@@ -27,7 +27,7 @@ Tudo nessa lista é software livre, e nada exige conta em lugar nenhum.
 
 | caminho | o que é | o que custa ao seu computador |
 |---|---|---|
-| instalado | as ferramentas num computador que já roda Linux | cerca de 1,5 GiB de memória com o cluster, o registry e o Gitea rodando, até 3 GiB nas aulas 3 e 4, e 15 GiB de disco |
+| instalado | as ferramentas num computador que já roda Linux | cerca de 0,6 GiB de memória para o cluster e o registry, 1,7 GiB a partir da aula 3, e cerca de 10 GiB de disco para as imagens |
 | **uma máquina virtual com Multipass** (recomendado) | Ubuntu Server 24.04 numa VM criada com um comando, no Windows, no macOS ou no Linux, com as mesmas ferramentas dentro | 4 processadores, 8 GiB de memória e 40 GiB de disco enquanto roda |
 | online | uma máquina virtual Linux alugada por hora em qualquer provedor de nuvem | nada no seu computador; dinheiro por cada hora em que ela existir, e ela precisa ser apagada quando você parar |
 

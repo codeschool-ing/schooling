@@ -1,0 +1,552 @@
+{
+  "ex-kf5k63rt": {
+    "prompt": "Ligue cada controlador do Flux ao trabalho dele.",
+    "pairs": [
+      {
+        "left": "source controller",
+        "right": "Busca um repositório e o guarda como artefato"
+      },
+      {
+        "left": "kustomize controller",
+        "right": "Monta um caminho e o aplica"
+      },
+      {
+        "left": "helm controller",
+        "right": "Instala charts como releases do Helm"
+      },
+      {
+        "left": "notification controller",
+        "right": "Manda eventos e recebe webhooks"
+      }
+    ],
+    "right_distractors": [
+      "Atende uma interface web"
+    ]
+  },
+  "ex-ptyh697r": {
+    "prompt": "O que é o artefato que o source controller produz?",
+    "choices": [
+      {
+        "text": "Os arquivos de uma revisão, compactados",
+        "why": "Isso. Outros controladores o baixam em vez de clonar o Git eles mesmos."
+      },
+      {
+        "text": "A lista de objetos já aplicados",
+        "why": "Isso fica no status da Kustomization."
+      },
+      {
+        "text": "Uma imagem de container do repositório",
+        "why": "É um tarball servido dentro do cluster, não uma imagem."
+      },
+      {
+        "text": "Um commit assinado",
+        "why": "Assinatura é outro assunto, na aula 8."
+      }
+    ]
+  },
+  "ex-hbhsrwxn": {
+    "prompt": "Quem decide o que uma pessoa pode fazer com o Flux?",
+    "choices": [
+      {
+        "text": "A proteção de branch do Gitea",
+        "why": "Ela governa o que chega à main, não quem pode suspender uma Kustomization."
+      },
+      {
+        "text": "As permissões do próprio Kubernetes",
+        "why": "Isso. O Flux não tem usuários próprios; os objetos dele são governados como quaisquer outros."
+      },
+      {
+        "text": "O API server do Flux e os papéis dele",
+        "why": "O Flux não tem API server; esse é o modelo do Argo CD."
+      },
+      {
+        "text": "O login do comando flux",
+        "why": "Não há em que entrar."
+      }
+    ]
+  },
+  "ex-4b2r1dme": {
+    "prompt": "O recurso do Flux que monta um caminho com o Kustomize e o aplica se chama ___, como o arquivo do próprio Kustomize.",
+    "blanks": [
+      {
+        "accept": [
+          "Kustomization"
+        ]
+      }
+    ]
+  },
+  "ex-tvv8ykr8": {
+    "prompt": "Por que a Application raiz é apagada antes das outras?",
+    "choices": [
+      {
+        "text": "Porque apagá-la apaga o staging",
+        "why": "Estas Applications não têm finalizer de cascata, então o staging fica."
+      },
+      {
+        "text": "Para nada recriar as outras",
+        "why": "Isso. A raiz aplica as outras a partir do Git, e as poria de volta."
+      },
+      {
+        "text": "Porque a raiz guarda as credenciais do cluster",
+        "why": "Quem guarda é o controller; a raiz é uma Application como as outras."
+      },
+      {
+        "text": "Porque o Kubernetes recusa apagar os filhos antes",
+        "why": "O Kubernetes os apaga em qualquer ordem."
+      }
+    ]
+  },
+  "ex-x2pya86y": {
+    "prompt": "Por que tirar o acesso da conta argocd ao fleet no dia em que o Argo CD sai?",
+    "choices": [
+      {
+        "text": "O Flux não sobe enquanto ela existir",
+        "why": "O Flux não sabe nada de outras contas."
+      },
+      {
+        "text": "Chaves esquecidas são usadas sem alarde",
+        "why": "Isso. Chaves de sistemas aposentados são uma entrada clássica."
+      },
+      {
+        "text": "O token expiraria e travaria o fleet",
+        "why": "Um token expirado não trava nada."
+      },
+      {
+        "text": "O Gitea cobra por colaborador",
+        "why": "O Gitea não cobra nada aqui."
+      }
+    ]
+  },
+  "ex-dk84xmg5": {
+    "prompt": "Por que a pasta argocd/ sai do fleet quando o Argo CD vai embora?",
+    "choices": [
+      {
+        "text": "O Gitea recusa pastas que ninguém lê",
+        "why": "O Gitea guarda o que for commitado."
+      },
+      {
+        "text": "Ela guarda o token do argocd",
+        "why": "Ela guarda manifestos de Application, nenhuma credencial."
+      },
+      {
+        "text": "O Flux aplicaria as Applications dela",
+        "why": "O Flux aplica o clusters/lab, e o tipo Application nem existiria."
+      },
+      {
+        "text": "Descrição que ninguém lê envelhece",
+        "why": "Isso. Ela sai no mesmo pull request que traz o Flux."
+      }
+    ]
+  },
+  "ex-kgr4n37z": {
+    "prompt": "O que o flux check --pre faz?",
+    "choices": [
+      {
+        "text": "Confere o checksum do binário flux",
+        "why": "O checksum foi conferido com o sha256sum."
+      },
+      {
+        "text": "Instala o Flux em modo de ensaio",
+        "why": "Nada é instalado."
+      },
+      {
+        "text": "Reconcilia cada Kustomization uma vez",
+        "why": "Ainda não há Kustomizations."
+      },
+      {
+        "text": "Confere o cluster antes",
+        "why": "Isso. Versão do Kubernetes e acesso pelo kubectl."
+      }
+    ]
+  },
+  "ex-a0fmn5d7": {
+    "prompt": "O token da conta flux tem um escopo. Qual?",
+    "choices": [
+      {
+        "text": "write:repository",
+        "why": "O Flux nunca faz push neste curso; a automação de imagens da aula 7 é onde isso muda."
+      },
+      {
+        "text": "admin",
+        "why": "Nenhuma conta de máquina recebe admin."
+      },
+      {
+        "text": "read:repository",
+        "why": "Isso. O Flux só busca o fleet."
+      },
+      {
+        "text": "write:user",
+        "why": "O Flux não tem nada a ver com configurações de usuário."
+      }
+    ]
+  },
+  "ex-vegz9wjh": {
+    "prompt": "Por que a aula não roda o flux bootstrap no fleet?",
+    "choices": [
+      {
+        "text": "O flux bootstrap não suporta o Gitea",
+        "why": "Ele tem um subcomando gitea; o obstáculo é a regra."
+      },
+      {
+        "text": "Ele instalaria o Argo CD de novo",
+        "why": "O bootstrap instala só o Flux."
+      },
+      {
+        "text": "Ele faz push na main",
+        "why": "Isso. Então os três passos dele são feitos à mão, e o commit passa por um pull request."
+      },
+      {
+        "text": "Ele precisa de uma conta de nuvem",
+        "why": "Ele precisa de um servidor Git, que o Gitea é."
+      }
+    ]
+  },
+  "ex-vyf01g33": {
+    "prompt": "Ordene os três passos de bootstrap depois do merge.",
+    "items": [
+      "Aplicar o gotk-components.yaml",
+      "Criar o Secret fleet-auth",
+      "Aplicar o gotk-sync.yaml"
+    ],
+    "trap": "O Secret precisa do namespace flux-system, que os componentes criam, e a sincronização precisa do Secret."
+  },
+  "ex-dcg47sqz": {
+    "prompt": "Depois do bootstrap, como o próprio Flux é atualizado?",
+    "choices": [
+      {
+        "text": "kubectl apply da versão nova à mão",
+        "why": "O mesmo que o flux install: desvio do Git."
+      },
+      {
+        "text": "flux install contra o cluster",
+        "why": "Isso mudaria o cluster pelas costas do Git, e a próxima reconciliação desfaria."
+      },
+      {
+        "text": "Ele se atualiza para a última versão",
+        "why": "Nada no Flux se atualiza sozinho; a versão está fixada no arquivo."
+      },
+      {
+        "text": "Um pull request que muda o gotk-components.yaml",
+        "why": "Isso. A Kustomization flux-system aplica o clusters/lab, os manifestos do próprio Flux inclusive."
+      }
+    ]
+  },
+  "ex-dc744e84": {
+    "prompt": "O que o wait: true muda sobre quando a Kustomization staging fica pronta?",
+    "choices": [
+      {
+        "text": "Ela espera dez minutos antes de aplicar",
+        "why": "Isso é o intervalo, outro campo."
+      },
+      {
+        "text": "Pronto passa a exigir pods prontos",
+        "why": "Isso. Sincronização e saúde, juntas numa resposta."
+      },
+      {
+        "text": "Ela espera uma pessoa aprovar cada apply",
+        "why": "A aprovação aconteceu no pull request, antes do Git."
+      },
+      {
+        "text": "Ela espera o webhook",
+        "why": "O webhook dispara uma busca; o wait é sobre saúde."
+      }
+    ]
+  },
+  "ex-wevq5ndv": {
+    "prompt": "Alguém escala o staging para seis à mão. Com o Flux configurado como aqui, quanto isso pode durar?",
+    "choices": [
+      {
+        "text": "Para sempre, porque o Flux ignora o replicas",
+        "why": "Nada mandou o Flux ignorar o replicas."
+      },
+      {
+        "text": "Até dez minutos",
+        "why": "Isso. O kustomize controller aplica no intervalo dele e não observa."
+      },
+      {
+        "text": "Até o próximo commit no fleet",
+        "why": "Um commit dispara busca e reconciliação, mas o intervalo também."
+      },
+      {
+        "text": "Poucos segundos, como o selfHeal do Argo CD",
+        "why": "Esse é o modelo observado do Argo CD."
+      }
+    ]
+  },
+  "ex-jevdtmjd": {
+    "prompt": "flux reconcile kustomization staging ___ faz o source controller buscar antes, para o commit mais novo ser usado.",
+    "blanks": [
+      {
+        "accept": [
+          "--with-source"
+        ]
+      }
+    ]
+  },
+  "ex-h4zn3mwa": {
+    "prompt": "Por que não pôr o intervalo de toda Kustomization em dez segundos?",
+    "choices": [
+      {
+        "text": "Intervalos curtos desligam a poda",
+        "why": "A poda funciona em qualquer intervalo."
+      },
+      {
+        "text": "O Flux recusa intervalos menores que um minuto",
+        "why": "Ele aceita; o custo é o motivo para não fazer."
+      },
+      {
+        "text": "Cada rodada aplica o caminho inteiro",
+        "why": "Isso. Barato para três objetos, não para mil."
+      },
+      {
+        "text": "O Gitea bloquearia as buscas",
+        "why": "O intervalo da Kustomization nem busca no Gitea."
+      }
+    ]
+  },
+  "ex-hav2bdn7": {
+    "prompt": "O que torna o flux suspend diferente da pausa que a aula 2 descartou?",
+    "choices": [
+      {
+        "text": "Ele desfaz toda mudança manual ao retomar",
+        "why": "O resume reconcilia, o que devolve o Git, mas não é isso que o torna diferente."
+      },
+      {
+        "text": "Fica registrado no objeto",
+        "why": "Isso. O SUSPENDED True está no spec da Kustomization, visível a toda consulta e alerta."
+      },
+      {
+        "text": "Ele precisa de um pull request aprovado",
+        "why": "É um comando contra o cluster, e por isso deve durar pouco."
+      },
+      {
+        "text": "Ele também impede as pessoas de usar o kubectl",
+        "why": "O suspend para o Flux, não as pessoas."
+      }
+    ]
+  },
+  "ex-6xvqbqgf": {
+    "prompt": "Com o staging suspenso, uma mudança entrou. O que o Flux fez?",
+    "choices": [
+      {
+        "text": "Nem buscou nem aplicou",
+        "why": "O GitRepository não está suspenso e continuou buscando."
+      },
+      {
+        "text": "Aplicou, porque o suspend só para a poda",
+        "why": "O suspend para a reconciliação inteira."
+      },
+      {
+        "text": "Buscou o commit e não o aplicou",
+        "why": "Isso. A fonte andou; a Kustomization ficou na revisão antiga."
+      },
+      {
+        "text": "Recusou o merge no Gitea",
+        "why": "O Flux nunca fala com o merge do Gitea."
+      }
+    ]
+  },
+  "ex-gw6g23sn": {
+    "prompt": "Por que o Receiver é do tipo github se o servidor Git é o Gitea?",
+    "choices": [
+      {
+        "text": "O webhook passa pelo GitHub antes",
+        "why": "Ele vai direto do Gitea para o nó."
+      },
+      {
+        "text": "type é só um rótulo e não é conferido",
+        "why": "Ele decide como a requisição é verificada."
+      },
+      {
+        "text": "O Gitea assina webhooks do jeito do GitHub",
+        "why": "Isso. Um HMAC do corpo no X-Hub-Signature-256, que o receptor de GitHub confere."
+      },
+      {
+        "text": "O Flux só tem receptor para o GitHub",
+        "why": "Ele tem vários; o github é aquele cuja assinatura o Gitea fala."
+      }
+    ]
+  },
+  "ex-hty3fsaa": {
+    "prompt": "Por que o Gitea se recusa a chamar endereços privados, a menos que mandado?",
+    "choices": [
+      {
+        "text": "Webhooks para endereços privados não são assinados",
+        "why": "A assinatura é a mesma de qualquer jeito."
+      },
+      {
+        "text": "Endereços privados não recebem HTTP",
+        "why": "Recebem sem problema, como o nó recebeu."
+      },
+      {
+        "text": "Webhooks sondariam a rede interna",
+        "why": "Isso. Sem o limite, quem pudesse criar um webhook alcançaria a rede interna do servidor."
+      },
+      {
+        "text": "O receptor do Flux só escuta em endereços públicos",
+        "why": "Ele escutou num NodePort de um nó privado."
+      }
+    ]
+  },
+  "ex-snx0wgm8": {
+    "prompt": "Com o webhook funcionando, por que manter o intervalo de um minuto do GitRepository?",
+    "choices": [
+      {
+        "text": "Como rede de segurança para um webhook que se perdeu",
+        "why": "Isso. Uma chamada perdida é pega no próximo intervalo."
+      },
+      {
+        "text": "O webhook só funciona entre intervalos",
+        "why": "Ele funciona a qualquer momento."
+      },
+      {
+        "text": "O intervalo assina o webhook",
+        "why": "A assinatura usa o segredo compartilhado."
+      },
+      {
+        "text": "O Flux recusa uma fonte sem intervalo",
+        "why": "O motivo é o webhook perdido, não uma regra."
+      }
+    ]
+  },
+  "ex-vm1m47v9": {
+    "prompt": "Em qual NodePort o Gitea alcança o receptor do Flux neste laboratório?"
+  },
+  "ex-3qke0m2c": {
+    "prompt": "Um time exige que uma mudança manual na produção seja desfeita em segundos, sempre. Que diferença importa?",
+    "choices": [
+      {
+        "text": "Observar contra um intervalo",
+        "why": "Isso. Com o Flux o pior caso é o intervalo."
+      },
+      {
+        "text": "O Argo CD lê o Git e o Flux não",
+        "why": "Os dois leem o Git."
+      },
+      {
+        "text": "O Flux não tem noção de desvio",
+        "why": "Ele corrige desvios, no intervalo dele."
+      },
+      {
+        "text": "O Flux poda e o Argo CD não",
+        "why": "Os dois podam quando mandados."
+      }
+    ]
+  },
+  "ex-0kqtf1p9": {
+    "prompt": "No que as duas ferramentas diferem quanto ao que fazem com um chart do Helm?",
+    "choices": [
+      {
+        "text": "Só o Flux suporta Helm",
+        "why": "O Argo CD gera charts no repo server dele."
+      },
+      {
+        "text": "Os dois instalam releases do Helm do mesmo jeito",
+        "why": "O Argo CD nunca cria um release do Helm."
+      },
+      {
+        "text": "O Argo CD o transforma em manifestos; o Flux instala um release do Helm",
+        "why": "Isso. Com o Flux, o helm list mostra o release; com o Argo CD não há nenhum."
+      },
+      {
+        "text": "Só o Argo CD suporta Helm",
+        "why": "O Flux tem um helm controller."
+      }
+    ]
+  },
+  "ex-6xpm4fgy": {
+    "prompt": "Quais motivos a aula dá para escolher o Argo CD? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Ele decifra arquivos SOPS sem acréscimos",
+        "why": "Esse é o argumento do Flux."
+      },
+      {
+        "text": "Ele reconcilia num intervalo, e não por eventos",
+        "why": "Isso descreve o Flux, não o Argo CD."
+      },
+      {
+        "text": "Uma instalação serve muitos times com permissões diferentes",
+        "why": "Isso. Projetos e papéis fazem isso."
+      },
+      {
+        "text": "Pessoas que não vivem num terminal precisam ver o que está publicado",
+        "why": "Isso. A interface web dele é a imagem comum."
+      }
+    ]
+  },
+  "ex-1mjev3a8": {
+    "prompt": "Uma mudança não chega e as Kustomizations dizem READY True. O que você confere primeiro?",
+    "choices": [
+      {
+        "text": "A proteção de branch do Gitea",
+        "why": "A mudança entrou; a questão é se o Flux a buscou."
+      },
+      {
+        "text": "flux get sources git",
+        "why": "Isso. Uma fonte que não consegue buscar deixa tudo adiante no último artefato, parecendo saudável."
+      },
+      {
+        "text": "Os pods do staging",
+        "why": "Eles rodam a última revisão aplicada e parecem bem."
+      },
+      {
+        "text": "flux check --pre",
+        "why": "Isso confere pré-requisitos, não uma fonte rodando."
+      }
+    ]
+  },
+  "ex-8qmbs5r7": {
+    "prompt": "Por que a imagem ruim apareceu como uma Kustomization falhando, e não só como um pod falhando?",
+    "choices": [
+      {
+        "text": "O Flux baixa a imagem antes de aplicar",
+        "why": "Quem baixa imagens é o nó; o Flux nunca."
+      },
+      {
+        "text": "O source controller não conseguiu buscar",
+        "why": "A fonte buscou; o problema foi o resultado do apply."
+      },
+      {
+        "text": "Por causa do wait: true",
+        "why": "Isso. timeout waiting for, citando o Deployment e a revisão."
+      },
+      {
+        "text": "O kubeconform recusou a tag",
+        "why": "O kubeconform a aprovou, como na aula 2."
+      }
+    ]
+  },
+  "ex-gwzv1wmz": {
+    "prompt": "Ordene o que acontece entre um merge e pods novos quando o webhook funciona.",
+    "items": [
+      "O Gitea chama o Receiver",
+      "O source controller busca o commit novo",
+      "Um artefato novo é guardado",
+      "O kustomize controller aplica o caminho",
+      "O Deployment sobe pods novos"
+    ],
+    "trap": "Buscar vem antes de aplicar, e o artefato é o que liga os dois."
+  },
+  "ex-qr299d0d": {
+    "prompt": "Um time de plataforma roda o Flux, e um time de aplicação quer a interface do Argo CD para os mesmos objetos do staging. O que a aula recomenda?",
+    "choices": [
+      {
+        "text": "Rodar as duas no staging e deixar o selfHeal vencer",
+        "why": "Elas sobrescreveriam as mudanças e anotações uma da outra a cada passada."
+      },
+      {
+        "text": "Suspender o Flux sempre que o Argo CD sincronizar",
+        "why": "Uma Kustomization suspensa sem prazo é um cluster que parou de ser GitOps."
+      },
+      {
+        "text": "Objetos separados para cada ferramenta",
+        "why": "Isso. Dois reconciliadores num objeto são duas verdades com máquinas brigando."
+      },
+      {
+        "text": "Trocar o Git pela interface do Argo CD",
+        "why": "A interface lê o Git; não o substitui."
+      }
+    ]
+  }
+}

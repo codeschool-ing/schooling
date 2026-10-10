@@ -109,6 +109,36 @@ run 'flux resume kustomization staging'
 quiet 'kubectl -n staging rollout status deployment bulletin --timeout=120s'
 run 'curl -s localhost:8080'
 
+block receiver
+run 'openssl rand -hex 20 > ~/webhook.token && chmod 600 ~/webhook.token'
+run 'kubectl -n flux-system create secret generic webhook-token --from-literal=token="$(cat ~/webhook.token)"'
+run 'git switch --quiet -c webhook'
+shown "$HERE/webhook.md" 'clusters/lab/webhook.yaml' clusters/lab/webhook.yaml
+run 'git add clusters/lab/webhook.yaml'
+at 2026-10-09T17:15:00-03:00 run 'git commit --quiet -m "flux: a receiver for the Gitea webhook"'
+lab merge webhook "flux: a receiver for the Gitea webhook" >/dev/null || exit 1
+quiet 'flux reconcile kustomization flux-system --with-source'
+quiet 'sleep 3'
+run 'kubectl -n flux-system get receiver gitea'
+
+block hook
+docker exec gitea sed -i '/^\[security\]$/a ALLOWED_HOST_LIST = private' /etc/gitea/app.ini
+docker restart gitea >/dev/null
+until curl -fs localhost:3000/api/v1/version >/dev/null; do sleep 1; done
+run "docker exec gitea grep -A1 '^\[security\]\$' /etc/gitea/app.ini"
+run "HOOK_PATH=\$(kubectl -n flux-system get receiver gitea -o jsonpath='{.status.webhookPath}')"
+run 'curl -s -H "$AS_ANA" -H "$JSON" -d "{\"type\": \"gitea\", \"events\": [\"push\"], \"active\": true, \"config\": {\"url\": \"http://gitops-control-plane:30082$HOOK_PATH\", \"content_type\": \"json\", \"secret\": \"$(cat ~/webhook.token)\"}}" $API/hooks | jq '"'"'{id, type, events, active}'"'"''
+
+block fast
+run 'git switch --quiet -c webhook-banner'
+sed -i 's/value: Staging follows Flux./value: Staging is updated by a webhook./' staging/bulletin.yaml
+at 2026-10-09T17:18:00-03:00 run 'git commit --quiet -am "staging: updated by a webhook"'
+lab merge webhook-banner "staging: updated by a webhook" >/dev/null || exit 1
+run 'git log -1 --format="%h %s"'
+quiet 'sleep 10'
+run 'flux get kustomizations staging'
+run 'curl -s localhost:8080'
+
 block fail-auth
 run "kubectl -n flux-system create secret generic fleet-auth --from-literal=username=flux --from-literal=password=0123456789abcdef --dry-run=client -o yaml | kubectl apply -f -"
 run 'flux reconcile source git flux-system'

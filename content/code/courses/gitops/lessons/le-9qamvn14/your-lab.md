@@ -27,7 +27,7 @@ Everything on that list is free software, and none of it needs an account anywhe
 
 | path | what it is | what it costs your computer |
 |---|---|---|
-| installed | the tools on a computer that already runs Linux | about 1.5 GiB of memory with the cluster, the registry and Gitea running, up to 3 GiB in lessons 3 and 4, and 15 GiB of disk |
+| installed | the tools on a computer that already runs Linux | about 0.6 GiB of memory for the cluster and the registry, 1.7 GiB from lesson 3 on, and about 10 GiB of disk for the images |
 | **a virtual machine with Multipass** (recommended) | Ubuntu Server 24.04 in a VM made with one command, on Windows, macOS or Linux, with the same tools inside it | 4 processors, 8 GiB of memory and 40 GiB of disk while it runs |
 | online | a Linux virtual machine rented by the hour from any cloud provider | nothing on your computer; money for every hour it exists, and it must be deleted when you stop |
 
