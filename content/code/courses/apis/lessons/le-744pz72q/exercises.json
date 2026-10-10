@@ -1,0 +1,963 @@
+[
+  {
+    "id": "ex-88zr7qxz",
+    "version": 1,
+    "section": "who-and-what",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request arrives with a valid token for Ana and asks for order 3, which is Bruno's. What has the API established so far?",
+    "hint": "Two questions, asked in order.",
+    "choices": [
+      {
+        "text": "That Ana may read order 3, since her token is valid",
+        "correct": false,
+        "why": "A valid token answers who is asking. Whether Ana may read this order is the second question, and it has not been asked yet."
+      },
+      {
+        "text": "Who is asking, and nothing about what she may do",
+        "correct": true,
+        "why": "Right. Authentication is done; authorisation has not started."
+      },
+      {
+        "text": "Nothing yet, because a token proves nothing until the order is read",
+        "correct": false,
+        "why": "The token is checked first and does prove something: that the request comes from Ana."
+      },
+      {
+        "text": "That order 3 exists",
+        "correct": false,
+        "why": "Nothing has looked at the orders yet, and in orders.py that check comes after the permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-qykr5e7c",
+    "version": 1,
+    "section": "who-and-what",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's web page hides the refund button from customers. The refund route on the server checks that the token is valid and nothing more. What can a customer do?",
+    "hint": "Every request in this course was typed with curl.",
+    "choices": [
+      {
+        "text": "Nothing, because the button is not there to press",
+        "correct": false,
+        "why": "The button only sends a request. The same request can be typed without it."
+      },
+      {
+        "text": "Only refund orders that are already their own",
+        "correct": false,
+        "why": "Nothing on the server compares the order with the caller, so ownership is not checked either."
+      },
+      {
+        "text": "Get a 401, because a customer's token is not accepted on that route",
+        "correct": false,
+        "why": "The route accepts any valid token, a customer's included; that is the defect."
+      },
+      {
+        "text": "Send the refund request with curl and have it succeed",
+        "correct": true,
+        "why": "Right. Hiding is a convenience; the server has to decide on every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr60b9hn",
+    "version": 1,
+    "section": "who-and-what",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checks a request to orders.py passes in the order they run.",
+    "hint": "Who is asking comes before anything else is looked at.",
+    "items": [
+      "Is the token one this API issued?",
+      "Is there a route for this address and method?",
+      "Is the route's permission in the caller's set?",
+      "Is this order one the caller may see?",
+      "Does the refund policy allow it today?"
+    ],
+    "trap": "Looking the order up before checking the token would answer a stranger differently for orders that exist."
+  },
+  {
+    "id": "ex-z9n0tq3s",
+    "version": 1,
+    "section": "deny-by-default",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody adds a person with the role `auditor` to the database, and the code was never told about that role. What does each version of `allowed()` answer for `orders:refund`?",
+    "hint": "One version lists refusals; the other lists grants.",
+    "choices": [
+      {
+        "text": "Both answer False, since neither function mentions the role",
+        "correct": false,
+        "why": "Not mentioning the role is exactly what makes the refusal list answer True: it only refuses what it names."
+      },
+      {
+        "text": "The refusal list answers True and the grant list answers False",
+        "correct": true,
+        "why": "Right. The refusal list falls through to True; the grant list finds an empty set."
+      },
+      {
+        "text": "Both crash with a KeyError",
+        "correct": false,
+        "why": "The grant list uses `ROLES.get(role, set())`, which returns an empty set instead of raising."
+      },
+      {
+        "text": "Both answer True, because a new role starts with every permission until somebody narrows it",
+        "correct": false,
+        "why": "That would be allow by default. The grant list starts a role it does not know with nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1t1j716s",
+    "version": 1,
+    "section": "deny-by-default",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the lookup so that a role missing from the table gets no permissions at all: `ROLES.get(role, ___)`",
+    "hint": "An empty collection of the same type as the values.",
+    "blanks": [
+      {
+        "accept": [
+          "set()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h67bkjj2",
+    "version": 1,
+    "section": "deny-by-default",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new row is added to `ROUTES` with the permission written as `order:read` instead of `orders:read`. What happens when people call it?",
+    "hint": "Look for which role's set contains that string.",
+    "choices": [
+      {
+        "text": "It answers 404 for everybody, because the route is not registered",
+        "correct": false,
+        "why": "The route is in the table and matches the address. It is the permission check that refuses."
+      },
+      {
+        "text": "Everybody gets in, because a permission no role defines is not checked",
+        "correct": false,
+        "why": "That would be the failure of a deny list. Here the string is looked for in the caller's set and never found."
+      },
+      {
+        "text": "Everybody gets 403, and somebody notices on the first try",
+        "correct": true,
+        "why": "Right. No set holds `order:read`, so the route fails closed and loudly."
+      },
+      {
+        "text": "The server answers 500 with a KeyError",
+        "correct": false,
+        "why": "Nothing looks the permission up as a key; it is tested with `in`, which answers False."
+      }
+    ]
+  },
+  {
+    "id": "ex-ax794hxw",
+    "version": 1,
+    "section": "roles-and-permissions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants a `support` role that can refund orders but cannot list people. In orders.py, what has to change?",
+    "hint": "Where does a role mean anything in that file?",
+    "choices": [
+      {
+        "text": "One line in `ROLES`, and the people who get the role",
+        "correct": true,
+        "why": "Right. The handlers ask about permissions, so none of them learns the new role exists."
+      },
+      {
+        "text": "Every handler that checks for `staff`",
+        "correct": false,
+        "why": "No handler checks for a role name. That is what checking permissions instead buys."
+      },
+      {
+        "text": "A new row in `ROUTES` for each refund the support team will make",
+        "correct": false,
+        "why": "Routes describe addresses, not people. The refund route already names `orders:refund`."
+      },
+      {
+        "text": "The refund handler, to let `support` through",
+        "correct": false,
+        "why": "The handler never sees a role; the dispatcher checks the permission before it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz1f2nr2",
+    "version": 1,
+    "section": "roles-and-permissions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each permission in orders.py to what it lets a caller do.",
+    "hint": "One description belongs to no permission in the file.",
+    "pairs": [
+      {
+        "left": "`orders:read`",
+        "right": "read orders, as many as `find` allows"
+      },
+      {
+        "left": "`orders:read_all`",
+        "right": "see every customer's orders, notes included"
+      },
+      {
+        "left": "`orders:refund`",
+        "right": "ask for an order's refund"
+      },
+      {
+        "left": "`people:read`",
+        "right": "list everybody and their role"
+      }
+    ],
+    "right_distractors": [
+      "change somebody's role"
+    ]
+  },
+  {
+    "id": "ex-b8487sg6",
+    "version": 1,
+    "section": "roles-and-permissions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Dora is moved from `admin` to `staff`. In one API the role is read from a table on every request; in another it was copied into a JWT when her token was issued. When does each one stop letting her list people?",
+    "hint": "What does each API believe, and until when?",
+    "choices": [
+      {
+        "text": "Both at once, on her next request",
+        "correct": false,
+        "why": "The JWT still says `admin`, and the second API believes it without asking the database."
+      },
+      {
+        "text": "Both when she signs in again",
+        "correct": false,
+        "why": "The first API does not wait for anything: it reads the table on every request."
+      },
+      {
+        "text": "The JWT one at once, since a signed token is checked every time",
+        "correct": false,
+        "why": "The signature is checked every time, and it is still a valid signature over the old role."
+      },
+      {
+        "text": "The table one on her next request; the JWT one when that token expires",
+        "correct": true,
+        "why": "Right. A role inside a token is believed until the token ends; that is the price of not asking."
+      }
+    ]
+  },
+  {
+    "id": "ex-seh4gtct",
+    "version": 1,
+    "section": "the-orders-api",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "orders.py refuses a request with no token. Besides the 401 status, what does the answer carry that tells the client what to send?",
+    "hint": "A header.",
+    "choices": [
+      {
+        "text": "A `Location` header pointing at a sign-in page",
+        "correct": false,
+        "why": "`Location` is for a created or moved resource. An API answers 401 in place."
+      },
+      {
+        "text": "An `Allow` header",
+        "correct": false,
+        "why": "`Allow` lists methods, and comes with 405."
+      },
+      {
+        "text": "`WWW-Authenticate`, naming a bearer token",
+        "correct": true,
+        "why": "Right. `WWW-Authenticate: Bearer realm=\"shelf\"` says which kind of credential would do."
+      },
+      {
+        "text": "A fresh demo token in the body, ready to be used on the next request",
+        "correct": false,
+        "why": "Handing out tokens to whoever asks without one would make the check pointless."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdtbwr6a",
+    "version": 1,
+    "section": "the-orders-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Eva's role, `auditor`, is not in `ROLES`. Her token carries `orders:read`. What does `GET /orders` answer her?",
+    "hint": "The effective set is what the role grants and the token carries.",
+    "choices": [
+      {
+        "text": "200 with her own orders, because the token carries the scope",
+        "correct": false,
+        "why": "A scope only counts where the role grants it too, and her role grants nothing."
+      },
+      {
+        "text": "401, because a role nobody defined makes the token invalid",
+        "correct": false,
+        "why": "The token is one the API issued, so who is asking is answered. It is the second question that fails."
+      },
+      {
+        "text": "403, because her effective set is empty",
+        "correct": true,
+        "why": "Right. An unknown role gives the empty set, and an empty set meets any scope in nothing."
+      },
+      {
+        "text": "500, from a KeyError on the unknown role",
+        "correct": false,
+        "why": "`ROLES.get(role, set())` returns an empty set rather than raising."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgb7a1qj",
+    "version": 1,
+    "section": "object-ownership",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana holds `orders:read` and asks for `/orders/3`, which is Bruno's. Which part of orders.py turns her away?",
+    "hint": "The dispatcher let her in.",
+    "choices": [
+      {
+        "text": "The permission check in `dispatch`",
+        "correct": false,
+        "why": "She holds `orders:read`, which is all the route asks for, so the dispatcher lets her through."
+      },
+      {
+        "text": "`show`, which removes the fields she may not read",
+        "correct": false,
+        "why": "`show` decides which fields go out, and only after the order was allowed. It never refuses one."
+      },
+      {
+        "text": "The token check in `caller`, which ties each token to one customer's orders",
+        "correct": false,
+        "why": "Tokens are tied to people, not to orders. That check only answers who she is."
+      },
+      {
+        "text": "`find`, comparing the order's customer with the caller",
+        "correct": true,
+        "why": "Right. The order is somebody else's and she lacks `orders:read_all`, so `find` returns None and she gets 404."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ms7gt21",
+    "version": 1,
+    "section": "object-ownership",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make an object-level flaw hard to write? Choose all that apply.",
+    "hint": "One of them is worth having and is still not the check.",
+    "choices": [
+      {
+        "text": "Looking every object up through one function that takes the caller",
+        "correct": true,
+        "why": "Right. A handler cannot fetch an order without saying who wants it."
+      },
+      {
+        "text": "Using random UUIDs in place of consecutive ids",
+        "correct": false,
+        "why": "They make neighbours hard to guess, and an id still leaks through logs and links; then only the check is left."
+      },
+      {
+        "text": "Filtering lists in the query by the caller",
+        "correct": true,
+        "why": "Right. Somebody else's rows are never read at all."
+      },
+      {
+        "text": "Testing with at least two people",
+        "correct": true,
+        "why": "Right. A test that signs in as one person cannot ask for another's object."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hya0g0c",
+    "version": 1,
+    "section": "object-ownership",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You review `def get_invoice(self, me, perms, ident)`, which runs `SELECT * FROM invoices WHERE id = ?` with `ident`, returns 404 when no row comes back and the row otherwise. The route requires `invoices:read`. What do you flag?",
+    "hint": "Which argument does the handler never use?",
+    "choices": [
+      {
+        "text": "Nothing: the route permission already limits who can call it",
+        "correct": false,
+        "why": "The permission says the caller may read invoices, not which ones."
+      },
+      {
+        "text": "Any caller let through the route can fetch every customer's bill by trying other ids",
+        "correct": true,
+        "why": "Right. `me` is never used, so nothing ties the invoice to the caller."
+      },
+      {
+        "text": "The 404 should be a 403, so the caller knows the invoice exists",
+        "correct": false,
+        "why": "Telling a stranger an invoice exists is the leak a 404 avoids. The missing piece is the owner check."
+      },
+      {
+        "text": "`SELECT *` exposes columns; listing them would fix it",
+        "correct": false,
+        "why": "Listing columns is a fix for which fields go out, not for whose invoice it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-9avep6bk",
+    "version": 1,
+    "section": "admin-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno owns order 3, and his token carries `orders:refund`. What does `POST /orders/3/refund` answer him?",
+    "hint": "Owning the order and being allowed the function are two questions.",
+    "choices": [
+      {
+        "text": "200, since he owns the order and his token carries the scope",
+        "correct": false,
+        "why": "Both are true and neither is enough: his role does not grant refunds."
+      },
+      {
+        "text": "403, from his role, which grants no refunds",
+        "correct": true,
+        "why": "Right. Function-level authorisation refuses before ownership is even asked; the message is `the role customer lacks orders:refund`."
+      },
+      {
+        "text": "404, because a customer may not see refunds",
+        "correct": false,
+        "why": "He can see order 3; it is his. The refusal is about the function."
+      },
+      {
+        "text": "403 with `insufficient_scope`, because the token is the half that refused",
+        "correct": false,
+        "why": "His token carries the scope. It is the role that lacks it, and the answer says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-562ee6p0",
+    "version": 1,
+    "section": "admin-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dora sends `DELETE /orders/3`. Why does orders.py answer 405 with `Allow: GET`, rather than a 501 page from Python's library?",
+    "hint": "Look at the line after `dispatch`.",
+    "choices": [
+      {
+        "text": "Because an administrator's request is always answered by the API itself",
+        "correct": false,
+        "why": "The role has nothing to do with it; a customer gets the same 405."
+      },
+      {
+        "text": "Because the route table has a DELETE row that refuses",
+        "correct": false,
+        "why": "There is no DELETE row. The 405 comes from finding the address with only a GET."
+      },
+      {
+        "text": "`do_DELETE` is wired to `dispatch`, which finds no DELETE route there",
+        "correct": true,
+        "why": "Right. Every method goes through the table, so the table is the whole list of what the API does."
+      },
+      {
+        "text": "Because Python's library answers 405 for any method it was not told about",
+        "correct": false,
+        "why": "It answers 501 for those, as lesson 1's OPTIONS showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2xf2xam",
+    "version": 1,
+    "section": "object-properties",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's order body names `status` and `total_cents` beside `book_id` and `quantity`. orders.py answers 422. Why refuse instead of storing the order and ignoring the two fields?",
+    "hint": "What would the client believe afterwards?",
+    "choices": [
+      {
+        "text": "Ignoring them would store the status she sent",
+        "correct": false,
+        "why": "Ignoring them keeps the status safe. The problem is what the client is left believing."
+      },
+      {
+        "text": "The client would believe it had set a status that it had not",
+        "correct": true,
+        "why": "Right. Refusing, and naming the fields, tells the client what was wrong."
+      },
+      {
+        "text": "A 422 is required by HTTP for any unknown field",
+        "correct": false,
+        "why": "HTTP requires no such thing; 422 is the code this course chose for content that breaks a rule."
+      },
+      {
+        "text": "So that staff can set those fields in the same request",
+        "correct": false,
+        "why": "Nobody sets them through this route; the server computes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f48x5h4",
+    "version": 1,
+    "section": "object-properties",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana orders two copies of book 1, whose `price_cents` is 3990, and also sends `\"total_cents\": 1`. Leaving the refusal aside, what total does a correct server store, in cents?",
+    "hint": "The server reads the price from the books table.",
+    "value": 7980,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-tzdjvjcj",
+    "version": 1,
+    "section": "object-properties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An API sends every column of the order as JSON, and the shop's page simply does not display `note`. Has a customer been shown the note?",
+    "hint": "Where does the JSON end up?",
+    "choices": [
+      {
+        "text": "Yes; it reached their browser, and the developer tools show it",
+        "correct": true,
+        "why": "Right. What the page does not display was still sent. Only the representation can leave it out."
+      },
+      {
+        "text": "No, because a field the page does not draw is never received",
+        "correct": false,
+        "why": "The page draws from what it received, and it received the whole row."
+      },
+      {
+        "text": "No, as long as the request needed a valid token",
+        "correct": false,
+        "why": "The token says who asked; it does nothing to the fields in the answer."
+      },
+      {
+        "text": "Only if the customer owns the order",
+        "correct": false,
+        "why": "Owning the order is why they received it at all. The note goes out with it either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-atg83qbw",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In orders.py, what decides the permissions a request actually has?",
+    "hint": "Python's `&` on two sets.",
+    "choices": [
+      {
+        "text": "What the role and the token both allow",
+        "correct": true,
+        "why": "Right. The intersection: a token narrows, and never widens."
+      },
+      {
+        "text": "The scopes on the token",
+        "correct": false,
+        "why": "Bruno's token claims `orders:refund` and he still cannot refund. Scopes alone decide nothing."
+      },
+      {
+        "text": "The role, with the token's scopes added to it",
+        "correct": false,
+        "why": "Adding them would let a token widen what its owner may do."
+      },
+      {
+        "text": "The role",
+        "correct": false,
+        "why": "Ana's app token has her role and still cannot place an order."
+      }
+    ]
+  },
+  {
+    "id": "ex-czt911ze",
+    "version": 1,
+    "section": "scopes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When a request's role allows the action but its token's scope does not, orders.py answers 403 with `WWW-Authenticate: Bearer error=\"___\"`.",
+    "hint": "The name RFC 6750 gives this error.",
+    "blanks": [
+      {
+        "accept": [
+          "insufficient_scope"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b5ge28cc",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save a database query, a colleague proposes checking only the scopes a token carries and dropping the role lookup. With the six tokens of orders.py, what would change?",
+    "hint": "Look for a token that claims more than its owner's role.",
+    "choices": [
+      {
+        "text": "Nothing, because every token carries exactly its owner's permissions",
+        "correct": false,
+        "why": "Bruno's carries one more, and Eva's carries one her role does not grant."
+      },
+      {
+        "text": "Ana's app could place orders",
+        "correct": false,
+        "why": "Her app's token carries only `orders:read`. Scopes alone would still refuse it."
+      },
+      {
+        "text": "Bruno could refund orders, and Eva could read hers",
+        "correct": true,
+        "why": "Right. Both tokens claim a scope their role lacks, and only the intersection stopped them."
+      },
+      {
+        "text": "Carla could list people",
+        "correct": false,
+        "why": "Her token does not carry `people:read`, so scopes alone would refuse it as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-b85611ws",
+    "version": 1,
+    "section": "attributes-and-policies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`refund_order` refuses when `age > REFUND_DAYS`, and `REFUND_DAYS` is 30. What is the greatest age, in days, at which an order can still be refunded?",
+    "hint": "Strictly greater than.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-4nepzh0a",
+    "version": 1,
+    "section": "attributes-and-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dora is the administrator, and asks to refund order 4, which is 45 days old. What does she get, and why?",
+    "hint": "Is the refusal about her, or about the order?",
+    "choices": [
+      {
+        "text": "200, because an administrator is above the refund rule",
+        "correct": false,
+        "why": "Nothing in orders.py exempts a role from the policy. The rule reads the order's age, not the role."
+      },
+      {
+        "text": "403, the same as Carla, because the rule is about the order",
+        "correct": true,
+        "why": "Right. The policy is not a permission she lacks; no role changes the order's age."
+      },
+      {
+        "text": "409, because the order is shipped",
+        "correct": false,
+        "why": "A shipped order can be refunded. 409 is for one that is already refunded or cancelled."
+      },
+      {
+        "text": "404, because the order is not hers",
+        "correct": false,
+        "why": "She holds `orders:read_all`, so `find` returns every order to her."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcctd5gb",
+    "version": 1,
+    "section": "attributes-and-policies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ABAC policy reads attributes of four things. Match each attribute to what it describes.",
+    "hint": "`placed_on` is stored on the order.",
+    "pairs": [
+      {
+        "left": "the caller's role",
+        "right": "the person"
+      },
+      {
+        "left": "`placed_on`",
+        "right": "the object"
+      },
+      {
+        "left": "refund, rather than read",
+        "right": "the action"
+      },
+      {
+        "left": "today's date",
+        "right": "the environment"
+      }
+    ],
+    "right_distractors": [
+      "the token's signature"
+    ]
+  },
+  {
+    "id": "ex-axea33ht",
+    "version": 1,
+    "section": "which-status",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to orders.py with the status it receives.",
+    "hint": "One status is never the answer here.",
+    "pairs": [
+      {
+        "left": "no `Authorization` header at all",
+        "right": "401"
+      },
+      {
+        "left": "Ana's app token placing an order",
+        "right": "403"
+      },
+      {
+        "left": "Ana asking for Bruno's order 3",
+        "right": "404"
+      },
+      {
+        "left": "a DELETE on `/orders/3`",
+        "right": "405"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  {
+    "id": "ex-3a67g44z",
+    "version": 1,
+    "section": "which-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does orders.py answer 404, not 403, when Ana asks for Bruno's order?",
+    "hint": "The ids are consecutive.",
+    "choices": [
+      {
+        "text": "A 403 would tell her that order 3 exists",
+        "correct": true,
+        "why": "Right. Walking the ids and counting the 403s would count the shop's orders; a 404 tells a stranger nothing they did not send."
+      },
+      {
+        "text": "Because Ana's token is not valid for that order",
+        "correct": false,
+        "why": "Tokens are not per order; hers is valid, and a token problem would be a 401."
+      },
+      {
+        "text": "Because 403 is reserved for administrative functions",
+        "correct": false,
+        "why": "403 is also what a missing scope and the refund policy answer."
+      },
+      {
+        "text": "Because the order really is missing from her copy of the database",
+        "correct": false,
+        "why": "There is one database, and the order is in it; `find` decides she may not see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsqdt531",
+    "version": 1,
+    "section": "which-status",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop adds `POST /admin/reports/rebuild`, listed in its OpenAPI document, needing `reports:write`. Carla's role lacks it. Which status should she get?",
+    "hint": "Is the thing being hidden an object or a function?",
+    "choices": [
+      {
+        "text": "404, so that nobody learns the route exists",
+        "correct": false,
+        "why": "The route is in the published document already. Hiding it hides nothing, and leaves Carla nothing to ask for."
+      },
+      {
+        "text": "403, naming the permission",
+        "correct": true,
+        "why": "Right. A function in the documentation is no secret, and the refusal is something she can act on."
+      },
+      {
+        "text": "401, so that her client fetches a token with more in it",
+        "correct": false,
+        "why": "A new token for the same person meets the same role. 401 is for not knowing who is asking."
+      },
+      {
+        "text": "405, because the method is not allowed to her",
+        "correct": false,
+        "why": "405 is about the address and the method, the same for every caller. Her refusal is about her."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz9a5a2m",
+    "version": 1,
+    "section": "testing-the-matrix",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`matrix.py` has 7 rows in `EXPECTED` and 6 endpoints. You add one more token and two more endpoints. How many checks does a run make then?",
+    "hint": "Every token against every endpoint.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "checks"
+  },
+  {
+    "id": "ex-jenmxpr6",
+    "version": 1,
+    "section": "testing-the-matrix",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that prove the matrix can catch a missing ownership check in order.",
+    "hint": "The broken copy needs the port that orders.py is holding.",
+    "items": [
+      "Run `matrix.py` against `orders.py` and see 0 wrong",
+      "Write `broken.py` without the two lines of the check",
+      "Stop `orders.py` and start `broken.py`",
+      "Run `matrix.py` again and see 3 wrong, exit status 1",
+      "Stop `broken.py` and start `orders.py` again"
+    ],
+    "trap": "Starting `broken.py` while `orders.py` still holds port 8000 fails, and the matrix would test the old server."
+  },
+  {
+    "id": "ex-k26hpswh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's app token sends `POST /orders/2/refund`. Order 2 is Ana's. What comes back?",
+    "hint": "Ask the gates in order, and ask the role before the token.",
+    "choices": [
+      {
+        "text": "403 with `insufficient_scope`, because the token lacks `orders:refund`",
+        "correct": false,
+        "why": "The token lacks it, and so does Ana's role. orders.py only blames the token when the role has the permission."
+      },
+      {
+        "text": "404, because a refund route does not show customers' orders",
+        "correct": false,
+        "why": "The request never reaches `find`; it is refused at the permission gate."
+      },
+      {
+        "text": "200, since the order is hers and only 10 days old",
+        "correct": false,
+        "why": "Owning the order and its age are later gates. Refunding is not a customer's function."
+      },
+      {
+        "text": "403: the role customer lacks orders:refund",
+        "correct": true,
+        "why": "Right. Neither half grants it, and the message names the role because the role is where it was never granted."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcxvhd1q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these mistakes would `matrix.py`, exactly as written, catch? Choose all that apply.",
+    "hint": "It sends six requests per token and compares only the status.",
+    "choices": [
+      {
+        "text": "Deleting the ownership check in `find`",
+        "correct": true,
+        "why": "Right. Three cells turned 200 when that was done."
+      },
+      {
+        "text": "`show` sending `note` to customers",
+        "correct": false,
+        "why": "The status stays 200 either way; the matrix never reads a body."
+      },
+      {
+        "text": "Dropping `& scopes`, so a token gets its owner's whole role",
+        "correct": true,
+        "why": "Right. Ana's app token would place an order: 201 where 403 is expected."
+      },
+      {
+        "text": "Removing the 30-day refund rule",
+        "correct": false,
+        "why": "No column asks for a refund, so nothing in the table depends on the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-2f57ea78",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "No check in orders.py compares a role name. Each one asks whether a ___ is in the caller's set.",
+    "hint": "Something like `orders:refund`.",
+    "blanks": [
+      {
+        "accept": [
+          "permission"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1m7j2f7d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Eva is given a new token carrying every scope orders.py uses. Her role is still `auditor`. What can she do now?",
+    "hint": "Intersect her role's set with the token's.",
+    "choices": [
+      {
+        "text": "Nothing more: every request is still a 403",
+        "correct": true,
+        "why": "Right. An unknown role grants the empty set, and the empty set intersected with anything is empty."
+      },
+      {
+        "text": "Everything the token lists, since the role grants nothing to subtract",
+        "correct": false,
+        "why": "The role is not subtracted from; it is intersected with. An empty role leaves nothing."
+      },
+      {
+        "text": "Read her own orders, the one thing every role is given",
+        "correct": false,
+        "why": "No permission is given to every role; `auditor` has no row at all."
+      },
+      {
+        "text": "Only list people, like an auditor would",
+        "correct": false,
+        "why": "The role's name means nothing to the code. Only its row in `ROLES` would, and there is none."
+      }
+    ]
+  }
+]

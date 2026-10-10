@@ -1,0 +1,1013 @@
+[
+ {
+  "id": "ex-c37rrbcw",
+  "version": 1,
+  "section": "origins",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The page is `http://localhost:8080/page.html`. Match each address to what the browser makes of it.",
+  "hint": "An origin is the scheme, the host and the port, compared as written.",
+  "pairs": [
+   {
+    "left": "`http://localhost:8080/other.html`",
+    "right": "same origin: only the path differs"
+   },
+   {
+    "left": "`http://localhost:8000/v1/books/1`",
+    "right": "another origin: the port differs"
+   },
+   {
+    "left": "`https://localhost:8080/page.html`",
+    "right": "another origin: the scheme differs"
+   },
+   {
+    "left": "`http://127.0.0.1:8080/page.html`",
+    "right": "another origin: the host differs"
+   }
+  ],
+  "right_distractors": [
+   "same origin: both names reach one machine"
+  ]
+ },
+ {
+  "id": "ex-tefbv5y2",
+  "version": 1,
+  "section": "origins",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does the same-origin policy keep a script on one origin from doing with another origin?",
+  "hint": "The request is not the part it protects.",
+  "choices": [
+   {
+    "text": "Reading the response to a request it caused",
+    "correct": true,
+    "why": "Right. The request may well go out; the answer is what the browser keeps from the script."
+   },
+   {
+    "text": "Showing one of its images inside the page, with `<img>`",
+    "correct": false,
+    "why": "Embedding is allowed. What the script cannot do is read the image's bytes."
+   },
+   {
+    "text": "Sending it a request of any kind, even a GET",
+    "correct": false,
+    "why": "Forms, images and scripts have gone to other origins since long before CORS, and a simple request still goes out unasked."
+   },
+   {
+    "text": "Opening a link to it",
+    "correct": false,
+    "why": "Following a link is navigation, and the new page simply belongs to the other origin."
+   }
+  ]
+ },
+ {
+  "id": "ex-zccgdybg",
+  "version": 1,
+  "section": "origins",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An API is called only by phone apps and by other servers. A developer says the same-origin policy keeps strangers out of it. What is wrong with that?",
+  "hint": "Who enforces the policy?",
+  "choices": [
+   {
+    "text": "The policy covers phone apps too, but only over HTTPS",
+    "correct": false,
+    "why": "No program but a browser applies it, over HTTP or over HTTPS."
+   },
+   {
+    "text": "Nothing: the server refuses an unknown origin",
+    "correct": false,
+    "why": "secure.py answered an unknown origin with 200 and the book; and these clients send no `Origin` at all."
+   },
+   {
+    "text": "It keeps strangers out only once CORS is turned off",
+    "correct": false,
+    "why": "CORS relaxes the policy, and neither of them does anything to a client that is not a browser."
+   },
+   {
+    "text": "Only browsers apply the policy",
+    "correct": true,
+    "why": "Right. An app or a server reads whatever comes back. The policy protects the person at a browser, and these clients have no such person to protect."
+   }
+  ]
+ },
+ {
+  "id": "ex-f25ecmce",
+  "version": 1,
+  "section": "secure-shelf",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson put `page.html` in `~/shelf/site` and start `python3 -m http.server` there, rather than in `~/shelf`?",
+  "hint": "What does that server hand out?",
+  "choices": [
+   {
+    "text": "`http.server` will not start where there are Python files",
+    "correct": false,
+    "why": "It starts anywhere, and that is exactly the danger."
+   },
+   {
+    "text": "It serves every file under it, `shelf.db` included",
+    "correct": true,
+    "why": "Right. Anybody who reached port 8080 would download the database, and later the private keys."
+   },
+   {
+    "text": "Two directories are what make the page and the API two origins",
+    "correct": false,
+    "why": "An origin is scheme, host and port; directories play no part, and the ports are what differ here."
+   },
+   {
+    "text": "Port 8080 serves HTML files and refuses the rest",
+    "correct": false,
+    "why": "A port knows nothing about file types; `http.server` sends whatever file is asked for."
+   }
+  ]
+ },
+ {
+  "id": "ex-p1en519g",
+  "version": 1,
+  "section": "secure-shelf",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`secure.py` runs in the VM with its defaults. On your computer, the browser opens `http://127.0.0.1:8000/v1/books/1` and the connection is refused. Why?",
+  "hint": "Which machine does the browser mean by that address?",
+  "choices": [
+   {
+    "text": "CORS refuses connections from origins off the list",
+    "correct": false,
+    "why": "CORS refuses no connection at all; it decides what a page may read once an answer has arrived."
+   },
+   {
+    "text": "A browser needs HTTPS to reach a virtual machine",
+    "correct": false,
+    "why": "Plain HTTP reaches a VM as well as anything else; the address is the problem."
+   },
+   {
+    "text": "`secure.py` takes connections from curl and not from browsers",
+    "correct": false,
+    "why": "It cannot tell which program connects. It listens on an address, and that one is the VM's own loopback."
+   },
+   {
+    "text": "There it means your computer, not the VM",
+    "correct": true,
+    "why": "Right. Nothing listens on your computer's port 8000, and the VM's 127.0.0.1 is another machine's loopback. The server has to listen on the VM's network address."
+   }
+  ]
+ },
+ {
+  "id": "ex-rekwn8bc",
+  "version": 1,
+  "section": "secure-shelf",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To be reachable from the browser on your computer, `secure.py` is started with `--host ___`, the address that stands for every address the VM has.",
+  "hint": "Four numbers, all the same.",
+  "blanks": [
+   {
+    "accept": [
+     "0.0.0.0"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-7j8zvzhy",
+  "version": 1,
+  "section": "simple-cors",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "curl sends `GET /v1/books/1` to `secure.py` with `Origin: http://127.0.0.1:8080`, an origin not on its list. What comes back?",
+  "hint": "Compare the two transcripts header by header.",
+  "choices": [
+   {
+    "text": "200 and the book, with no `Access-Control-Allow-Origin`",
+    "correct": true,
+    "why": "Right. Both answers carried the book, and nothing but that one header told them apart."
+   },
+   {
+    "text": "200 with an empty body, so a page would see nothing",
+    "correct": false,
+    "why": "The body was the whole book in both transcripts. Withholding it is the browser's job."
+   },
+   {
+    "text": "403 Forbidden, with an error naming the origin",
+    "correct": false,
+    "why": "The server refuses nothing because of `Origin`; it leaves one header out."
+   },
+   {
+    "text": "No answer: the connection closes before the request is read",
+    "correct": false,
+    "why": "The request was read and answered, and the log printed a 200 for the browser's version of it too."
+   }
+  ]
+ },
+ {
+  "id": "ex-80rdfer7",
+  "version": 1,
+  "section": "simple-cors",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these requests from a page does the browser send without a preflight? Choose all that apply.",
+  "hint": "Could an HTML form have sent it?",
+  "choices": [
+   {
+    "text": "A GET with no headers set by the script",
+    "correct": true,
+    "why": "Right. It is the request \"Read it\" sent, and it went straight out."
+   },
+   {
+    "text": "A PATCH with a JSON body",
+    "correct": false,
+    "why": "PATCH is not a simple method, and `application/json` is not a simple type: two reasons to ask first."
+   },
+   {
+    "text": "A POST of form fields, `application/x-www-form-urlencoded`",
+    "correct": true,
+    "why": "Right. A form has always been able to send exactly this, so CORS adds no question in front of it."
+   },
+   {
+    "text": "A GET carrying an `Authorization` header",
+    "correct": false,
+    "why": "The method is simple but the header is not on the safelist, so the browser asks first."
+   },
+   {
+    "text": "A POST whose body is `application/json`",
+    "correct": false,
+    "why": "POST is a simple method, but this `Content-Type` is not one of the three a form can send."
+   }
+  ]
+ },
+ {
+  "id": "ex-nykk3bp7",
+  "version": 1,
+  "section": "simple-cors",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An API offers `GET /v1/books/1/sell`, which takes one copy off the stock. A page on an origin that is not on the list calls it with `fetch`. What happens to the stock?",
+  "hint": "Is a GET asked about first?",
+  "choices": [
+   {
+    "text": "Unchanged: the browser refuses to send it",
+    "correct": false,
+    "why": "A plain GET is simple and goes out unasked, as the log showed for the blocked page."
+   },
+   {
+    "text": "Unchanged: the preflight is refused first",
+    "correct": false,
+    "why": "A GET with no special headers gets no preflight at all."
+   },
+   {
+    "text": "One less, and the page reads the new number from the answer",
+    "correct": false,
+    "why": "The request goes through, but the answer names no origin, so the page reads nothing of it."
+   },
+   {
+    "text": "One less; only the answer is hidden from the page",
+    "correct": true,
+    "why": "Right. That is why a GET must change nothing: any page on any origin can make a browser send one."
+   }
+  ]
+ },
+ {
+  "id": "ex-f2w1s3ge",
+  "version": 1,
+  "section": "preflight",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order what happens when the page on the list presses \"Set the stock to 11\".",
+  "hint": "The script calls once; the browser makes two requests.",
+  "items": [
+   "The script calls `fetch` with PATCH and a JSON body",
+   "The browser sends `OPTIONS` with `Origin` and `Access-Control-Request-Method`",
+   "`secure.py` answers 204, naming the origin, the methods and the headers",
+   "The browser sends the PATCH",
+   "`secure.py` answers 200 with `Access-Control-Allow-Origin`",
+   "The script reads the new stock"
+  ],
+  "trap": "The PATCH does not leave until the answer to the OPTIONS has arrived and allowed it."
+ },
+ {
+  "id": "ex-qa7c2mxp",
+  "version": 1,
+  "section": "preflight",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each thing a preflight is about to the header in the answer that settles it.",
+  "hint": "One header in the answer has no question to answer.",
+  "pairs": [
+   {
+    "left": "which page is asking",
+    "right": "`Access-Control-Allow-Origin`"
+   },
+   {
+    "left": "the method the script wants",
+    "right": "`Access-Control-Allow-Methods`"
+   },
+   {
+    "left": "the headers the script set",
+    "right": "`Access-Control-Allow-Headers`"
+   },
+   {
+    "left": "how long the answer may be remembered",
+    "right": "`Access-Control-Max-Age`"
+   }
+  ],
+  "right_distractors": [
+   "`Vary`"
+  ]
+ },
+ {
+  "id": "ex-czyke212",
+  "version": 1,
+  "section": "preflight",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A page sends `Authorization: Bearer …` with its PATCH. The preflight's answer names the right origin and `Access-Control-Allow-Headers: Content-Type`. What happens?",
+  "hint": "The browser compares what it asked for with what was allowed.",
+  "choices": [
+   {
+    "text": "The PATCH is not sent, though curl with the same token works",
+    "correct": true,
+    "why": "Right. The header the script set was not among the ones allowed, so the browser stops at the question."
+   },
+   {
+    "text": "The PATCH goes out without the header and gets a 401",
+    "correct": false,
+    "why": "A browser does not trim a request to make it fit; it refuses the whole request at the question."
+   },
+   {
+    "text": "The PATCH succeeds: `Authorization` is safelisted",
+    "correct": false,
+    "why": "It is not on the safelist, which is why it causes a preflight at all."
+   },
+   {
+    "text": "The server answers the preflight 401, because it came with no token",
+    "correct": false,
+    "why": "A preflight carries no credentials, and `secure.py` answers it 204. The refusal is the browser's."
+   }
+  ]
+ },
+ {
+  "id": "ex-0jk9zh95",
+  "version": 1,
+  "section": "preflight",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The page loaded from `127.0.0.1:8080` pressed \"Set the stock to 11\". According to the server's log, how many requests did that click make reach the server?",
+  "hint": "Look at the last line of the log.",
+  "value": 1,
+  "tolerance": 0,
+  "unit": "requests"
+ },
+ {
+  "id": "ex-bkesq2xh",
+  "version": 1,
+  "section": "cors-mistakes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A server allows an origin when it ends in `shelf.example`. Which of these origins also gets through?",
+  "hint": "Read the test as a string comparison, letter by letter.",
+  "choices": [
+   {
+    "text": "`https://shelf.example.org`",
+    "correct": false,
+    "why": "It ends in `.org`, so the test refuses it. The hole is at the other end of the name."
+   },
+   {
+    "text": "`https://shelf.example:8443`",
+    "correct": false,
+    "why": "The port is part of the origin string, so it no longer ends in `shelf.example`."
+   },
+   {
+    "text": "`https://notshelf.example`",
+    "correct": true,
+    "why": "Right. It ends in the right letters, and it is a domain anybody is free to register. A set of exact origins has no such hole."
+   },
+   {
+    "text": "`http://localhost:8080`",
+    "correct": false,
+    "why": "It does not end in `shelf.example`, so the test refuses it."
+   }
+  ]
+ },
+ {
+  "id": "ex-q5v1vmy8",
+  "version": 1,
+  "section": "cors-mistakes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An API names its allowed origins correctly but sends `Vary: Origin` on no answer, and a shared cache sits in front of it. Page A, on the list, asks for a book; then page B, also on the list, asks for the same book. What does B get?",
+  "hint": "What did the cache keep, headers included?",
+  "choices": [
+   {
+    "text": "Its own answer, because caches ignore CORS headers",
+    "correct": false,
+    "why": "A cache stores the whole answer, headers included, and without `Vary` it thinks one copy fits every page."
+   },
+   {
+    "text": "A refusal, because the cache hands B the answer that names A",
+    "correct": true,
+    "why": "Right. B is refused for a reason it cannot see. `Vary: Origin` makes the cache keep one copy per origin."
+   },
+   {
+    "text": "Its own answer: each page triggers its own preflight",
+    "correct": false,
+    "why": "A plain GET has no preflight, and a cached answer is served without asking the server."
+   },
+   {
+    "text": "A 500, since a cache cannot store answers with CORS headers",
+    "correct": false,
+    "why": "Caches store such answers happily. That is the whole problem."
+   }
+  ]
+ },
+ {
+  "id": "ex-xw7fkh10",
+  "version": 1,
+  "section": "cors-mistakes",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these stop a stranger's program from changing the stock through `secure.py`'s PATCH? Choose all that apply.",
+  "hint": "curl changed the stock while claiming an origin nobody trusts.",
+  "choices": [
+   {
+    "text": "A shorter list of allowed origins",
+    "correct": false,
+    "why": "CORS tells a browser what to show a page; a program that is not a browser ignores it."
+   },
+   {
+    "text": "A token, checked on every request",
+    "correct": true,
+    "why": "Right. Authentication works whatever the client is, browser or not, which CORS does not."
+   },
+   {
+    "text": "Refusing every request with no `Origin` header",
+    "correct": false,
+    "why": "A program sends whatever `Origin` it likes, so the header proves nothing about who sent it."
+   },
+   {
+    "text": "A check that the caller's role may change stock",
+    "correct": true,
+    "why": "Right. That is authorisation, lesson 11, and the server makes it for every request."
+   }
+  ]
+ },
+ {
+  "id": "ex-0s7rgfc0",
+  "version": 1,
+  "section": "https",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Over plain HTTP, a request carries `Authorization: Basic YW5hOmNvcnJlY3QtaG9yc2U=`. What can somebody reading the bytes on the way learn from it?",
+  "hint": "What did `base64 -d` need?",
+  "choices": [
+   {
+    "text": "The user name and the password",
+    "correct": true,
+    "why": "Right. `base64 -d` needed nothing but the header, and printed `ana:correct-horse`."
+   },
+   {
+    "text": "Nothing, without the key that base64 was encrypted with",
+    "correct": false,
+    "why": "Base64 has no key; it is a way of writing bytes as text."
+   },
+   {
+    "text": "The user name; the password inside is hashed",
+    "correct": false,
+    "why": "Nothing in the header is hashed. Both halves came back from one decoding."
+   },
+   {
+    "text": "How long the password is, and nothing more",
+    "correct": false,
+    "why": "The whole password is in there, written in another alphabet."
+   }
+  ]
+ },
+ {
+  "id": "ex-78x8494r",
+  "version": 1,
+  "section": "https",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order the steps that gave `secure.py` a certificate curl accepts.",
+  "hint": "The authority exists before it can sign anything.",
+  "items": [
+   "Make the CA's key and its self-signed certificate",
+   "Make the server's key and a certificate signing request",
+   "Write `DNS:localhost, IP:127.0.0.1` into `server.ext`",
+   "Sign the request with the CA's key and `server.ext`",
+   "Start `secure.py --tls` and call it with `curl --cacert`"
+  ],
+  "trap": "The names have to be written before the signing, because the signature covers them."
+ },
+ {
+  "id": "ex-7v7h5c73",
+  "version": 1,
+  "section": "https",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague's script fails with `curl: (60) SSL certificate problem`, and they add `-k` to make it pass. What did they give up?",
+  "hint": "TLS does two jobs.",
+  "choices": [
+   {
+    "text": "Encryption: with `-k` the request travels as plain text",
+    "correct": false,
+    "why": "`-k` leaves the encryption on and stops checking the certificate, which is worse because everything looks fine."
+   },
+   {
+    "text": "Knowing who is at the other end",
+    "correct": true,
+    "why": "Right. The connection is encrypted to whoever answered, and nothing now says who that is."
+   },
+   {
+    "text": "Nothing that matters on their own company's network",
+    "correct": false,
+    "why": "Every network has other machines on it, and nothing now tells them apart from the server."
+   },
+   {
+    "text": "HSTS, which `-k` switches off for that host",
+    "correct": false,
+    "why": "curl applies HSTS only with `--hsts`; `-k` is about verifying the certificate."
+   }
+  ]
+ },
+ {
+  "id": "ex-7wpzjghb",
+  "version": 1,
+  "section": "https",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`secure.py` sends `Strict-Transport-Security: max-age=31536000`. For how many days does a browser keep to HTTPS for that host?",
+  "hint": "There are 86400 seconds in a day.",
+  "value": 365,
+  "tolerance": 0,
+  "unit": "days"
+ },
+ {
+  "id": "ex-325hzjyz",
+  "version": 1,
+  "section": "headers",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each header `secure.py` sends to what it tells the browser.",
+  "hint": "Each one forbids something.",
+  "pairs": [
+   {
+    "left": "`X-Content-Type-Options: nosniff`",
+    "right": "believe `Content-Type`, never guess"
+   },
+   {
+    "left": "`Cache-Control: no-store`",
+    "right": "keep no copy of this answer"
+   },
+   {
+    "left": "`Referrer-Policy: no-referrer`",
+    "right": "say nothing about this address when leaving it"
+   },
+   {
+    "left": "`Content-Security-Policy: frame-ancestors 'none'`",
+    "right": "let no page put this in a frame"
+   }
+  ],
+  "right_distractors": [
+   "send cookies over HTTPS alone"
+  ]
+ },
+ {
+  "id": "ex-h6s8mqdb",
+  "version": 1,
+  "section": "headers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An API answers only in JSON. Why does it still send `Content-Security-Policy: default-src 'none'`?",
+  "hint": "Think of an answer that ends up somewhere it was not meant to be.",
+  "choices": [
+   {
+    "text": "Browsers refuse JSON from another origin without it",
+    "correct": false,
+    "why": "Reading JSON from another origin is CORS's question; CSP plays no part in it."
+   },
+   {
+    "text": "It stops other origins sending requests to the API",
+    "correct": false,
+    "why": "A CSP limits what a document loads. Requests to the API are not its business, and not even CORS stops them."
+   },
+   {
+    "text": "It encrypts the JSON so that only allowed pages read it",
+    "correct": false,
+    "why": "A header encrypts nothing; TLS does that, for every byte."
+   },
+   {
+    "text": "An answer ever shown as a page then loads and runs nothing",
+    "correct": true,
+    "why": "Right. JSON needs nothing, so forbidding everything costs nothing, and it disarms the one case where an answer is rendered."
+   }
+  ]
+ },
+ {
+  "id": "ex-9ae26tvw",
+  "version": 1,
+  "section": "headers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`secure.py`'s `Server` header says `shelf` and no version. What does that change?",
+  "hint": "Is the version itself a flaw?",
+  "choices": [
+   {
+    "text": "It fixes the known flaws of the Python it runs on",
+    "correct": false,
+    "why": "The software is the same software; only updating it fixes its flaws."
+   },
+   {
+    "text": "It no longer tells every client which known flaws to try first",
+    "correct": true,
+    "why": "Right. It removes an advertisement, not a vulnerability. Keeping the software up to date is the fix."
+   },
+   {
+    "text": "It makes the server refuse clients that ask for its version",
+    "correct": false,
+    "why": "Nobody asks; the header goes out on every answer, unasked."
+   },
+   {
+    "text": "Nothing, since browsers alone read that header",
+    "correct": false,
+    "why": "Every client receives it, and scanners read it before anything else."
+   }
+  ]
+ },
+ {
+  "id": "ex-nhd66v0g",
+  "version": 1,
+  "section": "owasp",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each OWASP API risk to the defence this course built for it.",
+  "hint": "The table in the section has a column of lessons.",
+  "pairs": [
+   {
+    "left": "API1 Broken Object Level Authorization",
+    "right": "checking the caller against each object, lesson 11"
+   },
+   {
+    "left": "API4 Unrestricted Resource Consumption",
+    "right": "a limit per client, lesson 12"
+   },
+   {
+    "left": "API8 Security Misconfiguration",
+    "right": "CORS, headers and TLS on every answer, lesson 13"
+   },
+   {
+    "left": "API9 Improper Inventory Management",
+    "right": "a written contract of every endpoint, lesson 6"
+   }
+  ],
+  "right_distractors": [
+   "hashing passwords slowly, lesson 10"
+  ]
+ },
+ {
+  "id": "ex-eqchbvez",
+  "version": 1,
+  "section": "owasp",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An ordinary account calls `DELETE /v1/admin/users/7`, and user 7 is deleted. Which risk is that?",
+  "hint": "The function itself should have been refused.",
+  "choices": [
+   {
+    "text": "API2 Broken Authentication",
+    "correct": false,
+    "why": "The account was who it said it was. What nobody checked is what it was allowed to do."
+   },
+   {
+    "text": "API1 Broken Object Level Authorization",
+    "correct": false,
+    "why": "API1 is an allowed function used on the wrong object. Here an ordinary account should never reach the function."
+   },
+   {
+    "text": "API6 Unrestricted Access to Sensitive Business Flows",
+    "correct": false,
+    "why": "API6 is a permitted flow used too much. Here one call was enough, to a function the account should not have reached."
+   },
+   {
+    "text": "API5 Broken Function Level Authorization",
+    "correct": true,
+    "why": "Right. Every administrative function has to check the role or scope, whoever is calling."
+   }
+  ]
+ },
+ {
+  "id": "ex-hyfps6x2",
+  "version": 1,
+  "section": "owasp",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A client sends `PATCH /v1/users/me` with `{\"role\": \"admin\"}` and becomes an administrator. Which defence was missing?",
+  "hint": "The object was the client's own. The field was not theirs to set.",
+  "choices": [
+   {
+    "text": "Write rules per field (API3)",
+    "correct": true,
+    "why": "Right. Changing your own profile is allowed; changing that property of it is not, and the write has to refuse the field."
+   },
+   {
+    "text": "A rate limit on PATCH requests (API4)",
+    "correct": false,
+    "why": "One request was enough; volume had nothing to do with it."
+   },
+   {
+    "text": "CORS on the users endpoint (API8)",
+    "correct": false,
+    "why": "curl sends this with no browser involved, so CORS plays no part."
+   },
+   {
+    "text": "Checking the signature on the token (API2)",
+    "correct": false,
+    "why": "The client was exactly who it said it was. The problem is what it was allowed to write."
+   }
+  ]
+ },
+ {
+  "id": "ex-jkm08bya",
+  "version": 1,
+  "section": "api-as-client",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is a server fetching an address a client supplied more dangerous than the client fetching it itself?",
+  "hint": "Where is each of them standing on the network?",
+  "choices": [
+   {
+    "text": "The server's download ties up a thread for longer",
+    "correct": false,
+    "why": "That is API4's worry, and a timeout settles it. SSRF is about where the request can go."
+   },
+   {
+    "text": "The client's browser applies CORS and the server does not",
+    "correct": false,
+    "why": "True, and beside the point: the danger is the server's position on the network, not a header."
+   },
+   {
+    "text": "It sits inside a network that the client cannot see",
+    "correct": true,
+    "why": "Right. From there it reaches `127.0.0.1`, the database and `169.254.169.254`, with the server's position and the server's trust."
+   },
+   {
+    "text": "A long address may overflow the server's parser",
+    "correct": false,
+    "why": "Long input is a different and smaller problem. A short address can reach the database."
+   }
+  ]
+ },
+ {
+  "id": "ex-6sqrrehp",
+  "version": 1,
+  "section": "api-as-client",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "shelf has to download a cover from an address a client sends. Which checks belong in front of that download? Choose all that apply.",
+  "hint": "The section lists four.",
+  "choices": [
+   {
+    "text": "Hosts from an allowlist alone, over `https`",
+    "correct": true,
+    "why": "Right. A list of destinations, compared exactly, is the first check and the strongest."
+   },
+   {
+    "text": "Redirects followed freely, since the first address was checked",
+    "correct": false,
+    "why": "A redirect is a second address, and the client may have chosen it too. Each one is checked again."
+   },
+   {
+    "text": "The name resolved, and any address that is not public refused",
+    "correct": true,
+    "why": "Right. `is_global` said `False` for loopback, a private network and the metadata address."
+   },
+   {
+    "text": "`169.254.169.254` let through, as it is not a private network",
+    "correct": false,
+    "why": "It is link-local, where clouds keep their metadata, and `is_global` said `False` for it."
+   },
+   {
+    "text": "A timeout and a limit on the size",
+    "correct": true,
+    "why": "Right. A slow or enormous answer must not hold the API's threads."
+   }
+  ]
+ },
+ {
+  "id": "ex-jnkgmxje",
+  "version": 1,
+  "section": "api-as-client",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A partner's API sends shelf a book whose `price_cents` is `\"free\"` instead of a number. What should shelf do?",
+  "hint": "Treat it as you would a client's request.",
+  "choices": [
+   {
+    "text": "Store it as it came, since the partner signed a contract",
+    "correct": false,
+    "why": "A contract does not stop a bug or a compromise. Whatever is stored enters with shelf's own authority."
+   },
+   {
+    "text": "Refuse it, as it breaks the agreed schema",
+    "correct": true,
+    "why": "Right. A partner's answer is input, and it is validated like input."
+   },
+   {
+    "text": "Store the fields that parse and drop the price",
+    "correct": false,
+    "why": "Half an answer stored is a record nobody can trust. Refuse it whole and say why."
+   },
+   {
+    "text": "Ask again with TLS verification switched off",
+    "correct": false,
+    "why": "The format is the problem, not the connection, and verification stays on whatever happens."
+   }
+  ]
+ },
+ {
+  "id": "ex-k72p0gkk",
+  "version": 1,
+  "section": "checklist",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of these is a line you can check against a deployed API, from outside?",
+  "hint": "One curl command should settle it.",
+  "choices": [
+   {
+    "text": "The API follows good security practice in every endpoint",
+    "correct": false,
+    "why": "True or false, no request can show it. It is a hope, not a check."
+   },
+   {
+    "text": "The team takes security seriously",
+    "correct": false,
+    "why": "A statement about people; nothing about the API answers it."
+   },
+   {
+    "text": "Unknown origins get no `Access-Control-Allow-Origin`",
+    "correct": true,
+    "why": "Right. One curl with an `Origin` header settles it, today and after every change."
+   },
+   {
+    "text": "The code was reviewed by somebody experienced before launch",
+    "correct": false,
+    "why": "Worth doing, and invisible from outside: the review leaves nothing in an answer."
+   }
+  ]
+ },
+ {
+  "id": "ex-kp8hpv9v",
+  "version": 1,
+  "section": "checklist",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The checklist is gone through again after every ___ to the API, because a header lost in a refactor fails no test and breaks no page.",
+  "hint": "Not once before launch.",
+  "blanks": [
+   {
+    "accept": [
+     "change",
+     "deploy",
+     "deployment",
+     "release"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-q2saje7q",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A page served from `https://localhost:8080` calls `secure.py`, whose list of origins is still the default. The browser refuses to show it any answer. Why?",
+  "hint": "Write out the page's origin and the one on the list.",
+  "choices": [
+   {
+    "text": "HSTS forbids cross-origin requests",
+    "correct": false,
+    "why": "HSTS only decides that a host is reached over HTTPS; it says nothing about origins."
+   },
+   {
+    "text": "The certificate does not cover port 8080",
+    "correct": false,
+    "why": "Certificates name hosts, not ports, and the refusal here is CORS, not TLS."
+   },
+   {
+    "text": "`https` is not `http`; the origin is off the list",
+    "correct": true,
+    "why": "Right. The scheme is part of the origin, and the list holds `http://localhost:8080` only."
+   },
+   {
+    "text": "A page served over HTTPS may not call any server at all",
+    "correct": false,
+    "why": "It may; browsers stop an HTTPS page calling plain HTTP, but that is a different rule, and it is not what refuses here."
+   }
+  ]
+ },
+ {
+  "id": "ex-yvh8wknt",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A signed-in page reads a user's orders from an API, with cookies (`credentials: \"include\"`). Which headers in the API's answer make that work without opening it to other sites? Choose all that apply.",
+  "hint": "Credentials change what the browser accepts.",
+  "choices": [
+   {
+    "text": "`Access-Control-Allow-Origin: *`",
+    "correct": false,
+    "why": "Browsers refuse `*` on a credentialed answer; it would let every site read every user's orders."
+   },
+   {
+    "text": "`Access-Control-Allow-Origin` naming the page's exact origin",
+    "correct": true,
+    "why": "Right. One origin, from a list, compared whole."
+   },
+   {
+    "text": "`Access-Control-Allow-Credentials: true`",
+    "correct": true,
+    "why": "Right. Without it the browser keeps a credentialed answer from the page."
+   },
+   {
+    "text": "`Access-Control-Allow-Origin` copied from the request's `Origin`",
+    "correct": false,
+    "why": "That names every origin that asks, which is `*` without the browser's safeguard."
+   },
+   {
+    "text": "`Vary: Origin`",
+    "correct": true,
+    "why": "Right. The answer depends on `Origin`, and a cache has to know it."
+   }
+  ]
+ },
+ {
+  "id": "ex-qzy6xhgc",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "While testing, a developer opens `page.html` straight from disk, a `file://` address, and gets a CORS error. They add `null` to the allowed origins and it works. What else did they allow?",
+  "hint": "Who else sends `Origin: null`?",
+  "choices": [
+   {
+    "text": "Every origin, because `null` works as a wildcard",
+    "correct": false,
+    "why": "`*` is the wildcard. `null` is a value a few kinds of page send."
+   },
+   {
+    "text": "Pages opened from her own disk, and nothing more",
+    "correct": false,
+    "why": "`Origin: null` says nothing about where the page came from, and several kinds of page send it."
+   },
+   {
+    "text": "Any sandboxed `iframe` that anybody puts on any site",
+    "correct": true,
+    "why": "Right. A sandboxed frame sends `Origin: null` too, and anybody can publish one."
+   },
+   {
+    "text": "Requests from curl, which sends `null` by default",
+    "correct": false,
+    "why": "curl sends no `Origin` unless told to, and pays no attention to CORS in any case."
+   }
+  ]
+ }
+]
