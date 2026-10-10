@@ -608,6 +608,148 @@ def l03_maturity(lang):
     return f, t['cap']
 
 
+L04_SWEEP = [(0.10, 1688, 0.262, 0.834, 9640), (0.15, 1049, 0.355, 0.702, 11830),
+             (0.20, 742, 0.434, 0.608, 11900), (0.30, 488, 0.514, 0.474, 10180),
+             (0.40, 352, 0.614, 0.408, 9440), (0.50, 248, 0.685, 0.321, 7720),
+             (0.60, 180, 0.750, 0.255, 6300)]
+
+
+@figure('l04-confusion', 4)
+def l04_confusion(lang):
+    t = {'en': dict(
+            label='A two-by-two grid. Rows: actually stayed, actually lapsed. Columns: predicted '
+                  'stays, predicted lapses. Stayed and predicted stays: 2,522 true negatives. '
+                  'Stayed but predicted lapses: 78 false alarms. Lapsed but predicted stays: 360 '
+                  'misses. Lapsed and predicted lapses: 170 catches.',
+            rows=['actually stayed', 'actually lapsed'], cols=['predicted stays', 'predicted lapses'],
+            cells=[['true negative', 'false alarm'], ['miss', 'catch']],
+            n=[['2,522', '78'], ['360', '170']],
+            cap='The two right cells are where accuracy looks. The two wrong ones are where the '
+                'business is, and they cost different amounts.'),
+         'pt': dict(
+            label='Uma grade de dois por dois. Linhas: de fato ficou, de fato se afastou. Colunas: '
+                  'previsto fica, previsto se afasta. Ficou e previsto fica: 2.522 verdadeiros '
+                  'negativos. Ficou mas previsto se afasta: 78 alarmes falsos. Se afastou mas '
+                  'previsto fica: 360 perdidos. Se afastou e previsto se afasta: 170 acertos.',
+            rows=['de fato ficou', 'de fato se afastou'], cols=['previsto fica', 'previsto se afasta'],
+            cells=[['verdadeiro negativo', 'alarme falso'], ['perdido', 'acerto']],
+            n=[['2.522', '78'], ['360', '170']],
+            cap='As duas células certas são para onde a acurácia olha. As duas erradas são onde está '
+                'o negócio, e elas custam valores diferentes.')}[lang]
+    f = Fig('l04-confusion', 720, 270, t['label'])
+    x0, y0, w, h = 250, 50, 200, 90
+    for j in range(2):
+        f.text(x0 + j * w + w / 2, y0 - 16, t['cols'][j], size=11, weight='600')
+    for i in range(2):
+        f.text(x0 - 14, y0 + i * h + h / 2, t['rows'][i], size=11, weight='600', anchor='end')
+        for j in range(2):
+            right = (i == j)
+            f.rect(x0 + j * w, y0 + i * h, w, h, stroke='--phosphor' if right else '--amber',
+                   fill='--panel' if right else '--scan')
+            f.text(x0 + j * w + w / 2, y0 + i * h + 34, t['n'][i][j], size=18, weight='700',
+                   mono=True, fill='--paper')
+            f.text(x0 + j * w + w / 2, y0 + i * h + 62, t['cells'][i][j], size=10.5,
+                   fill='--phosphor' if right else '--amber')
+    return f, t['cap']
+
+
+@figure('l04-precision-recall', 4)
+def l04_precision_recall(lang):
+    t = {'en': dict(
+            label='Precision and recall against the threshold, from 0.1 to 0.6. As the threshold '
+                  'rises, precision climbs from 0.262 to 0.750 and recall falls from 0.834 to '
+                  '0.255. They cross between 0.3 and 0.4.',
+            x='threshold', p='precision', r='recall',
+            cap='Raise the threshold and the vouchers get better aimed while fewer of the lapsing '
+                'members get one. The model has a precision at every threshold, not one precision.'),
+         'pt': dict(
+            label='Precisão e revocação contra o limiar, de 0,1 a 0,6. Conforme o limiar sobe, a '
+                  'precisão vai de 0,262 a 0,750 e a revocação cai de 0,834 a 0,255. Elas se '
+                  'cruzam entre 0,3 e 0,4.',
+            x='limiar', p='precisão', r='revocação',
+            cap='Suba o limiar e os vouchers ficam mais bem mirados enquanto menos membros que se '
+                'afastam recebem um. O modelo tem uma precisão em cada limiar, não uma precisão.')}[lang]
+    f = Fig('l04-precision-recall', 720, 280, t['label'])
+    p = Plot(f, 70, 40, 560, 220, 0.08, 0.62, 0, 1)
+    p.yaxis([0, 0.25, 0.5, 0.75, 1], fmt=lambda v: num(lang, v, 2))
+    p.xaxis([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], fmt=lambda v: num(lang, v, 1), label=t['x'])
+    for k, stroke in ((2, '--phosphor'), (3, '--amber')):
+        d = 'M' + ' L'.join(f'{p.sx(r[0]):.1f} {p.sy(r[k]):.1f}' for r in L04_SWEEP)
+        f.path(d, stroke=stroke, width=2)
+        for r in L04_SWEEP:
+            f.circle(p.sx(r[0]), p.sy(r[k]), 3.5, fill=stroke)
+    f.line(590, 80, 620, 80, stroke='--phosphor', width=2)
+    f.text(628, 80, t['p'], size=11, anchor='start')
+    f.line(590, 106, 620, 106, stroke='--amber', width=2)
+    f.text(628, 106, t['r'], size=11, anchor='start')
+    return f, t['cap']
+
+
+@figure('l04-thresholds', 4)
+def l04_thresholds(lang):
+    t = {'en': dict(
+            label='Net value of acting on the model at each threshold, at R$ 10.00 a voucher and '
+                  'R$ 60.00 a member kept: R$ 9,640 at 0.1, R$ 11,830 at 0.15, R$ 11,900 at 0.2, '
+                  'R$ 10,180 at 0.3, R$ 9,440 at 0.4, R$ 7,720 at 0.5 and R$ 6,300 at 0.6.',
+            y='net value, reais', x='threshold', best='best: 0.2', default='scikit-learn: 0.5',
+            cap='The value peaks near 0.2, close to the cost of a voucher over the value of a member '
+                'kept, and the default of 0.5 leaves about a third of it behind.'),
+         'pt': dict(
+            label='Valor líquido de agir com o modelo em cada limiar, a R$ 10,00 por voucher e '
+                  'R$ 60,00 por membro mantido: R$ 9.640 em 0,1, R$ 11.830 em 0,15, R$ 11.900 em '
+                  '0,2, R$ 10.180 em 0,3, R$ 9.440 em 0,4, R$ 7.720 em 0,5 e R$ 6.300 em 0,6.',
+            y='valor líquido, reais', x='limiar', best='melhor: 0,2', default='scikit-learn: 0,5',
+            cap='O valor tem pico perto de 0,2, perto do custo de um voucher sobre o valor de um '
+                'membro mantido, e o padrão de 0,5 deixa cerca de um terço para trás.')}[lang]
+    f = Fig('l04-thresholds', 720, 290, t['label'])
+    p = Plot(f, 90, 40, 690, 220, -0.6, 6.6, 0, 14000)
+    p.yaxis([0, 4000, 8000, 12000], fmt=lambda v: num(lang, v, 0), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for i, r in enumerate(L04_SWEEP):
+        x = p.sx(i)
+        hi = r[0] == 0.20
+        f.path(f'M{x - 26:.1f} {p.y1:.1f} L{x - 26:.1f} {p.sy(r[4]):.1f} L{x + 26:.1f} '
+               f'{p.sy(r[4]):.1f} L{x + 26:.1f} {p.y1:.1f} Z',
+               stroke='--amber' if hi else '--phosphor', width=1,
+               fill='--amber' if hi else '--phosphor-dim')
+        f.text(x, p.y1 + 13, num(lang, r[0], 2), size=9.5, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 31, t['x'], size=10, weight='600')
+    f.text(p.sx(2), p.sy(11900) - 12, t['best'], size=10.5, fill='--amber', weight='600')
+    f.text(p.sx(5), p.sy(7720) - 12, t['default'], size=10, fill='--paper')
+    return f, t['cap']
+
+
+@figure('l04-calibration', 4)
+def l04_calibration(lang):
+    pts = [(0.064, 0.061, 1442), (0.139, 0.127, 946), (0.244, 0.280, 254), (0.389, 0.338, 240),
+           (0.596, 0.625, 128), (0.790, 0.750, 120)]
+    t = {'en': dict(
+            label='What the model said against what happened, for six bands of members. The '
+                  'points sit close to the diagonal: 0.064 said and 0.061 happened, 0.139 and '
+                  '0.127, 0.244 and 0.280, 0.389 and 0.338, 0.596 and 0.625, 0.790 and 0.750.',
+            x='what the model said', y='what happened', diag='perfectly calibrated',
+            cap='Every band lands near the diagonal, where a prediction of 0.3 is followed by 30% '
+                'of members lapsing. A ranking score cannot see this; the probabilities need it.'),
+         'pt': dict(
+            label='O que o modelo disse contra o que aconteceu, para seis faixas de membros. Os '
+                  'pontos ficam perto da diagonal: 0,064 dito e 0,061 acontecido, 0,139 e 0,127, '
+                  '0,244 e 0,280, 0,389 e 0,338, 0,596 e 0,625, 0,790 e 0,750.',
+            x='o que o modelo disse', y='o que aconteceu', diag='calibração perfeita',
+            cap='Toda faixa cai perto da diagonal, onde uma predição de 0,3 é seguida por 30% dos '
+                'membros se afastando. Uma nota de ordenação não vê isso; as probabilidades '
+                'precisam.')}[lang]
+    f = Fig('l04-calibration', 720, 320, t['label'])
+    p = Plot(f, 230, 30, 480, 270, 0, 0.85, 0, 0.85)
+    p.yaxis([0, 0.2, 0.4, 0.6, 0.8], fmt=lambda v: num(lang, v, 1), label=t['y'])
+    p.xaxis([0, 0.2, 0.4, 0.6, 0.8], fmt=lambda v: num(lang, v, 1))
+    f.text((p.x0 + p.x1) / 2, p.y1 + 30, t['x'], size=10, weight='600')
+    f.line(p.sx(0), p.sy(0), p.sx(0.85), p.sy(0.85), stroke='--paper-dim', dash='4 4')
+    f.text(p.sx(0.62), p.sy(0.78), t['diag'], size=10, fill='--paper-dim', anchor='end')
+    for sx_, sy_, n in pts:
+        f.circle(p.sx(sx_), p.sy(sy_), 3 + (n / 1442) ** 0.5 * 6, fill='--phosphor')
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
