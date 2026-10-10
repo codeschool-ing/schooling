@@ -26,8 +26,8 @@ In **1 track** — `backend`(7).
 | declared hours | 70 h |
 | lessons | 13 |
 | **hours per lesson** | **5.38** |
-| section budget | ~150, about 11.5 a lesson |
-| exercises | ~700, at the catalogue's density |
+| section budget | ~150, about 11.5 a lesson — 158 written |
+| exercises | ~700, at the catalogue's density — 444 written, at the density of the courses written this year, and an exam pool of 104 |
 
 ## Execution
 
