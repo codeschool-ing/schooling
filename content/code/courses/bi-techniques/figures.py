@@ -1014,6 +1014,50 @@ def l10_cases(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-peeking', 11)
+def l11_peeking(lang):
+    rng = np.random.default_rng(11)
+    tests, days, per_day, rate = 2000, 21, 1200, 0.042
+    a = rng.binomial(per_day, rate, size=(tests, days)).cumsum(axis=1)
+    b = rng.binomial(per_day, rate, size=(tests, days)).cumsum(axis=1)
+    n = per_day * np.arange(1, days + 1)
+    pooled = (a + b) / (2 * n)
+    z = (b - a) / n / np.sqrt(pooled * (1 - pooled) * 2 / n)
+    sig = np.abs(z) > 1.96
+    ever = np.maximum.accumulate(sig, axis=1).mean(axis=0) * 100
+    once = sig.mean(axis=0) * 100
+    t = {'en': dict(
+        label='Two lines over the 21 days of 2,000 A/A tests. The share of tests that would be '
+              'declared a winner if read once on that day stays near 5 per cent. The share that has '
+              'crossed the line at least once by that day, if somebody checked every morning, climbs '
+              'steadily to 26.5 per cent.',
+        x='day of the test', y='tests declared a winner, per cent', once='read once, on that day',
+        ever='read every day, stopped at the first crossing', five='5%',
+        cap='Every daily look is another chance for noise to cross the line. The promise of 5 per '
+            'cent holds only for the look that was planned.'),
+        'pt': dict(
+        label='Duas linhas nos 21 dias de 2.000 testes A/A. A fração de testes que seriam declarados '
+              'vencedores se lidos uma vez naquele dia fica perto de 5 por cento. A fração que já '
+              'cruzou a linha pelo menos uma vez até aquele dia, se alguém olhasse toda manhã, sobe '
+              'sem parar até 26,5 por cento.',
+        x='dia do teste', y='testes declarados vencedores, por cento', once='lido uma vez, naquele dia',
+        ever='lido todo dia, parado no primeiro cruzamento', five='5%',
+        cap='Cada olhada diária é mais uma chance de o ruído cruzar a linha. A promessa de 5 por cento '
+            'só vale para a olhada que foi planejada.')}[lang]
+    f = Fig('l11-peeking', 600, 290, t['label'])
+    p = Plot(f, 70, 40, 570, 220, 0.5, 21.5, 0, 30)
+    p.yaxis(range(0, 31, 10), label=t['y'])
+    p.xaxis([1, 7, 14, 21], label=t['x'])
+    f.line(p.x0, p.sy(5), p.x1, p.sy(5), stroke='--wire', width=1.2, dash='4 3')
+    series(p, range(1, 22), ever, stroke='--amber', width=2)
+    series(p, range(1, 22), once, stroke='--phosphor', width=2)
+    f.text(p.sx(21) - 4, p.sy(ever[-1]) - 12, t['ever'], size=10, anchor='end', fill='--amber', weight='600')
+    f.text(p.sx(21) - 4, p.sy(once[-1]) - 12, t['once'], size=10, anchor='end', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
