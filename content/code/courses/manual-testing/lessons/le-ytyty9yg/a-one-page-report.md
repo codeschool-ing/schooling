@@ -14,11 +14,11 @@ where it is.
 | | boxoffice 1.1, test summary, 10 October 2026 |
 |---|---|
 | answer | **Not ready to release.** Two of the plan's three exit criteria do not hold, and the third has not been asked for |
-| if it is released as it is | Students are charged full price, or 10% off if they are members, instead of half: two tickets for Hamlet cost R$ 160,00 instead of R$ 80,00. A ticket already used at the door can be refunded, and its seat goes back on sale. A refund is accepted after the show has started. A word typed in the tickets field shows an error page with the program's own code in it |
-| also open, smaller | The shows table scrolls sideways on a phone. The tickets field has no label for a screen reader. Refusing a move says "cannot be useed" |
+| if it is released as it is | Students are charged full price, or 10% off if they are members, instead of half: two tickets for Hamlet cost R$ 160,00 instead of R$ 80,00. A ticket already used at the door can be refunded, and its seat goes back on sale. A refund is accepted after the show has started. A word typed in the tickets field shows an error page with the program's own code in it. A customer using a screen reader is not told what the tickets field is for |
+| also open, smaller | The shows table scrolls sideways on a phone, which the triage still put first for the next build. Refusing a move says "cannot be useed" |
 | since 1.0 | Fixed: six tickets can be booked, and a member booking five pays 15% off instead of 25%. Broken: the student discount, which 1.0 got right |
-| what would change the answer | The student discount, both refund defects and the error page fixed in a new build, and lesson 10's regression suite run on it |
-| exit criteria | Every case for risks A to C passes: **no**, three fail, one on price and two on refunds. No open critical or major defect: **no**, the price, the two refunds and the error page are major. Acceptance signed off: not asked for while the first two fail |
+| what would change the answer | The student discount, both refund defects, the error page and the label fixed in a new build, and lesson 10's regression suite run on it |
+| exit criteria | Every case for risks A to C passes: **no**, three fail, one on price and two on refunds. No open critical or major defect: **no**, the student price and the refund of a used ticket are critical, and the late refund, the error page and the missing label are major. Acceptance signed off: not asked for while the first two fail |
 | not tested | Payment, load and the real mail server, left out by the plan. The confirmation link, R3, has no case yet |
 | numbers | 17 cases run: 10 passed, 7 failed, 0 blocked. 7 defects open, 2 fixed in 1.1, 1 new in 1.1 |
 
@@ -33,20 +33,20 @@ softened answer is read as a yes.
 
 **The consequences come before the evidence.** The second row is what happens to the theatre's
 customers and money, in the theatre's words: prices in reais, tickets, refunds, the show starting.
-There is no case id in it. Each of the four sentences is a defect report from earlier lessons,
+There is no case id in it. Each of the five sentences is a defect report from earlier lessons,
 translated into what a person at the box office would see.
 
 **The smaller defects are named, and kept apart.** A misspelt message is not a reason to hold a
 release, and putting it in the same list as the price would make the price look as small as the
-message. Naming it still matters: the manager may decide to release a later build with those three
+message. Naming it still matters: the manager may decide to release a later build with those two
 open, and that should be a decision rather than a surprise.
 
 **"Since 1.0" is there because the last report is what the reader remembers.** 1.1 fixed two
 things and broke one. Saying so stops the reader from assuming 1.1 is simply better, and it is the
 regression lesson 10 found, stated as news.
 
-**What would change the answer is specific.** Four defects, a new build, one suite run again. The
-manager can ask Rui how long the four take and plan a date from that; "more testing is needed"
+**What would change the answer is specific.** Five defects, a new build, one suite run again. The
+manager can ask Rui how long the five take and plan a date from that; "more testing is needed"
 would give her nothing to ask.
 
 **The exit criteria are the plan's, quoted back.** Nobody can argue that the bar was raised at the

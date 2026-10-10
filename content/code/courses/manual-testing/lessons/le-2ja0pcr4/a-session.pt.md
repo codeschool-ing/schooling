@@ -25,7 +25,22 @@ movimento da Ana é o mais simples que a missão permite: reservar um pedido e a
 diz que ainda não deveria funcionar. Um pedido reservado não pode ser usado na porta, porque ninguém
 pagou por ele.
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S2&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1001 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=use' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is reserved cannot be useed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now paid.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=use' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now used.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is used cannot be payed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=cancel' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is used cannot be canceled.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now refunded.</p>
+```
 
 O R6 se sustenta em todas as linhas acima menos uma: usar é recusado enquanto o pedido está
 reservado, pagar e usar funcionam em seguida, pagar e cancelar são recusados depois de usado, e o
@@ -40,7 +55,16 @@ teria olhado; foi a primeira coisa na tela. A nota dela: *mensagem de recusa = "
 Então ela tenta o único estado cujo nome a aplicação soletra para ela, cancelando um pedido novo e
 depois tentando pagá-lo:
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S3&quantity=1' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1002 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=cancel' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now cancelled.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is cancelled cannot be payed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=dance' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is cancelled cannot be danceed.</p>
+```
 
 *An order that is cancelled cannot be payed.* A mesma frase soletra o estado `cancelled`, com dois
 l, e monta a palavra da ação a partir de `pay`. **É o mecanismo aparecendo**: os nomes dos estados
@@ -66,26 +90,46 @@ O `BOXOFFICE_NOW` ajusta o relógio da aplicação, e a aula 1 disse para que el
 fuso, ele é lido como a hora local da própria máquina, então o mesmo comando funciona em qualquer
 lugar. A Ana para a aplicação e a sobe de novo às oito e meia da noite:
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ BOXOFFICE_NOW=2026-10-10T20:30 python3 boxoffice.py
+boxoffice 1.1 on http://127.0.0.1:8000  (Ctrl-C stops it)
+```
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S1&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Booking for this show has closed.</p><form method="post" action="/book">
+```
 
 Está certo: o R4 fecha as reservas uma hora antes do espetáculo, e The Seagull começa às 20:00. Mas
 isso deixa a Ana sem nada para reembolsar, porque um reinício esvazia a aplicação, e um pedido para
 esta noite só pode ser feito antes das 19:00. **Um relógio parado não anda com um pedido na mão.**
 Ela anota isso como obstáculo, *a aplicação não consegue mover o relógio enquanto guarda os pedidos*.
-Depois monta a pergunta do jeito lento, no relógio real. À noite, sem `BOXOFFICE_NOW`, ela sobe o
-boxoffice, reserva dois ingressos para The Seagull e paga.
+Depois monta a pergunta do jeito lento, no relógio real. Às dez para as sete da noite, sem `BOXOFFICE_NOW`,
+ela sobe o boxoffice, reserva dois ingressos para The Seagull e paga.
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ python3 boxoffice.py
+boxoffice 1.1 on http://127.0.0.1:8000  (Ctrl-C stops it)
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S1&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1001 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now paid.</p>
+```
 
-Depois deixa a aplicação rodando, cuida de outra coisa e volta depois que o espetáculo começou:
+Depois deixa a aplicação rodando, cuida de outra coisa e volta às oito e um, depois que o
+espetáculo começou. **Esta transcrição pula essa hora**: na gravação do curso, o relógio da aplicação
+em execução foi movido de 18:50 para 20:01 por fora, com um pequeno invólucro que o boxoffice não
+oferece e de que você não precisa. É o controle que a conversa final da seção 06 pede ao Rui. Na sua
+máquina, a hora é de verdade.
 
-@@fence@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now refunded.</p>
+```
 
 **O reembolso é aceito às 20:01, um minuto depois do início de The Seagull**, quando o R6 só permite
 reembolsos antes de o espetáculo começar. A nota dela: *Defeito: um pedido pago para S1 é
-reembolsado depois que S1 começou (reservado e pago às 18:50, reembolsado às 20:01, relógio real).
+reembolsado depois que S1 começou (reservado e pago às 18:50, reembolsado às 20:01, a mesma aplicação em execução).
 R6: reembolso antes de o espetáculo começar.*
 
 Para fazer o mesmo, você precisa de uma noite. Suba o boxoffice sem `BOXOFFICE_NOW` em algum momento

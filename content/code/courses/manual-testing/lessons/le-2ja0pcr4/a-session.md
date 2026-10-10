@@ -101,19 +101,33 @@ That is correct: R4 closes booking an hour before the show, and The Seagull star
 leaves Ana with nothing to refund, because a restart empties the application, and an order for
 tonight can only be made before 19:00. **A fixed clock cannot move with an order in hand.** She
 writes it as an obstacle, *the application cannot move its clock while it keeps its orders*. Then
-she sets the question up the slow way, on the real clock. In the evening, without `BOXOFFICE_NOW`,
-she starts boxoffice, books two tickets for The Seagull and pays.
+she sets the question up the slow way, on the real clock. At ten to seven in the evening, without
+`BOXOFFICE_NOW`, she starts boxoffice, books two tickets for The Seagull and pays.
 
-@@cap:evening+evening-book@@
+```
+ana@laptop:~/boxoffice$ python3 boxoffice.py
+boxoffice 1.1 on http://127.0.0.1:8000  (Ctrl-C stops it)
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S1&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1001 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now paid.</p>
+```
 
-Then she leaves it running, works on something else, and comes back after the show has started:
+Then she leaves it running, works on something else, and comes back at a minute past eight, after
+the show has started. **This transcript skips that hour**: for the course's recording, the clock of
+the running application was moved from 18:50 to 20:01 from outside, by a small wrapper that
+boxoffice does not offer and you do not need. It is the control the debrief in section 06 asks Rui
+for. On your machine the hour is a real one.
 
-@@cap:evening-refund@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now refunded.</p>
+```
 
 **The refund is accepted at 20:01, a minute after The Seagull began**, where R6 allows refunds only
 before the show starts. Her note:
 *Defect: a paid order for S1 is refunded after S1 has started (booked and paid 18:50, refunded
-20:01, real clock). R6: refund before the show starts.*
+20:01, one running application). R6: refund before the show starts.*
 
 To do the same, you need an evening. Start boxoffice without `BOXOFFICE_NOW` some time before 19:00,
 book and pay for The Seagull, leave the application running, and press Refund on the order page

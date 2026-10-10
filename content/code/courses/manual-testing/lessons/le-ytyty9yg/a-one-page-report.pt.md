@@ -14,11 +14,11 @@ está onde está.
 | | boxoffice 1.1, resumo de teste, 10 de outubro de 2026 |
 |---|---|
 | resposta | **Não está pronto para lançar.** Dois dos três critérios de saída do plano não valem, e o terceiro não foi pedido |
-| se for lançado como está | Estudantes pagam preço cheio, ou 10% de desconto se forem sócios, em vez de meia: dois ingressos de Hamlet custam R$ 160,00 em vez de R$ 80,00. Um ingresso já usado na porta pode ser reembolsado, e o lugar dele volta à venda. Um reembolso é aceito depois que o espetáculo começou. Uma palavra digitada no campo de ingressos mostra uma página de erro com o código do próprio programa |
-| também em aberto, menores | A tabela de espetáculos rola para o lado no celular. O campo de ingressos não tem rótulo para leitor de tela. Recusar uma ação diz "cannot be useed" |
+| se for lançado como está | Estudantes pagam preço cheio, ou 10% de desconto se forem sócios, em vez de meia: dois ingressos de Hamlet custam R$ 160,00 em vez de R$ 80,00. Um ingresso já usado na porta pode ser reembolsado, e o lugar dele volta à venda. Um reembolso é aceito depois que o espetáculo começou. Uma palavra digitada no campo de ingressos mostra uma página de erro com o código do próprio programa. Um cliente que usa leitor de tela não fica sabendo para que serve o campo de ingressos |
+| também em aberto, menores | A tabela de espetáculos rola para o lado no celular, que a triagem ainda pôs em primeiro para o próximo build. Recusar uma ação diz "cannot be useed" |
 | desde a 1.0 | Corrigido: seis ingressos podem ser reservados, e um sócio que reserva cinco paga 15% a menos em vez de 25%. Quebrado: o desconto de estudante, que a 1.0 acertava |
-| o que mudaria a resposta | O desconto de estudante, os dois defeitos de reembolso e a página de erro corrigidos num build novo, e a suíte de regressão da aula 10 rodada nele |
-| critérios de saída | Todo caso dos riscos A a C passa: **não**, três falham, um de preço e dois de reembolso. Nenhum defeito crítico ou grave em aberto: **não**, o preço, os dois reembolsos e a página de erro são graves. Aceitação assinada: não pedida enquanto os dois primeiros falham |
+| o que mudaria a resposta | O desconto de estudante, os dois defeitos de reembolso, a página de erro e o rótulo corrigidos num build novo, e a suíte de regressão da aula 10 rodada nele |
+| critérios de saída | Todo caso dos riscos A a C passa: **não**, três falham, um de preço e dois de reembolso. Nenhum defeito crítico ou grave em aberto: **não**, o preço de estudante e o reembolso de um ingresso usado são críticos, e o reembolso tardio, a página de erro e o rótulo que falta são graves. Aceitação assinada: não pedida enquanto os dois primeiros falham |
 | não testado | Pagamento, carga e o servidor de e-mail real, deixados de fora pelo plano. O link de confirmação, R3, ainda não tem caso |
 | números | 17 casos executados: 10 aprovados, 7 com falha, 0 bloqueados. 7 defeitos em aberto, 2 corrigidos na 1.1, 1 novo na 1.1 |
 
@@ -33,20 +33,20 @@ em boa parte", porque uma resposta amaciada é lida como sim.
 
 **As consequências vêm antes da evidência.** A segunda linha é o que acontece com os clientes e o
 dinheiro do teatro, nas palavras do teatro: preços em reais, ingressos, reembolsos, o espetáculo
-começando. Não há id de caso nela. Cada uma das quatro frases é um relato de defeito de aulas
+começando. Não há id de caso nela. Cada uma das cinco frases é um relato de defeito de aulas
 anteriores, traduzido no que uma pessoa na bilheteria veria.
 
 **Os defeitos menores são citados, e ficam à parte.** Uma mensagem com erro de grafia não é motivo
 para segurar uma versão, e pô-la na mesma lista do preço faria o preço parecer tão pequeno quanto
-a mensagem. Citá-la ainda importa: a gerente pode decidir lançar um build posterior com esses três
+a mensagem. Citá-la ainda importa: a gerente pode decidir lançar um build posterior com esses dois
 em aberto, e isso deve ser uma decisão, não uma surpresa.
 
 **"Desde a 1.0" está ali porque o último relatório é o que o leitor lembra.** A 1.1 corrigiu duas
 coisas e quebrou uma. Dizer isso impede o leitor de supor que a 1.1 é simplesmente melhor, e é a
 regressão que a aula 10 achou, contada como notícia.
 
-**O que mudaria a resposta é específico.** Quatro defeitos, um build novo, uma suíte rodada de
-novo. A gerente pode perguntar ao Rui quanto tempo os quatro levam e planejar uma data a partir
+**O que mudaria a resposta é específico.** Cinco defeitos, um build novo, uma suíte rodada de
+novo. A gerente pode perguntar ao Rui quanto tempo os cinco levam e planejar uma data a partir
 disso; "é preciso testar mais" não lhe daria nada para perguntar.
 
 **Os critérios de saída são os do plano, citados de volta.** Ninguém pode dizer que a régua subiu

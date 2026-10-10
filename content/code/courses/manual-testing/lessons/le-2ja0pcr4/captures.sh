@@ -6,7 +6,7 @@
 # this lesson was copied from running it; each block of output starts with a
 # line `##### <name>` naming it.
 #
-#   bash ../../lab.sh isolated bash captures.sh            # every block, ~75 min
+#   bash ../../lab.sh isolated bash captures.sh            # every block
 #   bash ../../lab.sh isolated bash captures.sh quick      # all but "evening"
 #   bash ../../lab.sh isolated bash captures.sh evening    # only "evening"
 #
@@ -19,15 +19,16 @@
 #     (the first two) or 2026-10-10T20:30 ("frozen"), written with no offset so it
 #     reads as the machine's local time; the start line of "frozen-start" is
 #     printed by a copy run under `timeout` with PYTHONUNBUFFERED=1;
-#   - "evening" needs a clock that MOVES, so its server runs with
-#     BOXOFFICE_NOW empty (the machine's real clock) and with TZ set to a
-#     fixed offset chosen when the block starts, so that the machine's local
-#     time reads 18:50 at that moment. The block then really waits until the
-#     local clock passes 20:01 before the refund, about seventy minutes. The
-#     times `date +%H:%M` prints are the times the application's clock read.
+#   - "evening" needs a clock that MOVES with orders in hand, which boxoffice
+#     cannot do: BOXOFFICE_NOW is fixed for a process and a restart empties it.
+#     So its server is boxoffice.py, unchanged, run inside a small wrapper that
+#     starts the clock at 2026-10-10T18:50:00-03:00 and moves it to
+#     2026-10-10T20:01:00-03:00 between the payment and the refund, in the same
+#     process. The lesson says so beside the transcript: on the student's own
+#     machine that hour is a real one.
 #
 # Recorded 2026-10-10 on Ubuntu 24.04 with Python 3.13.16 and curl 8.5.0,
-# TZ=America/Sao_Paulo apart from "evening". Run as root with HOME=/home/ana,
+# TZ=America/Sao_Paulo. Run as root with HOME=/home/ana,
 # so the paths read as Ana's.
 
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -72,23 +73,36 @@ fi
 if [ "$MODE" != quick ]; then
 
 block evening
-# a fixed offset that makes local time 18:50 now; POSIX writes UTC+h as -h
-off=$(( (18*60 + 50) - ( $(date -u +%-H)*60 + $(date -u +%-M) ) ))
-off=$(( (off + 720 + 1440) % 1440 - 720 ))
-sign=-; [ $off -lt 0 ] && { sign=+; off=$(( -off )); }
-STAGED_TZ=$(printf '<LAB>%s%d:%02d' "$sign" $((off/60)) $((off%60)))
-export TZ=$STAGED_TZ
-bash "$LAB" serve "$APP" BOXOFFICE_NOW= TZ="$STAGED_TZ" PYTHONUNBUFFERED=1 || exit 1
+# The application's clock is moved INSIDE one running process: the wrapper runs
+# boxoffice.py unchanged as __main__ in a thread, and sets BOXOFFICE_NOW in that
+# process's environment whenever $CLOCK is written. now() reads the variable on
+# every call, so the orders stay and the time moves. boxoffice offers no such
+# control; it stands in for the hour a student waits on the real clock.
+CLOCK=$APP/clock
+cat > "$APP/../moving-clock.py" <<'PY'
+import os, runpy, sys, threading, time
+os.environ["BOXOFFICE_NOW"] = sys.argv[2]
+threading.Thread(target=runpy.run_path, args=(sys.argv[1],), kwargs={"run_name": "__main__"},
+                 daemon=True).start()
+while True:
+    if os.path.exists(sys.argv[3]):
+        os.environ["BOXOFFICE_NOW"] = open(sys.argv[3]).read().strip()
+        os.remove(sys.argv[3])
+    time.sleep(0.05)
+PY
+( BOXOFFICE_SEED=lab PYTHONUNBUFFERED=1 python3 "$APP/../moving-clock.py" "$APP/boxoffice.py" \
+    2026-10-10T18:50:00-03:00 "$CLOCK" ) </dev/null >"$APP/evening.log" 2>&1 &
+MOVER=$!
+for _ in $(seq 50); do curl -sf $U/health >/dev/null && break; sleep 0.1; done
 printf 'ana@laptop:~/boxoffice$ python3 boxoffice.py\n'
-head -n 1 "$APP/server.log"
+head -n 1 "$APP/evening.log"
 block evening-book
-run 'date +%H:%M'
 run "curl -s -d 'email=member@example.org&show=S1&quantity=2' $U/book | grep msg"
 run "curl -s -d 'id=1001&action=pay' $U/order | grep msg"
-until [ "$(date +%H%M)" -ge 2001 ]; do sleep 20; done
+echo 2026-10-10T20:01:00-03:00 > "$CLOCK"
+while [ -e "$CLOCK" ]; do sleep 0.05; done
 block evening-refund
-run 'date +%H:%M'
 run "curl -s -d 'id=1001&action=refund' $U/order | grep msg"
-bash "$LAB" stop
+kill $MOVER
 
 fi
