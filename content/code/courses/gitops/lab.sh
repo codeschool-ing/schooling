@@ -206,6 +206,17 @@ images() {
     docker build -q -t $CACHE/lab/dex:$DEX "$OPT/src/dex" >/dev/null
     docker push -q --platform linux/amd64 $CACHE/lab/dex:$DEX >/dev/null
   }
+  # The External Secrets Operator, from its tagged source, under the name the
+  # chart asks for, so that the nodes' mirror for ghcr.io finds it
+  crane manifest "$CACHE/external-secrets/external-secrets:$ESO" >/dev/null 2>&1 || {
+    rm -rf "$OPT/src/eso" && mkdir -p "$OPT/src/eso"
+    git clone -q --depth 1 --branch $ESO https://github.com/external-secrets/external-secrets "$OPT/src/eso/src"
+    # its go.mod asks for a newer Go than the one that builds the rest
+    (cd "$OPT/src/eso/src" && GOTOOLCHAIN=go1.26.9 CGO_ENABLED=0 go build -o "$OPT/src/eso/external-secrets" .)
+    cp "$LAB/lab/external-secrets.Dockerfile" "$OPT/src/eso/Dockerfile"
+    docker build -q -t $CACHE/external-secrets/external-secrets:$ESO "$OPT/src/eso" >/dev/null
+    docker push -q --platform linux/amd64 $CACHE/external-secrets/external-secrets:$ESO >/dev/null
+  }
 }
 
 mirror() { # copy every cached image into the running registry
@@ -535,6 +546,7 @@ stage7() {
   local i digest
   cd /home/ana/fleet
   digest=$(curl -sI -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5001/v2/bulletin/manifests/1.1 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  docker tag localhost:5001/bulletin:1.1 localhost:5001/bulletin:stable && docker push --quiet localhost:5001/bulletin:stable >/dev/null
   git switch --quiet -c artefacts
   sed -i "s#  newTag: \"1.1\"#  digest: $digest#" apps/bulletin/production/kustomization.yaml
   helm package charts/bulletin >/dev/null && helm push bulletin-0.1.0.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
@@ -562,6 +574,142 @@ stage7() {
   git fetch --quiet && git switch --quiet -c image-updates origin/image-updates
   merge image-updates "staging: bulletin 1.2"
   for i in $(seq 120); do curl -s localhost:8080 | grep -q 'bulletin 1.2' && curl -s localhost:8081 | grep -q 'bulletin 1.1' && break; sleep 2; done
+  cd /home/ana
+}
+
+L8=$LAB/lessons/le-wek3xhhr
+
+# The state at the end of lesson 8, on top of stage7: a cosign key pair in
+# ~/signing, bulletin 1.2 and the chart 0.1.0 signed with it, the preview's
+# OCIRepository refusing anything else, and Git signing commits with an SSH key.
+stage8() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local digest chart
+  rm -rf /home/ana/signing && mkdir -p /home/ana/signing && cd /home/ana/signing
+  openssl rand -base64 24 > /home/ana/cosign.password && chmod 600 /home/ana/cosign.password
+  export COSIGN_PASSWORD=$(cat /home/ana/cosign.password)
+  cosign generate-key-pair >/dev/null 2>&1
+  cosign signing-config create --out offline.json >/dev/null 2>&1
+  digest=$(curl -sI -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5001/v2/bulletin/manifests/1.2 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  chart=$(curl -sI -H 'Accept: application/vnd.oci.image.manifest.v1+json' localhost:5001/v2/charts/bulletin/manifests/0.1.0 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  cosign sign --key cosign.key --signing-config offline.json -y "localhost:5001/bulletin@$digest" >/dev/null 2>&1
+  cosign sign --key cosign.key --signing-config offline.json -y "localhost:5001/charts/bulletin@$chart" >/dev/null 2>&1
+  cd /home/ana/fleet
+  git switch --quiet -c preview-verify
+  cp /home/ana/signing/cosign.pub apps/bulletin/preview/
+  shown "$L8/flux-verifies.md" 'apps/bulletin/preview/kustomization.yaml' > apps/bulletin/preview/kustomization.yaml
+  shown "$L8/flux-verifies.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  git add apps
+  commit_at 2026-10-09T22:00:00-03:00 -m "preview: only a signed chart"
+  merge preview-verify "preview: only a signed chart"
+  rm -f /home/ana/.ssh/signing /home/ana/.ssh/signing.pub
+  mkdir -p /home/ana/.ssh && chmod 700 /home/ana/.ssh
+  ssh-keygen -q -t ed25519 -N "" -C ana@example.org -f /home/ana/.ssh/signing
+  git config --global gpg.format ssh
+  git config --global user.signingkey /home/ana/.ssh/signing.pub
+  echo "ana@example.org $(cat /home/ana/.ssh/signing.pub)" > /home/ana/.ssh/allowed_signers
+  git config --global gpg.ssh.allowedSignersFile /home/ana/.ssh/allowed_signers
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 60); do
+    kubectl -n preview get ocirepository bulletin-chart -o jsonpath='{.status.conditions[?(@.type=="SourceVerified")].status}' 2>/dev/null | grep -q True && break
+    sleep 2
+  done
+  cd /home/ana
+}
+
+L9=$LAB/lessons/le-yt0584nj
+
+# The state at the end of lesson 9, on top of stage8: Sealed Secrets sealing
+# staging's token, SOPS and age encrypting production's, validate.sh dropping
+# the `sops` block, and Vault initialised, unsealed, holding both tokens and
+# trusting the cluster's ServiceAccounts through the Kubernetes auth method.
+stage9() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i token age
+  docker image inspect hashicorp/vault:$VAULT >/dev/null 2>&1 || {
+    docker pull -q "$CACHE/hashicorp/vault:$VAULT" >/dev/null && docker tag "$CACHE/hashicorp/vault:$VAULT" hashicorp/vault:$VAULT
+  }
+  cd /home/ana/fleet
+  git switch --quiet -c sealed-secrets
+  mkdir -p infrastructure/sealed-secrets
+  curl -fsSLo infrastructure/sealed-secrets/controller.yaml https://github.com/bitnami-labs/sealed-secrets/releases/download/v$KUBESEAL/controller.yaml
+  shown "$L9/sealed-secrets.md" 'clusters/lab/sealed-secrets.yaml' > clusters/lab/sealed-secrets.yaml
+  git add infrastructure clusters
+  commit_at 2026-10-10T01:00:00-03:00 -m "sealed-secrets: the controller, $KUBESEAL"
+  merge sealed-secrets "sealed-secrets: the controller, $KUBESEAL"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do kubectl -n kube-system get deployment sealed-secrets-controller >/dev/null 2>&1 && break; sleep 2; done
+  kubectl -n kube-system rollout status deployment sealed-secrets-controller --timeout=180s >/dev/null
+  kubeseal --fetch-cert > /home/ana/setup/sealed-secrets.pem
+  git switch --quiet -c staging-token
+  token=$(openssl rand -hex 16)
+  kubectl -n staging create secret generic bulletin-token --from-literal=token=$token --dry-run=client -o yaml \
+    | kubeseal --cert /home/ana/setup/sealed-secrets.pem -o yaml > apps/bulletin/staging/token.yaml
+  shown "$L9/sealed-secrets.md" 'apps/bulletin/base/deployment.yaml' > apps/bulletin/base/deployment.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- token.yaml#' apps/bulletin/staging/kustomization.yaml
+  sed -i 's/^spec:$/spec:\n  dependsOn:\n  - name: sealed-secrets/' clusters/lab/staging.yaml
+  git add apps clusters
+  commit_at 2026-10-10T01:10:00-03:00 -m "staging: a sealed token"
+  merge staging-token "staging: a sealed token"
+  rm -rf /home/ana/.config/sops && mkdir -p /home/ana/.config/sops/age
+  age-keygen -o /home/ana/.config/sops/age/keys.txt 2>/dev/null
+  age=$(age-keygen -y /home/ana/.config/sops/age/keys.txt)
+  git switch --quiet -c production-token
+  shown "$L9/sops.md" '.sops.yaml' | sed "s/AGE_PUBLIC_KEY/$age/" > .sops.yaml
+  kubectl -n production create secret generic bulletin-token --from-literal=token=$(openssl rand -hex 16) --dry-run=client -o yaml > apps/bulletin/production/token.sops.yaml
+  SOPS_AGE_KEY_FILE=/home/ana/.config/sops/age/keys.txt sops --encrypt --in-place apps/bulletin/production/token.sops.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- token.sops.yaml#' apps/bulletin/production/kustomization.yaml
+  python3 - <<'PY'
+p = '/home/ana/setup/validate.sh'
+s = open(p).read()
+old = [l for l in s.split('\n') if l.startswith('  elif ! kubeconform')][0]
+new = """  elif ! awk '/^sops:/ { s = 1; next } /^[^ ]/ { s = 0 } !s' "$work/out.yaml" |
+       kubeconform -strict -summary -skip HelmRelease,OCIRepository -kubernetes-version 1.37.0; then"""
+open(p, 'w').write(s.replace(old, new))
+PY
+  kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/ana/.config/sops/age/keys.txt >/dev/null
+  sed -i 's/^spec:$/spec:\n  decryption:\n    provider: sops\n    secretRef:\n      name: sops-age/' clusters/lab/production.yaml
+  git add .sops.yaml apps clusters
+  commit_at 2026-10-10T01:20:00-03:00 -m "production: a token encrypted with SOPS"
+  merge production-token "production: a token encrypted with SOPS"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  docker rm -fv vault >/dev/null 2>&1; docker volume rm vault-data >/dev/null 2>&1 || true
+  mkdir -p /home/ana/vault
+  shown "$L9/vault.md" '~/vault/vault.hcl' > /home/ana/vault/vault.hcl
+  docker run -d --name vault --network kind -p 127.0.0.1:8200:8200 -v /home/ana/vault:/vault/config:ro -v vault-data:/vault/file hashicorp/vault:$VAULT server >/dev/null
+  export VAULT_ADDR=http://127.0.0.1:8200
+  for i in $(seq 30); do vault status >/dev/null 2>&1; [ $? -eq 2 ] && break; sleep 1; done
+  vault operator init -key-shares=1 -key-threshold=1 -format=json > /home/ana/vault-init.json && chmod 600 /home/ana/vault-init.json
+  vault operator unseal "$(jq -r '.unseal_keys_b64[0]' /home/ana/vault-init.json)" >/dev/null
+  export VAULT_TOKEN=$(jq -r .root_token /home/ana/vault-init.json)
+  vault secrets enable -path=secret kv-v2 >/dev/null
+  vault kv put secret/bulletin/staging token=$(openssl rand -hex 16) >/dev/null
+  vault kv put secret/bulletin/production token=$(openssl rand -hex 16) >/dev/null
+  git switch --quiet -c vault-auth
+  mkdir -p infrastructure/vault-auth
+  shown "$L9/vault-kubernetes.md" 'infrastructure/vault-auth/vault-auth.yaml' > infrastructure/vault-auth/vault-auth.yaml
+  shown "$L9/vault-kubernetes.md" 'apps/bulletin/production/serviceaccount.yaml' > apps/bulletin/production/serviceaccount.yaml
+  sed 's/sealed-secrets/vault-auth/g' clusters/lab/sealed-secrets.yaml > clusters/lab/vault-auth.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- serviceaccount.yaml#' apps/bulletin/production/kustomization.yaml
+  git add infrastructure apps clusters
+  commit_at 2026-10-10T01:40:00-03:00 -m "vault: an identity to check tokens with, and one for production"
+  merge vault-auth "vault: an identity to check tokens with, and one for production"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do
+    kubectl -n vault-auth get secret vault-auth -o jsonpath='{.data.token}' 2>/dev/null | grep -q . && kubectl -n production get serviceaccount bulletin >/dev/null 2>&1 && break
+    sleep 2
+  done
+  vault auth enable kubernetes >/dev/null
+  kubectl config view --raw --minify -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' | base64 -d > /home/ana/vault/cluster-ca.crt
+  vault write auth/kubernetes/config kubernetes_host=https://gitops-control-plane:6443 kubernetes_ca_cert=@/home/ana/vault/cluster-ca.crt \
+    token_reviewer_jwt="$(kubectl -n vault-auth get secret vault-auth -o jsonpath='{.data.token}' | base64 -d)" >/dev/null
+  shown "$L9/vault-kubernetes.md" '~/vault/bulletin-production.hcl' > /home/ana/vault/bulletin-production.hcl
+  vault policy write bulletin-production /home/ana/vault/bulletin-production.hcl >/dev/null
+  vault write auth/kubernetes/role/bulletin-production bound_service_account_names=bulletin \
+    bound_service_account_namespaces=production policies=bulletin-production ttl=10m >/dev/null
+  for i in $(seq 90); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && break; sleep 2; done
   cd /home/ana
 }
 
@@ -604,11 +752,12 @@ merge() {
 
 down() {
   kind delete cluster --name gitops >/dev/null 2>&1 || true
-  docker rm -fv registry gitea >/dev/null 2>&1 || true
+  docker rm -fv registry gitea vault postgres >/dev/null 2>&1 || true
+  docker volume rm vault-data >/dev/null 2>&1 || true
 }
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac
