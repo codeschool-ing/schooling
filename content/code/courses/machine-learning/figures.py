@@ -310,6 +310,30 @@ def l01_four_outcomes(lang):
     return fig, cap
 
 
+CAT = ['city', 'payment', 'plan', 'box', 'channel']
+NUM = ['age', 'app_user', 'tenure_months', 'price_month', 'orders_90d', 'skips_90d', 'late_90d',
+       'complaints_90d', 'support_calls_90d', 'rating_90d', 'days_since_login']
+
+
+def churn_frame():
+    churn = data('churn.csv', parse_dates=['snapshot'])
+    for c in CAT:
+        churn[c] = churn[c].astype('category')
+    return churn
+
+
+def first_model_scores():
+    """Lesson 2's first_model.py, fitted again here so a figure needs no file it wrote."""
+    from sklearn.ensemble import HistGradientBoostingClassifier
+    churn = churn_frame()
+    test = churn['snapshot'] >= '2025-07-01'
+    model = HistGradientBoostingClassifier(categorical_features='from_dtype', random_state=0)
+    model.fit(churn.loc[~test, NUM + CAT], churn.loc[~test, 'churned'])
+    out = churn[test].copy()
+    out['chance'] = model.predict_proba(out[NUM + CAT])[:, 1]
+    return out.reset_index(drop=True)
+
+
 # ------------------------------------------------------------------ lesson 2
 
 def money(lang, v):
@@ -358,7 +382,7 @@ def l02_ceiling(lang):
 
 @figure('l02-bootstrap', 2)
 def l02_bootstrap(lang):
-    test = pd.read_csv('/home/ana/ml/first_model_scores.csv')
+    test = first_model_scores()
     model = test['chance'] >= 40 / (0.3 * 480)
     rule = (test['skips_90d'] >= 3) & (test['complaints_90d'] >= 1)
     y = (test['churned'] == 1).to_numpy()
@@ -398,6 +422,112 @@ def l02_bootstrap(lang):
                   'interval.',
             'Mil conjuntos de teste reamostrados. A diferença muda milhares de reais de um para '
             'outro, e nunca chega a zero. As barras da outra cor são os 5% fora do intervalo.')
+    return fig, cap
+
+
+# ------------------------------------------------------------------ lesson 3
+
+MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+MONTHS_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+
+
+@figure('l03-three-sets', 3)
+def l03_three_sets(lang):
+    churn = data('churn.csv', parse_dates=['snapshot'])
+    counts = churn.groupby('snapshot').size()
+    fig = Fig('l03-three-sets', 680, 190, T(lang,
+        'Eighteen monthly snapshots from July 2024 to December 2025, drawn as bars as tall as the '
+        'number of subscribers. The first nine are training, the next three validation, and the last '
+        'six, from July 2025, the test.',
+        'Dezoito retratos mensais de julho de 2024 a dezembro de 2025, desenhados como barras da '
+        'altura do número de assinantes. Os nove primeiros são treino, os três seguintes validação, '
+        'e os seis últimos, a partir de julho de 2025, o teste.'))
+    M = MONTHS_EN if lang == 'en' else MONTHS_PT
+    x0, w, base, top = 40, 33, 130, 40
+    mx = counts.max()
+    for i, (month, n) in enumerate(counts.items()):
+        kind = 0 if i < 9 else (1 if i < 12 else 2)
+        h = (base - top) * n / mx
+        x = x0 + i * w
+        fig.rect(x + 3, base - h, w - 6, h, stroke=['--phosphor', '--amber', '--paper-dim'][kind],
+                 fill=['--phosphor-dim', '--scan', '--panel'][kind], rx=2)
+        fig.text(x + w / 2, base + 12, M[month.month - 1], size=9.5, fill='--paper-dim')
+    fig.text(x0 + 4.5 * w, base + 30, '2024 – 2025', size=9.5, mono=True)
+    for a, b, label, col in [(0, 9, T(lang, 'training', 'treino'), '--phosphor'),
+                             (9, 12, T(lang, 'validation', 'validação'), '--amber'),
+                             (12, 18, T(lang, 'test: touched once', 'teste: tocado uma vez'), '--paper')]:
+        fig.line(x0 + a * w + 3, 26, x0 + b * w - 3, 26, stroke=col, width=2)
+        fig.text(x0 + (a + b) * w / 2, 16, label, size=11, weight='600', fill=col if col != '--paper' else '--paper')
+    fig.text(x0 + 15 * w, base + 30, T(lang, 'by_time cuts on 1 July 2025', 'o by_time corta em 1º de julho de 2025'), size=9.5,
+             fill='--paper-dim')
+    cap = T(lang, 'Cut by date. The test months are later than everything the model may learn from.',
+            'Corte por data. Os meses de teste vêm depois de tudo de que o modelo pode aprender.')
+    return fig, cap
+
+
+@figure('l03-folds', 3)
+def l03_folds(lang):
+    fig = Fig('l03-folds', 600, 230, T(lang,
+        'Five rows, one per fit. Each row is the training data cut into five folds; in each row a '
+        'different fold is scored and the other four are fitted on.',
+        'Cinco linhas, uma por ajuste. Cada linha são os dados de treino cortados em cinco partes; em '
+        'cada linha uma parte diferente é medida e as outras quatro servem para ajustar.'))
+    x0, w, y0, h = 120, 80, 40, 30
+    fig.text(x0 + 2.5 * w, 18, T(lang, 'the training rows, in five folds', 'as linhas de treino, em cinco partes'),
+             size=11, weight='600')
+    for r in range(5):
+        y = y0 + r * (h + 8)
+        fig.text(x0 - 14, y + h / 2, T(lang, f'fit {r + 1}', f'ajuste {r + 1}'), size=10.5, anchor='end')
+        for c in range(5):
+            scored = c == r
+            fig.rect(x0 + c * w + 2, y, w - 4, h, stroke='--amber' if scored else '--phosphor',
+                     fill='--scan' if scored else '--phosphor-dim', rx=3)
+            if scored:
+                fig.text(x0 + c * w + w / 2, y + h / 2, T(lang, 'scored', 'medida'), size=10, fill='--paper')
+        fig.text(x0 + 5 * w + 14, y + h / 2, T(lang, f'score {r + 1}', f'nota {r + 1}'), size=10.5,
+                 anchor='start', fill='--paper-dim')
+    cap = T(lang, 'Every row is scored once and fitted on four times. Five scores come out, and their '
+                  'spread is the luck of the cut.',
+            'Toda linha é medida uma vez e usada no ajuste quatro vezes. Saem cinco notas, e a '
+            'dispersão delas é a sorte do corte.')
+    return fig, cap
+
+
+@figure('l03-gap', 3)
+def l03_gap(lang):
+    fig = Fig('l03-gap', 640, 260, T(lang,
+        'Six snapshots, January to June, each followed by a three-month horizon bar. A vertical line '
+        'marks 1 July, the moment of fitting. The horizons of January to April end by then; those of '
+        'May and June run past it, so their labels are not yet known.',
+        'Seis retratos, de janeiro a junho, cada um seguido de uma barra de horizonte de três meses. '
+        'Uma linha vertical marca 1º de julho, o momento do ajuste. Os horizontes de janeiro a abril '
+        'terminam até ali; os de maio e junho passam dela, então os rótulos deles ainda não existem.'))
+    M = MONTHS_EN if lang == 'en' else MONTHS_PT
+    x0, w, y0 = 90, 52, 50
+    for m in range(10):
+        fig.text(x0 + m * w + w / 2, 30, M[m], size=9.5, fill='--paper-dim')
+        fig.line(x0 + m * w, 38, x0 + m * w, 220, stroke='--wire', width=1)
+    for i in range(6):
+        y = y0 + i * 28
+        known = i < 4
+        fig.text(x0 - 10, y + 9, T(lang, f'{M[i]} snapshot', f'retrato de {M[i]}'), size=10, anchor='end')
+        fig.circle(x0 + i * w + 6, y + 9, 4, fill='--paper')
+        fig.rect(x0 + i * w + 12, y + 2, 3 * w - 14, 14, stroke='--phosphor' if known else '--amber',
+                 fill='--phosphor-dim' if known else '--scan', rx=2)
+    xt = x0 + 6 * w
+    fig.line(xt, 40, xt, 222, stroke='--paper', width=2)
+    fig.text(xt + 6, 236, T(lang, '1 July: fit the model', '1º de julho: ajustar o modelo'), size=10.5,
+             anchor='start', weight='600')
+    fig.text(x0 + 2 * w, 236, T(lang, 'answer known: may train', 'resposta conhecida: pode treinar'),
+             size=10, fill='--phosphor')
+    fig.text(x0 + 8.4 * w, 140, T(lang, 'answer still open:', 'resposta em aberto:'), size=10,
+             fill='--amber', anchor='middle')
+    fig.text(x0 + 8.4 * w, 156, T(lang, 'leave it out', 'deixe de fora'), size=10, fill='--amber',
+             anchor='middle')
+    cap = T(lang, 'With a three-month horizon, the last two snapshots before the fit have no answer yet. '
+                  'The gap is what keeps them out of training.',
+            'Com horizonte de três meses, os dois últimos retratos antes do ajuste ainda não têm '
+            'resposta. A lacuna é o que os mantém fora do treino.')
     return fig, cap
 
 

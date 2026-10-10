@@ -1,0 +1,44 @@
+---
+title: The gap between what is learned and what is known
+version: 1
+---
+
+A time split has one more trap, and it is the subtlest in this lesson. The question it asks is not
+*what happened before this date?* but **what was known on this date?**, and those are different
+whenever a label takes time to arrive.
+
+At Feira em Casa the label is *cancels during the month after the snapshot*. The snapshot of 1 June
+gets its answer on 30 June. So a model fitted on 1 July can use every snapshot up to and including
+June, and `by_time` and `walk_forward.py` are cut exactly there. That only works because the
+horizon is one month and the training happens on the first.
+
+Change the horizon and the arithmetic changes. Suppose the team wanted to predict cancellations
+**within the next three months**. The snapshot of 1 June then gets its answer only on 31 August. On
+1 July, the snapshot of April has just closed, and those of May and June have no answer yet:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 260\" role=\"img\" data-fig=\"l03-gap\" aria-label=\"Six snapshots, January to June, each followed by a three-month horizon bar. A vertical line marks 1 July, the moment of fitting. The horizons of January to April end by then; those of May and June run past it, so their labels are not yet known.\"><text x=\"116.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Jan</text><path d=\"M90.0 38.0 L90.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"168.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Feb</text><path d=\"M142.0 38.0 L142.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"220.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Mar</text><path d=\"M194.0 38.0 L194.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"272.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Apr</text><path d=\"M246.0 38.0 L246.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"324.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">May</text><path d=\"M298.0 38.0 L298.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"376.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Jun</text><path d=\"M350.0 38.0 L350.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"428.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Jul</text><path d=\"M402.0 38.0 L402.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"480.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Aug</text><path d=\"M454.0 38.0 L454.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"532.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Sep</text><path d=\"M506.0 38.0 L506.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"584.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Oct</text><path d=\"M558.0 38.0 L558.0 220.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"80.0\" y=\"59.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Jan snapshot</text><circle cx=\"96.0\" cy=\"59.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"102.0\" y=\"52.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"80.0\" y=\"87.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Feb snapshot</text><circle cx=\"148.0\" cy=\"87.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"154.0\" y=\"80.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"80.0\" y=\"115.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Mar snapshot</text><circle cx=\"200.0\" cy=\"115.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"206.0\" y=\"108.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"80.0\" y=\"143.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Apr snapshot</text><circle cx=\"252.0\" cy=\"143.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"258.0\" y=\"136.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"80.0\" y=\"171.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">May snapshot</text><circle cx=\"304.0\" cy=\"171.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"310.0\" y=\"164.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"80.0\" y=\"199.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">Jun snapshot</text><circle cx=\"356.0\" cy=\"199.0\" r=\"4\" fill=\"var(--paper)\"></circle><rect x=\"362.0\" y=\"192.0\" width=\"142.0\" height=\"14.0\" rx=\"2\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><path d=\"M402.0 40.0 L402.0 222.0\" stroke=\"var(--paper)\" stroke-width=\"2\" fill=\"none\"></path><text x=\"408.0\" y=\"236.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">1 July: fit the model</text><text x=\"194.0\" y=\"236.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">answer known: may train</text><text x=\"526.8\" y=\"140.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">answer still open:</text><text x=\"526.8\" y=\"156.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">leave it out</text></svg>", "caption": "With a three-month horizon, the last two snapshots before the fit have no answer yet. The gap is what keeps them out of training."}
+```
+
+A split that ignored this would put those two months in training with labels filled in from the
+future, and the model would be learning from answers that, on the day it is used, do not exist.
+The fix is a **gap**: leave out of training every snapshot whose horizon has not closed by the
+moment of prediction. Some libraries call it an embargo; `TimeSeriesSplit` has a `gap` argument
+for exactly this.
+
+## A checklist for any split
+
+Before trusting a score, Ana answers four questions about the split that produced it:
+
+1. **Is anything in the scoring rows also in the training rows, directly or through a relative?**
+   Same row, same subscriber when the answer is per subscriber, same household, same device.
+2. **Is any training row later than any scoring row?** If the model will be used forward in time,
+   the split must go forward too.
+3. **Was every training label known at the moment the model would have been fitted?** If not, leave
+   a gap.
+4. **Was the test set used to choose anything?** If so, it is a validation set, and a fresh test is
+   needed.
+
+A *yes* to any of the first, second or fourth, or a *no* to the third, means the score is optimistic
+by an unknown amount. Lesson 4 is about the same failure arriving through a column instead of a
+split.
