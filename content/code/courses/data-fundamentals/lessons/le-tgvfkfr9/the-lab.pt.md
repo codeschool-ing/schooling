@@ -5,7 +5,7 @@ version: 1
 
 **Este curso é um mapa, e um mapa que você só lê se esquece fácil.** Por isso a maioria das aulas, da
 aula 3 em diante, termina com alguma coisa rodando: uma fonte feita por um programa curto, um arquivo
-escrito em quatro formatos, um fluxo com um evento chegando atrasado, duas cópias de um valor que param
+escrito em cinco formatos, um fluxo com um evento chegando atrasado, duas cópias de um valor que param
 de concordar. Cada programa é mostrado por inteiro na aula que o usa, e você o roda numa máquina que
 você mesmo monta. A plataforma não roda nada por você. Esta seção monta a máquina.
 

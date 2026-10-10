@@ -4,7 +4,7 @@ version: 1
 ---
 
 **This course is a map, and a map you only read is easily forgotten.** So most lessons from lesson 3
-onwards end with something running: a source made by a short program, a file written in four formats,
+onwards end with something running: a source made by a short program, a file written in five formats,
 a stream with an event arriving late, two copies of one value that stop agreeing. Each program is
 printed whole in the lesson that uses it, and you run it on a machine you build yourself. The
 platform runs nothing for you. This section builds the machine.

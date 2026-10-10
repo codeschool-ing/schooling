@@ -20,7 +20,7 @@ aconteceu. Cada item é um tipo de trabalho a que este curso dá nome, e a aula 
 | sexta | um disco do servidor que guarda os arquivos brutos encheu | **operação**: a máquina por baixo de tudo | 9 |
 
 Dois pedidos, uma questão de projeto e seis coisas que quebraram ou quase quebraram. Essa proporção é
-normal, e é a razão do hábito mais importante do ofício: **um pipeline é construído para ser operado,
+normal, e explica o hábito mais importante do ofício: **um pipeline é construído para ser operado,
 não só para rodar.** Ele avisa quando falha, pode ser rodado de novo com segurança, e alguém que não é
 o autor consegue dizer o que ele fez ontem à noite.
 

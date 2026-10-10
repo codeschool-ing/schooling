@@ -20,7 +20,7 @@ kind of work this course names, and the lesson that names it is beside it.
 | Friday | a disk on the server holding the raw files filled up | **operations**: the machine under it all | 9 |
 
 Two requests, one design question, and six things that broke or nearly broke. That ratio is normal,
-and it is the reason for the most important habit in the job: **a pipeline is built to be operated,
+and it explains the most important habit in the job: **a pipeline is built to be operated,
 not only to run.** It says when it fails, it can be run again safely, and somebody other than its
 author can tell what it did last night.
 
