@@ -571,6 +571,124 @@ def l04_timeline(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 5
+
+def deliveries_frame():
+    d = data('deliveries.csv', parse_dates=['date'])
+    d['rush'] = d['hour'].isin([11, 12, 17, 18, 19]).astype(int)
+    return d
+
+
+@figure('l05-line', 5)
+def l05_line(lang):
+    from sklearn.linear_model import LinearRegression
+    d = deliveries_frame()
+    train, test = d[d['date'] < '2025-10-01'], d[d['date'] >= '2025-10-01']
+    feats = ['distance_km', 'items', 'rush', 'rain', 'driver_months']
+    line = LinearRegression().fit(train[feats], train['minutes'])
+    fixed = dict(items=17, rush=0, rain=0, driver_months=30)
+    def at(km):
+        return line.intercept_ + line.coef_[0] * km + sum(
+            line.coef_[i] * fixed[f] for i, f in enumerate(feats) if f in fixed)
+    fig = Fig('l05-line', 640, 300, T(lang,
+        f'A scatter of the {len(test):,} test deliveries, minutes against kilometres, with the fitted '
+        'line for a dry delivery of 17 items outside rush hour. Most points sit within a band around '
+        'it; a few lie far above, the deliveries that went wrong.',
+        f'Uma dispersão das {len(test):,} entregas de teste, minutos contra quilômetros, com a reta '
+        'ajustada para uma entrega sem chuva, de 17 itens, fora do horário de pico. A maioria dos '
+        'pontos fica numa faixa em volta dela; alguns ficam muito acima, as entregas que deram '
+        'errado.'.replace(',', '.', 1)))
+    p = Plot(fig, 60, 30, 610, 250, 0, 30, 0, 200)
+    p.yaxis([0, 50, 100, 150, 200], label=T(lang, 'minutes', 'minutos'))
+    p.xaxis([0, 5, 10, 15, 20, 25, 30], label=T(lang, 'distance, km', 'distância, km'))
+    for km, mins in zip(test['distance_km'], test['minutes']):
+        if km <= 30 and mins <= 200:
+            fig.circle(p.sx(km), p.sy(mins), 1.6, fill='--paper-dim')
+    p.curve(at, 0, 30, stroke='--amber', width=2.4)
+    fig.text(p.sx(24), p.sy(at(24)) - 16, T(lang, 'the line', 'a reta'), size=11, fill='--amber',
+             weight='600')
+    cap = T(lang, 'Each kilometre adds about two and a half minutes to a fixed part of about 22 '
+                  '(with 17 items and 30 months of driving). The points far above the line are the '
+                  'deliveries nothing in the columns predicts.',
+            'Cada quilômetro soma uns dois minutos e meio a uma parte fixa de uns 22 (com 17 itens e '
+            '30 meses de direção). Os pontos muito acima da reta são as entregas que nada nas colunas '
+            'prevê.')
+    return fig, cap
+
+
+@figure('l05-lasso-path', 5)
+def l05_lasso_path(lang):
+    from sklearn.linear_model import Lasso
+    from sklearn.preprocessing import StandardScaler
+    d = deliveries_frame()
+    real = ['distance_km', 'items', 'rush', 'rain', 'driver_months']
+    rng = np.random.default_rng(0)
+    for i in range(40):
+        d[f'noise_{i}'] = rng.normal(size=len(d))
+    feats = real + [f'noise_{i}' for i in range(40)]
+    train = d[d['date'] < '2025-10-01'].sample(80, random_state=0)
+    X = StandardScaler().fit_transform(train[feats])
+    alphas = np.logspace(-2, 1.2, 60)
+    paths = np.array([Lasso(alpha=a, max_iter=50000).fit(X, train['minutes']).coef_ for a in alphas])
+    fig = Fig('l05-lasso-path', 640, 320, T(lang,
+        'Lasso weights against the penalty alpha, on a logarithmic axis. Forty noise weights, in a '
+        'faint colour, start spread around zero and are flattened early; the weights of distance, '
+        'rush, rain and items stay large much longer.',
+        'Pesos do lasso contra a penalidade alpha, num eixo logarítmico. Quarenta pesos de ruído, numa '
+        'cor apagada, começam espalhados em volta do zero e são achatados cedo; os pesos de '
+        'distância, pico, chuva e itens continuam grandes por muito mais tempo.'))
+    lo, hi = float(np.floor(paths.min())), float(np.ceil(paths.max()))
+    p = Plot(fig, 60, 30, 520, 270, -2, 1.2, lo, hi)
+    step = 5 if hi - lo > 20 else 2
+    p.yaxis([t for t in range(int(lo) - int(lo) % step, int(hi) + 1, step) if t > lo], label=T(lang, 'weight, minutes', 'peso, minutos'))
+    p.xaxis([-2, -1, 0, 1], fmt=lambda v: {-2: '0.01', -1: '0.1', 0: '1', 1: '10'}[v].replace('.', ',' if lang == 'pt' else '.'),
+            label=T(lang, 'alpha, the strength of the penalty', 'alpha, a força da penalidade'))
+    xs = np.log10(alphas)
+    for j in range(len(feats) - 1, -1, -1):
+        dd = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, paths[:, j]))
+        fig.path(dd, stroke='--phosphor' if j < 5 else '--wire', width=2 if j < 5 else 1)
+    names = {'distance_km': T(lang, 'distance', 'distância'), 'items': T(lang, 'items', 'itens'),
+             'rush': T(lang, 'rush', 'pico'), 'rain': T(lang, 'rain', 'chuva'),
+             'driver_months': T(lang, 'experience', 'experiência')}
+    used = []
+    for j, f in enumerate(real):
+        y = p.sy(paths[0, j])
+        while any(abs(y - u) < 13 for u in used):
+            y += 13
+        used.append(y)
+        fig.text(p.x1 + 8, y, names[f], size=10, anchor='start', fill='--phosphor')
+    cap = T(lang, 'Read from left to right: as the penalty grows, the noise weights hit zero first and '
+                  'the real columns last.',
+            'Leia da esquerda para a direita: à medida que a penalidade cresce, os pesos de ruído chegam '
+            'a zero primeiro e as colunas reais por último.')
+    return fig, cap
+
+
+@figure('l05-sigmoid', 5)
+def l05_sigmoid(lang):
+    fig = Fig('l05-sigmoid', 600, 260, T(lang,
+        'The logistic curve: chance on the vertical axis from 0 to 1, the weighted sum on the '
+        'horizontal axis from minus 6 to 6. It is flat near 0 on the left, rises steeply through 0.5 '
+        'at a sum of zero, and flattens near 1 on the right.',
+        'A curva logística: chance no eixo vertical de 0 a 1, a soma ponderada no eixo horizontal de '
+        'menos 6 a 6. Ela é plana perto de 0 à esquerda, sobe rápido passando por 0,5 na soma zero, e '
+        'se achata perto de 1 à direita.'))
+    p = Plot(fig, 60, 30, 560, 210, -6, 6, 0, 1)
+    dec = (lambda v: f'{v:.2f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.2f}')
+    p.yaxis([0, 0.25, 0.5, 0.75, 1], fmt=dec, label=T(lang, 'chance of leaving', 'chance de sair'))
+    p.xaxis([-6, -4, -2, 0, 2, 4, 6], fmt=lambda v: str(v).replace('-', '−'),
+            label=T(lang, 'intercept + the weighted columns', 'intercepto + as colunas ponderadas'))
+    p.curve(lambda x: 1 / (1 + math.exp(-x)), -6, 6, stroke='--phosphor', width=2.4)
+    p.vline(0, stroke='--amber')
+    fig.text(p.sx(0) + 8, p.sy(0.5) + 14, T(lang, 'sum 0: chance 0.5', 'soma 0: chance 0,5'), size=10,
+             anchor='start', fill='--amber')
+    cap = T(lang, 'The same weighted sum as a line, bent so that it never leaves the range a '
+                  'probability lives in.',
+            'A mesma soma ponderada de uma reta, dobrada para nunca sair da faixa em que uma '
+            'probabilidade vive.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
