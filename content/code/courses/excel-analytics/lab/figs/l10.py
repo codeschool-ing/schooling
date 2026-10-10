@@ -85,7 +85,7 @@ def areas(t):
     s.rect(x0 + lw - 2, gy - 2, 3 * cw + 4, rh + 4, fill="none", stroke="var(--phosphor)", sw=1.8, rx=3)
     s.rect(x0 - 2, gy + rh - 2, lw + 4, len(prods) * rh + 4, fill="none", stroke="var(--paper)", sw=1.8, rx=3,
            dash="5 3")
-    s.rect(x0 + lw + 2, gy + rh + 2, 3 * cw - 4, len(prods) * rh - 4, fill="none", stroke="var(--paper-dim)",
+    s.rect(x0 + lw - 2, gy + rh + 3, 3 * cw + 4, len(prods) * rh - 1, fill="none", stroke="var(--paper-dim)",
            sw=1.8, rx=3, dash="2 3")
     s.sans(x0, ty + rh + 26, t("A blank cell: that product was never sold through that channel.",
                                "Célula em branco: aquele produto nunca foi vendido por aquele canal."),
