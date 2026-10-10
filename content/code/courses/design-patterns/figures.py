@@ -3,6 +3,7 @@
 
     python3 figures.py            # rewrite every figure in the lessons
     python3 figures.py --list     # the names, and the lesson each lives in
+    python3 figures.py le-xxxx    # only that lesson's prose
 
 A figure lives in a lesson's prose as an ordinary `schooling-figure` fence. Its
 SVG carries `data-fig="<name>"`, which is how this file finds it again: running
@@ -275,8 +276,14 @@ def apply(path):
 
 def main():
     import importlib
+    only = [a for a in sys.argv[1:] if a.startswith('le-')]
     for f in sorted(glob.glob(os.path.join(HERE, 'figs', 'l*.py'))):
-        importlib.import_module('figs.' + os.path.basename(f)[:-3])
+        try:
+            importlib.import_module('figs.' + os.path.basename(f)[:-3])
+        except Exception as err:  # another lesson's drawing being written; say so, carry on
+            if not only:
+                raise
+            print(f'skipped {os.path.basename(f)}: {err}')
     if '--list' in sys.argv:
         for name, (lesson, _) in sorted(FIGURES.items(), key=lambda kv: (kv[1][0], kv[0])):
             print(f'{lesson:2}  {name}')
@@ -285,6 +292,8 @@ def main():
         return
     changed = 0
     for path in sorted(glob.glob(os.path.join(HERE, 'lessons', '*', '*.md'))):
+        if only and os.path.basename(os.path.dirname(path)) not in only:
+            continue
         changed += apply(path)
     if PICTURES:
         os.makedirs(os.path.join(HERE, 'images'), exist_ok=True)

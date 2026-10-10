@@ -11,8 +11,8 @@ uma das formas de a linguagem ajudar. O que importa é a promessa.
 Pense num empréstimo na biblioteca que este curso usa como exemplo do começo ao fim. Um empréstimo
 tem uma data de devolução, pode ser devolvido uma vez, e cada dia de atraso custa 50 centavos. São
 três regras. Se a data de devolução e a data em que o livro voltou forem variáveis soltas que
-qualquer parte do programa escreve, cada uma dessas regras vira uma esperança: toda função que mexe
-num empréstimo precisa lembrar das três, e a que esquecer é onde mora o defeito.
+qualquer parte do programa escreve, cada uma dessas regras vira uma esperança. **Toda função que mexe
+num empréstimo precisa lembrar das três, e a que esquecer é onde mora o defeito.**
 
 ```schooling-example
 {"language": "python", "file": "loan.py", "parts": [
@@ -54,8 +54,8 @@ enxerga, e que uma revisão de código pode se recusar a deixar alguém atravess
 Pergunte o que quem chama precisa saber para usar o objeto direito. Para `Loan`, a resposta são três
 métodos: `due`, `give_back` e `fine`. Quem chama não sabe que a multa é de 50 centavos por dia, que
 a data de devolução é calculada a partir de uma duração, nem que "não devolvido" é guardado como
-`None`. Cada uma dessas coisas pode mudar sem tocar em nenhum chamador. É isso que o encapsulamento
-compra, e é por isso que o princípio da responsabilidade única, na lição 3, e os agregados, na lição
+`None`. Cada uma dessas coisas pode mudar sem tocar em nenhum chamador. **É isso que o encapsulamento
+compra**, e é por isso que o princípio da responsabilidade única, na lição 3, e os agregados, na lição
 12, são no fundo discussões sobre onde passar uma fronteira.
 
 Uma fronteira mal traçada tem esta cara: uma classe com um getter e um setter para cada campo. Ela

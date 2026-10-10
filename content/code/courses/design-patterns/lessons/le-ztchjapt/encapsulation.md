@@ -11,8 +11,8 @@ one way a language helps. The point is the promise.
 Take a loan at the library this course uses as its running example. A loan has a due date, it can
 be given back once, and a late return costs 50 cents a day. Those are three rules. If the due date
 and the return date are loose variables that any part of the program can write, each of those
-rules is a hope: every function that touches a loan has to remember all three, and the one that
-forgets is where the bug lives.
+rules is a hope. **Every function that touches a loan has to remember all three, and the one that
+forgets is where the bug lives.**
 
 ```schooling-example
 {"language": "python", "file": "loan.py", "parts": [
@@ -53,7 +53,7 @@ that a reader can see, and a code review can refuse to let anybody cross.
 Ask what a caller has to know to use the object correctly. For `Loan` the answer is three
 methods: `due`, `give_back` and `fine`. The caller does not know that the fine is 50 cents a day,
 that the due date is computed from a loan length, or that "not returned" is stored as `None`. Each
-of those can change without touching a single caller. That is what encapsulation buys, and it is
+of those can change without touching a single caller. **That is what encapsulation buys**, and it is
 why lesson 3's single responsibility principle and lesson 12's aggregates are both, underneath,
 arguments about where a boundary should go.
 
