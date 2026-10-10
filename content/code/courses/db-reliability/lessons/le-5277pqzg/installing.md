@@ -26,7 +26,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 Version 16, one cluster called `main`, on port 5432, **`online`**. The two right-hand columns are
 the ones this course comes back to most: the **data directory**, which is the database as files on
 disk, and the **log**, which is the first place to look when something has gone wrong. When lesson
-3 adds a second server, it is a second line in this table.
+2 adds a second server, it is a second line in this table.
 
 ## You, as the database knows you
 

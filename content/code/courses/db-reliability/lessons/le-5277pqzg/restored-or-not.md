@@ -20,9 +20,9 @@ chain, and each link can fail without saying so:
 
 Every link has a failure that leaves the job green:
 
-- **The copy holds the wrong thing.** The job dumps a database that was renamed last year, or one
+- **The copy holds the wrong thing.** The job dumps a database the application stopped using last year, or one
   schema out of three, or a file of twenty bytes because the program it piped into succeeded and
-  the one that mattered did not. The last section of this lesson does exactly that, on purpose.
+  the one that mattered did not. A section later in this lesson does exactly that, on purpose.
 - **The copy is right and incomplete.** A logical dump of one database leaves out the roles that
   own its tables and the passwords they log in with. Lesson 2 restores one into a clean server and
   watches it fail on that.

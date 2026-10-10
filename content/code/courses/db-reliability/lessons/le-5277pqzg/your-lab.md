@@ -11,7 +11,7 @@ asks for, and a server you set up yourself is the only kind you are allowed to k
 What you need is **one Ubuntu 24.04 computer with several PostgreSQL servers on it**. Ubuntu's
 packaging lets one machine run many independent servers, each with its own port, its own data
 directory and its own log, and that is how every transcript in the course was recorded: a primary
-on port 5432, a second server on 5433 when lesson 3 needs somewhere to restore to, and three more
+on port 5432, a second server on 5433 when lesson 2 needs somewhere to restore to, and three more
 that Patroni runs from lesson 16. Later lessons install the tools they need, pgBackRest in lesson 5
 and Patroni, etcd, HAProxy and PgBouncer when their turn comes, each with the command that does it.
 

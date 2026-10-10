@@ -91,12 +91,12 @@ case "${1:-}" in
     pg_createcluster 16 main >/dev/null
     pg_ctlcluster 16 main start ;;
   base)
-    "$0" fresh
+    bash "$0" fresh
     runuser -u postgres -- createuser --superuser ana
     as_ana createdb shop
     python3 "$HERE/lab/fence.py" "$L1/installing.md" shop.sql > /home/ana/shop.sql
     chown ana: /home/ana/shop.sql
-    (cd /home/ana && as_ana psql -qX -v ON_ERROR_STOP=1 shop -f shop.sql >/dev/null) ;;
+    (cd /home/ana && as_ana psql -qX -v ON_ERROR_STOP=1 shop -f shop.sql >/dev/null 2>&1) ;;
   etcd)
     # /etc/default/etcd ships empty, so the unit runs `etcd` with no arguments
     # as the etcd user, in /var/lib/etcd: one member called `default`,
