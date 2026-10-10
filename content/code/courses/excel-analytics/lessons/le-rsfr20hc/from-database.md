@@ -58,7 +58,9 @@ Two habits keep a query folding:
 
 ## What to ask before connecting
 
-A database at work belongs to somebody, and three questions save an afternoon: which **server and
-database** to use, which **login** you should have (a personal one, never a shared password in a
-workbook), and whether there is a **read-only copy** meant for reports, so that your refresh does
-not slow the system that takes orders.
+A database at work belongs to somebody, and three questions to them save an afternoon:
+
+- which **server and database** to use;
+- which **login** you should have: a personal one, never a shared password inside a workbook;
+- whether there is a **read-only copy** meant for reports, so that your refresh does not slow the
+  system that takes orders.

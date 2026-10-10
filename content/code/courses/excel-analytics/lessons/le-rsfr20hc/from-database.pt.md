@@ -59,7 +59,11 @@ Dois hábitos mantêm a consulta dobrando:
 
 ## O que perguntar antes de conectar
 
-Um banco de dados no trabalho pertence a alguém, e três perguntas economizam uma tarde: qual
-**servidor e banco** usar, qual **login** você deveria ter (um pessoal, nunca uma senha compartilhada
-dentro de uma pasta de trabalho) e se existe uma **cópia somente leitura** feita para relatórios, para
-que a sua atualização não deixe lento o sistema que recebe os pedidos.
+Um banco de dados no trabalho pertence a alguém, e três perguntas a essa pessoa economizam uma
+tarde:
+
+- qual **servidor e banco** usar;
+- qual **login** você deveria ter: um pessoal, nunca uma senha compartilhada dentro de uma pasta de
+  trabalho;
+- se existe uma **cópia somente leitura** feita para relatórios, para que a sua atualização não deixe
+  lento o sistema que recebe os pedidos.
