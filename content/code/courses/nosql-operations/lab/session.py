@@ -68,6 +68,15 @@ if tool in ("mongosh", "cqlsh"):
             if PROMPT.search(text) and text.endswith(ENDS):
                 buf += read_for(0.5)
                 return buf.decode("utf-8", "replace")
+            if tool == "cqlsh" and PROMPT.search(text) and text.endswith("\n"):
+                # cqlsh can write the next prompt before the error that belongs
+                # to the line (stdout before stderr) in one read, so the text
+                # never ends in a prompt: it has finished once it stays quiet
+                more = read_for(1.5)
+                if not more:
+                    return text
+                buf += more
+                continue
             if proc.poll() is not None:
                 buf += read_for(0.2)
                 return buf.decode("utf-8", "replace")
