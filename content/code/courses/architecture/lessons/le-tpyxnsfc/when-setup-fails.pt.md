@@ -28,8 +28,8 @@ internet, e é assim que um banco de pacotes se corrompe.
 
 **`permission denied while trying to connect to the docker API`.** O engine está rodando e recusou
 você: ou você não está no grupo `docker`, ou está e não entrou de novo desde então. `id -nG` sem
-`docker` na saída diz qual dos dois. Duas correções que vão te oferecer estão erradas: `sudo chmod
-666` no socket dá a toda conta da máquina o que ser do grupo significa, que é root, e `sudo` antes
+`docker` na saída diz qual dos dois. Duas correções que vão te oferecer estão erradas:
+`sudo chmod 666` no socket dá a toda conta da máquina o que ser do grupo significa, que é root, e `sudo` antes
 de todo `docker` deixa arquivos do root nos seus próprios diretórios.
 
 **Uma porta já está em uso.** Toda aula publica os seus serviços no loopback da máquina, e um
