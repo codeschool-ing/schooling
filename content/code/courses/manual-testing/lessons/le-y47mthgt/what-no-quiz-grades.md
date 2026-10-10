@@ -51,9 +51,9 @@ other than what you meant, even if the verdict came out the same. Fix them in th
 explanation. Then give the fixed case to a **different** stranger, because the first one now knows
 the answers and can no longer find the holes.
 
-Two cases with no questions from a stranger who had never seen boxoffice is the finish line. Most
-first attempts get three or four questions each, and the questions repeat: the same vague word, the
-same missing state. That repetition is the useful part. It is a list of your own habits, and the
+Two cases with no questions from a stranger who had never seen boxoffice is the finish line. A first
+attempt rarely gets there, and the questions it draws tend to repeat: the same vague word, the same
+missing state. That repetition is the useful part. It is a list of your own habits, and the
 next case you write will be read with that list in mind.
 
 ## When there is nobody to hand it to

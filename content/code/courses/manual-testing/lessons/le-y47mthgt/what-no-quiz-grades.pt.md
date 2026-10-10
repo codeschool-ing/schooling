@@ -53,8 +53,8 @@ explicação. Depois entregue o caso corrigido a um estranho **diferente**, porq
 as respostas e não consegue mais achar os buracos.
 
 Dois casos sem nenhuma pergunta de um estranho que nunca tinha visto o boxoffice é a linha de
-chegada. A maioria das primeiras tentativas recebe três ou quatro perguntas cada, e as perguntas se
-repetem: a mesma palavra vaga, o mesmo estado faltando. Essa repetição é a parte útil. É uma lista
+chegada. Uma primeira tentativa raramente chega lá, e as perguntas que ela recebe
+tendem a se repetir: a mesma palavra vaga, o mesmo estado faltando. Essa repetição é a parte útil. É uma lista
 dos seus próprios hábitos, e o próximo caso que você escrever vai ser lido com essa lista em mente.
 
 ## Quando não há ninguém para quem entregar
