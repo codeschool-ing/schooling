@@ -76,7 +76,7 @@ def calendar():
     f.text(28, 40, ('Ipê · compliance calendar', 'Ipê · calendário de obrigações'), size=15, weight=600)
     f.text(692, 40, ('Mon 12 Jan 2026', 'seg., 12/01/2026'), size=11, anchor='end', fill='--paper-dim')
     cols = [(28, ('report', 'relatório')), (290, ('due', 'frequência')),
-            (380, ('owner', 'responsável')), (490, ('status', 'situação'))]
+            (400, ('owner', 'responsável')), (505, ('status', 'situação'))]
     y = 76
     for cx, lab in cols:
         f.text(cx, y, lab, size=11, fill='--paper-dim')
@@ -87,8 +87,8 @@ def calendar():
             f.bar(18, y - 12, 4, 16, fill='--amber')
         f.text(28, y, rep, size=12)
         f.text(290, y, due, size=12, fill='--paper-dim')
-        f.text(380, y, owner, size=12)
-        f.text(490, y, status, size=12, fill='--paper' if kind != 'ok' else '--paper-dim')
+        f.text(400, y, owner, size=12)
+        f.text(505, y, status, size=12, fill='--paper' if kind != 'ok' else '--paper-dim')
         y += 38
     f.text(28, 304, ('each submitted report keeps: snapshot date, definition version, approver',
                      'cada relatório enviado guarda: data da foto, versão da definição, quem aprovou'),
@@ -116,12 +116,12 @@ def path():
         (('nightly copy', 'cópia noturna'), ('changes every day', 'muda todo dia'), None),
         (('frozen snapshot', 'foto congelada'), ('as at 31 Dec 2025', 'posição de 31/12/2025'),
          ('never edited', 'nunca editada')),
-        (('the report', 'o relatório'), ('default = 90+ days', 'inadimplência = 90+ dias'),
+        (('the report', 'o relatório'), ('default: 90+ days', 'inadimpl.: 90+ dias'),
          ('definition v3', 'definição v3')),
-        (('submitted file', 'arquivo enviado'), ('approved by Fernanda', 'aprovado por Fernanda'),
+        (('submitted file', 'arquivo enviado'), ('approved: Fernanda', 'aprovado: Fernanda'),
          ('who, when, which file', 'quem, quando, qual arquivo')),
     ]
-    w, h, gap, x, y = 124, 70, 25, 18, 60
+    w, h, gap, x, y = 120, 70, 20, 18, 60
     for i, (t, d, keep) in enumerate(boxes):
         bx = x + i * (w + gap)
         frozen = i >= 2

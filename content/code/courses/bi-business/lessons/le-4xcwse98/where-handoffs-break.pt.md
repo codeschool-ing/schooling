@@ -19,14 +19,14 @@ chegassem mais ao banco de dados. Era uma boa mudança, pedida pelo financeiro, 
 mensagem a Otávio. Ninguém avisou Lívia.
 
 A taxa de recompra dela contava todo cliente cujo primeiro pedido foi feito no primeiro semestre de
-2025. **1.400 desses 41.200 clientes tinham feito um pedido e depois cancelado**, e, com os
+2025. **420 desses 13.200 clientes tinham feito um pedido e depois cancelado**, e, com os
 cancelados fora, eles sumiram da conta. Ninguém no numerador mudou: um cliente cujo único pedido foi
 cancelado nunca tinha voltado. Então o denominador encolheu e a taxa subiu:
 
 | | clientes novos | voltaram em até 180 dias | taxa de recompra |
 |---|---|---|---|
-| antes de 1º de março | 41.200 | 11.900 | 28,9% |
-| depois de 1º de março | 39.800 | 11.900 | 29,9% |
+| antes de 1º de março | 13.200 | 3.820 | 28,9% |
+| depois de 1º de março | 12.780 | 3.820 | 29,9% |
 
 Um ponto inteiro, de um dia para o outro, sem nenhum cliente agir diferente. Renata viu no relatório
 de março e perguntou o que a equipe de campanhas tinha acertado. **As duas definições eram

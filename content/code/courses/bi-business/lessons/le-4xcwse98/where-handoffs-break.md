@@ -18,15 +18,15 @@ On 1 March 2026 Tiago changed the online shop's pipeline so that cancelled order
 the database. It was a good change, asked for by finance, and he mentioned it in a message to Otávio.
 Nobody told Lívia.
 
-Her repeat rate counted every customer whose first order was placed in the first half of 2025. **1,400 of those 41,200
+Her repeat rate counted every customer whose first order was placed in the first half of 2025. **420 of those 13,200
 customers had placed one order and then cancelled it**, and with cancelled orders gone they vanished
 from the count. Nobody in the numerator changed: a customer whose only order was cancelled had never
 come back. So the denominator shrank and the rate rose:
 
 | | first-time customers | came back within 180 days | repeat rate |
 |---|---|---|---|
-| before 1 March | 41,200 | 11,900 | 28.9% |
-| after 1 March | 39,800 | 11,900 | 29.9% |
+| before 1 March | 13,200 | 3,820 | 28.9% |
+| after 1 March | 12,780 | 3,820 | 29.9% |
 
 A full point, overnight, with no customer behaving differently. Renata saw it in the March report and
 asked what the campaign team had done right. **Both definitions were defensible; the problem was that

@@ -30,13 +30,13 @@ Isso é engenharia: nenhuma pergunta de negócio respondida, e nada mais possív
 ## A parte do analista de dados: o que os dados dizem, uma vez?
 
 Lívia então fez um trabalho de analista de dados. Pegou todos os clientes cujo primeiro pedido online foi feito no primeiro semestre de 2025, para
-que cada um tivesse tido pelo menos 180 dias para voltar até o fim do ano: **41.200 clientes.**
-Desses, **11.900 fizeram outro pedido em até 180 dias depois do primeiro, ou 28,9%.** Depois procurou diferenças: pela categoria da primeira compra, pelo
+que cada um tivesse tido pelo menos 180 dias para voltar até o fim do ano: **13.200 clientes.**
+Desses, **3.820 fizeram outro pedido em até 180 dias depois do primeiro, ou 28,9%.** Depois procurou diferenças: pela categoria da primeira compra, pelo
 mês e por ter chegado atrasado ou não o primeiro pedido. No começo ela não sabia que comparação ia
 importar, e a maioria não importou.
 
-O que ela achou foi modesto e útil. Dos 2.600 clientes cujo primeiro pedido chegou atrasado, 21,9%
-voltaram; dos 38.600 cujo primeiro pedido chegou no prazo, 29,4%. Isso foi para Caio, além de Renata.
+O que ela achou foi modesto e útil. Dos 840 clientes cujo primeiro pedido chegou atrasado, 21,9%
+voltaram; dos 12.360 cujo primeiro pedido chegou no prazo, 29,4%. Isso foi para Caio, além de Renata.
 
 ## A parte do analista de BI: a mesma resposta, todo mês
 

@@ -8,23 +8,23 @@ LESSON = 'le-x7h26kcp'
 # October, by store and for the online shop, in thousands of reais. The stores
 # are each a little above October 2024; the online shop is not.
 OCT = [
-    ('Savassi', 950, 993),
-    ('Pampulha', 848, 882),
-    ('Contagem', 1036, 1042),
-    ('Betim', 716, 738),
-    ('Nova Lima', 750, 789),
-    ('Sete Lagoas', 545, 561),
-    ('Divinópolis', 520, 539),
-    ('Ipatinga', 562, 588),
-    ('Juiz de Fora', 723, 748),
-    ('Online', 1370, 1080),
+    ('Savassi', 945, 991),
+    ('Pampulha', 844, 880),
+    ('Contagem', 1032, 1040),
+    ('Betim', 714, 737),
+    ('Nova Lima', 748, 788),
+    ('Sete Lagoas', 543, 560),
+    ('Divinópolis', 519, 538),
+    ('Ipatinga', 560, 587),
+    ('Juiz de Fora', 722, 747),
+    ('Online', 1393, 1092),
 ]
 NOV_ONLINE = (1660, 2060)            # November's online shop, 2024 and 2025
 # Orders: receipts in the stores, paid orders online.
-ORDERS = {'stores': (17500, 17920), 'online': (2740, 2160)}
+ORDERS = {'stores': (17500, 17920), 'online': (3980, 3120)}
 # The online shop's October 2024, split at the campaign: 1-20 October without,
 # 21-31 October with. October 2025 had no campaign day.
-SPLIT_2024 = ((20, 1240), (11, 1500))
+SPLIT_2024 = ((20, 1800), (11, 2180))
 
 assert sum(a for _, a, _ in OCT) == B.SALES_2024[9]
 assert sum(b for _, _, b in OCT) == B.SALES_2025[9]
@@ -53,8 +53,8 @@ def october():
 def orders():
     so, oo = ORDERS['stores'], ORDERS['online']
     rows = [['', 'Oct 2024', 'Oct 2025'],
-            ['Store sales', 6650, 6880], ['Store receipts', so[0], so[1]],
-            ['Online sales', 1370, 1080], ['Online orders', oo[0], oo[1]]]
+            ['Store sales', 6627, 6868], ['Store receipts', so[0], so[1]],
+            ['Online sales', 1393, 1092], ['Online orders', oo[0], oo[1]]]
     return B.report('lesson 7 — orders times average ticket', rows, [], [
         '=ROUND(B2*1000/B3,0)', '=ROUND(C2*1000/C3,0)',
         '=ROUND(B4*1000/B5,0)', '=ROUND(C4*1000/C5,0)',
@@ -79,7 +79,7 @@ def suspects():
     rows = [['', '2024', '2025'],
             ['Oct, all', B.SALES_2024[9], B.SALES_2025[9]],
             ['Nov, all', B.SALES_2024[10], B.SALES_2025[10]],
-            ['Oct, online', 1370, 1080],
+            ['Oct, online', 1393, 1092],
             ['Nov, online', n24, n25]]
     got2 = B.report('lesson 7 — October and November together', rows, [], [
         '=B2+B3', '=C2+C3', '=ROUND(((C2+C3)/(B2+B3)-1)*100,1)',
@@ -96,10 +96,10 @@ def questions():
         '=ROUND(2400*450/1000,0)',
         '=ROUND((1250/1300-1)*100,1)',
         '=ROUND((180-150)/1200*100,1)',
-        '=ROUND((789/750-1)*100,1)',
-        '=ROUND((1042/1036-1)*100,1)',
+        '=ROUND((788/748-1)*100,1)',
+        '=ROUND((1040/1032-1)*100,1)',
         '=75*0.5',
-        '=2740-2160',
+        '=3980-3120', '=ROUND(1393*1000/3980,0)', '=ROUND(1092*1000/3120,0)',
     ])
 
 

@@ -31,13 +31,13 @@ That is engineering: no business question answered, and nothing else possible wi
 
 Lívia then did a data analyst's work. She took every customer whose first ever online order was
 placed in the first half of 2025, so that each had had at least 180 days to come back by the end of
-the year: **41,200 of them.** Of those, **11,900 ordered again within 180 days of their first order,
+the year: **13,200 of them.** Of those, **3,820 ordered again within 180 days of their first order,
 or 28.9%.** Then she looked for differences: by the category of the first purchase,
 by the month, by whether the first order was delivered late. She did not know at the start which
 comparison would matter, and most of them did not.
 
-What she found was modest and useful. Of the 2,600 customers whose first order arrived late, 21.9%
-came back; of the 38,600 whose first order arrived on time, 29.4% did. That went to Caio as well as
+What she found was modest and useful. Of the 840 customers whose first order arrived late, 21.9%
+came back; of the 12,360 whose first order arrived on time, 29.4% did. That went to Caio as well as
 to Renata.
 
 ## The BI analyst's part: the same answer, every month

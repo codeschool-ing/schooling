@@ -5,12 +5,12 @@ import book as B
 LESSON = 'le-4xcwse98'
 
 # Renata's question, on the online shop's 2025 first-time customers.
-FIRST_TIME = 41200          # customers whose first ever order was placed in January to June 2025
-RETURNED = 11900            # of those, bought again within 180 days of the first order
-ONLY_CANCELLED = 1400       # of those, whose only order was later cancelled
+FIRST_TIME = 13200          # customers whose first ever order was placed in January to June 2025
+RETURNED = 3820            # of those, bought again within 180 days of the first order
+ONLY_CANCELLED = 420       # of those, whose only order was later cancelled
 
 
-LATE_FIRST, LATE_RETURNED = 2600, 570     # first order delivered late, and of those came back
+LATE_FIRST, LATE_RETURNED = 840, 184     # first order delivered late, and of those came back
 
 
 def by_delivery():
