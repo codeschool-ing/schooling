@@ -1,0 +1,422 @@
+{
+  "ex-m6xdw5bd": {
+    "prompt": "Como o MongoDB guarda um documento no disco e na rede?",
+    "choices": [
+      {
+        "text": "BSON, uma codificação binária com mais tipos que o JSON",
+        "why": "Isso. Datas, inteiros de 32 e 64 bits, Decimal128 e ObjectId são tipos do BSON que o JSON não tem."
+      },
+      {
+        "text": "Texto JSON, comprimido",
+        "why": "O mongosh imprime algo parecido com JSON, mas a forma guardada é binária e tipada."
+      },
+      {
+        "text": "Linhas de uma tabela escondida, uma coluna por campo já visto",
+        "why": "Não há tabela por trás de uma coleção; cada documento carrega os próprios campos e tipos."
+      },
+      {
+        "text": "Código-fonte JavaScript que o mongosh avalia ao ler",
+        "why": "O mongosh fala JavaScript; o servidor guarda dados, não programas."
+      }
+    ]
+  },
+  "ex-103rheyx": {
+    "prompt": "No mongosh você insere `{ views: 12345678901 }`. Que tipo BSON `views` recebe?",
+    "hint": "Não cabe em 32 bits.",
+    "choices": [
+      {
+        "text": "long, porque o número é inteiro",
+        "why": "O mongosh não promove um inteiro grande a inteiro de 64 bits; para isso existe NumberLong."
+      },
+      {
+        "text": "double",
+        "why": "Isso. Só inteiros que cabem em 32 bits vão como int; o resto vira double, exato só até 2^53."
+      },
+      {
+        "text": "int, truncado ao maior valor de 32 bits",
+        "why": "Nada é truncado; o valor vira double."
+      },
+      {
+        "text": "decimal, já que doubles não guardam onze dígitos",
+        "why": "Um double guarda onze dígitos com exatidão; decimal só é usado quando você pede."
+      }
+    ]
+  },
+  "ex-cjkerwkv": {
+    "prompt": "As contas de clientes recebem ObjectIds, e a URL da página da conta é `/account/<id>`. O que um estranho descobre com uma URL dessas?",
+    "hint": "Leia os quatro primeiros bytes.",
+    "choices": [
+      {
+        "text": "Nada: o id é aleatório do primeiro ao último byte, como um token",
+        "why": "Só cinco dos doze bytes são aleatórios, e são os mesmos para todo id de um processo."
+      },
+      {
+        "text": "O e-mail do cliente, codificado nos bytes do meio",
+        "why": "Nenhum campo do documento entra no seu ObjectId."
+      },
+      {
+        "text": "A hora de criação, até o segundo, e um palpite dos vizinhos",
+        "why": "Isso. O carimbo de tempo é legível e o contador é sequencial, então um ObjectId não substitui um token aleatório."
+      },
+      {
+        "text": "O endereço do servidor, que o cliente carimba em todo id",
+        "why": "A parte de 5 bytes é um valor aleatório por processo, não um endereço."
+      }
+    ]
+  },
+  "ex-w9vgwyn0": {
+    "prompt": "Quantos bytes tem um ObjectId?",
+    "hint": "Ele é impresso como 24 dígitos hexadecimais.",
+    "unit": "bytes"
+  },
+  "ex-x3d85kas": {
+    "prompt": "Por que `NumberDecimal(349.90 * 3)` deu `Decimal128('1049.6999999999998')`?",
+    "choices": [
+      {
+        "text": "O Decimal128 tem poucos dígitos para esse valor",
+        "why": "Ele tem 34 dígitos significativos; o erro já estava na entrada."
+      },
+      {
+        "text": "A multiplicação rodou como double antes de o decimal ser construído a partir do resultado",
+        "why": "Isso. Construa o decimal a partir de uma string, NumberDecimal(\"349.90\"), e multiplique no servidor."
+      },
+      {
+        "text": "O servidor arredonda decimais para duas casas ao inserir",
+        "why": "Nada foi inserido, e o servidor não arredonda decimais desse jeito."
+      },
+      {
+        "text": "O mongosh trata um decimal como string até ele ser guardado",
+        "why": "O valor era um número ao chegar ao NumberDecimal; é disso que o aviso falava."
+      }
+    ]
+  },
+  "ex-7tg0h63p": {
+    "prompt": "Uma aplicação roda `updateOne({ _id: orderId }, { $set: { status: \"paid\" } })` e trata a ausência de exceção como sucesso. O que ela informa quando `orderId` não nomeia pedido nenhum?",
+    "hint": "Veja o que o servidor respondeu para `_id: 22`.",
+    "choices": [
+      {
+        "text": "Que foi pago: matchedCount 0 não é erro",
+        "why": "Isso. Um update que não casa com nada é um update bem-sucedido de nada; a contagem é o único sinal."
+      },
+      {
+        "text": "Um erro, porque o servidor recusa updates em documentos inexistentes",
+        "why": "O servidor não levantou nada; respondeu acknowledged: true."
+      },
+      {
+        "text": "Um pedido novo, já que updateOne insere quando nada casa",
+        "why": "Só com upsert: true um update insere."
+      },
+      {
+        "text": "Um timeout, enquanto o servidor espera o pedido aparecer",
+        "why": "O servidor responde na hora; ele não espera aparecer um documento que case."
+      }
+    ]
+  },
+  "ex-4j5k3mhn": {
+    "prompt": "Por que `updateOne({ _id: 1 }, { status: \"shipped\" })` foi recusado?",
+    "choices": [
+      {
+        "text": "O pedido 1 ainda não tinha campo status",
+        "why": "Ele tinha, e o $set criaria um de qualquer forma."
+      },
+      {
+        "text": "Mudanças de status exigem uma transação de vários documentos",
+        "why": "Um update de um documento só é atômico sem transação."
+      },
+      {
+        "text": "Não tinha operador `$`, então substituiria o pedido inteiro",
+        "why": "Isso. Sem a verificação, significaria substituir o pedido por { status: \"shipped\" } e perder o resto."
+      },
+      {
+        "text": "`shipped` não é um valor que as regras da coleção permitem em status",
+        "why": "Não havia validador em orders; a recusa veio do próprio mongosh."
+      }
+    ]
+  },
+  "ex-v7bdx9eq": {
+    "prompt": "Um processo de reposição roda `updateOne({ _id: \"LS-050\" }, { $set: { name: \"Laptop stand\" }, $inc: { stock: 5 } }, { upsert: true })`. A primeira tentativa dá timeout no cliente, embora o servidor a tenha aplicado, e o processo tenta de novo. Qual é o estoque?",
+    "hint": "A segunda chamada da captura é essa nova tentativa.",
+    "choices": [
+      {
+        "text": "5, porque um upsert é idempotente",
+        "why": "Ele só é idempotente com operadores como $set; o $inc soma de novo."
+      },
+      {
+        "text": "10",
+        "why": "Isso. A nova tentativa casou com o documento que a primeira criou e somou 5 de novo."
+      },
+      {
+        "text": "Um erro E11000, porque a primeira tentativa já inseriu LS-050",
+        "why": "Um upsert que encontra o documento o atualiza; só um insert simples colide."
+      },
+      {
+        "text": "0, já que uma escrita com timeout é desfeita pelo servidor",
+        "why": "O servidor não sabe que o cliente desistiu; a escrita fica."
+      }
+    ]
+  },
+  "ex-8c7np3py": {
+    "prompt": "Dois clientes rodam `updateOne({ _id: \"MN-330\" }, { $inc: { stock: -1 } })` no mesmo instante, com o estoque em 1. Qual é o estoque depois?",
+    "choices": [
+      {
+        "text": "0, porque o segundo decremento leu o valor antigo",
+        "why": "Isso é o que ler-subtrair-gravar na aplicação faz; o $inc é aplicado pelo servidor ao valor atual."
+      },
+      {
+        "text": "-1",
+        "why": "Isso. Cada $inc é atômico no documento; evitar o negativo exige um filtro como stock: { $gt: 0 }."
+      },
+      {
+        "text": "1, porque updates conflitantes se anulam",
+        "why": "Nenhum update é anulado; os dois são aplicados, um depois do outro."
+      },
+      {
+        "text": "Um erro para um deles, já que o estoque não pode ficar abaixo de zero",
+        "why": "Nada proibia estoque negativo; um validador com minimum: 0 proibiria, e a seção de validação acrescenta um."
+      }
+    ]
+  },
+  "ex-6rf4mfd0": {
+    "prompt": "Complete o filtro que encontra os pedidos com uma linha do cabo: `db.orders.find({ \"___\": \"CB-012\" })`.",
+    "hint": "Um caminho com ponto dentro do array de linhas.",
+    "blanks": [
+      {
+        "accept": [
+          "items.sku"
+        ]
+      }
+    ]
+  },
+  "ex-cmb5zea8": {
+    "prompt": "`db.products.insertOne({ _id: \"KB-101\", ... })` é recusado com E11000. O que impôs isso?",
+    "choices": [
+      {
+        "text": "Um validador com que a coleção products foi criada",
+        "why": "Ainda não existia validador; E11000 é chave duplicada, não regra violada."
+      },
+      {
+        "text": "O índice único em `_id` que toda coleção tem",
+        "why": "Isso. Ele não pode ser removido, e é a única restrição que o MongoDB impõe sem que peçam."
+      },
+      {
+        "text": "O mongosh, que lembra os ids que já inseriu",
+        "why": "Uma sessão nova do mongosh seria recusada do mesmo jeito; a verificação é no servidor."
+      },
+      {
+        "text": "Uma chave estrangeira de orders para products",
+        "why": "O MongoDB não tem chaves estrangeiras."
+      }
+    ]
+  },
+  "ex-e6swsjtt": {
+    "prompt": "O preço de um produto foi importado como a string `\"79.90\"`. Por que `find({ price: { $lt: NumberDecimal(\"100\") } })` o deixa de fora?",
+    "choices": [
+      {
+        "text": "Valores se comparam pelo tipo primeiro, e string não cabe em intervalo numérico",
+        "why": "Isso. A consulta não falha; ela devolve uma lista menor."
+      },
+      {
+        "text": "A string é comparada letra a letra, e \"7\" vem depois de \"1\" nessa ordem",
+        "why": "Uma string nem chega a ser comparada com um número."
+      },
+      {
+        "text": "A consulta levanta um erro de tipo, que o mongosh esconde",
+        "why": "Nenhum erro é levantado; um find só não casa entre tipos."
+      },
+      {
+        "text": "Strings não são indexadas, então a consulta as pula",
+        "why": "Não há índice aqui, e strings podem ser indexadas."
+      }
+    ]
+  },
+  "ex-na689w4f": {
+    "prompt": "Ponha estes produtos na ordem em que `find().sort({ price: 1 })` os devolve.",
+    "hint": "Um campo ausente ordena como null; strings ordenam depois de números.",
+    "items": [
+      "Webcam, sem campo price",
+      "Cabo USB-C, preço Decimal128 39.90",
+      "Monitor de 27 polegadas, preço Decimal128 1499.00",
+      "Cartão de memória, preço a string \"79.90\""
+    ],
+    "trap": "O cartão de memória é o mais barato e mesmo assim vem por último."
+  },
+  "ex-ems6h1za": {
+    "prompt": "Um desenvolvedor digita `db.prodcuts.insertOne(...)`. O que o servidor faz?",
+    "choices": [
+      {
+        "text": "Recusa, porque `prodcuts` não existe",
+        "why": "A primeira escrita cria a coleção que ela nomeia."
+      },
+      {
+        "text": "Sugere `products` e espera confirmação",
+        "why": "O servidor não sugere grafias."
+      },
+      {
+        "text": "Grava o documento em `products`, o nome mais próximo",
+        "why": "Nomes casam exatamente."
+      },
+      {
+        "text": "Cria uma coleção chamada `prodcuts` e guarda o documento ali",
+        "why": "Isso, acknowledged: true. Só a lista de nomes de coleções mostra."
+      }
+    ]
+  },
+  "ex-qk7m2s0d": {
+    "prompt": "Você herda uma coleção de 2 milhões de pedidos e lhe dizem que todo `total` é decimal. Que consulta testa a afirmação e diz quão errada ela está?",
+    "choices": [
+      {
+        "text": "`find({ total: { $type: \"decimal\" } }).count()`",
+        "why": "Ela conta os bons e não diz nada sobre quais outros tipos existem, ausente incluído."
+      },
+      {
+        "text": "`aggregate([{ $group: { _id: { $type: \"$total\" }, n: { $sum: 1 } } }])`",
+        "why": "Isso. Uma linha por tipo, ausente incluído, com quantos de cada: o censo."
+      },
+      {
+        "text": "`findOne()`, lido por uma pessoa",
+        "why": "Um documento não prova nada sobre dois milhões."
+      },
+      {
+        "text": "`find({ total: { $exists: false } })`",
+        "why": "Isso acha só os ausentes, não as strings nem os doubles."
+      }
+    ]
+  },
+  "ex-8t39ch5r": {
+    "prompt": "Um validador `$jsonSchema` é acrescentado com `collMod` a uma coleção em que dois documentos já o quebram. O que acontece com eles?",
+    "choices": [
+      {
+        "text": "O collMod é recusado até eles serem consertados, citando os dois",
+        "why": "Ele respondeu { ok: 1 }; documentos existentes não são verificados."
+      },
+      {
+        "text": "Eles são apagados",
+        "why": "Um validador nunca remove dados."
+      },
+      {
+        "text": "Ficam, e a regra vale a partir da próxima escrita",
+        "why": "Isso. Achá-los é uma consulta $nor em volta do validador."
+      },
+      {
+        "text": "São convertidos para os tipos que o esquema nomeia",
+        "why": "Nada é convertido; o preço string continuou string até o $set mudá-lo."
+      }
+    ]
+  },
+  "ex-zqjr91pj": {
+    "prompt": "Com `validationLevel: \"strict\"`, um update que só faz `$inc: { stock: -1 }` é recusado. Em que documento ele foi aplicado?",
+    "hint": "O strict verifica o documento que o update deixa para trás.",
+    "choices": [
+      {
+        "text": "Um cujo estoque ficaria abaixo de zero",
+        "why": "É possível, mas a recusa da captura foi por causa do preço, um campo que o update nem tocou."
+      },
+      {
+        "text": "Um já inválido em outro campo, como um preço string",
+        "why": "Isso. O strict verifica o documento resultante inteiro; o moderate deixa passar updates em documentos já inválidos."
+      },
+      {
+        "text": "Um criado antes de o validador existir, seja o que for que contenha",
+        "why": "Um documento antigo válido é atualizado sem problema; a idade não é o que se verifica."
+      },
+      {
+        "text": "Qualquer documento, porque o strict recusa todo update",
+        "why": "O strict só recusa updates que deixam um documento inválido."
+      }
+    ]
+  },
+  "ex-kcyzcdat": {
+    "prompt": "Associe cada configuração de validador ao que uma escrita inválida faz com ela.",
+    "hint": "Um comportamento não pertence a nenhuma delas.",
+    "pairs": [
+      {
+        "left": "validationAction: \"error\"",
+        "right": "recusada, com a regra violada no erro"
+      },
+      {
+        "left": "validationAction: \"warn\"",
+        "right": "aceita, e uma linha no log do servidor"
+      },
+      {
+        "left": "validationLevel: \"moderate\"",
+        "right": "um update em documento já inválido passa"
+      }
+    ],
+    "right_distractors": [
+      "o documento é corrigido para casar com o esquema"
+    ]
+  },
+  "ex-dk9mevdh": {
+    "prompt": "Ponha em ordem os passos para implantar um validador numa coleção movimentada.",
+    "items": [
+      "acrescentar a regra com validationAction \"warn\"",
+      "ler o log para saber quais programas gravam documentos inválidos",
+      "consertar os documentos até o censo com $nor ficar vazio",
+      "mudar para validationLevel \"strict\" e validationAction \"error\""
+    ],
+    "trap": "Recusar primeiro quebra os programas que você ainda não achou."
+  },
+  "ex-0j7tr8wa": {
+    "prompt": "Quais destas coisas um validador `$jsonSchema` em `products` lhe dá? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Um erro no momento em que um programa grava um preço string",
+        "why": "Sim, seja qual for o programa."
+      },
+      {
+        "text": "A recusa de escritas numa coleção com nome errado como `prodcuts`",
+        "why": "O validador pertence a products; prodcuts é outra coleção, sem regra."
+      },
+      {
+        "text": "Os detalhes de qual regra falhou e o tipo que ela viu",
+        "why": "Sim: propertyName, specifiedAs, consideredType."
+      },
+      {
+        "text": "Uma verificação dos documentos guardados antes de a regra existir",
+        "why": "Documentos antigos não são verificados; o censo com $nor é como você os acha."
+      }
+    ]
+  },
+  "ex-1bc46k6w": {
+    "prompt": "Um relatório soma `total` de todos os pedidos e sai alguns centavos diferente do sistema contábil. Os totais são todos números. Qual é a causa mais provável, dado o que esta aula mostrou?",
+    "choices": [
+      {
+        "text": "Alguns totais são strings e foram pulados pela soma",
+        "why": "A pergunta diz que todos são números; uma string pulada erraria por preços inteiros, não centavos."
+      },
+      {
+        "text": "Os totais são doubles, e frações binárias não somam centavos exatos",
+        "why": "Isso. Guarde dinheiro como Decimal128 construído de strings, ou como centavos inteiros."
+      },
+      {
+        "text": "As datas estão em UTC, então pedidos de um dia caem no relatório errado",
+        "why": "Isso moveria pedidos inteiros entre dias, não centavos no total."
+      },
+      {
+        "text": "ObjectIds ordenam pelo tempo, então os pedidos mais novos ainda não foram contados",
+        "why": "Uma soma não depende da ordem, e estes pedidos têm ids inteiros."
+      }
+    ]
+  },
+  "ex-qwmdf6z9": {
+    "prompt": "Associe cada sintoma à causa mais provável.",
+    "pairs": [
+      {
+        "left": "um produto ausente de \"abaixo de 100\"",
+        "right": "o preço dele está guardado como string"
+      },
+      {
+        "left": "um produto ordenado antes do mais barato",
+        "right": "o campo de preço está com nome errado, então price está ausente"
+      },
+      {
+        "left": "um update informando matchedCount: 0",
+        "right": "o filtro nomeia um documento que não existe"
+      },
+      {
+        "left": "um estoque de 10 depois de uma reposição de 5",
+        "right": "um upsert com $inc foi repetido"
+      }
+    ]
+  }
+}
