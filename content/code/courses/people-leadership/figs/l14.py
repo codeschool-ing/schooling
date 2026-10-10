@@ -27,8 +27,8 @@ def funnel():
         f.text(cx, y + h / 2, str(n), size=13, weight='600', mono=True)
         f.text(cx + maxw / 2 + 20, y + h / 2, name, size=11.5, anchor='start')
     y = top + 6 * (h + 6)
-    f.circle(cx, y + 12, 10, fill='--phosphor')
-    f.text(cx, y + 12, '1', size=11, weight='600', fill='--ink')
+    f.rect(cx - 20, y, 40, 24, stroke='--phosphor', fill='--panel', width=1.8, rx=3)
+    f.text(cx, y + 12, '1', size=13, weight='600', mono=True)
     f.text(cx + maxw / 2 + 20, y + 12, T('accepted', 'aceita'), size=11.5, anchor='start',
            weight='600')
     f.text(20, top + 2 * (h + 6), T('width scaled by', 'largura proporcional'), size=10,
