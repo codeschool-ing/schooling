@@ -4,7 +4,7 @@ from figures import Fig, T, figure
 
 @figure('l11-three-books', 11)
 def three_books():
-    f = Fig('l11-three-books', 720, 300, T(
+    f = Fig('l11-three-books', 720, 250, T(
         'Three bounded contexts side by side, each a dashed boundary with its own class called '
         'Book. In acquisitions, Book has isbn, supplier, unit_cents and quantity, and the method '
         'total_cents. In the catalogue, Book has isbn, title, authors and subjects, and the method '
@@ -26,19 +26,16 @@ def three_books():
          ['barcode', 'isbn', 'loan_days', 'on_loan_to'], ['lend()']),
     ]
     for x, name, quote, flds, meths in ctx:
-        f.rect(x, 14, 200, 222, stroke='--amber', fill='--ink', dash='5 4', rx=6)
+        f.rect(x, 14, 200, 172, stroke='--amber', fill='--ink', dash='5 4', rx=6)
         f.text(x + 100, 32, name, size=11, weight='600', fill='--amber')
         f.text(x + 100, 50, quote, size=9.5, fill='--paper-dim', italic=True)
         f.klass(x + 30, 66, 140, 'Book', flds, meths)
-    # the isbn row is the first field in two boxes and the second in lending
-    row = 9.5 * 1.45
-    y0 = 66 + row + 8 + 4 + row / 2
-    for x, idx in ((20, 0), (260, 0), (500, 1)):
-        f.line(x + 100, 236, x + 100, 262, stroke='--phosphor', width=1.3)
-    f.line(120, 262, 600, 262, stroke='--phosphor', width=1.3)
-    f.text(360, 280, T('joined only by the ISBN, never by sharing the class',
+    for x in (20, 260, 500):
+        f.line(x + 100, 186, x + 100, 210, stroke='--phosphor', width=1.3)
+    f.line(120, 210, 600, 210, stroke='--phosphor', width=1.3)
+    f.text(360, 230, T('joined only by the ISBN, never by sharing the class',
                        'ligados só pelo ISBN, nunca por compartilhar a classe'), size=10, fill='--paper')
-    f.text(660, 252, T('many per ISBN', 'muitos por ISBN'), size=9, fill='--paper-dim', italic=True)
+    f.text(660, 200, T('many per ISBN', 'muitos por ISBN'), size=9, fill='--paper-dim', italic=True)
     return f, T('One word, three models. Each context keeps the Book its own people mean, and the ISBN is the only thing they share.',
                 'Uma palavra, três modelos. Cada contexto fica com o Book que a sua gente quer dizer, e o ISBN é a única coisa em comum.')
 

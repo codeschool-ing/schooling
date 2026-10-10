@@ -27,8 +27,8 @@ class Laptop(Item):
 ```
 
 Nothing is overridden and nothing raises. But `lend` promised a due date *later* than the day of
-lending, and `Laptop` returns the same day. That is a **weakened postcondition**, and the caller
-that breaks is one that was written trusting it: the reminder job that sends "due in two days"
+lending, and `Laptop` returns the same day. That is a **weakened postcondition**. The callers
+that break are the ones written trusting it: the reminder job that sends "due in two days"
 by subtracting two days from the due date, or a report of loans that are out, which counts an item
 as out while `today < due`. Lesson 1's `ReferenceBook` had `loan_days = 0` too. It was this
 violation, waiting for a caller.
