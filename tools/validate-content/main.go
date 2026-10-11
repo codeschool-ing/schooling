@@ -779,6 +779,10 @@ var allowedOutsideTheFont = map[rune]string{
 		"at all, so no cut of it would fix this. It opens a line and nothing is aligned to " +
 		"what follows it, so the width the reader's machine gives it moves nothing that means " +
 		"anything",
+	'\u2718': "Playwright's list reporter opens the line of a failed test with it, as it opens a " +
+		"passing one with U+2713, which the terminal cut carries; IBM Plex Mono has no U+2718 " +
+		"at all. It opens a line and nothing is aligned to what follows it, and a capture is " +
+		"pasted byte for byte, so the alternative is a transcript that is not the one printed",
 }
 
 // coverage is the set of code points the interface declares a face for.

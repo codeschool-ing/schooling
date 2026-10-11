@@ -127,6 +127,9 @@ var terminalGlyphs = func() string {
 		}
 	}
 	b.WriteString("←↑→↓↔↕↖↗↘↙↩↪↰↱↲↳↶↷↺↻⇄⇆")
+	// The tick a test runner prints beside a test that passed: Playwright's
+	// list reporter opens every passing line with it.
+	b.WriteString("✓")
 	return b.String()
 }()
 
