@@ -879,6 +879,79 @@ def l07_steps(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 8
+
+@figure('l08-boost-curve', 8)
+def l08_boost_curve(lang):
+    from sklearn.ensemble import GradientBoostingRegressor
+    d = deliveries_frame()
+    feats = ['distance_km', 'items', 'hour', 'rain', 'driver_months']
+    train, test = d[d['date'] < '2025-10-01'], d[d['date'] >= '2025-10-01']
+    boost = GradientBoostingRegressor(n_estimators=300, max_depth=3, learning_rate=0.1,
+                                      loss='absolute_error', random_state=0).fit(train[feats], train['minutes'])
+    err = [np.abs(test['minutes'] - p).mean() for p in boost.staged_predict(test[feats])]
+    fig = Fig('l08-boost-curve', 620, 280, T(lang,
+        'Average error in minutes on the test deliveries against the number of boosted trees, from 1 '
+        'to 300. It starts near 11, falls steeply over the first 50 trees, crosses the line model\'s '
+        '5.9 and flattens just under 5.',
+        'Erro médio em minutos nas entregas de teste contra o número de árvores do boosting, de 1 a '
+        '300. Começa perto de 11, cai rápido nas 50 primeiras árvores, cruza os 5,9 da reta e se '
+        'achata logo abaixo de 5.'))
+    p = Plot(fig, 60, 30, 560, 230, 0, 300, 0, 12)
+    p.yaxis([0, 2, 4, 6, 8, 10, 12], label=T(lang, 'minutes off, on average', 'minutos de erro, em média'))
+    p.xaxis([0, 50, 100, 150, 200, 250, 300], label=T(lang, 'trees added', 'árvores somadas'))
+    fig.path('M' + ' L'.join(f'{p.sx(i + 1):.1f} {p.sy(e):.1f}' for i, e in enumerate(err)),
+             stroke='--phosphor', width=2.4)
+    fig.line(p.x0, p.sy(5.9), p.x1, p.sy(5.9), stroke='--amber', width=1.4, dash='5 4')
+    fig.text(p.x1, p.sy(5.9) - 10, T(lang, 'lesson 5\'s line: 5.9', 'a reta da aula 5: 5,9'), size=10,
+             anchor='end', fill='--amber')
+    cap = T(lang, 'Each tree is a small correction. Most of the gain comes in the first hundred, and the '
+                  'rest is polish.',
+            'Cada árvore é uma pequena correção. Quase todo o ganho vem nas cem primeiras, e o resto é '
+            'polimento.')
+    return fig, cap
+
+
+@figure('l08-growth', 8)
+def l08_growth(lang):
+    fig = Fig('l08-growth', 640, 250, T(lang,
+        'Two small trees with three splits and four leaves each. On the left, level by level: every '
+        'node at one depth is split before the next depth. On the right, leaf by leaf: one branch goes '
+        'three levels deep while the other stops after the first split.',
+        'Duas árvores pequenas com três cortes e quatro folhas cada. À esquerda, nível a nível: todo nó de '
+        'uma profundidade é dividido antes da seguinte. À direita, folha a folha: um galho desce três '
+        'níveis enquanto o outro para depois do primeiro corte.'))
+    def node(x, y, leaf=False):
+        fig.circle(x, y, 7, fill='--panel' if leaf else '--phosphor', stroke='--phosphor', width=1.4)
+    def edge(x1, y1, x2, y2):
+        fig.line(x1, y1 + 7, x2, y2 - 7, stroke='--paper-dim', width=1.2)
+    # level-wise: complete depth 3
+    xs = {0: [160], 1: [100, 220], 2: [70, 130, 190, 250]}
+    for depth in (0, 1):
+        for i, x in enumerate(xs[depth]):
+            for j in (0, 1):
+                edge(x, 50 + 50 * depth, xs[depth + 1][2 * i + j], 100 + 50 * depth)
+    for depth, row in xs.items():
+        for x in row:
+            node(x, 50 + 50 * depth, leaf=depth == 2)
+    # leaf-wise: one deep branch
+    pts = [(480, 50), (430, 100), (560, 100), (400, 150), (470, 150), (440, 200), (500, 200)]
+    for a, b in [(0, 1), (0, 2), (1, 3), (1, 4), (4, 5), (4, 6)]:
+        edge(*pts[a], *pts[b])
+    for i, (x, y) in enumerate(pts):
+        node(x, y, leaf=i in (2, 3, 5, 6))
+    fig.text(160, 18, T(lang, 'level by level: XGBoost by default', 'nível a nível: XGBoost por padrão'), size=11, weight='600')
+    fig.text(480, 18, T(lang, 'leaf by leaf: LightGBM', 'folha a folha: LightGBM'), size=11, weight='600')
+    fig.text(160, 232, T(lang, 'four leaves at one depth', 'quatro folhas numa profundidade'), size=10, fill='--paper-dim')
+    fig.text(480, 232, T(lang, 'the best leaf is split next, wherever it is', 'a melhor folha é a próxima a dividir, onde estiver'),
+             size=10, fill='--paper-dim')
+    cap = T(lang, 'Same number of splits, different shapes. A filled circle is a question; an empty one '
+                  'is a leaf.',
+            'O mesmo número de cortes, formas diferentes. Um círculo cheio é uma pergunta; um vazio é '
+            'uma folha.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
