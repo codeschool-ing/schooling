@@ -61,10 +61,10 @@ try {
 
 ```
 ana@laptop:~/quitanda$ node selenium/waits.mjs
-implicit: the cards                  8              20 ms
-implicit: an element that is absent  0              3036 ms
-explicit: the toast says             Added Banana   22 ms
-explicit: the toast is empty again   ""             2115 ms
+implicit: the cards                  8              15 ms
+implicit: an element that is absent  0              3055 ms
+explicit: the toast says             Added Banana   23 ms
+explicit: the toast is empty again   ""             2120 ms
 ```
 
 Quatro linhas, quatro fatos.

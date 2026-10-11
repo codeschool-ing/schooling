@@ -66,20 +66,20 @@ Baixe o `selenium-server-4.51.0.jar` das versões do projeto Selenium no GitHub,
 
 ```
 ana@laptop:~$ java -jar selenium-server-4.51.0.jar standalone
-16:47:19.454 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
-16:47:19.463 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
-16:47:21.125 INFO [NodeOptions.getSessionFactories] - Detected 4 available processors
-16:47:21.127 INFO [NodeOptions.discoverDrivers] - Looking for existing drivers on the PATH.
-16:47:21.127 INFO [NodeOptions.discoverDrivers] - Add '--selenium-manager true' to the startup command to setup drivers automatically.
-16:47:21.855 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper msedgedriver version in offline mode
-16:47:21.864 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper geckodriver version in offline mode
-16:47:21.878 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "linux"} 4 times
-16:47:21.878 INFO [NodeOptions.report] - Adding Edge for {"browserName": "MicrosoftEdge","platformName": "linux"} 4 times
-16:47:21.879 INFO [NodeOptions.report] - Adding Firefox for {"browserName": "firefox","platformName": "linux"} 4 times
-16:47:21.914 INFO [Node.<init>] - Binding additional locator mechanisms: relative
-16:47:21.938 INFO [LocalGridModel.setAvailability] - Switching Node 31bec0f4-8210-436d-8fea-123ca3a28dd4 (uri: http://192.0.2.2:4444) from DOWN to UP
-16:47:21.938 INFO [LocalNodeRegistry.add] - Added node 31bec0f4-8210-436d-8fea-123ca3a28dd4 at http://192.0.2.2:4444. Health check every 120s
-16:47:22.191 INFO [Standalone.execute] - Started Selenium Standalone 4.51.0 (revision 35c5fab 35c5fab4a58fa5878edb255eb7747b04ca51a015): http://192.0.2.2:4444
+17:00:46.682 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+17:00:46.692 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+17:00:47.282 INFO [NodeOptions.getSessionFactories] - Detected 4 available processors
+17:00:47.283 INFO [NodeOptions.discoverDrivers] - Looking for existing drivers on the PATH.
+17:00:47.283 INFO [NodeOptions.discoverDrivers] - Add '--selenium-manager true' to the startup command to setup drivers automatically.
+17:00:47.373 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper msedgedriver version in offline mode
+17:00:47.383 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper geckodriver version in offline mode
+17:00:47.401 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "linux"} 4 times
+17:00:47.401 INFO [NodeOptions.report] - Adding Edge for {"browserName": "MicrosoftEdge","platformName": "linux"} 4 times
+17:00:47.402 INFO [NodeOptions.report] - Adding Firefox for {"browserName": "firefox","platformName": "linux"} 4 times
+17:00:47.434 INFO [Node.<init>] - Binding additional locator mechanisms: relative
+17:00:47.455 INFO [LocalGridModel.setAvailability] - Switching Node a2110a02-10e5-407d-8c3c-535851e36cd9 (uri: http://192.0.2.2:4444) from DOWN to UP
+17:00:47.456 INFO [LocalNodeRegistry.add] - Added node a2110a02-10e5-407d-8c3c-535851e36cd9 at http://192.0.2.2:4444. Health check every 120s
+17:00:47.569 INFO [Standalone.execute] - Started Selenium Standalone 4.51.0 (revision 35c5fab 35c5fab4a58fa5878edb255eb7747b04ca51a015): http://192.0.2.2:4444
 ```
 
 Leia de cima para baixo. O nó achou 4 processadores, procurou drivers no `PATH` e ofereceu 4 vagas
@@ -95,35 +95,41 @@ mesmo servidor.
 Com a loja rodando em outro terminal, rode o mesmo teste pelo grid:
 
 ```
-ana@laptop:~/quitanda$ SELENIUM_REMOTE_URL=http://localhost:4444 node --test --test-reporter=spec selenium/shop.test.js
-✔ adding a banana puts one item in the basket (1371.514675ms)
-ℹ tests 1
-ℹ suites 0
-ℹ pass 1
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 1630.977142
+ana@laptop:~/quitanda$ SELENIUM_REMOTE_URL=http://localhost:4444 node --test --test-reporter=tap selenium/shop.test.js
+TAP version 13
+# Subtest: adding a banana puts one item in the basket
+ok 1 - adding a banana puts one item in the basket
+  ---
+  duration_ms: 1145.453065
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1417.47877
 ```
 
 Passou, e o terminal do grid imprimiu a história daquela sessão enquanto ela acontecia:
 
 ```
-16:47:22.894 INFO [LocalDistributor.newSession] - Session request received by the Distributor: 
+17:00:48.391 INFO [LocalDistributor.newSession] - Session request received by the Distributor: 
  [Capabilities {browserName: chrome, goog:chromeOptions: {args: [--headless=new]}, se:remoteUrl: http://localhost:4444}]
-16:47:22.900 INFO [LocalNode.newSession] - Not using file system: desiredCapabilities=Capabilities {browserName: chrome, goog:chromeOptions: {args: [--headless=new]}, se:remoteUrl: http://localhost:4444}
-16:47:22.960 WARN [SeleniumManager.lambda$runCommand$0] - Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
-16:47:22.961 WARN [SeleniumManager.lambda$runCommand$0] - Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
-16:47:23.624 INFO [LocalNode.newSession] - Session created by the Node. Id: f2ec5ac844c186189c52f5d32461a884, Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.rDkWaQ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:36641}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/f2ec5ac844c186189c52f5d32461a884/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
-16:47:23.635 INFO [LocalSessionMap.add] - Added session to local Session Map, Id: f2ec5ac844c186189c52f5d32461a884, Node: http://192.0.2.2:4444
-16:47:23.637 INFO [LocalDistributor.newSession] - Session created by the Distributor. Id: f2ec5ac844c186189c52f5d32461a884 
- Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.rDkWaQ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:36641}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/f2ec5ac844c186189c52f5d32461a884/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
-16:47:24.108 INFO [LocalNode.stopTimedOutSession] - Session id f2ec5ac844c186189c52f5d32461a884 is stopping on demand...
-16:47:24.109 INFO [SessionSlot.stop] - Stopping session f2ec5ac844c186189c52f5d32461a884 (reason: QUIT_COMMAND)
-16:47:24.109 INFO [SessionSlot.stop] - Session stopped successfully: f2ec5ac844c186189c52f5d32461a884
-16:47:24.112 INFO [LocalSessionMap.removeWithReason] - Deleted session from local Session Map, Id: f2ec5ac844c186189c52f5d32461a884, Node: http://192.0.2.2:4444, Reason: session closed normally (QUIT command)
-16:47:24.113 INFO [LocalGridModel.release] - Releasing slot for session id f2ec5ac844c186189c52f5d32461a884
+17:00:48.397 INFO [LocalNode.newSession] - Not using file system: desiredCapabilities=Capabilities {browserName: chrome, goog:chromeOptions: {args: [--headless=new]}, se:remoteUrl: http://localhost:4444}
+17:00:48.443 WARN [SeleniumManager.lambda$runCommand$0] - Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
+17:00:48.944 INFO [LocalNode.newSession] - Session created by the Node. Id: e250ec001b2f14da5c08e7d772b619ba, Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.IU7ITZ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:35477}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/e250ec001b2f14da5c08e7d772b619ba/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
+17:00:48.950 INFO [LocalSessionMap.add] - Added session to local Session Map, Id: e250ec001b2f14da5c08e7d772b619ba, Node: http://192.0.2.2:4444
+17:00:48.952 INFO [LocalDistributor.newSession] - Session created by the Distributor. Id: e250ec001b2f14da5c08e7d772b619ba 
+ Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.IU7ITZ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:35477}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/e250ec001b2f14da5c08e7d772b619ba/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
+17:00:49.407 INFO [LocalNode.stopTimedOutSession] - Session id e250ec001b2f14da5c08e7d772b619ba is stopping on demand...
+17:00:49.408 INFO [SessionSlot.stop] - Stopping session e250ec001b2f14da5c08e7d772b619ba (reason: QUIT_COMMAND)
+17:00:49.408 INFO [SessionSlot.stop] - Session stopped successfully: e250ec001b2f14da5c08e7d772b619ba
+17:00:49.413 INFO [LocalSessionMap.removeWithReason] - Deleted session from local Session Map, Id: e250ec001b2f14da5c08e7d772b619ba, Node: http://192.0.2.2:4444, Reason: session closed normally (QUIT command)
+17:00:49.414 INFO [LocalGridModel.release] - Releasing slot for session id e250ec001b2f14da5c08e7d772b619ba
 ```
 
 O **distribuidor** recebeu um pedido de `browserName: chrome`, o **nó** criou a sessão, o **mapa de

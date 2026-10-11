@@ -62,17 +62,15 @@ Windows é `bin\windows\selenium-manager.exe`:
 
 ```
 ana@laptop:~/quitanda$ node_modules/selenium-webdriver/bin/linux-x86_64/selenium-manager --browser chrome --debug
-[2026-10-10T19:46:58.703Z DEBUG] Sending stats to Plausible: Props { browser: "chrome", browser_version: "", os: "linux", arch: "x86_64", lang: "", selenium_version: "4.51" }
-[2026-10-10T19:46:58.709Z DEBUG] Found chromedriver 141.0.7390.122 in PATH: /home/ana/bin/chromedriver
-[2026-10-10T19:46:58.709Z DEBUG] Found google-chrome in PATH: /home/ana/bin/google-chrome
-[2026-10-10T19:46:58.709Z DEBUG] Running command: /home/ana/bin/google-chrome --version
-[2026-10-10T19:46:58.733Z DEBUG] Output: "Chromium 141.0.7390.37 "
-[2026-10-10T19:46:58.735Z DEBUG] Detected browser: chrome 141.0.7390.37
-[2026-10-10T19:46:58.735Z DEBUG] Discovering versions from https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
-[2026-10-10T19:46:58.737Z WARN ] Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
-[2026-10-10T19:46:58.737Z WARN ] Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
-[2026-10-10T19:46:58.737Z INFO ] Driver path: /home/ana/bin/chromedriver
-[2026-10-10T19:46:58.737Z INFO ] Browser path: /home/ana/bin/google-chrome
+[2026-10-10T20:00:28.207Z DEBUG] Found chromedriver 141.0.7390.122 in PATH: /home/ana/bin/chromedriver
+[2026-10-10T20:00:28.207Z DEBUG] Found google-chrome in PATH: /home/ana/bin/google-chrome
+[2026-10-10T20:00:28.207Z DEBUG] Running command: /home/ana/bin/google-chrome --version
+[2026-10-10T20:00:28.237Z DEBUG] Output: "Chromium 141.0.7390.37 "
+[2026-10-10T20:00:28.239Z DEBUG] Detected browser: chrome 141.0.7390.37
+[2026-10-10T20:00:28.240Z DEBUG] Discovering versions from https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
+[2026-10-10T20:00:28.242Z WARN ] Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
+[2026-10-10T20:00:28.242Z INFO ] Driver path: /home/ana/bin/chromedriver
+[2026-10-10T20:00:28.242Z INFO ] Browser path: /home/ana/bin/google-chrome
 ```
 
 As duas últimas linhas são a resposta: um driver e um navegador. A seção 04 lê o resto dessa saída;
@@ -96,7 +94,7 @@ ana@laptop:~/quitanda$ chromedriver --port=9515
 Starting ChromeDriver 141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}) on port 9515
 Only local connections are allowed.
 Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
-[1791661614.462][SEVERE]: CreatePlatformSocket() failed: Address family not supported by protocol (97)
+[1791662423.114][SEVERE]: CreatePlatformSocket() failed: Address family not supported by protocol (97)
 ChromeDriver was started successfully on port 9515.
 ```
 
@@ -114,7 +112,7 @@ transcrições não tem tela:
 
 ```
 ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session -H 'Content-Type: application/json' -d '{"capabilities":{"alwaysMatch":{"browserName":"chrome","goog:chromeOptions":{"args":["--headless=new"]}}}}'
-{"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"141.0.7390.37","chrome":{"chromedriverVersion":"141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667})","userDataDir":"/tmp/.org.chromium.Chromium.4M4Wnx"},"fedcm:accounts":true,"goog:chromeOptions":{"debuggerAddress":"localhost:33389"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"linux","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"e4229beaca7b1633a5c8a483e578ecc5"}}
+{"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"141.0.7390.37","chrome":{"chromedriverVersion":"141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667})","userDataDir":"/tmp/.org.chromium.Chromium.F0Gxae"},"fedcm:accounts":true,"goog:chromeOptions":{"debuggerAddress":"localhost:39661"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"linux","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"6aecfebb83e7104d396e4f8064bb2b3e"}}
 ```
 
 Duas coisas na resposta importam. `browserVersion` diz que Chrome o driver encontrou, e `sessionId`
@@ -122,7 +120,7 @@ Duas coisas na resposta importam. `browserVersion` diz que Chrome o driver encon
 transcrição tem o dela. Mande o navegador para a loja:
 
 ```
-ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/url -H 'Content-Type: application/json' -d '{"url":"http://localhost:3000/"}'
+ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/6aecfebb83e7104d396e4f8064bb2b3e/url -H 'Content-Type: application/json' -d '{"url":"http://localhost:3000/"}'
 {"value":null}
 ```
 
@@ -130,8 +128,8 @@ ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/e4229beaca7
 com o mesmo seletor CSS que você testaria no painel Elements:
 
 ```
-ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/element -H 'Content-Type: application/json' -d '{"using":"css selector","value":"[data-testid=product-banana] h2"}'
-{"value":{"element-6066-11e4-a52e-4f735466cecf":"f.A30DC6592F8CE9BFBB2A69D15B4FE543.d.C74D23DBB922802EA2E9E604EB4538CF.e.3"}}
+ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/6aecfebb83e7104d396e4f8064bb2b3e/element -H 'Content-Type: application/json' -d '{"using":"css selector","value":"[data-testid=product-banana] h2"}'
+{"value":{"element-6066-11e4-a52e-4f735466cecf":"f.6DE962CA241056E830BEE44F7356548C.d.40C05D920F19FA6623ECF03ED5CD3153.e.3"}}
 ```
 
 **Um elemento volta como referência, nunca como o próprio elemento.** A string comprida debaixo
@@ -140,14 +138,14 @@ JSON da própria página seja confundido com ela, é o nome que o driver dá a u
 saber qualquer coisa sobre ele, você pergunta de novo:
 
 ```
-ana@laptop:~/quitanda$ curl -s http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/element/f.A30DC6592F8CE9BFBB2A69D15B4FE543.d.C74D23DBB922802EA2E9E604EB4538CF.e.3/text
+ana@laptop:~/quitanda$ curl -s http://localhost:9515/session/6aecfebb83e7104d396e4f8064bb2b3e/element/f.6DE962CA241056E830BEE44F7356548C.d.40C05D920F19FA6623ECF03ED5CD3153.e.3/text
 {"value":"Banana"}
 ```
 
 E feche a sessão, o que fecha o navegador:
 
 ```
-ana@laptop:~/quitanda$ curl -s -X DELETE http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5
+ana@laptop:~/quitanda$ curl -s -X DELETE http://localhost:9515/session/6aecfebb83e7104d396e4f8064bb2b3e
 {"value":null}
 ```
 

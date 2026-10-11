@@ -32,29 +32,35 @@ teste da seção anterior roda com um `chromedriver` antigo, versão 139, achado
 contra o Chrome 141:
 
 ```
-ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js
-✖ adding a banana puts one item in the basket (339.211472ms)
-ℹ tests 1
-ℹ suites 0
-ℹ pass 0
-ℹ fail 1
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 536.84098
-
-✖ failing tests:
-
-test at selenium/shop.test.js:18:1
-✖ adding a banana puts one item in the basket (339.211472ms)
-  Error [SessionNotCreatedError]: session not created: This version of ChromeDriver only supports Chrome version 139
-  Current browser version is 141.0.7390.37 with binary path /home/ana/bin/google-chrome
-      at Object.throwDecodedError (/home/ana/quitanda/node_modules/selenium-webdriver/lib/error.js:523:15)
-      at parseHttpResponse (/home/ana/quitanda/node_modules/selenium-webdriver/lib/http.js:527:13)
-      at Executor.execute (/home/ana/quitanda/node_modules/selenium-webdriver/lib/http.js:459:28)
-      at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
-    remoteStacktrace: '#0 0x55f2353c108a <unknown>\n#1 0x55f234e60a70 <unknown>\n#2 0x55f234ea18f7 <unknown>\n#3 0x55f234ea07e5 <unknown>\n#4 0x55f234e9aad6 <unknown>\n#5 0x55f234e965a7 <unknown>\n#6 0x55f234ee693e <unknown>\n#7 0x55f234ee5f06 <unknown>\n#8 0x55f234ed81b3 <unknown>\n#9 0x55f234ea459b <unknown>\n#10 0x55f234ea5971 <unknown>\n#11 0x55f23538625b <unknown>\n#12 0x55f235389fa9 <unknown>\n#13 0x55f23536d339 <unknown>\n#14 0x55f23538ab58 <unknown>\n#15 0x55f235351c1f <unknown>\n#16 0x55f2353ae118 <unknown>\n#17 0x55f2353ae2f6 <unknown>\n#18 0x55f2353c0066 <unknown>\n#19 0x7f6fb829cb84 <unknown>\n#20 0x7f6fb8329ecc <unknown>\n'
-  }
+ana@laptop:~/quitanda$ node --test --test-reporter=tap selenium/shop.test.js
+TAP version 13
+# Subtest: adding a banana puts one item in the basket
+not ok 1 - adding a banana puts one item in the basket
+  ---
+  duration_ms: 302.403352
+  type: 'test'
+  location: '/home/ana/quitanda/selenium/shop.test.js:18:1'
+  failureType: 'hookFailed'
+  error: |-
+    session not created: This version of ChromeDriver only supports Chrome version 139
+    Current browser version is 141.0.7390.37 with binary path /home/ana/bin/google-chrome
+  code: 'ERR_TEST_FAILURE'
+  name: 'SessionNotCreatedError'
+  stack: |-
+    Object.throwDecodedError (/home/ana/quitanda/node_modules/selenium-webdriver/lib/error.js:523:15)
+    parseHttpResponse (/home/ana/quitanda/node_modules/selenium-webdriver/lib/http.js:527:13)
+    Executor.execute (/home/ana/quitanda/node_modules/selenium-webdriver/lib/http.js:459:28)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 478.928532
 ```
 
 Leia as duas primeiras linhas do erro: o driver diz que Chrome ele suporta, qual encontrou e onde.
@@ -63,7 +69,7 @@ O conserto é um driver da versão certa, nunca uma mudança no teste. O mesmo c
 tolerante: o driver 140 abriu o Chrome 141 e escreveu isto no próprio registro enquanto abria:
 
 ```
-[1791661619.997][WARNING]: This version of ChromeDriver has not been tested with Chrome version 141.
+[1791662429.498][WARNING]: This version of ChromeDriver has not been tested with Chrome version 141.
 ```
 
 **Não construa nada em cima disso.** *Has not been tested* é o driver avisando que está chutando.

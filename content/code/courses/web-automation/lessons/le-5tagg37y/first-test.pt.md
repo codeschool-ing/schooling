@@ -23,49 +23,61 @@ A loja precisa estar rodando antes, então inicie-a num terminal com `npm start`
 outro, em `~/quitanda`:
 
 ```
-ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js
-✔ adding a banana puts one item in the basket (633.08805ms)
-ℹ tests 1
-ℹ suites 0
-ℹ pass 1
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 865.904299
+ana@laptop:~/quitanda$ node --test --test-reporter=tap selenium/shop.test.js
+TAP version 13
+# Subtest: adding a banana puts one item in the basket
+ok 1 - adding a banana puts one item in the basket
+  ---
+  duration_ms: 568.355227
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 854.940586
 ```
 
-**Um teste, um sucesso.** `--test-reporter=spec` pede o relatório legível; é o que o Node imprime
-num terminal de qualquer jeito, e está escrito aqui porque um terminal que não é interativo, o de um
-servidor de build por exemplo, recebe o formato TAP, mais seco, se não pedir. Os 633 ms ao lado
-do teste são só o teste; iniciar o Chrome aconteceu no `before`, e o `duration_ms` no pé é a
-execução inteira.
+**Um teste, um sucesso: `ok 1`.** O relatório é TAP, um formato de texto simples que servidores de
+build leem; num terminal o Node desenha um mais amigável por padrão, e as transcrições pedem o TAP
+pelo nome para que a sua imprima o mesmo que elas. Os 568 ms debaixo do teste são só o teste:
+iniciar o Chrome aconteceu no `before`, e o `duration_ms` no pé, 854 ms, é a execução inteira.
 
 Para ver uma falha, troque a contagem esperada de `'1'` para `'2'` na espera e rode de novo; depois
 desfaça a troca:
 
 ```
-ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js
-✖ adding a banana puts one item in the basket (5633.567052ms)
-ℹ tests 1
-ℹ suites 0
-ℹ pass 0
-ℹ fail 1
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 5866.427682
-
-✖ failing tests:
-
-test at selenium/shop.test.js:18:1
-✖ adding a banana puts one item in the basket (5633.567052ms)
-  Error [TimeoutError]: Waiting until element text is
-  Wait timed out after 5066ms
-      at /home/ana/quitanda/node_modules/selenium-webdriver/lib/webdriver.js:939:22
-      at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
-    remoteStacktrace: ''
-  }
+ana@laptop:~/quitanda$ node --test --test-reporter=tap selenium/shop.test.js
+TAP version 13
+# Subtest: adding a banana puts one item in the basket
+not ok 1 - adding a banana puts one item in the basket
+  ---
+  duration_ms: 5654.713994
+  type: 'test'
+  location: '/home/ana/quitanda/selenium/shop.test.js:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Waiting until element text is
+    Wait timed out after 5115ms
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    /home/ana/quitanda/node_modules/selenium-webdriver/lib/webdriver.js:939:22
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5906.138257
 ```
 
 A espera desistiu depois de cinco segundos, e a mensagem nomeia o tipo de condição, *element text
