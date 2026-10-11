@@ -53,7 +53,7 @@ The first round grew the table from 52 MB to 63 MB, because a compact table has 
 versions except the end. **The second round did not grow it at all**: VACUUM had freed the first
 round's old versions, and the second round's new versions went into that space. Nor did the third.
 That is the shape of a healthy table under load, and 63 MB is this table's working size for this
-traffic. Rebuilding it to 52 MB again would buy back 11 MB until the next batch of updates.
+traffic. **Rebuilding it to 52 MB again would buy back 11 MB until the next batch of updates.**
 
 The indexes moved further, from 31 MB to 56 MB in the first round, and stayed within a megabyte of
 that. Their

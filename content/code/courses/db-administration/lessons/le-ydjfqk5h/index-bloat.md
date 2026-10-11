@@ -45,6 +45,6 @@ the file. Those mid-leaf splits are what put `orders_customer_id` near 50 with n
 matters to a range scan reading many leaves on a spinning disk, and much less on an SSD. **Density
 is the number to act on**; fragmentation is a detail.
 
-Fixing an index on its own is `REINDEX`, and doing it without blocking writes is
+**Fixing an index on its own is `REINDEX`**, and doing it without blocking writes is
 `REINDEX CONCURRENTLY`; both are lesson 17's subject. The two fixes in the next section rebuild the
 indexes as a side effect of rebuilding the table.

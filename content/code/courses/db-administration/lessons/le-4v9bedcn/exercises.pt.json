@@ -1,0 +1,511 @@
+{
+  "ex-f41k3jjz": {
+    "prompt": "A `customers` tem 568 páginas. O arquivo dela tem 4653056 bytes. Quantos bytes tem uma página?",
+    "hint": "Divida, ou lembre do block_size.",
+    "unit": "bytes"
+  },
+  "ex-yagn531a": {
+    "prompt": "Por que uma queda de energia pode deixar uma página do PostgreSQL metade nova e metade antiga no ext4?",
+    "hint": "Compare as duas unidades de escrita.",
+    "choices": [
+      {
+        "text": "Os 8 kB dela ocupam dois blocos de 4 kB, escritos separadamente",
+        "why": "Isso. Uma página de 8 kB são dois blocos de 4 kB, e nada faz os dois chegarem juntos."
+      },
+      {
+        "text": "O PostgreSQL escreve cada linha separadamente e para no meio da lista de linhas de uma página",
+        "why": "O PostgreSQL escreve páginas inteiras. A divisão acontece embaixo dele, nos blocos menores do sistema de arquivos."
+      },
+      {
+        "text": "O ext4 comprime páginas e perde metade numa queda",
+        "why": "O ext4 não comprime dados. A causa é a diferença de tamanho, que qualquer sistema de arquivos de 4 kB tem."
+      },
+      {
+        "text": "O WAL só registra metade de cada página",
+        "why": "O contrário: depois de um checkpoint o log registra a página inteira, que é como uma página rasgada é consertada."
+      }
+    ]
+  },
+  "ex-2r1haq2a": {
+    "prompt": "Um colega quer pôr `block_size = 4096` no postgresql.conf para as páginas baterem com o sistema de arquivos. O que acontece?",
+    "hint": "Quando o tamanho da página é decidido?",
+    "choices": [
+      {
+        "text": "As páginas rasgadas param de acontecer depois do próximo reinício, porque a página agora bate com o bloco",
+        "why": "A configuração não pode ser mudada num arquivo de configuração, então o reinício não muda nada."
+      },
+      {
+        "text": "As tabelas existentes são reescritas em páginas de 4 kB",
+        "why": "Nenhuma configuração reescreve os arquivos de dados em outro tamanho de página; um tamanho diferente exige um cluster novo."
+      },
+      {
+        "text": "Nada: ele é fixado na compilação",
+        "why": "Isso. O `block_size` é só leitura; mudá-lo exige compilar o PostgreSQL e criar um cluster novo."
+      },
+      {
+        "text": "O full_page_writes é desligado automaticamente",
+        "why": "Nada o desliga, e no ext4 ele tem de ficar ligado."
+      }
+    ]
+  },
+  "ex-xm5jewnt": {
+    "prompt": "Qual opção de montagem nunca deve ser usada sob um diretório de dados do PostgreSQL?",
+    "hint": "Qual torna o fsync sem sentido?",
+    "choices": [
+      {
+        "text": "barrier=0",
+        "why": "Isso. Sem barreiras um flush pode não chegar ao armazenamento estável, e uma queda de energia pode perder transações confirmadas."
+      },
+      {
+        "text": "noatime",
+        "why": "O noatime só para as atualizações de horário de acesso, que o PostgreSQL nunca lê. É seguro."
+      },
+      {
+        "text": "relatime",
+        "why": "O relatime é o padrão e inofensivo; atualiza horários de acesso no máximo uma vez por dia."
+      },
+      {
+        "text": "defaults",
+        "why": "O defaults dá as opções normais da distribuição, barreiras incluídas."
+      }
+    ]
+  },
+  "ex-fb236caa": {
+    "prompt": "Uma equipe no Red Hat Enterprise Linux pergunta se deve reformatar em ext4 porque o curso usa ext4. O que a lição aconselha?",
+    "hint": "Para onde a atenção deveria ir?",
+    "choices": [
+      {
+        "text": "Reformatar: o PostgreSQL só tem suporte no ext4",
+        "why": "O PostgreSQL roda nos dois, e o XFS é onde muitos servidores de produção ficam."
+      },
+      {
+        "text": "Ir para NFS, para os dados ficarem seguros em outra máquina",
+        "why": "Um sistema de arquivos de rede é o que a lição diz para evitar, a não ser que o fornecedor o documente para bancos."
+      },
+      {
+        "text": "Manter o XFS, o padrão da distribuição, e olhar o disco",
+        "why": "Isso. Os dois são bem testados para o PostgreSQL; o disco importa muito mais que a escolha entre eles."
+      },
+      {
+        "text": "Trocar por tmpfs pela velocidade",
+        "why": "O tmpfs mora na memória e perde tudo num reboot."
+      }
+    ]
+  },
+  "ex-yv5nhcss": {
+    "prompt": "Um sistema de arquivos de dados listado no /etc/fstab falha ao montar no boot, e o servidor inicia o PostgreSQL mesmo assim. O que aconteceu?",
+    "hint": "O que fica no ponto de montagem quando nada está montado nele?",
+    "choices": [
+      {
+        "text": "O PostgreSQL lê os dados pelo nome do dispositivo",
+        "why": "O PostgreSQL só conhece o caminho de um diretório. Ele nunca abre o dispositivo."
+      },
+      {
+        "text": "O kernel monta depois, e o PostgreSQL espera os arquivos aparecerem",
+        "why": "Nada espera. O que o PostgreSQL encontra na partida é o que ele usa."
+      },
+      {
+        "text": "Ele encontrou um diretório vazio",
+        "why": "Isso. O ponto de montagem é um diretório vazio comum até algo ser montado nele, então o servidor não tem dados ali."
+      },
+      {
+        "text": "Os dados são lidos do cache do sistema operacional",
+        "why": "Depois de um boot o cache está vazio, e ele nunca guardou um sistema de arquivos inteiro."
+      }
+    ]
+  },
+  "ex-7eytfpf6": {
+    "prompt": "Qual linha do `pg_test_fsync` diz no que os commits do seu servidor esperam, com as configurações padrão?",
+    "hint": "O wal_sync_method padrão do Linux.",
+    "choices": [
+      {
+        "text": "Non-sync'ed 8kB writes",
+        "why": "Essa linha nunca espera pelo disco; ela mede a memória do kernel."
+      },
+      {
+        "text": "fdatasync",
+        "why": "Isso. É o wal_sync_method padrão do Linux, então cada commit espera mais ou menos isso."
+      },
+      {
+        "text": "fsync_writethrough",
+        "why": "Ela imprimiu n/a: esse método não existe no Linux."
+      },
+      {
+        "text": "16 * 1kB open_sync writes",
+        "why": "Essa compara tamanhos de escrita para o open_sync, que o servidor não usa por padrão."
+      }
+    ]
+  },
+  "ex-jttge26n": {
+    "prompt": "Um disco na nuvem mostra 900.000 operações de fdatasync por segundo no pg_test_fsync. O que você deve concluir?",
+    "hint": "Compare com a execução no tmpfs.",
+    "choices": [
+      {
+        "text": "Que é rápido",
+        "why": "Rápido demais para ser um flush de verdade. Um disco tão rápido sem cache protegido perde commits numa queda de energia."
+      },
+      {
+        "text": "Um flush provavelmente não está chegando ao armazenamento durável",
+        "why": "Isso. Esse é o número do tmpfs: um cache de escrita respondendo antes de os dados estarem seguros. Descubra se ele tem proteção de energia."
+      },
+      {
+        "text": "Trocar o wal_sync_method por open_datasync",
+        "why": "O método não é a questão. O número diz que a promessa de um flush pode não estar sendo cumprida."
+      },
+      {
+        "text": "Os commits vão ser limitados pelo processador",
+        "why": "A questão é durabilidade, não velocidade. Um flush suspeitamente rápido é um risco, não um gargalo."
+      }
+    ]
+  },
+  "ex-na347ewt": {
+    "prompt": "No Ubuntu, o pg_test_fsync não está no PATH. Ele fica em /usr/lib/postgresql/16/___.",
+    "hint": "Onde ficam todos os programas de servidor da versão 16.",
+    "blanks": [
+      {
+        "accept": [
+          "bin",
+          "bin/"
+        ]
+      }
+    ]
+  },
+  "ex-2t2yt6vy": {
+    "prompt": "O `pg_wal` tem 337 MB e o `max_wal_size` é 1GB. Que tamanho é um piso razoável para um sistema de arquivos só do pg_wal?",
+    "hint": "O max_wal_size é flexível.",
+    "choices": [
+      {
+        "text": "512 MB, bem acima dos 337 MB medidos hoje",
+        "why": "O tamanho de hoje não é o limite. Esse é o tamanho que a lição fez de propósito para encher."
+      },
+      {
+        "text": "1 GB, exatamente o max_wal_size",
+        "why": "O limite é onde um checkpoint é pedido, não um teto; o log pode passar dele."
+      },
+      {
+        "text": "2 GB",
+        "why": "Isso. O dobro do max_wal_size, porque o WAL continua chegando enquanto o checkpoint que ele disparou roda."
+      },
+      {
+        "text": "400 MB, o tamanho medido mais uma margem",
+        "why": "O log pode crescer até perto do max_wal_size entre checkpoints, muito além do que guarda hoje."
+      }
+    ]
+  },
+  "ex-0f5r73bd": {
+    "prompt": "Ponha em ordem os passos para mover o pg_wal de um cluster existente para um sistema de arquivos novo, já montado.",
+    "hint": "O servidor não pode estar rodando enquanto os arquivos se movem.",
+    "items": [
+      "sudo systemctl stop postgresql@16-main",
+      "sudo mv /var/lib/postgresql/16/main/pg_wal /srv/wal/pg_wal",
+      "sudo -u postgres ln -s /srv/wal/pg_wal /var/lib/postgresql/16/main/pg_wal",
+      "sudo systemctl start postgresql@16-main"
+    ],
+    "trap": "Criar o link antes de mover falha, porque o pg_wal ainda existe como diretório."
+  },
+  "ex-mrj5w6nc": {
+    "prompt": "Na máquina virtual do curso, os dois sistemas de arquivos são arquivos no mesmo drive físico. O que separar o pg_wal ainda compra ali?",
+    "hint": "A lição dá dois motivos; um precisa de dispositivos separados.",
+    "choices": [
+      {
+        "text": "Commits mais rápidos, já que o checkpoint não disputa mais o mesmo disco com eles",
+        "why": "Num drive físico só, eles ainda disputam. Esse benefício precisa de dispositivos diferentes."
+      },
+      {
+        "text": "Um pode encher sem o outro",
+        "why": "Isso. O espaço é separado mesmo quando o dispositivo é compartilhado, então um sistema de arquivos de dados cheio não para o log, nem o contrário."
+      },
+      {
+        "text": "Arquivos de WAL menores",
+        "why": "Os segmentos continuam com 16 MB onde quer que morem."
+      },
+      {
+        "text": "Nada",
+        "why": "A fronteira de espaço é real em qualquer máquina; só falta o benefício de velocidade."
+      }
+    ]
+  },
+  "ex-kemr3hbt": {
+    "prompt": "Um INSERT numa tabela de um tablespace cheio falha com `could not extend file`. O que acontece com o servidor?",
+    "hint": "Leia a severidade.",
+    "choices": [
+      {
+        "text": "Reinicia todas as conexões",
+        "why": "Isso é o que um PANIC faz, como quando o sistema de arquivos do log enche. Um de dados faz comandos falharem."
+      },
+      {
+        "text": "Continua rodando; só o comando falhou",
+        "why": "Isso. É um ERROR: o comando é desfeito e toda outra consulta continua."
+      },
+      {
+        "text": "Desliga até liberarem espaço",
+        "why": "O servidor continua no ar; a consulta seguinte leu um milhão de pedidos do outro disco."
+      },
+      {
+        "text": "Fica somente leitura",
+        "why": "O PostgreSQL não tem esse modo para isso. Escritas em outros lugares continuam funcionando."
+      }
+    ]
+  },
+  "ex-xbt5cpgx": {
+    "prompt": "Depois do INSERT que falhou, a `filler` tem 0 linhas. Por que o arquivo dela continua com 51 MB?",
+    "hint": "O que um rollback deixa nas páginas?",
+    "choices": [
+      {
+        "text": "Linhas mortas",
+        "why": "Isso. As linhas desfeitas ficam em páginas que existem até o VACUUM removê-las."
+      },
+      {
+        "text": "As linhas ainda são visíveis para outras sessões",
+        "why": "O count(*) devolveu 0. Ninguém as vê; elas só ocupam espaço."
+      },
+      {
+        "text": "O ext4 não informa o espaço liberado até o sistema de arquivos ser desmontado",
+        "why": "Nada foi liberado. O pg_relation_size informa o próprio arquivo, e ele tem mesmo 51 MB."
+      },
+      {
+        "text": "O WAL guarda uma cópia dentro da tabela",
+        "why": "O log mora no pg_wal, em outro sistema de arquivos aqui."
+      }
+    ]
+  },
+  "ex-qmmek9f3": {
+    "prompt": "O `VACUUM filler` falhou no sistema de arquivos cheio, e depois funcionou com `tune2fs -m 0`. Por que isso funcionou para o PostgreSQL?",
+    "hint": "Quem podia usar os blocos reservados antes?",
+    "choices": [
+      {
+        "text": "O tune2fs apagou as linhas mortas direto no arquivo",
+        "why": "O tune2fs só muda configurações do sistema de arquivos; ele não sabe nada de linhas."
+      },
+      {
+        "text": "Ele aumentou o sistema de arquivos de 56 MB para 64 MB",
+        "why": "O tamanho continuou 56M no df; só a parte reservada mudou."
+      },
+      {
+        "text": "A reserva só do root ficou disponível para o postgres",
+        "why": "Isso. O ext4 guarda 5% para o root; com 0% o usuário postgres ganhou 3,2 MB, o bastante para o mapa de visibilidade."
+      },
+      {
+        "text": "Ele fez o VACUUM rodar como root",
+        "why": "O servidor sempre roda como postgres. A mudança foi quem pode usar os blocos reservados."
+      }
+    ]
+  },
+  "ex-2rfnm8gd": {
+    "prompt": "O que um PANIC significa para as sessões conectadas ao servidor?",
+    "hint": "É a severidade acima de FATAL.",
+    "choices": [
+      {
+        "text": "Só a sessão que encontrou o erro perde a conexão",
+        "why": "Isso é FATAL. O PANIC está um nível acima e leva todos os processos junto."
+      },
+      {
+        "text": "Só o comando atual é desfeito",
+        "why": "Isso é ERROR, que é o que o tablespace cheio deu."
+      },
+      {
+        "text": "Todas são desconectadas e o servidor reinicia",
+        "why": "Isso. Um PANIC encerra o servidor inteiro, não um comando ou uma sessão."
+      },
+      {
+        "text": "Nada, só vai para o log",
+        "why": "A captura mostra o cliente perdendo a conexão e o cluster caindo."
+      }
+    ]
+  },
+  "ex-4516ns6q": {
+    "prompt": "Depois do PANIC, o postmaster começou a recuperação sozinho. Por que o cluster ainda assim acabou parado?",
+    "hint": "Leia a linha depois de `redo done`.",
+    "choices": [
+      {
+        "text": "Terminar a recuperação também precisa escrever WAL",
+        "why": "Isso. A recuperação repetiu tudo até o fim, e depois não conseguiu escrever um arquivo de log novo no sistema de arquivos cheio."
+      },
+      {
+        "text": "Os arquivos de dados foram corrompidos pela queda e a recuperação se recusou a lê-los",
+        "why": "O redo done quer dizer que a repetição deu certo. Nada se corrompeu; faltou espaço para escrever."
+      },
+      {
+        "text": "O systemd não reinicia o PostgreSQL depois de uma queda",
+        "why": "O postmaster se reiniciou sozinho; a recuperação rodou e falhou por falta de espaço."
+      },
+      {
+        "text": "O max_wal_size proíbe um reinício",
+        "why": "Nenhuma configuração proíbe isso. O processo de partida falhou numa escrita."
+      }
+    ]
+  },
+  "ex-tym3zq84": {
+    "prompt": "A `walfill` foi criada com 1.000.000 de linhas, e o laço rodou INSERTs de 1.000.000 de linhas cada: três imprimiram INSERT 0 1000000 e o quarto bateu no PANIC. Quantas linhas a `walfill` tinha depois da recuperação?",
+    "hint": "Só o que foi confirmado sobrevive.",
+    "unit": "linhas"
+  },
+  "ex-jpb68d75": {
+    "prompt": "Com `vm.overcommit_memory = 2`, o que acontece quando um backend pede memória além do limite?",
+    "hint": "Onde a falha acontece?",
+    "choices": [
+      {
+        "text": "Só aquela consulta falha, com um erro de out of memory",
+        "why": "Isso. O pedido é recusado dentro do processo que o fez, e o resto do servidor continua."
+      },
+      {
+        "text": "O OOM killer escolhe o maior processo",
+        "why": "Esse é o padrão, overcommit 0, que a configuração existe para evitar."
+      },
+      {
+        "text": "O postmaster reinicia todas as conexões para liberar memória para o backend que pediu",
+        "why": "O reinício vem depois de um backend morto. Com overcommit 2 ninguém é morto."
+      },
+      {
+        "text": "O kernel move os shared buffers para o swap",
+        "why": "Nada é movido; a alocação simplesmente é recusada."
+      }
+    ]
+  },
+  "ex-cgk7xg8f": {
+    "prompt": "Um servidor de 4 GB sem swap recebe `vm.overcommit_memory = 2` e mais nada. Qual é o risco?",
+    "hint": "Que outra configuração decide o limite?",
+    "choices": [
+      {
+        "text": "O OOM killer fica mais agressivo",
+        "why": "Com 2 o kernel recusa alocações em vez de matar; o problema é quão baixo o limite fica."
+      },
+      {
+        "text": "Ele pode comprometer só 2 GB no total",
+        "why": "Isso. O limite é o swap mais overcommit_ratio por cento da memória, e a proporção padrão é 50."
+      },
+      {
+        "text": "As huge pages param de funcionar",
+        "why": "As duas configurações são independentes."
+      },
+      {
+        "text": "Nenhum, porque o PostgreSQL foi feito para isso",
+        "why": "O PostgreSQL recomenda, junto com uma proporção que deixe memória suficiente para o servidor."
+      }
+    ]
+  },
+  "ex-2p89tfy0": {
+    "prompt": "O `huge_pages` está em `try` e o `HugePages_Total` é 0. O que o servidor está usando?",
+    "hint": "O que o try faz quando nenhuma está reservada?",
+    "choices": [
+      {
+        "text": "Páginas comuns, em silêncio",
+        "why": "Isso. O try volta atrás sem dizer nada, e é por isso que on é o valor honesto depois que as páginas estão reservadas."
+      },
+      {
+        "text": "72 huge pages que ele reservou para si na partida",
+        "why": "O PostgreSQL não consegue reservá-las; o kernel tem de fazer isso, com vm.nr_hugepages."
+      },
+      {
+        "text": "Nada: ele se recusa a iniciar",
+        "why": "Isso é huge_pages = on. O servidor da captura estava rodando."
+      },
+      {
+        "text": "Transparent huge pages",
+        "why": "AnonHugePages e ShmemHugePages também eram 0; os shared buffers não estão em huge pages."
+      }
+    ]
+  },
+  "ex-fy17czk7": {
+    "prompt": "Ligue cada sistema de arquivos cheio ao que o PostgreSQL faz.",
+    "hint": "ERROR, PANIC e uma recusa a terminar a partida.",
+    "pairs": [
+      {
+        "left": "O sistema de arquivos de um tablespace",
+        "right": "O comando falha com ERROR"
+      },
+      {
+        "left": "O sistema de arquivos do pg_wal, servidor rodando",
+        "right": "PANIC, todas as sessões caem"
+      },
+      {
+        "left": "O sistema de arquivos do pg_wal, durante a recuperação",
+        "right": "FATAL no processo de partida, cluster parado"
+      }
+    ],
+    "right_distractors": [
+      "Modo somente leitura até o espaço voltar"
+    ]
+  },
+  "ex-5xdn798s": {
+    "prompt": "Às 3 da manhã o sistema de arquivos do pg_wal está cheio e o cluster não inicia. Um colega propõe apagar os dez arquivos mais antigos do pg_wal. O que você faz em vez disso?",
+    "hint": "O log é a única cópia de mudanças que ainda não estão nos arquivos de dados.",
+    "choices": [
+      {
+        "text": "Rodar o pg_resetwal antes, já que é a ferramenta oficial para exatamente esta situação",
+        "why": "O pg_resetwal joga o log fora e pode deixar o banco inconsistente. É um último recurso, não o primeiro passo."
+      },
+      {
+        "text": "Dar espaço ao sistema de arquivos, e então iniciar",
+        "why": "Isso. Aumente-o ou libere outra coisa nele; a recuperação então repete e termina com um checkpoint."
+      },
+      {
+        "text": "Baixar o max_wal_size e reiniciar",
+        "why": "Reciclar precisa de um servidor rodando, e ele não consegue iniciar."
+      },
+      {
+        "text": "Apagá-los, mas só os mais antigos que o último checkpoint",
+        "why": "Não dá para saber de fora quais ainda são necessários, e a recuperação precisa de tudo desde o checkpoint de onde começa."
+      }
+    ]
+  },
+  "ex-vg6j7evb": {
+    "prompt": "Um storage novo mostra 2.000 fdatasync por segundo e o fornecedor diz que ele tem cache com bateria. Um segundo mostra 600.000 e não tem bateria. Qual deve ficar sob o pg_wal?",
+    "hint": "A velocidade não é a questão; a promessa é.",
+    "choices": [
+      {
+        "text": "O segundo, porque os commits vão ser trezentas vezes mais rápidos",
+        "why": "Rápido até a energia acabar, e aí transações confirmadas se perdem sem nada no log."
+      },
+      {
+        "text": "Qualquer um, desde que o full_page_writes continue ligado",
+        "why": "O full_page_writes conserta páginas rasgadas; ele não recupera um commit que o disco nunca guardou."
+      },
+      {
+        "text": "O primeiro",
+        "why": "Isso. O número dele é plausível e o cache sobrevive a uma queda de energia. O segundo faz flush para memória sem nada atrás."
+      },
+      {
+        "text": "Nenhum: o WAL deve ficar em tmpfs",
+        "why": "O tmpfs perde tudo num reboot. É o pior lugar para o log."
+      }
+    ]
+  },
+  "ex-dgyjqfyw": {
+    "prompt": "Quais destes devolvem espaço ao sistema de arquivos de um tablespace cheio? Marque todos que se aplicam.",
+    "hint": "Quais removem páginas do arquivo, e não só a visibilidade das linhas?",
+    "choices": [
+      {
+        "text": "TRUNCATE numa tabela descartável",
+        "why": "Sim. O arquivo some quando a transação confirma."
+      },
+      {
+        "text": "DELETE FROM na maior tabela",
+        "why": "Não. O DELETE deixa linhas mortas nas mesmas páginas; o arquivo mantém o tamanho."
+      },
+      {
+        "text": "ALTER TABLE ... SET TABLESPACE para um com espaço",
+        "why": "Sim, ao preço de um lock enquanto copia."
+      },
+      {
+        "text": "Aumentar o sistema de arquivos",
+        "why": "Sim, e é o jeito que não depende do que está nas tabelas."
+      },
+      {
+        "text": "Apagar à mão o maior arquivo numerado",
+        "why": "Não. Aquele arquivo é uma tabela, que passa a dar erro em toda leitura."
+      }
+    ]
+  },
+  "ex-r8m40wtx": {
+    "prompt": "O kernel reserva páginas de 2 MB com antecedência quando você define o sysctl vm.___ em /etc/sysctl.d.",
+    "hint": "nr_ é como o kernel diz número de.",
+    "blanks": [
+      {
+        "accept": [
+          "nr_hugepages"
+        ]
+      }
+    ]
+  }
+}

@@ -55,7 +55,7 @@ shop=# SELECT count(*) FROM orders_copy;
 (1 row)
 ```
 
-The table went from 66 MB to 130 MB and its indexes from 37 MB to 75 MB, for the same million rows.
+**The table went from 66 MB to 130 MB** and its indexes from 37 MB to 75 MB, for the same million rows.
 Each updated row needed room for its new version, the old pages were full of versions the `UPDATE`
 had not finished with yet, and so every new version went to the end of the file. VACUUM then freed
 the whole first half. It is free, it is inside the file, and the file has the size it had at its

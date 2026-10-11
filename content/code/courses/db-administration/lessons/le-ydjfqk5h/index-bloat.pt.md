@@ -45,6 +45,6 @@ próxima página no arquivo. São essas divisões no meio das folhas que põem `
 de 50 sem bloat nenhum. Isso importa para uma varredura de intervalo que lê muitas folhas num disco
 giratório, e bem menos num SSD. **A densidade é o número que pede ação**; a fragmentação é detalhe.
 
-Corrigir só um índice é `REINDEX`, e fazê-lo sem bloquear escritas é `REINDEX CONCURRENTLY`; os
+**Corrigir só um índice é `REINDEX`**, e fazê-lo sem bloquear escritas é `REINDEX CONCURRENTLY`; os
 dois são o assunto da lição 17. As duas correções da próxima seção reconstroem os índices como
 efeito colateral de reconstruir a tabela.

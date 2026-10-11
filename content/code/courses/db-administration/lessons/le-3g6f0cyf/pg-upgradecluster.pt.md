@@ -47,8 +47,8 @@ qualquer coisa:
 
 ```
 ana@db:~$ sudo -u postgres /usr/lib/postgresql/17/bin/postgres -D /var/lib/postgresql/16/rehearsal -c config_file=/etc/postgresql/16/rehearsal/postgresql.conf
-2026-10-10 16:40:48.813 -03 [4434] FATAL:  database files are incompatible with server
-2026-10-10 16:40:48.813 -03 [4434] DETAIL:  The data directory was initialized by PostgreSQL version 16, which is not compatible with this version 17.10.
+2026-10-10 22:47:47.014 -03 [4457] FATAL:  database files are incompatible with server
+2026-10-10 22:47:47.014 -03 [4457] DETAIL:  The data directory was initialized by PostgreSQL version 16, which is not compatible with this version 17.10.
 ```
 
 É por isso que upgrades maiores são um projeto. O resto desta seção é o `pg_upgrade`, o mais rápido
@@ -119,9 +119,9 @@ Your installation references loadable libraries that are missing from the
 new installation.  You can add these libraries to the new installation,
 or remove the functions using them from the old installation.  A list of
 problem libraries is in the file:
-    /var/lib/postgresql/17/rehearsal/pg_upgrade_output.d/20261010T164052.366/loadable_libraries.txt
+    /var/lib/postgresql/17/rehearsal/pg_upgrade_output.d/20261010T224749.610/loadable_libraries.txt
 Failure, exiting
-pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.XsrL
+pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.i0Hq
 Error during cluster dumping, removing new cluster
 
 Cluster is not running.
@@ -257,7 +257,7 @@ Once you start the new server, consider running:
     /usr/lib/postgresql/17/bin/vacuumdb --all --analyze-in-stages
 Running this script will delete the old cluster's data files:
     ./delete_old_cluster.sh
-pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.7TJ3
+pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.Rg72
 Disabling automatic startup of old cluster...
 Starting upgraded cluster on port 5433...
 Running finish phase upgrade hook scripts ...
@@ -283,9 +283,9 @@ Ver Cluster   Port Status Owner    Data directory                   Log file
 Ver Cluster   Port Status Owner    Data directory                   Log file
 17  rehearsal 5433 online postgres /var/lib/postgresql/17/rehearsal /var/log/postgresql/postgresql-17-rehearsal.log
 
-real	0m17.706s
-user	0m1.056s
-sys	0m0.673s
+real	0m9.471s
+user	0m1.376s
+sys	0m1.001s
 ```
 
 Vale conhecer as etapas, porque uma execução real demora mais e você vai assistir a ela:
@@ -326,8 +326,8 @@ Um hard link é um segundo nome para o mesmo arquivo. Peça o número de inode d
 
 ```
 ana@db:~$ sudo ls -li /var/lib/postgresql/16/rehearsal/base/16386/16393 /var/lib/postgresql/17/rehearsal/base/16386/16393
-1756158 -rw------- 2 postgres postgres 68747264 Oct 10 16:40 /var/lib/postgresql/16/rehearsal/base/16386/16393
-1756158 -rw------- 2 postgres postgres 68747264 Oct 10 16:40 /var/lib/postgresql/17/rehearsal/base/16386/16393
+1024606 -rw------- 2 postgres postgres 68747264 Oct 10 22:47 /var/lib/postgresql/16/rehearsal/base/16386/16393
+1024606 -rw------- 2 postgres postgres 68747264 Oct 10 22:47 /var/lib/postgresql/17/rehearsal/base/16386/16393
 ```
 
 O mesmo número de inode nas duas linhas, e uma contagem de links **2**: um arquivo de 68.747.264

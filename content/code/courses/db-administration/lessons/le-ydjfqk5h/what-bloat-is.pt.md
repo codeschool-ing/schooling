@@ -55,7 +55,7 @@ shop=# SELECT count(*) FROM orders_copy;
 (1 row)
 ```
 
-A tabela foi de 66 MB para 130 MB e os índices de 37 MB para 75 MB, para o mesmo milhão de linhas.
+**A tabela foi de 66 MB para 130 MB** e os índices de 37 MB para 75 MB, para o mesmo milhão de linhas.
 Cada linha atualizada precisou de espaço para a versão nova, as páginas antigas estavam cheias de
 versões com que o `UPDATE` ainda não tinha terminado, e assim toda versão nova foi para o fim do
 arquivo. Depois o VACUUM liberou a primeira metade inteira. Ela está livre, está dentro do arquivo,

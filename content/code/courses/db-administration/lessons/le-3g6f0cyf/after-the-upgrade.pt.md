@@ -22,8 +22,8 @@ ana@db:~$ psql -p 5433 shop
 shop=# SELECT relname, last_analyze FROM pg_stat_user_tables ORDER BY relname;
   relname  |         last_analyze          
 -----------+-------------------------------
- customers | 2026-10-10 16:41:19.983082-03
- orders    | 2026-10-10 16:41:19.861384-03
+ customers | 2026-10-10 22:48:04.946284-03
+ orders    | 2026-10-10 22:48:04.861057-03
 (2 rows)
 ```
 
@@ -49,29 +49,33 @@ ALTER EXTENSION "pg_stat_statements" UPDATE;
 ```
 
 ```
-shop=# \dx pg_stat_statements
-                                          List of installed extensions
-        Name        | Version | Schema |                              Description                               
---------------------+---------+--------+------------------------------------------------------------------------
- pg_stat_statements | 1.10    | public | track planning and execution statistics of all SQL statements executed
-(1 row)
+shop=# \dx
+                                            List of installed extensions
+        Name        | Version |   Schema   |                              Description                               
+--------------------+---------+------------+------------------------------------------------------------------------
+ pg_stat_statements | 1.10    | public     | track planning and execution statistics of all SQL statements executed
+ plpgsql            | 1.0     | pg_catalog | PL/pgSQL procedural language
+(2 rows)
 
 shop=# ALTER EXTENSION pg_stat_statements UPDATE;
 ALTER EXTENSION
 
-shop=# \dx pg_stat_statements
-                                          List of installed extensions
-        Name        | Version | Schema |                              Description                               
---------------------+---------+--------+------------------------------------------------------------------------
- pg_stat_statements | 1.11    | public | track planning and execution statistics of all SQL statements executed
-(1 row)
+shop=# \dx
+                                            List of installed extensions
+        Name        | Version |   Schema   |                              Description                               
+--------------------+---------+------------+------------------------------------------------------------------------
+ pg_stat_statements | 1.11    | public     | track planning and execution statistics of all SQL statements executed
+ plpgsql            | 1.0     | pg_catalog | PL/pgSQL procedural language
+(2 rows)
 
 shop=# \q
 ```
 
 A `pg_stat_statements` foi de 1.10 para 1.11, a versão que o 17 traz. Rode o script, ou o
-`ALTER EXTENSION … UPDATE` que ele contém, em cada banco que ele cita. A lição 18 terminou falando
-de manter as extensões em dia, e este é o momento para o qual ela preparava.
+`ALTER EXTENSION … UPDATE` que ele contém, em cada banco que ele cita. **O `\dx` é o inventário que
+a lição 18 pediu que você mantivesse**: cada extensão que o cluster novo tem e a versão instalada,
+lida antes da atualização e de novo depois. Uma extensão ainda na versão antiga depois de um upgrade
+é aquela cujo `ALTER EXTENSION … UPDATE` ninguém rodou.
 
 ## O resto a conferir
 
@@ -129,7 +133,7 @@ ana@db:~$ psql -c "SHOW server_version;" -c "SELECT pg_postmaster_start_time();"
 
    pg_postmaster_start_time    
 -------------------------------
- 2026-10-10 16:40:20.370122-03
+ 2026-10-10 22:47:17.006546-03
 (1 row)
 ```
 

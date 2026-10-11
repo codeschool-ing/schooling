@@ -143,7 +143,7 @@ printf "DROP SUBSCRIPTION upgrade;\nINSERT INTO orders (customer_id, status, tot
 block after
 on 'sudo find /var/log/postgresql -name update_extensions.sql -exec cat {} +'
 printf 'ana@db:~$ psql -p 5433 shop\n'
-printf "SELECT relname, last_analyze FROM pg_stat_user_tables ORDER BY relname;\n\\\\dx pg_stat_statements\nALTER EXTENSION pg_stat_statements UPDATE;\n\\\\dx pg_stat_statements\n\\\\q\n" | session shop -p 5433
+printf "SELECT relname, last_analyze FROM pg_stat_user_tables ORDER BY relname;\n\\\\dx\nALTER EXTENSION pg_stat_statements UPDATE;\n\\\\dx\n\\\\q\n" | session shop -p 5433
 
 block drop-old
 on 'sudo pg_dropcluster 16 rehearsal'

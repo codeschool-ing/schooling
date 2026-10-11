@@ -15,8 +15,8 @@ stays, in every table of the database, for as long as that snapshot stays open.
 
 The commonest holder is an application that opens a transaction, reads something and then waits:
 for a person, for a remote call, for a bug to let go. You can make one with two terminals. In the
-first, open a transaction at `REPEATABLE READ` and read the copy once, which fixes its snapshot, then
-leave that terminal alone:
+first, open a transaction at `REPEATABLE READ` and read the copy once. That fixes its snapshot. Then
+leave the terminal alone:
 
 ```
 shop=# BEGIN ISOLATION LEVEL REPEATABLE READ;

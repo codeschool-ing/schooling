@@ -32,11 +32,11 @@ Então dê o caminho completo. `-Fc` escreve o **formato custom**: comprimido, e
 ```
 ana@db:~$ time /usr/lib/postgresql/17/bin/pg_dump -Fc -f shop.dump shop
 
-real	0m3.882s
-user	0m1.714s
-sys	0m0.081s
+real	0m2.411s
+user	0m2.116s
+sys	0m0.103s
 ana@db:~$ ls -lh shop.dump
--rw-rw-r-- 1 ana ana 14M Oct 10 16:41 shop.dump
+-rw-rw-r-- 1 ana ana 14M Oct 10 22:48 shop.dump
 ```
 
 Só a tabela `orders` e seus índices ocupam uns 107 MB no `main`, e o dump inteiro tem 14 MB. As
@@ -61,9 +61,9 @@ O mesmo erro esperado do ensaio: o `postgres` já existe.
 ana@db:~$ createdb -p 5434 shop
 ana@db:~$ time pg_restore -p 5434 -d shop -j 4 shop.dump
 
-real	0m4.543s
-user	0m0.202s
-sys	0m0.046s
+real	0m3.205s
+user	0m0.243s
+sys	0m0.231s
 ```
 
 `-j 4` roda quatro tarefas ao mesmo tempo, carregando tabelas e construindo índices lado a lado; só

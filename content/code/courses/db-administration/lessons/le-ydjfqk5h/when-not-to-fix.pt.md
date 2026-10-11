@@ -54,8 +54,8 @@ A primeira rodada aumentou a tabela de 52 MB para 63 MB, porque uma tabela compa
 versões novas a não ser no fim. **A segunda rodada não a aumentou nada**: o VACUUM tinha liberado as
 versões antigas da primeira rodada, e as versões novas da segunda foram para esse espaço. A terceira
 também não. Esse é o formato de uma tabela saudável sob carga, e 63 MB é o tamanho de trabalho desta
-tabela para este movimento. Reconstruí-la para 52 MB de novo recuperaria 11 MB até o próximo lote de
-atualizações.
+tabela para este movimento. **Reconstruí-la para 52 MB de novo recuperaria 11 MB até o próximo lote de
+atualizações.**
 
 Os índices andaram mais, de 31 MB para 56 MB na primeira rodada, e ficaram a um megabyte disso. O
 tamanho compacto deles depois de uma reconstrução só valeu até a primeira onda de atualizações.
