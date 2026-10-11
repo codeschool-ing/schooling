@@ -14,6 +14,25 @@ returns to. `watermark.py` does it with `--late-topic`. Make the topic and run i
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-late --partitions 1
+Created topic sales-late.
+ubuntu@stream:~/work$ python watermark.py --late-topic sales-late
+ #  happened  shop      watermark  what happened
+ 1  09:00:40  recife    08:58:40  
+ 2  09:02:10  natal     09:00:10  
+ 3  09:03:55  olinda    09:01:55  
+ 4  09:05:00  recife    09:03:00  
+ 5  09:06:20  natal     09:04:20  
+ 6  09:12:30  caruaru   09:10:30  
+                              emit 09:00:00-09:05:00: 3 sales, 12470
+                              emit 09:05:00-09:10:00: 2 sales, 12390
+ 7  09:13:05  recife    09:11:05  
+ 8  09:08:50  natal     09:11:05  too late for 09:05:00-09:10:00: sent to sales-late
+ 9  09:14:10  olinda    09:12:10  
+10  09:21:00  recife    09:19:00  
+                              emit 09:10:00-09:15:00: 3 sales, 12690
+11  09:04:30  natal     09:19:00  too late for 09:00:00-09:05:00: sent to sales-late
+12  09:23:10  olinda    09:21:10  
+still open: 09:20:00 (2)
 ```
 
 The same two sales as before are too late, and this time the line says where they went. Each was
@@ -22,6 +41,10 @@ it was late, but by how much.
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-late --from-beginning --max-messages 2
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+{"at": "09:08:50", "shop": "natal", "cents": 8990, "watermark": "09:11:05"}
+{"at": "09:04:30", "shop": "natal", "cents": 4490, "watermark": "09:19:00"}
+Processed a total of 2 messages
 ```
 
 ## What happens to them next

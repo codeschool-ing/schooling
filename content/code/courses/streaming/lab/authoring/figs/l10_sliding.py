@@ -17,6 +17,6 @@ def draw(s, t):
         e = sec(end); y = 108 + i * 20
         col = "var(--amber)" if n == 4 else "var(--phosphor-dim)"
         s.rect(X(e - 300), y, X(e) - X(e - 300), 14, fill="var(--panel)", stroke=col, rx=2)
-        s.circle(X(e), y + 7, 3, fill="var(--paper)")
+        s.circle(X(e) - 4, y + 7, 2.5, fill="var(--paper)")
         s.text(X(e) + 10, y + 7, str(n), size=9.5, mono=True, anchor="start")
     s.text(560, 160, t("busiest: 4"), size=10, fill="var(--amber)", anchor="start")

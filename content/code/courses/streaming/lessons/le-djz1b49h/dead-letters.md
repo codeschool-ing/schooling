@@ -51,6 +51,11 @@ puts three orders on it, rejects one, handles one and leaves the third alone. Sa
 
 ```
 ubuntu@stream:~/work$ python rabbit_dead.py
+took web-0001, the address is unreadable: reject it
+took web-0002, printed the label: ack it
+nobody takes web-0003; waiting 3 seconds
+dead letter web-0001: reason rejected, from queue labels
+dead letter web-0003: reason expired, from queue labels
 ```
 
 Two dead letters for two different reasons, and the one that was handled is not among them. The

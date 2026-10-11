@@ -15,6 +15,10 @@ than the gap.
 
 ```
 ubuntu@stream:~/work$ python windows.py session 5
+window               sales   cents
+(09:08:50 arrives and joins 2 sessions into one)
+09:00:40-09:14:10      9   46540
+09:21:00-09:21:00      1    5490
 ```
 
 The program printed one session where the paragraph above predicted two, and the line in
@@ -50,6 +54,10 @@ The gap is the whole design. Shorten it to three minutes and the program finds t
 
 ```
 ubuntu@stream:~/work$ python windows.py session 3
+window               sales   cents
+09:00:40-09:08:50      6   33850
+09:12:30-09:14:10      3   12690
+09:21:00-09:21:00      1    5490
 ```
 
 The first session now stops at 09:08:50, because sale 8 bridges a pause of 2 minutes 30 seconds

@@ -57,9 +57,20 @@ subject for the topic `sales-avro`, which the next section creates:
 
 ```
 ubuntu@stream:~/work$ ./register.sh sales-avro-value sale.avsc
+{"id":1}
+ubuntu@stream:~/work$ curl -s localhost:8080/apis/ccompat/v7/subjects; echo
+["sales-avro-value"]
+ubuntu@stream:~/work$ curl -s localhost:8080/apis/ccompat/v7/subjects/sales-avro-value/versions/1; echo
+{"subject":"sales-avro-value","version":1,"id":1,"schema":"{\"type\":\"record\",\"name\":\"Sale\",\"namespace\":\"pontofinal\",\"fields\":[{\"name\":\"sale\",\"type\":\"string\"},{\"name\":\"shop\",\"type\":\"string\"},{\"name\":\"book\",\"type\":\"string\"},{\"name\":\"qty\",\"type\":\"int\"},{\"name\":\"cents\",\"type\":\"long\"},{\"name\":\"at\",\"type\":\"string\"}]}"}
+ubuntu@stream:~/work$ ./register.sh sales-avro-value sale.avsc
+{"id":1}
 ```
 
-@@REGISTER@@
+The registry answered with the schema's **id**, 1. The subject now exists and its version 1 holds
+the schema, which the second `curl` shows with all three numbers side by side. Offering the same
+schema again does not make a version 2: the last command got id 1 back, because the registry
+recognises a schema it already has, and that is what lets every producer of a topic offer its
+schema on start without filling the subject with copies.
 
 ## What goes into a message
 

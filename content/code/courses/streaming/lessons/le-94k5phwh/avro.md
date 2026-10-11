@@ -54,9 +54,16 @@ This program writes one sale with a first schema, then reads it back with two ot
 
 ```
 ubuntu@stream:~/work$ python avro_demo.py
+json: 82 bytes
+avro: 27 bytes: 14 6e 61 74 2d 30 30 30 30 30 32 0a 6e 61 74 61 6c 0a 62 6b 2d 30 38 04 f8 98 02
+read with v2: {'sale': 'nat-000002', 'shop': 'natal', 'book': 'bk-08', 'qty': 2, 'amount': 17980, 'till': 'unknown'}
+read with v3: SchemaResolutionError No default value for field till in pontofinal.Sale
 ```
 
-@@BYTES@@
+The 27 bytes are worth reading once. `14` is the length of the first string, `nat-000002`, which
+is ten characters: Avro writes integers in a compact form in which ten becomes `14`. Then the ten
+characters, `6e 61 74…`. Then `0a`, a length of five, and `natal`; another five, and `bk-08`; `04`,
+which is the 2 of `qty`; and `f8 98 02`, which is 17980. **There is not one field name in it.**
 
 ## What resolution does
 

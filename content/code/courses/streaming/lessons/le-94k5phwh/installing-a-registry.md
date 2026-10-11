@@ -28,6 +28,9 @@ Compare the two, as you did with Kafka:
 
 ```
 ubuntu@stream:~$ sha512sum apicurio-registry-app-3.3.3-all.tar.gz | cut -d" " -f1
+dd081e0bb14bb94ac9806eb768667b10a7292a8a75a81cbbfec1c99d920bc35697fc5e567d74b7bf94a0105648b90480842822959815d2965e0dc6c9524c92d3
+ubuntu@stream:~$ cat apicurio-registry-app-3.3.3-all.tar.gz.sha512; echo
+dd081e0bb14bb94ac9806eb768667b10a7292a8a75a81cbbfec1c99d920bc35697fc5e567d74b7bf94a0105648b90480842822959815d2965e0dc6c9524c92d3
 ```
 
 The archive has no directory of its own at the top, so make one and unpack into it. Then install
@@ -49,6 +52,9 @@ to a file, and wait for it to answer:
 
 ```
 ubuntu@stream:~/work$ nohup java -jar ~/apicurio/quarkus-run.jar > ~/apicurio/registry.log 2>&1 &
+ubuntu@stream:~/work$ until curl -s localhost:8080/apis/ccompat/v7/subjects; do sleep 1; done; echo
+[]
+# (author) registry rss kB: 285968
 ```
 
 The `until` line asks for the list of subjects once a second until something answers. `[]` is

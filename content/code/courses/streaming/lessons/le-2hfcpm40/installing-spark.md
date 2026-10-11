@@ -18,7 +18,7 @@ pip install pyspark==4.1.3
 It is a large download, and it unpacks into something larger:
 
 ```
-ubuntu@stream:~/work$ pip show pyspark | head -2
+ubuntu@stream:~/work$ pip show pyspark | grep -E '^(Name|Version):'
 ```
 
 ```

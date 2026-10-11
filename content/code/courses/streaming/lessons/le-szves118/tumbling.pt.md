@@ -69,6 +69,11 @@ Janelas tumbling de cinco minutos:
 
 ```
 ubuntu@stream:~/work$ python windows.py tumbling 5
+window               sales   cents
+09:00:00-09:05:00      3   12470
+09:05:00-09:10:00      3   21380
+09:10:00-09:15:00      3   12690
+09:20:00-09:25:00      1    5490
 ```
 
 Quatro janelas, e as dez vendas fecham a conta: 3, 3, 3 e 1. Não há linha para 09:15 às 09:20,

@@ -14,6 +14,8 @@ how much processor time it has used in total:
 
 ```
 ubuntu@stream:~/work$ ps -o rss,etime,time -p $(pgrep -f '^[^ ]*java .*node1')
+  RSS     ELAPSED     TIME
+543552      01:28 00:00:13
 ```
 
 A minute later, with still nothing written, and the disk the whole cluster holds after this lesson's
@@ -21,11 +23,16 @@ five topics:
 
 ```
 ubuntu@stream:~/work$ ps -o rss,etime,time -p $(pgrep -f '^[^ ]*java .*node1')
+  RSS     ELAPSED     TIME
+553948      02:28 00:00:14
+ubuntu@stream:~/work$ du -sh ~/kafka-data
+33M	/home/ubuntu/kafka-data
 ```
 
-`RSS` is in kilobytes. **The memory does not go back when the traffic stops**: the Java heap that
-`cluster.sh` gave the node is reserved for as long as it runs, and the page cache of the data it
-holds stays warm. The processor time barely moves, which is the good news: an idle broker is
+`RSS` is in kilobytes: over half a gigabyte, held by a node with nothing to do. In the minute
+between the two lines it used one second of processor time. **The memory does not go back when the
+traffic stops**: the 512 MB of Java heap that
+`cluster.sh` gave the node is reserved for as long as it runs. The processor time barely moves, which is the good news: an idle broker is
 cheap to run but not free to keep, because a machine rented by the hour is billed for the hour
 whatever its processor does.
 

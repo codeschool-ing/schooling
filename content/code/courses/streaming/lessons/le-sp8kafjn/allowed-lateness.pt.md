@@ -13,6 +13,23 @@ Com cinco minutos de atraso permitido:
 
 ```
 ubuntu@stream:~/work$ python watermark.py --lateness 5
+ #  happened  shop      watermark  what happened
+ 1  09:00:40  recife    08:58:40  
+ 2  09:02:10  natal     09:00:10  
+ 3  09:03:55  olinda    09:01:55  
+ 4  09:05:00  recife    09:03:00  
+ 5  09:06:20  natal     09:04:20  
+ 6  09:12:30  caruaru   09:10:30  
+                              emit 09:00:00-09:05:00: 3 sales, 12470
+                              emit 09:05:00-09:10:00: 2 sales, 12390
+ 7  09:13:05  recife    09:11:05  
+ 8  09:08:50  natal     09:11:05  late, 09:05:00-09:10:00 now 3 sales, 21380
+ 9  09:14:10  olinda    09:12:10  
+10  09:21:00  recife    09:19:00  
+                              emit 09:10:00-09:15:00: 3 sales, 12690
+11  09:04:30  natal     09:19:00  too late for 09:00:00-09:05:00: dropped
+12  09:23:10  olinda    09:21:10  
+still open: 09:20:00 (2)
 ```
 
 Tudo é igual até a venda 8. A janela das 09:05 foi emitida na venda 6 com duas vendas, como antes.

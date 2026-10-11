@@ -16,24 +16,26 @@
 . "$(dirname "$0")/../../lab/capture-lib.sh"
 
 lab reset 1 >/dev/null
-DESCRIBE='kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic sales'
+DESCRIBE='kafka-topics.sh --bootstrap-server localhost:9092,localhost:9093 --describe --topic sales'
 leader_of() { run "$DESCRIBE" | awk -v p="$1" '$3 == "Partition:" && $4 == p {print $6}'; }
 
 block new3
 vm './cluster.sh stop'
 vm './cluster.sh new 3'
 vm './cluster.sh start'
+echo "# (author) node rss kB: $(ps -o rss= -C java | tr '\n' ' ')" >&2
 block create
 vm 'kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3 --replication-factor 3 --config min.insync.replicas=2'
 vm "$DESCRIBE"
 block dirs
-vm 'ls ~/kafka-data/node1/log ~/kafka-data/node2/log ~/kafka-data/node3/log | grep sales'
+vm 'ls -d ~/kafka-data/node*/log/sales-*'
 
 block copies
 vm 'python tills.py --count 300 --rate 0'
 vm 'kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic sales'
 vm 'wc -c ~/kafka-data/node*/log/sales-1/*.log'
 
+echo "# (author) node rss kB after 300 sales: $(ps -o rss= -C java | tr '\n' ' ')" >&2
 block lagtime
 vm 'kafka-configs.sh --bootstrap-server localhost:9092 --describe --all --broker 1 | grep replica.lag.time.max.ms'
 block pause
@@ -70,7 +72,8 @@ echo "# (author) recife -> partition $P, leader $L" >&2
 block producing
 shown 'python acks.py --acks all --count 100 --rate 5'
 term2 prod 'python acks.py --acks all --count 100 --rate 5' 6
-vm "./cluster.sh kill $L"
+block kill
+vm "./cluster.sh kill $L    # the leader of partition $P"
 block produced
 wait2 prod
 block after-kill
@@ -88,8 +91,8 @@ vm 'kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status
 block two-down
 vm './cluster.sh kill 2'
 vm './cluster.sh kill 3'
-vm 'timeout 60 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic returns --partitions 3 2>/dev/null'
-vm 'timeout 30 kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status 2>/dev/null'
+vm 'timeout 60 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic returns --partitions 3 2>/dev/null; echo "exit $?"'
+vm 'timeout 30 kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status 2>/dev/null; echo "exit $?"'
 block quorum-back
 vm './cluster.sh start'
 vm 'kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status | grep -E "LeaderId|HighWatermark"'

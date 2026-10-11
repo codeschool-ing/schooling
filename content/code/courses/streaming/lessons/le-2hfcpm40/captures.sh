@@ -41,7 +41,7 @@ lab install le-2hfcpm40 installing-spark.md >/dev/null 2>&1
 
 # installing-spark
 block pip-show
-vm 'pip show pyspark | head -2'
+vm "pip show pyspark | grep -E '^(Name|Version):'"
 block du
 vm 'du -sh ~/venv/lib/python3.12/site-packages/pyspark'
 block version
@@ -69,7 +69,7 @@ vm 'python spark_sales.py --mode append --checkpoint ~/spark/ckpt/append 2>spark
 block ckpt-ls
 vm 'ls ~/spark/ckpt/update ~/spark/ckpt/update/state/0'
 block ckpt-offsets
-vm 'tail -1 ~/spark/ckpt/update/offsets/5'
+vm 'tail -1 ~/spark/ckpt/update/offsets/5; echo'
 block rerun
 vm 'python spark_sales.py --mode update --checkpoint ~/spark/ckpt/update 2>spark.log'
 block two-more

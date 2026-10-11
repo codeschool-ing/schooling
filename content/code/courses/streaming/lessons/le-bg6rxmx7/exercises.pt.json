@@ -1,0 +1,425 @@
+{
+  "ex-pas180hn": {
+    "prompt": "Por que o custo de computação de um stream não cai numa terça à noite calma?",
+    "choices": [
+      {
+        "text": "O Kafka processa mensagens antigas de novo enquanto está ocioso",
+        "why": "Um broker ocioso quase não faz nada; o custo é ele estar lá."
+      },
+      {
+        "text": "Os brokers e consumidores rodam o tempo todo, prontos para a próxima venda",
+        "why": "Isso: dimensionados pelo pico, pagos no vale."
+      },
+      {
+        "text": "A compressão custa mais à noite",
+        "why": "Nada na compressão depende da hora."
+      },
+      {
+        "text": "A retenção é contada em horas de tráfego",
+        "why": "Retenção é tempo em disco, seja qual for o tráfego."
+      }
+    ]
+  },
+  "ex-264edthe": {
+    "prompt": "Um tópico é escrito a 2 MB/s, tem três réplicas e cinco grupos de consumidores o leem inteiro. Quantos MB/s se movem no total: entrada, entre brokers e saída?",
+    "hint": "Entra uma vez, vai a cada seguidora, sai uma vez por grupo.",
+    "unit": "MB/s"
+  },
+  "ex-4ak80hn3": {
+    "prompt": "Um cluster ocupa três zonas de disponibilidade por segurança. Qual tráfego tem mais chance de aparecer na conta de rede?",
+    "choices": [
+      {
+        "text": "Cópias de réplica e leituras de consumidores que cruzam uma fronteira de zona",
+        "why": "Isso: duas de cada três cópias cruzam uma, e as leituras remotas também."
+      },
+      {
+        "text": "Heartbeats entre consumidores e o coordenador",
+        "why": "Eles existem, mas são minúsculos perto dos dados."
+      },
+      {
+        "text": "Escritas de um produtor para um líder na própria zona",
+        "why": "O tráfego dentro de uma zona é a parte que costuma não ser cobrada."
+      },
+      {
+        "text": "Ler os arquivos de índice",
+        "why": "Leituras de índice ficam no disco do próprio broker."
+      }
+    ]
+  },
+  "ex-kr28xzf7": {
+    "prompt": "O JSON de uma venda tem uns 122 bytes, mas o tópico guarda cerca de 135 bytes por venda. De onde vem a diferença?",
+    "choices": [
+      {
+        "text": "Os arquivos de índice ao lado do log",
+        "why": "O `kafka-log-dirs.sh` contou só o arquivo `.log`."
+      },
+      {
+        "text": "Replicação: a segunda cópia",
+        "why": "Um nó, uma cópia; a replicação multiplica depois."
+      },
+      {
+        "text": "A chave, e os campos do próprio registro e do lote",
+        "why": "Isso: offset, timestamp, enquadramento, o cabeçalho do lote."
+      },
+      {
+        "text": "O Kafka completa cada mensagem até um tamanho fixo",
+        "why": "Registros têm tamanho variável; nada é completado."
+      }
+    ]
+  },
+  "ex-wnw36tek": {
+    "prompt": "O arquivo `.index` de um segmento ativo tem 10 485 760 bytes. Por que isso não entra nos bytes por venda?",
+    "choices": [
+      {
+        "text": "Ele é comprimido",
+        "why": "Não é; ele é pré-alocado."
+      },
+      {
+        "text": "Ele pertence a outro tópico",
+        "why": "Ele fica no mesmo diretório da partição."
+      },
+      {
+        "text": "Ele guarda os offsets dos consumidores",
+        "why": "Esses ficam em `__consumer_offsets`."
+      },
+      {
+        "text": "Ele é pré-alocado e aparado quando o segmento fecha",
+        "why": "Isso: num segmento ativo o tamanho dele diz pouco."
+      }
+    ]
+  },
+  "ex-1cwnp3y6": {
+    "prompt": "Um caixa que manda uma venda a cada poucos segundos escreve num tópico. Comparado com as 100 000 vendas mandadas na velocidade máxima, o que acontece com os bytes por venda?",
+    "choices": [
+      {
+        "text": "Caem, já que há menos tráfego",
+        "why": "Menos tráfego quer dizer lotes menores, que custam mais por mensagem."
+      },
+      {
+        "text": "Sobem: cada venda paga um cabeçalho de lote próprio",
+        "why": "Isso: a medição dependia de lotes cheios."
+      },
+      {
+        "text": "Ficam iguais, porque a mensagem é a mesma",
+        "why": "A mensagem é a mesma; o lote em volta dela não."
+      },
+      {
+        "text": "Dobram, por causa da replicação",
+        "why": "A replicação multiplica cópias, não o tamanho de uma."
+      }
+    ]
+  },
+  "ex-ryhe5dd7": {
+    "prompt": "Por que as vendas em JSON da Ponto Final comprimem tão bem?",
+    "choices": [
+      {
+        "text": "Todo lote repete os mesmos nomes de campo e poucos valores",
+        "why": "Isso: cinco lojas, oito livros, as mesmas cinco chaves."
+      },
+      {
+        "text": "JSON já é um formato binário",
+        "why": "É texto, e por isso comprime."
+      },
+      {
+        "text": "O Kafka remove vendas duplicadas",
+        "why": "Nada é removido; a repetição dentro de um lote é guardada uma vez."
+      },
+      {
+        "text": "Cada mensagem é comprimida sozinha",
+        "why": "O Kafka comprime um lote por vez, e é por isso que a repetição entre vendas ajuda."
+      }
+    ]
+  },
+  "ex-n0w814cp": {
+    "prompt": "Neste laboratório, qual codec deu o menor tópico para as 100 000 vendas?",
+    "choices": [
+      {
+        "text": "`zstd`",
+        "why": "Perto, com 16,9 bytes por venda, mas não o menor aqui."
+      },
+      {
+        "text": "`lz4`",
+        "why": "31,5 bytes por venda, mais ou menos um quarto do sem compressão."
+      },
+      {
+        "text": "`uncompressed`",
+        "why": "135,3 bytes por venda, o maior."
+      },
+      {
+        "text": "`gzip`",
+        "why": "Isso: 14,5 bytes por venda nestas vendas."
+      }
+    ]
+  },
+  "ex-4d1fe31n": {
+    "prompt": "O `gzip` foi o menor no laboratório. Por que um pipeline novo ainda escolheria `zstd` no produtor?",
+    "choices": [
+      {
+        "text": "O `gzip` não é permitido num produtor",
+        "why": "Todo codec está disponível no produtor."
+      },
+      {
+        "text": "Uma taxa próxima por bem menos tempo de processador",
+        "why": "Isso: tamanho é metade da troca, CPU a outra."
+      },
+      {
+        "text": "O `zstd` dispensa descompressão nos consumidores",
+        "why": "Todo grupo de consumidores descomprime, seja qual for o codec."
+      },
+      {
+        "text": "O `gzip` corrompe JSON",
+        "why": "A compressão é sem perdas; as vendas voltam byte a byte."
+      }
+    ]
+  },
+  "ex-pfbnvgmk": {
+    "prompt": "Num tópico, o valor de `compression.type` que mantém o que o produtor mandou é ___.",
+    "blanks": [
+      {
+        "accept": [
+          "producer"
+        ]
+      }
+    ]
+  },
+  "ex-c4d6a6m6": {
+    "prompt": "Um tópico recebe 1 000 000 de mensagens por dia de 50 bytes cada em disco, guardadas 10 dias com 3 cópias. Quantos gigabytes (10^9 bytes) ele ocupa somando as cópias?",
+    "unit": "GB"
+  },
+  "ex-ef2c6763": {
+    "prompt": "O que o `bill.py` disse que uma semana de vendas da Ponto Final precisa, nas três cópias?",
+    "choices": [
+      {
+        "text": "Uns 7 MB",
+        "why": "Isso: 7,1 MB, o que cabe num cartão de memória."
+      },
+      {
+        "text": "Uns 7 GB",
+        "why": "Mil vezes demais: confira as unidades."
+      },
+      {
+        "text": "Uns 420 GB",
+        "why": "Esse foi o exemplo do clickstream."
+      },
+      {
+        "text": "Uns 372 MB",
+        "why": "Esse foi um ano de retenção."
+      }
+    ]
+  },
+  "ex-z7dgj7m7": {
+    "prompt": "A retenção é de 7 dias e os segmentos têm 1 GB, mas uma partição calma guarda 9 dias de mensagens. Por quê?",
+    "choices": [
+      {
+        "text": "O broker ignora a retenção em tópicos calmos",
+        "why": "A retenção vale; só que vale para segmentos inteiros."
+      },
+      {
+        "text": "A retenção é contada a partir da última leitura de um consumidor",
+        "why": "Ler não tem nada a ver com a remoção."
+      },
+      {
+        "text": "Um segmento só é apagado quando a mensagem mais nova dele passa do limite",
+        "why": "Isso: a remoção é por segmento, então mensagens velhas esperam o segmento delas."
+      },
+      {
+        "text": "A compactação guarda os dias a mais",
+        "why": "Este tópico apaga; nada o compacta."
+      }
+    ]
+  },
+  "ex-85epf8e9": {
+    "prompt": "Ligue cada alavanca ao custo de puxá-la.",
+    "pairs": [
+      {
+        "left": "menos dias guardados",
+        "right": "os replays não voltam tão longe"
+      },
+      {
+        "left": "compressão mais forte",
+        "right": "tempo de processador em produtores e consumidores"
+      },
+      {
+        "left": "menos cópias",
+        "right": "uma falha a menos sobrevivida"
+      },
+      {
+        "left": "mensagens menores",
+        "right": "uma mudança de esquema"
+      }
+    ],
+    "right_distractors": [
+      "um grupo de consumidores maior"
+    ]
+  },
+  "ex-hgka31r7": {
+    "prompt": "Por que o tópico de vendas não pode ser compactado, quando um tópico de estoque por livro pode?",
+    "choices": [
+      {
+        "text": "Vendas não têm chave",
+        "why": "Têm: a loja. O problema é o que a chave significaria."
+      },
+      {
+        "text": "Cada venda é um fato próprio; guardar uma por chave perderia o resto",
+        "why": "Isso: compactação serve para estado, não para histórico."
+      },
+      {
+        "text": "A compactação só funciona numa partição",
+        "why": "Ela funciona com qualquer número de partições."
+      },
+      {
+        "text": "Tópicos compactados não podem ser lidos por consumidores",
+        "why": "Eles são lidos como qualquer outro tópico."
+      }
+    ]
+  },
+  "ex-e9r2typ6": {
+    "prompt": "Um tópico guarda um ano de eventos, e quase ninguém lê nada com mais de uma semana. O que o armazenamento em camadas muda?",
+    "choices": [
+      {
+        "text": "Os segmentos antigos vão para um object storage mais barato",
+        "why": "Isso: a maior linha da conta vai para o armazenamento mais barato."
+      },
+      {
+        "text": "Eventos antigos são apagados depois de uma semana",
+        "why": "Eles são mantidos, em outro lugar; `retention.ms` ainda cobre o ano."
+      },
+      {
+        "text": "Eventos antigos são compactados para um por chave",
+        "why": "Isso é compactação, outro arranjo."
+      },
+      {
+        "text": "Toda leitura fica mais rápida",
+        "why": "Leituras da parte antiga ficam mais lentas, vindas do object storage."
+      }
+    ]
+  },
+  "ex-zve72844": {
+    "prompt": "Uma mensagem com chave e sem valor, que diz a um tópico compactado para esquecer aquela chave, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone"
+        ]
+      }
+    ]
+  },
+  "ex-b4kpprhn": {
+    "prompt": "Um serviço gerenciado cobra a vazão de saída por byte. O que multiplica essa linha para um tópico?",
+    "choices": [
+      {
+        "text": "O número de grupos de consumidores que o leem",
+        "why": "Isso: todo grupo lê o tópico inteiro."
+      },
+      {
+        "text": "O número de partições",
+        "why": "Partições dividem os bytes; não os multiplicam."
+      },
+      {
+        "text": "A retenção",
+        "why": "Retenção é a linha de armazenamento."
+      },
+      {
+        "text": "O codec de compressão",
+        "why": "A compressão divide, não multiplica."
+      }
+    ]
+  },
+  "ex-3fn5cspa": {
+    "prompt": "Num modelo que cobra por hora de partição, uma equipe cria 100 partições \"para depois\" num tópico calmo. O que há de errado nisso?",
+    "choices": [
+      {
+        "text": "O Kafka recusa mais de 50 partições",
+        "why": "Ele permite muito mais; o problema é a conta."
+      },
+      {
+        "text": "Partições nunca podem ser acrescentadas depois",
+        "why": "Podem; acrescentar move chaves, como a lição 3 avisa, mas é possível."
+      },
+      {
+        "text": "Cada partição ociosa é cobrada a toda hora desde hoje",
+        "why": "Isso: o preço é pago antes de a necessidade chegar."
+      },
+      {
+        "text": "Consumidores leem mais rápido de muitas partições",
+        "why": "Só até um consumidor por partição, e o tópico é calmo."
+      }
+    ]
+  },
+  "ex-4tdhbgmm": {
+    "prompt": "No laboratório, como a memória do broker ocioso se comportou num minuto sem nada escrito?",
+    "choices": [
+      {
+        "text": "Caiu quase a zero",
+        "why": "Ficou acima de meio gigabyte."
+      },
+      {
+        "text": "Ficou acima de meio gigabyte",
+        "why": "Isso: o heap fica reservado enquanto o nó roda."
+      },
+      {
+        "text": "Cresceu para vários gigabytes",
+        "why": "Ficou perto de 540 MB."
+      },
+      {
+        "text": "Foi devolvida ao sistema operacional",
+        "why": "Nada foi devolvido; o nó segura o heap."
+      }
+    ]
+  },
+  "ex-917jhnh7": {
+    "prompt": "Qual necessidade da Ponto Final é o melhor caso, para a lição, de um stream em vez de um batch?",
+    "choices": [
+      {
+        "text": "O relatório mensal de vendas",
+        "why": "Lido depois: um batch noturno o atende por vinte minutos."
+      },
+      {
+        "text": "Carregar o warehouse",
+        "why": "Ele pode ler o mesmo log uma vez por noite."
+      },
+      {
+        "text": "Treinar um modelo de demanda",
+        "why": "A entrada é fixa; batch sai mais barato."
+      },
+      {
+        "text": "O estoque mostrado no site",
+        "why": "Isso: uma promessa que depende do agora."
+      }
+    ]
+  },
+  "ex-9kbb6bkn": {
+    "prompt": "A conta mensal de um stream é três vezes o que mensagens × bytes × dias × cópias prevê. O que a lição sugere procurar?",
+    "choices": [
+      {
+        "text": "Um bug de broker que escreve tudo três vezes",
+        "why": "A replicação já está na aritmética; procure o que não está."
+      },
+      {
+        "text": "Outra coisa crescendo: partições sem uso, grupos sem leitor, retenção não escolhida",
+        "why": "Isso: a diferença é uma lista de padrões que ninguém olhou."
+      },
+      {
+        "text": "Compressão forte demais",
+        "why": "Compressão mais forte baixa o armazenamento, não o triplica."
+      },
+      {
+        "text": "Nada; contas sempre são maiores que a aritmética",
+        "why": "O ponto da aritmética é tornar a diferença visível."
+      }
+    ]
+  },
+  "ex-zm1djf9j": {
+    "prompt": "Ponha em ordem os passos para dimensionar o disco de um tópico novo.",
+    "items": [
+      "Escrever um número conhecido de mensagens reais num tópico vazio",
+      "Dividir o tamanho que o kafka-log-dirs.sh informa por esse número",
+      "Multiplicar por mensagens por dia, dias guardados e cópias",
+      "Somar folga e definir retention.ms no tópico"
+    ]
+  },
+  "ex-1ktz4kjh": {
+    "prompt": "Sem compressão, uma venda ocupou 135,3 bytes; com zstd, 16,9. Quantas vezes menor, mais ou menos, é o tópico com zstd? Responda com uma casa decimal.",
+    "unit": "vezes"
+  }
+}

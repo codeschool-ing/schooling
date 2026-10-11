@@ -35,7 +35,7 @@ The plan for the last batch is a small text file. Its second line holds the wate
 the batch ran, and its third line the offsets, per partition, that the batch read up to:
 
 ```
-ubuntu@stream:~/work$ tail -1 ~/spark/ckpt/update/offsets/5
+ubuntu@stream:~/work$ tail -1 ~/spark/ckpt/update/offsets/5; echo
 ```
 
 Partition 0 up to 41, partition 1 up to 159, and partition 2, which no shop's key lands in, at 0.

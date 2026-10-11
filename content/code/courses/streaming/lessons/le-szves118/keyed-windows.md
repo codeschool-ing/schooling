@@ -12,6 +12,20 @@ has the same edges for every shop, because the edges come from the clock:
 
 ```
 ubuntu@stream:~/work$ python windows.py tumbling 5 --by-shop
+window               sales   cents
+caruaru
+09:10:00-09:15:00      1    6200
+natal
+09:00:00-09:05:00      1    5490
+09:05:00-09:10:00      2   13480
+olinda
+09:00:00-09:05:00      1    2990
+09:10:00-09:15:00      1    2990
+recife
+09:00:00-09:05:00      1    3990
+09:05:00-09:10:00      1    7900
+09:10:00-09:15:00      1    3500
+09:20:00-09:25:00      1    5490
 ```
 
 The ten sales are now spread across nine rows. Recife has a sale in four different windows and
@@ -24,6 +38,18 @@ shop's sales:
 
 ```
 ubuntu@stream:~/work$ python windows.py session 5 --by-shop
+window               sales   cents
+caruaru
+09:12:30-09:12:30      1    6200
+natal
+09:02:10-09:08:50      3   18970
+olinda
+09:03:55-09:03:55      1    2990
+09:14:10-09:14:10      1    2990
+recife
+09:00:40-09:05:00      2   11890
+09:13:05-09:13:05      1    3500
+09:21:00-09:21:00      1    5490
 ```
 
 Seven sessions instead of two, and no merge. Sale 8 joined two sessions of the whole stream, but

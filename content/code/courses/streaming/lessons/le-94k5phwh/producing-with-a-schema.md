@@ -46,6 +46,9 @@ Make the topic and send ten sales:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-avro --partitions 3
+Created topic sales-avro.
+ubuntu@stream:~/work$ python avro_tills.py --count 10
+sent 10 sales to sales-avro as Avro
 ```
 
 ## What went over the wire
@@ -55,9 +58,22 @@ from the start of partition 0:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-avro --partition 0 --offset 0 --max-messages 1 2>/dev/null | od -A d -t x1z
+0000000 00 00 00 00 01 14 63 61 72 2d 30 30 30 30 31 30  >......car-000010<
+0000016 0e 63 61 72 75 61 72 75 0a 62 6b 2d 30 34 02 b8  >.caruaru.bk-04..<
+0000032 7b 32 32 30 32 36 2d 30 33 2d 30 32 54 30 39 3a  >{22026-03-02T09:<
+0000048 30 31 3a 30 37 2d 30 33 3a 30 30 0a              >01:07-03:00.<
+0000060
 ```
 
-@@WIRE@@
+`od` prints the offset of each line on the left, sixteen bytes in hexadecimal, and the printable
+ones between `>` and `<`. The first byte is the magic `00`, the next four are `00 00 00 01`, the
+id; and from `14` on it is an Avro body like the one in the Avro section: `car-000010`, `caruaru`,
+`bk-04`. The last byte, `0a`, is not part of the message: it is the new line the console consumer
+prints after each value.
+
+Nothing in those bytes says *sale*, *shop* or *cents*. A program that has the id and can reach
+the registry can read them, and one that cannot has 59 bytes of noise, which is why the registry
+is as much a part of the pipeline as the brokers.
 
 ## The reader
 
@@ -88,6 +104,15 @@ each message. Save it as `~/work/avro_read.py`:
 
 ```
 ubuntu@stream:~/work$ python avro_read.py
+schema ids: {1: 10}
+fields read: sale, shop, book, qty, cents, at
+caruaru           79.00
+joao-pessoa       54.90
+natal            719.10
+olinda           109.80
+recife           141.80
 ```
 
-@@READ@@
+All ten sales were written with schema 1, the reader asked for the same fields, and the totals
+come out of an Avro topic as they did from JSON. The difference is invisible here, and shows the
+first time somebody changes the schema, which the next section does on purpose.

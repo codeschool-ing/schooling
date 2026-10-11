@@ -26,10 +26,13 @@ leaves version 3 unable to read version 1.
 ## The default is not the same everywhere
 
 Confluent's registry starts every subject at `BACKWARD`. Apicurio's Confluent-compatible API
-does not:
+does not, as the first command shows; the second sets the mode for this lesson's subject:
 
 ```
 ubuntu@stream:~/work$ curl -s localhost:8080/apis/ccompat/v7/config; echo
+{"compatibilityLevel":"NONE"}
+ubuntu@stream:~/work$ curl -s -X PUT -H 'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"compatibility": "BACKWARD"}' localhost:8080/apis/ccompat/v7/config/sales-avro-value; echo
+{"compatibility":"BACKWARD","normalize":false}
 ```
 
 **`NONE` means the registry you started in this lesson accepts any change at all** until it is
@@ -40,13 +43,22 @@ end of the address it would have changed the default for every subject.
 ## A change it accepts
 
 The tills are to report which till rang up each sale. `jq` writes a version 2 of the schema with a
-`till` field and a default, for the sales written before the field existed:
+`till` field and a default, for the sales written before the field existed. Then the producer
+tries to send with it, and the version is offered to the registry:
 
 ```
 ubuntu@stream:~/work$ jq '.fields += [{"name": "till", "type": "string", "default": "unknown"}]' sale.avsc > sale-v2.avsc
+ubuntu@stream:~/work$ python avro_tills.py --schema sale-v2.avsc --count 1 2>&1 | tail -1
+confluent_kafka.schema_registry.error.SchemaRegistryError: The given schema does not match any schema under the subject sales-avro-value (HTTP status code 404, SR code 40403)
+ubuntu@stream:~/work$ ./register.sh sales-avro-value sale-v2.avsc
+{"id":2}
 ```
 
-@@V2@@
+The producer would not send with version 2 yet: with `auto.register.schemas` off, a schema the
+registry does not have is a 404, and the sale is never written. Registering it is a separate,
+deliberate step, and the registry checked it against version 1 under `BACKWARD` before giving it
+id 2. A new field with a default passes, because a reader on version 2 can fill `till` with
+`unknown` for every sale written before it existed.
 
 ## A change it refuses
 
@@ -54,9 +66,14 @@ Now the rename from the first section of this lesson, `cents` to `amount`, as a 
 
 ```
 ubuntu@stream:~/work$ jq '.fields[4].name = "amount"' sale.avsc > sale-renamed.avsc
+ubuntu@stream:~/work$ ./register.sh sales-avro-value sale-renamed.avsc
+{"message":"io.apicurio.registry.rules.violation.RuleViolationException: Incompatible artifact: sales-avro-value [AVRO], num of incompatible diffs: {1}, list of diff types: [amount at /fields/4]","error_code":409}
+ubuntu@stream:~/work$ curl -s localhost:8080/apis/ccompat/v7/subjects/sales-avro-value/versions; echo
+[1,2]
 ```
 
-@@REFUSED@@
+**409, Conflict**, and the subject still has only versions 1 and 2. The message names the field
+the check stopped on, `amount`, at position 4 of the field list.
 
 To Avro, a rename is two changes: `cents` removed and `amount` added. Removing is allowed under
 `BACKWARD`; adding a field **with no default** is not, because a reader on the new schema cannot

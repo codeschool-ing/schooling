@@ -53,6 +53,16 @@ sales in it with the till from lesson 1, and add them up:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-json --partitions 3
+Created topic sales-json.
+ubuntu@stream:~/work$ python tills.py --count 20 --rate 0 --topic sales-json
+sent 20 sales to sales-json, the last one at 09:02:55
+ubuntu@stream:~/work$ python totals.py
+20 sales
+caruaru          398.50
+joao-pessoa      159.90
+natal            877.10
+olinda           330.80
+recife           531.30
 ```
 
 Now the tills are upgraded. The new software is right in every way but one: its programmer
@@ -77,9 +87,26 @@ Five more sales from Recife, and the totals again:
 
 ```
 ubuntu@stream:~/work$ python till_v2.py
+sent 5 sales from the new till
+ubuntu@stream:~/work$ python totals.py
+25 sales
+caruaru          398.50
+joao-pessoa      159.90
+natal            877.10
+olinda           330.80
+recife           531.30
 ```
 
-@@NUMBERS@@
+**Twenty-five sales, and Recife's total has not moved**: 531.30 before the new till and 531.30
+after it, although Recife has just sold five copies of `bk-04` at 79.00 each. The 395.00 is in
+the topic, in a field called `amount`, and `sale.get("cents", 0)` returned the 0 it was told to
+return five times. No error, no warning, no log line. The count of sales is right, which makes
+the total look checked.
+
+That is the shape of the failure a schema exists to prevent. The producer and the consumer never
+met; they shared a **guess** about what a sale looks like, written in two programs, and one of
+them changed its half. A crash would have been better: somebody would have looked. The report
+that goes to the manager tomorrow is wrong, and nothing in the system knows.
 
 ## Where the agreement has to live
 

@@ -68,6 +68,11 @@ Five-minute tumbling windows:
 
 ```
 ubuntu@stream:~/work$ python windows.py tumbling 5
+window               sales   cents
+09:00:00-09:05:00      3   12470
+09:05:00-09:10:00      3   21380
+09:10:00-09:15:00      3   12690
+09:20:00-09:25:00      1    5490
 ```
 
 Four windows, and the ten sales add up: 3, 3, 3 and 1. There is no line for 09:15 to 09:20,

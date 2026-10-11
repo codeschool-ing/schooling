@@ -19,6 +19,22 @@ Caruaru's through another, the way shops keyed by name spread over partitions:
 
 ```
 ubuntu@stream:~/work$ python watermark.py --partitions 2
+ #  happened  shop      watermark  what happened
+ 1  09:00:40  recife    --:--:--  
+ 2  09:02:10  natal     08:58:40  
+ 3  09:03:55  olinda    09:00:10  
+ 4  09:05:00  recife    09:00:10  
+ 5  09:06:20  natal     09:03:00  
+ 6  09:12:30  caruaru   09:03:00  
+ 7  09:13:05  recife    09:10:30  
+                              emit 09:00:00-09:05:00: 3 sales, 12470
+                              emit 09:05:00-09:10:00: 2 sales, 12390
+ 8  09:08:50  natal     09:10:30  too late for 09:05:00-09:10:00: dropped
+ 9  09:14:10  olinda    09:10:30  
+10  09:21:00  recife    09:10:30  
+11  09:04:30  natal     09:10:30  too late for 09:00:00-09:05:00: dropped
+12  09:23:10  olinda    09:10:30  
+still open: 09:10:00 (3), 09:20:00 (2)
 ```
 
 The watermark is now held by whichever partition is behind. After sale 10, Recife's 09:21:00, the
@@ -37,6 +53,20 @@ Pessoa's partition has nothing at all:
 
 ```
 ubuntu@stream:~/work$ python watermark.py --partitions 3
+ #  happened  shop      watermark  what happened
+ 1  09:00:40  recife    --:--:--  
+ 2  09:02:10  natal     --:--:--  
+ 3  09:03:55  olinda    --:--:--  
+ 4  09:05:00  recife    --:--:--  
+ 5  09:06:20  natal     --:--:--  
+ 6  09:12:30  caruaru   --:--:--  
+ 7  09:13:05  recife    --:--:--  
+ 8  09:08:50  natal     --:--:--  
+ 9  09:14:10  olinda    --:--:--  
+10  09:21:00  recife    --:--:--  
+11  09:04:30  natal     --:--:--  
+12  09:23:10  olinda    --:--:--  
+still open: 09:00:00 (4), 09:05:00 (3), 09:10:00 (3), 09:20:00 (2)
 ```
 
 **The watermark never exists, and no window is ever emitted.** Every sale is counted, nothing is
@@ -54,6 +84,22 @@ has had nothing during the last three sales is left out:
 
 ```
 ubuntu@stream:~/work$ python watermark.py --partitions 3 --idle 3
+ #  happened  shop      watermark  what happened
+ 1  09:00:40  recife    --:--:--  
+ 2  09:02:10  natal     --:--:--  
+ 3  09:03:55  olinda    09:00:10  
+ 4  09:05:00  recife    09:00:10  
+ 5  09:06:20  natal     09:03:00  
+ 6  09:12:30  caruaru   09:03:00  
+ 7  09:13:05  recife    09:10:30  
+                              emit 09:00:00-09:05:00: 3 sales, 12470
+                              emit 09:05:00-09:10:00: 2 sales, 12390
+ 8  09:08:50  natal     09:10:30  too late for 09:05:00-09:10:00: dropped
+ 9  09:14:10  olinda    09:10:30  
+10  09:21:00  recife    09:10:30  
+11  09:04:30  natal     09:10:30  too late for 09:00:00-09:05:00: dropped
+12  09:23:10  olinda    09:10:30  
+still open: 09:10:00 (3), 09:20:00 (2)
 ```
 
 From sale 3 on, João Pessoa's partition is idle and the watermark comes from the other two. The

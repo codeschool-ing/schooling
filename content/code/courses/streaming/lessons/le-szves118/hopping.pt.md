@@ -22,6 +22,13 @@ terminou exatamente às 09:05:00.
 
 ```
 ubuntu@stream:~/work$ python windows.py hopping 10 5
+window               sales   cents
+08:55:00-09:05:00      3   12470
+09:00:00-09:10:00      6   33850
+09:05:00-09:15:00      6   34070
+09:10:00-09:20:00      3   12690
+09:15:00-09:25:00      1    5490
+09:20:00-09:30:00      1    5490
 ```
 
 Seis janelas onde a tumbling tinha quatro, e as contagens somam vinte, o dobro das dez vendas,

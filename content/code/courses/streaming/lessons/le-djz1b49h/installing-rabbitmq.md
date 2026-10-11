@@ -20,6 +20,8 @@ yours, check it is up:
 
 ```
 ubuntu@stream:~/work$ sudo rabbitmq-diagnostics ping
+Will ping rabbit@stream. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.
+Ping succeeded
 ```
 
 `rabbitmqctl` and `rabbitmq-diagnostics` talk to the server as an administrator, which is why they

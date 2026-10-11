@@ -12,6 +12,17 @@ na ordem em que chegaram e imprime uma janela cada vez que uma venda a muda:
 
 ```
 ubuntu@stream:~/work$ python windows.py tumbling 5 --updates
+arrived   window               sales   cents
+09:00:40  09:00:00-09:05:00      1    3990
+09:02:10  09:00:00-09:05:00      2    9480
+09:03:55  09:00:00-09:05:00      3   12470
+09:05:00  09:05:00-09:10:00      1    7900
+09:06:20  09:05:00-09:10:00      2   12390
+09:12:30  09:10:00-09:15:00      1    6200
+09:13:05  09:10:00-09:15:00      2    9700
+09:08:50  09:05:00-09:10:00      3   21380
+09:14:10  09:10:00-09:15:00      3   12690
+09:21:00  09:20:00-09:25:00      1    5490
 ```
 
 Leia a janela das 09:05 às 09:10 coluna abaixo. Depois da venda 5 ela tem duas vendas e 12.390

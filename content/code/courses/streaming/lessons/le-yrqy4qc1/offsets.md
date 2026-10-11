@@ -13,12 +13,17 @@ partition has got to:
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 1000 --rate 0
+sent 1000 sales to sales, the last one at 11:56:20
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic sales
+sales:0:211
+sales:1:789
+sales:2:0
 ```
 
 `kafka-get-offsets.sh` prints `topic:partition:offset`, and with no `--time` the offset is the
 **log-end offset**: the offset the next message in that partition will get, which is also how many
 messages it has ever received, as long as nothing was deleted. Partition 0 has 211 sales and
-partition 1 has 789. **Partition 2 has none**, and the last section says why: `tills.py` uses the
+partition 1 has 789. **Partition 2 has none**, and the previous section says why: `tills.py` uses the
 Python client's default partitioner, and none of the five shop names hashes to partition 2 under
 it. A topic with three partitions is, for these sales, a topic with two, one of them nearly four
 times busier than the other. Nothing warns you about that; this command is how you find out.
@@ -29,6 +34,9 @@ The other end is the **earliest** offset, the first one still stored:
 
 ```
 ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic sales --time earliest
+sales:0:0
+sales:1:0
+sales:2:0
 ```
 
 All three are 0, because nothing has been deleted yet. Between the two ends, every offset holds a
@@ -47,6 +55,9 @@ The console consumer can read one partition from any offset in it:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales --partition 1 --offset 5 --max-messages 2 --formatter-property print.offset=true
+Offset:5	{"sale": "rec-000006", "shop": "recife", "book": "bk-06", "qty": 1, "cents": 6200, "at": "2026-03-02T09:00:43-03:00"}
+Offset:6	{"sale": "rec-000007", "shop": "recife", "book": "bk-01", "qty": 2, "cents": 7980, "at": "2026-03-02T09:00:44-03:00"}
+Processed a total of 2 messages
 ```
 
 Offsets 5 and 6 of partition 1 are `rec-000006` and `rec-000007`, two Recife sales in the order

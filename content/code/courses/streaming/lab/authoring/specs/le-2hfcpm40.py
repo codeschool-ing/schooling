@@ -87,7 +87,7 @@ Q(S5,"easy",("Where does a Spark streaming query keep the offsets it has read?",
 ])
 Q(S5,"medium",("The second run with the same checkpoint printed nothing, although the query says `startingOffsets` is `earliest`. Why?","A segunda execução com o mesmo checkpoint não imprimiu nada, embora a consulta diga que `startingOffsets` é `earliest`. Por quê?"),[
  ("The topic's retention had deleted the old sales","A retenção do tópico tinha apagado as vendas antigas",False,"The sales were still there; the checkpoint said they were done.","As vendas ainda estavam lá; o checkpoint dizia que já tinham sido tratadas."),
- ("`earliest` only applies to a query's first run","`earliest` só vale na primeira execução de uma consulta",True,"Right. After that the checkpoint decides where to start.","Isso. Depois disso, o checkpoint decide de onde começar."),
+ ("`earliest` only applies to a query's first run","Essa opção só é lida na estreia",True,"Right. After that the checkpoint decides where to start.","Isso. Depois disso, o checkpoint decide de onde começar."),
  ("Console output is shown once per checkpoint","A saída de console é mostrada uma vez por checkpoint",False,"Batch 6 printed later with the same checkpoint.","O batch 6 imprimiu depois com o mesmo checkpoint."),
  ("Spark had crashed during the first run","O Spark tinha caído na primeira execução",False,"The first run finished; its commits were written.","A primeira execução terminou; os commits foram gravados."),
 ])
@@ -117,7 +117,7 @@ Q(S6,"medium",("Why did the continuous trigger refuse `spark_sales.py` before re
 ])
 N(S6,"easy",("While the live query ran, roughly how many megabytes did the Spark process and the Kafka node hold together? (Answer to the nearest 100.)","Enquanto a consulta ao vivo rodava, quantos megabytes, mais ou menos, o processo do Spark e o nó Kafka ocupavam juntos? (Responda arredondando para a centena.)"),1000,100,("megabytes","megabytes"))
 Q(S7,"medium",("The file sink refused update mode. Why does it accept only append?","O sink de arquivos recusou o modo update. Por que ele só aceita append?"),[
- ("A written file is never changed, so only final rows can go in","Um arquivo escrito nunca é alterado, então só linhas finais podem entrar",True,"Right. Update would need to rewrite rows already on disk.","Isso. O update exigiria reescrever linhas que já estão em disco."),
+ ("A written file is never changed, so only final rows go in","Um arquivo escrito nunca é alterado, então só entram linhas finais",True,"Right. Update would need to rewrite rows already on disk.","Isso. O update exigiria reescrever linhas que já estão em disco."),
  ("JSON cannot hold numbers that change","JSON não consegue guardar números que mudam",False,"The format is not the issue; changing a file already written is.","O formato não é a questão; mudar um arquivo já escrito é."),
  ("Update mode needs Kafka's keys","O modo update precisa das chaves do Kafka",False,"The console sink takes update mode with no keys at all.","O sink de console aceita update sem chave nenhuma."),
  ("Append is faster on disk","Append é mais rápido em disco",False,"Speed is not why; correctness is.","Velocidade não é o motivo; correção é."),

@@ -49,8 +49,8 @@ Q(S3,"medium",("After a thousand sales from tills.py, partition 2 of sales had n
  ("None of the five shop keys hashes to it","Nenhuma das cinco chaves de loja cai nela pelo hash",True,"Right. Five keys over three partitions, and two partitions took all five.","Isso. Cinco chaves em três partições, e duas partições levaram as cinco."),
  ("Retention deleted them before the command ran","A retenção as apagou antes de o comando rodar",False,"Nothing was deleted: the earliest offsets were all 0.","Nada foi apagado: os offsets mais antigos eram todos 0."),
 ])
-N(S3,"easy",("A partition's earliest offset is 7513 and its log-end offset is 20000. How many messages does it hold now, with no compaction?","O offset mais antigo de uma partição é 7513 e o log-end offset é 20000. Quantas mensagens ela guarda agora, sem compactação?"),12487,0,("messages","mensagens"))
-Q(S4,"easy",("What is the name of a segment file like 00000000000000007513.log?","O que é o nome de um arquivo de segmento como 00000000000000007513.log?"),[
+N(S3,"easy",("A partition's earliest offset is 7081 and its log-end offset is 20000. How many messages does it hold now, with no compaction?","O offset mais antigo de uma partição é 7081 e o log-end offset é 20000. Quantas mensagens ela guarda agora, sem compactação?"),12919,0,("messages","mensagens"))
+Q(S4,"easy",("What is the name of a segment file like 00000000000000007081.log?","O que é o nome de um arquivo de segmento como 00000000000000007081.log?"),[
  ("The time the segment was created","A hora em que o segmento foi criado",False,"The time is inside, in the .timeindex; the name is an offset.","A hora está dentro, no .timeindex; o nome é um offset."),
  ("The offset of the first message in it","O offset da primeira mensagem nele",True,"Right. The base offset, padded to twenty digits.","Isso. O offset base, completado até vinte dígitos."),
  ("The number of bytes written before it was opened","O número de bytes escritos antes de ele ser aberto",False,"Bytes are positions inside a file, kept in the .index.","Bytes são posições dentro de um arquivo, guardadas no .index."),
@@ -62,11 +62,11 @@ Q(S4,"medium",("Why does a segment have an .index beside its .log?","Por que um 
  ("To sort the messages by key","Para ordenar as mensagens por chave",False,"Messages stay in the order they were written; nothing sorts them.","As mensagens ficam na ordem em que foram escritas; nada as ordena."),
  ("To find the byte position of an offset without reading the log from its start","Para achar a posição em bytes de um offset sem ler o log desde o começo",True,"Right. minilog.py had to count every line; Kafka looks up the nearest entry.","Isso. O minilog.py tinha de contar toda linha; o Kafka consulta a entrada mais próxima."),
 ])
-Q(S4,"hard",("kafka-dump-log.sh shows a batch line with count: 150 before the messages. What does it tell you about how they arrived?","O kafka-dump-log.sh mostra uma linha de lote com count: 150 antes das mensagens. O que ela diz sobre como elas chegaram?"),[
- ("The producer sent 150 messages in one batch, stored as written","O produtor mandou 150 mensagens num lote, guardado como foi escrito",True,"Right. The broker stores the producer's batch whole; lesson 4 changes its size.","Isso. O broker guarda inteiro o lote do produtor; a lição 4 muda o tamanho dele."),
- ("150 consumers have read them","150 consumidores as leram",False,"The log does not record readers.","O log não registra leitores."),
- ("The broker waited for 150 messages before writing anything to disk","O broker esperou 150 mensagens antes de escrever qualquer coisa no disco",False,"The grouping comes from the producer, not from the broker waiting.","O agrupamento vem do produtor, não de o broker esperar."),
- ("The segment is full after 150 messages","O segmento fica cheio depois de 150 mensagens",False,"A segment closes by size or age, and holds many batches.","Um segmento fecha por tamanho ou idade, e guarda muitos lotes."),
+Q(S4,"hard",("kafka-dump-log.sh shows a batch line with count: 761 before the messages. What does it tell you about how they arrived?","O kafka-dump-log.sh mostra uma linha de lote com count: 761 antes das mensagens. O que ela diz sobre como elas chegaram?"),[
+ ("The producer sent 761 messages in one batch, stored as written","O produtor mandou 761 mensagens num lote, guardado como foi escrito",True,"Right. The broker stores the producer's batch whole; lesson 4 changes its size.","Isso. O broker guarda inteiro o lote do produtor; a lição 4 muda o tamanho dele."),
+ ("761 consumers have read them","761 consumidores as leram",False,"The log does not record readers.","O log não registra leitores."),
+ ("The broker waited for 761 messages before writing anything to disk","O broker esperou 761 mensagens antes de escrever qualquer coisa no disco",False,"The grouping comes from the producer, not from the broker waiting.","O agrupamento vem do produtor, não de o broker esperar."),
+ ("The segment is full after 761 messages","O segmento fica cheio depois de 761 mensagens",False,"A segment closes by size or age, and holds many batches.","Um segmento fecha por tamanho ou idade, e guarda muitos lotes."),
 ])
 Q(S5,"easy",("What does retention delete?","O que a retenção apaga?"),[
  ("Messages that every consumer group has read","Mensagens que todo consumer group já leu",False,"Retention ignores readers entirely.","A retenção ignora os leitores por completo."),
@@ -74,7 +74,7 @@ Q(S5,"easy",("What does retention delete?","O que a retenção apaga?"),[
  ("Whole closed segments, oldest first","Segmentos fechados inteiros, os mais antigos primeiro",True,"Right. And never the active segment.","Isso. E nunca o segmento ativo."),
  ("The oldest value of each key","O valor mais antigo de cada chave",False,"That is closer to compaction, the next section.","Isso está mais perto da compactação, a próxima seção."),
 ])
-N(S5,"medium",("old-sales had segments starting at offsets 0, 7513 and 14965. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?","O old-sales tinha segmentos começando nos offsets 0, 7513 e 14965. A retenção apagou o primeiro segmento. Que offset o kafka-get-offsets.sh --time earliest imprimiu?"),7513,0,("offset","offset"))
+N(S5,"medium",("old-sales had segments starting at offsets 0, 7081 and 14354. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?","O old-sales tinha segmentos começando nos offsets 0, 7081 e 14354. A retenção apagou o primeiro segmento. Que offset o kafka-get-offsets.sh --time earliest imprimiu?"),7081,0,("offset","offset"))
 Q(S5,"medium",("You set retention.bytes on a topic and nothing is deleted for three minutes. Why?","Você configura retention.bytes num tópico e nada é apagado por três minutos. Por quê?"),[
  ("The setting needs a broker restart","A configuração precisa reiniciar o broker",False,"Topic settings apply without a restart; the check is periodic.","Configurações de tópico valem sem reiniciar; a verificação é periódica."),
  ("The broker checks retention every five minutes","O broker verifica a retenção a cada cinco minutos",True,"Right. log.retention.check.interval.ms is 300000 by default.","Isso. log.retention.check.interval.ms é 300000 por padrão."),

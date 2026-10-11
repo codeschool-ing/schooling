@@ -12,7 +12,35 @@ põe a mensagem na fila `packing`, e a exchange fica fora de vista.
 
 O lado do site põe os pedidos na fila. Salve isto como `~/work/rabbit_send.py`:
 
-@@fence@@
+```python
+"""rabbit_send.py: put Ponto Final's online orders on a RabbitMQ queue, to be packed.
+
+    python rabbit_send.py [--count N]
+"""
+import argparse
+import json
+
+import pika
+
+args = argparse.ArgumentParser()
+args.add_argument("--count", type=int, default=6)
+args = args.parse_args()
+
+conn = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+ch = conn.channel()
+ch.queue_declare(queue="packing", durable=True)
+
+for n in range(1, args.count + 1):
+    order = {"order": f"web-{n:04d}", "shop": "recife", "books": n % 3 + 1}
+    ch.basic_publish(
+        exchange="",
+        routing_key="packing",
+        body=json.dumps(order),
+        properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent),
+    )
+print(f"queued {args.count} orders")
+conn.close()
+```
 
 O `queue_declare` cria a fila se ela não existe e não faz nada se existe, então os dois lados o
 chamam e qualquer um pode subir primeiro. **`durable=True` faz a fila sobreviver a um reinício do
@@ -59,33 +87,64 @@ O lado do embalador, como `~/work/rabbit_work.py`:
 Ponha seis pedidos na fila e pergunte ao servidor o que ele guarda. `messages_ready` esperam um
 consumidor, `messages_unacknowledged` foram entregues e ainda não confirmadas:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_send.py
+queued 6 orders
+ubuntu@stream:~/work$ sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged consumers
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages_ready	messages_unacknowledged	consumers
+packing	6	0	0
+```
 
 Agora dois embaladores. No **segundo shell**, a Ana, que embala tudo o que recebe:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_work.py ana
+```
 
 E num **terceiro shell** — abra mais um, do jeito que abriu o segundo — a Bia, que vai cair durante o
 segundo pedido dela:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_work.py bia --crash-after 1
+```
 
 Depois de alguns segundos o shell da Bia volta ao prompt:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_work.py bia --crash-after 1
+bia: packing web-0003
+bia: packing web-0005
+bia: crashed before acknowledging web-0005
+```
 
 A Ana continua esperando mais. No primeiro shell, pergunte ao servidor de novo:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged consumers
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages_ready	messages_unacknowledged	consumers
+packing	0	0	1
+```
 
 A fila está vazia, e um consumidor, a Ana, continua conectado. Pare-a com Ctrl+C, e o shell dela
 mostra o que ela fez:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_work.py ana
+ana: packing web-0001
+ana: packing web-0002
+ana: packing web-0004
+ana: packing web-0006
+ana: packing web-0005 (redelivered)
+ana: stopped after 5 orders
+```
 
-Siga o `web-0004`. O servidor o deu à Bia; a Bia o embalou e morreu antes de avisar. **A conexão
+Siga o `web-0005`. O servidor o deu à Bia; a Bia o embalou e morreu antes de avisar. **A conexão
 fechar bastou para o servidor saber**: uma mensagem não confirmada cujo consumidor sumiu volta para
-a fila, e a Ana a recebeu, marcada como `redelivered`. Nada se perdeu. E o `web-0004` foi embalado
+a fila, e a Ana a recebeu, marcada como `redelivered`. Nada se perdeu. E o `web-0005` foi embalado
 duas vezes — uma pela Bia, cujo trabalho não foi a lugar nenhum, outra pela Ana. Isso é entrega
 pelo menos uma vez, a garantia da lição 7, num outro broker; a marca `redelivered` é um aviso de
 que o trabalho talvez já tenha acontecido, e tornar a própria embalagem idempotente é a resposta da

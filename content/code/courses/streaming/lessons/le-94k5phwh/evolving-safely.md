@@ -31,9 +31,31 @@ they are new sales:
 
 ```
 ubuntu@stream:~/work$ python avro_tills.py --schema sale-v2.avsc --count 5 --seed 2
+sent 5 sales to sales-avro as Avro
+ubuntu@stream:~/work$ python avro_read.py
+schema ids: {1: 10, 2: 5}
+fields read: sale, shop, book, qty, cents, at
+caruaru          213.70
+joao-pessoa      444.30
+natal            824.10
+olinda           109.80
+recife           196.70
+ubuntu@stream:~/work$ python avro_read.py sale-v2.avsc
+schema ids: {1: 10, 2: 5}
+fields read: sale, shop, book, qty, cents, at, till
+caruaru          213.70
+joao-pessoa      444.30
+natal            824.10
+olinda           109.80
+recife           196.70
 ```
 
-@@MIXED@@
+The topic now holds sales written with two schemas, ten with id 1 and five with id 2, and two
+readers each got all fifteen. `avro_read.py` with no argument reads them as version 1 and never
+sees `till`: an **old reader on new data**, the forward direction. With `sale-v2.avsc` it reads
+them as version 2 and gets `till` on every sale, `unknown` on the ten that were written before the
+field existed: a **new reader on old data**, the backward direction. Same bytes, same totals, and
+each reader got the shape it asked for.
 
 **A Kafka topic is not migrated when its schema changes.** The ten old messages are still written
 with version 1 and will be for as long as the topic keeps them, which is the reason readers have to

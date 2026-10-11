@@ -89,6 +89,12 @@ Queue six orders and ask the server what it holds. `messages_ready` are waiting 
 
 ```
 ubuntu@stream:~/work$ python rabbit_send.py
+queued 6 orders
+ubuntu@stream:~/work$ sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged consumers
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages_ready	messages_unacknowledged	consumers
+packing	6	0	0
 ```
 
 Now two packers. In the **second shell**, Ana, who packs everything she is given:
@@ -108,12 +114,19 @@ After a few seconds Bia's shell is back at the prompt:
 
 ```
 ubuntu@stream:~/work$ python rabbit_work.py bia --crash-after 1
+bia: packing web-0003
+bia: packing web-0005
+bia: crashed before acknowledging web-0005
 ```
 
 Ana is still waiting for more. In the first shell, ask the server again:
 
 ```
 ubuntu@stream:~/work$ sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged consumers
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages_ready	messages_unacknowledged	consumers
+packing	0	0	1
 ```
 
 The queue is empty, and one consumer, Ana, is still attached. Stop her with Ctrl+C, and her shell
@@ -121,12 +134,18 @@ shows what she did:
 
 ```
 ubuntu@stream:~/work$ python rabbit_work.py ana
+ana: packing web-0001
+ana: packing web-0002
+ana: packing web-0004
+ana: packing web-0006
+ana: packing web-0005 (redelivered)
+ana: stopped after 5 orders
 ```
 
-Follow `web-0004`. The server gave it to Bia; Bia packed it and died before saying so. **The
+Follow `web-0005`. The server gave it to Bia; Bia packed it and died before saying so. **The
 connection closing was enough for the server to know**: an unacknowledged message whose consumer
 has gone goes back on the queue, and Ana got it, marked `redelivered`. Nothing was lost. And
-`web-0004` was packed twice — once by Bia, whose work went nowhere, once by Ana. That is
+`web-0005` was packed twice — once by Bia, whose work went nowhere, once by Ana. That is
 at-least-once delivery, lesson 7's guarantee, from a different broker; the `redelivered` flag is a
 hint that the work may already have happened, and making the packing itself idempotent is
 lesson 8's answer, not the broker's.

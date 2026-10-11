@@ -36,7 +36,7 @@ O plano do último batch é um arquivo de texto pequeno. A segunda linha guarda 
 em que o batch rodou, e a terceira, os offsets por partição até onde o batch leu:
 
 ```
-ubuntu@stream:~/work$ tail -1 ~/spark/ckpt/update/offsets/5
+ubuntu@stream:~/work$ tail -1 ~/spark/ckpt/update/offsets/5; echo
 ```
 
 Partição 0 até 41, partição 1 até 159, e a partição 2, onde não cai a chave de nenhuma loja, em 0.

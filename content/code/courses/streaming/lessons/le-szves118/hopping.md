@@ -22,6 +22,13 @@ the one starting 08:55, which ended at 09:05:00 exactly.
 
 ```
 ubuntu@stream:~/work$ python windows.py hopping 10 5
+window               sales   cents
+08:55:00-09:05:00      3   12470
+09:00:00-09:10:00      6   33850
+09:05:00-09:15:00      6   34070
+09:10:00-09:20:00      3   12690
+09:15:00-09:25:00      1    5490
+09:20:00-09:30:00      1    5490
 ```
 
 Six windows where tumbling had four, and the counts add up to twenty, twice the ten sales,

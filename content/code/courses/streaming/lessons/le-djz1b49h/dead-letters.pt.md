@@ -49,7 +49,14 @@ segundos, põe três pedidos nela, rejeita um, trata um e deixa o terceiro em pa
 }
 ```
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python rabbit_dead.py
+took web-0001, the address is unreadable: reject it
+took web-0002, printed the label: ack it
+nobody takes web-0003; waiting 3 seconds
+dead letter web-0001: reason rejected, from queue labels
+dead letter web-0003: reason expired, from queue labels
+```
 
 Dois dead letters por dois motivos diferentes, e o que foi tratado não está entre eles. O pedido
 rejeitado manteve o corpo, então alguém pode corrigir o endereço e publicá-lo de novo; o expirado

@@ -14,6 +14,10 @@ than the timeout, does not delete it, so the message becomes visible again and s
 receives it. RabbitMQ notices a dead consumer by its connection closing; SQS has no connection to
 watch, so it uses a clock. That is at-least-once delivery again, with a timer instead of a socket.
 
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 220\" role=\"img\" aria-label=\"The visibility timeout of an SQS queue over six seconds. At 0 seconds worker A receives web-0001 and the message becomes invisible for 5 seconds. Worker B asks at once and gets nothing. Worker A crashes and never deletes it. At 5 seconds the message is visible again; at 6 seconds worker B receives it, with a receive count of 2, and deletes it.\" data-fig=\"l15-visibility\"><line x1=\"120\" y1=\"185\" x2=\"696.0\" y2=\"185\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"120\" y1=\"181\" x2=\"120\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"120\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">0</text><line x1=\"210\" y1=\"181\" x2=\"210\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"210\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1</text><line x1=\"300\" y1=\"181\" x2=\"300\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"300\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">2</text><line x1=\"390\" y1=\"181\" x2=\"390\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"390\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">3</text><line x1=\"480\" y1=\"181\" x2=\"480\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"480\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">4</text><line x1=\"570\" y1=\"181\" x2=\"570\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"570\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">5</text><line x1=\"660\" y1=\"181\" x2=\"660\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"660\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">6</text><text x=\"20\" y=\"200\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">seconds</text><rect x=\"120\" y=\"92\" width=\"450\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"345.0\" y=\"105\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">invisible: visibility timeout 5 s</text><text x=\"576\" y=\"105\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">visible again</text><text x=\"20\" y=\"55\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">worker A</text><text x=\"20\" y=\"150\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">worker B</text><circle cx=\"120\" cy=\"55\" r=\"5\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"130\" y=\"45\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">receives</text><circle cx=\"255.0\" cy=\"55\" r=\"5\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"265.0\" y=\"45\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">crashes, no delete</text><line x1=\"120\" y1=\"55\" x2=\"255.0\" y2=\"55\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></line><circle cx=\"124.5\" cy=\"150\" r=\"5\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></circle><text x=\"130\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">asks: 0 messages</text><circle cx=\"660\" cy=\"150\" r=\"5\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"650\" y=\"140\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">receives, count 2</text><text x=\"650\" y=\"162\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">deletes</text></svg>", "caption": "SQS has no connection to watch, so a received message is hidden for a fixed time, and an undeleted one comes back when the time runs out."}
+```
+
 ## The emulator
 
 Everything below runs against moto, the emulator installed earlier in this lesson, and **not against
@@ -64,6 +68,10 @@ a real account — and at a real bill. Save it as `~/work/sqs_demo.py`:
 
 ```
 ubuntu@stream:~/work$ python sqs_demo.py visibility
+worker A got web-0001, and crashes without deleting it
+worker B, at once: 0 messages
+worker B, 6 s later: got web-0001, received 2 times
+after delete: 0 messages
 ```
 
 Worker B sees nothing while the message is hidden, and gets it once the timeout has passed, with a
@@ -82,6 +90,10 @@ would send it:
 
 ```
 ubuntu@stream:~/work$ python sqs_demo.py fifo
+sent 'rec-1 bk-02 -1' with deduplication id rec-1
+sent 'rec-1 bk-02 -1' with deduplication id rec-1
+sent 'rec-2 bk-02 -1' with deduplication id rec-2
+received ['rec-1 bk-02 -1', 'rec-2 bk-02 -1']
 ```
 
 Three sent, two received: the second `rec-1` was dropped because its deduplication id had been seen.
@@ -93,6 +105,9 @@ bounded window as lesson 8's deduplication table, chosen for you.
 
 ```
 ubuntu@stream:~/work$ python sqs_demo.py fanout
+stock-updates: ['{"sale": "rec-000001", "cents": 5490}']
+loyalty-points: ['{"sale": "rec-000001", "cents": 5490}']
+EXIT 0
 ```
 
 One publish, one copy in each subscribed queue. **SNS plus a queue per reader is the AWS spelling of

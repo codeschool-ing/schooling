@@ -45,9 +45,24 @@ Make a topic of three partitions and send one message per shop:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic shops --partitions 3
+Created topic shops.
+ubuntu@stream:~/work$ python keys.py shops recife=py olinda=py caruaru=py natal=py joao-pessoa=py
+recife       partition 1  offset 0
+olinda       partition 1  offset 1
+natal        partition 1  offset 2
+joao-pessoa  partition 1  offset 3
+caruaru      partition 0  offset 0
 ```
 
-KEYS-DEFAULT
+Four of the five shops landed in partition 1, Caruaru in partition 0, and **nothing in partition
+2**. That is not a fault: five keys hashed into three buckets is a small sample, and an uneven one
+is what a small sample gives. It does mean a topic with three partitions is, for these keys, a topic
+with two. The offsets count up inside each partition, which is why Caruaru's message is at offset 0
+while Natal's is at 2.
+
+**The same key goes to the same partition for as long as the number of partitions does not
+change**, and that is the whole promise. The client did the hashing: the Python client is built on librdkafka, a
+library in C, and its default partitioner, `consistent_random`, takes a CRC32 of the key.
 
 ## Kafka's own tools hash differently
 
@@ -57,15 +72,44 @@ that each line is a key, a `:`, and a value:
 
 ```
 ubuntu@stream:~/work$ printf "recife:java\nolinda:java\ncaruaru:java\nnatal:java\njoao-pessoa:java\n" | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic shops --reader-property parse.key=true --reader-property key.separator=:
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic shops --from-beginning --max-messages 10 --formatter-property print.partition=true --formatter-property print.key=true
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+Partition:1	recife	py
+Partition:1	olinda	py
+Partition:1	natal	py
+Partition:1	joao-pessoa	py
+Partition:1	caruaru	java
+Partition:1	natal	java
+Partition:2	recife	java
+Partition:0	caruaru	py
+Partition:0	olinda	java
+Partition:0	joao-pessoa	java
+Processed a total of 10 messages
 ```
 
-KEYS-JAVA
+Read the consumer's output by key. Recife, which the Python client put in partition 1, went to
+partition **2** from Java; Olinda and João Pessoa went to partition 0 instead of 1. Only Caruaru and
+Natal happen to agree, and the agreement is luck. **The Java client hashes keys with murmur2**,
+which is a different function from CRC32, so the same key gives a different number.
 
-The `murmur2_random` partitioner is librdkafka's copy of the Java one, and it is the line in
-`keys.py` that the `--partitioner` option sets:
+This matters as soon as two programs in two languages write the same topic. A till written in
+Python and a back-office service written in Java, both writing Recife's stock changes, would put
+them in two partitions, and lesson 2 showed what reading one key's events out of order does.
+librdkafka has the fix built in: `murmur2_random`, a copy of the Java partitioner, which is what
+`keys.py`'s `--partitioner` option sets:
 
 ```
 ubuntu@stream:~/work$ python keys.py --partitioner murmur2_random shops recife=m2 olinda=m2 caruaru=m2 natal=m2 joao-pessoa=m2
+caruaru      partition 1  offset 6
+natal        partition 1  offset 7
+recife       partition 2  offset 1
+olinda       partition 0  offset 3
+joao-pessoa  partition 0  offset 4
 ```
 
-KEYS-MURMUR
+Recife to 2, Olinda and João Pessoa to 0, Caruaru and Natal to 1: exactly where Java put them.
+**When clients in more than one language write the same topic, set `partitioner` to
+`murmur2_random` in every librdkafka-based client**, the Python, Go and .NET ones among them. The
+`_random` part is about messages with no key, which it spreads at random. The rest of this course
+keeps the default where only Python writes, and lesson 4's producer sets `murmur2_random`, so its
+sales reach all three partitions.

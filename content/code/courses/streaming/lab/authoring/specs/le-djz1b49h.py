@@ -35,7 +35,7 @@ Q(S3,"easy",("A program publishes to the exchange `\"\"` with routing key `packi
  ("To the queue named `packing`","Para a fila chamada `packing`",True,"Right. The default exchange routes by queue name.","Isso. A exchange padrão roteia pelo nome da fila."),
  ("To a new queue that RabbitMQ creates with a random name","Para uma fila nova que o RabbitMQ cria com um nome aleatório",False,"The default exchange never creates queues.","A exchange padrão nunca cria filas."),
 ])
-Q(S3,"medium",("Bia packed `web-0004` and crashed before `basic_ack`. What happened to the order?","A Bia embalou o `web-0004` e caiu antes do `basic_ack`. O que aconteceu com o pedido?"),[
+Q(S3,"medium",("Bia packed `web-0005` and crashed before `basic_ack`. What happened to the order?","A Bia embalou o `web-0005` e caiu antes do `basic_ack`. O que aconteceu com o pedido?"),[
  ("It was lost with her process","Ele se perdeu com o processo dela",False,"The server still held it as unacknowledged.","O servidor ainda o guardava como não confirmado."),
  ("Ana received it, marked redelivered, and it was packed twice","A Ana o recebeu, marcado como reentregue, e ele foi embalado duas vezes",True,"Right. At-least-once: nothing lost, something done twice.","Isso. Pelo menos uma vez: nada perdido, algo feito duas vezes."),
  ("It waited on the server until Bia's process came back to finish it","Ele esperou no servidor até o processo da Bia voltar para terminá-lo",False,"The server gives it to any consumer once the connection closes.","O servidor o entrega a qualquer consumidor quando a conexão fecha."),

@@ -16,6 +16,10 @@ o intervalo.
 
 ```
 ubuntu@stream:~/work$ python windows.py session 5
+window               sales   cents
+(09:08:50 arrives and joins 2 sessions into one)
+09:00:40-09:14:10      9   46540
+09:21:00-09:21:00      1    5490
 ```
 
 O programa imprimiu uma sessão onde o parágrafo acima previa duas, e a linha entre parênteses diz por
@@ -51,6 +55,10 @@ A pausa é o projeto inteiro. Diminua para três minutos e o programa acha três
 
 ```
 ubuntu@stream:~/work$ python windows.py session 3
+window               sales   cents
+09:00:40-09:08:50      6   33850
+09:12:30-09:14:10      3   12690
+09:21:00-09:21:00      1    5490
 ```
 
 A primeira sessão agora para às 09:08:50, porque a venda 8 cobre uma pausa de 2 minutos e 30 segundos

@@ -34,12 +34,16 @@ so here it is as a program. Save it as `~/work/bill.py`:
 
 ## Ponto Final's sales
 
-Five shops, open twelve hours, together ringing up about 20 000 sales a day on a good one. The
-compression section measured BYTES bytes a sale with `zstd`. A week of retention, so a replay can
+Suppose the five shops, open twelve hours, together ring up about 20 000 sales on a good day. The
+compression section measured 16.9 bytes a sale with `zstd`, rounded here to 17. A week of retention, so a replay can
 reach back to last Monday, and three copies, as in lesson 5:
 
 ```
 ubuntu@stream:~/work$ python bill.py 20000 17 7 3
+written per day      340.0 KB
+average write rate   3.9 B/s
+kept, one copy       2.4 MB
+kept, all copies     7.1 MB
 ```
 
 **Ponto Final's sales fit on a memory card.** That is the honest result for a small business: the
@@ -48,6 +52,10 @@ Keeping them a year instead of a week changes the number, and not the conclusion
 
 ```
 ubuntu@stream:~/work$ python bill.py 20000 17 365 3
+written per day      340.0 KB
+average write rate   3.9 B/s
+kept, one copy       124.1 MB
+kept, all copies     372.3 MB
 ```
 
 ## A topic where storage is the bill
@@ -59,6 +67,10 @@ a measurement. The same week and the same three copies:
 
 ```
 ubuntu@stream:~/work$ python bill.py 50000000 400 7 3
+written per day      20.0 GB
+average write rate   231.5 KB/s
+kept, one copy       140.0 GB
+kept, all copies     420.0 GB
 ```
 
 **The same arithmetic, and now the disk is the decision.** Each factor is a lever, and they are not
@@ -79,6 +91,11 @@ on the topic means the number is written where somebody reading the topic will s
 
 ```
 ubuntu@stream:~/work$ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name sales-zstd --alter --add-config retention.ms=604800000
+Completed updating config for topic sales-zstd.
+ubuntu@stream:~/work$ kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name sales-zstd --describe
+Dynamic configs for topic sales-zstd are:
+  compression.type=zstd sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:compression.type=zstd, DEFAULT_CONFIG:compression.type=producer}
+  retention.ms=604800000 sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:retention.ms=604800000}
 ```
 
 604 800 000 milliseconds is seven days. `retention.bytes` caps a partition by size instead, and

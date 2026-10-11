@@ -15,12 +15,18 @@ o timeout, não a apaga, então a mensagem volta a ficar visível e outro a rece
 um consumidor morto pela conexão fechando; o SQS não tem conexão para observar, então usa um
 relógio. É entrega pelo menos uma vez de novo, com um cronômetro em vez de um socket.
 
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 220\" role=\"img\" aria-label=\"O visibility timeout de uma fila SQS ao longo de seis segundos. Em 0 segundo o worker A recebe o web-0001 e a mensagem fica invisível por 5 segundos. O worker B pede na hora e não recebe nada. O worker A cai e nunca a apaga. Aos 5 segundos a mensagem volta a ficar visível; aos 6 segundos o worker B a recebe, com contagem de recebimentos 2, e a apaga.\" data-fig=\"l15-visibility\"><line x1=\"120\" y1=\"185\" x2=\"696.0\" y2=\"185\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"120\" y1=\"181\" x2=\"120\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"120\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">0</text><line x1=\"210\" y1=\"181\" x2=\"210\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"210\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1</text><line x1=\"300\" y1=\"181\" x2=\"300\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"300\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">2</text><line x1=\"390\" y1=\"181\" x2=\"390\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"390\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">3</text><line x1=\"480\" y1=\"181\" x2=\"480\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"480\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">4</text><line x1=\"570\" y1=\"181\" x2=\"570\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"570\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">5</text><line x1=\"660\" y1=\"181\" x2=\"660\" y2=\"189\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><text x=\"660\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">6</text><text x=\"20\" y=\"200\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">segundos</text><rect x=\"120\" y=\"92\" width=\"450\" height=\"26\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"345.0\" y=\"105\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">invisível: visibility timeout de 5 s</text><text x=\"576\" y=\"105\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">visível de novo</text><text x=\"20\" y=\"55\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">worker A</text><text x=\"20\" y=\"150\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">worker B</text><circle cx=\"120\" cy=\"55\" r=\"5\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"130\" y=\"45\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">recebe</text><circle cx=\"255.0\" cy=\"55\" r=\"5\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"265.0\" y=\"45\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">cai, sem apagar</text><line x1=\"120\" y1=\"55\" x2=\"255.0\" y2=\"55\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></line><circle cx=\"124.5\" cy=\"150\" r=\"5\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></circle><text x=\"130\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">pede: 0 mensagens</text><circle cx=\"660\" cy=\"150\" r=\"5\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"650\" y=\"140\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper)\">recebe, contagem 2</text><text x=\"650\" y=\"162\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">apaga</text></svg>", "caption": "O SQS não tem conexão para observar, então uma mensagem recebida fica escondida por um tempo fixo, e uma que não foi apagada volta quando o tempo acaba.", "same": ["worker A", "worker B"]}
+```
+
 ## O emulador
 
 Tudo daqui para baixo roda contra o moto, o emulador instalado antes nesta lição, e **não contra a
 AWS**. Suba-o no **segundo shell** e deixe-o lá; ele responde na porta 5000:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ moto_server -p 5000
+```
 
 O programa fala com ele via `boto3`, exatamente como falaria com a AWS, exceto pelo `endpoint_url`
 e pelas credenciais inventadas. Tirar essas duas coisas é tudo o que bastaria para apontá-lo para
@@ -61,7 +67,13 @@ uma conta de verdade — e para uma fatura de verdade. Salve-o como `~/work/sqs_
 
 ## Visibilidade, e a contagem de recebimentos
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python sqs_demo.py visibility
+worker A got web-0001, and crashes without deleting it
+worker B, at once: 0 messages
+worker B, 6 s later: got web-0001, received 2 times
+after delete: 0 messages
+```
 
 O worker B não vê nada enquanto a mensagem está escondida, e a recebe quando o timeout passa, com
 uma contagem de recebimentos de 2. **O timeout precisa ser maior que o tempo do trabalho.** Se
@@ -77,7 +89,13 @@ e fora de ordem, e o consumidor que se vire. Uma **fila FIFO** promete as duas c
 *message group*, com vazão menor. Dois dos três envios abaixo são a mesma venda, como um caixa a
 mandaria ao tentar de novo depois de um timeout:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python sqs_demo.py fifo
+sent 'rec-1 bk-02 -1' with deduplication id rec-1
+sent 'rec-1 bk-02 -1' with deduplication id rec-1
+sent 'rec-2 bk-02 -1' with deduplication id rec-2
+received ['rec-1 bk-02 -1', 'rec-2 bk-02 -1']
+```
 
 Três enviadas, duas recebidas: o segundo `rec-1` foi descartado porque o id de deduplicação dele já
 tinha sido visto. **A AWS guarda esses ids por cinco minutos**, pela documentação dela; uma nova
@@ -87,7 +105,12 @@ para você.
 
 ## SNS: uma mensagem, todo assinante
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python sqs_demo.py fanout
+stock-updates: ['{"sale": "rec-000001", "cents": 5490}']
+loyalty-points: ['{"sale": "rec-000001", "cents": 5490}']
+EXIT 0
+```
 
 Uma publicação, uma cópia em cada fila assinante. **SNS mais uma fila por leitor é a grafia da AWS
 para a exchange fanout do RabbitMQ**, e tem o mesmo limite: uma fila que assina amanhã não recebe
