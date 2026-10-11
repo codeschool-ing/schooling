@@ -1,0 +1,494 @@
+[
+ {
+  "id": "ex-9bgf4kan",
+  "version": 1,
+  "section": "layers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A look at show 990 returned `Server-Timing: db;dur=10.2, pay;dur=0.0, total;dur=10.7`, and curl measured 11.461 ms in all. Where did the time go?",
+  "hint": "Subtract each clock from the one outside it.",
+  "choices": [
+   {
+    "text": "Into the network between curl and the server",
+    "correct": false,
+    "why": "curl's total and the server's total differ by under a millisecond; the network added almost nothing."
+   },
+   {
+    "text": "Into the payment provider's 40 ms",
+    "correct": false,
+    "why": "pay is 0.0: looking at a show pays nothing."
+   },
+   {
+    "text": "Into the database query",
+    "correct": true,
+    "why": "Right. 10.2 of the server's 10.7 ms, which is nearly all of curl's 11.461 too."
+   },
+   {
+    "text": "Into Python starting a thread for the request",
+    "correct": false,
+    "why": "That cost is inside the server's total but outside db, and the gap is only 0.5 ms."
+   }
+  ]
+ },
+ {
+  "id": "ex-y8dd4eqk",
+  "version": 1,
+  "section": "layers",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A booking returned `Server-Timing: db;dur=15.7, pay;dur=40.1, total;dur=58.2`. How many milliseconds of it did no named part account for?",
+  "hint": "Total minus the parts.",
+  "value": 2.4,
+  "tolerance": 0.05,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-58e6x96z",
+  "version": 1,
+  "section": "layers",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each observation from this lesson to the USE question it answers.",
+  "hint": "Busy, waiting, refused.",
+  "pairs": [
+   {
+    "left": "python3 app.py at 212.5% CPU",
+    "right": "utilisation"
+   },
+   {
+    "left": "fifteen threads waiting for booking_lock",
+    "right": "saturation"
+   },
+   {
+    "left": "190 TcpExtListenOverflows in five seconds",
+    "right": "errors"
+   }
+  ],
+  "right_distractors": [
+   "throughput"
+  ]
+ },
+ {
+  "id": "ex-1mpdswfh",
+  "version": 1,
+  "section": "layers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Under eight workers looking at shows, top's second snapshot showed `python3 app.py` at 212.5% and `python3 measure.py 8 12` at 6.5%. What does that pair of numbers rule out?",
+  "hint": "Which of the two programs could be the limit?",
+  "choices": [
+   {
+    "text": "That the generator was what limited the test",
+    "correct": true,
+    "why": "Right. The generator was nearly idle; the server's process was using more than two processors."
+   },
+   {
+    "text": "That the database was slow",
+    "correct": false,
+    "why": "SQLite runs inside the server's process, so its work is part of the 212.5%."
+   },
+   {
+    "text": "That the machine was short of memory",
+    "correct": false,
+    "why": "%CPU says nothing about memory; free and vmstat's si and so do."
+   },
+   {
+    "text": "That a lock was involved anywhere in the server",
+    "correct": false,
+    "why": "A lock can sit in a busy process too; this pair only says the server is the busy one."
+   }
+  ]
+ },
+ {
+  "id": "ex-4xhmgr20",
+  "version": 1,
+  "section": "the-database",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`EXPLAIN QUERY PLAN` printed `SCAN bookings` for the count of one show's bookings. What does SCAN tell you?",
+  "hint": "Compare it with the SEARCH that followed the index.",
+  "choices": [
+   {
+    "text": "The query is wrong and returns too many rows",
+    "correct": false,
+    "why": "The count was right; a scan is about cost, not correctness."
+   },
+   {
+    "text": "It reads every row of the table",
+    "correct": true,
+    "why": "Right. Every one of nearly three hundred thousand rows, on every request."
+   },
+   {
+    "text": "The result is cached after the first request",
+    "correct": false,
+    "why": "Nothing in the plan says so, and the timings did not fall on repeat."
+   },
+   {
+    "text": "The table is locked while the count runs",
+    "correct": false,
+    "why": "Readers do not lock each other out in SQLite; the lock in this lesson is app.py's own."
+   }
+  ]
+ },
+ {
+  "id": "ex-8n24gjqs",
+  "version": 1,
+  "section": "the-database",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the index, the plan said `USING COVERING INDEX bookings_by_show`. What does COVERING add to SEARCH?",
+  "hint": "What does a count of rows for one show need to read?",
+  "choices": [
+   {
+    "text": "The table itself is not read at all",
+    "correct": true,
+    "why": "Right. A count by show_id needs nothing but the show_id values the index already holds."
+   },
+   {
+    "text": "The index covers every column of the bookings table",
+    "correct": false,
+    "why": "It holds one column, show_id; it covers the query, not the table."
+   },
+   {
+    "text": "Every show has at least one booking in it",
+    "correct": false,
+    "why": "The word is about which data the query needs, not about the data's contents."
+   },
+   {
+    "text": "The index is kept in memory and never written to disk",
+    "correct": false,
+    "why": "An index is stored in the database file like the table."
+   }
+  ]
+ },
+ {
+  "id": "ex-psgx0dsb",
+  "version": 1,
+  "section": "the-database",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In SQLite, prefixing a query with EXPLAIN QUERY ___ prints how it will be run, without running it.",
+  "hint": "The word after QUERY.",
+  "blanks": [
+   {
+    "accept": [
+     "plan"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-g1fsbv7f",
+  "version": 1,
+  "section": "the-database",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the index on bookings(show_id) cost the box office?",
+  "hint": "Think about what happens when a row is added.",
+  "choices": [
+   {
+    "text": "Nothing, since an index only ever speeds things up",
+    "correct": false,
+    "why": "Indexes are paid for on every write and in disk space."
+   },
+   {
+    "text": "Each booking writes an index entry as well as the row",
+    "correct": true,
+    "why": "Right. Worth it on a table read far more than written; a load test of the writes says when it is not."
+   },
+   {
+    "text": "Counts become approximate rather than exact",
+    "correct": false,
+    "why": "An index changes how rows are found, never which rows exist."
+   },
+   {
+    "text": "Two bookings for the same seat become impossible",
+    "correct": false,
+    "why": "That is a unique index on (show_id, seat), the one app_fixed.py creates."
+   }
+  ]
+ },
+ {
+  "id": "ex-z3gcza2v",
+  "version": 1,
+  "section": "the-lock",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Every successful booking holds one global lock for at least its 40 ms payment. At most how many successful bookings can finish per second, whatever the load?",
+  "hint": "One second divided by the time each holds the lock.",
+  "value": 25,
+  "tolerance": 0,
+  "unit": "bookings/s"
+ },
+ {
+  "id": "ex-0gw1mpjz",
+  "version": 1,
+  "section": "the-lock",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With sixteen workers booking, throughput was flat, the median was 401.2 ms, and top showed app.py at 10% of a processor. What kind of resource is the bottleneck?",
+  "hint": "Which resources have no %CPU?",
+  "choices": [
+   {
+    "text": "The processors, which are too slow for Python",
+    "correct": false,
+    "why": "They were nearly idle; a busy processor shows up in %CPU."
+   },
+   {
+    "text": "The disk, which every booking writes to",
+    "correct": false,
+    "why": "Possible in general, but a disk-bound server shows wa rising; here the fix to the lock multiplied bookings."
+   },
+   {
+    "text": "A software resource that requests queue for",
+    "correct": true,
+    "why": "Right. Hardware idle, throughput flat, latency rising: a lock, a pool or a queue. Here, booking_lock."
+   },
+   {
+    "text": "The generator, which cannot send faster",
+    "correct": false,
+    "why": "measure.py was at a few percent; it was waiting for answers, not short of processor."
+   }
+  ]
+ },
+ {
+  "id": "ex-qj4dcd68",
+  "version": 1,
+  "section": "the-lock",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps app_fixed.py takes for a booking in order.",
+  "hint": "The database decides the winner before anybody pays.",
+  "items": [
+   "Read show_id, seat and customer from the request",
+   "Check that the seat exists in a show on sale",
+   "Insert the row and commit, or answer 409 if the unique index refuses it",
+   "Charge the customer, with no lock held",
+   "Answer 201 with the booking's id"
+  ],
+  "trap": "Paying before the insert would charge the loser of a race for a seat it then cannot have."
+ },
+ {
+  "id": "ex-5jn3358b",
+  "version": 1,
+  "section": "the-lock",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Twenty threads booked seat 1 of show 990 at once against app_fixed.py and got one 201 and nineteen 409s. Which part of app_fixed.py made that outcome certain?",
+  "hint": "app_fixed.py has no booking_lock.",
+  "choices": [
+   {
+    "text": "The barrier in race.py, which sends the requests together",
+    "correct": false,
+    "why": "The barrier makes the test hostile; it does nothing to protect the seat."
+   },
+   {
+    "text": "disable_nagle_algorithm, which answers each request at once",
+    "correct": false,
+    "why": "That changes when bytes leave the server, not who gets the seat."
+   },
+   {
+    "text": "The unique index on show and seat",
+    "correct": true,
+    "why": "Right. The database refuses a second row for the seat, whichever insert arrives second."
+   },
+   {
+    "text": "The queue of 128 connections, which serves them in order",
+    "correct": false,
+    "why": "The accept queue orders connections, not commits; twenty threads still run at once."
+   }
+  ]
+ },
+ {
+  "id": "ex-qqkxq11p",
+  "version": 1,
+  "section": "network-and-infrastructure",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "On app.py, every request after the first on one kept connection took about 44 ms at the client, while the server reported 0.3 ms for the second. What held the answer back?",
+  "hint": "Two TCP rules, one on each side.",
+  "choices": [
+   {
+    "text": "Nagle's algorithm, waiting on the client's delayed ACK",
+    "correct": true,
+    "why": "Right. The body waits for the headers to be acknowledged, and the client delays that acknowledgement by 40 ms."
+   },
+   {
+    "text": "The database, which counts the bookings of a show on every request",
+    "correct": false,
+    "why": "These were requests for /health, which runs no query."
+   },
+   {
+    "text": "The 40 ms payment provider",
+    "correct": false,
+    "why": "/health pays nothing; the match with 40 ms is a coincidence of two different constants."
+   },
+   {
+    "text": "Opening a new connection for each request",
+    "correct": false,
+    "why": "These requests reused one connection; the fresh connections were the fast ones."
+   }
+  ]
+ },
+ {
+  "id": "ex-rk9692yp",
+  "version": 1,
+  "section": "network-and-infrastructure",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A run with 32 workers on app.py had a median of 9.0 ms, a p99 of 1035.5 ms and 190 TcpExtListenOverflows. Where did the requests near one second spend that second?",
+  "hint": "The application never saw them during it.",
+  "choices": [
+   {
+    "text": "Waiting for booking_lock",
+    "correct": false,
+    "why": "That run only looked at shows; no booking took the lock."
+   },
+   {
+    "text": "Before their connection was accepted, waiting to retry",
+    "correct": true,
+    "why": "Right. The kernel dropped the opening packet while the accept queue of 5 was full, and the client retried a second later."
+   },
+   {
+    "text": "In a slow database query",
+    "correct": false,
+    "why": "With the index every query took a fraction of a millisecond."
+   },
+   {
+    "text": "Inside measure.py, which could not keep up",
+    "correct": false,
+    "why": "A generator at its limit sends less; it does not add a second to a request it timed."
+   }
+  ]
+ },
+ {
+  "id": "ex-12zzpgd1",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the accept queue was raised, 32 workers completed 626.2 requests a second. By Little's law, about what mean response time should the report show, in ms?",
+  "hint": "Requests inside the system = throughput × time each spends there.",
+  "value": 51.1,
+  "tolerance": 1,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-7c5k64cv",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A tester runs a load generator on a laptop against a staging server in another country. The client sees 310 ms per request, Server-Timing says total 22 ms, and curl's time_connect is 145 ms. Where is most of the time?",
+  "hint": "Subtract the server's clock from the client's, then read time_connect.",
+  "choices": [
+   {
+    "text": "In the database, which Server-Timing cannot see",
+    "correct": false,
+    "why": "The database is inside the server's total of 22 ms."
+   },
+   {
+    "text": "In the application, where the 22 ms are spent",
+    "correct": false,
+    "why": "22 of 310 ms is the smaller part; the gap is outside the server."
+   },
+   {
+    "text": "In the network: about 145 ms each round trip, and a request needs two",
+    "correct": true,
+    "why": "Right. One round trip to connect, one for the request: about 290 ms of the 310 before the server's 22."
+   },
+   {
+    "text": "In the laptop's processors, which slow the generator",
+    "correct": false,
+    "why": "A busy generator sends fewer requests; it does not make time_connect 145 ms."
+   }
+  ]
+ },
+ {
+  "id": "ex-syrj4sf0",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Python load generator shows one processor fully used by its own process, the server's process at 40%, and throughput flat as workers are added. What should the tester do next?",
+  "hint": "Which of the two programs is at its ceiling?",
+  "choices": [
+   {
+    "text": "Report the flat throughput as the capacity of the server under test",
+    "correct": false,
+    "why": "The flat line is the generator's ceiling; the server was never pushed to its own."
+   },
+   {
+    "text": "Add a second generator and measure again",
+    "correct": true,
+    "why": "Right. Or a more efficient one: until the generator has room, the test measures the generator."
+   },
+   {
+    "text": "Add an index to the busiest query of the server",
+    "correct": false,
+    "why": "The server is at 40%; nothing says the database limits anything yet."
+   },
+   {
+    "text": "Raise the server's accept queue",
+    "correct": false,
+    "why": "Dropped connections show as a tail near one second and a counter in nstat, neither of which is described."
+   }
+  ]
+ },
+ {
+  "id": "ex-f46zzc3a",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these can saturate while every processor, disk and network link on the machine looks idle? Choose every one that can.",
+  "hint": "No %CPU, no bo, no bandwidth.",
+  "choices": [
+   {
+    "text": "A lock held while calling a slow external service",
+    "correct": true,
+    "why": "Yes. booking_lock did exactly that at 10% CPU."
+   },
+   {
+    "text": "A pool of database connections smaller than the number of threads",
+    "correct": true,
+    "why": "Yes. Threads wait for a free connection while nothing is busy."
+   },
+   {
+    "text": "The kernel's queue of connections waiting to be accepted",
+    "correct": true,
+    "why": "Yes. It overflowed at 5 while the server was answering in milliseconds."
+   },
+   {
+    "text": "A scan of a table with no index",
+    "correct": false,
+    "why": "A scan is work: it shows as processor time, as it did at 212.5%."
+   },
+   {
+    "text": "A process swapping its memory to disk",
+    "correct": false,
+    "why": "Swapping is the disk at work, and shows in si, so and wa."
+   }
+  ]
+ }
+]
