@@ -1,0 +1,432 @@
+{
+  "ex-q8tx8pgw": {
+    "prompt": "Quais são as duas coisas que o particionamento compra, segundo a aula?",
+    "hint": "Nenhuma delas é 'toda consulta fica mais rápida'.",
+    "choices": [
+      {
+        "text": "Inserts mais rápidos e índices menores",
+        "why": "Encaminhar uma linha custa um pouco no insert, e os índices somados têm o mesmo tamanho."
+      },
+      {
+        "text": "Remoção barata de uma fatia, e pular fatias",
+        "why": "Isso: a segunda é a poda da aula 18, e as duas dependem da chave."
+      },
+      {
+        "text": "Ids únicos na tabela inteira",
+        "why": "É o contrário: a unicidade agora tem de incluir a chave de partição."
+      },
+      {
+        "text": "Menos WAL para toda mudança",
+        "why": "Só remover uma partição inteira grava pouco; um update comum grava o mesmo que antes."
+      }
+    ]
+  },
+  "ex-nd7cvgcc": {
+    "prompt": "Quantos megabytes de WAL o delete de outubro na tabela `events` comum gravou?",
+    "hint": "A consulta depois do DELETE.",
+    "unit": "MB"
+  },
+  "ex-21bmj9z6": {
+    "prompt": "O `DELETE` de outubro rodou numa transação desfeita. Se tivesse havido commit, o que ainda restaria pagar?",
+    "hint": "A aula 15.",
+    "choices": [
+      {
+        "text": "Nada: linhas com commit somem do arquivo",
+        "why": "Uma linha apagada fica no arquivo como versão morta até o VACUUM removê-la."
+      },
+      {
+        "text": "Uma segunda passada de WAL para confirmar o delete",
+        "why": "O registro de commit é pequeno; os 251 MB já tinham sido gravados."
+      },
+      {
+        "text": "Linhas mortas para o VACUUM, e o arquivo igual",
+        "why": "Isso: 1611210 versões mortas, entradas de índice apontando para elas, e espaço reaproveitado em vez de devolvido."
+      },
+      {
+        "text": "A reconstrução da chave primária da tabela",
+        "why": "Nada reconstrói o índice; o VACUUM remove as entradas uma a uma."
+      }
+    ]
+  },
+  "ex-ag19hrtm": {
+    "prompt": "Qual tabela é a candidata mais fraca para particionamento?",
+    "hint": "Pergunte como as linhas saem e pelo que as consultas filtram.",
+    "choices": [
+      {
+        "text": "Um log de requisições de API guardado por trinta dias",
+        "why": "As linhas chegam e saem por data; é o caso para o qual o particionamento existe."
+      },
+      {
+        "text": "Leituras de sensores, descartadas depois de um ano",
+        "why": "Ordem de tempo na entrada e na saída, e consultas numa janela recente: um bom encaixe."
+      },
+      {
+        "text": "Clientes, lidos um de cada vez pelo id ou email",
+        "why": "Isso: as linhas não envelhecem e as buscas não mencionam uma fatia; um índice as atende melhor."
+      },
+      {
+        "text": "Eventos de auditoria expurgados por mês",
+        "why": "Um expurgo mensal é exatamente o DELETE que o particionamento substitui."
+      }
+    ]
+  },
+  "ex-17z245by": {
+    "prompt": "Em `FOR VALUES FROM ('2025-10-01') TO ('2025-11-01')`, para qual partição vai um evento em `2025-11-01 00:00`?",
+    "hint": "Um dos limites é exclusivo.",
+    "choices": [
+      {
+        "text": "A de outubro, porque o limite inclui o fim",
+        "why": "O limite superior não é incluído; é isso que deixa os meses se encontrarem sem sobreposição."
+      },
+      {
+        "text": "A de novembro",
+        "why": "Isso: o TO é exclusivo, então o primeiro instante de novembro é de novembro."
+      },
+      {
+        "text": "As duas, uma cópia em cada",
+        "why": "Toda linha mora em exatamente uma partição."
+      },
+      {
+        "text": "Ela é recusada por ambígua",
+        "why": "Os limites não são ambíguos; o servidor recusa intervalos sobrepostos na criação."
+      }
+    ]
+  },
+  "ex-c7xdxnpm": {
+    "prompt": "Um `INSERT` de um evento de março de 2026 falha com `no partition of relation \"events_by_month\" found for row`. Qual a correção duradoura?",
+    "hint": "A falha chega numa data.",
+    "choices": [
+      {
+        "text": "Repetir o insert até passar",
+        "why": "Nada muda entre as tentativas; não existe partição para aceitá-la."
+      },
+      {
+        "text": "Desfazer o particionamento e voltar a uma tabela só",
+        "why": "Isso joga fora o motivo do particionamento para corrigir um mês faltando."
+      },
+      {
+        "text": "Uma rotina que cria as partições com meses de antecedência",
+        "why": "Isso: o próximo mês tem de existir antes da primeira linha dele."
+      },
+      {
+        "text": "Esticar o limite de janeiro até o fim do ano",
+        "why": "Isso faz a partição de janeiro guardar um ano e estraga a remoção por mês."
+      }
+    ]
+  },
+  "ex-q3yrmdn9": {
+    "prompt": "Buscar um evento pelo `id` levou uma leitura de índice em `events` e quatro leituras em `events_by_month`. Por que quatro?",
+    "hint": "O que o id diz sobre o mês?",
+    "choices": [
+      {
+        "text": "A tabela particionada tem quatro cópias de cada linha",
+        "why": "Cada linha está em exatamente uma partição."
+      },
+      {
+        "text": "Nada nela diz o mês",
+        "why": "Isso: a condição não está na chave, então toda partição tem de ser consultada."
+      },
+      {
+        "text": "Faltavam as estatísticas da tabela nova",
+        "why": "O arquivo rodou VACUUM ANALYZE; estatísticas não decidem de quais partições a consulta precisa."
+      },
+      {
+        "text": "Buscas por id ficam desligadas em tabelas particionadas",
+        "why": "Elas funcionam; só visitam todas as partições."
+      }
+    ]
+  },
+  "ex-f6kv7bt2": {
+    "prompt": "A coluna escondida que diz em que tabela uma linha mora fisicamente, usada para contar linhas por partição, se chama `___`.",
+    "hint": "Foi convertida para regclass na contagem.",
+    "blanks": [
+      {
+        "accept": [
+          "tableoid"
+        ]
+      }
+    ]
+  },
+  "ex-9sgc1bg7": {
+    "prompt": "Que tipo de particionamento dá a cada partição um conjunto de valores nomeados da chave?",
+    "hint": "`FOR VALUES IN (...)`.",
+    "choices": [
+      {
+        "text": "Faixa",
+        "why": "Faixa dá a cada partição um intervalo, de um valor até outro."
+      },
+      {
+        "text": "Hash",
+        "why": "Hash dá a cada partição um resto; ninguém nomeia os valores."
+      },
+      {
+        "text": "Lista",
+        "why": "Isso: como navegar e comprar na aula."
+      },
+      {
+        "text": "Padrão",
+        "why": "Uma partição padrão recebe o que nenhuma outra aceita; não é um tipo de particionamento."
+      }
+    ]
+  },
+  "ex-98wxg9zg": {
+    "prompt": "Quatro partições por hash em `customer_id` ficaram com uns 875 mil linhas cada, menos uma com 2372458. Por quê?",
+    "hint": "Olhe a coluna with_customer.",
+    "choices": [
+      {
+        "text": "Os eventos sem conta são todos NULL e caem juntos",
+        "why": "Isso: um hash espalha valores, não linhas, e um valor era três em cada dez eventos."
+      },
+      {
+        "text": "Os pedidos do vendedor 1 foram todos para lá",
+        "why": "A chave era customer_id em events; vendedores não entraram."
+      },
+      {
+        "text": "O módulo 4 não divide a contagem de linhas por igual",
+        "why": "O módulo divide o hash, não a contagem; valores desiguais fazem partições desiguais."
+      },
+      {
+        "text": "A primeira partição recebe o excesso das outras",
+        "why": "Não há excesso em hash; cada linha vai para onde o hash dela diz."
+      }
+    ]
+  },
+  "ex-cfzrdzzp": {
+    "prompt": "Uma empresa guarda eventos de compra por cinco anos e de navegação por noventa dias. Que arranjo serve?",
+    "hint": "Cada grupo sai no seu próprio calendário.",
+    "choices": [
+      {
+        "text": "Hash por customer_id, para manter as partições iguais",
+        "why": "Pedaços iguais não ajudam quando os dois grupos envelhecem de jeitos diferentes."
+      },
+      {
+        "text": "Nenhum particionamento, e um DELETE por grupo toda noite",
+        "why": "Essa é a remoção cara que a seção 02 mediu."
+      },
+      {
+        "text": "Partições por lista na coluna kind, uma por grupo",
+        "why": "Isso: cada partição é removida ou mantida no seu próprio calendário."
+      },
+      {
+        "text": "Uma partição por cliente",
+        "why": "Duzentas mil partições, e os grupos ainda misturados dentro de cada uma."
+      }
+    ]
+  },
+  "ex-p2539j3k": {
+    "prompt": "Alguém propõe particionar `orders` por hash em `seller_id` em oito partições para espalhar a carga. O que deve ser verificado primeiro?",
+    "hint": "A aula 1 fez um vendedor muito grande.",
+    "choices": [
+      {
+        "text": "Se oito é uma potência de dois",
+        "why": "Qualquer módulo funciona; a quantidade de partições não é o risco aqui."
+      },
+      {
+        "text": "Se seller_id tem índice",
+        "why": "Cada partição ganha o próprio índice; isso não muda onde as linhas caem."
+      },
+      {
+        "text": "O quanto os valores da chave são desiguais",
+        "why": "Isso: um quarto das linhas cairia numa partição, qualquer que seja o módulo."
+      },
+      {
+        "text": "Se orders tem chave primária",
+        "why": "Ela tem; a questão é como as linhas vão se espalhar."
+      }
+    ]
+  },
+  "ex-ejwbztkm": {
+    "prompt": "Remover outubro de `events_by_month` com DETACH e DROP gravou quanto WAL, contra 251 MB do DELETE?",
+    "hint": "A consulta depois do DROP.",
+    "choices": [
+      {
+        "text": "251 MB também, já que as mesmas linhas saíram",
+        "why": "O servidor registrou uma tabela indo embora, não cada linha."
+      },
+      {
+        "text": "55 kB",
+        "why": "Isso: alguns registros para o catálogo e os arquivos."
+      },
+      {
+        "text": "Cerca da metade, porque o detach grava a outra metade depois",
+        "why": "Nada é gravado depois; os 55 kB foram tudo."
+      },
+      {
+        "text": "Zero, porque o DROP não é registrado",
+        "why": "Ele é registrado, para as réplicas removerem também; só é pequeno."
+      }
+    ]
+  },
+  "ex-9rs7cvz4": {
+    "prompt": "Por que acrescentar `CHECK (at >= '2026-02-01' AND at < '2026-03-01')` a uma tabela antes de anexá-la como fevereiro?",
+    "hint": "Do que o servidor precisa ter certeza?",
+    "choices": [
+      {
+        "text": "Sem ele, o ATTACH recusa a tabela",
+        "why": "Ele anexa mesmo assim, depois de ler todas as linhas para conferir."
+      },
+      {
+        "text": "Acelera os inserts futuros em fevereiro",
+        "why": "O limite da partição já confere os inserts; a restrição é sobre o anexo."
+      },
+      {
+        "text": "Para o anexo pular a leitura completa",
+        "why": "Isso: numa tabela carregada de antemão, isso evita uma leitura completa com o pai esperando."
+      },
+      {
+        "text": "É exigido pela chave primária",
+        "why": "A chave precisa da coluna de partição, não de uma restrição CHECK."
+      }
+    ]
+  },
+  "ex-97eackha": {
+    "prompt": "`DETACH PARTITION events_2026_01 CONCURRENTLY` falhou quando a tabela ganhou uma partição sem intervalo, que recebe toda linha que nenhuma outra aceita. O que o erro disse?",
+    "hint": "Essa partição muda o que mais pode ser feito.",
+    "choices": [
+      {
+        "text": "Que janeiro ainda tinha linhas",
+        "why": "Janeiro estava vazio; o erro é sobre a padrão."
+      },
+      {
+        "text": "Que o CONCURRENTLY precisa de um bloco de transação",
+        "why": "O contrário: ele não é permitido dentro de um."
+      },
+      {
+        "text": "Que a partição padrão impede isso",
+        "why": "Isso: `cannot detach partitions concurrently when a default partition exists`."
+      },
+      {
+        "text": "Que o pai estava travado por outra sessão",
+        "why": "Não havia outra conexão; a recusa é uma regra, não uma espera."
+      }
+    ]
+  },
+  "ex-2rn0hca4": {
+    "prompt": "Ponha na ordem os passos para acrescentar a partição do mês seguinte, preparada de antemão.",
+    "hint": "O anexo vem por último, e deve ser barato.",
+    "items": [
+      "Criar a tabela com LIKE do pai",
+      "Carregá-la e indexá-la enquanto ninguém a vê",
+      "Acrescentar uma restrição CHECK que bate com o mês",
+      "ATTACH PARTITION com os limites do mês"
+    ],
+    "trap": "Anexar antes de carregar deixa a carga visível às consultas; anexar sem o CHECK faz o servidor ler todas as linhas antes."
+  },
+  "ex-78dwq2jb": {
+    "prompt": "Por que `CREATE TABLE … (id bigint PRIMARY KEY, at timestamptz) PARTITION BY RANGE (at)` falha?",
+    "hint": "Cada partição tem o próprio índice.",
+    "choices": [
+      {
+        "text": "bigint não pode ser chave de partição",
+        "why": "A chave aqui é at, e bigint poderia ser uma de qualquer jeito."
+      },
+      {
+        "text": "Uma tabela particionada não pode ter chave primária",
+        "why": "Pode; events_by_month tem (id, at)."
+      },
+      {
+        "text": "Falta `at` na chave, e os meses não podem ser comparados",
+        "why": "Isso: o índice de cada partição só vê o próprio mês."
+      },
+      {
+        "text": "As partições têm de ser criadas antes",
+        "why": "O pai sempre vem primeiro; as partições são anexadas a ele."
+      }
+    ]
+  },
+  "ex-wktpcv6h": {
+    "prompt": "Ligue cada comando ao que aconteceu quando a aula o rodou em `events_by_month`.",
+    "hint": "Dois deles falharam.",
+    "pairs": [
+      {
+        "left": "`CREATE INDEX ON events_by_month (customer_id)`",
+        "right": "um índice construído em cada partição"
+      },
+      {
+        "left": "`CREATE INDEX CONCURRENTLY ON events_by_month (kind)`",
+        "right": "recusado numa tabela particionada"
+      },
+      {
+        "left": "`PRIMARY KEY (id)` numa tabela particionada por `at`",
+        "right": "recusado: falta a coluna de partição na chave"
+      },
+      {
+        "left": "`DROP TABLE events_2025_10` depois de desanexá-la",
+        "right": "o mês removido, com 55 kB de WAL"
+      }
+    ],
+    "right_distractors": [
+      "1611210 linhas mortas deixadas para o VACUUM"
+    ]
+  },
+  "ex-h03bn2wx": {
+    "prompt": "Quais destes são verdade sobre os índices de `events_by_month`? Marque todos os que se aplicam.",
+    "hint": "Um índice no pai são muitos índices.",
+    "choices": [
+      {
+        "text": "Remover um mês remove os índices dele junto",
+        "why": "Certo: eles pertencem à tabela da partição."
+      },
+      {
+        "text": "Um REINDEX pode ser feito um mês por vez",
+        "why": "Certo: o índice de cada partição é independente."
+      },
+      {
+        "text": "O ATTACH constrói o índice equivalente que faltar na tabela anexada",
+        "why": "Certo: e numa tabela grande isso é lento, então construa antes."
+      },
+      {
+        "text": "Um índice no pai cobre todos os meses numa única árvore",
+        "why": "Há uma árvore por partição; é por isso que a unicidade precisa da chave."
+      },
+      {
+        "text": "CREATE INDEX CONCURRENTLY funciona no pai",
+        "why": "Foi recusado; o caminho é ON ONLY mais cada partição."
+      }
+    ]
+  },
+  "ex-1eg4m3aq": {
+    "prompt": "Um `DELETE … WHERE created_at < now() - interval '90 days'` noturno numa tabela de log de 400 GB agora roda por uma hora, e as réplicas ficam para trás enquanto isso. Que mudança ataca a causa?",
+    "hint": "O que as réplicas têm de receber?",
+    "choices": [
+      {
+        "text": "Rodar o DELETE de hora em hora em vez de toda noite",
+        "why": "Lotes menores espalham o custo, mas gravam o mesmo WAL e as mesmas linhas mortas no total."
+      },
+      {
+        "text": "Particionar por dia; remover dias velhos",
+        "why": "Isso: remover grava kilobytes de WAL e não deixa nada para o VACUUM."
+      },
+      {
+        "text": "Criar um índice em created_at",
+        "why": "Ele acha as linhas mais depressa, mas o delete ainda grava cada linha no WAL."
+      },
+      {
+        "text": "Particionar por hash no id da requisição em dezesseis pedaços",
+        "why": "As linhas antigas ficariam espalhadas pelos dezesseis, e cada um ainda precisaria de um DELETE."
+      }
+    ]
+  },
+  "ex-dvdy8xh0": {
+    "prompt": "Que afirmação sobre particionamento a aula sustenta?",
+    "hint": "Pense na busca por id.",
+    "choices": [
+      {
+        "text": "Não citar a chave custa mais trabalho",
+        "why": "Isso: a busca por id fez quatro leituras em vez de uma, e planejou por mais tempo."
+      },
+      {
+        "text": "Uma tabela particionada responde a toda consulta no mínimo tão rápido",
+        "why": "A busca por id foi mais lenta no planejamento e na execução."
+      },
+      {
+        "text": "Uma partição padrão é necessária para a tabela aceitar inserts",
+        "why": "Inserts em meses existentes funcionaram sem ela."
+      },
+      {
+        "text": "O particionamento por hash mantém as partições iguais em linhas",
+        "why": "Os NULLs deixaram uma partição quase três vezes maior que as outras."
+      }
+    ]
+  }
+}
