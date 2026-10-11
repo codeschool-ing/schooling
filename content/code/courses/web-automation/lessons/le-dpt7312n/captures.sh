@@ -23,7 +23,7 @@
 #     stripped from everything below, which is what a terminal does with them
 #     on screen. No character of text is changed.
 #
-# Recorded 2026-10-10 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
+# Recorded 2026-10-11 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
 # Playwright 1.56.0 and Chromium 141.0.7390.37, TZ=America/Sao_Paulo.
 
 set -uo pipefail
