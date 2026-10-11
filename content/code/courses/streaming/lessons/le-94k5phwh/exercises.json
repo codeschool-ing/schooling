@@ -1,0 +1,689 @@
+[
+  {
+    "id": "ex-z2zd2xc6",
+    "version": 1,
+    "section": "why-schemas",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the new till sent five sales with `amount` instead of `cents`, what did `totals.py` report?",
+    "choices": [
+      {
+        "text": "An error on the first sale without `cents`",
+        "correct": false,
+        "why": "`.get` with a default never raises; that is the trouble."
+      },
+      {
+        "text": "Twenty-five sales and the same totals as before",
+        "correct": true,
+        "why": "Right. The count moved and the money did not, and nothing complained."
+      },
+      {
+        "text": "Twenty sales, because the new ones were skipped",
+        "correct": false,
+        "why": "They were counted: 25 sales. Only their money was missing."
+      },
+      {
+        "text": "Recife's total five times too high",
+        "correct": false,
+        "why": "Nothing was added for the new sales, so it stayed at 531.30."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zc1vkva",
+    "version": 1,
+    "section": "why-schemas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "JSON carries the name of every field in every message. Why does that not protect a reader from a renamed field?",
+    "choices": [
+      {
+        "text": "Kafka strips the names before storing the message",
+        "correct": false,
+        "why": "The broker stores the bytes it was given, names and all."
+      },
+      {
+        "text": "Names are carried, but no agreement about them is",
+        "correct": true,
+        "why": "Right. A reader that misses a name gets nothing and carries on."
+      },
+      {
+        "text": "JSON readers in Python cannot read nested objects",
+        "correct": false,
+        "why": "Nesting has nothing to do with it; the field is at the top level."
+      },
+      {
+        "text": "A rename changes the size of each message, which the consumer rejects",
+        "correct": false,
+        "why": "Nothing was rejected; the reader read every sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxxx7g86",
+    "version": 1,
+    "section": "why-schemas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes making `totals.py` try `cents`, then `amount`, then `price`. What is wrong with that fix, according to the section?",
+    "choices": [
+      {
+        "text": "It is slower, because each sale is looked up three times",
+        "correct": false,
+        "why": "Speed is not the objection; the guess is."
+      },
+      {
+        "text": "Python dictionaries cannot hold three optional keys",
+        "correct": false,
+        "why": "They can; the problem is not in the dictionary."
+      },
+      {
+        "text": "It spreads the guess about a sale's shape into more places",
+        "correct": true,
+        "why": "Right. The next rename breaks it again; what is missing is a written agreement."
+      },
+      {
+        "text": "Kafka would deliver sales with both fields twice",
+        "correct": false,
+        "why": "Delivery has nothing to do with which field the reader looks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh051z9m",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an Avro body contain, besides the values?",
+    "choices": [
+      {
+        "text": "The field names, before each value",
+        "correct": false,
+        "why": "That is JSON. Avro writes no names at all."
+      },
+      {
+        "text": "Nothing: the values in the schema's order",
+        "correct": true,
+        "why": "Right. Only the schema says which value is which."
+      },
+      {
+        "text": "A copy of the schema, compressed",
+        "correct": false,
+        "why": "A Kafka message carries an id, not the schema; the body is values only."
+      },
+      {
+        "text": "The names and the types of the fields, in a header",
+        "correct": false,
+        "why": "There is no such header in the body; that is what the schema is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mbtpt6y",
+    "version": 1,
+    "section": "avro",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `avro_demo.py`, how many bytes did the sale take as Avro?",
+    "value": 27,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-yccx18wh",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sale written with v1 is read with a reader schema that adds `till` with no default. What happens?",
+    "choices": [
+      {
+        "text": "`till` comes back as an empty string",
+        "correct": false,
+        "why": "Avro does not invent a value; without a default there is nothing to use."
+      },
+      {
+        "text": "`till` is left out of the result",
+        "correct": false,
+        "why": "The reader asked for it, so it cannot simply be omitted."
+      },
+      {
+        "text": "The read fails",
+        "correct": true,
+        "why": "Right. v3 raised SchemaResolutionError: no default value for till."
+      },
+      {
+        "text": "`till` is filled from the producer's configuration",
+        "correct": false,
+        "why": "The producer did not write it; only a default in the reader's schema could fill it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6wan5vg",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "v2 renames `cents` to `amount` with `aliases: [\"cents\"]`. A consumer still on v1 receives a message written with v2. What happens?",
+    "choices": [
+      {
+        "text": "It reads `amount` as `cents`, thanks to the alias",
+        "correct": false,
+        "why": "The alias is in the reader's schema of v2; a v1 reader does not have it."
+      },
+      {
+        "text": "It fails, because it looks for `cents` and the writer had `amount`",
+        "correct": true,
+        "why": "Right. An alias is the reader's knowledge of the past, so it only helps an upgraded reader."
+      },
+      {
+        "text": "It reads the sale with `cents` set to zero",
+        "correct": false,
+        "why": "Zero would need a default for `cents` in v1, which it does not have."
+      },
+      {
+        "text": "The broker refuses to deliver it",
+        "correct": false,
+        "why": "The broker never looks inside messages."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhxcdswj",
+    "version": 1,
+    "section": "installing-a-registry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the registry started in this lesson keep its schemas, and what follows from that?",
+    "choices": [
+      {
+        "text": "In a Kafka topic, so they survive a restart",
+        "correct": false,
+        "why": "That is a production setting; with no configuration it uses memory."
+      },
+      {
+        "text": "In memory, so stopping it forgets them",
+        "correct": true,
+        "why": "Right. Fine for a lab; anywhere else it makes old messages unreadable."
+      },
+      {
+        "text": "In `~/apicurio/registry.log`",
+        "correct": false,
+        "why": "That file holds what the registry says about itself, not the schemas."
+      },
+      {
+        "text": "In the broker's `__cluster_metadata` log",
+        "correct": false,
+        "why": "Kafka does not know the registry exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwejne3t",
+    "version": 1,
+    "section": "installing-a-registry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every client in this lesson is given `http://localhost:8080/apis/ccompat/v7`. Why that path?",
+    "choices": [
+      {
+        "text": "It is where Kafka serves its own schema API",
+        "correct": false,
+        "why": "Kafka has no schema API; the registry is a separate service."
+      },
+      {
+        "text": "Version 7 of Avro requires it in the address",
+        "correct": false,
+        "why": "The v7 is the version of Confluent's API, not of Avro."
+      },
+      {
+        "text": "Apicurio answers Confluent's API under it, so the Confluent client works unchanged",
+        "correct": true,
+        "why": "Right. Confluent's own registry would be at port 8081 with no prefix."
+      },
+      {
+        "text": "It turns on compatibility checking",
+        "correct": false,
+        "why": "Compatibility is set per subject with `/config`; the path is just where the API lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hds5mhh",
+    "version": 1,
+    "section": "the-registry",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each word to what it names in a schema registry.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "the name a series of versions is kept under"
+      },
+      {
+        "left": "version",
+        "right": "the position of a schema within its subject"
+      },
+      {
+        "left": "id",
+        "right": "the number written into each message"
+      }
+    ],
+    "right_distractors": [
+      "the byte that is always zero"
+    ]
+  },
+  {
+    "id": "ex-77413q7x",
+    "version": 1,
+    "section": "the-registry",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By convention, the subject for the values of the topic `sales-avro` is `sales-avro-___`.",
+    "blanks": [
+      {
+        "accept": [
+          "value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bxtxg9h8",
+    "version": 1,
+    "section": "the-registry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`register.sh` offered `sale.avsc` a second time. What came back?",
+    "choices": [
+      {
+        "text": "A 409, because the schema already existed",
+        "correct": false,
+        "why": "A repeated schema is not a conflict; it is recognised."
+      },
+      {
+        "text": "The id 1 again, and no new version",
+        "correct": true,
+        "why": "Right. That is what lets every producer offer its schema on start."
+      },
+      {
+        "text": "Version 2 of the subject, with the same id",
+        "correct": false,
+        "why": "The versions list stayed at [1] until a different schema arrived."
+      },
+      {
+        "text": "A new id, 2, for the same schema",
+        "correct": false,
+        "why": "The id belongs to the schema, so the same schema keeps id 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms9bcngk",
+    "version": 1,
+    "section": "producing-with-a-schema",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the bytes of a message value written by the Avro serialiser in order.",
+    "items": [
+      "the magic byte, 00",
+      "four bytes of schema id",
+      "the length of the first string",
+      "the characters of the sale's id",
+      "the encoded `cents`"
+    ]
+  },
+  {
+    "id": "ex-c1k46xpq",
+    "version": 1,
+    "section": "producing-with-a-schema",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes did the first message of partition 0 of `sales-avro` take, according to `od` (not counting the new line the console consumer adds)?",
+    "value": 59,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-0vk1yf62",
+    "version": 1,
+    "section": "producing-with-a-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `avro_tills.py` set `auto.register.schemas` to `False`?",
+    "choices": [
+      {
+        "text": "So that a producer cannot change the topic's schema by starting",
+        "correct": true,
+        "why": "Right. Registering becomes a deliberate step, checked against the compatibility mode."
+      },
+      {
+        "text": "Because Apicurio does not accept registrations from Python",
+        "correct": false,
+        "why": "`register.sh` registered from the shell, and Python could too."
+      },
+      {
+        "text": "To make each message smaller",
+        "correct": false,
+        "why": "The message carries the same five-byte header either way."
+      },
+      {
+        "text": "Because the serialiser would otherwise ask the registry for every message, at the full cost of an HTTP round trip each time",
+        "correct": false,
+        "why": "The client caches what the registry tells it either way; the setting is about who may register."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3wkprtf",
+    "version": 1,
+    "section": "producing-with-a-schema",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`avro_tills.py` builds every sale with a `till` field, and `sale.avsc` has no such field. What does the serialiser do with it when given `sale.avsc`?",
+    "choices": [
+      {
+        "text": "Refuses the sale as not matching the schema",
+        "correct": false,
+        "why": "Ten sales were sent with `sale.avsc`, each carrying `till`."
+      },
+      {
+        "text": "Registers a new version that includes it",
+        "correct": false,
+        "why": "Auto-registration is off, and the subject stayed at version 1."
+      },
+      {
+        "text": "Writes it after the other fields, unnamed",
+        "correct": false,
+        "why": "A field outside the schema has no position to be written at."
+      },
+      {
+        "text": "Ignores it",
+        "correct": true,
+        "why": "Right. It writes the fields its schema names, which lets one program write either version."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv6n603j",
+    "version": 1,
+    "section": "compatibility",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What compatibility mode did Apicurio's Confluent-compatible API report before anything was set?",
+    "hint": "The first curl of the section printed it.",
+    "choices": [
+      {
+        "text": "`BACKWARD`",
+        "correct": false,
+        "why": "That is Confluent's default, not Apicurio's."
+      },
+      {
+        "text": "`FULL_TRANSITIVE`",
+        "correct": false,
+        "why": "Nothing in the lesson's registry was that strict by default."
+      },
+      {
+        "text": "`NONE`",
+        "correct": true,
+        "why": "Right. It accepts any change until a mode is set."
+      },
+      {
+        "text": "`FORWARD`",
+        "correct": false,
+        "why": "The `/config` call answered with a different level."
+      }
+    ]
+  },
+  {
+    "id": "ex-geg1m217",
+    "version": 1,
+    "section": "compatibility",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `BACKWARD`, which of these changes to version 1 of the sale would the registry accept? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Adding `till` with a default",
+        "correct": true,
+        "why": "Yes: it became version 2 with id 2."
+      },
+      {
+        "text": "Removing the field `at`",
+        "correct": true,
+        "why": "Yes: a new reader simply skips what old data has and it lacks."
+      },
+      {
+        "text": "Renaming `cents` to `amount`",
+        "correct": false,
+        "why": "Refused with a 409: it adds `amount` with no default."
+      },
+      {
+        "text": "Adding `till` with no default",
+        "correct": false,
+        "why": "A new reader could not fill it from an old sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-grtz5tc9",
+    "version": 1,
+    "section": "compatibility",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team uses `BACKWARD`. Version 2 removes a field and version 3 adds it back with another type; each was accepted. Why can version 3 still fail to read version 1 data?",
+    "choices": [
+      {
+        "text": "`BACKWARD` checks each version against the previous one only",
+        "correct": true,
+        "why": "Right. `BACKWARD_TRANSITIVE` checks against every earlier version and would have refused it."
+      },
+      {
+        "text": "The registry forgot version 1 when version 3 arrived",
+        "correct": false,
+        "why": "The registry only adds; version 1 is still there."
+      },
+      {
+        "text": "Types can never change in Avro",
+        "correct": false,
+        "why": "Some can, such as `int` to `long`; the issue is which versions were compared."
+      },
+      {
+        "text": "Version 1 data was deleted by retention",
+        "correct": false,
+        "why": "Even if it were still there, the problem is what the check compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-26f0yt87",
+    "version": 1,
+    "section": "evolving-safely",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `BACKWARD`, which side should be deployed first?",
+    "choices": [
+      {
+        "text": "The producers, so new data exists before readers look for it",
+        "correct": false,
+        "why": "That is `FORWARD`'s order; under `BACKWARD` old readers may fail on new data."
+      },
+      {
+        "text": "The consumers",
+        "correct": true,
+        "why": "Right. A new reader can read old data, so readers move first."
+      },
+      {
+        "text": "Neither: the registry deploys them together",
+        "correct": false,
+        "why": "The registry checks schemas; it deploys nothing."
+      },
+      {
+        "text": "Both at the same instant, or messages are lost",
+        "correct": false,
+        "why": "No mode needs that; each says which side may go first."
+      }
+    ]
+  },
+  {
+    "id": "ex-68fxst7s",
+    "version": 1,
+    "section": "evolving-safely",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After five sales were written with version 2, `avro_read.py` read the topic with `sale.avsc`. What did it show?",
+    "choices": [
+      {
+        "text": "Ten sales, because the reader skips versions it does not know",
+        "correct": false,
+        "why": "It read all fifteen; the schema ids were {1: 10, 2: 5}."
+      },
+      {
+        "text": "Fifteen sales, each with `till`",
+        "correct": false,
+        "why": "`till` appeared only when it read with `sale-v2.avsc`."
+      },
+      {
+        "text": "Fifteen sales, and no `till` in any of them",
+        "correct": true,
+        "why": "Right. An old reader on new data gets the fields it asked for."
+      },
+      {
+        "text": "An error on the first version 2 sale",
+        "correct": false,
+        "why": "Adding a field with a default is safe in both directions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty3h0v0a",
+    "version": 1,
+    "section": "evolving-safely",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to the messages already in a topic when its schema gets a new version?",
+    "choices": [
+      {
+        "text": "They stay written with the version they were written with",
+        "correct": true,
+        "why": "Right. A topic is not migrated; readers must cope with every version still in it."
+      },
+      {
+        "text": "The registry rewrites them in the new version",
+        "correct": false,
+        "why": "The registry never touches the topic."
+      },
+      {
+        "text": "They are deleted at the next segment roll",
+        "correct": false,
+        "why": "Deletion follows retention, not schema changes."
+      },
+      {
+        "text": "Kafka marks them as outdated, and consumers skip them",
+        "correct": false,
+        "why": "Kafka knows nothing about schemas."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9rrep25",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each compatibility mode to who may upgrade first.",
+    "pairs": [
+      {
+        "left": "BACKWARD",
+        "right": "the consumers"
+      },
+      {
+        "left": "FORWARD",
+        "right": "the producers"
+      },
+      {
+        "left": "FULL",
+        "right": "either side"
+      }
+    ],
+    "right_distractors": [
+      "the registry"
+    ]
+  },
+  {
+    "id": "ex-y69sm5fz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final wants to rename `cents` to `amount` without breaking any reader. Which plan follows the lesson?",
+    "choices": [
+      {
+        "text": "Set the subject to `NONE`, register the rename, and deploy everything at night",
+        "correct": false,
+        "why": "`NONE` only stops the registry from warning; old readers still break."
+      },
+      {
+        "text": "Add `amount` beside `cents`, move readers to it, then remove `cents`",
+        "correct": true,
+        "why": "Right. Slower, and it never breaks anybody."
+      },
+      {
+        "text": "Rename it in the producer and rely on JSON to carry the new name",
+        "correct": false,
+        "why": "That is the Monday at the start of the lesson."
+      },
+      {
+        "text": "Delete the topic and start again with the new schema",
+        "correct": false,
+        "why": "That throws away the history every reader depends on."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvj01hb4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field can be added safely to an Avro schema when it has a ___ value.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

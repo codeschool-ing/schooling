@@ -25,7 +25,7 @@ Num batch, a hora da venda e a hora em que ela foi processada estão a horas de 
 ninguém se importa, porque o job lê o dia inteiro de qualquer jeito. Num stream elas estão a
 segundos de distância, quase sempre — e as exceções são onde os resultados saem errados. Um caixa
 que perde a conexão às 10:20 e a recupera às 14:00 manda as vendas numa rajada, e um processador que
-conta vendas pela hora em que *chegaram* põe duas horas de vendas de Natal no minuto das 14:00.
+conta vendas pela hora em que *chegaram* põe horas de vendas de Natal no minuto das 14:00.
 **Tempo do evento** é quando aconteceu; **tempo de processamento** é quando o programa viu. As
 lições 9 a 11 tratam de manter os dois separados, e de decidir quanto esperar pelos atrasados.
 

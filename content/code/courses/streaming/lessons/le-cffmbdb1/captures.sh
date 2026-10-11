@@ -75,7 +75,6 @@ for s in eager:range coop:cooperative-sticky; do
   block "reb-$g-b"
   cat /tmp/term-b
 done
-block reb-848-a
 term2 a 'python consumer.py a --group new --topic quiet --protocol consumer' 8
 term2 b 'python consumer.py b --group new --topic quiet --protocol consumer' 8
 block reb-848-describe

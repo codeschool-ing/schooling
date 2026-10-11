@@ -24,7 +24,7 @@ customer's visit. Lesson 10 is about them.
 In a batch, the sale's time and the time it was processed are hours apart and nobody cares, because
 the job reads the whole day anyway. In a stream they are seconds apart, usually — and the exceptions
 are where results go wrong. A till that loses its connection at 10:20 and gets it back at 14:00
-sends its sales in a burst, and a processor that counts sales by the time they *arrived* puts two
+sends its sales in a burst, and a processor that counts sales by the time they *arrived* puts
 hours of Natal's sales into the 14:00 minute. **Event time** is when it happened; **processing
 time** is when the program saw it. Lessons 9 to 11 are about keeping them apart, and about deciding
 how long to wait for the late ones.
