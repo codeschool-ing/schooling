@@ -25,7 +25,13 @@ The way to see by how much is to change nothing but the seed. Save as `~/dl/spre
 ```
 
 ```
-PENDING spread
+ana@vm:~/dl$ python spread.py
+seed 0  val acc 0.9167  (330 of 360)
+seed 1  val acc 0.9250  (333 of 360)
+seed 2  val acc 0.9139  (329 of 360)
+seed 3  val acc 0.9250  (333 of 360)
+seed 4  val acc 0.9250  (333 of 360)
+min 0.9139  max 0.9250  mean 0.9211  sd 0.0054
 ```
 
 **Five runs of one configuration landed between 0.9139 and 0.9250.** That is 329 to 333 correct
@@ -38,7 +44,7 @@ Two numbers summarise the spread, and they say different things:
 
 - **the range**, minimum to maximum, is what a single run could have shown you. Had you run only
   seed 2, you would have reported 0.9139; only seed 1, 0.9250.
-- **the standard deviation**, here 0.0053, is the typical distance of a run from the mean. It is
+- **the standard deviation**, here 0.0054, is the typical distance of a run from the mean. It is
   the yardstick a comparison of two configurations, two sections on, is measured against.
 
 Five seeds is a small sample, and the standard deviation of five numbers is itself rough. It is

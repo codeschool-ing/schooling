@@ -13,7 +13,12 @@ produces the same sequence again, so everything drawn from it is drawn again. Th
 with seed 0 and once with seed 1:
 
 ```
-PENDING init
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(0); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([-0.0009,  0.0671, -0.1029], grad_fn=<SliceBackward0>)
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(0); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([-0.0009,  0.0671, -0.1029], grad_fn=<SliceBackward0>)
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(1); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([ 0.0644, -0.0552, -0.0242], grad_fn=<SliceBackward0>)
 ```
 
 The same seed gave the same first three weights, digit for digit, and seed 1 gave different ones.
@@ -84,7 +89,10 @@ Save as `~/dl/seeds.py`:
 ```
 
 ```
-PENDING seeds
+ana@vm:~/dl$ python seeds.py
+seed 0  val acc 0.9167
+seed 0  val acc 0.9167  every weight equal to the first run's: True
+seed 1  val acc 0.9250  every weight equal to the first run's: False
 ```
 
 **Seed 0 twice gave the same network to the last bit**, not merely the same accuracy. Ten epochs of

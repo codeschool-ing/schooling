@@ -8,7 +8,7 @@ A tabela de épocas iguais da seção anterior não foi justa com o lote grande.
 do lote e taxa de aprendizado são escolhidos juntos**, e mudar um sem o outro é o jeito mais comum de
 fazer uma comparação de tamanhos de lote não dizer nada.
 
-O argumento para escalar é curto. Multiplique o lote por *k* e uma época passa a ter *k* vezes menos
+Multiplique o lote por *k* e uma época passa a ter *k* vezes menos
 passos. Cada um desses passos faz a média de *k* vezes mais imagens, então o gradiente dele tem mais ou
 menos o mesmo tamanho, só que com menos ruído. Para cobrir a mesma distância numa época com *k* vezes
 menos passos, cada passo precisa ser *k* vezes mais longo. **Essa é a regra de escala linear:
@@ -36,7 +36,15 @@ Salve isto como `~/dl/batch_lr.py`. Toda execução tem vinte épocas:
 ```
 
 ```
-PENDING batch-lr
+ana@vm:~/dl$ python batch_lr.py
+batch   32  lr 0.1   680 steps  val loss 0.1515  val acc 0.956
+batch  128  lr 0.1   180 steps  val loss 0.3344  val acc 0.928
+batch  128  lr 0.4   180 steps  val loss 0.1518  val acc 0.958
+batch  256  lr 0.1   100 steps  val loss 0.5480  val acc 0.903
+batch  256  lr 0.8   100 steps  val loss 0.1551  val acc 0.956
+batch 1077  lr 0.1    20 steps  val loss 1.6861  val acc 0.669
+batch 1077  lr 1.6    20 steps  val loss 2.5676  val acc 0.356
+batch 1077  lr 3.4    20 steps  val loss 2.2154  val acc 0.119
 ```
 
 **Até oito vezes o lote, a regra funciona.** Com 128 e a taxa antiga, a acurácia caiu de 0,956 para
@@ -45,7 +53,7 @@ de 0,8 deu 0,956, com 100 passos onde o lote de 32 teve 680. As mesmas imagens, 
 passos, e o mesmo resultado.
 
 **No lote inteiro, ela quebra.** A regra pede 3,4, e essa execução terminou em 0,119, que é uma rede
-chutando. Reduzir à metade, 1,6, deu 0,358, pior que o 0,1 sem escala. Duas coisas dão errado ao mesmo
+chutando. Reduzir à metade, 1,6, deu 0,356, pior que o 0,1 sem escala. Duas coisas dão errado ao mesmo
 tempo. Vinte passos são poucos para se recuperar de um passo ruim, e o argumento acima supôs que a
 direção de um passo quase não muda ao longo do comprimento dele, o que deixa de ser verdade quando o
 passo é tão longo. A última seção desta aula mostra o que uma taxa de 1,5 faz com uma curva.

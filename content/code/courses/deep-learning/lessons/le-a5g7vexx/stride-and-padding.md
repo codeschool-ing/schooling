@@ -34,7 +34,15 @@ on an 8 by 8 image, and prints the formula's answer beside the shape PyTorch ret
 ```
 
 ```
-PENDING shapes
+ana@vm:~/dl$ python shapes.py
+kernel  stride  padding  formula  nn.Conv2d output
+     3       1        0        6  (1, 4, 6, 6)
+     3       1        1        8  (1, 4, 8, 8)
+     5       1        0        4  (1, 4, 4, 4)
+     5       1        2        8  (1, 4, 8, 8)
+     3       2        1        4  (1, 4, 4, 4)
+     3       2        0        3  (1, 4, 3, 3)
+     2       2        0        4  (1, 4, 4, 4)
 ```
 
 The formula and the layer agree on every line. Read them in pairs:

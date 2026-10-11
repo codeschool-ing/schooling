@@ -13,7 +13,12 @@ ele produz de novo a mesma sequência, então tudo o que é sorteado dele é sor
 linhas, rodadas duas vezes com a semente 0 e uma vez com a semente 1:
 
 ```
-PENDING init
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(0); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([-0.0009,  0.0671, -0.1029], grad_fn=<SliceBackward0>)
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(0); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([-0.0009,  0.0671, -0.1029], grad_fn=<SliceBackward0>)
+ana@vm:~/dl$ python -c "import torch; torch.manual_seed(1); print(torch.nn.Linear(64, 32).weight[0, :3])"
+tensor([ 0.0644, -0.0552, -0.0242], grad_fn=<SliceBackward0>)
 ```
 
 A mesma semente deu os mesmos três primeiros pesos, dígito por dígito, e a semente 1 deu outros.
@@ -84,7 +89,10 @@ Salve como `~/dl/seeds.py`:
 ```
 
 ```
-PENDING seeds
+ana@vm:~/dl$ python seeds.py
+seed 0  val acc 0.9167
+seed 0  val acc 0.9167  every weight equal to the first run's: True
+seed 1  val acc 0.9250  every weight equal to the first run's: False
 ```
 
 **A semente 0, duas vezes, deu a mesma rede até o último bit**, e não só a mesma acurácia. Dez

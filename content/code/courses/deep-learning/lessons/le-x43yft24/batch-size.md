@@ -35,7 +35,10 @@ batch sizes of 1, 32 and 1,077, the whole training set at once, with the rate fi
 ## Equal epochs
 
 ```
-PENDING by-epochs
+ana@vm:~/dl$ python batchsize.py epochs
+batch    1    10 epochs  10770 steps    10770 images  val loss 0.1264  val acc 0.969  val loss rose 4/9
+batch   32    10 epochs    340 steps    10770 images  val loss 0.2367  val acc 0.933  val loss rose 1/9
+batch 1077    10 epochs     10 steps    10770 images  val loss 1.9658  val acc 0.436  val loss rose 0/9
 ```
 
 Every run processed the same 10,770 images. **Per epoch, the small batch wins by a distance**:
@@ -46,7 +49,10 @@ rate of 0.1 is not enough to get anywhere, however good each gradient is.
 ## Equal steps
 
 ```
-PENDING by-steps
+ana@vm:~/dl$ python batchsize.py steps
+batch    1     1 epochs   1077 steps     1077 images  val loss 0.2030  val acc 0.936  val loss rose 0/0
+batch   32    32 epochs   1088 steps    34464 images  val loss 0.1331  val acc 0.958  val loss rose 7/31
+batch 1077  1077 epochs   1077 steps  1159929 images  val loss 0.1254  val acc 0.967  val loss rose 0/1076
 ```
 
 Now every run moved the weights about 1,077 times, and **per step the large batch wins**: 0.967 at

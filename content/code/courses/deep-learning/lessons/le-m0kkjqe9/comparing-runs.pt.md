@@ -14,7 +14,24 @@ Três configurações aqui: a de antes, uma camada oculta duas vezes mais larga 
 aprendizado cinco vezes maior.
 
 ```
-PENDING compare
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s; done
+seed 0  val acc 0.9167  commit 878e080
+seed 1  val acc 0.9250  commit 878e080
+seed 2  val acc 0.9139  commit 878e080
+seed 3  val acc 0.9250  commit 878e080
+seed 4  val acc 0.9250  commit 878e080
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --hidden 64; done
+seed 0  val acc 0.9194  commit 878e080
+seed 1  val acc 0.9278  commit 878e080
+seed 2  val acc 0.9167  commit 878e080
+seed 3  val acc 0.9250  commit 878e080
+seed 4  val acc 0.9111  commit 878e080
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --lr 0.05; done
+seed 0  val acc 0.9722  commit 878e080
+seed 1  val acc 0.9583  commit 878e080
+seed 2  val acc 0.9556  commit 878e080
+seed 3  val acc 0.9556  commit 878e080
+seed 4  val acc 0.9500  commit 878e080
 ```
 
 Quinze linhas acrescentadas ao `runs.jsonl`, cada uma com o seu commit e nenhuma suja. Lê-las é mais
@@ -41,7 +58,19 @@ um programa, que não precisa de nada do PyTorch. Salve como `~/dl/report.py`:
 ```
 
 ```
-PENDING report
+ana@vm:~/dl$ python report.py
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.01}  commit 878e080
+  5 seeds  mean 0.9211  min 0.9139  max 0.9250  sd 0.0054
+{"batch_size": 32, "epochs": 10, "hidden": 64, "lr": 0.01}  commit 878e080
+  5 seeds  mean 0.9200  min 0.9111  max 0.9278  sd 0.0066
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.05}  commit 878e080
+  5 seeds  mean 0.9583  min 0.9500  max 0.9722  sd 0.0083
+left out: 1 run(s) from uncommitted code
+ana@vm:~/dl$ git add report.py
+ana@vm:~/dl$ git commit -q -m "Report the runs by configuration"
+ana@vm:~/dl$ git log --oneline
+a1ec172 Report the runs by configuration
+878e080 Train the digits network and record every run
 ```
 
 O `report.py` é código como o resto, então a transcrição termina com o commit dele. Sem commit, ele
@@ -54,8 +83,7 @@ ficou fora do relatório, com uma contagem ao lado. O que sobra são três grupo
 
 **A camada mais larga não mudou nada mensurável.** A média dela, 0,9200, fica 0,0011 abaixo dos
 0,9211 da mais estreita, menos de meia imagem, contra um desvio padrão perto de 0,006 em cada uma. As
-cinco execuções dela caem entre 0,9111 e 0,9278, inteiramente dentro da mesma faixa das execuções de
-32 unidades. E repare no que uma execução sozinha teria dito: **na semente 0 a camada mais larga
+cinco execuções dela caem entre 0,9111 e 0,9278, uma faixa que contém as cinco execuções de 32 unidades. E repare no que uma execução sozinha teria dito: **na semente 0 a camada mais larga
 ganhou, 0,9194 a 0,9167**, e na semente 4 perdeu, 0,9111 a 0,9250. Qualquer um dos dois resultados,
 sozinho, teria sido escrito como descoberta.
 

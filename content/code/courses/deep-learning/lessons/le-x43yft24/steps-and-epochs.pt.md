@@ -36,7 +36,15 @@ do `optim.py` e do `fit.py` da aula 5:
 ```
 
 ```
-PENDING steps
+ana@vm:~/dl$ python steps.py
+batch    1: 1077 steps an epoch, the last one 1 images
+batch   32:   34 steps an epoch, the last one 21 images
+batch  100:   11 steps an epoch, the last one 77 images
+batch 1077:    1 steps an epoch, the last one 1077 images
+epoch   1  train loss 1.8263  val loss 1.3480  val acc 0.811
+epoch   2  train loss 1.0473  val loss 0.8026  val acc 0.881
+epoch   3  train loss 0.6583  val loss 0.5526  val acc 0.894
+steps counted in 3 epochs: 102
 ```
 
 **Com lote de 32, uma época tem 34 passos**, e três épocas fizeram 102 chamadas a `step`, exatamente

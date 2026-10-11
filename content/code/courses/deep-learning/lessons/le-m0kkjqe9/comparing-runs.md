@@ -14,7 +14,24 @@ configurations here: the one from before, a hidden layer twice as wide, and a le
 times higher.
 
 ```
-PENDING compare
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s; done
+seed 0  val acc 0.9167  commit 878e080
+seed 1  val acc 0.9250  commit 878e080
+seed 2  val acc 0.9139  commit 878e080
+seed 3  val acc 0.9250  commit 878e080
+seed 4  val acc 0.9250  commit 878e080
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --hidden 64; done
+seed 0  val acc 0.9194  commit 878e080
+seed 1  val acc 0.9278  commit 878e080
+seed 2  val acc 0.9167  commit 878e080
+seed 3  val acc 0.9250  commit 878e080
+seed 4  val acc 0.9111  commit 878e080
+ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --lr 0.05; done
+seed 0  val acc 0.9722  commit 878e080
+seed 1  val acc 0.9583  commit 878e080
+seed 2  val acc 0.9556  commit 878e080
+seed 3  val acc 0.9556  commit 878e080
+seed 4  val acc 0.9500  commit 878e080
 ```
 
 Fifteen lines appended to `runs.jsonl`, each with its commit and nothing dirty. Reading them is one
@@ -41,7 +58,19 @@ more program, which needs nothing from PyTorch. Save as `~/dl/report.py`:
 ```
 
 ```
-PENDING report
+ana@vm:~/dl$ python report.py
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.01}  commit 878e080
+  5 seeds  mean 0.9211  min 0.9139  max 0.9250  sd 0.0054
+{"batch_size": 32, "epochs": 10, "hidden": 64, "lr": 0.01}  commit 878e080
+  5 seeds  mean 0.9200  min 0.9111  max 0.9278  sd 0.0066
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.05}  commit 878e080
+  5 seeds  mean 0.9583  min 0.9500  max 0.9722  sd 0.0083
+left out: 1 run(s) from uncommitted code
+ana@vm:~/dl$ git add report.py
+ana@vm:~/dl$ git commit -q -m "Report the runs by configuration"
+ana@vm:~/dl$ git log --oneline
+a1ec172 Report the runs by configuration
+878e080 Train the digits network and record every run
 ```
 
 `report.py` is code like the rest, so the transcript ends by committing it. Left uncommitted, it
@@ -54,7 +83,7 @@ the report with a count beside it. What is left is three groups of five.
 
 **The wider layer changed nothing measurable.** Its mean, 0.9200, sits 0.0011 below the narrower
 one's 0.9211, which is less than half an image, against a standard deviation near 0.006 for each.
-Its five runs fall between 0.9111 and 0.9278, entirely inside the same band as the 32-unit runs. And
+Its five runs fall between 0.9111 and 0.9278, a band that holds all five of the 32-unit runs. And
 note what a single run would have said: **on seed 0 the wider layer won, 0.9194 to 0.9167**, and on
 seed 4 it lost, 0.9111 to 0.9250. Either result, alone, would have been written up as a finding.
 

@@ -34,7 +34,10 @@ lotes de 1, 32 e 1.077, o conjunto de treino inteiro de uma vez, com a taxa fixa
 ## Épocas iguais
 
 ```
-PENDING by-epochs
+ana@vm:~/dl$ python batchsize.py epochs
+batch    1    10 epochs  10770 steps    10770 images  val loss 0.1264  val acc 0.969  val loss rose 4/9
+batch   32    10 epochs    340 steps    10770 images  val loss 0.2367  val acc 0.933  val loss rose 1/9
+batch 1077    10 epochs     10 steps    10770 images  val loss 1.9658  val acc 0.436  val loss rose 0/9
 ```
 
 Toda execução processou as mesmas 10.770 imagens. **Por época, o lote pequeno ganha com folga**: 0,969
@@ -45,7 +48,10 @@ chegar a lugar nenhum, por melhor que seja cada gradiente.
 ## Passos iguais
 
 ```
-PENDING by-steps
+ana@vm:~/dl$ python batchsize.py steps
+batch    1     1 epochs   1077 steps     1077 images  val loss 0.2030  val acc 0.936  val loss rose 0/0
+batch   32    32 epochs   1088 steps    34464 images  val loss 0.1331  val acc 0.958  val loss rose 7/31
+batch 1077  1077 epochs   1077 steps  1159929 images  val loss 0.1254  val acc 0.967  val loss rose 0/1076
 ```
 
 Agora toda execução moveu os pesos cerca de 1.077 vezes, e **por passo o lote grande ganha**: 0,967

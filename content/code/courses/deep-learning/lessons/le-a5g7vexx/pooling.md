@@ -26,7 +26,17 @@ four are gone. Save as `~/dl/pool.py`:
 ```
 
 ```
-PENDING pool
+ana@vm:~/dl$ python pool.py
+max:
+ tensor([[4., 2.],
+        [2., 7.]])
+average:
+ tensor([[2.5000, 0.7500],
+        [0.7500, 4.7500]])
+parameters in MaxPool2d(2): 0
+dot moved 0 right -> pooled [1.0, 0.0, 0.0, 0.0]
+dot moved 1 right -> pooled [1.0, 0.0, 0.0, 0.0]
+dot moved 2 right -> pooled [0.0, 1.0, 0.0, 0.0]
 ```
 
 The top-left block holds 1, 3, 4 and 2, so max pooling keeps 4 and average pooling keeps 2.5. **A
@@ -36,8 +46,8 @@ The reason to want it is in the last three lines. The bright point moved one pix
 the pooled output did not change, because it stayed inside the same 2 by 2 block. Moved two pixels,
 it crossed into the next block and the output moved with it. **Max pooling asks whether a feature
 appeared somewhere in the block, not exactly where.** A stroke drawn one pixel to the left by a
-different hand gives the same answer, and that is worth more than the precise position for telling a
-6 from a 5.
+different hand often gives the same answer, and telling a 6 from a 5 does not depend on where a
+stroke sits to the pixel.
 
 The other reason is cost. Every layer after the pooling works on a quarter of the numbers. In the
 network of this lesson the pooling turns 32 maps of 8 by 8 into 32 maps of 4 by 4, and the dense

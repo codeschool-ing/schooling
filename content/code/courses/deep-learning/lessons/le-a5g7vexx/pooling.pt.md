@@ -26,7 +26,17 @@ três de cada quatro números somem. Salve como `~/dl/pool.py`:
 ```
 
 ```
-PENDING pool
+ana@vm:~/dl$ python pool.py
+max:
+ tensor([[4., 2.],
+        [2., 7.]])
+average:
+ tensor([[2.5000, 0.7500],
+        [0.7500, 4.7500]])
+parameters in MaxPool2d(2): 0
+dot moved 0 right -> pooled [1.0, 0.0, 0.0, 0.0]
+dot moved 1 right -> pooled [1.0, 0.0, 0.0, 0.0]
+dot moved 2 right -> pooled [0.0, 1.0, 0.0, 0.0]
 ```
 
 O bloco de cima à esquerda tem 1, 3, 4 e 2, então o max pooling fica com 4 e o average pooling com
@@ -37,7 +47,8 @@ O motivo para querê-la está nas três últimas linhas. O ponto aceso andou um 
 saída do pooling não mudou, porque ele continuou dentro do mesmo bloco 2 por 2. Deslocado dois pixels,
 ele passou para o bloco seguinte e a saída andou junto. **O max pooling pergunta se uma característica
 apareceu em algum lugar do bloco, não exatamente onde.** Um traço desenhado um pixel mais à esquerda
-por outra mão dá a mesma resposta, e isso vale mais que a posição exata para distinguir um 6 de um 5.
+por outra mão muitas vezes dá a mesma resposta, e distinguir um 6 de um 5 não depende de onde o traço
+fica, pixel a pixel.
 
 O outro motivo é custo. Toda camada depois do pooling trabalha com um quarto dos números. Na rede desta
 aula, o pooling transforma 32 mapas de 8 por 8 em 32 mapas de 4 por 4, e a camada densa que vem depois

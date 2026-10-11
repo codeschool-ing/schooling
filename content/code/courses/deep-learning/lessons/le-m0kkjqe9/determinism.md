@@ -30,7 +30,11 @@ Save as `~/dl/order.py`:
 ```
 
 ```
-PENDING order
+ana@vm:~/dl$ python order.py
+0.6000000000000001 0.6
+1 thread(s): sum -1561.453125
+2 thread(s): sum -1561.453125
+4 thread(s): sum -1561.4527587890625
 ```
 
 `0.6000000000000001` against `0.6` is the whole story in one line. The million numbers then gave a
@@ -61,7 +65,10 @@ Save as `~/dl/threads.py`:
 ```
 
 ```
-PENDING threads
+ana@vm:~/dl$ python threads.py
+1 thread(s): val acc 0.9167
+4 thread(s): val acc 0.9167
+largest difference between the two sets of weights: 0.0
 ```
 
 On this network, **one thread and four gave identical weights**, a difference of `0.0`. Its

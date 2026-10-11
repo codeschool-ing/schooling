@@ -8,7 +8,7 @@ the rate that suits a batch of 32, and gave the batch of 1,077 ten steps of that
 size and a learning rate are chosen together**, and changing one without the other is the commonest
 way to make a comparison of batch sizes say nothing.
 
-The argument for scaling is short. Multiply the batch by *k* and an epoch has *k* times fewer steps.
+Multiply the batch by *k* and an epoch has *k* times fewer steps.
 Each of those steps averages *k* times as many images, so its gradient is about the same size, just
 less noisy. To cover the same distance in an epoch with *k* times fewer steps, each step has to be
 *k* times longer. **That is the linear scaling rule: multiply the batch by *k*, multiply the rate by
@@ -35,7 +35,15 @@ Save this as `~/dl/batch_lr.py`. Every run is twenty epochs:
 ```
 
 ```
-PENDING batch-lr
+ana@vm:~/dl$ python batch_lr.py
+batch   32  lr 0.1   680 steps  val loss 0.1515  val acc 0.956
+batch  128  lr 0.1   180 steps  val loss 0.3344  val acc 0.928
+batch  128  lr 0.4   180 steps  val loss 0.1518  val acc 0.958
+batch  256  lr 0.1   100 steps  val loss 0.5480  val acc 0.903
+batch  256  lr 0.8   100 steps  val loss 0.1551  val acc 0.956
+batch 1077  lr 0.1    20 steps  val loss 1.6861  val acc 0.669
+batch 1077  lr 1.6    20 steps  val loss 2.5676  val acc 0.356
+batch 1077  lr 3.4    20 steps  val loss 2.2154  val acc 0.119
 ```
 
 **Up to eight times the batch, the rule works.** At 128 and the old rate the accuracy fell from
@@ -44,7 +52,7 @@ the scaled 0.8 gave 0.956, with 100 steps where the batch of 32 had 680. Same im
 the steps, and the same result.
 
 **At the full batch, it breaks.** The rule asks for 3.4, and that run ended at 0.119, which is a
-network guessing. Halving it to 1.6 gave 0.358, worse than the unscaled 0.1. Two things go wrong at
+network guessing. Halving it to 1.6 gave 0.356, worse than the unscaled 0.1. Two things go wrong at
 once. Twenty steps is too few to recover from a bad one, and the argument above assumed that a
 step's direction barely changes over its length, which stops being true when the step is that long.
 The last section of this lesson shows what a rate of 1.5 does to a curve.
