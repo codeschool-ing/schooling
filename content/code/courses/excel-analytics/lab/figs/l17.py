@@ -56,9 +56,10 @@ def layout(t):
                                       ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"])]
     for i, m in enumerate(months):
         x = 350 + i * 31
-        s.rect(x, 62, 29, 18, fill="var(--phosphor-dim)" if i < 6 else "var(--scan)", rx=2)
-        s.mono(x + 14.5, 71.5, m, size=9.5, anchor="middle",
-               fill="var(--ink)" if i < 6 else "var(--paper-dim)")
+        s.rect(x, 62, 29, 18, fill="var(--scan)", stroke="var(--phosphor)" if i < 6 else "var(--wire)",
+               rx=2, sw=1.5 if i < 6 else 1)
+        s.mono(x + 14.5, 71.5, m, size=9.5, anchor="middle", weight="600" if i < 6 else None,
+               fill="var(--phosphor)" if i < 6 else "var(--paper-dim)")
     s.mono(728, 54, "2026", size=10, fill="var(--paper-dim)", anchor="end")
     # KPI cards.
     rv, rv_ly = rev(2026, H1), rev(2025, H1)

@@ -62,7 +62,7 @@ def shapes(t):
              (3, x0 + sum(w) + 16, y0 + 3 * rh + rh / 2), (4, x0 + sum(w) + 16, y0 + 8 * rh + rh / 2),
              (5, x0 + sum(w) + 16, y0 + 9 * rh + rh / 2)]
     for n, mx, my in marks:
-        s.parts.append(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="8" fill="var(--amber)"></circle>')
+        s.rect(mx - 8, my - 8, 16, 16, fill="var(--amber)", stroke="var(--amber)", rx=8)
         s.mono(mx, my + 0.5, str(n), size=10, fill="var(--ink)", anchor="middle", weight="600")
     notes = [
         t("1  a title merged across the columns", "1  um título mesclado sobre as colunas"),
