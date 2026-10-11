@@ -12,7 +12,15 @@ vez.
 O diretório tem o nome do tópico e da partição. A partição 1 de `sales`, que tem a maior parte das mil
 vendas:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ls -l ~/kafka-data/node1/log/sales-1
+total 124
+-rw-r--r-- 1 ubuntu ubuntu 10485760 Oct 10 16:59 00000000000000000000.index
+-rw-r--r-- 1 ubuntu ubuntu   106916 Oct 10 16:59 00000000000000000000.log
+-rw-r--r-- 1 ubuntu ubuntu 10485756 Oct 10 16:59 00000000000000000000.timeindex
+-rw-r--r-- 1 ubuntu ubuntu        8 Oct 10 16:59 leader-epoch-checkpoint
+-rw-r--r-- 1 ubuntu ubuntu       43 Oct 10 16:59 partition.metadata
+```
 
 Um segmento só, por enquanto, então três arquivos dividem um nome, e o nome é o **offset base** do
 segmento, o primeiro offset dele, completado até vinte dígitos:
@@ -33,7 +41,14 @@ segmento, o primeiro offset dele, completado até vinte dígitos:
 O `kafka-dump-log.sh` lê um segmento e o imprime. Com `--print-data-log` ele mostra também a chave e o
 valor de cada mensagem:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-dump-log.sh --files ~/kafka-data/node1/log/sales-1/00000000000000000000.log --print-data-log | head -5
+Dumping /home/ubuntu/kafka-data/node1/log/sales-1/00000000000000000000.log
+Log starting offset: 0
+baseOffset: 0 lastOffset: 760 count: 761 baseSequence: -1 lastSequence: -1 producerId: -1 producerEpoch: -1 partitionLeaderEpoch: 0 isTransactional: false isControl: false deleteHorizonMs: OptionalLong.empty position: 0 CreateTime: 1791662396759 size: 103095 magic: 2 compresscodec: none crc: 3008869467 isvalid: true
+| offset: 0 CreateTime: 1791662396752 keySize: 11 valueSize: 122 sequence: -1 headerKeys: [] key: joao-pessoa payload: {"sale": "joa-000001", "shop": "joao-pessoa", "book": "bk-02", "qty": 1, "cents": 5490, "at": "2026-03-02T09:00:05-03:00"}
+| offset: 1 CreateTime: 1791662396752 keySize: 5 valueSize: 117 sequence: -1 headerKeys: [] key: natal payload: {"sale": "nat-000002", "shop": "natal", "book": "bk-08", "qty": 2, "cents": 17980, "at": "2026-03-02T09:00:09-03:00"}
+```
 
 As duas primeiras linhas dão o nome do arquivo e o primeiro offset dele. A terceira não é uma
 mensagem: é um **lote**, `baseOffset: 0 lastOffset: 760 count: 761`, que diz que 761 mensagens
@@ -46,7 +61,11 @@ criou, em milissegundos desde 1970, não o `at` da própria venda, uma diferenç
 
 ## Dentro do .index
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-dump-log.sh --files ~/kafka-data/node1/log/sales-1/00000000000000000000.index
+Dumping /home/ubuntu/kafka-data/node1/log/sales-1/00000000000000000000.index
+offset: 788 position: 103095
+```
 
 Uma entrada: o lote que termina no offset 788 começa no byte 103 095 do `.log`. **O índice é
 esparso**: o Kafka só acrescenta uma entrada depois de passarem uns 4 096 bytes de mensagens

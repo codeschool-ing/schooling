@@ -14,7 +14,7 @@
         "why": "An idle broker does almost nothing; the cost is that it is there."
       },
       {
-        "text": "The brokers and consumers run all the time, ready for the next sale",
+        "text": "They run all day, waiting",
         "correct": true,
         "why": "Right: sized for the peak, paid at the trough."
       },
@@ -39,7 +39,7 @@
     "drillable": true,
     "prompt": "A topic is written at 2 MB/s, has three replicas, and five consumer groups read all of it. How many MB/s move in total: in, between brokers, and out?",
     "hint": "In once, to every follower, out once per group.",
-    "value": 18,
+    "value": 16,
     "tolerance": 0,
     "unit": "MB/s"
   },
@@ -53,7 +53,7 @@
     "prompt": "A cluster spans three availability zones for safety. Which traffic is most likely to show up on the network bill?",
     "choices": [
       {
-        "text": "Replica copies and consumer reads that cross a zone boundary",
+        "text": "Copies and reads crossing zones",
         "correct": true,
         "why": "Right: two of every three copies cross one, and so do remote reads."
       },
@@ -115,12 +115,12 @@
     "prompt": "The `.index` file of a live segment is 10 485 760 bytes. Why is that not part of the bytes per sale?",
     "choices": [
       {
-        "text": "It is compressed",
+        "text": "It is compressed differently from the log",
         "correct": false,
         "why": "It is not; it is preallocated."
       },
       {
-        "text": "It belongs to another topic",
+        "text": "It belongs to the consumer group, not the topic",
         "correct": false,
         "why": "It sits in the same partition directory."
       },
@@ -130,7 +130,7 @@
         "why": "Those live in `__consumer_offsets`."
       },
       {
-        "text": "It is preallocated and trimmed when the segment closes",
+        "text": "It is preallocated, then trimmed at close",
         "correct": true,
         "why": "Right: on a live segment its size says little."
       }
@@ -177,7 +177,7 @@
     "prompt": "Why do Ponto Final's JSON sales compress so well?",
     "choices": [
       {
-        "text": "Every batch repeats the same field names and a few values",
+        "text": "Batches repeat the same names and values",
         "correct": true,
         "why": "Right: five shops, eight books, the same five keys."
       },
@@ -187,12 +187,12 @@
         "why": "It is text, which is why it compresses."
       },
       {
-        "text": "Kafka removes duplicate sales",
+        "text": "Kafka removes duplicate sales before storing them",
         "correct": false,
         "why": "Nothing is removed; repetition inside a batch is stored once."
       },
       {
-        "text": "Each message is compressed on its own",
+        "text": "Each message is compressed on its own, before batching",
         "correct": false,
         "why": "Kafka compresses a batch at a time, which is why repetition across sales helps."
       }
@@ -261,13 +261,13 @@
     ]
   },
   {
-    "id": "ex-pfbnvgmk",
+    "id": "ex-fzk2bzv8",
     "version": 1,
     "section": "compression",
     "type": "cloze",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "On a topic, the `compression.type` value that keeps whatever the producer sent is ___.",
+    "prompt": "On a topic, the `compression.type` value that stores batches exactly as they arrived is ___.",
     "blanks": [
       {
         "accept": [
@@ -341,7 +341,7 @@
         "why": "Reading has nothing to do with deletion."
       },
       {
-        "text": "A segment is deleted only once its newest message is past the limit",
+        "text": "Deletion waits for the whole segment",
         "correct": true,
         "why": "Right: deletion is per segment, so old messages wait for their segment."
       },
@@ -397,12 +397,12 @@
         "why": "They do: the shop. The problem is what the key would mean."
       },
       {
-        "text": "Each sale is a fact of its own; keeping one per key would lose the rest",
+        "text": "Each sale is its own fact, not a state",
         "correct": true,
         "why": "Right: compaction suits state, not history."
       },
       {
-        "text": "Compaction only works on one partition",
+        "text": "Compaction only works on a topic with one partition",
         "correct": false,
         "why": "It works on any number of partitions."
       },
@@ -423,7 +423,7 @@
     "prompt": "A topic keeps a year of events, and almost nobody reads anything older than a week. What does tiered storage change?",
     "choices": [
       {
-        "text": "The old segments move to cheaper object storage",
+        "text": "Old segments go to object storage",
         "correct": true,
         "why": "Right: the largest line of the bill moves to the cheapest storage."
       },
@@ -472,22 +472,22 @@
     "prompt": "A managed service bills throughput out per byte. What multiplies that line for one topic?",
     "choices": [
       {
-        "text": "The number of consumer groups reading it",
+        "text": "How many groups read it",
         "correct": true,
         "why": "Right: every group reads the whole topic."
       },
       {
-        "text": "The number of partitions",
+        "text": "The number of partitions in the topic",
         "correct": false,
         "why": "Partitions split the bytes; they do not multiply them."
       },
       {
-        "text": "The retention",
+        "text": "How long the retention is",
         "correct": false,
         "why": "Retention is the storage line."
       },
       {
-        "text": "The compression codec",
+        "text": "Which compression codec it uses",
         "correct": false,
         "why": "Compression divides, it does not multiply."
       }
@@ -503,7 +503,7 @@
     "prompt": "Under a model that charges per partition hour, a team creates 100 partitions \"for later\" on a quiet topic. What is wrong with that?",
     "choices": [
       {
-        "text": "Kafka refuses more than 50 partitions",
+        "text": "Kafka refuses more than 50 partitions on a topic",
         "correct": false,
         "why": "It allows far more; the issue is the bill."
       },
@@ -513,7 +513,7 @@
         "why": "They can; adding moves keys, as lesson 3 warns, but it is possible."
       },
       {
-        "text": "Each idle partition is billed every hour from today",
+        "text": "Idle partitions are billed hourly",
         "correct": true,
         "why": "Right: the price is paid before the need arrives."
       },
@@ -565,17 +565,17 @@
     "prompt": "Which of Ponto Final's needs is the lesson's best case for a stream rather than a batch?",
     "choices": [
       {
-        "text": "The monthly sales report",
+        "text": "The monthly sales report for the owner",
         "correct": false,
         "why": "Read later: a nightly batch serves it for twenty minutes."
       },
       {
-        "text": "Loading the warehouse",
+        "text": "Loading the warehouse each night",
         "correct": false,
         "why": "It can read the same log once a night."
       },
       {
-        "text": "Training a demand model",
+        "text": "Training a demand model on last year",
         "correct": false,
         "why": "The input is fixed; batch is cheaper."
       },
@@ -601,17 +601,17 @@
         "why": "Replication is already in the arithmetic; look for what is not."
       },
       {
-        "text": "Something else growing: unused partitions, unread groups, unchosen retention",
+        "text": "Something else growing that nobody chose",
         "correct": true,
         "why": "Right: the gap is a list of defaults nobody looked at."
       },
       {
-        "text": "Compression that is too strong",
+        "text": "Compression that is too strong for the data",
         "correct": false,
         "why": "Stronger compression lowers storage, it does not triple it."
       },
       {
-        "text": "Nothing; bills are always higher than arithmetic",
+        "text": "Nothing; bills always run above the arithmetic",
         "correct": false,
         "why": "The point of the arithmetic is to make the gap visible."
       }

@@ -7,7 +7,7 @@
         "why": "Um broker ocioso quase não faz nada; o custo é ele estar lá."
       },
       {
-        "text": "Os brokers e consumidores rodam o tempo todo, prontos para a próxima venda",
+        "text": "Rodam o dia todo, esperando",
         "why": "Isso: dimensionados pelo pico, pagos no vale."
       },
       {
@@ -29,7 +29,7 @@
     "prompt": "Um cluster ocupa três zonas de disponibilidade por segurança. Qual tráfego tem mais chance de aparecer na conta de rede?",
     "choices": [
       {
-        "text": "Cópias de réplica e leituras de consumidores que cruzam uma fronteira de zona",
+        "text": "Cópias e leituras entre zonas",
         "why": "Isso: duas de cada três cópias cruzam uma, e as leituras remotas também."
       },
       {
@@ -62,7 +62,7 @@
         "why": "Isso: offset, timestamp, enquadramento, o cabeçalho do lote."
       },
       {
-        "text": "O Kafka completa cada mensagem até um tamanho fixo",
+        "text": "O Kafka completa toda mensagem até um tamanho fixo de bloco",
         "why": "Registros têm tamanho variável; nada é completado."
       }
     ]
@@ -71,11 +71,11 @@
     "prompt": "O arquivo `.index` de um segmento ativo tem 10 485 760 bytes. Por que isso não entra nos bytes por venda?",
     "choices": [
       {
-        "text": "Ele é comprimido",
+        "text": "Ele é comprimido de outro jeito que o log",
         "why": "Não é; ele é pré-alocado."
       },
       {
-        "text": "Ele pertence a outro tópico",
+        "text": "Ele pertence ao grupo de consumidores, não ao tópico",
         "why": "Ele fica no mesmo diretório da partição."
       },
       {
@@ -83,7 +83,7 @@
         "why": "Esses ficam em `__consumer_offsets`."
       },
       {
-        "text": "Ele é pré-alocado e aparado quando o segmento fecha",
+        "text": "É pré-alocado e só é aparado quando o segmento fecha",
         "why": "Isso: num segmento ativo o tamanho dele diz pouco."
       }
     ]
@@ -113,7 +113,7 @@
     "prompt": "Por que as vendas em JSON da Ponto Final comprimem tão bem?",
     "choices": [
       {
-        "text": "Todo lote repete os mesmos nomes de campo e poucos valores",
+        "text": "Lotes repetem os mesmos nomes e valores",
         "why": "Isso: cinco lojas, oito livros, as mesmas cinco chaves."
       },
       {
@@ -121,11 +121,11 @@
         "why": "É texto, e por isso comprime."
       },
       {
-        "text": "O Kafka remove vendas duplicadas",
+        "text": "O Kafka remove vendas duplicadas antes de guardá-las",
         "why": "Nada é removido; a repetição dentro de um lote é guardada uma vez."
       },
       {
-        "text": "Cada mensagem é comprimida sozinha",
+        "text": "Cada mensagem é comprimida sozinha, antes de formar o lote",
         "why": "O Kafka comprime um lote por vez, e é por isso que a repetição entre vendas ajuda."
       }
     ]
@@ -172,8 +172,8 @@
       }
     ]
   },
-  "ex-pfbnvgmk": {
-    "prompt": "Num tópico, o valor de `compression.type` que mantém o que o produtor mandou é ___.",
+  "ex-fzk2bzv8": {
+    "prompt": "Num tópico, o valor de `compression.type` que guarda os lotes exatamente como chegaram é ___.",
     "blanks": [
       {
         "accept": [
@@ -219,7 +219,7 @@
         "why": "Ler não tem nada a ver com a remoção."
       },
       {
-        "text": "Um segmento só é apagado quando a mensagem mais nova dele passa do limite",
+        "text": "A remoção espera o segmento inteiro vencer",
         "why": "Isso: a remoção é por segmento, então mensagens velhas esperam o segmento delas."
       },
       {
@@ -260,11 +260,11 @@
         "why": "Têm: a loja. O problema é o que a chave significaria."
       },
       {
-        "text": "Cada venda é um fato próprio; guardar uma por chave perderia o resto",
+        "text": "Cada venda é um fato próprio, não um estado",
         "why": "Isso: compactação serve para estado, não para histórico."
       },
       {
-        "text": "A compactação só funciona numa partição",
+        "text": "A compactação só funciona num tópico de uma partição",
         "why": "Ela funciona com qualquer número de partições."
       },
       {
@@ -277,7 +277,7 @@
     "prompt": "Um tópico guarda um ano de eventos, e quase ninguém lê nada com mais de uma semana. O que o armazenamento em camadas muda?",
     "choices": [
       {
-        "text": "Os segmentos antigos vão para um object storage mais barato",
+        "text": "Segmentos velhos vão para o object storage",
         "why": "Isso: a maior linha da conta vai para o armazenamento mais barato."
       },
       {
@@ -308,19 +308,19 @@
     "prompt": "Um serviço gerenciado cobra a vazão de saída por byte. O que multiplica essa linha para um tópico?",
     "choices": [
       {
-        "text": "O número de grupos de consumidores que o leem",
+        "text": "Quantos grupos o leem",
         "why": "Isso: todo grupo lê o tópico inteiro."
       },
       {
-        "text": "O número de partições",
+        "text": "O número de partições do tópico",
         "why": "Partições dividem os bytes; não os multiplicam."
       },
       {
-        "text": "A retenção",
+        "text": "O tamanho da retenção",
         "why": "Retenção é a linha de armazenamento."
       },
       {
-        "text": "O codec de compressão",
+        "text": "Qual codec de compressão ele usa",
         "why": "A compressão divide, não multiplica."
       }
     ]
@@ -329,7 +329,7 @@
     "prompt": "Num modelo que cobra por hora de partição, uma equipe cria 100 partições \"para depois\" num tópico calmo. O que há de errado nisso?",
     "choices": [
       {
-        "text": "O Kafka recusa mais de 50 partições",
+        "text": "O Kafka recusa mais de 50 partições num tópico",
         "why": "Ele permite muito mais; o problema é a conta."
       },
       {
@@ -337,7 +337,7 @@
         "why": "Podem; acrescentar move chaves, como a lição 3 avisa, mas é possível."
       },
       {
-        "text": "Cada partição ociosa é cobrada a toda hora desde hoje",
+        "text": "Partição ociosa é cobrada por hora",
         "why": "Isso: o preço é pago antes de a necessidade chegar."
       },
       {
@@ -354,7 +354,7 @@
         "why": "Ficou acima de meio gigabyte."
       },
       {
-        "text": "Ficou acima de meio gigabyte",
+        "text": "Continuou acima de meio gigabyte, sem cair",
         "why": "Isso: o heap fica reservado enquanto o nó roda."
       },
       {
@@ -371,15 +371,15 @@
     "prompt": "Qual necessidade da Ponto Final é o melhor caso, para a lição, de um stream em vez de um batch?",
     "choices": [
       {
-        "text": "O relatório mensal de vendas",
+        "text": "O relatório mensal de vendas para o dono",
         "why": "Lido depois: um batch noturno o atende por vinte minutos."
       },
       {
-        "text": "Carregar o warehouse",
+        "text": "Carregar o warehouse toda noite",
         "why": "Ele pode ler o mesmo log uma vez por noite."
       },
       {
-        "text": "Treinar um modelo de demanda",
+        "text": "Treinar um modelo de demanda com o ano passado",
         "why": "A entrada é fixa; batch sai mais barato."
       },
       {
@@ -396,15 +396,15 @@
         "why": "A replicação já está na aritmética; procure o que não está."
       },
       {
-        "text": "Outra coisa crescendo: partições sem uso, grupos sem leitor, retenção não escolhida",
+        "text": "Outra coisa que cresce sozinha",
         "why": "Isso: a diferença é uma lista de padrões que ninguém olhou."
       },
       {
-        "text": "Compressão forte demais",
+        "text": "Compressão forte demais para os dados",
         "why": "Compressão mais forte baixa o armazenamento, não o triplica."
       },
       {
-        "text": "Nada; contas sempre são maiores que a aritmética",
+        "text": "Nada; contas sempre ficam acima da aritmética",
         "why": "O ponto da aritmética é tornar a diferença visível."
       }
     ]

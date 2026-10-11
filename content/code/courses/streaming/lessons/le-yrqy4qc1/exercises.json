@@ -169,7 +169,7 @@
         "why": "The broker stores what each client chose, and the two choose differently."
       },
       {
-        "text": "One book's changes land in two partitions with no order between them; set partitioner to murmur2_random in the Python client",
+        "text": "A book's updates split across two partitions, unordered; switch the librdkafka hash to murmur2_random",
         "correct": true,
         "why": "Right. Then both clients hash the same way."
       },
@@ -267,25 +267,25 @@
     ]
   },
   {
-    "id": "ex-5wtjr6zc",
+    "id": "ex-0mtdd07z",
     "version": 1,
     "section": "offsets",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "A partition's earliest offset is 7513 and its log-end offset is 20000. How many messages does it hold now, with no compaction?",
-    "value": 12487,
+    "prompt": "A partition's earliest offset is 7081 and its log-end offset is 20000. How many messages does it hold now, with no compaction?",
+    "value": 12919,
     "tolerance": 0,
     "unit": "messages"
   },
   {
-    "id": "ex-a7h1a22f",
+    "id": "ex-aarpjpyf",
     "version": 1,
     "section": "on-disk",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What is the name of a segment file like 00000000000000007513.log?",
+    "prompt": "What is the name of a segment file like 00000000000000007081.log?",
     "choices": [
       {
         "text": "The time the segment was created",
@@ -341,31 +341,31 @@
     ]
   },
   {
-    "id": "ex-pwmze0vz",
+    "id": "ex-schp9qbq",
     "version": 1,
     "section": "on-disk",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "kafka-dump-log.sh shows a batch line with count: 150 before the messages. What does it tell you about how they arrived?",
+    "prompt": "kafka-dump-log.sh shows a batch line with count: 761 before the messages. What does it tell you about how they arrived?",
     "choices": [
       {
-        "text": "The producer sent 150 messages in one batch, stored as written",
+        "text": "The producer sent 761 messages in one batch, stored as written",
         "correct": true,
         "why": "Right. The broker stores the producer's batch whole; lesson 4 changes its size."
       },
       {
-        "text": "150 consumers have read them",
+        "text": "761 consumers have read them",
         "correct": false,
         "why": "The log does not record readers."
       },
       {
-        "text": "The broker waited for 150 messages before writing anything to disk",
+        "text": "The broker waited for 761 messages before writing anything to disk",
         "correct": false,
         "why": "The grouping comes from the producer, not from the broker waiting."
       },
       {
-        "text": "The segment is full after 150 messages",
+        "text": "The segment is full after 761 messages",
         "correct": false,
         "why": "A segment closes by size or age, and holds many batches."
       }
@@ -403,14 +403,14 @@
     ]
   },
   {
-    "id": "ex-hrbmkntt",
+    "id": "ex-fehgyys2",
     "version": 1,
     "section": "retention",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "old-sales had segments starting at offsets 0, 7513 and 14965. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?",
-    "value": 7513,
+    "prompt": "old-sales had segments starting at offsets 0, 7081 and 14354. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?",
+    "value": 7081,
     "tolerance": 0,
     "unit": "offset"
   },
@@ -429,7 +429,7 @@
         "why": "Topic settings apply without a restart; the check is periodic."
       },
       {
-        "text": "The broker checks retention every five minutes",
+        "text": "The broker only looks every five minutes",
         "correct": true,
         "why": "Right. log.retention.check.interval.ms is 300000 by default."
       },

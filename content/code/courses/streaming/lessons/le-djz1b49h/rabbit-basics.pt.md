@@ -142,7 +142,7 @@ ana: packing web-0005 (redelivered)
 ana: stopped after 5 orders
 ```
 
-Siga o `web-0005`. O servidor o deu à Bia; a Bia o embalou e morreu antes de avisar. **A conexão
+A Ana já tinha dois pedidos prontos quando a Bia entrou; dali em diante o servidor os distribuiu alternando, o `web-0003` para a Bia, o `web-0004` para a Ana, o `web-0005` para a Bia, porque cada embalador segura um pedido não confirmado por vez e só pega o próximo quando termina. Siga o `web-0005`. O servidor o deu à Bia; a Bia o embalou e morreu antes de avisar. **A conexão
 fechar bastou para o servidor saber**: uma mensagem não confirmada cujo consumidor sumiu volta para
 a fila, e a Ana a recebeu, marcada como `redelivered`. Nada se perdeu. E o `web-0005` foi embalado
 duas vezes — uma pela Bia, cujo trabalho não foi a lugar nenhum, outra pela Ana. Isso é entrega

@@ -8,8 +8,8 @@ when they write, consumers ask it for a schema when they read, and the schemas t
 stored in it, numbered. **Kafka does not ship one**, and nothing in the broker knows a registry
 exists: as far as Kafka is concerned, a message is still a key and a value of bytes.
 
-The best-known registry is Confluent's, and its source licence does not allow it to be offered
-as a service by anybody but Confluent. This course uses **Apicurio Registry**, an Apache-licensed
+The best-known registry is Confluent's, published under the Confluent Community License, which
+forbids offering it as a hosted service that competes with Confluent's own. This course uses **Apicurio Registry**, an Apache-licensed
 registry from Red Hat that also answers on Confluent's API, so the Python client you already
 have talks to it unchanged. Version 3.3.3 is one archive on Maven Central, the repository Java
 libraries are published to, and it runs on the Java you installed in lesson 1.

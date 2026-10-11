@@ -29,7 +29,15 @@ resposta muda para algumas chaves. O Kafka deixa acrescentar partições a um t�
 única mensagem existente, então depois da mudança **as mensagens antigas de uma chave ficam numa
 partição e as novas em outra**:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic shops --partitions 4
+ubuntu@stream:~/work$ python keys.py --partitioner murmur2_random shops recife=4p olinda=4p caruaru=4p natal=4p joao-pessoa=4p
+recife       partition 0  offset 5
+caruaru      partition 0  offset 6
+olinda       partition 1  offset 8
+natal        partition 2  offset 2
+joao-pessoa  partition 2  offset 3
+```
 
 Com três partições, o `murmur2_random` mandava o Recife para a 2, Olinda e João Pessoa para a 0, e
 Caruaru e Natal para a 1. Com quatro, Recife e Caruaru foram para a 0, Olinda para a 1, e Natal e João
@@ -43,7 +51,12 @@ hash por acaso dá o mesmo resto fica no lugar, e com cinco chaves nenhuma ficou
 
 Remover partições não é possível de jeito nenhum:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic shops --partitions 2
+Error while executing topic command : The topic shops currently has 4 partition(s); 2 would not be an increase.
+[2026-10-10 17:01:51,108] ERROR org.apache.kafka.common.errors.InvalidPartitionsException: The topic shops currently has 4 partition(s); 2 would not be an increase.
+ (org.apache.kafka.tools.TopicCommand)
+```
 
 `2 would not be an increase`. Uma partição guarda mensagens e offsets em que consumidores registraram
 posições, e juntar duas delas daria às duas uma ordem nova e quebraria todo offset registrado, então o

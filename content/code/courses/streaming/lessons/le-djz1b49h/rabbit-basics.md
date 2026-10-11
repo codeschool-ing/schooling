@@ -142,7 +142,7 @@ ana: packing web-0005 (redelivered)
 ana: stopped after 5 orders
 ```
 
-Follow `web-0005`. The server gave it to Bia; Bia packed it and died before saying so. **The
+Ana had two orders done before Bia joined; from then on the server dealt them out in turn, `web-0003` to Bia, `web-0004` to Ana, `web-0005` to Bia, because each packer holds one unacknowledged order at a time and takes the next only when it has finished. Follow `web-0005`. The server gave it to Bia; Bia packed it and died before saying so. **The
 connection closing was enough for the server to know**: an unacknowledged message whose consumer
 has gone goes back on the queue, and Ana got it, marked `redelivered`. Nothing was lost. And
 `web-0005` was packed twice — once by Bia, whose work went nowhere, once by Ana. That is
