@@ -1058,6 +1058,57 @@ def l11_peeking(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 12
+
+def retention_table():
+    c = csv('customers.csv', parse_dates=['signup'])
+    o = csv('orders.csv', parse_dates=['date']).merge(c[['customer', 'signup']], on='customer')
+    o['cohort'] = o['signup'].dt.to_period('M')
+    o['month'] = (o['date'].dt.to_period('M') - o['cohort']).apply(lambda d: d.n)
+    size = c.groupby(c['signup'].dt.to_period('M')).size()
+    return o.groupby(['cohort', 'month'])['customer'].nunique().unstack().div(size, axis=0) * 100
+
+
+@figure('l12-heatmap', 12)
+def l12_heatmap(lang):
+    r = retention_table().loc['2024-01':'2025-06', list(range(13))]
+    t = {'en': dict(
+        label='A grid of 18 cohorts, January 2024 to June 2025, against months 0 to 12 since signup. '
+              'The shade of each cell is the share of the cohort that ordered that month: full in '
+              'month 0, fading to around a quarter by month 12. The bottom right is empty, a staircase '
+              'of months that have not happened yet.',
+        x='months since signup', y='cohort', empty='not happened yet',
+        cap='Each row is a group of customers growing older; each column is one age. The empty '
+            'triangle is the future, and it is why newer cohorts can only be compared at the ages '
+            'they have reached.'),
+        'pt': dict(
+        label='Uma grade de 18 coortes, de janeiro de 2024 a junho de 2025, contra os meses 0 a 12 '
+              'desde o cadastro. O tom de cada célula é a fração da coorte que pediu naquele mês: '
+              'cheio no mês 0, se apagando até cerca de um quarto no mês 12. O canto de baixo à '
+              'direita está vazio, uma escada de meses que ainda não aconteceram.',
+        x='meses desde o cadastro', y='coorte', empty='ainda não aconteceu',
+        cap='Cada linha é um grupo de clientes envelhecendo; cada coluna é uma idade. O triângulo '
+            'vazio é o futuro, e é por isso que coortes mais novas só podem ser comparadas nas '
+            'idades a que chegaram.')}[lang]
+    f = Fig('l12-heatmap', 620, 360, t['label'])
+    x0, y0, cw, ch = 100, 40, 36, 17
+    for j in range(13):
+        f.text(x0 + j * cw + cw / 2, y0 - 10, str(j), size=9.5, fill='--paper-dim', mono=True)
+    f.text(x0 + 13 * cw / 2, y0 - 26, t['x'], size=10, weight='600')
+    for i, (cohort, row) in enumerate(r.iterrows()):
+        y = y0 + i * ch
+        f.text(x0 - 8, y + ch / 2, str(cohort), size=9, anchor='end', fill='--paper-dim', mono=True)
+        for j in range(13):
+            v = row[j]
+            x = x0 + j * cw
+            if pd.isna(v):
+                continue
+            f.path(f'M{x + 1:.1f} {y + 1:.1f} h{cw - 2} v{ch - 2} h{-(cw - 2)} Z', stroke=None,
+                   width=0, fill='--phosphor', opacity=round(0.12 + 0.88 * v / 100, 2))
+    f.text(x0 + 10.5 * cw, y0 + 16.5 * ch, t['empty'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
