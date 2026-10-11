@@ -60,20 +60,20 @@ def join(lang):
             cx += w
 
     f.text(10, 16, t['prod'], size=11, anchor='start', weight='600')
-    f.text(440, 16, t['copy'], size=11, anchor='start', weight='600')
-    for x in (10, 440):
+    f.text(430, 16, t['copy'], size=11, anchor='start', weight='600')
+    for x in (10, 430):
         f.text(x, 42, t['acc'], size=10, anchor='start', fill='--paper-dim')
         f.text(x, 118, t['ord'], size=10, anchor='start', fill='--paper-dim')
     row(10, 52, [(92, name, '--paper'), (136, email, '--paper')])
     row(10, 128, [(40, '1003', '--paper'), (136, email, '--paper'), (52, 'Hamlet', '--paper')])
-    row(440, 52, [(92, mask(name), '--paper'), (180, code, '--phosphor')])
-    row(440, 128, [(40, '1003', '--paper'), (180, code, '--phosphor'), (52, 'Hamlet', '--paper')])
+    row(430, 52, [(92, mask(name), '--paper'), (196, code, '--phosphor')])
+    row(430, 128, [(40, '1003', '--paper'), (196, code, '--phosphor'), (52, 'Hamlet', '--paper')])
     box(f, 285, 72, 128, 64, t['hash'], stroke='--amber', fill='--scan',
         fills=['--paper', '--paper-dim', '--paper-dim'], weights=['600', None, None], size=10, lh=15)
     arrow(f, 238, 65, 282, 92)
     arrow(f, 238, 141, 282, 118)
-    arrow(f, 416, 92, 437, 66)
-    arrow(f, 416, 118, 437, 140)
+    arrow(f, 416, 92, 427, 66)
+    arrow(f, 416, 118, 427, 140)
     f.line(600, 79, 600, 127, stroke='--phosphor', width=1.4, dash='3 3')
     f.text(716, 174, t['same'], size=10, anchor='end', fill='--phosphor')
     f.line(10, 200, 710, 200, stroke='--wire', width=1, dash='4 3')
