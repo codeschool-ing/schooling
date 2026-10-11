@@ -1,0 +1,534 @@
+[
+ {
+  "id": "ex-9r16tehw",
+  "version": 1,
+  "section": "leaks",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A payment key was committed, pushed, and deleted in the next commit. What comes first?",
+  "hint": "Which step makes every copy harmless?",
+  "choices": [
+   {
+    "text": "Rewrite the history with git filter-repo and force-push it",
+    "correct": false,
+    "why": "That tidies this repository and recalls no clone that already exists."
+   },
+   {
+    "text": "Revoke the key at the provider and deploy a new one",
+    "correct": true,
+    "why": "Right. From then on every copy of the history holds a dead key."
+   },
+   {
+    "text": "Add the settings file to .gitignore",
+    "correct": false,
+    "why": "That stops future commits of the file; the past commit is untouched."
+   },
+   {
+    "text": "Delete the repository and push a fresh one",
+    "correct": false,
+    "why": "Clones, forks and caches of the old one still hold the key."
+   }
+  ]
+ },
+ {
+  "id": "ex-xdgt657a",
+  "version": 1,
+  "section": "leaks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is a key that reached a shared repository treated as known, even if nobody seems to have looked?",
+  "hint": "Who has a copy of the history?",
+  "choices": [
+   {
+    "text": "Every clone, fork and cache already holds it",
+    "correct": true,
+    "why": "Right. The copies are out of your reach, so the key is assumed to be too."
+   },
+   {
+    "text": "Git publishes each commit to a public log of changes",
+    "correct": false,
+    "why": "Git keeps history in the repository; nothing is published unless the repository is."
+   },
+   {
+    "text": "Deleting a line takes days to reach the other clones",
+    "correct": false,
+    "why": "A deletion is a new commit; the old commit stays in every copy regardless of time."
+   },
+   {
+    "text": "The scanner sends each finding to the provider",
+    "correct": false,
+    "why": "gitleaks reports to you, on your machine; it tells no provider anything."
+   }
+  ]
+ },
+ {
+  "id": "ex-76ssrrbw",
+  "version": 1,
+  "section": "leaks",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each requirement of the test plan to what holds it.",
+  "hint": "The table at the end of the first reading section.",
+  "pairs": [
+   {
+    "left": "no secret in any commit of the history",
+    "right": "a history scan on every push"
+   },
+   {
+    "left": "no secret in a commit to begin with",
+    "right": "the same scanner on what is staged"
+   },
+   {
+    "left": "the code holds no secret and no default for one",
+    "right": "configuration from the environment, reviewed"
+   },
+   {
+    "left": "a found secret is rotated, not only deleted",
+    "right": "the response procedure and its record"
+   }
+  ],
+  "right_distractors": [
+   "a DAST scan of the running service"
+  ]
+ },
+ {
+  "id": "ex-p4r8yfp2",
+  "version": 1,
+  "section": "gitleaks",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In leaky, gitleaks dir reports no leaks and gitleaks git reports one in commit ad0a6bc. What does that say?",
+  "hint": "What does each subcommand read?",
+  "choices": [
+   {
+    "text": "The second scan is a false positive",
+    "correct": false,
+    "why": "The key really is in ad0a6bc, as git show proved."
+   },
+   {
+    "text": "An old commit still holds the key",
+    "correct": true,
+    "why": "Right. dir reads the disk, git reads every commit."
+   },
+   {
+    "text": "The deletion has not been committed yet",
+    "correct": false,
+    "why": "It was: the log shows the second commit, and dir reads the file after it."
+   },
+   {
+    "text": "gitleaks dir skips files ending in .ini",
+    "correct": false,
+    "why": "It read settings.ini; there was simply no key left in it."
+   }
+  ]
+ },
+ {
+  "id": "ex-bpkt8081",
+  "version": 1,
+  "section": "gitleaks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "gitleaks stdin reports nothing for payment_api_key = \"fake-7Zq2vRmX9kLp4Tn8Wc3Yb6Hd1Jf5G\". Why?",
+  "hint": "Change one word and it is reported.",
+  "choices": [
+   {
+    "text": "The value is too short for the generic rule",
+    "correct": false,
+    "why": "The same length with another prefix is reported."
+   },
+   {
+    "text": "Input from a pipe is checked by fewer rules",
+    "correct": false,
+    "why": "The second line, also from stdin, is reported."
+   },
+   {
+    "text": "It skips values that contain words like fake",
+    "correct": true,
+    "why": "Right. So a test value has to look like a real key to be found."
+   },
+   {
+    "text": "The name payment_api_key matches no rule",
+    "correct": false,
+    "why": "It matched generic-api-key in settings.ini with a random value."
+   }
+  ]
+ },
+ {
+  "id": "ex-07dxxpjt",
+  "version": 1,
+  "section": "gitleaks",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With its default settings, what exit code does gitleaks give when it finds a leak?",
+  "hint": "The line after the findings in the history scan.",
+  "value": 1,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-ybk8nz4a",
+  "version": 1,
+  "section": "gitleaks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which field of a finding names that one finding, so it can be recorded as dealt with?",
+  "hint": "Commit, file, rule and line together.",
+  "choices": [
+   {
+    "text": "RuleID",
+    "correct": false,
+    "why": "Many findings share a rule."
+   },
+   {
+    "text": "Fingerprint",
+    "correct": true,
+    "why": "Right. It joins commit, file, rule and line."
+   },
+   {
+    "text": "Entropy",
+    "correct": false,
+    "why": "A measure of randomness, the same for the same value anywhere."
+   },
+   {
+    "text": "Commit",
+    "correct": false,
+    "why": "One commit can hold several findings."
+   }
+  ]
+ },
+ {
+  "id": "ex-btz42hs6",
+  "version": 1,
+  "section": "environment",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After *.env went into .gitignore, gitleaks dir still reported payment.env. Why is that right?",
+  "hint": "dir and git answer different questions.",
+  "choices": [
+   {
+    "text": "The ignore rule takes effect after the next commit",
+    "correct": false,
+    "why": "check-ignore showed it already applied; and dir does not consult it."
+   },
+   {
+    "text": "payment.env had been committed before the rule",
+    "correct": false,
+    "why": "It never was; the history scan still found only ad0a6bc."
+   },
+   {
+    "text": "The key really is in a file on this disk",
+    "correct": true,
+    "why": "Right. dir says what the machine holds, ignored files included."
+   },
+   {
+    "text": "gitleaks reads .gitignore as a file of secrets",
+    "correct": false,
+    "why": "The finding names payment.env, line 3, not .gitignore."
+   }
+  ]
+ },
+ {
+  "id": "ex-atkv450t",
+  "version": 1,
+  "section": "environment",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "account.py was started with PAYMENT_API_KEY in its environment, as ana. Who can read the value from /proc/<pid>/environ?",
+  "hint": "What did nobody get?",
+  "choices": [
+   {
+    "text": "ana, who runs it, and root",
+    "correct": true,
+    "why": "Right. The environment is protected as well as that account, and no better."
+   },
+   {
+    "text": "Any user logged in to the machine",
+    "correct": false,
+    "why": "nobody got Permission denied."
+   },
+   {
+    "text": "Only root, through sudo",
+    "correct": false,
+    "why": "ana read it with a plain tr, no sudo."
+   },
+   {
+    "text": "No one, once the process has started",
+    "correct": false,
+    "why": "The file holds the environment for the whole life of the process."
+   }
+  ]
+ },
+ {
+  "id": "ex-nf487wc0",
+  "version": 1,
+  "section": "environment",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which way of reading a payment key in Python is the one a tester should expect in review?",
+  "hint": "What happens when the variable is missing?",
+  "choices": [
+   {
+    "text": "os.environ.get(\"PAYMENT_API_KEY\", \"nft7Zq2vRmX9kLp4\")",
+    "correct": false,
+    "why": "The default puts a key back in the file."
+   },
+   {
+    "text": "os.environ[\"PAYMENT_API_KEY\"]",
+    "correct": true,
+    "why": "Right. A missing key stops the service at start-up instead of running with a key in the code."
+   },
+   {
+    "text": "A value under [payment] in the committed settings.ini",
+    "correct": false,
+    "why": "That is the leak this lesson started with."
+   },
+   {
+    "text": "The ?key= parameter of each request",
+    "correct": false,
+    "why": "An address is written into logs and history, as lesson 17 showed for tokens."
+   }
+  ]
+ },
+ {
+  "id": "ex-x0dr1a4t",
+  "version": 1,
+  "section": "environment",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A service that stores secrets encrypted, gives each to the identity allowed to read it and records every read is a secret ___.",
+  "hint": "Vault is one.",
+  "blanks": [
+   {
+    "accept": [
+     "manager"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-w0f5nbf6",
+  "version": 1,
+  "section": "pre-commit",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does --staged make gitleaks read in the pre-commit hook?",
+  "hint": "The hook runs before the commit exists.",
+  "choices": [
+   {
+    "text": "The whole history, from the first commit",
+    "correct": false,
+    "why": "That is the pipeline's scan; in a hook it would be slow on every commit."
+   },
+   {
+    "text": "Every file in the directory, ignored ones too",
+    "correct": false,
+    "why": "That is gitleaks dir."
+   },
+   {
+    "text": "The changes about to be committed",
+    "correct": true,
+    "why": "Right. Only what this commit would add."
+   },
+   {
+    "text": "The last commit that was pushed",
+    "correct": false,
+    "why": "A hook before a commit has nothing to do with the last push."
+   }
+  ]
+ },
+ {
+  "id": "ex-vk3qfkj4",
+  "version": 1,
+  "section": "pre-commit",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The team installs the hook. Why does the pipeline still scan the history on every push?",
+  "hint": "Where does the hook live, and what skips it?",
+  "choices": [
+   {
+    "text": "The hook reads fewer rules than the history scan",
+    "correct": false,
+    "why": "The same gitleaks applies the same rules; it reads less input, not fewer rules."
+   },
+   {
+    "text": "A pipeline scan is faster than a hook",
+    "correct": false,
+    "why": "It is slower, reading every commit; speed is not why it exists."
+   },
+   {
+    "text": "Hooks run only on the first commit of a clone",
+    "correct": false,
+    "why": "The hook ran on every commit in leaky, and refused one."
+   },
+   {
+    "text": "It lives in .git and --no-verify skips it",
+    "correct": true,
+    "why": "Right. The bypass put a second leak in the history, and the scan caught it."
+   }
+  ]
+ },
+ {
+  "id": "ex-hjxh3rwe",
+  "version": 1,
+  "section": "pre-commit",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why was git reset --hard HEAD~1 enough to remove the commit made with --no-verify?",
+  "hint": "Who else had that commit?",
+  "choices": [
+   {
+    "text": "The key in that commit had been redacted",
+    "correct": false,
+    "why": "--redact hides the value in gitleaks's output; the commit held the real value."
+   },
+   {
+    "text": "It had never been pushed, so no copy existed",
+    "correct": true,
+    "why": "Right. Once pushed, the first step would be rotation."
+   },
+   {
+    "text": "reset also removes the commit from every clone",
+    "correct": false,
+    "why": "reset changes this machine only."
+   },
+   {
+    "text": "The hook ran again during the reset",
+    "correct": false,
+    "why": "A pre-commit hook runs before a commit, not on a reset."
+   }
+  ]
+ },
+ {
+  "id": "ex-t3ta5bt7",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A real key was pushed to the shared repository. Put the response in order.",
+  "hint": "Make the key worthless before anything else.",
+  "items": [
+   "revoke the key at the provider and issue a new one",
+   "deploy the new key",
+   "read the provider's log for uses of the old key",
+   "decide whether to rewrite the history",
+   "record the finding's fingerprint, with the reason"
+  ]
+ },
+ {
+  "id": "ex-s0jpx8vq",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The pipeline's history scan has failed on every push for a month, over a key that was rotated on day one. What should the team do?",
+  "hint": "Accept one finding, not the rule.",
+  "choices": [
+   {
+    "text": "Switch off the generic-api-key rule for the whole scan",
+    "correct": false,
+    "why": "Then every new generic key passes too."
+   },
+   {
+    "text": "Mark the scan job as allowed to fail in the pipeline",
+    "correct": false,
+    "why": "A job that may fail reports nothing anybody reads, new leaks included."
+   },
+   {
+    "text": "List its fingerprint in .gitleaksignore, with why",
+    "correct": true,
+    "why": "Right. One commit, file, rule and line are accepted; every new finding still fails."
+   },
+   {
+    "text": "Rotate the same key once more, then push again",
+    "correct": false,
+    "why": "The scan reads the history, which rotation does not change."
+   }
+  ]
+ },
+ {
+  "id": "ex-tkkqr7tv",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A service reads its key from an environment variable. Which of these can carry the key out of it? Choose every one.",
+  "hint": "Follow the copies, not the code.",
+  "choices": [
+   {
+    "text": "A helper script the service starts",
+    "correct": true,
+    "why": "Right. A child process inherits the whole environment."
+   },
+   {
+    "text": "A debug page that lists the environment",
+    "correct": true,
+    "why": "Right. It prints the value to whoever opens it."
+   },
+   {
+    "text": "The line os.environ[\"PAYMENT_API_KEY\"] in the committed source code",
+    "correct": false,
+    "why": "The code holds the name, not the value."
+   },
+   {
+    "text": "An error tracker that captures the environment with each exception",
+    "correct": true,
+    "why": "Right. The value travels with every report."
+   },
+   {
+    "text": "Another user, without privileges, reading /proc/<pid>/environ",
+    "correct": false,
+    "why": "nobody got Permission denied."
+   }
+  ]
+ },
+ {
+  "id": "ex-2mx27233",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "To check that a CI job received the database password, a colleague adds echo \"$DB_PASSWORD\" to it. What is wrong?",
+  "hint": "Where does a job's output end up?",
+  "choices": [
+   {
+    "text": "echo strips the special characters out of the value",
+    "correct": false,
+    "why": "Whatever it prints, it prints the secret into a log."
+   },
+   {
+    "text": "CI variables are unreadable inside a job",
+    "correct": false,
+    "why": "The job has to read it to use it."
+   },
+   {
+    "text": "It writes the secret into the job's log",
+    "correct": true,
+    "why": "Right. Show that it is set, for example its length, and never the value."
+   },
+   {
+    "text": "The job leaks it to gitleaks, which keeps a copy",
+    "correct": false,
+    "why": "gitleaks keeps nothing; the log is the leak."
+   }
+  ]
+ }
+]
