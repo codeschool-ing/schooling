@@ -85,7 +85,14 @@ def buckets():
         f.text(x + (w - 28) / 2, y0 - h - 10, str(n), size=10, mono=True)
         f.text(x + (w - 28) / 2, y0 + 16, f'le {name}', size=10)
     ty = y0 - target * scale
-    f.line(x0 - 10, ty, x0 + w * 6 + 10, ty, stroke='--amber', width=1.3, dash='5 4')
+    # the line stops at every bar that rises above it, so it never runs through one
+    left = x0 - 10
+    for i, (name, n) in enumerate(BUCKETS):
+        x = x0 + i * w + 14
+        if y0 - n * scale - 18 < ty:            # the bar, or the count written above it
+            f.line(left, ty, x - 3, ty, stroke='--amber', width=1.3, dash='5 4')
+            left = x + w - 28 + 3
+    f.line(left, ty, x0 + w * 6 + 10, ty, stroke='--amber', width=1.3, dash='5 4')
     f.text(x0 - 14, ty, '915', size=10, anchor='end', mono=True, fill='--amber')
     f.text(x0 - 4, ty - 12, T('95% of 963', '95% de 963'), size=10, anchor='start', fill='--amber')
     f.text(360, 20, T('requests that took at most this long', 'requisições que levaram no máximo isto'),

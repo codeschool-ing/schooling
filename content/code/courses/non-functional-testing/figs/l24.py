@@ -69,7 +69,7 @@ def routing():
     f.lines(315, 160, [T('group', 'agrupa'), T('inhibit', 'inibe'), T('route by label', 'encaminha pelo rótulo'),
                        T('repeat every 4h', 'repete a cada 4h')], size=10, gap=17)
     f.arrow([(402, 120), (476, 80)], stroke='--amber')
-    f.text(440, 84, 'severity="page"', size=9.5, mono=True, anchor='end', fill='--amber')
+    f.text(406, 140, 'severity="page"', size=9.5, mono=True, anchor='start', fill='--amber')
     f.arrow([(402, 190), (476, 228)], stroke='--paper-dim')
     f.text(446, 226, T('the rest', 'o resto'), size=9.5, anchor='end')
     f.rect(480, 50, 220, 70, stroke='--amber', fill='--panel', width=1.4)

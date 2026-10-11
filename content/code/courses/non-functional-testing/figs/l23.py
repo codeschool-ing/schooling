@@ -6,19 +6,20 @@ from figures import Fig, T, figure
 def interval():
     f = Fig('l23-interval', 720, 250, T(
         'A time line of eight minutes with a check at every minute, drawn as a dot. The first three '
-        'checks pass. An outage begins just after the third check, shown as a shaded band running to '
+        'checks pass. An outage begins just after the third check, marked by a dashed line running to '
         'the end. The fourth check, almost a minute later, is the first to fail; the fifth fails '
         'too, and only then, with two failures in a row, is somebody told. Between the start of the '
         'outage and the person being told, nearly two intervals pass.',
         'Uma linha do tempo de oito minutos com uma verificação a cada minuto, desenhada como um '
         'ponto. As três primeiras passam. Uma queda começa logo depois da terceira verificação, '
-        'mostrada como uma faixa sombreada até o fim. A quarta verificação, quase um minuto depois, '
+        'marcada por uma linha tracejada até o fim. A quarta verificação, quase um minuto depois, '
         'é a primeira a falhar; a quinta falha também, e só então, com duas falhas seguidas, alguém '
         'é avisado. Entre o início da queda e o aviso à pessoa passam quase dois intervalos.'))
     x0, step, y = 70, 80, 120
-    start = x0 + 2 * step + 8
-    f.rect(start, 70, x0 + 7 * step + 20 - start, 100, stroke=None, fill='--scan', rx=0)
-    f.text(start + 6, 82, T('outage begins', 'a queda começa'), size=10, anchor='start', fill='--amber')
+    start = x0 + 2 * step + 24
+    f.line(start, 62, start, 178, stroke='--amber', width=1.3, dash='5 4')
+    f.line(start, 62, x0 + 7 * step + 20, 62, stroke='--amber', width=1.3, dash='5 4')
+    f.text(start + 6, 50, T('outage begins', 'a queda começa'), size=10, anchor='start', fill='--amber')
     f.line(x0 - 20, y, x0 + 7 * step + 20, y, stroke='--paper-dim', width=1.2)
     for i in range(8):
         x = x0 + i * step

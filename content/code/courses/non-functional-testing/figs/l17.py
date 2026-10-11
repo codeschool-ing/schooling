@@ -21,9 +21,8 @@ def escalation():
                       'duas direções, uma regra: a resposta é uma recusa'),
            size=11, weight='600', fill='--paper-dim')
     # levels
-    f.rect(40, 50, 640, 70, stroke='--wire', fill='--panel', width=1.1)
+    f.line(40, 150, 680, 150, stroke='--wire', width=1.1, dash='4 4')
     f.text(56, 64, T('staff', 'equipe'), size=10, anchor='start', fill='--paper-dim', italic=True)
-    f.rect(40, 160, 640, 90, stroke='--wire', fill='--panel', width=1.1)
     f.text(56, 174, T('customer', 'cliente'), size=10, anchor='start', fill='--paper-dim', italic=True)
     # staff list
     f.rect(140, 70, 170, 34, stroke='--phosphor', fill='--scan', width=1.4)
@@ -65,16 +64,17 @@ def session():
     f.text(360, 22, T('a token is a password with an end', 'um token é uma senha com fim'),
            size=11, weight='600', fill='--paper-dim')
     x0, xl, xe, x1 = 80, 430, 560, 690
-    f.line(40, 120, x1, 120, stroke='--wire', width=1.1, arrow=True)
+    f.line(40, 120, x0, 120, stroke='--wire', width=1.1)
+    f.line(xe, 120, x1, 120, stroke='--wire', width=1.1, arrow=True)
     f.rect(x0, 98, xe - x0, 44, stroke='--phosphor', fill='--scan', width=1.4)
     for x in (130, 190, 250, 310, 370):
-        f.line(x, 104, x, 136, stroke='--phosphor', width=1.2)
+        f.circle(x, 120, 4, fill='--phosphor')
     f.text(250, 84, T('every request accepted', 'toda requisição aceita'), size=10)
     f.text(x0, 160, T('sign-in', 'login'), size=10, weight='600')
-    f.line(xl, 92, xl, 148, stroke='--amber', width=1.6, dash='5 4')
+    f.line(xl, 144, xl, 150, stroke='--amber', width=1.6)
     f.text(xl, 160, T('logout', 'logout'), size=10, weight='600', fill='--amber')
     f.text(xl, 174, T('row deleted', 'linha apagada'), size=9.5, fill='--paper-dim')
-    f.line(xe, 92, xe, 148, stroke='--amber', width=1.6)
+    f.line(xe, 144, xe, 150, stroke='--amber', width=1.6)
     f.text(xe, 160, T('expiry', 'expiração'), size=10, weight='600', fill='--amber')
     f.text(xe, 174, T('1800 s after sign-in', '1800 s após o login'), size=9.5, fill='--paper-dim')
     f.text(626, 104, '401', size=10.5, weight='600', mono=True, fill='--amber')
