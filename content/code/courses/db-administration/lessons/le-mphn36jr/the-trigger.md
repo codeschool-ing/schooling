@@ -43,12 +43,12 @@ visibility map set and its rows frozen. You have already seen it fire:
 shop=# SELECT relname, last_analyze, last_autovacuum, autovacuum_count FROM pg_stat_user_tables WHERE relname IN ('customers', 'orders');
   relname  |         last_analyze          |        last_autovacuum        | autovacuum_count 
 -----------+-------------------------------+-------------------------------+------------------
- customers | 2026-10-10 16:39:58.473499-03 | 2026-10-10 16:40:43.441353-03 |                1
- orders    | 2026-10-10 16:39:59.002546-03 | 2026-10-10 16:40:43.699616-03 |                1
+ customers | 2026-10-10 16:48:11.409611-03 | 2026-10-10 16:49:15.095607-03 |                1
+ orders    | 2026-10-10 16:48:11.507019-03 | 2026-10-10 16:49:15.367302-03 |                1
 (2 rows)
 ```
 
-`last_analyze` is the `ANALYZE` at the end of `shop.sql`. Autovacuum visited both tables less than a
+`last_analyze` is the `ANALYZE` at the end of `shop.sql`. Autovacuum visited both tables about a
 minute later, on the launcher's next round, although nothing had been updated or deleted: a million
 inserted rows were well past 1,000 plus a fifth of a million.
 
@@ -78,7 +78,7 @@ Wait a minute for the launcher's next round, then look:
 shop=# SELECT n_dead_tup, last_autovacuum, last_autoanalyze FROM pg_stat_user_tables WHERE relname = 'orders_copy';
  n_dead_tup | last_autovacuum |       last_autoanalyze        
 ------------+-----------------+-------------------------------
-     150000 |                 | 2026-10-10 16:41:43.808939-03
+     150000 |                 | 2026-10-10 16:50:15.527774-03
 (1 row)
 
 shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id > 150000 AND id <= 250000;
@@ -88,7 +88,13 @@ UPDATE 100000
 The worker came, analysed the table and left the 150,000 dead versions where they were. A second
 `UPDATE` of 100,000 rows takes the count to 250,000. A minute later:
 
-<<<the-trigger 7>>>
+```
+shop=# SELECT n_dead_tup, last_autovacuum, autovacuum_count FROM pg_stat_user_tables WHERE relname = 'orders_copy';
+ n_dead_tup |        last_autovacuum        | autovacuum_count 
+------------+-------------------------------+------------------
+          0 | 2026-10-10 16:51:15.411023-03 |                1
+(1 row)
+```
 
 **`last_autovacuum` has a time, `autovacuum_count` is 1 and `n_dead_tup` is back to 0.** That is the whole mechanism, and on
 a table of a million rows the defaults are reasonable.

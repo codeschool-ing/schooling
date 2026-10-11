@@ -81,7 +81,7 @@ ana@db:~$ sudo sh -c 'tail -n 1 /var/lib/postgresql/16/main/log/*.json' | jq .
 
 O `sh -c` está ali porque o diretório pertence a `postgres`: o `*` precisa ser expandido por um
 shell que consiga lê-lo. O `jq .` imprime a linha indentada. Cada parte do prefixo é um campo
-próprio — `user`, `dbname`, `pid`, `application_name` — e há alguns que prefixo nenhum tinha: o
+próprio: `user`, `dbname`, `pid`, `application_name`. Há alguns que prefixo nenhum tinha. o
 `state_code` é o SQLSTATE, `22012` para divisão por zero, que um programa consegue casar sem ler
 inglês, e o `backend_type` diz que tipo de processo escreveu a linha. O arquivo `.log` pequeno ao
 lado do JSON é o arquivo em texto puro do collector, que ele mantém para qualquer coisa escrita na

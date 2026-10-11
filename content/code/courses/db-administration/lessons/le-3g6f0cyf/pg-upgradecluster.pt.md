@@ -16,9 +16,9 @@ sudo apt install -y postgresql-17
 ```
 
 **A máquina da gravação não conseguiu alcançar esse repositório**, e o servidor dentro dela não tem
-rede nenhuma. O 17 dela foi compilado a partir do código-fonte da mesma versão, 17.10, e instalado
-nos mesmos lugares que o pacote usa — `/usr/lib/postgresql/17` para os programas,
-`/usr/share/postgresql/17` para o resto —, onde o postgresql-common o encontra exatamente como
+rede nenhuma. O 17 dela foi compilado a partir do código-fonte da mesma versão, 17.10. Foi instalado
+nos lugares que o pacote usa, `/usr/lib/postgresql/17` para os programas e
+`/usr/share/postgresql/17` para o resto, onde o postgresql-common o encontra exatamente como
 encontra o pacote. A única diferença visível é a string de versão: a sua traz o empacotamento do
 repositório entre parênteses depois de `17.10`, e a da gravação não tem nada depois.
 

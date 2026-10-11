@@ -10,9 +10,9 @@ tell you what it did, and **the first is a query worth keeping**:
 shop=# SELECT relname, n_live_tup, n_dead_tup, last_vacuum, last_autovacuum FROM pg_stat_user_tables ORDER BY n_dead_tup DESC;
    relname   | n_live_tup | n_dead_tup |          last_vacuum          |        last_autovacuum        
 -------------+------------+------------+-------------------------------+-------------------------------
- customers   |      50000 |          0 |                               | 2026-10-10 16:40:43.441353-03
- orders_copy |    1000000 |          0 | 2026-10-10 16:42:53.500473-03 | 2026-10-10 16:42:43.904485-03
- orders      |    1000000 |          0 |                               | 2026-10-10 16:40:43.699616-03
+ customers   |      50000 |          0 |                               | 2026-10-10 16:49:15.095607-03
+ orders_copy |    1000000 |          0 | 2026-10-10 16:51:25.061368-03 | 2026-10-10 16:51:15.411023-03
+ orders      |    1000000 |          0 |                               | 2026-10-10 16:49:15.367302-03
 (3 rows)
 ```
 
@@ -57,7 +57,7 @@ is over it. On the launcher's next round:
 
 ```
 ana@db:~$ sudo grep -A10 'automatic vacuum of table "shop.public.orders_copy"' /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:44:43.517 -03 [973] LOG:  automatic vacuum of table "shop.public.orders_copy": index scans: 0
+2026-10-10 16:53:15.133 -03 [1016] LOG:  automatic vacuum of table "shop.public.orders_copy": index scans: 0
 	pages: 0 removed, 10417 remain, 338 scanned (3.24% of total)
 	tuples: 20000 removed, 987756 remain, 0 are dead but not yet removable
 	removable cutoff: 809, which was 0 XIDs old when operation ended

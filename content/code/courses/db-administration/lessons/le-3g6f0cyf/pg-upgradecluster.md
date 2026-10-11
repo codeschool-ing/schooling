@@ -16,9 +16,9 @@ sudo apt install -y postgresql-17
 ```
 
 **The recording machine could not reach that repository**, and the server in it has no network at
-all. Its 17 was built from the source of the same release, 17.10, and installed into the same
-places the package uses — `/usr/lib/postgresql/17` for the programs, `/usr/share/postgresql/17` for
-the rest — where postgresql-common finds it exactly as it finds the package. The one visible
+all. Its 17 was built from the source of the same release, 17.10. It was installed into the
+places the package uses, `/usr/lib/postgresql/17` for the programs and `/usr/share/postgresql/17`
+for the rest, where postgresql-common finds it exactly as it finds the package. The one visible
 difference is the version string: yours carries the repository's packaging in brackets after
 `17.10`, and the recording's has nothing after it.
 

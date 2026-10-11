@@ -114,7 +114,7 @@ ana@db:~$ psql -h localhost -U bruno shop
 shop=> SELECT pid, usename, state, query FROM pg_stat_activity WHERE usename = 'app';
  pid | usename | state |          query           
 -----+---------+-------+--------------------------
- 296 | app     |       | <insufficient privilege>
+ 298 | app     |       | <insufficient privilege>
 (1 row)
 shop=# GRANT pg_monitor TO bruno;
 GRANT ROLE
@@ -122,7 +122,7 @@ ana@db:~$ psql -h localhost -U bruno shop
 shop=> SELECT pid, usename, state, query FROM pg_stat_activity WHERE usename = 'app';
  pid | usename | state  |        query        
 -----+---------+--------+---------------------
- 296 | app     | active | SELECT pg_sleep(60)
+ 298 | app     | active | SELECT pg_sleep(60)
 (1 row)
 ```
 

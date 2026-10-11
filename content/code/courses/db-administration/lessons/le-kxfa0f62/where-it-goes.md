@@ -92,6 +92,5 @@ or size, and is the only arrangement that can write `csvlog` or `jsonlog`. Turni
 restart. The last section of this lesson does it for JSON and puts it back.
 
 Nothing is wrong with Ubuntu's choice. One file, rotated by the same tool as every other log on
-the machine, is simple to find at three in the morning. **What matters is knowing which one you
-have**, because on a server set up the other way `/var/log/postgresql` holds a couple of start-up
+the machine, is simple to find at three in the morning. **Know which one you have**, because on a server set up the other way `/var/log/postgresql` holds a couple of start-up
 lines and the real log is somewhere you have not looked.

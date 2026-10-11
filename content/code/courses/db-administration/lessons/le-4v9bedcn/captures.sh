@@ -26,6 +26,11 @@
 # move between runs. The root filesystem's mount options are the recording
 # computer's as well, inherited by the container.
 #
+# The kernel settings section changes nothing: a container cannot write
+# /proc/sys, so `sysctl -w` and the file in /etc/sysctl.d are printed as
+# commands and were not run. For the same reason the container could not
+# apply the unit's OOMScoreAdjust to the postmaster, which the lesson says.
+#
 # Everything the lesson creates is removed at the end: the tables, the
 # tablespace, pg_wal moved back into the data directory, both filesystems
 # unmounted and their files deleted.
@@ -111,5 +116,11 @@ on 'sudo systemctl start postgresql@16-main'
 on 'sudo umount /srv/wal /srv/small'
 on 'sudo rm /srv/wal.img /srv/small.img && sudo rmdir /srv/wal /srv/small'
 on 'pg_lsclusters'
+
+block kernel
+on 'sysctl vm.overcommit_memory vm.overcommit_ratio'
+on 'systemctl cat postgresql@16-main | grep -B2 OOMScoreAdjust'
+on 'psql shop -c "SHOW huge_pages" -c "SHOW shared_memory_size" -c "SHOW shared_memory_size_in_huge_pages"'
+on 'grep -E "^(HugePages_Total|HugePages_Free|Hugepagesize)" /proc/meminfo'
 
 lab down

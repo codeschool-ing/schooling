@@ -15,7 +15,31 @@ disser, então o `xmin` dela não entra mais na comparação. Cada tabela regist
 transação não congelada mais antiga que ainda pode conter, cada banco registra em `datfrozenxid` a
 mais antiga das suas tabelas, e `age()` transforma qualquer um dos dois numa contagem de transações:
 
-@@1@@
+```
+shop=# SELECT datname, age(datfrozenxid) FROM pg_database;
+  datname  | age 
+-----------+-----
+ postgres  |  84
+ ana       |  84
+ template1 |  84
+ template0 |  84
+ shop      |  84
+(5 rows)
+
+shop=# SELECT relname, age(relfrozenxid) FROM pg_class WHERE relkind = 'r' ORDER BY 2 DESC LIMIT 3;
+     relname      | age 
+------------------+-----
+ pg_foreign_table |  84
+ pg_type          |  84
+ pg_authid        |  84
+(3 rows)
+
+shop=# SHOW autovacuum_freeze_max_age;
+ autovacuum_freeze_max_age 
+---------------------------
+ 200000000
+(1 row)
+```
 
 O servidor de `shop` é jovem, então toda idade é de poucas dezenas. **`autovacuum_freeze_max_age`
 é a linha**: uma tabela cuja idade passa de 200 milhões recebe um autovacuum agressivo, que lê toda
@@ -34,7 +58,30 @@ write-ahead log, o que num cluster de verdade perde dados. O `dd` cria o pedaço
 `pg_xact`, de que o novo id de transação precisa; sem ele o servidor não conseguiria registrar se
 essa transação fez commit:
 
-@@2@@
+```
+ana@db:~$ sudo pg_createcluster 16 wrap >/dev/null
+ana@db:~$ sudo -u postgres /usr/lib/postgresql/16/bin/pg_resetwal -x 2145000000 /var/lib/postgresql/16/wrap
+Write-ahead log reset
+ana@db:~$ sudo -u postgres dd if=/dev/zero of=/var/lib/postgresql/16/wrap/pg_xact/07FD bs=256k count=1 status=none
+ana@db:~$ sudo pg_ctlcluster 16 wrap start
+ana@db:~$ sudo -u postgres psql -p 5433 -c "SELECT datname, age(datfrozenxid) FROM pg_database;"
+  datname  |    age     
+-----------+------------
+ postgres  | 2144999278
+ template1 | 2144999278
+ template0 | 2144999278
+(3 rows)
+
+ana@db:~$ sudo -u postgres psql -p 5433 -c "CREATE TABLE t (i int);"
+ERROR:  database is not accepting commands to avoid wraparound data loss in database "template1"
+HINT:  Stop the postmaster and vacuum that database in single-user mode.
+You might also need to commit or roll back old prepared transactions, or drop stale replication slots.
+ana@db:~$ sudo -u postgres psql -p 5433 -c "SELECT count(*) FROM pg_class;"
+ count 
+-------
+   413
+(1 row)
+```
 
 As idades são 2.144.999.278, logo abaixo de 2.147.483.648, onde o círculo viraria. **O servidor
 recusa tudo o que precisa de um novo id de transação** e continua atendendo leituras: o
@@ -45,19 +92,58 @@ cima deles.
 
 A saída é um VACUUM que congele todos os bancos:
 
-@@3@@
+```
+ana@db:~$ sudo -u postgres vacuumdb -p 5433 --all --freeze 2> vacuum.log
+vacuumdb: vacuuming database "postgres"
+vacuumdb: vacuuming database "template1"
+ana@db:~$ grep -c "as a failsafe" vacuum.log
+216
+ana@db:~$ grep -m1 -A3 "as a failsafe" vacuum.log
+WARNING:  bypassing nonessential maintenance of table "postgres.pg_catalog.pg_proc" as a failsafe after 0 index scans
+DETAIL:  The table's relfrozenxid or relminmxid is too far in the past.
+HINT:  Consider increasing configuration parameter "maintenance_work_mem" or "autovacuum_work_mem".
+You might also need to consider other ways for VACUUM to keep up with the allocation of transaction IDs.
+ana@db:~$ grep -A2 "must be vacuumed" vacuum.log
+WARNING:  database "template1" must be vacuumed within 2484369 transactions
+HINT:  To avoid a database shutdown, execute a database-wide VACUUM in that database.
+You might also need to commit or roll back old prepared transactions, or drop stale replication slots.
+--
+WARNING:  database "template0" must be vacuumed within 2484369 transactions
+HINT:  To avoid a database shutdown, execute a database-wide VACUUM in that database.
+You might also need to commit or roll back old prepared transactions, or drop stale replication slots.
+```
 
 **`as a failsafe`** apareceu 216 vezes. Passado o `vacuum_failsafe_age`, 1,6 bilhão por padrão, o
 VACUUM larga tudo o que não seja congelar: nada de limpeza de índice, nada de freio, só trazer a
 idade de volta para baixo. Os avisos no fim nomeiam os bancos ainda em risco.
 
-@@4@@
+```
+ana@db:~$ sudo -u postgres psql -p 5433 -c "SELECT datname, datallowconn, age(datfrozenxid) FROM pg_database;"
+  datname  | datallowconn |    age     
+-----------+--------------+------------
+ postgres  | t            |          0
+ template1 | t            |          0
+ template0 | f            | 2144999278
+(3 rows)
+```
 
 `postgres` e `template1` estão em 0. **`template0` não**, porque não aceita conexões e o
 `vacuumdb --all` o pula, então o servidor continua recusando. Esse fica com o autovacuum, que
 consegue alcançá-lo, e em cerca de um minuto tinha feito:
 
-@@5@@
+```
+ana@db:~$ sudo -u postgres psql -p 5433 -c "SELECT datname, datallowconn, age(datfrozenxid) FROM pg_database;"
+  datname  | datallowconn | age 
+-----------+--------------+-----
+ postgres  | t            |   0
+ template1 | t            |   0
+ template0 | f            |   0
+(3 rows)
+
+ana@db:~$ sudo -u postgres psql -p 5433 -c "CREATE TABLE t (i int);"
+CREATE TABLE
+ana@db:~$ sudo pg_dropcluster --stop 16 wrap
+```
 
 A dica na recusa manda parar o servidor e rodar o vacuum em modo de usuário único. Aqui um
 `vacuumdb` comum, com o servidor no ar e ainda atendendo leituras, fez o trabalho, e o autovacuum

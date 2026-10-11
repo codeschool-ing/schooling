@@ -38,8 +38,8 @@ projeto e ainda não está instalado; ele tem um pacote próprio, e a seção de
 ## Arquivos no disco
 
 Cada extensão disponível é um punhado de arquivos. Um **arquivo de controle** diz como ela se chama,
-qual versão é a padrão e se precisa de uma biblioteca; um **script** para cada versão cria os seus
-objetos; e um **script de atualização** para cada passo entre versões leva uma instalação antiga
+qual versão é a padrão e se precisa de uma biblioteca. Um **script** para cada versão cria os seus
+objetos. Um **script de atualização** para cada passo entre versões leva uma instalação antiga
 adiante:
 
 ```

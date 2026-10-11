@@ -6,7 +6,7 @@ version: 1
 O caminho mais antigo é também o mais simples: escrever o banco como SQL com o servidor antigo
 rodando, e carregar no novo. Nada nos arquivos do cluster antigo importa, então funciona entre
 quaisquer duas versões, entre duas máquinas e entre dois sistemas operacionais. O custo é **tempo
-proporcional aos dados**, e parada do mesmo tamanho: o que for escrito depois que o dump começou não
+proporcional aos dados**, e parada do mesmo tamanho. O que for escrito depois que o dump começou não
 está nele, então a aplicação para de escrever quando o dump começa e volta a escrever no servidor
 novo quando o restore termina.
 

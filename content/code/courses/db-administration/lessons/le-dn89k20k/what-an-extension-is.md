@@ -38,8 +38,8 @@ project and not installed yet; it has a package of its own, and the section afte
 ## Files on disk
 
 Each available extension is a handful of files. A **control file** says what it is called, which
-version is the default and whether it needs a library; a **script** for each version creates its
-objects; and an **upgrade script** for each step between versions moves an old installation forward:
+version is the default and whether it needs a library. A **script** for each version creates its
+objects. An **upgrade script** for each step between versions moves an old installation forward:
 
 ```
 ana@db:~$ ls /usr/share/postgresql/16/extension/pgcrypto*

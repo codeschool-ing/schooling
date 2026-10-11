@@ -38,8 +38,8 @@ UPDATE 100000
 shop=# SELECT pid, state, backend_xmin, xact_start FROM pg_stat_activity WHERE backend_xmin IS NOT NULL;
  pid |        state        | backend_xmin |          xact_start           
 -----+---------------------+--------------+-------------------------------
- 448 | idle in transaction |          805 | 2026-10-10 16:42:50.024427-03
- 458 | active              |          806 | 2026-10-10 16:42:51.424242-03
+ 474 | idle in transaction |          805 | 2026-10-10 16:51:21.536808-03
+ 484 | active              |          806 | 2026-10-10 16:51:22.765268-03
 (2 rows)
 
 shop=# VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;
@@ -50,8 +50,8 @@ tuples: 0 removed, 957677 remain, 100000 are dead but not yet removable
 removable cutoff: 805, which was 1 XIDs old when operation ended
 frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
 index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
-avg read rate: 0.000 MB/s, avg write rate: 0.525 MB/s
-buffer usage: 3361 hits, 0 misses, 1 dirtied
+avg read rate: 0.000 MB/s, avg write rate: 20.729 MB/s
+buffer usage: 3361 hits, 0 misses, 44 dirtied
 WAL usage: 1 records, 1 full page images, 5949 bytes
 system usage: CPU: user: 0.01 s, system: 0.00 s, elapsed: 0.01 s
 VACUUM
@@ -76,7 +76,28 @@ COMMIT
 Back in the second terminal, nobody is idle in a transaction any more, and the same VACUUM does its
 job:
 
-<<<falling-behind-after>>>
+```
+shop=# SELECT count(*) FROM pg_stat_activity WHERE state = 'idle in transaction';
+ count 
+-------
+     0
+(1 row)
+
+shop=# VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;
+INFO:  vacuuming "shop.public.orders_copy"
+INFO:  finished vacuuming "shop.public.orders_copy": index scans: 1
+pages: 0 removed, 10417 remain, 1670 scanned (16.03% of total)
+tuples: 100000 removed, 820339 remain, 0 are dead but not yet removable
+removable cutoff: 806, which was 0 XIDs old when operation ended
+frozen: 1 pages from table (0.01% of total) had 1 tuples frozen
+index scan needed: 834 pages from table (8.01% of total) had 99996 dead item identifiers removed
+index "orders_copy_pkey": pages: 3430 in total, 0 newly deleted, 0 currently deleted, 0 reusable
+avg read rate: 165.348 MB/s, avg write rate: 1.579 MB/s
+buffer usage: 5656 hits, 1990 misses, 19 dirtied
+WAL usage: 3888 records, 605 full page images, 1845401 bytes
+system usage: CPU: user: 0.08 s, system: 0.00 s, elapsed: 0.09 s
+VACUUM
+```
 
 `100000 removed`, and `index scans: 1` because there were entries in the primary key to take out
 this time. Nothing about the table changed between the two runs. Only the snapshot went away.

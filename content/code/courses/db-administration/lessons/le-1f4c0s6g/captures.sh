@@ -118,6 +118,7 @@ on 'pgbench --select-only --connect --client=4 --jobs=4 --time=15 bench'
 
 block cleanup
 on 'dropdb bench'
+on 'psql shop -c "REVOKE ALL ON customers, orders FROM app"'
 on 'dropuser app'
 on 'sudo userdel --remove app'
 on 'psql shop -Atc "SHOW max_connections"'

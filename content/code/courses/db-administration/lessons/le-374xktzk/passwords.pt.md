@@ -58,8 +58,8 @@ todo lugar aonde um comando pode ir. Aqui está um, com um erro de digitação n
 shop=# ALTER ROLE brunno PASSWORD 'bruno-lab-only';
 ERROR:  role "brunno" does not exist
 ana@db:~$ sudo tail -n 2 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:26:06.155 -03 [320] ana@shop ERROR:  role "brunno" does not exist
-2026-10-10 04:26:06.155 -03 [320] ana@shop STATEMENT:  ALTER ROLE brunno PASSWORD 'bruno-lab-only';
+2026-10-10 16:51:01.836 -03 [320] ana@shop ERROR:  role "brunno" does not exist
+2026-10-10 16:51:01.836 -03 [320] ana@shop STATEMENT:  ALTER ROLE brunno PASSWORD 'bruno-lab-only';
 ```
 
 O servidor registra no log, por padrão, o texto de um comando que falha, então o erro veio com a
@@ -92,7 +92,7 @@ primeira tentativa falha por um motivo que aparece na tela e passa despercebido 
 
 ```
 ana@db:~$ ls -l ~/.pgpass
--rw-rw-r-- 1 ana ana 126 Oct 10 04:26 /home/ana/.pgpass
+-rw-rw-r-- 1 ana ana 126 Oct 10 16:50 /home/ana/.pgpass
 ana@db:~$ psql -w -h localhost -U app shop -c "SELECT current_user;"
 WARNING: password file "/home/ana/.pgpass" has group or world access; permissions should be u=rw (0600) or less
 psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: fe_sendauth: no password supplied
@@ -135,8 +135,8 @@ password retrieved from file "/home/ana/.pgpass"
 connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL:  password authentication failed for user "app"
 password retrieved from file "/home/ana/.pgpass"
 ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:26:07.883 -03 [334] app@shop FATAL:  password authentication failed for user "app"
-2026-10-10 04:26:07.883 -03 [334] app@shop DETAIL:  User "app" has an expired password.
+2026-10-10 16:51:05.341 -03 [334] app@shop FATAL:  password authentication failed for user "app"
+2026-10-10 16:51:05.341 -03 [334] app@shop DETAIL:  User "app" has an expired password.
 	Connection matched file "/etc/postgresql/16/main/pg_hba.conf" line 125: "host    all             all             127.0.0.1/32            scram-sha-256"
 ```
 

@@ -92,6 +92,5 @@ por idade ou tamanho, e é o único arranjo que consegue escrever `csvlog` ou `j
 exige um restart. A última seção desta lição faz isso para JSON e desfaz depois.
 
 Não há nada de errado na escolha do Ubuntu. Um arquivo só, girado pela mesma ferramenta que todo
-outro log da máquina, é fácil de achar às três da manhã. **O que importa é saber qual dos dois você
-tem**, porque num servidor montado do outro jeito o `/var/log/postgresql` guarda duas linhas de
+outro log da máquina, é fácil de achar às três da manhã. **Saiba qual dos dois você tem**, porque num servidor montado do outro jeito o `/var/log/postgresql` guarda duas linhas de
 partida e o log de verdade está num lugar onde você não olhou.

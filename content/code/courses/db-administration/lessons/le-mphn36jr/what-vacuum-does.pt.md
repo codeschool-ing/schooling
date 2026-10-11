@@ -23,7 +23,28 @@ isso importa.
 
 `pg_visibility` é outra extensão que vem com o PostgreSQL. Ela conta os dois bits:
 
-@@1@@
+```
+shop=# CREATE EXTENSION pg_visibility;
+CREATE EXTENSION
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id <= 50000;
+UPDATE 50000
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        7915 |          0
+(1 row)
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        8751 |        415
+(1 row)
+```
 
 O `UPDATE` tirou 836 páginas do mapa de visibilidade: as páginas de onde ele removeu linhas e as
 páginas onde escreveu as versões novas. O VACUUM as devolveu. **O tamanho não mudou**: 68 MB antes
@@ -34,7 +55,28 @@ As 415 páginas congeladas são um hábito da versão 16. Quando o VACUUM já es
 inteira no write-ahead log, ele congela a página enquanto está ali, porque o trabalho extra quase
 não custa nada. Todo o resto espera até as linhas ficarem antigas o bastante, ou até alguém pedir:
 
-@@2@@
+```
+shop=# SELECT relname, relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 'orders_copy';
+   relname   | relfrozenxid | age 
+-------------+--------------+-----
+ orders_copy |          782 |  20
+(1 row)
+
+shop=# VACUUM (FREEZE) orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        8751 |       8751
+(1 row)
+
+shop=# SELECT relname, relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 'orders_copy';
+   relname   | relfrozenxid | age 
+-------------+--------------+-----
+ orders_copy |          802 |   0
+(1 row)
+```
 
 **`relfrozenxid` é o id de transação mais antigo que ainda pode aparecer não congelado na
 tabela**. Antes do `FREEZE` ele era 782, a transação que carregou a cópia. Depois, toda página está

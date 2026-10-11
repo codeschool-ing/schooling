@@ -6,9 +6,9 @@ version: 1
 The oldest way across is also the simplest: write the database out as SQL with the old server
 running, and load it into the new one. Nothing about the old cluster's files matters, so it works
 between any two versions, between two machines, and between two operating systems. Its cost is
-**time proportional to the data**, and downtime to match: anything written after the dump began is
-not in it, so the application stops writing when the dump starts and starts again on the new server
-when the restore ends.
+**time proportional to the data**, and downtime to match. Anything written after the dump began is
+not in it, so the application stops writing when the dump starts, and starts again on the new
+server when the restore ends.
 
 This section copies `shop` from `main`, which is still 16, into the empty `17/main` that the package
 created. Reading from `main` is all it does there.
