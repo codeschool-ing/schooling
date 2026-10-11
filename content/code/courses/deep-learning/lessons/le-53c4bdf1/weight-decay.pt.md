@@ -3,15 +3,13 @@ title: Decaimento de pesos, uma penalidade L2 no passo
 version: 1
 ---
 
-Uma rede que decorou o conjunto de treino em geral fez isso com pesos grandes: um peso grande faz uma
-saída balançar muito com uma pequena mudança num pixel, e é isso que é preciso para dar a cada uma de 100
-imagens a sua própria resposta. **O decaimento de pesos faz o próprio tamanho custar alguma coisa.** Ele
+Uma rede que decorou o conjunto de treino em geral fez isso com pesos grandes. Um peso grande faz uma saída balançar muito quando um pixel muda
+um pouco, e é isso que é preciso para dar a cada uma de 100 imagens a sua própria resposta. **O decaimento de pesos faz o próprio tamanho custar alguma coisa.** Ele
 soma à perda uma penalidade para cada peso, proporcional ao seu quadrado:
 
 `loss + decay / 2 × (sum of every weight squared)`
 
-Você nunca calcula essa soma durante o treino. O gradiente dela em relação a um peso `w` é `decay × w`,
-então a penalidade só soma `decay × w` a cada gradiente, e cada passo puxa cada peso um pouco para zero,
+Você nunca calcula essa soma durante o treino. O gradiente dela em relação a um peso `w` é `decay × w`. Então a penalidade só soma `decay × w` a cada gradiente, e cada passo puxa cada peso um pouco para zero,
 além do que os dados pedirem. O nome *L2* vem do tamanho ao quadrado dos pesos, e *decaimento* vem do que
 esse puxão faz com um peso que os dados deixam de defender.
 
@@ -39,7 +37,11 @@ esse puxão faz com um peso que os dados deixam de defender.
 ```
 
 ```
-PENDING decay
+ana@vm:~/dl$ python decay.py
+decay 0.0     val loss 0.3281  val acc 0.903  sum of squared weights  2122.6
+decay 0.001   val loss 0.2975  val acc 0.897  sum of squared weights  1335.8
+decay 0.01    val loss 0.4468  val acc 0.869  sum of squared weights    88.5
+decay 0.1     val loss 1.5644  val acc 0.386  sum of squared weights    16.5
 ```
 
 **A última coluna é o mecanismo, medido.** Sem decaimento, os pesos ao quadrado somam 2122,6; com 0,001
@@ -50,8 +52,7 @@ tão baixa quanto a melhor época do `overfit.py`, enquanto a acurácia vai de 0
 imagens em 360. Com 0,01 o puxão é forte o bastante para atrapalhar: perda 0,4468, acurácia 0,869. Com 0,1
 a rede já não consegue ajustar nem o próprio conjunto de treino, e a acurácia cai para 0,386.
 
-**O decaimento é um botão com um precipício de um lado.** Pouco não faz nada e demais para o aprendizado,
-e o valor certo depende da rede, dos dados e da taxa de aprendizado; por isso ele é achado testando alguns
+**O decaimento é um botão com um precipício de um lado.** Pouco não faz nada e demais para o aprendizado. O valor certo depende da rede, dos dados e da taxa de aprendizado, e por isso ele é achado testando alguns
 valores no conjunto de validação, como aqui. Valores entre 0,0001 e 0,01 são onde a maioria das buscas
 começa.
 

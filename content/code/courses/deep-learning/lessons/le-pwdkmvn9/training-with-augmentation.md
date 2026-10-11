@@ -4,8 +4,8 @@ version: 1
 ---
 
 The two sections above give one program what it needs: transforms that draw per image, and a
-test for which of them are safe. **This one trains the CNN on 100 images four times, once with
-no augmentation, once with the safe one, and twice with the ones `preserve.py` warned against.**
+test for which of them are safe. **This one trains the CNN on 100 images four times: with no
+augmentation, with the safe one, and with the two that `preserve.py` warned against.**
 `loop.fit` takes a fixed set of tensors, so the program carries a copy of its loop with one line
 added. Save as `~/dl/augtrain.py`:
 
@@ -35,7 +35,12 @@ added. Save as `~/dl/augtrain.py`:
 ```
 
 ```
-PENDING augtrain
+ana@vm:~/dl$ python augtrain.py
+100 training images, 360 validation images, 150 epochs
+none            val acc 0.886  0.933  0.917
+shift and turn  val acc 0.931  0.928  0.942
+mirror          val acc 0.831  0.858  0.819
+any turn        val acc 0.672  0.714  0.700
 ```
 
 Read the rows against the first one.
@@ -48,7 +53,7 @@ helped most by being shown each of them in more than one position.
 
 **The two unsafe ones did damage, and in proportion to how much they lied.** Mirroring half the
 images took the network down to 0.819 to 0.858, because a mirrored 2, 3 or 7 went in labelled as
-itself. Turning by any angle brought it down to between 0.669 and 0.706, since every 6 and 9 was
+itself. Turning by any angle brought it down to between 0.672 and 0.714, since every 6 and 9 was
 taught as both, and every digit had to be learnt in every orientation from ten examples.
 
 Two things this run does not show, said plainly. **Augmentation does not make the network see

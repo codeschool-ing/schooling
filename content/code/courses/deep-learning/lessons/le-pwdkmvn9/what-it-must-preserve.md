@@ -37,7 +37,21 @@ or mirrored digit what it makes of them. Save as `~/dl/preserve.py`:
 ```
 
 ```
-PENDING preserve
+ana@vm:~/dl$ python preserve.py
+epoch  20  train loss 0.0180  val loss 0.0757  val acc 0.978
+digit      as drawn     mirrored  upside down
+    0          0.97         0.94         0.91
+    1          1.00         0.58         0.56
+    2          1.00         0.11         0.13
+    3          0.92         0.00         0.00
+    4          1.00         0.86         0.97
+    5          0.98         0.00         0.50
+    6          1.00         0.00         0.00
+    7          1.00         0.26         0.00
+    8          0.97         0.91         0.89
+    9          0.94         0.41         0.00
+6s turned upside down are read as: [0, 1, 0, 0, 1, 0, 0, 0, 0, 40]
+9s turned upside down are read as: [4, 0, 0, 0, 1, 2, 18, 0, 7, 0]
 ```
 
 The first column is the network on the images as drawn, between 0.92 and 1.00 for every digit.
@@ -47,10 +61,8 @@ predict from the shapes**. The 0 and the 8 are symmetric both ways and keep 0.94
 0.11 when mirrored.
 
 The last two lines are the trap in its plainest form. **Of the 6s turned upside down, 40 were
-read as 9**. The upside-down 9s spread wider, with 18 read as 6, but none was read as a 9. If
-training had used a rotation of up to 180 degrees, every one of those images would have gone into
-the loss with its old label, and the network would have been taught that a shape is both a 6 and
-a 9.
+read as 9**. The upside-down 9s spread wider, with 18 read as 6, but none was read as a 9. Train with rotations of up to 180 degrees and every one of those images goes into the loss with its old
+label. The network is then taught that one shape is both a 6 and a 9.
 
 ## The rule, and where it bends
 

@@ -23,8 +23,8 @@ dígitos sem conversão nenhuma. Salve isto como `~/dl/augment.py`:
       "note": "Os dígitos como imagens, formato 1x8x8 cada, do `tdigits.py` da aula 9. `transforms.v2` é o conjunto atual de transformações do torchvision, e trabalha direto sobre tensores."
     },
     {
-      "code": "def draw(images):\n    \"\"\"Several 1x8x8 images side by side, ink as characters.\"\"\"\n    for r in range(8):\n        print(\"   \".join(\"\".join(\" .:-=+*#@\"[int(v * 8)] for v in img[0, r].clamp(0, 1))\n                         for img in images))",
-      "note": "O desenho que o `look.py` fez na aula 1, para várias imagens numa fileira. O `clamp` mantém dentro dos nove caracteres um valor que a interpolação empurrou para além de 1."
+      "code": "def draw(images):\n    \"\"\"Several 1x8x8 images side by side, ink as characters.\"\"\"\n    for r in range(8):\n        print(\"   \".join(\"\".join(\" .:-=+*#%\"[int(v * 8)] for v in img[0, r].clamp(0, 1))\n                         for img in images))",
+      "note": "O desenho que o `look.py` fez na aula 1, para várias imagens numa fileira, com `%` como a tinta mais escura. O `clamp` mantém dentro dos nove caracteres um valor que a interpolação empurrou para além de 1."
     },
     {
       "code": "torch.manual_seed(0)\njitter = v2.RandomAffine(degrees=15, translate=(0.125, 0.125),\n                         interpolation=v2.InterpolationMode.BILINEAR)\nprint(\"label\", y[0].item(), \"shape\", tuple(x[0].shape), \"- the original, then four draws:\")\ndraw([x[0]] + [jitter(x[0]) for _ in range(4)])",
@@ -45,7 +45,9 @@ PENDING augment
 ## Uma transformação, uma imagem diferente a cada chamada
 
 O primeiro bloco é um 6 e quatro chamadas ao mesmo `RandomAffine`. **Nenhuma saiu igual a outra**:
-JITTERPT
+o primeiro subiu um pixel e foi um pixel para a direita, e os outros três se inclinam
+em medidas diferentes. Todos continuam sendo um 6 que uma pessoa leria sem hesitar, e esse é o
+contrato inteiro de uma augmentation: mudar aquilo de que o rótulo não depende, e nada mais.
 
 `RandomAffine` cobre as mudanças que mais importam para imagens pequenas: girar (`degrees`), mover
 (`translate`, como fração do tamanho), aproximar (`scale`) e inclinar (`shear`). O resto do módulo
@@ -56,7 +58,8 @@ por que esta última é errada para dígitos.
 ## Um lote recebe um sorteio só
 
 A segunda metade é a armadilha. **Recebendo um lote de quatro imagens numa chamada só, a
-transformação sorteou um deslocamento e o aplicou às quatro**: BATCHPT Chamada uma vez por imagem,
+transformação sorteou um deslocamento e o aplicou às quatro**: todos os dígitos subiram um pixel e foram um pixel para a
+esquerda, juntos, e cada um perdeu a linha de cima pela borda. Chamada uma vez por imagem,
 cada uma das quatro se moveu do seu jeito.
 
 As transformações v2 tratam tudo o que recebem numa chamada como uma amostra só: uma imagem com a sua

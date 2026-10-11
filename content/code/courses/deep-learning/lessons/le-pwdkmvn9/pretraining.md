@@ -40,7 +40,13 @@ whatever it brings to the second five has to be something general about handwrit
 ```
 
 ```
-PENDING pretrain
+ana@vm:~/dl$ python pretrain.py
+train 528 images, val 180 images, labels [0, 1, 2, 3, 4]
+epoch   5  train loss 0.1748  val loss 0.1185  val acc 0.967
+epoch  10  train loss 0.0430  val loss 0.0502  val acc 0.989
+epoch  15  train loss 0.0151  val loss 0.0371  val acc 0.994
+epoch  20  train loss 0.0045  val loss 0.0309  val acc 0.989
+saved base.pt: 37957 parameters
 ```
 
 528 training images and 180 for validation, labelled 0 to 4. After 20 epochs the network is right
@@ -48,7 +54,8 @@ on 0.989 of the validation images, and it was already at 0.967 after 5. The prog
 weights to `base.pt`, and `ls` shows the file:
 
 ```
-PENDING pretrain
+ana@vm:~/dl$ ls -l base.pt
+-rw-r--r-- 1 root root 154915 Oct 10 17:12 base.pt
 ```
 
 The file holds the 37,957 parameters of `cnn.make_cnn(5)`, as a `state_dict`. **Keep it**: the

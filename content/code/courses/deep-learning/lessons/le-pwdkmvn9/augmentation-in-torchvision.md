@@ -23,8 +23,8 @@ digits without any conversion. Save this as `~/dl/augment.py`:
       "note": "The digits as images, shape 1x8x8 each, from the `tdigits.py` of lesson 9. `transforms.v2` is torchvision's current set of transforms, and it works on tensors directly."
     },
     {
-      "code": "def draw(images):\n    \"\"\"Several 1x8x8 images side by side, ink as characters.\"\"\"\n    for r in range(8):\n        print(\"   \".join(\"\".join(\" .:-=+*#@\"[int(v * 8)] for v in img[0, r].clamp(0, 1))\n                         for img in images))",
-      "note": "The drawing `look.py` did in lesson 1, for several images in a row. `clamp` keeps a value nudged past 1 by the interpolation inside the nine characters."
+      "code": "def draw(images):\n    \"\"\"Several 1x8x8 images side by side, ink as characters.\"\"\"\n    for r in range(8):\n        print(\"   \".join(\"\".join(\" .:-=+*#%\"[int(v * 8)] for v in img[0, r].clamp(0, 1))\n                         for img in images))",
+      "note": "The drawing `look.py` did in lesson 1, for several images in a row, with `%` as the darkest ink. `clamp` keeps a value nudged past 1 by the interpolation inside the nine characters."
     },
     {
       "code": "torch.manual_seed(0)\njitter = v2.RandomAffine(degrees=15, translate=(0.125, 0.125),\n                         interpolation=v2.InterpolationMode.BILINEAR)\nprint(\"label\", y[0].item(), \"shape\", tuple(x[0].shape), \"- the original, then four draws:\")\ndraw([x[0]] + [jitter(x[0]) for _ in range(4)])",
@@ -44,8 +44,8 @@ PENDING augment
 
 ## One transform, a different image each call
 
-The first block is one 6 and four calls to the same `RandomAffine`. **No two came out alike**: one
-leans left, one sits a pixel lower, one is turned enough to thin the loop. Every one is still a 6
+The first block is one 6 and four calls to the same `RandomAffine`. **No two came out alike**: the first moved a pixel up and a pixel right, and the other three lean
+by different amounts. Every one is still a 6
 that a person would read without hesitating, and that is the whole contract of an augmentation:
 change what the label does not depend on, and nothing else.
 
@@ -58,8 +58,8 @@ section is about why that last one is wrong for digits.
 ## A batch gets one draw
 
 The second half is the trap. **Given a batch of four images in one call, the transform drew one
-shift and applied it to all four**: every digit moved up a pixel and left a pixel, together, and
-the 2 on the right lost its top row. Called once per image, each of the four moved its own way.
+shift and applied it to all four**: every digit moved up a pixel and left a pixel, together,
+and each lost its top row over the edge. Called once per image, each of the four moved its own way.
 
 The v2 transforms treat everything they are given in one call as one sample: an image with its
 mask, or a batch that should move as one. That is the right behaviour for a picture and its

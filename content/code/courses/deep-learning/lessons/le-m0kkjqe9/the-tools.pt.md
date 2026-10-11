@@ -66,7 +66,12 @@ e nasceu para acompanhar ao vivo um único treino. O PyTorch traz o escritor,
 nunca instalou:
 
 ```
-PENDING tensorboard
+ana@vm:~/dl$ python -c "from torch.utils.tensorboard import SummaryWriter"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/torch/utils/tensorboard/__init__.py", line 1, in <module>
+    import tensorboard
+ModuleNotFoundError: No module named 'tensorboard'
 ```
 
 Ele registra métricas e deixa a configuração, a semente e a versão do código por sua conta, o que faz

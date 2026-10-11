@@ -92,15 +92,64 @@ O ambiente são gigabytes de bibliotecas instaladas, e o `requirements.txt` já 
 nome e um endereço uma vez por máquina, e então vem o primeiro commit:
 
 ```
-PENDING git
+ana@vm:~/dl$ git config --global user.name "Ana"
+ana@vm:~/dl$ git config --global user.email "ana@example.com"
+ana@vm:~/dl$ git init -b main
+Initialized empty Git repository in /home/ana/dl/.git/
+ana@vm:~/dl$ git add .
+ana@vm:~/dl$ git status --short
+A  .gitignore
+A  digits.py
+A  exp.py
+A  loop.py
+A  requirements.txt
+A  run.py
+A  seeds.py
+A  spread.py
+A  tdigits.py
+A  track.py
+ana@vm:~/dl$ git commit -q -m "Train the digits network and record every run"
+ana@vm:~/dl$ git log --oneline
+878e080 Train the digits network and record every run
 ```
 
 O `git status --short` listou dez arquivos e nada de `.venv`: os cinco programas desta aula até aqui,
-os três das aulas 1 e 9, o `requirements.txt` e o `.gitignore`. Agora eles são o commit `HASH`. Uma
+os três das aulas 1 e 9, o `requirements.txt` e o `.gitignore`. Agora eles são o commit `878e080`. Uma
 execução, e o registro dela:
 
 ```
-PENDING record
+ana@vm:~/dl$ python run.py
+seed 0  val acc 0.9167  commit 878e080
+ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
+{
+    "time": "2026-10-10T17:13:27",
+    "config": {
+        "hidden": 32,
+        "lr": 0.01,
+        "epochs": 10,
+        "batch_size": 32
+    },
+    "seed": 0,
+    "code": {
+        "commit": "878e080",
+        "dirty": false
+    },
+    "data": {
+        "split_seed": 0,
+        "train": 1077,
+        "sha256": "c1ad415d5c49"
+    },
+    "versions": {
+        "python": "3.12.3",
+        "torch": "2.14.1+cu130",
+        "numpy": "2.5.3",
+        "sklearn": "1.9.1"
+    },
+    "threads": 4,
+    "metrics": {
+        "val_acc": 0.9167
+    }
+}
 ```
 
 **A semente 0 deu 0,9167, o mesmo número que o `spread.py` imprimiu para ela**: um processo novo, um
@@ -112,10 +161,15 @@ commit, `"dirty": false`, a impressão digital dos dados e cada versão que part
 Agora o caso para o qual a marca `dirty` existe. Edite um programa sem fazer commit, e rode:
 
 ```
-PENDING dirty
+ana@vm:~/dl$ echo '# trying something' >> exp.py
+ana@vm:~/dl$ python run.py
+seed 0  val acc 0.9167  commit 878e080  (uncommitted changes)
+ana@vm:~/dl$ git checkout exp.py
+Updated 1 path from the index
+ana@vm:~/dl$ git status --short
 ```
 
-A nova linha do `runs.jsonl` cita o commit `HASH`, e **o código que rodou não é o commit `HASH`**:
+A nova linha do `runs.jsonl` cita o commit `878e080`, e **o código que rodou não é o commit `878e080`**:
 ele tem uma linha que o commit não tem. Aqui a linha é um comentário e não muda nada, mas a marca não
 tem como saber disso e nem deve tentar. O `git checkout exp.py` devolveu o arquivo ao que está no
 commit, e o `git status` voltou a ficar quieto.

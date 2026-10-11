@@ -40,7 +40,13 @@ então o que ela levar para as outras cinco tem de ser algo geral sobre caligraf
 ```
 
 ```
-PENDING pretrain
+ana@vm:~/dl$ python pretrain.py
+train 528 images, val 180 images, labels [0, 1, 2, 3, 4]
+epoch   5  train loss 0.1748  val loss 0.1185  val acc 0.967
+epoch  10  train loss 0.0430  val loss 0.0502  val acc 0.989
+epoch  15  train loss 0.0151  val loss 0.0371  val acc 0.994
+epoch  20  train loss 0.0045  val loss 0.0309  val acc 0.989
+saved base.pt: 37957 parameters
 ```
 
 528 imagens de treino e 180 de validação, com rótulos de 0 a 4. Depois de 20 épocas a rede acerta
@@ -48,7 +54,8 @@ PENDING pretrain
 `base.pt`, e o `ls` mostra o arquivo:
 
 ```
-PENDING pretrain
+ana@vm:~/dl$ ls -l base.pt
+-rw-r--r-- 1 root root 154915 Oct 10 17:12 base.pt
 ```
 
 O arquivo guarda os 37.957 parâmetros de `cnn.make_cnn(5)`, como um `state_dict`. **Guarde-o**: a

@@ -49,20 +49,24 @@ Save as `~/dl/dropout.py`:
 ```
 
 ```
-PENDING dropout
+ana@vm:~/dl$ python dropout.py
+dropout 0.0  train acc 1.000  val loss 0.3281  val acc 0.903
+dropout 0.2  train acc 1.000  val loss 0.3328  val acc 0.906
+dropout 0.5  train acc 1.000  val loss 0.3798  val acc 0.911
+dropout 0.8  train acc 0.900  val loss 1.0342  val acc 0.739
 ```
 
 The row for 0.0 is the run of `overfit.py` again, number for number, which is the check that the layer
 does nothing when it drops nothing.
 
 **At 0.2 and 0.5 the accuracy goes up a little and the loss goes up too.** Validation accuracy reaches
-0.906 and then 0.911, three and then eight images more than without dropout out of 360; the loss rises
+0.906 and then 0.911, one and then three images more than without dropout, out of 360; the loss rises
 from 0.3281 to 0.3328 and 0.3798. Training accuracy is still 1.000 in both. Dropout made the network
 learn something a little more general, and did nothing to stop 300 epochs of growing confidence. At
 0.8 it removes so much that the network cannot fit its own training set, 0.900, and validation
 accuracy falls to 0.739.
 
-Whether three or eight images is a real improvement is a fair question, and the last section of this
+Whether one or three images is a real improvement is a fair question, and the last section of this
 lesson answers it with a run that changes nothing but the seed. Dropout earns more in larger networks
 trained on more data than this, where it was introduced, in 2014, and it is one of the reasons the
 transformers of lesson 15 still carry it.

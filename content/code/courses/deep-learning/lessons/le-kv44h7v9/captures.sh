@@ -44,7 +44,7 @@ on 'python bptt.py lstm 3'
 
 use seqtask.py recall.py
 block recall
-on 'python recall.py'
+on 'time python recall.py'
 
 use timing.py
 block timing

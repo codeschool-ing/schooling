@@ -49,19 +49,23 @@ Salve como `~/dl/dropout.py`:
 ```
 
 ```
-PENDING dropout
+ana@vm:~/dl$ python dropout.py
+dropout 0.0  train acc 1.000  val loss 0.3281  val acc 0.903
+dropout 0.2  train acc 1.000  val loss 0.3328  val acc 0.906
+dropout 0.5  train acc 1.000  val loss 0.3798  val acc 0.911
+dropout 0.8  train acc 0.900  val loss 1.0342  val acc 0.739
 ```
 
 A linha de 0.0 é a execução do `overfit.py` de novo, número por número, e é a prova de que a camada não faz
 nada quando não descarta nada.
 
 **Com 0.2 e 0.5 a acurácia sobe um pouco e a perda sobe também.** A acurácia de validação chega a 0,906 e
-depois a 0,911, três e depois oito imagens a mais que sem dropout, em 360; a perda sobe de 0,3281 para
+depois a 0,911, uma e depois três imagens a mais que sem dropout, em 360; a perda sobe de 0,3281 para
 0,3328 e 0,3798. A acurácia de treino continua 1,000 nos dois. O dropout fez a rede aprender algo um pouco
 mais geral, e não fez nada para impedir 300 épocas de confiança crescente. Com 0.8 ele tira tanto que a
 rede não consegue ajustar o próprio conjunto de treino, 0,900, e a acurácia de validação cai para 0,739.
 
-Se três ou oito imagens são uma melhora de verdade é uma pergunta justa, e a última seção desta aula a
+Se uma ou três imagens são uma melhora de verdade é uma pergunta justa, e a última seção desta aula a
 responde com uma execução que só muda a semente. O dropout rende mais em redes maiores, treinadas com mais
 dados do que estas, onde foi apresentado, em 2014, e é um dos motivos de os transformers da aula 15 ainda
 o carregarem.

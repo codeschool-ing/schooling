@@ -1,0 +1,83 @@
+---
+title: "The LSTM: a cell state and three gates"
+version: 1
+---
+
+The long short-term memory, LSTM, is from 1997, by Sepp Hochreiter and Jürgen Schmidhuber, and it was
+designed against exactly the product of the previous section. **It adds a second state, the cell state
+`c`, and arranges for the path from one step's `c` to the next to have no weight matrix and no `tanh`
+on it.** What changes `c` is decided by gates: vectors of numbers between 0 and 1, computed from the
+input and the previous output, that multiply other vectors element by element.
+
+- the forget gate `f`, added by Felix Gers, Schmidhuber and Fred Cummins in 2000, scales what the cell state already holds;
+- the input gate `i` scales the candidate `g`, what this step proposes to add;
+- the output gate `o` scales how much of the cell state is shown as the output `h`.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 280\" role=\"img\" aria-label=\"One LSTM step. Along the top runs the cell state, from c on the left to the new c on the right. On its way it is multiplied by the forget gate f and has the candidate g, scaled by the input gate i, added to it: no weight matrix and no squashing function sit on that line. Below, the previous output h and the input x feed a single weight multiplication that produces the four gates. The new output h is the output gate o times tanh of the new cell state.\"><text x=\"30\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"15\" fill=\"var(--paper)\">c</text><path d=\"M45 50 L590 50\" stroke=\"var(--phosphor)\" stroke-width=\"2.4\" fill=\"none\"></path><path d=\"M582.6 53.1 L590 50 L582.6 46.9\" stroke=\"var(--phosphor)\" stroke-width=\"2.4\" fill=\"none\"></path><text x=\"610\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"15\" fill=\"var(--phosphor)\">c'</text><text x=\"320\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\">cell state</text><circle cx=\"200\" cy=\"50\" r=\"14\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"2\"></circle><text x=\"200\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"16\" fill=\"var(--amber)\">×</text><circle cx=\"340\" cy=\"50\" r=\"14\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"2\"></circle><text x=\"340\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"16\" fill=\"var(--amber)\">+</text><rect x=\"110\" y=\"180\" width=\"360\" height=\"44\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"290\" y=\"202\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" fill=\"var(--paper)\">[x, h] @ W + b</text><text x=\"30\" y=\"202\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" fill=\"var(--paper-dim)\">x, h</text><path d=\"M62 202 L108 202\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M100.6 205.1 L108 202 L100.6 198.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"200\" y=\"146\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">f = σ</text><text x=\"200\" y=\"164\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">forget</text><path d=\"M200 180 L200 172\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M203.1 179.4 L200 172 L196.9 179.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"310\" y=\"146\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">i = σ</text><text x=\"310\" y=\"164\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">input</text><path d=\"M310 180 L310 172\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M313.1 179.4 L310 172 L306.9 179.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"370\" y=\"146\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">g = tanh</text><text x=\"370\" y=\"164\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">candidate</text><path d=\"M370 180 L370 172\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M373.1 179.4 L370 172 L366.9 179.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"450\" y=\"146\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">o = σ</text><text x=\"450\" y=\"164\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">output</text><path d=\"M450 180 L450 172\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M453.1 179.4 L450 172 L446.9 179.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M200 132 L200 66\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M203.1 73.4 L200 66 L196.9 73.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><circle cx=\"340\" cy=\"100\" r=\"12\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></circle><text x=\"340\" y=\"100\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"14\" fill=\"var(--paper)\">×</text><path d=\"M310 132 L332 109\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M329.2 116.5 L332 109 L324.7 112.2\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M370 132 L348 109\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M355.3 112.2 L348 109 L350.8 116.5\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M340 88 L340 66\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M343.1 73.4 L340 66 L336.9 73.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M520 50 L520 88\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M516.9 80.6 L520 88 L523.1 80.6\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"520\" y=\"100\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper)\">tanh</text><circle cx=\"520\" cy=\"140\" r=\"12\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></circle><text x=\"520\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"14\" fill=\"var(--paper)\">×</text><path d=\"M520 110 L520 126\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M516.9 118.6 L520 126 L523.1 118.6\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M480 140 L506 140\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M498.6 143.1 L506 140 L498.6 136.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M520 152 L520 250\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M516.9 242.6 L520 250 L523.1 242.6\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"540\" y=\"262\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"15\" fill=\"var(--paper)\">h'</text></svg>", "caption": "The cell state runs along the top, touched only by one multiplication and one addition. Everything that needs weights happens below it."}
+```
+
+The program computes one step by hand and compares it with `nn.LSTM`. Save as `~/dl/lstm_step.py`:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "lstm_step.py",
+  "parts": [
+    {
+      "code": "\"\"\"lstm_step: one step of nn.LSTM, gate by gate.\"\"\"\nimport torch\nimport torch.nn as nn\n\ntorch.manual_seed(0)\nlstm = nn.LSTM(input_size=3, hidden_size=5, batch_first=True)\nx = torch.randn(2, 1, 3)\nh0, c0 = torch.zeros(1, 2, 5), torch.randn(1, 2, 5)\nout, (h1, c1) = lstm(x, (h0, c0))",
+      "note": "An LSTM carries two states, `h` and the cell state `c`, and returns both. The program starts `c` from random numbers so that there is something in it for the gates to keep or forget."
+    },
+    {
+      "code": "z = (x[:, 0] @ lstm.weight_ih_l0.T + h0[0] @ lstm.weight_hh_l0.T\n     + lstm.bias_ih_l0 + lstm.bias_hh_l0)\ni, f, g, o = z.chunk(4, dim=1)\ni, f, o = torch.sigmoid(i), torch.sigmoid(f), torch.sigmoid(o)\ng = torch.tanh(g)",
+      "note": "The same sum as an RNN's, four times wider, cut into four blocks of five. Three go through a sigmoid and become gates between 0 and 1: input `i`, forget `f`, output `o`. The fourth goes through `tanh` and is the candidate `g`, what this step proposes to write."
+    },
+    {
+      "code": "c = f * c0[0] + i * g\nh = o * torch.tanh(c)",
+      "note": "The two lines the LSTM exists for. The new cell state is the old one scaled by the forget gate, plus the candidate scaled by the input gate: no matrix and no `tanh` stand between `c0` and `c`. The output is a gated view of it."
+    },
+    {
+      "code": "print(\"cell state equals nn.LSTM's:\", torch.allclose(c, c1[0], atol=1e-6))\nprint(\"output equals nn.LSTM's:\", torch.allclose(h, h1[0], atol=1e-6))\nprint(\"forget gate, sequence 0:\", f[0].detach().numpy().round(2))\nprint(\"parameters: RNN\", sum(p.numel() for p in nn.RNN(3, 5).parameters()),\n      \" LSTM\", sum(p.numel() for p in lstm.parameters()))"
+    }
+  ]
+}
+```
+
+```
+PENDING lstm-step
+```
+
+**Both states agree with PyTorch's**, so the four blocks are in the order `i, f, g, o`, which is the
+order PyTorch documents. The gates are computed from the same kind of sum an RNN computes, four times
+wider, so the layer has four times the parameters: 200 against the RNN's 50.
+
+The line that matters is `c = f * c0[0] + i * g`. Going back one step along the cell state multiplies the
+gradient by `f`, and nothing else. **Where the forget gate sits near 1, the cell state carries both the
+information and its gradient across many steps.** Where it sits near 0, the cell forgets on purpose,
+which is just as useful when a sentence ends or a topic changes.
+
+The gate is a sigmoid of a learnt sum, so it does not start near 1. The forget gate this program printed
+runs from 0.22 to 0.61. `bptt.py` from the previous section takes `lstm` as its first argument and, for
+an LSTM, a number to add to the forget gate's bias as its second. Run it without and with 3:
+
+```
+PENDING bptt-lstm
+```
+
+**A fresh LSTM loses its gradient almost as fast as the RNN**: 1.6e-11 at 49 steps back. With 3 added
+to the forget gate's bias, so that the gates start around the sigmoid of 3, which is 0.95, the same
+layer still passes 2.9e-02 back 49 steps, some nine orders of magnitude more. The cell does not remember by default. It is a cell that
+*can* learn to, because the path is there and training only has to open the gate.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 640 330\" role=\"img\" aria-label=\"A chart of gradient size against how many steps back the input sits, from 0 to 49, on a logarithmic scale from 10 to the minus 14 up to 10. The RNN line falls steadily to about 10 to the minus 14 at 49 steps back. The fresh LSTM line falls almost as steeply, to about 10 to the minus 11. The LSTM with 3 added to its forget bias stays nearly flat, between 10 to the minus 1 and 10 to the minus 2, all the way back.\"><path d=\"M80 260 L600 260\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M80 260 L80 30\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M80 260.0 L600 260.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"260.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e-14</text><path d=\"M80 214.0 L600 214.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"214.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e-11</text><path d=\"M80 168.0 L600 168.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"168.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e-8</text><path d=\"M80 122.0 L600 122.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"122.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e-5</text><path d=\"M80 76.0 L600 76.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"76.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e-2</text><path d=\"M80 30.0 L600 30.0\" stroke=\"var(--scan)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"72\" y=\"30.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1e1</text><text x=\"80.0\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">0</text><text x=\"186.12244897959184\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">10</text><text x=\"292.2448979591837\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">20</text><text x=\"398.3673469387755\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">30</text><text x=\"504.48979591836735\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">40</text><text x=\"600.0\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">49</text><text x=\"340.0\" y=\"300\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">steps back from the last output</text><text x=\"80\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">gradient (log scale)</text></svg>", "caption": "The numbers `bptt.py` printed, on a scale where each grid line is a thousand times the one below it."}
+```
+
+That is why it is common to start the forget bias at 1 rather than 0, which Jozefowicz, Zaremba and
+Sutskever recommended in 2015 after comparing thousands of recurrent architectures. The model of the
+next section does that.
+
+**The GRU**, from 2014, is the LSTM's best-known simplification: two gates instead of three and no
+separate cell state, so three blocks of weights instead of four. PyTorch has it as `nn.GRU`, with the
+same interface as `nn.RNN`. It was not run for this lesson. Chung and colleagues compared the two in
+2014 and found them close on the tasks they tried, and the GRU costs three quarters of the parameters.

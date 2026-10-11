@@ -38,7 +38,21 @@ dígito girado ou espelhado o que ela acha deles. Salve como `~/dl/preserve.py`:
 ```
 
 ```
-PENDING preserve
+ana@vm:~/dl$ python preserve.py
+epoch  20  train loss 0.0180  val loss 0.0757  val acc 0.978
+digit      as drawn     mirrored  upside down
+    0          0.97         0.94         0.91
+    1          1.00         0.58         0.56
+    2          1.00         0.11         0.13
+    3          0.92         0.00         0.00
+    4          1.00         0.86         0.97
+    5          0.98         0.00         0.50
+    6          1.00         0.00         0.00
+    7          1.00         0.26         0.00
+    8          0.97         0.91         0.89
+    9          0.94         0.41         0.00
+6s turned upside down are read as: [0, 1, 0, 0, 1, 0, 0, 0, 0, 40]
+9s turned upside down are read as: [4, 0, 0, 0, 1, 2, 18, 0, 7, 0]
 ```
 
 A primeira coluna é a rede nas imagens como foram desenhadas, entre 0,92 e 1,00 para todo dígito. As
@@ -49,9 +63,8 @@ espelhados, 0,91 e 0,89 de cabeça para baixo. O 3, o 6 e o 2 têm direção, e 
 
 As duas últimas linhas são a armadilha na forma mais simples. **Dos 6 de cabeça para baixo, 40
 foram lidos como 9**. Os 9 de cabeça para baixo se espalharam mais, com 18 lidos como 6, mas nenhum
-foi lido como 9. Se o treino tivesse usado uma rotação de até 180 graus, cada uma dessas imagens
-teria entrado na perda com o rótulo antigo, e a rede teria aprendido que uma forma é ao mesmo tempo
-um 6 e um 9.
+foi lido como 9. Treine com rotações de até 180 graus e cada uma dessas imagens entra na perda com o rótulo antigo. A
+rede então aprende que uma mesma forma é ao mesmo tempo um 6 e um 9.
 
 ## A regra, e onde ela cede
 

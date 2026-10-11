@@ -37,7 +37,10 @@ Save as `~/dl/early.py`:
 ```
 
 ```
-PENDING early
+ana@vm:~/dl$ python early.py
+stopped at epoch 53: no improvement for 20 epochs
+last epoch 53  val loss 0.2996  val acc 0.900
+best epoch 33  val loss 0.2926  val acc 0.911
 ```
 
 The run trains epoch by epoch with its own shuffling seeds, so its epochs are not the same as
@@ -47,8 +50,8 @@ patience and stopped at 53, where the validation loss was 0.2996. Putting the sa
 It also took 53 epochs of work instead of 300.
 
 **Patience is a trade.** Validation loss is noisy from one epoch to the next, so a patience of 1 stops at
-the first unlucky epoch; a patience of 100 here would have run to the end. Twenty is a common first
-choice for a run of a few hundred epochs.
+the first unlucky epoch; a patience of 100 would train at least a hundred epochs past the best one before
+stopping. Twenty was this lesson's choice, a guess like the decay values of two sections back.
 
 **The copy is the line that is easy to get wrong.** `best = [p for p, _ in net.params()]` without
 `.copy()` keeps references to the very arrays the optimiser keeps changing, so at the end "the best

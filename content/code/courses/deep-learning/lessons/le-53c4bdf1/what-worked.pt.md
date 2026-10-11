@@ -4,8 +4,8 @@ version: 1
 ---
 
 Cada seção mediu uma cura contra a execução do `overfit.py`, mas com um laço diferente, então os números
-não são bem comparáveis. Este programa roda todas pelo mesmo laço, acrescenta um controle que só muda a
-semente, e depois junta as quatro curas. Salve como `~/dl/compare.py`:
+não são bem comparáveis. Este programa roda todas pelo mesmo laço, acrescenta um controle que só muda a semente, junta as quatro curas e, por último, dá à rede sem cura
+dez vezes mais dados. Salve como `~/dl/compare.py`:
 
 ```schooling-example
 {
@@ -29,7 +29,16 @@ semente, e depois junta as quatro curas. Salve como `~/dl/compare.py`:
 ```
 
 ```
-PENDING compare
+ana@vm:~/dl$ python compare.py
+                     epoch  val loss  val acc
+nothing                300    0.3305    0.900
+nothing, seed 1        300    0.3112    0.908
+weight decay 0.001     300    0.3006    0.906
+dropout 0.5            300    0.3766    0.919
+early stopping          33    0.2926    0.911
+shifted images         300    0.3441    0.933
+all four                53    0.2439    0.944
+all 1,077 images       300    0.0519    0.986
 ```
 
 **Leia o controle primeiro.** Mudar só a semente moveu a acurácia de 0,900 para 0,908 e a perda de 0,3305
@@ -39,14 +48,14 @@ esta tabela pede.
 
 | execução | o que mudou | contra `nothing` |
 | --- | --- | --- |
-| weight decay 0.001 | pesos puxados para zero | perda 0,3006 e acurácia 0,906, as duas dentro do que a semente move |
+| weight decay 0.001 | pesos puxados para zero | acurácia 0,906, dentro do que a semente move; perda 0,3006, um pouco além |
 | dropout 0.5 | metade das unidades ocultas desligada a cada passo | acurácia 0,919, mas perda subindo para 0,3766 |
 | early stopping | os pesos da época 33 | perda 0,2926 e acurácia 0,911, em 53 épocas |
 | shifted images | cinco vezes mais imagens de treino | acurácia 0,933, a melhor sozinha, com perda 0,3441 |
 | all four | tudo isso junto | **perda 0,2439 e acurácia 0,944**, guardada da época 53 |
 
 **Juntas elas fizeram o que nenhuma fez sozinha.** A combinação tem a menor perda e a maior acurácia da
-tabela, 0,944 contra 0,900, que são 16 imagens a mais em 360 e quatro vezes o que a semente moveu. As
+tabela, 0,944 contra 0,900, que são 16 imagens a mais em 360, mais de cinco vezes as 3 que a semente moveu. As
 curas agem em coisas diferentes: o aumento dá mais exemplos, o dropout e o decaimento deixam a rede menos
 capaz de decorá-los, e a parada antecipada guarda o momento antes de a confiança crescer.
 
@@ -55,6 +64,7 @@ menos. Com um milhão de imagens, outra rede ou outra taxa de aprendizado, a ord
 escolhidos aqui, 0.001, 0.5 e paciência 20, foram testados, não sabidos. O que se transfere é o método: uma
 linha de base, uma mudança por vez, um controle para o acaso, e o conjunto de validação como juiz.
 
-**E a cura mais forte não está na tabela:** mais dados de verdade. Com todas as 1.077 imagens de treino,
-toda aula até aqui chegou a uma acurácia de validação bem acima de tudo isto, sem cura nenhuma. Cada
+**E a cura mais forte é a última linha:** mais dados de verdade. Com todas as 1.077 imagens de treino e cura
+nenhuma, a mesma rede chegou a acurácia 0,986 e perda 0,0519, muito além de tudo que as quatro curas
+conseguiram com 100. Cada
 técnica desta aula é um jeito de fazer com menos dados o que mais dados fazem sozinhos.

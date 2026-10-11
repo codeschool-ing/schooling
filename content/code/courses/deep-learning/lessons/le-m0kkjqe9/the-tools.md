@@ -62,7 +62,12 @@ single training run live. PyTorch ships the writer, `torch.utils.tensorboard.Sum
 the package it writes for, which this course never installed:
 
 ```
-PENDING tensorboard
+ana@vm:~/dl$ python -c "from torch.utils.tensorboard import SummaryWriter"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/torch/utils/tensorboard/__init__.py", line 1, in <module>
+    import tensorboard
+ModuleNotFoundError: No module named 'tensorboard'
 ```
 
 It records metrics and leaves the configuration, the seed and the code version to you, which makes

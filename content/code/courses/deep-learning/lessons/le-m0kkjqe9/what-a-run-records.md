@@ -91,15 +91,64 @@ The environment is gigabytes of installed libraries, and `requirements.txt` alre
 for a name and an address once per machine, and then the first commit:
 
 ```
-PENDING git
+ana@vm:~/dl$ git config --global user.name "Ana"
+ana@vm:~/dl$ git config --global user.email "ana@example.com"
+ana@vm:~/dl$ git init -b main
+Initialized empty Git repository in /home/ana/dl/.git/
+ana@vm:~/dl$ git add .
+ana@vm:~/dl$ git status --short
+A  .gitignore
+A  digits.py
+A  exp.py
+A  loop.py
+A  requirements.txt
+A  run.py
+A  seeds.py
+A  spread.py
+A  tdigits.py
+A  track.py
+ana@vm:~/dl$ git commit -q -m "Train the digits network and record every run"
+ana@vm:~/dl$ git log --oneline
+878e080 Train the digits network and record every run
 ```
 
 `git status --short` listed ten files and nothing from `.venv`: the five programs of this lesson so
 far, the three from lessons 1 and 9, `requirements.txt` and the `.gitignore`. They are commit
-`HASH` now. One run, and its record:
+`878e080` now. One run, and its record:
 
 ```
-PENDING record
+ana@vm:~/dl$ python run.py
+seed 0  val acc 0.9167  commit 878e080
+ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
+{
+    "time": "2026-10-10T17:13:27",
+    "config": {
+        "hidden": 32,
+        "lr": 0.01,
+        "epochs": 10,
+        "batch_size": 32
+    },
+    "seed": 0,
+    "code": {
+        "commit": "878e080",
+        "dirty": false
+    },
+    "data": {
+        "split_seed": 0,
+        "train": 1077,
+        "sha256": "c1ad415d5c49"
+    },
+    "versions": {
+        "python": "3.12.3",
+        "torch": "2.14.1+cu130",
+        "numpy": "2.5.3",
+        "sklearn": "1.9.1"
+    },
+    "threads": 4,
+    "metrics": {
+        "val_acc": 0.9167
+    }
+}
 ```
 
 **Seed 0 gave 0.9167, the same number `spread.py` printed for it**: a new process, a different
@@ -111,10 +160,15 @@ program calling `exp.run`, and the same result to the last digit. The record car
 Now the case the `dirty` flag exists for. Edit a program without committing, and run:
 
 ```
-PENDING dirty
+ana@vm:~/dl$ echo '# trying something' >> exp.py
+ana@vm:~/dl$ python run.py
+seed 0  val acc 0.9167  commit 878e080  (uncommitted changes)
+ana@vm:~/dl$ git checkout exp.py
+Updated 1 path from the index
+ana@vm:~/dl$ git status --short
 ```
 
-The new line in `runs.jsonl` names commit `HASH`, and **the code that ran is not commit `HASH`**:
+The new line in `runs.jsonl` names commit `878e080`, and **the code that ran is not commit `878e080`**:
 it has a line the commit does not. Here the line is a comment and changes nothing, but the flag
 cannot know that and should not try. `git checkout exp.py` put the file back as the commit has it,
 and `git status` is quiet again.

@@ -41,7 +41,24 @@ Salve como `~/dl/shift.py`:
 ```
 
 ```
-PENDING shift
+ana@vm:~/dl$ python shift.py
+images: 100 -> 500  labels [6 6 6]
+original  up        right
+   #.       .#          #.  
+  .#        #.         .#   
+  #.        #          #.   
+  #         #:::       #    
+  #:::      #:.::      #::: 
+  #:.::     #: #:      #:.::
+  #: #:      :#:       #: #:
+   :#:                  :#: 
+epoch  50  train loss 0.0065  val loss 0.3188  val acc 0.922
+epoch 100  train loss 0.0025  val loss 0.3369  val acc 0.925
+epoch 150  train loss 0.0015  val loss 0.3496  val acc 0.931
+epoch 200  train loss 0.0011  val loss 0.3590  val acc 0.928
+epoch 250  train loss 0.0008  val loss 0.3670  val acc 0.928
+epoch 300  train loss 0.0007  val loss 0.3724  val acc 0.928
+train acc 1.000  val loss 0.3724  val acc 0.928
 ```
 
 Os três desenhos são um 6, como era, movido para cima e movido para a direita. A linha de cima da cópia

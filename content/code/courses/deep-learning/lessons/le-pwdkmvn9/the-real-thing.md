@@ -34,7 +34,18 @@ is real, and printing it says most of what matters. Save as `~/dl/weights.py`:
 ```
 
 ```
-PENDING weights
+ana@vm:~/dl$ python weights.py
+ResNet18_Weights.IMAGENET1K_V1 from https://download.pytorch.org/models/resnet18-f37072fd.pth
+11,689,512 parameters, 44.661 MB, ImageNet top-1 69.758
+1000 classes, the first three: ['tench', 'goldfish', 'great white shark']
+the head: Linear(in_features=512, out_features=1000, bias=True)
+ImageClassification(
+    crop_size=[224]
+    resize_size=[256]
+    mean=[0.485, 0.456, 0.406]
+    std=[0.229, 0.224, 0.225]
+    interpolation=InterpolationMode.BILINEAR
+)
 ```
 
 Three things in that output decide how you use the file.

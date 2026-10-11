@@ -37,7 +37,10 @@ Salve como `~/dl/early.py`:
 ```
 
 ```
-PENDING early
+ana@vm:~/dl$ python early.py
+stopped at epoch 53: no improvement for 20 epochs
+last epoch 53  val loss 0.2996  val acc 0.900
+best epoch 33  val loss 0.2926  val acc 0.911
 ```
 
 A execução treina época por época com suas próprias sementes de embaralhamento, então suas épocas não são
@@ -47,8 +50,8 @@ acurácia 0,911, contra 0,3281 e 0,903 da rede que treinou as 300 épocas. E lev
 vez de 300.
 
 **A paciência é uma troca.** A perda de validação é ruidosa de uma época para a outra, então uma paciência
-de 1 para na primeira época de azar; uma paciência de 100 aqui teria ido até o fim. Vinte é uma primeira
-escolha comum para uma execução de algumas centenas de épocas.
+de 1 para na primeira época de azar; uma paciência de 100 treinaria pelo menos cem épocas além da melhor antes
+de parar. Vinte foi a escolha desta aula, um palpite como os valores de decaimento de duas seções atrás.
 
 **A cópia é a linha fácil de errar.** `best = [p for p, _ in net.params()]` sem `.copy()` guarda
 referências aos próprios arrays que o otimizador continua mudando, então no fim "os melhores pesos" são os

@@ -4,8 +4,8 @@ version: 1
 ---
 
 Each section measured one cure against the run of `overfit.py`, but with a different loop, so the
-numbers are not quite comparable. This program runs them all through the same loop, adds a control
-that changes nothing but the seed, and then puts the four cures together. Save as `~/dl/compare.py`:
+numbers are not quite comparable. This program runs them all through the same loop, adds a control that changes nothing but the seed, puts the four cures together, and last of all gives
+the uncured network ten times the data. Save as `~/dl/compare.py`:
 
 ```schooling-example
 {
@@ -29,7 +29,16 @@ that changes nothing but the seed, and then puts the four cures together. Save a
 ```
 
 ```
-PENDING compare
+ana@vm:~/dl$ python compare.py
+                     epoch  val loss  val acc
+nothing                300    0.3305    0.900
+nothing, seed 1        300    0.3112    0.908
+weight decay 0.001     300    0.3006    0.906
+dropout 0.5            300    0.3766    0.919
+early stopping          33    0.2926    0.911
+shifted images         300    0.3441    0.933
+all four                53    0.2439    0.944
+all 1,077 images       300    0.0519    0.986
 ```
 
 **Read the control first.** Changing only the seed moved accuracy from 0.900 to 0.908 and loss from
@@ -39,15 +48,14 @@ it is the habit this table asks for.
 
 | run | what it changed | against `nothing` |
 | --- | --- | --- |
-| weight decay 0.001 | weights pulled towards zero | loss 0.3006 and accuracy 0.906, both inside what the seed moves |
+| weight decay 0.001 | weights pulled towards zero | accuracy 0.906, inside what the seed moves; loss 0.3006, a little beyond it |
 | dropout 0.5 | half the hidden units off at each step | accuracy 0.919, but loss up to 0.3766 |
 | early stopping | the weights of epoch 33 | loss 0.2926 and accuracy 0.911, in 53 epochs |
 | shifted images | five times the training images | accuracy 0.933, the best alone, with loss 0.3441 |
 | all four | all of the above | **loss 0.2439 and accuracy 0.944**, kept from epoch 53 |
 
 **Together they did what none did alone.** The combination has the lowest loss and the highest
-accuracy in the table, 0.944 against 0.900, which is 16 more images out of 360 and four times what the
-seed moved. The cures act on different things: augmentation gives more examples, dropout and decay
+accuracy in the table, 0.944 against 0.900, which is 16 more images out of 360, more than five times the 3 that the seed moved. The cures act on different things: augmentation gives more examples, dropout and decay
 make the network less able to memorise them, and early stopping keeps the moment before the confidence
 grows.
 
@@ -57,6 +65,7 @@ order can change, and the values chosen here, 0.001 and 0.5 and a patience of 20
 than known. What carries over is the method: one baseline, one change at a time, one control for
 chance, and the validation set as the judge.
 
-**And the strongest cure is not in the table:** more real data. With all 1,077 training images, every
-lesson so far has reached validation accuracy well above anything here, with no cure at all. Every
+**And the strongest cure is the last row:** more real data. With all 1,077 training images and no cure at all,
+the same network reached 0.986 accuracy and a loss of 0.0519, far beyond anything the four cures managed
+on 100. Every
 technique in this lesson is a way of doing with less data what more data does on its own.

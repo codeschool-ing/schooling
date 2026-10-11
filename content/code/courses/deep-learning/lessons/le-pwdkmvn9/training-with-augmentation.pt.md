@@ -35,7 +35,12 @@ linha a mais. Salve como `~/dl/augtrain.py`:
 ```
 
 ```
-PENDING augtrain
+ana@vm:~/dl$ python augtrain.py
+100 training images, 360 validation images, 150 epochs
+none            val acc 0.886  0.933  0.917
+shift and turn  val acc 0.931  0.928  0.942
+mirror          val acc 0.831  0.858  0.819
+any turn        val acc 0.672  0.714  0.700
 ```
 
 Leia as linhas contra a primeira.
@@ -48,7 +53,7 @@ um deles em mais de uma posição.
 
 **As duas inseguras fizeram estrago, na proporção do quanto mentiam.** Espelhar metade das imagens
 levou a rede para entre 0,819 e 0,858, porque um 2, um 3 ou um 7 espelhado entrou com o próprio
-rótulo. Girar por qualquer ângulo derrubou para entre 0,669 e 0,706, já que todo 6 e todo 9 foi
+rótulo. Girar por qualquer ângulo derrubou para entre 0,672 e 0,714, já que todo 6 e todo 9 foi
 ensinado como os dois, e todo dígito precisou ser aprendido em toda orientação a partir de dez
 exemplos.
 

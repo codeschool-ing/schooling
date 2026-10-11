@@ -3,15 +3,13 @@ title: Weight decay, an L2 penalty in the step
 version: 1
 ---
 
-A network that has memorised its training set has usually done it with large weights: a big weight
-makes an output swing hard on a small change in one pixel, which is what it takes to give each of 100
-images its own answer. **Weight decay makes size itself cost something.** It adds a penalty to the loss
+A network that has memorised its training set has usually done it with large weights. A big weight makes an output swing hard when one pixel changes a little,
+and that is what it takes to give each of 100 images its own answer. **Weight decay makes size itself cost something.** It adds a penalty to the loss
 for every weight, proportional to its square:
 
 `loss + decay / 2 × (sum of every weight squared)`
 
-You never compute that sum while training. Its gradient with respect to one weight `w` is
-`decay × w`, so the penalty only adds `decay × w` to each gradient, and every step pulls each weight a
+You never compute that sum while training. Its gradient with respect to one weight `w` is `decay × w`. So the penalty only adds `decay × w` to each gradient, and every step pulls each weight a
 little towards zero on top of whatever the data asks for. The name *L2* comes from the squared size of
 the weights, and *decay* from what that pull does to a weight the data stops defending.
 
@@ -40,7 +38,11 @@ It is a change to the optimiser, three lines in a subclass of the `SGD` from les
 ```
 
 ```
-PENDING decay
+ana@vm:~/dl$ python decay.py
+decay 0.0     val loss 0.3281  val acc 0.903  sum of squared weights  2122.6
+decay 0.001   val loss 0.2975  val acc 0.897  sum of squared weights  1335.8
+decay 0.01    val loss 0.4468  val acc 0.869  sum of squared weights    88.5
+decay 0.1     val loss 1.5644  val acc 0.386  sum of squared weights    16.5
 ```
 
 **The last column is the mechanism, measured.** Without decay the squared weights add up to 2122.6;
@@ -51,8 +53,7 @@ almost as low as the best epoch of `overfit.py`, while the accuracy moves from 0
 images out of 360. At 0.01 the pull is strong enough to hurt: loss 0.4468, accuracy 0.869. At 0.1 the
 network can no longer fit even its training set, and accuracy falls to 0.386.
 
-**Decay is a dial with a cliff on one side.** Too little does nothing and too much stops learning, and
-the right value depends on the network, the data and the learning rate, so it is found by trying a few
+**Decay is a dial with a cliff on one side.** Too little does nothing and too much stops learning. The right value depends on the network, the data and the learning rate, so it is found by trying a few
 values on the validation set, as here. Values between 0.0001 and 0.01 are where most searches start.
 
 One detail for when you meet it in a framework. Adding `decay × w` to the gradient is the same as an
