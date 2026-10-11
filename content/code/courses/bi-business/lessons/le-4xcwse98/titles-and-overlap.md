@@ -44,7 +44,7 @@ modelling* is mostly engineering with a BI title. **Neither is a trick; it is th
 its problem in the market's words**, and the verbs tell you which problem you would be hired to solve.
 The `first-job` course goes through job searching as a whole.
 
-## A newer title: the analytics engineer
+## A newer job title, the analytics engineer
 
 One title has spread in the last decade and sits between two of the four. **The analytics engineer
 takes the data the engineer has delivered and turns it into clean, tested, documented tables that
