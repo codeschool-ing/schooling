@@ -1109,6 +1109,87 @@ def l12_heatmap(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 13
+
+def orders_with_age():
+    c = csv('customers.csv', parse_dates=['signup'])
+    o = csv('orders.csv', parse_dates=['date']).merge(c, on='customer')
+    o['month'] = (o['date'].dt.to_period('M') - o['signup'].dt.to_period('M')).apply(lambda d: d.n)
+    return c, o
+
+
+CHANNELS = {'en': {'referral': 'referral', 'search': 'search', 'social': 'social'},
+            'pt': {'referral': 'indicação', 'search': 'busca', 'social': 'redes sociais'}}
+
+
+@figure('l13-curves', 13)
+def l13_curves(lang):
+    c, o = orders_with_age()
+    c24 = c[c['signup'].dt.year == 2024]
+    o24 = o[o['customer'].isin(c24['customer'])]
+    size = c24.groupby('channel').size()
+    act = o24.groupby(['channel', 'month'])['customer'].nunique().unstack().div(size, axis=0) * 100
+    t = {'en': dict(
+        label='Retention curves of the 2024 customers by channel, months 0 to 12. All three start at '
+              '100. Referral falls slowest, to about 44 per cent at month 12; search to about 31; '
+              'social fastest, to about 10.',
+        x='months since signup', y='active that month, per cent',
+        cap='Three channels that look alike in the first month and part a little more every month '
+            'after it.'),
+        'pt': dict(
+        label='Curvas de retenção dos clientes de 2024 por canal, meses 0 a 12. As três começam em '
+              '100. Indicação cai mais devagar, para cerca de 44 por cento no mês 12; busca para cerca '
+              'de 31; redes sociais mais rápido, para cerca de 10.',
+        x='meses desde o cadastro', y='ativos no mês, por cento',
+        cap='Três canais que parecem iguais no primeiro mês e se separam um pouco mais a cada mês '
+            'depois dele.')}[lang]
+    f = Fig('l13-curves', 600, 300, t['label'])
+    p = Plot(f, 70, 40, 480, 240, 0, 12, 0, 100)
+    p.yaxis(range(0, 101, 25), label=t['y'])
+    p.xaxis(range(0, 13, 3), label=t['x'])
+    styles = {'referral': '--phosphor', 'search': '--paper-dim', 'social': '--amber'}
+    for ch, col in styles.items():
+        ys = act.loc[ch, list(range(13))].values
+        series(p, range(13), ys, stroke=col, width=2)
+        f.text(p.sx(12) + 8, p.sy(ys[-1]), CHANNELS[lang][ch], size=10.5, anchor='start', fill=col,
+               weight='600')
+    return f, t['cap']
+
+
+@figure('l13-value', 13)
+def l13_value(lang):
+    c, o = orders_with_age()
+    c24 = c[c['signup'].dt.year == 2024]
+    o24 = o[o['customer'].isin(c24['customer'])]
+    size = c24.groupby('channel').size()
+    val = o24.groupby(['channel', 'month'])['value'].sum().unstack().fillna(0).cumsum(axis=1).div(size, axis=0)
+    t = {'en': dict(
+        label='Cumulative revenue per 2024 customer by channel, months 1 to 12, in reais. The three '
+              'lines start together near 380 and fan out: referral reaches about 4,200, search about '
+              '3,800 and social about 2,600 by month 12.',
+        x='end of month', y='revenue per customer acquired, R$',
+        cap='Value per customer is retention multiplied by the price of a box. The channels that '
+            'keep customers longer are worth more, and the gap is still growing at month 12.'),
+        'pt': dict(
+        label='Receita acumulada por cliente de 2024 por canal, meses 1 a 12, em reais. As três '
+              'linhas começam juntas perto de 380 e se abrem: indicação chega a cerca de 4.200, busca '
+              'a cerca de 3.800 e redes sociais a cerca de 2.600 no mês 12.',
+        x='fim do mês', y='receita por cliente adquirido, R$',
+        cap='O valor por cliente é a retenção multiplicada pelo preço de uma caixa. Os canais que '
+            'mantêm clientes por mais tempo valem mais, e a distância ainda cresce no mês 12.')}[lang]
+    f = Fig('l13-value', 600, 300, t['label'])
+    p = Plot(f, 70, 40, 480, 240, 1, 12, 0, 5000)
+    p.yaxis(range(0, 5001, 1000), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    p.xaxis([1, 3, 6, 9, 12], label=t['x'])
+    styles = {'referral': '--phosphor', 'search': '--paper-dim', 'social': '--amber'}
+    for ch, col in styles.items():
+        ys = val.loc[ch, list(range(12))].values
+        series(p, range(1, 13), ys, stroke=col, width=2)
+        f.text(p.sx(12) + 8, p.sy(ys[-1]), CHANNELS[lang][ch], size=10.5, anchor='start', fill=col,
+               weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
