@@ -132,9 +132,9 @@ ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/6aecfebb83e
 {"value":{"element-6066-11e4-a52e-4f735466cecf":"f.6DE962CA241056E830BEE44F7356548C.d.40C05D920F19FA6623ECF03ED5CD3153.e.3"}}
 ```
 
-**Um elemento volta como referência, nunca como o próprio elemento.** A string comprida debaixo
-daquela chave esquisita, `element-6066-11e4-a52e-4f735466cecf`, que o padrão fixa para que nenhum
-JSON da própria página seja confundido com ela, é o nome que o driver dá a um nó da página. Para
+**Um elemento volta como referência, nunca como o próprio elemento.** A string comprida é o nome que o driver dá a um nó
+da página. A chave esquisita em volta, `element-6066-11e4-a52e-4f735466cecf`, é fixada pelo padrão
+para que nenhum JSON da própria página seja confundido com um elemento. Para
 saber qualquer coisa sobre ele, você pergunta de novo:
 
 ```

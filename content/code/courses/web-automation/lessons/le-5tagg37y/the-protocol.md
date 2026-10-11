@@ -132,9 +132,9 @@ ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/6aecfebb83e
 {"value":{"element-6066-11e4-a52e-4f735466cecf":"f.6DE962CA241056E830BEE44F7356548C.d.40C05D920F19FA6623ECF03ED5CD3153.e.3"}}
 ```
 
-**An element comes back as a reference, never as the element.** The long string under that odd
-key, `element-6066-11e4-a52e-4f735466cecf`, which the standard fixes so that no page's own JSON
-can be mistaken for it, is the driver's name for a node in the page. To learn anything about it,
+**An element comes back as a reference, never as the element.** The long string is the driver's name for a node in
+the page. The odd key around it, `element-6066-11e4-a52e-4f735466cecf`, is fixed by the standard
+so that no page's own JSON can be mistaken for an element. To learn anything about it,
 you ask again:
 
 ```
