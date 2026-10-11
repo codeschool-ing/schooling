@@ -46,6 +46,8 @@ payments/
     adr/
       0001-record-architecture-decisions.md
       0002-pay-drivers-by-pix.md
+      0003-payouts-as-a-weekly-batch.md
+      0007-delivery-proof-from-an-event.md
     runbooks/
       payout-stuck.md
 ```
