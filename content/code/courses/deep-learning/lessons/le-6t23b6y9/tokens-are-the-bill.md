@@ -34,7 +34,18 @@ makes of Portuguese:
 ```
 
 ```
-PENDING bill
+ana@vm:~/dl$ python bill.py
+     chars bytes tokens
+en      32    32      7  On Monday the baker sells bread.
+pt      37    38     28  Na segunda-feira o padeiro vende pão.
+en      43    43     14  The goat eats apples, and the cow eats hay.
+pt      39    41     28  A cabra come maçãs, e a vaca come feno.
+en      44    44     20  The weaver mends the blankets before winter.
+pt      49    50     30  O tecelão remenda os cobertores antes do inverno.
+tokens, en: 41  pt: 86  ratio: 2.10
+' pão' -> [' p', '�', '�', 'o']
+en: 13.7 tokens a sentence, 37 sentences fit in 512, a million sentences cost 27.33
+pt: 28.7 tokens a sentence, 17 sentences fit in 512, a million sentences cost 57.33
 ```
 
 ## The same meaning, twice the tokens
@@ -51,8 +62,8 @@ Look at the bytes column. `pão` is three characters and four bytes, because UTF
 printed alone.
 
 The third pair is fairer, since neither sentence was in the corpus: 20 tokens against 30. **English
-still wins, with no sentence to have memorised**, because the pieces it breaks into, ` the`, `er`,
-` w`, are pieces the trainer saw constantly.
+still wins, with no sentence to have memorised**, because a new English word is still made of
+pieces the trainer saw constantly, like the ` w` that `weaver` begins with.
 
 ## What the ratio costs
 

@@ -48,7 +48,22 @@ uma média, e uma camada linear que dá nota aos 500 tokens. Salve-o como `~/dl/
 ```
 
 ```
-PENDING near
+ana@vm:~/dl$ python near.py
+examples: 998  context: (998, 4)
+candidates: 57
+untrained Monday  said 0.82  The 0.66  sells 0.57
+untrained baker   rains 0.89  two 0.75  night 0.73
+untrained pears   farmer 0.58  river 0.56  rains 0.51
+untrained red     cherries 0.81  eat 0.58  wakes 0.44
+untrained goat    wakes 0.74  square 0.73  miller 0.70
+epoch 100: loss 3.270
+epoch 200: loss 2.038
+epoch 300: loss 1.353
+trained   Monday  Saturday 0.81  Friday 0.79  square 0.75
+trained   baker   potter 0.95  miller 0.94  fire 0.91
+trained   pears   sleeps 0.80  plums 0.76  cherries 0.70
+trained   red     all 0.86  sheep 0.83  bowls 0.66
+trained   goat    dog 0.91  cat 0.88  child 0.85
 ```
 
 Os 998 exemplos são os tokens do corpus menos os dois de cada ponta, e cada um tem quatro tokens de

@@ -34,7 +34,18 @@ o que ele faz com o português:
 ```
 
 ```
-PENDING bill
+ana@vm:~/dl$ python bill.py
+     chars bytes tokens
+en      32    32      7  On Monday the baker sells bread.
+pt      37    38     28  Na segunda-feira o padeiro vende pão.
+en      43    43     14  The goat eats apples, and the cow eats hay.
+pt      39    41     28  A cabra come maçãs, e a vaca come feno.
+en      44    44     20  The weaver mends the blankets before winter.
+pt      49    50     30  O tecelão remenda os cobertores antes do inverno.
+tokens, en: 41  pt: 86  ratio: 2.10
+' pão' -> [' p', '�', '�', 'o']
+en: 13.7 tokens a sentence, 37 sentences fit in 512, a million sentences cost 27.33
+pt: 28.7 tokens a sentence, 17 sentences fit in 512, a million sentences cost 57.33
 ```
 
 ## O mesmo sentido, o dobro de tokens
@@ -51,8 +62,8 @@ Olhe a coluna de bytes. `pão` tem três caracteres e quatro bytes, porque o UTF
 para imprimi-lo isolado.
 
 O terceiro par é mais justo, já que nenhuma das duas frases estava no corpus: 20 tokens contra 30. **O
-inglês ainda ganha, sem frase nenhuma para ter decorado**, porque os pedaços em que ele se quebra,
-` the`, `er`, ` w`, são pedaços que o treinador viu o tempo todo.
+inglês ainda ganha, sem frase nenhuma para ter decorado**, porque uma palavra inglesa nova ainda é feita
+de pedaços que o treinador viu o tempo todo, como o ` w` com que `weaver` começa.
 
 ## Quanto a razão custa
 

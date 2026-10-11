@@ -41,7 +41,13 @@ precisa do `tok.json` que o `tok.py` salvou:
 ```
 
 ```
-PENDING lookup
+ana@vm:~/dl$ python lookup.py
+ids: [304, 369, 258, 288, 307, 371, 13]
+table: (500, 8)  parameters: 4000
+row 288 for ' baker': [ 0.224  0.218 -0.926  0.345 -1.446 -0.936 -0.427 -2.011]
+lookup: (7, 8)  one-hot: (7, 500)  product: (7, 8)
+equal: True
+rows with a gradient: 7 of 500
 ```
 
 **`equal: True` diz que os dois são um cálculo só.** Sete ids consultados na tabela dão uma matriz 7 por 8; sete

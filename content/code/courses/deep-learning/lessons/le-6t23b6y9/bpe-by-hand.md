@@ -45,7 +45,16 @@ Five words, each with how often it was seen, are enough to watch it work. Save t
 ```
 
 ```
-PENDING bpe
+ana@vm:~/dl$ python bpe.py
+merge 1: 'a' + 'k' seen 20 times -> b|ak|e b|ak|e|r b|ak|e|r|s m|ak|e m|ak|e|r
+merge 2: 'ak' + 'e' seen 20 times -> b|ake b|ake|r b|ake|r|s m|ake m|ake|r
+merge 3: 'b' + 'ake' seen 13 times -> bake bake|r bake|r|s m|ake m|ake|r
+merge 4: 'bake' + 'r' seen  8 times -> bake baker baker|s m|ake m|ake|r
+merge 5: 'm' + 'ake' seen  7 times -> bake baker baker|s make make|r
+merge 6: 'make' + 'r' seen  3 times -> bake baker baker|s make maker
+'makers' was never seen -> ['maker', 's']
+'baked' was never seen -> ['bake', 'd']
+'taker' was never seen -> ['t', 'ake', 'r']
 ```
 
 ## Reading the merges

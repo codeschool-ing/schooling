@@ -82,7 +82,13 @@ print("as characters:", len(new), "symbols, none unknown:", all(c in chars for c
 ```
 
 ```
-PENDING split
+ana@vm:~/dl$ wc corpus.txt
+  45  623 3261 corpus.txt
+ana@vm:~/dl$ python split.py
+characters:   40 different,  3261 in the corpus
+words:       187 different,   713 in the corpus
+as words:      ['On', 'Sunday', 'the', '<unk>', 'sells', '<unk>', '.']
+as characters: 36 symbols, none unknown: True
 ```
 
 ## Characters: nothing unknown, and long
