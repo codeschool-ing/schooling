@@ -1,0 +1,594 @@
+{
+  "ex-r2er8dbb": {
+    "prompt": "A página de um livro precisa do livro, do nome do autor e dos outros livros do autor, e o `rest.py` faz o cliente perguntar três vezes. Como se chama isso?",
+    "choices": [
+      {
+        "text": "Sobrebusca",
+        "why": "Essa é a metade oposta: uma resposta trazendo campos que a tela não mostra."
+      },
+      {
+        "text": "Subbusca",
+        "why": "Certo. Nenhum endereço tem os três, e o cliente compensa com mais requisições."
+      },
+      {
+        "text": "Versionamento",
+        "why": "Versões tratam de mudar um contrato; nada mudou aqui."
+      },
+      {
+        "text": "O problema N+1 dentro do banco",
+        "why": "Perto, mas aqui as requisições atravessam a rede a partir do cliente; o lado do banco é o N+1 que o graph.py mostra depois."
+      }
+    ]
+  },
+  "ex-bb2hhz2x": {
+    "prompt": "Uma página mostra todos os livros do `rest.py` com o nome do autor, buscados do jeito óbvio: a lista e depois uma requisição por livro. Com os seis livros do `db.py`, quantas requisições o servidor registrou?",
+    "hint": "Uma para a lista, depois uma por livro, repetições incluídas.",
+    "unit": "requisições"
+  },
+  "ex-gzt2q2xa": {
+    "prompt": "Na página de livro em REST, por que o cliente não podia enviar a requisição do autor junto com a do livro?",
+    "choices": [
+      {
+        "text": "O HTTP/1.1 manda uma requisição por conexão de cada vez",
+        "why": "Um cliente pode abrir várias conexões; o obstáculo não era o protocolo."
+      },
+      {
+        "text": "O rest.py recusa duas requisições simultâneas do mesmo cliente",
+        "why": "Ele roda uma thread por requisição e não recusa nada disso."
+      },
+      {
+        "text": "O endereço do autor só se sabe pelo livro",
+        "why": "Certo. O `author_id` chega na primeira resposta, então a segunda requisição espera uma ida e volta inteira."
+      },
+      {
+        "text": "O autor precisava estar em cache antes de ser pedido",
+        "why": "Nenhum cache entra nisso; a segunda requisição depende de um dado, não de um cache."
+      }
+    ]
+  },
+  "ex-1j3c54k2": {
+    "prompt": "Um esquema declara `tags: [String]!`. Qual destas respostas quebra a promessa?",
+    "hint": "Leia o `!` de fora e o tipo de dentro separadamente.",
+    "choices": [
+      {
+        "text": "`\"tags\": []`",
+        "why": "Uma lista vazia continua sendo lista, e a lista é o que o `!` promete."
+      },
+      {
+        "text": "`\"tags\": [\"new\", null]`",
+        "why": "O `String` dentro dos colchetes não tem `!`, então um item pode ser nulo."
+      },
+      {
+        "text": "`\"tags\": null`",
+        "why": "Certo. O `!` fora dos colchetes diz que a lista em si nunca é nula."
+      },
+      {
+        "text": "`\"tags\": [\"new\"]`",
+        "why": "Uma lista com um texto satisfaz as duas metades do tipo."
+      }
+    ]
+  },
+  "ex-8bzhqn6s": {
+    "prompt": "Na linguagem de esquema do GraphQL, um tipo seguido de ___ promete que o valor nunca é nulo.",
+    "hint": "Um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "!"
+        ]
+      }
+    ]
+  },
+  "ex-174yn7w0": {
+    "prompt": "O `Book` do `graph.py` tem um campo `priceCents`, enquanto a tabela tem uma coluna `price_cents` e um `author_id` que o esquema não mostra. O que isso diz sobre o GraphQL?",
+    "choices": [
+      {
+        "text": "O esquema deveria espelhar a tabela, e o graph.py tem um bug",
+        "why": "Essa é a crença que a seção corrige: espelhar a tabela não é tarefa do esquema."
+      },
+      {
+        "text": "Ele descreve os tipos da API, não a tabela",
+        "why": "Certo. O GraphQL consulta os tipos da API, e os resolvers decidem de onde vem cada valor."
+      },
+      {
+        "text": "O GraphQL renomeia colunas para camelCase sozinho",
+        "why": "Nada renomeia nada sozinho; `price_cents` precisou de um resolver próprio."
+      },
+      {
+        "text": "Colunas fora do esquema são apagadas do banco",
+        "why": "O esquema não toca na tabela; `author_id` continua lá para os resolvers usarem."
+      }
+    ]
+  },
+  "ex-a5qpctc1": {
+    "prompt": "Por que a aula para o `rest.py` antes de subir o `graph.py`?",
+    "choices": [
+      {
+        "text": "Os dois escutam em 127.0.0.1:8000, e uma porta aceita um servidor",
+        "why": "Certo. O segundo a subir não conseguiria ocupar o endereço."
+      },
+      {
+        "text": "Dois programas não conseguem abrir o shelf.db juntos",
+        "why": "O SQLite deixa vários leitores abrirem um arquivo; o conflito é a porta."
+      },
+      {
+        "text": "O graph.py importa o rest.py",
+        "why": "Ele importa `db.py` e `graphql`, nunca o `rest.py`."
+      },
+      {
+        "text": "REST e GraphQL usam versões diferentes do HTTP",
+        "why": "Os dois falam HTTP/1.1, definido por `protocol_version`."
+      }
+    ]
+  },
+  "ex-r509erdd": {
+    "prompt": "A página de livro como uma consulta GraphQL, `{ book(id: 2) { title author { name books { title } } } }`. Quantas consultas SQL o `graph.py` relatou em `extensions`?",
+    "hint": "Uma por resolver que chega ao banco.",
+    "unit": "consultas"
+  },
+  "ex-ayjdvvmn": {
+    "prompt": "Você quer os títulos dos livros 1 e 5 numa requisição. `{ book(id: 1) { title } book(id: 5) { title } }` é recusada. O que resolve?",
+    "hint": "Duas respostas cairiam sob uma chave só.",
+    "choices": [
+      {
+        "text": "Um fragment",
+        "why": "Um fragment reaproveita campos; as duas respostas continuariam se chamando `book`."
+      },
+      {
+        "text": "Variáveis para os dois ids",
+        "why": "Variáveis tiram os valores do texto; os dois campos continuam colidindo."
+      },
+      {
+        "text": "Duas requisições; o GraphQL pede uma coisa por vez",
+        "why": "Uma requisição pode pedir muitos campos, que é a razão de ser do GraphQL."
+      },
+      {
+        "text": "Aliases, como `first:` e `fifth:`",
+        "why": "Certo. Cada alias nomeia sua própria chave na resposta."
+      }
+    ]
+  },
+  "ex-4ba7myxx": {
+    "prompt": "Ligue cada parte de uma consulta ao que ela serve.",
+    "pairs": [
+      {
+        "left": "um alias, `fifth:`",
+        "right": "renomeia um campo na resposta"
+      },
+      {
+        "left": "um fragment, `...card`",
+        "right": "reaproveita um conjunto de campos em vários lugares"
+      },
+      {
+        "left": "uma variável, `$id`",
+        "right": "leva um valor fora do texto da consulta"
+      },
+      {
+        "left": "um nome de operação, `Page`",
+        "right": "identifica a operação em logs e ferramentas"
+      }
+    ],
+    "right_distractors": [
+      "limita a profundidade da consulta"
+    ]
+  },
+  "ex-hqzgn16r": {
+    "prompt": "`{ book(id: 1) { author } }` é recusada com 400. Por quê?",
+    "choices": [
+      {
+        "text": "O livro 1 não tem autor",
+        "why": "O livro 1 é do Machado, e a recusa veio antes de rodar SQL."
+      },
+      {
+        "text": "`author` é um objeto com campos a nomear",
+        "why": "Certo. A consulta desce até os escalares; não há como pedir um objeto inteiro."
+      },
+      {
+        "text": "Argumentos pertencem aos campos da raiz da consulta",
+        "why": "Qualquer campo pode ter argumentos; `books(authorId:)` e `book(id:)` têm."
+      },
+      {
+        "text": "O id precisa ir como variável",
+        "why": "Variáveis são boa prática, não regra; `book(id: 1)` rodou bem em outro lugar."
+      }
+    ]
+  },
+  "ex-8nf0m3nz": {
+    "prompt": "O corpo JSON de uma requisição GraphQL guarda o texto da consulta em `query` e os valores de `$id` na chave ___.",
+    "blanks": [
+      {
+        "accept": [
+          "variables"
+        ]
+      }
+    ]
+  },
+  "ex-v95sgn9b": {
+    "prompt": "Quando o `Book.author` roda no `graph.py`, o que é o `parent` dele?",
+    "choices": [
+      {
+        "text": "A linha do livro, como dict",
+        "why": "Certo. O pai é o que o campo de cima devolveu, e o `author_id` está nele."
+      },
+      {
+        "text": "O texto inteiro da consulta",
+        "why": "A consulta chega analisada, por `info`, e não como pai."
+      },
+      {
+        "text": "A conexão com o banco",
+        "why": "A conexão está no contexto, compartilhada pelos resolvers da requisição."
+      },
+      {
+        "text": "O autor, já buscado pelo servidor",
+        "why": "Buscar o autor é o trabalho deste resolver; ninguém fez isso antes."
+      }
+    ]
+  },
+  "ex-q70c212k": {
+    "prompt": "O `graph.py` tem um resolver para `priceCents` e nenhum para `title`. Por quê?",
+    "choices": [
+      {
+        "text": "`title` é um texto, e textos são devolvidos sem precisar de código",
+        "why": "O tipo não decide isso; `isbn` é texto e `stock` é Int, e nenhum tem função."
+      },
+      {
+        "text": "Campos inteiros sempre precisam de resolver próprio",
+        "why": "`year` e `stock` são inteiros respondidos pelo resolver padrão."
+      },
+      {
+        "text": "O resolver padrão procura uma chave com o nome do campo",
+        "why": "Certo. A coluna é `price_cents`, então o dict da linha tem `title` e não tem `priceCents`."
+      },
+      {
+        "text": "Preços são calculados, não guardados",
+        "why": "O preço é guardado em centavos; o resolver só o lê com outro nome."
+      }
+    ]
+  },
+  "ex-05c372ba": {
+    "prompt": "O esquema do `graph.py` tem 15 campos entre `Query`, `Mutation`, `Book` e `Author`, e o arquivo prende 7 funções de resolver. Quantos campos são respondidos pelo resolver padrão?",
+    "unit": "campos"
+  },
+  "ex-mf43nwv2": {
+    "prompt": "Uma loja tem 100 livros de 30 autores. Sem `--batch`, quantas consultas SQL custa `{ books { title author { name } } }`?",
+    "hint": "Seis livros custaram sete aqui.",
+    "choices": [
+      {
+        "text": "31",
+        "why": "Isso conta cada autor uma vez, que é o que o loader consegue, não o resolver simples."
+      },
+      {
+        "text": "2",
+        "why": "Dois é o número com agrupamento: a lista e uma consulta `IN`."
+      },
+      {
+        "text": "101",
+        "why": "Certo. Uma para a lista e uma por livro, repetições incluídas: N+1."
+      },
+      {
+        "text": "1",
+        "why": "Uma significaria que o servidor transforma a consulta em um comando SQL, e ele não faz isso."
+      }
+    ]
+  },
+  "ex-16g07fgn": {
+    "prompt": "Ponha em ordem o que acontece com os autores de uma lista de livros quando o `graph.py` roda com `--batch`.",
+    "hint": "Nada é buscado até todo livro ter pedido.",
+    "items": [
+      "O resolver `author` de cada livro chama `load` com um id",
+      "`load` devolve uma promessa e agenda o `fetch`",
+      "O event loop fica livre, então o `fetch` roda",
+      "Uma consulta `WHERE id IN (…)` traz todos os autores",
+      "Cada promessa é cumprida, e os campos `name` dos autores são resolvidos"
+    ],
+    "trap": "Buscar dentro do `load` traria o N+1 de volta: a graça é esperar até todos os ids chegarem."
+  },
+  "ex-a2jtaszh": {
+    "prompt": "Com o loader ligado, `{ books { author { books { author { name } } } } }` ainda custou 8 consultas SQL. O que falta consertar?",
+    "choices": [
+      {
+        "text": "O loader deveria ser compartilhado entre requisições",
+        "why": "Isso faria dele um cache entre usuários, e não reduziria as consultas desta requisição."
+      },
+      {
+        "text": "`Author.books` ainda roda uma consulta por autor",
+        "why": "Certo. Seis das oito são livros por autor; um loader conserta o campo para o qual foi escrito."
+      },
+      {
+        "text": "Os autores do último nível são buscados uma segunda vez",
+        "why": "Eles não custaram nada: todos já tinham sido prometidos nesta requisição."
+      },
+      {
+        "text": "O limite de profundidade deveria baixar para 3",
+        "why": "Isso recusa a consulta em vez de deixá-la mais barata."
+      }
+    ]
+  },
+  "ex-n14j0fvp": {
+    "prompt": "Uma mutation ajusta o estoque do livro 1 para 10 (campo `a`) e o do livro 2 para -1 (campo `b`). A resposta é 200, com `a` preenchido, `b` nulo e um erro. O que está no banco agora?",
+    "choices": [
+      {
+        "text": "Nenhuma mudança; o erro desfez a requisição",
+        "why": "Nada fez dos dois campos uma transação, então a primeira escrita ficou."
+      },
+      {
+        "text": "As duas mudanças, já que o status foi 200",
+        "why": "O CHECK do banco recusou o -1; 200 só diz que a consulta rodou."
+      },
+      {
+        "text": "O livro 2 mudou e o livro 1 não",
+        "why": "Ao contrário: `a` foi o que deu certo."
+      },
+      {
+        "text": "Livro 1 com 10, livro 2 como estava",
+        "why": "Certo. Cada campo fez seu commit sozinho: um sucesso parcial."
+      }
+    ]
+  },
+  "ex-cvqxm5k9": {
+    "prompt": "Quais destas valem para uma resposta GraphQL com status 200? Marque todas que se aplicam.",
+    "hint": "O status diz que a consulta rodou, e só.",
+    "choices": [
+      {
+        "text": "Ela pode trazer uma lista `errors`",
+        "why": "Certo. O `setStock` que falhou voltou com 200."
+      },
+      {
+        "text": "Parte de `data` pode ser nula porque um campo falhou",
+        "why": "Certo. `b` veio nulo com o erro ao lado."
+      },
+      {
+        "text": "Ela prova que todo campo deu certo",
+        "why": "É o que um 200 queria dizer no `rest.py`, e deixa de querer aqui."
+      },
+      {
+        "text": "Um painel que conta 4xx e 5xx vê os erros dela",
+        "why": "Ele vê um sucesso comum; os erros estão no corpo."
+      }
+    ]
+  },
+  "ex-rbvjt8qt": {
+    "prompt": "Suponha que `setStock` fosse declarado `Book!` e a requisição tivesse um campo, o que ajusta um estoque de -1. O que a resposta traria?",
+    "hint": "Um campo não nulo não pode guardar o null.",
+    "choices": [
+      {
+        "text": "`\"data\": {\"setStock\": null}` e o erro",
+        "why": "É o que o `Book` anulável permite; `Book!` proíbe exatamente este null."
+      },
+      {
+        "text": "`\"data\": null` e o erro",
+        "why": "Certo. O null sobe até o campo mais próximo que aceita um, e aqui é o próprio `data`."
+      },
+      {
+        "text": "Um 500 sem corpo",
+        "why": "O servidor não falhou; o GraphQL relata o erro do campo no corpo."
+      },
+      {
+        "text": "O livro com o estoque antigo e nenhum erro",
+        "why": "A recusa continua sendo relatada; o esquema decide onde o null cai, não se ele cai."
+      }
+    ]
+  },
+  "ex-pjkvbgnw": {
+    "prompt": "Uma equipe desliga a introspecção no servidor público e diz que o esquema está protegido. O que há de errado nisso?",
+    "choices": [
+      {
+        "text": "A introspecção não pode ser desligada no graphql-core",
+        "why": "Pode: `NoSchemaIntrospectionCustomRule` é uma regra de validação para isso."
+      },
+      {
+        "text": "Desligá-la deixa mais lenta a validação de cada consulta que um cliente envia",
+        "why": "É uma regra de validação a mais; o custo não é a questão."
+      },
+      {
+        "text": "Campos escondidos seguem chamáveis, e erros vazam os nomes",
+        "why": "Certo. Cada campo ainda precisa de autorização, e `Did you mean 'title'?` responde sem introspecção."
+      },
+      {
+        "text": "Os clientes vão parar de receber `data`",
+        "why": "As consultas comuns rodam como antes; só `__schema` e `__type` são recusados."
+      }
+    ]
+  },
+  "ex-tjgfz3b3": {
+    "prompt": "Ligue cada ferramenta ao que ela faz com o esquema que lê por introspecção.",
+    "pairs": [
+      {
+        "left": "um editor",
+        "right": "completa nomes de campo enquanto você digita"
+      },
+      {
+        "left": "um gerador de código",
+        "right": "escreve código de cliente tipado"
+      },
+      {
+        "left": "uma página de documentação",
+        "right": "descreve a API sem ficar para trás"
+      }
+    ],
+    "right_distractors": [
+      "decide quem pode chamar uma mutation"
+    ]
+  },
+  "ex-0822pfmq": {
+    "prompt": "Pela conta do `graph.py`, quantos níveis tem `{ book(id: 1) { title author { books { title } } } }`?",
+    "hint": "Conte os campos do caminho mais longo até uma folha.",
+    "unit": "níveis"
+  },
+  "ex-e5apnkqv": {
+    "prompt": "Por que limitar cada cliente a tantas requisições por minuto protege menos um servidor GraphQL do que um REST?",
+    "choices": [
+      {
+        "text": "Uma requisição custa uma consulta SQL, ou vinte e três",
+        "why": "Certo. O cliente escolhe o trabalho, então contar requisições não o mede."
+      },
+      {
+        "text": "Clientes GraphQL mandam menos requisições, então o limite nunca é atingido",
+        "why": "Menos requisições é verdade e não vem ao caso: cada uma pode pesar muito mais."
+      },
+      {
+        "text": "Requisições POST não podem ser contadas por um servidor",
+        "why": "Toda requisição é contada igual; o log de acesso listou cada POST."
+      },
+      {
+        "text": "Limites de taxa só funcionam com status diferente de 200",
+        "why": "Um limite de taxa conta requisições, não status."
+      }
+    ]
+  },
+  "ex-1qbssyek": {
+    "prompt": "Quando toda consulta que o cliente vai enviar é registrada no servidor com antecedência, e o cliente manda só um id com as variáveis, elas se chamam consultas ___.",
+    "blanks": [
+      {
+        "accept": [
+          "persistidas",
+          "persisted"
+        ]
+      }
+    ]
+  },
+  "ex-9yqkscfw": {
+    "prompt": "Você põe o limite de profundidade 5 do `graph.py` num servidor que a sua equipe explora com um editor GraphQL. O que quebra primeiro?",
+    "hint": "Meça a consulta que as ferramentas enviam.",
+    "choices": [
+      {
+        "text": "As mutations, porque são escritas na raiz",
+        "why": "A profundidade de uma mutation conta como a de qualquer consulta; `setStock` com dois campos tem dois níveis."
+      },
+      {
+        "text": "Consultas que usam variáveis",
+        "why": "Variáveis não somam profundidade; só campos somam."
+      },
+      {
+        "text": "A consulta de esquema do próprio editor, que tem 13 níveis",
+        "why": "Certo. Servidores com limite de profundidade isentam a introspecção ou a medem à parte por isso."
+      },
+      {
+        "text": "Consultas com fragments",
+        "why": "O limite segue o fragment para dentro dos campos; um fragment raso passa."
+      }
+    ]
+  },
+  "ex-6ctfda3t": {
+    "prompt": "Um banco publica uma API para parceiros que nunca vai conhecer, que a chamam de várias linguagens, muitas vezes com `curl`. O que serve melhor?",
+    "choices": [
+      {
+        "text": "GraphQL com consultas persistidas",
+        "why": "Consultas persistidas exigem cada cliente registrado antes, e os clientes de estranhos não são seus."
+      },
+      {
+        "text": "REST",
+        "why": "Certo. Endereços, códigos de status, cache HTTP e custo fixo por requisição servem a quem você não vê."
+      },
+      {
+        "text": "GraphQL com a introspecção desligada",
+        "why": "Esconder o esquema torna uma API pública mais difícil de usar e não protege nada."
+      },
+      {
+        "text": "Um backend for frontend",
+        "why": "Um BFF serve as suas próprias telas; parceiros não são uma delas."
+      }
+    ]
+  },
+  "ex-qefdtn5e": {
+    "prompt": "Uma equipe escreve um app web, um Android e um de iPhone sobre os mesmos serviços, e cada tela muda a cada poucas semanas. O que uma camada GraphQL na frente dos serviços dá a eles?",
+    "choices": [
+      {
+        "text": "Cache HTTP de graça para toda resposta",
+        "why": "O contrário: um endereço e POST deixam o cache HTTP mais difícil."
+      },
+      {
+        "text": "Fim da necessidade de limitar o custo de uma consulta",
+        "why": "O cliente escolhe o trabalho, então limites importam mais, não menos."
+      },
+      {
+        "text": "Cada tela pede sua fatia sem um endpoint novo",
+        "why": "Certo. E como todo cliente é deles, consultas persistidas podem fixar a lista de operações."
+      },
+      {
+        "text": "Códigos de status que relatam o resultado de cada campo",
+        "why": "Um 200 cobre a resposta inteira; o resultado de cada campo está em `errors`."
+      }
+    ]
+  },
+  "ex-htn6e8hh": {
+    "prompt": "Ponha em ordem o que o `graph.py` faz com um `POST /graphql`.",
+    "hint": "Toda verificação que não precisa do banco vem antes de qualquer SQL.",
+    "items": [
+      "Ler o corpo e conferir o `Content-Type`",
+      "Analisar o texto da consulta",
+      "Validar a consulta contra o esquema",
+      "Medir a profundidade contra o `MAX_DEPTH`",
+      "Rodar os resolvers, contando o SQL",
+      "Responder 200 com `data`, eventuais `errors` e `extensions`"
+    ],
+    "trap": "A validação precisa da consulta analisada, e a profundidade é medida numa consulta que já se sabe válida."
+  },
+  "ex-a27br88j": {
+    "prompt": "Quais destas requisições o `graph.py` responde com 400? Marque todas que se aplicam.",
+    "hint": "Um 400 quer dizer que nada rodou.",
+    "choices": [
+      {
+        "text": "`{ books { titel } }`",
+        "why": "Certo. A validação recusa um campo que o esquema não tem."
+      },
+      {
+        "text": "Uma mutation ajustando um estoque de -1",
+        "why": "Ela rodou, então é um 200 com o erro em `errors`."
+      },
+      {
+        "text": "Uma consulta de seis níveis",
+        "why": "Certo. O limite de profundidade a recusa antes de qualquer SQL."
+      },
+      {
+        "text": "Um `GET /graphql?query=…`",
+        "why": "Esse é um 405 com `Allow: POST`."
+      }
+    ]
+  },
+  "ex-mey1ssj1": {
+    "prompt": "Ligue cada coisa vista nesta aula ao que a causou.",
+    "pairs": [
+      {
+        "left": "`sqlQueries: 7` para seis livros e seus autores",
+        "right": "um resolver rodando uma vez por item"
+      },
+      {
+        "left": "400 e `Did you mean 'title'?`",
+        "right": "validação contra o esquema"
+      },
+      {
+        "left": "200 com `b` nulo e um erro",
+        "right": "um resolver lançando um erro"
+      },
+      {
+        "left": "`IN (1, 2, 3, 4)` no terminal do servidor",
+        "right": "o loader agrupando ids"
+      }
+    ],
+    "right_distractors": [
+      "um cache HTTP respondendo"
+    ]
+  },
+  "ex-aadvz46d": {
+    "prompt": "Uma equipe troca sua página de lista REST por uma consulta GraphQL. A página carrega mais rápido, e a contagem de consultas do banco sobe. O que aconteceu?",
+    "choices": [
+      {
+        "text": "O N+1 saiu da rede e foi para os resolvers do servidor",
+        "why": "Certo. As idas e voltas sumiram e as buscas por item ficaram; um loader é a solução."
+      },
+      {
+        "text": "O GraphQL manda cada campo como uma requisição HTTP separada",
+        "why": "Foi uma requisição só; as consultas extras acontecem dentro do servidor."
+      },
+      {
+        "text": "Consultas de introspecção rodam a cada requisição",
+        "why": "A introspecção só roda quando um cliente pede `__schema` ou `__type`."
+      },
+      {
+        "text": "O esquema forçou campos extras na resposta",
+        "why": "Uma consulta devolve exatamente os campos que nomeia, nada além."
+      }
+    ]
+  }
+}
