@@ -14,7 +14,7 @@ that they run unattended, every time the same way, and leave a record. Save this
 
 It runs as you, with `sudo` for the commands that need it, because it moves files that belong to
 `postgres` and runs `psql` as you. The restore targets the **restore point** it created, by name,
-which lesson 6 called the cheapest exact target there is. Make it executable, and run it:
+which lesson 6 called the cheapest insurance there is. Make it executable, and run it:
 
 ```
 ana@vm:~$ chmod +x restore-drill.sh
