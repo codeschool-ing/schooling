@@ -116,7 +116,7 @@ fresh. It has no cookies, and the line printed in the middle shows that neither 
 the shop never sets one, so it has nothing to tell two people apart by. Bia opens the shop having
 added nothing, and her basket says `1`, because the banana is Ana's and **the basket lives on the
 server, as one list for everybody**. Bia adds a mango, Ana reloads, and Ana's total is now
-@@TOTAL@@. A context isolates what the browser keeps. It cannot isolate what the server keeps, and no
+`R$ 10,40`, a banana and a mango. A context isolates what the browser keeps. It cannot isolate what the server keeps, and no
 setting in Playwright can.
 
 Read the test as what it is: a description of the shop as it behaves today. If a later version

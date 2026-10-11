@@ -71,7 +71,7 @@ its first line:
 %%CAP firefox%%
 ```
 
-The path names `firefox-@@FFBUILD@@`: Playwright 1.56.0 looks for one particular build of its patched
+The path names `firefox-1495`: Playwright 1.56.0 looks for one particular build of its patched
 Firefox, as it does for Chromium. **The Firefox and WebKit projects were not run for this course**,
 so no transcript here shows a test passing in either. Run `npx playwright test --config
 browsers.config.js` on your own machine after installing them and you should see every test three

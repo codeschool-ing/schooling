@@ -52,9 +52,15 @@ test('a read is a snapshot, an assertion retries', async ({ page }) => {
 O `textContent()` leu a contagem na hora e recebeu `0`: **uma leitura é uma foto**, tirada no
 instante em que roda, antes de a resposta da loja voltar. O `expect(count).toHaveText('1')` passou
 na mesma página, porque uma asserção sobre um localizador é uma **asserção web-first**: ela lê,
-compara e lê de novo até o texto bater. Um teste que conferisse a foto com
-`expect(text).toBe('1')` falharia aqui na maioria das execuções e passaria em algumas, que é o
-teste instável de que trata a aula 14.
+compara e lê de novo até o texto bater. O mesmo teste dez vezes, um depois do outro:
+
+```
+%%CAP waiting-repeat%%
+```
+
+A foto leu `0` sete vezes e `1` três vezes, conforme a loja já tivesse respondido ou não; a
+asserção passou nas dez. Um teste que conferisse a foto com `expect(text).toBe('1')` teria falhado
+em sete dessas dez execuções e passado em três, que é o teste instável de que trata a aula 14.
 
 ## Quanto tempo é "até"
 
@@ -80,10 +86,10 @@ test('a click on a button that is not there', async ({ page }) => {
 
 As duas falhas mostram dois relógios diferentes:
 
-- **uma asserção desiste depois de @@EXPECT@@**, e a mensagem diz isso, `Timeout: @@EXPECT@@`, com um
+- **uma asserção desiste depois de cinco segundos**, e a mensagem diz isso, `Timeout: 5000ms`, com um
   registro de chamadas mostrando quantas vezes ela olhou e o que achou em cada uma;
 - **uma ação não tem relógio próprio.** O clique esperou um botão chamado *Buy now* até o teste
-  inteiro estourar o tempo, `Test timeout of @@TEST@@ exceeded`, e a duração ao lado do nome do
+  inteiro estourar o tempo, `Test timeout of 30000ms exceeded`, e a duração ao lado do nome do
   teste mostra isso.
 
 Os dois podem ser mudados: `expect.timeout` e `timeout` na configuração, `actionTimeout` dentro de

@@ -48,7 +48,8 @@ número, e os eventos voltam como linhas `RECV` sem número nenhum. Contando a e
 %%CAP protocol-count%%
 ```
 
-@@COUNT@@ O terceiro comando da lista, `Target.createBrowserContext`, vale guardar para a seção
+**Um teste que abre uma página levou 29 comandos**, e o navegador mandou 90 linhas de volta: uma
+resposta a cada comando, e eventos que ninguém pediu. O terceiro comando da lista, `Target.createBrowserContext`, vale guardar para a seção
 sobre contextos: um contexto é algo que o próprio navegador oferece, e não um truque do
 Playwright.
 

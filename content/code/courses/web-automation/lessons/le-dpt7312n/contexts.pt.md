@@ -116,7 +116,7 @@ O segundo teste é **a falha da loja, mostrada pela ferramenta que não esconde 
 Bia é novo. Ele não tem cookies, e a linha impressa no meio mostra que nenhuma das duas tem: a loja
 nunca define um, então não tem com que distinguir duas pessoas. A Bia abre a loja sem ter posto
 nada, e a cesta dela diz `1`, porque a banana é da Ana e **a cesta mora no servidor, como uma lista
-só para todo mundo**. A Bia põe uma manga, a Ana recarrega, e o total da Ana agora é @@TOTAL@@. Um
+só para todo mundo**. A Bia põe uma manga, a Ana recarrega, e o total da Ana agora é `R$ 10,40`, uma banana e uma manga. Um
 contexto isola o que o navegador guarda. Não consegue isolar o que o servidor guarda, e nenhuma
 configuração do Playwright consegue.
 

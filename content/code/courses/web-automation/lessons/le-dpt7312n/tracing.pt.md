@@ -35,14 +35,38 @@ clientes:
 %%CAP trace-unzip%%
 ```
 
-@@TRACEPROSE@@
+Trinta e três arquivos, de quatro tipos:
+
+- **`test.trace`** é o teste como o executor o viu: cada passo, os hooks, e onde no código-fonte
+  cada um foi chamado. O código-fonte do próprio teste está em `resources/src@….txt`, para que o
+  viewer mostre a linha que rodou;
+- **um arquivo `trace` e um `network` numerados para cada contexto**, com as ações e as
+  requisições que aquele contexto fez;
+- **capturas de tela `.jpeg`**, com o nome da página de onde vieram e tiradas conforme o teste
+  agia, e é assim que o viewer mostra a página a cada passo;
+- **recursos `.html`, `.css` e `.json`**: os corpos das respostas, para que o viewer reconstrua a
+  página como ela estava, e não como a loja a serve hoje.
+
+Há três contextos numerados num teste que criou dois. Os arquivos de rede dizem quem é quem:
+
+```
+%%CAP trace-network%%
+```
+
+`0-` é a Ana: a página duas vezes, porque ela recarregou, e a cesta três vezes, uma em cada carga
+e uma pela banana. `2-` tem uma requisição só, o reset do `beforeEach`, porque a fixture `request`
+é um contexto de requisições próprio, sem página nenhuma. `1-` é a Bia: uma carga e a manga dela.
+
+**Um rastro é um registro da execução**, e diz o que aconteceu sem ninguém rodar o teste de novo.
+Ele também guarda o que as páginas mostraram e o que as requisições carregaram, o que, numa
+aplicação com contas reais, significa dados que você não colaria numa issue pública.
 
 ## Abrindo um
 
 O rastro foi feito para ser lido no **trace viewer** do Playwright:
 
 ```sh
-npx playwright show-trace test-results/@@TRACEDIR@@/trace.zip
+npx playwright show-trace test-results/contexts-two-shoppers-one-basket-the-shop-s-flaw/trace.zip
 ```
 
 Ele abre uma janela com a linha do tempo do teste no alto, a lista de ações na lateral e, para a

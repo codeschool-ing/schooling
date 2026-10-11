@@ -71,7 +71,7 @@ antes da primeira linha:
 %%CAP firefox%%
 ```
 
-O caminho cita `firefox-@@FFBUILD@@`: o Playwright 1.56.0 procura uma versão específica do seu Firefox
+O caminho cita `firefox-1495`: o Playwright 1.56.0 procura uma versão específica do seu Firefox
 modificado, como faz com o Chromium. **Os projetos Firefox e WebKit não foram executados para este
 curso**, então nenhuma transcrição aqui mostra um teste passando em nenhum dos dois. Rode
 `npx playwright test --config browsers.config.js` na sua máquina depois de instalá-los e você deve

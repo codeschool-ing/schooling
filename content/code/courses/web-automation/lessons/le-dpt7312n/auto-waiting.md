@@ -52,8 +52,16 @@ test('a read is a snapshot, an assertion retries', async ({ page }) => {
 `textContent()` read the count at once and got `0`: **a read is a snapshot**, taken the instant it
 runs, before the shop's answer had come back. `expect(count).toHaveText('1')` passed on the same
 page, because an assertion on a locator is a **web-first assertion**: it reads, compares, and reads
-again until the text matches. A test that checked the snapshot with `expect(text).toBe('1')` would
-fail here on most runs and pass on a few, which is the flaky test lesson 14 is about.
+again until the text matches. The same test ten times over, one after another:
+
+```
+%%CAP waiting-repeat%%
+```
+
+The snapshot read `0` seven times and `1` three times, depending on whether the shop had answered
+yet; the assertion passed all ten. A test that checked the snapshot with `expect(text).toBe('1')`
+would have failed seven runs of these ten and passed three, which is the flaky test lesson 14 is
+about.
 
 ## How long is "until"
 
@@ -79,10 +87,10 @@ test('a click on a button that is not there', async ({ page }) => {
 
 The two failures report two different clocks:
 
-- **an assertion gives up after @@EXPECT@@**, and the message says so, `Timeout: @@EXPECT@@`, with a
+- **an assertion gives up after five seconds**, and the message says so, `Timeout: 5000ms`, with a
   call log showing how many times it looked and what it found each time;
 - **an action has no clock of its own.** The click waited for a button called *Buy now* until the
-  whole test ran out of time, `Test timeout of @@TEST@@ exceeded`, and the duration beside the test
+  whole test ran out of time, `Test timeout of 30000ms exceeded`, and the duration beside the test
   name shows it.
 
 Both can be changed: `expect.timeout` and `timeout` in the configuration, `actionTimeout` under

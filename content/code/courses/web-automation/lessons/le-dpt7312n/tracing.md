@@ -34,14 +34,38 @@ two shoppers:
 %%CAP trace-unzip%%
 ```
 
-@@TRACEPROSE@@
+Thirty-three files, of four kinds:
+
+- **`test.trace`** is the test as the runner saw it: each step, the hooks, and where in the source
+  each one was called. The test's own source is in `resources/src@….txt`, so the viewer can show
+  the line that ran;
+- **a numbered `trace` and `network` file for each context**, with the actions and the requests
+  that context made;
+- **`.jpeg` screenshots**, named after the page they came from and taken as the test acted, which
+  is how the viewer shows the page at each step;
+- **`.html`, `.css` and `.json` resources**: the bodies of the responses, so the viewer can
+  rebuild the page as it was rather than as the shop serves it today.
+
+There are three numbered contexts in a test that made two. The network files say whose is whose:
+
+```
+%%CAP trace-network%%
+```
+
+`0-` is Ana: the page twice, because she reloaded, and the basket three times, once on each load
+and once for her banana. `2-` holds one request, the reset in `beforeEach`, because the `request`
+fixture is a request context of its own, with no page in it. `1-` is Bia: one load and her mango.
+
+**A trace is a record of the run**, and it says what happened without anybody running the test
+again. It also holds whatever the pages showed and whatever the requests carried, which on an
+application with real accounts means data you would not paste into a public issue.
 
 ## Opening it
 
 The trace is meant to be read in Playwright's **trace viewer**:
 
 ```sh
-npx playwright show-trace test-results/@@TRACEDIR@@/trace.zip
+npx playwright show-trace test-results/contexts-two-shoppers-one-basket-the-shop-s-flaw/trace.zip
 ```
 
 It opens a window with a timeline of the test across the top, the list of actions down the side, and

@@ -48,7 +48,8 @@ run:
 %%CAP protocol-count%%
 ```
 
-@@COUNT@@ The third command on the list, `Target.createBrowserContext`, is worth remembering for the
+**One test that opens one page took 29 commands**, and the browser sent 90 lines back: an answer to
+each command, and events nobody asked for. The third command on the list, `Target.createBrowserContext`, is worth remembering for the
 section on contexts: a context is something the browser itself provides, not a trick of
 Playwright's.
 

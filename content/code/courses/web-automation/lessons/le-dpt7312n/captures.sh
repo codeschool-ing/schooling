@@ -76,6 +76,7 @@ run "unzip -l test-results/contexts-two-shoppers-*/trace.zip"
 
 block trace-network
 run "unzip -p test-results/contexts-two-shoppers-*/trace.zip 0-trace.network | grep -o '\"url\":\"[^\"]*\"' | sort | uniq -c"
+run "unzip -p test-results/contexts-two-shoppers-*/trace.zip 1-trace.network | grep -o '\"url\":\"[^\"]*\"' | sort | uniq -c"
 run "unzip -p test-results/contexts-two-shoppers-*/trace.zip 2-trace.network | grep -o '\"url\":\"[^\"]*\"' | sort | uniq -c"
 
 block report-run
