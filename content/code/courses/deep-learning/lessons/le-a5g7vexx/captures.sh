@@ -10,8 +10,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Every program comes out of the lessons' own sections through lab/shown.py, so
-# what ran is what the page shows: digits.py from lesson 1, tdigits.py and
-# loop.py from lesson 9, and this lesson's own, cnn.py among them. Recorded on
+# what ran is what the page shows: digits.py from lesson 1, tdigits.py,
+# loop.py and mlp.py from lesson 9, and this lesson's own, cnn.py among them. Recorded on
 # Ubuntu 24.04, Python 3.12.3, torch 2.14.1 on the processor, four processors
 # and no graphics card, TZ=America/Sao_Paulo, on 2026-10-10.
 #
@@ -41,7 +41,7 @@ use cnn.py
 block model
 on 'python -c "import cnn; print(cnn.make_cnn())"'
 
-use tdigits.py loop.py compare.py
+use tdigits.py loop.py mlp.py compare.py
 block compare
 on 'python compare.py'
 

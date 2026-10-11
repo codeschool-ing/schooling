@@ -26,17 +26,7 @@ três de cada quatro números somem. Salve como `~/dl/pool.py`:
 ```
 
 ```
-ana@vm:~/dl$ python pool.py
-max:
- tensor([[4., 2.],
-        [2., 7.]])
-average:
- tensor([[2.5000, 0.7500],
-        [0.7500, 4.7500]])
-parameters in MaxPool2d(2): 0
-dot moved 0 right -> pooled [1.0, 0.0, 0.0, 0.0]
-dot moved 1 right -> pooled [1.0, 0.0, 0.0, 0.0]
-dot moved 2 right -> pooled [0.0, 1.0, 0.0, 0.0]
+PENDING pool
 ```
 
 O bloco de cima à esquerda tem 1, 3, 4 e 2, então o max pooling fica com 4 e o average pooling com

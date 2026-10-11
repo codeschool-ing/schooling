@@ -38,13 +38,7 @@ contados à mão. Salve como `~/dl/params.py`:
 ```
 
 ```
-ana@vm:~/dl$ python params.py
-conv1 weight (16, 1, 3, 3) bias (16,) -> 160
-a Linear from 64 pixels to 16 x 8 x 8 outputs -> 66560
-conv2 weight (32, 16, 3, 3) bias (32,) -> 4640
-a Linear from 16 x 8 x 8 to 32 x 8 x 8 -> 2099200
-conv on a 3 x 224 x 224 photo -> 448
-a Linear doing the same -> 120847089664
+PENDING params
 ```
 
 **A primeira camada tem 160 parâmetros**: 16 filtros de 1 × 3 × 3 pesos, mais um viés cada. Uma camada

@@ -26,17 +26,7 @@ four are gone. Save as `~/dl/pool.py`:
 ```
 
 ```
-ana@vm:~/dl$ python pool.py
-max:
- tensor([[4., 2.],
-        [2., 7.]])
-average:
- tensor([[2.5000, 0.7500],
-        [0.7500, 4.7500]])
-parameters in MaxPool2d(2): 0
-dot moved 0 right -> pooled [1.0, 0.0, 0.0, 0.0]
-dot moved 1 right -> pooled [1.0, 0.0, 0.0, 0.0]
-dot moved 2 right -> pooled [0.0, 1.0, 0.0, 0.0]
+PENDING pool
 ```
 
 The top-left block holds 1, 3, 4 and 2, so max pooling keeps 4 and average pooling keeps 2.5. **A

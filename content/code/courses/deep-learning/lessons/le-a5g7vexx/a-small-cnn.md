@@ -27,18 +27,7 @@ PyTorch describes a model when it is printed, and the description is a quick che
 the ones you meant:
 
 ```
-ana@vm:~/dl$ python -c "import cnn; print(cnn.make_cnn())"
-Sequential(
-  (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-  (1): ReLU()
-  (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-  (3): ReLU()
-  (4): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-  (5): Flatten(start_dim=1, end_dim=-1)
-  (6): Linear(in_features=512, out_features=64, bias=True)
-  (7): ReLU()
-  (8): Linear(in_features=64, out_features=10, bias=True)
-)
+PENDING model
 ```
 
 A comparison with lesson 9's dense network is only worth something if both are trained the same way,
@@ -54,15 +43,15 @@ Save as `~/dl/compare.py`:
   "file": "compare.py",
   "parts": [
     {
-      "code": "\"\"\"compare: lesson 9's dense network, a wider one, and cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits"
+      "code": "\"\"\"compare: lesson 9's dense network, a wider one, and cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\n\nimport cnn\nimport loop\nimport tdigits\nfrom mlp import make_mlp"
     },
     {
-      "code": "def run(name, make, images):\n    torch.manual_seed(0)\n    model = make()\n    train, val, _ = tdigits.load(images=images)\n    print(f\"{name}: {sum(p.numel() for p in model.parameters())} parameters\")\n    loop.fit(model, torch.optim.Adam(model.parameters(), lr=1e-3), train, val, epochs=30, every=10)\n    return model",
-      "note": "One recipe for all three: the same seed before the weights are made, the same split, Adam at 0.001, batches of 32, 30 epochs. `images` says whether the digits arrive as rows of 64 or as 1 by 8 by 8 grids."
+      "code": "def run(name, make, images):\n    torch.manual_seed(0)\n    model = make()\n    train, val, _ = tdigits.load(images=images)\n    print(f\"{name}: {sum(p.numel() for p in model.parameters())} parameters\")\n    loop.fit(model, torch.optim.SGD(model.parameters(), lr=0.1), train, val, epochs=30, every=10)\n    return model",
+      "note": "One recipe for all three, lesson 9's: the same seed before the weights are made, the same split, SGD at 0.1, batches of 32, 30 epochs. `images` says whether the digits arrive as rows of 64 or as 1 by 8 by 8 grids."
     },
     {
-      "code": "run(\"dense, lesson 9\", lambda: nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10)), False)\nrun(\"dense, 512 wide\", lambda: nn.Sequential(nn.Linear(64, 512), nn.ReLU(), nn.Linear(512, 10)), False)",
-      "note": "Lesson 9's network as it was, and the same shape with 512 hidden units instead of 64, which gives it about as many parameters as the convolutional network."
+      "code": "run(\"dense, lesson 9\", make_mlp, False)\nrun(\"dense, 512 wide\", lambda: make_mlp(512), False)",
+      "note": "Lesson 9's network as it was, with 32 hidden units, and the same function asked for 512, which gives it about as many parameters as the convolutional network."
     },
     {
       "code": "net = run(\"convolutional\", cnn.make_cnn, True)\nprint(sum(p.numel() for p in net[:4].parameters()), \"of them in the two convolutions\")\ntorch.save(net.state_dict(), \"cnn.pt\")",
@@ -73,15 +62,7 @@ Save as `~/dl/compare.py`:
 ```
 
 ```
-ana@vm:~/dl$ python compare.py
-dense: 4810 parameters
-epoch  10  train loss 0.3627  val loss 0.3510  val acc 0.922
-epoch  20  train loss 0.1724  val loss 0.1889  val acc 0.944
-epoch  30  train loss 0.1177  val loss 0.1471  val acc 0.953
-convolutional: 38282 parameters, 4800 of them in the two convolutions
-epoch  10  train loss 0.0985  val loss 0.1518  val acc 0.953
-epoch  20  train loss 0.0180  val loss 0.0757  val acc 0.978
-epoch  30  train loss 0.0070  val loss 0.0633  val acc 0.983
+PENDING compare
 ```
 
 **Against lesson 9's network the convolutional one wins clearly**: 0.983 on the validation set
