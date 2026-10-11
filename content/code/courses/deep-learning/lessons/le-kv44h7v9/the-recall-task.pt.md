@@ -82,11 +82,10 @@ e o aprendizado é lento na mesma proporção.
 **No comprimento 50 nenhuma aprendeu** em 3.000 passos. A RNN nunca saiu do acaso. A LSTM terminou em
 0,144, um pouco acima do acaso, o que pode ser o começo do aprendizado ou ruído em 1.000 sequências de
 teste, e esta execução não tem como dizer qual. Mais passos, um viés de esquecimento maior ou uma taxa de
-aprendizado menor talvez a levassem adiante, e nada disso foi tentado aqui, então esta aula afirma só o
+aprendizado menor talvez a levassem adiante. Nada disso foi tentado aqui, então esta aula afirma só o
 que mediu: **com o mesmo orçamento, a LSTM alcançou 20 passos atrás e não 50.**
 
-Vale levar duas coisas desta tabela. A primeira é que uma tarefa assim, em que a dificuldade é um botão
-só, é o jeito mais barato de comparar arquiteturas: a resposta é conhecida, os dados não custam nada, e o
-botão mostra onde cada uma para. A segunda é a comparação que a aula 15 faz com o mesmo arquivo, os
-mesmos passos e os mesmos comprimentos, contra um modelo que não carrega estado nenhum de um passo para o
-outro.
+**Uma tarefa cuja dificuldade é um botão só é o jeito mais barato de comparar arquiteturas.** A resposta
+é conhecida, os dados não custam nada, e o botão mostra onde cada uma para. A aula 15 gira o mesmo botão
+com o mesmo arquivo, os mesmos passos e os mesmos comprimentos, num modelo que não carrega estado nenhum
+de um passo para o outro.

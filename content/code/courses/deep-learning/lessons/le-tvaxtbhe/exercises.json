@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ex-54nngy1a",
+    "version": 1,
+    "section": "from-lenet-to-vgg",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two 3x3 convolutions in a row: how large a patch of the input does one value at the end depend on?",
+    "hint": "Each value of the first output saw a 3 by 3 patch.",
+    "choices": [
+      {
+        "text": "3 by 3, the size of each filter",
+        "correct": false,
+        "why": "That is what one layer sees. The second layer reads 3 by 3 values that each saw 3 by 3 pixels, so the patch grows."
+      },
+      {
+        "text": "5 by 5",
+        "correct": true,
+        "why": "Right. `stack.py` lit one pixel and counted 25 outputs, the same as one 5x5 filter."
+      },
+      {
+        "text": "6 by 6, the two sizes added",
+        "correct": false,
+        "why": "Each extra 3x3 layer adds one pixel on every side, two in width, not three."
+      },
+      {
+        "text": "9 by 9, the two sizes multiplied",
+        "correct": false,
+        "why": "The patches overlap; three layers reach 7 by 7, so two cannot reach 9 by 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-57fbd5sb",
+    "version": 1,
+    "section": "from-lenet-to-vgg",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did VGG prefer two 3x3 convolutions to one 5x5 with the same receptive field?",
+    "hint": "Compare the parameter counts, and what sits between the two layers.",
+    "choices": [
+      {
+        "text": "A 3x3 filter is faster on a graphics card whatever the count",
+        "correct": false,
+        "why": "Speed per filter was not the argument; the count and the extra non-linearity were."
+      },
+      {
+        "text": "Two layers see a larger patch than one 5x5",
+        "correct": false,
+        "why": "They see the same 25 pixels, which is why the comparison is fair."
+      },
+      {
+        "text": "Fewer weights, and a ReLU between them",
+        "correct": true,
+        "why": "Right: 73,856 against 102,464 at 64 channels, and the ReLU lets the pair compute what one linear filter cannot."
+      },
+      {
+        "text": "A 5x5 filter cannot be trained with backpropagation",
+        "correct": false,
+        "why": "Any filter size trains; AlexNet's first layer was 11x11."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kmqknw9",
+    "version": 1,
+    "section": "from-lenet-to-vgg",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to shrink a VGG-16 to fit a phone and starts by removing two of its 13 convolutions. Going by the counts in this lesson, why will that barely help?",
+    "hint": "Where do most of VGG-16's parameters sit?",
+    "choices": [
+      {
+        "text": "Convolutions share weights across the image, so they hold none",
+        "correct": false,
+        "why": "They share them, but they still hold 14,714,688 between them."
+      },
+      {
+        "text": "Removing layers makes the network train worse",
+        "correct": false,
+        "why": "That may or may not be so, but it is not about size."
+      },
+      {
+        "text": "The phone runs convolutions on dedicated hardware",
+        "correct": false,
+        "why": "Hardware changes speed, not the number of weights to store."
+      },
+      {
+        "text": "Nearly all the weight is in the dense head",
+        "correct": true,
+        "why": "Right: 123,642,856 of 138,357,544 are in the three dense layers. Replacing that head with an average and one small layer is what ResNet did."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjnb7k01",
+    "version": 1,
+    "section": "deeper-is-worse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes the degradation problem different from overfitting?",
+    "hint": "Which set does the deeper network do worse on?",
+    "choices": [
+      {
+        "text": "The deeper network is worse on its own training data",
+        "correct": true,
+        "why": "Right. Overfitting is good on training and bad on validation; here training itself fails."
+      },
+      {
+        "text": "Only the validation loss rises",
+        "correct": false,
+        "why": "That is overfitting's signature, the one this is not."
+      },
+      {
+        "text": "It happens only with small data sets",
+        "correct": false,
+        "why": "The ResNet paper saw it on ImageNet's million images."
+      },
+      {
+        "text": "It goes away with dropout",
+        "correct": false,
+        "why": "Dropout fights overfitting; it gives a network that cannot fit its training set nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-a24zbday",
+    "version": 1,
+    "section": "deeper-is-worse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `depth.py`, the 20-layer plain network's training loss sits at 2.30 for twenty epochs. What does that number mean on the digits?",
+    "hint": "What is the cross-entropy of a network that is equally unsure of all ten classes?",
+    "choices": [
+      {
+        "text": "The network has learnt the digits and is overfitting",
+        "correct": false,
+        "why": "An overfitting network has a training loss near zero, not stuck high."
+      },
+      {
+        "text": "It gives every digit the same probability",
+        "correct": true,
+        "why": "Right: minus the log of 1/10 is about 2.30. The network learnt nothing, and its accuracy is a fixed guess."
+      },
+      {
+        "text": "The rate is too high",
+        "correct": false,
+        "why": "A diverging loss climbs or turns into nan; this one does not move."
+      },
+      {
+        "text": "The network needs more epochs, since the loss falls slowly",
+        "correct": false,
+        "why": "It does not fall slowly; it does not fall, while the 8-layer network falls fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3gpc0qy",
+    "version": 1,
+    "section": "deeper-is-worse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deeper network can always copy a shallower one by making its extra layers pass their input through. Given that, what does a deeper plain network with a WORSE training loss tell you?",
+    "hint": "A better solution exists. Who failed to find it?",
+    "choices": [
+      {
+        "text": "Twenty layers are too few parameters for the digits",
+        "correct": false,
+        "why": "The 20-layer network has eight times the parameters of the 4-layer one, which trains."
+      },
+      {
+        "text": "The data needs augmenting",
+        "correct": false,
+        "why": "Augmentation helps generalisation, and the failure here is on the training set itself."
+      },
+      {
+        "text": "The optimiser cannot reach a solution that exists",
+        "correct": true,
+        "why": "Right. The weights for at least the shallow network's loss exist inside the deep one; training did not find them."
+      },
+      {
+        "text": "The test set is harder than the training set",
+        "correct": false,
+        "why": "The test set was never used, and the training loss is the one that is worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-gne98fbj",
+    "version": 1,
+    "section": "residual-connections",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `Residual` class of `deep.py` change about the `Plain` block?",
+    "hint": "Compare the two `forward` methods.",
+    "choices": [
+      {
+        "text": "It adds a third convolution",
+        "correct": false,
+        "why": "It inherits the same two convolutions and nothing else."
+      },
+      {
+        "text": "It adds the input to the output of the second convolution",
+        "correct": true,
+        "why": "Right: `x +` before the last ReLU, and the same parameters."
+      },
+      {
+        "text": "It doubles the channels",
+        "correct": false,
+        "why": "The width stays 16 throughout, which is why `x` and `f(x)` can be added."
+      },
+      {
+        "text": "It removes the ReLU that sits between the two convolutions of the block",
+        "correct": false,
+        "why": "That ReLU is still there; the skip is the only change."
+      }
+    ]
+  },
+  {
+    "id": "ex-65h391e0",
+    "version": 1,
+    "section": "residual-connections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`grads.py` shows the first block of the plain 20-layer network getting a gradient about a million times smaller than the last. Why does the residual one not?",
+    "hint": "Differentiate `x + f(x)` with respect to `x`.",
+    "choices": [
+      {
+        "text": "Its weights were started larger",
+        "correct": false,
+        "why": "Both networks were built from the same seed with the same weights."
+      },
+      {
+        "text": "It uses a different loss",
+        "correct": false,
+        "why": "Both use cross-entropy on the same batch."
+      },
+      {
+        "text": "The addition passes the gradient back unchanged",
+        "correct": true,
+        "why": "Right: the derivative of `x + f(x)` is 1 plus what `f` adds, so there is a path where nothing is multiplied away."
+      },
+      {
+        "text": "Its gradients are clipped to a fixed size",
+        "correct": false,
+        "why": "Nothing in `grads.py` clips anything; it only measures."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk0jjg1j",
+    "version": 1,
+    "section": "residual-connections",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A residual block computes `relu(x + f(x))`. If its convolutions learn nothing useful and `f(x)` stays near zero, the block outputs roughly its ___, which is why extra blocks cannot make things much worse.",
+    "hint": "What is left of `x + f(x)` when `f(x)` is 0?",
+    "blanks": [
+      {
+        "accept": [
+          "input",
+          "x",
+          "own input"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tyzk83e2",
+    "version": 1,
+    "section": "resnet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Between one stage of ResNet-18 and the next, what happens to the image and to the channels?",
+    "hint": "Read the shapes `resnet.py` printed.",
+    "choices": [
+      {
+        "text": "Both halve",
+        "correct": false,
+        "why": "The channels go up, from 64 to 128 to 256 to 512."
+      },
+      {
+        "text": "The side halves and the channels double",
+        "correct": true,
+        "why": "Right: 56, 28, 14, 7 on the side, and 64 up to 512 channels."
+      },
+      {
+        "text": "The image stays 224 by 224 and the channels double",
+        "correct": false,
+        "why": "The stem has already taken it to 56 by 56 before the first stage."
+      },
+      {
+        "text": "Nothing changes: only the weights differ between stages",
+        "correct": false,
+        "why": "The printed shapes change at every stage after the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhgvjaw7",
+    "version": 1,
+    "section": "resnet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the printed block `layer2[0]`, what is `downsample` for?",
+    "hint": "`f(x)` came out with 128 channels at 28 by 28. What shape is `x`?",
+    "choices": [
+      {
+        "text": "It shrinks the image before the block's convolutions",
+        "correct": false,
+        "why": "The block's own path shrinks it, with `stride=(2, 2)` on `conv1`; `downsample` sits on the skip."
+      },
+      {
+        "text": "It brings `x` to the shape of `f(x)` so the two can be added",
+        "correct": true,
+        "why": "Right: a 1x1 convolution with stride 2 takes 64 channels at 56 by 56 to 128 at 28 by 28."
+      },
+      {
+        "text": "It replaces batch normalisation in the first block",
+        "correct": false,
+        "why": "The block still has `bn1` and `bn2`, and `downsample` has a `BatchNorm2d` of its own."
+      },
+      {
+        "text": "It is the classifier",
+        "correct": false,
+        "why": "The classifier is `fc`, after the last stage."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnxmb5ye",
+    "version": 1,
+    "section": "resnet",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what an image passes through in torchvision's ResNet-18, from the input to the class scores.",
+    "hint": "The stem first, the head last.",
+    "items": [
+      "a 7x7 convolution with stride 2",
+      "a max pooling",
+      "layer1, at 64 channels",
+      "layer4, at 512 channels",
+      "an average over each map",
+      "a linear layer with 1,000 outputs"
+    ]
+  },
+  {
+    "id": "ex-sknj4kn4",
+    "version": 1,
+    "section": "efficientnet-and-mobilenet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a depthwise convolution leave out that a full convolution does?",
+    "hint": "`groups=32` puts each channel in a group of its own.",
+    "choices": [
+      {
+        "text": "Looking at a neighbourhood of pixels",
+        "correct": false,
+        "why": "That is the half it keeps: each channel still gets a 3x3 filter."
+      },
+      {
+        "text": "Mixing the channels",
+        "correct": true,
+        "why": "Right. Each channel is filtered alone, and the 1x1 pointwise convolution after it does the mixing."
+      },
+      {
+        "text": "Padding the edges of the image",
+        "correct": false,
+        "why": "`separable.py` gives it `padding=1`, like the full one."
+      },
+      {
+        "text": "The activation after the filter",
+        "correct": false,
+        "why": "Activations are separate layers in both cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6j299nh",
+    "version": 1,
+    "section": "efficientnet-and-mobilenet",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A depthwise separable convolution goes from 64 channels to 128 with a 3x3 depthwise filter, and neither part has a bias. How many parameters does it have?",
+    "hint": "Depthwise: 3 × 3 per input channel. Pointwise: input channels times output channels.",
+    "value": 8768,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-j3przm24",
+    "version": 1,
+    "section": "efficientnet-and-mobilenet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`scaling.py` printed EfficientNet-B0 to B7. What does compound scaling grow from one to the next?",
+    "hint": "Look at which columns change between B0 and B7.",
+    "choices": [
+      {
+        "text": "Only the number of blocks",
+        "correct": false,
+        "why": "The blocks grow, but so do the width and the image."
+      },
+      {
+        "text": "Only the image size, with the network fixed",
+        "correct": false,
+        "why": "The parameters go from 5,288,548 to 66,347,960, so the network grows too."
+      },
+      {
+        "text": "Depth, width and image size together",
+        "correct": true,
+        "why": "Right: 16 to 55 blocks, 320 to 640 channels, 224 to 600 pixels."
+      },
+      {
+        "text": "The number of classes",
+        "correct": false,
+        "why": "All eight are ImageNet models with the same 1,000 classes."
+      }
+    ]
+  },
+  {
+    "id": "ex-depzssad",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "EfficientNet-B0 needs less than a tenth of ResNet-50's operations per image. Why might it still not run ten times faster on a graphics card?",
+    "hint": "What does a depthwise convolution do per byte it reads?",
+    "choices": [
+      {
+        "text": "Depthwise layers do little arithmetic per byte they read",
+        "correct": true,
+        "why": "Right. Time depends on moving data as well as on arithmetic, so operations are a guide, not a stopwatch."
+      },
+      {
+        "text": "The GFLOPs on the card were counted for a larger image than ResNet-50's",
+        "correct": false,
+        "why": "Both rows are for 224 by 224, the image column says so."
+      },
+      {
+        "text": "EfficientNet has more parameters to load",
+        "correct": false,
+        "why": "It has about a fifth of ResNet-50's."
+      },
+      {
+        "text": "Graphics cards cannot run depthwise convolutions",
+        "correct": false,
+        "why": "They run them; they just run them less efficiently than dense ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0j832t6",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must classify 28 by 28 grey sketches into 20 classes, with 2,000 training images and no pretrained weights for anything like them. Going by this lesson, what is a sensible first model?",
+    "hint": "Think about what ResNet-18's stem does to a small image.",
+    "choices": [
+      {
+        "text": "EfficientNet-B7, the most accurate on ImageNet",
+        "correct": false,
+        "why": "It was scaled for 600 by 600 photographs and has 66,347,960 parameters for 2,000 images."
+      },
+      {
+        "text": "A small CNN of your own, sized for 28 by 28",
+        "correct": true,
+        "why": "Right. On the 8 by 8 digits, lesson 11's 38,282-parameter network beat ResNet-18 at about 290 times the size."
+      },
+      {
+        "text": "VGG-16, because its dense head can learn 20 classes",
+        "correct": false,
+        "why": "Any head learns 20 classes; VGG's costs over a hundred million parameters to do it."
+      },
+      {
+        "text": "ResNet-50 with its stem unchanged",
+        "correct": false,
+        "why": "The stem divides the side by four before the first block, leaving 7 by 7 from 28 by 28, and expects three colour channels."
+      }
+    ]
+  },
+  {
+    "id": "ex-3b370a4k",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each architecture with the change it is remembered for.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "VGG",
+        "right": "only 3x3 filters, stacked"
+      },
+      {
+        "left": "ResNet",
+        "right": "each block's input added to its output"
+      },
+      {
+        "left": "MobileNet",
+        "right": "depthwise filters followed by 1x1 mixing"
+      },
+      {
+        "left": "EfficientNet",
+        "right": "depth, width and image size scaled together"
+      }
+    ],
+    "right_distractors": [
+      "filters of several sizes side by side"
+    ]
+  },
+  {
+    "id": "ex-x3rj50pt",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the residual networks in this lesson? Choose all that apply.",
+    "hint": "Two are true.",
+    "choices": [
+      {
+        "text": "A residual block has the same parameters as the plain block it extends",
+        "correct": true,
+        "why": "True: `Residual` inherits both convolutions from `Plain`, and the counts match line for line."
+      },
+      {
+        "text": "The skip connection holds weights of its own in every block",
+        "correct": false,
+        "why": "In `deep.py` it holds none, and in ResNet-18 only the first block of a stage has a 1x1 `downsample`."
+      },
+      {
+        "text": "At 20 layers, the residual network trained where the plain one did not",
+        "correct": true,
+        "why": "True: the plain one stayed at 2.30 and the residual one fell to a low training loss."
+      },
+      {
+        "text": "Skips work by preventing overfitting",
+        "correct": false,
+        "why": "They help the optimiser reach a low training loss; overfitting is a different problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzjmectt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team doubles the input resolution of their EfficientNet-B0 to 448 pixels and keeps everything else. By the lesson's account of compound scaling, what is the likely problem?",
+    "hint": "What else grows when B-numbers take a larger image?",
+    "choices": [
+      {
+        "text": "The network refuses an image it was not built for",
+        "correct": false,
+        "why": "The average pooling before the head accepts any size; it runs."
+      },
+      {
+        "text": "The network is too shallow and narrow for that image",
+        "correct": true,
+        "why": "Right. A larger image needs more depth and width to cover it; B5 takes 456 pixels with 39 blocks and 512 channels."
+      },
+      {
+        "text": "The parameter count doubles",
+        "correct": false,
+        "why": "Convolutions do not grow with the image; the parameters stay at 5,288,548 while the work per image grows."
+      },
+      {
+        "text": "It needs pretrained weights at that size first",
+        "correct": false,
+        "why": "Weights help, but the lesson's point is the shape of the network, not its starting weights."
+      }
+    ]
+  }
+]

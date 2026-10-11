@@ -83,11 +83,10 @@ learning is slow in proportion.
 **At length 50 neither learnt it** in 3,000 steps. The RNN never left chance. The LSTM ended at 0.144,
 a little above chance, which may be the start of learning or may be noise in 1,000 test sequences, and
 this run cannot tell which. More steps, a larger forget bias or a smaller learning rate might take it
-further, and none of that was tried here, so this lesson claims only what it measured: **under the
-same budget, the LSTM reached 20 steps back and not 50.**
+further. None of that was tried here, so this lesson claims only what it measured: **under the same
+budget, the LSTM reached 20 steps back and not 50.**
 
-Two things are worth carrying from this table. The first is that a task like this one, where the
-difficulty is a single knob, is the cheapest way to compare architectures: the answer is known, the data
-is free, and the knob shows where each one stops. The second is the comparison lesson 15 makes with the
-same file, the same steps and the same lengths, against a model that does not carry a state from step to
+**A task whose difficulty is a single knob is the cheapest way to compare architectures.** The answer
+is known, the data costs nothing, and the knob shows where each one stops. Lesson 15 turns the same knob
+with the same file, the same steps and the same lengths, on a model that carries no state from step to
 step at all.

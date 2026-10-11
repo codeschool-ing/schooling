@@ -3,8 +3,8 @@ title: What worked, run side by side
 version: 1
 ---
 
-Each section measured one cure against the run of `overfit.py`, but with a different loop, so the
-numbers are not quite comparable. This program runs them all through the same loop, adds a control that changes nothing but the seed, puts the four cures together, and last of all gives
+Each section measured one cure against the run of `overfit.py`, but early stopping trained with a loop of its own,
+so the numbers are not quite comparable. This program runs them all through the same loop, adds a control that changes nothing but the seed, puts the four cures together, and last of all gives
 the uncured network ten times the data. Save as `~/dl/compare.py`:
 
 ```schooling-example

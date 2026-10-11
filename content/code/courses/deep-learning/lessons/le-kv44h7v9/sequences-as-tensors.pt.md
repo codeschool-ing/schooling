@@ -53,6 +53,6 @@ posições para as quais ela não tem pesos. Completar toda sequência até o ta
 remendo com custo: a camada aprende uma regra para o símbolo 3 na posição 2 e outra para o símbolo 3 na
 posição 5, como se não tivessem nada em comum.
 
-O que uma sequência pede é uma camada cujos pesos pertençam **ao passo**, não à posição: uma regra
-aplicada na posição 1, de novo na posição 2, e assim até o fim, levando o que já viu de cada passo para o
+O que uma sequência pede é uma camada cujos pesos pertençam **ao passo**, não à posição. Ela aplica uma
+regra na posição 1, de novo na posição 2, e assim até o fim, e leva o que já viu de cada passo para o
 seguinte. Isso é uma rede recorrente, e a próxima seção escreve uma.

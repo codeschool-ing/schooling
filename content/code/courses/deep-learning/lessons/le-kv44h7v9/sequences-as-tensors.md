@@ -53,6 +53,6 @@ longer sequence has positions it has no weights for. Padding every sequence to t
 workaround with a cost: the layer learns a separate rule for symbol 3 in position 2 and for symbol 3 in
 position 5, as if they had nothing in common.
 
-What a sequence needs is a layer whose weights belong to **the step**, not to the position: one rule
-applied at position 1, again at position 2, and so on to the end, carrying what it has seen so far
+What a sequence needs is a layer whose weights belong to **the step**, not to the position. It applies
+one rule at position 1, again at position 2, and so on to the end, and carries what it has seen so far
 from each step to the next. That is a recurrent network, and the next section writes one.

@@ -1,0 +1,409 @@
+{
+  "ex-54nngy1a": {
+    "prompt": "Duas convoluções 3x3 em sequência: de que tamanho é a mancha da entrada de que um valor do fim depende?",
+    "hint": "Cada valor da primeira saída viu uma mancha de 3 por 3.",
+    "choices": [
+      {
+        "text": "3 por 3, o tamanho de cada filtro",
+        "why": "É o que uma camada enxerga. A segunda lê 3 por 3 valores que viram 3 por 3 pixels cada, então a mancha cresce."
+      },
+      {
+        "text": "5 por 5",
+        "why": "Certo. O `stack.py` acendeu um pixel e contou 25 saídas, o mesmo que um filtro 5x5."
+      },
+      {
+        "text": "6 por 6, com os dois tamanhos somados",
+        "why": "Cada camada 3x3 a mais acrescenta um pixel de cada lado, dois na largura, não três."
+      },
+      {
+        "text": "9 por 9, os dois tamanhos multiplicados",
+        "why": "As manchas se sobrepõem; três camadas chegam a 7 por 7, então duas não chegam a 9 por 9."
+      }
+    ]
+  },
+  "ex-57fbd5sb": {
+    "prompt": "Por que a VGG preferiu duas convoluções 3x3 a uma 5x5 com o mesmo campo receptivo?",
+    "hint": "Compare as contagens de parâmetros, e o que fica entre as duas camadas.",
+    "choices": [
+      {
+        "text": "Um filtro 3x3 é mais rápido numa placa de vídeo qualquer que seja a contagem",
+        "why": "A velocidade por filtro não era o argumento; a contagem e a não linearidade extra eram."
+      },
+      {
+        "text": "Duas camadas enxergam uma mancha maior que um 5x5",
+        "why": "Enxergam os mesmos 25 pixels, e é por isso que a comparação é justa."
+      },
+      {
+        "text": "Menos pesos, e um ReLU entre elas",
+        "why": "Certo: 73.856 contra 102.464 com 64 canais, e o ReLU deixa o par calcular o que um filtro linear sozinho não calcula."
+      },
+      {
+        "text": "Um filtro 5x5 não pode ser treinado por retropropagação",
+        "why": "Qualquer tamanho de filtro treina; a primeira camada da AlexNet era 11x11."
+      }
+    ]
+  },
+  "ex-4kmqknw9": {
+    "prompt": "Um colega quer encolher uma VGG-16 para caber num celular e começa tirando duas das suas 13 convoluções. Pelas contagens desta aula, por que isso quase não ajuda?",
+    "hint": "Onde fica a maior parte dos parâmetros da VGG-16?",
+    "choices": [
+      {
+        "text": "Convoluções compartilham pesos pela imagem, então não têm nenhum",
+        "why": "Compartilham, mas ainda têm 14.714.688 entre elas."
+      },
+      {
+        "text": "Tirar camadas faz a rede treinar pior",
+        "why": "Isso pode ou não acontecer, mas não é sobre tamanho."
+      },
+      {
+        "text": "O celular roda convoluções em hardware dedicado",
+        "why": "O hardware muda a velocidade, não o número de pesos a guardar."
+      },
+      {
+        "text": "Quase todo o peso está na cabeça densa",
+        "why": "Certo: 123.642.856 de 138.357.544 estão nas três camadas densas. Trocar essa cabeça por uma média e uma camada pequena foi o que a ResNet fez."
+      }
+    ]
+  },
+  "ex-kjnb7k01": {
+    "prompt": "O que torna o problema da degradação diferente do overfitting?",
+    "hint": "Em qual conjunto a rede mais profunda vai pior?",
+    "choices": [
+      {
+        "text": "A rede mais profunda vai pior nos próprios dados de treino",
+        "why": "Certo. Overfitting é ir bem no treino e mal na validação; aqui o próprio treino falha."
+      },
+      {
+        "text": "Só a perda de validação sobe",
+        "why": "Essa é a marca do overfitting, que é justamente o que isto não é."
+      },
+      {
+        "text": "Acontece só com conjuntos de dados pequenos",
+        "why": "O artigo da ResNet o viu no milhão de imagens da ImageNet."
+      },
+      {
+        "text": "Some com dropout",
+        "why": "O dropout combate overfitting; não dá nada a uma rede que não consegue se ajustar ao treino."
+      }
+    ]
+  },
+  "ex-a24zbday": {
+    "prompt": "No `depth.py`, a perda de treino da rede comum de 20 camadas fica em 2,30 por vinte épocas. O que esse número quer dizer nos dígitos?",
+    "hint": "Qual a entropia cruzada de uma rede igualmente insegura das dez classes?",
+    "choices": [
+      {
+        "text": "A rede aprendeu os dígitos e está em overfitting",
+        "why": "Uma rede em overfitting tem perda de treino perto de zero, não parada lá em cima."
+      },
+      {
+        "text": "Dá a mesma probabilidade a todo dígito",
+        "why": "Certo: menos o log de 1/10 é cerca de 2,30. A rede não aprendeu nada, e a acurácia é um chute fixo."
+      },
+      {
+        "text": "A taxa está alta demais",
+        "why": "Uma perda divergindo sobe ou vira nan; esta não se mexe."
+      },
+      {
+        "text": "A rede precisa de mais épocas, já que a perda cai devagar",
+        "why": "Ela não cai devagar; ela não cai, enquanto a rede de 8 camadas cai rápido."
+      }
+    ]
+  },
+  "ex-d3gpc0qy": {
+    "prompt": "Uma rede mais profunda sempre pode copiar uma mais rasa fazendo as camadas extras deixarem a entrada passar. Dado isso, o que diz uma rede comum mais profunda com perda de treino PIOR?",
+    "hint": "Uma solução melhor existe. Quem não a achou?",
+    "choices": [
+      {
+        "text": "Vinte camadas têm parâmetros de menos",
+        "why": "A rede de 20 camadas tem oito vezes os parâmetros da de 4, que treina."
+      },
+      {
+        "text": "Os dados precisam de aumento",
+        "why": "O aumento ajuda a generalizar, e a falha aqui é no próprio conjunto de treino."
+      },
+      {
+        "text": "O otimizador não alcança uma solução que existe",
+        "why": "Certo. Os pesos para pelo menos a perda da rede rasa existem dentro da profunda; o treino não os achou."
+      },
+      {
+        "text": "O teste é mais difícil que o treino",
+        "why": "O teste nem foi usado, e é a perda de treino que está pior."
+      }
+    ]
+  },
+  "ex-gne98fbj": {
+    "prompt": "O que a classe `Residual` do `deep.py` muda no bloco `Plain`?",
+    "hint": "Compare os dois métodos `forward`.",
+    "choices": [
+      {
+        "text": "Acrescenta uma terceira convolução",
+        "why": "Herda as mesmas duas convoluções e nada mais."
+      },
+      {
+        "text": "Soma a entrada à saída da segunda convolução",
+        "why": "Certo: `x +` antes do último ReLU, e os mesmos parâmetros."
+      },
+      {
+        "text": "Dobra os canais",
+        "why": "A largura fica em 16 do começo ao fim, e é por isso que `x` e `f(x)` podem ser somados."
+      },
+      {
+        "text": "Tira o ReLU que fica entre as duas convoluções do bloco",
+        "why": "Esse ReLU continua lá; o atalho é a única mudança."
+      }
+    ]
+  },
+  "ex-65h391e0": {
+    "prompt": "O `grads.py` mostra o primeiro bloco da rede comum de 20 camadas recebendo um gradiente cerca de um milhão de vezes menor que o do último. Por que a residual não?",
+    "hint": "Derive `x + f(x)` em relação a `x`.",
+    "choices": [
+      {
+        "text": "Os pesos dela começaram maiores",
+        "why": "As duas redes foram montadas da mesma semente, com os mesmos pesos."
+      },
+      {
+        "text": "Ela usa outra perda",
+        "why": "As duas usam entropia cruzada no mesmo lote."
+      },
+      {
+        "text": "A soma passa o gradiente de volta sem mudança",
+        "why": "Certo: a derivada de `x + f(x)` é 1 mais o que `f` soma, então há um caminho em que nada é multiplicado até sumir."
+      },
+      {
+        "text": "Os gradientes dela são cortados num tamanho fixo",
+        "why": "Nada no `grads.py` corta coisa alguma; ele só mede."
+      }
+    ]
+  },
+  "ex-sk0jjg1j": {
+    "prompt": "Um bloco residual calcula `relu(x + f(x))`. Se as convoluções não aprendem nada útil e `f(x)` fica perto de zero, o bloco devolve mais ou menos a sua ___, e é por isso que blocos extras não pioram muito as coisas.",
+    "hint": "O que sobra de `x + f(x)` quando `f(x)` é 0?",
+    "blanks": [
+      {
+        "accept": [
+          "entrada",
+          "x",
+          "própria entrada"
+        ]
+      }
+    ]
+  },
+  "ex-tyzk83e2": {
+    "prompt": "Entre um estágio da ResNet-18 e o seguinte, o que acontece com a imagem e com os canais?",
+    "hint": "Leia as formas que o `resnet.py` imprimiu.",
+    "choices": [
+      {
+        "text": "Os dois caem pela metade",
+        "why": "Os canais sobem, de 64 para 128, 256 e 512."
+      },
+      {
+        "text": "O lado cai pela metade e os canais dobram",
+        "why": "Certo: 56, 28, 14, 7 no lado, e de 64 a 512 canais."
+      },
+      {
+        "text": "A imagem fica em 224 por 224 e os canais dobram",
+        "why": "O tronco já a levou a 56 por 56 antes do primeiro estágio."
+      },
+      {
+        "text": "Nada muda: só os pesos diferem entre estágios",
+        "why": "As formas impressas mudam a cada estágio depois do primeiro."
+      }
+    ]
+  },
+  "ex-qhgvjaw7": {
+    "prompt": "No bloco impresso `layer2[0]`, para que serve o `downsample`?",
+    "hint": "`f(x)` saiu com 128 canais em 28 por 28. Qual a forma de `x`?",
+    "choices": [
+      {
+        "text": "Encolhe a imagem antes das convoluções do bloco",
+        "why": "O caminho do próprio bloco a encolhe, com `stride=(2, 2)` no `conv1`; o `downsample` fica no atalho."
+      },
+      {
+        "text": "Leva `x` à forma de `f(x)` para que os dois possam ser somados",
+        "why": "Certo: uma convolução 1x1 com passo 2 leva 64 canais em 56 por 56 a 128 em 28 por 28."
+      },
+      {
+        "text": "Substitui a batch normalization no primeiro bloco",
+        "why": "O bloco ainda tem `bn1` e `bn2`, e o `downsample` tem um `BatchNorm2d` próprio."
+      },
+      {
+        "text": "É o classificador",
+        "why": "O classificador é o `fc`, depois do último estágio."
+      }
+    ]
+  },
+  "ex-tnxmb5ye": {
+    "prompt": "Ponha em ordem o que uma imagem atravessa na ResNet-18 do torchvision, da entrada às pontuações de classe.",
+    "hint": "O tronco primeiro, a cabeça por último.",
+    "items": [
+      "uma convolução 7x7 com passo 2",
+      "um max pooling",
+      "layer1, com 64 canais",
+      "layer4, com 512 canais",
+      "uma média de cada mapa",
+      "uma camada linear com 1.000 saídas"
+    ]
+  },
+  "ex-sknj4kn4": {
+    "prompt": "O que uma convolução depthwise deixa de fazer que uma convolução completa faz?",
+    "hint": "`groups=32` põe cada canal num grupo só dele.",
+    "choices": [
+      {
+        "text": "Olhar uma vizinhança de pixels",
+        "why": "Essa é a metade que ela guarda: cada canal ainda ganha um filtro 3x3."
+      },
+      {
+        "text": "Misturar os canais",
+        "why": "Certo. Cada canal é filtrado sozinho, e a convolução pointwise 1x1 depois dela faz a mistura."
+      },
+      {
+        "text": "Preencher as bordas da imagem",
+        "why": "O `separable.py` dá a ela `padding=1`, como à completa."
+      },
+      {
+        "text": "A ativação depois do filtro",
+        "why": "As ativações são camadas à parte nos dois casos."
+      }
+    ]
+  },
+  "ex-f6j299nh": {
+    "prompt": "Uma convolução separável em profundidade vai de 64 canais para 128 com um filtro depthwise 3x3, e nenhuma das partes tem viés. Quantos parâmetros ela tem?",
+    "hint": "Depthwise: 3 × 3 por canal de entrada. Pointwise: canais de entrada vezes canais de saída.",
+    "unit": "parâmetros"
+  },
+  "ex-j3przm24": {
+    "prompt": "O `scaling.py` imprimiu da EfficientNet-B0 à B7. O que o escalonamento composto faz crescer de uma para a outra?",
+    "hint": "Veja quais colunas mudam entre a B0 e a B7.",
+    "choices": [
+      {
+        "text": "Só o número de blocos",
+        "why": "Os blocos crescem, mas a largura e a imagem também."
+      },
+      {
+        "text": "Só o tamanho da imagem, com a rede fixa",
+        "why": "Os parâmetros vão de 5.288.548 a 66.347.960, então a rede cresce também."
+      },
+      {
+        "text": "Profundidade, largura e tamanho da imagem juntos",
+        "why": "Certo: de 16 a 55 blocos, de 320 a 640 canais, de 224 a 600 pixels."
+      },
+      {
+        "text": "O número de classes",
+        "why": "As oito são modelos da ImageNet com as mesmas 1.000 classes."
+      }
+    ]
+  },
+  "ex-depzssad": {
+    "prompt": "A EfficientNet-B0 precisa de menos de um décimo das operações da ResNet-50 por imagem. Por que ela pode ainda assim não rodar dez vezes mais rápido numa placa de vídeo?",
+    "hint": "O que uma convolução depthwise faz por byte que lê?",
+    "choices": [
+      {
+        "text": "Camadas depthwise fazem pouca conta por byte que leem",
+        "why": "Certo. O tempo depende de mover dados além da conta, então as operações são um guia, não um cronômetro."
+      },
+      {
+        "text": "Os GFLOPs do quadro foram contados para uma imagem maior que a da ResNet-50",
+        "why": "As duas linhas são para 224 por 224, como a coluna da imagem diz."
+      },
+      {
+        "text": "A EfficientNet tem mais parâmetros para carregar",
+        "why": "Tem cerca de um quinto dos da ResNet-50."
+      },
+      {
+        "text": "Placas de vídeo não rodam convoluções depthwise",
+        "why": "Rodam; só que com menos eficiência que as densas."
+      }
+    ]
+  },
+  "ex-w0j832t6": {
+    "prompt": "Você precisa classificar esboços cinza de 28 por 28 em 20 classes, com 2.000 imagens de treino e nenhum peso pré-treinado para nada parecido. Pelo que esta aula mostrou, qual é um primeiro modelo sensato?",
+    "hint": "Pense no que o tronco da ResNet-18 faz com uma imagem pequena.",
+    "choices": [
+      {
+        "text": "A EfficientNet-B7, a mais precisa na ImageNet",
+        "why": "Foi escalada para fotografias de 600 por 600 e tem 66.347.960 parâmetros para 2.000 imagens."
+      },
+      {
+        "text": "Uma CNN pequena sua, no tamanho de 28 por 28",
+        "why": "Certo. Nos dígitos de 8 por 8, a rede de 38.282 parâmetros da aula 11 venceu a ResNet-18, que tinha umas 290 vezes o tamanho."
+      },
+      {
+        "text": "A VGG-16, porque a cabeça densa dela aprende 20 classes",
+        "why": "Qualquer cabeça aprende 20 classes; a da VGG gasta mais de cem milhões de parâmetros nisso."
+      },
+      {
+        "text": "A ResNet-50 com o tronco sem mudança",
+        "why": "O tronco divide o lado por quatro antes do primeiro bloco, deixando 7 por 7 de 28 por 28, e espera três canais de cor."
+      }
+    ]
+  },
+  "ex-3b370a4k": {
+    "prompt": "Ligue cada arquitetura à mudança pela qual é lembrada.",
+    "hint": "Uma descrição não pertence a nenhuma delas.",
+    "pairs": [
+      {
+        "left": "VGG",
+        "right": "só filtros 3x3, empilhados"
+      },
+      {
+        "left": "ResNet",
+        "right": "a entrada de cada bloco somada à saída"
+      },
+      {
+        "left": "MobileNet",
+        "right": "filtros depthwise seguidos de mistura 1x1"
+      },
+      {
+        "left": "EfficientNet",
+        "right": "profundidade, largura e imagem escaladas juntas"
+      }
+    ],
+    "right_distractors": [
+      "filtros de vários tamanhos lado a lado"
+    ]
+  },
+  "ex-x3rj50pt": {
+    "prompt": "Quais destas afirmações valem para as redes residuais desta aula? Marque todas as que se aplicam.",
+    "hint": "Duas são verdadeiras.",
+    "choices": [
+      {
+        "text": "Um bloco residual tem os mesmos parâmetros do bloco comum que estende",
+        "why": "Verdade: `Residual` herda as duas convoluções de `Plain`, e as contagens batem linha a linha."
+      },
+      {
+        "text": "O atalho tem pesos próprios em todo bloco",
+        "why": "No `deep.py` não tem nenhum, e na ResNet-18 só o primeiro bloco de um estágio tem um `downsample` 1x1."
+      },
+      {
+        "text": "Com 20 camadas, a rede residual treinou onde a comum não treinou",
+        "why": "Verdade: a comum ficou em 2,30 e a residual caiu para uma perda de treino baixa."
+      },
+      {
+        "text": "Atalhos funcionam evitando o overfitting",
+        "why": "Eles ajudam o otimizador a chegar a uma perda de treino baixa; overfitting é outro problema."
+      }
+    ]
+  },
+  "ex-bzjmectt": {
+    "prompt": "Uma equipe dobra a resolução de entrada da sua EfficientNet-B0 para 448 pixels e mantém todo o resto. Pelo que a aula conta do escalonamento composto, qual é o provável problema?",
+    "hint": "O que mais cresce quando os modelos B recebem uma imagem maior?",
+    "choices": [
+      {
+        "text": "A rede recusa uma imagem para a qual não foi montada",
+        "why": "O pooling de média antes da cabeça aceita qualquer tamanho; ela roda."
+      },
+      {
+        "text": "A rede é rasa e estreita demais para essa imagem",
+        "why": "Certo. Uma imagem maior pede mais profundidade e largura para ser coberta; a B5 recebe 456 pixels com 39 blocos e 512 canais."
+      },
+      {
+        "text": "A contagem de parâmetros dobra",
+        "why": "Convoluções não crescem com a imagem; os parâmetros ficam em 5.288.548 enquanto o trabalho por imagem cresce."
+      },
+      {
+        "text": "Faltam pesos pré-treinados nesse tamanho",
+        "why": "Pesos ajudam, mas o ponto da aula é a forma da rede, não os pesos de partida."
+      }
+    ]
+  }
+}

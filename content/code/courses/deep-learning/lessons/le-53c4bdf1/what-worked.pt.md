@@ -3,8 +3,8 @@ title: O que funcionou, lado a lado
 version: 1
 ---
 
-Cada seção mediu uma cura contra a execução do `overfit.py`, mas com um laço diferente, então os números
-não são bem comparáveis. Este programa roda todas pelo mesmo laço, acrescenta um controle que só muda a semente, junta as quatro curas e, por último, dá à rede sem cura
+Cada seção mediu uma cura contra a execução do `overfit.py`, mas a parada antecipada treinou com um laço próprio,
+então os números não são bem comparáveis. Este programa roda todas pelo mesmo laço, acrescenta um controle que só muda a semente, junta as quatro curas e, por último, dá à rede sem cura
 dez vezes mais dados. Salve como `~/dl/compare.py`:
 
 ```schooling-example
