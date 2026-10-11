@@ -38,7 +38,7 @@ shop=# SELECT pid, usename, state, now() - xact_start AS open_for, query
 shop-#   FROM pg_stat_activity WHERE state = 'idle in transaction';
  pid | usename |        state        |    open_for     |                         query                          
 -----+---------+---------------------+-----------------+--------------------------------------------------------
- 655 | app     | idle in transaction | 00:00:01.682687 | UPDATE customers SET name = 'Customer 1' WHERE id = 1;
+ 655 | app     | idle in transaction | 00:00:01.111508 | UPDATE customers SET name = 'Customer 1' WHERE id = 1;
 (1 row)
 
 shop=# SELECT pg_cancel_backend(pid) FROM pg_stat_activity WHERE state = 'idle in transaction';
@@ -130,7 +130,7 @@ server closed the connection unexpectedly
 	before or while processing the request.
 The connection to the server was lost. Attempting reset: Succeeded.
 ana@db:~$ sudo grep "idle-in-transaction" /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:50:44.698 -03 [691] app@shop FATAL:  terminating connection due to idle-in-transaction timeout
+2026-10-10 16:57:08.033 -03 [691] app@shop FATAL:  terminating connection due to idle-in-transaction timeout
 ```
 
 Twelve seconds passed between the count and `SELECT 1`, and the server had ended the session at

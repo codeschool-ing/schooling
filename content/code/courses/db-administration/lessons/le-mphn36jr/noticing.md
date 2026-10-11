@@ -86,8 +86,8 @@ aggressive one, the wraparound section's, which arrives later and larger.
 
 ## Putting shop back
 
-The copy and the two extensions were for this lesson. Remove them, and `shop` is as lesson 4 left
-it:
+The copy and the two extensions were for this lesson. Its two settings, the logging one
+included, live on the table and go with it. Remove them, and `shop` is as lesson 4 left it:
 
 ```
 shop=# DROP TABLE orders_copy;

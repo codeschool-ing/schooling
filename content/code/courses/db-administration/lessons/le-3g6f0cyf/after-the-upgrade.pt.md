@@ -80,6 +80,10 @@ de manter as extensões em dia, e este é o momento para o qual ela preparava.
   seu próprio código antes da noite de verdade, não durante.
 - A configuração. O `pg_upgradecluster` copiou o `postgresql.conf`. Um parâmetro que foi removido
   ou renomeado na versão nova impede o servidor de subir, e o log diz qual é.
+- O esquema public, quando o servidor antigo era 14 ou anterior. O PostgreSQL 15 deixou de permitir
+  que todo papel crie objetos em `public`, mas o `pg_upgrade` leva os privilégios antigos como
+  estavam, então um banco atualizado continua com o esquema antigo, aberto. Olhe com `\dn+ public`
+  e feche como a lição 12 fez: `REVOKE CREATE ON SCHEMA public FROM PUBLIC;` em cada banco.
 - Réplicas e backups. Um standby físico não consegue seguir um primário de outra versão maior, e um
   backup base feito pelo 16 não restaura no 17. Os dois são refeitos depois do upgrade; as lições 1
   a 10 e 11 a 13 de db-reliability dizem como.

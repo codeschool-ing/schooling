@@ -167,7 +167,8 @@ stage_shop() {
 
 reset() {
   down
-  rm -rf "$LIVE"
+  # nspawn's teardown can still hold mounts under the directory for a moment
+  for _ in $(seq 50); do rm -rf "$LIVE" 2>/dev/null && break; sleep 0.2; done
   if [ "${1:-1}" -ge 4 ]; then cp -a "$PGBASE" "$LIVE"; else cp -a "$BASE" "$LIVE"; fi
   up
   stage "${1:-1}"

@@ -86,7 +86,6 @@ ana@db:~$ psql shop -c "SELECT usename, count(*) FROM pg_stat_activity WHERE bac
  ana     |     1
  app     |     2
 (2 rows)
-
 ```
 
 **`app` is refused, and `ana` still gets in**, into one of the reserved slots, which is exactly what
@@ -129,7 +128,6 @@ ana@db:~$ psql shop -c "SELECT count(pg_terminate_backend(pid)) FROM pg_stat_act
 -------
      4
 (1 row)
-
 ```
 
 One slot freed was enough for a session, and that session ended the other four: every client

@@ -92,10 +92,10 @@ NOTICE:  table "pgbench_history" does not exist, skipping
 NOTICE:  table "pgbench_tellers" does not exist, skipping
 creating tables...
 generating data (client-side)...
-1000000 of 1000000 tuples (100%) done (elapsed 2.51 s, remaining 0.00 s)
+1000000 of 1000000 tuples (100%) done (elapsed 0.91 s, remaining 0.00 s)
 vacuuming...
 creating primary keys...
-done in 3.81 s (drop tables 0.00 s, create tables 0.00 s, client-side generate 2.55 s, vacuum 0.24 s, primary keys 1.01 s).
+done in 1.35 s (drop tables 0.00 s, create tables 0.01 s, client-side generate 0.94 s, vacuum 0.14 s, primary keys 0.27 s).
 ana@db:~$ pgbench --select-only --client=4 --jobs=4 --time=15 bench
 pgbench (16.15 (Ubuntu 16.15-0ubuntu0.24.04.1))
 starting vacuum...end.
@@ -106,11 +106,11 @@ number of clients: 4
 number of threads: 4
 maximum number of tries: 1
 duration: 15 s
-number of transactions actually processed: 534211
+number of transactions actually processed: 1358800
 number of failed transactions: 0 (0.000%)
-latency average = 0.112 ms
-initial connection time = 80.100 ms
-tps = 35787.641500 (without initial connection time)
+latency average = 0.044 ms
+initial connection time = 10.639 ms
+tps = 90620.117573 (without initial connection time)
 ana@db:~$ pgbench --select-only --client=80 --jobs=4 --time=15 bench
 pgbench (16.15 (Ubuntu 16.15-0ubuntu0.24.04.1))
 starting vacuum...end.
@@ -121,17 +121,18 @@ number of clients: 80
 number of threads: 4
 maximum number of tries: 1
 duration: 15 s
-number of transactions actually processed: 463481
+number of transactions actually processed: 813516
 number of failed transactions: 0 (0.000%)
-latency average = 2.209 ms
-initial connection time = 2265.701 ms
-tps = 36209.255106 (without initial connection time)
+latency average = 1.470 ms
+initial connection time = 92.567 ms
+tps = 54424.941721 (without initial connection time)
 ```
 
-`--scale=10` made a million rows in `pgbench_accounts`. **Twenty times the clients did the same
-work**: 35,788 transactions a second with four, 36,209 with eighty. What changed is how long each
-one waited, 0.112 ms on average with four clients and 2.209 ms with eighty, because the recording
-machine has four processors and eighty backends took turns on them. Lesson 22 of
+`--scale=10` made a million rows in `pgbench_accounts`. **Twenty times the clients did less
+work**: 90,620 transactions a second with four, 54,425 with eighty. And each transaction waited far
+longer, 0.044 ms on average with four clients and 1.470 ms with eighty, because the recording
+machine has four processors and eighty backends took turns on them, with the kernel switching
+between them and the backends contending for the same shared structures. Lesson 22 of
 `db-performance` is about running benchmarks properly; these numbers are the recording machine's,
 with `pgbench` itself competing for the same four processors, and yours will differ.
 

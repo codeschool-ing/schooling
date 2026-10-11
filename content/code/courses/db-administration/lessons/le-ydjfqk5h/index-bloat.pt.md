@@ -15,7 +15,18 @@ O `pgstatindex`, da mesma extensão, lê uma B-tree e informa sobre as páginas 
 onde as entradas moram. Aqui estão os três índices da cópia ao lado dos três de `orders`, que
 guardam o mesmo tipo de linha e nunca viram um `UPDATE`:
 
-@@1@@
+```
+shop=# SELECT i.indexrelid::regclass AS index, pg_size_pretty(s.index_size) AS size, s.avg_leaf_density, s.leaf_fragmentation FROM pg_index i, pgstatindex(i.indexrelid::regclass::text) s WHERE i.indrelid IN ('orders'::regclass, 'orders_copy'::regclass) ORDER BY 1;
+          index          |  size   | avg_leaf_density | leaf_fragmentation 
+-------------------------+---------+------------------+--------------------
+ orders_pkey             | 21 MB   |            90.06 |                  0
+ orders_customer_id      | 9408 kB |            87.53 |              49.96
+ orders_created_at       | 12 MB   |            78.11 |              49.67
+ orders_copy_pkey        | 43 MB   |            45.17 |              49.98
+ orders_copy_customer_id | 15 MB   |            38.01 |              49.97
+ orders_copy_created_at  | 17 MB   |            39.61 |              49.98
+(6 rows)
+```
 
 **`avg_leaf_density` é o quanto as páginas folha estão cheias, em média.** Um índice cujas chaves
 chegam em ordem crescente enche cada folha até 90%, o fill factor padrão de um índice, e passa para

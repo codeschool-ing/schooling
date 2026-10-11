@@ -30,8 +30,8 @@ ana@db:~$ ps -u postgres -o pid,ppid,cmd
     105     101 postgres: 16/main: walwriter 
     106     101 postgres: 16/main: autovacuum launcher 
     107     101 postgres: 16/main: logical replication launcher 
-    202     101 postgres: 16/main: ana shop [local] idle
-    215     101 postgres: 16/main: ana shop [local] SELECT
+    204     101 postgres: 16/main: ana shop [local] idle
+    219     101 postgres: 16/main: ana shop [local] SELECT
 ```
 
 The workers from lesson 3 are there, and below them **one process for each terminal**. The `PPID`
@@ -55,9 +55,9 @@ shop-#   FROM pg_stat_activity ORDER BY backend_type, pid;
  106 | autovacuum launcher          |          |        | 
  103 | background writer            |          |        | 
  102 | checkpointer                 |          |        | 
- 202 | client backend               | ana      | idle   | 
- 215 | client backend               | ana      | active | SELECT pg_sleep(600)
- 224 | client backend               | ana      | active | SELECT pid, backend_type
+ 204 | client backend               | ana      | idle   | 
+ 219 | client backend               | ana      | active | SELECT pg_sleep(600)
+ 230 | client backend               | ana      | active | SELECT pid, backend_type
  107 | logical replication launcher | postgres |        | 
  105 | walwriter                    |          |        | 
 (8 rows)

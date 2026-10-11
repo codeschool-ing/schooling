@@ -19,15 +19,15 @@ number of clients: 4
 number of threads: 4
 maximum number of tries: 1
 duration: 15 s
-number of transactions actually processed: 2874
+number of transactions actually processed: 10892
 number of failed transactions: 0 (0.000%)
-latency average = 21.026 ms
-average connection time = 17.186 ms
-tps = 190.242543 (including reconnection times)
+latency average = 5.509 ms
+average connection time = 4.264 ms
+tps = 726.068665 (including reconnection times)
 ```
 
-**The same four clients and the same query managed 190 transactions a second instead of 35,788.**
-Each connection took 17.186 ms to set up, for a lookup that took a fraction of a millisecond once
+**The same four clients and the same query managed 726 transactions a second instead of 90,620.**
+Each connection took 4.264 ms to set up, for a lookup that took a fraction of a millisecond once
 it was connected: a process started, authentication done, caches warmed from nothing, and all of
 it thrown away a moment later.
 

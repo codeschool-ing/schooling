@@ -1,0 +1,747 @@
+[
+  {
+    "id": "ex-1tg1hfkj",
+    "version": 1,
+    "section": "dead-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `UPDATE orders_copy SET status = 'shipped' WHERE id = 7` commits, where is the version of row 7 that said `paid`?",
+    "hint": "Look at what `heap_page_items` showed for page 0.",
+    "choices": [
+      {
+        "text": "Overwritten in place by the new value, which is why the ctid stays (0,7)",
+        "correct": false,
+        "why": "The ctid changed to (8333,41). PostgreSQL never overwrites a row version in place."
+      },
+      {
+        "text": "Copied to the write-ahead log and removed from the table at commit",
+        "correct": false,
+        "why": "Commit removes nothing from the table. The old version is still on page 0 after it."
+      },
+      {
+        "text": "Still on its page, with xmax set",
+        "correct": true,
+        "why": "Right. The old version stays where it was until VACUUM frees its space; xmax names the transaction that replaced it."
+      },
+      {
+        "text": "Moved to the free space map, which keeps old versions for readers",
+        "correct": false,
+        "why": "The free space map records free room per page. It holds no row versions at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-6efdvahs",
+    "version": 1,
+    "section": "dead-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A transaction updates one row and then runs `ROLLBACK`. What does it leave in the table?",
+    "hint": "The update wrote something before it was undone.",
+    "choices": [
+      {
+        "text": "Nothing: a rollback restores the page exactly",
+        "correct": false,
+        "why": "The rollback does not erase what was written; n_dead_tup went up by one for it."
+      },
+      {
+        "text": "Two dead versions, the old one and the new one",
+        "correct": false,
+        "why": "The old version is still the live one after a rollback. Only the new version is dead."
+      },
+      {
+        "text": "One dead version: the new one it wrote",
+        "correct": true,
+        "why": "Right. The old version stays live, and the version the aborted transaction wrote is the one nobody will ever see."
+      },
+      {
+        "text": "A lock on the row until the next VACUUM",
+        "correct": false,
+        "why": "Row locks end with the transaction. VACUUM has nothing to do with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxsnymn0",
+    "version": 1,
+    "section": "dead-rows",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The hidden column that names the transaction which wrote a row version is ___.",
+    "hint": "Its partner, xmax, names the one that replaced it.",
+    "blanks": [
+      {
+        "accept": [
+          "xmin"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tcnyhasy",
+    "version": 1,
+    "section": "what-vacuum-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`orders_copy` was 68 MB before and after `VACUUM` cleared 50,000 dead versions. Why did it not shrink?",
+    "hint": "Where did the freed space go?",
+    "choices": [
+      {
+        "text": "The dead versions were still visible",
+        "correct": false,
+        "why": "Nothing held a snapshot then. The dead versions were removed; the space simply stayed in the file."
+      },
+      {
+        "text": "The freed space is free inside the file, for the next rows",
+        "correct": true,
+        "why": "Right. A plain VACUUM records the room in the free space map; only empty pages at the end of the file are ever cut off."
+      },
+      {
+        "text": "VACUUM shrinks files only after a checkpoint",
+        "correct": false,
+        "why": "Checkpoints write dirty pages out. They do not change a table's size."
+      },
+      {
+        "text": "pg_relation_size reports the size from the last ANALYZE",
+        "correct": false,
+        "why": "It reads the files' real size. relpages is the estimate ANALYZE keeps, not this."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8k26664",
+    "version": 1,
+    "section": "what-vacuum-does",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each structure to what VACUUM records in it.",
+    "hint": "One per page about room, two bits per page about visibility, one number per table.",
+    "pairs": [
+      {
+        "left": "The free space map",
+        "right": "How much room each page has for new rows"
+      },
+      {
+        "left": "The visibility map",
+        "right": "Which pages hold only rows every transaction can see, and which are frozen"
+      },
+      {
+        "left": "relfrozenxid in pg_class",
+        "right": "The oldest transaction id that may still be unfrozen in the table"
+      }
+    ],
+    "right_distractors": [
+      "The planner's estimate of the rows in the table"
+    ]
+  },
+  {
+    "id": "ex-qn804g17",
+    "version": 1,
+    "section": "what-vacuum-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index-only scan on the copy still visits the table for many rows right after a big UPDATE, and stops doing so after a VACUUM. What changed?",
+    "hint": "What can the scan trust without reading the page?",
+    "choices": [
+      {
+        "text": "The pages are all-visible again",
+        "correct": true,
+        "why": "Right. The UPDATE took those pages out of the visibility map, and VACUUM put them back, so the scan can trust the index for them."
+      },
+      {
+        "text": "The index was rebuilt",
+        "correct": false,
+        "why": "VACUUM removes dead index entries; it does not rebuild the index."
+      },
+      {
+        "text": "The planner's statistics were refreshed by the VACUUM, which is what an index-only scan reads",
+        "correct": false,
+        "why": "Statistics are ANALYZE's job, and a scan reads the visibility map, not pg_stats, to decide whether to visit a page."
+      },
+      {
+        "text": "The rows were frozen",
+        "correct": false,
+        "why": "Freezing sets the second bit. The scan needs only the all-visible one, which a plain VACUUM set on all 8,751 pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrdd8ayd",
+    "version": 1,
+    "section": "the-trigger",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default settings, after how many dead versions does autovacuum vacuum a table whose reltuples is 1,000,000?",
+    "hint": "50 plus a fifth.",
+    "value": 200050,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-ehmkesvq",
+    "version": 1,
+    "section": "the-trigger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After 150,000 rows of the copy were updated, a minute later `last_autoanalyze` had a time and `last_autovacuum` was empty. Why?",
+    "hint": "Two lines, two scale factors.",
+    "choices": [
+      {
+        "text": "Autovacuum analyses first and vacuums on its following visit",
+        "correct": false,
+        "why": "Both are decided on the same visit. The vacuum was not due at all, as the 250,000 case showed."
+      },
+      {
+        "text": "150,000 is past the analyse line and short of the vacuum line",
+        "correct": true,
+        "why": "Right: 100,050 for analysing, 200,050 for vacuuming."
+      },
+      {
+        "text": "The worker was cancelled by the UPDATE's lock",
+        "correct": false,
+        "why": "The UPDATE had finished; nothing was holding a lock on the copy."
+      },
+      {
+        "text": "A table needs its first manual VACUUM before autovacuum will touch it",
+        "correct": false,
+        "why": "Autovacuum vacuumed orders and customers after the load with nobody typing VACUUM."
+      }
+    ]
+  },
+  {
+    "id": "ex-qa8q9dex",
+    "version": 1,
+    "section": "the-trigger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody had updated or deleted a row of `orders` when autovacuum vacuumed it, a minute after the load. Which trigger fired?",
+    "hint": "A million rows arrived.",
+    "choices": [
+      {
+        "text": "The wraparound limit",
+        "correct": false,
+        "why": "The ages were a few dozen transactions, nowhere near 200 million."
+      },
+      {
+        "text": "The insert threshold: rows inserted since the last vacuum",
+        "correct": true,
+        "why": "Right. 1,000 plus a fifth of the table, and a million inserted rows were far past it."
+      },
+      {
+        "text": "The dead-version threshold, counting the load's rows as dead",
+        "correct": false,
+        "why": "Inserted rows are live; n_dead_tup stayed at 0."
+      },
+      {
+        "text": "A timer that vacuums every table once a minute",
+        "correct": false,
+        "why": "The launcher wakes every minute, but it vacuums only tables past a line. orders was not vacuumed again on later rounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3emvh3k",
+    "version": 1,
+    "section": "the-trigger",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table holds 500 million rows and receives 20 million updates a day. With the default settings, roughly how often is it vacuumed?",
+    "hint": "Work out a fifth of the table, then divide.",
+    "choices": [
+      {
+        "text": "Every minute, on each launcher round",
+        "correct": false,
+        "why": "The launcher looks every minute; it vacuums only past the line, which here is 100 million dead versions."
+      },
+      {
+        "text": "Never, because a table that large is skipped",
+        "correct": false,
+        "why": "There is no size limit; the line simply rises with the table."
+      },
+      {
+        "text": "Once a day, since 20 million is past the 200,050-row line",
+        "correct": false,
+        "why": "200,050 is the line for a table of a million rows. The line scales with reltuples."
+      },
+      {
+        "text": "About every five days",
+        "correct": true,
+        "why": "Right: 50 + 0.2 x 500 million is about 100 million, which takes five days at 20 million a day. Each pass then clears 100 million versions, which is why such a table gets a scale factor of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctjneb99",
+    "version": 1,
+    "section": "falling-behind",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`VACUUM VERBOSE` reports `100000 are dead but not yet removable`. What is the first thing to look for?",
+    "hint": "Removable depends on who could still see them.",
+    "choices": [
+      {
+        "text": "A faster disk for autovacuum",
+        "correct": false,
+        "why": "VACUUM read the pages fine and quickly; speed was not what stopped it."
+      },
+      {
+        "text": "More autovacuum workers",
+        "correct": false,
+        "why": "More workers would read the same pages and get the same answer."
+      },
+      {
+        "text": "A higher maintenance_work_mem",
+        "correct": false,
+        "why": "Memory changes how many dead entries fit per pass, not whether they may be removed."
+      },
+      {
+        "text": "A session holding an old snapshot",
+        "correct": true,
+        "why": "Right. The removable cutoff matched the backend_xmin of the session idle in transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj4203ry",
+    "version": 1,
+    "section": "falling-behind",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The idle session had read only `orders_copy`. Would its open snapshot also stop VACUUM removing dead versions from `customers`?",
+    "hint": "A snapshot is of the database, not of a table.",
+    "choices": [
+      {
+        "text": "No: a snapshot only protects the tables it has read",
+        "correct": false,
+        "why": "The snapshot could read any table next. The horizon applies to every table of the database."
+      },
+      {
+        "text": "Yes, and it would also block every INSERT into customers until it ends",
+        "correct": false,
+        "why": "A snapshot blocks no writes. It only keeps old versions from being removed."
+      },
+      {
+        "text": "No, because customers belongs to another schema",
+        "correct": false,
+        "why": "Both tables are in public, and schemas have nothing to do with the horizon."
+      },
+      {
+        "text": "Yes, for versions that died after its snapshot",
+        "correct": true,
+        "why": "Right. The session could still read customers, so everything that died after its snapshot stays, in every table of the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfe4xsbd",
+    "version": 1,
+    "section": "falling-behind",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the falling-behind demonstration in the order it happened.",
+    "hint": "The snapshot has to exist before the update for it to matter.",
+    "items": [
+      "Terminal 1 opens a REPEATABLE READ transaction and reads the copy",
+      "Terminal 2 updates 100,000 rows",
+      "VACUUM reports them dead but not yet removable",
+      "Terminal 1 commits",
+      "VACUUM removes the 100,000 versions"
+    ],
+    "trap": "Committing before the second VACUUM is the whole fix; nothing else changed between the two runs."
+  },
+  {
+    "id": "ex-c37mrg16",
+    "version": 1,
+    "section": "falling-behind",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "VACUUM keeps saying `not yet removable`, and `pg_stat_activity` shows no session older than a few seconds. Where do you look next?",
+    "hint": "Two things hold the horizon without being sessions.",
+    "choices": [
+      {
+        "text": "pg_stat_user_tables, to see whether last_autovacuum is recent",
+        "correct": false,
+        "why": "That shows autovacuum is visiting. The question is what stops it removing anything."
+      },
+      {
+        "text": "The table's reloptions, in case autovacuum is turned off for it",
+        "correct": false,
+        "why": "A manual VACUUM is reporting the problem, so autovacuum's switch is not the cause."
+      },
+      {
+        "text": "pg_prepared_xacts and pg_replication_slots",
+        "correct": true,
+        "why": "Right. A forgotten prepared transaction or a slot whose consumer stopped holds the line, and neither appears as a session."
+      },
+      {
+        "text": "pg_settings, for autovacuum_naptime",
+        "correct": false,
+        "why": "The naptime decides how often autovacuum looks, not what it may remove."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv0zmrbh",
+    "version": 1,
+    "section": "wraparound",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What would happen to an unfrozen row once its xmin was more than about two billion transactions old?",
+    "hint": "The numbers are compared on a circle.",
+    "choices": [
+      {
+        "text": "It would seem to be in the future and vanish from queries",
+        "correct": true,
+        "why": "Right. That is why freezing exists, and why the server refuses new transaction ids before it can happen."
+      },
+      {
+        "text": "It would be deleted by the next VACUUM",
+        "correct": false,
+        "why": "VACUUM freezes old rows; it deletes only dead versions."
+      },
+      {
+        "text": "The server would renumber it with a new 64-bit id",
+        "correct": false,
+        "why": "Row versions carry 32-bit ids, and nothing renumbers them."
+      },
+      {
+        "text": "Nothing: age only matters for statistics",
+        "correct": false,
+        "why": "The age decides visibility. That is the whole danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-hha3av1x",
+    "version": 1,
+    "section": "wraparound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the scratch cluster pushed past the limit, which of these still worked?",
+    "hint": "What needs a new transaction id?",
+    "choices": [
+      {
+        "text": "CREATE TABLE t (i int)",
+        "correct": false,
+        "why": "Creating a table writes to the catalogue and needs a transaction id, so it was refused."
+      },
+      {
+        "text": "SELECT txid_current()",
+        "correct": false,
+        "why": "txid_current assigns an id if the transaction has none, so it is refused too."
+      },
+      {
+        "text": "An INSERT into an existing table",
+        "correct": false,
+        "why": "Any write needs a transaction id."
+      },
+      {
+        "text": "SELECT count(*) FROM pg_class",
+        "correct": true,
+        "why": "Right. A read needs no new transaction id, and it answered 413."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqjt53rd",
+    "version": 1,
+    "section": "wraparound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `vacuumdb --all --freeze`, the scratch cluster still refused writes. Why?",
+    "hint": "Look at datallowconn.",
+    "choices": [
+      {
+        "text": "The failsafe had skipped the freezing",
+        "correct": false,
+        "why": "The failsafe skips index cleanup and throttling, never the freezing; postgres and template1 came back to age 0."
+      },
+      {
+        "text": "The server has to restart before the new ages count",
+        "correct": false,
+        "why": "Writes worked again with no restart, once template0 was frozen."
+      },
+      {
+        "text": "template0 accepts no connections, so vacuumdb skipped it",
+        "correct": true,
+        "why": "Right. Autovacuum can reach template0, and within about a minute it had frozen it too."
+      },
+      {
+        "text": "vacuumdb must run in single-user mode to clear the limit",
+        "correct": false,
+        "why": "It ran with the server up and froze both databases it could reach. Single-user mode was not needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbk5z706",
+    "version": 1,
+    "section": "wraparound",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring graph shows `age(datfrozenxid)` for one database rising steadily past 400 million, while autovacuum_freeze_max_age is 200 million. What does it mean?",
+    "hint": "Past 200 million an aggressive autovacuum should already have brought it down.",
+    "choices": [
+      {
+        "text": "Normal growth; act only when the server starts warning",
+        "correct": false,
+        "why": "The warnings start 40 million before the stop. Waiting for them on a large table leaves no time for a freeze that takes hours."
+      },
+      {
+        "text": "autovacuum is turned off, and turning it on solves it",
+        "correct": false,
+        "why": "The aggressive autovacuum runs even with autovacuum off, so this alone cannot explain an age that keeps climbing."
+      },
+      {
+        "text": "Autovacuum cannot finish freezing: find what holds the horizon or blocks it",
+        "correct": true,
+        "why": "Right. Treat it as an incident: an old snapshot, a prepared transaction or a slot is the usual reason."
+      },
+      {
+        "text": "The setting is too low and should be raised to 2 billion",
+        "correct": false,
+        "why": "Raising the line only moves the alarm closer to the stop. The age climbing past it is the symptom to explain."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4nps9qg",
+    "version": 1,
+    "section": "noticing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On PostgreSQL 16 with default settings, which autovacuum runs reach the server log?",
+    "hint": "SHOW log_autovacuum_min_duration.",
+    "choices": [
+      {
+        "text": "Every one",
+        "correct": false,
+        "why": "That is a setting of 0, which the lesson put on one table."
+      },
+      {
+        "text": "Those that take ten minutes or more",
+        "correct": true,
+        "why": "Right. The default is 10min."
+      },
+      {
+        "text": "Only those that remove nothing",
+        "correct": false,
+        "why": "The setting is about duration, not about what the run achieved."
+      },
+      {
+        "text": "None, unless logging_collector is on",
+        "correct": false,
+        "why": "Ubuntu's server logs to its file without the collector; the autovacuum line arrived there."
+      }
+    ]
+  },
+  {
+    "id": "ex-496a7hcb",
+    "version": 1,
+    "section": "noticing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `ALTER TABLE orders_copy SET (autovacuum_vacuum_scale_factor = 0.01)`, after how many dead versions is the copy vacuumed?",
+    "hint": "The threshold stays at 50.",
+    "choices": [
+      {
+        "text": "200,050, because a table option does not override the server default",
+        "correct": false,
+        "why": "A table's own option wins over the server's for that table; the autovacuum after 20,000 updates shows it."
+      },
+      {
+        "text": "1,050",
+        "correct": false,
+        "why": "That would be a scale factor of 0.001."
+      },
+      {
+        "text": "100,050",
+        "correct": false,
+        "why": "That is the default analyse line, with a scale factor of 0.1."
+      },
+      {
+        "text": "10,050",
+        "correct": true,
+        "why": "Right: 50 + 0.01 x 1,000,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsp34p92",
+    "version": 1,
+    "section": "noticing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes `ALTER TABLE events SET (autovacuum_enabled = false)` because autovacuum on `events` slows the night's batch. What does that lead to?",
+    "hint": "Which autovacuum still runs?",
+    "choices": [
+      {
+        "text": "No vacuum of events ever again",
+        "correct": false,
+        "why": "The aggressive autovacuum against wraparound still comes, whatever this option says."
+      },
+      {
+        "text": "Dead versions pile up until a later, larger, aggressive vacuum",
+        "correct": true,
+        "why": "Right. Lower the cost of each visit or move it instead; turning the ordinary visits off leaves only the big one."
+      },
+      {
+        "text": "A faster batch and no other effect, since VACUUM can be run by hand later",
+        "correct": false,
+        "why": "Only if somebody remembers, every time. Meanwhile the table bloats and its age climbs."
+      },
+      {
+        "text": "An error, since autovacuum cannot be set per table",
+        "correct": false,
+        "why": "Per-table settings are exactly how autovacuum is tuned; the lesson set two of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-29hcrshb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of 2 million rows keeps growing although `last_autovacuum` is updated every few minutes and `n_dead_tup` stays near 3 million. Which explanation fits all of it?",
+    "hint": "Autovacuum is visiting. What does each visit achieve?",
+    "choices": [
+      {
+        "text": "The scale factor is too high for the table",
+        "correct": false,
+        "why": "Then autovacuum would not be visiting every few minutes; it would be waiting for the line."
+      },
+      {
+        "text": "Autovacuum is throttled by its cost delay and never reaches the end of the table, so more workers are needed",
+        "correct": false,
+        "why": "A throttled run would not finish and update last_autovacuum every few minutes. And more workers would read the same pages."
+      },
+      {
+        "text": "Something holds an old snapshot",
+        "correct": true,
+        "why": "Right. Frequent visits that leave the dead count high are the signature of a held horizon."
+      },
+      {
+        "text": "The statistics are stale, so n_dead_tup is wrong",
+        "correct": false,
+        "why": "n_dead_tup is a counter the server keeps, not an ANALYZE estimate, and the file growing agrees with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh0f09kk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 02:00 a report opens a REPEATABLE READ transaction and runs for three hours. Meanwhile the application updates 5 million rows of `orders`. What does autovacuum achieve on `orders` between 02:00 and 05:00?",
+    "hint": "Which versions died after 02:00?",
+    "choices": [
+      {
+        "text": "It removes the dead versions as usual, since the report only reads",
+        "correct": false,
+        "why": "Reading is exactly what needs the old versions; a read-only snapshot holds the horizon too."
+      },
+      {
+        "text": "It cancels the report to clear the table",
+        "correct": false,
+        "why": "Autovacuum cancels nobody's query; it yields, and the dead versions wait."
+      },
+      {
+        "text": "It is blocked by the report's lock and cannot start",
+        "correct": false,
+        "why": "A SELECT's lock does not conflict with VACUUM's. Autovacuum runs; it just cannot remove those versions."
+      },
+      {
+        "text": "Nothing on versions that died after 02:00; they go once the report ends",
+        "correct": true,
+        "why": "Right. The report could still read them, so they stay until its snapshot is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvsjqzqg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to what it points at.",
+    "hint": "Each line is from this lesson's captures.",
+    "pairs": [
+      {
+        "left": "`dead but not yet removable` stays high run after run",
+        "right": "A held snapshot, slot or prepared transaction"
+      },
+      {
+        "left": "`last_autovacuum` empty on a big, busy table",
+        "right": "A line too high for the table's size"
+      },
+      {
+        "left": "`must be vacuumed within N transactions` in the log",
+        "right": "Transaction id age close to wraparound"
+      },
+      {
+        "left": "`index scan bypassed`",
+        "right": "Few pages with dead entries, indexes left for later"
+      }
+    ]
+  },
+  {
+    "id": "ex-rbq3erfp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You set `autovacuum_vacuum_scale_factor = 0.01` on a 300-million-row table. Autovacuum now runs every hour, finishes, and `n_dead_tup` returns to near 0 each time, but the file keeps its size. What should you conclude?",
+    "hint": "What does a plain VACUUM do with freed space?",
+    "choices": [
+      {
+        "text": "The setting did not take effect",
+        "correct": false,
+        "why": "Hourly runs that clear the dead count are the setting working."
+      },
+      {
+        "text": "A snapshot is held, so nothing is removed",
+        "correct": false,
+        "why": "Then n_dead_tup would stay high. It returns to near 0."
+      },
+      {
+        "text": "The table needs VACUUM (FREEZE) every hour as well, to release its pages to the free space map",
+        "correct": false,
+        "why": "Freezing is about transaction id age. A plain VACUUM already records freed room in the free space map."
+      },
+      {
+        "text": "It is working: space is reused inside the file",
+        "correct": true,
+        "why": "Right. A steady size is the goal; giving space back to the operating system is lesson 15's subject."
+      }
+    ]
+  }
+]

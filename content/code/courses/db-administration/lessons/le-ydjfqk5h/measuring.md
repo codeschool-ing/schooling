@@ -25,7 +25,7 @@ shop=# SELECT table_len, tuple_count, tuple_percent, dead_tuple_count, free_spac
  122880000 |      800000 |         41.67 |                0 |   68026508 |        55.36
 (1 row)
 
-Time: 115.181 ms
+Time: 89.991 ms
 
 shop=# SELECT table_len, scanned_percent, approx_tuple_count, approx_free_percent FROM pgstattuple_approx('orders_copy');
  table_len | scanned_percent | approx_tuple_count | approx_free_percent 
@@ -33,7 +33,7 @@ shop=# SELECT table_len, scanned_percent, approx_tuple_count, approx_free_percen
  122880000 |               0 |             902407 |   55.33841145833333
 (1 row)
 
-Time: 1.542 ms
+Time: 2.382 ms
 
 shop=# \timing off
 Timing is off.
@@ -49,7 +49,7 @@ application uses. On 117 MB that took about a tenth of a second on the recording
 table of 500 GB it is a full scan of 500 GB, which belongs at a quiet hour.
 
 `pgstattuple_approx` is the same question asked of the visibility map. It skips every page marked
-all-visible and estimates those from the free space map, which is why it answered in under two
+all-visible and estimates those from the free space map, which is why it answered in a couple of
 milliseconds with `scanned_percent` 0. Its free percentage is close; its row count is not, because
 the count comes from the planner's statistics, which were taken before the last `DELETE`. **An
 estimate is only as current as what it is estimated from.**

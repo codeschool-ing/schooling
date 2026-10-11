@@ -38,13 +38,13 @@ ana@db:~$ df -h /srv/wal
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0      488M  449M  3.4M 100% /srv/wal
 ana@db:~$ sudo grep -E "PANIC|terminated by signal|redo done|FATAL|shut down" /var/log/postgresql/postgresql-16-main.log | tail -n 7
-2026-10-10 16:48:27.282 -03 [339] LOG:  database system was shut down at 2026-10-10 16:48:26 -03
-2026-10-10 16:48:40.247 -03 [449] ana@shop PANIC:  could not write to file "pg_wal/xlogtemp.449": No space left on device
-2026-10-10 16:48:40.252 -03 [336] LOG:  server process (PID 449) was terminated by signal 6: Aborted
-2026-10-10 16:48:40.869 -03 [450] LOG:  database system was not properly shut down; automatic recovery in progress
-2026-10-10 16:48:42.478 -03 [450] LOG:  redo done at 0/33FFFF98 system usage: CPU: user: 1.32 s, system: 0.21 s, elapsed: 1.60 s
-2026-10-10 16:48:42.485 -03 [450] FATAL:  could not write to file "pg_wal/xlogtemp.450": No space left on device
-2026-10-10 16:48:42.505 -03 [336] LOG:  database system is shut down
+2026-10-10 16:54:42.244 -03 [339] LOG:  database system was shut down at 2026-10-10 16:54:41 -03
+2026-10-10 16:54:57.767 -03 [449] ana@shop PANIC:  could not write to file "pg_wal/xlogtemp.449": No space left on device
+2026-10-10 16:54:57.785 -03 [336] LOG:  server process (PID 449) was terminated by signal 6: Aborted
+2026-10-10 16:54:58.536 -03 [451] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-10-10 16:55:01.301 -03 [451] LOG:  redo done at 0/33FFFF78 system usage: CPU: user: 1.93 s, system: 0.24 s, elapsed: 2.75 s
+2026-10-10 16:55:01.339 -03 [451] FATAL:  could not write to file "pg_wal/xlogtemp.451": No space left on device
+2026-10-10 16:55:01.426 -03 [336] LOG:  database system is shut down
 ```
 
 Read the log in order. The backend that hit the full disk panicked and was killed. The
@@ -87,12 +87,12 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0      2.0G  449M  1.4G  24% /srv/wal
 ana@db:~$ sudo systemctl start postgresql@16-main
 ana@db:~$ sudo tail -n 6 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:48:45.901 -03 [524] LOG:  database system was not properly shut down; automatic recovery in progress
-2026-10-10 16:48:45.903 -03 [524] LOG:  redo starts at 0/18F7F9E0
-2026-10-10 16:48:47.673 -03 [524] LOG:  redo done at 0/33FFFF98 system usage: CPU: user: 1.43 s, system: 0.18 s, elapsed: 1.77 s
-2026-10-10 16:48:47.721 -03 [522] LOG:  checkpoint starting: end-of-recovery immediate wait
-2026-10-10 16:48:48.129 -03 [522] LOG:  checkpoint complete: wrote 16386 buffers (100.0%); 0 WAL file(s) added, 0 removed, 28 recycled; write=0.080 s, sync=0.265 s, total=0.409 s; sync files=27, longest=0.186 s, average=0.010 s; distance=442881 kB, estimate=442881 kB; lsn=0/34000058, redo lsn=0/34000058
-2026-10-10 16:48:48.138 -03 [521] LOG:  database system is ready to accept connections
+2026-10-10 16:55:05.448 -03 [533] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-10-10 16:55:05.449 -03 [533] LOG:  redo starts at 0/18F7F9E8
+2026-10-10 16:55:08.001 -03 [533] LOG:  redo done at 0/33FFFF78 system usage: CPU: user: 1.59 s, system: 0.21 s, elapsed: 2.55 s
+2026-10-10 16:55:08.069 -03 [531] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-10-10 16:55:08.618 -03 [531] LOG:  checkpoint complete: wrote 16386 buffers (100.0%); 0 WAL file(s) added, 0 removed, 28 recycled; write=0.087 s, sync=0.374 s, total=0.553 s; sync files=27, longest=0.218 s, average=0.014 s; distance=442881 kB, estimate=442881 kB; lsn=0/34000058, redo lsn=0/34000058
+2026-10-10 16:55:08.643 -03 [530] LOG:  database system is ready to accept connections
 ana@db:~$ psql shop -c "SELECT count(*) FROM walfill"
   count  
 ---------

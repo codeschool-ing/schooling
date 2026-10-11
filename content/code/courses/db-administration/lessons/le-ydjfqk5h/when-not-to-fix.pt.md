@@ -12,7 +12,43 @@ achar espaço.
 A cópia compacta da seção anterior mostra isso. Atualize um quinto das linhas, rode o vacuum e
 olhe; depois faça isso mais duas vezes, com um quinto diferente a cada vez:
 
-@@1@@
+```
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 0;
+UPDATE 160000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 56 MB
+(1 row)
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 1;
+UPDATE 160000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 56 MB
+(1 row)
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 2;
+UPDATE 160000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 57 MB
+(1 row)
+```
 
 A primeira rodada aumentou a tabela de 52 MB para 63 MB, porque uma tabela compacta não tem onde pôr
 versões novas a não ser no fim. **A segunda rodada não a aumentou nada**: o VACUUM tinha liberado as
@@ -45,4 +81,13 @@ atualização ache espaço na mesma página e possa ser HOT, sem nenhuma entrada
 A cópia e as duas extensões em `shop` eram para esta lição. O pacote continua instalado; não é
 preciso removê-lo.
 
-@@2@@
+```
+shop=# DROP TABLE orders_copy;
+DROP TABLE
+
+shop=# DROP EXTENSION pg_repack;
+DROP EXTENSION
+
+shop=# DROP EXTENSION pgstattuple;
+DROP EXTENSION
+```

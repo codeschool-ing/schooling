@@ -87,8 +87,8 @@ maior.
 
 ## Devolvendo o shop
 
-A cópia e as duas extensões eram para esta lição. Remova-as, e o `shop` fica como a lição 4 o
-deixou:
+A cópia e as duas extensões eram para esta lição. Os dois parâmetros dela, o do log incluído,
+moram na tabela e vão embora com ela. Remova-as, e o `shop` fica como a lição 4 o deixou:
 
 ```
 shop=# DROP TABLE orders_copy;

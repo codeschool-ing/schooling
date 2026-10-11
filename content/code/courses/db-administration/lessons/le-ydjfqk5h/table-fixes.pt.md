@@ -14,16 +14,43 @@ EXCLUSIVE` na tabela do começo ao fim, e essa trava conflita com tudo, inclusiv
 
 Três terminais mostram isso. O primeiro roda a reconstrução:
 
-@@1@@
+```
+shop=# \timing on
+Timing is on.
+
+shop=# VACUUM FULL orders_copy;
+VACUUM
+Time: 2340.301 ms (00:02.340)
+```
 
 Enquanto ela rodava, um segundo terminal tentou contar as linhas:
 
-@@2@@
+```
+shop=# \timing on
+Timing is on.
+
+shop=# SELECT count(*) FROM orders_copy;
+ count  
+--------
+ 800000
+(1 row)
+
+Time: 1417.188 ms (00:01.417)
+```
 
 Uma contagem que normalmente leva uma fração de segundo esperou até a reconstrução terminar. Um
 terceiro terminal, olhando o `pg_locks` no meio dela, viu por quê:
 
-@@3@@
+```
+shop=# SELECT l.pid, l.mode, l.granted, a.query FROM pg_locks l JOIN pg_stat_activity a USING (pid) WHERE l.relation = 'orders_copy'::regclass;
+ pid |        mode         | granted |               query               
+-----+---------------------+---------+-----------------------------------
+ 350 | AccessExclusiveLock | t       | VACUUM FULL orders_copy;
+ 350 | ShareLock           | t       | VACUUM FULL orders_copy;
+ 403 | AccessShareLock     | f       | SELECT count(*) FROM orders_copy;
+ 441 | ShareLock           | t       | VACUUM FULL orders_copy;
+(4 rows)
+```
 
 **`granted` é a coluna para ler.** O `VACUUM FULL` tem `AccessExclusiveLock`, concedida; o `SELECT`
 pediu `AccessShareLock`, a trava mais fraca que existe, e não a recebeu. As duas linhas de
@@ -34,7 +61,16 @@ tabela de 200 GB é tempo suficiente para ser uma indisponibilidade.
 
 De volta ao primeiro terminal, quando ela terminou:
 
-@@4@@
+```
+shop=# \timing off
+Timing is off.
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 52 MB      | 31 MB
+(1 row)
+```
 
 A tabela foi de 117 MB para 52 MB e os índices de 75 MB para 31 MB. É o bloat inteiro, devolvido ao
 sistema operacional. **Conte com espaço para as duas cópias enquanto ele roda**: os arquivos novos
@@ -52,26 +88,71 @@ antes da troca.
 Infle a cópia de novo do mesmo jeito e depois instale-o. O pacote vem do repositório do Ubuntu e a
 extensão vai para o banco que guarda a tabela:
 
-@@5@@
+```
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1;
+UPDATE 1000000
 
-@@6@@
+shop=# VACUUM orders_copy;
+VACUUM
 
-@@7@@
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 130 MB     | 75 MB
+(1 row)
+```
+
+```sh
+sudo apt install -y postgresql-16-repack
+```
+
+```
+shop=# CREATE EXTENSION pg_repack;
+CREATE EXTENSION
+```
 
 Depois rode-o pelo shell, como superusuário ou como o papel dono da tabela:
 
-@@8@@
+```
+ana@db:~$ time pg_repack -d shop -t orders_copy
+INFO: repacking table "public.orders_copy"
+
+real	0m2.945s
+user	0m0.007s
+sys	0m0.000s
+```
 
 Enquanto ele copiava, outro terminal olhou as travas e depois alterou uma linha:
 
-@@9@@
+```
+shop=# SELECT l.pid, l.mode, l.granted, a.query FROM pg_locks l JOIN pg_stat_activity a USING (pid) WHERE l.relation = 'orders_copy'::regclass;
+ pid |      mode       | granted |                                                      query                                                      
+-----+-----------------+---------+-----------------------------------------------------------------------------------------------------------------
+ 533 | AccessShareLock | t       | LOCK TABLE public.orders_copy IN ACCESS SHARE MODE
+ 531 | SIReadLock      | t       | INSERT INTO repack.table_16420 SELECT id,customer_id,status,total_cents,created_at FROM ONLY public.orders_copy
+ 531 | AccessShareLock | t       | INSERT INTO repack.table_16420 SELECT id,customer_id,status,total_cents,created_at FROM ONLY public.orders_copy
+(3 rows)
+
+shop=# \timing on
+Timing is on.
+
+shop=# UPDATE orders_copy SET status = 'paid' WHERE id = 3;
+UPDATE 1
+Time: 263.927 ms
+```
 
 O `pg_repack` tem `AccessShareLock`, a mesma trava que um `SELECT` toma, então leituras e escritas
 continuam. O `SIReadLock` está ali porque ele copia no nível de isolamento `SERIALIZABLE`, para ter
 um snapshot consistente. **O `UPDATE` passou direto** e o trigger o levou para a tabela nova. De
 volta ao shell, o resultado é o mesmo do `VACUUM FULL`:
 
-@@10@@
+```
+ana@db:~$ psql shop -c "SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;"
+ table_size | indexes 
+------------+---------
+ 52 MB      | 31 MB
+(1 row)
+```
 
 Três condições vêm junto. **A tabela precisa de uma chave primária** ou de um índice único em
 colunas não nulas, porque a reaplicação encontra as linhas por ele; o `pg_repack` recusa uma tabela

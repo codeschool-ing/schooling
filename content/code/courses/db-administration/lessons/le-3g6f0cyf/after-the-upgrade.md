@@ -80,6 +80,10 @@ extensions current, and this is the moment it was preparing for.
   against your own code before the real night, not during it.
 - The configuration. `pg_upgradecluster` copied `postgresql.conf` across. A parameter that was
   removed or renamed in the new version stops the server at start, and the log names it.
+- The public schema, when the old server was 14 or earlier. PostgreSQL 15 stopped letting every role
+  create objects in `public`, but `pg_upgrade` carries the old privileges across as they were, so an
+  upgraded database still has the old, open schema. Look at it with `\dn+ public`, and close it as
+  lesson 12 did: `REVOKE CREATE ON SCHEMA public FROM PUBLIC;` in every database.
 - Replicas and backups. A physical standby cannot follow a primary of a different major
   version, and a base backup taken by 16 does not restore into 17. Both are rebuilt after the
   upgrade; db-reliability lessons 1 to 10 and 11 to 13 say how.

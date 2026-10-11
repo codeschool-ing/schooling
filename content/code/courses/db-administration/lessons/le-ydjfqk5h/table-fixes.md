@@ -14,16 +14,43 @@ table from start to finish, and that lock conflicts with everything, a plain `SE
 
 Three terminals show it. The first runs the rebuild:
 
-<<<vacuum-full 1-2>>>
+```
+shop=# \timing on
+Timing is on.
+
+shop=# VACUUM FULL orders_copy;
+VACUUM
+Time: 2340.301 ms (00:02.340)
+```
 
 While it ran, a second terminal tried to count the rows:
 
-<<<vacuum-full-select>>>
+```
+shop=# \timing on
+Timing is on.
+
+shop=# SELECT count(*) FROM orders_copy;
+ count  
+--------
+ 800000
+(1 row)
+
+Time: 1417.188 ms (00:01.417)
+```
 
 A count that normally takes a fraction of a second waited until the rebuild finished. A third
 terminal, looking at `pg_locks` in the middle of it, saw why:
 
-<<<vacuum-full-locks>>>
+```
+shop=# SELECT l.pid, l.mode, l.granted, a.query FROM pg_locks l JOIN pg_stat_activity a USING (pid) WHERE l.relation = 'orders_copy'::regclass;
+ pid |        mode         | granted |               query               
+-----+---------------------+---------+-----------------------------------
+ 350 | AccessExclusiveLock | t       | VACUUM FULL orders_copy;
+ 350 | ShareLock           | t       | VACUUM FULL orders_copy;
+ 403 | AccessShareLock     | f       | SELECT count(*) FROM orders_copy;
+ 441 | ShareLock           | t       | VACUUM FULL orders_copy;
+(4 rows)
+```
 
 **`granted` is the column to read.** The `VACUUM FULL` holds `AccessExclusiveLock`, granted; the
 `SELECT` asked for `AccessShareLock`, the weakest lock there is, and has not got it. The two
@@ -35,7 +62,16 @@ outage.
 
 Back in the first terminal, once it finished:
 
-<<<vacuum-full 3-4>>>
+```
+shop=# \timing off
+Timing is off.
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 52 MB      | 31 MB
+(1 row)
+```
 
 The table went from 117 MB to 52 MB and the indexes from 75 MB to 31 MB. That is the whole of the
 bloat, returned to the operating system. **Expect to need room for both copies while it runs**: the
@@ -52,28 +88,71 @@ trigger records every change the application makes, then replays those changes b
 Bloat the copy again the same way, then install it. The package comes from Ubuntu's archive and the
 extension goes into the database that holds the table:
 
-<<<repack 1-3>>>
+```
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1;
+UPDATE 1000000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 130 MB     | 75 MB
+(1 row)
+```
 
 ```sh
 sudo apt install -y postgresql-16-repack
 ```
 
-<<<repack 4>>>
+```
+shop=# CREATE EXTENSION pg_repack;
+CREATE EXTENSION
+```
 
 Then run it from the shell, as a superuser or the role that owns the table:
 
-<<<repack-run 1>>>
+```
+ana@db:~$ time pg_repack -d shop -t orders_copy
+INFO: repacking table "public.orders_copy"
+
+real	0m2.945s
+user	0m0.007s
+sys	0m0.000s
+```
 
 While it copied, another terminal looked at the locks, and then changed a row:
 
-<<<repack-locks>>>
+```
+shop=# SELECT l.pid, l.mode, l.granted, a.query FROM pg_locks l JOIN pg_stat_activity a USING (pid) WHERE l.relation = 'orders_copy'::regclass;
+ pid |      mode       | granted |                                                      query                                                      
+-----+-----------------+---------+-----------------------------------------------------------------------------------------------------------------
+ 533 | AccessShareLock | t       | LOCK TABLE public.orders_copy IN ACCESS SHARE MODE
+ 531 | SIReadLock      | t       | INSERT INTO repack.table_16420 SELECT id,customer_id,status,total_cents,created_at FROM ONLY public.orders_copy
+ 531 | AccessShareLock | t       | INSERT INTO repack.table_16420 SELECT id,customer_id,status,total_cents,created_at FROM ONLY public.orders_copy
+(3 rows)
+
+shop=# \timing on
+Timing is on.
+
+shop=# UPDATE orders_copy SET status = 'paid' WHERE id = 3;
+UPDATE 1
+Time: 263.927 ms
+```
 
 `pg_repack` holds `AccessShareLock`, the same lock a `SELECT` takes, so reads and writes carry on.
 The `SIReadLock` is there because it copies at the `SERIALIZABLE` isolation level, to get a
 consistent snapshot. **The `UPDATE` went straight through** and the trigger carried it into the new
 table. Back in the shell, the result is the same as `VACUUM FULL`'s:
 
-<<<repack-run 2>>>
+```
+ana@db:~$ psql shop -c "SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;"
+ table_size | indexes 
+------------+---------
+ 52 MB      | 31 MB
+(1 row)
+```
 
 Three conditions come with it. **The table needs a primary key** or a unique index on columns that
 are not null, because the replay finds rows by it; `pg_repack` refuses a table without one. It

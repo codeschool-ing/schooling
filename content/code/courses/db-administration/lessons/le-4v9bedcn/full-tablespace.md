@@ -78,9 +78,9 @@ ana@db:~$ df -h /srv/small
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop1       56M   52M     0 100% /srv/small
 ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:48:31.928 -03 [396] ana@shop ERROR:  could not extend file "pg_tblspc/16420/PG_16_202307071/16386/16421": No space left on device
-2026-10-10 16:48:31.928 -03 [396] ana@shop HINT:  Check free disk space.
-2026-10-10 16:48:31.928 -03 [396] ana@shop STATEMENT:  INSERT INTO filler SELECT i, repeat('x', 500) FROM generate_series(1, 200000) AS i;
+2026-10-10 16:54:47.285 -03 [396] ana@shop ERROR:  could not extend file "pg_tblspc/16420/PG_16_202307071/16386/16421": No space left on device
+2026-10-10 16:54:47.285 -03 [396] ana@shop HINT:  Check free disk space.
+2026-10-10 16:54:47.285 -03 [396] ana@shop STATEMENT:  INSERT INTO filler SELECT i, repeat('x', 500) FROM generate_series(1, 200000) AS i;
 ```
 
 **The rollback gave nothing back.** The table holds no rows and its file is still 51 MB, because a
