@@ -65,9 +65,9 @@ payouts table in the monolith's database, and walked them one by one.
 
 **A retry after a timeout is the most ordinary way a payment system pays somebody twice.** The
 remedy is old and well understood, and the `architecture` course covered it as idempotency in its
-lesson 7: send the same idempotency key with every attempt at the same payout, so the bank
-recognises a repeat and does not pay it a second time, and ask the bank for the payout's status
-before retrying a timeout. Ícaro knew the idea. He had not connected it to his own design, which is
+lesson 7. Send the same idempotency key with every attempt at the same payout, so that the bank
+recognises a repeat and does not pay it a second time. And before retrying a timeout, ask the bank
+for the payout's status. Ícaro knew the idea. He had not connected it to his own design, which is
 exactly what a failure walk is for.
 
 For a design of this size the walk takes about twenty minutes. It is where an experienced reviewer

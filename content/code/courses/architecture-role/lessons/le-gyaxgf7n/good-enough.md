@@ -33,6 +33,23 @@ Some of these bars belong in lesson 9's standards, written with their reasons: "
 Payments ships with tests on the money paths" is a standard with an owner and a reason. Others stay
 as judgement, made by the team and reviewed as part of a design.
 
+## Two ways to miss the bar
+
+A bar can be wrong in either direction, and each direction leaves symptoms a team can see without
+any framework.
+
+**A bar set too high shows up as effort that buys nothing anybody asked for.** Renata found two
+examples in her first months. A monthly report for finance went through three rounds of design
+review. A script that moved old delivery photos to cheaper storage was given a configuration file,
+a plugin mechanism and a test suite, was run once, and was never opened again. Neither piece of work
+was wrong in itself. The cost was the week each one took from work that deserved a higher bar.
+
+**A bar set too low shows up later, and in somebody else's time.** The same rounding bug was fixed
+twice in the quote engine because nobody wrote the test the first time. A change to the payout flow
+needed an engineer to watch production for an afternoon, because nothing else would have noticed a
+mistake. The people who pay for a low bar are rarely the people who set it, which is why the bar
+belongs in writing, where both can see it.
+
 ## Deliberate debt, written down
 
 When a team chooses lower internal quality to gain time, it takes on technical debt. Martin Fowler's

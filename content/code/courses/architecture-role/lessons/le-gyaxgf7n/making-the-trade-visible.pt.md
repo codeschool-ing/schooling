@@ -67,6 +67,26 @@ reais e a chance de um caminhão não sair. O ofício dessa conversa é ensinado
 de `architect-communication`, sobre traduzir risco técnico em risco de negócio, e na aula 13 dele,
 sobre negociar prazo, escopo, qualidade e dívida.
 
+## Quando a escolha vai para o outro lado
+
+Suponha que tivessem escolhido a A, o remendo sem reestruturação planejada. Renata tinha recomendado
+contra, e isso não tornaria a decisão errada em nenhum sentido que caiba à arquiteta impor: a A era
+uma troca legítima de velocidade futura por custo presente, dentro da lei e dentro da régua do
+trabalho feito no dia. **Perder uma recomendação faz parte do trabalho, e o que a arquiteta faz em
+seguida é a parte de que as pessoas se lembram.**
+
+Daí seguem três coisas. O ADR registra a decisão como foi tomada, e registra também as opções que
+perderam, a recomendação dela e o motivo, para que alguém lendo dois anos depois veja que a troca foi
+feita sabendo o que se fazia. O registro de dívidas recebe a entrada mesmo assim, com os juros
+escritos da forma mais clara: cada mudança de leiaute depois leva cerca do dobro do tempo. E o
+trabalho é feito tão bem quanto a A permite, sem uma campanha silenciosa para reabrir a questão em
+cada reunião de planejamento. Algumas empresas chamam isso de "disagree and commit", discordar e se
+comprometer, expressão dos princípios de liderança da Amazon.
+
+A exceção é uma opção que não é troca nenhuma. Um plano que emitisse CT-es que a autoridade fiscal
+rejeitaria, ou que cotasse abaixo do piso da ANTT, quebra uma restrição em vez de escolher um ponto
+no triângulo. Isso não cabe ao negócio escolher, e a arquiteta diz isso com essas palavras.
+
 ## Escrevendo a dívida
 
 A opção C é dívida deliberada e prudente, e só continua prudente se for registrada. Renata escreveu um

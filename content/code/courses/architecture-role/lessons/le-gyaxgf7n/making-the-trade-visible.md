@@ -64,6 +64,25 @@ and the chance of a truck not leaving. The craft of that conversation is taught 
 4 of `architect-communication` on translating technical risk into business risk and in its lesson 13
 on negotiating deadline, scope, quality and debt.
 
+## When the choice goes the other way
+
+Suppose they had chosen A, the patch with no restructuring planned. Renata had recommended against
+it, and that would not have made the decision wrong in any sense the architect gets to enforce: A was
+a legitimate trade of future speed for present cost, inside the law and inside the bar for the work
+done on the day. **Losing a recommendation is part of the job, and what the architect does next is
+the part people remember.**
+
+Three things follow. The ADR records the decision as taken, and it also records the options that
+lost, her recommendation and its reason, so that a reader two years later can see the trade was
+made knowingly. The debt register still gets its entry, with the interest written in its plainest
+form: every later layout change takes about twice as long. And the work then gets done as well as A
+allows, with no quiet campaign to reopen the question at every planning meeting. Some companies call
+this "disagree and commit", a phrase from Amazon's leadership principles.
+
+The exception is an option that is not a trade at all. A plan that issued CT-es the tax authority
+would reject, or quoted below the ANTT floor, breaks a constraint rather than choosing a point on
+the triangle. That is not the business's to choose, and the architect says so in those words.
+
 ## Writing the debt down
 
 Option C is deliberate, prudent debt, and it stays prudent only if it is recorded. Renata wrote an

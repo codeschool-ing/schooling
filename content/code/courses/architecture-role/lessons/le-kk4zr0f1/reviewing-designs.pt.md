@@ -68,9 +68,9 @@ e a tabela de repasses no banco de dados do monólito, e percorreu uma a uma.
 
 **Uma nova tentativa depois de um timeout é o jeito mais comum de um sistema de pagamentos pagar
 alguém duas vezes.** O remédio é antigo e bem conhecido, e o curso `architecture` tratou dele como
-idempotência na aula 7: mandar a mesma chave de idempotência em toda tentativa do mesmo repasse,
-para que o banco reconheça a repetição e não pague uma segunda vez, e perguntar ao banco o status do
-repasse antes de tentar de novo depois de um timeout. Ícaro conhecia a ideia. Não a tinha ligado ao
+idempotência na aula 7. Mande a mesma chave de idempotência em toda tentativa do mesmo repasse,
+para que o banco reconheça a repetição e não pague uma segunda vez. E, antes de tentar de novo
+depois de um timeout, pergunte ao banco o status do repasse. Ícaro conhecia a ideia. Não a tinha ligado ao
 próprio design, e é exatamente para isso que serve um passeio pelas falhas.
 
 Para um design deste tamanho, o passeio leva uns vinte minutos. É onde quem revisa com experiência

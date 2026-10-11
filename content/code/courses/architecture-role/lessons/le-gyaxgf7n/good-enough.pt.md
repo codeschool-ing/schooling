@@ -34,6 +34,24 @@ Algumas dessas réguas cabem nos padrões da aula 9, escritas com os motivos: "t
 Payments vai com testes nos caminhos do dinheiro" é um padrão com dono e motivo. Outras ficam como
 julgamento, feito pelo time e revisado como parte de um design.
 
+## Dois jeitos de errar a régua
+
+Uma régua pode errar nas duas direções, e cada direção deixa sintomas que um time vê sem precisar de
+nenhum framework.
+
+**Uma régua alta demais aparece como esforço que compra algo que ninguém pediu.** Renata achou dois
+exemplos nos primeiros meses. Um relatório mensal para o financeiro passou por três rodadas de
+revisão de design. Um script que movia fotos antigas de entrega para um armazenamento mais barato
+ganhou arquivo de configuração, um mecanismo de plugins e uma suíte de testes, rodou uma vez e nunca
+mais foi aberto. Nenhum dos dois trabalhos estava errado em si. O custo foi a semana que cada um
+tirou de um trabalho que merecia uma régua mais alta.
+
+**Uma régua baixa demais aparece depois, e no tempo de outra pessoa.** O mesmo bug de arredondamento
+foi corrigido duas vezes no motor de cotação porque ninguém escreveu o teste da primeira vez. Uma
+mudança no fluxo de repasses exigiu um engenheiro olhando a produção por uma tarde, porque nada mais
+teria percebido um erro. Quem paga por uma régua baixa raramente é quem a definiu, e é por isso que
+a régua precisa estar escrita, onde os dois a vejam.
+
 ## Dívida deliberada, por escrito
 
 Quando um time escolhe uma qualidade interna menor para ganhar tempo, ele contrai dívida técnica. O

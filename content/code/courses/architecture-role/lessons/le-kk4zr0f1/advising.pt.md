@@ -64,11 +64,11 @@ depois.
 
 Nem toda pergunta faz isso. As úteis vêm em três tipos.
 
-- **De esclarecimento**: qual é o objetivo, que número, para quem, até quando. Elas transformam um
+- De esclarecimento: qual é o objetivo, que número, para quem, até quando. Elas transformam um
   pedido num problema, como a aula 7 faz com o negócio.
-- **De sondagem**: o que acontece quando isto falha, o que acontece com dez vezes a carga, quem mais
+- De sondagem: o que acontece quando isto falha, o que acontece com dez vezes a carga, quem mais
   depende disto. Elas acham os casos que o design ainda não encontrou.
-- **De ampliação**: o que mais vocês consideraram, o que fariam se esta opção não fosse permitida,
+- De ampliação: o que mais vocês consideraram, o que fariam se esta opção não fosse permitida,
   qual é a menor coisa que poderia funcionar. Elas impedem que o time compare a opção favorita com o
   nada.
 
@@ -100,13 +100,13 @@ estavam.
 Perguntar nem sempre é o certo, e tratar isso como regra produz uma arquiteta que responde a "que
 horas são?" com "o que você acha?". Renata responde direto em quatro situações.
 
-- **É um fato, não um julgamento**: qual versão do leiaute do CT-e a autoridade fiscal aceita, onde
+- É um fato, não um julgamento: qual versão do leiaute do CT-e a autoridade fiscal aceita, onde
   está documentado o contrato de Payments, o que um padrão diz.
-- **Alguma coisa está pegando fogo.** Durante um incidente o time precisa de uma decisão em minutos,
+- Alguma coisa está pegando fogo. Durante um incidente o time precisa de uma decisão em minutos,
   e o aprendizado acontece na revisão depois.
-- **A decisão é uma porta de mão única** (aula 5) e o time nunca enfrentou uma desse tipo. Aprender
+- A decisão é uma porta de mão única (aula 5) e o time nunca enfrentou uma desse tipo. Aprender
   errando custa caro demais, então ela dá a resposta e explica o raciocínio enquanto dá.
-- **O time já fez o raciocínio** e quer uma segunda opinião. Aí a opinião dela, com os motivos, é
+- O time já fez o raciocínio e quer uma segunda opinião. Aí a opinião dela, com os motivos, é
   exatamente a ajuda que pediram.
 
 Mesmo nesses casos, um curto "o motivo é este" transforma a resposta em algo que o time pode

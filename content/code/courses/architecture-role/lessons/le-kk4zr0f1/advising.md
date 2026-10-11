@@ -62,11 +62,11 @@ learnt to ask helps every time after.
 
 Not every question does this. The useful ones come in three kinds.
 
-- **Clarifying**: what is the goal, what number, for whom, by when. These turn a request into a
+- Clarifying: what is the goal, what number, for whom, by when. These turn a request into a
   problem, the way lesson 7 does with the business.
-- **Probing**: what happens when this fails, what happens at ten times the load, who else depends on
+- Probing: what happens when this fails, what happens at ten times the load, who else depends on
   it. These find the cases the design has not met yet.
-- **Widening**: what else did you consider, what would you do if this option were not allowed, what
+- Widening: what else did you consider, what would you do if this option were not allowed, what
   is the smallest thing that could work. These stop a team comparing its favourite option with
   nothing.
 
@@ -97,14 +97,14 @@ argument. Renata closes most conversations by saying which row of that table the
 Asking is not always right, and treating it as a rule produces an architect who answers "what time
 is it?" with "what do you think?". Renata answers directly in four situations.
 
-- **It is a fact, not a judgement**: which version of the CT-e layout the tax authority accepts,
+- It is a fact, not a judgement: which version of the CT-e layout the tax authority accepts,
   where the Payments contract is documented, what a standard says.
-- **Something is on fire.** During an incident the team needs a decision in minutes, and the
+- Something is on fire. During an incident the team needs a decision in minutes, and the
   learning happens in the review afterwards.
-- **The decision is a one-way door** (lesson 5) and the team has not met one of its kind before.
+- The decision is a one-way door (lesson 5) and the team has not met one of its kind before.
   Learning by getting it wrong costs too much, so she gives the answer and explains the reasoning
   as she does.
-- **The team has already done the thinking** and wants a second opinion. Then her opinion, with its
+- The team has already done the thinking and wants a second opinion. Then her opinion, with its
   reasons, is exactly the help they asked for.
 
 Even then, a short "here is why" turns an answer into something the team can reuse. What separates

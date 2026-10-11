@@ -11,9 +11,10 @@ inventory, because nobody can remove what nobody has listed.**
 ## The inventory
 
 In her first quarter Renata built a table with one row per deployable service. For each one she
-recorded the owning team, what calls it, how many times it was deployed in the last 90 days, how
-many pages it raised, when its code last changed for a reason other than an upgrade, who could
-explain it, and why it exists as a separate deployable rather than as code inside something else.
+recorded the owning team, what calls it, how often it was deployed in the last 90 days and how many
+pages it raised. She also recorded when its code last changed for a reason other than an upgrade,
+who could explain it, and why it exists as a separate deployable rather than as code inside
+something else.
 
 The last column was the hard one. Nine services had a clear answer to it. Five did not.
 
@@ -102,10 +103,10 @@ until then nobody had ever added it up.
 
 The surest way to have less to remove is to add less. **YAGNI**, "you aren't gonna need it", comes
 from Extreme Programming in the late 1990s: do not build a capability for a need you only expect to
-have. Martin Fowler's essay on it lists what such a presumptive feature costs: the cost of building
-it; the cost of delay, because something else was not built in that time; the cost of carrying it,
-because it makes everything near it harder to change; and, when the presumed need turns out to be
-different, the cost of repairing it.
+have. Martin Fowler's essay on it lists four costs of such a presumptive feature. There is the cost
+of building it, and the cost of delay, because something else was not built in that time. There is
+the cost of carrying it, because it makes everything near it harder to change. And when the presumed
+need turns out to be different, there is the cost of repairing it.
 
 pricing-floor was a presumptive feature. It was built for business people who would update the
 floor themselves, a need that was never confirmed and never arrived, and Carreto paid to carry it

@@ -11,10 +11,10 @@ pedir, e começa com um inventário, porque ninguém remove o que ninguém listo
 ## O inventário
 
 No primeiro trimestre, Renata montou uma tabela com uma linha por serviço implantável. Para cada um
-ela anotou o time dono, quem o chama, quantas vezes foi implantado nos últimos 90 dias, quantos
-acionamentos de plantão gerou, quando o código mudou pela última vez por um motivo que não fosse
-atualização, quem saberia explicá-lo e por que ele existe como implantável separado, e não como
-código dentro de outra coisa.
+ela anotou o time dono, quem o chama, quantas vezes foi implantado nos últimos 90 dias e quantos
+acionamentos de plantão gerou. Anotou também quando o código mudou pela última vez por um motivo que
+não fosse atualização, quem saberia explicá-lo e por que ele existe como implantável separado, e não
+como código dentro de outra coisa.
 
 A última coluna era a difícil. Nove serviços tinham uma resposta clara para ela. Cinco não tinham.
 
@@ -107,10 +107,11 @@ manter, e até ali ninguém nunca o tinha somado.
 
 O jeito mais seguro de ter menos para remover é acrescentar menos. **YAGNI**, "you aren't gonna need
 it", você não vai precisar disso, vem da Extreme Programming do fim dos anos 1990: não construa uma
-capacidade para uma necessidade que você só espera ter. O ensaio de Martin Fowler sobre o tema lista o
-que custa uma funcionalidade presumida: o custo de construí-la; o custo do atraso, porque outra coisa
-deixou de ser construída nesse tempo; o custo de carregá-la, porque ela torna mais difícil mudar tudo
-o que está perto; e, quando a necessidade presumida se revela outra, o custo de consertá-la.
+capacidade para uma necessidade que você só espera ter. O ensaio de Martin Fowler sobre o tema lista
+quatro custos de uma funcionalidade presumida. Há o custo de construí-la, e o custo do atraso, porque
+outra coisa deixou de ser construída nesse tempo. Há o custo de carregá-la, porque ela torna mais
+difícil mudar tudo o que está perto. E, quando a necessidade presumida se revela outra, há o custo de
+consertá-la.
 
 O pricing-floor era uma funcionalidade presumida. Foi feito para pessoas do negócio que atualizariam
 o piso por conta própria, uma necessidade que nunca foi confirmada e nunca chegou, e a Carreto pagou
