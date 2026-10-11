@@ -48,7 +48,7 @@ finished in the last 30 days: 30, median 4 days, 85th 8 days
   BIL-229  review         0
 ```
 
-Seis itens estão abertos, e um deles é cinco vezes mais velho que o percentil 85. **O `BIL-189` é um bug de um ponto que está aberto há quarenta dias.** É o item que a aula 1 achou pela aritmética, quando o trabalho em andamento de setembro deu um a mais do que os itens terminados explicavam, e que o gráfico de dispersão da aula 2 não conseguia mostrar de jeito nenhum, porque ele não tem ponto. Aqui ele é a primeira linha da saída.
+Seis itens estão abertos, e um deles é cinco vezes mais velho que o percentil 85. **O `BIL-189` é um bug de um ponto que está aberto há quarenta dias.** É o item que a aula 1 achou pela aritmética, quando o trabalho em andamento de setembro deu um a mais do que os itens terminados explicavam. O gráfico de dispersão da aula 2 não conseguia mostrá-lo de jeito nenhum, porque ele não tem ponto. Aqui ele é a primeira linha da saída.
 
 O que aconteceu com ele é banal. Em 21 de agosto o seu dev o começou, descobriu que ele precisava de uma mudança de outro time e o marcou como bloqueado. Um item bloqueado, pela leitura que o próprio time fazia da nova regra, não contava para o limite de um item por dev, então o dev começou outra coisa. Toda daily desde então perguntou a cada pessoa em que ela estava trabalhando, e a resposta honesta nunca incluiu o `BIL-189`.
 

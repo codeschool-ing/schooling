@@ -3,7 +3,7 @@ title: Roadmaps whose confidence fades with distance
 version: 1
 ---
 
-A roadmap is a forecast drawn as a picture, and most roadmaps draw it wrongly: a row of bars on a timeline, each with a crisp start and end, a year out, with the same sharp edge on the bar for next month and the bar for next autumn. **The picture claims the same certainty about November as about next week**, and everybody who reads it believes the picture.
+A roadmap is a forecast drawn as a picture, and most roadmaps draw it wrongly. They show a row of bars on a timeline, each with a crisp start and end, a year out, with the same sharp edge on the bar for next month and the bar for next autumn. **The picture claims the same certainty about November as about next week**, and everybody who reads it believes the picture.
 
 ## Confidence falls with the horizon
 

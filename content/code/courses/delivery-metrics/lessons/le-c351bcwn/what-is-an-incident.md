@@ -28,4 +28,4 @@ The fix is cultural and procedural at once:
 
 ## What declaring sets in motion
 
-Declaring an incident is a switch from normal work to a different mode, with its own rules, which the next three sections set out: **a severity**, which says how much else should stop; **roles**, so that the people responding know who decides and who writes things down; and **one channel**, so that everything said about the incident is said in one place. None of it needs anybody to know the cause yet, which is why it can start in the first minute.
+Declaring an incident is a switch from normal work to a different mode, with its own rules. The next three sections set them out: **a severity**, which says how much else should stop; **roles**, so that the people responding know who decides and who writes things down; and **one channel**, so that everything said about the incident is said in one place. None of it needs anybody to know the cause yet, which is why it can start in the first minute.

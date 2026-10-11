@@ -60,7 +60,7 @@ ana@laptop:~/delivery$ python3 oncall.py
 
 **O Rafa ficou de plantão três semanas, como a Duda e a Inês, e foi acionado mais do que as duas juntas**: 54 vezes, 29 delas nas semanas de outras pessoas. A escala diz que a carga é dividida por cinco. O pager diz que uma pessoa carrega quase metade dela, e nada na escala jamais mostraria isso.
 
-O programa mostra uma segunda injustiça, mais discreta. O Caio foi acionado 6 vezes e a Inês 21, e nenhum dos dois teve nada a ver com isso: duas das três semanas da Inês, e todas as três do Rafa, incluíram o fim do mês, quando as lojas fecham as contas e os acionamentos vêm de três em três; nenhuma das do Caio incluiu. Uma escala de cinco semanas contra um mês de pouco mais de quatro anda devagar, então o fim do mês cai nas mesmas pessoas por vários meses seguidos antes de mudar. A seção 06 volta às duas coisas.
+O programa mostra uma segunda injustiça, mais discreta. O Caio foi acionado 6 vezes e a Inês 21, e nenhum dos dois teve nada a ver com isso. Duas das três semanas da Inês, e todas as três do Rafa, incluíram o fim do mês, quando as lojas fecham as contas e os acionamentos vêm de três em três; nenhuma das do Caio incluiu. Uma escala de cinco semanas contra um mês de pouco mais de quatro anda devagar, então o fim do mês cai nas mesmas pessoas por vários meses seguidos antes de mudar. A seção 06 volta às duas coisas.
 
 ## Por que o padrão do especialista prejudica todo mundo
 

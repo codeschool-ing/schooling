@@ -60,7 +60,7 @@ average cycle time          15.4 days
 WIP / throughput             8.0 days
 ```
 
-Agora os dois números estão quase um fator de dois distantes: a lei diz **8,0 dias** e os itens terminados levaram **15,4**. A aritmética está certa. **Agosto quebrou as condições da lei.** Começou com 26 itens abertos e terminou com 6, então o trabalho em andamento não era o mesmo nas duas pontas; e muitos dos itens que terminaram em agosto tinham começado em junho e julho, sob as regras antigas, então os ciclos longos deles descrevem um time que já não existia quando foram contados. O mais antigo estava aberto desde 7 de julho, 55 dias.
+Agora os dois números estão quase um fator de dois distantes: a lei diz **8,0 dias** e os itens terminados levaram **15,4**. A aritmética está certa. **Agosto quebrou as condições da lei.** Começou com 26 itens abertos e terminou com 6, então o trabalho em andamento não era o mesmo nas duas pontas. E muitos dos itens que terminaram em agosto tinham começado em junho e julho, sob as regras antigas, então os ciclos longos deles descrevem um time que já não existia quando foram contados. O mais antigo estava aberto desde 7 de julho, 55 dias.
 
 É assim que se lê uma discordância: **quando a lei e a medição discordam, o sistema mudou durante o período**. Aqui você já sabia que tinha mudado, porque o time anunciou a mudança. Num time real, a discordância muitas vezes é como você descobre.
 

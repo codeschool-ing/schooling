@@ -16,7 +16,7 @@ He was right that it was the usual alert, and right that most of its pages neede
 - **a slower answer to every page**, including the rare one that matters, because the expected value of looking has fallen;
 - **people leaving the rota**, which lesson 17 showed is the last symptom rather than the first.
 
-Hospitals know the same thing as **alarm fatigue**: monitors at a patient's bedside that sound so often for nothing that staff stop hearing them, and in 2013 the Joint Commission, which accredits American hospitals, issued a formal warning about it, after a run of deaths in which alarms had been silenced, turned down or not heard. The mechanism is the same in a ward and on a pager, and it is not a weakness of the people involved. **A person exposed to a signal that is usually wrong learns to discount it, correctly, almost every time.**
+Hospitals know the same thing as **alarm fatigue**: monitors at a patient's bedside that sound so often for nothing that staff stop hearing them. In 2013 the Joint Commission, which accredits American hospitals, issued a formal warning about it, after a run of deaths in which alarms had been silenced, turned down or not heard. The mechanism is the same in a ward and on a pager, and it is not a weakness of the people involved. **A person exposed to a signal that is usually wrong learns to discount it, correctly, almost every time.**
 
 ## The cost is paid twice
 

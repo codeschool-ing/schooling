@@ -28,4 +28,4 @@ A correção é cultural e processual ao mesmo tempo:
 
 ## O que declarar põe em movimento
 
-Declarar um incidente é passar do trabalho normal para outro modo, com regras próprias, que as próximas três seções apresentam: **uma severidade**, que diz quanto do resto deve parar; **papéis**, para que quem está respondendo saiba quem decide e quem anota; e **um canal**, para que tudo o que se diz sobre o incidente seja dito num lugar só. Nada disso exige que alguém já saiba a causa, e é por isso que pode começar no primeiro minuto.
+Declarar um incidente é passar do trabalho normal para outro modo, com regras próprias. As próximas três seções as apresentam: **uma severidade**, que diz quanto do resto deve parar; **papéis**, para que quem está respondendo saiba quem decide e quem anota; e **um canal**, para que tudo o que se diz sobre o incidente seja dito num lugar só. Nada disso exige que alguém já saiba a causa, e é por isso que pode começar no primeiro minuto.

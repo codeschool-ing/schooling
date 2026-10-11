@@ -9,7 +9,7 @@ A **service level objective**, or SLO, is the target for an SLI over a window of
 99.9% of charge attempts are good, over any 30 days
 ```
 
-Both halves matter. The number says how good is good enough, and the window says over how long the team is judged. A **rolling** window of 30 days moves forward a day at a time, so a bad afternoon counts for exactly 30 days and then leaves; a calendar month resets on the 1st, which makes the last day of the month either a free pass or a disaster depending on what happened earlier.
+Both halves matter. The number says how good is good enough, and the window says over how long the team is judged. A **rolling** window of 30 days moves forward a day at a time, so a bad afternoon counts for exactly 30 days and then leaves. A calendar month resets on the 1st, which makes the last day of the month either a free pass or a disaster depending on what happened earlier.
 
 ## What each nine buys
 
@@ -22,7 +22,7 @@ It helps to turn a percentage into time, as if every request failed for a contin
 | 99.9% | 1 in 1,000 | 43 minutes |
 | 99.99% | 1 in 10,000 | 4 minutes 19 seconds |
 
-Each extra nine is ten times stricter, and it costs far more than ten times as much: 43 minutes a month is time enough for a person to be paged, open a laptop and roll back a release; four minutes is not, so a 99.99% service needs the rollback to happen without anybody.
+Each extra nine is ten times stricter, and it costs far more than ten times as much: 43 minutes a month is time enough for a person to be paged, open a laptop and roll back a release. Four minutes is not, so a 99.99% service needs the rollback to happen without anybody.
 
 ## Why not 100%
 
@@ -34,7 +34,7 @@ Each extra nine is ten times stricter, and it costs far more than ten times as m
 
 ## Choosing the number
 
-The best starting point is **what users have been getting without complaining**. If the SLI has been around 99.95% for months and the shops are content, an objective of 99.9% leaves room for the team to take risks and still keeps the shops where they are; an objective of 99.99% promises something nobody has asked for, and pays for it with every release.
+The best starting point is **what users have been getting without complaining**. If the SLI has been around 99.95% for months and the shops are content, an objective of 99.9% leaves room for the team to take risks and still keeps the shops where they are. An objective of 99.99% promises something nobody has asked for, and pays for it with every release.
 
 The number is a **product decision**, not an engineering one. It says how much unreliability the business accepts in exchange for change, and the people who own the product sign it beside the team that runs it.
 

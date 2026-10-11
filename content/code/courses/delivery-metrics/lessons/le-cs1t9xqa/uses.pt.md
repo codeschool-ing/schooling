@@ -7,7 +7,7 @@ Os usos legítimos têm algo em comum: **as pessoas que os números descrevem po
 
 ## O time melhorando o próprio sistema
 
-O primeiro uso, e aquele em que o curso passou mais tempo. O time de Billing mudou suas regras em 3 de agosto e usou o histórico do próprio quadro para ver o que a mudança fez; podou seus alertas porque as notas de passagem de turno mostravam que quatro acionamentos em cinco não precisavam de ninguém. Nos dois casos o time leu os próprios números, mudou as próprias regras e mediu o resultado. **Ninguém de fora do time precisou pedir nada disso.**
+O primeiro uso, e aquele em que o curso passou mais tempo. O time de Billing mudou suas regras em 3 de agosto e usou o histórico do próprio quadro para ver o que a mudança fez; podou seus alertas porque as notas de troca mostravam que quatro acionamentos em cinco não precisavam de ninguém. Nos dois casos o time leu os próprios números, mudou as próprias regras e mediu o resultado. **Ninguém de fora do time precisou pedir nada disso.**
 
 ## Responder "quando?" com honestidade
 

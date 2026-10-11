@@ -60,7 +60,7 @@ average cycle time          15.4 days
 WIP / throughput             8.0 days
 ```
 
-Now the two numbers are nearly a factor of two apart: the law says **8.0 days** and the finished items took **15.4**. Nothing is wrong with the arithmetic. **August broke the law's conditions.** It began with 26 items open and ended with 6, so work in progress was not the same at both ends; and many of the items that finished in August had been started in June and July, under the old rules, so their long cycle times describe a team that no longer existed by the time they were counted. The oldest had been open since 7 July, 55 days.
+Now the two numbers are nearly a factor of two apart: the law says **8.0 days** and the finished items took **15.4**. Nothing is wrong with the arithmetic. **August broke the law's conditions.** It began with 26 items open and ended with 6, so work in progress was not the same at both ends. And many of the items that finished in August had been started in June and July, under the old rules, so their long cycle times describe a team that no longer existed by the time they were counted. The oldest had been open since 7 July, 55 days.
 
 That is how to read a disagreement: **when the law and the measurement disagree, the system changed during the period**. Here you already knew it had, because the team announced the change. On a real team the disagreement is often how you find out.
 

@@ -17,7 +17,7 @@ The third costs least and is the one most often forgotten. A developer who was u
 
 ## In Brazil
 
-Brazilian labour law has a name for being available away from work: **sobreaviso**. The CLT, art. 244, §2, defines it for railway workers, as staying at home awaiting a call, paid at **one third of the normal hourly wage** for each hour, in shifts of at most 24 hours. Courts apply it by analogy to other workers, and the Superior Labour Court's **Súmula 428** says when: carrying a company phone is not, by itself, sobreaviso; it is when the employee, at a distance and under the employer's control by electronic means, is on a duty schedule and can be called at any moment during their rest.
+Brazilian labour law has a name for being available away from work: **sobreaviso**. The CLT, art. 244, §2, defines it for railway workers, as staying at home awaiting a call, paid at **one third of the normal hourly wage** for each hour, in shifts of at most 24 hours. Courts apply it by analogy to other workers, and the Superior Labour Court's **Súmula 428** says when. Carrying a company phone is not, by itself, sobreaviso; it is when the employee, at a distance and under the employer's control by electronic means, is on a duty schedule and can be called at any moment during their rest.
 
 A rota like the Billing team's, with a named person who must answer within minutes all week, fits the second description closely. Hours actually worked after a page are working hours, paid as overtime. **The details depend on the contract and the collective agreement, and this course is not legal advice**: a team introducing a rota in Brazil agrees it with whoever handles the company's labour matters, before the first shift rather than after the first complaint.
 

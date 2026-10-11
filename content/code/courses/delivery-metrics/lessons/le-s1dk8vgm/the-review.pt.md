@@ -22,6 +22,6 @@ A parcela de acionamentos que precisou de uma pessoa é um bom número para acom
 
 ## O que o time espera
 
-A primeira revisão aconteceu na terça-feira, 6 de outubro, com os números do trimestre da seção 04. Se os alertas que ficaram acionarem tanto quanto acionaram no trimestre, o pager vai tocar mais ou menos uma vez por semana em vez de seis, e uma vez por mês à noite em vez de duas vezes por semana, com o alerta de burn rate e o alerta de fila corrigido somando um pouco por cima. Ninguém no time vai chamar isso de resultado antes de passar um trimestre: um mês é uma amostra pequena, e um mês tranquilo pode vir depois de qualquer mudança.
+A primeira revisão aconteceu na terça-feira, 6 de outubro, com os números do trimestre da seção 04. Se os alertas que ficaram acionarem tanto quanto acionaram no trimestre, o pager vai tocar mais ou menos uma vez por semana em vez de seis, e uma vez por mês à noite em vez de duas vezes por semana. O alerta de burn rate e o alerta de fila corrigido vão somar um pouco por cima. Ninguém no time vai chamar isso de resultado antes de passar um trimestre: um mês é uma amostra pequena, e um mês tranquilo pode vir depois de qualquer mudança.
 
 O que eles vão olhar primeiro não é a contagem. É se todo acionamento é lido, toda vez, em menos de um minuto, porque é para essa propriedade que a poda existe: **um acionamento em que as pessoas acreditam.**

@@ -11,7 +11,7 @@ The meeting reviews the document; it does not write it. Its job is to check the 
 
 ## How to ask
 
-The single most useful habit is to ask **"how"** and **"what"** rather than **"why"**. "Why did you approve that change?" is heard as an accusation, however it is meant. "What did the review look at?", "How did it look at 17:20?", "What would have made the retry stand out?" ask about the situation, and people answer them fully.
+The most useful habit is to ask **"how"** and **"what"** rather than **"why"**. "Why did you approve that change?" is heard as an accusation, however it is meant. "What did the review look at?", "How did it look at 17:20?", "What would have made the retry stand out?" ask about the situation, and people answer them fully.
 
 Three more habits help:
 
