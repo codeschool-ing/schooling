@@ -31,7 +31,7 @@ number that would say whether the design worked. The document had the first ("dr
 long when a payout fails") and not the second. Her first comment asked for it. The answer Ícaro and
 Bruno wrote in was Carreto's promise from lesson 4: a driver is paid within 24 hours of a proved
 delivery. The same conversation produced two more numbers: 2% of payouts fail on the first attempt,
-which is about 160 a day out of roughly 8,000.
+which is about 600 a month out of roughly 30,000.
 
 **A design with no stated measure cannot be reviewed, only liked or disliked.** Once the 24-hour
 promise was in the document, every later comment had something to be tested against. Retries at 5,

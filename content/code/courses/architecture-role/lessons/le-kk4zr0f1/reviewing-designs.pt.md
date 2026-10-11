@@ -32,7 +32,7 @@ o design funcionou. O documento tinha a primeira ("os motoristas esperam demais 
 falha") e não a segunda. O primeiro comentário dela pedia esse número. A resposta que Ícaro e Bruno
 escreveram foi a promessa da Carreto da aula 4: o motorista é pago em até 24 horas depois de uma
 entrega comprovada. A mesma conversa trouxe mais dois números: 2% dos repasses falham na primeira
-tentativa, cerca de 160 por dia num total de uns 8.000.
+tentativa, cerca de 600 por mês num total de uns 30.000.
 
 **Um design sem medida declarada não pode ser revisado, só aprovado ou reprovado no gosto.** Com a
 promessa das 24 horas no documento, todo comentário seguinte tinha contra o que ser testado. Novas
