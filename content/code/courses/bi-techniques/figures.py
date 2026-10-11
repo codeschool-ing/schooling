@@ -1190,6 +1190,50 @@ def l13_value(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 14
+
+@figure('l14-funnel', 14)
+def l14_funnel(lang):
+    s = csv('sessions.csv')
+    t = {'en': dict(
+        label='Paired bars of step conversion for desktop and mobile across the four steps of '
+              'Panela\'s funnel. Landing to menu, menu to box and box to checkout are nearly equal on '
+              'both devices, about 62, 55 and 71 per cent. Checkout to paid is 82.8 per cent on '
+              'desktop and 48.3 on mobile.',
+        steps=['landing → menu', 'menu → box', 'box → checkout', 'checkout → paid'],
+        desk='desktop', mob='mobile', x='sessions that go on to the next step, per cent',
+        cap='Three steps behave alike on both devices; one does not. The steepest step of the '
+            'funnel is the second, and the broken one is the last.'),
+        'pt': dict(
+        label='Barras em pares da conversão de cada etapa para computador e celular nas quatro '
+              'etapas do funil da Panela. Chegada ao cardápio, cardápio à caixa e caixa ao checkout '
+              'ficam quase iguais nos dois aparelhos, cerca de 62, 55 e 71 por cento. Do checkout ao '
+              'pagamento é 82,8 por cento no computador e 48,3 no celular.',
+        steps=['chegada → cardápio', 'cardápio → caixa', 'caixa → checkout', 'checkout → pago'],
+        desk='computador', mob='celular', x='sessões que seguem para a etapa seguinte, por cento',
+        cap='Três etapas se comportam igual nos dois aparelhos; uma não. A etapa mais íngreme do '
+            'funil é a segunda, e a quebrada é a última.')}[lang]
+    f = Fig('l14-funnel', 620, 300, t['label'])
+    p = Plot(f, 160, 30, 590, 230, 0, 100, 0, 1)
+    for v in range(0, 101, 25):
+        f.line(p.sx(v), p.y0, p.sx(v), p.y1, stroke='--wire', width=1)
+        f.text(p.sx(v), p.y1 + 14, str(v), size=9.5, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 32, t['x'], size=10, weight='600')
+    for i in range(4):
+        y = p.y0 + 8 + i * 50
+        f.text(p.x0 - 10, y + 10, t['steps'][i], size=10.5, anchor='end', weight='600')
+        for k, (dev, fill, st) in enumerate([('desktop', '--phosphor-dim', '--phosphor'), ('mobile', '--amber', '--amber')]):
+            d = s[s['device'] == dev]
+            r = (d['step'] >= i + 2).sum() / (d['step'] >= i + 1).sum() * 100
+            f.rect(p.x0, y + k * 12, p.sx(r) - p.x0, 10, stroke=st, fill=fill, rx=1, width=1)
+            f.text(p.sx(r) + 6, y + k * 12 + 5, num(lang, r, 1), size=9, anchor='start', fill='--paper-dim')
+    f.rect(170, 274, 14, 9, stroke='--phosphor', fill='--phosphor-dim', rx=1, width=1)
+    f.text(190, 279, t['desk'], size=10, anchor='start')
+    f.rect(300, 274, 14, 9, stroke='--amber', fill='--amber', rx=1, width=1)
+    f.text(320, 279, t['mob'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
