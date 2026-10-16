@@ -1,0 +1,621 @@
+[
+  {
+    "id": "ex-fdg31w0k",
+    "version": 1,
+    "section": "what-a-job-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a Glue job run billed by?",
+    "hint": "There is no cluster between runs.",
+    "choices": [
+      {
+        "text": "The rows the script processed",
+        "correct": false,
+        "why": "Glue does not count rows; a run with no input costs the same seconds."
+      },
+      {
+        "text": "The DPUs it was given times the seconds they were up",
+        "correct": true,
+        "why": "Right, with one minute as the least a run costs on Glue 2.0 and later."
+      },
+      {
+        "text": "The gigabytes it read from S3",
+        "correct": false,
+        "why": "That is how Athena is billed, lesson 15; Glue bills the machines."
+      },
+      {
+        "text": "The hours its cluster exists, between runs too",
+        "correct": false,
+        "why": "There is no cluster between runs; that is the point of Glue."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev8xghs6",
+    "version": 1,
+    "section": "what-a-job-is",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A job runs on five `G.2X` workers. How many DPUs does each run use?",
+    "hint": "Workers times the DPUs of each.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mw6ng2xw",
+    "version": 1,
+    "section": "what-a-job-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's run of the job says `SUCCEEDED`, `123` seconds and Glue `0.9`, for a job defined as Glue 5.0. What do those values tell you about `orders_etl.py`?",
+    "hint": "Every run of every job in moto says the same.",
+    "choices": [
+      {
+        "text": "It ran in about two minutes, on an older Spark",
+        "correct": false,
+        "why": "Nothing ran: 123 is a constant moto returns for every run."
+      },
+      {
+        "text": "moto downgraded the job because 5.0 is not supported",
+        "correct": false,
+        "why": "The job still says 5.0; the run carries a default of moto's own."
+      },
+      {
+        "text": "Nothing: the script was never opened",
+        "correct": true,
+        "why": "Right. The values describe moto's answer, not a run."
+      },
+      {
+        "text": "It failed and Glue reran it on version 0.9",
+        "correct": false,
+        "why": "There is no fallback and no failure; there is no run."
+      }
+    ]
+  },
+  {
+    "id": "ex-72abv7xc",
+    "version": 1,
+    "section": "what-a-job-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a job give up in exchange for Flex's 0.45 dollars a DPU-hour?",
+    "hint": "It runs on capacity AWS has spare.",
+    "choices": [
+      {
+        "text": "Its bookmark, which Flex runs do not keep",
+        "correct": false,
+        "why": "Flex changes where the run gets its capacity, not what the job remembers."
+      },
+      {
+        "text": "A start at a known time and a known length",
+        "correct": true,
+        "why": "Right: it may start later and take longer, which a report read in the morning can afford."
+      },
+      {
+        "text": "Writing to the catalog, which needs standard capacity",
+        "correct": false,
+        "why": "The script is the same script; nothing it calls changes."
+      },
+      {
+        "text": "Per-second billing, since Flex bills whole hours",
+        "correct": false,
+        "why": "The unit is the same DPU-hour, billed the same way, at a lower rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1wewz3t",
+    "version": 1,
+    "section": "what-a-job-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of capacity to what it is for.",
+    "hint": "One of them is not Spark.",
+    "pairs": [
+      {
+        "left": "`G.1X`",
+        "right": "One DPU per worker, the ordinary batch job"
+      },
+      {
+        "left": "`G.2X`",
+        "right": "Two DPUs per worker, for jobs short of memory"
+      },
+      {
+        "left": "`G.025X`",
+        "right": "A quarter of a DPU, for streaming"
+      },
+      {
+        "left": "`pythonshell`",
+        "right": "Plain Python on a sixteenth of a DPU, no Spark"
+      }
+    ],
+    "right_distractors": [
+      "A cluster kept running between nightly runs"
+    ]
+  },
+  {
+    "id": "ex-h669g5xe",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Glue have DynamicFrames when Spark already has DataFrames?",
+    "hint": "Think of lesson 16's files that disagreed.",
+    "choices": [
+      {
+        "text": "They let records disagree about a column's type until the script settles it",
+        "correct": true,
+        "why": "Right: a choice type, settled by `resolveChoice`, for raw files whose types drift."
+      },
+      {
+        "text": "They are faster than DataFrames for the joins and windows a job spends its time on",
+        "correct": false,
+        "why": "Those are the DataFrame's, which is why the script calls `toDF` before `dropDuplicates`."
+      },
+      {
+        "text": "Spark cannot write Parquet without one",
+        "correct": false,
+        "why": "Spark writes Parquet from a DataFrame on its own."
+      },
+      {
+        "text": "They keep a job's data in the catalog between one run and the next, ready to read",
+        "correct": false,
+        "why": "The catalog holds no data; a DynamicFrame lives only during a run."
+      }
+    ]
+  },
+  {
+    "id": "ex-kte5x0b2",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `transformation_ctx` for, in `from_catalog` and `getSink`?",
+    "hint": "The bookmark needs a name to keep state under.",
+    "choices": [
+      {
+        "text": "It names the Spark stage in the job's logs",
+        "correct": false,
+        "why": "Logs are not what it is for; without it the bookmark has nothing to key on."
+      },
+      {
+        "text": "It sets which column the output is partitioned by",
+        "correct": false,
+        "why": "That is `partitionKeys`."
+      },
+      {
+        "text": "It names the read or write the bookmark keeps state for",
+        "correct": true,
+        "why": "Right. A read with no name is read whole on every run."
+      },
+      {
+        "text": "It opens a transaction that `job.commit` closes at the end of the run",
+        "correct": false,
+        "why": "S3 writes are not transactional; `job.commit` saves the bookmark."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzspnp5h",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With bookmarks on, the shop resends 15 October's export the next night in a second file. What does this lesson's Glue script do with it?",
+    "hint": "Which rows does `dropDuplicates` see?",
+    "choices": [
+      {
+        "text": "`dropDuplicates` removes them, since they repeat order ids already written",
+        "correct": false,
+        "why": "It sees only the new file, where nothing repeats."
+      },
+      {
+        "text": "The bookmark skips the file, because its day is done",
+        "correct": false,
+        "why": "A bookmark tracks files, and this one is new."
+      },
+      {
+        "text": "It adds the rows beside the first file's: the day is counted twice",
+        "correct": true,
+        "why": "Right, and nothing fails. The cure is to rewrite the day from all its files."
+      },
+      {
+        "text": "`writeFrame` replaces the day with the resent file alone",
+        "correct": false,
+        "why": "`writeFrame` adds files; it does not replace what is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqmt09bp",
+    "version": 1,
+    "section": "the-script",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To replace only the partitions a write touches, Spark overwrites with `partitionOverwriteMode` set to ___.",
+    "hint": "The other value replaces the whole table.",
+    "blanks": [
+      {
+        "accept": [
+          "dynamic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qn1ws67t",
+    "version": 1,
+    "section": "run-it-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`etl.py` wrote 12,703,975 bytes of Parquet, exactly what `lake.py` wrote in lesson 15. Why exactly?",
+    "hint": "What would have to differ for the files to differ?",
+    "choices": [
+      {
+        "text": "`etl.py` copies the Parquet files that `lake.py` wrote in lesson 15",
+        "correct": false,
+        "why": "`lake.py --layer raw` wrote no Parquet in this lesson."
+      },
+      {
+        "text": "Parquet files of the same row count are always the same size",
+        "correct": false,
+        "why": "Size follows the values; the resent day shows rows of another size."
+      },
+      {
+        "text": "Same rows, same order, same types, same library: the same file",
+        "correct": true,
+        "why": "Right, which makes the size a cheap test that the job did what a known-good process did."
+      },
+      {
+        "text": "moto stores one copy of identical objects",
+        "correct": false,
+        "why": "moto stores what it is sent; nothing is shared between keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6zybj0t",
+    "version": 1,
+    "section": "run-it-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `etl.py` read the CSV with the schema's types instead of letting PyArrow guess them?",
+    "hint": "Remember 265.68 in lesson 16.",
+    "choices": [
+      {
+        "text": "A guess takes longer than reading a type that has been declared up front",
+        "correct": false,
+        "why": "Speed is not the reason; where a bad value fails is."
+      },
+      {
+        "text": "A value that does not fit fails in the job, not in a query later",
+        "correct": true,
+        "why": "Right, and the curated files get exactly lesson 15's types."
+      },
+      {
+        "text": "Parquet can hold only the types that a schema names, and nothing else",
+        "correct": false,
+        "why": "Parquet would hold whatever PyArrow guessed; the guess is the risk."
+      },
+      {
+        "text": "PyArrow's guesses change from run to run",
+        "correct": false,
+        "why": "They are repeatable; the issue is a file whose values look like another type."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymrvhn5y",
+    "version": 1,
+    "section": "run-it-here",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can running `etl.py` against moto actually tell you? Choose all that apply.",
+    "hint": "It is the logic, run small.",
+    "choices": [
+      {
+        "text": "Whether duplicates of a day are removed",
+        "correct": true,
+        "why": "Yes: 500 of them were."
+      },
+      {
+        "text": "Whether the output matches a known-good result",
+        "correct": true,
+        "why": "Yes: the four rows and the byte count did."
+      },
+      {
+        "text": "How long Glue's workers take to start",
+        "correct": false,
+        "why": "That is a property of a real run on AWS."
+      },
+      {
+        "text": "How the work spreads across ten workers",
+        "correct": false,
+        "why": "There is one process here and no Spark."
+      },
+      {
+        "text": "What the run would be billed on Glue",
+        "correct": false,
+        "why": "That is arithmetic from the sheet with an assumed size, not a measurement."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1djmkq9",
+    "version": 1,
+    "section": "bookmarks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does a Glue job's bookmark move forward?",
+    "hint": "Look at the script's last line.",
+    "choices": [
+      {
+        "text": "After each file is read",
+        "correct": false,
+        "why": "A half-finished run would then lose files it never wrote."
+      },
+      {
+        "text": "At `job.commit()`",
+        "correct": true,
+        "why": "Right. A run that never reaches it leaves the bookmark where it was."
+      },
+      {
+        "text": "When the run starts",
+        "correct": false,
+        "why": "At the start it is read, not moved."
+      },
+      {
+        "text": "Once an hour, while the job runs",
+        "correct": false,
+        "why": "Nothing about it is periodic."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba2sdfsy",
+    "version": 1,
+    "section": "bookmarks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run writes half the days and then fails. What does the next run do, and what does that require of the job?",
+    "hint": "The bookmark did not move.",
+    "choices": [
+      {
+        "text": "It continues from the day it failed on, so nothing is required",
+        "correct": false,
+        "why": "Nothing recorded where it failed; the bookmark is all-or-nothing per run."
+      },
+      {
+        "text": "It skips the days already written, so they must not be rewritten",
+        "correct": false,
+        "why": "It does not know which were written."
+      },
+      {
+        "text": "It marks every file done, so the job must log what was lost",
+        "correct": false,
+        "why": "A failed run does not commit; nothing is marked."
+      },
+      {
+        "text": "It reads the same files again, so doing them twice must be harmless",
+        "correct": true,
+        "why": "Right, which is why `etl.py` replaces a day instead of adding to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-knmt0gdg",
+    "version": 1,
+    "section": "bookmarks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop corrects 3 October by overwriting `dt=2026-10-03/orders.csv` under the same key. Which bookmark notices the correction?",
+    "hint": "One remembers names; the other remembers times.",
+    "choices": [
+      {
+        "text": "Both, since the object changed",
+        "correct": false,
+        "why": "`etl.py` compares names only, and the name is unchanged."
+      },
+      {
+        "text": "Glue's, which compares the last-modified time",
+        "correct": true,
+        "why": "Right. `etl.py` would never read it again; remembering the ETag would fix that."
+      },
+      {
+        "text": "`etl.py`'s, which lists every key on each run",
+        "correct": false,
+        "why": "It lists them and skips any key it has seen."
+      },
+      {
+        "text": "Neither: overwriting a key cannot be seen by any bookmark",
+        "correct": false,
+        "why": "The object's modification time changes, and Glue reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-68xk4v13",
+    "version": 1,
+    "section": "bookmarks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "15 October had 23,781 orders, and the resent file repeated 500 of them. Had the job added the new file's rows to the day instead of rewriting it, how many rows would the curated day hold?",
+    "hint": "The raw layer holds the answer.",
+    "value": 24281,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yfnzj2kc",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly job is ten `G.1X` workers for six minutes. On Flex, at 0.45 dollars a DPU-hour, what do the 31 nights of October cost, in dollars?",
+    "hint": "Ten DPUs for a tenth of an hour is one DPU-hour.",
+    "value": 13.95,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-rs26cjw3",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run on two workers finishes its work in twenty seconds. What is billed?",
+    "hint": "There is a floor.",
+    "choices": [
+      {
+        "text": "Two DPUs for the twenty seconds the run took",
+        "correct": false,
+        "why": "Per-second billing has a one-minute minimum."
+      },
+      {
+        "text": "Two DPUs for ten minutes",
+        "correct": false,
+        "why": "Ten minutes was the minimum before Glue 2.0."
+      },
+      {
+        "text": "Nothing, as a run of under a minute is free of charge",
+        "correct": false,
+        "why": "They are billed as a minute."
+      },
+      {
+        "text": "Two DPUs for one minute, 0.023 dollars",
+        "correct": true,
+        "why": "Right: three times the twenty seconds it used."
+      }
+    ]
+  },
+  {
+    "id": "ex-96b72yw0",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "October's raw layer is 40 MB a month. Of the three job definitions moto kept, which is the cheapest that still does the work?",
+    "hint": "Which of them is not Spark?",
+    "choices": [
+      {
+        "text": "`orders-etl-flex`, ten `G.1X` workers on Flex",
+        "correct": false,
+        "why": "A third cheaper than standard, and still ten DPUs for 40 MB."
+      },
+      {
+        "text": "`orders-etl-small`, Python shell on 0.0625 DPU",
+        "correct": true,
+        "why": "Right: about four cents for October, against 21.39 dollars for the Spark job."
+      },
+      {
+        "text": "`orders-etl`, which is standard and so starts on time",
+        "correct": false,
+        "why": "Starting on time is worth paying for when somebody is waiting; it is the dearest of the three."
+      },
+      {
+        "text": "Any of them, because moto billed all three the same",
+        "correct": false,
+        "why": "moto billed nothing; the price is the sheet times the DPUs and the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jgappb4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `etl.py` does in one night.",
+    "hint": "The bookmark is read first and written last.",
+    "items": [
+      "List the raw keys and compare them with the bookmark",
+      "Rewrite each day that has a new file, from all of its files",
+      "Add those days to the catalog",
+      "Write the bookmark with the new keys"
+    ]
+  },
+  {
+    "id": "ex-67nvnmva",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `etl.py` write its bookmark after the days and the catalog, and not before?",
+    "hint": "Imagine it failing in the middle.",
+    "choices": [
+      {
+        "text": "S3 does not show a new object until the run has ended",
+        "correct": false,
+        "why": "S3 shows a new object at once; the order is about failure."
+      },
+      {
+        "text": "Writing the bookmark first costs one more request",
+        "correct": false,
+        "why": "Same request either way; what changes is what a failure leaves behind."
+      },
+      {
+        "text": "So a run that fails leaves it unmoved, and the next redoes those days",
+        "correct": true,
+        "why": "Right. Written first, a failure would mark as done days never written."
+      },
+      {
+        "text": "The catalog has to read the bookmark before it can add any of the partitions",
+        "correct": false,
+        "why": "The catalog knows nothing of the bookmark."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7s5jcpv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a Glue version before 2.0, with its ten-minute minimum, what is a two-minute run on 10 DPUs billed, at 0.69 dollars a DPU-hour?",
+    "hint": "The minimum applies first.",
+    "choices": [
+      {
+        "text": "0.23 dollars",
+        "correct": false,
+        "why": "That is two minutes, which the minimum rounds up."
+      },
+      {
+        "text": "1.15 dollars",
+        "correct": true,
+        "why": "Right: 10 × 10/60 × 0.69."
+      },
+      {
+        "text": "0.115 dollars",
+        "correct": false,
+        "why": "That is one DPU for ten minutes."
+      },
+      {
+        "text": "0.69 dollars",
+        "correct": false,
+        "why": "That is one DPU-hour; this run is a sixth of an hour on ten."
+      }
+    ]
+  }
+]
