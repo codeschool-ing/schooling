@@ -1,0 +1,321 @@
+{
+  "ex-fv13g73j": {
+    "prompt": "Cada título precisa virar as suas palavras, todas num stream só. Que operação faz isso?",
+    "hint": "Um elemento, muitos valores.",
+    "choices": [
+      {
+        "text": "`distinct`",
+        "why": "`distinct` tira repetições; não divide nada."
+      },
+      {
+        "text": "`filter`",
+        "why": "`filter` mantém ou descarta títulos inteiros."
+      },
+      {
+        "text": "`flatMap`",
+        "why": "Isso: junta os streams que recebe num só."
+      },
+      {
+        "text": "`map`",
+        "why": "`map` dá um valor por título: um stream de streams."
+      }
+    ]
+  },
+  "ex-vhasa17f": {
+    "prompt": "O que `map(t -> Arrays.stream(t.split(\" \")))` produz, sem `flatMap`?",
+    "hint": "`map` é um para um.",
+    "choices": [
+      {
+        "text": "Uma `List<String[]>`",
+        "why": "Nenhuma lista é montada sem operação terminal."
+      },
+      {
+        "text": "Um erro de compilação, porque `map` não pode devolver um stream",
+        "why": "Compila; o resultado só raramente serve."
+      },
+      {
+        "text": "Um `Stream<Stream<String>>`",
+        "why": "Isso: um stream por título, dentro de um stream."
+      },
+      {
+        "text": "Um `Stream<String>` de todas as palavras",
+        "why": "Isso é o que o `flatMap` dá."
+      }
+    ]
+  },
+  "ex-dn0vekhz": {
+    "prompt": "Por que pôr `distinct` ou `sorted` depois do `filter` que tira a maioria dos elementos?",
+    "hint": "Eles lembram elementos.",
+    "choices": [
+      {
+        "text": "Guardam elementos na memória, e menos é mais barato",
+        "why": "Isso."
+      },
+      {
+        "text": "Eles não são permitidos antes de um `filter`",
+        "why": "São permitidos em qualquer ponto entre os passos."
+      },
+      {
+        "text": "O `filter` desfaria o trabalho deles se rodasse depois",
+        "why": "Um `filter` posterior mantém a ordem e a unicidade que recebe."
+      },
+      {
+        "text": "Para o resultado ser um `Set` em vez de uma `List`",
+        "why": "A operação terminal decide o contêiner."
+      }
+    ]
+  },
+  "ex-nzmyjhqz": {
+    "prompt": "`Shelf.BOOKS.stream().___(Book::pages).sum()` soma as páginas sem embrulhá-las.",
+    "hint": "Um `map` para um `IntStream`.",
+    "blanks": [
+      {
+        "accept": [
+          "mapToInt"
+        ]
+      }
+    ]
+  },
+  "ex-56k3nmmz": {
+    "prompt": "Por que `reduce((a, b) -> a + b)`, sem identidade, devolve um `Optional`?",
+    "hint": "O que um stream vazio deveria dar?",
+    "choices": [
+      {
+        "text": "Um stream vazio não tem o que devolver",
+        "why": "Isso: o stream vazio deu `Optional.empty`."
+      },
+      {
+        "text": "A soma pode estourar, e o `Optional` avisa",
+        "why": "O `reduce` não detecta estouro."
+      },
+      {
+        "text": "O lambda poderia devolver `null` no último par",
+        "why": "O `Optional` é sobre um stream vazio, não sobre o lambda."
+      },
+      {
+        "text": "`reduce` sem identidade roda sempre em paralelo",
+        "why": "O paralelismo não tem nada a ver com o tipo de retorno."
+      }
+    ]
+  },
+  "ex-md9e6yd5": {
+    "prompt": "`IntStream.rangeClosed(1, 8).parallel().reduce(100, Integer::sum)` imprimiu 836. O que deu errado?",
+    "hint": "Cada pedaço começa da identidade.",
+    "choices": [
+      {
+        "text": "`Integer::sum` estourou",
+        "why": "836 está longe do limite de um `int`."
+      },
+      {
+        "text": "A soma não é associativa",
+        "why": "Ela é; o problema é a identidade."
+      },
+      {
+        "text": "O `parallel` repetiu alguns números",
+        "why": "Cada número foi somado uma vez; o 100 foi somado oito vezes."
+      },
+      {
+        "text": "100 não é identidade neutra, e cada pedaço começou dele",
+        "why": "Isso: 36 mais oito centenas."
+      }
+    ]
+  },
+  "ex-415c26ge": {
+    "prompt": "Quais destas servem como função de combinação do `reduce`, com a identidade certa? Marque todas as que se aplicam.",
+    "hint": "Associativa, com identidade neutra.",
+    "choices": [
+      {
+        "text": "multiplicação, a partir de 1",
+        "why": "Sim."
+      },
+      {
+        "text": "subtração, a partir de 0",
+        "why": "Não: não é associativa."
+      },
+      {
+        "text": "a média de dois números, a partir de 0",
+        "why": "Não: a média das médias não é a média."
+      },
+      {
+        "text": "`Math::max`, a partir de `Integer.MIN_VALUE`",
+        "why": "Sim."
+      },
+      {
+        "text": "soma, a partir de 0",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-gvpekjhf": {
+    "prompt": "Qual é o preço total da estante, em centavos, como `Reduce.java` imprimiu?",
+    "hint": "A primeira linha.",
+    "unit": "centavos"
+  },
+  "ex-7h1gx81s": {
+    "prompt": "`orders.stream().allMatch(Order::isPaid)` numa lista vazia devolve o quê?",
+    "hint": "Há algum pedido para contradizer?",
+    "choices": [
+      {
+        "text": "`false`",
+        "why": "`false` precisa de um pedido não pago, e não há nenhum."
+      },
+      {
+        "text": "Lança `NoSuchElementException`",
+        "why": "Ele responde; não lança."
+      },
+      {
+        "text": "`true`",
+        "why": "Isso: nada contradiz."
+      },
+      {
+        "text": "`Optional.empty`",
+        "why": "`allMatch` devolve um `boolean` simples."
+      }
+    ]
+  },
+  "ex-n0vzjgq8": {
+    "prompt": "Que operação dá a contagem, a soma, o mínimo, a média e o máximo dos anos numa passada só?",
+    "hint": "Num `IntStream`.",
+    "choices": [
+      {
+        "text": "`collect(Collectors.toList())`",
+        "why": "Isso dá os anos, não as estatísticas."
+      },
+      {
+        "text": "`reduce`",
+        "why": "Dobra num valor, não em cinco."
+      },
+      {
+        "text": "`summaryStatistics()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`average()`",
+        "why": "Só a média."
+      }
+    ]
+  },
+  "ex-kq9d55pd": {
+    "prompt": "Ligue cada pergunta à sua operação terminal.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "Algum livro tem mais de 800 páginas?",
+        "right": "`anyMatch`"
+      },
+      {
+        "left": "Quantos clássicos?",
+        "right": "`count`"
+      },
+      {
+        "left": "O livro mais caro?",
+        "right": "`max`"
+      },
+      {
+        "left": "O primeiro livro antes de 1900?",
+        "right": "`findFirst`"
+      }
+    ],
+    "right_distractors": [
+      "`peek`"
+    ]
+  },
+  "ex-es9mppq6": {
+    "prompt": "Por que `collect(Collectors.joining(\", \"))` é melhor que `reduce` com `+` para juntar títulos?",
+    "hint": "Quantas strings cada um monta?",
+    "choices": [
+      {
+        "text": "`joining` ordena os títulos antes",
+        "why": "Ele mantém a ordem do stream."
+      },
+      {
+        "text": "`reduce` não funciona com strings",
+        "why": "Funciona; só é um desperdício."
+      },
+      {
+        "text": "Acrescenta a um builder só em vez de copiar a cada passo",
+        "why": "Isso."
+      },
+      {
+        "text": "`reduce` perde o último título",
+        "why": "Não perde nada."
+      }
+    ]
+  },
+  "ex-n8xca615": {
+    "prompt": "`Collectors.toMap(Book::author, Book::title)` lançou `Duplicate key Frank Herbert`. Qual é o conserto da aula?",
+    "hint": "Um terceiro argumento.",
+    "choices": [
+      {
+        "text": "Ordenar os livros por autor antes",
+        "why": "A chave continua se repetindo."
+      },
+      {
+        "text": "Usar `toSet()`, que permite repetições",
+        "why": "Um conjunto não guarda pares chave-valor, e guarda cada valor uma vez."
+      },
+      {
+        "text": "Uma função de fusão dizendo como combinar dois valores",
+        "why": "Isso: aqui, os títulos juntados com uma barra."
+      },
+      {
+        "text": "Capturar a exceção e usar o mapa montado até ali",
+        "why": "Nenhum mapa é devolvido quando lança."
+      }
+    ]
+  },
+  "ex-gabwme41": {
+    "prompt": "Por que `toMap` lança exceção numa chave repetida em vez de ficar com o último valor?",
+    "hint": "O que uma escolha silenciosa perderia?",
+    "choices": [
+      {
+        "text": "Perderia um livro em silêncio",
+        "why": "Isso: quem chama precisa decidir."
+      },
+      {
+        "text": "Mapas em Java não substituem um valor",
+        "why": "O `put` substitui valores o tempo todo."
+      },
+      {
+        "text": "O último valor só é conhecido quando o stream acaba",
+        "why": "Ele é conhecido no momento do choque."
+      },
+      {
+        "text": "Ficar com um valor exigiria um `TreeMap`",
+        "why": "Qualquer mapa pode ficar com um valor."
+      }
+    ]
+  },
+  "ex-j7xe6ywd": {
+    "prompt": "Ponha em ordem os passos da consulta de página de `Steps.java`.",
+    "hint": "Ordenar, descartar quatro, ficar com quatro, rotular.",
+    "items": [
+      "`sorted(Comparator.comparingLong(Book::priceCents))`",
+      "`skip(4)`",
+      "`limit(4)`",
+      "`map(b -> b.title() + \" \" + b.priceCents())`"
+    ]
+  },
+  "ex-w0f4xh47": {
+    "prompt": "Você precisa do preço médio dos clássicos. Qual é o jeito da aula?",
+    "hint": "Médias não são associativas; use o que é embutido.",
+    "choices": [
+      {
+        "text": "Só `count()`",
+        "why": "Isso conta os clássicos e não soma nada."
+      },
+      {
+        "text": "`filter`, depois `mapToLong(Book::priceCents).average()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`reduce` com `(a, b) -> (a + b) / 2`",
+        "why": "A média das médias não é a média."
+      },
+      {
+        "text": "`collect(Collectors.toSet())`, depois dividir pelo tamanho",
+        "why": "Um conjunto descarta preços iguais, e não há o que dividir."
+      }
+    ]
+  }
+}
