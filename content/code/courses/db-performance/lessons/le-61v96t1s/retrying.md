@@ -154,10 +154,10 @@ Time: 0.379 ms
 collided 10 times between them, two retries for one and eight for the other, and one transaction
 needed nine tries. Nobody saw an error, and nothing was lost.
 
-While this lesson was being recorded, a first version of the program waited at most a few
-milliseconds between tries, growing slowly, and one of the two copies gave up after ten tries: the
-two kept colliding in step. The backoff that
-doubles each time is what broke the tie. That is the general lesson about retries: **without a
+The wait matters as much as the loop. Two copies that retry after the same short pause collide again
+at the same moment, and again after that, and can use up their ten tries in step; a wait that
+doubles each time, drawn at random, is what pulls them apart. That is the general lesson about
+retries: **without a
 growing, random wait, two transactions that collided once tend to collide again.**
 
 ## Where the loop belongs

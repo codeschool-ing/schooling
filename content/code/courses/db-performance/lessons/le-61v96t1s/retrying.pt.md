@@ -157,10 +157,10 @@ Time: 0.379 ms
 colidiram 10 vezes entre eles, duas novas tentativas num e oito no outro, e uma transação precisou de
 nove tentativas. Ninguém viu erro, e nada se perdeu.
 
-Enquanto esta aula era gravada, uma primeira versão do programa esperava no máximo alguns
-milissegundos entre tentativas, crescendo devagar, e uma das duas cópias desistiu depois de dez
-tentativas: as duas continuavam colidindo no mesmo passo. A espera que dobra a cada vez foi o que
-desfez o empate. Essa é a lição geral sobre novas tentativas: **sem uma espera aleatória e crescente,
+A espera importa tanto quanto o laço. Duas cópias que tentam de novo depois da mesma pausa curta
+colidem outra vez no mesmo instante, e de novo depois disso, e podem gastar as dez tentativas no
+mesmo passo; uma espera que dobra a cada vez, sorteada, é o que as separa. Essa é a lição geral
+sobre novas tentativas: **sem uma espera aleatória e crescente,
 duas transações que colidiram uma vez tendem a colidir de novo.**
 
 ## Onde o laço fica
