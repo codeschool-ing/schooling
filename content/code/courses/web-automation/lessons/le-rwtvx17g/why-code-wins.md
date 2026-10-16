@@ -52,9 +52,12 @@ course's project, which is worth seeing whole before you put the words back:
 %%CAP project%%
 ```
 
-The tests from lessons 2, 10 and 11 name the button directly too, so a change of words reaches them
-as well. That is not an argument against those tests: they were written to teach a locator, not to
-be maintained. It is the measurement of what a page object is for.
+Tests from lessons 2, 6, 9, 10, 11, 15 and 16 name the button directly too, so a change of words
+reaches each of them. That is not an argument against those tests: they were written to teach one
+idea each, not to be maintained together. It is the measurement of what a page object is for. One
+line in that list is not a test at all: `app/routes/ssr.js` draws the same button on lesson 6's
+server-rendered page, so the copywriter's change is two edits in the shop as well, and this
+experiment made only the one on `/`.
 
 %%FIG fanout%%
 

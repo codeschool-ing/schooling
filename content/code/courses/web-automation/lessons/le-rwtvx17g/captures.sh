@@ -18,9 +18,10 @@
 # files are written by hand in the shape those tools save, and the lesson says
 # so. What is STAGED rather than typed, beyond what ../../lab.sh's header lists
 # for every lesson:
-#   - the shop. In "pick" it is started in the background, as the student
-#     starts it with `npm start` in another terminal; every other run lets
-#     Playwright's webServer start it.
+#   - the shop. In "pick" and "basket-after" it is started in the background,
+#     as the student starts it with `npm start` in another terminal, so that
+#     the basket can be read after the run; every other run lets Playwright's
+#     webServer start it.
 #   - in "change", the button's words in app/public/app.js changed with sed,
 #     the edit the section asks for; in "fix", the same words changed with sed
 #     in pages/product-card.js. Both files are put back after "project", as
@@ -59,6 +60,12 @@ run 'npx playwright test --config recorded.config.js recorded/codegen.spec.js' |
 
 block codegen-again
 run "for i in 1 2 3 4 5; do npx playwright test --config recorded.config.js recorded/codegen.spec.js -g 'banana|two fruit' | grep -E '✓|✘|Received string'; done" | nocolor
+
+block basket-after
+start_app
+run "npx playwright test --config recorded.config.js recorded/codegen.spec.js -g 'banana|two fruit' | grep -E '✓|✘'" | nocolor
+run 'curl -s http://localhost:3000/api/basket'; echo
+stop_app
 
 block hand
 run 'npx playwright test tests/two-fruit.spec.js --repeat-each 3 --workers 1' | nocolor
