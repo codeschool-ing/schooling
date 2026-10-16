@@ -1,0 +1,455 @@
+{
+  "ex-a9ppqvv7": {
+    "prompt": "O cache da Quitanda rodaria Valkey no ElastiCache. Por que esta lição pratica no servidor Redis que o Ubuntu empacota?",
+    "hint": "Pense no que uma biblioteca de cliente enxerga.",
+    "choices": [
+      {
+        "text": "O Valkey não pode ser instalado fora da AWS",
+        "why": "O Valkey é um projeto de código aberto que qualquer um roda; o motivo é que os dois respondem aos mesmos comandos."
+      },
+      {
+        "text": "O Valkey fala o protocolo e os comandos do Redis, então o mesmo cliente e os mesmos comandos funcionam nos dois",
+        "why": "Isso. O Valkey é um fork do Redis 7.2.4, e `SET`, `EXPIRE` e o despejo se comportam igual."
+      },
+      {
+        "text": "O moto contém um servidor Redis que a lição reaproveita",
+        "why": "O moto registra um cluster de cache e não roda cache nenhum."
+      },
+      {
+        "text": "O Redis é grátis, e o Valkey é cobrado por hora de nó",
+        "why": "A hora de nó é o preço do ElastiCache pela máquina, seja qual for a engine; as duas engines são software livre."
+      }
+    ]
+  },
+  "ex-sp3aerkj": {
+    "prompt": "Na tabela, um `cache.r7g.large` custa 0,34880 USD por hora com Valkey e 0,43600 com Redis OSS. Quantos USD por mês o Valkey economiza num nó, em 730 horas? Dê duas casas decimais.",
+    "hint": "Subtraia os dois preços e multiplique pelas horas."
+  },
+  "ex-zy6v1qc0": {
+    "prompt": "Um cache guarda 10 GB constantes o mês inteiro e responde a um número modesto de requisições pequenas. Pela tabela, o que sai mais barato: Serverless Valkey ou dois nós `cache.r7g.large` com Valkey?",
+    "hint": "O Serverless cobra pelo que guarda, toda hora.",
+    "choices": [
+      {
+        "text": "O Serverless, que cobra por requisição em vez de por máquina",
+        "why": "Ele cobra por requisição e também por todo GB-hora guardado: 10 × 0,133 × 730 dá 970,90 USD só pelos dados."
+      },
+      {
+        "text": "Os dois nós",
+        "why": "Isso. Dois nós saem 509,25 USD por mês; o Serverless guardando 10 GB sai 970,90 antes de qualquer requisição."
+      },
+      {
+        "text": "O Serverless, porque um milhão de ECPUs custa menos de um centavo",
+        "why": "As requisições são a menor linha; os dados guardados são a linha que cresce com este cache."
+      },
+      {
+        "text": "Custam o mesmo, já que os dois são cobrados por hora",
+        "why": "Nós são cobrados por hora de nó e o Serverless por GB-hora; as unidades diferem, e os totais também."
+      }
+    ]
+  },
+  "ex-hwqqseqp": {
+    "prompt": "Ligue cada opção ao que a distingue.",
+    "hint": "Duas das engines são quase o mesmo programa.",
+    "pairs": [
+      {
+        "left": "Valkey",
+        "right": "Um fork do Redis 7.2.4, e o menor preço por nó"
+      },
+      {
+        "left": "Redis OSS",
+        "right": "Os mesmos comandos do Valkey, por 20% a mais por nó"
+      },
+      {
+        "left": "Memcached",
+        "right": "Só strings, sem replicação"
+      },
+      {
+        "left": "Serverless",
+        "right": "Cobrado por GB-hora guardado e por ECPU"
+      }
+    ],
+    "right_distractors": [
+      "Cobrado pelo terabyte que as consultas leem"
+    ]
+  },
+  "ex-8hgx537d": {
+    "prompt": "Num grupo de replicação com o modo cluster ligado, como o cliente sabe qual shard guarda `product:p-101`?",
+    "hint": "Há 16.384 de alguma coisa.",
+    "choices": [
+      {
+        "text": "Manda todo comando ao endpoint primário, que o repassa ao shard certo",
+        "why": "Essa é a imagem do modo cluster desligado, em que uma primária guarda tudo."
+      },
+      {
+        "text": "Faz o hash da chave para um slot, e cada slot pertence a um shard",
+        "why": "Isso. O cliente calcula o slot e manda o comando direto ao shard dono dele."
+      },
+      {
+        "text": "Tenta os shards um por um até achar a chave",
+        "why": "Uma falta custaria então uma requisição por shard; o slot faz disso uma requisição só."
+      },
+      {
+        "text": "Os shards se enchem em sequência, então consulta a chave num diretório",
+        "why": "Não há diretório de chaves; o slot é calculado a partir da própria chave."
+      }
+    ]
+  },
+  "ex-s26pf7n4": {
+    "prompt": "Uma primária confirma uma escrita e falha antes de mandá-la à réplica. O failover automático promove a réplica. O que aconteceu com a escrita?",
+    "hint": "Como a cópia chega à réplica?",
+    "choices": [
+      {
+        "text": "A nova primária a reexecuta a partir do disco da antiga",
+        "why": "A réplica não tem acesso ao nó que falhou; só tem o que já tinha recebido."
+      },
+      {
+        "text": "O ElastiCache espera para promover até a escrita ser copiada",
+        "why": "O nó que tinha a escrita parou de responder; não há o que esperar."
+      },
+      {
+        "text": "Ela se perdeu, porque a replicação é assíncrona",
+        "why": "Isso. Para um cache isso é aceitável, já que o banco continua guardando a verdade."
+      },
+      {
+        "text": "O ElastiCache a repete contra a nova primária",
+        "why": "O ElastiCache não guarda as escritas de um cliente; repetir é trabalho do cliente."
+      }
+    ]
+  },
+  "ex-g95zf6df": {
+    "prompt": "O moto responde ao `create-replication-group` com `available` na mesma linha, versão de engine `None` e zonas em `us-east-1`. O que isso diz sobre o grupo que você desenhou?",
+    "hint": "O que o moto ligou por trás da resposta?",
+    "choices": [
+      {
+        "text": "Que ficaria pronto em segundos na AWS",
+        "why": "O moto não espera nada; na AWS o status fica `creating` por minutos antes."
+      },
+      {
+        "text": "Que o ElastiCache põe grupos de São Paulo nas zonas da Virgínia",
+        "why": "As zonas são um detalhe da imitação, não da AWS."
+      },
+      {
+        "text": "Que o failover foi testado como parte da criação",
+        "why": "Nada foi testado; o próprio `test-failover` falha dentro do moto com um 500."
+      },
+      {
+        "text": "Só que a requisição estava bem formada",
+        "why": "Isso. O moto registra o grupo e não roda cache nenhum, e os detalhes que preenche são dele."
+      }
+    ]
+  },
+  "ex-czpn2pna": {
+    "prompt": "Quais destas afirmações valem para um cluster Memcached no ElastiCache? Marque todas as que se aplicam.",
+    "hint": "O Memcached não tem nada do que um grupo de replicação acrescenta.",
+    "choices": [
+      {
+        "text": "Cada chave mora num nó, escolhido pelo hash do cliente",
+        "why": "Sim. Os nós são independentes e o cliente espalha as chaves."
+      },
+      {
+        "text": "Um nó que morre leva as chaves junto",
+        "why": "Sim. Nada é replicado, então nada faz failover."
+      },
+      {
+        "text": "Uma réplica em outra zona é promovida quando um nó falha",
+        "why": "Isso é um grupo de replicação Valkey ou Redis OSS com failover automático."
+      },
+      {
+        "text": "As chaves se dividem em 16.384 hash slots",
+        "why": "Hash slots são o modo cluster, no Valkey e no Redis OSS."
+      }
+    ]
+  },
+  "ex-khbv47f7": {
+    "prompt": "`redis-cli TTL product:p-101` responde `(integer) -2`. O que isso quer dizer?",
+    "hint": "Compare com a chave `visits`, que respondeu `-1`.",
+    "choices": [
+      {
+        "text": "A chave nunca expira",
+        "why": "Isso é `-1`, que a chave `visits` respondeu."
+      },
+      {
+        "text": "A chave expira em dois segundos",
+        "why": "Um tempo restante é um número positivo; os negativos são as duas respostas especiais."
+      },
+      {
+        "text": "Não existe essa chave, por exemplo porque expirou",
+        "why": "Isso. Depois do `sleep 6` a chave tinha sumido, o `GET` respondeu `(nil)` e o `TTL` respondeu `-2`."
+      },
+      {
+        "text": "A chave expirou há dois segundos e ainda pode ser lida",
+        "why": "Uma chave expirada sumiu para todo leitor; o `GET` respondeu `(nil)`."
+      }
+    ]
+  },
+  "ex-0bhyc2nb": {
+    "prompt": "`redis-cli SET product:p-101 '{...}' ___ 300` guarda o valor com um tempo de vida de cinco minutos.",
+    "hint": "A opção tem duas letras, e `ex=` é o nome dela no cliente Python.",
+    "blanks": [
+      {
+        "accept": [
+          "EX"
+        ]
+      }
+    ]
+  },
+  "ex-g8rjf0s0": {
+    "prompt": "Por que a lição roda `sudo systemctl disable --now redis-server` logo depois de instalar o pacote?",
+    "hint": "O que o pacote ligou por conta própria?",
+    "choices": [
+      {
+        "text": "O pacote ligou um serviço Redis próprio, que também ligaria a cada boot",
+        "why": "Isso. Pará-lo quer dizer que nada roda sem você ligar, como o moto."
+      },
+      {
+        "text": "O serviço do pacote grava em disco, e um cache não deve guardar nada",
+        "why": "A persistência é desligada pelas opções com que você liga o Redis; não é por isso que o serviço é parado."
+      },
+      {
+        "text": "Senão o `redis-cli` se conectaria ao ElastiCache",
+        "why": "O `redis-cli` conecta em `127.0.0.1:6379` a menos que mandem outra coisa; ele não sabe nada da AWS."
+      },
+      {
+        "text": "O serviço do pacote recusa conexões do Python",
+        "why": "Qualquer cliente na mesma máquina conecta nele; o motivo é que ele roda sem você o ter ligado."
+      }
+    ]
+  },
+  "ex-gy4k1q9a": {
+    "prompt": "Ponha em ordem as mensagens de uma leitura cache-aside que falta.",
+    "hint": "O cache nunca fala com o banco.",
+    "items": [
+      "O programa manda `GET product:p-101` ao cache",
+      "O cache responde nil: a chave não está lá",
+      "O programa roda o `SELECT` no banco",
+      "O programa grava a resposta com `SET ... EX 300`"
+    ]
+  },
+  "ex-btfk44ew": {
+    "prompt": "A importação noturna mudou `p-101` para 1390 direto no banco, e a página continua mostrando 1290. Sem mudar a importação, o que deixa a página certa?",
+    "hint": "O cache não ficou sabendo da mudança.",
+    "choices": [
+      {
+        "text": "Reiniciar o `catalog.py`, que guarda o preço numa variável",
+        "why": "O programa roda uma vez por comando e não guarda nada; o preço velho está no Redis."
+      },
+      {
+        "text": "Ler a página de novo, já que um acerto atualiza a chave a partir do banco",
+        "why": "Um acerto devolve o que o cache tem e não lê nada do banco; é isso que um acerto é."
+      },
+      {
+        "text": "Nada até o tempo de vida da chave acabar",
+        "why": "Isso. O TTL é a rede de proteção: com 300 segundos, a página fica errada no máximo cinco minutos."
+      },
+      {
+        "text": "O Redis percebe o `UPDATE` e descarta a chave",
+        "why": "O Redis e o banco nunca conversam; ninguém avisou o cache."
+      }
+    ]
+  },
+  "ex-0v973qjj": {
+    "prompt": "Por que o `set_price` apaga a chave do cache em vez de gravar 1390 nela?",
+    "hint": "Pense em dois escritores mudando o mesmo preço quase no mesmo instante.",
+    "choices": [
+      {
+        "text": "Gravar o valor reiniciaria o tempo de vida, e a cópia viveria demais",
+        "why": "Uma cópia nova com TTL novo não faz mal; o perigo é o valor mais antigo vencer."
+      },
+      {
+        "text": "Se dois escritores disputam para gravá-lo, o valor mais antigo fica; um delete não deixa nada para estar errado",
+        "why": "Isso. Depois de um delete, o próximo leitor busca o que o banco tiver."
+      },
+      {
+        "text": "O `DEL` é mais barato para o Redis que o `SET`",
+        "why": "Os dois são mínimos; a escolha é sobre correção, não velocidade."
+      },
+      {
+        "text": "O Redis recusa `SET` numa chave que já tem TTL",
+        "why": "O `SET` substitui a chave seja o que for que ela tinha, como o `catalog.py` faz em toda falta."
+      }
+    ]
+  },
+  "ex-ag1ngbq1": {
+    "prompt": "O cache tem `p-101` a 1290. Qual destas leituras ainda vai ao banco?",
+    "hint": "Qual delas decide dinheiro?",
+    "choices": [
+      {
+        "text": "A foto e o nome na página do produto",
+        "why": "Não faz mal com alguns minutos de atraso, que é para isso que serve um cache."
+      },
+      {
+        "text": "O preço cobrado no checkout",
+        "why": "Isso. Cobrar um preço velho é um bug com reembolso no fim."
+      },
+      {
+        "text": "O preço mostrado numa lista de resultados de busca",
+        "why": "Uma página de resultados é exibição, e a lição põe exatamente isso no cache; a cobrança é onde o banco decide."
+      },
+      {
+        "text": "A lista de categorias no menu",
+        "why": "Lida o dia todo e mudada raramente: boa coisa para pôr no cache."
+      }
+    ]
+  },
+  "ex-0gs2332h": {
+    "prompt": "O Redis está no `maxmemory` com a política `noeviction`. O que acontece com um `SET` novo?",
+    "hint": "Leia o nome da política ao pé da letra.",
+    "choices": [
+      {
+        "text": "É aceito, e a chave usada há mais tempo é despejada",
+        "why": "Isso é o `allkeys-lru`."
+      },
+      {
+        "text": "É recusado com um erro de OOM, e toda chave existente fica",
+        "why": "Isso. O `fill.py` contou 2.134 recusas, e o `redis-cli` imprimiu o erro para o preço de um produto."
+      },
+      {
+        "text": "É aceito, e as chaves mais antigas vão para o disco para abrir espaço",
+        "why": "O Redis não move chaves para o disco para abrir espaço; este servidor foi até ligado com a persistência desligada."
+      },
+      {
+        "text": "É aceito, e o Redis passa do limite",
+        "why": "O limite é respeitado; foi o que a demonstração com 2 MB mostrou."
+      }
+    ]
+  },
+  "ex-7fxceabp": {
+    "prompt": "Um programa grava chaves sem tempo de vida num cache ElastiCache com o grupo de parâmetros padrão, até o cache encher. O que acontece depois?",
+    "hint": "A política padrão é `volatile-lru`, e a lição a rodou nas chaves de enchimento.",
+    "choices": [
+      {
+        "text": "As chaves usadas há mais tempo são despejadas, seja qual for a validade",
+        "why": "Isso é o `allkeys-lru`; o `volatile-lru` só considera chaves que têm TTL."
+      },
+      {
+        "text": "O ElastiCache acrescenta um nó para abrir espaço",
+        "why": "Um cache baseado em nós tem os nós que você escolheu; acrescentar um é decisão sua."
+      },
+      {
+        "text": "As escritas são recusadas, porque nenhuma chave está apta ao despejo",
+        "why": "Isso. Localmente, as 1.000 escritas foram recusadas no `volatile-lru`, exatamente como no `noeviction`."
+      },
+      {
+        "text": "O ElastiCache dá a cada chave um TTL padrão e expira as mais antigas",
+        "why": "Ninguém acrescenta um TTL por você; uma chave sem TTL fica até ser apagada."
+      }
+    ]
+  },
+  "ex-ah2cbhvw": {
+    "prompt": "Por que sessões de login combinam mal com um cache rodando `allkeys-lru`?",
+    "hint": "O que o banco tem de uma sessão?",
+    "choices": [
+      {
+        "text": "Valores de sessão são grandes demais para o Redis",
+        "why": "Uma sessão é um valor pequeno; tamanho não é o problema."
+      },
+      {
+        "text": "O `allkeys-lru` recusa chaves que têm TTL",
+        "why": "Ele aceita qualquer chave e despeja qualquer chave; esse é o problema."
+      },
+      {
+        "text": "Sessões mudam rápido demais para um cache acompanhar",
+        "why": "O Redis lida bem com escritas frequentes; o que ele faz no limite é a questão."
+      },
+      {
+        "text": "A sessão é o original, e o cache tem permissão de despejá-la, deslogando o usuário",
+        "why": "Isso. Não há cópia a que recorrer, ao contrário de uma página de produto."
+      }
+    ]
+  },
+  "ex-ncv28g64": {
+    "prompt": "No `herd.py`, por que a trava é gravada com `ex=10` além de `nx=True`?",
+    "hint": "Imagine que a requisição com a trava trave de vez.",
+    "choices": [
+      {
+        "text": "Para que a própria página expire em dez segundos",
+        "why": "A página é gravada com `ex=300`; o `ex=10` é da trava."
+      },
+      {
+        "text": "Para que uma requisição que morra segurando a trava não bloqueie as outras para sempre",
+        "why": "Isso. Depois de dez segundos a chave da trava some e outra requisição pode pegá-la."
+      },
+      {
+        "text": "Porque `nx=True` é recusado sem validade",
+        "why": "`nx=True` funciona sozinho; a validade é uma escolha de segurança."
+      },
+      {
+        "text": "Para que dez requisições de cada vez possam segurá-la",
+        "why": "Exatamente uma requisição ganha o `nx=True`; o número é de segundos."
+      }
+    ]
+  },
+  "ex-4cp746ce": {
+    "prompt": "Ligue cada sintoma à sua causa.",
+    "hint": "Cada um foi produzido nesta lição ou descrito por ela.",
+    "pairs": [
+      {
+        "left": "A página mostra o preço de ontem",
+        "right": "Um escritor mudou o banco sem apagar a chave"
+      },
+      {
+        "left": "Escritas falham com erro de OOM",
+        "right": "O cache está cheio e a política não despeja nada do que ele guarda"
+      },
+      {
+        "left": "Usuários são deslogados ao acaso",
+        "right": "As sessões moram num cache que despeja"
+      },
+      {
+        "left": "O banco dispara quando uma chave expira",
+        "right": "Toda requisição que falta roda a mesma consulta"
+      }
+    ],
+    "right_distractors": [
+      "O grupo de replicação está com o modo cluster desligado"
+    ]
+  },
+  "ex-0p5fvs3v": {
+    "prompt": "Qual conjunto de escolhas serve a um cache de páginas de produto que sempre pode ser reconstruído a partir do banco?",
+    "hint": "Tudo nele é cópia.",
+    "choices": [
+      {
+        "text": "`noeviction`, sem TTL, e escritas indo ao cache antes do banco",
+        "why": "Isso faz do cache o original e o deixa encher até recusar."
+      },
+      {
+        "text": "`allkeys-lru`, TTL em toda chave, e delete em toda escrita",
+        "why": "Isso. Esquecer não faz mal, o TTL limita o atraso, e o delete mantém os escritores honestos."
+      },
+      {
+        "text": "`volatile-lru`, sem TTL, e o valor novo gravado no cache a cada mudança",
+        "why": "Sem TTL, o `volatile-lru` não tem o que despejar e recusa escritas quando enche."
+      },
+      {
+        "text": "`allkeys-lru`, sem TTL, e nada feito nas escritas",
+        "why": "Um preço mudado ficaria errado até a chave por acaso ser despejada."
+      }
+    ]
+  },
+  "ex-hb1rk4ar": {
+    "prompt": "Quais destas coisas esta lição realmente rodou, em vez de tirar da documentação da AWS? Marque todas as que se aplicam.",
+    "hint": "O cache de verdade era o Redis local.",
+    "choices": [
+      {
+        "text": "Despejos no `allkeys-lru` com limite de 2 MB",
+        "why": "Sim, 3.039 deles, no Redis local."
+      },
+      {
+        "text": "Cinquenta requisições simultâneas fazendo uma leitura no banco atrás de uma trava",
+        "why": "Sim, com `herd.py lock`."
+      },
+      {
+        "text": "Um failover promovendo uma réplica",
+        "why": "O `test-failover` falha dentro do moto; o failover foi descrito a partir da documentação."
+      },
+      {
+        "text": "O grupo de parâmetros padrão do ElastiCache com `volatile-lru`",
+        "why": "A política foi rodada localmente; que o ElastiCache a usa por padrão vem da documentação da AWS."
+      },
+      {
+        "text": "Um cache Serverless crescendo sozinho",
+        "why": "O moto nem consegue criar um; respondeu com um 500."
+      }
+    ]
+  }
+}
