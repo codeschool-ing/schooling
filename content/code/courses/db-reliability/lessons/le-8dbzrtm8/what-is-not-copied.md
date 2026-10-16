@@ -62,4 +62,4 @@ DETAIL:  Key (id)=(1) already exists.
 The 16 has handed out ids up to 50002; the 17's sequence has never been used, because every row it
 holds arrived with its id already set. **The first insert an application makes on the subscriber
 collides** with order 1. On the day the application moves to the 17, that is every insert, until
-somebody moves the sequences by hand, and the next section's switch does exactly that.
+somebody moves the sequences by hand, and the switch in this lesson's last section does exactly that.
