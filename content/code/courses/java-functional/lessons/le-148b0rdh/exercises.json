@@ -1,0 +1,521 @@
+[
+  {
+    "id": "ex-n8a2be3g",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Ubuntu package gives you the compiler `javac` as well as the launcher?",
+    "hint": "The kit for writing Java, not only for running it.",
+    "choices": [
+      {
+        "text": "`openjdk-25-jre`",
+        "correct": false,
+        "why": "That is the runtime alone: it runs Java and cannot compile it."
+      },
+      {
+        "text": "`openjdk-25-jdk`",
+        "correct": true,
+        "why": "Right. The JDK carries `javac`, `java` and tools like `javap`."
+      },
+      {
+        "text": "`maven`",
+        "correct": false,
+        "why": "Maven builds projects and needs a JDK underneath it."
+      },
+      {
+        "text": "`java-common`, which every Java package depends on",
+        "correct": false,
+        "why": "It holds shared configuration and no compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1jnf7bc",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mvn -B -v` prints `Java version: 25.0.4.1` on its third line. What does that line tell you?",
+    "hint": "Maven is itself a Java program.",
+    "choices": [
+      {
+        "text": "The newest Java that Maven supports",
+        "correct": false,
+        "why": "It reports what it found, not a limit."
+      },
+      {
+        "text": "The Java your programs will be compiled for, whatever the project says",
+        "correct": false,
+        "why": "The project's own settings decide the target; this line is the Java Maven runs on."
+      },
+      {
+        "text": "The Java that Maven itself found and runs on",
+        "correct": true,
+        "why": "Right. Maven runs on whichever Java it finds, which is why this is the line to read first."
+      },
+      {
+        "text": "The version of Maven",
+        "correct": false,
+        "why": "That is the first line, `Apache Maven 3.8.7`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ranc019e",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `java Hello.java` printed its line, `ls` showed only `Hello.java`. Why is there no `Hello.class`?",
+    "hint": "Source-file mode.",
+    "choices": [
+      {
+        "text": "`java` deleted it as soon as the program had finished",
+        "correct": false,
+        "why": "Nothing was written to delete."
+      },
+      {
+        "text": "It was compiled in memory, not to a file",
+        "correct": true,
+        "why": "Right. Source-file mode compiles in memory and runs the result."
+      },
+      {
+        "text": "Java 25 interprets source code without compiling it",
+        "correct": false,
+        "why": "It does compile, to bytecode, only not to a file."
+      },
+      {
+        "text": "The class file went into `~/.m2`",
+        "correct": false,
+        "why": "That is Maven's local repository of libraries."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr5rg52p",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A runtime says `class file version 69.0` and `only recognizes class file versions up to 65.0`. What happened?",
+    "hint": "65 is Java 21, 69 is Java 25.",
+    "choices": [
+      {
+        "text": "Code compiled by Java 25 was run by a Java 21 runtime",
+        "correct": true,
+        "why": "Right. A runtime refuses class files newer than itself."
+      },
+      {
+        "text": "Code compiled by Java 21 was run by Java 25",
+        "correct": false,
+        "why": "That direction works: newer runtimes read older class files."
+      },
+      {
+        "text": "The class file was damaged when copied",
+        "correct": false,
+        "why": "A damaged file fails with a different error, about its format."
+      },
+      {
+        "text": "Maven was given the wrong `JAVA_HOME`",
+        "correct": false,
+        "why": "Maven was not involved; this is `java` itself refusing a class."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wy3rzxa",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`mvn -B -v` reports Java 21 although `java -version` says 25. Where does Maven get its Java from?",
+    "hint": "A variable a guide told you to put in `~/.bashrc`.",
+    "choices": [
+      {
+        "text": "From the newest JDK in `/usr/lib/jvm`",
+        "correct": false,
+        "why": "Maven does not search that folder by version."
+      },
+      {
+        "text": "From the `pom.xml` of the project",
+        "correct": false,
+        "why": "`mvn -v` was run outside any project."
+      },
+      {
+        "text": "From `JAVA_HOME`, when it is set",
+        "correct": true,
+        "why": "Right. When `JAVA_HOME` is set, Maven uses that Java rather than the one on the `PATH`."
+      },
+      {
+        "text": "From the Java it was built with, years ago",
+        "correct": false,
+        "why": "It runs on the Java it finds now."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6rfg1qs",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The compiler reports three errors, the first `illegal character: '\\u201c'`. What should you do first?",
+    "hint": "The other two may be consequences.",
+    "choices": [
+      {
+        "text": "Fix the last error, which is the one closest to the cause",
+        "correct": false,
+        "why": "Compilers report in order; the first is closest to the cause."
+      },
+      {
+        "text": "Install a newer JDK that accepts typographic quotes",
+        "correct": false,
+        "why": "No Java accepts them as string delimiters."
+      },
+      {
+        "text": "Fix the first one, retyping the quotes, and compile again",
+        "correct": true,
+        "why": "Right. `not a statement` was only a consequence of the rejected quotes."
+      },
+      {
+        "text": "Fix all three before compiling again",
+        "correct": false,
+        "why": "The third disappears with the first; chasing it wastes time."
+      }
+    ]
+  },
+  {
+    "id": "ex-03yz73qh",
+    "version": 1,
+    "section": "before-lambdas",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Compiling `BeforeLambdas.java` produced `BeforeLambdas$1.class`. Which part of the program is that file?",
+    "hint": "One of the two comparators became a class of its own.",
+    "choices": [
+      {
+        "text": "The lambda",
+        "correct": false,
+        "why": "The lambda's body became the method `lambda$main$0` inside `BeforeLambdas`."
+      },
+      {
+        "text": "The anonymous `Comparator` class from the first sort",
+        "correct": true,
+        "why": "Right. An anonymous class is a class, and gets a file."
+      },
+      {
+        "text": "The `main` method",
+        "correct": false,
+        "why": "`main` is inside `BeforeLambdas.class`."
+      },
+      {
+        "text": "A copy of `List` made for the second sort",
+        "correct": false,
+        "why": "Lists are objects at run time, not classes the compiler writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga26az5j",
+    "version": 1,
+    "section": "before-lambdas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`javap -c` showed three `invokedynamic` instructions in `BeforeLambdas`, and the program has one lambda. Where do the other two come from?",
+    "hint": "Look at what they say after `InvokeDynamic`.",
+    "choices": [
+      {
+        "text": "From the anonymous class, which also uses `invokedynamic`",
+        "correct": false,
+        "why": "The anonymous class is created with `new`, from its own class file."
+      },
+      {
+        "text": "From `List.of`, which builds its list lazily",
+        "correct": false,
+        "why": "`List.of` is an ordinary static method call."
+      },
+      {
+        "text": "From the two string concatenations with `+`",
+        "correct": true,
+        "why": "Right: `makeConcatWithConstants`. Since Java 9 the compiler joins strings with `invokedynamic` too."
+      },
+      {
+        "text": "From the two calls to `sort`",
+        "correct": false,
+        "why": "A method call on an object is `invokeinterface` or `invokevirtual`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jdd86r2",
+    "version": 1,
+    "section": "before-lambdas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Dune` and `Emma` have the same length. After the sort they are still in the order they were given. Why?",
+    "hint": "A property of `List.sort`.",
+    "choices": [
+      {
+        "text": "The comparator breaks ties between equal lengths in alphabetical order",
+        "correct": false,
+        "why": "It compares lengths and nothing else."
+      },
+      {
+        "text": "`List.sort` is stable",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "By chance; another run may swap them",
+        "correct": false,
+        "why": "Stability is guaranteed, not luck."
+      },
+      {
+        "text": "Strings of equal length are never compared",
+        "correct": false,
+        "why": "They are compared, and the comparator answers 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ey3cj3f",
+    "version": 1,
+    "section": "syntax",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each lambda with the rule its form illustrates.",
+    "hint": "The comments of `Shapes.java`.",
+    "pairs": [
+      {
+        "left": "`() -> System.out.println(\"hi\")`",
+        "right": "No parameters need empty brackets"
+      },
+      {
+        "left": "`s -> s.length()`",
+        "right": "One parameter may drop its brackets"
+      },
+      {
+        "left": "`(String s, Integer n) -> s.repeat(n)`",
+        "right": "Written types go on every parameter"
+      },
+      {
+        "left": "`n -> { return n * 2; }`",
+        "right": "A block body needs `return`"
+      }
+    ],
+    "right_distractors": [
+      "A lambda must declare its return type"
+    ]
+  },
+  {
+    "id": "ex-89caqng4",
+    "version": 1,
+    "section": "syntax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var twice = (Integer x) -> x * 2;` does not compile. Why?",
+    "hint": "Each side waits for the other to give it a type.",
+    "choices": [
+      {
+        "text": "`var` cannot hold an object",
+        "correct": false,
+        "why": "`var` holds any object whose type the right-hand side states."
+      },
+      {
+        "text": "`var` gives the lambda no target type",
+        "correct": true,
+        "why": "Right: `lambda expression needs an explicit target-type`."
+      },
+      {
+        "text": "`Integer` cannot be multiplied",
+        "correct": false,
+        "why": "It is unboxed to `int` for the multiplication."
+      },
+      {
+        "text": "Parameter types are forbidden inside a lambda's brackets",
+        "correct": false,
+        "why": "They are allowed; `Shapes.java` writes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv7sqmg3",
+    "version": 1,
+    "section": "syntax",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The type a lambda takes from the variable or parameter it is written for is called its ___ type.",
+    "hint": "Where it is aimed.",
+    "blanks": [
+      {
+        "accept": [
+          "target"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3tb85b7t",
+    "version": 1,
+    "section": "capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`greeter` has returned, and the lambda it built still prints its local `greeting`. How?",
+    "hint": "What capturing means.",
+    "choices": [
+      {
+        "text": "The local variable lives on until the program ends",
+        "correct": false,
+        "why": "Locals end with their method; the lambda kept its own copy."
+      },
+      {
+        "text": "The lambda calls `greeter` again to get it",
+        "correct": false,
+        "why": "`greeter` runs once."
+      },
+      {
+        "text": "The lambda keeps a copy of the value",
+        "correct": true,
+        "why": "Right, and that copy is why the variable must not change."
+      },
+      {
+        "text": "`greeting` is a field of `Capture`",
+        "correct": false,
+        "why": "It is declared inside `greeter`; `shop` is the field."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9ngzv4x",
+    "version": 1,
+    "section": "capture",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can a lambda written inside an instance method read? Choose all that apply.",
+    "hint": "The rule covers locals and nothing else.",
+    "choices": [
+      {
+        "text": "A field of the object that is reassigned later",
+        "correct": true,
+        "why": "Yes. Fields are read through `this`, which never changes."
+      },
+      {
+        "text": "A local assigned once and never again",
+        "correct": true,
+        "why": "Yes: effectively final."
+      },
+      {
+        "text": "A local assigned twice before the lambda",
+        "correct": false,
+        "why": "No. `Reassigned.java` showed that it is refused."
+      },
+      {
+        "text": "The method's own parameter, never reassigned",
+        "correct": true,
+        "why": "Yes, like `visitor` in `greeter`."
+      },
+      {
+        "text": "A local the lambda increments",
+        "correct": false,
+        "why": "No: `Counter.java`'s error."
+      }
+    ]
+  },
+  {
+    "id": "ex-qd9q8g48",
+    "version": 1,
+    "section": "capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `WhoIsThis.show()`, a lambda prints `this`. Which object is that?",
+    "hint": "A lambda is not a class.",
+    "choices": [
+      {
+        "text": "The lambda object itself",
+        "correct": false,
+        "why": "That is what an anonymous class's `this` would be."
+      },
+      {
+        "text": "The one `show()` was called on",
+        "correct": true,
+        "why": "Right: `lambda sees: the WhoIsThis object`."
+      },
+      {
+        "text": "None: `this` is a compile error in a lambda",
+        "correct": false,
+        "why": "It compiles and means the enclosing object."
+      },
+      {
+        "text": "The `Runnable` interface",
+        "correct": false,
+        "why": "`this` is always an object, never an interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zmmkrz2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the lambda in `again.sort((a, b) -> ...)` in order.",
+    "hint": "From the compiler to the last comparison.",
+    "items": [
+      "`javac` puts the body in a private method, `lambda$main$0`",
+      "`invokedynamic` asks the JVM to build a `Comparator` around it",
+      "The `Comparator` object is passed to `sort`",
+      "`sort` calls `compare`, which runs the body, once per comparison"
+    ]
+  },
+  {
+    "id": "ex-b26m6swa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Counting in a `forEach` with `n++` on a local is refused. What does section 06 recommend instead?",
+    "hint": "The best counter is one nobody has to change.",
+    "choices": [
+      {
+        "text": "Declare `n` as `final`",
+        "correct": false,
+        "why": "Then `count++` is refused for a second reason."
+      },
+      {
+        "text": "Move `n` into a field of the object and increment it there",
+        "correct": false,
+        "why": "It compiles, and is the shared mutable state lessons 11 to 14 warn about."
+      },
+      {
+        "text": "Let a stream do it, with lesson 7's `count()`",
+        "correct": true,
+        "why": "Right. The lesson points at lesson 7 for this."
+      },
+      {
+        "text": "Write `var n = 0` so the compiler infers the type",
+        "correct": false,
+        "why": "`var` changes nothing about effectively final."
+      }
+    ]
+  }
+]
