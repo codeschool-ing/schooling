@@ -1,0 +1,602 @@
+[
+  {
+    "id": "ex-9tnwm1cj",
+    "version": 1,
+    "section": "shards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides which shard of a stream a record is written to?",
+    "hint": "The producer supplies one string with every record.",
+    "choices": [
+      {
+        "text": "The MD5 of its partition key",
+        "correct": true,
+        "why": "Right. The digest is read as a 128-bit number, and each shard owns a contiguous range of them."
+      },
+      {
+        "text": "Kinesis sends each record to the shard with the least data in it",
+        "correct": false,
+        "why": "Kinesis does no balancing of its own; the key alone decides, which is how a hot shard happens."
+      },
+      {
+        "text": "The shards take records in turn",
+        "correct": false,
+        "why": "A rotation would scatter one customer's events over every shard and lose their order."
+      },
+      {
+        "text": "A hash of the record's data",
+        "correct": false,
+        "why": "Kinesis never looks inside the data; two different events of one customer go to the same shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwsa7gr6",
+    "version": 1,
+    "section": "shards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stream created with two shards. The MD5 of a key, read as a number, is 254303140926280561521588452831818067638, which is above 2^127. Where does the record go?",
+    "hint": "A new stream splits the space in half.",
+    "choices": [
+      {
+        "text": "To shard 0, because shard 0 is filled first",
+        "correct": false,
+        "why": "Shards are not filled in order; each owns a range of the hash space."
+      },
+      {
+        "text": "To shard 1",
+        "correct": true,
+        "why": "Right. Shard 1 owns 2^127 and everything above it. That number is the MD5 of `c-02`, which the lesson put on shard 1."
+      },
+      {
+        "text": "It is refused, because the number is larger than a 64-bit integer",
+        "correct": false,
+        "why": "The hash key space is 128 bits wide; every MD5 fits in it."
+      },
+      {
+        "text": "To either shard, chosen when the record arrives",
+        "correct": false,
+        "why": "The same key always lands on the same shard; that is what keeps a key in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3yyx213",
+    "version": 1,
+    "section": "shards",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda keys its order stream by store. It has three stores, and the stream has eight shards. What happens?",
+    "hint": "Count the distinct hash values.",
+    "choices": [
+      {
+        "text": "Eight shards share the load evenly, one store per shard and the rest idle in reserve",
+        "correct": false,
+        "why": "Shards in reserve do not take over anything; idle is all they are."
+      },
+      {
+        "text": "Kinesis notices the skew and spreads the three keys over all eight shards",
+        "correct": false,
+        "why": "Nothing rebalances keys; the hash decides, and three keys give three hashes."
+      },
+      {
+        "text": "At most three shards receive records, and the other five are paid for and idle",
+        "correct": true,
+        "why": "Right. Three keys hash to three points; a key with more values, such as the customer, would spread."
+      },
+      {
+        "text": "The stream refuses keys with fewer values than shards",
+        "correct": false,
+        "why": "Kinesis accepts any key; it never knows how many distinct values you will send."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny4tjtnx",
+    "version": 1,
+    "section": "shards",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A producer that wants to name a point on the hash line itself, instead of letting Kinesis hash the key, passes ___ in `PutRecord`.",
+    "hint": "Its name says the hash key is given rather than computed.",
+    "blanks": [
+      {
+        "accept": [
+          "ExplicitHashKey"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cqznjzc6",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The producer wrote `o-101 placed` and then `o-102 placed`, for customers on different shards. What does Kinesis promise about the order a consumer reads them in?",
+    "hint": "Order is a property of something smaller than the stream.",
+    "choices": [
+      {
+        "text": "That `o-101 placed` is read first, since it was written first",
+        "correct": false,
+        "why": "That holds within one shard; these two are on different shards."
+      },
+      {
+        "text": "Nothing: order holds within a shard and not across shards",
+        "correct": true,
+        "why": "Right. In the lesson the consumer printed `o-102 placed` sixth, after all of shard 0."
+      },
+      {
+        "text": "That they are read in order of `ApproximateArrivalTimestamp`",
+        "correct": false,
+        "why": "The timestamp is approximate, and no read sorts by it; a reader that wants it has to sort."
+      },
+      {
+        "text": "That they come back in the order of their sequence numbers",
+        "correct": false,
+        "why": "Sequence numbers are positions in one shard; both of these were number 1 in their own shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7fyqr25",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Code that tested against moto stores sequence numbers as integers and compares them with `<`. Why will it break on AWS?",
+    "hint": "What does an AWS sequence number look like?",
+    "choices": [
+      {
+        "text": "AWS sequence numbers are random, so comparing two with `<` means nothing",
+        "correct": false,
+        "why": "They increase over time within a shard; comparing them is meaningful."
+      },
+      {
+        "text": "AWS numbers sequence records across the whole stream, not per shard",
+        "correct": false,
+        "why": "A sequence number is a position in one shard on AWS as in moto."
+      },
+      {
+        "text": "On AWS they are long decimal strings, too large for a 64-bit integer",
+        "correct": true,
+        "why": "Right. Keep them as strings, and compare them as numbers of arbitrary size."
+      },
+      {
+        "text": "Sequence numbers on AWS start at zero",
+        "correct": false,
+        "why": "Where they start is not the problem; their size is."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkqcfm54",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A producer's `PutRecord` for `o-101 packed` times out, the producer sends it again, and meanwhile it has written `o-101 delivered`. What can the shard now hold?",
+    "hint": "The producer cannot tell whether the first attempt was written.",
+    "choices": [
+      {
+        "text": "`packed`, `delivered` and `packed` again: a duplicate, and an event after a later one",
+        "correct": true,
+        "why": "Right. The first attempt may have been written; the retry adds it again after `delivered`. Lesson 23 deals with it."
+      },
+      {
+        "text": "Only `packed` and `delivered`, in that order, because Kinesis drops repeated records",
+        "correct": false,
+        "why": "Kinesis does not deduplicate; a retried record gets a new sequence number."
+      },
+      {
+        "text": "Only `delivered`, because the timed-out request is cancelled",
+        "correct": false,
+        "why": "A timeout on the producer's side cancels nothing on the server."
+      },
+      {
+        "text": "`packed` and `delivered`, sorted by Kinesis by the time they were sent",
+        "correct": false,
+        "why": "Kinesis keeps the order of arrival in the shard and knows nothing of when a producer sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0fx9vds",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `PutRecords`, which writes up to 500 records in one call, promise about their order?",
+    "hint": "It is not `PutRecord` with a list.",
+    "choices": [
+      {
+        "text": "That they are written in the order of the list",
+        "correct": false,
+        "why": "That is the belief to drop; it makes no such promise."
+      },
+      {
+        "text": "Order within each partition key, but not across keys",
+        "correct": false,
+        "why": "Even records of one key in one batch may be written out of the list's order."
+      },
+      {
+        "text": "Nothing, not even within its own batch",
+        "correct": true,
+        "why": "Right. `PutRecord` with `SequenceNumberForOrdering` is the strict form."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3x01as3",
+    "version": 1,
+    "section": "iterators-and-retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer restarts after an hour down and asks for a `LATEST` iterator. What happens to the records written during that hour?",
+    "hint": "Where does `LATEST` point?",
+    "choices": [
+      {
+        "text": "They are delivered first, oldest to newest, and then the new ones follow",
+        "correct": false,
+        "why": "That would be `AFTER_SEQUENCE_NUMBER` from a checkpoint."
+      },
+      {
+        "text": "They are deleted from the shard",
+        "correct": false,
+        "why": "Reading or not reading never deletes; only the retention period does."
+      },
+      {
+        "text": "This consumer never sees them; they stay in the shard for other readers",
+        "correct": true,
+        "why": "Right. `LATEST` points after the newest record, so it sees only what is written once it exists."
+      },
+      {
+        "text": "Kinesis refuses a `LATEST` iterator while unread records remain in the shard",
+        "correct": false,
+        "why": "Kinesis has no notion of a record being unread; each reader keeps its own position."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tpqjhs5",
+    "version": 1,
+    "section": "iterators-and-retention",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the iterator type that serves it.",
+    "hint": "One of them starts at a time rather than at a record.",
+    "pairs": [
+      {
+        "left": "Reprocess everything the shard still keeps",
+        "right": "`TRIM_HORIZON`"
+      },
+      {
+        "left": "Resume after the last record you finished",
+        "right": "`AFTER_SEQUENCE_NUMBER`"
+      },
+      {
+        "left": "Replay everything since 09:00",
+        "right": "`AT_TIMESTAMP`"
+      },
+      {
+        "left": "Only what is written from now on",
+        "right": "`LATEST`"
+      }
+    ],
+    "right_distractors": [
+      "`AT_SEQUENCE_NUMBER`"
+    ]
+  },
+  {
+    "id": "ex-efwv5v65",
+    "version": 1,
+    "section": "iterators-and-retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer on a stream with the default retention is broken from Friday evening to Monday morning. It is fixed and restarted with `TRIM_HORIZON`. What does it read?",
+    "hint": "The default retention is a day.",
+    "choices": [
+      {
+        "text": "Everything since Friday evening, because unread records are kept until somebody reads them",
+        "correct": false,
+        "why": "A shard keeps records for the retention period, read or not, and then deletes them."
+      },
+      {
+        "text": "Only the last 24 hours; the weekend before that is gone, with no error",
+        "correct": true,
+        "why": "Right. `TRIM_HORIZON` silently means a later point. Seven days of retention would have saved the weekend."
+      },
+      {
+        "text": "Nothing, because the iterator from Friday has expired",
+        "correct": false,
+        "why": "A new iterator is taken at restart; expiry only means the old one cannot be reused."
+      },
+      {
+        "text": "An error saying records were lost",
+        "correct": false,
+        "why": "There is no such error; that silence is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-wypcmn9m",
+    "version": 1,
+    "section": "iterators-and-retention",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the largest retention period a Kinesis stream accepts, in hours? moto refused 9,000 with the limit in its message.",
+    "hint": "365 days.",
+    "value": 8760,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-6w5rbyk8",
+    "version": 1,
+    "section": "limits-and-resharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stream of ten shards is throttled on one shard while the other nine are nearly idle. What helps?",
+    "hint": "The limit is per shard, and the key decides the shard.",
+    "choices": [
+      {
+        "text": "A partition key with more values, so the busy key's records spread",
+        "correct": true,
+        "why": "Right. A hot shard comes from a hot key; adding shards leaves that key where it is."
+      },
+      {
+        "text": "Doubling the shards with `update-shard-count`",
+        "correct": false,
+        "why": "The busy key still hashes to one point, now in a child shard of half the range."
+      },
+      {
+        "text": "Enhanced fan-out on the consumers",
+        "correct": false,
+        "why": "That raises reading capacity; the throttle here is on writing."
+      },
+      {
+        "text": "Longer retention",
+        "correct": false,
+        "why": "Retention decides how long records stay, not how fast they can arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyr7v6aw",
+    "version": 1,
+    "section": "limits-and-resharding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, 2,000 records went into a one-shard stream in well under a second with none failing. What does that show?",
+    "hint": "What does moto keep a clock for?",
+    "choices": [
+      {
+        "text": "That a shard takes more than 1,000 records a second when they are small",
+        "correct": false,
+        "why": "The limit is 1 MB or 1,000 records a second, whichever comes first; small records hit the count."
+      },
+      {
+        "text": "That moto applies no capacity limit, so throttling was never tested",
+        "correct": true,
+        "why": "Right. On AWS part of that would have been refused with `ProvisionedThroughputExceededException`."
+      },
+      {
+        "text": "That `PutRecords` is exempt from the per-shard limit",
+        "correct": false,
+        "why": "Each record in a batch counts against its shard as a single one would."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bdk0244",
+    "version": 1,
+    "section": "limits-and-resharding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `update-shard-count` from 2 to 4, a consumer reads shard 3 before shard 0. What goes wrong for the key `c-17`?",
+    "hint": "Where are c-17's events from before the reshard?",
+    "choices": [
+      {
+        "text": "Nothing, because shard 3 holds a copy of shard 0's records",
+        "correct": false,
+        "why": "Children start empty; the parent keeps its records until the retention period removes them."
+      },
+      {
+        "text": "Its events from after the reshard are read before its events from before it",
+        "correct": true,
+        "why": "Right. A parent must be read to its end before its children, which the Kinesis Client Library does by following `ParentShardId`."
+      },
+      {
+        "text": "Shard 0 refuses reads once it is closed",
+        "correct": false,
+        "why": "A closed shard refuses writes; it can be read until its records expire."
+      },
+      {
+        "text": "`c-17` moves to shard 1, so its events are split three ways",
+        "correct": false,
+        "why": "Shard 1 is closed too; `shard_of.py` found `c-17` in shard 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0eb3yvz",
+    "version": 1,
+    "section": "on-demand-or-provisioned",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a steady, known load, the lesson's provisioned stream cost 82.50 a month and the on-demand one 250.40. What does on demand buy for the difference?",
+    "hint": "What did the promotion month show?",
+    "choices": [
+      {
+        "text": "Records kept for longer",
+        "correct": false,
+        "why": "Both start at 24 hours; longer retention is priced separately in each mode."
+      },
+      {
+        "text": "Not having to size and reshard for a peak nobody knows yet",
+        "correct": true,
+        "why": "Right. Sized for a 30 MB/s peak, the provisioned stream would have cost 657.00 in shard-hours alone."
+      },
+      {
+        "text": "Order across shards",
+        "correct": false,
+        "why": "An on-demand stream is shards too, and orders records the same way."
+      },
+      {
+        "text": "Reads that cost nothing however many consumers there are",
+        "correct": false,
+        "why": "The reverse: on demand, every consumer pays the read line again."
+      }
+    ]
+  },
+  {
+    "id": "ex-ye6bg5tq",
+    "version": 1,
+    "section": "on-demand-or-provisioned",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A provisioned stream receives 10 million records a day of 30 KB each, for 30 days. At 0.02800 USD per million PUT payload units of 25 KB, what do the payload units cost in the month, in USD?",
+    "hint": "A record of 30 KB is two units.",
+    "value": 16.8,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-2t24ykkb",
+    "version": 1,
+    "section": "on-demand-or-provisioned",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda adds a third consumer to the steady stream of the lesson. How does each bill change?",
+    "hint": "Which mode charges per gigabyte read?",
+    "choices": [
+      {
+        "text": "Both rise by a third",
+        "correct": false,
+        "why": "A provisioned stream bills shards, not reads."
+      },
+      {
+        "text": "On demand rises by 48.00; provisioned does not move",
+        "correct": true,
+        "why": "Right: 600 GB × 0.08000 on demand. Three consumers share 2 MB a second per shard on a provisioned stream, and that is plenty at this load."
+      },
+      {
+        "text": "Provisioned needs a shard per consumer, so it rises by a third; on demand does not move",
+        "correct": false,
+        "why": "Consumers do not take shards of their own; they share each shard's reading capacity."
+      },
+      {
+        "text": "Neither changes",
+        "correct": false,
+        "why": "The on-demand bill has a read line per consumer."
+      }
+    ]
+  },
+  {
+    "id": "ex-kecrm58h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to `c-17`'s records when the stream of the lesson goes from two shards to four.",
+    "hint": "The parent is closed before any record lands in a child.",
+    "items": [
+      "Its records are written to shard 0, the shard its MD5 falls in",
+      "`update-shard-count` closes shard 0 and opens shards 2 and 3 over its range",
+      "New records with the key land in shard 3",
+      "A consumer reads shard 0 to its end",
+      "The same consumer moves on to shard 3"
+    ]
+  },
+  {
+    "id": "ex-jsvwvfaf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fraud check needs every event of one order in order, and nothing across orders. Customers place many orders a day. Which partition key fits best?",
+    "hint": "The smallest thing whose events must stay in order.",
+    "choices": [
+      {
+        "text": "The store, so each store's fraud is checked on one shard",
+        "correct": false,
+        "why": "Three values put the stream on three shards at most, and nothing asked for store order."
+      },
+      {
+        "text": "The customer",
+        "correct": false,
+        "why": "It works, but it ties all of a heavy customer's orders to one shard when only each order needs order."
+      },
+      {
+        "text": "A random value per record, to spread the load",
+        "correct": false,
+        "why": "It spreads perfectly and scatters one order's events over every shard, losing the order needed."
+      },
+      {
+        "text": "The order id",
+        "correct": true,
+        "why": "Right. It keeps each order in order and spreads better than the customer."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdp9epgr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson see moto do as AWS would? Choose all that apply.",
+    "hint": "Separate what was run from what was only documented.",
+    "choices": [
+      {
+        "text": "Put a key on the shard its MD5 falls in",
+        "correct": true,
+        "why": "Right; `shard_of.py` predicted every record."
+      },
+      {
+        "text": "Refuse a retention of 9,000 hours",
+        "correct": true,
+        "why": "Right, with AWS's own limit in the message."
+      },
+      {
+        "text": "Throttle writes beyond 1,000 records a second on a shard",
+        "correct": false,
+        "why": "moto accepted 2,000 in well under a second."
+      },
+      {
+        "text": "Delete records older than the retention period",
+        "correct": false,
+        "why": "moto keeps every record until it stops; the deletion was not run."
+      },
+      {
+        "text": "Close the parent shards when resharding",
+        "correct": true,
+        "why": "Right; they got an `EndingSequenceNumber`."
+      }
+    ]
+  }
+]
