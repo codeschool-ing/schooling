@@ -6,7 +6,7 @@ version: 1
 **A group is a list of users that policies can be attached to, and nothing more.** A role is the
 opposite kind of thing: an identity with permissions and **no credentials of its own**, which a
 principal puts on for a while and takes off again. The two are often confused because both carry
-permissions for somebody else, so this section builds both for the shop and then reads the names
+permissions for somebody else. This section builds both for the shop and then reads the names
 AWS gave them.
 
 ## Three groups
@@ -32,7 +32,7 @@ ana@laptop:~/aws$ aws iam list-groups-for-user --user-name caio --query "Groups[
 ]
 ```
 
-`list-groups-for-user` answers the question from the other side, and it is the one to run when
+`list-groups-for-user` answers the question from the other side. It is the one to run when
 somebody asks why a user can do something: the answer is often a group nobody remembered.
 
 **The wrong picture is a group as a shared account for the team.** A group has no password, no
@@ -51,7 +51,7 @@ ana@laptop:~/aws$ aws iam delete-role --role-name grouptest
 
 **moto stored a trust policy naming a group. AWS refuses that document** as malformed, because a
 group is not a principal and the policy names one in the principal's place. That refusal was not
-run here, since it needs an account; it is AWS's documented behaviour, and the reason the
+run here, since it needs an account. It is AWS's documented behaviour, and the reason the
 `developers` team reaches a role through each member's own permissions instead.
 
 ## A role, and the policy that says who may wear it
@@ -132,7 +132,7 @@ ana@laptop:~/aws$ aws sts assume-role --role-arn arn:aws:iam::123456789012:role/
 permanent one. Beside it, which the `--query` left out, come a secret and a session token, and
 the three are refused together an hour later. Nobody has to rotate or delete them, and a leaked
 one is worth an hour at most. Note also what moto did not ask: whether the caller was bia. With
-checking off it hands a session to anybody, and lesson 9 repeats this with checking on to show the
+checking off it hands a session to anybody. Lesson 9 repeats this with checking on, to show the
 trust policy refusing a principal it does not name.
 
 ## Reading the names
@@ -151,12 +151,12 @@ Every principal so far has two names: an **ARN**, which is the address policies 
 
 **The session's ARN belongs to `sts`, not `iam`**, and it ends in the session name the caller
 chose. That is the name a log shows when something was done through a role, which is why
-`bia-deploy` beats `session1`; lesson 9 shows how AWS's audit log, CloudTrail, uses it.
+`bia-deploy` beats `session1`. Lesson 9 shows how AWS's audit log, CloudTrail, uses it.
 
 **The id is what makes a recreated user a different user.** If bia's user is deleted and created
 again, the ARN is the same and the id is new. AWS's documentation describes what that does to a
-trust policy that names her: the stored policy turns the ARN into the old id when the user is
-deleted, so the new bia is not trusted until somebody writes the policy again. That was not run
+trust policy that names her. When the user is deleted, the stored policy turns the ARN into the old
+id, so the new bia is not trusted until somebody writes the policy again. That was not run
 here, and it is a deliberate protection: a name reused by somebody else does not inherit an old
 permission.
 

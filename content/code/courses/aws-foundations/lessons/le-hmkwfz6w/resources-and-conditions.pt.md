@@ -3,7 +3,7 @@ title: Políticas de recurso, condições, e as ferramentas que verificam de ver
 version: 1
 ---
 
-**Uma política baseada em recurso é anexada à coisa usada em vez de a quem a usa**, e por isso nomeia
+**Uma política baseada em recurso é anexada à coisa usada em vez de a quem a usa.** Por isso ela nomeia
 um `Principal`: quem, de onde, pode fazer o quê com este bucket, esta fila, esta chave. É uma camada
 que concede, como uma política de identidade, e um `Deny` explícito nela encerra uma requisição como
 um `Deny` em qualquer outro lugar. A política de confiança de uma role, da lição 6, é uma delas: o
@@ -58,16 +58,16 @@ lugar encerra a requisição, e uma política de bucket é um lugar qualquer. O 
 de uma política de bucket só na leitura e na escrita de objetos, como a lição 19 mostra, e nunca no
 próprio bucket. Essa recusa não foi rodada aqui.
 
-**Entre contas, uma política de recurso é metade da resposta.** Se a conta `log-archive` da loja é
-dona do `shop-logs` e uma role em `shop-prod` grava nele, a política do bucket tem de permitir essa
-role **e** a própria política de identidade da role tem de permitir `s3:PutObject` no bucket.
+**Entre contas, uma política de recurso é metade da resposta.** Digamos que a conta `log-archive` da loja seja
+dona do `shop-logs`, e que uma role em `shop-prod` grave nele. A política do bucket tem de permitir
+essa role, **e** a própria política de identidade da role tem de permitir `s3:PutObject` no bucket.
 Qualquer uma sozinha é uma negação implícita. A lição 9 encontra a mesma regra nas roles, em que a
 política de confiança é o lado do recurso.
 
 ## Condições
 
 Uma condição estreita uma instrução a algumas requisições. Dentro de `Condition`, cada **operador**
-guarda **chaves** e os valores que elas têm de bater; várias chaves têm de bater todas, e vários
+guarda **chaves** e os valores que elas têm de bater. Várias chaves têm de bater todas, e vários
 valores para uma chave são alternativas. Quatro chaves aparecem em quase toda conta:
 
 | chave | o que é | um uso típico |
@@ -80,7 +80,7 @@ valores para uma chave são alternativas. Quatro chaves aparecem em quase toda c
 Duas delas têm uma armadilha que a documentação da AWS explica. **`aws:SourceIp` não existe quando a
 requisição chega por um VPC endpoint**, que tem chave própria, então um `IpAddress` de permissão
 escrito para o escritório falha de dentro da VPC. **`aws:MultiFactorAuthPresent` não existe, em vez de
-valer `false`, numa requisição assinada com uma chave de acesso de longo prazo**, e por isso o deny
+valer `false`, numa requisição assinada com uma chave de acesso de longo prazo**. Por isso o deny
 usa `BoolIfExists`: um `Bool` simples não bateria com a chave ausente, e a chave que nunca teve MFA
 passaria.
 

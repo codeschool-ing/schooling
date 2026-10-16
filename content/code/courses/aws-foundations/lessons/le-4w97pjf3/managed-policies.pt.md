@@ -5,7 +5,7 @@ version: 1
 
 **Uma política gerenciada é uma política que existe por conta própria, com um ARN, e é anexada a
 quantos usuários, grupos e roles precisarem dela.** Há dois donos. As políticas **gerenciadas pela
-AWS** são escritas e editadas pela AWS e são as mesmas em toda conta; as **gerenciadas pelo
+AWS** são escritas e editadas pela AWS e são as mesmas em toda conta. As **gerenciadas pelo
 cliente** são escritas por você e moram numa conta. As duas são anexadas em vez de embutidas, as
 duas guardam versões, e mudar uma muda as permissões de tudo a que ela está anexada, de uma vez.
 
@@ -52,7 +52,7 @@ ana@laptop:~/aws$ aws iam get-policy-version --policy-arn arn:aws:iam::aws:polic
 ```
 
 Quase três mil padrões de ação, em todo recurso. **"Somente leitura" é uma promessa sobre gravar,
-não sobre ler**: as linhas do S3 são `s3:Get*` e `s3:List*`, então quem tem esta política lê todo
+não sobre ler**. As linhas do S3 são `s3:Get*` e `s3:List*`, então quem tem esta política lê todo
 objeto de todo bucket da conta, os backups inclusive. Uma política gerenciada pela AWS é um ponto
 de partida escrito para todo mundo, e não serve exatamente a ninguém.
 
@@ -122,11 +122,11 @@ aws: [ERROR]: An error occurred (AccessDenied) when calling the ListUsers operat
 
 **Leia as recusas, porque elas não são iguais.** O IAM nomeia o usuário e a ação, que é exatamente
 o que quem depura precisa. O S3 diz `Access Denied` e mais nada, ao listar `shop-backups`, ao listar
-os buckets e ao apagar o logo: a política nunca mencionou `s3:ListAllMyBuckets` nem
+os buckets e ao apagar o logo. A política nunca mencionou `s3:ListAllMyBuckets` nem
 `s3:DeleteObject`, então nada os permitiu. O `sts get-caller-identity` responde a qualquer um, o que
 a AWS documenta e o moto copia: ele revela apenas quem você é.
 
-`aws s3 ls s3://shop-assets` seria o comando óbvio para listar, e não é usado aqui porque **o moto
+`aws s3 ls s3://shop-assets` seria o comando óbvio para listar. Ele não é usado aqui porque **o moto
 responde a ele com `SignatureDoesNotMatch` seja quem for que assine**, admin inclusive: o
 delimitador `/` que o comando envia atrapalha a verificação de assinatura do moto. O `s3api
 list-objects-v2` não envia nenhum e é julgado normalmente:
@@ -162,7 +162,7 @@ aws: [ERROR]: An error occurred (DeleteConflict) when calling the DeletePolicyVe
 ```
 
 **Uma política gerenciada guarda no máximo cinco versões**, e o moto aplica isso como a AWS. A
-padrão não pode ser apagada, então o caminho é apagar uma antiga, o que abre espaço para a `v6`, e
+padrão não pode ser apagada, então o caminho é apagar uma antiga, o que abre espaço para a `v6`. Depois
 o `set-default-policy-version` move a padrão para lá e para cá:
 
 ```
@@ -180,7 +180,7 @@ v6	False
 
 **É para isso que servem as versões: uma edição ruim se desfaz movendo a padrão de volta**, sem
 documento para reconstruir e sem nada desanexado. O `--set-as-default` no `create-policy-version`
-torna a versão nova a ativa na mesma chamada; sem ele, uma versão nova fica esperando, sem uso.
+torna a versão nova a ativa na mesma chamada. Sem ele, uma versão nova fica esperando, sem uso.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 320\" role=\"img\" data-fig=\"l07-three-kinds\" aria-label=\"Onde mora cada tipo de política. À esquerda, fora da conta da loja, a biblioteca da AWS: a política gerenciada pela AWS ReadOnlyAccess, na versão v188 e editada pela AWS, anexada ao usuário caio dentro da conta da loja. Dentro da conta 123456789012, a política gerenciada pelo cliente shop-assets-rw, com até cinco versões e uma padrão, anexada ao mesmo tempo à usuária bia, ao grupo developers e à role deployer. Embaixo à direita, o usuário edu com uma política inline embutida nele, que não tem ARN e é apagada junto com o edu.\"><defs><marker id=\"l07-three-kinds-af-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l07-three-kinds-af-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20.0\" y=\"40.0\" width=\"200.0\" height=\"120.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\"></rect><text x=\"120.0\" y=\"56.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">gerenciada pela AWS</text><rect x=\"40.0\" y=\"70.0\" width=\"160.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></rect><text x=\"120.0\" y=\"88.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">ReadOnlyAccess</text><text x=\"120.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">v188, editada pela AWS</text><text x=\"120.0\" y=\"146.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-style=\"italic\" fill=\"var(--paper-dim)\">a mesma em toda conta</text><rect x=\"250.0\" y=\"20.0\" width=\"450.0\" height=\"290.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"266.0\" y=\"36.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">account 123456789012</text><text x=\"365.0\" y=\"60.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">gerenciada pelo cliente</text><rect x=\"280.0\" y=\"72.0\" width=\"170.0\" height=\"66.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"365.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">shop-assets-rw</text><text x=\"365.0\" y=\"116.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">até 5 versões, 1 padrão</text><rect x=\"530.0\" y=\"55.0\" width=\"150.0\" height=\"30.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"605.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">user/bia</text><path d=\"M452.0 105.0 L528.0 70.0\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l07-three-kinds-af-ah-amber)\"></path><rect x=\"530.0\" y=\"95.0\" width=\"150.0\" height=\"30.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"605.0\" y=\"110.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">group/developers</text><path d=\"M452.0 105.0 L528.0 110.0\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l07-three-kinds-af-ah-amber)\"></path><rect x=\"530.0\" y=\"135.0\" width=\"150.0\" height=\"30.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"605.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">role/deployer</text><path d=\"M452.0 105.0 L528.0 150.0\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l07-three-kinds-af-ah-amber)\"></path><rect x=\"280.0\" y=\"175.0\" width=\"170.0\" height=\"30.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"365.0\" y=\"190.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">user/caio</text><path d=\"M120.0 127.0 L120.0 160.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M120.0 160.0 L120.0 190.0 L250.0 190.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\"></path><path d=\"M250.0 190.0 L278.0 190.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#l07-three-kinds-af-ah-paper-dim)\"></path><text x=\"185.0\" y=\"180.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">anexada</text><rect x=\"470.0\" y=\"205.0\" width=\"210.0\" height=\"90.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"222.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">user/edu</text><rect x=\"490.0\" y=\"236.0\" width=\"170.0\" height=\"46.0\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"575.0\" y=\"252.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">política inline, sem ARN</text><text x=\"575.0\" y=\"268.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">apagada junto com o edu</text></svg>", "caption": "Uma política gerenciada pela AWS é compartilhada por toda conta, uma gerenciada pelo cliente por tudo a que está anexada, e uma inline por nada."}

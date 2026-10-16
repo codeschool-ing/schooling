@@ -3,8 +3,8 @@ title: Resource policies, conditions, and the tools that check for real
 version: 1
 ---
 
-**A resource-based policy is attached to the thing being used rather than to the one using it**,
-and so it names a `Principal`: who, from where, may do what to this bucket, this queue, this key.
+**A resource-based policy is attached to the thing being used rather than to the one using it.**
+So it names a `Principal`: who, from where, may do what to this bucket, this queue, this key.
 It is a granting layer like an identity policy, and an explicit `Deny` in it ends a request like a
 `Deny` anywhere else. A role's trust policy, from lesson 6, is one of them: the resource is the
 role, and the action is assuming it.
@@ -58,8 +58,8 @@ because an explicit `Deny` anywhere ends the request, and a bucket policy is any
 bucket policy's `Deny` only on reading and writing objects, as lesson 19 shows, and never on the
 bucket itself. That refusal was not run here.
 
-**Across accounts, a resource policy is half of the answer.** If the shop's `log-archive` account
-owns `shop-logs` and a role in `shop-prod` writes to it, the bucket policy has to allow that role
+**Across accounts, a resource policy is half of the answer.** Say the shop's `log-archive` account
+owns `shop-logs`, and a role in `shop-prod` writes to it. The bucket policy has to allow that role,
 **and** the role's own identity policy has to allow `s3:PutObject` on the bucket. Either one alone
 is an implicit deny. Lesson 9 meets the same rule in roles, where the trust policy is the resource
 side.
@@ -67,7 +67,7 @@ side.
 ## Conditions
 
 A condition narrows a statement to some requests. Inside `Condition`, each **operator** holds
-**keys** and the values they must match; several keys must all match, and several values for one
+**keys** and the values they must match. Several keys must all match, and several values for one
 key are alternatives. Four keys come up in nearly every account:
 
 | key | what it is | a typical use |
@@ -80,7 +80,7 @@ key are alternatives. Four keys come up in nearly every account:
 Two of them have a trap that AWS's documentation spells out. **`aws:SourceIp` is absent when the
 request arrives through a VPC endpoint**, which has its own key, so an `IpAddress` allow written for
 the office fails from inside the VPC. **`aws:MultiFactorAuthPresent` is absent, not `false`, on a
-request signed with a long-term access key**, which is why the deny uses `BoolIfExists`: a plain
+request signed with a long-term access key**. That is why the deny uses `BoolIfExists`: a plain
 `Bool` would not match the missing key, and the key that never had MFA would pass.
 
 **moto treats every condition as met**, and that can err in either direction. A `Deny` limited to

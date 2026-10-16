@@ -42,7 +42,7 @@ ana@laptop:~/aws$ aws iam create-user --user-name bia --query User.Arn --output 
 arn:aws:iam::123456789012:user/bia
 ```
 
-`sns create-topic` cria um canal de notificação, de que esta lição só precisa pelo nome; o
+`sns create-topic` cria um canal de notificação, de que esta lição só precisa pelo nome. O
 `create-user` do IAM cria um usuário, e a lição 6 diz para que serve um usuário. As duas respostas
 carregam o número do primeiro comando, `123456789012`, que é a conta padrão do moto.
 
@@ -63,7 +63,7 @@ serviço escolhe.
 
 **Um campo vazio é informação.** O usuário não tem região, porque o IAM é global dentro de uma
 conta: `bia` existe em São Paulo e na Virgínia ao mesmo tempo. O ARN de um bucket,
-`arn:aws:s3:::shop-assets`, não tem região e também não tem conta, que é a primeira pista de algo
+`arn:aws:s3:::shop-assets`, não tem região e também não tem conta. Essa é a primeira pista de algo
 que a próxima seção mede: o nome de um bucket não pertence à conta de ninguém.
 
 Um detalhe da resposta do moto é do moto. Para um usuário, a AWS informa quem chama como
@@ -72,7 +72,7 @@ usuário padrão de `moto`. Para uma role assumida com `assume-role`, que a pró
 também diz `sts`, e a próxima transcrição está certa nos dois pontos.
 
 **Leia a conta de um ARN antes de qualquer outra coisa.** Quando uma política, uma linha de log ou
-uma fatura cita um recurso, o quinto campo diz de quem ele é, e uma política que cita uma conta que
+uma fatura cita um recurso, o quinto campo diz de quem ele é. Uma política que cita uma conta que
 ninguém reconhece é a primeira coisa nela a questionar.
 
 ## Cotas são contadas por conta
@@ -109,13 +109,13 @@ conta. Outra conta recomeça do padrão, que é exatamente o ponto da próxima s
 
 **Toda conta tem exatamente um usuário root**, a identidade que a abriu. Ele entra com o endereço de
 e-mail da conta, pode fazer qualquer coisa nela, inclusive encerrá-la, e não pode ser limitado pelas
-políticas do IAM da própria conta. A lição 1, em "Uma conta real", disse como protegê-lo; quem
+políticas do IAM da própria conta. A lição 1, em "Uma conta real", disse como protegê-lo. Quem
 trabalha na conta no dia a dia é uma identidade do IAM criada dentro dela, e a lição 6 organiza
 essas identidades.
 
 O que importa aqui é a contagem. **Dez contas são dez usuários root e dez endereços de e-mail**,
-cada um único em toda a AWS, e é por isso que a loja dá a cada conta um endereço da forma
+cada um único em toda a AWS. Por isso a loja dá a cada conta um endereço da forma
 `aws+<account>@example.com`: uma caixa de correio, um endereço diferente por conta. Uma conta criada
-dentro de uma organização, como na próxima seção, começa com um usuário root sem senha nenhuma, e a
-conta de gerenciamento da organização pode remover de vez as credenciais do root das suas
+dentro de uma organização, como na próxima seção, começa com um usuário root sem senha nenhuma. A
+conta de gerenciamento da organização também pode remover de vez as credenciais do root das suas
 contas-membro. A lição 5 põe isso na lista do que uma landing zone resolve.

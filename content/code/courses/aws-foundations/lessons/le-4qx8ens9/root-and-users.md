@@ -6,8 +6,8 @@ version: 1
 **A principal is whatever signs a request that AWS then judges.** Every call to AWS carries a
 signature, the signature names an identity, and IAM decides what that identity may do. The common
 wrong picture is that an IAM user is a person. **A user is a name with long-term credentials**,
-and the two do not line up: a person can work in AWS for years with no IAM user at all, signing in
-through single sign-on as lesson 11 shows, and a program on somebody's laptop can sign every
+and the two do not line up. A person can work in AWS for years with no IAM user at all, signing in
+through single sign-on as lesson 11 shows. And a program on somebody's laptop can sign every
 request with a user's key.
 
 This lesson creates the four kinds of principal AWS has, in the order an account meets them: the
@@ -109,9 +109,9 @@ AKIARZPUZDIKEBQA4QAN	Active
 ```
 
 **An access key id begins with `AKIA`**, in moto and in AWS: four letters that mean "long-term key
-of an IAM user". The `--query` printed the id and the status and kept the secret off the screen,
-which is a habit worth having even with moto's keys, which open nothing outside moto. moto also
-recorded `PasswordResetRequired` as false although the command asked for true; AWS keeps the flag
+of an IAM user". The `--query` printed the id and the status and kept the secret off the screen.
+That habit is worth having even with moto's keys, which open nothing outside moto. moto also
+recorded `PasswordResetRequired` as false although the command asked for true. AWS keeps the flag
 and makes bia choose a new password at her first sign-in.
 
 The password and the key have the same weakness: **they work from anywhere, for anyone holding

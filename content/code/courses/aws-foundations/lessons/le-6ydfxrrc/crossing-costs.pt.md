@@ -70,8 +70,8 @@ impostos.
 | para a internet, primeiros 10 TB do mês | 0,1500 por GB | 0,0900 por GB |
 | vindo da internet | grátis | grátis |
 
-**Entre zonas, a cobrança é dos dois lados.** O tipo de uso é uma linha só, e a documentação da AWS
-diz que ele é cobrado nos dados que saem de uma zona *e* nos que chegam à outra, então um gigabyte
+**Entre zonas, a cobrança é dos dois lados.** O tipo de uso é uma linha só, mas a documentação da AWS
+diz que ele é cobrado nos dados que saem de uma zona *e* nos que chegam à outra. Um gigabyte
 que atravessa custa 0,02 no total. Um banco de dados replicando 500 GB por mês para uma réplica na
 zona vizinha custa 500 × 0,02 = **10 dólares por mês só de transferência**, antes de qualquer das
 duas máquinas.
@@ -79,13 +79,13 @@ duas máquinas.
 **Entre regiões, o sentido decide.** Um gigabyte saindo de São Paulo para a Virgínia custa 0,138; o
 mesmo gigabyte saindo da Virgínia para São Paulo custa 0,02, quase sete vezes menos. Uma cópia
 noturna de 2 TB de backups de `sa-east-1` para `us-east-1` sai por 2.048 × 0,138 = **282,62 dólares
-por mês**; a cópia no outro sentido sairia por 40,96. Isso não é uma esquisitice a contornar; é o
+por mês**; a cópia no outro sentido sairia por 40,96. Isso não é uma esquisitice a contornar. É o
 preço de levar os bytes por um caminho longo e caro, e é o que você pesa ao decidir onde mora a
 cópia de alguma coisa.
 
 **Para a internet, as faixas caem com o volume**, e São Paulo começa mais caro que a Virgínia: 0,15
-contra 0,09 nos primeiros 10 TB do mês. O que as quatro linhas não mostram é que a AWS dá de graça
-os primeiros 100 GB por mês enviados à internet, somados em todas as regiões de uma conta; essa
+contra 0,09 nos primeiros 10 TB do mês. As quatro linhas deixam uma coisa de fora: a AWS dá de graça
+os primeiros 100 GB por mês enviados à internet, somados em todas as regiões de uma conta. Essa
 franquia está na página de preços da AWS, e não nessas linhas, então foi lida lá e não impressa pelo
 programa.
 

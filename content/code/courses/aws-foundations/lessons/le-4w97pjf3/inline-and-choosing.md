@@ -4,8 +4,8 @@ version: 1
 ---
 
 **An inline policy is written into one user, group or role and belongs to nothing else.** It has
-a name but no ARN, so no other identity can be given it; it has no versions, so an edit overwrites
-it; and it lives exactly as long as the identity that holds it. The wrong picture is that inline is
+a name but no ARN, so no other identity can be given it. It has no versions, so an edit overwrites
+it. And it lives exactly as long as the identity that holds it. The wrong picture is that inline is
 the quick, informal kind, for when a managed policy feels like too much ceremony. **Inline is the
 strict kind**: it is the one way to make sure a permission can never be attached to a second
 identity by somebody tidying up.
@@ -49,7 +49,7 @@ ana@laptop:~/aws$ aws iam list-attached-user-policies --user-name edu
 }
 ```
 
-`list-user-policies` lists only inline policies; the managed ones attached to a user are a
+`list-user-policies` lists only inline policies. The managed ones attached to a user are a
 different list, `list-attached-user-policies`, and an audit that reads one and not the other misses
 half of what a user can do.
 
@@ -67,7 +67,7 @@ aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetUser operatio
 ```
 
 **The refusal is a safeguard, not a leftover.** AWS will not delete a user who still holds a
-policy, so the command line names each one first; the console's delete button does the same steps
+policy, so the command line names each one first. The console's delete button does the same steps
 for you. Either way, once the user is gone **the inline policy is gone with it**: there is no copy
 anywhere to attach to the next contractor by accident. A managed policy would have outlived him,
 still attachable, which is sometimes what you want and here is not.
@@ -89,7 +89,7 @@ ana@laptop:~/aws$ aws iam delete-user-policy --user-name bia --policy-name with-
 **moto stored it, and then obeyed it**: the second command is bia listing `shop-backups`, which
 her customer-managed policy never allowed. AWS would have refused the document as malformed before
 storing anything; that was not run here. In a lab, it means a policy that works in moto is not yet a
-policy AWS accepts, and lesson 8 names the tool that checks a document against AWS's grammar.
+policy AWS accepts. Lesson 8 names the tool that checks a document against AWS's grammar.
 
 ## The limits, as moto reports them
 
@@ -105,7 +105,7 @@ ana@laptop:~/aws$ aws iam get-account-summary --query "SummaryMap.{PolicySizeQuo
 ```
 
 The numbers are characters, apart from the last two. **A managed policy may hold 6,144 characters,
-an inline policy on a user only 2,048**, and a user may have ten managed policies attached; these
+an inline policy on a user only 2,048**, and a user may have ten managed policies attached. These
 match the quotas in AWS's documentation, where the last one can be raised on request. The small
 size of a user's inline policies is a hint about what they are for: a short, specific permission,
 not a library.

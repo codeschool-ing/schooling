@@ -9,12 +9,12 @@ instalação as encontra, e o que cada uma quer dizer. **Quatro delas foram prod
 aparecem como a máquina as imprimiu; as outras são descritas, e cada uma diz por quê.**
 
 **O ambiente virtual não foi criado.** O Ubuntu traz o Python sem a parte que cria ambientes
-virtuais, e o `python3 -m venv` então para com uma mensagem que começa com *The virtual environment
+virtuais. O `python3 -m venv` então para com uma mensagem que começa com *The virtual environment
 was not created successfully because ensurepip is not available* e nomeia o pacote a instalar. A
 cura é `sudo apt-get install -y python3-venv`, o pacote que o primeiro bloco da instalação instala.
 A tentativa que falhou deixa um `~/aws/venv` pela metade, então remova-o com `rm -rf ~/aws/venv` e
 rode o terceiro bloco de novo. **Esta não foi produzida aqui**, porque a máquina em que as lições
-foram gravadas tem o pacote e a falha exige que ele falte; o curso `cloud`, lição 1, mostra a
+foram gravadas tem o pacote e a falha exige que ele falte. O curso `cloud`, lição 1, mostra a
 mensagem inteira.
 
 **O `apt-get` diz que não conseguiu obter uma trava.** O Ubuntu instala as próprias atualizações
@@ -31,8 +31,8 @@ bash: line 1: aws: command not found
 
 Todo terminal novo começa sem `~/.local/bin` no caminho e fora do ambiente virtual.
 `source ~/aws/env.sh` devolve os dois, e a mesma linha resolve um `moto_server` que falta. Num
-Ubuntu de desktop a mensagem pode trazer a sugestão de instalar o `aws-cli` por um pacote; ignore,
-porque a versão de que o curso precisa já está instalada em `~/.local`.
+Ubuntu de desktop a mensagem pode trazer a sugestão de instalar o `aws-cli` por um pacote. Ignore:
+a versão de que o curso precisa já está instalada em `~/.local`.
 
 **O `aws` não consegue se conectar ao endpoint.** A linha de comando fez o que o `env.sh` mandou, e
 nada respondeu na porta 4567:
@@ -84,7 +84,7 @@ você tem: `x86_64` ou `aarch64`. Apague o `~/.local/aws-cli` e instale a partir
 Não produzida aqui, já que a máquina de gravação é `x86_64`.
 
 **Um download da lista de preços parou no meio.** O programa da última seção desta lição grava cada
-download num arquivo terminado em `.part` e só lhe dá o nome real quando está completo, então um
+download num arquivo terminado em `.part`, e só lhe dá o nome real quando está completo. Um
 download quebrado nunca é confundido com um terminado. Rode o mesmo comando de novo e ele recomeça
-do início. Os arquivos que esta lição lê têm cerca de 1,5 MB cada, então isso é raro; o arquivo do
+do início. Os arquivos que esta lição lê têm cerca de 1,5 MB cada, então isso é raro. O arquivo do
 EC2 que a lição 14 lê tem uns 290 MB, e é ali que acontece.

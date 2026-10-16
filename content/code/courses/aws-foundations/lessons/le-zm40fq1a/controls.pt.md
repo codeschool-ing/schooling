@@ -5,8 +5,8 @@ version: 1
 
 **Um controle é uma regra que o Control Tower aplica a toda conta de uma OU, e há três tipos,
 distinguidos por quando agem.** A imagem errada é que um controle bloqueia algo. Só um tipo bloqueia.
-Os outros dois acham um problema, um depois do fato e outro antes de qualquer coisa ser construída, e
-uma landing zone precisa dos três porque cada um deixa passar o que os outros pegam.
+Os outros dois acham um problema, um depois do fato e outro antes de qualquer coisa ser construída.
+Uma landing zone precisa dos três, porque cada um deixa passar o que os outros pegam.
 
 ## Três tipos
 
@@ -17,8 +17,8 @@ uma landing zone precisa dos três porque cada um deixa passar o que os outros p
 | **proativo** | antes de uma stack do CloudFormation criá-lo | hooks do CloudFormation | a stack recusada antes de construir |
 
 **Um controle preventivo é a barreira da lição 4, escrita e anexada pelo Control Tower.** Ele recusa a
-chamada, então o estado ruim nunca existe; o limite dele é que uma SCP só enxerga uma requisição, não
-o estado da conta, então não consegue dizer "todo bucket tem de ser criptografado", só "esta chamada
+chamada, então o estado ruim nunca existe. O limite dele é que uma SCP só enxerga uma requisição, não
+o estado da conta: ela não consegue dizer "todo bucket tem de ser criptografado", só "esta chamada
 não pode ser feita". A negação de regiões do Control Tower, que recusa toda região que a landing zone
 não governa, é a `sa-east-1-only` da lição 4 como configuração.
 
@@ -64,7 +64,7 @@ SAE1-ConfigRuleEvaluations
 ```
 
 Um **item de configuração** é um registro de um recurso num momento, gravado cada vez que um recurso
-gravado muda, a 0,003 dólar cada; uma **avaliação de regra** é uma regra do Config julgando um
+gravado muda, a 0,003 dólar cada. Uma **avaliação de regra** é uma regra do Config julgando um
 recurso, a 0,001 nas primeiras 100.000 do mês. As contagens dependem inteiramente de quanto muda.
 Como ilustração, não como medição: uma conta cujas máquinas são trocadas com frequência suficiente
 para gravar 20.000 itens de configuração num mês paga 60 dólares de gravação. Se dez controles
@@ -88,7 +88,7 @@ ana@laptop:~/aws$ jq -r '.terms.OnDemand[][].priceDimensions[].description | sel
 ```
 
 O `price.py` imprime quatro casas decimais e um evento custa menos que isso, então as duas últimas
-linhas dele mostram `0.0000`; o arquivo da oferta que ele salvou traz os preços exatos, e o `jq` os
+linhas dele mostram `0.0000`. O arquivo da oferta que ele salvou traz os preços exatos, e o `jq` os
 lê. **A primeira cópia dos eventos de gerenciamento de uma conta não custa nada**, e a trilha da
 organização é essa cópia. Uma segunda trilha gravando os mesmos eventos, uma que uma equipe
 acrescenta na própria conta, paga 0,00002 dólar por evento, 2 dólares a cada 100.000. Eventos de

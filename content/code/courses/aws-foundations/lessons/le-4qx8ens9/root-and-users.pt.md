@@ -6,8 +6,8 @@ version: 1
 **Um principal é quem assina uma requisição que a AWS depois julga.** Toda chamada à AWS leva uma
 assinatura, a assinatura nomeia uma identidade, e o IAM decide o que essa identidade pode fazer. A
 imagem errada mais comum é que um usuário do IAM é uma pessoa. **Um usuário é um nome com
-credenciais de longo prazo**, e as duas coisas não coincidem: uma pessoa pode trabalhar na AWS por
-anos sem usuário do IAM nenhum, entrando por login único como a lição 11 mostra, e um programa no
+credenciais de longo prazo**, e as duas coisas não coincidem. Uma pessoa pode trabalhar na AWS por
+anos sem usuário do IAM nenhum, entrando por login único como a lição 11 mostra. E um programa no
 notebook de alguém pode assinar toda requisição com a chave de um usuário.
 
 Esta lição cria os quatro tipos de principal (os *principais*, no vocabulário da AWS) que existem,
@@ -113,9 +113,9 @@ AKIARZPUZDIKEBQA4QAN	Active
 
 **Um id de chave de acesso começa com `AKIA`**, no moto e na AWS: quatro letras que querem dizer
 "chave de longo prazo de um usuário do IAM". O `--query` imprimiu o id e o status e deixou o
-segredo fora da tela, um hábito que vale a pena ter mesmo com as chaves do moto, que não abrem nada
+segredo fora da tela. Esse hábito vale a pena mesmo com as chaves do moto, que não abrem nada
 fora dele. O moto também registrou `PasswordResetRequired` como falso, embora o comando pedisse
-verdadeiro; a AWS guarda a opção e obriga a bia a escolher uma senha nova no primeiro login.
+verdadeiro. A AWS guarda a opção e obriga a bia a escolher uma senha nova no primeiro login.
 
 A senha e a chave têm a mesma fraqueza: **funcionam de qualquer lugar, para qualquer um que as
 tenha, até alguém perceber.** É por isso que a lição 12 chama a chave de acesso de último recurso, e

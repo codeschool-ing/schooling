@@ -30,9 +30,9 @@ ana@laptop:~/aws$ aws iam get-role --role-name deployer --query Role.MaxSessionD
 ```
 
 **moto does not enforce the maximum.** Two hours were granted on a role whose maximum was still
-one, and AWS would have refused that request; that refusal was not run here. Raising the maximum to
+one, and AWS would have refused that request. That refusal was not run here. Raising the maximum to
 7200 with `update-role` is what makes the same request valid in AWS. The expiry times above are in
-UTC, three hours ahead of São Paulo, and they are moto's answer for this run; yours will be the time
+UTC, three hours ahead of São Paulo, and they are moto's answer for this run. Yours will be the time
 of yours.
 
 Which length to choose is a trade the role's owner makes once. **A short session limits what a
@@ -68,22 +68,22 @@ arn:aws:sts::123456789012:assumed-role/auditor-session/chained	2026-10-16T18:53:
 AWS accepts a role's ARN in a trust policy as meaning its sessions, so the first attempt would
 have succeeded there, and lasted an hour. **moto accepted only the trust policy that names the
 exact session**, which nobody writes in a real account, because the session name changes with
-every caller. The one-hour limit on chaining was not measured here; moto granted the chained
+every caller. The one-hour limit on chaining was not measured here. moto granted the chained
 session the two hours it was asked for.
 
 ## Who did it: session names and source identity
 
 **Everything done through a role is logged under the session, not under the person.** CloudTrail,
 AWS's audit log of API calls, records the caller of each call as the session's ARN,
-`arn:aws:sts::123456789012:assumed-role/deployer/bia-deploy`, and the `AssumeRole` call that made
-the session as a separate event naming bia. Joining the two is possible and tedious, and the
+`arn:aws:sts::123456789012:assumed-role/deployer/bia-deploy`. It records the `AssumeRole` call that
+made the session as a separate event naming bia. Joining the two is possible and tedious. The
 session name is the cheap part of the answer: **a name that says who, such as `bia-deploy`, makes
 every later line readable**, where `session1` makes each one a search.
 
 The session name is the caller's choice, though, so it proves nothing. **Source identity** is the
-stronger form: `--source-identity bia` sets a value that is recorded in CloudTrail for every call of
-the session and **carries over to every role chained from it**, and which the caller cannot change
-afterwards. A role can demand it: its trust policy allows `sts:SetSourceIdentity` beside
+stronger form. `--source-identity bia` sets a value that CloudTrail records for every call of the
+session, which the caller cannot change afterwards, and which **carries over to every role chained
+from it**. A role can demand it: its trust policy allows `sts:SetSourceIdentity` beside
 `sts:AssumeRole`, with a condition on `sts:SourceIdentity`. moto accepts the parameter and returns
 no source identity:
 

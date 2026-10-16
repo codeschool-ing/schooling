@@ -5,7 +5,7 @@ version: 1
 
 **You do not need an AWS account for any lesson in this course.** This section is for later, or for
 the student who wants to see the real console beside moto. **None of it was run for the course**,
-because there is no account behind it, so there are no transcripts here, only the steps and the
+because there is no account behind it. So there are no transcripts here, only the steps and the
 reasons for their order. The screens they mention are AWS's, and AWS redesigns them; the names of
 the settings change less often than their places.
 
@@ -18,11 +18,11 @@ that receives a code, and a payment card. Two decisions are cheap now and dear l
   that owns the account and can do anything in it, including close it. A shared mailbox such as
   `aws-root@yourcompany.example` survives the day the person who opened the account leaves.
 - **Know which plan you are choosing.** At the time this course was written, a new account starts
-  either on a **free plan**, with a sum of credits that expire after some months and limits on what
-  it can create, or on a paid plan with the long-standing **free tier**: a set of services free up
-  to a monthly amount. **The free tier is one possibility, not a promise**: AWS changed its terms in
-  2025 and may again, so read the current page before relying on any number in it, and never on a
-  number from a course.
+  on one of two plans. A **free plan** gives a sum of credits that expire after some months, and
+  limits what the account can create. A paid plan carries the long-standing **free tier**: a set of
+  services free up to a monthly amount. **The free tier is one possibility, not a promise**: AWS
+  changed its terms in 2025 and may again. Read the current page before relying on any number in
+  it, and never rely on a number from a course.
 
 ## The first hour, in this order
 
@@ -39,7 +39,7 @@ that receives a code, and a payment card. Two decisions are cheap now and dear l
    says what each kind of alert means. **An alert does not stop spending**; it tells you, which is
    why it comes first, while the amount is still small.
 4. **Make an everyday identity, and stop using root.** Lesson 11 turns on IAM Identity Center and
-   creates a user for yourself with a permission set; from then on the root user's password goes
+   creates a user for yourself with a permission set. From then on, the root user's password goes
    somewhere safe and is used only for the few tasks that need it, such as closing the account.
 
 ## Pointing the lab at it, and back

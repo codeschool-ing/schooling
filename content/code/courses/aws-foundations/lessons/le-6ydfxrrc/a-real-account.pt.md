@@ -5,7 +5,7 @@ version: 1
 
 **Você não precisa de conta AWS para nenhuma lição deste curso.** Esta seção é para depois, ou para
 o aluno que quer ver o console de verdade ao lado do moto. **Nada aqui foi rodado para o curso**,
-porque não há conta por trás, então não há transcrições, só os passos e os motivos da ordem deles.
+porque não há conta por trás. Então não há transcrições, só os passos e os motivos da ordem deles.
 As telas que eles citam são da AWS, e a AWS as redesenha; os nomes das configurações mudam menos que
 o lugar delas.
 
@@ -18,12 +18,12 @@ depois:
 - **Use um endereço que não seja de uma pessoa.** O endereço vira o **usuário root**, a identidade
   que é dona da conta e pode fazer qualquer coisa nela, inclusive encerrá-la. Uma caixa
   compartilhada como `aws-root@suaempresa.example` sobrevive ao dia em que quem abriu a conta sai.
-- **Saiba que plano está escolhendo.** Quando este curso foi escrito, uma conta nova começava ou num
-  **plano gratuito**, com uma soma de créditos que expiram depois de alguns meses e limites no que
-  ela pode criar, ou num plano pago com o antigo **nível gratuito**: um conjunto de serviços
+- **Saiba que plano está escolhendo.** Quando este curso foi escrito, uma conta nova começava num de dois
+  planos. Um **plano gratuito** dá uma soma de créditos que expiram depois de alguns meses, e limita
+  o que a conta pode criar. Um plano pago traz o antigo **nível gratuito**: um conjunto de serviços
   gratuitos até um valor mensal. **O nível gratuito é uma possibilidade, não uma promessa**: a AWS
-  mudou os termos em 2025 e pode mudar de novo, então leia a página atual antes de contar com
-  qualquer número dela, e nunca com um número tirado de um curso.
+  mudou os termos em 2025 e pode mudar de novo. Leia a página atual antes de contar com qualquer
+  número dela, e nunca conte com um número tirado de um curso.
 
 ## A primeira hora, nesta ordem
 
@@ -40,7 +40,7 @@ depois:
    moto e diz o que cada tipo de alerta quer dizer. **Um alerta não para o gasto**; ele avisa você,
    e é por isso que vem primeiro, enquanto o valor ainda é pequeno.
 4. **Crie uma identidade do dia a dia, e pare de usar o root.** A lição 11 liga o IAM Identity
-   Center e cria um usuário para você com um permission set; dali em diante a senha do root vai para
+   Center e cria um usuário para você com um permission set. Dali em diante, a senha do root vai para
    um lugar seguro e só é usada nas poucas tarefas que a exigem, como encerrar a conta.
 
 ## Apontando o laboratório para ela, e de volta

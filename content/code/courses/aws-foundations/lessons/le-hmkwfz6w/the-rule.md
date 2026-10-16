@@ -5,7 +5,7 @@ version: 1
 
 **Every request starts denied. An explicit `Deny` in any policy that applies ends it there. Then
 every layer that can only limit has to allow it, and at least one layer that grants has to allow
-it.** Lesson 7 showed the vocabulary; this is the sentence it is written for, and the rest of the
+it.** Lesson 7 showed the vocabulary. This is the sentence it is written for, and the rest of the
 lesson takes its parts one at a time.
 
 The wrong picture is the firewall again, now with an extra mistake: that an `Allow` somewhere
@@ -15,8 +15,8 @@ bucket, and it beats `AdministratorAccess`, which allows `*` on `*`.
 
 ## Two kinds of layer
 
-The policies that can apply to one request are of two kinds, and the difference is the whole
-point of the rule:
+The policies that can apply to one request are of two kinds, and the rule rests on the
+difference:
 
 | layer | who writes it | what it can do |
 |---|---|---|
@@ -27,13 +27,13 @@ point of the rule:
 | session policy | whoever assumes a role, for that session | only limit |
 
 **A layer that only limits never grants anything by itself.** An SCP that allows `s3:*` gives
-nobody S3; it says S3 is as far as the account's own policies may go. So a request has to pass
+nobody S3. It says S3 is as far as the account's own policies may go. So a request has to pass
 every limiting layer that is in place and find an `Allow` in a granting layer. Missing either is
 an implicit deny.
 
 **Across accounts, both sides have to grant.** When a principal of one account uses a resource of
-another, the caller's own identity policy has to allow the action **and** the resource's policy, or
-a role's trust policy, has to allow that caller. Within one account, one granting layer is enough.
+another, two policies have to allow it. The caller's own identity policy has to allow the action,
+**and** the resource's policy, or a role's trust policy, has to allow that caller. Within one account, one granting layer is enough.
 That rule was not run here: moto does not judge resource-based policies, as the last section shows.
 
 ```schooling-figure
@@ -137,5 +137,5 @@ aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 op
 ```
 
 `shop-assets` still lists, because nothing denies it; `shop-backups` is refused, because something
-does. **This part moto judges exactly as AWS does**, and it is the part that matters most: a
+does. **This part moto judges exactly as AWS does**, and it is the part that matters most. A
 `Deny` is how a guardrail is written, because no `Allow` added later undoes it; only removing the `Deny` does.

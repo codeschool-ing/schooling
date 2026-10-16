@@ -71,7 +71,7 @@ prova que a verificação está ligada antes de qualquer outra tentativa.
 
 A linha do `export` passa este terminal para a chave do admin. O `jq -r` tira um campo do JSON que
 o `create-access-key` devolveu, e o `export` põe o id e o segredo onde a linha de comando procura
-primeiro. **Essas são chaves do moto, inventadas por ele e sem valor em qualquer outro lugar**; não
+primeiro. **Essas são chaves do moto, inventadas por ele e sem valor em qualquer outro lugar.** Elas não
 estão na tela de ninguém nem em arquivo nenhum, e somem quando o moto para. O `get-caller-identity`
 confirma: daqui em diante o terminal trabalha como `admin`.
 
@@ -110,7 +110,7 @@ moto, inicie-o de novo com a contagem, e digite as três requisições outra vez
 ## Um comando como outra pessoa
 
 As próximas seções dão uma política à bia e depois agem como ela, um comando por vez, enquanto o
-terminal continua `admin`. Uma pequena função do shell faz isso: ela recebe o JSON que o
+terminal continua `admin`. Uma pequena função do shell faz isso. Ela recebe o JSON que o
 `create-access-key` imprimiu, e roda o resto da linha com essa chave no ambiente daquele comando
 apenas. Digite-a no segundo terminal:
 

@@ -6,7 +6,7 @@ version: 1
 **Um grupo é uma lista de usuários à qual se podem anexar políticas, e nada mais.** Uma role é uma
 coisa do tipo oposto: uma identidade com permissões e **sem credenciais próprias**, que um principal
 veste por um tempo e depois tira. Os dois se confundem porque ambos carregam permissões para outra
-pessoa, então esta seção monta os dois para a loja e depois lê os nomes que a AWS deu a eles.
+pessoa. Esta seção monta os dois para a loja e depois lê os nomes que a AWS deu a eles.
 
 ## Três grupos
 
@@ -31,7 +31,7 @@ ana@laptop:~/aws$ aws iam list-groups-for-user --user-name caio --query "Groups[
 ]
 ```
 
-`list-groups-for-user` responde à pergunta pelo outro lado, e é o comando a rodar quando alguém
+`list-groups-for-user` responde à pergunta pelo outro lado. É o comando a rodar quando alguém
 pergunta por que um usuário consegue fazer algo: a resposta costuma ser um grupo de que ninguém se
 lembrava.
 
@@ -51,7 +51,7 @@ ana@laptop:~/aws$ aws iam delete-role --role-name grouptest
 
 **O moto guardou uma política de confiança que nomeia um grupo. A AWS recusa esse documento** como
 malformado, porque um grupo não é um principal e a política põe um no lugar do principal. Essa
-recusa não foi rodada aqui, já que exige uma conta; é o comportamento documentado da AWS, e o motivo
+recusa não foi rodada aqui, já que exige uma conta. É o comportamento documentado da AWS, e o motivo
 pelo qual o time `developers` chega a uma role pelas permissões de cada membro.
 
 ## Uma role, e a política que diz quem pode vesti-la
@@ -134,8 +134,8 @@ ana@laptop:~/aws$ aws sts assume-role --role-arn arn:aws:iam::123456789012:role/
 permanente de um usuário. Ao lado dele, que o `--query` deixou de fora, vêm um segredo e um token de
 sessão, e os três são recusados juntos uma hora depois. Ninguém precisa girá-los ou apagá-los, e um
 que vaze vale uma hora no máximo. Note também o que o moto não perguntou: se quem chamou era a bia.
-Com a verificação desligada ele dá uma sessão a qualquer um, e a lição 9 repete isto com a
-verificação ligada para mostrar a política de confiança recusando um principal que ela não nomeia.
+Com a verificação desligada ele dá uma sessão a qualquer um. A lição 9 repete isto com a
+verificação ligada, para mostrar a política de confiança recusando um principal que ela não nomeia.
 
 ## Lendo os nomes
 
@@ -153,13 +153,13 @@ Todo principal até aqui tem dois nomes: um **ARN**, que é o endereço que as p
 
 **O ARN da sessão pertence ao `sts`, não ao `iam`**, e termina no nome de sessão que quem chamou
 escolheu. É esse o nome que um log mostra quando algo foi feito por meio de uma role, e por isso
-`bia-deploy` é melhor que `session1`; a lição 9 mostra como o log de auditoria da AWS, o
+`bia-deploy` é melhor que `session1`. A lição 9 mostra como o log de auditoria da AWS, o
 CloudTrail, o usa.
 
 **O id é o que faz de um usuário recriado um usuário diferente.** Se o usuário da bia for apagado e
 criado de novo, o ARN é o mesmo e o id é novo. A documentação da AWS descreve o que isso faz com uma
-política de confiança que a nomeia: a política guardada troca o ARN pelo id antigo quando o usuário é
-apagado, então a nova bia não é confiável até alguém escrever a política de novo. Isso não foi rodado
+política de confiança que a nomeia. Quando o usuário é apagado, a política guardada troca o ARN pelo
+id antigo, então a nova bia não é confiável até alguém escrever a política de novo. Isso não foi rodado
 aqui, e é uma proteção deliberada: um nome reutilizado por outra pessoa não herda uma permissão
 antiga.
 

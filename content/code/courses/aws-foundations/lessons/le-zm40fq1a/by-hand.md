@@ -26,15 +26,15 @@ aws: [ERROR]: An error occurred (500) when calling the ListLandingZones operatio
 ```
 
 **A `500` is moto failing, not AWS answering.** The command exists in the AWS CLI and against an
-account it lists the landing zone, if there is one; moto implements none of the service. So nothing
+account it lists the landing zone, if there is one. moto implements none of the service. So nothing
 in this lesson about Control Tower itself was run.
 
 ## `landing-zone.sh`
 
-The script builds the tree a Control Tower landing zone would start the shop with: the `Security`
-OU with the two accounts that watch the others, the shop's own `Workloads` and `Sandbox` OUs, one
-guardrail on the record, and the `security` account named as the administrator of GuardDuty for the
-organisation. Paste the whole block into the second terminal; it writes the file:
+The script builds the tree a Control Tower landing zone would start the shop with. It makes the `Security`
+OU with the two accounts that watch the others, and the shop's own `Workloads` and `Sandbox` OUs.
+It puts one guardrail on the record, and names the `security` account as the administrator of
+GuardDuty for the organisation. Paste the whole block into the second terminal; it writes the file:
 
 ```sh
 cat > ~/aws/landing-zone.sh <<'EOF'
@@ -102,10 +102,10 @@ echo "delegated administrator for GuardDuty: $security_id"
 EOF
 ```
 
-Four things in it are there because AWS is not moto. **The test before `enable-policy-type`** is
+Four things in it need a word, and the first two are there because AWS is not moto. **The test before `enable-policy-type`** is
 there because in AWS the type is already on, and asking again is an error,
 `PolicyTypeAlreadyEnabledException`, which would stop the script. **The wait loop** exists because AWS creates
-an account in the background, as lesson 2 said; in moto the first answer is already `SUCCEEDED`, so
+an account in the background, as lesson 2 said. In moto the first answer is already `SUCCEEDED`, so
 the loop never sleeps. **`set -euo pipefail`** stops the script at the first command that fails,
 so a half-built landing zone says so rather than carrying on. And the guardrail is lesson 4's pattern again: a deny with
 `Resource` `*`, attached to `Security` rather than to the root, because inside `Security` there is
@@ -143,7 +143,7 @@ ana@laptop:~/aws$ aws organizations list-delegated-administrators --query "Deleg
 ```
 
 **This is the shape, and only the shape.** The OUs, the two accounts in `Security`, the guardrail
-and the delegated administrator are all there, and in AWS every one of those commands would have
+and the delegated administrator are all there. In AWS every one of those commands would have
 done the same. What a real landing zone also has is everything that lives **inside** the accounts,
 and that is where the script stops.
 
@@ -156,12 +156,12 @@ and that is where the script stops.
 **No trail and no bucket.** The `log-archive` account holds nothing: a landing zone puts an
 organisation trail into CloudTrail, whose records from every account land in a bucket there. The
 script would have to take on a role in `log-archive`, create the bucket with a policy that lets
-CloudTrail write to it, and create the trail from the management account; lesson 9 has the
+CloudTrail write to it, and create the trail from the management account. Lesson 9 has the
 cross-account part. **No Config**, and therefore no detective controls: nothing records what the
 accounts contain. **No way in for people**: IAM Identity Center is lesson 11. **No detection of
 drift**: the script runs once, and anything changed afterwards stays changed. And it takes no
 decision about **root credentials** in the member accounts, which lesson 2 said the management
-account can remove; a landing zone should settle that too.
+account can remove. A landing zone should settle that too.
 
 **Not run here, for any of it**: Control Tower's setup, Account Factory, the controls it enables,
 and its drift detection. Those are described from AWS's documentation in this lesson's two sections

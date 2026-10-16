@@ -14,7 +14,7 @@ As duas metades da regra funcionam de jeitos diferentes, e dão os dois jeitos d
 ## Um deny em qualquer lugar vence: a lista de negação
 
 **Mantenha a `FullAWSAccess` em todo lugar e acrescente políticas que negam.** Todo nível permite
-tudo, então a metade da permissão sempre é cumprida; as barreiras são instruções `Deny`, e um deny
+tudo, então a metade da permissão sempre é cumprida. As barreiras são instruções `Deny`, e um deny
 anexado em qualquer nível, na raiz ou na conta, barra a requisição. Essa é a **lista de negação**
 (deny list), e é a estratégia que a AWS descreve primeiro e que a maioria das empresas usa. Ela tem
 uma propriedade que importa num dia corrido: um serviço novo da AWS é permitido no dia em que é
@@ -27,12 +27,12 @@ denies.
 
 **Troque a `FullAWSAccess` de um nível por uma política que permite só alguns serviços**, e dali em
 diante só esses serviços passam por aquele nível. Essa é a **lista de permissão** (allow list). A
-força dela é que tudo o que não está na lista é recusado, um serviço novo inclusive; o custo dela é
-exatamente o mesmo fato, já que todo serviço de que alguém precisa de verdade tem de ser acrescentado
+força dela é que tudo o que não está na lista é recusado, um serviço novo inclusive. O custo dela é
+exatamente o mesmo fato: todo serviço de que alguém precisa de verdade tem de ser acrescentado
 antes.
 
 O allow tem de estar presente **em todo nível do caminho**. Uma conta cujas próprias SCPs permitem
-tudo ainda perde o que a lista de permissão da OU dela deixa de fora, e uma conta sob uma OU que
+tudo ainda perde o que a lista de permissão da OU dela deixa de fora. Uma conta sob uma OU que
 permite tudo ainda é limitada por uma lista de permissão anexada à própria conta. Os níveis não se
 somam; eles se cruzam.
 
@@ -93,8 +93,8 @@ já nela, e segue três requisições árvore abaixo.
 ## A ordem importa, e o moto não a verifica
 
 **A AWS se recusa a deixar um alvo sem SCP nenhuma.** A referência da API para `DetachPolicy` diz que
-toda raiz, OU e conta precisa ter pelo menos uma SCP anexada, e é por isso que a lista de permissão
-entrou antes de a `FullAWSAccess` sair; um alvo sem nada anexado não permitiria nada. A recusa é uma
+toda raiz, OU e conta precisa ter pelo menos uma SCP anexada. É por isso que a lista de permissão
+entrou antes de a `FullAWSAccess` sair: um alvo sem nada anexado não permitiria nada. A recusa é uma
 `ConstraintViolationException` cujo motivo é `MIN_POLICY_TYPE_ATTACHMENT_LIMIT_EXCEEDED`. O moto não
 aplica isso:
 

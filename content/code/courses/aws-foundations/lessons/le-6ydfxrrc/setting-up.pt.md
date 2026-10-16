@@ -9,8 +9,8 @@ e `~/.local`, onde fica a linha de comando da AWS.** Apagar os dois, e o `~/.cac
 depois que a última seção desta lição o preencher, remove o laboratório por completo.
 
 Se você fez o curso `cloud` e guardou o laboratório dele, a linha de comando da AWS já está em
-`~/.local`, na mesma versão: se `aws --version` imprime `aws-cli/2.37.4`, pode pular o segundo
-bloco. O moto do curso `cloud` rodava em outra porta e em outro diretório; este é novo.
+`~/.local`, na mesma versão. Se `aws --version` imprime `aws-cli/2.37.4`, você pode pular o
+segundo bloco. O moto do curso `cloud` rodava em outra porta e em outro diretório; este é novo.
 
 ## Os pacotes do Ubuntu
 
@@ -89,8 +89,8 @@ Linha por linha, depois do comentário:
 | `MOTO_IAM_LOAD_MANAGED_POLICIES` | faz o moto carregar as políticas de permissão que a própria AWS mantém, que a lição 7 lê |
 
 **Nunca ponha uma chave real neste arquivo**, nem em qualquer arquivo que este curso peça para você
-criar. Os dois valores `test` não são segredo; uma chave real é, e um arquivo no seu diretório
-pessoal é copiado para backups, pastas compartilhadas e capturas de tela sem ninguém decidir isso.
+criar. Os dois valores `test` não são segredo; uma chave real é. Um arquivo no seu diretório
+pessoal acaba copiado para backups, pastas compartilhadas e capturas de tela sem ninguém decidir isso.
 
 ## Toda vez que você abrir um terminal
 
@@ -152,7 +152,7 @@ Press CTRL+C to quit
 127.0.0.1 - - [16/Oct/2026 12:32:26] "POST / HTTP/1.1" 200 -
 ```
 
-**Um `POST` para `/` respondido com `200` é uma chamada de API**, e enquanto você mantiver esse
+**Um `POST` para `/` respondido com `200` é uma chamada de API.** Enquanto você mantiver esse
 terminal à vista, vê cada requisição que a linha de comando envia. A lição 26 abre uma delas e lê o
 que tem dentro.
 

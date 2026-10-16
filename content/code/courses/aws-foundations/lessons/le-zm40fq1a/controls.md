@@ -5,8 +5,8 @@ version: 1
 
 **A control is a rule Control Tower applies to every account in an OU, and there are three kinds,
 told apart by when they act.** The wrong picture is that a control blocks something. Only one kind
-does. The other two find a problem, one after the fact and one before anything is built, and a
-landing zone needs all three because each misses what the others catch.
+does. The other two find a problem, one after the fact and one before anything is built. A
+landing zone needs all three, because each misses what the others catch.
 
 ## Three kinds
 
@@ -17,8 +17,8 @@ landing zone needs all three because each misses what the others catch.
 | **proactive** | before a CloudFormation stack creates it | CloudFormation hooks | the stack refused before it builds |
 
 **A preventive control is lesson 4's guardrail, written and attached by Control Tower.** It refuses
-the call, so the bad state never exists; its limit is that an SCP can only see a request, not the
-state of the account, so it cannot say "every bucket must be encrypted", only "this call may not be
+the call, so the bad state never exists. Its limit is that an SCP can only see a request, not the
+state of the account: it cannot say "every bucket must be encrypted", only "this call may not be
 made". Control Tower's region deny, which refuses every region the landing zone does not govern, is
 lesson 4's `sa-east-1-only` as a setting.
 
@@ -63,7 +63,7 @@ SAE1-ConfigRuleEvaluations
 ```
 
 A **configuration item** is one record of one resource at one moment, written each time a recorded
-resource changes, at 0.003 dollars each; a **rule evaluation** is one Config rule judging one
+resource changes, at 0.003 dollars each. A **rule evaluation** is one Config rule judging one
 resource, at 0.001 for the first 100,000 of the month. The counts depend entirely on how much
 changes. As an illustration, not a measurement: an account whose machines are replaced often
 enough to record 20,000 configuration items in a month pays 60 dollars for recording. If ten
@@ -87,7 +87,7 @@ ana@laptop:~/aws$ jq -r '.terms.OnDemand[][].priceDimensions[].description | sel
 ```
 
 `price.py` prints four decimals and an event costs less than that, so its last two lines read
-`0.0000`; the offer file it saved carries the exact prices, and `jq` reads them out. **The first
+`0.0000`. The offer file it saved carries the exact prices, and `jq` reads them out. **The first
 copy of an account's management events costs nothing**, and the organisation trail is that copy. A
 second trail recording the same events, one a team adds in its own account, pays 0.00002 dollars
 per event, 2 dollars per 100,000. Data events, such as every read of an object in a bucket, are

@@ -26,10 +26,10 @@ ana@laptop:~/aws$ aws organizations list-accounts --query "Accounts[].[Id,Name,E
 
 The account that created the organisation is its management account, here moto's default
 `123456789012`, which moto lists by the name `master`. The new account got a number of its own,
-`218935875641`; yours will be a different twelve digits, since moto invents them, so use yours
+`218935875641`. Yours will be a different twelve digits, since moto invents them, so use yours
 wherever the lesson shows this one. **moto answers `SUCCEEDED` at once. AWS creates an account in
-the background** and answers `IN_PROGRESS`, and `describe-create-account-status` is how you wait
-for it; that part was not run here.
+the background** and answers `IN_PROGRESS`; `describe-create-account-status` is how you wait
+for it. That part was not run here.
 
 ## Working inside it
 
@@ -37,7 +37,7 @@ Nothing you hold is a credential of `shop-prod`: the `test` keys in `env.sh` bel
 management account. What the new account does have is a role, **`OrganizationAccountAccessRole`**,
 which AWS creates in every account an organisation makes and which the management account is
 allowed to take on. Taking on a role is `sts assume-role`, and it returns temporary credentials that
-act inside the other account; lesson 9 opens that up. The command line will do it for you if a
+act inside the other account. Lesson 9 opens that up. The command line will do it for you if a
 profile says which role to take:
 
 ```
@@ -63,7 +63,7 @@ and `role_session_name` puts your name into the session. **`--profile shop-prod`
 now runs it inside the other account**: the command line calls `assume-role` first and uses what
 comes back. The answer to "who am I" changed account, and its ARN says `assumed-role`. Lesson 25
 says more about profiles. The profile names this run's account number, so after moto restarts it
-points at an account that is gone; lesson 3 writes it again.
+points at an account that is gone. Lesson 3 writes it again.
 
 ## Looking around from inside
 
@@ -86,7 +86,7 @@ planned, and why the shop gives its production network `10.20.0.0/16` rather tha
 
 `shop-prod` sees **no topic and no user**. The `shop-alerts` topic and the user `bia` from the
 section before are still there, in the management account; from here they do not exist. And
-`shop-prod` holds one VPC, so the six VPCs the management account made used none of its quota.
+`shop-prod` holds one VPC, so the six VPCs the management account holds used none of its quota.
 
 ## The names that cross the walls
 
@@ -120,14 +120,14 @@ way AWS does, which makes it one of the few cross-account rules you can watch fa
 
 **The shop's fix is the account number in the name**, `218935875641-shop-assets`, which nobody else
 can be using, since nobody else has that account. A bucket's name is also part of its address on
-the internet, which is why it must be unique and why it cannot be renamed: a bucket that needs a
+the internet. That is why it must be unique, and why it cannot be renamed: a bucket that needs a
 new name is a new bucket and a copy.
 
-A few other names are global in the same way, and moto does not enforce these: the account
-alias that replaces the twelve digits in the console's sign-in address, and the root user's
-e-mail address, which the section before said is unique across AWS. In moto, two accounts can set
-the same alias and two accounts can be created with the same address; in AWS the second alias is
-refused, and the second account fails with the reason `EMAIL_ALREADY_EXISTS`. **Those refusals were
+A few other names are global in the same way, and moto does not enforce these. One is the account
+alias that replaces the twelve digits in the console's sign-in address. The other is the root
+user's e-mail address, which the section before said is unique across AWS. In moto, two accounts
+can set the same alias and two accounts can be created with the same address. In AWS the second
+alias is refused, and the second account fails with the reason `EMAIL_ALREADY_EXISTS`. **Those refusals were
 not run here**, since moto lets both through.
 
 ```schooling-figure
@@ -138,6 +138,6 @@ not run here**, since moto lets both through.
 
 `shop-prod`'s role works in moto because moto checks no permission yet: lesson 7 turns that on. In
 AWS the role also arrives with the `AdministratorAccess` policy attached, and in moto it arrives
-with none. Lesson 3 looks at that difference, and lesson 9 at roles themselves. And nothing above
-cost anything, in moto or in AWS: **an account is free**, and what it costs is the work of keeping
-it in order, which is the subject of the next section and of lessons 3 to 5.
+with none. Lesson 3 looks at that difference, and lesson 9 at roles themselves. Nothing above
+cost anything, in moto or in AWS: **an account is free**. What it costs is the work of keeping
+it in order, the subject of the next section and of lessons 3 to 5.

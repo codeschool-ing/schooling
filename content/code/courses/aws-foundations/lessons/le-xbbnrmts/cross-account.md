@@ -4,8 +4,8 @@ version: 1
 ---
 
 **A role is how one account lets in a principal of another, and it is the only way that leaves no
-long-term credential behind.** The role lives in the account being entered; its trust policy names
-the other account, or a principal in it; and the other account's own policies decide which of its
+long-term credential behind.** The role lives in the account being entered, and its trust policy names
+the other account, or a principal in it. The other account's own policies decide which of its
 principals may use the door. Both sides grant, as lesson 8's cross-account rule said, and here the
 trust policy is the resource's half.
 
@@ -46,7 +46,7 @@ aws: [ERROR]: An error occurred (AccessDenied) when calling the AssumeRole opera
 **The session's ARN carries the other account's number**, and everything it does happens there. In
 AWS that session would be an administrator of `shop-prod`, because AWS attaches
 `AdministratorAccess` to the role it creates. moto creates the role with no policy at all, so the
-session is refused even a list of VPCs; AWS would have answered it. bia was refused on her own side,
+session is refused even a list of VPCs. AWS would have answered it. bia was refused on her own side,
 before the trust policy was read, and moto judges that half as AWS does.
 
 **The other half, moto does not judge across accounts.** Asked for a role in an account that does
@@ -126,10 +126,10 @@ match. That last refusal was not run here.
 ## A profile that assumes the role for you
 
 Typing `assume-role` and carrying the answer around is what a profile does for you. A profile in
-`~/.aws/config` names the role, and the command line assumes it before each command, keeps the
+`~/.aws/config` names the role. The command line assumes it before each command, keeps the
 session in `~/.aws/cli/cache` until it expires, and assumes it again after. Lesson 25 is about
-profiles; this is the one line of it that belongs to roles. The lab has no `~/.aws/config` so far,
-and this creates one:
+profiles, and this is the one line of it that belongs to roles. If lessons 2 to 4 left a
+`~/.aws/config` behind, this replaces it:
 
 ```sh
 mkdir -p ~/.aws

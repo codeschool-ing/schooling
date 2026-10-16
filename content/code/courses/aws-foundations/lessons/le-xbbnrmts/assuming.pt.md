@@ -122,12 +122,12 @@ nenhum dentro da sessão**: ela permitiu que a bia assumisse a role, e foi só i
 
 Uma política de confiança muitas vezes nomeia uma conta inteira em vez de uma pessoa: `"AWS":
 "arn:aws:iam::123456789012:root"`. **Na AWS isso não quer dizer o usuário root.** Quer dizer qualquer
-principal daquela conta cujas próprias políticas permitam `sts:AssumeRole` na role, então os
+principal daquela conta cujas próprias políticas permitam `sts:AssumeRole` na role. Os
 administradores da conta decidem, pelas políticas de identidade, quem pode vesti-la. É o jeito
 habitual de confiar em outra conta, como a última seção desta lição mostra.
 
-**O moto não lê assim.** Ele compara o ARN de quem chama com o principal como duas strings, então
-`user/admin` não bate com `root`, e o admin é recusado numa role cuja política de confiança nomeia a
+**O moto não lê assim.** Ele compara o ARN de quem chama com o principal como duas strings.
+`user/admin` não bate com `root`, então o admin é recusado numa role cuja política de confiança nomeia a
 própria conta dele:
 
 ```

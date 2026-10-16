@@ -13,7 +13,7 @@ verdade. As cobranças de cada membro ainda aparecem sob o número da sua conta.
 
 O **faturamento consolidado** é a parte do Organizations que toda organização tem, seja qual for o
 conjunto de recursos. A conta de gerenciamento é a **pagadora**: ela guarda o meio de pagamento,
-recebe a fatura e a paga. Os membros aparecem nessa fatura um por um, com o que cada um usou, então
+recebe a fatura e a paga. A fatura lista os membros um por um, com o que cada um usou. Então
 "quanto custou a `shop-staging` em setembro" é uma linha e não uma estimativa. Uma conta criada
 dentro da organização não tem cartão próprio, e a lição 2 disse que ela não custa nada para ter.
 
@@ -61,9 +61,9 @@ aparece contra cada conta é um detalhe do layout da fatura; o segundo total é 
 Mais duas coisas atravessam as paredes na fatura, e a lição 14 lê as duas.
 
 **Reserved Instances e Savings Plans são divididos pela organização.** Os dois são um compromisso
-com uma certa quantidade de uso em troca de um preço menor, e por padrão o desconto vale para o uso
+com uma certa quantidade de uso em troca de um preço menor. Por padrão o desconto vale para o uso
 correspondente em qualquer conta da organização, não só na que comprou. A lição 14 os lê numa
-fatura; aqui o ponto é que a árvore decide quem se beneficia. A divisão pode ser desligada para uma
+fatura. A árvore decide quem se beneficia. A divisão pode ser desligada para uma
 conta nas preferências de faturamento da conta de gerenciamento.
 
 **Créditos também são divididos.** A AWS às vezes concede créditos, por um programa, uma migração ou
@@ -82,7 +82,7 @@ padrão:
 
 **Não há motivo para começar só com a fatura.** Esse conjunto existe para organizações que já
 existiam antes das políticas, e para uma empresa que só quer uma fatura. Passar de só fatura para
-todos os recursos é possível, e a referência da API para `EnableAllFeatures` diz quanto custa: toda
+todos os recursos é possível, e a referência da API para `EnableAllFeatures` diz quanto custa. Toda
 conta **convidada** tem de aprovar a mudança antes de ela valer, então uma organização grande espera
 pelo seu administrador mais lento. Voltar atrás não é oferecido.
 

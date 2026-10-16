@@ -62,7 +62,7 @@ encontram voltam a dizê-lo:
 - **Ele não julga permissões, a menos que você peça.** De saída, toda chamada dá certo, até uma que
   uma política deveria negar. A lição 7 liga a verificação do moto, e dali em diante um usuário sem
   permissão é recusado. O que o moto verifica são as políticas do próprio usuário, a política de
-  confiança de uma role e um deny explícito; ele **não** verifica permission boundaries, service
+  confiança de uma role e um deny explícito. Ele **não** verifica permission boundaries, service
   control policies, session policies nem a política do próprio bucket além dos objetos, e trata toda condição de uma
   política como atendida. As lições 4 e 8 ensinam essas pela documentação da AWS e dizem quais
   linhas não foram rodadas.
@@ -84,6 +84,6 @@ seções mandam você montar o seu. O prompt diz `ana@laptop:~/aws$`.
 ## Uma conta real, se você quiser
 
 Você nunca precisa de uma aqui. Se quiser testar o que aprendeu na própria AWS, a seção **"Uma conta
-real, e a ordem em que protegê-la"**, mais adiante, diz como abrir uma com segurança, e ela vem
-antes de qualquer outra coisa por um motivo: a primeira hora de uma conta nova é quando protegê-la
+real, e a ordem em que protegê-la"**, mais adiante, diz como abrir uma com segurança. Ela põe a proteção da conta
+antes de qualquer outra coisa, por um motivo: a primeira hora de uma conta nova é quando protegê-la
 custa menos e deixá-la aberta custa mais.

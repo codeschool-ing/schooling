@@ -5,7 +5,7 @@ version: 1
 
 **Toda requisição começa negada. Um `Deny` explícito em qualquer política que se aplique a encerra
 ali. Depois, toda camada que só pode limitar tem de permiti-la, e pelo menos uma camada que concede
-tem de permiti-la.** A lição 7 mostrou o vocabulário; esta é a frase para a qual ele foi escrito, e o
+tem de permiti-la.** A lição 7 mostrou o vocabulário. Esta é a frase para a qual ele foi escrito, e o
 resto da lição pega as partes dela uma de cada vez.
 
 A imagem errada é o firewall de novo, agora com um erro a mais: que um `Allow` em algum lugar
@@ -15,8 +15,8 @@ vence o `AdministratorAccess`, que permite `*` em `*`.
 
 ## Dois tipos de camada
 
-As políticas que podem valer para uma requisição são de dois tipos, e a diferença é o ponto inteiro
-da regra:
+As políticas que podem valer para uma requisição são de dois tipos, e a regra se apoia na
+diferença:
 
 | camada | quem a escreve | o que ela pode fazer |
 |---|---|---|
@@ -27,13 +27,14 @@ da regra:
 | política de sessão | quem assume uma role, para aquela sessão | só limitar |
 
 **Uma camada que só limita nunca concede nada sozinha.** Uma SCP que permite `s3:*` não dá S3 a
-ninguém; ela diz que o S3 é até onde as políticas da própria conta podem ir. Então uma requisição tem
+ninguém. Ela diz que o S3 é até onde as políticas da própria conta podem ir. Então uma requisição tem
 de passar por toda camada limitadora que existir e encontrar um `Allow` numa camada que concede.
 Faltar qualquer um dos dois é uma negação implícita.
 
 **Entre contas, os dois lados têm de conceder.** Quando um principal de uma conta usa um recurso de
-outra, a política de identidade de quem chama tem de permitir a ação **e** a política do recurso, ou
-a política de confiança de uma role, tem de permitir quem chama. Dentro de uma conta, uma camada que
+outra, duas políticas têm de permiti-lo. A política de identidade de quem chama tem de permitir a
+ação, **e** a política do recurso, ou a política de confiança de uma role, tem de permitir quem
+chama. Dentro de uma conta, uma camada que
 concede basta. Essa regra não foi rodada aqui: o moto não julga políticas baseadas em recurso, como a
 última seção mostra.
 
@@ -139,6 +140,6 @@ aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 op
 ```
 
 O `shop-assets` continua listando, porque nada o nega; o `shop-backups` é recusado, porque algo nega.
-**Esta parte o moto julga exatamente como a AWS**, e é a parte que mais importa: um `Deny` é como se
+**Esta parte o moto julga exatamente como a AWS**, e é a parte que mais importa. Um `Deny` é como se
 escreve uma barreira de proteção, porque nenhum `Allow` acrescentado depois a desfaz; só remover o
 `Deny` desfaz.

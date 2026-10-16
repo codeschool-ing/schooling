@@ -5,8 +5,7 @@ version: 1
 
 **A service control policy sets the most that anybody in an account may do, and gives nobody
 anything.** The wrong picture is the one the word "policy" suggests after a few weeks of IAM: attach
-an SCP allowing S3 to an account and its developers can use S3. They cannot, not because of the
-SCP. An SCP is a filter that every request in the account passes through on its way to IAM's
+an SCP allowing S3 to an account and its developers can use S3. The SCP alone gives them nothing. An SCP is a filter that every request in the account passes through on its way to IAM's
 decision, and it can only take permissions away.
 
 ## Two filters in a row
@@ -54,7 +53,7 @@ ana@laptop:~/aws$ aws organizations move-account --account-id $(account shop-pro
 ana@laptop:~/aws$ aws organizations move-account --account-id $(account sandbox) --source-parent-id $root --destination-parent-id $sandbox
 ```
 
-Now the policy type itself. Lesson 3 found the root's list empty in moto; in AWS the type is enabled
+Now the policy type itself. Lesson 3 found the root's list empty in moto. In AWS the type is enabled
 when an organisation is created with all features, so this first command is only needed here:
 
 ```
@@ -80,6 +79,6 @@ ou-ucqy-7pqpa5j0: FullAWSAccess
 
 **One SCP exists before anybody writes one: `FullAWSAccess`**, managed by AWS, allowing every action
 on every resource. It is attached to the root, to each OU and to each account, as the loop shows
-level by level, and new OUs and accounts get it too. **That is why turning SCPs on changes
+level by level. New OUs and accounts get it too. **That is why turning SCPs on changes
 nothing**: the ceiling starts at the top of the room. Every guardrail after this point is written
 against it, and the next section says the two ways to do that.

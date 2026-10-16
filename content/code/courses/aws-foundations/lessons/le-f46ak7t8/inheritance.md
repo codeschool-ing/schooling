@@ -14,7 +14,7 @@ The two halves of the rule work differently, and they give the two ways of writi
 ## A deny anywhere wins: the deny list
 
 **Keep `FullAWSAccess` everywhere and add policies that deny.** Every level allows everything, so the
-allow half of the rule is always met; the guardrails are `Deny` statements, and a deny attached at
+allow half of the rule is always met. The guardrails are `Deny` statements, and a deny attached at
 any level, the root or the account, stops the request. This is the **deny list**, and it is the
 strategy AWS describes first and most companies use. It has one property that matters on a busy
 day: a new AWS service is allowed the day it launches, and nobody has to remember to add it.
@@ -26,11 +26,11 @@ denies.
 
 **Replace `FullAWSAccess` at a level with a policy that allows only some services**, and from then
 on only those services pass that level. This is the **allow list**. Its strength is that whatever
-is not on the list is refused, a new service included; its cost is exactly the same fact, since
+is not on the list is refused, a new service included. Its cost is exactly the same fact:
 every service somebody legitimately needs has to be added first.
 
 The allow has to be present **at every level of the path**. An account whose own SCPs allow
-everything still loses whatever its OU's allow list leaves out, and an account under an OU that
+everything still loses whatever its OU's allow list leaves out. An account under an OU that
 allows everything is still limited by an allow list attached to the account itself. The levels do
 not add up; they intersect.
 
@@ -91,8 +91,8 @@ guardrails already on it, and follows three requests down it.
 ## The order matters, and moto does not check it
 
 **AWS refuses to leave a target with no SCP at all.** The API reference for `DetachPolicy` says every
-root, OU and account must have at least one SCP attached, which is why the allow list went on
-before `FullAWSAccess` came off; a target with nothing attached would allow nothing. The refusal is
+root, OU and account must have at least one SCP attached. That is why the allow list went on
+before `FullAWSAccess` came off: a target with nothing attached would allow nothing. The refusal is
 a `ConstraintViolationException` whose reason is `MIN_POLICY_TYPE_ATTACHMENT_LIMIT_EXCEEDED`. moto
 does not enforce it:
 

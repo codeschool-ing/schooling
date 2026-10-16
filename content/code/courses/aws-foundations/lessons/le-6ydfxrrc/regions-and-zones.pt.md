@@ -8,9 +8,9 @@ version: 1
 detalhes que a AWS acrescenta e que pegam as pessoas desprevenidas.
 
 A imagem errada comum é que uma Availability Zone é um datacenter. **Uma AZ é um ou mais
-datacenters com energia, refrigeração e rede próprias**, longe o bastante das outras zonas da região
-para que uma enchente ou um incêndio leve uma delas e não a seguinte, e perto o bastante para que
-uma ida e volta entre elas fique em torno de um ou dois milissegundos. Uma região é um grupo delas,
+datacenters com energia, refrigeração e rede próprias.** As zonas de uma região ficam longe o
+bastante entre si para que uma enchente ou um incêndio leve uma delas e não a seguinte. E ficam
+perto o bastante para que uma ida e volta entre elas fique em torno de um ou dois milissegundos. Uma região é um grupo delas,
 pelo menos três em toda região que a AWS constrói hoje. O ponto do arranjo é que **você escolhe as
 zonas, a AWS escolhe os prédios**, e uma aplicação espalhada por duas ou três zonas sobrevive à perda
 de uma.
@@ -44,8 +44,8 @@ A opção `--query` é um filtro que a linha de comando aplica à resposta antes
 numa linguagem pequena chamada JMESPath. `length(Regions)` conta; o segundo comando guarda só as
 regiões cujo nome começa com `sa-` ou `us-east`; `--output text` imprime uma linha por item em vez
 de JSON. A lição 25 fala mais das duas coisas. **A contagem é do moto**: a lista que ele carrega é
-parecida com a da AWS e não tem garantia de ser a mesma num dia qualquer, então confie na
-documentação da AWS, e não num número de um curso, quando a lista exata importar.
+parecida com a da AWS, e não tem garantia de ser a mesma num dia qualquer. Quando a lista exata
+importar, confie na documentação da AWS, e não num número de um curso.
 
 `sa-east-1` tem três zonas, e cada uma tem **dois nomes**.
 
@@ -57,9 +57,9 @@ que escolhesse a primeira zona da lista não caísse no mesmo prédio. **`sae1-a
 e ele nomeia a mesma zona física em toda conta.
 
 Isso importa no momento em que duas contas precisam se encontrar. A lição 2 divide a plataforma em
-várias contas, e a lição 19 liga serviços entre elas; se a conta da loja põe o banco de dados em
-`sa-east-1a` e a conta de pagamentos põe o cliente em `sa-east-1a` também, os dois ainda podem estar
-em prédios diferentes, pagando por cada byte entre eles como a próxima seção mostra. **Coordene pelo
+várias contas, e a lição 19 liga serviços entre elas. Suponha que a conta da loja ponha o banco de dados em
+`sa-east-1a` e a conta de pagamentos ponha o cliente em `sa-east-1a` também. Os dois ainda podem
+estar em prédios diferentes, pagando por cada byte entre eles como a próxima seção mostra. **Coordene pelo
 id da zona**, e traduza para um nome de zona dentro de cada conta.
 
 ```schooling-figure
@@ -73,15 +73,15 @@ Outra conta pode receber outro mapeamento, e `describe-availability-zones` é co
 
 ## Local Zones, e as outras bordas de uma região
 
-**Uma Local Zone estende uma região até uma cidade onde a AWS não tem região**: um conjunto pequeno
-de serviços, em geral computação, armazenamento em bloco e uma fatia da rede, posto perto de pessoas
+**Uma Local Zone estende uma região até uma cidade onde a AWS não tem região.** É um conjunto
+pequeno de serviços, em geral computação, armazenamento em bloco e uma fatia da rede, posto perto de pessoas
 que precisam de alguns milissegundos a menos do que a região consegue dar. Edição de vídeo, jogos e
 operações financeiras são os motivos de sempre. Uma Local Zone pertence a uma região-mãe, tem um nome
 construído a partir dela (`us-west-2-lax-1a` é Los Angeles, ligada ao Oregon), e precisa de adesão
 antes de aparecer.
 
-O moto não carrega nenhuma, e é isto que ele responde quando perguntado por todas as zonas de
-`us-west-2`, uma região que tem várias Local Zones na AWS, a de Los Angeles entre elas:
+O moto não carrega nenhuma. Perguntado por todas as zonas de `us-west-2`, uma região que tem
+várias Local Zones na AWS, a de Los Angeles entre elas, ele responde isto:
 
 ```
 ana@laptop:~/aws$ aws ec2 describe-availability-zones --region us-west-2 --all-availability-zones --query "AvailabilityZones[].[ZoneName,ZoneType]" --output text
@@ -102,8 +102,8 @@ próprio datacenter. Os dois respondem a uma região-mãe, como uma Local Zone.
 ## Qual região, para este curso e para você
 
 Toda lição trabalha em **`sa-east-1`**, a região que o `env.sh` nomeia. Para uma empresa brasileira
-ela costuma ser a óbvia: os dados ficam no país, o que a LGPD não exige mas clientes e contratos
-muitas vezes exigem, e um aluno em São Paulo fica a poucos milissegundos dela em vez de cem da
+ela costuma ser a óbvia. Os dados ficam no país, o que a LGPD não exige mas clientes e contratos
+muitas vezes exigem. E um aluno em São Paulo fica a poucos milissegundos dela em vez de cem da
 Virgínia. Ela também é uma das regiões mais caras que a AWS tem, o que a próxima seção mede. O curso
-`cloud`, lição 9, tem o argumento completo para escolher uma região; a linha que importa aqui é que
+`cloud`, lição 9, tem o argumento completo para escolher uma região. A linha que importa aqui é que
 **a escolha decide o preço de tudo o que a atravessa**.

@@ -13,8 +13,8 @@ tiers, the difference is money.
 
 **Consolidated billing** is the part of Organizations that every organisation has, whatever its
 feature set. The management account is the **payer**: it holds the payment method, receives the
-invoice and pays it. The members are listed on that invoice one by one, with what each of them used,
-so "what did `shop-staging` cost in September" is a line rather than an estimate. An account created
+invoice and pays it. The invoice lists the members one by one, with what each of them used.
+So "what did `shop-staging` cost in September" is a line rather than an estimate. An account created
 inside the organisation has no card of its own, and lesson 2 said it costs nothing to have.
 
 ## Volume tiers are counted across the organisation
@@ -59,9 +59,9 @@ shown against each account is a detail of the bill's layout; the second total is
 Two more things cross the walls on the bill, and lesson 14 reads both.
 
 **Reserved Instances and Savings Plans are shared across the organisation.** Both are a commitment
-to a certain amount of use in exchange for a lower price, and by default the discount applies to
+to a certain amount of use in exchange for a lower price. By default the discount applies to
 matching use in any account of the organisation, not only the one that bought it. Lesson 14 reads
-them on a bill; here the point is that the tree decides who benefits. The sharing can be switched
+them on a bill. The tree decides who benefits. The sharing can be switched
 off for an account in the management account's billing preferences.
 
 **Credits are shared as well.** AWS sometimes grants credits, for a programme, a migration or a
@@ -79,7 +79,7 @@ An organisation is created with one of two feature sets, and the transcript's `A
 
 **There is no reason to start with billing alone.** It exists for organisations that existed before
 the policies did, and for a company that only wants one invoice. Moving from billing alone to all
-features is possible, and the API reference for `EnableAllFeatures` says what it costs: every
+features is possible, and the API reference for `EnableAllFeatures` says what it costs. Every
 **invited** account has to approve the change before it takes effect, so a large organisation waits
 on its slowest administrator. Going back is not offered.
 

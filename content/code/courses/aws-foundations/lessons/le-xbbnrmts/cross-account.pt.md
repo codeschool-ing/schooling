@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Uma role é como uma conta deixa entrar um principal de outra, e é o único jeito que não deixa
-credencial de longo prazo para trás.** A role mora na conta em que se entra; a política de confiança
-dela nomeia a outra conta, ou um principal nela; e as políticas da própria outra conta decidem quais
+credencial de longo prazo para trás.** A role mora na conta em que se entra, e a política de confiança
+dela nomeia a outra conta, ou um principal nela. As políticas da própria outra conta decidem quais
 dos seus principais podem usar a porta. Os dois lados concedem, como a regra entre contas da lição 8
 disse, e aqui a política de confiança é a metade do recurso.
 
@@ -46,7 +46,7 @@ aws: [ERROR]: An error occurred (AccessDenied) when calling the AssumeRole opera
 
 **O ARN da sessão leva o número da outra conta**, e tudo o que ela faz acontece lá. Na AWS essa
 sessão seria administradora da `shop-prod`, porque a AWS anexa `AdministratorAccess` à role que cria.
-O moto cria a role sem política nenhuma, então a sessão é recusada até numa lista de VPCs; a AWS teria
+O moto cria a role sem política nenhuma, então a sessão é recusada até numa lista de VPCs. A AWS teria
 respondido. A bia foi recusada do lado dela, antes de a política de confiança ser lida, e o moto
 julga essa metade como a AWS.
 
@@ -128,10 +128,10 @@ não foi rodada aqui.
 ## Um perfil que assume a role por você
 
 Digitar `assume-role` e carregar a resposta por aí é o que um perfil faz por você. Um perfil no
-`~/.aws/config` nomeia a role, e a linha de comando a assume antes de cada comando, guarda a sessão em
-`~/.aws/cli/cache` até ela expirar, e a assume de novo depois. A lição 25 trata de perfis; esta é a
-única linha deles que pertence às roles. O laboratório não tem `~/.aws/config` até agora, e isto cria
-um:
+`~/.aws/config` nomeia a role. A linha de comando a assume antes de cada comando, guarda a sessão em
+`~/.aws/cli/cache` até ela expirar, e a assume de novo depois. A lição 25 trata de perfis, e esta é a
+única linha deles que pertence às roles. Se as lições 2 a 4 deixaram um `~/.aws/config` para trás,
+isto o substitui:
 
 ```sh
 mkdir -p ~/.aws

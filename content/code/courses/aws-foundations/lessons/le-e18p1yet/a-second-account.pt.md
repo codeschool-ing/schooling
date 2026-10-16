@@ -26,9 +26,9 @@ ana@laptop:~/aws$ aws organizations list-accounts --query "Accounts[].[Id,Name,E
 
 A conta que criou a organização é a sua conta de gerenciamento, aqui a padrão do moto,
 `123456789012`, que o moto lista com o nome `master`. A conta nova ganhou um número próprio,
-`218935875641`; o seu terá outros doze dígitos, já que o moto os inventa, então use o seu onde a
+`218935875641`. O seu terá outros doze dígitos, já que o moto os inventa, então use o seu onde a
 lição mostrar este. **O moto responde `SUCCEEDED` na hora. A AWS cria uma conta em segundo plano** e
-responde `IN_PROGRESS`, e `describe-create-account-status` é como você espera por ela; essa parte não
+responde `IN_PROGRESS`; `describe-create-account-status` é como você espera por ela. Essa parte não
 foi rodada aqui.
 
 ## Trabalhando dentro dela
@@ -37,7 +37,7 @@ Nada do que você tem é credencial da `shop-prod`: as chaves `test` do `env.sh`
 gerenciamento. O que a conta nova tem é uma role, **`OrganizationAccountAccessRole`**, que a AWS cria
 em toda conta que uma organização cria e que a conta de gerenciamento tem permissão de assumir.
 Assumir uma role é `sts assume-role`, e isso devolve credenciais temporárias que agem dentro da outra
-conta; a lição 9 abre esse assunto. A linha de comando faz isso por você se um perfil disser que
+conta. A lição 9 abre esse assunto. A linha de comando faz isso por você se um perfil disser que
 role assumir:
 
 ```
@@ -63,7 +63,7 @@ Environment` diz que as chaves de partida são as do ambiente, as que o `env.sh`
 dentro da outra conta**: a linha de comando chama `assume-role` antes e usa o que volta. A resposta
 para "quem sou eu" mudou de conta, e o ARN dela diz `assumed-role`. A lição 25 fala mais de perfis. O
 perfil cita o número de conta desta execução, então depois que o moto reinicia ele aponta para uma
-conta que não existe mais; a lição 3 o escreve de novo.
+conta que não existe mais. A lição 3 o escreve de novo.
 
 ## Olhando em volta lá de dentro
 
@@ -86,7 +86,7 @@ ser planejada, e de a loja dar à sua rede de produção `10.20.0.0/16` em vez d
 
 A `shop-prod` não vê **nenhum tópico e nenhum usuário**. O tópico `shop-alerts` e o usuário `bia` da
 seção anterior continuam lá, na conta de gerenciamento; daqui eles não existem. E a `shop-prod` tem
-uma VPC, então as seis VPCs que a conta de gerenciamento criou não usaram nada da cota dela.
+uma VPC, então as seis VPCs que a conta de gerenciamento tem não usaram nada da cota dela.
 
 ## Os nomes que atravessam as paredes
 
@@ -121,13 +121,14 @@ como a AWS, o que faz disso uma das poucas regras entre contas que você vê fal
 
 **A solução da loja é o número da conta no nome**, `218935875641-shop-assets`, que ninguém mais pode
 estar usando, já que ninguém mais tem essa conta. O nome de um bucket também faz parte do endereço
-dele na internet, e é por isso que ele precisa ser único e não pode ser renomeado: um bucket que
+dele na internet. É por isso que ele precisa ser único, e que não pode ser renomeado: um bucket que
 precisa de nome novo é um bucket novo e uma cópia.
 
-Alguns outros nomes são globais do mesmo jeito, e estes o moto não aplica: o alias da conta, que
-substitui os doze dígitos no endereço de entrada do console, e o endereço de e-mail do usuário
-root, que a seção anterior disse ser único em toda a AWS. No moto, duas contas podem definir o
-mesmo alias e duas contas podem ser criadas com o mesmo endereço; na AWS o segundo alias é recusado, e
+Alguns outros nomes são globais do mesmo jeito, e estes o moto não aplica. Um é o alias da conta, que
+substitui os doze dígitos no endereço de entrada do console. O outro é o endereço de e-mail do
+usuário root, que a seção anterior disse ser único em toda a AWS. No moto, duas contas podem definir
+o mesmo alias e duas contas podem ser criadas com o mesmo endereço. Na AWS o segundo alias é
+recusado, e
 a segunda conta falha com o motivo `EMAIL_ALREADY_EXISTS`. **Essas recusas não foram rodadas aqui**,
 já que o moto deixa as duas passarem.
 
@@ -139,6 +140,6 @@ já que o moto deixa as duas passarem.
 
 A role da `shop-prod` funciona no moto porque o moto ainda não verifica permissão nenhuma: a lição 7
 liga isso. Na AWS a role também chega com a política `AdministratorAccess` anexada, e no moto chega
-sem nenhuma. A lição 3 olha essa diferença, e a lição 9 as roles em si. E nada acima custou nada, no
-moto ou na AWS: **uma conta é de graça**, e o que ela custa é o trabalho de mantê-la em ordem, que é o
+sem nenhuma. A lição 3 olha essa diferença, e a lição 9 as roles em si. Nada acima custou nada, no
+moto ou na AWS: **uma conta é de graça**. O que ela custa é o trabalho de mantê-la em ordem, o
 assunto da próxima seção e das lições 3 a 5.

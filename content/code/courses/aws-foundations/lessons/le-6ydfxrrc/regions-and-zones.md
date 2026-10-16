@@ -8,9 +8,9 @@ version: 1
 two details AWS adds that catch people out.
 
 The common wrong picture is that an Availability Zone is a datacentre. **An AZ is one or more
-datacentres with their own power, cooling and network**, far enough from the other zones of its
-region that a flood or a fire takes one of them and not the next, and close enough that a round trip
-between them stays around a millisecond or two. A region is a group of these, at least three in
+datacentres with their own power, cooling and network.** The zones of a region sit far enough
+apart that a flood or a fire takes one of them and not the next. They sit close enough that a round
+trip between them stays around a millisecond or two. A region is a group of these, at least three in
 every region AWS builds now. The point of the arrangement is that **you choose the zones, AWS
 chooses the buildings**, and an application spread across two or three zones survives the loss of
 one.
@@ -43,9 +43,8 @@ us-east-1f	use1-az5
 The `--query` option is a filter the command line applies to the answer before printing it, written
 in a small language called JMESPath. `length(Regions)` counts; the second command keeps only the
 regions whose name starts with `sa-` or `us-east`; `--output text` prints one line per item instead
-of JSON. Lesson 25 says more about both. **The count is moto's**: the list it carries is close to
-AWS's own and is not guaranteed to be the same on any given day, so trust AWS's documentation, not a
-number in a course, when the exact list matters.
+of JSON. Lesson 25 says more about both. **The count is moto's**: the list it carries is close to AWS's own, and not guaranteed to match it on any given day. When the
+exact list matters, trust AWS's documentation, not a number in a course.
 
 `sa-east-1` has three zones, and each one carries **two names**.
 
@@ -57,8 +56,9 @@ the first zone in the list did not land in the same building. **`sae1-az1` is a 
 names the same physical zone in every account.
 
 That matters the moment two accounts have to meet. Lesson 2 splits the platform into several
-accounts, and lesson 19 connects services across them; if the shop's account puts its database in
-`sa-east-1a` and the payments account puts its client in `sa-east-1a` too, the two may still be in
+accounts, and lesson 19 connects services across
+them. Suppose the shop's account puts its database in
+`sa-east-1a` and the payments account puts its client in `sa-east-1a` too. The two may still be in
 different buildings, paying for every byte between them as the next section shows. **Coordinate by
 zone id**, and translate to a zone name inside each account.
 
@@ -73,14 +73,14 @@ command that prints both names side by side.
 
 ## Local Zones, and the other edges of a region
 
-**A Local Zone extends a region into a city where AWS has no region**: a small set of services,
+**A Local Zone extends a region into a city where AWS has no region.** It is a small set of services,
 usually compute, block storage and a slice of the network, placed close to people who need a few
 milliseconds less than the region can give them. Video editing, games and trading are the usual
 reasons. A Local Zone belongs to a parent region, has a name built from it (`us-west-2-lax-1a` is
 Los Angeles, attached to Oregon), and has to be opted into before it appears.
 
-moto carries none, and this is what it answers when asked for every zone of `us-west-2`, a region
-that has several Local Zones in AWS, the Los Angeles one among them:
+moto carries none. Asked for every zone of `us-west-2`, a region that has several Local Zones in
+AWS, the Los Angeles one among them, it answers this:
 
 ```
 ana@laptop:~/aws$ aws ec2 describe-availability-zones --region us-west-2 --all-availability-zones --query "AvailabilityZones[].[ZoneName,ZoneType]" --output text
@@ -101,8 +101,8 @@ Both answer to a parent region, as a Local Zone does.
 ## Which region, for this course and for you
 
 Every lesson works in **`sa-east-1`**, the region `env.sh` names. For a Brazilian business it is
-usually the obvious one: the data stays in the country, which the LGPD does not demand but customers
-and contracts often do, and a student in São Paulo is a few milliseconds from it instead of a hundred
+usually the obvious one. The data stays in the country, which the LGPD does not demand but customers
+and contracts often do. And a student in São Paulo is a few milliseconds from it instead of a hundred
 from Virginia. It is also one of the dearest regions AWS has, which the next section measures. The
-`cloud` course, lesson 9, has the full argument for choosing a region; the line that matters here is
+`cloud` course, lesson 9, has the full argument for choosing a region. The line that matters here is
 that **the choice decides the price of everything that crosses it**.

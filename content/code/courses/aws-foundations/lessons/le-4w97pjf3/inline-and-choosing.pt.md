@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Uma política inline é escrita dentro de um usuário, grupo ou role e não pertence a mais nada.**
-Ela tem nome mas não tem ARN, então nenhuma outra identidade pode recebê-la; não tem versões, então
-uma edição a sobrescreve; e vive exatamente o tempo da identidade que a guarda. A imagem errada é que
+Ela tem nome mas não tem ARN, então nenhuma outra identidade pode recebê-la. Não tem versões, então
+uma edição a sobrescreve. E vive exatamente o tempo da identidade que a guarda. A imagem errada é que
 inline é o tipo rápido e informal, para quando uma política gerenciada parece cerimônia demais.
 **Inline é o tipo rigoroso**: é o único jeito de garantir que uma permissão nunca seja anexada a uma
 segunda identidade por alguém arrumando as coisas.
@@ -49,7 +49,7 @@ ana@laptop:~/aws$ aws iam list-attached-user-policies --user-name edu
 }
 ```
 
-O `list-user-policies` lista só as políticas inline; as gerenciadas anexadas a um usuário são outra
+O `list-user-policies` lista só as políticas inline. As gerenciadas anexadas a um usuário são outra
 lista, `list-attached-user-policies`, e uma auditoria que lê uma e não a outra perde metade do que um
 usuário pode fazer.
 
@@ -67,7 +67,7 @@ aws: [ERROR]: An error occurred (NoSuchEntity) when calling the GetUser operatio
 ```
 
 **A recusa é uma salvaguarda, não um resto.** A AWS não apaga um usuário que ainda tem uma política,
-então a linha de comando nomeia cada uma antes; o botão de apagar do console faz os mesmos passos
+então a linha de comando nomeia cada uma antes. O botão de apagar do console faz os mesmos passos
 por você. De um jeito ou de outro, quando o usuário some **a política inline some com ele**: não há
 cópia em lugar nenhum para anexar ao próximo prestador por engano. Uma política gerenciada teria
 sobrevivido a ele, ainda anexável, o que às vezes é o que se quer e aqui não é.
@@ -90,7 +90,7 @@ ana@laptop:~/aws$ aws iam delete-user-policy --user-name bia --policy-name with-
 **O moto a guardou, e depois a obedeceu**: o segundo comando é a bia listando `shop-backups`, o que a
 política gerenciada pelo cliente dela nunca permitiu. A AWS teria recusado o documento como
 malformado antes de guardar qualquer coisa; isso não foi rodado aqui. Num laboratório, isso quer
-dizer que uma política que funciona no moto ainda não é uma política que a AWS aceita, e a lição 8
+dizer que uma política que funciona no moto ainda não é uma política que a AWS aceita. A lição 8
 nomeia a ferramenta que confere um documento contra a gramática da AWS.
 
 ## Os limites, como o moto os informa
@@ -108,7 +108,7 @@ ana@laptop:~/aws$ aws iam get-account-summary --query "SummaryMap.{PolicySizeQuo
 
 Os números são caracteres, exceto os dois últimos. **Uma política gerenciada comporta 6.144
 caracteres, uma política inline num usuário só 2.048**, e um usuário pode ter dez políticas
-gerenciadas anexadas; esses números batem com as cotas da documentação da AWS, onde a última pode
+gerenciadas anexadas. Esses números batem com as cotas da documentação da AWS, onde a última pode
 ser aumentada a pedido. O tamanho pequeno das políticas inline de um usuário é uma pista do que elas
 são: uma permissão curta e específica, não uma biblioteca.
 

@@ -3,8 +3,8 @@ title: Four guardrails, written out
 version: 1
 ---
 
-**A guardrail is a deny that no administrator in the account can lift.** That is the whole reason
-the shop writes SCPs at all: the accounts' own administrators, `AdministratorAccess` and the
+**A guardrail is a deny that no administrator in the account can lift.** The shop writes SCPs for
+that reason alone. The accounts' own administrators, `AdministratorAccess` and the
 `OrganizationAccountAccessRole` included, can do anything IAM allows, and these four things should
 not be among them. Each is a policy file, created once in the management account and attached to
 the branch it protects. Save each one in `~/aws/scp/`, the directory from the section before,
@@ -30,7 +30,7 @@ under the name given above it.
 
 **An account that leaves walks out of every rule attached to the tree**, the other three in this
 section among them. Lesson 3 said a created account cannot leave until it has a payment method and
-a support plan; this makes it unable to leave even then, until the management account removes it.
+a support plan. This policy keeps it from leaving even then, until the management account removes it.
 
 ## Nothing outside São Paulo
 
@@ -67,11 +67,11 @@ a support plan; this makes it unable to leave even then, until the management ac
 
 `aws:RequestedRegion` is the region a request is sent to, and the condition makes the deny apply to
 every request that is not for `sa-east-1`. **`NotAction` is the half that people get wrong.** It
-means "every action except these", and the exceptions are the **global services**: IAM, STS,
+means "every action except these", and the exceptions are the **global services**. IAM, STS,
 Organizations, CloudFront, Route 53 and the billing services answer from one place, normally
 `us-east-1`, whatever region the caller works in. Deny them outside São Paulo and the shop could no
 longer create a user or read its own bill. The list above is shorter than the one in AWS's own
-example of this policy, which carries more global services; a company copies AWS's list and removes
+example of this policy, which carries more global services. A company copies AWS's list and removes
 what it does not use, never the other way round.
 
 **The shop's reason is the data, and the bill.** Nothing it runs should be anywhere else, so a
@@ -146,7 +146,7 @@ should be able to. Lesson 5 places both services, and the account their records 
 }
 ```
 
-`deployer` is the role the shop's pipeline uses to release software, so **whoever can change its
+`deployer` is the role the shop's pipeline uses to release software. So **whoever can change its
 permissions or its trust policy can make the pipeline do anything**, or make anybody the pipeline.
 `aws:PrincipalArn` is the ARN of the identity making the request, and the condition excludes one:
 the role the management account comes in through. Everyone else, administrators of `shop-prod`
@@ -172,7 +172,7 @@ ana@laptop:~/aws$ aws organizations list-targets-for-policy --policy-id $(policy
 Workloads	ORGANIZATIONAL_UNIT
 ```
 
-The first three go on the root, so they cover every member account; the deployer's protection goes
+The first three go on the root, so they cover every member account. The deployer's protection goes
 on `Workloads`, where the deployer role lives. **The management account is untouched by all four**,
 which is lesson 3's reason for it to run nothing.
 
@@ -192,8 +192,8 @@ vpc-2c9aa2ce3234ff9c3
 **moto made the VPC. AWS would have refused it**, and its documentation says how: the call fails
 with `AccessDenied`, and the message says the request was denied by an explicit deny in a service
 control policy. **That refusal was not run here.** moto stores SCPs, attaches them and lists them,
-and decides nothing with them. This course checked that with moto's permission checking switched
-on as well, which lesson 7 explains: with an IAM policy allowing the call, the VPC in Virginia is
+and decides nothing with them. This course also checked it with moto's permission checking switched
+on, which lesson 7 explains. With an IAM policy allowing the call, the VPC in Virginia is
 still created. Everything this lesson says about what an SCP refuses comes from AWS's
 documentation, and the lab can only show you the shape.
 
@@ -207,7 +207,7 @@ policy at most 5,120 characters.
 Organizations has more policy types than SCPs, and two of them are worth recognising here.
 
 **Resource control policies**, RCPs, arrived in 2024 as the other half of an SCP. An SCP limits what
-the identities in an account may do; an RCP limits what may be done to the resources in an
+the identities in an account may do. An RCP limits what may be done to the resources in an
 account, by anybody, including identities from outside the organisation. The classic use is "no
 bucket of ours may be read by an account that is not ours", which no SCP can say, since the reader
 is not under the SCP. An RCP is a filter in the same way: it grants nothing.
@@ -215,5 +215,5 @@ is not under the SCP. An RCP is a filter in the same way: it grants nothing.
 **Declarative policies** set a configuration of a service across the organisation, starting with
 EC2, such as refusing to make machine images public. The service enforces the setting itself, so it
 holds even for a request no SCP anticipated. Both types appear in the CLI as values of
-`--policy-type`, `RESOURCE_CONTROL_POLICY` and `DECLARATIVE_POLICY_EC2`; this course goes no
+`--policy-type`, `RESOURCE_CONTROL_POLICY` and `DECLARATIVE_POLICY_EC2`. This course goes no
 further with them.

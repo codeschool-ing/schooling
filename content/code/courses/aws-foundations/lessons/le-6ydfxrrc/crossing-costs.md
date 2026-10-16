@@ -69,21 +69,21 @@ These are the prices in the list AWS published on **16 September 2026**, in doll
 | out to the internet, first 10 TB of a month | 0.1500 per GB | 0.0900 per GB |
 | in from the internet | free | free |
 
-**Between zones is charged on both sides.** The usage type is one line, and AWS's documentation
-says it is billed on the data leaving one zone *and* on the data arriving in the other, so a
+**Between zones is charged on both sides.** The usage type is one line, but AWS's documentation
+says it is billed on the data leaving one zone *and* on the data arriving in the other. A
 gigabyte that crosses costs 0.02 in total. A database replicating 500 GB a month to a standby in
 the next zone costs 500 × 0.02 = **10 dollars a month in transfer alone**, before either machine.
 
 **Between regions, the direction decides.** A gigabyte leaving São Paulo for Virginia costs 0.138;
 the same gigabyte leaving Virginia for São Paulo costs 0.02, almost seven times less. A nightly copy
 of 2 TB of backups from `sa-east-1` to `us-east-1` is 2,048 × 0.138 = **282.62 dollars a month**;
-the copy in the other direction would be 40.96. That is not a quirk to work around; it is the price
+the copy in the other direction would be 40.96. That is not a quirk to work around. It is the price
 of carrying the bytes over a long and expensive path, and it is what you weigh when you decide where
 the copy of something lives.
 
 **To the internet, the tiers fall with volume**, and São Paulo starts dearer than Virginia: 0.15
-against 0.09 for the first 10 TB of the month. What the four lines do not show is that AWS gives
-away the first 100 GB a month sent to the internet, summed over every region of an account; that
+against 0.09 for the first 10 TB of the month. The four lines leave one thing out: AWS gives
+away the first 100 GB a month sent to the internet, summed over every region of an account. That
 allowance is on AWS's pricing page rather than in these lines, so it was read there and not printed
 by the program.
 

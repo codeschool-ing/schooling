@@ -67,7 +67,7 @@ proves the checking is on before anything else is tried.
 
 The `export` line moves this terminal onto admin's key. `jq -r` takes one field out of the JSON
 that `create-access-key` returned, and `export` puts the id and the secret where the command line
-looks first. **These are moto's keys, made up by moto and worthless anywhere else**; they are on
+looks first. **These are moto's keys, made up by moto and worthless anywhere else.** They are on
 nobody's screen and in no file, and they vanish when moto stops. `get-caller-identity` confirms
 it: from here on the terminal works as `admin`.
 
@@ -106,7 +106,7 @@ start it again with the count, and type the three requests again.
 ## One command as somebody else
 
 The next sections give bia a policy and then act as her, one command at a time, while the terminal
-stays `admin`. A small shell function does it: it takes the JSON that `create-access-key` printed,
+stays `admin`. A small shell function does it. It takes the JSON that `create-access-key` printed,
 and runs the rest of the line with that key in the environment of that one command only. Type it
 into the second terminal:
 

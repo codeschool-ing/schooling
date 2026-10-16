@@ -5,8 +5,8 @@ version: 1
 
 **Uma service control policy define o máximo que qualquer pessoa numa conta pode fazer, e não dá
 nada a ninguém.** A imagem errada é a que a palavra "política" sugere depois de algumas semanas de
-IAM: anexe a uma conta uma SCP que permite S3 e os desenvolvedores dela podem usar S3. Não podem, não
-por causa da SCP. Uma SCP é um filtro por onde toda requisição da conta passa a caminho da decisão do
+IAM: anexe a uma conta uma SCP que permite S3 e os desenvolvedores dela podem usar S3. A SCP sozinha
+não lhes dá nada. Uma SCP é um filtro por onde toda requisição da conta passa a caminho da decisão do
 IAM, e ela só consegue tirar permissões.
 
 ## Dois filtros em sequência
@@ -55,7 +55,7 @@ ana@laptop:~/aws$ aws organizations move-account --account-id $(account shop-pro
 ana@laptop:~/aws$ aws organizations move-account --account-id $(account sandbox) --source-parent-id $root --destination-parent-id $sandbox
 ```
 
-Agora o tipo de política em si. A lição 3 achou a lista da raiz vazia no moto; na AWS o tipo é
+Agora o tipo de política em si. A lição 3 achou a lista da raiz vazia no moto. Na AWS o tipo é
 habilitado quando uma organização é criada com todos os recursos, então este primeiro comando só é
 necessário aqui:
 
@@ -82,6 +82,6 @@ ou-ucqy-7pqpa5j0: FullAWSAccess
 
 **Uma SCP existe antes de alguém escrever alguma: a `FullAWSAccess`**, gerenciada pela AWS, que
 permite toda ação em todo recurso. Ela está anexada à raiz, a cada OU e a cada conta, como o laço
-mostra nível por nível, e OUs e contas novas também a recebem. **É por isso que ligar as SCPs não muda
+mostra nível por nível. OUs e contas novas também a recebem. **É por isso que ligar as SCPs não muda
 nada**: o teto começa no alto da sala. Toda barreira daqui em diante é escrita contra ela, e a
 próxima seção diz os dois jeitos de fazer isso.

@@ -5,7 +5,8 @@ version: 1
 
 **A policy is a JSON document holding a list of statements, and each statement says one thing:
 this effect, for these actions, on these resources, under these conditions.** That is the whole
-language. What makes it hard is not the syntax but the reading: the common wrong picture is a
+language. What makes it hard is the reading, not the syntax. The common
+wrong picture is a
 firewall, where rules are read from the top and the first match wins. **IAM has no order.** Every
 statement of every policy that applies to a request is considered together, and lesson 8 gives the
 rule that settles them. This section is the vocabulary that rule is written in.
@@ -47,20 +48,20 @@ bucket and read and write the objects inside it, and nothing else. Save it as
 | `Condition` | when the statement applies at all | none here |
 
 **`Version` is the date AWS fixed the language, and it never changes with your edits.** The only
-other value, `2008-10-17`, is the language before policy variables such as `${aws:username}`, which
-are written in strings and are not read as variables under the old version. A document with no
+other value, `2008-10-17`, is the language before policy variables such as `${aws:username}`. Those
+are written in strings, and the old version does not read them as variables. A document with no
 `Version` is read as the old one, so writing the line every time costs nothing and avoids that.
 
 **An action is a service prefix and an operation name**, and the name is case-insensitive. Two
 wildcards work inside it: `*` for any run of characters and `?` for exactly one. `s3:Get*` covers
 `GetObject`, `GetBucketPolicy` and every other S3 read whose name begins that way, including ones
-AWS adds next year, which is the property to keep in mind before writing a wildcard. `NotAction`
+AWS adds next year. Keep that in mind before writing a wildcard. `NotAction`
 inverts the list: the statement then covers every action except those named.
 
 **A resource is an ARN, and S3's has no region and no account in it**, because bucket names are
 unique across all of AWS: `arn:aws:s3:::shop-assets`. The bucket and its objects are different
 resources, which is why bia's policy has two statements. **`s3:ListBucket` is an action on the
-bucket**, so it needs the bucket's ARN; `GetObject` and `PutObject` act on objects, so they need
+bucket**, so it needs the bucket's ARN. `GetObject` and `PutObject` act on objects, so they need
 `shop-assets/*`. Swapping the two resources is one of the commonest mistakes in S3 policies, and
 the result is a policy that grants nothing it was meant to.
 
@@ -73,5 +74,5 @@ it.
 An identity policy has no `Principal`, because the principal is whoever the policy is attached to.
 **`Principal` belongs to the two kinds of policy attached to something else**: a role's trust policy,
 which lesson 6 wrote, and a resource-based policy such as a bucket policy, which lesson 8 reads.
-AWS refuses an identity policy that names a principal; the last section of this lesson shows moto
+AWS refuses an identity policy that names a principal. The last section of this lesson shows moto
 accepting one.

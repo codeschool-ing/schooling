@@ -120,12 +120,12 @@ no part inside the session**: it allowed her to assume the role, and that was al
 
 A trust policy often names a whole account rather than a person: `"AWS":
 "arn:aws:iam::123456789012:root"`. **In AWS that does not mean the root user.** It means any
-principal of that account whose own policies allow `sts:AssumeRole` on the role, so the account's
+principal of that account whose own policies allow `sts:AssumeRole` on the role. The account's
 administrators decide, through their identity policies, who may wear it. It is the usual way to
 trust another account, as the last section of this lesson shows.
 
-**moto does not read it that way.** It compares the caller's ARN with the principal as two strings,
-so `user/admin` does not match `root`, and admin is refused a role whose trust policy names its own
+**moto does not read it that way.** It compares the caller's ARN with the principal as two strings.
+`user/admin` does not match `root`, so admin is refused a role whose trust policy names its own
 account:
 
 ```

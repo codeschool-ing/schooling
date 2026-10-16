@@ -9,7 +9,7 @@ course, and `~/.local`, where the AWS command line goes.** Deleting those two, a
 `~/.cache/aws-prices` once the last section of this lesson has filled it, removes the lab completely.
 
 If you did the `cloud` course and kept its lab, the AWS command line is already in `~/.local`, at
-the same version: `aws --version` printing `aws-cli/2.37.4` means you can skip the second block.
+the same version. If `aws --version` prints `aws-cli/2.37.4`, you can skip the second block.
 The `cloud` course's moto ran on another port and in another directory; this one is new.
 
 ## The packages from Ubuntu
@@ -88,7 +88,7 @@ Line by line, after the comment:
 | `MOTO_IAM_LOAD_MANAGED_POLICIES` | makes moto carry the permission policies AWS itself maintains, which lesson 7 reads |
 
 **Never put a real key in this file**, or in any file this course asks you to create. The two
-`test` values are not secrets; a real key is, and a file in your home directory is copied into
+`test` values are not secrets; a real key is. A file in your home directory gets copied into
 backups, shared folders and screenshots without anybody deciding to.
 
 ## Every time you open a terminal
@@ -150,8 +150,8 @@ Press CTRL+C to quit
 127.0.0.1 - - [16/Oct/2026 12:32:26] "POST / HTTP/1.1" 200 -
 ```
 
-**A `POST` to `/` answered with `200` is one API call**, and for as long as you keep that terminal
-in view you can see every request the command line sends. Lesson 26 opens one of them and reads
+**A `POST` to `/` answered with `200` is one API call.** For as long as you keep that terminal
+in view, you can see every request the command line sends. Lesson 26 opens one of them and reads
 what is inside.
 
 The last lines of the second terminal are the cost of the lab: the disk the two installations take,

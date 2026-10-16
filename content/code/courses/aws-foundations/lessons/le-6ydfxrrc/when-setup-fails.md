@@ -9,12 +9,12 @@ them, and what each one means. **Four of them were produced on purpose and are q
 printed them; the others are described, and each says why.**
 
 **The virtual environment was not created.** Ubuntu ships Python without the part that makes
-virtual environments, and `python3 -m venv` then stops with a message that begins *The virtual
+virtual environments. `python3 -m venv` then stops with a message that begins *The virtual
 environment was not created successfully because ensurepip is not available* and names the package
 to install. The cure is `sudo apt-get install -y python3-venv`, the package the first block of the
 setup installs. The failed attempt leaves a half-made `~/aws/venv` behind, so remove it with
 `rm -rf ~/aws/venv` and run the third block again. **This one was not produced here**, because the
-machine the lessons were recorded on has the package and the failure needs it absent; the `cloud`
+machine the lessons were recorded on has the package and the failure needs it absent. The `cloud`
 course, lesson 1, quotes the whole message.
 
 **`apt-get` says it could not get a lock.** Ubuntu installs its own updates in the first minutes
@@ -31,7 +31,7 @@ bash: line 1: aws: command not found
 
 Every new terminal starts without `~/.local/bin` on its path and outside the virtual environment.
 `source ~/aws/env.sh` puts both back, and the same line fixes a missing `moto_server`. On an Ubuntu
-desktop the message may add a suggestion to install `aws-cli` from a package; ignore it, because the
+desktop the message may add a suggestion to install `aws-cli` from a package. Ignore it: the
 version the course needs is already installed in `~/.local`.
 
 **`aws` cannot connect to the endpoint.** The command line did what `env.sh` told it, and nothing
@@ -83,7 +83,7 @@ need the `aarch64` file the setup names, and `uname -m` prints which kind you ha
 recording machine is `x86_64`.
 
 **A download of the price list stopped halfway.** The program in the last section of this lesson
-writes each download to a file ending in `.part` and gives it its real name only when it is
-complete, so a broken download is never mistaken for a finished one. Run the same command again and
-it starts from the beginning. The files this lesson reads are about 1.5 MB each, so this is rare;
-the EC2 file lesson 14 reads is some 290 MB, and that is where it happens.
+writes each download to a file ending in `.part`, and gives it its real name only when it is
+complete. A broken download is never mistaken for a finished one. Run the same command again and
+it starts from the beginning. The files this lesson reads are about 1.5 MB each, so this is rare.
+The EC2 file lesson 14 reads is some 290 MB, and that is where it happens.

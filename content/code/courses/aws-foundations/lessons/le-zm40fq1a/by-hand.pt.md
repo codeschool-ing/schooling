@@ -26,15 +26,15 @@ aws: [ERROR]: An error occurred (500) when calling the ListLandingZones operatio
 ```
 
 **Um `500` é o moto falhando, não a AWS respondendo.** O comando existe na CLI da AWS e, contra uma
-conta, lista a landing zone, se houver uma; o moto não implementa nada do serviço. Então nada nesta
+conta, lista a landing zone, se houver uma. O moto não implementa nada do serviço. Então nada nesta
 lição sobre o Control Tower em si foi rodado.
 
 ## `landing-zone.sh`
 
-O script constrói a árvore com que uma landing zone do Control Tower começaria a loja: a OU
-`Security` com as duas contas que vigiam as outras, as OUs `Workloads` e `Sandbox` da própria loja,
-uma barreira sobre o registro, e a conta `security` nomeada administradora do GuardDuty para a
-organização. Cole o bloco inteiro no segundo terminal; ele escreve o arquivo:
+O script constrói a árvore com que uma landing zone do Control Tower começaria a loja. Ele cria a OU
+`Security` com as duas contas que vigiam as outras, e as OUs `Workloads` e `Sandbox` da própria
+loja. Põe uma barreira sobre o registro, e nomeia a conta `security` administradora do GuardDuty
+para a organização. Cole o bloco inteiro no segundo terminal; ele escreve o arquivo:
 
 ```sh
 cat > ~/aws/landing-zone.sh <<'EOF'
@@ -102,10 +102,10 @@ echo "delegated administrator for GuardDuty: $security_id"
 EOF
 ```
 
-Quatro coisas nele estão lá porque a AWS não é o moto. **O teste antes do `enable-policy-type`** está
+Quatro coisas nele pedem explicação, e as duas primeiras estão lá porque a AWS não é o moto. **O teste antes do `enable-policy-type`** está
 lá porque na AWS o tipo já está ligado, e pedir de novo é um erro, `PolicyTypeAlreadyEnabledException`,
 que pararia o script. **O laço de espera** existe porque a AWS cria uma conta em segundo plano, como a
-lição 2 disse; no moto a primeira resposta já é `SUCCEEDED`, então o laço nunca dorme.
+lição 2 disse. No moto a primeira resposta já é `SUCCEEDED`, então o laço nunca dorme.
 **`set -euo pipefail`** para o script no primeiro comando que falhar, para uma landing zone pela
 metade dizer isso em vez de seguir em frente. E a barreira é o padrão da lição 4 de novo: um deny com
 `Resource` `*`, anexado à `Security` e não à raiz, porque dentro da `Security` não há nada que alguém
@@ -142,7 +142,7 @@ ana@laptop:~/aws$ aws organizations list-delegated-administrators --query "Deleg
 ```
 
 **Esta é a forma, e só a forma.** As OUs, as duas contas em `Security`, a barreira e o administrador
-delegado estão todos lá, e na AWS cada um desses comandos teria feito o mesmo. O que uma landing zone
+delegado estão todos lá. Na AWS cada um desses comandos teria feito o mesmo. O que uma landing zone
 de verdade também tem é tudo o que mora **dentro** das contas, e é aí que o script para.
 
 ```schooling-figure
@@ -154,12 +154,12 @@ de verdade também tem é tudo o que mora **dentro** das contas, e é aí que o 
 **Nem trilha nem bucket.** A conta `log-archive` não guarda nada: uma landing zone põe uma trilha da
 organização no CloudTrail, cujos registros de toda conta caem num bucket lá. O script teria de
 assumir uma role na `log-archive`, criar o bucket com uma política que deixe o CloudTrail escrever
-nele, e criar a trilha a partir da conta de gerenciamento; a lição 9 tem a parte entre contas. **Nada
+nele, e criar a trilha a partir da conta de gerenciamento. A lição 9 tem a parte entre contas. **Nada
 de Config**, e portanto nada de controles detectivos: nada registra o que as contas contêm. **Nenhum
 jeito de as pessoas entrarem**: o IAM Identity Center é a lição 11. **Nenhuma detecção de drift**: o
 script roda uma vez, e o que for mudado depois fica mudado. E ele não toma decisão nenhuma sobre as
 **credenciais do root** nas contas-membro, que a lição 2 disse que a conta de gerenciamento pode
-remover; uma landing zone deveria resolver isso também.
+remover. Uma landing zone deveria resolver isso também.
 
 **Não rodado aqui, nada disto**: a montagem do Control Tower, o Account Factory, os controles que ele
 liga e a detecção de drift dele. Esses estão descritos pela documentação da AWS nas duas seções

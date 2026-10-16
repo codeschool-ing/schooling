@@ -41,7 +41,7 @@ ana@laptop:~/aws$ aws iam create-user --user-name bia --query User.Arn --output 
 arn:aws:iam::123456789012:user/bia
 ```
 
-`sns create-topic` makes a notification channel, which this lesson needs only for its name; IAM's
+`sns create-topic` makes a notification channel, which this lesson needs only for its name. IAM's
 `create-user` makes a user, and lesson 6 says what a user is for. Both answers carry the number
 from the first command, `123456789012`, which is moto's default account.
 
@@ -62,7 +62,7 @@ service chooses.
 
 **An empty field is information.** The user has no region, because IAM is global inside an
 account: `bia` exists in São Paulo and in Virginia at once. A bucket's ARN, `arn:aws:s3:::shop-assets`,
-has no region and no account either, which is the first hint of something the next section
+has no region and no account either. That is the first hint of something the next section
 measures: a bucket's name belongs to nobody's account.
 
 One detail of moto's answer is moto's. For a user, AWS reports the caller as
@@ -71,7 +71,7 @@ default user `moto`. For a role taken on with `assume-role`, which the next sect
 says `sts`, and the next transcript is right on both counts.
 
 **Read the account out of an ARN before anything else.** When a policy, a log line or a bill names
-a resource, the fifth field says whose it is, and a policy naming an account nobody recognises is
+a resource, the fifth field says whose it is. A policy naming an account nobody recognises is
 the first thing in it to question.
 
 ## Quotas are counted per account
@@ -109,13 +109,13 @@ the next section.
 
 **Every account has exactly one root user**, the identity that opened it. It signs in with the
 account's e-mail address, may do anything in the account including closing it, and cannot be
-limited by the account's own IAM policies. Lesson 1, in "A real account", said how to protect it;
-everyone who works in the account day to day is an IAM identity created inside it instead, and
+limited by the account's own IAM policies. Lesson 1, in "A real account", said how to protect it.
+Everyone who works in the account day to day is an IAM identity created inside it instead, and
 lesson 6 sorts those out.
 
 What matters here is the count. **Ten accounts are ten root users and ten e-mail addresses**, each
-of them unique across all of AWS, which is why the shop gives every account an address of the form
+of them unique across all of AWS. So the shop gives every account an address of the form
 `aws+<account>@example.com`: one mailbox, a different address per account. An account made inside
-an organisation, as in the next section, starts with a root user that has no password at all, and
-the organisation's management account can remove the root user's credentials from its member
+an organisation, as in the next section, starts with a root user that has no password at all. The
+organisation's management account can also remove the root user's credentials from its member
 accounts altogether. Lesson 5 puts that on the list of what a landing zone settles.

@@ -30,9 +30,9 @@ ana@laptop:~/aws$ aws iam get-role --role-name deployer --query Role.MaxSessionD
 ```
 
 **O moto não aplica o máximo.** Duas horas foram concedidas numa role cujo máximo ainda era uma, e a
-AWS teria recusado esse pedido; essa recusa não foi rodada aqui. Aumentar o máximo para 7200 com o
+AWS teria recusado esse pedido. Essa recusa não foi rodada aqui. Aumentar o máximo para 7200 com o
 `update-role` é o que torna o mesmo pedido válido na AWS. Os horários de expiração acima estão em
-UTC, três horas à frente de São Paulo, e são a resposta do moto nesta execução; os seus serão a hora
+UTC, três horas à frente de São Paulo, e são a resposta do moto nesta execução. Os seus serão a hora
 da sua.
 
 Que duração escolher é uma troca que o dono da role faz uma vez. **Uma sessão curta limita o quanto
@@ -68,22 +68,22 @@ arn:aws:sts::123456789012:assumed-role/auditor-session/chained	2026-10-16T18:53:
 A AWS aceita o ARN de uma role numa política de confiança como querendo dizer as sessões dela, então
 a primeira tentativa teria dado certo lá, e durado uma hora. **O moto só aceitou a política de
 confiança que nomeia a sessão exata**, que ninguém escreve numa conta real, porque o nome da sessão
-muda a cada quem chama. O limite de uma hora no encadeamento não foi medido aqui; o moto deu à sessão
+muda a cada quem chama. O limite de uma hora no encadeamento não foi medido aqui. O moto deu à sessão
 encadeada as duas horas pedidas.
 
 ## Quem fez: nomes de sessão e source identity
 
 **Tudo o que se faz por meio de uma role fica registrado sob a sessão, não sob a pessoa.** O
 CloudTrail, o log de auditoria de chamadas de API da AWS, registra quem fez cada chamada como o ARN
-da sessão, `arn:aws:sts::123456789012:assumed-role/deployer/bia-deploy`, e a chamada `AssumeRole`
-que criou a sessão como um evento separado que nomeia a bia. Juntar os dois é possível e trabalhoso,
-e o nome da sessão é a parte barata da resposta: **um nome que diz quem, como `bia-deploy`, deixa
+da sessão, `arn:aws:sts::123456789012:assumed-role/deployer/bia-deploy`. Ele registra a chamada `AssumeRole`
+que criou a sessão como um evento separado que nomeia a bia. Juntar os dois é possível e trabalhoso.
+O nome da sessão é a parte barata da resposta: **um nome que diz quem, como `bia-deploy`, deixa
 toda linha posterior legível**, enquanto `session1` faz de cada uma uma busca.
 
 O nome da sessão é escolha de quem chama, porém, então não prova nada. A **source identity** é a
-forma mais forte: `--source-identity bia` define um valor que fica registrado no CloudTrail em toda
-chamada da sessão e **passa para toda role encadeada a partir dela**, e que quem chama não pode mudar
-depois. Uma role pode exigi-la: a política de confiança dela permite `sts:SetSourceIdentity` ao lado
+forma mais forte. `--source-identity bia` define um valor que o CloudTrail registra em toda chamada
+da sessão, que quem chama não pode mudar depois, e que **passa para toda role encadeada a partir
+dela**. Uma role pode exigi-la: a política de confiança dela permite `sts:SetSourceIdentity` ao lado
 de `sts:AssumeRole`, com uma condição em `sts:SourceIdentity`. O moto aceita o parâmetro e não
 devolve source identity nenhuma:
 

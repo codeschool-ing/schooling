@@ -3,8 +3,8 @@ title: Quatro barreiras, escritas por extenso
 version: 1
 ---
 
-**Uma barreira é um deny que nenhum administrador da conta consegue tirar.** Esse é todo o motivo de
-a loja escrever SCPs: os administradores das próprias contas, a `AdministratorAccess` e a
+**Uma barreira é um deny que nenhum administrador da conta consegue tirar.** A loja escreve SCPs só
+por esse motivo. Os administradores das próprias contas, a `AdministratorAccess` e a
 `OrganizationAccountAccessRole` inclusive, podem fazer tudo o que o IAM permite, e estas quatro
 coisas não deviam estar entre elas. Cada uma é um arquivo de política, criado uma vez na conta de
 gerenciamento e anexado ao galho que protege. Salve cada uma em `~/aws/scp/`, o diretório da seção
@@ -30,7 +30,7 @@ anterior, com o nome dado acima dela.
 
 **Uma conta que sai deixa para trás toda regra anexada à árvore**, as outras três desta seção entre
 elas. A lição 3 disse que uma conta criada não pode sair até ter meio de pagamento e plano de
-suporte; esta a impede de sair mesmo então, até a conta de gerenciamento removê-la.
+suporte. Esta política a impede de sair mesmo então, até a conta de gerenciamento removê-la.
 
 ## Nada fora de São Paulo
 
@@ -67,11 +67,11 @@ suporte; esta a impede de sair mesmo então, até a conta de gerenciamento remov
 
 `aws:RequestedRegion` é a região para onde uma requisição é mandada, e a condição faz o deny valer
 para toda requisição que não é para `sa-east-1`. **`NotAction` é a metade que as pessoas erram.** Quer
-dizer "toda ação menos estas", e as exceções são os **serviços globais**: IAM, STS, Organizations,
+dizer "toda ação menos estas", e as exceções são os **serviços globais**. IAM, STS, Organizations,
 CloudFront, Route 53 e os serviços de faturamento respondem de um lugar só, normalmente `us-east-1`,
 seja qual for a região em que quem chama trabalha. Negue-os fora de São Paulo e a loja não
 conseguiria mais criar um usuário nem ler a própria fatura. A lista acima é mais curta que a do
-exemplo da própria AWS para esta política, que carrega mais serviços globais; uma empresa copia a
+exemplo da própria AWS para esta política, que carrega mais serviços globais. Uma empresa copia a
 lista da AWS e tira o que não usa, nunca o contrário.
 
 **O motivo da loja são os dados, e a fatura.** Nada do que ela roda deveria estar em outro lugar,
@@ -147,7 +147,7 @@ a conta para onde vão os registros deles.
 }
 ```
 
-`deployer` é a role que o pipeline da loja usa para publicar software, então **quem pode mudar as
+`deployer` é a role que o pipeline da loja usa para publicar software. Então **quem pode mudar as
 permissões ou a política de confiança dela pode fazer o pipeline fazer qualquer coisa**, ou fazer de
 qualquer um o pipeline. `aws:PrincipalArn` é o ARN da identidade que faz a requisição, e a condição
 exclui uma: a role por onde a conta de gerenciamento entra. Todos os outros, administradores da
@@ -173,7 +173,7 @@ ana@laptop:~/aws$ aws organizations list-targets-for-policy --policy-id $(policy
 Workloads	ORGANIZATIONAL_UNIT
 ```
 
-As três primeiras vão na raiz, então cobrem toda conta-membro; a proteção do deployer vai em
+As três primeiras vão na raiz, então cobrem toda conta-membro. A proteção do deployer vai em
 `Workloads`, onde a role deployer mora. **A conta de gerenciamento não é tocada por nenhuma das
 quatro**, que é o motivo da lição 3 para ela não rodar nada.
 
@@ -194,7 +194,7 @@ vpc-2c9aa2ce3234ff9c3
 `AccessDenied`, e a mensagem diz que a requisição foi negada por um deny explícito numa service
 control policy. **Essa recusa não foi rodada aqui.** O moto guarda SCPs, anexa e lista, e não decide
 nada com elas. Este curso conferiu isso também com a verificação de permissões do moto ligada, que a
-lição 7 explica: com uma política do IAM permitindo a chamada, a VPC na Virgínia continua sendo
+lição 7 explica. Com uma política do IAM permitindo a chamada, a VPC na Virgínia continua sendo
 criada. Tudo o que esta lição diz sobre o que uma SCP recusa vem da documentação da AWS, e o
 laboratório só consegue mostrar a forma.
 
@@ -208,7 +208,7 @@ recebe no máximo cinco SCPs e uma política tem no máximo 5.120 caracteres.
 O Organizations tem mais tipos de política que as SCPs, e dois deles valem ser reconhecidos aqui.
 
 As **resource control policies**, RCPs, chegaram em 2024 como a outra metade de uma SCP. Uma SCP
-limita o que as identidades de uma conta podem fazer; uma RCP limita o que pode ser feito com os
+limita o que as identidades de uma conta podem fazer. Uma RCP limita o que pode ser feito com os
 recursos de uma conta, por qualquer um, inclusive identidades de fora da organização. O uso clássico
 é "nenhum bucket nosso pode ser lido por uma conta que não é nossa", o que nenhuma SCP consegue
 dizer, já que quem lê não está sob a SCP. Uma RCP é um filtro do mesmo jeito: não concede nada.
@@ -216,5 +216,5 @@ dizer, já que quem lê não está sob a SCP. Uma RCP é um filtro do mesmo jeit
 As **políticas declarativas** definem uma configuração de um serviço para a organização inteira,
 começando pelo EC2, como recusar tornar imagens de máquina públicas. O próprio serviço aplica a
 configuração, então ela vale até para uma requisição que nenhuma SCP previu. Os dois tipos aparecem
-na CLI como valores de `--policy-type`, `RESOURCE_CONTROL_POLICY` e `DECLARATIVE_POLICY_EC2`; este
+na CLI como valores de `--policy-type`, `RESOURCE_CONTROL_POLICY` e `DECLARATIVE_POLICY_EC2`. Este
 curso não vai além disso com eles.

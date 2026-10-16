@@ -8,7 +8,7 @@ for.** Somebody else signs it in, an identity provider such as GitHub, Google or
 directory, and hands it a signed statement. AWS checks the signature, finds a role whose trust
 policy accepts that statement, and gives back a role session like the one in the previous section.
 The wrong picture is that federation makes IAM users for outside people. **No IAM user is created
-and no long-term key exists on AWS's side**, which is the whole point: the password stays with the
+and no long-term key exists on AWS's side.** The password stays with the
 provider, and the session dies on its own.
 
 Two standards carry the statement, and IAM has a kind of provider for each:
@@ -21,7 +21,7 @@ Two standards carry the statement, and IAM has a kind of provider for each:
 | IAM resource | `oidc-provider/<host>` | `saml-provider/<name>` |
 
 For people, the usual answer today is IAM Identity Center, which speaks SAML to the directory once
-and manages the roles for you; lesson 11 is about it. **For a machine outside AWS, OIDC is the
+and manages the roles for you. Lesson 11 is about it. **For a machine outside AWS, OIDC is the
 answer**, and the shop's deployer is the example.
 
 ## GitHub Actions as an OIDC provider
@@ -48,7 +48,7 @@ ana@laptop:~/aws$ aws iam get-open-id-connect-provider --open-id-connect-provide
 ```
 
 `sts.amazonaws.com` is the **audience**: the token has to say it was minted for AWS, so a token
-GitHub made for some other service is refused. `--thumbprint-list` was left out on purpose; AWS's
+GitHub made for some other service is refused. `--thumbprint-list` was left out on purpose. AWS's
 reference for the command says IAM then fetches the provider's certificate thumbprint itself, and
 moto stored an empty list.
 
@@ -77,7 +77,7 @@ previous section; save it as `~/aws/deployer-github.json`:
 ```
 
 **The `sub` line is the one that matters.** Every workflow in every repository on GitHub gets its
-tokens from the same issuer, so a trust policy with only the `aud` line trusts all of them,
+tokens from the same issuer. A trust policy with only the `aud` line trusts all of them,
 strangers included. `repo:shop/web:ref:refs/heads/main` narrows it to the `main` branch of the
 shop's `web` repository. `Principal` says `Federated` instead of `AWS`, and the action is the
 web-identity one.

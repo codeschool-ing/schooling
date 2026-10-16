@@ -6,7 +6,7 @@ version: 1
 **Um limite de permissões (permission boundary) é uma política gerenciada definida num usuário ou
 numa role como teto: a identidade só pode fazer o que as próprias políticas permitem e o limite
 permite, os dois ao mesmo tempo.** É a interseção, nunca a soma. A imagem errada é o limite como mais
-uma política que acrescenta permissões; um limite de `s3:*` num usuário sem políticas não dá nada a
+uma política que acrescenta permissões. Um limite de `s3:*` num usuário sem políticas não dá nada a
 esse usuário.
 
 ```schooling-figure
@@ -29,7 +29,7 @@ b'<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1
 ```
 
 **Num usuário, o moto nem o guarda.** O `create-user --permissions-boundary` dá certo e a resposta não
-traz limite nenhum, e o `put-user-permissions-boundary`, o comando que define um num usuário
+traz limite nenhum. O `put-user-permissions-boundary`, o comando que define um num usuário
 existente, não está implementado: o moto responde HTTP 500 e a linha de comando imprime a página de
 erro dele. Numa role, o moto guarda o limite, então a medição é feita com uma role. Ela se chama
 `app-admin`, tem `AdministratorAccess`, tem o limite só de S3, e confia no `admin`:
@@ -51,9 +51,9 @@ logo.png
 ```
 
 **A sessão listou todos os usuários. A AWS teria recusado**: `iam:ListUsers` é permitido pelo
-`AdministratorAccess` e não pelo limite, então a interseção não o contém, e a resposta seria um
+`AdministratorAccess` e não pelo limite, então a interseção não o contém. A resposta seria um
 `AccessDenied` apontando o limite como motivo. A chamada ao S3 teria funcionado nos dois. Essa recusa
-não foi rodada aqui, já que o moto guarda limites e nunca os aplica; é o comportamento documentado da
+não foi rodada aqui, já que o moto guarda limites e nunca os aplica. É o comportamento documentado da
 AWS, e o motivo de a figura acima ser desenhada como uma interseção.
 
 ## Políticas de sessão, testadas
@@ -75,7 +75,7 @@ A AWS recusaria esse `list-users` duas vezes, uma pelo limite e uma pela políti
 ## Delegação: deixar um time criar roles com segurança
 
 Os limites existem para um problema acima de todos. Os desenvolvedores da loja precisam criar roles
-para as próprias aplicações, e **quem consegue criar uma role e anexar `AdministratorAccess` a ela
+para as próprias aplicações. Mas **quem consegue criar uma role e anexar `AdministratorAccess` a ela
 consegue se tornar administrador**: cria a role, confia em si mesmo, assume. Negar `iam:CreateRole`
 aos desenvolvedores faz do time de plataforma uma fila para todo serviço novo.
 
@@ -118,7 +118,7 @@ desenvolvedor anexe a uma role `app-` depois, mesmo `AdministratorAccess`, o lim
 
 O moto não consegue julgar esta política, e no laboratório ele erra para o outro lado. Ele compara
 chamadas do IAM com o recurso `*` em vez do ARN da role, então uma instrução restrita a `role/app-*`
-nunca bate lá, e ele trata a condição como satisfeita. Com o limite, a política e a bia criados, e a
+nunca bate lá. Ele também trata a condição como satisfeita. Com o limite, a política e a bia criados, e a
 política anexada a ela, a bia é recusada na única chamada que a AWS permitiria:
 
 ```

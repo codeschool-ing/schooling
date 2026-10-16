@@ -8,7 +8,7 @@ nenhuma.** Outra parte a autentica, um provedor de identidade como o GitHub, o G
 da empresa, e entrega a ela uma declaração assinada. A AWS confere a assinatura, encontra uma role
 cuja política de confiança aceita essa declaração, e devolve uma sessão de role como a da seção
 anterior. A imagem errada é que a federação cria usuários do IAM para gente de fora. **Nenhum
-usuário do IAM é criado e nenhuma chave de longo prazo existe do lado da AWS**, e esse é o ponto: a
+usuário do IAM é criado e nenhuma chave de longo prazo existe do lado da AWS.** A
 senha fica com o provedor, e a sessão morre sozinha.
 
 Dois padrões carregam a declaração, e o IAM tem um tipo de provedor para cada um:
@@ -21,7 +21,7 @@ Dois padrões carregam a declaração, e o IAM tem um tipo de provedor para cada
 | recurso do IAM | `oidc-provider/<host>` | `saml-provider/<name>` |
 
 Para pessoas, a resposta habitual hoje é o IAM Identity Center, que fala SAML com o diretório uma
-vez e administra as roles por você; a lição 11 trata dele. **Para uma máquina fora da AWS, a
+vez e administra as roles por você. A lição 11 trata dele. **Para uma máquina fora da AWS, a
 resposta é OIDC**, e o deployer da loja é o exemplo.
 
 ## O GitHub Actions como provedor OIDC
@@ -49,7 +49,7 @@ ana@laptop:~/aws$ aws iam get-open-id-connect-provider --open-id-connect-provide
 
 `sts.amazonaws.com` é a **audiência**: o token precisa dizer que foi emitido para a AWS, então um
 token que o GitHub fez para outro serviço é recusado. O `--thumbprint-list` ficou de fora de
-propósito; a referência da AWS para o comando diz que o IAM então busca sozinho a impressão digital
+propósito. A referência da AWS para o comando diz que o IAM então busca sozinho a impressão digital
 do certificado do provedor, e o moto guardou uma lista vazia.
 
 Agora o `deployer` pode confiar no GitHub em vez da bia. Esta política de confiança substitui a da
@@ -77,7 +77,7 @@ seção anterior; salve-a como `~/aws/deployer-github.json`:
 ```
 
 **A linha `sub` é a que importa.** Todo workflow de todo repositório do GitHub recebe tokens do
-mesmo emissor, então uma política de confiança só com a linha `aud` confia em todos eles,
+mesmo emissor. Uma política de confiança só com a linha `aud` confia em todos eles,
 desconhecidos inclusive. `repo:shop/web:ref:refs/heads/main` restringe ao branch `main` do
 repositório `web` da loja. O `Principal` diz `Federated` em vez de `AWS`, e a ação é a de
 identidade web.
