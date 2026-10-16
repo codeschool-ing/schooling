@@ -4,12 +4,12 @@ version: 1
 ---
 
 **A load balancer does nothing until it has a listener**, and a listener does nothing until it has
-somewhere to send. Three objects make the path, and the API keeps them apart on purpose. The
-**listener** is a protocol and a port the load balancer accepts; its **rules** decide, request by
-request, which **target group** answers. A target group is a set of machines, addresses or
-functions with one health check that they all share. The wrong picture is machines attached to a
-load balancer. Machines are attached to a target group, and the same group can sit behind several
-listeners and several rules at once.
+somewhere to send. Three objects make the path, and the API keeps them apart on purpose. The **listener**
+is a protocol and a port the load balancer accepts. Its **rules** decide, request by request, which **target
+group** answers. A target group is a set of machines, addresses or functions with one health check
+that they all share. The wrong picture is machines attached to a load balancer. Machines are
+attached to a target group, and the same group can sit behind several listeners and several rules at
+once.
 
 ## A target group, and what it watches
 
@@ -22,14 +22,15 @@ instance	HTTP	8080	/health	15	3	2
 ```
 
 **A target is healthy after three good answers in a row and unhealthy after two bad ones**, with a
-check every 15 seconds; the two is the default, which the command did not change. So a machine that stops answering is out of rotation about 30 seconds later, and one that comes back is
-in again after 45. Those three numbers are the trade between reacting fast and reacting to noise.
+check every 15 seconds. The two is the default, which the command did not change. So a machine that
+stops answering is out of rotation about 30 seconds later, and one that comes back is in again after 45.
+Those three numbers are the trade between reacting fast and reacting to noise.
 
 **`--target-type` decides what a target is, and it cannot be changed later.** `instance` registers
 machines by id, and traffic goes to their primary address on the group's port. `ip` registers
 addresses, which is how a container platform, a machine in a peered VPC or one in the shop's own
 datacentre over lesson 24's VPN gets behind an ALB. `lambda` registers a function, and the ALB turns
-each request into an invocation; lesson 14 of `aws-compute` writes one. Put the ids into variables
+each request into an invocation. Lesson 14 of `aws-compute` writes one. Put the ids into variables
 and register the two machines:
 
 ```
@@ -73,11 +74,11 @@ ana@laptop:~/aws$ aws elbv2 deregister-targets --target-group-arn $tg --targets 
 
 ## Listeners, and a certificate
 
-The shop answers on HTTPS, so the load balancer needs a **certificate** for `shop.example.com`.
-**AWS Certificate Manager (ACM)** issues public ones at no charge, renews them by itself, and hands
-them to a load balancer without the private key ever leaving AWS. That is what **TLS termination**
-means here: the ALB decrypts, reads the request, and talks to the targets over the VPC, in plain HTTP
-on 8080 as configured above or in TLS again if the group says `HTTPS`.
+The shop answers on HTTPS, so the load balancer needs a **certificate** for `shop.example.com`. **AWS
+Certificate Manager (ACM)** issues public ones at no charge, renews them by itself, and hands them
+to a load balancer without the private key ever leaving AWS. That is what **TLS termination** means
+here: the ALB decrypts and reads the request. It talks to the targets over the VPC, in plain HTTP on
+8080 as configured above, or in TLS again if the group says `HTTPS`.
 
 ```
 ana@laptop:~/aws$ aws acm request-certificate --domain-name shop.example.com --subject-alternative-names www.shop.example.com --validation-method DNS --query CertificateArn --output text
@@ -92,7 +93,7 @@ shop.example.com	PENDING_VALIDATION	AMAZON_ISSUED
 
 **`PENDING_VALIDATION` is where a new certificate waits for proof.** ACM gives you a `CNAME` record
 to create in the zone, as lesson 21 creates records, and issues the certificate once it can see the
-record; a load balancer accepts only a certificate that has been issued. moto never issues it, and
+record. A load balancer accepts only a certificate that has been issued. moto never issues it, and
 lets a listener use it anyway. The listener also names a **security policy**, which decides the TLS
 versions and ciphers it accepts:
 
@@ -107,9 +108,10 @@ ELBSecurityPolicy-TLS13-1-2-2021-06	TLSv1.3 TLSv1.2
 ```
 
 **Name the policy yourself.** Left out, the listener gets a default, and in moto that default is
-`ELBSecurityPolicy-2016-08`, which still accepts TLS 1.0 and 1.1; the newer policy accepts only 1.2
-and 1.3, which every browser the shop's customers use speaks. The listener on 443 sends everything to
-the web target group unless a rule says otherwise, and its ARN goes into a variable for the rules:
+`ELBSecurityPolicy-2016-08`, which still accepts TLS 1.0 and 1.1. The newer policy accepts only 1.2
+and 1.3, which every browser the shop's customers use speaks. The listener on 443 sends everything
+to the web target group unless a rule says otherwise, and its ARN goes into a variable for the
+rules:
 
 ```
 ana@laptop:~/aws$ aws elbv2 create-listener --load-balancer-arn $lb --protocol HTTPS --port 443 --certificates CertificateArn=$cert --ssl-policy ELBSecurityPolicy-TLS13-1-2-2021-06 --default-actions Type=forward,TargetGroupArn=$tg --query "Listeners[0].[Protocol,Port,SslPolicy]" --output text
@@ -126,12 +128,12 @@ redirect	HTTP_301
 
 ## Rules: the layer 7 in the name
 
-**A rule is a condition and an action, with a priority**: the listener tries its rules from the
-lowest number up and the first match wins; the default action answers whatever matches none. The
-conditions are what only an ALB can see, because only an ALB reads the request: the **host**, the
-**path**, a **header**, the method, a query string, the caller's address. The shop's API runs on
-separate machines at known addresses, `10.20.0.50` and `10.20.1.50`, so it gets a target group of
-type `ip`, the two addresses, and a rule on the path:
+**A rule is a condition and an action, with a priority**. The listener tries its rules from the
+lowest number up, and the first match wins. The default action answers whatever matches none. The
+conditions are what only an ALB can see, because only an ALB reads the request: the **host**, the **path**,
+a **header**, the method, a query string, the caller's address. The shop's API runs on separate
+machines at known addresses, `10.20.0.50` and `10.20.1.50`. So it gets a target group of type `ip`,
+the two addresses, and a rule on the path:
 
 ```
 ana@laptop:~/aws$ aws elbv2 create-target-group --name shop-api --protocol HTTP --port 9000 --vpc-id $vpc --target-type ip --query "TargetGroups[0].TargetGroupArn" --output text
@@ -182,6 +184,6 @@ stickiness.lb_cookie.duration_seconds	3600
 ```
 
 **Stickiness is a patch for state kept on one machine**, such as a basket held in a process's
-memory, and it has a cost: a target that holds many sticky callers cannot be drained quickly, and the
+memory. It has a cost: a target that holds many sticky callers cannot be drained quickly, and the
 load spreads unevenly. The shop's basket belongs in a database or a cache that every target can
 read, and then stickiness has nothing left to fix.

@@ -25,16 +25,16 @@ reached max retries: 2
 
 **Three attempts, then the error**, which says it reached two retries. Each request tells the
 service which attempt it is with `amz-sdk-request`. The delays before the second and third are
-random and short, because the waiting doubles from a small base and a random part keeps a thousand
-clients that failed together from retrying together. The limit is a setting:
+random and short. The waiting doubles from a small base, and a random part keeps a thousand clients
+that failed together from retrying together. The limit is a setting:
 
 ```
 ana@laptop:~/aws$ AWS_MAX_ATTEMPTS=1 aws rolesanywhere list-trust-anchors --debug 2>&1 | grep -c "Sending http request"
 1
 ```
 
-**One request, no retry.** The same pair of settings exists in every SDK and in `~/.aws/config`,
-as `max_attempts` and `retry_mode`; the program in the previous section wrote them in its `Config`.
+**One request, no retry.** The same pair of settings exists in every SDK and in `~/.aws/config`, as
+`max_attempts` and `retry_mode`. The program in the previous section wrote them in its `Config`.
 
 AWS's documentation describes three retry modes, and the default of AWS CLI 2 is the second:
 
@@ -46,7 +46,7 @@ AWS's documentation describes three retry modes, and the default of AWS CLI 2 is
 
 **Throttling is the failure retries exist for.** Every API has a rate per account and region, and a
 caller above it gets `ThrottlingException`, `Throttling` or `TooManyRequestsException`, depending on
-the service, often with HTTP 400 or 429. A retry with backoff usually gets through; a program that
+the service, often with HTTP 400 or 429. A retry with backoff usually gets through. A program that
 loops without one makes it worse for itself and for everybody else in the account. moto never
 throttles, so this paragraph comes from AWS's documentation and was not run. A request that failed
 for a reason a retry cannot fix, such as `AccessDenied` or a malformed parameter, is not retried.
@@ -54,9 +54,9 @@ for a reason a retry cannot fix, such as `AccessDenied` or a malformed parameter
 ## The console is a client too
 
 **The AWS Management Console is a web application that, behind its screens, makes the same signed
-API calls**, with temporary credentials for whoever signed in to it: a root user, an IAM user, or a
-role reached through Identity Center as in lesson 11. Opening the EC2 page lists instances with
-`DescribeInstances`; pressing a button to launch one sends `RunInstances`. That is why a permission
+API calls**. It uses temporary credentials for whoever signed in to it: a root user, an IAM user, or
+a role reached through Identity Center as in lesson 11. Opening the EC2 page lists instances with
+`DescribeInstances`. Pressing a button to launch one sends `RunInstances`. That is why a permission
 the console lacks shows up as the same `AccessDenied` a command would get, and why the console can
 do nothing that the API does not offer.
 
@@ -70,11 +70,11 @@ pictures of it, because its screens change on AWS's schedule while the calls beh
 ## CloudTrail records the call, whoever made it
 
 Every call that reaches AWS, from the console, the command line, an SDK or `curl`, is the kind of
-event **AWS CloudTrail** records: who made it, from which address, with which key or role session,
-when, and what was asked. The record carries the client's `User-Agent`, so it shows which client
-it was, and it is the same record either way. That is the trail lesson 12 searched by key id after
-a leak. CloudTrail itself belongs to the `aws-operations` course, and moto 5.2.3 answers
-`lookup-events` with an internal error, so it was not run here.
+event **AWS CloudTrail** records. The record says who made it, from which address, with which key or
+role session, when, and what was asked. The record carries the client's `User-Agent`, so it shows
+which client it was, and it is the same record either way. That is the trail lesson 12 searched by
+key id after a leak. CloudTrail itself belongs to the `aws-operations` course, and moto 5.2.3
+answers `lookup-events` with an internal error, so it was not run here.
 
 ## Where this course leaves you
 
@@ -85,7 +85,7 @@ part that lasts**: account, principal, policy, role, region, subnet, request.
 
 ::: track cloud-engineering
 In this track two AWS courses follow. `aws-compute` puts machines, containers and functions into the
-accounts and networks built here, and `aws-operations` delivers to them, watches them and reads the
+accounts and networks built here. `aws-operations` delivers to them, watches them and reads the
 bill, with CloudTrail among its tools. Both assume the identity and network of this course, so the
 profiles, roles and VPCs you made are where they start.
 :::
@@ -98,7 +98,7 @@ this course, so the roles and policies here are what its pipelines will wear.
 
 ::: track devops
 In this track this course is the whole of AWS. The courses that follow, `iac`, `testing-cicd`,
-`gitops` and `observability`, are written for any provider; the accounts, the roles for machines and
+`gitops` and `observability`, are written for any provider. The accounts, the roles for machines and
 pipelines, and the networks you built here are what you point their tools at.
 :::
 

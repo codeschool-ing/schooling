@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A road in from the datacentre is only as good as its second road.** One Direct Connect connection
-is one port, one cross-connect, one building and one fibre route, and any of them can fail; the
+is one port, one cross-connect, one building and one fibre route, and any of them can fail. The
 shop's office then loses the VPC entirely, however fast the link was a minute before. The wrong
 picture is that Direct Connect is "the reliable one" and the VPN the fallback for people who cannot
 afford it. Each is a single path until it is doubled, and the price list decides which doubling the
@@ -25,8 +25,8 @@ AWS describes three arrangements for Direct Connect, from its own resiliency gui
 | maximum resiliency | two connections at each of two locations, on separate devices | a building, and a device in the other one at the same time |
 
 **A VPN is the cheap second road**, and AWS documents it as a backup to Direct Connect. With BGP on
-both, the same office prefix announced over each, AWS prefers the Direct Connect path while it is up,
-and the routes move to the VPN tunnels when it is not. The VPN is slower and crosses the internet,
+both and the same office prefix announced over each, AWS prefers the Direct Connect path while it is
+up. The routes move to the VPN tunnels when it is not. The VPN is slower and crosses the internet,
 which is acceptable for a few hours of degraded service and not as a permanent design.
 
 moto records the second location as readily as the first, which is all it can show of a design meant
@@ -43,8 +43,8 @@ shop-dx-1	TNDB	1Gbps
 shop-dx-2	TIVIT	1Gbps
 ```
 
-**Nothing failed over, because nothing was carrying anything**: the behaviour above is AWS's, and
-testing it means taking one path down in a real account and watching the BGP routes move.
+**Nothing failed over, because nothing was carrying anything**. The behaviour above is AWS's.
+Testing it means taking one path down in a real account and watching the BGP routes move.
 
 ## The prices
 
@@ -119,11 +119,11 @@ A month is 730 hours.
   the building, which the building and the telecom provider bill and the price list does not carry.
 
 **At 2 TB the VPN is cheaper; the bytes decide where that changes.** The port costs 182.50 a month
-more than the VPN's hours, and each gigabyte over Direct Connect saves 0.04, so the two meet at
-182.50 / 0.04 = **4,562.5 GB**, about 4.5 TB a month. Above that the cable is cheaper on the price
-list alone, and it was already the steadier path.
+more than the VPN's hours, and each gigabyte over Direct Connect saves 0.04. So the two meet at 182.50
+/ 0.04 = **4,562.5 GB**, about 4.5 TB a month. Above that the cable is cheaper on the price list
+alone, and it was already the steadier path.
 
 That arithmetic is for one road. A high-resiliency design is two ports at two locations, 438.00 a
 month in hours before a byte moves. The cheaper doubling, for an office of the shop's size, is the
-one this section opened with: **one Direct Connect connection, with a VPN behind it**, for
-219.00 + 36.50 = 255.50 a month in hours.
+one this section opened with. That is **one Direct Connect connection, with a VPN behind it**, for 219.00 + 36.50
+= 255.50 a month in hours.

@@ -5,9 +5,9 @@ version: 1
 
 **For credentials, the environment beats `AWS_PROFILE`, and `--profile` beats the environment.**
 That asymmetry is the most useful single fact about the command line in this course, because
-`env.sh` exports moto's test keys into every terminal. Lesson 10's chain explains it: the `env`
-provider comes first, and naming a profile with `--profile` removes that provider from the chain
-for the command; naming it with a variable does not.
+`env.sh` exports moto's test keys into every terminal. Lesson 10's chain explains it. The `env`
+provider comes first, and naming a profile with `--profile` removes that provider from the chain for
+the command. Naming it with a variable does not.
 
 ## Measured three ways
 
@@ -36,9 +36,9 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 ```
 
 **Now the keys come from `shared-credentials-file`**, the profile's own file. The two runs use the
-same keys only because `lab` holds `test` and `test` too; with a real profile the first would sign
-as one identity and the second as another, and nothing on the screen but the `TYPE` column would
-say so.
+same keys only because `lab` holds `test` and `test` too. With a real profile the first would sign
+as one identity and the second as another, and nothing on the screen but the `TYPE` column would say
+so.
 
 The third way keeps `AWS_PROFILE` and takes the environment's keys away for one command. That is
 the way to use a profile in this course **without changing `env.sh`**, which every other lesson
@@ -53,9 +53,9 @@ secret_key : ****************test     : shared-credentials-file :
 region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_DEFAULT_REGION']
 ```
 
-A terminal that never read `env.sh` behaves the same, with the difference that it also lacks the
-endpoint and would send its requests to AWS. **In the lab, prefer `--profile`**; outside it, a
-profile picked with `AWS_PROFILE` in a shell with no keys exported is the everyday arrangement.
+A terminal that never read `env.sh` behaves the same, except that it also lacks the endpoint and
+would send its requests to AWS. **In the lab, prefer `--profile`**. Outside it, a profile picked
+with `AWS_PROFILE` in a shell with no keys exported is the everyday arrangement.
 
 ## A role in a profile: one account to another
 
@@ -88,10 +88,10 @@ ana@laptop:~/aws$ aws sts get-caller-identity --profile staging
 
 **`role_arn` says which role to assume and `source_profile` says with which credentials.** The
 command line called `sts:AssumeRole` as `lab`, got temporary credentials in `shop-staging`, and
-signed `get-caller-identity` with them; `role_session_name` fixed the session name that it would
+signed `get-caller-identity` with them. `role_session_name` fixed the session name that it would
 otherwise take from the clock. The output is a table because the profile asked for one. The role is
-the one lesson 3 showed moto creating in every new account, with no policy attached, which moto
-does not check here anyway.
+the one lesson 3 showed moto creating in every new account, with no policy attached, which moto does
+not check here anyway.
 
 The same command with the profile and without it shows two accounts, each with its own default
 network:
@@ -111,11 +111,11 @@ session.db
 ```
 
 The `.json` files in `~/.aws/cli/cache/` hold the role's temporary credentials, kept until they
-expire so that the next command does not assume the role again. **Deleting them is safe**: the
-next command just assumes the role once more. Two related settings sit beside `role_arn`. `credential_source`
-replaces `source_profile` on a machine that already has credentials from its environment or its
-metadata service, as in lesson 10; `mfa_serial` makes the command line ask for a code before
-assuming a role whose trust policy demands MFA.
+expire so that the next command does not assume the role again. **Deleting them is safe**: the next
+command just assumes the role once more. Two related settings sit beside `role_arn`.
+`credential_source` replaces `source_profile` on a machine that already has credentials from its
+environment or its metadata service, as in lesson 10. `mfa_serial` makes the command line ask for a
+code before assuming a role whose trust policy demands MFA.
 
 ## `credential_process`, a program that hands over credentials
 
@@ -160,14 +160,14 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 `custom-process` is the provider of lesson 10's chain that answered. A real program may also return
 `SessionToken` and `Expiration`, and the command line asks it again once that time has passed.
 
-Lesson 11 used the fourth kind, `sso_session`, and with these four the list is complete: **keys in
-a file, a role assumed from another profile, a program, or a sign-in through Identity Center.**
+Lesson 11 used the fourth kind, `sso_session`. With these four the list is complete: **keys in a
+file, a role assumed from another profile, a program, or a sign-in through Identity Center.**
 
 ## CloudShell, which needs no profile at all
 
 **AWS CloudShell is a shell in the browser, opened from the console, with the command line already
 signed in as whoever is using the console.** It runs Amazon Linux in the region the console is set
-to, with the AWS CLI, Python and Node.js installed, and keeps 1 GB of the home directory per region
+to, with the AWS CLI, Python and Node.js installed. It keeps 1 GB of the home directory per region
 between sessions. There is no key to configure, because the credentials are those of the console
 session, and they end when it does.
 

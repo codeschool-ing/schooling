@@ -3,12 +3,12 @@ title: Quanto custa o CloudFront, e o que ele deixa de fora
 version: 1
 ---
 
-**O CloudFront cobra por onde está quem vê**, não por onde está a loja: um gigabyte mandado a um
-cliente em Recife é cobrado como América do Sul, um gigabyte a um em Lisboa como Europa, seja qual for
-a região em que a origem mora. Três linhas fazem a maior parte da fatura, os bytes de saída para quem
-vê, as requisições, e os caminhos de invalidação além de uma cota, e uma linha que importa é a que
-não custa nada. A imagem errada comum é que uma CDN é uma camada extra de custo por cima da da região.
-Para bytes que saem da AWS, ela costuma ser a porta mais barata.
+**O CloudFront cobra por onde está quem vê**, não por onde está a loja. Um gigabyte mandado a um
+cliente em Recife é cobrado como América do Sul e um gigabyte a um em Lisboa como Europa, seja qual
+for a região em que a origem mora. Três linhas fazem a maior parte da fatura: os bytes de saída para
+quem vê, as requisições, e os caminhos de invalidação além de uma cota. E uma linha que importa é a
+que não custa nada. A imagem errada comum é que uma CDN é uma camada extra de custo por cima da da
+região. Para bytes que saem da AWS, ela costuma ser a porta mais barata.
 
 ## As linhas da lista de preços
 
@@ -87,18 +87,18 @@ Digamos que a loja manda 5 TB por mês a clientes no Brasil, em 50 milhões de r
   para o CloudFront é grátis.
 
 **A CDN sai 94,80 dólares por mês mais barata antes de economizar qualquer outra coisa**, e ela
-economiza: toda requisição respondida no ponto de presença é uma que o balanceador não contou nas
-unidades de capacidade, e uma que o bucket não contou como `GET`. Os números só vão para o outro lado
-em tráfego que não pode ficar em cache nenhum e é feito de requisições pequenas, em que a linha de
-requisições pesa mais que a transferência que ela economiza.
+economiza mais. Toda requisição respondida no ponto de presença é uma que o balanceador não contou
+nas unidades de capacidade, e uma que o bucket não contou como `GET`. Os números só vão para o outro
+lado em tráfego que não pode ficar em cache nenhum e é feito de requisições pequenas, em que a linha
+de requisições pesa mais que a transferência que ela economiza.
 
 **A classe de preço é a configuração que pode desfazer isso em silêncio.** `PriceClass_All`, que a
-distribuição da loja usa, atende todo mundo pelo ponto de presença mais próximo. As duas classes mais
-baratas, `PriceClass_100` e `PriceClass_200`, deixam de fora as partes mais caras do mundo, e segundo a
-documentação da AWS a América do Sul fica de fora das duas: um cliente brasileiro seria então
-atendido por um ponto de presença na América do Norte, a um preço menor por gigabyte e com uma
-latência que o cliente sente. Para uma loja cujos clientes estão no Brasil, a classe não é economia, é
-o ponto de presença errado.
+distribuição da loja usa, atende todo mundo pelo ponto de presença mais próximo. As duas classes
+mais baratas, `PriceClass_100` e `PriceClass_200`, deixam de fora as partes mais caras do mundo.
+Segundo a documentação da AWS, a América do Sul fica de fora das duas. Um cliente brasileiro seria
+então atendido por um ponto de presença na América do Norte, a um preço menor por gigabyte e com uma
+latência que o cliente sente. Para uma loja cujos clientes estão no Brasil, a classe não é economia,
+é o ponto de presença errado.
 
 As invalidações, por último: os 1.500 caminhos da loja num mês movimentado custam 500 × 0,005 =
 **2,50 dólares**, e o mesmo mês com nomes de arquivo com versão não custa nada.
@@ -110,7 +110,7 @@ delas foi posta à prova aqui**: o moto guarda algumas e não aplica nenhuma, en
 abaixo é o documentado pela AWS.
 
 - **Um comportamento pode exigir assinatura em toda requisição**, numa URL assinada ou num cookie
-  assinado feitos com uma chave que a loja guarda; o CloudFront a confere com a metade pública,
+  assinado feitos com uma chave que a loja guarda. O CloudFront a confere com a metade pública,
   guardada num **grupo de chaves** (*key group*) da distribuição. Um download vendido a um cliente
   ganha uma URL que funciona até uma hora que a loja escolheu, e o link de mais ninguém funciona.
 - **Uma distribuição pode recusar países inteiros**, ou permitir só alguns, pelo endereço de quem vê.
@@ -130,12 +130,11 @@ ana@laptop:~/aws$ aws cloudfront get-distribution-config --id $id --query "Distr
   que elas custem qualquer coisa à origem: limites de taxa por endereço, regras contra ataques comuns,
   bloqueios por país ou cabeçalho. Para o CloudFront a web ACL é criada com o escopo `CLOUDFRONT`, em
   `us-east-1`, a regra da primeira seção desta lição mais uma vez.
-- **O AWS Shield Standard está ligado em toda distribuição**, sem custo, contra as enxurradas de
-  tráfego mais comuns; o **Shield Advanced**, pago, acrescenta uma equipe de resposta e proteção de
+- **O AWS Shield Standard está ligado em toda distribuição**, sem custo, contra as enxurradas de tráfego mais comuns. O **Shield Advanced**, pago, acrescenta uma equipe de resposta e proteção de
   custo.
 
 **A origem também tem de ser fechada.** Uma distribuição na frente de um balanceador que qualquer um
-ainda alcança direto é uma porta da frente ao lado de uma janela aberta. O OAC fecha o bucket, como a
-primeira seção fez. Para o balanceador, a AWS publica uma lista de prefixos gerenciada com os
-endereços do CloudFront, e uma regra de grupo de segurança que admite só essa lista, assunto da lição
+ainda alcança direto é uma porta da frente ao lado de uma janela aberta. O OAC fecha o bucket, como
+a primeira seção fez. Para o balanceador, a AWS publica uma lista de prefixos gerenciada com os
+endereços do CloudFront. Uma regra de grupo de segurança que admite só essa lista, assunto da lição
 18, deixa o CloudFront como o único caminho de entrada.

@@ -4,7 +4,7 @@ version: 1
 ---
 
 **AWS's services do not all speak the same dialect of HTTP.** The older ones take a form and answer
-in XML; most of the newer ones take JSON; S3 uses the URL itself as the address of what it acts on.
+in XML. Most of the newer ones take JSON. S3 uses the URL itself as the address of what it acts on.
 Signing is the same in all of them. An SDK knows which dialect each service speaks, and the program
 that uses it never has to.
 
@@ -40,7 +40,7 @@ method=PUT, url=http://localhost:4567/shop-assets
 ```
 
 The XML names S3's version too, `2006-03-01`, in its namespace. Against AWS the bucket usually goes
-into the host name instead, `shop-assets.s3.sa-east-1.amazonaws.com`; with a custom endpoint like
+into the host name instead, `shop-assets.s3.sa-east-1.amazonaws.com`. With a custom endpoint like
 moto's the command line puts it in the path. EC2 speaks query, like STS:
 
 ```
@@ -50,7 +50,7 @@ ana@laptop:~/aws$ aws ec2 describe-vpcs --debug 2>&1 | grep -oE "'body': \{[^}]*
 
 **Every service carries an API version, and it is a date.** STS's is `2011-06-15` and EC2's
 `2016-11-15`. AWS adds operations and fields under the same version and keeps old ones working,
-which is why a fifteen-year-old script still runs; a new version date is rare, and the SDK names it
+which is why a fifteen-year-old script still runs. A new version date is rare, and the SDK names it
 for you. Lambda's REST-JSON was not measured here.
 
 ## boto3, already in the lab
@@ -67,7 +67,7 @@ ana@laptop:~/aws$ which python3
 /opt/awslab/home/ana/aws/venv/bin/python3
 ```
 
-`env.sh` activated `~/aws/venv`, so `python3` is the virtual environment's, and boto3 reads the same
+`env.sh` activated `~/aws/venv`, so `python3` is the virtual environment's. boto3 reads the same
 variables the command line does: the test keys, the region, and `AWS_ENDPOINT_URL`, which sends it
 to moto. This program asks the lab three questions with it. Save it as `~/aws/shop-check.py`:
 

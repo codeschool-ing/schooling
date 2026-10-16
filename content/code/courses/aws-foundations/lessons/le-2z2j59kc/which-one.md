@@ -3,10 +3,10 @@ title: Peering or Transit Gateway, by count, by route and by price
 version: 1
 ---
 
-**Peering costs nothing to have and grows by pairs; a Transit Gateway costs something every hour
-and grows by one attachment per network.** With two or three VPCs, peering is cheaper and simpler.
-With many, or the moment one network has to be reached *through* another, the hub wins, and the
-price list says how much it charges for winning.
+**Peering costs nothing to have and grows by pairs; a Transit Gateway costs something every hour and
+grows by one attachment per network.** With two or three VPCs, peering is cheaper and simpler. With
+many, or the moment one network has to be reached *through* another, the hub wins. The price list
+says how much it charges for winning.
 
 ## The prices
 
@@ -47,7 +47,7 @@ and a VPN concentrator. Whatever is attached, **0.09 dollars an hour per attachm
 gigabyte the hub processes**.
 
 The two peering lines are **0.01 a gigabyte in each direction**. AWS's documentation says that
-traffic over a peering inside one zone is free, so these lines are what crossing zones over a
+traffic over a peering inside one zone is free. So these lines are what crossing zones over a
 peering costs, the same 0.01 each way as any crossing between zones in lesson 1. Peering has no
 hourly line at all.
 
@@ -68,10 +68,10 @@ in the middle of a conversation that needs nobody in the middle.
 ## Ten VPCs
 
 Pairs grow faster than networks. Ten VPCs that all talk to each other need 10 × 9 / 2 = **45
-peerings**, each requested and accepted, and every route table of every VPC carries **nine routes**,
-one per peer; an eleventh VPC adds ten more peerings and a route to every table in the organisation.
-AWS caps the peerings of one VPC by quota as well, 50 by default. The hub needs **ten attachments**
-and one line per VPC in its own table, propagated by itself:
+peerings**, each requested and accepted. Every route table of every VPC carries **nine routes**, one
+per peer. An eleventh VPC adds ten more peerings and a route to every table in the organisation. AWS
+caps the peerings of one VPC by quota as well, 50 by default. The hub needs **ten attachments** and
+one line per VPC in its own table, propagated by itself:
 
 | ten VPCs | peering | Transit Gateway |
 |---|---|---|
@@ -91,13 +91,13 @@ running the platform, is worth a good deal of it.
 
 - **Peering** when the VPCs are few, the traffic between them is heavy and every pair simply talks
   to every other. It has no hourly cost, no processing charge, and nothing in the middle to fail.
-- **Transit Gateway** when the VPCs are many or keep arriving, when the routing must be
-  **transitive**, such as one VPN to the office (lesson 24) that every VPC uses, and when the shop
-  needs **segments**, staging kept away from production while both reach shared tools, which only
-  the hub's route tables can say.
+- **Transit Gateway** when the VPCs are many or keep arriving, or when the routing must be
+  **transitive**, such as one VPN to the office (lesson 24) that every VPC uses. It also wins when
+  the shop needs **segments**: staging kept away from production while both reach shared tools,
+  which only the hub's route tables can say.
 - **Neither** when one service is all that has to be shared, one way. That is PrivateLink, lesson
   19, and it does not care whether the ranges overlap.
 
 The shop, with production, staging and a disaster-recovery copy, starts with **peering**. The day
-the office VPN arrives, or a fourth and fifth account do, it moves to the hub, and the move is the
+the office VPN arrives, or a fourth and fifth account do, it moves to the hub. The move is the
 `replace-route` of the previous section, one table at a time.

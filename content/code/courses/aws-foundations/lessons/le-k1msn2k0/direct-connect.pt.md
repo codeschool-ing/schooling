@@ -3,21 +3,21 @@ title: Direct Connect, um cabo até a AWS
 version: 1
 ---
 
-**O Direct Connect é um enlace físico entre a sua rede e a da AWS**, feito num prédio onde as duas têm
-equipamentos, para que o tráfego entre o escritório e a VPC nunca atravesse a internet pública. A
-imagem errada é uma VPN mais rápida. Uma VPN é um túnel que você levanta numa tarde por cima da
-internet que tiver. O Direct Connect é uma porta, uma fibra e um contrato, encomendado ao longo de
-semanas, e o que ele compra é um caminho cuja banda e cuja latência são as mesmas às nove da manhã e
-às três da madrugada. Três peças o formam: uma **conexão** num **local**, uma ou mais **interfaces
-virtuais** nela, e muitas vezes um **Direct Connect gateway** para alcançar VPCs além de uma região.
+**O Direct Connect é um enlace físico entre a sua rede e a da AWS**, feito num prédio onde as duas
+têm equipamentos. O tráfego entre o escritório e a VPC nunca atravessa a internet pública. A imagem
+errada é uma VPN mais rápida. Uma VPN é um túnel que você levanta numa tarde por cima da internet
+que tiver. O Direct Connect é uma porta, uma fibra e um contrato, encomendado ao longo de semanas.
+Ele compra um caminho cuja banda e cuja latência são as mesmas às nove da manhã e às três da
+madrugada. Três peças o formam: uma **conexão** num **local**, uma ou mais **interfaces virtuais**
+nela, e muitas vezes um **Direct Connect gateway** para alcançar VPCs além de uma região.
 
 ## Locais, e os dois tipos de conexão
 
 **Um local do Direct Connect é um datacenter de colocation onde a AWS tem roteadores**, não uma
-região da AWS. A lista de preços nomeia dois em São Paulo, `Equinix SP4` sob o código `TNDB` e `Tivit`
-sob `TIVIT`, e uma conexão feita em qualquer um deles fica ligada a `sa-east-1`. O equipamento da
-própria loja, ou o da operadora dela, tem de chegar a esse prédio; os últimos metros lá dentro são um
-**cross-connect**, um cabo que o operador do prédio passa entre os dois racks.
+região da AWS. A lista de preços nomeia dois em São Paulo, `Equinix SP4` sob o código `TNDB` e
+`Tivit` sob `TIVIT`. Uma conexão feita em qualquer um deles fica ligada a `sa-east-1`. O equipamento
+da própria loja, ou o da operadora dela, tem de chegar a esse prédio. Os últimos metros lá dentro
+são um **cross-connect**, um cabo que o operador do prédio passa entre os dois racks.
 
 | | conexão dedicada | conexão hospedada |
 |---|---|---|
@@ -39,7 +39,7 @@ aws: [ERROR]: An error occurred (500) when calling the DescribeLocations operati
 ```
 
 **O moto 5.2.3 não consegue listar locais**, então o código que esta lição usa é o que a lista de
-preços deu, `TNDB`, e o moto teria aceitado qualquer texto. Uma conexão dedicada de 1 Gbps:
+preços deu, `TNDB`. O moto teria aceitado qualquer texto. Uma conexão dedicada de 1 Gbps:
 
 ```
 ana@laptop:~/aws$ aws directconnect create-connection --location TNDB --bandwidth 1Gbps --connection-name shop-dx-1 --query "[connectionId,connectionState,location,bandwidth,awsDevice]" --output text
@@ -47,9 +47,9 @@ arn:aws:directconnect:sa-east-1:123456789012:dx-con/dx-moto-shop-dx-1-2026101613
 ```
 
 Três coisas nessa linha são do moto e não da AWS. **O estado é `available` na hora**, enquanto a AWS
-começa uma conexão dedicada em `requested`, a mantém ali até você baixar a LOA, e só a passa para
-`available` quando o cross-connect está feito e há luz na fibra, o que leva de dias a semanas. **O id
-é um ARN com uma data e hora dentro**, enquanto a AWS dá um id como `dxcon-` seguido de alguns
+começa uma conexão dedicada em `requested` e a mantém ali até você baixar a LOA. A AWS só a passa
+para `available` quando o cross-connect está feito e há luz na fibra, o que leva de dias a semanas. **O
+id é um ARN com uma data e hora dentro**, enquanto a AWS dá um id como `dxcon-` seguido de alguns
 caracteres. E `mock_device` é o moto dizendo que não há equipamento. Guarde o id para o próximo
 passo:
 
@@ -60,7 +60,7 @@ ana@laptop:~/aws$ dx=$(aws directconnect describe-connections --query "connectio
 ## Interfaces virtuais: o que viaja no cabo
 
 **Uma conexão é um cabo; uma interface virtual (VIF) é uma conversa nele**, uma VLAN com uma sessão
-BGP própria, e uma conexão carrega várias. Há três tipos:
+BGP própria. Uma conexão carrega várias. Há três tipos:
 
 | VIF | alcança | a loja a usa para |
 |---|---|---|
@@ -87,18 +87,18 @@ em diante a seção é comportamento documentado da AWS, e nada dela foi rodado.
 ## O Direct Connect gateway
 
 **Um Direct Connect gateway é um objeto global que liga interfaces virtuais a gateways em qualquer
-região.** Sem ele, uma VIF privada alcança um virtual private gateway na região de origem da conexão;
-com ele, a mesma VIF alcança virtual private gateways em várias regiões e contas, e uma VIF de
-trânsito alcança Transit Gateways. Ele roteia entre as VIFs e as VPCs, não entre duas VPCs nem entre
-dois escritórios: tráfego de uma VPC para outra por um Direct Connect gateway é recusado de propósito,
-e esse é o trabalho da lição 20.
+região.** Sem ele, uma VIF privada alcança um virtual private gateway na região de origem da
+conexão. Com ele, a mesma VIF alcança virtual private gateways em várias regiões e contas, e uma VIF
+de trânsito alcança Transit Gateways. Ele roteia entre as VIFs e as VPCs, não entre duas VPCs nem
+entre dois escritórios. Tráfego de uma VPC para outra por um Direct Connect gateway é recusado de
+propósito, e ligar VPCs é o trabalho da lição 20.
 
 ## O que o cabo não faz
 
-**O Direct Connect é privado, e não é cifrado.** O tráfego atravessa um cabo que ninguém mais divide,
-entre equipamentos que a loja e a AWS controlam, e ainda assim vai em texto claro nesse cabo. Duas
-respostas, ambas documentadas pela AWS e nenhuma rodada aqui: o **MACsec**, cifragem de enlace em
-conexões dedicadas de 10 e 100 Gbps; ou uma **VPN Site-to-Site por cima do Direct Connect**, os túneis
-da seção anterior carregados numa VIF pública ou de trânsito em vez da internet. Para uma loja que
-manda dados de pagamento entre o escritório e a VPC, uma das duas pertence ao projeto, sugira o que
-sugerir a privacidade do cabo.
+**O Direct Connect é privado, e não é cifrado.** O tráfego atravessa um cabo que ninguém mais
+divide, entre equipamentos que a loja e a AWS controlam, e ainda assim vai em texto claro nesse
+cabo. Há duas respostas, ambas documentadas pela AWS e nenhuma rodada aqui. O **MACsec** é cifragem
+de enlace em conexões dedicadas de 10 e 100 Gbps. A outra é uma **VPN Site-to-Site por cima do
+Direct Connect**: os túneis da seção anterior carregados numa VIF pública ou de trânsito em vez da
+internet. Para uma loja que manda dados de pagamento entre o escritório e a VPC, uma das duas
+pertence ao projeto, sugira o que sugerir a privacidade do cabo.

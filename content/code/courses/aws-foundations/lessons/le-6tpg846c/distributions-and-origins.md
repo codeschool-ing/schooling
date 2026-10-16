@@ -4,16 +4,16 @@ version: 1
 ---
 
 **CloudFront keeps copies of the shop's files in AWS's edge locations, near the people asking for
-them**, and fetches from the shop only what no nearby copy has. The shop's side is called the
-**origin**; the configuration that joins the origins to the edges, with the rules for what is kept
-and for how long, is a **distribution**. The common wrong picture is that CloudFront is a faster
-copy of the bucket. It is a cache in front of anything that answers HTTP, and its job is to make
-most requests never reach the origin at all.
+them**, and fetches from the shop only what no nearby copy has. The shop's side is called the **origin**.
+The configuration that joins the origins to the edges, with the rules for what is kept and for how
+long, is a **distribution**. The common wrong picture is that CloudFront is a faster copy of the
+bucket. It is a cache in front of anything that answers HTTP, and its job is to make most requests
+never reach the origin at all.
 
 ## Edges, and the cache between them and the shop
 
-**An edge location is a point of presence in a city**, hundreds of them around the world, and it is
-where a viewer's request lands: the DNS name of a distribution answers with an edge close to whoever
+**An edge location is a point of presence in a city**, one of hundreds around the world, and it is
+where a viewer's request lands. The DNS name of a distribution answers with an edge close to whoever
 asks. Behind the edges sit the **regional edge caches**, fewer and larger, which keep what has
 fallen out of the edges' smaller caches. A request that finds nothing at the edge asks its regional
 cache, and only a miss there goes back to the origin.
@@ -23,9 +23,9 @@ cache, and only a miss there goes back to the origin.
 ```
 
 That arrangement is what changes the bill as well as the speed. A file asked for a million times a
-day is fetched from the shop a handful of times, once per regional cache whenever its copy expires,
-and the rest is answered by AWS's network. **The bytes from the origin to CloudFront are free**,
-which the offer lesson 1 read says on a line of its own, and the last section of this lesson prints.
+day is fetched from the shop a handful of times, once per regional cache whenever its copy expires.
+AWS's network answers the rest. **The bytes from the origin to CloudFront are free**, which the
+offer lesson 1 read says on a line of its own, and the last section of this lesson prints.
 
 ## Starting from an empty AWS
 
@@ -54,8 +54,8 @@ aws elbv2 create-load-balancer --name shop-web --subnets "$a" "$b" > /dev/null
 | any other HTTP server | its DNS name, as a custom origin | a payment provider's status page, a server in the datacentre |
 
 **Origin Access Control (OAC) is how a bucket stays private and still serves the world.** CloudFront
-signs each request it makes to the bucket, the bucket's own policy allows those signed requests and
-nobody else's, and the files can then be read through the distribution and never straight from S3.
+signs each request it makes to the bucket, and the bucket's own policy allows those signed requests
+and nobody else's. The files can then be read through the distribution and never straight from S3.
 An OAC is an object of its own, made once and named in the origin:
 
 ```
@@ -111,7 +111,7 @@ The configuration is one JSON document. Save it as `~/aws/distribution.json`, wi
 
 Read it from the top. **Two origins**, each with an `Id` the behaviours refer to. **A default
 behaviour** sends everything to the load balancer, without caching it, since pages and the API are
-different for every customer; the next section reads the three policy ids. **One more behaviour**
+different for every customer. The next section reads the three policy ids. **One more behaviour**
 sends `/static/*` to the bucket, cached, compressed. And `redirect-to-https` turns a viewer's plain
 HTTP request into a redirect, as lesson 22's listener on port 80 did.
 
@@ -122,7 +122,7 @@ https://cloudfront.amazonaws.com/2020-05-31/distribution/DOF70T4DOCRTU	DOF70T4DO
 
 **The distribution has a name of its own, under `cloudfront.net`**, and that is what viewers are
 sent to. `InProgress` means AWS is copying the configuration to every edge, which against AWS takes
-minutes; moto calls it `Deployed` the next time it is asked. Keep the id:
+minutes. moto calls it `Deployed` the next time it is asked. Keep the id:
 
 ```
 ana@laptop:~/aws$ id=$(aws cloudfront list-distributions --query "DistributionList.Items[0].Id" --output text)
@@ -135,7 +135,7 @@ web	shop-web-1.sa-east-1.elb.amazonaws.com	None
 ```
 
 **moto dropped the OAC.** The bucket origin came back with no `OriginAccessControlId`, so moto 5.2.3
-stores the origin and not the protection on it; against AWS the same command prints the id.
+stores the origin and not the protection on it. Against AWS the same command prints the id.
 
 ## The bucket's half of the bargain
 
@@ -163,16 +163,18 @@ ana@laptop:~/aws$ aws s3api put-bucket-policy --bucket shop-assets --policy file
 ```
 
 **moto stores a bucket policy and does not judge it**, the limit lesson 1 named, so nothing here
-proves that a stranger is refused. In AWS the bucket's **Block Public Access** stays on, nothing in
-the policy is public, and a direct request for `shop-assets.s3.sa-east-1.amazonaws.com/static/logo.png`
-is refused while the same file through the distribution is served.
+proves that a stranger is refused. In AWS the bucket's **Block Public Access** stays on, and nothing
+in the policy is public. A direct request for
+`shop-assets.s3.sa-east-1.amazonaws.com/static/logo.png` is refused, while the same file through the
+distribution is served.
 
 ## Global, with its API in Virginia
 
 **CloudFront belongs to no region**, like Route 53 in lesson 21. Against AWS the command line sends
 every CloudFront call to one address and signs it for `us-east-1`, where the service's control plane
-runs, and the answers show it in three places. The `Location` above is `cloudfront.amazonaws.com`, with no region in it. The ARN has an
-empty region field, `arn:aws:cloudfront::123456789012:…`. And `--region` changes nothing:
+runs. The answers show it in three places. The `Location` above is `cloudfront.amazonaws.com`, with
+no region in it. The ARN has an empty region field, `arn:aws:cloudfront::123456789012:…`. And
+`--region` changes nothing:
 
 ```
 ana@laptop:~/aws$ aws cloudfront list-distributions --region ap-southeast-2 --query "DistributionList.Items[].[Id,DomainName]" --output text
@@ -181,7 +183,7 @@ DOF70T4DOCRTU	wtn4hbbp1mje6.cloudfront.net
 
 **The one place a region is not optional is the certificate.** To serve `cdn.shop.example.com`
 instead of the `cloudfront.net` name, the distribution needs the name in `Aliases` and an ACM
-certificate for it, and **CloudFront takes certificates only from `us-east-1`**, wherever the shop
+certificate for it. **CloudFront takes certificates only from `us-east-1`**, wherever the shop
 lives. The other services attached to a distribution follow the same rule: a WAF web ACL for
 CloudFront is made in `us-east-1`, and CloudFront's metrics land in CloudWatch in `us-east-1`.
 

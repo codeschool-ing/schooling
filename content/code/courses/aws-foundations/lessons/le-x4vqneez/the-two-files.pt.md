@@ -6,8 +6,8 @@ version: 1
 **A linha de comando da AWS lê as configurações de três lugares, e o mais próximo vence: uma opção
 no comando, depois uma variável de ambiente, depois um perfil nos arquivos em `~/.aws`.** Um perfil
 é um pacote de configurações com nome, então um laptop conversa com seis contas sem editar nada
-entre um comando e outro. Toda lição até aqui viveu na camada do meio, as variáveis do `env.sh`;
-esta lição abre a de baixo e mede como as três se empilham.
+entre um comando e outro. Toda lição até aqui viveu na camada do meio, as variáveis do `env.sh`.
+Esta lição abre a de baixo e mede como as três se empilham.
 
 A imagem errada é que o `~/.aws/credentials` é onde a linha de comando é configurada. **Ele é um de
 dois arquivos**, e o menor. Chaves vão em `credentials`; todo o resto, da região à role a assumir,
@@ -43,7 +43,7 @@ e que é usado quando nada nomeia outro. O arquivo da lição 11 mostrou um terc
 `[sso-session …]`, que não pertence a nenhum perfil e é compartilhado pelos que o nomeiam.
 
 Nunca ponha uma chave real em nenhum dos dois arquivos à mão, e nunca cole uma vinda de uma
-mensagem; as chaves aqui são marcadores do moto. O `aws configure get` lê uma configuração de volta,
+mensagem. As chaves aqui são marcadores do moto. O `aws configure get` lê uma configuração de volta,
 e o `list-profiles` nomeia todo perfil que os dois arquivos definem:
 
 ```
@@ -77,7 +77,7 @@ comando com `env -u` deixa a região do perfil passar. E uma opção na linha de
 | ambiente | `AWS_DEFAULT_REGION` no `env.sh` | `sa-east-1a` |
 | perfil | `region = us-east-1` no `~/.aws/config` | `us-east-1a` |
 
-A região tem duas variáveis, e `AWS_REGION` vence `AWS_DEFAULT_REGION` quando as duas existem; o
+A região tem duas variáveis, e `AWS_REGION` vence `AWS_DEFAULT_REGION` quando as duas existem. O
 `aws configure list` nomeia as duas na coluna `LOCATION`. As mesmas três camadas valem para o
 formato de saída (`--output`, `AWS_DEFAULT_OUTPUT`, `output =`), para o endpoint (`--endpoint-url`,
 `AWS_ENDPOINT_URL`, `endpoint_url =`) e para o próprio perfil (`--profile`, `AWS_PROFILE`).

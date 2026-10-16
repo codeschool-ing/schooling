@@ -4,7 +4,7 @@ version: 1
 ---
 
 **PrivateLink lets one VPC offer a service to others the way AWS offers STS.** The provider puts a
-Network Load Balancer in front of the service and publishes it as an **endpoint service**, and each
+Network Load Balancer in front of the service and publishes it as an **endpoint service**. Each
 consumer creates an interface endpoint to it in its own VPC. Traffic goes one way, from consumer to
 provider, and nothing else of either VPC is visible to the other.
 
@@ -28,8 +28,8 @@ ana@laptop:~/aws$ aws elbv2 describe-load-balancers --names stock-api --query "L
 network	internal	3
 ```
 
-Lesson 22 is about load balancers; here the only thing that matters is that an endpoint service
-needs a Network Load Balancer (or a Gateway Load Balancer, which serves another purpose) behind it.
+Lesson 22 is about load balancers. Here all that matters is that an endpoint service needs a Network
+Load Balancer (or a Gateway Load Balancer, which serves another purpose) behind it.
 
 ## Publishing it as an endpoint service
 
@@ -63,9 +63,9 @@ arn:aws:iam::321532293571:root
 
 ## The consumer, in the other account
 
-The staging side works through a profile that assumes the account's administrator role, as lesson
-2 set one up; the profile names this run's account number, so after a restart of moto it is set
-again. Staging's VPC is `10.30.0.0/16`, with one subnet for the test:
+The staging side works through a profile that assumes the account's administrator role, as lesson 2
+set one up. The profile names this run's account number, so it is set again after a restart of moto.
+Staging's VPC is `10.30.0.0/16`, with one subnet for the test:
 
 ```
 ana@laptop:~/aws$ aws configure set profile.shop-staging.role_arn arn:aws:iam::$staging:role/OrganizationAccountAccessRole
@@ -80,7 +80,7 @@ vpce-d2da24b6a04de105b	available	321532293571
 ```
 
 **On AWS that endpoint would now be `pendingAcceptance`**, and it would carry no traffic until the
-shop ran `accept-vpc-endpoint-connections` for it. moto creates it `available` at once, and answers
+shop ran `accept-vpc-endpoint-connections` for it. moto creates it `available` at once. It answers
 both `describe-vpc-endpoint-connections` and `accept-vpc-endpoint-connections` with an internal
 error, so the acceptance was not run here. Once accepted, staging's machines would reach the stock
 API at the endpoint's interface in their own subnet, with an address from `10.30.0.0/16`. Production
@@ -105,5 +105,5 @@ because nothing went there.
 | to offer one service of yours to other VPCs or accounts, one way | PrivateLink: an endpoint service behind a Network Load Balancer |
 | two VPCs whose machines talk to each other freely | peering or Transit Gateway, lesson 20 |
 
-The last row is the one this lesson does not do. When two networks need to reach many things in
-each other, endpoint by endpoint is the wrong tool, and lesson 20 joins the ranges themselves.
+The last row is the one this lesson does not do. When two networks need to reach many things in each
+other, endpoint by endpoint is the wrong tool. Lesson 20 joins the ranges themselves.

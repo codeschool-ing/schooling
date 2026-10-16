@@ -10,7 +10,7 @@ pega alguém. **Os dois intervalos não podem se sobrepor, os dois lados precisa
 passa através.**
 
 A imagem errada é uma conexão de peering como um cabo entre duas redes que então viram uma só. Elas
-não viram uma só. Um peering é um par, e **ele não é transitivo**: se a produção tem peering com o
+não viram uma só. Um peering é um par, e **ele não é transitivo**. Se a produção tem peering com o
 staging e com a cópia de recuperação de desastre, o staging continua sem alcançar a cópia através da
 produção. Cada par que precisa conversar precisa do seu próprio peering.
 
@@ -30,10 +30,10 @@ ana@laptop:~/aws$ echo $vpc $svpc
 vpc-4d9b138dab1e13c0a vpc-17bcf95982f6b62d7
 ```
 
-O outro lado é a VPC do staging, `10.30.0.0/16`. **Na AWS ela mora na conta `shop-staging`**; o
+O outro lado é a VPC do staging, `10.30.0.0/16`. **Na AWS ela mora na conta `shop-staging`**. O
 laboratório põe as duas VPCs na conta padrão do moto, o que muda os comandos em uma opção e o
 raciocínio em nada. Um peering entre contas nomeia a outra conta com `--peer-owner-id`, e a outra
-conta o aceita com as próprias credenciais; essa variante não foi executada aqui.
+conta o aceita com as próprias credenciais. Essa variante não foi executada aqui.
 
 ## Intervalos sobrepostos
 
@@ -50,11 +50,11 @@ true
 ```
 
 **O moto aceitou o pedido**, e o estado dele diz que está a caminho. A AWS recusa um peering entre
-VPCs cujos intervalos se sobrepõem, que é a única resposta que faria sentido: um endereço em
+VPCs cujos intervalos se sobrepõem, e nenhuma outra resposta faria sentido. Um endereço em
 `10.20.0.0/16` estaria nas duas, e nenhuma tabela de rotas saberia dizer para qual delas um pacote
-vai. Essa recusa não foi executada aqui, e a cópia é apagada. É por isso que a lição 16 escolheu cada
-intervalo contra toda outra rede que a loja tem, e por isso seis VPCs padrão, todas `172.31.0.0/16`,
-nunca podem ter peering entre si.
+vai. Essa recusa não foi executada aqui, e a cópia é apagada. É por isso que a lição 16 escolheu
+cada intervalo contra toda outra rede que a loja tem. É também por isso que seis VPCs padrão, todas
+`172.31.0.0/16`, nunca podem ter peering entre si.
 
 ## Pedido, aceite, e as rotas dos dois lados
 
@@ -82,16 +82,16 @@ VPC concorda. Depois que ele fica `active`, nada mudou ainda para pacote nenhum,
 tabela o nomeia. Os últimos comandos da transcrição dão às três tabelas privadas da produção uma rota
 para o intervalo do staging, e à tabela principal do staging uma para o da produção.
 
-A regra do prefixo mais longo da lição 17 faz o resto: um pacote de `app-a` para `10.30.48.10` casa
+A regra do prefixo mais longo da lição 17 faz o resto. Um pacote de `app-a` para `10.30.48.10` casa
 com `10.30.0.0/16` e com `0.0.0.0/0`, e o `/16` o manda para o peering. **Esquecer um dos lados é o
 defeito clássico**: o pacote chega, e a resposta não tem rota de volta. Os security groups dos dois
-lados continuam valendo, e como os grupos da lição 18 nomeavam uns aos outros, vale saber que um
-grupo pode se referir a um grupo de uma VPC com peering na mesma região.
+lados continuam valendo. Os grupos da lição 18 nomeavam uns aos outros, e um grupo também pode se
+referir a um grupo de uma VPC com peering na mesma região.
 
 ## Entre regiões
 
 A loja mantém uma cópia de recuperação de desastre na Virgínia, `10.40.0.0/16` em `us-east-1`. Um
-peering pode atravessar regiões; o pedido nomeia a outra região, e o aceite é feito lá:
+peering pode atravessar regiões. O pedido nomeia a outra região, e o aceite é feito lá:
 
 ```
 ana@laptop:~/aws$ dr=$(aws ec2 create-vpc --region us-east-1 --cidr-block 10.40.0.0/16 --query Vpc.VpcId --output text)
@@ -108,8 +108,8 @@ Paulo que a lição 1 leu, e 0,02 no outro sentido.
 ## Não transitivo
 
 A produção agora tem peering com o staging e com a Virgínia. A tabela do staging poderia receber uma
-rota para `10.40.0.0/16` apontando para o peering da produção, e o pacote ainda seria descartado:
-**um peering só carrega tráfego entre as suas duas VPCs**, nunca tráfego a caminho de uma terceira. A
+rota para `10.40.0.0/16` apontando para o peering da produção, e o pacote ainda seria descartado. **Um
+peering só carrega tráfego entre as suas duas VPCs**, nunca tráfego a caminho de uma terceira. A
 figura é a regra inteira.
 
 ```schooling-figure

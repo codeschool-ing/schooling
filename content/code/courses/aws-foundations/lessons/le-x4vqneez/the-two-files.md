@@ -3,11 +3,11 @@ title: Two files, profiles, and the order settings are read in
 version: 1
 ---
 
-**The AWS command line reads its settings from three places, and the nearest one wins: an option
-on the command, then an environment variable, then a profile in the files under `~/.aws`.** A
-profile is a named bundle of settings, so one laptop can talk to six accounts without editing
-anything between commands. Every lesson so far has lived on the middle layer, `env.sh`'s
-variables; this lesson opens the bottom one and measures how the three stack.
+**The AWS command line reads its settings from three places, and the nearest one wins: an option on
+the command, then an environment variable, then a profile in the files under `~/.aws`.** A profile
+is a named bundle of settings, so one laptop can talk to six accounts without editing anything
+between commands. Every lesson so far has lived on the middle layer, `env.sh`'s variables. This
+lesson opens the bottom one and measures how the three stack.
 
 The wrong picture is that `~/.aws/credentials` is where the command line is configured. **It is one
 of two files**, and the smaller one. Keys go in `credentials`; everything else, from the region to
@@ -41,7 +41,7 @@ output = json
 in both, and which is used when nothing names another. Lesson 11's file showed a third kind of
 section, `[sso-session …]`, which belongs to no profile and is shared by those that name it.
 
-Never put a real key in either file by hand, and never paste one from a message; the keys here are
+Never put a real key in either file by hand, and never paste one from a message. The keys here are
 moto's placeholders. `aws configure get` reads a setting back, and `list-profiles` names every
 profile both files define:
 
@@ -76,9 +76,9 @@ for one command with `env -u` lets the profile's region through. And an option o
 | environment | `AWS_DEFAULT_REGION` in `env.sh` | `sa-east-1a` |
 | profile | `region = us-east-1` in `~/.aws/config` | `us-east-1a` |
 
-The region has two variables, and `AWS_REGION` wins over `AWS_DEFAULT_REGION` when both are set;
-`aws configure list` names both in its `LOCATION` column. The same three layers hold for the
-output format (`--output`, `AWS_DEFAULT_OUTPUT`, `output =`), the endpoint (`--endpoint-url`,
+The region has two variables, and `AWS_REGION` wins over `AWS_DEFAULT_REGION` when both are set.
+`aws configure list` names both in its `LOCATION` column. The same three layers hold for the output
+format (`--output`, `AWS_DEFAULT_OUTPUT`, `output =`), the endpoint (`--endpoint-url`,
 `AWS_ENDPOINT_URL`, `endpoint_url =`) and the profile itself (`--profile`, `AWS_PROFILE`).
 
 ```schooling-figure

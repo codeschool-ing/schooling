@@ -24,7 +24,7 @@ onde a resposta disse.
 | múltiplos valores (*multivalue*) | até oito registros saudáveis, escolhidos ao acaso | vários servidores, cada um com a sua verificação de saúde |
 
 Duas delas são fáceis de confundir. **Latência é sobre a rede**, medida pela AWS entre as regiões e
-os lugares de onde as pessoas perguntam; **geolocalização é sobre onde quem pergunta está**, diga a
+os lugares de onde as pessoas perguntam. **Geolocalização é sobre onde quem pergunta está**, diga a
 rede o que disser, e é com isso que uma lei ou uma licença se importa. Um conjunto de geolocalização
 deve sempre incluir um registro `Default`, senão um resolvedor de um país que ninguém listou não
 recebe resposta nenhuma.
@@ -32,9 +32,10 @@ recebe resposta nenhuma.
 ## Verificações de saúde
 
 **Uma verificação de saúde (*health check*) é um conjunto de sondas que a AWS envia de vários
-lugares do mundo** a um endereço que você nomeia, a cada 30 segundos ou a cada 10, e um veredito:
-saudável, ou não saudável depois de um número de falhas seguidas. Um registro que cita a verificação
-fica fora das respostas enquanto ela está não saudável. Crie uma para a API em São Paulo:
+lugares do mundo** a um endereço que você nomeia, a cada 30 segundos ou a cada 10. Ela guarda um
+veredito: saudável, ou não saudável depois de um número de falhas seguidas. Um registro que cita a
+verificação fica fora das respostas enquanto ela está não saudável. Crie uma para a API em São
+Paulo:
 
 ```
 ana@laptop:~/aws$ aws route53 create-health-check --caller-reference shop-api-sp-1 --health-check-config Type=HTTPS,IPAddress=203.0.113.20,Port=443,ResourcePath=/health,FullyQualifiedDomainName=api.shop.example.com,RequestInterval=30,FailureThreshold=3 --query "HealthCheck.[Id,HealthCheckConfig.Type,HealthCheckConfig.IPAddress]" --output text
@@ -69,8 +70,8 @@ ana@laptop:~/aws$ aws route53 get-health-check-status --health-check-id $hc
 um endereço de documentação, e o moto não enviou sonda nenhuma a ele nem a lugar nenhum. O status, o
 código 200 e o endereço `127.0.13.37` são o que o moto 5.2.3 diz sobre toda verificação de saúde. Na
 AWS, o mesmo comando lista uma observação por região que sonda, cada uma com o que aquela sonda viu
-de fato, e uma verificação de um endereço que não responde informa uma falha. **Um plano de failover
-não pode ser testado no moto**; o que o moto consegue conferir é que os registros e a verificação
+de fato. Uma verificação de um endereço que não responde informa uma falha. **Um plano de failover
+não pode ser testado no moto**. O que o moto consegue conferir é que os registros e a verificação
 estão ligados do jeito que você quis.
 
 ## Ponderada e failover, num lote só
@@ -117,16 +118,16 @@ search.shop.example.com.	current	90	None	None
 search.shop.example.com.	canary	10	None	None
 ```
 
-**Um peso é uma fatia, não uma porcentagem.** O Route 53 divide o peso de cada registro pela soma dos
-pesos daquele nome, então 90 e 10 são nove respostas em dez e uma em dez, e 9 e 1 também. Um peso 0
-tira um registro do rodízio sem apagá-lo, e é assim que um canário é parado às pressas.
+**Um peso é uma fatia, não uma porcentagem.** O Route 53 divide o peso de cada registro pela soma
+dos pesos daquele nome. Então 90 e 10 são nove respostas em dez e uma em dez, e 9 e 1 também. Um
+peso 0 tira um registro do rodízio sem apagá-lo, e é assim que um canário é parado às pressas.
 
 **O par de failover responde com o primário enquanto a verificação dele está saudável**, e com o
 secundário quando não está. O secundário aqui não tem verificação, então é sempre considerado
-saudável: uma reserva que nunca é verificada é uma aposta de que ela ainda está lá no dia em que for
-preciso, e uma reserva de verdade ganha uma verificação própria. O TTL de 60 faz parte do projeto. Um
-resolvedor que guardou o endereço de São Paulo continua usando-o por até um minuto depois da troca,
-então o TTL é o piso de quão rápido um failover pode ser.
+saudável. Uma reserva que nunca é verificada é uma aposta de que ela ainda está lá no dia em que for
+preciso, e uma reserva de verdade ganha uma verificação própria. O TTL de 60 faz parte do projeto.
+Um resolvedor que guardou o endereço de São Paulo continua usando-o por até um minuto depois da
+troca, então o TTL é o piso de quão rápido um failover pode ser.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" data-fig=\"l21-routing\" aria-label=\"Duas políticas de roteamento lado a lado. À esquerda, ponderada: o nome search.shop.example.com tem dois registros, current com peso 90 em 203.0.113.30 e canary com peso 10 em 203.0.113.31, então nove respostas em dez dão o primeiro endereço. À direita, failover: api.shop.example.com tem um primário em São Paulo em 203.0.113.20, vigiado por uma verificação de saúde, e um secundário na Virgínia em 198.51.100.20, dado só enquanto a verificação diz que o primário não está saudável. Embaixo: o Route 53 escolhe a resposta, e o tráfego nunca passa por ele.\"><defs><marker id=\"l21-routing-af-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l21-routing-af-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20.0\" y=\"20.0\" width=\"330.0\" height=\"250.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\"></rect><text x=\"36.0\" y=\"40.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper-dim)\">ponderada</text><rect x=\"370.0\" y=\"20.0\" width=\"330.0\" height=\"250.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\"></rect><text x=\"386.0\" y=\"40.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper-dim)\">failover</text><rect x=\"70.0\" y=\"60.0\" width=\"230.0\" height=\"36.0\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"185.0\" y=\"78.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">search.shop.example.com</text><rect x=\"40.0\" y=\"180.0\" width=\"130.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105.0\" y=\"200.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">current</text><text x=\"105.0\" y=\"220.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">203.0.113.30</text><rect x=\"200.0\" y=\"180.0\" width=\"130.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"265.0\" y=\"200.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">canary</text><text x=\"265.0\" y=\"220.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">203.0.113.31</text><path d=\"M150.0 98.0 L110.0 176.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.2\" fill=\"none\" marker-end=\"url(#l21-routing-af-ah-phosphor)\"></path><path d=\"M220.0 98.0 L260.0 176.0\" stroke=\"var(--amber)\" stroke-width=\"1.0\" fill=\"none\" marker-end=\"url(#l21-routing-af-ah-amber)\"></path><text x=\"112.0\" y=\"132.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--phosphor)\">9 em 10</text><text x=\"256.0\" y=\"132.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">1 em 10</text><text x=\"185.0\" y=\"258.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-style=\"italic\" fill=\"var(--paper-dim)\">pesos 90 e 10, uma fração da soma</text><rect x=\"420.0\" y=\"60.0\" width=\"230.0\" height=\"36.0\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"535.0\" y=\"78.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">api.shop.example.com</text><rect x=\"390.0\" y=\"180.0\" width=\"140.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"460.0\" y=\"200.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">PRIMARY, São Paulo</text><text x=\"460.0\" y=\"220.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">203.0.113.20</text><rect x=\"550.0\" y=\"180.0\" width=\"140.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"620.0\" y=\"200.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">SECONDARY, Virgínia</text><text x=\"620.0\" y=\"220.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">198.51.100.20</text><path d=\"M500.0 98.0 L465.0 176.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\" fill=\"none\" marker-end=\"url(#l21-routing-af-ah-phosphor)\"></path><path d=\"M570.0 98.0 L615.0 176.0\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\" marker-end=\"url(#l21-routing-af-ah-amber)\"></path><text x=\"494.0\" y=\"128.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">enquanto saudável</text><text x=\"600.0\" y=\"128.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">quando não está</text><circle cx=\"425.0\" cy=\"128.0\" r=\"11\" fill=\"var(--ink)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></circle><text x=\"425.0\" y=\"128.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--phosphor)\">✓</text><text x=\"425.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">verificação</text><path d=\"M430.0 158.0 L440.0 176.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.0\" fill=\"none\" stroke-dasharray=\"2 2\"></path><text x=\"535.0\" y=\"258.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-style=\"italic\" fill=\"var(--paper-dim)\">verificação de saúde só no primário</text><text x=\"360.0\" y=\"304.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">o Route 53 escolhe a resposta; o tráfego nunca passa por ele</text></svg>", "caption": "Uma política é uma regra para escolher entre registros. A escolha é feita uma vez por pergunta, e fica em cache pelo TTL.", "same": ["PRIMARY, São Paulo", "failover"]}
@@ -134,7 +135,7 @@ então o TTL é o piso de quão rápido um failover pode ser.
 
 ## Perguntar ao Route 53 o que ele responderia
 
-A AWS tem um comando exatamente para a pergunta que o moto não sabe responder: o `test-dns-answer`
+A AWS tem um comando exatamente para a pergunta que o moto não sabe responder. O `test-dns-answer`
 pergunta ao Route 53 quais valores ele devolveria para um nome e um tipo, a partir de um endereço de
 resolvedor que você pode escolher.
 
@@ -144,11 +145,11 @@ ana@laptop:~/aws$ aws route53 test-dns-answer --hosted-zone-id $zone --record-na
 aws: [ERROR]: An error occurred (404) when calling the TestDNSAnswer operation: Not Found
 ```
 
-**O moto 5.2.3 não o implementa**, e o `404` é o moto dizendo isso, não o Route 53 dizendo que o nome
-falta. O moto também não serve DNS em porta nenhuma, então o `dig` não tem a quem perguntar; apontar o
-`dig` para os servidores de nomes reais do Route 53 é assunto da internet e fica fora deste curso. O
-que o laboratório dá é a configuração, lida de volta exatamente como foi escrita, e é nela que mora a
-maioria dos erros de uma zona.
+**O moto 5.2.3 não o implementa**, e o `404` é o moto dizendo isso, não o Route 53 dizendo que o
+nome falta. O moto também não serve DNS em porta nenhuma, então o `dig` não tem a quem perguntar.
+Apontar o `dig` para os servidores de nomes reais do Route 53 é assunto da internet e fica fora
+deste curso. O que o laboratório dá é a configuração, lida de volta exatamente como foi escrita, e é
+nela que mora a maioria dos erros de uma zona.
 
 ## Quanto custa um milhão de respostas
 
@@ -223,8 +224,8 @@ Na lista de **11 de setembro de 2026**:
 
 **A política faz parte do preço.** A mesma pergunta custa metade a mais quando o registro por trás
 dela é baseado em latência, e três quartos a mais quando é de geolocalização. A verificação da API
-sonda `203.0.113.20`, um endereço fora da AWS, então é a linha de 0,75; e ela sonda por HTTPS, que a
-página de preços da AWS conta como um dos recursos opcionais, junto com a busca de texto na resposta,
-o intervalo de 10 segundos e a medição de latência. Isso soma a linha de 2,00, então essa única
-verificação custa 2,75 dólares por mês. Uma loja que responde dez milhões de consultas por mês a
-partir de registros simples paga 4 dólares por elas, e nada pelas que o alias do ápice responde.
+sonda `203.0.113.20`, um endereço fora da AWS, então é a linha de 0,75. Ela também sonda por HTTPS,
+que a página de preços da AWS conta como um dos recursos opcionais, junto com a busca de texto na
+resposta, o intervalo de 10 segundos e a medição de latência. Isso soma a linha de 2,00, então essa
+única verificação custa 2,75 dólares por mês. Uma loja que responde dez milhões de consultas por mês
+a partir de registros simples paga 4 dólares por elas, e nada pelas que o alias do ápice responde.

@@ -26,8 +26,8 @@ reached max retries: 2
 
 **Três tentativas, depois o erro**, que diz ter chegado a duas novas tentativas. Cada requisição diz
 ao serviço qual tentativa ela é com o `amz-sdk-request`. As esperas antes da segunda e da terceira
-são aleatórias e curtas, porque a espera dobra a partir de uma base pequena e uma parte aleatória
-impede que mil clientes que falharam juntos tentem de novo juntos. O limite é uma configuração:
+são aleatórias e curtas. A espera dobra a partir de uma base pequena, e uma parte aleatória impede
+que mil clientes que falharam juntos tentem de novo juntos. O limite é uma configuração:
 
 ```
 ana@laptop:~/aws$ AWS_MAX_ATTEMPTS=1 aws rolesanywhere list-trust-anchors --debug 2>&1 | grep -c "Sending http request"
@@ -35,7 +35,7 @@ ana@laptop:~/aws$ AWS_MAX_ATTEMPTS=1 aws rolesanywhere list-trust-anchors --debu
 ```
 
 **Uma requisição, nenhuma nova tentativa.** O mesmo par de configurações existe em todo SDK e no
-`~/.aws/config`, como `max_attempts` e `retry_mode`; o programa da seção anterior as escreveu no
+`~/.aws/config`, como `max_attempts` e `retry_mode`. O programa da seção anterior as escreveu no
 `Config` dele.
 
 A documentação da AWS descreve três modos de nova tentativa, e o padrão do AWS CLI 2 é o segundo:
@@ -49,7 +49,7 @@ A documentação da AWS descreve três modos de nova tentativa, e o padrão do A
 **A limitação de taxa (throttling) é a falha para a qual as novas tentativas existem.** Toda API tem
 uma taxa por conta e região, e quem passa dela recebe `ThrottlingException`, `Throttling` ou
 `TooManyRequestsException`, conforme o serviço, muitas vezes com HTTP 400 ou 429. Uma nova tentativa
-com espera em geral passa; um programa que repete sem espera piora a situação para si e para todo
+com espera em geral passa. Um programa que repete sem espera piora a situação para si e para todo
 mundo na conta. O moto nunca limita, então este parágrafo vem da documentação da AWS e não foi
 executado. Uma requisição que falhou por um motivo que repetir não resolve, como `AccessDenied` ou
 um parâmetro malformado, não é repetida.
@@ -57,10 +57,10 @@ um parâmetro malformado, não é repetida.
 ## O console também é um cliente
 
 **O AWS Management Console é uma aplicação web que, por trás das telas, faz as mesmas chamadas de
-API assinadas**, com credenciais temporárias de quem entrou nele: um usuário raiz, um usuário do IAM,
-ou uma role alcançada pelo Identity Center como na lição 11. Abrir a página do EC2 lista as
-instâncias com `DescribeInstances`; apertar um botão para lançar uma manda `RunInstances`. É por isso
-que uma permissão que falta ao console aparece como o mesmo `AccessDenied` que um comando
+API assinadas**. Ele usa credenciais temporárias de quem entrou nele: um usuário raiz, um usuário do
+IAM, ou uma role alcançada pelo Identity Center como na lição 11. Abrir a página do EC2 lista as
+instâncias com `DescribeInstances`. Apertar um botão para lançar uma manda `RunInstances`. É por
+isso que uma permissão que falta ao console aparece como o mesmo `AccessDenied` que um comando
 receberia, e por isso o console não consegue fazer nada que a API não ofereça.
 
 Ele não foi executado aqui. **O console exige uma conta e um navegador**, e este curso não desenha
@@ -73,11 +73,12 @@ imagens dele, porque as telas mudam no ritmo da AWS enquanto as chamadas por tr�
 ## O CloudTrail registra a chamada, seja quem for que a fez
 
 Toda chamada que chega à AWS, do console, da linha de comando, de um SDK ou do `curl`, é o tipo de
-evento que o **AWS CloudTrail** registra: quem fez, de qual endereço, com qual chave ou sessão de
-role, quando, e o que foi pedido. O registro traz o `User-Agent` do cliente, então mostra qual
-cliente foi, e é o mesmo registro em qualquer caso. Essa é a trilha que a lição 12 buscou pelo id da
-chave depois de um vazamento. O CloudTrail em si pertence ao curso `aws-operations`, e o moto 5.2.3
-responde o `lookup-events` com um erro interno, então ele não foi executado aqui.
+evento que o **AWS CloudTrail** registra. O registro diz quem fez, de qual endereço, com qual chave
+ou sessão de role, quando, e o que foi pedido. O registro traz o `User-Agent` do cliente, então
+mostra qual cliente foi, e é o mesmo registro em qualquer caso. Essa é a trilha que a lição 12
+buscou pelo id da chave depois de um vazamento. O CloudTrail em si pertence ao curso
+`aws-operations`, e o moto 5.2.3 responde o `lookup-events` com um erro interno, então ele não foi
+executado aqui.
 
 ## Onde este curso deixa você
 
@@ -88,7 +89,7 @@ lista de preços, as redes que os pacotes atravessam, e a API por baixo de tudo 
 
 ::: track cloud-engineering
 Nesta trilha vêm mais dois cursos da AWS. O `aws-compute` põe máquinas, contêineres e funções nas
-contas e redes montadas aqui, e o `aws-operations` entrega para elas, as observa e lê a fatura, com o
+contas e redes montadas aqui. O `aws-operations` entrega para elas, as observa e lê a fatura, com o
 CloudTrail entre as ferramentas. Os dois pressupõem a identidade e a rede deste curso, então os
 perfis, as roles e as VPCs que você criou são de onde eles partem.
 :::
@@ -101,7 +102,7 @@ identidade deste curso, então as roles e políticas daqui são o que os pipelin
 
 ::: track devops
 Nesta trilha este curso é a AWS inteira. Os cursos seguintes, `iac`, `testing-cicd`, `gitops` e
-`observability`, são escritos para qualquer provedor; as contas, as roles para máquinas e pipelines,
+`observability`, são escritos para qualquer provedor. As contas, as roles para máquinas e pipelines,
 e as redes que você montou aqui são para onde você aponta as ferramentas deles.
 :::
 

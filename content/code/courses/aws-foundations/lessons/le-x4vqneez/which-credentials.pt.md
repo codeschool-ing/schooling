@@ -4,10 +4,10 @@ version: 1
 ---
 
 **Para credenciais, o ambiente vence o `AWS_PROFILE`, e o `--profile` vence o ambiente.** Essa
-assimetria é o fato isolado mais útil sobre a linha de comando neste curso, porque o `env.sh` exporta
-as chaves de teste do moto em todo terminal. A cadeia da lição 10 explica: o provedor `env` vem
-primeiro, e nomear um perfil com `--profile` tira esse provedor da cadeia naquele comando; nomeá-lo
-com uma variável não tira.
+assimetria é o fato isolado mais útil sobre a linha de comando neste curso, porque o `env.sh`
+exporta as chaves de teste do moto em todo terminal. A cadeia da lição 10 explica. O provedor `env`
+vem primeiro, e nomear um perfil com `--profile` tira esse provedor da cadeia naquele comando.
+Nomeá-lo com uma variável não tira.
 
 ## Medido de três jeitos
 
@@ -35,8 +35,9 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 ```
 
 **Agora as chaves vêm de `shared-credentials-file`**, o arquivo do próprio perfil. As duas execuções
-usam as mesmas chaves só porque `lab` também guarda `test` e `test`; com um perfil real a primeira
-assinaria como uma identidade e a segunda como outra, e nada na tela além da coluna `TYPE` diria isso.
+usam as mesmas chaves só porque `lab` também guarda `test` e `test`. Com um perfil real a primeira
+assinaria como uma identidade e a segunda como outra, e nada na tela além da coluna `TYPE` diria
+isso.
 
 O terceiro jeito mantém o `AWS_PROFILE` e tira as chaves do ambiente por um comando. É o jeito de
 usar um perfil neste curso **sem mudar o `env.sh`**, de que toda outra lição depende:
@@ -50,9 +51,9 @@ secret_key : ****************test     : shared-credentials-file :
 region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_DEFAULT_REGION']
 ```
 
-Um terminal que nunca leu o `env.sh` se comporta igual, com a diferença de que também não tem o
-endpoint e mandaria as requisições para a AWS. **No laboratório, prefira `--profile`**; fora dele,
-um perfil escolhido com `AWS_PROFILE` num shell sem chaves exportadas é o arranjo do dia a dia.
+Um terminal que nunca leu o `env.sh` se comporta igual, exceto que também não tem o endpoint e
+mandaria as requisições para a AWS. **No laboratório, prefira `--profile`**. Fora dele, um perfil
+escolhido com `AWS_PROFILE` num shell sem chaves exportadas é o arranjo do dia a dia.
 
 ## Uma role num perfil: de uma conta para outra
 
@@ -83,11 +84,11 @@ ana@laptop:~/aws$ aws sts get-caller-identity --profile staging
 +---------+-----------------------------------------------------------------------------+
 ```
 
-**`role_arn` diz qual role assumir e `source_profile` diz com quais credenciais.** A linha de comando
-chamou `sts:AssumeRole` como `lab`, recebeu credenciais temporárias em `shop-staging`, e assinou o
-`get-caller-identity` com elas; o `role_session_name` fixou o nome da sessão que ela tiraria do
-relógio. A saída é uma tabela porque o perfil pediu uma. A role é a que a lição 3 mostrou o moto
-criando em toda conta nova, sem política anexada, o que o moto aqui nem verifica.
+**`role_arn` diz qual role assumir e `source_profile` diz com quais credenciais.** A linha de
+comando chamou `sts:AssumeRole` como `lab`, recebeu credenciais temporárias em `shop-staging`, e
+assinou o `get-caller-identity` com elas. O `role_session_name` fixou o nome da sessão que ela
+tiraria do relógio. A saída é uma tabela porque o perfil pediu uma. A role é a que a lição 3 mostrou
+o moto criando em toda conta nova, sem política anexada, o que o moto aqui nem verifica.
 
 O mesmo comando com o perfil e sem ele mostra duas contas, cada uma com a sua rede padrão:
 
@@ -109,7 +110,7 @@ Os arquivos `.json` em `~/.aws/cli/cache/` guardam as credenciais temporárias d
 vencerem para que o próximo comando não assuma a role de novo. **Apagá-los é seguro**: o próximo
 comando só assume a role mais uma vez. Duas configurações vizinhas ficam ao lado de `role_arn`. O
 `credential_source` substitui o `source_profile` numa máquina que já tem credenciais do ambiente ou
-do serviço de metadados, como na lição 10; o `mfa_serial` faz a linha de comando pedir um código
+do serviço de metadados, como na lição 10. O `mfa_serial` faz a linha de comando pedir um código
 antes de assumir uma role cuja política de confiança exige MFA.
 
 ## `credential_process`, um programa que entrega credenciais
@@ -155,7 +156,7 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 O `custom-process` é o provedor da cadeia da lição 10 que respondeu. Um programa real pode devolver
 também `SessionToken` e `Expiration`, e a linha de comando pergunta de novo quando esse horário passa.
 
-A lição 11 usou o quarto tipo, `sso_session`, e com esses quatro a lista está completa: **chaves num
+A lição 11 usou o quarto tipo, `sso_session`. Com esses quatro a lista está completa: **chaves num
 arquivo, uma role assumida a partir de outro perfil, um programa, ou um login pelo Identity
 Center.**
 
@@ -163,7 +164,7 @@ Center.**
 
 **O AWS CloudShell é um shell no navegador, aberto pelo console, com a linha de comando já logada
 como quem está usando o console.** Ele roda Amazon Linux na região em que o console está, com o AWS
-CLI, Python e Node.js instalados, e guarda 1 GB do diretório pessoal por região entre sessões. Não
+CLI, Python e Node.js instalados. Ele guarda 1 GB do diretório pessoal por região entre sessões. Não
 há chave para configurar, porque as credenciais são as da sessão do console, e acabam quando ela
 acaba.
 

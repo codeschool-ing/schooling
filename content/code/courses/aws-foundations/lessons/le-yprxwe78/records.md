@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Route 53 has no command that adds one record.** Every change to a zone is a **change batch**: a
-list of actions, `CREATE`, `UPSERT` or `DELETE`, each on one record set, sent in a single request
+list of actions, `CREATE`, `UPSERT` or `DELETE`, each on one record set. It goes in a single request
 that is applied whole or not at all. The wrong picture is a table you edit row by row. A batch is
-closer to a transaction, and that is what makes it safe to move a name from one address to another
+closer to a transaction. That is what makes it safe to move a name from one address to another
 without a moment in which it points at neither.
 
 ## The shop's first records
@@ -46,8 +46,8 @@ A **record set** is a name, a type and the values that answer for them: `mail.sh
 | `TXT` | free text | an SPF policy: only the domain's own MX may send its mail |
 | `CNAME` | another name, to be looked up instead | `www` is whatever the bare domain is |
 
-A `TXT` value carries its own double quotes inside the JSON string, which is why they are escaped:
-that is how Route 53 wants text records written. Send the batch:
+A `TXT` value carries its own double quotes inside the JSON string, which is why they are escaped.
+That is how Route 53 wants text records written. Send the batch:
 
 ```
 ana@laptop:~/aws$ aws route53 change-resource-record-sets --hosted-zone-id $zone --change-batch file://records.json
@@ -112,7 +112,7 @@ aws: [ERROR]: An error occurred (InvalidChangeBatch) when calling the ChangeReso
 ```
 
 `UPSERT` is the action that does not care whether the record exists: it creates it or replaces it.
-It is what a script uses when it runs every day; `CREATE` is what you use when an existing record
+It is what a script uses when it runs every day. `CREATE` is what you use when an existing record
 would be a surprise worth stopping for.
 
 ## The apex, and why a CNAME cannot sit there
@@ -120,8 +120,8 @@ would be a surprise worth stopping for.
 The shop's own name, `shop.example.com` with nothing in front, is the **zone apex**, and it should
 lead to the load balancer. A load balancer has no fixed address, only a name AWS gives it, so the
 obvious record is a `CNAME`. **The DNS standard forbids it**: a name that has a `CNAME` may have no
-other record, and the apex always has at least two, the NS and the SOA, plus the MX and TXT the
-batch just wrote. Here is moto accepting it anyway:
+other record. The apex always has at least two, the NS and the SOA, plus the MX and TXT the batch
+just wrote. Here is moto accepting it anyway:
 
 ```
 ana@laptop:~/aws$ aws route53 change-resource-record-sets --hosted-zone-id $zone --change-batch '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"shop.example.com","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"shop-web-1.sa-east-1.elb.amazonaws.com"}]}}]}'
@@ -135,27 +135,27 @@ ana@laptop:~/aws$ aws route53 change-resource-record-sets --hosted-zone-id $zone
 ```
 
 **AWS refuses that batch with `InvalidChangeBatch`; moto 5.2.3 stored the record.** It is the
-clearest case in this lesson of moto checking less than AWS, and the answer to it is the same:
-delete what moto should never have accepted.
+clearest case in this lesson of moto checking less than AWS. The answer is the usual one: delete
+what moto should never have accepted.
 
 ```
 ana@laptop:~/aws$ aws route53 change-resource-record-sets --hosted-zone-id $zone --change-batch '{"Changes":[{"Action":"DELETE","ResourceRecordSet":{"Name":"shop.example.com","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"shop-web-1.sa-east-1.elb.amazonaws.com"}]}}]}' --query ChangeInfo.Status --output text
 INSYNC
 ```
 
-**An alias record is Route 53's answer.** It is an `A` or `AAAA` record whose value is not an address
-but a pointer to an AWS resource: a load balancer, a CloudFront distribution, an S3 website, another
-record in the same zone. Route 53 looks the target up itself and answers with **its current
-addresses**, so to the resolver asking it is an ordinary `A` record, and an ordinary `A` record is
-allowed at the apex. The pointer needs the target's name and the hosted zone AWS keeps it in, and the
-load balancer says both:
+**An alias record is Route 53's answer.** It is an `A` or `AAAA` record whose value is not an
+address but a pointer to an AWS resource: a load balancer, a CloudFront distribution, an S3 website,
+another record in the same zone. Route 53 looks the target up itself and answers with **its current
+addresses**. To the resolver asking, it is an ordinary `A` record, and an ordinary `A` record is
+allowed at the apex. The pointer needs the target's name and the hosted zone AWS keeps it in, and
+the load balancer says both:
 
 ```
 ana@laptop:~/aws$ aws elbv2 describe-load-balancers --names shop-web --query "LoadBalancers[0].[DNSName,CanonicalHostedZoneId]" --output text
 shop-web-1.sa-east-1.elb.amazonaws.com	Z2P70J7EXAMPLE
 ```
 
-`Z2P70J7EXAMPLE` is moto's placeholder; AWS publishes one real id per region and per kind of load
+`Z2P70J7EXAMPLE` is moto's placeholder. AWS publishes one real id per region and per kind of load
 balancer, and `describe-load-balancers` prints the right one. Save the alias as `~/aws/apex.json`:
 
 ```json
@@ -182,12 +182,11 @@ SOA	900	None
 TXT	3600	None
 ```
 
-**An alias has no TTL of its own**, which is why the listing printed `None` in its TTL column: the answer
-carries the target's. `EvaluateTargetHealth` makes Route 53 count the alias as unhealthy when the
-load balancer has no healthy targets, which matters once there is another record to fall back to,
-as the next section builds. And a query that Route 53 answers from an alias
-to an AWS resource is **free**, where the same answer from a `CNAME` is billed; the last section
-reads that line of the price list.
+**An alias has no TTL of its own**, which is why the listing printed `None` in its TTL column: the
+answer carries the target's. `EvaluateTargetHealth` makes Route 53 count the alias as unhealthy when
+the load balancer has no healthy targets. That matters once there is another record to fall back to,
+as the next section builds. And a query that Route 53 answers from an alias to an AWS resource is **free**,
+where the same answer from a `CNAME` is billed. The last section reads that line of the price list.
 
 ## TTL, and what "propagation" really is
 
@@ -196,15 +195,15 @@ not ask again. It is the one number in a record that decides how fast a change i
 
 The common wrong picture is that a DNS change "propagates" across the internet over a day or two,
 slowly, the way news spreads. **Nothing is pushed anywhere.** Within about a minute every Route 53
-name server has the new answer. What takes time is **the caches that already hold the old one**: a
+name server has the new answer. What takes time is **the caches that already hold the old one**. A
 resolver that asked five minutes before the change keeps its copy until the TTL it was given runs
 out, and a TTL of 86,400 means a day. So the delay is chosen in advance, by whoever wrote the TTL.
 
-The working habit follows from that. A day before moving a name, lower its TTL to 60 seconds; wait
-one old TTL so that every cache has the short one; make the change; raise the TTL again once the
-new address has proved itself. A low TTL costs queries, because resolvers ask more often, and
-queries are what Route 53 bills.
+The working habit follows from that. A day before moving a name, lower its TTL to 60 seconds, and
+wait one old TTL so that every cache has the short one. Then make the change, and raise the TTL
+again once the new address has proved itself. A low TTL costs queries, because resolvers ask more
+often, and queries are what Route 53 bills.
 
 The delegation is the exception, and it is slow for the same reason. The `.com` registry's NS
-records carry a TTL of two days, set by the registry and not by you, so changing name servers at
-the registrar is the one DNS change that really does take that long.
+records carry a TTL of two days, set by the registry and not by you. So changing name servers at the
+registrar is the one DNS change that really does take that long.

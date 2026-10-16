@@ -8,10 +8,10 @@ it were a neighbour.** Nothing sits in the middle: there is no gateway to size, 
 no single point to fail. The price of that simplicity is three rules, and each of them catches
 somebody. **The two ranges may not overlap, both sides need routes, and nothing passes through.**
 
-The wrong picture is a peering connection as a cable between two networks that then become one.
-They do not become one. A peering is a pair, and **it is not transitive**: if production is peered
-with staging and with the disaster-recovery copy, staging still cannot reach the copy through
-production. Each pair that must talk needs its own peering.
+The wrong picture is a peering connection as a cable between two networks that then become one. They
+do not become one. A peering is a pair, and **it is not transitive**. If production is peered with
+staging and with the disaster-recovery copy, staging still cannot reach the copy through production.
+Each pair that must talk needs its own peering.
 
 ## Starting from lesson 17
 
@@ -29,10 +29,10 @@ ana@laptop:~/aws$ echo $vpc $svpc
 vpc-4d9b138dab1e13c0a vpc-17bcf95982f6b62d7
 ```
 
-The other side is staging's VPC, `10.30.0.0/16`. **On AWS it lives in the `shop-staging` account**;
-the lab puts both VPCs in moto's default account, which changes the commands by one option and the
-reasoning not at all. A peering across accounts names the other account with `--peer-owner-id`,
-and the other account accepts it with its own credentials; that variant was not run here.
+The other side is staging's VPC, `10.30.0.0/16`. **On AWS it lives in the `shop-staging` account**.
+The lab puts both VPCs in moto's default account, which changes the commands by one option and the
+reasoning not at all. A peering across accounts names the other account with `--peer-owner-id`, and
+the other account accepts it with its own credentials. That variant was not run here.
 
 ## Overlapping ranges
 
@@ -49,11 +49,10 @@ true
 ```
 
 **moto accepted the request**, and its state says it is on its way. AWS refuses a peering between
-VPCs whose ranges overlap, which is the only answer that could make sense: an address in
-`10.20.0.0/16` would be in both, and no route table could say which one a packet is for. That
-refusal was not run here, and the copy is deleted. This is why lesson 16 chose every range against
-every other network the shop has, and why six default VPCs, all `172.31.0.0/16`, can never be
-peered with each other.
+VPCs whose ranges overlap, and no other answer could make sense. An address in `10.20.0.0/16` would
+be in both, and no route table could say which one a packet is for. That refusal was not run here,
+and the copy is deleted. This is why lesson 16 chose every range against every other network the
+shop has. It is also why six default VPCs, all `172.31.0.0/16`, can never be peered with each other.
 
 ## Request, accept, and the routes on both sides
 
@@ -81,16 +80,16 @@ the owner of each VPC agrees. Once it is `active`, nothing has changed yet for a
 no table names it. The last commands of the transcript give production's three private tables a
 route for staging's range, and staging's main table one for production's.
 
-The longest-prefix rule of lesson 17 does the rest: a packet from `app-a` for `10.30.48.10` matches
+The longest-prefix rule of lesson 17 does the rest. A packet from `app-a` for `10.30.48.10` matches
 `10.30.0.0/16` and `0.0.0.0/0`, and the `/16` sends it to the peering. **Forgetting one side is the
 classic fault**: the packet arrives, and the reply has no route home. Security groups on both sides
-still apply, and since lesson 18's groups named each other, it is worth knowing that a group can
-refer to a group in a peered VPC of the same region.
+still apply. Lesson 18's groups named each other, and a group can also refer to a group in a peered
+VPC of the same region.
 
 ## Across regions
 
 The shop keeps a disaster-recovery copy in Virginia, `10.40.0.0/16` in `us-east-1`. A peering can
-cross regions; the request names the other region, and the acceptance is made there:
+cross regions. The request names the other region, and the acceptance is made there:
 
 ```
 ana@laptop:~/aws$ dr=$(aws ec2 create-vpc --region us-east-1 --cidr-block 10.40.0.0/16 --query Vpc.VpcId --output text)
@@ -107,7 +106,7 @@ São Paulo that lesson 1 read, and 0.02 in the other direction.
 ## Not transitive
 
 Production is now peered with staging and with Virginia. Staging's table could be given a route for
-`10.40.0.0/16` pointing at the production peering, and the packet would still be dropped: **a
+`10.40.0.0/16` pointing at the production peering, and the packet would still be dropped. **A
 peering carries only traffic between its own two VPCs**, never traffic on its way to a third. The
 figure is the whole rule.
 

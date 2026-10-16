@@ -4,16 +4,16 @@ version: 1
 ---
 
 **Um balanceador de carga não é uma máquina só.** A AWS roda um pedaço dele, um **nó**, em cada zona
-em que você deu a ele uma sub-rede, e o nome `shop-web-1.sa-east-1.elb.amazonaws.com` responde com os
-endereços de todos os nós. Cada chamador cai num nó, e a pergunta desta seção é o que esse nó faz em
-seguida: mandar só para alvos da própria zona, ou para alvos de todas as zonas. Essa escolha é o
-**balanceamento entre zonas** (*cross-zone load balancing*), e ela decide tanto o quão por igual a
-carga se espalha quanto se o preço de atravessar uma zona, da lição 1, aparece na fatura.
+em que você deu a ele uma sub-rede. O nome `shop-web-1.sa-east-1.elb.amazonaws.com` responde com os
+endereços de todos os nós. Cada chamador cai num nó. A pergunta desta seção é o que esse nó faz em
+seguida: mandar só para alvos da própria zona, ou para alvos de todas as zonas. Essa escolha é o **balanceamento
+entre zonas** (*cross-zone load balancing*), e ela decide tanto o quão por igual a carga se espalha
+quanto se o preço de atravessar uma zona, da lição 1, aparece na fatura.
 
 ## Quando as zonas são desiguais
 
 A imagem errada é que um balanceador divide as requisições por igual entre os alvos. Ele as divide
-por igual entre os **nós**, porque o DNS entrega os endereços dos nós em rodízio, e o que cada nó faz
+por igual entre os **nós**, porque o DNS entrega os endereços dos nós em rodízio. O que cada nó faz
 com a sua parte depende da configuração. Ponha dois alvos em `sa-east-1a` e oito em `sa-east-1b`:
 
 ```schooling-figure
@@ -21,11 +21,11 @@ com a sua parte depende da configuração. Ponha dois alvos em `sa-east-1a` e oi
 ```
 
 **Com o balanceamento entre zonas desligado, cada zona recebe metade do tráfego, tenha o que
-tiver**, então as duas máquinas de `sa-east-1a` carregam um quarto cada e as oito de `sa-east-1b` um
+tiver**. As duas máquinas de `sa-east-1a` carregam um quarto cada, e as oito de `sa-east-1b` um
 oitavo de metade, 6,25% cada. As duas vão estar sobrecarregadas muito antes de as oito ficarem
 ocupadas. Com ele ligado, todo nó espalha por todo alvo e cada um dos dez carrega 10%. O outro jeito
-de resolver é manter as zonas iguais, que é o que um grupo de auto scaling espalhado pelas mesmas
-zonas faz, e a lição 4 do `aws-compute` constrói um.
+de resolver é manter as zonas iguais. Um grupo de auto scaling espalhado pelas mesmas zonas faz
+isso, e a lição 4 do `aws-compute` constrói um.
 
 ## A configuração, por tipo
 
@@ -46,29 +46,29 @@ ana@laptop:~/aws$ aws elbv2 describe-load-balancer-attributes --load-balancer-ar
 false
 ```
 
-**O moto informa `false` para os dois, e para o ALB isso está errado**: um ALB sempre balanceia entre
-zonas no nível do balanceador, e o que pode ser desligado é a mesma configuração num dos grupos de
-alvos dele. Para o NLB, `false` é o padrão verdadeiro, e ligá-lo é uma chamada:
+**O moto informa `false` para os dois, e para o ALB isso está errado**. Um ALB sempre balanceia
+entre zonas no nível do balanceador. O que pode ser desligado é a mesma configuração num dos grupos
+de alvos dele. Para o NLB, `false` é o padrão verdadeiro, e ligá-lo é uma chamada:
 
 ```
 ana@laptop:~/aws$ aws elbv2 modify-load-balancer-attributes --load-balancer-arn $nlb --attributes Key=load_balancing.cross_zone.enabled,Value=true --query "Attributes[?Key=='load_balancing.cross_zone.enabled'].Value" --output text
 true
 ```
 
-**Num NLB, essa chamada tem preço.** Com os alvos espalhados por igual em duas zonas, cerca de metade
-do que cada nó repassa atravessa para a outra zona, e a lição 1 leu essa travessia a 0,01 dólar o
-gigabyte ao sair de uma zona mais 0,01 ao chegar na outra. Um NLB que repassa 2 TB por mês com o
-balanceamento entre zonas ligado manda cerca de 1.024 GB para o outro lado, então 1.024 × 0,02 =
-**20,48 dólares por mês** só pela travessia. A travessia do ALB não é cobrada, o que a página de
-preços da AWS diz e as linhas de transferência da lista de preços não mostram. Então o padrão do NLB
-é uma escolha entre uma carga por igual e uma fatura menor, e a resposta certa muitas vezes é deixar
-o balanceamento entre zonas desligado e as zonas iguais.
+**Num NLB, essa chamada tem preço.** Com os alvos espalhados por igual em duas zonas, cerca de
+metade do que cada nó repassa atravessa para a outra zona. A lição 1 leu essa travessia a 0,01 dólar
+o gigabyte ao sair de uma zona mais 0,01 ao chegar na outra. Um NLB que repassa 2 TB por mês com o
+balanceamento entre zonas ligado manda cerca de 1.024 GB para o outro lado, então 1.024 × 0,02 = **20,48
+dólares por mês** só pela travessia. A travessia do ALB não é cobrada, o que a página de preços da
+AWS diz e as linhas de transferência da lista de preços não mostram. Então o padrão do NLB é uma
+escolha entre uma carga por igual e uma fatura menor. A resposta certa muitas vezes é deixar o
+balanceamento entre zonas desligado e as zonas iguais.
 
 ## A lista de preços
 
-Os balanceadores têm uma oferta própria, `AWSELB`, com 16 kilobytes para São Paulo, enquanto a oferta
-do EC2 de onde o curso `cloud` leu a mesma linha tem cerca de 290 megabytes; as duas dizem 0,0340
-pela hora de um ALB. Peça ao `price.py` os dois tipos de uso que importam:
+Os balanceadores têm uma oferta própria, `AWSELB`, com 16 kilobytes para São Paulo. A oferta do EC2
+de onde o curso `cloud` leu a mesma linha tem cerca de 290 megabytes, e as duas dizem 0,0340 pela
+hora de um ALB. Peça ao `price.py` os dois tipos de uso que importam:
 
 ```
 ana@laptop:~/aws$ python3 price.py AWSELB 20260911124544 sa-east-1 SAE1-LoadBalancerUsage SAE1-LCUUsage
@@ -84,10 +84,10 @@ SAE1-LCUUsage
           0 to       Inf LCU-Hrs 0.0110
 ```
 
-**Quatro preços sob um nome, e três sob o outro, sem nada que diga qual é qual**, e as quatro casas
-decimais transformaram um deles, 0,00825, em `0.0083`. Um tipo de uso nem sempre é único dentro de
-uma oferta: o mesmo `SAE1-LoadBalancerUsage` é a hora de um balanceador Classic, de um application,
-de um network e de um gateway, e o que os separa é outro atributo do produto, a **operação**
+**Quatro preços sob um nome, e três sob o outro, sem nada que diga qual é qual**. As quatro casas
+decimais também transformaram um deles, 0,00825, em `0.0083`. Um tipo de uso nem sempre é único
+dentro de uma oferta: o mesmo `SAE1-LoadBalancerUsage` é a hora de um balanceador Classic, de um
+application, de um network e de um gateway. O que os separa é outro atributo do produto, a **operação**
 (*operation*). Este programa curto a imprime ao lado de cada preço. Salve-o como `~/aws/ops.py`:
 
 ```python

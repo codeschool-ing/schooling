@@ -4,20 +4,20 @@ version: 1
 ---
 
 **Uma VPN Site-to-Site liga uma rede que você mantém a uma VPC por túneis cifrados atravessando a
-internet pública.** Três objetos a formam: um **customer gateway**, que é o registro que a AWS tem do
-seu roteador; um **virtual private gateway** (ou um Transit Gateway), que é a ponta da AWS, presa à
-VPC; e a **conexão VPN** entre eles, que são sempre **dois túneis IPsec**. A imagem errada é um túnel
-só, como costuma ser a VPN de um escritório até uma filial. A AWS põe as suas duas pontas dos túneis
-em equipamentos diferentes e faz manutenção nelas uma de cada vez, então um projeto com um túnel só
-de pé é um projeto que cai no calendário de manutenção da AWS.
+internet pública.** Três objetos a formam. Um **customer gateway** é o registro que a AWS tem do seu
+roteador. Um **virtual private gateway** (ou um Transit Gateway) é a ponta da AWS, presa à VPC. A **conexão
+VPN** entre eles são sempre **dois túneis IPsec**. A imagem errada é um túnel só, como costuma ser a
+VPN de um escritório até uma filial. A AWS põe as suas duas pontas dos túneis em equipamentos
+diferentes e faz manutenção nelas uma de cada vez. Um projeto com um túnel só de pé cai no
+calendário de manutenção da AWS.
 
 ## O escritório, e uma AWS vazia
 
 O escritório da loja é a rede `192.168.0.0/16` atrás de um roteador, cujo endereço público é
-`203.0.113.12`, e o roteador fala **BGP**, o protocolo de roteamento com que as redes contam umas às
+`203.0.113.12`. O roteador fala **BGP**, o protocolo de roteamento com que as redes contam umas às
 outras quais endereços alcançam, como o número de AS privado `65000`. Reinicie o moto no primeiro
-terminal (Ctrl+C, depois `moto_server -p 4567`) para que esta lição comece de uma AWS vazia, e crie a
-parte da VPC da loja de que esta lição precisa, uma sub-rede e a tabela de rotas dela:
+terminal (Ctrl+C, depois `moto_server -p 4567`) para que esta lição comece de uma AWS vazia. Depois
+crie a parte da VPC da loja de que esta lição precisa, uma sub-rede e a tabela de rotas dela:
 
 ```sh
 vpc=$(aws ec2 create-vpc --cidr-block 10.20.0.0/16 --query Vpc.VpcId --output text)
@@ -56,8 +56,8 @@ ana@laptop:~/aws$ cgw=$(aws ec2 describe-customer-gateways --query "CustomerGate
 
 ## A ponta da AWS: um virtual private gateway
 
-O **virtual private gateway** é a porta da VPC para VPN e para Direct Connect, e tem um número de AS
-próprio do lado da AWS, `64512` aqui, a menos que você escolha outro:
+O **virtual private gateway** é a porta da VPC para VPN e para Direct Connect. Ele tem um número de
+AS próprio do lado da AWS, `64512` aqui, a menos que você escolha outro:
 
 ```
 ana@laptop:~/aws$ aws ec2 create-vpn-gateway --type ipsec.1 --amazon-side-asn 64512 --query "VpnGateway.[VpnGatewayId,AmazonSideAsn,State]" --output text
@@ -77,11 +77,11 @@ ana@laptop:~/aws$ aws ec2 attach-vpn-gateway --vpn-gateway-id $vgw --vpc-id $vpc
 }
 ```
 
-Na AWS a associação passa por `attaching` antes de ficar `attached`; o moto pula direto para o fim.
-Uma VPC aceita um virtual private gateway por vez. **Um Transit Gateway é a ponta alternativa**, que a
-lição 20 constrói: a VPN se prende ao Transit Gateway, e toda VPC presa a ele alcança o escritório pela
-mesma conexão. Essa é a ponta certa quando há mais que um par de VPCs, e a seção depois da próxima
-precifica as duas.
+Na AWS a associação passa por `attaching` antes de ficar `attached`. O moto pula direto para o fim.
+Uma VPC aceita um virtual private gateway por vez. **Um Transit Gateway é a ponta alternativa**, que
+a lição 20 constrói. A VPN se prende ao Transit Gateway, e toda VPC presa a ele alcança o escritório
+pela mesma conexão. Essa é a ponta certa quando há mais que um par de VPCs. A seção depois da
+próxima precifica as duas.
 
 ## A conexão, e o que o moto diz dos túneis dela
 
@@ -121,9 +121,9 @@ ana@laptop:~/aws$ aws ec2 describe-vpn-connections --vpn-connection-ids $vpn --q
           </ipsec_tunnel>
 ```
 
-**Leia isso como documento do moto, não como configuração.** Ele tem o formato que a AWS documenta,
-dois blocos `<ipsec_tunnel>`, cada um com um endereço externo para as duas pontas, um par de endereços
-dentro do túnel em `169.254.0.0/16`, e os números de BGP. Os valores não se sustentam:
+**Leia isso como documento do moto, não como configuração.** Ele tem o formato que a AWS documenta:
+dois blocos `<ipsec_tunnel>`. Cada um tem um endereço externo para as duas pontas, um par de
+endereços dentro do túnel em `169.254.0.0/16`, e os números de BGP. Os valores não se sustentam:
 
 - o endereço externo do cliente é `12.1.2.3`, e não o `203.0.113.12` que o customer gateway recebeu;
 - o número de AS do lado da AWS é `7224`, e não o `64512` com que este gateway foi criado;
@@ -131,7 +131,7 @@ dentro do túnel em `169.254.0.0/16`, e os números de BGP. Os valores não se s
   túnel **o seu próprio endereço externo, no seu próprio equipamento**, e o seu próprio `/30` interno.
 
 Na AWS esse documento é o que um engenheiro de rede carrega no roteador, muitas vezes por um arquivo
-que a AWS gera para a marca do roteador; vindo do moto, é um modelo para ler e nada para carregar. O
+que a AWS gera para a marca do roteador. Vindo do moto, é um modelo para ler e nada para carregar. O
 estado que a AWS guarda sobre os túneis também falta:
 
 ```
@@ -142,8 +142,8 @@ ana@laptop:~/aws$ aws ec2 describe-vpn-connections --vpn-connection-ids $vpn --q
 ]
 ```
 
-**`VgwTelemetry` é onde a AWS informa cada túnel**, uma entrada cada, `UP` ou `DOWN`, com o número de
-rotas que aprendeu; é a primeira coisa a olhar quando o escritório não alcança a VPC. O moto não
+**`VgwTelemetry` é onde a AWS informa cada túnel**, uma entrada cada, `UP` ou `DOWN`, com o número
+de rotas que aprendeu. É a primeira coisa a olhar quando o escritório não alcança a VPC. O moto não
 devolve nada ali, porque não há túneis por trás da resposta dele.
 
 ## Rotas estáticas ou BGP
@@ -156,11 +156,11 @@ nas duas pontas. Ele também faz failover pior: sem BGP, o roteador precisa perc
 verificações próprias antes de passar para o outro.
 
 O **BGP** deixa as duas pontas contarem uma à outra: o roteador do escritório anuncia
-`192.168.0.0/16` por cada túnel, a AWS anuncia `10.20.0.0/16`, e quando um túnel cai as rotas
+`192.168.0.0/16` por cada túnel, e a AWS anuncia `10.20.0.0/16`. Quando um túnel cai, as rotas
 aprendidas por ele são retiradas e o outro túnel carrega o tráfego. **Use BGP quando o roteador
 souber falá-lo**, e é por isso que o customer gateway carrega um número de AS.
 
-A **propagação de rotas** é a metade que toca a VPC: uma tabela de rotas com a propagação ligada a
+A **propagação de rotas** é a metade que toca a VPC. Uma tabela de rotas com a propagação ligada a
 partir do virtual private gateway recebe as rotas que o gateway aprendeu, e as mantém atualizadas
 sozinha. O moto 5.2.3 não consegue fazer isso:
 
@@ -188,7 +188,7 @@ ana@laptop:~/aws$ aws ec2 describe-route-tables --route-table-ids $rt --query "R
 ```
 
 A lição 17 lê uma tabela de rotas linha a linha. **`CreateRoute` na última coluna é como uma rota
-estática diz quem a escreveu**; uma propagada diz `EnableVgwRoutePropagation`. A rota local,
+estática diz quem a escreveu**. Uma propagada diz `EnableVgwRoutePropagation`. A rota local,
 `10.20.0.0/16`, é o que a VPC sabe de si mesma.
 
 ```schooling-figure

@@ -9,9 +9,9 @@ muda o que foi pedido à AWS nem o que ela devolve. As duas opções do fim dest
 as de paginação, são do tipo oposto, porque mudam as requisições.
 
 A imagem errada é que o `--query` é um filtro que a AWS aplica. **Ele é uma expressão JMESPath que a
-linha de comando avalia sobre a resposta inteira**, e é por isso que ele consegue contar, ordenar e
-remodelar, e por isso um filtro no `--query` não deixa uma listagem grande mais barata. Alguns
-comandos têm também um `--filters` do lado do servidor, e esse sim reduz o que é enviado.
+linha de comando avalia sobre a resposta inteira**. É por isso que ele consegue contar, ordenar e
+remodelar. É também por isso que um filtro no `--query` não deixa uma listagem grande mais barata.
+Alguns comandos têm também um `--filters` do lado do servidor, e esse sim reduz o que é enviado.
 
 ## JMESPath, a linguagem do `--query`
 
@@ -24,8 +24,8 @@ ana@laptop:~/aws$ aws iam list-policies --scope AWS --query "Policies[?starts_wi
 AmazonS3ExpressFullAccess	AmazonS3ExpressReadOnlyAccess	AmazonS3FilesCSIDriverPolicy	AmazonS3FilesClientFullAccess	AmazonS3FilesClientReadOnlyAccess	AmazonS3FilesClientReadWriteAccess	AmazonS3FilesFullAccess	AmazonS3FilesReadOnlyAccess	AmazonS3FullAccess	AmazonS3ObjectLambdaExecutionRolePolicy	AmazonS3OutpostsFullAccess	AmazonS3OutpostsReadOnlyAccess	AmazonS3ReadOnlyAccess	AmazonS3TablesFullAccess	AmazonS3TablesLakeFormationServiceRole	AmazonS3TablesReadOnlyAccess
 ```
 
-`Policies` é a lista dentro da resposta, `[? … ]` guarda os elementos para os quais a condição é
-verdadeira, `starts_with` é uma das funções do JMESPath, e `.PolicyName` projeta um campo de cada
+`Policies` é a lista dentro da resposta, e `[? … ]` guarda os elementos para os quais a condição é
+verdadeira. `starts_with` é uma das funções do JMESPath, e `.PolicyName` projeta um campo de cada
 elemento que sobrou. **Literais vão entre crases**, que o shell também usa, então a expressão vai
 entre aspas duplas e cada crase é escapada com uma barra invertida.
 
@@ -80,7 +80,7 @@ ana@laptop:~/aws$ aws iam list-policies --scope AWS --query "Policies[?starts_wi
 
 **`json` é para programas, `text` para o shell, `table` para pessoas, e `yaml` para arquivos.** O
 `text` põe cada valor numa coluna separada por tabulações, numa ordem que a API decide, e é por isso
-que combina bem com um `--query` que escolhe a ordem; `cut` e `read` o separam sem parser. O `table`
+que combina bem com um `--query` que escolhe a ordem. `cut` e `read` o separam sem parser. O `table`
 desenha bordas e títulos, e é o que nunca se deve passar a outro programa. O último comando mostra o
 que um hash de seleção múltipla rende numa tabela: os cabeçalhos são as chaves que a consulta
 nomeou. O `yaml-stream` é um quinto formato, que imprime cada página de uma listagem longa conforme
@@ -102,9 +102,9 @@ ana@laptop:~/aws$ aws ec2 describe-instances --query "length(Reservations)"
 
 **Um dry run bem-sucedido é um erro**, `DryRunOperation`, com a frase "Request would have
 succeeded", e código de saída 254. Um script que testa `$?` precisa olhar o código do erro, já que
-os dois desfechos falham. Quem não tem a permissão recebe `UnauthorizedOperation` na AWS; o moto aqui
-não verifica permissões, então essa metade não foi medida. Nenhuma instância foi criada, como a
-contagem mostra. A opção é do EC2; a maioria dos serviços não tem nada parecido, e o curso se apoia
+os dois desfechos falham. Quem não tem a permissão recebe `UnauthorizedOperation` na AWS. O moto
+aqui não verifica permissões, então essa metade não foi medida. Nenhuma instância foi criada, como a
+contagem mostra. A opção é do EC2. A maioria dos serviços não tem nada parecido, e o curso se apoia
 na verificação de permissões do moto para a mesma pergunta em outras lições.
 
 ## Páginas, que a linha de comando esconde

@@ -5,8 +5,8 @@ version: 1
 
 **Peering não custa nada para ter e cresce por pares; um Transit Gateway custa algo a cada hora e
 cresce um attachment por rede.** Com duas ou três VPCs, o peering é mais barato e mais simples. Com
-muitas, ou no momento em que uma rede precisa ser alcançada *através* de outra, o hub ganha, e a
-lista de preços diz quanto ele cobra por ganhar.
+muitas, ou no momento em que uma rede precisa ser alcançada *através* de outra, o hub ganha. A lista
+de preços diz quanto ele cobra por ganhar.
 
 ## Os preços
 
@@ -47,7 +47,7 @@ hubs e um concentrador de VPN. Seja o que for que esteja ligado, **0,09 dólar p
 e 0,02 por gigabyte que o hub processa**.
 
 As duas linhas de peering são **0,01 por gigabyte em cada sentido**. A documentação da AWS diz que o
-tráfego por um peering dentro de uma zona é grátis, então essas linhas são o que custa atravessar
+tráfego por um peering dentro de uma zona é grátis. Então essas linhas são o que custa atravessar
 zonas por um peering, os mesmos 0,01 em cada sentido de qualquer travessia entre zonas da lição 1. O
 peering não tem linha por hora nenhuma.
 
@@ -66,11 +66,11 @@ meio de uma conversa que não precisa de ninguém no meio.
 
 ## Dez VPCs
 
-Pares crescem mais rápido que redes. Dez VPCs que conversam todas entre si precisam de 10 × 9 / 2 =
-**45 peerings**, cada um pedido e aceito, e toda tabela de rotas de toda VPC carrega **nove rotas**,
-uma por par; uma décima primeira VPC acrescenta mais dez peerings e uma rota em toda tabela da
-organização. A AWS também limita por cota os peerings de uma VPC, 50 por padrão. O hub precisa de
-**dez attachments** e uma linha por VPC na própria tabela, propagada sozinha:
+Pares crescem mais rápido que redes. Dez VPCs que conversam todas entre si precisam de 10 × 9 / 2 = **45
+peerings**, cada um pedido e aceito. Toda tabela de rotas de toda VPC carrega **nove rotas**, uma
+por par. Uma décima primeira VPC acrescenta mais dez peerings e uma rota em toda tabela da
+organização. A AWS também limita por cota os peerings de uma VPC, 50 por padrão. O hub precisa de **dez
+attachments** e uma linha por VPC na própria tabela, propagada sozinha:
 
 | dez VPCs | peering | Transit Gateway |
 |---|---|---|
@@ -91,13 +91,13 @@ pessoas operando a plataforma, vale boa parte deles.
 - **Peering** quando as VPCs são poucas, o tráfego entre elas é pesado e todo par simplesmente
   conversa com todo outro. Ele não tem custo por hora, nem cobrança de processamento, nem nada no
   meio para falhar.
-- **Transit Gateway** quando as VPCs são muitas ou não param de chegar, quando o roteamento precisa
-  ser **transitivo**, como uma VPN até o escritório (lição 24) que toda VPC usa, e quando a loja
-  precisa de **segmentos**, o staging mantido longe da produção enquanto os dois alcançam ferramentas
-  compartilhadas, o que só as tabelas de rotas do hub conseguem dizer.
+- **Transit Gateway** quando as VPCs são muitas ou não param de chegar, ou quando o roteamento
+  precisa ser **transitivo**, como uma VPN até o escritório (lição 24) que toda VPC usa. Ele também
+  ganha quando a loja precisa de **segmentos**: o staging mantido longe da produção enquanto os dois
+  alcançam ferramentas compartilhadas, o que só as tabelas de rotas do hub conseguem dizer.
 - **Nenhum dos dois** quando um único serviço é tudo o que precisa ser compartilhado, num sentido só.
   Isso é o PrivateLink, lição 19, e ele não se importa se os intervalos se sobrepõem.
 
 A loja, com produção, staging e uma cópia de recuperação de desastre, começa com **peering**. No dia
-em que a VPN do escritório chegar, ou uma quarta e uma quinta conta, ela passa para o hub, e a
-mudança é o `replace-route` da seção anterior, uma tabela de cada vez.
+em que a VPN do escritório chegar, ou uma quarta e uma quinta conta, ela passa para o hub. A mudança
+é o `replace-route` da seção anterior, uma tabela de cada vez.

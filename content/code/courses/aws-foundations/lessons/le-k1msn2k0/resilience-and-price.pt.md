@@ -4,11 +4,11 @@ version: 1
 ---
 
 **Um caminho de entrada desde o datacenter vale o que vale o segundo caminho.** Uma conexão Direct
-Connect é uma porta, um cross-connect, um prédio e uma rota de fibra, e qualquer um deles pode falhar;
-o escritório da loja então perde a VPC inteira, por mais rápido que o enlace fosse um minuto antes. A
-imagem errada é que o Direct Connect é "o confiável" e a VPN o reserva de quem não pode pagar por ele.
-Cada um é um caminho único até ser dobrado, e a lista de preços decide qual dobra a loja consegue
-pagar.
+Connect é uma porta, um cross-connect, um prédio e uma rota de fibra, e qualquer um deles pode
+falhar. O escritório da loja então perde a VPC inteira, por mais rápido que o enlace fosse um minuto
+antes. A imagem errada é que o Direct Connect é "o confiável" e a VPN o reserva de quem não pode
+pagar por ele. Cada um é um caminho único até ser dobrado, e a lista de preços decide qual dobra a
+loja consegue pagar.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 340\" role=\"img\" data-fig=\"l24-resilience\" aria-label=\"Dois jeitos de dobrar o caminho do escritório até a VPC. O roteador do escritório tem uma conexão Direct Connect até o local Equinix SP4, código TNDB, e dali uma interface virtual privada até o virtual private gateway da VPC em sa-east-1. Tracejado, o segundo caminho: ou uma segunda conexão Direct Connect no local Tivit, que sobrevive a um prédio inteiro apagar, ou uma VPN Site-to-Site pela internet, o reserva mais barato. Com BGP nos dois, a AWS prefere o caminho do Direct Connect enquanto ele está de pé.\"><defs><marker id=\"l24-resilience-af-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l24-resilience-af-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20.0\" y=\"110.0\" width=\"140.0\" height=\"110.0\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"90.0\" y=\"140.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">o escritório</text><text x=\"90.0\" y=\"160.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">roteador</text><text x=\"90.0\" y=\"180.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">AS 65000</text><rect x=\"250.0\" y=\"40.0\" width=\"160.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></rect><text x=\"330.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Equinix SP4</text><text x=\"330.0\" y=\"81.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">local TNDB</text><rect x=\"250.0\" y=\"140.0\" width=\"160.0\" height=\"60.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"330.0\" y=\"161.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Tivit</text><text x=\"330.0\" y=\"181.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">local TIVIT</text><rect x=\"250.0\" y=\"250.0\" width=\"160.0\" height=\"50.0\" rx=\"24\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"330.0\" y=\"275.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a internet</text><rect x=\"480.0\" y=\"30.0\" width=\"220.0\" height=\"280.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\"></rect><text x=\"494.0\" y=\"48.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">sa-east-1</text><rect x=\"520.0\" y=\"120.0\" width=\"150.0\" height=\"90.0\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"595.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">virtual private</text><text x=\"595.0\" y=\"165.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">gateway</text><text x=\"595.0\" y=\"188.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">10.20.0.0/16</text><path d=\"M162.0 140.0 L246.0 80.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.2\" fill=\"none\"></path><path d=\"M412.0 75.0 L516.0 140.0\" stroke=\"var(--phosphor)\" stroke-width=\"2.2\" fill=\"none\" marker-end=\"url(#l24-resilience-af-ah-phosphor)\"></path><text x=\"200.0\" y=\"96.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--phosphor)\">Direct Connect</text><text x=\"444.0\" y=\"118.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">VIF privada</text><path d=\"M162.0 170.0 L246.0 170.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"6 4\"></path><path d=\"M412.0 170.0 L516.0 168.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"6 4\" marker-end=\"url(#l24-resilience-af-ah-amber)\"></path><text x=\"205.0\" y=\"160.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">ou uma segunda</text><path d=\"M162.0 200.0 L246.0 268.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"2 3\"></path><path d=\"M412.0 270.0 L516.0 200.0\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"2 3\" marker-end=\"url(#l24-resilience-af-ah-amber)\"></path><text x=\"195.0\" y=\"258.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">ou uma VPN</text><text x=\"360.0\" y=\"330.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-style=\"italic\" fill=\"var(--paper-dim)\">com BGP nos dois, a AWS prefere o Direct Connect enquanto ele está de pé</text></svg>", "caption": "Uma conexão é um prédio e uma fibra. O segundo caminho é outro prédio ou a internet.", "same": ["Direct Connect", "Equinix SP4", "Tivit", "gateway", "virtual private"]}
@@ -26,7 +26,7 @@ A AWS descreve três arranjos para o Direct Connect, na própria orientação de
 
 **Uma VPN é o segundo caminho barato**, e a AWS a documenta como reserva do Direct Connect. Com BGP
 nos dois, e o mesmo prefixo do escritório anunciado por cada um, a AWS prefere o caminho do Direct
-Connect enquanto ele está de pé, e as rotas passam para os túneis da VPN quando não está. A VPN é mais
+Connect enquanto ele está de pé. As rotas passam para os túneis da VPN quando não está. A VPN é mais
 lenta e atravessa a internet, o que é aceitável por algumas horas de serviço degradado, e não como
 projeto permanente.
 
@@ -44,7 +44,7 @@ shop-dx-1	TNDB	1Gbps
 shop-dx-2	TIVIT	1Gbps
 ```
 
-**Nada fez failover, porque nada carregava nada**: o comportamento acima é o da AWS, e testá-lo
+**Nada fez failover, porque nada carregava nada**. O comportamento acima é o da AWS. Testá-lo
 significa derrubar um caminho numa conta real e ver as rotas BGP se moverem.
 
 ## Os preços
@@ -120,11 +120,11 @@ tem 730 horas.
   do escritório até o prédio, que o prédio e a operadora cobram e a lista de preços não traz.
 
 **Com 2 TB a VPN sai mais barata; os bytes decidem onde isso muda.** A porta custa 182,50 por mês a
-mais que as horas da VPN, e cada gigabyte pelo Direct Connect economiza 0,04, então os dois se
-encontram em 182,50 / 0,04 = **4.562,5 GB**, cerca de 4,5 TB por mês. Acima disso o cabo é mais barato
-só pela lista de preços, e ele já era o caminho mais estável.
+mais que as horas da VPN, e cada gigabyte pelo Direct Connect economiza 0,04. Então os dois se
+encontram em 182,50 / 0,04 = **4.562,5 GB**, cerca de 4,5 TB por mês. Acima disso o cabo é mais
+barato só pela lista de preços, e ele já era o caminho mais estável.
 
-Essa conta é para um caminho só. Um projeto de alta resiliência são duas portas em dois locais, 438,00
-por mês em horas antes de um byte se mover. A dobra mais barata, para um escritório do tamanho da
-loja, é a que abriu esta seção: **uma conexão Direct Connect, com uma VPN atrás dela**, por
-219,00 + 36,50 = 255,50 por mês em horas.
+Essa conta é para um caminho só. Um projeto de alta resiliência são duas portas em dois locais,
+438,00 por mês em horas antes de um byte se mover. A dobra mais barata, para um escritório do
+tamanho da loja, é a que abriu esta seção. Isto é, **uma conexão Direct Connect, com uma VPN atrás
+dela**, por 219,00 + 36,50 = 255,50 por mês em horas.

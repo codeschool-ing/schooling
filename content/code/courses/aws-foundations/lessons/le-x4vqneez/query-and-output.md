@@ -9,9 +9,9 @@ changes what AWS was asked or what it sends back. The two options at the end of 
 `--dry-run` and the pagination options, are the opposite kind, because they change the requests.
 
 The wrong picture is that `--query` is a filter AWS applies. **It is a JMESPath expression the
-command line evaluates on the full answer**, which is why it can count, sort and reshape, and why a
-filter in `--query` does not make a large listing any cheaper. Some commands have a server-side
-`--filters` too, and that one does reduce what is sent.
+command line evaluates on the full answer**. That is why it can count, sort and reshape. It is also
+why a filter in `--query` does not make a large listing any cheaper. Some commands have a
+server-side `--filters` too, and that one does reduce what is sent.
 
 ## JMESPath, the language of `--query`
 
@@ -24,10 +24,10 @@ ana@laptop:~/aws$ aws iam list-policies --scope AWS --query "Policies[?starts_wi
 AmazonS3ExpressFullAccess	AmazonS3ExpressReadOnlyAccess	AmazonS3FilesCSIDriverPolicy	AmazonS3FilesClientFullAccess	AmazonS3FilesClientReadOnlyAccess	AmazonS3FilesClientReadWriteAccess	AmazonS3FilesFullAccess	AmazonS3FilesReadOnlyAccess	AmazonS3FullAccess	AmazonS3ObjectLambdaExecutionRolePolicy	AmazonS3OutpostsFullAccess	AmazonS3OutpostsReadOnlyAccess	AmazonS3ReadOnlyAccess	AmazonS3TablesFullAccess	AmazonS3TablesLakeFormationServiceRole	AmazonS3TablesReadOnlyAccess
 ```
 
-`Policies` is the list inside the answer, `[? … ]` keeps the elements for which the condition is
-true, `starts_with` is one of JMESPath's functions, and `.PolicyName` projects one field out of
-each element that is left. **Literals go between backticks**, which a shell also uses, so the
-expression is wrapped in double quotes and each backtick escaped with a backslash.
+`Policies` is the list inside the answer, and `[? … ]` keeps the elements for which the condition is
+true. `starts_with` is one of JMESPath's functions, and `.PolicyName` projects one field out of each
+element that is left. **Literals go between backticks**, which a shell also uses, so the expression
+is wrapped in double quotes and each backtick escaped with a backslash.
 
 Four more shapes cover nearly every query in this course:
 
@@ -80,9 +80,9 @@ ana@laptop:~/aws$ aws iam list-policies --scope AWS --query "Policies[?starts_wi
 
 **`json` is for programs, `text` for the shell, `table` for people, and `yaml` for files.** `text`
 puts each value in a column separated by tabs, in an order the API decides, which is why it pairs
-well with a `--query` that picks the order itself; `cut` and `read` split it without a parser.
-`table` draws borders and titles, and is the one never to feed to another program. The last
-command shows what a multiselect hash buys in a table: the headings are the keys the query named.
+well with a `--query` that picks the order itself. `cut` and `read` split it without a parser.
+`table` draws borders and titles, and is the one never to feed to another program. The last command
+shows what a multiselect hash buys in a table: the headings are the keys the query named.
 `yaml-stream` is a fifth format, which prints each page of a long listing as it arrives.
 
 ## `--dry-run`: asking whether, without doing
@@ -100,11 +100,11 @@ ana@laptop:~/aws$ aws ec2 describe-instances --query "length(Reservations)"
 ```
 
 **A successful dry run is an error**, `DryRunOperation`, with the sentence "Request would have
-succeeded", and an exit code of 254. A script that tests `$?` has to look at the error code
-instead, since both outcomes fail. A caller without the permission gets `UnauthorizedOperation`
-in AWS; moto here checks no permissions, so that half was not measured. No instance was
-made, as the count shows. The option is EC2's; most services have nothing like it, and the course
-leans on moto's permission checking for the same question elsewhere.
+succeeded", and an exit code of 254. A script that tests `$?` has to look at the error code instead,
+since both outcomes fail. A caller without the permission gets `UnauthorizedOperation` in AWS. moto
+here checks no permissions, so that half was not measured. No instance was made, as the count shows.
+The option is EC2's. Most services have nothing like it, and the course leans on moto's permission
+checking for the same question elsewhere.
 
 ## Pages, which the command line hides
 

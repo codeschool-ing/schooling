@@ -5,11 +5,11 @@ version: 1
 
 **Um balanceador não faz nada até ter um listener**, e um listener não faz nada até ter para onde
 mandar. Três objetos formam o caminho, e a API os mantém separados de propósito. O **listener** é um
-protocolo e uma porta que o balanceador aceita; as **regras** dele decidem, requisição a requisição,
+protocolo e uma porta que o balanceador aceita. As **regras** dele decidem, requisição a requisição,
 qual **grupo de alvos** (*target group*) responde. Um grupo de alvos é um conjunto de máquinas,
 endereços ou funções com uma verificação de saúde que todos compartilham. A imagem errada são
-máquinas presas a um balanceador. Máquinas são presas a um grupo de alvos, e o mesmo grupo pode estar
-atrás de vários listeners e várias regras ao mesmo tempo.
+máquinas presas a um balanceador. Máquinas são presas a um grupo de alvos, e o mesmo grupo pode
+estar atrás de vários listeners e várias regras ao mesmo tempo.
 
 ## Um grupo de alvos, e o que ele vigia
 
@@ -22,15 +22,15 @@ instance	HTTP	8080	/health	15	3	2
 ```
 
 **Um alvo fica saudável depois de três respostas boas seguidas e não saudável depois de duas
-ruins**, com uma verificação a cada 15 segundos; o dois é o padrão, que o comando não mudou. Então uma
-máquina que para de responder sai do rodízio uns 30 segundos depois, e uma que volta entra de novo
-depois de 45. Esses três números são a troca entre reagir rápido e reagir a ruído.
+ruins**, com uma verificação a cada 15 segundos. O dois é o padrão, que o comando não mudou. Então
+uma máquina que para de responder sai do rodízio uns 30 segundos depois, e uma que volta entra de
+novo depois de 45. Esses três números são a troca entre reagir rápido e reagir a ruído.
 
 **`--target-type` decide o que é um alvo, e não pode ser mudado depois.** `instance` registra
 máquinas pelo id, e o tráfego vai para o endereço primário delas na porta do grupo. `ip` registra
 endereços, e é assim que uma plataforma de contêineres, uma máquina numa VPC emparelhada ou uma no
 datacenter da própria loja, pela VPN da lição 24, entra atrás de um ALB. `lambda` registra uma
-função, e o ALB transforma cada requisição numa invocação; a lição 14 do `aws-compute` escreve uma.
+função, e o ALB transforma cada requisição numa invocação. A lição 14 do `aws-compute` escreve uma.
 Ponha os ids em variáveis e registre as duas máquinas:
 
 ```
@@ -76,8 +76,8 @@ ana@laptop:~/aws$ aws elbv2 deregister-targets --target-group-arn $tg --targets 
 A loja responde em HTTPS, então o balanceador precisa de um **certificado** para `shop.example.com`.
 O **AWS Certificate Manager (ACM)** emite certificados públicos sem custo, os renova sozinho e os
 entrega a um balanceador sem que a chave privada saia da AWS. É isso que **terminação TLS** quer
-dizer aqui: o ALB decifra, lê a requisição e fala com os alvos pela VPC, em HTTP puro na 8080 como
-configurado acima, ou em TLS de novo se o grupo disser `HTTPS`.
+dizer aqui: o ALB decifra e lê a requisição. Ele fala com os alvos pela VPC, em HTTP puro na 8080
+como configurado acima, ou em TLS de novo se o grupo disser `HTTPS`.
 
 ```
 ana@laptop:~/aws$ aws acm request-certificate --domain-name shop.example.com --subject-alternative-names www.shop.example.com --validation-method DNS --query CertificateArn --output text
@@ -92,7 +92,7 @@ shop.example.com	PENDING_VALIDATION	AMAZON_ISSUED
 
 **`PENDING_VALIDATION` é onde um certificado novo espera a prova.** O ACM lhe dá um registro `CNAME`
 para criar na zona, como a lição 21 cria registros, e emite o certificado quando consegue ver o
-registro; um balanceador só aceita um certificado que foi emitido. O moto nunca o emite, e deixa um
+registro. Um balanceador só aceita um certificado que foi emitido. O moto nunca o emite, e deixa um
 listener usá-lo mesmo assim. O listener também nomeia uma **política de segurança**, que decide as
 versões de TLS e as cifras que ele aceita:
 
@@ -107,8 +107,8 @@ ELBSecurityPolicy-TLS13-1-2-2021-06	TLSv1.3 TLSv1.2
 ```
 
 **Nomeie a política você mesmo.** Se ela ficar de fora, o listener recebe uma padrão, e no moto essa
-padrão é `ELBSecurityPolicy-2016-08`, que ainda aceita TLS 1.0 e 1.1; a política mais nova aceita só
-1.2 e 1.3, que todo navegador dos clientes da loja fala. O listener na 443 manda tudo para o grupo de
+padrão é `ELBSecurityPolicy-2016-08`, que ainda aceita TLS 1.0 e 1.1. A política mais nova aceita só 1.2
+e 1.3, que todo navegador dos clientes da loja fala. O listener na 443 manda tudo para o grupo de
 alvos web a menos que uma regra diga outra coisa, e o ARN dele vai para uma variável para as regras:
 
 ```
@@ -126,11 +126,11 @@ redirect	HTTP_301
 
 ## Regras: a camada 7 do nome
 
-**Uma regra é uma condição e uma ação, com uma prioridade**: o listener tenta as regras do menor
-número para cima e a primeira que casar vence; a ação padrão responde ao que não casar com nenhuma. As
-condições são o que só um ALB enxerga, porque só um ALB lê a requisição: o **host**, o **caminho**,
+**Uma regra é uma condição e uma ação, com uma prioridade**. O listener tenta as regras do menor
+número para cima, e a primeira que casar vence. A ação padrão responde ao que não casar com nenhuma.
+As condições são o que só um ALB enxerga, porque só um ALB lê a requisição: o **host**, o **caminho**,
 um **cabeçalho**, o método, uma query string, o endereço de quem chama. A API da loja roda em
-máquinas separadas em endereços conhecidos, `10.20.0.50` e `10.20.1.50`, então ganha um grupo de
+máquinas separadas em endereços conhecidos, `10.20.0.50` e `10.20.1.50`. Então ela ganha um grupo de
 alvos do tipo `ip`, os dois endereços e uma regra pelo caminho:
 
 ```
@@ -182,6 +182,6 @@ stickiness.lb_cookie.duration_seconds	3600
 ```
 
 **A aderência é um remendo para estado guardado numa máquina só**, como uma cesta mantida na memória
-de um processo, e ela tem um custo: um alvo que segura muitos chamadores fixos não pode ser esvaziado
+de um processo. Ela tem um custo: um alvo que segura muitos chamadores fixos não pode ser esvaziado
 rápido, e a carga se espalha de forma desigual. A cesta da loja pertence a um banco de dados ou a um
 cache que todo alvo consegue ler, e aí a aderência não tem mais nada para consertar.

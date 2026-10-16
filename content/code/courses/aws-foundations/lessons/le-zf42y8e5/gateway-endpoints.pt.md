@@ -4,13 +4,13 @@ version: 1
 ---
 
 **Um gateway endpoint é uma rota.** Ele põe numa tabela de rotas uma linha que manda o tráfego para
-o S3, ou para o DynamoDB, direto pela rede da AWS, em vez de sair pelo NAT gateway e voltar pela
+o S3, ou para o DynamoDB, direto pela rede da AWS. Nada sai pelo NAT gateway para voltar pela
 internet. Ele não tem endereço, não fica em sub-rede nenhuma e **não custa nada**, nem por hora nem
 por gigabyte. Só esses dois serviços têm um.
 
 A imagem errada é que uma aplicação numa sub-rede privada falando com o S3 fica "dentro da AWS" de
 qualquer jeito. Sem um endpoint ela não fica, no que diz respeito à VPC. Os endereços do S3 são
-públicos, e a tabela privada os manda para `0.0.0.0/0`, então **todo gigabyte para o S3 passa por um
+públicos, e a tabela privada os manda para `0.0.0.0/0`. Então **todo gigabyte para o S3 passa por um
 NAT gateway**, aos 0,093 dólar por gigabyte que a lição 17 leu. Os backups noturnos da loja para o
 `shop-backups` somam cerca de 1 TB por mês, o que dá 1.024 × 0,093 = **95,23 dólares por mês** de
 processamento de NAT para um tráfego que nunca precisou da internet.
@@ -27,8 +27,8 @@ ana@laptop:~/aws$ rts=$(aws ec2 describe-route-tables --filters Name=tag:Name,Va
 rtb-2f5b255a96df86cac rtb-8a1f0f36b3db1cfbe rtb-2725b1ebad62ad346
 ```
 
-O segundo comando guarda o id da VPC em `vpc` como antes, e o terceiro guarda os ids das três
-tabelas de rotas privadas, as que a lição 17 fez para as sub-redes app e data, em `rts`.
+O segundo comando guarda o id da VPC em `vpc` como antes. O terceiro guarda em `rts` os ids das três
+tabelas de rotas privadas, as que a lição 17 fez para as sub-redes app e data.
 
 ## Quais serviços têm endpoint, e de que tipo
 
@@ -61,15 +61,15 @@ ana@laptop:~/aws$ aws ec2 get-managed-prefix-list-entries --prefix-list-id $(aws
 ```
 
 O segundo comando lista os intervalos. **Os três intervalos são do moto**, uma lista fixa que vem
-com ele; a lista da AWS para `sa-east-1` é outra e muda com o tempo, e é exatamente por isso que uma
+com ele. A lista da AWS para `sa-east-1` é outra e muda com o tempo, e é exatamente por isso que uma
 rota nomeia a lista e não os intervalos.
 
 ## O endpoint, e a política dele
 
 Um endpoint carrega uma **política**, uma política de recurso que diz o que pode passar por ele. Ela
 não concede nada sozinha: um pedido pelo endpoint ainda precisa da permissão de IAM de quem chama,
-como as lições 7 e 8 ensinaram. O que ela faz é estreitar a porta, para que uma máquina na VPC da
-loja não use a rota grátis para copiar dados para o bucket de outra pessoa. Salve isto como
+como as lições 7 e 8 ensinaram. Ela estreita a porta, para que uma máquina na VPC da loja não use a
+rota grátis para copiar dados para o bucket de outra pessoa. Salve isto como
 `~/aws/endpoint-s3.json`:
 
 ```json
@@ -103,8 +103,8 @@ ana@laptop:~/aws$ aws ec2 describe-route-tables --filters Name=tag:Name,Values=p
 pl-d029879653b03e4de	vpce-5365ddb620e8ec4a9
 ```
 
-**A `private-a` agora tem três rotas**, e a nova nomeia uma prefix list em vez de um intervalo, com o
-endpoint como alvo. Um pacote para o S3 casa com `0.0.0.0/0` e com um dos intervalos da lista; o
+**A `private-a` agora tem três rotas**, e a nova nomeia uma prefix list em vez de um intervalo, com
+o endpoint como alvo. Um pacote para o S3 casa com `0.0.0.0/0` e com um dos intervalos da lista. O
 intervalo da lista é mais longo, então a regra da lição 17 o manda para o endpoint e não para o NAT
 gateway. A aplicação não muda nada: ela chama o mesmo endereço do S3 de sempre.
 
@@ -148,15 +148,14 @@ ana@laptop:~/aws$ aws s3api delete-bucket-policy --bucket shop-backups
 ```
 
 **Na AWS esta política recusa todo pedido vindo do laptop**, porque nenhum deles veio pelo endpoint.
-O moto recusou os dois pedidos de objeto com um 403 seco, onde a AWS responde `AccessDenied`, mas
-**ele não julgou a condição**: o moto ignora o bloco `Condition` de uma política, então aplicou o
-Deny como se a condição não existisse, e recusaria do mesmo jeito um pedido vindo pelo endpoint.
-Ele também deixou a listagem passar, que a AWS recusaria. Então a
-transcrição mostra a forma da política e parte do efeito dela; o resto é comportamento documentado
-da AWS e não foi executado.
+O moto recusou os dois pedidos de objeto com um 403 seco, onde a AWS responde `AccessDenied`. Mas **ele
+não julgou a condição**. O moto ignora o bloco `Condition` de uma política, então aplicou o Deny
+como se a condição não existisse, e recusaria do mesmo jeito um pedido vindo pelo endpoint. Ele
+também deixou a listagem passar, que a AWS recusaria. Então a transcrição mostra a forma da política
+e parte do efeito dela. O resto é comportamento documentado da AWS e não foi executado aqui.
 
 **Um Deny em `s3:*` recusa os administradores também**, incluindo quem o escreveu, pelo console e
 pela linha de comando, sempre que não estiverem dentro da VPC. O usuário root da conta ainda pode
-apagar uma política dessas, e esse é o caminho de volta; o hábito mais seguro é uma condição que
+apagar uma política dessas, e esse é o caminho de volta. O hábito mais seguro é uma condição que
 também isente um role nomeado, como o role `deployer` da lição 9. A política é apagada no fim, para
 que o laboratório continue funcionando a partir do laptop.

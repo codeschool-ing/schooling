@@ -4,19 +4,19 @@ version: 1
 ---
 
 **Direct Connect is a physical link between your network and AWS's**, made in a building where both
-have equipment, so that the traffic between the office and the VPC never crosses the public
-internet. The wrong picture is a faster VPN. A VPN is a tunnel you can bring up in an afternoon over
-whatever internet you have. Direct Connect is a port, a fibre and a contract, ordered over weeks,
-and what it buys is a path whose bandwidth and latency are the same at nine in the morning as at
-three in the night. Three pieces make it: a **connection** at a **location**, one or more **virtual
-interfaces** on it, and often a **Direct Connect gateway** to reach VPCs beyond one region.
+have equipment. The traffic between the office and the VPC never crosses the public internet. The
+wrong picture is a faster VPN. A VPN is a tunnel you can bring up in an afternoon over whatever
+internet you have. Direct Connect is a port, a fibre and a contract, ordered over weeks. It buys a
+path whose bandwidth and latency are the same at nine in the morning as at three in the night. Three
+pieces make it: a **connection** at a **location**, one or more **virtual interfaces** on it, and
+often a **Direct Connect gateway** to reach VPCs beyond one region.
 
 ## Locations, and the two kinds of connection
 
 **A Direct Connect location is a colocation datacentre where AWS has routers**, not an AWS region.
 The price list names two in São Paulo, `Equinix SP4` under the code `TNDB` and `Tivit` under
-`TIVIT`, and a connection made at either is homed to `sa-east-1`. The shop's own equipment, or its
-telecom provider's, has to reach that building; the last metres inside it are a **cross-connect**, a
+`TIVIT`. A connection made at either is homed to `sa-east-1`. The shop's own equipment, or its
+telecom provider's, has to reach that building. The last metres inside it are a **cross-connect**, a
 cable the building's operator lays between the two racks.
 
 | | dedicated connection | hosted connection |
@@ -39,7 +39,7 @@ aws: [ERROR]: An error occurred (500) when calling the DescribeLocations operati
 ```
 
 **moto 5.2.3 cannot list locations**, so the code this lesson uses is the one the price list gave,
-`TNDB`, and moto would have accepted any string. A dedicated 1 Gbps connection:
+`TNDB`. moto would have accepted any string. A dedicated 1 Gbps connection:
 
 ```
 ana@laptop:~/aws$ aws directconnect create-connection --location TNDB --bandwidth 1Gbps --connection-name shop-dx-1 --query "[connectionId,connectionState,location,bandwidth,awsDevice]" --output text
@@ -47,11 +47,11 @@ arn:aws:directconnect:sa-east-1:123456789012:dx-con/dx-moto-shop-dx-1-2026101613
 ```
 
 Three things in that line are moto's and not AWS's. **The state is `available` at once**, where AWS
-starts a dedicated connection `requested`, keeps it there until you download the LOA, and moves it to
-`available` only once the cross-connect is in and light is seen on the fibre, which takes days to
-weeks. **The id is an ARN with a timestamp in it**, where AWS gives an id such as `dxcon-` followed by
-a few characters. And `mock_device` is moto saying there is no device. Keep the id for the next
-step:
+starts a dedicated connection `requested` and keeps it there until you download the LOA. AWS moves
+it to `available` only once the cross-connect is in and light is seen on the fibre, which takes days
+to weeks. **The id is an ARN with a timestamp in it**, where AWS gives an id such as `dxcon-`
+followed by a few characters. And `mock_device` is moto saying there is no device. Keep the id for
+the next step:
 
 ```
 ana@laptop:~/aws$ dx=$(aws directconnect describe-connections --query "connections[0].connectionId" --output text)
@@ -60,7 +60,7 @@ ana@laptop:~/aws$ dx=$(aws directconnect describe-connections --query "connectio
 ## Virtual interfaces: what travels on the cable
 
 **A connection is a cable; a virtual interface (VIF) is a conversation on it**, a VLAN with a BGP
-session of its own, and one connection carries several. There are three kinds:
+session of its own. One connection carries several. There are three kinds:
 
 | VIF | reaches | the shop uses it for |
 |---|---|---|
@@ -88,17 +88,17 @@ the section is AWS's documented behaviour and none of it was run.
 
 **A Direct Connect gateway is a global object that joins virtual interfaces to gateways in any
 region.** Without one, a private VIF reaches one virtual private gateway in the connection's home
-region; with one, the same VIF can reach virtual private gateways in several regions and accounts,
+region. With one, the same VIF can reach virtual private gateways in several regions and accounts,
 and a transit VIF can reach Transit Gateways. It routes between the VIFs and the VPCs, not between
-two VPCs and not between two offices: traffic from one VPC to another through a Direct Connect
-gateway is refused by design, which is lesson 20's job.
+two VPCs and not between two offices. Traffic from one VPC to another through a Direct Connect
+gateway is refused by design, and joining VPCs is lesson 20's job.
 
 ## What the cable does not do
 
 **Direct Connect is private, and it is not encrypted.** The traffic crosses a cable nobody else
-shares, between equipment the shop and AWS control, and it is still clear text on that cable. Two
-answers, both documented by AWS and neither run here: **MACsec**, link encryption on dedicated
-connections at 10 and 100 Gbps; or a **Site-to-Site VPN over the Direct Connect**, the tunnels of the
-previous section carried on a public or transit VIF instead of the internet. For a shop sending
-payment data between the office and the VPC, one of the two belongs in the design, whatever the
-cable's privacy suggests.
+shares, between equipment the shop and AWS control, and it is still clear text on that cable. There
+are two answers, both documented by AWS and neither run here. **MACsec** is link encryption on
+dedicated connections at 10 and 100 Gbps. The other is a **Site-to-Site VPN over the Direct
+Connect**: the tunnels of the previous section, carried on a public or transit VIF instead of the
+internet. For a shop sending payment data between the office and the VPC, one of the two belongs in
+the design, whatever the cable's privacy suggests.
