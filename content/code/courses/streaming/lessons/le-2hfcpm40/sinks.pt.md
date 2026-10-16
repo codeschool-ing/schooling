@@ -34,6 +34,13 @@ Leia o tópico:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-per-window --from-beginning --formatter-property print.key=true --max-messages 5
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+09:00	{"start":"09:00","end":"09:05","sales":30,"cents":337340}
+09:05	{"start":"09:05","end":"09:10","sales":20,"cents":155950}
+09:10	{"start":"09:10","end":"09:15","sales":28,"cents":204680}
+09:05	{"start":"09:05","end":"09:10","sales":28,"cents":241740}
+09:15	{"start":"09:15","end":"09:20","sales":14,"cents":118290}
+Processed a total of 5 messages
 ```
 
 A chave `09:05` aparece duas vezes, 20 vendas e depois 28, porque o modo update manda uma janela
@@ -50,6 +57,7 @@ Arquivos são o caso oposto. Peça-os no modo update e a consulta é recusada na
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --sink files --checkpoint ~/spark/ckpt/files 2>spark.log; tail -1 spark.log
+pyspark.errors.exceptions.captured.AnalysisException: [STREAMING_OUTPUT_MODE.UNSUPPORTED_DATASOURCE] Invalid streaming output mode: update. This output mode is not supported in Data Source json. SQLSTATE: 42KDE
 ```
 
 Um arquivo, depois de escrito, não pode ser atualizado, então só o modo append é permitido:
@@ -60,9 +68,21 @@ ubuntu@stream:~/work$ python spark_sales.py --sink files --mode append --checkpo
 
 ```
 ubuntu@stream:~/work$ ls ~/spark/out ~/spark/out/_spark_metadata
+/home/ubuntu/spark/out:
+_spark_metadata
+part-00000-16ade9a4-8ce1-417b-a50e-b1ac3b5b9655-c000.json
+part-00000-7d2b3f47-d5d8-422d-a956-1a9ae4d70c7f-c000.json
+part-00000-b4ad9555-44eb-41ba-8860-a359d7bab273-c000.json
+part-00001-0657b3fb-d4fa-46d6-9177-9f1c4d541545-c000.json
+part-00001-b995a194-438f-432b-80df-36d23380e391-c000.json
+
+/home/ubuntu/spark/out/_spark_metadata:
+0
+1
+2
 ```
 
-Cada batch escreveu um arquivo por partição de shuffle, alguns vazios, com um nome aleatório. **O
+Os batches escreveram cinco arquivos entre eles, com nomes aleatórios, e dois estão vazios. **O
 diretório `_spark_metadata` é o que torna este sink exactly-once**: uma entrada por batch concluído,
 com os arquivos dele. Um batch que caiu no meio da escrita deixa arquivos que nenhuma entrada cita,
 e o Spark, ao ler o diretório de volta, os ignora; um batch que roda de novo escreve arquivos novos
@@ -71,6 +91,9 @@ são três janelas:
 
 ```
 ubuntu@stream:~/work$ cat ~/spark/out/part-*.json
+{"start":"09:10","end":"09:15","sales":28,"cents":204680}
+{"start":"09:00","end":"09:05","sales":30,"cents":337340}
+{"start":"09:05","end":"09:10","sales":28,"cents":241740}
 ```
 
 Três, não quatro: o watermark parou em 09:15:12, três minutos antes da última venda do caixa, então

@@ -12,6 +12,39 @@ first one, and let `jq` lay it out:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --from-beginning --max-messages 1 | jq .
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+Processed a total of 1 messages
+{
+  "before": null,
+  "after": {
+    "shop": "recife",
+    "book": "bk-01",
+    "qty": 3
+  },
+  "source": {
+    "version": "3.7.0.Final",
+    "connector": "postgresql",
+    "name": "pf",
+    "ts_ms": 1792111135528,
+    "snapshot": "first_in_data_collection",
+    "db": "pontofinal",
+    "sequence": "[null,\"83294112\"]",
+    "ts_us": 1792111135528071,
+    "ts_ns": 1792111135528071000,
+    "schema": "public",
+    "table": "stock",
+    "txId": 809,
+    "lsn": 83294112,
+    "xmin": null,
+    "origin": null,
+    "origin_lsn": null
+  },
+  "transaction": null,
+  "op": "r",
+  "ts_ms": 1792111135657,
+  "ts_us": 1792111135657066,
+  "ts_ns": 1792111135657066348
+}
 ```
 
 The fields, from the top:
@@ -36,6 +69,11 @@ The message's value is the envelope. Its **key** is the row's primary key, on it
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --from-beginning --max-messages 3 --formatter-property print.key=true --formatter-property print.value=false
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+{"shop":"recife","book":"bk-01"}
+{"shop":"recife","book":"bk-02"}
+{"shop":"recife","book":"bk-03"}
+Processed a total of 3 messages
 ```
 
 Everything that ever happens to Recife's `bk-01` has that key, so it goes to the same partition and
@@ -48,6 +86,7 @@ The snapshot is history. Now make a change and watch it arrive. A new book reach
 
 ```
 ubuntu@stream:~/work$ psql pontofinal -c "INSERT INTO books VALUES ('bk-09', 'Iracema', 3290)"
+INSERT 0 1
 ```
 
 `books` had eight rows, so its snapshot took offsets 0 to 7 and the insert is offset 8. Read that one
@@ -55,6 +94,8 @@ message and only the fields that matter here:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.books --partition 0 --offset 8 --max-messages 1 | jq -c '{op, before, after}'
+Processed a total of 1 messages
+{"op":"c","before":null,"after":{"book":"bk-09","title":"Iracema","cents":3290}}
 ```
 
 `op` is `c`, `before` is `null` because the row did not exist, and `after` is the row as inserted.

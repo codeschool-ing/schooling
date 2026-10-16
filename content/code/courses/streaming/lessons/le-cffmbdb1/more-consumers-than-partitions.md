@@ -13,6 +13,12 @@ all four were running:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group shelf --members
+
+GROUP           CONSUMER-ID                                  HOST            CLIENT-ID       #PARTITIONS     
+shelf           rdkafka-0c78a452-9546-4ec4-90d3-37964f5dc9a1 /127.0.0.1      rdkafka         1               
+shelf           rdkafka-6ca0753c-f173-40e0-9a91-f0f99a179b6a /127.0.0.1      rdkafka         1               
+shelf           rdkafka-9547e082-fcb7-45cf-834b-6beee12b671b /127.0.0.1      rdkafka         1               
+shelf           rdkafka-9d32af94-70bc-4989-bedb-c9169e605cb8 /127.0.0.1      rdkafka         0               
 ```
 
 `#PARTITIONS` is 1, 1, 1 and 0. And this is what the fourth member, `d`, printed between starting
@@ -20,6 +26,8 @@ and being stopped, while ten sales arrived:
 
 ```
 ubuntu@stream:~/work$ python consumer.py d --group shelf
+d: assigned []
+d: revoked []
 ```
 
 `d` joined, was given an empty list, and never read a message. It was not broken; it was a member

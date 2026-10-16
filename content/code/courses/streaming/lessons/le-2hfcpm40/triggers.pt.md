@@ -27,6 +27,7 @@ ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --delete
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
 ```
 
 No **segundo shell**, comece a consulta com um trigger de cinco segundos e um checkpoint novo, já
@@ -34,12 +35,58 @@ que os antigos descrevem um tópico que não existe mais:
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --trigger 5 --checkpoint ~/spark/ckpt/live 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:00|09:05|   22|241160|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   14| 94000|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:15|09:20|   14|118290|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 No primeiro, mande cem vendas a dez por segundo, para que levem dez segundos para chegar:
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 100 --rate 10
+sent 100 sales to sales, the last one at 09:17:12
 ```
 
 **Os seus batches não vão bater com estes**, e esse é o ponto desta execução: o que cai em cada
@@ -56,19 +103,29 @@ o JDK, lista os programas Java, e o `ps`, quanta memória cada processo ocupa:
 
 ```
 ubuntu@stream:~/work$ jps -l
+24528 org.apache.spark.deploy.SparkSubmit
+25802 jdk.jcmd/sun.tools.jps.Jps
+15646 kafka.Kafka
 ```
 
 ```
 ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -5
+  PID   RSS COMMAND
+24528 653548 java
+15646 378596 java
+24523 53468 python
+25837  4340 ps
 ```
 
-O `java` maior é o Spark, cerca de 600 MB, e o seguinte é o nó Kafka, cerca de 400 MB: o `RSS` está
+O `java` maior é o Spark, cerca de 650 MB, e o seguinte é o nó Kafka, um pouco menos de 400 MB: o `RSS` está
 em kilobytes. O seu programa Python, que só manda a consulta ao Spark e espera, é o `python` de 50
 MB. **Cerca de um gigabyte para um broker e uma consulta de streaming**, com folga dentro dos 4 GB
 da máquina virtual.
 
 ```
 ubuntu@stream:~/work$ ss -ltn | grep -E "4040|9092"
+LISTEN 0      1          127.0.0.1:4040       0.0.0.0:*          
+LISTEN 0      50         127.0.0.1:9092       0.0.0.0:*          
 ```
 
 A porta 4040 é a página web do Spark sobre a consulta em execução, e ela escuta em `127.0.0.1`, como
@@ -84,6 +141,7 @@ estado, então a contagem desta lição é recusada antes de começar:
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --trigger continuous --checkpoint ~/spark/ckpt/cont 2>spark.log; grep AnalysisException spark.log
+pyspark.errors.exceptions.captured.AnalysisException: Continuous processing does not support EventTimeWatermark operations.;
 ```
 
 O watermark é a primeira coisa contra a qual ele protesta, e a agregação seria a próxima. O

@@ -51,6 +51,66 @@ consulta, e a seção 06 mostra o que acontece quando uma consulta encontra um a
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode update --checkpoint ~/spark/ckpt/update 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|    1|  3990|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   18|147970|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:05|09:10|   28|241740|
+|09:15|09:20|   12|108980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:20|09:25|   23|209180|
+|09:15|09:20|   29|240130|
+|09:25|09:30|    9| 69980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|    9| 86510|
+|09:25|09:30|   25|237180|
+|09:30|09:35|   24|172230|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|   13|134940|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 5
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 **O modo update imprime, depois de cada batch, só as janelas que aquele batch alterou**, com os
@@ -72,6 +132,74 @@ tinha andado no fim do batch 4, e um batch sem dados é o jeito que ele tem de a
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode complete --checkpoint ~/spark/ckpt/complete 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|    1|  3990|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   18|147970|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:15|09:20|   12|108980|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:20|09:25|   23|209180|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:15|09:20|   29|240130|
+|09:25|09:30|    9| 69980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:35|09:40|    9| 86510|
+|09:20|09:25|   23|209180|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:30|09:35|   24|172230|
+|09:15|09:20|   29|240130|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|   13|134940|
+|09:20|09:25|   23|209180|
+|09:10|09:15|   28|204680|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:30|09:35|   24|172230|
+|09:15|09:20|   29|240130|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
 ```
 
 **O modo complete imprime o resultado inteiro depois de cada batch**, sem ordem definida. É o mais
@@ -84,6 +212,59 @@ resultado que fica pequeno, como um total por loja.
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode append --checkpoint ~/spark/ckpt/append 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:00|09:05|   30|337340|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:05|09:10|   28|241740|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:15|09:20|   29|240130|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:20|09:25|   23|209180|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 5
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 **O modo append imprime uma janela uma única vez, quando o watermark diz que ela não pode mais
@@ -93,7 +274,7 @@ batch 1 virou 09:08:12, depois do fim da janela de 09:00, e o batch 1 a imprimiu
 final de 30.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"O modo append sobre as duzentas vendas. Oito janelas de cinco minutos, de 09:00 a 09:40, ao longo de um eixo de tempo. Abaixo delas, o watermark que o Spark usou em cada batch: zero no batch 0, depois 09:08:12, 09:15:49, 09:24:24, 09:34:33 e 09:34:41. Cada janela é impressa no primeiro batch cujo watermark passou do fim dela: 09:00 no batch 1, 09:05 e 09:10 no batch 2, 09:15 no batch 3, 09:20 e 09:25 no batch 4. As janelas de 09:30 e 09:35 nunca são impressas, porque o watermark para em 09:34:41.\" data-fig=\"l12-append\"><text x=\"20\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">janelas</text><text x=\"20\" y=\"160\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">watermark</text><rect x=\"111.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"145.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:00</text><text x=\"145.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 1</text><rect x=\"181.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"215.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:05</text><text x=\"215.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"251.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"285.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:10</text><text x=\"285.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"321.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:15</text><text x=\"355.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 3</text><rect x=\"391.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:20</text><text x=\"425.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"461.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"495.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:25</text><text x=\"495.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"531.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"565.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:30</text><rect x=\"601.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"635.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:35</text><text x=\"558.0\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">nunca impressas</text><text x=\"20\" y=\"98\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">impressa no</text><line x1=\"110.0\" y1=\"140\" x2=\"670.0\" y2=\"140\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"224.79999999999998\" y1=\"128\" x2=\"224.79999999999998\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"224.79999999999998\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 1</text><text x=\"224.79999999999998\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:08:12</text><line x1=\"331.43333333333334\" y1=\"128\" x2=\"331.43333333333334\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"331.43333333333334\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 2</text><text x=\"331.43333333333334\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:15:49</text><line x1=\"451.59999999999997\" y1=\"128\" x2=\"451.59999999999997\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"451.59999999999997\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 3</text><text x=\"451.59999999999997\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:24:24</text><line x1=\"593.6999999999999\" y1=\"128\" x2=\"593.6999999999999\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"593.6999999999999\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 4</text><text x=\"593.6999999999999\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:34:33</text><line x1=\"595.5666666666666\" y1=\"128\" x2=\"595.5666666666666\" y2=\"152\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><text x=\"591.5666666666666\" y=\"200\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">batch 5</text><text x=\"591.5666666666666\" y=\"214\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--amber)\">09:34:41</text><circle cx=\"623.5666666666666\" cy=\"140\" r=\"3.5\" fill=\"var(--paper-dim)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"629.5666666666666\" y=\"232\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">última venda 09:36:41</text><line x1=\"623.5666666666666\" y1=\"146\" x2=\"623.5666666666666\" y2=\"222\" stroke=\"var(--paper-dim)\" stroke-width=\"0.8\" stroke-dasharray=\"2 2\"></line></svg>", "caption": "Uma janela sai no modo append quando o watermark passa do fim dela; as duas últimas esperam uma venda que nunca chega.", "same": ["watermark", "batch 1", "batch 2", "batch 3", "batch 4", "batch 5"]}
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"O modo append sobre as duzentas vendas. Oito janelas de cinco minutos, de 09:00 a 09:40, ao longo de um eixo de tempo. Abaixo delas, o watermark que o Spark usou em cada batch: zero no batch 0, depois 09:08:12, 09:15:49, 09:24:24, 09:34:33 e 09:34:41. Cada janela é impressa no primeiro batch cujo watermark passou do fim dela: 09:00 no batch 1, 09:05 e 09:10 no batch 2, 09:15 no batch 3, 09:20 e 09:25 no batch 4. As janelas de 09:30 e 09:35 nunca são impressas, porque o watermark para em 09:34:41.\" data-fig=\"l12-append\"><text x=\"20\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">janelas</text><text x=\"20\" y=\"160\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">watermark</text><rect x=\"111.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"145.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:00</text><text x=\"145.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 1</text><rect x=\"181.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"215.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:05</text><text x=\"215.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"251.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"285.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:10</text><text x=\"285.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"321.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:15</text><text x=\"355.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 3</text><rect x=\"391.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:20</text><text x=\"425.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"461.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"495.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:25</text><text x=\"495.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"531.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"565.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:30</text><rect x=\"601.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"635.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:35</text><text x=\"558.0\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">nunca impressas</text><text x=\"20\" y=\"98\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">impressa no</text><line x1=\"110.0\" y1=\"140\" x2=\"670.0\" y2=\"140\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"224.79999999999998\" y1=\"128\" x2=\"224.79999999999998\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"224.79999999999998\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 1</text><text x=\"224.79999999999998\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:08:12</text><line x1=\"331.43333333333334\" y1=\"128\" x2=\"331.43333333333334\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"331.43333333333334\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 2</text><text x=\"331.43333333333334\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:15:49</text><line x1=\"451.59999999999997\" y1=\"128\" x2=\"451.59999999999997\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"451.59999999999997\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 3</text><text x=\"451.59999999999997\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:24:24</text><line x1=\"593.6999999999999\" y1=\"128\" x2=\"593.6999999999999\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"593.6999999999999\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 4</text><text x=\"593.6999999999999\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:34:33</text><line x1=\"595.5666666666666\" y1=\"128\" x2=\"595.5666666666666\" y2=\"152\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><text x=\"591.5666666666666\" y=\"200\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">batch 5</text><text x=\"591.5666666666666\" y=\"214\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--amber)\">09:34:41</text><circle cx=\"623.5666666666666\" cy=\"140\" r=\"3.5\" fill=\"var(--paper-dim)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"627.5666666666666\" y=\"232\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">última venda 09:36:41</text><line x1=\"623.5666666666666\" y1=\"146\" x2=\"623.5666666666666\" y2=\"222\" stroke=\"var(--paper-dim)\" stroke-width=\"0.8\" stroke-dasharray=\"2 2\"></line></svg>", "caption": "Uma janela sai no modo append quando o watermark passa do fim dela; as duas últimas esperam uma venda que nunca chega.", "same": ["watermark", "batch 1", "batch 2", "batch 3", "batch 4", "batch 5"]}
 ```
 
 Conte as janelas: seis foram impressas, e os dados têm oito. **As janelas de 09:30 e 09:35 nunca

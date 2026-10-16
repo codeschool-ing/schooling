@@ -19,18 +19,35 @@ replicas in sync. Then node 3 dies, and ten more sales go in with node 2 alone, 
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic till-log --replica-assignment 2:3 --config min.insync.replicas=1
+Created topic till-log.
+ubuntu@stream:~/work$ python acks.py --topic till-log
+acks=all: 10 delivered
+partition 0: offsets 0 to 9
+ubuntu@stream:~/work$ ./cluster.sh kill 3
+node 3: killed
+ubuntu@stream:~/work$ sleep 15; kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic till-log
+Topic: till-log	TopicId: utv0ygFwQ-OUoRoOKuvJXA	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1
+	Topic: till-log	Partition: 0	Leader: 2	Replicas: 2,3	Isr: 2	Elr: 	LastKnownElr: 
+ubuntu@stream:~/work$ python acks.py --topic till-log
+acks=all: 10 delivered
+partition 0: offsets 10 to 19
 ```
 
-@@TILLLOG@@
-
-Offsets 10 to 19 are on node 2 and nowhere else. Now node 2 dies too, and node 3, which stopped at
-offset 10, comes back:
+Offsets 0 to 9 went to both replicas. After node 3 died, the ISR shrank to node 2 alone, and
+offsets 10 to 19 were acknowledged by it, so they are on node 2 and nowhere else. Now node 2 dies
+too, and node 3, which stopped at offset 10, comes back:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh kill 2
+node 2: killed
+ubuntu@stream:~/work$ ./cluster.sh start 3
+node 3: up on localhost:9094
+ubuntu@stream:~/work$ sleep 15; kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic till-log
+Topic: till-log	TopicId: utv0ygFwQ-OUoRoOKuvJXA	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1
+	Topic: till-log	Partition: 0	Leader: none	Replicas: 2,3	Isr: 	Elr: 2	LastKnownElr: 2
+ubuntu@stream:~/work$ python acks.py --topic till-log --count 1
+acks=all: 1 _MSG_TIMED_OUT
 ```
-
-@@OFFLINE@@
 
 **`Leader: none`**: the partition is offline. Node 3 is alive and holds a copy, and Kafka will not
 use it, because it is not in the ISR and does not have the last ten sales. Producers wait and time
@@ -39,21 +56,23 @@ out; consumers get nothing.
 ## Elr: the replicas that may still lead cleanly
 
 The two columns that were empty until now have filled in. **`Elr` is the list of Eligible Leader
-Replicas**, from KIP-966, which Kafka 4 brought in: replicas that are no longer in the ISR,
-because they are down or the ISR shrank below `min.insync.replicas`, and are still known to hold
-every committed record. Node 2 is in it, because it was the last in-sync replica when the ISR lost
+Replicas**, from KIP-966, which Kafka 4 brought in: replicas that left the ISR while it was
+already at or below `min.insync.replicas`, and so are known to hold every committed record. Node 2 is in it, because it was the last in-sync replica when the ISR lost
 it. When node 2 comes back, Kafka can make it leader cleanly and lose nothing. `LastKnownElr`
 keeps the last such list when even the Elr is empty, so an operator can see which node to bring
-back first. Before Elr, the same information was only the ISR, and a replica could lose its place
-in it without anybody knowing it had everything.
+back first.
 
 So the clean way out is to restart node 2. The unclean way is to tell Kafka to use what it has:
 
 ```
 ubuntu@stream:~/work$ kafka-leader-election.sh --bootstrap-server localhost:9092 --election-type unclean --topic till-log --partition 0
+Successfully completed leader election (UNCLEAN) for partitions till-log-0
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic till-log
+Topic: till-log	TopicId: utv0ygFwQ-OUoRoOKuvJXA	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1
+	Topic: till-log	Partition: 0	Leader: 3	Replicas: 2,3	Isr: 3	Elr: 	LastKnownElr: 
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic till-log
+till-log:0:10
 ```
-
-@@UNCLEAN@@
 
 The partition is back, led by node 3, and its log ends at offset 10. **The ten sales written while
 node 3 was down are gone**: they were acknowledged to the producer, with `acks=all`, and they no
@@ -62,11 +81,18 @@ diverges from its own at offset 10, and it **truncates** its log to match:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh start 2
+node 2: up on localhost:9093
+ubuntu@stream:~/work$ sleep 10; kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic till-log
+Topic: till-log	TopicId: utv0ygFwQ-OUoRoOKuvJXA	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1
+	Topic: till-log	Partition: 0	Leader: 3	Replicas: 2,3	Isr: 2,3	Elr: 	LastKnownElr: 
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic till-log
+till-log:0:10
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic till-log --from-beginning --timeout-ms 5000 2>/dev/null | wc -l
+10
 ```
 
-@@NODE2BACK@@
-
-Both replicas are in sync again, on ten sales.
+Both replicas are in sync again, the end offset is still 10, and a consumer reading from the
+beginning gets ten sales.
 
 ## Which to choose
 

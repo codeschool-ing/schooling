@@ -45,5 +45,5 @@ def draw(s, t):
     s.text(x5 - 4, 214, "09:34:41", size=9, mono=True, fill="var(--amber)", anchor="end")
     xl = X(9, 36, 41)
     s.circle(xl, 140, 3.5, fill="var(--paper-dim)")
-    s.text(xl + 6, 232, t("last sale 09:36:41"), size=9, fill="var(--paper-dim)", anchor="start")
+    s.text(xl + 4, 232, t("last sale 09:36:41"), size=9, fill="var(--paper-dim)", anchor="end")
     s.line(xl, 146, xl, 222, stroke="var(--paper-dim)", sw=0.8, dash="2 2")

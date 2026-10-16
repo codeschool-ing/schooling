@@ -2,7 +2,6 @@
 # The terminal sessions quoted in lesson 7 of streaming, as a script that
 # produces them. Its output is not committed: run it and compare.
 #
-#   sudo bash ../../lab.sh files
 #   sudo bash captures.sh > /tmp/le-2q5apnvb.out 2>&1
 #
 # STAGED, not typed, and said here: the lab starts from a fresh one-node
@@ -12,6 +11,21 @@
 # no final commit. A lost acknowledgement (where-it-breaks) is NOT provoked:
 # it needs a network that drops one answer, which this lab does not have.
 . "$(dirname "$0")/../../lab/capture-lib.sh"
+D=$(cd "$(dirname "$0")" && pwd)
+# The programs are extracted from this lesson's sections byte for byte, the
+# way `lab.sh files` would, so the files that run are the files shown.
+for md in "$D"/*.md; do
+python3 - "$md" <<'PY'
+import json, os, pwd, re, sys
+pat = re.compile(r"^[^\n]*`~/work/([\w.-]+)`[^\n]*:\n\n```([\w-]*)\n(.*?)^```$", re.S | re.M)
+for name, lang, body in pat.findall(open(sys.argv[1], encoding="utf-8").read()):
+    if lang == "schooling-example":
+        body = "\n".join(p["code"] for p in json.loads(body)["parts"]) + "\n"
+    path = "/home/ubuntu/work/" + name
+    open(path, "w", encoding="utf-8").write(body)
+    u = pwd.getpwnam("ubuntu"); os.chown(path, u.pw_uid, u.pw_gid)
+PY
+done
 
 lab reset 1 >/dev/null
 run 'rm -f processed-most.txt processed-least.txt' >/dev/null

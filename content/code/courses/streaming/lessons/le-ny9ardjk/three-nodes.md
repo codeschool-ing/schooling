@@ -14,11 +14,18 @@ course is always made again by the lesson that needs it:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh stop
+node 1: stopped
+ubuntu@stream:~/work$ ./cluster.sh new 3
+new: 3 node(s), cluster id YCLAkZhFSxymvym7xHcgzQ
+ubuntu@stream:~/work$ ./cluster.sh start
+node 1: up on localhost:9092
+node 2: up on localhost:9093
+node 3: up on localhost:9094
 ```
 
 The three nodes listen on 9092, 9093 and 9094, each with its own directory under `~/kafka-data`.
-They are three Java processes on one machine, about 400 MB of memory each, which is the 1.2 GB
-lesson 1 measured.
+They are three Java processes on one machine, with just under 400 MB of memory each, which is the
+1.2 GB lesson 1 measured.
 
 ## A topic with three copies
 
@@ -28,6 +35,12 @@ topic is made the way a production topic would be:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3 --replication-factor 3 --config min.insync.replicas=2
+Created topic sales.
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092,localhost:9093 --describe --topic sales
+Topic: sales	TopicId: hBMADyrPSHqe-J4ZJkPq1A	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: sales	Partition: 0	Leader: 1	Replicas: 1,2,3	Isr: 1,2,3	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 1	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 2	Leader: 3	Replicas: 3,1,2	Isr: 3,1,2	Elr: 	LastKnownElr: 
 ```
 
 The `describe` gives the topic's tools an address list rather than one address. Any node can
@@ -52,6 +65,15 @@ On disk, every node now has a directory for every partition:
 
 ```
 ubuntu@stream:~/work$ ls -d ~/kafka-data/node*/log/sales-*
+/home/ubuntu/kafka-data/node1/log/sales-0
+/home/ubuntu/kafka-data/node1/log/sales-1
+/home/ubuntu/kafka-data/node1/log/sales-2
+/home/ubuntu/kafka-data/node2/log/sales-0
+/home/ubuntu/kafka-data/node2/log/sales-1
+/home/ubuntu/kafka-data/node2/log/sales-2
+/home/ubuntu/kafka-data/node3/log/sales-0
+/home/ubuntu/kafka-data/node3/log/sales-1
+/home/ubuntu/kafka-data/node3/log/sales-2
 ```
 
 Nine directories, three partitions times three copies. Which of them is the leader's is not

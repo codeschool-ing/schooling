@@ -12,6 +12,17 @@ Look inside the one the update run wrote:
 
 ```
 ubuntu@stream:~/work$ ls ~/spark/ckpt/update ~/spark/ckpt/update/state/0
+/home/ubuntu/spark/ckpt/update:
+commits
+metadata
+offsets
+sources
+state
+
+/home/ubuntu/spark/ckpt/update/state/0:
+0
+1
+_metadata
 ```
 
 | entry | what is in it |
@@ -36,6 +47,7 @@ the batch ran, and its third line the offsets, per partition, that the batch rea
 
 ```
 ubuntu@stream:~/work$ tail -1 ~/spark/ckpt/update/offsets/5; echo
+{"sales":{"0":41,"1":159,"2":0}}
 ```
 
 Partition 0 up to 41, partition 1 up to 159, and partition 2, which no shop's key lands in, at 0.
@@ -66,6 +78,22 @@ ubuntu@stream:~/work$ printf '%s\n' 'recife|{"sale": "rec-000201", "shop": "reci
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode update --checkpoint ~/spark/ckpt/update 2>spark.log
+-------------------------------------------
+Batch: 6
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|   14|137930|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 7
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 The numbering carries on from batch 6, because the checkpoint remembers batches 0 to 5. **The 09:35

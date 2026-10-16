@@ -32,7 +32,7 @@ home 'cat apicurio-registry-app-3.3.3-all.tar.gz.sha512; echo'
 block start
 vm 'nohup java -jar ~/apicurio/quarkus-run.jar > ~/apicurio/registry.log 2>&1 &'
 vm "until curl -s $API/subjects; do sleep 1; done; echo"
-echo "# (author) registry rss kB: $(ps -o rss= -p "$(pgrep -u ubuntu -f '^java -jar .*quarkus-run')")" >&2
+echo "# (author) registry rss kB: $(ps -o rss= -p "$(pgrep -u ubuntu -f '^java -jar .*quarkus-run')")" >> /tmp/le-94k5phwh.notes
 
 block register
 vm './register.sh sales-avro-value sale.avsc'

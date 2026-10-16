@@ -13,6 +13,7 @@ caught up.
 
 ```
 ubuntu@stream:~/work$ kafka-configs.sh --bootstrap-server localhost:9092 --describe --all --broker 1 | grep replica.lag.time.max.ms
+  replica.lag.time.max.ms=30000 sensitive=false synonyms={DEFAULT_CONFIG:replica.lag.time.max.ms=30000}
 ```
 
 **Thirty seconds, and it is measured in time, not in messages.** A follower is out of the ISR when
@@ -31,28 +32,34 @@ thirty seconds:
 
 ```
 ubuntu@stream:~/work$ kill -STOP $(pgrep -f "^[^ ]*java .*node3/")
+ubuntu@stream:~/work$ sleep 40; kafka-topics.sh --bootstrap-server localhost:9092,localhost:9093 --describe --topic sales
+Topic: sales	TopicId: hBMADyrPSHqe-J4ZJkPq1A	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: sales	Partition: 0	Leader: 1	Replicas: 1,2,3	Isr: 1,2	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 1	Leader: 2	Replicas: 2,3,1	Isr: 2,1	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 2	Leader: 1	Replicas: 3,1,2	Isr: 1,2	Elr: 	LastKnownElr: 
 ```
-
-@@PAUSE@@
 
 The pattern in `pgrep` matches the Java process whose command line names node 3's directory, the
 same pattern `cluster.sh` uses; a looser one, such as `node3` on its own, could match your own
 shell.
 
-Node 3 has left every ISR. Partition 0, whose leader it was, has a new leader, because a frozen
-leader answers nobody and the controllers stopped hearing from it. The topic kept working
-throughout with two copies, which `min.insync.replicas=2` allows, as the next section explains.
+Node 3 has left every ISR. Partition 2, whose leader it was, now has node 1 as leader, because a
+frozen leader answers nobody and the controllers stopped hearing from it. Every partition still has a
+leader and two copies in sync, which is enough to take writes under `min.insync.replicas=2`, as the next section explains.
 
 Now let it go:
 
 ```
 ubuntu@stream:~/work$ kill -CONT $(pgrep -f "^[^ ]*java .*node3/")
+ubuntu@stream:~/work$ sleep 10; kafka-topics.sh --bootstrap-server localhost:9092,localhost:9093 --describe --topic sales
+Topic: sales	TopicId: hBMADyrPSHqe-J4ZJkPq1A	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: sales	Partition: 0	Leader: 1	Replicas: 1,2,3	Isr: 1,2,3	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 1	Leader: 2	Replicas: 2,3,1	Isr: 1,2,3	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 2	Leader: 1	Replicas: 3,1,2	Isr: 1,2,3	Elr: 	LastKnownElr: 
 ```
 
-@@RESUME@@
-
 Ten seconds after it resumed, node 3 had fetched what it missed and was back in every ISR. It did
-**not** get back the leadership of partition 0: a returning replica comes back as a follower, and
+**not** get back the leadership of partition 2: a returning replica comes back as a follower, and
 the section on a node dying shows how leadership returns to the preferred one.
 
 ## Why the list matters

@@ -36,6 +36,10 @@ also starts by itself every time the machine boots — unlike the Kafka cluster,
 
 ```
 ubuntu@stream:~$ sudo -u postgres psql -c "SHOW wal_level"
+ wal_level 
+-----------
+ logical
+(1 row)
 ```
 
 `sudo -u postgres` runs `psql` as the operating-system user `postgres`, which the server trusts as
@@ -57,6 +61,9 @@ name and no line ending, so the second command adds one:
 
 ```
 ubuntu@stream:~$ sha512sum debezium-connector-postgres-3.7.0.Final-plugin.tar.gz | cut -d" " -f1
+dc5334e087c7405f5b423e77373c60a89a3d7538ad38016f3959c431ad7078361ab95300a7e926c50621e7aa8375b7f4f3c5ecec4fe04ac484804d325009b6c0
+ubuntu@stream:~$ cat debezium-connector-postgres-3.7.0.Final-plugin.tar.gz.sha512; echo
+dc5334e087c7405f5b423e77373c60a89a3d7538ad38016f3959c431ad7078361ab95300a7e926c50621e7aa8375b7f4f3c5ecec4fe04ac484804d325009b6c0
 ```
 
 Then unpack it into a directory that will hold Connect's plugins. **Connect loads every plugin
@@ -70,6 +77,16 @@ tar -xzf debezium-connector-postgres-3.7.0.Final-plugin.tar.gz -C ~/connect-plug
 
 ```
 ubuntu@stream:~$ ls ~/connect-plugins/debezium-connector-postgres/*.jar | xargs -n1 basename
+debezium-api-3.7.0.Final.jar
+debezium-config-3.7.0.Final.jar
+debezium-connect-plugins-3.7.0.Final.jar
+debezium-connector-common-3.7.0.Final.jar
+debezium-connector-postgres-3.7.0.Final.jar
+debezium-openlineage-api-3.7.0.Final.jar
+debezium-util-3.7.0.Final.jar
+postgresql-42.7.13.jar
+protobuf-java-3.25.5.jar
+sketches-java-0.8.2.jar
 ```
 
 The connector itself is `debezium-connector-postgres-3.7.0.Final.jar`; the rest are Debezium's own

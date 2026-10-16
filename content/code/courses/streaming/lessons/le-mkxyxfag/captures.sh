@@ -2,7 +2,6 @@
 # The terminal sessions quoted in lesson 8 of streaming, as a script that
 # produces them. Its output is not committed: run it and compare.
 #
-#   sudo bash ../../lab.sh files
 #   sudo bash captures.sh > /tmp/le-mkxyxfag.out 2>&1
 #
 # STAGED, not typed, and said here: the lab starts from a fresh one-node
@@ -11,6 +10,21 @@
 # own os._exit, which ends a process with no cleanup, as kill -9 would.
 # Nothing was NOT run.
 . "$(dirname "$0")/../../lab/capture-lib.sh"
+D=$(cd "$(dirname "$0")" && pwd)
+# The programs are extracted from this lesson's sections byte for byte, the
+# way `lab.sh files` would, so the files that run are the files shown.
+for md in "$D"/*.md; do
+python3 - "$md" <<'PY'
+import json, os, pwd, re, sys
+pat = re.compile(r"^[^\n]*`~/work/([\w.-]+)`[^\n]*:\n\n```([\w-]*)\n(.*?)^```$", re.S | re.M)
+for name, lang, body in pat.findall(open(sys.argv[1], encoding="utf-8").read()):
+    if lang == "schooling-example":
+        body = "\n".join(p["code"] for p in json.loads(body)["parts"]) + "\n"
+    path = "/home/ubuntu/work/" + name
+    open(path, "w", encoding="utf-8").write(body)
+    u = pwd.getpwnam("ubuntu"); os.chown(path, u.pw_uid, u.pw_gid)
+PY
+done
 
 lab reset 1 >/dev/null
 run 'rm -f demo.db prices.db stock.db stock2.db shop.db run1.txt run2.txt' >/dev/null

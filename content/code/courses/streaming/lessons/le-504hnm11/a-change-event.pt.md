@@ -10,7 +10,42 @@ têm, numa transação consistente, e grava cada uma como evento, para que um le
 com a tabela inteira e não só com o que mudar daqui em diante. Leia a primeira, e deixe o `jq`
 organizá-la:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --from-beginning --max-messages 1 | jq .
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+Processed a total of 1 messages
+{
+  "before": null,
+  "after": {
+    "shop": "recife",
+    "book": "bk-01",
+    "qty": 3
+  },
+  "source": {
+    "version": "3.7.0.Final",
+    "connector": "postgresql",
+    "name": "pf",
+    "ts_ms": 1792111135528,
+    "snapshot": "first_in_data_collection",
+    "db": "pontofinal",
+    "sequence": "[null,\"83294112\"]",
+    "ts_us": 1792111135528071,
+    "ts_ns": 1792111135528071000,
+    "schema": "public",
+    "table": "stock",
+    "txId": 809,
+    "lsn": 83294112,
+    "xmin": null,
+    "origin": null,
+    "origin_lsn": null
+  },
+  "transaction": null,
+  "op": "r",
+  "ts_ms": 1792111135657,
+  "ts_us": 1792111135657066,
+  "ts_ns": 1792111135657066348
+}
+```
 
 Os campos, de cima para baixo:
 
@@ -31,7 +66,14 @@ máquina são outros, assim como `txId` e `lsn`, e nada nesta lição depende de
 
 O valor da mensagem é o envelope. A **chave** é a chave primária da linha, sozinha:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --from-beginning --max-messages 3 --formatter-property print.key=true --formatter-property print.value=false
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+{"shop":"recife","book":"bk-01"}
+{"shop":"recife","book":"bk-02"}
+{"shop":"recife","book":"bk-03"}
+Processed a total of 3 messages
+```
 
 Tudo o que acontecer com o `bk-01` do Recife tem essa chave, então vai para a mesma partição e é lido
 na ordem em que foi confirmado. Um consumidor que guarda o `after` mais recente de cada chave tem
@@ -41,12 +83,19 @@ uma cópia da tabela; é a dualidade tabela–stream da lição 2, com o Postgre
 
 O snapshot é história. Agora faça uma mudança e veja-a chegar. Um livro novo entra no catálogo:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ psql pontofinal -c "INSERT INTO books VALUES ('bk-09', 'Iracema', 3290)"
+INSERT 0 1
+```
 
 A `books` tinha oito linhas, então o snapshot dela ocupou os offsets 0 a 7 e o insert é o offset 8.
 Leia essa mensagem, e só os campos que importam aqui:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.books --partition 0 --offset 8 --max-messages 1 | jq -c '{op, before, after}'
+Processed a total of 1 messages
+{"op":"c","before":null,"after":{"book":"bk-09","title":"Iracema","cents":3290}}
+```
 
 O `op` é `c`, o `before` é `null` porque a linha não existia, e o `after` é a linha como foi
 inserida. **Nada no código do site menciona o Kafka**, e nada precisa mencionar: o `INSERT` podia

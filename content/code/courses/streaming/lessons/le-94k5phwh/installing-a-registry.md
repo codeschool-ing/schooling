@@ -54,7 +54,6 @@ to a file, and wait for it to answer:
 ubuntu@stream:~/work$ nohup java -jar ~/apicurio/quarkus-run.jar > ~/apicurio/registry.log 2>&1 &
 ubuntu@stream:~/work$ until curl -s localhost:8080/apis/ccompat/v7/subjects; do sleep 1; done; echo
 []
-# (author) registry rss kB: 285968
 ```
 
 The `until` line asks for the list of subjects once a second until something answers. `[]` is

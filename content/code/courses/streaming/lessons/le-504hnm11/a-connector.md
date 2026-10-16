@@ -16,6 +16,8 @@ in a file in this lab, which is acceptable for a lab and not for anything else:
 
 ```
 ubuntu@stream:~/work$ sudo -u postgres createuser --createdb ubuntu
+ubuntu@stream:~/work$ sudo -u postgres psql -c "CREATE ROLE cdc WITH LOGIN REPLICATION PASSWORD 'lab-only-password'"
+CREATE ROLE
 ```
 
 Because the operating-system user and the database role share a name, `createdb` and `psql` now
@@ -58,6 +60,12 @@ GRANT SELECT ON books, stock TO cdc;
 
 ```
 ubuntu@stream:~/work$ createdb pontofinal
+ubuntu@stream:~/work$ psql -q pontofinal -f stock.sql
+ubuntu@stream:~/work$ psql pontofinal -c "SELECT count(*) AS rows, sum(qty) AS copies FROM stock"
+ rows | copies 
+------+--------
+   40 |    120
+(1 row)
 ```
 
 Forty rows of stock and eight books. **Every table Debezium captures needs a primary key**: it
@@ -116,7 +124,8 @@ create on its first start.
 ## Starting it
 
 In your **second shell**, from `~/work`, start Connect with both files. It writes its log to the
-terminal, a few hundred lines of it in the first seconds, and keeps running:
+terminal, several hundred lines in the first seconds and over nine hundred by the end of this
+lesson, and keeps running:
 
 ```
 ubuntu@stream:~/work$ connect-standalone.sh connect.properties stock-connector.properties
@@ -127,6 +136,23 @@ how you find out whether a connector is running without reading the log:
 
 ```
 ubuntu@stream:~/work$ curl -s localhost:8083/connectors/stock/status | jq .
+{
+  "name": "stock",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "127.0.1.1:8083",
+    "version": "3.7.0.Final"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "127.0.1.1:8083",
+      "version": "3.7.0.Final"
+    }
+  ],
+  "type": "source"
+}
 ```
 
 `RUNNING` for the connector and for its one task. A connector that cannot reach the database, or is
@@ -135,10 +161,16 @@ first thing to read when something is wrong. Then look at what exists now, on bo
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --list
+pf.public.books
+pf.public.stock
 ```
 
 ```
 ubuntu@stream:~/work$ psql pontofinal -c "SELECT slot_name, plugin, active FROM pg_replication_slots"
+   slot_name    |  plugin  | active 
+----------------+----------+--------
+ debezium_stock | pgoutput | t
+(1 row)
 ```
 
 Two topics that nobody created by hand, one per table: the broker made them the moment the

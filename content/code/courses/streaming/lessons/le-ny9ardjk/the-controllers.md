@@ -23,6 +23,14 @@ busy broker never slows it down.
 
 ```
 ubuntu@stream:~/work$ kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status
+ClusterId:              YCLAkZhFSxymvym7xHcgzQ
+LeaderId:               1
+LeaderEpoch:            1
+HighWatermark:          426
+MaxFollowerLag:         0
+MaxFollowerLagTimeMs:   0
+CurrentVoters:          [{"id": 1, "endpoints": ["CONTROLLER://localhost:9192"]}, {"id": 2, "endpoints": ["CONTROLLER://localhost:9193"]}, {"id": 3, "endpoints": ["CONTROLLER://localhost:9194"]}]
+CurrentObservers:       []
 ```
 
 `LeaderId` is the active controller, which is a different thing from the leader of a partition:
@@ -40,21 +48,37 @@ needs a decision, and then ask it who is in charge:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh kill 2
+node 2: killed
+ubuntu@stream:~/work$ ./cluster.sh kill 3
+node 3: killed
+ubuntu@stream:~/work$ timeout 60 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic returns --partitions 3 2>/dev/null; echo "exit $?"
+exit 124
+ubuntu@stream:~/work$ timeout 30 kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status 2>/dev/null; echo "exit $?"
+exit 124
 ```
 
-@@TWODOWN@@
+Both commands printed nothing and waited until `timeout` ended them, and `timeout` reports that
+with exit status 124.
 
-Both commands waited until `timeout` ended them, and `timeout` reports that with exit status 124.
-Node 1 is running and its port answers; what it cannot do is change the cluster. The topic was
-not created, and no leadership or ISR can move while the majority is missing.
+Node 1 is running and its port answers; what it cannot do is change the cluster. The `create`
+never got an answer, and no leadership or ISR can move while the majority is missing.
 
 **The cure is to bring back enough voters to make a majority**, not to make the survivor decide
 alone:
 
-@@QUORUMBACK@@
+```
+ubuntu@stream:~/work$ ./cluster.sh start
+node 1: already running
+node 1: up on localhost:9092
+node 2: up on localhost:9093
+node 3: up on localhost:9094
+ubuntu@stream:~/work$ kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --status | grep -E "LeaderId|HighWatermark"
+LeaderId:               1
+HighWatermark:          499
+```
 
-The controllers elected a leader among themselves again and the metadata log moved on. The
-arithmetic is why controllers come in odd numbers: three survive one failure, five survive two,
+`LeaderId` is node 1 again and the `HighWatermark` has moved on, from 426 before the failure to
+499: the controllers can vote again, and the metadata log is being written. The arithmetic is why controllers come in odd numbers: three survive one failure, five survive two,
 and four survive only one, like three, while costing a machine more.
 
 ## In this lab, and in a real one

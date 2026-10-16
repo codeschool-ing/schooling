@@ -9,12 +9,19 @@ copy of `bk-02` in Recife, then take `bk-08` out of the Natal shop's range altog
 
 ```
 ubuntu@stream:~/work$ psql pontofinal -c "UPDATE stock SET qty = qty - 1 WHERE shop = 'recife' AND book = 'bk-02'"
+UPDATE 1
+ubuntu@stream:~/work$ psql pontofinal -c "DELETE FROM stock WHERE shop = 'natal' AND book = 'bk-08'"
+DELETE 1
 ```
 
 The snapshot filled offsets 0 to 39 of `pf.public.stock`, so these are 40 onwards. Read three:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --partition 0 --offset 40 --max-messages 3 --formatter-property print.key=true
+{"shop":"recife","book":"bk-02"}	{"before":null,"after":{"shop":"recife","book":"bk-02","qty":2},"source":{"version":"3.7.0.Final","connector":"postgresql","name":"pf","ts_ms":1792111155764,"snapshot":"false","db":"pontofinal","sequence":"[\"83294528\",\"83294528\"]","ts_us":1792111155764257,"ts_ns":1792111155764257000,"schema":"public","table":"stock","txId":811,"lsn":83294528,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"u","ts_ms":1792111156082,"ts_us":1792111156082431,"ts_ns":1792111156082431164}
+{"shop":"natal","book":"bk-08"}	{"before":{"shop":"natal","book":"bk-08","qty":0},"after":null,"source":{"version":"3.7.0.Final","connector":"postgresql","name":"pf","ts_ms":1792111155818,"snapshot":"false","db":"pontofinal","sequence":"[\"83294664\",\"83294664\"]","ts_us":1792111155818097,"ts_ns":1792111155818097000,"schema":"public","table":"stock","txId":812,"lsn":83294664,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"d","ts_ms":1792111156083,"ts_us":1792111156083916,"ts_ns":1792111156083916457}
+{"shop":"natal","book":"bk-08"}	null
+Processed a total of 3 messages
 ```
 
 Three messages for two statements, and each one says something different:
@@ -36,6 +43,7 @@ keeps the whole old row, every time:
 
 ```
 ubuntu@stream:~/work$ psql pontofinal -c "ALTER TABLE stock REPLICA IDENTITY FULL"
+ALTER TABLE
 ```
 
 The same kind of sale again, and now `before` is the row as it was. The difference between `before`
@@ -44,6 +52,10 @@ without keeping a copy of the table:
 
 ```
 ubuntu@stream:~/work$ psql pontofinal -c "UPDATE stock SET qty = qty - 1 WHERE shop = 'recife' AND book = 'bk-02'"
+UPDATE 1
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic pf.public.stock --partition 0 --offset 43 --max-messages 1 | jq -c '{op, before, after}'
+Processed a total of 1 messages
+{"op":"u","before":{"shop":"recife","book":"bk-02","qty":2},"after":{"shop":"recife","book":"bk-02","qty":1}}
 ```
 
 ```schooling-figure

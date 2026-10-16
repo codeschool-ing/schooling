@@ -123,11 +123,12 @@ term2 connect2 'connect-standalone.sh connect.properties stock-connector.propert
 connect_up
 block caught-up
 vm 'kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic pf.public.stock'
-# wait (up to 90 s) for the connector to confirm its position, and record how long it took
-t0=$(date +%s)
-for i in $(seq 1 90); do run "psql -At pontofinal -c \"SELECT pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn) < 1048576 FROM pg_replication_slots\"" | grep -q t && break; sleep 1; done
-echo "slot confirmed after restart: $(( $(date +%s) - t0 )) s more" >> "$META"
+sleep 20   # twenty seconds after the connector caught up, staged
 block slot-back
+vm "$SLOTQ"
+block nudge
+vm "psql pontofinal -c \"UPDATE books SET cents = 4190 WHERE book = 'bk-01'\""
+sleep 5
 vm "$SLOTQ"
 block fuse
 vm 'psql pontofinal -c "SHOW max_slot_wal_keep_size"'

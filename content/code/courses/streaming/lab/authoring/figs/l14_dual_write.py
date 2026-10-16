@@ -20,7 +20,7 @@ PT = {
     "the topic: 2 copies": "o tópico: 2 exemplares",
     "time": "tempo",
 }
-SAME = ["Kafka", "UPDATE stock", "COMMIT"]
+SAME = ["UPDATE stock", "COMMIT"]
 
 
 def draw(s, t):

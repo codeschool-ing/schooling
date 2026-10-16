@@ -23,7 +23,7 @@ block new3
 vm './cluster.sh stop'
 vm './cluster.sh new 3'
 vm './cluster.sh start'
-echo "# (author) node rss kB: $(ps -o rss= -C java | tr '\n' ' ')" >&2
+echo "# (author) node rss kB: $(ps -o rss= -C java | tr '\n' ' ')" >> /tmp/le-ny9ardjk.notes
 block create
 vm 'kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3 --replication-factor 3 --config min.insync.replicas=2'
 vm "$DESCRIBE"
@@ -35,7 +35,7 @@ vm 'python tills.py --count 300 --rate 0'
 vm 'kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic sales'
 vm 'wc -c ~/kafka-data/node*/log/sales-1/*.log'
 
-echo "# (author) node rss kB after 300 sales: $(ps -o rss= -C java | tr '\n' ' ')" >&2
+echo "# (author) node rss kB after 300 sales: $(ps -o rss= -C java | tr '\n' ' ')" >> /tmp/le-ny9ardjk.notes
 block lagtime
 vm 'kafka-configs.sh --bootstrap-server localhost:9092 --describe --all --broker 1 | grep replica.lag.time.max.ms'
 block pause
@@ -68,7 +68,7 @@ block before-kill
 vm "$DESCRIBE"
 P=$(run 'python acks.py --acks all --count 1' | awk '/^partition/ {print $2}' | tr -d :)
 L=$(leader_of "$P")
-echo "# (author) recife -> partition $P, leader $L" >&2
+echo "# (author) recife -> partition $P, leader $L" >> /tmp/le-ny9ardjk.notes
 block producing
 shown 'python acks.py --acks all --count 100 --rate 5'
 term2 prod 'python acks.py --acks all --count 100 --rate 5' 6

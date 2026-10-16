@@ -13,6 +13,7 @@ vazio, para que os seus números batam com os daqui:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
 ```
 
 `--rate 0` manda as vendas o mais rápido que o Kafka aceita, porque desta vez ninguém está olhando
@@ -21,6 +22,7 @@ duzentas cobrem pouco mais de meia hora de loja, das 09:00 às 09:36:41:
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 200 --rate 0
+sent 200 sales to sales, the last one at 09:36:41
 ```
 
 ## A menor consulta
@@ -59,6 +61,43 @@ seja o que a consulta imprimiu, e leia o arquivo quando algo der errado:
 
 ```
 ubuntu@stream:~/work$ python spark_raw.py 2>spark.log
+root
+ |-- key: binary (nullable = true)
+ |-- value: binary (nullable = true)
+ |-- topic: string (nullable = true)
+ |-- partition: integer (nullable = true)
+ |-- offset: long (nullable = true)
+ |-- timestamp: timestamp (nullable = true)
+ |-- timestampType: integer (nullable = true)
+
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++--------------------+--------------------+---------+------+--------------------+
+|                 key|               value|partition|offset|           timestamp|
++--------------------+--------------------+---------+------+--------------------+
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|     0|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|     1|2026-10-10 22:45:...|
+| [6F 6C 69 6E 64 61]|{"sale": "oli-000...|        1|     2|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|     3|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|     4|2026-10-10 22:45:...|
+| [72 65 63 69 66 65]|{"sale": "rec-000...|        1|     5|2026-10-10 22:45:...|
+| [72 65 63 69 66 65]|{"sale": "rec-000...|        1|     6|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|     7|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|     8|2026-10-10 22:45:...|
+| [72 65 63 69 66 65]|{"sale": "rec-000...|        1|     9|2026-10-10 22:45:...|
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|    10|2026-10-10 22:45:...|
+|    [6E 61 74 61 6C]|{"sale": "nat-000...|        1|    11|2026-10-10 22:45:...|
+| [6F 6C 69 6E 64 61]|{"sale": "oli-000...|        1|    12|2026-10-10 22:45:...|
+| [72 65 63 69 66 65]|{"sale": "rec-000...|        1|    13|2026-10-10 22:45:...|
+| [6F 6C 69 6E 64 61]|{"sale": "oli-000...|        1|    14|2026-10-10 22:45:...|
+| [72 65 63 69 66 65]|{"sale": "rec-000...|        1|    15|2026-10-10 22:45:...|
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|    16|2026-10-10 22:45:...|
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|    17|2026-10-10 22:45:...|
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|    18|2026-10-10 22:45:...|
+|[6A 6F 61 6F 2D 7...|{"sale": "joa-000...|        1|    19|2026-10-10 22:45:...|
++--------------------+--------------------+---------+------+--------------------+
+only showing top 20 rows
 ```
 
 Levou uns quinze segundos aqui, a maior parte para subir o Java, e a primeira execução demora mais
@@ -89,6 +128,17 @@ O download do conector foi parar no seu diretório pessoal:
 
 ```
 ubuntu@stream:~/work$ ls ~/.ivy2.5.2/jars
+com.google.code.findbugs_jsr305-3.0.0.jar
+org.apache.commons_commons-pool2-2.12.1.jar
+org.apache.hadoop_hadoop-client-api-3.4.2.jar
+org.apache.hadoop_hadoop-client-runtime-3.4.2.jar
+org.apache.kafka_kafka-clients-3.9.1.jar
+org.apache.spark_spark-sql-kafka-0-10_2.13-4.1.3.jar
+org.apache.spark_spark-token-provider-kafka-0-10_2.13-4.1.3.jar
+org.lz4_lz4-java-1.8.0.jar
+org.scala-lang.modules_scala-parallel-collections_2.13-1.2.0.jar
+org.slf4j_slf4j-api-2.0.17.jar
+org.xerial.snappy_snappy-java-1.1.10.8.jar
 ```
 
 Onze arquivos: o conector, o cliente Java do próprio Kafka, que ele usa para falar com o broker, e

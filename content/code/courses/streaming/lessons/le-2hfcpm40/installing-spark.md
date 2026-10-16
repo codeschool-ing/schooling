@@ -19,10 +19,13 @@ It is a large download, and it unpacks into something larger:
 
 ```
 ubuntu@stream:~/work$ pip show pyspark | grep -E '^(Name|Version):'
+Name: pyspark
+Version: 4.1.3
 ```
 
 ```
 ubuntu@stream:~/work$ du -sh ~/venv/lib/python3.12/site-packages/pyspark
+488M	/home/ubuntu/venv/lib/python3.12/site-packages/pyspark
 ```
 
 Most of that is the Java libraries, in the package's `jars` directory. The package also put
@@ -31,6 +34,20 @@ from any directory:
 
 ```
 ubuntu@stream:~/work$ spark-submit --version
+WARNING: Using incubator modules: jdk.incubator.vector
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 4.1.3
+      /_/
+                        
+Using Scala version 2.13.17, OpenJDK 64-Bit Server VM, 21.0.12.1
+Branch HEAD
+Compiled by user holden on 2026-07-12T02:17:43Z
+Revision 77bbf77e86ad48f58b5dfbc6ac882b3e70cf1989
+Url https://github.com/apache/spark
+Type --help for more information.
 ```
 
 The banner names three versions, and two of them are worth reading: **Spark 4.1.3**, and the Scala
@@ -49,8 +66,9 @@ echo 'export SPARK_LOCAL_IP=127.0.0.1' >> ~/.profile
 source ~/.profile
 ```
 
-Without it Spark still works, and starts each program with a warning that the machine's name
-resolves to a loopback address and that it is using the network address instead.
+Without it Spark still works. On this course's machine it then started each program with a
+warning that the machine's name resolves to a loopback address and that it was using the network
+address instead.
 
 ## The Kafka connector arrives on first use
 

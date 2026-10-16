@@ -51,6 +51,66 @@ section 06 shows what happens when a query finds an old one.
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode update --checkpoint ~/spark/ckpt/update 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|    1|  3990|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   18|147970|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:05|09:10|   28|241740|
+|09:15|09:20|   12|108980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:20|09:25|   23|209180|
+|09:15|09:20|   29|240130|
+|09:25|09:30|    9| 69980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|    9| 86510|
+|09:25|09:30|   25|237180|
+|09:30|09:35|   24|172230|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|   13|134940|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 5
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 **Update mode prints, after each batch, only the windows that batch changed**, with their totals
@@ -70,6 +130,74 @@ moved at the end of batch 4, and a batch with no data is how it gets a chance to
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode complete --checkpoint ~/spark/ckpt/complete 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|    1|  3990|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   18|147970|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:15|09:20|   12|108980|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:20|09:25|   23|209180|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:15|09:20|   29|240130|
+|09:25|09:30|    9| 69980|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:35|09:40|    9| 86510|
+|09:20|09:25|   23|209180|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:30|09:35|   24|172230|
+|09:15|09:20|   29|240130|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:35|09:40|   13|134940|
+|09:20|09:25|   23|209180|
+|09:10|09:15|   28|204680|
+|09:00|09:05|   30|337340|
+|09:05|09:10|   28|241740|
+|09:30|09:35|   24|172230|
+|09:15|09:20|   29|240130|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
 ```
 
 **Complete mode prints the entire result after every batch**, in no particular order. It is the
@@ -82,6 +210,59 @@ sense for a result that stays small, such as a total per shop.
 
 ```
 ubuntu@stream:~/work$ python spark_sales.py --mode append --checkpoint ~/spark/ckpt/append 2>spark.log
+-------------------------------------------
+Batch: 0
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
+
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:00|09:05|   30|337340|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:10|09:15|   28|204680|
+|09:05|09:10|   28|241740|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 3
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:15|09:20|   29|240130|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 4
+-------------------------------------------
++-----+-----+-----+------+
+|start|  end|sales| cents|
++-----+-----+-----+------+
+|09:20|09:25|   23|209180|
+|09:25|09:30|   25|237180|
++-----+-----+-----+------+
+
+-------------------------------------------
+Batch: 5
+-------------------------------------------
++-----+---+-----+-----+
+|start|end|sales|cents|
++-----+---+-----+-----+
++-----+---+-----+-----+
 ```
 
 **Append mode prints a window once, when the watermark says it can no longer change**, and never
@@ -90,7 +271,7 @@ of batch 0 the latest sale seen was from 09:10:12, so the watermark for batch 1 
 past the end of the 09:00 window, and batch 1 printed it, with its final count of 30.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Append mode over the two hundred sales. Eight five-minute windows from 09:00 to 09:40 lie along a time axis. Below them, the watermark Spark used in each batch: zero in batch 0, then 09:08:12, 09:15:49, 09:24:24, 09:34:33 and 09:34:41. Each window is printed in the first batch whose watermark has passed its end: 09:00 in batch 1, 09:05 and 09:10 in batch 2, 09:15 in batch 3, 09:20 and 09:25 in batch 4. The 09:30 and 09:35 windows are never printed, because the watermark stops at 09:34:41.\" data-fig=\"l12-append\"><text x=\"20\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">windows</text><text x=\"20\" y=\"160\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">watermark</text><rect x=\"111.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"145.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:00</text><text x=\"145.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 1</text><rect x=\"181.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"215.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:05</text><text x=\"215.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"251.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"285.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:10</text><text x=\"285.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"321.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:15</text><text x=\"355.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 3</text><rect x=\"391.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:20</text><text x=\"425.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"461.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"495.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:25</text><text x=\"495.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"531.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"565.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:30</text><rect x=\"601.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"635.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:35</text><text x=\"558.0\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">never printed</text><text x=\"20\" y=\"98\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">printed in</text><line x1=\"110.0\" y1=\"140\" x2=\"670.0\" y2=\"140\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"224.79999999999998\" y1=\"128\" x2=\"224.79999999999998\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"224.79999999999998\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 1</text><text x=\"224.79999999999998\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:08:12</text><line x1=\"331.43333333333334\" y1=\"128\" x2=\"331.43333333333334\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"331.43333333333334\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 2</text><text x=\"331.43333333333334\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:15:49</text><line x1=\"451.59999999999997\" y1=\"128\" x2=\"451.59999999999997\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"451.59999999999997\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 3</text><text x=\"451.59999999999997\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:24:24</text><line x1=\"593.6999999999999\" y1=\"128\" x2=\"593.6999999999999\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"593.6999999999999\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 4</text><text x=\"593.6999999999999\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:34:33</text><line x1=\"595.5666666666666\" y1=\"128\" x2=\"595.5666666666666\" y2=\"152\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><text x=\"591.5666666666666\" y=\"200\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">batch 5</text><text x=\"591.5666666666666\" y=\"214\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--amber)\">09:34:41</text><circle cx=\"623.5666666666666\" cy=\"140\" r=\"3.5\" fill=\"var(--paper-dim)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"629.5666666666666\" y=\"232\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">last sale 09:36:41</text><line x1=\"623.5666666666666\" y1=\"146\" x2=\"623.5666666666666\" y2=\"222\" stroke=\"var(--paper-dim)\" stroke-width=\"0.8\" stroke-dasharray=\"2 2\"></line></svg>", "caption": "A window leaves in append mode when the watermark passes its end; the last two wait for a sale that never comes."}
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Append mode over the two hundred sales. Eight five-minute windows from 09:00 to 09:40 lie along a time axis. Below them, the watermark Spark used in each batch: zero in batch 0, then 09:08:12, 09:15:49, 09:24:24, 09:34:33 and 09:34:41. Each window is printed in the first batch whose watermark has passed its end: 09:00 in batch 1, 09:05 and 09:10 in batch 2, 09:15 in batch 3, 09:20 and 09:25 in batch 4. The 09:30 and 09:35 windows are never printed, because the watermark stops at 09:34:41.\" data-fig=\"l12-append\"><text x=\"20\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">windows</text><text x=\"20\" y=\"160\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">watermark</text><rect x=\"111.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"145.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:00</text><text x=\"145.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 1</text><rect x=\"181.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"215.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:05</text><text x=\"215.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"251.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"285.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:10</text><text x=\"285.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 2</text><rect x=\"321.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:15</text><text x=\"355.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 3</text><rect x=\"391.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:20</text><text x=\"425.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"461.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"495.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:25</text><text x=\"495.0\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--phosphor)\">batch 4</text><rect x=\"531.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"565.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:30</text><rect x=\"601.0\" y=\"55\" width=\"68\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"635.0\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">09:35</text><text x=\"558.0\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">never printed</text><text x=\"20\" y=\"98\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">printed in</text><line x1=\"110.0\" y1=\"140\" x2=\"670.0\" y2=\"140\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><line x1=\"224.79999999999998\" y1=\"128\" x2=\"224.79999999999998\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"224.79999999999998\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 1</text><text x=\"224.79999999999998\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:08:12</text><line x1=\"331.43333333333334\" y1=\"128\" x2=\"331.43333333333334\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"331.43333333333334\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 2</text><text x=\"331.43333333333334\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:15:49</text><line x1=\"451.59999999999997\" y1=\"128\" x2=\"451.59999999999997\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"451.59999999999997\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 3</text><text x=\"451.59999999999997\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:24:24</text><line x1=\"593.6999999999999\" y1=\"128\" x2=\"593.6999999999999\" y2=\"152\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"593.6999999999999\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">batch 4</text><text x=\"593.6999999999999\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">09:34:33</text><line x1=\"595.5666666666666\" y1=\"128\" x2=\"595.5666666666666\" y2=\"152\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><text x=\"591.5666666666666\" y=\"200\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">batch 5</text><text x=\"591.5666666666666\" y=\"214\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--amber)\">09:34:41</text><circle cx=\"623.5666666666666\" cy=\"140\" r=\"3.5\" fill=\"var(--paper-dim)\" stroke=\"none\" stroke-width=\"1.2\"></circle><text x=\"627.5666666666666\" y=\"232\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">last sale 09:36:41</text><line x1=\"623.5666666666666\" y1=\"146\" x2=\"623.5666666666666\" y2=\"222\" stroke=\"var(--paper-dim)\" stroke-width=\"0.8\" stroke-dasharray=\"2 2\"></line></svg>", "caption": "A window leaves in append mode when the watermark passes its end; the last two wait for a sale that never comes."}
 ```
 
 Count the windows: six were printed, and the data has eight. **The 09:30 and 09:35 windows were
