@@ -1284,6 +1284,49 @@ def l17_maps(lang):
             'entre grupos; os outros dois mantêm os vizinhos.')
     return fig, cap
 
+# ------------------------------------------------------------------ lesson 19
+
+@figure('l19-pdp', 19)
+def l19_pdp(lang):
+    import numpy as np
+    from sklearn.ensemble import HistGradientBoostingClassifier
+    churn = churn_frame()
+    test = churn['snapshot'] >= '2025-07-01'
+    model = HistGradientBoostingClassifier(categorical_features='from_dtype', random_state=0)
+    model.fit(churn.loc[~test, NUM + CAT], churn.loc[~test, 'churned'])
+    rows = churn.loc[test, NUM + CAT]
+    panels = [('rating_90d', np.linspace(2.8, 5, 23), T(lang, 'rating, last 90 days', 'nota, últimos 90 dias'), [3, 4, 5]),
+              ('skips_90d', np.arange(0, 7), T(lang, 'skips, last 90 days', 'pulos, últimos 90 dias'), [0, 2, 4, 6]),
+              ('days_since_login', np.arange(0, 49, 3), T(lang, 'days since login', 'dias desde o login'), [0, 14, 28, 42])]
+    fig = Fig('l19-pdp', 640, 270, T(lang,
+        'Three small charts of the boosted model\'s average chance of leaving as one column is set to each '
+        'value for every test subscriber. Rating: high, near 0.26, below 3.4, a cliff between 3.4 and 3.8, then '
+        'low and flat. Skips: low and flat to two, a step up at three. Days since login: flat to about three '
+        'weeks, then rising.',
+        'Três gráficos pequenos da chance média de sair do modelo de boosting quando uma coluna é posta em cada '
+        'valor para todo assinante de teste. Nota: alta, perto de 0,26, abaixo de 3,4, um penhasco entre 3,4 e '
+        '3,8, depois baixa e plana. Pulos: baixa e plana até dois, um degrau em três. Dias desde o login: plana '
+        'até umas três semanas, depois subindo.'))
+    dec = (lambda v: f'{v:.1f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.1f}')
+    for i, (col, grid, label, ticks) in enumerate(panels):
+        avg = []
+        for v in grid:
+            r = rows.copy()
+            r[col] = v
+            avg.append(model.predict_proba(r)[:, 1].mean())
+        x0 = 60 + i * 200
+        p = Plot(fig, x0, 30, x0 + 150, 200, grid[0], grid[-1], 0, 0.3)
+        p.xaxis(ticks, fmt=lambda v: dec(v) if col == 'rating_90d' else str(int(v)), label=label)
+        if i == 0:
+            p.yaxis([0, 0.1, 0.2, 0.3], fmt=dec, label=T(lang, 'average chance', 'chance média'))
+        else:
+            p.yaxis([0, 0.1, 0.2, 0.3], fmt=lambda v: '', grid=True)
+        fig.path('M' + ' L'.join(f'{p.sx(a):.1f} {p.sy(b):.1f}' for a, b in zip(grid, avg)),
+                 stroke='--phosphor', width=2.4)
+    cap = T(lang, 'The cliff, the threshold and the jump of lesson 14, found by the trees on their own.',
+            'O penhasco, o limiar e o salto da aula 14, achados pelas árvores sozinhas.')
+    return fig, cap
+
 
 def main():
     if '--list' in sys.argv:
