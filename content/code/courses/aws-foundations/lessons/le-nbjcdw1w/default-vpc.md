@@ -80,7 +80,9 @@ because a range cannot be changed once a VPC has it. The shop's plan is written 
 None overlaps another, and each VPC takes the largest range AWS allows. Private addresses cost
 nothing, and a VPC that runs out of room is a migration, so there is no saving in a small one.
 
-Creating it is one command, and the tags say what it is and whose:
+**On AWS this VPC lives in the `shop-prod` account** of lesson 2. The lab builds it in moto's
+default account, `123456789012`, so that no command needs a profile; which account holds it changes
+nothing about the network. Creating it is one command, and the tags say what it is and whose:
 
 ```
 ana@laptop:~/aws$ vpc=$(aws ec2 create-vpc --cidr-block 10.20.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=shop-prod},{Key=project,Value=shop},{Key=env,Value=prod}]' --query Vpc.VpcId --output text)

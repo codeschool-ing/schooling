@@ -84,7 +84,9 @@ Nenhum se sobrepõe a outro, e cada VPC fica com o maior intervalo que a AWS per
 privados não custam nada, e uma VPC que fica sem espaço é uma migração, então não há economia numa
 pequena.
 
-Criá-la é um comando, e as tags dizem o que ela é e de quem:
+**Na AWS esta VPC mora na conta `shop-prod`** da lição 2. O laboratório a constrói na conta padrão
+do moto, `123456789012`, para que nenhum comando precise de profile; qual conta a guarda não muda
+nada na rede. Criá-la é um comando, e as tags dizem o que ela é e de quem:
 
 ```
 ana@laptop:~/aws$ vpc=$(aws ec2 create-vpc --cidr-block 10.20.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=shop-prod},{Key=project,Value=shop},{Key=env,Value=prod}]' --query Vpc.VpcId --output text)
