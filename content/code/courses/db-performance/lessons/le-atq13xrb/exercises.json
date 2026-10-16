@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ex-q8tx8pgw",
+    "version": 1,
+    "section": "why-partition",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are the two things partitioning buys, according to the lesson?",
+    "hint": "Neither of them is 'every query is faster'.",
+    "choices": [
+      {
+        "text": "Faster inserts and smaller indexes",
+        "correct": false,
+        "why": "Routing a row costs a little on insert, and the indexes are as big in total."
+      },
+      {
+        "text": "Cheap removal of a slice, and skipping slices",
+        "correct": true,
+        "why": "Right: the second is lesson 18's pruning, and both depend on the key."
+      },
+      {
+        "text": "Unique ids across the whole table",
+        "correct": false,
+        "why": "It is the reverse: uniqueness now has to include the partition key."
+      },
+      {
+        "text": "Less WAL for every change",
+        "correct": false,
+        "why": "Only dropping a whole partition writes little; an ordinary update writes as much as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd7cvgcc",
+    "version": 1,
+    "section": "why-partition",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many megabytes of WAL did deleting October from the plain `events` table write?",
+    "hint": "The query after the DELETE.",
+    "value": 251,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-21bmj9z6",
+    "version": 1,
+    "section": "why-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `DELETE` of October ran inside a transaction that was rolled back. Had it been committed, what would still have remained to pay?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: committed rows are gone from the file",
+        "correct": false,
+        "why": "A deleted row stays in the file as a dead version until VACUUM removes it."
+      },
+      {
+        "text": "A second pass of WAL to confirm the delete",
+        "correct": false,
+        "why": "The commit record is small; the 251 MB was already written."
+      },
+      {
+        "text": "Dead rows for VACUUM, and a file that stays",
+        "correct": true,
+        "why": "Right: 1611210 dead versions, index entries pointing at them, and space reused rather than returned."
+      },
+      {
+        "text": "A rebuild of the table's primary key",
+        "correct": false,
+        "why": "Nothing rebuilds the index; VACUUM removes its entries one by one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag19hrtm",
+    "version": 1,
+    "section": "why-partition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which table is the weakest candidate for partitioning?",
+    "hint": "Ask how its rows leave, and what its queries filter on.",
+    "choices": [
+      {
+        "text": "A log of API requests kept for thirty days",
+        "correct": false,
+        "why": "Rows arrive and leave by date; that is the case partitioning is for."
+      },
+      {
+        "text": "Sensor readings, dropped after a year",
+        "correct": false,
+        "why": "Time order in and out, and queries on a recent window: a good fit."
+      },
+      {
+        "text": "Customers, read one at a time",
+        "correct": true,
+        "why": "Right: the rows do not age and the lookups do not name a slice; an index serves them better."
+      },
+      {
+        "text": "Audit events purged by month",
+        "correct": false,
+        "why": "A monthly purge is exactly the DELETE partitioning replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-17z245by",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `FOR VALUES FROM ('2025-10-01') TO ('2025-11-01')`, which partition does an event at `2025-11-01 00:00` go to?",
+    "hint": "One of the bounds is exclusive.",
+    "choices": [
+      {
+        "text": "October's, because the bound includes its end",
+        "correct": false,
+        "why": "The upper bound is not included; that is what lets months meet without overlap."
+      },
+      {
+        "text": "November's",
+        "correct": true,
+        "why": "Right: TO is exclusive, so the first instant of November is November's."
+      },
+      {
+        "text": "Both, as a copy in each",
+        "correct": false,
+        "why": "Every row lives in exactly one partition."
+      },
+      {
+        "text": "It is refused as ambiguous",
+        "correct": false,
+        "why": "The bounds are not ambiguous; overlapping ones are what the server refuses at creation."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7xdxnpm",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`INSERT` of an event dated March 2026 fails with `no partition of relation \"events_by_month\" found for row`. What is the lasting fix?",
+    "hint": "The failure arrives on a date.",
+    "choices": [
+      {
+        "text": "Retry the insert until it goes through",
+        "correct": false,
+        "why": "Nothing changes between tries; there is no partition to accept it."
+      },
+      {
+        "text": "Drop the partitioning and go back to one table",
+        "correct": false,
+        "why": "That throws away what partitioning was for to fix a missing month."
+      },
+      {
+        "text": "A job that creates partitions months in advance",
+        "correct": true,
+        "why": "Right: the next month has to exist before its first row."
+      },
+      {
+        "text": "Widen January's bound to the end of the year",
+        "correct": false,
+        "why": "That makes January's partition hold a year and breaks dropping by month."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3yrmdn9",
+    "version": 1,
+    "section": "range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Looking up one event by `id` took one index scan on `events` and four scans on `events_by_month`. Why four?",
+    "hint": "What does the id say about the month?",
+    "choices": [
+      {
+        "text": "The partitioned table has four copies of each row",
+        "correct": false,
+        "why": "Each row is in exactly one partition."
+      },
+      {
+        "text": "Nothing in it names the month",
+        "correct": true,
+        "why": "Right: the condition is not on the key, so every partition has to be asked."
+      },
+      {
+        "text": "The statistics on the new table were missing",
+        "correct": false,
+        "why": "The file ran VACUUM ANALYZE; statistics do not decide which partitions a query needs."
+      },
+      {
+        "text": "Lookups by id are disabled on partitioned tables",
+        "correct": false,
+        "why": "They work; they just visit every partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6kv7bt2",
+    "version": 1,
+    "section": "range",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The hidden column that says which table a row physically lives in, used to count rows per partition, is called `___`.",
+    "hint": "It was cast to regclass in the count.",
+    "blanks": [
+      {
+        "accept": [
+          "tableoid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9sgc1bg7",
+    "version": 1,
+    "section": "list-and-hash",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of partitioning gives each partition a set of named values of the key?",
+    "hint": "`FOR VALUES IN (...)`.",
+    "choices": [
+      {
+        "text": "Range",
+        "correct": false,
+        "why": "Range gives each partition an interval, from one value up to another."
+      },
+      {
+        "text": "Hash",
+        "correct": false,
+        "why": "Hash gives each partition a remainder; nobody names the values."
+      },
+      {
+        "text": "List",
+        "correct": true,
+        "why": "Right: as with browse and buy in the lesson."
+      },
+      {
+        "text": "Default",
+        "correct": false,
+        "why": "A default partition takes what no other accepts; it is not a kind of partitioning."
+      }
+    ]
+  },
+  {
+    "id": "ex-98wxg9zg",
+    "version": 1,
+    "section": "list-and-hash",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four hash partitions by `customer_id` held about 875 thousand rows each, except one with 2372458. Why?",
+    "hint": "Look at the with_customer column.",
+    "choices": [
+      {
+        "text": "Events without an account are all NULL, and land together",
+        "correct": true,
+        "why": "Right: a hash spreads values, not rows, and one value was three in ten events."
+      },
+      {
+        "text": "Seller 1's orders all went there",
+        "correct": false,
+        "why": "The key was customer_id on events; sellers were not involved."
+      },
+      {
+        "text": "The modulus 4 does not divide the row count evenly",
+        "correct": false,
+        "why": "The modulus divides the hash, not the count; uneven values make uneven partitions."
+      },
+      {
+        "text": "The first partition takes the overflow of the others",
+        "correct": false,
+        "why": "There is no overflow in hashing; each row goes where its hash says."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfzrdzzp",
+    "version": 1,
+    "section": "list-and-hash",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company keeps purchase events for five years and browsing events for ninety days. Which layout fits?",
+    "hint": "Each group leaves on its own schedule.",
+    "choices": [
+      {
+        "text": "Hash by customer_id, to keep partitions even",
+        "correct": false,
+        "why": "Even pieces do not help when the two groups age differently."
+      },
+      {
+        "text": "No partitioning, and a DELETE per group every night",
+        "correct": false,
+        "why": "That is the expensive removal section 02 measured."
+      },
+      {
+        "text": "List partitions on the kind column, one per group",
+        "correct": true,
+        "why": "Right: each partition is dropped or kept on its own schedule."
+      },
+      {
+        "text": "One partition per customer",
+        "correct": false,
+        "why": "Two hundred thousand partitions, and the groups still mixed inside each one."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2539j3k",
+    "version": 1,
+    "section": "list-and-hash",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody proposes hash-partitioning `orders` by `seller_id` into eight partitions to spread the load. What should be checked first?",
+    "hint": "Lesson 1 made one seller very big.",
+    "choices": [
+      {
+        "text": "Whether eight is a power of two",
+        "correct": false,
+        "why": "Any modulus works; the count of partitions is not the risk here."
+      },
+      {
+        "text": "Whether seller_id has an index",
+        "correct": false,
+        "why": "Each partition gets its own index; that does not change where rows land."
+      },
+      {
+        "text": "How skewed the values of the key are in the data",
+        "correct": true,
+        "why": "Right: a quarter of the rows would land in one partition whatever the modulus."
+      },
+      {
+        "text": "Whether orders has a primary key",
+        "correct": false,
+        "why": "It has one; the question is how the rows will spread."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejwbztkm",
+    "version": 1,
+    "section": "attach-detach",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Removing October from `events_by_month` by DETACH and DROP wrote how much WAL, against 251 MB for the DELETE?",
+    "hint": "The query after the DROP.",
+    "choices": [
+      {
+        "text": "251 MB too, as the same rows were removed",
+        "correct": false,
+        "why": "The server logged a table going away, not each row."
+      },
+      {
+        "text": "55 kB",
+        "correct": true,
+        "why": "Right: a few records for the catalogue and the files."
+      },
+      {
+        "text": "About half, because detach writes the other half later",
+        "correct": false,
+        "why": "Nothing is written later; the 55 kB was all of it."
+      },
+      {
+        "text": "Zero, since DROP is not logged",
+        "correct": false,
+        "why": "It is logged, so replicas drop it too; it is just small."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rs7cvz4",
+    "version": 1,
+    "section": "attach-detach",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why add `CHECK (at >= '2026-02-01' AND at < '2026-03-01')` to a table before attaching it as February?",
+    "hint": "What does the server have to be sure of?",
+    "choices": [
+      {
+        "text": "Without it, ATTACH refuses the table",
+        "correct": false,
+        "why": "It attaches anyway, after reading every row to check them."
+      },
+      {
+        "text": "It speeds up later inserts into February",
+        "correct": false,
+        "why": "The partition bound already checks inserts; the constraint is about the attach."
+      },
+      {
+        "text": "So the attach skips a full table scan",
+        "correct": true,
+        "why": "Right: on a table loaded in advance that saves a full scan while the parent waits."
+      },
+      {
+        "text": "It is required for the primary key",
+        "correct": false,
+        "why": "The key needs the partition column, not a CHECK constraint."
+      }
+    ]
+  },
+  {
+    "id": "ex-97eackha",
+    "version": 1,
+    "section": "attach-detach",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`DETACH PARTITION events_2026_01 CONCURRENTLY` failed once the table had a partition with no interval, taking every row no other accepts. What did the error say?",
+    "hint": "That partition changes what else can be done.",
+    "choices": [
+      {
+        "text": "That January still held rows",
+        "correct": false,
+        "why": "January was empty; the error is about the default."
+      },
+      {
+        "text": "That CONCURRENTLY needs a transaction block",
+        "correct": false,
+        "why": "The reverse: it is not allowed inside one."
+      },
+      {
+        "text": "That a default partition forbids it",
+        "correct": true,
+        "why": "Right: `cannot detach partitions concurrently when a default partition exists`."
+      },
+      {
+        "text": "That the parent was locked by another session",
+        "correct": false,
+        "why": "Nothing else was connected; the refusal is a rule, not a wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rn0hca4",
+    "version": 1,
+    "section": "attach-detach",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for adding next month's partition, prepared in advance, in order.",
+    "hint": "The attach comes last, and it should be cheap.",
+    "items": [
+      "Create the table with LIKE the parent",
+      "Load and index it while nobody can see it",
+      "Add a CHECK constraint matching the month",
+      "ATTACH PARTITION with the month's bounds"
+    ],
+    "trap": "Attaching before loading makes the load visible to queries; attaching without the CHECK makes the server scan every row first."
+  },
+  {
+    "id": "ex-78dwq2jb",
+    "version": 1,
+    "section": "keys-and-indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `CREATE TABLE … (id bigint PRIMARY KEY, at timestamptz) PARTITION BY RANGE (at)` fail?",
+    "hint": "Each partition has its own index.",
+    "choices": [
+      {
+        "text": "bigint cannot be a partition key",
+        "correct": false,
+        "why": "The key here is at, and bigint could be one anyway."
+      },
+      {
+        "text": "A partitioned table cannot have a primary key",
+        "correct": false,
+        "why": "It can; events_by_month has (id, at)."
+      },
+      {
+        "text": "The key lacks `at`, so months cannot be compared",
+        "correct": true,
+        "why": "Right: each partition's index only sees its own month."
+      },
+      {
+        "text": "The partitions must be created first",
+        "correct": false,
+        "why": "The parent always comes first; partitions are attached to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wktpcv6h",
+    "version": 1,
+    "section": "keys-and-indexes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each statement to what happened when the lesson ran it on `events_by_month`.",
+    "hint": "Two of them failed.",
+    "pairs": [
+      {
+        "left": "`CREATE INDEX ON events_by_month (customer_id)`",
+        "right": "one index built on each partition"
+      },
+      {
+        "left": "`CREATE INDEX CONCURRENTLY ON events_by_month (kind)`",
+        "right": "refused on a partitioned table"
+      },
+      {
+        "left": "`PRIMARY KEY (id)` on a table partitioned by `at`",
+        "right": "refused: the key lacks the partition column"
+      },
+      {
+        "left": "`DROP TABLE events_2025_10` after detaching it",
+        "right": "the month gone, with 55 kB of WAL"
+      }
+    ],
+    "right_distractors": [
+      "1611210 dead rows left for VACUUM"
+    ]
+  },
+  {
+    "id": "ex-h03bn2wx",
+    "version": 1,
+    "section": "keys-and-indexes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of indexes on `events_by_month`? Choose all that apply.",
+    "hint": "An index on the parent is many indexes.",
+    "choices": [
+      {
+        "text": "Dropping a month drops its indexes with it",
+        "correct": true,
+        "why": "Right: they belong to the partition's table."
+      },
+      {
+        "text": "A REINDEX can be done one month at a time",
+        "correct": true,
+        "why": "Right: each partition's index is its own."
+      },
+      {
+        "text": "ATTACH builds a missing matching index on the table being attached",
+        "correct": true,
+        "why": "Right: and on a big table that is slow, so build it before."
+      },
+      {
+        "text": "One index on the parent covers every month in a single tree",
+        "correct": false,
+        "why": "There is one tree per partition; that is why uniqueness needs the key."
+      },
+      {
+        "text": "CREATE INDEX CONCURRENTLY works on the parent",
+        "correct": false,
+        "why": "It was refused; the way round is ON ONLY plus each partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eg4m3aq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly `DELETE … WHERE created_at < now() - interval '90 days'` on a 400 GB log table now runs for an hour and the replicas fall behind while it does. Which change attacks the cause?",
+    "hint": "What do the replicas have to receive?",
+    "choices": [
+      {
+        "text": "Run the DELETE every hour instead of every night",
+        "correct": false,
+        "why": "Smaller batches spread the cost but write the same WAL and dead rows in total."
+      },
+      {
+        "text": "Partition by day; drop old days",
+        "correct": true,
+        "why": "Right: dropping writes kilobytes of WAL and leaves nothing for VACUUM."
+      },
+      {
+        "text": "Add an index on created_at",
+        "correct": false,
+        "why": "It finds the rows faster but the deletion still writes every row to the WAL."
+      },
+      {
+        "text": "Hash-partition by request id into sixteen pieces",
+        "correct": false,
+        "why": "Old rows would be spread across all sixteen, so each still needs a DELETE."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvdy8xh0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about partitioning does the lesson support?",
+    "hint": "Think of the id lookup.",
+    "choices": [
+      {
+        "text": "Not naming the key costs more work",
+        "correct": true,
+        "why": "Right: the id lookup did four scans instead of one, and planned for longer."
+      },
+      {
+        "text": "A partitioned table answers every query at least as fast",
+        "correct": false,
+        "why": "The id lookup was slower in planning and execution."
+      },
+      {
+        "text": "A default partition is needed for the table to accept inserts",
+        "correct": false,
+        "why": "Inserts into existing months worked without one."
+      },
+      {
+        "text": "Hash partitioning keeps partitions equal in rows",
+        "correct": false,
+        "why": "The NULLs made one partition nearly three times the others."
+      }
+    ]
+  }
+]

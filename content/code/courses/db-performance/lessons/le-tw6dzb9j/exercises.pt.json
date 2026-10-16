@@ -1,0 +1,393 @@
+{
+  "ex-nthr3wtt": {
+    "prompt": "Contar os pedidos acima de 400 reais leu as 16667 páginas de `orders` e removeu 1580119 linhas para ficar com 419881. Por que essa varredura sequencial é o plano certo?",
+    "hint": "Onde estão as linhas que batem?",
+    "choices": [
+      {
+        "text": "Não há índice em `total_cents`, e só isso decide",
+        "why": "Mesmo com um, quase toda página tem uma linha que bate, então a tabela seria lida inteira de qualquer jeito."
+      },
+      {
+        "text": "Quase toda página tem uma linha que bate, então não há conjunto menor de páginas",
+        "why": "Isso: um pedido em cinco, uns 120 por página, preços ao acaso."
+      },
+      {
+        "text": "Linhas removidas por filtro não custam nada",
+        "why": "Cada uma foi lida e conferida; aqui esse custo é só inevitável."
+      },
+      {
+        "text": "Uma varredura sequencial vence a de índice em qualquer consulta, seja ela grande ou pequena",
+        "why": "Para id = 42 a varredura de índice custou 8.45 contra 36667."
+      }
+    ]
+  },
+  "ex-442mnzv2": {
+    "prompt": "Com planos paralelos permitidos, a mesma contagem rodou em 93 ms em vez de 238 ms, com dois workers. Por que não um terço de 238?",
+    "hint": "O que o Gather faz, e o que os três dividem?",
+    "choices": [
+      {
+        "text": "Cada um dos três processos leu a tabela inteira",
+        "why": "Eles dividem as páginas; os três juntos leem cada página uma vez."
+      },
+      {
+        "text": "Só um worker foi lançado",
+        "why": "`Workers Launched: 2`."
+      },
+      {
+        "text": "Workers custam a iniciar e dividem um disco",
+        "why": "Isso: o Gather os inicia e recolhe as linhas, e os três disputam disco e memória. O planejador pôs 27083, não um terço de 41667."
+      },
+      {
+        "text": "Varreduras paralelas pulam o anel de buffers e expulsam páginas",
+        "why": "Nada no plano sugere isso, e não explicaria a razão."
+      }
+    ]
+  },
+  "ex-fh03ba99": {
+    "prompt": "Por que a varredura de `products` fica num processo só, seja qual for a consulta?",
+    "hint": "Compare o tamanho dela com um ajuste.",
+    "choices": [
+      {
+        "text": "Os 5 MB dela ficam abaixo do mínimo de 8 MB que o paralelismo exige",
+        "why": "Isso: `min_parallel_table_scan_size` é 8MB e a tabela tem 5192 kB."
+      },
+      {
+        "text": "`max_parallel_workers_per_gather` vale 0 por padrão no Ubuntu",
+        "why": "Vale 2; a varredura de orders lançou dois workers."
+      },
+      {
+        "text": "A coluna de array dela não pode ser dividida entre workers",
+        "why": "Tipos de coluna não decidem isso; o tamanho da tabela decide."
+      },
+      {
+        "text": "Ela tem chave primária",
+        "why": "Orders também tem, e é varrida em paralelo."
+      }
+    ]
+  },
+  "ex-k6zfzanp": {
+    "prompt": "O que `correlation = 1` em `orders.placed_at` diz?",
+    "hint": "Duas ordens: a dos valores e a das linhas no disco.",
+    "choices": [
+      {
+        "text": "Todo valor de placed_at é distinto",
+        "why": "Isso é o n_distinct; a correlação é sobre ordem."
+      },
+      {
+        "text": "placed_at tem índice",
+        "why": "A correlação é coletada para colunas com ou sem índice."
+      },
+      {
+        "text": "Os valores estão na mesma ordem que as linhas no disco",
+        "why": "Isso: o market.sql gravou os pedidos na ordem em que foram feitos."
+      },
+      {
+        "text": "placed_at é correlacionada com customer_id",
+        "why": "É uma propriedade de uma coluna contra a ordem física da tabela."
+      }
+    ]
+  },
+  "ex-aa61ssg7": {
+    "prompt": "Um dia de pedidos (2801 linhas) levou 35 páginas pelo índice em `placed_at`; os pedidos de cem clientes (991 linhas), forçados pelo índice em `customer_id`, levaram 994. O que explica isso?",
+    "hint": "Onde ficam as linhas de cada um?",
+    "choices": [
+      {
+        "text": "O índice de customer_id é maior e mais profundo que o outro",
+        "why": "As páginas de índice foram poucas nos dois; a diferença está nas páginas da tabela."
+      },
+      {
+        "text": "As do dia ficam juntas; as outras, espalhadas",
+        "why": "Isso: correlação 1 contra 0,006."
+      },
+      {
+        "text": "A segunda consulta rodou fria",
+        "why": "Fria ou quente muda hits em reads, não o número de páginas tocadas."
+      },
+      {
+        "text": "As varreduras bitmap estavam desligadas, o que dobra as páginas tocadas",
+        "why": "A varredura bitmap das mesmas linhas tocou 971 páginas, quase o mesmo."
+      }
+    ]
+  },
+  "ex-40cx8rz9": {
+    "prompt": "Uma tabela `logins` recebe uma linha por acesso, acrescentada conforme acontece, e tem índices em `at` e em `user_id`. Qual consulta é o caso natural da varredura de índice?",
+    "hint": "Que coluna acompanha a ordem em que as linhas foram gravadas?",
+    "choices": [
+      {
+        "text": "Os acessos da última hora, por `at`",
+        "why": "Isso: linhas acrescentadas em ordem de tempo dão a `at` correlação perto de 1, então as de uma hora ficam em poucas páginas."
+      },
+      {
+        "text": "Todos os acessos de 5000 usuários ao acaso, por `user_id`",
+        "why": "Essas linhas estão espalhadas pela tabela toda; um bitmap ou uma varredura sequencial combina."
+      },
+      {
+        "text": "A contagem de todos os acessos de sempre, pelo índice de `at`",
+        "why": "Toda linha é pedida, então a tabela inteira é lida em ordem."
+      },
+      {
+        "text": "Os acessos do ano passado, uns 60% da tabela",
+        "why": "Mesmo correlacionada, mais da metade da tabela foi para varredura sequencial em orders."
+      }
+    ]
+  },
+  "ex-rxct7acw": {
+    "prompt": "O que o nó `Bitmap Index Scan` entrega ao `Bitmap Heap Scan` acima dele?",
+    "hint": "A largura dele é 0.",
+    "choices": [
+      {
+        "text": "As linhas, ordenadas pela chave do índice",
+        "why": "Ele não entrega linhas; é por isso que a largura é 0."
+      },
+      {
+        "text": "Um mapa das páginas da tabela a visitar",
+        "why": "Isso: uma marca por página, e quais linhas nela enquanto a memória deixa."
+      },
+      {
+        "text": "As páginas do índice, para a varredura relê-las em ordem",
+        "why": "A varredura da tabela lê a tabela, não o índice."
+      },
+      {
+        "text": "Uma contagem das linhas que batem",
+        "why": "Uma contagem é um número; a varredura precisa saber onde."
+      }
+    ]
+  },
+  "ex-hn2v3mtp": {
+    "prompt": "Para os cem clientes, a varredura bitmap tocou 971 páginas e a de índice forçada, 994, mas o planejador as precificou em 3450.95 contra 4237.98. De onde vem a vantagem do bitmap?",
+    "hint": "Não da contagem.",
+    "choices": [
+      {
+        "text": "Ele pula o índice completamente",
+        "why": "O primeiro nó dele lê o índice."
+      },
+      {
+        "text": "Ele guarda em cache as páginas que leu",
+        "why": "As duas varreduras leem pelos mesmos shared buffers."
+      },
+      {
+        "text": "Ler as páginas em ordem crescente, cada uma uma vez",
+        "why": "Isso: páginas lidas da frente para trás são cobradas mais perto de leituras sequenciais."
+      },
+      {
+        "text": "Devolve as linhas na ordem do índice, que o Aggregate exige",
+        "why": "Ele as devolve na ordem da tabela, e uma soma não precisa de ordem."
+      }
+    ]
+  },
+  "ex-xbkzw5ny": {
+    "prompt": "Uma varredura bitmap mostra `Heap Blocks: exact=635 lossy=16032` e `Rows Removed by Index Recheck: 1729287`. O que aconteceu?",
+    "hint": "De que orçamento de memória um bitmap tira?",
+    "choices": [
+      {
+        "text": "O índice está corrompido e as linhas tiveram de ser conferidas de novo",
+        "why": "Reconferir é o comportamento normal para páginas com perdas, não sinal de dano."
+      },
+      {
+        "text": "As estatísticas estavam velhas, então a estimativa errou",
+        "why": "A estimativa, 203777, ficou perto das 200378 achadas."
+      },
+      {
+        "text": "O bitmap estourou o `work_mem`",
+        "why": "Isso: com 64kB, 16032 páginas ficaram com um bit cada, e cada linha nelas foi conferida de novo."
+      },
+      {
+        "text": "Outras sessões mudaram as linhas durante a varredura",
+        "why": "Nada mais rodou; a reconferência vem das páginas com perdas."
+      }
+    ]
+  },
+  "ex-pce7wqek": {
+    "prompt": "Quando o bitmap não cabe no `work_mem`, `Heap Blocks` mostra páginas ___ além das exatas.",
+    "hint": "A palavra na linha do plano.",
+    "blanks": [
+      {
+        "accept": [
+          "lossy"
+        ]
+      }
+    ]
+  },
+  "ex-jnq1w9k0": {
+    "prompt": "Ligue cada linha do plano ao que ela diz.",
+    "hint": "As quatro apareceram nesta aula.",
+    "pairs": [
+      {
+        "left": "`Heap Blocks: exact=16667`",
+        "right": "a varredura bitmap visitou todas as páginas da tabela"
+      },
+      {
+        "left": "`Rows Removed by Index Recheck`",
+        "right": "linhas em páginas com perdas que não passaram na condição"
+      },
+      {
+        "left": "`Workers Launched: 2`",
+        "right": "dois processos ajudantes dividiram a varredura"
+      },
+      {
+        "left": "`cost=10000000000.00..`",
+        "right": "o caminho está desligado e foi escolhido mesmo assim"
+      }
+    ],
+    "right_distractors": [
+      "o índice é maior que a tabela"
+    ]
+  },
+  "ex-qndjxr4h": {
+    "prompt": "Ordene estas consultas em `orders` pelo plano que o planejador escolheu, do mais guiado por índice à tabela inteira: varredura de índice primeiro, sequencial por último.",
+    "hint": "Dia, clientes, ano.",
+    "items": [
+      "`id = 42`",
+      "cem valores de `customer_id` (bitmap)",
+      "vinte mil valores de `customer_id` (bitmap paralelo)",
+      "um ano de `placed_at` (sequencial paralela)"
+    ],
+    "trap": "Ordenar só pela fração de linhas poria um mês de placed_at, 4,5%, depois dos clientes, e ele é uma varredura de índice."
+  },
+  "ex-f8ec9ky4": {
+    "prompt": "Um mês de `placed_at` (4,5% de `orders`) ganha varredura de índice, e cem clientes (0,05%) ganham varredura bitmap. Por quê?",
+    "hint": "Não é a fração.",
+    "choices": [
+      {
+        "text": "Há um limite fixo, e só customer_id o cruza",
+        "why": "Não existe limite fixo; a fração menor ganhou o plano menos guiado por índice."
+      },
+      {
+        "text": "A correlação: as linhas do mês dividem páginas",
+        "why": "Isso: umas 750 páginas consecutivas para o mês, uma página por linha para os clientes."
+      },
+      {
+        "text": "O índice de customer_id foi criado mais recentemente",
+        "why": "Os dois foram criados pelo market.sql no mesmo momento."
+      },
+      {
+        "text": "Datas são sempre mais baratas de comparar que inteiros",
+        "why": "Custos de comparação são um operador cada; as páginas decidem."
+      }
+    ]
+  },
+  "ex-ss8pwtct": {
+    "prompt": "Um servidor passa de discos giratórios para armazenamento de estado sólido rápido, e a equipe baixa o `random_page_cost` de 4 para 1.1 na configuração, depois de medir. O que acontece com os pontos de virada desta aula?",
+    "hint": "Que plano paga o random_page_cost?",
+    "choices": [
+      {
+        "text": "Nada: o ajuste só afeta varreduras bitmap",
+        "why": "Ele precifica toda página buscada fora de ordem, o que é sobretudo varredura de índice."
+      },
+      {
+        "text": "Vão para o lado das varreduras sequenciais, que ficam mais baratas",
+        "why": "Leituras sequenciais continuam com seq_page_cost 1; só as aleatórias ficaram mais baratas."
+      },
+      {
+        "text": "Vão para o lado do índice",
+        "why": "Isso: leituras aleatórias agora custam quase o mesmo que sequenciais aos olhos do planejador."
+      },
+      {
+        "text": "Somem: toda consulta usa índice",
+        "why": "Uma consulta que quer a maior parte de uma tabela ainda a lê inteira mais barato."
+      }
+    ]
+  },
+  "ex-87bfz6dx": {
+    "prompt": "O planejador estimou 90336 linhas para um mês de `placed_at` de 2000000. Que fração da tabela é isso, em porcentagem, com uma casa decimal?",
+    "hint": "Divida, depois multiplique por 100.",
+    "unit": "%"
+  },
+  "ex-axb1a07n": {
+    "prompt": "O que `SET enable_seqscan = off` faz de verdade?",
+    "hint": "Olhe o custo em products.",
+    "choices": [
+      {
+        "text": "Soma uma grande penalidade ao custo delas",
+        "why": "Isso: 10000000000.00, e a varredura sequencial ainda é escolhida quando nada mais roda a consulta."
+      },
+      {
+        "text": "Proíbe varreduras sequenciais: uma consulta que precise de uma falha",
+        "why": "A consulta LIKE '%lamp%' ganhou uma varredura sequencial mesmo assim."
+      },
+      {
+        "text": "Desliga as varreduras sequenciais no servidor inteiro",
+        "why": "SET muda uma sessão; a configuração do servidor é ALTER SYSTEM."
+      },
+      {
+        "text": "Faz o planejador refazer as estatísticas",
+        "why": "Estatísticas vêm do ANALYZE; isto muda preços."
+      }
+    ]
+  },
+  "ex-q47jjc3p": {
+    "prompt": "Com varreduras sequenciais desligadas, a soma do ano usou uma varredura de índice paralela tocando 14932 páginas em 145 ms; a sequencial escolhida tocou 16667 em 112 ms. O que você conclui?",
+    "hint": "Menos páginas, mais tempo.",
+    "choices": [
+      {
+        "text": "O plano de índice é melhor porque lê menos páginas",
+        "why": "Levou mais; seguir um milhão de entradas uma a uma custa mais que ler em ordem."
+      },
+      {
+        "text": "O planejador acertou, e agora você sabe por quanto",
+        "why": "Isso: 112 contra 145, as duas quentes, e os custos dele diziam o mesmo."
+      },
+      {
+        "text": "Desligue na configuração para o índice ser usado",
+        "why": "Isso deixaria esta consulta mais lenta, e toda outra varredura grande também."
+      },
+      {
+        "text": "A primeira execução foi fria, então não dá para concluir nada",
+        "why": "As duas execuções impressas eram segundas, quentes."
+      }
+    ]
+  },
+  "ex-08xrh7yz": {
+    "prompt": "Um colega põe `SET enable_seqscan = off` na configuração de conexão da aplicação porque um relatório ficou mais rápido. Que consequências se seguem? Marque todas as que se aplicam.",
+    "hint": "O ajuste não sabe de que consulta você estava falando.",
+    "choices": [
+      {
+        "text": "Toda consulta nessas conexões perde as varreduras sequenciais, inclusive as certas",
+        "why": "Certo: vale para tudo."
+      },
+      {
+        "text": "A entrada errada que enganou o planejador continua no lugar",
+        "why": "Certo: esconde o motivo."
+      },
+      {
+        "text": "Conforme os dados mudam, o plano forçado pode virar o lento",
+        "why": "Certo: não continua verdadeiro."
+      },
+      {
+        "text": "Consultas que precisam de varredura sequencial passam a falhar com erro",
+        "why": "Penalidade, não proibição: elas ainda rodam, com custo na casa dos bilhões."
+      },
+      {
+        "text": "Os outros bancos do servidor também são afetados",
+        "why": "Um SET só alcança a sessão que o rodou."
+      }
+    ]
+  },
+  "ex-fr9zf1p8": {
+    "prompt": "Um plano mostra `Bitmap Heap Scan … rows=15` estimado, `actual … rows=190000`, `Heap Blocks: exact=16667`, numa tabela de 16667 páginas. Qual é o próximo passo mais útil?",
+    "hint": "Que entrada estava errada?",
+    "choices": [
+      {
+        "text": "Aumentar o work_mem",
+        "why": "Nenhuma página ficou com perdas; memória não era o problema."
+      },
+      {
+        "text": "Criar outro índice na mesma coluna",
+        "why": "Um índice existia e foi usado; mais deles não muda nada."
+      },
+      {
+        "text": "Desligar varreduras bitmap na configuração do servidor",
+        "why": "Isso força um plano em todo lugar e deixa a estimativa errada no lugar."
+      },
+      {
+        "text": "Descobrir por que esperava 15 linhas",
+        "why": "Isso: o caminho foi escolhido para 15 linhas e recebeu 190000; a estimativa é a falha, e a aula 6 trata dela."
+      }
+    ]
+  },
+  "ex-ce5jxv3k": {
+    "prompt": "Para vinte mil clientes, a varredura bitmap levou 104 ms e a sequencial para a qual o planejador recuou levou 161 ms. Quantas vezes mais lento foi o segundo colocado, com uma casa decimal?",
+    "hint": "161 dividido por 104.",
+    "unit": "vezes"
+  }
+}

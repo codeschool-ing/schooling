@@ -1,0 +1,438 @@
+{
+  "ex-x4hshdv1": {
+    "prompt": "Que trava de tabela um `SELECT` simples pega na tabela que lê?",
+    "hint": "Linha 1 da matriz.",
+    "choices": [
+      {
+        "text": "Nenhuma: leitores no PostgreSQL nunca travam nada",
+        "why": "Leitores não pegam travas de linha, mas a janela B viu AccessShareLock em orders e nos seus quatro índices."
+      },
+      {
+        "text": "ACCESS SHARE",
+        "why": "Isso: o modo mais fraco, que só conflita com ACCESS EXCLUSIVE."
+      },
+      {
+        "text": "ROW SHARE, em cada linha que devolve",
+        "why": "ROW SHARE é um modo de tabela, pego por SELECT … FOR UPDATE ou FOR SHARE, não por uma leitura simples."
+      },
+      {
+        "text": "SHARE, que deixa outros leitores entrarem e mantém escritores fora",
+        "why": "Isso é o que o CREATE INDEX pega; um SELECT que bloqueasse escritores faria todo relatório parar a loja."
+      }
+    ]
+  },
+  "ex-g0718ct0": {
+    "prompt": "A janela A tem uma transação aberta que atualizou um pedido. Qual destes, digitado na janela B, espera por ela?",
+    "hint": "ROW EXCLUSIVE é a coluna 3.",
+    "choices": [
+      {
+        "text": "`UPDATE` de outro pedido",
+        "why": "Dois ROW EXCLUSIVE não conflitam, e linhas diferentes também não: passou em menos de 3 ms."
+      },
+      {
+        "text": "`SELECT count(*) FROM orders`",
+        "why": "ACCESS SHARE não conflita com ROW EXCLUSIVE; leitores seguem."
+      },
+      {
+        "text": "`CREATE INDEX` em `orders`",
+        "why": "Isso: o CREATE INDEX pega SHARE, que conflita com ROW EXCLUSIVE; esperou 8985 ms na aula."
+      },
+      {
+        "text": "`VACUUM orders`",
+        "why": "O VACUUM pega SHARE UPDATE EXCLUSIVE, que não conflita com ROW EXCLUSIVE."
+      }
+    ]
+  },
+  "ex-ed61vj7r": {
+    "prompt": "Por que uma transação que rodou um `SELECT` há uma hora e continua aberta importa para um `ALTER TABLE` posterior?",
+    "hint": "Quando as travas são devolvidas?",
+    "choices": [
+      {
+        "text": "O ACCESS SHARE dela dura até a transação terminar",
+        "why": "Isso: travas são juntadas e liberadas de uma vez no COMMIT ou ROLLBACK, então o ALTER espera a transação inteira."
+      },
+      {
+        "text": "Não importa: o SELECT terminou, então a trava foi liberada quando as linhas voltaram",
+        "why": "Nada é liberado antes; a trava sobrevive ao comando e dura o mesmo que a transação."
+      },
+      {
+        "text": "O snapshot dela impede o ALTER de ver a tabela",
+        "why": "Snapshots decidem que versões de linha são visíveis; a espera vem da trava."
+      },
+      {
+        "text": "Ela segura travas de linha em toda linha que leu",
+        "why": "Um SELECT simples não trava linhas."
+      }
+    ]
+  },
+  "ex-431k5bbj": {
+    "prompt": "Um job noturno roda `CREATE INDEX` numa tabela de 400 milhões de linhas, e o checkout da loja dá timeout até ele terminar. O que teria mantido o checkout funcionando?",
+    "hint": "Que modo cada forma pega?",
+    "choices": [
+      {
+        "text": "Rodá-lo dentro de uma transação para poder desfazer",
+        "why": "Uma transação não muda nada na trava SHARE que ele segura durante a construção."
+      },
+      {
+        "text": "Definir `lock_timeout` no job",
+        "why": "O lock_timeout limita a espera para pegar a trava; uma vez concedida, a construção ainda bloqueia escritas pelo tempo todo."
+      },
+      {
+        "text": "Construí-lo com `CONCURRENTLY`",
+        "why": "Isso: SHARE UPDATE EXCLUSIVE deixa INSERT e UPDATE passarem, o que o SHARE do CREATE INDEX comum não deixa."
+      },
+      {
+        "text": "Rodar ANALYZE antes",
+        "why": "Estatísticas não têm nada a ver com a trava que a construção pega."
+      }
+    ]
+  },
+  "ex-9v66csr2": {
+    "prompt": "Quantos modos de trava de tabela o PostgreSQL tem?",
+    "hint": "As linhas da matriz.",
+    "unit": "modos"
+  },
+  "ex-a07h6h0b": {
+    "prompt": "A janela A atualizou o pedido 1 e não confirmou. O que um `SELECT status FROM orders WHERE id = 1` simples faz na janela B?",
+    "hint": "Leitores e travas de linha.",
+    "choices": [
+      {
+        "text": "Espera até a janela A confirmar",
+        "why": "Uma leitura simples nunca é bloqueada por uma trava de linha."
+      },
+      {
+        "text": "Falha com `could not obtain lock`",
+        "why": "Esse erro veio do FOR UPDATE NOWAIT, não de uma leitura simples."
+      },
+      {
+        "text": "Mostra a mudança da janela A, já que ela está na tabela",
+        "why": "Mudanças não confirmadas são invisíveis a outras transações; ela leu delivered."
+      },
+      {
+        "text": "Responde na hora com o valor antigo",
+        "why": "Isso: leu `delivered`, a versão de antes do update da janela A."
+      }
+    ]
+  },
+  "ex-qjba0n0s": {
+    "prompt": "A janela B esperou 7085 ms no `SELECT status … FOR UPDATE` e então leu `shipped`, não `delivered`. Por que esse valor?",
+    "hint": "Quando a linha é lida?",
+    "choices": [
+      {
+        "text": "Ela lê a linha quando a trava é concedida, depois do commit da janela A",
+        "why": "Isso: depois que a janela A confirmou, então vê a mudança confirmada, o que torna seguro FOR UPDATE seguido de UPDATE."
+      },
+      {
+        "text": "A transação da janela B tinha começado depois de a janela A confirmar",
+        "why": "A janela B começou a transação antes do commit; estava esperando quando a janela A confirmou."
+      },
+      {
+        "text": "FOR UPDATE sempre lê a versão não confirmada mais nova",
+        "why": "Nenhuma leitura vê a mudança não confirmada de outra transação."
+      },
+      {
+        "text": "O SELECT foi rodado duas vezes pelo psql",
+        "why": "O psql o enviou uma vez; o servidor esperou e depois leu."
+      }
+    ]
+  },
+  "ex-0y0w2akn": {
+    "prompt": "Dez estações de embalagem rodam `UPDATE … WHERE id IN (SELECT … LIMIT 3 FOR UPDATE)` ao mesmo tempo. O que acontece sem `SKIP LOCKED`?",
+    "hint": "A janela B da aula.",
+    "choices": [
+      {
+        "text": "Duas estações pegam os mesmos três pedidos",
+        "why": "A trava impede isso; a janela B releu e pegou os três seguintes."
+      },
+      {
+        "text": "Trabalha uma estação por vez, as outras na fila",
+        "why": "Isso: a janela B esperou 7495 ms pelas linhas da janela A antes de pegar as três seguintes."
+      },
+      {
+        "text": "Nove recebem erro de deadlock",
+        "why": "Elas esperam no mesmo sentido, então nenhum ciclo se forma."
+      },
+      {
+        "text": "O comando falha porque LIMIT não é permitido com FOR UPDATE",
+        "why": "Ele rodou na aula e devolveu três ids."
+      }
+    ]
+  },
+  "ex-ypfwj014": {
+    "prompt": "Um relatório financeiro usa `FOR UPDATE SKIP LOCKED` 'para nunca esperar'. O que há de errado?",
+    "hint": "O que o SKIP LOCKED deixa de fora?",
+    "choices": [
+      {
+        "text": "SKIP LOCKED só funciona dentro de um UPDATE",
+        "why": "Funciona em qualquer SELECT … FOR UPDATE ou FOR SHARE."
+      },
+      {
+        "text": "Ele trava a tabela inteira enquanto o relatório roda",
+        "why": "Ele trava as linhas que devolve e pega ROW SHARE na tabela, que quase não bloqueia nada."
+      },
+      {
+        "text": "Linhas travadas por outros ficam de fora dos totais, em silêncio",
+        "why": "Isso: SKIP LOCKED é uma visão inconsistente de propósito, feita para filas; um relatório em cima dele erra sempre que há escritas."
+      },
+      {
+        "text": "Ele faz o relatório entrar em deadlock com todo escritor",
+        "why": "Pular nunca espera, então não pode fazer parte de um ciclo de espera."
+      }
+    ]
+  },
+  "ex-g4tr7fap": {
+    "prompt": "`SELECT … FOR UPDATE ___` dá erro na hora em vez de esperar quando a linha está travada.",
+    "hint": "Uma palavra, o contrário de esperar.",
+    "blanks": [
+      {
+        "accept": [
+          "NOWAIT"
+        ]
+      }
+    ]
+  },
+  "ex-tf0h5aqs": {
+    "prompt": "No experimento das três janelas, pelo que o `SELECT` da janela C estava de fato esperando?",
+    "hint": "A trava dela não conflita com a da janela A.",
+    "choices": [
+      {
+        "text": "O ACCESS SHARE da janela A",
+        "why": "Dois ACCESS SHARE não conflitam; a janela A sozinha não a teria parado."
+      },
+      {
+        "text": "O ALTER da janela B",
+        "why": "Isso: um pedido só é concedido se não conflita com quem segura a trava nem com quem já está na fila."
+      },
+      {
+        "text": "Uma trava de linha no pedido 2",
+        "why": "Ninguém tinha tocado no pedido 2 nesse experimento."
+      },
+      {
+        "text": "O disco",
+        "why": "Uma linha pela chave primária é uma fração de milissegundo; 12 segundos foram espera por trava."
+      }
+    ]
+  },
+  "ex-c7n3sqx8": {
+    "prompt": "Quantos segundos a janela C esperou para ler um pedido atrás do `ALTER TABLE` que esperava?",
+    "hint": "A linha Time: dela.",
+    "unit": "s"
+  },
+  "ex-7vt5sxwk": {
+    "prompt": "Por que o servidor não deixa um leitor novo passar à frente de um `ALTER TABLE` que espera, se o leitor não conflita com nada que está seguro?",
+    "hint": "Pense numa tabela movimentada com leitores chegando o tempo todo.",
+    "choices": [
+      {
+        "text": "Porque leitores são mais lentos que escritores",
+        "why": "Velocidade não tem nada a ver com a regra da fila."
+      },
+      {
+        "text": "Porque o leitor veria a tabela meio alterada",
+        "why": "O ALTER nem começou; ainda espera a trava."
+      },
+      {
+        "text": "Porque ACCESS SHARE conflita com todos os outros modos",
+        "why": "Ele só conflita com ACCESS EXCLUSIVE."
+      },
+      {
+        "text": "O ALTER nunca entraria: sempre haveria algum leitor segurando a tabela",
+        "why": "Isso: a fila é o que impede uma trava forte de esperar para sempre, e o preço é que todos atrás dela esperam."
+      }
+    ]
+  },
+  "ex-xhx0m7mn": {
+    "prompt": "Uma migração acrescenta uma coluna em `orders` às 10:00 com `SET lock_timeout = '2s'` e falha com `canceling statement due to lock timeout`. O que o deploy deve fazer em seguida?",
+    "hint": "O tempo limite fez o trabalho dele; a mudança ainda precisa acontecer.",
+    "choices": [
+      {
+        "text": "Subir o lock_timeout para uma hora para não falhar",
+        "why": "Isso traz a queda de volta: uma hora na fila com toda consulta atrás."
+      },
+      {
+        "text": "Tentar de novo em breve, num laço, mantendo o tempo limite curto",
+        "why": "Isso: cada tentativa custa à aplicação no máximo dois segundos, e uma delas entra quando a transação longa termina."
+      },
+      {
+        "text": "Usar statement_timeout no lugar, que é mais rígido",
+        "why": "O statement_timeout também cortaria os relatórios lentos; ele não mira a espera pela trava."
+      },
+      {
+        "text": "Reiniciar o servidor para limpar todas as travas e então rodar a migração",
+        "why": "Um reinício é uma queda para todo mundo para resolver uma espera de dois segundos."
+      }
+    ]
+  },
+  "ex-x2yn8zq1": {
+    "prompt": "O que o `pg_try_advisory_lock(42)` devolve quando outra sessão já segura a trava 42?",
+    "hint": "O try do nome.",
+    "choices": [
+      {
+        "text": "Espera até a outra sessão liberar",
+        "why": "Isso é o pg_advisory_lock sem try, que a janela B rodou em seguida e esperou 6434 ms."
+      },
+      {
+        "text": "Um erro",
+        "why": "Ele devolve um booleano; nada é levantado."
+      },
+      {
+        "text": "`f`, na hora",
+        "why": "Isso: try nunca espera; responde t ou f."
+      },
+      {
+        "text": "O id do processo da sessão que a segura",
+        "why": "Ele só devolve se esta sessão conseguiu a trava."
+      }
+    ]
+  },
+  "ex-aje8v7d9": {
+    "prompt": "Por que uma trava consultiva é melhor que uma linha `status = 'running'` para garantir que um job noturno rode uma vez?",
+    "hint": "O que acontece quando o worker cai no meio?",
+    "choices": [
+      {
+        "text": "Uma queda libera a trava, mas não a linha",
+        "why": "Isso: nada fica para trás, então a execução da noite seguinte nunca é bloqueada por um worker morto."
+      },
+      {
+        "text": "Travas consultivas são mais rápidas de escrever",
+        "why": "Velocidade não é o argumento; um update de linha também leva um milissegundo."
+      },
+      {
+        "text": "Uma linha de status não pode ser lida por outros workers",
+        "why": "Qualquer worker lê a linha; o problema é uma linha que ninguém limpa depois de uma queda."
+      },
+      {
+        "text": "Travas consultivas sobrevivem a um reinício do servidor",
+        "why": "Não sobrevivem; pertencem a sessões, e um reinício termina todas."
+      }
+    ]
+  },
+  "ex-7cbjmwee": {
+    "prompt": "Uma aplicação atrás de um pooler em modo transação pega `pg_advisory_lock(7)` numa transação e libera na seguinte. Jobs começam a travar. Qual é a causa provável?",
+    "hint": "De quem é uma trava de sessão?",
+    "choices": [
+      {
+        "text": "Travas consultivas são desligadas atrás de poolers",
+        "why": "O pooler não as desliga; ele muda que conexão as segura."
+      },
+      {
+        "text": "O número 7 é reservado pelo PostgreSQL",
+        "why": "Nenhum número é reservado; o significado é todo da aplicação."
+      },
+      {
+        "text": "A liberação rodou em outra conexão",
+        "why": "Isso: uma trava de sessão pertence a uma conexão, e o pooler deu outra à transação seguinte; travas de transação evitam isso."
+      },
+      {
+        "text": "Duas transações não podem usar um mesmo número de trava",
+        "why": "Podem, uma depois da outra; esse é o uso normal."
+      }
+    ]
+  },
+  "ex-hetwh3z0": {
+    "prompt": "Por que o comando da janela B falhou depois de quase exatamente 1001 ms?",
+    "hint": "Uma configuração com padrão de um segundo.",
+    "choices": [
+      {
+        "text": "O lock_timeout, que a aula tinha definido em um segundo",
+        "why": "Ele foi definido em dois segundos, em outra janela, na seção 04; o erro aqui foi deadlock detected."
+      },
+      {
+        "text": "Uma sessão que espera só procura deadlock depois do `deadlock_timeout`",
+        "why": "Isso: checar a cada espera seria caro, então a checagem roda quando a espera chega a um segundo."
+      },
+      {
+        "text": "O update levou um segundo para achar a linha",
+        "why": "Achar uma linha pela chave primária leva uma fração de milissegundo."
+      },
+      {
+        "text": "O psql desiste de qualquer comando depois de um segundo de silêncio do servidor",
+        "why": "O psql espera indefinidamente; esperas anteriores nesta aula duraram mais de 13 segundos."
+      }
+    ]
+  },
+  "ex-sdy937x2": {
+    "prompt": "As duas janelas rodam `SELECT id FROM orders WHERE id IN (…) ORDER BY id FOR UPDATE` antes de atualizar os pedidos 1 e 2. Por que nenhum deadlock pode se formar?",
+    "hint": "Quem segura o quê enquanto espera?",
+    "choices": [
+      {
+        "text": "FOR UPDATE pega uma trava de tabela que serializa as duas",
+        "why": "Ele pega ROW SHARE, que não conflita consigo mesmo; o que importa é a ordem das travas de linha."
+      },
+      {
+        "text": "O deadlock_timeout é desligado para SELECT",
+        "why": "Essa exceção não existe."
+      },
+      {
+        "text": "A lista do IN é ordenada pelo servidor",
+        "why": "A ordem da lista não importa; o ORDER BY decide a ordem em que as linhas são travadas."
+      },
+      {
+        "text": "As duas pegam o pedido 1 primeiro",
+        "why": "Isso: a janela B esperou no pedido 1 antes de travar qualquer coisa, então nenhum ciclo podia se fechar."
+      }
+    ]
+  },
+  "ex-kyc4jc4s": {
+    "prompt": "Ponha os passos do deadlock da aula na ordem em que aconteceram.",
+    "hint": "Cada janela pega um pedido primeiro.",
+    "items": [
+      "A janela A atualiza o pedido 1",
+      "A janela B atualiza o pedido 2",
+      "A janela A pede o pedido 2 e espera",
+      "A janela B pede o pedido 1 e espera",
+      "Depois de um segundo, a checagem da janela B acha o ciclo e o comando dela falha"
+    ],
+    "trap": "O update do pedido 2 pela janela A só termina depois que a transação da janela B falhou e o liberou."
+  },
+  "ex-k4frsmav": {
+    "prompt": "Ligue cada erro ou sintoma à sua causa.",
+    "hint": "Seções 03, 04 e 06.",
+    "pairs": [
+      {
+        "left": "`could not obtain lock on row`",
+        "right": "FOR UPDATE NOWAIT numa linha que alguém segura"
+      },
+      {
+        "left": "`canceling statement due to lock timeout`",
+        "right": "uma trava não concedida dentro do lock_timeout"
+      },
+      {
+        "left": "`deadlock detected`",
+        "right": "duas transações esperando uma pela outra"
+      },
+      {
+        "left": "um SELECT de uma linha levando 12 segundos",
+        "right": "um pedido na fila atrás de um ACCESS EXCLUSIVE que espera"
+      }
+    ],
+    "right_distractors": [
+      "um índice faltando na coluna"
+    ]
+  },
+  "ex-hnbcbjza": {
+    "prompt": "Quais destes são hábitos que a aula recomenda para uma mudança de esquema numa tabela movimentada? Marque todos os que se aplicam.",
+    "hint": "Seções 04 e 06.",
+    "choices": [
+      {
+        "text": "Definir lock_timeout em poucos segundos antes",
+        "why": "Certo: tira o ALTER da fila antes que a fila machuque."
+      },
+      {
+        "text": "Tentar de novo num laço quando der tempo limite",
+        "why": "Certo: cada tentativa custa um soluço curto, e uma entra."
+      },
+      {
+        "text": "Procurar transações longas antes de começar",
+        "why": "Certo: é atrás delas que o ALTER ficaria na fila."
+      },
+      {
+        "text": "Rodá-lo dentro de uma transação longa com a correção de dados, para os dois acontecerem juntos",
+        "why": "Uma transação longa segura ACCESS EXCLUSIVE pelo tempo todo, o contrário do que se quer."
+      },
+      {
+        "text": "Subir o deadlock_timeout para o ALTER não ser cancelado",
+        "why": "O deadlock_timeout decide quando ciclos são checados; não faz nada por uma fila."
+      }
+    ]
+  }
+}

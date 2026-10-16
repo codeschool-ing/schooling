@@ -1,0 +1,411 @@
+{
+  "ex-vehz6yhr": {
+    "prompt": "Por que `ORDER BY placed_at DESC LIMIT 5` não precisa de nó Sort quando `placed_at` tem uma B-tree?",
+    "hint": "Em que ordem estão as entradas do índice?",
+    "choices": [
+      {
+        "text": "O índice é lido de trás para a frente a partir do fim",
+        "why": "Isso: as entradas já estão ordenadas, e o Limit para depois de cinco."
+      },
+      {
+        "text": "O PostgreSQL guarda na memória as últimas cinco linhas de toda tabela para isso",
+        "why": "Não existe esse cache; o plano é um Index Scan Backward."
+      },
+      {
+        "text": "A própria tabela está em ordem de placed_at, então nenhum índice é usado",
+        "why": "O plano cita o orders_placed_at_idx; uma tabela não tem ordem garantida."
+      },
+      {
+        "text": "Há um nó Sort, mas o EXPLAIN o esconde quando o LIMIT é pequeno",
+        "why": "O EXPLAIN não esconde nós; o plano é Limit sobre Index Scan Backward."
+      }
+    ]
+  },
+  "ex-fpegdgmd": {
+    "prompt": "`customers.email` tem uma B-tree única, e `LIKE 'user42@%'` ainda recebe um scan sequencial. Por quê?",
+    "hint": "Veja como o texto é ordenado nesse banco.",
+    "choices": [
+      {
+        "text": "Índices únicos nunca são usados para LIKE",
+        "why": "A unicidade não tem nada a ver; um índice não único com a mesma collation falha igual."
+      },
+      {
+        "text": "O padrão tem um @, que o LIKE trata como curinga",
+        "why": "Só % e _ são curingas no LIKE."
+      },
+      {
+        "text": "O índice usa a collation da coluna, e o PostgreSQL 16 só transforma um prefixo em faixa com a C",
+        "why": "Isso: C.UTF-8 não conta, então o planejador precisa do text_pattern_ops."
+      },
+      {
+        "text": "customers é pequena demais para valer um índice",
+        "why": "Com text_pattern_ops a mesma consulta usou um índice a custo 8,44."
+      }
+    ]
+  },
+  "ex-s0e6h96e": {
+    "prompt": "Qual destas um índice `text_pattern_ops` em `email` consegue atender?",
+    "hint": "Um prefixo é uma faixa; um sufixo não.",
+    "choices": [
+      {
+        "text": "`email LIKE '%@example.com'`",
+        "why": "Um curinga no começo não é faixa em ordem nenhuma; ficou scan sequencial."
+      },
+      {
+        "text": "`email LIKE 'user7%'`",
+        "why": "Isso: um prefixo vira a faixa de user7 até user8."
+      },
+      {
+        "text": "`ORDER BY email` na collation do banco",
+        "why": "A ordem dele é a dos bytes, não a da collation; o índice comum atende isso."
+      },
+      {
+        "text": "`lower(email) = 'user7@example.com'`",
+        "why": "Uma função da coluna precisa de um índice nessa expressão, assunto da aula 9."
+      }
+    ]
+  },
+  "ex-cwfyxr4e": {
+    "prompt": "O que um índice hash consegue responder?",
+    "hint": "Ele guarda códigos de hash, não uma ordem.",
+    "choices": [
+      {
+        "text": "Igualdade, faixas e ORDER BY, mais rápido que uma B-tree",
+        "why": "Sem ordem ele não responde faixa nem ORDER BY."
+      },
+      {
+        "text": "Igualdade e buscas por prefixo",
+        "why": "Um prefixo é uma faixa, que precisa de ordem."
+      },
+      {
+        "text": "Só =",
+        "why": "Isso: a consulta email > foi para a B-tree."
+      },
+      {
+        "text": "Igualdade, e unicidade quando declarado UNIQUE",
+        "why": "Um índice hash não garante UNIQUE; só uma B-tree garante."
+      }
+    ]
+  },
+  "ex-91a47d77": {
+    "prompt": "A B-tree em `customers.email` tinha 14 MB e o índice hash na mesma coluna 6568 kB. Mais ou menos que fração do tamanho da B-tree é o hash, em porcentagem?",
+    "hint": "6568 kB são uns 6,4 MB.",
+    "unit": "%"
+  },
+  "ex-6kdzd6mk": {
+    "prompt": "Por que um índice hash em `customers.email` não deixaria você apagar a B-tree dali?",
+    "hint": "O que a B-tree faz além de acelerar buscas?",
+    "choices": [
+      {
+        "text": "Porque dois índices numa coluna sempre rendem mais que um",
+        "why": "Cada índice extra custa a toda escrita; mais não é melhor por si só."
+      },
+      {
+        "text": "Porque a B-tree garante a restrição UNIQUE",
+        "why": "Isso: um índice hash não garante isso, então a B-tree fica, haja o que houver."
+      },
+      {
+        "text": "Porque índices hash não sobrevivem a uma queda",
+        "why": "Isso deixou de ser verdade no PostgreSQL 10."
+      },
+      {
+        "text": "Porque o índice hash só é usado depois que a B-tree está quente",
+        "why": "O planejador escolheu o hash para igualdade com a B-tree presente."
+      }
+    ]
+  },
+  "ex-tn7bkcj3": {
+    "prompt": "O que um índice GIN em `tags` guarda?",
+    "hint": "Invertido.",
+    "choices": [
+      {
+        "text": "Cada array, ordenado como um valor inteiro",
+        "why": "Isso é uma B-tree de arrays, que não acha um elemento."
+      },
+      {
+        "text": "Para cada tag, as linhas que a contêm",
+        "why": "Isso: onze entradas, uma por tag, cada uma com sua lista de produtos."
+      },
+      {
+        "text": "Um hash de cada array",
+        "why": "Um hash do array inteiro só responde se dois arrays são iguais."
+      },
+      {
+        "text": "A menor e a maior tag de cada 128 páginas",
+        "why": "Esse é o resumo do BRIN, e não acharia tags dentro de arrays."
+      }
+    ]
+  },
+  "ex-90hs6t3z": {
+    "prompt": "O índice GIN levou a busca por tag de 58,7 ms para 19,8 ms sob carga. Para onde foi a maior parte do tempo que sobrou?",
+    "hint": "Um quinto de todos os produtos usa a tag.",
+    "choices": [
+      {
+        "text": "No Bitmap Index Scan do índice GIN",
+        "why": "Isso levou cerca de 1,4 ms dos 17."
+      },
+      {
+        "text": "No planejamento, já que planos com GIN são caros de fazer",
+        "why": "O Planning Time foi 0,63 ms."
+      },
+      {
+        "text": "Na ida e volta pela rede até o pgbench",
+        "why": "O pgbench rodou na mesma máquina; o EXPLAIN ANALYZE mostrou 17 ms dentro do servidor."
+      },
+      {
+        "text": "Em ler as 649 páginas e ordenar 9917 linhas",
+        "why": "Isso: o WHERE foi respondido, e o ORDER BY LIMIT era a metade cara."
+      }
+    ]
+  },
+  "ex-ddrmjgbz": {
+    "prompt": "Com uma B-tree em `price_cents`, a busca por tag leu 74 linhas em vez de 9917. Por que tão poucas?",
+    "hint": "O índice entrega as linhas em ordem de preço.",
+    "choices": [
+      {
+        "text": "A B-tree também indexa as tags",
+        "why": "Ela indexa só price_cents; o teste da tag é um Filter, com 54 linhas removidas."
+      },
+      {
+        "text": "Andando do mais barato, um em cinco tem a tag, então vinte aparecem logo e o Limit para",
+        "why": "Isso: esperavam-se umas cem linhas e foram lidas 74."
+      },
+      {
+        "text": "O planejador passou a usar uma amostra da tabela",
+        "why": "Planos nunca amostram; a resposta é exata."
+      },
+      {
+        "text": "O índice GIN pré-filtrou as linhas",
+        "why": "O plano usou só o products_price_cents_idx."
+      }
+    ]
+  },
+  "ex-stdzp4s6": {
+    "prompt": "Uma busca pela tag `kitchn`, que nenhum produto tem, levou 41 ms com os dois índices presentes. O que fez o planejador escolher o plano lento?",
+    "hint": "Compare o rows= com o que saiu.",
+    "choices": [
+      {
+        "text": "O índice GIN ainda não estava válido",
+        "why": "Ele tinha sido usado para kitchen minutos antes."
+      },
+      {
+        "text": "O GIN não responde a uma busca que não acha nada",
+        "why": "Uma lista vazia é a resposta mais barata que o GIN dá."
+      },
+      {
+        "text": "Esperava 250 linhas, e o percurso parecia curto",
+        "why": "Isso: sem nenhuma linha, o percurso leu os 50.000 produtos. Uma estimativa errada escolheu entre dois índices bons."
+      },
+      {
+        "text": "B-trees têm prioridade sobre GIN quando os dois servem",
+        "why": "Não há prioridade; o planejador compara custos estimados."
+      }
+    ]
+  },
+  "ex-kdbzsfxp": {
+    "prompt": "Quais afirmações sobre `jsonb_path_ops` comparado com o `jsonb_ops` padrão batem com esta aula? Marque todas as que se aplicam.",
+    "hint": "Tamanhos, tempos de construção e operadores.",
+    "choices": [
+      {
+        "text": "Ficou menor, 42 MB contra 55 MB",
+        "why": "Certo."
+      },
+      {
+        "text": "Foi construído mais rápido, 9,6 s contra 20,8 s",
+        "why": "Certo."
+      },
+      {
+        "text": "Ele responde ao operador ?, esta chave existe",
+        "why": "Só o jsonb_ops responde; o jsonb_path_ops só responde a @>."
+      },
+      {
+        "text": "O planejador o escolheu para @> quando os dois existiam",
+        "why": "Certo: o plano citou o events_payload_path_idx."
+      }
+    ]
+  },
+  "ex-76mcsf5p": {
+    "prompt": "O que um índice GiST de trigramas oferece que um GIN de trigramas não oferece?",
+    "hint": "Veja a linha Order By no plano.",
+    "choices": [
+      {
+        "text": "Suporte a ILIKE com curinga no começo",
+        "why": "Os dois atendem isso, e o GIN costuma ser mais rápido."
+      },
+      {
+        "text": "Ordenação do mais próximo primeiro, por distância",
+        "why": "Isso: o próprio índice entrega as linhas pela distância <-> e o Limit para."
+      },
+      {
+        "text": "Igualdade sem diferenciar maiúsculas nos títulos",
+        "why": "Isso é um índice de expressão em lower(title)."
+      },
+      {
+        "text": "Um índice menor que a tabela",
+        "why": "Os dois são menores que a tabela; não é isso que distingue o GiST."
+      }
+    ]
+  },
+  "ex-cqf5sb24": {
+    "prompt": "Uma tabela de reservas precisa recusar duas reservas da mesma sala que se sobrepõem no tempo. Que ferramenta a aula aponta?",
+    "hint": "Dois intervalos sobrepostos não são iguais.",
+    "choices": [
+      {
+        "text": "Uma restrição UNIQUE em (sala, período)",
+        "why": "Dois intervalos diferentes que se sobrepõem não são iguais, então o UNIQUE deixa os dois entrarem."
+      },
+      {
+        "text": "Um SELECT procurando sobreposição antes de cada INSERT",
+        "why": "Duas requisições juntas não acham nada e as duas inserem."
+      },
+      {
+        "text": "Um índice BRIN na hora de início",
+        "why": "O BRIN acelera leituras por faixa; não garante nada."
+      },
+      {
+        "text": "EXCLUDE USING gist (sala WITH =, período WITH &&), com btree_gist",
+        "why": "Isso: o formato da seller_away, com btree_gist para o = num tipo comum."
+      }
+    ]
+  },
+  "ex-tkpb3gxn": {
+    "prompt": "A extensão que corta strings em sequências de três caracteres, para que `ILIKE '%…%'` possa usar um índice, é a ___.",
+    "hint": "O nome termina em trgm.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_trgm"
+        ]
+      }
+    ]
+  },
+  "ex-svym838w": {
+    "prompt": "O que um índice BRIN guarda para cada faixa de 128 páginas?",
+    "hint": "Um resumo pequeno por trecho.",
+    "choices": [
+      {
+        "text": "Todo valor da faixa, ordenado",
+        "why": "Isso seria do tamanho de uma B-tree; o BRIN tinha 32 kB."
+      },
+      {
+        "text": "Um ponteiro para cada linha cujo valor mudou",
+        "why": "O BRIN não guarda ponteiro nenhum por linha."
+      },
+      {
+        "text": "O menor e o maior valor",
+        "why": "Isso: e uma busca pula toda faixa que eles descartam."
+      },
+      {
+        "text": "O número de linhas da faixa e a média delas",
+        "why": "Uma média não descarta um valor; o BRIN guarda mínimo e máximo."
+      }
+    ]
+  },
+  "ex-mtfg8jtx": {
+    "prompt": "Um índice BRIN em `events.customer_id` fez `customer_id = 4242` levar 445 ms. Que número teria avisado antes de você criá-lo?",
+    "hint": "A aula 7 o leu para toda coluna.",
+    "choices": [
+      {
+        "text": "O n_distinct de customer_id, 181538",
+        "why": "Muitos valores distintos não atrapalham o BRIN se estiverem na ordem da tabela."
+      },
+      {
+        "text": "A correlation, -0.0032",
+        "why": "Isso: nenhuma relação com a ordem da tabela, então toda faixa cobre todo cliente."
+      },
+      {
+        "text": "O null_frac, 0.3054",
+        "why": "Os NULLs são anotados à parte no resumo do BRIN e não são o problema."
+      },
+      {
+        "text": "O tamanho da tabela, 511 MB",
+        "why": "A mesma tabela deu 18 ms para um dia de at."
+      }
+    ]
+  },
+  "ex-39wvn6g9": {
+    "prompt": "Os eventos de um dia por `at` com o índice BRIN mostraram `Heap Blocks: lossy=896`. Com 128 páginas por faixa, quantas faixas são?",
+    "hint": "Divida.",
+    "unit": "faixas"
+  },
+  "ex-bfejf719": {
+    "prompt": "Ligue cada pergunta ao tipo de índice que esta aula usou para ela.",
+    "hint": "Uma estrutura por formato de pergunta.",
+    "pairs": [
+      {
+        "left": "os vinte produtos mais baratos",
+        "right": "B-tree"
+      },
+      {
+        "left": "eventos cujo payload contém um produto",
+        "right": "GIN"
+      },
+      {
+        "left": "títulos mais próximos de um erro de digitação",
+        "right": "GiST"
+      },
+      {
+        "left": "um dia de eventos numa tabela gravada em ordem de tempo",
+        "right": "BRIN"
+      }
+    ],
+    "right_distractors": [
+      "hash"
+    ]
+  },
+  "ex-ksmykrq3": {
+    "prompt": "Ordene os índices em `events.at` e `customers.email` medidos nesta aula, do menor para o maior.",
+    "hint": "32 kB, 6568 kB, 14 MB, 107 MB.",
+    "items": [
+      "BRIN em events.at",
+      "hash em customers.email",
+      "B-tree do UNIQUE em customers.email",
+      "B-tree em events.at"
+    ],
+    "trap": "Uma B-tree com cinco milhões de horários é de longe a maior."
+  },
+  "ex-bqqds9kx": {
+    "prompt": "Uma tabela de leituras de sensores só recebe linhas no fim e é consultada por faixas de tempo, e a B-tree em `read_at` já ocupa um quinto do disco. O que a aula sugere conferir primeiro?",
+    "hint": "O BRIN faz uma aposta.",
+    "choices": [
+      {
+        "text": "Se um índice hash em read_at seria menor",
+        "why": "Um índice hash não responde faixa nenhuma."
+      },
+      {
+        "text": "Se a correlation dela está perto de 1, para o BRIN",
+        "why": "Isso: uma coluna de tempo numa tabela que só cresce no fim segue a ordem da tabela, e aí o BRIN tem poucos kB."
+      },
+      {
+        "text": "Se o GIN suporta timestamps",
+        "why": "O GIN é para valores feitos de partes; um timestamp não tem."
+      },
+      {
+        "text": "Se a B-tree precisa de REINDEX",
+        "why": "Uma B-tree reconstruída sobre toda linha continuaria muito maior que um BRIN."
+      }
+    ]
+  },
+  "ex-y3kw308s": {
+    "prompt": "Uma tela lista os dez pedidos mais novos com um status, `WHERE status = $1 ORDER BY placed_at DESC LIMIT 10`, e está lenta. Aplicando o achado da busca por tag desta aula, que índice vale tentar primeiro?",
+    "hint": "A pergunta é o texto inteiro, não o WHERE.",
+    "choices": [
+      {
+        "text": "Um índice hash em status",
+        "why": "Ele acha as linhas mas sem ordem nenhuma, então a ordenação continua."
+      },
+      {
+        "text": "Um índice GIN em status",
+        "why": "status é uma palavra só, não um valor feito de partes."
+      },
+      {
+        "text": "Uma B-tree de duas colunas, a do filtro primeiro",
+        "why": "Isso: acha um status e o percorre já em ordem de placed_at, então o Limit para em dez."
+      },
+      {
+        "text": "Um índice BRIN em status",
+        "why": "status não segue a ordem da tabela, então toda faixa bateria."
+      }
+    ]
+  }
+}

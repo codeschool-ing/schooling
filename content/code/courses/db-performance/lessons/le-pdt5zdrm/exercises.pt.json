@@ -1,0 +1,459 @@
+{
+  "ex-rsxp5qca": {
+    "prompt": "Por que um índice que nenhuma consulta lê ainda custa algo numa tabela que recebe escritas?",
+    "hint": "Pense no que um INSERT precisa fazer com cada cópia das colunas.",
+    "choices": [
+      {
+        "text": "Toda escrita precisa atualizá-lo também",
+        "why": "Isso: um índice é uma cópia mantida em dia a cada insert e a cada update das suas colunas, lida ou não."
+      },
+      {
+        "text": "O planejador precisa considerá-lo em toda consulta, e o planejamento domina o custo",
+        "why": "O planejamento olha cada índice, mas o custo medido na aula estava nas escritas: 9396 contra 4895 bytes de log por pedido."
+      },
+      {
+        "text": "Ele segura uma trava na tabela enquanto fica sem uso",
+        "why": "Um índice não segura trava por existir; as travas pertencem aos comandos, assunto da aula 12."
+      },
+      {
+        "text": "Ele deixa mais lentas as leituras dos outros índices",
+        "why": "As leituras de um índice não são afetadas pela existência de outro; o custo é do lado da escrita."
+      }
+    ]
+  },
+  "ex-zfnk7s2y": {
+    "prompt": "Com as sete sobras no lugar, quantos bytes de write-ahead log cada pedido do `place-order.sql` escreveu na execução da aula?",
+    "hint": "A segunda medição, a coluna bytes_per_order.",
+    "unit": "bytes"
+  },
+  "ex-312qzn9m": {
+    "prompt": "Antes das sobras, 19.996 de 20.000 updates do `place-order.sql` eram HOT; com elas, nenhum. Qual sobra, sozinha, causou isso?",
+    "hint": "Que coluna o UPDATE muda?",
+    "choices": [
+      {
+        "text": "`orders_status_idx`",
+        "why": "O update não mexe em `status`; um índice numa coluna que o update não muda não impede o HOT."
+      },
+      {
+        "text": "`orders_seller_placed_idx`, porque tem duas colunas",
+        "why": "O número de colunas não importa; nem `seller_id` nem `placed_at` mudam no update."
+      },
+      {
+        "text": "`orders_total_cents_idx`",
+        "why": "Isso: o update define `total_cents`, e HOT só é possível quando nenhum índice contém uma coluna alterada."
+      },
+      {
+        "text": "`orders_customer_idx`, porque duplica outro índice",
+        "why": "Ser duplicata custa uma entrada a mais por insert, mas `customer_id` não muda no update."
+      }
+    ]
+  },
+  "ex-ncyfr3cp": {
+    "prompt": "A taxa de transações caiu 13% com as sobras enquanto o log por pedido quase dobrou. Por que a aula confia mais no número do log?",
+    "hint": "O que domina uma transação curta naquela máquina?",
+    "choices": [
+      {
+        "text": "Porque o pgbench arredonda a taxa para transações inteiras",
+        "why": "O pgbench imprime a taxa com seis casas decimais; arredondamento não é o problema."
+      },
+      {
+        "text": "A taxa varia vários por cento entre execuções idênticas, e o log são bytes de fato escritos",
+        "why": "Isso: a espera do commit pelo disco domina a taxa, enquanto o volume do log é uma contagem do que o servidor escreveu."
+      },
+      {
+        "text": "O log inclui leituras além de escritas, então enxerga mais",
+        "why": "O write-ahead log registra só mudanças; leituras não escrevem nada nele."
+      },
+      {
+        "text": "Só o log é zerado pelo CHECKPOINT",
+        "why": "Um checkpoint não zera a posição do log, que só cresce; ele foi feito para as duas execuções começarem iguais."
+      }
+    ]
+  },
+  "ex-8p2dpp8n": {
+    "prompt": "Uma tabela de leituras de sensores recebe uma linha nova a cada milissegundo e nunca é atualizada. Qual destes índices acrescenta menos write-ahead log por insert depois de cada checkpoint?",
+    "hint": "Em que ponto do índice cai cada chave nova?",
+    "choices": [
+      {
+        "text": "Um índice no id do sensor, com 50.000 sensores reportando em ordem aleatória",
+        "why": "Chaves aleatórias tocam uma folha diferente quase toda vez, e cada página custa uma imagem inteira uma vez por checkpoint."
+      },
+      {
+        "text": "Um índice no valor da leitura, que varia muito",
+        "why": "Valores que variam muito caem em todo lugar do índice, como o `total_cents` da aula."
+      },
+      {
+        "text": "Um índice no horário da leitura",
+        "why": "Isso: um valor que só cresce é acrescentado na ponta direita, então as mesmas poucas páginas recebem toda chave nova."
+      },
+      {
+        "text": "Os três acrescentam o mesmo, já que cada insert põe uma entrada em cada um",
+        "why": "Uma entrada em cada, mas não uma imagem de página em cada: as imagens dependem de quantas páginas diferentes as chaves tocam."
+      }
+    ]
+  },
+  "ex-41h6scah": {
+    "prompt": "Que coluna diz quantas vezes consultas leram um índice desde que os contadores foram zerados?",
+    "hint": "Fica em pg_stat_user_indexes.",
+    "choices": [
+      {
+        "text": "`pg_stat_user_indexes.idx_tup_read`, as entradas devolvidas",
+        "why": "Isso conta entradas devolvidas, não quantas varreduras começaram; a aula lê o número de varreduras."
+      },
+      {
+        "text": "`pg_index.indisvalid`",
+        "why": "Isso diz se um índice pode ser usado, por exemplo depois de uma criação concorrente que falhou."
+      },
+      {
+        "text": "`pg_stat_user_indexes.idx_scan`",
+        "why": "Isso: uma contagem por varredura que uma consulta começou no índice."
+      },
+      {
+        "text": "`pg_stat_statements.calls`",
+        "why": "Isso conta execuções de um comando, sem índice nomeado em lugar nenhum."
+      }
+    ]
+  },
+  "ex-ve2hpgfy": {
+    "prompt": "Depois da mistura de um minuto, o `orders_customer_id_idx` mostrou 0 varreduras e o `orders_customer_idx` 72.686. O que significa esse zero?",
+    "hint": "Os dois índices têm a mesma coluna.",
+    "choices": [
+      {
+        "text": "Que o planejador escolheu um de dois índices idênticos, e qualquer um poderia sair",
+        "why": "Isso: o zero registra um empate que o planejador desfez; quando um gêmeo sai, as varreduras vão para o outro."
+      },
+      {
+        "text": "Que a busca por cliente foi escrita para ler só o índice mais novo em `customer_id`, por princípio",
+        "why": "O planejador não tem regra que favoreça índices mais novos; ele viu duas escolhas iguais."
+      },
+      {
+        "text": "Que o `orders_customer_id_idx` está danificado de algum jeito e deve ser reconstruído antes de tudo",
+        "why": "Um índice danificado não é o que um zero significa; o gêmeo simplesmente recebeu as leituras."
+      },
+      {
+        "text": "Que o original deve ser apagado e o mais novo mantido",
+        "why": "O contador não diz qual gêmeo manter; a seção 04 mantém o original pelo nome."
+      }
+    ]
+  },
+  "ex-ss9ekqfs": {
+    "prompt": "Um índice mostra `idx_scan = 0` no primário. Quais destas situações ainda podem significar que ele é necessário? Marque todas as que se aplicam.",
+    "hint": "Os quatro jeitos de um zero mentir.",
+    "choices": [
+      {
+        "text": "Os contadores foram zerados há dois dias e um relatório roda mensalmente",
+        "why": "Certo: a janela é mais curta que o ciclo que o lê."
+      },
+      {
+        "text": "Os relatórios rodam numa réplica de leitura",
+        "why": "Certo: os contadores são por servidor, e o apagamento chegaria à réplica também."
+      },
+      {
+        "text": "Ele sustenta uma constraint de unicidade",
+        "why": "Certo: impor uma regra não deixa rastro em idx_scan."
+      },
+      {
+        "text": "A tabela dele tem mais de um milhão de linhas",
+        "why": "O tamanho da tabela não diz nada sobre alguém ler o índice."
+      },
+      {
+        "text": "O last_idx_scan dele está vazio",
+        "why": "Um last_idx_scan vazio concorda com o zero; não é motivo para manter o índice."
+      }
+    ]
+  },
+  "ex-4n69vza8": {
+    "prompt": "O `sellers_pkey` foi varrido 29.010 vezes durante a mistura, embora nenhum script da carga busque vendedor pelo id. O que fez as varreduras?",
+    "hint": "Todo pedido cita um vendedor.",
+    "choices": [
+      {
+        "text": "O autovacuum, que varre toda chave primária depois de um lote de inserts",
+        "why": "O trabalho do autovacuum não aparece como idx_scan na chave de outra tabela."
+      },
+      {
+        "text": "O join do painel do vendedor",
+        "why": "O painel lê `orders` por `seller_id` e não faz join; ele usou o `orders_seller_placed_idx`."
+      },
+      {
+        "text": "O pg_stat_statements, ao normalizar consultas",
+        "why": "A extensão não lê tabela nenhuma para contar comandos."
+      },
+      {
+        "text": "A checagem de chave estrangeira feita a cada pedido inserido",
+        "why": "Isso: cada pedido prova que o vendedor existe, e essa prova é uma varredura de índice; o customers_pkey mostra os mesmos 29.010."
+      }
+    ]
+  },
+  "ex-2et81c0z": {
+    "prompt": "Pedem que você remova índices num servidor cujo `stats_reset` é de ontem. Um colega zerou os contadores para medir um teste. O que você faz primeiro?",
+    "hint": "Um zero precisa de uma janela.",
+    "choices": [
+      {
+        "text": "Apagar todo índice que a consulta de não usados lista, já que um dia de tráfego é uma boa amostra",
+        "why": "Um dia perde os jobs semanais, mensais e anuais, exatamente o relatório mensal da aula."
+      },
+      {
+        "text": "Esperar até os contadores cobrirem o ciclo mais longo da aplicação, ou perguntar a quem roda os relatórios",
+        "why": "Isso: o contador só é evidência numa janela longa o bastante para todo job ter rodado."
+      },
+      {
+        "text": "Reiniciar o servidor para os contadores serem refeitos a partir do log",
+        "why": "Contadores não são refeitos a partir do log; um reinício limpo os preserva, e nada recupera o que o zeramento apagou."
+      },
+      {
+        "text": "Ler o `last_idx_scan`, que sobrevive a um zeramento",
+        "why": "O `last_idx_scan` é apagado pelo mesmo zeramento; ele só ajuda numa janela que os contadores cobrem."
+      }
+    ]
+  },
+  "ex-6zg1evyw": {
+    "prompt": "Por que o `order_lines_product_id_idx1` termina em `1`?",
+    "hint": "Veja a linha dele no leftovers.sql.",
+    "choices": [
+      {
+        "text": "É a primeira versão do índice, e a próxima migração que o mudar cria um 2",
+        "why": "O PostgreSQL não guarda versões de um índice no nome."
+      },
+      {
+        "text": "Foi criado com uma coluna, e o PostgreSQL acrescenta a contagem de colunas a todo nome",
+        "why": "O sufixo não conta colunas; o original também tem uma coluna."
+      },
+      {
+        "text": "Fica no tablespace 1",
+        "why": "O nome não diz nada sobre onde o arquivo fica."
+      },
+      {
+        "text": "A migração não deu nome, e a escolha do próprio PostgreSQL já estava em uso",
+        "why": "Isso: `CREATE INDEX ON order_lines (product_id)` inventa um nome, e acrescenta 1 porque `order_lines_product_id_idx` existia."
+      }
+    ]
+  },
+  "ex-0m1eme7a": {
+    "prompt": "Dois índices B-tree em `products (title)`: um comum, outro com `text_pattern_ops`. Por que a consulta de duplicatas não os lista juntos?",
+    "hint": "Uma das cinco colunas difere.",
+    "choices": [
+      {
+        "text": "O `indclass` deles difere, então guardam entradas ordenadas para perguntas diferentes",
+        "why": "Isso: a operator class decide o que o índice responde, então não são o mesmo índice."
+      },
+      {
+        "text": "Os nomes são diferentes",
+        "why": "A consulta ignora nomes de propósito; as duplicatas da aula tinham nomes diferentes."
+      },
+      {
+        "text": "Colunas de texto são puladas pela consulta, porque as collations delas não se comparam como texto",
+        "why": "Nada na consulta filtra por tipo; ela compara as cinco colunas do pg_index."
+      },
+      {
+        "text": "Um foi criado de forma concorrente",
+        "why": "Como um índice foi criado não está registrado no que a consulta compara."
+      }
+    ]
+  },
+  "ex-fr2t4tnv": {
+    "prompt": "Uma tabela tem chave primária em `id` e um índice comum em `id` que o planejador lê o dia inteiro, enquanto a chave primária mostra 0 varreduras. Qual você apaga?",
+    "hint": "Qual o servidor deixa apagar sozinho?",
+    "choices": [
+      {
+        "text": "O índice da chave primária, porque ninguém o lê",
+        "why": "O servidor se recusa a apagar um índice que pertence a uma constraint, e a constraint é a regra contra uma segunda linha com o mesmo id."
+      },
+      {
+        "text": "O índice comum; as leituras dele vão para a chave primária",
+        "why": "Isso: o zero era um empate desfeito pelo planejador, e apagar o gêmeo não único de uma chave primária é sempre seguro."
+      },
+      {
+        "text": "Nenhum, já que as contagens provam que os dois são necessários",
+        "why": "Um tem zero leituras e o outro tem todas; as contagens provam que um sobra."
+      },
+      {
+        "text": "Os dois, e criar um índice único novo",
+        "why": "Apagar o índice da chave primária é apagar a chave, e reconstruir custa tempo para nada."
+      }
+    ]
+  },
+  "ex-a7qghthx": {
+    "prompt": "A consulta de duplicatas agrupa o `pg_index` por `indkey`, `indclass`, `indcollation`, `indexprs` e `___`, o WHERE de um índice parcial.",
+    "hint": "A coluna cujo nome começa com ind e termina com a palavra para uma condição.",
+    "blanks": [
+      {
+        "accept": [
+          "indpred"
+        ]
+      }
+    ]
+  },
+  "ex-vzrd235e": {
+    "prompt": "Por que um índice em `(seller_id, placed_at)` responde `WHERE seller_id = 42` sem ajuda?",
+    "hint": "Como o índice é ordenado?",
+    "choices": [
+      {
+        "text": "Porque o planejador reescreve a consulta para acrescentar uma faixa em `placed_at`",
+        "why": "Nenhuma reescrita acontece; a Index Cond do plano é só `seller_id = 42`."
+      },
+      {
+        "text": "Ele é ordenado primeiro por `seller_id`",
+        "why": "Isso: todas as entradas do vendedor 42 ficam juntas, então ler a primeira coluna basta."
+      },
+      {
+        "text": "Porque B-trees podem ser lidos por qualquer coluna",
+        "why": "Um B-tree em (a, b) não é ordenado por b sozinho; só a coluna inicial funciona assim."
+      },
+      {
+        "text": "Porque `placed_at` nunca é nulo",
+        "why": "Nulos não são o motivo; a ordem das colunas é."
+      }
+    ]
+  },
+  "ex-p5at1rnc": {
+    "prompt": "Do par `orders_placed_at_idx` e `orders_placed_at_status_idx`, a aula apaga o maior, contra a regra comum. Por quê?",
+    "hint": "O que o relatório mensal leu?",
+    "choices": [
+      {
+        "text": "Porque índices de duas colunas não podem ser lidos para uma faixa",
+        "why": "Podem; uma faixa na primeira coluna funciona em (placed_at, status) também."
+      },
+      {
+        "text": "Porque `status` muda em todo pedido, então o composto também tira o HOT de todo update",
+        "why": "O `place-order.sql` nunca atualiza `status`; esse foi o motivo do `total_cents`, não deste."
+      },
+      {
+        "text": "Nada leu o composto, nem o relatório para o qual foi criado, e ele é o maior",
+        "why": "Isso: o relatório leu o índice de uma coluna, e o composto tinha 79 MB contra 44."
+      },
+      {
+        "text": "Porque índices criados pelo `market.sql` nunca podem ser apagados, então o menor tem de ficar",
+        "why": "Qualquer índice que não pertença a uma constraint pode ser apagado; a aula apagou o `orders_seller_id_idx`, criado na aula 2."
+      }
+    ]
+  },
+  "ex-rzgw31dw": {
+    "prompt": "`customers` tem um índice único em `(email)` e um comum em `(email, city)`. A consulta de sobreposições lista o par com `shorter_is_unique = t`. O que é seguro?",
+    "hint": "O que cada índice proíbe?",
+    "choices": [
+      {
+        "text": "Apagar o `(email)`, já que o maior o cobre",
+        "why": "O índice maior permite duas linhas com o mesmo email; apagar o único apaga a regra."
+      },
+      {
+        "text": "Apagar os dois e criar um índice único em `(email, city)`",
+        "why": "Único no par permite o mesmo email em duas cidades; é uma regra mais fraca."
+      },
+      {
+        "text": "Nada pode ser decidido sem o tamanho da tabela",
+        "why": "O tamanho importa no caso da busca muito usada, mas a unicidade decide qual precisa ficar."
+      },
+      {
+        "text": "Manter o `(email)`; o maior sai se as leituras dele migrarem",
+        "why": "Isso: o índice único impõe uma regra, então se um sair é o maior, depois de conferir as leituras dele."
+      }
+    ]
+  },
+  "ex-x65m4sms": {
+    "prompt": "Ligue cada sobra ao que a aula decidiu sobre ela.",
+    "hint": "Seções 03 a 05.",
+    "pairs": [
+      {
+        "left": "`orders_seller_id_idx`",
+        "right": "apagado: sobreposto por um índice maior que é lido"
+      },
+      {
+        "left": "`orders_total_cents_idx`",
+        "right": "apagado: sem leitura, e custava o HOT de todo update"
+      },
+      {
+        "left": "`orders_customer_idx`",
+        "right": "apagado: cópia exata de um índice mais antigo"
+      },
+      {
+        "left": "`orders_status_idx`",
+        "right": "mantido: a tela de operações o lê"
+      }
+    ],
+    "right_distractors": [
+      "mantido: sustenta uma constraint"
+    ]
+  },
+  "ex-m5wj70fn": {
+    "prompt": "O que o `DROP INDEX CONCURRENTLY` responde dentro de `BEGIN … COMMIT`?",
+    "hint": "A aula rodou assim uma vez.",
+    "choices": [
+      {
+        "text": "Espera o COMMIT e então apaga o índice",
+        "why": "Ele não espera; recusa na hora."
+      },
+      {
+        "text": "Apaga o índice sem a concorrência",
+        "why": "Ele não recua para um apagamento comum; dá erro."
+      },
+      {
+        "text": "Um erro: não pode rodar dentro de um bloco de transação",
+        "why": "Isso: ele faz mais de um commit por conta própria, então recusa uma transação externa."
+      },
+      {
+        "text": "Um aviso, e o apagamento é desfeito com o resto",
+        "why": "É um erro, e a transação fica falha, por isso a transcrição mostra `market=!#`."
+      }
+    ]
+  },
+  "ex-fz8yfcnm": {
+    "prompt": "Por que guardar a saída do `pg_get_indexdef` antes de apagar, se o PostgreSQL 16 não tem como desativar um índice?",
+    "hint": "Qual é o único caminho de volta depois de um apagamento?",
+    "choices": [
+      {
+        "text": "Porque o servidor precisa dela para apagar o índice de forma concorrente",
+        "why": "O apagamento só precisa do nome; a definição é para você."
+      },
+      {
+        "text": "Porque reconstruir é o único caminho de volta, e deve ser o comando exato, revisado",
+        "why": "Isso: sem chave para desligar um índice, o desfazer é uma criação a partir da definição guardada, no passo reverso da migração."
+      },
+      {
+        "text": "Porque o `DROP INDEX` também apaga a definição do índice dos arquivos de migração que o criaram",
+        "why": "O servidor nunca mexe nos seus arquivos de migração."
+      },
+      {
+        "text": "Porque senão as estatísticas do índice se perdem",
+        "why": "O pg_get_indexdef devolve um comando CREATE INDEX, não estatísticas."
+      }
+    ]
+  },
+  "ex-5v5kpx01": {
+    "prompt": "Depois dos seis apagamentos, quantos bytes de write-ahead log cada pedido escreveu, segundo a última medição da aula?",
+    "hint": "A tabela no fim da seção.",
+    "unit": "bytes"
+  },
+  "ex-by8m0saw": {
+    "prompt": "Ponha os passos de apagar um índice que você acha não usado na ordem que a aula segue.",
+    "hint": "O caminho de volta vem antes do apagamento.",
+    "items": [
+      "Conferir idx_scan numa janela que cubra todo ciclo, em todo servidor",
+      "Guardar a definição com pg_get_indexdef",
+      "Rodar DROP INDEX CONCURRENTLY fora de um bloco de transação",
+      "Medir a carga de novo e comparar"
+    ],
+    "trap": "Guardar a definição depois do apagamento é tarde demais: ela lê o catálogo, e o índice não está mais lá."
+  },
+  "ex-748909vx": {
+    "prompt": "Uma tabela `payments` movimentada tem um índice sem leitura em `status`, e todo pagamento é atualizado de `pending` para `paid`. Um colega quer apagá-lo com `DROP INDEX` comum ao meio-dia. Que duas coisas a aula diz desse plano?",
+    "hint": "Uma sobre o ganho, outra sobre o método.",
+    "choices": [
+      {
+        "text": "O ganho é pequeno porque o índice é pequeno, e o DROP comum serve ao meio-dia",
+        "why": "Um índice numa coluna atualizada custa o HOT de todo update, seja qual for o tamanho, e um drop comum enfileira toda consulta atrás da trava."
+      },
+      {
+        "text": "Apagá-lo devolve o HOT a todo update, e ele deve ser apagado de forma concorrente",
+        "why": "Isso: `status` muda a cada update, então o índice impede o HOT; e um drop comum espera pela tabela movimentada e depois a bloqueia."
+      },
+      {
+        "text": "Ele precisa primeiro ser reconstruído, depois apagado",
+        "why": "Nada na aula reconstrói um índice antes de apagá-lo."
+      },
+      {
+        "text": "Índices sem leitura em colunas de status sempre ficam pelas estatísticas do planejador",
+        "why": "As estatísticas do planejador vêm do ANALYZE da tabela, não de índices em colunas simples."
+      }
+    ]
+  }
+}

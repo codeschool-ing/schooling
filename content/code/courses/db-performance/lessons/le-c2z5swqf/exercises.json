@@ -1,0 +1,670 @@
+[
+  {
+    "id": "ex-bxgdk4hj",
+    "version": 1,
+    "section": "the-wall",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of load is the reason sharding exists, because copies of the database cannot absorb it?",
+    "hint": "Think about what every copy has to receive.",
+    "choices": [
+      {
+        "text": "Writes",
+        "correct": true,
+        "why": "Right: every copy must apply every write, so only splitting the data spreads them."
+      },
+      {
+        "text": "Reads of recent rows",
+        "correct": false,
+        "why": "Reads spread over replicas and caches; that is what lessons 20 and 21 are for."
+      },
+      {
+        "text": "Reports that read old data once a year",
+        "correct": false,
+        "why": "Those are reads, and archiving or a warehouse handles them."
+      },
+      {
+        "text": "Too many open connections from the application",
+        "correct": false,
+        "why": "That is a pooling problem, lesson 16, and one server still copes once it is pooled."
+      }
+    ]
+  },
+  {
+    "id": "ex-54t7a03x",
+    "version": 1,
+    "section": "the-wall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team's primary is at 90% processor, and the top three statements in `pg_stat_statements` are a `SELECT` with a sequential scan, a report and a search. They propose sharding. What does the lesson say comes first?",
+    "hint": "Look at what kind of statements are on top.",
+    "choices": [
+      {
+        "text": "Shard by the column the search filters on, since it is the most frequent",
+        "correct": false,
+        "why": "Sharding answers write volume; these are reads, and the plans are the first suspect."
+      },
+      {
+        "text": "Fix the three queries, then add replicas or a cache for the reads",
+        "correct": true,
+        "why": "Right: the load is reads running bad plans, the cheapest items on the list."
+      },
+      {
+        "text": "Buy the largest machine available and stop measuring",
+        "correct": false,
+        "why": "A bigger machine is on the list, but after the queries, and measuring never stops."
+      },
+      {
+        "text": "Partition the report's table by hash",
+        "correct": false,
+        "why": "Hash partitioning does not help a report that reads everything; the plans come first."
+      }
+    ]
+  },
+  {
+    "id": "ex-249417wk",
+    "version": 1,
+    "section": "the-wall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `market`, 2023 holds 221610 of the 2000000 orders and is read a few times a year. What does moving those rows out of the hot table buy?",
+    "hint": "The lesson calls this archiving.",
+    "choices": [
+      {
+        "text": "Faster writes, because each order is now written to two places",
+        "correct": false,
+        "why": "Archiving moves old rows once; new orders are still written to one table."
+      },
+      {
+        "text": "Nothing measurable, since unread rows cost nothing",
+        "correct": false,
+        "why": "They still cost index memory, vacuum time and restore time."
+      },
+      {
+        "text": "A hot table about a ninth smaller, and the gain grows every year",
+        "correct": true,
+        "why": "Right: 221610 is about 11% of the orders, and each year adds another old year."
+      },
+      {
+        "text": "A second server to send the reports to",
+        "correct": false,
+        "why": "That is a replica; archiving is about where old rows live."
+      }
+    ]
+  },
+  {
+    "id": "ex-ra2xaa63",
+    "version": 1,
+    "section": "the-wall",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company must keep Brazilian customers' data in Brazil and German customers' data in Germany, and its database is small and fast. Is sharding justified?",
+    "hint": "The lesson names a second reason that is not speed.",
+    "choices": [
+      {
+        "text": "No, because sharding is only ever a fix for too much write volume",
+        "correct": false,
+        "why": "The lesson names data residence as a second reason, with the same mechanics."
+      },
+      {
+        "text": "Yes, with the country as a shard key the law chose",
+        "correct": true,
+        "why": "Right: the reason to pay the bill is legal rather than performance."
+      },
+      {
+        "text": "No, a read replica in each country is enough",
+        "correct": false,
+        "why": "A replica holds every row, so German data would sit in Brazil too."
+      },
+      {
+        "text": "Yes, because a small database is always faster when split",
+        "correct": false,
+        "why": "Splitting adds network trips; a small database gains no speed from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdfhbds8",
+    "version": 1,
+    "section": "the-wall",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these steps from what to try first to what to try last, as the lesson ranks them by cost.",
+    "hint": "Rewriting what the application knows is the most expensive.",
+    "items": [
+      "Fix the queries that dominate the tally",
+      "Move to a bigger machine",
+      "Partition the large table on the same server",
+      "Shard the table across servers"
+    ],
+    "trap": "Sharding before the queries are fixed spreads three bad plans over several servers."
+  },
+  {
+    "id": "ex-b1e2txvd",
+    "version": 1,
+    "section": "shard-key",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Split by `seller_id % 4`, what percentage of all orders lands on the shard that holds seller 1?",
+    "hint": "Seller 1's quarter plus a quarter of everybody else.",
+    "value": 43.7,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-dvq7ryf0",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can adding more shards not cure the hot shard when the key is `seller_id`?",
+    "hint": "How many shards can one seller's rows live on?",
+    "choices": [
+      {
+        "text": "Every row of seller 1 goes to the same shard, however many there are",
+        "correct": true,
+        "why": "Right: one value cannot be split by a function of that value, so a quarter stays together."
+      },
+      {
+        "text": "PostgreSQL limits a hash-partitioned table to four partitions, so a fifth is refused",
+        "correct": false,
+        "why": "There is no such limit; the modulus can be any number."
+      },
+      {
+        "text": "More shards means more network trips for every query",
+        "correct": false,
+        "why": "True for fan-out queries, but not why seller 1's shard stays hot."
+      },
+      {
+        "text": "Seller 1's orders are written in time order",
+        "correct": false,
+        "why": "The order rows are written in has nothing to do with which shard they go to."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpq4y6tv",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 2's workload is 50% customer order lists and 4% seller dashboards. Why does that settle the key as `customer_id`, beyond the even split?",
+    "hint": "Which queries stay on one shard under each key?",
+    "choices": [
+      {
+        "text": "Because the seller dashboards stop working entirely once the table is split by customer",
+        "correct": false,
+        "why": "They still work; they fan out to every shard and cost more."
+      },
+      {
+        "text": "Because writes are routed by seller",
+        "correct": false,
+        "why": "A write of one order goes to one shard under either key."
+      },
+      {
+        "text": "Half the traffic then names the key and stays on one shard; only the 4% fans out",
+        "correct": true,
+        "why": "Right: the key should be the column most of the traffic already filters by."
+      },
+      {
+        "text": "Because customer ids are smaller numbers than seller ids, so they hash more evenly",
+        "correct": false,
+        "why": "The size of the numbers is irrelevant; customer ids are in fact larger."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8y456y2",
+    "version": 1,
+    "section": "shard-key",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sharding `order_lines` by the same key as `orders`, so that a join between them runs inside one server, is called ___.",
+    "hint": "A word for living in the same place.",
+    "blanks": [
+      {
+        "accept": [
+          "co-location",
+          "colocation",
+          "co-locating",
+          "colocating"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7xtw9x6e",
+    "version": 1,
+    "section": "shard-key",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way to route a key to a server with what it costs.",
+    "hint": "Each has one weakness the lesson names.",
+    "pairs": [
+      {
+        "left": "hash",
+        "right": "even, and blind to what the values mean"
+      },
+      {
+        "left": "range",
+        "right": "a band grows hot when new keys are all high"
+      },
+      {
+        "left": "directory",
+        "right": "one more lookup on every request"
+      }
+    ],
+    "right_distractors": [
+      "a row can only ever move with the whole table"
+    ]
+  },
+  {
+    "id": "ex-fbcjgst6",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A video platform considers sharding comments by `video_id`. One video in a thousand goes viral and gets most of the day's comments. What does the lesson predict?",
+    "hint": "Compare with seller 1.",
+    "choices": [
+      {
+        "text": "Range routing would avoid it",
+        "correct": false,
+        "why": "No routing function splits one value; the problem is the key."
+      },
+      {
+        "text": "A hot shard: the viral video's comments all land on one server",
+        "correct": true,
+        "why": "Right: it is the seller 1 shape, a single value large enough to fill a server."
+      },
+      {
+        "text": "An even spread, because there are many videos",
+        "correct": false,
+        "why": "Many values do not help when one of them carries most of the writes."
+      },
+      {
+        "text": "Nothing, until there are a hundred shards",
+        "correct": false,
+        "why": "With a hundred shards the viral video still sits on one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-16c9m27s",
+    "version": 1,
+    "section": "across-shards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `EXPLAIN (VERBOSE)` on the coordinator, what does the `Remote SQL` line show?",
+    "hint": "It is about what crosses the connection.",
+    "choices": [
+      {
+        "text": "The statement the shard will run, as the coordinator sends it",
+        "correct": true,
+        "why": "Right: it is how you see whether a WHERE or a GROUP BY travels to the shard."
+      },
+      {
+        "text": "The plan the shard chose",
+        "correct": false,
+        "why": "The shard plans it on its own side; the coordinator only shows what it sends."
+      },
+      {
+        "text": "The SQL the application typed, unchanged",
+        "correct": false,
+        "why": "It is rewritten per shard, often with fewer columns or no aggregate."
+      },
+      {
+        "text": "A log of the rows that came back over the connection while the query ran",
+        "correct": false,
+        "why": "EXPLAIN without ANALYZE runs nothing, so no row has come back."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkn7eemn",
+    "version": 1,
+    "section": "across-shards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SELECT count(*) FROM sharded_orders WHERE seller_id = 42` took 262 ms and the same count for customer 42 took 39 ms. What does the plan show for the seller?",
+    "hint": "Seller is not the key.",
+    "choices": [
+      {
+        "text": "One Foreign Scan, on the shard holding seller 42",
+        "correct": false,
+        "why": "Seller 42's orders are on both shards, because the split is by customer."
+      },
+      {
+        "text": "No WHERE in the remote SQL: every row comes back",
+        "correct": false,
+        "why": "The WHERE does travel; each shard filters, but reads its whole table to do it."
+      },
+      {
+        "text": "A sequential scan of the coordinator's own orders",
+        "correct": false,
+        "why": "The coordinator holds no order rows in sharded_orders."
+      },
+      {
+        "text": "An Append over both shards, each sent the same WHERE",
+        "correct": true,
+        "why": "Right: the query fans out, and each shard scans without an index on seller_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ngt9vcz",
+    "version": 1,
+    "section": "across-shards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `GROUP BY status` over the shards take 2961 ms against 565 ms locally, even with `enable_partitionwise_aggregate`?",
+    "hint": "Each shard holds part of every status.",
+    "choices": [
+      {
+        "text": "Because status is a text column, and the coordinator has no way to count text on a remote server",
+        "correct": false,
+        "why": "Grouping by customer_id was pushed down; the type is not the issue."
+      },
+      {
+        "text": "Two million values crossed the wire, since PostgreSQL 16 sends no partial counts down",
+        "correct": true,
+        "why": "Right: only a grouping by the key, where each shard's count is final, ran on the shards."
+      },
+      {
+        "text": "Because the coordinator had not been analysed, so it guessed the shards were empty and planned badly",
+        "correct": false,
+        "why": "It was analysed after the load; the plan still pulled the rows."
+      },
+      {
+        "text": "Because shard1 holds more orders than shard2",
+        "correct": false,
+        "why": "They hold 995080 and 1004920, close to even, and shard2 holds slightly more."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycbfqfqv",
+    "version": 1,
+    "section": "across-shards",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many orders hold the id 1 after the `INSERT` of order 1 for customer 3 through the coordinator?",
+    "hint": "The INSERT was routed by customer, not by id.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-kx5tadns",
+    "version": 1,
+    "section": "across-shards",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Both COMMITs in the section print the same duplicate-key error. What makes the first one worse than the second?",
+    "hint": "Look at what was left on shard1 afterwards.",
+    "choices": [
+      {
+        "text": "The first left order 2000001 committed on shard1 although the coordinator reported failure",
+        "correct": true,
+        "why": "Right: shard1 committed before shard2 refused, so half the transaction survived."
+      },
+      {
+        "text": "The first rolled back both shards, while the second left the rows it wrote committed on shard2",
+        "correct": false,
+        "why": "It is the reverse: the second left nothing, the first left a row."
+      },
+      {
+        "text": "The first was slower",
+        "correct": false,
+        "why": "Timing is not the problem; a committed half is."
+      },
+      {
+        "text": "The first used two-phase commit and the second did not",
+        "correct": false,
+        "why": "postgres_fdw in PostgreSQL 16 uses two-phase commit for neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6z6hj3g",
+    "version": 1,
+    "section": "across-shards",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did a single `orders` table give you that the two shards in the section did not? Choose all that apply.",
+    "hint": "Three things stopped working.",
+    "choices": [
+      {
+        "text": "A unique index on `id`",
+        "correct": true,
+        "why": "Right: PostgreSQL refuses it on a table with foreign partitions."
+      },
+      {
+        "text": "A transaction that commits everywhere or nowhere",
+        "correct": true,
+        "why": "Right: one shard committed and the other refused."
+      },
+      {
+        "text": "A cheap aggregate grouped by any column",
+        "correct": true,
+        "why": "Right: grouping by status pulled two million values over the wire."
+      },
+      {
+        "text": "Routing an INSERT to the right place",
+        "correct": false,
+        "why": "Routing worked: each order went to the shard its customer hashes to."
+      },
+      {
+        "text": "A query for one customer that reads one shard",
+        "correct": false,
+        "why": "That worked: customer 42 was pruned to one Foreign Scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z7dh6dv",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Going from 2 hash shards to 4, how much of `orders` has to move?",
+    "hint": "The capture counted 999306.",
+    "choices": [
+      {
+        "text": "About a quarter",
+        "correct": false,
+        "why": "999306 of 2000000 is half, not a quarter."
+      },
+      {
+        "text": "None, because the old shards keep their rows",
+        "correct": false,
+        "why": "Each old shard hands half its rows to a new one."
+      },
+      {
+        "text": "About half",
+        "correct": true,
+        "why": "Right: 999306 of 2000000, while the application keeps writing."
+      },
+      {
+        "text": "All of it, because every hash changes",
+        "correct": false,
+        "why": "The hash of a key does not change; only which remainder is taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf4xeq82",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `ALTER TABLE orders ADD COLUMN coupon text` ran on both shards, the coordinator still said `column \"coupon\" does not exist`. Why?",
+    "hint": "Who describes the shards to the coordinator?",
+    "choices": [
+      {
+        "text": "The ALTER on the shards had not committed yet when the coordinator ran its query",
+        "correct": false,
+        "why": "Each psql -c commits on its own; the shards had the column."
+      },
+      {
+        "text": "A foreign table cannot have columns added",
+        "correct": false,
+        "why": "ALTER TABLE on the coordinator added it, and the query worked."
+      },
+      {
+        "text": "The shards cached the old definition for a minute",
+        "correct": false,
+        "why": "The shards were right; the coordinator was out of date."
+      },
+      {
+        "text": "Its foreign tables describe the shards as they were, until it is altered too",
+        "correct": true,
+        "why": "Right: a schema change is one statement per shard plus one on the coordinator."
+      }
+    ]
+  },
+  {
+    "id": "ex-z78wp208",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do teams that shard often create 64 logical shards on 2 machines?",
+    "hint": "Think about the day a third machine arrives.",
+    "choices": [
+      {
+        "text": "A new server then receives whole pieces instead of rehashed rows",
+        "correct": true,
+        "why": "Right: a logical shard moves intact, and no row needs a new hash."
+      },
+      {
+        "text": "PostgreSQL needs one partition per processor",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "Smaller shards remove the hot shard",
+        "correct": false,
+        "why": "A single hot key stays on one shard however small the shards are."
+      },
+      {
+        "text": "It makes cross-shard transactions atomic",
+        "correct": false,
+        "why": "Atomicity needs two-phase commit, not more shards."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdf8dxxd",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two shards are backed up every night at 02:00, one after the other, and each backup takes an hour. A restore of both is attempted. What is the lesson's concern?",
+    "hint": "Two pictures, two moments.",
+    "choices": [
+      {
+        "text": "The second backup will be twice as large",
+        "correct": false,
+        "why": "Size is not the problem; the moment each one shows is."
+      },
+      {
+        "text": "Restoring both will take at least two hours, which is longer than the night's maintenance window",
+        "correct": false,
+        "why": "Duration matters, but the lesson's point is consistency between shards."
+      },
+      {
+        "text": "The shards come back at different moments, with cross-shard transactions cut in half",
+        "correct": true,
+        "why": "Right: a consistent restore needs every shard recovered to the same instant from archived WAL."
+      },
+      {
+        "text": "Backups of a sharded database are impossible",
+        "correct": false,
+        "why": "They are possible; they need coordination across shards."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh1rafsy",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each id scheme for a sharded table with its cost.",
+    "hint": "The table in section 05.",
+    "pairs": [
+      {
+        "left": "a UUID",
+        "right": "larger indexes, inserts all over the index"
+      },
+      {
+        "left": "interleaved sequences",
+        "right": "the number of shards baked into the ids"
+      },
+      {
+        "left": "one central allocator",
+        "right": "a single point every write depends on"
+      }
+    ],
+    "right_distractors": [
+      "ids that two shards may hand out twice"
+    ]
+  },
+  {
+    "id": "ex-bq0pqaze",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs Citus and picked `seller_id` as the distribution column for orders. A quarter of orders are one seller's. What does Citus change about the problem?",
+    "hint": "The lesson lists what Citus carries and what it does not.",
+    "choices": [
+      {
+        "text": "It splits the big seller's orders across several workers automatically",
+        "correct": false,
+        "why": "A distribution column sends one value to one shard; Citus does not split a value."
+      },
+      {
+        "text": "It switches the distribution column to customer_id when it detects skew",
+        "correct": false,
+        "why": "Citus never chooses the key; the team does."
+      },
+      {
+        "text": "It makes transactions atomic across shards, and the hot shard remains",
+        "correct": true,
+        "why": "Right: two-phase commit is on its list; choosing the key is not."
+      },
+      {
+        "text": "It removes the need for a shard key",
+        "correct": false,
+        "why": "Every distributed table has a distribution column."
+      }
+    ]
+  }
+]

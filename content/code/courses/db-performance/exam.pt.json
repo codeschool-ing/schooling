@@ -1,0 +1,1939 @@
+{
+  "ex-y1hv44k5": {
+    "prompt": "Um relatório está lento. Antes de mudar qualquer coisa, o que a primeira aula do curso manda fazer?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Criar um índice em cada coluna do WHERE",
+        "why": "Isso é o conserto de um suspeito aplicado antes de saber qual."
+      },
+      {
+        "text": "Dobrar a memória do servidor",
+        "why": "Uma máquina maior não faz nada por uma consulta que lê demais."
+      },
+      {
+        "text": "Reescrevê-lo como procedure",
+        "why": "Mudar o SQL de lugar não muda qual é o suspeito."
+      },
+      {
+        "text": "Dar nome ao suspeito primeiro",
+        "why": "Isso: os consertos não se transferem, então o suspeito vem primeiro."
+      }
+    ]
+  },
+  "ex-wey2rstd": {
+    "prompt": "A primeira execução de uma consulta depois de um reinício leva 435 ms, as duas seguintes 167 e 208 ms. Que afirmação sobre esses números está certa?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "A primeira foi fria; a diferença entre as outras duas é ruído",
+        "why": "Isso: o reinício e o cache descartado fizeram a primeira ler do disco."
+      },
+      {
+        "text": "O plano mudou entre a primeira e a segunda execução",
+        "why": "Mesma consulta, mesmo plano, mesmas linhas; só mudou onde estavam os bytes."
+      },
+      {
+        "text": "A terceira mostra que a consulta está ficando mais lenta com o tempo",
+        "why": "41 ms entre duas execuções quentes é o ruído que a aula mediu."
+      },
+      {
+        "text": "A média, 270 ms, é o número a citar",
+        "why": "Uma execução fria misturada às quentes é exatamente o que não se tira média."
+      }
+    ]
+  },
+  "ex-jvx91mb5": {
+    "prompt": "Por que `WHERE date(placed_at) = '2025-06-01'` não usa o índice em `placed_at`?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Junho tem pedidos demais",
+        "why": "O dia tinha 2801 pedidos em dois milhões."
+      },
+      {
+        "text": "A lista guarda o horário, não a data dele",
+        "why": "Isso: pergunte nos termos do próprio índice, uma faixa de placed_at."
+      },
+      {
+        "text": "Índices não servem para datas",
+        "why": "A faixa em placed_at o usou em 1,3 ms."
+      },
+      {
+        "text": "A tabela é pequena demais para um índice valer",
+        "why": "Ela tem dois milhões de linhas."
+      }
+    ]
+  },
+  "ex-ecqcnzwa": {
+    "prompt": "O `market` ocupa 1334 MB e o `shared_buffers` é de 128 MB. Quantas vezes maior que o cache do próprio PostgreSQL é o banco, mais ou menos? Arredonde para o inteiro mais próximo.",
+    "hint": "Divida.",
+    "unit": "vezes"
+  },
+  "ex-ypjfedec": {
+    "prompt": "Qual ordenação do `pg_stat_statements` acha os comandos que vale consertar primeiro?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Por total_exec_time, depois ler a média",
+        "why": "Isso: candidatos pelo total, depois a média diz o que cada usuário ganha."
+      },
+      {
+        "text": "Por calls, mais frequente primeiro",
+        "why": "Um comando frequente pode ser quase de graça."
+      },
+      {
+        "text": "Por queryid",
+        "why": "queryid é um identificador, não um custo."
+      },
+      {
+        "text": "Por mean_exec_time, mais lento primeiro",
+        "why": "A média diz quanto um usuário espera, não o que o servidor gasta."
+      }
+    ]
+  },
+  "ex-1cwcwwsf": {
+    "prompt": "Por que o `pg_stat_statements` guarda `WHERE customer_id = $1` em vez do número de cada cliente?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Para esconder dados de clientes do DBA",
+        "why": "Esconder é efeito colateral; o motivo é agrupar."
+      },
+      {
+        "text": "Para que um milhão de chamadas com valores diferentes sejam uma linha",
+        "why": "Isso: um comando, uma linha, uma contagem grande."
+      },
+      {
+        "text": "Porque o servidor nunca vê os valores",
+        "why": "Ele os executa, e o log pode registrá-los."
+      },
+      {
+        "text": "Para economizar o tempo de análise",
+        "why": "É sobre o registro, não sobre análise."
+      }
+    ]
+  },
+  "ex-z3nj6b27": {
+    "prompt": "Um placar mostra um comando de 0,1 ms chamado 30 000 vezes por minuto e outro de 200 ms chamado uma vez por hora. Você pode cortar qualquer um pela metade. Qual devolve mais tempo ao servidor?",
+    "hint": "Aula 2. Multiplique.",
+    "choices": [
+      {
+        "text": "Nenhum, porque os dois estão abaixo de um segundo",
+        "why": "O que importa é o total, não cada execução."
+      },
+      {
+        "text": "O de 200 ms",
+        "why": "Cortá-lo pela metade economiza 100 ms por hora."
+      },
+      {
+        "text": "O de 0,1 ms, de longe",
+        "why": "Isso: 0,05 ms × 30 000 por minuto é 1,5 s a cada minuto."
+      },
+      {
+        "text": "Os dois são mais ou menos iguais",
+        "why": "Um é segundos por minuto, o outro milissegundos por hora."
+      }
+    ]
+  },
+  "ex-tqsqcytx": {
+    "prompt": "Ponha em ordem o ciclo que o curso repete.",
+    "hint": "Aula 2.",
+    "items": [
+      "Zerar o placar",
+      "Rodar a carga e ler o placar pelo total",
+      "Mudar uma coisa",
+      "Zerar o placar de novo",
+      "Rodar a mesma carga pelo mesmo tempo e comparar"
+    ],
+    "trap": "Cada medida precisa do próprio começo limpo, e a mudança fica entre duas medidas idênticas."
+  },
+  "ex-fhaszzfz": {
+    "prompt": "Que pergunta precisa do log em vez do `pg_stat_statements`?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Quantas vezes o painel rodou hoje",
+        "why": "O calls responde isso."
+      },
+      {
+        "text": "O tempo médio do painel",
+        "why": "mean_exec_time é exatamente isso."
+      },
+      {
+        "text": "Qual comando custa mais ao servidor",
+        "why": "Isso é o placar ordenado pelo total."
+      },
+      {
+        "text": "Para qual vendedor foi uma execução lenta do painel",
+        "why": "Isso: o log guarda os valores."
+      }
+    ]
+  },
+  "ex-z1wa2m0r": {
+    "prompt": "A 900 transações por segundo a latência média era de 29 ms; a 1050, de 133 ms, com máximo de 1099. Qual é a leitura certa?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "O servidor está perto do joelho da curva",
+        "why": "Isso: um sexto a mais de trabalho, quatro vezes e meia a latência."
+      },
+      {
+        "text": "O disco falha em taxas mais altas",
+        "why": "Nada aponta para o disco; isso é fila."
+      },
+      {
+        "text": "1050 passa do máximo, então a execução é inválida",
+        "why": "1050 está abaixo de 1099."
+      },
+      {
+        "text": "A latência cresce em proporção à carga",
+        "why": "Ela cresce devagar e depois de repente, não em proporção."
+      }
+    ]
+  },
+  "ex-eh4vjger": {
+    "prompt": "Uma tabela cresce 2 GB por mês e o disco dela tem 50 GB livres. Em quantos meses ele enche, se nada mais mudar?",
+    "hint": "Aula 23.",
+    "unit": "meses"
+  },
+  "ex-bymhk2qs": {
+    "prompt": "Por que um alerta na sequência de uma chave `integer` deve disparar uns um ano antes de ela acabar, enquanto um alerta de disco pode disparar semanas antes?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Sequências crescem mais depressa que discos",
+        "why": "A velocidade de cada uma é medida separadamente."
+      },
+      {
+        "text": "O alerta de disco é sempre ignorado de qualquer jeito",
+        "why": "Nada na aula diz isso."
+      },
+      {
+        "text": "Sequências são mais importantes que discos",
+        "why": "A diferença é o conserto, não a importância."
+      },
+      {
+        "text": "O conserto, passar a chave a bigint, reescreve a tabela e pede planejamento",
+        "why": "Isso: a antecedência do alerta é a duração do conserto mais uma margem."
+      }
+    ]
+  },
+  "ex-nyrhw49z": {
+    "prompt": "Quais destas são paredes que o `capacity.sql` lê de dentro do banco? Marque todas as que se aplicam.",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "A idade do id de transação não congelado mais antigo",
+        "why": "Certo."
+      },
+      {
+        "text": "Cada sequência contra o máximo dela",
+        "why": "Certo."
+      },
+      {
+        "text": "Espaço livre no disco",
+        "why": "O banco não o enxerga; o df enxerga."
+      },
+      {
+        "text": "Conexões contra max_connections",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-20e613qx": {
+    "prompt": "Um índice novo deixou uma consulta 0,018 ms mais rápida por chamada; a latência de escrita antes e depois se sobrepôs inteiramente. O que se pode concluir sobre o custo dele nas escritas?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "Que ele não tem nenhum",
+        "why": "Não demonstrado não é zero."
+      },
+      {
+        "text": "Nada: a medida foi grossa demais",
+        "why": "Isso: o custo tem de ser medido de outro jeito, em espaço e por escrita."
+      },
+      {
+        "text": "Que as escritas ficaram mais rápidas",
+        "why": "Faixas sobrepostas não mostram direção."
+      },
+      {
+        "text": "Que ele dobrou o custo das escritas",
+        "why": "Um dobro apareceria muito fora da faixa."
+      }
+    ]
+  },
+  "ex-5tjyda69": {
+    "prompt": "Uma mudança economiza 2 ms por chamada num comando que roda 50 vezes por segundo. Quantos segundos de servidor ela economiza por hora?",
+    "hint": "Aula 24.",
+    "unit": "s"
+  },
+  "ex-7bgtap85": {
+    "prompt": "Duas execuções antes de uma mudança deram 1134 e 1151 transações por segundo; duas depois deram 1200 e 1116. Qual o veredicto pela regra da aula?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "Uma perda de 3%",
+        "why": "Isso escolhe o par oposto."
+      },
+      {
+        "text": "Exatamente nenhuma mudança",
+        "why": "Sobreposição quer dizer não demonstrado, não igual provado."
+      },
+      {
+        "text": "Não demonstrado: as faixas se sobrepõem",
+        "why": "Isso: mais execuções, ou mais longas, são o jeito de descobrir."
+      },
+      {
+        "text": "Uma melhora de 6%",
+        "why": "Isso escolhe o melhor depois contra o pior antes."
+      }
+    ]
+  },
+  "ex-5krtsa3m": {
+    "prompt": "Antes de apagar um índice, guarde o comando que o reconstrói, que a função chamada `pg_get_` seguido de ___ imprime.",
+    "hint": "Aula 24.",
+    "blanks": [
+      {
+        "accept": [
+          "indexdef"
+        ]
+      }
+    ]
+  },
+  "ex-38wb6tjw": {
+    "prompt": "Que método de junção serve a um punhado de linhas externas com índice na coluna de junção da tabela interna?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Nested loop",
+        "why": "Isso: uma busca no índice por linha externa é barata quando as linhas são poucas."
+      },
+      {
+        "text": "Hash join",
+        "why": "Montar um hash da tabela interna inteira custa mais que poucas buscas."
+      },
+      {
+        "text": "Merge join",
+        "why": "Ordenar os dois lados é desperdício para um punhado de linhas."
+      },
+      {
+        "text": "Cross join",
+        "why": "Isso é todo par, não um método que o planejador escolhe."
+      }
+    ]
+  },
+  "ex-28smsp9f": {
+    "prompt": "Um hash join mostra `Batches: 8` com `work_mem` em 1MB e `Batches: 1` com 32MB. O que quer dizer uma contagem de lotes acima de 1?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Oito índices foram usados",
+        "why": "Um hash join não usa índice para a junção em si."
+      },
+      {
+        "text": "O hash passou do work_mem",
+        "why": "Isso: se é mais lento tem de ser medido, e na aula um lote não foi o mais rápido."
+      },
+      {
+        "text": "A junção rodou em oito workers paralelos",
+        "why": "Workers aparecem à parte; lotes são sobre memória."
+      },
+      {
+        "text": "A junção foi repetida oito vezes",
+        "why": "Isso seriam loops."
+      }
+    ]
+  },
+  "ex-bgexxs40": {
+    "prompt": "O planejador escolheu um hash join de 1392 ms em vez de um merge join que rodou em 171 ms, com estimativas de linhas a 1% do real. Qual era a entrada errada?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O work_mem estava grande demais",
+        "why": "Memória decide lotes, não qual método vence aqui."
+      },
+      {
+        "text": "As estatísticas estavam velhas",
+        "why": "Estatísticas frescas deram estimativas a 1% do real."
+      },
+      {
+        "text": "random_page_cost",
+        "why": "Isso: com 1,1 o planejador escolheu o merge; as estimativas nunca foram o problema."
+      },
+      {
+        "text": "As estimativas de linhas",
+        "why": "Estavam a 1% do real."
+      }
+    ]
+  },
+  "ex-kgcr49at": {
+    "prompt": "Conforme cresce o número de clientes numa junção, ponha em ordem os métodos que a aula viu o planejador escolher.",
+    "hint": "Aula 5.",
+    "items": [
+      "Nested loop, para dez clientes",
+      "Nested loop, para mil",
+      "Hash join, para vinte mil"
+    ],
+    "trap": "Buscas por linha vencem enquanto o lado externo é pequeno; o hash vence quando montá-lo sai mais barato que tantas buscas."
+  },
+  "ex-kfsmkbqt": {
+    "prompt": "Em `cost=0.43..68618.43`, o que é o primeiro número?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "O custo antes de o nó entregar a primeira linha",
+        "why": "Isso: o custo de partida; o segundo é o total."
+      },
+      {
+        "text": "Os milissegundos que o nó vai levar para começar",
+        "why": "Custos são em unidades do próprio planejador, não milissegundos."
+      },
+      {
+        "text": "A fração da tabela que ele lê",
+        "why": "Não é isso que um custo é."
+      },
+      {
+        "text": "O custo do plano alternativo mais barato",
+        "why": "Um plano só mostra os custos do plano escolhido."
+      }
+    ]
+  },
+  "ex-gqhjsgkf": {
+    "prompt": "Um nó interno mostra `actual time=0.012..0.012 rows=1 loops=25000`. Quanto ele custou ao todo?",
+    "hint": "Aula 3. Os tempos são por volta.",
+    "choices": [
+      {
+        "text": "Nada: loops contam tentativas descartadas",
+        "why": "Toda volta fez trabalho de verdade."
+      },
+      {
+        "text": "Cerca de 0,012 ms",
+        "why": "Isso é uma volta; foram 25000."
+      },
+      {
+        "text": "Cerca de 300 ms e 25000 linhas",
+        "why": "Isso: tempos e linhas são médias por volta, então multiplique."
+      },
+      {
+        "text": "Cerca de 25 segundos",
+        "why": "0,012 × 25000 dá 300 ms."
+      }
+    ]
+  },
+  "ex-r5e1rpxb": {
+    "prompt": "Por que embrulhar `EXPLAIN ANALYZE UPDATE …` em `BEGIN` e `ROLLBACK`?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Para deixar os tempos mais precisos",
+        "why": "A transação não muda a medida."
+      },
+      {
+        "text": "Porque planos de UPDATE só aparecem dentro de transação",
+        "why": "Um EXPLAIN UPDATE simples mostra o plano sem rodar."
+      },
+      {
+        "text": "O ANALYZE roda o comando de verdade",
+        "why": "Isso: as linhas são mudadas, e o rollback desfaz."
+      },
+      {
+        "text": "O EXPLAIN se recusa a rodar fora de uma transação",
+        "why": "Ele roda em qualquer lugar."
+      }
+    ]
+  },
+  "ex-s9b7hdnm": {
+    "prompt": "Uma tabela tem `relpages` 1000 e `reltuples` 100000. Com `seq_page_cost` 1 e `cpu_tuple_cost` 0,01, que custo total imprime uma varredura sequencial simples sem condição?",
+    "hint": "Aula 3. Páginas vezes um, mais linhas vezes 0,01.",
+    "unit": "unidades de custo"
+  },
+  "ex-7dm6tyd8": {
+    "prompt": "Você quer saber se um relatório reescrito faz menos trabalho, num servidor compartilhado cujo cache muda o dia todo. O que você compara?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "O Execution Time de uma execução de cada",
+        "why": "Tempos mudam com o cache e os vizinhos."
+      },
+      {
+        "text": "As páginas tocadas, hit mais read, no nó do alto",
+        "why": "Isso: a contagem de páginas não depende de onde foram encontradas."
+      },
+      {
+        "text": "O custo da linha do alto",
+        "why": "Custos de duas consultas diferentes não se comparam assim."
+      },
+      {
+        "text": "O número de nós do plano",
+        "why": "Um plano mais longo pode fazer menos trabalho."
+      }
+    ]
+  },
+  "ex-xckpqbap": {
+    "prompt": "O vendedor 42 não está em `most_common_vals` de `orders.seller_id`. Como a contagem dele é estimada?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Como uma linha, o padrão para valores desconhecidos",
+        "why": "A estimativa foi 1491."
+      },
+      {
+        "text": "A fatia que sobra, dividida por igual",
+        "why": "Isso: 0,7382 da tabela entre 990 valores, 1491 linhas."
+      },
+      {
+        "text": "Pelo histograma de seller_id",
+        "why": "A conta da aula usa a lista e o n_distinct."
+      },
+      {
+        "text": "É lida do índice",
+        "why": "Estimativas vêm do pg_statistic, não da leitura do índice."
+      }
+    ]
+  },
+  "ex-1ccde64b": {
+    "prompt": "Curitiba é 0,0685 dos clientes e PR é 0,0685. Sem estatísticas estendidas, o que o planejador espera para `city = 'Curitiba' AND state = 'PR'`?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Demais: ele soma as frações",
+        "why": "AND multiplica; não soma."
+      },
+      {
+        "text": "Zero, porque as condições se contradizem",
+        "why": "Não se contradizem; concordam."
+      },
+      {
+        "text": "Poucas demais: ele multiplica as frações",
+        "why": "Isso: 938 esperadas, enquanto todo cliente de Curitiba está no PR."
+      },
+      {
+        "text": "Exatamente o número certo",
+        "why": "Independência está errada para duas colunas que dizem uma coisa só."
+      }
+    ]
+  },
+  "ex-j3f24e36": {
+    "prompt": "Com `default_statistics_target` em 100, quantas linhas o ANALYZE amostra de uma tabela?",
+    "hint": "Aula 7.",
+    "unit": "linhas"
+  },
+  "ex-j7f10e3g": {
+    "prompt": "Ligue cada campo do `pg_stats` ao que descreve.",
+    "hint": "Aula 7.",
+    "pairs": [
+      {
+        "left": "`most_common_vals`",
+        "right": "os valores frequentes o bastante para entrar na lista"
+      },
+      {
+        "left": "`histogram_bounds`",
+        "right": "limites de faixas com o mesmo número de linhas"
+      },
+      {
+        "left": "`n_distinct`",
+        "right": "quantos valores diferentes, ou uma fração negativa"
+      },
+      {
+        "left": "`correlation`",
+        "right": "o quanto a ordem física segue a ordem da coluna"
+      }
+    ],
+    "right_distractors": [
+      "com que frequência a coluna é atualizada"
+    ]
+  },
+  "ex-enj4kvwt": {
+    "prompt": "Uma tabela de leituras tem `sensor_id` e `site_id`, e cada sensor pertence a um local. `WHERE site_id = 7 AND sensor_id = 70` é estimado em 3 linhas e devolve 4000. O que conserta a estimativa?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "VACUUM FULL",
+        "why": "Reescrever a tabela não muda a suposição."
+      },
+      {
+        "text": "Um default_statistics_target maior nas duas colunas",
+        "why": "Números melhores por coluna continuam multiplicados como se fossem independentes."
+      },
+      {
+        "text": "Um índice nas duas colunas",
+        "why": "Um índice acelera a leitura mas não muda a estimativa."
+      },
+      {
+        "text": "Estatísticas estendidas no par, depois ANALYZE",
+        "why": "Isso: dependências dizem ao planejador que o sensor fixa o local."
+      }
+    ]
+  },
+  "ex-vv7kfbnm": {
+    "prompt": "Um mês de pedidos (4,5% da tabela) ganha uma varredura por índice e cem clientes (0,05%) ganham uma varredura por bitmap. O que explica?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "customer_id não tem índice",
+        "why": "A varredura por bitmap usou o orders_customer_id_idx."
+      },
+      {
+        "text": "O mês estava em cache e os clientes não",
+        "why": "Planos são escolhidos pelas estatísticas, não pelo que está em cache."
+      },
+      {
+        "text": "Correlação: as linhas do mês dividem páginas",
+        "why": "Isso: placed_at segue a ordem física; customer_id não."
+      },
+      {
+        "text": "O planejador sempre prefere bitmap para resultados pequenos",
+        "why": "O mês é o resultado maior e ganhou a varredura por índice."
+      }
+    ]
+  },
+  "ex-xg8p5egq": {
+    "prompt": "Uma varredura por bitmap mostra `Heap Blocks: exact=635 lossy=16032` e um `Rows Removed by Index Recheck` grande. O que aconteceu?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O índice está corrompido",
+        "why": "Páginas lossy são um limite de memória, não dano."
+      },
+      {
+        "text": "A tabela precisa de ANALYZE",
+        "why": "Estatísticas não decidem o quanto o bitmap pode crescer."
+      },
+      {
+        "text": "Outra sessão segurava trava nessas páginas",
+        "why": "Leituras não esperam travas de página assim."
+      },
+      {
+        "text": "O bitmap passou do `work_mem`",
+        "why": "Isso: toda linha de uma página lossy tem de ser checada de novo."
+      }
+    ]
+  },
+  "ex-z7qbkrrd": {
+    "prompt": "Um colega põe `SET enable_seqscan = off` na configuração de conexão da aplicação porque um relatório ficou mais rápido. Qual é o veredicto do curso?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Tudo bem, desde que o relatório seja a consulta mais importante",
+        "why": "Muda toda consulta dessas conexões."
+      },
+      {
+        "text": "Errado: toda consulta perde as varreduras sequenciais certas, e o erro de estimativa real continua",
+        "why": "Isso: a configuração serve para comparar planos, nunca como conserto."
+      },
+      {
+        "text": "Errado só porque precisa de reinício",
+        "why": "É uma configuração de sessão; o problema não é esse."
+      },
+      {
+        "text": "Tudo bem, porque o planejador a ignora quando uma varredura é mais barata",
+        "why": "Ela acrescenta uma penalidade grande a toda varredura sequencial."
+      }
+    ]
+  },
+  "ex-1h40rhsj": {
+    "prompt": "`CREATE INDEX ON orders (placed_at) WHERE status = 'pending'`. Que consulta pode usá-lo?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "`count(*)` de todos os pedidos",
+        "why": "O índice guarda só os pendentes."
+      },
+      {
+        "text": "`count(*) WHERE status = 'pending'`",
+        "why": "Isso: a condição da consulta implica a do índice."
+      },
+      {
+        "text": "`count(*) WHERE status <> 'pending'`",
+        "why": "São justamente as linhas que o índice deixa de fora."
+      },
+      {
+        "text": "`count(*) WHERE status = $1`, plano genérico, executado com 'pending'",
+        "why": "Um plano genérico tem de cobrir todo status."
+      }
+    ]
+  },
+  "ex-w1ygknat": {
+    "prompt": "Por que o PostgreSQL recusa `CREATE INDEX ON orders (date(placed_at))`?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "placed_at já tem índice",
+        "why": "Uma coluna pode ter vários índices."
+      },
+      {
+        "text": "Datas não podem ser indexadas",
+        "why": "A expressão com AT TIME ZONE foi indexada."
+      },
+      {
+        "text": "Depende da configuração TimeZone",
+        "why": "Isso: não é IMMUTABLE, então um índice poderia guardar respostas que mudam."
+      },
+      {
+        "text": "Funções não podem aparecer num índice",
+        "why": "lower(email) foi indexado na mesma aula."
+      }
+    ]
+  },
+  "ex-44aha9nt": {
+    "prompt": "O índice completo em `status` tinha 13 MB e o parcial dos pedidos pendentes, 176 kB. Quantas vezes menor é o parcial, mais ou menos? (1 MB = 1024 kB, arredonde para a dezena mais próxima)",
+    "hint": "Aula 9.",
+    "unit": "vezes"
+  },
+  "ex-qeykenyw": {
+    "prompt": "Um plano diz `Index Only Scan` com `Heap Fetches: 87062` de umas cem mil linhas. Como ler?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Como, na maior parte, uma varredura por índice comum",
+        "why": "Isso: a maioria das linhas ainda foi à tabela, porque as páginas não estavam todas visíveis."
+      },
+      {
+        "text": "Como um plano rápido, porque o nome do nó diz isso",
+        "why": "O nome é a intenção do plano; Heap Fetches é o que aconteceu."
+      },
+      {
+        "text": "Como um mapa de visibilidade corrompido",
+        "why": "Mudanças recentes limpam bits; nada está corrompido."
+      },
+      {
+        "text": "Como sinal de que falta uma coluna no índice",
+        "why": "Uma coluna faltando impediria o index-only scan de vez."
+      }
+    ]
+  },
+  "ex-2ed0bw7j": {
+    "prompt": "O que liga o bit de uma página no mapa de visibilidade, e o que o desliga?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "CREATE INDEX liga; DROP INDEX desliga",
+        "why": "O mapa pertence à tabela, não a um índice."
+      },
+      {
+        "text": "O VACUUM liga; uma mudança de linha desliga",
+        "why": "Isso."
+      },
+      {
+        "text": "O ANALYZE liga; uma leitura desliga",
+        "why": "O ANALYZE amostra; leituras não mudam nada."
+      },
+      {
+        "text": "Um checkpoint liga; um reinício desliga",
+        "why": "Nenhum dos dois é o que mexe nesses bits."
+      }
+    ]
+  },
+  "ex-gwz4y6rw": {
+    "prompt": "Colunas que uma consulta só devolve, e nunca busca nem ordena, vão depois da chave numa cláusula ___.",
+    "hint": "Aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "INCLUDE"
+        ]
+      }
+    ]
+  },
+  "ex-sacy90pj": {
+    "prompt": "Um `ALTER TABLE` espera atrás de um `SELECT` longo, e todo `SELECT` novo na tabela espera atrás do `ALTER`. Qual a defesa que a aula aponta?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Aumentar o max_connections",
+        "why": "Mais conexões entram na mesma fila."
+      },
+      {
+        "text": "Rodar o ALTER com NOWAIT em todo SELECT",
+        "why": "NOWAIT é para travas de linha no SELECT FOR UPDATE."
+      },
+      {
+        "text": "Rodar VACUUM antes",
+        "why": "O VACUUM não solta a trava de ninguém."
+      },
+      {
+        "text": "`lock_timeout` de alguns segundos, e tentar de novo",
+        "why": "Isso: uma espera curta que desiste impede a fila de se formar."
+      }
+    ]
+  },
+  "ex-1f0tf6ev": {
+    "prompt": "Um relatório financeiro usa `FOR UPDATE SKIP LOCKED` \"para nunca esperar\". O que está errado?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Linhas travadas são puladas em silêncio",
+        "why": "Isso: SKIP LOCKED é para uma fila de tarefas, onde qualquer linha livre serve."
+      },
+      {
+        "text": "SKIP LOCKED só funciona em chaves primárias",
+        "why": "Funciona em quaisquer linhas que a consulta trava."
+      },
+      {
+        "text": "Relatórios não podem pegar travas de linha",
+        "why": "Qualquer consulta pode."
+      },
+      {
+        "text": "Faz o relatório esperar mais",
+        "why": "Faz esperar menos, ao preço de faltar linhas."
+      }
+    ]
+  },
+  "ex-7xdc6sjy": {
+    "prompt": "Ponha em ordem os passos de um deadlock entre duas janelas.",
+    "hint": "Aula 12.",
+    "items": [
+      "A janela A atualiza o pedido 1",
+      "A janela B atualiza o pedido 2",
+      "A janela A pede o pedido 2 e espera",
+      "A janela B pede o pedido 1 e espera",
+      "Depois do deadlock_timeout, uma delas é cancelada"
+    ],
+    "trap": "Cada uma precisa segurar uma linha antes de pedir a da outra; a detecção só roda depois do timeout."
+  },
+  "ex-cbx66tcz": {
+    "prompt": "Um cliente cancela um pedido, a página recarrega de uma réplica 10 segundos atrasada, e o pedido aparece como ainda aberto. Que propriedade foi quebrada?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Isolamento entre duas transações",
+        "why": "O problema é uma cópia atrasada, não duas transações colidindo."
+      },
+      {
+        "text": "Os índices da réplica",
+        "why": "A réplica tem os mesmos índices; estava atrasada."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "Isso: o conserto espera a réplica passar do LSN da escrita, ou lê do primário."
+      },
+      {
+        "text": "Durabilidade",
+        "why": "O cancelamento foi confirmado no primário."
+      }
+    ]
+  },
+  "ex-z4hwqrbp": {
+    "prompt": "Uma equipe liga o `hot_standby_feedback` para uma exportação de seis horas na réplica parar de falhar. Uma semana depois, as tabelas mais movimentadas do primário cresceram. Por quê?",
+    "hint": "Aulas 15 e 20.",
+    "choices": [
+      {
+        "text": "A réplica manda as próprias escritas de volta ao primário",
+        "why": "Uma standby não escreve nada."
+      },
+      {
+        "text": "O feedback dobra o WAL que o primário grava",
+        "why": "Ele manda um horizonte, não dados."
+      },
+      {
+        "text": "A exportação copia as tabelas para o primário",
+        "why": "Nada é copiado de volta."
+      },
+      {
+        "text": "Ele segura o VACUUM no primário",
+        "why": "Isso: a foto da réplica agora segura o horizonte do primário."
+      }
+    ]
+  },
+  "ex-wq45ejrb": {
+    "prompt": "Sem feedback, uma consulta longa na réplica foi cancelada com `canceling statement due to conflict with ___`.",
+    "hint": "Aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "recovery"
+        ]
+      }
+    ]
+  },
+  "ex-6vjgxwd1": {
+    "prompt": "Num plano lido de baixo para cima, onde começa o erro de estimativa que importa?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Em qualquer junção",
+        "why": "Uma junção costuma herdar os erros das entradas."
+      },
+      {
+        "text": "No nó mais baixo em que linhas estimadas e reais se separam",
+        "why": "Isso: os nós acima só herdam o erro."
+      },
+      {
+        "text": "No nó do alto, que tem os maiores números",
+        "why": "O alto só mostra a soma do que deu errado embaixo."
+      },
+      {
+        "text": "No nó mais lento",
+        "why": "A lentidão pode ser consequência de uma estimativa feita mais embaixo."
+      }
+    ]
+  },
+  "ex-2vkk6ms7": {
+    "prompt": "Depois de importar 300 000 pedidos com o autovacuum desligado, com quantas linhas mudadas o autoanalyze teria rodado em `orders` (2 000 000 linhas, limite 50, fator 0,1)?",
+    "hint": "Aula 6. Limite mais fator vezes linhas.",
+    "unit": "linhas"
+  },
+  "ex-nq85jf45": {
+    "prompt": "Depois de uma importação em massa de pedidos pendentes, `status = 'pending'` foi estimado em 7590 e devolveu 307 319, e o plano virou um nested loop longo. O que consertou, e o que evita da próxima vez?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Um índice em status, para o scan ficar barato",
+        "why": "Um índice não muda a estimativa em que o plano se baseou."
+      },
+      {
+        "text": "VACUUM FULL, para a tabela ficar compacta de novo",
+        "why": "Reescrever a tabela não atualiza as estatísticas."
+      },
+      {
+        "text": "Mais work_mem, para o plano caber na memória",
+        "why": "Memória muda um derramamento em disco, não a estimativa."
+      },
+      {
+        "text": "ANALYZE, agora e depois de cada carga",
+        "why": "Isso: a fração antiga de pendentes era a parte velha."
+      }
+    ]
+  },
+  "ex-pz926097": {
+    "prompt": "Que tipo de índice responde `tags @> ARRAY['kitchen']` em `products`?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "GIN",
+        "why": "Isso: para cada etiqueta, as linhas que a contêm."
+      },
+      {
+        "text": "Um B-tree em tags",
+        "why": "Um B-tree ordena arrays inteiros; não olha dentro de um."
+      },
+      {
+        "text": "Hash",
+        "why": "Hash só responde = sobre o valor inteiro."
+      },
+      {
+        "text": "BRIN",
+        "why": "BRIN guarda um mínimo e um máximo por faixa de páginas."
+      }
+    ]
+  },
+  "ex-7aezhdba": {
+    "prompt": "Um índice BRIN em `events.at` funcionou e um em `events.customer_id` levou 445 ms para um cliente. Que estatística dizia a diferença de antemão?",
+    "hint": "Aulas 7 e 8.",
+    "choices": [
+      {
+        "text": "most_common_freqs",
+        "why": "Frequências dizem quantas vezes, não onde."
+      },
+      {
+        "text": "n_distinct",
+        "why": "Quantos valores há não diz como estão dispostos."
+      },
+      {
+        "text": "correlation",
+        "why": "Isso: perto de 1 para at, perto de zero para customer_id."
+      },
+      {
+        "text": "null_frac",
+        "why": "Nulos não são o que a deixou lenta."
+      }
+    ]
+  },
+  "ex-9a1pzx3f": {
+    "prompt": "Um `LIKE 'user42@%'` numa coluna com B-tree único faz uma varredura sequencial. Qual a causa?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Índices únicos servem só a restrições, nunca a leituras",
+        "why": "O planejador lê índices únicos como qualquer outro."
+      },
+      {
+        "text": "A tabela precisa de VACUUM antes de confiar no índice",
+        "why": "O vacuum não decide se um índice responde a LIKE."
+      },
+      {
+        "text": "A collation; ele precisa de `text_pattern_ops`",
+        "why": "Isso: sob outra collation a ordem do índice não é ordem de caracteres."
+      },
+      {
+        "text": "LIKE nunca usa índice, seja qual for o padrão",
+        "why": "Com text_pattern_ops o mesmo LIKE usou um."
+      }
+    ]
+  },
+  "ex-48z6cmfs": {
+    "prompt": "Por que um índice que nenhuma consulta lê ainda custa algo numa tabela que recebe escritas?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O planejador perde tempo considerando-o em toda leitura",
+        "why": "O custo de planejamento existe, mas a aula mediu as escritas."
+      },
+      {
+        "text": "É reconstruído toda noite",
+        "why": "Nada reconstrói índices sozinho num horário."
+      },
+      {
+        "text": "Trava a tabela enquanto não é usado",
+        "why": "Um índice sem uso não pega travas."
+      },
+      {
+        "text": "Toda escrita o atualiza também",
+        "why": "Isso: na aula o log por pedido quase dobrou com os índices esquecidos."
+      }
+    ]
+  },
+  "ex-qjx547ex": {
+    "prompt": "Um índice mostra `idx_scan = 0` no primário. Quais destas coisas ainda podem significar que ele é necessário? Marque todas as que se aplicam.",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Os contadores foram zerados há dois dias e um relatório roda todo mês",
+        "why": "Certo."
+      },
+      {
+        "text": "Os relatórios rodam numa réplica de leitura",
+        "why": "Certo: cada servidor conta as próprias varreduras."
+      },
+      {
+        "text": "Ele sustenta uma restrição de unicidade",
+        "why": "Certo: é usado em todo insert, sem varredura."
+      },
+      {
+        "text": "A tabela dele é grande",
+        "why": "Tamanho não diz se ele é lido."
+      }
+    ]
+  },
+  "ex-aqa7rm53": {
+    "prompt": "Uma tabela `payments` movimentada tem um índice não lido em `status`, e o status de todo pagamento muda. O que apagá-lo devolve além de espaço?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Uma chave primária menor",
+        "why": "A chave primária é outro índice."
+      },
+      {
+        "text": "Updates HOT, que pulam a escrita em todos os índices",
+        "why": "Isso: uma coluna indexada mudando impede o HOT."
+      },
+      {
+        "text": "Leituras mais rápidas de pagamentos por id",
+        "why": "A busca por id usa a chave primária de qualquer jeito."
+      },
+      {
+        "text": "Nada: um índice não lido custa só espaço",
+        "why": "Custa todo update que muda o status."
+      }
+    ]
+  },
+  "ex-8mh7npnn": {
+    "prompt": "Uma sessão abriu `REPEATABLE READ`, leu uma tabela e ficou ociosa por uma hora enquanto outra a atualizava sem parar. O que o VACUUM fez nesse meio-tempo?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Removeu-as, porque a sessão ociosa não tinha escrito",
+        "why": "A foto de um leitor também segura o horizonte."
+      },
+      {
+        "text": "Esperou por uma trava na tabela",
+        "why": "O VACUUM não espera travas de leitores."
+      },
+      {
+        "text": "Deixou as versões mortas no lugar",
+        "why": "Isso: o horizonte segurou, e a tabela cresceu."
+      },
+      {
+        "text": "Cancelou a sessão ociosa",
+        "why": "O VACUUM nunca cancela sessões."
+      }
+    ]
+  },
+  "ex-fkkx0z7a": {
+    "prompt": "O que acontece quando o `idle_in_transaction_session_timeout` dispara?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "A transação é confirmada",
+        "why": "Nada é confirmado em nome dela."
+      },
+      {
+        "text": "Um aviso é escrito e a sessão segue",
+        "why": "Ele encerra a sessão."
+      },
+      {
+        "text": "Só o comando atual é cancelado",
+        "why": "Isso é o statement_timeout, e uma sessão ociosa não roda nenhum."
+      },
+      {
+        "text": "A sessão termina com FATAL",
+        "why": "Isso: a sessão inteira, não só a transação."
+      }
+    ]
+  },
+  "ex-d4w4a2sp": {
+    "prompt": "Apagar outubro da tabela `events` comum gravou uns 251 MB de WAL; destacar e apagar a partição de outubro gravou 55 kB. Quantas vezes mais o DELETE gravou, mais ou menos? Arredonde para o milhar mais próximo.",
+    "hint": "Aula 17. 1 MB = 1024 kB.",
+    "unit": "vezes"
+  },
+  "ex-ksy2vz8f": {
+    "prompt": "Por que a chave primária de uma tabela particionada por `at` tem de incluir `at`?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Porque senão partições não podem ter índices",
+        "why": "Partições podem ter qualquer índice; a questão é a unicidade."
+      },
+      {
+        "text": "Cada partição confere só as próprias linhas",
+        "why": "Isso: sem a coluna da chave, dois meses poderiam ter o mesmo id."
+      },
+      {
+        "text": "Porque timestamps são mais rápidos de indexar",
+        "why": "Velocidade não é o motivo; correção é."
+      },
+      {
+        "text": "É convenção, não regra",
+        "why": "O CREATE TABLE da aula falhou sem ele."
+      }
+    ]
+  },
+  "ex-g5jvzva8": {
+    "prompt": "Um `DELETE` noturno de linhas com mais de 90 dias numa tabela de log de 400 GB leva uma hora e faz as réplicas ficarem para trás. O que o curso sugere?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Criar um índice na coluna de data",
+        "why": "O DELETE continua gravando cada linha que remove."
+      },
+      {
+        "text": "VACUUM FULL depois de cada DELETE",
+        "why": "Isso acrescenta uma reescrita completa e uma trava."
+      },
+      {
+        "text": "Rodar o DELETE em lotes menores durante o dia",
+        "why": "Isso espalha o mesmo trabalho e o mesmo log pelo dia."
+      },
+      {
+        "text": "Particionar por dia e apagar os dias velhos",
+        "why": "Isso: apagar uma partição grava quase nada."
+      }
+    ]
+  },
+  "ex-rfz8z8q5": {
+    "prompt": "Que tipo de carga é o motivo de o sharding existir, porque réplicas não a absorvem?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Leituras",
+        "why": "Réplicas e caches espalham leituras."
+      },
+      {
+        "text": "Relatórios",
+        "why": "Relatórios são leituras, atendidas por uma réplica."
+      },
+      {
+        "text": "Backups",
+        "why": "Backups não são por que alguém faz sharding."
+      },
+      {
+        "text": "Escritas",
+        "why": "Isso: toda cópia tem de aplicar toda escrita."
+      }
+    ]
+  },
+  "ex-bawkbnaf": {
+    "prompt": "Dividido por `seller_id % 4`, que percentual de todos os pedidos caiu no shard do vendedor 1? Use uma casa decimal.",
+    "hint": "Aula 19.",
+    "unit": "%"
+  },
+  "ex-qkn2nn6j": {
+    "prompt": "Dois shards são copiados um depois do outro toda noite, com uma hora de diferença. O que uma restauração dos dois perde que a de um banco só não perderia?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "As sequências dos dois shards",
+        "why": "As sequências voltam com cada shard."
+      },
+      {
+        "text": "Nada, se os dois backups deram certo",
+        "why": "Eles voltam em dois momentos diferentes."
+      },
+      {
+        "text": "Um momento único: transações entre shards voltam partidas ao meio",
+        "why": "Isso: um shard tem o que o outro não viu."
+      },
+      {
+        "text": "Os índices, que não entram no backup",
+        "why": "Índices voltam com os dados."
+      }
+    ]
+  },
+  "ex-xgcmxfb9": {
+    "prompt": "Durante um incidente de travas, um painel de consultas `active` acima de cinco segundos não mostra nada. Por quê?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "As esperas duram menos de cinco segundos",
+        "why": "Os que esperam apareceriam se o filtro os incluísse; a raiz não."
+      },
+      {
+        "text": "Travas só aparecem no log",
+        "why": "O pg_locks as mostra ao vivo."
+      },
+      {
+        "text": "A raiz está idle in transaction, e o filtro a esconde",
+        "why": "Isso: a sessão que segura todo mundo não está rodando nada."
+      },
+      {
+        "text": "O pg_stat_activity fica vazio durante esperas de trava",
+        "why": "Os que esperam aparecem, com wait_event_type Lock."
+      }
+    ]
+  },
+  "ex-p4h6marg": {
+    "prompt": "Por que cancelar a sessão em espera de que um usuário reclama não acaba com uma cadeia de bloqueio?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Cancelar nunca funciona numa sessão em espera",
+        "why": "Cancela a espera; não remove a causa."
+      },
+      {
+        "text": "A sessão cancelada reinicia o comando sozinha",
+        "why": "Nada a reinicia; a aplicação pode."
+      },
+      {
+        "text": "Cancelar promove a trava para a tabela inteira",
+        "why": "Travas não são promovidas no PostgreSQL."
+      },
+      {
+        "text": "A raiz ainda segura a trava",
+        "why": "Isso: aja na raiz, que bloqueia alguém e não espera ninguém."
+      }
+    ]
+  },
+  "ex-04011jwf": {
+    "prompt": "O que o `pg_cancel_backend` faz com uma sessão idle in transaction?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Nada visível: ela não tem comando rodando para cancelar",
+        "why": "Isso: o pg_terminate_backend encerra a sessão e desfaz a transação."
+      },
+      {
+        "text": "Confirma a transação",
+        "why": "Nada é confirmado em nome de uma sessão."
+      },
+      {
+        "text": "Encerra a sessão",
+        "why": "Isso é o pg_terminate_backend."
+      },
+      {
+        "text": "Solta as travas mas mantém a transação",
+        "why": "Travas duram até a transação acabar."
+      }
+    ]
+  },
+  "ex-8tvz9j3j": {
+    "prompt": "No `pg_locks`, a coluna que separa uma trava concedida de uma que alguém espera é `___`.",
+    "hint": "Aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "granted"
+        ]
+      }
+    ]
+  },
+  "ex-camsegqz": {
+    "prompt": "Duas sessões em READ COMMITTED leem um preço de 9290, somam 100 na aplicação e gravam de volta. O preço termina em 9390. O que conserta sem mudar o nível de isolamento?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Confirmar cada transação mais depressa, antes de a outra ler",
+        "why": "A janela encolhe; a atualização perdida continua possível."
+      },
+      {
+        "text": "Rodar VACUUM entre as duas",
+        "why": "O VACUUM não tem a ver com atualizações perdidas."
+      },
+      {
+        "text": "Somar 100 no SQL, ou ler com FOR UPDATE",
+        "why": "Isso: a conta acontece na linha atual, ou o segundo leitor espera."
+      },
+      {
+        "text": "Um índice na coluna de preço, para a escrita ficar mais rápida",
+        "why": "Índices não ordenam escritas concorrentes."
+      }
+    ]
+  },
+  "ex-w17cvky9": {
+    "prompt": "Em REPEATABLE READ, o UPDATE de uma sessão falha com `could not serialize access due to concurrent update`. O que a aplicação precisa fazer?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Tentar de novo só o UPDATE que falhou",
+        "why": "A foto continua velha; a transação inteira tem de recomeçar."
+      },
+      {
+        "text": "Ignorar; a linha foi atualizada de qualquer jeito",
+        "why": "Não foi; a transação foi abortada."
+      },
+      {
+        "text": "Passar o servidor inteiro para SERIALIZABLE",
+        "why": "Isso gera mais desses erros, não menos."
+      },
+      {
+        "text": "Desfazer e rodar a transação inteira de novo",
+        "why": "Isso: a nova tentativa fica em volta da unidade de trabalho, não de um comando."
+      }
+    ]
+  },
+  "ex-h5xc6kzk": {
+    "prompt": "Duas sessões verificam que um cliente não tem pedido pendente e depois inserem um. REPEATABLE READ deixou as duas passarem; SERIALIZABLE parou a segunda com 40001. Como se chama essa anomalia?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Write skew",
+        "why": "Isso: cada leitura era verdadeira quando feita, e as escritas juntas quebram a regra."
+      },
+      {
+        "text": "Uma leitura suja",
+        "why": "O PostgreSQL nunca mostra dado não confirmado."
+      },
+      {
+        "text": "Um deadlock",
+        "why": "Ninguém esperou por ninguém."
+      },
+      {
+        "text": "Uma atualização perdida",
+        "why": "Nenhuma linha foi escrita duas vezes; duas linhas novas foram inseridas."
+      }
+    ]
+  },
+  "ex-2wm1gtjg": {
+    "prompt": "Em READ COMMITTED, a execução de pgbench de ler-modificar-gravar confirmou 55 802 incrementos mas acrescentou só 37 821. Quantos se perderam?",
+    "hint": "Aula 14.",
+    "unit": "incrementos"
+  },
+  "ex-2nm6gd3k": {
+    "prompt": "A vazão subiu de 489 para umas 1400 transações por segundo até 16 clientes e depois ficou plana até 90, enquanto a latência subiu para 61 ms. O que aumentar o `max_connections` para 500 compra?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Latência menor para todo cliente",
+        "why": "A latência subiu com os clientes."
+      },
+      {
+        "text": "Nada, porque a configuração é ignorada",
+        "why": "Vale depois de um reinício; só não ajuda."
+      },
+      {
+        "text": "Mais espera, não mais vazão",
+        "why": "Isso: depois da parte plana, cada cliente novo só entra na fila."
+      },
+      {
+        "text": "Umas cinco vezes a vazão",
+        "why": "A curva já estava plana em 16 clientes."
+      }
+    ]
+  },
+  "ex-69244xvh": {
+    "prompt": "Pelo PgBouncer em modo de transação, 200 clientes rodaram enquanto o servidor via 9 conexões. O que um cliente perde nesse modo?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Transações: cada comando confirma sozinho",
+        "why": "Uma transação fica numa conexão do servidor até o fim."
+      },
+      {
+        "text": "Autenticação",
+        "why": "Clientes continuam se autenticando."
+      },
+      {
+        "text": "Nada; o modo de transação é idêntico a uma conexão direta",
+        "why": "Tudo o que dura mais que uma transação pode quebrar."
+      },
+      {
+        "text": "Estado de sessão, como um SET",
+        "why": "Isso: a aula mostrou acontecer."
+      }
+    ]
+  },
+  "ex-snvq4fxh": {
+    "prompt": "Pools de 2, 4, 8, 16 e 32 conexões de servidor foram medidos na máquina de quatro processadores do laboratório, e acima de 8 as diferenças ficaram dentro do ruído. O que deve definir o tamanho de um pool?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Uma medida no servidor que ele atende",
+        "why": "Isso: uma regra de bolso começa a busca; a curva termina."
+      },
+      {
+        "text": "O número de clientes da aplicação",
+        "why": "É disso que o pool existe para desacoplar."
+      },
+      {
+        "text": "max_connections menos três",
+        "why": "Isso é um teto, não um bom tamanho."
+      },
+      {
+        "text": "Sempre 100",
+        "why": "O laboratório não mediu ganho acima de 8."
+      }
+    ]
+  },
+  "ex-v7s4dx9c": {
+    "prompt": "Numa tabela particionada por `at`, que condição deixa o planejador podar partições?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "`customer_id = 42`",
+        "why": "Não é a chave de particionamento."
+      },
+      {
+        "text": "Uma faixa no próprio at",
+        "why": "Isso: a chave, comparada diretamente, nomeia as partições."
+      },
+      {
+        "text": "`date(at) = '2025-11-15'`",
+        "why": "Uma função sobre a chave lê todas as partições."
+      },
+      {
+        "text": "`extract(month FROM at) = 11`",
+        "why": "Também uma função sobre a chave."
+      }
+    ]
+  },
+  "ex-yn0jna32": {
+    "prompt": "Um comando preparado com plano genérico mostra `Subplans Removed: 3`. Quando essas partições foram removidas?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Quando as partições foram criadas",
+        "why": "A poda é por consulta."
+      },
+      {
+        "text": "Pelo VACUUM, de madrugada",
+        "why": "O VACUUM não tem a ver com poda."
+      },
+      {
+        "text": "Na execução, quando o valor do parâmetro ficou conhecido",
+        "why": "Isso: poda em tempo de execução."
+      },
+      {
+        "text": "No planejamento, pelo literal do SQL",
+        "why": "Um plano genérico não tem literal, só $1."
+      }
+    ]
+  },
+  "ex-wv8763sb": {
+    "prompt": "Com 365 partições diárias, o planejamento cresceu de cerca de 1 ms para cerca de 30 ms, e até uma consulta podada planejou mais devagar. Qual a lição para escolher o tamanho de uma partição?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Mais partições são sempre mais rápidas",
+        "why": "A medida diz o contrário no planejamento."
+      },
+      {
+        "text": "Partições diárias são exigidas para podar",
+        "why": "Partições mensais foram podadas na aula."
+      },
+      {
+        "text": "Tempo de planejamento não importa num servidor",
+        "why": "30 ms por consulta é mais do que a maior parte das consultas da carga leva para rodar."
+      },
+      {
+        "text": "Não mais finas que a remoção precisa",
+        "why": "Isso: mensais, se você apaga meses."
+      }
+    ]
+  },
+  "ex-6942k8bh": {
+    "prompt": "No cache-aside, quem enche o cache?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "A aplicação, depois de uma falta",
+        "why": "Isso: ela lê o banco e guarda a resposta com um TTL."
+      },
+      {
+        "text": "O banco, em toda escrita",
+        "why": "O banco não sabe nada do cache."
+      },
+      {
+        "text": "O cache, consultando o banco periodicamente",
+        "why": "O Redis não lê o PostgreSQL sozinho."
+      },
+      {
+        "text": "Uma tarefa noturna",
+        "why": "O cache-aside enche sob demanda."
+      }
+    ]
+  },
+  "ex-3sh2j1r7": {
+    "prompt": "O painel de um vendedor fica em cache por 60 segundos. Um pedido novo chega no segundo 10. O que os leitores veem até o segundo 60?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Nada, porque a chave é apagada na escrita",
+        "why": "Só se a aplicação a invalidar; um TTL sozinho não apaga."
+      },
+      {
+        "text": "A contagem velha: o TTL é o atraso que o cache permite",
+        "why": "Isso: na aula o cache dizia 91 enquanto o banco dizia 92."
+      },
+      {
+        "text": "A contagem nova, porque o Redis vigia a tabela",
+        "why": "Nada avisa o Redis do pedido."
+      },
+      {
+        "text": "Um erro até a chave expirar",
+        "why": "O valor velho é servido sem reclamação."
+      }
+    ]
+  },
+  "ex-zrm2j8ta": {
+    "prompt": "A aplicação apaga uma chave em toda escrita, e mesmo assim às vezes um valor velho volta e fica. Como?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O TTL recria a chave apagada",
+        "why": "Um TTL só remove chaves."
+      },
+      {
+        "text": "O PostgreSQL reenvia o valor velho ao Redis",
+        "why": "O banco nunca escreve no cache."
+      },
+      {
+        "text": "Um leitor lento recoloca o valor velho",
+        "why": "Isso: a aula forçou essa intercalação e a protegeu com uma versão por chave."
+      },
+      {
+        "text": "O Redis ignora DEL sob carga",
+        "why": "O DEL sempre roda."
+      }
+    ]
+  },
+  "ex-sry5nz7w": {
+    "prompt": "Quando uma chave quente expirou, 50 pedidos simultâneos fizeram 50 consultas ao banco; com single flight fizeram quantas?",
+    "hint": "Aula 21.",
+    "unit": "consultas"
+  },
+  "ex-07jq3be9": {
+    "prompt": "Por que o `REFRESH MATERIALIZED VIEW CONCURRENTLY` falhou até um índice ser criado?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Ele precisa de um índice único para casar linhas velhas com novas",
+        "why": "Isso: uma atualização concorrente calcula uma diferença, linha a linha."
+      },
+      {
+        "text": "Views materializadas não podem ser atualizadas sem índice algum",
+        "why": "Um REFRESH simples funcionou sem índice."
+      },
+      {
+        "text": "CONCURRENTLY exige superusuário",
+        "why": "O erro era sobre o índice, não sobre privilégios."
+      },
+      {
+        "text": "A view era grande demais",
+        "why": "Tamanho não é a condição."
+      }
+    ]
+  },
+  "ex-mmrrv2cn": {
+    "prompt": "Com `default_statistics_target` em 100, quantas linhas o ANALYZE põe na amostra de uma tabela de cinco milhões de linhas?",
+    "hint": "Aula 6.",
+    "unit": "linhas"
+  },
+  "ex-t1n1jxzn": {
+    "prompt": "Depois de uma importação, `reltuples` ainda dizia 2.000.000, mas o plano estimou a tabela em 2,3 milhões de linhas. De onde o planejador tirou o número maior?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Do autoanalyze, que rodou durante a importação",
+        "why": "Ele estava desligado, e last_autoanalyze ficou vazio."
+      },
+      {
+        "text": "Do n_live_tup em pg_stat_user_tables",
+        "why": "O planejador lê o pg_class e o tamanho do arquivo, não os contadores de atividade."
+      },
+      {
+        "text": "Do tamanho atual da tabela em páginas",
+        "why": "Isso: ele escala reltuples pela contagem real de páginas, então o total acerta e a mistura fica velha."
+      },
+      {
+        "text": "De uma contagem rápida que ele faz quando reltuples parece velho",
+        "why": "O planejador nunca conta linhas para planejar."
+      }
+    ]
+  },
+  "ex-dhsp098v": {
+    "prompt": "Um Sort planejado para 7590 linhas recebeu 307.319. O que aconteceu com ele?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Transbordou para o disco num external merge",
+        "why": "Isso: 7216 kB gravados, memória planejada para uma estimativa gasta com o real."
+      },
+      {
+        "text": "O planejador parou e o replanejou com a contagem certa",
+        "why": "Um plano fica fixo quando a execução começa."
+      },
+      {
+        "text": "Ordenou só as primeiras 7590 linhas",
+        "why": "Toda linha é ordenada; a estimativa só dimensionou a memória."
+      },
+      {
+        "text": "Falhou com erro de falta de memória",
+        "why": "Uma ordenação que passa da memória transborda; não falha."
+      }
+    ]
+  },
+  "ex-7kvfz7bh": {
+    "prompt": "No `pg_locks`, que coluna separa uma trava que está segura de uma que está sendo esperada?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "`mode`",
+        "why": "mode diz que tipo de trava, segura ou não."
+      },
+      {
+        "text": "`locktype`",
+        "why": "locktype diz o que está travado: uma relação, uma tupla, um id de transação."
+      },
+      {
+        "text": "`granted`",
+        "why": "Isso: t para segura, f para esperando, e as linhas f são o problema."
+      },
+      {
+        "text": "`pid`",
+        "why": "pid diz de quem é a trava, não se ela foi concedida."
+      }
+    ]
+  },
+  "ex-e5epmmtq": {
+    "prompt": "Num grafo de bloqueio montado com `pg_blocking_pids`, qual sessão é a raiz?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "A sessão que roda o comando mais longo",
+        "why": "A raiz da aula não rodava comando nenhum: idle in transaction."
+      },
+      {
+        "text": "A que está esperando há mais tempo",
+        "why": "Quem espera há mais tempo é vítima; a raiz não espera ninguém."
+      },
+      {
+        "text": "Uma que bloqueia outras e não espera ninguém",
+        "why": "Isso: um blocked_by vazio, e o pid dela dentro do de outra."
+      },
+      {
+        "text": "A de pid mais alto, já que chegou por último",
+        "why": "pids não dizem nada sobre quem bloqueia quem."
+      }
+    ]
+  },
+  "ex-z6sxr86y": {
+    "prompt": "Uma sessão dentro de uma transação longa está presa numa espera de trava, e você cancela o comando dela com `pg_cancel_backend`. Que travas ela ainda segura?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Toda trava que a transação pegou, até o ROLLBACK",
+        "why": "Isso: e por isso pode ser preciso encerrar a sessão mesmo assim."
+      },
+      {
+        "text": "Só travas de linha; as de tabela saem na hora",
+        "why": "Travas de todo tipo saem no fim da transação, não antes."
+      },
+      {
+        "text": "Nenhuma: cancelar encerra a transação",
+        "why": "Cancelar faz o comando falhar; a transação fica aberta até o cliente desfazê-la."
+      },
+      {
+        "text": "Só a trava que estava esperando",
+        "why": "Essa ela nunca teve; estava esperando por ela."
+      }
+    ]
+  },
+  "ex-c585gyxz": {
+    "prompt": "Com `log_lock_waits = on` e o `deadlock_timeout` padrão, depois de quantos milissegundos uma sessão que espera grava a primeira linha `still waiting`?",
+    "hint": "Aula 13.",
+    "unit": "ms"
+  },
+  "ex-fe48mmvb": {
+    "prompt": "O que o PostgreSQL inicia no servidor para cada conexão de cliente?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Uma thread dentro de um processo de servidor compartilhado",
+        "why": "O PostgreSQL cria um processo por conexão, não uma thread."
+      },
+      {
+        "text": "Um processo inteiro do sistema operacional",
+        "why": "Isso: um por sessão, visível no ps."
+      },
+      {
+        "text": "Nada até chegar a primeira consulta",
+        "why": "O processo existe, ocioso, desde o momento em que o cliente conecta."
+      },
+      {
+        "text": "Uma vaga no PgBouncer",
+        "why": "O PgBouncer é um programa à parte que a aula acrescenta; o PostgreSQL não sabe dele."
+      }
+    ]
+  },
+  "ex-qr0n6mqf": {
+    "prompt": "Noventa clientes completaram 1481 transações por segundo. Pela lei de Little, qual foi a latência média, em milissegundos?",
+    "hint": "Clientes divididos pela vazão.",
+    "unit": "ms"
+  },
+  "ex-a35c7xsf": {
+    "prompt": "Pelo PgBouncer com `default_pool_size = 8`, 200 clientes conectaram. Quantas conexões de servidor o PostgreSQL viu?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "100, o max_connections do servidor",
+        "why": "O pool nunca abre mais que o seu tamanho."
+      },
+      {
+        "text": "Quatro, uma por processador",
+        "why": "Processadores são onde a curva dobra; quem definiu a contagem foi o tamanho do pool."
+      },
+      {
+        "text": "200, uma por cliente",
+        "why": "Isso é conexão direta; o pool divide oito."
+      },
+      {
+        "text": "Oito; o resto esperou no pooler",
+        "why": "Isso: 192 clientes esperaram no pooler em vez de no servidor."
+      }
+    ]
+  },
+  "ex-w8t6qz36": {
+    "prompt": "Três servidores de aplicação rodam cada um um PgBouncer com `default_pool_size = 30` contra um banco com `max_connections = 100` em quatro processadores. O que a aula diz que está errado?",
+    "hint": "Some os pools.",
+    "choices": [
+      {
+        "text": "O PgBouncer não pode rodar em mais de um servidor",
+        "why": "Pode; o problema é a soma dos pools."
+      },
+      {
+        "text": "Noventa conexões ocupadas só somam espera, e sobra pouca folga",
+        "why": "Isso: depois da dobra, mais conexões somam espera, não vazão."
+      },
+      {
+        "text": "Cada pool deveria ser 100 para bater com o max_connections",
+        "why": "Isso pediria 300 conexões a um servidor que permite 100."
+      },
+      {
+        "text": "Nada: três pools de 30 cabem em 100",
+        "why": "Cabem, com dez sobrando para migrações e incidentes, e muito além da dobra."
+      }
+    ]
+  },
+  "ex-7pc1ye7q": {
+    "prompt": "Numa tabela particionada por mês em `at`, por que `WHERE date(at) = '2025-11-10'` lê todas as partições?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "A poda só funciona com instruções preparadas",
+        "why": "Uma faixa literal em at podou para uma partição no psql."
+      },
+      {
+        "text": "Não é uma faixa de `at`, então os limites não descartam nada",
+        "why": "Isso: os limites são valores de at, e uma função de at não é at."
+      },
+      {
+        "text": "A partição de novembro não tinha índice",
+        "why": "A poda usa os limites das partições, não índices."
+      },
+      {
+        "text": "As estatísticas das partições estavam velhas",
+        "why": "A poda compara limites; estatísticas não entram nisso."
+      }
+    ]
+  },
+  "ex-87a6dxn8": {
+    "prompt": "Um `Append` num plano mostra `Subplans Removed: 3`. O que aconteceu?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Três workers não foram iniciados",
+        "why": "Workers aparecem como Workers Launched; subplans são partições."
+      },
+      {
+        "text": "Três partições estavam vazias",
+        "why": "Partições vazias são lidas como qualquer outra, a menos que sejam podadas."
+      },
+      {
+        "text": "Três partições foram descartadas quando a execução começou",
+        "why": "Isso: o plano cobria todas e podou quando o valor ficou conhecido."
+      },
+      {
+        "text": "O planejador removeu três índices que julgou inúteis",
+        "why": "Planos nunca removem índices."
+      }
+    ]
+  },
+  "ex-9sn9yanh": {
+    "prompt": "Para uma instrução preparada usar um plano só para todo valor desde a primeira execução, ajuste `plan_cache_mode` para ___.",
+    "hint": "Um valor de configuração com dois sublinhados dentro.",
+    "blanks": [
+      {
+        "accept": [
+          "force_generic_plan"
+        ]
+      }
+    ]
+  },
+  "ex-dr2z3hy7": {
+    "prompt": "Contar um dia de eventos levou 216,7 ms na tabela `events` comum e 48,3 ms na `events_by_month`. Cerca de quantas vezes mais rápida foi a tabela particionada? Uma casa decimal.",
+    "hint": "Divida.",
+    "unit": "vezes"
+  },
+  "ex-49dy5f64": {
+    "prompt": "No cache-aside, o que a aplicação faz quando não acha a chave no cache?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Pergunta ao banco, guarda a resposta com TTL e a devolve",
+        "why": "Isso: o cache só se enche com respostas que alguém pediu."
+      },
+      {
+        "text": "Devolve um resultado vazio e deixa o cache esquentar depois",
+        "why": "O usuário recebe a resposta real numa falta, vinda do banco."
+      },
+      {
+        "text": "Pede ao servidor de cache para buscar no banco",
+        "why": "O Redis não sabe nada do banco; quem busca é a aplicação."
+      },
+      {
+        "text": "Grava todas as linhas da tabela no cache",
+        "why": "Isso é pré-carga, não cache-aside."
+      }
+    ]
+  },
+  "ex-9n8tdrt5": {
+    "prompt": "Das 5000 requisições do painel pelo cache da aula, quantas chegaram ao banco?",
+    "hint": "Aula 21.",
+    "unit": "requisições"
+  },
+  "ex-pjn8g8aj": {
+    "prompt": "Com TTL de 60 segundos e sem invalidação, por quanto tempo uma mudança fica invisível para os leitores, em média?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Exatamente sessenta segundos, toda vez",
+        "why": "Esse é o pior caso; uma mudança pode cair logo antes de uma entrada vencer."
+      },
+      {
+        "text": "Até o próximo reinício do cache",
+        "why": "O TTL encerra cada entrada muito antes de qualquer reinício."
+      },
+      {
+        "text": "Nada, porque o Redis observa a tabela",
+        "why": "O Redis nunca vê as escritas do banco."
+      },
+      {
+        "text": "Cerca de trinta segundos",
+        "why": "Isso: metade do TTL em média, o TTL inteiro no pior caso."
+      }
+    ]
+  },
+  "ex-0p1mfda1": {
+    "prompt": "Cinquenta requisições por uma chave ausente rodaram a contagem cinquenta vezes, cada uma levando cerca de 1,3 s em vez de 55 ms. O que conserta o estouro, do jeito que a aula montou?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Um chamador pega uma trava com SET NX e consulta; o resto espera e relê",
+        "why": "Isso: single flight, uma contagem em vez de cinquenta."
+      },
+      {
+        "text": "Mais processadores para o banco",
+        "why": "Cinquenta contagens iguais continuariam rodando; só fariam menos fila."
+      },
+      {
+        "text": "Apagar a chave a cada escrita",
+        "why": "Isso deixa as faltas mais frequentes, e cada uma pode estourar."
+      },
+      {
+        "text": "Um TTL mais longo na chave",
+        "why": "O estouro acontece na falta, seja qual for o TTL."
+      }
+    ]
+  },
+  "ex-qhcnhkrb": {
+    "prompt": "Por que o teste embutido do pgbench, parecido com o TPC-B, não mede a sua aplicação?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Ele roda as próprias tabelas e comandos, não os seus",
+        "why": "Isso: mede o servidor numa carga que é de outra pessoa."
+      },
+      {
+        "text": "Ele só roda por dez segundos fixos",
+        "why": "A duração é o que o -T disser."
+      },
+      {
+        "text": "Ele não roda com mais de um cliente",
+        "why": "Ele aceita -c como qualquer execução do pgbench."
+      },
+      {
+        "text": "Não escreve nada, então é só um teste de leitura",
+        "why": "Ele atualiza três tabelas e insere numa quarta."
+      }
+    ]
+  },
+  "ex-wq8m100g": {
+    "prompt": "De onde devem vir os pesos dos scripts de um benchmark?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Do tamanho das tabelas que cada um lê",
+        "why": "Tamanho não diz nada sobre frequência."
+      },
+      {
+        "text": "Das contagens de chamadas no pg_stat_statements",
+        "why": "Isso: o placar diz com que frequência cada comando roda de verdade."
+      },
+      {
+        "text": "Do tempo médio de cada comando",
+        "why": "A média diz quão lento, não com que frequência."
+      },
+      {
+        "text": "Pesos iguais, para ser justo com todo script",
+        "why": "Uma aplicação real não é misturada por igual."
+      }
+    ]
+  },
+  "ex-6jc26c99": {
+    "prompt": "Uma execução em laço fechado deu 6,5 ms; a mesma carga oferecida a 900 por segundo fixos com `-R` deu 17,1 ms, dos quais 13,0 de atraso de agenda. Que número descreve o que usuários veriam nessa taxa?",
+    "hint": "Aulas 22 e 23.",
+    "choices": [
+      {
+        "text": "4,1 ms, tirando o atraso",
+        "why": "O atraso faz parte da espera de um usuário."
+      },
+      {
+        "text": "Nenhum: o -R deixa os resultados sem sentido",
+        "why": "O -R é o que torna o padrão de chegada realista."
+      },
+      {
+        "text": "17,1 ms: usuários chegam no próprio ritmo e esperam",
+        "why": "Isso: um laço fechado nunca manda o pedido seguinte antes de o anterior voltar, então esconde a fila."
+      },
+      {
+        "text": "6,5 ms, a velocidade real do servidor",
+        "why": "É o que vê um cliente que espera educadamente, não usuários chegando."
+      }
+    ]
+  },
+  "ex-34ggne4a": {
+    "prompt": "Três execuções depois de uma cópia nova deram 1157, 1434 e 1311 transações por segundo, e a primeira foi descartada como aquecimento. Em quantos por cento as outras duas diferem, em relação à menor? Arredonde para o inteiro mais próximo.",
+    "hint": "Aula 22. (1434 − 1311) ÷ 1311.",
+    "unit": "%"
+  }
+}
