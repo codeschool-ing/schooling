@@ -992,6 +992,86 @@ def l08_three_places(lang):
     return f, t['cap']
 
 
+@figure('l09-four-signals', 9)
+def l09_four_signals(lang):
+    t = {'en': dict(
+            label='A time axis from the moment of a request to ninety days later. Is it answering and '
+                  'how fast are known within seconds; what it is saying is known the next morning; '
+                  'whether it was right is known ninety days later, when the outcomes are in.',
+            rows=[('is it answering?', 'status of every request'), ('how fast?', 'milliseconds per request'),
+                  ('what is it saying?', 'tonight against the weeks before'),
+                  ('was it right?', 'scores against outcomes')],
+            ticks=['seconds', 'a night', '90 days'], service='the service', model='the model',
+            cap='The two questions a model shares with any service are answered at once; its own two '
+                'wait, and the one that matters most waits longest.'),
+         'pt': dict(
+            label='Um eixo de tempo do momento de um pedido até noventa dias depois. Se está '
+                  'respondendo e quão rápido se sabe em segundos; o que está dizendo se sabe na manhã '
+                  'seguinte; se acertou se sabe noventa dias depois, quando os desfechos chegam.',
+            rows=[('está respondendo?', 'status de cada pedido'), ('quão rápido?', 'milissegundos por pedido'),
+                  ('o que está dizendo?', 'esta noite contra as semanas anteriores'),
+                  ('acertou?', 'notas contra desfechos')],
+            ticks=['segundos', 'uma noite', '90 dias'], service='o serviço', model='o modelo',
+            cap='As duas perguntas que um modelo divide com qualquer serviço têm resposta na hora; as '
+                'duas dele esperam, e a que mais importa é a que mais espera.')}[lang]
+    f = Fig('l09-four-signals', 720, 260, t['label'])
+    xs = [300, 470, 650]
+    f.line(250, 220, 700, 220, stroke='--paper-dim', width=1.2)
+    for x, tick in zip(xs, t['ticks']):
+        f.line(x, 216, x, 224, stroke='--paper-dim', width=1)
+        f.text(x, 240, tick, size=10, fill='--paper-dim')
+    ends = [xs[0], xs[0], xs[1], xs[2]]
+    for i, ((q, sub), end) in enumerate(zip(t['rows'], ends)):
+        y = 30 + i * 46
+        f.text(20, y - 7, q, size=11.5, anchor='start', weight='600')
+        f.text(20, y + 9, sub, size=10, anchor='start', fill='--paper-dim')
+        colour = '--phosphor' if i < 2 else '--amber'
+        f.line(255, y, end - 6, y, stroke=colour, width=2, dash='4 3')
+        f.circle(end, y, 5, fill=colour)
+    f.text(314, 53, t['service'], size=10, anchor='start', fill='--phosphor')
+    f.text(484, 145, t['model'], size=10, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l09-latency', 9)
+def l09_latency(lang):
+    runs = [(1, 163, 6.5, 7.8, 10.8), (4, 107, 36.2, 56.3, 64.4), (16, 88, 142.4, 237.5, 351.8)]
+    t = {'en': dict(
+            label='Grouped bars of latency for 600 requests at one, four and sixteen at once. One at a '
+                  'time: p50 6.5, p95 7.8 and p99 10.8 milliseconds, 163 requests a second. Four: 36.2, '
+                  '56.3 and 64.4, 107 a second. Sixteen: 142.4, 237.5 and 351.8, 88 a second.',
+            at='{} at once', rate='{} a second', ms='milliseconds',
+            cap='More requests in flight did not raise the throughput; it fell, and the time each '
+                'request spent waiting is what the percentiles grew by.'),
+         'pt': dict(
+            label='Barras agrupadas de latência para 600 pedidos com um, quatro e dezesseis ao mesmo '
+                  'tempo. Um por vez: p50 6,5, p95 7,8 e p99 10,8 milissegundos, 163 pedidos por '
+                  'segundo. Quatro: 36,2, 56,3 e 64,4, 107 por segundo. Dezesseis: 142,4, 237,5 e '
+                  '351,8, 88 por segundo.',
+            at='{} por vez', rate='{} por segundo', ms='milissegundos',
+            cap='Mais pedidos em voo não aumentaram a vazão; ela caiu, e o tempo que cada pedido '
+                'passou esperando é o que os percentis cresceram.')}[lang]
+    f = Fig('l09-latency', 720, 300, t['label'])
+    p = Plot(f, 80, 40, 700, 240, 0, 3, 0, 400)
+    p.yaxis([0, 100, 200, 300, 400], label=t['ms'])
+    fills = ['--phosphor-dim', '--phosphor', '--amber']
+    for g, (n, rate, *qs) in enumerate(runs):
+        for k, v in enumerate(qs):
+            x0 = p.sx(g + 0.2 + k * 0.2)
+            x1 = p.sx(g + 0.38 + k * 0.2)
+            f.rect(x0, p.sy(v), x1 - x0, p.y1 - p.sy(v), stroke=fills[k], fill=fills[k], rx=1)
+            f.text((x0 + x1) / 2, p.sy(v) - 9, f'{v:g}' if lang == 'en' else f'{v:g}'.replace('.', ','),
+                   size=9, fill='--paper-dim', mono=True)
+        f.text(p.sx(g + 0.5), p.y1 + 16, t['at'].format(n), size=10.5, weight='600')
+        f.text(p.sx(g + 0.5), p.y1 + 32, t['rate'].format(rate), size=10, fill='--paper-dim')
+    for k, name in enumerate(['p50', 'p95', 'p99']):
+        x = 110 + k * 70
+        f.rect(x, 52, 12, 12, stroke=fills[k], fill=fills[k], rx=1)
+        f.text(x + 18, 58, name, size=10, anchor='start', mono=True)
+    f.line(80, 240, 700, 240, stroke='--paper-dim', width=1.2)
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
