@@ -29,7 +29,7 @@
 #     second restored after;
 #   - the shards. The three run one after the other on this one machine,
 #     standing in for three CI machines, and the zip each writes is moved into
-#     all-blob-reports/ the way a CI job would upload it.
+#     all-blob-reports/ the way a CI job would upload it;
 #   - the machine was not otherwise idle: other lessons' authors shared it,
 #     though never the lab lock. /proc/loadavg is printed into blocks named
 #     load-* (not quoted in the lesson) so the timings can be judged.
@@ -101,7 +101,7 @@ done
 
 block shard-lists
 for i in 1 2 3; do
-  pw "npx playwright test --config turns.config.js --list --shard=$i/3 | grep -o '[a-z-]*\.spec\.js' | uniq -c"
+  pw "npx playwright test --config turns.config.js --list --shard=$i/3 | tail -1"
 done
 
 block shards
@@ -111,6 +111,17 @@ for i in 1 2 3; do
   run "mv blob-report/report-$i.zip all-blob-reports/"
 done
 block merge
+pw "npx playwright merge-reports --reporter list all-blob-reports | $SUMMARY"
+
+block shards-split
+run 'rm -rf all-blob-reports && mkdir all-blob-reports'
+for i in 1 2 3; do
+  pw "npx playwright test --config turns.config.js --project parallel --shard=$i/3 --reporter=list,blob | $SUMMARY"
+  run "mv blob-report/report-$i.zip all-blob-reports/parallel-$i.zip"
+  pw "npx playwright test --config turns.config.js --project one-at-a-time --no-deps --shard=$i/3 --reporter=list,blob | $SUMMARY"
+  run "mv blob-report/report-$i.zip all-blob-reports/one-at-a-time-$i.zip"
+done
+block merge-split
 pw "npx playwright merge-reports --reporter list all-blob-reports | $SUMMARY"
 block load-before-cost; cat /proc/loadavg
 

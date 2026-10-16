@@ -31,11 +31,11 @@ door into the product is the screen.
 **The cone is a description, not a strategy**: nobody argues for it. Its cost is the one this lesson
 measured, paid on every test. A suite of browser tests runs the browser for every check, including
 the checks of arithmetic, and the defect in `total()` from two sections back is exactly the kind it
-handles badly. The browser tests went green on it because none of them bought more than one banana.
+handles badly. The browser test went green on it because it bought one banana.
 
 It is worth recognising for a reason that has nothing to do with blame. **This course has built
 one.** Nearly every test you saved since lesson 1 drives a page, because the course is about the
-browser layer; a handful in lessons 4, 6 and 15 speak only HTTP, and `unit/total.test.js` is the
+browser layer. A handful in lessons 4, 6 and 15 speak only HTTP, and `unit/total.test.js` is the
 first that runs no server at all. That is right for a course on browser automation and wrong for a
 product's suite, and the difference is the point of this lesson.
 

@@ -67,7 +67,8 @@ way the first section showed; this file is used by naming it. Four workers, thre
 %%CAP turns4-v1%%
 ```
 
-Green three times. With eight workers:
+@@V1FOUR@@ With eight workers, writing the JSON report so that `overlap.mjs` can say who ran
+beside whom:
 
 ```
 %%CAP turns8-v1%%
@@ -86,10 +87,8 @@ handing out a file from a limited project, the dispatcher counts the busy worker
 already belongs to that project**. A worker that ran a `parallel` file has to be stopped and
 replaced before it can run a `one-at-a-time` one, and while that happens it is busy but still
 counted as `parallel`. When several workers run out of `parallel` files at once, each is handed a
-`one-at-a-time` file, and none of them sees the others. Four workers were green three times, and
-the summary cannot say whether two of those files overlapped there without colliding; nothing in
-the rule kept them apart. A rule that holds by luck makes a suite that fails on some days and not
-on others, and lesson 14 is about those.
+`one-at-a-time` file, and none of them sees the others. A rule that holds when the timing is kind
+makes a suite that fails on some runs and not on others, and lesson 14 is about those.
 
 **The arrangement that holds is to stop the two groups from overlapping in time.** A project can
 name another in `dependencies`, and Playwright then runs them in **phases**: every test of the

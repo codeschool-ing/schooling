@@ -31,11 +31,11 @@ código estar escrito e a única porta para o produto é a tela.
 **O cone é uma descrição, não uma estratégia**: ninguém o defende. O custo dele é o que esta aula
 mediu, pago em cada teste. Uma suíte de testes de navegador roda o navegador para cada verificação,
 inclusive as de aritmética, e o defeito em `total()` de duas seções atrás é justamente do tipo que
-ela trata mal. Os testes de navegador passaram por cima dele porque nenhum comprou mais de uma banana.
+ela trata mal. O teste de navegador passou por cima dele porque comprou uma banana só.
 
 Vale reconhecê-lo por um motivo que não tem nada a ver com culpa. **Este curso montou um.** Quase
 todo teste que você salvou desde a aula 1 dirige uma página, porque o curso é sobre a camada do
-navegador; um punhado nas aulas 4, 6 e 15 fala só HTTP, e `unit/total.test.js` é o primeiro que não
+navegador. Um punhado nas aulas 4, 6 e 15 fala só HTTP, e `unit/total.test.js` é o primeiro que não
 sobe servidor nenhum. Isso é certo para um curso de automação de navegador e errado para a suíte de
 um produto, e a diferença é o ponto desta aula.
 
