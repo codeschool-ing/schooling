@@ -1,0 +1,1961 @@
+{
+  "ex-3paqx778": {
+    "prompt": "Uma rotina noturna reporta sucesso toda noite. O que isso prova sobre o backup?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "Que os dados podem ser restaurados",
+        "why": "Só uma restauração prova isso."
+      },
+      {
+        "text": "Que a cópia está completa",
+        "why": "Nada num código de saída diz o que o arquivo contém."
+      },
+      {
+        "text": "Que um programa saiu sem reclamar",
+        "why": "Isso: uma afirmação sobre a rotina, não sobre os dados."
+      },
+      {
+        "text": "Que a cópia está fora do local",
+        "why": "Onde ela fica é a pergunta da lição 9."
+      }
+    ]
+  },
+  "ex-8qg43cfs": {
+    "prompt": "`pg_dump shop | gzip > shop.sql.gz` sai com 0 embora o `pg_dump` tenha falhado. Por quê?",
+    "hint": "O status de saída de um pipeline.",
+    "choices": [
+      {
+        "text": "O pipeline reporta o status do gzip",
+        "why": "Isso: sem pipefail, o status do último comando é o do pipeline."
+      },
+      {
+        "text": "O pg_dump nunca reporta erros",
+        "why": "Ele imprimiu um e saiu com status diferente de zero."
+      },
+      {
+        "text": "O gzip conserta entrada truncada",
+        "why": "O gzip comprime o que recebeu."
+      },
+      {
+        "text": "O shell ignora o stderr",
+        "why": "Status de saída não passa pelo stderr."
+      }
+    ]
+  },
+  "ex-rfsvcx4v": {
+    "prompt": "Qual verificação pega um backup que contém o banco errado?",
+    "hint": "As três condições da lição 1.",
+    "choices": [
+      {
+        "text": "O tamanho do arquivo",
+        "why": "Um banco errado pode ter o tamanho certo."
+      },
+      {
+        "text": "O status de saída",
+        "why": "A rotina teve sucesso em fazer dump da coisa errada."
+      },
+      {
+        "text": "O horário do arquivo",
+        "why": "Ele foi escrito hoje à noite, e continua errado."
+      },
+      {
+        "text": "Uma restauração",
+        "why": "Isso: com perguntas que só dados reais respondem, contagens e datas comparáveis com o sistema em produção."
+      }
+    ]
+  },
+  "ex-ege7nsnc": {
+    "prompt": "Um dump lógico do `shop` é restaurado num servidor novinho e falha por causa de ownership. O que faltava?",
+    "hint": "O que fica fora de todo banco.",
+    "choices": [
+      {
+        "text": "Os índices",
+        "why": "Um dump leva as definições deles."
+      },
+      {
+        "text": "Os papéis",
+        "why": "Isso: os papéis são globais e vêm do pg_dumpall --globals-only; não estão no dump de banco nenhum."
+      },
+      {
+        "text": "O WAL",
+        "why": "Uma restauração lógica não precisa de WAL."
+      },
+      {
+        "text": "As sequências",
+        "why": "Um dump leva as sequências e seus valores."
+      }
+    ]
+  },
+  "ex-hkkmk08x": {
+    "prompt": "O banco de 268 MB da lição 2 levou 7,3 segundos para restaurar. A restauração cresce com os dados. Mais ou menos quantas horas para um banco de 1 TB no mesmo ritmo (1 TB = 1.000.000 MB), arredondando para a hora mais próxima?",
+    "hint": "1.000.000 / 268 × 7,3 segundos.",
+    "unit": "horas"
+  },
+  "ex-9w0jngz7": {
+    "prompt": "Um dump feito com `pg_dump -F___` pode ser restaurado seletivamente, uma tabela por vez, com `pg_restore`.",
+    "hint": "A letra do formato custom.",
+    "blanks": [
+      {
+        "accept": [
+          "c"
+        ]
+      }
+    ]
+  },
+  "ex-c3g61t5c": {
+    "prompt": "Por que um snapshot atômico do diretório de dados inteiro é um backup utilizável de um PostgreSQL em execução?",
+    "hint": "Como se a energia tivesse caído.",
+    "choices": [
+      {
+        "text": "O PostgreSQL pausa as escritas durante um snapshot",
+        "why": "Ele nem sabe que um snapshot está acontecendo."
+      },
+      {
+        "text": "Ele é consistente como após uma queda",
+        "why": "Isso: o PostgreSQL se recupera dele como de uma queda de energia."
+      },
+      {
+        "text": "Snapshots pulam arquivos abertos",
+        "why": "Eles copiam blocos, esteja o que estiver aberto."
+      },
+      {
+        "text": "Ele inclui um pg_dump",
+        "why": "É uma cópia dos arquivos."
+      }
+    ]
+  },
+  "ex-ys2v5tz6": {
+    "prompt": "Dados e WAL estão em dois volumes, com snapshots tirados um depois do outro. Qual é o risco?",
+    "hint": "Cada arquivo do mesmo instante.",
+    "choices": [
+      {
+        "text": "O snapshot fica grande demais",
+        "why": "Tamanho não é o problema."
+      },
+      {
+        "text": "O WAL não é necessário",
+        "why": "A recuperação precisa dele."
+      },
+      {
+        "text": "Snapshots não guardam WAL",
+        "why": "Eles guardam o que estiver no volume."
+      },
+      {
+        "text": "São de dois instantes",
+        "why": "Isso: só um snapshot em grupo, tirado atomicamente, é consistente após uma queda."
+      }
+    ]
+  },
+  "ex-vh8qx10n": {
+    "prompt": "Associe cada cópia ao que ela é.",
+    "hint": "Lições 2 e 3.",
+    "pairs": [
+      {
+        "left": "pg_dump",
+        "right": "Linhas e definições, como SQL ou num arquivo custom"
+      },
+      {
+        "left": "pg_basebackup",
+        "right": "Uma cópia dos arquivos do cluster inteiro"
+      },
+      {
+        "left": "Um snapshot de volume",
+        "right": "Blocos de um instante, consistentes após uma queda se for atômico"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia só dos papéis"
+    ]
+  },
+  "ex-m0jbm0ze": {
+    "prompt": "O `archive_command` começa a falhar. O que o banco faz primeiro?",
+    "hint": "O quando-o-arquivamento-falha da lição 4.",
+    "choices": [
+      {
+        "text": "Nada visível; ele guarda os segmentos",
+        "why": "Isso: nenhuma consulta falha enquanto o pg_wal enche."
+      },
+      {
+        "text": "Recusa escritas na hora",
+        "why": "Só muito depois, quando o disco enche."
+      },
+      {
+        "text": "Manda um e-mail",
+        "why": "O PostgreSQL não manda e-mail."
+      },
+      {
+        "text": "Muda para um slot",
+        "why": "Arquivamento e slots são coisas separadas."
+      }
+    ]
+  },
+  "ex-qwfwk7xn": {
+    "prompt": "Num banco tranquilo, por que a última hora de mudanças poderia existir só no servidor?",
+    "hint": "Um segmento que não está cheio.",
+    "choices": [
+      {
+        "text": "Bancos tranquilos não escrevem WAL",
+        "why": "Toda mudança escreve WAL."
+      },
+      {
+        "text": "O arquivo de WAL é lido à noite",
+        "why": "Ele é escrito sempre que um segmento fecha."
+      },
+      {
+        "text": "O segmento atual não foi arquivado",
+        "why": "Isso: o archive_timeout o fecha depois de um tempo definido."
+      },
+      {
+        "text": "Checkpoints o apagam",
+        "why": "Eles reciclam só segmentos já arquivados."
+      }
+    ]
+  },
+  "ex-snrwbky9": {
+    "prompt": "Quantos MB de espaço de arquivamento custa cada segmento de WAL fechado, por menos que tenha dentro?",
+    "hint": "O tamanho padrão de um segmento.",
+    "unit": "MB"
+  },
+  "ex-0f58jd1s": {
+    "prompt": "`archive____` fecha o segmento atual depois de um tempo definido, se algo foi escrito nele.",
+    "hint": "O parâmetro da hora tranquila da lição 4.",
+    "blanks": [
+      {
+        "accept": [
+          "_timeout"
+        ]
+      }
+    ]
+  },
+  "ex-72atzzxz": {
+    "prompt": "O `pgbackrest verify` não imprimiu nada e saiu com 0, com um backup danificado no repositório. O que a rotina noturna da lição faz em vez disso?",
+    "hint": "O relatório é o resultado.",
+    "choices": [
+      {
+        "text": "Confia no código de saída",
+        "why": "O código de saída foi 0 com um backup danificado."
+      },
+      {
+        "text": "Roda o verify duas vezes",
+        "why": "Duas vezes dá o mesmo silêncio."
+      },
+      {
+        "text": "Compara tamanhos de arquivo",
+        "why": "Tamanhos não revelam um arquivo danificado."
+      },
+      {
+        "text": "Lê o relatório dele",
+        "why": "Isso: lê o relatório detalhado, com --verbose --output=text, e passa só com um status: ok exato."
+      }
+    ]
+  },
+  "ex-8trxtkqe": {
+    "prompt": "O que `repo1-retention-full=2` mantém?",
+    "hint": "Dois de alguma coisa, e o que depende deles.",
+    "choices": [
+      {
+        "text": "Dois dias de backups",
+        "why": "Aqui a retenção conta backups full, não dias."
+      },
+      {
+        "text": "Duas cópias de cada arquivo",
+        "why": "Ela conta backups."
+      },
+      {
+        "text": "Dois backups full",
+        "why": "Isso: com o que depende deles e o WAL necessário para recuperá-los."
+      },
+      {
+        "text": "Dois repositórios",
+        "why": "Repositórios são repo1, repo2."
+      }
+    ]
+  },
+  "ex-49v7epp2": {
+    "prompt": "Associe cada tipo de backup do pgBackRest ao que ele copia.",
+    "hint": "Os tipos de backup da lição 5.",
+    "pairs": [
+      {
+        "left": "full",
+        "right": "Todos os arquivos"
+      },
+      {
+        "left": "diff",
+        "right": "Arquivos alterados desde o último full"
+      },
+      {
+        "left": "incr",
+        "right": "Arquivos alterados desde o último backup de qualquer tipo"
+      }
+    ],
+    "right_distractors": [
+      "Só o WAL"
+    ]
+  },
+  "ex-bsqve8wj": {
+    "prompt": "Uma PITR para logo antes da transação 742 se recusou a começar: a recuperação terminou antes de alcançar o alvo. Por quê?",
+    "hint": "Onde estava a 742?",
+    "choices": [
+      {
+        "text": "O segmento dela ainda não fora arquivado",
+        "why": "Isso: ela estava no segmento que o primário ainda escrevia."
+      },
+      {
+        "text": "A 742 era um SELECT",
+        "why": "SELECTs não ganham um alvo próprio assim."
+      },
+      {
+        "text": "O --target-exclusive está errado",
+        "why": "É assim que se para antes da transação."
+      },
+      {
+        "text": "O backup era novo demais",
+        "why": "O backup era de antes."
+      }
+    ]
+  },
+  "ex-qwg2pz27": {
+    "prompt": "O que uma recuperação que para antes do fim do log inicia?",
+    "hint": "O nome de um segmento muda.",
+    "choices": [
+      {
+        "text": "Um banco novo",
+        "why": "É o mesmo cluster, numa história nova."
+      },
+      {
+        "text": "Uma timeline nova",
+        "why": "Isso: com um arquivo .history registrando a bifurcação."
+      },
+      {
+        "text": "Um slot de replicação",
+        "why": "A recuperação não cria slot."
+      },
+      {
+        "text": "Um dump lógico",
+        "why": "A recuperação é física."
+      }
+    ]
+  },
+  "ex-jhccqx81": {
+    "prompt": "Por que usar `--target-action=pause` numa PITR?",
+    "hint": "Olhe antes de se comprometer.",
+    "choices": [
+      {
+        "text": "Para deixar a recuperação mais rápida",
+        "why": "Pausar não deixa nada mais rápido."
+      },
+      {
+        "text": "Para manter o primário antigo em execução",
+        "why": "Ele age no servidor restaurado."
+      },
+      {
+        "text": "Para conferir os dados antes de encerrar",
+        "why": "Isso: promova só quando as linhas estiverem certas."
+      },
+      {
+        "text": "Porque o alvo exige uma pausa",
+        "why": "É uma escolha."
+      }
+    ]
+  },
+  "ex-r85fmk7w": {
+    "prompt": "Ponha em ordem uma recuperação para um ponto no tempo com o pgBackRest.",
+    "hint": "Lição 6.",
+    "items": [
+      "Encontrar o instante logo antes do erro",
+      "Restaurar um base backup com um alvo",
+      "Deixá-lo reaplicar o arquivo de WAL e pausar",
+      "Conferir as linhas",
+      "Promover, ou mover o alvo"
+    ],
+    "trap": "Promover antes de conferir torna permanente a história errada."
+  },
+  "ex-bfan2yxp": {
+    "prompt": "Backups são mantidos por 14 dias. Por que os ensaios de restauração precisam rodar com mais frequência que isso?",
+    "hint": "O máximo que um backup quebrado passa despercebido.",
+    "choices": [
+      {
+        "text": "As cópias boas expiram primeiro",
+        "why": "Isso: uma falha achada depois já expirou todas as cópias boas; o intervalo dos ensaios tem de ser menor que a retenção."
+      },
+      {
+        "text": "Ensaios liberam espaço em disco",
+        "why": "Eles usam espaço, por pouco tempo."
+      },
+      {
+        "text": "O pgBackRest exige",
+        "why": "Não exige."
+      },
+      {
+        "text": "Auditores pedem toda semana",
+        "why": "O motivo é aritmética, não auditoria."
+      }
+    ]
+  },
+  "ex-2ts0034s": {
+    "prompt": "O que um ensaio de restauração mede, além de que funcionou?",
+    "hint": "Um cronômetro.",
+    "choices": [
+      {
+        "text": "O tamanho do dump",
+        "why": "Tamanho é detalhe; o número é o tempo."
+      },
+      {
+        "text": "Quantas tabelas existem",
+        "why": "Isso é conferido, não medido."
+      },
+      {
+        "text": "A CPU do primário",
+        "why": "O ensaio roda em outro lugar."
+      },
+      {
+        "text": "Quanto tempo levou",
+        "why": "Isso: o RTO de fato alcançado."
+      }
+    ]
+  },
+  "ex-rr8y50zs": {
+    "prompt": "O script da lição 7 acrescenta o resultado de cada ensaio a `~/drills.___`, uma linha por ensaio.",
+    "hint": "Um formato que planilhas abrem.",
+    "blanks": [
+      {
+        "accept": [
+          "csv"
+        ]
+      }
+    ]
+  },
+  "ex-g7gh8r0t": {
+    "prompt": "O que é RPO?",
+    "hint": "Aponta para trás a partir do incidente.",
+    "choices": [
+      {
+        "text": "Quanto a recuperação pode levar",
+        "why": "Isso é RTO."
+      },
+      {
+        "text": "Quantos dados podem ser perdidos",
+        "why": "Isso: medidos em tempo, podem ser perdidos; \"no máximo cinco minutos de pedidos\"."
+      },
+      {
+        "text": "Com que frequência rodam backups",
+        "why": "Isso é um agendamento que serve ao RPO."
+      },
+      {
+        "text": "Quantas réplicas existem",
+        "why": "Isso é um desenho."
+      }
+    ]
+  },
+  "ex-5tev9hzc": {
+    "prompt": "O negócio responde primeiro \"nada e nada\" para RPO e RTO. O que deve vir em seguida?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Montar replicação síncrona em toda parte",
+        "why": "Isso é gastar antes de decidir."
+      },
+      {
+        "text": "Pôr preço em cada resposta",
+        "why": "Isso: até um número ser assinado; nada e nada tem um preço que ninguém paga."
+      },
+      {
+        "text": "Ignorar a resposta",
+        "why": "A resposta abre uma conversa."
+      },
+      {
+        "text": "Escolher os números você mesmo",
+        "why": "Quem os assina é o negócio."
+      }
+    ]
+  },
+  "ex-392cp0vj": {
+    "prompt": "O que protege contra um `DELETE` errado: uma réplica ou um backup com PITR?",
+    "hint": "Os dois números da lição 8.",
+    "choices": [
+      {
+        "text": "A réplica",
+        "why": "Ela copia o erro em milissegundos."
+      },
+      {
+        "text": "Os dois, igualmente",
+        "why": "Só um tem o instante de antes."
+      },
+      {
+        "text": "Nenhum dos dois",
+        "why": "A PITR protege."
+      },
+      {
+        "text": "O backup com PITR",
+        "why": "Isso: uma réplica reaplica o delete."
+      }
+    ]
+  },
+  "ex-2mnhhtc0": {
+    "prompt": "Arquivando a cada 5 minutos com archive_timeout, e o primário perdido. No máximo quantos minutos de mudanças se perdem se o último segmento nunca foi fechado?",
+    "hint": "O timeout.",
+    "unit": "minutos"
+  },
+  "ex-5g2wk0be": {
+    "prompt": "O que o 3-2-1 pede?",
+    "hint": "Cópias, mídias, lugares.",
+    "choices": [
+      {
+        "text": "Três cópias, duas mídias, uma fora do local",
+        "why": "Isso: e a lição 10 acrescenta uma imutável, zero erros."
+      },
+      {
+        "text": "Três servidores, dois standbys, um primário",
+        "why": "Isso é um cluster, não uma regra de backup."
+      },
+      {
+        "text": "Três backups por dia",
+        "why": "Ele conta cópias, não execuções."
+      },
+      {
+        "text": "Três dias de retenção",
+        "why": "É sobre lugares, não tempo."
+      }
+    ]
+  },
+  "ex-c7n1yekk": {
+    "prompt": "O segundo repositório é criptografado e a chave dele vivia só na máquina do primeiro repositório, agora perdida. O que sobra?",
+    "hint": "Cada byte está lá.",
+    "choices": [
+      {
+        "text": "Uma cópia que funciona",
+        "why": "Sem a chave, ele nem lista os próprios backups."
+      },
+      {
+        "text": "Uma cópia legível com a chave padrão",
+        "why": "Não existe chave padrão."
+      },
+      {
+        "text": "Dados ilegíveis",
+        "why": "Isso: ilegíveis para qualquer um; a chave tem de viver onde perder os backups não a perde junto."
+      },
+      {
+        "text": "O WAL, sem criptografia",
+        "why": "O arquivo de WAL também é criptografado."
+      }
+    ]
+  },
+  "ex-dm6wwbfe": {
+    "prompt": "O que o `chattr +i` na cópia fora do local mostrou?",
+    "hint": "Até o root.",
+    "choices": [
+      {
+        "text": "Que criptografou os arquivos",
+        "why": "O chattr muda atributos, não conteúdo."
+      },
+      {
+        "text": "Que deixou o backup mais rápido",
+        "why": "A velocidade não muda."
+      },
+      {
+        "text": "Que levou os arquivos para fora",
+        "why": "Não muda nada sobre onde eles estão."
+      },
+      {
+        "text": "Que nem o root pôde apagá-la",
+        "why": "Isso: nem o root nem o expire do pgBackRest conseguiram apagá-la; a imutabilidade barra também erros e scripts."
+      }
+    ]
+  },
+  "ex-sq78q25r": {
+    "prompt": "Por que o `chattr +i` na mesma máquina não é imutabilidade de verdade?",
+    "hint": "Quem pode tirar a flag?",
+    "choices": [
+      {
+        "text": "A flag expira depois de um dia",
+        "why": "Ela fica até ser removida."
+      },
+      {
+        "text": "Só o ext4 tem suporte",
+        "why": "Suporte não é a fraqueza."
+      },
+      {
+        "text": "O root dali tira a flag",
+        "why": "Isso: o root daquela máquina remove a flag; imutabilidade de verdade fica onde as credenciais do atacante não chegam."
+      },
+      {
+        "text": "Ela deixa as escritas lentas",
+        "why": "Desempenho não é a questão."
+      }
+    ]
+  },
+  "ex-ytj2k41n": {
+    "prompt": "Uma restauração para logo antes de o ransomware rodar trouxe de volta um superusuário `maint_svc` que o invasor criara antes. O que isso ensina?",
+    "hint": "O ponto limpo.",
+    "choices": [
+      {
+        "text": "A invasão veio antes",
+        "why": "Isso: o instante antes do dano não é o instante antes da invasão; audite o banco restaurado antes de deixar qualquer coisa conectar."
+      },
+      {
+        "text": "A PITR está quebrada",
+        "why": "Ela restaurou exatamente o que foi pedido."
+      },
+      {
+        "text": "Superusuários resistem a restaurações",
+        "why": "Este estava nos dados naquele instante."
+      },
+      {
+        "text": "Os backups também foram cifrados",
+        "why": "Os backups estavam bem."
+      }
+    ]
+  },
+  "ex-1khy8rdp": {
+    "prompt": "Ponha em ordem a recuperação de ransomware da lição 10.",
+    "hint": "Isolar primeiro, reconectar por último.",
+    "items": [
+      "Isolar as máquinas afetadas",
+      "Preservar uma cópia do que está lá",
+      "Achar um lugar limpo para restaurar",
+      "Achar uma cópia limpa e conferi-la",
+      "Restaurar, depois auditar",
+      "Trocar todas as credenciais, depois reconectar"
+    ],
+    "trap": "Trocar credenciais antes de isolar deixa o invasor ver as novas chegando."
+  },
+  "ex-1m2x9rca": {
+    "prompt": "O que as credenciais do repositório fora do local devem ter em comum com as dos servidores de produção?",
+    "hint": "Outra credencial.",
+    "choices": [
+      {
+        "text": "A mesma conta de administrador",
+        "why": "Aí uma conta roubada apaga os dois."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: quem tem as de produção não pode conseguir apagar os backups."
+      },
+      {
+        "text": "A mesma chave SSH",
+        "why": "Mesmo problema."
+      },
+      {
+        "text": "O mesmo item no gerenciador de senhas",
+        "why": "Mesmo problema."
+      }
+    ]
+  },
+  "ex-3hf5gc2n": {
+    "prompt": "O que é um standby físico, nos termos das lições anteriores?",
+    "hint": "A recuperação da lição 6, sem um alvo.",
+    "choices": [
+      {
+        "text": "Um dump recarregado à noite",
+        "why": "Isso é lógico."
+      },
+      {
+        "text": "Um snapshot por minuto",
+        "why": "Snapshots são instantes."
+      },
+      {
+        "text": "Uma recuperação sem fim",
+        "why": "Isso: um base backup que não para de se recuperar; ele reaplica o log à medida que chega."
+      },
+      {
+        "text": "Um segundo primário",
+        "why": "Ele é somente leitura até ser promovido."
+      }
+    ]
+  },
+  "ex-ww3hpxvf": {
+    "prompt": "Um standby com slot está parado há uma semana. O que acontece no primário?",
+    "hint": "O slot segura log.",
+    "choices": [
+      {
+        "text": "O pg_wal cresce",
+        "why": "Isso: o pg_wal cresce, a não ser que o slot tenha limite; max_slot_wal_keep_size, ao custo de perder o slot."
+      },
+      {
+        "text": "Nada; slots expiram",
+        "why": "Slots não expiram sozinhos."
+      },
+      {
+        "text": "O primário para",
+        "why": "Só quando o disco enche."
+      },
+      {
+        "text": "O slot vai para o arquivo de WAL",
+        "why": "Slots não arquivam."
+      }
+    ]
+  },
+  "ex-j09qfk4d": {
+    "prompt": "`max_slot_wal____size` limita quanto log um slot de replicação pode segurar.",
+    "hint": "Manter.",
+    "blanks": [
+      {
+        "accept": [
+          "_keep_"
+        ]
+      }
+    ]
+  },
+  "ex-6xf8xa8m": {
+    "prompt": "Depois de perder o slot, como o standby da lição 13 evitou ser reconstruído?",
+    "hint": "Outra fonte de segmentos antigos.",
+    "choices": [
+      {
+        "text": "Pulou os segmentos que faltavam",
+        "why": "Um standby não pode pular log."
+      },
+      {
+        "text": "pg_rewind",
+        "why": "Isso é para um primário antigo que divergiu."
+      },
+      {
+        "text": "Um slot novo os recriou",
+        "why": "Um slot não recria log removido."
+      },
+      {
+        "text": "O arquivo de WAL os forneceu",
+        "why": "Isso: o restore_command os buscou no arquivo de WAL; depois ele voltou ao streaming."
+      }
+    ]
+  },
+  "ex-42ns2vqf": {
+    "prompt": "Com `synchronous_commit = on` e um standby síncrono, quando um commit retorna?",
+    "hint": "Escrito, gravado em disco, reaplicado.",
+    "choices": [
+      {
+        "text": "Quando o primário o gravou em disco",
+        "why": "Isso é local."
+      },
+      {
+        "text": "Quando o standby o gravou em disco",
+        "why": "Isso: o remote_apply esperaria também o replay."
+      },
+      {
+        "text": "Quando o standby o reaplicou",
+        "why": "Isso é o remote_apply."
+      },
+      {
+        "text": "Na hora",
+        "why": "Isso é off."
+      }
+    ]
+  },
+  "ex-0mbv0e1n": {
+    "prompt": "`synchronous_standby_names = 'standby1'` e o standby1 morre. Qual é a descrição honesta dessa configuração?",
+    "hint": "Ou o banco para.",
+    "choices": [
+      {
+        "text": "Todo commit está em dois servidores, sempre",
+        "why": "Está em dois servidores, ou não houve commit."
+      },
+      {
+        "text": "Dois servidores, ou sem escritas",
+        "why": "Isso: uma queda do standby é uma queda do primário."
+      },
+      {
+        "text": "Ele volta para assíncrono",
+        "why": "O PostgreSQL nunca faz isso sozinho."
+      },
+      {
+        "text": "O standby é opcional",
+        "why": "Ele é exigido para cada commit."
+      }
+    ]
+  },
+  "ex-72ng6btw": {
+    "prompt": "Um loop faz commit de 36.000 linhas, uma por vez, contra um standby síncrono a 50 ms de distância. Quantos minutos a espera acrescenta?",
+    "hint": "36.000 × 0,05 s, depois minutos.",
+    "unit": "minutos"
+  },
+  "ex-s0ba8n05": {
+    "prompt": "Qual configuração sobrevive à perda de um de dois standbys síncronos?",
+    "hint": "O quórum da lição 12.",
+    "choices": [
+      {
+        "text": "'standby1'",
+        "why": "Essa para quando o standby1 some."
+      },
+      {
+        "text": "ANY 2 (standby1, standby2)",
+        "why": "Essa precisa dos dois."
+      },
+      {
+        "text": "Uma lista vazia",
+        "why": "Isso é assíncrono, não síncrono."
+      },
+      {
+        "text": "ANY 1 (standby1, standby2)",
+        "why": "Isso: qualquer um dos standbys confirma."
+      }
+    ]
+  },
+  "ex-g9kyqftg": {
+    "prompt": "Uma sessão esperando em `SyncRep` é cancelada. O que o cliente dela recebeu?",
+    "hint": "insert.log.",
+    "choices": [
+      {
+        "text": "Um aviso",
+        "why": "Isso: e depois INSERT 0 1; sucesso, numa linha que o standby talvez não tenha."
+      },
+      {
+        "text": "Um erro, e nenhuma linha",
+        "why": "A linha teve commit local."
+      },
+      {
+        "text": "Nada",
+        "why": "O cliente conectado foi avisado."
+      },
+      {
+        "text": "Um rollback",
+        "why": "Um commit não pode sofrer rollback."
+      }
+    ]
+  },
+  "ex-3rqjvm81": {
+    "prompt": "Ninguém escreve há uma hora. `now() - pg_last_xact_replay_timestamp()` no standby diz uma hora. O standby está atrasado?",
+    "hint": "Compare posições.",
+    "choices": [
+      {
+        "text": "Sim, uma hora",
+        "why": "Com o primário ocioso, o replay está em dia."
+      },
+      {
+        "text": "Sim, um segmento",
+        "why": "As posições eram iguais na lição."
+      },
+      {
+        "text": "Não necessariamente",
+        "why": "Isso: ele mede o tempo desde a última transação."
+      },
+      {
+        "text": "Não dá para saber",
+        "why": "Comparar LSNs diz."
+      }
+    ]
+  },
+  "ex-647kg6qb": {
+    "prompt": "Por que uma verificação que lista standbys mais de 64 MB atrás deixa passar um standby morto?",
+    "hint": "pg_stat_replication.",
+    "choices": [
+      {
+        "text": "64 MB é alto demais",
+        "why": "Qualquer limite deixa passar uma linha ausente."
+      },
+      {
+        "text": "O pg_wal_lsn_diff ignora standbys mortos",
+        "why": "Não há sobre o que calculá-lo."
+      },
+      {
+        "text": "A verificação precisa de um slot",
+        "why": "É a view que não tem a linha."
+      },
+      {
+        "text": "Um standby morto não tem linha",
+        "why": "Isso: parta dos standbys que deveriam existir."
+      }
+    ]
+  },
+  "ex-z0kft140": {
+    "prompt": "Ponha em ordem a leitura da sua própria escrita num standby.",
+    "hint": "Lição 13.",
+    "items": [
+      "Fazer commit no primário",
+      "Ler pg_current_wal_lsn() no primário",
+      "Perguntar ao standby se o replay passou dela",
+      "Ler lá, se passou, ou no primário"
+    ],
+    "trap": "Ler a posição antes do commit dá uma posição anterior à escrita."
+  },
+  "ex-avtbm3x9": {
+    "prompt": "`write_lag` e `flush_lag` são minúsculos; `replay_lag` está em minutos. Onde está o problema?",
+    "hint": "O log chega.",
+    "choices": [
+      {
+        "text": "A rede",
+        "why": "O write_lag seria grande."
+      },
+      {
+        "text": "O disco do primário",
+        "why": "Não aparece nessas colunas."
+      },
+      {
+        "text": "No replay do standby",
+        "why": "Isso: pausado, lento ou esperando uma consulta."
+      },
+      {
+        "text": "O arquivo de WAL",
+        "why": "O streaming não o usa."
+      }
+    ]
+  },
+  "ex-x0jyc7ht": {
+    "prompt": "Que tipo de replicação consegue copiar do PostgreSQL 16 para o 17?",
+    "hint": "Linhas, não bytes.",
+    "choices": [
+      {
+        "text": "Lógica",
+        "why": "Isso: ela decodifica o log em mudanças de linha."
+      },
+      {
+        "text": "Física",
+        "why": "A física exige a mesma versão major."
+      },
+      {
+        "text": "Em cascata",
+        "why": "Essa é física, a partir de um standby."
+      },
+      {
+        "text": "Síncrona",
+        "why": "Isso é um modo, não um tipo que cruza versões."
+      }
+    ]
+  },
+  "ex-qbv4hz74": {
+    "prompt": "Uma coluna é adicionada primeiro no publisher. O que acontece com a subscription?",
+    "hint": "DDL não é replicado.",
+    "choices": [
+      {
+        "text": "Ela adiciona a coluna",
+        "why": "Subscriptions copiam linhas, não DDL."
+      },
+      {
+        "text": "Ela para",
+        "why": "Isso: e o slot dela segura o log; adicione colunas primeiro no subscriber."
+      },
+      {
+        "text": "Ela descarta os valores da coluna nova",
+        "why": "Ela recusa a linha em vez disso."
+      },
+      {
+        "text": "Nada",
+        "why": "O worker falha e tenta de novo."
+      }
+    ]
+  },
+  "ex-yrs2kyq3": {
+    "prompt": "Ponha em ordem a virada de um upgrade por replicação lógica.",
+    "hint": "A última seção da lição 14.",
+    "items": [
+      "Parar as escritas",
+      "Esperar até o slot estar 0 bytes atrás",
+      "Levar as sequências além do máximo antigo",
+      "Desabilitar a subscription",
+      "Apontar a aplicação para a versão nova"
+    ],
+    "trap": "Sequências movidas antes de as escritas pararem podem ser ultrapassadas."
+  },
+  "ex-m28zkbwd": {
+    "prompt": "Depois da virada para o 17, o primeiro insert colide com o pedido 1. O que foi esquecido?",
+    "hint": "Não é uma linha.",
+    "choices": [
+      {
+        "text": "A chave primária",
+        "why": "Ela foi copiada com o schema."
+      },
+      {
+        "text": "A publication",
+        "why": "Ela funcionou."
+      },
+      {
+        "text": "A sequência",
+        "why": "Isso: a replicação lógica não copia sequências."
+      },
+      {
+        "text": "O slot",
+        "why": "Não tem relação."
+      }
+    ]
+  },
+  "ex-fcjmga1r": {
+    "prompt": "Ponha em ordem as três perguntas da lição 15 antes de uma promoção.",
+    "hint": "Sumiu, dados, duas vezes.",
+    "items": [
+      "O primário sumiu mesmo?",
+      "Quanto o standby tem?",
+      "Alguma coisa vai promover uma segunda vez?"
+    ],
+    "trap": "Perguntar primeiro sobre os dados pode promover ao lado de um primário vivo."
+  },
+  "ex-h3smwjeg": {
+    "prompt": "Depois de um failover, o primário antigo reinicia. Por que ele volta como primário?",
+    "hint": "O que há no diretório de dados dele?",
+    "choices": [
+      {
+        "text": "Nada nele diz que algo aconteceu",
+        "why": "Isso: sem standby.signal, ele sobe como o que era."
+      },
+      {
+        "text": "Ele lê a timeline nova e se promove",
+        "why": "Ele nem olha para o outro servidor."
+      },
+      {
+        "text": "O slot dele manda",
+        "why": "Slots não decidem papéis."
+      },
+      {
+        "text": "O pg_ctlcluster o promove",
+        "why": "Ele simplesmente o inicia."
+      }
+    ]
+  },
+  "ex-4qp64t0n": {
+    "prompt": "O `pg_rewind` recusou: nem checksums nem `wal_log_hints`. Quando um deles precisa estar ligado?",
+    "hint": "Antes.",
+    "choices": [
+      {
+        "text": "Logo antes do rewind",
+        "why": "As mudanças divergentes já foram registradas sem ele."
+      },
+      {
+        "text": "Só no primário novo",
+        "why": "Qualquer um pode ser o primário antigo da próxima vez."
+      },
+      {
+        "text": "Nunca; o rewind não precisa",
+        "why": "Ele recusou sem eles."
+      },
+      {
+        "text": "Antes da falha",
+        "why": "Isso: ele torna utilizável o log escrito dali em diante."
+      }
+    ]
+  },
+  "ex-420sjy8h": {
+    "prompt": "No Ubuntu, o `pg_rewind` falhou no primeiro passo sem `--config-file`. Por quê?",
+    "hint": "Onde fica o postgresql.conf?",
+    "choices": [
+      {
+        "text": "O pg_rewind não está instalado",
+        "why": "Ele rodou e falhou."
+      },
+      {
+        "text": "O postgresql.conf fica em /etc/postgresql",
+        "why": "Isso: não no diretório de dados, onde a recuperação single-user dele procurou."
+      },
+      {
+        "text": "O servidor de origem estava desligado",
+        "why": "Ele conectou."
+      },
+      {
+        "text": "O alvo era um standby",
+        "why": "Era o primário antigo."
+      }
+    ]
+  },
+  "ex-kpfdfqc6": {
+    "prompt": "O que faz um switchover não perder nada?",
+    "hint": "Um desligamento limpo.",
+    "choices": [
+      {
+        "text": "A replicação síncrona está ligada",
+        "why": "Não é necessária para um switchover limpo."
+      },
+      {
+        "text": "O standby recebe o último checkpoint",
+        "why": "Isso: o primário espera os standbys receberem o último checkpoint dele; aí o standby tem cada byte."
+      },
+      {
+        "text": "O pg_rewind roda antes",
+        "why": "Não é preciso rewind."
+      },
+      {
+        "text": "A aplicação está parada",
+        "why": "Ajuda, mas não é o que garante."
+      }
+    ]
+  },
+  "ex-g9mcyebj": {
+    "prompt": "Sequências registram valores adiantados em lotes. Na lição, quantos ids foram pulados entre 50001 e 50034?",
+    "hint": "Entre, sem contar nenhum dos dois.",
+    "unit": "ids"
+  },
+  "ex-efr6xty2": {
+    "prompt": "Num cluster Patroni, qual nó é o primário?",
+    "hint": "Uma chave.",
+    "choices": [
+      {
+        "text": "O de número de porta mais baixo",
+        "why": "Portas não decidem."
+      },
+      {
+        "text": "O primeiro a subir",
+        "why": "Só no bootstrap."
+      },
+      {
+        "text": "O que tem mais dados",
+        "why": "O atraso só limita quem pode concorrer."
+      },
+      {
+        "text": "O que detém a leader key",
+        "why": "Isso: e só enquanto a renova."
+      }
+    ]
+  },
+  "ex-en3hcm8p": {
+    "prompt": "Com `ttl: 30` e `loop_wait: 10`, no máximo quantos segundos podem passar entre a última renovação de um líder e a expiração da chave dele?",
+    "hint": "O ttl.",
+    "unit": "segundos"
+  },
+  "ex-eq61h0kc": {
+    "prompt": "O etcd, de um único membro, para. Os servidores PostgreSQL estão saudáveis. O que acontece com as escritas sem o failsafe mode?",
+    "hint": "Um líder que não consegue renovar.",
+    "choices": [
+      {
+        "text": "Param: o líder se rebaixa",
+        "why": "Isso: um etcd único é um ponto único de falha para as escritas."
+      },
+      {
+        "text": "Seguem funcionando no líder",
+        "why": "Só com o failsafe mode, e com todos os membros respondendo."
+      },
+      {
+        "text": "Uma réplica assume",
+        "why": "Ninguém pega uma chave de um store que está fora."
+      },
+      {
+        "text": "Vão para os três nós",
+        "why": "Por desenho, nunca há mais de um primário."
+      }
+    ]
+  },
+  "ex-rmcnm1gv": {
+    "prompt": "O Patroni do líder derrubado sobe de novo. O que ele faz?",
+    "hint": "Ele lê a chave primeiro.",
+    "choices": [
+      {
+        "text": "Se promove",
+        "why": "A chave nomeia outro nó."
+      },
+      {
+        "text": "Espera um operador",
+        "why": "Ele age por conta própria."
+      },
+      {
+        "text": "Faz rewind e volta como réplica",
+        "why": "Isso: ele viu outro líder."
+      },
+      {
+        "text": "Apaga os dados dele",
+        "why": "O pg_rewind bastou."
+      }
+    ]
+  },
+  "ex-wvzk89hx": {
+    "prompt": "`patronictl ... ___ --leader pg3 --candidate pg1 --force` move o líder de propósito.",
+    "hint": "Planejado, não depois de uma falha.",
+    "blanks": [
+      {
+        "accept": [
+          "switchover"
+        ]
+      }
+    ]
+  },
+  "ex-9q6s0ka6": {
+    "prompt": "O Patroni do líder está congelado e o PostgreSQL dele segue rodando. O que acontece?",
+    "hint": "A chave expira.",
+    "choices": [
+      {
+        "text": "O cluster para",
+        "why": "Outro nó pega a chave."
+      },
+      {
+        "text": "O PostgreSQL para junto",
+        "why": "É um processo separado."
+      },
+      {
+        "text": "Nada muda",
+        "why": "A chave expira e uma réplica se promove."
+      },
+      {
+        "text": "Dois primários",
+        "why": "Isso: até o Patroni acordar; aí as escritas dele são desfeitas pelo rewind."
+      }
+    ]
+  },
+  "ex-7xmm0ngq": {
+    "prompt": "O que aconteceu com o pedido que o primário antigo congelado confirmou?",
+    "hint": "O trabalho do pg_rewind.",
+    "choices": [
+      {
+        "text": "Copiado para o novo líder",
+        "why": "Nada o copia."
+      },
+      {
+        "text": "Guardado numa tabela de conflitos",
+        "why": "Não existe uma."
+      },
+      {
+        "text": "Descartado pelo rewind",
+        "why": "Isso: sem aviso; uma escrita confirmada, perdida em silêncio."
+      },
+      {
+        "text": "Ainda no primário antigo",
+        "why": "O rewind o removeu."
+      }
+    ]
+  },
+  "ex-t15c3dtm": {
+    "prompt": "Associe cada fence ao modo como ele detém um primário antigo.",
+    "hint": "A tabela da lição 17.",
+    "pairs": [
+      {
+        "left": "Watchdog",
+        "right": "Reinicia a máquina quando o Patroni para de resetá-lo"
+      },
+      {
+        "left": "STONITH",
+        "right": "Desliga a máquina por fora"
+      },
+      {
+        "left": "Replicação síncrona",
+        "right": "Deixa-o sem conseguir confirmar um commit"
+      }
+    ],
+    "right_distractors": [
+      "Remove o slot de replicação dele"
+    ]
+  },
+  "ex-sne378rn": {
+    "prompt": "Por que `watchdog: mode: required` importa?",
+    "hint": "Descoberto na inicialização.",
+    "choices": [
+      {
+        "text": "Sem dispositivo, sem liderança",
+        "why": "Isso: um watchdog ausente é descoberto antes de um failover."
+      },
+      {
+        "text": "Acelera o failover",
+        "why": "Não muda nada no tempo."
+      },
+      {
+        "text": "Substitui o etcd",
+        "why": "É um fence, não um store."
+      },
+      {
+        "text": "Faz o Patroni reiniciar o PostgreSQL",
+        "why": "Ele reinicia a máquina."
+      }
+    ]
+  },
+  "ex-bnf7zk3y": {
+    "prompt": "Por que o PostgreSQL não pode simplesmente aceitar mil conexões?",
+    "hint": "Um destes por conexão.",
+    "choices": [
+      {
+        "text": "O protocolo proíbe",
+        "why": "É um limite configurado."
+      },
+      {
+        "text": "Cada uma é um processo com memória própria",
+        "why": "Isso: eles disputam em vez de trabalhar."
+      },
+      {
+        "text": "As portas acabam",
+        "why": "Uma porta atende todas."
+      },
+      {
+        "text": "Licenças",
+        "why": "O PostgreSQL não tem nenhuma."
+      }
+    ]
+  },
+  "ex-cp9cg0q7": {
+    "prompt": "Em modo transaction, o `SET statement_timeout = '1ms'` de um cliente cancelou a consulta de outro cliente. Por quê?",
+    "hint": "Onde vive o estado da sessão?",
+    "choices": [
+      {
+        "text": "O PgBouncer o espalhou",
+        "why": "Ele não copia nada."
+      },
+      {
+        "text": "O statement_timeout é global",
+        "why": "SET é por sessão."
+      },
+      {
+        "text": "Ficou na conexão do pool com o servidor",
+        "why": "Isso: use SET LOCAL dentro de transações."
+      },
+      {
+        "text": "O segundo cliente herdou o papel do primeiro",
+        "why": "Os papéis não mudam."
+      }
+    ]
+  },
+  "ex-00q9xn7a": {
+    "prompt": "Associe cada modo de pool ao que ele quebra.",
+    "hint": "A tabela da lição 18.",
+    "pairs": [
+      {
+        "left": "session",
+        "right": "Nada"
+      },
+      {
+        "left": "transaction",
+        "right": "Estado de sessão, como SET e PREPARE"
+      },
+      {
+        "left": "statement",
+        "right": "Transações de mais de um comando"
+      }
+    ],
+    "right_distractors": [
+      "A replicação"
+    ]
+  },
+  "ex-ns17971x": {
+    "prompt": "Em modo session, por que uma consulta a mais esperou quase dois segundos?",
+    "hint": "Quem segura as conexões?",
+    "choices": [
+      {
+        "text": "Sessões seguram conexões",
+        "why": "Isso: clientes seguram uma conexão a sessão inteira; ela esperou uma sessão acabar, não uma transação."
+      },
+      {
+        "text": "O modo session é mais lento",
+        "why": "As consultas rodam na mesma velocidade."
+      },
+      {
+        "text": "O DISCARD ALL leva dois segundos",
+        "why": "Ele é rápido."
+      },
+      {
+        "text": "O PgBouncer reiniciou",
+        "why": "Ele recarregou com SIGHUP sem reiniciar."
+      }
+    ]
+  },
+  "ex-y2mcpzge": {
+    "prompt": "Qual string de conexão chega ao primário entre três hosts, sem proxy?",
+    "hint": "libpq.",
+    "choices": [
+      {
+        "text": "host=primary",
+        "why": "Esse nome é só um endereço."
+      },
+      {
+        "text": "sslmode=require",
+        "why": "Criptografia, não papel."
+      },
+      {
+        "text": "dbname=primary",
+        "why": "Isso nomeia um banco."
+      },
+      {
+        "text": "Os três hosts listados",
+        "why": "Isso: com target_session_attrs=read-write; ele fica com o primeiro que aceita escritas."
+      }
+    ]
+  },
+  "ex-xspqfp4b": {
+    "prompt": "Como o HAProxy sabe qual nó é o primário?",
+    "hint": "A API REST do Patroni.",
+    "choices": [
+      {
+        "text": "Ele lê o etcd",
+        "why": "Ele pergunta a cada Patroni."
+      },
+      {
+        "text": "Verifica /primary em cada nó",
+        "why": "Isso: 200 no líder, 503 nos outros."
+      },
+      {
+        "text": "Tenta uma escrita em cada um",
+        "why": "Ele roda uma verificação HTTP."
+      },
+      {
+        "text": "É configurado à mão após cada failover",
+        "why": "Aí ele não acompanharia os failovers."
+      }
+    ]
+  },
+  "ex-9am8hhtn": {
+    "prompt": "O que nenhum proxy, VIP ou string de conexão consegue levar para um primário novo?",
+    "hint": "held.log.",
+    "choices": [
+      {
+        "text": "Conexões novas",
+        "why": "É exatamente o que eles redirecionam."
+      },
+      {
+        "text": "Uma conexão aberta",
+        "why": "Isso: a sessão vivia num processo do primário antigo."
+      },
+      {
+        "text": "Os dados",
+        "why": "Quem leva os dados é a replicação."
+      },
+      {
+        "text": "A leader key",
+        "why": "Ela fica no etcd."
+      }
+    ]
+  },
+  "ex-z9kesxmp": {
+    "prompt": "Um pedido falhou com \"connection lost\". O que torna seguro tentar de novo?",
+    "hint": "Teve commit?",
+    "choices": [
+      {
+        "text": "Tentar na hora, muitas vezes",
+        "why": "Isso martela o primário novo e pode duplicar."
+      },
+      {
+        "text": "Usar um timeout maior",
+        "why": "Não responde se teve commit."
+      },
+      {
+        "text": "Tentar numa réplica",
+        "why": "Réplicas recusam escritas."
+      },
+      {
+        "text": "Uma chave escolhida pela aplicação",
+        "why": "Isso: uma nova tentativa com a mesma chave não consegue duplicá-lo."
+      }
+    ]
+  },
+  "ex-grxdzjy5": {
+    "prompt": "Por que o DNS demora para mover a aplicação depois de um failover?",
+    "hint": "Alguém guardou a resposta.",
+    "choices": [
+      {
+        "text": "Respostas em cache",
+        "why": "Isso: as respostas ficam em cache pelo TTL ou mais, tanto em resolvers quanto em runtimes."
+      },
+      {
+        "text": "Registros de DNS são só leitura",
+        "why": "Eles podem ser alterados."
+      },
+      {
+        "text": "O primário novo não tem IP",
+        "why": "Ele tem um."
+      },
+      {
+        "text": "A libpq ignora o DNS",
+        "why": "Ela resolve nomes."
+      }
+    ]
+  },
+  "ex-xvz54ytc": {
+    "prompt": "Por que um standby em outro continente é assíncrono?",
+    "hint": "Idas e voltas.",
+    "choices": [
+      {
+        "text": "Standbys assíncronos copiam menos",
+        "why": "Eles copiam o mesmo log."
+      },
+      {
+        "text": "A distância quebra o streaming",
+        "why": "O streaming funciona a qualquer distância."
+      },
+      {
+        "text": "Todo commit esperaria",
+        "why": "Isso: um síncrono somaria a ida e volta dele a cada commit; um décimo de segundo ou mais, toda vez."
+      },
+      {
+        "text": "O Patroni proíbe",
+        "why": "Quem proíbe é a latência."
+      }
+    ]
+  },
+  "ex-zzdmhsmy": {
+    "prompt": "Um relatório num standby foi cancelado por `conflict with recovery`. Qual configuração o mantém rodando, e às custas de quem?",
+    "hint": "O primário guarda as linhas.",
+    "choices": [
+      {
+        "text": "synchronous_commit, às custas de latência",
+        "why": "Não tem relação com conflitos."
+      },
+      {
+        "text": "max_connections, às custas de memória",
+        "why": "Não tem relação."
+      },
+      {
+        "text": "archive_timeout, às custas de disco",
+        "why": "Não tem relação."
+      },
+      {
+        "text": "hot_standby_feedback, com bloat no primário",
+        "why": "Isso: às custas de bloat no primário; o VACUUM do primário mantém as linhas de que o relatório precisa."
+      }
+    ]
+  },
+  "ex-hw9sqjnp": {
+    "prompt": "Uma réplica atrasada em uma hora. Uma tabela é dropada às 10:00 e alguém nota às 10:20. E agora?",
+    "hint": "Pause primeiro.",
+    "choices": [
+      {
+        "text": "Promovê-la na hora",
+        "why": "Não é preciso promover para ler."
+      },
+      {
+        "text": "Restaurar do arquivo de WAL",
+        "why": "É possível, e mais lento que a réplica atrasada."
+      },
+      {
+        "text": "Pausar o replay e copiar a tabela",
+        "why": "Isso: dentro da hora, a réplica ainda a tem."
+      },
+      {
+        "text": "Não há o que fazer",
+        "why": "O atraso existe exatamente para isso."
+      }
+    ]
+  },
+  "ex-4ndtg8wt": {
+    "prompt": "Por que o standby em cascata perdeu os pedidos do cliente 7 enquanto o atrasado os tinha?",
+    "hint": "O que uma cascata repassa?",
+    "choices": [
+      {
+        "text": "O log recebido é repassado na hora",
+        "why": "Isso: o standby em cascata não tem atraso próprio."
+      },
+      {
+        "text": "A cascata tem hardware mais rápido",
+        "why": "Mesma máquina."
+      },
+      {
+        "text": "A réplica atrasada ignorou o delete",
+        "why": "Ela esperava para aplicá-lo."
+      },
+      {
+        "text": "A cascata lê do primário",
+        "why": "Ela lê do standby atrasado."
+      }
+    ]
+  },
+  "ex-8cn0x9f7": {
+    "prompt": "Que ferramentas protegem contra que falha? Marque todas as corretas.",
+    "hint": "Lições 6, 11 e 20.",
+    "choices": [
+      {
+        "text": "Uma réplica atrasada, contra um erro notado dentro do atraso",
+        "why": "Isso."
+      },
+      {
+        "text": "PITR a partir do arquivo de WAL, contra um erro notado amanhã",
+        "why": "Isso."
+      },
+      {
+        "text": "Um standby síncrono, contra um DELETE errado",
+        "why": "Ele reaplica o delete na hora."
+      },
+      {
+        "text": "Um standby em outra região, contra perder uma região",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-x7emv6rj": {
+    "prompt": "Quantos minutos de indisponibilidade por mês (30 dias) 99,9% permite, arredondando para o minuto mais próximo?",
+    "hint": "00:43:12.",
+    "unit": "minutos"
+  },
+  "ex-dhpbee7h": {
+    "prompt": "O que paga o crédito do SLA de um provedor?",
+    "hint": "A receita de quem?",
+    "choices": [
+      {
+        "text": "A sua receita perdida",
+        "why": "Créditos são uma parte da fatura."
+      },
+      {
+        "text": "Uma parte da fatura do provedor",
+        "why": "Isso: não os pedidos que você deixou de receber."
+      },
+      {
+        "text": "Uma restauração grátis",
+        "why": "Não é isso que créditos são."
+      },
+      {
+        "text": "Uma instância nova",
+        "why": "Não é isso que créditos são."
+      }
+    ]
+  },
+  "ex-fksxcap2": {
+    "prompt": "Num serviço gerenciado, qual backup é inteiramente seu?",
+    "hint": "Mesma conta, mesmas credenciais.",
+    "choices": [
+      {
+        "text": "Os snapshots automáticos",
+        "why": "Eles vivem na mesma conta."
+      },
+      {
+        "text": "A réplica de leitura",
+        "why": "Ela copia erros."
+      },
+      {
+        "text": "Um dump guardado em outro lugar",
+        "why": "Isso: um dump lógico guardado fora da conta, onde as credenciais dela não chegam."
+      },
+      {
+        "text": "A janela de retenção",
+        "why": "É uma configuração."
+      }
+    ]
+  },
+  "ex-m2ft50e9": {
+    "prompt": "Quais continuam sendo responsabilidade sua num serviço gerenciado? Marque todas as corretas.",
+    "hint": "A última linha da tabela da lição 21.",
+    "choices": [
+      {
+        "text": "Um DELETE errado",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma senha vazada",
+        "why": "Isso."
+      },
+      {
+        "text": "Reiniciar o host que falhou",
+        "why": "Quem cuida dos hosts é o provedor."
+      },
+      {
+        "text": "A aplicação reconectar depois de um failover",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5dqj5spd": {
+    "prompt": "Ponha em ordem as partes de um incidente.",
+    "hint": "Lição 22.",
+    "items": [
+      "Detectar",
+      "Decidir",
+      "Comunicar",
+      "Escrever o relato"
+    ],
+    "trap": "O relato espera o incidente acabar."
+  },
+  "ex-x6n7mg6m": {
+    "prompt": "O que torna confiável uma mensagem de incidente?",
+    "hint": "Três regras.",
+    "choices": [
+      {
+        "text": "Fatos e compromissos cumpridos",
+        "why": "Isso: fatos, sem causa chutada, a próxima atualização cumprida, e nenhum prazo de recuperação que ninguém mediu."
+      },
+      {
+        "text": "Detalhe técnico",
+        "why": "Use as palavras de quem lê."
+      },
+      {
+        "text": "Um prazo de recuperação prometido",
+        "why": "Nunca um que ninguém mediu."
+      },
+      {
+        "text": "Esperar até saber tudo",
+        "why": "Cedo e repetido vence completo."
+      }
+    ]
+  },
+  "ex-6vrds37q": {
+    "prompt": "Por que montar a linha do tempo pelos logs, e não pela memória?",
+    "hint": "Ordem.",
+    "choices": [
+      {
+        "text": "Logs são mais curtos",
+        "why": "São mais longos."
+      },
+      {
+        "text": "A memória não é permitida",
+        "why": "Os relatos importam; os horários vêm dos logs."
+      },
+      {
+        "text": "Logs apontam culpados",
+        "why": "Os relatos são sem culpados."
+      },
+      {
+        "text": "A memória reordena",
+        "why": "Isso: a memória reordena os eventos no que fazia sentido; os logs têm os horários."
+      }
+    ]
+  },
+  "ex-5xhk3c1t": {
+    "prompt": "Os 30 segundos sem pedidos da lição 22 se dividem em uns 27 para a chave e 3 para o HAProxy. Que mudança encurta a primeira parte, e com que risco?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Checks mais rápidos do HAProxy, sem risco",
+        "why": "Isso são os três segundos."
+      },
+      {
+        "text": "Um ttl mais curto",
+        "why": "Isso: mais fácil de enganar com um primário lento; cada ajuste tem seu próprio risco."
+      },
+      {
+        "text": "Mais réplicas, sem risco",
+        "why": "O número de réplicas não muda a espera."
+      },
+      {
+        "text": "Replicação síncrona",
+        "why": "Ela decide o que se perde, não quanto demora."
+      }
+    ]
+  },
+  "ex-22gg61fk": {
+    "prompt": "Qual é uma ação num relato de incidente?",
+    "hint": "Dono e data.",
+    "choices": [
+      {
+        "text": "Ter mais cuidado",
+        "why": "Um desejo."
+      },
+      {
+        "text": "Um timeout de conexão, pela Ana, até o dia 30",
+        "why": "Isso: pela Ana, até o dia 30; uma mudança, um dono, uma data."
+      },
+      {
+        "text": "Lembrar do ttl",
+        "why": "Nada muda."
+      },
+      {
+        "text": "Descobrir quem fez",
+        "why": "Sem culpados."
+      }
+    ]
+  },
+  "ex-ts05qgbs": {
+    "prompt": "Por que um ensaio precisa se recusar a começar com um nó já fora?",
+    "hint": "Quantos podem ser perdidos?",
+    "choices": [
+      {
+        "text": "O Patroni não faz failover com dois",
+        "why": "Faz; o risco vem depois."
+      },
+      {
+        "text": "O HAProxy precisa de três",
+        "why": "Ele roteia para o que está de pé."
+      },
+      {
+        "text": "O script não sabe contar",
+        "why": "É o plano que proíbe."
+      },
+      {
+        "text": "Ele viraria o incidente",
+        "why": "Isso: derrubar o líder deixaria um nó."
+      }
+    ]
+  },
+  "ex-vk7qbmq0": {
+    "prompt": "A primeira versão do `rehearsal.sh` encontrou o atraso `unknown` e seguiu em frente. Qual é a lição?",
+    "hint": "Uma proteção que falha aberta.",
+    "choices": [
+      {
+        "text": "Uma verificação deve parar no que não consegue ler",
+        "why": "Isso: \"não sei\" só pode significar parar."
+      },
+      {
+        "text": "Python não deveria ser usado em scripts shell",
+        "why": "O problema era o modo de falha, não a linguagem."
+      },
+      {
+        "text": "Não vale a pena verificar o atraso",
+        "why": "Ele é um dos critérios."
+      },
+      {
+        "text": "O JSON do patronictl não é confiável",
+        "why": "Ele reportou a verdade: unknown."
+      }
+    ]
+  },
+  "ex-gf08h7z5": {
+    "prompt": "Uma conexão ficou pendurada por minutos atrás do HAProxy depois que o líder morreu. O que limita essa espera?",
+    "hint": "A descoberta da lição 23.",
+    "choices": [
+      {
+        "text": "Um timeout client maior no HAProxy",
+        "why": "Isso a alonga."
+      },
+      {
+        "text": "Um ttl mais curto",
+        "why": "Isso muda quando o failover acontece, não o cliente pendurado."
+      },
+      {
+        "text": "Um connect timeout no cliente",
+        "why": "Isso: PGCONNECT_TIMEOUT, ou o equivalente do driver."
+      },
+      {
+        "text": "synchronous_commit = off",
+        "why": "Não tem relação."
+      }
+    ]
+  },
+  "ex-a88q0zw6": {
+    "prompt": "Por que a primeira página do runbook é um script?",
+    "hint": "O estado muda.",
+    "choices": [
+      {
+        "text": "Ele conserta problemas",
+        "why": "Ele só olha."
+      },
+      {
+        "text": "Scripts são mais curtos",
+        "why": "Tamanho não é a questão."
+      },
+      {
+        "text": "Ninguém lê texto",
+        "why": "As pessoas leem; os fatos mudam."
+      },
+      {
+        "text": "Ele acerta cada vez que roda",
+        "why": "Isso: uma página sobre estado fica desatualizada."
+      }
+    ]
+  },
+  "ex-46mf7tb1": {
+    "prompt": "O `runbook-check.sh` achou a 5434 sem responder. Que tipo de achado é esse?",
+    "hint": "Uma página errada.",
+    "choices": [
+      {
+        "text": "Um erro de digitação para ignorar",
+        "why": "Alguém o digitaria no pior momento."
+      },
+      {
+        "text": "Prova de que o cluster caiu",
+        "why": "Só aquele endereço caiu."
+      },
+      {
+        "text": "Um defeito",
+        "why": "Isso: um defeito, enviado ao dono do runbook, como são as falhas do lagcheck.sh."
+      },
+      {
+        "text": "Um motivo para reiniciar a 5434",
+        "why": "Nada precisa rodar ali; a página está errada."
+      }
+    ]
+  },
+  "ex-0qaqa3st": {
+    "prompt": "Onde precisa ficar uma cópia do runbook?",
+    "hint": "Não junto com o que ele descreve.",
+    "choices": [
+      {
+        "text": "Fora de cada sistema que ele descreve",
+        "why": "Isso: uma wiki no banco que falhou não pode ser lida."
+      },
+      {
+        "text": "No primário",
+        "why": "Perdida junto com ele."
+      },
+      {
+        "text": "Só na cabeça de quem escreveu",
+        "why": "Esse é o problema que o runbook resolve."
+      },
+      {
+        "text": "No etcd",
+        "why": "O etcd guarda algumas chaves, não documentos."
+      }
+    ]
+  },
+  "ex-1z4d7enq": {
+    "prompt": "Quais destes uma verificação de endereços do runbook NÃO pega? Marque todas as corretas.",
+    "hint": "Ela lê endereços e pergunta a eles.",
+    "choices": [
+      {
+        "text": "Um passo sem endereço",
+        "why": "Isso: invisível para ela."
+      },
+      {
+        "text": "Uma ordem errada de passos",
+        "why": "Isso: só segui-lo descobre isso."
+      },
+      {
+        "text": "Um endereço onde nada responde",
+        "why": "É exatamente o que ela pega."
+      },
+      {
+        "text": "Um comando que não funciona mais",
+        "why": "Isso: só um ensaio descobre isso."
+      }
+    ]
+  },
+  "ex-syzhywy5": {
+    "prompt": "Qual par cobre tanto perder um servidor quanto um `DELETE` errado?",
+    "hint": "Máquinas e dados.",
+    "choices": [
+      {
+        "text": "Dois standbys",
+        "why": "Os dois reaplicam o delete."
+      },
+      {
+        "text": "Standby mais PITR",
+        "why": "Isso: um standby e recuperação para um ponto no tempo; replicação para as máquinas, o arquivo de WAL para os dados."
+      },
+      {
+        "text": "Só dumps noturnos",
+        "why": "Horas de dados e horas de restauração."
+      },
+      {
+        "text": "Um standby síncrono e um quórum",
+        "why": "Ainda cópias de cada erro."
+      }
+    ]
+  },
+  "ex-kf9vaxns": {
+    "prompt": "Quais destes são afirmações até serem testados? Marque todas as corretas.",
+    "hint": "Lição 1, para tudo.",
+    "choices": [
+      {
+        "text": "Um backup",
+        "why": "Isso: até ser restaurado."
+      },
+      {
+        "text": "Um failover",
+        "why": "Isso: até ser ensaiado."
+      },
+      {
+        "text": "Um runbook",
+        "why": "Isso: até outra pessoa segui-lo."
+      },
+      {
+        "text": "Uma restauração acompanhada até o fim e cronometrada",
+        "why": "Isso já é o teste."
+      }
+    ]
+  },
+  "ex-2q2pmq2c": {
+    "prompt": "RPO de segundos e RTO de minutos para um shop com uma região. Qual desenho se encaixa melhor?",
+    "hint": "Lições 8, 12, 16 e 19.",
+    "choices": [
+      {
+        "text": "Dumps noturnos para outra região",
+        "why": "Horas de perda, horas de restauração."
+      },
+      {
+        "text": "Um standby síncrono, promovido à mão",
+        "why": "A perda dele para as escritas, e uma promoção manual estoura os minutos."
+      },
+      {
+        "text": "Patroni com um quórum síncrono próximo",
+        "why": "Isso: com um proxy e PITR; failover automático rápido, pouca perda, e o arquivo de WAL por baixo."
+      },
+      {
+        "text": "Só uma réplica atrasada",
+        "why": "Inútil para failover."
+      }
+    ]
+  },
+  "ex-x9w8dsb4": {
+    "prompt": "Quais afirmações sobre um standby assíncrono são verdadeiras? Marque todas as corretas.",
+    "hint": "Lições 11 a 13.",
+    "choices": [
+      {
+        "text": "Pode perder os últimos commits num failover",
+        "why": "Isso: o que ele ainda não tinha recebido."
+      },
+      {
+        "text": "A falha dele não para as escritas",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele protege contra um DELETE errado",
+        "why": "Ele o reaplica."
+      },
+      {
+        "text": "O atraso dele deve ser vigiado",
+        "why": "Isso: o lagcheck.sh da lição 13."
+      }
+    ]
+  }
+}
