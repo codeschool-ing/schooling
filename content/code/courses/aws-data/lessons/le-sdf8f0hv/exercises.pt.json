@@ -1,0 +1,383 @@
+{
+  "ex-epje6k40": {
+    "prompt": "Quantas cópias de cada segmento de 10 GB o Aurora guarda, e onde?",
+    "hint": "Conte por zona, depois as zonas.",
+    "choices": [
+      {
+        "text": "Duas, uma em cada uma de duas zonas, como o Multi-AZ",
+        "why": "Essa é a instância Multi-AZ do RDS; o Aurora grava cada segmento seis vezes."
+      },
+      {
+        "text": "Seis: duas em cada uma de três zonas",
+        "why": "Isso. As seis cópias de um segmento são um protection group."
+      },
+      {
+        "text": "Três, uma por zona, com um quórum de leitura de dois",
+        "why": "Há duas cópias por zona, seis no total; o quórum de leitura é três de seis."
+      },
+      {
+        "text": "Uma por instância do cluster",
+        "why": "As instâncias compartilham um volume; o número de cópias não tem nada a ver com elas."
+      }
+    ]
+  },
+  "ex-kafq0hq0": {
+    "prompt": "A zona `sa-east-1c` apaga, levando duas das seis cópias de um protection group. O que o cluster ainda consegue fazer?",
+    "hint": "Quórum de escrita 4, de leitura 3.",
+    "choices": [
+      {
+        "text": "Ler, mas não escrever, até a zona voltar",
+        "why": "Sobram quatro cópias, que é exatamente o quórum de escrita."
+      },
+      {
+        "text": "Nada, até um failover mover o volume",
+        "why": "O volume não é movido; continua espalhado pelas outras duas zonas."
+      },
+      {
+        "text": "Escrever só nas cópias de `sa-east-1a`",
+        "why": "As escritas vão para toda cópia que responde, e quatro respondendo basta."
+      },
+      {
+        "text": "Ler e escrever, com quatro cópias restantes",
+        "why": "Isso. Uma zona é a falha que o Aurora é projetado para aguentar sem parar as escritas."
+      }
+    ]
+  },
+  "ex-fcwp0gba": {
+    "prompt": "Por que o Aurora escolhe um quórum de escrita de 4 e um de leitura de 3, em 6, em vez de 3 e 3?",
+    "hint": "Some os dois números e compare com seis.",
+    "choices": [
+      {
+        "text": "3 e 3 seria mais rápido, e 4 e 3 é um meio-termo de preço",
+        "why": "O preço não é o motivo; com 3 e 3 uma leitura poderia perder a última escrita."
+      },
+      {
+        "text": "Com 4 + 3 acima de 6, toda consulta cruza uma cópia que tem o dado mais novo",
+        "why": "Isso. Dois conjuntos de 3 podem não se tocar; 4 e 3 não."
+      },
+      {
+        "text": "As escritas precisam de uma cópia a mais para o cache da réplica",
+        "why": "As réplicas leem o armazenamento como qualquer um; o quórum é sobre interseção."
+      },
+      {
+        "text": "Três zonas precisam de um número ímpar de cópias por zona",
+        "why": "Há duas por zona, um número par; o motivo é a interseção."
+      }
+    ]
+  },
+  "ex-0jxsgn1v": {
+    "prompt": "O que um writer do Aurora manda para a camada de armazenamento quando uma transação é confirmada?",
+    "hint": "\"O log é o banco.\"",
+    "choices": [
+      {
+        "text": "As páginas de dados alteradas, para seis cópias",
+        "why": "É assim que uma instância RDS e o espelho dela funcionam; o Aurora não manda páginas."
+      },
+      {
+        "text": "Só registros de log, aplicados pelos nós às páginas",
+        "why": "Isso. O que faz de um commit uma escrita pequena pela rede, e deixa as réplicas compartilharem o volume."
+      },
+      {
+        "text": "Um snapshot do volume, a cada cinco minutos",
+        "why": "Isso confunde o commit com os backups da lição 7."
+      },
+      {
+        "text": "A transação inteira para cada réplica, que a grava em disco",
+        "why": "As réplicas não têm disco próprio; leem o volume compartilhado."
+      }
+    ]
+  },
+  "ex-7y48p0ec": {
+    "prompt": "A Quitanda cria um cluster Aurora e depois duas instâncias nele. Qual delas é o writer?",
+    "hint": "Um cluster tem exatamente um writer.",
+    "choices": [
+      {
+        "text": "A da classe de instância maior",
+        "why": "O tamanho desempata réplicas num failover; não escolhe o primeiro writer."
+      },
+      {
+        "text": "As duas, uma por zona",
+        "why": "O Aurora tem um writer por cluster; a outra instância é réplica."
+      },
+      {
+        "text": "A primeira criada",
+        "why": "Isso. Toda instância depois dela é réplica, até um failover mudar o papel."
+      },
+      {
+        "text": "Nenhuma, até você indicar uma com `--promotion-tier 0`",
+        "why": "O tier ordena as réplicas para um failover; a primeira instância é writer desde o início."
+      }
+    ]
+  },
+  "ex-qhqwhvcw": {
+    "prompt": "O moto informa o `StorageType` de um cluster Aurora como `gp2`. Por que essa resposta está errada, e não só incomum?",
+    "hint": "De onde vem o gp2?",
+    "choices": [
+      {
+        "text": "O gp2 é lento demais para o Aurora, que precisa de io2",
+        "why": "O Aurora não usa tipo EBS nenhum, rápido ou lento."
+      },
+      {
+        "text": "Um volume Aurora não é um disco EBS",
+        "why": "Isso. O moto emprestou um campo do modelo dele de uma instância comum."
+      },
+      {
+        "text": "O gp2 foi aposentado, e o moto deveria dizer gp3",
+        "why": "O gp3 estaria igualmente errado; nenhum dos dois é armazenamento Aurora."
+      },
+      {
+        "text": "Clusters Aurora não informam tipo de armazenamento nenhum",
+        "why": "Informam, `aurora` ou `aurora-iopt1`, que é como o modo de cobrança aparece."
+      }
+    ]
+  },
+  "ex-ss6bw0gf": {
+    "prompt": "O primeiro `create-db-cluster` da Quitanda não indicou tamanho de armazenamento. O que decide quanto armazenamento o cluster paga?",
+    "hint": "O RDS cobra o que alocou. O que o Aurora cobra?",
+    "choices": [
+      {
+        "text": "Um padrão de 100 GiB, aumentado pelo autoscaling",
+        "why": "Esse é o modelo de uma instância RDS; o Aurora não tem alocação de partida."
+      },
+      {
+        "text": "O tamanho dado à primeira instância",
+        "why": "As instâncias não carregam armazenamento no Aurora; o `1` do moto é um marcador."
+      },
+      {
+        "text": "Os dados que guarda, cobrados uma vez",
+        "why": "Isso. As seis cópias são custo da AWS, não uma linha na conta."
+      },
+      {
+        "text": "Seis vezes os dados, pelas seis cópias",
+        "why": "As cópias não são cobradas; você paga pelos dados uma vez."
+      }
+    ]
+  },
+  "ex-xsn58hca": {
+    "prompt": "Por que um failover do Aurora para uma réplica não precisa copiar nem reaplicar dado nenhum?",
+    "hint": "De onde a réplica lê?",
+    "choices": [
+      {
+        "text": "A réplica lê o mesmo volume compartilhado que o writer gravou",
+        "why": "Isso. Ela só precisa começar a aceitar escritas, e o cluster endpoint passa para ela."
+      },
+      {
+        "text": "Réplicas Aurora são síncronas, como um standby Multi-AZ",
+        "why": "Elas nem são cópias síncronas: não têm cópia, compartilham o volume."
+      },
+      {
+        "text": "Os dados são restaurados do último snapshot durante o failover",
+        "why": "Nada é restaurado; um snapshot levaria bem mais que trinta segundos."
+      },
+      {
+        "text": "O failover espera a réplica reaplicar o log",
+        "why": "Quem aplica o log são os nós de armazenamento; a réplica não tem nada próprio para alcançar."
+      }
+    ]
+  },
+  "ex-7rh24agz": {
+    "prompt": "Um cluster roda um writer e nenhuma réplica, porque nada lê de uma réplica. O que isso custa no dia em que o writer falha, pela documentação da AWS?",
+    "hint": "Algo precisa rodar o engine contra o volume.",
+    "choices": [
+      {
+        "text": "Nada: as seis cópias do armazenamento assumem",
+        "why": "As cópias guardam dados; não rodam engine nem aceitam conexões."
+      },
+      {
+        "text": "Os dados gravados desde o último snapshot",
+        "why": "Nenhum dado se perde: o volume sobrevive à instância."
+      },
+      {
+        "text": "Uma instância nova precisa ligar: menos de dez minutos pelo número da AWS, em vez de uns trinta segundos",
+        "why": "Isso. Uma réplica, mesmo ociosa, é o que torna o failover rápido."
+      },
+      {
+        "text": "O volume precisa ser restaurado num cluster novo",
+        "why": "O cluster e o volume ficam; só falta uma instância."
+      }
+    ]
+  },
+  "ex-hyexng2b": {
+    "prompt": "Ligue cada endpoint do Aurora ao tráfego que a Quitanda manda para ele.",
+    "hint": "Um deles nunca é para uma aplicação.",
+    "pairs": [
+      {
+        "left": "Cluster endpoint",
+        "right": "Checkouts, que gravam pedidos"
+      },
+      {
+        "left": "Reader endpoint",
+        "right": "As páginas do catálogo de produtos"
+      },
+      {
+        "left": "Custom endpoint",
+        "right": "Os relatórios pesados dos analistas, numa réplica só deles"
+      },
+      {
+        "left": "Endpoint de instância",
+        "right": "Diagnosticar uma máquina em particular"
+      }
+    ],
+    "right_distractors": [
+      "Backups para o S3"
+    ]
+  },
+  "ex-1678h732": {
+    "prompt": "Pela documentação da AWS, qual é o maior número de instâncias que um cluster Aurora pode ter, com o writer?",
+    "hint": "Quinze réplicas e mais uma."
+  },
+  "ex-8s5gx3w4": {
+    "prompt": "Um banco precisa de 16 GiB de memória o tempo todo. O que a conta da lição diz sobre rodá-lo no Serverless v2 em vez de numa `db.r7g.large`?",
+    "hint": "16 GiB são 8 ACUs a 0,25 por ACU-hora.",
+    "choices": [
+      {
+        "text": "Mais ou menos o mesmo, já que os dois são cobrados por hora",
+        "why": "8 ACUs custam 2,00 por hora contra 0,43884; a unidade é a mesma e o preço não."
+      },
+      {
+        "text": "Mais barato, porque o serverless diminui quando fica ocioso",
+        "why": "Este banco nunca fica ocioso, então não há o que diminuir."
+      },
+      {
+        "text": "Cerca de 4,6 vezes o preço: 1.460,00 por mês contra 320,35",
+        "why": "Isso. O serverless ganha quando a carga quase não existe, não quando é constante."
+      },
+      {
+        "text": "Impossível, porque o serverless para em 8 ACUs",
+        "why": "O máximo documentado é bem maior, 256 ACUs nas versões recentes."
+      }
+    ]
+  },
+  "ex-ve0s5hws": {
+    "prompt": "Com 8 ACUs e 0,25 USD por ACU-hora, quantas horas por mês no tamanho cheio um cluster que pausa quando ocioso pode rodar antes de custar mais que uma `db.r7g.large` de 320,35 por mês?",
+    "hint": "Divida o preço mensal pelo custo por hora de 8 ACUs."
+  },
+  "ex-tewv5hj3": {
+    "prompt": "Por que a lição põe um mínimo de 0 com pausa automática no cluster de desenvolvimento, e não no da loja?",
+    "hint": "O que acontece com a primeira conexão depois de uma pausa?",
+    "choices": [
+      {
+        "text": "A primeira conexão espera ela acordar",
+        "why": "Isso. Segundos de espera servem para um desenvolvedor e não para o primeiro cliente da manhã."
+      },
+      {
+        "text": "Um cluster pausado perde os dados depois de 24 horas",
+        "why": "O armazenamento fica, e é cobrado, enquanto a computação está pausada."
+      },
+      {
+        "text": "O cluster da loja é provisionado, o que não pode pausar",
+        "why": "A pergunta é sobre qual cluster deveria pausar, e por quê."
+      },
+      {
+        "text": "A pausa automática é só para MySQL",
+        "why": "O cluster desta lição é Aurora PostgreSQL, e o moto guardou a configuração."
+      }
+    ]
+  },
+  "ex-4963c7d9": {
+    "prompt": "Uma `db.r7g.large` e 500 GB. O I/O-Optimized soma 96,34 por mês na instância e 119,00 no armazenamento, e o Standard cobra 0,28 por milhão de I/Os. Acima de quantos milhões de I/Os por mês o I/O-Optimized fica mais barato? Arredonde para o inteiro mais próximo.",
+    "hint": "(96,34 + 119,00) / 0,28"
+  },
+  "ex-97w5xw3x": {
+    "prompt": "A Quitanda põe uma terceira `db.r7g.large` no cluster. O que acontece com o ponto de equilíbrio entre Standard e I/O-Optimized?",
+    "hint": "O adicional é por instância.",
+    "choices": [
+      {
+        "text": "Ele cai, já que réplicas não acrescentam armazenamento",
+        "why": "Não se acrescenta armazenamento, e o adicional da instância cresce mesmo assim, então a linha sobe."
+      },
+      {
+        "text": "Ele sobe cerca de 344 milhões de I/Os por mês",
+        "why": "Isso. Mais 96,34 de adicional de instância, divididos por 0,28."
+      },
+      {
+        "text": "Ele não muda; só o armazenamento o define",
+        "why": "Instâncias e armazenamento carregam adicional no I/O-Optimized."
+      },
+      {
+        "text": "Ele some: três instâncias sempre favorecem o I/O-Optimized",
+        "why": "Mais instâncias aumentam o adicional fixo, o que favorece o Standard até o I/O crescer."
+      }
+    ]
+  },
+  "ex-6cr711jx": {
+    "prompt": "Depois de passar para o I/O-Optimized, a linha de I/O da conta da Quitanda sumiu. O que a lição avisou que isso esconde?",
+    "hint": "Um índice faltando no Standard aparece como dinheiro.",
+    "choices": [
+      {
+        "text": "O crescimento do armazenamento, que agora é gratuito",
+        "why": "O armazenamento é cobrado a 0,428 por GB-mês, mais que no Standard."
+      },
+      {
+        "text": "As réplicas, que deixam de ser cobradas",
+        "why": "Toda instância continua cobrada, a um preço por hora maior."
+      },
+      {
+        "text": "Uma consulta lenta, agora sem preço",
+        "why": "Isso. Ela continua igualmente lenta; só a fatura parou de dizer isso."
+      },
+      {
+        "text": "As escritas, que agora são assíncronas",
+        "why": "O modo de cobrança não muda nada em como o armazenamento é gravado."
+      }
+    ]
+  },
+  "ex-bztrea06": {
+    "prompt": "Ponha em ordem os passos para montar o cluster Aurora da Quitanda.",
+    "hint": "O cluster existe antes de qualquer máquina.",
+    "items": [
+      "`create-db-cluster`, que cria o volume e os dois endpoints",
+      "O primeiro `create-db-instance`, que vira o writer",
+      "Uma segunda instância em outra zona, como réplica",
+      "`failover-db-cluster` para ensaiar a troca do writer"
+    ]
+  },
+  "ex-ds4f4vgx": {
+    "prompt": "Um banco de relatórios é usado duas horas toda manhã e fica ocioso o resto do dia; o I/O dele é pequeno. Qual montagem de Aurora combina com o que a lição calculou?",
+    "hint": "Duas alavancas: como a capacidade é cobrada, e como o I/O é cobrado.",
+    "choices": [
+      {
+        "text": "Uma `db.r7g.large` provisionada no I/O-Optimized",
+        "why": "Paga por 730 horas para usar umas 44, e um adicional por um I/O que quase não faz."
+      },
+      {
+        "text": "Serverless v2 com pausa automática, armazenamento Standard",
+        "why": "Isso. Bem abaixo das 160 horas em que o serverless deixa de ganhar, e I/O pequeno demais para o I/O-Optimized compensar."
+      },
+      {
+        "text": "Serverless v2 com o mínimo igual ao máximo",
+        "why": "Isso é uma instância provisionada cobrada a preço de serverless, 4,6 vezes mais."
+      },
+      {
+        "text": "Duas instâncias provisionadas, para os relatórios rodarem numa réplica",
+        "why": "Nada mais usa este banco, então uma réplica só dobra as horas ociosas."
+      }
+    ]
+  },
+  "ex-yzfxa4ap": {
+    "prompt": "Quais destas coisas decorrem do volume compartilhado do Aurora? Marque todas as que se aplicam.",
+    "hint": "Pense no que as réplicas deixam de precisar.",
+    "choices": [
+      {
+        "text": "Uma réplica não acrescenta armazenamento à conta",
+        "why": "Sim; há um volume só."
+      },
+      {
+        "text": "O atraso de réplica é documentado em milissegundos",
+        "why": "Sim; as réplicas leem os mesmos dados e só atualizam a memória."
+      },
+      {
+        "text": "O failover para uma réplica não copia dado nenhum",
+        "why": "Sim; os dados já estão onde ela consegue lê-los."
+      },
+      {
+        "text": "Um `DELETE` sem `WHERE` pode ser desfeito a partir de uma réplica",
+        "why": "A réplica lê o mesmo volume, então vê a exclusão na hora; quem desfaz são os backups."
+      },
+      {
+        "text": "O I/O deixa de ser cobrado",
+        "why": "Só no I/O-Optimized, que é escolha de cobrança e não propriedade do volume."
+      }
+    ]
+  }
+}
