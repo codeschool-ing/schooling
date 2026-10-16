@@ -1346,6 +1346,117 @@ def l16_overfit(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 17
+
+def churn_scores():
+    from sklearn.linear_model import LogisticRegression
+    cu = csv('customers.csv', parse_dates=['signup']).set_index('customer')
+    o = csv('orders.csv', parse_dates=['date'])
+
+    def snap(day):
+        day = pd.Timestamp(day)
+        past = o[o['date'] <= day]
+        recent = past[past['date'] > day - pd.Timedelta(days=90)]
+        after = o[(o['date'] > day) & (o['date'] <= day + pd.Timedelta(days=90))]
+        t = pd.DataFrame({'recency': (day - past.groupby('customer')['date'].max()).dt.days,
+                          'orders_90': recent.groupby('customer').size()}).fillna({'orders_90': 0})
+        t = t.join(cu)
+        t['tenure'] = (day - t['signup']).dt.days
+        t['social'] = (t['channel'] == 'social').astype(int)
+        t['referral'] = (t['channel'] == 'referral').astype(int)
+        t['weekly'] = (t['plan'] == 'weekly').astype(int)
+        t = t[t['recency'] <= 60]
+        t['churned'] = (~t.index.isin(after['customer'])).astype(int)
+        return t
+    inputs = ['recency', 'orders_90', 'tenure', 'social', 'referral', 'weekly']
+    tr, te = snap('2024-12-31'), snap('2025-06-30')
+    m = LogisticRegression(max_iter=1000).fit(tr[inputs], tr['churned'])
+    te['risk'] = m.predict_proba(te[inputs])[:, 1]
+    return te
+
+
+@figure('l17-confusion', 17)
+def l17_confusion(lang):
+    te = churn_scores()
+    flag = te['risk'] >= 0.5
+    tp = int((flag & (te['churned'] == 1)).sum()); fn = int((~flag & (te['churned'] == 1)).sum())
+    fp = int((flag & (te['churned'] == 0)).sum()); tn = int((~flag & (te['churned'] == 0)).sum())
+    t = {'en': dict(
+        label=f'The confusion matrix of the churn model at a threshold of 0.5, as four boxes. Churned '
+              f'and flagged: {tp}. Churned and not flagged: {fn}. Stayed and flagged: {fp}. Stayed and '
+              f'not flagged: {tn}. Precision reads along the flagged column, recall along the churned '
+              f'row.',
+        pred=['flagged', 'not flagged'], act=['churned', 'stayed'],
+        cells=['caught', 'missed', 'false alarms', 'left alone'],
+        prec='precision: caught ÷ flagged', rec='recall: caught ÷ churned',
+        cap='The same four counts give every measure. Precision is what the retention team sees; recall '
+            'is what the business sees.'),
+        'pt': dict(
+        label=f'A matriz de confusão do modelo de churn com limiar de 0,5, como quatro caixas. Saiu e foi '
+              f'marcado: {tp}. Saiu e não foi marcado: {fn}. Ficou e foi marcado: {fp}. Ficou e não foi '
+              f'marcado: {tn}. A precisão se lê na coluna dos marcados, a revocação na linha dos que '
+              f'saíram.',
+        pred=['marcados', 'não marcados'], act=['saíram', 'ficaram'],
+        cells=['pegos', 'perdidos', 'alarmes falsos', 'deixados em paz'],
+        prec='precisão: pegos ÷ marcados', rec='revocação: pegos ÷ saíram',
+        cap='As mesmas quatro contagens dão toda medida. A precisão é o que o time de retenção vê; a '
+            'revocação é o que o negócio vê.')}[lang]
+    f = Fig('l17-confusion', 600, 230, t['label'])
+    x0, y0, w, h = 120, 40, 160, 70
+    vals = [[tp, fn], [fp, tn]]
+    fills = [['--panel', '--panel'], ['--panel', '--panel']]
+    for j in range(2):
+        f.text(x0 + j * w + w / 2, y0 - 14, t['pred'][j], size=11, weight='600')
+    for i in range(2):
+        f.text(x0 - 12, y0 + i * h + h / 2, t['act'][i], size=11, anchor='end', weight='600')
+        for j in range(2):
+            f.rect(x0 + j * w, y0 + i * h, w, h, stroke='--wire', fill=fills[i][j], rx=0)
+            f.text(x0 + j * w + w / 2, y0 + i * h + h / 2 - 9, str(vals[i][j]), size=14, weight='600', mono=True)
+            f.text(x0 + j * w + w / 2, y0 + i * h + h / 2 + 13, t['cells'][i * 2 + j], size=10, fill='--paper-dim')
+    f.path(f'M{x0 + 1} {y0 + 1} h{w - 2} v{h - 2} h{-(w - 2)} Z', stroke='--phosphor', width=2.5)
+    f.text(x0 + w / 2, y0 + 2 * h + 22, t['prec'], size=10, fill='--paper-dim')
+    f.text(x0 + 2 * w + 12, y0 + h / 2, t['rec'], size=10, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l17-threshold', 17)
+def l17_threshold(lang):
+    te = churn_scores()
+    ths = np.linspace(0.05, 0.8, 76)
+    prec, rec = [], []
+    for th in ths:
+        fl = te[te['risk'] >= th]
+        prec.append(fl['churned'].mean() * 100)
+        rec.append(fl['churned'].sum() / te['churned'].sum() * 100)
+    t = {'en': dict(
+        label='Precision and recall of the churn model as the threshold moves from 0.05 to 0.8. '
+              'Recall falls steadily from about 90 to under 40 per cent; precision rises from about 25 '
+              'to about 90. A marker at 0.2 shows where the invented costs of the example give the '
+              'campaign its highest value.',
+        x='threshold', y='per cent', p='precision', r='recall', best='best value, 0.2',
+        cap='Lowering the threshold catches more leavers and raises more false alarms. Where to stop '
+            'is decided by what each mistake costs, not by the model.'),
+        'pt': dict(
+        label='Precisão e revocação do modelo de churn conforme o limiar vai de 0,05 a 0,8. A revocação '
+              'cai sem parar de cerca de 90 para menos de 40 por cento; a precisão sobe de cerca de 25 '
+              'para cerca de 90. Uma marca em 0,2 mostra onde os custos inventados do exemplo dão à '
+              'campanha o maior valor.',
+        x='limiar', y='por cento', p='precisão', r='revocação', best='melhor valor, 0,2',
+        cap='Baixar o limiar pega mais gente saindo e levanta mais alarmes falsos. Onde parar é decidido '
+            'pelo custo de cada erro, não pelo modelo.')}[lang]
+    f = Fig('l17-threshold', 600, 290, t['label'])
+    p = Plot(f, 70, 40, 470, 240, 0, 0.8, 0, 100)
+    p.yaxis(range(0, 101, 25), label=t['y'])
+    p.xaxis([0, 0.2, 0.4, 0.6, 0.8], fmt=lambda v: num(lang, v, 1), label=t['x'])
+    series(p, ths, prec, stroke='--phosphor', width=2)
+    series(p, ths, rec, stroke='--amber', width=2)
+    f.text(p.sx(0.8) + 8, p.sy(prec[-1]), t['p'], size=10.5, anchor='start', fill='--phosphor', weight='600')
+    f.text(p.sx(0.8) + 8, p.sy(rec[-1]), t['r'], size=10.5, anchor='start', fill='--amber', weight='600')
+    f.line(p.sx(0.2), p.y0, p.sx(0.2), p.y1, stroke='--paper-dim', width=1.2, dash='4 3')
+    f.text(p.sx(0.2) + 6, p.y0 + 6, t['best'], size=10, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
