@@ -9,9 +9,9 @@ declaração na política baseada em recurso da própria função, que a aula 7 
 apresentou como a outra metade do IAM: uma política presa à coisa que se quer alcançar, nomeando
 quem pode alcançá-la. Esqueça dela e a origem fica perfeitamente configurada e nada nunca chega.
 
-Duas funções servem a esta aula. Elas são criadas no moto a partir de zips feitos do jeito que a aula
-14 fez o `greet`, com um role igual ao `greet-role`; `thumbs` é o handler mais abaixo nesta seção, e
-`orders` é o da seção 04:
+Duas funções servem a esta aula. Elas são criadas no moto a partir de zips feitos do jeito que a
+aula 14 fez o `greet`, com um role como o `greet-role`. `thumbs` é o handler mais abaixo nesta
+seção, e `orders` é o da seção 04:
 
 ```
 ana@laptop:~/aws$ aws lambda create-function --function-name thumbs --runtime python3.12 --handler thumbs.handler --role arn:aws:iam::123456789012:role/trigger-role --zip-file fileb://thumbs.zip --query FunctionArn

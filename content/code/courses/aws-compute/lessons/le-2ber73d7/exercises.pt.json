@@ -1,0 +1,441 @@
+{
+  "ex-6139e7xd": {
+    "prompt": "`thumbs` levanta uma exceção num evento vindo do S3. Quem tenta o evento de novo?",
+    "choices": [
+      {
+        "text": "O Lambda, a partir da própria fila, duas vezes por padrão",
+        "why": "O S3 invoca de forma assíncrona: o Lambda aceitou o evento e é dono das novas tentativas, como dizem as configurações da função."
+      },
+      {
+        "text": "O S3, que manda a notificação de novo",
+        "why": "O S3 recebeu na hora a resposta de que o evento foi aceito; ele não espera para ver o resultado da função."
+      },
+      {
+        "text": "Ninguém: um evento assíncrono é tentado uma vez só",
+        "why": "Isso não descreve origem nenhuma. Eventos assíncronos recebem as novas tentativas do Lambda; é quem chama de forma síncrona que não recebe nenhuma do Lambda."
+      },
+      {
+        "text": "O mapeamento de origem de eventos, pelo visibility timeout",
+        "why": "Mapeamentos são dos pollers, como o SQS. Uma notificação de bucket é um push, sem mapeamento no meio."
+      }
+    ]
+  },
+  "ex-zhaqp5z5": {
+    "prompt": "Relacione cada origem com o que acontece quando a função falha no evento dela.",
+    "pairs": [
+      {
+        "left": "API Gateway",
+        "right": "quem chama fica sabendo, e decide se tenta de novo"
+      },
+      {
+        "left": "S3",
+        "right": "o Lambda tenta de novo da própria fila, e depois um destino"
+      },
+      {
+        "left": "DynamoDB Streams",
+        "right": "o mapeamento tenta de novo e segura o shard"
+      }
+    ],
+    "right_distractors": [
+      "o registro é apagado na primeira falha",
+      "o S3 reenvia até o objeto ser apagado"
+    ]
+  },
+  "ex-wz3m1qr9": {
+    "prompt": "Uma função assíncrona não tem destino nem dead-letter queue. Um evento falha nas três tentativas. O que sobra dele?",
+    "choices": [
+      {
+        "text": "Ele espera na fila do Lambda até alguém reprocessá-lo",
+        "why": "O Lambda descarta o evento quando as tentativas ou a idade máxima acabam; não existe reprocessamento de um evento descartado."
+      },
+      {
+        "text": "Linhas no log da função, e mais nada",
+        "why": "Sem um destino, as linhas de erro são o único rastro; é por isso que o destino é a primeira configuração a procurar."
+      },
+      {
+        "text": "A origem é avisada e o envia de novo mais tarde",
+        "why": "Uma origem assíncrona ouviu que o evento foi aceito, e não fica sabendo de nada sobre como foi."
+      },
+      {
+        "text": "Uma cópia na fila SQS padrão da função",
+        "why": "Não existe fila padrão; um destino só existe se alguém configurou um."
+      }
+    ]
+  },
+  "ex-ar7765zc": {
+    "prompt": "Com as configurações assíncronas padrão do Lambda, uma função que falha em toda tentativa recebe um evento do S3. Quantas vezes a função roda por causa dele?",
+    "hint": "A primeira tentativa, e depois as novas tentativas.",
+    "unit": "execuções"
+  },
+  "ex-wq08cqct": {
+    "prompt": "`thumbs` cobra do cliente um crédito por miniatura e depois falha por timeout ao escrever o log. O Lambda tenta o evento de novo. O que protege o cliente de pagar duas vezes?",
+    "choices": [
+      {
+        "text": "Pôr o máximo de novas tentativas em zero",
+        "why": "Isso transforma toda falha passageira numa miniatura perdida, e um evento ainda pode chegar duas vezes da origem."
+      },
+      {
+        "text": "Um destino em caso de falha",
+        "why": "Um destino recebe eventos que falharam em todas as tentativas; ele não faz nada com uma tentativa que deu meio certo."
+      },
+      {
+        "text": "Um handler idempotente",
+        "why": "Novas tentativas querem dizer que o mesmo evento pode rodar duas vezes; um handler que registra cada cobrança por bucket, chave e eTag, e pula a que já fez, é seguro para rodar duas vezes."
+      },
+      {
+        "text": "Fazer o S3 invocá-la de forma síncrona",
+        "why": "O S3 não tem modo síncrono para notificações; o formato vem com a origem."
+      }
+    ]
+  },
+  "ex-t5raz9q0": {
+    "prompt": "Na AWS, você salva uma notificação de bucket para `thumbs` antes de rodar o `add-permission`. O que acontece?",
+    "choices": [
+      {
+        "text": "Ela é salva, e os envios invocam a função mesmo assim",
+        "why": "O S3 precisa que a política da função o deixe entrar, e confere isso quando a configuração é salva."
+      },
+      {
+        "text": "Ela é salva, e a função acrescenta a permissão sozinha",
+        "why": "Nada acrescenta uma permissão sozinho; ela é uma declaração explícita que alguém escreve."
+      },
+      {
+        "text": "Ela é salva, e só o primeiro envio falha",
+        "why": "A conferência acontece quando a configuração é salva, antes de qualquer envio."
+      },
+      {
+        "text": "É recusada: o S3 não consegue validar o destino",
+        "why": "O S3 confere se a política da função o deixa invocar, e falha com `Unable to validate the following destination configurations`. O moto pulou essa conferência."
+      }
+    ]
+  },
+  "ex-kq1z9832": {
+    "prompt": "Por que a permissão para o S3 traz `AWS:SourceAccount` além do ARN do bucket?",
+    "choices": [
+      {
+        "text": "Nomes de bucket são globais",
+        "why": "Se o bucket fosse apagado e o nome dele tomado por outra conta, o ARN casaria com esse bucket; a condição de conta impede isso."
+      },
+      {
+        "text": "O Lambda recusa uma permissão com uma condição só",
+        "why": "Uma condição é válida; a segunda está ali pelo que impede."
+      },
+      {
+        "text": "Ela deixa todo bucket da conta invocar a função",
+        "why": "Ela restringe em vez de ampliar: as duas condições precisam valer."
+      },
+      {
+        "text": "O S3 envia a conta em vez do ARN no evento",
+        "why": "O evento traz o nome e o ARN do bucket; a condição trata de quem invoca, não do que o evento diz."
+      }
+    ]
+  },
+  "ex-pb9yb6c1": {
+    "prompt": "Depois que a seção apontou o bucket para a fila SQS, um envio para `uploads/` chegou à fila e não ao `thumbs`. Por quê?",
+    "choices": [
+      {
+        "text": "O S3 manda cada evento para um tipo de destino só",
+        "why": "Um bucket pode notificar vários destinos ao mesmo tempo, numa configuração que liste todos."
+      },
+      {
+        "text": "A segunda chamada substituiu a configuração inteira",
+        "why": "`put-bucket-notification-configuration` escreve o conjunto inteiro; a entrada do Lambda não estava na nova, então sumiu."
+      },
+      {
+        "text": "O moto não roda função, então descartou a entrada do Lambda",
+        "why": "O moto não rodava função de qualquer jeito, mas a entrada do Lambda sumiu porque a nova chamada a deixou de fora, como na AWS."
+      },
+      {
+        "text": "Uma fila tem prioridade sobre uma função no mesmo prefixo",
+        "why": "Não há prioridade entre tipos de destino. Dois destinos com filtros sobrepostos para o mesmo tipo de evento são recusados."
+      }
+    ]
+  },
+  "ex-w2fx54h0": {
+    "prompt": "No evento do S3 a chave `uploads%2Fcat.jpg` vem ___ para URL, então o handler a passa pelo `unquote_plus` antes de pedir o objeto ao S3.",
+    "blanks": [
+      {
+        "accept": [
+          "codificada",
+          "encoded"
+        ]
+      }
+    ]
+  },
+  "ex-deaqvq4n": {
+    "prompt": "`thumbs` é disparada por `ObjectCreated` em `uploads/` e escreve cada miniatura em `uploads/thumbs/`. O que acontece depois da primeira foto?",
+    "choices": [
+      {
+        "text": "Nada fora do comum: o S3 não notifica objetos que uma função escreveu",
+        "why": "O S3 notifica todo objeto criado sob o prefixo, seja quem for que o escreveu."
+      },
+      {
+        "text": "A miniatura falha, porque `/var/task` é só leitura",
+        "why": "A função escreve no S3 pela API, não no próprio disco."
+      },
+      {
+        "text": "Uma miniatura da miniatura, e assim por diante: a função chama a si mesma",
+        "why": "Cada miniatura é um evento `ObjectCreated` em `uploads/`, que dispara a função de novo. Outro prefixo ou outro bucket quebra o laço."
+      },
+      {
+        "text": "O S3 se recusa a salvar a configuração quando detecta o laço",
+        "why": "O S3 não analisa o que uma função escreve; a configuração é aceita."
+      }
+    ]
+  },
+  "ex-stz4g6hd": {
+    "prompt": "Ponha em ordem o que acontece com as três mensagens do lote da seção na AWS, com ReportBatchItemFailures no mapeamento.",
+    "items": [
+      "O mapeamento recebe as três mensagens da fila",
+      "O Lambda invoca orders com o lote como um evento",
+      "O handler responde com batchItemFailures nomeando m-2",
+      "O Lambda apaga m-1 e m-3 da fila",
+      "m-2 volta a ficar visível quando o seu visibility timeout acaba"
+    ],
+    "trap": "Apagar as mensagens antes de a função responder: o mapeamento só sabe quais apagar depois de ler a resposta."
+  },
+  "ex-y65fjbae": {
+    "prompt": "`orders.py` devolve `{\"batchItemFailures\": [{\"itemIdentifier\": \"m-2\"}]}`, mas o mapeamento foi criado sem `--function-response-types ReportBatchItemFailures`. O que acontece com `m-2`?",
+    "choices": [
+      {
+        "text": "Ela volta, como qualquer mensagem que falhou",
+        "why": "Aqui só uma exceção falha um lote. Um retorno normal é sucesso, seja o que for que ele contenha."
+      },
+      {
+        "text": "O lote inteiro volta, já que a resposta não foi entendida",
+        "why": "Sem a configuração o mapeamento nem lê a resposta, então não há nada para ele entender errado."
+      },
+      {
+        "text": "Ela vai direto para a dead-letter queue",
+        "why": "Até onde o mapeamento sabe nada falhou, então nada é redirecionado."
+      },
+      {
+        "text": "É apagada com as outras, sem ser lida",
+        "why": "A resposta é ignorada, o lote conta como sucesso, e as três mensagens são apagadas."
+      }
+    ]
+  },
+  "ex-raatjybs": {
+    "prompt": "Uma fila recebe 600 mensagens por minuto, de forma constante, e o mapeamento tem tamanho de lote 10 e lotes sempre cheios. Quantas invocações por minuto isso dá?",
+    "unit": "invocações"
+  },
+  "ex-tqtrx2b4": {
+    "prompt": "Um mapeamento de stream não tem limite de novas tentativas, nem divisão de lote, nem destino. Um registro faz o handler levantar uma exceção toda vez. O que acontece com aquele shard?",
+    "choices": [
+      {
+        "text": "O shard para até o registro expirar",
+        "why": "O mapeamento tenta o lote de novo para manter a ordem do shard, e só a expiração do registro, um dia no DynamoDB Streams, acaba com isso."
+      },
+      {
+        "text": "O registro é pulado depois de duas tentativas, como no S3",
+        "why": "Duas tentativas é o padrão assíncrono; um mapeamento de stream tenta de novo até ser instruído do contrário."
+      },
+      {
+        "text": "O registro vai para uma dead-letter queue",
+        "why": "Um stream não tem visibility timeout nem política de redrive; um destino só existe se for configurado."
+      },
+      {
+        "text": "Os outros registros do lote são processados e o ruim é tentado sozinho",
+        "why": "É o que a divisão de lote faria, e este mapeamento não tem."
+      }
+    ]
+  },
+  "ex-p0brt6cb": {
+    "prompt": "Quais configurações limitam o que um registro ruim faz a um shard de stream? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "`--maximum-retry-attempts`",
+        "why": "Faz o mapeamento desistir de um lote depois de tantas novas tentativas."
+      },
+      {
+        "text": "`--bisect-batch-on-function-error`",
+        "why": "Divide um lote que falha para o registro ruim acabar sozinho e o resto passar."
+      },
+      {
+        "text": "Um destino em caso de falha",
+        "why": "Guarda uma descrição dos registros abandonados, para serem examinados em vez de perdidos."
+      },
+      {
+        "text": "Um visibility timeout maior",
+        "why": "Visibility timeouts são das filas SQS; um stream não tem."
+      },
+      {
+        "text": "Um `--batch-size` maior",
+        "why": "Um lote maior põe mais registros bons atrás do ruim, e não limita nada."
+      }
+    ]
+  },
+  "ex-tx9egv2m": {
+    "prompt": "Com o `pattern.json`, chega um evento com `source` `shop.payments`, `detail-type` `OrderPlaced` e total de 1500. A regra casa?",
+    "choices": [
+      {
+        "text": "Sim: o total passa de 1000",
+        "why": "O total passa, mas todo campo que o padrão nomeia precisa casar, e `source` não casa."
+      },
+      {
+        "text": "Não: `source` não é `shop.orders`",
+        "why": "Todo campo que o padrão lista precisa casar; `A-3` falhou exatamente nisso."
+      },
+      {
+        "text": "Sim: dois dos três campos casam",
+        "why": "Um padrão não é uma votação; um campo que falha basta para não casar."
+      },
+      {
+        "text": "Não: `detail-type` deveria estar em `detail`",
+        "why": "`detail-type` é um campo de primeiro nível de todo evento, onde o padrão o procura."
+      }
+    ]
+  },
+  "ex-5akpyzw4": {
+    "prompt": "`aws events test-event-pattern` não imprimiu nada e terminou com status 0. O que isso diz a você?",
+    "choices": [
+      {
+        "text": "O evento casa, já que não houve erro",
+        "why": "Na AWS um casamento é `{\"Result\": true}`; silêncio não é resposta em nenhum dos sentidos."
+      },
+      {
+        "text": "O padrão é inválido",
+        "why": "Um padrão inválido é um erro com mensagem, e o status de saída diz isso."
+      },
+      {
+        "text": "Que o moto deixa a chamada sem resposta",
+        "why": "O moto 5.2.3 lista a chamada e não implementa nada por trás; na AWS este evento dá `{\"Result\": false}`."
+      },
+      {
+        "text": "O evento não casa, já que nada foi entregue",
+        "why": "`test-event-pattern` não entrega nada em caso nenhum; ele só responde a uma pergunta."
+      }
+    ]
+  },
+  "ex-txgw9b9y": {
+    "prompt": "Um colega escreve o padrão com `\"detail_type\": [\"OrderPlaced\"]`, sublinhado em vez de hífen. O que o EventBridge faz?",
+    "choices": [
+      {
+        "text": "Corrige para `detail-type`",
+        "why": "O EventBridge casa nomes de campo exatamente e não adivinha nada."
+      },
+      {
+        "text": "Recusa a regra como inválida",
+        "why": "Qualquer nome de campo é válido num padrão; um que nenhum evento traz não é erro."
+      },
+      {
+        "text": "Ignora o campo desconhecido e casa pelo resto",
+        "why": "Um campo que o padrão nomeia precisa estar presente e casar; ele não é pulado."
+      },
+      {
+        "text": "Aceita, e a regra nunca casa com nada",
+        "why": "Nenhum evento tem um campo `detail_type`, então todo evento falha no padrão, em silêncio. Testar contra eventos de verdade encontra isso."
+      }
+    ]
+  },
+  "ex-hb1szj87": {
+    "prompt": "A loja acrescenta uma função de fidelidade que precisa ver todo `OrderPlaced`, de qualquer total. O que muda no código do checkout?",
+    "choices": [
+      {
+        "text": "Nada; uma segunda regra resolve",
+        "why": "Quem publica não nomeia ninguém, então um consumidor novo é uma regra e um alvo novos, sem mudança em quem publica."
+      },
+      {
+        "text": "Ele publica cada evento duas vezes, uma por função",
+        "why": "Esse é o acoplamento que o EventBridge remove; um evento pode casar com várias regras."
+      },
+      {
+        "text": "Ele chama a nova função diretamente depois de publicar",
+        "why": "Aí o checkout volta a conhecer os seus consumidores, e espera por um deles."
+      },
+      {
+        "text": "Ele acrescenta o ARN da função aos `resources` de cada evento",
+        "why": "`resources` descreve aquilo de que o evento trata; ele não o encaminha."
+      }
+    ]
+  },
+  "ex-bw9s4s1v": {
+    "prompt": "Com o `pattern.json`, cinco eventos são publicados, todos de `shop.orders`: `OrderPlaced` com totais 1000, 1000.01 e 2500, `OrderCancelled` com 3000, e `OrderPlaced` sem `total` nenhum. Quantos chegam ao alvo?",
+    "hint": "Todo campo que o padrão nomeia precisa casar, e `>` é estrito.",
+    "unit": "eventos"
+  },
+  "ex-sx49bj9x": {
+    "prompt": "O sistema de um parceiro manda rajadas de 5.000 pedidos num minuto, e o banco de dados por trás da função não aguenta essa taxa. Que gatilho serve?",
+    "choices": [
+      {
+        "text": "Uma URL de função que o parceiro chama a cada pedido",
+        "why": "Cada chamada roda a função na hora, então a rajada chega ao banco no ritmo do parceiro."
+      },
+      {
+        "text": "Uma fila SQS lida por um mapeamento de origem de eventos",
+        "why": "A fila absorve a rajada e o mapeamento a lê em lotes, num ritmo que a função e o banco decidem."
+      },
+      {
+        "text": "Uma regra do EventBridge nos eventos do parceiro",
+        "why": "Uma regra encaminha cada evento quando chega e invoca de forma assíncrona; ela não desacelera uma rajada."
+      },
+      {
+        "text": "Um bucket S3 para onde o parceiro envia cada pedido",
+        "why": "Cada envio é uma notificação própria, e a rajada chega como uma rajada de invocações."
+      }
+    ]
+  },
+  "ex-vw7jb795": {
+    "prompt": "Uma URL de função é criada com `--auth-type NONE`, e todo pedido recebe `403 Forbidden`. O que falta?",
+    "choices": [
+      {
+        "text": "Um API Gateway na frente da URL",
+        "why": "Uma URL de função funciona sem API Gateway; é essa a ideia dela."
+      },
+      {
+        "text": "Assinar todo pedido com SigV4",
+        "why": "Isso é o que o `AWS_IAM` exige; `NONE` quer dizer sem assinatura."
+      },
+      {
+        "text": "Uma declaração na política da função permitindo o principal `*`",
+        "why": "Uma URL pública também precisa que a política de recurso da função deixe todos a invocarem pela URL."
+      },
+      {
+        "text": "Um destino para invocações que falharam",
+        "why": "Destinos são das invocações assíncronas, e uma URL é síncrona."
+      }
+    ]
+  },
+  "ex-qhtmz7kg": {
+    "prompt": "O mesmo handler, que levanta uma exceção com entrada malformada, está ligado ao API Gateway numa conta e ao S3 em outra. Um evento malformado chega a cada um. O que muda?",
+    "choices": [
+      {
+        "text": "Nada: o handler levanta a mesma exceção nos dois",
+        "why": "A exceção é a mesma; o que acontece com o evento depois é decidido pelo formato do gatilho."
+      },
+      {
+        "text": "O S3 mostra uma página de erro ao usuário; o API Gateway tenta duas vezes",
+        "why": "Isso é o par trocado: o API Gateway é síncrono e o S3 é assíncrono."
+      },
+      {
+        "text": "Os dois tentam duas vezes e depois usam um destino",
+        "why": "Novas tentativas e destinos são de invocações assíncronas; quem chama pelo API Gateway só recebe o erro."
+      },
+      {
+        "text": "Quem chama vê o erro; o evento do S3 é repetido",
+        "why": "O síncrono devolve a falha a quem chamou; o assíncrono enfileira, tenta de novo e desiste para um destino."
+      }
+    ]
+  },
+  "ex-75tv59mx": {
+    "prompt": "Um mapeamento de stream é criado com `--starting-position LATEST` uma hora depois de a tabela começar a escrever mudanças. O que acontece com as mudanças daquela hora?",
+    "choices": [
+      {
+        "text": "A função nunca as vê; a leitura começa no próximo registro escrito",
+        "why": "`LATEST` começa depois do registro mais novo; `TRIM_HORIZON` teria começado no mais antigo ainda guardado."
+      },
+      {
+        "text": "Elas chegam primeiro, e depois as novas",
+        "why": "Isso é o `TRIM_HORIZON`, a configuração que o mapeamento da seção usou."
+      },
+      {
+        "text": "Chegam num lote grande quando o mapeamento começa",
+        "why": "Nenhuma posição inicial junta o passado num único lote."
+      },
+      {
+        "text": "São mandadas para o destino em caso de falha",
+        "why": "Registros não lidos não são falhas; um destino recebe registros em que a função falhou."
+      }
+    ]
+  }
+}

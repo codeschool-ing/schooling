@@ -26,10 +26,10 @@ of lesson 19's subjects.
 
 S3, SNS and EventBridge invoke a function **asynchronously**. Lambda puts the event on a queue of
 its own and answers the source at once that it was accepted, then calls the function from that
-queue. If the function fails, Lambda tries again, twice by default, with a wait between attempts;
-an event that still fails, or that waits longer than its maximum age, six hours by default, is
-dropped, unless the function has somewhere to send it. Both numbers and the place to send failures
-are a function's settings, and moto keeps them:
+queue. If the function fails, Lambda tries again, twice by default, with a wait between attempts. An
+event that still fails, or that waits longer than its maximum age, six hours by default, is dropped,
+unless the function has somewhere to send it. Both numbers and the place to send failures are a
+function's settings, and moto keeps them:
 
 ```
 ana@laptop:~/aws$ aws lambda put-function-event-invoke-config --function-name thumbs --maximum-retry-attempts 1 --maximum-event-age-in-seconds 3600 --destination-config '{"OnFailure": {"Destination": "arn:aws:sqs:sa-east-1:123456789012:thumbs-failed"}}'
@@ -63,8 +63,8 @@ safe to run twice on the same event. Lesson 21 calls that idempotence and builds
 SQS, DynamoDB Streams and Kinesis do not call anything. A queue or a stream waits to be read, and
 the reader is an **event source mapping**: a poller Lambda runs on your behalf, which reads the
 source, gathers records into a batch and invokes the function synchronously with it. Failure
-handling belongs to the mapping and to the source: a message the function did not finish stays in
-its queue and becomes visible again, and a stream record stays in its shard and is retried, so
+handling belongs to the mapping and to the source. A message the function did not finish stays in
+its queue and becomes visible again, and a stream record stays in its shard and is retried. So
 nothing is lost by default, and the questions become how long a bad record is retried and what it
 holds up meanwhile. Section 04 is about those questions.
 

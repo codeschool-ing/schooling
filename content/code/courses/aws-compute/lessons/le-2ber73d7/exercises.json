@@ -1,0 +1,664 @@
+[
+  {
+    "id": "ex-6139e7xd",
+    "version": 1,
+    "section": "three-ways-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`thumbs` raises an exception on an event from S3. Who tries the event again?",
+    "choices": [
+      {
+        "text": "Lambda, from its own queue, twice by default",
+        "correct": true,
+        "why": "S3 invokes asynchronously: Lambda accepted the event and owns the retries, as the function's settings say."
+      },
+      {
+        "text": "S3, which sends the notification again",
+        "correct": false,
+        "why": "S3 was answered at once that the event was accepted; it does not wait to see the function's result."
+      },
+      {
+        "text": "Nobody: an asynchronous event is tried once",
+        "correct": false,
+        "why": "That describes no source. Asynchronous events get Lambda's retries; it is a synchronous caller that gets none from Lambda."
+      },
+      {
+        "text": "The event source mapping, through the visibility timeout",
+        "correct": false,
+        "why": "Mappings belong to pollers such as SQS. A bucket notification is a push, with no mapping in between."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhaqp5z5",
+    "version": 1,
+    "section": "three-ways-in",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source with what happens when the function fails on its event.",
+    "pairs": [
+      {
+        "left": "API Gateway",
+        "right": "the caller is told, and decides whether to try again"
+      },
+      {
+        "left": "S3",
+        "right": "Lambda retries from its own queue, then a destination"
+      },
+      {
+        "left": "DynamoDB Streams",
+        "right": "the mapping retries and holds the shard"
+      }
+    ],
+    "right_distractors": [
+      "the record is deleted on the first failure",
+      "S3 resends until the object is deleted"
+    ]
+  },
+  {
+    "id": "ex-wz3m1qr9",
+    "version": 1,
+    "section": "three-ways-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An asynchronous function has no destination and no dead-letter queue. An event fails all three attempts. What is left of it?",
+    "choices": [
+      {
+        "text": "It waits in Lambda's queue until somebody replays it",
+        "correct": false,
+        "why": "Lambda drops the event once the retries or the maximum age are used up; there is no replay of a dropped event."
+      },
+      {
+        "text": "Lines in the function's log, and nothing else",
+        "correct": true,
+        "why": "Without a destination, the error lines are the only trace; that is why the destination is the first setting to look for."
+      },
+      {
+        "text": "The source is notified and sends it again later",
+        "correct": false,
+        "why": "An asynchronous source was told the event was accepted, and hears nothing about how it went."
+      },
+      {
+        "text": "A copy in the function's default SQS queue",
+        "correct": false,
+        "why": "There is no default queue; a destination exists only if somebody configured one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ar7765zc",
+    "version": 1,
+    "section": "three-ways-in",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With Lambda's default asynchronous settings, a function that fails on every attempt receives one S3 event. How many times does the function run for it?",
+    "hint": "The first attempt, then the retries.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "runs"
+  },
+  {
+    "id": "ex-wq08cqct",
+    "version": 1,
+    "section": "three-ways-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`thumbs` charges the customer one credit per thumbnail and then fails on a timeout writing its log. Lambda retries the event. What protects the customer from paying twice?",
+    "choices": [
+      {
+        "text": "Setting the maximum retry attempts to zero",
+        "correct": false,
+        "why": "That turns every transient failure into a lost thumbnail, and an event may still arrive twice from the source."
+      },
+      {
+        "text": "An on-failure destination",
+        "correct": false,
+        "why": "A destination receives events that failed every attempt; it does nothing about an attempt that half succeeded."
+      },
+      {
+        "text": "An idempotent handler",
+        "correct": true,
+        "why": "Retries mean the same event can run twice; a handler that records each charge by bucket, key and eTag, and skips one it already made, is safe to run twice."
+      },
+      {
+        "text": "Invoking it synchronously from S3 instead",
+        "correct": false,
+        "why": "S3 has no synchronous mode for notifications; the shape comes with the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5raz9q0",
+    "version": 1,
+    "section": "push-sources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AWS, you save a bucket notification to `thumbs` before running `add-permission`. What happens?",
+    "choices": [
+      {
+        "text": "It is saved, and uploads invoke the function anyway",
+        "correct": false,
+        "why": "S3 needs the function's policy to let it in, and checks for it when the configuration is saved."
+      },
+      {
+        "text": "It is saved, and the function adds the permission itself",
+        "correct": false,
+        "why": "Nothing adds a permission on its own; it is an explicit statement somebody writes."
+      },
+      {
+        "text": "It is saved, and only the first upload fails",
+        "correct": false,
+        "why": "The check happens when the configuration is saved, before any upload."
+      },
+      {
+        "text": "It is refused: S3 cannot validate the destination",
+        "correct": true,
+        "why": "S3 checks that the function's policy lets it invoke, and fails with `Unable to validate the following destination configurations`. moto skipped that check."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq1z9832",
+    "version": 1,
+    "section": "push-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the permission for S3 carry `AWS:SourceAccount` as well as the bucket's ARN?",
+    "choices": [
+      {
+        "text": "Bucket names are global",
+        "correct": true,
+        "why": "If the bucket were deleted and its name taken by another account, the ARN would match that bucket; the account condition stops it."
+      },
+      {
+        "text": "Lambda refuses a permission with only one condition",
+        "correct": false,
+        "why": "One condition is valid; the second is there for what it prevents."
+      },
+      {
+        "text": "It lets every bucket in the account invoke the function",
+        "correct": false,
+        "why": "It narrows rather than widens: both conditions must hold."
+      },
+      {
+        "text": "S3 sends the account instead of the ARN in its event",
+        "correct": false,
+        "why": "The event carries the bucket's name and ARN; the condition concerns who invokes, not what the event says."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb9yb6c1",
+    "version": 1,
+    "section": "push-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the section pointed the bucket at the SQS queue, an upload to `uploads/` reached the queue and not `thumbs`. Why?",
+    "choices": [
+      {
+        "text": "S3 sends each event to one destination type only",
+        "correct": false,
+        "why": "A bucket can notify several destinations at once, in one configuration that lists them all."
+      },
+      {
+        "text": "The second call replaced the whole configuration",
+        "correct": true,
+        "why": "`put-bucket-notification-configuration` writes the entire set; the Lambda entry was not in the new one, so it was gone."
+      },
+      {
+        "text": "moto runs no function, so it dropped the Lambda entry",
+        "correct": false,
+        "why": "moto ran no function either way, but the Lambda entry vanished because the new call left it out, as on AWS."
+      },
+      {
+        "text": "A queue takes priority over a function for the same prefix",
+        "correct": false,
+        "why": "There is no priority between destination types. Two destinations with overlapping filters for the same event type are refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2fx54h0",
+    "version": 1,
+    "section": "push-sources",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In S3's event the object key `uploads%2Fcat.jpg` is URL-___, so the handler passes it through `unquote_plus` before asking S3 for the object.",
+    "blanks": [
+      {
+        "accept": [
+          "encoded"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-deaqvq4n",
+    "version": 1,
+    "section": "push-sources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`thumbs` is triggered by `ObjectCreated` under `uploads/` and writes each thumbnail to `uploads/thumbs/`. What happens after the first photo?",
+    "choices": [
+      {
+        "text": "Nothing unusual: S3 does not notify for objects a function wrote",
+        "correct": false,
+        "why": "S3 notifies for every object created under the prefix, whoever wrote it."
+      },
+      {
+        "text": "The thumbnail fails, because `/var/task` is read-only",
+        "correct": false,
+        "why": "The function writes to S3 through the API, not to its own disk."
+      },
+      {
+        "text": "A thumbnail of the thumbnail, and so on: the function calls itself",
+        "correct": true,
+        "why": "Each thumbnail is an `ObjectCreated` event under `uploads/`, which triggers the function again. Another prefix or bucket breaks the loop."
+      },
+      {
+        "text": "S3 refuses to save the configuration once it detects the loop",
+        "correct": false,
+        "why": "S3 does not analyse what a function writes; the configuration is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-stz4g6hd",
+    "version": 1,
+    "section": "pollers",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to the three messages of the section's batch on AWS, with ReportBatchItemFailures on the mapping.",
+    "items": [
+      "The mapping receives the three messages from the queue",
+      "Lambda invokes orders with the batch as one event",
+      "The handler answers with batchItemFailures naming m-2",
+      "Lambda deletes m-1 and m-3 from the queue",
+      "m-2 becomes visible again when its visibility timeout ends"
+    ],
+    "trap": "Deleting the messages before the function answers: the mapping only knows which ones to delete once it has read the response."
+  },
+  {
+    "id": "ex-y65fjbae",
+    "version": 1,
+    "section": "pollers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders.py` returns `{\"batchItemFailures\": [{\"itemIdentifier\": \"m-2\"}]}`, but the mapping was created without `--function-response-types ReportBatchItemFailures`. What happens to `m-2`?",
+    "choices": [
+      {
+        "text": "It comes back, like any failed message",
+        "correct": false,
+        "why": "Only an exception fails a batch here. A normal return is success, whatever it contains."
+      },
+      {
+        "text": "The whole batch comes back, since an answer was not understood",
+        "correct": false,
+        "why": "The mapping does not read the answer at all without the setting, so there is nothing for it to misunderstand."
+      },
+      {
+        "text": "It goes straight to the dead-letter queue",
+        "correct": false,
+        "why": "Nothing failed as far as the mapping knows, so nothing is redriven."
+      },
+      {
+        "text": "It is deleted with the others, unread",
+        "correct": true,
+        "why": "The answer is ignored, the batch counts as a success, and all three messages are deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-raatjybs",
+    "version": 1,
+    "section": "pollers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue receives 600 messages a minute, steadily, and the mapping has a batch size of 10 and full batches every time. How many invocations a minute does that make?",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "invocations"
+  },
+  {
+    "id": "ex-tqtrx2b4",
+    "version": 1,
+    "section": "pollers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stream mapping has no retry limit, no bisecting and no destination. One record makes the handler raise every time. What happens to that shard?",
+    "choices": [
+      {
+        "text": "Its shard stops until the record expires",
+        "correct": true,
+        "why": "The mapping retries the batch to keep the shard's order, and only the record's expiry, a day on DynamoDB Streams, ends it."
+      },
+      {
+        "text": "The record is skipped after two retries, as with S3",
+        "correct": false,
+        "why": "Two retries are the asynchronous default; a stream mapping retries until told otherwise."
+      },
+      {
+        "text": "The record moves to a dead-letter queue",
+        "correct": false,
+        "why": "A stream has no visibility timeout or redrive policy; a destination only exists if configured."
+      },
+      {
+        "text": "The other records of the batch are processed and the bad one is retried alone",
+        "correct": false,
+        "why": "That is what bisecting would do, and this mapping has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0brt6cb",
+    "version": 1,
+    "section": "pollers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings limit what one bad record does to a stream shard? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`--maximum-retry-attempts`",
+        "correct": true,
+        "why": "It makes the mapping give up on a batch after so many retries."
+      },
+      {
+        "text": "`--bisect-batch-on-function-error`",
+        "correct": true,
+        "why": "It splits a failing batch so the bad record ends up alone and the rest get through."
+      },
+      {
+        "text": "An on-failure destination",
+        "correct": true,
+        "why": "It keeps a description of the records given up on, so they are examined instead of lost."
+      },
+      {
+        "text": "A longer visibility timeout",
+        "correct": false,
+        "why": "Visibility timeouts belong to SQS queues; a stream has none."
+      },
+      {
+        "text": "A larger `--batch-size`",
+        "correct": false,
+        "why": "A larger batch puts more good records behind the bad one, and limits nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx9egv2m",
+    "version": 1,
+    "section": "eventbridge-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `pattern.json`, an event arrives with `source` `shop.payments`, `detail-type` `OrderPlaced` and a total of 1500. Does the rule match?",
+    "choices": [
+      {
+        "text": "Yes: the total is over 1000",
+        "correct": false,
+        "why": "The total passes, but every field the pattern names must match, and `source` does not."
+      },
+      {
+        "text": "No: `source` is not `shop.orders`",
+        "correct": true,
+        "why": "Every field the pattern lists must match; `A-3` failed on exactly this."
+      },
+      {
+        "text": "Yes: two of the three fields match",
+        "correct": false,
+        "why": "A pattern is not a vote; one field that fails is enough to miss."
+      },
+      {
+        "text": "No: `detail-type` should be in `detail`",
+        "correct": false,
+        "why": "`detail-type` is a top-level field of every event, where the pattern looks for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5akpyzw4",
+    "version": 1,
+    "section": "eventbridge-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws events test-event-pattern` printed nothing and exited with status 0. What does that tell you?",
+    "choices": [
+      {
+        "text": "The event matches, since there was no error",
+        "correct": false,
+        "why": "On AWS a match is `{\"Result\": true}`; silence is not an answer either way."
+      },
+      {
+        "text": "The pattern is invalid",
+        "correct": false,
+        "why": "An invalid pattern is an error with a message, and the exit status says so."
+      },
+      {
+        "text": "That moto leaves the call unanswered",
+        "correct": true,
+        "why": "moto 5.2.3 lists the call and implements nothing behind it; on AWS this event gives `{\"Result\": false}`."
+      },
+      {
+        "text": "The event does not match, since nothing was delivered",
+        "correct": false,
+        "why": "`test-event-pattern` delivers nothing in any case; it only answers a question."
+      }
+    ]
+  },
+  {
+    "id": "ex-txgw9b9y",
+    "version": 1,
+    "section": "eventbridge-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague writes the pattern with `\"detail_type\": [\"OrderPlaced\"]`, underscore instead of hyphen. What does EventBridge do?",
+    "choices": [
+      {
+        "text": "Corrects it to `detail-type`",
+        "correct": false,
+        "why": "EventBridge matches field names exactly and guesses nothing."
+      },
+      {
+        "text": "Refuses the rule as invalid",
+        "correct": false,
+        "why": "Any field name is legal in a pattern; one that no event carries is not an error."
+      },
+      {
+        "text": "Ignores the unknown field and matches on the rest",
+        "correct": false,
+        "why": "A field the pattern names must be present and match; it is not skipped."
+      },
+      {
+        "text": "Accepts it, and the rule never matches anything",
+        "correct": true,
+        "why": "No event has a `detail_type` field, so every event fails the pattern, silently. Testing against real events finds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb1szj87",
+    "version": 1,
+    "section": "eventbridge-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop adds a loyalty function that must see every `OrderPlaced`, of any total. What changes in the checkout's code?",
+    "choices": [
+      {
+        "text": "Nothing; a second rule does it",
+        "correct": true,
+        "why": "The publisher names nobody, so a new consumer is a new rule and target, with no change to who publishes."
+      },
+      {
+        "text": "It publishes each event twice, once per function",
+        "correct": false,
+        "why": "That is the coupling EventBridge removes; one event can match several rules."
+      },
+      {
+        "text": "It calls the new function directly after publishing",
+        "correct": false,
+        "why": "Then the checkout knows its consumers again, and waits for one of them."
+      },
+      {
+        "text": "It adds the function's ARN to each event's `resources`",
+        "correct": false,
+        "why": "`resources` describes what the event is about; it does not route it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw9s4s1v",
+    "version": 1,
+    "section": "eventbridge-rules",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `pattern.json`, five events are published, all from `shop.orders`: `OrderPlaced` with totals 1000, 1000.01 and 2500, `OrderCancelled` with 3000, and `OrderPlaced` with no `total` at all. How many reach the target?",
+    "hint": "Every field the pattern names must match, and `>` is strict.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "events"
+  },
+  {
+    "id": "ex-sx49bj9x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner's system sends bursts of 5,000 orders in a minute, and the database behind the function cannot take that rate. Which trigger fits?",
+    "choices": [
+      {
+        "text": "A function URL the partner calls for each order",
+        "correct": false,
+        "why": "Each call runs the function at once, so the burst reaches the database at the partner's rate."
+      },
+      {
+        "text": "An SQS queue read by an event source mapping",
+        "correct": true,
+        "why": "The queue absorbs the burst and the mapping reads it in batches, at a pace the function and its database decide."
+      },
+      {
+        "text": "An EventBridge rule on the partner's events",
+        "correct": false,
+        "why": "A rule routes each event as it comes and invokes asynchronously; it does not slow a burst down."
+      },
+      {
+        "text": "An S3 bucket the partner uploads each order to",
+        "correct": false,
+        "why": "Every upload is its own notification, and the burst arrives as a burst of invocations."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw7jb795",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function URL is created with `--auth-type NONE`, and every request gets `403 Forbidden`. What is missing?",
+    "choices": [
+      {
+        "text": "An API Gateway in front of the URL",
+        "correct": false,
+        "why": "A function URL works without API Gateway; that is its point."
+      },
+      {
+        "text": "Signing every request with SigV4",
+        "correct": false,
+        "why": "That is what `AWS_IAM` requires; `NONE` means no signature."
+      },
+      {
+        "text": "A statement in the function's policy allowing the principal `*`",
+        "correct": true,
+        "why": "A public URL also needs the function's resource policy to allow everyone to invoke it through the URL."
+      },
+      {
+        "text": "A destination for failed invocations",
+        "correct": false,
+        "why": "Destinations belong to asynchronous invocations, and a URL is synchronous."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhtmz7kg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same handler, raising on malformed input, is attached to API Gateway in one account and to S3 in another. A malformed event reaches each. What differs?",
+    "choices": [
+      {
+        "text": "Nothing: the handler raises the same exception in both",
+        "correct": false,
+        "why": "The exception is the same; what happens to the event afterwards is decided by the trigger's shape."
+      },
+      {
+        "text": "S3 shows the user an error page; API Gateway retries twice",
+        "correct": false,
+        "why": "That is the two the wrong way round: API Gateway is synchronous and S3 asynchronous."
+      },
+      {
+        "text": "Both retry twice and then use a destination",
+        "correct": false,
+        "why": "Retries and destinations are for asynchronous invocations; API Gateway's caller just gets the error."
+      },
+      {
+        "text": "The caller sees the error; S3's event is retried",
+        "correct": true,
+        "why": "Synchronous returns the failure to the caller; asynchronous queues, retries and gives up to a destination."
+      }
+    ]
+  },
+  {
+    "id": "ex-75tv59mx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stream mapping is created with `--starting-position LATEST` an hour after the table began writing changes. What happens to the changes of that hour?",
+    "choices": [
+      {
+        "text": "The function never sees them; reading starts with the next record written",
+        "correct": true,
+        "why": "`LATEST` begins after the newest record; `TRIM_HORIZON` would have started with the oldest still kept."
+      },
+      {
+        "text": "They arrive first, then the new ones",
+        "correct": false,
+        "why": "That is `TRIM_HORIZON`, the setting the section's mapping used."
+      },
+      {
+        "text": "They arrive in one large batch when the mapping starts",
+        "correct": false,
+        "why": "No starting position gathers the past into a single batch."
+      },
+      {
+        "text": "They are sent to the on-failure destination",
+        "correct": false,
+        "why": "Unread records are not failures; a destination receives records the function failed on."
+      }
+    ]
+  }
+]

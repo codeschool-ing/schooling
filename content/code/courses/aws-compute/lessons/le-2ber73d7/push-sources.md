@@ -10,8 +10,8 @@ IAM: a policy attached to the thing being reached, naming who may reach it. Forg
 is configured perfectly and nothing ever arrives.
 
 Two functions serve this lesson. They are created in moto from zips made the way lesson 14 made
-`greet`, with a role the same as `greet-role`; `thumbs` is the handler further down this section,
-and `orders` is section 04's:
+`greet`, with a role like `greet-role`. `thumbs` is the handler further down this section, and
+`orders` is section 04's:
 
 ```
 ana@laptop:~/aws$ aws lambda create-function --function-name thumbs --runtime python3.12 --handler thumbs.handler --role arn:aws:iam::123456789012:role/trigger-role --zip-file fileb://thumbs.zip --query FunctionArn

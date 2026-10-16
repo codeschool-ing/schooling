@@ -27,7 +27,7 @@ da aula 19.
 O S3, o SNS e o EventBridge invocam uma função de forma **assíncrona**. O Lambda põe o evento numa
 fila própria e responde na hora à origem que ele foi aceito, e depois chama a função a partir dessa
 fila. Se a função falha, o Lambda tenta de novo, duas vezes por padrão, com uma espera entre as
-tentativas; um evento que continua falhando, ou que espera mais que a sua idade máxima, seis horas
+tentativas. Um evento que continua falhando, ou que espera mais que a sua idade máxima, seis horas
 por padrão, é descartado, a menos que a função tenha para onde mandá-lo. Os dois números e o lugar
 para onde mandar as falhas são configurações da função, e o moto as guarda:
 
@@ -64,8 +64,8 @@ constrói em cima disso.
 O SQS, o DynamoDB Streams e o Kinesis não chamam nada. Uma fila ou um stream espera ser lido, e quem
 lê é um **mapeamento de origem de eventos** (event source mapping): um poller que o Lambda roda por
 você, que lê a origem, junta registros num lote e invoca a função de forma síncrona com ele. O
-tratamento de falhas é do mapeamento e da origem: uma mensagem que a função não terminou fica na sua
-fila e volta a ficar visível, e um registro de stream fica no seu shard e é tentado de novo, então
+tratamento de falhas é do mapeamento e da origem. Uma mensagem que a função não terminou fica na sua
+fila e volta a ficar visível, e um registro de stream fica no seu shard e é tentado de novo. Então
 por padrão nada se perde, e as perguntas passam a ser por quanto tempo um registro ruim é tentado de
 novo e o que ele segura enquanto isso. A seção 04 trata dessas perguntas.
 
