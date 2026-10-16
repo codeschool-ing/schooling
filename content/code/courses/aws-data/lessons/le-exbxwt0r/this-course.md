@@ -29,7 +29,7 @@ course, and none of them explains a policy document or a `JOIN` from the beginni
 **Every lesson that makes a choice prices it**, because on AWS a design and its invoice are the same
 decision. A table designed around the wrong key is a table that costs ten times what it should, and
 a lake partitioned by the wrong column is a lake every query reads whole. Cost is the one thing in
-this subject that is learnt by feeling it, and this course cannot make you feel it, because nothing in it ever touches a real account, and it does the next best thing: every
+this subject that is learnt by feeling it, and this course cannot make you feel it, because nothing in it ever touches a real account. It does the next best thing: every
 price is read from AWS's published list by a program you run, and every lesson that quotes one shows
 the arithmetic, so that the number is checkable rather than asserted.
 

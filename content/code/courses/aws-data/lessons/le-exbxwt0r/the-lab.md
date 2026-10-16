@@ -53,7 +53,7 @@ python3 -m venv ~/aws/venv
 **This is the one step `aws-foundations` does not have.** Athena and Redshift Spectrum run SQL over
 files in S3, and moto accepts such a query and runs nothing, as the section after next shows. So the
 lessons from 15 on read the same files with **DuckDB**, a database engine that lives inside a Python
-program, and write them with **PyArrow**, the library that reads and writes Parquet:
+program. They write them with **PyArrow**, the library that reads and writes Parquet:
 
 ```sh
 ~/aws/venv/bin/pip install -q duckdb==1.5.6 pyarrow==25.0.1

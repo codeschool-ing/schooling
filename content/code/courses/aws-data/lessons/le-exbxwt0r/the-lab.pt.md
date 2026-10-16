@@ -53,8 +53,8 @@ python3 -m venv ~/aws/venv
 **Este é o único passo que o `aws-foundations` não tem.** O Athena e o Redshift Spectrum rodam SQL
 sobre arquivos no S3, e o moto aceita uma consulta dessas e não roda nada, como mostra a seção depois
 da próxima. Então as lições a partir da 15 leem os mesmos arquivos com o **DuckDB**, um motor de banco
-de dados que vive dentro de um programa Python, e os escrevem com o **PyArrow**, a biblioteca que lê
-e escreve Parquet:
+de dados que vive dentro de um programa Python. Elas os escrevem com o **PyArrow**, a biblioteca que
+lê e escreve Parquet:
 
 ```sh
 ~/aws/venv/bin/pip install -q duckdb==1.5.6 pyarrow==25.0.1

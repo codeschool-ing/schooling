@@ -31,7 +31,7 @@ nenhuma explica um documento de política ou um `JOIN` desde o começo.
 decisão. Uma tabela desenhada em torno da chave errada é uma tabela que custa dez vezes o que deveria,
 e um lake particionado pela coluna errada é um lake que toda consulta lê inteiro. Custo é a única coisa
 deste assunto que se aprende sentindo, e este curso não consegue fazer você sentir, porque nada nele
-toca uma conta de verdade; ele faz a segunda melhor coisa: todo preço é lido da lista publicada pela
+toca uma conta de verdade. Ele faz a segunda melhor coisa: todo preço é lido da lista publicada pela
 AWS por um programa que você roda, e toda lição que cita um mostra a conta, para que o número possa
 ser conferido em vez de afirmado.
 
