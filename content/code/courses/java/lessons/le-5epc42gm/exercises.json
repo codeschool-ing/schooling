@@ -1,0 +1,538 @@
+[
+  {
+    "id": "ex-2nwe2bdg",
+    "version": 1,
+    "section": "widening",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which conversion does Java make by itself, with no cast?",
+    "hint": "The direction that cannot overflow.",
+    "choices": [
+      {
+        "text": "`double` to `int`",
+        "correct": false,
+        "why": "That one was refused as a possible lossy conversion."
+      },
+      {
+        "text": "`long` to `int`",
+        "correct": false,
+        "why": "Narrowing, which needs a cast."
+      },
+      {
+        "text": "`int` to `long`",
+        "correct": true,
+        "why": "Right: a smaller type into a larger one is a widening conversion."
+      },
+      {
+        "text": "`int` to `boolean`",
+        "correct": false,
+        "why": "`boolean` converts to nothing and from nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zc2qc3e",
+    "version": 1,
+    "section": "widening",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`float asFloat = 16_777_217;` printed `1.6777216E7`. Why one less?",
+    "hint": "A `float` spends 24 of its bits on digits.",
+    "choices": [
+      {
+        "text": "Past 2²⁴, a `float` skips some whole numbers",
+        "correct": true,
+        "why": "Right: 2²⁴ is 16,777,216, and the next value it can hold is two further on."
+      },
+      {
+        "text": "The number is larger than a `float` can hold",
+        "correct": false,
+        "why": "A `float` reaches about 3.4 × 10³⁸; the range is not the problem."
+      },
+      {
+        "text": "Printing in scientific notation drops the last digit",
+        "correct": false,
+        "why": "The `double` printed `1.6777217E7` in the same notation, all digits kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hswk5p9",
+    "version": 1,
+    "section": "widening",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these automatic conversions can change the value? Choose all that apply.",
+    "hint": "The dashed arrows in the figure.",
+    "choices": [
+      {
+        "text": "`int` to `float`",
+        "correct": true,
+        "why": "Yes: 16,777,217 became 16,777,216."
+      },
+      {
+        "text": "`int` to `double`",
+        "correct": false,
+        "why": "No: a `double` has more digits than any `int` needs, and kept 16,777,217."
+      },
+      {
+        "text": "`long` to `double`",
+        "correct": true,
+        "why": "Yes: a `long` has more significant digits than a `double` keeps."
+      },
+      {
+        "text": "`char` to `int`",
+        "correct": false,
+        "why": "No: every `char` code fits in an `int` exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4gbe5rg",
+    "version": 1,
+    "section": "widening",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`char initial = 'J'; int code = initial;` What is `code`?",
+    "hint": "A `char` is a number underneath.",
+    "choices": [
+      {
+        "text": "`J`",
+        "correct": false,
+        "why": "An `int` holds a number; the letter is how a `char` prints."
+      },
+      {
+        "text": "A compile error, because a letter is not a number",
+        "correct": false,
+        "why": "It compiled and printed 74."
+      },
+      {
+        "text": "74",
+        "correct": true,
+        "why": "Right: `J`'s code, and `char` to `int` is widening, so no cast was needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r8bafzw",
+    "version": 1,
+    "section": "narrowing-casts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `(int) 3.99` give?",
+    "hint": "A cast from a decimal cuts.",
+    "choices": [
+      {
+        "text": "4",
+        "correct": false,
+        "why": "That is `Math.round(3.99)`; a cast does not round."
+      },
+      {
+        "text": "A compile error about lossy conversion",
+        "correct": false,
+        "why": "The cast is how you accept the loss, so it compiles."
+      },
+      {
+        "text": "3",
+        "correct": true,
+        "why": "Right: the fraction is cut off, towards zero."
+      },
+      {
+        "text": "3.99, since the cast only changes the declared type",
+        "correct": false,
+        "why": "An `int` cannot hold 3.99; the value itself changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gjqr4dx",
+    "version": 1,
+    "section": "narrowing-casts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `(byte) 200` print?",
+    "hint": "A `byte` reaches 127, and 256 values fit in 8 bits.",
+    "value": -56,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-48pwype5",
+    "version": 1,
+    "section": "narrowing-casts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`(int) 1e20` printed `2147483647`. What rule was that?",
+    "hint": "Compare with `(byte) 200`, which wrapped.",
+    "choices": [
+      {
+        "text": "Low bits kept, as for whole numbers",
+        "correct": false,
+        "why": "Low bits are the rule from a whole number to a smaller one; 1e20 is a `double`."
+      },
+      {
+        "text": "An overflow that would have thrown without the cast",
+        "correct": false,
+        "why": "Nothing throws in a cast; `Math.toIntExact` is the one that throws."
+      },
+      {
+        "text": "A decimal too large for the target stops at its largest value",
+        "correct": true,
+        "why": "Right: from a `double`, an oversized value is clamped to `Integer.MAX_VALUE`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe2b8c53",
+    "version": 1,
+    "section": "narrowing-casts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Math.round(-2.5)` gave -2. Why not -3?",
+    "hint": "Which way do halves go?",
+    "choices": [
+      {
+        "text": "Halves go up, towards positive infinity",
+        "correct": true,
+        "why": "Right: and up from -2.5 is -2."
+      },
+      {
+        "text": "It cuts off the fraction like a cast",
+        "correct": false,
+        "why": "A cast of -2.5 would also give -2, but `Math.round(3.99)` gave 4, so it does round."
+      },
+      {
+        "text": "It rounds halves away from zero, and -2 is further",
+        "correct": false,
+        "why": "-3 is further from zero; the rule is towards positive infinity."
+      }
+    ]
+  },
+  {
+    "id": "ex-afegcb2w",
+    "version": 1,
+    "section": "narrowing-casts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report converts a total held in a `long` into an `int` to put it in a column. Which line makes a value that does not fit stop the program instead of printing a wrong number?",
+    "hint": "One of these throws.",
+    "choices": [
+      {
+        "text": "`int column = (int) total;`",
+        "correct": false,
+        "why": "A cast always produces a number, and for a large `long` it keeps the low bits, silently."
+      },
+      {
+        "text": "`int column = Math.toIntExact(total);`",
+        "correct": true,
+        "why": "Right: it threw `integer overflow` for 3,000,000,000."
+      },
+      {
+        "text": "`int column = (int) (total / 1);`",
+        "correct": false,
+        "why": "Dividing by 1 changes nothing, and the cast still keeps the low bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-7481zac3",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `7 / 2` evaluate to in Java?",
+    "hint": "Both sides are `int`.",
+    "choices": [
+      {
+        "text": "3.5",
+        "correct": false,
+        "why": "That is `7 / 2.0`, where one side is a `double`."
+      },
+      {
+        "text": "4",
+        "correct": false,
+        "why": "Nothing rounds; the fraction is dropped."
+      },
+      {
+        "text": "3",
+        "correct": true,
+        "why": "Right: integer division cuts off the fraction."
+      }
+    ]
+  },
+  {
+    "id": "ex-398km07t",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`int pages = 7; double half = pages / 2;` What is `half`?",
+    "hint": "The variable's type does not reach into the expression.",
+    "choices": [
+      {
+        "text": "3.0",
+        "correct": true,
+        "why": "Right: `pages / 2` is 3, and only then widened."
+      },
+      {
+        "text": "3.5, because `half` is a `double`",
+        "correct": false,
+        "why": "The division is done first, as `int`, before the `double` is involved."
+      },
+      {
+        "text": "A compile error: an `int` result cannot go into a `double`",
+        "correct": false,
+        "why": "`int` into `double` is widening; it compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-v53smb0z",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`byte stock = 10; stock += 300;` compiles and prints 54, while `stock = stock + 300;` is refused. What is the difference?",
+    "hint": "One of them carries something you did not write.",
+    "choices": [
+      {
+        "text": "`+=` is computed in `byte` arithmetic, which wraps",
+        "correct": false,
+        "why": "Arithmetic is never done in `byte`; both forms compute 310 as an `int`."
+      },
+      {
+        "text": "`+=` includes a hidden cast back to `byte`, which the long form lacks",
+        "correct": true,
+        "why": "Right: the compound operator casts silently; the long form needs the cast written."
+      },
+      {
+        "text": "`+=` checks that the result fits and the long form does not",
+        "correct": false,
+        "why": "Nothing checked: 310 did not fit, and 54 came out."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnmwfr3m",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `System.out.println(\"total: \" + 1 + 2);` print?",
+    "hint": "Left to right, and a `String` changes what `+` means.",
+    "choices": [
+      {
+        "text": "`total: 3`",
+        "correct": false,
+        "why": "That needs the sum in parentheses: `\"total: \" + (1 + 2)`."
+      },
+      {
+        "text": "A compile error mixing a `String` and numbers",
+        "correct": false,
+        "why": "`+` with a `String` joins text; it compiles."
+      },
+      {
+        "text": "`total: 12`",
+        "correct": true,
+        "why": "Right: `\"total: \" + 1` is already a `String`, so `2` is joined to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0xtb054",
+    "version": 1,
+    "section": "promotion",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before any arithmetic, `byte`, `short` and `char` values are widened to `___`.",
+    "hint": "The default whole-number type.",
+    "blanks": [
+      {
+        "accept": [
+          "int"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-00phke9n",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you turn the `String` `\"21\"` into the `int` 21?",
+    "hint": "It is a method, not a cast.",
+    "choices": [
+      {
+        "text": "`(int) \"21\"`",
+        "correct": false,
+        "why": "A cast converts between number types, and a `String` is not one."
+      },
+      {
+        "text": "`Integer.parseInt(\"21\")`",
+        "correct": true,
+        "why": "Right: and it throws when the text is not a number."
+      },
+      {
+        "text": "`String.valueOf(\"21\")`",
+        "correct": false,
+        "why": "That goes the other way, to a `String`."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1dwj55j",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`java Copies \"21 \"` failed with `NumberFormatException: For input string: \"21 \"`. What is wrong with the input?",
+    "hint": "Read what is between the quotes, all of it.",
+    "choices": [
+      {
+        "text": "21 is too large for an `int`",
+        "correct": false,
+        "why": "21 fits easily; `java Copies 21` printed 42."
+      },
+      {
+        "text": "The quotes, which were passed to the program",
+        "correct": false,
+        "why": "The shell removed them; the message quotes the string to show its edges."
+      },
+      {
+        "text": "An invisible space after the 21",
+        "correct": true,
+        "why": "Right: `parseInt` accepts no space, the quotes in the message show it, and `strip()` would remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdj49h9w",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Brazilian user types `39,90` into a price field, and the code calls `Double.parseDouble`. What happens?",
+    "hint": "Java's parsing methods have one decimal separator.",
+    "choices": [
+      {
+        "text": "A `NumberFormatException`",
+        "correct": true,
+        "why": "Right: `\"39,90\"` was refused, and lesson 7 shows parsing for a locale."
+      },
+      {
+        "text": "It returns 39.9, because the computer is set to Portuguese",
+        "correct": false,
+        "why": "The methods read a point whatever the computer's language."
+      },
+      {
+        "text": "It returns 3990, ignoring the comma",
+        "correct": false,
+        "why": "It does not skip characters; it refused the whole string."
+      }
+    ]
+  },
+  {
+    "id": "ex-4thcpapd",
+    "version": 1,
+    "section": "parsing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`String text = String.valueOf(39.9);` and then `text + 1`. Why `39.91` and not 40.9?",
+    "hint": "What type is `text`?",
+    "choices": [
+      {
+        "text": "`String.valueOf` rounds, and 39.9 + 1 rounded to 39.91",
+        "correct": false,
+        "why": "There is no arithmetic at all: one side is a `String`."
+      },
+      {
+        "text": "`text` is a `String`, so `+ 1` joins the character `1` to it",
+        "correct": true,
+        "why": "Right: the section 04 rule, once one side is text."
+      },
+      {
+        "text": "Floating-point arithmetic added a small error",
+        "correct": false,
+        "why": "That would give something like 40.900000000000006, not a new digit at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd5rmd8j",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression to what `Narrow` or `Promote` printed.",
+    "hint": "Cut, wrap, clamp, round.",
+    "pairs": [
+      {
+        "left": "`(int) -3.99`",
+        "right": "`-3`"
+      },
+      {
+        "left": "`(byte) 200`",
+        "right": "`-56`"
+      },
+      {
+        "left": "`(int) 1e20`",
+        "right": "`2147483647`"
+      },
+      {
+        "left": "`Math.round(3.99)`",
+        "right": "`4`"
+      }
+    ],
+    "right_distractors": [
+      "`-4`"
+    ]
+  },
+  {
+    "id": "ex-k0c2cyz2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An average is written `double avg = total / count;` with `total` and `count` both `int`. Totals of 7 and counts of 2 give 3.0. Which change gives 3.5?",
+    "hint": "One side of the division has to be a `double` before dividing.",
+    "choices": [
+      {
+        "text": "`double avg = (double) total / count;`",
+        "correct": true,
+        "why": "Right: the cast applies to `total` first, so the division is done in `double`."
+      },
+      {
+        "text": "`double avg = (double) (total / count);`",
+        "correct": false,
+        "why": "The parentheses divide as `int` first, giving 3, and then cast 3 to 3.0."
+      },
+      {
+        "text": "`float avg = total / count;`",
+        "correct": false,
+        "why": "Still `int` division on the right; the variable's type does not reach into it."
+      }
+    ]
+  }
+]

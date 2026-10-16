@@ -94,14 +94,14 @@ next thing to count.
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | wc -l
 605
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | grep -E "Greet|Hello, Ana"
-[0.037s][info][class,load] Greet source: file:/home/ana/life/out/
+[0.081s][info][class,load] Greet source: file:/home/ana/life/out/
 Hello, Ana
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | grep -c "shared objects file"
 600
 ```
 
 605 lines, and one of them is `Hello, Ana`, so **the JVM loaded 604 classes to print one line**.
-Only one of them is yours: `Greet`, found at 0.037 seconds in the directory the class path named.
+Only one of them is yours: `Greet`, found at 0.081 seconds in the directory the class path named.
 The rest are the library: strings, the console, the class loader itself.
 
 The last count explains how that is fast. **600 of those classes came from the "shared objects

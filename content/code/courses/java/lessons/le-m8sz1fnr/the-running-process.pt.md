@@ -96,14 +96,14 @@ carrega. Rode o `Greet` com ele, de volta em `~/life`:
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | wc -l
 605
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | grep -E "Greet|Hello, Ana"
-[0.037s][info][class,load] Greet source: file:/home/ana/life/out/
+[0.081s][info][class,load] Greet source: file:/home/ana/life/out/
 Hello, Ana
 ana@vm:~/life$ java -Xlog:class+load -cp out Greet Ana | grep -c "shared objects file"
 600
 ```
 
 605 linhas, e uma delas é `Hello, Ana`, então **a JVM carregou 604 classes para imprimir uma linha**.
-Só uma delas é sua: o `Greet`, encontrado aos 0,037 segundo no diretório que o class path indicou. O
+Só uma delas é sua: o `Greet`, encontrado aos 0,081 segundo no diretório que o class path indicou. O
 resto é a biblioteca: strings, o console, o próprio carregador de classes.
 
 A última contagem explica como isso é rápido. **600 dessas classes vieram do "shared objects file"**,
