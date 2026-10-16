@@ -59,8 +59,8 @@ logistic regression  refused:
     natively. For supervised learning, you might want to consider
     sklearn.ensemble.HistGradientBoostingClassifier and Regressor which
     accept missing values encoded as NaNs natively.
-logistic, imputed    accuracy 0.797  worst fold 0.775   0.07 s
-gradient boosting    accuracy 0.867  worst fold 0.858   1.38 s
+logistic, imputed    accuracy 0.797  worst fold 0.775   0.06 s
+gradient boosting    accuracy 0.867  worst fold 0.858   1.13 s
 ```
 
 **Logistic regression refuses the table outright**, and scikit-learn's own message names the model

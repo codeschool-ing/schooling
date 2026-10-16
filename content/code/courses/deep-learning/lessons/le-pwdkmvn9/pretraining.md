@@ -55,7 +55,7 @@ weights to `base.pt`, and `ls` shows the file:
 
 ```
 ana@vm:~/dl$ ls -l base.pt
--rw-r--r-- 1 root root 154915 Oct 10 23:01 base.pt
+-rw-r--r-- 1 root root 154915 Oct 16 01:46 base.pt
 ```
 
 The file holds the 37,957 parameters of `cnn.make_cnn(5)`, as a `state_dict`. **Keep it**: the

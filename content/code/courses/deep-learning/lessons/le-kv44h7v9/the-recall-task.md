@@ -72,12 +72,12 @@ lstm  length 20   1.000  1.000  1.000
 rnn   length 50   0.122  0.136  0.118
 lstm  length 50   0.120  0.122  0.144
 
-real	1m15.151s
-user	1m14.329s
-sys	0m0.537s
+real	2m2.026s
+user	2m0.139s
+sys	0m0.700s
 ```
 
-The six runs took 1 minute 15 seconds on the course's machine, on one thread.
+The six runs took 2 minutes 2 seconds on the course's machine, on one thread.
 
 | length | RNN after 3,000 steps | LSTM after 3,000 steps |
 | --- | --- | --- |

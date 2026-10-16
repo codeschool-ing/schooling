@@ -53,15 +53,15 @@ modelo a perto de 0,9. Rode a mesma bancada nela. Salve como `~/dl/churn.py`:
 ```
 ana@vm:~/dl$ python churn.py
 3000 rows, 10 columns, 24% left
-logistic regression  accuracy 0.801  worst fold 0.782    0.04 s
-gradient boosting    accuracy 0.883  worst fold 0.877    1.44 s
-MLP, PyTorch         accuracy 0.799  worst fold 0.788    6.81 s
+logistic regression  accuracy 0.801  worst fold 0.782    0.03 s
+gradient boosting    accuracy 0.883  worst fold 0.877    1.10 s
+MLP, PyTorch         accuracy 0.799  worst fold 0.788    5.77 s
 ```
 
 **O boosting chega a 0,883, a poucos pontos do teto, e os outros dois param perto de 0,80.** Um
 modelo que sempre respondesse "fica" marcaria 0,76, então a regressão logística e a rede acharam só
 uma pequena parte das regras. As piores dobras contam a mesma história: boosting 0,877, os outros dois
-abaixo de 0,79. A rede é de novo a mais lenta, com 6,81 segundos contra 1,44 do boosting.
+abaixo de 0,79. A rede é de novo a mais lenta, com 5,77 segundos contra 1,10 do boosting.
 
 ## Três razões, cada uma uma propriedade da tabela
 

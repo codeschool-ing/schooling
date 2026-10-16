@@ -37,18 +37,18 @@ number of symbols both ways, and then longer sequences. Save as `~/dl/timing.py`
 
 ```
 ana@vm:~/dl$ python timing.py
-64 x   50 steps =  3200 symbols    1.7 ms  x1.0
- 1 x 3200 steps =  3200 symbols    3.7 ms  x2.2
-64 x  100 steps =  6400 symbols    2.9 ms  x1.7
-64 x  200 steps = 12800 symbols    5.7 ms  x3.4
+64 x   50 steps =  3200 symbols    2.2 ms  x1.0
+ 1 x 3200 steps =  3200 symbols    8.6 ms  x3.9
+64 x  100 steps =  6400 symbols    4.4 ms  x2.0
+64 x  200 steps = 12800 symbols    8.6 ms  x4.0
 ```
 
 The timings are the course machine's and yours will differ; **the ratios are what to compare.** The
-first two rows are the same 3,200 symbols, and reading them as one sequence of 3,200 steps took 2.2 times
+first two rows are the same 3,200 symbols, and reading them as one sequence of 3,200 steps took 3.9 times
 as long as reading them as 64 sequences of 50. Both did the same multiplications. The long one did them
 3,200 times on one row each, and the batch did them 50 times on 64 rows each, where one larger product is
-cheaper than many small ones. The last two rows show the other half: the time grew with the length, 1.7 and
-then 3.4 times the first row, because every extra step is one more turn of the loop.
+cheaper than many small ones. The last two rows show the other half: the time grew with the length, 2.0 and
+then 4.0 times the first row, because every extra step is one more turn of the loop.
 
 That was one thread on a processor. **A graphics card makes the gap far wider**, because it runs
 thousands of multiplications at once: the batch fills it, and a single long sequence leaves almost all of

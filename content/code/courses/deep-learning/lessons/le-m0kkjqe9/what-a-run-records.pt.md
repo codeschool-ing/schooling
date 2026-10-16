@@ -110,19 +110,19 @@ A  tdigits.py
 A  track.py
 ana@vm:~/dl$ git commit -q -m "Train the digits network and record every run"
 ana@vm:~/dl$ git log --oneline
-878e080 Train the digits network and record every run
+d43259c Train the digits network and record every run
 ```
 
 O `git status --short` listou dez arquivos e nada de `.venv`: os cinco programas desta aula até aqui,
-os três das aulas 1 e 9, o `requirements.txt` e o `.gitignore`. Agora eles são o commit `878e080`. Uma
+os três das aulas 1 e 9, o `requirements.txt` e o `.gitignore`. Agora eles são o commit `d43259c`. Uma
 execução, e o registro dela:
 
 ```
 ana@vm:~/dl$ python run.py
-seed 0  val acc 0.9167  commit 878e080
+seed 0  val acc 0.9167  commit d43259c
 ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
 {
-    "time": "2026-10-10T17:13:27",
+    "time": "2026-10-16T01:55:52",
     "config": {
         "hidden": 32,
         "lr": 0.01,
@@ -131,7 +131,7 @@ ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
     },
     "seed": 0,
     "code": {
-        "commit": "878e080",
+        "commit": "d43259c",
         "dirty": false
     },
     "data": {
@@ -163,13 +163,13 @@ Agora o caso para o qual a marca `dirty` existe. Edite um programa sem fazer com
 ```
 ana@vm:~/dl$ echo '# trying something' >> exp.py
 ana@vm:~/dl$ python run.py
-seed 0  val acc 0.9167  commit 878e080  (uncommitted changes)
+seed 0  val acc 0.9167  commit d43259c  (uncommitted changes)
 ana@vm:~/dl$ git checkout exp.py
 Updated 1 path from the index
 ana@vm:~/dl$ git status --short
 ```
 
-A nova linha do `runs.jsonl` cita o commit `878e080`, e **o código que rodou não é o commit `878e080`**:
+A nova linha do `runs.jsonl` cita o commit `d43259c`, e **o código que rodou não é o commit `d43259c`**:
 ele tem uma linha que o commit não tem. Aqui a linha é um comentário e não muda nada, mas a marca não
 tem como saber disso e nem deve tentar. O `git checkout exp.py` devolveu o arquivo ao que está no
 commit, e o `git status` voltou a ficar quieto.

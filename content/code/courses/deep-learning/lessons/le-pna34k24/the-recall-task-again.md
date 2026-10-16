@@ -59,9 +59,9 @@ the other three columns:
 | 20 | 0.482 | 1.000 | 1.000 |
 | 50 | 0.118 | 0.144 | 1.000 |
 
-It did that with 10,728 parameters, half of the LSTM model's 21,640. **It was not faster.** On one
+It did that with 10,728 parameters, half of the LSTM model's 21,640. **Speed is not where it won.** On one
 thread of the course's machine the three runs took 19, 29 and 62 seconds, 110 seconds together, where
-lesson 14's six runs took 75 seconds. The time grew with the length because attention compares every
+lesson 14's six runs, half of them the cheaper RNN, took 2 minutes 2 seconds. The time grew with the length because attention compares every
 position with every other one. Lesson 14's argument for the transformer was about
 hardware that does many multiplications at once, and one thread is the opposite of that; this course has
 no graphics card, so that part was not run.
@@ -111,7 +111,7 @@ The positions are what made that possible, and taking them out shows it:
 ana@vm:~/dl$ python recall_tf.py --no-positions
 parameters: this model 9128  lesson 14's LSTM 21640
 accuracy on 1,000 new sequences after 250, 1,000, 2,000 and 3,000 steps (chance is 0.125)
-length 50   0.162  0.178  0.182  0.171     65 s
+length 50   0.162  0.178  0.182  0.171     63 s
 ```
 
 Without positions the same model reached 0.171 after 3,000 steps. That is above chance, because the first

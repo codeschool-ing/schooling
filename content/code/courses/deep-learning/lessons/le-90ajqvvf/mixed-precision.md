@@ -75,14 +75,14 @@ Save as `~/dl/mixed.py`:
 
 ```
 ana@vm:~/dl$ python mixed.py
-float32     1.9 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
-bfloat16    0.9 s  val loss 0.1322  val acc 0.969  weights torch.float32, outputs torch.bfloat16
+float32     2.7 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
+bfloat16    1.4 s  val loss 0.1298  val acc 0.972  weights torch.float32, outputs torch.bfloat16
 ```
 
-**The accuracy is the same, 0.969 both ways**, and the validation loss moved in the third decimal,
-from 0.1291 to 0.1322. The weights stayed `torch.float32` in both runs, while the network's outputs came
+**The accuracy is within one image, 0.969 against 0.972**, and the validation loss moved in the third
+decimal, from 0.1291 to 0.1298. The weights stayed `torch.float32` in both runs, while the network's outputs came
 out in `torch.bfloat16` under autocast. The seconds are the course machine's and
-yours will differ, so read them as an ordering: **bfloat16 was the faster of the two**, 0.9 s against 1.9 s.
+yours will differ, so read them as an ordering: **bfloat16 was the faster of the two**, 1.4 s against 2.7 s.
 That depends on the processor. One with instructions for bfloat16 products, like the course machine's,
 gains from them; one without converts every number to float32 and back, and can come out slower. Time
 both on yours before choosing.

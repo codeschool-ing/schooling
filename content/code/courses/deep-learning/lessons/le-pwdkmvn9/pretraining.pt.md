@@ -55,7 +55,7 @@ saved base.pt: 37957 parameters
 
 ```
 ana@vm:~/dl$ ls -l base.pt
--rw-r--r-- 1 root root 154915 Oct 10 23:01 base.pt
+-rw-r--r-- 1 root root 154915 Oct 16 01:46 base.pt
 ```
 
 O arquivo guarda os 37.957 parâmetros de `cnn.make_cnn(5)`, como um `state_dict`. **Guarde-o**: a

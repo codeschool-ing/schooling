@@ -77,15 +77,15 @@ dois jeitos. Salve como `~/dl/mixed.py`:
 
 ```
 ana@vm:~/dl$ python mixed.py
-float32     1.9 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
-bfloat16    0.9 s  val loss 0.1322  val acc 0.969  weights torch.float32, outputs torch.bfloat16
+float32     2.7 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
+bfloat16    1.4 s  val loss 0.1298  val acc 0.972  weights torch.float32, outputs torch.bfloat16
 ```
 
-**A acurácia é a mesma, 0,969 dos dois jeitos**, e a perda de validação mudou na terceira casa, de 0,1291
-para 0,1322. Os pesos ficaram em `torch.float32` nas duas execuções, enquanto as saídas da rede saíram em
+**A acurácia fica a uma imagem de distância, 0,969 contra 0,972**, e a perda de validação mudou na
+terceira casa, de 0,1291 para 0,1298. Os pesos ficaram em `torch.float32` nas duas execuções, enquanto as saídas da rede saíram em
 `torch.bfloat16` com o autocast. Os segundos são os da máquina do curso e os
-seus vão ser diferentes, então leia-os como uma ordem: **o bfloat16 foi o mais rápido dos dois**, 0,9 s contra
-1,9 s. Isso depende do processador. Um que tem instruções para produtos em bfloat16, como o da máquina do
+seus vão ser diferentes, então leia-os como uma ordem: **o bfloat16 foi o mais rápido dos dois**, 1,4 s contra
+2,7 s. Isso depende do processador. Um que tem instruções para produtos em bfloat16, como o da máquina do
 curso, ganha com elas; um que não tem converte cada número para float32 e de volta, e pode sair mais
 lento. Cronometre os dois no seu antes de escolher.
 

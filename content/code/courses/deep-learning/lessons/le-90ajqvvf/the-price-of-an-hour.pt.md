@@ -27,9 +27,9 @@ epoch  20  train loss 0.0249  val loss 0.1526  val acc 0.947
 epoch  30  train loss 0.0055  val loss 0.0776  val acc 0.978
 4800 of them in the two convolutions
 
-real	0m8.275s
-user	0m19.603s
-sys	0m0.647s
+real	0m10.857s
+user	0m24.827s
+sys	0m0.778s
 ```
 
 `real` é o tempo no relógio, do início ao fim. `user` é tempo de processador, somado em todos os
@@ -64,15 +64,15 @@ Ponha o preço que lhe passarem no dia. Salve como `~/dl/bill.py`:
 Rode-o com os segundos da linha `real` acima, arredondados:
 
 ```
-ana@vm:~/dl$ python bill.py 8
-this run: 8 s = 0.0022 h, 0.0056 at 2.50 an hour
+ana@vm:~/dl$ python bill.py 11
+this run: 11 s = 0.0031 h, 0.0076 at 2.50 an hour
 6 x N x D = 5.88e+21 FLOPs
 4,083 card-hours, 10,208 at 2.50 an hour
   on   8 cards:  21.3 days
   on 256 cards:   0.7 days
 ```
 
-**A execução do curso custa 0,0056 a esse preço**, uma pequena fração de uma unidade, seja qual for a
+**A execução do curso custa 0,0076 a esse preço**, uma pequena fração de uma unidade, seja qual for a
 moeda. A segunda metade é a mesma conta para um modelo que precisa mesmo de orçamento, feita antes de
 treiná-lo, com a regra 6 × N × D da primeira seção. Um modelo de 7 bilhões de parâmetros treinado com 20
 tokens por parâmetro precisa de 5.88e+21 operações. Em placas que sustentam 40% de um pico de 1e15 por

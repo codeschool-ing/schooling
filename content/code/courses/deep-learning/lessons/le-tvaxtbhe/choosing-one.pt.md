@@ -79,15 +79,15 @@ ana@vm:~/dl$ python small.py
 cnn.make_cnn 38282 parameters
 epoch   5  train loss 0.3023  val loss 0.2438  val acc 0.939
 epoch  10  train loss 0.0985  val loss 0.1518  val acc 0.953
-  1 s
+  2 s
 resnet18 11175370 parameters
 epoch   5  train loss 0.2078  val loss 0.2733  val acc 0.931
 epoch  10  train loss 0.1344  val loss 0.2077  val acc 0.939
-  23 s
+  30 s
 ```
 
 A ResNet-18 tem 11.175.370 parâmetros contra 38.282 da rede pequena, umas 290 vezes mais, e termina
-em 0,939 na validação contra 0,953. Levou 23 segundos para chegar lá, contra 1. O tronco dela divide o
+em 0,939 na validação contra 0,953. Levou 30 segundos para chegar lá, contra 2. O tronco dela divide o
 lado por quatro, como os 224 para 56 da seção da ResNet-18 mostraram, então os dígitos chegam ao
 primeiro bloco residual como mapas de 2 por 2 e quase toda a maquinaria trabalha sobre quatro
 pixels. Uma arquitetura carrega suposições sobre a entrada, e o tamanho da imagem é a primeira

@@ -109,19 +109,19 @@ A  tdigits.py
 A  track.py
 ana@vm:~/dl$ git commit -q -m "Train the digits network and record every run"
 ana@vm:~/dl$ git log --oneline
-878e080 Train the digits network and record every run
+d43259c Train the digits network and record every run
 ```
 
 `git status --short` listed ten files and nothing from `.venv`: the five programs of this lesson so
 far, the three from lessons 1 and 9, `requirements.txt` and the `.gitignore`. They are commit
-`878e080` now. One run, and its record:
+`d43259c` now. One run, and its record:
 
 ```
 ana@vm:~/dl$ python run.py
-seed 0  val acc 0.9167  commit 878e080
+seed 0  val acc 0.9167  commit d43259c
 ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
 {
-    "time": "2026-10-10T17:13:27",
+    "time": "2026-10-16T01:55:52",
     "config": {
         "hidden": 32,
         "lr": 0.01,
@@ -130,7 +130,7 @@ ana@vm:~/dl$ tail -n 1 runs.jsonl | python -m json.tool
     },
     "seed": 0,
     "code": {
-        "commit": "878e080",
+        "commit": "d43259c",
         "dirty": false
     },
     "data": {
@@ -162,13 +162,13 @@ Now the case the `dirty` flag exists for. Edit a program without committing, and
 ```
 ana@vm:~/dl$ echo '# trying something' >> exp.py
 ana@vm:~/dl$ python run.py
-seed 0  val acc 0.9167  commit 878e080  (uncommitted changes)
+seed 0  val acc 0.9167  commit d43259c  (uncommitted changes)
 ana@vm:~/dl$ git checkout exp.py
 Updated 1 path from the index
 ana@vm:~/dl$ git status --short
 ```
 
-The new line in `runs.jsonl` names commit `878e080`, and **the code that ran is not commit `878e080`**:
+The new line in `runs.jsonl` names commit `d43259c`, and **the code that ran is not commit `d43259c`**:
 it has a line the commit does not. Here the line is a comment and changes nothing, but the flag
 cannot know that and should not try. `git checkout exp.py` put the file back as the commit has it,
 and `git status` is quiet again.

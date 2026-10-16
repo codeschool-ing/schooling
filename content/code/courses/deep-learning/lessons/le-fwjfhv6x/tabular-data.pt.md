@@ -83,9 +83,9 @@ se ele era maligno ou benigno. Salve como `~/dl/cancer.py` e rode:
 ```
 ana@vm:~/dl$ python cancer.py
 569 rows, 30 columns, 63% benign
-logistic regression  accuracy 0.979  worst fold 0.956    0.06 s
-gradient boosting    accuracy 0.970  worst fold 0.956    1.22 s
-MLP, PyTorch         accuracy 0.967  worst fold 0.930    4.52 s
+logistic regression  accuracy 0.979  worst fold 0.956    0.04 s
+gradient boosting    accuracy 0.970  worst fold 0.956    1.06 s
+MLP, PyTorch         accuracy 0.967  worst fold 0.930    3.90 s
 ```
 
 **Os três ficam a 1,2 ponto um do outro, e a rede fica em último.** A regressão logística chega a
@@ -94,8 +94,8 @@ um ponto, e esses três diferem por um ou dois tumores por dobra. A rede também
 0,930. A aula 18 trata de separar uma diferença de ruído, e esta não se qualifica. O que não está em
 dúvida é que a rede não comprou nada.
 
-**O relógio separa os três mais do que a acurácia.** A regressão logística levou 0,06 segundo para
-as cinco dobras, o boosting 1,22 e a rede 4,52: a rede várias vezes o boosting, e o boosting muitas
+**O relógio separa os três mais do que a acurácia.** A regressão logística levou 0,04 segundo para
+as cinco dobras, o boosting 1,06 e a rede 3,90: a rede várias vezes o boosting, e o boosting muitas
 vezes a regressão logística. Esses segundos serão outros na sua máquina, e mudam de uma execução
 para outra. A ordem é o que se deve ler.
 

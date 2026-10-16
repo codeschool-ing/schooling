@@ -15,23 +15,23 @@ times higher.
 
 ```
 ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s; done
-seed 0  val acc 0.9167  commit 878e080
-seed 1  val acc 0.9250  commit 878e080
-seed 2  val acc 0.9139  commit 878e080
-seed 3  val acc 0.9250  commit 878e080
-seed 4  val acc 0.9250  commit 878e080
+seed 0  val acc 0.9167  commit d43259c
+seed 1  val acc 0.9250  commit d43259c
+seed 2  val acc 0.9139  commit d43259c
+seed 3  val acc 0.9250  commit d43259c
+seed 4  val acc 0.9250  commit d43259c
 ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --hidden 64; done
-seed 0  val acc 0.9194  commit 878e080
-seed 1  val acc 0.9278  commit 878e080
-seed 2  val acc 0.9167  commit 878e080
-seed 3  val acc 0.9250  commit 878e080
-seed 4  val acc 0.9111  commit 878e080
+seed 0  val acc 0.9194  commit d43259c
+seed 1  val acc 0.9278  commit d43259c
+seed 2  val acc 0.9167  commit d43259c
+seed 3  val acc 0.9250  commit d43259c
+seed 4  val acc 0.9111  commit d43259c
 ana@vm:~/dl$ for s in 0 1 2 3 4; do python run.py --seed $s --lr 0.05; done
-seed 0  val acc 0.9722  commit 878e080
-seed 1  val acc 0.9583  commit 878e080
-seed 2  val acc 0.9556  commit 878e080
-seed 3  val acc 0.9556  commit 878e080
-seed 4  val acc 0.9500  commit 878e080
+seed 0  val acc 0.9722  commit d43259c
+seed 1  val acc 0.9583  commit d43259c
+seed 2  val acc 0.9556  commit d43259c
+seed 3  val acc 0.9556  commit d43259c
+seed 4  val acc 0.9500  commit d43259c
 ```
 
 Fifteen lines appended to `runs.jsonl`, each with its commit and nothing dirty. Reading them is one
@@ -59,18 +59,18 @@ more program, which needs nothing from PyTorch. Save as `~/dl/report.py`:
 
 ```
 ana@vm:~/dl$ python report.py
-{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.01}  commit 878e080
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.01}  commit d43259c
   5 seeds  mean 0.9211  min 0.9139  max 0.9250  sd 0.0054
-{"batch_size": 32, "epochs": 10, "hidden": 64, "lr": 0.01}  commit 878e080
+{"batch_size": 32, "epochs": 10, "hidden": 64, "lr": 0.01}  commit d43259c
   5 seeds  mean 0.9200  min 0.9111  max 0.9278  sd 0.0066
-{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.05}  commit 878e080
+{"batch_size": 32, "epochs": 10, "hidden": 32, "lr": 0.05}  commit d43259c
   5 seeds  mean 0.9583  min 0.9500  max 0.9722  sd 0.0083
 left out: 1 run(s) from uncommitted code
 ana@vm:~/dl$ git add report.py
 ana@vm:~/dl$ git commit -q -m "Report the runs by configuration"
 ana@vm:~/dl$ git log --oneline
-a1ec172 Report the runs by configuration
-878e080 Train the digits network and record every run
+fc96710 Report the runs by configuration
+d43259c Train the digits network and record every run
 ```
 
 `report.py` is code like the rest, so the transcript ends by committing it. Left uncommitted, it

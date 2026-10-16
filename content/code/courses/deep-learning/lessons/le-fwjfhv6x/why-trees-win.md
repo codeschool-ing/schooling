@@ -52,16 +52,16 @@ the same bench on it. Save as `~/dl/churn.py`:
 ```
 ana@vm:~/dl$ python churn.py
 3000 rows, 10 columns, 24% left
-logistic regression  accuracy 0.801  worst fold 0.782    0.04 s
-gradient boosting    accuracy 0.883  worst fold 0.877    1.44 s
-MLP, PyTorch         accuracy 0.799  worst fold 0.788    6.81 s
+logistic regression  accuracy 0.801  worst fold 0.782    0.03 s
+gradient boosting    accuracy 0.883  worst fold 0.877    1.10 s
+MLP, PyTorch         accuracy 0.799  worst fold 0.788    5.77 s
 ```
 
 **Boosting reaches 0.883, within a couple of points of the ceiling, and the other two stall near
 0.80.** A model that always answered "stays" would score 0.76, so logistic regression and the
 network have each found only a small part of the rules. The worst folds tell the same story: boosting
-0.877, the other two below 0.79. The network is again the slowest, at 6.81 seconds against
-boosting's 1.44.
+0.877, the other two below 0.79. The network is again the slowest, at 5.77 seconds against
+boosting's 1.10.
 
 ## Three reasons, each a property of the table
 

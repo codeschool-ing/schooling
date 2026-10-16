@@ -59,9 +59,9 @@ justa são as outras três colunas:
 | 20 | 0,482 | 1,000 | 1,000 |
 | 50 | 0,118 | 0,144 | 1,000 |
 
-Ele fez isso com 10.728 parâmetros, metade dos 21.640 do modelo LSTM. **Não foi mais rápido.** Numa
+Ele fez isso com 10.728 parâmetros, metade dos 21.640 do modelo LSTM. **Não foi na velocidade que ele venceu.** Numa
 thread da máquina do curso, as três execuções levaram 19, 29 e 62 segundos, 110 segundos ao todo, onde
-as seis execuções da aula 14 levaram 75 segundos. O tempo cresceu com o comprimento porque a atenção
+as seis execuções da aula 14, metade delas a RNN, mais barata, levaram 2 minutos e 2 segundos. O tempo cresceu com o comprimento porque a atenção
 compara cada posição com todas as outras. O argumento da aula 14 a favor do transformer era sobre
 hardware que faz muitas multiplicações de uma vez, e uma thread é o oposto disso; este curso não tem
 placa de vídeo, então essa parte não foi executada.
@@ -112,7 +112,7 @@ As posições é que tornaram isso possível, e tirá-las mostra:
 ana@vm:~/dl$ python recall_tf.py --no-positions
 parameters: this model 9128  lesson 14's LSTM 21640
 accuracy on 1,000 new sequences after 250, 1,000, 2,000 and 3,000 steps (chance is 0.125)
-length 50   0.162  0.178  0.182  0.171     65 s
+length 50   0.162  0.178  0.182  0.171     63 s
 ```
 
 Sem posições, o mesmo modelo chegou a 0,171 depois de 3.000 passos. Isso fica acima do acaso porque o
