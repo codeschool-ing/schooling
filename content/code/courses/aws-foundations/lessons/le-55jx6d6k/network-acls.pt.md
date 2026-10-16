@@ -3,11 +3,11 @@ title: Network ACLs, sem estado e presas à sub-rede
 version: 1
 ---
 
-**Uma network ACL é uma lista numerada de regras de permissão e de negação na borda de uma
-sub-rede, lida em ordem até uma casar.** Todo pacote que entra na sub-rede ou sai dela é conferido
-contra ela, e ela não lembra de nada: uma resposta é um pacote novo como qualquer outro, e precisa
-ser permitida por conta própria. Essa propriedade, **não ter estado** (stateless), é de onde vêm
-quase todos os erros com network ACLs.
+**Uma network ACL é uma lista numerada de regras de permissão e de negação na borda de uma sub-rede,
+lida em ordem até uma casar.** Ela confere todo pacote que entra na sub-rede ou sai dela, e não
+lembra de nada. Uma resposta é um pacote novo como qualquer outro, e precisa ser permitida por conta
+própria. Essa propriedade, **não ter estado** (stateless), é de onde vêm quase todos os erros com
+network ACLs.
 
 | | security group | network ACL |
 |---|---|---|
@@ -31,22 +31,22 @@ False	32767	-1	0.0.0.0/0	deny
 ```
 
 Duas regras em cada sentido. **A regra 100 permite todo protocolo (`-1`) de qualquer lugar.** A
-regra numerada `32767` é a que o console mostra como `*`: a última regra de toda network ACL, que
-nega o que nenhuma outra regra casou, e que não pode ser removida. Sob a network ACL padrão ela
-nunca dispara, já que a regra 100 casa antes.
+regra numerada `32767` é a que o console mostra como `*`. É a última regra de toda network ACL, nega
+o que nenhuma outra regra casou, e não pode ser removida. Sob a network ACL padrão ela nunca
+dispara, já que a regra 100 casa antes.
 
-É por isso que a maioria das VPCs roda na network ACL padrão e filtra só com security groups, e é
-uma posição razoável. **Uma network ACL vale a pena quando uma sub-rede precisa de uma negação**, ou
+É por isso que a maioria das VPCs roda na network ACL padrão e filtra só com security groups. É uma
+posição razoável. **Uma network ACL vale a pena quando uma sub-rede precisa de uma negação**, ou
 quando uma equipe quer um segundo filtro, mais grosso, que um security group errado não consiga
 abrir.
 
 ## Uma network ACL para a camada pública
 
 As sub-redes públicas da loja encaram a internet, e um endereço, `198.51.100.7`, anda martelando o
-checkout. Um security group não consegue recusar um endereço; uma network ACL consegue. Uma network
-ACL nova na AWS começa só com as duas regras `*`, então nega tudo até regras serem acrescentadas.
-**A do moto começa sem regra nenhuma**, como mostra o segundo comando; as regras abaixo tornam a
-diferença irrelevante, já que a loja escreve toda regra de que depende.
+checkout. Um security group não consegue recusar um endereço, e uma network ACL consegue. Uma
+network ACL nova na AWS começa só com as duas regras `*`, então nega tudo até alguém acrescentar
+regras. **A do moto começa sem regra nenhuma**, como mostra o segundo comando. As regras abaixo
+tornam a diferença irrelevante, já que a loja escreve toda regra de que depende.
 
 ```
 ana@laptop:~/aws$ acl=$(aws ec2 create-network-acl --vpc-id $vpc --tag-specifications 'ResourceType=network-acl,Tags=[{Key=Name,Value=public}]' --query NetworkAcl.NetworkAclId --output text)
@@ -72,18 +72,18 @@ A regra 110 de entrada e a regra 100 de saída são a parte sem estado. O navega
 conecta **a partir de** uma porta que o próprio sistema dele escolheu, em algum lugar da faixa alta,
 **para** a porta 443. A resposta volta para essa porta alta, e a network ACL, que não lembra de
 nada, precisa permiti-la como um pacote de saída por si só. Essas portas de cliente se chamam
-**efêmeras**, e como a faixa varia entre sistemas (o Linux escolhe de 32768 a 60999, outros a partir
-de mais baixo), a documentação da AWS recomenda permitir **de 1024 a 65535**.
+**efêmeras**. A faixa varia entre sistemas: o Linux escolhe de 32768 a 60999, outros a partir de
+mais baixo. Então a documentação da AWS recomenda permitir **de 1024 a 65535**.
 
 O mesmo acontece no outro sentido. O NAT gateway numa sub-rede pública abre conexões para o provedor
-de pagamentos na 443, o que a regra 110 de saída permite, e as respostas chegam numa porta alta, que
-é para o que serve a regra 110 de entrada. A regra 120 de cada sentido deixa as sub-redes públicas
+de pagamentos na 443, o que a regra 110 de saída permite. As respostas chegam numa porta alta, que é
+para o que serve a regra 110 de entrada. A regra 120 de cada sentido deixa as sub-redes públicas
 conversarem com o resto da VPC, onde os security groups fazem o trabalho fino.
 
 ## Pondo-a nas sub-redes
 
-Uma sub-rede fica associada a exatamente uma network ACL, então mudar uma sub-rede para a nova quer
-dizer substituir a associação atual dela, que é com a padrão:
+Uma sub-rede fica associada a exatamente uma network ACL. Mudar uma sub-rede para a nova quer dizer
+substituir a associação atual dela, que é com a padrão:
 
 ```
 ana@laptop:~/aws$ for z in a b c; do s=$(aws ec2 describe-subnets --filters Name=tag:Name,Values=public-$z --query "Subnets[0].SubnetId" --output text); a=$(aws ec2 describe-network-acls --filters Name=association.subnet-id,Values=$s --query "NetworkAcls[0].Associations[?SubnetId=='$s'].NetworkAclAssociationId" --output text); aws ec2 replace-network-acl-association --association-id $a --network-acl-id $acl --query NewAssociationId --output text; done
@@ -100,7 +100,7 @@ False	120	-1	None	None	10.20.0.0/16	allow
 True	120	-1	None	None	10.20.0.0/16	allow
 ```
 
-As três sub-redes públicas agora respondem à `public`; as seis privadas ficam na padrão, que deixa
-tudo passar e deixa a filtragem para os security groups delas. Lidas de volta por número, as regras
-são a saída do último comando: `False` é entrada e `True` é saída, o TCP aparece pelo número de
-protocolo dele, `6`, e a negação vem primeiro.
+As três sub-redes públicas agora respondem à `public`. As seis privadas ficam na padrão, que deixa
+tudo passar e deixa a filtragem para os security groups delas. O último comando lê as regras de
+volta por número. `False` é entrada e `True` é saída, o TCP aparece pelo número de protocolo dele,
+`6`, e a negação vem primeiro.

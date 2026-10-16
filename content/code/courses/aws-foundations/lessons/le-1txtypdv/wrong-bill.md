@@ -11,11 +11,11 @@ small per hour, and a month is 730 hours.
 
 ## The case
 
-The shop's staging account, `shop-staging`, runs one `m7i.large` on demand, and the team expected
-its September bill to be that instance, 117.27 dollars, from the table in the section on paying for
-one machine. The bill arrived at more than twice that. This is a worked case: the four lines below
-are a set of mistakes this course's network lessons teach you to avoid, priced from the
-list, not an invoice anybody received. Its prices come from three offers:
+The shop's staging account, `shop-staging`, runs one `m7i.large` on demand. The team expected its
+September bill to be that instance, 117.27 dollars, from the table in the section on paying for one
+machine. The bill arrived at more than twice that. This is a worked case, not an invoice anybody
+received. The four lines below are mistakes this course's network lessons teach you to avoid, priced
+from the list. Its prices come from three offers:
 
 ```
 ana@laptop:~/aws$ python3 price.py AmazonEC2 20260925174521 sa-east-1 SAE1-NatGateway-Hours SAE1-NatGateway-Bytes
@@ -28,8 +28,8 @@ SAE1-NatGateway-Bytes
 
 The NAT gateway is in the EC2 offer, which `terms.py` already downloaded into the same cache, so
 `price.py` reads it without downloading again. A **NAT gateway** is what lets machines in a private
-subnet reach the internet, and lesson 17 builds one; it costs 0.093 dollars for every hour it
-exists and 0.093 for every gigabyte it passes, in the list of 25 September 2026.
+subnet reach the internet, and lesson 17 builds one. It costs 0.093 dollars for every hour it exists
+and 0.093 for every gigabyte it passes, in the list of 25 September 2026.
 
 ```
 ana@laptop:~/aws$ python3 price.py AmazonVPC 20260917190528 sa-east-1 SAE1-PublicIPv4:InUseAddress SAE1-PublicIPv4:IdleAddress
@@ -40,9 +40,9 @@ SAE1-PublicIPv4:IdleAddress
           0 to       Inf Hrs  0.0050
 ```
 
-**Every public IPv4 address costs 0.005 dollars an hour, attached to something or not**, in the
-list of 17 September 2026. The two lines have the same price; what the name of the second one says
-is that an address held and attached to nothing is still paid for.
+**Every public IPv4 address costs 0.005 dollars an hour, attached to something or not**, in the list
+of 17 September 2026. The two lines have the same price. The name of the second one says that an
+address held and attached to nothing is still paid for.
 
 ```
 ana@laptop:~/aws$ python3 price.py AWSDataTransfer 20260916132208 sa-east-1 SAE1-DataTransfer-Regional-Bytes
@@ -63,13 +63,13 @@ The crossing between zones is lesson 1's line, 0.01 per gigabyte, charged on bot
 | `SAE1-DataTransfer-Regional-Bytes` | the instance in `sa-east-1a` talking to a database in `sa-east-1b` | 800 GB × 0.02 | 16.00 |
 
 Together they are **109.79 dollars**, and the bill is 117.27 + 109.79 = 227.06, before tax. Not one
-of the four is a machine, and the largest is a gateway that carried almost nothing: the hours of a
+of the four is a machine, and the largest is a gateway that carried almost nothing. The hours of a
 NAT gateway cost more than its traffic until it passes 730 GB a month.
 
 ## Finding them
 
 **Group the month by usage type, filtered to the account.** In Cost Explorer that is the query of
-lesson 13 with `--group-by Type=DIMENSION,Key=USAGE_TYPE` and a filter on `LINKED_ACCOUNT`; in the
+lesson 13 with `--group-by Type=DIMENSION,Key=USAGE_TYPE` and a filter on `LINKED_ACCOUNT`. In the
 Cost and Usage Report it is a `GROUP BY` on the usage type column, which lesson 15 writes. A usage
 type names the thing exactly, `NatGateway-Hours` rather than "EC2", and the region prefix says
 where. Each line then has an owner to ask and a fix:
@@ -82,6 +82,6 @@ where. Each line then has an owner to ask and a fix:
   staging does not need to survive the loss of a zone (lesson 1's rule for chatty pairs).
 
 **The bill that arrived wrong is the reason for the tags of lesson 13.** Grouped by `team`, these
-four lines would have arrived under somebody's name. Untagged, they sit in `team$`, and the question
+four lines would have arrived under somebody's name. Untagged, they sit in `team$`. The question
 "whose is this" becomes an afternoon of reading usage types, which is the afternoon this section
 just spent.

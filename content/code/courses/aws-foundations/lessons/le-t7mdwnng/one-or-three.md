@@ -5,16 +5,16 @@ version: 1
 
 **A NAT gateway belongs to one zone, so the shop chooses between losing a zone's way out with the
 zone, and paying for three.** With one gateway in `public-a`, the private subnets of zones b and c
-send their internet traffic across a zone boundary to reach it, and when zone a fails they lose the
+send their internet traffic across a zone boundary to reach it. When zone a fails they lose the
 internet with it, although their own zones are fine. With a gateway in every zone, each zone's
 private table points at its own, and a failure stays where it happened. The rest of this section
 puts prices on both.
 
 ## The prices
 
-A NAT gateway is billed by the hour it exists and by the gigabyte it processes, and those two lines
-are in the **EC2 offer** rather than in the VPC one. That offer prices every machine type in every
-combination, so it is large: `price.py` downloads it once, and the `ls` at the end shows what it
+A NAT gateway is billed by the hour it exists and by the gigabyte it processes. Those two lines are
+in the **EC2 offer** rather than in the VPC one. That offer prices every machine type in every
+combination, so it is large. `price.py` downloads it once, and the `ls` at the end shows what it
 keeps.
 
 ```
@@ -56,16 +56,16 @@ gateways is the hourly part, and the crossing.**
 
 The third line, `SAE1-RegionalNatGateway-Hours`, is a newer kind of NAT gateway that AWS spreads
 across the zones itself, at the same hourly price. moto 5.2.3 builds only the zonal kind, so this
-lesson does too; read AWS's pages on the regional one before relying on it, because it changes the
+lesson does too. Read AWS's pages on the regional one before relying on it, because it changes the
 trade below.
 
 ## What the shared gateway costs instead
 
-One shared gateway saves two of them, **143.08 dollars a month**. What it adds is the crossing:
-every gigabyte from zones b and c reaches `public-a` across a zone boundary, and lesson 1 measured
-that at 0.01 a gigabyte **each way**, so 0.02 for a gigabyte that crosses. The break-even point is
-143.08 / 0.02 ≈ **7,154 GB a month** crossing to the shared gateway. Below that, one gateway is
-cheaper in money; above it, three are.
+One shared gateway saves two of them, **143.08 dollars a month**. What it adds is the crossing.
+Every gigabyte from zones b and c reaches `public-a` across a zone boundary. Lesson 1 measured that
+at 0.01 a gigabyte **each way**, so 0.02 for a gigabyte that crosses. The break-even point is 143.08
+/ 0.02 ≈ **7,154 GB a month** crossing to the shared gateway. Below that, one gateway is cheaper in
+money. Above it, three are.
 
 The shop sends about 200 GB a month to the internet from its private subnets, two thirds of it from
 zones b and c. Sharing would cost 133 × 0.02 ≈ 2.67 dollars of crossing, to save 143.08 of
@@ -79,12 +79,12 @@ bill:
 - **A zone's failure becomes everybody's.** With the gateway in zone a, losing zone a stops the
   payment calls of the machines in b and c too, which were the reason the shop spread across zones.
 - **The whole VPC's outbound traffic goes through one zone's capacity.** A gateway scales by itself
-  within limits; one gateway still carries everything.
+  within limits, and one gateway still carries everything.
 
 So the shop's choice is **one per zone in production and one shared in staging**, where a lost zone
 costs an afternoon rather than sales. It is a decision about what an outage is worth, and the table
-above is what the decision is weighed with. And if most of the 200 GB is traffic to S3, lesson 19
-shows a way to send it there for nothing, which beats both.
+above is what you weigh it with. And if most of the 200 GB is traffic to S3, lesson 19 shows a way
+to send it there for nothing, which beats both.
 
 ## The lesson as a script
 
@@ -128,7 +128,7 @@ EOF
 
 It leaves out the office route and the egress-only gateway, which were there to be read rather than
 used. To check it, restart moto once more and run lesson 16's script and this one, one after the
-other; the last command lists the tables, how many subnets each serves, and where each sends
+other. The last command lists the tables, how many subnets each serves, and where each sends
 `0.0.0.0/0`:
 
 ```
@@ -145,6 +145,6 @@ private-b	2	nat-de872524ebf250fe5
 private-c	2	nat-c69478fa57a3113fe
 ```
 
-**The table with no name is the main one**: it serves no subnet now, and its single association
-is the marker that makes it main. Every subnet has an explicit table, three public and six private,
-and a subnet added later without one lands in the table with no way out.
+**The table with no name is the main one.** It serves no subnet now, and its single association is
+the marker that makes it main. Every subnet has an explicit table, three public and six private. A
+subnet added later without one lands in the table with no way out.

@@ -5,18 +5,18 @@ version: 1
 
 **A program that calls AWS never has to carry a key; it has to find credentials, and the SDK knows
 where to look.** Every AWS SDK, and the command line built on one, walks an ordered list of places
-called the **credential provider chain** and stops at the first place that answers. The top of the
+called the **credential provider chain**. It stops at the first place that answers. The top of the
 list is a key somebody typed. The bottom is a credential the platform hands to a machine for a few
 hours at a time, and this lesson is about the bottom.
 
 The common wrong picture is that `aws` reads `AWS_ACCESS_KEY_ID` and that is the whole story. It is
-the first place the command line looks, which is why `env.sh` has worked since lesson 1, and it is
+the first place the command line looks, which is why `env.sh` has worked since lesson 1. It is also
 one place out of a dozen.
 
-Restart moto in the first terminal (Ctrl+C, then `moto_server -p 4567`) so this lesson starts from an
-empty AWS. **Nothing in this lesson turns on moto's permission checking.** The credentials moto hands out at
-the bottom of the chain are placeholders its checking would refuse, and the last section measures a
-call that breaks the checking outright.
+Restart moto in the first terminal (Ctrl+C, then `moto_server -p 4567`) so this lesson starts from
+an empty AWS. **Nothing in this lesson turns on moto's permission checking.** The credentials moto
+hands out at the bottom of the chain are placeholders its checking would refuse. The last section
+measures a call that breaks the checking outright.
 
 ```
 ana@laptop:~/aws$ aws configure list
@@ -28,8 +28,8 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 ```
 
 `aws configure list` says which credentials the command line would use and where it found them. The
-`TYPE` column is the provider: `env`, the environment `env.sh` filled. The last four characters of
-the key are shown and the rest is hidden, which makes it safe to paste into a ticket.
+`TYPE` column is the provider: `env`, the environment `env.sh` filled. It shows the last four
+characters of the key and hides the rest, so the output is safe to paste into a ticket.
 
 ## The order, as the command line reports it
 
@@ -79,17 +79,17 @@ gives them:
 | `iam-role` | the instance metadata service | EC2, through an instance profile |
 
 Two consequences follow from **first answer wins**. A key left in the environment of a machine that
-has a role beats the role, silently, and the machine runs as whoever owns the key. And the
-providers near the top cost nothing to check, while the last one makes network requests, which is
-why a laptop with no credentials at all pauses for a moment before it says so. Other SDKs keep the
-same idea and differ in small ways in the order; each SDK's documentation lists its own.
+has a role beats the role, silently, and the machine runs as whoever owns the key. And the providers
+near the top cost nothing to check, while the last one makes network requests. That is why a laptop
+with no credentials at all pauses for a moment before it says so. Other SDKs keep the same idea and
+differ in small ways in the order; each SDK's documentation lists its own.
 
 ## Asking the metadata service yourself
 
-On an EC2 instance the metadata service lives at **`http://169.254.169.254/`**, a link-local
-address that only the instance itself can reach, and nothing is installed to make it answer. moto
-answers the same paths on `localhost:4567`. The service has two versions, and the difference is the
-first request:
+On an EC2 instance the metadata service lives at **`http://169.254.169.254/`**, a link-local address
+that only the instance itself can reach. Nothing is installed to make it answer. moto answers the
+same paths on `localhost:4567`. The service has two versions, and the difference is the first
+request:
 
 ```
 ana@laptop:~/aws$ curl -s http://localhost:4567/latest/meta-data/iam/security-credentials/; echo
@@ -98,7 +98,7 @@ default-role
 
 That is **IMDSv1**: a plain `GET`, answered with the name of the role whose credentials the instance
 holds. moto always answers `default-role`. **IMDSv2** asks for a session token first, with a `PUT`
-and a header saying how many seconds it should last, and then sends that token on every read:
+and a header saying how many seconds it should last. It then sends that token on every read:
 
 ```
 ana@laptop:~/aws$ TOKEN=$(curl -s -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" http://localhost:4567/latest/api/token)
@@ -109,11 +109,12 @@ ana@laptop:~/aws$ curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://localhost
 ```
 
 The answer is a whole set of credentials: a key id, a secret, a session token and an expiry. On AWS
-the key id starts with `ASIA`, the prefix of a temporary key, and the answer carries three more
-fields, `Code`, `LastUpdated` and `Type`. AWS's documentation promises **new credentials at least five
-minutes before the old ones expire**, so a program that asks again when its copy runs out never
-holds a dead key. moto's are fixed placeholders, `test-key` with the session token `test-session-token`, its IMDSv2
-token is always `fake-imdsv2-token`, and the expiry is a day after the request.
+the key id starts with `ASIA`, the prefix of a temporary key. The answer also carries three more
+fields: `Code`, `LastUpdated` and `Type`. AWS's documentation promises **new credentials at least
+five minutes before the old ones expire**, so a program that asks again when its copy runs out never
+holds a dead key. moto's are fixed placeholders: `test-key`, with the session token
+`test-session-token`. Its IMDSv2 token is always `fake-imdsv2-token`, and the expiry is a day after
+the request.
 
 ## The bottom of the chain, from the command line
 
@@ -138,8 +139,8 @@ ana@laptop:~/aws$ aws sts get-caller-identity
 **`iam-role` is the instance metadata provider**, and the location is empty because there is no
 file: the credentials came over HTTP. `get-caller-identity` answers as moto's default user, because
 moto does not know a key called `test-key` and falls back to it. On an instance AWS would answer
-with the role, `arn:aws:sts::123456789012:assumed-role/shop-app/i-…`, where **the session name is the
-instance id**, so a line in CloudTrail says which machine made the call.
+with the role, `arn:aws:sts::123456789012:assumed-role/shop-app/i-…`. There **the session name is
+the instance id**, so a line in CloudTrail says which machine made the call.
 
 Now read `env.sh` again. It puts the keys back, and leaves the metadata address where it was:
 

@@ -8,7 +8,7 @@ prometeu, não pela máquina.** Sob demanda (*on demand*) não promete nada e pa
 **Reserved Instance** promete pagar por um tipo de instância numa região, toda hora, por um ou três
 anos. Um **Savings Plan** promete gastar um número de dólares por hora em computação, toda hora, por
 um ou três anos. A imagem comum de uma reserva é uma máquina guardada para você em algum lugar. Ela
-é um desconto na fatura: nenhuma máquina é ligada, separada ou nomeada quando você a compra, e uma
+é um desconto na fatura. Comprá-la não liga, não separa e não nomeia máquina nenhuma, e uma
 instância rodando que combina com ela é simplesmente cobrada a menos.
 
 ## O moto tem uma lista de preços, e ela não é a da AWS
@@ -29,13 +29,13 @@ aws: [ERROR]: An error occurred (500) when calling the DescribeSavingsPlans oper
 
 **A pergunta citou um `m7i.large` e o moto respondeu sobre um `t2.micro`**, com preços adiantados
 inventados por ele. O moto guarda algumas ofertas inventadas para que código que compra reservas
-tenha algo para comprar, e a API de Savings Plans dele nem existe. Nada na aritmética desta lição
-vem do moto. Vem de duas ofertas da lista de preços da AWS, lidas por um programa curto.
+tenha algo para comprar. A API de Savings Plans dele nem existe. Nada na aritmética desta lição vem
+do moto. Vem de duas ofertas da lista de preços da AWS, lidas por um programa curto.
 
 ## Um programa que lê todo termo de uma instância
 
 O `price.py`, da lição 1, imprime só preços sob demanda. Os preços das reservas ficam na mesma
-oferta do EC2 sob um segundo tipo de termo, e as tarifas dos Savings Plans ficam numa oferta própria,
+oferta do EC2 sob um segundo tipo de termo. As tarifas dos Savings Plans ficam numa oferta própria,
 `AWSComputeSavingsPlan`, que a AWS publica ao lado das outras. **Salve isto como `~/aws/terms.py`**:
 
 ```schooling-example
@@ -71,11 +71,12 @@ ana@laptop:~/aws$ ls -sh ~/.cache/aws-prices | grep -e AmazonEC2 -e SavingsPlan
 279M AmazonEC2-20260925174521-sa-east-1.json
 ```
 
-**A primeira execução baixa dois arquivos grandes, e toda execução lê os dois inteiros.** A
-listagem os mostra no cache: 279 MB de oferta do EC2, porque ela dá preço a todo tipo de instância
-em toda combinação de sistema, licença e tenancy, e 230 MB de tarifas de Savings Plans. Ler um com `json.load` o guarda na memória como um dicionário do Python. O
-programa os lê um depois do outro, então o pico que ele informa, 936 MB na execução acima, é o maior dos dois e não
-a soma. Um computador com 2 GB de memória livre o roda com folga.
+**A primeira execução baixa dois arquivos grandes, e toda execução lê os dois inteiros.** A listagem
+os mostra no cache: 279 MB de oferta do EC2 e 230 MB de tarifas de Savings Plans. A do EC2 é grande
+porque dá preço a todo tipo de instância em toda combinação de sistema, licença e tenancy. Ler um
+com `json.load` o guarda na memória como um dicionário do Python. O programa os lê um depois do
+outro, então o pico que ele informa, 936 MB na execução acima, é o maior dos dois e não a soma. Um
+computador com 2 GB de memória livre o roda com folga.
 
 ## Lendo a tabela
 
@@ -90,19 +91,19 @@ que importam para uma decisão:
 | Compute Savings Plan, 1 ano, sem adiantamento | 0,10915 | 79,68 | 32% a menos |
 | EC2 Instance Savings Plan, m7i, 1 ano, sem adiantamento | 0,09956 | 72,68 | 38% a menos |
 
-**A tarifa efetiva é o que torna as linhas comparáveis.** Uma reserva com adiantamento parcial
-cobra 415 dólares no dia da compra e 0,04741 por hora depois disso; espalhados pelas 8.760 horas do
-ano, os 415 são 0,04737 por hora, e os dois juntos dão 0,09478. Pagar mais adiantado baixa um pouco a
-tarifa efetiva, aqui de 0,09956 para 0,09292, em troca de dinheiro pago um ano antes e que não volta.
+**A tarifa efetiva é o que torna as linhas comparáveis.** Uma reserva com adiantamento parcial cobra
+415 dólares no dia da compra e 0,04741 por hora depois disso. Espalhados pelas 8.760 horas do ano,
+os 415 são 0,04737 por hora, e os dois juntos dão 0,09478. Pagar mais adiantado baixa um pouco a
+tarifa efetiva, aqui de 0,09956 para 0,09292. O preço é dinheiro pago um ano antes e que não volta.
 
 **Dois pares de números são iguais**, e a coincidência é projeto da AWS e não um defeito do
 programa. O EC2 Instance Savings Plan da família `m7i` cobra exatamente a tarifa da reserva padrão,
-0,09956; o Compute Savings Plan cobra exatamente a da reserva conversível, 0,10915. Um plano tão
+0,09956. O Compute Savings Plan cobra exatamente a da reserva conversível, 0,10915. Um plano tão
 estreito quanto uma reserva tem preço de reserva, e um plano tão flexível quanto a reserva mais
 flexível tem o preço dela. Em que cada um é flexível é a próxima seção.
 
 Um **mês são 730 horas** em toda linha, um doze avos de 8.760, que é o mês que a própria calculadora
-de preços da AWS usa; um mês real de 31 dias são 744 horas rodando, e a fatura conta as horas que
+de preços da AWS usa. Um mês real de 31 dias são 744 horas rodando, e a fatura conta as horas que
 aconteceram. A coluna `a month` é a tarifa efetiva vezes 730. Esses valores mensais supõem que a
-máquina roda o mês inteiro. O compromisso é pago rode ela ou não, e é disso que trata a última coluna
-do programa.
+máquina roda o mês inteiro. O compromisso é pago rode ela ou não, e é disso que trata a última
+coluna do programa.

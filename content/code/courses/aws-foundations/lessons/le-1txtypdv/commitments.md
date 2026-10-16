@@ -3,17 +3,17 @@ title: What a commitment buys, and when it pays
 version: 1
 ---
 
-**A commitment is paid for every hour of its term, used or not; on demand is paid only for the
-hours that ran.** So a discount of 38% is not a saving of 38%. It is a saving if the machine runs
-enough hours, and a loss if it does not, and the number of hours where one turns into the other is
-the **break-even**. It is the first thing to compute before buying anything, and the last column of
+**A commitment is paid for every hour of its term, used or not; on demand is paid only for the hours
+that ran.** So a discount of 38% is not a saving of 38%. It is a saving if the machine runs enough
+hours, and a loss if it does not. The number of hours where one turns into the other is the
+**break-even**. It is the first thing to compute before buying anything, and the last column of
 `terms.py` is that number.
 
 ## The break-even, in hours a month
 
 On demand, an `m7i.large` costs 0.16065 dollars for each hour it runs. The one-year standard
 reservation with no upfront costs 0.09956 for each hour of the year, whether an instance is running
-or not, which is 72.68 dollars a month. The month on demand reaches 72.68 after 72.68 / 0.16065 =
+or not. That is 72.68 dollars a month. The month on demand reaches 72.68 after 72.68 / 0.16065 =
 **452 hours**, 62% of a 730-hour month. Below that, on demand is cheaper; above it, the reservation
 is. The Compute Savings Plan's rate is higher, so its break-even is later, at **496 hours**.
 
@@ -23,9 +23,9 @@ is. The Compute Savings Plan's rate is higher, so its break-even is later, at **
 
 **The break-even turns the purchase into a question about the machine's schedule.** A database that
 runs all month is far past it. A build server that runs ten hours a day on 22 working days runs 220
-hours, and on demand costs it 220 × 0.16065 = 35.34 dollars, less than half of what the reservation
-would. Staging environments that are stopped at night are the usual place where a reservation is
-bought and wasted.
+hours. On demand that costs 220 × 0.16065 = 35.34 dollars, less than half of what the reservation
+would. Staging environments that are stopped at night are the usual place where somebody buys a
+reservation and wastes it.
 
 ## What a reservation is tied to
 
@@ -38,30 +38,32 @@ in one region. AWS's documentation describes two scopes:
 - a **zonal** reservation applies only in one zone, and in exchange it also reserves the capacity
   there, so an instance of that type can be started in that zone when others cannot.
 
-It comes in two classes. A **standard** reservation can be changed in zone, scope and size within
-its family, and sold on AWS's Reserved Instance Marketplace to somebody else when it is no longer
-needed. A **convertible** reservation can be exchanged for another convertible one of equal or
-greater value, in another family or for another operating system; the table in the section before
-this one shows what that freedom costs, 0.10915 against 0.09956 an hour.
+It comes in two classes. You can change a **standard** reservation's zone, scope and size within its
+family, and sell it to somebody else on AWS's Reserved Instance Marketplace when you no longer need
+it. You can exchange a **convertible** reservation for another convertible one of equal or greater
+value, in another family or for another operating system. The table in the section before this one
+shows what that freedom costs, 0.10915 against 0.09956 an hour.
 
 ## What a Savings Plan is tied to
 
 **A Savings Plan commits to dollars an hour, not to a machine.** The shop buys a one-year Compute
 Savings Plan of 0.10915 dollars an hour, the rate of one `m7i.large`. In every hour of the year AWS
-takes the usage the plan can cover, charges it at the plan's rates, and stops when 0.10915 dollars of it has been charged. Anything beyond is on demand,
-and any part of the 0.10915 left unused in that hour is lost. If the shop moves the application to another family, to another region, or out
-of EC2 into containers on Fargate or functions on Lambda, a **Compute** Savings Plan follows it,
-because it covers all of those. An **EC2 Instance** Savings Plan covers one family in one region,
-any size and system, and is priced like a standard reservation for that narrowness. AWS's
-documentation says neither kind can be sold or exchanged once bought.
+takes the usage the plan can cover and charges it at the plan's rates, up to 0.10915 dollars.
+Anything beyond is on demand, and any part of the 0.10915 left unused in that hour is lost. The shop
+might move the application to another family, to another region, or out of EC2 into containers on
+Fargate or functions on Lambda. A **Compute** Savings Plan follows it, because it covers all of
+those. An **EC2 Instance** Savings Plan covers one family in one region, any size and system. It is
+priced like a standard reservation for that narrowness. AWS's documentation says neither kind can be
+sold or exchanged once bought.
 
-AWS's documentation also gives the order: in each hour, reservations are applied first, and Savings
+AWS's documentation also gives the order. In each hour AWS applies reservations first, and Savings
 Plans after them to what is left. And it gives the tie to lesson 3. **In an organisation the
-discount is shared across the consolidated bill**: a reservation or a plan bought in one account
-covers matching usage in that account first, and then in any other account of the organisation,
-unless the management account has turned sharing off for an account. That is why a shop with six
-accounts buys its commitments in one place and lets them float, rather than one per account.
+discount is shared across the consolidated bill.** A reservation or a plan bought in one account
+covers matching usage in that account first, then in any other account of the organisation. The
+exception is an account for which the management account has turned sharing off. That is why a shop
+with six accounts buys its commitments in one place and lets them float, rather than one per
+account.
 
-How much to commit, and when to buy more, is the subject of `aws-operations` lesson 22; it is a
+How much to commit, and when to buy more, is the subject of `aws-operations` lesson 22. It is a
 question of measuring the hours before promising them. The next section reads what a commitment
 looks like once it is on a bill.

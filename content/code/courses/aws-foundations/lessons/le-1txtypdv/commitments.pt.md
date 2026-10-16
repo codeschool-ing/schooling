@@ -4,15 +4,15 @@ version: 1
 ---
 
 **Um compromisso é pago por toda hora do seu prazo, usada ou não; sob demanda é pago só pelas horas
-que rodaram.** Então um desconto de 38% não é uma economia de 38%. É economia se a máquina roda horas
-suficientes, e prejuízo se não roda, e o número de horas em que um vira o outro é o **ponto de
+que rodaram.** Então um desconto de 38% não é uma economia de 38%. É economia se a máquina roda
+horas suficientes, e prejuízo se não roda. O número de horas em que um vira o outro é o **ponto de
 equilíbrio** (*break-even*). É a primeira coisa a calcular antes de comprar qualquer coisa, e a
 última coluna do `terms.py` é esse número.
 
 ## O ponto de equilíbrio, em horas por mês
 
 Sob demanda, um `m7i.large` custa 0,16065 dólar por hora que roda. A reserva padrão de um ano sem
-adiantamento custa 0,09956 por hora do ano, haja instância rodando ou não, o que dá 72,68 dólares por
+adiantamento custa 0,09956 por hora do ano, haja instância rodando ou não. Isso dá 72,68 dólares por
 mês. O mês sob demanda chega a 72,68 depois de 72,68 / 0,16065 = **452 horas**, 62% de um mês de 730
 horas. Abaixo disso, sob demanda é mais barato; acima, a reserva é. A tarifa do Compute Savings Plan
 é mais alta, então o ponto de equilíbrio dele vem depois, em **496 horas**.
@@ -22,10 +22,10 @@ horas. Abaixo disso, sob demanda é mais barato; acima, a reserva é. A tarifa d
 ```
 
 **O ponto de equilíbrio transforma a compra numa pergunta sobre o horário da máquina.** Um banco de
-dados que roda o mês todo está muito além dele. Um servidor de build que roda dez horas por dia em 22
-dias úteis roda 220 horas, e sob demanda custa 220 × 0,16065 = 35,34 dólares, menos da metade do que
-a reserva custaria. Ambientes de staging desligados à noite são o lugar comum onde uma reserva é
-comprada e desperdiçada.
+dados que roda o mês todo está muito além dele. Um servidor de build que roda dez horas por dia em
+22 dias úteis roda 220 horas. Sob demanda isso custa 220 × 0,16065 = 35,34 dólares, menos da metade
+do que a reserva custaria. Ambientes de staging desligados à noite são o lugar comum onde alguém
+compra uma reserva e a desperdiça.
 
 ## A que uma reserva está presa
 
@@ -38,30 +38,31 @@ tenancy, numa região. A documentação da AWS descreve dois escopos:
 - uma reserva **zonal** vale só numa zona, e em troca também reserva a capacidade ali, então uma
   instância desse tipo pode ser iniciada nessa zona quando outras não conseguem.
 
-Ela vem em duas classes. Uma reserva **padrão** (*standard*) pode ter zona, escopo e tamanho
-alterados dentro da família, e ser vendida no Reserved Instance Marketplace da AWS para outra pessoa
-quando não for mais necessária. Uma reserva **conversível** (*convertible*) pode ser trocada por
-outra conversível de valor igual ou maior, em outra família ou para outro sistema operacional; a
+Ela vem em duas classes. Você pode mudar a zona, o escopo e o tamanho de uma reserva **padrão**
+(*standard*) dentro da família, e vendê-la a outra pessoa no Reserved Instance Marketplace da AWS
+quando não precisar mais dela. Você pode trocar uma reserva **conversível** (*convertible*) por
+outra conversível de valor igual ou maior, em outra família ou para outro sistema operacional. A
 tabela da seção anterior mostra quanto custa essa liberdade, 0,10915 contra 0,09956 por hora.
 
 ## A que um Savings Plan está preso
 
 **Um Savings Plan se compromete com dólares por hora, não com uma máquina.** A loja compra um
-Compute Savings Plan de um ano de 0,10915 dólar por hora, a tarifa de um `m7i.large`. Em cada hora do
-ano a AWS pega o uso que o plano pode cobrir, cobra-o pelas tarifas do plano, e para quando 0,10915 dólar dele foram cobrados. O que passar disso é sob demanda, e
-qualquer parte dos 0,10915 que ficar sem uso naquela hora se perde. Se a loja mudar a aplicação para outra família, para outra região, ou
-para fora do EC2, em contêineres no Fargate ou funções no Lambda, um Savings Plan **Compute** a
-acompanha, porque cobre tudo isso. Um Savings Plan **EC2 Instance** cobre uma família numa região,
-qualquer tamanho e sistema, e tem preço de reserva padrão por ser estreito assim. A documentação da
-AWS diz que nenhum dos dois tipos pode ser vendido ou trocado depois de comprado.
+Compute Savings Plan de um ano de 0,10915 dólar por hora, a tarifa de um `m7i.large`. Em cada hora
+do ano a AWS pega o uso que o plano pode cobrir e o cobra pelas tarifas do plano, até 0,10915 dólar.
+O que passar disso é sob demanda, e qualquer parte dos 0,10915 que ficar sem uso naquela hora se
+perde. A loja pode mudar a aplicação para outra família, para outra região, ou para fora do EC2, em
+contêineres no Fargate ou funções no Lambda. Um Savings Plan **Compute** a acompanha, porque cobre
+tudo isso. Um Savings Plan **EC2 Instance** cobre uma família numa região, qualquer tamanho e
+sistema. Ele tem preço de reserva padrão por ser estreito assim. A documentação da AWS diz que
+nenhum dos dois tipos pode ser vendido ou trocado depois de comprado.
 
-A documentação da AWS também dá a ordem: em cada hora, as reservas são aplicadas primeiro, e os
+A documentação da AWS também dá a ordem. Em cada hora a AWS aplica as reservas primeiro, e os
 Savings Plans depois, ao que sobrar. E dá a ligação com a lição 3. **Numa organização o desconto é
-compartilhado pela fatura consolidada**: uma reserva ou um plano comprado numa conta cobre primeiro o
-uso que combina nessa conta, e depois em qualquer outra conta da organização, a menos que a conta de
-gerenciamento tenha desligado o compartilhamento para uma conta. É por isso que uma loja com seis
-contas compra os compromissos num lugar só e os deixa circular, em vez de um por conta.
+compartilhado pela fatura consolidada.** Uma reserva ou um plano comprado numa conta cobre primeiro
+o uso que combina nessa conta, e depois em qualquer outra conta da organização. A exceção é uma
+conta para a qual a conta de gerenciamento desligou o compartilhamento. É por isso que uma loja com
+seis contas compra os compromissos num lugar só e os deixa circular, em vez de um por conta.
 
-Quanto se comprometer, e quando comprar mais, é o assunto da lição 22 de `aws-operations`; é uma
-questão de medir as horas antes de prometê-las. A próxima seção lê como um compromisso aparece depois
-que está numa fatura.
+Quanto se comprometer, e quando comprar mais, é o assunto da lição 22 de `aws-operations`. É uma
+questão de medir as horas antes de prometê-las. A próxima seção lê como um compromisso aparece
+depois que está numa fatura.

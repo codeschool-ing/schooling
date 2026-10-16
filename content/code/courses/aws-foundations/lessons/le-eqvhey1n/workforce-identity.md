@@ -4,15 +4,14 @@ version: 1
 ---
 
 **People sign in once, to IAM Identity Center, and reach every account they are allowed into as a
-role for a few hours.** No account holds a user for them and no laptop holds a key. Lesson 6 met
-the IAM user, and lesson 12 explains why its access key is the last resort; this lesson is the
+role for a few hours.** No account holds a user for them and no laptop holds a key. Lesson 6 met the
+IAM user, and lesson 12 explains why its access key is the last resort. This lesson is the
 arrangement that replaces both for everybody who works at the shop.
 
 The wrong picture is the one that grows by itself. The shop starts in one account, gives `bia` an
 IAM user there, and then gets a second account. **Now `bia` has two users, two passwords, two MFA
-devices and two keys**, and when she leaves somebody has to remember both. With six accounts, as
-lesson 3 built, and five people, that is thirty users that each have to be created, audited and
-deleted on the right day.
+devices and two keys**. When she leaves, somebody has to remember both. Six accounts, as lesson 3
+built, and five people make thirty users, each to be created, audited and deleted on the right day.
 
 ## Three pieces: an identity, a permission set, an assignment
 
@@ -24,17 +23,17 @@ Identity Center separates the three questions an IAM user answers all at once:
 - who gets which access where is an **account assignment**: a user or a group, a permission
   set, and one account.
 
-When an assignment is made, Identity Center provisions the permission set into the account: it
-creates a role there, named `AWSReservedSSO_<permission set>_<suffix>`, under the path
-`/aws-reserved/sso.amazonaws.com/`, with the permission set's policies attached and a trust policy
-that only Identity Center can satisfy. When `caio` opens `shop-prod` with `ReadOnly`, he is
-assuming that role, and CloudTrail records `assumed-role/AWSReservedSSO_ReadOnly_…/caio`.
-Change the permission set and Identity Center updates the role in every account that has it; delete
-the assignment and the role stops accepting him.
+When you make an assignment, Identity Center provisions the permission set into the account. It
+creates a role there named `AWSReservedSSO_<permission set>_<suffix>`, under the path
+`/aws-reserved/sso.amazonaws.com/`. The role carries the permission set's policies and a trust
+policy that only Identity Center can satisfy. When `caio` opens `shop-prod` with `ReadOnly`, he is
+assuming that role, and CloudTrail records `assumed-role/AWSReservedSSO_ReadOnly_…/caio`. Change the
+permission set and Identity Center updates the role in every account that has it. Delete the
+assignment and the role stops accepting him.
 
-Those roles are managed for you, and **nobody should edit them by hand**. An edit made inside one
-account is overwritten the next time the permission set is provisioned, and until then that account
-quietly disagrees with the others.
+Those roles are managed for you, and **nobody should edit them by hand**. Identity Center overwrites
+an edit made inside one account the next time it provisions the permission set. Until then that
+account quietly disagrees with the others.
 
 ## The identity source, inside or outside AWS
 
@@ -51,16 +50,16 @@ The shop's people already have Google Workspace accounts for mail, so the shop's
 row. **Two protocols connect an external provider, and they do different jobs.**
 
 **SAML 2.0 is the sign-in.** When `caio` opens the access portal, Identity Center sends his browser
-to Google, Google checks his password and his second factor, and sends back a signed assertion that
+to Google. Google checks his password and his second factor, and sends back a signed assertion that
 says who he is. Identity Center trusts that assertion because the two sides exchanged certificates
 when the provider was connected. No password ever reaches AWS.
 
-**SCIM is the provisioning.** SAML says who is signing in at the moment they do; it cannot tell
+**SCIM is the provisioning.** SAML says who is signing in at the moment they do. It cannot tell
 Identity Center that a person exists before they arrive, which groups they belong to, or that they
-have left. SCIM is an API that the identity provider calls to create, update and disable users and
-groups in Identity Center as they change on its side. **Without SCIM, every change is made twice**:
-a new person has to be created in Identity Center by hand before their first sign-in, and a person
-removed from Google can no longer sign in but leaves their user, groups and assignments behind for
+have left. SCIM is an API the identity provider calls to create, update and disable users and groups
+in Identity Center as they change on its side. **Without SCIM, somebody makes every change twice.**
+A new person has to be created in Identity Center by hand before their first sign-in. A person
+removed from Google can no longer sign in, but leaves their user, groups and assignments behind for
 somebody to remember.
 
 ```schooling-figure
@@ -68,9 +67,9 @@ somebody to remember.
 ```
 
 None of this was run. **Connecting a real identity provider needs a real Identity Center, a real
-directory and a browser**, and moto has none of the three; the description is AWS's documented
-arrangement. What moto does have is the Identity Center side of it, the permission sets, users,
-groups and assignments, and the next section builds them.
+directory and a browser**, and moto has none of the three. The description is AWS's documented
+arrangement. What moto does have is the Identity Center side: the permission sets, users, groups and
+assignments, which the next section builds.
 
 ## Why a short session beats a user with a key
 
@@ -90,7 +89,7 @@ What is left for IAM users is the short list lesson 12 ends with: a program that
 and cannot use any of the mechanisms of lesson 10, and the account's emergency access. **People are
 not on that list.**
 
-The access portal is the page where a person who signed in sees the accounts and permission
-sets assigned to them, and opens the console in one, or copies short-lived credentials for the
+The access portal is the page where a person who signed in sees the accounts and permission sets
+assigned to them. From there they open the console in one, or copy short-lived credentials for the
 command line. Its address is `https://<something>.awsapps.com/start`, shown in Identity Center's
-settings, and the last section of this lesson points the command line at it.
+settings. The last section of this lesson points the command line at it.

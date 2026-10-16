@@ -5,9 +5,9 @@ version: 1
 
 **Uma sub-rede é uma fatia do intervalo da VPC que mora em exatamente uma Availability Zone.** Todo
 endereço que a AWS distribui sai de uma sub-rede, então toda máquina fica numa zona, a zona da sua
-sub-rede. A imagem errada é uma sub-rede esticada pela região; isso não existe. **Um desenho que
-sobrevive à perda de uma zona precisa de uma sub-rede em cada zona para cada tipo de máquina**, que é
-o que a lição 1 prometeu que esta lição faria.
+sub-rede. A imagem errada é uma sub-rede esticada pela região. Isso não existe. **Um desenho que
+sobrevive à perda de uma zona precisa de uma sub-rede em cada zona para cada tipo de máquina.** A
+lição 1 prometeu que esta lição montaria isso.
 
 ## Três camadas, três zonas, nove sub-redes
 
@@ -20,9 +20,9 @@ A loja roda três tipos de coisa, e cada um ganha uma camada própria:
 | `data` | o banco de dados | só a aplicação |
 
 Três camadas em três zonas são nove sub-redes. Cada uma ganha um `/20`, 4.096 endereços, e um `/16`
-guarda dezesseis desses, então nove deixam **sete blocos de reserva** para uma camada em que ninguém
+guarda dezesseis desses. Então nove deixam **sete blocos de reserva** para uma camada em que ninguém
 pensou ainda. Esse espaço de reserva importa mais do que parece, porque **o intervalo de uma
-sub-rede não pode ser mudado depois que ela é criada**: uma sub-rede que fica sem endereços é
+sub-rede não pode ser mudado depois que ela é criada**. Uma sub-rede que fica sem endereços é
 substituída, e tudo o que está nela se muda.
 
 Calcular onde cada `/20` começa é aritmética binária, do tipo que erra por um bit na pressa. O módulo
@@ -48,7 +48,7 @@ sa-east-1c  data    10.20.128.0/20  4091
 # spare: 7 blocks of /20, 10.20.144.0/20 to 10.20.240.0/20
 ```
 
-**As três sub-redes de uma camada são vizinhas**, então o plano se lê de relance: a camada pública
+**As três sub-redes de uma camada são vizinhas**, então o plano se lê de relance. A camada pública
 vai de `10.20.0.0` a `10.20.47.255`, a camada de dados termina em `10.20.143.255`, e tudo de
 `10.20.144.0` até o topo do intervalo está livre.
 
@@ -100,12 +100,12 @@ ana@laptop:~/aws$ aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpc --q
 0
 ```
 
-**Duas sub-redes de uma VPC nunca se sobrepõem**: `10.20.240.128/25` é a metade de cima do `/24`
-criado um momento antes, e é recusada como conflito. **Uma sub-rede fica dentro de um dos intervalos
-da VPC**: `10.21.0.0/24` está fora de `10.20.0.0/16`, e é recusada como inválida. A terceira regra é
-o tamanho, **entre `/28` e `/16`**, e aqui o moto é mais tolerante que a AWS: ele aceitou o `/29` e
-deu a ele três endereços utilizáveis. A AWS recusa uma sub-rede menor que um `/28`; essa recusa não
-foi executada aqui, já que o moto não a faz.
+**Duas sub-redes de uma VPC nunca se sobrepõem.** `10.20.240.128/25` é a metade de cima do `/24`
+criado um momento antes, e o moto a recusa como conflito. **Uma sub-rede fica dentro de um dos
+intervalos da VPC.** `10.21.0.0/24` está fora de `10.20.0.0/16`, e o moto a recusa como inválida. A
+terceira regra é o tamanho, **entre `/28` e `/16`**, e aqui o moto é mais tolerante que a AWS. Ele
+aceitou o `/29` e deu a ele três endereços utilizáveis. A AWS recusa uma sub-rede menor que um
+`/28`. Essa recusa não foi executada aqui, já que o moto não a faz.
 
 As três sub-redes de teste cumpriram o papel. O último comando dessa transcrição apagou todas, então
 a VPC está vazia de novo para o plano.
@@ -114,7 +114,7 @@ a VPC está vazia de novo para o plano.
 
 As nove sub-redes saem do próprio plano, então ninguém digita um intervalo. Este script lê as linhas
 do `plan.py` e cria uma sub-rede para cada uma, com o nome da camada e da zona (`public-a`, `app-b`,
-`data-c`). Ele também cria a VPC quando não há nenhuma chamada `shop-prod`, e é isso que deixa as
+`data-c`). Ele também cria a VPC quando não há nenhuma chamada `shop-prod`. É isso que deixa as
 lições 17 a 20 reconstruírem esta lição num passo só, num moto vazio. Escreva-o com:
 
 ```sh
@@ -155,7 +155,6 @@ data-b	10.20.112.0/20	sae1-az2	4091
 data-c	10.20.128.0/20	sae1-az3	4091
 ```
 
-**A terceira coluna é o id da zona**, de `sae1-az1` a `sae1-az3`, e é ele que se cita quando outra
-conta precisa colocar algo na mesma zona (lição 1). A VPC agora tem a forma da rede da loja. Se
-alguma parte dela alcança a internet é outra pergunta, e a próxima seção mostra que a resposta, por
-enquanto, é não.
+**A terceira coluna é o id da zona**, de `sae1-az1` a `sae1-az3`. Cite-o quando outra conta precisar
+colocar algo na mesma zona (lição 1). A VPC agora tem a forma da rede da loja. Se alguma parte dela
+alcança a internet é outra pergunta. A próxima seção mostra que a resposta, por enquanto, é não.

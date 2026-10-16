@@ -4,17 +4,17 @@ version: 1
 ---
 
 **Uma chave que precisa existir deve poder fazer o mínimo possível, e as ações mais perigosas devem
-exigir mais que a chave.** O `erp-sync` já mostra a primeira metade: a política dele nomeia uma ação
+exigir mais que a chave.** O `erp-sync` já mostra a primeira metade. A política dele nomeia uma ação
 num prefixo de um bucket, então uma cópia da chave dele consegue enviar arquivos e nada mais. A
-segunda metade é uma condição que pede um segundo fator, e a última parte desta seção é o que fazer
+segunda metade é uma condição que pede um segundo fator. A última parte desta seção é o que fazer
 quando, apesar das duas, uma chave aparece onde não devia.
 
 ## Um segundo fator para as ações que doem
 
 A `dani`, do financeiro, ainda tem um usuário do IAM de antes do Identity Center, com acesso ao S3
 para os relatórios do mês. Apagar um backup deveria exigir o celular dela além da chave. **Uma chave
-não traz MFA sozinha**; uma sessão o ganha quando a usuária chama `sts get-session-token` com o
-código do dispositivo dela, e as requisições assinadas com essa sessão levam
+não traz MFA sozinha.** Uma sessão o ganha quando a usuária chama `sts get-session-token` com o
+código do dispositivo dela. As requisições assinadas com essa sessão levam
 `aws:MultiFactorAuthPresent` igual a `true`. Esta recusa vale sempre que não for o caso. Salve-a
 como `~/aws/mfa-to-delete.json`:
 
@@ -33,9 +33,9 @@ como `~/aws/mfa-to-delete.json`:
 ```
 
 **`BoolIfExists` é a palavra importante.** Uma requisição assinada só com a chave não leva
-`aws:MultiFactorAuthPresent` nenhum, e um `Bool` simples não bateria com uma chave ausente, então o
-deny não valeria justamente para a requisição para a qual existe. O `IfExists` faz a chave ausente
-contar como coincidência.
+`aws:MultiFactorAuthPresent` nenhum. Um `Bool` simples não bateria com uma chave ausente, então o
+deny erraria justamente a requisição para a qual existe. O `IfExists` faz a chave ausente contar
+como coincidência.
 
 ```
 ana@laptop:~/aws$ aws iam create-user --user-name dani --query User.Arn --output text
@@ -49,9 +49,9 @@ ana@laptop:~/aws$ AWS_ACCESS_KEY_ID=$DANI_ID AWS_SECRET_ACCESS_KEY=$DANI_SECRET 
 delete failed: s3://shop-backups/erp/sales.csv An error occurred (AccessDenied) when calling the DeleteObject operation: Access Denied
 ```
 
-Listar funcionou e apagar foi recusado, que é o que a AWS faria com uma chave e sem MFA. **Mas o moto
-chegou à resposta certa pelo motivo errado**, e mais um teste mostra isso. Esta versão inverte a
-condição, para recusar só requisições que têm MFA; uma chave sozinha deveria passar. Salve-a como
+Listar funcionou e apagar foi recusado, que é o que a AWS faria com uma chave e sem MFA. **Mas o
+moto chegou à resposta certa pelo motivo errado**, e mais um teste mostra isso. Esta versão inverte
+a condição, para recusar só requisições que têm MFA. Uma chave sozinha deveria passar. Salve-a como
 `~/aws/mfa-flipped.json`:
 
 ```json
@@ -76,9 +76,9 @@ delete failed: s3://shop-backups/erp/sales.csv An error occurred (AccessDenied) 
 
 **O moto recusou de novo, então ele ignora a condição por inteiro**: um `Deny` com um bloco
 `Condition` nega sempre, diga a condição o que disser. A outra metade do teste, uma sessão com MFA
-dando certo, também não pode ser executada: as credenciais que o `get-session-token` do moto devolve
-são recusadas pela própria verificação dele. Então o laboratório mostra a política e a recusa, e se
-a condição bate é a avaliação documentada pela AWS, não algo medido aqui.
+dando certo, também não pode ser executada. A própria verificação do moto recusa as credenciais que
+o `get-session-token` dele devolve. Então o laboratório mostra a política e a recusa. Se a condição
+bate é a avaliação documentada pela AWS, não algo medido aqui.
 
 ## O dia em que uma chave vaza
 
@@ -101,8 +101,9 @@ usa:
 
 A AWS também age por conta própria. Quando ela acha uma das suas chaves em público, pela própria
 varredura ou por aviso de um parceiro, ela pode anexar ao usuário uma política gerenciada chamada
-**`AWSCompromisedKeyQuarantineV3`** e escrever para o endereço de contato da conta. O moto traz uma
-cópia da política, e a forma dela diz o que a AWS considera a parte perigosa de uma chave roubada:
+**`AWSCompromisedKeyQuarantineV3`**. Ela também escreve para o endereço de contato da conta. O moto
+traz uma cópia da política, e a forma dela diz o que a AWS considera a parte perigosa de uma chave
+roubada:
 
 ```
 ana@laptop:~/aws$ aws iam get-policy-version --policy-arn arn:aws:iam::aws:policy/AWSCompromisedKeyQuarantineV3 --version-id v3 --query "PolicyVersion.Document.Statement[].[Effect,length(Action)]" --output text
@@ -116,12 +117,12 @@ ana@laptop:~/aws$ aws iam get-policy-version --policy-arn arn:aws:iam::aws:polic
       6 ec2
 ```
 
-Ligar máquinas, criar usuários e chaves, mudar políticas, ler o CloudTrail: ela nega as ações que
-um invasor usa para gastar dinheiro e para ficar. **É um freio, não uma cura**: ela deixa a chave
-ativa, não desfaz nada, e a própria orientação da AWS ainda manda trocar a chave e investigar. A
-cópia do moto é a versão `v3` da política; a AWS revisa as políticas gerenciadas dela, então a
-contagem pode ser outra numa conta. Aplicá-la você mesmo é o mesmo `attach-user-policy` de qualquer
-outra, e ela vai ao lado da desativação, não no lugar dela:
+Ligar máquinas, criar usuários e chaves, mudar políticas, ler o CloudTrail: ela nega as ações que um
+invasor usa para gastar dinheiro e para ficar. **É um freio, não uma cura**: ela deixa a chave ativa
+e não desfaz nada. A própria orientação da AWS ainda manda trocar a chave e investigar. A cópia do
+moto é a versão `v3` da política. A AWS revisa as políticas gerenciadas dela, então a contagem pode
+ser outra numa conta. Aplicá-la você mesmo é o mesmo `attach-user-policy` de qualquer outra, e ela
+vai ao lado da desativação, não no lugar dela:
 
 ```
 ana@laptop:~/aws$ aws iam update-access-key --user-name dani --access-key-id $DANI_ID --status Inactive
@@ -143,6 +144,6 @@ ponto, e nenhuma foi executada aqui:
   mudanças batem com os padrões de chave da AWS. Ele pega a chave no laptop, antes de qualquer
   servidor vê-la.
 
-As duas procuram a forma de uma chave, e é por isso que a ordem desta lição se mantém: **a única
+As duas procuram a forma de uma chave, e é por isso que a ordem desta lição se mantém. **A única
 chave que não pode vazar é a que nunca foi criada**, e um varredor é a rede embaixo dessa regra, não
 um substituto dela.

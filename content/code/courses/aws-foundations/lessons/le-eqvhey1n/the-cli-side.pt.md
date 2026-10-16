@@ -9,7 +9,7 @@ o navegador uma vez, a pessoa entra no provedor de identidade, e nas horas segui
 com aquele perfil recebe sozinho credenciais novas da role.
 
 A imagem errada é que a linha de comando precisa das credenciais copiadas do portal de acesso
-coladas em `~/.aws/credentials`. O portal oferece exatamente isso, e é o certo para uma vez só; para
+coladas em `~/.aws/credentials`. O portal oferece exatamente isso, e é o certo para uma vez só. Para
 o dia a dia, é um segredo com cara de chave num arquivo que sobrevive à sessão de onde veio. **O
 perfil faz o mesmo trabalho sem o arquivo.**
 
@@ -36,11 +36,10 @@ output = json
 
 **Dois tipos de seção, para duas coisas diferentes.** `[sso-session shop]` é o login: o endereço do
 portal, a região onde o Identity Center vive, e o escopo que a linha de comando pede. O endereço
-aqui é o marcador que a documentação da AWS usa; um real fica nas configurações do Identity Center.
+aqui é o marcador que a documentação da AWS usa. Um real fica nas configurações do Identity Center.
 `[profile prod-readonly]` é um destino: uma conta, um permission set pelo nome, e a região e o
-formato de saída dos comandos rodados com ele. **Uma sessão serve a quantos perfis forem**, então um
-login de manhã abre `prod-readonly`, um `staging-developer` ao lado, e todo outro par atribuído à
-pessoa.
+formato de saída dos comandos rodados com ele. **Uma sessão serve a quantos perfis forem.** Um login
+de manhã abre `prod-readonly`, um `staging-developer` ao lado, e todo outro par atribuído à pessoa.
 
 ```
 ana@laptop:~/aws$ aws configure list-profiles
@@ -59,7 +58,7 @@ aws: [ERROR]: Error loading SSO Token: Token for shop does not exist
 
 **A linha de comando procurou um login em cache para a sessão `shop`, não achou, e parou.** Ela não
 recorreu às chaves de teste que o `env.sh` exporta, porque um perfil nomeado com `--profile` tira da
-cadeia as chaves do ambiente; a lição 25 mede essa regra e a sua exceção. O cache em que procurou é
+cadeia as chaves do ambiente. A lição 25 mede essa regra e a sua exceção. O cache em que procurou é
 `~/.aws/sso/cache/`, e quem o enche é um comando.
 
 ## O login, que não foi executado
@@ -79,14 +78,14 @@ endereço e um código, e abre o navegador nele, a menos que receba `--no-browse
 que o código bate, entra no provedor de identidade com o segundo fator, e autoriza o acesso. A linha
 de comando recebe um token, escreve-o em `~/.aws/sso/cache/`, e diz que entrou.
 
-Daí em diante, **todo comando com o perfil troca esse token por credenciais da role**: o provedor
-`sso` da cadeia da lição 10 pede ao portal as credenciais de `ReadOnly` em `834307267662`, recebe
-credenciais temporárias da role `AWSReservedSSO_ReadOnly_…`, e as renova quando acabam. Dois relógios
-o limitam. A **duração de sessão do permission set**, quatro horas para `ReadOnly`, limita cada
-conjunto de credenciais da role. A **sessão do Identity Center**, oito horas por padrão e definida
-pelo administrador, limita o próprio login; quando ela acaba, o próximo comando diz que o token
-venceu e a pessoa roda `aws sso login` de novo. O `aws sso logout` a encerra de propósito, e apaga o
-token do cache.
+Daí em diante, **todo comando com o perfil troca esse token por credenciais da role**. O provedor
+`sso` da cadeia da lição 10 pede ao portal as credenciais de `ReadOnly` em `834307267662`. Ele
+recebe credenciais temporárias da role `AWSReservedSSO_ReadOnly_…`, e as renova quando acabam. Dois
+relógios o limitam. A **duração de sessão do permission set**, quatro horas para `ReadOnly`, limita
+cada conjunto de credenciais da role. A **sessão do Identity Center**, oito horas por padrão e
+definida pelo administrador, limita o próprio login. Quando ela acaba, o próximo comando diz que o
+token venceu e a pessoa roda `aws sso login` de novo. O `aws sso logout` a encerra de propósito, e
+apaga o token do cache.
 
 ## O que isso compra, numa comparação
 

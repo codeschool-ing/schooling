@@ -3,19 +3,20 @@ title: Rotating a key without stopping the program that uses it
 version: 1
 ---
 
-**Rotation is a handover between two keys: create the second, move the program to it, check that
-the first has gone quiet, switch the first off, wait, and only then delete it.** Every step can be
+**Rotation is a handover between two keys: create the second, move the program to it, check that the
+first has gone quiet, switch the first off, wait, and only then delete it.** Every step can be
 undone except the last, and the order exists so that a mistake shows up while it can still be
 undone. This section runs it end to end in moto against the shop's one honest key holder,
-`erp-sync`, the accounting system in the office that uploads the day's sales to `shop-backups`.
+`erp-sync`. That is the accounting system in the office, which uploads the day's sales to
+`shop-backups`.
 
 ## A moto that judges
 
-Last-used dates and refused keys are only recorded when moto checks permissions, so start it the way
+moto records last-used dates and refused keys only when it checks permissions, so start it the way
 lesson 7 does. In the first terminal, Ctrl+C, then
-`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`: moto lets three requests through unchecked
-and judges every one after that. Spend the three on an administrator. The `read` puts its key
-straight into the environment, so the secret never reaches the screen:
+`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`. moto lets three requests through unchecked and
+judges every one after that. Spend the three on an administrator. The `read` puts its key straight
+into the environment, so the secret never reaches the screen:
 
 ```
 ana@laptop:~/aws$ aws iam create-user --user-name admin --query User.Arn --output text
@@ -26,8 +27,8 @@ ana@laptop:~/aws$ aws sts get-caller-identity --query Arn --output text
 arn:aws:iam::123456789012:user/admin
 ```
 
-The fourth request was judged, and passed. Lesson 7 explains this start in full; from here on,
-every command in this terminal signs as `admin`.
+The fourth request was judged, and passed. Lesson 7 explains this start in full. From here on, every
+command in this terminal signs as `admin`.
 
 ## The key holder
 
@@ -58,9 +59,9 @@ ana@laptop:~/aws$ echo $OLD_ID
 AKIARZPUZDIKCZVHDNNE
 ```
 
-**The key id is printed and the secret is not.** In the office the secret would be typed once into
-the accounting system's settings and nowhere else. Here the two variables stand in for that
-system, which uploads with them:
+**The command prints the key id and not the secret.** In the office somebody would type the secret
+once into the accounting system's settings and nowhere else. Here the two variables stand in for
+that system, which uploads with them:
 
 ```
 ana@laptop:~/aws$ printf 'order,total_cents\n1001,4990\n' > sales.csv
@@ -101,8 +102,8 @@ ana@laptop:~/aws$ aws iam get-access-key-last-used --access-key-id $NEW_ID --que
 
 Both keys have a date and the service `s3`, because both have uploaded. The date is the field to
 watch: **when the old key's date stops moving, nothing is using it any more.** A key whose date
-keeps moving after the switch has a second user nobody knew about, and finding that user is the
-reason the old key is not deleted yet.
+keeps moving after the switch has a second user nobody knew about. Finding that user is the reason
+you do not delete the old key yet.
 
 **Switch the old key off.** `Inactive` refuses every request signed with it, and it is reversible:
 if something breaks, `--status Active` brings the key back in one command.
@@ -117,10 +118,10 @@ upload: ./sales.csv to s3://shop-backups/erp/sales.csv
 ```
 
 **The old key still uploaded, and that is moto, not AWS.** moto 5.2.3 records the status and goes on
-accepting the key; AWS refuses every request signed with an inactive key. So the lab cannot show
-the one thing this step is for, which is the failure of whatever still used the key, and a real
-rotation waits here. A week covers a program that runs daily; a month covers one that runs at the
-end of the month.
+accepting the key, where AWS refuses every request signed with an inactive key. So the lab cannot
+show the one thing this step is for: the failure of whatever still used the key. A real rotation
+waits here. A week covers a program that runs daily; a month covers one that runs at the end of the
+month.
 
 **Delete it**, once the wait has passed with nothing broken:
 
@@ -138,10 +139,10 @@ Now the old pair names nothing, and moto refuses it the way AWS would.
 
 ## The credential report
 
-**The credential report is one CSV with a row per IAM user**, saying whether each has a password,
-MFA and keys, how old the keys are and when they were last used. It is generated on request, and
-asked for again if it is more than four hours old. `get-credential-report` returns it in base64,
-so it goes through `base64 -d`; `cut` keeps five of its twenty-two columns:
+**The credential report is one CSV with a row per IAM user.** It says whether each has a password,
+MFA and keys, how old the keys are and when they were last used. IAM generates it on request, and
+you ask again if it is more than four hours old. `get-credential-report` returns it in base64, so it
+goes through `base64 -d`, and `cut` keeps five of its twenty-two columns:
 
 ```
 ana@laptop:~/aws$ aws iam generate-credential-report --query State --output text
@@ -154,9 +155,9 @@ admin,true,2026-10-16T16:37:34+00:00,2026-10-16T16:37:48+00:00,false
 erp-sync,true,2026-10-16T16:37:39+00:00,2026-10-16T16:37:41+00:00,false
 ```
 
-`erp-sync`'s first key slot now holds the new key, and the second is empty, which is what a
-finished rotation looks like. Against AWS the report also has a first row for the account's root
-user, called `<root_account>`, and moto's has none.
+`erp-sync`'s first key slot now holds the new key and the second is empty. That is what a finished
+rotation looks like. Against AWS the report also has a first row for the account's root user, called
+`<root_account>`, and moto's has none.
 
 Reading ages by eye works for three users and not for three hundred. This program reads the report
 and prints every active key with its age in days. Save it as `~/aws/key-ages.py`:
@@ -171,6 +172,6 @@ admin      key 1    0 days  last used 2026-10-16T16:37:49+00:00  ok
 erp-sync   key 1    0 days  last used 2026-10-16T16:37:41+00:00  ok
 ```
 
-**Every key is 0 days old**, because moto was started minutes ago, and so nothing is flagged; in an
+**Every key is 0 days old**, because moto was started minutes ago, so nothing is flagged. In an
 account that has existed for years the same program prints the keys nobody has touched since they
 were made.

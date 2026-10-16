@@ -5,9 +5,8 @@ version: 1
 
 **Uma máquina no EC2 recebe as permissões de uma role, e a role chega à máquina dentro de um
 instance profile.** Ninguém copia uma chave para o disco. A instância pergunta ao serviço de
-metadados, o serviço responde com credenciais temporárias da role, e o SDK na base da cadeia as
-pega. Os servidores web da loja leem as fotos dos produtos em `shop-assets` assim, como a role
-`shop-app`.
+metadados, que responde com credenciais temporárias da role. O SDK na base da cadeia as pega. Os
+servidores web da loja leem as fotos dos produtos em `shop-assets` assim, como a role `shop-app`.
 
 A imagem errada é que uma role é anexada a uma instância. **O que se anexa é um instance profile**,
 um contêiner que guarda exatamente uma role. O console esconde a diferença: escolher uma role para
@@ -16,9 +15,9 @@ criar os dois, e esse é o jeito mais claro de ver que são duas coisas.
 
 ## Uma role que o EC2 pode vestir
 
-Uma role responde duas perguntas, como a lição 9 mostrou: quem pode assumi-la, na política de
-confiança, e o que ela pode fazer, nas políticas de permissão. **Para uma máquina, o principal na
-política de confiança é o próprio serviço EC2.** Salve isto como `~/aws/trust-ec2.json`:
+Uma role responde duas perguntas, como a lição 9 mostrou. A política de confiança diz quem pode
+assumi-la, e as políticas de permissão dizem o que ela pode fazer. **Para uma máquina, o principal
+na política de confiança é o próprio serviço EC2.** Salve isto como `~/aws/trust-ec2.json`:
 
 ```json
 {
@@ -67,9 +66,9 @@ i-0ee42130b0c3e009d	arn:aws:iam::123456789012:instance-profile/shop-app	associat
 ```
 
 **O moto não roda máquina nenhuma.** Ele registra uma instância com um id, um estado e um profile, e
-nada dá boot; não há Linux por trás de `i-0ee42130b0c3e009d` para entrar. O seu id vai ser
-diferente deste. O que o moto guarda de fato é a **associação** entre a instância e o profile, que é
-o registro que a AWS também guarda, e que pode ser trocado numa instância em execução sem pará-la.
+nada dá boot; não há Linux por trás de `i-0ee42130b0c3e009d` para entrar. O seu id vai ser diferente
+deste. O que o moto guarda de fato é a **associação** entre a instância e o profile. A AWS guarda o
+mesmo registro, e você pode trocá-lo numa instância em execução sem pará-la.
 
 Numa instância de verdade o resto acontece sem ninguém. O SDK na máquina chega à base da cadeia,
 pede `iam/security-credentials/` a `169.254.169.254`, recebe `shop-app` de volta, lê as credenciais
@@ -77,8 +76,8 @@ sob esse nome e assina com elas. Quando estão perto de vencer, ele pergunta de 
 
 Mais uma permissão protege isso, e é fácil não ver. **Quem lança uma instância com um profile
 precisa de `iam:PassRole` na role dele**, além de `ec2:RunInstances`. Sem essa regra, qualquer um
-autorizado a ligar máquinas poderia ligar uma vestindo a role mais poderosa da conta e ler as
-credenciais lá de dentro. Uma desenvolvedora que pode lançar instâncias recebe `iam:PassRole` em
+autorizado a ligar máquinas poderia ligar uma vestindo a role mais poderosa da conta. Depois leria
+as credenciais lá de dentro. Uma desenvolvedora que pode lançar instâncias recebe `iam:PassRole` em
 `shop-app` e nada mais amplo.
 
 ```schooling-figure
@@ -88,12 +87,12 @@ credenciais lá de dentro. Uma desenvolvedora que pode lançar instâncias receb
 ## O IMDSv2, e contra o que ele defende
 
 O serviço de metadados responde a qualquer coisa que consiga abrir uma conexão de dentro da
-instância, e isso inclui a aplicação. **O perigo é uma falsificação de requisição do lado do
-servidor, SSRF**: uma aplicação que busca um endereço que o usuário fornece, como uma imagem para
-pré-visualizar ou um webhook para chamar, pode receber o endereço de metadados no lugar. No IMDSv1
-isso é um único `GET`, e as credenciais voltam na resposta para quem mandou o endereço. Um
-vazamento público em 2019 passou exatamente por esse caminho, de um firewall mal configurado na
-frente de uma aplicação até a role da máquina por trás dela.
+instância, a aplicação inclusive. **O perigo é uma falsificação de requisição do lado do servidor,
+SSRF**: uma aplicação que busca um endereço que o usuário fornece, como uma imagem para
+pré-visualizar ou um webhook para chamar. Um estranho pode entregar a ela o endereço de metadados no
+lugar. No IMDSv1 isso é um único `GET`, e as credenciais voltam na resposta para quem mandou o
+endereço. Um vazamento público em 2019 passou exatamente por esse caminho. Ele foi de um firewall
+mal configurado na frente de uma aplicação até a role da máquina por trás dela.
 
 **O IMDSv2 fecha as formas comuns desse buraco com três regras**, todas da documentação da AWS:
 
@@ -114,8 +113,8 @@ ana@laptop:~/aws$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:4567
 ```
 
 As próprias imagens da AWS agora pedem o IMDSv2 sozinhas. **As imagens Amazon Linux 2023 trazem
-`ImdsSupport` definido como `v2.0`**, o que faz uma instância lançada a partir de uma delas exigir
-tokens mesmo quando o lançamento não diz nada. A cópia da imagem no moto não traz o campo:
+`ImdsSupport` definido como `v2.0`.** Uma instância lançada a partir de uma delas exige tokens mesmo
+quando o lançamento não diz nada. A cópia da imagem no moto não traz o campo:
 
 ```
 ana@laptop:~/aws$ aws ec2 describe-images --image-ids ami-0629d059c178d0eac --query "Images[0].[Name,ImdsSupport]" --output text
@@ -130,9 +129,9 @@ este curso o descreve pela documentação da AWS.
 ## O limite de saltos, e os contêineres
 
 Um limite de 1 significa que os processos da própria instância recebem um token e nada além deles
-recebe. **Um contêiner na rede bridge padrão do Docker está um salto mais longe**, então numa
-máquina que roda contêineres que devem usar a role da instância a documentação da AWS recomenda um
-limite de 2. Ponha o id da sua instância no lugar deste:
+recebe. **Um contêiner na rede bridge padrão do Docker está um salto mais longe.** Numa máquina
+cujos contêineres devem usar a role da instância, a documentação da AWS recomenda um limite de 2.
+Ponha o id da sua instância no lugar deste:
 
 ```
 ana@laptop:~/aws$ aws ec2 modify-instance-metadata-options --instance-id i-0ee42130b0c3e009d --http-tokens required --http-put-response-hop-limit 2
@@ -148,5 +147,5 @@ ana@laptop:~/aws$ aws ec2 modify-instance-metadata-options --instance-id i-0ee42
 
 O caso oposto é igualmente comum. Num nó do EKS, a role da instância é a do próprio nó, com as
 permissões de que o nó precisa para entrar no cluster e baixar imagens. **Um pod que conseguisse
-lê-la teria as permissões do nó**, e é por isso que a orientação do EKS mantém o limite em 1 nos nós
-e dá a cada pod uma role própria. Esse é o assunto da próxima seção.
+lê-la teria as permissões do nó.** É por isso que a orientação do EKS mantém o limite em 1 nos nós e
+dá a cada pod uma role própria. Esse é o assunto da próxima seção.

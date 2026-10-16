@@ -5,9 +5,9 @@ version: 1
 
 **A subnet is a slice of the VPC's range that lives in exactly one Availability Zone.** Every
 address AWS hands out comes from a subnet, so every machine sits in one zone, the zone of its
-subnet. The wrong picture is a subnet stretched across the region; there is no such thing. **A
-design that survives losing a zone needs a subnet in every zone for every kind of machine**, which
-is what lesson 1 promised this lesson would do.
+subnet. The wrong picture is a subnet stretched across the region. There is no such thing. **A
+design that survives losing a zone needs a subnet in every zone for every kind of machine.** Lesson
+1 promised this lesson would build that.
 
 ## Three tiers, three zones, nine subnets
 
@@ -20,12 +20,12 @@ The shop runs three kinds of thing, and each gets a tier of its own:
 | `data` | the database | the application only |
 
 Three tiers in three zones are nine subnets. Each gets a `/20`, 4,096 addresses, and a `/16` holds
-sixteen of those, so nine leave **seven blocks spare** for a tier nobody has thought of yet. That
+sixteen of those. So nine leave **seven blocks spare** for a tier nobody has thought of yet. That
 spare room matters more than it looks, because **a subnet's range cannot be changed after it is
-created**: a subnet that runs out of addresses is replaced, and everything in it moves.
+created**. A subnet that runs out of addresses is replaced, and everything in it moves.
 
 Working out where each `/20` starts is binary arithmetic, and it is the kind that goes wrong by one
-bit in a hurry. Python's `ipaddress` module does it, and the plan becomes a program that anybody can
+bit in a hurry. Python's `ipaddress` module does it, and the plan becomes a program anybody can
 rerun and read. Make a directory for this lesson's files with `mkdir -p ~/aws/net` and save this as
 `~/aws/net/plan.py`:
 
@@ -47,7 +47,7 @@ sa-east-1c  data    10.20.128.0/20  4091
 # spare: 7 blocks of /20, 10.20.144.0/20 to 10.20.240.0/20
 ```
 
-**A tier's three subnets are neighbours**, so the plan reads at a glance: the public tier runs from
+**A tier's three subnets are neighbours**, so the plan reads at a glance. The public tier runs from
 `10.20.0.0` to `10.20.47.255`, the data tier ends at `10.20.143.255`, and everything from
 `10.20.144.0` to the top of the range is free.
 
@@ -98,12 +98,12 @@ ana@laptop:~/aws$ aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpc --q
 0
 ```
 
-**Two subnets of one VPC never overlap**: `10.20.240.128/25` is the top half of the `/24` made a
-moment ago, and it is refused as a conflict. **A subnet lies inside one of the VPC's ranges**:
-`10.21.0.0/24` is outside `10.20.0.0/16`, and it is refused as invalid. The third rule is the size,
-**between `/28` and `/16`**, and here moto is more lenient than AWS: it accepted the `/29` and gave
-it three usable addresses. AWS refuses a subnet smaller than a `/28`; that refusal was not run here,
-since moto does not make it.
+**Two subnets of one VPC never overlap.** `10.20.240.128/25` is the top half of the `/24` made a
+moment ago, and moto refuses it as a conflict. **A subnet lies inside one of the VPC's ranges.**
+`10.21.0.0/24` is outside `10.20.0.0/16`, and moto refuses it as invalid. The third rule is the
+size, **between `/28` and `/16`**, and here moto is more lenient than AWS. It accepted the `/29` and
+gave it three usable addresses. AWS refuses a subnet smaller than a `/28`. That refusal was not run
+here, since moto does not make it.
 
 The three test subnets have done their job. The last command of that transcript deleted all of them,
 so the VPC is empty again for the plan.
@@ -112,8 +112,8 @@ so the VPC is empty again for the plan.
 
 The nine subnets come from the plan itself, so nobody types a range. This script reads `plan.py`'s
 lines and creates one subnet for each, named after its tier and zone (`public-a`, `app-b`,
-`data-c`). It also creates the VPC when there is none called `shop-prod`, which is what lets
-lessons 17 to 20 rebuild this lesson in one step on an empty moto. Write it with:
+`data-c`). It also creates the VPC when there is none called `shop-prod`. That is what lets lessons
+17 to 20 rebuild this lesson in one step on an empty moto. Write it with:
 
 ```sh
 cat > ~/aws/net/16-vpc.sh <<'EOF'
@@ -153,7 +153,7 @@ data-b	10.20.112.0/20	sae1-az2	4091
 data-c	10.20.128.0/20	sae1-az3	4091
 ```
 
-**The third column is the zone id**, `sae1-az1` to `sae1-az3`, and it is the one to quote when
-another account has to place something in the same zone (lesson 1). The VPC now has the shape of
-the shop's network. Whether any of it can reach the internet is a separate question, and the next
-section shows that the answer, so far, is no.
+**The third column is the zone id**, `sae1-az1` to `sae1-az3`. Quote it when another account has to
+place something in the same zone (lesson 1). The VPC now has the shape of the shop's network.
+Whether any of it can reach the internet is a separate question. The next section shows that the
+answer, so far, is no.

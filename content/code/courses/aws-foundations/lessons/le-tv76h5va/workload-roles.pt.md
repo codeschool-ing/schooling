@@ -5,8 +5,8 @@ version: 1
 
 **Um instance profile dá uma role para a máquina inteira; um cluster precisa de uma role por carga
 de trabalho.** Um nó Kubernetes no EKS roda pods de várias equipes, e o checkout da loja e o seu job
-de relatórios não devem dividir permissões só porque caíram no mesmo nó. A AWS tem três respostas, e
-cada uma cai num de dois provedores da cadeia: **um arquivo de token trocado por uma role**, ou um
+de relatórios não devem dividir permissões só porque caíram no mesmo nó. A AWS tem três respostas.
+Cada uma cai num de dois provedores da cadeia: **um arquivo de token trocado por uma role**, ou um
 endereço local que entrega credenciais.
 
 | | o que a carga recebe | provedor na cadeia |
@@ -18,7 +18,7 @@ endereço local que entrega credenciais.
 ## IRSA: um token do cluster, trocado no STS
 
 Um cluster EKS é um **emissor OpenID Connect**. Ele assina um token de vida curta para cada pod,
-dizendo como qual service account o pod roda, e publica num endereço público as chaves que
+dizendo como qual service account o pod roda. Também publica, num endereço público, as chaves que
 verificam a assinatura. O IRSA faz o IAM confiar nesse emissor:
 
 1. a conta registra o emissor do cluster como um provedor de identidade OIDC no IAM;
@@ -76,7 +76,7 @@ ana@laptop:~/aws$ aws iam attach-role-policy --role-name shop-checkout --policy-
 
 Do lado do cluster, a service account traz o ARN da role numa anotação, e o EKS põe o token e as
 duas variáveis em todo pod que roda como ela. **Isto não foi executado**, já que não há cluster no
-laboratório; é o formato que o EKS documenta:
+laboratório. É o formato que o EKS documenta:
 
 ```yaml
 apiVersion: v1
@@ -90,18 +90,19 @@ metadata:
 
 ## Um token, feito à mão
 
-O token de um pod é um JWT: três pedaços em base64 unidos por pontos, um cabeçalho, um conjunto
-de claims e uma assinatura. Este programa escreve um com as claims que um token do EKS traz, e um
+O token de um pod é um JWT: três pedaços em base64 unidos por pontos, um cabeçalho, um conjunto de
+claims e uma assinatura. Este programa escreve um com as claims que um token do EKS traz, e um
 terceiro pedaço que **não é assinatura nenhuma**. Basta para mover a cadeia, e a seção seguinte mede
-o que isso diz sobre o moto. Salve-o como `~/aws/make-token.py`; um arquivo chamado `token.py` em
-`~/aws` esconderia o módulo `token` do próprio Python de todo programa rodado ali, o boto3 inclusive:
+o que isso diz sobre o moto. Salve-o como `~/aws/make-token.py`. Um arquivo chamado `token.py` em
+`~/aws` esconderia o módulo `token` do próprio Python de todo programa rodado ali, o boto3
+inclusive:
 
 ```schooling-example
 {"language": "python", "file": "make-token.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"Prints a token shaped like the one EKS gives a pod. It is NOT signed.\n\n    python3 make-token.py SERVICE-ACCOUNT > token\n\"\"\"\nimport base64\nimport json\nimport sys\nimport time\n\n", "note": "Só a biblioteca do próprio Python. A service account vem da linha de comando, então o mesmo programa escreve um token para a carga certa e para a errada."}, {"code": "ISSUER = 'https://oidc.eks.sa-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE'\n\n\ndef piece(d):\n    raw = json.dumps(d, separators=(',', ':')).encode()\n    return base64.urlsafe_b64encode(raw).rstrip(b'=').decode()\n\n\n", "note": "Um JWT codifica cada pedaço em base64 na forma segura para URL, sem o preenchimento `=`. `ISSUER` é o endereço registrado como provedor OIDC."}, {"code": "now = int(time.time())\nclaims = {'iss': ISSUER, 'sub': sys.argv[1], 'aud': ['sts.amazonaws.com'],\n          'iat': now, 'exp': now + 3600}\n", "note": "As claims que o STS compara com a política de confiança: quem emitiu o token, que service account ele nomeia, para quem ele é. `exp` o torna inútil uma hora depois de feito. O token de um pod de verdade também vence, e o kubelet o troca antes disso."}, {"code": "print(piece({'alg': 'RS256', 'kid': 'lab'}) + '.' + piece(claims) + '.not-a-signature')\n", "note": "O cabeçalho diz RS256, uma assinatura RSA, e o terceiro pedaço é um marcador. A AWS buscaria as chaves publicadas pelo emissor, não acharia nenhuma que o verificasse, e recusaria o token."}]}
 ```
 
 Escreva um token para a service account do checkout, tire as chaves do ambiente e dê à cadeia as
-duas variáveis que um pod receberia. `AWS_ROLE_SESSION_NAME` é opcional; ele fixa o nome que a
+duas variáveis que um pod receberia. `AWS_ROLE_SESSION_NAME` é opcional. Ele fixa o nome que a
 sessão tiraria do relógio:
 
 ```
@@ -150,22 +151,22 @@ Credentials	AssumedRoleUser	PackedPolicySize
 A resposta da AWS traz também `SubjectFromWebIdentityToken`, `Audience` e `Provider`, que dizem de
 quem foi o token aceito, e a do moto não tem nenhum deles.
 
-E com a verificação de permissões do moto ligada, como a lição 7 a inicia
-(`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`, e depois um usuário `admin` criado em três
-requisições), a chamada nem chega lá. A verificação do moto espera que toda requisição traga uma
-assinatura, esta não traz nenhuma, e o moto responde com um erro interno, HTTP 500. Isso foi medido
-durante a gravação desta lição, e é por isso que a lição deixa a verificação desligada.
+Ligue a verificação de permissões do moto, como a lição 7 a inicia, e a chamada nem chega lá. Isso
+quer dizer `INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`, e depois um usuário `admin` criado
+em três requisições. A verificação do moto espera que toda requisição traga uma assinatura. Esta não
+traz nenhuma, e o moto responde com um erro interno, HTTP 500. Isso foi medido durante a gravação
+desta lição, e é por isso que a lição deixa a verificação desligada.
 
 Então o laboratório mostra **como as credenciais viajam**, e a documentação da AWS é a única fonte
-para o que o STS recusa. Ele verifica a assinatura do token contra as chaves que o emissor
-publica, confere que o emissor é um provedor registrado e que o token não venceu, e então avalia a
-política de confiança, onde `sub` e `aud` precisam bater. Um token para `other:intruder` é recusado
-ali com `AccessDenied`.
+para o que o STS recusa. O STS verifica a assinatura do token contra as chaves que o emissor
+publica. Confere que o emissor é um provedor registrado e que o token não venceu. Então avalia a
+política de confiança, onde `sub` e `aud` precisam bater, e ali recusa um token para
+`other:intruder` com `AccessDenied`.
 
 ## EKS Pod Identity, o jeito mais novo
 
 O **EKS Pod Identity** tira o provedor OIDC do arranjo. Um agente roda em cada nó e responde num
-endereço link-local, `169.254.170.23`, e o cluster liga uma service account a uma role com uma
+endereço link-local, `169.254.170.23`. O cluster liga uma service account a uma role com uma
 associação, `aws eks create-pod-identity-association`. A política de confiança da role nomeia um
 principal de serviço, o mesmo em todo cluster:
 
@@ -182,23 +183,23 @@ principal de serviço, o mesmo em todo cluster:
 }
 ```
 
-Essa é a diferença que pesa na prática: **com o IRSA cada cluster é um provedor a registrar e uma
-condição a escrever em cada política de confiança, e com o Pod Identity uma role pode ser reusada
-por qualquer cluster da conta** sem editá-la. A documentação da AWS apresenta o Pod Identity como a
-escolha mais simples no EKS, e o IRSA fica onde o Pod Identity não chega, como pods no Fargate.
-Nenhum dos dois foi executado aqui.
+Essa é a diferença que pesa na prática. **Com o IRSA cada cluster é um provedor a registrar e uma
+condição a escrever em cada política de confiança; com o Pod Identity qualquer cluster da conta pode
+reusar uma role** sem editá-la. A documentação da AWS apresenta o Pod Identity como a escolha mais
+simples no EKS. O IRSA fica onde o Pod Identity não chega, como pods no Fargate. Nenhum dos dois foi
+executado aqui.
 
 ## Task roles do ECS, e o provedor de contêiner
 
-No ECS, uma task role é declarada na definição da tarefa, e o agente do ECS serve as credenciais
-dela em `169.254.170.2`. O contêiner recebe uma variável, `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`,
-com o caminho a pedir, e o provedor `container-role` da cadeia pede. A política de confiança da role
-nomeia `ecs-tasks.amazonaws.com`.
+No ECS, a definição da tarefa declara uma task role, e o agente do ECS serve as credenciais dela em
+`169.254.170.2`. O contêiner recebe uma variável, `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`, com o
+caminho a pedir. O provedor `container-role` da cadeia pede. A política de confiança da role nomeia
+`ecs-tasks.amazonaws.com`.
 
-A resposta tem o mesmo formato JSON da do serviço de metadados, então dá para mostrar o provedor
-funcionando apontando a outra variável dele, `AWS_CONTAINER_CREDENTIALS_FULL_URI`, para a resposta de
-metadados do moto. Isso é o provedor lendo as credenciais de marcador do moto, não um agente do ECS.
-Tire antes as variáveis de web identity, já que esse provedor vem mais cedo na cadeia:
+A resposta tem o mesmo formato JSON da do serviço de metadados. Então dá para mostrar o provedor
+funcionando apontando a outra variável dele, `AWS_CONTAINER_CREDENTIALS_FULL_URI`, para a resposta
+de metadados do moto. Isso é o provedor lendo as credenciais de marcador do moto, não um agente do
+ECS. Tire antes as variáveis de web identity, já que esse provedor vem mais cedo na cadeia:
 
 ```
 ana@laptop:~/aws$ unset AWS_ROLE_ARN AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_SESSION_NAME
@@ -211,5 +212,5 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 ```
 
 **`container-role` respondeu**, antes do `iam-role` na cadeia. Toda carga desta seção, pod ou
-tarefa, terminou com credenciais que vencem em horas, e nenhuma chave foi escrita em lugar nenhum.
+tarefa, terminou com credenciais que vencem em horas. Ninguém escreveu uma chave em lugar nenhum.
 Leia o `env.sh` de novo para pôr as chaves de teste de volta antes da prática.

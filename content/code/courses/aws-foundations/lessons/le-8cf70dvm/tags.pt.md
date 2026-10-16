@@ -13,9 +13,9 @@ novas.
 ## Tags no laboratório
 
 As tags deste curso são as da loja: `project=shop`, `env=prod` ou `staging`, e `team=web`, `data` ou
-`finance`. Um bucket recebe as tags como um conjunto; uma instância pode recebê-las no próprio
-comando que a cria, que é o hábito que vale ter, porque um recurso marcado um dia depois ficou um dia
-sem tag. A segunda instância abaixo é iniciada sem tags, de propósito:
+`finance`. Um bucket recebe as tags como um conjunto. Uma instância pode recebê-las no próprio
+comando que a cria, que é o hábito que vale ter: um recurso marcado um dia depois ficou um dia sem
+tag. A segunda instância abaixo é iniciada sem tags, de propósito:
 
 ```
 ana@laptop:~/aws$ aws s3api create-bucket --bucket shop-assets --create-bucket-configuration LocationConstraint=sa-east-1 --output text
@@ -29,9 +29,9 @@ ana@laptop:~/aws$ aws ec2 run-instances --image-id ami-0629d059c178d0eac --insta
 i-5ef280fe00c97d2e5
 ```
 
-O moto inventa ids de instância, e os seus diferem dos dois acima; use os seus nos comandos a seguir.
-A **Resource Groups Tagging API** responde a uma pergunta em todos os serviços, quais recursos têm
-uma tag:
+O moto inventa ids de instância, e os seus diferem dos dois acima. Use os seus nos comandos a
+seguir. A **Resource Groups Tagging API** responde a uma pergunta em todos os serviços, quais
+recursos têm uma tag:
 
 ```
 ana@laptop:~/aws$ aws resourcegroupstaggingapi get-resources --tag-filters Key=team,Values=web --query 'ResourceTagMappingList[].ResourceARN'
@@ -51,11 +51,11 @@ i-5ef280fe00c97d2e5	t3.medium	None
 
 O segundo comando pediu todo recurso, sem filtro, e ainda assim imprimiu só os dois com tag. **É
 assim que a API é documentada: ela lista recursos que têm tags ou já tiveram, e um recurso que nunca
-recebeu tag é invisível para ela.** A instância sem tag e o bucket `shop-logs` existem e faltam nessa
-lista, e são exatamente os recursos que um relatório de custos não consegue atribuir. Achá-los exige
-perguntar a cada serviço, como o terceiro comando faz para o EC2: o `t3.medium` não tem `team`, e a
-saída em texto diz `None`. A regra `required-tags` do AWS Config faz a mesma verificação
-continuamente; a lição 21 de `aws-operations` cobre o Config.
+recebeu tag é invisível para ela.** A instância sem tag e o bucket `shop-logs` existem e faltam
+nessa lista. São exatamente os recursos que um relatório de custos não consegue atribuir. Achá-los
+exige perguntar a cada serviço, como o terceiro comando faz para o EC2: o `t3.medium` não tem
+`team`, e a saída em texto diz `None`. A regra `required-tags` do AWS Config faz a mesma verificação
+continuamente, e a lição 21 de `aws-operations` cobre o Config.
 
 Ponha tags na instância perdida e pergunte de novo:
 
@@ -70,10 +70,10 @@ arn:aws:ec2:sa-east-1:123456789012:instance/i-5ef280fe00c97d2e5	data
 ## Políticas de tag: a grafia, não a presença
 
 Tags são texto livre e diferenciam maiúsculas, então `team=web`, `Team=web` e `team=Web` são três
-grupos diferentes num relatório, e um relatório de três grupos para um time está errado de um jeito
+grupos diferentes num relatório. Um relatório de três grupos para um time está errado de um jeito
 que ninguém percebe. Uma **política de tag** (*tag policy*) é um tipo de política do AWS
 Organizations, como as SCPs da lição 4, que fixa como uma chave é escrita e quais valores ela pode
-ter. Esta diz que `team` é escrita em minúsculas e guarda um de três valores, e `enforced_for` pede à
+ter. Esta diz que `team` é escrita em minúsculas e guarda um de três valores. `enforced_for` pede à
 AWS que recuse uma operação de tag numa instância do EC2 que a desrespeite:
 
 ```sh
@@ -108,37 +108,38 @@ team	marketing
 ```
 
 **O moto guardou a política, anexou-a e depois a ignorou**: o último comando iniciou uma instância
-com um valor que a política não permite. Contra a AWS, uma requisição que escreve `team=marketing`
-numa instância de uma conta que a política cobre é recusada, porque o valor desrespeita a política.
-Essa parte não foi rodada. O que uma política de tag não faz, nem na AWS, é **exigir** uma tag: a
-documentação da AWS diz que recursos sem tags não são apontados como não conformes, então o
-`t3.medium` sem tag lá de cima teria passado por ela. Para recusar um recurso criado sem `team`, uma
-SCP nega a ação de criação quando a requisição não tem essa tag, usando a chave de condição
-`aws:RequestTag/team`; a lição 4 escreve SCPs.
+com um valor que a política não permite. Contra a AWS, a política recusa uma requisição que escreve
+`team=marketing` numa instância de uma conta que ela cobre. Essa parte não foi rodada. O que uma
+política de tag não faz, nem na AWS, é **exigir** uma tag. A documentação da AWS diz que ela não
+aponta recursos sem tags como não conformes, então o `t3.medium` sem tag lá de cima teria passado
+por ela. Para recusar um recurso criado sem `team`, uma SCP nega a ação de criação quando a
+requisição não tem essa tag. Ela usa a chave de condição `aws:RequestTag/team`, e a lição 4 escreve
+SCPs.
 
 ## Ativar uma tag para alocação de custos
 
 O Billing guarda a sua própria lista de chaves de tag, e **uma chave só é usada para dividir custos
-depois de ativada** lá, na **conta de gerenciamento** de uma organização, porque é a conta a quem a
-fatura consolidada pertence (lição 3). A documentação da AWS dá os prazos: uma chave recém-usada
-pode levar até 24 horas para aparecer nessa lista, e até mais 24 horas depois da ativação antes de
-aparecer em relatórios. A API do Cost Explorer tem uma operação para cada metade, listar as chaves e
-mudar o status delas; o moto não tem nenhuma das duas:
+depois de ativada** lá. Isso acontece na **conta de gerenciamento** de uma organização, porque a
+fatura consolidada pertence a essa conta (lição 3). A documentação da AWS dá os prazos. Uma chave
+recém-usada pode levar até 24 horas para aparecer nessa lista, e até mais 24 horas depois da
+ativação antes de aparecer em relatórios. A API do Cost Explorer tem uma operação para cada metade,
+listar as chaves e mudar o status delas, e o moto não tem nenhuma das duas:
 
 ```
 ana@laptop:~/aws$ aws ce list-cost-allocation-tags 2>&1 | grep ERROR
 aws: [ERROR]: An error occurred (500) when calling the ListCostAllocationTags operation (reached max retries: 2): <!doctype html>
 ```
 
-Contra a AWS, `aws ce update-cost-allocation-tags-status --cost-allocation-tags-status TagKey=team,Status=Active`
+Contra a AWS,
+`aws ce update-cost-allocation-tags-status --cost-allocation-tags-status TagKey=team,Status=Active`
 é a ativação; ela não foi rodada. Dois tipos de chave acabam nessa lista. As **definidas pelo
 usuário** são as que você escreveu, como `team`. As **geradas pela AWS** são escritas pela AWS, como
-`aws:createdBy`, que registra a identidade que criou um recurso; elas também precisam ser ativadas.
+`aws:createdBy`, que registra a identidade que criou um recurso. Elas também precisam ser ativadas.
 
 **A ativação não é retroativa.** Uma chave ativada em 20 de outubro divide os custos dali em diante,
 e os primeiros dezenove dias do mês ficam num monte só, sem divisão. A AWS acrescentou em 2024 um
 pedido de **preenchimento retroativo** (*backfill*), que aplica a ativação atual a até doze meses
-anteriores, e ele corrige só a ativação esquecida: o uso que aconteceu enquanto um recurso não tinha
+anteriores. Ele corrige só a ativação esquecida: o uso que aconteceu enquanto um recurso não tinha
 tag não tem tag nenhuma para preencher. **A tag tem de estar no recurso quando o custo acontece.** É
 por isso que marcar na criação é o hábito, e por isso o fluxo abaixo tem duas portas em vez de uma.
 

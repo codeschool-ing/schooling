@@ -7,13 +7,14 @@ version: 1
 que a primeira ficou quieta, desligar a primeira, esperar, e só então apagá-la.** Todo passo pode
 ser desfeito menos o último, e a ordem existe para que um erro apareça enquanto ainda pode ser
 desfeito. Esta seção a executa de ponta a ponta no moto com o único dono legítimo de chave da loja,
-`erp-sync`, o sistema de contabilidade do escritório que envia as vendas do dia para `shop-backups`.
+`erp-sync`. É o sistema de contabilidade do escritório, que envia as vendas do dia para
+`shop-backups`.
 
 ## Um moto que julga
 
-Datas de último uso e chaves recusadas só são registradas quando o moto verifica permissões, então
-inicie-o como a lição 7 faz. No primeiro terminal, Ctrl+C, depois
-`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`: o moto deixa três requisições passarem sem
+O moto só registra datas de último uso e chaves recusadas quando verifica permissões, então inicie-o
+como a lição 7 faz. No primeiro terminal, Ctrl+C, depois
+`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`. O moto deixa três requisições passarem sem
 verificação e julga toda requisição depois delas. Gaste as três num administrador. O `read` põe a
 chave dele direto no ambiente, então o segredo nunca chega à tela:
 
@@ -26,7 +27,7 @@ ana@laptop:~/aws$ aws sts get-caller-identity --query Arn --output text
 arn:aws:iam::123456789012:user/admin
 ```
 
-A quarta requisição foi julgada, e passou. A lição 7 explica esse início por inteiro; daqui em
+A quarta requisição foi julgada, e passou. A lição 7 explica esse início por inteiro. Daqui em
 diante, todo comando neste terminal assina como `admin`.
 
 ## O dono da chave
@@ -58,9 +59,9 @@ ana@laptop:~/aws$ echo $OLD_ID
 AKIARZPUZDIKCZVHDNNE
 ```
 
-**O id da chave é impresso e o segredo não.** No escritório, o segredo seria digitado uma vez nas
-configurações do sistema de contabilidade e em nenhum outro lugar. Aqui as duas variáveis fazem o
-papel desse sistema, que envia o arquivo com elas:
+**O comando imprime o id da chave e não o segredo.** No escritório, alguém digitaria o segredo uma
+vez nas configurações do sistema de contabilidade e em nenhum outro lugar. Aqui as duas variáveis
+fazem o papel desse sistema, que envia o arquivo com elas:
 
 ```
 ana@laptop:~/aws$ printf 'order,total_cents\n1001,4990\n' > sales.csv
@@ -102,8 +103,8 @@ ana@laptop:~/aws$ aws iam get-access-key-last-used --access-key-id $NEW_ID --que
 
 As duas chaves têm uma data e o serviço `s3`, porque as duas enviaram arquivos. A data é o campo a
 observar: **quando a data da chave antiga para de mudar, nada mais a está usando.** Uma chave cuja
-data continua mudando depois da troca tem um segundo usuário que ninguém conhecia, e achar esse
-usuário é o motivo de a chave antiga ainda não ser apagada.
+data continua mudando depois da troca tem um segundo usuário que ninguém conhecia. Achar esse
+usuário é o motivo de você ainda não apagar a chave antiga.
 
 **Desligue a chave antiga.** `Inactive` recusa toda requisição assinada com ela, e é reversível: se
 algo quebrar, `--status Active` traz a chave de volta num comando.
@@ -118,10 +119,10 @@ upload: ./sales.csv to s3://shop-backups/erp/sales.csv
 ```
 
 **A chave antiga ainda enviou o arquivo, e isso é o moto, não a AWS.** O moto 5.2.3 registra o
-status e continua aceitando a chave; a AWS recusa toda requisição assinada com uma chave inativa.
-Então o laboratório não consegue mostrar a única coisa para a qual este passo serve, que é a falha
-de quem ainda usava a chave, e uma rotação de verdade espera aqui. Uma semana cobre um programa que
-roda todo dia; um mês cobre um que roda no fim do mês.
+status e continua aceitando a chave, onde a AWS recusa toda requisição assinada com uma chave
+inativa. Então o laboratório não consegue mostrar a única coisa para a qual este passo serve: a
+falha de quem ainda usava a chave. Uma rotação de verdade espera aqui. Uma semana cobre um programa
+que roda todo dia; um mês cobre um que roda no fim do mês.
 
 **Apague-a**, depois que a espera passou sem nada quebrar:
 
@@ -139,10 +140,10 @@ Agora o par antigo não nomeia nada, e o moto o recusa como a AWS recusaria.
 
 ## O relatório de credenciais
 
-**O relatório de credenciais é um CSV com uma linha por usuário do IAM**, dizendo se cada um tem
-senha, MFA e chaves, qual a idade das chaves e quando foram usadas pela última vez. Ele é gerado sob
-pedido, e pedido de novo se tiver mais de quatro horas. O `get-credential-report` o devolve em
-base64, então ele passa pelo `base64 -d`; o `cut` guarda cinco das suas vinte e duas colunas:
+**O relatório de credenciais é um CSV com uma linha por usuário do IAM.** Ele diz se cada um tem
+senha, MFA e chaves, qual a idade das chaves e quando foram usadas pela última vez. O IAM o gera sob
+pedido, e você pede de novo se tiver mais de quatro horas. O `get-credential-report` o devolve em
+base64, então ele passa pelo `base64 -d`, e o `cut` guarda cinco das suas vinte e duas colunas:
 
 ```
 ana@laptop:~/aws$ aws iam generate-credential-report --query State --output text
@@ -155,7 +156,7 @@ admin,true,2026-10-16T16:37:34+00:00,2026-10-16T16:37:48+00:00,false
 erp-sync,true,2026-10-16T16:37:39+00:00,2026-10-16T16:37:41+00:00,false
 ```
 
-A primeira vaga de chave do `erp-sync` agora guarda a chave nova, e a segunda está vazia, que é a
+A primeira vaga de chave do `erp-sync` agora guarda a chave nova e a segunda está vazia. É essa a
 cara de uma rotação terminada. Na AWS o relatório tem também uma primeira linha para o usuário raiz
 da conta, chamada `<root_account>`, e o do moto não tem nenhuma.
 
@@ -172,6 +173,6 @@ admin      key 1    0 days  last used 2026-10-16T16:37:49+00:00  ok
 erp-sync   key 1    0 days  last used 2026-10-16T16:37:41+00:00  ok
 ```
 
-**Toda chave tem 0 dias**, porque o moto foi iniciado minutos atrás, e então nada é sinalizado; numa
+**Toda chave tem 0 dias**, porque o moto foi iniciado minutos atrás, então nada é sinalizado. Numa
 conta que existe há anos, o mesmo programa imprime as chaves que ninguém toca desde que foram
 criadas.

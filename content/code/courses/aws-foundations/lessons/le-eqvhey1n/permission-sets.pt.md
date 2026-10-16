@@ -17,16 +17,16 @@ ana@laptop:~/aws$ aws sso-admin list-instances --query "Instances[].[InstanceArn
 arn:aws:sso:::instance/ssoins-o3rwaaubjxq19hji	d-2mpgvds33k	ACTIVE
 ```
 
-**O moto já tem um, antes de qualquer coisa ser criada.** Na AWS, o Identity Center é habilitado uma
-vez, na conta de gerenciamento da organização, e isso cria uma **instância de organização**: o ARN
-`ssoins-` que todo comando abaixo nomeia, e um **identity store**, o id `d-`, que é o diretório do
-Identity Center da seção anterior. Existem também instâncias de conta, que servem aplicações e não
-dão acesso a contas da AWS; este curso não as usa.
+**O moto já tem um, antes de qualquer coisa ser criada.** Na AWS, você habilita o Identity Center
+uma vez, na conta de gerenciamento da organização. Isso cria uma **instância de organização**, o ARN
+`ssoins-` que todo comando abaixo nomeia. Cria também um **identity store**, o id `d-`, que é o
+diretório do Identity Center da seção anterior. Existem também instâncias de conta, que servem
+aplicações e não dão acesso a contas da AWS. Este curso não as usa.
 
 ## Duas contas para dar acesso
 
 As atribuições apontam para contas da organização, então crie a organização e as duas contas em que
-as pessoas da loja trabalham. A lição 3 montou a árvore inteira; esta lição precisa de duas folhas
+as pessoas da loja trabalham. A lição 3 montou a árvore inteira, e esta lição precisa de duas folhas
 dela:
 
 ```
@@ -54,8 +54,8 @@ ana@laptop:~/aws$ STORE=$(aws sso-admin list-instances --query "Instances[0].Ide
 ## Um permission set é uma role, escrita uma vez
 
 A loja precisa de dois tipos de acesso. `ReadOnly` é para olhar a produção: a política gerenciada
-`ReadOnlyAccess` da AWS, mais uma recusa escrita inline, porque os backups guardam dados de clientes
-e ler tudo não deve incluí-los. Salve a recusa como `~/aws/no-backups.json`:
+`ReadOnlyAccess` da AWS, mais uma recusa escrita inline. Os backups guardam dados de clientes, e ler
+tudo não deve incluí-los. Salve a recusa como `~/aws/no-backups.json`:
 
 ```json
 {
@@ -81,10 +81,10 @@ ReadOnly	PT4H
 ```
 
 **`--session-duration` é quanto a sessão dura depois de aberta**, escrito como uma duração ISO 8601:
-`PT4H` são quatro horas, e a AWS aceita de uma a doze. Um permission set leva os mesmos três tipos de
-política que uma role, como a lição 7 os descreveu: as gerenciadas pela AWS como `ReadOnlyAccess`,
-as gerenciadas pelo cliente referidas pelo nome, e uma política inline. O segundo permission set é
-`Developer`, a `PowerUserAccess` da AWS, por oito horas em staging:
+`PT4H` são quatro horas, e a AWS aceita de uma a doze. Um permission set leva os mesmos três tipos
+de política que uma role, como a lição 7 os descreveu. Há as gerenciadas pela AWS como
+`ReadOnlyAccess`, as gerenciadas pelo cliente referidas pelo nome, e uma política inline. O segundo
+permission set é `Developer`, a `PowerUserAccess` da AWS, por oito horas em staging:
 
 ```
 ana@laptop:~/aws$ DEVELOPER=$(aws sso-admin create-permission-set --instance-arn $INSTANCE --name Developer --session-duration PT8H --query PermissionSet.PermissionSetArn --output text)
@@ -96,9 +96,9 @@ entre construir numa conta e governá-la.
 
 ## Pessoas e grupos no identity store
 
-O identity store é uma API separada, `identitystore`, e não sabe nada de contas nem de políticas:
-só de usuários, grupos e de quem pertence a qual. **Atribua a grupos, nunca a pessoas uma a uma**,
-para que um desenvolvedor novo seja uma associação a um grupo em vez de três atribuições:
+O identity store é uma API separada, `identitystore`. Não sabe nada de contas nem de políticas, só
+de usuários, grupos e de quem pertence a qual. **Atribua a grupos, nunca a pessoas uma a uma**, para
+que um desenvolvedor novo seja uma associação a um grupo em vez de três atribuições:
 
 ```
 ana@laptop:~/aws$ BIA=$(aws identitystore create-user --identity-store-id $STORE --user-name bia --display-name "Bia" --name GivenName=Bia,FamilyName=Lima --emails Value=bia@example.com,Type=work,Primary=true --query UserId --output text)
@@ -117,8 +117,8 @@ developers	67306502-6c80-4049-951f-a3687c3539c9
 data	cdcd7a46-ca7b-4c2a-a37b-31a63fa15b16
 ```
 
-Com um provedor de identidade externo e SCIM, nenhum desses comandos seria digitado: os usuários,
-os grupos e as associações chegariam do Google. Tudo daqui em diante é igual nos dois casos.
+Com um provedor de identidade externo e SCIM, ninguém digitaria esses comandos. Os usuários, os
+grupos e as associações chegariam do Google. Tudo daqui em diante é igual nos dois casos.
 
 ## Três atribuições
 
@@ -138,7 +138,7 @@ GROUP	67306502-6c80-4049-951f-a3687c3539c9
 GROUP	cdcd7a46-ca7b-4c2a-a37b-31a63fa15b16
 ```
 
-Na AWS essa chamada é assíncrona: ela responde `IN_PROGRESS`, e
+Na AWS essa chamada é assíncrona. Ela responde `IN_PROGRESS`, e
 `describe-account-assignment-creation-status` informa `SUCCEEDED` quando a role já existe na conta.
 O moto responde `SUCCEEDED` na hora. A listagem nomeia os dois grupos pelos ids, os mesmos que o
 `list-groups` imprimiu.
@@ -163,8 +163,8 @@ ana@laptop:~/aws$ aws sso-admin list-permission-sets-provisioned-to-account --in
 }
 ```
 
-**O moto registra as atribuições e não provisiona nada.** A conta guarda só a role que o moto criou
-quando a conta foi criada, e o `list-permission-sets-provisioned-to-account` responde uma lista
-vazia onde a AWS nomearia `ReadOnly`. Então o laboratório consegue montar e inspecionar todo o lado
-administrativo do Identity Center, e não consegue mostrar uma pessoa usando-o: a role, o portal e o
+**O moto registra as atribuições e não provisiona nada.** A conta guarda só a role que o moto fez
+quando criou a conta. O `list-permission-sets-provisioned-to-account` responde uma lista vazia onde
+a AWS nomearia `ReadOnly`. Então o laboratório consegue montar e inspecionar todo o lado
+administrativo do Identity Center, e não consegue mostrar uma pessoa usando-o. A role, o portal e o
 login são comportamento documentado da AWS, descrito na seção anterior e na próxima.

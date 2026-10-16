@@ -3,19 +3,19 @@ title: Narrowing what a key can do, and the day one leaks
 version: 1
 ---
 
-**A key that has to exist should be able to do as little as possible, and the most dangerous
-actions should need more than the key.** `erp-sync` already shows the first half: its policy names
-one action on one prefix of one bucket, so a copy of its key can upload files and nothing else.
-The second half is a condition that asks for a second factor, and the last part of this section is
-what to do when, despite both, a key turns up somewhere it should not be.
+**A key that has to exist should be able to do as little as possible, and the most dangerous actions
+should need more than the key.** `erp-sync` already shows the first half. Its policy names one
+action on one prefix of one bucket, so a copy of its key can upload files and nothing else. The
+second half is a condition that asks for a second factor. The last part of this section is what to
+do when, despite both, a key turns up somewhere it should not be.
 
 ## A second factor for the actions that hurt
 
 `dani`, in finance, still has an IAM user from before Identity Center, with S3 access for the
 monthly reports. Deleting a backup should need her phone as well as her key. **A key carries no MFA
-on its own**; a session gets it when the user calls `sts get-session-token` with the code from her
-device, and requests signed with that session carry `aws:MultiFactorAuthPresent` set to `true`.
-This refusal applies whenever that is not the case. Save it as `~/aws/mfa-to-delete.json`:
+on its own.** A session gets it when the user calls `sts get-session-token` with the code from her
+device. Requests signed with that session carry `aws:MultiFactorAuthPresent` set to `true`. This
+refusal applies whenever that is not the case. Save it as `~/aws/mfa-to-delete.json`:
 
 ```json
 {
@@ -32,9 +32,9 @@ This refusal applies whenever that is not the case. Save it as `~/aws/mfa-to-del
 ```
 
 **`BoolIfExists` is the important word.** A request signed with the key alone carries no
-`aws:MultiFactorAuthPresent` at all, and a plain `Bool` would not match a key that is absent, so the
-deny would not apply to exactly the request it exists for. `IfExists` makes the missing key count as
-a match.
+`aws:MultiFactorAuthPresent` at all. A plain `Bool` would not match a key that is absent, so the
+deny would miss exactly the request it exists for. `IfExists` makes the missing key count as a
+match.
 
 ```
 ana@laptop:~/aws$ aws iam create-user --user-name dani --query User.Arn --output text
@@ -50,7 +50,7 @@ delete failed: s3://shop-backups/erp/sales.csv An error occurred (AccessDenied) 
 
 Listing worked and deleting was refused, which is what AWS would do with a key and no MFA. **But
 moto reached the right answer for the wrong reason**, and one more test shows it. This version
-inverts the condition, so that it refuses only requests that do have MFA; a key alone should pass.
+inverts the condition, so that it refuses only requests that do have MFA. A key alone should pass.
 Save it as `~/aws/mfa-flipped.json`:
 
 ```json
@@ -75,9 +75,9 @@ delete failed: s3://shop-backups/erp/sales.csv An error occurred (AccessDenied) 
 
 **moto refused again, so it ignores the condition entirely**: a `Deny` with a `Condition` block
 denies always, whatever the condition says. The other half of the test, a session with MFA
-succeeding, cannot be run either: the credentials moto's `get-session-token` returns are refused by
-its own checking. So the lab shows the policy and the refusal, and whether the condition matches is
-AWS's documented evaluation, not something measured here.
+succeeding, cannot run either. moto's own checking refuses the credentials its `get-session-token`
+returns. So the lab shows the policy and the refusal. Whether the condition matches is AWS's
+documented evaluation, not something measured here.
 
 ## The day a key leaks
 
@@ -99,9 +99,9 @@ playbook uses:
 answers `lookup-events` with an internal error.
 
 AWS also acts on its own. When it finds one of your keys in public, through its own scanning or a
-report from a partner, it can attach a managed policy called **`AWSCompromisedKeyQuarantineV3`** to the
-user and writes to the account's contact address. moto carries a copy of the policy, and its shape
-says what AWS considers the dangerous part of a stolen key:
+report from a partner, it can attach a managed policy called **`AWSCompromisedKeyQuarantineV3`** to
+the user. It also writes to the account's contact address. moto carries a copy of the policy, and
+its shape says what AWS considers the dangerous part of a stolen key:
 
 ```
 ana@laptop:~/aws$ aws iam get-policy-version --policy-arn arn:aws:iam::aws:policy/AWSCompromisedKeyQuarantineV3 --version-id v3 --query "PolicyVersion.Document.Statement[].[Effect,length(Action)]" --output text
@@ -117,10 +117,10 @@ ana@laptop:~/aws$ aws iam get-policy-version --policy-arn arn:aws:iam::aws:polic
 
 Starting machines, creating users and keys, changing policies, reading CloudTrail: it denies the
 actions an intruder uses to spend money and to stay. **It is a brake, not a cure**: it leaves the
-key active, does not undo anything, and AWS's own guidance still says to rotate the key and
-investigate. moto's copy is version `v3` of the policy; AWS revises its managed policies, so the
-count can differ in an account. Applying it yourself is the same `attach-user-policy` as any
-other, and it goes beside the deactivation, not instead of it:
+key active and does not undo anything. AWS's own guidance still says to rotate the key and
+investigate. moto's copy is version `v3` of the policy. AWS revises its managed policies, so the
+count can differ in an account. Applying it yourself is the same `attach-user-policy` as any other,
+and it goes beside the deactivation, not instead of it:
 
 ```
 ana@laptop:~/aws$ aws iam update-access-key --user-name dani --access-key-id $DANI_ID --status Inactive
@@ -140,6 +140,6 @@ and neither was run here:
 - **`git-secrets`**, from AWS Labs, installs hooks in a local repository and refuses a commit whose
   changes match AWS's key patterns. It catches the key on the laptop, before any server sees it.
 
-Both look for the shape of a key, which is why the order of this lesson holds: **the only key that
+Both look for the shape of a key, which is why the order of this lesson holds. **The only key that
 cannot leak is the one that was never created**, and a scanner is the net under that rule, not a
 substitute for it.

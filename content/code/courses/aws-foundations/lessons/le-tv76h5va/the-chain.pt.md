@@ -5,17 +5,17 @@ version: 1
 
 **Um programa que chama a AWS nunca precisa carregar uma chave; precisa encontrar credenciais, e o
 SDK sabe onde procurar.** Todo SDK da AWS, e a linha de comando construída sobre um deles, percorre
-uma lista ordenada de lugares chamada **cadeia de provedores de credenciais** e para no primeiro
+uma lista ordenada de lugares chamada **cadeia de provedores de credenciais**. Ela para no primeiro
 lugar que responde. O topo da lista é uma chave que alguém digitou. A base é uma credencial que a
 plataforma entrega a uma máquina por algumas horas de cada vez, e esta lição é sobre a base.
 
 A imagem errada comum é que o `aws` lê `AWS_ACCESS_KEY_ID` e que a história acaba aí. É o primeiro
-lugar onde a linha de comando procura, e é por isso que o `env.sh` funciona desde a lição 1, mas é
+lugar onde a linha de comando procura, e é por isso que o `env.sh` funciona desde a lição 1. Mas é
 um lugar entre uma dúzia.
 
 Reinicie o moto no primeiro terminal (Ctrl+C, depois `moto_server -p 4567`) para que esta lição
 comece de uma AWS vazia. **Nada nesta lição liga a verificação de permissões do moto.** As
-credenciais que o moto entrega na base da cadeia são marcadores que a verificação dele recusaria, e a
+credenciais que o moto entrega na base da cadeia são marcadores que a verificação dele recusaria. A
 última seção mede uma chamada que quebra a verificação de vez.
 
 ```
@@ -28,8 +28,8 @@ region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_D
 ```
 
 `aws configure list` diz quais credenciais a linha de comando usaria e onde as encontrou. A coluna
-`TYPE` é o provedor: `env`, o ambiente que o `env.sh` preencheu. Os quatro últimos caracteres da
-chave aparecem e o resto fica escondido, o que torna seguro colar a saída num chamado.
+`TYPE` é o provedor: `env`, o ambiente que o `env.sh` preencheu. Ele mostra os quatro últimos
+caracteres da chave e esconde o resto, então a saída é segura para colar num chamado.
 
 ## A ordem, como a linha de comando a relata
 
@@ -79,15 +79,15 @@ comando, dá a eles:
 | `iam-role` | o serviço de metadados da instância | o EC2, por meio de um instance profile |
 
 Duas consequências saem de **a primeira resposta vence**. Uma chave esquecida no ambiente de uma
-máquina que tem uma role vence a role, em silêncio, e a máquina roda como quem for o dono da chave. E
-os provedores do topo não custam nada para verificar, enquanto o último faz requisições de rede, e é
+máquina que tem uma role vence a role, em silêncio, e a máquina roda como quem for o dono da chave.
+E os provedores do topo não custam nada para verificar, enquanto o último faz requisições de rede. É
 por isso que um laptop sem credencial nenhuma hesita um instante antes de dizer que não tem. Outros
 SDKs mantêm a mesma ideia e diferem em detalhes da ordem; a documentação de cada SDK lista a sua.
 
 ## Perguntando você mesmo ao serviço de metadados
 
 Numa instância EC2 o serviço de metadados fica em **`http://169.254.169.254/`**, um endereço
-link-local que só a própria instância alcança, e nada precisa ser instalado para que ele responda. O
+link-local que só a própria instância alcança. Nada precisa ser instalado para que ele responda. O
 moto responde os mesmos caminhos em `localhost:4567`. O serviço tem duas versões, e a diferença está
 na primeira requisição:
 
@@ -98,7 +98,7 @@ default-role
 
 Isso é o **IMDSv1**: um `GET` simples, respondido com o nome da role cujas credenciais a instância
 tem. O moto sempre responde `default-role`. O **IMDSv2** pede antes um token de sessão, com um `PUT`
-e um cabeçalho dizendo quantos segundos ele deve durar, e depois manda esse token em cada leitura:
+e um cabeçalho dizendo quantos segundos ele deve durar. Depois manda esse token em cada leitura:
 
 ```
 ana@laptop:~/aws$ TOKEN=$(curl -s -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" http://localhost:4567/latest/api/token)
@@ -108,13 +108,13 @@ ana@laptop:~/aws$ curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://localhost
 {"AccessKeyId": "test-key", "SecretAccessKey": "test-secret-key", "Token": "test-session-token", "Expiration": "2026-10-17T19:00:28Z"}
 ```
 
-A resposta é um conjunto inteiro de credenciais: um id de chave, um segredo, um token de sessão e uma
-validade. Na AWS o id da chave começa com `ASIA`, o prefixo de uma chave temporária, e a resposta
-traz mais três campos, `Code`, `LastUpdated` e `Type`. A documentação da AWS promete **credenciais
-novas pelo menos cinco minutos antes de as antigas vencerem**, então um programa que pergunta de novo
-quando a sua cópia acaba nunca segura uma chave morta. As do moto são marcadores fixos, `test-key`
-com o token de sessão `test-session-token`, o token do IMDSv2 é sempre `fake-imdsv2-token`, e a
-validade é um dia depois da requisição.
+A resposta é um conjunto inteiro de credenciais: um id de chave, um segredo, um token de sessão e
+uma validade. Na AWS o id da chave começa com `ASIA`, o prefixo de uma chave temporária. A resposta
+traz também mais três campos: `Code`, `LastUpdated` e `Type`. A documentação da AWS promete
+**credenciais novas pelo menos cinco minutos antes de as antigas vencerem**, então um programa que
+pergunta de novo quando a sua cópia acaba nunca segura uma chave morta. As do moto são marcadores
+fixos: `test-key`, com o token de sessão `test-session-token`. O token do IMDSv2 é sempre
+`fake-imdsv2-token`, e a validade é um dia depois da requisição.
 
 ## A base da cadeia, pela linha de comando
 
@@ -139,7 +139,7 @@ ana@laptop:~/aws$ aws sts get-caller-identity
 **`iam-role` é o provedor de metadados da instância**, e a localização está vazia porque não há
 arquivo: as credenciais vieram por HTTP. O `get-caller-identity` responde como o usuário padrão do
 moto, porque o moto não conhece uma chave chamada `test-key` e recorre a ele. Numa instância a AWS
-responderia com a role, `arn:aws:sts::123456789012:assumed-role/shop-app/i-…`, onde **o nome da
+responderia com a role, `arn:aws:sts::123456789012:assumed-role/shop-app/i-…`. Ali **o nome da
 sessão é o id da instância**, de modo que uma linha no CloudTrail diz qual máquina fez a chamada.
 
 Agora leia o `env.sh` de novo. Ele põe as chaves de volta, e deixa o endereço de metadados onde

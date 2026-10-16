@@ -9,7 +9,7 @@ the browser once, the person signs in at the identity provider, and for the hour
 command with that profile gets fresh role credentials on its own.
 
 The wrong picture is that the command line needs the access portal's copied credentials pasted into
-`~/.aws/credentials`. The portal offers exactly that, and it is the right thing for a one-off; for
+`~/.aws/credentials`. The portal offers exactly that, and it is the right thing for a one-off. For
 anything daily it means a key-shaped secret in a file that outlives the session it came from. **The
 profile does the same job without the file.**
 
@@ -36,11 +36,11 @@ output = json
 
 **Two kinds of section, for two different things.** `[sso-session shop]` is the sign-in: the
 portal's address, the region Identity Center lives in, and the scope the command line asks for. The
-address here is the placeholder AWS's documentation uses; a real one is in Identity Center's
+address here is the placeholder AWS's documentation uses. A real one is in Identity Center's
 settings. `[profile prod-readonly]` is one destination: an account, a permission set by name, and
 the region and output format for commands run with it. **One session serves any number of
-profiles**, so a single sign-in in the morning opens `prod-readonly`, a `staging-developer` beside
-it, and every other pair the person is assigned.
+profiles.** A single sign-in in the morning opens `prod-readonly`, a `staging-developer` beside it,
+and every other pair the person is assigned.
 
 ```
 ana@laptop:~/aws$ aws configure list-profiles
@@ -57,10 +57,10 @@ ana@laptop:~/aws$ aws sts get-caller-identity --profile prod-readonly
 aws: [ERROR]: Error loading SSO Token: Token for shop does not exist
 ```
 
-**The command line looked for a cached sign-in for the session `shop`, found none, and stopped.**
-It did not fall back to the test keys `env.sh` exports, because a profile named with `--profile`
-takes the environment's keys out of the chain; lesson 25 measures that rule and its exception. The
-cache it looked in is `~/.aws/sso/cache/`, and it is filled by one command.
+**The command line looked for a cached sign-in for the session `shop`, found none, and stopped.** It
+did not fall back to the test keys `env.sh` exports, because a profile named with `--profile` takes
+the environment's keys out of the chain. Lesson 25 measures that rule and its exception. The cache
+it looked in is `~/.aws/sso/cache/`, and one command fills it.
 
 ## Signing in, which was not run
 
@@ -79,12 +79,12 @@ person checks that the code matches, signs in at the identity provider with thei
 and allows the access. The command line receives a token, writes it into `~/.aws/sso/cache/`, and
 says it signed in.
 
-From then on, **every command with the profile trades that token for role credentials**: the `sso`
-provider of lesson 10's chain asks the portal for the credentials of `ReadOnly` in `834307267662`,
-gets temporary ones for the `AWSReservedSSO_ReadOnly_…` role, and refreshes them when they run out.
-Two clocks bound it. The **permission set's session duration**, four hours for `ReadOnly`, limits
-each set of role credentials. The **Identity Center session**, eight hours by default and set by
-the administrator, limits the sign-in itself; when it ends, the next command says the token has
+From then on, **every command with the profile trades that token for role credentials**. The `sso`
+provider of lesson 10's chain asks the portal for the credentials of `ReadOnly` in `834307267662`.
+It gets temporary ones for the `AWSReservedSSO_ReadOnly_…` role, and refreshes them when they run
+out. Two clocks bound it. The **permission set's session duration**, four hours for `ReadOnly`,
+limits each set of role credentials. The **Identity Center session**, eight hours by default and set
+by the administrator, limits the sign-in itself. When it ends, the next command says the token has
 expired and the person runs `aws sso login` again. `aws sso logout` ends it on purpose, and removes
 the cached token.
 

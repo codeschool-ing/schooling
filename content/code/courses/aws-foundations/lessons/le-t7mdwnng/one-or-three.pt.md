@@ -5,16 +5,16 @@ version: 1
 
 **Um NAT gateway pertence a uma zona, então a loja escolhe entre perder a saída de uma zona junto
 com a zona, e pagar por três.** Com um gateway em `public-a`, as sub-redes privadas das zonas b e c
-mandam o tráfego de internet delas atravessando uma fronteira de zona para chegar a ele, e quando a
+mandam o tráfego de internet delas atravessando uma fronteira de zona para chegar a ele. Quando a
 zona a falha elas perdem a internet junto, embora as próprias zonas estejam bem. Com um gateway em
 cada zona, a tabela privada de cada zona aponta para o seu, e uma falha fica onde aconteceu. O resto
 desta seção põe preços nas duas opções.
 
 ## Os preços
 
-Um NAT gateway é cobrado pela hora em que existe e pelo gigabyte que processa, e essas duas linhas
+Um NAT gateway é cobrado pela hora em que existe e pelo gigabyte que processa. Essas duas linhas
 estão na **oferta do EC2**, não na da VPC. Essa oferta precifica todo tipo de máquina em toda
-combinação, então é grande: o `price.py` a baixa uma vez, e o `ls` no fim mostra o que ele guarda.
+combinação, então é grande. O `price.py` a baixa uma vez, e o `ls` no fim mostra o que ele guarda.
 
 ```
 ana@laptop:~/aws$ python3 price.py AmazonEC2 20260925174521 sa-east-1 SAE1-NatGateway-Hours SAE1-NatGateway-Bytes SAE1-RegionalNatGateway-Hours
@@ -56,16 +56,16 @@ parte por hora, e a travessia.**
 
 A terceira linha, `SAE1-RegionalNatGateway-Hours`, é um tipo mais novo de NAT gateway que a própria
 AWS espalha pelas zonas, ao mesmo preço por hora. O moto 5.2.3 só constrói o tipo zonal, então esta
-lição também; leia as páginas da AWS sobre o regional antes de contar com ele, porque ele muda a
+lição também. Leia as páginas da AWS sobre o regional antes de contar com ele, porque ele muda a
 troca abaixo.
 
 ## O que o gateway compartilhado custa no lugar
 
 Um gateway compartilhado economiza dois deles, **143,08 dólares por mês**. O que ele acrescenta é a
-travessia: todo gigabyte das zonas b e c chega a `public-a` atravessando uma fronteira de zona, e a
+travessia. Todo gigabyte das zonas b e c chega a `public-a` atravessando uma fronteira de zona. A
 lição 1 mediu isso a 0,01 por gigabyte **em cada sentido**, então 0,02 por gigabyte que atravessa. O
-ponto de equilíbrio é 143,08 / 0,02 ≈ **7.154 GB por mês** atravessando até o gateway
-compartilhado. Abaixo disso, um gateway sai mais barato em dinheiro; acima, três saem.
+ponto de equilíbrio é 143,08 / 0,02 ≈ **7.154 GB por mês** atravessando até o gateway compartilhado.
+Abaixo disso, um gateway sai mais barato em dinheiro. Acima, três saem.
 
 A loja manda uns 200 GB por mês para a internet a partir das sub-redes privadas, dois terços delas
 das zonas b e c. Compartilhar custaria 133 × 0,02 ≈ 2,67 dólares de travessia, para economizar
@@ -79,11 +79,11 @@ está na fatura:
 - **A falha de uma zona vira a de todas.** Com o gateway na zona a, perder a zona a para as chamadas
   de pagamento das máquinas em b e c também, que eram o motivo de a loja se espalhar por zonas.
 - **Todo o tráfego de saída da VPC passa pela capacidade de uma zona.** Um gateway escala sozinho
-  dentro de limites; um gateway só ainda carrega tudo.
+  dentro de limites, e um gateway só ainda carrega tudo.
 
 Então a escolha da loja é **um por zona na produção e um compartilhado no staging**, onde uma zona
 perdida custa uma tarde, não vendas. É uma decisão sobre quanto vale uma queda, e a tabela acima é
-com o que ela se pesa. E se a maior parte dos 200 GB for tráfego para o S3, a lição 19 mostra um
+com o que você a pesa. E se a maior parte dos 200 GB for tráfego para o S3, a lição 19 mostra um
 jeito de mandá-lo para lá de graça, que ganha das duas opções.
 
 ## A lição como script
@@ -129,7 +129,7 @@ EOF
 
 Ele deixa de fora a rota do escritório e o egress-only gateway, que estavam ali para serem lidos e
 não usados. Para conferir, reinicie o moto mais uma vez e rode o script da lição 16 e este, um
-depois do outro; o último comando lista as tabelas, quantas sub-redes cada uma serve, e para onde
+depois do outro. O último comando lista as tabelas, quantas sub-redes cada uma serve, e para onde
 cada uma manda `0.0.0.0/0`:
 
 ```
@@ -146,6 +146,6 @@ private-b	2	nat-de872524ebf250fe5
 private-c	2	nat-c69478fa57a3113fe
 ```
 
-**A tabela sem nome é a principal**: ela não serve sub-rede nenhuma agora, e a única associação dela
+**A tabela sem nome é a principal.** Ela não serve sub-rede nenhuma agora, e a única associação dela
 é o marcador que a faz principal. Toda sub-rede tem uma tabela explícita, três públicas e seis
-privadas, e uma sub-rede acrescentada depois sem tabela cai naquela que não tem saída.
+privadas. Uma sub-rede acrescentada depois sem tabela cai naquela que não tem saída.

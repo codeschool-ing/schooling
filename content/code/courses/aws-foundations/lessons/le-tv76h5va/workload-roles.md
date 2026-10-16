@@ -5,9 +5,9 @@ version: 1
 
 **An instance profile gives one role to a whole machine; a cluster needs a role per workload.** A
 Kubernetes node on EKS runs pods from several teams, and the shop's checkout and its reporting job
-should not share permissions because they happen to land on the same node. AWS has three answers,
-and each lands on one of two providers in the chain: **a token file traded for a role**, or a
-local address that hands out credentials.
+should not share permissions because they happen to land on the same node. AWS has three answers.
+Each lands on one of two providers in the chain: **a token file traded for a role**, or a local
+address that hands out credentials.
 
 | | what the workload is given | provider in the chain |
 |---|---|---|
@@ -18,8 +18,8 @@ local address that hands out credentials.
 ## IRSA: a token from the cluster, traded at STS
 
 An EKS cluster is an **OpenID Connect issuer**. It signs a short-lived token for each pod that says
-which service account the pod runs as, and publishes the keys that verify the signature at a public
-address. IRSA makes IAM trust that issuer:
+which service account the pod runs as. It also publishes, at a public address, the keys that verify
+the signature. IRSA makes IAM trust that issuer:
 
 1. the account registers the cluster's issuer as an OIDC identity provider in IAM;
 2. a role's trust policy names that provider and says which service account may assume it;
@@ -76,7 +76,7 @@ ana@laptop:~/aws$ aws iam attach-role-policy --role-name shop-checkout --policy-
 
 On the cluster side, the service account carries the role's ARN in an annotation, and EKS puts the
 token and the two variables into every pod that runs as it. **This was not run**, since there is no
-cluster in the lab; it is the shape EKS documents:
+cluster in the lab. It is the shape EKS documents:
 
 ```yaml
 apiVersion: v1
@@ -93,16 +93,16 @@ metadata:
 A pod's token is a JWT: three base64 pieces joined by dots, a header, a set of claims and a
 signature. This program writes one with the claims an EKS token carries, and a third piece that is
 **not a signature at all**. It is enough to drive the chain, and the section after it measures what
-that says about moto. Save it as `~/aws/make-token.py`; a file called `token.py` in `~/aws` would
+that says about moto. Save it as `~/aws/make-token.py`. A file called `token.py` in `~/aws` would
 hide Python's own `token` module from every program run there, boto3 included:
 
 ```schooling-example
 {"language": "python", "file": "make-token.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"Prints a token shaped like the one EKS gives a pod. It is NOT signed.\n\n    python3 make-token.py SERVICE-ACCOUNT > token\n\"\"\"\nimport base64\nimport json\nimport sys\nimport time\n\n", "note": "Only Python's own library. The service account comes from the command line, so the same program can write a token for the right workload and for the wrong one."}, {"code": "ISSUER = 'https://oidc.eks.sa-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE'\n\n\ndef piece(d):\n    raw = json.dumps(d, separators=(',', ':')).encode()\n    return base64.urlsafe_b64encode(raw).rstrip(b'=').decode()\n\n\n", "note": "A JWT encodes each piece as base64 in its URL-safe form, with the `=` padding removed. `ISSUER` is the address registered as the OIDC provider."}, {"code": "now = int(time.time())\nclaims = {'iss': ISSUER, 'sub': sys.argv[1], 'aud': ['sts.amazonaws.com'],\n          'iat': now, 'exp': now + 3600}\n", "note": "The claims STS compares with the trust policy: who issued the token, which service account it names, who it is for. `exp` makes it worthless an hour after it was made. A real pod's token expires too, and the kubelet replaces it before it does."}, {"code": "print(piece({'alg': 'RS256', 'kid': 'lab'}) + '.' + piece(claims) + '.not-a-signature')\n", "note": "The header says RS256, an RSA signature, and the third piece is a placeholder. AWS would fetch the issuer's published keys, find none that verifies it, and refuse the token."}]}
 ```
 
-Write a token for the checkout's service account, take the keys out of the environment, and give
-the chain the two variables a pod would get. `AWS_ROLE_SESSION_NAME` is optional; it fixes the name
-the session would otherwise take from the clock:
+Write a token for the checkout's service account, take the keys out of the environment, and give the
+chain the two variables a pod would get. `AWS_ROLE_SESSION_NAME` is optional. It fixes the name the
+session would otherwise take from the clock:
 
 ```
 ana@laptop:~/aws$ python3 make-token.py system:serviceaccount:shop:checkout > token
@@ -150,24 +150,24 @@ Credentials	AssumedRoleUser	PackedPolicySize
 AWS's answer also carries `SubjectFromWebIdentityToken`, `Audience` and `Provider`, which say whose
 token was accepted, and moto's has none of them.
 
-And with moto's permission checking turned on, as lesson 7 starts it
-(`INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`, then an `admin` user bootstrapped in three
-requests), the call does not get that far. moto's checking expects every request to carry a
-signature, this one carries none, and moto answers with an internal error, HTTP 500. That was
-measured while recording this lesson, and it is why the lesson leaves the checking off.
+Turn on moto's permission checking, as lesson 7 starts it, and the call does not get that far. That
+means `INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`, then an `admin` user bootstrapped in
+three requests. moto's checking expects every request to carry a signature. This one carries none,
+and moto answers with an internal error, HTTP 500. That was measured while recording this lesson,
+and it is why the lesson leaves the checking off.
 
-So the lab shows **how the credentials travel**, and AWS's documentation is the only source for
-what STS refuses. It verifies the token's signature against the keys the issuer publishes, checks
-that the issuer is a registered provider and that the token has not expired, and then evaluates the
-trust policy, where `sub` and `aud` must match. A token for `other:intruder` is refused there with
+So the lab shows **how the credentials travel**, and AWS's documentation is the only source for what
+STS refuses. STS verifies the token's signature against the keys the issuer publishes. It checks
+that the issuer is a registered provider and that the token has not expired. Then it evaluates the
+trust policy, where `sub` and `aud` must match, and refuses a token for `other:intruder` there with
 `AccessDenied`.
 
 ## EKS Pod Identity, the newer way
 
 **EKS Pod Identity** removes the OIDC provider from the arrangement. An agent runs on every node and
-answers on a link-local address, `169.254.170.23`, and the cluster maps a service account to a role
-with an association, `aws eks create-pod-identity-association`. The role's trust policy names one
-service principal, the same in every cluster:
+answers on a link-local address, `169.254.170.23`. The cluster maps a service account to a role with
+an association, `aws eks create-pod-identity-association`. The role's trust policy names one service
+principal, the same in every cluster:
 
 ```json
 {
@@ -182,23 +182,22 @@ service principal, the same in every cluster:
 }
 ```
 
-That is the difference that matters in practice: **with IRSA every cluster is a provider to
-register and a condition to write in each trust policy, and with Pod Identity a role can be reused
-by any cluster in the account** without editing it. AWS's documentation presents Pod Identity as
-the simpler choice on EKS, and IRSA stays where Pod Identity does not reach, such as pods on Fargate.
-Neither was run here.
+That is the difference that matters in practice. **With IRSA every cluster is a provider to register
+and a condition to write in each trust policy; with Pod Identity any cluster in the account can
+reuse a role** without editing it. AWS's documentation presents Pod Identity as the simpler choice
+on EKS. IRSA stays where Pod Identity does not reach, such as pods on Fargate. Neither was run here.
 
 ## ECS task roles, and the container provider
 
-On ECS, a task role is declared in the task definition, and the ECS agent serves its credentials
-at `169.254.170.2`. The container gets a variable, `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`, holding
-the path to ask for, and the chain's `container-role` provider asks it. The role's trust policy
-names `ecs-tasks.amazonaws.com`.
+On ECS, the task definition declares a task role, and the ECS agent serves its credentials at
+`169.254.170.2`. The container gets a variable, `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`, holding
+the path to ask for. The chain's `container-role` provider asks it. The role's trust policy names
+`ecs-tasks.amazonaws.com`.
 
-The answer has the same JSON shape as the metadata service's, so the provider can be shown working
+The answer has the same JSON shape as the metadata service's. So you can show the provider working
 by pointing its other variable, `AWS_CONTAINER_CREDENTIALS_FULL_URI`, at moto's metadata answer.
-That is the provider reading moto's placeholder credentials, not an ECS agent. Take the web
-identity variables out first, since that provider comes earlier in the chain:
+That is the provider reading moto's placeholder credentials, not an ECS agent. Take the web identity
+variables out first, since that provider comes earlier in the chain:
 
 ```
 ana@laptop:~/aws$ unset AWS_ROLE_ARN AWS_WEB_IDENTITY_TOKEN_FILE AWS_ROLE_SESSION_NAME
@@ -210,6 +209,6 @@ secret_key : ****************-key     : container-role   :
 region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_DEFAULT_REGION']
 ```
 
-**`container-role` answered**, ahead of `iam-role` in the chain. Every workload in this section,
-pod or task, ended with credentials that expire within hours, and no key was written anywhere.
-Read `env.sh` again to put the test keys back before the drill.
+**`container-role` answered**, ahead of `iam-role` in the chain. Every workload in this section, pod
+or task, ended with credentials that expire within hours. Nobody wrote a key anywhere. Read `env.sh`
+again to put the test keys back before the drill.

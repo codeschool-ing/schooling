@@ -4,15 +4,15 @@ version: 1
 ---
 
 **A security group is a list of what may arrive at a network interface, and of what may leave it,
-and everything else is refused.** It holds only allows. It is attached to the interface a machine,
-a load balancer or a database talks through, not to the subnet, so two machines side by side in one
+and everything else is refused.** It holds only allows. It is attached to the interface a machine, a
+load balancer or a database talks through, not to the subnet. So two machines side by side in one
 subnet can have different groups. And it is **stateful**: once it lets a connection in, the replies
 to that connection go out without any rule having to say so.
 
 The wrong picture is a firewall at the edge of the subnet that traffic passes on its way in. **A
 security group sits on each interface**, so it also judges traffic between two machines in the same
-subnet, which no edge ever sees. The filter at the subnet's edge exists too; it is the network ACL of
-the next section, and it works differently.
+subnet, which no edge ever sees. The filter at the subnet's edge exists too. It is the network ACL
+of the next section, and it works differently.
 
 ## Starting from lesson 17
 
@@ -44,8 +44,8 @@ ana@laptop:~/aws$ aws ec2 describe-security-groups --filters Name=vpc-id,Values=
 ]
 ```
 
-moto's default group allows every outbound connection and no inbound one. **AWS's default group
-has one inbound rule more**: it allows all traffic from interfaces that carry the same group, so
+moto's default group allows every outbound connection and no inbound one. **AWS's default group has
+one inbound rule more.** It allows all traffic from interfaces that carry the same group, so
 machines left on the default can all reach one another and nothing else can reach them. That rule
 was not seen here, since moto does not create it.
 
@@ -84,15 +84,15 @@ ana@laptop:~/aws$ aws ec2 revoke-security-group-egress --group-id $db --protocol
 }
 ```
 
-**A reference survives everything an address does not.** The application machines come and go as
-the shop scales; their addresses change every time; the load balancer adds interfaces in new zones.
-A rule naming `alb-sg` keeps meaning "the load balancer" through all of it, where a rule naming
-`10.20.0.0/20` would keep meaning "whatever happens to have an address in `public-a`", which
-includes the NAT gateway and anything somebody launches there next year.
+**A reference survives everything an address does not.** The application machines come and go as the
+shop scales, and their addresses change every time. The load balancer adds interfaces in new zones.
+A rule naming `alb-sg` keeps meaning "the load balancer" through all of it. A rule naming
+`10.20.0.0/20` would keep meaning "whatever happens to have an address in `public-a`". That includes
+the NAT gateway and anything somebody launches there next year.
 
 The last command removed `db-sg`'s outbound rule. **A database opens no connection of its own**, so
-it needs none, and the replies to the application's queries still leave, because the group is
-stateful. Removing it means that a database somebody tricks into calling out reaches nothing.
+it needs none. The replies to the application's queries still leave, because the group is stateful.
+Removing it means that a database somebody tricks into calling out reaches nothing.
 
 ## Reading the rules back
 
@@ -108,13 +108,13 @@ ana@laptop:~/aws$ aws ec2 authorize-security-group-ingress --group-id $alb --pro
 aws: [ERROR]: An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupIngress operation: The specified rule already exists
 ```
 
-Each line is one rule with an id of its own, `sgr-…`, which `revoke-security-group-ingress` can
-name to remove exactly that rule. The first column is the group, and the last is the source:
-`0.0.0.0/0` for the load balancer, and for the other two **the id of the group they trust**, the
-chain `alb-sg` to `app-sg` to `db-sg` in three lines. The same rule added twice is refused, in moto
-as in AWS, which is the last command.
+Each line is one rule with an id of its own, `sgr-…`, which `revoke-security-group-ingress` can name
+to remove exactly that rule. The first column is the group, and the last is the source. That is
+`0.0.0.0/0` for the load balancer, and for the other two **the id of the group they trust**: the
+chain `alb-sg` to `app-sg` to `db-sg` in three lines. The last command adds the same rule twice, and
+moto refuses it as AWS does.
 
 **There is no way to write a deny here.** A security group can only allow, so "everybody except
-`198.51.100.7`" cannot be said in one; it is the network ACL's job. AWS also limits a group to 60
-inbound and 60 outbound rules, and an interface to five groups, by default; both are quotas that
-can be raised, and neither was reached here.
+`198.51.100.7`" cannot be said in one. That is the network ACL's job. By default AWS also limits a
+group to 60 inbound and 60 outbound rules, and an interface to five groups. Both are quotas that can
+be raised, and neither was reached here.

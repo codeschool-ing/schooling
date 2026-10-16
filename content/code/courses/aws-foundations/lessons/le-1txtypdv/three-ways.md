@@ -8,8 +8,8 @@ what you promised, not by the machine.** On demand promises nothing and pays the
 **Reserved Instance** promises to pay for one instance type in one region, every hour, for one or
 three years. A **Savings Plan** promises to spend a number of dollars an hour on computing, every
 hour, for one or three years. The common picture of a reservation is a machine kept aside for you
-somewhere. It is a discount on the bill: no machine is started, set aside or named when you buy
-one, and a running instance that matches it is simply charged less.
+somewhere. It is a discount on the bill. Buying one starts, sets aside or names no machine, and a
+running instance that matches it is simply charged less.
 
 ## moto has a price list, and it is not AWS's
 
@@ -26,15 +26,15 @@ ana@laptop:~/aws$ aws savingsplans describe-savings-plans 2>&1 | grep ERROR
 aws: [ERROR]: An error occurred (500) when calling the DescribeSavingsPlans operation (reached max retries: 2): <!doctype html>
 ```
 
-**The question named an `m7i.large` and moto answered about a `t2.micro`**, with upfront prices of its own invention. moto keeps a few invented offerings so that
-code which buys reservations has something to buy, and its Savings Plans API is not there at all.
-Nothing in this lesson's arithmetic comes from moto. It comes from two offers of AWS's price list,
-read by a short program.
+**The question named an `m7i.large` and moto answered about a `t2.micro`**, with upfront prices of
+its own invention. moto keeps a few invented offerings so that code which buys reservations has
+something to buy. Its Savings Plans API is not there at all. Nothing in this lesson's arithmetic
+comes from moto. It comes from two offers of AWS's price list, read by a short program.
 
 ## A program that reads every term of one instance
 
 `price.py`, from lesson 1, prints only on-demand prices. The prices of reservations sit in the same
-EC2 offer under a second kind of term, and the rates of Savings Plans sit in an offer of their own,
+EC2 offer under a second kind of term. The rates of Savings Plans sit in an offer of their own,
 `AWSComputeSavingsPlan`, which AWS publishes beside the others. **Save this as `~/aws/terms.py`**:
 
 ```schooling-example
@@ -70,11 +70,12 @@ ana@laptop:~/aws$ ls -sh ~/.cache/aws-prices | grep -e AmazonEC2 -e SavingsPlan
 279M AmazonEC2-20260925174521-sa-east-1.json
 ```
 
-**The first run downloads two large files, and every run reads both whole.** The listing shows
-them in the cache: 279 MB of EC2 offer, because it prices every instance type in every combination
-of system, licence and tenancy, and 230 MB of Savings Plans rates. Reading one with `json.load` holds it in memory as a Python dictionary. The
-program reads them one after the other, so the peak it reports, 936 MB in the run above, is the larger of the two rather
-than their sum. A computer with 2 GB of memory free runs it comfortably.
+**The first run downloads two large files, and every run reads both whole.** The listing shows them
+in the cache: 279 MB of EC2 offer and 230 MB of Savings Plans rates. The EC2 one is large because it
+prices every instance type in every combination of system, licence and tenancy. Reading one with
+`json.load` holds it in memory as a Python dictionary. The program reads them one after the other,
+so the peak it reports, 936 MB in the run above, is the larger of the two rather than their sum. A
+computer with 2 GB of memory free runs it comfortably.
 
 ## Reading the table
 
@@ -90,19 +91,20 @@ matter for a decision:
 | EC2 Instance Savings Plan, m7i, 1 year, no upfront | 0.09956 | 72.68 | 38% less |
 
 **The effective rate is what makes the rows comparable.** A partial-upfront reservation charges 415
-dollars on the day of purchase and 0.04741 an hour after that; spread over the 8,760 hours of the
-year, the 415 is 0.04737 an hour, and the two together are 0.09478. Paying more upfront lowers the effective rate a little, here from 0.09956 to 0.09292, in exchange for money paid a year
-early and not recoverable.
+dollars on the day of purchase and 0.04741 an hour after that. Spread over the 8,760 hours of the
+year, the 415 is 0.04737 an hour, and the two together are 0.09478. Paying more upfront lowers the
+effective rate a little, here from 0.09956 to 0.09292. The price is money paid a year early that you
+cannot recover.
 
 **Two pairs of numbers are the same**, and the coincidence is AWS's design rather than a bug in the
 program. The EC2 Instance Savings Plan for the `m7i` family charges exactly the standard
-reservation's rate, 0.09956; the Compute Savings Plan charges exactly the convertible reservation's,
+reservation's rate, 0.09956. The Compute Savings Plan charges exactly the convertible reservation's,
 0.10915. A plan that is as narrow as a reservation is priced like one, and a plan that is as
 flexible as the most flexible reservation is priced like that. What each one is flexible about is
 the next section.
 
 A **month is 730 hours** on every line, a twelfth of 8,760, which is the month AWS's own pricing
-calculator uses; a real month of 31 days is 744 hours of running, and the bill counts the hours
-that happened. The `a month` column is the effective rate times 730. Those monthly
-figures assume the machine runs all month. The commitment is paid whether it does or not, which is
-what the last column of the program is about.
+calculator uses. A real month of 31 days is 744 hours of running, and the bill counts the hours that
+happened. The `a month` column is the effective rate times 730. Those monthly figures assume the
+machine runs all month. The commitment is paid whether it does or not, which is what the last column
+of the program is about.

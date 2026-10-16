@@ -5,8 +5,8 @@ version: 1
 
 **Uma chave de acesso é uma senha para a API que não tem segundo fator, não vence e não faz ideia de
 onde está sendo usada.** Quem tem as duas strings é o usuário do IAM, de qualquer computador da
-internet, até alguém apagar a chave. As lições 10 e 11 a substituíram para máquinas e para pessoas;
-esta lição é sobre os casos em que nada a substituiu, e sobre o que fazer no dia em que uma escapa.
+internet, até alguém apagar a chave. As lições 10 e 11 a substituíram para máquinas e para pessoas.
+Esta lição é sobre os casos em que nada a substituiu, e sobre o que fazer no dia em que uma escapa.
 
 A imagem errada comum é que uma chave é segura porque é longa. **A chave nunca é adivinhada; ela é
 copiada.** O comprimento a protege de um atacante que tenta strings, e ninguém faz isso. O atacante
@@ -15,7 +15,7 @@ que importa acha uma chave que foi anotada em algum lugar, e daí em diante o co
 ## Duas strings, e o que elas fazem
 
 Uma chave é um par. O **id da chave de acesso**, `AKIA` e mais dezesseis caracteres numa chave de
-longo prazo, não é segredo: ele nomeia a chave, e aparece em toda requisição e em toda linha do
+longo prazo, não é segredo. Ele nomeia a chave, e aparece em toda requisição e em toda linha do
 CloudTrail. A **chave secreta**, de quarenta caracteres, nunca é enviada a lugar nenhum. O cliente a
 usa para assinar cada requisição, como a lição 26 mostra byte a byte, e a AWS confere a assinatura
 com a cópia dela.
@@ -34,7 +34,7 @@ existe por um único motivo: trocar a chave sem parar o programa que usa a prime
 
 ## Por onde as chaves vazam
 
-Chaves raramente vazam pela AWS. **Elas vazam por tudo o mais que uma pessoa toca**, e quatro lugares
+Chaves raramente vazam pela AWS. **Elas vazam por tudo o mais que uma pessoa toca.** Quatro lugares
 respondem pela maioria dos casos que a AWS e o GitHub publicam:
 
 - **um repositório.** Uma chave colada num arquivo de configuração, num teste, num notebook ou num
@@ -68,7 +68,7 @@ descartada. Para cada tipo de programa, o curso já tem uma:
 
 A última linha é a que puxa as pessoas para uma chave, e ela também tem resposta. O **IAM Roles
 Anywhere** deixa uma máquina fora da AWS assumir uma role apresentando um certificado X.509 emitido
-por uma autoridade certificadora em que a conta confia; as credenciais que ela recebe vencem como
+por uma autoridade certificadora em que a conta confia. As credenciais que ela recebe vencem como
 qualquer outra sessão de role. Ele exige uma autoridade certificadora e a disciplina de manter uma,
 e é por isso que algumas organizações ainda recorrem a uma chave ali. Este curso o cita e não o
 executa: o moto 5.2.3 responde toda chamada de `rolesanywhere` com um erro interno.
@@ -76,5 +76,5 @@ executa: o moto 5.2.3 responde toda chamada de `rolesanywhere` com um erro inter
 O que sobra depois da tabela é pouco. **Um programa fora da AWS, numa máquina a que a organização
 não consegue dar um certificado, chamando a AWS num horário fixo**: o sistema de um fornecedor que
 envia um arquivo toda noite, um equipamento antigo com um campo para chave de acesso e nada mais. A
-loja tem um desses, o sistema de contabilidade do escritório, e a próxima seção lhe dá uma chave e a
+loja tem um desses, o sistema de contabilidade do escritório. A próxima seção lhe dá uma chave e a
 troca.

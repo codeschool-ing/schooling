@@ -5,30 +5,30 @@ version: 1
 
 **Um pacote que entra numa sub-rede encontra primeiro a network ACL e depois o security group, e
 precisa passar pelos dois.** Na saída ele os encontra na ordem inversa. Os dois filtros não sabem um
-do outro: a network ACL não vê que grupo uma interface carrega, e o security group nunca vê um
+do outro. A network ACL não vê que grupo uma interface carrega, e o security group nunca vê um
 pacote que a network ACL descartou. Esta seção leva três pacotes pelas regras que a loja tem agora,
-do jeito que você faria num quadro branco, porque nada no laboratório vai levá-los por você.
+do jeito que você faria num quadro branco. Nada no laboratório vai levá-los por você.
 
 ## Os três percursos
 
 **Um cliente em `203.0.113.50` abre a loja na porta 443.** O pacote chega à interface do load
-balancer em `public-a`. A network ACL `public` lê as regras de entrada a partir da menor: a regra 90
-nomeia outro endereço e não casa, a regra 100 permite TCP 443 de qualquer lugar, então o pacote
+balancer em `public-a`. A network ACL `public` lê as regras de entrada a partir da menor. A regra 90
+nomeia outro endereço e não casa, e a regra 100 permite TCP 443 de qualquer lugar, então o pacote
 entra na sub-rede. O `alb-sg` permite 443 de `0.0.0.0/0`, então ele chega ao load balancer. A
-resposta sai para a porta efêmera do cliente, digamos 50812: o `alb-sg` a deixa sair porque ela
-pertence a uma conexão que ele deixou entrar, e a network ACL a deixa sair porque a regra 100 de
-saída permite de 1024 a 65535. **Dois filtros, quatro decisões, todas de permissão.**
+resposta sai para a porta efêmera do cliente, digamos 50812. O `alb-sg` a deixa sair porque ela
+pertence a uma conexão que ele deixou entrar. A network ACL a deixa sair porque a regra 100 de saída
+permite de 1024 a 65535. **Dois filtros, quatro decisões, todas de permissão.**
 
-**`198.51.100.7` tenta a mesma coisa.** A regra 90 casa primeiro e nega, e o pacote é descartado na
-borda da sub-rede. O `alb-sg` nunca o vê, e nem poderia tê-lo recusado: ele permite 443 de todo
-lugar, e um security group não tem como dizer "menos".
+**`198.51.100.7` tenta a mesma coisa.** A regra 90 casa primeiro e nega, e a network ACL descarta o
+pacote na borda da sub-rede. O `alb-sg` nunca o vê, e nem poderia tê-lo recusado. Ele permite 443 de
+todo lugar, e um security group não tem como dizer "menos".
 
 **O load balancer está mal configurado e manda um pedido direto para o banco de dados**, em
 `10.20.97.10` porta 5432. A network ACL `public` o deixa sair pela regra 120, e `data-a` está na
 network ACL padrão, que o deixa entrar. Então o `db-sg` lê sua única regra: 5432 de interfaces que
 carregam o `app-sg`. A interface do load balancer carrega o `alb-sg`, então **o security group o
-recusa**, embora todo endereço e toda regra de sub-rede no caminho o tenham permitido. O mesmo pedido
-vindo de uma máquina da aplicação passaria, que é exatamente a corrente que os três grupos
+recusa**, embora todo endereço e toda regra de sub-rede no caminho o tenham permitido. O mesmo
+pedido vindo de uma máquina da aplicação passaria. É exatamente a corrente que os três grupos
 descrevem.
 
 ```schooling-figure
@@ -37,24 +37,24 @@ descrevem.
 
 Os três percursos são o motivo de ter os dois filtros. A network ACL faz o que só ela sabe fazer,
 uma negação para um endereço na borda de uma camada. Os security groups fazem o que só eles sabem
-fazer, **confiar por identidade em vez de por endereço**, e é isso que mantém o load balancer longe
-do banco de dados sejam quais forem os endereços de um e de outro.
+fazer, **confiar por identidade em vez de por endereço**. É isso que mantém o load balancer longe do
+banco de dados sejam quais forem os endereços de um e de outro.
 
 ## O que não foi executado, e como você conferiria na AWS
 
-**O moto não filtra nada.** Ele guarda toda regra, confere a forma delas, recusa uma repetida, e não
+**O moto não filtra nada.** Ele guarda toda regra, confere a forma delas e recusa uma repetida. Não
 deixa pacote nenhum passar por nenhuma delas, porque não existe pacote. Os três percursos acima são
 raciocínio a partir das regras, e a figura é um desenho desse raciocínio, não de uma captura.
 
 Na AWS, duas ferramentas respondem à pergunta de verdade, e nenhuma foi executada aqui:
 
-- **VPC Flow Logs** registram, para cada interface de rede, toda tentativa de conexão com
-  endereços, portas e um `ACCEPT` ou `REJECT`. Eles mostram o que aconteceu, depois que aconteceu, e
-  são onde se olha quando alguém diz "não conecta".
+- **VPC Flow Logs** registram, para cada interface de rede, toda tentativa de conexão com endereços,
+  portas e um `ACCEPT` ou `REJECT`. Eles mostram o que aconteceu, depois que aconteceu. São onde se
+  olha quando alguém diz "não conecta".
 - **VPC Reachability Analyzer** recebe uma origem e um destino, como o load balancer e o banco de
-  dados, lê as tabelas de rotas, as network ACLs e os security groups entre eles, e diz se um pacote
-  conseguiria passar e, se não, qual regra o impede. Ele não manda tráfego; lê a mesma configuração
-  que esta seção leu, sem os erros que uma pessoa comete ao lê-la.
+  dados. Ele lê as tabelas de rotas, as network ACLs e os security groups entre eles. Então diz se
+  um pacote conseguiria passar e, se não, qual regra o impede. Ele não manda tráfego. Lê a mesma
+  configuração que esta seção leu, sem os erros que uma pessoa comete ao lê-la.
 
 O Reachability Analyzer é cobrado por análise, e a linha dele está na mesma oferta da VPC que a
 lição 17 leu, de 17 de setembro de 2026:

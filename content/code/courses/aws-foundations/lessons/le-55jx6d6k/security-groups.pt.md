@@ -3,15 +3,15 @@ title: Security groups, com estado e presos à máquina
 version: 1
 ---
 
-**Um security group é uma lista do que pode chegar a uma interface de rede, e do que pode sair
-dela, e todo o resto é recusado.** Ele só guarda permissões. Ele fica preso à interface pela qual
-uma máquina, um load balancer ou um banco de dados conversa, não à sub-rede, então duas máquinas lado
-a lado numa sub-rede podem ter grupos diferentes. E ele **tem estado** (é stateful): depois que deixa
+**Um security group é uma lista do que pode chegar a uma interface de rede, e do que pode sair dela,
+e todo o resto é recusado.** Ele só guarda permissões. Ele fica preso à interface pela qual uma
+máquina, um load balancer ou um banco de dados conversa, não à sub-rede. Então duas máquinas lado a
+lado numa sub-rede podem ter grupos diferentes. E ele **tem estado** (é stateful): depois que deixa
 uma conexão entrar, as respostas dessa conexão saem sem que nenhuma regra precise dizer isso.
 
 A imagem errada é um firewall na borda da sub-rede pelo qual o tráfego passa na entrada. **Um
 security group fica em cada interface**, então ele também julga o tráfego entre duas máquinas da
-mesma sub-rede, que nenhuma borda vê. O filtro na borda da sub-rede existe também; é a network ACL
+mesma sub-rede, que nenhuma borda vê. O filtro na borda da sub-rede existe também. É a network ACL
 da próxima seção, e ela funciona de outro jeito.
 
 ## Partindo da lição 17
@@ -45,7 +45,7 @@ ana@laptop:~/aws$ aws ec2 describe-security-groups --filters Name=vpc-id,Values=
 ```
 
 O grupo padrão do moto permite toda conexão de saída e nenhuma de entrada. **O grupo padrão da AWS
-tem uma regra de entrada a mais**: ele permite todo tráfego vindo de interfaces que carregam o mesmo
+tem uma regra de entrada a mais.** Ele permite todo tráfego vindo de interfaces que carregam o mesmo
 grupo, então máquinas deixadas no padrão se alcançam todas entre si e nada mais as alcança. Essa
 regra não apareceu aqui, já que o moto não a cria.
 
@@ -85,16 +85,16 @@ ana@laptop:~/aws$ aws ec2 revoke-security-group-egress --group-id $db --protocol
 ```
 
 **Uma referência sobrevive a tudo a que um endereço não sobrevive.** As máquinas da aplicação vêm e
-vão conforme a loja escala; os endereços delas mudam a cada vez; o load balancer acrescenta
+vão conforme a loja escala, e os endereços delas mudam a cada vez. O load balancer acrescenta
 interfaces em zonas novas. Uma regra que nomeia `alb-sg` continua significando "o load balancer"
-através de tudo isso. Uma regra que nomeasse `10.20.0.0/20` continuaria significando "o que tiver
-um endereço em `public-a`", o que inclui o NAT gateway e qualquer coisa que alguém lance ali no ano
-que vem.
+através de tudo isso. Uma regra que nomeasse `10.20.0.0/20` continuaria significando "o que tiver um
+endereço em `public-a`". Isso inclui o NAT gateway e qualquer coisa que alguém lance ali no ano que
+vem.
 
 O último comando tirou a regra de saída do `db-sg`. **Um banco de dados não abre conexão nenhuma por
-conta própria**, então não precisa de uma, e as respostas às consultas da aplicação continuam
-saindo, porque o grupo tem estado. Tirá-la quer dizer que um banco de dados que alguém engane para
-chamar para fora não alcança nada.
+conta própria**, então não precisa de uma. As respostas às consultas da aplicação continuam saindo,
+porque o grupo tem estado. Tirá-la quer dizer que um banco de dados que alguém engane para chamar
+para fora não alcança nada.
 
 ## Lendo as regras de volta
 
@@ -111,12 +111,12 @@ aws: [ERROR]: An error occurred (InvalidPermission.Duplicate) when calling the A
 ```
 
 Cada linha é uma regra com id próprio, `sgr-…`, que o `revoke-security-group-ingress` pode nomear
-para tirar exatamente aquela regra. A primeira coluna é o grupo, e a última é a origem: `0.0.0.0/0`
-para o load balancer, e para os outros dois **o id do grupo em que eles confiam**, a corrente
-`alb-sg` para `app-sg` para `db-sg` em três linhas. A mesma regra acrescentada duas vezes é recusada,
-no moto como na AWS, que é o último comando.
+para tirar exatamente aquela regra. A primeira coluna é o grupo, e a última é a origem. É
+`0.0.0.0/0` para o load balancer, e para os outros dois **o id do grupo em que eles confiam**: a
+corrente `alb-sg` para `app-sg` para `db-sg` em três linhas. O último comando acrescenta a mesma
+regra duas vezes, e o moto a recusa como a AWS recusa.
 
 **Não há como escrever uma negação aqui.** Um security group só sabe permitir, então "todo mundo
-menos `198.51.100.7`" não se diz num deles; é trabalho da network ACL. A AWS também limita um grupo a
-60 regras de entrada e 60 de saída, e uma interface a cinco grupos, por padrão; as duas são cotas que
-podem ser aumentadas, e nenhuma foi alcançada aqui.
+menos `198.51.100.7`" não se diz num deles. Isso é trabalho da network ACL. Por padrão a AWS também
+limita um grupo a 60 regras de entrada e 60 de saída, e uma interface a cinco grupos. As duas são
+cotas que podem ser aumentadas, e nenhuma foi alcançada aqui.
