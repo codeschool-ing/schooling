@@ -6,7 +6,7 @@
 #   python3 ../../paste.py . out.txt
 #
 # Recorded in the lab lesson 1 built, against an empty moto with no permission
-# checking. trust-ec2.json, trust-checkout.json and token.py are read out of the
+# checking. trust-ec2.json, trust-checkout.json and make-token.py are read out of the
 # lesson's own fences, so the files the capture uses are the ones the student
 # saves; they are removed from ~/aws when the capture ends.
 #
@@ -36,13 +36,13 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 . "$HERE/../../from-lessons.sh"
 lab
 moto_fresh
-trap 'moto_stop; rm -f ~/aws/trust-ec2.json ~/aws/trust-checkout.json ~/aws/token.py ~/aws/token' EXIT
+trap 'moto_stop; rm -f ~/aws/trust-ec2.json ~/aws/trust-checkout.json ~/aws/make-token.py ~/aws/token' EXIT
 
 sets() { printf 'ana@laptop:%s$ %s\n' "$PROMPT_DIR" "$*"; eval "$*"; }
 
 fences json "$HERE/instance-profiles.md" 1 > ~/aws/trust-ec2.json || exit 1
 fences json "$HERE/workload-roles.md" 1 > ~/aws/trust-checkout.json || exit 1
-example "$HERE/workload-roles.md" token.py > ~/aws/token.py || exit 1
+example "$HERE/workload-roles.md" make-token.py > ~/aws/make-token.py || exit 1
 
 # ---- the-chain ---------------------------------------------------------------
 block configure-env
@@ -102,14 +102,14 @@ run 'aws iam create-role --role-name shop-checkout --assume-role-policy-document
 run 'aws iam attach-role-policy --role-name shop-checkout --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
 
 block web-identity
-run 'python3 token.py system:serviceaccount:shop:checkout > token'
+run 'python3 make-token.py system:serviceaccount:shop:checkout > token'
 sets 'unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY'
 sets 'export AWS_ROLE_ARN=arn:aws:iam::123456789012:role/shop-checkout AWS_WEB_IDENTITY_TOKEN_FILE=~/aws/token AWS_ROLE_SESSION_NAME=checkout-pod'
 run 'aws configure list'
 run 'aws sts get-caller-identity'
 
 block web-identity-wrong
-run 'python3 token.py system:serviceaccount:other:intruder > token'
+run 'python3 make-token.py system:serviceaccount:other:intruder > token'
 run 'aws sts get-caller-identity --query Arn --output text'
 run 'AWS_ROLE_ARN=arn:aws:iam::123456789012:role/no-such-role aws sts get-caller-identity --query Arn --output text'
 
@@ -124,11 +124,12 @@ run 'AWS_CONTAINER_CREDENTIALS_FULL_URI=http://localhost:4567/latest/meta-data/i
 block irsa-checked
 . ~/aws/env.sh
 moto_fresh INITIAL_NO_AUTH_ACTION_COUNT=3
+trap 'moto_stop; rm -f ~/aws/trust-ec2.json ~/aws/trust-checkout.json ~/aws/make-token.py ~/aws/token' EXIT
 aws iam create-user --user-name admin > /dev/null
 read -r K S < <(aws iam create-access-key --user-name admin --query "AccessKey.[AccessKeyId,SecretAccessKey]" --output text)
 aws iam attach-user-policy --user-name admin --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 export AWS_ACCESS_KEY_ID=$K AWS_SECRET_ACCESS_KEY=$S
 run 'aws iam create-open-id-connect-provider --url https://oidc.eks.sa-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE --client-id-list sts.amazonaws.com --query OpenIDConnectProviderArn --output text'
 run 'aws iam create-role --role-name shop-checkout --assume-role-policy-document file://trust-checkout.json --query Role.Arn --output text'
-run 'python3 token.py system:serviceaccount:shop:checkout > token'
+run 'python3 make-token.py system:serviceaccount:shop:checkout > token'
 run 'aws sts assume-role-with-web-identity --role-arn arn:aws:iam::123456789012:role/shop-checkout --role-session-name checkout-pod --web-identity-token file://token --no-sign-request --query AssumedRoleUser.Arn --output text'

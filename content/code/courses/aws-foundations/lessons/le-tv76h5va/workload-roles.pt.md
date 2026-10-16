@@ -93,10 +93,11 @@ metadata:
 O token de um pod é um JWT: três pedaços em base64 unidos por pontos, um cabeçalho, um conjunto
 de claims e uma assinatura. Este programa escreve um com as claims que um token do EKS traz, e um
 terceiro pedaço que **não é assinatura nenhuma**. Basta para mover a cadeia, e a seção seguinte mede
-o que isso diz sobre o moto. Salve-o como `~/aws/token.py`:
+o que isso diz sobre o moto. Salve-o como `~/aws/make-token.py`; um arquivo chamado `token.py` em
+`~/aws` esconderia o módulo `token` do próprio Python de todo programa rodado ali, o boto3 inclusive:
 
 ```schooling-example
-{"language": "python", "file": "token.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"Prints a token shaped like the one EKS gives a pod. It is NOT signed.\n\n    python3 token.py SERVICE-ACCOUNT > token\n\"\"\"\nimport base64\nimport json\nimport sys\nimport time\n\n", "note": "Só a biblioteca do próprio Python. A service account vem da linha de comando, então o mesmo programa escreve um token para a carga certa e para a errada."}, {"code": "ISSUER = 'https://oidc.eks.sa-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE'\n\n\ndef piece(d):\n    raw = json.dumps(d, separators=(',', ':')).encode()\n    return base64.urlsafe_b64encode(raw).rstrip(b'=').decode()\n\n\n", "note": "Um JWT codifica cada pedaço em base64 na forma segura para URL, sem o preenchimento `=`. `ISSUER` é o endereço registrado como provedor OIDC."}, {"code": "now = int(time.time())\nclaims = {'iss': ISSUER, 'sub': sys.argv[1], 'aud': ['sts.amazonaws.com'],\n          'iat': now, 'exp': now + 3600}\n", "note": "As claims que o STS compara com a política de confiança: quem emitiu o token, que service account ele nomeia, para quem ele é. `exp` o torna inútil uma hora depois de feito. O token de um pod de verdade também vence, e o kubelet o troca antes disso."}, {"code": "print(piece({'alg': 'RS256', 'kid': 'lab'}) + '.' + piece(claims) + '.not-a-signature')\n", "note": "O cabeçalho diz RS256, uma assinatura RSA, e o terceiro pedaço é um marcador. A AWS buscaria as chaves publicadas pelo emissor, não acharia nenhuma que o verificasse, e recusaria o token."}]}
+{"language": "python", "file": "make-token.py", "parts": [{"code": "#!/usr/bin/env python3\n\"\"\"Prints a token shaped like the one EKS gives a pod. It is NOT signed.\n\n    python3 make-token.py SERVICE-ACCOUNT > token\n\"\"\"\nimport base64\nimport json\nimport sys\nimport time\n\n", "note": "Só a biblioteca do próprio Python. A service account vem da linha de comando, então o mesmo programa escreve um token para a carga certa e para a errada."}, {"code": "ISSUER = 'https://oidc.eks.sa-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE'\n\n\ndef piece(d):\n    raw = json.dumps(d, separators=(',', ':')).encode()\n    return base64.urlsafe_b64encode(raw).rstrip(b'=').decode()\n\n\n", "note": "Um JWT codifica cada pedaço em base64 na forma segura para URL, sem o preenchimento `=`. `ISSUER` é o endereço registrado como provedor OIDC."}, {"code": "now = int(time.time())\nclaims = {'iss': ISSUER, 'sub': sys.argv[1], 'aud': ['sts.amazonaws.com'],\n          'iat': now, 'exp': now + 3600}\n", "note": "As claims que o STS compara com a política de confiança: quem emitiu o token, que service account ele nomeia, para quem ele é. `exp` o torna inútil uma hora depois de feito. O token de um pod de verdade também vence, e o kubelet o troca antes disso."}, {"code": "print(piece({'alg': 'RS256', 'kid': 'lab'}) + '.' + piece(claims) + '.not-a-signature')\n", "note": "O cabeçalho diz RS256, uma assinatura RSA, e o terceiro pedaço é um marcador. A AWS buscaria as chaves publicadas pelo emissor, não acharia nenhuma que o verificasse, e recusaria o token."}]}
 ```
 
 Escreva um token para a service account do checkout, tire as chaves do ambiente e dê à cadeia as
@@ -104,7 +105,7 @@ duas variáveis que um pod receberia. `AWS_ROLE_SESSION_NAME` é opcional; ele f
 sessão tiraria do relógio:
 
 ```
-ana@laptop:~/aws$ python3 token.py system:serviceaccount:shop:checkout > token
+ana@laptop:~/aws$ python3 make-token.py system:serviceaccount:shop:checkout > token
 ana@laptop:~/aws$ unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 ana@laptop:~/aws$ export AWS_ROLE_ARN=arn:aws:iam::123456789012:role/shop-checkout AWS_WEB_IDENTITY_TOKEN_FILE=~/aws/token AWS_ROLE_SESSION_NAME=checkout-pod
 ana@laptop:~/aws$ aws configure list
@@ -115,9 +116,9 @@ secret_key : ****************B/rN     : assume-role-with-web-identity :
 region     : sa-east-1                : env              : ['AWS_REGION', 'AWS_DEFAULT_REGION']
 ana@laptop:~/aws$ aws sts get-caller-identity
 {
-    "UserId": "AKIAIOSFODNN7EXAMPLE",
+    "UserId": "AROARZPUZDIKGSK3B22RF:checkout-pod",
     "Account": "123456789012",
-    "Arn": "arn:aws:sts::123456789012:user/moto"
+    "Arn": "arn:aws:sts::123456789012:assumed-role/shop-checkout/checkout-pod"
 }
 ```
 
@@ -130,11 +131,11 @@ Agora a mesma cadeia com um token para uma service account que a política de co
 e depois com uma role que não existe:
 
 ```
-ana@laptop:~/aws$ python3 token.py system:serviceaccount:other:intruder > token
+ana@laptop:~/aws$ python3 make-token.py system:serviceaccount:other:intruder > token
 ana@laptop:~/aws$ aws sts get-caller-identity --query Arn --output text
-arn:aws:sts::123456789012:user/moto
+arn:aws:sts::123456789012:assumed-role/shop-checkout/checkout-pod
 ana@laptop:~/aws$ AWS_ROLE_ARN=arn:aws:iam::123456789012:role/no-such-role aws sts get-caller-identity --query Arn --output text
-arn:aws:sts::123456789012:user/moto
+arn:aws:sts::123456789012:assumed-role/no-such-role/checkout-pod
 ```
 
 **O moto não verificou nada.** Nem a assinatura, que não é uma; nem o emissor; nem `sub` ou `aud`

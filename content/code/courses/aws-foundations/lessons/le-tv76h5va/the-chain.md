@@ -105,7 +105,7 @@ ana@laptop:~/aws$ TOKEN=$(curl -s -X PUT -H "X-aws-ec2-metadata-token-ttl-second
 ana@laptop:~/aws$ echo $TOKEN
 fake-imdsv2-token
 ana@laptop:~/aws$ curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://localhost:4567/latest/meta-data/iam/security-credentials/default-role; echo
-{"AccessKeyId": "test-key", "SecretAccessKey": "test-secret-key", "Token": "test-session-token", "Expiration": "2026-10-17T16:00:38Z"}
+{"AccessKeyId": "test-key", "SecretAccessKey": "test-secret-key", "Token": "test-session-token", "Expiration": "2026-10-17T19:00:28Z"}
 ```
 
 The answer is a whole set of credentials: a key id, a secret, a session token and an expiry. On AWS
