@@ -13,8 +13,12 @@ import re, sys
 
 PROMPT = re.compile(r"^ana@dev:[^$]*\$ ")
 
+# A link's code is random, so a typed line that names one is compared with the
+# code masked: a draft fence may say CODE where the run will have a real one.
+CODE = re.compile(r"(?<=:3000/)(links/)?[2-9a-hjkmnp-z]{6}(?![\w-])|(?<=:3000/)(links/)?CODE")
+
 def typed(body):
-    return [l for l in body.split("\n") if PROMPT.match(l)]
+    return [CODE.sub(lambda m: (m.group(1) or m.group(2) or "") + "CODE", l) for l in body.split("\n") if PROMPT.match(l)]
 
 md, cap = sys.argv[1], sys.argv[2]
 check = "--check" in sys.argv
