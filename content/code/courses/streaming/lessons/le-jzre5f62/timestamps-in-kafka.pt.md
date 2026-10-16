@@ -78,10 +78,8 @@ registro: um segmento é apagado quando o timestamp **mais novo** dele é mais a
 tópico de registros carimbados com 2 de março os perderia na primeira verificação de retenção,
 poucos minutos depois de serem gravados, e o tópico pareceria esvaziado por alguém. É por isso que
 `late` e `late-sold` foram criados com `retention.ms=-1`, que guarda tudo. O Kafka verifica a
-retenção a cada cinco minutos por padrão, e essa espera não está nas transcrições. Ela foi testada
-uma vez num broker separado, configurado para verificar a cada dez segundos: as 360 vendas de um
-tópico com a retenção padrão sumiram na primeira verificação, o segmento ativo inclusive, e o offset
-mais antigo dele virou 360.
+retenção a cada cinco minutos por padrão, e essa espera não está nas transcrições, então a
+remoção é descrita aqui, e não mostrada.
 
 Duas lições saem disso. **Um produtor que carimba o tempo do evento precisa contar com eventos mais
 antigos que a retenção**, e esses somem rápido, do segmento mais novo tanto quanto dos antigos. E um

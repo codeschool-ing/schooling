@@ -76,9 +76,8 @@ timestamp: a segment is deleted when its **newest** timestamp is older than the 
 records stamped with 2 March would lose them at the first retention check, a few minutes after
 they were written, and the topic would look as if somebody had emptied it. That is why `late` and
 `late-sold` were made with `retention.ms=-1`, which keeps everything. Kafka checks retention every
-five minutes by default, and that wait is not in the transcripts. It was tried once on a separate
-broker set to check every ten seconds: the 360 sales of a topic with the default retention were
-gone at the first check, the active segment included, and its earliest offset became 360.
+five minutes by default, and that wait is not in the transcripts, so the deletion is described here
+rather than shown.
 
 Two lessons follow from that. **A producer that stamps event time has to expect events older than
 the retention**, and those vanish quickly, from the newest segment as well as the old ones. And a
