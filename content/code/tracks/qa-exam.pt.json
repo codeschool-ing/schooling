@@ -1,0 +1,2701 @@
+{
+  "ex-5fd6b76w": {
+    "prompt": "Testando uma loja on-line, você está logado como um cliente. `GET /orders/ord-2044`, pedido de outro cliente, responde `404`. `GET /orders/ord-9999`, que não existe, também responde `404`, e o seu próprio pedido responde `200`. Você reporta o primeiro `404` como defeito?",
+    "hint": "Fundamentos da Web e Internet, aula 6; Fundamentos de Segurança da Informação, aula 8.",
+    "choices": [
+      {
+        "text": "Sim: o servidor sabe quem você é, então a recusa tem de ser `403`.",
+        "why": "Um `403` confirmaria que o pedido existe; um `404` para os dois é um jeito deliberado de não dizer isso."
+      },
+      {
+        "text": "Sim: você não pode ver esse pedido, então o código certo é `401`.",
+        "why": "`401` diz que o servidor não sabe quem está pedindo, e aqui ele sabe."
+      },
+      {
+        "text": "Não: a mesma resposta aos dois esconde que pedidos existem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Sim: um `404` no pedido de outro cliente é a falha de referência direta insegura a objeto.",
+        "why": "Essa falha responde `200` e mostra o pedido; qualquer recusa quer dizer que a verificação rodou."
+      }
+    ]
+  },
+  "ex-f5xh58xs": {
+    "prompt": "A página de oferta de uma loja busca o preço numa resposta enviada com `Cache-Control: max-age=3600`. Clientes que a abriram de manhã continuam vendo o preço antigo depois de uma mudança à tarde. O seu teste no Playwright muda o preço pela API, abre a página e passa. Por que ele passa?",
+    "hint": "Fundamentos da Web e Internet, aula 7; Automação de Testes Web, aula 4.",
+    "choices": [
+      {
+        "text": "Cada teste roda num contexto novo e vazio, então só faz o papel de primeira visita.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Playwright desliga o cache HTTP em todo teste, como a caixa *Disable cache* faz.",
+        "why": "Ele não tem essa configuração; o cache está ligado, e vazio só porque o contexto é novo."
+      },
+      {
+        "text": "O navegador do teste revalidou a cópia com `If-None-Match`, e o servidor respondeu com o preço novo.",
+        "why": "Dentro do `max-age` a cópia guardada é usada sem perguntar, e um contexto novo não tem cópia para revalidar."
+      },
+      {
+        "text": "O servidor manda `max-age` só para navegadores que ele já viu antes.",
+        "why": "O cabeçalho é o mesmo para todo mundo; o que muda é se o navegador já tem uma cópia fresca."
+      }
+    ]
+  },
+  "ex-3v8t7j2s": {
+    "prompt": "Testando o checkout, você recarrega a página de confirmação do pedido, o navegador pergunta se deve reenviar o formulário, e aparece um segundo pedido. O `POST` foi respondido com a própria página de confirmação. Que correção a aula 6 dá?",
+    "hint": "Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "Responder ao `POST` com um `307` para a página de confirmação.",
+        "why": "O `307` mantém o método, então o navegador postaria o formulário de novo no endereço novo."
+      },
+      {
+        "text": "Enviar o formulário do pedido como `GET`, que é seguro repetir.",
+        "why": "Fazer um pedido muda alguma coisa, e se muda alguma coisa não é um `GET`."
+      },
+      {
+        "text": "Responder ao `POST` com um `308` para essa página, para a mudança ficar guardada.",
+        "why": "O `308` é permanente e também mantém o método, então o formulário é postado de novo."
+      },
+      {
+        "text": "Responder ao `POST` com um `303` apontando para a página de confirmação.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8659c08z": {
+    "prompt": "O requisito diz *Largest Contentful Paint de no máximo 2,5 s no percentil 75 das visitas reais*. Uma colega abre a página no notebook do escritório, na fibra, com *Disable cache* marcado no painel de rede e sem throttling. Ela carrega em 0,9 s, e a colega marca o requisito como atendido. O que há de errado nessa evidência? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 11; Testes Não Funcionais, aula 10.",
+    "choices": [
+      {
+        "text": "A conexão dela é rápida e perto do servidor, e poucos visitantes têm uma assim.",
+        "why": "Isso."
+      },
+      {
+        "text": "Desligar o cache fez a página parecer mais rápida do que os visitantes a veem.",
+        "why": "É o contrário: cada arquivo é buscado de novo, como numa primeira visita."
+      },
+      {
+        "text": "Um carregamento em laboratório não diz como foram três visitas em quatro para pessoas reais.",
+        "why": "Isso."
+      },
+      {
+        "text": "O painel de rede cronometra pedidos soltos e não consegue cronometrar a página inteira.",
+        "why": "O rodapé dele mostra quando `DOMContentLoaded` e `load` aconteceram para a página inteira."
+      },
+      {
+        "text": "Com o cache desligado todo carregamento é uma primeira visita, que não é a visita que a maioria tem.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-0ev2npwe": {
+    "prompt": "Analytics, uma ferramenta de teste e duas funcionalidades aposentadas deixaram cookies no domínio da própria loja que somam 3 kilobytes. A página de produto faz 40 requisições, todas para esse mesmo domínio. Pela conta da aula 7, quantos kilobytes de upload esses cookies acrescentam a um carregamento da página?",
+    "hint": "Fundamentos da Web e Internet, aula 7."
+  },
+  "ex-2qpg82kf": {
+    "prompt": "Um relatório de defeito diz que, atrás da CDN, a página inicial aparece em inglês para alguns visitantes brasileiros e em português para outros, conforme quem a carregou primeiro. O servidor escolhe o idioma pelo `Accept-Language`. Pela aula 6, falta um cabeçalho na resposta, cujo nome é `___`.",
+    "hint": "Fundamentos da Web e Internet, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "Vary"
+        ]
+      }
+    ]
+  },
+  "ex-d5546bgj": {
+    "prompt": "Um serviço de homologação fica atrás de um proxy, e quatro requisições com falha voltaram com quatro códigos. Associe cada código ao que ele diz sobre onde está a falha.",
+    "hint": "Fundamentos da Web e Internet, aula 6.",
+    "pairs": [
+      {
+        "left": "`500`",
+        "right": "a aplicação lançou um erro e nada o capturou"
+      },
+      {
+        "left": "`502`",
+        "right": "o serviço atrás do proxy respondeu com algo sem sentido"
+      },
+      {
+        "left": "`503`",
+        "right": "o servidor está no ar e de propósito não está atendendo, sobrecarregado ou em manutenção"
+      },
+      {
+        "left": "`504`",
+        "right": "o serviço atrás do proxy nunca respondeu"
+      }
+    ]
+  },
+  "ex-44j31nzk": {
+    "prompt": "Quinta à noite, um defeito aberto ainda cobra o preço errado de alguns clientes, e os critérios de saída dizem que nenhum defeito alto ou crítico pode estar aberto em preços. A correção está planejada para o próximo sprint, e o Rafael pede à Lia que marque o defeito como médio para a tabela de sexta ficar verde. O que ela deve fazer?",
+    "hint": "Fundamentos de Qualidade de Software, aula 21; Teste Manual e Gestão de Testes, aula 15.",
+    "choices": [
+      {
+        "text": "Baixar, porque uma correção planejada para o próximo sprint quer dizer que o defeito já não precisa ser tratado logo.",
+        "why": "Isso é prioridade, quando ele é corrigido; severidade é o estrago, e o estrago não mudou."
+      },
+      {
+        "text": "Recusar que o release de sexta saia antes de o preço ser corrigido e testado de novo.",
+        "why": "O release é decisão da Joana; a parte da testadora é um relatório que diz com clareza qual critério não foi cumprido."
+      },
+      {
+        "text": "Manter a severidade e relatar o critério como não cumprido; a Joana decide sabendo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Baixar e pôr uma linha no resumo dizendo que foi baixado para cumprir o critério.",
+        "why": "A tabela fica verde do mesmo jeito, numa severidade que nenhum fato novo sustenta: é o rebaixamento discreto que a aula 21 não aceita."
+      }
+    ]
+  },
+  "ex-28ewny56": {
+    "prompt": "A Lia dá a um assistente o `tickets.py` original e mais nada, e pede testes de `price`. Todos os testes que ele escreve passam, e um deles espera que `price(60, False, \"thu\", \"20:00\")` seja 3600. Contra o que esses valores esperados foram conferidos?",
+    "hint": "IA no Desenvolvimento, aula 4; Fundamentos de Qualidade de Software, aula 19.",
+    "choices": [
+      {
+        "text": "A regra da Joana, que o assistente leu nas linhas `if` em que cada frase dela foi transformada em código de verdade.",
+        "why": "Um `if` diz o que o programa faz, e `age > 60` é o defeito, não a regra."
+      },
+      {
+        "text": "Um oráculo implícito, já que um teste que passa mostra que nada quebrou.",
+        "why": "Um oráculo implícito dispensa valor esperado; esses testes têm valores esperados, tirados do código."
+      },
+      {
+        "text": "Um oráculo humano: o modelo leu como os cinemas cobram ingressos.",
+        "why": "Ele recebeu um arquivo e escreveu o que esse arquivo faz; nada do que recebeu dizia que sessenta paga meia."
+      },
+      {
+        "text": "O próprio código, como uma tabela de preços impressa pelo mesmo programa: mostram que ele concorda consigo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-zh028g8z": {
+    "prompt": "Os sete casos da aula 7 fazem rodar toda linha de `price`. Uma ferramenta de mutação troca `age > 60` por `age >= 60` e roda contra isso os mesmos sete casos. O que acontece, e o que isso diz à Lia?",
+    "hint": "Fundamentos de Qualidade de Software, aula 7; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Ele sobrevive: nenhum caso é sessenta, e a suíte não distingue as linhas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O caso de sessenta e um mata o mutante, porque é ele que roda a linha alterada.",
+        "why": "Sessenta e um paga meia com as duas linhas; um caso que roda a linha não é um caso na fronteira dela."
+      },
+      {
+        "text": "A cobertura de `tickets.py` cai, e o relatório mostra a lacuna antes de os casos terminarem.",
+        "why": "O mutante tem as mesmas linhas, e os casos as rodam do mesmo jeito; a cobertura não enxerga a troca."
+      },
+      {
+        "text": "Ele é morto, porque, com toda linha já rodada, qualquer troca numa linha faz um dos sete casos dar outro preço.",
+        "why": "Um mutante só morre quando a resposta de algum caso muda; entre as duas linhas só sessenta difere, e nenhum caso é sessenta."
+      }
+    ]
+  },
+  "ex-12ckq4s3": {
+    "prompt": "Um teste Playwright do mapa de assentos falha 3 vezes em 20 execuções com dois workers e passa 20 de 20 com um worker. Nada na loja nem no teste foi editado entre as execuções. Pelo método da aula 4, o que a Lia já sabe?",
+    "hint": "Fundamentos de Qualidade de Software, aula 4; Automação de Testes Web, aula 14.",
+    "choices": [
+      {
+        "text": "O defeito não existe, já que some toda vez que o teste roda sozinho, com um único worker e sem outro teste rodando ao lado dele.",
+        "why": "Uma falha que nem sempre se reproduz quer dizer que uma condição ainda não foi achada, não que nada aconteceu."
+      },
+      {
+        "text": "O que difere entre as execuções que falham e as que passam é o que rodou junto: a próxima hipótese é estado compartilhado.",
+        "why": "Isso."
+      },
+      {
+        "text": "O próprio mapa de assentos está quebrado, porque um teste que falhou uma vez em vinte execuções já achou um defeito na página, e esse defeito é da tela.",
+        "why": "Passar sozinho e falhar junto aponta primeiro para dois testes dividindo dados, não para a página."
+      },
+      {
+        "text": "A espera é curta demais, e um timeout maior no teste resolve.",
+        "why": "Nada nas contagens fala de tempo; o número de workers é a única mudança que mexeu na taxa."
+      }
+    ]
+  },
+  "ex-7vzfmj3e": {
+    "prompt": "A Lia descobre que a página de histórico de pedidos pode mostrar a um cliente os pedidos de outro. A Joana ouve as evidências e decide publicar na sexta e corrigir no próximo sprint. O que a aula 5 diz que a Lia faz em seguida?",
+    "hint": "Fundamentos de Qualidade de Software, aula 5.",
+    "choices": [
+      {
+        "text": "Registra o que se sabia e o que se decidiu, e depois ajuda a reduzir o risco, já que a decisão era da Joana.",
+        "why": "Isso serve para uma troca comercial; dados pessoais expostos são um risco de alguém de fora da sala."
+      },
+      {
+        "text": "Leva o caso a quem responde pelos dados pessoais na empresa, porque esse risco não é da Joana para aceitar em nome da empresa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Segura o release ela mesma, porque a aprovação dela é o que deixa um build sair.",
+        "why": "Esse é o portão contra o qual a aula 5 argumenta; escalar é levar a quem responde pelo risco, não vetar."
+      },
+      {
+        "text": "Aceita: depois que a dona do produto pesou as evidências, a decisão está tomada.",
+        "why": "Isso vale para riscos que ela pode pesar; um dever legal de proteger dados não é algo que um time aceite pela empresa."
+      }
+    ]
+  },
+  "ex-0kh1pyq1": {
+    "prompt": "A aula 7 contou as combinações que passam por `price`: matinê ou não, estudante ou não, criança, adulto ou acima de sessenta, e quarta ou não. A Joana acrescenta mais uma condição de sim ou não, feriado, independente das outras. Contando do mesmo jeito, quantas combinações há agora?",
+    "hint": "Fundamentos de Qualidade de Software, aula 7."
+  },
+  "ex-6fy64zbw": {
+    "prompt": "Ligue cada jeito como a Lia julgou um resultado ao tipo de oráculo que ele é.",
+    "hint": "Fundamentos de Qualidade de Software, aula 19.",
+    "pairs": [
+      {
+        "left": "a Célia diz na hora que uma família nunca paga tanto no balcão",
+        "right": "humano"
+      },
+      {
+        "left": "o programa imprime um traceback quando falta o horário da sessão",
+        "right": "implícito"
+      },
+      {
+        "left": "um ingresso das 9:30 custa mais que o das 11:00 no mesmo dia",
+        "right": "de consistência"
+      },
+      {
+        "left": "uma linha combinada do Scenario Outline diz que 60 paga R$ 18,00",
+        "right": "especificado"
+      },
+      {
+        "left": "a versão do programa do mês passado, rodada com as mesmas entradas",
+        "right": "de referência"
+      }
+    ]
+  },
+  "ex-n8qyn3w2": {
+    "prompt": "Quais destes pertencem à definição de pronto do Cine Aurora, e não aos critérios de aceitação de uma história? Escolha todas as que se aplicam.",
+    "hint": "Fundamentos de Qualidade de Software, aula 12.",
+    "choices": [
+      {
+        "text": "Um estudante numa matinê paga R$ 14,00.",
+        "why": "Isso é o que uma história, estudantes pagam meia, tem de fazer: um critério de aceitação."
+      },
+      {
+        "text": "O código foi revisado por outro desenvolvedor.",
+        "why": "Isso."
+      },
+      {
+        "text": "As verificações automáticas de tudo o que foi feito antes continuam passando.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um cliente de 60 anos paga R$ 18,00 numa sessão da noite.",
+        "why": "Isso é um exemplo da história dos clientes mais velhos, não uma régua que toda história passa."
+      },
+      {
+        "text": "Alguém explorou a história por meia hora além dos critérios dela.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-b8z4z7y4": {
+    "prompt": "O `relations.py` não sabe dizer quanto deveria custar um ingresso das 9:30, mas consegue provar que os preços das 9:30 e das 11:00 não podem estar ambos certos. A aula 19 chama uma verificação assim de oráculo ___.",
+    "hint": "Fundamentos de Qualidade de Software, aula 19.",
+    "blanks": [
+      {
+        "accept": [
+          "parcial"
+        ]
+      }
+    ]
+  },
+  "ex-vg8mezap": {
+    "prompt": "Ponha em ordem os passos da Lia, da reclamação da Célia sobre a família de domingo até um relatório com que o Rafael pudesse agir.",
+    "hint": "Fundamentos de Qualidade de Software, aula 4.",
+    "items": [
+      "anotar o que foi observado, separado do que foi deduzido",
+      "listar toda explicação que se encaixa nas evidências",
+      "rodar os comandos cujos resultados separam as explicações",
+      "abrir o `tickets.py` na linha para onde as evidências apontam",
+      "reduzir ao menor conjunto de comandos que mostra o defeito"
+    ],
+    "trap": "O código não é o ponto de partida: ela junta evidências primeiro, para que resistam a ser mostradas a quem escreveu o código."
+  },
+  "ex-nnw4tng5": {
+    "prompt": "Reservar Hamlet com `quantity=two` responde `500` e um traceback. O Rui diz que é justo, porque o cliente digitou uma palavra. Pelo código de status, com quem está o problema, e o que o cliente deveria ter recebido?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "Com o cliente: `500` é o código para uma entrada que quem chamou errou, então basta consertar a página em volta.",
+        "why": "Entrada que quem chamou errou é um `4xx`; um `500` diz que algo lançou um erro e ninguém o pegou."
+      },
+      {
+        "text": "Com o servidor: um `5xx` diz que ele quebrou, e uma palavra no campo recebe uma frase dizendo o que está errado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cedo demais para dizer: o status não diz nada sobre culpa até alguém ler a linha de log do servidor.",
+        "why": "O primeiro dígito já diz com quem está o problema; a linha de log amarra o relato a um momento."
+      },
+      {
+        "text": "Com o navegador: ele deixou uma palavra entrar num campo feito para dígitos, então é o formulário que tem de barrá-la.",
+        "why": "O campo aceita qualquer coisa e o curl pula o formulário; o R7 pede que o servidor responda entrada errada com uma frase."
+      }
+    ]
+  },
+  "ex-xcvkv1ae": {
+    "prompt": "O teatro guarda os defeitos como issues do GitHub. O pull request do Rui para o traceback diz `Closes #31` e é mesclado no branch principal na segunda. O build que o carrega chega ao ambiente de teste na quarta. Onde isso deixa a #31, pelo ciclo de vida da aula 16?",
+    "hint": "Teste Manual e Gestão de Testes, aula 16; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "Pronta para reteste, que é a deixa para a Ana rodar a reprodução de novo.",
+        "why": "Pronto para reteste exige um build com a correção no ambiente de teste, e ele chega na quarta."
+      },
+      {
+        "text": "Ainda aberta: `Closes #31` apenas cria um link, e a issue espera até alguém de teste fechá-la.",
+        "why": "O GitHub fecha a issue sozinho quando o pull request é mesclado no branch principal."
+      },
+      {
+        "text": "Verificada, já que a revisão do pull request conta como reteste.",
+        "why": "Uma revisão lê a mudança; um reteste roda a reprodução do relato num build que a contém."
+      },
+      {
+        "text": "Já fechada, dois dias antes de qualquer reteste.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vjr3hryh": {
+    "prompt": "Uma cópia mascarada da produção mantém `accounts` e `orders`, e `orders` identifica o cliente pelo nome, mascarado do mesmo jeito. Débora Barbosa tem 2 pedidos e Daniel Bezerra tem 3, e os dois nomes viram `D***** B******`. Quantas linhas a junção de `accounts` com `orders` pelo nome mascarado devolve para esses dois clientes?",
+    "hint": "Teste Manual e Gestão de Testes, aula 20; Bancos de Dados Relacionais e SQL, aula 5."
+  },
+  "ex-z6hd5nhh": {
+    "prompt": "A Ana prova a regressão do estudante mandando a regra 7 para a 1.0 na porta 8001 e para a 1.1 na porta 8000. Como oráculo, o que a 1.0 é nessa comparação, e o que ela não consegue mostrar?",
+    "hint": "Teste Manual e Gestão de Testes, aula 10; Fundamentos de Qualidade de Software, aula 19.",
+    "choices": [
+      {
+        "text": "Um oráculo de referência, cego a qualquer defeito que as duas versões compartilhem, como o reembolso de um pedido usado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um oráculo especificado, já que a 1.0 é o resultado esperado a partir do qual o caso de regressão foi escrito.",
+        "why": "Um oráculo especificado é uma regra escrita como o R5; a 1.0 é outra implementação da mesma coisa."
+      },
+      {
+        "text": "Um oráculo de consistência, então ele também aponta o reembolso de pedido usado, onde as versões diferem.",
+        "why": "As duas versões aceitam esse reembolso, então compará-las mostra acordo e nenhum defeito."
+      },
+      {
+        "text": "Um oráculo implícito: o que a 1.1 fizer diferente da 1.0 está errado em qualquer programa.",
+        "why": "Oráculos implícitos pegam quedas e tracebacks; uma diferença da 1.0 pode ser uma correção, como mostraram os seis ingressos."
+      }
+    ]
+  },
+  "ex-j4jynq69": {
+    "prompt": "Para economizar um caso, a Ana se cadastra com o nome vazio e a senha `abc`. O formulário responde \"Name must be 1 to 40 characters.\" e ela marca as duas partições inválidas como testadas. O que está errado no registro dela?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4.",
+    "choices": [
+      {
+        "text": "Nada: uma frase de recusa cobre todo valor inválido que o pedido levava.",
+        "why": "O boxoffice para na primeira coisa errada que encontra, então uma recusa fala por um valor e não pelo resto."
+      },
+      {
+        "text": "Um nome vazio fica numa partição válida, então a senha foi o único valor testado.",
+        "why": "O R2 recusa um nome vazio; ele é uma das duas partições inválidas do nome."
+      },
+      {
+        "text": "A senha talvez nem tenha sido lida: o primeiro valor errado para as verificações antes de chegar a ela.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela precisava de `member@example.org`, porque a senha é conferida depois que uma conta existente é encontrada.",
+        "why": "Esse endereço acrescenta um terceiro valor inválido, um e-mail já usado, e esconde ainda mais."
+      }
+    ]
+  },
+  "ex-a43ywt8n": {
+    "prompt": "Ligue cada substituto ao tipo de dublê de teste que a aula 13 daria a ele.",
+    "hint": "Teste Manual e Gestão de Testes, aula 13.",
+    "pairs": [
+      {
+        "left": "Um servidor de e-mail que responde \"aceito\" a toda mensagem e não faz mais nada",
+        "right": "um stub"
+      },
+      {
+        "left": "Uma `send` que não envia nada, e a quem o teste pergunta depois qual endereço recebeu",
+        "right": "um mock"
+      },
+      {
+        "left": "Um armazenamento de pedidos na memória que de fato os guarda e devolve até o teste acabar",
+        "right": "um fake"
+      },
+      {
+        "left": "`BOXOFFICE_NOW=2026-10-10T19:30:00-03:00`, definido quando o servidor sobe",
+        "right": "um relógio falso"
+      }
+    ]
+  },
+  "ex-5xzsp1r0": {
+    "prompt": "A gerente responde à pergunta da Ana sobre o R5: meia-entrada é por ingresso, e o estudante mostra uma carteirinha na porta. Ponha as três mudanças na ordem em que a aula 6 diz que elas andam, a primeira primeiro.",
+    "hint": "Teste Manual e Gestão de Testes, aula 6.",
+    "items": [
+      "o R5 é reescrito para carregar a resposta",
+      "os casos que citam o R5 são alterados",
+      "a regra de preço do boxoffice é alterada, e os casos alterados a conferem"
+    ],
+    "trap": "Mudar o código primeiro deixa os casos conferindo a regra antiga; mudar os casos antes do R5 faz com que citem uma regra que ninguém escreveu."
+  },
+  "ex-sz6z8t00": {
+    "prompt": "O teatro acrescenta um estado, expirado, e um evento, expirar, que leva um pedido reservado a expirado e não faz nada a partir de nenhum outro estado. As outras transições do R6 continuam como estão. Quantos traços tem a nova tabela de estados?",
+    "hint": "Teste Manual e Gestão de Testes, aula 5."
+  },
+  "ex-a5wy64km": {
+    "prompt": "A Ana reinicia o boxoffice com o relógio um dia e uma hora depois, e o primeiro link da Dora é recusado. Antes de acreditar, ela repete os passos com o relógio onde estava, para que só o horário mude. A aula 22 chama essa segunda rodada de ___.",
+    "hint": "Teste Manual e Gestão de Testes, aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "controle",
+          "o controle",
+          "rodada de controle",
+          "um controle"
+        ]
+      }
+    ]
+  },
+  "ex-29fn5rq3": {
+    "prompt": "A Ana tem uma sessão exploratória para encaixar no boxoffice 1.3. Quais destes são lugares onde a aula 11 diz que a exploração rende mais? Marque todas as que se aplicam.",
+    "hint": "Teste Manual e Gestão de Testes, aula 11.",
+    "choices": [
+      {
+        "text": "A venda no balcão até a cortina subir, nova na 1.3, ainda sem nenhum caso escrito",
+        "why": "Isso."
+      },
+      {
+        "text": "As oito regras de desconto, rodadas de novo na 1.3 porque o preço é o risco A",
+        "why": "Isso é uma verificação de regressão com os resultados esperados escritos; o que uma sessão encontra não dá para rodar de novo na semana seguinte."
+      },
+      {
+        "text": "Os estados do pedido, onde apareceram três defeitos na última versão",
+        "why": "Isso."
+      },
+      {
+        "text": "A lista de espetáculos, cujos casos roteirizados passam e que não gera reclamações",
+        "why": "Casos que passam pedem exploração onde as reclamações continuam chegando; aqui não chega nenhuma."
+      }
+    ]
+  },
+  "ex-d0dtej2b": {
+    "prompt": "Você está escolhendo a suíte de regressão do `v1.1` da padaria, e uma das fontes da análise de impacto é a própria mudança: os commits que estão no `v1.1` e não no `v1.0`, deixando de fora os commits de merge. Que comando os lista?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12; Teste Manual e Gestão de Testes, aula 10.",
+    "choices": [
+      {
+        "text": "`git log --oneline --no-merges v1.0 v1.1`",
+        "why": "Com um espaço no lugar do `..`, o log lista todo commit alcançável a partir de qualquer uma das tags, que é o histórico inteiro."
+      },
+      {
+        "text": "`git log --oneline --no-merges --grep v1.1`",
+        "why": "O `--grep` procura nas mensagens dos commits, e uma tag não está escrita em mensagem nenhuma, então não acha nada."
+      },
+      {
+        "text": "`git log --oneline --no-merges v1.0..v1.1`",
+        "why": "Isso."
+      },
+      {
+        "text": "`git diff --stat v1.0 v1.1`",
+        "why": "Um diff compara as duas pontas arquivo por arquivo; não mostra os commits separados entre elas, e são as mensagens deles que dizem o que mudou."
+      }
+    ]
+  },
+  "ex-2c9rrv2m": {
+    "prompt": "O defeito #23 está marcado como corrigido, e a homologação roda a versão marcada com a tag `v1.1`. Antes do reteste você acha a correção com `git log --oneline --grep \"#23\"` e roda `git tag --contains` no commit dela. Não sai nada. O que isso quer dizer?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12; Teste Manual e Gestão de Testes, aula 9.",
+    "choices": [
+      {
+        "text": "Nenhuma tag inclui o conserto ainda, então conferir no `v1.1` falharia por um motivo que nada tem a ver com ele.",
+        "why": "Isso."
+      },
+      {
+        "text": "A correção está no ar: o ticket fechou quando o pull request entrou.",
+        "why": "O ticket fecha no merge, antes de qualquer tag ou deploy; fechado não é lançado."
+      },
+      {
+        "text": "Reteste no `v1.1` assim mesmo e reabra o defeito se falhar de novo.",
+        "why": "Uma falha ali diz em que versão você está, não se a correção funciona; antes, confirme que a versão contém a mudança."
+      },
+      {
+        "text": "A saída vem vazia porque o `--contains` só lista tags feitas com `-a`.",
+        "why": "Ele nomeia toda tag cujo histórico inclui o commit, e vazio quer dizer que nenhuma inclui."
+      }
+    ]
+  },
+  "ex-3jrkk630": {
+    "prompt": "Para guardar um log, o workflow da Ana no `ubuntu-latest` roda o check do Bruno como `- run: ./check-links.sh | tee links.log`, sem linha `shell:`. O branch dela aponta para dois arquivos que nunca foram commitados, e o script imprime duas linhas `missing:`. Com que status de saída termina esse passo, o número pelo qual a execução é julgada?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17; Testes Automatizados e CI/CD, aula 5."
+  },
+  "ex-jc96f34r": {
+    "prompt": "Testando o site da padaria, você acha um preço no cardápio que parece errado. Antes de relatar, quer saber se alguém o pôs de propósito, e por quê. Ponha os passos em ordem.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aulas 3 e 12.",
+    "items": [
+      "Rodar `git blame menu.html` e anotar o commit daquela linha",
+      "Abrir esse commit com `git show` e ler a mensagem",
+      "Seguir o `Refs #23` no fim da mensagem",
+      "Ler no ticket o relato do Bruno sobre o problema"
+    ],
+    "trap": "O blame parte de uma linha que existe agora, por isso vem primeiro; o ticket só se alcança no fim, pelo número que a mensagem do commit carrega."
+  },
+  "ex-4y57rtyp": {
+    "prompt": "Cada defeito abaixo funciona numa máquina e falha em outra. Ligue cada um à leitura que teria mostrado a diferença.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17; Teste Manual e Gestão de Testes, aula 21.",
+    "pairs": [
+      {
+        "left": "Uma imagem aparece no notebook de quem escreveu e falta num clone novo",
+        "right": "`git status --short`"
+      },
+      {
+        "left": "O código depende de um recurso que chegou na 3.12, e o servidor tem a 3.10",
+        "right": "`python3 --version`"
+      },
+      {
+        "left": "As reservas fecham três horas antes no servidor alugado e não no notebook",
+        "right": "`date`"
+      },
+      {
+        "left": "Ninguém tem certeza de que o servidor que responde é a versão nova",
+        "right": "`curl -s http://127.0.0.1:8000/health`"
+      }
+    ],
+    "right_distractors": [
+      "`grep PRETTY_NAME /etc/os-release`"
+    ]
+  },
+  "ex-emqnsnmd": {
+    "prompt": "Um cliente diz que o preço do pão de queijo estava certo no `v1.0` e agora está errado. Para conferir a afirmação contra a versão anterior, você põe o `menu.html` no disco como estava naquela tag, sem mover branch nem fazer commit: `git restore ___=v1.0 menu.html`.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Teste Manual e Gestão de Testes, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "--source"
+        ]
+      }
+    ]
+  },
+  "ex-54m5qybq": {
+    "prompt": "O pull request do Bruno entrou há uma hora, e desde então o `main` está vermelho: todo branch criado a partir dele falha no mesmo teste. O Bruno está num avião, e você tem permissão de push. O que você faz primeiro?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "Rodar `git reset --hard HEAD~1` no `main` e enviar, para o commit dele sumir do histórico.",
+        "why": "Todo mundo já tem esse commit; reescrever um branch compartilhado deixa as cópias deles discordando dele. O reset é para commits que só você tem."
+      },
+      {
+        "text": "Deixar para o Bruno quando ele pousar, já que quem quebrou conserta, e seguir fazendo merge enquanto isso.",
+        "why": "Consertar um main vermelho vem antes de trabalho novo, porque toda falha nova se esconde atrás da antiga, e qualquer um pode reverter."
+      },
+      {
+        "text": "Mudar o teste que falha para esperar o que o código faz agora, e a execução fica verde.",
+        "why": "Isso faz o check concordar com a quebra em vez de pegá-la."
+      },
+      {
+        "text": "Desfazer o commit dele com `git revert` e enviar isso.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-dvqq1q5p": {
+    "prompt": "Um relatório dos pedidos de março filtra com `WHERE created_at BETWEEN '2026-03-01' AND '2026-03-31'`, e `created_at` é um timestamp. Testando a borda do período, você inclui um pedido feito em `2026-03-31 14:00`. O que o relatório faz com ele?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4; Bancos de Dados Relacionais e SQL, aula 4.",
+    "choices": [
+      {
+        "text": "Deixa de fora, porque o limite superior é a meia-noite do começo do dia 31.",
+        "why": "Isso."
+      },
+      {
+        "text": "Mostra, porque o `BETWEEN` é inclusivo nas duas pontas.",
+        "why": "Inclusivo de `2026-03-31 00:00:00`, que é o que uma data pura representa; 14:00 já passou disso."
+      },
+      {
+        "text": "Recusa a consulta: uma data pura não se compara com uma coluna timestamp.",
+        "why": "A comparação roda; a data é lida como meia-noite e a linha some sem aviso."
+      },
+      {
+        "text": "Deixa de fora, junto com todo pedido de 1º de março, já que o `BETWEEN` exclui os dois limites.",
+        "why": "O `BETWEEN` inclui os dois limites; a armadilha é o que o superior significa num timestamp."
+      }
+    ]
+  },
+  "ex-3nzmaxgn": {
+    "prompt": "A tela de pedidos por cliente roda `SELECT c.name, count(*) FROM customers c LEFT JOIN orders o ON o.customer_id = c.id GROUP BY c.id, c.name`. Você a testa com um cliente de cada partição da contagem de pedidos: nenhum, um e vários. Qual partição revela um defeito, e como?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4; Bancos de Dados Relacionais e SQL, aula 6.",
+    "choices": [
+      {
+        "text": "Vários: o join repete o cliente uma vez por pedido, então o `count(*)` desse cliente sai dobrado.",
+        "why": "Uma linha por pedido é a contagem desejada aqui; a multiplicação aparece com um segundo join um-para-muitos, ou numa soma das colunas do próprio cliente."
+      },
+      {
+        "text": "Nenhum: esse cliente some da tela, porque o join não acha par para ele.",
+        "why": "Um `LEFT JOIN` mantém o cliente sem par, com nulos nas colunas da direita."
+      },
+      {
+        "text": "Nenhuma partição: o `count(*)` conta cada linha do grupo, o que está certo.",
+        "why": "Ele conta linhas, e o cliente sem pedidos ainda tem uma linha, feita de nulos."
+      },
+      {
+        "text": "Nenhum: esse cliente mostra 1, porque a linha de nulos é contada; `count(o.id)` dá 0.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-dkkw8gnb": {
+    "prompt": "O serviço de pedidos repete as falhas sozinho, tanto para o provedor de pagamento quanto para o próprio banco. Quais destas é certo mandar de novo? Marque todas as que se aplicam.",
+    "hint": "Automação de API e Mobile, aula 13; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Um `503` do provedor, depois de uma espera curta e aleatória.",
+        "why": "Isso."
+      },
+      {
+        "text": "SQLSTATE `23505` ao gravar a linha do pedido na tabela `orders`.",
+        "why": "Uma violação de unicidade quer dizer que a linha é mesmo duplicada; outra tentativa insere de novo."
+      },
+      {
+        "text": "SQLSTATE `40001` no `COMMIT`, refazendo a transação do zero.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um `422` do provedor para um pedido de sete lugares.",
+        "why": "O pedido em si está errado, e falha igual em toda tentativa."
+      }
+    ]
+  },
+  "ex-fs3xteej": {
+    "prompt": "A suíte compartilha um PostgreSQL, e uma fixture abre uma transação antes de cada teste e a desfaz depois. Depois de uma execução, as linhas escritas pelo teste de `place_order` continuam lá. Essa função abre uma conexão própria com os padrões do driver. Por que elas sobreviveram?",
+    "hint": "Testes Automatizados e CI/CD, aula 3; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "O PostgreSQL guarda no disco as linhas desfeitas até o próximo `VACUUM` rodar.",
+        "why": "Mudanças desfeitas não ficam visíveis para ninguém; linhas que ainda se leem foram confirmadas."
+      },
+      {
+        "text": "Um rollback desfaz o último comando do teste, e os anteriores ficam.",
+        "why": "Um rollback descarta a transação inteira; o que desfaz parte de uma é um savepoint."
+      },
+      {
+        "text": "A transação da fixture roda em `READ COMMITTED`, que deixa as linhas não confirmadas persistirem.",
+        "why": "O nível de isolamento decide o que os outros veem, não se uma escrita descartada sobrevive."
+      },
+      {
+        "text": "Lá o autocommit está ligado, então cada comando foi confirmado no instante em que rodou.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-9s7q7nxb": {
+    "prompt": "A CI roda os testes de integração em SQLite e a produção roda PostgreSQL. Um teste afirma que inserir `'three'` em `order_lines.quantity`, declarada `INTEGER NOT NULL CHECK (quantity > 0)`, é recusado. Ele falha na CI. Qual é a leitura certa?",
+    "hint": "Testes Automatizados e CI/CD, aula 1; Bancos de Dados Relacionais e SQL, aula 12.",
+    "choices": [
+      {
+        "text": "O esquema que a CI monta perdeu o `CHECK`, já que a produção recusa esse mesmo insert.",
+        "why": "O check está lá e passou: no SQLite um valor de texto é maior que qualquer número na comparação."
+      },
+      {
+        "text": "O SQLite guardou o texto, e lá `'three' > 0` é verdadeiro.",
+        "why": "Isso."
+      },
+      {
+        "text": "O teste é instável, dependendo do que testes anteriores deixaram no banco que compartilham.",
+        "why": "Aqui o SQLite dá a cada teste um arquivo próprio, e o insert é aceito em toda execução."
+      },
+      {
+        "text": "A asserção está errada: um banco recusa um texto numa coluna inteira quando a linha é lida de volta, não no insert.",
+        "why": "O PostgreSQL e o MySQL recusam já no insert, com `invalid input syntax` e o erro 1366."
+      }
+    ]
+  },
+  "ex-b78mr8wt": {
+    "prompt": "Uma transação de checkout roda em `SERIALIZABLE` e, entre o `BEGIN` e o `COMMIT`, chama o provedor de pagamento para cobrar o cartão. O commit falha com `40001`, o helper de repetição roda a transação de novo, e a segunda tentativa dá certo. Quantas vezes o cliente foi cobrado?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8; Automação de API e Mobile, aula 13.",
+    "choices": [
+      {
+        "text": "Uma: o rollback depois do `40001` desfez tudo o que a primeira tentativa fez.",
+        "why": "O banco desfez o próprio trabalho; ele não enxerga uma chamada a outro sistema."
+      },
+      {
+        "text": "Duas, a menos que cada tentativa mandasse ao provedor a mesma chave para essa compra.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma, porque o `SERIALIZABLE` roda as duas tentativas uma depois da outra.",
+        "why": "A ordem serial vale para transações dentro do banco; a cobrança aconteceu fora dele, nas duas tentativas."
+      },
+      {
+        "text": "Duas, e uma chave não ajudaria, já que a segunda tentativa é outra transação.",
+        "why": "O cliente escolhe a chave para uma intenção e a manda em toda tentativa; o provedor repete a primeira resposta."
+      }
+    ]
+  },
+  "ex-1d7rwgtt": {
+    "prompt": "Um relatório de defeito diz que a contagem de pedidos não pagos parece baixa. `orders` tem 50 linhas: 20 com `status = 'paid'`, 25 com `status = 'pending'` e 5 cujo `status` é nulo. Que número `SELECT count(*) FROM orders WHERE status <> 'paid'` devolve?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4."
+  },
+  "ex-24qz3mqq": {
+    "prompt": "O pedido 7 tem três linhas, com quantidades 1, 2 e 4, e dois pagamentos, de 50 e 30. Um relatório roda `SELECT o.id, sum(l.quantity), sum(p.amount) FROM orders o JOIN order_lines l ON l.order_id = o.id JOIN payments p ON p.order_id = o.id GROUP BY o.id`. O que ele mostra como `sum(p.amount)` para o pedido 7?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5."
+  },
+  "ex-vq05362p": {
+    "prompt": "Para conferir quais clientes não fizeram pedido, a aula 5 recomenda a forma que continua correta haja nulos ou não: `SELECT c.name FROM customers c WHERE ___ (SELECT 1 FROM orders o WHERE o.customer_id = c.id);`",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "NOT EXISTS"
+        ]
+      }
+    ]
+  },
+  "ex-3mejjex0": {
+    "prompt": "Você precisa cancelar à mão os pedidos em aberto de um cliente no servidor de teste, e acabou de digitar `BEGIN`. Ponha o resto na ordem que a aula 8 ensina.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8.",
+    "items": [
+      "Rodar a condição como um `SELECT` e anotar quais linhas voltam",
+      "Trocar o verbo por `UPDATE`, deixando o `WHERE` exatamente como estava",
+      "Ler a contagem que ele informa contra as linhas anotadas",
+      "`COMMIT` se batem, `ROLLBACK` se não batem"
+    ],
+    "trap": "Escrever o `UPDATE` primeiro e olhar depois: uma escrita não se reexecuta, e as linhas já mudaram quando você consegue ver a contagem."
+  },
+  "ex-ag0qghk5": {
+    "prompt": "Cada relatório abaixo dá uma resposta errada plausível e nenhum erro. Associe cada sintoma ao engano por trás dele.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5.",
+    "pairs": [
+      {
+        "left": "A lista de todos os clientes com seus pedidos de março perde os que não compraram em março",
+        "right": "Uma condição sobre a tabela da direita de um `LEFT JOIN`, escrita no `WHERE`"
+      },
+      {
+        "left": "A lista de clientes que nunca compraram volta vazia",
+        "right": "`NOT IN` sobre uma subconsulta cuja coluna tem um nulo"
+      },
+      {
+        "left": "O total dos limites de crédito fica muito acima do que a tabela de clientes soma",
+        "right": "Um join que repete cada cliente uma vez por pedido"
+      },
+      {
+        "left": "Os clientes que nunca compraram incluem alguns que têm pedidos",
+        "right": "Um anti-join testando uma coluna anulável com `IS NULL`"
+      }
+    ],
+    "right_distractors": [
+      "`DISTINCT` removendo as linhas que o join duplicou"
+    ]
+  },
+  "ex-zgp89ync": {
+    "prompt": "Testando o login, você digita `x' OR '1'='1` no campo de e-mail e entra como outra pessoa. A consulta é montada com a formatação de strings da linguagem e entregue ao `raw()` do ORM. Que mudança a aula 11 aceita como correção?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 11.",
+    "choices": [
+      {
+        "text": "Rejeitar qualquer e-mail que tenha aspas antes de chegar à consulta.",
+        "why": "O valor continua dentro do texto; a aula 11 não abre exceção para um valor que você verificou."
+      },
+      {
+        "text": "Declarar a coluna de e-mail `UNIQUE`, para o login casar com uma linha no máximo.",
+        "why": "`OR '1'='1'` casa com toda linha, com ou sem a restrição; o defeito é um valor lido como código."
+      },
+      {
+        "text": "Manter a formatação e passar a string montada por `PREPARE` e `EXECUTE`.",
+        "why": "Se o valor já está no texto quando é preparado, a forma que ele fixa inclui o `OR`."
+      },
+      {
+        "text": "Passar o e-mail ao `raw()` como parâmetro.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ebcx5z8t": {
+    "prompt": "O campo de exemplares do formulário de pedido é `<input id=\"copies\" name=\"copies\" type=\"number\" min=\"1\" max=\"5\" value=\"1\">`. Você faz a análise de valor limite de dois valores no navegador: 1 e 5 são enviados, e 0 e 6 são barrados pelo navegador, sem pedido nenhum sair. O que você aprendeu sobre onde o servidor traça as duas linhas?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4; HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "As duas linhas estão certas, já que o campo recusou exatamente os dois valores fora da faixa.",
+        "why": "Quem recusou foi o navegador; o servidor nunca viu 0 nem 6, e a checagem do navegador qualquer um desliga."
+      },
+      {
+        "text": "Pouco, até testar também o 3, porque um valor do meio mostra como a partição inteira se comporta.",
+        "why": "Um representante não diz nada sobre as bordas, e é nas bordas que um erro de um se esconde."
+      },
+      {
+        "text": "Nada sobre 0 e 6: eles precisam ser mandados de novo por fora do navegador, de uma cópia da página com `novalidate` ou de uma ferramenta de linha de comando.",
+        "why": "Isso."
+      },
+      {
+        "text": "A linha de cima está deslocada em um, porque um valor dentro da faixa nunca deveria ser recusado.",
+        "why": "6 está fora de `max=\"5\"`; o navegador o recusou corretamente, e isso é um fato sobre o navegador, não sobre o servidor."
+      }
+    ]
+  },
+  "ex-033vzrb7": {
+    "prompt": "Na página de reserva, `page.getByRole('button', { name: 'Reserve (div)' }).click()` estoura o tempo sem achar nada, embora o controle esteja na tela como `<div class=\"button\" onclick=\"reserve()\">Reserve (div)</div>`. Um colega sugere `page.locator('.button')` para o teste passar. O que você faz?",
+    "hint": "HTML e CSS, aula 2; Automação de Testes Web, aula 2.",
+    "choices": [
+      {
+        "text": "Reporta um defeito: o Tab nunca chega nele, e a árvore o chama de texto.",
+        "why": "Isso."
+      },
+      {
+        "text": "Usa `.button`: casa com o elemento na tela, e uma classe é a alça estável mais curta que a página oferece.",
+        "why": "Uma classe de estilo muda num redesenho, e a execução verde esconderia um controle que quem usa teclado não alcança."
+      },
+      {
+        "text": "Aumenta o tempo de espera, porque o controle é desenhado por um script e chega depois que o localizador desiste.",
+        "why": "Ele está no HTML desde o começo; nenhuma espera dá a uma `<div>` o papel de botão."
+      },
+      {
+        "text": "Troca por `getByText('Reserve (div)')`, que acha as mesmas palavras que o cliente lê.",
+        "why": "Acharia o texto e passaria, enquanto a página continua com um botão que ninguém de teclado ou leitor de tela consegue apertar."
+      }
+    ]
+  },
+  "ex-0nk9cb4m": {
+    "prompt": "O formulário da newsletter tem `<label for=\"name\">Your name</label> <input id=\"name\" name=\"name\">`, `<label>Email <input name=\"email\" type=\"email\"></label>` e `<input name=\"city\" placeholder=\"City\">`. Quais localizadores do Playwright acham o terceiro campo? Marque todas as que se aplicam.",
+    "hint": "HTML e CSS, aula 3; Automação de Testes Web, aula 2.",
+    "choices": [
+      {
+        "text": "`page.getByRole('textbox', { name: 'City' })`",
+        "why": "Isso."
+      },
+      {
+        "text": "`page.locator('#city')`",
+        "why": "`city` é o `name` do campo, o que o servidor recebe; não há `id` para o `#` achar."
+      },
+      {
+        "text": "`page.getByTestId('city')`",
+        "why": "Nada no campo tem `data-testid`."
+      },
+      {
+        "text": "`page.getByPlaceholder('City')`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-98aeyy0j": {
+    "prompt": "Para um teste que confere a nota da página de eventos, uma colega que escreve a folha de estilo propõe `#events article.event p.note` como localizador, argumentando que a especificidade (1,2,2) faz dele a escolha mais confiável. O que está errado no argumento?",
+    "hint": "HTML e CSS, aula 5; Automação de Testes Web, aula 2.",
+    "choices": [
+      {
+        "text": "Nada: especificidade maior quer dizer que o seletor casa com menos elementos, então é o mais seguro.",
+        "why": "A especificidade pesa uma regra contra outras regras; não diz nada sobre quantos elementos casam, e `.note` sozinho já acha um."
+      },
+      {
+        "text": "Esse número decide qual regra de CSS vence; para um teste, cada passo é uma promessa a cumprir.",
+        "why": "Isso."
+      },
+      {
+        "text": "A conta está errada: um id dentro de uma cadeia vale como classe, então é (0,3,2).",
+        "why": "Um id conta no primeiro número onde quer que esteja; a conta está certa, e mesmo assim não vem ao caso."
+      },
+      {
+        "text": "Deveria ser cortado para `#events .note`, que mantém a mesma especificidade e chega lá com menos passos no caminho.",
+        "why": "`#events .note` é (1,1,0); o motivo para cortar é ter menos promessas, não manter a pontuação."
+      }
+    ]
+  },
+  "ex-ynrpc0bz": {
+    "prompt": "Ligue cada coisa encontrada na página de reserva durante uma revisão de acessibilidade ao critério de sucesso da WCAG que ela viola.",
+    "hint": "HTML e CSS, aula 11; Testes Não Funcionais, aula 14.",
+    "pairs": [
+      {
+        "left": "O campo do nome tem `tabindex=\"1\"`, e o Tab chega nele antes da navegação do site",
+        "right": "2.4.3 Ordem do foco"
+      },
+      {
+        "left": "`*:focus { outline: none; }` sem nada desenhado no lugar",
+        "right": "2.4.7 Foco visível"
+      },
+      {
+        "left": "Uma barra fixa no pé da janela cobre o link que acabou de receber o Tab",
+        "right": "2.4.11 Foco não encoberto (mínimo)"
+      },
+      {
+        "left": "Com 320 pixels CSS de largura, a página inteira rola para o lado",
+        "right": "1.4.10 Reflow"
+      }
+    ],
+    "right_distractors": [
+      "2.1.1 Teclado",
+      "2.4.1 Ignorar blocos"
+    ]
+  },
+  "ex-9b07g36a": {
+    "prompt": "A foto da loja tem `srcset=\"shelves-480.png 480w, shelves-960.png 960w, shelves-1600.png 1600w\"` e `sizes=\"(min-width: 800px) 50vw, 100vw\"`. Você a abre no Chromium numa janela de 1024 de largura, com razão de pixels do dispositivo 2. Pela escolha que o Chromium fez nas cinco execuções da aula 4, qual é a largura, em pixels, do arquivo que você espera ver no painel Network?",
+    "hint": "HTML e CSS, aula 4."
+  },
+  "ex-9jgqyk6h": {
+    "prompt": "Um relatório de bug diz: \"A página de horários está totalmente em branco, e a aba do navegador mostra um título enorme cheio de sinais de menor e maior.\" Que erro no HTML explica os dois sintomas?",
+    "hint": "HTML e CSS, aula 1.",
+    "choices": [
+      {
+        "text": "A página não tem `<!doctype html>`, então é desenhada em modo quirks.",
+        "why": "O modo quirks parece quase certo, uns pixels a menos aqui e ali; ele não esvazia a página."
+      },
+      {
+        "text": "O arquivo foi salvo em ISO-8859-1 enquanto declara `utf-8`.",
+        "why": "Isso desenha um caractere de substituição no lugar de uma letra acentuada e deixa o resto da página em paz."
+      },
+      {
+        "text": "Um `<b>` nunca foi fechado no primeiro parágrafo.",
+        "why": "O parser o fecha e o reabre no parágrafo seguinte: a página aparece, com mais coisa em negrito."
+      },
+      {
+        "text": "O `<title>` não tem a tag de fechamento.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jtn823g1": {
+    "prompt": "Testando a página de horários, você não vê legenda acima da tabela. O painel Elements mostra `<caption class=\"visually-hidden\">Opening hours</caption>`, desenhada como uma caixa de 1 pixel por 1. O que você reporta?",
+    "hint": "HTML e CSS, aula 7.",
+    "choices": [
+      {
+        "text": "Um defeito: a legenda deveria ser escondida com `display: none`, que não deixa caixa de 1 pixel na página.",
+        "why": "`display: none` a tira também da árvore de acessibilidade, e a tabela perde o nome."
+      },
+      {
+        "text": "Nada: a árvore de acessibilidade continua dando nome à tabela, e escondê-la só da tela é a intenção.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um defeito: leitores de tela pulam qualquer elemento menor que o alvo mínimo de 24 pixels.",
+        "why": "Tamanho de alvo é sobre controles que alguém aperta; a árvore nomeia a tabela a partir de uma legenda de 1 por 1."
+      },
+      {
+        "text": "Um defeito: a legenda deveria sair da tabela e virar um título, onde todo mundo a lê.",
+        "why": "Um título acima da tabela não lhe dá nome; o `<caption>` dá."
+      }
+    ]
+  },
+  "ex-qbx3z4zc": {
+    "prompt": "Um navegador configurado para o Brasil mostra o campo de retirada, `<input name=\"pickup\" type=\"date\">`, como `08/10/2026` depois que Ana escolhe 8 de outubro de 2026 no calendário. No pedido que o formulário envia, o par desse campo é `pickup=___`.",
+    "hint": "HTML e CSS, aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "2026-10-08"
+        ]
+      }
+    ]
+  },
+  "ex-va8frcyp": {
+    "prompt": "Cinco regras definem `color` na mesma nota, e você quer saber, antes de abrir o DevTools, qual delas a especificidade favorece. Ponha os seletores em ordem de especificidade, do menor para o maior.",
+    "hint": "HTML e CSS, aula 5.",
+    "items": [
+      "`:where(#events .event) p`",
+      "`main article p`",
+      "`.note`",
+      "`.event p.note`",
+      "`#events p`"
+    ],
+    "trap": "Compare primeiro os ids, depois as classes, depois os nomes de elemento, e nunca some: três nomes de elemento perdem para uma classe, e `:where()` conta zero seja o que for que tenha dentro."
+  },
+  "ex-mb005btx": {
+    "prompt": "O axe não aponta nenhuma violação na página de eventos, onde dois links diferentes dizem *Click here*. A desenvolvedora pede que você aprove a página como acessível. O que você responde?",
+    "hint": "HTML e CSS, aula 2.",
+    "choices": [
+      {
+        "text": "Aprovo: o axe rodou as regras da WCAG 2.2 AA, o nível para o qual a maioria das leis aponta.",
+        "why": "Uma máquina confere só parte do que está errado numa página; as estimativas publicadas vão de cerca de um terço a cerca de metade."
+      },
+      {
+        "text": "Os links estão bons: lidos no meio dos parágrafos eles fazem sentido, e é assim que o leitor de tela os encontra.",
+        "why": "Quem usa leitor de tela muitas vezes abre a lista de links da página, e ali os dois soam iguais e não dizem nada."
+      },
+      {
+        "text": "Ainda não: o axe aceita *Click here* como nome, e a lista de links da página o lê duas vezes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ainda não: rode o axe de novo com as regras de boas práticas ligadas, que apontam dois links com o mesmo texto.",
+        "why": "A execução já incluía as boas práticas do axe, e ele aceitou *Click here*; essa conferência é de uma pessoa."
+      }
+    ]
+  },
+  "ex-mbg8fzmz": {
+    "prompt": "O aviso de feriado é `position: absolute; inset: 0; margin: auto; width: 300px; height: 200px; box-sizing: border-box`, dentro de uma camada com `position: fixed; inset: 0`. Você o confere numa janela de 1280 de largura e 720 de altura. Em que x, em pixels, deveria estar a borda esquerda do aviso?",
+    "hint": "HTML e CSS, aula 7."
+  },
+  "ex-cvt04h06": {
+    "prompt": "Um colega copia o `withRetries` da aula 16, faz ele repassar `{ method: \"POST\", … }` para o `getJSON` e o usa para cadastrar um livro de título vazio. O que acontece?",
+    "hint": "JavaScript, aula 16; Automação de API e Mobile, aula 13.",
+    "choices": [
+      {
+        "text": "Um pedido só: o `fetch` resolve num 422, então o `catch` do laço nunca roda.",
+        "why": "Isso vale para o `fetch` puro; o `getJSON` transforma qualquer status fora de 200 a 299 em um `Error` lançado."
+      },
+      {
+        "text": "Dois pedidos: o servidor vê o mesmo corpo de novo e repete a primeira resposta.",
+        "why": "Um servidor repete a resposta para uma chave de idempotência repetida, e nenhuma foi enviada."
+      },
+      {
+        "text": "Quatro pedidos, cada um respondido com 422, e então o erro chega a quem chamou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Quatro pedidos e até quatro livros salvos, porque um `POST` repetido cria de novo a cada vez que é enviado.",
+        "why": "Um 422 é uma recusa antes de salvar qualquer coisa; o prejuízo são quatro tentativas por uma resposta que não muda."
+      }
+    ]
+  },
+  "ex-kvnp26g5": {
+    "prompt": "Um teste Playwright chama `page.getByLabel('Fruit').pressSequentially('papaya');` sem `await` e, na linha seguinte, espera a contagem de `#results li`. O que essa contagem mede?",
+    "hint": "JavaScript, aula 14; Automação de Testes Web, aula 3.",
+    "choices": [
+      {
+        "text": "A lista num momento em que a digitação mal começou.",
+        "why": "Isso."
+      },
+      {
+        "text": "A lista depois da última tecla, já que o Playwright termina uma ação antes de a próxima linha rodar.",
+        "why": "Só o `await` faz o teste esperar; sem ele a digitação é iniciada e a linha seguinte roda na hora."
+      },
+      {
+        "text": "Nada: chamar um método `async` sem `await` para o arquivo com um `SyntaxError`.",
+        "why": "Deixar o `await` de fora é código válido, e é justamente por isso que o erro é fácil de cometer."
+      },
+      {
+        "text": "A lista final de três frutas, já que toda resposta chega antes de uma contagem poder rodar.",
+        "why": "As respostas ainda chegavam centenas de milissegundos depois do fim da digitação; a contagem vem bem antes."
+      }
+    ]
+  },
+  "ex-5v7831c7": {
+    "prompt": "Para acelerar o pipeline, uma colega guarda `node_modules` em cache entre execuções, com a chave num hash do `package-lock.json`. O passo seguinte é `npm ci`, e as execuções demoram o mesmo que antes. Por quê?",
+    "hint": "JavaScript, aula 21; Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "A chave é frouxa demais: o hash do lockfile muda a cada commit.",
+        "why": "O lockfile só muda quando uma dependência muda; o hash do arquivo que fixa as versões é o tipo certo de chave."
+      },
+      {
+        "text": "O `npm ci` esvazia essa pasta primeiro e instala tudo de novo, então a cópia restaurada é descartada a cada vez.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `npm ci` para com `EUSAGE` quando encontra um `node_modules` que não foi ele que criou.",
+        "why": "`EUSAGE` é o que ele diz quando `package.json` e lockfile discordam; uma pasta existente ele remove."
+      },
+      {
+        "text": "A chave deveria ser só o sistema operacional, para todo branch usar a mesma cópia.",
+        "why": "Uma chave só no sistema restaura pacotes velhos depois que uma versão fixada muda."
+      }
+    ]
+  },
+  "ex-zv3kjf58": {
+    "prompt": "Um passo de CI roda `node seed.mjs`, que carrega dados de teste dentro de `try { … } catch {}` e depois imprime `seeded`. O passo fica verde, e os testes de navegador depois dele falham porque os dados não estão lá. Por que o passo ficou verde?",
+    "hint": "JavaScript, aula 17; Automação de Testes Web, aula 14.",
+    "choices": [
+      {
+        "text": "O job lê o log, e a última linha que ele viu foi `seeded`.",
+        "why": "Um job lê o código de saída, não o texto; o texto só enganou quem leu o log."
+      },
+      {
+        "text": "A carga rodou num callback, e um `try` não captura o que um callback lança depois.",
+        "why": "Sem captura, teria encerrado o processo com código 1 e um passo vermelho; verde quer dizer que algo capturou."
+      },
+      {
+        "text": "O serviço de CI rodou o passo de novo, e uma nova tentativa que passa esconde a falha.",
+        "why": "Nada foi repetido; uma execução terminou com código 0 porque o erro nunca saiu do script."
+      },
+      {
+        "text": "O `catch` vazio engoliu o erro, então o script terminou com código de saída 0, que é o número que o job lê.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-er16wqs0": {
+    "prompt": "Um teste manda `POST /v1/orders` com `signal: AbortSignal.timeout(2000)` e recebe um `TimeoutError`. O que ele pode concluir sobre o pedido?",
+    "hint": "JavaScript, aula 16; Automação de API e Mobile, aula 13.",
+    "choices": [
+      {
+        "text": "Não foi criado: o abort cancelou o trabalho no servidor também.",
+        "why": "Abortar para a espera deste lado e não desfaz o que o servidor já fez."
+      },
+      {
+        "text": "Falhou, então o teste pode mandar o mesmo `POST` de novo na hora.",
+        "why": "Sem chave de idempotência, repetir um pedido que pode ter dado certo pode criar um segundo pedido."
+      },
+      {
+        "text": "Nada ainda: talvez tenha sido salvo, então pergunte ao servidor o estado dele.",
+        "why": "Isso."
+      },
+      {
+        "text": "Foi criado, já que um `TimeoutError` só surge depois que o servidor respondeu tarde.",
+        "why": "Um `TimeoutError` quer dizer que nenhuma resposta chegou a tempo; não diz nada sobre o que o servidor fez."
+      }
+    ]
+  },
+  "ex-bxymqpgc": {
+    "prompt": "O contrato diz que o campo `coupon` de um pedido está sempre presente, com um código ou `null`. O cliente manda `JSON.stringify({ seats: 2, coupon: input.coupon })`, e para um cliente sem cupom `input.coupon` é `undefined`. O que o servidor recebe?",
+    "hint": "JavaScript, aula 16; Automação de API e Mobile, aula 2.",
+    "choices": [
+      {
+        "text": "`{\"seats\":2,\"coupon\":null}`, que o contrato permite.",
+        "why": "O `stringify` escreve `null` para `NaN`; um campo com `undefined` fica de fora."
+      },
+      {
+        "text": "`{\"seats\":2}`, um corpo que não traz campo `coupon` nenhum.",
+        "why": "Isso."
+      },
+      {
+        "text": "`{\"seats\":2,\"coupon\":\"undefined\"}`, com a palavra escrita como string.",
+        "why": "Uma template string imprimiria essa palavra; o JSON não tem como escrever `undefined` e descarta o campo."
+      },
+      {
+        "text": "Nada: o `stringify` lança um erro num campo cujo valor é `undefined`, antes de qualquer pedido.",
+        "why": "Ele não lança nada; o campo some sem aviso, e é por isso que um teste confere que ele está presente."
+      }
+    ]
+  },
+  "ex-b05p6hzf": {
+    "prompt": "Um chamado diz que a página da estante parece certa, mas o console mostra `Uncaught TypeError: Cannot read properties of undefined (reading 'title')`. Pausado na exceção, o escopo mostra `i = 3`, `book = undefined` e `books = Array(3)`. Qual é o defeito?",
+    "hint": "JavaScript, aula 22.",
+    "choices": [
+      {
+        "text": "A API mandou um livro sem `title`, e a página precisa de um valor padrão para ele.",
+        "why": "O próprio `book` é `undefined`, não um livro sem um campo: o índice 3 fica depois dos três livros."
+      },
+      {
+        "text": "O `fetch` resolveu antes de o corpo chegar, então a lista estava vazia.",
+        "why": "`books` tem três itens na pausa; o `await res.json()` esperou o corpo inteiro."
+      },
+      {
+        "text": "Nenhum que um usuário perceba, já que os três livros estão na tela e só o console reclama.",
+        "why": "Um erro lançado abandona o que o script ia fazer em seguida; a página parece certa e está errada."
+      },
+      {
+        "text": "O laço roda enquanto `i <= books.length` e lê um livro a mais.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-rr3g1ge9": {
+    "prompt": "Um teste salva um objeto como JSON antes de um passo e o lê de volta depois, para comparar. O objeto é `{ year: 1865, tags: [\"romance\"], added: new Date(Date.UTC(2026, 9, 6)), copiesBy: new Map([[\"ana\", 1]]), rating: NaN }`. Quais campos voltam diferentes do que entrou? Marque todas as que se aplicam.",
+    "hint": "JavaScript, aula 16.",
+    "choices": [
+      {
+        "text": "`year`",
+        "why": "Números fazem a viagem intactos; só `NaN` e `Infinity` não têm grafia em JSON."
+      },
+      {
+        "text": "`added`, que volta como string",
+        "why": "Isso."
+      },
+      {
+        "text": "`tags`, um array de strings",
+        "why": "Arrays e strings fazem parte do que o JSON é feito, então voltam como foram."
+      },
+      {
+        "text": "`copiesBy`",
+        "why": "Isso."
+      },
+      {
+        "text": "`rating`, agora `null`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-y6jnm60r": {
+    "prompt": "O `withRetries(url, attempts = 4)` da aula 16 espera `100 * 2 ** (i - 1)` ms depois de cada tentativa que falha, menos a última, cujo erro ele lança. Contra um servidor que responde 503 a todo pedido, quantos milissegundos ele passa esperando antes de o erro chegar a quem chamou?",
+    "hint": "JavaScript, aula 16."
+  },
+  "ex-vs9a6qte": {
+    "prompt": "Três cópias de um arquivo são pedidas ao mesmo tempo a três espelhos: A rejeita depois de 150 ms, B cumpre depois de 400 ms, C rejeita depois de 250 ms. Depois de quantos milissegundos o `Promise.any` sobre os três se resolve?",
+    "hint": "JavaScript, aula 14."
+  },
+  "ex-2vccbp0a": {
+    "prompt": "Um auxiliar de teste se reduz a isto:\n\n```javascript\nsetTimeout(() => console.log(\"timer\"), 0);\nasync function check() {\n  console.log(\"check starts\");\n  await null;\n  console.log(\"after await\");\n}\ncheck();\nconsole.log(\"last line\");\n```\n\nPonha em ordem as quatro linhas que ele imprime.",
+    "hint": "JavaScript, aulas 13 e 14.",
+    "items": [
+      "`check starts`",
+      "`last line`",
+      "`after await`",
+      "`timer`"
+    ],
+    "trap": "A primeira linha da função roda quando ela é chamada; só o que vem depois do `await` espera, como microtarefa, e toda microtarefa roda antes da tarefa do timer."
+  },
+  "ex-4419yrm1": {
+    "prompt": "O pedido de um smoke check ao staging precisa desistir depois de cinco segundos em vez de travar o job, já que o `fetch` não tem prazo próprio. A opção que ele passa é `{ signal: AbortSignal.___(5000) }`.",
+    "hint": "JavaScript, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ]
+      }
+    ]
+  },
+  "ex-e98gwje6": {
+    "prompt": "Uma suíte de testes precisa de quatro coisas de grupos de promises. Associe cada necessidade ao combinador que a atende.",
+    "hint": "JavaScript, aula 14.",
+    "pairs": [
+      {
+        "left": "Um relatório de quais de cinco endpoints de saúde responderam, com as falhas incluídas",
+        "right": "`Promise.allSettled`"
+      },
+      {
+        "left": "A cópia mais rápida de um arquivo entre três espelhos, ignorando os que estão fora do ar",
+        "right": "`Promise.any`"
+      },
+      {
+        "left": "Todos os resultados em ordem, desistindo na primeira rejeição",
+        "right": "`Promise.all`"
+      },
+      {
+        "left": "O que se resolver primeiro, a chamada de verdade ou um timer que rejeita",
+        "right": "`Promise.race`"
+      }
+    ]
+  },
+  "ex-d1zcscdj": {
+    "prompt": "Uma testadora que escreve folhas de estilo precisa do título da Mango e escolhe `main > ul#products > li.card:nth-child(2) > h2` em vez de `[data-testid=\"product-mango\"] h2`, dizendo que o primeiro tem especificidade maior e por isso é o localizador mais seguro. Os dois acham um elemento hoje. O que está errado nesse raciocínio?",
+    "hint": "Automação de Testes Web, aula 2; HTML e CSS, aula 5.",
+    "choices": [
+      {
+        "text": "A especificidade dele é menor do que parece: `:nth-child(2)` conta zero, como `:where()`.",
+        "why": "Uma pseudoclasse conta junto com as classes, no número do meio; só `:where()` conta zero."
+      },
+      {
+        "text": "Nada, desde que ele ache um único elemento: um localizador que acha exatamente uma coisa na página hoje é, por isso mesmo, um localizador estável.",
+        "why": "Os dois acham um hoje; o que muda é quantos fatos sobre a página cada um precisa que continuem verdadeiros."
+      },
+      {
+        "text": "A especificidade decide entre duas regras de CSS; um localizador não disputa com nenhuma, e cada passo a mais é uma promessa a cumprir.",
+        "why": "Isso."
+      },
+      {
+        "text": "O id é o que o deixa frágil, porque o id é a parte que a especificidade compara por último.",
+        "why": "Os ids são comparados primeiro; as partes frágeis aqui são a cadeia longa e a posição."
+      }
+    ]
+  },
+  "ex-4dyys49r": {
+    "prompt": "Na página de busca, `papaya` digitado rápido deixa a lista com três frutas, porque a resposta a `p` chega por último e é desenhada. Quais destas mudanças em `search.js` impediriam que a resposta a uma pergunta mais antiga substituísse a lista? Marque todas as que se aplicam.",
+    "hint": "Automação de Testes Web, aula 3; JavaScript, aula 16.",
+    "choices": [
+      {
+        "text": "Dar a toda requisição `{ signal: AbortSignal.timeout(1000) }`.",
+        "why": "A resposta a `p` leva uns 750 ms, então um limite de um segundo a deixa chegar e ser desenhada como antes."
+      },
+      {
+        "text": "Guardar o `AbortController` da requisição em andamento e chamar o seu `abort()` quando a próxima tecla começar outra.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr `await` na frente de `results.replaceChildren(...)`, para as respostas serem desenhadas na ordem em que as perguntas saíram.",
+        "why": "`replaceChildren` não devolve nada para esperar; a ordem do desenho continua sendo a ordem de chegada."
+      },
+      {
+        "text": "Lembrar o texto que cada requisição pediu e descartar a resposta quando a caixa não tiver mais esse texto.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-v590zfxa": {
+    "prompt": "Um job de CI roda `npx playwright test --retries 2`, e hoje imprimiu `5 flaky` e `15 passed`. O time quer que uma execução assim bloqueie o merge e continue mostrando quais testes só passaram numa segunda tentativa. O que faz isso?",
+    "hint": "Automação de Testes Web, aula 14; Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "Acrescentar `--fail-on-flaky-tests` ao mesmo comando.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: a CI já deixa o job vermelho quando o resumo tem uma contagem de flaky.",
+        "why": "A CI lê o código de saída do passo, não a saída dele, e com as novas tentativas esta execução saiu com 0."
+      },
+      {
+        "text": "Trocar para `--retries 0`, para que um teste que falha uma vez conte como falha.",
+        "why": "Isso bloqueia o merge, mas sem segunda tentativa nada diz quais falhas eram instáveis."
+      },
+      {
+        "text": "Subir para `--retries 3`, para os instáveis terem mais uma chance de passar limpo.",
+        "why": "Uma terceira tentativa é a mesma moeda jogada de novo, e o job continua saindo com 0."
+      }
+    ]
+  },
+  "ex-exghg9cq": {
+    "prompt": "As 300 verificações de navegador de um time levam cerca de um minuto e meio num worker, então os desenvolvedores param de rodá-las a cada mudança e passam a rodá-las uma vez, antes do merge. Além dos minutos de máquina, o que isso custa?",
+    "hint": "Automação de Testes Web, aula 21; Fundamentos de Qualidade de Software, aula 3.",
+    "choices": [
+      {
+        "text": "Mais alarmes falsos, já que uma suíte que roda menos vezes falha mais em cada execução.",
+        "why": "A chance de falhar sem motivo é de cada execução; rodar menos vezes não a aumenta."
+      },
+      {
+        "text": "Nada além disso: a correção é a mesma edição, seja qual for o dia em que a suíte acha o defeito.",
+        "why": "A edição pode ser a mesma; o que cresce é o que se constrói sobre o defeito, quem o encontra e quem lembra o porquê."
+      },
+      {
+        "text": "Os defeitos que ela acha passam a ser de requisitos, o tipo mais caro de corrigir.",
+        "why": "Quando a suíte roda muda quando ela acha um defeito, não onde ele foi cometido."
+      },
+      {
+        "text": "Cada defeito espera mais para ser visto, e enquanto isso mais coisa é construída sobre ele e menos se lembra do porquê.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-gwc84pp8": {
+    "prompt": "Um seletor de horário de entrega chegou ao ambiente de teste hoje de manhã. Ninguém o usou ainda, e a especificação tem dois parágrafos. A sua líder pede testes de navegador dele até a noite. O que os dois cursos mandam fazer primeiro?",
+    "hint": "Automação de Testes Web, aula 22; Teste Manual e Gestão de Testes, aula 11.",
+    "choices": [
+      {
+        "text": "Gravar os fluxos principais com `npx playwright codegen` agora e arrumar o código gerado quando passar.",
+        "why": "Uma gravação também registra um palpite: ninguém olhou ainda qual é o comportamento certo."
+      },
+      {
+        "text": "Uma sessão exploratória com tempo marcado, missão e anotações; depois, automatizar o que ela mostrar que importa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Escrever os testes a partir dos dois parágrafos ainda hoje, porque o teste escrito mais cedo acha defeitos mais barato.",
+        "why": "Antes de alguém ver a funcionalidade, um teste congela um palpite sobre a resposta certa."
+      },
+      {
+        "text": "Deixá-lo sem teste até o design se firmar, já que um teste escrito agora terá manutenção no mês que vem.",
+        "why": "Uma funcionalidade que ainda muda é testada à mão, não deixada de lado; ela está na sua frente hoje."
+      }
+    ]
+  },
+  "ex-7x6ychyz": {
+    "prompt": "Um teste de cadastro digita o nome fixo `maria`, e passou em todas as execuções da CI durante meses. Apontado para o servidor de staging, cujo banco ninguém esvazia, ele passa uma vez e depois falha com `Received: \"maria already exists\"`. O código é o mesmo arquivo nos dois lugares. O que explica isso?",
+    "hint": "Automação de Testes Web, aula 15; Teste Manual e Gestão de Testes, aula 21.",
+    "choices": [
+      {
+        "text": "O staging roda outro build, e a rota de cadastro dele tem um defeito que o build da CI não tem.",
+        "why": "O `409` é a loja respondendo certo: um nome que já existe deve ser recusado."
+      },
+      {
+        "text": "As execuções em staging não têm novas tentativas; com `--retries 2` a tentativa seguinte ficaria verde.",
+        "why": "A Maria continua lá em todas as tentativas, então repetir encontra a mesma recusa."
+      },
+      {
+        "text": "Os dados fazem parte do ambiente: a CI sobe uma loja vazia a cada execução, e o staging guarda a Maria da execução anterior.",
+        "why": "Isso."
+      },
+      {
+        "text": "Com `CI` definida, o Playwright pula o bloco `webServer`, então na CI o teste nunca chegou ao formulário.",
+        "why": "Com `CI` definida, o Playwright sobe uma loja nova toda vez; o teste chegou ao formulário em cada execução."
+      }
+    ]
+  },
+  "ex-c894bn8d": {
+    "prompt": "Para dois workers nunca colidirem, um teste chama o seu cliente de `maria-${testInfo.workerIndex}`. Com a loja deixada rodando em outro terminal, a suíte roda duas vezes seguidas em dois workers. O que a segunda execução relata?",
+    "hint": "Automação de Testes Web, aula 15.",
+    "choices": [
+      {
+        "text": "O cadastro é recusado com `409`, porque os índices 0 e 1 voltam em toda execução.",
+        "why": "Isso."
+      },
+      {
+        "text": "Passa: cada execução dá aos seus workers índices que nenhuma execução anterior usou.",
+        "why": "Os índices de worker se repetem de uma execução para outra; são únicos entre workers, não entre execuções."
+      },
+      {
+        "text": "Falha já na primeira execução, porque os dois workers recebem o índice 0.",
+        "why": "Dois workers rodando ao mesmo tempo têm índices diferentes; é para isso que o índice existe."
+      },
+      {
+        "text": "Passa, porque o Playwright sobe uma loja nova e vazia antes de cada execução.",
+        "why": "Só quando nada responde na porta 3000, ou com `CI` definida; aqui a loja que está rodando é reaproveitada."
+      }
+    ]
+  },
+  "ex-rnktd4yz": {
+    "prompt": "Um teste do portão falha de vez em quando, e ninguém sabe por quê. Ponha os passos da aula 14 em ordem, de quando se suspeita dele até voltar a confiar nele.",
+    "hint": "Automação de Testes Web, aula 14.",
+    "items": [
+      "Movê-lo para uma pasta que a configuração do portão não lê",
+      "Rodá-lo com `--repeat-each 20` e anotar quantas tentativas falharam",
+      "Rodar as mesmas vinte com `--workers 1` e comparar a contagem",
+      "Corrigir a causa que a comparação aponta e medir a taxa de novo",
+      "Devolvê-lo para `tests/`"
+    ],
+    "trap": "Corrigir primeiro e medir depois é o deslize comum: sem a taxa de antes, vinte passagens depois da correção não provam nada sobre quão rara era a falha."
+  },
+  "ex-9vy7rrh6": {
+    "prompt": "Em `/ssr`, como a aula 6 o construiu primeiro, um teste espera com `await expect(button).toBeEnabled()` antes de clicar em **Add to basket** da Banana, e depois espera que a contagem diga `1`. O que acontece?",
+    "hint": "Automação de Testes Web, aula 6.",
+    "choices": [
+      {
+        "text": "A espera segura até `ssr.js` ligar o handler, e o teste passa em uns dois segundos.",
+        "why": "Nada no botão muda quando o handler é ligado, então não há nada para a espera ver."
+      },
+      {
+        "text": "O Playwright se recusa a clicar, porque as verificações de acionabilidade não acham handler no botão.",
+        "why": "As verificações olham se está visível, estável, habilitado e descoberto; handler não está entre elas."
+      },
+      {
+        "text": "A espera estoura depois de cinco segundos, porque o botão fica desabilitado até `ssr.js` rodar.",
+        "why": "Essa é a página depois da correção dos desenvolvedores; como construída primeiro, os botões chegam habilitados."
+      },
+      {
+        "text": "Ela passa na hora, o clique cai antes de `ssr.js` rodar, e o contador fica em `0`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-0kkz20dc": {
+    "prompt": "No app em `/spa/`, um clique em **Basket** chama `history.pushState` e só depois busca a cesta. Um teste segue o clique com `await page.___('**/spa/basket')` e então lê `Fruit` no título, porque essa espera retorna assim que o endereço bate. Qual é o método?",
+    "hint": "Automação de Testes Web, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "waitForURL"
+        ]
+      }
+    ]
+  },
+  "ex-j8c18dc4": {
+    "prompt": "Nenhum dos casos abaixo deveria virar um teste de navegador comum. Associe cada um ao que a aula 22 faz no lugar.",
+    "hint": "Automação de Testes Web, aula 22.",
+    "pairs": [
+      {
+        "left": "Um CAPTCHA no formulário de cadastro",
+        "right": "Desligá-lo no ambiente de teste, ou usar as chaves de teste documentadas pelo fornecedor"
+      },
+      {
+        "left": "Pagar pelo fornecedor de cartão da loja",
+        "right": "O sandbox do fornecedor e os seus cartões de teste"
+      },
+      {
+        "left": "Uma funcionalidade cujo design muda no mês que vem",
+        "right": "Testá-la à mão até o design se firmar"
+      },
+      {
+        "left": "Se a borda é o verde certo",
+        "right": "Uma pessoa olha; um teste verifica os fatos por baixo"
+      }
+    ],
+    "right_distractors": [
+      "Gravá-lo uma vez e repetir a gravação a cada push"
+    ]
+  },
+  "ex-pm50ayj1": {
+    "prompt": "A aula 21 contou as cestas que os oito produtos da loja permitem quando cada fruta pode estar nela de nenhuma a três vezes. Suponha que cada uma possa estar de nenhuma a duas vezes. Quantas cestas diferentes são?",
+    "hint": "Automação de Testes Web, aula 21."
+  },
+  "ex-pnht46ep": {
+    "prompt": "O teste offline da aula 16 aponta o Tickets para `http://10.0.2.2:9`, onde nada no computador escuta, em vez de `10.255.255.1`, um endereço que nenhuma máquina da rede tem. O Tickets dá cinco segundos à conexão. Por que essa escolha?",
+    "hint": "Automação de API e Mobile, aula 16; Fundamentos da Web e Internet, aula 2.",
+    "choices": [
+      {
+        "text": "Os dois falham na hora; `10.0.2.2` é usado só porque o arquivo de segurança de rede o nomeia.",
+        "why": "O curl esperou 5002 ms pelo endereço que ninguém tem; só a porta sem nada atrás falhou depois de 0 ms."
+      },
+      {
+        "text": "O endereço privado é recusado na hora por um roteador, enquanto a porta 9 faz o Tickets esgotar o tempo de leitura.",
+        "why": "É o contrário: ninguém diz não a um endereço que ninguém tem, e uma porta que ninguém reivindicou é recusada na hora."
+      },
+      {
+        "text": "Uma porta que ninguém reivindicou é recusada na hora; um endereço que ninguém tem nunca diz não, e cada carga esperaria cinco segundos.",
+        "why": "Isso."
+      },
+      {
+        "text": "A porta 9 devolve um status de erro que o Tickets consegue mostrar, e o endereço privado não devolve nada que ele consiga ler.",
+        "why": "Nada responde na porta 9: o computador recusa a conexão, e nenhum status HTTP chega a ser enviado."
+      }
+    ]
+  },
+  "ex-rdvtyejf": {
+    "prompt": "Seu schema `order.json` foi escrito a partir das respostas de `POST /v1/orders`. Um pedido cancelado com `DELETE` e lido de novo falha nele: `/status must be equal to one of the allowed values: confirmed, declined, failed`. O que você faz primeiro?",
+    "hint": "Automação de API e Mobile, aula 10.",
+    "choices": [
+      {
+        "text": "Ler o `openapi.yaml` e a intenção do código; os dois listam `cancelled`, então o schema é que está errado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Abrir um defeito contra o boxoffice: a resposta quebra o schema, e o schema é o contrato.",
+        "why": "O contrato é o `openapi.yaml`, que lista `cancelled`; este schema foi escrito a partir do caminho de criação e nunca viu um cancelamento."
+      },
+      {
+        "text": "Tirar o `enum` de `status`, para que um valor que ninguém listou não possa mais derrubar o teste numa execução seguinte.",
+        "why": "Aí um status de fato errado passa também; acrescente o único valor que o contrato nomeia."
+      },
+      {
+        "text": "Parar de checar pedidos cancelados, já que o `DELETE` responde `204` e não devolve nada que um cliente leia.",
+        "why": "O pedido continua sendo lido depois de cancelado, e o status dele é uma promessa do contrato."
+      }
+    ]
+  },
+  "ex-8rf2ac84": {
+    "prompt": "Um passo do pipeline pega o segredo do cliente nos segredos criptografados do repositório, busca com ele um token do boxoffice e depois chama a API sob `bash -x`, para que as falhas fiquem mais fáceis de ler. Um colega diz que o log está seguro porque o GitHub mascara segredos. Está?",
+    "hint": "Automação de API e Mobile, aula 3; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Sim: o GitHub esconde todo valor com cara de JWT, venha do passo que vier.",
+        "why": "O mascaramento troca os valores registrados como segredos, por correspondência exata; ele não sabe nada do formato de um token."
+      },
+      {
+        "text": "Sim: o token é criptografado, então a linha que o `bash -x` imprime não serve para quem não tem o segredo do servidor.",
+        "why": "Um JWT é assinado, não criptografado: qualquer um lê as claims, e a própria string é o que quem chama manda depois de `Bearer`."
+      },
+      {
+        "text": "Não, mas só porque o segredo do cliente aparece; o token dura pouco e é inofensivo num log.",
+        "why": "O segredo do cliente está registrado, então é mascarado; o que sai inteiro é o token, e ele funciona durante toda a validade."
+      },
+      {
+        "text": "Não: o token nunca foi registrado, então o `bash -x` o imprime inteiro.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-y3wa70nr": {
+    "prompt": "O boxoffice vai rodar em três cópias que compartilham um banco, e a corrida da aula 13 vai ser corrigida com uma tabela de chaves de idempotência. Um desenvolvedor propõe: abrir uma transação, fazer `SELECT` da chave e fazer `INSERT` dela como 'em andamento' só se o `SELECT` não achou nada. O que você diz?",
+    "hint": "Automação de API e Mobile, aula 13; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Funciona: a transação faz da verificação e da inserção um passo só, e nenhuma outra cópia entra no meio.",
+        "why": "Duas transações podem ler 'nenhuma linha' e inserir cada uma; verificar e depois inserir é write skew mesmo dentro de uma transação."
+      },
+      {
+        "text": "As duas cópias não acham nada e as duas inserem; declare a chave única e faça da própria inserção a reserva.",
+        "why": "Isso."
+      },
+      {
+        "text": "Funciona em `REPEATABLE READ`, onde cada cópia vê uma visão consistente da tabela inteira durante a transação inteira.",
+        "why": "Cada visão é consistente e correta quando tirada; nenhuma mostra a inserção da outra, então as duas cópias reservam a chave."
+      },
+      {
+        "text": "Guarde as chaves na memória de cada cópia, como o boxoffice faz hoje, e reserve-as ali antes de cobrar.",
+        "why": "A memória é de uma cópia só: uma nova tentativa que chega a outra cópia não acha nada, e por isso a reserva precisa de um lugar compartilhado."
+      }
+    ]
+  },
+  "ex-3ry5r9fv": {
+    "prompt": "O `seats.feature` da aula 8 compra assentos de `sh-102` só nas linhas `1` e `6`, então os 120 assentos duram dezessete execuções. Uma linha `| 3 | 201 |` é acrescentada no fim dos Examples. Num boxoffice recém-iniciado, rodando só essa feature várias vezes seguidas, quantas execuções seguidas passam antes de uma falhar?",
+    "hint": "Automação de API e Mobile, aula 8."
+  },
+  "ex-wtp3538q": {
+    "prompt": "Os testes do boxoffice rodam contra o stub de pagamentos em vez do provedor real. Quais destas coisas o stub dá aos testes e o provedor real não dá? Escolha todas as que se aplicam.",
+    "hint": "Automação de API e Mobile, aula 11.",
+    "choices": [
+      {
+        "text": "Uma recusa, ou uma resposta tarde demais, no momento em que um teste pede",
+        "why": "Isso."
+      },
+      {
+        "text": "A prova de que o provedor responde mesmo `201` a uma cobrança",
+        "why": "Um dublê prova que o boxoffice trata as respostas que você escreveu; como o provedor responde está no contrato dele."
+      },
+      {
+        "text": "As cobranças que o boxoffice mandou, com valores e chaves de idempotência",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma execução vermelha no dia em que o provedor muda as respostas",
+        "why": "O stub continua respondendo como foi escrito e todo teste segue verde; quem pega a mudança é um árbitro do contrato."
+      },
+      {
+        "text": "Execuções que não dependem de o provedor estar no ar",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7qhf3z4z": {
+    "prompt": "Um cliente do boxoffice recebe cada uma destas respostas a `POST /v1/orders`. Ligue cada uma ao que o cliente deve fazer em seguida, pela aula 13.",
+    "hint": "Automação de API e Mobile, aula 13.",
+    "pairs": [
+      {
+        "left": "`422` seats must be a whole number from 1 to 6",
+        "right": "Parar: o mesmo pedido falha do mesmo jeito todas as vezes"
+      },
+      {
+        "left": "`402` the payment was declined",
+        "right": "Parar e deixar com a pessoa, a quem cabe a decisão"
+      },
+      {
+        "left": "`429` Too Many Requests",
+        "right": "Tentar de novo mais tarde, depois da espera que o servidor pede"
+      },
+      {
+        "left": "`504` the payment provider did not answer in time",
+        "right": "Mandar de novo com a mesma chave de idempotência, e tratar o resultado como desconhecido até lá"
+      }
+    ],
+    "right_distractors": [
+      "Mandar de novo na hora, sem chave, já que nenhum pedido foi feito"
+    ]
+  },
+  "ex-y423gvcy": {
+    "prompt": "Ponha os passos do `run-integration.sh` da aula 12 na ordem em que ele os executa.",
+    "hint": "Automação de API e Mobile, aula 12.",
+    "items": [
+      "Recusar-se a seguir se algo já responde na porta 8080 ou 8090",
+      "Subir o stub de pagamentos e esperar até `/__requests` responder",
+      "Subir o boxoffice com `PAYMENTS_URL` apontando para o stub e esperar até `/health` responder",
+      "Rodar todo arquivo que casa com `tests/*.test.mjs`, guardando o código de saída",
+      "Imprimir as falhas e o resumo e sair com o código guardado"
+    ],
+    "trap": "A checagem de portas vem antes de qualquer coisa subir, senão um servidor esquecido rodando responderia às checagens de saúde; e o boxoffice precisa do stub, então o stub tem de responder primeiro."
+  },
+  "ex-jgscdbg5": {
+    "prompt": "O Tickets alcança o boxoffice a partir do emulador em `http://10.0.2.2:8080`. Num celular ligado por USB, depois de `adb reverse tcp:8080 tcp:8080`, o `baseUrl` em `Shows.kt` vira `http://___:8080`. O que vai na lacuna?",
+    "hint": "Automação de API e Mobile, aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "localhost"
+        ]
+      }
+    ]
+  },
+  "ex-pg6wdrxw": {
+    "prompt": "Na tela de um espetáculo, uma pessoa liga o lembrete e recusa as notificações. O interruptor desliga e aparece a linha *Notifications are off for Tickets, so no reminder can be sent.* Então ela vira o celular de lado. O que ela vê, pela leitura do código na aula 21?",
+    "hint": "Automação de API e Mobile, aula 21.",
+    "choices": [
+      {
+        "text": "A mesma tela: o Android mantém cada view como estava numa rotação.",
+        "why": "Uma rotação destrói a activity; uma view guarda o que a pessoa mudou nela, não o que o código definiu."
+      },
+      {
+        "text": "O diálogo de permissão de novo, porque a activity nova pede a permissão ao começar.",
+        "why": "A `ShowActivity` só pede quando o interruptor é ligado; nada no `onCreate` pede."
+      },
+      {
+        "text": "O interruptor ainda desligado, e a frase que explica o motivo sumiu.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma tela vazia, porque título, horário e preço estavam na memória e a rotação os perdeu.",
+        "why": "Eles vêm do intent, que a activity recriada recebe de novo."
+      }
+    ]
+  },
+  "ex-q6mcgmqw": {
+    "prompt": "O Lighthouse aponta o `<img src=\"hero.png\">` da página lenta como seu largest contentful paint, em 13.1 s. Para baixar isso, um desenvolvedor põe `loading=\"lazy\"` na imagem, porque isso economizou muitos bytes nas páginas longas do site. O que você responde?",
+    "hint": "Testes Não Funcionais, aula 10; Fundamentos da Web e Internet, aula 10.",
+    "choices": [
+      {
+        "text": "Tudo bem, desde que ela também ganhe `width` e `height`, porque o deslocamento do layout é o que atrasou a pintura.",
+        "why": "O tamanho ausente move o conteúdo, e isso é CLS; a pintura espera 2.4 MB de imagem, e uma busca preguiçosa só começa mais tarde."
+      },
+      {
+        "text": "Piora: a imagem precisa de um arquivo mais leve, buscado cedo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Boa: imagem preguiçosa fica fora do LCP, e a métrica cai para a pintura do título.",
+        "why": "O LCP é quando a maior coisa visível é pintada, chegue quando chegar; buscar a imagem depois só atrasa essa pintura."
+      },
+      {
+        "text": "Não muda nada, já que os 13.1 s vêm do `slow.js` travando o parser.",
+        "why": "O `slow.js` atrasa a primeira pintura; a maior parte dos 13.1 s são 2.4 MB a 1.6 megabits por segundo simulados."
+      }
+    ]
+  },
+  "ex-7x1r2xem": {
+    "prompt": "Ao arrumar o workflow de desempenho da aula 11, um colega apaga `if: always()` do passo que envia `perf/runs/`. No pull request seguinte, `bash perf/gate.sh /fast.html` sai com 1. Com o que a equipe fica para trabalhar?",
+    "hint": "Testes Não Funcionais, aula 11; Testes Automatizados e CI/CD, aula 6.",
+    "choices": [
+      {
+        "text": "Um job vermelho com todos os relatórios anexados, já que enviar arquivos é um job à parte.",
+        "why": "O envio é um passo dentro do próprio job do gate, e os passos depois de um que falhou são pulados, a menos que digam o contrário."
+      },
+      {
+        "text": "Um job verde, porque um job leva o resultado do último passo.",
+        "why": "Um passo que sai com código diferente de zero reprova o job, venha o que vier depois."
+      },
+      {
+        "text": "Um job vermelho e os relatórios da última execução aprovada, que continuam em `perf/runs/`.",
+        "why": "O `gate.sh` apaga os relatórios antigos antes de começar, então uma execução reprovada nunca é julgada nem mostrada com os de outra."
+      },
+      {
+        "text": "Um job vermelho e nenhum relatório: o envio depois do passo que falhou foi pulado.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-g43v39cq": {
+    "prompt": "Depois de uma migração, o gate imprime `✓ 'p(95)<200' p(95)=33.4ms` e `✗ 'p(95)<9.8' p(95)=33.4ms`, e o `EXPLAIN QUERY PLAN` da contagem de assentos agora diz `SCAN bookings`. O desenvolvedor argumenta que 33 ms está bem abaixo de 200 ms, então o limite da linha de base deveria ser afrouxado. O que você responde?",
+    "hint": "Testes Não Funcionais, aula 11; Bancos de Dados Relacionais e SQL, aula 9.",
+    "choices": [
+      {
+        "text": "Mantenha: sem o índice cada pedido lê a tabela inteira, um custo que cresce a cada reserva até os 200 ms falharem também.",
+        "why": "Isso."
+      },
+      {
+        "text": "Concordo: o requisito é o contrato, e uma linha de base só importa depois de ser ultrapassada.",
+        "why": "A linha de base existe para pegar um endpoint que ficou várias vezes mais lento e continua abaixo de 200 ms."
+      },
+      {
+        "text": "Grave um novo `baseline.json` a partir desta execução, já que a migração mudou o código de propósito.",
+        "why": "Uma linha de base renovada a partir da versão mais lenta segue a regressão em vez de pegá-la."
+      },
+      {
+        "text": "Rode de novo e fique com o resultado mais rápido, porque uma execução é ruído.",
+        "why": "Dez vezes a linha de base não é ruído, e um gate usa a mediana de várias execuções, nunca a melhor."
+      }
+    ]
+  },
+  "ex-0zpjz41n": {
+    "prompt": "No celular, a folha de estilo da página de reserva dá ao seletor de espetáculo `order: -1` numa coluna flex, e ele é desenhado acima dos links de navegação, enquanto o HTML o mantém depois deles. O `tab.js` alcança todos os controles e reserva o assento. O que o testador relata?",
+    "hint": "Testes Não Funcionais, aula 14; HTML e CSS, aula 8.",
+    "choices": [
+      {
+        "text": "Nada: todo controle é alcançado e a reserva se completa, então o 2.1.1 Keyboard é atendido.",
+        "why": "Alcançar todos os controles atende o 2.1.1; a ordem em que são alcançados é outro critério."
+      },
+      {
+        "text": "Dar ao seletor `tabindex=\"1\"`, para o Tab chegar nele primeiro e bater com o desenho.",
+        "why": "Um tabindex positivo o põe na frente da página toda, link de pular incluído, e é um defeito por si só."
+      },
+      {
+        "text": "2.4.3 Focus Order: o Tab segue o HTML, e o foco anda na direção contrária à do desenho.",
+        "why": "Isso."
+      },
+      {
+        "text": "Rodar o axe na largura de um celular e aceitar a ordem se ele não relatar violação.",
+        "why": "A auditoria deu zero violações ao `book2.html` com a ordem de foco quebrada; quem vê ordem é uma caminhada com Tab."
+      }
+    ]
+  },
+  "ex-xghv5rhe": {
+    "prompt": "O `payment.env`, com uma chave de pagamento válida, foi commitado e enviado na semana passada. Hoje um colega põe `*.env` no `.gitignore` e faz commit. O `gitleaks git` do push seguinte ainda acusa a chave, e editar o arquivo ainda mostra ` M` em `git status --short`. Qual é a situação?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Testes Não Funcionais, aula 18.",
+    "choices": [
+      {
+        "text": "O arquivo saiu do repositório com aquele commit, e o scanner está lendo um cache que o próximo push limpa.",
+        "why": "Uma regra de ignorar não deixa de rastrear um arquivo que o git já rastreia, e o commit antigo continua com a chave."
+      },
+      {
+        "text": "A chave está resolvida, então a impressão digital vai para o `.gitleaksignore` com uma linha dizendo isso.",
+        "why": "A impressão digital registra um achado tratado, e tratado quer dizer trocado; esta chave ainda funciona."
+      },
+      {
+        "text": "Rode `git filter-repo` para tirar o arquivo de todos os commits e faça um push forçado; isso remove a chave.",
+        "why": "Reescrever não alcança nenhuma das cópias já feitas, e enquanto a chave não for revogada ela ainda abre a conta."
+      },
+      {
+        "text": "O arquivo segue rastreado e a chave enviada ainda funciona: revogue-a e depois deixe de rastreá-lo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-trhp62hm": {
+    "prompt": "Uma página nova só existe em homologação, e a equipe não tem nada sobre ela além de execuções do Lighthouse com as configurações padrão. O que essas execuções podem dizer? Marque todas as que se aplicam.",
+    "hint": "Testes Não Funcionais, aula 10.",
+    "choices": [
+      {
+        "text": "O Total Blocking Time dela no celular simulado.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Interaction to Next Paint dela.",
+        "why": "Ninguém toca em nada numa execução de laboratório, e é por isso que o Lighthouse relata o TBT no lugar."
+      },
+      {
+        "text": "Qual elemento foi o largest contentful paint dela.",
+        "why": "Isso."
+      },
+      {
+        "text": "Se 75% das visitas reais veem um LCP de 2.5 s ou menos.",
+        "why": "Isso é dado de campo, de visitantes reais, e uma página de homologação não tem tráfego para o CrUX relatar."
+      }
+    ]
+  },
+  "ex-ezp8qr1p": {
+    "prompt": "Doze pedidos, enviados um depois do outro, levaram estes tempos em milissegundos: 14, 22, 19, 95, 17, 31, 18, 210, 25, 20, 16, 41. Pelo método da posição mais próxima da aula 8, qual é o percentil 90 deles, em ms?",
+    "hint": "Testes Não Funcionais, aula 8."
+  },
+  "ex-774c5xwy": {
+    "prompt": "Uma varredura de dependências relata um aviso contra uma biblioteca que a bilheteria usa. Ponha em ordem a triagem da aula 21 para esse achado.",
+    "hint": "Testes Não Funcionais, aula 21.",
+    "items": [
+      "Juntar os nomes da falha em cada base e buscar pelo CVE",
+      "Ler a nota base e depois pesá-la pelo lugar que a biblioteca ocupa aqui",
+      "Procurar no seu próprio código as condições que o aviso descreve",
+      "Decidir se o achado está errado sobre o seu sistema"
+    ],
+    "trap": "A nota base é onde a triagem começa, não onde termina: o alcance vem depois dela, e um achado certo sobre a biblioteca e inalcançável continua sendo um verdadeiro positivo."
+  },
+  "ex-v1s66nts": {
+    "prompt": "Ligue cada coisa que um teste de carga mostra ao lugar onde a aula 9 manda olhar.",
+    "hint": "Testes Não Funcionais, aula 9.",
+    "pairs": [
+      {
+        "left": "vazão parada, latência subindo, processadores ociosos",
+        "right": "uma trava, um pool ou uma fila"
+      },
+      {
+        "left": "o tempo do cliente muito maior que o do servidor",
+        "right": "a rede, o TCP ou um proxy"
+      },
+      {
+        "left": "uma cauda perto de 1 s ou 3 s",
+        "right": "conexões descartadas e tentadas de novo"
+      },
+      {
+        "left": "o processo da própria ferramenta de carga no teto",
+        "right": "o gerador, não o sistema"
+      }
+    ],
+    "right_distractors": [
+      "memória ou disco"
+    ]
+  },
+  "ex-0cdge3ec": {
+    "prompt": "Um link de pular aponta para `<main id=\"main\">`. Para que segui-lo leve o foco do teclado até lá, e não só a posição da rolagem, o elemento `<main>` recebe `tabindex=\"___\"`.",
+    "hint": "Testes Não Funcionais, aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ]
+      }
+    ]
+  },
+  "ex-09a0jx07": {
+    "prompt": "Dois dias antes de um release, o QA descobre que a página de exportação entrega os e-mails dos clientes a qualquer pessoa logada. No chat do time, o tech lead escreve \"esse a gente aceita, pode subir\". Pela aula 3, o que faria disso uma aceitação, e não negligência?",
+    "hint": "Fundamentos de Segurança da Informação, aula 3.",
+    "choices": [
+      {
+        "text": "Pôr o problema como conhecido nas notas de release, para a decisão ficar registrada.",
+        "why": "Estar escrito é uma das três condições; ninguém com autoridade assinou e nada diz quando olhar de novo."
+      },
+      {
+        "text": "Uma decisão escrita, assinada pela pessoa dona do risco, com uma data para revisar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: um defeito de segurança já conhecido tem de ser corrigido antes de subir.",
+        "why": "Aceitar é um tratamento legítimo quando está escrito, assinado e datado."
+      },
+      {
+        "text": "A mensagem do tech lead basta, já que a TI é quem melhor entende o risco no time inteiro.",
+        "why": "Quem decide sobre o risco residual é o dono do ativo, nunca a TI por conta própria."
+      }
+    ]
+  },
+  "ex-7xts5xa6": {
+    "prompt": "Um teste exploratório descobriu que a ana, logada, lê a fatura do bruno trocando `/invoices/ana` por `/invoices/bruno` no endereço. A correção esconde o link para as faturas dos outros. Como o reteste deve conferir isso?",
+    "hint": "Fundamentos de Segurança da Informação, aula 8.",
+    "choices": [
+      {
+        "text": "Mandar esse pedido com as credenciais da ana, como o `curl` faz, e esperar `403`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Entrar como ana e confirmar que o link para a fatura do bruno não aparece mais na página dela.",
+        "why": "Esconder um botão não é autorização; o endereço ainda pode ser digitado."
+      },
+      {
+        "text": "Sair da conta, pedir `/invoices/bruno` e esperar `401`.",
+        "why": "Isso confere a autenticação, que nunca esteve quebrada; a falha é de um usuário logado."
+      },
+      {
+        "text": "Entrar como bruno e ver se a fatura dele ainda abre.",
+        "why": "Um bom teste de regressão, mas nunca pergunta se a ana é recusada."
+      }
+    ]
+  },
+  "ex-196vd2zy": {
+    "prompt": "Um scan de dependências aponta uma falha numa função da versão do `requests` que você fixou. Uma busca mostra que o seu código nunca chama essa função, e um colega fecha o achado como falso positivo. Esse é o nome certo?",
+    "hint": "Testes Não Funcionais, aula 21; Fundamentos de Segurança da Informação, aula 11.",
+    "choices": [
+      {
+        "text": "Sim: um achado que não consegue ferir esta aplicação é um falso positivo.",
+        "why": "Um falso positivo está errado sobre o seu sistema; este está certo sobre a biblioteca que você instalou."
+      },
+      {
+        "text": "Não, um falso negativo: o scanner não percebeu que o seu código nunca chega à função.",
+        "why": "Um falso negativo é um problema real que não gerou alerta; aqui houve alerta."
+      },
+      {
+        "text": "Não, um verdadeiro negativo, já que nada vai acontecer nesta implantação.",
+        "why": "Negativo quer dizer sem alerta, e o scanner deu um."
+      },
+      {
+        "text": "Não: está certo sobre essa versão, então é verdadeiro positivo de prioridade baixa.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-gpga3fdm": {
+    "prompt": "O primário PostgreSQL de um time tem uma réplica por streaming em outro servidor, e o checklist de release marca \"backups\" por causa dela. Uma migração roda `DELETE FROM orders` sem `WHERE`. O que a réplica guarda um minuto depois?",
+    "hint": "Fundamentos de Segurança da Informação, aula 12; Bancos de Dados Relacionais e SQL, aula 12.",
+    "choices": [
+      {
+        "text": "Todos os pedidos, porque uma réplica é só leitura e recusa exclusões.",
+        "why": "Só leitura quer dizer que clientes não escrevem nela; ela continua aplicando toda mudança do primário."
+      },
+      {
+        "text": "Nenhum pedido: ela reaplica o log do primário, exclusão incluída.",
+        "why": "Isso."
+      },
+      {
+        "text": "Todos os pedidos até alguém promovê-la com Patroni ou repmgr, o que só acontece quando o primário cai.",
+        "why": "Promoção é sobre o primário morrer; uma exclusão é uma mudança comum e é reaplicada na hora."
+      },
+      {
+        "text": "Os pedidos de ontem à noite, que foi quando ela foi copiada pela última vez.",
+        "why": "Isso descreve um backup noturno; uma réplica por streaming acompanha o primário o tempo todo."
+      }
+    ]
+  },
+  "ex-v6x9gbbr": {
+    "prompt": "O job de backup da livraria não imprimiu nada e terminou sem erro toda noite de março a outubro, e deixou a pasta de notas fiscais de fora o tempo todo. No vocabulário de oráculos de teste, o que vinha julgando o job toda noite, e para o que isso é cego?",
+    "hint": "Fundamentos de Segurança da Informação, aula 12; Fundamentos de Qualidade de Software, aula 19.",
+    "choices": [
+      {
+        "text": "Um oráculo humano, a ana, cego para o que ela nunca viu.",
+        "why": "Ninguém olhou o arquivo até o teste de restauração; nenhuma pessoa o julgava toda noite."
+      },
+      {
+        "text": "Um oráculo de consistência, cada noite contra a anterior, cego para um defeito que é igual em todo lugar.",
+        "why": "Nada comparava o arquivo de uma noite com o de outra; o único veredito era o silêncio."
+      },
+      {
+        "text": "Um oráculo implícito, cego para tudo o que roda sem reclamar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um oráculo de referência, os dados vivos em `/srv/shop`, cego para defeitos que divide com o arquivo.",
+        "why": "Os dados vivos só entraram com o `diff -r` do teste de restauração, e ele achou a falta na hora."
+      }
+    ]
+  },
+  "ex-rdvce9sg": {
+    "prompt": "Um release que falha derruba o checkout da livraria. O checkout vale R$ 30.000 para o negócio, uma falha destrói um quinto desse valor e acontece duas vezes por ano. Testar cada atualização antes numa cópia de homologação custa R$ 4.000 por ano e reduz as falhas para uma a cada dois anos. Pela conta da aula 3, quantos reais por ano esse controle vale, já descontado o custo dele?",
+    "hint": "Fundamentos de Segurança da Informação, aula 3."
+  },
+  "ex-2ptgn1vc": {
+    "prompt": "Um critério de aceite diz que o login do portal da equipe \"tem autenticação de dois fatores\". Quais destes, pedidos depois da senha, cumprem isso no sentido da aula 9? Marque todas as que se aplicam.",
+    "hint": "Fundamentos de Segurança da Informação, aula 9.",
+    "choices": [
+      {
+        "text": "Um código de um app autenticador no celular do funcionário",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma pergunta de segurança sobre a primeira escola do funcionário",
+        "why": "De novo algo que você sabe, perdido do mesmo jeito que a senha."
+      },
+      {
+        "text": "Uma impressão digital lida pelo notebook",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma verificação de que o pedido vem de dentro do Brasil",
+        "why": "Localização é um sinal que aumenta ou diminui a suspeita, não prova de quem alguém é."
+      }
+    ]
+  },
+  "ex-c1efmteh": {
+    "prompt": "Depois de uma falha de disco, os pedidos voltaram do backup noturno e as últimas 20 horas de pedidos se perderam. Os sócios tinham decidido que o negócio podia perder no máximo 24 horas de pedidos. Essa perda é medida contra uma das duas metas de recuperação; a sigla dela, de três letras, é ___.",
+    "hint": "Fundamentos de Segurança da Informação, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "RPO"
+        ]
+      }
+    ]
+  },
+  "ex-nrewn5p5": {
+    "prompt": "Um time de produto pergunta qual segundo fator oferecer aos administradores do app. Ponha estes em ordem do mais fraco ao mais forte, como a aula 9 os classifica.",
+    "hint": "Fundamentos de Segurança da Informação, aula 9.",
+    "items": [
+      "Um código mandado por SMS",
+      "Uma aprovação por push num app",
+      "Um código TOTP de seis dígitos",
+      "Uma chave de segurança ou passkey"
+    ],
+    "trap": "O SMS cai com uma troca de chip e o push com a fadiga de MFA; um código TOTP ainda funciona numa página falsa dentro de trinta segundos, enquanto uma chave só responde ao endereço do site verdadeiro."
+  },
+  "ex-2sxnn7vk": {
+    "prompt": "Uma regra alerta quando um endereço erra o login três vezes em dez minutos. Associe cada acontecimento da semana ao seu resultado.",
+    "hint": "Fundamentos de Segurança da Informação, aula 11.",
+    "pairs": [
+      {
+        "left": "Ela alerta para uma ferramenta de sincronização que ainda guarda a senha do mês passado",
+        "right": "falso positivo"
+      },
+      {
+        "left": "Ela fica quieta enquanto alguém chuta duas senhas a cada dez minutos, a semana toda",
+        "right": "falso negativo"
+      },
+      {
+        "left": "Ela alerta enquanto o chutador rápido do exercício purple está agindo",
+        "right": "verdadeiro positivo"
+      },
+      {
+        "left": "Ela fica quieta enquanto uma colega erra a senha uma vez e depois entra",
+        "right": "verdadeiro negativo"
+      }
+    ]
+  },
+  "ex-vxg4c820": {
+    "prompt": "Um teste do Playwright no gate de merge falha mais ou menos uma execução em quatro. O líder do time põe `retries: 2` na configuração, e o pipeline fica verde em toda execução. O que os dois cursos mandam o time fazer em vez disso?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Automação de Testes Web, aula 14.",
+    "choices": [
+      {
+        "text": "Manter os retries: um teste que passa numa tentativa seguinte mostrou que o defeito acusado não estava na página.",
+        "why": "O retry muda o veredito informado, não a página: as falhas viram uma contagem de flaky debaixo de um código de saída 0."
+      },
+      {
+        "text": "Passá-lo para um job separado que o roda repetidas vezes, com um responsável e uma data de revisão, até ser corrigido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Subir os retries para três, para que a execução rara que falha em cada uma das tentativas pare de bloquear o merge de todo mundo.",
+        "why": "Se duas novas tentativas não bastam, a terceira é a mesma moeda jogada de novo."
+      },
+      {
+        "text": "Envolvê-lo em `test.fail()`, para o gate esperar a falha e continuar tendo sentido.",
+        "why": "`test.fail()` descreve um teste que falha sempre; nas execuções em que a página se comporta, ele acusa erro."
+      }
+    ]
+  },
+  "ex-msr2xqfm": {
+    "prompt": "A mudança do Bruno chegou à `main`, e a execução do CI sobre ela está vermelha. Dois colegas já fizeram pull dela. O Bruno quer rodar `git reset --hard HEAD~1` e dar force-push na `main` para a mudança sumir. O que deveria acontecer em vez disso?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "Deixar a `main` vermelha e subir a correção de verdade por cima quando o Bruno achar a causa.",
+        "why": "Enquanto a main está vermelha, todo branch novo nasce de uma base quebrada e as falhas novas se escondem atrás da antiga."
+      },
+      {
+        "text": "Seguir com o reset: um commit que quebrou o build não tem lugar no histórico compartilhado.",
+        "why": "Os colegas já têm esse commit; reescrever histórico compartilhado deixa as cópias deles discordando da main."
+      },
+      {
+        "text": "Pular o teste que falha no próximo commit, para a execução ficar verde enquanto o Bruno investiga.",
+        "why": "Um teste pulado não informa nada; a main pareceria saudável com o comportamento quebrado ainda dentro dela."
+      },
+      {
+        "text": "Rodar `git revert` sobre ela, que a desfaz num commit novo por cima.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vy3fxf5m": {
+    "prompt": "Uma etapa do canary manda 200 requisições para a release nova, e o time acrescenta uma regra: parar quando a latência p99 do canary passar da do baseline. Por que essa regra não merece confiança nessa etapa?",
+    "hint": "Testes Não Funcionais, aula 8; Testes Automatizados e CI/CD, aula 10.",
+    "choices": [
+      {
+        "text": "Com 200 respostas, só duas requisições ficam acima do p99, então uma requisição lenta o desloca; são precisas umas mil respostas para pôr dez acima dele.",
+        "why": "Isso."
+      },
+      {
+        "text": "Latência se julga pela média, porque o p99 ignora as poucas lentas.",
+        "why": "Ao contrário: a média esconde as poucas lentas, e um percentil alto é o que as mostra."
+      },
+      {
+        "text": "Um p99 se compara a um limite fixo, nunca ao baseline, que também pode estar num minuto ruim.",
+        "why": "Os dois lados recebem o mesmo tráfego ao mesmo tempo; um limite fixo deixa passar releases ruins e barra as boas."
+      },
+      {
+        "text": "Um p99 só pode ser calculado por ferramentas que interpolam entre valores, como o k6.",
+        "why": "O método do posto mais próximo o calcula ordenando e contando; os métodos diferem, e os dois dão um p99."
+      }
+    ]
+  },
+  "ex-kdhe8bqh": {
+    "prompt": "Entrou uma regra que reprova o build abaixo de 85% de cobertura, e o total do time subiu de 81% para 90% numa semana. Quais destes mostrariam se o time passou mesmo a testar melhor? Marque todas as que se aplicam.",
+    "hint": "Testes Automatizados e CI/CD, aula 4; Fundamentos de Qualidade de Software, aula 22.",
+    "choices": [
+      {
+        "text": "Rodar uma ferramenta de mutação nos arquivos que os testes novos alcançam, e ver se os antigos sobreviventes morrem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Comparar os 90% com o número que o JaCoCo do time de Java deu no mesmo trimestre, para ver qual dos dois times testa melhor.",
+        "why": "Ferramentas contam unidades diferentes; um projeto se compara consigo mesmo ao longo do tempo, não com o percentual de outra ferramenta."
+      },
+      {
+        "text": "Ler o que os testes novos verificam, e não só quais linhas eles executam.",
+        "why": "Isso."
+      },
+      {
+        "text": "Acompanhar os defeitos escapados, área por área, nos próximos meses.",
+        "why": "Isso."
+      },
+      {
+        "text": "Conferir se o total continua subindo toda semana daqui para a frente.",
+        "why": "Um número que sempre anda na direção certa é sinal de teatro; um total maior diz que mais linhas rodaram, não que mais coisa foi verificada."
+      }
+    ]
+  },
+  "ex-bpd4hhpj": {
+    "prompt": "No GitLab, o token de produção da transportadora é uma variável de CI/CD mascarada, mas não protegida. Alguém sobe um branch novo cujo job manda o valor da variável para um endereço de fora. O que impede isso?",
+    "hint": "Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "O mascaramento: o runner troca o valor por asteriscos onde quer que o job o use, não só no log.",
+        "why": "O mascaramento edita o log do job por correspondência exata; o próprio job recebe o valor real."
+      },
+      {
+        "text": "A variável pertence ao branch padrão em que foi criada, então um branch novo nunca a enxerga.",
+        "why": "A variável pertence ao projeto; restringi-la a branches e tags protegidos é o que protegida quer dizer."
+      },
+      {
+        "text": "Nada: sem proteção, chega ao pipeline de todo branch, e a máscara mexe só no log.",
+        "why": "Isso."
+      },
+      {
+        "text": "O token está numa variável de ambiente e não num argumento, então o `ps` não o mostra.",
+        "why": "Isso o protege dos outros usuários da máquina; aqui, quem envia é o próprio job que o recebeu."
+      }
+    ]
+  },
+  "ex-2kt7hghq": {
+    "prompt": "Cada célula da matriz de um workflow do GitHub Actions envia `junit.xml` e seus dados `.coverage.*` como artefato. Todo job fica verde, e o job de cobertura não combina nada. Falta um input no passo de upload. Escreva-o: `___: true`.",
+    "hint": "Testes Automatizados e CI/CD, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "include-hidden-files"
+        ]
+      }
+    ]
+  },
+  "ex-s77p9mx3": {
+    "prompt": "O `shipquote` renomeia a coluna `cents` da tabela de cotações para `price_cents`, e cada release no caminho precisa aguentar um rollback. Ponha as releases em ordem.",
+    "hint": "Testes Automatizados e CI/CD, aula 7.",
+    "items": [
+      "Adicionar `price_cents` ao lado de `cents`; o código antigo a ignora",
+      "Gravar as duas colunas, ainda lendo `cents`",
+      "Copiar os valores das linhas antigas para `price_cents`",
+      "Ler `price_cents` no lugar de `cents`",
+      "Parar de gravar `cents`, e removê-la numa release posterior"
+    ],
+    "trap": "Ler a coluna nova antes de copiar as linhas antigas mostra essas cotações sem preço, e remover `cents` cedo quebra qualquer rollback para um código que ainda a lê."
+  },
+  "ex-btrbk8vt": {
+    "prompt": "Associe cada tipo de feature flag a como ela é usada e a quanto tempo deve viver.",
+    "hint": "Testes Automatizados e CI/CD, aula 10.",
+    "pairs": [
+      {
+        "left": "flag de release",
+        "right": "Esconde uma funcionalidade até ela ficar pronta; sai quando todos a têm"
+      },
+      {
+        "left": "flag operacional",
+        "right": "Um kill switch para algo frágil ou caro; pode ficar por anos"
+      },
+      {
+        "left": "flag de experimento",
+        "right": "Divide os clientes entre duas versões; dura o tempo da comparação"
+      },
+      {
+        "left": "flag de permissão",
+        "right": "Ligada para alguns clientes por direito, como um plano pago"
+      }
+    ]
+  },
+  "ex-pdp4ac2b": {
+    "prompt": "Um serviço de cotação tem o objetivo de 99,9% das requisições com sucesso em 30 dias, e recebe 1.200.000 requisições nesse período. Uma release fez 300 requisições falharem antes de ser parada. Que percentual do error budget ela gastou?",
+    "hint": "Testes Automatizados e CI/CD, aula 11."
+  },
+  "ex-7z04wjy3": {
+    "prompt": "Jobs de integração de vários pull requests rodam em paralelo contra um mesmo PostgreSQL. Um teste insere um cliente com o e-mail `test@example.org`, coluna com índice único, e depois verifica que `SELECT count(*) FROM customers` devolve 1. Ele passa sozinho e falha ao acaso no CI. O que o curso muda?",
+    "hint": "Testes Automatizados e CI/CD, aula 3.",
+    "choices": [
+      {
+        "text": "Dar `TRUNCATE` na tabela de clientes quando o teste começa, para a contagem partir de zero.",
+        "why": "Num banco compartilhado, isso apaga as linhas de outro job no meio da execução dele."
+      },
+      {
+        "text": "Deixar uma factory gerar o e-mail de cada teste, e contar as linhas que este teste gravou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Marcar o teste como flaky e deixar o pipeline repeti-lo até passar.",
+        "why": "Repetir esconde a colisão; o teste continua dependendo de quem mais está rodando."
+      },
+      {
+        "text": "Dar `scope=\"session\"` à fixture, para uma conexão servir a execução inteira.",
+        "why": "O escopo decide quantas vezes a fixture é montada; não muda nada quanto a outros jobs gravando nas mesmas tabelas."
+      }
+    ]
+  },
+  "ex-abjhjxb9": {
+    "prompt": "O ticket de um pull request diz \"Refactor Cart so total() computes the subtotal once\". O diff do assistente guarda o subtotal numa variável dentro de `total()`, enquanto `discount()` e `shipping()` ainda chamam `subtotal()`. Os oito testes passam. O que sua revisão deve dizer primeiro?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13; IA no Desenvolvimento, aula 3.",
+    "choices": [
+      {
+        "text": "Nada que bloqueie: os testes passam, então o comportamento não mudou e a refatoração está pronta.",
+        "why": "Testes passando dizem que o comportamento não mudou; não dizem se a mudança fez o que foi pedido."
+      },
+      {
+        "text": "Um detalhe sobre o nome local `subtotal`, igual ao do método de onde ele foi lido.",
+        "why": "Nomes vêm em terceiro na ordem de leitura, e uma mudança que erra o objetivo os torna irrelevantes."
+      },
+      {
+        "text": "Ela não faz o que o ticket pediu: a soma continua sendo calculada várias vezes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pedir mais testes antes, porque oito é pouco para julgar a mudança.",
+        "why": "Mais testes também passariam; a distância é entre a mudança e o pedido, e só lendo os dois lado a lado ela aparece."
+      }
+    ]
+  },
+  "ex-m3vg3t7n": {
+    "prompt": "Um assistente gerou doze testes para `shop/cart.py`. Todos passam, e `coverage report` mostra o arquivo em 100%, ramos incluídos. Depois, uma execução do script de mutação imprime `3 survived`. O que os dois resultados dizem juntos?",
+    "hint": "IA no Desenvolvimento, aula 4; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Aquelas linhas rodaram, e nenhum teste confere o que três delas calculam.",
+        "why": "Isso."
+      },
+      {
+        "text": "A execução de mutação está errada, porque um arquivo totalmente coberto não tem linha que um teste possa deixar passar.",
+        "why": "A cobertura registra que uma linha rodou, não que um teste conferiu o resultado dela."
+      },
+      {
+        "text": "Os sobreviventes estão em linhas que a cobertura nunca alcançou, e os 100% são 99% arredondados.",
+        "why": "Os sobreviventes estão em linhas que rodaram; são buracos nas asserções, não na cobertura."
+      },
+      {
+        "text": "Ponha `--fail-under=100` para o build falhar até os sobreviventes morrerem.",
+        "why": "Esse limite já está cumprido aqui; só um teste que confere um valor calculado mata um mutante."
+      }
+    ]
+  },
+  "ex-8ar887rc": {
+    "prompt": "Na aula 11, o host dava ao modelo `get_order` e `issue_refund`, e um e-mail o convenceu a reembolsar. Qual mudança segue o princípio de dar a cada tarefa só o acesso de que ela precisa, e vale qualquer que seja o próximo e-mail?",
+    "hint": "IA no Desenvolvimento, aula 11; Fundamentos de Segurança da Informação, aula 6.",
+    "choices": [
+      {
+        "text": "Uma frase no prompt de sistema proibindo reembolsos, que o modelo lê antes do e-mail.",
+        "why": "É mais uma frase no mesmo fluxo; se o modelo obedece é questão de probabilidade, não de regra."
+      },
+      {
+        "text": "Manter as duas ferramentas e registrar cada chamada de reembolso, para alguém desfazer de manhã.",
+        "why": "Isso explica o estrago depois que o dinheiro saiu; qualquer valor em qualquer pedido continua ao alcance."
+      },
+      {
+        "text": "Trocar por um modelo maior, que resiste melhor a texto injetado que o `llama3.2:3b`.",
+        "why": "Modelos resistem a parte do texto injetado e seguem outra parte, e quem ataca pode tentar de novo."
+      },
+      {
+        "text": "Oferecer à tarefa de rascunho só `get_order`: uma ferramenta que não foi oferecida não pode ser chamada, seja qual for a redação do pedido.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-q36zzzes": {
+    "prompt": "Sua equipe liga um bot de revisão com IA nos pull requests. Um desenvolvedor propõe mudar a proteção de `main` para que o Approve do bot conte como a única aprovação exigida. O que a equipe deve fazer em vez disso?",
+    "hint": "IA no Desenvolvimento, aula 4; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "Aceitar para pull requests pequenos, já que o bot lê todos eles e as pessoas costumam passar o olho.",
+        "why": "Ler todo pull request é o que o bot faz bem; a aprovação dele continua sendo uma afirmação, mudança pequena ou grande."
+      },
+      {
+        "text": "Condicionar o merge à revisão de uma pessoa e às verificações; o bot informa essa pessoa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Deixar o bot aprovar e esconder os achados dele que se mostrarem errados.",
+        "why": "Ignorar os comentários do bot em silêncio ensina a equipe a ignorar todos; um achado errado se responde no pull request, com o motivo."
+      },
+      {
+        "text": "Fazer dele uma de duas aprovações exigidas, para uma pessoa ainda assinar ao lado.",
+        "why": "Aí a afirmação de um bot continua ocupando o lugar do segundo revisor no botão de merge."
+      }
+    ]
+  },
+  "ex-fpqce46y": {
+    "prompt": "O frete é grátis quando o valor do carrinho depois do desconto é de pelo menos `FREE_SHIPPING_FROM = 20000` centavos. A lista de casos-limite de um assistente para `shipping()` tem carrinho vazio, um centavo, um valor negativo e um muito grande. Que par a análise de fronteira de dois valores acrescenta?",
+    "hint": "Teste Manual e Gestão de Testes, aula 4; IA no Desenvolvimento, aula 4.",
+    "choices": [
+      {
+        "text": "200.00 e 200.01",
+        "why": "Os dois estão na partição grátis; a linha fica entre 199.99 e 200.00."
+      },
+      {
+        "text": "199.99 e 200.00",
+        "why": "Isso."
+      },
+      {
+        "text": "150.00 e 250.00, um do meio de cada lado",
+        "why": "Valores do meio se comportam igual com `>=` ou com `>`; só a borda separa os dois."
+      },
+      {
+        "text": "199.00 e 200.00",
+        "why": "Para dinheiro, o vizinho mais próximo é um centavo, não uma unidade inteira."
+      }
+    ]
+  },
+  "ex-9n69tnys": {
+    "prompt": "O diff sugerido na aula 3 mudou `discount()` para arredondar para baixo o desconto de cada linha separadamente e somar os resultados. Um carrinho tem uma caneca a 1990 centavos e uma luminária a 2990 centavos, com o FRIENDS15 (15% de desconto). Quantos centavos o `discount()` alterado desconta?",
+    "hint": "IA no Desenvolvimento, aula 3."
+  },
+  "ex-xnx19w4j": {
+    "prompt": "Um e-mail injetado fez o assistente da loja emitir um reembolso ontem à noite, e um token pode ter sido exposto na mesma conversa. Ponha a resposta da aula 11 em ordem, do primeiro passo ao último.",
+    "hint": "IA no Desenvolvimento, aula 11.",
+    "items": [
+      "Acionar o interruptor para todo e-mail ir para uma pessoa",
+      "Revogar o token que pode ter vazado",
+      "Estornar o reembolso e escrever ao cliente",
+      "Acrescentar a aprovação que a chamada de reembolso pulou",
+      "Pôr o e-mail no conjunto de avaliação"
+    ],
+    "trap": "Consertar a causa parece o primeiro trabalho, mas o estrago é contido e o vazamento revogado antes de tudo; o conserto vai para o host depois de desfazer, e o e-mail entra na avaliação por último."
+  },
+  "ex-04sg4zvs": {
+    "prompt": "Um colega propõe três testes baseados em propriedades para a loja. Associe cada um ao lugar de onde a aula 4 diz que as propriedades vêm.",
+    "hint": "IA no Desenvolvimento, aula 4.",
+    "pairs": [
+      {
+        "left": "Exportar os pedidos para CSV e importar o arquivo de volta dá os mesmos pedidos",
+        "right": "Uma ida e volta"
+      },
+      {
+        "left": "Ordenar as linhas do carrinho por preço mantém exatamente as mesmas linhas",
+        "right": "Uma invariante"
+      },
+      {
+        "left": "A nova busca de preço com cache concorda com a busca simples que ela substitui",
+        "right": "Comparação com uma versão mais simples"
+      }
+    ],
+    "right_distractors": [
+      "Uma caracterização do que o código faz hoje"
+    ]
+  },
+  "ex-bn0fsp3z": {
+    "prompt": "Você está testando o `redact()` da aula 11 antes de ele ir para produção, com mensagens de clientes que contêm o seguinte. Quais chegariam ao provedor ainda legíveis? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "Um cartão escrito `4111.1111.1111.1111`",
+        "why": "Isso."
+      },
+      {
+        "text": "Um cartão escrito `4111-1111-1111-1111`",
+        "why": "O padrão de cartão aceita um espaço ou um hífen depois de cada dígito, então este vira `[CARD]`."
+      },
+      {
+        "text": "Um CPF digitado sem pontuação, `12345678909`",
+        "why": "Isso."
+      },
+      {
+        "text": "Um endereço escrito `marta@example.com`",
+        "why": "É exatamente o formato que o padrão `EMAIL` pega."
+      }
+    ]
+  },
+  "ex-7j2dqfsz": {
+    "prompt": "Testando a versão do passo 7 do loanbook, da aula 11, você manda `curl -s -X POST localhost:8000/api/items/1/loan -d 'not json'` e nada volta. Qual linha entra no seu relatório de defeito tal como está escrita?",
+    "hint": "Teste Manual e Gestão de Testes, aula 15; O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "choices": [
+      {
+        "text": "Resultado obtido: o servidor está fora do ar e nenhum pedido recebe resposta.",
+        "why": "É assim que parece para quem usa, não o que aconteceu: o log mostra um pedido levantando `JSONDecodeError` e a conexão fechada sem resposta."
+      },
+      {
+        "text": "Correção sugerida: levar o `json.loads` para dentro do `try`, para um corpo malformado virar 400.",
+        "why": "Um relatório que aponta a correção começou a consertar um programa que não é de quem o escreve; o traceback já leva o desenvolvedor à linha."
+      },
+      {
+        "text": "Resultado esperado: um 400 dizendo que o corpo não é JSON, como pede a tabela de erros da API.",
+        "why": "Isso."
+      },
+      {
+        "text": "Título: o empréstimo está completamente quebrado sempre que alguém usa a rota de empréstimo.",
+        "why": "Emprestar funciona com um corpo JSON; um título diz o que falha e em que condição, sem adjetivos."
+      }
+    ]
+  },
+  "ex-05q2fjtj": {
+    "prompt": "Os sete testes do loanbook rodaram em 0,003 segundo, e nenhum percebeu que um corpo que não é JSON fazia o loanbook desligar na cara do pedido. Pelas camadas da aula 1 do curso de testes automatizados, que teste teria pego isso?",
+    "hint": "Testes Automatizados e CI/CD, aula 1; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Mais um teste unitário que chama `lend` com um borrower que não é JSON válido.",
+        "why": "`lend` nunca vê o corpo; a leitura que falhou está no handler, que esses testes nunca sobem."
+      },
+      {
+        "text": "Um teste funcional mandando esse corpo a um servidor rodando.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um teste de integração contra um arquivo SQLite de verdade em vez de `:memory:`.",
+        "why": "O banco nem foi alcançado; a falha estava na leitura do pedido, antes de qualquer consulta."
+      },
+      {
+        "text": "Não é teste nosso: corpo malformado é engano do cliente, então o cliente que teste.",
+        "why": "A aula 11 faz de responder ao engano do cliente o trabalho do servidor: um 400 e uma frase, não uma conexão derrubada."
+      }
+    ]
+  },
+  "ex-y0c07pv0": {
+    "prompt": "O layout de celular do loanbook é `@media (max-width: 36rem)`. Uma leitora com baixa visão ajusta o tamanho padrão do texto no navegador para 20 pixels. Qual é a janela mais larga, em pixels, em que essa leitora recebe o layout de celular?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 13; HTML e CSS, aula 11."
+  },
+  "ex-f9zkp1wv": {
+    "prompt": "O loanbook tem a tag `v1.0.0`. Seguindo a retrospectiva, os dois commits seguintes são `fix(api): answer an unexpected error with 500` e `feat(page): show a Loading row while the list arrives`, e nenhum quebra nada. Pelo Conventional Commits, a versão que os entrega recebe a tag `___`.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 21.",
+    "blanks": [
+      {
+        "accept": [
+          "v1.1.0",
+          "1.1.0"
+        ]
+      }
+    ]
+  },
+  "ex-9jjwzg3b": {
+    "prompt": "Na aula 12 a Ana apaga o índice único parcial, roda a suíte, e `test_an_item_cannot_be_lent_twice` falha. Nos termos do teste de mutação, o que foi isso, e o que significaria se os sete testes tivessem passado?",
+    "hint": "Testes Automatizados e CI/CD, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Um mutante que sobreviveu, porque um teste ficou vermelho.",
+        "why": "É ao contrário: um teste que falha mata o mutante, e o que passa em todos os testes sobreviveu."
+      },
+      {
+        "text": "Uma verificação de cobertura: o teste vermelho prova que as linhas do índice rodaram, e sete aprovações diriam que não rodaram.",
+        "why": "Cobertura diz quais linhas rodaram; se um teste percebe o código mudando é o que a mutação mede."
+      },
+      {
+        "text": "Um mutante morto; sete aprovações provariam que o índice não era necessário.",
+        "why": "Passar diria que os testes não enxergam a regra sumir, não que dá para perdê-la: a aula 5 mostra o Projector 2 emprestado duas vezes sem ele."
+      },
+      {
+        "text": "Um mutante morto; sete aprovações diriam que a suíte não enxerga a regra de jeito nenhum.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-emc8rhnh": {
+    "prompt": "Testando uma página de lista, você para o servidor e recarrega. A página mostra o cabeçalho da tabela e mais nada, exatamente como faz com o banco vazio. Por que isso é um defeito, pela aula 11?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "choices": [
+      {
+        "text": "Uma professora ouve que não há equipamento quando o servidor é que caiu.",
+        "why": "Isso."
+      },
+      {
+        "text": "É o estado de carregamento: o pedido nunca voltou, e uma linha Carregando resolveria.",
+        "why": "Carregando é um pedido ainda a caminho; servidor parado é o estado de erro, que precisa da sua própria frase."
+      },
+      {
+        "text": "Não é defeito: sem servidor não há dados, então uma tabela vazia está correta.",
+        "why": "Uma tabela vazia afirma que não há nada para emprestar, o que é falso; um pedido que falhou não diz nada sobre a prateleira."
+      },
+      {
+        "text": "A página deveria esconder a tabela e mostrar o traceback do servidor no lugar, para a causa ficar visível.",
+        "why": "Bug vai para o log, não para quem usa; a página precisa de uma frase dizendo que o servidor não respondeu e que é para recarregar."
+      }
+    ]
+  },
+  "ex-dqtf8qq7": {
+    "prompt": "Ligue cada linha do *pronto quando* do briefing do loanbook ao que a verifica.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aulas 4 e 12.",
+    "pairs": [
+      {
+        "left": "Um segundo empréstimo de um item que está fora é recusado, dizendo com quem está.",
+        "right": "`test_an_item_cannot_be_lent_twice`"
+      },
+      {
+        "left": "Um item devolvido aparece como disponível na hora.",
+        "right": "`test_a_returned_item_can_be_lent_again`"
+      },
+      {
+        "left": "Um empréstimo fica atrasado no dia seguinte ao vencimento.",
+        "right": "`test_a_loan_is_overdue_the_day_after_it_is_due`"
+      },
+      {
+        "left": "A Marta abre pela sala de TI e uma professora pelo celular.",
+        "right": "uma verificação à mão, sem teste unitário"
+      }
+    ],
+    "right_distractors": [
+      "`test_a_lent_item_shows_who_has_it`",
+      "`test_an_item_that_is_in_cannot_come_back`"
+    ]
+  },
+  "ex-t1ddfba1": {
+    "prompt": "Ponha o primeiro deploy do loanbook no srv na ordem em que a aula 15 o faz.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "items": [
+      "Enviar a `main` e as tags para um repositório bare no srv",
+      "Clonar no srv e construir a imagem com `podman build`",
+      "Copiar o arquivo `.container` para `/etc/containers/systemd/` e rodar `daemon-reload`",
+      "Iniciar o `loanbook` e pedir `/healthz` do próprio srv",
+      "Copiar o Caddyfile e dar `reload` no Caddy"
+    ],
+    "trap": "O systemd só consegue iniciar um serviço a partir de uma imagem que já existe, e o Caddy é posto na frente de um serviço que já responde em `127.0.0.1:8000`."
+  },
+  "ex-q7epc03a": {
+    "prompt": "Depois do passo 8, o log do loanbook diz: `GET /api/nothing 404`, `POST /api/items/1/loan 400`, `POST /api/items/9/loan 404`, `POST /api/items/1/loan 400`, `POST /api/items/1/loan 201`, `POST /api/items/1/loan 409`, `POST /api/items/1/return 200`, `POST /api/items/1/return 409`. Pela tabela da aula 11 de quem é o engano em cada resposta, quantos desses oito pedidos foram recusados por engano do cliente ou de quem usa, e não por uma regra?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11."
+  },
+  "ex-3axcyfvr": {
+    "prompt": "Você está escrevendo a linha do currículo de um projeto feito do jeito que o loanbook foi. Quais destes números cabem nela? Marque todas as que se aplicam.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 20.",
+    "choices": [
+      {
+        "text": "Sete testes, um dos quais falha quando o índice é removido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Aguenta mil usuários ao mesmo tempo num único servidor pequeno.",
+        "why": "Nada foi medido além de uma sala dos professores, como a resposta da aula 20 admite, e um número que você não sabe explicar custa mais que nenhum."
+      },
+      {
+        "text": "Reiniciou sozinho depois de ser derrubado, com os oito itens ainda lá.",
+        "why": "Isso."
+      },
+      {
+        "text": "Reduziu em 40% os atrasos de devolução na escola no primeiro mês.",
+        "why": "Não há linha de base nem medição por trás; o entrevistador vai perguntar de onde veio."
+      }
+    ]
+  },
+  "ex-dfbkc8r1": {
+    "prompt": "Num exercício ao vivo você escreve uma função que aceita um pedido de 1 a 6 ingressos. O formato da aula 12 manda testar em voz alta com um caso normal e um caso-limite. Que par aproveita melhor esses dois casos?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 12; Teste Manual e Gestão de Testes, aula 4.",
+    "choices": [
+      {
+        "text": "3 e depois 4, para mostrar duas vezes o caminho comum funcionando",
+        "why": "Os dois vêm da mesma partição, então o segundo repete a pergunta do primeiro."
+      },
+      {
+        "text": "3 e depois 1000, porque o valor mais longe da faixa é o teste mais difícil",
+        "why": "Longe da linha, *menor que* e *menor ou igual* se comportam igual; é um valor na borda que separa os dois."
+      },
+      {
+        "text": "3 e depois 6, um valor do meio e o maior que a regra permite",
+        "why": "Isso."
+      },
+      {
+        "text": "`two` e depois `2.5`, o que um cliente digita por engano",
+        "why": "Os dois estão numa mesma partição inválida, e nenhum é o caso normal."
+      }
+    ]
+  },
+  "ex-aw1tbzhb": {
+    "prompt": "Um exercício para casa de uma vaga de QA júnior pede que você teste um formulário de reserva por três horas. Você achou dois defeitos: uma quantidade `two` responde com um traceback 500, e uma recusa diz *cannot be useed*. O que você entrega? Marque todas as que se aplicam.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; Teste Manual e Gestão de Testes, aula 15.",
+    "choices": [
+      {
+        "text": "Um relatório com os dois, para quem avalia ler uma única página",
+        "why": "Uma correção fecha esse relatório, e o outro defeito é esquecido junto."
+      },
+      {
+        "text": "Dois relatórios, um por defeito, cada um com passos que um estranho repete sem perguntar",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma nota dizendo o que você fez, o que escolheu e por quê, e o que faria com mais tempo",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma linha no relatório do traceback dizendo que a chamada `int()` precisa de um try/except",
+        "why": "Isso começa a consertar um programa que não é seu, e um palpite sobre a causa erra tanto quanto acerta."
+      }
+    ]
+  },
+  "ex-ctz7m4yb": {
+    "prompt": "Sua primeira tarefa num emprego novo: a página do recibo mostra a data do pedido com o mês primeiro, e sua mudança passa a mostrar o dia primeiro. A equipe usa Conventional Commits. Que primeira linha serve para a primeira coisa que você entrega?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11.",
+    "choices": [
+      {
+        "text": "`fix(receipt): show the order date day first`",
+        "why": "Isso."
+      },
+      {
+        "text": "`fix: fix bug`",
+        "why": "Está no formato e não diz nada; um tipo não é um motivo."
+      },
+      {
+        "text": "`feat(receipt): show the order date day first`",
+        "why": "`feat` é para algo novo; uma data errada que foi corrigida é um bug consertado."
+      },
+      {
+        "text": "`Fixed the date on the receipt page.`",
+        "why": "A primeira linha é uma instrução sem ponto final, e as linhas desta equipe começam por um tipo."
+      }
+    ]
+  },
+  "ex-jjq4r3sa": {
+    "prompt": "Na sua segunda semana como QA júnior, você percebe que a rodada de regressão que relatou como completa ontem pulou a página de checkout. A versão sai hoje à tarde. O que vem primeiro?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Fundamentos de Qualidade de Software, aula 5.",
+    "choices": [
+      {
+        "text": "Testar o checkout em silêncio antes que alguém perceba, e falar se falhar",
+        "why": "O silêncio enquanto você conserta sozinho é o que transforma um erro pequeno num incidente."
+      },
+      {
+        "text": "Segurar a versão você mesmo até o checkout ser testado",
+        "why": "A decisão de lançar é de quem é dono do produto; quem testa traz informação."
+      },
+      {
+        "text": "Levantar o assunto no próximo one-to-one, onde a má notícia chega cedo",
+        "why": "A versão sai hoje à tarde; quem precisa saber é quem decide hoje."
+      },
+      {
+        "text": "Avisar agora o dono do produto de que o checkout não foi testado, antes de decidirem lançar",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vdhdxeyk": {
+    "prompt": "Uma proposta CLT paga R$ 2.500 por mês. Com a conta da aula 17, antes de impostos e com doze meses faturados, que nota fiscal mensal de PJ empata com esse ano de CLT, em reais?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-t72qbzxm": {
+    "prompt": "Um anúncio de vaga de QA júnior acabou de chamar sua atenção. Ponha em ordem a rotina da aula 8 para mirar a candidatura.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8.",
+    "items": [
+      "Ler o anúncio procurando o trabalho, as necessidades do primeiro dia e o desejável",
+      "Mudar a linha abaixo do seu nome para as palavras do anúncio sobre o trabalho",
+      "Escolher cinco ou seis habilidades que casam com as necessidades do primeiro dia",
+      "Conferir se o topo do currículo responde o que você faz e se já fez",
+      "Salvar com um nome, exportar o PDF, candidatar-se e acrescentar a linha na planilha"
+    ],
+    "trap": "Todo passo seguinte usa as palavras do anúncio, então ele é lido primeiro; a linha da planilha vem por último porque a candidatura só existe depois de enviada."
+  },
+  "ex-5bj1d1wk": {
+    "prompt": "Três processos terminaram num não, cada um numa etapa diferente. Ligue cada etapa ao que a aula 19 diz que uma recusa ali costuma significar.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 19.",
+    "pairs": [
+      {
+        "left": "Depois da triagem",
+        "right": "Um desencontro prático: salário, contrato, escala ou local"
+      },
+      {
+        "left": "Depois da entrevista técnica",
+        "right": "O exercício, o pensar em voz alta, ou um candidato mais forte naquele dia"
+      },
+      {
+        "left": "Depois da entrevista final",
+        "right": "Por pouco: outra pessoa se encaixou um pouco melhor, muitas vezes por motivos que você não poderia mudar"
+      }
+    ],
+    "right_distractors": [
+      "O currículo ou a mira dele, e por isso não houve resposta"
+    ]
+  },
+  "ex-9rwkc828": {
+    "prompt": "Numa entrevista para uma vaga de QA júnior, você pergunta a quem recorreria quando travasse. A resposta: *você seria nosso único tester; os desenvolvedores passam tudo para você, e nada sai sem a sua aprovação.* Como as duas aulas leem isso?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 16; Fundamentos de Qualidade de Software, aula 5.",
+    "choices": [
+      {
+        "text": "Um ótimo começo: aprovar versões é para isso que existe um QA, e mostra confiança",
+        "why": "Isso é o portão, que ensina os desenvolvedores a largar a qualidade e joga tudo em você no fim."
+      },
+      {
+        "text": "Dois alertas: ninguém com quem aprender, e um portão",
+        "why": "Isso."
+      },
+      {
+        "text": "Um bom sinal, já que ser independente desde o primeiro dia faz um júnior aprender mais rápido",
+        "why": "Num primeiro emprego, independência desde o início é o alerta da aula 2, não uma vantagem."
+      },
+      {
+        "text": "Tudo bem, desde que a aprovação fique por escrito, para um defeito que escapar não ser culpa sua",
+        "why": "Uma assinatura por escrito não torna a promessa cumprível; o que o portão fornece é alguém para culpar."
+      }
+    ]
+  }
+}
