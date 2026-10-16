@@ -37,7 +37,7 @@ moto_up() {
   moto_down
   # a moto left over from an earlier run would answer instead, with its state
   for d in /proc/[0-9]*; do
-    c=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null) || continue
+    c=$( { tr '\0' ' ' < "$d/cmdline"; } 2>/dev/null ) || continue
     case "$c" in *bin/moto_server\ -p\ 4567*) kill "${d#/proc/}" 2>/dev/null ;; esac
   done
   for _ in $(seq 40); do curl -s -o /dev/null http://127.0.0.1:4567/ || break; sleep 0.25; done
