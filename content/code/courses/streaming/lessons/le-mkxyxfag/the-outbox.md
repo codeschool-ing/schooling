@@ -47,9 +47,28 @@ reach Kafka. This program does both halves, as two commands. Save it as `~/work/
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic stock-events --partitions 1
+Created topic stock-events.
+ubuntu@stream:~/work$ python outbox.py restock bk-04 10
+bk-04: +10, event queued
+ubuntu@stream:~/work$ python outbox.py restock bk-07 5
+bk-07: +5, event queued
+ubuntu@stream:~/work$ python -m sqlite3 shop.db "SELECT id, sent FROM outbox"
+('12098da2-b441-40bd-a0d4-ea83a638a598', 0)
+('0e605ed6-41ea-49b0-8d81-b5d62bface21', 0)
+ubuntu@stream:~/work$ python outbox.py relay
+%4|1792112069.651|GETPID|rdkafka#producer-1| [thrd:main]: Failed to acquire idempotence PID from broker localhost:9092/1: Broker: Coordinator load in progress: retrying
+relayed 2 events
+ubuntu@stream:~/work$ python outbox.py relay
+relayed 0 events
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic stock-events --from-beginning --timeout-ms 5000 2>/dev/null
+{"event": "12098da2-b441-40bd-a0d4-ea83a638a598", "type": "restocked", "book": "bk-04", "qty": 10}
+{"event": "0e605ed6-41ea-49b0-8d81-b5d62bface21", "type": "restocked", "book": "bk-07", "qty": 5}
 ```
 
-@@OUTBOX@@
+Each restock queued its event in the same transaction, and both rows of `outbox` say `sent` is 0;
+the ids are random, so yours differ. The first relay sent both, after the same first-time line
+from the client that lesson 7 showed, and marked them; **the second relay found nothing to send**.
+The topic holds the two events, each with the id it was given when the stock changed.
 
 ## What the relay still owes
 

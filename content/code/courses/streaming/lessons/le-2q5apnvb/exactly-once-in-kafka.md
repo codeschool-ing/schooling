@@ -56,6 +56,42 @@ The `sales` topic from the earlier sections still holds its fifty sales, and the
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic big-sales --partitions 1
+Created topic big-sales.
+ubuntu@stream:~/work$ python eos_copy.py --crash-after 25
+crashed after reading 25 sales, 13 of them copied
+ubuntu@stream:~/work$ python eos_copy.py
+%4|1792111588.861|GETPID|rdkafka#producer-2| [thrd:main]: Failed to acquire transactional PID from broker TxnCoordinator/1: Broker: Producer attempted to update a transaction while another concurrent operation on the same transaction was ongoing: retrying
+read 35 sales, copied 9
 ```
 
-@@EOS@@
+The crashed run read 25 sales and copied 13 of the big ones: 11 in the two batches it committed,
+and 2 in the third, which it had sent but not committed. The restart printed the client retrying
+while the coordinator finished aborting that open transaction, then started from the offset
+committed with the second batch, 20, and read the remaining 35 sales, copying 9.
+
+Now count the output both ways, and the source:
+
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic big-sales --from-beginning --timeout-ms 5000 --isolation-level read_committed 2>/dev/null | wc -l
+20
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic big-sales --from-beginning --timeout-ms 5000 2>/dev/null | wc -l
+22
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales --from-beginning --timeout-ms 5000 2>/dev/null | jq -c "select(.cents >= 10000)" | wc -l
+20
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group eos-copy 2>/dev/null
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID
+eos-copy        sales           0          55              55              0               -               -               -
+```
+
+**A `read_committed` reader sees 20 copies, and the source holds exactly 20 big sales.** Nothing
+lost, nothing twice. The log itself holds 22 records: the two copies of the aborted batch are
+still in it, and a `read_uncommitted` reader counts them. The group's committed offset is 55, the
+end of `sales`, and it got there only through the transactions: the program never called
+`commit`.
+
+So the guarantee has a precise shape. **Exactly once holds for readers that read committed
+data**, and it holds because the output and the offsets moved together. A downstream consumer
+left at the console consumer's default would see the two aborted copies, which is the most
+common way a team discovers that exactly once is a property of the whole chain and not of one
+program.

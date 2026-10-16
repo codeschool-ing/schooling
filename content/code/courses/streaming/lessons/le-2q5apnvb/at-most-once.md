@@ -54,6 +54,9 @@ follow. Make it and put fifty sales in it:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 1
+Created topic sales.
+ubuntu@stream:~/work$ python tills.py --count 50 --rate 0
+sent 50 sales to sales, the last one at 09:08:39
 ```
 
 If `sales` still exists from an earlier lesson, start from a fresh cluster first with
@@ -65,6 +68,20 @@ Run it in `most` mode with a crash after 25 sales, then again without one, and c
 
 ```
 ubuntu@stream:~/work$ python crash_consumer.py most --crash-after 25
+crashed after 25 sales
+ubuntu@stream:~/work$ python crash_consumer.py most
+processed 20 sales; nothing more to read
+ubuntu@stream:~/work$ wc -l < processed-most.txt
+45
+ubuntu@stream:~/work$ sort processed-most.txt | uniq | wc -l
+45
 ```
 
-@@MOST@@
+The first run read two batches of ten, committing each before writing it, then read the third
+batch, sales 21 to 30, committed it, and crashed after writing five of them. The second run started
+from the committed offset, 30, and processed the last 20. **The file holds 45 sales, all
+different, out of 50.** Sales 26 to 30 were never processed, and nothing in the output says so:
+the file is simply five lines short, and only a count against the topic reveals it.
+
+That is the whole character of at most once. No duplicate, ever, and a loss as large as whatever
+was in flight when the crash came, which here was half a batch.

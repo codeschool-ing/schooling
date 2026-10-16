@@ -60,12 +60,50 @@ and whatever had been sent by then is in the log in the same way.
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic ledger --partitions 1
+Created topic ledger.
+ubuntu@stream:~/work$ python txn.py
+transaction 1: 5 sales written, committed
+transaction 2: 5 sales written, aborted
 ```
 
 ## Two readers of the same log
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ledger --from-beginning --timeout-ms 5000 2>/dev/null
+{"sale": "txn-1-1", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-2", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-3", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-4", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-5", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-2-1", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-2-2", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-2-3", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-2-4", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-2-5", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ledger --from-beginning --timeout-ms 5000 --isolation-level read_committed 2>/dev/null
+{"sale": "txn-1-1", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-2", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-3", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-4", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+{"sale": "txn-1-5", "shop": "olinda", "book": "bk-03", "qty": 1, "cents": 2990}
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic ledger
+ledger:0:12
+ubuntu@stream:~/work$ kafka-dump-log.sh --files ~/kafka-data/node1/log/ledger-0/00000000000000000000.log
+Dumping /home/ubuntu/kafka-data/node1/log/ledger-0/00000000000000000000.log
+Log starting offset: 0
+baseOffset: 0 lastOffset: 4 count: 5 baseSequence: 0 lastSequence: 4 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: false deleteHorizonMs: OptionalLong.empty position: 0 CreateTime: 1792111568970 size: 531 magic: 2 compresscodec: none crc: 15249745 isvalid: true
+baseOffset: 5 lastOffset: 5 count: 1 baseSequence: -1 lastSequence: -1 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: true deleteHorizonMs: OptionalLong.empty position: 531 CreateTime: 1792111569014 size: 78 magic: 2 compresscodec: none crc: 1596816661 isvalid: true
+baseOffset: 6 lastOffset: 10 count: 5 baseSequence: 5 lastSequence: 9 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: false deleteHorizonMs: OptionalLong.empty position: 609 CreateTime: 1792111568999 size: 531 magic: 2 compresscodec: none crc: 1806690553 isvalid: true
+baseOffset: 11 lastOffset: 11 count: 1 baseSequence: -1 lastSequence: -1 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: true deleteHorizonMs: OptionalLong.empty position: 1140 CreateTime: 1792111569035 size: 78 magic: 2 compresscodec: none crc: 2943571995 isvalid: true
 ```
 
-@@ISOLATION@@
+The console consumer reads `read_uncommitted` unless told otherwise, and prints all ten sales,
+the aborted ones included. With `--isolation-level read_committed` the same command prints the
+five of the committed transaction and **the aborted five are not there**.
+
+The offsets show where the transactions left their marks. The partition's end offset is 12 for
+ten sales, and the dump shows why: offsets 5 and 11 are batches with **`isControl: true`**, the
+markers, the first saying commit and the second abort. The aborted sales are on disk at offsets
+6 to 10 with the same producer id as the committed ones. A reader that does not ask for
+committed data reads them as if nothing had happened, which is why a consumer of a
+transactional topic has to choose its isolation level on purpose.

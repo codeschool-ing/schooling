@@ -30,9 +30,15 @@ tuple. First, the counter that adds, with the same sale of two copies of `bk-04`
 
 ```
 ubuntu@stream:~/work$ python -m sqlite3 demo.db "CREATE TABLE sold (book TEXT PRIMARY KEY, qty INTEGER NOT NULL)"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "INSERT INTO sold VALUES ('bk-04', 0)"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "UPDATE sold SET qty = qty + 2 WHERE book = 'bk-04'"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "UPDATE sold SET qty = qty + 2 WHERE book = 'bk-04'"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "SELECT * FROM sold"
+('bk-04', 4)
 ```
 
-@@ADD@@
+**Two deliveries of one sale of two copies, and the table says four.** Nothing in the second
+statement could tell it was a repeat; it adds to whatever is there.
 
 Now the other shape. The sales themselves are stored, **keyed by the sale's id**, and the number
 sold is computed from them. `ON CONFLICT (sale) DO NOTHING` turns a second insert of the same id
@@ -40,9 +46,15 @@ into nothing at all; SQLite calls this an **upsert** when the conflict clause up
 
 ```
 ubuntu@stream:~/work$ python -m sqlite3 demo.db "CREATE TABLE sales (sale TEXT PRIMARY KEY, book TEXT, qty INTEGER)"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "INSERT INTO sales VALUES ('rec-000007', 'bk-04', 2) ON CONFLICT (sale) DO NOTHING"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "INSERT INTO sales VALUES ('rec-000007', 'bk-04', 2) ON CONFLICT (sale) DO NOTHING"
+ubuntu@stream:~/work$ python -m sqlite3 demo.db "SELECT book, sum(qty) FROM sales GROUP BY book"
+('bk-04', 2)
 ```
 
-@@UPSERT@@
+The second insert hits the primary key and does nothing, and **the total stays at two**. The
+duplicate was harmless without anybody looking for it, because the write was shaped so that a
+second copy has nowhere to go.
 
 ## The catch
 

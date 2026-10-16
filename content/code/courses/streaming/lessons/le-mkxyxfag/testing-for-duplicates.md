@@ -16,9 +16,18 @@ compared with `diff`, which prints nothing when two files are the same.
 
 ```
 ubuntu@stream:~/work$ rm stock.db
+ubuntu@stream:~/work$ python stock_sink.py --dedup --replay
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT * FROM stock ORDER BY book" > run1.txt
+ubuntu@stream:~/work$ python stock_sink.py --dedup --replay
+applied 0 sales, skipped 40 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT * FROM stock ORDER BY book" > run2.txt
+ubuntu@stream:~/work$ diff run1.txt run2.txt && echo identical
+identical
 ```
 
-@@TEST-DEDUP@@
+The second run applied nothing and the two dumps are the same: `diff` printed nothing, so the
+`echo` ran and printed `identical`.
 
 ## The sink without ids
 
@@ -26,9 +35,36 @@ The same test against the version that only subtracts:
 
 ```
 ubuntu@stream:~/work$ rm stock.db
+ubuntu@stream:~/work$ python stock_sink.py --replay
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT * FROM stock ORDER BY book" > run1.txt
+ubuntu@stream:~/work$ python stock_sink.py --replay
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT * FROM stock ORDER BY book" > run2.txt
+ubuntu@stream:~/work$ diff run1.txt run2.txt && echo identical
+1,8c1,8
+< ('bk-01', 90)
+< ('bk-02', 97)
+< ('bk-03', 97)
+< ('bk-04', 91)
+< ('bk-05', 92)
+< ('bk-06', 87)
+< ('bk-07', 87)
+< ('bk-08', 88)
+---
+> ('bk-01', 80)
+> ('bk-02', 94)
+> ('bk-03', 94)
+> ('bk-04', 82)
+> ('bk-05', 84)
+> ('bk-06', 74)
+> ('bk-07', 74)
+> ('bk-08', 76)
 ```
 
-@@TEST-NAIVE@@
+`diff` prints every line, because every book's stock moved: `bk-01` from 90 to 80, `bk-06` from
+87 to 74. **The test fails in the first second**, on exactly the defect that would otherwise show
+up as a shelf that disagrees with the website.
 
 ## What else the test should do
 

@@ -19,9 +19,24 @@ Same program, `least` mode, same crash after 25 sales:
 
 ```
 ubuntu@stream:~/work$ python crash_consumer.py least --crash-after 25
+crashed after 25 sales
+ubuntu@stream:~/work$ python crash_consumer.py least
+processed 30 sales; nothing more to read
+ubuntu@stream:~/work$ wc -l < processed-least.txt
+55
+ubuntu@stream:~/work$ sort processed-least.txt | uniq -d
+car-000024
+joa-000021
+joa-000022
+joa-000023
+joa-000025
 ```
 
-@@LEAST@@
+This time the third batch was read and half written when the crash came, but its offsets had
+not been committed; the last commit was after the second batch, at 20. The restart began there
+and processed 30 sales, 21 to 50. **The file holds 55 lines for 50 sales**, and `uniq -d` names
+the five that appear twice: sales 21 to 25, the part of the third batch that was done before the
+crash and done again after it. Nothing is missing.
 
 ## Why at least once is the usual choice
 

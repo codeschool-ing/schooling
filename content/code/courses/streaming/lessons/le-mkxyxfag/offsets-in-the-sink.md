@@ -48,6 +48,34 @@ Crash it after fifteen sales and start it again:
 
 ```
 ubuntu@stream:~/work$ python offset_sink.py --crash-after 15
+partition 0: starting at the beginning
+partition 1: starting at the beginning
+partition 2: starting at the beginning
+crashed after 15 sales
+ubuntu@stream:~/work$ python offset_sink.py
+partition 0: starting at the beginning
+partition 1: starting at 15
+partition 2: starting at the beginning
+applied 25 sales
+ubuntu@stream:~/work$ python -m sqlite3 stock2.db "SELECT sum(qty) FROM stock"
+(729,)
+ubuntu@stream:~/work$ python -m sqlite3 stock2.db "SELECT * FROM offsets"
+(0, 7)
+(1, 33)
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group offset-sink
+
+Consumer group 'offset-sink' has no active members.
 ```
 
-@@OFFSETS@@
+The fifteen sales of the first run all came from partition 1, so after the crash the database
+held one row of `offsets`, saying partition 1 should resume at 15. **The restart read that and
+started partition 1 at 15**, and the other two from the beginning. It applied the remaining 25,
+and the stock is 729, as with the deduplicating sink, with no table of ids.
+
+`offsets` now says where to resume in each partition that had sales: 7 for partition 0 and 33 for
+partition 1; partition 2 received none of the forty. And the consumer group has **no committed
+offsets at all**: `kafka-consumer-groups.sh` has nothing to show beyond the fact that nobody is
+connected. Every tool that reads lag from the group sees nothing, which is the price of this
+design, and the reason some teams commit to the group as well, after the database, purely as a
+hint for monitoring. A hint that is wrong after a crash is harmless, because nothing reads it on
+start.

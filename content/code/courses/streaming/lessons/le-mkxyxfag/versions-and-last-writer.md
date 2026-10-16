@@ -25,9 +25,16 @@ Three updates of the price of `bk-01`, versions 1 and 3 and then a late version 
 
 ```
 ubuntu@stream:~/work$ python -m sqlite3 prices.db "CREATE TABLE price (book TEXT PRIMARY KEY, cents INTEGER, version INTEGER)"
+ubuntu@stream:~/work$ python -m sqlite3 prices.db "INSERT INTO price VALUES ('bk-01', 3990, 1) ON CONFLICT (book) DO UPDATE SET cents = excluded.cents, version = excluded.version WHERE excluded.version > price.version"
+ubuntu@stream:~/work$ python -m sqlite3 prices.db "INSERT INTO price VALUES ('bk-01', 4490, 3) ON CONFLICT (book) DO UPDATE SET cents = excluded.cents, version = excluded.version WHERE excluded.version > price.version"
+ubuntu@stream:~/work$ python -m sqlite3 prices.db "INSERT INTO price VALUES ('bk-01', 4290, 2) ON CONFLICT (book) DO UPDATE SET cents = excluded.cents, version = excluded.version WHERE excluded.version > price.version"
+ubuntu@stream:~/work$ python -m sqlite3 prices.db "SELECT * FROM price"
+('bk-01', 4490, 3)
 ```
 
-@@VERSIONS@@
+Version 1 was written, version 3 replaced it, and **version 2, arriving last, changed nothing**:
+the price is 4490 at version 3. Without the `WHERE`, it would be 4290, a price somebody had
+already changed.
 
 The same statement is also **idempotent**: replaying version 3 finds version 3 stored, the
 condition is false, and nothing changes. A versioned upsert answers duplicates and reordering at

@@ -56,6 +56,9 @@ consumer has run is 800 minus the copies sold. Make a fresh topic with forty sal
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
+ubuntu@stream:~/work$ python tills.py --count 40 --rate 0
+sent 40 sales to sales, the last one at 09:06:58
 ```
 
 As in lesson 7, a `sales` topic left from an earlier lesson means starting from a fresh cluster.
@@ -67,9 +70,18 @@ of the same topic, or after restoring this database from last night's backup:
 
 ```
 ubuntu@stream:~/work$ python stock_sink.py
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
+(729,)
+ubuntu@stream:~/work$ python stock_sink.py --replay
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
+(658,)
 ```
 
-@@NAIVE@@
+The forty sales took 71 copies off the shelves: 800 became 729. **The replay took them again**,
+to 658, and every book's count is now wrong by the copies of its own sales. Both runs printed the
+same honest line; nothing in either one looks like an error.
 
 ## With them
 
@@ -77,9 +89,18 @@ Start the database again and do the same with `--dedup`:
 
 ```
 ubuntu@stream:~/work$ rm stock.db
+ubuntu@stream:~/work$ python stock_sink.py --dedup --replay
+applied 40 sales, skipped 0 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
+(729,)
+ubuntu@stream:~/work$ python stock_sink.py --dedup --replay
+applied 0 sales, skipped 40 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
+(729,)
 ```
 
-@@DEDUP@@
+The first run applied all forty and kept their ids; the replay found every id already there,
+**skipped all forty, and the stock stayed at 729**.
 
 ## And the crash it was built for
 
@@ -89,6 +110,17 @@ start it again:
 
 ```
 ubuntu@stream:~/work$ rm stock.db
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --delete --group stock-sink
+Deletion of requested consumer groups ('stock-sink') was successful.
+ubuntu@stream:~/work$ python stock_sink.py --dedup --crash-after 15
+crashed after 15 sales, before committing the offset
+ubuntu@stream:~/work$ python stock_sink.py --dedup
+applied 25 sales, skipped 1 already seen
+ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
+(729,)
 ```
 
-@@CRASH@@
+The crash came after the fifteenth sale's database transaction had committed and before its
+offset had been committed to Kafka. So the restart was handed that sale again, found its id in
+`processed`, and skipped it: **25 applied, 1 skipped, and the stock at 729**, the same as a run
+that never crashed. Without `--dedup`, that one sale would have been subtracted twice.

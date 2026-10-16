@@ -31,9 +31,14 @@ idempotence writes `-1` in both. `tills.py` sets nothing:
 
 ```
 ubuntu@stream:~/work$ kafka-dump-log.sh --files ~/kafka-data/node1/log/sales-0/00000000000000000000.log | head -4
+Dumping /home/ubuntu/kafka-data/node1/log/sales-0/00000000000000000000.log
+Log starting offset: 0
+baseOffset: 0 lastOffset: 49 count: 50 baseSequence: -1 lastSequence: -1 producerId: -1 producerEpoch: -1 partitionLeaderEpoch: 0 isTransactional: false isControl: false deleteHorizonMs: OptionalLong.empty position: 0 CreateTime: 1792111518493 size: 6777 magic: 2 compresscodec: none crc: 855803453 isvalid: true
 ```
 
-@@PLAIN@@
+Without `--print-data-log` the tool prints one line per batch, and `tills.py` sent its fifty
+sales as one batch. **`producerId: -1` and `baseSequence: -1`**: the broker had no way to tell a
+retry of that batch from a new one.
 
 Now five sales from a producer with one setting changed. Save it as `~/work/idempotent.py`:
 
@@ -53,9 +58,17 @@ print("sent 5 sales with enable.idempotence=true")
 
 ```
 ubuntu@stream:~/work$ python idempotent.py
+%4|1792111564.419|GETPID|rdkafka#producer-1| [thrd:main]: Failed to acquire idempotence PID from broker localhost:9092/1: Broker: Coordinator load in progress: retrying
+sent 5 sales with enable.idempotence=true
+ubuntu@stream:~/work$ kafka-dump-log.sh --files ~/kafka-data/node1/log/sales-0/00000000000000000000.log | tail -1
+baseOffset: 50 lastOffset: 54 count: 5 baseSequence: 0 lastSequence: 4 producerId: 0 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: false isControl: false deleteHorizonMs: OptionalLong.empty position: 6777 CreateTime: 1792111563909 size: 546 magic: 2 compresscodec: none crc: 3146156970 isvalid: true
 ```
 
-@@IDEM@@
+The first line is the client waiting while a fresh cluster prepares the internal topic it keeps
+producer ids in; it retries on its own and is printed only the first time. The batch it wrote
+sits at offsets 50 to 54 with **`producerId: 0`, `producerEpoch: 0` and sequences 0 to 4**. A
+retry of that batch would arrive with the same producer id and base sequence 0, and the leader
+would answer success without writing it again.
 
 ## What it changes, and what it does not
 
