@@ -17,9 +17,9 @@ ana@laptop:~/aws$ aws athena get-work-group --work-group analysts --query 'WorkG
 10485760	True
 ana@laptop:~/aws$ aws athena start-query-execution --work-group analysts --query-string "SELECT * FROM quitanda.orders_csv"
 {
-    "QueryExecutionId": "bc87a049-7fa6-4f9f-bdd9-3be0858437e8"
+    "QueryExecutionId": "3b75ad5a-d87c-49cf-9d27-370e0bcdd10a"
 }
-ana@laptop:~/aws$ aws athena get-query-execution --query-execution-id bc87a049-7fa6-4f9f-bdd9-3be0858437e8 --query 'QueryExecution.[WorkGroup,Status.State,Statistics.DataScannedInBytes]' --output text
+ana@laptop:~/aws$ aws athena get-query-execution --query-execution-id 3b75ad5a-d87c-49cf-9d27-370e0bcdd10a --query 'QueryExecution.[WorkGroup,Status.State,Statistics.DataScannedInBytes]' --output text
 analysts	SUCCEEDED	0
 ```
 

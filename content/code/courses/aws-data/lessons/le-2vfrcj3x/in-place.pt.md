@@ -58,9 +58,9 @@ ana@laptop:~/aws$ aws s3 mb s3://quitanda-athena-results-prod
 make_bucket: quitanda-athena-results-prod
 ana@laptop:~/aws$ aws athena start-query-execution --query-string file://orders.sql --result-configuration OutputLocation=s3://quitanda-athena-results-prod/
 {
-    "QueryExecutionId": "327552ed-b1e2-4267-9365-d8700b391a96"
+    "QueryExecutionId": "5d04099c-fed5-4816-a1f2-e26a5321bdf7"
 }
-ana@laptop:~/aws$ aws athena get-query-execution --query-execution-id 327552ed-b1e2-4267-9365-d8700b391a96 --query 'QueryExecution.[StatementType,Status.State]' --output text
+ana@laptop:~/aws$ aws athena get-query-execution --query-execution-id 5d04099c-fed5-4816-a1f2-e26a5321bdf7 --query 'QueryExecution.[StatementType,Status.State]' --output text
 DDL	SUCCEEDED
 ana@laptop:~/aws$ aws glue get-databases
 {
