@@ -1,0 +1,348 @@
+{
+  "ex-6bja4xnz": {
+    "prompt": "O construtor de `Loan` imprimiu `title=null` na primeira linha. Por que `null`?",
+    "hint": "O que a JVM fez com a memória antes de tudo?",
+    "choices": [
+      {
+        "text": "Porque `title` não tem inicializador, o compilador insere `title = null` no fim do construtor",
+        "why": "Nada é inserido no fim; o atributo era null antes de o construtor começar."
+      },
+      {
+        "text": "A memória do objeto começa zerada",
+        "why": "Isso: um atributo de referência começa como `null`, um número como 0, um boolean como false."
+      },
+      {
+        "text": "Porque o argumento ainda não tinha sido passado",
+        "why": "O argumento estava lá; o construtor só não o tinha atribuído ao atributo ainda."
+      }
+    ]
+  },
+  "ex-6ftxf7wy": {
+    "prompt": "Ponha os passos de `new Loan(\"Effective Java\")` na ordem em que acontecem.",
+    "hint": "O corpo do construtor é o último.",
+    "items": [
+      "A memória do objeto é reservada e zerada",
+      "O inicializador do atributo, `days = 14`, roda",
+      "O corpo do construtor atribui `title`",
+      "A referência é guardada na variável `loan`"
+    ]
+  },
+  "ex-w17yjzx6": {
+    "prompt": "No bytecode do `main`, o que é `<init>`?",
+    "hint": "O `invokespecial` o chama.",
+    "choices": [
+      {
+        "text": "A instrução que aloca o objeto",
+        "why": "A alocação é a instrução `new`, que vem antes."
+      },
+      {
+        "text": "Um método escondido que zera os atributos",
+        "why": "Zerar faz parte do `new`; o `<init>` roda o código que a classe escreveu."
+      },
+      {
+        "text": "O construtor, compilado como um método",
+        "why": "Isso: o `invokespecial` o executa sobre o objeto que o `new` produziu."
+      },
+      {
+        "text": "O inicializador estático da classe",
+        "why": "Esse se chama `<clinit>` e roda uma vez por classe; a lição 27 o mostra."
+      }
+    ]
+  },
+  "ex-p3vdd950": {
+    "prompt": "Por que um construtor pode contar com ninguém mais usar o objeto enquanto ele roda?",
+    "hint": "Onde está a referência entre o `new` e o `<init>`?",
+    "choices": [
+      {
+        "text": "Porque a JVM tranca todo objeto até o construtor retornar",
+        "why": "Não há tranca assim; ninguém mais tem a referência ainda, só isso."
+      },
+      {
+        "text": "Até ele retornar, a única referência é a que está sendo inicializada; quem chamou a guarda depois",
+        "why": "Isso: o `astore_1` vem depois do `invokespecial`, então `loan` só recebe valor com o construtor terminado."
+      },
+      {
+        "text": "Porque atributos não podem ser lidos antes da última linha do construtor",
+        "why": "O construtor leu três atributos na primeira linha."
+      }
+    ]
+  },
+  "ex-jyz5prfa": {
+    "prompt": "Quando o coletor de lixo considera um objeto lixo?",
+    "hint": "Raízes, e cadeias de referências.",
+    "choices": [
+      {
+        "text": "Quando o programa não o usa há algum tempo",
+        "why": "O uso não é medido; um objeto sem uso que ainda é alcançável fica."
+      },
+      {
+        "text": "Quando o método que o criou retorna",
+        "why": "Um objeto sobrevive ao método que o criou sempre que algo alcançável ainda aponta para ele."
+      },
+      {
+        "text": "Quando nenhuma cadeia de referências chega a ele a partir de uma raiz",
+        "why": "Isso: essa é a regra inteira."
+      },
+      {
+        "text": "Quando absolutamente nada aponta para ele",
+        "why": "Dois objetos inalcançáveis que apontam um para o outro continuam sendo lixo."
+      }
+    ]
+  },
+  "ex-b8ddgc4b": {
+    "prompt": "Quais destas coisas são raízes? Escolha todas as que se aplicam.",
+    "hint": "Onde o coletor começa?",
+    "choices": [
+      {
+        "text": "Uma variável local de um método que ainda está rodando",
+        "why": "Sim: `pages` no `main` manteve vivo cada array do `Hoard`."
+      },
+      {
+        "text": "Um atributo estático",
+        "why": "Sim: `latest` no `Churn` manteve o array mais novo."
+      },
+      {
+        "text": "Um atributo de um objeto que nada alcança",
+        "why": "Os atributos de um objeto inalcançável não levam a lugar nenhum onde o coletor olhe."
+      },
+      {
+        "text": "Uma variável local de um método que já retornou",
+        "why": "Quando o método retorna, o frame dele some, e a variável junto."
+      }
+    ]
+  },
+  "ex-966a718w": {
+    "prompt": "O `Churn` alocou quantos megabytes, num heap limitado a 32 MB?",
+    "hint": "O programa imprimiu.",
+    "unit": "MB"
+  },
+  "ex-qazkc2mv": {
+    "prompt": "Uma linha do `-Xlog:gc` diz `Pause Young (Normal) (G1 Evacuation Pause) 18M->1M(32M) 0.784ms`. O que `18M->1M(32M)` diz?",
+    "hint": "Antes, depois, e o tamanho do heap.",
+    "choices": [
+      {
+        "text": "18 MB em uso antes, 1 MB depois, num heap de 32 MB",
+        "why": "Isso: quase tudo era lixo."
+      },
+      {
+        "text": "18 objetos coletados, 1 mantido, de 32",
+        "why": "Os números são megabytes, como diz o `M`, e não contagens de objetos."
+      },
+      {
+        "text": "O heap cresceu de 18 MB para 32 MB e 1 MB foi liberado",
+        "why": "O heap ficou em 32 MB; o uso caiu de 18 para 1."
+      },
+      {
+        "text": "A pausa durou 18 ms, e 1 ms disso foi gasto no heap de 32 MB",
+        "why": "A duração é o último campo, 0,784 ms."
+      }
+    ]
+  },
+  "ex-2fg0knm7": {
+    "prompt": "O `Churn` alocou quase 2 GB num heap de 32 MB e terminou; o `Hoard` estourou com o mesmo limite. Qual é a diferença que importa?",
+    "hint": "Quantos arrays de cada programa estão alcançáveis ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Os arrays do `Hoard` são maiores, um megabyte cada contra um kilobyte",
+        "why": "O tamanho por objeto não importa; o `Churn` alocou muito mais no total."
+      },
+      {
+        "text": "O `Churn` mantém um array alcançável; o `Hoard` mantém todos",
+        "why": "Isso: a lista em `pages` segurava todos, então nada podia ser liberado."
+      },
+      {
+        "text": "O `Hoard` usa um `ArrayList`, que o coletor não consegue limpar",
+        "why": "O coletor limpa listas como qualquer outra coisa quando ficam inalcançáveis."
+      },
+      {
+        "text": "O `Churn` chama o próprio coletor por meio de um atributo estático",
+        "why": "Um atributo estático é uma raiz; ele não chama nada."
+      }
+    ]
+  },
+  "ex-c793st42": {
+    "prompt": "Com `-XX:+DisableExplicitGC`, o `Request` chamou `System.gc()` e coleta nenhuma aconteceu. O que isso mostra?",
+    "hint": "Compare com a execução sem a opção.",
+    "choices": [
+      {
+        "text": "Que a opção quebrou o programa",
+        "why": "O programa imprimiu `asked` e terminou normalmente nas duas vezes."
+      },
+      {
+        "text": "Que a chamada é um pedido, e a resposta foi não",
+        "why": "Isso: mesma chamada, nenhuma pausa; um programa não deve depender dela."
+      },
+      {
+        "text": "Que não havia nada para coletar, já que `junk` ainda era alcançável",
+        "why": "O `junk = null` deixou os arrays inalcançáveis antes da chamada."
+      }
+    ]
+  },
+  "ex-n0863j27": {
+    "prompt": "O erro com que o `Hoard` morreu foi `java.lang.___: Java heap space`.",
+    "hint": "Um `Error`, não uma `Exception`.",
+    "blanks": [
+      {
+        "accept": [
+          "OutOfMemoryError"
+        ]
+      }
+    ]
+  },
+  "ex-rwveexk3": {
+    "prompt": "O `Tidy` sobrescreve o `finalize()` e o programa imprimiu só `main ends`. Por que o `finalize` não rodou?",
+    "hint": "O coletor chegou a rodar?",
+    "choices": [
+      {
+        "text": "Porque o objeto ainda era alcançável a partir do `main`",
+        "why": "O `new Tidy()` nunca foi guardado; virou lixo na hora."
+      },
+      {
+        "text": "Porque o compilador removeu o método depois do aviso",
+        "why": "Um aviso não remove nada; o método está no arquivo de classe."
+      },
+      {
+        "text": "O programa terminou antes de qualquer coleta, e nenhuma acontece na saída",
+        "why": "Isso: ninguém sabe quando, nem se, um finalizador roda."
+      }
+    ]
+  },
+  "ex-hdyqa834": {
+    "prompt": "O que o `[removal]` em `warning: [removal] finalize() in Object has been deprecated and marked for removal` acrescenta a uma depreciação comum?",
+    "hint": "O que um JDK futuro vai fazer?",
+    "choices": [
+      {
+        "text": "Que o método já parou de funcionar no Java 25",
+        "why": "Ainda compila e ainda poderia ser chamado; a remoção é anunciada, não feita."
+      },
+      {
+        "text": "Que uma versão futura vai tirá-lo, e não só desaconselhá-lo",
+        "why": "Isso: o `finalize` está marcado assim desde o Java 18."
+      },
+      {
+        "text": "Que o aviso só aparece com `-Xlint:removal`",
+        "why": "Ele apareceu com o `javac` simples, sem ninguém pedir."
+      },
+      {
+        "text": "Que o método foi removido de `Object` e o `Tidy` define um novo",
+        "why": "O `Object` ainda o declara, e é por isso que o `@Override` compilou."
+      }
+    ]
+  },
+  "ex-gzebb2cx": {
+    "prompt": "Uma classe guarda um arquivo aberto. Qual é o jeito principal que o curso dá para fechá-lo?",
+    "hint": "Num ponto conhecido, pelo código que o abriu.",
+    "choices": [
+      {
+        "text": "Sobrescrever o `finalize()` para fechá-lo",
+        "why": "Depreciado para remoção, e pode nunca rodar, como o `Tidy` mostrou."
+      },
+      {
+        "text": "Registrá-lo num `Cleaner`, que o fecha prontamente",
+        "why": "Um `Cleaner` tem a mesma incerteza sobre o quando; é só uma rede de segurança."
+      },
+      {
+        "text": "Um método `close()` que o usuário chama, com try-with-resources",
+        "why": "Isso: a lição 37 torna isso difícil de esquecer."
+      },
+      {
+        "text": "Chamar `System.gc()` depois do último uso, para o arquivo ser coletado",
+        "why": "O coletor recupera memória, não arquivos, e a chamada é só um pedido."
+      }
+    ]
+  },
+  "ex-tknvmywm": {
+    "prompt": "Por que um `Cleaner` é aceitável como reserva quando o `finalize` não era, se nenhum dos dois diz quando roda?",
+    "hint": "O que cada um pode fazer com o objeto que está morrendo?",
+    "choices": [
+      {
+        "text": "A ação dele não ressuscita o objeto, e ele nunca é o jeito principal de fechar",
+        "why": "Isso: ele cobre um `close()` esquecido, sem a capacidade do finalizador de reviver o que limpa."
+      },
+      {
+        "text": "Porque a JVM executa toda ação de `Cleaner` quando o programa termina",
+        "why": "Essa promessa não existe; esse era justamente o problema do `finalize` também."
+      },
+      {
+        "text": "Porque um `Cleaner` roda assim que o objeto fica inalcançável",
+        "why": "Ele roda algum tempo depois, quando o coletor percebe; o momento é tão incerto quanto."
+      }
+    ]
+  },
+  "ex-nywp99kk": {
+    "prompt": "A memória de um servidor cresce por dias até um `OutOfMemoryError`. Seguindo a lição, o que você procura primeiro?",
+    "hint": "Objetos alcançáveis ficam, usados ou não.",
+    "choices": [
+      {
+        "text": "Um `-Xmx` maior, já que o heap é pequeno demais",
+        "why": "Mais heap adia o erro; algo que só cresce chega a qualquer tamanho."
+      },
+      {
+        "text": "O que ainda segura referências que deveria ter soltado",
+        "why": "Isso: costuma ser uma coleção, muitas vezes estática, que só cresce."
+      },
+      {
+        "text": "Uma chamada a `System.gc()` faltando no laço principal",
+        "why": "O coletor roda sozinho; a chamada é um pedido e não libera nada alcançável."
+      },
+      {
+        "text": "Uma classe cujo `finalize()` está falhando",
+        "why": "Finalizadores estão depreciados e não decidem o que é alcançável."
+      }
+    ]
+  },
+  "ex-50rgsv4w": {
+    "prompt": "Ligue cada opção da JVM usada na lição ao que ela fez.",
+    "hint": "Três opções, três efeitos.",
+    "pairs": [
+      {
+        "left": "`-Xmx32m`",
+        "right": "Limitou o heap a 32 MB"
+      },
+      {
+        "left": "`-Xlog:gc`",
+        "right": "Imprimiu uma linha a cada coleta"
+      },
+      {
+        "left": "`-XX:+DisableExplicitGC`",
+        "right": "Fez o `System.gc()` não fazer nada"
+      }
+    ],
+    "right_distractors": [
+      "Fez o `finalize()` rodar na saída"
+    ]
+  },
+  "ex-s7z920m9": {
+    "prompt": "Um cache guarda todo `Report` já produzido num `static Map`, e um relatório nunca é consultado de novo depois da primeira hora. Nos termos da lição, o que está errado?",
+    "hint": "Um relatório antigo é alcançável?",
+    "choices": [
+      {
+        "text": "Nada: relatórios que ninguém consulta estão sem uso, então o coletor os libera",
+        "why": "O coletor libera o inalcançável, não o sem uso, e um mapa estático é uma raiz."
+      },
+      {
+        "text": "O mapa devia ser um atributo de instância, que o coletor limpa mais vezes",
+        "why": "Um atributo de instância de um objeto alcançável mantém as coisas igualmente vivas."
+      },
+      {
+        "text": "Todo relatório fica alcançável de uma raiz, para sempre",
+        "why": "Isso: o `Hoard` em câmera lenta; o cache precisa descartar as entradas antigas."
+      }
+    ]
+  },
+  "ex-0kq8e936": {
+    "prompt": "Na execução gravada, quantas pausas de coleta o `Churn` causou com `-Xmx32m`?",
+    "hint": "O `grep -c Pause gc.log` as contou."
+  },
+  "ex-x9636ve4": {
+    "prompt": "O coletor de lixo padrão da JVM na máquina da lição, nomeado na primeira linha do `-Xlog:gc`, é o ___.",
+    "hint": "Dois caracteres.",
+    "blanks": [
+      {
+        "accept": [
+          "G1"
+        ]
+      }
+    ]
+  }
+}

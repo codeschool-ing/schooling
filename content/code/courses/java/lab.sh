@@ -58,7 +58,7 @@
 # scripts; the container's hostname is vm as well.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
-set -euo pipefail
+[[ "${BASH_SOURCE[0]}" != "$0" ]] || set -euo pipefail  # sourced by a captures.sh: leave its options alone
 
 BASE=/var/lib/machines/java-base
 BARE=/var/lib/machines/java-bare

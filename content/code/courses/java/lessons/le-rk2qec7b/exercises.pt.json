@@ -1,0 +1,383 @@
+{
+  "ex-48j54bgd": {
+    "prompt": "Na saída de `Shelf`, `static block: [fiction, history]` veio antes de `main starts`. Por quê?",
+    "hint": "O `main` é um método estático de `Shelf`.",
+    "choices": [
+      {
+        "text": "Blocos estáticos rodam quando a JVM inicia, antes de qualquer classe ser escolhida",
+        "why": "Eles rodam por classe, quando a classe é usada pela primeira vez; a seção 03 mostra uma classe cujo bloco esperou até o `new Book()`."
+      },
+      {
+        "text": "A classe tem de ser inicializada antes de qualquer método estático dela rodar",
+        "why": "Isso: executar o `main` é usar `Shelf`, então os inicializadores e blocos estáticos rodaram antes."
+      },
+      {
+        "text": "O bloco está escrito acima do `main` no arquivo",
+        "why": "A posição no arquivo ordena os inicializadores estáticos entre si, não em relação ao `main`."
+      },
+      {
+        "text": "O `javac` moveu o bloco para a primeira linha do `main`",
+        "why": "O `javap -p` o mostrou como membro próprio, `static {}`, separado do `main`."
+      }
+    ]
+  },
+  "ex-gsvg7f3g": {
+    "prompt": "O `javap -p Shelf` listou `static {}` e nenhum membro para o bloco de instância. Para onde foi o código do bloco de instância?",
+    "hint": "Ele rodou antes da linha de cada construtor.",
+    "choices": [
+      {
+        "text": "Para o inicializador da classe, ao lado do bloco estático",
+        "why": "Aí ele teria rodado uma vez; a saída o mostrou duas vezes, uma por objeto."
+      },
+      {
+        "text": "Para o `main`, antes de cada `new Shelf`",
+        "why": "O `main` é só um dos chamadores; o bloco roda seja quem for que chame o construtor."
+      },
+      {
+        "text": "Para o começo de cada construtor, depois da chamada à superclasse",
+        "why": "Isso: o compilador copia inicializadores e blocos de instância em cada construtor, e por isso nenhum consegue pulá-los."
+      },
+      {
+        "text": "Para lugar nenhum: é interpretado do código-fonte em tempo de execução",
+        "why": "A JVM só executa bytecode; o código-fonte não está no arquivo de classe."
+      }
+    ]
+  },
+  "ex-m40n3p8x": {
+    "prompt": "Uma classe tem dois construtores que precisam das mesmas cinco linhas de preparação. O que a seção recomenda em vez de um bloco de instância?",
+    "hint": "Na lição 13 um construtor chamava outro.",
+    "choices": [
+      {
+        "text": "Um construtor chamar o outro com `this(...)`",
+        "why": "Isso: o trabalho comum fica visível no construtor que alguém está lendo."
+      },
+      {
+        "text": "Um bloco estático, para a preparação rodar uma vez só",
+        "why": "Preparação de cada objeto não pode rodar uma vez para a classe; os objetos dividiriam um resultado só."
+      },
+      {
+        "text": "Copiar as cinco linhas nos dois construtores",
+        "why": "São duas cópias para manter iguais, que é justamente o que o bloco e o `this(...)` evitam."
+      }
+    ]
+  },
+  "ex-3yfj3rcm": {
+    "prompt": "Um bloco de chaves dentro de uma classe, marcado com a palavra-chave `___`, roda uma vez por classe e não uma vez por objeto.",
+    "hint": "É a mesma palavra-chave que a lição 15 pôs em campos e métodos.",
+    "blanks": [
+      {
+        "accept": [
+          "static"
+        ]
+      }
+    ]
+  },
+  "ex-6a2hjgjy": {
+    "prompt": "`Book extends Item`, e nenhuma das classes foi usada ainda. Ponha em ordem o que acontece no primeiro `new Book()`.",
+    "hint": "Classes antes de objetos, superclasse antes da subclasse.",
+    "items": [
+      "O bloco estático de `Item`",
+      "O bloco estático de `Book`",
+      "O bloco de instância de `Item`",
+      "O corpo do construtor de `Item`",
+      "O inicializador de campo de `Book`",
+      "O corpo do construtor de `Book`"
+    ]
+  },
+  "ex-sj8wr8xf": {
+    "prompt": "O `Order` imprimiu linhas numeradas de 1 a 7 para o primeiro `Book`. Quantas linhas numeradas o segundo `new Book()` imprimiu?",
+    "hint": "Quais passos acontecem uma vez por classe?",
+    "unit": "linhas"
+  },
+  "ex-gv6xhejn": {
+    "prompt": "`main: before the first Book` saiu antes de qualquer bloco estático de `Item` ou de `Book`. O que isso mostra?",
+    "hint": "Quando uma classe é inicializada?",
+    "choices": [
+      {
+        "text": "Que o `System.out` segurou as linhas dos blocos estáticos",
+        "why": "As linhas estão na ordem em que foram impressas; nada ficou retido."
+      },
+      {
+        "text": "Que o bloco estático de `Order` roda antes do de qualquer outra classe",
+        "why": "O `Order` não tem bloco estático, e a questão é quando `Item` e `Book` rodaram os deles."
+      },
+      {
+        "text": "Que uma classe é inicializada na primeira vez que é usada, não quando o programa começa",
+        "why": "Isso: `Item` e `Book` esperaram até o `new Book()` precisar deles."
+      },
+      {
+        "text": "Que blocos estáticos rodam depois que o `main` retorna",
+        "why": "Eles rodaram no meio do `main`, no primeiro `new Book()`, e o `main` continuou depois."
+      }
+    ]
+  },
+  "ex-b2d4pm4p": {
+    "prompt": "Você troca de lugar, no código, o campo `title = note(\"5 ...\")` de `Book` e o bloco de instância dele, e o bloco fica escrito primeiro. O que muda na saída?",
+    "hint": "Dentro de uma classe, qual regra decide?",
+    "choices": [
+      {
+        "text": "Nada: inicializadores de campo sempre rodam antes de blocos de instância",
+        "why": "Não existe essa hierarquia entre os dois; eles rodam juntos, na ordem do código."
+      },
+      {
+        "text": "As linhas 5 e 6 trocam de lugar, nos dois objetos",
+        "why": "Isso: inicializadores e blocos de uma classe rodam na ordem em que estão escritos."
+      },
+      {
+        "text": "A linha 6 passa para antes da linha 3, à frente da parte de `Item`",
+        "why": "A parte de `Item` continua terminando antes; a troca só reordena passos dentro de `Book`."
+      },
+      {
+        "text": "O compilador recusa um campo declarado abaixo de um bloco de instância",
+        "why": "Campos e blocos podem vir em qualquer ordem; só ler um campo antes da declaração é que tem restrição."
+      }
+    ]
+  },
+  "ex-anbz76jk": {
+    "prompt": "O `javac Order.java` compilou um arquivo. Quantos arquivos `.class` ele escreveu, e por quê?",
+    "hint": "O `ls *.class` listou também o `Shelf.class`, da seção 02.",
+    "choices": [
+      {
+        "text": "Um, `Order.class`, porque um arquivo vira um arquivo de classe",
+        "why": "A listagem tinha `Book.class` e `Item.class` ao lado dele."
+      },
+      {
+        "text": "Quatro, um por classe mais um do próprio arquivo",
+        "why": "O quarto era o `Shelf.class`, e ele é do arquivo da seção 02."
+      },
+      {
+        "text": "Três, um por classe declarada nele",
+        "why": "Isso: `Book`, `Item` e `Order`, cada um inicializado separadamente pela JVM."
+      }
+    ]
+  },
+  "ex-8d6c3ah9": {
+    "prompt": "O `Trap` imprimiu `Item() sees: null, 0 pages`. Por que `pages` valia 0, se a declaração diz `= 100`?",
+    "hint": "Quando o inicializador de campo de `Book` roda em relação ao `super()`?",
+    "choices": [
+      {
+        "text": "Porque campos `int` ignoram o inicializador quando a classe tem superclasse",
+        "why": "O inicializador rodou; o `afterwards` imprimiu 100."
+      },
+      {
+        "text": "Porque ele roda depois que o `super()` retorna, e o `Item()` o leu antes",
+        "why": "Isso: durante o `Item()` o campo ainda tinha o valor padrão, 0."
+      },
+      {
+        "text": "Porque o `describe()` de `Item` tem um campo `pages` próprio",
+        "why": "O `Item` não tem `pages`; a chamada chegou ao `describe()` de `Book` e leu o campo de `Book`."
+      },
+      {
+        "text": "Porque o `final` em `title` deixou o objeto inteiro somente leitura durante a construção",
+        "why": "`pages` não é `final`, e nada fica somente leitura na construção; o campo só ainda não foi definido."
+      }
+    ]
+  },
+  "ex-w62brv8x": {
+    "prompt": "No `Trap`, o `Item()` chama `describe()`. Qual versão roda, e por que isso cria o problema?",
+    "hint": "Que tipo de objeto está sendo construído?",
+    "choices": [
+      {
+        "text": "A versão de `Item`, porque a chamada está escrita dentro de `Item`",
+        "why": "Aí teria impresso `an item`; imprimiu `null, 0 pages`."
+      },
+      {
+        "text": "A de `Book`, porque o objeto é um `Book`, e os campos dele ainda não foram definidos",
+        "why": "Isso: a sobrescrita roda antes do código que define os campos que ela lê."
+      },
+      {
+        "text": "Nenhuma: um construtor não pode chamar métodos de instância, então a JVM põe valores padrão",
+        "why": "Pode, e chamou; os padrões são os valores dos campos, não uma substituição."
+      }
+    ]
+  },
+  "ex-zf164xq3": {
+    "prompt": "Qual é a regra que a seção dá para evitar a armadilha?",
+    "hint": "Quais métodos uma subclasse não consegue substituir?",
+    "choices": [
+      {
+        "text": "Declarar todo campo como `final`, para que só possa ser definido uma vez",
+        "why": "O `title` era `final` e mesmo assim leu `null`."
+      },
+      {
+        "text": "Dar um inicializador a todo campo",
+        "why": "O `pages` tinha um e mesmo assim leu 0."
+      },
+      {
+        "text": "Um construtor não deve chamar um método que uma subclasse possa sobrescrever",
+        "why": "Isso: chame um método `private`, `static` ou `final`, ou faça o trabalho depois da construção."
+      },
+      {
+        "text": "Pôr o corpo do construtor da subclasse acima do da superclasse",
+        "why": "O Java roda a parte da superclasse primeiro; nenhum arranjo do código muda isso."
+      }
+    ]
+  },
+  "ex-hxmnxapn": {
+    "prompt": "No `Early`, `this.title = title;` vem antes de `super();`. Por que o `Item()` então viu o título, mas continuou vendo `0 pages`?",
+    "hint": "`pages = 100` não é uma instrução do construtor.",
+    "choices": [
+      {
+        "text": "O inicializador de campo continua rodando depois que o `super()` retorna",
+        "why": "Isso: só o que está escrito acima da chamada muda de lugar; o passo 5 fica onde a seção 03 o pôs."
+      },
+      {
+        "text": "Código antes do `super()` pode definir campos de referência, mas não `int`",
+        "why": "Qualquer campo do objeto pode ser atribuído ali; o `pages` é que não foi."
+      },
+      {
+        "text": "O `Item()` guarda o primeiro valor que lê e ignora os seguintes",
+        "why": "O `Item()` não guarda nada; leu o que o campo tinha naquele momento."
+      },
+      {
+        "text": "O Java 25 roda inicializadores de campo antes dos construtores só para campos `final`",
+        "why": "Não existe essa regra; a ordem dos inicializadores é a mesma para todo campo."
+      }
+    ]
+  },
+  "ex-q92fg3t6": {
+    "prompt": "Quais destas coisas um construtor do Java 25 pode fazer antes da chamada `super(...)`? Escolha todas as que se aplicam.",
+    "hint": "O objeto ainda não está construído: pode receber valores, não ser lido.",
+    "choices": [
+      {
+        "text": "Conferir um argumento e lançar uma exceção",
+        "why": "Sim: o `Early` recusou um título em branco antes de o `Item` entrar em cena."
+      },
+      {
+        "text": "Atribuir um dos campos do próprio objeto",
+        "why": "Sim: `this.title = title;` fez exatamente isso."
+      },
+      {
+        "text": "Chamar um dos métodos de instância do próprio objeto",
+        "why": "Não: o objeto ainda não está construído, e os métodos dele não podem ser chamados ali."
+      },
+      {
+        "text": "Ler um campo que o construtor da superclasse define",
+        "why": "Não: o construtor da superclasse ainda não rodou, e ler o objeto ali não é permitido."
+      }
+    ]
+  },
+  "ex-1ngxsceh": {
+    "prompt": "O `javac --release 21 Early.java` recusou o arquivo. O que a mensagem citou?",
+    "hint": "Ela citou o recurso e a versão que o tem.",
+    "choices": [
+      {
+        "text": "Um ponto e vírgula faltando na linha 20",
+        "why": "A linha 20 era a atribuição antes do `super()`, e a mensagem falava do recurso, não de pontuação."
+      },
+      {
+        "text": "Construtores flexíveis, que exigem source 25",
+        "why": "Isso: instruções antes do `super(...)` não existem no 21."
+      },
+      {
+        "text": "Uma `IllegalArgumentException` lançada na compilação",
+        "why": "A exceção veio ao rodar `java Early` no 25; a compilação para o 21 nem chegou lá."
+      }
+    ]
+  },
+  "ex-2rsqf88b": {
+    "prompt": "Uma classe `Report` tem `static int count = 0;` e, escrito abaixo, um bloco estático `count = 10;`. Quanto vale `Report.count` na primeira vez que um programa o lê?",
+    "hint": "Inicializadores e blocos estáticos rodam como um só, na ordem do código.",
+    "choices": [
+      {
+        "text": "0, porque o inicializador da declaração prevalece",
+        "why": "O inicializador da declaração roda primeiro, e o bloco abaixo o sobrescreve."
+      },
+      {
+        "text": "10",
+        "why": "Isso: `count = 0` roda, depois o bloco põe 10, tudo antes da leitura."
+      },
+      {
+        "text": "Depende de um objeto de `Report` ter sido criado antes",
+        "why": "Campos estáticos são inicializados uma vez por classe, com ou sem objetos."
+      },
+      {
+        "text": "O compilador recusa duas atribuições a um campo estático",
+        "why": "Só um campo `static final` pode ser atribuído uma vez; este não é final."
+      }
+    ]
+  },
+  "ex-q0a33hf8": {
+    "prompt": "Um programa cria mil objetos de `Shelf`. Quantas vezes o bloco estático de `Shelf` roda?",
+    "hint": "Ele pertence à classe.",
+    "choices": [
+      {
+        "text": "Uma vez",
+        "why": "Isso: a inicialização estática acontece uma vez por classe, qualquer que seja o número de objetos."
+      },
+      {
+        "text": "Mil vezes, uma por objeto",
+        "why": "Esse é o bloco de instância; o estático rodou uma vez na saída da seção 02."
+      },
+      {
+        "text": "Duas vezes, porque `Shelf` tem dois construtores",
+        "why": "Construtores não decidem nada sobre blocos estáticos; eles pertencem aos objetos."
+      },
+      {
+        "text": "Nenhuma, a menos que o `main` o chame",
+        "why": "Um bloco estático não pode ser chamado; a JVM o roda quando a classe é usada pela primeira vez."
+      }
+    ]
+  },
+  "ex-4e8zd6n8": {
+    "prompt": "Ligue cada parte de uma classe à frequência com que ela roda.",
+    "hint": "Classe ou objeto?",
+    "pairs": [
+      {
+        "left": "um bloco estático",
+        "right": "uma vez por classe"
+      },
+      {
+        "left": "um bloco de instância",
+        "right": "uma vez por objeto, em todo construtor"
+      },
+      {
+        "left": "o corpo de um construtor",
+        "right": "uma vez por objeto, só no construtor chamado"
+      }
+    ],
+    "right_distractors": [
+      "uma vez por chamada de método"
+    ]
+  },
+  "ex-wr4zcrbw": {
+    "prompt": "Um construtor de `Book` com `this.title = title;` antes de `super();` compila no JDK 25. Os servidores da equipe rodam Java 21. O que acontece quando eles compilam com `--release 21`?",
+    "hint": "O `--release` da lição 1 compila como aquela versão compilaria.",
+    "choices": [
+      {
+        "text": "Compila, e a JVM do servidor reordena as instruções",
+        "why": "A recusa acontece na compilação; nenhum arquivo de classe é gerado."
+      },
+      {
+        "text": "Compila, e falha com `UnsupportedClassVersionError` no servidor",
+        "why": "Com `--release 21` a versão seria 65, que o 21 aceita; o problema vem antes."
+      },
+      {
+        "text": "O compilador recusa: construtores flexíveis exigem source 25",
+        "why": "Isso: é a transcrição no fim da seção 04."
+      },
+      {
+        "text": "Compila com um aviso de que a ordem não é garantida",
+        "why": "Esse aviso não existe; é um erro."
+      }
+    ]
+  },
+  "ex-cpqy9f32": {
+    "prompt": "O `Item()` chama um método `private` `label()` em vez do `describe()` sobrescrevível. O `Book` consegue mudar o que o `Item()` imprime?",
+    "hint": "Uma subclasse consegue sobrescrever um método privado?",
+    "choices": [
+      {
+        "text": "Sim, declarando o seu próprio `label()`",
+        "why": "Um `label()` em `Book` é outro método; o `Item()` continua chamando o privado dele."
+      },
+      {
+        "text": "Não: o `Item()` continua chamando o dele, declare o `Book` o que declarar",
+        "why": "Isso: é por isso que a regra cita métodos private, static e final como seguros."
+      },
+      {
+        "text": "Só se os campos de `Book` forem definidos antes do `super()`",
+        "why": "Definir campos cedo muda o que uma sobrescrita leria, não se um método privado pode ser substituído."
+      }
+    ]
+  }
+}
