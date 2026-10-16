@@ -150,7 +150,7 @@ O protocolo é a parte que mais varia entre linguagens. Em Java, `FinePolicy` é
 `Capped` diz `implements FinePolicy`; em Go e TypeScript, `Capped` satisfaz a interface por ter o
 método, como aqui. Como `FinePolicy` tem um método só, as quatro linguagens também poderiam usar uma
 função simples: um `func(int) int` em Go, uma lambda em Java, uma arrow function em TypeScript. A
-tabela de regras guardaria funções, e `charges.py` chamaria `rules[kind](days_late)`. O princípio
+tabela de regras guardaria funções, e `charges.py` chamaria `rules[kind]` com `days_late`. O princípio
 não liga para qual: o código fechado depende de um formato, e os casos novos chegam como coisas novas
 desse formato.
 

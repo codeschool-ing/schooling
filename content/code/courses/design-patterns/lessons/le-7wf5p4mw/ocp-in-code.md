@@ -149,7 +149,7 @@ The protocol is the part that varies most between languages. In Java, `FinePolic
 interface by having the method, as it does here. Because `FinePolicy` has a single method, all
 four languages could also use a plain function: a `func(int) int` in Go, a lambda in Java, an arrow
 function in TypeScript. The table of rules would then hold functions, and `charges.py` would call
-`rules[kind](days_late)`. The principle does not care which: the closed code depends on a shape,
+`rules[kind]` with `days_late`. The principle does not care which: the closed code depends on a shape,
 and new cases arrive as new things of that shape.
 
 `main.py` is the one file that knows every rule by name. Lesson 5 gives that file a name, the
