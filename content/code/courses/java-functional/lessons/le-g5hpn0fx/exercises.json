@@ -1,0 +1,450 @@
+[
+  {
+    "id": "ex-177m72x2",
+    "version": 1,
+    "section": "what-a-stream-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you tell an intermediate operation from a terminal one?",
+    "hint": "Look at what it returns.",
+    "choices": [
+      {
+        "text": "An intermediate one returns a `Stream`",
+        "correct": true,
+        "why": "Right, and anything that returns something else ends the pipeline."
+      },
+      {
+        "text": "Intermediate operations change the source collection",
+        "correct": false,
+        "why": "No operation changes the source."
+      },
+      {
+        "text": "Terminal operations are the ones written on the first line of the chain",
+        "correct": false,
+        "why": "The terminal operation comes last."
+      },
+      {
+        "text": "A terminal one takes a lambda; an intermediate one does not",
+        "correct": false,
+        "why": "`filter` and `map` take lambdas and are intermediate."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrvve5vm",
+    "version": 1,
+    "section": "what-a-stream-is",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Shelf.BOOKS.stream().filter(...).map(Book::title).toList()`, match each operation with what it returns.",
+    "hint": "Only the last one returns something that is not a stream.",
+    "pairs": [
+      {
+        "left": "`stream()`",
+        "right": "a `Stream<Book>` of all twelve"
+      },
+      {
+        "left": "`filter(...)`",
+        "right": "a `Stream<Book>` of the ones kept"
+      },
+      {
+        "left": "`map(Book::title)`",
+        "right": "a `Stream<String>`"
+      },
+      {
+        "left": "`toList()`",
+        "right": "a `List<String>`"
+      }
+    ],
+    "right_distractors": [
+      "a `Stream<List<Book>>`"
+    ]
+  },
+  {
+    "id": "ex-a6atjj23",
+    "version": 1,
+    "section": "what-a-stream-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a stream built from `Shelf.BOOKS` hold?",
+    "hint": "It is not a collection.",
+    "choices": [
+      {
+        "text": "The results of every step, computed in advance",
+        "correct": false,
+        "why": "Nothing is computed until the terminal operation."
+      },
+      {
+        "text": "No data: a description of the work",
+        "correct": true,
+        "why": "Right. The data stays in the list."
+      },
+      {
+        "text": "An index into the list and nothing else, like a cursor in a database table",
+        "correct": false,
+        "why": "It also holds the steps: what to keep and what to turn each into."
+      },
+      {
+        "text": "A copy of the twelve books",
+        "correct": false,
+        "why": "Nothing is copied; it reads the list as it goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-51mfpy5g",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Stream.iterate(1, n -> n * 2).limit(10).toList()` finished. What would happen without `limit(10)`?",
+    "hint": "`iterate` is an infinite source.",
+    "choices": [
+      {
+        "text": "It would stop at the largest `int`",
+        "correct": false,
+        "why": "Overflow does not stop a stream; the values wrap around."
+      },
+      {
+        "text": "`toList()` would keep pulling and never finish",
+        "correct": true,
+        "why": "Right: until memory ran out."
+      },
+      {
+        "text": "It would not compile",
+        "correct": false,
+        "why": "It compiles; it is the run that never ends."
+      },
+      {
+        "text": "It would collect ten values anyway, the default",
+        "correct": false,
+        "why": "There is no default limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-72caabhe",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Arrays.stream(new int[] {1965, 1815, 1922})` gives which type?",
+    "hint": "No boxing per element.",
+    "choices": [
+      {
+        "text": "`IntStream`",
+        "correct": true,
+        "why": "Right, with `max`, `sum` and `average` built in."
+      },
+      {
+        "text": "`Stream<Integer>`",
+        "correct": false,
+        "why": "An `int[]` gives the primitive stream."
+      },
+      {
+        "text": "`List<Integer>`",
+        "correct": false,
+        "why": "A stream, not a list."
+      },
+      {
+        "text": "`Stream<int[]>`",
+        "correct": false,
+        "why": "That is `Stream.of(array)`, one element that is an array."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjf59d3t",
+    "version": 1,
+    "section": "sources",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `IntStream.rangeClosed(1, 5).sum()` print?",
+    "hint": "`rangeClosed` includes its end.",
+    "value": 15,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ggkxwfjb",
+    "version": 1,
+    "section": "nothing-until-the-end",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pipeline has a source and two `peek` and `filter` steps, and no terminal operation. What does it print?",
+    "hint": "The first part of `Lazy.java`.",
+    "choices": [
+      {
+        "text": "One line per book",
+        "correct": false,
+        "why": "That needs something to pull the books through."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: no terminal operation, no work."
+      },
+      {
+        "text": "One line per book that passes the filter",
+        "correct": false,
+        "why": "`peek` comes before `filter`, and neither ran."
+      },
+      {
+        "text": "A compile error asking for a terminal operation",
+        "correct": false,
+        "why": "It compiles, and silently does nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy835e1b",
+    "version": 1,
+    "section": "nothing-until-the-end",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `findFirst`, how many books did the second pipeline of `Lazy.java` look at?",
+    "hint": "Count the `looked at` lines.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-ya4t1qtp",
+    "version": 1,
+    "section": "nothing-until-the-end",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the third pipeline, `upper: EMMA` was printed before `classic: Persuasion`. What does that show?",
+    "hint": "One element at a time.",
+    "choices": [
+      {
+        "text": "Each element goes through every step before the next one starts",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`peek` reorders the elements",
+        "correct": false,
+        "why": "`peek` passes each element on unchanged."
+      },
+      {
+        "text": "The output was printed out of order by two threads",
+        "correct": false,
+        "why": "One thread; that is the real order."
+      },
+      {
+        "text": "`map` runs before `filter` in every pipeline",
+        "correct": false,
+        "why": "`filter` ran first on Emma; then `map` ran on Emma."
+      }
+    ]
+  },
+  {
+    "id": "ex-mz7dezr5",
+    "version": 1,
+    "section": "nothing-until-the-end",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are short-circuiting, able to finish before the source is exhausted? Choose all that apply.",
+    "hint": "They can stop once they know the answer.",
+    "choices": [
+      {
+        "text": "`anyMatch`",
+        "correct": true,
+        "why": "Yes: the first match is enough."
+      },
+      {
+        "text": "`findFirst`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`count`",
+        "correct": false,
+        "why": "No: it has to see every element."
+      },
+      {
+        "text": "`limit`",
+        "correct": true,
+        "why": "Yes, as the third pipeline showed."
+      },
+      {
+        "text": "`sorted`",
+        "correct": false,
+        "why": "No: it must see everything before handing over the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm3hqva0",
+    "version": 1,
+    "section": "used-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`classics.count()` worked, and the second `classics.count()` threw. Which fix does the lesson suggest?",
+    "hint": "Keep what can be traversed again.",
+    "choices": [
+      {
+        "text": "Use `peek` to copy the elements on the first pass",
+        "correct": false,
+        "why": "`peek` is for looking, and copying is what the source already is."
+      },
+      {
+        "text": "Catch the exception and use the first answer",
+        "correct": false,
+        "why": "That hides the mistake rather than removing it."
+      },
+      {
+        "text": "Call `classics.reset()` before the second count",
+        "correct": false,
+        "why": "Streams have no `reset`."
+      },
+      {
+        "text": "Keep the source and build a new stream for each question",
+        "correct": true,
+        "why": "Right, or a `Supplier<Stream<Book>>` that builds one each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3xy1e2d",
+    "version": 1,
+    "section": "used-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `titles.add(\"Moby-Dick\")` throw on a list from `toList()`?",
+    "hint": "Java 16 decided what it returns.",
+    "choices": [
+      {
+        "text": "`toList()` returns an unmodifiable list",
+        "correct": true,
+        "why": "Right. Wrap it in `new ArrayList<>(...)` to edit."
+      },
+      {
+        "text": "`Moby-Dick` is not on the shelf",
+        "correct": false,
+        "why": "Any string would have been refused."
+      },
+      {
+        "text": "Lists of strings cannot grow past their first size in any Java version",
+        "correct": false,
+        "why": "An `ArrayList` grows; this list is read-only by design."
+      },
+      {
+        "text": "The stream was still open",
+        "correct": false,
+        "why": "The stream had finished; the list is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z5x290y",
+    "version": 1,
+    "section": "used-once",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule that a pipeline's lambdas must not change the source they read is called non-___.",
+    "hint": "They must not get in its way.",
+    "blanks": [
+      {
+        "accept": [
+          "interference"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zf2h2a4p",
+    "version": 1,
+    "section": "used-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method stores `Stream<Book>` in a field so several other methods can use it. What will happen?",
+    "hint": "A stream is a traversal.",
+    "choices": [
+      {
+        "text": "It works, but slowly, because the stream is recomputed each time",
+        "correct": false,
+        "why": "It is not recomputed; it is refused."
+      },
+      {
+        "text": "Each method gets its own copy of the stream",
+        "correct": false,
+        "why": "A field holds one object; there are no copies."
+      },
+      {
+        "text": "The compiler rejects a stream stored in a field",
+        "correct": false,
+        "why": "It compiles; the failure is at run time."
+      },
+      {
+        "text": "The first terminal operation uses it up; the next one throws",
+        "correct": true,
+        "why": "Right: `stream has already been operated upon or closed`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq0rg9wv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of `Shelf.BOOKS.stream().filter(...).map(Book::title).toList()` in the order they are written.",
+    "hint": "Source, steps, end.",
+    "items": [
+      "the source, `stream()`",
+      "what to keep, `filter`",
+      "what to turn each into, `map`",
+      "how to finish, `toList()`"
+    ]
+  },
+  {
+    "id": "ex-twvvf7f5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline sorts the shelf by price and then takes `findFirst`. How many books does it pull from the source?",
+    "hint": "What does `sorted` need before it can hand over the first?",
+    "choices": [
+      {
+        "text": "None until a second terminal operation is called",
+        "correct": false,
+        "why": "`findFirst` is the terminal operation, and it starts the work."
+      },
+      {
+        "text": "One, because `findFirst` short-circuits",
+        "correct": false,
+        "why": "`findFirst` stops early, but `sorted` has already pulled everything."
+      },
+      {
+        "text": "All twelve",
+        "correct": true,
+        "why": "Right: `sorted` must see every element first."
+      },
+      {
+        "text": "Two: one to compare and one to return",
+        "correct": false,
+        "why": "A sort compares far more than two."
+      }
+    ]
+  }
+]
