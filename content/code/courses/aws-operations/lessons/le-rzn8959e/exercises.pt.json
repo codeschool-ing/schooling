@@ -1,0 +1,295 @@
+{
+  "ex-2mgz1v08": {
+    "prompt": "O objeto de estado foi apagado. O que aconteceu com os recursos que ele descrevia?",
+    "hint": "O estado é um registro, não os recursos.",
+    "choices": [
+      {
+        "text": "Foram apagados junto com o estado, na mesma requisição",
+        "why": "Apagar um objeto no S3 mexe só naquele objeto."
+      },
+      {
+        "text": "Ficam marcados para exclusão no próximo apply",
+        "why": "O próximo plan quer criá-los, não apagá-los."
+      },
+      {
+        "text": "Nada: continuam existindo e atendendo",
+        "why": "Certo. O Terraform os esqueceu; a AWS, não."
+      },
+      {
+        "text": "Param de funcionar até o estado ser restaurado",
+        "why": "Recursos nunca consultam o estado; só o Terraform consulta."
+      }
+    ]
+  },
+  "ex-rh8gjt77": {
+    "prompt": "Depois que o estado se perdeu, o apply adotou o tópico do SNS sem erro mas falhou no bucket. Por que a diferença?",
+    "hint": "O que cada serviço responde a uma criação de um nome que já existe?",
+    "choices": [
+      {
+        "text": "Criar um tópico que já existe o devolve; um bucket recusa",
+        "why": "Certo. O SNS responde com o tópico existente, o S3 com BucketAlreadyOwnedByYou."
+      },
+      {
+        "text": "O tópico era mais novo que o bucket",
+        "why": "A idade não conta; os serviços respondem de jeitos diferentes."
+      },
+      {
+        "text": "O Terraform tenta de novo com tópicos mas não com buckets",
+        "why": "Nenhuma nova tentativa ocorreu; a primeira chamada funcionou para o tópico."
+      },
+      {
+        "text": "O bucket tinha DeletionPolicy Retain",
+        "why": "Isso é CloudFormation; este bucket é do Terraform, e a política não diz nada sobre criação."
+      }
+    ]
+  },
+  "ex-k62q24kz": {
+    "prompt": "Com o estado perdido, que tipo de recurso é o mais perigoso para um apply recriar?",
+    "hint": "O que impede que uma segunda cópia seja feita?",
+    "choices": [
+      {
+        "text": "Um bucket, porque o nome é global",
+        "why": "O nome global é o que faz a criação falhar, que é o resultado seguro."
+      },
+      {
+        "text": "Um grupo de logs, porque os logs se perdem",
+        "why": "A criação falha no nome existente, e os logs ficam onde estão."
+      },
+      {
+        "text": "Um tópico do SNS, porque é adotado",
+        "why": "A adoção deixa um tópico; é silenciosa, mas nenhuma cópia é feita."
+      },
+      {
+        "text": "Um sem nome único, como uma instância EC2",
+        "why": "Certo. A criação funciona, e a conta fica com dois, um deles sem gestão."
+      }
+    ]
+  },
+  "ex-03dng06s": {
+    "prompt": "O que apagar um objeto num bucket versionado faz de fato?",
+    "hint": "Os dados ficam embaixo.",
+    "choices": [
+      {
+        "text": "Remove só a versão mais nova",
+        "why": "Uma exclusão simples não remove versão nenhuma; ela as esconde atrás de um marcador."
+      },
+      {
+        "text": "Acrescenta um marcador de exclusão por cima das versões",
+        "why": "Certo. As versões anteriores continuam legíveis pelos ids."
+      },
+      {
+        "text": "Move o objeto para um bucket de lixeira por 30 dias",
+        "why": "O S3 não tem lixeira; as versões ficam no mesmo bucket."
+      },
+      {
+        "text": "Remove todas as versões a menos que o MFA delete esteja ligado",
+        "why": "Versões só são removidas apagando cada uma pelo id."
+      }
+    ]
+  },
+  "ex-cx9zbtmz": {
+    "prompt": "O histórico mostra uma versão de 8.403 bytes, um marcador de exclusão um segundo depois, e uma versão de 2.744 bytes depois dele. Qual versão é restaurada?",
+    "hint": "A última boa, antes do marcador.",
+    "choices": [
+      {
+        "text": "A de 2.744 bytes, porque é a mais nova",
+        "why": "Ela foi gravada pelo apply ruim e registra um recurso."
+      },
+      {
+        "text": "O marcador, apagando-o",
+        "why": "Remover o marcador expõe a versão de 2.744 bytes, a mais nova embaixo dele."
+      },
+      {
+        "text": "A de 8.403 bytes, anterior ao marcador",
+        "why": "Certo. Ela tem os quatro recursos, e copiá-la a torna a mais nova."
+      },
+      {
+        "text": "Nenhuma: uma versão não pode ser restaurada quando existe outra mais nova",
+        "why": "Qualquer versão pode ser copiada por cima, venha o que vier depois."
+      }
+    ]
+  },
+  "ex-706ft76x": {
+    "prompt": "Por que parar todas as esteiras antes de restaurar o estado?",
+    "hint": "Veja de onde veio a versão de 2.744 bytes.",
+    "choices": [
+      {
+        "text": "Porque o S3 recusa copy-object enquanto existe trava",
+        "why": "O S3 não sabe nada da trava do Terraform; a cópia funcionaria."
+      },
+      {
+        "text": "Porque o versionamento é suspenso durante uma restauração",
+        "why": "O versionamento continua ligado; a própria restauração é uma versão nova."
+      },
+      {
+        "text": "Porque as esteiras guardam o estado em cache e o sobrescreveriam na hora",
+        "why": "As esteiras leem o estado a cada execução; o risco é uma execução acontecer, não um cache."
+      },
+      {
+        "text": "Um apply grava versão nova errada",
+        "why": "Certo. Foi exatamente assim que a versão ruim apareceu."
+      }
+    ]
+  },
+  "ex-0t0p4jsk": {
+    "prompt": "A versão boa do estado tem 8.403 bytes e a ruim, 2.744. Quantos bytes a boa tem a mais?",
+    "hint": "Uma subtração."
+  },
+  "ex-ahhtra6x": {
+    "prompt": "Quando um bloco `import` é a saída, em vez de uma restauração?",
+    "hint": "Importar não precisa de preparação anterior.",
+    "choices": [
+      {
+        "text": "Quando não sobra versão nem cópia do estado",
+        "why": "Certo. Com uma versão ou uma cópia puxada, restaurar é mais rápido."
+      },
+      {
+        "text": "Quando os recursos também foram apagados",
+        "why": "Importar exige que os recursos existam; um apagado é criado de novo."
+      },
+      {
+        "text": "Sempre que o plan mostra mudanças",
+        "why": "Mudanças são normais; importar é para recursos que o estado não conhece."
+      },
+      {
+        "text": "Só para recursos criados no console",
+        "why": "Qualquer recurso existente pode ser importado, quem quer que o tenha feito."
+      }
+    ]
+  },
+  "ex-7qt93zfa": {
+    "prompt": "O que deve ser feito com o arquivo que `-generate-config-out` escreve?",
+    "hint": "Ele descreve o recurso como ele é.",
+    "choices": [
+      {
+        "text": "Fazer commit dele como está, já que o Terraform o escreveu",
+        "why": "Ele repete cada padrão e copia os erros do recurso junto."
+      },
+      {
+        "text": "Apagá-lo depois do apply, porque o estado basta",
+        "why": "Sem blocos de recurso, o próximo plan destruiria os recursos importados."
+      },
+      {
+        "text": "Ler, enxugar os padrões, comparar com a intenção",
+        "why": "Certo. É um rascunho do que existe, que pode não ser o que se quis."
+      },
+      {
+        "text": "Passá-lo pelo cfn-lint",
+        "why": "O cfn-lint lê templates do CloudFormation, não HCL."
+      }
+    ]
+  },
+  "ex-e8zr60bg": {
+    "prompt": "Ligue o que sobrou depois do acidente ao caminho de volta.",
+    "hint": "Três situações, três respostas.",
+    "pairs": [
+      {
+        "left": "Uma versão do estado no bucket",
+        "right": "Copiá-la por cima"
+      },
+      {
+        "left": "Um arquivo do terraform state pull",
+        "right": "terraform state push"
+      },
+      {
+        "left": "Nada além dos próprios recursos",
+        "right": "blocos import"
+      }
+    ],
+    "right_distractors": [
+      "terraform destroy e apply"
+    ]
+  },
+  "ex-y933vpqx": {
+    "prompt": "Para o Terraform escrever os blocos de recurso dos recursos importados, rode `terraform plan -generate-___-out=generated.tf`.",
+    "hint": "O que ele gera.",
+    "blanks": [
+      {
+        "accept": [
+          "config"
+        ]
+      }
+    ]
+  },
+  "ex-sbrpg2ze": {
+    "prompt": "A política do bucket nega `s3:DeleteObject` em `*.tfstate` exceto para um papel. Por que os objetos `.tflock` não ficam bloqueados também?",
+    "hint": "O Terraform apaga um deles a cada execução.",
+    "choices": [
+      {
+        "text": "Arquivos de trava não ficam no bucket",
+        "why": "Com use_lockfile ficam, ao lado do estado."
+      },
+      {
+        "text": "Eles têm outra extensão, fora do padrão",
+        "why": "Certo. Bloqueá-los quebraria toda execução, que apaga a própria trava no fim."
+      },
+      {
+        "text": "Negações explícitas nunca valem para objetos pequenos",
+        "why": "Tamanho não tem papel nenhum numa política."
+      },
+      {
+        "text": "O Terraform usa o papel de manutenção para apagá-los",
+        "why": "O Terraform roda como quem o roda, não como o papel de manutenção."
+      }
+    ]
+  },
+  "ex-229acgm4": {
+    "prompt": "Quais hábitos protegem contra perder o estado? Marque todos os que se aplicam.",
+    "hint": "Menos gente apagando, histórico mais longo, uma segunda cópia.",
+    "choices": [
+      {
+        "text": "terraform state pull antes de qualquer coisa incomum",
+        "why": "Sim. Uma cópia que não depende do bucket."
+      },
+      {
+        "text": "Editar o objeto de estado à mão quando um valor está errado",
+        "why": "Não. Edições à mão pulam a trava e o serial; use os subcomandos de state."
+      },
+      {
+        "text": "Um alerta quando um objeto de estado é apagado",
+        "why": "Sim. Eventos de dados do CloudTrail podem registrá-lo."
+      },
+      {
+        "text": "Um estado para todos os ambientes, para simplificar",
+        "why": "Não. Um acidente custaria todos os ambientes de uma vez."
+      },
+      {
+        "text": "Versões antigas guardadas por mais tempo do que leva para perceber",
+        "why": "Sim. O histórico precisa durar mais que a descoberta."
+      }
+    ]
+  },
+  "ex-36cmkq1d": {
+    "prompt": "Ponha em ordem a recuperação de um objeto de estado apagado.",
+    "hint": "Parar o estrago, achar, restaurar, confirmar.",
+    "trap": "Restaurar antes de parar as esteiras é o deslize: uma execução no meio grava uma versão ruim mais nova.",
+    "items": [
+      "Parar toda esteira e pessoa que possa aplicar",
+      "Listar as versões e os marcadores do objeto",
+      "Copiar a última versão boa por cima",
+      "Rodar terraform plan e esperar nenhuma mudança"
+    ]
+  },
+  "ex-y5wv04z6": {
+    "prompt": "Um plan numa terça tranquila diz `Plan: 4 to add` para uma configuração que roda há um ano. O que você faz primeiro?",
+    "hint": "Um plan que quer criar o que existe é sobre o estado.",
+    "choices": [
+      {
+        "text": "Aplicar, já que o Terraform sabe o que faz",
+        "why": "Aplicar adota alguns, falha em outros e pode duplicar o resto."
+      },
+      {
+        "text": "Parar, e conferir o objeto de estado e o histórico dele",
+        "why": "Certo. O plan está dizendo que o estado sumiu, não os recursos."
+      },
+      {
+        "text": "Rodar terraform destroy para começar do zero",
+        "why": "Com estado vazio, o destroy não acha nada, e o problema do plan continua."
+      },
+      {
+        "text": "Apagar os quatro recursos à mão para o plan ficar certo",
+        "why": "Isso transforma um registro perdido numa interrupção."
+      }
+    ]
+  }
+}
