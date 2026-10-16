@@ -1,0 +1,421 @@
+{
+  "ex-8pnp2ezr": {
+    "prompt": "Uma equipe pergunta \"MongoDB ou Cassandra?\" para um serviço novo. O que deve ser respondido primeiro?",
+    "choices": [
+      {
+        "text": "Qual dos dois tem o melhor benchmark",
+        "why": "Um benchmark mede a carga de outra pessoa; a pergunta é sobre a sua."
+      },
+      {
+        "text": "As operações e seus custos",
+        "why": "Isso. O padrão de acesso decide; a marca vem depois."
+      },
+      {
+        "text": "Qual dos dois a equipe já usou",
+        "why": "Familiaridade desempata, não é a primeira pergunta."
+      },
+      {
+        "text": "Qual licença é mais barata",
+        "why": "Os dois são gratuitos para rodar na sua aplicação; a licença é uma linha posterior do registro."
+      }
+    ]
+  },
+  "ex-2mr9nad5": {
+    "prompt": "Associe cada padrão de acesso à família que serve.",
+    "pairs": [
+      {
+        "left": "um pedido inteiro com atributos variáveis, lido e escrito como um só",
+        "right": "documento"
+      },
+      {
+        "left": "bilhões de leituras de sensores anexadas, lidas por dispositivo e intervalo de tempo",
+        "right": "coluna larga"
+      },
+      {
+        "left": "uma sessão buscada pelo token, com expiração",
+        "right": "chave-valor"
+      },
+      {
+        "left": "estoque, pedidos e pagamentos alterados juntos numa transação",
+        "right": "relacional"
+      }
+    ],
+    "right_distractors": [
+      "grafo"
+    ]
+  },
+  "ex-p0nsagdf": {
+    "prompt": "Um fundador diz: \"vamos ter um bilhão de eventos por dia, então precisamos de Cassandra agora\". Hoje a loja tem dez mil por dia. O que a aula manda anotar?",
+    "choices": [
+      {
+        "text": "Nada: previsões não pertencem a um registro de decisão",
+        "why": "Pertencem, rotuladas como previsões."
+      },
+      {
+        "text": "MongoDB, como meio-termo entre os dois",
+        "why": "Um meio-termo entre um fato e um palpite ainda é um palpite."
+      },
+      {
+        "text": "Cassandra, já que migrar depois é impossível",
+        "why": "Migrar custa um projeto; Cassandra agora custa toda consulta escrita antes, a partir de hoje."
+      },
+      {
+        "text": "A previsão, rotulada como tal",
+        "why": "Isso. Um padrão que você talvez tenha é um gatilho de revisão, não o projeto de hoje."
+      }
+    ]
+  },
+  "ex-mvwpcjca": {
+    "prompt": "Por que a aula diz que a tabela classifica operações, não sistemas?",
+    "choices": [
+      {
+        "text": "Sistemas são grandes demais para classificar",
+        "why": "Tamanho não é o motivo; padrões misturados são."
+      },
+      {
+        "text": "Cada operação precisa do próprio banco",
+        "why": "A maioria das operações da maioria dos sistemas divide um banco relacional."
+      },
+      {
+        "text": "Famílias são definidas pelas operações, não pelos fornecedores",
+        "why": "Verdade em certo sentido, mas não explica por que o sistema inteiro é a unidade errada."
+      },
+      {
+        "text": "Uma aplicação tem operações de várias famílias",
+        "why": "Isso. Os pedidos da loja cabem no Postgres enquanto as visualizações cabem no Redis."
+      }
+    ]
+  },
+  "ex-bdcg3scj": {
+    "prompt": "O plano de `doc @> '{\"gift\": {\"wrap\": true}}'` mostrou `Bitmap Index Scan on orders_doc`. O que isso diz?",
+    "choices": [
+      {
+        "text": "O índice GIN achou as linhas",
+        "why": "Isso. 2.000 de 100.000 pedidos foram achados pelo índice."
+      },
+      {
+        "text": "O Postgres converteu o JSON em colunas",
+        "why": "A coluna continua `jsonb`; o índice cobre o conteúdo dela."
+      },
+      {
+        "text": "A consulta foi enviada ao MongoDB",
+        "why": "Só o Postgres participou."
+      },
+      {
+        "text": "Toda linha foi lida e depois filtrada",
+        "why": "Isso seria um Seq Scan, que o plano não mostrou."
+      }
+    ]
+  },
+  "ex-765vzdex": {
+    "prompt": "Depois de `docker kill postgres` e `docker start postgres`, quantas linhas tinha a tabela unlogged `cache`?"
+  },
+  "ex-v8cwn3hm": {
+    "prompt": "Por que a `page_views` manteve sua linha depois da queda e a `cache` perdeu a dela?",
+    "choices": [
+      {
+        "text": "A `page_views` tem chave primária e a `cache` não",
+        "why": "As duas têm; a persistência é a diferença."
+      },
+      {
+        "text": "O upsert gravou a `cache` só na memória",
+        "why": "Tabelas unlogged têm arquivos de dados; só pulam o log."
+      },
+      {
+        "text": "A `cache` tinha expirado",
+        "why": "A expiração estava a cinco minutos; a queda a esvaziou."
+      },
+      {
+        "text": "A `cache` é unlogged: sem write-ahead log, então a recuperação a esvazia",
+        "why": "Isso. O `relpersistence` disse `u`; a recuperação reaplicou o log só para tabelas `p`."
+      }
+    ]
+  },
+  "ex-5pkb46hj": {
+    "prompt": "Um worker segurava a tarefa 1 com `FOR UPDATE SKIP LOCKED` enquanto um segundo worker rodava a mesma consulta. O que o segundo recebeu, e por quê?",
+    "choices": [
+      {
+        "text": "Nada até o primeiro confirmar",
+        "why": "Isso é `FOR UPDATE` sem `SKIP LOCKED`, que entra na fila."
+      },
+      {
+        "text": "A tarefa 2, pulando a linha travada",
+        "why": "Isso, e sem esperar."
+      },
+      {
+        "text": "Um erro de conflito de trava",
+        "why": "Isso é `NOWAIT`; `SKIP LOCKED` simplesmente passa por cima."
+      },
+      {
+        "text": "A tarefa 1, já que leituras não são bloqueadas",
+        "why": "`FOR UPDATE` é uma leitura com trava; não entrega uma linha travada."
+      }
+    ]
+  },
+  "ex-p5wekjc9": {
+    "prompt": "Quais destas a aula cita como coisas que o Postgres não faz tão bem? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Sorted sets e streams na velocidade da memória",
+        "why": "Isso: é o que o Redis é."
+      },
+      {
+        "text": "Aceitar escritas em muitas máquinas ao mesmo tempo",
+        "why": "Isso: um primário recebe todas as escritas."
+      },
+      {
+        "text": "Aceitar escritas em duas regiões ao mesmo tempo",
+        "why": "Isso: é a replicação entre datacenters do Cassandra."
+      },
+      {
+        "text": "Indexar documentos JSON",
+        "why": "O índice GIN em `jsonb` fez exatamente isso."
+      },
+      {
+        "text": "Upserts atômicos",
+        "why": "`ON CONFLICT DO UPDATE` é um."
+      }
+    ]
+  },
+  "ex-cj1611xv": {
+    "prompt": "No Postgres, `INSERT ... ON ___ DO UPDATE` transforma um insert num upsert.",
+    "blanks": [
+      {
+        "accept": [
+          "CONFLICT"
+        ]
+      }
+    ]
+  },
+  "ex-s3etny75": {
+    "prompt": "Que sinal diz que uma operação pertence ao Redis ao lado do banco principal?",
+    "choices": [
+      {
+        "text": "Ela guarda a única cópia dos pagamentos do cliente, que nunca podem se perder",
+        "why": "Pagamentos são os dados menos perdoáveis que a loja tem."
+      },
+      {
+        "text": "As consultas dela ainda não são conhecidas",
+        "why": "Consultas desconhecidas pedem um banco relacional."
+      },
+      {
+        "text": "Ela é pequena, quente e perdoável",
+        "why": "Isso. As aulas 13 e 15 mostraram o que o Redis pode perder; uma operação que aguenta isso cabe."
+      },
+      {
+        "text": "Ela altera várias entidades que precisam concordar",
+        "why": "Essa é a linha relacional da tabela."
+      }
+    ]
+  },
+  "ex-rc57h8v9": {
+    "prompt": "Um catálogo guarda monitores e cabos com atributos diferentes, mas todo produto também é ligado a estoque, preços e pedidos em relatórios. Para onde a aula pende?",
+    "choices": [
+      {
+        "text": "Cassandra, pelos relatórios",
+        "why": "Relatórios ad hoc são o que um modelo de consulta antes resolve pior."
+      },
+      {
+        "text": "Postgres, com os atributos variáveis numa coluna `jsonb`",
+        "why": "Isso. Os documentos são uma tabela entre muitas, não a aplicação inteira."
+      },
+      {
+        "text": "Redis, como cache do catálogo",
+        "why": "Um cache pode ficar na frente, mas não é onde o catálogo mora."
+      },
+      {
+        "text": "MongoDB, porque as formas variam",
+        "why": "Forma variável sozinha é o que uma coluna `jsonb` resolve; os joins puxam para o outro lado."
+      }
+    ]
+  },
+  "ex-c9pthyj4": {
+    "prompt": "Qual caso é o mais forte para o Cassandra?",
+    "choices": [
+      {
+        "text": "Pedidos, pagamentos e estoque de uma loja",
+        "why": "Mudam juntos em transações; isso é relacional."
+      },
+      {
+        "text": "Telemetria de dispositivos em duas regiões",
+        "why": "Isso: volume de escrita, uma consulta conhecida e mais de um datacenter."
+      },
+      {
+        "text": "Sessões com expiração de trinta minutos",
+        "why": "Pequenas, quentes e perdoáveis: Redis."
+      },
+      {
+        "text": "Um painel cujas perguntas mudam toda semana",
+        "why": "Perguntas que mudam são o que o Cassandra mais cobra."
+      }
+    ]
+  },
+  "ex-j0x07dhv": {
+    "prompt": "A estrutura do Redis que mantém um ranking ordenado enquanto as pontuações mudam é um sorted ___.",
+    "blanks": [
+      {
+        "accept": [
+          "set"
+        ]
+      }
+    ]
+  },
+  "ex-kfdrvh3z": {
+    "prompt": "A loja confirma uma venda no Postgres e depois grava o estoque novo no Redis. O processo morre entre os dois. O que a página do produto mostra?",
+    "choices": [
+      {
+        "text": "Um erro, porque a transação sofreu rollback",
+        "why": "O commit já tinha acontecido."
+      },
+      {
+        "text": "Nada, porque o Redis expulsa chaves que não consegue confirmar",
+        "why": "O Redis não sabe que a chave está velha."
+      },
+      {
+        "text": "O estoque antigo: o Redis nunca soube da venda",
+        "why": "Isso. É a brecha da escrita dupla, e nenhuma repetição a fecha porque o processo que repetiria morreu."
+      },
+      {
+        "text": "O estoque novo, porque o Postgres empurra mudanças para o Redis",
+        "why": "Nada os liga a menos que você construa."
+      }
+    ]
+  },
+  "ex-mwynynhn": {
+    "prompt": "Ponha o outbox transacional em ordem, para uma venda.",
+    "items": [
+      "Inserir o pedido e uma linha de outbox",
+      "Fazer COMMIT dos dois numa transação",
+      "O relay lê a linha do outbox",
+      "O relay grava o estoque no Redis",
+      "O relay marca a linha como feita"
+    ],
+    "trap": "Marcar antes de aplicar perderia a entrada se o relay morresse no meio."
+  },
+  "ex-vzhs9b36": {
+    "prompt": "Por que uma entrada do outbox deve dizer \"ponha o estoque do MN-330 em 0\" e não \"decremente o estoque do MN-330\"?",
+    "choices": [
+      {
+        "text": "Decrementos não são suportados pelo Redis",
+        "why": "`DECR` existe; repeti-lo é o problema."
+      },
+      {
+        "text": "Um relay morto repete a última entrada",
+        "why": "Isso. Um relay que morre depois do SET e antes de marcar o repete."
+      },
+      {
+        "text": "Valores absolutos ocupam menos espaço no outbox",
+        "why": "Tamanho não é a questão; repetição é."
+      },
+      {
+        "text": "O Postgres não guarda números negativos em jsonb",
+        "why": "Guarda, e isso não vem ao caso."
+      }
+    ]
+  },
+  "ex-afht5g8e": {
+    "prompt": "Qual destes é um custo de rodar Redis ao lado do Postgres mesmo quando nada falha?",
+    "choices": [
+      {
+        "text": "As licenças proíbem usar os dois juntos",
+        "why": "Nenhuma licença discutida na aula 21 proíbe."
+      },
+      {
+        "text": "Dois backups e dois testes de restauração",
+        "why": "Isso, com duas habilidades de plantão e dois lugares para o acesso estar errado."
+      },
+      {
+        "text": "O Postgres fica mais lento porque o Redis existe",
+        "why": "O Redis tira carga do Postgres, se tanto."
+      },
+      {
+        "text": "Transações param de funcionar no Postgres",
+        "why": "Funcionam como antes; só não alcançam o Redis."
+      }
+    ]
+  },
+  "ex-cvwdnrwk": {
+    "prompt": "O que pertence ao parágrafo \"rever quando\" de um registro de decisão?",
+    "choices": [
+      {
+        "text": "A data da próxima versão maior",
+        "why": "Uma versão nova não é, sozinha, motivo para trocar de banco."
+      },
+      {
+        "text": "Nada: decisões são definitivas",
+        "why": "O registro existe para que um leitor futuro saiba quando ele deixa de valer."
+      },
+      {
+        "text": "Um número ou um evento, como as escritas passarem do maior primário",
+        "why": "Isso. Algo que dá para perceber, não uma sensação."
+      },
+      {
+        "text": "\"Quando a equipe se sentir pronta\"",
+        "why": "Uma sensação não pode ser percebida por mais ninguém."
+      }
+    ]
+  },
+  "ex-fxdqj66y": {
+    "prompt": "No registro da loja, por que o MongoDB perdeu para os pedidos mesmo um pedido sendo um agregado?",
+    "choices": [
+      {
+        "text": "Muda com estoque e pagamento",
+        "why": "Isso. O agregado não é a unidade de mudança; a transação é."
+      },
+      {
+        "text": "O volume é alto demais",
+        "why": "O volume era de milhares por dia, baixo para qualquer um."
+      },
+      {
+        "text": "A licença do MongoDB proíbe lojas",
+        "why": "A SSPL restringe oferecer o MongoDB como serviço, não usá-lo."
+      },
+      {
+        "text": "O MongoDB não guarda arrays de itens",
+        "why": "Guarda, na aula 6."
+      }
+    ]
+  },
+  "ex-p73m1sp5": {
+    "prompt": "Uma equipe mantém o ranking de um jogo no Postgres, recalculado com `ORDER BY score` a cada visualização, e agora está lento. O que este curso sugere?",
+    "choices": [
+      {
+        "text": "Levar o jogo inteiro para o Cassandra",
+        "why": "O problema é uma estrutura, não o volume de escrita do jogo inteiro."
+      },
+      {
+        "text": "Um sorted set no Redis ao lado do Postgres, alimentado por um outbox",
+        "why": "Isso: uma estrutura na velocidade da memória para uma operação quente, e sem escrita dupla."
+      },
+      {
+        "text": "Tornar a tabela de pontuações UNLOGGED",
+        "why": "Isso barateia escritas e perde as pontuações numa queda; a parte lenta é a leitura do ranking."
+      },
+      {
+        "text": "Guardar as pontuações numa coluna `jsonb` com índice GIN",
+        "why": "O GIN responde a contenção, não a ordenação por número."
+      }
+    ]
+  },
+  "ex-16fcdfy1": {
+    "prompt": "Quais destes esta aula de fato rodou no laboratório? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "`SKIP LOCKED` entregando tarefas diferentes a dois workers",
+        "why": "Isso: o segundo worker recebeu a tarefa 2."
+      },
+      {
+        "text": "Um índice GIN respondendo a uma consulta de contenção",
+        "why": "Isso: o Bitmap Index Scan."
+      },
+      {
+        "text": "Uma tabela unlogged esvaziada por uma queda",
+        "why": "Isso: `docker kill`, e depois uma contagem de 0."
+      },
+      {
+        "text": "Um relay copiando linhas do outbox para o Redis",
+        "why": "A aula diz com clareza que não constrói o relay."
+      }
+    ]
+  }
+}
