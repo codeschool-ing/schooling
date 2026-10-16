@@ -5,9 +5,7 @@ version: 1
 
 **The useful question is never "is our system consistent or available?". It is "for this one
 operation, what does it cost if two copies disagree for a while, and who pays?"** The same library,
-on the same database, gives that question different answers several times a day, and a design that
-picks one answer for everything is either slow where it did not need to be or wrong where it could
-not afford to be.
+on the same database, gives that question different answers several times a day. A design that picks one answer for everything is either slow where it did not need to be or wrong where it could not afford to be.
 
 The belief to drop is that consistency is a property you buy once, with a database. The previous
 section already showed the databases themselves refusing to decide for you: PostgreSQL, DynamoDB and
