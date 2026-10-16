@@ -1,0 +1,466 @@
+[
+  {
+    "id": "ex-02cc6fct",
+    "version": 1,
+    "section": "tags-and-digests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two images in different repositories have the same digest. What can you conclude?",
+    "hint": "A digest is a hash of the content.",
+    "choices": [
+      {
+        "text": "They were pushed by the same pipeline run",
+        "correct": false,
+        "why": "Nothing in a digest records who pushed or when."
+      },
+      {
+        "text": "They carry the same tag",
+        "correct": false,
+        "why": "Tags are names kept beside the image; the same image can carry different ones in each repository."
+      },
+      {
+        "text": "They are the same image",
+        "correct": true,
+        "why": "Right. The same content gives the same digest, wherever it is stored."
+      },
+      {
+        "text": "They were built from the same Dockerfile on different days",
+        "correct": false,
+        "why": "Two builds of one Dockerfile usually differ in some layer, and then the digests differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzyxfvxr",
+    "version": 1,
+    "section": "tags-and-digests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service's tasks all run `shop/web:latest`. Two of them restart after a new push; the others do not. What is running now?",
+    "hint": "When does a task resolve the tag?",
+    "choices": [
+      {
+        "text": "Every task runs the new build, because the tag moved",
+        "correct": false,
+        "why": "A running task keeps the image it pulled; only a restart asks the tag again."
+      },
+      {
+        "text": "Two versions at once, under one name",
+        "correct": true,
+        "why": "Right. The restarted tasks pulled the new image; the rest still run the old one."
+      },
+      {
+        "text": "The old build everywhere, until the service is redeployed",
+        "correct": false,
+        "why": "The two that restarted asked for latest and got whatever it pointed at then."
+      },
+      {
+        "text": "Nothing, because ECR refuses to serve a tag that moved",
+        "correct": false,
+        "why": "A mutable repository serves whatever the tag points at now, with no complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9d0cd88",
+    "version": 1,
+    "section": "tags-and-digests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could this lesson not run `docker push` against moto?",
+    "hint": "Two protocols are involved in a push.",
+    "choices": [
+      {
+        "text": "Because Docker refuses to log in with the test key",
+        "correct": false,
+        "why": "The login is not where it stops; moto has no registry to log in to."
+      },
+      {
+        "text": "Because moto only accepts images under 50 MB",
+        "correct": false,
+        "why": "No size limit is involved; no layer reaches moto at all."
+      },
+      {
+        "text": "Because a push needs an AWS account to bill the storage",
+        "correct": false,
+        "why": "moto bills nothing and needs no account; the missing piece is a protocol."
+      },
+      {
+        "text": "moto answers PutImage but not the registry protocol",
+        "correct": true,
+        "why": "Right. The layers travel over the registry protocol, which moto does not speak; PutImage is the last step only."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqc3p6dn",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an `IMMUTABLE` repository, `1.4.0` already points at an image. A pipeline pushes different content as `1.4.0`. What happens?",
+    "hint": "The name is taken.",
+    "choices": [
+      {
+        "text": "The tag moves and the old image becomes untagged",
+        "correct": false,
+        "why": "That is what a mutable repository does."
+      },
+      {
+        "text": "ECR stores the new image as 1.4.0-2",
+        "correct": false,
+        "why": "ECR never invents a tag; the push simply fails."
+      },
+      {
+        "text": "Both images keep the tag 1.4.0, told apart by their digests",
+        "correct": false,
+        "why": "A tag points at one image in a repository, never at two."
+      },
+      {
+        "text": "The push is refused, and 1.4.0 keeps its image",
+        "correct": true,
+        "why": "Right. ECR answers ImageTagAlreadyExistsException; the old image is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-7grk5can",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An immutable repository already holds an image tagged `1.4.1`. Can the pipeline add the tag `3f9c2a1b7e40` to that same image?",
+    "hint": "Immutability is about moving a tag.",
+    "choices": [
+      {
+        "text": "No: an immutable image cannot gain tags after its first push",
+        "correct": false,
+        "why": "Immutability protects tags from moving, and adding a new one moves nothing."
+      },
+      {
+        "text": "Only by deleting 1.4.1 first",
+        "correct": false,
+        "why": "Nothing has to be deleted; an image may carry several tags."
+      },
+      {
+        "text": "Yes, as long as that tag is not taken",
+        "correct": true,
+        "why": "Right. The lab did exactly that, and the image carries both."
+      },
+      {
+        "text": "Yes, but the repository has to be switched to MUTABLE first",
+        "correct": false,
+        "why": "No switch is needed; a free tag can be given in an immutable repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-my91ssqt",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants every release tag fixed, but developers' `dev-` builds overwritten freely, in one repository. Which setting does it?",
+    "hint": "A narrow exception to immutability.",
+    "choices": [
+      {
+        "text": "MUTABLE, and a lifecycle rule that keeps releases",
+        "correct": false,
+        "why": "A lifecycle rule deletes images; it never stops a tag from moving."
+      },
+      {
+        "text": "IMMUTABLE_WITH_EXCLUSION, filtered on dev-*",
+        "correct": true,
+        "why": "Right. Tags matching the filter may move; every other tag stays fixed."
+      },
+      {
+        "text": "IMMUTABLE_WITH_EXCLUSION, filtered on *",
+        "correct": false,
+        "why": "A filter of * excludes every tag, which is a mutable repository with a longer name."
+      },
+      {
+        "text": "IMMUTABLE, with developers deleting their old tags before each push",
+        "correct": false,
+        "why": "It works by hand and fails the first busy day; the exclusion does it for them."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq9ag9fj",
+    "version": 1,
+    "section": "immutable",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A mutable tag is a pointer; what identifies the image itself is its ___, a hash of its manifest.",
+    "hint": "Six letters, starts with sha256: when written out.",
+    "blanks": [
+      {
+        "accept": [
+          "digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gwzs098d",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does enhanced scanning do that basic scanning does not?",
+    "hint": "Think of a vulnerability published next week.",
+    "choices": [
+      {
+        "text": "It scans the image at every push, where basic scanning never does",
+        "correct": false,
+        "why": "Basic scanning can scan on push too; scanOnPush is a setting of both."
+      },
+      {
+        "text": "It blocks the push of an image with findings",
+        "correct": false,
+        "why": "Neither blocks a push; a gate in the pipeline does that."
+      },
+      {
+        "text": "It rescans when new vulnerabilities are published, and reads language packages",
+        "correct": true,
+        "why": "Right. Inspector rescans continuously and covers Python, npm and other libraries."
+      },
+      {
+        "text": "It is free",
+        "correct": false,
+        "why": "Basic scanning is the free one; enhanced is billed by Inspector per image and rescan."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwcnagez",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab's scan returned `CVE-9999-9999` in a package called `moto_fake`. What does that show about the scan-gate script?",
+    "hint": "Separate the logic from its input.",
+    "choices": [
+      {
+        "text": "That the gate refuses a high finding, though this one is fake",
+        "correct": true,
+        "why": "Right. The logic was exercised; the input was a placeholder."
+      },
+      {
+        "text": "That the image has a high vulnerability to fix",
+        "correct": false,
+        "why": "moto returns that finding for every image; it read nothing."
+      },
+      {
+        "text": "Nothing, because the script should have ignored it",
+        "correct": false,
+        "why": "The script cannot know a finding is fake; it counts severities as it should."
+      },
+      {
+        "text": "That scanning works the same in moto as in ECR",
+        "correct": false,
+        "why": "It shows the opposite: the API shape is the same and the finding is invented."
+      }
+    ]
+  },
+  {
+    "id": "ex-fyywrd4p",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A gate refusing every finding of every severity has blocked deployments for a week, and the team is about to turn it off. What keeps protection without that?",
+    "hint": "A line people can live with, plus fixes upstream.",
+    "choices": [
+      {
+        "text": "Run the gate only on Fridays",
+        "correct": false,
+        "why": "A gate that runs on one day lets six days of images through unchecked."
+      },
+      {
+        "text": "Refuse on critical and high, rebuild on fresh base images, allow dated exceptions",
+        "correct": true,
+        "why": "Right. A narrower line stays on, rebuilds remove most findings, and exceptions expire."
+      },
+      {
+        "text": "Switch from enhanced to basic scanning so fewer findings appear",
+        "correct": false,
+        "why": "Seeing less is not the same as being safer."
+      },
+      {
+        "text": "Keep the gate but let any developer bypass it with a commit message",
+        "correct": false,
+        "why": "A bypass anybody can type becomes the normal path within a week."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p4b8w51",
+    "version": 1,
+    "section": "scanning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 53,
+    "tolerance": 0.01,
+    "prompt": "With enhanced scanning at 0.11 USD per first scan and 0.01 USD per rescan, what does a month cost in which 300 new images are pushed and 2,000 rescans happen?",
+    "hint": "Two lines of the price list, added.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-ccqka2j8",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rule 1 expires untagged images after 7 days; rule 2 keeps the 30 newest images tagged `dev-`. An image is tagged `1.4.0`. Which rule can expire it?",
+    "hint": "Which rule selects it at all?",
+    "choices": [
+      {
+        "text": "Rule 1, once it is seven days old",
+        "correct": false,
+        "why": "Rule 1 selects untagged images only, and this one has a tag."
+      },
+      {
+        "text": "Rule 2, when 30 newer dev builds arrive",
+        "correct": false,
+        "why": "Rule 2 selects tags starting with dev-, and 1.4.0 does not."
+      },
+      {
+        "text": "Neither: no rule selects it",
+        "correct": true,
+        "why": "Right. An image no rule selects is never expired."
+      },
+      {
+        "text": "Both, whichever has the lower priority",
+        "correct": false,
+        "why": "Priority orders rules that select an image; here neither does."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwcgtqkp",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Before new expiry rules go live on a repository production pulls from, what should be run first, and why?",
+    "hint": "A rule written slightly wrong can delete what is running.",
+    "choices": [
+      {
+        "text": "start-lifecycle-policy-preview, to list what would expire",
+        "correct": true,
+        "why": "Right. The preview evaluates the rules and deletes nothing."
+      },
+      {
+        "text": "A scan of every image, so no vulnerable image is kept",
+        "correct": false,
+        "why": "Scanning has nothing to say about which images the rules will delete."
+      },
+      {
+        "text": "A restart of every task, so they all pull fresh images first",
+        "correct": false,
+        "why": "Restarting is the moment a deleted image would bite, not a check."
+      },
+      {
+        "text": "Nothing: ECR refuses to expire an image that is running",
+        "correct": false,
+        "why": "ECR does not know what runs; a running task fails only when it restarts."
+      }
+    ]
+  },
+  {
+    "id": "ex-n60hy5d9",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a push to a registry in the order they happen.",
+    "hint": "Names come last.",
+    "items": [
+      "The client logs in to the registry",
+      "Each layer the registry lacks is uploaded as a blob",
+      "The manifest is uploaded under a tag",
+      "The registry points the tag at the manifest's digest"
+    ],
+    "trap": "Sending the manifest first is the slip: it names layers the registry would not have yet."
+  },
+  {
+    "id": "ex-6png41dp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ECR setting to what it protects against.",
+    "hint": "One protection each.",
+    "pairs": [
+      {
+        "left": "IMMUTABLE tags",
+        "right": "A release name moving to other code"
+      },
+      {
+        "left": "scanOnPush",
+        "right": "An image nobody checked for known vulnerabilities"
+      },
+      {
+        "left": "A lifecycle policy",
+        "right": "Thousands of old builds growing on the bill"
+      },
+      {
+        "left": "A commit-hash tag",
+        "right": "Not knowing which code is running"
+      }
+    ],
+    "right_distractors": [
+      "A stolen access key"
+    ]
+  },
+  {
+    "id": "ex-4401qtbj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Production runs `shop/api:3f9c2a1b7e40` from an immutable repository, and the release broke checkout. What does rolling back to the previous image require?",
+    "hint": "A tag that cannot have moved.",
+    "choices": [
+      {
+        "text": "Rebuilding the previous commit and pushing it again",
+        "correct": false,
+        "why": "A rebuild can differ from what ran; the previous image is still there, unchanged."
+      },
+      {
+        "text": "Moving latest back to the old digest",
+        "correct": false,
+        "why": "Nothing here deploys by latest, and in an immutable repository it would not move."
+      },
+      {
+        "text": "A deployment naming the previous tag",
+        "correct": true,
+        "why": "Right. The old tag still points at exactly the image that ran before."
+      },
+      {
+        "text": "Asking ECR to restore the image from its version history",
+        "correct": false,
+        "why": "ECR keeps no version history of a tag; immutability is what makes one unnecessary."
+      }
+    ]
+  }
+]
