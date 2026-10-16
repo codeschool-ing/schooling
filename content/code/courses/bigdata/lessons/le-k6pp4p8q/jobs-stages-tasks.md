@@ -8,7 +8,7 @@ tasks, one per partition.** Lessons 2 and 6 used each of the three words; this l
 them, and it needs a way to see a stage's numbers after it ran.
 
 The driver's REST interface has them, per stage. A module of this course's own prints the stages of
-the last query, one line each. Save it as `~/big/stages.py`; this lesson and lessons 8, 9 and 14 use
+the last query, one line each. Save it as `~/big/stages.py`; this lesson and lessons 9 and 14 use
 it:
 
 ```schooling-example

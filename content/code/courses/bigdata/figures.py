@@ -740,6 +740,144 @@ def l08_salting(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 9
+
+# Seconds per iteration of pagerank.py, from the run its captures.sh records.
+L09_PLAIN = [50.4, 36.0, 34.5, 34.8, 36.3, 37.2, 34.3, 33.2, 36.3, 32.9]
+L09_CACHED = [67.7, 10.4, 11.2, 10.4, 9.2, 9.1, 10.3, 9.0, 8.3, 7.7]
+
+
+@figure('l09-iterations', 9)
+def l09_iterations(lang):
+    t = {'en': dict(
+            label='Seconds taken by each of ten PageRank iterations, in two runs. Without a cache '
+                  'every iteration takes about 35 seconds, the first 50. With the links cached, the '
+                  'first iteration takes 68 seconds while it fills the copy, and every later one '
+                  'takes 8 to 11.',
+            x='iteration', y='seconds', plain='without a cache', cached='links cached',
+            cap='The cache costs the first iteration more, and every later one much less.'),
+         'pt': dict(
+            label='Segundos gastos por cada uma de dez iterações do PageRank, em duas execuções. Sem '
+                  'cache toda iteração leva cerca de 35 segundos, a primeira 50. Com os links em '
+                  'cache, a primeira iteração leva 68 segundos enquanto enche a cópia, e cada uma '
+                  'das seguintes leva de 8 a 11.',
+            x='iteração', y='segundos', plain='sem cache', cached='links em cache',
+            cap='O cache custa mais na primeira iteração, e muito menos em cada uma das seguintes.')}[lang]
+    f = Fig('l09-iterations', 720, 280, t['label'])
+    p = Plot(f, 70, 40, 690, 230, 0.5, 10.5, 0, 70)
+    p.yaxis([0, 10, 20, 30, 40, 50, 60, 70], label=t['y'])
+    p.xaxis(list(range(1, 11)), label=t['x'])
+    for i in range(10):
+        x = p.sx(i + 1)
+        for k, (vals, fill, stroke) in enumerate(((L09_PLAIN, '--panel', '--paper-dim'),
+                                                  (L09_CACHED, '--phosphor-dim', '--phosphor'))):
+            x0 = x - 22 + k * 22
+            f.rect(x0, p.sy(vals[i]), 20, p.y1 - p.sy(vals[i]), stroke=stroke, fill=fill, rx=1)
+    f.rect(470, 30, 12, 12, stroke='--paper-dim', fill='--panel', rx=1)
+    f.text(488, 36, t['plain'], size=10, anchor='start')
+    f.rect(590, 30, 12, 12, stroke='--phosphor', fill='--phosphor-dim', rx=1)
+    f.text(608, 36, t['cached'], size=10, anchor='start')
+    return f, t['cap']
+
+
+# ------------------------------------------------------------------ lesson 10
+
+@figure('l10-layout', 10)
+def l10_layout(lang):
+    t = {'en': dict(
+            label='The same four rows of three columns stored two ways. On the left, row by row: '
+                  'each row\'s values sit together, so reading one column means reading past the '
+                  'other two. On the right, column by column: each column\'s values sit together, '
+                  'so a query that needs only kind reads one contiguous block.',
+            rows='row by row (CSV)', cols='column by column (Parquet, ORC)',
+            want='a query that needs only kind', read='read', skip='skipped',
+            cap='A columnar file keeps each column together, so a query reads only the columns it '
+                'names.'),
+         'pt': dict(
+            label='As mesmas quatro linhas de três colunas guardadas de dois jeitos. À esquerda, '
+                  'linha a linha: os valores de cada linha ficam juntos, então ler uma coluna é '
+                  'passar pelas outras duas. À direita, coluna a coluna: os valores de cada coluna '
+                  'ficam juntos, então uma consulta que só precisa de kind lê um bloco contínuo.',
+            rows='linha a linha (CSV)', cols='coluna a coluna (Parquet, ORC)',
+            want='uma consulta que só precisa de kind', read='lido', skip='pulado',
+            cap='Um arquivo colunar mantém cada coluna junta, então uma consulta lê só as colunas '
+                'que cita.')}[lang]
+    f = Fig('l10-layout', 720, 250, t['label'])
+    vals = [('v1', 'view', '17'), ('v2', 'cart', '3'), ('v1', 'view', '17'), ('v3', 'purchase', '9')]
+    names = ['visitor_id', 'kind', 'book_id']
+    f.text(170, 20, t['rows'], size=11, weight='600')
+    f.text(530, 20, t['cols'], size=11, weight='600')
+    w = 52
+    for r, row in enumerate(vals):
+        for c, v in enumerate(row):
+            x = 14 + (r * 3 + c) * 27.5
+            hot = c == 1
+            f.rect(x, 50, 26, 34, stroke='--amber' if hot else '--wire',
+                   fill='--scan' if hot else '--panel', rx=2)
+            f.text(x + 13, 67, v[:4], size=8.5, mono=True, fill='--paper' if hot else '--paper-dim')
+    f.line(14, 100, 342, 100, stroke='--amber', width=1.2, arrow=True)
+    f.text(178, 116, t['read'] + ': 12 / 12', size=10, fill='--amber')
+    for c, name in enumerate(names):
+        y = 50 + c * 50
+        hot = c == 1
+        f.text(388, y + 17, name, size=10, anchor='start', mono=True)
+        for r in range(4):
+            x = 470 + r * w
+            f.rect(x, y, w - 4, 34, stroke='--amber' if hot else '--wire',
+                   fill='--scan' if hot else '--panel', rx=2)
+            f.text(x + (w - 4) / 2, y + 17, vals[r][c][:5], size=9, mono=True,
+                   fill='--paper' if hot else '--paper-dim')
+        f.text(690, y + 17, t['read'] if hot else t['skip'], size=9.5, anchor='end',
+               fill='--amber' if hot else '--paper-dim')
+    f.text(530, 222, t['want'], size=10, fill='--paper-dim')
+    f.line(360, 30, 360, 230, stroke='--wire', dash='4 4')
+    return f, t['cap']
+
+
+@figure('l10-file', 10)
+def l10_file(lang):
+    t = {'en': dict(
+            label='The anatomy of a Parquet file. The file is a sequence of row groups, each holding '
+                  'a few thousand to millions of rows. Inside a row group, each column is a column '
+                  'chunk, and each chunk is a sequence of pages, the unit that is compressed and '
+                  'encoded. The footer at the end holds the schema, and for every column chunk its '
+                  'position, size, encodings and the minimum and maximum value.',
+            rg='row group', chunk='column chunk', pages='pages', footer='footer',
+            fsub=('schema, sizes,', 'min and max per chunk'), file='one Parquet file',
+            cap='A reader opens the footer first, and from it decides which row groups and which '
+                'column chunks to read at all.'),
+         'pt': dict(
+            label='A anatomia de um arquivo Parquet. O arquivo é uma sequência de row groups, cada '
+                  'um com de alguns milhares a milhões de linhas. Dentro de um row group, cada '
+                  'coluna é um column chunk, e cada chunk é uma sequência de páginas, a unidade que '
+                  'é comprimida e codificada. O rodapé no fim guarda o esquema e, para cada column '
+                  'chunk, a posição, o tamanho, as codificações e o valor mínimo e máximo.',
+            rg='row group', chunk='column chunk', pages='páginas', footer='rodapé',
+            fsub=('esquema, tamanhos,', 'mín. e máx. por chunk'), file='um arquivo Parquet',
+            cap='Um leitor abre o rodapé primeiro, e a partir dele decide quais row groups e quais '
+                'column chunks vai ler.')}[lang]
+    f = Fig('l10-file', 720, 240, t['label'])
+    f.text(20, 20, t['file'], size=11, anchor='start', weight='600')
+    f.rect(14, 32, 692, 196, stroke='--paper-dim', fill='--ink', rx=4)
+    for g in range(2):
+        x0 = 26 + g * 236
+        f.rect(x0, 44, 224, 172, stroke='--phosphor', fill='--panel')
+        f.text(x0 + 112, 58, f"{t['rg']} {g}", size=10.5, weight='600')
+        for c, name in enumerate(['ts', 'visitor_id', 'kind']):
+            y = 72 + c * 46
+            f.rect(x0 + 10, y, 204, 38, stroke='--wire', fill='--scan', rx=2)
+            f.text(x0 + 16, y + 11, f"{t['chunk']}: {name}", size=9, anchor='start', mono=True)
+            for p in range(4):
+                f.rect(x0 + 16 + p * 49, y + 20, 44, 13, stroke='--paper-dim', fill='--panel', rx=1)
+        f.text(x0 + 112, 211, t['pages'] + ' ▸', size=9, fill='--paper-dim')
+    f.text(508, 130, '· · ·', size=14, fill='--paper-dim')
+    f.rect(540, 44, 154, 172, stroke='--amber', fill='--scan')
+    f.text(617, 110, t['footer'], size=11, weight='600')
+    f.text(617, 132, t['fsub'][0], size=9, fill='--paper-dim')
+    f.text(617, 146, t['fsub'][1], size=9, fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

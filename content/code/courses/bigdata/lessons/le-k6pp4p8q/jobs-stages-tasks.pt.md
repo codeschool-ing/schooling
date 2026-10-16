@@ -8,7 +8,7 @@ tarefas, uma por partição.** As aulas 2 e 6 usaram cada uma das três palavras
 precisa de um jeito de ver os números de um estágio depois que ele rodou.
 
 A interface REST do driver os tem, por estágio. Um módulo deste curso imprime os estágios da última
-consulta, uma linha cada. Salve como `~/big/stages.py`; esta aula e as aulas 8, 9 e 14 o usam:
+consulta, uma linha cada. Salve como `~/big/stages.py`; esta aula e as aulas 9 e 14 o usam:
 
 ```schooling-example
 {

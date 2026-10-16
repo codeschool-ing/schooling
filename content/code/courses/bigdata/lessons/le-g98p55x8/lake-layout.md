@@ -32,7 +32,7 @@ Three decisions make or break a lake, and each has a rule of thumb:
 - **Keep the layers apart.** Most lakes keep the data as it arrived (*raw*, or *bronze*), the same
   data cleaned and typed (*silver*), and tables built for questions (*gold*). The raw layer is never
   edited, so any mistake downstream can be rebuilt from it. `~/big/data/raw` is that layer, and
-  lesson 10 writes the next one.
+  lesson 5 writes the next one.
 
 **What a lake does not have, by construction, is anything to stop two writers from colliding**, or a
 reader from seeing a half-written partition, or a schema from drifting file by file. Those are what a

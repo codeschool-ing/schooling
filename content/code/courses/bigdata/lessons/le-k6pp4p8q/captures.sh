@@ -19,7 +19,7 @@
 # not quote it.
 #
 # Timings are one run each, on a machine shared with other work.
-# Recorded on Ubuntu 24.04, OpenJDK 17, Spark 4.1.3, Python 3.12, 4 cores,
+# Recorded on Ubuntu 24.04, OpenJDK 17, Spark 4.1.3, Python 3.13, 4 cores,
 # TZ=America/Sao_Paulo, on 2026-10-16.
 set -uo pipefail
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

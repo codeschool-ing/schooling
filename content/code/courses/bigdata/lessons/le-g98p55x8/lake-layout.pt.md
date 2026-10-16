@@ -33,7 +33,7 @@ Três decisões fazem ou desfazem um lake, e cada uma tem uma regra de bolso:
 - **Mantenha as camadas separadas.** A maioria dos lakes guarda os dados como chegaram (*raw*, ou
   *bronze*), os mesmos dados limpos e tipados (*silver*) e tabelas feitas para perguntas (*gold*). A
   camada raw nunca é editada, então qualquer erro adiante pode ser refeito a partir dela. O
-  `~/big/data/raw` é essa camada, e a aula 10 escreve a seguinte.
+  `~/big/data/raw` é essa camada, e a aula 5 escreve a seguinte.
 
 **O que um lake não tem, por construção, é algo que impeça dois escritores de colidir**, ou um
 leitor de ver uma partição meio escrita, ou um esquema de mudar arquivo a arquivo. Isso era o que um
