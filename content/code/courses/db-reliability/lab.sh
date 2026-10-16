@@ -27,6 +27,12 @@
 #             capture script extracts it from the lesson's .md (lab/fence.py)
 #             and runs that, so the file a student copies is the file that ran.
 #
+# THE SANDBOX'S python3 IS 3.13, and Ubuntu 24.04's is 3.12. The patroni
+# package's modules (psycopg2 among them) are built for 3.12, so here `up`
+# writes /usr/local/bin/patroni and patronictl, which run the package's own
+# /usr/bin scripts under /usr/bin/python3.12. On the student's machine the same
+# two commands are the package's, under the python3 that already is 3.12.
+#
 # THERE IS NO systemd IN THE SANDBOX. Where a student's machine starts a
 # service from its package (etcd), this script starts the same program with the
 # same arguments the package's unit uses, and the lesson's header says so.
@@ -82,6 +88,10 @@ case "${1:-}" in
     command -v psql >/dev/null || { apt-get update -q; apt-get install -y -q postgresql; }
     command -v pgbackrest >/dev/null || DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
       pgbackrest pgbouncer patroni etcd-server etcd-client haproxy
+    for p in patroni patronictl; do
+      printf '#!/bin/sh\nexec /usr/bin/python3.12 /usr/bin/%s "$@"\n' "$p" > /usr/local/bin/$p
+      chmod 755 /usr/local/bin/$p
+    done
     id ana >/dev/null 2>&1 || useradd -m -s /bin/bash ana
     echo 'ana ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ana
     # The package's own units would run these as their own users; nothing here
@@ -110,5 +120,5 @@ case "${1:-}" in
     shift; cd /home/ana; as_ana bash -c "$*" ;;
   psql)
     shift; cd /home/ana; as_ana python3 "$HERE/lab/session.py" "$@" ;;
-  *) sed -n '2,45p' "$0"; exit 1 ;;
+  *) sed -n '2,50p' "$0"; exit 1 ;;
 esac
