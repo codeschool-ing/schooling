@@ -1,0 +1,913 @@
+[
+  {
+    "id": "ex-427hv9th",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What limits the damage of a leak that nobody noticed?",
+    "choices": [
+      {
+        "text": "A longer token",
+        "correct": false,
+        "why": "Length does not matter once it is copied."
+      },
+      {
+        "text": "A stronger password",
+        "correct": false,
+        "why": "A strong password that leaked works as well as a weak one."
+      },
+      {
+        "text": "The credential expiring",
+        "correct": true,
+        "why": "Right. Detection may never come; expiry always does."
+      },
+      {
+        "text": "Encrypting the backup",
+        "correct": false,
+        "why": "That prevents some leaks; it does nothing for one that happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-npqktzs8",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which credential of the course has the shape this lesson aims for?",
+    "choices": [
+      {
+        "text": "The age private key",
+        "correct": false,
+        "why": "It lives until somebody replaces it."
+      },
+      {
+        "text": "Ana's Gitea token",
+        "correct": false,
+        "why": "It lives until somebody revokes it."
+      },
+      {
+        "text": "A pod's Vault token",
+        "correct": true,
+        "why": "Right. Made on demand, ten minutes, one path."
+      },
+      {
+        "text": "The cosign key pair",
+        "correct": false,
+        "why": "It lives until somebody replaces it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8ezng6h",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The age private key leaks. What can somebody with a clone of fleet read?",
+    "choices": [
+      {
+        "text": "Only the current SOPS files",
+        "correct": false,
+        "why": "The history is in every clone too."
+      },
+      {
+        "text": "Every SOPS file in the history",
+        "correct": true,
+        "why": "Right. Old commits were encrypted to the same key."
+      },
+      {
+        "text": "Nothing without the cluster",
+        "correct": false,
+        "why": "age needs only the key and the file."
+      },
+      {
+        "text": "Only staging's sealed token",
+        "correct": false,
+        "why": "That one is sealed, with another key."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmvwrv39",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each credential to how long it lives in this lab.",
+    "pairs": [
+      {
+        "left": "A Vault token from the Kubernetes login",
+        "right": "Ten minutes"
+      },
+      {
+        "left": "A token from kubectl create token",
+        "right": "One hour"
+      },
+      {
+        "left": "A Gitea access token",
+        "right": "Until revoked"
+      },
+      {
+        "left": "The Sealed Secrets signing keys",
+        "right": "Renewed every 30 days"
+      }
+    ],
+    "right_distractors": [
+      "One year, then refused"
+    ]
+  },
+  {
+    "id": "ex-b85116a1",
+    "version": 1,
+    "section": "rotating",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a planned rotation in order.",
+    "items": [
+      "Make the new credential, while the old one works",
+      "Deliver it everywhere the old one was used",
+      "Check that everything works with the new one",
+      "Revoke the old one, and check it is refused"
+    ],
+    "trap": "Revoking first turns a rotation into an outage until somebody notices."
+  },
+  {
+    "id": "ex-np7hm8w8",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the last step check that the old credential is refused?",
+    "choices": [
+      {
+        "text": "To reset the account's password",
+        "correct": false,
+        "why": "Tokens and passwords are separate."
+      },
+      {
+        "text": "To count how many used it",
+        "correct": false,
+        "why": "The refusal says nothing about use."
+      },
+      {
+        "text": "Gitea needs the request to finish",
+        "correct": false,
+        "why": "The deletion is done already."
+      },
+      {
+        "text": "To prove the revocation",
+        "correct": true,
+        "why": "Right. Seeing the refusal is the proof."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsx2bxgb",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does image-bot's new token get a name of its own?",
+    "choices": [
+      {
+        "text": "Gitea refuses an unnamed token",
+        "correct": false,
+        "why": "It is about telling them apart."
+      },
+      {
+        "text": "To tell the two apart in Gitea",
+        "correct": true,
+        "why": "Right. Step 4 deletes the old one by name."
+      },
+      {
+        "text": "Flux reads the token by name",
+        "correct": false,
+        "why": "Flux reads the value from a Secret."
+      },
+      {
+        "text": "The name is the secret",
+        "correct": false,
+        "why": "The name is public; the value is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-trb4r0gw",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Rotating the age key, what has to happen before the old key is removed?",
+    "choices": [
+      {
+        "text": "Re-encrypting every file",
+        "correct": true,
+        "why": "Right. Otherwise nobody can open them."
+      },
+      {
+        "text": "The cluster recreated",
+        "correct": false,
+        "why": "The cluster only needs the new Secret."
+      },
+      {
+        "text": "A new commit of the public key only",
+        "correct": false,
+        "why": "The files are still encrypted to the old one."
+      },
+      {
+        "text": "Every SealedSecret resealed",
+        "correct": false,
+        "why": "Those use another key entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfgkbt5s",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does least privilege limit that rotation does not?",
+    "choices": [
+      {
+        "text": "Who notices the leak",
+        "correct": false,
+        "why": "Neither is about detection."
+      },
+      {
+        "text": "How long it works",
+        "correct": false,
+        "why": "That is rotation."
+      },
+      {
+        "text": "Whether it leaks",
+        "correct": false,
+        "why": "Neither prevents a leak."
+      },
+      {
+        "text": "What it unlocks",
+        "correct": true,
+        "why": "Right. Rotation limits for how long."
+      }
+    ]
+  },
+  {
+    "id": "ex-trc0cmqc",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By default, what may a commit to any path Flux applies create?",
+    "choices": [
+      {
+        "text": "Anything, anywhere in the cluster",
+        "correct": true,
+        "why": "Right. The controllers run as cluster-admin."
+      },
+      {
+        "text": "Only what the Kustomization lists",
+        "correct": false,
+        "why": "Its path can list anything."
+      },
+      {
+        "text": "Only objects kubeconform knows",
+        "correct": false,
+        "why": "The check runs in CI, not in Flux."
+      },
+      {
+        "text": "Only objects in its own namespace",
+        "correct": false,
+        "why": "That needs serviceAccountName."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9e2a3tw",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Kustomization reasonably keeps Flux's full power?",
+    "choices": [
+      {
+        "text": "preview",
+        "correct": false,
+        "why": "An application's environment needs its namespace."
+      },
+      {
+        "text": "staging",
+        "correct": false,
+        "why": "An application's environment needs its namespace."
+      },
+      {
+        "text": "production",
+        "correct": false,
+        "why": "An application's environment needs its namespace."
+      },
+      {
+        "text": "flux-system",
+        "correct": true,
+        "why": "Right. It installs controllers and CRDs."
+      }
+    ]
+  },
+  {
+    "id": "ex-6391cvs6",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "image-bot's token leaks. Why is the worst case a pull request, not a deployment?",
+    "choices": [
+      {
+        "text": "It never merges",
+        "correct": true,
+        "why": "Right. A person still has to approve."
+      },
+      {
+        "text": "It can read fleet only",
+        "correct": false,
+        "why": "It can write branches."
+      },
+      {
+        "text": "The token expires in an hour",
+        "correct": false,
+        "why": "It lives until revoked."
+      },
+      {
+        "text": "Flux ignores its commits",
+        "correct": false,
+        "why": "Flux applies whatever reaches main."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs26212k",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A token is known to have leaked. Put the response in order.",
+    "items": [
+      "Revoke it",
+      "Make a new one and deliver it",
+      "Find out what it was used for",
+      "Write down how it leaked"
+    ],
+    "trap": "After a leak, revoking last would leave it working for whoever has it."
+  },
+  {
+    "id": "ex-sp94btrz",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A token was committed to fleet an hour ago. What makes it safe again?",
+    "choices": [
+      {
+        "text": "Making the repository private",
+        "correct": false,
+        "why": "Whoever read it already has it."
+      },
+      {
+        "text": "Revoking and replacing it",
+        "correct": true,
+        "why": "Right. Every clone already has it."
+      },
+      {
+        "text": "Deleting it in the next commit",
+        "correct": false,
+        "why": "The old commit still has it."
+      },
+      {
+        "text": "Rewriting the history",
+        "correct": false,
+        "why": "Clones made before still have it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht4qke89",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why revoke first after a leak even though it breaks the automation?",
+    "choices": [
+      {
+        "text": "Gitea requires it",
+        "correct": false,
+        "why": "It is a choice, not a rule of the server."
+      },
+      {
+        "text": "Less harm than misuse",
+        "correct": true,
+        "why": "Right. Someone may be using it now."
+      },
+      {
+        "text": "It makes the audit log shorter",
+        "correct": false,
+        "why": "The audit log is not the reason."
+      },
+      {
+        "text": "The new token cannot coexist",
+        "correct": false,
+        "why": "Two tokens can coexist."
+      }
+    ]
+  },
+  {
+    "id": "ex-gft3rfzs",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a secret scanner run so that it refuses a diff before the merge?",
+    "choices": [
+      {
+        "text": "In Vault",
+        "correct": false,
+        "why": "Vault does not see Git."
+      },
+      {
+        "text": "In Flux, before applying",
+        "correct": false,
+        "why": "By then it is in main and in every clone."
+      },
+      {
+        "text": "In the cluster's admission",
+        "correct": false,
+        "why": "The secret never reaches the cluster."
+      },
+      {
+        "text": "In CI, on every pull request",
+        "correct": true,
+        "why": "Right. Like validate.sh."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzhrrxk1",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The role bulletin-readonly hands out accounts that live how many seconds by default?",
+    "value": 3600,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-43sxk29x",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does max_ttl=24h on the role limit?",
+    "choices": [
+      {
+        "text": "The longest renewal",
+        "correct": true,
+        "why": "Right. An hour at a time, a day at most."
+      },
+      {
+        "text": "How long the root password lives",
+        "correct": false,
+        "why": "That is rotated separately."
+      },
+      {
+        "text": "How many accounts exist at once",
+        "correct": false,
+        "why": "It limits time, not count."
+      },
+      {
+        "text": "How often Vault rotates the role",
+        "correct": false,
+        "why": "It rotates nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvpmdq8p",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In readonly.sql, who fills in {{name}}, {{password}} and {{expiration}}?",
+    "choices": [
+      {
+        "text": "PostgreSQL",
+        "correct": false,
+        "why": "It runs what Vault sends."
+      },
+      {
+        "text": "Vault, for each request",
+        "correct": true,
+        "why": "Right. A new account every time."
+      },
+      {
+        "text": "The person who wrote the file",
+        "correct": false,
+        "why": "They write the recipe, not the values."
+      },
+      {
+        "text": "The ExternalSecret",
+        "correct": false,
+        "why": "No ExternalSecret is involved here."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqv0cepg",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After vault lease revoke, the same username and password are tried. What does PostgreSQL say?",
+    "choices": [
+      {
+        "text": "It logs in until the hour ends",
+        "correct": false,
+        "why": "Revoking ended it at once."
+      },
+      {
+        "text": "too many connections",
+        "correct": false,
+        "why": "Nothing about load."
+      },
+      {
+        "text": "permission denied for table",
+        "correct": false,
+        "why": "It never got that far."
+      },
+      {
+        "text": "password authentication failed",
+        "correct": true,
+        "why": "Right. The account is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4gmv1xq",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After rotate-root, why does initial-password stop working?",
+    "choices": [
+      {
+        "text": "The container restarted",
+        "correct": false,
+        "why": "Nothing restarted."
+      },
+      {
+        "text": "PostgreSQL expires passwords after an hour",
+        "correct": false,
+        "why": "The administrator password has no expiry here."
+      },
+      {
+        "text": "The role bulletin-readonly replaced it",
+        "correct": false,
+        "why": "The role makes other accounts."
+      },
+      {
+        "text": "Vault changed it to a value nobody knows",
+        "correct": true,
+        "why": "Right. Only Vault can log in as postgres now."
+      }
+    ]
+  },
+  {
+    "id": "ex-x62q7rrf",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After rotate-root, can Vault still hand out readonly accounts?",
+    "choices": [
+      {
+        "text": "Only after a new config write",
+        "correct": false,
+        "why": "None was needed."
+      },
+      {
+        "text": "No; the configuration still says initial-password",
+        "correct": false,
+        "why": "Vault updated its own copy."
+      },
+      {
+        "text": "Yes; it holds the new administrator password",
+        "correct": true,
+        "why": "Right. The next creds came back."
+      },
+      {
+        "text": "Only for an hour",
+        "correct": false,
+        "why": "Nothing expires the connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2tsg889",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did Gitea answer the old image-bot token after it was deleted?",
+    "choices": [
+      {
+        "text": "200",
+        "correct": false,
+        "why": "The token no longer works."
+      },
+      {
+        "text": "403",
+        "correct": false,
+        "why": "Gitea said unauthenticated, not forbidden."
+      },
+      {
+        "text": "204",
+        "correct": false,
+        "why": "That was the answer to the deletion."
+      },
+      {
+        "text": "401",
+        "correct": true,
+        "why": "Right. The check of step 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxcwpt5w",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which command was step 3, checking that the new token works?",
+    "choices": [
+      {
+        "text": "gitea admin user generate-access-token",
+        "correct": false,
+        "why": "That was step 1."
+      },
+      {
+        "text": "flux reconcile source git fleet-writer",
+        "correct": true,
+        "why": "Right. It fetched with the new Secret."
+      },
+      {
+        "text": "flux create secret git",
+        "correct": false,
+        "why": "That was step 2, the delivery."
+      },
+      {
+        "text": "The DELETE to Gitea",
+        "correct": false,
+        "why": "That was step 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx8mn0ha",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which ServiceAccounts does Flux's cluster-reconciler binding give cluster-admin?",
+    "choices": [
+      {
+        "text": "source-controller only",
+        "correct": false,
+        "why": "It fetches; it does not apply."
+      },
+      {
+        "text": "Every ServiceAccount in flux-system",
+        "correct": false,
+        "why": "The binding names two."
+      },
+      {
+        "text": "kustomize-controller and helm-controller",
+        "correct": true,
+        "why": "Right. The two that write objects."
+      },
+      {
+        "text": "None",
+        "correct": false,
+        "why": "cluster-admin is the role."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jg0shec",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After serviceAccountName was set, which refusal did Flux report first?",
+    "choices": [
+      {
+        "text": "create on clusterrolebindings",
+        "correct": false,
+        "why": "That came with the debugging account."
+      },
+      {
+        "text": "patch on deployments",
+        "correct": false,
+        "why": "admin allows that."
+      },
+      {
+        "text": "get on secrets",
+        "correct": false,
+        "why": "Secrets were not the problem."
+      },
+      {
+        "text": "patch on the namespace staging",
+        "correct": true,
+        "why": "Right. The Namespace is applied first."
+      }
+    ]
+  },
+  {
+    "id": "ex-55jdmth5",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does the lesson see every refusal at once, before another pull request?",
+    "choices": [
+      {
+        "text": "Merging and waiting",
+        "correct": false,
+        "why": "That shows one refusal per merge."
+      },
+      {
+        "text": "Reading Flux's events",
+        "correct": false,
+        "why": "They repeat the first refusal."
+      },
+      {
+        "text": "kubeconform",
+        "correct": false,
+        "why": "It knows schemas, not permissions."
+      },
+      {
+        "text": "A dry run as the account",
+        "correct": true,
+        "why": "Right. Every object gets its own answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3bjmbet",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does staging-applier need an extra rule for sealedsecrets?",
+    "choices": [
+      {
+        "text": "Flux decrypts them",
+        "correct": false,
+        "why": "The controller does."
+      },
+      {
+        "text": "They are cluster-scoped",
+        "correct": false,
+        "why": "They are namespaced."
+      },
+      {
+        "text": "admin does not include that custom kind",
+        "correct": true,
+        "why": "Right. The dry run named it."
+      },
+      {
+        "text": "SealedSecrets live outside the namespace",
+        "correct": false,
+        "why": "They are in staging."
+      }
+    ]
+  },
+  {
+    "id": "ex-27drcacy",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the namespace rule name resourceNames: [staging]?",
+    "choices": [
+      {
+        "text": "ClusterRoles require a name",
+        "correct": false,
+        "why": "They do not."
+      },
+      {
+        "text": "To create the namespace",
+        "correct": false,
+        "why": "The verbs are get and patch."
+      },
+      {
+        "text": "Flux ignores rules without names",
+        "correct": false,
+        "why": "It applies any rule."
+      },
+      {
+        "text": "One namespace only",
+        "correct": true,
+        "why": "Right. The narrowest rule that works."
+      }
+    ]
+  },
+  {
+    "id": "ex-v607gv08",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Flux refused the debugging ClusterRoleBinding. What did kubectl get clusterrolebinding staging-debug say?",
+    "choices": [
+      {
+        "text": "NotFound",
+        "correct": true,
+        "why": "Right. Nothing was created."
+      },
+      {
+        "text": "Forbidden",
+        "correct": false,
+        "why": "Ana is cluster-admin; she may read it."
+      },
+      {
+        "text": "It listed the binding",
+        "correct": false,
+        "why": "It was never created."
+      },
+      {
+        "text": "Pending",
+        "correct": false,
+        "why": "Bindings have no such state."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bsdvdtp",
+    "version": 1,
+    "section": "flux-impersonation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does staging recover after the refused pull request?",
+    "choices": [
+      {
+        "text": "Somebody deletes the binding",
+        "correct": false,
+        "why": "It never existed."
+      },
+      {
+        "text": "Giving staging-applier cluster-admin",
+        "correct": false,
+        "why": "That is the escalation being refused."
+      },
+      {
+        "text": "A revert pull request",
+        "correct": true,
+        "why": "Right. Git goes back to what Flux may apply."
+      },
+      {
+        "text": "Flux skips the bad object",
+        "correct": false,
+        "why": "It refuses the whole apply."
+      }
+    ]
+  }
+]

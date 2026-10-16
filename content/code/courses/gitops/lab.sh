@@ -583,7 +583,8 @@ L8=$LAB/lessons/le-wek3xhhr
 
 # The state at the end of lesson 8, on top of stage7: a cosign key pair in
 # ~/signing, bulletin 1.2 and the chart 0.1.0 signed with it, the preview's
-# OCIRepository refusing anything else, and Git signing commits with an SSH key.
+# OCIRepository refusing anything else, Git signing commits with an SSH key, and
+# the unsigned chart 0.1.1 refused before a signed commit took preview back.
 stage8() {
   export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
   export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
@@ -617,6 +618,20 @@ stage8() {
     kubectl -n preview get ocirepository bulletin-chart -o jsonpath='{.status.conditions[?(@.type=="SourceVerified")].status}' 2>/dev/null | grep -q True && break
     sleep 2
   done
+  # the chart 0.1.1 nobody signed, refused by Flux, and the signed commit that
+  # takes preview back to 0.1.0
+  sed -i 's/^version: 0.1.0$/version: 0.1.1/' charts/bulletin/Chart.yaml
+  helm package charts/bulletin >/dev/null && helm push bulletin-0.1.1.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  rm -f bulletin-0.1.1.tgz && git checkout --quiet charts/bulletin/Chart.yaml
+  git switch --quiet -c preview-0.1.1
+  sed -i 's/    tag: 0.1.0/    tag: 0.1.1/' apps/bulletin/preview/release.yaml
+  commit_at 2026-10-09T22:10:00-03:00 -am "preview: chart 0.1.1"
+  merge preview-0.1.1 "preview: chart 0.1.1"
+  git switch --quiet -c preview-0.1.0
+  sed -i 's/    tag: 0.1.1/    tag: 0.1.0/' apps/bulletin/preview/release.yaml
+  commit_at 2026-10-09T22:20:00-03:00 -S -am "preview: back to the signed chart"
+  merge preview-0.1.0 "preview: back to the signed chart"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
   cd /home/ana
 }
 
@@ -811,7 +826,7 @@ stage11() {
   merge staging-debug "staging: a debugging account"
   git switch --quiet -c revert-staging-debug
   GIT_AUTHOR_DATE=2026-10-10T02:35:00-03:00 GIT_COMMITTER_DATE=2026-10-10T02:35:00-03:00 git revert --no-edit HEAD^2 >/dev/null
-  merge revert-staging-debug 'Revert "staging: a debugging account"'
+  merge revert-staging-debug "staging: no debugging account"
   flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
   flux reconcile kustomization staging >/dev/null 2>&1
   for i in $(seq 60); do
