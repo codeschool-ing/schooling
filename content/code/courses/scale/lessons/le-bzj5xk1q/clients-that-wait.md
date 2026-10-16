@@ -56,10 +56,11 @@ status    201: 1949  503: 1638
 | 99th percentile | 1,054 ms | 137 ms |
 
 **Same box office, same number of buyers, and 31% more tickets sold.** The impatient workers spent
-the box office's one CPU on being refused: 7,304 times in twenty seconds, each one a connection, a
-thread and a reply that sold nothing, while the sales waited behind them. The polite workers stayed
-away for a second or two when they were told to, the refusals fell to under a quarter, and the sales that
-were admitted ran at the speed of a box office that is busy rather than besieged.
+the box office's one CPU on being refused: 7,304 times in twenty seconds. Each refusal was a
+connection, a thread and a reply that sold nothing, while the sales waited behind them. The polite
+workers stayed away for a second or two when they were told to, the refusals fell to under a
+quarter, and the sales that were admitted ran at the speed of a box office that is busy rather than
+besieged.
 
 That is backpressure working end to end: the box office says it is full, and the caller hears it.
 Lesson 9 built the first half; this lesson is the second.

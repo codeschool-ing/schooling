@@ -30,10 +30,10 @@ ana@lab:~/tickets$ nproc
 ```
 
 From one processor to two, sales go from 143 a second (the 16-worker run of the last section) to
-314. **A little more than double**, and the extra is an artefact of the cap rather than a gift: a
-container limited to one processor is paused for the rest of each tenth of a second once its
-threads have used up their share, and sixteen busy threads use it up in bursts. With two, it is
-paused less often.
+314. **A little more than double**, and the extra is an artefact of the cap rather than a gift. A
+container limited to one processor is paused for the rest of each tenth of a second once its threads
+have used up their share, and sixteen busy threads use it up in bursts. With two, it is paused less
+often.
 
 From two to four, sales go to 433, not to 628. `nproc` gives the reason: **the machine has four
 processors**, and the box office was not the only thing using them. The load generator, nginx and

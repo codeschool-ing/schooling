@@ -92,10 +92,10 @@ The parent and six children, 1 200 000 rows, and the count per partition shows w
 `tableoid::regclass` names the child table each row is stored in. February has fewer because it
 has 28 days.
 
-The plan for a query about June is the point of the whole exercise. **It reads `sales_2026_06`
-and nothing else.** The filter on `sold_at` let the planner rule out five of the six partitions
-before reading a row, so the query does a sixth of the work it would do on one big table, and
-the indexes it would use are a sixth of the size.
+The plan for a query about June is the point of the whole exercise. **It reads `sales_2026_06` and
+nothing else.** The filter on `sold_at` let the planner rule out five of the six partitions before
+reading a row. The query does a sixth of the work it would do on one big table, and the indexes it
+would use are a sixth of the size.
 
 ## Choosing the key
 

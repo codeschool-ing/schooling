@@ -65,6 +65,6 @@ OpenTelemetry's propagators handle both.
 ## And the cost of a header
 
 Accepting a `traceparent` from outside means a client can choose your trace ids and your sampling
-decision. Systems that care put a gateway at the edge that starts a fresh trace for untrusted
+decision. Systems that care put a gateway at the edge. It starts a fresh trace for untrusted
 callers, or records the caller's trace as a link rather than as a parent, so that nobody outside can
 fill a tracing back end by asking for every request to be sampled.

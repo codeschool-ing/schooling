@@ -56,7 +56,7 @@ ana@lab:~/tickets$ python3 trace.py --count 'GET /events/{id}'
 ```
 
 **22 traces for 200 reads**, about a tenth, as asked. The decision is made from the trace id, which
-is random, so the count varies around 20 from run to run; and because it is made from the id rather
+is random, so the count varies around 20 from run to run. And because it is made from the id rather
 than from a coin, every service that applies the same ratio to the same id makes the same decision.
 
 ## What head sampling cannot do
@@ -67,10 +67,10 @@ thousand is almost never traced.
 
 **Tail sampling** decides at the end, once the whole trace has arrived: keep every trace with an
 error, every trace slower than 250 ms, and 1% of the rest. It runs in the Collector, in the
-`tail_sampling` processor of the Collector's contrib distribution, and it has a real cost: the
-Collector must hold every span of every recent trace in memory until it decides, and all the spans of
-a trace must reach the **same** Collector, which needs a load-balancing layer of Collectors routing
-by trace id.
+`tail_sampling` processor of the Collector's contrib distribution. It has a real cost: the Collector
+must hold every span of every recent trace in memory until it decides, and all the spans of a trace
+must reach the **same** Collector, which needs a load-balancing layer of Collectors routing by trace
+id.
 
 The usual arrangement is both: a generous head sample, or none, in the services, and tail sampling in
 a Collector tier that keeps what is interesting. Whatever the policy, **metrics are never sampled**:

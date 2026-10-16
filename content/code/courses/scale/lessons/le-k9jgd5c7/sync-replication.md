@@ -91,11 +91,10 @@ initial connection time = 11.193 ms
 tps = 1439.731837 (without initial connection time)
 ```
 
-`sync_state` changed from `async` to `sync`, and the same transactions went from **2.008 ms to
-2.778 ms** on average, from 1992 a second to 1440. **Every commit now waits for a round trip to
-the replica and a write to its disk.** Here the replica is on the same machine, behind a virtual
-network bridge, so the round trip is tens of microseconds and most of the extra is the replica's
-own write.
+`sync_state` changed from `async` to `sync`, and the same transactions went from **2.008 ms to 2.778
+ms** on average, from 1992 a second to 1440. **Every commit now waits for a round trip to the
+replica and a write to its disk.** Here the replica is on the same machine, behind a virtual network
+bridge, so the round trip is tens of microseconds. Most of the extra is the replica's own write.
 
 On real networks the round trip is the larger part. Between two data centres in the same city it
 is around a millisecond; between São Paulo and the east coast of the United States it is well over

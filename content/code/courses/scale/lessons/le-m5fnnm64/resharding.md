@@ -30,9 +30,9 @@ third of them. Two thirds of the data travel, most of it from one old shard to t
 which helps nothing. The arithmetic is general: going from *n* shards to *n* + 1 by modulo moves
 about *n* / (*n* + 1) of everything.
 
-**The ring moves about a third**, which is the minimum: the new shard has to receive its share,
-and only its share moves. Each shard is placed on the ring at many points, and a key belongs to the
-first point after its own hash; the new shard's points each take over a short stretch of the ring,
+**The ring moves about a third**, which is the minimum: the new shard has to receive its share, and
+only its share moves. Each shard is placed on the ring at many points, and a key belongs to the
+first point after its own hash. The new shard's points each take over a short stretch of the ring,
 and the keys in those stretches are the only ones that change owner.
 
 ## Why the points matter

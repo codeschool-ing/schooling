@@ -34,9 +34,9 @@ matches what the load generator counted, 13 250, plus the one sale of section 05
 The 95th percentile is the latency below which 95% of the requests fall: 95% of 13 251 is 12 588.
 The table says 12 404 fall below 100 ms and 13 236 below 250 ms, so the 12 588th is **somewhere
 between 100 and 250 ms**. That is all the histogram knows. `histogram_quantile` then assumes the
-requests are spread evenly inside the bucket and interpolates: 184 of the 832 requests in that
-bucket, about 22% of the way from 100 to 250 ms, which is about 133 ms over the whole run, and 120
-ms over the thirty seconds section 06 asked about.
+requests are spread evenly inside the bucket and interpolates. The 12 588th is 184 of the 832
+requests in that bucket, about 22% of the way from 100 to 250 ms: about 133 ms over the whole run,
+and 120 ms over the thirty seconds section 06 asked about.
 
 So **a percentile from a histogram is an estimate, and its error is set by the buckets.** Here the
 answer lies in a bucket 150 ms wide, and any value in it is equally consistent with the counts. The

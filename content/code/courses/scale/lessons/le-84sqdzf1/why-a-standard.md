@@ -6,8 +6,8 @@ version: 1
 Lesson 7 instrumented the box office with `prometheus_client`, a library that speaks one format to
 one system. That is how instrumentation used to be done everywhere, and it has a cost that only
 shows later: **the code that records the signals is tied to the product that stores them.** A team
-that moves from one monitoring vendor to another rewrites the instrumentation of every service; a
-library that wants to emit traces has to pick a vendor for all its users; and a request that crosses
+that moves from one monitoring vendor to another rewrites the instrumentation of every service. A
+library that wants to emit traces has to pick a vendor for all its users. And a request that crosses
 two services written by two teams, with two vendors' libraries, cannot be followed at all, because
 the two do not agree on how to pass a trace from one to the other.
 

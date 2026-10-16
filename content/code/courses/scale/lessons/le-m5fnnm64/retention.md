@@ -39,10 +39,10 @@ DROP TABLE
 Time: 3.539 ms
 ```
 
-The `DELETE` took **199 ms** for 205 529 rows, and the detach and the drop **under 11 ms
-together**. The numbers are small because the table is small, and the ratio is what grows: a
-`DELETE`'s cost is proportional to the rows it removes, while dropping a partition costs about the
-same for a thousand rows or a billion, because it removes files rather than rows.
+The `DELETE` took **199 ms** for 205 529 rows, and the detach and the drop **under 11 ms together**.
+The numbers are small because the table is small, and the ratio is what grows. A `DELETE`'s cost is
+proportional to the rows it removes, while dropping a partition costs about the same for a thousand
+rows or a billion, because it removes files rather than rows.
 
 What the timing does not show is worse for the `DELETE`:
 

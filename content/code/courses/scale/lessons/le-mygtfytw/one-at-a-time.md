@@ -21,7 +21,7 @@ The five, with what each is in this lesson:
 
 Each database runs in a container of its own, started at the beginning of its section and **removed
 at the end of it** with `docker rm -f`. None of them needs the box office, and none of them keeps
-anything you will need later. Running them one at a time is what makes the lab of lesson 1 enough:
+anything you will need later. Running them one at a time is what makes the lab of lesson 1 enough.
 Cassandra and Neo4j are Java programs that size their memory from the machine they find, so each
 command below gives them a limit with `--memory`, and Cassandra is also told how big its heap may
 be. Together, all five would want more memory than an 8 GB lab should give; one at a time, the

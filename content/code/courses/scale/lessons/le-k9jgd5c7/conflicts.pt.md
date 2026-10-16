@@ -8,9 +8,9 @@ atrasada. **Um sistema que deixa os dois lados de uma partição aceitarem escri
 mais difícil: quando a partição se fecha, duas cópias têm dois valores diferentes para a mesma
 coisa, cada um uma escrita que alguém ouviu que deu certo.
 
-Esse é o preço de escolher disponibilidade para escritas. Um carrinho de compras é o caso clássico e
-o motivo de o Dynamo da Amazon ter sido construído assim: um comprador que não consegue pôr algo no
-carrinho porque um data center está inalcançável é uma venda perdida, então o carrinho aceita a
+Esse é o preço de escolher disponibilidade para escritas. Um carrinho de compras é o caso clássico,
+e o motivo de o Dynamo da Amazon ter sido construído assim. Um comprador que não consegue pôr algo
+no carrinho porque um data center está inalcançável é uma venda perdida, então o carrinho aceita a
 escrita do lado que o comprador alcança, e o sistema reconcilia depois.
 
 Como ele reconcilia decide se uma escrita se perde. Este programa encena duas escritas

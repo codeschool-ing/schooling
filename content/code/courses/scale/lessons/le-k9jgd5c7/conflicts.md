@@ -8,8 +8,8 @@ PostgreSQL's replica never writes, so it never disagrees with the primary; it ca
 partition heals, two copies hold two different values for the same thing, each of them a write that
 somebody was told had succeeded.
 
-That is the price of choosing availability for writes. A shopping cart is the classic case and the
-reason Amazon's Dynamo was built this way: a buyer who cannot add to their cart because a data
+That is the price of choosing availability for writes. A shopping cart is the classic case, and the
+reason Amazon's Dynamo was built this way. A buyer who cannot add to their cart because a data
 centre is unreachable is a lost sale, so the cart accepts the write on whichever side the buyer
 reaches, and the system reconciles later.
 

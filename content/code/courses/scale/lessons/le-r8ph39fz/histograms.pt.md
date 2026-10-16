@@ -34,9 +34,9 @@ contou, 13 250, mais a única venda da seção 05.
 O percentil 95 é a latência abaixo da qual ficam 95% dos pedidos: 95% de 13 251 é 12 588. A tabela
 diz que 12 404 ficam abaixo de 100 ms e 13 236 abaixo de 250 ms, então o 12 588º está **em algum
 lugar entre 100 e 250 ms**. É tudo o que o histograma sabe. O `histogram_quantile` então supõe que
-os pedidos estão espalhados por igual dentro da faixa e interpola: 184 dos 832 pedidos daquela
-faixa, cerca de 22% do caminho de 100 a 250 ms, o que dá uns 133 ms na rodada inteira, e 120 ms nos
-trinta segundos sobre os quais a seção 06 perguntou.
+os pedidos estão espalhados por igual dentro da faixa e interpola. O 12 588º é o 184º dos 832
+pedidos daquela faixa, cerca de 22% do caminho de 100 a 250 ms: uns 133 ms na rodada inteira, e 120
+ms nos trinta segundos sobre os quais a seção 06 perguntou.
 
 Então **um percentil tirado de um histograma é uma estimativa, e o erro dela é definido pelas
 faixas.** Aqui a resposta está numa faixa de 150 ms de largura, e qualquer valor dentro dela é

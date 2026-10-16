@@ -164,6 +164,6 @@ up{instance="172.18.0.8:8000", job="tickets"} => 1 @[1791612577.701]
 Três alvos, um por cópia, cada um coletado diretamente no próprio endereço e não pelo nginx.
 **Perguntar pelo balanceador teria respondido com os números de uma cópia**, uma diferente a cada
 vez, o que é inútil para um contador. Esse é o motivo de um sistema que puxa precisar de
-**descoberta de serviços**, um jeito de conhecer o endereço de toda cópia, e o motivo de o `up` ser a
-primeira coisa a alertar: uma cópia que para de responder às coletas é uma cópia cujos números
-saíram em silêncio de todo gráfico.
+**descoberta de serviços**, um jeito de conhecer o endereço de toda cópia. É também o motivo de o
+`up` ser a primeira coisa a alertar: uma cópia que para de responder às coletas é uma cópia cujos
+números saíram em silêncio de todo gráfico.

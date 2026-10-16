@@ -4,10 +4,10 @@ version: 1
 ---
 
 Lesson 11's plan, as a test: 1,000 reads and 100 sales a second, the first minute of the on-sale,
-for thirty seconds. Two scenarios run at once, each tagging its requests with a `kind`, and the
-pass mark is written into the test as **thresholds**: the 95th percentile of reads under 100 ms, of
-sales under 250 ms, and fewer than 1% of requests failing, where k6 counts any status of 400 or
-more as a failure. Save it as `onsale.js`:
+for thirty seconds. Two scenarios run at once, each tagging its requests with a `kind`. The pass
+mark is written into the test as **thresholds**: the 95th percentile of reads under 100 ms, of sales
+under 250 ms, and fewer than 1% of requests failing; k6 counts any status of 400 or more as a
+failure. Save it as `onsale.js`:
 
 ```javascript
 // onsale.js

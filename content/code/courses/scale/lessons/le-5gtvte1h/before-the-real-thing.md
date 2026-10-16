@@ -26,9 +26,9 @@ resemblance, and each is a way load tests have lied to somebody.
 
 Twelve lessons ago the box office was one program and one database, and a hot row stopped it at
 under 140 sales a second. Since then it has grown copies and a replica, learnt what each kind of
-database is for, changed its schema without stopping, reported what it does in metrics, logs and
-traces, defended itself with limits, shedding and a breaker, retried without charging twice,
-degraded instead of failing, and been planned for and tested at the load of an on-sale.
+database is for and changed its schema without stopping. It has reported what it does in metrics,
+logs and traces, defended itself with limits, shedding and a breaker, retried without charging
+twice, degraded instead of failing, and been planned for and tested at the load of an on-sale.
 
 None of those steps made the box office *scale* on its own. Each one moved a limit, measured where
 the next one was, or made a failure say what it was. That is the work, and it does not end: the
