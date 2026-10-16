@@ -37,7 +37,8 @@
 #     a lock, so two of them never share moto.
 #   - Each run has a ~/aws of its own (an empty directory with the virtual
 #     environment bound into it), so what one capture writes there is gone when
-#     it ends and no other capture ever sees it.
+#     it ends and no other capture ever sees it. ~/.aws is private to each run
+#     too, so no capture answers from another's cached credentials.
 #
 #   bash lab.sh tools            # once: the student's environment, the images
 #   bash lab.sh run CMD...       # CMD in a fresh lab, as ana, in ~/aws
@@ -130,6 +131,10 @@ inside() {
   mkdir -p "$work/aws/venv"
   mount --bind "$work/aws" /home/ana/aws
   mount --bind "$HOMEDIR/aws/venv" /home/ana/aws/venv
+  # and a ~/.aws of its own, so a credential the command line cached in one
+  # run (~/.aws/cli/cache) never answers for the next one's empty moto
+  mkdir -p "$work/dotaws" "$HOMEDIR/.aws"
+  mount --bind "$work/dotaws" /home/ana/.aws
   env ${LAB_MOTO_ENV:-} /home/ana/aws/venv/bin/moto_server -p 4567 >"$work/moto.log" 2>&1 </dev/null &
   local moto=$!
   for _ in $(seq 80); do curl -s -o /dev/null http://127.0.0.1:4567/ && break; sleep 0.25; done
@@ -141,11 +146,11 @@ EOF
   # then the lines the student types in every new terminal, out of the lesson
   sh_fence "$LESSON1/your-lab.md" 4 >> "$work/env"
   local status=0
-  [ -z "${LAB_HOSTS:-}" ] || trap 'umount /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null' EXIT
+  [ -z "${LAB_HOSTS:-}" ] || trap 'umount /home/ana/.aws /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null' EXIT
   env -i bash -c 'cd /home/ana; . "$1"; shift; "$@"' lab "$work/env" "$@" || status=$?
   kill "$moto" 2>/dev/null || true
   wait "$moto" 2>/dev/null || true
-  umount /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null || true
+  umount /home/ana/.aws /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null || true
   rm -rf "$work"
   return $status
 }
