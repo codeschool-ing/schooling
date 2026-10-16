@@ -29,8 +29,8 @@ tem o nome da classe que declara**, `Hello`.
 ana@vm:~/jvm$ javac Hello.java
 ana@vm:~/jvm$ ls -l
 total 8
--rw-r--r-- 1 ana ana 415 Oct 16 19:23 Hello.class
--rw-r--r-- 1 ana ana 131 Oct 16 19:23 Hello.java
+-rw-r--r-- 1 ana ana 415 Oct 16 19:31 Hello.class
+-rw-r--r-- 1 ana ana 131 Oct 16 19:31 Hello.java
 ana@vm:~/jvm$ java Hello
 Hello, Java
 ```
