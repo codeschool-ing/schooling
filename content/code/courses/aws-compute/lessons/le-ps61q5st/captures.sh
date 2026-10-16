@@ -22,6 +22,11 @@
 #     empties ~/.cache/aws-prices first. It needs the internet, through the
 #     same proxy as `real-aws`.
 #
+# The blocks from `name-letters` to `burstable` belong to the sections
+# `the-name`, `families` and `sizes-and-burstable`, and run against the same
+# empty moto as `check`. The image id ami-0b44997419d0b0d38 is the Amazon Linux
+# 2023 image moto ships with; lesson 2 shows where such an id comes from.
+#
 # One failure in `the-price-sheet` is quoted and not produced here, because it
 # cannot be produced on purpose: the cut download (ContentTooShortError). It
 # happened on 2026-10-16 while the EC2 file was first downloaded for this
@@ -67,6 +72,34 @@ run 'aws sts get-caller-identity'
 
 block port-taken
 run '~/aws/venv/bin/moto_server -p 4567'
+
+block name-letters
+run 'aws ec2 describe-instance-types --instance-types c7g.xlarge c7gd.xlarge c7gn.xlarge --query "InstanceTypes[].[InstanceType,ProcessorInfo.SupportedArchitectures[0],InstanceStorageInfo.TotalSizeInGB,NetworkInfo.NetworkPerformance]" --output table'
+
+block processors
+run 'aws ec2 describe-instance-types --instance-types m7i.large m7a.large m7g.large --query "InstanceTypes[].[InstanceType,ProcessorInfo.Manufacturer,ProcessorInfo.SupportedArchitectures[0],VCpuInfo.DefaultCores,VCpuInfo.DefaultThreadsPerCore]" --output table'
+
+block lenient
+run 'aws ec2 run-instances --image-id ami-0b44997419d0b0d38 --instance-type m7g.large --query "Instances[0].[InstanceType,Architecture]" --output text'
+run 'aws ec2 run-instances --image-id ami-0b44997419d0b0d38 --instance-type m7i.huge --query "Instances[0].[InstanceType,State.Name]" --output text'
+
+block catalogue
+run 'aws ec2 describe-instance-types --query "length(InstanceTypes)"'
+run 'aws ec2 describe-instance-type-offerings --query "length(InstanceTypeOfferings)"'
+run 'aws ec2 describe-instance-type-offerings --location-type availability-zone --filters Name=instance-type,Values=i4i.large --query "InstanceTypeOfferings[].Location" --output text'
+
+block families
+run 'aws ec2 describe-instance-types --instance-types m7i.large c7i.large r7i.large i4i.large g4dn.xlarge --query "InstanceTypes[].[InstanceType,VCpuInfo.DefaultVCpus,MemoryInfo.SizeInMiB,InstanceStorageInfo.TotalSizeInGB,GpuInfo.Gpus[0].Name]" --output table'
+
+block sizes
+run 'aws ec2 describe-instance-types --filters "Name=instance-type,Values=m7i.*" --query "sort_by(InstanceTypes,&VCpuInfo.DefaultVCpus)[].[InstanceType,VCpuInfo.DefaultVCpus,MemoryInfo.SizeInMiB,NetworkInfo.NetworkPerformance]" --output table'
+run 'aws ec2 describe-instance-types --instance-types m7i.large m7i.xlarge m7i.4xlarge m7i.8xlarge --query "InstanceTypes[].[InstanceType,NetworkInfo.NetworkCards[0].BaselineBandwidthInGbps,NetworkInfo.NetworkCards[0].PeakBandwidthInGbps]" --output table'
+
+block burstable
+run 'aws ec2 describe-instance-types --instance-types t3.micro t3.medium t4g.medium m7i.large --query "InstanceTypes[].[InstanceType,BurstablePerformanceSupported]" --output text'
+run 'ID=$(aws ec2 run-instances --image-id ami-0b44997419d0b0d38 --instance-type t3.medium --credit-specification CpuCredits=unlimited --query "Instances[0].InstanceId" --output text)'
+run 'aws ec2 describe-instance-credit-specifications --instance-ids "$ID"'
+run 'aws ec2 modify-instance-credit-specification --instance-credit-specifications "InstanceId=$ID,CpuCredits=unlimited"'
 
 block moto-down
 quiet 'kill "$LAB_MOTO_PID"; sleep 1'
