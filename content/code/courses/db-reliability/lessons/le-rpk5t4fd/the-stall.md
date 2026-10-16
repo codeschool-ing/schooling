@@ -40,7 +40,7 @@ ana@vm:~$ PGOPTIONS='-c statement_timeout=3s' timeout 10 psql shop -c "INSERT IN
 exit 124
 ```
 
-It waited the full ten seconds again. `statement_timeout` limits the statement, and the statement
+It waited the full ten seconds again, and its session is now a second `INSERT` waiting on `SyncRep`, beside the first. `statement_timeout` limits the statement, and the statement
 had finished: what is left is the commit, and the commit waits outside it. Nothing the application
 sets on its own connection bounds that wait.
 

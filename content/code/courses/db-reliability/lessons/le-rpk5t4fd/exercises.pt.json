@@ -1,0 +1,442 @@
+{
+  "ex-dy8dkqcn": {
+    "prompt": "Com um standby assíncrono, o primário confirma um commit e morre um milissegundo depois. O que acontece com esse commit se o standby for promovido?",
+    "hint": "Quando o log foi enviado?",
+    "choices": [
+      {
+        "text": "É reaplicado a partir da memória do primário",
+        "why": "O primário está morto; a memória dele foi junto."
+      },
+      {
+        "text": "Está seguro, porque um commit é escrito duas vezes",
+        "why": "Escrito duas vezes no disco do próprio primário, não no do standby."
+      },
+      {
+        "text": "Perdido, se o log não tinha chegado ao standby",
+        "why": "Isso. A aplicação ouviu sim sobre uma transação que o novo primário nunca recebeu."
+      },
+      {
+        "text": "O standby se recusa a ser promovido",
+        "why": "Nada na promoção procura commits que ele não viu."
+      }
+    ]
+  },
+  "ex-zjy34b91": {
+    "prompt": "Ponha os valores de `synchronous_commit` em ordem, do que retorna mais cedo ao que espera mais.",
+    "hint": "Siga o commit da memória do primário até os dados do standby.",
+    "items": [
+      "off",
+      "local",
+      "remote_write",
+      "on",
+      "remote_apply"
+    ],
+    "trap": "remote_write e on esperam os dois pelo standby; on também espera o disco dele."
+  },
+  "ex-ztf5pc96": {
+    "prompt": "Ligue cada configuração, com um standby síncrono, ao momento em que o commit retorna.",
+    "hint": "Escrito, flush, reaplicado.",
+    "pairs": [
+      {
+        "left": "local",
+        "right": "Ele está no disco do primário"
+      },
+      {
+        "left": "remote_write",
+        "right": "O standby o escreveu, sem flush"
+      },
+      {
+        "left": "on",
+        "right": "O standby fez o flush dele em disco"
+      },
+      {
+        "left": "remote_apply",
+        "right": "O standby o reaplicou"
+      }
+    ],
+    "right_distractors": [
+      "O standby o arquivou"
+    ]
+  },
+  "ex-5c9qxygp": {
+    "prompt": "`synchronous_standby_names` está vazio. O que `synchronous_commit = on` espera?",
+    "hint": "Ninguém foi nomeado.",
+    "choices": [
+      {
+        "text": "O próprio disco, como o local",
+        "why": "Isso. Sem standby síncrono, on e local se comportam igual."
+      },
+      {
+        "text": "O flush de cada standby conectado",
+        "why": "Só os standbys nomeados em synchronous_standby_names são esperados."
+      },
+      {
+        "text": "O primeiro standby a se conectar",
+        "why": "Uma lista vazia não nomeia ninguém."
+      },
+      {
+        "text": "Nada; ele se comporta como off",
+        "why": "on ainda espera o flush do próprio primário."
+      }
+    ]
+  },
+  "ex-b5h59f4p": {
+    "prompt": "Um banco registra pagamentos e visualizações de página. O que a lição sugere?",
+    "hint": "A configuração não vale só para o servidor inteiro.",
+    "choices": [
+      {
+        "text": "Dois servidores, um para cada tipo de dado",
+        "why": "Possível, mas a configuração já deixa um servidor fazer as duas coisas."
+      },
+      {
+        "text": "remote_apply no servidor, por segurança",
+        "why": "Aí cada visualização de página paga o custo de um pagamento."
+      },
+      {
+        "text": "off no servidor, e um dump toda noite",
+        "why": "Os pagamentos perderiam o último segundo de commits numa queda."
+      },
+      {
+        "text": "synchronous_commit escolhido por transação",
+        "why": "Isso: remote_apply onde perder o commit importa, off ou local onde não importa."
+      }
+    ]
+  },
+  "ex-1cnwk101": {
+    "prompt": "Com o que o primário compara os nomes em `synchronous_standby_names`?",
+    "hint": "Cada standby o informa ao se conectar.",
+    "choices": [
+      {
+        "text": "O número da porta do standby",
+        "why": "Porta não é nome; os dois standbys poderiam usar a mesma porta em hosts diferentes."
+      },
+      {
+        "text": "O application_name dele",
+        "why": "Isso. Aqui ele vem da string de conexão que o pg_basebackup copiou para o primary_conninfo."
+      },
+      {
+        "text": "O nome do cluster do standby",
+        "why": "O standby da lição 11 informava 16/standby só porque nada mais foi dado."
+      },
+      {
+        "text": "O nome do slot de replicação",
+        "why": "O slot é outra coisa; a lista compara o application_name."
+      }
+    ]
+  },
+  "ex-tww04zqt": {
+    "prompt": "Um standby se apresenta com o `___` do seu `primary_conninfo`, e o primário o lista com esse nome em `pg_stat_replication`.",
+    "hint": "Duas palavras em inglês unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "application_name"
+        ]
+      }
+    ]
+  },
+  "ex-81e1z9rj": {
+    "prompt": "Por que esta lição passa `-d 'host=... application_name=standby1'` para o `pg_basebackup`?",
+    "hint": "O que o -R escreve?",
+    "choices": [
+      {
+        "text": "O pg_basebackup se recusa a rodar sem nome",
+        "why": "A lição 11 o rodou sem nenhum."
+      },
+      {
+        "text": "O -R copia a string para o primary_conninfo",
+        "why": "Isso, e assim o standby usa o nome toda vez que se conecta."
+      },
+      {
+        "text": "O slot recebe o nome da aplicação",
+        "why": "Quem dá nome ao slot é o -S."
+      },
+      {
+        "text": "Isso torna a cópia síncrona",
+        "why": "Nada é síncrono até o synchronous_standby_names do primário nomeá-lo."
+      }
+    ]
+  },
+  "ex-7qsr2rhh": {
+    "prompt": "Na rodada da lição, a latência média foi 1,610 ms com o standby assíncrono e 1,969 ms síncrono. Quantos milissegundos cada transação pagou pela espera?",
+    "hint": "Subtraia.",
+    "unit": "ms"
+  },
+  "ex-5rfs3554": {
+    "prompt": "Por que a lição diz que o custo que ela mediu é o mais barato que a replicação síncrona vai ser?",
+    "hint": "Onde estava o standby?",
+    "choices": [
+      {
+        "text": "O pgbench roda mais rápido que aplicações reais",
+        "why": "A carga não é a questão; a distância é."
+      },
+      {
+        "text": "O standby não tinha consultas próprias a atender",
+        "why": "Isso ajuda um pouco; o que cresce é a ida e volta."
+      },
+      {
+        "text": "O PostgreSQL 16 eliminou a espera de rede",
+        "why": "Todo commit síncrono espera uma ida e volta."
+      },
+      {
+        "text": "O standby está na mesma máquina",
+        "why": "Isso. Todo standby real acrescenta uma ida e volta de rede a cada commit."
+      }
+    ]
+  },
+  "ex-n7a2gabp": {
+    "prompt": "Uma importação faz commit de um milhão de linhas, uma de cada vez, contra um standby síncrono com 100 ms de ida e volta. Ignorando todo o resto, quantas horas a espera acrescenta?",
+    "hint": "Primeiro os segundos, depois divida por 3600.",
+    "unit": "horas"
+  },
+  "ex-3me8qz3p": {
+    "prompt": "O que `synchronous_commit = off` arrisca?",
+    "hint": "Ele também não espera o disco do primário.",
+    "choices": [
+      {
+        "text": "Commits recentes, se ele cair",
+        "why": "Isso: a última fração de segundo deles, numa queda do primário, com ou sem standby."
+      },
+      {
+        "text": "O standby ficar horas atrás",
+        "why": "A replicação não muda; o risco está no primário."
+      },
+      {
+        "text": "Corromper os arquivos de dados",
+        "why": "off perde commits recentes; ele não corrompe o banco."
+      },
+      {
+        "text": "Nada, se houver um standby síncrono",
+        "why": "O primário ainda pode perder commits que confirmou antes de escrevê-los."
+      }
+    ]
+  },
+  "ex-mv6rxhsf": {
+    "prompt": "`synchronous_standby_names = 'standby1'` e o standby1 para. O que acontece com as escritas no primário?",
+    "hint": "Nada pode ser confirmado.",
+    "choices": [
+      {
+        "text": "Continuam de forma assíncrona",
+        "why": "O PostgreSQL não rebaixa sozinho; isso quebraria a garantia em silêncio."
+      },
+      {
+        "text": "Falham na hora com um erro",
+        "why": "Elas esperam, sem erro e sem fim."
+      },
+      {
+        "text": "Esperam o standby voltar ou a configuração mudar",
+        "why": "Isso. O primário não volta sozinho para o modo assíncrono."
+      },
+      {
+        "text": "O primário se desliga",
+        "why": "Ele continua rodando e continua esperando."
+      }
+    ]
+  },
+  "ex-gf27srsq": {
+    "prompt": "Enquanto o `INSERT` esperava em `SyncRep`, outra sessão contou o pedido e obteve 0. Por quê?",
+    "hint": "O commit está no disco do primário.",
+    "choices": [
+      {
+        "text": "O insert ainda não tinha sido escrito",
+        "why": "Ele foi escrito e teve flush no primário antes da espera."
+      },
+      {
+        "text": "A outra sessão leu do standby",
+        "why": "As duas sessões estavam no primário."
+      },
+      {
+        "text": "count(*) pula linhas do último segundo",
+        "why": "count não tem regra assim."
+      },
+      {
+        "text": "Um commit em espera é invisível aos outros",
+        "why": "Isso: até a espera acabar, mais ninguém o vê."
+      }
+    ]
+  },
+  "ex-04w2djbc": {
+    "prompt": "O que `statement_timeout = 3s` fez com o insert que esperava o standby parado?",
+    "hint": "Onde acontece a espera?",
+    "choices": [
+      {
+        "text": "Cancelou-o depois de três segundos",
+        "why": "O timeout matou o cliente aos dez segundos; o banco não o cancelou."
+      },
+      {
+        "text": "Desfez o insert no primário",
+        "why": "Ele já estava commitado localmente."
+      },
+      {
+        "text": "Nada, coisa nenhuma",
+        "why": "Isso: o statement tinha terminado, e o commit espera fora do statement."
+      },
+      {
+        "text": "Fez o primário ficar assíncrono",
+        "why": "Uma configuração numa conexão não muda a replicação do servidor."
+      }
+    ]
+  },
+  "ex-e1tx5cnx": {
+    "prompt": "Uma sessão esperando em `SyncRep` é cancelada. O que fica na tabela, e o que o cliente dela vê?",
+    "hint": "insert.log.",
+    "choices": [
+      {
+        "text": "Só no primário; INSERT 0 1",
+        "why": "Isso: a linha está só no primário, e o cliente recebeu um warning e depois INSERT 0 1: sucesso, numa linha que existe em um servidor. Uma aplicação que lê só o INSERT 0 1 nunca fica sabendo."
+      },
+      {
+        "text": "Nenhuma linha, e um erro",
+        "why": "O commit aconteceu antes da espera e não pode ser desfeito."
+      },
+      {
+        "text": "Nenhuma linha, e INSERT 0 1",
+        "why": "A linha está lá: a contagem deu 1."
+      },
+      {
+        "text": "A linha nos dois servidores, e um warning",
+        "why": "O standby estava parado; ele não tem nada."
+      }
+    ]
+  },
+  "ex-ryajn02n": {
+    "prompt": "O que `exit 124` queria dizer nas transcrições da lição?",
+    "hint": "É o status de saída de um dos comandos.",
+    "choices": [
+      {
+        "text": "O insert violou uma constraint",
+        "why": "Isso imprimiria um ERROR do psql."
+      },
+      {
+        "text": "O timeout matou o psql após dez segundos",
+        "why": "Isso: o comando ainda esperava quando o limite chegou."
+      },
+      {
+        "text": "O standby recusou a conexão",
+        "why": "O psql se conectou ao primário, não ao standby."
+      },
+      {
+        "text": "O psql perdeu a conexão com o servidor",
+        "why": "Isso sai com 2 e imprime uma mensagem."
+      }
+    ]
+  },
+  "ex-f0sqawq9": {
+    "prompt": "Com `ANY 1 (standby1, standby2)`, o standby1 para. O que acontece com o próximo insert?",
+    "hint": "Qualquer um basta.",
+    "choices": [
+      {
+        "text": "Ele espera o standby1 voltar",
+        "why": "É o que acontece com um único standby nomeado."
+      },
+      {
+        "text": "Faz commit assíncrono, com um warning",
+        "why": "O standby2 confirmou; nada ficou assíncrono."
+      },
+      {
+        "text": "Faz commit, confirmado pelo standby2",
+        "why": "Isso: exit 0 na hora, e o commit continua em dois servidores."
+      },
+      {
+        "text": "Falha até alguém editar a lista",
+        "why": "O quórum existe exatamente para evitar isso."
+      }
+    ]
+  },
+  "ex-8axwmxrw": {
+    "prompt": "Ligue cada valor de `synchronous_standby_names` ao que um commit espera.",
+    "hint": "Vazio, um, FIRST, ANY.",
+    "pairs": [
+      {
+        "left": "''",
+        "right": "Ninguém: a replicação é assíncrona"
+      },
+      {
+        "left": "'standby1'",
+        "right": "O standby1, e para quando ele some"
+      },
+      {
+        "left": "'FIRST 1 (standby1, standby2)'",
+        "right": "O standby1 enquanto conectado, senão o standby2"
+      },
+      {
+        "left": "'ANY 1 (standby1, standby2)'",
+        "right": "O que responder primeiro dos dois"
+      }
+    ],
+    "right_distractors": [
+      "Os dois standbys, sempre"
+    ]
+  },
+  "ex-ra6j7hph": {
+    "prompt": "Quantos servidores PostgreSQL, contando o primário, são precisos para que todo commit confirmado esteja em duas máquinas e um standby possa falhar sem parar as escritas?",
+    "hint": "Um primário e um quórum de um em quantos?",
+    "unit": "servidores"
+  },
+  "ex-pkvja0c7": {
+    "prompt": "Um standby está no mesmo data center e outro em outra cidade. Por que um time escolheria `FIRST 1 (near, far)` em vez de `ANY 1 (near, far)`?",
+    "hint": "Qual cada um espera em regime normal?",
+    "choices": [
+      {
+        "text": "Ele declara a preferência pelo near",
+        "why": "Isso: o far só é esperado quando o near some, então é o near que dita a velocidade enquanto estiver no ar."
+      },
+      {
+        "text": "O FIRST é mais rápido com os dois no ar",
+        "why": "O ANY espera o mais rápido, o que é no mínimo tão rápido quanto."
+      },
+      {
+        "text": "O ANY exige os dois standbys no ar",
+        "why": "O ANY 1 precisa de um."
+      },
+      {
+        "text": "O FIRST deixa o standby far assíncrono para sempre",
+        "why": "Ele vira o síncrono quando o near some."
+      }
+    ]
+  },
+  "ex-pkww3cnb": {
+    "prompt": "Um shop aceitou um RPO de poucos segundos para pedidos, e tem um standby. O que esta lição sugere?",
+    "hint": "O número da lição 8 decide.",
+    "choices": [
+      {
+        "text": "Tornar síncrono o único standby",
+        "why": "Aí a falha do standby para todos os pedidos."
+      },
+      {
+        "text": "synchronous_commit = off, pela velocidade",
+        "why": "Isso perde commits numa queda do próprio primário."
+      },
+      {
+        "text": "Síncrono, mais um timeout em cada statement",
+        "why": "Um timeout não limita a espera do commit."
+      },
+      {
+        "text": "Assíncrono, com o atraso monitorado",
+        "why": "Isso: segundos de RPO dispensam um standby síncrono, e a falha dele não para nada."
+      }
+    ]
+  },
+  "ex-x5z9sren": {
+    "prompt": "Uma tabela de pagamentos está protegida por `ANY 1` sobre dois standbys síncronos próximos. Alguém roda `DELETE FROM payments` sem `WHERE`. O que traz as linhas de volta?",
+    "hint": "A replicação síncrona copia mais rápido; ela não julga.",
+    "choices": [
+      {
+        "text": "Promover um dos standbys",
+        "why": "Os dois standbys reaplicaram o delete, mais cedo do que um assíncrono faria."
+      },
+      {
+        "text": "Uma restauração para um ponto no tempo",
+        "why": "Isso: recuperação para um ponto no tempo a partir do arquivo, até um momento antes do delete, como na lição 6. Replicação protege máquinas, não dados."
+      },
+      {
+        "text": "Cancelar a espera SyncRep do delete",
+        "why": "O delete foi commitado no primário antes da espera."
+      },
+      {
+        "text": "Nada: não dá para recuperar",
+        "why": "O base backup e o arquivo trazem de volta o momento anterior."
+      }
+    ]
+  }
+}
