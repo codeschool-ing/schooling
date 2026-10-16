@@ -1,0 +1,412 @@
+{
+  "ex-cmbrq7xt": {
+    "prompt": "Uma SCP que permite `s3:*` está anexada à `shop-staging`. Uma role nova lá não tem política do IAM. O que a role pode fazer no S3?",
+    "hint": "Qual dos dois filtros concede?",
+    "choices": [
+      {
+        "text": "Tudo, já que a SCP permite todo o S3",
+        "why": "Uma SCP não concede nada. Ela só define o máximo que as identidades da conta podem receber."
+      },
+      {
+        "text": "Nada, até o IAM lhe conceder algo",
+        "why": "Isso. O IAM concede e a SCP põe o teto; sem concessão, não há nada sob o teto."
+      },
+      {
+        "text": "Ler, mas não escrever, até o IAM acrescentar mais",
+        "why": "Nenhuma permissão é dada por padrão, leitura inclusive. A role precisa de política do IAM para qualquer coisa."
+      },
+      {
+        "text": "O que a role da conta de gerenciamento puder fazer lá",
+        "why": "As permissões de outra identidade não são as desta role. Cada identidade é julgada pelas próprias políticas."
+      }
+    ]
+  },
+  "ex-8xhtke24": {
+    "prompt": "Uma role na `shop-prod` tem `AdministratorAccess`; as SCPs acima da conta só permitem EC2 e S3. O que a role consegue fazer?",
+    "hint": "O que está nos dois filtros?",
+    "choices": [
+      {
+        "text": "Tudo: um administrador está acima das SCPs",
+        "why": "Ninguém numa conta-membro está acima das SCPs dela, o usuário root da conta inclusive."
+      },
+      {
+        "text": "Nada, já que as duas políticas discordam",
+        "why": "Elas não se anulam. O que está nas duas continua passando."
+      },
+      {
+        "text": "EC2 e S3, onde os dois filtros se sobrepõem",
+        "why": "Isso. As permissões efetivas são onde a concessão do IAM e o teto das SCPs se sobrepõem."
+      },
+      {
+        "text": "EC2 e S3, mais o IAM, que SCPs nunca limitam",
+        "why": "SCPs limitam as ações do próprio IAM também, que é como a role deployer é protegida nesta lição."
+      }
+    ]
+  },
+  "ex-xd3g535d": {
+    "prompt": "Quais destes NÃO são restringidos pelas SCPs da organização? Marque todos os que se aplicam.",
+    "hint": "Duas coisas ficam fora do filtro.",
+    "choices": [
+      {
+        "text": "Qualquer identidade da conta de gerenciamento",
+        "why": "Isso. A conta de gerenciamento nunca é afetada por uma SCP, onde quer que ela esteja anexada."
+      },
+      {
+        "text": "O usuário root da `shop-prod`",
+        "why": "O usuário root de uma conta-membro é filtrado como todos os outros nela."
+      },
+      {
+        "text": "Uma service-linked role na `shop-prod`",
+        "why": "Isso. As roles que os serviços da AWS criam para agir por conta própria ficam fora das SCPs."
+      },
+      {
+        "text": "Uma role com `AdministratorAccess` no `sandbox`",
+        "why": "Administrador é uma concessão do IAM, e as SCPs a filtram como qualquer outra."
+      },
+      {
+        "text": "A `OrganizationAccountAccessRole` numa conta-membro",
+        "why": "É uma role comum na conta-membro, então as SCPs do membro valem para ela."
+      }
+    ]
+  },
+  "ex-ttwqq5ks": {
+    "prompt": "Uma empresa habilita SCPs na raiz numa segunda de manhã. O que muda para os desenvolvedores nesse dia?",
+    "hint": "Que política está anexada em todo lugar desde o início?",
+    "choices": [
+      {
+        "text": "Toda requisição é recusada até alguém escrever um allow",
+        "why": "A `FullAWSAccess` está anexada em todo lugar, então o teto começa no alto e nada é recusado."
+      },
+      {
+        "text": "Só ações na região da raiz são permitidas",
+        "why": "Uma raiz não tem região. Limitar regiões exige uma SCP que alguém escreve, como a da loja."
+      },
+      {
+        "text": "Nada, porque a `FullAWSAccess` permite toda ação",
+        "why": "Isso. Ela está anexada à raiz, a cada OU e a cada conta, então ligar as SCPs não muda nada até uma barreira ser escrita."
+      },
+      {
+        "text": "As políticas do IAM deles são trocadas pelas SCPs",
+        "why": "Nada é trocado. O IAM continua concedendo; as SCPs só põem um teto sobre ele."
+      }
+    ]
+  },
+  "ex-7e1ravka": {
+    "prompt": "O `describe-policy` imprimiu a `FullAWSAccess` como uma instrução. O que ela diz?",
+    "hint": "É o teto com que todo nível começa.",
+    "choices": [
+      {
+        "text": "`Deny` em `*` a não ser que exista lista de permissão",
+        "why": "Ela não nega nada. Se negasse, habilitar SCPs pararia toda conta na hora."
+      },
+      {
+        "text": "`Allow` nas ações dos serviços que a conta já usou",
+        "why": "Ela não sabe nada do que a conta já usou. São as mesmas três palavras em todo lugar."
+      },
+      {
+        "text": "`Allow`, `Action` `*`, `Resource` `*`",
+        "why": "Isso. Toda ação em todo recurso, e é por isso que o teto começa no alto."
+      },
+      {
+        "text": "`Allow` em `*` só para a conta de gerenciamento",
+        "why": "SCPs nunca valem para a conta de gerenciamento, então uma política que a citasse não faria nada."
+      }
+    ]
+  },
+  "ex-9zpx7947": {
+    "prompt": "`Sandbox` carrega só a `sandbox-allow-list`; a conta `sandbox` abaixo dela ainda carrega a `FullAWSAccess`. Qual vale para uma requisição da `sandbox`?",
+    "hint": "Cada nível é um filtro separado.",
+    "choices": [
+      {
+        "text": "A `FullAWSAccess`, já que a política da própria conta é a mais próxima",
+        "why": "Nada sobrescreve nada em SCPs. A política da conta e a da OU filtram a requisição."
+      },
+      {
+        "text": "As duas, então na prática a lista de permissão",
+        "why": "Isso. A requisição passa por todo nível, e a OU deixa passar só o que a lista dela permite."
+      },
+      {
+        "text": "Nenhuma, porque as duas se contradizem",
+        "why": "Elas não se contradizem: uma permite tudo, a outra algumas coisas, e a sobreposição é a lista."
+      },
+      {
+        "text": "A que foi anexada por último",
+        "why": "A ordem de anexação não significa nada para a avaliação; o caminho, sim."
+      }
+    ]
+  },
+  "ex-5bakn3pa": {
+    "prompt": "A raiz da loja carrega a `FullAWSAccess` e um deny em `organizations:LeaveOrganization`. Um administrador anexa a `FullAWSAccess` direto à `shop-prod` também. A `shop-prod` agora pode sair?",
+    "hint": "Um allow mais abaixo contra um deny mais acima.",
+    "choices": [
+      {
+        "text": "Sim, porque o allow da própria conta é mais específico",
+        "why": "Especificidade não decide nada. A requisição continua passando pela raiz, e a raiz a nega."
+      },
+      {
+        "text": "Sim, assim que o allow chega à conta",
+        "why": "Um allow nunca tira um deny, em nível nenhum. É isso que faz de uma barreira uma barreira."
+      },
+      {
+        "text": "Não: um deny em qualquer nível vence",
+        "why": "Isso. Um deny em qualquer ponto do caminho encerra a requisição, seja o que for permitido abaixo."
+      },
+      {
+        "text": "Só se o usuário root da conta fizer a chamada",
+        "why": "O usuário root de uma conta-membro está sob as SCPs como todos os outros na conta."
+      }
+    ]
+  },
+  "ex-wht0rc6d": {
+    "prompt": "Por que a loja usa uma lista de negação para tudo menos o seu sandbox?",
+    "hint": "O que acontece no dia em que a AWS lança um serviço?",
+    "choices": [
+      {
+        "text": "Um serviço novo é permitido na hora, e ninguém precisa lembrar dele",
+        "why": "Isso. Com a `FullAWSAccess` em todo lugar, só o que é negado é recusado; o sandbox quer o contrário."
+      },
+      {
+        "text": "Instruções deny são mais baratas que instruções allow",
+        "why": "Políticas não custam nada de jeito nenhum. A diferença é o que acontece com o que não está escrito."
+      },
+      {
+        "text": "Uma lista de permissão não pode ser anexada a uma OU",
+        "why": "A loja anexa uma à `Sandbox`, uma OU. As duas estratégias funcionam em qualquer nível."
+      },
+      {
+        "text": "A AWS recusa listas de permissão em contas que rodam produção",
+        "why": "A AWS não recusa estratégia nenhuma em lugar nenhum. A escolha é da empresa."
+      }
+    ]
+  },
+  "ex-7hjht4qf": {
+    "prompt": "Troque a `FullAWSAccess` da `Sandbox` por uma lista de permissão, na ordem que a AWS aceita.",
+    "hint": "Um alvo nunca pode ficar sem SCP.",
+    "items": [
+      "salvar o arquivo da política",
+      "`create-policy` a partir do arquivo",
+      "`attach-policy` da lista de permissão na `Sandbox`",
+      "`detach-policy` da `FullAWSAccess` da `Sandbox`"
+    ],
+    "trap": "Tirar a `FullAWSAccess` primeiro é o deslize comum: a AWS se recusa a deixar um alvo sem SCP, com o motivo `MIN_POLICY_TYPE_ATTACHMENT_LIMIT_EXCEEDED`. O moto deixa passar."
+  },
+  "ex-82z2f7g1": {
+    "prompt": "`Workloads` mantém a `FullAWSAccess`; `Prod` abaixo dela recebe no lugar uma lista de permissão de EC2 e S3; a `shop-prod` mantém a `FullAWSAccess`. Uma role na `shop-prod` com `AdministratorAccess` chama o DynamoDB. O que acontece?",
+    "hint": "Percorra o caminho da raiz para baixo, um nível por vez.",
+    "choices": [
+      {
+        "text": "Permitido: dois dos três níveis permitem tudo",
+        "why": "Níveis não são uma votação. Cada um tem de permitir a requisição."
+      },
+      {
+        "text": "Recusado em `Prod`, o nível sem allow para ele",
+        "why": "Isso. O DynamoDB não está na lista de permissão de `Prod`, então a requisição para ali, por mais que o IAM conceda."
+      },
+      {
+        "text": "Permitido, porque a própria `shop-prod` carrega a `FullAWSAccess`",
+        "why": "A política da própria conta não sobrescreve a da OU. As duas filtram a requisição."
+      },
+      {
+        "text": "Recusado na raiz, que não permite mais o DynamoDB",
+        "why": "A raiz não mudou e continua permitindo tudo. O allow que falta está mais abaixo."
+      }
+    ]
+  },
+  "ex-8d887d58": {
+    "prompt": "Manter a `FullAWSAccess` em todo lugar e anexar políticas que recusam ações específicas é a estratégia chamada lista de ___.",
+    "hint": "As barreiras são escritas com um `Effect`.",
+    "blanks": [
+      {
+        "accept": [
+          "negação",
+          "negacao",
+          "deny"
+        ]
+      }
+    ]
+  },
+  "ex-jp33wx8h": {
+    "prompt": "Alguém tira `iam:*` da lista `NotAction` da `sa-east-1-only` porque \"o IAM também devia ficar em São Paulo\". O que quebra?",
+    "hint": "De onde um serviço global responde?",
+    "choices": [
+      {
+        "text": "Nada; requisições do IAM já vão para `sa-east-1`",
+        "why": "O IAM é global e responde de um lugar só, normalmente `us-east-1`, então as requisições dele não citam São Paulo."
+      },
+      {
+        "text": "Só o IAM da conta de gerenciamento",
+        "why": "A conta de gerenciamento não é tocada por SCPs. É toda conta-membro que perde o IAM."
+      },
+      {
+        "text": "Toda conta-membro perde o IAM, usuários e roles igualmente",
+        "why": "Isso. As requisições do IAM não são para `sa-east-1`, então o deny agora pega todas. É por isso que serviços globais são as exceções."
+      },
+      {
+        "text": "A SCP fica inválida e a AWS se recusa a anexá-la",
+        "why": "Ela continua sendo linguagem de política válida. Está válida e errada, o que é pior."
+      }
+    ]
+  },
+  "ex-q53e5723": {
+    "prompt": "Na `protect-deployer`, o que faz a condição sobre `aws:PrincipalArn`?",
+    "hint": "`ArnNotLike` desliga o deny quando bate.",
+    "choices": [
+      {
+        "text": "Cita a role que é protegida",
+        "why": "A role protegida está em `Resource`. A condição é sobre quem pede."
+      },
+      {
+        "text": "Isenta a role por onde a conta de gerenciamento entra",
+        "why": "Isso. O deny vale para quem chamar, menos a `OrganizationAccountAccessRole`, então a plataforma ainda pode mudar o deployer."
+      },
+      {
+        "text": "Limita o deny à `shop-prod`",
+        "why": "O `*` no campo da conta a faz valer para toda conta sob `Workloads`."
+      },
+      {
+        "text": "Concede ao deployer as ações que lista",
+        "why": "Uma SCP nunca concede. Esta só recusa, a todos menos um."
+      }
+    ]
+  },
+  "ex-z8yvx47f": {
+    "prompt": "Por que a loja nega `cloudtrail:StopLogging` em toda conta-membro?",
+    "hint": "Qual a primeira coisa que um intruso faz?",
+    "choices": [
+      {
+        "text": "Para economizar o custo da trilha",
+        "why": "O deny mantém a trilha rodando, então não economiza nada. Protege o registro."
+      },
+      {
+        "text": "Porque a AWS exige isso de toda organização",
+        "why": "A AWS não exige SCP nenhuma. A loja escreve esta pelos próprios motivos."
+      },
+      {
+        "text": "Para ninguém, intruso ou engenheiro cansado, desligar o registro",
+        "why": "Isso. Um registro de toda chamada de API só vale algo se as pessoas registradas não puderem pará-lo."
+      },
+      {
+        "text": "Porque o CloudTrail para sozinho quando uma região é negada",
+        "why": "Nada para sozinho. O deny é contra uma pessoa ou um script pará-lo."
+      }
+    ]
+  },
+  "ex-4x9w7y7e": {
+    "prompt": "Com a `sa-east-1-only` anexada à raiz, a `shop-prod` criou uma VPC em `us-east-1` no moto. O que a AWS teria respondido?",
+    "hint": "O moto guarda SCPs e não decide nada com elas.",
+    "choices": [
+      {
+        "text": "O mesmo id de VPC, já que a role tem direitos totais",
+        "why": "Direitos totais no IAM continuam filtrados pelas SCPs. Na AWS o deny vence."
+      },
+      {
+        "text": "`AccessDenied`, citando um deny explícito numa SCP",
+        "why": "Isso. Essa é a resposta documentada da AWS; não foi rodada aqui, porque o moto ignora SCPs."
+      },
+      {
+        "text": "`VpcLimitExceeded`, já que `us-east-1` está cheia",
+        "why": "Essa é a recusa de cota da lição 2, sem relação com SCPs."
+      },
+      {
+        "text": "Um `500`, porque a requisição atravessou regiões",
+        "why": "Um 500 é o moto falhando em algo que não implementa. Atravessar regiões é comum."
+      }
+    ]
+  },
+  "ex-4qxe8c4f": {
+    "prompt": "A loja quer proibir qualquer conta de fora da organização de ler os seus buckets, mesmo com uma política de bucket que permita. Que ferramenta serve?",
+    "hint": "Quem é o leitor, e ele está sob as SCPs da organização?",
+    "choices": [
+      {
+        "text": "Uma SCP negando `s3:GetObject`",
+        "why": "Uma SCP filtra as identidades das contas da loja. O leitor de fora não é uma delas."
+      },
+      {
+        "text": "Uma política declarativa para EC2",
+        "why": "Políticas declarativas definem a configuração de um serviço, começando pelo EC2. Buckets são S3, e o ponto é quem os lê."
+      },
+      {
+        "text": "Uma resource control policy",
+        "why": "Isso. Uma RCP limita o que pode ser feito com os recursos da organização, por qualquer um, os de fora inclusive."
+      },
+      {
+        "text": "Tirar a `FullAWSAccess` da conta dona dos buckets",
+        "why": "Isso filtraria as identidades da própria conta, e só as de dentro; e ainda deixa o alvo sem SCP."
+      }
+    ]
+  },
+  "ex-dwww0phz": {
+    "prompt": "Ligue cada barreira da loja ao que ela recusa.",
+    "hint": "Um arquivo cada.",
+    "pairs": [
+      {
+        "left": "`deny-leaving`",
+        "right": "uma conta saindo da árvore"
+      },
+      {
+        "left": "`sa-east-1-only`",
+        "right": "uma máquina iniciada na Virgínia"
+      },
+      {
+        "left": "`protect-security-services`",
+        "right": "desligar a trilha"
+      },
+      {
+        "left": "`protect-deployer`",
+        "right": "mudar a role do pipeline"
+      }
+    ],
+    "right_distractors": [
+      "ler o bucket de outra conta"
+    ]
+  },
+  "ex-vnqxaeyj": {
+    "prompt": "Um engenheiro diz: \"a SCP permite `ec2:*` no `sandbox`, então os nossos desenvolvedores podem lançar máquinas lá.\" O que está errado na frase?",
+    "hint": "O que uma SCP dá a alguém?",
+    "choices": [
+      {
+        "text": "Nada; uma lista de permissão é como os desenvolvedores ganham EC2",
+        "why": "Uma lista de permissão diz o que pode passar, não o que é concedido. Sem concessão do IAM, nada passa."
+      },
+      {
+        "text": "Confunde um teto com uma concessão",
+        "why": "Isso. Os desenvolvedores também precisam de uma política do IAM no `sandbox` que conceda EC2; a SCP só deixa passar."
+      },
+      {
+        "text": "`ec2:*` é amplo demais para ser permitido numa SCP",
+        "why": "Curingas são comuns em SCPs; a própria `FullAWSAccess` é `*`."
+      },
+      {
+        "text": "SCPs valem para OUs, nunca para as contas nelas",
+        "why": "Uma SCP numa OU filtra toda conta abaixo dela; é para isso que se anexa ali."
+      }
+    ]
+  },
+  "ex-n116tqjw": {
+    "prompt": "Que conta deveria guardar uma carga de trabalho que nunca pode ser barrada por uma barreira?",
+    "hint": "A pergunta é uma armadilha; leia duas vezes.",
+    "choices": [
+      {
+        "text": "A conta de gerenciamento, que nenhuma SCP afeta",
+        "why": "É o único lugar que uma barreira não alcança, e é exatamente por isso que nada deve rodar lá."
+      },
+      {
+        "text": "Uma conta direto sob a raiz",
+        "why": "As SCPs da raiz valem para ela como para todo membro."
+      },
+      {
+        "text": "Nenhuma: uma carga de trabalho que precisa fugir das barreiras é o que deve ser questionado",
+        "why": "Isso. Barreiras existem para nenhuma carga de trabalho fugir delas; uma que precisa está pedindo uma exceção a ser discutida, não um esconderijo."
+      },
+      {
+        "text": "Uma conta-membro convidada em vez de criada",
+        "why": "Como uma conta entrou não muda nada nas SCPs a que está sujeita."
+      }
+    ]
+  },
+  "ex-0ktq434d": {
+    "prompt": "Uma requisição da `shop-prod` passa pelas SCPs da raiz, de `Workloads`, de `Prod` e da conta. Se a loja anexasse um deny a cada um desses quatro níveis, quantos deles têm de não dizer nada sobre a requisição para ela passar?",
+    "hint": "Um deny em qualquer lugar vence.",
+    "unit": "denies"
+  }
+}
