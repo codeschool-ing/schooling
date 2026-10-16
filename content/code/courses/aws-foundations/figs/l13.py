@@ -113,8 +113,8 @@ def flow():
                                      T('activated in', 'ativada no'),
                                      T('Billing', 'Billing')))):
         f.line(gx, 48, gx, 218, stroke='--amber', width=2.5, dash='3 3')
-        f.circle(gx, 252, 13, fill='--amber')
-        f.text(gx, 252, n, size=11, weight='600', fill='--ink')
+        f.circle(gx, 252, 13, fill='--panel', stroke='--amber', width=1.8)
+        f.text(gx, 252, n, size=11, weight='600', fill='--amber')
         f.lines(gx, 293, rows_, size=10, fill='--amber')
     return f, T('A cost reaches a report under a tag only if the tag was there at the hour, and the '
                 'key was activated.',
