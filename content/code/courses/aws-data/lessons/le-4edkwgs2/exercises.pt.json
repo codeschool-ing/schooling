@@ -1,0 +1,368 @@
+{
+  "ex-xk42kyvg": {
+    "prompt": "O que decide em qual partição um item do DynamoDB é guardado?",
+    "hint": "Um dos dois atributos da chave passa por uma função.",
+    "choices": [
+      {
+        "text": "A chave de ordenação, comparada com as faixas que cada partição guarda",
+        "why": "A chave de ordenação ordena os itens dentro de uma coleção; não participa da escolha da partição."
+      },
+      {
+        "text": "Um hash da chave de partição",
+        "why": "Isso. O hash do valor da chave de partição escolhe a partição, então chaves iguais ficam juntas e vizinhas se espalham."
+      },
+      {
+        "text": "A ordem em que os itens foram escritos",
+        "why": "A ordem de escrita não decide nada sobre o lugar; dois itens escritos com um segundo de diferença podem cair em qualquer lugar."
+      },
+      {
+        "text": "O tamanho do item, para que as partições encham por igual",
+        "why": "O tamanho não entra no hash. O enchimento por igual vem de uma chave com muitos valores distintos, assunto que a lição 11 retoma."
+      }
+    ]
+  },
+  "ex-qsxcvqdj": {
+    "prompt": "Os clientes estão guardados sob as chaves de partição `CUSTOMER#c-17`, `CUSTOMER#c-18` e assim por diante. Uma requisição consegue ler \"os clientes de c-17 a c-40\"?",
+    "hint": "Pergunte onde essas chaves de partição ficam umas em relação às outras.",
+    "choices": [
+      {
+        "text": "Sim, uma `query` com `BETWEEN` na chave de partição, que os lê na ordem da chave",
+        "why": "Uma query recebe exatamente uma chave de partição, com `=`. `BETWEEN` é uma condição da chave de ordenação."
+      },
+      {
+        "text": "Sim, com `begins_with(pk, :p)`",
+        "why": "Essa é a segunda recusa da seção sobre leituras: `Query key condition not supported`."
+      },
+      {
+        "text": "Não: chaves vizinhas vão por hash a partições sem relação",
+        "why": "Isso. Faixas só existem dentro de uma coleção de itens, ao longo da chave de ordenação."
+      },
+      {
+        "text": "Não, porque uma faixa de clientes exige uma transação",
+        "why": "Transações tratam de escrever junto, não de ler uma faixa."
+      }
+    ]
+  },
+  "ex-ex1pqf9k": {
+    "prompt": "`create-table` recebeu `--attribute-definitions` para `pk` e `total_cents` com um esquema de chave só com `pk`. O que aconteceu, e por quê?",
+    "hint": "Para que serve essa lista?",
+    "choices": [
+      {
+        "text": "Foi recusado: a lista só nomeia atributos usados por uma chave ou um índice",
+        "why": "Isso. Não é uma lista de colunas, e o moto recusou com a mesma mensagem que a AWS usa."
+      },
+      {
+        "text": "A tabela foi criada e todo item agora tem de ter um número chamado `total_cents`",
+        "why": "O DynamoDB não impõe nenhum atributo além da chave, então não existe coluna obrigatória."
+      },
+      {
+        "text": "A tabela foi criada com um índice em `total_cents`",
+        "why": "Um índice é declarado à parte, com seu próprio esquema de chave; nomear um atributo não cria nada."
+      }
+    ]
+  },
+  "ex-21p9wqmq": {
+    "prompt": "Por que os padrões de acesso são escritos antes de criar a tabela?",
+    "hint": "O que uma leitura rápida precisa nomear?",
+    "choices": [
+      {
+        "text": "Porque a AWS pede por eles no `create-table`, para dimensionar as partições",
+        "why": "Nada na API recebe uma lista de padrões; eles moldam as chaves que você declara."
+      },
+      {
+        "text": "Porque uma chave só atende às perguntas para as quais foi feita",
+        "why": "Isso. Não há planejador para achar outro caminho; a chave é o projeto."
+      },
+      {
+        "text": "Porque uma tabela não pode ser apagada depois que tem itens, então o primeiro projeto é o definitivo",
+        "why": "Uma tabela pode ser apagada a qualquer hora. O caro é reescrever todos os itens com chaves novas."
+      },
+      {
+        "text": "Porque o DynamoDB normaliza as entidades a partir da lista",
+        "why": "O DynamoDB não normaliza nada; os padrões é que substituem a normalização como ponto de partida."
+      }
+    ]
+  },
+  "ex-seggmzqn": {
+    "prompt": "Ligue cada pergunta da Quitanda à leitura que a responde na tabela da lição.",
+    "hint": "Conte o que cada pergunta recebe.",
+    "pairs": [
+      {
+        "left": "O perfil de um cliente",
+        "right": "`get-item` em `pk` e `sk = PROFILE`"
+      },
+      {
+        "left": "Um pedido e suas linhas",
+        "right": "`query` com `begins_with` no prefixo do pedido"
+      },
+      {
+        "left": "Os pedidos de um cliente num intervalo de datas",
+        "right": "`query` com `BETWEEN` entre dois prefixos de data"
+      },
+      {
+        "left": "Todos os pedidos de um dia, de todos os clientes",
+        "right": "um `scan`, até existir um índice"
+      }
+    ]
+  },
+  "ex-a07txg6d": {
+    "prompt": "O back office pede \"o total vendido por bairro neste mês\", recalculado sempre que alguém abre o relatório. O que escrever isso como padrão de acesso diz?",
+    "hint": "Veja o que a pergunta recebe e quanto ela toca.",
+    "choices": [
+      {
+        "text": "Ela precisa de uma chave de ordenação em `district`",
+        "why": "Uma chave de ordenação ordena itens dentro da coleção de um cliente; a pergunta atravessa todos os clientes."
+      },
+      {
+        "text": "É um `BETWEEN` nas datas dos pedidos de todas as partições",
+        "why": "Uma query lê uma partição. Rodar uma por cliente é um scan com passos a mais."
+      },
+      {
+        "text": "Ela agrega sobre tudo, o que um armazenamento lido por chave atende mal; pertence ao data warehouse ou ao lago, alimentados pela tabela",
+        "why": "Isso. Escrever o padrão é como se descobre que o DynamoDB é o armazenamento errado para ela."
+      },
+      {
+        "text": "Nada: uma expressão de filtro deixa isso barato",
+        "why": "Um filtro é aplicado depois da leitura, então a tabela inteira continua sendo lida e paga."
+      }
+    ]
+  },
+  "ex-c8f6hjy1": {
+    "prompt": "Por que os atributos de chave se chamam `pk` e `sk` e não `customer_id` e `order_date`?",
+    "hint": "Veja o que `sk` guarda num perfil.",
+    "choices": [
+      {
+        "text": "Porque o DynamoDB proíbe nomes mais longos para atributos de chave",
+        "why": "Nomes de atributos de chave podem ser longos; a escolha é sobre significado."
+      },
+      {
+        "text": "Porque cada um guarda tipos diferentes de valor para itens diferentes, e um nome específico seria falso para alguns deles",
+        "why": "Isso. `sk` é `PROFILE` para um tipo de item e um pedido ou uma linha para os outros."
+      },
+      {
+        "text": "Porque `order_date` é uma palavra reservada",
+        "why": "`date` é reservada; `order_date` não é, e o motivo é outro."
+      }
+    ]
+  },
+  "ex-x6ece1c9": {
+    "prompt": "Na coleção de c-17, por que `PROFILE` vem depois de todos os pedidos?",
+    "hint": "Compare os primeiros caracteres.",
+    "choices": [
+      {
+        "text": "Porque foi escrito por último pelo programa de carga",
+        "why": "Foi escrito primeiro, antes dos pedidos. A ordem numa coleção é a da chave de ordenação, não a da escrita."
+      },
+      {
+        "text": "Porque o DynamoDB põe por último os itens sem data",
+        "why": "O DynamoDB não sabe nada sobre datas dentro de uma string; ele compara bytes."
+      },
+      {
+        "text": "Porque `P` vem depois de `O` na ordem de bytes",
+        "why": "Isso. Nada num perfil o coloca primeiro; só a chave de ordenação dele poderia."
+      },
+      {
+        "text": "Porque um perfil tem menos atributos que um pedido",
+        "why": "O número de atributos não participa da ordenação."
+      }
+    ]
+  },
+  "ex-61082v45": {
+    "prompt": "Suponha que os ids de pedido não tivessem largura fixa, e um cliente pudesse ter `o-1002` e `o-10021` no mesmo dia. O que a query pelo prefixo de um pedido, `begins_with(sk, ORDER#2026-10-05#o-1002)`, devolveria?",
+    "hint": "Um id é o começo do outro?",
+    "choices": [
+      {
+        "text": "Só `o-1002` e suas linhas, porque o id do pedido é comparado inteiro",
+        "why": "`begins_with` compara bytes, e não faz ideia de onde o id termina."
+      },
+      {
+        "text": "Os dois pedidos e os dois conjuntos de linhas, já que `o-10021` começa com `o-1002`",
+        "why": "Isso. É por isso que a carga começa com cinco dígitos, ou por que seria preciso um separador depois do id."
+      },
+      {
+        "text": "Uma `ValidationException`, porque dois itens casam com o prefixo",
+        "why": "Uma query devolve tantos itens quantos a condição cobre; casar com muitos é o trabalho normal dela."
+      },
+      {
+        "text": "Nada, porque o DynamoDB recusa dois ids de tamanhos diferentes no mesmo dia",
+        "why": "Nada no DynamoDB impede isso; a convenção mora no programa que escreve a tabela."
+      }
+    ]
+  },
+  "ex-kddtxcs7": {
+    "prompt": "Quais destas podem ser condição da chave de ordenação numa `query`? Escolha todas que podem.",
+    "hint": "Cada condição permitida descreve um trecho contínuo da coleção ordenada.",
+    "choices": [
+      {
+        "text": "`begins_with(sk, :prefix)`",
+        "why": "Sim: toda chave com um prefixo fica junta na ordem de bytes."
+      },
+      {
+        "text": "`sk BETWEEN :a AND :b`",
+        "why": "Sim, incluindo as duas pontas."
+      },
+      {
+        "text": "`contains(sk, :word)`",
+        "why": "As ocorrências podem estar em qualquer lugar da coleção, então não é um trecho; só existe como filtro."
+      },
+      {
+        "text": "`sk > :a`",
+        "why": "Sim: tudo depois de um ponto é um trecho."
+      },
+      {
+        "text": "`sk = :a OR sk = :b`",
+        "why": "Dois pontos separados são dois trechos; uma condição de chave não tem `OR`."
+      }
+    ]
+  },
+  "ex-m93yj6ve": {
+    "prompt": "Na tabela da lição, quantos itens a `query` devolve para `pk = CUSTOMER#c-19` e `sk BETWEEN ORDER#2026-10-10 AND ORDER#2026-10-12`?",
+    "hint": "Liste as chaves de ordenação de c-19 no scan de \"Carregando\" e lembre que as linhas ficam com o pedido."
+  },
+  "ex-3xvh4p81": {
+    "prompt": "`query` em `begins_with(sk, ORDER#)` com `--no-scan-index-forward --limit 1` devolveu `ORDER#2026-10-12#o-10003#LINE#2`. Por que não o próprio pedido?",
+    "hint": "Leia a coleção de trás para frente.",
+    "choices": [
+      {
+        "text": "Porque as linhas ficam depois do pedido, então a leitura ao contrário as encontra primeiro",
+        "why": "Isso. A query fez o que foi pedido; a chave é que não servia para a pergunta."
+      },
+      {
+        "text": "Porque `--limit` conta linhas e não pedidos",
+        "why": "`--limit` conta itens, e o DynamoDB não sabe quais itens são linhas."
+      },
+      {
+        "text": "Porque o moto ignora `--no-scan-index-forward` e sempre lê em ordem crescente, então a AWS teria respondido com o pedido",
+        "why": "Lida em ordem crescente, o primeiro item seria o pedido de 3 de outubro. A resposta veio do fim da coleção."
+      },
+      {
+        "text": "Porque o pedido de 12 de outubro ainda estava pendente",
+        "why": "Uma query não sabe nada de entrega; só a chave de ordenação decide a ordem."
+      }
+    ]
+  },
+  "ex-fqby9ar7": {
+    "prompt": "Um scan com filtro em `#n = Gabi` devolveu `Count` 1 e `ScannedCount` 30. O que o filtro economizou?",
+    "hint": "Quando o filtro é aplicado?",
+    "choices": [
+      {
+        "text": "29 das 30 leituras, já que só o item encontrado foi lido",
+        "why": "`ScannedCount` 30 diz que os trinta foram lidos."
+      },
+      {
+        "text": "Só a transferência; os trinta foram lidos",
+        "why": "Isso. Um filtro decide o que você recebe, não o que você paga."
+      },
+      {
+        "text": "Metade das leituras, porque um scan com filtro é eventualmente consistente",
+        "why": "A consistência muda o preço de uma leitura e não tem nada a ver com o filtro; a lição 11 dá o preço."
+      }
+    ]
+  },
+  "ex-chj4g8f2": {
+    "prompt": "Um `put-item` nomeia uma chave que já tem um item. O que acontece por padrão?",
+    "hint": "O perfil escrito à mão na primeira seção é o exemplo.",
+    "choices": [
+      {
+        "text": "Os atributos novos são mesclados no item antigo, um a um",
+        "why": "Mesclar é o que o `update-item` faz. Um put substitui o item inteiro."
+      },
+      {
+        "text": "Falha com erro de chave duplicada, como um INSERT faria",
+        "why": "Esse é o hábito do SQL; o DynamoDB só recusa quando uma condição manda."
+      },
+      {
+        "text": "O item antigo é trocado inteiro, sem aviso",
+        "why": "Isso. Ana virou Gabi sem nenhuma mensagem."
+      },
+      {
+        "text": "Os dois itens são guardados, como duas versões da chave",
+        "why": "O DynamoDB não guarda versões de um item; isso é o S3 com versionamento, na lição 3."
+      }
+    ]
+  },
+  "ex-xezg85cn": {
+    "prompt": "Um put que não pode substituir um item existente leva a condição `___(pk)`, que só é verdadeira quando não existe item com aquela chave.",
+    "hint": "O nome da função diz \"este atributo está ausente\".",
+    "blanks": [
+      {
+        "accept": [
+          "attribute_not_exists"
+        ]
+      }
+    ]
+  },
+  "ex-gxvcsjsj": {
+    "prompt": "Por que não dava para simplesmente mandar o `seed.py` deixar em paz os perfis existentes?",
+    "hint": "Qual API o `batch_writer` chama?",
+    "choices": [
+      {
+        "text": "Porque o boto3 não tem como mandar uma condição",
+        "why": "O boto3 manda condições em `put_item`, `update_item` e transações; o limite é a API que o lote usa."
+      },
+      {
+        "text": "Porque o `BatchWriteItem` só aceita puts e deletes simples, sem condição",
+        "why": "Isso. Escritas que não podem sobrescrever vão uma a uma com condição, ou numa transação."
+      },
+      {
+        "text": "Porque uma condição custa uma unidade de leitura por item verificado, que um lote de 25 não pode pagar",
+        "why": "Uma condição é cobrada como parte da escrita, não como uma leitura à parte, e o limite do lote tem outra causa."
+      }
+    ]
+  },
+  "ex-3ksstrcp": {
+    "prompt": "O celular de um entregador manda \"entregar o-10009\" duas vezes, a segunda depois de um timeout. Com a condição `attribute_exists(pending_since)` no update, o que fica guardado em `delivered_at`?",
+    "hint": "O primeiro update removeu algo que a condição verifica.",
+    "choices": [
+      {
+        "text": "O horário da segunda requisição, que sobrescreveu o primeiro",
+        "why": "O segundo update foi recusado, então não escreveu nada."
+      },
+      {
+        "text": "Os dois horários, como lista",
+        "why": "Um update com `SET` escreve um valor, e o recusado não escreve nenhum."
+      },
+      {
+        "text": "O do primeiro: a nova tentativa foi recusada e não escreveu nada",
+        "why": "Isso. A condição transforma uma mudança de estado repetida em algo que não faz nada."
+      },
+      {
+        "text": "Nada, porque uma requisição duplicada cancela as duas",
+        "why": "Nada cancela a primeira; ela foi aplicada e respondida antes da segunda chegar."
+      }
+    ]
+  },
+  "ex-rzfnb3th": {
+    "prompt": "Ponha os passos de projetar uma tabela do DynamoDB na ordem em que esta lição os dá.",
+    "hint": "A tabela não é o primeiro passo.",
+    "items": [
+      "Escrever cada pergunta, com entradas, ordem e tamanho",
+      "Escolher a chave de partição e a de ordenação que cada pergunta consegue nomear",
+      "Criar a tabela com esses dois atributos de chave",
+      "Carregar itens cujas chaves seguem a convenção",
+      "Ler de volta cada padrão com um get-item ou uma query"
+    ]
+  },
+  "ex-kxpm304b": {
+    "prompt": "A Quitanda quer \"os três pedidos mais recentes de um cliente, do mais novo para o mais antigo\" numa query, sem ler as linhas. Que mudança nas chaves torna isso possível?",
+    "hint": "As linhas ficam entre os pedidos na coleção. Onde mais poderiam ficar?",
+    "choices": [
+      {
+        "text": "Pôr `--limit 3` e um filtro que descarta as linhas",
+        "why": "O limite conta itens antes do filtro, então três itens lidos podem ser um pedido e duas linhas, e só um pedido voltaria."
+      },
+      {
+        "text": "Mover cada item de linha para um prefixo próprio, como `LINE#2026-10-12#o-10003#1`, fora de `ORDER#`",
+        "why": "Isso, com um preço: um pedido e suas linhas viram dois trechos, então o padrão A3 precisa de duas queries. Um projeto troca um padrão por outro."
+      },
+      {
+        "text": "Fazer de `order_day` a chave de partição",
+        "why": "Aí os pedidos de um cliente se espalham pela partição de cada dia, e a pergunta não consegue nomear uma."
+      },
+      {
+        "text": "Usar um número como chave de ordenação",
+        "why": "Um número ordenaria por valor, mas as linhas continuariam entre os pedidos."
+      }
+    ]
+  }
+}
