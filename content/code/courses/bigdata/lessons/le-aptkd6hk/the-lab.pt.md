@@ -70,7 +70,7 @@ No shell da máquina, como o seu próprio usuário:
 
 ```sh
 sudo apt-get update
-sudo apt-get install -y openjdk-17-jre-headless python3 jq curl
+sudo apt-get install -y openjdk-17-jre-headless python3 python3-venv jq curl
 curl -O https://downloads.apache.org/spark/spark-4.1.3/spark-4.1.3-bin-hadoop3.tgz
 curl -O https://downloads.apache.org/spark/spark-4.1.3/spark-4.1.3-bin-hadoop3.tgz.sha512
 sha512sum -c spark-4.1.3-bin-hadoop3.tgz.sha512
@@ -88,7 +88,8 @@ mkdir ~/big
 
 As duas primeiras linhas instalam o Java 17, o mínimo que o Spark 4 pede, e duas ferramentas
 pequenas que o curso usa para ler as respostas do Spark: o `curl` pede uma página a um endereço web,
-e o `jq` tira campos do JSON que volta. As duas linhas `curl -O` baixam a versão, 573 MB, e o
+e o `jq` tira campos do JSON que volta. O `python3-venv` deixa o Python criar os ambientes separados
+em que as aulas 3 e 10 instalam bibliotecas. As duas linhas `curl -O` baixam a versão, 573 MB, e o
 arquivo com o seu checksum SHA-512. O `sha512sum -c` recalcula o checksum e compara; qualquer coisa
 diferente de `OK` quer dizer que o download veio danificado, e a seção 06 diz o que fazer.
 

@@ -81,7 +81,7 @@ grep -q ' lab$' /etc/hosts || echo '127.0.1.1 lab' >> /etc/hosts
 case "${1:-}" in
   up)
     id ana >/dev/null 2>&1 || useradd -m -s /bin/bash ana
-    apt-get install -y -qq openjdk-17-jre-headless python3 >/dev/null
+    apt-get install -y -qq openjdk-17-jre-headless python3 python3-venv >/dev/null
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
     mkdir -p "$CACHE"
     [ -f "$CACHE/$TGZ" ] || curl -sS -o "$CACHE/$TGZ" "https://downloads.apache.org/spark/spark-4.1.3/$TGZ"

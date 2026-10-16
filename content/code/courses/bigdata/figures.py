@@ -807,7 +807,7 @@ def l10_layout(lang):
     names = ['visitor_id', 'kind', 'book_id']
     f.text(170, 20, t['rows'], size=11, weight='600')
     f.text(530, 20, t['cols'], size=11, weight='600')
-    w = 52
+    w = 48
     for r, row in enumerate(vals):
         for c, v in enumerate(row):
             x = 14 + (r * 3 + c) * 27.5
@@ -820,14 +820,14 @@ def l10_layout(lang):
     for c, name in enumerate(names):
         y = 50 + c * 50
         hot = c == 1
-        f.text(388, y + 17, name, size=10, anchor='start', mono=True)
+        f.text(374, y + 17, name, size=10, anchor='start', mono=True)
         for r in range(4):
-            x = 470 + r * w
+            x = 446 + r * w
             f.rect(x, y, w - 4, 34, stroke='--amber' if hot else '--wire',
                    fill='--scan' if hot else '--panel', rx=2)
             f.text(x + (w - 4) / 2, y + 17, vals[r][c][:5], size=9, mono=True,
                    fill='--paper' if hot else '--paper-dim')
-        f.text(690, y + 17, t['read'] if hot else t['skip'], size=9.5, anchor='end',
+        f.text(646, y + 17, t['read'] if hot else t['skip'], size=9.5, anchor='start',
                fill='--amber' if hot else '--paper-dim')
     f.text(530, 222, t['want'], size=10, fill='--paper-dim')
     f.line(360, 30, 360, 230, stroke='--wire', dash='4 4')
