@@ -69,7 +69,7 @@ problema eram as características que eles receberam.
 
 A primeira linha da saída diz por quê. **25 das 64 unidades antes da cabeça nunca disparam para
 nenhum 5 a 9 da validação.** O pré-treino em 0 a 4 moldou essa camada em detectores daqueles cinco
-dígitos, e um terço dela não tem nada a dizer sobre um 7. Essa é a regra geral sobre onde as
+dígitos, e mais de um terço dela não tem nada a dizer sobre um 7. Essa é a regra geral sobre onde as
 características moram: as camadas perto da entrada aprendem peças que qualquer dígito tem, e as
 camadas perto da saída aprendem as respostas da tarefa antiga.
 

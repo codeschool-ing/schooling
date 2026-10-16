@@ -58,6 +58,5 @@ taught as both, and every digit had to be learnt in every orientation from ten e
 
 Two things this run does not show, said plainly. **Augmentation does not make the network see
 validation images differently**: validation is read as drawn, and the gain comes only from what
-training learnt. And with all 1,077 training images the gap would be smaller, because the data
-already holds more of the variation the transform imitates; it is on short data that
-augmentation earns its place.
+training learnt. And this run used 100 images. With all 1,077, the data already holds more of the variation the
+transform imitates, so the gain should be smaller; that was not measured here.

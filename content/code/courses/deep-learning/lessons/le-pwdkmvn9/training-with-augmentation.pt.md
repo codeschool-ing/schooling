@@ -59,6 +59,5 @@ exemplos.
 
 Duas coisas que esta execução não mostra, ditas com clareza. **A augmentation não faz a rede ver as
 imagens de validação de outro jeito**: a validação é lida como foi desenhada, e o ganho vem só do que
-o treino aprendeu. E com as 1.077 imagens de treino a diferença seria menor, porque os dados já
-trazem mais da variação que a transformação imita; é com poucos dados que a augmentation vale o que
-custa.
+o treino aprendeu. E esta execução usou 100 imagens. Com as 1.077, os dados já trazem mais da variação que a
+transformação imita, então o ganho deve ser menor; isso não foi medido aqui.

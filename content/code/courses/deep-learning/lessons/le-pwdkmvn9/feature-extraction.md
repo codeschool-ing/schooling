@@ -68,7 +68,7 @@ fine; the features they were given were the problem.
 
 The first line of the output says why. **25 of the 64 units before the head never fire for any
 5 to 9 in the validation set.** Pretraining on 0 to 4 shaped that layer into detectors for those
-five digits, and a third of it has nothing to say about a 7. That is the general rule about where
+five digits, and more than a third of it has nothing to say about a 7. That is the general rule about where
 features live: the layers near the input learn parts that any digit has, and the layers near the
 output learn the old task's answers.
 

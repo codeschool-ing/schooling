@@ -69,6 +69,6 @@ head turns features into the classes of one task**: here the last `Linear(64, 5)
 output per digit from 0 to 4. The head is what knows the task's labels. The body, ideally, only
 knows what images of this kind are made of.
 
-That is the whole idea of transfer learning: keep the body, throw the head away, and train a new
+Transfer learning, in one line: keep the body, throw the head away, and train a new
 head for the new labels. Whether the body really only knows *what digits are made of*, or knows
 *what 0 to 4 look like*, is a question the next section answers with a run.

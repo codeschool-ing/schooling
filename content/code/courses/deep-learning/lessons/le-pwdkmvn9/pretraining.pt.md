@@ -69,6 +69,6 @@ números por imagem. **A cabeça transforma características nas classes de uma 
 `Linear(64, 5)`, com uma saída por dígito de 0 a 4. A cabeça é quem conhece os rótulos da tarefa. O
 corpo, no caso ideal, só conhece aquilo de que imagens desse tipo são feitas.
 
-Essa é a ideia inteira da transferência de aprendizado: manter o corpo, jogar a cabeça fora e treinar
+A transferência de aprendizado, numa linha: manter o corpo, jogar a cabeça fora e treinar
 uma cabeça nova para os rótulos novos. Se o corpo conhece de fato só *aquilo de que dígitos são
 feitos*, ou conhece *a cara de 0 a 4*, é uma pergunta que a próxima seção responde com uma execução.
