@@ -1,0 +1,2769 @@
+{
+  "ex-00e4j696": {
+    "prompt": "Sem pandas, um colega dá nome à estação de partida de cada viagem com `names = {r[\"station_id\"]: r[\"name\"] for r in csv.DictReader(f)}`, montado sobre o `stations.csv` do curso. Que nome recebem as viagens de janeiro que saem de `S07`?",
+    "hint": "Python, aula 4; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 14.",
+    "choices": [
+      {
+        "text": "`Espinheiro`: a linha de julho vem depois no arquivo e substitui a primeira sob a chave.",
+        "why": "Isso."
+      },
+      {
+        "text": "`Rua da Hora`: um dicionário guarda o primeiro valor de uma chave e ignora os seguintes.",
+        "why": "Atribuir a uma chave que já existe troca o valor; vence a última linha lida."
+      },
+      {
+        "text": "Os dois nomes, numa lista, como `stations.loc[\"S07\"]` devolve duas linhas.",
+        "why": "Um dicionário guarda um valor por chave; só o pandas devolveu as duas linhas."
+      },
+      {
+        "text": "Um `KeyError` quando a compreensão chega ao segundo `S07`, porque as chaves têm de ser únicas.",
+        "why": "As chaves são únicas porque a repetição sobrescreve, não porque levanta erro."
+      }
+    ]
+  },
+  "ex-0s7q0yre": {
+    "prompt": "`rows` é o `trips.csv` lido numa lista com `csv.DictReader`, e `trips` é o mesmo arquivo como DataFrame do pandas 3. Depois de quais destas o objeto de partida fica exatamente como estava? Marque todas as que se aplicam.",
+    "hint": "Python, aula 3; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 11.",
+    "choices": [
+      {
+        "text": "`trips.loc[trips[\"plan\"] == \"day\", \"price\"] = 1200`",
+        "why": "Um único `loc` à esquerda do `=` escreve no próprio `trips`."
+      },
+      {
+        "text": "`for r in [r for r in rows if r[\"plan\"] == \"day\"]: r[\"price\"] = 1200`",
+        "why": "A lista nova guarda os mesmos dicionários de `rows`, e cada um ganhou uma chave."
+      },
+      {
+        "text": "`day = trips[trips[\"plan\"] == \"day\"]`, depois `day[\"price\"] = 1200`",
+        "why": "Isso."
+      },
+      {
+        "text": "`by_time = sorted(rows, key=lambda r: r[\"started_at\"])`",
+        "why": "Isso."
+      },
+      {
+        "text": "`rows.sort(key=lambda r: r[\"started_at\"])`",
+        "why": "O `sort` reordena a própria lista e devolve `None`."
+      }
+    ]
+  },
+  "ex-0yjkg9t5": {
+    "prompt": "Um código de estação é o inteiro `2` numa fonte e o texto `\"2\"` em outra, lida de um CSV. Quais destas dão uma resposta em vez de levantar um erro? Marque todas as que se aplicam.",
+    "hint": "Python, aula 4; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 14.",
+    "choices": [
+      {
+        "text": "`\"2\" in [1, 2, 3]`",
+        "why": "Isso."
+      },
+      {
+        "text": "`codes.merge(labels, on=\"code\")`, com `code` como `int64` de um lado e `str` do outro",
+        "why": "O `merge` confere os tipos das chaves e levanta `ValueError` nomeando os dois."
+      },
+      {
+        "text": "`\"2\" == 2`",
+        "why": "Isso."
+      },
+      {
+        "text": "`\"2\" < 3`",
+        "why": "A ordenação recusa: não há resposta honesta para qual é maior, então levanta `TypeError`."
+      }
+    ]
+  },
+  "ex-12wkyk5e": {
+    "prompt": "Um notebook grava as viagens com `with sqlite3.connect(\"bikes.db\") as con:` e, dentro do bloco, `trips.to_sql(\"trips\", con, index=False)`. O que o `with` fez quando o bloco termina?",
+    "hint": "Python, aula 13; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 10.",
+    "choices": [
+      {
+        "text": "Confirmou e fechou, e apagaria o `bikes.db` se o bloco tivesse levantado erro.",
+        "why": "Numa exceção ele desfaz (rollback) a transação; não fecha nem apaga nada."
+      },
+      {
+        "text": "Fechou a conexão, como o `with open(...)` fecha um arquivo.",
+        "why": "O gerenciador de uma biblioteca faz o que a documentação dela diz; este confirma e deixa a conexão aberta."
+      },
+      {
+        "text": "Confirmou (commit) a transação; a conexão continua aberta até `con.close()`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada ainda: a transação só é confirmada pelo `con.close()`, não antes.",
+        "why": "O `with` confirma no fim do bloco; o `close` é um passo à parte."
+      }
+    ]
+  },
+  "ex-135hwzyq": {
+    "prompt": "O curso de `python` diz que o `pip freeze` não escreve um arquivo de requirements. O curso de dados versiona um `requirements-lock.txt` feito com `pip freeze`, ao lado de um `requirements.txt` escrito à mão. Um colega chama isso de contradição. O que responde a ele?",
+    "hint": "Python, aula 18; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 3.",
+    "choices": [
+      {
+        "text": "Reconstrua a partir do arquivo escrito à mão quando os números tiverem de bater; toda linha dele está fixada.",
+        "why": "Ele fixa sete pacotes e deixa noventa e seis a critério do pip no dia em que roda."
+      },
+      {
+        "text": "Contradizem mesmo: guarde só a lista congelada, que fixa tudo, e descarte o arquivo curto.",
+        "why": "O arquivo curto é o único lugar que diz quais pacotes são decisões do projeto."
+      },
+      {
+        "text": "O `pip freeze` marca os pacotes que você pediu, então um único arquivo congelado faz os dois papéis.",
+        "why": "O `freeze` lista tudo, sem distinguir o que você escolheu do que veio junto."
+      },
+      {
+        "text": "Um lock, gerado e nunca editado, reconstrói o ambiente; o arquivo curto diz o que foi pedido.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-15j6dkbb": {
+    "prompt": "Sem pandas, você conta viagens por estação final com `Counter(r[\"end_station\"] for r in csv.DictReader(f))` sobre o `trips.csv` do curso, em que 146 bicicletas nunca voltaram. Quantas chaves o `Counter` tem?",
+    "hint": "Python, aula 9; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 14."
+  },
+  "ex-1dv7cd9s": {
+    "prompt": "Um teste da sua `plan_shares(trips)`, cujas proporções deveriam somar 1, falha com `assert 0.9999999999999999 == 1.0`. A função está certa. Como deve ser a asserção?",
+    "hint": "Python, aula 16; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 5.",
+    "choices": [
+      {
+        "text": "`assert result.sum() is not None`, já que uma soma voltou",
+        "why": "Isso afirma que houve resposta, o que vale seja qual for a conta."
+      },
+      {
+        "text": "`assert result.sum() == pytest.approx(1.0)`, igual dentro de uma tolerância",
+        "why": "Isso."
+      },
+      {
+        "text": "`assert result.astype(\"float32\").sum() == 1.0`, com menos dígitos para desviar",
+        "why": "O `float32` guarda uns sete dígitos, então as somas dele desviam mais cedo, não mais tarde."
+      },
+      {
+        "text": "`assert round(result.sum(), 2) == 1.0`, arredondando antes de comparar",
+        "why": "Arredondar é para exibir; isto aprova proporções erradas em até meio centésimo."
+      }
+    ]
+  },
+  "ex-1gt9shjg": {
+    "prompt": "Num notebook, `import bikes` e `bikes.label(20)` dão `'long'`. Você muda o limite em `bikes.py` de 15 para 30, salva o arquivo, roda `import bikes` de novo e continua recebendo `'long'`. Por quê?",
+    "hint": "Python, aula 7; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 2.",
+    "choices": [
+      {
+        "text": "O `.ipynb` guarda uma cópia de cada módulo importado, então o arquivo em disco não é lido de novo.",
+        "why": "O arquivo do notebook guarda células e saídas; os módulos vivem na memória do kernel."
+      },
+      {
+        "text": "O módulo `bikes` já está carregado; importá-lo de novo reaproveita o que está na memória.",
+        "why": "Isso."
+      },
+      {
+        "text": "O kernel reaproveita a saída salva de uma célula cujo código não mudou desde a última execução.",
+        "why": "A célula roda de novo toda vez; o `total` da aula 2 deu outra resposta com o mesmo código."
+      },
+      {
+        "text": "Um `.pyc` velho em `__pycache__` vence o código editado até alguém apagá-lo.",
+        "why": "O Python reaproveita o arquivo compilado só enquanto o código-fonte não muda."
+      }
+    ]
+  },
+  "ex-1kmb6y58": {
+    "prompt": "A partir do `weather.csv`, um colega monta `dates`, com os 365 dias, e `rain`, com as leituras sem os seis dias não lidos, 359 floats. Depois, `by_day = dict(zip(dates, rain))`. O que `by_day` contém?",
+    "hint": "Python, aula 4; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 7.",
+    "choices": [
+      {
+        "text": "359 entradas; do primeiro dia não lido em diante, as leituras caem em datas anteriores.",
+        "why": "Isso."
+      },
+      {
+        "text": "365 entradas, com `None` nas seis datas que não têm leitura para formar par.",
+        "why": "Isso é o pandas alinhando por rótulo; o `zip` junta por posição e não tem rótulos."
+      },
+      {
+        "text": "359 entradas, pareadas certo, porque o `zip` pula as datas que não têm par.",
+        "why": "O `zip` não sabe nada de datas; pega o primeiro item de cada uma, depois o segundo."
+      },
+      {
+        "text": "Nada: o `zip` levanta `ValueError`, porque as duas listas têm tamanhos diferentes.",
+        "why": "Só `zip(..., strict=True)` levanta erro; o padrão para na mais curta, em silêncio."
+      }
+    ]
+  },
+  "ex-1rkqpz9h": {
+    "prompt": "Antes de um merge, códigos de estação digitados à mão são conferidos com `re.match(r\"S\\d{2}\", code)`. `\"S03 \"`, com um espaço no fim, passa, e depois não casa com nada em `station_id`. Qual verificação o recusa?",
+    "hint": "Python, aula 10; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 14.",
+    "choices": [
+      {
+        "text": "`re.search(r\"S\\d{2}\", code)`",
+        "why": "O `search` acha o padrão em qualquer lugar, então é mais frouxo que o `match`, não mais estrito."
+      },
+      {
+        "text": "`re.match(r\"S\\d+\", code)`",
+        "why": "Qualquer quantidade de dígitos ainda deixa o espaço final sem verificação."
+      },
+      {
+        "text": "`re.match(r\"^S\\d{2}\", code)`",
+        "why": "O `^` ancora o início, o que o `match` já faz; o espaço está no fim."
+      },
+      {
+        "text": "`re.fullmatch(r\"S\\d{2}\", code)`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-27ewwg0z": {
+    "prompt": "Um notebook lê a chuva com `rain = [float(line.split(\",\")[1] or \"nan\") for line in lines[1:]]` e conta os dias de chuva com `len([r for r in rain if r > 0])`. Num dia sem leitura, o que o `or \"nan\"` faz, e esse dia entra na contagem?",
+    "hint": "Python, aula 2; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 1.",
+    "choices": [
+      {
+        "text": "O campo vazio é falso, então o `or` dá `\"nan\"`; o dia vira `nan`, que passa no teste e entra na contagem.",
+        "why": "`nan > 0` é `False`, então o dia sai da contagem sem aviso."
+      },
+      {
+        "text": "O campo vazio é falso, então o `or` dá `\"nan\"`; o dia vira `nan`, e `nan > 0` levanta erro, parando a contagem.",
+        "why": "Uma comparação com `nan` responde `False`; não levanta erro."
+      },
+      {
+        "text": "O campo vazio é falso, então o `or` dá `\"nan\"`; o dia vira `nan` e sai, já que `nan > 0` é falso.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `or` dá `False` para o campo vazio e `float(False)` é `0.0`, então o dia é lido como seco e não entra.",
+        "why": "O `or` devolve um dos operandos, não um booleano: aqui, a string `\"nan\"`."
+      }
+    ]
+  },
+  "ex-2c1pyyd6": {
+    "prompt": "Um auxiliar evita ler o `trips.csv` duas vezes: `@functools.cache` sobre `def load(path): return pd.read_csv(path)`. Uma célula roda `t = load(\"trips.csv\")` e depois `t[\"minutes\"] = ...`; uma célula posterior chama `load(\"trips.csv\")`. O que volta?",
+    "hint": "Python, aula 12; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 11.",
+    "choices": [
+      {
+        "text": "A tabela como foi lida, porque o Copy-on-Write protege todo DataFrame de mudanças posteriores.",
+        "why": "O Copy-on-Write trata de seleções; criar uma coluna em `t` muda o próprio `t`."
+      },
+      {
+        "text": "O DataFrame já alterado, com a coluna nova: o cache devolve o mesmo objeto que guardou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma tabela nova: o cache guarda o texto do arquivo e o interpreta de novo a cada chamada.",
+        "why": "O cache é um dicionário de argumentos para resultados, e o resultado é o próprio DataFrame."
+      },
+      {
+        "text": "Um `TypeError`, porque um DataFrame não cabe num cache que exige valores hasheáveis.",
+        "why": "Os argumentos é que precisam ser hasheáveis, e o argumento aqui é uma string; o resultado pode ser qualquer coisa."
+      }
+    ]
+  },
+  "ex-2wjtabt9": {
+    "prompt": "Um script de limpeza mantém as viagens de passe diário no próprio arquivo: `with open(\"trips.csv\", encoding=\"utf-8\") as src, open(\"trips.csv\", \"w\", encoding=\"utf-8\") as dst:`, depois escreve o cabeçalho e copia cada linha de `src` que contém `,day,`. O que fica no `trips.csv`?",
+    "hint": "Python, aula 9; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 2.",
+    "choices": [
+      {
+        "text": "O arquivo como estava: o Python se recusa a abrir para escrita um arquivo aberto para leitura.",
+        "why": "O Python o abre duas vezes sem reclamar; o estrago é o que o `\"w\"` faz ao abrir."
+      },
+      {
+        "text": "As viagens antigas seguidas das copiadas, porque os dois objetos de arquivo compartilham uma posição.",
+        "why": "Cada objeto de arquivo tem a própria posição; o arquivo que compartilham foi esvaziado."
+      },
+      {
+        "text": "O cabeçalho e as viagens de passe diário, porque `src` foi aberto primeiro e ainda lê o arquivo antigo.",
+        "why": "Os dois nomes são o mesmo arquivo, e o `\"w\"` o truncou antes de o laço ler qualquer coisa."
+      },
+      {
+        "text": "Só o cabeçalho: abrir o arquivo com `\"w\"` o esvaziou antes de uma única linha ser lida.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2zdrtfrv": {
+    "prompt": "Uma lista de estações exportada do Excel é lida com csv.DictReader, e row[\"station_id\"] levanta KeyError: a primeira chave é '\\ufeffstation_id', com três bytes invisíveis na frente. Abra o arquivo com encoding=\"___\" e a chave sai limpa.",
+    "hint": "Python, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "utf-8-sig",
+          "utf_8_sig",
+          "utf8-sig"
+        ]
+      }
+    ]
+  },
+  "ex-35hawj2f": {
+    "prompt": "Um relatório em Python puro sobre vinte mil pedidos leva nove segundos, todos numa única função grande. Ponha os passos na ordem em que a aula 20 os segue.",
+    "hint": "Python, aula 20.",
+    "items": [
+      "Rodar `python -m cProfile -s tottime report.py` no código como está",
+      "Dividir a função grande em algumas menores e perfilar de novo",
+      "Corrigir a função com o maior `tottime`",
+      "Medir o tempo da versão corrigida sem o profiler"
+    ],
+    "trap": "Corrigir o que parece pior antes de perfilar rendeu sete por cento na demonstração; e os tempos medidos sob o `cProfile` vêm inflados, então a correção é medida sem ele."
+  },
+  "ex-38g24dgt": {
+    "prompt": "A coluna `docks` de um relatório de medidores chega como texto, e entre os valores estão `n/a` e `1O`. Um colega converte num laço com `int(text)` dentro de `try`, e `except ValueError: value = 0`. Por que a aula 12 faz de outro jeito?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 12; Python, aula 8.",
+    "choices": [
+      {
+        "text": "O `int` lê `1O` como dez, então só `n/a` vira 0, e um zero é de qualquer jeito o valor certo para uma lacuna.",
+        "why": "`1O` tem a letra O, então o `int` o recusa; e um zero afirma uma leitura."
+      },
+      {
+        "text": "O `pd.to_numeric(..., errors=\"coerce\")` para no primeiro valor ruim, então mostra menos que o laço.",
+        "why": "O `coerce` converte o que dá e transforma o resto em `NaN`, então toda falha aparece de uma vez."
+      },
+      {
+        "text": "Os dois viram zeros que passam por leituras; forçar e listar o que falhou nomeia `n/a` e `1O`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O laço dá o mesmo resultado, e a chamada do pandas só é mais rápida numa coluna longa.",
+        "why": "O laço esconde quais valores falharam; o par do pandas mantém o texto original para ler."
+      }
+    ]
+  },
+  "ex-3jcrvygh": {
+    "prompt": "Em `pydata`, `pip install numpy==2.5.3` falha com `2.5.3 Requires-Python >=3.12`: o `.venv` foi criado com o Python 3.11. Ana instala o Python 3.12 ao lado do antigo. O que vem agora?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 1; Python, aula 18.",
+    "choices": [
+      {
+        "text": "Apagar o `.venv` e refazê-lo com o 3.12: um ambiente só aponta para o Python que o criou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Acrescentar `--break-system-packages` à instalação, para o pip aceitar o NumPy novo.",
+        "why": "Essa opção trata do Python do próprio sistema, e a recusa aqui é sobre a versão."
+      },
+      {
+        "text": "Editar `version` e `executable` em `.venv/pyvenv.cfg` para apontarem o interpretador novo.",
+        "why": "Um ambiente não se atualiza no lugar; as bibliotecas dele foram instaladas para o Python antigo."
+      },
+      {
+        "text": "Rodar `python -m pip install --upgrade python` com o ambiente ativo.",
+        "why": "O pip instala bibliotecas num ambiente; o interpretador não é uma delas."
+      }
+    ]
+  },
+  "ex-3txhc7zb": {
+    "prompt": "Num notebook rodando o kernel `Python (pandas 2.2)`, `!pip install pyarrow` informa sucesso, e o `import pyarrow` da célula seguinte falha. O que aconteceu?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 3; Python, aula 18.",
+    "choices": [
+      {
+        "text": "O kernel tinha guardado os imports, e um `importlib.reload(pyarrow)` depois da instalação o encontra.",
+        "why": "O reload precisa de um módulo já importado; este nunca chegou ao ambiente do kernel."
+      },
+      {
+        "text": "O pyarrow precisa do conda, como a aula 3 descobriu, então o pip não o põe em kernel nenhum.",
+        "why": "O pip instalou o pyarrow na aula 1; foi o conda-forge que não tinha essa versão."
+      },
+      {
+        "text": "O pip instala no Python do sistema a menos que se passe `--user`, e os kernels não enxergam isso.",
+        "why": "O pip instala no ambiente a que pertence; a questão é qual `pip` rodou."
+      },
+      {
+        "text": "O `!pip` rodou o `pip` que o shell achou, de outro ambiente; o `%pip` usa o do kernel.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-47x3h3pg": {
+    "prompt": "O `weather_br.csv` veio de uma planilha configurada em português; as linhas dele são `date;rain_mm;temp_max` e `2025-01-01;0,0;29,9`. Qual linha lhe dá `rain_mm` como números que se podem somar?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 10; Python, aula 9.",
+    "choices": [
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", sep=\";\")`",
+        "why": "As colunas se separam, e `0,0` e `29,9` ficam como texto que nenhuma conta lê."
+      },
+      {
+        "text": "`csv.DictReader(open(\"weather_br.csv\"), delimiter=\";\")`",
+        "why": "O módulo `csv` separa as colunas e devolve todo valor como string."
+      },
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", sep=\";\", decimal=\",\")`",
+        "why": "Isso."
+      },
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", decimal=\",\", encoding=\"utf-8\")`",
+        "why": "Ele continua procurando vírgulas entre as colunas, e o cabeçalho não tem nenhuma."
+      }
+    ]
+  },
+  "ex-4abbt0pf": {
+    "prompt": "Uma Series de 12 leituras diárias tem 3 faltando; as 9 presentes somam 54,0. Em quantos por cento `s.mean()` é maior que `s.sum() / len(s)`? Arredonde para uma casa decimal.",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 12; Python, aula 21."
+  },
+  "ex-4abcg61q": {
+    "prompt": "Um CSV de alguns gigabytes precisa ser analisado num laptop com 16 GB de memória. Ponha os passos baratos na ordem em que a aula 20 os tenta, antes de recorrer a outra ferramenta.",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 20.",
+    "items": [
+      "Ler menos colunas, com `usecols` ou o `columns` do Parquet",
+      "Dar às colunas seus tipos já na leitura, com `dtype` e `parse_dates`",
+      "Guardar em Parquet o que você vai ler mais de uma vez",
+      "Ler em pedaços (chunks), quando a pergunta soma",
+      "Trabalhar numa amostra enquanto escreve a análise, e rodar no todo no fim"
+    ],
+    "trap": "Os pedaços vêm tarde porque só respondem a perguntas que somam, como uma contagem ou um total; menos colunas e tipos menores custam menos e ajudam qualquer pergunta."
+  },
+  "ex-4b00d48g": {
+    "prompt": "Associe cada jeito de trabalhar em Python puro sobre `rows`, as viagens como lista de dicionários, à linha que faz o mesmo trabalho sobre `trips`, o DataFrame.",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 17; Python, aula 7.",
+    "pairs": [
+      {
+        "left": "Contar as viagens por estação com `collections.Counter`",
+        "right": "`trips[\"start_station\"].value_counts()`"
+      },
+      {
+        "left": "Acrescentar os minutos de cada viagem a um `defaultdict(list)` por estação e somar cada lista",
+        "right": "`trips.groupby(\"start_station\")[\"minutes\"].sum()`"
+      },
+      {
+        "left": "Procurar o código de estação de cada viagem num dicionário de nomes",
+        "right": "`trips[\"start_station\"].map(by_code)`"
+      },
+      {
+        "left": "Uma compreensão de lista com um `if` que mantém as viagens de uma estação",
+        "right": "`trips[trips[\"start_station\"] == \"S05\"]`"
+      },
+      {
+        "left": "Um laço `for` que chama uma função uma vez por viagem",
+        "right": "`trips.apply(f, axis=1)`"
+      }
+    ],
+    "right_distractors": [
+      "`trips.merge(stations, left_on=\"start_station\", right_on=\"station_id\")`"
+    ]
+  },
+  "ex-4hteh1em": {
+    "prompt": "Um notebook chama `np.random.seed(42)` na primeira célula e sorteia uma amostra na quarta. Um colega acrescenta uma chamada a uma função auxiliar dele na terceira célula, e a amostra muda, embora a semente não tenha mudado. Que mudança faz a amostra ficar parada?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 8; Python, aula 5.",
+    "choices": [
+      {
+        "text": "Criar um Generator, `rng = np.random.default_rng(42)`, sortear dele e passá-lo aos auxiliares que precisem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Acrescentar `rng = np.random.default_rng(42)` no topo e continuar sorteando com `np.random.choice`.",
+        "why": "O `np.random.choice` ainda sorteia do gerador global; o `rng` só é usado quando chamado."
+      },
+      {
+        "text": "Declarar o gerador como `global` dentro do auxiliar, para os sorteios dele não alcançarem os números do notebook.",
+        "why": "O `global` deixa uma função atribuir um nome do módulo; não torna privado o estado compartilhado."
+      },
+      {
+        "text": "Manter `np.random.seed(42)` mas escolher uma semente maior, para os sorteios do auxiliar usarem outro trecho da sequência.",
+        "why": "A semente diz onde começa uma sequência compartilhada; qualquer sorteio ainda a avança para tudo o que vem depois."
+      }
+    ]
+  },
+  "ex-4jr7ab7b": {
+    "prompt": "Um modelo entrega uma previsão de 30 dias com formato `(30, 1)`; as temperaturas reais têm formato `(30,)`. De quantas diferenças `np.abs(forecast - actual).mean()` tira a média?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 6."
+  },
+  "ex-4p11b1v9": {
+    "prompt": "146 viagens não têm `end_station`. Quais destas deixam essas viagens fora do que devolvem, sem aviso? Marque todas as que se aplicam.",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aulas 13 e 14; Python, aula 21.",
+    "choices": [
+      {
+        "text": "`trips.groupby(\"end_station\").size()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`trips[\"end_station\"].value_counts()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`trips.groupby(\"end_station\", dropna=False).size()`",
+        "why": "O `dropna=False` faz da chave ausente um grupo próprio, `NaN`, com as 146."
+      },
+      {
+        "text": "`trips.merge(ids, left_on=\"end_station\", right_on=\"station_id\", how=\"left\")`",
+        "why": "Um left join mantém toda viagem e preenche o lado da estação com `NaN`."
+      },
+      {
+        "text": "`trips.merge(ids, left_on=\"end_station\", right_on=\"station_id\")`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-4rag4195": {
+    "prompt": "Quatro processos de trabalho precisam, cada um, de números aleatórios reproduzíveis a partir de uma semente e independentes entre si. Depois de parent = np.random.default_rng(2025), os filhos vêm de workers = parent.___(4).",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "spawn"
+        ]
+      }
+    ]
+  },
+  "ex-4tg4wyxd": {
+    "prompt": "`trips.pivot_table(index=\"plan\", columns=\"bike\", values=\"minutes\", aggfunc=\"median\", margins=True)` põe 14,2 no canto `All`, enquanto a mediana das quatro células é 15,3. Um revisor diz que o canto está errado. O que acontece?",
+    "hint": "Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 15.",
+    "choices": [
+      {
+        "text": "Uma soma das células bateria com o canto, então uma mediana também deveria; houve viagens contadas duas vezes.",
+        "why": "Somas das partes se somam; medianas das partes não, e nada foi contado duas vezes."
+      },
+      {
+        "text": "O canto é a mediana de todas as viagens; grupos de tamanhos diferentes dão outra mediana das medianas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O canto é uma média, porque `margins=True` acrescenta médias seja qual for o `aggfunc`.",
+        "why": "As margens usam o mesmo `aggfunc` das células, aplicado a todas as viagens da linha ou da coluna."
+      },
+      {
+        "text": "As células deixam de fora as 146 bicicletas perdidas e o canto as mantém, o que o puxa para baixo.",
+        "why": "Os dois pulam viagens sem minutos; a diferença está em como uma mediana se combina."
+      }
+    ]
+  },
+  "ex-53t6m4m1": {
+    "prompt": "O funil de março da Panela mostra que 4.467 das 9.242 sessões em celular que chegaram ao checkout pagaram. Tratando cada sessão como um sim ou não independente, qual é a margem de erro de 95% dessa taxa, pela fórmula do erro padrão de uma proporção? Responda em pontos percentuais, com uma casa decimal.",
+    "hint": "Estatística para Análise de Dados, aula 12; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 14."
+  },
+  "ex-540q047b": {
+    "prompt": "Na quebra por segmento do teste de checkout da Panela, o celular mostra um ganho de 0,62 ponto com p = 0,006. Uma gerente de produto escreve no slide: \"só há 0,6% de chance de o ganho no celular ser um acaso\". Qual frase diz corretamente o que o 0,006 significa?",
+    "hint": "Estatística para Análise de Dados, aula 14; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 11.",
+    "choices": [
+      {
+        "text": "Há 99,4% de chance de a página nova de fato ajudar os visitantes que compram pelo celular.",
+        "why": "Um menos p não é a probabilidade da alternativa; o p é calculado supondo a hipótese nula verdadeira."
+      },
+      {
+        "text": "O ganho no celular tem de ser grande, porque um p tão pequeno quanto esse exige um efeito grande.",
+        "why": "O p-valor mistura o tamanho do efeito com o tamanho da amostra; ele não mede o ganho."
+      },
+      {
+        "text": "A chance de a hipótese nula, a de nenhuma diferença, valer para os visitantes de celular é de 0,6%.",
+        "why": "O p é a probabilidade dos dados dada a nula, não da nula dados os dados."
+      },
+      {
+        "text": "Se a página não ajudasse no celular, uma diferença assim ou maior surgiria em 0,6% dos testes.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5f9ca9bn": {
+    "prompt": "Um relatório mensal diz que a taxa de checkout para pagamento da Panela caiu de 64,5% em fevereiro para 58,5% em março. Separado por aparelho, março é maior nos dois: desktop 83% contra 82%, celular 48% contra 47%. Qual é a explicação mais provável?",
+    "hint": "Estatística para Análise de Dados, aula 18; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 14.",
+    "choices": [
+      {
+        "text": "A alta dentro de cada aparelho é pequena demais para ser significativa, então a queda do total é o achado real.",
+        "why": "O total não é a visão mais confiável aqui; ele compara meses com parcelas diferentes de sessões em celular."
+      },
+      {
+        "text": "As taxas por aparelho enganam, porque o aparelho é um efeito do próprio checkout.",
+        "why": "O aparelho é definido antes de alguém chegar ao checkout, então separar por ele é a comparação justa."
+      },
+      {
+        "text": "Uma parcela maior dos checkouts de março veio de celulares, onde pagar é mais raro, então o total se deslocou.",
+        "why": "Isso."
+      },
+      {
+        "text": "A separação deve estar errada: se os dois aparelhos subiram, o total tem de subir também.",
+        "why": "Um total pode cair com todas as partes subindo, quando a mistura se desloca para a parte mais fraca; é o paradoxo de Simpson."
+      }
+    ]
+  },
+  "ex-5my8zehv": {
+    "prompt": "De 2023 a 2025 os pedidos mensais da Panela cresceram, e o preço mensal do arroz também; as duas séries têm correlação de 0,8. Antes que alguém chame o arroz de motor dos pedidos, o que o analista deveria correlacionar no lugar?",
+    "hint": "Estatística para Análise de Dados, aula 18; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 1.",
+    "choices": [
+      {
+        "text": "Quanto cada série variou de um mês para o outro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os postos das duas séries, com o coeficiente de Spearman.",
+        "why": "Duas tendências de alta também sobem juntas nos postos; os postos mantêm a deriva comum."
+      },
+      {
+        "text": "Os logaritmos das duas séries, para o crescimento virar aditivo.",
+        "why": "O logaritmo muda a escala de uma tendência, não a remove; as séries em log continuam derivando juntas."
+      },
+      {
+        "text": "As mesmas duas séries ao longo do dobro de meses.",
+        "why": "Mais meses de duas séries que derivam trazem mais deriva, não menos; a própria tendência é a armadilha."
+      }
+    ]
+  },
+  "ex-5vkeqg7x": {
+    "prompt": "A tabela RFM da Panela descreve a recência, em dias desde o último pedido, com primeiro quartil 6, mediana 33, terceiro quartil 196 e máximo 364. Onde fica a cerca superior da regra de 1,5 IQR, em dias?",
+    "hint": "Estatística para Análise de Dados, aula 9; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 15."
+  },
+  "ex-5x05w2km": {
+    "prompt": "Os resíduos de um modelo dos pedidos semanais da Panela, lidos em ordem de tempo, têm autocorrelação de defasagem 1 de 0,5: uma semana acima do modelo tende a ser seguida por outra semana acima dele. Quais conclusões decorrem disso? Marque todas as que se aplicam.",
+    "hint": "Estatística para Análise de Dados, aula 20; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 1.",
+    "choices": [
+      {
+        "text": "O que sobrou não é ruído no sentido que um modelo deveria deixar.",
+        "why": "Ruído não deveria lembrar a semana anterior; esses resíduos lembram."
+      },
+      {
+        "text": "Seus erros padrão e intervalos provavelmente estão estreitos demais.",
+        "why": "Resíduos correlacionados carregam menos informação independente do que a contagem sugere."
+      },
+      {
+        "text": "As previsões estão altas demais na média.",
+        "why": "Sequências dizem que os erros estão relacionados, não que pendem para um lado; isso é o viés, a média dos erros."
+      },
+      {
+        "text": "Ajustar o mesmo modelo com o dobro de semanas tornaria os resíduos independentes.",
+        "why": "Mais semanas repetem as mesmas sequências; a variável que falta precisa entrar no modelo."
+      },
+      {
+        "text": "Falta no modelo algo que muda ao longo do tempo.",
+        "why": "Sequências nos resíduos são um padrão que o modelo não captou."
+      }
+    ]
+  },
+  "ex-5x2nb3te": {
+    "prompt": "Uma média aparada de 10% de 400 cestas em A2:A401 descarta as 40 menores e as 40 maiores. No TRIMMEAN, o segundo argumento que pede exatamente isso é ___.",
+    "hint": "Estatística para Análise de Dados, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "0,2",
+          "0.2",
+          ",2",
+          "20%",
+          "20 %",
+          "0,20"
+        ]
+      }
+    ]
+  },
+  "ex-5zqkq7fb": {
+    "prompt": "Uma equipe de suporte registra os chamados que recebe por dia durante 90 dias: média de 3,1 por dia e variância de 9,4. Antes de modelar a contagem diária como Poisson, o que esse par de números sugere?",
+    "hint": "Estatística para Análise de Dados, aula 8.",
+    "choices": [
+      {
+        "text": "A taxa do modelo de Poisson deve ser fixada em 9,4 por dia, já que a taxa da Poisson é a variância.",
+        "why": "A taxa é estimada pela média; a Poisson exige que média e variância concordem, e estas não concordam."
+      },
+      {
+        "text": "Os chamados chegam em rajadas, e não de forma independente, então a Poisson se ajusta mal.",
+        "why": "Isso."
+      },
+      {
+        "text": "A contagem diária é binomial, e não Poisson, porque a variância é maior que a média.",
+        "why": "A variância da binomial, np(1 − p), é menor que a média, np, e não maior."
+      },
+      {
+        "text": "Noventa dias são poucos para comparar variância com média, então a Poisson continua valendo.",
+        "why": "Uma variância três vezes a média em noventa dias é um sinal de alerta, não uma oscilação."
+      }
+    ]
+  },
+  "ex-68nt186t": {
+    "prompt": "Entre os 4.679 clientes da tabela RFM da Panela, pedidos e gasto no último ano têm correlação forte. Um analista refaz o cálculo, com os mesmos pedidos e reais brutos, só para os 1.087 campeões, os de notas R e F de 4 ou 5, e encontra uma correlação bem mais fraca. Qual é o motivo mais provável?",
+    "hint": "Estatística para Análise de Dados, aula 17; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 15.",
+    "choices": [
+      {
+        "text": "Mil clientes são poucos para estimar uma correlação com alguma precisão.",
+        "why": "Mil pares fixam bem uma correlação; a causa é a faixa, não a contagem."
+      },
+      {
+        "text": "Entre os campeões o gasto deixa de depender dos pedidos, porque eles escolhem caixas bem maiores.",
+        "why": "Nada nos dados diz isso; a mesma relação vista por uma janela estreita só parece mais fraca."
+      },
+      {
+        "text": "Os campeões cobrem só o topo das contagens de pedidos, e uma faixa estreita esconde a relação.",
+        "why": "Isso."
+      },
+      {
+        "text": "Selecionar clientes pela nota transformou os pedidos numa variável ordinal, que o r de Pearson não sabe usar.",
+        "why": "Os pedidos continuam sendo contagens; escolher clientes pela nota estreitou a faixa sem mudar a escala."
+      }
+    ]
+  },
+  "ex-6hfsv4nt": {
+    "prompt": "O modelo de churn da Panela recebe o canal como duas colunas de 0 ou 1, `social` e `referral`, e não tem coluna para busca. O que o coeficiente de `referral` compara?",
+    "hint": "Estatística para Análise de Dados, aula 19; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 17.",
+    "choices": [
+      {
+        "text": "Nada claro até que uma terceira coluna, para busca, seja adicionada.",
+        "why": "Uma terceira coluna seria sempre um menos as outras duas, e não poderia ser separada do intercepto."
+      },
+      {
+        "text": "Um cliente de indicação com um de rede social, já que social é a coluna anterior.",
+        "why": "Social tem coluna própria; a linha de zeros, a busca, é a referência."
+      },
+      {
+        "text": "Um cliente de indicação com a média de todos os outros clientes.",
+        "why": "A comparação é com o nível que não tem coluna, a referência, que aqui é a busca."
+      },
+      {
+        "text": "Um cliente de indicação com um cliente de busca, mantidas fixas as outras entradas.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6s4f821a": {
+    "prompt": "Um relatório sobre os segmentos da Panela diz que clientes com nota de recência R igual a 4 \"pediram duas vezes mais recentemente\" que clientes com R igual a 2. O que está errado nessa frase?",
+    "hint": "Estatística para Análise de Dados, aula 2; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 15.",
+    "choices": [
+      {
+        "text": "Notas são quintis, com ordem e sem distâncias: a razão entre elas nada significa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada está errado, já que a recência em dias que está por trás das notas fica numa escala de razão.",
+        "why": "Os dias estão numa escala de razão; as notas não, e a frase divide as notas."
+      },
+      {
+        "text": "Está invertida: R igual a 4 quer dizer que o último pedido foi há mais tempo que R igual a 2.",
+        "why": "A recência é invertida na nota, então um pedido recente recebe a nota alta."
+      },
+      {
+        "text": "Deveria usar a diferença no lugar: R igual a 4 é dois pontos mais recente que R igual a 2.",
+        "why": "Uma diferença entre postos supõe passos iguais, e quintis de uma recência assimétrica não os têm."
+      }
+    ]
+  },
+  "ex-6yg11sw6": {
+    "prompt": "Suponha que o modelo logístico de churn da Panela dê aos clientes de rede social uma razão de chances de 2,0 em relação aos de busca, com todo o resto igual. Um cliente de busca idêntico em todo o resto tem probabilidade de churn de 0,5. Qual é a probabilidade de churn do cliente de rede social?",
+    "hint": "Estatística para Análise de Dados, aula 21; Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 17.",
+    "choices": [
+      {
+        "text": "1,00",
+        "why": "Isso dobra a probabilidade; a razão de chances dobra as chances, de 1 para 2."
+      },
+      {
+        "text": "0,67",
+        "why": "Isso."
+      },
+      {
+        "text": "0,75",
+        "why": "0,75 são chances de 3; dobrar chances de 1 dá 2, uma probabilidade de 2 ÷ 3."
+      }
+    ]
+  },
+  "ex-7556qac7": {
+    "prompt": "Associe cada comparação da semana de uma equipe de BI ao teste que as duas perguntas da aula, o tipo de resultado e os grupos, escolhem para ela.",
+    "hint": "Estatística para Análise de Dados, aula 16.",
+    "pairs": [
+      {
+        "left": "Se 2.000 visitantes de cada página compraram ou não",
+        "right": "teste qui-quadrado"
+      },
+      {
+        "left": "Receita semanal das mesmas 30 lojas, antes e depois de um novo layout",
+        "right": "teste t pareado"
+      },
+      {
+        "left": "Cesta média em quatro regiões de uma vez",
+        "right": "ANOVA"
+      },
+      {
+        "left": "Minutos de entrega, 30 por bairro, em dois bairros",
+        "right": "teste t de Welch"
+      },
+      {
+        "left": "Dois entregadores, oito tempos assimétricos cada, um bem distante",
+        "right": "teste de Mann-Whitney"
+      }
+    ],
+    "right_distractors": [
+      "teste t de uma amostra"
+    ]
+  },
+  "ex-7cmrx2qz": {
+    "prompt": "O teste de checkout da Panela precisou de 18.739 visitantes por grupo para detectar um ganho de 0,6 ponto. A equipe agora quer detectar 0,2 ponto. Trate a amostra como crescendo exatamente com o quadrado de quão pequeno é o efeito, mande todos os 2.400 visitantes diários do checkout para o teste e arredonde a duração para cima em semanas inteiras. Quantos dias o teste dura?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 8; Estatística para Análise de Dados, aula 15."
+  },
+  "ex-7j7dmyw5": {
+    "prompt": "A faixa de 80% em torno da previsão de pedidos da Panela para a próxima semana tem cerca de 800 pedidos de largura. Um colega diz que mais dois anos de histórico permitiriam deixá-la tão estreita quanto a cozinha quiser. Por que mais histórico não consegue isso?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 4; Estatística para Análise de Dados, aula 12.",
+    "choices": [
+      {
+        "text": "Um intervalo de 80% tem largura fixada pelo percentual, digam os dados e o modelo o que disserem.",
+        "why": "A largura vem do ruído e do modelo; só a cobertura que ele promete é fixa."
+      },
+      {
+        "text": "Semanas antigas descrevem um negócio menor que o de hoje, então incluí-las alarga todas as faixas, em vez de estreitá-las.",
+        "why": "Dados antigos podem enganar um modelo, mas o limite vale até para uma série que nunca mudou."
+      },
+      {
+        "text": "A faixa cobre uma semana futura, que tem ruído próprio; mais dados estreitam a dúvida sobre o nível, não esse ruído.",
+        "why": "Isso."
+      },
+      {
+        "text": "Funcionaria se a faixa viesse do `conf_int`, que dá um intervalo de confiança que encolhe com os dados.",
+        "why": "Apesar do nome, o `conf_int` de uma previsão devolve um intervalo de previsão."
+      }
+    ]
+  },
+  "ex-7kpmjf86": {
+    "prompt": "Um teste de um novo layout do cardápio termina com um intervalo de 95% para a diferença de conversão de −0,12 a +0,18 ponto. O efeito mínimo detectável do plano era 0,6 ponto. Como o resultado deve ser lido?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 10; Estatística para Análise de Dados, aula 22.",
+    "choices": [
+      {
+        "text": "Nenhum efeito que valha a pena, e o teste foi grande o bastante para dizer isso: a pergunta está respondida.",
+        "why": "Isso."
+      },
+      {
+        "text": "Inconclusivo: o intervalo contém o zero, então o teste foi pequeno demais para dizer.",
+        "why": "Essa leitura exige que o intervalo também alcance o EMD; este para muito abaixo de 0,6."
+      },
+      {
+        "text": "Inacabado: rodar de novo com o dobro de visitantes antes de decidir qualquer coisa.",
+        "why": "Mais visitantes só estreitariam um intervalo que já está dentro dos efeitos pequenos demais para importar."
+      },
+      {
+        "text": "Um ganho real pequeno, porque a ponta de cima do intervalo está acima de zero.",
+        "why": "O intervalo atravessa o zero, então nem a direção está estabelecida."
+      }
+    ]
+  },
+  "ex-7rp8ka5t": {
+    "prompt": "A tabela da campanha de churn da Panela dá, em cada limiar, os clientes marcados e os que saíram entre eles: 0,2, 479 e 282; 0,3, 373 e 256; 0,4, 319 e 235; 0,5, 259 e 204. Mantenha a taxa de retenção de um em quatro e R$ 600 por cliente mantido, mas suponha que cada oferta custe R$ 60 em vez de R$ 30. Qual limiar dá agora o maior valor líquido?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 17; Estatística para Análise de Dados, aula 21.",
+    "choices": [
+      {
+        "text": "0,5",
+        "why": "R$ 15.060: menos ofertas economizam, mas perdem mais clientes do que economizam."
+      },
+      {
+        "text": "0,4",
+        "why": "Isso."
+      },
+      {
+        "text": "0,3",
+        "why": "R$ 16.020, noventa reais abaixo dos R$ 16.110 de 0,4."
+      },
+      {
+        "text": "0,2",
+        "why": "R$ 13.560: o pico com a oferta mais barata; dobrar o custo de cada alarme falso o empurra para cima."
+      }
+    ]
+  },
+  "ex-7s7n27r6": {
+    "prompt": "Para impedir que códigos de indicação vazem entre os grupos, a Panela planeja sortear 20 cidades em vez de visitantes individuais, com o mesmo tráfego total. Por que isso custa muito poder?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 9; Estatística para Análise de Dados, aula 10.",
+    "choices": [
+      {
+        "text": "As cidades têm tamanhos diferentes, então todo teste assim mostra um descompasso de proporção amostral.",
+        "why": "Uma divisão desigual planejada não é descompasso; SRM é um desvio da divisão planejada."
+      },
+      {
+        "text": "Vinte cidades de tamanhos diferentes não se dividem por igual, então os tamanhos dos dois grupos deixam de bater.",
+        "why": "Tamanhos desiguais custam pouco; a grande perda vem de membros de um agrupamento se comportarem igual."
+      },
+      {
+        "text": "Sortear cidades inteiras quebra a atribuição fixa que o hash dá a cada visitante.",
+        "why": "Uma cidade pode passar pelo hash e ficar no grupo tão fixa quanto um visitante; não é a fixação que se perde."
+      },
+      {
+        "text": "Pessoas de uma cidade se parecem, então o teste tem perto de vinte unidades independentes, não milhares.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7w5gf8q4": {
+    "prompt": "Um produto pequeno vendeu 3, 1, 0 e 2 unidades em quatro dias, e a previsão foi de 2 unidades por dia. O MAPE não pode ser calculado por causa do zero. Qual é o WAPE, o erro absoluto total dividido pelo total real, em por cento? Uma casa decimal.",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 5."
+  },
+  "ex-7z6nqyef": {
+    "prompt": "As datas do Carnaval são conhecidas com anos de antecedência, então um modelo semanal pode receber uma coluna de dias de Carnaval por semana, para o passado e para as semanas que prevê. O statsmodels chama essa coluna de fora da série de série ___.",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "exógena",
+          "exogena",
+          "exogenous",
+          "exog"
+        ]
+      }
+    ]
+  },
+  "ex-88y470tb": {
+    "prompt": "Testes em que nada mudou são lidos de quatro jeitos. Ponha os jeitos em ordem de quantas vezes declaram um vencedor falso, pela conta e pela simulação da aula, do que menos declara para o que mais declara.",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 11.",
+    "items": [
+      "Uma olhada planejada no fim, na única métrica primária",
+      "Uma olhada por semana, parando no primeiro cruzamento",
+      "Uma olhada por dia, parando no primeiro cruzamento",
+      "Uma olhada no fim, em vinte métricas independentes"
+    ],
+    "trap": "Espiar todo dia parece o pior hábito, e dá 26,5%; vinte métricas lidas uma vez dão 64%. Até uma olhada semanal mais que dobra os 4,6% da olhada planejada, para 11,3%."
+  },
+  "ex-8dda59ps": {
+    "prompt": "Subir o limiar de churn do Norte para cerca de 0,5 traz os alarmes falsos dele para o nível das outras regiões. Por que a aula ainda chama isso de correção mais fraca? Marque todas as que se aplicam.",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 19.",
+    "choices": [
+      {
+        "text": "Dois clientes com o mesmo risco são tratados de modo diferente por causa de onde moram.",
+        "why": "Usar o grupo explicitamente precisa ser defendido, e em algumas decisões não é permitido."
+      },
+      {
+        "text": "Um limiar ajustado em cem clientes fiéis é ele mesmo um número ruidoso.",
+        "why": "Os clientes do Norte que ficaram são 100 pessoas, poucas para um corte preciso."
+      },
+      {
+        "text": "Exige retreinar o modelo com a região como entrada.",
+        "why": "Só o limiar se move; nada é retreinado, e por isso é a correção mais rápida."
+      },
+      {
+        "text": "O modelo ainda lê um ritmo lento como desistência, então o próximo uso dele encontra o problema de novo.",
+        "why": "A causa continua no modelo; só uma decisão foi consertada."
+      },
+      {
+        "text": "Baixa a revocação de todas as regiões, não só a do Norte.",
+        "why": "Só o limiar do Norte muda; as marcações das outras regiões ficam como estavam."
+      }
+    ]
+  },
+  "ex-8hfvfy14": {
+    "prompt": "Duas coortes chegaram ao mês 3: uma coorte de campanha de 1.200 clientes com 60% ainda pedindo, e uma coorte comum de 300 com 90%. Seguindo a regra da aula para tirar a média de coortes de tamanhos muito diferentes, qual é a retenção combinada no mês 3, em por cento?",
+    "hint": "Técnicas Analíticas: Séries Temporais, Testes A/B e Coortes, aula 12; Estatística para Análise de Dados, aula 3."
+  },
+  "ex-8qafwh10": {
+    "prompt": "Seu extrato no nível do pedido acrescenta `sum(total) OVER (PARTITION BY customer_id) AS customer_revenue`, para que um modelo veja o tamanho de cada comprador. Um colega então informa a receita como a soma dessa coluna. O cliente A tem três pedidos, de 10, 20 e 30; o cliente B tem um pedido, de 40. Que total o colega informa?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 6; Limpeza e Preparação de Dados, aula 12."
+  },
+  "ex-8r580jx3": {
+    "prompt": "A tabela de clientes agora está no MySQL 8, com a collation padrão. Quatro linhas têm as cidades `São Paulo`, `SAO PAULO`, `Sao Paulo` e `são paulo`, todas em forma composta e sem espaços sobrando. O que `SELECT count(DISTINCT city)` devolve ali, e no PostgreSQL para as mesmas quatro linhas?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 12; Limpeza e Preparação de Dados, aula 6.",
+    "choices": [
+      {
+        "text": "4 nos dois: nenhum motor ignora caixa ou acento sem a consulta pedir",
+        "why": "A collation padrão do MySQL ignora acento e caixa, e o `DISTINCT` a usa."
+      },
+      {
+        "text": "2 no MySQL, que ignora caixa mas não acento, e 4 no PostgreSQL",
+        "why": "O `ai` de `utf8mb4_0900_ai_ci` quer dizer que ele ignora acento também."
+      },
+      {
+        "text": "1 nos dois, porque o `DISTINCT` compara pela collation padrão sem caixa de cada motor",
+        "why": "O PostgreSQL compara texto byte a byte, a menos que se peça outra coisa."
+      },
+      {
+        "text": "1 no MySQL, onde essas grafias são uma só string, e 4 no PostgreSQL",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8rsj69z6": {
+    "prompt": "Você leva o placar de qualidade do dado para um painel e escreve a parcela como `100 * failing / tested`, em que as duas colunas são resultados de `count(*)`. Para a regra do e-mail, 282 reprovados de 2.413 testados, o que o PostgreSQL devolve nessa coluna?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 3; Limpeza e Preparação de Dados, aula 1."
+  },
+  "ex-8tz17b3c": {
+    "prompt": "Para montar um conjunto de treino depressa, um notebook roda `SELECT * FROM orders LIMIT 5000` e salva as linhas. Depois que um colega cria um índice em `orders`, sem gravar nenhuma linha, a mesma célula devolve outras 5.000. Por quê?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4; Limpeza e Preparação de Dados, aula 17.",
+    "choices": [
+      {
+        "text": "Sem `ORDER BY`, as linhas vêm numa ordem que ninguém prometeu, e um índice novo pode mudá-la.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `LIMIT` sorteia uma amostra, e sem semente fixada sorteia outra a cada execução.",
+        "why": "O `LIMIT` não sorteia: é uma fatia arbitrária de um arranjo arbitrário."
+      },
+      {
+        "text": "O `LIMIT` fica com as primeiras linhas inseridas, então o índice deve ter reescrito essa ordem.",
+        "why": "Não existe ordem de inserção guardada; sem `ORDER BY` não há ordem nenhuma."
+      },
+      {
+        "text": "Um índice pode esconder linhas de um `SELECT` simples, então a tabela lida não é a mesma.",
+        "why": "Um plano nunca muda a resposta; só a ordem de um resultado sem ordem pode mudar."
+      }
+    ]
+  },
+  "ex-93x6pd8g": {
+    "prompt": "O painel de churn lê `monthly_revenue`, uma view materializada atualizada por um job noturno. A atualização falhou quatro noites seguidas e ninguém percebeu. O que o painel está mostrando, e o que a aula 7 sugere para que quem lê consiga saber?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 7; Limpeza e Preparação de Dados, aula 1.",
+    "choices": [
+      {
+        "text": "Nenhuma linha, porque uma atualização que falha esvazia o resultado; um alerta na contagem de linhas pega.",
+        "why": "Nada a esvazia; as últimas linhas guardadas ficam, e são lidas como se fossem atuais."
+      },
+      {
+        "text": "A última atualização que deu certo, como atual; uma coluna `refreshed_at` deixa cada relatório imprimir a idade.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os números de hoje, porque ler uma view materializada roda a consulta de novo quando as linhas estão velhas.",
+        "why": "Isso é uma view comum. Uma view materializada guarda as linhas e as serve até ser atualizada."
+      },
+      {
+        "text": "Um erro a cada leitura até uma atualização dar certo, o que deixa a falha visível já na primeira manhã.",
+        "why": "A leitura dá erro só antes da primeira atualização; depois disso as linhas guardadas são servidas."
+      }
+    ]
+  },
+  "ex-95qys6kd": {
+    "prompt": "Para um modelo de elasticidade de preço, você precisa do que cada item de pedido de 2025 de fato cobrou. O catálogo lista a rúcula a R$ 4,90 e a R$ 5,20, sem data em nenhum dos dois. De onde deve vir o preço?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 2; Limpeza e Preparação de Dados, aula 11.",
+    "choices": [
+      {
+        "text": "Do catálogo, já que um preço guardado no item é uma cópia que a normalização remove.",
+        "why": "O preço no item é outro fato, quanto custou naquele dia, e não uma cópia do preço de hoje."
+      },
+      {
+        "text": "Do catálogo, ficando com o maior dos dois preços de cada produto como o atual.",
+        "why": "Não se sabe qual preço é o atual, e o preço de hoje não é o que uma venda antiga custou."
+      },
+      {
+        "text": "Do `unit_price` de cada item, que registra quanto aquela venda custou no dia.",
+        "why": "Isso."
+      },
+      {
+        "text": "Do catálogo, juntado pelo código, com a média dos dois preços de cada produto.",
+        "why": "Uma média é um preço que ninguém pagou, em dia nenhum."
+      }
+    ]
+  },
+  "ex-99f3bry8": {
+    "prompt": "A primeira consulta de enriquecimento do curso de limpeza faz um left join dos clientes com `ref_states` pelas duas letras, e os 104 clientes cujo estado está escrito por extenso saem com a região em branco. Um colega acrescenta `WHERE s.region <> 'Norte'` para deixar de fora os clientes do Norte. O que acontece com os 104?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5; Limpeza e Preparação de Dados, aula 14.",
+    "choices": [
+      {
+        "text": "A consulta é recusada: uma condição da tabela da direita tem de ir na cláusula `ON`.",
+        "why": "É SQL válido e roda; é por isso que o erro sobrevive."
+      },
+      {
+        "text": "Ficam, porque um `LEFT JOIN` mantém toda linha da esquerda, diga o `WHERE` depois o que disser.",
+        "why": "O `WHERE` roda depois da junção e descarta as linhas que ela inventou, junto com o resto que falha."
+      },
+      {
+        "text": "Somem: a região é NULL, então o teste é desconhecido e o left join passa a agir como um inner.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ficam, porque uma região NULL não é `'Norte'`, então o teste `<>` é verdadeiro para cada um.",
+        "why": "Comparar NULL com qualquer coisa dá desconhecido, e o `WHERE` só mantém o que é verdadeiro."
+      }
+    ]
+  },
+  "ex-9fweh23t": {
+    "prompt": "Um parceiro manda o histórico de pedidos como um arquivo SQLite. A tabela `orders` declara `customer_id INTEGER REFERENCES customers (id)`, e ele diz que isso prova que todo pedido tem cliente. Antes de suas variáveis de churn dependerem disso, o que fazer?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 12; Limpeza e Preparação de Dados, aula 11.",
+    "choices": [
+      {
+        "text": "Nada além disso: o SQLite conferiu cada referência ao gravar cada linha, como o PostgreSQL faz.",
+        "why": "No SQLite as chaves estrangeiras vêm desligadas, e um arquivo gravado assim pode ter órfãos."
+      },
+      {
+        "text": "Contar os órfãos mesmo assim: o SQLite só aplica chave estrangeira onde a conexão a ligou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Conferir `typeof(customer_id)`: a referência foi aplicada, só o tipo declarado é que não foi.",
+        "why": "No SQLite o tipo é frouxo, e a referência também, a menos que uma conexão a tenha ligado."
+      },
+      {
+        "text": "Conferir só pedidos de clientes apagados: o SQLite ignora o `ON DELETE`, mas checa cada insert.",
+        "why": "Os inserts também não foram conferidos, a menos que `PRAGMA foreign_keys = ON` estivesse na conexão."
+      }
+    ]
+  },
+  "ex-9q02vkgw": {
+    "prompt": "Para a tabela limpa de clientes, um colega propõe abandonar os códigos no estilo `C00001` e usar o e-mail em minúsculas como chave primária, já que o casamento de duplicados já o comparou. O que descarta isso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 1; Limpeza e Preparação de Dados, aula 5.",
+    "choices": [
+      {
+        "text": "Clientes de loja muitas vezes não têm e-mail, e quem se cadastra de novo troca o endereço.",
+        "why": "Isso."
+      },
+      {
+        "text": "Passar para minúsculas junta endereços que só diferem na caixa, e podem ser duas pessoas.",
+        "why": "O casamento passou os endereços para minúsculas de propósito; a caixa não separa duas pessoas aqui."
+      },
+      {
+        "text": "Um e-mail é longo demais para um bom índice, então toda junção pela chave viraria varredura.",
+        "why": "O tamanho não é a objeção; uma chave natural falha por faltar ou por mudar."
+      },
+      {
+        "text": "Uma chave primária tem de ser um número gerado pelo banco, e um e-mail é texto.",
+        "why": "Chaves de texto são permitidas; o problema desta é que ela pode faltar ou mudar."
+      }
+    ]
+  },
+  "ex-a0ecd12n": {
+    "prompt": "Seu extrato noturno roda cinco consultas (clientes, pedidos, itens, reembolsos, pesquisa) dentro de uma transação, no nível padrão do PostgreSQL, enquanto a loja continua recebendo pedidos. Alguns itens extraídos apontam para pedidos que o arquivo de pedidos não tem. O que faz as cinco consultas verem um só momento?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Rodar em `READ UNCOMMITTED`, para ver também os pedidos que outras sessões ainda gravam.",
+        "why": "Isso mostraria trabalho inacabado, e o PostgreSQL o trata como `READ COMMITTED` de todo modo."
+      },
+      {
+        "text": "Pôr `FOR UPDATE` em cada consulta, para nenhum pedido entrar até o extrato fazer commit.",
+        "why": "Uma trava de linha segura as linhas já lidas; não impede pedidos novos e seus itens de chegarem."
+      },
+      {
+        "text": "Nada além disso: uma transação já lê uma visão consistente no nível padrão.",
+        "why": "Em `READ COMMITTED` cada comando pega uma visão nova, então cinco consultas veem cinco momentos."
+      },
+      {
+        "text": "Iniciar a transação em `REPEATABLE READ`, para a transação inteira ler uma só visão.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-adf77e15": {
+    "prompt": "Uma consulta de variáveis sobre `orders`, com um milhão de linhas, filtra `WHERE date(placed_at) = DATE '2025-03-01'`. O `EXPLAIN ANALYZE` mostra um `Seq Scan` que esperava 5.000 linhas e achou 1.558, embora `placed_at` tenha índice. Que mudança corrige a varredura e a estimativa?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 10.",
+    "choices": [
+      {
+        "text": "`WHERE placed_at::date = DATE '2025-03-01'`, já que um cast não é uma função",
+        "why": "Um cast embrulha a coluna como uma função faz, e o índice de `placed_at` segue sem uso."
+      },
+      {
+        "text": "`ANALYZE orders`, para o planejador coletar estatística de `date(placed_at)` também",
+        "why": "Estatística é guardada para colunas; o resultado da função não é uma, então o palpite segue o padrão."
+      },
+      {
+        "text": "`WHERE date(placed_at) BETWEEN DATE '2025-03-01' AND DATE '2025-03-01'`",
+        "why": "A coluna continua dentro de `date()`, então nem o índice nem a estatística se aplicam."
+      },
+      {
+        "text": "`WHERE placed_at >= DATE '2025-03-01' AND placed_at < DATE '2025-03-02'`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-aegv295s": {
+    "prompt": "Você confere os totais de pedido do pandas contra os do SQL com um FULL JOIN por order_id. A condição a.total <> b.total fica calada num par em que o total de um dos lados é NULL, porque essa comparação é desconhecida. Escrita como a.total IS ___ b.total, a condição responde verdadeiro também para esse par.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4; Limpeza e Preparação de Dados, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "DISTINCT FROM",
+          "distinct from"
+        ]
+      }
+    ]
+  },
+  "ex-agzptdr8": {
+    "prompt": "Antes de juntar os itens de pedido ao catálogo, um colega passa o catálogo por `SELECT DISTINCT *` para tirar os duplicados, e depois junta pelo código do produto. O que acontece com os itens de rúcula, banana e açúcar?",
+    "hint": "Limpeza e Preparação de Dados, aula 5; Bancos de Dados Relacionais e SQL, aula 4.",
+    "choices": [
+      {
+        "text": "Cada um junta uma vez, porque o `DISTINCT` deixa uma única linha para cada código de produto.",
+        "why": "O `DISTINCT` compara linhas inteiras, não uma coluna; linhas que diferem em algo ficam as duas."
+      },
+      {
+        "text": "Continuam duplicados: as duas linhas de cada código diferem no preço, e o `DISTINCT` mantém as duas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada um junta uma vez com o preço novo, já que o `DISTINCT` fica com a última linha carregada.",
+        "why": "O `DISTINCT` não escolhe qual cópia sobrevive, e aqui fica com as duas."
+      },
+      {
+        "text": "Somem, porque o `DISTINCT` remove toda linha cujo código de produto se repete.",
+        "why": "Nada sai a menos que linhas inteiras sejam idênticas, e estas não são."
+      }
+    ]
+  },
+  "ex-at55q66c": {
+    "prompt": "A exportação do CRM do mês que vem tem uma linha com `customer_id` em branco, que o `\\copy` carrega como NULL. Quais destas ainda acham os pedidos cujo cliente falta no CRM? Marque todas as que se aplicam.",
+    "hint": "Limpeza e Preparação de Dados, aula 11; Bancos de Dados Relacionais e SQL, aula 7.",
+    "choices": [
+      {
+        "text": "`WHERE NOT EXISTS (SELECT 1 FROM raw.customers c WHERE c.customer_id = o.customer_id)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`LEFT JOIN raw.customers c ON c.customer_id = o.customer_id WHERE c.email IS NULL`",
+        "why": "Pega também clientes que existem e não têm e-mail."
+      },
+      {
+        "text": "`WHERE o.customer_id NOT IN (SELECT customer_id FROM raw.customers)`",
+        "why": "Um NULL na subconsulta faz o `NOT IN` não devolver linha nenhuma."
+      },
+      {
+        "text": "`LEFT JOIN raw.customers c ON c.customer_id = o.customer_id WHERE c.customer_id IS NULL`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ayvj1d39": {
+    "prompt": "Um colega carrega o `ordered_at` do site numa coluna `timestamp` do PostgreSQL, tirando o `Z` antes, e monta a receita diária com ela. Um pedido carimbado `2025-03-01T01:30:00Z` foi feito por um cliente em São Paulo. Em que dia ele cai, e em qual deveria cair?",
+    "hint": "Limpeza e Preparação de Dados, aula 7; Bancos de Dados Relacionais e SQL, aula 3.",
+    "choices": [
+      {
+        "text": "Cai em 28 de fevereiro, porque uma coluna `timestamp` converte para o fuso do servidor.",
+        "why": "O `timestamp` guarda os dígitos que recebeu e não sabe nada de fuso."
+      },
+      {
+        "text": "Cai em 1º de março e pertence a ele também, às 04:30, três horas depois em São Paulo.",
+        "why": "São Paulo fica atrás do UTC, então o relógio de lá marcava três horas antes, não depois."
+      },
+      {
+        "text": "Cai em 1º de março e pertence a 28 de fevereiro, às 22:30 no relógio do cliente.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cai em 1º de março, o que está certo: o `Z` marca o formato do texto, não um relógio.",
+        "why": "`Z` quer dizer UTC, e São Paulo fica três horas atrás dele o ano inteiro."
+      }
+    ]
+  },
+  "ex-b0vzxtaj": {
+    "prompt": "Você está transformando `raw.customers` numa tabela cujo `customer_id` é chave primária, antes de qualquer pedido ser juntado a ela. Ponha os passos em ordem, do primeiro ao último.",
+    "hint": "Limpeza e Preparação de Dados, aula 11; Bancos de Dados Relacionais e SQL, aula 9.",
+    "items": [
+      "Descartar as linhas que repetem outra em todas as colunas",
+      "Rodar `GROUP BY customer_id HAVING count(*) > 1` e não obter linha",
+      "Declarar `customer_id` como chave primária da tabela",
+      "Juntar os pedidos aos clientes"
+    ],
+    "trap": "Conferir a chave primeiro aponta 37 repetições que são só linhas copiadas, e declarar a chave primeiro faz a carga falhar nessas mesmas cópias em vez de removê-las."
+  },
+  "ex-bkk0v6mm": {
+    "prompt": "Receita por categoria a partir dos itens de pedidos entregues: um `GROUP BY category` em SQL soma R$ 2.343.926,15, e o `sold.groupby(\"category\")[\"line_cents\"].sum() / 100` de um colega soma R$ 37.761,35 a menos. Ninguém filtrou nada. Por que diferem?",
+    "hint": "Limpeza e Preparação de Dados, aula 16; Bancos de Dados Relacionais e SQL, aula 6.",
+    "choices": [
+      {
+        "text": "O pandas descarta linhas com chave em branco se não receber `dropna=False`; o SQL junta os NULL num grupo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os itens dos dois códigos desconhecidos têm `line_cents` em branco, e o pandas pula vazios na soma.",
+        "why": "Os itens sabem quanto cobraram; o que está em branco é a chave de categoria."
+      },
+      {
+        "text": "O pandas somou os centavos como inteiros e o SQL somou floats, e o erro de arredondamento cresceu.",
+        "why": "Um erro de arredondamento não cairia exatamente nos itens dos dois códigos ausentes."
+      },
+      {
+        "text": "O left join com o catálogo descartou os itens dos dois códigos que o catálogo não lista.",
+        "why": "Um left join mantém esses itens, com nome e categoria em branco."
+      }
+    ]
+  },
+  "ex-bkwkrmte": {
+    "prompt": "Uma balança do depósito registra pesos até 30 kg e não salva nada acima disso. Os vazios são bem mais comuns nos pedidos das seis empresas do que nos das famílias. Um colega os chama de faltantes ao acaso dado o tipo de cliente e preenche cada um com a mediana do tipo. O que diz a aula 3?",
+    "hint": "Limpeza e Preparação de Dados, aula 3.",
+    "choices": [
+      {
+        "text": "É MCAR: a balança falha do mesmo jeito para todos, então qualquer peso registrado serve.",
+        "why": "As falhas atingem justamente os volumes pesados, então os pesos registrados não são amostra justa."
+      },
+      {
+        "text": "O vazio depende do próprio peso, então é MNAR; o tipo de cliente só prevê os volumes pesados.",
+        "why": "Isso."
+      },
+      {
+        "text": "É MAR, já que os vazios se alinham com uma coluna do arquivo, e preencher por grupo é a cura.",
+        "why": "Alinhar-se com uma coluna visível é também a cara do MNAR; a hora fez o mesmo no caso do cronômetro."
+      },
+      {
+        "text": "Nada falta: um volume acima de 30 kg não tem peso a registrar, como a entrega de uma retirada.",
+        "why": "O volume tinha peso e a balança não o salvou; uma retirada não tem entrega nenhuma."
+      }
+    ]
+  },
+  "ex-bmcjd3s1": {
+    "prompt": "Ligue cada vazio de uma tabela diária ao tratamento que a aula 4 dá a ele.",
+    "hint": "Limpeza e Preparação de Dados, aula 4.",
+    "pairs": [
+      {
+        "left": "O câmbio do euro num dia sem lançamento",
+        "right": "Levar o último valor adiante"
+      },
+      {
+        "left": "Unidades vendidas num domingo com a loja fechada",
+        "right": "Preencher com zero"
+      },
+      {
+        "left": "Unidades vendidas num dia em que o caixa travou",
+        "right": "Deixar em branco"
+      },
+      {
+        "left": "Uma entrega que o cronômetro parou de medir em duas horas",
+        "right": "Manter o vazio e sinalizar o que ele quer dizer"
+      }
+    ],
+    "right_distractors": [
+      "Preencher com a mediana da coluna"
+    ]
+  },
+  "ex-bpej4zb3": {
+    "prompt": "A meta de uma loja era R$ 10.000 em janeiro e R$ 30.000 em fevereiro, e ela vendeu R$ 12.000 e R$ 24.000. Calculado do jeito que a aula 13 calcula a tabela do ano, qual é o atingimento nos dois meses, em porcentagem?",
+    "hint": "Limpeza e Preparação de Dados, aula 13."
+  },
+  "ex-bv0y3569": {
+    "prompt": "Um arquivo de países de fornecedores é lido com pd.read_csv(path, dtype=str), e as linhas da Namíbia voltam com o país em branco, porque o pandas transformou o código NA num valor faltante. Passar ___=False junto com na_values=[\"\"] mantém o código como texto.",
+    "hint": "Limpeza e Preparação de Dados, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "keep_default_na"
+        ]
+      }
+    ]
+  },
+  "ex-bx5xhed4": {
+    "prompt": "Você está acrescentando checagens a `checks.py`, para rodar a cada reconstrução a partir da exportação do mês que vem. Quais pertencem a ele? Marque todas as que se aplicam.",
+    "hint": "Limpeza e Preparação de Dados, aula 17.",
+    "choices": [
+      {
+        "text": "Toda linha do registro de mudanças nomeia sua regra",
+        "why": "Isso."
+      },
+      {
+        "text": "O pedido médio é R$ 94,06",
+        "why": "É um número que se move com o dado, não uma promessa das tabelas."
+      },
+      {
+        "text": "`order_id` é único",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhum total de pedido é negativo",
+        "why": "Isso."
+      },
+      {
+        "text": "Há 28.526 pedidos",
+        "why": "Uma contagem falha no primeiro pedido novo; o lugar dela é o log."
+      }
+    ]
+  },
+  "ex-bxta100w": {
+    "prompt": "A Ana treina uma rede em PyTorch no `churn.csv` com parada antecipada e paciência de 20, julgando cada época num conjunto de validação sorteado ao acaso entre todas as 18 fotografias mensais. A rede vai pontuar assinantes em 1º de janeiro de 2026. O que há de errado com esse conjunto de validação?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 3; Deep Learning: Redes Neurais na Prática, aula 7.",
+    "choices": [
+      {
+        "text": "Meses posteriores estão nele: a época mantida sai de uma divisão que deixa o futuro entrar.",
+        "why": "Isso."
+      },
+      {
+        "text": "A paciência de 20; com uma paciência de 1, o mesmo conjunto de validação aleatório já serviria.",
+        "why": "A paciência troca ruído por épocas desperdiçadas; não decide quais meses fazem o julgamento."
+      },
+      {
+        "text": "Nada, já que a parada antecipada guarda os pesos da melhor de todas as épocas, e não os da última.",
+        "why": "Guardar os melhores pesos não muda quais meses os julgaram: uma divisão embaralhada deixa setembro julgar agosto."
+      },
+      {
+        "text": "Ele devia ser estratificado, para que cada parte tivesse a mesma proporção de quem sai.",
+        "why": "Estratificar fixa as proporções das classes e não faz nada contra meses posteriores julgando os anteriores."
+      }
+    ]
+  },
+  "ex-c47sca3z": {
+    "prompt": "A Ana treina uma rede em PyTorch para o crédito de retenção com entropia cruzada binária e precisa ficar com um de vários checkpoints, julgados nos meses de validação. Por qual número ela deve escolher?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 9; Deep Learning: Redes Neurais na Prática, aula 4.",
+    "choices": [
+      {
+        "text": "A menor perda de treino, porque mostra qual checkpoint aprendeu os dados de churn mais a fundo.",
+        "why": "A perda de treino continua caindo à medida que a rede se ajusta às linhas que já viu; não diz nada sobre meses novos."
+      },
+      {
+        "text": "A menor perda de validação, porque é exatamente esse o número que a rede foi treinada para fazer diminuir.",
+        "why": "A perda é o que o treino segue; quem escolhe é o número que corresponde à decisão."
+      },
+      {
+        "text": "A maior acurácia de validação, porque ela conta cada assinante que a rede acerta.",
+        "why": "Numa classe rara a acurácia quase não se mexe enquanto o dinheiro se mexe muito."
+      },
+      {
+        "text": "O valor líquido por mil linhas no corte de equilíbrio, com a perda guardada para acompanhar o treino.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-c93zxg3a": {
+    "prompt": "Uma rede para o crédito de retenção continuou treinando enquanto sua perda de validação subia por muitas épocas e sua acurácia de validação ficava parada. A Ana agora manda o crédito onde a chance for de pelo menos 0,278. O que ela deve conferir primeiro?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 11; Deep Learning: Redes Neurais na Prática, aula 6.",
+    "choices": [
+      {
+        "text": "Se 0,5 se sai melhor, já que a saída de uma sigmoide é calibrada em torno de meio por construção.",
+        "why": "0,5 é um padrão, e nenhuma saída é calibrada por construção; isso tem de ser conferido."
+      },
+      {
+        "text": "A ROC AUC em meses separados, já que uma ordenação tão boa faria o corte mandar os créditos certo.",
+        "why": "A AUC só olha a ordem das pontuações, então não enxerga chances altas ou baixas demais."
+      },
+      {
+        "text": "Se as chances são honestas, já que o corte supõe que 0,278 quer dizer que 27,8% deles saem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: com a acurácia parada a rede não sobreajustou, então as chances podem ser lidas como vêm.",
+        "why": "Uma perda de validação subindo sob uma acurácia parada é uma rede ficando confiante demais, que é justamente um problema de nível."
+      }
+    ]
+  },
+  "ex-c9ha9nnb": {
+    "prompt": "Uma rede de churn em PyTorch, em dados onde uma linha em dezessete é de quem sai, quase não manda créditos quando sua saída sigmoide é cortada em 0,5. Um colega copia cada um que sai umas dezesseis vezes, depois divide as linhas em treino e validação, e relata uma AUC de validação muito maior. O que a Ana deve dizer a ele?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 13; Deep Learning: Redes Neurais na Prática, aula 4.",
+    "choices": [
+      {
+        "text": "O ganho é real, porque copiar cada assinante que sai dá à rede muito mais exemplos de saída com que aprender.",
+        "why": "Reamostrar muda a proporção e não a contagem: a cópia de quem sai não é alguém novo saindo."
+      },
+      {
+        "text": "Ele devia usar pesos de classe, que sobem a AUC sem copiar uma única linha.",
+        "why": "Os pesos de classe não melhoraram a ordenação; subiram todas as chances e mudaram o corte útil."
+      },
+      {
+        "text": "Está correto desde que a rede use dropout, que impede que ela decore linhas repetidas.",
+        "why": "O dropout não faz nada contra cópias do mesmo assinante sendo avaliadas do lado da validação."
+      },
+      {
+        "text": "Cópias de quem sai estão agora dos dois lados, então o ganho é vazamento; a raridade se trata no corte.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-cmfckqtq": {
+    "prompt": "Nos seis meses de teste, uma rede em PyTorch treinada com uma semente fez R$ 22.900, contra R$ 22.304 do LightGBM. Antes de a Ana escrever que a rede vence, quais conferências os dois cursos pedem? Marque todas as que se aplicam.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 8; Deep Learning: Redes Neurais na Prática, aula 18.",
+    "choices": [
+      {
+        "text": "Fazer bootstrap da diferença reamostrando assinantes com todas as suas linhas, e ver se o intervalo cruza o zero.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ajustar a rede de novo nos meses de teste até a vantagem ficar claramente maior que algumas centenas de reais.",
+        "why": "Escolher nos meses de teste transforma-os em validação, e o número relatado fica otimista."
+      },
+      {
+        "text": "Treinar a rede com várias sementes e ver se a diferença é maior que a dispersão entre elas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer bootstrap da diferença reamostrando linhas uma a uma, para um intervalo mais estreito e decisivo.",
+        "why": "As linhas de um assinante não são sorteios independentes; reamostrar linhas deixa o intervalo estreito demais."
+      }
+    ]
+  },
+  "ex-csdyq240": {
+    "prompt": "`rating_90d` está vazio em 4.977 linhas do `churn.csv`. A Ana vai comparar o `HistGradientBoostingClassifier` com uma MLP em PyTorch nas mesmas colunas. O que as duas precisam que se faça com essas lacunas?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 14; Deep Learning: Redes Neurais na Prática, aula 20.",
+    "choices": [
+      {
+        "text": "As duas aceitam como estão, já que as camadas de uma rede passam por cima de um valor vazio como as árvores.",
+        "why": "Uma soma ponderada não comporta um valor vazio; só as árvores decidem em cada divisão para onde vão as lacunas."
+      },
+      {
+        "text": "O boosting precisa delas como −1 para ter um número, e a MLP precisa que as linhas com lacunas saiam.",
+        "why": "−1 era o tapa-buraco da aula 3; este boosting lê lacunas sozinho, e descartar linhas joga evidência fora."
+      },
+      {
+        "text": "O boosting as aceita como estão; a MLP precisa delas preenchidas com as linhas de treino, mais uma coluna-sinal.",
+        "why": "Isso."
+      },
+      {
+        "text": "As duas precisam delas preenchidas antes com a mediana do arquivo inteiro, para lerem a mesma tabela.",
+        "why": "O valor de preenchimento vem só das linhas de treino, e preencher joga fora o que o boosting aprende com a lacuna."
+      }
+    ]
+  },
+  "ex-d5199tdq": {
+    "prompt": "As sete colunas novas da aula 14 levaram a regressão logística de R$ 16.424 a R$ 22.712 e deixaram as árvores com boosting onde estavam. Um colega agora dá as colunas brutas de churn a uma MLP em PyTorch com camadas ReLU. O que os dois cursos levam a esperar se as mesmas sinalizações forem adicionadas a ela?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 14; Deep Learning: Redes Neurais na Prática, aula 20.",
+    "choices": [
+      {
+        "text": "Um ganho, como na reta: somas de ReLU se curvam aos poucos rumo a um penhasco, e a sinalização entrega o degrau.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma perda, porque cada coluna somada à primeira camada de uma rede é ruído para ela ajustar.",
+        "why": "Colunas de ruído custam caro a uma rede; uma sinalização carrega o sinal que o penhasco da nota guarda."
+      },
+      {
+        "text": "Nada, como nas árvores: camadas ocultas acham sozinhas os limiares de uma tabela.",
+        "why": "Redes tendem a funções suaves, e um degrau abrupto exige muitas unidades e muitos exemplos para ser aproximado."
+      },
+      {
+        "text": "Nada mensurável, já que uma rede aprende suas características de imagens, de som e de texto, e uma tabela não é nenhum desses.",
+        "why": "Redes aprendem em tabelas, sim; o que trazem para lá é um viés para respostas suaves."
+      }
+    ]
+  },
+  "ex-d7v5web9": {
+    "prompt": "Nos seis meses de teste um modelo de churn manda 900 créditos, e 410 deles chegam a assinantes que estavam saindo. Com os três números da Feira em Casa, qual é o valor líquido em reais, contra não mandar para ninguém?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 2."
+  },
+  "ex-d7yemnks": {
+    "prompt": "A equipe de logística diz que um minuto de atraso custa ao negócio três vezes o que custa um minuto adiantado. Pela regra da aula 12, a promessa de entrega deve ser o modelo ajustado com loss=\"quantile\" no quantil ___.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "0,75",
+          "0.75",
+          ",75",
+          ".75",
+          "75%"
+        ]
+      }
+    ]
+  },
+  "ex-d877w75b": {
+    "prompt": "Um modelo de churn é ajustado com todos os que saem e 6% dos que ficam, e dá a um assinante a chance de 0,5. Corrigida pela fórmula da aula 13 para subamostragem, qual é a chance desse assinante? Responda em porcentagem, com uma casa decimal.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 13."
+  },
+  "ex-d9c7w6dv": {
+    "prompt": "Informação nos dados de treino que não vai existir no momento em que o modelo é usado é o que a aula 4 chama de ___.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "vazamento",
+          "vazamento de dados",
+          "leakage"
+        ]
+      }
+    ]
+  },
+  "ex-dbq02j1a": {
+    "prompt": "Ponha o trabalho que o pipeline de churn da aula 15 faz com as colunas numéricas na ordem em que o `fit` o executa.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 15.",
+    "items": [
+      "Acrescentar as sete colunas de sinalização, teto e razão",
+      "Preencher cada lacuna com a mediana de treino, acrescentando uma coluna que a marca",
+      "Escalar a coluna pela média e pelo desvio padrão de treino",
+      "Ajustar a regressão logística nas colunas preparadas"
+    ],
+    "trap": "As sinalizações leem valores brutos, como uma nota abaixo de 3,6, então vêm antes de qualquer preparação; no caminho dos números a lacuna é preenchida antes de o escalonador ver a coluna; o modelo é sempre o último."
+  },
+  "ex-dggtwvcr": {
+    "prompt": "Ligue cada pergunta sobre o crédito de retenção à métrica que a responde, como faz a última tabela da aula 10.",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 10.",
+    "pairs": [
+      {
+        "left": "Dos créditos enviados, quantos valeram a pena?",
+        "right": "precisão"
+      },
+      {
+        "left": "De quem saiu, quantos foram alcançados?",
+        "right": "revocação"
+      },
+      {
+        "left": "O modelo põe quem sai acima de quem fica?",
+        "right": "ROC AUC"
+      },
+      {
+        "left": "Agir pelo modelo dá dinheiro?",
+        "right": "valor líquido"
+      }
+    ],
+    "right_distractors": [
+      "acurácia"
+    ]
+  },
+  "ex-dj7v5rvv": {
+    "prompt": "Pontuar março de 2026 com um assinante por pedido levou cerca de 12 ms cada, enquanto o mês inteiro numa chamada só ao modelo levou 32 ms para os 4.540. O que explica a diferença?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 21; Deep Learning: Redes Neurais na Prática, aula 19.",
+    "choices": [
+      {
+        "text": "Um pedido pontuado sozinho faz o pipeline recalcular as medianas de treino e o escalonador toda vez.",
+        "why": "O `transform` só lê o que o `fit` aprendeu; nada é reajustado a cada pedido."
+      },
+      {
+        "text": "Custos fixos de cada ida e volta, o JSON e a tabela de uma linha, pesam mais que a conta em si.",
+        "why": "Isso."
+      },
+      {
+        "text": "O servidor fica em outra máquina, então cada pedido também espera pela rede entre os dois computadores.",
+        "why": "O Uvicorn respondeu em `127.0.0.1`, esta máquina e nada fora dela."
+      },
+      {
+        "text": "O modelo servido roda mais devagar porque foi carregado de um arquivo em vez de ajustado no mesmo processo.",
+        "why": "O modelo carregado deu as mesmas chances que um ajuste novo; o tempo vai no caminho até ele, não no modelo."
+      }
+    ]
+  },
+  "ex-drq2vyjq": {
+    "prompt": "Um script começa com `torch.manual_seed(0)` e depois ajusta `HistGradientBoostingClassifier()` nos meses de treino do churn, sem `random_state`. Rodado duas vezes, ele dá o mesmo modelo nas duas?",
+    "hint": "Machine Learning: Modelos, Avaliação e Publicação, aula 15; Deep Learning: Redes Neurais na Prática, aula 18.",
+    "choices": [
+      {
+        "text": "Sim: uma semente fixada no topo de um programa fixa os sorteios que o programa faz dali em diante.",
+        "why": "O `torch.manual_seed` reinicia o gerador do PyTorch; o modelo do scikit-learn sorteia do seu."
+      },
+      {
+        "text": "Não, e nada resolve: modelos de árvore treinados num processador não se repetem de uma execução para outra.",
+        "why": "Com `random_state=0` saiu o mesmo modelo duas vezes, 40 árvores e os mesmos reais."
+      },
+      {
+        "text": "Sim: gradient boosting não tem aleatoriedade, já que cada árvore se ajusta ao que as anteriores erraram.",
+        "why": "Com mais de dez mil linhas ele liga a parada antecipada, que separa um décimo aleatório."
+      },
+      {
+        "text": "Não necessariamente: o boosting sorteia o seu décimo da parada antecipada, fora do alcance do PyTorch.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-e3vc2h2y": {
+    "prompt": "Uma rede para a tabela de churn padroniza as entradas numéricas, preenche suas lacunas e codifica o plano em one-hot antes da primeira camada. Quais destes precisam ser aprendidos só com os meses de treino e salvos com o modelo? Marque todas as que se aplicam.",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 8; Machine Learning: Modelos, Avaliação e Publicação, aula 15.",
+    "choices": [
+      {
+        "text": "A média e o desvio padrão de cada coluna numérica.",
+        "why": "Isso."
+      },
+      {
+        "text": "A mediana que preenche uma lacuna em `rating_90d`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A lista de planos para os quais o codificador cria coluna.",
+        "why": "Isso."
+      },
+      {
+        "text": "O 3,6 abaixo do qual a sinalização `unhappy` é ligada.",
+        "why": "Esse limiar está escrito e não aprende nada com os dados, então é seguro em qualquer linha."
+      },
+      {
+        "text": "O 0,278 a partir do qual o crédito é mandado.",
+        "why": "O corte de equilíbrio vem dos três números do negócio, não das linhas."
+      }
+    ]
+  },
+  "ex-e3zrsrby": {
+    "prompt": "Uma rede de churn em PyTorch com uma camada de batch norm vai para trás do FastAPI e pontua um assinante por pedido. A execução em lote de março dá chances variadas, mas todo assinante servido recebe exatamente a mesma chance. O que aconteceu?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 8; Machine Learning: Modelos, Avaliação e Publicação, aula 21.",
+    "choices": [
+      {
+        "text": "A classe do pedido não tem faixas para as colunas da rede, então todo campo chega com o mesmo padrão.",
+        "why": "A classe do pedido confere o que chega e recusa o que não cabe; ela não preenche nada."
+      },
+      {
+        "text": "O arquivo salvo guardou os pesos e perdeu as médias móveis, então o servidor usa médias novas no lugar.",
+        "why": "No modo de avaliação as médias guardadas substituem o lote, e assinantes diferentes ainda dariam chances diferentes."
+      },
+      {
+        "text": "O servidor prevê em modo de treino: sozinho no lote, cada assinante normaliza para zero e só sai o vetor beta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Batch norm precisa de um lote de pelo menos 32, então o servidor completa cada pedido com linhas de zeros.",
+        "why": "Nada completa um pedido; um lote de um tem ele mesmo como média e variância 0."
+      }
+    ]
+  },
+  "ex-ed3zn8mm": {
+    "prompt": "A Ana salva sua rede de churn em PyTorch com `torch.save(model.state_dict(), path)` e copia o arquivo para o servidor de pontuação. Além do arquivo, o que o servidor precisa ter para a rede voltar?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 9; Machine Learning: Modelos, Avaliação e Publicação, aula 21.",
+    "choices": [
+      {
+        "text": "O código que monta a rede, já que o arquivo guarda números por nome e não as camadas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O state dict do otimizador, porque os pesos não servem sem as médias móveis do Adam.",
+        "why": "O estado do otimizador é preciso para retomar o treino, não para prever."
+      },
+      {
+        "text": "Só o arquivo, já que ele guarda a rede inteira, com suas classes e sua passagem para frente.",
+        "why": "Um state dict são os números do modelo por nome, e nada mais."
+      },
+      {
+        "text": "Os dados de treino, porque o `load_state_dict` reajusta cada camada com eles ao ler o arquivo.",
+        "why": "O `load_state_dict` copia os números salvos numa rede já montada; ele não ajusta nada."
+      }
+    ]
+  },
+  "ex-eeme6fnd": {
+    "prompt": "Um colega dá as colunas de churn a uma rede em PyTorch sem escalar: `price_month` vai de uns R$ 180 a R$ 760, e `skips_90d` de 0 a um punhado. Os vizinhos mais próximos sem escala foram decididos só pelo preço. O que dá errado na rede?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 8; Machine Learning: Modelos, Avaliação e Publicação, aula 6.",
+    "choices": [
+      {
+        "text": "Nada duradouro, porque a primeira camada aprende pesos pequenos o bastante para o preço e absorve qualquer escala.",
+        "why": "Os pesos podem chegar lá no fim, mas a escala decide como o treino chega lá, e se chega."
+      },
+      {
+        "text": "Entradas grandes de preço dão passos grandes nos pesos dele; nenhuma taxa serve às duas.",
+        "why": "Isso."
+      },
+      {
+        "text": "A rede ignora o preço, porque uma ReLU corta entradas positivas grandes de volta para zero.",
+        "why": "A ReLU deixa passar uma entrada positiva sem mudança; ela só zera somas negativas."
+      },
+      {
+        "text": "A camada de saída é a que mais sofre, já que a escala importa no fim, onde a chance é lida.",
+        "why": "O gradiente de um peso da primeira camada é sua entrada vezes o gradiente que vem de cima, então o estrago começa na entrada."
+      }
+    ]
+  },
+  "ex-eewfjyg6": {
+    "prompt": "Um colega troca o `OneHotEncoder` seguido de um `nn.Linear` sem viés por um `nn.Embedding` para a coluna `city` de uma rede de churn. O que muda no que ela calcula para as cidades vistas no treino?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 16; Machine Learning: Modelos, Avaliação e Publicação, aula 14.",
+    "choices": [
+      {
+        "text": "Cada cidade vira sua proporção de quem sai, como na codificação pelo alvo, e o rótulo vaza para a entrada.",
+        "why": "As linhas começam aleatórias e são movidas pela retropropagação; nada lê os rótulos de uma cidade para a linha dela."
+      },
+      {
+        "text": "Nada: pegar uma linha da tabela é o mesmo produto de uma linha one-hot vezes os pesos, feito por indexação.",
+        "why": "Isso."
+      },
+      {
+        "text": "As cidades ganham uma ordem, como na codificação ordinal, já que cada uma chega como número inteiro.",
+        "why": "O id só escolhe uma linha; nenhuma conta é feita com ele, então nenhuma cidade vale mais que outra."
+      },
+      {
+        "text": "Cada cidade ganha também um viés aprendido só seu, que o `nn.Linear` sem viés não lhe dava.",
+        "why": "Uma camada de embedding é uma camada linear sem viés, então as duas guardam exatamente os mesmos números."
+      }
+    ]
+  },
+  "ex-ef6480t2": {
+    "prompt": "A Ana vai experimentar 20 taxas de aprendizado para uma rede em PyTorch treinada com Adam, em algum lugar entre 0,0001 e 3. Como os 20 valores devem se espalhar?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 5; Machine Learning: Modelos, Avaliação e Publicação, aula 9.",
+    "choices": [
+      {
+        "text": "Perto do padrão do Adam, 0,001, já que o padrão de uma biblioteca costuma ser onde fica a melhor taxa.",
+        "why": "O Adam a 0,001 deu 0,933 na varredura, onde 0,03 deu 0,969: um padrão é um ponto de partida."
+      },
+      {
+        "text": "Por igual entre as duas pontas, para cada trecho da faixa receber sua parte justa das tentativas.",
+        "why": "Passos iguais põem quase todas as tentativas acima de 0,1; o que importa numa taxa é a ordem de grandeza."
+      },
+      {
+        "text": "Em escala logarítmica, como o `loguniform`, para 0,0001 a 0,001 valer tanto quanto 0,3 a 3.",
+        "why": "Isso."
+      },
+      {
+        "text": "Numa grade de 20 passos iguais, já que uma grade cobre um único botão melhor que sorteios.",
+        "why": "Passos iguais gastam as tentativas nas taxas grandes, em grade ou sorteados; o problema é a escala."
+      }
+    ]
+  },
+  "ex-efdvhb63": {
+    "prompt": "Ligue cada problema novo ao primeiro modelo que os dois cursos indicam.",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 20; Machine Learning: Modelos, Avaliação e Publicação, aula 6.",
+    "pairs": [
+      {
+        "left": "Uma tabela de clientes de 40.000 linhas, com lacunas e um tipo de contrato",
+        "right": "Gradient boosting com os padrões"
+      },
+      {
+        "left": "Avaliações curtas para separar em reclamações, lidas como contagem de palavras",
+        "right": "Naive Bayes"
+      },
+      {
+        "left": "Fotografias de dez tipos de fruta, 30 rotuladas de cada",
+        "right": "Uma rede pré-treinada com uma cabeça nova"
+      },
+      {
+        "left": "Dígitos de 8 por 8, dois rotulados de cada, e nada pré-treinado",
+        "right": "Regressão logística nos pixels"
+      }
+    ],
+    "right_distractors": [
+      "Uma rede convolucional treinada do zero"
+    ]
+  },
+  "ex-ej2jwh20": {
+    "prompt": "`nn.MultiheadAttention(48, 6)` divide suas 48 características em seis cabeças. Quantos parâmetros ela tem, contando os vieses?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 15."
+  },
+  "ex-ejj7q2mv": {
+    "prompt": "Uma equipe pega emprestado um corpo pré-treinado para uma tarefa nova de imagens. Ponha as execuções da receita da aula 17 em ordem, da primeira à última.",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 17.",
+    "items": [
+      "Treinar a mesma rede a partir de pesos aleatórios",
+      "Treinar só uma cabeça nova sobre o corpo congelado",
+      "Descongelar também o último bloco",
+      "Deixar todas as camadas aprenderem"
+    ],
+    "trap": "Começar com tudo descongelado pula as execuções mais baratas, e sem a execução do zero ninguém sabe dizer se o empréstimo compensou."
+  },
+  "ex-ekw9wn5a": {
+    "prompt": "Na aula 18, o resultado de uma execução cujo código tinha mudanças não commitadas é uma pista, não uma ___.",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 18.",
+    "blanks": [
+      {
+        "accept": [
+          "descoberta",
+          "finding"
+        ]
+      }
+    ]
+  },
+  "ex-etcprzqz": {
+    "prompt": "A CNN da aula 11, com seus 38.282 parâmetros, é treinada em float32 com Adam num lote de 64. Contando os pesos, os gradientes, os dois buffers do Adam e as ativações guardadas para a passagem para trás, quantos bytes um passo segura?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 19."
+  },
+  "ex-f90tyc7c": {
+    "prompt": "Com 100 imagens de treino, as quatro curas da aula 7 juntas chegaram a 0,944; a mesma rede com as 1.077 imagens e nenhuma cura chegou a 0,986. Qual conclusão da aula 13 do curso de churn diz o mesmo sobre uma classe rara?",
+    "hint": "Deep Learning: Redes Neurais na Prática, aula 7; Machine Learning: Modelos, Avaliação e Publicação, aula 13.",
+    "choices": [
+      {
+        "text": "Pesos de classe fazem com poucos que saem o que mais deles faria, já que cada um conta dezesseis vezes.",
+        "why": "Os pesos deixaram a ordenação onde estava e subiram todas as chances; não acrescentam evidência."
+      },
+      {
+        "text": "As linhas inventadas do SMOTE fazem o papel do aumento de dados, trazendo informação nova sobre a classe rara.",
+        "why": "Toda linha inventada é uma mistura de linhas que o modelo já tinha, então não traz informação."
+      },
+      {
+        "text": "Subamostrar quem fica é a cura, porque uma tabela equilibrada treina o ordenador melhor.",
+        "why": "A subamostragem foi a que mais perdeu em precisão média, por ter jogado fora quase tudo o que o modelo sabia sobre quem fica."
+      },
+      {
+        "text": "Reamostrar muda a proporção de quem sai e não a contagem; se são poucos demais, a cura é ter mais deles.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-fs2v9adj": {
+    "prompt": "O slide da Marina mostra duas barras: 41,5% dos clientes cuja primeira caixa atrasou cancelaram em noventa dias, contra 17,4% dos demais. Um colega que quer destacar a diferença começa o eixo vertical em 15%. Qual é o fator de mentira desse gráfico, medido como na aula 16? Responda com duas casas decimais.",
+    "hint": "Visualização de Dados, aula 16; Comunicação e Storytelling com Dados, aula 1."
+  },
+  "ex-g4pkrppm": {
+    "prompt": "O slide seguinte da Marina diz que a diferença se mantém nas duas regiões: clientes com atraso cancelaram 38,8% contra 16,0% na capital, e 43,9% contra 20,0% no interior. Que gráfico desenha essa frase, e por quê?",
+    "hint": "Visualização de Dados, aula 3; Comunicação e Storytelling com Dados, aula 5.",
+    "choices": [
+      {
+        "text": "Barras agrupadas, atraso ao lado de no prazo em cada região, todas sobre o mesmo zero.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma barra empilhada por região, atraso sobre no prazo, para que cada região vire um único comprimento.",
+        "why": "Empilhar compara totais; o segmento de atraso começa onde o no prazo termina, fora da linha de base, e somar duas taxas não significa nada."
+      },
+      {
+        "text": "Uma linha da capital ao interior para cada situação, para que duas inclinações paralelas mostrem a mesma diferença.",
+        "why": "Uma linha entre duas regiões desenha uma inclinação entre categorias, e inclinação entre regiões não significa nada."
+      },
+      {
+        "text": "Uma pizza por região dividida em atraso e no prazo, porque a pizza mostra cada parte contra o todo.",
+        "why": "As duas taxas não são partes de um mesmo todo, e comparar fatias de duas pizzas é o degrau mais baixo da escada duas vezes."
+      }
+    ]
+  },
+  "ex-gddbsjjv": {
+    "prompt": "Seguindo o conselho de deixar tudo cinza e colorir uma coisa só, a Marina desenha as barras no prazo em `#c8ccd4` e só as de atraso em cor, num slide branco que será projetado. O que há de errado com esse cinza?",
+    "hint": "Visualização de Dados, aula 14; Comunicação e Storytelling com Dados, aula 5.",
+    "choices": [
+      {
+        "text": "Nada: barras de contexto são como linhas de grade, feitas para ser discretas, e nenhum limite de contraste vale para elas.",
+        "why": "Linhas de grade ficam de fora porque o gráfico se lê sem elas; as barras no prazo são metade da comparação."
+      },
+      {
+        "text": "Com 1,61:1 sobre o branco ele não chega aos 3:1 de uma barra necessária, e o contexto do destaque some no projetor.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele precisa chegar a 4,5:1, porque toda marca de um gráfico segue o mesmo limite do texto.",
+        "why": "4,5:1 é para texto; barras, linhas e pontos de que o leitor precisa seguem 3:1."
+      },
+      {
+        "text": "O erro é o cinza: as barras no prazo precisam de um segundo matiz forte para as duas séries continuarem visíveis.",
+        "why": "Cinza para o contexto é a técnica; um segundo matiz forte põe duas coisas para competir, e o cinza só precisa de contraste suficiente."
+      }
+    ]
+  },
+  "ex-gj4e3m6e": {
+    "prompt": "A Marina está dando títulos a quatro gráficos da Faro. Pela regra de quando um título que afirma é a escolha errada, qual deles deve manter um título-rótulo?",
+    "hint": "Visualização de Dados, aula 15; Comunicação e Storytelling com Dados, aula 7.",
+    "choices": [
+      {
+        "text": "O slide C do apêndice, mostrado só se alguém perguntar da região.",
+        "why": "Slides de apêndice também ganham títulos em frase, como todos os outros, para serem entendidos de relance."
+      },
+      {
+        "text": "O slide 4 da apresentação, as duas barras de 41,5% contra 17,4%.",
+        "why": "Um slide apresentado leva uma mensagem, então o título a diz como uma frase."
+      },
+      {
+        "text": "O quadro semanal de primeiras entregas que o Paulo filtra.",
+        "why": "Isso."
+      },
+      {
+        "text": "O gráfico do sumário de uma página encaminhado à Renata.",
+        "why": "Um gráfico encaminhado perdeu sua explicação, e é aí que um título que afirma mais vale."
+      }
+    ]
+  },
+  "ex-gm9rrdnh": {
+    "prompt": "Um colega põe as semanas da Faro num só gráfico: a parcela de primeiras caixas entregues no prazo no eixo da esquerda, e a taxa de cancelamento em 90 dias no da direita. As duas linhas sobem e descem juntas, e ele chama isso de prova. O que há de errado no argumento? Marque todas as que se aplicam.",
+    "hint": "Visualização de Dados, aula 16; Comunicação e Storytelling com Dados, aula 7.",
+    "choices": [
+      {
+        "text": "O eixo da esquerda tem de começar no zero, porque uma parcela de entregas se lê como comprimento.",
+        "why": "Uma linha se lê pela posição e pela inclinação, então o eixo pode começar onde os dados começam."
+      },
+      {
+        "text": "A taxa de cancelamento lida numa semana fala de clientes que entraram uns três meses antes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, desde que os dois eixos comecem no zero, já que as duas séries são porcentagens.",
+        "why": "Duas parcelas de coisas diferentes continuam sendo duas escalas cujas faixas posicionam as linhas, e o problema do tempo continua."
+      },
+      {
+        "text": "Quem escolheu as duas faixas dos eixos também escolheu se as linhas parecem andar juntas.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-gmn1v96z": {
+    "prompt": "A aula 9 estima o efeito de levar as primeiras entregas atrasadas de 17,3% para 8% em cerca de 274 clientes mantidos por ano, e avisa que o piloto talvez chegue só a 12%. Com a mesma fórmula e as mesmas premissas, quantos clientes por ano são mantidos se ele chegar a 12%? Arredonde para o cliente inteiro mais próximo.",
+    "hint": "Comunicação e Storytelling com Dados, aula 9."
+  },
+  "ex-gp6w3nap": {
+    "prompt": "Um slide para a Renata rotula as duas barras com `41.5%` e `17%`, e a nota ao lado diz `R$ 792,611.40` por ano. O que deve mudar?",
+    "hint": "Comunicação e Storytelling com Dados, aula 8; Visualização de Dados, aula 15.",
+    "choices": [
+      {
+        "text": "Nada: números exatos deixam o financeiro conferir a conta, e as duas taxas se leem bem como estão.",
+        "why": "Oito algarismos significativos alegam uma precisão que as estimativas de vida e de margem não têm, e 17% ao lado de 41,5% mistura precisões."
+      },
+      {
+        "text": "Mostrar 41,5% e 17,4%, e o dinheiro como R$ 792,6 mil, mantendo uma casa decimal em tudo.",
+        "why": "Uma casa decimal no dinheiro ainda alega uma precisão que as premissas não têm; a página diz cerca de R$ 790 mil."
+      },
+      {
+        "text": "Arredondar as duas taxas para inteiros, 42% e 17%, para combinarem com o dinheiro arredondado.",
+        "why": "As taxas são contadas e a casa decimal é honesta; arredondá-las faz o slide discordar da apresentação e da página."
+      },
+      {
+        "text": "Escrever 17,4% como 41,5%, e o dinheiro como cerca de R$ 790 mil, por ser uma estimativa.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-gwb6j5ry": {
+    "prompt": "O Paulo agora abre o painel redesenhado da Faro no celular, onde as quatro zonas viram uma coluna só. Que bloco deve vir primeiro?",
+    "hint": "Comunicação e Storytelling com Dados, aula 7; Visualização de Dados, aula 19.",
+    "choices": [
+      {
+        "text": "Primeiras entregas no prazo, 84,1% contra a meta de 95%, e os cancelamentos da coorte.",
+        "why": "Isso."
+      },
+      {
+        "text": "A linha semanal da taxa de primeiras entregas, porque o gráfico principal ocupa a largura toda.",
+        "why": "A tendência responde o que mudou, a terceira pergunta; no celular a ordem de empilhar é a ordem de importância."
+      },
+      {
+        "text": "O no prazo geral de 94,5%, porque é o número que a logística já reporta.",
+        "why": "Esse número fica pequeno na zona de baixo do redesenho; foi ele que escondeu o problema."
+      },
+      {
+        "text": "As barras por região, porque o interior é onde o problema é pior.",
+        "why": "Onde está o problema vem em segundo, depois de saber se está tudo bem."
+      }
+    ]
+  },
+  "ex-gyt4x9cj": {
+    "prompt": "O painel antigo do Paulo tinha um mapa do estado de São Paulo colorido por pedidos. Se um mapa ficar no redesenho, o que deve valer para ele?",
+    "hint": "Comunicação e Storytelling com Dados, aula 7; Visualização de Dados, aula 8.",
+    "choices": [
+      {
+        "text": "Cada cidade ganha um círculo do tamanho da sua parcela de caixas atrasadas, com áreas em cinza.",
+        "why": "Um símbolo dimensionado pela área serve para uma contagem; uma taxa vai no tom da própria área."
+      },
+      {
+        "text": "Ele mantém os pedidos, recolorido como arco-íris para que cada cidade se destaque bem das vizinhas.",
+        "why": "Pedidos por contagem continuam sendo o mapa da população, e um arco-íris não dá ordem aos tons."
+      },
+      {
+        "text": "O lugar faz parte da pergunta, e as áreas são sombreadas por uma taxa, como a parcela de primeiras caixas atrasadas.",
+        "why": "Isso."
+      },
+      {
+        "text": "As áreas são sombreadas pelo número de primeiras caixas atrasadas, já que o atraso é o assunto da análise.",
+        "why": "Uma contagem de qualquer coisa mapeia sobretudo onde as pessoas moram; caixas atrasadas também precisam de um denominador."
+      }
+    ]
+  },
+  "ex-h0yxyj49": {
+    "prompt": "A Marina desenha os gráficos da apresentação no matplotlib e deixa a biblioteca colorir as séries na ordem em que as encontra. No slide por região, onde as séries chegam em outra ordem, as entregas atrasadas saem na cor que os slides anteriores deram ao no prazo. O que resolve isso em todos os gráficos?",
+    "hint": "Visualização de Dados, aula 13; Comunicação e Storytelling com Dados, aula 6.",
+    "choices": [
+      {
+        "text": "Manter um dicionário de cada categoria para a sua cor, e buscar a cor nele em todo gráfico.",
+        "why": "Isso."
+      },
+      {
+        "text": "Dar a cada slide uma paleta própria, para ninguém levar uma cor do slide anterior.",
+        "why": "O leitor leva o significado de uma cor de um slide para o outro de qualquer jeito; a repetição usa esse hábito em vez de brigar com ele."
+      },
+      {
+        "text": "Pôr uma legenda em todo slide, para o leitor conferir a cada vez o que cada cor significa.",
+        "why": "Quem já aprendeu uma cor para de ler a legenda, e é por isso que a cor precisa manter o significado."
+      },
+      {
+        "text": "Ordenar as séries do mesmo jeito antes de cada gráfico, para a biblioteca dar as cores na mesma ordem.",
+        "why": "Isso vale até um filtro ou uma categoria ausente mudar a ordem; um mapeamento por nome não depende da ordem."
+      }
+    ]
+  },
+  "ex-h6dkg90n": {
+    "prompt": "O slide D do apêndice responde se a diferença aparece todo mês. O rascunho da Marina tem quatro linhas emboladas: a taxa mensal de cancelamento de clientes com e sem atraso em cada região. Como redesenhá-lo?",
+    "hint": "Visualização de Dados, aula 10; Comunicação e Storytelling com Dados, aula 5.",
+    "choices": [
+      {
+        "text": "Quatro painéis, um por linha, ordenados da maior taxa média para a menor.",
+        "why": "Separa as duas linhas que estão sendo comparadas; cada painel deve ter o par com e sem atraso de uma região."
+      },
+      {
+        "text": "Dois painéis, um por região, cada um com suas séries com e sem atraso, numa só escala vertical compartilhada.",
+        "why": "Isso."
+      },
+      {
+        "text": "Dois painéis, um por região, cada um ajustado à própria faixa para que os dois pares de linhas ocupem a altura.",
+        "why": "Com escalas livres a mesma altura significa uma taxa diferente em cada painel, e o leitor compara alturas mesmo assim."
+      },
+      {
+        "text": "Um gráfico com dois eixos verticais, clientes com atraso à esquerda e clientes no prazo à direita.",
+        "why": "As duas faixas decidiriam onde as linhas ficam, que é justamente a comparação para a qual o slide existe."
+      }
+    ]
+  },
+  "ex-h8qzaq4j": {
+    "prompt": "A Faro dobra seis meses de cancelamentos a mais para chegar a um ano, e a aula aceita. Um colega na Horta, a quitanda, dobra os pedidos de janeiro a junho de 2025 para estimar o ano todo. Por que isso é menos seguro lá?",
+    "hint": "Comunicação e Storytelling com Dados, aula 11; Visualização de Dados, aula 4.",
+    "choices": [
+      {
+        "text": "É seguro depois de indexar cada região a janeiro, para comparar o crescimento com justiça.",
+        "why": "Indexar compara o crescimento entre séries; não resolve uma estação que ficou fora da janela."
+      },
+      {
+        "text": "Pedidos são uma contagem, e só uma taxa pode virar um ano sendo dobrada.",
+        "why": "A Faro dobrou uma contagem, 255 cancelamentos a mais; o que decide é se o padrão é estável."
+      },
+      {
+        "text": "Seis meses é pouco para qualquer número anual, então a conta da Faro também estava errada.",
+        "why": "A aula aceita a conta da Faro porque lá o padrão mensal é estável."
+      },
+      {
+        "text": "Os pedidos da Horta sobem o ano todo e saltam em dezembro, então o segundo semestre não copia o primeiro.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-hcvp6jew": {
+    "prompt": "A Marina faz um gráfico da pesquisa de saída da Faro em barras ordenadas: preço 116 respostas, o pet recusou a ração 58, entrega 52, passou a comprar em loja 43, outros 35. Quais títulos são verdadeiros sobre esse gráfico como foi desenhado? Marque todas as que se aplicam.",
+    "hint": "Comunicação e Storytelling com Dados, aula 12; Visualização de Dados, aula 15.",
+    "choices": [
+      {
+        "text": "O preço foi o motivo mais citado por quem respondeu.",
+        "why": "Isso."
+      },
+      {
+        "text": "Quem cancela cedo na Faro sai principalmente por causa do preço.",
+        "why": "O gráfico descreve os 23% que escolheram responder, não os 1.320 que saíram."
+      },
+      {
+        "text": "A entrega pouco importa para quem cancela cedo.",
+        "why": "Um motivo em terceiro lugar entre quem respondeu não diz nada de como todos se comportaram, e o comportamento diz o contrário."
+      },
+      {
+        "text": "Dos 304 que responderam à pesquisa de saída, 38% citaram o preço.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-hfeepccd": {
+    "prompt": "A apresentação da Marina vai ser feita na sexta e também enviada à Renata, que não poderá ir, então ela enche cada slide de parágrafos, definições e ressalvas. O nome que Garr Reynolds deu a esse híbrido, denso demais para apresentar e fragmentado demais para ler, é ___.",
+    "hint": "Comunicação e Storytelling com Dados, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "slideument",
+          "slideuments"
+        ]
+      }
+    ]
+  },
+  "ex-hgvqh7cq": {
+    "prompt": "A Marina pode desenhar suas duas taxas, 41,5% e 17,4%, de vários jeitos. Ponha-os em ordem de quão bem o leitor julga quantas vezes uma é maior que a outra, do mais preciso para o menos.",
+    "hint": "Visualização de Dados, aula 2.",
+    "items": [
+      "Dois pontos sobre um mesmo eixo",
+      "Duas barras a partir de uma linha de base no zero",
+      "Duas fatias, uma em cada de duas pizzas",
+      "Dois círculos com áreas iguais às taxas",
+      "Dois quadrados sombreados pela luminosidade"
+    ],
+    "trap": "Um círculo parece mais vistoso que uma fatia, mas a escada medida vai de posição, comprimento, ângulo, área e por último sombreamento; e pontos vencem barras porque posição numa escala comum é o degrau mais alto."
+  },
+  "ex-hkk0mkdr": {
+    "prompt": "Ligue cada uso de cor no relatório da Faro ao que ele precisa.",
+    "hint": "Visualização de Dados, aula 12; Comunicação e Storytelling com Dados, aula 7.",
+    "pairs": [
+      {
+        "left": "Um mapa de calor de primeiros pedidos por região e semana, sombreado pela contagem",
+        "right": "Uma paleta sequencial, uma só direção de luminosidade"
+      },
+      {
+        "left": "A taxa de primeiras entregas de cada região como distância da meta de 95%",
+        "right": "Uma paleta divergente centrada na meta"
+      },
+      {
+        "left": "As linhas da capital e do interior distinguidas num só gráfico",
+        "right": "Uma paleta categórica, matizes distintos de peso parecido"
+      },
+      {
+        "left": "As entregas atrasadas destacadas de todo o resto num slide",
+        "right": "Cinza em todas as marcas, e uma única cor forte"
+      }
+    ],
+    "right_distractors": [
+      "Uma escala arco-íris como a jet"
+    ]
+  },
+  "ex-hs9wfv0t": {
+    "prompt": "Suponha que a região fosse a história toda por trás da diferença da Faro: o interior recebe mais primeiras caixas atrasadas e cancela mais de qualquer jeito. O que a divisão da tabela por região, feita pela Marina, teria mostrado?",
+    "hint": "Comunicação e Storytelling com Dados, aula 10.",
+    "choices": [
+      {
+        "text": "A taxa de cancelamento do interior caindo até a da capital quando as caixas atrasadas saem.",
+        "why": "Isso compara as regiões; a pergunta é se o atraso ainda importa com a região fixa."
+      },
+      {
+        "text": "Mais ou menos a mesma parcela de primeiras caixas atrasadas na capital e no interior.",
+        "why": "As parcelas de atraso são o que são em qualquer caso; o teste compara cancelamentos com a região fixa."
+      },
+      {
+        "text": "Uma diferença dentro de cada região pelo menos tão grande quanto os 24,1 pontos da tabela agregada.",
+        "why": "Esse é o padrão quando a região não explica nada; ela achou 22,8 e 23,9 pontos, um pouco abaixo."
+      },
+      {
+        "text": "Clientes com e sem atraso cancelando quase na mesma taxa em cada região.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-hvrm17ha": {
+    "prompt": "No painel da Faro, a linha semanal de primeiras entregas fica num quadro alto e estreito e parece um penhasco. A regra de Cleveland para escolher a largura e a altura de um gráfico de linhas põe as inclinações importantes perto de ___ graus.",
+    "hint": "Visualização de Dados, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "45",
+          "quarenta e cinco"
+        ]
+      }
+    ]
+  },
+  "ex-hyn4njjy": {
+    "prompt": "Você mantém `.env` e `.DS_Store` no seu próprio `~/.gitignore_global`, e o `.gitignore` do projeto de churn não lista nenhum dos dois. Um colega clona o projeto e escreve a senha do data warehouse num `.env` dele. O que impede o próximo `git add .` dele de colocar esse arquivo na área de preparo?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; O Projeto de Portfólio: do Briefing ao Deploy, aula 14.",
+    "choices": [
+      {
+        "text": "A push protection do GitHub, que recusa qualquer arquivo chamado `.env`.",
+        "why": "Ela recusa tipos conhecidos de chave pelo formato, não arquivos pelo nome, e age num push, quando o commit já existe."
+      },
+      {
+        "text": "Nada: o `.env` precisa estar listado no arquivo de ignorados commitado no repositório.",
+        "why": "Isso."
+      },
+      {
+        "text": "O hook de pre-commit da aula 14, que todo clone do projeto recebe.",
+        "why": "Um hook fica em `.git/hooks`, que não faz parte do repositório; ele protege o seu clone e o de mais ninguém."
+      },
+      {
+        "text": "O seu arquivo de ignorados global, que o `git clone` traz junto com o histórico.",
+        "why": "É um arquivo na sua pasta pessoal, apontado por `core.excludesFile`; um clone leva o repositório, não as suas configurações."
+      }
+    ]
+  },
+  "ex-hzsrvjp5": {
+    "prompt": "Seu repositório de portfólio guarda `data/sales.parquet` no Git LFS. Uma pessoa que avalia o projeto segue o seu README numa máquina nova, e o notebook não consegue ler o arquivo: no disco dela são três linhas curtas que começam com `version https://git-lfs.github.com/spec/v1`. O que aconteceu?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; O Projeto de Portfólio: do Briefing ao Deploy, aula 16.",
+    "choices": [
+      {
+        "text": "Falta Git LFS na máquina dela, e o clone ficou com o ponteiro; nada que você escreveu manda instalá-lo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `.gitattributes` nunca foi commitado, então o Git guardou o parquet no histórico como texto.",
+        "why": "Sem essa linha o Git teria guardado o arquivo inteiro no histórico, não um ponteiro de três linhas."
+      },
+      {
+        "text": "O arquivo passou do limite de 100 MB do GitHub, e o push o cortou, guardando só as primeiras linhas.",
+        "why": "Com LFS o conteúdo nunca entra no histórico; o histórico guarda um ponteiro, e os bytes vão para o armazenamento do LFS."
+      },
+      {
+        "text": "Arquivos grandes esperam num clone simples até alguém rodar `git submodule update --init`.",
+        "why": "Esse comando clona submódulos; arquivos guardados no LFS chegam pela extensão do LFS."
+      }
+    ]
+  },
+  "ex-jc90r781": {
+    "prompt": "Cada pull request do seu repositório de análise de churn tem três ou quatro commits arrumados, como `Drop duplicate customers` e `Test the duplicate rule`. Você quer que o `main` se leia como uma linha só de histórico, em que cada um deles ainda possa ser encontrado, revertido e achado pelo blame sozinho. Qual botão de merge serve?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8; O Projeto de Portfólio: do Briefing ao Deploy, aula 9.",
+    "choices": [
+      {
+        "text": "Squash and merge, que transforma o pull request num commit",
+        "why": "Os commits individuais somem do `main`, e nenhum deles pode ser revertido sozinho."
+      },
+      {
+        "text": "Create a merge commit, que os mantém e soma uma junção",
+        "why": "Todos os commits sobrevivem, mas cada pull request acrescenta uma bifurcação e uma junção, então o histórico não é uma linha só."
+      },
+      {
+        "text": "Rebase and merge, que os reaplica em cima do `main`",
+        "why": "Isso."
+      },
+      {
+        "text": "Squash and merge, listando cada assunto na mensagem",
+        "why": "Os assuntos sobrevivem como texto numa mensagem; os commits por trás deles não, então nenhum pode ser revertido sozinho."
+      }
+    ]
+  },
+  "ex-jgdqhd2p": {
+    "prompt": "Você enviou `feature-cohorts`, e um amigo revisou os quatro commits dele e pediu que você corrija um eixo com o rótulo errado, feito no segundo. Dá vontade de usar `git commit --fixup` e `git rebase -i --autosquash`, para o histórico parecer certo desde a primeira vez. O que as aulas dizem?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
+    "choices": [
+      {
+        "text": "Incorpore: o branch é seu, então reescrevê-lo não prejudica ninguém.",
+        "why": "Ele deixou de ser só seu quando foi enviado e lido; os commits reescritos ganham ids novos que o revisor nunca viu."
+      },
+      {
+        "text": "Use `git commit --amend` nele, que mantém o id de cada commit.",
+        "why": "O `--amend` substitui só o último commit, e um commit emendado é um commit novo, com id novo."
+      },
+      {
+        "text": "Um commit novo; o botão de merge decide o que chega ao `main`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Feche o pull request e abra outro a partir de um branch arrumado.",
+        "why": "A revisão mora no pull request, e o revisor teria de ler todos os commits de novo para achar a única correção."
+      }
+    ]
+  },
+  "ex-jnb1v67q": {
+    "prompt": "Seu repositório tem o workflow da aula 12, que roda `python3 -m unittest -v` a cada push. Os testes leem um arquivo em `tests/fixtures/`, e `git status --short` no seu notebook mostra `?? tests/fixtures/`. Todos os testes passam localmente. O que a execução no GitHub mostra?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Um visto verde, porque roda o mesmíssimo comando que passou no seu notebook",
+        "why": "O comando é o mesmo e a máquina não: ela só tem o que foi commitado e enviado."
+      },
+      {
+        "text": "Um X vermelho, porque testa um clone do que foi enviado, e a fixture não está nele",
+        "why": "Isso."
+      },
+      {
+        "text": "Um visto verde, porque o `git commit -a` também levou a fixture nova",
+        "why": "O `-a` só põe na área de preparo arquivos que o Git já rastreia, e `??` quer dizer que a pasta nunca foi rastreada."
+      },
+      {
+        "text": "Nada ainda, porque esse workflow espera um pull request ser aberto",
+        "why": "`on: [push, pull_request]` o roda também a cada push."
+      }
+    ]
+  },
+  "ex-jss7wfz4": {
+    "prompt": "Ligue cada deslize no seu repositório de análise ao comando que a aula 4 usa.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "pairs": [
+      {
+        "left": "Uma edição em `clean.py`, nunca posta na área de preparo, que quebrou o parser",
+        "right": "`git restore clean.py`"
+      },
+      {
+        "left": "Um commit já no `main` compartilhado que descartou os outliers errados",
+        "right": "`git revert` nesse commit"
+      },
+      {
+        "left": "Um erro de digitação na mensagem do commit que você acabou de fazer, ainda não enviado",
+        "right": "`git commit --amend`"
+      },
+      {
+        "left": "Um commit que o `git reset --hard` deixou para trás e que agora você quer de volta",
+        "right": "`git reflog`, depois `git reset` para a entrada dele"
+      }
+    ],
+    "right_distractors": [
+      "`git push --force` para o `main`"
+    ]
+  },
+  "ex-jt27y2f4": {
+    "prompt": "Sua equipe de analytics, de cinco pessoas, termina cerca de 40 pontos num sprint normal de duas semanas, com 10 dias úteis para cada uma. Neste sprint uma pessoa está num curso de quatro dias e outra passa dois dias no suporte. Ajustando os pontos de costume aos dias de fato disponíveis, como faz a aula 18, quantos pontos de capacidade a equipe tem? Arredonde para o ponto inteiro mais próximo.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18."
+  },
+  "ex-jvnmww4p": {
+    "prompt": "Você está prestes a enviar o seu projeto de churn para um repositório público pela primeira vez. Quais destes pertencem a ele? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Python, aula 18.",
+    "choices": [
+      {
+        "text": "`config.py`, que lê `os.environ[\"WAREHOUSE_PASSWORD\"]`",
+        "why": "Isso."
+      },
+      {
+        "text": "`.gitignore`, com `.venv/` entre as linhas",
+        "why": "Isso."
+      },
+      {
+        "text": "`.env`, com a senha, para o notebook rodar",
+        "why": "Senha é segredo: ela mora no ambiente, e o arquivo que a guarda é ignorado."
+      },
+      {
+        "text": "`requirements.txt`, com o que o projeto pede",
+        "why": "Isso."
+      },
+      {
+        "text": "`.venv/`, para quem avalia pular a instalação",
+        "why": "É um artefato de build de uma máquina, refeito em segundos a partir do `requirements.txt`, e nunca vai para um commit."
+      }
+    ]
+  },
+  "ex-kayw4xhv": {
+    "prompt": "Você está se candidatando a vagas de cientista de dados júnior. Pela aula 3, o que quem contrata nessa área abre primeiro no seu projeto de portfólio?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3.",
+    "choices": [
+      {
+        "text": "O diagrama do pipeline, e depois o que acontece quando ele roda duas vezes",
+        "why": "Essa é a primeira olhada de engenharia de dados; quem avalia ciência de dados começa pelo resultado."
+      },
+      {
+        "text": "O painel num link público, e depois o que cada métrica conta",
+        "why": "Isso é o que quem avalia business intelligence abre primeiro."
+      },
+      {
+        "text": "O código de modelagem, lido célula por célula antes de qualquer resultado",
+        "why": "O resultado vem primeiro; um notebook de duzentas células sem explicação é lido como rascunho."
+      },
+      {
+        "text": "Um notebook ou relatório renderizado que responde a uma pergunta",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-kd87nk96": {
+    "prompt": "Antes de abrir o seu pull request você roda o check da aula 10, `git diff main... | grep -nE '^\\+.*(console\\.log|TODO|print\\(|debugger)'`. Quais destas linhas do diff ele imprime? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "`+    print(df.shape)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`-    print(\"loaded\")`",
+        "why": "Uma linha que começa com `-` só existe do lado antigo; o padrão só olha as linhas que este branch acrescenta."
+      },
+      {
+        "text": "`+# TODO: check the outlier cut`",
+        "why": "Isso."
+      },
+      {
+        "text": "`print(df.head())` numa linha que começa com um espaço",
+        "why": "Um espaço no início marca contexto, uma linha que ninguém mudou; ela só aparece para você ver onde está."
+      },
+      {
+        "text": "`+    display(df)`",
+        "why": "`display` não está no padrão; um grep acha o que ele nomeia e nada mais, e é por isso que existe a lista de verificação."
+      }
+    ]
+  },
+  "ex-kdd2n90p": {
+    "prompt": "Sua API de modelo copia o arquivo de unidade do loanbook, com `HealthInterval=30s` e tudo, e o `/healthz` dela roda uma previsão num modelo hospedado que custa 0,1 centavo por chamada. Quantos centavos por dia o health check gasta sozinho?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15."
+  },
+  "ex-ke9zgatj": {
+    "prompt": "Seus 40 commits locais foram feitos com o seu endereço pessoal em `user.email`. Antes de enviar o projeto a um repositório público pela primeira vez, você troca `user.email` pelo endereço no-reply do GitHub. O que o histórico publicado vai mostrar?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 18; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 1.",
+    "choices": [
+      {
+        "text": "Seu e-mail pessoal nos 40, e o no-reply só no que vier depois da troca",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhum endereço, porque o GitHub esconde quem escreveu os commits enviados a ele",
+        "why": "Enviar publica o nome e o endereço de cada commit, para sempre, em todo clone."
+      },
+      {
+        "text": "Só o no-reply, depois de ligada a opção do GitHub que bloqueia endereços expostos",
+        "why": "Essa opção recusa um push que exporia o endereço; ela não reescreve nenhum dos 40 commits."
+      },
+      {
+        "text": "O endereço no-reply nos 40, porque o Git preenche o endereço na hora do push",
+        "why": "O endereço é copiado para cada commit quando o commit é feito, não quando ele é enviado."
+      }
+    ]
+  },
+  "ex-ksbf7psm": {
+    "prompt": "Num estágio você exportou a tabela real de clientes para `data/customers.csv`, para o seu projeto de churn, e fez commit dela. O commit seguinte a apagou e acrescentou um seed de clientes inventados. Nada foi enviado ainda. O que continua errado?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "O primeiro commit ainda guarda a exportação, e precisa ser reescrito antes do push.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr `data/` no `.gitignore`, o que deixa a exportação fora de tudo o que for enviado.",
+        "why": "Ignorar só esconde arquivos não rastreados; a exportação já está dentro de um commit."
+      },
+      {
+        "text": "Nada: o seed substituiu a exportação, e os arquivos no disco são todos inventados.",
+        "why": "Um push envia o histórico, e o commit que acrescentou a exportação faz parte dele."
+      },
+      {
+        "text": "O seed deveria manter os clientes reais, com os nomes trocados por falsos.",
+        "why": "Uma cópia de uma planilha real com os nomes trocados continua sendo dado real de alguém."
+      }
+    ]
+  },
+  "ex-ky6tpc7v": {
+    "prompt": "Seu painel de vendas pede ao data warehouse os números da semana quando abre. Numa manhã o warehouse está fora do ar, o pedido falha, e a área do gráfico diz `No sales recorded this week`. Pela aula 11, o que está errado?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "choices": [
+      {
+        "text": "A página deveria mostrar o traceback do warehouse para o usuário poder relatá-lo.",
+        "why": "Os detalhes vão para o log; o usuário recebe uma frase dizendo o que aconteceu e o que fazer."
+      },
+      {
+        "text": "Falta o estado de carregamento: os números ainda não chegaram.",
+        "why": "O pedido voltou, e voltou com falha; isso é o estado de erro, não a espera antes de uma resposta."
+      },
+      {
+        "text": "Nada: sem linhas devolvidas, semana vazia é uma descrição honesta.",
+        "why": "Nenhuma resposta não é uma resposta zero; um servidor fora do ar e uma semana sem vendas são estados diferentes."
+      },
+      {
+        "text": "O erro é desenhado como estado vazio, e uma queda vira uma semana ruim.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-m2yhtf5m": {
+    "prompt": "Sua etapa de limpeza descarta respondentes da pesquisa com menos de 18 anos, e o briefing diz que um respondente com exatamente 18 fica. Você tem tempo para dois testes dessa regra. Quais dois valem o esforço, pela aula 12?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Um com 18, mantido, e um de que o arquivo limpo carrega",
+        "why": "Carregar é encanamento que a biblioteca já testa, e só um lado da borda fica coberto."
+      },
+      {
+        "text": "Um com 30, mantido, e um com 10, descartado",
+        "why": "Os dois ficam longe da fronteira, onde um erro na comparação não muda nada."
+      },
+      {
+        "text": "Um com 17, descartado, e um com 18 exatos, mantido",
+        "why": "Isso."
+      },
+      {
+        "text": "Dois com 18, um de cada um dos dois arquivos de origem",
+        "why": "Os dois estão do mesmo lado da borda; o 17 que uma comparação errada manteria nunca é tentado."
+      }
+    ]
+  },
+  "ex-mbw1gfep": {
+    "prompt": "Ponha os quatro marcos do seu projeto de churn na ordem em que a aula 7 marca os do loanbook com tags.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7.",
+    "items": [
+      "Um notebook que carrega a exportação, ajusta um baseline e imprime um número, de ponta a ponta",
+      "A regra que só este projeto tem, clientes contados uma vez em dois sistemas, com o seu teste",
+      "O relatório refeito toda noite por um job agendado que falha alto quando falha",
+      "README, captura de tela, dados de exemplo e licença: a primeira versão que vale mostrar"
+    ],
+    "trap": "Acabamento e README parecem progresso, mas o esqueleto vem primeiro para algo rodar, e a única coisa vem logo depois dele para estar pronta aconteça o que acontecer; a versão que vale mostrar fica por último."
+  },
+  "ex-mh2a46gv": {
+    "prompt": "Seu .env é ignorado, então quem clona o projeto não sabe quais variáveis definir. A aula 14 faz commit de um arquivo que lista cada variável de que o projeto precisa, cada uma com um valor falso: ___.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          ".env.example",
+          "env.example"
+        ]
+      }
+    ]
+  },
+  "ex-mhwyrefh": {
+    "prompt": "Na sua primeira semana como analista de dados júnior, você quer instalar no editor uma extensão de assistente de IA para trabalhar no repositório de análises da empresa. Pelas aulas citadas, o que vem antes de instalar?",
+    "hint": "IA no Desenvolvimento, aula 3; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20.",
+    "choices": [
+      {
+        "text": "Instalar e se virar sozinho: perguntar sobre ferramentas no primeiro mês passa a imagem de falta de autonomia.",
+        "why": "Quem é júnior e não pergunta nada por um mês está chutando, e o primeiro mês é para aprender como as coisas funcionam ali."
+      },
+      {
+        "text": "Descobrir o que a empresa permite: se o código tem permissão de sair dela, e que ferramentas de IA são aprovadas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Escrever um `AGENTS.md` com as regras do time, para que toda requisição do assistente as leve junto.",
+        "why": "Um arquivo de instruções melhora as sugestões; não diz nada sobre se o código pode sair da empresa."
+      },
+      {
+        "text": "Pôr `.env` no `.gitignore` do repositório, para o assistente não ter como ler o arquivo de credenciais.",
+        "why": "O `.gitignore` diz ao git o que ignorar; o editor continua abrindo o arquivo, e uma aba é uma aba."
+      }
+    ]
+  },
+  "ex-mnnqqj78": {
+    "prompt": "O enunciado do seu desafio em casa diz que um código promocional vale \"até 31 de março, inclusive\". Você dá a um assistente só a sua `is_valid(code, today)` e pede testes de pytest; os nove que ele escreve passam. O que essa execução verde diz, pelas aulas citadas?",
+    "hint": "IA no Desenvolvimento, aula 4; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13.",
+    "choices": [
+      {
+        "text": "Que a fronteira está segura, porque um assistente que só viu a função não tinha nada para copiar além da regra.",
+        "why": "Ter visto só a função é justamente por que os valores esperados descrevem a função, com o erro de um dia junto."
+      },
+      {
+        "text": "Que o enunciado foi atendido, já que um teste para cada ramo é o que quem avalia chama de regra que importa.",
+        "why": "A regra que importa ganha um teste que falha quando a regra sai; testes lidos do código fixam os bugs dele."
+      },
+      {
+        "text": "Pouco por enquanto: peça mais testes até eles executarem cada linha, que é o que torna uma suíte confiável.",
+        "why": "Executar uma linha não é verificar o que ela faz; uma comparação errada continuaria contando como coberta."
+      },
+      {
+        "text": "Que o código faz o que faz; casos de 31 de março e 1º de abril pedem valores esperados tirados da regra escrita.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-n1qytt70": {
+    "prompt": "Sua gestora pergunta quanto custaria rotular com um modelo as avaliações de produtos que chegam. São 5.000 requisições por dia durante 30 dias, cada uma com 800 tokens de entrada e 50 de saída, ao preço de tabela que a aula 2 dá para o Claude Sonnet 5.5. Quantos dólares custa o mês?",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-n845ypyd": {
+    "prompt": "Um job noturno manda 20.000 avaliações de produtos para um modelo, uma requisição cada, e grava cada rótulo numa tabela que ninguém fica olhando encher. Um colega sugere usar streaming nas respostas para o job terminar mais cedo. O que diz a aula 9?",
+    "hint": "IA no Desenvolvimento, aula 9.",
+    "choices": [
+      {
+        "text": "Não, e ainda traz um risco: uma resposta em streaming pode ser cortada em `max_tokens`, e uma comum não.",
+        "why": "As duas param no limite do mesmo jeito; o `stop_reason` perto do fim do stream diz se ela terminou."
+      },
+      {
+        "text": "Não: isso adianta a primeira palavra, não a última, e aqui não há quem espere por ela.",
+        "why": "Isso."
+      },
+      {
+        "text": "Permitiria conferir cada rótulo enquanto chega e parar um errado antes de o resto ser escrito.",
+        "why": "Um rótulo é lido por um programa, e um programa que interpreta a resposta não consegue usar metade dela."
+      },
+      {
+        "text": "Terminaria, porque cada resposta chega em pedaços enquanto o modelo já trabalha na requisição seguinte.",
+        "why": "O tempo total é do modelo de um jeito ou de outro; o streaming muda quando o primeiro pedaço aparece, não quando chega o último."
+      }
+    ]
+  },
+  "ex-nnh7tzhe": {
+    "prompt": "Seu notebook usa a semente `np.random.default_rng(2025)`, e o intervalo do bootstrap sai igual em toda execução. Depois você rotula 200 avaliações pelo Chat Completions da OpenAI com `temperature=0` e `seed=7`, e a nova execução de uma colega discorda em três rótulos. Qual explicação vale para as duas aulas?",
+    "hint": "IA no Desenvolvimento, aula 1; Python para Ciência de Dados: NumPy, pandas e Notebooks, aula 8.",
+    "choices": [
+      {
+        "text": "O provedor trata a semente como melhor esforço, sem prometer saída idêntica nem em 0; guarde os rótulos obtidos.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma biblioteca tirou números do gerador global do NumPy antes da requisição e mexeu na semente que o modelo recebeu.",
+        "why": "Isso é o estado compartilhado do NumPy na sua máquina; o sorteio do provedor acontece do lado dele."
+      },
+      {
+        "text": "Em temperatura 0 o sorteio ainda acontece, só mais concentrado; uma semente fixa não seguraria os rótulos.",
+        "why": "Em 0 o sorteio some e o token mais provável vence; a diferença vem da aritmética do provedor."
+      },
+      {
+        "text": "A colega tem um NumPy mais novo, cujos métodos do Generator podem dar outros números para a mesma semente.",
+        "why": "Vale para o Generator do NumPy, mas os rótulos vieram do provedor, onde o seu NumPy não entra."
+      }
+    ]
+  },
+  "ex-nsj3shz7": {
+    "prompt": "Antes de os e-mails de clientes irem para um modelo receber rótulos de assunto, você acrescenta a `redact()` da aula 11, com os padrões EMAIL, CPF, CARD e SECRET. Quais afirmações sobre o resultado valem, por essa aula? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "`logging.basicConfig(level=logging.INFO)` liga o seu logger e deixa quietos os das bibliotecas.",
+        "why": "Ele liga as mensagens informativas de toda biblioteca; a biblioteca de HTTP passou a registrar cada URL que chamou."
+      },
+      {
+        "text": "O modelo ainda percebe que um cartão foi mencionado, porque o número vira um rótulo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um CPF digitado como onze dígitos soltos, sem pontos nem traço, ainda chega ao provedor.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um código de rastreio de dezesseis dígitos no e-mail é trocado por `[CARD]`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Se o modelo se recusa a responder, os dados do e-mail nunca saíram da loja.",
+        "why": "Uma recusa é uma resposta: ela volta depois que a requisição já foi, com tudo dentro."
+      }
+    ]
+  },
+  "ex-ny2v9bjy": {
+    "prompt": "Seu pipeline pede a um modelo que extraia `total_cents` de notas de fornecedores, por um provedor que impõe o seu JSON Schema enquanto o modelo escreve. Toda resposta passa na validação. O que a aula 8 diz sobre usar esse campo no relatório mensal de gastos?",
+    "hint": "IA no Desenvolvimento, aula 8.",
+    "choices": [
+      {
+        "text": "Tire o seu validador, já que uma resposta restringida pelo provedor não tem como falhar nele, e a checagem custa tempo.",
+        "why": "A aula 8 mantém a checagem: ela segura o formato seja lá o que o provedor fez, e um endpoint ignorou a restrição em silêncio."
+      },
+      {
+        "text": "Use: com o provedor impondo o schema, um campo inteiro só pode guardar um valor que a nota trouxe.",
+        "why": "A restrição mantém o tipo, não o significado; o mesmo modelo leu os 21000 centavos de uma luminária como $21,000."
+      },
+      {
+        "text": "A validação prova o formato; calcule o valor da fonte no código, e use os campos para encaminhar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Acrescente `minimum` e `maximum` ao schema, para que um valor errado por um fator de cem seja recusado ali.",
+        "why": "Uma regra sobre o que é verdade nos dados mora no código; espremida num schema, continua com buracos."
+      }
+    ]
+  },
+  "ex-p140k22a": {
+    "prompt": "Seu desafio em casa pede um carregador que também leia datas escritas com o dia primeiro, e você vai usar um assistente. Ponha os passos na ordem da aula 5, para que o \"o que conta como pronto\" do enunciado seja checado por testes que você escreveu.",
+    "hint": "IA no Desenvolvimento, aula 5; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13.",
+    "items": [
+      "Pedir ao assistente os passos, e nenhum código ainda",
+      "Escrever você mesmo os casos de teste a partir do enunciado",
+      "Rodar os testes e vê-los falhar",
+      "Pedir a mudança, e então rodar os testes nela"
+    ],
+    "trap": "Pedir a mudança e os testes numa requisição só parece mais rápido, mas testes que chegam com a mudança foram escritos a partir dela, e um teste que passa antes da mudança não verifica nada."
+  },
+  "ex-p5ewvg5q": {
+    "prompt": "Seu projeto de portfólio responde perguntas sobre um manual de suporte recuperando trechos e citando-os. Qual linha de currículo segue as regras da aula 4 para um número, usando o que a aula 6 mede?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "Ajudei a construir um chatbot de suporte cujas respostas citadas fazem o cliente receber a resposta certa sempre.",
+        "why": "*Ajudei* esconde a sua parte, e uma citação verificada não torna uma resposta certa: uma passou e estava errada."
+      },
+      {
+        "text": "Construí um assistente de suporte que melhorou a precisão das respostas em 40% sobre um modelo puro, com fontes citadas.",
+        "why": "Medido como, e contra o quê? Um número que você não sabe explicar custa mais do que nenhum número."
+      },
+      {
+        "text": "Construí uma busca de trechos: o certo fica entre os três primeiros em 11 de 12 questões rotuladas; 10 por palavras.",
+        "why": "Isso."
+      },
+      {
+        "text": "Desenvolvi uma aplicação de RAG usando Python, NumPy, WordLlama e BM25, com busca híbrida e checagem de cada citação.",
+        "why": "Lista a stack, que todo outro currículo também tem, e não diz nada sobre o que a ferramenta consegue."
+      }
+    ]
+  },
+  "ex-phx6ashv": {
+    "prompt": "Num desafio em casa, um assistente escreveu para você uma função de reamostragem com um método que você nunca usou; ela roda, e os resultados parecem plausíveis. A conversa seguinte vai percorrer a sua entrega. O que decorre das aulas citadas?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; IA no Desenvolvimento, aula 3.",
+    "choices": [
+      {
+        "text": "Manter só quando você entender o método a ponto de poder tê-lo escrito, e dizer na nota o que escolheu e por quê.",
+        "why": "Isso."
+      },
+      {
+        "text": "Manter como está: roda, atende ao enunciado, e dez minutos de avaliação não dão tempo de perguntarem disso.",
+        "why": "Num domínio que você não conhece, uma resposta errada e fluente parece certa, e a conversa vai perguntar sobre ela."
+      },
+      {
+        "text": "Pedir ao assistente uma segunda versão, e entregar a que concordar com a primeira nos seus dados.",
+        "why": "Um segundo sorteio do mesmo modelo não é uma checagem; você continua sem conseguir julgar nenhuma das duas."
+      },
+      {
+        "text": "Entregar sem nota, já que uma nota que menciona o assistente admite que o trabalho não é seu.",
+        "why": "A nota faz parte da entrega: o que você fez, o que escolheu e por quê, e o que falta."
+      }
+    ]
+  },
+  "ex-pja3896d": {
+    "prompt": "Uma proposta PJ fatura R$ 7.200 por mês durante doze meses, sem benefícios. Pela conta da aula 17, antes de impostos e benefícios, qual salário mensal CLT vale o mesmo ano? Um número inteiro de reais.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-pr4sgaxq": {
+    "prompt": "Na sua segunda semana, você cola num assistente de chat hospedado o traceback de uma célula do notebook que falhou, e depois percebe que ele continha a senha do banco de dados de análises. O que as aulas citadas dizem para fazer?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; IA no Desenvolvimento, aula 3.",
+    "choices": [
+      {
+        "text": "Trocar você mesmo a senha à noite, e comentar só se alguém notar uma conexão que falhou.",
+        "why": "O que os times não perdoam fácil é descobrir depois que você sabia; diga cedo, a quem precisa saber."
+      },
+      {
+        "text": "Nada, desde que o arquivo de onde a senha veio já esteja listado no `.gitignore` do repositório.",
+        "why": "O `.gitignore` decide o que o git ignora, não o que você cola num chat."
+      },
+      {
+        "text": "Apagar a conversa do histórico do chat, o que remove a requisição antes de o provedor guardá-la.",
+        "why": "Não há como chamar uma requisição de volta; ela fica num log que você não pode ler nem apagar."
+      },
+      {
+        "text": "Avisar já quem é dono do banco, para a senha ser revogada; uma requisição não pode ser chamada de volta.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pz4gy1cf": {
+    "prompt": "Numa entrevista para uma vaga júnior de dados, perguntam como você deixaria o time de suporte consultar um modelo de linguagem sobre o manual de políticas de 300 páginas da empresa. Pelas aulas citadas, como a sua resposta deve começar?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 14; IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "Com mandar o manual inteiro em toda requisição, já que as maiores janelas de contexto de hoje o comportam.",
+        "why": "Isso decide o desenho antes de perguntar qualquer coisa, e a aula 6 recupera trechos porque documentos grandes deixam de ser baratos de mandar."
+      },
+      {
+        "text": "Com duas ou três perguntas: quantas pessoas perguntam, e o que não é admissível, como uma resposta sem base.",
+        "why": "Isso."
+      },
+      {
+        "text": "Com treinar o modelo mais um pouco no manual, para ele saber as políticas sem elas no prompt.",
+        "why": "Treinar mais muda como um modelo escreve, não os fatos que ele deve citar, e ainda pula as perguntas."
+      },
+      {
+        "text": "Com o desenho completo logo de saída: um banco vetorial, um cache, busca híbrida e um fallback entre três provedores.",
+        "why": "Partes que ninguém pediu soam recitadas, e não raciocinadas; a coisa mais simples vem depois das perguntas."
+      }
+    ]
+  },
+  "ex-pz9e1why": {
+    "prompt": "Perguntado sobre uma vez em que falhou, você conta que aceitou a refatoração de um assistente numa função de limpeza de dados: todos os testes passaram, e mudou um resultado que nenhum teste cobria. Qual última frase segue a aula 15 e bate com o que a aula 3 encontrou?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15; IA no Desenvolvimento, aula 3.",
+    "choices": [
+      {
+        "text": "Não foi bem um erro meu: os testes estavam verdes, e a ferramenta devia ter avisado o que mudou.",
+        "why": "Culpar outra pessoa é a resposta que a aula 15 diz que falha; a correção é o ponto."
+      },
+      {
+        "text": "Desde então peço ao assistente que rode a suíte inteira depois de cada mudança, e aceito a mudança quando fica verde.",
+        "why": "A suíte estava verde na mudança que quebrou o resultado; testes só checam o que foram escritos para checar."
+      },
+      {
+        "text": "Desde então, antes de aceitar uma refatoração sugerida, escrevo primeiro os casos que fixam o que não pode mudar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Sou perfeccionista, então agora reviso cada linha duas vezes, mesmo quando isso me deixa mais lento que o time.",
+        "why": "Uma qualidade disfarçada é a resposta que entrevistadores já ouviram milhares de vezes."
+      }
+    ]
+  },
+  "ex-q8a4vxxr": {
+    "prompt": "Associe cada ponto em que veio uma recusa ao que a aula 19 diz que ela costuma significar.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 19.",
+    "pairs": [
+      {
+        "left": "Depois da conversa de triagem",
+        "right": "Um desencontro prático, como salário, contrato, escala ou local"
+      },
+      {
+        "left": "Depois de uma entrevista técnica",
+        "right": "O exercício, o pensar em voz alta, ou um candidato mais forte naquele dia"
+      },
+      {
+        "left": "Depois da entrevista final",
+        "right": "Costuma ter sido por pouco: outra pessoa se encaixou um pouco melhor"
+      }
+    ],
+    "right_distractors": [
+      "O currículo, ou a mira das candidaturas"
+    ]
+  },
+  "ex-qb5sy60w": {
+    "prompt": "Pela aula 10, depois de um seguimento e de umas três semanas de silêncio, você marca a candidatura como fria na planilha e mantém a linha, porque fria não é ___.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "fechada",
+          "encerrada",
+          "closed",
+          "acabada",
+          "terminada"
+        ]
+      }
+    ]
+  }
+}

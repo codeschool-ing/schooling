@@ -1,0 +1,3860 @@
+[
+  {
+    "id": "ex-00e4j696",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Without pandas, a colleague names each trip's start station from `names = {r[\"station_id\"]: r[\"name\"] for r in csv.DictReader(f)}`, built over the course's `stations.csv`. What do the January trips from `S07` get?",
+    "hint": "Python, lesson 4; Python for Data Science: NumPy, pandas and Notebooks, lesson 14.",
+    "choices": [
+      {
+        "text": "`Espinheiro`: the July row is later in the file and replaces the first under that key.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Rua da Hora`: a dictionary keeps the first value stored under a key and ignores later ones.",
+        "correct": false,
+        "why": "Assigning to a key that exists replaces its value; the last row read wins."
+      },
+      {
+        "text": "Both names, in a list, the way `stations.loc[\"S07\"]` returns two rows.",
+        "correct": false,
+        "why": "A dictionary holds one value per key; only pandas returned both rows."
+      },
+      {
+        "text": "A `KeyError` when the comprehension reaches the second `S07`, because keys must be unique.",
+        "correct": false,
+        "why": "Keys are unique because a repeat overwrites, not because a repeat raises."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s7q0yre",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "`rows` is `trips.csv` read into a list with `csv.DictReader`, and `trips` is the same file as a pandas 3 DataFrame. After which of these is the object it started from exactly as it was? Choose all that apply.",
+    "hint": "Python, lesson 3; Python for Data Science: NumPy, pandas and Notebooks, lesson 11.",
+    "choices": [
+      {
+        "text": "`trips.loc[trips[\"plan\"] == \"day\", \"price\"] = 1200`",
+        "correct": false,
+        "why": "One `loc` on the left of `=` writes into `trips` itself."
+      },
+      {
+        "text": "`for r in [r for r in rows if r[\"plan\"] == \"day\"]: r[\"price\"] = 1200`",
+        "correct": false,
+        "why": "The new list holds the same dictionaries as `rows`, and each one gained a key."
+      },
+      {
+        "text": "`day = trips[trips[\"plan\"] == \"day\"]`, then `day[\"price\"] = 1200`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`by_time = sorted(rows, key=lambda r: r[\"started_at\"])`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rows.sort(key=lambda r: r[\"started_at\"])`",
+        "correct": false,
+        "why": "`sort` reorders the list itself and returns `None`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0yjkg9t5",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A station code is the integer `2` in one source and the text `\"2\"` in another, read from a CSV. Which of these give an answer instead of raising an error? Choose all that apply.",
+    "hint": "Python, lesson 4; Python for Data Science: NumPy, pandas and Notebooks, lesson 14.",
+    "choices": [
+      {
+        "text": "`\"2\" in [1, 2, 3]`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`codes.merge(labels, on=\"code\")`, with `code` as `int64` on one side and `str` on the other",
+        "correct": false,
+        "why": "`merge` checks the key types and raises `ValueError` naming both."
+      },
+      {
+        "text": "`\"2\" == 2`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`\"2\" < 3`",
+        "correct": false,
+        "why": "Ordering refuses: there is no honest answer to which is larger, so it raises `TypeError`."
+      }
+    ]
+  },
+  {
+    "id": "ex-12wkyk5e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A notebook stores the trips with `with sqlite3.connect(\"bikes.db\") as con:` and, inside the block, `trips.to_sql(\"trips\", con, index=False)`. What has the `with` done once the block ends?",
+    "hint": "Python, lesson 13; Python for Data Science: NumPy, pandas and Notebooks, lesson 10.",
+    "choices": [
+      {
+        "text": "Committed and closed it, and would have deleted `bikes.db` had the block raised.",
+        "correct": false,
+        "why": "On an exception it rolls the transaction back; it neither closes nor deletes anything."
+      },
+      {
+        "text": "Closed the connection, the way `with open(...)` closes a file.",
+        "correct": false,
+        "why": "A library's manager does what its documentation says; this one commits and leaves the connection open."
+      },
+      {
+        "text": "Committed the transaction; the connection stays open until `con.close()`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing yet: the transaction is committed by `con.close()` and not before.",
+        "correct": false,
+        "why": "The `with` commits at the end of the block; `close` is a separate step."
+      }
+    ]
+  },
+  {
+    "id": "ex-135hwzyq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The `python` course says `pip freeze` does not write a requirements file. The data course commits `requirements-lock.txt` from `pip freeze`, beside a hand-written `requirements.txt`. A teammate calls that a contradiction. What answers them?",
+    "hint": "Python, lesson 18; Python for Data Science: NumPy, pandas and Notebooks, lesson 3.",
+    "choices": [
+      {
+        "text": "Rebuild from the hand-written file when the numbers must match; every line in it is pinned.",
+        "correct": false,
+        "why": "It pins seven packages and leaves ninety-six to pip on the day it runs."
+      },
+      {
+        "text": "They do contradict: keep only the frozen list, which pins everything, and drop the short file.",
+        "correct": false,
+        "why": "The short file is the only place that says which packages are the project's own decisions."
+      },
+      {
+        "text": "`pip freeze` marks the packages you asked for, so a single frozen file can do both jobs.",
+        "correct": false,
+        "why": "`freeze` lists everything, with no distinction between what you chose and what came with it."
+      },
+      {
+        "text": "A lock, generated and never edited, rebuilds the setup; the short file says what was asked for.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-15j6dkbb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Without pandas, you count trips per end station with `Counter(r[\"end_station\"] for r in csv.DictReader(f))` over the course's `trips.csv`, in which 146 bikes never came back. How many keys does the `Counter` have?",
+    "hint": "Python, lesson 9; Python for Data Science: NumPy, pandas and Notebooks, lesson 14.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1dv7cd9s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test of your `plan_shares(trips)`, whose shares should add up to 1, fails with `assert 0.9999999999999999 == 1.0`. The function is correct. What should the assertion be?",
+    "hint": "Python, lesson 16; Python for Data Science: NumPy, pandas and Notebooks, lesson 5.",
+    "choices": [
+      {
+        "text": "`assert result.sum() is not None`, since a sum came back",
+        "correct": false,
+        "why": "That asserts there was an answer, which is true whatever the arithmetic did."
+      },
+      {
+        "text": "`assert result.sum() == pytest.approx(1.0)`, within a tolerance",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`assert result.astype(\"float32\").sum() == 1.0`, with fewer digits to stray",
+        "correct": false,
+        "why": "`float32` keeps about seven digits, so its sums drift sooner, not later."
+      },
+      {
+        "text": "`assert round(result.sum(), 2) == 1.0`, rounding before comparing",
+        "correct": false,
+        "why": "Rounding is for display; this passes shares that are wrong by up to half a hundredth."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gt9shjg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a notebook, `import bikes` and `bikes.label(20)` give `'long'`. You change the limit in `bikes.py` from 15 to 30, save the file, run `import bikes` again, and still get `'long'`. Why?",
+    "hint": "Python, lesson 7; Python for Data Science: NumPy, pandas and Notebooks, lesson 2.",
+    "choices": [
+      {
+        "text": "The `.ipynb` keeps a copy of each imported module, so the file on disk is not read again.",
+        "correct": false,
+        "why": "The notebook file holds cells and outputs; modules live in the kernel's memory."
+      },
+      {
+        "text": "`bikes` is already loaded; importing it again reuses what is in memory, not the file.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The kernel reuses the saved output of a cell whose code has not changed since its last run.",
+        "correct": false,
+        "why": "A cell runs again every time; lesson 2's `total` gave a new answer from the same code."
+      },
+      {
+        "text": "A stale `.pyc` in `__pycache__` wins over the edited source until somebody deletes it.",
+        "correct": false,
+        "why": "Python reuses the compiled file only while the source is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kmb6y58",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "From `weather.csv` a colleague builds `dates`, all 365 days, and `rain`, the readings with the six unread days left out, 359 floats. Then `by_day = dict(zip(dates, rain))`. What does `by_day` hold?",
+    "hint": "Python, lesson 4; Python for Data Science: NumPy, pandas and Notebooks, lesson 7.",
+    "choices": [
+      {
+        "text": "359 entries, and from the first gap on, each value sits under an earlier date.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "365 entries, with `None` under the six dates that have no reading to pair with.",
+        "correct": false,
+        "why": "That is pandas aligning by label; `zip` pairs by position and has no labels."
+      },
+      {
+        "text": "359 entries, correctly paired, because `zip` passes over the dates with no partner.",
+        "correct": false,
+        "why": "`zip` knows nothing about dates; it takes the first item of each, then the second."
+      },
+      {
+        "text": "Nothing: `zip` raises a `ValueError`, because the two lists differ in length.",
+        "correct": false,
+        "why": "Only `zip(..., strict=True)` raises; the default stops at the shorter one, silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rkqpz9h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before a merge, station codes typed by hand are checked with `re.match(r\"S\\d{2}\", code)`. `\"S03 \"`, with a space at the end, passes, and then matches nothing in `station_id`. Which check refuses it?",
+    "hint": "Python, lesson 10; Python for Data Science: NumPy, pandas and Notebooks, lesson 14.",
+    "choices": [
+      {
+        "text": "`re.search(r\"S\\d{2}\", code)`",
+        "correct": false,
+        "why": "`search` finds the pattern anywhere, so it is looser than `match`, not stricter."
+      },
+      {
+        "text": "`re.match(r\"S\\d+\", code)`",
+        "correct": false,
+        "why": "Any number of digits still leaves the trailing space unchecked."
+      },
+      {
+        "text": "`re.match(r\"^S\\d{2}\", code)`",
+        "correct": false,
+        "why": "`^` anchors the start, which `match` already does; the space is at the end."
+      },
+      {
+        "text": "`re.fullmatch(r\"S\\d{2}\", code)`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-27ewwg0z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A notebook reads the rain with `rain = [float(line.split(\",\")[1] or \"nan\") for line in lines[1:]]` and counts wet days with `len([r for r in rain if r > 0])`. For a day with no reading, what does `or \"nan\"` do, and is that day counted?",
+    "hint": "Python, lesson 2; Python for Data Science: NumPy, pandas and Notebooks, lesson 1.",
+    "choices": [
+      {
+        "text": "The empty field is falsy, so `or` gives `\"nan\"`; the day becomes `nan`, which passes the test and is counted.",
+        "correct": false,
+        "why": "`nan > 0` is `False`, so the day drops out of the count without a word."
+      },
+      {
+        "text": "The empty field is falsy, so `or` gives `\"nan\"`; the day becomes `nan`, and `nan > 0` raises, stopping the count.",
+        "correct": false,
+        "why": "A comparison with `nan` answers `False`; it does not raise."
+      },
+      {
+        "text": "The empty field is falsy, so `or` gives `\"nan\"`; the day becomes `nan` and drops out, as `nan > 0` is false.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`or` gives `False` for the empty field and `float(False)` is `0.0`, so the day reads as dry and is not counted.",
+        "correct": false,
+        "why": "`or` returns one of its operands, not a boolean: here the string `\"nan\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c1pyyd6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A helper saves reading `trips.csv` twice: `@functools.cache` above `def load(path): return pd.read_csv(path)`. One cell runs `t = load(\"trips.csv\")` and then `t[\"minutes\"] = ...`; a later cell calls `load(\"trips.csv\")`. What comes back?",
+    "hint": "Python, lesson 12; Python for Data Science: NumPy, pandas and Notebooks, lesson 11.",
+    "choices": [
+      {
+        "text": "The table as it was read, because Copy-on-Write keeps every DataFrame safe from later changes.",
+        "correct": false,
+        "why": "Copy-on-Write is about selections; adding a column to `t` changes `t` itself."
+      },
+      {
+        "text": "The DataFrame the first cell changed, new column and all: the cache hands back what it stored.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A fresh table: the cache keeps the file's text and parses it again on every call.",
+        "correct": false,
+        "why": "The cache is a dictionary from arguments to results, and the result is the DataFrame itself."
+      },
+      {
+        "text": "A `TypeError`, because a DataFrame cannot be kept in a cache that needs hashable values.",
+        "correct": false,
+        "why": "The arguments must be hashable, and the argument here is a string; a result can be anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wjtabt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A cleaning script keeps the day-pass trips in place: `with open(\"trips.csv\", encoding=\"utf-8\") as src, open(\"trips.csv\", \"w\", encoding=\"utf-8\") as dst:`, then it writes the header and copies every line of `src` that contains `,day,`. What is in `trips.csv` afterwards?",
+    "hint": "Python, lesson 9; Python for Data Science: NumPy, pandas and Notebooks, lesson 2.",
+    "choices": [
+      {
+        "text": "The file as it was: Python refuses to open a file for writing while it is open for reading.",
+        "correct": false,
+        "why": "Python opens it twice without complaint; the damage is what `\"w\"` does on opening."
+      },
+      {
+        "text": "The old trips followed by the copied ones, because the two file objects share one position.",
+        "correct": false,
+        "why": "Each file object has its own position; the file they share was emptied."
+      },
+      {
+        "text": "The header and the day-pass trips, since `src` was opened first and still reads the old file.",
+        "correct": false,
+        "why": "Both names are the same file, and `\"w\"` truncated it before the loop read anything."
+      },
+      {
+        "text": "Only the header: opening the file with `\"w\"` emptied it before a single line was read.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zdrtfrv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A station list exported from Excel is read with csv.DictReader, and row[\"station_id\"] raises KeyError: the first key is '\\ufeffstation_id', with three invisible bytes in front. Open the file with encoding=\"___\" and the key comes out clean.",
+    "hint": "Python, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "utf-8-sig",
+          "utf_8_sig",
+          "utf8-sig"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-35hawj2f",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A plain-Python report over twenty thousand orders takes nine seconds, all of it in one large function. Put the steps in the order lesson 20 takes them.",
+    "hint": "Python, lesson 20.",
+    "items": [
+      "Run `python -m cProfile -s tottime report.py` on the code as it stands",
+      "Split the large function into a few smaller ones and profile again",
+      "Fix the function with the largest `tottime`",
+      "Time the fixed version without the profiler"
+    ],
+    "trap": "Fixing what looks worst before profiling saved seven per cent in the demonstration; and times taken under `cProfile` are inflated, so the fix is timed without it."
+  },
+  {
+    "id": "ex-38g24dgt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A meter report's `docks` column arrives as text, and among its values are `n/a` and `1O`. A colleague converts it in a loop with `int(text)` inside `try`, and `except ValueError: value = 0`. Why does lesson 12 do it another way?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 12; Python, lesson 8.",
+    "choices": [
+      {
+        "text": "`int` reads `1O` as ten, so only `n/a` becomes 0, and a zero is the right value for a gap anyway.",
+        "correct": false,
+        "why": "`1O` has the letter O in it, so `int` refuses it; and a zero claims a reading."
+      },
+      {
+        "text": "`pd.to_numeric(..., errors=\"coerce\")` stops at the first bad value, so it reports less than the loop.",
+        "correct": false,
+        "why": "`coerce` converts what it can and makes the rest `NaN`, so every failure shows at once."
+      },
+      {
+        "text": "Both become zeros that pass for readings; coercing, then listing what failed, names `n/a` and `1O`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The loop gives the same result, and the pandas call is only faster on a long column.",
+        "correct": false,
+        "why": "The loop hides which values failed; the pandas pair keeps their original text to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jcrvygh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In `pydata`, `pip install numpy==2.5.3` fails with `2.5.3 Requires-Python >=3.12`: the `.venv` was made with Python 3.11. Ana installs Python 3.12 beside the old one. What comes next?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 1; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "Delete `.venv` and rebuild it with 3.12: an environment only points at its maker's Python.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add `--break-system-packages` to the install, so that pip accepts the newer NumPy.",
+        "correct": false,
+        "why": "That flag is about the system's own Python, and the refusal here is about the version."
+      },
+      {
+        "text": "Edit `version` and `executable` in `.venv/pyvenv.cfg` so they name the new interpreter.",
+        "correct": false,
+        "why": "An environment cannot be upgraded in place; its libraries were installed for the old Python."
+      },
+      {
+        "text": "Run `python -m pip install --upgrade python` with the environment active.",
+        "correct": false,
+        "why": "pip installs libraries into an environment; the interpreter is not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3txhc7zb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a notebook running the `Python (pandas 2.2)` kernel, `!pip install pyarrow` reports success, and the next cell's `import pyarrow` fails. What happened?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 3; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "The kernel had cached its imports, and `importlib.reload(pyarrow)` after the install picks it up.",
+        "correct": false,
+        "why": "Reloading needs a module already imported; this one never reached the kernel's environment."
+      },
+      {
+        "text": "pyarrow needs conda, as lesson 3 found, so pip cannot put it into any kernel at all.",
+        "correct": false,
+        "why": "pip installed pyarrow in lesson 1; conda-forge was the one missing that version."
+      },
+      {
+        "text": "pip installs into the system Python unless `--user` is given, and kernels cannot see that.",
+        "correct": false,
+        "why": "pip installs into the environment it belongs to; the question is which `pip` ran."
+      },
+      {
+        "text": "`!pip` ran whichever `pip` the shell found, another environment's; `%pip` uses the kernel's.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-47x3h3pg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`weather_br.csv` came from a spreadsheet set to Portuguese; its lines read `date;rain_mm;temp_max` and `2025-01-01;0,0;29,9`. Which line gives you `rain_mm` as numbers you can sum?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 10; Python, lesson 9.",
+    "choices": [
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", sep=\";\")`",
+        "correct": false,
+        "why": "The columns split, and `0,0` and `29,9` stay text that no arithmetic reads."
+      },
+      {
+        "text": "`csv.DictReader(open(\"weather_br.csv\"), delimiter=\";\")`",
+        "correct": false,
+        "why": "The `csv` module splits the columns and hands back every value as a string."
+      },
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", sep=\";\", decimal=\",\")`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`pd.read_csv(\"weather_br.csv\", decimal=\",\", encoding=\"utf-8\")`",
+        "correct": false,
+        "why": "It still looks for commas between columns, and the header has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-4abbt0pf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A Series of 12 daily readings has 3 missing; the 9 present add up to 54.0. By how many percent is `s.mean()` higher than `s.sum() / len(s)`? Round to one decimal place.",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 12; Python, lesson 21.",
+    "value": 33.3,
+    "tolerance": 0.1,
+    "unit": ""
+  },
+  {
+    "id": "ex-4abcg61q",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "A CSV of a few gigabytes has to be analysed on a laptop with 16 GB of memory. Put the cheap steps in the order lesson 20 tries them, before reaching for another tool.",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 20.",
+    "items": [
+      "Read fewer columns, with `usecols` or Parquet's `columns`",
+      "Give the columns their types as they are read, with `dtype` and `parse_dates`",
+      "Store as Parquet what you will read more than once",
+      "Read in chunks, when the question adds up",
+      "Work on a sample while writing the analysis, and run it on the whole at the end"
+    ],
+    "trap": "Chunks come late because they only answer questions that add up, such as a count or a sum; fewer columns and smaller types cost less and help every question."
+  },
+  {
+    "id": "ex-4b00d48g",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each plain-Python way of working over `rows`, the trips as a list of dictionaries, to the line that does the same job on `trips`, the DataFrame.",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 17; Python, lesson 7.",
+    "pairs": [
+      {
+        "left": "Counting the trips per station with `collections.Counter`",
+        "right": "`trips[\"start_station\"].value_counts()`"
+      },
+      {
+        "left": "Appending each trip's minutes to a `defaultdict(list)` by station, then summing each list",
+        "right": "`trips.groupby(\"start_station\")[\"minutes\"].sum()`"
+      },
+      {
+        "left": "Looking each trip's station code up in a dictionary of names",
+        "right": "`trips[\"start_station\"].map(by_code)`"
+      },
+      {
+        "left": "A list comprehension with an `if` that keeps one station's trips",
+        "right": "`trips[trips[\"start_station\"] == \"S05\"]`"
+      },
+      {
+        "left": "A `for` loop that calls a function once per trip",
+        "right": "`trips.apply(f, axis=1)`"
+      }
+    ],
+    "right_distractors": [
+      "`trips.merge(stations, left_on=\"start_station\", right_on=\"station_id\")`"
+    ]
+  },
+  {
+    "id": "ex-4hteh1em",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A notebook calls `np.random.seed(42)` in its first cell and draws a sample in its fourth. A colleague adds a call to one of their helpers in the third cell, and the sample changes though the seed did not. What change makes the sample stay put?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 8; Python, lesson 5.",
+    "choices": [
+      {
+        "text": "Create a Generator, `rng = np.random.default_rng(42)`, draw from it, and pass it on as an argument.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add `rng = np.random.default_rng(42)` at the top and keep drawing with `np.random.choice`.",
+        "correct": false,
+        "why": "`np.random.choice` still draws from the global generator; `rng` is used only when called."
+      },
+      {
+        "text": "Declare the generator `global` inside the helper, so that its draws stop reaching the notebook's numbers.",
+        "correct": false,
+        "why": "`global` lets a function assign a module-level name; it does not make shared state private."
+      },
+      {
+        "text": "Keep `np.random.seed(42)` but pick a larger seed, so the helper's draws use another stretch of the sequence.",
+        "correct": false,
+        "why": "A seed sets where one shared sequence starts; any draw still moves it for everything after."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jr7ab7b",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A model hands over a 30-day forecast with shape `(30, 1)`; the actual temperatures have shape `(30,)`. How many differences does `np.abs(forecast - actual).mean()` average?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 6.",
+    "value": 900,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-4p11b1v9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "146 trips have no `end_station`. Which of these leave those trips out of what they return, with no warning? Choose all that apply.",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lessons 13 and 14; Python, lesson 21.",
+    "choices": [
+      {
+        "text": "`trips.groupby(\"end_station\").size()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`trips[\"end_station\"].value_counts()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`trips.groupby(\"end_station\", dropna=False).size()`",
+        "correct": false,
+        "why": "`dropna=False` makes the missing key a group of its own, `NaN`, holding all 146."
+      },
+      {
+        "text": "`trips.merge(ids, left_on=\"end_station\", right_on=\"station_id\", how=\"left\")`",
+        "correct": false,
+        "why": "A left join keeps every trip and fills the station side with `NaN`."
+      },
+      {
+        "text": "`trips.merge(ids, left_on=\"end_station\", right_on=\"station_id\")`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rag4195",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Four worker processes each need random numbers that are reproducible from one seed and independent of each other. After parent = np.random.default_rng(2025), the children come from workers = parent.___(4).",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "spawn"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4tg4wyxd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`trips.pivot_table(index=\"plan\", columns=\"bike\", values=\"minutes\", aggfunc=\"median\", margins=True)` puts 14.2 in the `All` corner, while the median of its four cells is 15.3. A reviewer says the corner is wrong. What is the case?",
+    "hint": "Python for Data Science: NumPy, pandas and Notebooks, lesson 15.",
+    "choices": [
+      {
+        "text": "A sum of the cells would match its corner, so a median should too; some trips were counted twice.",
+        "correct": false,
+        "why": "Sums of parts add up; medians of parts do not, and nothing was counted twice."
+      },
+      {
+        "text": "The corner is every trip's median; groups of unequal size have a different median of medians.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The corner is a mean, because `margins=True` adds means whatever `aggfunc` says.",
+        "correct": false,
+        "why": "The margins use the same `aggfunc` as the cells, applied to every trip in the row or column."
+      },
+      {
+        "text": "The cells leave out the 146 lost bikes and the corner keeps them, which pulls it down.",
+        "correct": false,
+        "why": "Both skip trips with no minutes; the difference is in how a median combines."
+      }
+    ]
+  },
+  {
+    "id": "ex-53t6m4m1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Panela's March funnel shows that 4,467 of the 9,242 mobile sessions that reached checkout went on to pay. Treating each session as an independent yes or no, what is the 95% margin of error of that rate, by the standard-error formula for a proportion? Answer in percentage points, to one decimal place.",
+    "hint": "Statistics for Data Analysis, lesson 12; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 14.",
+    "value": 1.0,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-540q047b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the breakdown of Panela's checkout test by segment, mobile shows a lift of 0.62 points with p = 0.006. A product manager writes on the slide: \"there is only a 0.6% chance that the mobile lift is a fluke\". Which sentence says correctly what the 0.006 means?",
+    "hint": "Statistics for Data Analysis, lesson 14; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 11.",
+    "choices": [
+      {
+        "text": "There is a 99.4% chance that the new page really does help visitors who buy on a phone.",
+        "correct": false,
+        "why": "One minus p is not the probability of the alternative; p is computed assuming the null is true."
+      },
+      {
+        "text": "The lift on mobile must be a large one, because a p as small as this needs a big effect.",
+        "correct": false,
+        "why": "A p-value mixes the size of the effect with the size of the sample; it does not measure the lift."
+      },
+      {
+        "text": "The chance that the null hypothesis, no difference, holds for mobile visitors is 0.6%.",
+        "correct": false,
+        "why": "p is the probability of the data given the null, not of the null given the data."
+      },
+      {
+        "text": "Were the page no help on mobile, a gap this large or larger would appear in 0.6% of tests.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5f9ca9bn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A monthly report says Panela's checkout-to-paid rate fell from 64.5% in February to 58.5% in March. Split by device, March is higher on both: desktop 83% against 82%, mobile 48% against 47%. What is the most likely explanation?",
+    "hint": "Statistics for Data Analysis, lesson 18; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 14.",
+    "choices": [
+      {
+        "text": "The rise within each device is too small to be significant, so the fall in the total is the real finding.",
+        "correct": false,
+        "why": "The total is not the more trustworthy view here; it compares months with different shares of phone sessions."
+      },
+      {
+        "text": "The device rates mislead, because the device is an effect of the checkout itself.",
+        "correct": false,
+        "why": "The device is fixed before anyone reaches checkout, so splitting by it is the fair comparison."
+      },
+      {
+        "text": "A larger share of March's checkouts came from phones, where paying is rarer, so the total shifted.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The split must be wrong: if both devices rose, the total has to rise too.",
+        "correct": false,
+        "why": "A total can fall while every part rises, when the mix shifts towards the weaker part; that is Simpson's paradox."
+      }
+    ]
+  },
+  {
+    "id": "ex-5my8zehv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "From 2023 to 2025 Panela's monthly orders grew, and so did the monthly price of rice; the two series have a correlation of 0.8. Before anyone calls rice a driver of orders, what should the analyst correlate instead?",
+    "hint": "Statistics for Data Analysis, lesson 18; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 1.",
+    "choices": [
+      {
+        "text": "How much each series moved from one month to the next.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The ranks of the two series, with Spearman's coefficient.",
+        "correct": false,
+        "why": "Two rising trends also rise together in rank; ranks keep the shared drift."
+      },
+      {
+        "text": "The logarithms of both series, so the growth becomes additive.",
+        "correct": false,
+        "why": "A logarithm changes the scale of a trend, not its presence; the logged series still drift together."
+      },
+      {
+        "text": "The same two series over twice as many months.",
+        "correct": false,
+        "why": "More months of two drifting series bring more drift, not less; the trend itself is the trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vkeqg7x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Panela's RFM table describes recency, in days since the last order, with a first quartile of 6, a median of 33, a third quartile of 196 and a maximum of 364. Where does the upper fence of the 1.5 IQR rule fall, in days?",
+    "hint": "Statistics for Data Analysis, lesson 9; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 15.",
+    "value": 481,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-5x05w2km",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The residuals of a model of Panela's weekly orders, read in time order, have a lag-1 autocorrelation of 0.5: a week above the model tends to be followed by another week above it. Which conclusions follow? Choose all that apply.",
+    "hint": "Statistics for Data Analysis, lesson 20; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 1.",
+    "choices": [
+      {
+        "text": "What is left over is not noise in the sense a model should leave.",
+        "correct": true,
+        "why": "Noise should have no memory of last week; these residuals do."
+      },
+      {
+        "text": "Its standard errors and intervals are probably too narrow.",
+        "correct": true,
+        "why": "Correlated residuals carry less independent information than their count suggests."
+      },
+      {
+        "text": "The forecasts are too high on average.",
+        "correct": false,
+        "why": "Runs say the errors are related, not that they lean one way overall; that is the bias, the mean of the errors."
+      },
+      {
+        "text": "Fitting the same model on twice as many weeks would make the residuals independent.",
+        "correct": false,
+        "why": "More weeks repeat the same runs; the missing variable has to enter the model."
+      },
+      {
+        "text": "Something that changes over time is missing from the model.",
+        "correct": true,
+        "why": "Runs in the residuals are a pattern the model did not take."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x2nb3te",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A 10% trimmed mean of 400 baskets in A2:A401 drops the 40 smallest and the 40 largest. In TRIMMEAN, the second argument that asks for exactly that is ___.",
+    "hint": "Statistics for Data Analysis, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "0.2",
+          "0,2",
+          ".2",
+          "20%",
+          "20 %",
+          "0.20"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5zqkq7fb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A support team logs the tickets it receives each day for 90 days: a mean of 3.1 a day and a variance of 9.4. Before modelling the daily count as Poisson, what does that pair of numbers suggest?",
+    "hint": "Statistics for Data Analysis, lesson 8.",
+    "choices": [
+      {
+        "text": "The Poisson model's rate should be set at 9.4 a day, since a Poisson's rate is its variance.",
+        "correct": false,
+        "why": "The rate is estimated by the mean; a Poisson needs the mean and the variance to agree, and these do not."
+      },
+      {
+        "text": "The tickets come in bursts rather than independently, so a Poisson fits them badly.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The daily count is binomial rather than Poisson, because its variance is larger than its mean.",
+        "correct": false,
+        "why": "A binomial's variance, np(1 − p), is smaller than its mean, np, not larger."
+      },
+      {
+        "text": "Ninety days are too few to compare a variance with a mean, so the Poisson still stands.",
+        "correct": false,
+        "why": "A variance three times the mean over ninety days is a warning sign, not a wobble."
+      }
+    ]
+  },
+  {
+    "id": "ex-68nt186t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Across the 4,679 customers of Panela's RFM table, orders and spend in the last year are strongly correlated. An analyst repeats the calculation, on the same raw orders and reais, for the 1,087 champions only, those with R and F scores of 4 or 5, and finds a much weaker correlation. What is the most likely reason?",
+    "hint": "Statistics for Data Analysis, lesson 17; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 15.",
+    "choices": [
+      {
+        "text": "A thousand customers are too few to estimate a correlation with any precision.",
+        "correct": false,
+        "why": "A thousand pairs pin a correlation down well; the cause is the range, not the count."
+      },
+      {
+        "text": "Among champions spend stops depending on orders, because they choose bigger boxes.",
+        "correct": false,
+        "why": "Nothing in the data says so; the same relationship seen through a narrow window simply looks weaker."
+      },
+      {
+        "text": "Champions span only the top of the order counts, and a narrow range hides the relationship.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Selecting customers by their score turned the orders into an ordinal variable, which Pearson's r cannot use.",
+        "correct": false,
+        "why": "The orders are still counts; choosing customers by score narrowed their range without changing their scale."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hfsv4nt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Panela's churn model enters the channel as two 0-or-1 columns, `social` and `referral`, and has no column for search. What does the coefficient on `referral` compare?",
+    "hint": "Statistics for Data Analysis, lesson 19; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing clear until a third column, for search, is added.",
+        "correct": false,
+        "why": "A third column would always equal one minus the other two, and could not be separated from the intercept."
+      },
+      {
+        "text": "A referral customer with a social one, as social is the column before it.",
+        "correct": false,
+        "why": "Social has its own column; the row of zeros, search, is the reference."
+      },
+      {
+        "text": "A referral customer with the average of all the other customers.",
+        "correct": false,
+        "why": "The comparison is with the level that has no column, the reference, which here is search."
+      },
+      {
+        "text": "A referral customer with a search customer, the other inputs held fixed.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s4f821a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A report on Panela's segments says that customers with a recency score R of 4 \"ordered twice as recently\" as customers with an R of 2. What is wrong with that sentence?",
+    "hint": "Statistics for Data Analysis, lesson 2; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 15.",
+    "choices": [
+      {
+        "text": "Scores are quintiles with an order but no distances, so their ratio means nothing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing is wrong, since the recency in days that lies behind the scores is on a ratio scale.",
+        "correct": false,
+        "why": "The days are on a ratio scale; the scores are not, and the sentence divides the scores."
+      },
+      {
+        "text": "It is reversed: an R of 4 means the last order was longer ago than an R of 2.",
+        "correct": false,
+        "why": "Recency is reversed when scored, so a recent order gets the high score."
+      },
+      {
+        "text": "It should use the difference instead: an R of 4 is two points more recent than an R of 2.",
+        "correct": false,
+        "why": "A difference between ranks assumes equal steps, which quintiles of a skewed recency do not have."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yg11sw6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Suppose Panela's logistic churn model gives social-media customers an odds ratio of 2.0 against search customers, everything else equal. An otherwise identical search customer has a churn probability of 0.5. What is the social customer's churn probability?",
+    "hint": "Statistics for Data Analysis, lesson 21; Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 17.",
+    "choices": [
+      {
+        "text": "1.00",
+        "correct": false,
+        "why": "That doubles the probability; the odds ratio doubles the odds, from 1 to 2."
+      },
+      {
+        "text": "0.67",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "0.75",
+        "correct": false,
+        "why": "0.75 is odds of 3; doubling odds of 1 gives 2, a probability of 2 ÷ 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-7556qac7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each comparison from a BI team's week to the test that the lesson's two questions, the kind of outcome and the groups, pick for it.",
+    "hint": "Statistics for Data Analysis, lesson 16.",
+    "pairs": [
+      {
+        "left": "Whether 2,000 visitors on each page bought or not",
+        "right": "chi-square test"
+      },
+      {
+        "left": "Weekly revenue of the same 30 stores, before and after a new layout",
+        "right": "paired t test"
+      },
+      {
+        "left": "Mean basket in four regions at once",
+        "right": "ANOVA"
+      },
+      {
+        "left": "Delivery minutes, 30 per neighbourhood, in two neighbourhoods",
+        "right": "Welch's t test"
+      },
+      {
+        "left": "Two couriers, eight skewed delivery times each, one far out",
+        "right": "Mann-Whitney test"
+      }
+    ],
+    "right_distractors": [
+      "one-sample t test"
+    ]
+  },
+  {
+    "id": "ex-7cmrx2qz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Panela's checkout test needed 18,739 visitors per group to detect a lift of 0.6 points. The team now wants to detect 0.2 points. Treat the sample as growing exactly with the square of how small the effect is, send all 2,400 checkout visitors a day into the test, and round the duration up to whole weeks. How many days does the test run?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 8; Statistics for Data Analysis, lesson 15.",
+    "value": 147,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-7j7dmyw5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The 80% band around next week's forecast of Panela's orders is about 800 orders wide. A colleague says that two more years of history would let them make it as narrow as the kitchen likes. Why can extra history not do that?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 4; Statistics for Data Analysis, lesson 12.",
+    "choices": [
+      {
+        "text": "An 80% interval has a width fixed by its percentage, whatever the data and the model say.",
+        "correct": false,
+        "why": "Its width comes from the noise and the model; only the coverage it claims is fixed."
+      },
+      {
+        "text": "Older weeks describe a smaller business than today's, so adding them makes every band wider, not narrower.",
+        "correct": false,
+        "why": "Old data can mislead a model, but the limit holds even for a series that never changed."
+      },
+      {
+        "text": "The band covers one future week, which has its own noise; more data narrows doubt about the level, not that noise.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It would work if the band came from `conf_int`, which gives a confidence interval that shrinks with data.",
+        "correct": false,
+        "why": "Despite its name, `conf_int` on a forecast returns a prediction interval."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kpmjf86",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test of a new menu layout ends with a 95% interval for the difference in conversion of −0.12 to +0.18 points. The minimum detectable effect in the plan was 0.6 points. How should the result be read?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 10; Statistics for Data Analysis, lesson 22.",
+    "choices": [
+      {
+        "text": "No effect worth having, and the test was big enough to say so: the question is answered.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Inconclusive: the interval contains zero, so the test was too small to tell.",
+        "correct": false,
+        "why": "That reading needs the interval to reach the MDE as well; this one stops far below 0.6."
+      },
+      {
+        "text": "Unfinished: run it again with twice as many visitors before deciding anything.",
+        "correct": false,
+        "why": "More visitors would only narrow an interval that already sits inside the effects too small to matter."
+      },
+      {
+        "text": "A small real lift, because the upper end of the interval is above zero.",
+        "correct": false,
+        "why": "The interval straddles zero, so not even the direction is established."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rp8ka5t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Panela's churn campaign table gives, at each threshold, the customers flagged and the churners among them: 0.2, 479 and 282; 0.3, 373 and 256; 0.4, 319 and 235; 0.5, 259 and 204. Keep the save rate of one in four and R$ 600 per customer kept, but suppose each offer costs R$ 60 instead of R$ 30. Which threshold now gives the highest net value?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 17; Statistics for Data Analysis, lesson 21.",
+    "choices": [
+      {
+        "text": "0.5",
+        "correct": false,
+        "why": "R$ 15,060: fewer offers save money, but lose more churners than they save."
+      },
+      {
+        "text": "0.4",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "0.3",
+        "correct": false,
+        "why": "R$ 16,020, ninety reais short of 0.4's R$ 16,110."
+      },
+      {
+        "text": "0.2",
+        "correct": false,
+        "why": "R$ 13,560: the peak at the cheaper offer; doubling the cost of every false alarm moves it up."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s7n27r6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To stop referral codes leaking between groups, Panela plans to randomise 20 cities instead of individual visitors, with the same total traffic. Why does that cost a great deal of power?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 9; Statistics for Data Analysis, lesson 10.",
+    "choices": [
+      {
+        "text": "Cities differ in size, so every such test shows a sample ratio mismatch.",
+        "correct": false,
+        "why": "An uneven split that was planned is not a mismatch; SRM is a gap from the planned split."
+      },
+      {
+        "text": "Twenty cities of different sizes cannot be split evenly, so the sizes of the two groups stop matching.",
+        "correct": false,
+        "why": "Uneven sizes cost little; the large loss comes from members of a cluster behaving alike."
+      },
+      {
+        "text": "Sorting whole cities into groups breaks the sticky assignment that a hash gives each visitor.",
+        "correct": false,
+        "why": "A city can be hashed to a group as stickily as a visitor; stickiness is not what is lost."
+      },
+      {
+        "text": "People in a city are alike, so the test has nearer twenty independent units than thousands.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w5gf8q4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A small product sold 3, 1, 0 and 2 units on four days, and the forecast was 2 units every day. MAPE cannot be computed because of the zero. What is the WAPE, the total absolute error divided by the total actual, in per cent? One decimal place.",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 5.",
+    "value": 66.7,
+    "tolerance": 0.1,
+    "unit": ""
+  },
+  {
+    "id": "ex-7z6nqyef",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Carnival's dates are known years ahead, so a weekly model can be handed a column of Carnival days per week, for the past and for the weeks it forecasts. statsmodels calls such a column from outside the series an ___ series.",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "exogenous",
+          "exog"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-88y470tb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Tests where nothing changed are read in four ways. Put the ways in order of how often they declare a false winner, by the lesson's arithmetic and simulation, fewest first.",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 11.",
+    "items": [
+      "One planned look at the end, on the one primary metric",
+      "A look once a week, stopping at the first crossing",
+      "A look every day, stopping at the first crossing",
+      "One look at the end, at twenty independent metrics"
+    ],
+    "trap": "Daily peeking feels like the worst habit, and it gives 26.5%; twenty metrics read once give 64%. Even a weekly look more than doubles the planned look's 4.6%, to 11.3%."
+  },
+  {
+    "id": "ex-8dda59ps",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Raising the churn threshold for the North to about 0.5 brings its false alarms down to the other regions' level. Why does the lesson still call it the weaker fix? Choose all that apply.",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 19.",
+    "choices": [
+      {
+        "text": "Two customers with the same risk are treated differently because of where they live.",
+        "correct": true,
+        "why": "Using the group explicitly has to be defended, and in some decisions it is not allowed."
+      },
+      {
+        "text": "A threshold tuned on a hundred loyal customers is itself a noisy number.",
+        "correct": true,
+        "why": "The North's stayers are 100 people, too few for a precise cut-off."
+      },
+      {
+        "text": "It needs the model retrained with region added as an input.",
+        "correct": false,
+        "why": "Only the threshold moves; nothing is retrained, which is why it is the quickest fix."
+      },
+      {
+        "text": "The model still reads a slow rhythm as fading, so its next use meets the problem again.",
+        "correct": true,
+        "why": "The cause stays in the model; only one decision was repaired."
+      },
+      {
+        "text": "It lowers the recall of every region, not only the North's.",
+        "correct": false,
+        "why": "Only the North's threshold changes; the other regions' flags stay as they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hfvfy14",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Two cohorts have reached month 3: a campaign cohort of 1,200 customers with 60% still ordering, and an ordinary cohort of 300 with 90%. Following the lesson's rule for averaging cohorts that differ much in size, what is their combined month-3 retention, in per cent?",
+    "hint": "Analytical Techniques: Time Series, A/B Tests and Cohorts, lesson 12; Statistics for Data Analysis, lesson 3.",
+    "value": 66,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8qafwh10",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Your order-level extract adds `sum(total) OVER (PARTITION BY customer_id) AS customer_revenue`, so a model can see how big each buyer is. A teammate then reports revenue as the sum of that column. Customer A has three orders, of 10, 20 and 30; customer B has one order, of 40. What total does the teammate report?",
+    "hint": "Relational Databases and SQL, lesson 6; Data Cleaning and Preparation, lesson 12.",
+    "value": 220,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8r580jx3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The customer table now lives in MySQL 8 with its default collation. Four rows hold the cities `São Paulo`, `SAO PAULO`, `Sao Paulo` and `são paulo`, all in composed form and with no stray spaces. What does `SELECT count(DISTINCT city)` return there, and on PostgreSQL for the same four rows?",
+    "hint": "Relational Databases and SQL, lesson 12; Data Cleaning and Preparation, lesson 6.",
+    "choices": [
+      {
+        "text": "4 on both: no engine folds case or accents unless the query asks it to",
+        "correct": false,
+        "why": "MySQL's default collation is accent- and case-insensitive, and `DISTINCT` uses it."
+      },
+      {
+        "text": "2 on MySQL, which ignores case but not accents, and 4 on PostgreSQL",
+        "correct": false,
+        "why": "The `ai` in `utf8mb4_0900_ai_ci` means accent-insensitive as well."
+      },
+      {
+        "text": "1 on both, since `DISTINCT` compares through each engine's case-insensitive default",
+        "correct": false,
+        "why": "PostgreSQL compares text byte for byte unless told otherwise."
+      },
+      {
+        "text": "1 on MySQL, where those spellings are one string, and 4 on PostgreSQL",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rsj69z6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "You port the data-quality scorecard to a dashboard and write the share as `100 * failing / tested`, where both columns are `count(*)` results. For the e-mail rule, 282 failing of 2,413 tested, what does PostgreSQL return in that column?",
+    "hint": "Relational Databases and SQL, lesson 3; Data Cleaning and Preparation, lesson 1.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8tz17b3c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "To build a training set quickly, a notebook runs `SELECT * FROM orders LIMIT 5000` and saves the rows. After a colleague adds an index to `orders`, with no row written, the same cell returns a different 5,000. Why?",
+    "hint": "Relational Databases and SQL, lesson 4; Data Cleaning and Preparation, lesson 17.",
+    "choices": [
+      {
+        "text": "With no `ORDER BY` the rows come in an order nobody promised, and an index can change it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`LIMIT` draws a random sample, and with no seed set it draws a fresh one on every run.",
+        "correct": false,
+        "why": "`LIMIT` is not random: it is an arbitrary slice of an arbitrary arrangement."
+      },
+      {
+        "text": "`LIMIT` keeps the rows inserted first, so the new index must have rewritten that order.",
+        "correct": false,
+        "why": "No insertion order is kept; without `ORDER BY` there is no order at all."
+      },
+      {
+        "text": "An index can hide rows from a plain `SELECT`, so the table it read is not the same table.",
+        "correct": false,
+        "why": "A plan never changes the answer; only the order of an unordered result may move."
+      }
+    ]
+  },
+  {
+    "id": "ex-93x6pd8g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The churn dashboard reads `monthly_revenue`, a materialised view refreshed by a nightly job. The refresh has failed for four nights and nobody noticed. What is the dashboard showing, and what does lesson 7 suggest so that a reader can tell?",
+    "hint": "Relational Databases and SQL, lesson 7; Data Cleaning and Preparation, lesson 1.",
+    "choices": [
+      {
+        "text": "No rows at all, since a failed refresh empties the stored result; an alert on the row count catches it.",
+        "correct": false,
+        "why": "Nothing empties it; the rows it last stored stay, and are read as though they were current."
+      },
+      {
+        "text": "The last refresh that worked, shown as current; a `refreshed_at` column lets each report print its age.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Today's figures, because reading a materialised view re-runs its query whenever the stored rows are old.",
+        "correct": false,
+        "why": "That is a plain view. A materialised view stores its rows and serves them until it is refreshed."
+      },
+      {
+        "text": "An error on every read until a refresh succeeds, which makes the failure visible on the first morning.",
+        "correct": false,
+        "why": "Reading is an error only before the first refresh; after that the stored rows are served."
+      }
+    ]
+  },
+  {
+    "id": "ex-95qys6kd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For a price-elasticity model you need what each 2025 order line was actually charged. The catalogue lists rúcula at both R$ 4.90 and R$ 5.20, with no date on either. Where should the price come from?",
+    "hint": "Relational Databases and SQL, lesson 2; Data Cleaning and Preparation, lesson 11.",
+    "choices": [
+      {
+        "text": "From the catalogue, since a price stored on the line is a copy that normalisation removes.",
+        "correct": false,
+        "why": "The price on the line is a different fact, what it cost that day, not a copy of today's price."
+      },
+      {
+        "text": "From the catalogue, keeping the higher of each product's two prices as the current one.",
+        "correct": false,
+        "why": "Which price is current is unknown, and today's price is not what an old sale cost."
+      },
+      {
+        "text": "From `unit_price` on each line, which records what that sale cost on its day.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From the catalogue joined on the code, with each product's two prices averaged.",
+        "correct": false,
+        "why": "An average is a price nobody was charged, on any day."
+      }
+    ]
+  },
+  {
+    "id": "ex-99f3bry8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The first enrichment query of the cleaning course left-joins the customers to `ref_states` on the two letters, and the 104 customers whose state is written as a name come out with a blank region. A colleague appends `WHERE s.region <> 'Norte'` to leave out northern customers. What happens to the 104?",
+    "hint": "Relational Databases and SQL, lesson 5; Data Cleaning and Preparation, lesson 14.",
+    "choices": [
+      {
+        "text": "The query is refused: a condition on the right-hand table belongs in the `ON` clause.",
+        "correct": false,
+        "why": "It is valid SQL and it runs; that is why the mistake survives."
+      },
+      {
+        "text": "They stay, because a `LEFT JOIN` keeps every left-hand row whatever the `WHERE` says afterwards.",
+        "correct": false,
+        "why": "`WHERE` runs after the join and drops the rows it invented, along with any other row that fails."
+      },
+      {
+        "text": "They vanish: their region is NULL, so the test is unknown and the left join acts as an inner one.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They stay, because a NULL region is not `'Norte'`, so the `<>` test is true for each of them.",
+        "correct": false,
+        "why": "Comparing NULL with anything is unknown, and `WHERE` keeps only what is true."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fweh23t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A partner sends their order history as a SQLite file. Its `orders` table declares `customer_id INTEGER REFERENCES customers (id)`, and they say this proves every order has a customer. Before your churn features rely on that, what should you do?",
+    "hint": "Relational Databases and SQL, lesson 12; Data Cleaning and Preparation, lesson 11.",
+    "choices": [
+      {
+        "text": "Nothing more: SQLite checked every reference as each row was written, as PostgreSQL does.",
+        "correct": false,
+        "why": "In SQLite foreign keys are off by default, and a file written without them may hold orphans."
+      },
+      {
+        "text": "Count the orphans anyway: SQLite enforces a foreign key only where the connection turned it on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Check `typeof(customer_id)` instead: the reference was enforced, only the declared type was not.",
+        "correct": false,
+        "why": "Types are loose in SQLite, and so is the reference unless a connection switched it on."
+      },
+      {
+        "text": "Check only the orders of deleted customers: SQLite skips `ON DELETE` but checks every insert.",
+        "correct": false,
+        "why": "Inserts were not checked either unless `PRAGMA foreign_keys = ON` was set on that connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q02vkgw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For the clean customer table, a teammate proposes dropping the `C00001`-style codes and making the lower-cased e-mail the primary key, since the duplicate matching already compared it. What rules that out?",
+    "hint": "Relational Databases and SQL, lesson 1; Data Cleaning and Preparation, lesson 5.",
+    "choices": [
+      {
+        "text": "Shop customers often have no address, and people who sign up again change theirs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lower-casing merges addresses that differ only in case, and those can be two people.",
+        "correct": false,
+        "why": "The matching lower-cased addresses on purpose; case does not tell two people apart here."
+      },
+      {
+        "text": "An e-mail is too long for a good index, so every join on the key would become a scan.",
+        "correct": false,
+        "why": "Length is not the objection; a natural key fails by being missing or by changing."
+      },
+      {
+        "text": "A primary key must be a number the database generates, and an e-mail address is text.",
+        "correct": false,
+        "why": "Text keys are allowed; the trouble with this one is that it can be missing or change."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0ecd12n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your nightly extract runs five queries (customers, orders, lines, refunds, survey) inside one transaction at PostgreSQL's default level, while the shop keeps taking orders. Some extracted lines point at orders the orders file does not contain. What makes the five queries see one moment?",
+    "hint": "Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "Run it at `READ UNCOMMITTED`, so it also sees orders that other sessions are still writing.",
+        "correct": false,
+        "why": "That would show unfinished work, and PostgreSQL treats it as `READ COMMITTED` anyway."
+      },
+      {
+        "text": "Add `FOR UPDATE` to each query, so no order can be inserted until the extract commits.",
+        "correct": false,
+        "why": "A row lock holds rows already read; it does not stop new orders and their lines arriving."
+      },
+      {
+        "text": "Nothing more: one transaction already reads one consistent view at the default level.",
+        "correct": false,
+        "why": "At `READ COMMITTED` each statement takes a fresh view, so five queries see five moments."
+      },
+      {
+        "text": "Start the transaction at `REPEATABLE READ`, so the whole transaction reads one view.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-adf77e15",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A feature query on the million-row `orders` filters `WHERE date(placed_at) = DATE '2025-03-01'`. `EXPLAIN ANALYZE` shows a `Seq Scan` that expected 5,000 rows and found 1,558, though `placed_at` has an index. Which change fixes both the scan and the estimate?",
+    "hint": "Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "`WHERE placed_at::date = DATE '2025-03-01'`, since a cast is not a function",
+        "correct": false,
+        "why": "A cast wraps the column just as a function does, and the index on `placed_at` stays unused."
+      },
+      {
+        "text": "`ANALYZE orders`, so the planner gathers statistics on `date(placed_at)` too",
+        "correct": false,
+        "why": "Statistics are kept for columns; the function's result is not one, so the guess stays a default."
+      },
+      {
+        "text": "`WHERE date(placed_at) BETWEEN DATE '2025-03-01' AND DATE '2025-03-01'`",
+        "correct": false,
+        "why": "The column is still inside `date()`, so neither the index nor the statistics apply."
+      },
+      {
+        "text": "`WHERE placed_at >= DATE '2025-03-01' AND placed_at < DATE '2025-03-02'`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-aegv295s",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "You check the pandas order totals against the SQL ones with a FULL JOIN on order_id. The condition a.total <> b.total stays silent on a pair where one side's total is NULL, because that comparison is unknown. Written as a.total IS ___ b.total, the test answers true for that pair as well.",
+    "hint": "Relational Databases and SQL, lesson 4; Data Cleaning and Preparation, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "DISTINCT FROM",
+          "distinct from"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-agzptdr8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before joining the order lines to the catalogue, a colleague passes the catalogue through `SELECT DISTINCT *` to remove its duplicates, then joins on the product code. What happens to the lines of rúcula, banana and sugar?",
+    "hint": "Data Cleaning and Preparation, lesson 5; Relational Databases and SQL, lesson 4.",
+    "choices": [
+      {
+        "text": "Each joins once, because `DISTINCT` keeps a single row for every product code it meets.",
+        "correct": false,
+        "why": "`DISTINCT` compares whole rows, not one column; rows that differ anywhere both stay."
+      },
+      {
+        "text": "They are still doubled: each code's two rows differ in price, so `DISTINCT` keeps both.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each joins once at the newer price, since `DISTINCT` keeps the row that was loaded last.",
+        "correct": false,
+        "why": "`DISTINCT` cannot choose which copy survives, and here it keeps both."
+      },
+      {
+        "text": "They are dropped, because `DISTINCT` removes every row whose product code repeats.",
+        "correct": false,
+        "why": "Nothing is removed unless whole rows are identical, and these are not."
+      }
+    ]
+  },
+  {
+    "id": "ex-at55q66c",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Next month's CRM export has one row whose `customer_id` is blank, which `\\copy` loads as NULL. Which of these still find the orders whose customer is missing from the CRM? Choose all that apply.",
+    "hint": "Data Cleaning and Preparation, lesson 11; Relational Databases and SQL, lesson 7.",
+    "choices": [
+      {
+        "text": "`WHERE NOT EXISTS (SELECT 1 FROM raw.customers c WHERE c.customer_id = o.customer_id)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`LEFT JOIN raw.customers c ON c.customer_id = o.customer_id WHERE c.email IS NULL`",
+        "correct": false,
+        "why": "It also catches customers who exist and have no e-mail."
+      },
+      {
+        "text": "`WHERE o.customer_id NOT IN (SELECT customer_id FROM raw.customers)`",
+        "correct": false,
+        "why": "One NULL in the subquery makes `NOT IN` return no rows at all."
+      },
+      {
+        "text": "`LEFT JOIN raw.customers c ON c.customer_id = o.customer_id WHERE c.customer_id IS NULL`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayvj1d39",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A teammate loads the website's `ordered_at` into a PostgreSQL `timestamp` column, stripping the `Z` first, and builds daily revenue from it. An order stamped `2025-03-01T01:30:00Z` was placed by a customer in São Paulo. On which day does it land, and on which should it?",
+    "hint": "Data Cleaning and Preparation, lesson 7; Relational Databases and SQL, lesson 3.",
+    "choices": [
+      {
+        "text": "It lands on 28 February, since a `timestamp` column converts to the server's time zone.",
+        "correct": false,
+        "why": "`timestamp` stores the digits it was given and knows nothing of any zone."
+      },
+      {
+        "text": "It lands on 1 March and belongs there too, at 04:30, three hours later in São Paulo.",
+        "correct": false,
+        "why": "São Paulo is behind UTC, so its clock read three hours earlier, not later."
+      },
+      {
+        "text": "It lands on 1 March and belongs on 28 February, at 22:30 on the customer's clock.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It lands on 1 March, which is right: the `Z` marks the text's format, not a clock.",
+        "correct": false,
+        "why": "`Z` means UTC, and São Paulo is three hours behind it all year."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0vzxtaj",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You are turning `raw.customers` into a table whose `customer_id` is a primary key, before any order is joined to it. Put the steps in order, first step first.",
+    "hint": "Data Cleaning and Preparation, lesson 11; Relational Databases and SQL, lesson 9.",
+    "items": [
+      "Drop the rows that repeat another in every column",
+      "Run `GROUP BY customer_id HAVING count(*) > 1` and get no rows",
+      "Declare `customer_id` the table's primary key",
+      "Join the orders to the customers"
+    ],
+    "trap": "Checking the key first reports 37 repeats that are only copied rows, and declaring the key first makes the load fail on those same copies instead of removing them."
+  },
+  {
+    "id": "ex-bkk0v6mm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Revenue by category from the delivered order lines: a SQL `GROUP BY category` adds up to R$ 2,343,926.15, while a teammate's `sold.groupby(\"category\")[\"line_cents\"].sum() / 100` adds up to R$ 37,761.35 less. Nobody filtered anything. Why do they differ?",
+    "hint": "Data Cleaning and Preparation, lesson 16; Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "pandas drops rows whose key is blank unless told `dropna=False`; SQL keeps the NULLs as one group.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The two unknown codes' lines have a blank `line_cents`, and pandas skips blanks in a sum.",
+        "correct": false,
+        "why": "The lines know what they were charged; it is the category key that is blank."
+      },
+      {
+        "text": "pandas added the cents as integers while SQL added floats, and the rounding error built up.",
+        "correct": false,
+        "why": "A rounding error would not land exactly on the lines of the two missing codes."
+      },
+      {
+        "text": "The left join to the catalogue dropped the lines of the two codes the catalogue does not list.",
+        "correct": false,
+        "why": "A left join keeps those lines, with a blank name and a blank category."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkwkrmte",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A warehouse scale records weights up to 30 kg and saves nothing for anything heavier. Its blanks are far commoner on the six companies' orders than on households'. A colleague calls them missing at random given the customer type and fills each with its type's median. What does lesson 3 say?",
+    "hint": "Data Cleaning and Preparation, lesson 3.",
+    "choices": [
+      {
+        "text": "It is MCAR: the scale fails the same way for everyone, so any recorded weight can stand in.",
+        "correct": false,
+        "why": "Its failures hit exactly the heavy parcels, so the recorded weights are not a fair sample."
+      },
+      {
+        "text": "The blank depends on the weight itself, so it is MNAR; the customer type only predicts heavy parcels.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is MAR, since the blanks line up with a column in the file, and filling by group is the cure.",
+        "correct": false,
+        "why": "Lining up with a visible column is what MNAR looks like too; the hour did the same in the timer case."
+      },
+      {
+        "text": "Nothing is missing: a parcel over 30 kg has no weight to record, like a pickup's delivery time.",
+        "correct": false,
+        "why": "The parcel had a weight and the scale did not save it; a pickup has no delivery at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmcjd3s1",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each gap in a daily table to the treatment lesson 4 gives it.",
+    "hint": "Data Cleaning and Preparation, lesson 4.",
+    "pairs": [
+      {
+        "left": "The euro rate on a day when nothing was booked",
+        "right": "Carry the last value forward"
+      },
+      {
+        "left": "Units sold on a Sunday when the shop was closed",
+        "right": "Fill with zero"
+      },
+      {
+        "left": "Units sold on a day when the till crashed",
+        "right": "Leave it blank"
+      },
+      {
+        "left": "A delivery the timer stopped timing at two hours",
+        "right": "Keep the blank and flag what it means"
+      }
+    ],
+    "right_distractors": [
+      "Fill with the column's median"
+    ]
+  },
+  {
+    "id": "ex-bpej4zb3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A shop's target was R$ 10,000 in January and R$ 30,000 in February, and it sold R$ 12,000 and R$ 24,000. Computed the way lesson 13 computes the yearly table, what is its attainment over the two months, in percent?",
+    "hint": "Data Cleaning and Preparation, lesson 13.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bv0y3569",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A file of supplier countries is read with pd.read_csv(path, dtype=str), and the rows for Namibia come back with a blank country, because pandas turned its code NA into a missing value. Passing ___=False together with na_values=[\"\"] keeps the code as text.",
+    "hint": "Data Cleaning and Preparation, lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "keep_default_na"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bx5xhed4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "You are adding checks to `checks.py`, to run on every rebuild from next month's export onwards. Which belong there? Choose all that apply.",
+    "hint": "Data Cleaning and Preparation, lesson 17.",
+    "choices": [
+      {
+        "text": "Every row of the change record names its rule",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mean order is R$ 94.06",
+        "correct": false,
+        "why": "That is a number that moves with the data, not a promise the tables make."
+      },
+      {
+        "text": "`order_id` is unique",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No order total is negative",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "There are 28,526 orders",
+        "correct": false,
+        "why": "A count fails on the first new order; it belongs in the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxta100w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana trains a PyTorch network on `churn.csv` with early stopping and a patience of 20, judging every epoch on a validation set drawn at random from all 18 monthly snapshots. The network will score subscribers on 1 January 2026. What is wrong with that validation set?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 3; Deep Learning: Neural Networks in Practice, lesson 7.",
+    "choices": [
+      {
+        "text": "Later months sit in it, so the epoch kept is picked on a split that lets the future in.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The patience of 20; with a patience of 1, that same random validation set would be fine.",
+        "correct": false,
+        "why": "Patience trades noise against wasted epochs; it has no say in which months do the judging."
+      },
+      {
+        "text": "Nothing, since early stopping keeps the best epoch's weights rather than the last epoch's.",
+        "correct": false,
+        "why": "Keeping the best weights does not change which months judged them: a shuffled split lets September judge August."
+      },
+      {
+        "text": "It should be stratified, so that every part of it holds the same share of leavers.",
+        "correct": false,
+        "why": "Stratifying fixes the class shares and does nothing about later months judging earlier ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-c47sca3z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana trains a PyTorch network for the churn credit with binary cross-entropy, and has to keep one of several checkpoints, judged on the validation months. By which number should she choose?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 9; Deep Learning: Neural Networks in Practice, lesson 4.",
+    "choices": [
+      {
+        "text": "The lowest training loss, as it shows which checkpoint learnt the churn data most completely.",
+        "correct": false,
+        "why": "The training loss keeps falling as the network fits the rows it has seen; it says nothing about new months."
+      },
+      {
+        "text": "The lowest validation loss, because that is exactly the number the network was trained to make small.",
+        "correct": false,
+        "why": "The loss is what training follows; the number that matches the decision is what chooses."
+      },
+      {
+        "text": "The highest validation accuracy, because it counts every subscriber the network gets right.",
+        "correct": false,
+        "why": "On a rare class accuracy barely moves while the money moves a great deal."
+      },
+      {
+        "text": "The net value per thousand rows at the break-even cut, with the loss kept for watching the training.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c93zxg3a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A network for the churn credit kept training while its validation loss rose for many epochs and its validation accuracy stayed flat. Ana now sends the credit wherever its chance is at least 0.278. What should she check first?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 11; Deep Learning: Neural Networks in Practice, lesson 6.",
+    "choices": [
+      {
+        "text": "Whether 0.5 does better, as a sigmoid output is calibrated around one half by its construction.",
+        "correct": false,
+        "why": "0.5 is a default, and no output is calibrated by construction; that has to be checked."
+      },
+      {
+        "text": "Its ROC AUC on held-out months, since a ranking that good would make the cut send credits correctly.",
+        "correct": false,
+        "why": "AUC only looks at the order of the scores, so it cannot see chances that are too high or too low."
+      },
+      {
+        "text": "Whether its chances are honest, since the cut assumes that 0.278 means 27.8% of them leave.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: with accuracy flat the network has not overfitted, so its chances can be read as they come.",
+        "correct": false,
+        "why": "A validation loss rising under a flat accuracy is a network growing overconfident, which is exactly a level problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9ha9nnb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A PyTorch churn network, on data where one row in seventeen is a leaver, sends almost no credits when its sigmoid output is cut at 0.5. A colleague copies every leaver about sixteen times, then splits the rows into training and validation, and reports a much higher validation AUC. What should Ana tell him?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 13; Deep Learning: Neural Networks in Practice, lesson 4.",
+    "choices": [
+      {
+        "text": "The gain is real, because copying every leaver gives the network more examples of leaving to learn from.",
+        "correct": false,
+        "why": "Resampling changes the share and not the count: a copy of a leaver is not a new leaver."
+      },
+      {
+        "text": "He should use class weights instead, which raise the AUC without copying a single row.",
+        "correct": false,
+        "why": "Class weights did not improve the ranking; they moved every chance up and moved the useful cut."
+      },
+      {
+        "text": "It is sound as long as the network uses dropout, which stops it memorising repeated rows.",
+        "correct": false,
+        "why": "Dropout does nothing about copies of the same leaver being scored on the validation side."
+      },
+      {
+        "text": "Copies of one leaver now sit on both sides, so the gain is a leak; the rarity belongs to the cut.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmfckqtq",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "On the six test months, a PyTorch network trained on one seed made R$ 22,900, against R$ 22,304 for LightGBM. Before Ana writes that the network wins, which checks do the two courses ask for? Choose all that apply.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 8; Deep Learning: Neural Networks in Practice, lesson 18.",
+    "choices": [
+      {
+        "text": "Bootstrap the difference by resampling subscribers with all their rows, and see if the interval crosses zero.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Tune the network again on the test months until its lead is clearly wider than a few hundred reais.",
+        "correct": false,
+        "why": "Choosing on the test months turns them into a validation set, and the reported number is then optimistic."
+      },
+      {
+        "text": "Train the network on several seeds and see whether the gap is larger than the spread between them.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Bootstrap the difference by resampling rows one at a time, for a narrower and more decisive interval.",
+        "correct": false,
+        "why": "A subscriber's rows are not independent draws; resampling rows makes the interval too narrow."
+      }
+    ]
+  },
+  {
+    "id": "ex-csdyq240",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`rating_90d` is empty for 4,977 rows of `churn.csv`. Ana will compare `HistGradientBoostingClassifier` with a PyTorch MLP on the same columns. What do the two need done to those gaps?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 14; Deep Learning: Neural Networks in Practice, lesson 20.",
+    "choices": [
+      {
+        "text": "Both can take them as they are, since a network's layers pass over an empty value just as trees do.",
+        "correct": false,
+        "why": "A weighted sum cannot include an empty value; only the trees decide at each split where the gaps go."
+      },
+      {
+        "text": "The booster needs them set to −1 so it has a number, and the MLP needs the rows with gaps dropped.",
+        "correct": false,
+        "why": "−1 was lesson 3's placeholder; this booster reads gaps itself, and dropping rows throws evidence away."
+      },
+      {
+        "text": "The booster takes them as they are; the MLP needs them filled from the training rows, with a flag column.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Both need them filled with the median of the whole file, so that the two models read the same table.",
+        "correct": false,
+        "why": "A fill value comes from the training rows only, and filling throws away what the booster learns from a gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5199tdq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 14's seven new columns took the logistic regression from R$ 16,424 to R$ 22,712 and left the boosted trees where they were. A colleague now feeds the raw churn columns to a PyTorch MLP of ReLU layers. What do the two courses lead you to expect if the same flags are added to it?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 14; Deep Learning: Neural Networks in Practice, lesson 20.",
+    "choices": [
+      {
+        "text": "A gain, as for the line: ReLU sums bend towards a cliff a little at a time, and a flag hands over the step.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A loss, because each column added to a network's first layer is more noise for it to fit.",
+        "correct": false,
+        "why": "Columns of noise cost a network; a flag carries the signal the rating's cliff holds."
+      },
+      {
+        "text": "Nothing, as for the trees: hidden layers find the thresholds of a table on their own.",
+        "correct": false,
+        "why": "Networks lean towards smooth functions, and a sharp step takes many units and many examples to approximate."
+      },
+      {
+        "text": "Nothing measurable, since a network learns its features from images, sound and text, and a table is none of them.",
+        "correct": false,
+        "why": "Networks do learn on tables; what they bring there is a bias towards smooth answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7v5web9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On the six test months a churn model sends 900 credits, and 410 of them reach subscribers who were leaving. At Feira em Casa's three numbers, what is its net value in reais, against sending nobody?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 2.",
+    "value": 23040,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-d7yemnks",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "The logistics team says a minute late costs the business three times what a minute early costs. By lesson 12's rule, the delivery promise should be the model fitted with loss=\"quantile\" at the quantile ___.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "0.75",
+          "0,75",
+          ".75",
+          "75%"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d877w75b",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A churn model is fitted on every leaver and 6% of the stayers, and it gives one subscriber a chance of 0.5. Corrected with lesson 13's formula for undersampling, what is that subscriber's chance? Answer in percent, to one decimal place.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 13.",
+    "value": 5.7,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-d9c7w6dv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Information in the training data that will not exist at the moment the model is used is what lesson 4 calls ___.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "leakage",
+          "data leakage",
+          "a leak",
+          "leak"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dbq02j1a",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the work lesson 15's churn pipeline does to the numeric columns in the order `fit` runs it.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 15.",
+    "items": [
+      "Add the seven flag, cap and ratio columns",
+      "Fill each gap with the training median, adding a column that marks it",
+      "Scale the column by its training mean and standard deviation",
+      "Fit the logistic regression on the prepared columns"
+    ],
+    "trap": "The flags read raw values, such as a rating below 3.6, so they come before any preparation; inside the numbers' path the gap is filled before the scaler sees the column; the model is always last."
+  },
+  {
+    "id": "ex-dggtwvcr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each question about the churn credit to the metric that answers it, as lesson 10's last table does.",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 10.",
+    "pairs": [
+      {
+        "left": "Of the credits sent, how many were worth sending?",
+        "right": "precision"
+      },
+      {
+        "left": "Of the leavers, how many were reached?",
+        "right": "recall"
+      },
+      {
+        "left": "Does the model rank leavers above stayers?",
+        "right": "ROC AUC"
+      },
+      {
+        "left": "Does acting on the model make money?",
+        "right": "net value"
+      }
+    ],
+    "right_distractors": [
+      "accuracy"
+    ]
+  },
+  {
+    "id": "ex-dj7v5rvv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Scoring March 2026 one subscriber per request took about 12 ms each, while the whole month in one call to the model took 32 ms for all 4,540. What explains the gap?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 21; Deep Learning: Neural Networks in Practice, lesson 19.",
+    "choices": [
+      {
+        "text": "A request scored alone makes the pipeline recompute the training medians and scaler every time.",
+        "correct": false,
+        "why": "`transform` only reads what `fit` learnt; nothing is refitted per request."
+      },
+      {
+        "text": "Fixed costs on every call, the JSON and a one-row table, dwarf a small model's arithmetic.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The server sits on another machine, so each request also waits on the network between the two.",
+        "correct": false,
+        "why": "Uvicorn answered on `127.0.0.1`, this machine and nothing outside it."
+      },
+      {
+        "text": "The served model runs slower because it was loaded from a file rather than fitted in the same process.",
+        "correct": false,
+        "why": "The loaded model gave the same chances as a fresh fit; the time goes on the road to it, not on the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-drq2vyjq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A script starts with `torch.manual_seed(0)` and then fits `HistGradientBoostingClassifier()` on the churn training months, with no `random_state`. Run twice, will it give the same model both times?",
+    "hint": "Machine Learning: Models, Evaluation and Deployment, lesson 15; Deep Learning: Neural Networks in Practice, lesson 18.",
+    "choices": [
+      {
+        "text": "Yes: a seed set at the top of a program fixes the random draws the program makes from then on.",
+        "correct": false,
+        "why": "`torch.manual_seed` resets PyTorch's generator; scikit-learn's model draws from its own."
+      },
+      {
+        "text": "No, and nothing fixes it: tree models trained on a processor do not repeat from one run to the next.",
+        "correct": false,
+        "why": "With `random_state=0` the same model came out twice, 40 trees and the same reais."
+      },
+      {
+        "text": "Yes: gradient boosting has no randomness, since each tree is fitted to what the trees before it got wrong.",
+        "correct": false,
+        "why": "With more than ten thousand rows it turns on early stopping, which sets aside a random tenth."
+      },
+      {
+        "text": "Not necessarily: the booster draws its own random tenth for early stopping, out of PyTorch's reach.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3vc2h2y",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A network for the churn table standardises its numeric inputs, fills their gaps and one-hot encodes the plan before its first layer. Which of these must be learnt from the training months only, and saved with the model? Choose all that apply.",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 8; Machine Learning: Models, Evaluation and Deployment, lesson 15.",
+    "choices": [
+      {
+        "text": "The mean and the standard deviation of each numeric column.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The median that fills a gap in `rating_90d`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The list of plans the encoder makes a column for.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The 3.6 below which the `unhappy` flag is set.",
+        "correct": false,
+        "why": "That threshold is written down and learns nothing from data, so it is safe on any rows."
+      },
+      {
+        "text": "The 0.278 at which the credit is sent.",
+        "correct": false,
+        "why": "The break-even cut comes from the business's three numbers, not from the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3zrsrby",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A PyTorch churn network with a batch norm layer is put behind FastAPI and scores one subscriber per request. The batch run on March gives varied chances, but every served subscriber gets exactly the same chance. What happened?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 8; Machine Learning: Models, Evaluation and Deployment, lesson 21.",
+    "choices": [
+      {
+        "text": "The request class has no ranges for the network's columns, so every field arrives as the same default.",
+        "correct": false,
+        "why": "The request class checks what arrives and refuses what does not fit; it fills in nothing."
+      },
+      {
+        "text": "The saved file kept the weights and lost the running averages, so the server uses fresh ones instead.",
+        "correct": false,
+        "why": "In evaluation mode stored averages stand in for the batch, and different subscribers would still differ."
+      },
+      {
+        "text": "The server predicts in training mode: alone in its batch, each subscriber normalises to zero and only beta comes out.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Batch norm needs a batch of at least 32, so the server pads each request with rows of zeros first.",
+        "correct": false,
+        "why": "Nothing pads a request; a batch of one has itself as its mean and a variance of 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed3zn8mm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana saves her PyTorch churn network with `torch.save(model.state_dict(), path)` and copies the file to the scoring server. Besides the file, what must the server have for the network to come back?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 9; Machine Learning: Models, Evaluation and Deployment, lesson 21.",
+    "choices": [
+      {
+        "text": "The code that builds the network, since the file holds numbers by name and not the layers.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The optimiser's state dict, because the weights cannot be used without Adam's running averages.",
+        "correct": false,
+        "why": "The optimiser's state is needed to resume training, not to predict."
+      },
+      {
+        "text": "The file alone, as it holds the whole network, its classes and its forward pass all included.",
+        "correct": false,
+        "why": "A state dict is the model's numbers by name, and nothing else."
+      },
+      {
+        "text": "The training data, because `load_state_dict` refits each layer from it.",
+        "correct": false,
+        "why": "`load_state_dict` copies the saved numbers into a network already built; it fits nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-eeme6fnd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague feeds the churn columns to a PyTorch network unscaled: `price_month` runs from about R$ 180 to R$ 760, and `skips_90d` from 0 to a handful. Unscaled nearest neighbours were decided by price alone. What goes wrong in the network?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 8; Machine Learning: Models, Evaluation and Deployment, lesson 6.",
+    "choices": [
+      {
+        "text": "Nothing lasting, because the first layer learns weights small enough for price and absorbs any scale.",
+        "correct": false,
+        "why": "The weights may get there in the end, but the scale decides how training gets there, and whether it arrives."
+      },
+      {
+        "text": "Large price inputs make large steps on its weights; no one rate suits both.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The network ignores price, because a ReLU cuts large positive inputs back to zero.",
+        "correct": false,
+        "why": "ReLU passes a positive input through unchanged; it only zeroes negative sums."
+      },
+      {
+        "text": "The output layer suffers most, since scale matters at the end, where the chance is read.",
+        "correct": false,
+        "why": "A first-layer weight's gradient is its input times the gradient from above, so the damage starts at the input."
+      }
+    ]
+  },
+  {
+    "id": "ex-eewfjyg6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague replaces `OneHotEncoder` followed by a bias-free `nn.Linear` with an `nn.Embedding` for the `city` column of a churn network. What changes in what it computes for the cities seen in training?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 16; Machine Learning: Models, Evaluation and Deployment, lesson 14.",
+    "choices": [
+      {
+        "text": "Each city is replaced by its share of leavers, as target encoding does, so the label leaks into the input.",
+        "correct": false,
+        "why": "The rows start random and are moved by backpropagation; nothing reads a city's labels into its row."
+      },
+      {
+        "text": "Nothing: taking a row of the table is the same product as a one-hot row times the weights, done by indexing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The cities gain an order, as in ordinal encoding, since each reaches the network as a whole number.",
+        "correct": false,
+        "why": "The id only picks a row; no arithmetic is done on it, so no city is more than another."
+      },
+      {
+        "text": "Each city now gets a learnt bias of its own as well, which the bias-free `nn.Linear` did not give it.",
+        "correct": false,
+        "why": "An embedding layer is a linear layer with no bias, so the two hold exactly the same numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef6480t2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana will try 20 learning rates for a PyTorch network trained with Adam, somewhere between 0.0001 and 3. How should the 20 values be spread?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 5; Machine Learning: Models, Evaluation and Deployment, lesson 9.",
+    "choices": [
+      {
+        "text": "Close to Adam's default of 0.001, since a library's default is where the best rate usually sits for it.",
+        "correct": false,
+        "why": "Adam at 0.001 gave 0.933 in the sweep, where 0.03 gave 0.969: a default is a place to start."
+      },
+      {
+        "text": "Evenly between the two ends, so that every stretch of the range gets its fair share of the tries.",
+        "correct": false,
+        "why": "Even steps put nearly all the tries above 0.1; what matters about a rate is its order of magnitude."
+      },
+      {
+        "text": "Evenly on a log scale, as `loguniform` draws, so 0.0001 to 0.001 gets as many tries as 0.3 to 3.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "On a grid of 20 equal steps, since a grid covers a single dial better than random draws can.",
+        "correct": false,
+        "why": "Equal steps waste the tries on the large rates whether they are a grid or random; the scale is the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-efdvhb63",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each new problem to the first model the two courses point to.",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 20; Machine Learning: Models, Evaluation and Deployment, lesson 6.",
+    "pairs": [
+      {
+        "left": "A customer table of 40,000 rows, with gaps and a contract type",
+        "right": "Gradient boosting with its defaults"
+      },
+      {
+        "left": "Short reviews to sort into complaints, read as word counts",
+        "right": "Naive Bayes"
+      },
+      {
+        "left": "Photographs of ten kinds of fruit, 30 labelled of each",
+        "right": "A pretrained network with a new head"
+      },
+      {
+        "left": "8 by 8 digits, two labelled of each, and nothing pretrained",
+        "right": "Logistic regression on the pixels"
+      }
+    ],
+    "right_distractors": [
+      "A convolutional network trained from scratch"
+    ]
+  },
+  {
+    "id": "ex-ej2jwh20",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`nn.MultiheadAttention(48, 6)` cuts its 48 features into six heads. How many parameters does it have, biases included?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 15.",
+    "value": 9408,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ejj7q2mv",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A team borrows a pretrained body for a new image task. Put the runs lesson 17's recipe makes in order, first to last.",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 17.",
+    "items": [
+      "Train the same network from random weights",
+      "Train only a new head on the frozen body",
+      "Unfreeze the last block as well",
+      "Let every layer learn"
+    ],
+    "trap": "Starting with everything unfrozen skips the cheapest runs, and without the from-scratch run nobody can say whether borrowing paid at all."
+  },
+  {
+    "id": "ex-ekw9wn5a",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In lesson 18, a result from a run whose code had uncommitted changes is a lead, not a ___.",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 18.",
+    "blanks": [
+      {
+        "accept": [
+          "finding",
+          "a finding"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-etcprzqz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 11's CNN, with its 38,282 parameters, is trained in float32 with Adam at a batch of 64. Counting the weights, the gradients, Adam's two buffers and the activations kept for the backward pass, how many bytes does one step hold?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 19.",
+    "value": 1828000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-f90tyc7c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On 100 training images, all four cures of lesson 7 together reached 0.944; the same network with all 1,077 images and no cure reached 0.986. Which conclusion of the churn course's lesson 13 says the same about a rare class?",
+    "hint": "Deep Learning: Neural Networks in Practice, lesson 7; Machine Learning: Models, Evaluation and Deployment, lesson 13.",
+    "choices": [
+      {
+        "text": "Class weights do with few leavers what more leavers would do, since each one counts sixteen times.",
+        "correct": false,
+        "why": "The weights left the ranking where it was and moved every chance up; they add no evidence."
+      },
+      {
+        "text": "SMOTE's invented rows play the part augmentation plays for images, adding new information about the rare class.",
+        "correct": false,
+        "why": "Every invented row is a blend of rows the model already had, so it adds no information."
+      },
+      {
+        "text": "Undersampling the stayers is the cure, because a balanced table trains the better ranker.",
+        "correct": false,
+        "why": "Undersampling lost the most average precision, having thrown away most of what the model knew about staying."
+      },
+      {
+        "text": "Resampling changes the share of leavers and not their count; if there are too few, the cure is more of them.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs2v9adj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Marina's slide shows two bars: 41.5% of customers whose first box was late cancelled within ninety days, against 17.4% of the others. A colleague who wants the gap to stand out starts the vertical axis at 15%. What is the lie factor of that chart, measured as lesson 16 measures it? Give it to two decimal places.",
+    "hint": "Data Visualisation, lesson 16; Communication and Storytelling with Data, lesson 1.",
+    "value": 7.25,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-g4pkrppm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marina's next slide says the gap holds in both regions: late customers cancelled at 38.8% against 16.0% in the capital, and at 43.9% against 20.0% in the interior. Which chart draws that sentence, and why?",
+    "hint": "Data Visualisation, lesson 3; Communication and Storytelling with Data, lesson 5.",
+    "choices": [
+      {
+        "text": "Grouped bars, late beside on-time in each region, all standing on one zero.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One stacked bar per region, late on top of on-time, so each region becomes a single length to compare.",
+        "correct": false,
+        "why": "A stack compares totals; the late segment starts where on-time ends, off the baseline, and a sum of two rates means nothing."
+      },
+      {
+        "text": "A line from capital to interior for each status, so that two parallel slopes show the gap is the same.",
+        "correct": false,
+        "why": "A line between two regions draws a slope between categories, and a slope between regions means nothing."
+      },
+      {
+        "text": "A pie per region split into late and on-time, because a pie shows each part against its whole.",
+        "correct": false,
+        "why": "The two rates are not parts of one whole, and comparing slices across two pies is the lowest rung of the ladder twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-gddbsjjv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Following the advice to grey everything and colour one thing, Marina draws the on-time bars in `#c8ccd4` and only the late bars in colour, on a white slide that will be projected. What is wrong with that grey?",
+    "hint": "Data Visualisation, lesson 14; Communication and Storytelling with Data, lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: context bars are like gridlines, meant to be quiet, so no contrast threshold applies to them at all.",
+        "correct": false,
+        "why": "Gridlines are exempt because the chart reads without them; the on-time bars are half of the comparison."
+      },
+      {
+        "text": "At 1.61:1 on white it fails the 3:1 a needed bar requires, so the context the highlight needs disappears on the projector.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It has to reach 4.5:1, because every mark on a chart is held to the same threshold as its text.",
+        "correct": false,
+        "why": "4.5:1 is for text; the bars, lines and points a reader needs are held to 3:1."
+      },
+      {
+        "text": "Grey is the mistake: the on-time bars need a second strong hue so that both series stay visible.",
+        "correct": false,
+        "why": "Grey for the context is the technique; a second strong hue makes two things compete, and the grey only needs enough contrast."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj4e3m6e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marina is titling four of Faro's charts. By the rule for when a claim title is the wrong choice, which one should keep a label title?",
+    "hint": "Data Visualisation, lesson 15; Communication and Storytelling with Data, lesson 7.",
+    "choices": [
+      {
+        "text": "Appendix slide C, shown only if somebody asks about region.",
+        "correct": false,
+        "why": "Appendix slides get sentence titles like every other slide, so they can be understood in one glance."
+      },
+      {
+        "text": "Slide 4 of the deck, the two bars of 41.5% against 17.4%.",
+        "correct": false,
+        "why": "A presented slide carries one message, so its title states it as a sentence."
+      },
+      {
+        "text": "The weekly first-delivery tile Paulo filters by region.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The chart on the one-page summary forwarded to Renata.",
+        "correct": false,
+        "why": "A forwarded chart has lost its explanation, which is exactly when a claim title earns its place."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm9rrdnh",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A colleague puts Faro's weeks on one chart: the share of first boxes delivered on time against the left axis, and the 90-day cancellation rate against the right. The two lines rise and fall together, and he calls that proof. What is wrong with the argument? Choose all that apply.",
+    "hint": "Data Visualisation, lesson 16; Communication and Storytelling with Data, lesson 7.",
+    "choices": [
+      {
+        "text": "The left axis must start at zero, because a share of deliveries is read as a length.",
+        "correct": false,
+        "why": "A line is read by its position and slope, so its axis may start where the data starts."
+      },
+      {
+        "text": "The cancellation rate read in a week is about customers who joined some three months before.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, provided both axes start at zero, since both series are percentages.",
+        "correct": false,
+        "why": "Two shares of different things are still two scales whose ranges place the lines, and the timing problem remains."
+      },
+      {
+        "text": "Whoever picked the two axis ranges also picked whether the lines seem to move together.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmn1v96z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 9 sizes the effect of bringing late first deliveries from 17.3% down to 8% at about 274 customers kept a year, and warns that the pilot might reach only 12%. With the same formula and the same assumptions, how many customers a year are kept if it reaches 12%? Round to the nearest whole customer.",
+    "hint": "Communication and Storytelling with Data, lesson 9.",
+    "value": 156,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-gp6w3nap",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A slide for Renata labels its two bars `41.5%` and `17%`, and the note beside them reads `R$ 792,611.40` a year. What should change?",
+    "hint": "Communication and Storytelling with Data, lesson 8; Data Visualisation, lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: exact figures let finance check the arithmetic, and the two rates are readable as they are.",
+        "correct": false,
+        "why": "Eight significant figures claim a precision the lifetime and margin estimates lack, and 17% beside 41.5% mixes precisions."
+      },
+      {
+        "text": "Show 41.5% and 17.4%, and the money as R$ 792.6 thousand, keeping one decimal throughout.",
+        "correct": false,
+        "why": "A decimal on the money still claims a precision its assumptions do not have; the page says about R$ 790 thousand."
+      },
+      {
+        "text": "Round both rates to whole numbers, 42% and 17%, so that they match the rounded money.",
+        "correct": false,
+        "why": "The rates are counted and their decimal is honest; rounding them makes the slide disagree with the deck and the page."
+      },
+      {
+        "text": "Write 17.4% to match 41.5%, and the money as about R$ 790 thousand, since it is an estimate.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwb6j5ry",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Paulo now opens Faro's redesigned dashboard on his phone, where the four zones become one column. Which block should come first?",
+    "hint": "Communication and Storytelling with Data, lesson 7; Data Visualisation, lesson 19.",
+    "choices": [
+      {
+        "text": "First deliveries on time, 84.1% against a 95% target, and the cohort's cancellations.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The weekly line of the first-delivery rate, because the main chart takes the full width.",
+        "correct": false,
+        "why": "The trend answers what changed, the third question; on a phone the stacking order is the order of importance."
+      },
+      {
+        "text": "Overall on-time at 94.5%, because it is the number logistics already reports.",
+        "correct": false,
+        "why": "That number sits small in the bottom zone of the redesign; it is the one that hid the problem."
+      },
+      {
+        "text": "The bars by region, because the interior is where the problem is worst.",
+        "correct": false,
+        "why": "Where the problem is comes second, after whether things are all right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyt4x9cj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Paulo's old dashboard had a map of the state of São Paulo coloured by orders. If a map stays on the redesign, what should be true of it?",
+    "hint": "Communication and Storytelling with Data, lesson 7; Data Visualisation, lesson 8.",
+    "choices": [
+      {
+        "text": "Each city gets a circle sized by its share of late first boxes, with the areas left grey.",
+        "correct": false,
+        "why": "A symbol sized by area is for a count; a rate belongs in the shade of the area itself."
+      },
+      {
+        "text": "It keeps orders, recoloured as a rainbow so that every city stands out clearly from its neighbours.",
+        "correct": false,
+        "why": "Orders by count is still the population map, and a rainbow gives the shades no order."
+      },
+      {
+        "text": "Location is part of the question, and the areas are shaded by a rate, such as the share of first boxes late.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The areas are shaded by the number of late first boxes, since lateness is what the analysis is about.",
+        "correct": false,
+        "why": "A count of anything mostly maps where people live; late boxes need a denominator too."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0yxyj49",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Marina draws the deck's charts in matplotlib and lets it colour the series in the order it finds them. On the regional slide, where the series arrive in another order, late deliveries come out in the colour earlier slides gave on-time. What fixes it for every chart?",
+    "hint": "Data Visualisation, lesson 13; Communication and Storytelling with Data, lesson 6.",
+    "choices": [
+      {
+        "text": "Keep a dictionary from each category to its colour, and look the colour up in every chart.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Give each slide a palette of its own, so nobody carries a colour over from the previous slide.",
+        "correct": false,
+        "why": "Readers carry a colour's meaning from slide to slide whatever you do; repetition uses the habit instead of fighting it."
+      },
+      {
+        "text": "Add a legend to every slide, so that the reader can check what each colour means each time.",
+        "correct": false,
+        "why": "A reader who has learnt a colour stops reading the legend, which is why the colour must keep its meaning."
+      },
+      {
+        "text": "Sort the series the same way before every chart, so the library assigns the colours in the same order.",
+        "correct": false,
+        "why": "That holds until a filter or a missing category shifts the order; a mapping by name does not depend on order."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6dkg90n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Appendix slide D answers whether the gap is there every month. Marina's draft has four tangled lines: the monthly cancellation rate of late and on-time customers in each region. How should it be redrawn?",
+    "hint": "Data Visualisation, lesson 10; Communication and Storytelling with Data, lesson 5.",
+    "choices": [
+      {
+        "text": "Four panels, one per line, sorted from the highest average rate to the lowest.",
+        "correct": false,
+        "why": "It separates the two lines being compared; each panel should hold one region's late and on-time pair."
+      },
+      {
+        "text": "Two panels, one per region, each with its late and on-time lines, on one shared vertical scale.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two panels, one per region, each fitted to its own range so both pairs of lines fill the height.",
+        "correct": false,
+        "why": "With free scales the same height means a different rate in each panel, and readers compare heights anyway."
+      },
+      {
+        "text": "One chart with two vertical axes, late customers on the left and on-time customers on the right.",
+        "correct": false,
+        "why": "The two ranges would then decide where the lines sit, which is the very comparison the slide exists for."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8qzaq4j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Faro doubles six months of extra cancellations to get a year, and the lesson accepts it. A colleague at Horta, the grocer, doubles its orders from January to June 2025 to estimate the whole year. Why is that less safe there?",
+    "hint": "Communication and Storytelling with Data, lesson 11; Data Visualisation, lesson 4.",
+    "choices": [
+      {
+        "text": "It is safe once each region is indexed to January, so that growth compares fairly.",
+        "correct": false,
+        "why": "Indexing compares growth between series; it does nothing about a season missing from the window."
+      },
+      {
+        "text": "Orders are a count, and only a rate may be scaled to a year by doubling it.",
+        "correct": false,
+        "why": "Faro doubled a count, 255 extra cancellations; what decides it is whether the pattern is stable."
+      },
+      {
+        "text": "Six months is too short for any yearly figure, so Faro's doubling was an error too.",
+        "correct": false,
+        "why": "The lesson allows it for Faro because the monthly pattern there is stable."
+      },
+      {
+        "text": "Horta's orders climb all year and spike each December, so the second half is no copy of the first.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcvp6jew",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Marina charts Faro's exit survey as sorted bars: price 116 answers, the pet refused the food 58, delivery 52, moved to a shop 43, other 35. Which titles are true of that chart as drawn? Choose all that apply.",
+    "hint": "Communication and Storytelling with Data, lesson 12; Data Visualisation, lesson 15.",
+    "choices": [
+      {
+        "text": "Price was the reason given most often by those who answered.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Faro's early cancellers leave mainly because of the price.",
+        "correct": false,
+        "why": "The chart describes the 23% who chose to answer, not all 1,320 who left."
+      },
+      {
+        "text": "Delivery hardly matters to customers who cancel early.",
+        "correct": false,
+        "why": "A reason ranked third by those who answered says nothing about how everybody behaved, and their behaviour says the opposite."
+      },
+      {
+        "text": "Of the 304 who answered the exit survey, 38% named price.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfeepccd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Marina's deck will be presented on Friday and also sent to Renata, who cannot attend, so she fills every slide with paragraphs, definitions and caveats. Garr Reynolds's name for that hybrid, too dense to present and too fragmented to read, is a ___.",
+    "hint": "Communication and Storytelling with Data, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "slideument",
+          "slideuments"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hgvqh7cq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Marina can draw her two rates, 41.5% and 17.4%, in several ways. Put these in order of how accurately a reader judges how many times larger one is than the other, most accurate first.",
+    "hint": "Data Visualisation, lesson 2.",
+    "items": [
+      "Two dots against one shared axis",
+      "Two bars from a zero baseline",
+      "Two slices, one in each of two pies",
+      "Two circles whose areas match the rates",
+      "Two squares shaded by lightness"
+    ],
+    "trap": "A circle looks more vivid than a slice, but the measured ladder runs position, length, angle, area and shading last; and dots beat bars because position on a common scale is the top rung."
+  },
+  {
+    "id": "ex-hkk0mkdr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each colour job in Faro's report to what it needs.",
+    "hint": "Data Visualisation, lesson 12; Communication and Storytelling with Data, lesson 7.",
+    "pairs": [
+      {
+        "left": "A heatmap of first orders per region and week, shaded by count",
+        "right": "A sequential palette, one direction of lightness"
+      },
+      {
+        "left": "Each region's first-delivery rate as its distance from the 95% target",
+        "right": "A diverging palette centred on the target"
+      },
+      {
+        "left": "The capital's and the interior's lines told apart on one chart",
+        "right": "A categorical palette, distinct hues of similar weight"
+      },
+      {
+        "left": "Late deliveries picked out against everything else on a slide",
+        "right": "Grey for every mark, and one strong colour"
+      }
+    ],
+    "right_distractors": [
+      "A rainbow scale such as jet"
+    ]
+  },
+  {
+    "id": "ex-hs9wfv0t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Suppose region had been the whole story behind Faro's gap: the interior both gets more late first boxes and cancels more anyway. What would Marina's split of the table by region have shown?",
+    "hint": "Communication and Storytelling with Data, lesson 10.",
+    "choices": [
+      {
+        "text": "The interior's cancellation rate dropping to the capital's once late boxes are removed.",
+        "correct": false,
+        "why": "That compares the regions; the question is whether lateness still matters once region is held fixed."
+      },
+      {
+        "text": "About the same share of late first boxes in the capital as in the interior.",
+        "correct": false,
+        "why": "The late shares are what they are either way; the test compares cancellations with region held fixed."
+      },
+      {
+        "text": "A gap inside each region at least as large as the 24.1 points of the pooled table.",
+        "correct": false,
+        "why": "That is the pattern when region explains nothing; she found 22.8 and 23.9 points, a little under it."
+      },
+      {
+        "text": "Late and on-time customers cancelling at about the same rate inside each region.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-hvrm17ha",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "On Faro's dashboard the weekly first-delivery line sits in a tall, narrow tile and looks like a cliff. Cleveland's rule for choosing a line chart's width and height puts the important slopes near ___ degrees.",
+    "hint": "Data Visualisation, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "45",
+          "forty-five",
+          "forty five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hyn4njjy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You keep `.env` and `.DS_Store` in your own `~/.gitignore_global`, and the churn project's `.gitignore` lists neither. A colleague clones the project and writes the warehouse password into a `.env` of their own. What stops their next `git add .` from staging it?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "choices": [
+      {
+        "text": "GitHub's push protection, which refuses any file that is named `.env`.",
+        "correct": false,
+        "why": "It refuses known kinds of key by their shape, not files by name, and it acts on a push, after the commit exists."
+      },
+      {
+        "text": "Nothing: `.env` has to be listed in the ignore file committed with the repository.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lesson 14's pre-commit hook, which every clone of the project receives.",
+        "correct": false,
+        "why": "A hook lives in `.git/hooks`, which is not part of the repository; it protects your clone and nobody else's."
+      },
+      {
+        "text": "Your global ignore file, which `git clone` brings along with the history.",
+        "correct": false,
+        "why": "It is a file in your home directory named by `core.excludesFile`; a clone carries the repository, not your settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzsrvjp5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio repository keeps `data/sales.parquet` in Git LFS. A reviewer follows your README on a fresh machine, and the notebook cannot read the file: on their disk it is three short lines starting `version https://git-lfs.github.com/spec/v1`. What happened?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; The Portfolio Project: From Brief to Deploy, lesson 16.",
+    "choices": [
+      {
+        "text": "They have no Git LFS, so the clone kept the pointer; nothing you wrote says to install it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`.gitattributes` was never committed, so Git stored the parquet file in the history as text.",
+        "correct": false,
+        "why": "Without that line Git would have stored the whole file in the history, not a three-line pointer."
+      },
+      {
+        "text": "The file passed GitHub's 100 MB limit, so the push cut it short and kept its first lines.",
+        "correct": false,
+        "why": "With LFS the content never goes into the history; the history holds a pointer and the bytes go to LFS storage."
+      },
+      {
+        "text": "Large files wait in a plain clone until `git submodule update --init` is run.",
+        "correct": false,
+        "why": "That command clones submodules; files kept in LFS arrive through the LFS extension."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc90r781",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Each pull request on your churn-analysis repository holds three or four tidy commits, such as `Drop duplicate customers` and `Test the duplicate rule`. You want `main` to read as one line of history in which each of them can still be found, reverted and blamed on its own. Which merge button fits?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 8; The Portfolio Project: From Brief to Deploy, lesson 9.",
+    "choices": [
+      {
+        "text": "Squash and merge, which makes the pull request one commit",
+        "correct": false,
+        "why": "The individual commits are gone from `main`, so none of them can be reverted on its own."
+      },
+      {
+        "text": "Create a merge commit, which keeps them and adds a join",
+        "correct": false,
+        "why": "Every commit survives, but each pull request adds a fork and a join, so the history is not one line."
+      },
+      {
+        "text": "Rebase and merge, which replays them on top of `main`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Squash and merge, listing every subject in the message",
+        "correct": false,
+        "why": "The subjects survive as text in one message; the commits behind them do not, so none can be reverted alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgdqhd2p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You pushed `feature-cohorts`, and a friend has reviewed its four commits and asked you to fix a mislabelled axis made in the second. You are tempted to use `git commit --fixup` and `git rebase -i --autosquash`, so the history reads as if it had been right the first time. What do the lessons say?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 11; The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "choices": [
+      {
+        "text": "Fold it in: the branch is yours, so rewriting it hurts nobody.",
+        "correct": false,
+        "why": "It stopped being yours alone when it was pushed and read; the rewritten commits get new ids the reviewer has never seen."
+      },
+      {
+        "text": "Use `git commit --amend` on it, which keeps every commit's id.",
+        "correct": false,
+        "why": "`--amend` replaces only the last commit, and an amended commit is a new commit with a new id."
+      },
+      {
+        "text": "Add a new commit; the merge button decides what reaches `main`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Close the pull request and open a new one from a tidied branch.",
+        "correct": false,
+        "why": "The review lives on the pull request, and the reviewer would have to read every commit again to find the one fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnb1v67q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your repository has lesson 12's workflow, which runs `python3 -m unittest -v` on every push. The tests read a file in `tests/fixtures/`, and `git status --short` on your laptop shows `?? tests/fixtures/`. Every test passes locally. What does the run on GitHub show?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "A green tick, since it runs the very command that passed on your laptop",
+        "correct": false,
+        "why": "The command is the same and the machine is not: it holds only what was committed and pushed."
+      },
+      {
+        "text": "A red cross, since it tests a clone of what was pushed, without the fixture",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A green tick, since `git commit -a` also took the new fixture along",
+        "correct": false,
+        "why": "`-a` only stages files Git already tracks, and `??` means the folder was never tracked."
+      },
+      {
+        "text": "Nothing yet, since this workflow waits until a pull request is opened",
+        "correct": false,
+        "why": "`on: [push, pull_request]` runs it on every push as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-jss7wfz4",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each slip in your analysis repository to the command lesson 4 reaches for.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "pairs": [
+      {
+        "left": "An edit to `clean.py`, never staged, that broke the parser",
+        "right": "`git restore clean.py`"
+      },
+      {
+        "left": "A commit already on the shared `main` that dropped the wrong outliers",
+        "right": "`git revert` on that commit"
+      },
+      {
+        "left": "A typo in the message of the commit you just made, not yet pushed",
+        "right": "`git commit --amend`"
+      },
+      {
+        "left": "A commit that `git reset --hard` stepped past, which you now want back",
+        "right": "`git reflog`, then `git reset` to its entry"
+      }
+    ],
+    "right_distractors": [
+      "`git push --force` to `main`"
+    ]
+  },
+  {
+    "id": "ex-jt27y2f4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Your analytics team of five finishes about 40 points in a normal two-week sprint of 10 working days each. This sprint one person is on a four-day course and another spends two days on support. Scaling the usual points by the days actually available, as lesson 18 does, how many points of capacity does the team have? Round to the nearest whole point.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 18.",
+    "value": 35,
+    "tolerance": 0.5,
+    "unit": ""
+  },
+  {
+    "id": "ex-jvnmww4p",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You are about to push your churn project to a public repository for the first time. Which of these belong in it? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "`config.py`, which reads `os.environ[\"WAREHOUSE_PASSWORD\"]`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`.gitignore`, with `.venv/` among its lines",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`.env`, holding the password, so the notebook runs",
+        "correct": false,
+        "why": "A password is a secret: it lives in the environment, and the file that holds it is ignored."
+      },
+      {
+        "text": "`requirements.txt`, naming what the project asks for",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`.venv/`, so that a reviewer can skip the install",
+        "correct": false,
+        "why": "It is a build artefact for one machine, rebuilt in seconds from `requirements.txt`, and never committed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kayw4xhv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "You are applying for junior data scientist roles. By lesson 3, what does somebody hiring in that field open first in your portfolio project?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "The pipeline's diagram, then what happens when it runs twice",
+        "correct": false,
+        "why": "That is data engineering's first look; a data science reviewer starts from the result."
+      },
+      {
+        "text": "The dashboard at a public link, then what each metric counts",
+        "correct": false,
+        "why": "That is what a business intelligence reviewer opens first."
+      },
+      {
+        "text": "The modelling code, read cell by cell before any result",
+        "correct": false,
+        "why": "The result comes first; a notebook of two hundred unexplained cells is read as a draft."
+      },
+      {
+        "text": "A rendered notebook or report answering one stated question",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd87nk96",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Before opening your pull request you run lesson 10's check, `git diff main... | grep -nE '^\\+.*(console\\.log|TODO|print\\(|debugger)'`. Which of these lines of the diff does it print? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 10; Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "`+    print(df.shape)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`-    print(\"loaded\")`",
+        "correct": false,
+        "why": "A line starting with `-` exists only on the old side; the pattern looks only at lines this branch adds."
+      },
+      {
+        "text": "`+# TODO: check the outlier cut`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`print(df.head())` on a line that starts with a space",
+        "correct": false,
+        "why": "A leading space marks context, a line nobody changed; it is shown only so you can see where you are."
+      },
+      {
+        "text": "`+    display(df)`",
+        "correct": false,
+        "why": "`display` is not in the pattern; a grep finds what it names and nothing else, which is why the checklist exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdd2n90p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Your model API copies loanbook's unit file, `HealthInterval=30s` included, and its `/healthz` runs one prediction through a hosted model that costs 0.1 cent per call. How many cents a day does the health check alone spend?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "value": 288,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ke9zgatj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your 40 local commits were made with your personal address in `user.email`. Before pushing the project to a public repository for the first time, you set `user.email` to GitHub's no-reply address. What will the published history show?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 18; Git and Teamwork: Version Control, Review and Process, lesson 1.",
+    "choices": [
+      {
+        "text": "Your personal address on the 40, and the no-reply one only on commits made later",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No address at all, since GitHub hides who wrote commits pushed to it",
+        "correct": false,
+        "why": "Pushing publishes the name and address of every commit, permanently, in every clone."
+      },
+      {
+        "text": "Only the no-reply address, once GitHub's option to block exposed addresses is on",
+        "correct": false,
+        "why": "That option refuses a push that would expose the address; it rewrites none of the 40 commits."
+      },
+      {
+        "text": "The no-reply address on all 40, since Git fills in the address when it pushes",
+        "correct": false,
+        "why": "The address is copied into each commit when the commit is made, not when it is pushed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksbf7psm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "During an internship you exported the real customer table to `data/customers.csv` for your churn project and committed it. The next commit deleted it and added a seed of invented customers. Nothing is pushed yet. What is still wrong?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 17; Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "The first commit still holds the export, and must be rewritten before a push.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Put `data/` into `.gitignore`, which keeps the export out of everything that is pushed.",
+        "correct": false,
+        "why": "Ignoring only hides untracked files; the export is already inside a commit."
+      },
+      {
+        "text": "Nothing: the seed replaced the export, and the files on disk are all invented.",
+        "correct": false,
+        "why": "A push sends the history, and the commit that added the export is part of it."
+      },
+      {
+        "text": "The seed ought to keep the real customers, with their names swapped for fakes.",
+        "correct": false,
+        "why": "A copy of a real spreadsheet with the names changed is still somebody's real data."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky6tpc7v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your sales dashboard asks the warehouse for the week's figures when it opens. One morning the warehouse is down, the request fails, and the chart area says `No sales recorded this week`. By lesson 11, what is wrong?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "choices": [
+      {
+        "text": "The page should print the warehouse's traceback so that a user can report it.",
+        "correct": false,
+        "why": "The details belong in the log; the user gets a sentence saying what happened and what to do."
+      },
+      {
+        "text": "The loading state is missing: the figures have not arrived yet.",
+        "correct": false,
+        "why": "The request did come back, and it failed; that is the error state, not the wait before an answer."
+      },
+      {
+        "text": "Nothing: with no rows returned, an empty week is an honest description.",
+        "correct": false,
+        "why": "No answer is not an answer of zero; a server that is down and a week with no sales are different states."
+      },
+      {
+        "text": "The error is drawn as the empty state, so an outage reads as a bad week.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2yhtf5m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your cleaning step drops survey respondents younger than 18, and the brief says a respondent aged exactly 18 is kept. You have time for two tests on this rule. Which two earn their keep, by lesson 12?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "One aged 18, kept, and one that the cleaned file loads",
+        "correct": false,
+        "why": "Loading is plumbing the library already tests, and only one side of the edge is covered."
+      },
+      {
+        "text": "One aged 30, kept, and one aged 10, dropped",
+        "correct": false,
+        "why": "Both sit far from the boundary, where a mistake in the comparison changes nothing."
+      },
+      {
+        "text": "One aged 17, dropped, and one aged exactly 18, kept",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two aged 18, one from each of the two source files",
+        "correct": false,
+        "why": "Both are on the same side of the edge; the 17 that a wrong comparison would keep is never tried."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbw1gfep",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put your churn project's four milestones in the order lesson 7 tags loanbook's.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 7.",
+    "items": [
+      "A notebook that loads the export, fits a baseline and prints one number, end to end",
+      "The rule only this project has, customers counted once across two systems, with its test",
+      "The report rebuilt every night by a scheduled job that fails loudly when it fails",
+      "README, screenshot, seed data and licence: the first version worth showing"
+    ],
+    "trap": "Polish and the README feel like progress, but the skeleton comes first so something runs, and the one thing comes straight after it so it is done whatever happens later; the version worth showing is last."
+  },
+  {
+    "id": "ex-mh2a46gv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Your .env is ignored, so somebody cloning the project cannot tell which variables to set. Lesson 14 commits a file that lists every variable the project needs, each with a fake value: ___.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          ".env.example",
+          "env.example"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mhwyrefh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In your first week as a junior data analyst, you want to install an AI assistant extension in your editor to work on the company's analysis repository. By the lessons cited, what comes before installing it?",
+    "hint": "AI in Development, lesson 3; From Study to Hired: CV, Interviews and the First 90 Days, lesson 20.",
+    "choices": [
+      {
+        "text": "Install it and work it out alone: asking about tools in the first month reads as not being independent.",
+        "correct": false,
+        "why": "A junior who asks nothing for a month is guessing, and the first month is for learning how things work there."
+      },
+      {
+        "text": "Find out what the company allows: whether code is allowed to leave it, and which assistant tools are approved.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Write an `AGENTS.md` with the team's rules, so that every request the assistant makes carries them.",
+        "correct": false,
+        "why": "An instruction file improves suggestions; it says nothing about whether the code may leave the company."
+      },
+      {
+        "text": "Add `.env` to the repository's `.gitignore`, so that the assistant has no way to read the credentials.",
+        "correct": false,
+        "why": "`.gitignore` tells git what to ignore; the editor still opens the file, and a tab is a tab."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnnqqj78",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your take-home brief says a promo code is valid \"until 31 March, inclusive\". You give an assistant only your `is_valid(code, today)` and ask for pytest tests; all nine it writes pass. What does that green run tell you, by the lessons cited?",
+    "hint": "AI in Development, lesson 4; From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "That the boundary is safe, because an assistant that saw only the function had nothing to copy but the rule.",
+        "correct": false,
+        "why": "Seeing only the function is exactly why its expected values describe the function, an off-by-one included."
+      },
+      {
+        "text": "That the brief is met, since a test for every branch is what a reviewer means by the rule that matters.",
+        "correct": false,
+        "why": "The rule that matters gets one test that fails when the rule is removed; tests read off the code pin its bugs."
+      },
+      {
+        "text": "Not much yet: ask for more tests until they run every line, which is what makes a suite trustworthy.",
+        "correct": false,
+        "why": "Running a line is not checking what it does; a wrong comparison would still count as covered."
+      },
+      {
+        "text": "That the code does what it does; tests of 31 March and 1 April need expected values taken from the brief.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1qytt70",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Your manager asks what labelling incoming product reviews with a model would cost: 5,000 requests a day for 30 days, each with 800 tokens in and 50 out, at the list price lesson 2 gives for Claude Sonnet 5.5. How many dollars is the month?",
+    "hint": "AI in Development, lesson 2.",
+    "value": 315,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-n845ypyd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly job sends 20,000 product reviews to a model, one request each, and writes each label to a table that nobody watches being filled. A colleague suggests streaming the replies so that the job finishes sooner. What does lesson 9 say?",
+    "hint": "AI in Development, lesson 9.",
+    "choices": [
+      {
+        "text": "No, and it adds a risk: a streamed reply can be cut off at `max_tokens`, where a plain one cannot.",
+        "correct": false,
+        "why": "Both stop at the limit the same way; the `stop_reason` near the end of a stream says whether it finished."
+      },
+      {
+        "text": "No: it brings the first word forward, not the last, and no person is waiting on the first.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It would let the job check each label as it arrives and stop a wrong one before the rest is written.",
+        "correct": false,
+        "why": "A label is read by a program, and a program that parses a reply cannot use half of it."
+      },
+      {
+        "text": "It would, because each reply arrives in pieces while the model is already working on the next request.",
+        "correct": false,
+        "why": "The total time is the model's either way; streaming changes when the first piece is seen, not when the last arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnh7tzhe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your notebook seeds `np.random.default_rng(2025)`, and its bootstrap interval is the same on every run. You then label 200 reviews through OpenAI's Chat Completions with `temperature=0` and `seed=7`, and a teammate's rerun disagrees on three labels. Which explanation fits both lessons?",
+    "hint": "AI in Development, lesson 1; Python for Data Science: NumPy, pandas and Notebooks, lesson 8.",
+    "choices": [
+      {
+        "text": "The provider calls a seed best effort and promises no identical output even at 0; keep the labels you got.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A library drew from NumPy's global generator before the request and moved the seed the model was given.",
+        "correct": false,
+        "why": "That is NumPy's shared state on your machine; the provider's draw happens on its own side."
+      },
+      {
+        "text": "At temperature 0 the draw still happens, only sharper, so a fixed seed was not going to hold the labels in place.",
+        "correct": false,
+        "why": "At 0 the draw disappears and the top token wins; the drift comes from the provider's arithmetic."
+      },
+      {
+        "text": "The teammate has a newer NumPy, whose Generator methods may give other numbers for the same seed.",
+        "correct": false,
+        "why": "True of NumPy's Generator, but the labels came from the provider, where your NumPy plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-nsj3shz7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Before customer emails go to a model for topic labels, you add lesson 11's `redact()`, with its EMAIL, CPF, CARD and SECRET patterns. Which statements about the result hold, by that lesson? Choose all that apply.",
+    "hint": "AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "`logging.basicConfig(level=logging.INFO)` turns on your own logger and leaves the libraries' quiet.",
+        "correct": false,
+        "why": "It turns on every library's information messages; the HTTP library then logged each URL it called."
+      },
+      {
+        "text": "The model can still tell that a card was mentioned, because the number becomes a label.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A CPF typed as eleven bare digits, with no dots or dash, still reaches the provider.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A sixteen-digit tracking number in the email is replaced by `[CARD]`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "If the model refuses to answer, the email's details never left the shop.",
+        "correct": false,
+        "why": "A refusal is a reply: it comes back after the request has gone, with everything in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny2v9bjy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your pipeline asks a model to extract `total_cents` from supplier invoices, through a provider that enforces your JSON Schema while the model writes. Every reply validates. What does lesson 8 say about using that field in the monthly spend report?",
+    "hint": "AI in Development, lesson 8.",
+    "choices": [
+      {
+        "text": "Drop your own validator, since a reply the provider constrains cannot fail it, and the check costs time.",
+        "correct": false,
+        "why": "Lesson 8 keeps the check: it holds the shape whatever the provider did, and one endpoint ignored the constraint silently."
+      },
+      {
+        "text": "Use it: once the provider enforces the schema, an integer field can only hold a value the invoice gave.",
+        "correct": false,
+        "why": "The constraint keeps the type, not the meaning; the same model read a lamp's 21000 cents as $21,000."
+      },
+      {
+        "text": "Valid means the shape held; compute the amount from the source in code, and use the fields to route.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add `minimum` and `maximum` to the schema, so an amount out by a factor of a hundred is refused there.",
+        "correct": false,
+        "why": "A rule about what is true of the data belongs in code; squeezed into a schema it still has holes."
+      }
+    ]
+  },
+  {
+    "id": "ex-p140k22a",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Your take-home asks for a loader that also reads dates written day-first, and you will use an assistant. Put the steps in lesson 5's order, so that the brief's \"what counts as done\" is checked by tests you wrote.",
+    "hint": "AI in Development, lesson 5; From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "items": [
+      "Ask the assistant for the steps, and no code yet",
+      "Write the test cases from the brief yourself",
+      "Run the tests and watch them fail",
+      "Ask for the change, then run the tests on it"
+    ],
+    "trap": "Asking for the change and its tests in one request looks quicker, but tests that arrive with the change were written from it, and a test that passes before the change checks nothing."
+  },
+  {
+    "id": "ex-p5ewvg5q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio project answers questions about a support handbook by retrieving passages and citing them. Which CV line follows lesson 4's rules for a number, using what lesson 6 measures?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; AI in Development, lesson 6.",
+    "choices": [
+      {
+        "text": "Helped build a support chatbot whose cited answers mean that customers get the right answer every time.",
+        "correct": false,
+        "why": "*Helped* hides your part, and a checked citation does not make an answer right: one passed and was wrong."
+      },
+      {
+        "text": "Built a support assistant that improved answer accuracy by 40% over a plain language model, with every source cited.",
+        "correct": false,
+        "why": "Measured how, and against what? A number you cannot explain costs more than no number at all."
+      },
+      {
+        "text": "Built a handbook search: the right passage is in the top three for 11 of 12 labelled questions, 10 by keyword.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Developed a RAG application using Python, NumPy, WordLlama and BM25, with hybrid search and checking of citations.",
+        "correct": false,
+        "why": "It lists the stack, which every other CV has too, and says nothing about what the tool achieves."
+      }
+    ]
+  },
+  {
+    "id": "ex-phx6ashv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a take-home, an assistant wrote a resampling function for you with a method you have never used; it runs, and its results look plausible. The follow-up call will walk through your submission. What follows from the lessons cited?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; AI in Development, lesson 3.",
+    "choices": [
+      {
+        "text": "Keep it only once you understand it well enough to have written it, and say in the note what you chose and why.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Keep it as it is: it runs, the brief is met, and ten minutes of review leave no time to ask about it.",
+        "correct": false,
+        "why": "In a domain you do not know, a fluent wrong answer looks like a right one, and the call will ask about it."
+      },
+      {
+        "text": "Ask the assistant for a second version, and hand in whichever agrees with the first one on your data.",
+        "correct": false,
+        "why": "A second draw from the same model is not a check; you still cannot judge either of them."
+      },
+      {
+        "text": "Hand it in without a note, since a note that mentions the assistant admits that the work is not yours.",
+        "correct": false,
+        "why": "The note is part of what is handed in: what you did, what you chose and why, and what is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pja3896d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A PJ offer invoices R$ 7,200 a month for twelve months, with no benefits. By lesson 17's arithmetic, before tax and benefits, what monthly CLT salary is worth the same year? A whole number of reais.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 6000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-pr4sgaxq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In your second week, you paste a failing notebook cell's traceback into a hosted chat assistant, then notice that it held the analytics database's password. What do the lessons cited say to do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; AI in Development, lesson 3.",
+    "choices": [
+      {
+        "text": "Change the password yourself tonight, and mention it only if somebody notices a failed connection.",
+        "correct": false,
+        "why": "What teams do not forgive easily is finding out later that you knew; say it early, to whoever needs to know."
+      },
+      {
+        "text": "Nothing, provided the file the password came from is already listed in the repository's `.gitignore`.",
+        "correct": false,
+        "why": "`.gitignore` decides what git ignores, not what you paste into a chat."
+      },
+      {
+        "text": "Delete the conversation from the chat's history, which removes the request before the provider keeps it.",
+        "correct": false,
+        "why": "There is no calling a request back; it sits in a log you cannot read or delete."
+      },
+      {
+        "text": "Tell the owner of those credentials at once so they are revoked; a sent request cannot be called back.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz4gy1cf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In an interview for a junior data role, you are asked how you would let the support team ask a language model about the company's 300-page policy handbook. By the lessons cited, how should your answer begin?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; AI in Development, lesson 6.",
+    "choices": [
+      {
+        "text": "With sending the whole handbook in every request, since today's largest context windows hold it easily.",
+        "correct": false,
+        "why": "That decides the design before asking anything, and lesson 6 retrieves because big documents stop being cheap to send."
+      },
+      {
+        "text": "With two or three questions: how many people ask, and what must never happen, such as an unsupported answer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "With training the model further on the handbook, so it knows the policies without them in the prompt.",
+        "correct": false,
+        "why": "Further training changes how a model writes, not the facts it should cite, and it still skips the questions."
+      },
+      {
+        "text": "With the full design up front: a vector database, a cache, hybrid search and a fallback across three providers.",
+        "correct": false,
+        "why": "Parts nobody asked for read as recited rather than reasoned; the simplest thing comes after the questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz9e1why",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Asked about a time you failed, you describe accepting an assistant's refactoring of a data-cleaning function: every test passed, and a result nobody had a test for changed. Which last sentence follows lesson 15 and matches what lesson 3 found?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 15; AI in Development, lesson 3.",
+    "choices": [
+      {
+        "text": "It was not really my mistake: the tests were green, and the tool should have flagged what it changed.",
+        "correct": false,
+        "why": "Blaming somebody else is the answer lesson 15 says fails; the fix is the point."
+      },
+      {
+        "text": "Since then I have the assistant run the whole suite after every change, and I accept a change once it is green.",
+        "correct": false,
+        "why": "The suite was green on the change that broke the result; tests only check what they were written to check."
+      },
+      {
+        "text": "Since then, before an assistant refactors anything, I first write tests that pin what must not change.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "I'm a perfectionist, so now I review every line twice, even when that makes me a little slower than the team.",
+        "correct": false,
+        "why": "A disguised strength is the answer interviewers have heard thousands of times."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8a4vxxr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each point at which a rejection came to what lesson 19 says it most often means.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "pairs": [
+      {
+        "left": "After the screening call",
+        "right": "A practical mismatch, such as salary, contract, shift or location"
+      },
+      {
+        "left": "After a technical interview",
+        "right": "The exercise, the thinking aloud, or a stronger candidate that day"
+      },
+      {
+        "left": "After the final interview",
+        "right": "Usually close: somebody else fitted slightly better"
+      }
+    ],
+    "right_distractors": [
+      "The CV, or the aim of the applications"
+    ]
+  },
+  {
+    "id": "ex-qb5sy60w",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "By lesson 10, after one follow-up and about three weeks of silence, you mark the application cold in the tracker and keep the row, because cold is not ___.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "closed",
+          "over",
+          "ended",
+          "finished"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
