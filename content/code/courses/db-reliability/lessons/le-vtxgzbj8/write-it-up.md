@@ -29,7 +29,7 @@ Actions     Each one a change, with an owner and a date. "Be more careful"
 never who to punish. People hide what they did when they will be blamed for it, and a write-up is
 only as good as what people are willing to put in it.
 
-The timeline above is built in the last section from what this incident left on disk. Its actions,
+The timeline field above is what the previous section built from what this incident left on disk. Its actions,
 for an incident like this one, might be: make `orders.sh`'s real counterpart retry with lesson 19's
 rules, so that thirty seconds of failed orders become thirty seconds of slow ones; add an alert on
 HAProxy's primary changing, so that a person knows within a minute rather than from the shop's
