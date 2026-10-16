@@ -7,7 +7,7 @@ A rehearsal is planned on paper first, and the paper is short:
 
 | | for this lesson's rehearsal |
 |---|---|
-| **what fails** | the Patroni leader, killed as a dead machine (lesson 16) |
+| **what fails** | the Patroni leader, killed as a dead machine would be (lesson 16) |
 | **what we expect** | a new leader within about 30 seconds; orders fail meanwhile and succeed after, through port 5000; no order reported as saved is missing |
 | **what we measure** | seconds without orders; orders failed; rows in the table against orders reported `ok` |
 | **abort criteria** | the cluster is not whole and current before starting: three members, all running or streaming, no lag |
