@@ -21,12 +21,11 @@
 #   - the colour codes. Playwright forces colour on in its workers, so a
 #     failure's text can carry ANSI escapes; every Playwright line here goes
 #     through sed, which deletes exactly ESC[...m and nothing else;
-#   - the JSON reports are copied to /tmp/lab/L19-run1.json, -run2.json and
-#     -run8.json; the lesson's timeline figure was drawn from the first;
+#   - the JSON reports are copied to /tmp/lab/L19-run1.json and -run2.json;
+#     the lesson's timeline figure was drawn from the first;
 #   - turns.config.js. `taking-turns` shows it twice at the same path, and the
-#     project is built with the second; for "turns4-v1", "turns8-v1" and
-#     "overlap8-v1" the first is written back with ../../lab.sh fence, and the
-#     second restored after;
+#     project is built with the second; for "turns-v1" the first is written
+#     back with ../../lab.sh fence, and the second restored after;
 #   - the shards. The three run one after the other on this one machine,
 #     standing in for three CI machines, and the zip each writes is moved into
 #     all-blob-reports/ the way a CI job would upload it;
@@ -85,17 +84,15 @@ cp run2.json /tmp/lab/L19-run2.json
 # turns.config.js as taking-turns first shows it, before the fix.
 cp turns.config.js /tmp/l19-turns-v2.js
 bash "$HERE/../../lab.sh" fence "$HERE/taking-turns.md" turns.config.js > turns.config.js
-block turns4-v1
-pw "for i in 1 2 3; do npx playwright test --config turns.config.js --workers 4 | $SUMMARY; done"
-block turns8-v1
-pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run8.json npx playwright test --config turns.config.js --workers 8 --reporter=list,json | $SUMMARY"
-block overlap8-v1
-run 'node overlap.mjs run8.json'
-cp run8.json /tmp/lab/L19-run8.json
+block turns-v1
+pw 'for w in 4 4 4 4 4 8 8 8 8 8; do PLAYWRIGHT_JSON_OUTPUT_FILE=turns.json npx playwright test --config turns.config.js --workers $w --reporter=json > /dev/null; printf "workers %s  " $w; node at-once.mjs turns.json one-at-a-time; done'
 cp /tmp/l19-turns-v2.js turns.config.js; chown ana:ana turns.config.js
 
 block turns-v2
-for w in 1 2 4 4 8 8; do
+pw 'for w in 4 4 4 4 4 8 8 8 8 8; do PLAYWRIGHT_JSON_OUTPUT_FILE=turns.json npx playwright test --config turns.config.js --workers $w --reporter=json > /dev/null; printf "workers %s  " $w; node at-once.mjs turns.json one-at-a-time; done'
+
+block turns-time
+for w in 1 2 4 8; do
   pw "npx playwright test --config turns.config.js --workers $w | $SUMMARY"
 done
 

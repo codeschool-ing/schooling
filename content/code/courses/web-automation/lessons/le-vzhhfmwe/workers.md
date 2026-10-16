@@ -38,18 +38,19 @@ test fails on one of them only.
 
 ## Files in parallel, tests in a file in order
 
-Three files that leave the shop's data alone, `responsive`, `headless` and `deals`, nine tests
+Three files that leave the shop's data alone, `responsive`, `headless` and `deals`, twelve tests
 between them, run with four workers allowed:
 
 ```
 %%CAP three-files%%
 ```
 
-*Running 9 tests using 3 workers*: four were allowed and three were started, because there were
-only three files to hand out. The numbers in the second column are the order the results came in,
-and the four `responsive` tests that were allowed to fail by `test.fail()` in lesson 7 show the
-✘ mark while still counting as passed. That mark is the list reporter saying the test failed,
-which is what it was told to expect.
+*Running 12 tests using 3 workers*: four were allowed and three were started, because there were
+only three files to hand out. The numbers in the second column are the order the tests were
+started in, and the list prints each line when a test finishes, so they arrive out of order as soon
+as two workers overlap. The two `responsive` tests that lesson 7 marked with `test.fail()` show
+the ✘ mark and still count among the passed: the test failed, which is what it was told to
+expect.
 
 `--fully-parallel` changes the unit of work from the file to the test. The same three files:
 
@@ -57,7 +58,8 @@ which is what it was told to expect.
 %%CAP three-files-fp%%
 ```
 
-Now all four workers are used, because there are nine tests to hand out rather than three files.
+Now all four workers are used, because there are twelve tests to hand out rather than three
+files.
 The setting also exists as `fullyParallel: true` in a configuration, for the whole run or for one
 project, and as `test.describe.configure({ mode: 'parallel' })` inside one file. **Whether a file's
 tests may run apart from each other is a fact about that file**, which is why the default keeps

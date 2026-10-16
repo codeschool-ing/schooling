@@ -61,21 +61,57 @@ export default defineConfig(base, {
 
 A bare file name in `testMatch` is matched anywhere under `testDir`, the way `**/deals.spec.js`
 would be. `playwright.config.js` is untouched, so a plain `npx playwright test` still runs the
-way the first section showed; this file is used by naming it. Four workers, three runs in a row:
+way the first section showed; this file is used by naming it.
+
+## Checking the ceiling, not the colour
+
+A green run does not prove the rule held. Two shop files can overlap and still not collide, because
+a collision needs one to write in the other's window, so the summary is the wrong evidence. The
+JSON report has what is needed: for every test, its project, when it started and how long it
+took. The program below counts the most tests of one project that were running at the same
+moment, and prints how many tests of the run failed. Save it as `at-once.mjs`:
+
+```javascript
+// Reads a JSON report from Playwright and prints the most tests of one
+// project that were running at the same moment, and how many tests of the
+// whole run ended in a way they were not expected to.
+import { readFileSync } from 'node:fs';
+
+const [file, project] = process.argv.slice(2);
+const report = JSON.parse(readFileSync(file, 'utf8'));
+const moments = [];
+const visit = (suite) => {
+  for (const spec of suite.specs ?? []) {
+    for (const test of spec.tests) {
+      if (test.projectName !== project) continue;
+      for (const result of test.results) {
+        if (result.status === 'skipped') continue;
+        const start = Date.parse(result.startTime);
+        moments.push([start, +1], [start + result.duration, -1]);
+      }
+    }
+  }
+  for (const child of suite.suites ?? []) visit(child);
+};
+report.suites.forEach(visit);
+
+// At the same instant, a test that ends is counted before one that starts.
+moments.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+let running = 0;
+let most = 0;
+for (const [, change] of moments) {
+  running += change;
+  most = Math.max(most, running);
+}
+console.log(`${project}: at most ${most} at once; ${report.stats.unexpected} failed`);
+```
+
+Every start adds one and every end takes one away; the highest the count reaches is the answer,
+and with `workers: 1` it should be 1. Five runs with four workers and five with eight, each
+writing its JSON report and checking it:
 
 ```
-%%CAP turns4-v1%%
-```
-
-@@V1FOUR@@ With eight workers, writing the JSON report so that `overlap.mjs` can say who ran
-beside whom:
-
-```
-%%CAP turns8-v1%%
-```
-
-```
-%%CAP overlap8-v1%%
+%%CAP turns-v1%%
 ```
 
 @@V1READ@@
@@ -135,6 +171,8 @@ export default defineConfig(base, {
   ],
 });
 ```
+
+The same ten runs:
 
 ```
 %%CAP turns-v2%%
