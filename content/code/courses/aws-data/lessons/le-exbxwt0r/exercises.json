@@ -1,0 +1,589 @@
+[
+  {
+    "id": "ex-s6xcstkv",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the exported variables makes the AWS command line send its requests to moto instead of to Amazon?",
+    "hint": "One of them names an address.",
+    "choices": [
+      {
+        "text": "`AWS_DEFAULT_REGION`",
+        "correct": false,
+        "why": "The region decides which regional address is used, and the address is still Amazon's."
+      },
+      {
+        "text": "`AWS_ENDPOINT_URL`",
+        "correct": true,
+        "why": "Right. It replaces the address of every service with `http://localhost:4567`."
+      },
+      {
+        "text": "`AWS_ACCESS_KEY_ID`, because moto only answers the key `test`",
+        "correct": false,
+        "why": "The key signs the request; it does not say where the request goes. moto accepts any key, as the section on moto shows."
+      },
+      {
+        "text": "`AWS_PAGER`",
+        "correct": false,
+        "why": "That one only decides whether a long answer opens in `less`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg2gh9ga",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws sts get-caller-identity` answers with an account number that is not `123456789012`. What does that tell you?",
+    "hint": "moto gives every account it imitates the same number.",
+    "choices": [
+      {
+        "text": "moto was restarted and generated a new account",
+        "correct": false,
+        "why": "moto keeps the same example number across restarts; only its contents are forgotten."
+      },
+      {
+        "text": "The region is not São Paulo",
+        "correct": false,
+        "why": "An account number is the same in every region."
+      },
+      {
+        "text": "The terminal holds real AWS credentials",
+        "correct": true,
+        "why": "Right. Stop and find where the credentials came from before running anything else."
+      },
+      {
+        "text": "The virtual environment is not active",
+        "correct": false,
+        "why": "Without it `aws` still runs, since it lives in `~/.local/bin`; the account would still be moto's."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ag1a30y",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You stop moto with Ctrl+C at the end of a sitting and start it again the next day. What is in it?",
+    "hint": "Where does moto keep what it is told?",
+    "choices": [
+      {
+        "text": "Nothing: it keeps everything in memory and starts empty",
+        "correct": true,
+        "why": "Right. Each lesson rebuilds what it needs from its first command."
+      },
+      {
+        "text": "Everything from the day before, which moto saved under `~/aws` when it stopped",
+        "correct": false,
+        "why": "moto writes nothing to disk in this lab; stopping it forgets every bucket."
+      },
+      {
+        "text": "The buckets, without their objects",
+        "correct": false,
+        "why": "Buckets are forgotten with everything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbanz5qg",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A command answers `InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records`. Which line of the setup is missing from that terminal?",
+    "hint": "Who answered? moto accepts any key.",
+    "choices": [
+      {
+        "text": "The one that sets `AWS_ENDPOINT_URL`",
+        "correct": true,
+        "why": "Right. Without it the request went to the real AWS, which refused the key `test`."
+      },
+      {
+        "text": "The one that sets the two keys to `test`",
+        "correct": false,
+        "why": "With no keys at all the command line stops before sending anything, with `Unable to locate credentials`."
+      },
+      {
+        "text": "The one that adds `~/.local/bin` to the path",
+        "correct": false,
+        "why": "Without it, `aws` is not found and nothing is sent."
+      },
+      {
+        "text": "The one that starts `moto_server` in the other terminal",
+        "correct": false,
+        "why": "A stopped moto gives `Could not connect to the endpoint URL`, naming the local address."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqhvzz81",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to its cause.",
+    "hint": "Read which program could have printed each one.",
+    "pairs": [
+      {
+        "left": "`aws: command not found`",
+        "right": "`~/.local/bin` is not on the path"
+      },
+      {
+        "left": "`Unable to locate credentials`",
+        "right": "No key is set in this terminal"
+      },
+      {
+        "left": "`Could not connect to the endpoint URL: \"http://localhost:4567/\"`",
+        "right": "moto is not running"
+      },
+      {
+        "left": "`Address already in use`",
+        "right": "A moto is already listening on the port"
+      }
+    ],
+    "right_distractors": [
+      "The bucket name is invalid"
+    ]
+  },
+  {
+    "id": "ex-2wk2qjzr",
+    "version": 1,
+    "section": "what-moto-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this lab, a listing signed with a key nobody issued succeeds. What does that show about moto by default?",
+    "hint": "Compare it with the anonymous `curl`, which got 403.",
+    "choices": [
+      {
+        "text": "It checks that a request is signed, and not who signed it",
+        "correct": true,
+        "why": "Right. And it evaluates no policy, so an action a policy should deny succeeds."
+      },
+      {
+        "text": "It refuses every request that is not signed with the key `test`",
+        "correct": false,
+        "why": "The listing was signed with another key and succeeded."
+      },
+      {
+        "text": "It accepts any request, signed or not",
+        "correct": false,
+        "why": "The unsigned `curl` was refused with 403."
+      },
+      {
+        "text": "It forwards unknown keys to AWS to be checked",
+        "correct": false,
+        "why": "moto never talks to AWS; the lab has no network in its captures at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6t5dykc",
+    "version": 1,
+    "section": "what-moto-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Athena query in moto comes back `SUCCEEDED` with 0 bytes scanned and no rows, against a table that does not exist. What is the right conclusion?",
+    "hint": "What does moto do with SQL?",
+    "choices": [
+      {
+        "text": "The query is correct and the table is empty",
+        "correct": false,
+        "why": "There is no table; Athena would have failed naming it."
+      },
+      {
+        "text": "Athena creates a table the first time it is queried",
+        "correct": false,
+        "why": "It does not; a query against a missing table is an error."
+      },
+      {
+        "text": "Nothing about the SQL: moto records the request and runs no query",
+        "correct": true,
+        "why": "Right. A success from moto means the request was well formed, and no more."
+      },
+      {
+        "text": "The query was cached from an earlier run",
+        "correct": false,
+        "why": "The answer says `ReusedPreviousResult: false`, and there was no earlier run."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwtdt4ay",
+    "version": 1,
+    "section": "what-moto-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does moto really do, rather than only record? Choose all that apply.",
+    "hint": "The faithful services are the ones whose behaviour is a data structure.",
+    "choices": [
+      {
+        "text": "Keep the bytes of an S3 object and list keys by prefix",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Evaluate a DynamoDB conditional write",
+        "correct": true,
+        "why": "Yes; the write is refused when the condition fails."
+      },
+      {
+        "text": "Run the SQL of an Athena query",
+        "correct": false,
+        "why": "It marks the query succeeded and runs nothing."
+      },
+      {
+        "text": "Run the Spark code of a Glue job",
+        "correct": false,
+        "why": "The job \"succeeds\" without a line being run."
+      },
+      {
+        "text": "Send a bill for what was used",
+        "correct": false,
+        "why": "moto has no prices; the price sheet does that part."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q6g2cwj",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does every price this course quotes come from?",
+    "hint": "moto reports none.",
+    "choices": [
+      {
+        "text": "From moto's billing interface",
+        "correct": false,
+        "why": "moto has none."
+      },
+      {
+        "text": "AWS's public price list, pinned per service",
+        "correct": true,
+        "why": "Right. Pinned, so the sheet prints the same numbers next year."
+      },
+      {
+        "text": "From the AWS Pricing API, which needs an account",
+        "correct": false,
+        "why": "The price sheet reads public files and needs no account and no key."
+      },
+      {
+        "text": "From the bill of the account the course was recorded on",
+        "correct": false,
+        "why": "There is no account; the course was recorded against moto."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsz0v1h2",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the sheet, a GB-month of S3 Standard costs 0.04050 USD and one of Glacier Deep Archive costs 0.00320. How many times more is Standard? Round to the nearest whole number.",
+    "hint": "Divide the two.",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0c1bt5mp",
+    "version": 1,
+    "section": "the-price-sheet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a line of the price sheet not your bill?",
+    "hint": "What else goes into an invoice?",
+    "choices": [
+      {
+        "text": "A bill is price × usage, plus tax, minus discounts",
+        "correct": true,
+        "why": "Right. The sheet is the first factor of that product."
+      },
+      {
+        "text": "The sheet is in USD and AWS bills Brazil in reais at a fixed rate",
+        "correct": false,
+        "why": "The currency is a detail of payment; it does not turn a price into a bill."
+      },
+      {
+        "text": "The sheet prints us-east-1 prices",
+        "correct": false,
+        "why": "It reads sa-east-1, São Paulo."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwn4cwbr",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws s3 ls s3://quitanda-raw-prod` shows `PRE raw/`, and `head-object` on the key `raw/orders/` answers 404. Why?",
+    "hint": "What is a \"folder\" in a listing?",
+    "choices": [
+      {
+        "text": "The folder was deleted between the two commands",
+        "correct": false,
+        "why": "Nothing was deleted; there was never an object with that key."
+      },
+      {
+        "text": "No object has that key; `PRE` is a grouping",
+        "correct": true,
+        "why": "Right. A folder is the answer to a question, not a thing that exists."
+      },
+      {
+        "text": "Folders can only be read with `--recursive`",
+        "correct": false,
+        "why": "`--recursive` lists the keys themselves; it does not make a folder an object."
+      },
+      {
+        "text": "`head-object` refuses keys that end in a slash",
+        "correct": false,
+        "why": "A key ending in a slash is legal, and the console's \"Create folder\" makes exactly one."
+      }
+    ]
+  },
+  {
+    "id": "ex-s82pjh2d",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You append a line to a local file and upload it again to the same key. What happens to the object in an ordinary bucket, without versioning?",
+    "hint": "S3 has no edit.",
+    "choices": [
+      {
+        "text": "S3 appends the new bytes to the end of the stored object",
+        "correct": false,
+        "why": "There is no append; an object is written whole."
+      },
+      {
+        "text": "The upload fails because the key already exists",
+        "correct": false,
+        "why": "An overwrite is silent; nothing refuses it."
+      },
+      {
+        "text": "A new object replaces it",
+        "correct": true,
+        "why": "Right: a new ETag, and the old bytes are gone. Lesson 3 keeps them with versioning."
+      },
+      {
+        "text": "S3 keeps both under the same key and returns the newest",
+        "correct": false,
+        "why": "That is what versioning does, and it is off unless turned on."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6j5tfv9",
+    "version": 1,
+    "section": "buckets-and-objects",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For an object uploaded in a single request, the ETag S3 returns is the ___ of its bytes.",
+    "hint": "`md5sum` printed the same 32 characters.",
+    "blanks": [
+      {
+        "accept": [
+          "MD5",
+          "md5 hash",
+          "md5 digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zh3sr084",
+    "version": 1,
+    "section": "naming",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would AWS refuse as the name of a general-purpose bucket? Choose all that apply.",
+    "hint": "Lowercase, digits, hyphens and dots; 3 to 63; not an address.",
+    "choices": [
+      {
+        "text": "`Quitanda_Raw`",
+        "correct": true,
+        "why": "A capital letter and an underscore, both refused."
+      },
+      {
+        "text": "`192.168.5.4`",
+        "correct": true,
+        "why": "A name shaped like an IP address is refused."
+      },
+      {
+        "text": "`qr`",
+        "correct": true,
+        "why": "Two characters; the minimum is three."
+      },
+      {
+        "text": "`quitanda-raw-prod`",
+        "correct": false,
+        "why": "Valid, if nobody has it yet."
+      },
+      {
+        "text": "`quitanda-logs-dev`",
+        "correct": false,
+        "why": "Valid too."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjb3daat",
+    "version": 1,
+    "section": "naming",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`quitanda.raw.prod` is a legal bucket name. Why does this course avoid dots anyway?",
+    "hint": "Think of the address `bucket.s3.sa-east-1.amazonaws.com` and its certificate.",
+    "choices": [
+      {
+        "text": "HTTPS to the usual address fails its certificate check",
+        "correct": true,
+        "why": "Right. The wildcard certificate covers one label, and the dots make three."
+      },
+      {
+        "text": "Dots make the name longer than the 63 characters a bucket name is allowed",
+        "correct": false,
+        "why": "A dot is one character like a hyphen."
+      },
+      {
+        "text": "S3 reads each dot in a bucket's name as one more level of folder",
+        "correct": false,
+        "why": "Folders come from slashes in keys, not from a bucket's name."
+      },
+      {
+        "text": "moto refuses dotted names",
+        "correct": false,
+        "why": "It accepted `quitanda.raw.prod` in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrx3xp5c",
+    "version": 1,
+    "section": "naming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the key layout write `dt=2026-10-01` rather than `dt=01-10-2026`?",
+    "hint": "In what order does S3 return keys?",
+    "choices": [
+      {
+        "text": "S3 refuses dates with the day first",
+        "correct": false,
+        "why": "A key may hold almost anything; nothing refuses it."
+      },
+      {
+        "text": "Byte order then equals time order",
+        "correct": true,
+        "why": "Right. S3 lists keys in byte order, and day first would list every first of the month together."
+      },
+      {
+        "text": "Athena only reads partitions written year first",
+        "correct": false,
+        "why": "Athena reads a partition value as a string, whatever its shape; the order is a matter of listing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmjs1x7r",
+    "version": 1,
+    "section": "naming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs in a bucket name, by the scheme of this lesson?",
+    "hint": "Company, layer, environment.",
+    "choices": [
+      {
+        "text": "The name of the engineer who created it",
+        "correct": false,
+        "why": "People move and the bucket stays."
+      },
+      {
+        "text": "The environment it serves, such as `prod` or `dev`",
+        "correct": true,
+        "why": "Right. It keeps test data out of production buckets."
+      },
+      {
+        "text": "The name of the customer whose data it holds",
+        "correct": false,
+        "why": "A bucket name travels in DNS and in error messages; nothing personal goes in it."
+      },
+      {
+        "text": "The date the bucket was created",
+        "correct": false,
+        "why": "The date is a property of the data, and it goes in the keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-cr2y8h6z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a sitting of this course in order.",
+    "hint": "The server comes first, in its own terminal.",
+    "items": [
+      "Start `moto_server -p 4567` in a terminal of its own",
+      "Open a second terminal and run the four lines of \"Every time you open a terminal\"",
+      "Check with `aws sts get-caller-identity` that the account is `123456789012`",
+      "Run the lesson's commands, which rebuild what it needs"
+    ]
+  },
+  {
+    "id": "ex-e03fgnn8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants to \"rename\" the prefix `raw/orders/` to `raw/sales/` across 40,000 objects. What does that take in S3?",
+    "hint": "There is no rename and no directory.",
+    "choices": [
+      {
+        "text": "One request that renames the folder",
+        "correct": false,
+        "why": "There is no folder to rename."
+      },
+      {
+        "text": "A copy and a delete for each object: 80,000 requests",
+        "correct": true,
+        "why": "Right, and every reader of the old keys breaks. Which is why keys are written as if they could never be renamed."
+      },
+      {
+        "text": "Changing the bucket's prefix setting",
+        "correct": false,
+        "why": "A bucket has no such setting."
+      },
+      {
+        "text": "A copy of each object, after which S3 deletes the originals",
+        "correct": false,
+        "why": "S3 deletes nothing on its own; the deletes are 40,000 more requests."
+      }
+    ]
+  }
+]
