@@ -633,6 +633,113 @@ def l07_memory(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 8
+
+# Rows read by each of the 200 tasks of skew.py's join stage, in partition order,
+# from the run its captures.sh records (see the header there).
+L08_TASK_ROWS = [
+    124925, 124405, 123857, 121535, 121911, 123349, 121036, 124774, 122578, 123454, 123963,
+    126010, 121491, 122570, 122664, 125004, 126067, 123461, 123640, 124618, 122717, 123632,
+    124822, 125371, 124789, 124238, 125750, 122182, 123486, 123846, 123862, 119806, 123523,
+    124084, 123608, 128020, 125064, 123106, 125939, 126329, 123178, 123331, 124569, 123993,
+    124789, 123062, 122845, 123760, 122810, 124884, 122972, 122406, 122890, 124330, 124151,
+    126013, 124675, 123114, 123247, 124439, 120058, 122454, 120597, 123845, 122855, 124070,
+    122926, 124191, 125366, 125295, 1086798, 123372, 124030, 123365, 125801, 122188, 122808,
+    124627, 123643, 123488, 123431, 123925, 124696, 123908, 125636, 125945, 123064, 121275,
+    121487, 125168, 122015, 122337, 125325, 124521, 125206, 123373, 125912, 122595, 121443,
+    122855, 123683, 124756, 122740, 124058, 123476, 124695, 120542, 126722, 124981, 128274,
+    123471, 123700, 123725, 123544, 126499, 121749, 124708, 125742, 124183, 122977, 124101,
+    124895, 123138, 123280, 125295, 125179, 122105, 124873, 122008, 121513, 124898, 123606,
+    123856, 122709, 123075, 125127, 121440, 123420, 124427, 125135, 124955, 121810, 123503,
+    125008, 121763, 122958, 126386, 126532, 124685, 124302, 122358, 120268, 124007, 124482,
+    121562, 123282, 120357, 127051, 124359, 124550, 124290, 123965, 124206, 121428, 125179,
+    124943, 124434, 123536, 124117, 126590, 123864, 126440, 123370, 124250, 122336, 122328,
+    125124, 123159, 123675, 124366, 124101, 124938, 123776, 122161, 124117, 121159, 127069,
+    123908, 124148, 126509, 123691, 124497, 124231, 122231, 123554, 124224, 123518, 125357,
+    122192, 122839,
+]
+
+
+@figure('l08-skew', 8)
+def l08_skew(lang):
+    rows = L08_TASK_ROWS
+    med = sorted(rows)[len(rows) // 2]
+    hot = max(rows)
+    t = {'en': dict(
+            label=f'A bar chart of the rows read by each of the 200 tasks of the join stage, in '
+                  f'partition order. 199 bars stand close to the median of {num(lang, med, 0)} rows. '
+                  f'One bar, the partition holding the crawler v0000000, reaches '
+                  f'{num(lang, hot, 0)} rows.',
+            x='the 200 tasks of the join stage, in partition order',
+            y='thousands of rows read', med='median', hot='v0000000 is in here',
+            cap='The hash spreads two million visitors evenly over 200 partitions, and cannot '
+                'spread one.'),
+         'pt': dict(
+            label=f'Um gráfico de barras das linhas lidas por cada uma das 200 tarefas do estágio do '
+                  f'join, na ordem das partições. 199 barras ficam perto da mediana de '
+                  f'{num(lang, med, 0)} linhas. Uma barra, a da partição que guarda o robô '
+                  f'v0000000, chega a {num(lang, hot, 0)} linhas.',
+            x='as 200 tarefas do estágio do join, na ordem das partições',
+            y='milhares de linhas lidas', med='mediana', hot='o v0000000 está aqui',
+            cap='O hash espalha dois milhões de visitantes por igual em 200 partições, e não '
+                'consegue espalhar um.')}[lang]
+    f = Fig('l08-skew', 720, 300, t['label'])
+    top = 1200
+    p = Plot(f, 70, 40, 690, 250, 0, len(rows), 0, top)
+    p.yaxis([0, 200, 400, 600, 800, 1000, 1200], fmt=lambda v: num(lang, v, 0), label=t['y'])
+    p.xaxis([0, 50, 100, 150, 200], label=t['x'])
+    i_hot = rows.index(hot)
+    p.bars(list(range(len(rows) + 1)), [r / 1000 for r in rows], highlight=lambda i: i == i_hot)
+    y = p.sy(med / 1000)
+    f.line(p.x0, y, p.x1, y, stroke='--amber', dash='4 3', width=1.2)
+    f.text(p.x1, y - 9, f"{t['med']} {num(lang, med, 0)}", size=9.5, anchor='end', fill='--amber')
+    x = p.sx(i_hot + 0.5)
+    f.text(x + (10 if i_hot < 120 else -10), p.sy(hot / 1000) + 4, t['hot'], size=10,
+           anchor='start' if i_hot < 120 else 'end', fill='--amber')
+    return f, t['cap']
+
+
+@figure('l08-salting', 8)
+def l08_salting(lang):
+    t = {'en': dict(
+            label='Two rows of partitions. Above, without a salt: the crawler v0000000 and all of '
+                  'its 960,905 events go to one partition, together with its one visitor row. '
+                  'Below, with eight salts: the events are split by salt 0 to 7 into eight '
+                  'partitions of about 120,000 each, and the visitor row is copied eight times, '
+                  'once into each of them.',
+            before='join key: visitor_id', after='join key: visitor_id + salt',
+            ev='960,905 events', ev8='~120,000 events', vis='1 visitor row',
+            copy='copy', cap='The large side is split by the salt; the small side is copied once '
+                             'per salt, so every piece still finds its match.'),
+         'pt': dict(
+            label='Duas fileiras de partições. Em cima, sem sal: o robô v0000000 e todos os seus '
+                  '960.905 eventos vão para uma partição, junto com a sua única linha de '
+                  'visitante. Embaixo, com oito sais: os eventos se dividem pelo sal de 0 a 7 em '
+                  'oito partições de cerca de 120.000 cada, e a linha do visitante é copiada oito '
+                  'vezes, uma em cada.',
+            before='chave do join: visitor_id', after='chave do join: visitor_id + sal',
+            ev='960.905 eventos', ev8='~120.000 eventos', vis='1 linha de visitante',
+            copy='cópia', cap='O lado grande se divide pelo sal; o lado pequeno é copiado uma vez '
+                              'por sal, então cada pedaço ainda acha o seu par.')}[lang]
+    f = Fig('l08-salting', 720, 300, t['label'])
+    f.text(20, 22, t['before'], size=11, anchor='start', weight='600')
+    f.rect(20, 36, 300, 70, stroke='--amber', fill='--scan')
+    f.text(170, 60, 'v0000000', size=11, mono=True)
+    f.text(170, 84, t['ev'], size=10, fill='--paper-dim')
+    f.rect(340, 52, 120, 38, stroke='--wire')
+    f.text(400, 71, t['vis'], size=10)
+    f.text(20, 140, t['after'], size=11, anchor='start', weight='600')
+    w = 80
+    for i in range(8):
+        x = 20 + i * (w + 6)
+        f.rect(x, 154, w, 56, stroke='--phosphor', fill='--scan')
+        f.text(x + w / 2, 172, f'v0000000 · {i}', size=9, mono=True)
+        f.text(x + w / 2, 192, t['ev8'], size=8.5, fill='--paper-dim')
+        f.rect(x + 6, 226, w - 12, 30, stroke='--wire')
+        f.text(x + w / 2, 241, f"{t['copy']} {i}", size=9.5)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
