@@ -1,0 +1,2162 @@
+[
+  {
+    "id": "ex-wwwxw68e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team's CI runs kubectl apply against production after every merge. Which GitOps principle does that break?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Nothing; this is GitOps",
+        "correct": false,
+        "why": "Push from CI is exactly what GitOps reverses."
+      },
+      {
+        "text": "Pulled",
+        "correct": true,
+        "why": "Right. The pipeline pushes, holding the cluster's keys."
+      },
+      {
+        "text": "Declarative",
+        "correct": false,
+        "why": "The manifests can still be declarative."
+      },
+      {
+        "text": "Versioned and immutable",
+        "correct": false,
+        "why": "The manifests can still be in Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj7znac6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Someone scales staging to five by hand while a reconciler applies every fifteen seconds. What happens?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It stays at five until the next commit",
+        "correct": false,
+        "why": "The reconciler applies on every pass, not every commit."
+      },
+      {
+        "text": "The reconciler stops with a conflict",
+        "correct": false,
+        "why": "Applying is idempotent; there is no conflict."
+      },
+      {
+        "text": "Git is updated to five",
+        "correct": false,
+        "why": "Nothing writes the cluster's state back to Git."
+      },
+      {
+        "text": "It goes back to the count in Git",
+        "correct": true,
+        "why": "Right. Applying again restores the field that moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqf6dmyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Service is deleted from Git, and a loop running kubectl apply -f keeps applying the directory. What happens to the Service?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It stays, orphaned",
+        "correct": true,
+        "why": "Right. kubectl apply -f knows only the files it was given."
+      },
+      {
+        "text": "It is recreated from the cluster's cache",
+        "correct": false,
+        "why": "There is no such cache."
+      },
+      {
+        "text": "The loop stops with an error",
+        "correct": false,
+        "why": "It applies what is left and says nothing."
+      },
+      {
+        "text": "It is deleted on the next pass",
+        "correct": false,
+        "why": "That needs a record of what was applied: pruning."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmnztvr7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pod named localhost:5001/bulletin:1.0 fails with 'connection refused' on 127.0.0.1:5001. What was skipped?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Creating the namespace",
+        "correct": false,
+        "why": "That fails earlier, on apply."
+      },
+      {
+        "text": "Where localhost:5001 really is",
+        "correct": true,
+        "why": "Right. Inside the node, localhost is the node."
+      },
+      {
+        "text": "Pushing the image",
+        "correct": false,
+        "why": "A missing image gives 'not found'."
+      },
+      {
+        "text": "Installing kubectl",
+        "correct": false,
+        "why": "kubectl is not involved in pulling."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rghf384",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which of these is GitOps, by the four principles?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Every merge deployed by CI",
+        "correct": false,
+        "why": "That is continuous deployment by push."
+      },
+      {
+        "text": "An in-cluster agent applying main",
+        "correct": true,
+        "why": "Right. Declared, versioned, pulled and reconciled."
+      },
+      {
+        "text": "A nightly job that applies main",
+        "correct": false,
+        "why": "Pushed from outside, and once a night."
+      },
+      {
+        "text": "YAML in Git, applied from a laptop when needed",
+        "correct": false,
+        "why": "Pushed, and only when somebody remembers."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8xdbyav",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Bruno approved; Ana pushes one more commit and tries to merge. What does the protection rule do?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Merges if the check is green",
+        "correct": false,
+        "why": "The approval is still missing."
+      },
+      {
+        "text": "Asks Ana to approve her own commit",
+        "correct": false,
+        "why": "Her own approval never counts."
+      },
+      {
+        "text": "Merges: an approval lasts for the pull request",
+        "correct": false,
+        "why": "Not with dismiss stale approvals on."
+      },
+      {
+        "text": "Refuses: the approval was dismissed",
+        "correct": true,
+        "why": "Right. Bruno approved a version that is no longer the one merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvb1cx1d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A merged change broke staging. What is the GitOps fix?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "kubectl rollout undo",
+        "correct": false,
+        "why": "The next pass applies main again."
+      },
+      {
+        "text": "A force-push of main to before the merge",
+        "correct": false,
+        "why": "History that can be rewritten is not a record."
+      },
+      {
+        "text": "A revert commit",
+        "correct": true,
+        "why": "Right. The fix goes where the truth is."
+      },
+      {
+        "text": "Pausing the agent and fixing by hand",
+        "correct": false,
+        "why": "Nobody tracks the difference afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyv3swx1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An autoscaler owns replicas, and the manifest in Git also says replicas: 2. What is the clean fix?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Delete the autoscaler",
+        "correct": false,
+        "why": "That removes the reason it was there."
+      },
+      {
+        "text": "Raise replicas in Git to the autoscaler's maximum",
+        "correct": false,
+        "why": "They would still fight below the maximum."
+      },
+      {
+        "text": "Turn the reconciler off for that deployment",
+        "correct": false,
+        "why": "That gives up every other field too."
+      },
+      {
+        "text": "Remove replicas from the manifest",
+        "correct": true,
+        "why": "Right. One owner per field."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vw63d02",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does validate.sh report as a separate ci user rather than as Ana?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Ana's token cannot reach the API",
+        "correct": false,
+        "why": "It can; it did everything else."
+      },
+      {
+        "text": "So nobody mistakes it for a person",
+        "correct": true,
+        "why": "Right. The status names who said it."
+      },
+      {
+        "text": "Statuses need an administrator",
+        "correct": false,
+        "why": "The ci user is not one."
+      },
+      {
+        "text": "Gitea forbids users to post statuses",
+        "correct": false,
+        "why": "Any user with write access can."
+      }
+    ]
+  },
+  {
+    "id": "ex-98bawx3j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What belongs in a break-glass path for emergencies?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Sharing the administrator's password",
+        "correct": false,
+        "why": "Nobody can tell afterwards who used it."
+      },
+      {
+        "text": "A named account, logged, reviewed later",
+        "correct": true,
+        "why": "Right. It skips the wait, never the record."
+      },
+      {
+        "text": "Editing the cluster and committing next week",
+        "correct": false,
+        "why": "The agent undoes it in the meantime."
+      },
+      {
+        "text": "Turning off branch protection for the night",
+        "correct": false,
+        "why": "That is a quietly weakened rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-awwd93jh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An Application is Synced and Degraded. Where is the problem?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "In what the repository says",
+        "correct": true,
+        "why": "Right. Argo CD applied it faithfully, and it does not work."
+      },
+      {
+        "text": "In the Git server",
+        "correct": false,
+        "why": "Synced means Git was read and applied."
+      },
+      {
+        "text": "In the network between Argo CD and Git",
+        "correct": false,
+        "why": "That would not be Synced."
+      },
+      {
+        "text": "In Argo CD's controller",
+        "correct": false,
+        "why": "It did its job."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3kaqz29",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With prune: true, a file is deleted from argocd/ by mistake and merged. What happens?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Argo CD asks for confirmation",
+        "correct": false,
+        "why": "It prunes without asking."
+      },
+      {
+        "text": "Nothing until somebody syncs by hand",
+        "correct": false,
+        "why": "Automated sync is on."
+      },
+      {
+        "text": "Its Application is deleted",
+        "correct": true,
+        "why": "Right. The review is what stands in the way."
+      },
+      {
+        "text": "The file is restored from Argo CD's history",
+        "correct": false,
+        "why": "Argo CD never writes to Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-00xd5hjp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pull request adds an Application in project bulletin that deploys into kube-system. What happens?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Gitea refuses the merge",
+        "correct": false,
+        "why": "Gitea does not read Argo CD projects."
+      },
+      {
+        "text": "It deploys into staging instead",
+        "correct": false,
+        "why": "Argo CD does not redirect."
+      },
+      {
+        "text": "Argo CD refuses the destination",
+        "correct": true,
+        "why": "Right. The project's allow-list says so."
+      },
+      {
+        "text": "It deploys, since the review passed",
+        "correct": false,
+        "why": "The project is checked regardless of review."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1ywe0yh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which Gitea permission does Argo CD's account need on fleet?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "owner",
+        "correct": false,
+        "why": "Far beyond what reading needs."
+      },
+      {
+        "text": "admin",
+        "correct": false,
+        "why": "Nothing about Argo CD needs administration."
+      },
+      {
+        "text": "read",
+        "correct": true,
+        "why": "Right. It never pushes or approves."
+      },
+      {
+        "text": "write",
+        "correct": false,
+        "why": "It never writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz45ymch",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why is argocd app rollback refused while automated sync is on?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Rollback needs the web interface",
+        "correct": false,
+        "why": "The CLI can roll back with automation off."
+      },
+      {
+        "text": "The next sync undoes it",
+        "correct": true,
+        "why": "Right. A rollback outside Git is drift."
+      },
+      {
+        "text": "It needs Bruno's approval",
+        "correct": false,
+        "why": "Argo CD knows nothing of reviewers."
+      },
+      {
+        "text": "The history was pruned",
+        "correct": false,
+        "why": "History is kept for ten syncs."
+      }
+    ]
+  },
+  {
+    "id": "ex-d44mjq7r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Changes stopped arriving, and every Kustomization says READY True. What do you check first?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Gitea's branch protection",
+        "correct": false,
+        "why": "It does not stop a fetch."
+      },
+      {
+        "text": "The pods",
+        "correct": false,
+        "why": "They run the last thing applied."
+      },
+      {
+        "text": "The image registry",
+        "correct": false,
+        "why": "Nothing new was asked of it."
+      },
+      {
+        "text": "The GitRepository",
+        "correct": true,
+        "why": "Right. A source that cannot fetch leaves everything downstream stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4c8zbx8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Flux's interval is 10m and nobody calls flux reconcile. How does a manual scale end?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Within ten minutes",
+        "correct": true,
+        "why": "Right. Flux reapplies on its interval."
+      },
+      {
+        "text": "Within seconds, like Argo CD's selfHeal",
+        "correct": false,
+        "why": "Flux's kustomize controller does not watch."
+      },
+      {
+        "text": "Never, until the next commit",
+        "correct": false,
+        "why": "The interval reapplies regardless of commits."
+      },
+      {
+        "text": "When the webhook fires",
+        "correct": false,
+        "why": "The webhook is about Git pushes."
+      }
+    ]
+  },
+  {
+    "id": "ex-r11sadyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why did this course do Flux's bootstrap by hand instead of flux bootstrap?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The manual way installs fewer controllers",
+        "correct": false,
+        "why": "The same controllers are installed."
+      },
+      {
+        "text": "It pushes to a protected main",
+        "correct": true,
+        "why": "Right. The commit went through a pull request."
+      },
+      {
+        "text": "flux bootstrap needs a cloud account",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "flux bootstrap does not support Gitea",
+        "correct": false,
+        "why": "It supports several servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ybfq0v1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Kustomization has been suspended for a week. What is the problem?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing; suspend has no effect on applies",
+        "correct": false,
+        "why": "It stops applies."
+      },
+      {
+        "text": "Flux deletes suspended objects after a week",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "The source stops fetching",
+        "correct": false,
+        "why": "Sources keep fetching."
+      },
+      {
+        "text": "The cluster quietly stopped being GitOps",
+        "correct": true,
+        "why": "Right. Merged changes are fetched and not applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-vppybr13",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Argo CD is uninstalled. What should happen to its Gitea access the same day?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "It is revoked",
+        "correct": true,
+        "why": "Right. A forgotten credential is a way in nobody watches."
+      },
+      {
+        "text": "Nothing; tokens expire on their own",
+        "correct": false,
+        "why": "These do not."
+      },
+      {
+        "text": "It stays, in case Argo CD returns",
+        "correct": false,
+        "why": "Then nobody remembers it exists."
+      },
+      {
+        "text": "It is given to Flux",
+        "correct": false,
+        "why": "Flux gets its own account and token."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv11z0m8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In this course's layout, what is a promotion to production?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "A flux reconcile on production",
+        "correct": false,
+        "why": "That only applies what is already there."
+      },
+      {
+        "text": "A tag on the fleet repository",
+        "correct": false,
+        "why": "Tags mark the application's source."
+      },
+      {
+        "text": "A one-line pull request on production",
+        "correct": true,
+        "why": "Right. Its diff is the release in transit."
+      },
+      {
+        "text": "A merge from the staging branch",
+        "correct": false,
+        "why": "Environments are directories, not branches."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgesx08a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Staging's files move to apps/bulletin/staging, and the same Kustomization now reads that path. What happens to the pods?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing; they are not recreated",
+        "correct": true,
+        "why": "Right. Same owner, new path."
+      },
+      {
+        "text": "They are pruned and created again",
+        "correct": false,
+        "why": "Only if a different Kustomization took them."
+      },
+      {
+        "text": "They are scaled to zero during the move",
+        "correct": false,
+        "why": "Nothing scales them."
+      },
+      {
+        "text": "They restart once to read the new path",
+        "correct": false,
+        "why": "Pods do not know paths in Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsnt64tm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "CODEOWNERS names Bruno for production. Without block_on_official_review_requests, what does it do?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "It asks for his review",
+        "correct": true,
+        "why": "Right. A request is not a requirement."
+      },
+      {
+        "text": "Makes his approval mandatory",
+        "correct": false,
+        "why": "That needs the blocking setting."
+      },
+      {
+        "text": "Nothing, without GitHub",
+        "correct": false,
+        "why": "Gitea reads it."
+      },
+      {
+        "text": "Blocks every other reviewer",
+        "correct": false,
+        "why": "Others can still approve."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7z70ewc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Where does the interface between the application's repository and fleet lie?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "At Gitea's webhook",
+        "correct": false,
+        "why": "The webhook notifies Flux, not the other repository."
+      },
+      {
+        "text": "At the image",
+        "correct": true,
+        "why": "Right. CI publishes it; fleet references it."
+      },
+      {
+        "text": "At a shared branch",
+        "correct": false,
+        "why": "They share no branches."
+      },
+      {
+        "text": "At the cluster's API",
+        "correct": false,
+        "why": "Neither repository talks to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3m8ajf0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Staging's message changes in its configMapGenerator. What does the cluster see?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "An error, because the old ConfigMap exists",
+        "correct": false,
+        "why": "Old and new coexist until the prune."
+      },
+      {
+        "text": "The same ConfigMap, updated in place",
+        "correct": false,
+        "why": "The name carries a hash of the content."
+      },
+      {
+        "text": "A new ConfigMap; pods roll",
+        "correct": true,
+        "why": "Right. A new hash is a new name and a new template."
+      },
+      {
+        "text": "Nothing until the pods are deleted",
+        "correct": false,
+        "why": "The template change triggers the rollout."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn8n8ejz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A patch's target has a typo. kubectl kustomize and kubeconform both pass. What stops it reaching production?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Flux, which refuses unmatched patches",
+        "correct": false,
+        "why": "Flux builds the same output."
+      },
+      {
+        "text": "An assertion on the output",
+        "correct": true,
+        "why": "Right. Only it knows what the patch was meant to do."
+      },
+      {
+        "text": "Nothing can",
+        "correct": false,
+        "why": "An assertion on the output can."
+      },
+      {
+        "text": "kubeconform -strict",
+        "correct": false,
+        "why": "It passed; the output was valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-wexh2ese",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your team writes one service and installs a database written by others. What does the lesson recommend?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Kustomize here, Helm there",
+        "correct": true,
+        "why": "Right. Kustomize for what you write, Helm for what you install."
+      },
+      {
+        "text": "Neither; plain YAML per environment",
+        "correct": false,
+        "why": "That is the duplication this lesson removes."
+      },
+      {
+        "text": "Helm for both",
+        "correct": false,
+        "why": "A chart is a cost for your own small service."
+      },
+      {
+        "text": "Kustomize for both",
+        "correct": false,
+        "why": "You would maintain the database's manifests yourself."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9eehakc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which command shows the releases Flux's helm controller installed?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "helm list -n preview",
+        "correct": true,
+        "why": "Right. They are ordinary Helm releases."
+      },
+      {
+        "text": "kubectl kustomize",
+        "correct": false,
+        "why": "It renders Kustomize, not Helm releases."
+      },
+      {
+        "text": "argocd app list",
+        "correct": false,
+        "why": "Argo CD is gone, and it makes no Helm releases."
+      },
+      {
+        "text": "flux get sources git",
+        "correct": false,
+        "why": "That lists Git sources."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdxepa78",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Production names bulletin by digest, and somebody pushes a new image to the tag 1.1. What does production run?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Nothing; the digest becomes invalid",
+        "correct": false,
+        "why": "The old manifest still exists."
+      },
+      {
+        "text": "Whatever staging runs",
+        "correct": false,
+        "why": "Each environment names its own reference."
+      },
+      {
+        "text": "The new image, on the next pull",
+        "correct": false,
+        "why": "Production does not pull by tag."
+      },
+      {
+        "text": "The same bytes as before",
+        "correct": true,
+        "why": "Right. A digest cannot be moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vz1jz0m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A retention job will delete manifests. What must be its input?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Everything Git references",
+        "correct": true,
+        "why": "Right. Including what charts render."
+      },
+      {
+        "text": "The tags pushed this month",
+        "correct": false,
+        "why": "Age says nothing about use."
+      },
+      {
+        "text": "The registry's list of untagged manifests",
+        "correct": false,
+        "why": "A digest in Git can name an untagged manifest."
+      },
+      {
+        "text": "Nothing; the registry refuses deletes in use",
+        "correct": false,
+        "why": "It accepts them without asking."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4y9x3nv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "CI pushed bulletin 1.3. Without anybody editing fleet, how does it reach staging?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Through a reviewed pull request",
+        "correct": true,
+        "why": "Right. Only the merge changes staging."
+      },
+      {
+        "text": "Flux applies the new tag directly",
+        "correct": false,
+        "why": "The automation writes to Git, not to the cluster."
+      },
+      {
+        "text": "It does not, ever",
+        "correct": false,
+        "why": "The automation proposes it."
+      },
+      {
+        "text": "The registry notifies the kubelet",
+        "correct": false,
+        "why": "Registries notify nobody here."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wh5cj17",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does a proxy repository in a repository manager protect a company from?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Slow Git servers",
+        "correct": false,
+        "why": "It is about artefacts, not Git."
+      },
+      {
+        "text": "Its own developers' mistakes",
+        "correct": false,
+        "why": "A proxy caches others' packages."
+      },
+      {
+        "text": "Unsigned commits",
+        "correct": false,
+        "why": "It knows nothing about commits."
+      },
+      {
+        "text": "Upstream changes",
+        "correct": true,
+        "why": "Right. The company keeps its own copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-15xaw28x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is an image signed by digest and never by tag?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "cosign cannot resolve tags",
+        "correct": false,
+        "why": "It resolves them when verifying."
+      },
+      {
+        "text": "A tag moves; a digest does not",
+        "correct": true,
+        "why": "Right. A digest is fixed bytes."
+      },
+      {
+        "text": "Digests are shorter",
+        "correct": false,
+        "why": "They are longer."
+      },
+      {
+        "text": "Registries refuse signatures on tags",
+        "correct": false,
+        "why": "They store whatever they are given."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1xqzrnw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A reviewed, merged pull request names an unsigned chart. What does the preview run?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing; the release is uninstalled",
+        "correct": false,
+        "why": "Flux uninstalls nothing on a refusal."
+      },
+      {
+        "text": "The chart from the Git path again",
+        "correct": false,
+        "why": "The source is the OCIRepository now."
+      },
+      {
+        "text": "The unsigned chart, because review passed",
+        "correct": false,
+        "why": "Verification does not depend on review."
+      },
+      {
+        "text": "The last signed chart",
+        "correct": true,
+        "why": "Right. Flux refuses the source and keeps what it had."
+      }
+    ]
+  },
+  {
+    "id": "ex-6e19h9ey",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Flux verifies the preview's chart. What still runs unchecked?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The chart's templates",
+        "correct": false,
+        "why": "They come inside the verified chart."
+      },
+      {
+        "text": "The OCIRepository itself",
+        "correct": false,
+        "why": "It is the thing that verifies."
+      },
+      {
+        "text": "The HelmRelease's values",
+        "correct": false,
+        "why": "They are in Git, reviewed."
+      },
+      {
+        "text": "A Deployment's image",
+        "correct": true,
+        "why": "Right. The kubelet pulls it; admission is what checks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-07fxht4k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does keyless signing replace the long-lived private key with?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The registry's own key",
+        "correct": false,
+        "why": "The registry signs nothing."
+      },
+      {
+        "text": "A short-lived certificate",
+        "correct": true,
+        "why": "Right. Issued by Fulcio, recorded in Rekor."
+      },
+      {
+        "text": "A checksum file",
+        "correct": false,
+        "why": "A checksum proves no identity."
+      },
+      {
+        "text": "A password typed at each signing",
+        "correct": false,
+        "why": "There is still no long-lived secret to type."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8n4843w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The cosign private key leaks. What comes first?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Delete the signatures in the registry",
+        "correct": false,
+        "why": "Anyone with the key can sign again."
+      },
+      {
+        "text": "Rotate the registry's credentials",
+        "correct": false,
+        "why": "The key signs; the registry is a separate matter."
+      },
+      {
+        "text": "Turn off verification until it is sorted",
+        "correct": false,
+        "why": "That is the wrong answer to every failure."
+      },
+      {
+        "text": "Remove its public key everywhere",
+        "correct": true,
+        "why": "Right. Then re-sign or rebuild what it signed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ws31a2cx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the principle say 'versioned and immutable' and not just 'versioned'?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "So Git can be replaced by a registry",
+        "correct": false,
+        "why": "Both satisfy it; neither is required by it."
+      },
+      {
+        "text": "So nobody can ever change the configuration",
+        "correct": false,
+        "why": "Changes are new versions, not edits to old ones."
+      },
+      {
+        "text": "So a version means one thing for ever",
+        "correct": true,
+        "why": "Right. A commit hash names exactly one tree."
+      },
+      {
+        "text": "So the cluster cannot drift from Git at all",
+        "correct": false,
+        "why": "Drift is what reconciliation handles, not immutability."
+      }
+    ]
+  },
+  {
+    "id": "ex-xk81c6vz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a pull setup, what is the only credential that leaves the cluster?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "A read-only repository token",
+        "correct": true,
+        "why": "Right. The agent reads; nothing outside holds the cluster's keys."
+      },
+      {
+        "text": "A cluster-admin token for the Git server",
+        "correct": false,
+        "why": "The Git server never touches the cluster."
+      },
+      {
+        "text": "The kubeconfig of the CI system",
+        "correct": false,
+        "why": "CI no longer talks to the cluster."
+      },
+      {
+        "text": "The registry's push credentials",
+        "correct": false,
+        "why": "Those belong to CI, and reach the registry only."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4n68bf2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Pods are Running but curl localhost:8080 is refused. What is the likely cause?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The image was never pushed",
+        "correct": false,
+        "why": "Then the pods would not be Running."
+      },
+      {
+        "text": "The registry is down",
+        "correct": false,
+        "why": "The image was already pulled."
+      },
+      {
+        "text": "No port mapping",
+        "correct": true,
+        "why": "Right. extraPortMappings only exist at creation."
+      },
+      {
+        "text": "Docker needs sudo",
+        "correct": false,
+        "why": "Docker answered; the pods run."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdvdjb9x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does kubectl diff show that git diff cannot?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Who wrote the change",
+        "correct": false,
+        "why": "That is git log."
+      },
+      {
+        "text": "Whether the YAML is valid",
+        "correct": false,
+        "why": "kubeconform checks that."
+      },
+      {
+        "text": "The effect on the live object",
+        "correct": true,
+        "why": "Right. Including drift and filled-in defaults."
+      },
+      {
+        "text": "Which reviewer approved it",
+        "correct": false,
+        "why": "That is in the pull request."
+      }
+    ]
+  },
+  {
+    "id": "ex-3q9fbz0z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Ana approves her own pull request. What does the protection rule count?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Only someone other than the author counts."
+      },
+      {
+        "text": "Half an approval",
+        "correct": false,
+        "why": "Approvals are not fractional."
+      },
+      {
+        "text": "One approval if the check is green",
+        "correct": false,
+        "why": "The check is a separate requirement."
+      },
+      {
+        "text": "One approval, since she is an administrator",
+        "correct": false,
+        "why": "Being an administrator does not help."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vj8jh80",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "How does Argo CD know which objects in the cluster are its own?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "A list kept in Redis",
+        "correct": false,
+        "why": "Redis is a cache, not the record."
+      },
+      {
+        "text": "Their creation time",
+        "correct": false,
+        "why": "Time says nothing about ownership."
+      },
+      {
+        "text": "A tracking annotation",
+        "correct": true,
+        "why": "Right. It names the owning Application."
+      },
+      {
+        "text": "The namespace they are in",
+        "correct": false,
+        "why": "Many owners can share a namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yxn99em",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Which Argo CD component runs whatever a repository asks it to render, and why does that matter?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Redis, which caches the output",
+        "correct": false,
+        "why": "It only caches."
+      },
+      {
+        "text": "The API server, which serves the web interface",
+        "correct": false,
+        "why": "It renders nothing."
+      },
+      {
+        "text": "The application controller, which applies the result",
+        "correct": false,
+        "why": "It applies, but does not render."
+      },
+      {
+        "text": "The repo server, which holds no cluster credentials",
+        "correct": true,
+        "why": "Right. Rendering untrusted input never touches the cluster's keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm8e5k09",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The Gitea webhook stopped arriving. What still delivers a merge to staging?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Argo CD",
+        "correct": false,
+        "why": "It was removed."
+      },
+      {
+        "text": "The image automation",
+        "correct": false,
+        "why": "It proposes image tags, not merges."
+      },
+      {
+        "text": "Nothing until the webhook is fixed",
+        "correct": false,
+        "why": "The GitRepository still fetches every minute."
+      },
+      {
+        "text": "The intervals",
+        "correct": true,
+        "why": "Right. They stay as the safety net."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwjksyd4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is Flux's user interface?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "A web dashboard",
+        "correct": false,
+        "why": "Flux has none."
+      },
+      {
+        "text": "Its own API server with users",
+        "correct": false,
+        "why": "That is Argo CD."
+      },
+      {
+        "text": "The Git server",
+        "correct": false,
+        "why": "Git holds the desired state, not Flux's status."
+      },
+      {
+        "text": "The Kubernetes API",
+        "correct": true,
+        "why": "Right. Read with kubectl and flux."
+      }
+    ]
+  },
+  {
+    "id": "ex-aest43ta",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why not one branch per environment?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Branches cannot be protected",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "A merge carries everything",
+        "correct": true,
+        "why": "Right. Including what was meant for staging only."
+      },
+      {
+        "text": "Git cannot hold many branches",
+        "correct": false,
+        "why": "It can hold thousands."
+      },
+      {
+        "text": "Flux cannot follow a branch",
+        "correct": false,
+        "why": "It follows any branch."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzctfrs0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Production's Kustomization dependsOn staging. A commit breaks staging and changes production. What happens to production?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "It waits",
+        "correct": true,
+        "why": "Right. It reconciles only while staging is ready."
+      },
+      {
+        "text": "It applies anyway",
+        "correct": false,
+        "why": "dependsOn holds it back."
+      },
+      {
+        "text": "It copies staging's state",
+        "correct": false,
+        "why": "dependsOn orders; it does not copy."
+      },
+      {
+        "text": "It rolls back to the previous commit",
+        "correct": false,
+        "why": "Flux does not roll back."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc8nxz5q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a Kustomize base contain?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Only the namespace",
+        "correct": false,
+        "why": "The base names no namespace."
+      },
+      {
+        "text": "What every environment shares",
+        "correct": true,
+        "why": "Right. No namespace, no tag, no message."
+      },
+      {
+        "text": "Production's settings",
+        "correct": false,
+        "why": "Production is an overlay."
+      },
+      {
+        "text": "Templates with placeholders",
+        "correct": false,
+        "why": "That is Helm."
+      }
+    ]
+  },
+  {
+    "id": "ex-01nyqjtd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does required in a Helm template do when the value is missing?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Asks for the value interactively",
+        "correct": false,
+        "why": "Helm does not prompt."
+      },
+      {
+        "text": "Skips the template",
+        "correct": false,
+        "why": "It fails the whole render."
+      },
+      {
+        "text": "Uses an empty string",
+        "correct": false,
+        "why": "That is what it prevents."
+      },
+      {
+        "text": "Stops the render with a message",
+        "correct": true,
+        "why": "Right. Before anything reaches the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-eear7p21",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the digest the tag bulletin:1.1 resolves to?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "The tag's own",
+        "correct": false,
+        "why": "A tag has no digest of its own."
+      },
+      {
+        "text": "The first layer's",
+        "correct": false,
+        "why": "Layers are two levels down."
+      },
+      {
+        "text": "The index's",
+        "correct": true,
+        "why": "Right. The top document covers every byte below it."
+      },
+      {
+        "text": "The config's",
+        "correct": false,
+        "why": "The config is listed by the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-21ntwpxm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which defence makes a moved version tag impossible rather than unlikely?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Tag immutability in the registry",
+        "correct": false,
+        "why": "Strong, but the registry is the one enforcing it."
+      },
+      {
+        "text": "A team rule",
+        "correct": false,
+        "why": "Only as strong as the CI enforcing it."
+      },
+      {
+        "text": "A digest in Git",
+        "correct": true,
+        "why": "Right. Nobody can move the content's own hash."
+      },
+      {
+        "text": "Tagging latest",
+        "correct": false,
+        "why": "latest moves by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed66xahp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "An attacker replaces a binary and its checksum file on the release page. What still catches it?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "HTTPS",
+        "correct": false,
+        "why": "HTTPS protects the transfer, not the source."
+      },
+      {
+        "text": "sha256sum --check",
+        "correct": false,
+        "why": "It compares against the replaced file."
+      },
+      {
+        "text": "Downloading twice",
+        "correct": false,
+        "why": "Both downloads get the replaced file."
+      },
+      {
+        "text": "A signature check",
+        "correct": true,
+        "why": "Right. They cannot sign with the publisher's key."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmv0hw4k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which check proves the desired state was not altered between the author's machine and the server?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The pull request title",
+        "correct": false,
+        "why": "It is text."
+      },
+      {
+        "text": "Branch protection",
+        "correct": false,
+        "why": "It controls who merges, not what the commit holds."
+      },
+      {
+        "text": "The author field",
+        "correct": false,
+        "why": "Anybody can write any name there."
+      },
+      {
+        "text": "A commit signature",
+        "correct": true,
+        "why": "Right. Made with a key only the author holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywpafd83",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A Secret's YAML with data.token: YS1zdGFnaW5nLXRva2Vu is in a pull request. What is exposed?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Nothing; the value is encrypted",
+        "correct": false,
+        "why": "base64 is an encoding, not encryption."
+      },
+      {
+        "text": "Only the token's length",
+        "correct": false,
+        "why": "The whole value decodes."
+      },
+      {
+        "text": "Only the name of the Secret",
+        "correct": false,
+        "why": "The value is right there, encoded."
+      },
+      {
+        "text": "The token",
+        "correct": true,
+        "why": "Right. base64 -d reverses it without a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-h81azsec",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A SealedSecret sealed for staging is applied in production. What does the controller do?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Moves it back to staging",
+        "correct": false,
+        "why": "The controller moves nothing."
+      },
+      {
+        "text": "Re-seals it for production",
+        "correct": false,
+        "why": "It cannot; it never saw the plaintext."
+      },
+      {
+        "text": "Refuses to unseal it",
+        "correct": true,
+        "why": "Right. Name and namespace are part of the seal."
+      },
+      {
+        "text": "Creates the Secret in production",
+        "correct": false,
+        "why": "That is exactly what the scope prevents."
+      }
+    ]
+  },
+  {
+    "id": "ex-0myahk4f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why back up the Sealed Secrets controller's keys outside the cluster?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Flux reads them from Git",
+        "correct": false,
+        "why": "They must never be in Git."
+      },
+      {
+        "text": "New keys cannot open old seals",
+        "correct": true,
+        "why": "Right. New keys open nothing already committed."
+      },
+      {
+        "text": "The controller deletes them monthly",
+        "correct": false,
+        "why": "It adds keys; it keeps the old ones."
+      },
+      {
+        "text": "kubeseal needs them to seal",
+        "correct": false,
+        "why": "Sealing needs only the public certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-ek4yk40g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a pull request that changes a SOPS-encrypted Secret show a reviewer?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The old and new values",
+        "correct": false,
+        "why": "Both are ciphertext."
+      },
+      {
+        "text": "Which key changed",
+        "correct": true,
+        "why": "Right. Values are encrypted; keys stay readable."
+      },
+      {
+        "text": "Only that the file changed",
+        "correct": false,
+        "why": "The keys inside show too."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The structure stays readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-wma2s4x8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "validate.sh fails a SOPS file with \"additional properties 'sops' not allowed\". What is the right fix?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Skip Secrets entirely",
+        "correct": false,
+        "why": "A Secret's shape is still worth checking."
+      },
+      {
+        "text": "Strip the sops block first",
+        "correct": true,
+        "why": "Right. The check never needs the key."
+      },
+      {
+        "text": "Give CI the age key",
+        "correct": false,
+        "why": "Every holder of the key is one more reader."
+      },
+      {
+        "text": "Remove -strict for every file",
+        "correct": false,
+        "why": "That weakens every other check."
+      }
+    ]
+  },
+  {
+    "id": "ex-q66kayk6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which secret in this course cannot come from Git, and why?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "cosign.pub",
+        "correct": false,
+        "why": "It is public and is in Git."
+      },
+      {
+        "text": "Staging's token",
+        "correct": false,
+        "why": "It comes from Git, sealed."
+      },
+      {
+        "text": "The age private key",
+        "correct": true,
+        "why": "Right. It opens the rest."
+      },
+      {
+        "text": "Production's token",
+        "correct": false,
+        "why": "It came from Git, encrypted, then from Vault."
+      }
+    ]
+  },
+  {
+    "id": "ex-1yrmbdkv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does the course run Vault's real server instead of vault server -dev?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Dev mode needs a licence",
+        "correct": false,
+        "why": "It is part of the same binary."
+      },
+      {
+        "text": "Dev mode cannot store secrets",
+        "correct": false,
+        "why": "It stores them, in memory."
+      },
+      {
+        "text": "It hides the seal",
+        "correct": true,
+        "why": "Right. It is in memory and always unsealed."
+      },
+      {
+        "text": "Dev mode cannot listen on 8200",
+        "correct": false,
+        "why": "It listens on 8200."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyrhcwrr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Vault was restarted overnight and every read fails. What is missing?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "A new root token",
+        "correct": false,
+        "why": "The token is fine; the storage is sealed."
+      },
+      {
+        "text": "Unseal keys",
+        "correct": true,
+        "why": "Right. Or automatic unsealing with a cloud key service."
+      },
+      {
+        "text": "A fresh operator init",
+        "correct": false,
+        "why": "Init runs once and is refused again."
+      },
+      {
+        "text": "The raft volume",
+        "correct": false,
+        "why": "It survived the restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysrzwexv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pod in staging logs in to Vault with the bulletin-production role. What happens?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "A token with production's policy",
+        "correct": false,
+        "why": "Only for the namespace and account the role binds."
+      },
+      {
+        "text": "A root token",
+        "correct": false,
+        "why": "Kubernetes logins never give root."
+      },
+      {
+        "text": "Refused",
+        "correct": true,
+        "why": "Right. The role names production's ServiceAccount only."
+      },
+      {
+        "text": "A token with no policy",
+        "correct": false,
+        "why": "Vault refuses the login outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqz7g67q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A policy grants read on secret/bulletin/production, and reads of that entry fail. What is wrong?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The entry needs a version number",
+        "correct": false,
+        "why": "Reads take the current version."
+      },
+      {
+        "text": "Policies cannot grant read",
+        "correct": false,
+        "why": "read is a capability."
+      },
+      {
+        "text": "Kubernetes auth cannot read KV",
+        "correct": false,
+        "why": "It reads whatever the policy allows."
+      },
+      {
+        "text": "It should say secret/data/...",
+        "correct": true,
+        "why": "Right. Version 2 of the engine puts data/ in the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2n6370g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With the External Secrets Operator, what does Git hold for production's token?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Nothing about it",
+        "correct": false,
+        "why": "The ExternalSecret is in Git."
+      },
+      {
+        "text": "A reference",
+        "correct": true,
+        "why": "Right. Which secret, and from where."
+      },
+      {
+        "text": "The token, sealed",
+        "correct": false,
+        "why": "That is staging."
+      },
+      {
+        "text": "The token, encrypted",
+        "correct": false,
+        "why": "That was the SOPS file, now removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzjt5kt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "How does the operator log in to Vault for production's store?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "As its own ServiceAccount, with full access",
+        "correct": false,
+        "why": "The store names bulletin."
+      },
+      {
+        "text": "As the ServiceAccount bulletin",
+        "correct": true,
+        "why": "Right. It asks Kubernetes for a token for it."
+      },
+      {
+        "text": "With a token in a Secret",
+        "correct": false,
+        "why": "None was created."
+      },
+      {
+        "text": "With the root token",
+        "correct": false,
+        "why": "It holds no Vault credential of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7eave7n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new value is put in Vault. What restarts in production?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The operator",
+        "correct": false,
+        "why": "It reads on its schedule."
+      },
+      {
+        "text": "Every pod",
+        "correct": false,
+        "why": "The Secret volume updates in place."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The file in the pod changes on the next syncs."
+      },
+      {
+        "text": "Flux",
+        "correct": false,
+        "why": "Nothing in Git changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-edcp3spc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program reads its token from an environment variable set from the Secret. The value changes in Vault. When does the program see it?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "At the next restart",
+        "correct": true,
+        "why": "Right. Environment variables are fixed at start."
+      },
+      {
+        "text": "On the next request",
+        "correct": false,
+        "why": "Only a program that rereads a file does that."
+      },
+      {
+        "text": "Never",
+        "correct": false,
+        "why": "A restart picks it up."
+      },
+      {
+        "text": "Within a minute",
+        "correct": false,
+        "why": "That is a mounted file, not a variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfqr9gfp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Vault is sealed. What happens to the Secret the operator wrote?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "It is deleted",
+        "correct": false,
+        "why": "The operator does not delete it."
+      },
+      {
+        "text": "It keeps its last value",
+        "correct": true,
+        "why": "Right. Pods carry on; changes stop."
+      },
+      {
+        "text": "It is emptied",
+        "correct": false,
+        "why": "Nothing empties it."
+      },
+      {
+        "text": "It is replaced by the SOPS value",
+        "correct": false,
+        "why": "That file is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ygfca8r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With workload identity, what does the cloud check when a pod asks for credentials?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The pod's IP address",
+        "correct": false,
+        "why": "Addresses prove nothing."
+      },
+      {
+        "text": "The token the cluster signed",
+        "correct": true,
+        "why": "Right. Against keys the cluster published."
+      },
+      {
+        "text": "An access key stored in the cluster",
+        "correct": false,
+        "why": "That is what workload identity removes."
+      },
+      {
+        "text": "A password in the SecretStore",
+        "correct": false,
+        "why": "None of the three stores has one."
+      }
+    ]
+  },
+  {
+    "id": "ex-37ceh4sj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why might a team pick the Secrets Store CSI Driver over the operator?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Pods start when the store is down",
+        "correct": false,
+        "why": "The opposite: they cannot mount it."
+      },
+      {
+        "text": "It works with environment variables",
+        "correct": false,
+        "why": "Only by syncing a Secret, which gives up the point."
+      },
+      {
+        "text": "No Secret in etcd",
+        "correct": true,
+        "why": "Right. The value lands only in the pod's volume."
+      },
+      {
+        "text": "It needs no identity",
+        "correct": false,
+        "why": "It logs in as the pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5sc3mcd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does the course push the operator's chart into its own registry first?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "To pull from your own place",
+        "correct": true,
+        "why": "Right. A repository manager's job, in miniature."
+      },
+      {
+        "text": "Flux only reads charts from Gitea",
+        "correct": false,
+        "why": "Flux reads OCI registries."
+      },
+      {
+        "text": "To change the chart's version",
+        "correct": false,
+        "why": "The version stays 1.3.2."
+      },
+      {
+        "text": "Helm cannot read GitHub releases",
+        "correct": false,
+        "why": "It reads a downloaded file fine."
+      }
+    ]
+  }
+]
