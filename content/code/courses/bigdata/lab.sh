@@ -33,7 +33,7 @@
 #   sudo bash lab.sh data             generate the data if it is not there
 #   sudo bash lab.sh exec 'COMMAND'   run COMMAND as ana, in ~/big
 #   sudo bash lab.sh extract MD FILE  the code of the example named FILE in MD
-#   sudo bash lab.sh fence MD N       the body of the Nth fence of MD (from 1)
+#   sudo bash lab.sh fence MD N       the body of the Nth ```sh fence of MD (from 1); captures, figures and examples are not counted
 #
 # Recorded on Ubuntu 24.04, OpenJDK 17, Python 3.12, 4 cores, 15 GB,
 # TZ=America/Sao_Paulo.
@@ -69,7 +69,7 @@ fence() {
   python3 - "$1" "$2" <<'PY'
 import re, sys
 md, n = sys.argv[1], int(sys.argv[2])
-blocks = re.findall(r'^```[^\n]*\n(.*?)^```$', open(md, encoding='utf-8').read(), re.S | re.M)
+blocks = re.findall(r'^```sh\n(.*?)^```$', open(md, encoding='utf-8').read(), re.S | re.M)
 sys.stdout.write(blocks[n - 1])
 PY
 }

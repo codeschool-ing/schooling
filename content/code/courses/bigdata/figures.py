@@ -927,6 +927,87 @@ def l11_log(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 12
+
+@figure('l12-stack', 12)
+def l12_stack(lang):
+    t = {'en': dict(
+            label='The Hadoop stack in three layers. At the bottom, storage: HDFS, and HBase on top '
+                  'of it. In the middle, YARN, which hands out the machines. At the top, the engines '
+                  'that run on YARN: MapReduce, Hive, Spark. Beside them, Hive\'s metastore, which '
+                  'every engine consults for table names.',
+            store='storage', res='resources', eng='engines', meta='Hive metastore',
+            meta2='table names, schemas, partitions', yarn2='containers and queues',
+            hdfs2='blocks, three copies', hbase2='rows by key',
+            cap='Storage at the bottom, YARN handing out machines, engines on top, and a catalog '
+                'beside them all.'),
+         'pt': dict(
+            label='A pilha do Hadoop em três camadas. Embaixo, o armazenamento: HDFS, e o HBase por '
+                  'cima dele. No meio, o YARN, que distribui as máquinas. Em cima, os motores que '
+                  'rodam no YARN: MapReduce, Hive, Spark. Ao lado, o metastore do Hive, que todo '
+                  'motor consulta para os nomes das tabelas.',
+            store='armazenamento', res='recursos', eng='motores', meta='metastore do Hive',
+            meta2='nomes, esquemas, partições', yarn2='contêineres e filas',
+            hdfs2='blocos, três cópias', hbase2='linhas por chave',
+            cap='Armazenamento embaixo, o YARN distribuindo máquinas, motores em cima, e um catálogo '
+                'ao lado de todos.')}[lang]
+    f = Fig('l12-stack', 720, 260, t['label'])
+    for i, name in enumerate(['MapReduce', 'Hive', 'Spark']):
+        box(f, 120 + i * 140, 20, 128, 54, name)
+    box(f, 120, 96, 408, 54, 'YARN', t['yarn2'], stroke='--phosphor')
+    box(f, 120, 172, 260, 54, 'HDFS', t['hdfs2'])
+    box(f, 392, 172, 136, 54, 'HBase', t['hbase2'])
+    for y, lab in ((47, t['eng']), (123, t['res']), (199, t['store'])):
+        f.text(108, y, lab, size=10, anchor='end', fill='--paper-dim')
+    box(f, 552, 20, 156, 206, t['meta'], t['meta2'], stroke='--amber', size=11)
+    return f, t['cap']
+
+
+@figure('l12-yarn', 12)
+def l12_yarn(lang):
+    t = {'en': dict(
+            label='YARN\'s roles. A client submits an application to the ResourceManager. The '
+                  'ResourceManager tells a NodeManager to start the application\'s first container, '
+                  'its ApplicationMaster, which then asks the ResourceManager for more containers '
+                  'and runs its tasks in them, on the NodeManagers of other machines.',
+            client='client', rm='ResourceManager', rm2='machines, queues', nm='NodeManager',
+            am='ApplicationMaster', task='task', submit='1 submit', ask='2 ask for containers',
+            run='3 start tasks',
+            cap='The ResourceManager decides; each application\'s own ApplicationMaster asks and '
+                'runs its tasks.'),
+         'pt': dict(
+            label='Os papéis do YARN. Um cliente submete uma aplicação ao ResourceManager. O '
+                  'ResourceManager manda um NodeManager iniciar o primeiro contêiner da aplicação, o '
+                  'seu ApplicationMaster, que então pede mais contêineres ao ResourceManager e roda '
+                  'as suas tarefas neles, nos NodeManagers de outras máquinas.',
+            client='cliente', rm='ResourceManager', rm2='máquinas, filas', nm='NodeManager',
+            am='ApplicationMaster', task='tarefa', submit='1 submete', ask='2 pede contêineres',
+            run='3 inicia tarefas',
+            cap='O ResourceManager decide; o ApplicationMaster de cada aplicação pede e roda as suas '
+                'tarefas.')}[lang]
+    f = Fig('l12-yarn', 720, 306, t['label'])
+    box(f, 20, 30, 120, 50, t['client'])
+    box(f, 280, 24, 180, 60, t['rm'], t['rm2'], stroke='--phosphor')
+    f.line(140, 55, 278, 55, arrow=True)
+    f.text(209, 44, t['submit'], size=9.5, fill='--paper-dim')
+    for i in range(3):
+        x = 40 + i * 230
+        f.rect(x, 140, 200, 120, stroke='--wire', fill='--panel')
+        f.text(x + 100, 156, t['nm'], size=10.5, weight='600')
+        if i == 0:
+            box(f, x + 14, 172, 172, 40, t['am'], stroke='--amber', fill='--scan', size=10.5)
+        else:
+            for k in range(2):
+                box(f, x + 14 + k * 90, 180, 82, 40, t['task'], fill='--scan', size=10)
+    f.line(200, 140, 300, 86, stroke='--amber', arrow=True)
+    f.text(236, 104, t['ask'], size=9.5, anchor='end', fill='--amber')
+    f.path('M140 260 L140 284 L600 284', stroke='--amber')
+    for x in (370, 600):
+        f.line(x, 284, x, 262, stroke='--amber', arrow=True)
+    f.text(484, 296, t['run'], size=9.5, fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
