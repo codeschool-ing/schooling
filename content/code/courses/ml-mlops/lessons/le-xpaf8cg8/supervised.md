@@ -93,7 +93,7 @@ learned from 2940 members; 17.0% of them lapsed
 
 Read the columns of one row. Member 1670 had not visited in 178 days, had come once in six months,
 and the model gave them 0.86. They did not come back. The five at the top of the list all have a
-recency close to 180 days, the edge of what counts as active, and one visit: the model has learned
+recency close to 180 days, the edge of what counts as active, and one visit. The model has learned
 that the longer since the last visit, the likelier the member is gone, which is what a person would
 have guessed.
 

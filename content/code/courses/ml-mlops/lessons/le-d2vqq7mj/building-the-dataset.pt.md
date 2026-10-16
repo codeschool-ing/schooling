@@ -61,6 +61,6 @@ O corte de treino é 31 de agosto e o de teste 30 de novembro, a distância hone
 janeiro, de outro diretório completamente diferente, e é recusado com o motivo, e **nada é
 gravado**: nenhum arquivo meio rotulado fica para trás para uma etapa posterior pegar.
 
-`sys.exit` com uma mensagem a imprime e termina o programa com um status de falha, o que importa
-para a etapa depois da próxima: um pipeline para na primeira etapa que falha, e só consegue saber que
+`sys.exit` com uma mensagem a imprime e termina o programa com um status de falha. Isso importa para
+a etapa depois da próxima: um pipeline para na primeira etapa que falha, e só consegue saber que
 uma falhou se ela disser isso no seu status de saída.

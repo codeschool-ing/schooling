@@ -24,11 +24,12 @@ member_id  cutoff      p_lapse  model_version
 
 A segunda execução gravou as mesmas 3.355 linhas e a tabela continua com 3.355: **o job é
 idempotente**, a palavra para um passo que deixa o mesmo resultado não importa quantas vezes rode. A
-consulta é a que o marketing rodaria, os membros com mais chance de se afastar, cada um com a data de
+consulta é a que o marketing rodaria, os membros com mais chance de se afastar, cada um com a data
+de
 corte e a versão que o pontuou. Quando a versão 2 assumir, as linhas dela dirão isso, e um relatório
 que mistura duas versões no mesmo mês consegue distinguir uma da outra.
 
 **A tabela cresce uma noite de cada vez, e isso é proposital.** As notas do mês que vem não
-sobrescrevem as deste mês, porque a lição 9 precisa das duas: as notas de 28 de fevereiro,
+sobrescrevem as deste mês, porque a lição 9 precisa das duas. As notas de 28 de fevereiro,
 comparadas com o que os membros de fato fizeram nos 90 dias seguintes, são o boletim do modelo, e só
 podem ser lidas se tiverem sido guardadas.

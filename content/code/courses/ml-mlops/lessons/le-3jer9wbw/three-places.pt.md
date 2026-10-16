@@ -25,10 +25,10 @@ tomada numa agenda: o marketing manda cupons uma vez por mês, então uma nota c
 noite vale tanto quanto uma calculada neste segundo. O modelo de afastamento é um modelo de lote.
 
 **Tempo real compensa o custo quando a resposta depende de algo que acabou de acontecer**, ou
-quando ninguém sabe de antemão quem pontuar: o recomendador da lição 2, que deveria mudar no
-instante em que um membro compra um livro, ou uma checagem de fraude num pagamento que não existia
-um segundo atrás. A página do membro que mostra uma nota de afastamento é um caso mais fraco, e a seção
-11 o pesa.
+quando ninguém sabe de antemão quem pontuar. O recomendador da lição 2 é um caso, já que deveria
+mudar no instante em que um membro compra um livro; uma checagem de fraude num pagamento que não
+existia um segundo atrás é outro. A página do membro que mostra uma nota de afastamento é um caso
+mais fraco, e a seção 11 o pesa.
 
 **A borda é para quando não há rede em que confiar**, ou a resposta precisa vir mais rápido do que
 uma ida e volta permite, ou os dados não podem sair do aparelho. É a menos comum das três para uma

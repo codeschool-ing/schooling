@@ -3,7 +3,8 @@ title: Uma mudança de uma linha
 version: 1
 ---
 
-Uma colega sugere uma correção comum para um desfecho raro: **pesar as classes**, para que os 17% que
+Uma colega sugere uma correção comum para um desfecho raro: **pesar as classes**, para que os 17%
+que
 se afastam contem no treino tanto quanto os 83% que ficam. No scikit-learn isso é um argumento. Aqui
 está o `model.py` com ele, mudado nessa linha e na docstring:
 
@@ -100,7 +101,8 @@ version 2  aliases []  commit d9f6d3a  average precision 0.519  said 0.426
 
 **O DVC pulou o estágio do conjunto de dados**, porque nada de que ele depende mudou, **e rodou de
 novo treino e avaliação**, porque o `model.py` é dependência do treino e o modelo é dependência da
-avaliação. `dvc metrics diff v1` compara as notas do diretório de trabalho com as commitadas em `v1`.
+avaliação. `dvc metrics diff v1` compara as notas do diretório de trabalho com as commitadas em
+`v1`.
 
 O diff é o argumento inteiro da lição em quatro linhas. **A ordenação quase não se mexeu**: precisão
 média de 0,522 para 0,519, AUC de 0,793 para 0,791, um afastamento a mais nos 300 primeiros. **As
@@ -109,7 +111,8 @@ Pesos balanceados dizem ao modelo que se afastar é tão comum quanto ficar, e e
 conta do limiar da lição 4, e qualquer previsão de quantos membros vão embora, erraria por mais do
 dobro.
 
-A mudança é commitada e registrada mesmo assim, como **versão 2**. O registro é o que foi tentado,
-não só o que foi ao ar, e o `champion.py` sem argumento mostra que o apelido não se moveu: **a
-produção continua carregando a versão 1.** A decisão de não promover também é uma decisão, e as notas
+A mudança é commitada e registrada mesmo assim, como **versão 2**. O registro guarda o que foi
+tentado além do que foi ao ar. O `champion.py` sem argumento mostra que o apelido não se moveu: **a
+produção continua carregando a versão 1.** A decisão de não promover também é uma decisão, e as
+notas
 ao lado de cada versão são o motivo dela.

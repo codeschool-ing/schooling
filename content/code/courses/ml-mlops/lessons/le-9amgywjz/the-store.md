@@ -46,7 +46,7 @@ file, `features.db`, beside `shop.db`. Save it in `~/ml` as `featurestore.py`; i
 }
 ```
 
-**Everything a production store adds is around these five functions, not instead of them**: a
-schedule for `snapshot`, a database that answers faster than SQLite for many readers at once, a
+**Everything a production store adds is around these five functions, not instead of them.** It adds
+a schedule for `snapshot`, a database that answers faster than SQLite for many readers at once, a
 registry of which feature views exist and who owns them, and monitoring of how fresh each one is.
 Section 10 names the products that add them.

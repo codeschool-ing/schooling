@@ -79,8 +79,8 @@ not yet: the outcomes of 2026-02-28 close on 2026-05-29, and the data ends on 20
 
 **The first card is the test, reproduced**: an AUC of 0.793, average precision 0.522, 190 lapsed
 members among the top 300, said 0.177 against 0.169 that happened. Those are lesson 5's numbers to
-the last digit. That is no discovery about the model, since the night is the one it was tested on,
-but it is a check of the card itself: a monitor that disagrees with a number you already trust has
+the last digit. That is no discovery about the model, since the night is the one it was tested on.
+It is a check of the card itself: a monitor that disagrees with a number you already trust has
 a bug, and finding it now is cheaper than finding it in May.
 
 **The second card refuses.** The scores of 28 February close on 29 May 2026, and the shop's data

@@ -24,9 +24,10 @@ overnight is cheap, easy to check and easy to rerun, and it fits any decision ta
 marketing sends vouchers once a month, so a score computed last night is as good as one computed
 this second. The lapse model is a batch model.
 
-**Real time earns its cost when the answer depends on something that just happened**, or when
-nobody knows in advance whom to score: the recommender of lesson 2, which should change the moment
-a member buys a book, or a fraud check on a payment that did not exist a second ago. The member
+**Real time earns its cost when the answer depends on something that just happened**, or when nobody
+knows in advance whom to score. The recommender of lesson 2 is one, since it should change the
+moment a member buys a book; a fraud check on a payment that did not exist a second ago is another.
+The member
 page that shows a lapse score is a weaker case, and section 11 weighs it.
 
 **The edge is for when there is no network to rely on**, or the answer has to come faster than a

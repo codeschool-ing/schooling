@@ -17,8 +17,8 @@ mainly money.
 
 **Start with batch and move only when a decision needs fresher answers than a night.** The lapse
 model's decision, a monthly voucher list, needs nothing else. The member page that wants a live
-score is better served by reading last night's row from `lapse_scores` than by a service: it is one
-indexed lookup, it shows the same number marketing used, and the score cannot be fresher than the
+score is better served by reading last night's row from `lapse_scores` than by a service. It is one
+indexed lookup and it shows the same number marketing used. And the score cannot be fresher than the
 features behind it anyway, which change when the member buys a book, not when they open a page.
 
 **A service is worth it when the answer depends on the request itself**: the basket now, the

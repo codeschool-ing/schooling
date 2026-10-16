@@ -103,13 +103,14 @@ evaluation**, because `model.py` is a dependency of training and the model is a 
 evaluation. `dvc metrics diff v1` compares the scores in the working directory with the ones
 committed at `v1`.
 
-The diff is the lesson's whole argument in four rows. **The ranking barely moved**: average precision
+The diff is the lesson's whole argument in four rows. **The ranking barely moved**: average
+precision
 0.522 to 0.519, AUC 0.793 to 0.791, one more lapse in the top 300. **The probabilities did**: the
 model now says 0.426 on average, where 0.169 of members lapse. Balanced weights tell the model that
 lapsing is as common as staying, and it believes it, so lesson 4's threshold arithmetic, and any
 forecast of how many members will leave, would be off by more than double.
 
-The change is committed and registered anyway, as **version 2**. The registry is a record of what
-was tried, not only of what shipped, and `champion.py` without an argument shows that the alias did
-not move: **production still loads version 1.** The decision not to promote is a decision too, and
+The change is committed and registered anyway, as **version 2**. The registry records what was tried
+as well as what shipped. `champion.py` without an argument shows that the alias did not move:
+**production still loads version 1.** The decision not to promote is a decision too, and
 the scores beside each version are why it was made.

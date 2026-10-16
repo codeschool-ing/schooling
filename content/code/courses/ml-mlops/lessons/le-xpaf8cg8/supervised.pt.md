@@ -3,14 +3,17 @@ title: Aprendizado supervisionado, com respostas já conhecidas
 version: 1
 ---
 
-**Aprendizado supervisionado é aprender com exemplos que vêm com a resposta.** Cada linha é um membro
+**Aprendizado supervisionado é aprender com exemplos que vêm com a resposta.** Cada linha é um
+membro
 descrito em números, e ao lado dele a coisa que lhe aconteceu depois. O trabalho do algoritmo é
-encontrar uma função dos números para a resposta que acerte o máximo possível nas linhas que recebeu,
+encontrar uma função dos números para a resposta que acerte o máximo possível nas linhas que
+recebeu,
 na esperança de que continue acertando nas linhas que não recebeu.
 
 A esperança é a parte interessante, e a palavra *supervisionado* a esconde. O supervisor não é uma
 pessoa; é o passado. Só dá para supervisionar com respostas que você já tem, então **todo modelo
-supervisionado aprende de uma época em que o desfecho já acabou**, e depois é usado numa época em que
+supervisionado aprende de uma época em que o desfecho já acabou**, e depois é usado numa época em
+que
 ele não acabou. Tudo o que dá errado entre essas duas épocas é o assunto das lições 3 e 10.
 
 ## Os exemplos
@@ -93,13 +96,14 @@ learned from 2940 members; 17.0% of them lapsed
 
 Leia as colunas de uma linha. O membro 1670 não visitava havia 178 dias, tinha vindo uma vez em seis
 meses, e o modelo lhe deu 0,86. Ele não voltou. Os cinco no topo da lista têm todos uma recência
-perto de 180 dias, a beira do que conta como ativo, e uma visita: o modelo aprendeu que quanto mais
+perto de 180 dias, a beira do que conta como ativo, e uma visita. O modelo aprendeu que quanto mais
 tempo desde a última visita, mais provável que o membro tenha ido embora, que é o que uma pessoa
 teria adivinhado.
 
 **O que uma pessoa não teria adivinhado é o número.** A regra da primeira seção, "120 dias quer
 dizer afastado", diz sim ou não. O modelo diz 0,86 para esses cinco e algo menor para o membro com
-recência de 150 e quatro visitas, e a lição 4 mostra que uma probabilidade é o que permite ao time de
+recência de 150 e quatro visitas, e a lição 4 mostra que uma probabilidade é o que permite ao time
+de
 marketing escolher quantos vouchers mandar.
 
 Duas palavras para depois. **Classificação** é aprendizado supervisionado em que a resposta é uma

@@ -47,6 +47,7 @@ segundo arquivo SQLite, `features.db`, ao lado do `shop.db`. Salve-a em `~/ml` c
 ```
 
 **Tudo o que uma store de produção acrescenta fica em volta destas cinco funções, não no lugar
-delas**: uma agenda para o `snapshot`, um banco que responde mais rápido que o SQLite para muitos
+delas.** Ela acrescenta uma agenda para o `snapshot`, um banco que responde mais rápido que o SQLite
+para muitos
 leitores ao mesmo tempo, um registro de quais visões de atributos existem e de quem são, e
 monitoramento de quão atualizada cada uma está. A seção 10 nomeia os produtos que acrescentam isso.

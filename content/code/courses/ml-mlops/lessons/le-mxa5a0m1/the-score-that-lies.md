@@ -41,9 +41,9 @@ test = features.build("2025-11-30")                      # opened once, at the e
 print(f"chosen depth {best}; test AUC {auc(tree, test):.3f}")
 ```
 
-The score in this lesson is **AUC**, a number from 0.5 to 1 that answers one question: pick a
-member who lapsed and one who stayed at random, and how often does the model give the one who
-lapsed the higher probability? 0.5 is a coin, 1 is a perfect ranking. Lesson 4 is about scores and
+The score in this lesson is **AUC**, a number from 0.5 to 1 that answers one question. Pick at
+random a member who lapsed and one who stayed: how often does the model give the one who lapsed the
+higher probability? 0.5 is a coin, 1 is a perfect ranking. Lesson 4 is about scores and
 explains why this one fits the lapse question better than the most obvious one.
 
 ```

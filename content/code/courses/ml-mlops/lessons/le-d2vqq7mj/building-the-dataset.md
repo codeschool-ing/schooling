@@ -60,6 +60,6 @@ section 07: the newest training label closes the day before the test cutoff. The
 for 31 January, from another directory altogether, and is refused with the reason, and **nothing
 is written**: no half-labelled file is left behind for a later step to pick up.
 
-`sys.exit` with a message prints it and ends the program with a failing status, which matters for
-the step after the next one: a pipeline stops at the first step that fails, and it can only know
-one has failed if the step says so in its exit status.
+`sys.exit` with a message prints it and ends the program with a failing status. That matters for the
+step after the next one: a pipeline stops at the first step that fails, and it knows one has failed
+only if the step says so in its exit status.

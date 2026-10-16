@@ -51,7 +51,8 @@ print(json.dumps({
 ```
 
 O desfecho é calculado aqui a partir das compras, com a mesma regra do `features.py`: afastado se
-nada foi comprado nos 90 dias depois da noite. **E o programa recusa uma noite cujos 90 dias ainda não
+nada foi comprado nos 90 dias depois da noite. **E o programa recusa uma noite cujos 90 dias ainda
+não
 passaram**, pelo mesmo motivo que a lição 3 recusou treinar com rótulos inacabados: um membro sem
 compra ainda pode simplesmente não ter voltado ainda.
 
@@ -78,12 +79,16 @@ not yet: the outcomes of 2026-02-28 close on 2026-05-29, and the data ends on 20
 ```
 
 **O primeiro boletim é o teste, reproduzido**: AUC de 0,793, precisão média de 0,522, 190 membros
-afastados entre os 300 primeiros, 0,177 dito contra 0,169 acontecido. São os números da lição 5 até o
+afastados entre os 300 primeiros, 0,177 dito contra 0,169 acontecido. São os números da lição 5 até
+o
 último dígito. Isso não é uma descoberta sobre o modelo, já que a noite é a mesma em que ele foi
-testado, mas é uma conferência do próprio boletim: um monitor que discorda de um número em que você
+testado. É uma conferência do próprio boletim: um monitor que discorda de um número em que você
 já confia tem um bug, e achá-lo agora sai mais barato do que achá-lo em maio.
 
-**O segundo boletim recusa.** As notas de 28 de fevereiro fecham em 29 de maio de 2026, e os dados da
-loja terminam na noite em que elas foram feitas. O boletim de cada noite vence 90 dias depois dela, e
-até lá o vigia da seção 06 é tudo o que existe. A lição 10 avança o calendário até maio e lê o boletim
+**O segundo boletim recusa.** As notas de 28 de fevereiro fecham em 29 de maio de 2026, e os dados
+da
+loja terminam na noite em que elas foram feitas. O boletim de cada noite vence 90 dias depois dela,
+e
+até lá o vigia da seção 06 é tudo o que existe. A lição 10 avança o calendário até maio e lê o
+boletim
 que importa.

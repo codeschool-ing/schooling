@@ -28,6 +28,6 @@ scored them. When version 2 takes over, its rows will say so, and a report that 
 in one month can tell which is which.
 
 **The table grows one night at a time, and that is deliberate.** Next month's scores do not
-overwrite this month's, because lesson 9 needs both: the scores of 28 February, compared with what
+overwrite this month's, because lesson 9 needs both. The scores of 28 February, compared with what
 the members actually did in the 90 days after it, are the model's report card, and they can only be
 read if they were kept.

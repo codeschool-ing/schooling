@@ -41,8 +41,8 @@ test = features.build("2025-11-30")                      # opened once, at the e
 print(f"chosen depth {best}; test AUC {auc(tree, test):.3f}")
 ```
 
-A nota desta lição é a **AUC**, um número de 0,5 a 1 que responde uma pergunta: escolha ao acaso um
-membro que se afastou e um que ficou, e com que frequência o modelo dá ao que se afastou a
+A nota desta lição é a **AUC**, um número de 0,5 a 1 que responde uma pergunta. Escolha ao acaso um
+membro que se afastou e um que ficou: com que frequência o modelo dá ao que se afastou a
 probabilidade maior? 0,5 é uma moeda, 1 é uma ordenação perfeita. A lição 4 é sobre notas e explica
 por que esta combina com a pergunta do afastamento melhor que a mais óbvia.
 
