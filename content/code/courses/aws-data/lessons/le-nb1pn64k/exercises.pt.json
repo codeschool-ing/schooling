@@ -1,0 +1,409 @@
+{
+  "ex-9yhr0pxn": {
+    "prompt": "A Quitanda leva o banco de pedidos para o RDS. Um relatório criado na segunda lê a tabela `orders` inteira a cada minuto e a CPU fica em 95%. Quem cria o índice que falta?",
+    "hint": "Em qual coluna da tabela estão os índices?",
+    "choices": [
+      {
+        "text": "O RDS, quando as métricas mostram a CPU alta por tempo suficiente",
+        "why": "O RDS informa a CPU; ele nunca muda um esquema, e um índice faz parte do esquema."
+      },
+      {
+        "text": "A Quitanda: os índices ficam com quem é dono do esquema",
+        "why": "Isso. Gerenciado transfere o trabalho operacional, e o esquema, as consultas e os índices ficam onde estavam."
+      },
+      {
+        "text": "O suporte da AWS, como parte do serviço gerenciado",
+        "why": "Nada na lista do gerenciado toca no que está dentro do banco."
+      },
+      {
+        "text": "Ninguém; a correção é uma classe de instância maior",
+        "why": "Uma instância maior é o jeito caro de esconder um índice que falta, e o relatório continua lendo a tabela inteira."
+      }
+    ]
+  },
+  "ex-eg31n480": {
+    "prompt": "Uma aplicação do servidor antigo da Quitanda usava uma extensão do PostgreSQL compilada ali à mão. O que acontece quando o banco vai para o RDS?",
+    "hint": "Pense no que é o usuário mestre, e se existe shell.",
+    "choices": [
+      {
+        "text": "Ela é copiada junto com os dados pela migração",
+        "why": "Um dump leva os dados e o esquema, não a biblioteca compilada de que a extensão precisa no servidor."
+      },
+      {
+        "text": "O usuário mestre a instala com `CREATE EXTENSION`",
+        "why": "Só as extensões da lista do RDS podem ser criadas; o usuário mestre está em `rds_superuser`, não é um superusuário de verdade."
+      },
+      {
+        "text": "Fica inutilizável se o RDS não a listar",
+        "why": "Isso. Sem shell, sem sistema de arquivos, e extensões só da lista permitida."
+      },
+      {
+        "text": "Você entra por SSH e a compila de novo",
+        "why": "Uma instância RDS não oferece login nenhum no sistema operacional."
+      }
+    ]
+  },
+  "ex-2kj4w982": {
+    "prompt": "Quais destas coisas o RDS faz por você? Marque todas as que se aplicam.",
+    "hint": "A coluna da esquerda é o trabalho que é igual para todo banco.",
+    "choices": [
+      {
+        "text": "Aplicar patches do sistema operacional no servidor do banco",
+        "why": "Sim; você nunca vê esse sistema operacional."
+      },
+      {
+        "text": "Fazer backups automáticos e guardá-los pela retenção que você define",
+        "why": "Sim, até 35 dias; a lição 7 restaura a partir deles."
+      },
+      {
+        "text": "Reescrever uma consulta que lê um milhão de linhas para devolver dez",
+        "why": "As consultas são da aplicação, no RDS como em qualquer lugar."
+      },
+      {
+        "text": "Escolher quantas conexões a aplicação abre",
+        "why": "O RDS define um limite; o que abre conexões, e quantas, é o projeto da aplicação."
+      },
+      {
+        "text": "Trocar o hardware quando ele falha",
+        "why": "Sim; a máquina é da AWS."
+      }
+    ]
+  },
+  "ex-epqc89fz": {
+    "prompt": "Uma empresa quer o Oracle Enterprise Edition no RDS e não tem licença da Oracle. O que ela pode fazer?",
+    "hint": "Olhe a coluna de licença do `oracle-ee`.",
+    "choices": [
+      {
+        "text": "Escolher `license-included` e pagar a parte da Oracle dentro do preço por hora, como no SQL Server",
+        "why": "Isso funciona para o Standard Edition 2 e para o SQL Server; o Enterprise Edition só é oferecido trazendo a licença."
+      },
+      {
+        "text": "Obter uma do fabricante antes, ou rodar o SE2 com ela coberta pelo preço",
+        "why": "Isso. O EE é só com licença própria; o SE2 pode vir com a licença no preço."
+      },
+      {
+        "text": "Nada: o Oracle não roda no RDS",
+        "why": "O Oracle é um dos cinco engines; a questão é quem paga a licença."
+      },
+      {
+        "text": "Usar o Aurora, que roda Oracle sem licença",
+        "why": "O Aurora fala PostgreSQL ou MySQL, nunca Oracle."
+      }
+    ]
+  },
+  "ex-gc3ycpcd": {
+    "prompt": "No moto, uma instância criada sem `--engine-version` voltou como PostgreSQL 9.3.3. Um colega conclui que o RDS ainda cria 9.3 por padrão. O que há de errado nisso?",
+    "hint": "De quem é o padrão que respondeu?",
+    "choices": [
+      {
+        "text": "Nada; 9.3 é o que o RDS escolhe quando nenhuma versão é dada",
+        "why": "A AWS escolhe a versão padrão atual dela; a 9.3 saiu do RDS há muito tempo."
+      },
+      {
+        "text": "A 9.3.3 é uma versão secundária, e o RDS só informa as principais",
+        "why": "O RDS informa a versão completa; o problema é de quem é o padrão."
+      },
+      {
+        "text": "É o padrão antigo do moto; a AWS escolhe o atual",
+        "why": "Isso. Diga a versão em todo comando para que o resultado não dependa de quem respondeu."
+      },
+      {
+        "text": "O padrão muda com a classe da instância",
+        "why": "A classe decide a máquina, não a versão do engine."
+      }
+    ]
+  },
+  "ex-sw2c2gka": {
+    "prompt": "Ligue cada valor de `--engine` à licença dele no RDS.",
+    "hint": "Um deles não é código aberto e tem a licença no preço por hora.",
+    "pairs": [
+      {
+        "left": "`postgres`",
+        "right": "Sem licença: código aberto"
+      },
+      {
+        "left": "`sqlserver-se`",
+        "right": "Incluída no preço por hora"
+      },
+      {
+        "left": "`oracle-ee`",
+        "right": "Só uma licença que você já tem"
+      },
+      {
+        "left": "`db2-se`",
+        "right": "Licença própria, da IBM"
+      }
+    ],
+    "right_distractors": [
+      "Gratuita no primeiro ano, depois incluída"
+    ]
+  },
+  "ex-1jqkd745": {
+    "prompt": "No moto, `create-db-instance` responde `available` no mesmo segundo, com um endpoint na porta 5432. O que há atrás desse endpoint?",
+    "hint": "O que o moto guardou?",
+    "choices": [
+      {
+        "text": "Um servidor PostgreSQL que o moto ligou em segundo plano",
+        "why": "O moto não liga engine nenhum; o registro tem um status e um endereço, e nada escuta."
+      },
+      {
+        "text": "Nada: um registro com um nome que nenhum DNS tem",
+        "why": "Isso. Na AWS a mesma instância levaria minutos até `available`, porque uma máquina de verdade liga."
+      },
+      {
+        "text": "Uma cópia somente leitura de um banco de exemplo",
+        "why": "O moto não traz banco nenhum."
+      },
+      {
+        "text": "O endpoint real do RDS, alcançado pelo moto como proxy",
+        "why": "O moto nunca fala com a AWS; o laboratório roda sem conta."
+      }
+    ]
+  },
+  "ex-tappb2c5": {
+    "prompt": "A instância da Quitanda vive numa zona. Por que o DB subnet group dela indica sub-redes em duas?",
+    "hint": "Pense na lição 7.",
+    "choices": [
+      {
+        "text": "A AWS exige duas zonas, e a segunda é onde um standby Multi-AZ ficaria",
+        "why": "Isso. O lugar do standby fica reservado quando o grupo é criado."
+      },
+      {
+        "text": "A instância é dividida entre as duas e lê de qualquer uma",
+        "why": "Uma instância Single-AZ roda numa zona, num volume."
+      },
+      {
+        "text": "Cada zona guarda metade do volume de 100 GiB",
+        "why": "O volume fica na zona da instância; nada é dividido ao meio."
+      },
+      {
+        "text": "O moto recusa um grupo com uma sub-rede",
+        "why": "A regra das duas zonas é da AWS, documentada; o moto confere bem menos."
+      }
+    ]
+  },
+  "ex-w8ej7bpr": {
+    "prompt": "Por que a lição cria a instância com `--manage-master-user-password` em vez de `--master-user-password`?",
+    "hint": "Onde vai parar uma senha digitada numa linha de comando?",
+    "choices": [
+      {
+        "text": "Ela faz a instância ligar mais rápido",
+        "why": "Ela muda onde o segredo mora, não quanto a instância demora."
+      },
+      {
+        "text": "O moto recusa uma senha digitada",
+        "why": "O moto aceita as duas, até uma senha que a AWS recusaria por ser curta."
+      },
+      {
+        "text": "Uma senha digitada fica guardada em texto puro dentro da instância",
+        "why": "Dos dois jeitos o engine guarda um hash; o vazamento é do seu lado do comando."
+      },
+      {
+        "text": "A senha vai para o Secrets Manager e nunca para o histórico",
+        "why": "Isso. O RDS a gera e rotaciona, e a aplicação a lê com uma role; ninguém a digita."
+      }
+    ]
+  },
+  "ex-rcpz3828": {
+    "prompt": "O moto criou uma `db.banana.huge` sem reclamar. O que isso diz sobre um script que cria instâncias e passa no moto?",
+    "hint": "O que o moto confere, e o que a AWS confere?",
+    "choices": [
+      {
+        "text": "Só que as requisições estão bem formadas",
+        "why": "Isso. Se uma classe existe para aquele engine e região é conferência da AWS, e o moto não a faz."
+      },
+      {
+        "text": "Que a classe existe, já que o moto a teria recusado",
+        "why": "O moto acabou de aceitar uma classe que não existe."
+      },
+      {
+        "text": "Que o script vai funcionar sem mudança na AWS",
+        "why": "Um sucesso do moto quer dizer que a requisição estava bem formada, e nada além."
+      },
+      {
+        "text": "Nada: o moto só pula a validação para classes de teste",
+        "why": "Não existem classes de teste; o moto confere o engine e pouco mais."
+      }
+    ]
+  },
+  "ex-r0ywb5b8": {
+    "prompt": "A Quitanda aumenta `max_connections` no parameter group com `ApplyMethod=pending-reboot`. Quando o engine em execução passa a usar o valor novo?",
+    "hint": "É um parâmetro estático.",
+    "choices": [
+      {
+        "text": "Na hora, porque o grupo está ligado à instância",
+        "why": "Um parâmetro estático só é lido quando o engine sobe."
+      },
+      {
+        "text": "No próximo reinício, planejado ou não; até lá a AWS o marca como em espera",
+        "why": "Isso. Então o reinício é agendado como qualquer outra parada."
+      },
+      {
+        "text": "Em até cinco minutos, quando o RDS recarrega a configuração de toda instância que usa o grupo",
+        "why": "Recarregar funciona para parâmetros dinâmicos; `max_connections` dimensiona a memória na partida."
+      },
+      {
+        "text": "Nunca, até a instância passar para um parameter group novo",
+        "why": "O mesmo grupo passa a valer no reinício; não é preciso grupo novo."
+      }
+    ]
+  },
+  "ex-hcyr76cn": {
+    "prompt": "Por que a lição criou o `quitanda-pg16` antes de a instância existir, em vez de usar o `default.postgres16`?",
+    "hint": "Um grupo padrão pode ser alterado?",
+    "choices": [
+      {
+        "text": "O grupo padrão não muda; trocar depois exige um reinício",
+        "why": "Isso. Indicar o próprio grupo na criação poupa a instância desse reinício."
+      },
+      {
+        "text": "Grupos próprios são mais baratos que o padrão, que é cobrado por instância",
+        "why": "Parameter groups não custam nada, de nenhum jeito."
+      },
+      {
+        "text": "O grupo padrão pertence a outra conta, a da AWS, e a sua não pode indicá-lo",
+        "why": "Ele está na sua conta, e é somente leitura."
+      },
+      {
+        "text": "Uma instância sem grupo próprio fica sem parâmetro nenhum",
+        "why": "Ela recebe os valores do grupo padrão, que é para isso que ele existe."
+      }
+    ]
+  },
+  "ex-gedby0jg": {
+    "prompt": "Depois de mudar um parâmetro estático, o moto mostra `ParameterApplyStatus: in-sync`. O que a AWS mostraria, e por que o moto difere?",
+    "hint": "O moto não mantém engine em execução.",
+    "choices": [
+      {
+        "text": "`in-sync` também: um parameter group é aplicado quando é salvo",
+        "why": "Um parâmetro estático espera um reinício, e a AWS mostra que está esperando."
+      },
+      {
+        "text": "`applying`, porque a AWS reinicia a instância sozinha",
+        "why": "A AWS nunca reinicia por uma mudança de parâmetro; o reinício é seu para agendar."
+      },
+      {
+        "text": "`pending-reboot`, já que o engine ainda roda o valor antigo",
+        "why": "Isso. O moto não tem engine para ficar fora de compasso, então nunca mostra a diferença."
+      },
+      {
+        "text": "Um erro, porque parâmetros estáticos não podem ser mudados no RDS",
+        "why": "Podem; passam a valer no próximo reinício."
+      }
+    ]
+  },
+  "ex-bzm1frnn": {
+    "prompt": "Um parâmetro que um engine em execução relê se chama dinâmico; um lido só na partida se chama ___.",
+    "hint": "`max_connections` é um deles.",
+    "blanks": [
+      {
+        "accept": [
+          "estático",
+          "estatico"
+        ]
+      }
+    ]
+  },
+  "ex-s1g4g8r1": {
+    "prompt": "Uma `db.m7g.large` PostgreSQL custa 0,221 USD por hora em Single-AZ, e o armazenamento gp3 0,219 por GB-mês. Quanto custa num mês de 730 horas com 200 GiB? Dê em USD com duas casas decimais.",
+    "hint": "Horas da instância vezes preço, mais GiB vezes preço."
+  },
+  "ex-0ncarvct": {
+    "prompt": "Na tabela de preços, como uma PostgreSQL `db.m7g.large` Multi-AZ se compara com a mesma instância Single-AZ?",
+    "hint": "Compare 0,442 com 0,221, e 0,438 com 0,219.",
+    "choices": [
+      {
+        "text": "Cerca de 10% a mais, pelo tráfego de replicação",
+        "why": "A tabela diz exatamente o dobro, para a instância e para o armazenamento."
+      },
+      {
+        "text": "O dobro da instância, e o mesmo armazenamento",
+        "why": "O armazenamento também dobra: o standby tem volume próprio."
+      },
+      {
+        "text": "Exatamente o dobro, instância e armazenamento",
+        "why": "Isso. É uma segunda instância com um segundo volume em outra zona."
+      },
+      {
+        "text": "O mesmo; o standby é gratuito até ser usado",
+        "why": "O standby roda toda hora e é cobrado toda hora."
+      }
+    ]
+  },
+  "ex-ehy5jz4f": {
+    "prompt": "Uma `db.m6i.large` com SQL Server Standard custa 1,087 USD por hora; uma `db.m7g.large` com PostgreSQL custa 0,221. As duas têm 2 vCPU e 8 GiB. O que é a maior parte da diferença?",
+    "hint": "Olhe a coluna da licença.",
+    "choices": [
+      {
+        "text": "O processador Intel da `m6i`, contra o Graviton",
+        "why": "Famílias de processador diferem em centavos por hora, não em quatro vezes o preço."
+      },
+      {
+        "text": "A licença da Microsoft, cobrada por hora",
+        "why": "Isso. A licença do engine está no preço por hora, a cada hora em que roda."
+      },
+      {
+        "text": "O armazenamento, já que o SQL Server precisa de mais",
+        "why": "O armazenamento é cobrado à parte, por GiB; estes são preços de instância."
+      },
+      {
+        "text": "Os backups, que o SQL Server faz com mais frequência",
+        "why": "Os backups são do RDS e funcionam igual para todo engine."
+      }
+    ]
+  },
+  "ex-gskwmvp9": {
+    "prompt": "Ponha os passos de criar a instância da Quitanda na ordem de que a lição precisa.",
+    "hint": "Cada passo nomeia algo que o passo anterior criou.",
+    "items": [
+      "Criar a VPC e duas sub-redes em duas zonas",
+      "Criar o DB subnet group com as duas sub-redes",
+      "Criar a instância, indicando os grupos e `--manage-master-user-password`",
+      "Mudar um parâmetro estático, depois reiniciar a instância"
+    ]
+  },
+  "ex-8r8txgnv": {
+    "prompt": "Um banco de teste não vai ser usado por dois meses. Alguém o para para economizar. O que acontece?",
+    "hint": "Duas coisas que uma instância parada não para.",
+    "choices": [
+      {
+        "text": "Nada mais é cobrado até ela ser ligada de novo",
+        "why": "O armazenamento continua sendo cobrado enquanto ela está parada."
+      },
+      {
+        "text": "Ela é apagada depois de sete dias parada, junto com todos os seus backups",
+        "why": "O RDS a liga de novo depois de sete dias; não apaga nada."
+      },
+      {
+        "text": "O armazenamento continua cobrado, e o RDS a liga sozinho depois de sete dias",
+        "why": "Isso. Para dois meses, um snapshot e uma exclusão é o jeito mais barato."
+      },
+      {
+        "text": "A classe da instância é reduzida para a menor",
+        "why": "Parar não muda classe; a cobrança por hora da máquina simplesmente para."
+      }
+    ]
+  },
+  "ex-bd2z2635": {
+    "prompt": "As funções da Quitanda abrem uma conexão nova a cada requisição e batem no `max_connections`. Qual correção combina com o que a lição disse?",
+    "hint": "Cada conexão do PostgreSQL é um processo com memória própria.",
+    "choices": [
+      {
+        "text": "Pôr um pool como o RDS Proxy na frente, para elas dividirem algumas dezenas de conexões",
+        "why": "Isso. Menos conexões, não um número maior."
+      },
+      {
+        "text": "Subir `max_connections` para 5.000 no parameter group",
+        "why": "Cada conexão custa memória; milhares delas estrangulam o cache de que as consultas precisam."
+      },
+      {
+        "text": "Passar para Multi-AZ, que dobra as conexões",
+        "why": "O standby não aceita conexões; ele só espera."
+      },
+      {
+        "text": "Trocar para MySQL, que não tem limite",
+        "why": "Todo engine tem limite de conexões."
+      }
+    ]
+  }
+}
