@@ -1,0 +1,304 @@
+{
+ "ex-mbakapkm": {
+  "prompt": "Num modelo fechado, o que decide quantas requisições por segundo o teste envia?",
+  "hint": "Ninguém escreve a taxa num modelo fechado.",
+  "choices": [
+   {
+    "text": "Uma taxa de requisições por segundo escrita no script",
+    "why": "Esse é o modelo aberto. Um teste fechado declara usuários e tempo de pensamento, e a taxa sai deles."
+   },
+   {
+    "text": "Usuários, pensamento e tempo de resposta",
+    "why": "Certo. Cada usuário envia uma requisição por volta, e a volta dura a resposta mais o pensamento."
+   },
+   {
+    "text": "A duração da rampa",
+    "why": "A rampa decide com que rapidez os usuários começam, não com que frequência cada um envia depois de começar."
+   },
+   {
+    "text": "O número de processadores do gerador",
+    "why": "Um gerador com processadores sobrando continua esperando cada resposta antes da próxima requisição."
+   }
+  ]
+ },
+ "ex-j9m870mn": {
+  "prompt": "O servidor sob um teste fechado passa de 20 ms para dois segundos por requisição. O que acontece com a carga que o teste oferece?",
+  "hint": "O que cada usuário virtual está fazendo enquanto espera?",
+  "choices": [
+   {
+    "text": "Fica igual, já que o número de usuários não mudou",
+    "why": "Os usuários são os mesmos, e cada um agora envia muito menos, porque espera cada resposta."
+   },
+   {
+    "text": "Sobe, porque os usuários repetem as requisições lentas",
+    "why": "Nada num laço fechado repete; ele espera, pensa e envia a próxima."
+   },
+   {
+    "text": "Passa sozinha para um modelo aberto",
+    "why": "O modelo é uma propriedade do gerador, e não muda no meio da rodada."
+   },
+   {
+    "text": "Cai, porque cada usuário espera mais",
+    "why": "Certo. Os usuários ficam lentos com o servidor, então o teste pede menos justamente quando o servidor sofre."
+   }
+  ]
+ },
+ "ex-sh0rc2p0": {
+  "prompt": "Qual destes sistemas é mais bem modelado por uma carga fechada?",
+  "hint": "Chega alguém novo enquanto o sistema está lento?",
+  "choices": [
+   {
+    "text": "Oito workers esvaziando uma fila de tarefas",
+    "why": "Certo. A população é fixa em oito, e nenhum começa uma tarefa antes de terminar a anterior."
+   },
+   {
+    "text": "A bilheteria quando um espetáculo concorrido abre as vendas",
+    "why": "As pessoas numa venda chegam tenha o servidor respondido às anteriores ou não."
+   },
+   {
+    "text": "Um site de notícias nos minutos depois de uma grande manchete",
+    "why": "Leitores vindos de uma manchete não esperam uns pelos outros: uma taxa de chegada aberta."
+   },
+   {
+    "text": "Uma API pública chamada por milhares de clientes sem relação",
+    "why": "Clientes sem relação chegam de forma independente, que é o modelo aberto."
+   }
+  ]
+ },
+ "ex-eda7jt20": {
+  "prompt": "Um teste fechado com poucos usuários relata um site público como lento mas sem erros, enquanto uma multidão de verdade o derruba. O que deu errado no teste?",
+  "hint": "Omissão coordenada.",
+  "choices": [
+   {
+    "text": "Os usuários pensavam tempo demais entre as requisições",
+    "why": "Pensamento longo baixa a taxa, mas o defeito é que a taxa caiu ainda mais quando o servidor ficou lento."
+   },
+   {
+    "text": "A rampa foi lenta demais para chegar à carga",
+    "why": "Uma rampa lenta atrasa a carga; ela não a remove quando os usuários já estão rodando."
+   },
+   {
+    "text": "A lentidão impediu os usuários de enviar as requisições que a teriam exposto",
+    "why": "Certo. Gerador e servidor se coordenaram sem querer, e as requisições que faltaram eram as lentas."
+   },
+   {
+    "text": "O site tinha um cache que a multidão não atingiu",
+    "why": "Possível em algum site, e nada na descrição aponta para isso; o modelo explica sozinho."
+   }
+  ]
+ },
+ "ex-ghd8kbk2": {
+  "prompt": "Cem usuários virtuais sem tempo de pensamento enviaram 140 requisições por segundo à bilheteria. O que essa rodada mediu?",
+  "hint": "Quanto pediriam cem pessoas lendo cada página por quatro segundos?",
+  "choices": [
+   {
+    "text": "A carga que cem pessoas de verdade colocariam no servidor",
+    "why": "Cem pessoas pensando quatro segundos cada pedem umas 25 por segundo, não 140."
+   },
+   {
+    "text": "Quanto o servidor conseguia terminar, fosse o que fosse pedido",
+    "why": "Certo. Sem pausa, cada usuário reenvia no instante em que é respondido, então quem define a taxa é o servidor."
+   },
+   {
+    "text": "A taxa de chegada da venda das dez horas",
+    "why": "A venda é uma taxa de chegada calculada a partir de pessoas e visitas; esta rodada não tem pessoas."
+   },
+   {
+    "text": "A capacidade do gerador de carga",
+    "why": "O gerador manteve cem requisições em voo; ele esperava o servidor, e não o contrário."
+   }
+  ]
+ },
+ "ex-y6eadq5p": {
+  "prompt": "Um usuário virtual tem cadência de uma iteração a cada 10 segundos, e as requisições de uma iteração levam 3 segundos. Quantos segundos ele dorme antes da próxima iteração?",
+  "hint": "A cadência é medida de início a início.",
+  "unit": "s"
+ },
+ "ex-5cgxr6qs": {
+  "prompt": "Por que um teste de carga faz uma rampa dos usuários em vez de iniciar todos de uma vez?",
+  "hint": "Duzentos usuários começando no mesmo instante enviam o quê?",
+  "choices": [
+   {
+    "text": "Porque os geradores se recusam a iniciar muitas threads juntas",
+    "why": "Um gerador consegue iniciá-las juntas; quem sofre é o resultado."
+   },
+   {
+    "text": "Para o teste rodar por mais tempo",
+    "why": "A duração da rodada é definida à parte; a rampa é medida separada dela."
+   },
+   {
+    "text": "Para o teste não abrir com uma rajada que ninguém pediu",
+    "why": "Certo. Uma partida num instante só é um pico, e descreveria a si mesma em vez da carga sendo testada."
+   },
+   {
+    "text": "Para o tempo de pensamento poder ser menor",
+    "why": "O tempo de pensamento é uma propriedade dos usuários, e a rampa não o muda."
+   }
+  ]
+ },
+ "ex-ydwyfefa": {
+  "prompt": "O tempo de pensamento conta a partir do fim de uma resposta; a cadência conta do ___ de uma iteração ao ___ da seguinte.",
+  "hint": "A cadência não se importa com quanto a resposta levou.",
+  "blanks": [
+   {
+    "accept": [
+     "início",
+     "começo"
+    ]
+   },
+   {
+    "accept": [
+     "início",
+     "começo"
+    ]
+   }
+  ]
+ },
+ "ex-vtvqeycs": {
+  "prompt": "Requisições chegam a um servidor a 50 por segundo e cada uma passa 0,2 segundo dentro dele. Em média, quantas requisições estão lá dentro ao mesmo tempo?",
+  "hint": "L = λ × W."
+ },
+ "ex-hpahpjzd": {
+  "prompt": "Trinta usuários virtuais pensam 2,9 segundos cada, e o servidor responde em 0,1 segundo. Quantas requisições por segundo eles enviam?",
+  "hint": "N = X × (R + Z), resolvida para X.",
+  "unit": "requisições/s"
+ },
+ "ex-vkmgbrmf": {
+  "prompt": "A lei de Little é escrita com médias, num curso que alerta contra a média. Por que a média é a certa aqui?",
+  "hint": "Que tipo de afirmação é a lei?",
+  "choices": [
+   {
+    "text": "Porque percentis não são definidos para uma fila",
+    "why": "Percentis do tempo numa fila existem e são úteis; só não são o que a lei relaciona."
+   },
+   {
+    "text": "Porque a bilheteria é pequena demais para precisar de percentil",
+    "why": "Tamanho não tem nada a ver; a lei vale para qualquer sistema estável."
+   },
+   {
+    "text": "Porque a aula 8 diz que a média é a certa para vazão",
+    "why": "A aula 8 trata de ler tempos de resposta; o motivo aqui é da própria lei."
+   },
+   {
+    "text": "Porque a lei é uma identidade sobre totais",
+    "why": "Certo. Totais divididos pelo tempo dão médias, e a identidade vale exatamente entre essas médias."
+   }
+  ]
+ },
+ "ex-v0nhm9rv": {
+  "prompt": "Cinco pessoas para cada um dos 300 lugares chegam no primeiro minuto, e cada visita tem cinco requisições. Quantas requisições por segundo o site recebe nesse minuto?",
+  "hint": "Pessoas por segundo, vezes requisições por pessoa.",
+  "unit": "requisições/s"
+ },
+ "ex-dmvfk875": {
+  "prompt": "Por que a divisão da venda por operação importa mais do que o total de 100 requisições por segundo?",
+  "hint": "As cinco requisições de uma visita custam o mesmo?",
+  "choices": [
+   {
+    "text": "A página do espetáculo é a leitura cara e a reserva segura uma trava",
+    "why": "Certo. 60 por segundo da leitura cara e 20 da escrita com trava são dois testes diferentes."
+   },
+   {
+    "text": "Totais não são permitidos num requisito",
+    "why": "Um total pode ir num requisito; ele só esconde qual operação vai falhar primeiro."
+   },
+   {
+    "text": "A lista de espetáculos fica em cache no navegador",
+    "why": "Nada na bilheteria diz isso, e a lista é a mais barata das três de qualquer jeito."
+   },
+   {
+    "text": "Cada operação precisa do seu próprio gerador de carga",
+    "why": "Um gerador consegue enviar as três; a divisão é sobre o que cada uma custa ao servidor."
+   }
+  ]
+ },
+ "ex-g6k79b59": {
+  "prompt": "O modelo disse que 240 usuários pensando 4 s enviariam 60 requisições por segundo, e a bilheteria recebeu 59,9. O que mais precisava ser verdade para os dois concordarem?",
+  "hint": "Olhe o R na saída.",
+  "choices": [
+   {
+    "text": "Que a rampa durasse exatamente dez segundos",
+    "why": "A rampa só decide quando a medição começa; qualquer duração daria a mesma taxa estável."
+   },
+   {
+    "text": "Que as requisições fossem para um espetáculo só",
+    "why": "Qualquer página de espetáculo custa mais ou menos o mesmo; a concordância não depende de qual."
+   },
+   {
+    "text": "Que o servidor acompanhasse, para R ficar pequeno",
+    "why": "Certo. Com 18,2 ms o tempo de resposta quase não somou nada ao laço de 4 s; um servidor lento teria cortado a taxa."
+   },
+   {
+    "text": "Que nenhum outro teste rodasse na máquina ao mesmo tempo",
+    "why": "Outro trabalho deixa os números mais ruidosos, e a aritmética concordou com ele presente."
+   }
+  ]
+ },
+ "ex-v59455wn": {
+  "prompt": "Ponha em ordem os passos de uma multidão até um número de usuários virtuais.",
+  "hint": "A ordem de \"A venda das dez horas, como um número\".",
+  "items": [
+   "estimar quantas pessoas chegam, e quando",
+   "dividir pelo tempo para ter pessoas por segundo",
+   "multiplicar pelas requisições de cada visita",
+   "dividir a taxa por operação",
+   "multiplicar pelo tempo de resposta mais o de pensamento"
+  ]
+ },
+ "ex-j4w9mhdc": {
+  "prompt": "Um teste dimensionado com 101 usuários e 2 s de pensamento, para oferecer 50 requisições por segundo, relata 25 por segundo e nenhum erro, com respostas perto de 2 s. O que ele diz sobre o requisito de 50 por segundo?",
+  "hint": "50 por segundo chegaram a ser oferecidas?",
+  "choices": [
+   {
+    "text": "Que foi atendido, já que nenhuma requisição falhou",
+    "why": "Nenhuma falhou porque só 25 por segundo foram enviadas; o requisito pergunta sobre 50."
+   },
+   {
+    "text": "Nada, já que 50 por segundo nunca foram oferecidas",
+    "why": "Certo. 101 / (2 + 2) dá uns 25. Rode como taxa de chegada, ou dimensione para o R real, para fazer a pergunta."
+   },
+   {
+    "text": "Que a capacidade do servidor é 50 requisições por segundo",
+    "why": "Ele respondeu 25 por segundo a uns 2 s cada; nada aqui mostra ele carregando 50."
+   },
+   {
+    "text": "Que o tempo de pensamento deveria subir para compensar",
+    "why": "Mais pensamento enviaria ainda menos; os usuários já eram o limite."
+   }
+  ]
+ },
+ "ex-ta3d3yj7": {
+  "prompt": "Um teste fechado precisa oferecer 30 requisições por segundo, com 5 segundos de pensamento e respostas de 0,5 segundo. De quantos usuários virtuais ele precisa?",
+  "hint": "N = X × (R + Z).",
+  "unit": "usuários"
+ },
+ "ex-g44c0vn3": {
+  "prompt": "Ligue cada termo ao que ele quer dizer.",
+  "hint": "Dois deles são sobre o tempo entre requisições.",
+  "pairs": [
+   {
+    "left": "tempo de pensamento",
+    "right": "a pausa de uma resposta até a próxima requisição"
+   },
+   {
+    "left": "cadência",
+    "right": "um intervalo fixo do início de uma iteração ao início da seguinte"
+   },
+   {
+    "left": "rampa",
+    "right": "o período em que os usuários são iniciados"
+   },
+   {
+    "left": "usuário virtual",
+    "right": "um laço que envia, espera, pensa e envia de novo"
+   },
+   {
+    "left": "taxa de chegada",
+    "right": "requisições por segundo, tenham as anteriores sido respondidas ou não"
+   }
+  ],
+  "right_distractors": [
+   "o tempo que o servidor gasta numa requisição"
+  ]
+ }
+}

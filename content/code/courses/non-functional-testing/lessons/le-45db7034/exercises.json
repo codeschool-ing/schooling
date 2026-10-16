@@ -1,0 +1,476 @@
+[
+ {
+  "id": "ex-8ft3s1vj",
+  "version": 1,
+  "section": "escalation",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which question does authorisation answer?",
+  "hint": "Authentication comes first.",
+  "choices": [
+   {
+    "text": "Who is this person, and how did they prove it?",
+    "correct": false,
+    "why": "That is authentication: a password or a token identifies the caller."
+   },
+   {
+    "text": "Is the password stored with a salt?",
+    "correct": false,
+    "why": "A storage question; it says nothing about what a signed-in caller may do."
+   },
+   {
+    "text": "Is this caller allowed to do this one thing?",
+    "correct": true,
+    "why": "Right. It is asked again on every request, about one record or one action."
+   },
+   {
+    "text": "Has this session expired yet, or is it still alive?",
+    "correct": false,
+    "why": "Expiry decides whether the caller is still identified, which is authentication's side."
+   }
+  ]
+ },
+ {
+  "id": "ex-13e8vnjf",
+  "version": 1,
+  "section": "escalation",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each probe to the kind of escalation it checks.",
+  "hint": "Sideways or upwards.",
+  "pairs": [
+   {
+    "left": "bia asks for ana's booking",
+    "right": "horizontal"
+   },
+   {
+    "left": "ana asks for the staff list",
+    "right": "vertical"
+   },
+   {
+    "left": "a staff account asks for the staff list",
+    "right": "the control"
+   }
+  ],
+  "right_distractors": [
+   "authentication"
+  ]
+ },
+ {
+  "id": "ex-26x5k92x",
+  "version": 1,
+  "section": "escalation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "account.py answers bia's request for ana's booking and her request for a booking that does not exist with the same 404. Why is that a reasonable design?",
+  "hint": "What would two different answers tell a stranger?",
+  "choices": [
+   {
+    "text": "Two answers would reveal which bookings exist",
+    "correct": true,
+    "why": "Right. A refusal that looks like absence tells a stranger nothing about other customers."
+   },
+   {
+    "text": "A 404 is faster to compute than a 403",
+    "correct": false,
+    "why": "Both are one status line; speed is not the reason."
+   },
+   {
+    "text": "HTTP forbids a 403 for a resource owned by someone else",
+    "correct": false,
+    "why": "HTTP allows it; a 403 for both is the other reasonable choice."
+   },
+   {
+    "text": "The test framework cannot tell a 403 from a 404",
+    "correct": false,
+    "why": "unittest compares status codes exactly; it can tell them apart."
+   }
+  ]
+ },
+ {
+  "id": "ex-0cse6shj",
+  "version": 1,
+  "section": "escalation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the vertical probe also ask the staff list with a staff account, which gets a 200?",
+  "hint": "A test that only checks refusals passes on what?",
+  "choices": [
+   {
+    "text": "Staff accounts expire faster and need to be refreshed",
+    "correct": false,
+    "why": "Sessions last the same for every role in account.py."
+   },
+   {
+    "text": "To create the staff role, which no route grants",
+    "correct": false,
+    "why": "The role is granted at the database before the request; the request only reads the list."
+   },
+   {
+    "text": "Because a 403 is not a valid answer to a customer",
+    "correct": false,
+    "why": "403 is exactly the answer the customer must get."
+   },
+   {
+    "text": "Without it, a route broken for everybody would still pass",
+    "correct": true,
+    "why": "Right. The 200 is the control: it proves the refusal is the role check and not a dead route."
+   }
+  ]
+ },
+ {
+  "id": "ex-mep0k192",
+  "version": 1,
+  "section": "sessions",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does account.py do with a valid token placed in the address instead of the header?",
+  "hint": "The transcript answers 401.",
+  "choices": [
+   {
+    "text": "Accepts it, but logs a warning",
+    "correct": false,
+    "why": "It does not accept it: the request is treated as anonymous."
+   },
+   {
+    "text": "It is ignored: anonymous, so 401",
+    "correct": true,
+    "why": "Right. An address is copied into histories, logs and Referer headers."
+   },
+   {
+    "text": "Moves it into a cookie for the next request",
+    "correct": false,
+    "why": "Nothing of the kind happens; the token in the URL is simply not read."
+   },
+   {
+    "text": "Ends the session, because the token was exposed",
+    "correct": false,
+    "why": "A reasonable idea, but not what account.py does: the header still worked until logout."
+   }
+  ]
+ },
+ {
+  "id": "ex-9gwx91rf",
+  "version": 1,
+  "section": "sessions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A logout button clears the token in the browser but leaves the session row on the server. What does the person who clicked it see, and what is wrong?",
+  "hint": "Who else might hold a copy of the token?",
+  "choices": [
+   {
+    "text": "An error page, because the server rejects the logout",
+    "correct": false,
+    "why": "Nothing fails visibly; that is what makes the defect easy to ship."
+   },
+   {
+    "text": "Nothing wrong, since the token kept in the browser is the only copy that exists",
+    "correct": false,
+    "why": "Copies end up in logs, proxies and other devices; the server must forget it."
+   },
+   {
+    "text": "A signed-out screen, while any copy of the token still opens the account",
+    "correct": true,
+    "why": "Right. It looks identical to a real logout, which is why lesson 16 tests it with a request after logout."
+   },
+   {
+    "text": "A slower sign-in the next time",
+    "correct": false,
+    "why": "Sign-in speed is unrelated to whether old sessions survive."
+   }
+  ]
+ },
+ {
+  "id": "ex-e1ckwe37",
+  "version": 1,
+  "section": "sessions",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each cookie flag to what it does.",
+  "hint": "The Set-Cookie line in the section.",
+  "pairs": [
+   {
+    "left": "HttpOnly",
+    "right": "keeps the cookie away from the page's JavaScript"
+   },
+   {
+    "left": "SameSite=Lax",
+    "right": "leaves it off forms posted from another site"
+   },
+   {
+    "left": "Secure",
+    "right": "sends it only over HTTPS"
+   },
+   {
+    "left": "Max-Age=1800",
+    "right": "lets the browser forget it after half an hour"
+   }
+  ],
+  "right_distractors": [
+   "encrypts the cookie's value"
+  ]
+ },
+ {
+  "id": "ex-3z6dvycx",
+  "version": 1,
+  "section": "sessions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is the Secure flag absent from account.py's cookie in the lab?",
+  "hint": "What does the service speak to 127.0.0.1?",
+  "choices": [
+   {
+    "text": "The lab speaks plain HTTP, where it would not be sent",
+    "correct": true,
+    "why": "Right. Behind HTTPS in a real deployment, it belongs on every session cookie."
+   },
+   {
+    "text": "Because HttpOnly already implies Secure on every cookie",
+    "correct": false,
+    "why": "HttpOnly and Secure are independent flags."
+   },
+   {
+    "text": "Because SameSite=Lax makes the Secure flag unnecessary",
+    "correct": false,
+    "why": "SameSite is about which sites send it, not about the channel."
+   },
+   {
+    "text": "Because Python's http.server cannot set that flag",
+    "correct": false,
+    "why": "Python can set it; the reason is the plain-HTTP lab."
+   }
+  ]
+ },
+ {
+  "id": "ex-qt18j02q",
+  "version": 1,
+  "section": "sessions",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many seconds does an account.py session last when ACCOUNT_SESSION_SECONDS is not set?",
+  "hint": "SESSION_SECONDS.",
+  "value": 1800,
+  "tolerance": 0,
+  "unit": "s"
+ },
+ {
+  "id": "ex-s81h62bw",
+  "version": 1,
+  "section": "passwords",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "ana, bia and sam chose the same password, and their three stored hashes have nothing in common. Why?",
+  "hint": "Look at the second column.",
+  "choices": [
+   {
+    "text": "scrypt adds the current time to every hash",
+    "correct": false,
+    "why": "scrypt is deterministic for a given password and salt; the salt is what differs."
+   },
+   {
+    "text": "The database encrypts each row with a different key",
+    "correct": false,
+    "why": "There is no encryption; it is a salted, slow hash."
+   },
+   {
+    "text": "SQLite randomises text columns when it stores them",
+    "correct": false,
+    "why": "SQLite stores what it is given, byte for byte."
+   },
+   {
+    "text": "Each account has its own random salt",
+    "correct": true,
+    "why": "Right. Without it, one cracked password would open every account sharing it."
+   }
+  ]
+ },
+ {
+  "id": "ex-0qqmfxp7",
+  "version": 1,
+  "section": "passwords",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why may a session token be stored as a plain SHA-256 when a password needs scrypt?",
+  "hint": "Who chose the token?",
+  "choices": [
+   {
+    "text": "Tokens are shorter than passwords",
+    "correct": false,
+    "why": "Length is not the point; 32 random bytes is longer than most passwords."
+   },
+   {
+    "text": "Random bytes nobody chose: nothing to guess",
+    "correct": true,
+    "why": "Right. A slow hash protects guessable secrets; a random token is not guessable."
+   },
+   {
+    "text": "SHA-256 is slower than scrypt",
+    "correct": false,
+    "why": "It is far faster; that is why it would be wrong for a password."
+   },
+   {
+    "text": "Tokens are deleted at logout, so they need no protection",
+    "correct": false,
+    "why": "Live tokens sit in the table; a copy of it must not open accounts."
+   }
+  ]
+ },
+ {
+  "id": "ex-dkh32wja",
+  "version": 1,
+  "section": "passwords",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Sign-in answers a wrong password and an unknown name with the same 401 and the same sentence, but the unknown name comes back in 0.2 ms and the wrong password in 45 ms. What does that leak, and what fixes it?",
+  "hint": "The clock says what the words do not.",
+  "choices": [
+   {
+    "text": "Nothing, since status and body are identical",
+    "correct": false,
+    "why": "The timing alone tells a stranger which names have accounts."
+   },
+   {
+    "text": "The password itself; encrypting the response body",
+    "correct": false,
+    "why": "No password leaks from a timing difference of this kind."
+   },
+   {
+    "text": "Which names have accounts; checking unknown names against a decoy hash",
+    "correct": true,
+    "why": "Right. account.py runs the same slow scrypt against DECOY, so both cost the same."
+   },
+   {
+    "text": "The salt; storing salts in another table",
+    "correct": false,
+    "why": "The salt never leaves the server; the leak is whether the account exists."
+   }
+  ]
+ },
+ {
+  "id": "ex-v2p8cerz",
+  "version": 1,
+  "section": "passwords",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After five failed sign-ins in a row, account.py refuses even the correct password and answers with status ___.",
+  "hint": "Too Many Requests.",
+  "blanks": [
+   {
+    "accept": [
+     "429"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ep2m7kdh",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team ships a limit of five failed sign-ins per name. A week later, a customer complains that she is locked out every morning although she never mistypes. What does the lesson say explains it?",
+  "hint": "Who else can type her name?",
+  "choices": [
+   {
+    "text": "Someone guesses wrong against her name on purpose",
+    "correct": true,
+    "why": "Right. A per-name limit lets anybody lock out anybody, which is why real services also limit per address, slow down or ask for a second factor."
+   },
+   {
+    "text": "Her browser saves the password wrongly every night",
+    "correct": false,
+    "why": "Then she would be the one failing; the complaint is that she never mistypes."
+   },
+   {
+    "text": "The session lifetime is too short",
+    "correct": false,
+    "why": "Expiry signs her out; it does not refuse her sign-in."
+   },
+   {
+    "text": "scrypt fails under the morning load and locks her out",
+    "correct": false,
+    "why": "Slow hashing makes sign-in slower, not refused with a lock-out."
+   }
+  ]
+ },
+ {
+  "id": "ex-kvv2x619",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With the line ending # role check commented out, exactly one of the nine session tests fails. What does that say about the suite?",
+  "hint": "Lesson 16 did the same with the owner check.",
+  "choices": [
+   {
+    "text": "The other eight tests are useless",
+    "correct": false,
+    "why": "They guard other defences; each answers for its own line."
+   },
+   {
+    "text": "The role check is not needed, as eight tests still pass",
+    "correct": false,
+    "why": "The one failing test is exactly the refusal that went missing."
+   },
+   {
+    "text": "The suite is flaky and should be run twice",
+    "correct": false,
+    "why": "The failure is deterministic and points at one line."
+   },
+   {
+    "text": "Each test answers for one defence, so a failure names it",
+    "correct": true,
+    "why": "Right. Whoever breaks it is told which defence they broke, in the first line."
+   }
+  ]
+ },
+ {
+  "id": "ex-vtr7737d",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these is horizontal escalation in the box office?",
+  "hint": "Same role, somebody else's data.",
+  "choices": [
+   {
+    "text": "A customer listing every booking through the staff route",
+    "correct": false,
+    "why": "A role the customer does not have: that is vertical."
+   },
+   {
+    "text": "A customer cancelling another customer's booking",
+    "correct": true,
+    "why": "Right. The same role reaching sideways into somebody else's record."
+   },
+   {
+    "text": "A stranger signing in with a guessed password",
+    "correct": false,
+    "why": "That is a failure of authentication, not of authorisation."
+   },
+   {
+    "text": "A member of staff reading the staff list",
+    "correct": false,
+    "why": "That is allowed: it is the control in the test."
+   }
+  ]
+ }
+]

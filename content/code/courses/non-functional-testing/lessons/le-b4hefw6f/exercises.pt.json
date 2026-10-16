@@ -1,0 +1,366 @@
+{
+ "ex-9r16tehw": {
+  "prompt": "Uma chave de pagamento entrou num commit, foi enviada e foi apagada no commit seguinte. O que vem primeiro?",
+  "hint": "Que passo torna toda cópia inofensiva?",
+  "choices": [
+   {
+    "text": "Reescrever o histórico com git filter-repo e forçar o push",
+    "why": "Isso arruma este repositório e não recolhe nenhum clone que já existe."
+   },
+   {
+    "text": "Revogar a chave no provedor e implantar uma nova",
+    "why": "Certo. A partir daí toda cópia do histórico guarda uma chave morta."
+   },
+   {
+    "text": "Pôr o arquivo de configuração no .gitignore",
+    "why": "Isso impede commits futuros do arquivo; o commit passado continua intacto."
+   },
+   {
+    "text": "Apagar o repositório e enviar um novo",
+    "why": "Clones, forks e caches do antigo continuam com a chave."
+   }
+  ]
+ },
+ "ex-xdgt657a": {
+  "prompt": "Por que uma chave que chegou a um repositório compartilhado é tratada como conhecida, mesmo que ninguém pareça ter olhado?",
+  "hint": "Quem tem uma cópia do histórico?",
+  "choices": [
+   {
+    "text": "Todo clone, fork, runner e cache já tem uma cópia",
+    "why": "Certo. As cópias estão fora do seu alcance, então se supõe que a chave também está."
+   },
+   {
+    "text": "O git publica cada commit num log público de mudanças",
+    "why": "O git guarda o histórico no repositório; nada é publicado a menos que o repositório seja."
+   },
+   {
+    "text": "Apagar uma linha leva dias para chegar aos outros clones",
+    "why": "Um apagamento é um commit novo; o commit antigo fica em cada cópia, passe o tempo que passar."
+   },
+   {
+    "text": "O scanner envia cada achado ao provedor",
+    "why": "O gitleaks relata para você, na sua máquina; não conta nada a provedor nenhum."
+   }
+  ]
+ },
+ "ex-76ssrrbw": {
+  "prompt": "Ligue cada requisito do plano de teste ao que o segura.",
+  "hint": "A tabela no fim da primeira seção de leitura.",
+  "pairs": [
+   {
+    "left": "nenhum segredo em nenhum commit do histórico",
+    "right": "uma varredura do histórico a cada push"
+   },
+   {
+    "left": "nenhum segredo num commit, para começar",
+    "right": "o mesmo scanner sobre o que está no stage"
+   },
+   {
+    "left": "o código não guarda segredo nem valor padrão para um",
+    "right": "configuração do ambiente, revisada"
+   },
+   {
+    "left": "um segredo achado é trocado, não só apagado",
+    "right": "o procedimento de resposta e o registro dele"
+   }
+  ],
+  "right_distractors": [
+   "uma varredura DAST do serviço rodando"
+  ]
+ },
+ "ex-p4r8yfp2": {
+  "prompt": "No leaky, o gitleaks dir não aponta vazamento e o gitleaks git aponta um no commit ad0a6bc. O que isso diz?",
+  "hint": "O que cada subcomando lê?",
+  "choices": [
+   {
+    "text": "A segunda varredura é um falso positivo",
+    "why": "A chave está mesmo no ad0a6bc, como o git show provou."
+   },
+   {
+    "text": "Um commit antigo ainda tem a chave",
+    "why": "Certo. O dir lê o disco, o git lê cada commit."
+   },
+   {
+    "text": "O apagamento ainda não entrou num commit",
+    "why": "Entrou: o log mostra o segundo commit, e o dir lê o arquivo depois dele."
+   },
+   {
+    "text": "O gitleaks dir pula arquivos terminados em .ini",
+    "why": "Ele leu o settings.ini; só não havia mais chave nele."
+   }
+  ]
+ },
+ "ex-bpkt8081": {
+  "prompt": "O gitleaks stdin não aponta nada para payment_api_key = \"fake-7Zq2vRmX9kLp4Tn8Wc3Yb6Hd1Jf5G\". Por quê?",
+  "hint": "Troque uma palavra e ele é apontado.",
+  "choices": [
+   {
+    "text": "O valor é curto demais para a regra genérica",
+    "why": "O mesmo comprimento com outro prefixo é apontado."
+   },
+   {
+    "text": "A entrada por pipe é conferida por menos regras",
+    "why": "A segunda linha, também pelo stdin, é apontada."
+   },
+   {
+    "text": "Ele pula valores que contêm palavras como fake",
+    "why": "Certo. Por isso um valor de teste precisa parecer uma chave real para ser achado."
+   },
+   {
+    "text": "O nome payment_api_key não casa com nenhuma regra",
+    "why": "Ele casou com generic-api-key no settings.ini, com um valor aleatório."
+   }
+  ]
+ },
+ "ex-07dxxpjt": {
+  "prompt": "Com as configurações padrão, que código de saída o gitleaks devolve quando acha um vazamento?",
+  "hint": "A linha depois dos achados na varredura do histórico."
+ },
+ "ex-ybk8nz4a": {
+  "prompt": "Que campo de um achado nomeia aquele achado, para que possa ser registrado como tratado?",
+  "hint": "Commit, arquivo, regra e linha juntos.",
+  "choices": [
+   {
+    "text": "RuleID",
+    "why": "Muitos achados têm a mesma regra."
+   },
+   {
+    "text": "Fingerprint",
+    "why": "Certo. Ele junta commit, arquivo, regra e linha."
+   },
+   {
+    "text": "Entropy",
+    "why": "Uma medida de aleatoriedade, igual para o mesmo valor em qualquer lugar."
+   },
+   {
+    "text": "Commit",
+    "why": "Um commit pode ter vários achados."
+   }
+  ]
+ },
+ "ex-btz42hs6": {
+  "prompt": "Depois que *.env entrou no .gitignore, o gitleaks dir continuou apontando o payment.env. Por que isso está certo?",
+  "hint": "dir e git respondem perguntas diferentes.",
+  "choices": [
+   {
+    "text": "A regra de ignorar vale a partir do próximo commit",
+    "why": "O check-ignore mostrou que ela já valia; e o dir não a consulta."
+   },
+   {
+    "text": "O payment.env tinha entrado num commit antes da regra",
+    "why": "Nunca entrou; a varredura do histórico continuou achando só o ad0a6bc."
+   },
+   {
+    "text": "A chave está mesmo num arquivo deste disco",
+    "why": "Certo. O dir diz o que a máquina guarda, arquivos ignorados incluídos."
+   },
+   {
+    "text": "O gitleaks lê o .gitignore como um arquivo de segredos",
+    "why": "O achado nomeia o payment.env, linha 3, e não o .gitignore."
+   }
+  ]
+ },
+ "ex-atkv450t": {
+  "prompt": "O account.py foi iniciado com PAYMENT_API_KEY no ambiente, como ana. Quem consegue ler o valor em /proc/<pid>/environ?",
+  "hint": "O que o nobody recebeu?",
+  "choices": [
+   {
+    "text": "ana, que o roda, e o root",
+    "why": "Certo. O ambiente é protegido tanto quanto essa conta, e não mais."
+   },
+   {
+    "text": "Qualquer usuário logado na máquina",
+    "why": "O nobody recebeu Permission denied."
+   },
+   {
+    "text": "Só o root, via sudo",
+    "why": "A ana leu com um tr simples, sem sudo."
+   },
+   {
+    "text": "Ninguém, depois que o processo iniciou",
+    "why": "O arquivo guarda o ambiente durante toda a vida do processo."
+   }
+  ]
+ },
+ "ex-nf487wc0": {
+  "prompt": "Que jeito de ler uma chave de pagamento em Python um testador deve esperar ver na revisão?",
+  "hint": "O que acontece quando a variável falta?",
+  "choices": [
+   {
+    "text": "os.environ.get(\"PAYMENT_API_KEY\", \"nft7Zq2vRmX9kLp4\")",
+    "why": "O valor padrão põe uma chave de volta no arquivo."
+   },
+   {
+    "text": "os.environ[\"PAYMENT_API_KEY\"]",
+    "why": "Certo. Uma chave faltando para o serviço ao iniciar, em vez de rodar com uma chave no código."
+   },
+   {
+    "text": "Um valor em [payment] no settings.ini versionado",
+    "why": "É o vazamento com que esta aula começou."
+   },
+   {
+    "text": "O parâmetro ?key= de cada requisição",
+    "why": "Um endereço vai parar em logs e no histórico, como a aula 17 mostrou para tokens."
+   }
+  ]
+ },
+ "ex-x0dr1a4t": {
+  "prompt": "Um serviço que guarda segredos cifrados, entrega cada um à identidade autorizada e registra cada leitura é um ___ de segredos.",
+  "hint": "O Vault é um.",
+  "blanks": [
+   {
+    "accept": [
+     "gerenciador",
+     "gestor"
+    ]
+   }
+  ]
+ },
+ "ex-w0f5nbf6": {
+  "prompt": "O que o --staged faz o gitleaks ler no hook de pre-commit?",
+  "hint": "O hook roda antes de o commit existir.",
+  "choices": [
+   {
+    "text": "O histórico inteiro, desde o primeiro commit",
+    "why": "Essa é a varredura do pipeline; num hook ela seria lenta a cada commit."
+   },
+   {
+    "text": "Cada arquivo do diretório, os ignorados também",
+    "why": "Esse é o gitleaks dir."
+   },
+   {
+    "text": "As mudanças prestes a entrar no commit",
+    "why": "Certo. Só o que este commit acrescentaria."
+   },
+   {
+    "text": "O último commit enviado",
+    "why": "Um hook antes do commit não tem nada a ver com o último push."
+   }
+  ]
+ },
+ "ex-vk3qfkj4": {
+  "prompt": "A equipe instala o hook. Por que o pipeline ainda varre o histórico a cada push?",
+  "hint": "Onde o hook mora, e o que o pula?",
+  "choices": [
+   {
+    "text": "O hook lê menos regras que a varredura do histórico",
+    "why": "O mesmo gitleaks aplica as mesmas regras; ele lê menos entrada, não menos regras."
+   },
+   {
+    "text": "Uma varredura no pipeline é mais rápida que um hook",
+    "why": "Ela é mais lenta, lê cada commit; velocidade não é o motivo de existir."
+   },
+   {
+    "text": "Hooks rodam só no primeiro commit de um clone",
+    "why": "O hook rodou em cada commit no leaky, e recusou um."
+   },
+   {
+    "text": "Fica em .git e o --no-verify o pula",
+    "why": "Certo. O desvio pôs um segundo vazamento no histórico, e a varredura o pegou."
+   }
+  ]
+ },
+ "ex-hjxh3rwe": {
+  "prompt": "Por que o git reset --hard HEAD~1 bastou para tirar o commit feito com --no-verify?",
+  "hint": "Quem mais tinha aquele commit?",
+  "choices": [
+   {
+    "text": "A chave naquele commit estava ocultada",
+    "why": "O --redact esconde o valor na saída do gitleaks; o commit tinha o valor real."
+   },
+   {
+    "text": "Nunca foi enviado, então não havia cópia",
+    "why": "Certo. Depois do envio, o primeiro passo seria a troca da chave."
+   },
+   {
+    "text": "O reset também tira o commit de cada clone",
+    "why": "O reset muda só esta máquina."
+   },
+   {
+    "text": "O hook rodou de novo durante o reset",
+    "why": "Um hook de pre-commit roda antes de um commit, não num reset."
+   }
+  ]
+ },
+ "ex-t3ta5bt7": {
+  "prompt": "Uma chave real foi enviada ao repositório compartilhado. Ponha a resposta em ordem.",
+  "hint": "Torne a chave inútil antes de tudo.",
+  "items": [
+   "revogar a chave no provedor e emitir uma nova",
+   "implantar a chave nova",
+   "ler o log do provedor sobre usos da chave antiga",
+   "decidir se vai reescrever o histórico",
+   "registrar a impressão digital do achado, com o motivo"
+  ]
+ },
+ "ex-s0jpx8vq": {
+  "prompt": "A varredura do histórico no pipeline falha a cada push há um mês, por uma chave trocada no primeiro dia. O que a equipe deve fazer?",
+  "hint": "Aceite um achado, não a regra.",
+  "choices": [
+   {
+    "text": "Desligar a regra generic-api-key na varredura inteira",
+    "why": "Aí toda chave genérica nova passa também."
+   },
+   {
+    "text": "Marcar o job de varredura como autorizado a falhar no pipeline",
+    "why": "Um job que pode falhar relata algo que ninguém lê, vazamentos novos incluídos."
+   },
+   {
+    "text": "Listar a impressão digital no .gitleaksignore, com o motivo",
+    "why": "Certo. Um commit, um arquivo, uma regra e uma linha são aceitos; todo achado novo continua reprovando."
+   },
+   {
+    "text": "Trocar a mesma chave mais uma vez e enviar de novo",
+    "why": "A varredura lê o histórico, que a troca não muda."
+   }
+  ]
+ },
+ "ex-tkkqr7tv": {
+  "prompt": "Um serviço lê a chave de uma variável de ambiente. Quais destes podem levar a chave para fora dele? Escolha todos.",
+  "hint": "Siga as cópias, não o código.",
+  "choices": [
+   {
+    "text": "Um script auxiliar que o serviço inicia",
+    "why": "Certo. Um processo filho herda o ambiente inteiro."
+   },
+   {
+    "text": "Uma página de depuração que lista o ambiente",
+    "why": "Certo. Ela imprime o valor para quem a abrir."
+   },
+   {
+    "text": "A linha os.environ[\"PAYMENT_API_KEY\"] no código-fonte versionado no repositório",
+    "why": "O código guarda o nome, não o valor."
+   },
+   {
+    "text": "Um rastreador de erros que captura o ambiente a cada exceção",
+    "why": "Certo. O valor viaja com cada relatório."
+   },
+   {
+    "text": "Outro usuário da máquina, sem privilégio, lendo /proc/<pid>/environ",
+    "why": "O nobody recebeu Permission denied."
+   }
+  ]
+ },
+ "ex-2mx27233": {
+  "prompt": "Para conferir que um job de CI recebeu a senha do banco, um colega acrescenta echo \"$DB_PASSWORD\" a ele. O que está errado?",
+  "hint": "Onde a saída de um job vai parar?",
+  "choices": [
+   {
+    "text": "O echo tira os caracteres especiais do valor",
+    "why": "Seja o que for que imprima, imprime o segredo num log."
+   },
+   {
+    "text": "Variáveis de CI não podem ser lidas dentro de um job",
+    "why": "O job precisa lê-la para usá-la."
+   },
+   {
+    "text": "Ele grava o segredo em claro no log que fica do job",
+    "why": "Certo. Mostre que está definida, o comprimento por exemplo, e nunca o valor."
+   },
+   {
+    "text": "O job o vaza para o gitleaks, que guarda uma cópia",
+    "why": "O gitleaks não guarda nada; o log é o vazamento."
+   }
+  ]
+ }
+}

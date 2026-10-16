@@ -127,6 +127,7 @@ var terminalGlyphs = func() string {
 		}
 	}
 	b.WriteString("←↑→↓↔↕↖↗↘↙↩↪↰↱↲↳↶↷↺↻⇄⇆")
+	b.WriteString("✓") // the mark k6 prints beside every check and threshold that passed
 	return b.String()
 }()
 
