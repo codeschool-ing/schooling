@@ -3,7 +3,8 @@ title: Synchronous replication as a fence
 version: 1
 ---
 
-The last row of the table needs no extra machinery, and the cluster from this lesson can show it.
+The last row of the table needs no extra machinery, and the cluster from this lesson can show it,
+once a switchover with lesson 16's one command has made `pg1` the leader again.
 Patroni's `synchronous_mode` manages lesson 12's `synchronous_standby_names` for you: it picks one
 replica as the **synchronous standby**, and the leader waits for it on every commit.
 
