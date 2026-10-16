@@ -4,8 +4,7 @@ version: 1
 ---
 
 **`groupby` splits a table into groups by the values of a column, applies a calculation to each group,
-and combines the answers into one result.** It is the single most used operation in pandas, because
-nearly every question about data is "this number, per that": trips per station, minutes per plan,
+and combines the answers into one result.** It is the operation this course reaches for most, because nearly every question about data is "this number, per that": trips per station, minutes per plan,
 rain per month.
 
 The notebook for this lesson prepares the trips once, with the types lesson 12 gave them:

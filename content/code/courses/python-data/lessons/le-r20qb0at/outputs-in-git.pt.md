@@ -50,9 +50,8 @@ index 3c7af00..0b0d677 100644
 ```
 
 Duas linhas mudaram e as duas são contadores de execução, `3` virando `5`. **Nada na análise
-mudou, e o histórico tem uma mudança.** Multiplique isso por um notebook com vinte células, um ou
-dois DataFrames e um gráfico, que é guardado como uma longa string de imagem codificada que muda a
-cada execução, e o diff de um trabalho de verdade vira uma página de ruído com uma linha
+mudou, e o histórico tem uma mudança.** Multiplique isso por um notebook com vinte células, um ou dois DataFrames e um gráfico. O gráfico é
+guardado como uma longa string de imagem codificada que muda a cada execução, e o diff de um trabalho de verdade vira uma página de ruído com uma linha
 significativa em algum lugar.
 
 ## Limpando as saídas antes de um commit

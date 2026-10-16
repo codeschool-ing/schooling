@@ -69,7 +69,7 @@ bikes.label(20)
 
 `importlib.reload` lê o arquivo de novo. Reiniciar o kernel faz o mesmo para todos os módulos de
 uma vez. O IPython também tem uma extensão que recarrega módulos editados antes de cada célula,
-ligada com duas linhas, `%load_ext autoreload` e `%autoreload 2`; ela é cômoda enquanto um módulo
+ligada com duas linhas, `%load_ext autoreload` e `%autoreload 2`. Ela é cômoda enquanto um módulo
 muda a cada poucos minutos, e é também mais uma coisa que difere entre a sua sessão e a execução do
 notebook por outra pessoa.
 

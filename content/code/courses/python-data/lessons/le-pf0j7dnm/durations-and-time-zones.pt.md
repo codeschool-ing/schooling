@@ -56,8 +56,7 @@ local.iloc[0], local.dt.tz_convert("UTC").iloc[0]
 `tz_localize` declara em que fuso estava um horário ingênuo; `tz_convert` expressa o mesmo momento
 em outro fuso. O momento não muda, só o relógio em que é lido. O Recife não tem horário de verão desde
 2000, então o deslocamento dele é um `-03:00` fixo; São Paulo teve horário de verão até 2019, e um
-horário ingênuo ali pode ser ambíguo ou nem existir na noite em que os relógios mudaram, o que é o
-melhor motivo para guardar horários em UTC e convertê-los só para mostrar.
+horário ingênuo ali pode ser ambíguo ou nem existir na noite em que os relógios mudaram. Esse é o melhor motivo para guardar horários em UTC e convertê-los só para mostrar.
 
 **Nunca compare uma coluna ingênua com uma com fuso**: o pandas recusa, e a recusa está certa, porque
 ele não tem como saber que fuso a ingênua queria dizer.

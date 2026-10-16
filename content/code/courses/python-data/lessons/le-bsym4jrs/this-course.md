@@ -4,10 +4,10 @@ version: 1
 ---
 
 **This is the scientific stack on top of Python, and not Python again.** The `python` course
-taught the language: its types, functions, modules and files. This one assumes all of that and
-adds the four tools that turn the language into something you can analyse data with — a notebook
-to work in, **NumPy** for arrays, **pandas** for tables, and **matplotlib** with **seaborn** for
-charts — plus the habits that make the work survive being handed to somebody else.
+taught the language: its types, functions, modules and files. This one assumes all of that and adds the four tools that turn the language into something you can
+analyse data with: a notebook to work in, **NumPy** for arrays, **pandas** for tables, and
+**matplotlib** with **seaborn** for charts. It adds the habits that make the work survive being
+handed to somebody else, too.
 
 It runs in this order:
 

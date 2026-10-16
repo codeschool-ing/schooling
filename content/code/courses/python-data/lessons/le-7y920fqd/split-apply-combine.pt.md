@@ -4,7 +4,7 @@ version: 1
 ---
 
 **O `groupby` divide uma tabela em grupos pelos valores de uma coluna, aplica um cálculo a cada
-grupo e combina as respostas num único resultado.** É a operação mais usada do pandas, porque quase
+grupo e combina as respostas num único resultado.** É a operação a que este curso mais recorre, porque quase
 toda pergunta sobre dados é "este número, por aquilo": viagens por estação, minutos por plano, chuva
 por mês.
 

@@ -55,9 +55,8 @@ local.iloc[0], local.dt.tz_convert("UTC").iloc[0]
 
 `tz_localize` states which zone a naive time was in; `tz_convert` expresses the same moment in another
 zone. The moment does not change, only the clock it is read on. Recife has had no daylight saving
-since 2000, so its offset is a fixed `-03:00`; São Paulo had daylight saving until 2019, and a
-naive time there can be ambiguous or not exist at all on the night the clocks changed, which is the
-best reason to keep times in UTC and convert only to display them.
+since 2000, so its offset is a fixed `-03:00`; São Paulo had daylight saving until 2019, and a naive time there can be ambiguous or not exist at all on
+the night the clocks changed. That is the best reason to keep times in UTC and convert only to display them.
 
 **Never compare a naive column with an aware one**: pandas refuses, and the refusal is right, because
 it cannot know which zone the naive one meant.

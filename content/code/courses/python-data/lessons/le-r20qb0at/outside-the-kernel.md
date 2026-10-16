@@ -70,8 +70,8 @@ bikes.label(20)
 
 `importlib.reload` reads the file again. Restarting the kernel does the same for every module at
 once. IPython also has an extension that reloads edited modules before each cell, turned on with
-two lines, `%load_ext autoreload` and `%autoreload 2`; it is convenient while a module is changing
-every few minutes, and it is also one more thing that differs between your session and somebody
+two lines, `%load_ext autoreload` and `%autoreload 2`. It is convenient while a module is changing every few
+minutes, and it is also one more thing that differs between your session and somebody
 else's run of the notebook.
 
 ## A file that changes underneath

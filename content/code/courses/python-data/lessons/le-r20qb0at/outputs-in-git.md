@@ -49,10 +49,9 @@ index 3c7af00..0b0d677 100644
 ```
 
 Two lines changed and both are execution counts, `3` becoming `5`. **Nothing about the analysis
-changed, and the history has a change in it.** Multiply that by a notebook with twenty cells, a
-DataFrame or two and a chart, which is stored as a long string of encoded image that changes on
-every run, and a diff of real work becomes a page of noise with one meaningful line somewhere in
-it.
+changed, and the history has a change in it.** Multiply that by a notebook with twenty cells, a DataFrame or two and a chart. The chart is stored as
+a long string of encoded image that changes on every run, and a diff of real work becomes a page of
+noise with one meaningful line somewhere in it.
 
 ## Clearing outputs before a commit
 
