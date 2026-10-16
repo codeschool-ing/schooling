@@ -1,0 +1,634 @@
+[
+  {
+    "id": "ex-w6wwh4rs",
+    "version": 1,
+    "section": "stale-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the replica cut off from the network, the primary set `stock:MN-330` to 0. What did `GET stock:MN-330` on the replica answer?",
+    "choices": [
+      {
+        "text": "An error, because the replica knows it lost its primary",
+        "correct": false,
+        "why": "It knows (`master_link_status:down`) and answers anyway, because `replica-serve-stale-data` is `yes`."
+      },
+      {
+        "text": "The old value, 1",
+        "correct": true,
+        "why": "Right. A stale read, with no sign in the answer that it is stale."
+      },
+      {
+        "text": "The new value, 0, fetched from the primary on demand",
+        "correct": false,
+        "why": "A replica never forwards a read; and it could not reach the primary anyway."
+      },
+      {
+        "text": "Nothing, because the key was removed when the link went down",
+        "correct": false,
+        "why": "The replica keeps its data; it only stops receiving changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg4efkrj",
+    "version": 1,
+    "section": "stale-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which setting decides whether a Redis replica that has lost its primary answers reads at all?",
+    "choices": [
+      {
+        "text": "`replica-read-only`",
+        "correct": false,
+        "why": "That one refuses writes on the replica, not stale reads."
+      },
+      {
+        "text": "`replica-serve-stale-data`",
+        "correct": true,
+        "why": "Right. Set to `no`, the replica answers most commands with an error while the link is down."
+      },
+      {
+        "text": "`replica-ignore-maxmemory`",
+        "correct": false,
+        "why": "That one is about memory limits on a replica, lesson 14's territory."
+      },
+      {
+        "text": "`appendonly`",
+        "correct": false,
+        "why": "That is persistence, lesson 13."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwnkyapb",
+    "version": 1,
+    "section": "stale-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `docker network connect`, the replica answered 0 a few seconds later. What does that show?",
+    "choices": [
+      {
+        "text": "That the replica was consistent all along",
+        "correct": false,
+        "why": "It answered 1 while the link was down; it was not."
+      },
+      {
+        "text": "That copies agree again once they reconnect",
+        "correct": true,
+        "why": "Right. Eventual consistency promises the agreement, not when."
+      },
+      {
+        "text": "That the primary resent only the last write",
+        "correct": false,
+        "why": "How it resynchronised is lesson 15; the point here is the outcome."
+      },
+      {
+        "text": "That reads from a replica are always safe after a reconnect",
+        "correct": false,
+        "why": "The next partition opens the same window again."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwwwawbs",
+    "version": 1,
+    "section": "anomalies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana saves a new address and the reloaded page shows the old one. Which anomaly is it?",
+    "choices": [
+      {
+        "text": "Lost update",
+        "correct": false,
+        "why": "Nothing was overwritten; the new address is on the primary."
+      },
+      {
+        "text": "Read your writes",
+        "correct": true,
+        "why": "Right: her read reached a copy her write had not reached yet."
+      },
+      {
+        "text": "Monotonic reads",
+        "correct": false,
+        "why": "That needs two reads going backwards; here one read missed her own write."
+      },
+      {
+        "text": "A network partition between the copies",
+        "correct": false,
+        "why": "No network failed; ordinary replication lag is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-7nr2bg9w",
+    "version": 1,
+    "section": "anomalies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each anomaly to what a user sees.",
+    "hint": "One sight belongs to none of them.",
+    "pairs": [
+      {
+        "left": "read your writes",
+        "right": "I saved it and the page still shows the old value"
+      },
+      {
+        "left": "monotonic reads",
+        "right": "the order said shipped, then said paid again"
+      },
+      {
+        "left": "lost update",
+        "right": "two sales, and the stock went down by one"
+      }
+    ],
+    "right_distractors": [
+      "the page fails with an error"
+    ]
+  },
+  {
+    "id": "ex-faya5mds",
+    "version": 1,
+    "section": "anomalies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs MongoDB on a single server with no replicas, so they say the anomalies of this lesson cannot happen to them. Which one still can?",
+    "choices": [
+      {
+        "text": "None, since there is only one copy",
+        "correct": false,
+        "why": "One copy does not stop two clients reading, deciding and writing back."
+      },
+      {
+        "text": "Read your writes",
+        "correct": false,
+        "why": "With one copy every read sees the last write."
+      },
+      {
+        "text": "Monotonic reads",
+        "correct": false,
+        "why": "There is no second copy to be further behind."
+      },
+      {
+        "text": "Lost update",
+        "correct": true,
+        "why": "Right. It needs concurrency, not replicas."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy1sxwmc",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the simplest fix for read-your-writes?",
+    "choices": [
+      {
+        "text": "Read from the primary after that user writes",
+        "correct": true,
+        "why": "Right. Everyone else may keep reading from replicas."
+      },
+      {
+        "text": "Turn replication off",
+        "correct": false,
+        "why": "That throws away what the replicas were for."
+      },
+      {
+        "text": "Retry the read until the value changes",
+        "correct": false,
+        "why": "The client cannot tell an old value from a value nobody changed."
+      },
+      {
+        "text": "Cache the page in the browser",
+        "correct": false,
+        "why": "A cache serves an old copy; it is a source of the anomaly, not a fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rbrmwaj",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The retry of the payment with `_id: \"pay-1001-a7f3\"` failed with `E11000 duplicate key error`. How should the application treat that?",
+    "choices": [
+      {
+        "text": "As a failure to charge, and try again with a new id",
+        "correct": false,
+        "why": "A new id would make the retry a second payment."
+      },
+      {
+        "text": "As a sign the database is corrupt",
+        "correct": false,
+        "why": "The unique `_id` did exactly its job."
+      },
+      {
+        "text": "As \"already done\": the first attempt had landed",
+        "correct": true,
+        "why": "Right. Here the duplicate-key error is the success case."
+      },
+      {
+        "text": "As a reason to delete the first payment",
+        "correct": false,
+        "why": "The first payment is the real one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcwx90ax",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `updateOne` with `version: 1` answered `matchedCount: 0`. What must the application do next?",
+    "choices": [
+      {
+        "text": "Nothing: the update succeeded quietly",
+        "correct": false,
+        "why": "Nothing was changed; ignoring the zero is the lost update again."
+      },
+      {
+        "text": "Read again and decide afresh",
+        "correct": true,
+        "why": "Right: here it finds the monitor sold out."
+      },
+      {
+        "text": "Send the same update without the version in the filter",
+        "correct": false,
+        "why": "That sells the monitor twice, the exact bug being prevented."
+      },
+      {
+        "text": "Wait for replication and send it again unchanged",
+        "correct": false,
+        "why": "Version 1 is gone for good; the same filter will never match."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4m5dx7n",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a write with optimistic concurrency in order.",
+    "items": [
+      "Read the document and note its version",
+      "Decide the new value in the application",
+      "Update with the old version in the filter, incrementing it",
+      "Check matchedCount, and start again if it is 0"
+    ]
+  },
+  {
+    "id": "ex-8wdzwp9p",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Detecting a conflict at write time with a version number, instead of locking at read time, is called ___ concurrency.",
+    "hint": "Nobody locks; everybody hopes.",
+    "blanks": [
+      {
+        "accept": [
+          "optimistic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-710y7t8p",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does Cassandra decide between two writes to the same cell?",
+    "choices": [
+      {
+        "text": "The write that reached the node last wins",
+        "correct": false,
+        "why": "Arrival order does not decide; the 179.00 arrived last and lost."
+      },
+      {
+        "text": "The cell with the higher timestamp wins",
+        "correct": true,
+        "why": "Right, whatever clock produced the timestamp."
+      },
+      {
+        "text": "The coordinator asks the client which one to keep",
+        "correct": false,
+        "why": "There is no conversation; the rule needs no coordination."
+      },
+      {
+        "text": "It refuses the second write with a conflict error",
+        "correct": false,
+        "why": "Both were accepted without a word."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwynhp01",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An update was sent with `USING TIMESTAMP 1789000000000000`, older than the cell's. What did the client see, and what was stored?",
+    "choices": [
+      {
+        "text": "An error, and nothing changed",
+        "correct": false,
+        "why": "No error came back; that is what makes it dangerous."
+      },
+      {
+        "text": "Success, and the new price 179.00",
+        "correct": false,
+        "why": "The `SELECT` afterwards still showed 189.00."
+      },
+      {
+        "text": "A warning, and both prices kept",
+        "correct": false,
+        "why": "A cell holds one value; the older one is discarded."
+      },
+      {
+        "text": "Success, and 189.00 kept",
+        "correct": true,
+        "why": "Right: the write lost silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-2939gaw4",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One application server's clock runs a minute ahead. What happens to the products it updates?",
+    "choices": [
+      {
+        "text": "Its writes lose to everybody else's for a minute",
+        "correct": false,
+        "why": "That is a clock that is behind."
+      },
+      {
+        "text": "Nothing, since Cassandra uses the node's clock",
+        "correct": false,
+        "why": "Drivers assign timestamps from the client's clock, as cqlsh did here."
+      },
+      {
+        "text": "Others' corrections in that minute lose to its writes",
+        "correct": true,
+        "why": "Right, as the 199.00 lost to the future-stamped 159.00."
+      },
+      {
+        "text": "Cassandra rejects timestamps from the future",
+        "correct": false,
+        "why": "It accepted one from late 2027."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m7cbbbk",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A node's clock is 2 seconds behind. By how many microseconds are its write timestamps too low?",
+    "hint": "WRITETIME counts microseconds.",
+    "value": 2000000,
+    "tolerance": 0,
+    "unit": "µs"
+  },
+  {
+    "id": "ex-z9zyf4bz",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which data is last-write-wins a safe rule? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A customer's last-seen time",
+        "correct": true,
+        "why": "Right: a newer value simply replaces an older one."
+      },
+      {
+        "text": "A stock count two checkouts decrement",
+        "correct": false,
+        "why": "Read-modify-write on a shared cell is the lost update, with the clock choosing the loser."
+      },
+      {
+        "text": "A profile field only its owner edits",
+        "correct": true,
+        "why": "Right: one writer, nothing computed from the old value."
+      },
+      {
+        "text": "An account balance",
+        "correct": false,
+        "why": "Every change depends on the value before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9znrdr7b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support agent says: \"the customer changed their phone number, it showed the old one, and a minute later the new one\". Which anomaly is it, and which fix fits?",
+    "choices": [
+      {
+        "text": "Lost update; add a version number",
+        "correct": false,
+        "why": "Nothing was lost: the new number appeared a minute later."
+      },
+      {
+        "text": "Read your writes; read from the primary",
+        "correct": true,
+        "why": "Right. The write landed; the read came from a copy behind it."
+      },
+      {
+        "text": "Clock skew; synchronise the clocks with NTP",
+        "correct": false,
+        "why": "Skew makes a value lose for good, not appear late."
+      },
+      {
+        "text": "A partition; wait for the network",
+        "correct": false,
+        "why": "Ordinary replication lag produces this without any failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-pt6ad3jp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these needs no replica at all to go wrong?",
+    "choices": [
+      {
+        "text": "A page that reads its own write from a secondary",
+        "correct": false,
+        "why": "That needs a secondary behind the primary."
+      },
+      {
+        "text": "Two checkouts reading stock 1 and both writing 0",
+        "correct": true,
+        "why": "Right: the lost update needs only concurrency."
+      },
+      {
+        "text": "A replica answering with the old value after a disconnect",
+        "correct": false,
+        "why": "That is a replica, by definition."
+      },
+      {
+        "text": "Two reads from two replicas going back in time",
+        "correct": false,
+        "why": "Two replicas, by definition."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8cn33g8",
+    "version": 1,
+    "section": "stale-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Right after `docker network disconnect`, the replica's `INFO` still said `master_link_status:up`. Why?",
+    "choices": [
+      {
+        "text": "Because the disconnect had not taken effect yet",
+        "correct": false,
+        "why": "It had: the replica already missed the write of 0."
+      },
+      {
+        "text": "The replica notices silence only after `repl-timeout`",
+        "correct": true,
+        "why": "Right. Silence is not an error until the timeout says so."
+      },
+      {
+        "text": "Because `INFO` is answered by the primary",
+        "correct": false,
+        "why": "The command ran on the replica, which could not reach the primary."
+      },
+      {
+        "text": "Because Docker keeps the old connection open",
+        "correct": false,
+        "why": "The connection is gone; the replica simply has not heard nothing for long enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p19wc3n",
+    "version": 1,
+    "section": "anomalies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer refreshes an order page twice: first it says \"shipped\", then \"paid\". Which anomaly is it?",
+    "choices": [
+      {
+        "text": "Monotonic reads",
+        "correct": true,
+        "why": "Right: two reads hit replicas behind by different amounts. Each answer is legitimate; the sequence goes backwards."
+      },
+      {
+        "text": "Lost update",
+        "correct": false,
+        "why": "Nothing was overwritten; the status is \"shipped\" on the primary."
+      },
+      {
+        "text": "Read your writes",
+        "correct": false,
+        "why": "The customer did not write anything."
+      },
+      {
+        "text": "Clock skew",
+        "correct": false,
+        "why": "No timestamps decided anything here."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2g08jm2",
+    "version": 1,
+    "section": "what-the-app-does",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment service lets MongoDB generate an `ObjectId` for each insert, and retries on timeout. What goes wrong?",
+    "choices": [
+      {
+        "text": "Nothing: the retry fails with a duplicate-key error",
+        "correct": false,
+        "why": "Each attempt gets a fresh id, so nothing is duplicated as far as the index knows."
+      },
+      {
+        "text": "A payment that had landed is charged twice",
+        "correct": true,
+        "why": "Right. The id has to exist before the first attempt."
+      },
+      {
+        "text": "The retry waits until the first insert is visible",
+        "correct": false,
+        "why": "Nothing links the two attempts."
+      },
+      {
+        "text": "MongoDB rejects inserts after a timeout",
+        "correct": false,
+        "why": "It accepts both."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hgvf454",
+    "version": 1,
+    "section": "last-write-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which defence does the section give against clock skew deciding a stock count?",
+    "choices": [
+      {
+        "text": "NTP, and no read-modify-write on a shared cell",
+        "correct": true,
+        "why": "Right: or pay for a lightweight transaction where the write must be conditional."
+      },
+      {
+        "text": "Raise the replication factor so more copies vote",
+        "correct": false,
+        "why": "More copies change nothing about which timestamp wins."
+      },
+      {
+        "text": "Write every update twice",
+        "correct": false,
+        "why": "The second write carries the same skewed clock."
+      },
+      {
+        "text": "Read at consistency `ALL` so every replica is asked",
+        "correct": false,
+        "why": "Every replica holds the same winning cell; the read cannot recover the loser."
+      }
+    ]
+  }
+]
