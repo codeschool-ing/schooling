@@ -1,0 +1,352 @@
+{
+  "ex-andn04n6": {
+    "prompt": "Por que os `rows` estimado e real de um nó são o par mais útil de um plano?",
+    "hint": "Para que as escolhas do planejador foram feitas?",
+    "choices": [
+      {
+        "text": "Toda escolha foi feita para a estimativa",
+        "why": "Isso: scan, join e memória foram planejados para as linhas estimadas."
+      },
+      {
+        "text": "Porque as linhas reais decidem quanto a consulta é cobrada",
+        "why": "Nada é cobrado por linha; o ponto é para o que o plano foi feito."
+      },
+      {
+        "text": "Porque a estimativa fica sempre dentro de 10% quando o plano é bom",
+        "why": "Um plano pode estar bem com razão dois; o par diz onde olhar."
+      },
+      {
+        "text": "Porque o EXPLAIN sem ANALYZE só imprime esses dois",
+        "why": "Sem ANALYZE não há contagem real nenhuma."
+      }
+    ]
+  },
+  "ex-zfr45ywd": {
+    "prompt": "No join de Curitiba, o Nested Loop mostrou 9380 estimadas contra 135.717 reais. Por que ele não é o nó a consertar?",
+    "hint": "Leia de baixo para cima.",
+    "choices": [
+      {
+        "text": "Porque nested loops nunca erram estimativa",
+        "why": "Ele mostrou razão de 14,5; a pergunta é de onde ela veio."
+      },
+      {
+        "text": "O scan de baixo já errava 14,5 vezes, sozinho",
+        "why": "Isso: o join só multiplicou linhas erradas por dez pedidos cada."
+      },
+      {
+        "text": "Porque a estimativa do próprio join estava dentro de 10%",
+        "why": "9380 contra 135.717 está muito fora de 10%."
+      },
+      {
+        "text": "Porque faltava o índice em orders.customer_id",
+        "why": "O plano usou o orders_customer_id_idx."
+      }
+    ]
+  },
+  "ex-7jtp34yz": {
+    "prompt": "Um nó com `loops=13578` mostra `rows=11` estimadas e `rows=10` reais. O que você conclui?",
+    "hint": "Os dois números são por loop.",
+    "choices": [
+      {
+        "text": "Este nó erra 1357 vezes",
+        "why": "Os dois números são por loop, então se comparam direto: 11 contra 10."
+      },
+      {
+        "text": "A estimativa por loop está certa; o problema é o número de loops",
+        "why": "Isso: rodou 13.578 vezes porque o nó de baixo errou as suas linhas."
+      },
+      {
+        "text": "O nó devolveu 10 linhas no total",
+        "why": "10 por loop em 13.578 loops dá uns 135.000."
+      },
+      {
+        "text": "O planejador esqueceu de multiplicar pelos loops",
+        "why": "Números por loop são como o EXPLAIN os imprime; nada foi esquecido."
+      }
+    ]
+  },
+  "ex-zy38jmx6": {
+    "prompt": "Seq Scan on customers: 938 estimadas, 13.578 reais. Qual a razão entre real e estimado, com uma casa decimal?",
+    "hint": "Divida o real pelo estimado.",
+    "unit": "vezes"
+  },
+  "ex-20t87mbn": {
+    "prompt": "Que coluna do `pg_stat_user_tables` diz a idade das estatísticas de uma tabela, em linhas?",
+    "hint": "Era 300000 depois da importação.",
+    "choices": [
+      {
+        "text": "n_live_tup",
+        "why": "Isso conta linhas vivas, não mudanças desde o ANALYZE."
+      },
+      {
+        "text": "last_autoanalyze",
+        "why": "Isso é um horário, e estava vazio."
+      },
+      {
+        "text": "n_mod_since_analyze",
+        "why": "Isso: linhas inseridas, atualizadas ou apagadas desde o último ANALYZE."
+      },
+      {
+        "text": "reltuples",
+        "why": "reltuples fica no pg_class e é a contagem que o ANALYZE anotou."
+      }
+    ]
+  },
+  "ex-xw2fxb1t": {
+    "prompt": "Depois da importação o planejador estimou 7590 pedidos pendentes, e não 6600. De onde veio o número maior?",
+    "hint": "reltuples dizia 2.000.000, mas a tabela tinha 19.167 páginas.",
+    "choices": [
+      {
+        "text": "O autoanalyze rodou no meio da importação",
+        "why": "Ele estava desligado, e last_autoanalyze estava vazio."
+      },
+      {
+        "text": "A fração de pending foi amostrada de novo",
+        "why": "A fração continuou 0,0033; nada a amostrou de novo."
+      },
+      {
+        "text": "As linhas novas foram contadas na hora do insert",
+        "why": "O planejador não conta linhas; ele escala pelas páginas."
+      },
+      {
+        "text": "Linhas escaladas pelo tamanho real, em páginas",
+        "why": "Isso: 2,3 milhões de linhas vezes o velho 0,0033."
+      }
+    ]
+  },
+  "ex-ewjswt6w": {
+    "prompt": "Uma tarefa noturna carrega um dia de leituras numa tabela de 500 milhões de linhas e depois roda um relatório sobre esse dia. O relatório fica lento em algumas noites. Para onde esta aula aponta primeiro?",
+    "hint": "Quando foi tirada a última fotografia?",
+    "choices": [
+      {
+        "text": "Criar um índice no valor da leitura",
+        "why": "Nada diz que falta índice; o plano pode ter sido feito para os dados de ontem."
+      },
+      {
+        "text": "Rodar ANALYZE logo depois da carga",
+        "why": "Isso: com 0,1 a tabela espera 50 milhões de mudanças antes do autoanalyze."
+      },
+      {
+        "text": "Desligar o autovacuum da tabela durante a carga",
+        "why": "Isso é o que mantém as estatísticas velhas; a aula só fez isso para observar a janela."
+      },
+      {
+        "text": "Subir o default_statistics_target do servidor inteiro",
+        "why": "Uma amostra maior tirada ontem continua sem as linhas de hoje."
+      }
+    ]
+  },
+  "ex-pqrem6zy": {
+    "prompt": "No plano velho, por que o Sort transbordou 7216 kB para o disco?",
+    "hint": "Para o que ele foi planejado?",
+    "choices": [
+      {
+        "text": "Ordenar texto sempre usa o disco",
+        "why": "Antes da importação a mesma ordenação rodou em 493 kB de memória."
+      },
+      {
+        "text": "Foi planejado para 7590 linhas e recebeu 307.319",
+        "why": "Isso: a memória planejada para uma estimativa é gasta com o real."
+      },
+      {
+        "text": "O disco estava mais rápido que a memória naquele momento",
+        "why": "O disco nunca é escolhido por velocidade; é para onde vai uma ordenação quando a memória acaba."
+      },
+      {
+        "text": "O work_mem tinha sido reduzido pela importação",
+        "why": "Um INSERT não muda configurações."
+      }
+    ]
+  },
+  "ex-awt9wh8r": {
+    "prompt": "Por que o plano velho chegou a `sellers` por um Nested Loop com Memoize?",
+    "hint": "Quantas buscas o planejador esperava?",
+    "choices": [
+      {
+        "text": "Porque sellers não tem chave primária",
+        "why": "Ele usou a sellers_pkey."
+      },
+      {
+        "text": "Porque o Memoize é sempre usado para tabelas pequenas",
+        "why": "Depois do ANALYZE a mesma tabela pequena virou hash."
+      },
+      {
+        "text": "Esperava só sete mil buscas baratas, com cache",
+        "why": "Isso: depois rodou 307.319 vezes."
+      },
+      {
+        "text": "Porque o hash join em customers usou toda a memória",
+        "why": "A memória é planejada por nó; a escolha veio da estimativa de linhas."
+      }
+    ]
+  },
+  "ex-3j0k0f7k": {
+    "prompt": "A consulta de operações levou 663 ms com estatísticas velhas e 464 ms depois do ANALYZE. Cerca de quantos por cento mais rápida ficou depois?",
+    "hint": "(663 − 464) ÷ 663.",
+    "unit": "%"
+  },
+  "ex-jav1x7fs": {
+    "prompt": "Ordene os nós do plano velho de onde o erro começou até onde terminou, seguindo as linhas para cima.",
+    "hint": "As linhas correm de baixo para cima.",
+    "items": [
+      "Seq Scan on orders",
+      "Hash Join com customers",
+      "Nested Loop com Memoize em sellers",
+      "Sort, external merge",
+      "GroupAggregate"
+    ],
+    "trap": "O scan é onde o número errado começa."
+  },
+  "ex-n78jm6d1": {
+    "prompt": "Um plano mostra um Hash Join no topo com razão 50, um Nested Loop abaixo com razão 50, e um Index Scan embaixo com razão 1. Onde você deve olhar?",
+    "hint": "Ache o nó mais baixo onde os dois se separam.",
+    "choices": [
+      {
+        "text": "No Hash Join, já que é o nó mais lento",
+        "why": "O tempo inclui os filhos; o topo é onde os erros chegam, não onde começam."
+      },
+      {
+        "text": "No Index Scan, já que está embaixo",
+        "why": "A razão dele é 1: a estimativa estava certa."
+      },
+      {
+        "text": "No Nested Loop, o primeiro a discordar",
+        "why": "Isso: a estimativa do próprio join, muitas vezes a seletividade dele, é onde o erro começa."
+      },
+      {
+        "text": "Em lugar nenhum: razão 50 é normal em joins",
+        "why": "Cinquenta quer dizer que o plano foi feito para outra quantidade de dados."
+      }
+    ]
+  },
+  "ex-szaht7ec": {
+    "prompt": "Com as configurações padrão, quantas linhas o ANALYZE põe na amostra de `events`, uma tabela de cinco milhões de linhas?",
+    "hint": "300 × default_statistics_target.",
+    "choices": [
+      {
+        "text": "Os cinco milhões",
+        "why": "Ele leu 30000 de 65432 páginas e amostrou 30.000 linhas."
+      },
+      {
+        "text": "Um por cento, 50.000",
+        "why": "O tamanho da amostra não depende do tamanho da tabela."
+      },
+      {
+        "text": "30.000",
+        "why": "Isso: o mesmo que para orders, e para qualquer tabela maior que isso."
+      },
+      {
+        "text": "100, o alvo de estatísticas",
+        "why": "O alvo é multiplicado por 300 para dar a amostra."
+      }
+    ]
+  },
+  "ex-t9q855np": {
+    "prompt": "`ANALYZE VERBOSE events` relatou `2292530 live rows` nas páginas que leu e `5000161 estimated total rows`. Para onde vai o segundo número?",
+    "hint": "O planejador parte dele em todo plano.",
+    "choices": [
+      {
+        "text": "Para o pg_class.reltuples",
+        "why": "Isso: a contagem de linhas da qual toda estimativa é escalada."
+      },
+      {
+        "text": "Só para o pg_stat_user_tables.n_live_tup, para monitoramento",
+        "why": "O planejador o usa, por meio do reltuples."
+      },
+      {
+        "text": "Para lugar nenhum; é impresso e descartado",
+        "why": "Ele é guardado no catálogo."
+      },
+      {
+        "text": "Para o most_common_freqs de cada coluna",
+        "why": "Frequências são frações; o total é guardado uma vez para a tabela."
+      }
+    ]
+  },
+  "ex-cyfya7sz": {
+    "prompt": "Com `autovacuum_analyze_threshold` 50 e `autovacuum_analyze_scale_factor` 0.1, quantas linhas mudadas uma tabela com `reltuples` de 2.000.000 precisa antes do autoanalyze rodar?",
+    "hint": "limite + fator de escala × linhas.",
+    "unit": "linhas"
+  },
+  "ex-tav3982x": {
+    "prompt": "O autovacuum analisa de novo uma tabela quando as linhas mudadas desde o último ANALYZE passam de um limite mais o fator de ___ vezes as linhas da tabela.",
+    "hint": "0.1 por padrão; o ALTER TABLE pode baixá-lo por tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "escala",
+          "scale"
+        ]
+      }
+    ]
+  },
+  "ex-qt8x0sw9": {
+    "prompt": "Ligue cada linha ao que ela diz sobre as estatísticas.",
+    "hint": "Todas das transcrições desta aula.",
+    "pairs": [
+      {
+        "left": "`n_mod_since_analyze | 300000`",
+        "right": "as estatísticas são anteriores a 300.000 mudanças"
+      },
+      {
+        "left": "`rows=7590 … rows=307319`",
+        "right": "a estimativa deste nó está 40 vezes baixa"
+      },
+      {
+        "left": "`30000 rows in sample`",
+        "right": "o ANALYZE leu uma amostra, não a tabela"
+      },
+      {
+        "left": "`Sort Method: external merge  Disk: 7216kB`",
+        "right": "a memória foi planejada para menos linhas"
+      }
+    ],
+    "right_distractors": [
+      "falta o índice"
+    ]
+  },
+  "ex-jc6syv96": {
+    "prompt": "Quais destas podem deixar as estatísticas de uma tabela descrevendo dados que ela não tem mais? Marque todas as que se aplicam.",
+    "hint": "A fotografia é tirada pelo ANALYZE.",
+    "choices": [
+      {
+        "text": "Uma carga grande consultada antes do autoanalyze rodar",
+        "why": "Certo: a janela que a seção 05 descreveu."
+      },
+      {
+        "text": "autovacuum_enabled = off na tabela",
+        "why": "Certo: aí só um ANALYZE manual a renova."
+      },
+      {
+        "text": "Uma tabela enorme mudando abaixo do seu fator de 10%",
+        "why": "Certo: um status raro que virou comum pode ficar abaixo do limite."
+      },
+      {
+        "text": "Rodar ANALYZE logo depois de uma carga",
+        "why": "Isso é o conserto, não uma causa."
+      }
+    ]
+  },
+  "ex-4sqvymcs": {
+    "prompt": "Estatísticas frescas, e ainda assim um scan estimado em 900 linhas devolve 14.000. O ANALYZE não muda nada. Qual o próximo passo da aula?",
+    "hint": "Duas causas de estimativa errada foram citadas.",
+    "choices": [
+      {
+        "text": "Rodar ANALYZE de novo até a amostra dar mais sorte",
+        "why": "Uma amostra nova de colunas correlacionadas dá o mesmo produto."
+      },
+      {
+        "text": "Forçar um hash join com configurações do planejador",
+        "why": "Isso passa por cima da escolha em vez de consertar o número."
+      },
+      {
+        "text": "Desligar o autovacuum da tabela",
+        "why": "Isso deixa as estatísticas mais velhas, não melhores."
+      },
+      {
+        "text": "Suspeitar de colunas correlacionadas, o assunto da aula 7",
+        "why": "Isso: Curitiba e PR erravam 14,5 vezes com estatísticas frescas."
+      }
+    ]
+  }
+}

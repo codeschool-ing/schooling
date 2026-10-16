@@ -1,0 +1,426 @@
+{
+  "ex-w6wwh4rs": {
+    "prompt": "Com a réplica isolada da rede, o primário gravou `stock:MN-330` como 0. O que `GET stock:MN-330` na réplica respondeu?",
+    "choices": [
+      {
+        "text": "Um erro, porque a réplica sabe que perdeu o primário",
+        "why": "Ela sabe (`master_link_status:down`) e responde mesmo assim, porque `replica-serve-stale-data` está `yes`."
+      },
+      {
+        "text": "O valor antigo, 1",
+        "why": "Isso. Uma leitura desatualizada, sem nenhum sinal na resposta de que está desatualizada."
+      },
+      {
+        "text": "O valor novo, 0, buscado no primário sob demanda",
+        "why": "Uma réplica nunca repassa uma leitura; e nem conseguiria alcançar o primário."
+      },
+      {
+        "text": "Nada, porque a chave foi removida quando o link caiu",
+        "why": "A réplica mantém os dados; ela só para de receber mudanças."
+      }
+    ]
+  },
+  "ex-yg4efkrj": {
+    "prompt": "Qual configuração decide se uma réplica Redis que perdeu o primário responde a leituras?",
+    "choices": [
+      {
+        "text": "`replica-read-only`",
+        "why": "Essa recusa escritas na réplica, não leituras desatualizadas."
+      },
+      {
+        "text": "`replica-serve-stale-data`",
+        "why": "Isso. Com `no`, a réplica responde à maioria dos comandos com erro enquanto o link está caído."
+      },
+      {
+        "text": "`replica-ignore-maxmemory`",
+        "why": "Essa trata de limites de memória numa réplica, terreno da aula 14."
+      },
+      {
+        "text": "`appendonly`",
+        "why": "Isso é persistência, aula 13."
+      }
+    ]
+  },
+  "ex-nwnkyapb": {
+    "prompt": "Depois do `docker network connect`, a réplica respondeu 0 alguns segundos depois. O que isso mostra?",
+    "choices": [
+      {
+        "text": "Que a réplica esteve consistente o tempo todo",
+        "why": "Ela respondeu 1 enquanto o link estava caído; não esteve."
+      },
+      {
+        "text": "Que as cópias voltam a concordar ao reconectar",
+        "why": "Isso. A consistência eventual promete a concordância, não quando."
+      },
+      {
+        "text": "Que o primário reenviou só a última escrita",
+        "why": "Como ressincronizou é a aula 15; o ponto aqui é o resultado."
+      },
+      {
+        "text": "Que leituras de uma réplica são sempre seguras depois de reconectar",
+        "why": "A próxima partição abre a mesma janela de novo."
+      }
+    ]
+  },
+  "ex-gwwwawbs": {
+    "prompt": "A Ana salva um endereço novo e a página recarregada mostra o antigo. Qual anomalia é essa?",
+    "choices": [
+      {
+        "text": "Atualização perdida",
+        "why": "Nada foi sobrescrito; o endereço novo está no primário."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "Isso: a leitura dela chegou a uma cópia que a escrita ainda não alcançou."
+      },
+      {
+        "text": "Leituras monotônicas",
+        "why": "Essa precisa de duas leituras voltando no tempo; aqui uma leitura perdeu a própria escrita dela."
+      },
+      {
+        "text": "Uma partição de rede entre as cópias",
+        "why": "Nenhuma rede falhou; o atraso comum de replicação basta."
+      }
+    ]
+  },
+  "ex-7nr2bg9w": {
+    "prompt": "Associe cada anomalia ao que o usuário vê.",
+    "hint": "Uma cena não pertence a nenhuma.",
+    "pairs": [
+      {
+        "left": "ler as próprias escritas",
+        "right": "salvei e a página ainda mostra o valor antigo"
+      },
+      {
+        "left": "leituras monotônicas",
+        "right": "o pedido dizia enviado, depois voltou a dizer pago"
+      },
+      {
+        "left": "atualização perdida",
+        "right": "duas vendas, e o estoque caiu só um"
+      }
+    ],
+    "right_distractors": [
+      "a página falha com um erro"
+    ]
+  },
+  "ex-faya5mds": {
+    "prompt": "Uma equipe roda o MongoDB num único servidor sem réplicas, e diz que as anomalias desta aula não podem acontecer com ela. Qual ainda pode?",
+    "choices": [
+      {
+        "text": "Nenhuma, já que há uma cópia só",
+        "why": "Uma cópia não impede dois clientes de ler, decidir e gravar de volta."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "Com uma cópia, toda leitura vê a última escrita."
+      },
+      {
+        "text": "Leituras monotônicas",
+        "why": "Não há segunda cópia para estar mais atrasada."
+      },
+      {
+        "text": "Atualização perdida",
+        "why": "Isso. Ela precisa de concorrência, não de réplicas."
+      }
+    ]
+  },
+  "ex-zy1sxwmc": {
+    "prompt": "Qual é a correção mais simples para ler-as-próprias-escritas?",
+    "choices": [
+      {
+        "text": "Ler do primário depois que aquele usuário grava",
+        "why": "Isso. Todo o resto pode continuar lendo das réplicas."
+      },
+      {
+        "text": "Desligar a replicação",
+        "why": "Isso joga fora o motivo de ter réplicas."
+      },
+      {
+        "text": "Repetir a leitura até o valor mudar",
+        "why": "O cliente não distingue um valor antigo de um valor que ninguém mudou."
+      },
+      {
+        "text": "Guardar a página em cache no navegador",
+        "why": "Um cache serve uma cópia velha; é fonte da anomalia, não correção."
+      }
+    ]
+  },
+  "ex-8rbrmwaj": {
+    "prompt": "A repetição do pagamento com `_id: \"pay-1001-a7f3\"` falhou com `E11000 duplicate key error`. Como a aplicação deve tratar isso?",
+    "choices": [
+      {
+        "text": "Como falha na cobrança, e tentar de novo com um id novo",
+        "why": "Um id novo faria da repetição um segundo pagamento."
+      },
+      {
+        "text": "Como sinal de que o banco está corrompido",
+        "why": "O `_id` único fez exatamente o seu papel."
+      },
+      {
+        "text": "Como \"já feito\": a primeira tentativa tinha chegado",
+        "why": "Isso. Aqui o erro de chave duplicada é o caso de sucesso."
+      },
+      {
+        "text": "Como motivo para apagar o primeiro pagamento",
+        "why": "O primeiro pagamento é o verdadeiro."
+      }
+    ]
+  },
+  "ex-xcwx90ax": {
+    "prompt": "O segundo `updateOne` com `version: 1` respondeu `matchedCount: 0`. O que a aplicação deve fazer em seguida?",
+    "choices": [
+      {
+        "text": "Nada: a atualização deu certo em silêncio",
+        "why": "Nada mudou; ignorar o zero é a atualização perdida de novo."
+      },
+      {
+        "text": "Ler de novo e decidir outra vez",
+        "why": "Isso: aqui ela descobre que o monitor esgotou."
+      },
+      {
+        "text": "Mandar a mesma atualização sem a versão no filtro",
+        "why": "Isso vende o monitor duas vezes, o bug que se queria evitar."
+      },
+      {
+        "text": "Esperar a replicação e mandar de novo igual",
+        "why": "A versão 1 sumiu de vez; o mesmo filtro nunca vai casar."
+      }
+    ]
+  },
+  "ex-m4m5dx7n": {
+    "prompt": "Ponha em ordem uma escrita com concorrência otimista.",
+    "items": [
+      "Ler o documento e anotar a versão",
+      "Decidir o valor novo na aplicação",
+      "Atualizar com a versão antiga no filtro, incrementando-a",
+      "Conferir o matchedCount, e recomeçar se for 0"
+    ]
+  },
+  "ex-8wdzwp9p": {
+    "prompt": "Detectar um conflito na escrita com um número de versão, em vez de travar na leitura, se chama concorrência ___.",
+    "hint": "Ninguém trava; todo mundo espera dar certo.",
+    "blanks": [
+      {
+        "accept": [
+          "otimista"
+        ]
+      }
+    ]
+  },
+  "ex-710y7t8p": {
+    "prompt": "Como o Cassandra decide entre duas escritas na mesma célula?",
+    "choices": [
+      {
+        "text": "Vence a escrita que chegou por último ao nó",
+        "why": "A ordem de chegada não decide; o 179.00 chegou por último e perdeu."
+      },
+      {
+        "text": "Vence a célula com o timestamp maior",
+        "why": "Isso, seja qual for o relógio que produziu o timestamp."
+      },
+      {
+        "text": "O coordenador pergunta ao cliente qual manter",
+        "why": "Não há conversa; a regra não precisa de coordenação."
+      },
+      {
+        "text": "Recusa a segunda com erro",
+        "why": "As duas foram aceitas sem uma palavra."
+      }
+    ]
+  },
+  "ex-vwynhp01": {
+    "prompt": "Uma atualização foi enviada com `USING TIMESTAMP 1789000000000000`, mais antigo que o da célula. O que o cliente viu, e o que ficou guardado?",
+    "choices": [
+      {
+        "text": "Um erro, e nada mudou",
+        "why": "Nenhum erro voltou; é isso que torna perigoso."
+      },
+      {
+        "text": "Sucesso, e o preço novo 179.00",
+        "why": "O `SELECT` depois ainda mostrou 189.00."
+      },
+      {
+        "text": "Um aviso, e os dois preços guardados",
+        "why": "Uma célula guarda um valor; o mais antigo é descartado."
+      },
+      {
+        "text": "Sucesso, e 189.00 mantido",
+        "why": "Isso: a escrita perdeu em silêncio."
+      }
+    ]
+  },
+  "ex-2939gaw4": {
+    "prompt": "O relógio de um servidor de aplicação está um minuto adiantado. O que acontece com os produtos que ele atualiza?",
+    "choices": [
+      {
+        "text": "As escritas dele perdem para as de todos por um minuto",
+        "why": "Isso é um relógio atrasado."
+      },
+      {
+        "text": "Nada, já que o Cassandra usa o relógio do nó",
+        "why": "Os drivers atribuem timestamps pelo relógio do cliente, como o cqlsh fez aqui."
+      },
+      {
+        "text": "Correções dos outros nesse minuto perdem para as escritas dele",
+        "why": "Isso, como o 199.00 perdeu para o 159.00 com timestamp no futuro."
+      },
+      {
+        "text": "O Cassandra rejeita timestamps do futuro",
+        "why": "Aceitou um do fim de 2027."
+      }
+    ]
+  },
+  "ex-2m7cbbbk": {
+    "prompt": "O relógio de um nó está 2 segundos atrasado. Em quantos microssegundos os timestamps de escrita dele ficam baixos demais?",
+    "hint": "O WRITETIME conta microssegundos.",
+    "unit": "µs"
+  },
+  "ex-z9zyf4bz": {
+    "prompt": "Para quais dados last-write-wins é uma regra segura? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O horário em que o cliente foi visto por último",
+        "why": "Isso: um valor mais novo só substitui o mais antigo."
+      },
+      {
+        "text": "Um estoque que dois checkouts decrementam",
+        "why": "Ler-modificar-gravar numa célula compartilhada é a atualização perdida, com o relógio escolhendo o perdedor."
+      },
+      {
+        "text": "Um campo de perfil que só o dono edita",
+        "why": "Isso: um escritor, nada calculado a partir do valor antigo."
+      },
+      {
+        "text": "Um saldo de conta",
+        "why": "Toda mudança depende do valor anterior."
+      }
+    ]
+  },
+  "ex-9znrdr7b": {
+    "prompt": "Uma atendente diz: \"o cliente mudou o telefone, apareceu o antigo, e um minuto depois o novo\". Qual anomalia é essa, e qual correção serve?",
+    "choices": [
+      {
+        "text": "Atualização perdida; acrescentar número de versão",
+        "why": "Nada se perdeu: o número novo apareceu um minuto depois."
+      },
+      {
+        "text": "Ler as próprias escritas; ler do primário",
+        "why": "Isso. A escrita chegou; a leitura veio de uma cópia atrasada."
+      },
+      {
+        "text": "Desvio de relógio; sincronizar os relógios com NTP",
+        "why": "O desvio faz um valor perder de vez, não aparecer atrasado."
+      },
+      {
+        "text": "Uma partição; esperar a rede",
+        "why": "O atraso comum de replicação produz isso sem falha nenhuma."
+      }
+    ]
+  },
+  "ex-pt6ad3jp": {
+    "prompt": "Qual destes não precisa de réplica nenhuma para dar errado?",
+    "choices": [
+      {
+        "text": "Uma página que lê a própria escrita de um secundário",
+        "why": "Isso precisa de um secundário atrás do primário."
+      },
+      {
+        "text": "Dois checkouts lendo estoque 1 e ambos gravando 0",
+        "why": "Isso: a atualização perdida só precisa de concorrência."
+      },
+      {
+        "text": "Uma réplica respondendo o valor antigo depois de desconectada",
+        "why": "Isso é uma réplica, por definição."
+      },
+      {
+        "text": "Duas leituras de duas réplicas voltando no tempo",
+        "why": "Duas réplicas, por definição."
+      }
+    ]
+  },
+  "ex-n8cn33g8": {
+    "prompt": "Logo depois do `docker network disconnect`, o `INFO` da réplica ainda dizia `master_link_status:up`. Por quê?",
+    "choices": [
+      {
+        "text": "Porque a desconexão ainda não tinha surtido efeito",
+        "why": "Tinha: a réplica já tinha perdido a escrita do 0."
+      },
+      {
+        "text": "Ela só nota o silêncio depois do `repl-timeout`",
+        "why": "Isso. Silêncio não é erro até o timeout dizer que é."
+      },
+      {
+        "text": "Porque quem responde o `INFO` é o primário",
+        "why": "O comando rodou na réplica, que não alcançava o primário."
+      },
+      {
+        "text": "Porque o Docker mantém a conexão antiga aberta",
+        "why": "A conexão sumiu; a réplica só não ficou tempo bastante sem ouvir nada."
+      }
+    ]
+  },
+  "ex-1p19wc3n": {
+    "prompt": "Um cliente recarrega a página de um pedido duas vezes: primeiro diz \"enviado\", depois \"pago\". Qual anomalia é essa?",
+    "choices": [
+      {
+        "text": "Leituras monotônicas",
+        "why": "Isso: duas leituras caíram em réplicas atrasadas em medidas diferentes. Cada resposta é legítima; a sequência anda para trás."
+      },
+      {
+        "text": "Atualização perdida",
+        "why": "Nada foi sobrescrito; o status é \"enviado\" no primário."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "O cliente não gravou nada."
+      },
+      {
+        "text": "Desvio de relógio",
+        "why": "Nenhum timestamp decidiu nada aqui."
+      }
+    ]
+  },
+  "ex-r2g08jm2": {
+    "prompt": "Um serviço de pagamentos deixa o MongoDB gerar um `ObjectId` a cada insert, e repete em caso de timeout. O que dá errado?",
+    "choices": [
+      {
+        "text": "Nada: a repetição falha com erro de chave duplicada",
+        "why": "Cada tentativa ganha um id novo, então para o índice nada se repete."
+      },
+      {
+        "text": "Um pagamento já registrado é cobrado de novo, em dobro",
+        "why": "Isso. O id tem de existir antes da primeira tentativa."
+      },
+      {
+        "text": "A repetição espera a primeira inserção ficar visível",
+        "why": "Nada liga as duas tentativas."
+      },
+      {
+        "text": "O MongoDB rejeita inserts depois de um timeout",
+        "why": "Ele aceita os dois."
+      }
+    ]
+  },
+  "ex-8hgvf454": {
+    "prompt": "Que defesa a seção dá contra o desvio de relógio decidindo um estoque?",
+    "choices": [
+      {
+        "text": "NTP, e sem ler-modificar-gravar em célula comum",
+        "why": "Isso: ou pagar por uma lightweight transaction onde a escrita precisa ser condicional."
+      },
+      {
+        "text": "Aumentar o fator de replicação para mais cópias votarem",
+        "why": "Mais cópias não mudam qual timestamp vence."
+      },
+      {
+        "text": "Gravar toda atualização duas vezes",
+        "why": "A segunda escrita leva o mesmo relógio desviado."
+      },
+      {
+        "text": "Ler com consistência `ALL` para consultar toda réplica",
+        "why": "Toda réplica guarda a mesma célula vencedora; a leitura não recupera a perdedora."
+      }
+    ]
+  }
+}

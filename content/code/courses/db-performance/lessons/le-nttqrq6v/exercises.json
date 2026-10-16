@@ -1,0 +1,562 @@
+[
+  {
+    "id": "ex-9mcsgn3g",
+    "version": 1,
+    "section": "partial",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes an index partial?",
+    "hint": "Look at the end of its CREATE INDEX.",
+    "choices": [
+      {
+        "text": "A WHERE clause in its definition",
+        "correct": true,
+        "why": "Right: rows that are not pending got no entry in orders_pending_idx."
+      },
+      {
+        "text": "Indexing only some of the columns",
+        "correct": false,
+        "why": "Every index covers some columns; that does not make it partial."
+      },
+      {
+        "text": "Building it over a sample",
+        "correct": false,
+        "why": "Indexes are exact; samples belong to ANALYZE."
+      },
+      {
+        "text": "Leaving it unfinished with CREATE INDEX CONCURRENTLY",
+        "correct": false,
+        "why": "CONCURRENTLY changes how it is built, not what it holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-18n54fpm",
+    "version": 1,
+    "section": "partial",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The full index on `status` was 13 MB and the partial one 176 kB. About how many times smaller is the partial index?",
+    "hint": "13 MB is about 13,300 kB.",
+    "value": 75,
+    "tolerance": 8,
+    "unit": "times"
+  },
+  {
+    "id": "ex-ahvs9z5n",
+    "version": 1,
+    "section": "partial",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the partial index index `placed_at` rather than `status`?",
+    "hint": "What would status hold inside it?",
+    "choices": [
+      {
+        "text": "Because a partial index cannot contain the column its WHERE tests",
+        "correct": false,
+        "why": "It can; it would just repeat one word."
+      },
+      {
+        "text": "Inside it every row says pending anyway",
+        "correct": true,
+        "why": "Right: and the ORDER BY placed_at LIMIT 20 query used it for both."
+      },
+      {
+        "text": "Because count(*) only works with a timestamp index",
+        "correct": false,
+        "why": "count(*) works with any index; the full status index served it too."
+      },
+      {
+        "text": "Because placed_at is smaller on disk than a text column",
+        "correct": false,
+        "why": "A short word like pending is no bigger; the reason is what the column is good for."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2xdbpzc",
+    "version": 1,
+    "section": "partial",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application runs `SELECT count(*) FROM orders WHERE status = $1` through a driver that prepares statements, and the partial index stopped being used after a few calls. Why?",
+    "hint": "A plan made for any value of $1.",
+    "choices": [
+      {
+        "text": "pg_stat_statements rewrote the constant into $1",
+        "correct": false,
+        "why": "It only normalises what it records; it never changes what runs."
+      },
+      {
+        "text": "The index was invalidated by the inserts",
+        "correct": false,
+        "why": "Inserts maintain the index; they do not invalidate it."
+      },
+      {
+        "text": "A generic plan must cover every status",
+        "correct": true,
+        "why": "Right: only a literal, or a value seen at planning, proves the rows are inside it."
+      },
+      {
+        "text": "Prepared statements cannot use index-only scans",
+        "correct": false,
+        "why": "They can; the problem is the predicate the planner cannot prove."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kzvb102",
+    "version": 1,
+    "section": "partial",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `orders_pending_idx` in place, what does `SELECT count(*) FROM orders WHERE status = 'shipped'` do?",
+    "hint": "Which rows have entries?",
+    "choices": [
+      {
+        "text": "It uses the partial index and returns 0",
+        "correct": false,
+        "why": "The planner never uses an index that would miss rows; it would not return a wrong count."
+      },
+      {
+        "text": "It uses the partial index, then checks the table",
+        "correct": false,
+        "why": "Shipped rows are not in it at all, so no check could find them."
+      },
+      {
+        "text": "It fails with an error",
+        "correct": false,
+        "why": "It runs; it just cannot use the index."
+      },
+      {
+        "text": "A sequential scan, as if the index did not exist",
+        "correct": true,
+        "why": "Right: the plan was a Parallel Seq Scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpe9hkcw",
+    "version": 1,
+    "section": "partial-unique",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `CREATE UNIQUE INDEX carts_one_open_idx ON carts (customer_id) WHERE status = 'open'` allow?",
+    "hint": "Unique, but only among some rows.",
+    "choices": [
+      {
+        "text": "One cart per customer, ever",
+        "correct": false,
+        "why": "That is a plain UNIQUE (customer_id)."
+      },
+      {
+        "text": "Closed carts freely, one open each",
+        "correct": true,
+        "why": "Right: customer 42 ended with one ordered and one open."
+      },
+      {
+        "text": "One open cart in the whole table",
+        "correct": false,
+        "why": "The key is customer_id, so the rule is per customer."
+      },
+      {
+        "text": "Any number of open carts, with unique ids",
+        "correct": false,
+        "why": "A second open cart for 42 was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4qwd933",
+    "version": 1,
+    "section": "partial-unique",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `ON CONFLICT (customer_id) WHERE status = 'open' DO NOTHING` need the `WHERE`?",
+    "hint": "PostgreSQL has to find the index the conflict is about.",
+    "choices": [
+      {
+        "text": "To name the partial index as the arbiter",
+        "correct": true,
+        "why": "Right: without it there is no unique index on customer_id alone to match."
+      },
+      {
+        "text": "To make the insert skip closed carts",
+        "correct": false,
+        "why": "The new row is always open; the WHERE names the index, not rows to skip."
+      },
+      {
+        "text": "Because DO NOTHING cannot be used without a WHERE",
+        "correct": false,
+        "why": "With a plain unique constraint, ON CONFLICT (col) DO NOTHING needs none."
+      },
+      {
+        "text": "To lock the customer's other carts",
+        "correct": false,
+        "why": "It locks nothing extra; it identifies the arbiter index."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p99zser",
+    "version": 1,
+    "section": "partial-unique",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two requests for customer 42 arrive within a millisecond. Each runs `SELECT` for an open cart, finds none, and inserts. What does the partial unique index change?",
+    "hint": "The index checks committed and in-progress rows.",
+    "choices": [
+      {
+        "text": "Nothing, because the SELECTs ran before either insert",
+        "correct": false,
+        "why": "The index checks at insert time, whatever the SELECTs saw."
+      },
+      {
+        "text": "Both inserts succeed, and VACUUM later removes one",
+        "correct": false,
+        "why": "VACUUM removes dead rows, never a live duplicate."
+      },
+      {
+        "text": "The second insert waits for the first, then fails",
+        "correct": true,
+        "why": "Right: the rule holds however the requests interleave."
+      },
+      {
+        "text": "The SELECTs see each other's uncommitted rows",
+        "correct": false,
+        "why": "No isolation level shows uncommitted rows in PostgreSQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-skmqs0qn",
+    "version": 1,
+    "section": "partial-unique",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The carts got ids 1 and 4. What happened to 2 and 3?",
+    "hint": "A sequence never gives a number back.",
+    "choices": [
+      {
+        "text": "The refused and the skipped inserts each drew one",
+        "correct": true,
+        "why": "Right: a gap can be an insert that never happened."
+      },
+      {
+        "text": "They were deleted when the cart was ordered",
+        "correct": false,
+        "why": "The UPDATE changed row 1's status; nothing was deleted."
+      },
+      {
+        "text": "Identity columns skip numbers on purpose to leave room for updates",
+        "correct": false,
+        "why": "Updates keep their id; nothing reserves numbers."
+      },
+      {
+        "text": "The UPDATE gave the ordered cart new ids twice",
+        "correct": false,
+        "why": "The ordered cart is still id 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-aga7z9j4",
+    "version": 1,
+    "section": "expression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why could the unique index on `email` not serve `WHERE lower(email) = 'user42@example.com'`?",
+    "hint": "What values does it hold?",
+    "choices": [
+      {
+        "text": "It holds email, not lower(email)",
+        "correct": true,
+        "why": "Right: the index answers in the terms it was written in."
+      },
+      {
+        "text": "Unique indexes cannot be used for equality",
+        "correct": false,
+        "why": "They serve equality all the time; the column here is wrapped in a function."
+      },
+      {
+        "text": "lower() is volatile, so no index can serve a query that calls it in its WHERE",
+        "correct": false,
+        "why": "lower() is immutable; the expression index on it worked."
+      },
+      {
+        "text": "The table had not been analysed",
+        "correct": false,
+        "why": "Statistics change estimates, not which index matches an expression."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rfywn6q",
+    "version": 1,
+    "section": "expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With an index on `lower(email)`, which query can use it?",
+    "hint": "The expression must match exactly.",
+    "choices": [
+      {
+        "text": "`WHERE email ILIKE 'user42@example.com'`",
+        "correct": false,
+        "why": "A different expression; the planner does not see it as lower(email)."
+      },
+      {
+        "text": "`WHERE lower(trim(email)) = 'user42@example.com'`",
+        "correct": false,
+        "why": "trim inside changes the expression, and the index is invisible to it."
+      },
+      {
+        "text": "`WHERE lower(email) = 'user42@example.com'`",
+        "correct": true,
+        "why": "Right: the same expression, written the same way."
+      },
+      {
+        "text": "`WHERE upper(email) = 'USER42@EXAMPLE.COM'`",
+        "correct": false,
+        "why": "upper is not lower, even if the answer would be the same row."
+      }
+    ]
+  },
+  {
+    "id": "ex-szf8fs4e",
+    "version": 1,
+    "section": "expression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after creating the expression index, the plan still said `rows=1000`; after `ANALYZE customers`, `rows=1`. Why?",
+    "hint": "Where did pg_stats get a new row?",
+    "choices": [
+      {
+        "text": "ANALYZE rebuilt the index more compactly",
+        "correct": false,
+        "why": "ANALYZE never rebuilds an index."
+      },
+      {
+        "text": "Its values got statistics of their own",
+        "correct": true,
+        "why": "Right: pg_stats then had a row for the index with n_distinct -1."
+      },
+      {
+        "text": "The first plan was cached",
+        "correct": false,
+        "why": "Each EXPLAIN plans afresh."
+      },
+      {
+        "text": "The index was not usable until ANALYZE ran",
+        "correct": false,
+        "why": "It was used before ANALYZE, in a bitmap scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndgqnhmc",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does PostgreSQL refuse `CREATE INDEX ON orders (date(placed_at))`?",
+    "hint": "Compare the two SELECTs under different TimeZone settings.",
+    "choices": [
+      {
+        "text": "date() of a timestamptz depends on the session's TimeZone",
+        "correct": true,
+        "why": "Right: it is stable, not immutable, and the same instant gave 1 and 2 June."
+      },
+      {
+        "text": "Indexes cannot hold date values",
+        "correct": false,
+        "why": "The AT TIME ZONE version indexed dates fine."
+      },
+      {
+        "text": "The orders table is too big for an expression index",
+        "correct": false,
+        "why": "The same table took the AT TIME ZONE index."
+      },
+      {
+        "text": "placed_at already has an index",
+        "correct": false,
+        "why": "A column can carry several indexes; the error is about IMMUTABLE."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kk7dgqx",
+    "version": 1,
+    "section": "immutable",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every function in an index expression must be marked ___, a promise that its result depends on its arguments and nothing else.",
+    "hint": "The word in the error message.",
+    "blanks": [
+      {
+        "accept": [
+          "IMMUTABLE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c7d9cxtw",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team in Lisbon and a team in São Paulo share a database, and both run reports by the day an order was placed. What does this lesson say the expression index forces them to decide?",
+    "hint": "The index needs a named zone.",
+    "choices": [
+      {
+        "text": "Which TimeZone each session should set",
+        "correct": false,
+        "why": "The immutable expression ignores the session's setting; that is its point."
+      },
+      {
+        "text": "Whether to use date() or a cast, since both are equal",
+        "correct": false,
+        "why": "They are not equal: date(timestamptz) depends on the session, the AT TIME ZONE cast does not."
+      },
+      {
+        "text": "Which zone a business day is counted in",
+        "correct": true,
+        "why": "Right: one index holds one zone's days, and that choice is about the business."
+      },
+      {
+        "text": "Nothing: an expression index adapts to each session",
+        "correct": false,
+        "why": "An index stores values once; it cannot adapt, which is why IMMUTABLE is required."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjz3wewr",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the orders of one day, lesson 1's range rewrite took 1.3 ms and the expression index 0.76 ms. Why does the lesson still prefer the rewrite when you can change the query?",
+    "hint": "What does the second index cost?",
+    "choices": [
+      {
+        "text": "Because the expression index gives wrong answers in other time zones",
+        "correct": false,
+        "why": "Its expression names the zone, so its answers do not depend on the session."
+      },
+      {
+        "text": "Because the rewrite needs no extra 14 MB index to maintain",
+        "correct": true,
+        "why": "Right: the existing placed_at index serves it, and is needed anyway."
+      },
+      {
+        "text": "Because 0.76 ms and 1.3 ms are the same within noise",
+        "correct": false,
+        "why": "The argument is the cost of the index, not the timing."
+      },
+      {
+        "text": "Because expression indexes cannot be used by count(*)",
+        "correct": false,
+        "why": "The count used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vp8f1drg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the index from this lesson that meets it.",
+    "hint": "Partial, unique partial, or expression.",
+    "pairs": [
+      {
+        "left": "count the pending orders quickly",
+        "right": "ON orders (placed_at) WHERE status = 'pending'"
+      },
+      {
+        "left": "at most one open cart per customer",
+        "right": "UNIQUE ON carts (customer_id) WHERE status = 'open'"
+      },
+      {
+        "left": "log in whatever case the address is typed in",
+        "right": "ON customers (lower(email))"
+      },
+      {
+        "left": "orders of a day counted in São Paulo time",
+        "right": "ON orders (((placed_at AT TIME ZONE 'America/Sao_Paulo')::date))"
+      }
+    ],
+    "right_distractors": [
+      "ON orders (date(placed_at))"
+    ]
+  },
+  {
+    "id": "ex-pfqsz1pg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's expression index on the order date in the order they happened.",
+    "hint": "From the error to the measurement.",
+    "items": [
+      "CREATE INDEX on date(placed_at) fails: not IMMUTABLE",
+      "Show that date() changes with TimeZone",
+      "Index the AT TIME ZONE expression instead",
+      "ANALYZE, so the estimate comes from statistics"
+    ],
+    "trap": "The estimate can only improve after the index exists and ANALYZE has measured it."
+  },
+  {
+    "id": "ex-gedkw89k",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would a partial index suit? Choose all that apply.",
+    "hint": "A small slice that every query asks about, named in its text.",
+    "choices": [
+      {
+        "text": "A queue screen that always asks for jobs WHERE done = false, a few hundred of millions",
+        "correct": true,
+        "why": "Right: a small slice named literally in every query."
+      },
+      {
+        "text": "One active subscription per account",
+        "correct": true,
+        "why": "Right: a unique partial index, the carts shape."
+      },
+      {
+        "text": "A report filtering by a status chosen from a menu of all twelve statuses",
+        "correct": false,
+        "why": "Every status is asked for; the slice is the whole table."
+      },
+      {
+        "text": "A search by email in any letter case",
+        "correct": false,
+        "why": "That is an expression index on lower(email)."
+      }
+    ]
+  }
+]

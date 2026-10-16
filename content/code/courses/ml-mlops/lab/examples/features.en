@@ -1,0 +1,28 @@
+```schooling-example
+{
+  "language": "python",
+  "file": "features.py",
+  "parts": [
+    {
+      "code": "\"\"\"features.py: one row per active member as of a cutoff day, and whether they lapsed.\n\nA member is active at the cutoff if they bought something in the 180 days\nbefore it, and lapsed if they then bought nothing in the 90 days after it.\n\"\"\"\nimport sqlite3\n\nimport pandas as pd\n\n",
+      "note": "The definitions this whole course runs on. **Active** means bought something in the 180 days up to the cutoff; **lapsed** means bought nothing in the 90 days after it."
+    },
+    {
+      "code": "QUERY = \"\"\"\nWITH recent AS (\n  SELECT p.member_id, p.day, p.shop,\n         (SELECT sum(price_cents) FROM lines l WHERE l.purchase_id = p.purchase_id) AS cents\n  FROM purchases p\n  WHERE p.day > date(:cutoff, '-180 days') AND p.day <= :cutoff\n)\n",
+      "note": "`recent` is every visit in the 180 days up to `:cutoff`, with what it cost. Only members with a row here appear in the result, which is what makes them active."
+    },
+    {
+      "code": "SELECT m.member_id, m.channel, m.age_band, m.home_shop,\n       julianday(:cutoff) - julianday(m.joined)        AS tenure_days,\n       julianday(:cutoff) - julianday(max(r.day))      AS recency_days,\n       count(*)                                        AS visits_180d,\n       sum(r.cents)                                    AS spend_180d,\n       avg(r.cents)                                    AS basket_avg,\n       avg(r.shop = 'Online')                          AS online_share,\n       count(DISTINCT r.shop)                          AS shops_180d,\n",
+      "note": "The features: one number per member, each computed from days on or before the cutoff and never after it."
+    },
+    {
+      "code": "       NOT EXISTS (SELECT 1 FROM purchases f WHERE f.member_id = m.member_id\n                   AND f.day > :cutoff AND f.day <= date(:cutoff, '+90 days')) AS lapsed\nFROM members m JOIN recent r USING (member_id)\nGROUP BY m.member_id\n\"\"\"\n\n",
+      "note": "The label, and the only line that reads the future: a purchase in the 90 days after the cutoff. **For a cutoff less than 90 days ago the future is not over yet**, and this line answers 1 for members who simply have not had time to come back. Lesson 3 is about that."
+    },
+    {
+      "code": "NUMERIC = [\"tenure_days\", \"recency_days\", \"visits_180d\", \"spend_180d\", \"basket_avg\",\n           \"online_share\", \"shops_180d\"]\nCATEGORICAL = [\"channel\", \"age_band\", \"home_shop\"]\n\n\ndef build(cutoff, path=\"shop.db\"):\n    with sqlite3.connect(path) as db:\n        return pd.read_sql_query(QUERY, db, params={\"cutoff\": cutoff})\n",
+      "note": "Two lists the later programs use to pick columns, and the one function they call. A cutoff is a date as text, `2025-09-30`."
+    }
+  ]
+}
+```

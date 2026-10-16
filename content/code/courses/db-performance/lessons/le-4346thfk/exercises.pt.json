@@ -1,0 +1,346 @@
+{
+  "ex-9fzjxy1h": {
+    "prompt": "Só com o `orders_placed_at_idx`, por que `count(*)` foi um index-only scan e `sum(total_cents)` não?",
+    "hint": "Que colunas cada consulta toca?",
+    "choices": [
+      {
+        "text": "sum() não é permitido num index-only scan",
+        "why": "Qualquer agregado é; o problema é que total_cents não está no índice."
+      },
+      {
+        "text": "total_cents não está no índice",
+        "why": "Isso: count(*) não precisou de coluna, sum precisou de uma que o índice não tem."
+      },
+      {
+        "text": "A segunda consulta rodou com o cache frio",
+        "why": "Ela achou todas as páginas na memória; o tipo de plano é que mudou."
+      },
+      {
+        "text": "count(*) é respondido pelo pg_class.reltuples sem ler o índice",
+        "why": "Ele leu 299 páginas do índice; reltuples é só uma estimativa."
+      }
+    ]
+  },
+  "ex-zzv2cjpz": {
+    "prompt": "Um plano diz `Index Only Scan` com `Heap Fetches: 87062` de 107.780 linhas. Como ler isso?",
+    "hint": "O nome promete; o número relata.",
+    "choices": [
+      {
+        "text": "Como um index-only scan funcionando normalmente",
+        "why": "A maioria das linhas foi à tabela, que é o que o nome diz evitar."
+      },
+      {
+        "text": "Como um erro: o índice está corrompido",
+        "why": "Nada está corrompido; o mapa de visibilidade foi desligado por um update."
+      },
+      {
+        "text": "Como, na maior parte, um index scan comum",
+        "why": "Isso: 87.265 acessos a páginas contra 299 com o mapa limpo."
+      },
+      {
+        "text": "Como sinal de que o planejador devia ter escolhido um scan sequencial",
+        "why": "Talvez, mas a primeira leitura é que o mapa está velho; um VACUUM o trouxe a 0."
+      }
+    ]
+  },
+  "ex-zkq8mh3t": {
+    "prompt": "Por que um index-only scan não pode simplesmente confiar em toda entrada do índice?",
+    "hint": "O que está escrito no cabeçalho da linha, e não no índice?",
+    "choices": [
+      {
+        "text": "Entradas de índice guardam só parte de cada valor",
+        "why": "Uma entrada de B-tree guarda a chave inteira; o problema é visibilidade."
+      },
+      {
+        "text": "O índice não sabe se a linha está visível para você",
+        "why": "Isso: uma entrada pode apontar para uma linha apagada ou não confirmada."
+      },
+      {
+        "text": "Entradas de índice só são atualizadas quando o VACUUM roda",
+        "why": "Inserts e updates não HOT acrescentam entradas na hora."
+      },
+      {
+        "text": "O índice é ordenado, então pode devolver linhas na ordem errada",
+        "why": "Ordem é o que um índice acerta; visibilidade é o que ele não sabe."
+      }
+    ]
+  },
+  "ex-0x2e1tk7": {
+    "prompt": "O que liga o bit de uma página no mapa de visibilidade, e o que o desliga?",
+    "hint": "Duas regras.",
+    "choices": [
+      {
+        "text": "O VACUUM liga; mudar uma linha desliga",
+        "why": "Isso: e é por isso que um UPDATE custou 87.062 heap fetches."
+      },
+      {
+        "text": "O ANALYZE liga; o VACUUM desliga",
+        "why": "O VACUUM é quem liga; o ANALYZE só amostra."
+      },
+      {
+        "text": "Construir índice liga; SELECTs desligam",
+        "why": "Ler nunca desliga, e construir índice não liga."
+      },
+      {
+        "text": "Um checkpoint liga; um reinício desliga",
+        "why": "O mapa sobrevive a reinícios; escritas nas linhas é que o desligam."
+      }
+    ]
+  },
+  "ex-9pbsv504": {
+    "prompt": "Logo depois do UPDATE de 43.422 linhas, `relallvisible` ainda mostrava 16.667 de 16.667. Por quê?",
+    "hint": "Quando o pg_class é atualizado?",
+    "choices": [
+      {
+        "text": "Updates de status nunca tocam o mapa de visibilidade",
+        "why": "O scan seguinte mostrou 87.062 heap fetches: o mapa tinha mudado."
+      },
+      {
+        "text": "O UPDATE ainda não tinha sido confirmado",
+        "why": "O psql o roda em autocommit; ele foi confirmado."
+      },
+      {
+        "text": "O pg_class guarda a contagem feita pelo último VACUUM",
+        "why": "Isso: depois do VACUUM ele mostrou 17.029 de 17.029."
+      },
+      {
+        "text": "O mapa só cobre páginas gravadas pelo market.sql",
+        "why": "Ele cobre toda página; o VACUUM marcou as novas também."
+      }
+    ]
+  },
+  "ex-zysympjz": {
+    "prompt": "O UPDATE mudou 43.422 linhas e o index-only scan seguinte fez 87.062 heap fetches. Cerca de quantas entradas de índice por linha atualizada isso indica?",
+    "hint": "Uma por versão.",
+    "unit": "entradas"
+  },
+  "ex-ftaetzk7": {
+    "prompt": "O index-only scan de um painel sobre os eventos de hoje é rápido às 6h e lento ao meio-dia, com `Heap Fetches` subindo a manhã toda. Qual a causa provável e o remédio?",
+    "hint": "Que páginas estão sendo escritas?",
+    "choices": [
+      {
+        "text": "O índice está inchado; faça REINDEX toda hora",
+        "why": "Heap Fetches contam idas à tabela, que um índice reconstruído não evita."
+      },
+      {
+        "text": "As páginas de hoje perdem os bits; rode vacuum antes",
+        "why": "Isso: a consulta pergunta exatamente pelas páginas sendo escritas, então o autovacuum precisa acompanhar ali."
+      },
+      {
+        "text": "As estatísticas estão velhas; rode ANALYZE",
+        "why": "O ANALYZE não liga bits de visibilidade."
+      },
+      {
+        "text": "O cache esfriou; ponha mais memória",
+        "why": "Heap Fetches contam visitas estando a página na memória ou não."
+      }
+    ]
+  },
+  "ex-az5xfp7r": {
+    "prompt": "Em `CREATE INDEX … ON orders (customer_id, placed_at) INCLUDE (id, status, total_cents)`, o que as colunas do INCLUDE podem fazer?",
+    "hint": "Elas vivem só nas entradas das folhas.",
+    "choices": [
+      {
+        "text": "Ser buscadas com = como a chave",
+        "why": "Só colunas-chave podem ser buscadas."
+      },
+      {
+        "text": "Ordenar os resultados quando nenhuma chave é dada",
+        "why": "A árvore é ordenada só pela chave."
+      },
+      {
+        "text": "Ser lidas, para a consulta não precisar da tabela",
+        "why": "Isso: elas estão ali para serem devolvidas."
+      },
+      {
+        "text": "Garantir unicidade junto com a chave",
+        "why": "Elas nunca entram na unicidade, e esse é um dos usos delas."
+      }
+    ]
+  },
+  "ex-1dmrhpgf": {
+    "prompt": "O primeiro índice, `(customer_id, placed_at) INCLUDE (status, total_cents)`, tirou o Sort mas ainda leu a tabela. O que faltou?",
+    "hint": "Leia de novo a lista do SELECT.",
+    "choices": [
+      {
+        "text": "Um VACUUM depois de criar o índice",
+        "why": "O mapa estava limpo; o plano nem foi um index-only scan."
+      },
+      {
+        "text": "placed_at DESC na chave",
+        "why": "O scan rodou de trás para a frente e deu a ordem sem isso."
+      },
+      {
+        "text": "A coluna id",
+        "why": "Isso: a consulta devolve id, e uma coluna faltando manda toda linha ao heap."
+      },
+      {
+        "text": "Um ANALYZE para o planejador confiar nele",
+        "why": "O planejador o usou; só não conseguiu responder só com ele."
+      }
+    ]
+  },
+  "ex-2et86k95": {
+    "prompt": "Por que `placed_at` precisa ser coluna-chave, e não estar no `INCLUDE`, para a consulta de pedidos do cliente?",
+    "hint": "A consulta tem ORDER BY placed_at DESC LIMIT 10.",
+    "choices": [
+      {
+        "text": "O INCLUDE não guarda timestamps",
+        "why": "O INCLUDE guarda qualquer tipo."
+      },
+      {
+        "text": "Só as colunas-chave põem as linhas em ordem",
+        "why": "Isso: no INCLUDE as linhas viriam sem ordem e precisariam de ordenação."
+      },
+      {
+        "text": "Colunas-chave são mais baratas de guardar",
+        "why": "Elas também são copiadas para os níveis de cima, então, se algo, custam mais."
+      },
+      {
+        "text": "placed_at está no WHERE",
+        "why": "Ela está no ORDER BY; o WHERE é em customer_id."
+      }
+    ]
+  },
+  "ex-gz5v1a2h": {
+    "prompt": "Você precisa de `email` único em `customers` e quer que `SELECT name FROM customers WHERE email = …` seja index-only. Que índice serve?",
+    "hint": "Unicidade de quê?",
+    "choices": [
+      {
+        "text": "UNIQUE (email, name)",
+        "why": "Só o par seria único, então duas linhas poderiam ter o mesmo email."
+      },
+      {
+        "text": "UNIQUE (email) INCLUDE (name)",
+        "why": "Isso: email continua único e name vai junto para ser lido."
+      },
+      {
+        "text": "Um índice hash em email com INCLUDE (name)",
+        "why": "Índices hash não suportam UNIQUE nem INCLUDE."
+      },
+      {
+        "text": "Dois índices: UNIQUE (email) e um em name",
+        "why": "Um índice em name não ajuda uma busca por email."
+      }
+    ]
+  },
+  "ex-njgzxc6s": {
+    "prompt": "Colunas que uma consulta só devolve, e nunca busca nem ordena, vão depois da chave numa cláusula ___.",
+    "hint": "A palavra-chave que vem depois dos parênteses.",
+    "blanks": [
+      {
+        "accept": [
+          "INCLUDE"
+        ]
+      }
+    ]
+  },
+  "ex-j5364829": {
+    "prompt": "Depois do índice de cobertura, os HOT updates de `orders` foram de 49.051 de 49.119 para 0 de 51.946. Por quê?",
+    "hint": "O que o place-order.sql atualiza?",
+    "choices": [
+      {
+        "text": "O índice de cobertura deixou as páginas mais cheias",
+        "why": "Um índice vive no próprio arquivo; as páginas da tabela não mudaram."
+      },
+      {
+        "text": "total_cents virou uma coluna indexada",
+        "why": "Isso: um update que muda um valor indexado não pode ser HOT."
+      },
+      {
+        "text": "O pgbench rodou com mais clientes da segunda vez",
+        "why": "As duas execuções usaram -c 8 -j 4 -T 15."
+      },
+      {
+        "text": "Os contadores de estatística não foram zerados",
+        "why": "Foram zerados antes de cada execução com pg_stat_reset_single_table_counters."
+      }
+    ]
+  },
+  "ex-b7nsn5td": {
+    "prompt": "A vazão foi de 3275 transações por segundo sem o índice de cobertura e 3461 com ele. O que a aula conclui?",
+    "hint": "Compare um tempo com um contador.",
+    "choices": [
+      {
+        "text": "Que o índice de cobertura acelera as escritas",
+        "why": "Nada nele pode baratear uma escrita; a diferença é ruído."
+      },
+      {
+        "text": "Que índices não custam nada na escrita nesta máquina",
+        "why": "O contador de HOT mostra que todo update agora grava cinco entradas de índice."
+      },
+      {
+        "text": "Que a execução deve ser repetida até os números baterem",
+        "why": "Repetir ajuda um tempo; a aula se apoia no contador."
+      },
+      {
+        "text": "Que 15 s escondem o custo, e o contador de HOT o mostra",
+        "why": "Isso: o tempo está dentro do ruído; 0 HOT updates não está."
+      }
+    ]
+  },
+  "ex-p9sngbzx": {
+    "prompt": "O índice de cobertura tinha 112 MB e o `orders_customer_id_idx` 18 MB. Cerca de quantas vezes maior é o índice de cobertura?",
+    "hint": "Divida.",
+    "unit": "vezes"
+  },
+  "ex-pe674kqm": {
+    "prompt": "Ordene as contagens de páginas da consulta de dezembro como esta aula as encontrou.",
+    "hint": "Limpo, sujo, depois do vacuum.",
+    "items": [
+      "299 páginas, Heap Fetches 0",
+      "UPDATE de 43.422 pedidos enviados",
+      "87.265 acessos a páginas, Heap Fetches 87062",
+      "VACUUM orders",
+      "419 páginas, Heap Fetches 0"
+    ],
+    "trap": "O update fica entre o scan limpo e o sujo."
+  },
+  "ex-d8wj2hvr": {
+    "prompt": "Ligue cada linha de plano ao que ela diz.",
+    "hint": "Linhas dos planos desta aula.",
+    "pairs": [
+      {
+        "left": "`Index Only Scan`",
+        "right": "toda coluna que a consulta usa está no índice"
+      },
+      {
+        "left": "`Heap Fetches: 0`",
+        "right": "o mapa de visibilidade respondeu por toda página"
+      },
+      {
+        "left": "`Index Scan Backward`",
+        "right": "as linhas vêm das mais novas, mas a tabela ainda é lida"
+      },
+      {
+        "left": "`Sort Key: placed_at DESC`",
+        "right": "o índice não entregou a ordem"
+      }
+    ],
+    "right_distractors": [
+      "as estatísticas estão velhas"
+    ]
+  },
+  "ex-9kyejhmk": {
+    "prompt": "Que mudanças você esperaria que deixassem um índice de cobertura mais caro de manter? Marque todas as que se aplicam.",
+    "hint": "Pense em HOT e em tamanho.",
+    "choices": [
+      {
+        "text": "Incluir uma coluna que a aplicação atualiza depois de todo insert",
+        "why": "Certo: é o total_cents, e ele acabou com os HOT updates."
+      },
+      {
+        "text": "Acrescentar uma coluna de texto larga ao INCLUDE",
+        "why": "Certo: todo byte incluído é copiado para o índice em toda linha."
+      },
+      {
+        "text": "Mover uma coluna raramente atualizada da chave para o INCLUDE",
+        "why": "Isso encolhe os níveis de cima e não muda nada em HOT."
+      },
+      {
+        "text": "Rodar VACUUM com mais frequência",
+        "why": "O VACUUM mantém o mapa atual; não acrescenta manutenção ao índice."
+      }
+    ]
+  }
+}

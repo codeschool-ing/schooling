@@ -1,0 +1,383 @@
+{
+  "ex-yt0emnwp": {
+    "prompt": "Na suavização exponencial simples com alpha 0,5, que peso recebe a penúltima semana? Responda em decimal.",
+    "hint": "alpha × (1 − alpha)."
+  },
+  "ex-t384mkbg": {
+    "prompt": "A suavização exponencial simples com alpha igual a 1 é igual a qual previsão?",
+    "choices": [
+      {
+        "text": "A média de todo o histórico",
+        "why": "É para lá que um alpha perto de 0 leva."
+      },
+      {
+        "text": "A previsão ingênua",
+        "why": "Isso. Todo o peso fica na última semana."
+      },
+      {
+        "text": "Uma média móvel de sete dias dos dias mais recentes",
+        "why": "Uma média móvel pesa uma janela por igual; a suavização nunca faz isso."
+      },
+      {
+        "text": "A previsão ingênua sazonal, que repete a mesma semana do ano passado",
+        "why": "A suavização simples não sabe nada de sazonalidade."
+      }
+    ]
+  },
+  "ex-hgtb2sg7": {
+    "prompt": "A suavização simples do statsmodels previu 8.893 pedidos para toda semana de 2025. Por que o mesmo número toda semana?",
+    "choices": [
+      {
+        "text": "O modelo só tem nível, e a previsão de qualquer semana futura é o nível de agora",
+        "why": "Isso. Sem tendência e sem sazonalidade, nada faz as semanas diferirem."
+      },
+      {
+        "text": "O alpha foi mal escolhido",
+        "why": "Qualquer alpha dá uma previsão plana; só muda a altura."
+      },
+      {
+        "text": "Um defeito no forecast(1)",
+        "why": "Pediu uma semana porque toda semana seria igual."
+      },
+      {
+        "text": "2025 não teve sazonalidade",
+        "why": "2025 teve as mesmas sazonalidades; o modelo é que não as representa."
+      }
+    ]
+  },
+  "ex-q0zazq10": {
+    "prompt": "Depois da última semana de 2024, uma semana de Natal com 7.743 pedidos, o nível é 8.033 com alpha 0,9 e 9.171 com alpha 0,1. Qual previsão para a primeira semana normal de 2025 deveria preocupar mais?",
+    "choices": [
+      {
+        "text": "A de 0,1, porque ignora o dado mais recente",
+        "why": "Não ignora; pesa como uma semana entre muitas, o que é certo para uma semana de festas."
+      },
+      {
+        "text": "Nenhuma; as duas são níveis",
+        "why": "Elas diferem em mais de mil pedidos, e uma foi arrastada pelo Natal."
+      },
+      {
+        "text": "As duas igualmente, já que a suavização não trata feriados com alpha nenhum",
+        "why": "Nenhuma os trata, mas uma memória longa quase não se mexe com um."
+      },
+      {
+        "text": "A de 0,9",
+        "why": "Isso. Uma memória curta acabou de aprender um feriado como se fosse o novo nível."
+      }
+    ]
+  },
+  "ex-gk0kvg2v": {
+    "prompt": "Associe cada peso de suavização do Holt-Winters ao que ele suaviza.",
+    "pairs": [
+      {
+        "left": "alpha",
+        "right": "o nível"
+      },
+      {
+        "left": "beta",
+        "right": "a tendência, a variação do nível por semana"
+      },
+      {
+        "left": "gamma",
+        "right": "os índices sazonais"
+      }
+    ],
+    "right_distractors": [
+      "o ruído"
+    ]
+  },
+  "ex-jw6hdmk0": {
+    "prompt": "O Holt-Winters ajustou gamma = 0,000 nas semanas da Panela. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "Não há sazonalidade",
+        "why": "A sazonalidade está lá e é usada em toda previsão; ela só não muda."
+      },
+      {
+        "text": "O ajuste falhou e caiu num padrão",
+        "why": "Zero é um ótimo legítimo: a sazonalidade era estável."
+      },
+      {
+        "text": "Os índices sazonais foram estimados uma vez e nunca atualizados",
+        "why": "Isso. Peso zero no dado novo quer dizer que a sazonalidade fica como foi estimada."
+      },
+      {
+        "text": "A sazonalidade é aditiva afinal, então os índices multiplicativos foram desligados",
+        "why": "O gamma é uma memória, não uma chave entre tipos de modelo."
+      }
+    ]
+  },
+  "ex-bnf61f5s": {
+    "prompt": "O Holt-Winters previu 7.669 pedidos para a semana que termina em 16 de fevereiro de 2025, e aconteceram 8.767. Ficou quantos pedidos abaixo?"
+  },
+  "ex-79pt0y78": {
+    "prompt": "Por que o Holt-Winters previu tão baixo a semana que termina em 16 de fevereiro de 2025?",
+    "choices": [
+      {
+        "text": "Os pedidos subiam mais rápido que a tendência esperava",
+        "why": "As semanas vizinhas foram bem previstas; só uma semana ficou fora."
+      },
+      {
+        "text": "O índice sazonal lembra o Carnaval naquela semana de 2024",
+        "why": "Isso. O Carnaval foi para março em 2025, e o índice não tem como saber."
+      },
+      {
+        "text": "Fevereiro é sempre um mês calmo no Brasil, e o modelo aprendeu isso",
+        "why": "Isso baixaria toda semana de fevereiro, não uma."
+      },
+      {
+        "text": "O alpha era pequeno demais",
+        "why": "O nível estava bom para as semanas em volta."
+      }
+    ]
+  },
+  "ex-qq0fc0se": {
+    "prompt": "Associe cada parte do ARIMA ao que ela faz.",
+    "pairs": [
+      {
+        "left": "AR",
+        "right": "usa os últimos valores"
+      },
+      {
+        "left": "I",
+        "right": "diferencia a série até ela ficar estacionária"
+      },
+      {
+        "left": "MA",
+        "right": "usa os últimos erros de previsão"
+      }
+    ],
+    "right_distractors": [
+      "tira a média de uma janela de dias"
+    ]
+  },
+  "ex-4g82p6jw": {
+    "prompt": "O que o seasonal_order=(0, 1, 0, 52) faz com dado semanal?",
+    "choices": [
+      {
+        "text": "Subtrai de cada semana a mesma semana do ano passado",
+        "why": "Isso. Uma diferença sazonal."
+      },
+      {
+        "text": "Acrescenta uma média móvel de 52 semanas",
+        "why": "O MA do ARIMA é sobre erros, e o 0 diz que aqui não há nenhum."
+      },
+      {
+        "text": "Ajusta um termo autorregressivo por semana do ano, 52 no total",
+        "why": "A ordem AR sazonal é o primeiro número, e é 0."
+      },
+      {
+        "text": "Remove as últimas 52 semanas",
+        "why": "A diferenciação perde a primeira sazonalidade, não a última, e transforma em vez de remover."
+      }
+    ]
+  },
+  "ex-hx97cjbx": {
+    "prompt": "Um colega diz que o termo MA do modelo ARIMA dele é uma média móvel dos pedidos das últimas semanas. O que está errado?",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "O nome engana exatamente assim."
+      },
+      {
+        "text": "É uma média móvel das previsões das últimas semanas",
+        "why": "Perto, mas são os erros, não as previsões."
+      },
+      {
+        "text": "MA é o passo de diferenciação, o I do nome",
+        "why": "A diferenciação é o I."
+      },
+      {
+        "text": "O termo MA usa erros de previsão passados, não valores passados",
+        "why": "Isso. Valores passados são do termo AR."
+      }
+    ]
+  },
+  "ex-f36fx0ce": {
+    "prompt": "Por que o ARIMA diferencia uma série que cresce antes de modelá-la?",
+    "choices": [
+      {
+        "text": "A diferenciação remove feriados",
+        "why": "Uma diferença sazonal traz o feriado do ano passado junto, como mostra a previsão do Carnaval."
+      },
+      {
+        "text": "Para deixar os números menores",
+        "why": "O tamanho não é o problema; o comportamento que muda é."
+      },
+      {
+        "text": "Os outros dois termos supõem um comportamento que não muda no tempo",
+        "why": "Isso. As diferenças dela podem ser estacionárias quando o nível não é."
+      },
+      {
+        "text": "É opcional e só acelera o ajuste",
+        "why": "Sem ela o modelo descreve uma série que o dado não é."
+      }
+    ]
+  },
+  "ex-63c12vke": {
+    "prompt": "Quais destes são peças que o Prophet ajusta? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma tendência que dobra em pontos de mudança",
+        "why": "Isso."
+      },
+      {
+        "text": "Feriados a partir de uma lista de datas",
+        "why": "Isso, e é assim que ele trata um que muda de lugar."
+      },
+      {
+        "text": "Termos autorregressivos nas últimas semanas",
+        "why": "Essa é a ideia do ARIMA, não do Prophet."
+      },
+      {
+        "text": "Sazonalidades anual e semanal suaves",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7pt8x8k6": {
+    "prompt": "Qual peça do Prophet teria evitado o erro de previsão de fevereiro desta aula?",
+    "choices": [
+      {
+        "text": "Pontos de mudança, porque a série dobrou",
+        "why": "A tendência estava boa; o problema foi uma semana da sazonalidade."
+      },
+      {
+        "text": "A lista de feriados",
+        "why": "Isso. O Carnaval ganha um efeito próprio nas suas datas, onde quer que caiam."
+      },
+      {
+        "text": "Uma sazonalidade semanal",
+        "why": "O dado já é semanal; o erro estava no desenho anual."
+      },
+      {
+        "text": "Regressores extras como uma verba de marketing",
+        "why": "Nada de marketing explica um feriado que mudou de lugar."
+      }
+    ]
+  },
+  "ex-9cgens38": {
+    "prompt": "O Prophet foi rodado em algum lugar deste curso?",
+    "choices": [
+      {
+        "text": "Não",
+        "why": "Isso. Ele é descrito, não instalado, e a aula 6 faz a parte dos feriados com statsmodels."
+      },
+      {
+        "text": "Sim, na aula 3",
+        "why": "A aula 3 o descreve e diz claramente que nada daquela seção foi rodado."
+      },
+      {
+        "text": "Sim, mas só no caminho da máquina virtual da aula 1",
+        "why": "Nenhum caminho da aula 1 o instala."
+      },
+      {
+        "text": "Só o componente de feriados, dentro do statsmodels",
+        "why": "O statsmodels não contém o Prophet; a aula 6 monta a mesma ideia com as próprias ferramentas."
+      }
+    ]
+  },
+  "ex-pz09hepx": {
+    "prompt": "Associe cada referência à série em que ela é difícil de vencer.",
+    "pairs": [
+      {
+        "left": "ingênua",
+        "right": "uma série que vagueia"
+      },
+      {
+        "left": "ingênua sazonal",
+        "right": "uma série dominada por uma sazonalidade estável"
+      },
+      {
+        "left": "média",
+        "right": "ruído em volta de um nível fixo"
+      }
+    ],
+    "right_distractors": [
+      "uma série com um feriado móvel"
+    ]
+  },
+  "ex-t3ss2mq6": {
+    "prompt": "Um modelo ARIMA que um colega passou uma semana ajustando se sai pior que repetir a mesma semana do ano passado, em semanas que nunca viu. O que deveria acontecer?",
+    "choices": [
+      {
+        "text": "Usar o ARIMA mesmo assim, porque é o modelo mais sofisticado",
+        "why": "Sofisticação que perde para uma referência gratuita é custo sem precisão."
+      },
+      {
+        "text": "Tirar a média dos dois e informar a média",
+        "why": "Tirar a média pode ajudar, mas só se ela também vencer a referência, que é o mesmo teste de novo."
+      },
+      {
+        "text": "Ajustar o ARIMA nas semanas de teste até ele ganhar",
+        "why": "Aí as semanas de teste viram treino, e nada foi testado."
+      },
+      {
+        "text": "Usar a previsão ingênua sazonal",
+        "why": "Isso. Um método que não vence a referência não deveria ser usado."
+      }
+    ]
+  },
+  "ex-jm3tznsp": {
+    "prompt": "O que as competições de previsão com milhares de séries reais encontraram de novo e de novo?",
+    "choices": [
+      {
+        "text": "O ARIMA vence a suavização exponencial",
+        "why": "Nenhuma família vence em geral."
+      },
+      {
+        "text": "O Prophet vence as duas famílias clássicas em dado de negócio",
+        "why": "A aula diz o contrário de um vencedor geral, e a própria documentação do Prophet aponta onde ele é fraco."
+      },
+      {
+        "text": "Métodos simples e médias de métodos são difíceis de vencer",
+        "why": "Isso."
+      },
+      {
+        "text": "Mais parâmetros sempre querem dizer uma previsão melhor",
+        "why": "Mais parâmetros podem se ajustar melhor ao passado e prever pior."
+      }
+    ]
+  },
+  "ex-6kzm9w75": {
+    "prompt": "Para conferir uma previsão com honestidade, ela é comparada com semanas que o modelo nunca ___ durante o ajuste.",
+    "blanks": [
+      {
+        "accept": [
+          "viu"
+        ]
+      }
+    ]
+  },
+  "ex-06hhs98w": {
+    "prompt": "Coloque os passos do programa de Holt-Winters da aula em ordem.",
+    "items": [
+      "somar os dias em semanas",
+      "separar 2025 como teste",
+      "ajustar tendência, sazonalidade e os três pesos em 2023 e 2024",
+      "prever as semanas de 2025",
+      "comparar com o que aconteceu"
+    ]
+  },
+  "ex-6egsr11a": {
+    "prompt": "Um time tem dois anos de pedidos diários, uma sazonalidade semanal e uma anual, e uma dúzia de feriados que mudam todo ano. Que família combina melhor para começar, depois das referências?",
+    "choices": [
+      {
+        "text": "ARIMA, porque tem impulso de curto prazo",
+        "why": "Nada na descrição fala de impulso, e duas sazonalidades com feriados móveis é o caso mais difícil do ARIMA."
+      },
+      {
+        "text": "Um modelo com sazonalidades e lista de feriados, como o Prophet",
+        "why": "Isso. Várias sazonalidades e muitos feriados móveis é o caso para o qual ele foi feito."
+      },
+      {
+        "text": "Suavização exponencial simples",
+        "why": "Ela não tem sazonalidade nenhuma."
+      },
+      {
+        "text": "Holt-Winters com sazonalidade de 365 dias",
+        "why": "Um período fixo não aprende feriados que mudam de lugar."
+      }
+    ]
+  }
+}

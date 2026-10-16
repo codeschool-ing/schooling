@@ -1,0 +1,485 @@
+{
+  "ex-hznwj4mg": {
+    "prompt": "Por que uma dependência lenta consegue derrubar páginas que nunca a chamam?",
+    "hint": "Do que essas páginas também precisam?",
+    "choices": [
+      {
+        "text": "Manda erros para toda página do serviço",
+        "why": "Não manda erro nenhum."
+      },
+      {
+        "text": "Quem a chama segura as threads compartilhadas",
+        "why": "Isso."
+      },
+      {
+        "text": "Requisições a ela são repetidas por toda outra página",
+        "why": "Outras páginas não a chamam."
+      },
+      {
+        "text": "Trava o banco de onde todas as páginas leem",
+        "why": "O catálogo respondia da memória."
+      }
+    ]
+  },
+  "ex-3687twj0": {
+    "prompt": "O que é uma falha em cascata?",
+    "hint": "Ela avança para fora um salto de cada vez.",
+    "choices": [
+      {
+        "text": "Vários defeitos lançados num deploy só",
+        "why": "Isso é um deploy ruim."
+      },
+      {
+        "text": "Um banco replicado em várias regiões",
+        "why": "Isso é replicação."
+      },
+      {
+        "text": "Lentidão passando de chamador a chamador",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma fila que passa mensagens por vários brokers",
+        "why": "Não é uma falha."
+      }
+    ]
+  },
+  "ex-g1yqvnbz": {
+    "prompt": "Associe cada jeito de um recurso acabar à ferramenta para ele.",
+    "hint": "Dependência, cliente, trabalho.",
+    "pairs": [
+      {
+        "left": "uma dependência lenta",
+        "right": "um bulkhead"
+      },
+      {
+        "left": "um cliente pedindo vezes demais",
+        "right": "um limite de taxa"
+      },
+      {
+        "left": "mais trabalho do que dá para fazer agora",
+        "right": "uma fila limitada"
+      }
+    ]
+  },
+  "ex-wz2mfs6x": {
+    "prompt": "Com quantas threads a loja do laboratório atende requisições?",
+    "hint": "`max_workers`.",
+    "unit": "threads"
+  },
+  "ex-2hesgmg1": {
+    "prompt": "Por que o pool do laboratório tem só oito threads?",
+    "hint": "Um pool de verdade também enche.",
+    "choices": [
+      {
+        "text": "O Python não consegue rodar mais de oito threads",
+        "why": "Consegue rodar muito mais."
+      },
+      {
+        "text": "Para o efeito aparecer rápido",
+        "why": "Isso; um pool maior enche mais tarde."
+      },
+      {
+        "text": "Oito é o padrão do Tomcat",
+        "why": "O padrão do Tomcat é 200."
+      },
+      {
+        "text": "O serviço de estoque só aceita oito conexões",
+        "why": "O serviço de estoque não tem esse limite."
+      }
+    ]
+  },
+  "ex-673ywh8k": {
+    "prompt": "Com o serviço de estoque levando cinco segundos, o que aconteceu com o catálogo?",
+    "hint": "Olhe a linha dele na saída.",
+    "choices": [
+      {
+        "text": "Nada; ele responde da memória",
+        "why": "193 de 200 deram timeout."
+      },
+      {
+        "text": "Devolveu erros do serviço de estoque",
+        "why": "Nunca chamou o serviço de estoque."
+      },
+      {
+        "text": "Também deu timeout, sem threads",
+        "why": "Isso."
+      },
+      {
+        "text": "Ficou em uns cinco segundos por resposta",
+        "why": "A carga desistia em três."
+      }
+    ]
+  },
+  "ex-g8qxjy23": {
+    "prompt": "Por que um timeout de um segundo na chamada ao estoque não bastaria?",
+    "hint": "Vinte por segundo, oito threads.",
+    "choices": [
+      {
+        "text": "Timeouts não funcionam dentro de um pool de threads",
+        "why": "Funcionam."
+      },
+      {
+        "text": "O serviço de estoque ignora timeouts",
+        "why": "O timeout fica do lado de quem chama."
+      },
+      {
+        "text": "Um segundo é mais que o atraso do serviço de estoque",
+        "why": "É menos que cinco."
+      },
+      {
+        "text": "Ainda pede mais de oito threads",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-wzv1rebg": {
+    "prompt": "Requisições de estoque chegam a 20 por segundo e cada uma segura uma thread por 5 segundos. De quantas threads elas precisariam para rodar todas ao mesmo tempo?",
+    "hint": "Ritmo de chegada × tempo segurado.",
+    "unit": "threads"
+  },
+  "ex-9q5k2m9r": {
+    "prompt": "O que o bulkhead da loja faz quando três threads já estão esperando o serviço de estoque?",
+    "hint": "`acquire(blocking=False)`.",
+    "choices": [
+      {
+        "text": "Põe a quarta requisição na fila até uma liberar",
+        "why": "Ele não espera."
+      },
+      {
+        "text": "Recusa a quarta na hora com 503",
+        "why": "Isso."
+      },
+      {
+        "text": "Manda a quarta para outra instância de estoque",
+        "why": "Há um serviço de estoque."
+      },
+      {
+        "text": "Aumenta o pool para nove threads",
+        "why": "O pool continua com oito."
+      }
+    ]
+  },
+  "ex-4e2dzext": {
+    "prompt": "Com o bulkhead ligado e o serviço de estoque lento, por que a página de estoque ainda falhou?",
+    "hint": "O que a dependência dela estava fazendo?",
+    "choices": [
+      {
+        "text": "O bulkhead estava baixo demais",
+        "why": "Um maior seguraria mais threads para o mesmo fim."
+      },
+      {
+        "text": "A dependência dela levava mesmo cinco segundos",
+        "why": "Isso: o bulkhead contém uma falha, não a conserta."
+      },
+      {
+        "text": "O catálogo tomou as threads dela",
+        "why": "O catálogo usou pouco."
+      },
+      {
+        "text": "O bulkhead bloqueia toda requisição de estoque",
+        "why": "Deixava três passarem por vez."
+      }
+    ]
+  },
+  "ex-avx7h8q2": {
+    "prompt": "O que a aula 2 prometeu que o bulkhead mostra?",
+    "hint": "Isolamento e serviços.",
+    "choices": [
+      {
+        "text": "Que toda dependência precisa de um serviço próprio",
+        "why": "O laboratório é um processo só."
+      },
+      {
+        "text": "Que monólitos não podem ser isolados",
+        "why": "O contrário."
+      },
+      {
+        "text": "Isolamento dentro de um processo",
+        "why": "Isso."
+      },
+      {
+        "text": "Que threads são mais baratas que processos",
+        "why": "Não é o ponto."
+      }
+    ]
+  },
+  "ex-vdv2atva": {
+    "prompt": "O que uma arquitetura baseada em células limita?",
+    "hint": "A última linha da tabela.",
+    "choices": [
+      {
+        "text": "O número de threads por serviço",
+        "why": "Essa é a primeira linha."
+      },
+      {
+        "text": "Quantos clientes uma falha alcança",
+        "why": "Isso."
+      },
+      {
+        "text": "O número de serviços que uma equipe pode ter",
+        "why": "Não é uma regra de organização."
+      },
+      {
+        "text": "O tamanho de cada tabela do banco",
+        "why": "Não é sobre armazenamento."
+      }
+    ]
+  },
+  "ex-5d4mxy60": {
+    "prompt": "Que código de status diz a um cliente que ele está pedindo vezes demais?",
+    "hint": "\"Você, vá mais devagar.\"",
+    "choices": [
+      {
+        "text": "`503 Service Unavailable`",
+        "why": "Esse diz que o serviço está com problemas."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "why": "A requisição estava bem formada."
+      },
+      {
+        "text": "`429 Too Many Requests`",
+        "why": "Isso."
+      },
+      {
+        "text": "`403 Forbidden`",
+        "why": "O cliente tem permissão, só não tão seguido."
+      }
+    ]
+  },
+  "ex-s6hys8sa": {
+    "prompt": "Por que a Ana recebeu toda resposta enquanto o cliente guloso foi recusado?",
+    "hint": "O balde de quem esvaziou?",
+    "choices": [
+      {
+        "text": "A Ana pediu primeiro",
+        "why": "Os dois começaram juntos."
+      },
+      {
+        "text": "O limite é por cliente",
+        "why": "Isso."
+      },
+      {
+        "text": "As requisições dela tinham prioridade maior",
+        "why": "Não há prioridade."
+      },
+      {
+        "text": "O cliente guloso usou outra página",
+        "why": "Os dois pediram o catálogo."
+      }
+    ]
+  },
+  "ex-s8twpfqr": {
+    "prompt": "Um balde guarda 10 fichas e é reabastecido a 10 por segundo. Um cliente começa com o balde cheio e pede o mais rápido que pode por 5 segundos. Mais ou menos quantas requisições passam?",
+    "hint": "A rajada, depois o ritmo.",
+    "unit": "requisições"
+  },
+  "ex-7f54sbd3": {
+    "prompt": "Três instâncias de gateway guardam cada uma o próprio balde de 10 por segundo por cliente. Qual é o limite de verdade?",
+    "hint": "Cada instância permite a taxa inteira.",
+    "choices": [
+      {
+        "text": "10 por segundo",
+        "why": "Só se os baldes fossem compartilhados."
+      },
+      {
+        "text": "Uns 3 por segundo por instância",
+        "why": "Nada o divide."
+      },
+      {
+        "text": "Até 30 por segundo",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhum limite",
+        "why": "Cada instância ainda limita."
+      }
+    ]
+  },
+  "ex-0tj76p0w": {
+    "prompt": "Por que critério o load shedding decide, ao contrário de um limite de taxa?",
+    "hint": "Recomendações primeiro, checkout por último.",
+    "choices": [
+      {
+        "text": "A importância da requisição",
+        "why": "Isso."
+      },
+      {
+        "text": "O cliente que a mandou",
+        "why": "Isso é um limite de taxa."
+      },
+      {
+        "text": "O tamanho da requisição em bytes",
+        "why": "Tamanho não é importância."
+      },
+      {
+        "text": "A hora do dia em que ela chega",
+        "why": "Não é o critério descrito."
+      }
+    ]
+  },
+  "ex-e17v730c": {
+    "prompt": "Com uma fila sem limite, em que a rajada de 100 pedidos se transformou?",
+    "hint": "Olhe a maior espera.",
+    "choices": [
+      {
+        "text": "Pedidos recusados",
+        "why": "Todos foram aceitos."
+      },
+      {
+        "text": "Pedidos perdidos",
+        "why": "Todos foram tratados."
+      },
+      {
+        "text": "Espera, quase dez segundos para o último",
+        "why": "Isso."
+      },
+      {
+        "text": "Um worker mais rápido",
+        "why": "A velocidade do worker não mudou."
+      }
+    ]
+  },
+  "ex-qvkwvsk8": {
+    "prompt": "O que é back pressure?",
+    "hint": "Para onde vai o limite quando é alcançado?",
+    "choices": [
+      {
+        "text": "Uma fila que cresce para absorver qualquer rajada",
+        "why": "Isso esconde o limite."
+      },
+      {
+        "text": "O limite voltando para quem produz o trabalho",
+        "why": "Isso."
+      },
+      {
+        "text": "Repetir o trabalho recusado até ser aceito",
+        "why": "Isso ignora a pressão."
+      },
+      {
+        "text": "Acrescentar workers sempre que a fila está longa",
+        "why": "Isso é escalar."
+      }
+    ]
+  },
+  "ex-0979kmqs": {
+    "prompt": "Com a fila limitada a 20, o que os pedidos recusados receberam?",
+    "hint": "Leia o `do_POST`.",
+    "choices": [
+      {
+        "text": "Um `202` e um cancelamento depois",
+        "why": "Nunca foram aceitos."
+      },
+      {
+        "text": "Nenhuma resposta, depois do timeout",
+        "why": "Foram respondidos na hora."
+      },
+      {
+        "text": "Um `429`, por terem vindo rápido demais",
+        "why": "A loja usou 503 aqui."
+      },
+      {
+        "text": "Um `503` com `Retry-After: 2` na hora",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-gc87pss6": {
+    "prompt": "Onde a back pressure aparece num pipeline Kafka com um consumidor lento?",
+    "hint": "O log nunca recusa.",
+    "choices": [
+      {
+        "text": "O produtor recebe erros",
+        "why": "Ele não fica sabendo de nada."
+      },
+      {
+        "text": "Só no lag do consumidor",
+        "why": "Isso."
+      },
+      {
+        "text": "O broker bloqueia tópicos novos",
+        "why": "Não é o que acontece."
+      },
+      {
+        "text": "As partições encolhem",
+        "why": "Partições não encolhem."
+      }
+    ]
+  },
+  "ex-es8tkvgv": {
+    "prompt": "No arranjo padrão do Resilience4j, qual fica por fora?",
+    "hint": "Um retry deveria passar por todo limite de novo.",
+    "choices": [
+      {
+        "text": "O bulkhead",
+        "why": "Ele fica junto da chamada."
+      },
+      {
+        "text": "O timeout",
+        "why": "Ele fica dentro do breaker."
+      },
+      {
+        "text": "O retry",
+        "why": "Isso."
+      },
+      {
+        "text": "O breaker",
+        "why": "Ele fica dentro do retry."
+      }
+    ]
+  },
+  "ex-bqjjt7xs": {
+    "prompt": "Associe cada pergunta à ferramenta que a responde.",
+    "hint": "Seis perguntas, seis ferramentas; quatro aqui.",
+    "pairs": [
+      {
+        "left": "quanto tempo espero?",
+        "right": "um timeout"
+      },
+      {
+        "left": "devo parar de chamar um serviço fora do ar?",
+        "right": "um circuit breaker"
+      },
+      {
+        "left": "quanta capacidade uma dependência pode segurar?",
+        "right": "um bulkhead"
+      },
+      {
+        "left": "o que acontece com o trabalho que ainda não consigo fazer?",
+        "right": "uma fila limitada"
+      }
+    ]
+  },
+  "ex-cn6jx49x": {
+    "prompt": "Ponha o experimento do bulkhead em ordem.",
+    "hint": "Reiniciar, deixar lento, carregar, ler.",
+    "items": [
+      "Reiniciar a loja com `BULKHEAD=3`",
+      "Fazer o serviço de estoque levar cinco segundos",
+      "Rodar a carga mista",
+      "Ver o catálogo responder toda requisição"
+    ]
+  },
+  "ex-temtd4r9": {
+    "prompt": "O relatório noturno da Quitanda chama o banco de pedidos pelo mesmo pool de conexões do checkout, e toda noite às 2 da manhã o checkout fica lento. Qual é a correção que esta aula sugere?",
+    "hint": "Um recurso, dois tipos de trabalho.",
+    "choices": [
+      {
+        "text": "Limitar a taxa do checkout de noite",
+        "why": "O checkout é a vítima."
+      },
+      {
+        "text": "Acrescentar retries às consultas do checkout",
+        "why": "Mais carga no mesmo pool."
+      },
+      {
+        "text": "Um pool separado e menor para o relatório",
+        "why": "Isso: um bulkhead."
+      },
+      {
+        "text": "Uma fila sem limite na frente do banco",
+        "why": "Isso esconde o problema como atraso."
+      }
+    ]
+  }
+}

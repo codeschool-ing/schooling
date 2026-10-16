@@ -1,0 +1,935 @@
+[
+  {
+    "id": "ex-cya9djxk",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A system's database spends most of its time answering reads of the same rows. Which technique answers that problem first?",
+    "choices": [
+      {
+        "text": "Sharding by the most-read column, so that each server answers part of the reads",
+        "correct": false,
+        "why": "Sharding splits writes and size, at a permanent cost to every query; reads are cheaper to solve with replicas."
+      },
+      {
+        "text": "Replication",
+        "correct": true,
+        "why": "Right. Replicas take reads; every copy holds everything."
+      },
+      {
+        "text": "Partitioning the table by month",
+        "correct": false,
+        "why": "Partitioning makes queries on a range cheaper; it does not add a server to answer them."
+      },
+      {
+        "text": "A bigger index on the read column",
+        "correct": false,
+        "why": "The rows are already found; the problem is how many times they are asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-4b905zg7",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson reach for sharding last?",
+    "choices": [
+      {
+        "text": "PostgreSQL does not support it",
+        "correct": false,
+        "why": "The lab ran it on two PostgreSQL servers; the routing lives in the program."
+      },
+      {
+        "text": "It only helps reads, which replicas already handle",
+        "correct": false,
+        "why": "Sharding is what scales writes; that is its reason to exist."
+      },
+      {
+        "text": "It changes every query the program makes, for good",
+        "correct": true,
+        "why": "Right. Each query has to choose a shard or ask them all, and that is hard to undo."
+      },
+      {
+        "text": "It needs a different database for each shard, from a different vendor, so that a bug in one does not reach the others",
+        "correct": false,
+        "why": "The shards in the lab are the same PostgreSQL image."
+      }
+    ]
+  },
+  {
+    "id": "ex-msvgxkcp",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a PostgreSQL replica receive from the primary, in streaming replication?",
+    "choices": [
+      {
+        "text": "Each SQL statement a client sent, to run again on the replica's own copy of the data",
+        "correct": false,
+        "why": "It receives the changes the statements made, not the statements; a statement with now() would give a different result twice."
+      },
+      {
+        "text": "A full copy of the data every few minutes",
+        "correct": false,
+        "why": "A full copy happens once, with pg_basebackup; afterwards only the log flows."
+      },
+      {
+        "text": "Only the rows clients have read recently",
+        "correct": false,
+        "why": "That would be a cache; a replica holds everything."
+      },
+      {
+        "text": "The write-ahead log, as it is written",
+        "correct": true,
+        "why": "Right. The replica applies the same changes in the same order."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm7tzv2v",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pg_stat_replication shows sync_state = async. What does that mean for a client whose INSERT just returned?",
+    "choices": [
+      {
+        "text": "The replica may not have the row yet",
+        "correct": true,
+        "why": "Right. The primary did not wait for the replica before answering."
+      },
+      {
+        "text": "The replica received the row and will apply it at night",
+        "correct": false,
+        "why": "It applies changes continuously, a moment behind."
+      },
+      {
+        "text": "The row exists on both servers already",
+        "correct": false,
+        "why": "That is the guarantee synchronous replication gives, in lesson 3."
+      },
+      {
+        "text": "The INSERT was queued and may still fail",
+        "correct": false,
+        "why": "It committed on the primary; only the replica's copy is late."
+      }
+    ]
+  },
+  {
+    "id": "ex-spgrftwj",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a replica refuse an UPDATE?",
+    "choices": [
+      {
+        "text": "Two servers accepting writes to the same rows would have to agree on the result",
+        "correct": true,
+        "why": "Right. A replica avoids the problem by never writing."
+      },
+      {
+        "text": "Its disk is mounted read-only",
+        "correct": false,
+        "why": "It writes to its disk all the time, applying the log."
+      },
+      {
+        "text": "Replicas run an older version of PostgreSQL",
+        "correct": false,
+        "why": "Both containers run postgres:16.15."
+      },
+      {
+        "text": "The replicator user has no write permission",
+        "correct": false,
+        "why": "The UPDATE ran as the tickets user, which can write on the primary; the refusal is about being a replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryxhqv2q",
+    "version": 1,
+    "section": "replication",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The command that copies the primary's whole data directory to start a replica is pg____ .",
+    "blanks": [
+      {
+        "accept": [
+          "basebackup",
+          "_basebackup"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jgdmt3hd",
+    "version": 1,
+    "section": "routing-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which read should go to the primary rather than a replica?",
+    "choices": [
+      {
+        "text": "Checking that a seat is free just before selling it",
+        "correct": true,
+        "why": "Right. A read that decides a write must see the latest state."
+      },
+      {
+        "text": "The list of venues",
+        "correct": false,
+        "why": "It changes rarely; a replica's copy is fine."
+      },
+      {
+        "text": "The page of a show browsed by a visitor",
+        "correct": false,
+        "why": "The bulk of the traffic, and a second's staleness hurts nobody."
+      },
+      {
+        "text": "A dashboard of sales per day, refreshed every minute",
+        "correct": false,
+        "why": "Nobody can tell a figure a second old; it is a natural replica read."
+      }
+    ]
+  },
+  {
+    "id": "ex-7td9zn98",
+    "version": 1,
+    "section": "routing-reads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A system's problem is too many writes. Why do more replicas not help?",
+    "choices": [
+      {
+        "text": "Every replica repeats every write",
+        "correct": true,
+        "why": "Right. Replicas add read capacity; the write work is applied everywhere."
+      },
+      {
+        "text": "Replicas slow the primary's writes by locking its rows while they copy them",
+        "correct": false,
+        "why": "Replicas read the log; they take no locks on the primary's rows."
+      },
+      {
+        "text": "PostgreSQL limits a primary to one replica",
+        "correct": false,
+        "why": "max_wal_senders allows ten by default."
+      },
+      {
+        "text": "Writes have to be sent to every replica by the program",
+        "correct": false,
+        "why": "The program writes once to the primary; replication does the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y85ndj0",
+    "version": 1,
+    "section": "routing-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After five seconds of reads, the replica's xact_commit went from 3 to 8027 while load.py sent 9655 requests. What explains the difference?",
+    "choices": [
+      {
+        "text": "nginx answered 1600 from its cache",
+        "correct": false,
+        "why": "This nginx caches nothing."
+      },
+      {
+        "text": "1600 requests failed",
+        "correct": false,
+        "why": "The status line showed 9655 answers of 200."
+      },
+      {
+        "text": "The counter is updated in batches, so it trails the requests",
+        "correct": true,
+        "why": "Right. The reads did reach the replica."
+      },
+      {
+        "text": "About 1600 reads went to the primary instead",
+        "correct": false,
+        "why": "Every GET in app.py asks db(REPLICA)."
+      }
+    ]
+  },
+  {
+    "id": "ex-32wwx6pj",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A buyer buys a ticket and the next page says it was never sold. Which guarantee was lost?",
+    "choices": [
+      {
+        "text": "Isolation between two buyers of the same show",
+        "correct": false,
+        "why": "One buyer, reading their own write."
+      },
+      {
+        "text": "Read-your-writes",
+        "correct": true,
+        "why": "Right. The read came from a replica that had not applied the sale."
+      },
+      {
+        "text": "Atomicity, because the sale was applied in two halves",
+        "correct": false,
+        "why": "The sale committed whole; the replica had not applied any of it."
+      },
+      {
+        "text": "Durability",
+        "correct": false,
+        "why": "The sale is safe on the primary; it is only not visible yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1ha6mb4",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program stores the primary's pg_current_wal_lsn() after each of a user's writes. What does it do with it before reading from a replica?",
+    "choices": [
+      {
+        "text": "Sends the LSN to the replica so that it applies the log up to that point immediately",
+        "correct": false,
+        "why": "A replica applies the log as fast as it can already; the program can only wait or go elsewhere."
+      },
+      {
+        "text": "Compares it with the time of the read",
+        "correct": false,
+        "why": "An LSN is a position in the log, not a time."
+      },
+      {
+        "text": "Uses it as the id of the ticket",
+        "correct": false,
+        "why": "It identifies a place in the log, not a row."
+      },
+      {
+        "text": "Checks the replica's pg_last_wal_replay_lsn() is at least that",
+        "correct": true,
+        "why": "Right. If it is, the replica has applied the user's write."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zjc3jk1",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the weakness of 'read from the primary for a few seconds after each write'?",
+    "choices": [
+      {
+        "text": "It sends every read in the system to the primary",
+        "correct": false,
+        "why": "Only the reads of users who just wrote."
+      },
+      {
+        "text": "The few seconds are a guess about the worst lag",
+        "correct": true,
+        "why": "Right. A replica further behind than the guess still serves a stale read."
+      },
+      {
+        "text": "It needs synchronous replication",
+        "correct": false,
+        "why": "It works with asynchronous replicas; that is its point."
+      },
+      {
+        "text": "It cannot be implemented without changing PostgreSQL",
+        "correct": false,
+        "why": "It is a decision in the program: a timestamp in the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqrnfe8n",
+    "version": 1,
+    "section": "lag",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of an asynchronous write in order, as the replica's reader experiences them.",
+    "items": [
+      "The primary writes the change to its WAL",
+      "The client is told the transaction committed",
+      "The replica receives the log record",
+      "The replica applies it, and reads there see the change"
+    ]
+  },
+  {
+    "id": "ex-vfcspv86",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the primary stopped, the box office's sales fail and its show pages still load. Why?",
+    "choices": [
+      {
+        "text": "The replica promoted itself when the primary stopped",
+        "correct": false,
+        "why": "It was promoted by hand afterwards; until then it stayed read-only."
+      },
+      {
+        "text": "nginx serves the pages from a copy it kept in memory before the primary stopped",
+        "correct": false,
+        "why": "This nginx keeps no copies; every page came from the replica."
+      },
+      {
+        "text": "Pages are read from the replica, which is still up",
+        "correct": true,
+        "why": "Right. Sales need the primary; reads were routed elsewhere."
+      },
+      {
+        "text": "The app retries sales until they work",
+        "correct": false,
+        "why": "The sale returned a 502 at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvgggx4r",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After promoting an asynchronous replica, which sales can be lost?",
+    "choices": [
+      {
+        "text": "All sales of the last hour, because replicas copy hourly",
+        "correct": false,
+        "why": "Replicas follow continuously; the loss is the lag at the moment of failure."
+      },
+      {
+        "text": "Only sales in progress, which the client never saw confirmed",
+        "correct": false,
+        "why": "Those are lost too, but the dangerous ones are the confirmed ones."
+      },
+      {
+        "text": "Those committed on the old primary but not yet sent",
+        "correct": true,
+        "why": "Right. They exist only on the dead machine."
+      },
+      {
+        "text": "None; a promoted replica fetches the missing log from the dead primary when it starts",
+        "correct": false,
+        "why": "The primary is dead; there is nothing to fetch from."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m37p4n8",
+    "version": 1,
+    "section": "failover",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failover hazard to what defends against it.",
+    "pairs": [
+      {
+        "left": "the program still points at the old primary",
+        "right": "a proxy or a name that moves to the new one"
+      },
+      {
+        "left": "confirmed writes lost with the old machine",
+        "right": "synchronous replication"
+      },
+      {
+        "left": "the old primary returns and accepts writes",
+        "right": "fencing it before promoting"
+      }
+    ]
+  },
+  {
+    "id": "ex-8t6p6bgr",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The plan for a June query on the partitioned sales table reads sales_2026_06 only. What is that called?",
+    "choices": [
+      {
+        "text": "Replication lag",
+        "correct": false,
+        "why": "Nothing in this query involves a replica."
+      },
+      {
+        "text": "An index-only scan of the parent table, which stores a summary of every child",
+        "correct": false,
+        "why": "The parent holds no rows; the plan scans one child."
+      },
+      {
+        "text": "Partition pruning",
+        "correct": true,
+        "why": "Right. The planner ruled out five partitions from the filter."
+      },
+      {
+        "text": "Sharding by month",
+        "correct": false,
+        "why": "All six partitions are on one server."
+      }
+    ]
+  },
+  {
+    "id": "ex-yccj9jhn",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the sales table of the lesson, a sale dated 2026-07-03 is inserted. What happens?",
+    "choices": [
+      {
+        "text": "It is stored in the parent table",
+        "correct": false,
+        "why": "A partitioned parent holds no rows of its own."
+      },
+      {
+        "text": "The insert fails: no partition holds July",
+        "correct": true,
+        "why": "Right. Someone has to create July's partition first."
+      },
+      {
+        "text": "It goes into June's partition, the last one",
+        "correct": false,
+        "why": "A range partition only takes rows inside its range."
+      },
+      {
+        "text": "PostgreSQL creates a July partition automatically",
+        "correct": false,
+        "why": "It does not; that is why a scheduled job exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t13s8vc",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a sales table partitioned by month, a report asks for every sale of show 42 since the table began. How does partitioning affect it?",
+    "choices": [
+      {
+        "text": "Six times faster, because the partitions are read in parallel",
+        "correct": false,
+        "why": "Parallel reads of six pieces do the same work as one table, plus six plans."
+      },
+      {
+        "text": "Slightly slower: every partition is read",
+        "correct": true,
+        "why": "Right. Pruning needs a filter on the key; show 42 is not the key."
+      },
+      {
+        "text": "It fails, because the query does not name a month",
+        "correct": false,
+        "why": "Queries on the parent work with any filter; only pruning needs the key."
+      },
+      {
+        "text": "It reads only the most recent partition",
+        "correct": false,
+        "why": "That would miss earlier sales; the planner cannot rule any out."
+      }
+    ]
+  },
+  {
+    "id": "ex-za3tay0z",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Apart from time, what does a big DELETE cost that dropping a partition does not?",
+    "choices": [
+      {
+        "text": "It cannot be rolled back",
+        "correct": false,
+        "why": "The lesson's DELETE was rolled back."
+      },
+      {
+        "text": "It needs the table to be detached first",
+        "correct": false,
+        "why": "A DELETE works on the parent directly."
+      },
+      {
+        "text": "Every row's removal goes into the log and to every replica",
+        "correct": true,
+        "why": "Right, and the dead rows stay on disk until VACUUM."
+      },
+      {
+        "text": "It deletes rows from other partitions as well",
+        "correct": false,
+        "why": "Its WHERE limits it to January."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg723b1m",
+    "version": 1,
+    "section": "retention",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, how many rows did the DELETE remove from January?",
+    "value": 205529,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-0d6benr8",
+    "version": 1,
+    "section": "sharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The box office is sharded by show. Which operation touches exactly one shard?",
+    "choices": [
+      {
+        "text": "Listing the ten best-selling shows of the week",
+        "correct": false,
+        "why": "Every shard holds some shows; all must be asked."
+      },
+      {
+        "text": "Selling a ticket for show 42",
+        "correct": true,
+        "why": "Right. The show's row and its tickets live on one shard."
+      },
+      {
+        "text": "Counting all tickets sold",
+        "correct": false,
+        "why": "Each shard counts its own; the program adds."
+      },
+      {
+        "text": "Finding every ticket one buyer has bought, across all the shows they went to this year",
+        "correct": false,
+        "why": "A buyer's tickets are spread over the shards of their shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd469t0d",
+    "version": 1,
+    "section": "sharding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sharding by show, one concert takes 80% of all sales. What happens?",
+    "choices": [
+      {
+        "text": "The router spreads that show over every shard",
+        "correct": false,
+        "why": "shard_for gives one answer per show."
+      },
+      {
+        "text": "Nothing; the sales are divided evenly by hashing",
+        "correct": false,
+        "why": "The hash divides shows, not sales of one show."
+      },
+      {
+        "text": "Its shard is overloaded while the others idle",
+        "correct": true,
+        "why": "Right. A hot key cannot be split by sharding on that key."
+      },
+      {
+        "text": "Adding a shard solves it",
+        "correct": false,
+        "why": "The hot show still lands on one shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-m16h81wb",
+    "version": 1,
+    "section": "sharding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the lesson's router and two shards, show n sells n tickets for n = 1 to 100. How many tickets end up on shard 0?",
+    "hint": "Shard 0 holds the even shows.",
+    "value": 2550,
+    "tolerance": 0,
+    "unit": "tickets"
+  },
+  {
+    "id": "ex-wnkgys29",
+    "version": 1,
+    "section": "cross-shard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each shard returns the average ticket price of its own shows. Why is the average of those averages wrong?",
+    "choices": [
+      {
+        "text": "The shards hold different numbers of tickets",
+        "correct": true,
+        "why": "Right. Each shard should return a sum and a count, which do merge."
+      },
+      {
+        "text": "One shard's answer always arrives late",
+        "correct": false,
+        "why": "Late or not, the arithmetic is wrong."
+      },
+      {
+        "text": "Prices are stored in cents, so dividing by the number of shards rounds every average down",
+        "correct": false,
+        "why": "Rounding is not the issue; the weights are."
+      },
+      {
+        "text": "Averages cannot be computed in SQL",
+        "correct": false,
+        "why": "avg() exists; merging them is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-fantcf5a",
+    "version": 1,
+    "section": "cross-shard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two shards each create rows in a table with a bigserial id. What goes wrong?",
+    "choices": [
+      {
+        "text": "Both hand out the same ids",
+        "correct": true,
+        "why": "Right. Each shard has its own sequence."
+      },
+      {
+        "text": "Nothing, as long as each shard has its own primary key",
+        "correct": false,
+        "why": "Each key is unique only inside its shard."
+      },
+      {
+        "text": "The ids skip every other number because the two sequences take turns",
+        "correct": false,
+        "why": "The sequences know nothing of each other."
+      },
+      {
+        "text": "Inserts fail on the second shard",
+        "correct": false,
+        "why": "Each shard's insert succeeds; the clash is between shards."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w6w12bn",
+    "version": 1,
+    "section": "cross-shard",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the shard key chosen so that common operations stay inside one shard?",
+    "choices": [
+      {
+        "text": "Routers can only reach one shard per connection, so a second shard means opening a new connection each time",
+        "correct": false,
+        "why": "The router keeps a connection to every shard."
+      },
+      {
+        "text": "Locks are not available across shards",
+        "correct": false,
+        "why": "Locks exist on each shard; atomicity across them does not."
+      },
+      {
+        "text": "No ordinary transaction spans two servers",
+        "correct": true,
+        "why": "Right. Two-phase commit and sagas exist, and both are expensive."
+      },
+      {
+        "text": "Shards cannot read each other's tables",
+        "correct": false,
+        "why": "True, and not the reason; the program reads both."
+      }
+    ]
+  },
+  {
+    "id": "ex-988fexkp",
+    "version": 1,
+    "section": "resharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By modulo, about what share of keys move when going from 4 shards to 5?",
+    "choices": [
+      {
+        "text": "One fifth",
+        "correct": false,
+        "why": "That is the minimum, which the ring approaches."
+      },
+      {
+        "text": "Four fifths",
+        "correct": true,
+        "why": "Right. n / (n + 1), with n = 4."
+      },
+      {
+        "text": "None, because the old shards keep their keys",
+        "correct": false,
+        "why": "The remainder of almost every key changes."
+      },
+      {
+        "text": "A quarter",
+        "correct": false,
+        "why": "Each old shard gives a quarter only under a ring."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhcd856g",
+    "version": 1,
+    "section": "resharding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With 10 points per shard, the ring moved only 26.2% of keys. Why is that not a better result than 1000 points?",
+    "choices": [
+      {
+        "text": "26.2% is below the minimum, so it is a measurement error",
+        "correct": false,
+        "why": "The minimum applies to an even split; this split was not even."
+      },
+      {
+        "text": "Fewer points make lookups slower",
+        "correct": false,
+        "why": "Fewer points make lookups faster."
+      },
+      {
+        "text": "It is better; fewer keys moving is always the goal",
+        "correct": false,
+        "why": "Moving fewer keys by leaving a shard underused is not a saving."
+      },
+      {
+        "text": "The shards ended very uneven, one with almost twice another's keys",
+        "correct": true,
+        "why": "Right. Fewer moves came from the new shard getting less than its share."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwhjkaxf",
+    "version": 1,
+    "section": "resharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does creating 256 logical shards on four servers from the start buy?",
+    "choices": [
+      {
+        "text": "A key's logical shard never changes; only the map to servers does",
+        "correct": true,
+        "why": "Right. Whole logical shards move, and no key is re-hashed."
+      },
+      {
+        "text": "Cross-shard transactions become ordinary ones, because logical shards share a server",
+        "correct": false,
+        "why": "Two logical shards may sit on different servers at any time."
+      },
+      {
+        "text": "No need for a shard key",
+        "correct": false,
+        "why": "The key still picks the logical shard."
+      },
+      {
+        "text": "256 times the write capacity",
+        "correct": false,
+        "why": "Capacity is still four servers' worth."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnhnmnr8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the technique the lesson uses for it.",
+    "pairs": [
+      {
+        "left": "too many reads",
+        "right": "replicas"
+      },
+      {
+        "left": "old months to throw away",
+        "right": "partitions"
+      },
+      {
+        "left": "too many writes for one server",
+        "right": "shards"
+      },
+      {
+        "left": "surviving the loss of the primary",
+        "right": "promoting a replica"
+      }
+    ]
+  },
+  {
+    "id": "ex-hqz2t6xv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ticketing system shards by buyer. What becomes a cross-shard operation that sharding by show would have kept local?",
+    "choices": [
+      {
+        "text": "Inserting a ticket",
+        "correct": false,
+        "why": "An insert lands on the buyer's shard."
+      },
+      {
+        "text": "Reading a buyer's profile",
+        "correct": false,
+        "why": "Local to the buyer's shard."
+      },
+      {
+        "text": "Showing one buyer their own tickets",
+        "correct": false,
+        "why": "That becomes local when the buyer is the key."
+      },
+      {
+        "text": "Selling the last seats of one show",
+        "correct": true,
+        "why": "Right. Buyers of one show are on many shards, and the seat count must be checked against all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzwz1n4v",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query with no shard key is sent to every shard and the answers merged; this is called scatter-___ .",
+    "blanks": [
+      {
+        "accept": [
+          "gather"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

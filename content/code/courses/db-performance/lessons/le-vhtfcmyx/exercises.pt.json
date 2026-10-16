@@ -1,0 +1,417 @@
+{
+  "ex-csfft85b": {
+    "prompt": "De onde a aula tira a taxa de crescimento de `orders`?",
+    "hint": "O banco já contém a própria história.",
+    "choices": [
+      {
+        "text": "Da contagem de pedidos por mês",
+        "why": "Isso: toda linha com data registra quando chegou."
+      },
+      {
+        "text": "Do tamanho da tabela no backup de ontem",
+        "why": "Um backup é uma foto só; crescimento precisa de história, que as linhas já carregam."
+      },
+      {
+        "text": "De uma previsão escrita pela área de negócio",
+        "why": "A aula mede em vez de perguntar."
+      },
+      {
+        "text": "Do `pg_stat_statements`",
+        "why": "Ele conta comandos desde um reset, não linhas em três anos."
+      }
+    ]
+  },
+  "ex-k0q26hp7": {
+    "prompt": "As contagens mensais sobem mais ou menos os mesmos dois a três mil pedidos por mês. Que tipo de crescimento é esse, e por que importa?",
+    "hint": "Uma quantidade fixa contra um percentual fixo.",
+    "choices": [
+      {
+        "text": "Exponencial, então o disco enche em meses",
+        "why": "Exponencial faria uma curva para cima; estes degraus são do mesmo tamanho."
+      },
+      {
+        "text": "Sazonal, então não dá para prever",
+        "why": "A queda de fevereiro é o mês curto; a tendência por baixo é clara."
+      },
+      {
+        "text": "Linear: uma reta basta",
+        "why": "Isso: uma loja crescendo por percentual precisaria da curva."
+      },
+      {
+        "text": "Nenhum: as contagens são aleatórias",
+        "why": "Elas sobem com regularidade, mês a mês."
+      }
+    ]
+  },
+  "ex-tmvf5p8q": {
+    "prompt": "Por que 130 bytes por pedido é mais do que as cinco colunas de um pedido sugeririam?",
+    "hint": "O que foi dividido pelo quê?",
+    "choices": [
+      {
+        "text": "O PostgreSQL guarda números como texto",
+        "why": "Inteiros e timestamps são guardados em larguras binárias fixas."
+      },
+      {
+        "text": "Conta índices, a contabilidade das linhas e espaço livre",
+        "why": "Isso: pg_total_relation_size dividido pelas linhas inclui tudo isso."
+      },
+      {
+        "text": "Porque a estimativa de linhas está baixa demais",
+        "why": "O reltuples de orders era exatamente 2000000."
+      },
+      {
+        "text": "Porque pedidos apagados ainda ocupam espaço",
+        "why": "Nada foi apagado de orders."
+      }
+    ]
+  },
+  "ex-apmta9ke": {
+    "prompt": "Uma previsão do disco é feita só com `orders` e `order_lines`. Em quanto, mais ou menos, ela erra neste banco?",
+    "hint": "Qual tabela cresce mais depressa em bytes?",
+    "choices": [
+      {
+        "text": "Nada: eventos não fazem parte do tamanho do banco",
+        "why": "events é a maior tabela de todas."
+      },
+      {
+        "text": "Em cerca de 10%",
+        "why": "events acrescentam 217 MB por mês contra 39 das outras duas."
+      },
+      {
+        "text": "Por um fator de uns seis, porque os eventos crescem mais que tudo o resto",
+        "why": "Isso: 256 MB por mês no total contra 39 de pedidos e linhas."
+      },
+      {
+        "text": "Por um fator de cem",
+        "why": "A razão é de uns 256 para 39."
+      }
+    ]
+  },
+  "ex-4gzwyba4": {
+    "prompt": "Um disco tem 20 GB livres e o banco cresce 256 MB por mês. Em uns quantos meses ele enche? (1 GB = 1024 MB)",
+    "hint": "Espaço livre dividido pelo crescimento.",
+    "unit": "meses"
+  },
+  "ex-rft82d25": {
+    "prompt": "Quais destes ocupam espaço em disco que uma previsão feita com contagem de linhas não vê? Marque todos os que se aplicam.",
+    "hint": "O último parágrafo da seção de crescimento.",
+    "choices": [
+      {
+        "text": "O log de escrita antecipada",
+        "why": "Certo: cresce com as escritas, não como linhas."
+      },
+      {
+        "text": "Arquivos temporários de uma ordenação grande",
+        "why": "Certo: aparecem enquanto uma consulta roda."
+      },
+      {
+        "text": "Um backup gravado no mesmo disco",
+        "why": "Certo: cresce com o banco sem estar nele."
+      },
+      {
+        "text": "As linhas de `orders`",
+        "why": "Essas são exatamente o que a previsão conta."
+      }
+    ]
+  },
+  "ex-mxy2pvkc": {
+    "prompt": "O que o `pgbench -R 600` muda no jeito de mandar a carga?",
+    "hint": "Usuários de verdade não esperam o servidor ficar pronto.",
+    "choices": [
+      {
+        "text": "Manda 600 transações e para",
+        "why": "Isso seria uma contagem de transações; o -R é uma taxa."
+      },
+      {
+        "text": "Marca um ritmo, como usuários chegam, e conta a espera",
+        "why": "Isso: quando o servidor fica para trás, o atraso de agenda entra na latência."
+      },
+      {
+        "text": "Limita cada transação a 600 ms",
+        "why": "Nada é cortado; o que se fixa é a taxa."
+      },
+      {
+        "text": "Roda 600 clientes",
+        "why": "Clientes são o -c; a execução usou oito."
+      }
+    ]
+  },
+  "ex-2cg796dd": {
+    "prompt": "A 1050 transações por segundo, o servidor entregou `tps = 1042` com latência média de 133 ms. O que aconteceu?",
+    "hint": "Ele não falhou.",
+    "choices": [
+      {
+        "text": "Acompanhou fazendo todo mundo entrar na fila",
+        "why": "Isso: a taxa foi cumprida, e o preço foi a espera."
+      },
+      {
+        "text": "Descartou as transações que não conseguiu atender",
+        "why": "Nenhuma transação falhou; elas esperaram."
+      },
+      {
+        "text": "O disco encheu durante a execução",
+        "why": "Nada na execução aponta para o disco; a latência cresceu com a taxa."
+      },
+      {
+        "text": "O pgbench mediu errado, porque 1050 passa do máximo",
+        "why": "1050 está abaixo do máximo medido, de 1099."
+      }
+    ]
+  },
+  "ex-astkfnjt": {
+    "prompt": "O máximo do servidor é 1100 transações por segundo. Sua gerente pede para rodá-lo a 1000, \"já que ainda temos 10% de folga\". O que a medida da aula diz sobre isso?",
+    "hint": "Leia os percentis, não a média.",
+    "choices": [
+      {
+        "text": "Tudo bem: 10% é a margem de segurança comum",
+        "why": "A 1000, os usuários mais lentos já esperavam mais de meio segundo."
+      },
+      {
+        "text": "Passou do joelho: p99 de 621 ms",
+        "why": "Isso: folga é distância do joelho, não do máximo."
+      },
+      {
+        "text": "Vai falhar com erros acima de 1000",
+        "why": "Não falhou a 1050; enfileirou."
+      },
+      {
+        "text": "A média de 62 ms é aceitável, então sim",
+        "why": "62 ms foi a mediana; a cauda é do que os usuários reclamam."
+      }
+    ]
+  },
+  "ex-zrcfdpfm": {
+    "prompt": "Nas execuções com taxa fixa, qual foi a latência média, em milissegundos, a 900 transações por segundo? Arredonde para o inteiro mais próximo.",
+    "hint": "A terceira execução com taxa.",
+    "unit": "ms"
+  },
+  "ex-88gd407q": {
+    "prompt": "O ponto da curva em que a latência para de crescer devagar e começa a crescer depressa se chama ___.",
+    "hint": "Uma articulação da perna.",
+    "blanks": [
+      {
+        "accept": [
+          "joelho"
+        ]
+      }
+    ]
+  },
+  "ex-r4m62nn0": {
+    "prompt": "A 600 por segundo, a transação mediana levou 0,7 ms e o percentil 99, 93,5 ms. O que a distância diz?",
+    "hint": "A fila não atrasa todo mundo por igual.",
+    "choices": [
+      {
+        "text": "O arquivo de log foi corrompido durante a execução",
+        "why": "Os números batem com uma mistura de consultas baratas e caras."
+      },
+      {
+        "text": "Metade da carga falhou",
+        "why": "Nenhuma transação falhou nestas execuções."
+      },
+      {
+        "text": "Algumas esperam atrás das lentas",
+        "why": "Isso: a média esconde quem esperou."
+      },
+      {
+        "text": "O servidor está sem disco",
+        "why": "Espaço em disco não tem a ver com esse espalhamento."
+      }
+    ]
+  },
+  "ex-2bxpnj8y": {
+    "prompt": "O que acontece com um cliente que pede uma conexão quando todas as `max_connections` já estão em uso?",
+    "hint": "Recusado ou na fila?",
+    "choices": [
+      {
+        "text": "Espera até uma ficar livre",
+        "why": "O servidor não mantém fila de conexões."
+      },
+      {
+        "text": "É recusado com um erro",
+        "why": "Isso: a aula 16 mostra o erro e o que fazer no lugar."
+      },
+      {
+        "text": "A conexão mais antiga é fechada para abrir espaço",
+        "why": "Nada é fechado para abrir espaço."
+      },
+      {
+        "text": "O servidor aumenta o limite sozinho",
+        "why": "O max_connections é fixado na partida."
+      }
+    ]
+  },
+  "ex-fdbefww2": {
+    "prompt": "Uma tabela com alguns milhares de linhas tem uma chave `integer` cuja sequência está perto de 2147483647. Como é possível?",
+    "hint": "Uma sequência devolve números?",
+    "choices": [
+      {
+        "text": "A sequência conta bytes, não linhas",
+        "why": "Ela entrega um número por chamada."
+      },
+      {
+        "text": "Alguém ajustou a sequência à mão para um valor alto",
+        "why": "Possível, mas a aula aponta um motivo que não precisa do erro de ninguém."
+      },
+      {
+        "text": "Apagados e desfeitos também gastaram números",
+        "why": "Isso: uma sequência nunca devolve um número."
+      },
+      {
+        "text": "Sequências `integer` contam de dois em dois",
+        "why": "Contam de um em um, salvo configuração."
+      }
+    ]
+  },
+  "ex-g3dkgs1p": {
+    "prompt": "Por que a aula chama o contador de transações de \"a parede que quase nunca chega\"?",
+    "hint": "Quem é feito para impedi-la?",
+    "choices": [
+      {
+        "text": "O autovacuum congela antes da volta",
+        "why": "Isso: só chega quando algo impede o VACUUM de congelar."
+      },
+      {
+        "text": "Porque o contador é de 64 bits",
+        "why": "É de 32 bits, por isso dá a volta depois de uns quatro bilhões."
+      },
+      {
+        "text": "Porque um reinício do servidor o zera de novo",
+        "why": "Um reinício não muda nada nos ids de transação."
+      },
+      {
+        "text": "Porque só réplicas têm um",
+        "why": "Todo servidor tem."
+      }
+    ]
+  },
+  "ex-2evxgthc": {
+    "prompt": "Ligue cada parede a como ela aparece quando é alcançada.",
+    "hint": "Algumas recusam, outras fazem falhar um comando.",
+    "pairs": [
+      {
+        "left": "conexões",
+        "right": "um cliente novo é recusado"
+      },
+      {
+        "left": "uma coluna `integer`",
+        "right": "o INSERT que a cruzou falha"
+      },
+      {
+        "left": "o contador de transações",
+        "right": "transações novas são recusadas até um vacuum alcançar"
+      },
+      {
+        "left": "o disco",
+        "right": "escritas deixam de ser aceitas"
+      }
+    ],
+    "right_distractors": [
+      "as consultas ficam mais lentas, aos poucos"
+    ]
+  },
+  "ex-g3m00xex": {
+    "prompt": "Por que a aula sugere alertar numa sequência `integer` um ano antes de ela acabar?",
+    "hint": "Quanto tempo o conserto leva?",
+    "choices": [
+      {
+        "text": "Sequências ficam lentas aos poucos quando chegam perto do limite",
+        "why": "Não ficam; param."
+      },
+      {
+        "text": "O conserto reescreve a tabela; pede planejamento e janela",
+        "why": "Isso: o alerta tem de deixar tempo para uma migração calma."
+      },
+      {
+        "text": "Porque a lei exige um ano de aviso",
+        "why": "Nenhuma lei está envolvida."
+      },
+      {
+        "text": "Porque o autovacuum zera sequências uma vez por ano",
+        "why": "O autovacuum nunca mexe em sequências."
+      }
+    ]
+  },
+  "ex-rqz874ks": {
+    "prompt": "O que a aula diz que um alerta deve medir, em vez de um percentual?",
+    "hint": "Uma distância dividida por uma velocidade.",
+    "choices": [
+      {
+        "text": "O tempo que resta até a parede",
+        "why": "Isso: quão longe do limite, dividido pela velocidade de aproximação."
+      },
+      {
+        "text": "O tamanho absoluto do banco em gigabytes",
+        "why": "Um tamanho não diz nada sobre quando vai importar."
+      },
+      {
+        "text": "O número de alertas já enviados hoje",
+        "why": "Isso mede o alerta, não o banco."
+      },
+      {
+        "text": "O tempo médio de consulta da aplicação inteira",
+        "why": "Uma média esconde a cauda lenta e não diz nada sobre paredes."
+      }
+    ]
+  },
+  "ex-44nyesz3": {
+    "prompt": "Ponha em ordem os passos para transformar o `capacity.sql` num alerta.",
+    "hint": "Uma foto, depois uma tendência, depois um limite.",
+    "items": [
+      "Rodar o capacity.sql num horário fixo",
+      "Guardar as linhas de cada execução em outro lugar",
+      "Calcular o crescimento por dia de cada parede a partir de duas execuções",
+      "Dividir o que sobra por esse crescimento",
+      "Disparar quando o tempo que resta for menor que a duração do conserto mais uma margem"
+    ],
+    "trap": "Uma tendência precisa de duas fotos guardadas; o limite vem por último porque depende do tempo que resta."
+  },
+  "ex-kagkpws9": {
+    "prompt": "Um disco tem 90 GB sobrando e cresce 3 GB por dia. Comprar e ligar um disco maior leva duas semanas. Quantos dias de margem sobram além das duas semanas do conserto?",
+    "hint": "Tempo que resta menos o conserto.",
+    "unit": "dias"
+  },
+  "ex-9mmj9vv6": {
+    "prompt": "Uma consulta levava 10 ms ontem e 40 ms hoje; nada está perto de parede nenhuma. Deve disparar um alerta?",
+    "hint": "Nível contra mudança.",
+    "choices": [
+      {
+        "text": "Não: 40 ms é rápido",
+        "why": "O nível está bom; a mudança é o sinal."
+      },
+      {
+        "text": "Não: alertas são só para paredes",
+        "why": "A aula cita dois alertas que não são sobre paredes."
+      },
+      {
+        "text": "Sim: uma mudança de quatro vezes é o primeiro sinal de estatística velha ou de um plano que ficou pequeno",
+        "why": "Isso: alerte na mudança além do nível."
+      },
+      {
+        "text": "Sim, mas só se o disco estiver acima de 80%",
+        "why": "O disco não tem a ver com a mudança desta consulta."
+      }
+    ]
+  },
+  "ex-99378680": {
+    "prompt": "O banco ocupa 400 GB num disco de 1 TB e cresce 5 GB por semana; o disco de um segundo servidor está 70% cheio depois de cinco anos de crescimento lento. Qual precisa de atenção primeiro?",
+    "hint": "Tempo que resta, não percentual.",
+    "choices": [
+      {
+        "text": "O segundo: 70% é mais que 40%",
+        "why": "Cinco anos para chegar a 70% deixam anos de sobra."
+      },
+      {
+        "text": "Nenhum: os dois estão abaixo de 80%",
+        "why": "Um limite em percentual é o alerta contra o qual a aula argumenta."
+      },
+      {
+        "text": "O primeiro: umas 120 semanas",
+        "why": "Isso: 600 GB a 5 GB por semana são umas 120 semanas; ainda calmo, mas o mais próximo dos dois."
+      },
+      {
+        "text": "Os dois igualmente, porque os dois vão encher",
+        "why": "Urgência igual ignora as taxas."
+      }
+    ]
+  }
+}

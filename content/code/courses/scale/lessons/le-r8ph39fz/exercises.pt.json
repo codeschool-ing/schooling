@@ -1,0 +1,489 @@
+{
+  "ex-3sxsn1ng": {
+    "prompt": "Qual sinal responde 'para onde foi o tempo' entre vários serviços?",
+    "choices": [
+      {
+        "text": "Logs escritos pelo balanceador para cada conexão que ele abre",
+        "why": "Registram eventos num ponto, não o caminho por todo serviço."
+      },
+      {
+        "text": "Verificações de saúde",
+        "why": "Dizem de pé ou fora."
+      },
+      {
+        "text": "Rastros",
+        "why": "Certo. A aula 8 os constrói."
+      },
+      {
+        "text": "Métricas, somadas sobre todo pedido de todo serviço e toda cópia",
+        "why": "Somas dizem quanto, não onde um pedido gastou o tempo."
+      }
+    ]
+  },
+  "ex-2jpw139m": {
+    "prompt": "Por que métricas são baratas comparadas com logs?",
+    "choices": [
+      {
+        "text": "O Prometheus é grátis e sistemas de log são pagos",
+        "why": "Os dois existem grátis; o custo aqui é volume."
+      },
+      {
+        "text": "Métricas são comprimidas e logs não",
+        "why": "Os dois podem ser comprimidos; o número de registros é que difere."
+      },
+      {
+        "text": "Um contador é um número só, por mais pedidos que conte",
+        "why": "Certo. Logs custam em proporção ao tráfego."
+      },
+      {
+        "text": "Métricas só são guardadas por uma hora",
+        "why": "Retenção é configuração, não o motivo."
+      }
+    ]
+  },
+  "ex-r5z7dx1a": {
+    "prompt": "O que RED significa?",
+    "choices": [
+      {
+        "text": "Taxa, erros, duração",
+        "why": "Certo: o serviço do lado dos usuários."
+      },
+      {
+        "text": "Taxa, erros, disco, para os recursos em que um serviço roda",
+        "why": "Recursos são o assunto do USE."
+      },
+      {
+        "text": "Pedidos, eventos, painéis",
+        "why": "Não é a lista."
+      },
+      {
+        "text": "Réplicas, erros, bancos",
+        "why": "Não é a lista."
+      }
+    ]
+  },
+  "ex-8dek7et5": {
+    "prompt": "Nos termos do USE, o que eram as quinze conexões esperando um Lock na linha quente da aula 1?",
+    "choices": [
+      {
+        "text": "Saturação",
+        "why": "Certo: trabalho esperando um recurso, aqui a trava de uma linha."
+      },
+      {
+        "text": "Taxa, já que quinze pedidos estavam sendo tratados ao mesmo tempo pelo banco",
+        "why": "Eles não estavam sendo tratados; estavam esperando."
+      },
+      {
+        "text": "Erros",
+        "why": "Toda venda deu certo."
+      },
+      {
+        "text": "Utilização",
+        "why": "Utilização é quão ocupado o recurso está, não quanto espera."
+      }
+    ]
+  },
+  "ex-yrryvqhj": {
+    "prompt": "tickets_requests_total é um contador. O que acontece com ele quando uma cópia reinicia?",
+    "choices": [
+      {
+        "text": "Mantém o valor no disco",
+        "why": "A prometheus_client guarda métricas na memória."
+      },
+      {
+        "text": "Fica negativo até a cópia alcançar as outras",
+        "why": "Contadores nunca ficam abaixo de zero."
+      },
+      {
+        "text": "Recomeça do zero",
+        "why": "Certo, e o rate() trata a queda como recomeço."
+      },
+      {
+        "text": "O Prometheus o restaura da última coleta",
+        "why": "A memória da cópia se foi; o Prometheus só registra."
+      }
+    ]
+  },
+  "ex-99kyej5d": {
+    "prompt": "Ligue cada tipo de métrica ao que o valor dela quer dizer.",
+    "pairs": [
+      {
+        "left": "contador",
+        "right": "só cresce; a taxa é a informação"
+      },
+      {
+        "left": "medidor",
+        "right": "sobe e desce; o valor de agora é a informação"
+      },
+      {
+        "left": "histograma",
+        "right": "contagens de observações por faixa"
+      }
+    ]
+  },
+  "ex-djg3bz2p": {
+    "prompt": "Por que o observe() captura toda exceção e responde 500?",
+    "choices": [
+      {
+        "text": "Um 500 é mais rápido que uma conexão fechada",
+        "why": "Velocidade não é a questão."
+      },
+      {
+        "text": "Senão o erro nunca é contado nem registrado",
+        "why": "Certo. Uma exceção não capturada fecha a conexão e não deixa nada nas métricas."
+      },
+      {
+        "text": "O servidor do Python pararia",
+        "why": "Ele sobrevive à exceção de um tratador; o pedido é que se perde."
+      },
+      {
+        "text": "O nginx se recusa a repassar uma exceção",
+        "why": "O nginx vê uma conexão fechada, e responde 502."
+      }
+    ]
+  },
+  "ex-cb1nzymf": {
+    "prompt": "Por que o Prometheus coleta cada cópia diretamente em vez de perguntar pelo nginx?",
+    "choices": [
+      {
+        "text": "Coletar pelo nginx é mais lento",
+        "why": "O problema é qual cópia responde, não a velocidade."
+      },
+      {
+        "text": "Pelo nginx ele receberia os números de uma cópia, uma diferente a cada vez",
+        "why": "Certo. Um contador precisa do valor próprio de cada cópia."
+      },
+      {
+        "text": "O Prometheus não fala keepalive do HTTP/1.1",
+        "why": "Fala; esse não é o motivo."
+      },
+      {
+        "text": "O nginx bloqueia /metrics",
+        "why": "A captura buscou /metrics pelo nginx."
+      }
+    ]
+  },
+  "ex-mhc7by76": {
+    "prompt": "Por que a aula chama o up de primeira coisa a alertar?",
+    "choices": [
+      {
+        "text": "Uma cópia que deixa de ser coletada sai em silêncio de todo gráfico",
+        "why": "Certo. Os números dela somem sem nada parecer errado."
+      },
+      {
+        "text": "É a única métrica que não precisa de rótulos para ser lida",
+        "why": "Ele tem os rótulos instance e job."
+      },
+      {
+        "text": "Ele mede latência",
+        "why": "É 1 ou 0: coletado ou não."
+      },
+      {
+        "text": "Ele conta erros",
+        "why": "Erros estão em tickets_requests_total."
+      }
+    ]
+  },
+  "ex-56adttt2": {
+    "prompt": "O Prometheus buscando a página /metrics de um programa se chama uma coleta, em inglês ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "scrape"
+        ]
+      }
+    ]
+  },
+  "ex-mtd82fjz": {
+    "prompt": "O que rate(tickets_requests_total[30s]) devolve?",
+    "choices": [
+      {
+        "text": "A latência média dos últimos 30 segundos, por rota e status",
+        "why": "Latência está no histograma; isto é um contador."
+      },
+      {
+        "text": "O total desde que a cópia começou",
+        "why": "Esse é o contador cru."
+      },
+      {
+        "text": "Os pedidos dos últimos 30 s, um por linha",
+        "why": "Métricas não guardam pedidos individuais."
+      },
+      {
+        "text": "O aumento por segundo em 30 s",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-ervp16k5": {
+    "prompt": "A bilheteria informou 338 vendas por segundo e o gerador 331. O que a aula tira disso?",
+    "choices": [
+      {
+        "text": "O gerador está errado",
+        "why": "Os dois estão certos sobre janelas diferentes."
+      },
+      {
+        "text": "Duas medidas independentes concordam, então a instrumentação está certa",
+        "why": "Certo. A pequena diferença é a janela que cada uma cobriu."
+      },
+      {
+        "text": "Sete vendas por segundo estão se perdendo",
+        "why": "Toda venda respondeu 201; as janelas diferem."
+      },
+      {
+        "text": "O Prometheus conta em dobro",
+        "why": "Então seria perto de 660."
+      }
+    ]
+  },
+  "ex-2753ks4c": {
+    "prompt": "Quantos pedidos estavam em andamento nas cópias quando sum(tickets_in_flight) foi perguntado?",
+    "unit": "pedidos"
+  },
+  "ex-qsq16e9v": {
+    "prompt": "Por que um percentil calculado de um histograma é uma estimativa?",
+    "choices": [
+      {
+        "text": "Ele só sabe em que faixa o valor cai",
+        "why": "Certo. Dentro da faixa, ele interpola."
+      },
+      {
+        "text": "O Prometheus amostra um pedido em cem",
+        "why": "Todo pedido é contado."
+      },
+      {
+        "text": "As latências são arredondadas ao milissegundo antes de irem para cada faixa",
+        "why": "Arredondar não é a causa; a largura da faixa é."
+      },
+      {
+        "text": "Coletas perdem alguns pedidos",
+        "why": "Contadores são acumulados; nada se perde entre coletas."
+      }
+    ]
+  },
+  "ex-sa3pz0rm": {
+    "prompt": "Três cópias informam cada uma o seu p95. Por que não tirar a média deles para o p95 da bilheteria?",
+    "choices": [
+      {
+        "text": "Médias não são permitidas em PromQL",
+        "why": "avg() existe; dá a resposta errada aqui."
+      },
+      {
+        "text": "Uma cópia costuma receber a maioria dos pedidos lentos",
+        "why": "Mesmo com cópias iguais a média de percentis não é um percentil."
+      },
+      {
+        "text": "Percentis não se combinam; contagens por faixa sim",
+        "why": "Certo. sum by (le) primeiro, depois um quantil."
+      },
+      {
+        "text": "As cópias têm faixas diferentes",
+        "why": "Elas rodam o mesmo código."
+      }
+    ]
+  },
+  "ex-yynjsbj2": {
+    "prompt": "Para leituras, o histograma disse 20 ms e o gerador 30 ms. O que explica?",
+    "choices": [
+      {
+        "text": "O gerador é mais lento que a bilheteria",
+        "why": "Ele mede; não acrescenta tempo ao servidor."
+      },
+      {
+        "text": "O gerador também cronometrou o nginx e a rede",
+        "why": "Certo. Uma latência medida por dentro é um limite inferior do que os usuários veem."
+      },
+      {
+        "text": "As coletas do Prometheus atrasam os pedidos",
+        "why": "Uma coleta é um pedido pequeno a cada cinco segundos."
+      },
+      {
+        "text": "As faixas do histograma têm 10 ms de largura",
+        "why": "A largura da faixa borra; não desloca um terço."
+      }
+    ]
+  },
+  "ex-4xbfzjem": {
+    "prompt": "De 1000 pedidos, 940 levaram até 100 ms e 990 até 250 ms. Interpolando por igual dentro da faixa, que p95 o histograma dá, em ms?",
+    "hint": "O 950º pedido é o 10º dos 50 na faixa 100–250.",
+    "unit": "ms"
+  },
+  "ex-x72pwd55": {
+    "prompt": "Por que a bilheteria escreve cada linha de log como um objeto JSON?",
+    "choices": [
+      {
+        "text": "O Docker só aceita JSON",
+        "why": "O Docker guarda qualquer saída."
+      },
+      {
+        "text": "JSON é mais curto que texto",
+        "why": "Costuma ser mais longo."
+      },
+      {
+        "text": "Ele cifra o conteúdo de cada linha para que só o sistema de logs o leia",
+        "why": "JSON é texto puro."
+      },
+      {
+        "text": "Para um programa procurar por campo",
+        "why": "Certo. Ela chega já desmontada."
+      }
+    ]
+  },
+  "ex-3jawybyn": {
+    "prompt": "Com a réplica parada, o que o cliente viu, e onde estava a causa real?",
+    "choices": [
+      {
+        "text": "Um tempo esgotado; a causa era desconhecida",
+        "why": "A resposta veio na hora."
+      },
+      {
+        "text": "O traceback inteiro do Python; nada foi registrado",
+        "why": "Clientes recebem uma mensagem curta de propósito."
+      },
+      {
+        "text": "Um 500 curto; a causa estava na linha de log de erro",
+        "why": "Certo: AdminShutdown, do servidor do outro lado."
+      },
+      {
+        "text": "Um 502 do nginx; a causa estava no log do nginx",
+        "why": "O try do observe o transformou num 500."
+      }
+    ]
+  },
+  "ex-5vv59hx4": {
+    "prompt": "Qual campo a aula diz que não deve ir numa linha de log?",
+    "choices": [
+      {
+        "text": "O e-mail do comprador",
+        "why": "Certo. Logs são copiados amplamente e guardados por muito tempo."
+      },
+      {
+        "text": "O nome da cópia que respondeu, tirado do nome do host do contêiner",
+        "why": "É como uma falha é levada a uma cópia."
+      },
+      {
+        "text": "O modelo da rota",
+        "why": "É exatamente o que uma linha de log deve levar."
+      },
+      {
+        "text": "A duração em milissegundos",
+        "why": "Útil e inofensiva."
+      }
+    ]
+  },
+  "ex-dqe748yk": {
+    "prompt": "Por que a bilheteria rotula os pedidos com /events/{id} e não com o caminho real?",
+    "choices": [
+      {
+        "text": "Cada caminho seria uma série separada",
+        "why": "Certo. Séries se multiplicam pelos valores de todo rótulo."
+      },
+      {
+        "text": "O caminho real revelaria o que os usuários compram a quem pudesse ler as métricas",
+        "why": "O motivo da aula é custo, não privacidade."
+      },
+      {
+        "text": "O Prometheus recusa barras em valores de rótulo",
+        "why": "O modelo tem barras."
+      },
+      {
+        "text": "Modelos são mais rápidos de comparar",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-3j2r9ta4": {
+    "prompt": "Um histograma de 11 faixas é rotulado por rota (4 valores) e status (3 valores) em 5 cópias. Quantas séries de faixa são?",
+    "hint": "Multiplique tudo.",
+    "unit": "séries"
+  },
+  "ex-8bv1s4fp": {
+    "prompt": "Onde fica um valor por usuário ou por pedido, pela aula?",
+    "choices": [
+      {
+        "text": "No nome da métrica, para que cada usuário tenha a sua",
+        "why": "A mesma explosão, por outro caminho."
+      },
+      {
+        "text": "Nos logs ou rastros",
+        "why": "Certo: onde se esperam detalhes únicos."
+      },
+      {
+        "text": "Em lugar nenhum; não deve ser registrado",
+        "why": "É útil, no sinal certo."
+      },
+      {
+        "text": "Num rótulo de métrica",
+        "why": "Essa é a explosão de cardinalidade."
+      }
+    ]
+  },
+  "ex-3d8jxdw1": {
+    "prompt": "Qual é um SLO e não um SLI?",
+    "choices": [
+      {
+        "text": "A fração de vendas respondidas em até 250 ms",
+        "why": "Esse é o indicador, sem meta."
+      },
+      {
+        "text": "tickets_request_seconds_bucket",
+        "why": "Uma métrica de que o SLI é feito."
+      },
+      {
+        "text": "As vendas que podem falhar",
+        "why": "Esse é o orçamento de erro."
+      },
+      {
+        "text": "99,9% das vendas em até 250 ms em 30 dias",
+        "why": "Certo: uma meta numa janela."
+      }
+    ]
+  },
+  "ex-20w7xe65": {
+    "prompt": "Um SLO de 99,5% em 30 dias permite quantos minutos de queda completa?",
+    "hint": "30 dias são 43 200 minutos.",
+    "unit": "minutos"
+  },
+  "ex-3d3bjjr1": {
+    "prompt": "Qual alerta a aula recomenda?",
+    "choices": [
+      {
+        "text": "Qualquer erro",
+        "why": "O orçamento existe para absorver alguns."
+      },
+      {
+        "text": "A disponibilidade abaixo de 100% por um minuto",
+        "why": "100% não é uma meta que valha ter."
+      },
+      {
+        "text": "O orçamento sendo gasto rápido o bastante para acabar em horas",
+        "why": "Certo. Vale acordar alguém."
+      },
+      {
+        "text": "Qualquer pedido mais lento que o objetivo",
+        "why": "Um único pedido lento é barulho."
+      }
+    ]
+  },
+  "ex-0e8feecg": {
+    "prompt": "Às 03:10 as vendas ficaram lentas. Que ordem de sinais a aula descreve para descobrir por quê?",
+    "choices": [
+      {
+        "text": "Só logs, lidos das 03:00 em diante até aparecerem as vendas lentas",
+        "why": "Isso responde devagar; métricas estreitam primeiro."
+      },
+      {
+        "text": "Rastro, depois log, depois métrica",
+        "why": "Sem uma métrica você não sabe quais rastros olhar."
+      },
+      {
+        "text": "Log, depois métrica, depois rastro",
+        "why": "Logs são o detalhe, lidos por último."
+      },
+      {
+        "text": "Métrica, depois rastro, depois log",
+        "why": "Certo: quanto e quando, depois onde, depois o que exatamente."
+      }
+    ]
+  }
+}

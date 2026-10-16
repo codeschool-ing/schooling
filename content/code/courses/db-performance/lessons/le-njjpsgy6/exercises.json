@@ -1,0 +1,557 @@
+[
+  {
+    "id": "ex-yqyym8t1",
+    "version": 1,
+    "section": "before-and-after",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the new index, why did the plan for a customer's last ten orders contain a `Sort`?",
+    "hint": "What order does `orders_customer_id_idx` hand the rows over in?",
+    "choices": [
+      {
+        "text": "The index gives them by customer, not by time",
+        "correct": true,
+        "why": "Right: the rows had to be ordered by placed_at afterwards to pick the newest ten."
+      },
+      {
+        "text": "Because LIMIT always forces a sort, whatever the indexes",
+        "correct": false,
+        "why": "After the new index the plan had a LIMIT and no Sort."
+      },
+      {
+        "text": "The table was not vacuumed",
+        "correct": false,
+        "why": "Vacuum does not change the order an index returns rows in."
+      },
+      {
+        "text": "The planner chose it because the statistics were stale and it misjudged how many rows the customer had",
+        "correct": false,
+        "why": "It estimated 11 and found 10; the sort was there because of the order, not a misestimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-nns5fjm3",
+    "version": 1,
+    "section": "before-and-after",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run the before three times, thirty seconds each, instead of once?",
+    "hint": "Lesson 1 section 06.",
+    "choices": [
+      {
+        "text": "Because pgbench refuses runs shorter than ninety seconds",
+        "correct": false,
+        "why": "It runs for whatever -T says."
+      },
+      {
+        "text": "To see the noise",
+        "correct": true,
+        "why": "Right: three runs of an unchanged database are three numbers, and their spread is the noise."
+      },
+      {
+        "text": "To warm the cache before the index is built",
+        "correct": false,
+        "why": "Warming is a side effect; the reason is to measure the spread."
+      },
+      {
+        "text": "Because the tally only counts after three runs have finished",
+        "correct": false,
+        "why": "The tally counts from the first call."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef8cmh05",
+    "version": 1,
+    "section": "before-and-after",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the server's count, how many milliseconds per call did the new index save? Use the two means, 0.107 and 0.089.",
+    "hint": "Subtract.",
+    "value": 0.018,
+    "tolerance": 0.001,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-6z3785fa",
+    "version": 1,
+    "section": "before-and-after",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the index, the plan has no `Sort` and the execution went from 0.261 to 0.194 ms. What else changed in the plan?",
+    "hint": "Count the buffers.",
+    "choices": [
+      {
+        "text": "The scan stops at ten rows and touches 13 buffers instead of 16",
+        "correct": true,
+        "why": "Right: the rows come out in order, so ten is enough."
+      },
+      {
+        "text": "It reads the whole table",
+        "correct": false,
+        "why": "It reads ten rows through the new index."
+      },
+      {
+        "text": "It uses both indexes together in a bitmap",
+        "correct": false,
+        "why": "It uses one Index Scan on the new index."
+      },
+      {
+        "text": "It became a parallel plan",
+        "correct": false,
+        "why": "No parallel workers appear."
+      }
+    ]
+  },
+  {
+    "id": "ex-g34njnnq",
+    "version": 1,
+    "section": "noise",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The customer-orders latency ranged 0.836–0.857 ms before and 0.794–0.800 ms after. What does the lesson conclude?",
+    "hint": "Do the ranges overlap?",
+    "choices": [
+      {
+        "text": "The change is real",
+        "correct": true,
+        "why": "Right: the worst after is better than the best before."
+      },
+      {
+        "text": "Nothing, because three runs prove nothing about any change",
+        "correct": false,
+        "why": "Three runs whose ranges do not overlap are as close to proof as the rule allows."
+      },
+      {
+        "text": "The change made it slower",
+        "correct": false,
+        "why": "The after numbers are lower."
+      },
+      {
+        "text": "The difference is noise, since it is under a millisecond",
+        "correct": false,
+        "why": "Size is not the test; overlap with the run-to-run spread is."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkc1n5d3",
+    "version": 1,
+    "section": "noise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The place-order latency was 8.156–8.794 ms before and 8.212–8.357 ms after. What may you say about the new index's cost on writes?",
+    "hint": "\"Not shown\" is not \"zero\".",
+    "choices": [
+      {
+        "text": "It costs nothing on writes",
+        "correct": false,
+        "why": "The measurement is too coarse to show it, which is different from showing it is zero."
+      },
+      {
+        "text": "It made writes faster",
+        "correct": false,
+        "why": "The after sits inside the before's range; nothing can be concluded."
+      },
+      {
+        "text": "Not shown: the difference is smaller than the noise of these runs",
+        "correct": true,
+        "why": "Right: a different measurement is needed, which the next section uses."
+      },
+      {
+        "text": "It doubled the cost of each write, hidden by caching",
+        "correct": false,
+        "why": "A doubling would be far outside the range."
+      }
+    ]
+  },
+  {
+    "id": "ex-s11139fx",
+    "version": 1,
+    "section": "noise",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Picking the before-run of 1134 transactions a second and the after-run of 1200, what percentage of extra throughput does the change appear to give? Round to the nearest whole number.",
+    "hint": "(1200 − 1134) ÷ 1134.",
+    "value": 6,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-3wfv1bjs",
+    "version": 1,
+    "section": "noise",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's rule for calling a change real in order.",
+    "hint": "The answer \"not shown\" is allowed.",
+    "items": [
+      "Run the before at least three times",
+      "Make the change",
+      "Run the after the same way, at least three times",
+      "Compare the two ranges",
+      "Call it real only if they do not overlap"
+    ],
+    "trap": "The before has to exist before the change; the verdict needs both ranges."
+  },
+  {
+    "id": "ex-t3hfh7rp",
+    "version": 1,
+    "section": "the-cost-side",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The new index is 60 MB and the one on `customer_id` alone is 18 MB, though it adds only one 8-byte column. Why?",
+    "hint": "How many orders does each customer have?",
+    "choices": [
+      {
+        "text": "The old index shares repeated values; the new keys are unique",
+        "correct": true,
+        "why": "Right: a value that repeats is stored once with a list; customer and moment together never repeat."
+      },
+      {
+        "text": "DESC indexes are stored twice",
+        "correct": false,
+        "why": "A descending index is stored once, in the other order."
+      },
+      {
+        "text": "Because timestamps are stored as long text strings",
+        "correct": false,
+        "why": "timestamptz is 8 bytes of binary."
+      },
+      {
+        "text": "Because the new index also holds total_cents and status for every order",
+        "correct": false,
+        "why": "Only customer_id and placed_at are in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8f52yrg",
+    "version": 1,
+    "section": "the-cost-side",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where are the new index's 60 MB paid? Choose all that apply.",
+    "hint": "Three places.",
+    "choices": [
+      {
+        "text": "On the disk",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In every backup",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In memory, competing with the tables",
+        "correct": true,
+        "why": "Right: shared_buffers and the operating system's cache."
+      },
+      {
+        "text": "In pg_stat_statements' table of statements",
+        "correct": false,
+        "why": "The tally holds statements, not indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-74wvgh9q",
+    "version": 1,
+    "section": "the-cost-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson count \"people\" as a cost of an index?",
+    "hint": "Lesson 11 found the result after three years.",
+    "choices": [
+      {
+        "text": "Each index needs a licence per developer",
+        "correct": false,
+        "why": "PostgreSQL has no such licence."
+      },
+      {
+        "text": "Because somebody has to rebuild every index by hand each night",
+        "correct": false,
+        "why": "Indexes are maintained automatically as rows change."
+      },
+      {
+        "text": "The next person must understand it before changing the table",
+        "correct": true,
+        "why": "Right: an index with no record of why it exists is one nobody dares remove."
+      },
+      {
+        "text": "Because users notice every new index on the screen",
+        "correct": false,
+        "why": "Nobody sees an index on a screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-stwbn6t1",
+    "version": 1,
+    "section": "worth-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each person opening their order list saves 0.046 ms. Why does the lesson say nobody can see that?",
+    "hint": "What delay can a person notice?",
+    "choices": [
+      {
+        "text": "It is two thousand times under what a person notices",
+        "correct": true,
+        "why": "Right: people notice around a tenth of a second."
+      },
+      {
+        "text": "Because the browser rounds all times to whole milliseconds",
+        "correct": false,
+        "why": "Rounding is not the reason; the size is."
+      },
+      {
+        "text": "The page is cached",
+        "correct": false,
+        "why": "The workload's reads hit the database each time."
+      },
+      {
+        "text": "Because pgbench measures something users never experience",
+        "correct": false,
+        "why": "pgbench's latency is the closest thing to a user's wait this lab has."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc2nnw0w",
+    "version": 1,
+    "section": "worth-it",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A statement runs 200 times a second and a change saves it 0.5 ms a call. How many milliseconds of server time does it save per second?",
+    "hint": "Calls times saving.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-p3gq67kv",
+    "version": 1,
+    "section": "worth-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seller_id index saved about 870 ms of server time per second and the customer-orders index about 10 ms. Both were one `CREATE INDEX` line. What made the difference?",
+    "hint": "Saving per call times calls.",
+    "choices": [
+      {
+        "text": "The seller index is on a smaller table",
+        "correct": false,
+        "why": "Both are on orders."
+      },
+      {
+        "text": "The saving per call: 24 ms against 0.018",
+        "correct": true,
+        "why": "Right: even at 36 calls a second against 575, the larger saving per call wins."
+      },
+      {
+        "text": "The seller index was built first, so it got the memory",
+        "correct": false,
+        "why": "Build order does not decide what an index saves."
+      },
+      {
+        "text": "Because pg_stat_statements counts dashboards twice over",
+        "correct": false,
+        "why": "Every statement is counted once per call."
+      }
+    ]
+  },
+  {
+    "id": "ex-6adq0zkp",
+    "version": 1,
+    "section": "worth-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which version of this database would keeping the new index be the right decision?",
+    "hint": "The arithmetic is the same; the numbers change.",
+    "choices": [
+      {
+        "text": "One where the customer's list tops the tally and the server is near the knee",
+        "correct": true,
+        "why": "Right: then the saving is large in total and the processor time is scarce."
+      },
+      {
+        "text": "Any version, since a faster query is always better",
+        "correct": false,
+        "why": "The lesson's point is that faster is not automatically worth its cost."
+      },
+      {
+        "text": "One with more disk free",
+        "correct": false,
+        "why": "Disk is one cost; the benefit still has to be large enough."
+      },
+      {
+        "text": "One where the tag search has already been fixed by lesson 8's index",
+        "correct": false,
+        "why": "That makes the customer list relatively bigger, but not by itself worth 60 MB."
+      }
+    ]
+  },
+  {
+    "id": "ex-93pj0s2h",
+    "version": 1,
+    "section": "writing-it-down",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why run `pg_get_indexdef` before dropping the index?",
+    "hint": "Somebody may need it back.",
+    "choices": [
+      {
+        "text": "To keep the exact statement that rebuilds it",
+        "correct": true,
+        "why": "Right: an index dropped without its definition cannot be put back quickly."
+      },
+      {
+        "text": "DROP INDEX refuses to run without it",
+        "correct": false,
+        "why": "DROP INDEX needs nothing but the name."
+      },
+      {
+        "text": "It frees the memory the index was using",
+        "correct": false,
+        "why": "It only prints a definition."
+      },
+      {
+        "text": "It makes the DROP happen concurrently, without blocking writes",
+        "correct": false,
+        "why": "That is DROP INDEX CONCURRENTLY."
+      }
+    ]
+  },
+  {
+    "id": "ex-k25nxywt",
+    "version": 1,
+    "section": "writing-it-down",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The line of the change record people leave out, and the one that makes the result checkable, is the ___ line.",
+    "hint": "How the numbers were obtained.",
+    "blanks": [
+      {
+        "accept": [
+          "measured"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cxg5ycv6",
+    "version": 1,
+    "section": "writing-it-down",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each line of the change record to what it holds.",
+    "hint": "Six lines.",
+    "pairs": [
+      {
+        "left": "change",
+        "right": "the exact statement, from pg_get_indexdef"
+      },
+      {
+        "left": "measured",
+        "right": "the workload, the runs and the reset between them"
+      },
+      {
+        "left": "cost",
+        "right": "the space and the extra work on writes"
+      },
+      {
+        "left": "decision",
+        "right": "what was done, and the numbers it rests on"
+      }
+    ],
+    "right_distractors": [
+      "the name of whoever proposed it"
+    ]
+  },
+  {
+    "id": "ex-bxhzavv5",
+    "version": 1,
+    "section": "writing-it-down",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dropping the index took 76 ms with an `ACCESS EXCLUSIVE` lock. On a busy table, what does the lesson point to instead?",
+    "hint": "A form of DROP INDEX.",
+    "choices": [
+      {
+        "text": "Dropping it at night when no one is there to notice the lock",
+        "correct": false,
+        "why": "Night is a schedule, not a way to avoid the lock."
+      },
+      {
+        "text": "`DROP INDEX CONCURRENTLY`",
+        "correct": true,
+        "why": "Right: it does not block writes, at the price of taking longer."
+      },
+      {
+        "text": "Truncating the table first",
+        "correct": false,
+        "why": "That deletes every order."
+      },
+      {
+        "text": "Restarting the server so that the lock is not needed",
+        "correct": false,
+        "why": "A restart is an outage, not a way around a lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wsrxebh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague shows one before-run at 950 transactions a second and one after-run at 1010, and calls their index a 6% win. What do you ask for first?",
+    "hint": "This lesson's own data had a 6% \"win\" between two runs.",
+    "choices": [
+      {
+        "text": "The index's size",
+        "correct": false,
+        "why": "Cost matters, but first find out whether there is any gain."
+      },
+      {
+        "text": "More runs of each, to compare the ranges",
+        "correct": true,
+        "why": "Right: one run each cannot separate a gain from the noise."
+      },
+      {
+        "text": "A bigger server, to see if the gain grows with it",
+        "correct": false,
+        "why": "That changes two things at once."
+      },
+      {
+        "text": "Nothing more: 6% is a large improvement for one index",
+        "correct": false,
+        "why": "In this lesson two runs of the same database differed by 6%."
+      }
+    ]
+  }
+]

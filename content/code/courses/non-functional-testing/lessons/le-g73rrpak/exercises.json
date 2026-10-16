@@ -1,0 +1,484 @@
+[
+ {
+  "id": "ex-b49yv5eq",
+  "version": 1,
+  "section": "injection",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the defence against SQL injection that both box office services use in every query?",
+  "hint": "Look for the ? in the SQL.",
+  "choices": [
+   {
+    "text": "Removing quotes from what the user typed",
+    "correct": false,
+    "why": "It mangles names like O'Brien and misses other special characters."
+   },
+   {
+    "text": "A firewall in front of the database server",
+    "correct": false,
+    "why": "A firewall filters connections, not what a query means."
+   },
+   {
+    "text": "Parameterised queries, with ? placeholders",
+    "correct": true,
+    "why": "Right. The values travel apart from the SQL, so the database never reads them as SQL."
+   },
+   {
+    "text": "Running the database as a user without privileges",
+    "correct": false,
+    "why": "Least privilege limits the damage; it does not stop the query from being rewritten."
+   }
+  ]
+ },
+ {
+  "id": "ex-q3nrxe30",
+  "version": 1,
+  "section": "injection",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "GET /search?q=' answered 200 with A Doll's House. What does that tell the tester?",
+  "hint": "To the database, what was the quote?",
+  "choices": [
+   {
+    "text": "The quote was data: it matched a title as a letter",
+    "correct": true,
+    "why": "Right. A query built by pasting would have failed on it with a 500."
+   },
+   {
+    "text": "The search is vulnerable, as it returned a result",
+    "correct": false,
+    "why": "It returned the one title containing an apostrophe, which is what a search should do."
+   },
+   {
+    "text": "Nothing, because a quote is not a useful probe",
+    "correct": false,
+    "why": "A quote is the character that breaks a pasted query; an ordinary answer is evidence."
+   },
+   {
+    "text": "The service escaped the quote before the query ran",
+    "correct": false,
+    "why": "Nothing escapes it: the value is a parameter and never part of the SQL."
+   }
+  ]
+ },
+ {
+  "id": "ex-mhkky7qw",
+  "version": 1,
+  "section": "injection",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The search for % returned all 20 shows although the query is parameterised. How should a tester record it?",
+  "hint": "What can anybody already see at /shows?",
+  "choices": [
+   {
+    "text": "As a critical SQL injection that has to be fixed before the release ships",
+    "correct": false,
+    "why": "The value never became SQL; LIKE read its own wildcard, and nothing private was reached."
+   },
+   {
+    "text": "As a false positive that should simply be deleted from the report",
+    "correct": false,
+    "why": "The behaviour is real; it is only harmless on this route."
+   },
+   {
+    "text": "As a performance defect, since it returns far more rows than were asked for",
+    "correct": false,
+    "why": "Twenty rows is the whole list on sale; the question is what it exposes."
+   },
+   {
+    "text": "A note: wildcards in a value, harmless here, a finding on private data",
+    "correct": true,
+    "why": "Right. Same behaviour, different verdict by context; the fix where it matters is ESCAPE."
+   }
+  ]
+ },
+ {
+  "id": "ex-1tg5x5fp",
+  "version": 1,
+  "section": "injection",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In SQLite, a parameterised query marks where each value goes with the character ___.",
+  "hint": "It appears in every query of app.py.",
+  "blanks": [
+   {
+    "accept": [
+     "?"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-8g4fdsnz",
+  "version": 1,
+  "section": "output",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which answer to the marker <em>nft-probe</em> shows that the page encoded it?",
+  "hint": "What does a browser show for &lt;?",
+  "choices": [
+   {
+    "text": "<em>nft-probe</em>, exactly as it was sent",
+    "correct": false,
+    "why": "That is the markup sent as markup: the encoding is missing."
+   },
+   {
+    "text": "&lt;em&gt;nft-probe&lt;/em&gt;",
+    "correct": true,
+    "why": "Right. The browser shows the angle brackets as text."
+   },
+   {
+    "text": "nft-probe, with the tags removed",
+    "correct": false,
+    "why": "Stripping is not encoding, and mangles real text elsewhere."
+   },
+   {
+    "text": "A 400, because angle brackets are refused",
+    "correct": false,
+    "why": "Refusing them on input breaks legitimate text; the defence is at the output."
+   }
+  ]
+ },
+ {
+  "id": "ex-53sx8by5",
+  "version": 1,
+  "section": "output",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson test the search term inside value=\"…\" separately from the holder's name in the list?",
+  "hint": "Which character ends an attribute?",
+  "choices": [
+   {
+    "text": "Attributes are never shown to the person using the page",
+    "correct": false,
+    "why": "The value of a search box is shown, and the context still matters."
+   },
+   {
+    "text": "Search terms are stored by the service, and names are not",
+    "correct": false,
+    "why": "It is the other way round, and storage is not what decides the encoding."
+   },
+   {
+    "text": "Inside value=\"…\" the double quote ends the attribute",
+    "correct": true,
+    "why": "Right. An escape that handled only < and > would pass the first check and fail this one."
+   },
+   {
+    "text": "The CSP header covers the list but leaves the form uncovered",
+    "correct": false,
+    "why": "CSP covers the whole page; the difference is the encoding context."
+   }
+  ]
+ },
+ {
+  "id": "ex-cqcwmw6x",
+  "version": 1,
+  "section": "output",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each layer to what it does on account.py's page.",
+  "hint": "Three layers in the section, plus lesson 17.",
+  "pairs": [
+   {
+    "left": "html.escape",
+    "right": "writes user text as text"
+   },
+   {
+    "left": "Content-Security-Policy",
+    "right": "lets the browser run no script on the page"
+   },
+   {
+    "left": "HttpOnly",
+    "right": "keeps the session cookie out of reach of scripts"
+   },
+   {
+    "left": "X-Content-Type-Options: nosniff",
+    "right": "stops the browser guessing another type"
+   }
+  ],
+  "right_distractors": [
+   "checks the password against its hash"
+  ]
+ },
+ {
+  "id": "ex-5pdmrfhn",
+  "version": 1,
+  "section": "output",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A developer proposes stripping < and > from every booking name when it is saved, instead of encoding on output. What does the lesson say is wrong with it?",
+  "hint": "The same text lands in more than one context.",
+  "choices": [
+   {
+    "text": "It mangles real text and misses quotes, URLs and scripts",
+    "correct": true,
+    "why": "Right. Each context needs its own encoding, which only the output knows."
+   },
+   {
+    "text": "Nothing, since filtering the input is the standard defence",
+    "correct": false,
+    "why": "Encoding belongs at the output, for the context the text lands in."
+   },
+   {
+    "text": "It is slower than encoding",
+    "correct": false,
+    "why": "Speed is not the objection; correctness is."
+   },
+   {
+    "text": "Python cannot remove characters from a string it has stored",
+    "correct": false,
+    "why": "It can; the problem is what that leaves undefended."
+   }
+  ]
+ },
+ {
+  "id": "ex-d5q5wvnw",
+  "version": 1,
+  "section": "forms",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why can another site not fill in account.py's CSRF token?",
+  "hint": "Where is the token written?",
+  "choices": [
+   {
+    "text": "The token is sent in a cookie it cannot set",
+    "correct": false,
+    "why": "The token is in the form, not in a cookie."
+   },
+   {
+    "text": "Browsers block every form posted between sites",
+    "correct": false,
+    "why": "They do not; that is why CSRF exists."
+   },
+   {
+    "text": "The token changes every second",
+    "correct": false,
+    "why": "It lives as long as the session."
+   },
+   {
+    "text": "It cannot read the page that holds the token, so it cannot copy it",
+    "correct": true,
+    "why": "Right. It can make the browser send a form, but not see the value the service wrote into its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-cc0v6v3h",
+  "version": 1,
+  "section": "forms",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The form without its token got 403. Why does the lesson also send the same form with the token?",
+  "hint": "A refusal on its own proves less than it seems.",
+  "choices": [
+   {
+    "text": "To check that the token has not expired in the meantime",
+    "correct": false,
+    "why": "The token lives with the session; the point is the control."
+   },
+   {
+    "text": "A route refusing every form would also pass the first check",
+    "correct": true,
+    "why": "Right. The 303 proves the refusal is the token check and not a broken route."
+   },
+   {
+    "text": "Because a 403 only counts as valid once a 303 has been seen too",
+    "correct": false,
+    "why": "Status codes do not depend on each other like that."
+   },
+   {
+    "text": "To clean up the booking the first request left",
+    "correct": false,
+    "why": "Cancelling is the effect, not the reason for the request."
+   }
+  ]
+ },
+ {
+  "id": "ex-89hbpbn2",
+  "version": 1,
+  "section": "forms",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why do account.py's JSON routes need no CSRF token while the cancel form does?",
+  "hint": "Which credential does a browser attach on its own?",
+  "choices": [
+   {
+    "text": "JSON cannot be sent to a service from a page on another site",
+    "correct": false,
+    "why": "Other sites can send JSON with scripts; what they lack is the header."
+   },
+   {
+    "text": "The JSON routes are read-only and leave the bookings as they were",
+    "correct": false,
+    "why": "POST /bookings creates a booking; it changes state."
+   },
+   {
+    "text": "The Authorization header, which a browser does not add by itself to a request",
+    "correct": true,
+    "why": "Right. Move them to cookie sessions and they would need a token too."
+   },
+   {
+    "text": "SameSite protects JSON requests but not the HTML forms",
+    "correct": false,
+    "why": "SameSite is about cookies, whatever the body type."
+   }
+  ]
+ },
+ {
+  "id": "ex-yc990rm3",
+  "version": 1,
+  "section": "uploads",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A CSV named notes.png was refused with 415. What did account.py look at?",
+  "hint": "Not the name.",
+  "choices": [
+   {
+    "text": "The first bytes of the content",
+    "correct": true,
+    "why": "Right. A PNG or JPEG signature, or a refusal."
+   },
+   {
+    "text": "The extension at the end of the file name",
+    "correct": false,
+    "why": "The name said .png and was refused anyway."
+   },
+   {
+    "text": "The Content-Type header the client sent",
+    "correct": false,
+    "why": "A header is the client's claim, like the name."
+   },
+   {
+    "text": "The size, which was too small for an image",
+    "correct": false,
+    "why": "Size is checked against a maximum; the type comes from the bytes."
+   }
+  ]
+ },
+ {
+  "id": "ex-srpznr8z",
+  "version": 1,
+  "section": "uploads",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put account.py's upload checks in the order the code makes them.",
+  "hint": "Nothing is read before the size is known.",
+  "items": [
+   "refuse a Content-Length over 200 KB",
+   "read the body",
+   "check the PNG or JPEG signature",
+   "write it under a random name"
+  ]
+ },
+ {
+  "id": "ex-vtg0gg41",
+  "version": 1,
+  "section": "uploads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does account.py store an upload under 32 random hexadecimal digits instead of the name the client sent?",
+  "hint": "What could a name contain?",
+  "choices": [
+   {
+    "text": "Random names compress better",
+    "correct": false,
+    "why": "Compression has nothing to do with it."
+   },
+   {
+    "text": "To hide which customer uploaded it from the staff",
+    "correct": false,
+    "why": "The owner is a separate question; the name is about paths."
+   },
+   {
+    "text": "Because SQLite cannot store file names",
+    "correct": false,
+    "why": "The file goes to the filesystem, not to SQLite."
+   },
+   {
+    "text": "So nothing the client sent becomes part of a path",
+    "correct": true,
+    "why": "Right. A client's name could carry slashes or dots that walk out of the directory."
+   }
+  ]
+ },
+ {
+  "id": "ex-b46nn6em",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With the line ending # CSRF check commented out, two of twelve tests fail. Which pair?",
+  "hint": "Both are about forms.",
+  "choices": [
+   {
+    "text": "The form that carries its token, and the escaped marker",
+    "correct": false,
+    "why": "A form with its token still works; escaping is not touched by that line."
+   },
+   {
+    "text": "A form without a token, and one from another session",
+    "correct": true,
+    "why": "Right. One line guards both cases, and each case has a test naming it."
+   },
+   {
+    "text": "The upload size and the upload type",
+    "correct": false,
+    "why": "The uploads have their own checks on other lines."
+   },
+   {
+    "text": "The quote in the search and the quote in a booking",
+    "correct": false,
+    "why": "Those are held by parameterised queries, not by the CSRF check."
+   }
+  ]
+ },
+ {
+  "id": "ex-wqpxqz3r",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new route lets customers rename a booking's holder and shows the new name on the page. Which pair of probes from this lesson does it need before release?",
+  "hint": "It writes to the database and to the page.",
+  "choices": [
+   {
+    "text": "A file that is not an image, and one over 200 KB",
+    "correct": false,
+    "why": "There is no upload on that route."
+   },
+   {
+    "text": "A form without a token, and a percent sign",
+    "correct": false,
+    "why": "A form test is right if it is a form; the percent sign only matters for LIKE searches."
+   },
+   {
+    "text": "Quote kept, marker escaped",
+    "correct": true,
+    "why": "Right. One for the database, one for the page; if it is a cookie form, the token test too."
+   },
+   {
+    "text": "Five wrong passwords, and an expired session",
+    "correct": false,
+    "why": "Those test sign-in, which the route does not change."
+   }
+  ]
+ }
+]

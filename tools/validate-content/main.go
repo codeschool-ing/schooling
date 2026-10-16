@@ -789,8 +789,10 @@ var allowedOutsideTheFont = map[rune]string{
 		"It opens a line and nothing is aligned to what follows it",
 	'\u2714': "`flux` prints it when a step is done (`✔ applied revision`). It opens a line " +
 		"and nothing is aligned to what follows it",
-	'\u2717': "`flux` prints it when it gives up (`✗ context deadline exceeded`). It opens a " +
-		"line and nothing is aligned to what follows it",
+	'\u2717': "k6 prints it before every check and threshold that failed, and `flux` prints it " +
+		"when it gives up (`✗ context deadline exceeded`). IBM Plex Mono has no U+2717 at all (it " +
+		"has U+2713, which the terminal cut carries). It opens the line after the indentation and " +
+		"nothing below is aligned to the column it ends in",
 }
 
 // coverage is the set of code points the interface declares a face for.

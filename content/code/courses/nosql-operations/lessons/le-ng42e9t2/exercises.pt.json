@@ -1,0 +1,372 @@
+{
+  "ex-6ey5khcm": {
+    "prompt": "Com o `c3` parado, duas escritas em `QUORUM` dão certo. O que o coordenador `c1` faz com a cópia do `c3`?",
+    "choices": [
+      {
+        "text": "Guarda-as como hints, para reenviar ao c3",
+        "why": "Isso: um arquivo no diretório de hints do c1, reenviado e apagado quando o c3 voltou."
+      },
+      {
+        "text": "Nada; o c3 só recebe os dados no próximo repair",
+        "why": "O repair também resolveria, mas os hints vêm antes e custam menos."
+      },
+      {
+        "text": "Recusa as escritas até o c3 voltar",
+        "why": "O QUORUM precisa de duas de três, e as teve."
+      },
+      {
+        "text": "Grava a cópia do c3 no c2, em definitivo",
+        "why": "O lugar dos dados nunca muda porque um nó está fora."
+      }
+    ]
+  },
+  "ex-wmnaqbrn": {
+    "prompt": "O arquivo de hint no `c1` se chamava `1fe37605-9cd6-…-2.hints`. O que a primeira parte do nome identificava?",
+    "choices": [
+      {
+        "text": "A tabela a que as escritas pertenciam",
+        "why": "Os hints são guardados por nó de destino, não por tabela."
+      },
+      {
+        "text": "O coordenador que guardou o hint",
+        "why": "O arquivo já está no coordenador; o nome diz para quem é."
+      },
+      {
+        "text": "Um checksum dos dois updates",
+        "why": "Ele batia com o host ID no nodetool status."
+      },
+      {
+        "text": "O host ID do c3",
+        "why": "Isso: o mesmo ID que o nodetool status mostrou na linha DN."
+      }
+    ]
+  },
+  "ex-k7hp3gs4": {
+    "prompt": "O `nodetool getmaxhintwindow` imprimiu `10800000 ms`. Quantas horas são?",
+    "unit": "horas"
+  },
+  "ex-g5wtk6ve": {
+    "prompt": "Enquanto o arquivo de hint estava no diretório, o `nodetool listpendinghints` disse que não havia nenhum. O que a aula tira disso?",
+    "choices": [
+      {
+        "text": "Os hints já tinham sido entregues ao c3",
+        "why": "O c3 estava parado; a linha do log sobre a entrega veio depois de ele ligar."
+      },
+      {
+        "text": "Confiar no diretório, não na ferramenta",
+        "why": "Isso. Uma ferramenta que diz nada é fácil de acreditar num incidente."
+      },
+      {
+        "text": "O hinted handoff estava desligado no c1",
+        "why": "O statushandoff disse que estava rodando, e o arquivo foi gravado e reenviado."
+      },
+      {
+        "text": "O arquivo era sobra de uma execução anterior",
+        "why": "Ele levava o host ID do c3 e foi reenviado quando o c3 voltou."
+      }
+    ]
+  },
+  "ex-dsv0tqyw": {
+    "prompt": "Em quais destes casos uma réplica fica para trás sem hint para corrigi-la? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "O nó ficou fora por cinco horas, com a janela padrão",
+        "why": "Isso: passadas três horas, nenhum hint é guardado."
+      },
+      {
+        "text": "O nó ficou fora por dez minutos",
+        "why": "Bem dentro da janela; os hints dele são reenviados."
+      },
+      {
+        "text": "O coordenador que guardava os hints também se perdeu",
+        "why": "Isso: os hints moravam nele."
+      },
+      {
+        "text": "Uma réplica de pé descartou uma escrita sob carga",
+        "why": "Isso: ela nunca foi marcada como fora."
+      },
+      {
+        "text": "A escrita foi em ALL",
+        "why": "Uma escrita em ALL falha com um nó fora, então não há o que guardar."
+      }
+    ]
+  },
+  "ex-9av8nczq": {
+    "prompt": "Na leitura rastreada em `ALL`, o coordenador pediu dados ao `c3` e um digest ao `c2`. O que é um digest?",
+    "choices": [
+      {
+        "text": "As entradas do commit log para a linha",
+        "why": "O commit log nunca é mandado para responder a uma leitura."
+      },
+      {
+        "text": "Um resumo das SSTables da réplica",
+        "why": "É sobre a resposta de uma consulta, não sobre os arquivos."
+      },
+      {
+        "text": "A árvore de Merkle da réplica para o intervalo",
+        "why": "Árvores de Merkle são do repair, não das leituras."
+      },
+      {
+        "text": "Um hash da resposta inteira da réplica",
+        "why": "Isso. Digests iguais querem dizer respostas iguais; uma diferença dispara a leitura completa."
+      }
+    ]
+  },
+  "ex-p2m5d9y7": {
+    "prompt": "Depois do `Digest mismatch`, o que o cliente recebeu, e o que aconteceu com o `c3`?",
+    "choices": [
+      {
+        "text": "Um erro, e o c3 foi marcado como fora",
+        "why": "A leitura deu certo; uma diferença é consertada, não relatada."
+      },
+      {
+        "text": "O valor 5 do c3, que depois o mandou aos outros",
+        "why": "O valor mais novo vence, e era 4."
+      },
+      {
+        "text": "O valor 4, e o c3 recebeu uma mutação de read repair",
+        "why": "Isso: o READ_REPAIR_RSP voltou do c3."
+      },
+      {
+        "text": "Os dois valores, para a aplicação escolher",
+        "why": "O Cassandra resolve pelo timestamp e devolve um valor."
+      }
+    ]
+  },
+  "ex-05yg60kq": {
+    "prompt": "Uma linha foi apagada com uma réplica fora, e ninguém nunca mais lê essa linha. O read repair algum dia vai corrigir a réplica atrasada?",
+    "choices": [
+      {
+        "text": "Sim, na próxima compactação",
+        "why": "A compactação é local e não compara nada entre réplicas."
+      },
+      {
+        "text": "Não: só as linhas que alguém lê são consertadas por ele",
+        "why": "Isso. É por isso que o repair existe, e por que os deletes dependem dele."
+      },
+      {
+        "text": "Sim, porque o read repair também roda em segundo plano a cada hora",
+        "why": "Não há read repair em segundo plano no 5.0; o read_repair_chance saiu na 4.0."
+      },
+      {
+        "text": "Não, porque deletes nunca passam por read repair",
+        "why": "Uma lápide passa por read repair como qualquer valor, quando uma leitura compara réplicas."
+      }
+    ]
+  },
+  "ex-r1bytnaa": {
+    "prompt": "A configuração da tabela que faz o cliente esperar até um read repair ser gravado tem o valor ___.",
+    "blanks": [
+      {
+        "accept": [
+          "BLOCKING"
+        ]
+      }
+    ]
+  },
+  "ex-r07d4w9s": {
+    "prompt": "Por que o repair monta árvores de Merkle em vez de mandar toda linha para comparar?",
+    "choices": [
+      {
+        "text": "Só árvores de Merkle levam lápides",
+        "why": "Lápides são transmitidas como qualquer dado."
+      },
+      {
+        "text": "Árvores de Merkle ocupam menos espaço em disco do que as SSTables",
+        "why": "São montadas em memória para o repair, não guardadas como dados."
+      },
+      {
+        "text": "As árvores deixam o repair pular a leitura dos dados",
+        "why": "Montar a árvore lê os dados: é a compactação de validação."
+      },
+      {
+        "text": "Hashes iguais resolvem fatias inteiras sem mandá-las",
+        "why": "Isso. A comparação custa hashes, e a transmissão custa só as diferenças."
+      }
+    ]
+  },
+  "ex-43sm0pap": {
+    "prompt": "O repair completo de `shop` relatou `orders_by_customer` fora de sincronia em todo par de nós, embora nenhum nó tivesse ficado fora quando ela foi gravada. Por quê?",
+    "choices": [
+      {
+        "text": "O hinted handoff tinha reenviado os pedidos duas vezes",
+        "why": "Uma escrita duplicada é idempotente e deixa os hashes iguais."
+      },
+      {
+        "text": "O índice SAI dele tinha divergido entre os nós",
+        "why": "A tabela desta aula não tem índice; a diferença são as linhas."
+      },
+      {
+        "text": "O ALTER subiu as cópias e não moveu linhas",
+        "why": "Isso. Este foi o repair que o aviso da aula 17 pediu."
+      },
+      {
+        "text": "A ordem de clustering difere por nó",
+        "why": "Ela faz parte do esquema, igual em todo lugar."
+      }
+    ]
+  },
+  "ex-pvxz2yf4": {
+    "prompt": "Depois de um repair incremental, o `tablestats` mostrou `Percent repaired: 100.0`. O que o próximo repair incremental dessa tabela lê?",
+    "choices": [
+      {
+        "text": "Toda SSTable de novo, já que dados reparados também são comparados",
+        "why": "Isso é um repair completo; o incremental pula SSTables carimbadas."
+      },
+      {
+        "text": "Só os arquivos escritos desde então, ainda sem carimbo",
+        "why": "Isso. Essa é a economia, e também por que ainda se roda um repair completo de vez em quando."
+      },
+      {
+        "text": "Nada, até o gc_grace_seconds expirar",
+        "why": "O repair incremental não tem essa espera."
+      },
+      {
+        "text": "O commit log de cada réplica",
+        "why": "O repair trabalha com SSTables, nunca com o commit log."
+      }
+    ]
+  },
+  "ex-jvh2nayk": {
+    "prompt": "Associe cada linha do log de repair ao que ela significou.",
+    "pairs": [
+      {
+        "left": "Requesting merkle trees",
+        "right": "o coordenador pediu a cada réplica o hash do intervalo"
+      },
+      {
+        "left": "Created 2 sync tasks",
+        "right": "dois pares de réplicas discordavam e precisam trocar dados"
+      },
+      {
+        "left": "Created 0 sync tasks",
+        "right": "todas as árvores eram iguais"
+      },
+      {
+        "left": "is fully synced",
+        "right": "as réplicas da tabela concordam depois do repair"
+      }
+    ],
+    "right_distractors": [
+      "hints foram reenviados"
+    ]
+  },
+  "ex-51z01p1b": {
+    "prompt": "Ponha em ordem os passos de uma sessão de repair.",
+    "items": [
+      "Pedir a cada réplica uma árvore de Merkle do intervalo",
+      "Cada réplica lê os dados e monta a árvore",
+      "Comparar as árvores e criar tarefas de sincronia para as fatias diferentes",
+      "Transmitir as fatias diferentes entre as réplicas"
+    ]
+  },
+  "ex-vqra7et3": {
+    "prompt": "O `gc_grace_seconds` de uma tabela é 432000. Em quantos dias toda réplica precisa passar por repair?",
+    "hint": "Um dia tem 86400 segundos.",
+    "unit": "dias"
+  },
+  "ex-rmfbfand": {
+    "prompt": "Por que um calendário costuma rodar `nodetool repair -pr` em todo nó em vez do `nodetool repair` simples?",
+    "choices": [
+      {
+        "text": "O -pr é a única forma que repara lápides",
+        "why": "As duas formas levam lápides; o -pr trata de quanto trabalho se repete."
+      },
+      {
+        "text": "O -pr cobre cada intervalo uma vez",
+        "why": "Isso. Com três cópias, é um terço do trabalho."
+      },
+      {
+        "text": "O -pr roda sem ler dados",
+        "why": "Ele ainda monta árvores de Merkle a partir dos dados."
+      },
+      {
+        "text": "O repair simples é recusado em mais de um nó",
+        "why": "Ele roda; repete trabalho."
+      }
+    ]
+  },
+  "ex-brb76nw4": {
+    "prompt": "O repair falhou em silêncio por três semanas e alguém finalmente conserta o job. O que a aula diz para esperar da primeira execução bem-sucedida?",
+    "choices": [
+      {
+        "text": "Linhas apagadas voltando, copiadas de réplicas velhas",
+        "why": "Isso. O custo de um repair parado é pago no dia em que ele é consertado."
+      },
+      {
+        "text": "Uma execução rápida, já que houve pouco para reparar",
+        "why": "Três semanas de deriva são mais trabalho, não menos."
+      },
+      {
+        "text": "Uma recusa, porque o repair não roda depois de gc_grace_seconds",
+        "why": "O repair roda a qualquer hora; só não restaura lápides expurgadas."
+      },
+      {
+        "text": "Escritas perdidas, já que o repair fica com a versão mais velha",
+        "why": "O repair fica com o timestamp mais novo."
+      }
+    ]
+  },
+  "ex-9rr3sjsm": {
+    "prompt": "O que um alerta de repair deve vigiar, segundo a aula?",
+    "choices": [
+      {
+        "text": "Só os comandos de repair que terminam com erro",
+        "why": "Um repair que nunca começa nunca dá erro."
+      },
+      {
+        "text": "A contagem de read repair da tabela mais movimentada",
+        "why": "O read repair cobre só o que é lido."
+      },
+      {
+        "text": "O número de arquivos de hint em cada coordenador",
+        "why": "Hints dizem que um nó está fora, não que o repair rodou."
+      },
+      {
+        "text": "A idade do último repair bom de cada nó",
+        "why": "Isso. Ele dispara para um job que quebrou tanto quanto para um que falha."
+      }
+    ]
+  },
+  "ex-x5ynwfa4": {
+    "prompt": "Associe cada mecanismo ao que ele deixa passar.",
+    "pairs": [
+      {
+        "left": "hinted handoff",
+        "right": "um nó fora por mais que max_hint_window"
+      },
+      {
+        "left": "read repair",
+        "right": "linhas que ninguém lê"
+      },
+      {
+        "left": "repair",
+        "right": "nada, se rodar dentro de gc_grace_seconds"
+      }
+    ],
+    "right_distractors": [
+      "escritas em QUORUM"
+    ]
+  },
+  "ex-ch23gmrp": {
+    "prompt": "O cluster de uma equipe nunca rodou repair, e as leituras em `QUORUM` sempre pareceram certas. Qual afirmação combina com esta aula?",
+    "choices": [
+      {
+        "text": "Leituras corretas em QUORUM provam que as réplicas concordam",
+        "why": "O read repair conserta o que é lido; linhas não lidas e cópias velhas ficam para trás."
+      },
+      {
+        "text": "Alguns deletes já não têm conserto",
+        "why": "Isso. O primeiro repair que rodarem pode trazer algumas de volta."
+      },
+      {
+        "text": "Os hints mantiveram toda réplica atualizada",
+        "why": "Hints têm limites, e uma réplica de pé que descartou uma escrita nunca recebe um."
+      },
+      {
+        "text": "O repair incremental roda sozinho por padrão",
+        "why": "O nó 5.0.9 registrou que o auto-repair está desligado."
+      }
+    ]
+  }
+}

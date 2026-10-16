@@ -1,0 +1,531 @@
+[
+ {
+  "id": "ex-3zjwtw0h",
+  "version": 1,
+  "section": "gatling",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In which language is the simulation written that the Gatling 3.15.1 bundle is set up to run?",
+  "hint": "Look at the directory the simulations go in.",
+  "choices": [
+   {
+    "text": "Scala, the language Gatling itself was written in",
+    "correct": false,
+    "why": "Scala was the original DSL, and it is still offered; the bundle is set up for another."
+   },
+   {
+    "text": "Python, through a plugin bundled with Maven",
+    "correct": false,
+    "why": "Python is Locust's language, not Gatling's."
+   },
+   {
+    "text": "Java",
+    "correct": true,
+    "why": "Right. The bundle's simulations live in `src/test/java/`."
+   },
+   {
+    "text": "XML, edited in a window as with JMeter",
+    "correct": false,
+    "why": "Gatling's tests are code; the XML plan is JMeter's way."
+   }
+  ]
+ },
+ {
+  "id": "ex-831bv6ex",
+  "version": 1,
+  "section": "gatling",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the `BasicSimulation.java` that ships with the bundle fail in the course's VM?",
+  "hint": "Where does it send its requests?",
+  "choices": [
+   {
+    "text": "It is a Scala file, which this bundle's Maven project does not compile",
+    "correct": false,
+    "why": "It is a Java file, in `src/test/java/example/`."
+   },
+   {
+    "text": "Its requests go to a host on the internet, and the VM test has none",
+    "correct": true,
+    "why": "Right. A simulation has to ask a system the machine can reach, here the box office."
+   },
+   {
+    "text": "Gatling refuses to run an example class",
+    "correct": false,
+    "why": "It would run; it would just not reach its host."
+   },
+   {
+    "text": "It has no assertions",
+    "correct": false,
+    "why": "A simulation with no assertions still runs and reports."
+   }
+  ]
+ },
+ {
+  "id": "ex-p7xxxf4m",
+  "version": 1,
+  "section": "gatling",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With `injectOpen(constantUsersPerSec(3).during(15))`, what does each Gatling user do?",
+  "hint": "Count the arrivals, not the users inside.",
+  "choices": [
+   {
+    "text": "Loops over the scenario for all 15 seconds, like a k6 virtual user in `constant-vus`",
+    "correct": false,
+    "why": "That is a closed user. An open injection adds new users instead."
+   },
+   {
+    "text": "Waits until three users have finished, then starts",
+    "correct": false,
+    "why": "Nothing waits on anybody: arrivals follow the clock."
+   },
+   {
+    "text": "Arrives, does the journey once and leaves",
+    "correct": true,
+    "why": "Right. Three new ones arrive every second, whatever the box office does."
+   },
+   {
+    "text": "Sends three requests a second until the end",
+    "correct": false,
+    "why": "The rate is of users arriving; each user sends the requests its journey has."
+   }
+  ]
+ },
+ {
+  "id": "ex-4adkymnh",
+  "version": 1,
+  "section": "gatling",
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "In the simulation, `#{show}` is replaced by the value that the ___, called with `.feed(orders)`, handed this user.",
+  "hint": "The iterator of random records.",
+  "blanks": [
+   {
+    "accept": [
+     "feeder",
+     "a feeder",
+     "the feeder"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-nzvz5fzk",
+  "version": 1,
+  "section": "gatling-run",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A Gatling assertion is crossed. What does the command line see?",
+  "hint": "The run is a Maven goal.",
+  "choices": [
+   {
+    "text": "`BUILD FAILURE` from Maven, and exit code 1",
+    "correct": true,
+    "why": "Right. A failed load test fails the build like a failed unit test."
+   },
+   {
+    "text": "Exit code 99, the same as k6",
+    "correct": false,
+    "why": "99 is k6's code. Gatling's runs through Maven, which uses 1."
+   },
+   {
+    "text": "Exit code 0, with `false` printed beside the assertion",
+    "correct": false,
+    "why": "The line does say `false`, and the exit code is not 0."
+   },
+   {
+    "text": "No exit code, because Gatling only writes the HTML report",
+    "correct": false,
+    "why": "The report is written either way; the exit code still says pass or fail."
+   }
+  ]
+ },
+ {
+  "id": "ex-p6p2487q",
+  "version": 1,
+  "section": "gatling-run",
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "The simulation injects `rampUsersPerSec(1).to(3).during(5)` and then `constantUsersPerSec(3).during(15)`, and each user sends two requests. The run reported 110 requests. How many users did Gatling start?",
+  "hint": "Two requests per user.",
+  "value": 55,
+  "tolerance": 0,
+  "unit": "users",
+  "drillable": true
+ },
+ {
+  "id": "ex-bp2v3jdd",
+  "version": 1,
+  "section": "gatling-run",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "About a third of the seats booked at random were already taken, yet the `KO` column stayed at 0. Why?",
+  "hint": "What does the booking's check accept?",
+  "choices": [
+   {
+    "text": "Gatling counts a 4xx answer as OK unless told otherwise",
+    "correct": false,
+    "why": "A status the check does not accept is KO, 4xx or not."
+   },
+   {
+    "text": "The check on the booking accepts 409 as well as 201",
+    "correct": true,
+    "why": "Right. A 409 is the box office refusing correctly, and the check says so."
+   },
+   {
+    "text": "The box office answered 201 even for taken seats",
+    "correct": false,
+    "why": "It answers 409 for a seat already sold, as lesson 1 showed."
+   },
+   {
+    "text": "KO counts only connections that were refused",
+    "correct": false,
+    "why": "KO counts any request that failed a check."
+   }
+  ]
+ },
+ {
+  "id": "ex-n1y01ddx",
+  "version": 1,
+  "section": "gatling-run",
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each piece of the simulation to what it does.",
+  "hint": "The notes beside the code.",
+  "pairs": [
+   {
+    "left": "feed(orders)",
+    "right": "hands the user a show and a seat picked at random"
+   },
+   {
+    "left": "pause(1, 3)",
+    "right": "the think time between looking and booking"
+   },
+   {
+    "left": "injectOpen",
+    "right": "starts new users at a rate, whatever the server does"
+   },
+   {
+    "left": "assertions",
+    "right": "decides whether the Maven build passes"
+   }
+  ],
+  "right_distractors": [
+   "keeps a fixed number of users inside the system"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-0qw36m5e",
+  "version": 1,
+  "section": "locust",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A Locust user has `@task(3)` on one method and `@task(1)` on another. What share of its tasks is the second one?",
+  "hint": "Add the weights.",
+  "choices": [
+   {
+    "text": "One in three",
+    "correct": false,
+    "why": "That would be weights of 2 and 1."
+   },
+   {
+    "text": "One in four",
+    "correct": true,
+    "why": "Right. 1 out of a total weight of 4."
+   },
+   {
+    "text": "One in two, until the first has run three times",
+    "correct": false,
+    "why": "The weights are a chance per pick, not a schedule."
+   },
+   {
+    "text": "A third of the run's duration",
+    "correct": false,
+    "why": "Weights share the picks, not the time."
+   }
+  ]
+ },
+ {
+  "id": "ex-mfx124en",
+  "version": 1,
+  "section": "locust",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `book_a_seat` call `r.success()` when the box office answers 409?",
+  "hint": "What does Locust do by default with a status of 400 or more?",
+  "choices": [
+   {
+    "text": "Locust would retry the booking until it got a 201",
+    "correct": false,
+    "why": "Locust retries nothing; the call only decides how the answer is counted."
+   },
+   {
+    "text": "Without it, every taken seat would be counted as a failure, though the box office answered correctly",
+    "correct": true,
+    "why": "Right. Locust counts a status of 400 or more as failed unless told otherwise."
+   },
+   {
+    "text": "`success()` makes the request faster",
+    "correct": false,
+    "why": "It changes the statistics, not the request."
+   },
+   {
+    "text": "A 409 has no body, and Locust needs one",
+    "correct": false,
+    "why": "The 409 does have a body, and Locust needs none."
+   }
+  ]
+ },
+ {
+  "id": "ex-228m10bv",
+  "version": 1,
+  "section": "locust",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A locustfile has no `quitting` hook. Its run finishes with no failed request and a 95th percentile of 900 ms. What exit code does Locust give?",
+  "hint": "What does Locust judge on its own?",
+  "choices": [
+   {
+    "text": "1, because the run was slow",
+    "correct": false,
+    "why": "Locust has no idea what slow means here; nobody wrote it down."
+   },
+   {
+    "text": "99, as k6 does for a crossed threshold",
+    "correct": false,
+    "why": "99 is k6's code, and Locust has no thresholds."
+   },
+   {
+    "text": "0",
+    "correct": true,
+    "why": "Right. Without a hook, Locust's exit code depends only on whether a request failed."
+   },
+   {
+    "text": "2, a warning",
+    "correct": false,
+    "why": "Locust uses no such code for slowness."
+   }
+  ]
+ },
+ {
+  "id": "ex-25x6d78y",
+  "version": 1,
+  "section": "locust",
+  "type": "ordering",
+  "difficulty": "medium",
+  "prompt": "Put the life of one Locust user in order, from the moment it is started.",
+  "hint": "The notes beside the class.",
+  "items": [
+   "on_start runs once",
+   "a task is picked by its weight",
+   "the task's request is sent and counted",
+   "wait_time passes before the next pick"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-mtarbm7g",
+  "version": 1,
+  "section": "locust",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What do `-u 10 -r 2` mean on the Locust command line?",
+  "hint": "The log line \"Ramping to 10 users\".",
+  "choices": [
+   {
+    "text": "10 requests a second, 2 of them bookings",
+    "correct": false,
+    "why": "`-u` counts users, not requests."
+   },
+   {
+    "text": "10 users in all, started 2 a second",
+    "correct": true,
+    "why": "Right. All ten were running after about five seconds."
+   },
+   {
+    "text": "10 seconds of test, after 2 seconds of warm-up",
+    "correct": false,
+    "why": "`-t 20s` is the duration."
+   },
+   {
+    "text": "10 tasks per user, 2 at a time",
+    "correct": false,
+    "why": "A user runs tasks one at a time, for as long as the test lasts."
+   }
+  ]
+ },
+ {
+  "id": "ex-sc3pxs0t",
+  "version": 1,
+  "section": "choosing",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these write an open model, one where new work arrives at a rate whatever the server does? Choose every one that applies.",
+  "hint": "Who decides when the next piece of work starts?",
+  "choices": [
+   {
+    "text": "Gatling's `injectOpen(constantUsersPerSec(5))`",
+    "correct": true,
+    "why": "Right. Five users arrive every second."
+   },
+   {
+    "text": "k6's `constant-arrival-rate` executor",
+    "correct": true,
+    "why": "Right. Iterations start on the clock."
+   },
+   {
+    "text": "Locust users with `wait_time = between(1, 3)`",
+    "correct": false,
+    "why": "Each user waits for its answer and then for its wait: a closed loop."
+   },
+   {
+    "text": "k6's `vus: 5, duration: '10s'`",
+    "correct": false,
+    "why": "That is `constant-vus`: five loops, each waiting on the server."
+   }
+  ]
+ },
+ {
+  "id": "ex-ndvvmdsh",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A report says \"20 users\" for a Gatling run and \"20 users\" for a Locust run against the same system. What can you conclude about the two loads?",
+  "hint": "What is a user in each tool?",
+  "choices": [
+   {
+    "text": "They are the same load, written in two languages",
+    "correct": false,
+    "why": "The word is the same; the meaning is not."
+   },
+   {
+    "text": "Locust's is heavier, because Python is slower",
+    "correct": false,
+    "why": "The language of the generator does not decide the load."
+   },
+   {
+    "text": "Nothing yet: one is arrivals a second, the other is users inside at once",
+    "correct": true,
+    "why": "Right. Convert both to requests a second before comparing."
+   },
+   {
+    "text": "Gatling's is heavier, because Java is faster than Python at sending requests",
+    "correct": false,
+    "why": "Speed of the generator is not what the number counts."
+   }
+  ]
+ },
+ {
+  "id": "ex-qh54w7mr",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Python team must test \"30 requests a second\" with Locust, against a page that answers in about 100 ms. Which user setup holds that rate as written?",
+  "hint": "A wait that paces each user rather than following each answer.",
+  "choices": [
+   {
+    "text": "30 users with `wait_time = between(1, 3)`",
+    "correct": false,
+    "why": "That is about one request every two seconds each, 15 a second, and less as answers slow."
+   },
+   {
+    "text": "3 users with no `wait_time` at all",
+    "correct": false,
+    "why": "Each loops as fast as the answers allow: the rate is whatever the server gives."
+   },
+   {
+    "text": "30 users with `wait_time = constant_throughput(1)`",
+    "correct": true,
+    "why": "Right. Each user is paced to one task a second, so 30 users hold 30 a second while answers stay under a second."
+   },
+   {
+    "text": "1 user started with `-r 30`",
+    "correct": false,
+    "why": "`-r` is how fast users start, not how often they ask."
+   }
+  ]
+ },
+ {
+  "id": "ex-kq6chz5z",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The box office stalls for five seconds in the middle of two runs: one Gatling run with `injectOpen`, one Locust run with 10 users. What does the stall do to the number of users inside each run?",
+  "hint": "Arrivals against loops.",
+  "choices": [
+   {
+    "text": "Ten in Locust, and climbing in Gatling as arrivals keep coming",
+    "correct": true,
+    "why": "Right. Locust's ten wait; Gatling keeps starting new users who also wait."
+   },
+   {
+    "text": "It falls in both Gatling and Locust, as the generator slows with the server",
+    "correct": false,
+    "why": "Locust's count is fixed at 10; Gatling's arrivals do not slow down."
+   },
+   {
+    "text": "It rises in both Gatling and Locust",
+    "correct": false,
+    "why": "Locust never has more than the 10 users it was told to run."
+   },
+   {
+    "text": "Gatling and Locust both keep the same count",
+    "correct": false,
+    "why": "Gatling's arrivals pile up inside while nobody leaves."
+   }
+  ]
+ },
+ {
+  "id": "ex-s781gw62",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague ports lesson 5's k6 script to Gatling and keeps `p(95)<200` only as a global assertion. The bookings' 95th percentile is 250 ms and the shows' 40 ms, and the build passes. What is the better assertion?",
+  "hint": "Which operation does lesson 1's requirement name?",
+  "choices": [
+   {
+    "text": "Remove the assertions, and read the HTML report by hand after every run instead",
+    "correct": false,
+    "why": "Then nothing fails the build, and somebody has to remember to look."
+   },
+   {
+    "text": "One on `details(\"show\")` at 200 ms, and a separate one for the POST",
+    "correct": true,
+    "why": "Right. Lesson 1's requirement is about one operation; a global percentile mixes the two."
+   },
+   {
+    "text": "A global `mean` under 200 ms",
+    "correct": false,
+    "why": "A mean hides the slow tail that the percentile is there to catch."
+   },
+   {
+    "text": "Raise the limit to 300 so that both pass",
+    "correct": false,
+    "why": "Moving the threshold to fit the result is writing the requirement after the test."
+   }
+  ]
+ }
+]

@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-mjxe8n7z",
+    "version": 1,
+    "section": "ring-and-partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a cluster of three nodes, what decides which node stores a partition?",
+    "choices": [
+      {
+        "text": "The token its partition key hashes to, and who owns that range",
+        "correct": true,
+        "why": "Right. Murmur3 turns the key into a token and the ring says who owns that point."
+      },
+      {
+        "text": "The node the client happened to be connected to when it wrote the row",
+        "correct": false,
+        "why": "That node is only the coordinator; it forwards the write to the owners."
+      },
+      {
+        "text": "The alphabetical order of the keys, split evenly between the nodes",
+        "correct": false,
+        "why": "The rows came back in token order, carla before bruno before ana; the hash scatters neighbours."
+      },
+      {
+        "text": "The node with the most free disk at the moment of the write",
+        "correct": false,
+        "why": "Placement is a function of the key alone, so any node can compute it without asking."
+      }
+    ]
+  },
+  {
+    "id": "ex-h02b5g8n",
+    "version": 1,
+    "section": "ring-and-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nodetool ring` lists a node's token as `8538878424377726911` and the token on the line above as `8141555572029014120`. Which partition keys does that node own?",
+    "hint": "A node owns the range that ends at its token.",
+    "choices": [
+      {
+        "text": "Those whose token is above 8141555572029014120 and up to 8538878424377726911",
+        "correct": true,
+        "why": "Right. Ana's token, 8413089589345688709, is in that range, which is why she is on that node."
+      },
+      {
+        "text": "Those whose token starts at 8538878424377726911 and runs to the next line",
+        "correct": false,
+        "why": "That is the next node's range: ownership ends at a token, it does not start there."
+      },
+      {
+        "text": "Only the key whose token is exactly 8538878424377726911",
+        "correct": false,
+        "why": "A token marks the end of a whole range of keys, not one key."
+      },
+      {
+        "text": "Every key, since the token only says where its first copy goes",
+        "correct": false,
+        "why": "With one copy per partition, each key has exactly one owner."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a7htfc6",
+    "version": 1,
+    "section": "ring-and-partitions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's three nodes each own 16 tokens. How many lines with `Normal` does `nodetool ring` print for the cluster?",
+    "value": 48,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2973hg3a",
+    "version": 1,
+    "section": "ring-and-partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fourth node joins a cluster where each node owns 16 small ranges spread round the ring. Compared with one big range per node, what changes?",
+    "hint": "Think of where the new node's ranges come from.",
+    "choices": [
+      {
+        "text": "It takes small pieces from every existing node, so the load evens out",
+        "correct": true,
+        "why": "Right. With one range per node it would split one neighbour's range and leave the others as they were."
+      },
+      {
+        "text": "It has to wait until the others have moved every partition to rebalance alphabetically",
+        "correct": false,
+        "why": "Keys are placed by token, never alphabetically."
+      },
+      {
+        "text": "Nothing, because tokens are only an index and do not decide placement",
+        "correct": false,
+        "why": "Tokens are the placement; getendpoints computes the node from them."
+      },
+      {
+        "text": "It halves one neighbour's range, which is why 16 tokens are slower to add",
+        "correct": false,
+        "why": "That is what happens with one token per node, the case 16 avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-2f5qckbe",
+    "version": 1,
+    "section": "ring-and-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's loop wait for each node to be `UN` before starting the next one?",
+    "choices": [
+      {
+        "text": "Because `docker run` refuses to start two containers from the same image at once",
+        "correct": false,
+        "why": "Docker has no such rule; the waiting is for Cassandra."
+      },
+      {
+        "text": "A joining node takes its share of the ring from the others, one join at a time",
+        "correct": true,
+        "why": "Right. Cassandra expects joins one after another."
+      },
+      {
+        "text": "Because c2 and c3 need c1's data copied in before they can start",
+        "correct": false,
+        "why": "There is no data yet when the cluster is built; it is the ring that is shared out."
+      },
+      {
+        "text": "Because each container needs the whole 4 GB while it is starting",
+        "correct": false,
+        "why": "With the small heap each node uses about 500 MB, and the loop is about joining, not memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-aec9aag6",
+    "version": 1,
+    "section": "clustering-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders_by_customer` is created `WITH CLUSTERING ORDER BY (ordered_at DESC, order_id ASC)`. What does `SELECT ... WHERE customer = 'ana@example.com' LIMIT 1` return?",
+    "choices": [
+      {
+        "text": "Ana's most recent order, read as the first row of her partition",
+        "correct": true,
+        "why": "Right: A-1006, from 8 April. The stored order is newest first."
+      },
+      {
+        "text": "The first order Ana ever placed",
+        "correct": false,
+        "why": "That would be the answer with ASC; DESC puts the newest on top."
+      },
+      {
+        "text": "Any one of Ana's orders, since rows have no order without ORDER BY",
+        "correct": false,
+        "why": "Inside a partition the rows have the clustering order, on disk."
+      },
+      {
+        "text": "An error, because LIMIT needs an ORDER BY",
+        "correct": false,
+        "why": "LIMIT works alone and takes rows in the stored order."
+      }
+    ]
+  },
+  {
+    "id": "ex-njbhrkd5",
+    "version": 1,
+    "section": "clustering-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table is `PRIMARY KEY (customer, ordered_at)`. A customer places two orders in the same millisecond, and both inserts succeed. What is in the table afterwards?",
+    "hint": "What does an INSERT do with a key that exists?",
+    "choices": [
+      {
+        "text": "Two rows, because each INSERT adds a row",
+        "correct": false,
+        "why": "An INSERT with an existing primary key replaces that row."
+      },
+      {
+        "text": "One row, holding the second order, with no error raised",
+        "correct": true,
+        "why": "Right. That is why the lesson adds order_id as a last clustering column."
+      },
+      {
+        "text": "One row, and the second INSERT fails with a duplicate key error",
+        "correct": false,
+        "why": "Cassandra does not check before writing; both inserts succeed."
+      },
+      {
+        "text": "Two rows in different partitions, one per order",
+        "correct": false,
+        "why": "The partition key is the customer, the same for both."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymwcgrxb",
+    "version": 1,
+    "section": "clustering-key",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `PRIMARY KEY (customer, ordered_at, order_id)` to what it decides.",
+    "pairs": [
+      {
+        "left": "customer",
+        "right": "which nodes hold the rows"
+      },
+      {
+        "left": "ordered_at",
+        "right": "the order of rows inside the partition, and the ranges you can ask for"
+      },
+      {
+        "left": "order_id",
+        "right": "what keeps two orders at the same instant apart"
+      }
+    ],
+    "right_distractors": [
+      "which replica answers a read at ONE"
+    ]
+  },
+  {
+    "id": "ex-c6h91hnz",
+    "version": 1,
+    "section": "clustering-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `ORDER BY` does Cassandra refuse on `orders_by_customer`, with the partition named?",
+    "choices": [
+      {
+        "text": "ORDER BY ordered_at ASC",
+        "correct": false,
+        "why": "Reversing the clustering order is allowed: it reads the partition backwards."
+      },
+      {
+        "text": "ORDER BY total DESC",
+        "correct": true,
+        "why": "Right: total is not a clustering column, and only those can be ordered by."
+      },
+      {
+        "text": "ORDER BY ordered_at DESC",
+        "correct": false,
+        "why": "That is the stored order itself."
+      },
+      {
+        "text": "ORDER BY ordered_at DESC, order_id ASC",
+        "correct": false,
+        "why": "That repeats the table's clustering order exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8ytfkq4",
+    "version": 1,
+    "section": "query-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query with `ALLOW FILTERING` returned the right three orders in milliseconds on the lab. Why is it still a bad choice for the application's main screen?",
+    "choices": [
+      {
+        "text": "Because its results are not guaranteed to be correct",
+        "correct": false,
+        "why": "The answer was correct; the refusal is about cost."
+      },
+      {
+        "text": "Its cost grows with the size of the table, not of the answer",
+        "correct": true,
+        "why": "Right. It sent range requests over all 49 ranges; with eighty million rows each request scans its share."
+      },
+      {
+        "text": "Because ALLOW FILTERING is removed in Cassandra 5.0 and will stop working",
+        "correct": false,
+        "why": "It ran on 5.0.9 in the lab."
+      },
+      {
+        "text": "Because it only reads the coordinator's own data and misses the rest",
+        "correct": false,
+        "why": "The trace shows it asking c2 and c3 as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1zyjvdy",
+    "version": 1,
+    "section": "query-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `CREATE INDEX ... USING 'sai'` on `status`, the trace of `WHERE status = 'shipped'` still shows `Submitting range requests on 49 ranges`. What does that tell you?",
+    "hint": "Where does a secondary index live?",
+    "choices": [
+      {
+        "text": "The index was not used, and the query fell back to filtering",
+        "correct": false,
+        "why": "It was used: no ALLOW FILTERING was needed, and each node read only the matching partitions."
+      },
+      {
+        "text": "The index is still being built, and a second run will go to one node",
+        "correct": false,
+        "why": "A finished SAI index still has to be asked on every node."
+      },
+      {
+        "text": "Each node indexes only its own data, so every node still has to be asked",
+        "correct": true,
+        "why": "Right. SAI makes each node's part cheaper; it cannot point the coordinator at one node."
+      },
+      {
+        "text": "The coordinator always splits every query into 49 ranges, indexed or not",
+        "correct": false,
+        "why": "A query naming the partition key was one single-partition read, with no ranges."
+      }
+    ]
+  },
+  {
+    "id": "ex-sys0rkd7",
+    "version": 1,
+    "section": "query-first",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's method for designing a Cassandra table in order.",
+    "items": [
+      "Write down the query the screen will run, with its parameters",
+      "Make the parameter always given with = the partition key",
+      "Make what the query sorts or ranges on the clustering columns",
+      "Add what makes a row unique as the last clustering column",
+      "Check that the partition cannot grow without bound"
+    ],
+    "trap": "The query comes first; the table is its answer."
+  },
+  {
+    "id": "ex-kevq694d",
+    "version": 1,
+    "section": "query-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The warehouse needs \"every order placed on a given day\". What does the lesson do?",
+    "choices": [
+      {
+        "text": "Adds an SAI index on ordered_at to orders_by_customer",
+        "correct": false,
+        "why": "Every node would still be asked, for the warehouse's main query."
+      },
+      {
+        "text": "Creates orders_by_day, partitioned by day, and writes each order to both tables",
+        "correct": true,
+        "why": "Right. One table per query, and the day's orders are one partition."
+      },
+      {
+        "text": "Runs the existing query with ALLOW FILTERING on a range of ordered_at",
+        "correct": false,
+        "why": "That reads every partition on every node to answer a one-day question."
+      },
+      {
+        "text": "Changes orders_by_customer's partition key to the day",
+        "correct": false,
+        "why": "Then the account page's query would break; each question keeps its own table."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tnk5nyc",
+    "version": 1,
+    "section": "query-first",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query on a column outside the primary key is refused unless it ends with ALLOW ___.",
+    "blanks": [
+      {
+        "accept": [
+          "FILTERING"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1cmmxam7",
+    "version": 1,
+    "section": "partition-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `PRIMARY KEY ((customer, month), viewed_at)`, what do the inner parentheses do?",
+    "choices": [
+      {
+        "text": "They make customer and month together the partition key",
+        "correct": true,
+        "why": "Right: one partition per customer per month."
+      },
+      {
+        "text": "They make month a clustering column sorted before viewed_at",
+        "correct": false,
+        "why": "Without the inner parentheses month would be a clustering column; with them it is part of the partition key."
+      },
+      {
+        "text": "They are an optional grouping, with no effect at all on how rows are stored",
+        "correct": false,
+        "why": "They change where every row lives."
+      },
+      {
+        "text": "They create a secondary index on month",
+        "correct": false,
+        "why": "Indexes are made with CREATE INDEX, never by the key's parentheses."
+      }
+    ]
+  },
+  {
+    "id": "ex-81aeqwwt",
+    "version": 1,
+    "section": "partition-size",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's unbucketed partition reached about 1.1 MB in 90 days of a view every five minutes. At the same rate, about how many MB will it hold after 10 years (3650 days)?",
+    "hint": "Divide 3650 by 90.",
+    "value": 45,
+    "tolerance": 3,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-fj3y4zeb",
+    "version": 1,
+    "section": "partition-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sensor writes a reading every second into `readings (sensor, at)` with `sensor` as the partition key. Which change does the lesson's reasoning point to?",
+    "choices": [
+      {
+        "text": "Add a day or an hour to the partition key, so each partition stops growing",
+        "correct": true,
+        "why": "Right. The rate decides the bucket; a second-by-second sensor needs a small one."
+      },
+      {
+        "text": "Add an SAI index on at, so reads of recent readings stay fast",
+        "correct": false,
+        "why": "An index does not shrink the partition; it keeps growing on the same nodes."
+      },
+      {
+        "text": "Raise the number of tokens per node so the partition is split across nodes",
+        "correct": false,
+        "why": "A partition is never split: it lives whole on the owners of its token."
+      },
+      {
+        "text": "Nothing, since a partition only becomes a problem above 100 MB",
+        "correct": false,
+        "why": "At one write a second that partition passes the guidance within weeks, and never stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-smwz02nh",
+    "version": 1,
+    "section": "partition-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab's `tablestats`, which node held `views_by_customer`'s one partition, and what did the other two hold of it?",
+    "choices": [
+      {
+        "text": "c2 held all of it; c1 and c3 held nothing of that table",
+        "correct": true,
+        "why": "Right. With one copy and one partition, one node carries Ana's whole history."
+      },
+      {
+        "text": "Each node held a third of it, split by month",
+        "correct": false,
+        "why": "That was the bucketed table, whose key includes the month."
+      },
+      {
+        "text": "c1 held it, because c1 coordinated the COPY",
+        "correct": false,
+        "why": "The coordinator forwards rows to the owners of their token."
+      },
+      {
+        "text": "All three held a full copy, as replicas",
+        "correct": false,
+        "why": "The keyspace has one copy in this lesson; lesson 17 raises it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0vbdgeh",
+    "version": 1,
+    "section": "partition-size",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does bucketing cost the application?",
+    "choices": [
+      {
+        "text": "Every write becomes slower, since the month must be computed by Cassandra",
+        "correct": false,
+        "why": "The application supplies the month; the write is the same size."
+      },
+      {
+        "text": "A query for recent rows names a month, and asks for the one before when it needs more",
+        "correct": true,
+        "why": "Right: a loop in the application instead of one query."
+      },
+      {
+        "text": "Old months can no longer be read once their bucket closes",
+        "correct": false,
+        "why": "A closed bucket is still a partition you can read; it just stops growing."
+      },
+      {
+        "text": "The data takes three times the disk space",
+        "correct": false,
+        "why": "The same rows are stored once, split into smaller partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm0th1m2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these queries go to one partition on `orders_by_customer`, `orders_by_day` and the tables of this lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Ana's orders in March, from orders_by_customer",
+        "correct": true,
+        "why": "Right: customer named, range on the first clustering column."
+      },
+      {
+        "text": "Every shipped order, through the SAI index",
+        "correct": false,
+        "why": "SAI still asks every node."
+      },
+      {
+        "text": "The orders of 2 March, from orders_by_day",
+        "correct": true,
+        "why": "Right: the day is the partition key."
+      },
+      {
+        "text": "Ana's views in February, from views_by_customer_month",
+        "correct": true,
+        "why": "Right: customer and month together name the partition."
+      },
+      {
+        "text": "Every order above 1000, with ALLOW FILTERING",
+        "correct": false,
+        "why": "It reads all 49 ranges."
+      }
+    ]
+  },
+  {
+    "id": "ex-909yxp5j",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it showed in this lesson.",
+    "pairs": [
+      {
+        "left": "nodetool getendpoints",
+        "right": "the node that holds a given partition key"
+      },
+      {
+        "left": "nodetool ring",
+        "right": "every token and the node that owns it"
+      },
+      {
+        "left": "nodetool tablestats",
+        "right": "the largest partition a node has written to disk"
+      },
+      {
+        "left": "TRACING ON",
+        "right": "how many nodes and ranges a query reached"
+      }
+    ],
+    "right_distractors": [
+      "which queries are refused before they run"
+    ]
+  },
+  {
+    "id": "ex-a8pdwv5x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes `PRIMARY KEY (status, ordered_at)` for a table of orders, so the shop can list orders by status. What does this lesson predict?",
+    "hint": "How many different values does status have?",
+    "choices": [
+      {
+        "text": "A few partitions, one per status, that grow forever on a few nodes",
+        "correct": true,
+        "why": "Right. Three statuses means three partitions holding every order the shop ever takes."
+      },
+      {
+        "text": "An even spread over the nodes, since the hash scatters any key it is given",
+        "correct": false,
+        "why": "The hash spreads different keys; with three values there are three partitions to spread."
+      },
+      {
+        "text": "A refusal at CREATE TABLE time, because status is not unique per order",
+        "correct": false,
+        "why": "A partition key need not be unique; uniqueness comes from the whole primary key."
+      },
+      {
+        "text": "The same result as an SAI index on status",
+        "correct": false,
+        "why": "SAI spreads the rows by their real key and asks every node; this piles them into three partitions."
+      }
+    ]
+  }
+]

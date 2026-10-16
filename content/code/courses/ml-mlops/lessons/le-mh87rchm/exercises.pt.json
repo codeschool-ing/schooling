@@ -1,0 +1,546 @@
+{
+  "ex-b39avawx": {
+    "prompt": "Que pergunta sobre o modelo de afastamento leva mais tempo para ser respondida?",
+    "choices": [
+      {
+        "text": "Ele acertou?",
+        "why": "Isso. Espera 90 dias pelos desfechos."
+      },
+      {
+        "text": "O serviço está respondendo?",
+        "why": "O status de cada pedido diz isso em segundos."
+      },
+      {
+        "text": "Quão rápido ele é?",
+        "why": "O tempo de cada pedido é registrado na hora."
+      },
+      {
+        "text": "O que ele está dizendo esta noite?",
+        "why": "Isso se sabe na manhã seguinte, comparando noites."
+      }
+    ]
+  },
+  "ex-q8dfyfnp": {
+    "prompt": "Um serviço responde cada pedido em cinco milissegundos com status 200. O que isso diz sobre o modelo?",
+    "choices": [
+      {
+        "text": "Que as probabilidades estão calibradas contra os desfechos",
+        "why": "Calibração precisa de desfechos."
+      },
+      {
+        "text": "Nada sobre as notas estarem certas",
+        "why": "Isso. Velocidade e status são perguntas do serviço, não do modelo."
+      },
+      {
+        "text": "Que as entradas dele não derivaram",
+        "why": "Entradas derivadas são respondidas igualmente rápido."
+      },
+      {
+        "text": "Que ele foi treinado com dados suficientes",
+        "why": "O treino não diz nada na hora do pedido."
+      }
+    ]
+  },
+  "ex-q07rycvd": {
+    "prompt": "Por que a lição compara as notas desta noite com as da semana passada, se só os desfechos dizem se o modelo acerta?",
+    "choices": [
+      {
+        "text": "Desfechos nunca são coletados para este modelo",
+        "why": "São; o boletim os lê."
+      },
+      {
+        "text": "As notas da semana passada foram conferidas por uma pessoa",
+        "why": "Ninguém as conferiu; são só referência."
+      },
+      {
+        "text": "Ela responde meses antes dos desfechos",
+        "why": "Isso. A checagem cedo fica no lugar da tardia."
+      },
+      {
+        "text": "Comparar notas é mais barato que servi-las",
+        "why": "Custo não é o motivo."
+      }
+    ]
+  },
+  "ex-5rghgs62": {
+    "prompt": "O que o middleware do serve.py faz com cada pedido?",
+    "choices": [
+      {
+        "text": "Recusa os que não têm id de membro",
+        "why": "A checagem de tipo do FastAPI faz isso."
+      },
+      {
+        "text": "Guarda a resposta para o próximo pedido",
+        "why": "Nada é guardado em cache."
+      },
+      {
+        "text": "Manda a probabilidade para o MLflow",
+        "why": "Ele grava um arquivo; o MLflow não entra."
+      },
+      {
+        "text": "Mede e grava uma linha JSON",
+        "why": "Isso. Hora, caminho, status, milissegundos, probabilidade, versão."
+      }
+    ]
+  },
+  "ex-bnj6rtp0": {
+    "prompt": "Como a probabilidade calculada na rota chega à linha de log do middleware?",
+    "choices": [
+      {
+        "text": "Por request.state",
+        "why": "Isso. Um pedido recusado nunca o define, e registra null."
+      },
+      {
+        "text": "Por uma variável global",
+        "why": "Pedidos simultâneos se sobrescreveriam."
+      },
+      {
+        "text": "O middleware lê o corpo da resposta",
+        "why": "Ele nunca lê o corpo."
+      },
+      {
+        "text": "A rota grava a sua própria linha",
+        "why": "Só o middleware grava."
+      }
+    ]
+  },
+  "ex-c7gv76x2": {
+    "prompt": "Por que o log guarda os 404 além das respostas?",
+    "choices": [
+      {
+        "text": "Os 404 são os pedidos mais lentos que o serviço responde",
+        "why": "São os mais rápidos: uma linha lida, sem predição."
+      },
+      {
+        "text": "Sem eles a taxa de erro não quer dizer nada",
+        "why": "Isso. O que não é registrado não pode ser contado."
+      },
+      {
+        "text": "O FastAPI não consegue pulá-los",
+        "why": "O middleware poderia filtrar qualquer coisa."
+      },
+      {
+        "text": "O modelo aprende com eles",
+        "why": "Nada aqui treina com o log."
+      }
+    ]
+  },
+  "ex-qwatn468": {
+    "prompt": "Um arquivo com um objeto JSON em cada linha está num formato chamado JSON ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Lines"
+        ]
+      }
+    ]
+  },
+  "ex-svssk67f": {
+    "prompt": "Por que o latency.py não conta um 404 como erro?",
+    "choices": [
+      {
+        "text": "404 são raros demais para importar",
+        "why": "Um terço das respostas do teste de carga foram 404."
+      },
+      {
+        "text": "O urllib os esconde",
+        "why": "O load.py os conta."
+      },
+      {
+        "text": "É uma recusa correta",
+        "why": "Isso. Erros são 500 para cima."
+      },
+      {
+        "text": "Eles vão para outro arquivo",
+        "why": "Estão no requests.log com o resto."
+      }
+    ]
+  },
+  "ex-ptr8pj5j": {
+    "prompt": "No teste de carga a média foi 68,7 ms e a mediana 81,3 ms. Por que a média fica abaixo da mediana?",
+    "choices": [
+      {
+        "text": "Os pedidos mais lentos foram descartados",
+        "why": "Todo pedido está no log."
+      },
+      {
+        "text": "A mediana é calculada com menos pedidos",
+        "why": "As duas leem as mesmas 2.000 linhas."
+      },
+      {
+        "text": "O pandas arredonda a média para baixo",
+        "why": "Arredondamento move um décimo, não doze milissegundos."
+      },
+      {
+        "text": "Recusas rápidas a puxam para baixo",
+        "why": "Isso. Dois tipos de pedido, e a média não descreve nenhum."
+      }
+    ]
+  },
+  "ex-ad4cqrw5": {
+    "prompt": "Na execução de 2.000 pedidos, oito por vez, qual foi o p99, em milissegundos?",
+    "unit": "ms"
+  },
+  "ex-fr79bfg5": {
+    "prompt": "O que um p95 de 120 ms quer dizer?",
+    "choices": [
+      {
+        "text": "95 em 100 pedidos levaram menos de 120 ms",
+        "why": "Isso. E 5 em 100 levaram mais."
+      },
+      {
+        "text": "O pedido médio levou 120 ms",
+        "why": "Essa é a média, outro número."
+      },
+      {
+        "text": "O serviço ficou no ar e respondendo 95% do tempo",
+        "why": "Isso seria disponibilidade, não latência."
+      },
+      {
+        "text": "O pedido mais lento levou 120 ms",
+        "why": "Esse é o máximo."
+      }
+    ]
+  },
+  "ex-0dzfh708": {
+    "prompt": "Mandar dezesseis pedidos por vez em vez de um baixou a vazão de 163 para 88 por segundo. Por quê?",
+    "choices": [
+      {
+        "text": "O armazenamento online trava sob carga",
+        "why": "Leituras do SQLite não são o gargalo aqui."
+      },
+      {
+        "text": "As predições fazem fila num só processo",
+        "why": "Isso. Depois de saturar, mais tráfego é só fila."
+      },
+      {
+        "text": "A rede ficou saturada",
+        "why": "Tudo rodou numa máquina só."
+      },
+      {
+        "text": "O load.py manda mais devagar com mais threads",
+        "why": "O próprio log do serviço mostra as esperas."
+      }
+    ]
+  },
+  "ex-karbqc0t": {
+    "prompt": "O que rodar o uvicorn com --workers 4 compra, e quanto custa?",
+    "choices": [
+      {
+        "text": "Pedidos isolados mais rápidos, de graça",
+        "why": "Um pedido sozinho não fica mais rápido."
+      },
+      {
+        "text": "Um modelo quatro vezes mais preciso que antes",
+        "why": "Workers não mudam nada do que o modelo diz."
+      },
+      {
+        "text": "Predições em paralelo, por mais memória",
+        "why": "Isso. Cada worker guarda a sua cópia do modelo."
+      },
+      {
+        "text": "Menos 404, com respostas mais lentas",
+        "why": "Os 404 vêm do armazenamento online."
+      }
+    ]
+  },
+  "ex-8zrzwbwx": {
+    "prompt": "Ordene os números de latência da execução com dezesseis por vez do menor para o maior.",
+    "items": [
+      "média",
+      "p50",
+      "p95",
+      "p99",
+      "máximo"
+    ]
+  },
+  "ex-2nrmn2bh": {
+    "prompt": "Com o que o watch.py compara as notas e entradas desta noite?",
+    "choices": [
+      {
+        "text": "O conjunto de teste da lição 5",
+        "why": "Ele lê os 28 dias antes da noite."
+      },
+      {
+        "text": "O que os membros fizeram depois",
+        "why": "Esse é o trabalho do boletim, 90 dias depois."
+      },
+      {
+        "text": "Uma tabela fixa escrita pelo marketing",
+        "why": "Nada ali é escrito à mão."
+      },
+      {
+        "text": "As quatro semanas anteriores",
+        "why": "Isso. O passado recente é a referência."
+      }
+    ]
+  },
+  "ex-63ekhw1p": {
+    "prompt": "Por que o watch.py compara a mediana de cada entrada e não a média?",
+    "choices": [
+      {
+        "text": "Membros estranhos quase não a movem",
+        "why": "Isso. Alguns membros estranhos não disparam alarme."
+      },
+      {
+        "text": "O pandas não tira média de inteiros",
+        "why": "Consegue."
+      },
+      {
+        "text": "A média seria a mesma toda noite",
+        "why": "Ela se move mais que a mediana, não menos."
+      },
+      {
+        "text": "O modelo foi treinado com medianas",
+        "why": "Foi treinado com os valores de cada membro."
+      }
+    ]
+  },
+  "ex-4zncr102": {
+    "prompt": "Para quais destes o watch.py dispararia um alarme? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "um valor de canal nunca visto nas quatro semanas anteriores",
+        "why": "Isso. O codificador o transformaria em zeros em silêncio."
+      },
+      {
+        "text": "uma noite com 40% menos membros pontuados",
+        "why": "Isso. A contagem pode variar 10%."
+      },
+      {
+        "text": "uma probabilidade média de 0,18 contra 0,174",
+        "why": "Dentro da faixa de 25%."
+      },
+      {
+        "text": "um membro com um gasto enorme",
+        "why": "A mediana não nota um membro."
+      }
+    ]
+  },
+  "ex-q3y4sx5n": {
+    "prompt": "O watch.py sai com status 1 num alarme. Por que isso importa mais que as linhas impressas?",
+    "choices": [
+      {
+        "text": "Status 1 apaga as notas desta noite",
+        "why": "Ele não apaga nada."
+      },
+      {
+        "text": "Agendadores agem por ele",
+        "why": "Isso. Ninguém lê linhas impressas às 2h30 da manhã."
+      },
+      {
+        "text": "O Python não imprime nada sem ele",
+        "why": "As linhas saem de qualquer jeito."
+      },
+      {
+        "text": "O MLflow registra o status de saída",
+        "why": "O MLflow não entra."
+      }
+    ]
+  },
+  "ex-dsmc6911": {
+    "prompt": "Depois que spend_180d foi multiplicado por 100, o que o score_batch.py relatou?",
+    "choices": [
+      {
+        "text": "Um erro de tipo na coluna de gasto",
+        "why": "Todo valor ainda era um número."
+      },
+      {
+        "text": "Que a fotografia não existia",
+        "why": "A fotografia estava lá, errada."
+      },
+      {
+        "text": "Sucesso: 3.355 membros pontuados",
+        "why": "Isso. Nada estava malformado, então nada falhou."
+      },
+      {
+        "text": "Nada",
+        "why": "Ele imprimiu a linha de sempre."
+      }
+    ]
+  },
+  "ex-0qkents0": {
+    "prompt": "Na noite quebrada, que probabilidade média de afastamento o modelo deu?",
+    "unit": ""
+  },
+  "ex-gqm5ka1d": {
+    "prompt": "Que duas propriedades anteriores fizeram do conserto uma única linha de comando?",
+    "choices": [
+      {
+        "text": "O apelido do registro e a calibração do campeão",
+        "why": "Nenhum dos dois entrou no conserto."
+      },
+      {
+        "text": "O cache do DVC e o histórico do Git",
+        "why": "O conserto não mexeu em nenhum dos dois."
+      },
+      {
+        "text": "O armazenamento online e o serviço web",
+        "why": "O caminho do lote não usa nenhum dos dois."
+      },
+      {
+        "text": "Fotografia refeita e lote que substitui",
+        "why": "Isso. Lições 6 e 8."
+      }
+    ]
+  },
+  "ex-9e054rsh": {
+    "prompt": "Por que o report_card.py recusa a noite de 28 de fevereiro?",
+    "choices": [
+      {
+        "text": "Os 90 dias dela acabam depois dos dados",
+        "why": "Isso. Um membro sem compra ainda pode só não ter voltado ainda."
+      },
+      {
+        "text": "Nenhuma nota foi guardada para essa noite",
+        "why": "3.355 foram."
+      },
+      {
+        "text": "A versão do modelo mudou nessa noite",
+        "why": "A versão 1 a pontuou."
+      },
+      {
+        "text": "Fevereiro tem poucos dias",
+        "why": "O calendário não é o problema."
+      }
+    ]
+  },
+  "ex-pgznxfj8": {
+    "prompt": "O boletim de 30 de novembro bateu com o teste da lição 5 até o último dígito. O que isso provou?",
+    "choices": [
+      {
+        "text": "Que o modelo não piorou",
+        "why": "É a mesma noite em que foi testado: nada poderia ter piorado."
+      },
+      {
+        "text": "Que o boletim calcula certo",
+        "why": "Isso. Um monitor que discorda de um número confiável tem um bug."
+      },
+      {
+        "text": "Que a versão 2 é pior",
+        "why": "A versão 2 não pontuou essa noite."
+      },
+      {
+        "text": "Que os rótulos estão errados",
+        "why": "As duas contas concordaram."
+      }
+    ]
+  },
+  "ex-a7qv8816": {
+    "prompt": "Quantos membros afastados estavam entre as 300 maiores notas de 30 de novembro de 2025?",
+    "unit": "membros"
+  },
+  "ex-gk89efta": {
+    "prompt": "Por que a lição mede uma implantação pelo que ela ocupa e por quanto tempo?",
+    "choices": [
+      {
+        "text": "Preços por predição são fixados por lei",
+        "why": "Nenhuma lei os define."
+      },
+      {
+        "text": "Memória é o único custo que um modelo tem",
+        "why": "Tempo de processador também conta."
+      },
+      {
+        "text": "Máquinas são cobradas por hora",
+        "why": "Isso. O serviço ocupa a memória às três da manhã também."
+      },
+      {
+        "text": "O lote não usa memória",
+        "why": "Usa alguma, por quatro segundos."
+      }
+    ]
+  },
+  "ex-61tzqp9k": {
+    "prompt": "Associe cada implantação a quanto do mês ela ocupa a máquina.",
+    "pairs": [
+      {
+        "left": "lote",
+        "right": "uns dois minutos"
+      },
+      {
+        "left": "serviço, um worker",
+        "right": "720 horas de uns 330 MB"
+      },
+      {
+        "left": "serviço, quatro workers",
+        "right": "720 horas de uns 1,3 GB"
+      }
+    ],
+    "right_distractors": [
+      "uma hora, no primeiro dia do mês"
+    ]
+  },
+  "ex-b6sfjer1": {
+    "prompt": "Qual destes deveria acordar alguém de madrugada para o modelo de afastamento?",
+    "choices": [
+      {
+        "text": "Um alarme do vigia nas notas desta noite",
+        "why": "A lista sai por mês; pode esperar a manhã."
+      },
+      {
+        "text": "Um boletim um pouco abaixo do mês passado",
+        "why": "Isso é chamado para a manhã."
+      },
+      {
+        "text": "Um membro novo entrando",
+        "why": "Isso é tráfego normal."
+      },
+      {
+        "text": "O serviço respondendo com erros",
+        "why": "Isso. Os membros sentem isso agora."
+      }
+    ]
+  },
+  "ex-w7c00sg8": {
+    "prompt": "O que dá errado quando os limites de alerta são apertados demais?",
+    "choices": [
+      {
+        "text": "As pessoas passam a ignorá-los",
+        "why": "Isso. E aí o de verdade também é ignorado."
+      },
+      {
+        "text": "Problemas reais passam sem ninguém notar",
+        "why": "Isso é o que limites frouxos fazem."
+      },
+      {
+        "text": "O serviço fica mais lento",
+        "why": "Conferir um limite não custa nada mensurável."
+      },
+      {
+        "text": "O modelo se retreina sozinho",
+        "why": "Nada aqui retreina com um alerta."
+      }
+    ]
+  },
+  "ex-e0daynqb": {
+    "prompt": "Coloque a cadeia noturna na ordem em que a linha do cron a roda.",
+    "items": [
+      "tirar a fotografia desta noite",
+      "pontuar todos os membros",
+      "comparar com as quatro semanas anteriores",
+      "deixar o marketing ler as notas"
+    ]
+  },
+  "ex-7vc17q7j": {
+    "prompt": "Uma equipe observa só latência e taxa de erro do seu serviço de afastamento. Que falha desta lição ela perderia?",
+    "choices": [
+      {
+        "text": "O serviço caindo",
+        "why": "Os erros mostrariam."
+      },
+      {
+        "text": "Uma carga que multiplicou o gasto por 100",
+        "why": "Isso. Rápido, sem erros e errado sobre todos."
+      },
+      {
+        "text": "O p99 subindo sob carga",
+        "why": "A latência mostraria."
+      },
+      {
+        "text": "Um pedido de um membro sem atributos",
+        "why": "Isso é um 404 registrado."
+      }
+    ]
+  }
+}

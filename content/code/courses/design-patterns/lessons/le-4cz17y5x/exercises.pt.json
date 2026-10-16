@@ -1,0 +1,425 @@
+{
+ "ex-58fbfgxn": {
+  "prompt": "Em models.py, quatro threads montaram os quatro relatórios de atraso. Por que não foram mais rápidas que uma thread?",
+  "choices": [
+   {
+    "text": "Criar quatro threads custou mais que os próprios relatórios",
+    "why": "Iniciar uma thread leva microssegundos; os relatórios levaram mais de um segundo."
+   },
+   {
+    "text": "A GIL deixou uma delas rodar Python por vez",
+    "why": "Isso. Aritmética segura a trava do interpretador, então as threads se revezaram num núcleo."
+   },
+   {
+    "text": "O notebook tinha um núcleo só para as quatro dividirem",
+    "why": "Tinha quatro, e os quatro processos os usaram: o mesmo trabalho levou cerca de um terço do tempo."
+   },
+   {
+    "text": "O ThreadPoolExecutor roda os trabalhos em sequência a menos que alguém diga o contrário",
+    "why": "O mesmo pool sobrepôs as quatro consultas e terminou em um quarto do tempo."
+   }
+  ]
+ },
+ "ex-kq5xt033": {
+  "prompt": "Na versão comum do CPython, só uma thread por vez executa bytecode Python, por causa da trava global do ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "interpretador",
+     "interpreter"
+    ]
+   }
+  ]
+ },
+ "ex-yqx795na": {
+  "prompt": "No asyncio, em que ponto outra tarefa pode começar a rodar no meio da sua corrotina?",
+  "choices": [
+   {
+    "text": "Entre quaisquer dois bytecodes, como com threads",
+    "why": "Essa é a linha de threading da tabela; o asyncio tem uma thread e não a interrompe."
+   },
+   {
+    "text": "A cada poucos milissegundos, quando o event loop decide que a corrotina já rodou bastante",
+    "why": "O loop nunca retoma o controle sozinho; uma corrotina que nunca faz await bloqueia todo o resto."
+   },
+   {
+    "text": "Só num await",
+    "why": "Isso. Os pontos de troca estão escritos no código, e é isso que torna o asyncio cooperativo."
+   }
+  ]
+ },
+ "ex-wbyhht4q": {
+  "prompt": "O contador está em 10. Três balcões rodam o record() de race.py, e os três leem o contador antes de qualquer um escrever. Quantos dos três empréstimos se perdem?",
+  "hint": "Cada balcão escreve o valor que leu, mais um.",
+  "unit": "empréstimos"
+ },
+ "ex-198zdrx7": {
+  "prompt": "plus_equals.py não perdeu nenhuma atualização em quatro milhões. O que essa execução mostra sobre counter.issued += 1?",
+  "choices": [
+   {
+    "text": "Que += é uma operação atômica única em Python",
+    "why": "Continua sendo uma leitura, uma soma e uma escrita; o 3.12 calha de não trocar no meio delas."
+   },
+   {
+    "text": "Só que o vão não foi atingido naquela execução no 3.12",
+    "why": "Isso. Nada na linguagem promete isso, e a versão free-threaded ou uma chamada a mais o reabre."
+   },
+   {
+    "text": "Que a GIL protege de corridas os dados compartilhados de qualquer programa",
+    "why": "race.py rodou sob a mesma GIL e perdeu três quartos das atualizações."
+   },
+   {
+    "text": "Que um milhão de iterações é pouco demais para mostrar uma corrida",
+    "why": "race.py mostrou uma em quatro mil; o número de iterações não é o que decide."
+   }
+  ]
+ },
+ "ex-9qnxh7ea": {
+  "prompt": "Duas threads leem a mesma lista de empréstimos, e nenhuma a muda nunca. Existe corrida?",
+  "choices": [
+   {
+    "text": "Não: sem escritor, não há nada a intercalar mal",
+    "why": "Isso. Uma corrida precisa de estado compartilhado, pelo menos um escritor e um passo não atômico; aqui não há escritor."
+   },
+   {
+    "text": "Sim, porque a lista é compartilhada entre duas threads",
+    "why": "Compartilhar sozinho não basta; ler a mesma lista que não muda, em qualquer ordem, dá a mesma resposta."
+   },
+   {
+    "text": "Sim, a menos que cada thread receba sua própria cópia da lista antes de começar",
+    "why": "Cópias também seriam seguras, e não são necessárias; a lista já não muda debaixo de nenhum dos leitores."
+   }
+  ]
+ },
+ "ex-atdjwayv": {
+  "prompt": "Por que locks.py cria a trava dentro de LoanCounter em vez de pedir que cada balcão pegue uma?",
+  "choices": [
+   {
+    "text": "Uma trava criada fora de uma classe não pode ser usada num with",
+    "why": "Qualquer Lock funciona com with, onde quer que tenha sido criada."
+   },
+   {
+    "text": "Para nenhum chamador ter de lembrar da trava",
+    "why": "Isso. A trava fica ao lado do estado que protege, o encapsulamento da lição 1 fazendo um trabalho novo."
+   },
+   {
+    "text": "Dentro da classe ela faz record() rodar em paralelo nos quatro núcleos",
+    "why": "Uma trava faz o contrário: deixa uma thread por vez passar por aqueles passos."
+   }
+  ]
+ },
+ "ex-qwcf1ekn": {
+  "prompt": "O que torna o segundo deadlock.py incapaz de entrar em deadlock?",
+  "choices": [
+   {
+    "text": "O timeout na segunda trava, que quebra a espera depois de um segundo",
+    "why": "A primeira versão tinha o mesmo timeout e ainda assim travou até ele disparar."
+   },
+   {
+    "text": "Usar uma RLock, para cada thread poder pegar a própria trava duas vezes",
+    "why": "As duas versões usam Lock comum, e o deadlock era entre duas threads, não entre uma thread e ela mesma."
+   },
+   {
+    "text": "As duas trocas pegam as travas na ordem do número do membro",
+    "why": "Isso. Com uma ordem combinada, o ciclo de espera não tem como se formar."
+   },
+   {
+    "text": "Ordenar o log, para as linhas não dependerem de qual thread escreveu primeiro",
+    "why": "As duas versões ordenam o log; isso só fixa a ordem das linhas impressas."
+   }
+  ]
+ },
+ "ex-mnn0egsm": {
+  "prompt": "No primeiro deadlock.py, o que teria acontecido sem timeout=1?",
+  "choices": [
+   {
+    "text": "O Python lançaria um DeadlockError depois de alguns segundos",
+    "why": "O Python não tem esse erro; nada percebe um ciclo de travas comuns."
+   },
+   {
+    "text": "As duas threads esperariam para sempre, sem imprimir nada",
+    "why": "Isso. Um programa em deadlock não usa processador e parece exatamente um programa pensando."
+   },
+   {
+    "text": "Uma troca terminaria e a outra seria cancelada",
+    "why": "Isso é o que o timeout fez acontecer; sem ele, ninguém solta nada."
+   }
+  ]
+ },
+ "ex-njrtjjgm": {
+  "prompt": "O primeiro catalogue.py criou quatro catálogos. O que permitiu isso?",
+  "choices": [
+   {
+    "text": "Cada thread importou sua própria cópia do módulo",
+    "why": "Um módulo é executado uma vez por processo; as quatro threads compartilharam um _instance."
+   },
+   {
+    "text": "O comando global dá a cada thread uma variável _instance privada",
+    "why": "global quer dizer a variável do módulo, a mesma para toda thread."
+   },
+   {
+    "text": "As quatro olharam _instance antes de um construtor acabar",
+    "why": "Isso. Verificar-depois-agir, com o construtor lento inteiro dentro do vão."
+   }
+  ]
+ },
+ "ex-831a09vj": {
+  "prompt": "No get_catalogue corrigido, por que _instance é verificado uma segunda vez dentro da trava?",
+  "choices": [
+   {
+    "text": "Quem esperou na trava talvez ache o objeto já pronto por outro",
+    "why": "Isso. Sem a segunda verificação, cada thread que esperava construiria o seu depois que a primeira saísse."
+   },
+   {
+    "text": "A primeira verificação poderia lançar erro se _instance nunca tivesse sido atribuído",
+    "why": "_instance recebe None na importação, então a primeira verificação sempre tem o que ler."
+   },
+   {
+    "text": "Para tornar a primeira verificação desnecessária e poder removê-la depois",
+    "why": "A primeira verificação é o que poupa todo chamador posterior do custo da trava; as duas ficam."
+   },
+   {
+    "text": "O Python recarrega as variáveis globais toda vez que uma trava é pega",
+    "why": "Nada é recarregado; o valor pode simplesmente ter mudado enquanto a thread esperava."
+   }
+  ]
+ },
+ "ex-j29mg2wh": {
+  "prompt": "Por que CATALOGUE = Catalogue() no topo de um módulo é seguro não importa quantas threads o importem?",
+  "choices": [
+   {
+    "text": "Objetos no nível do módulo são congelados pelo Python depois da importação",
+    "why": "Nada é congelado; o objeto ainda pode mudar. O que é garantido é que ele é construído uma vez."
+   },
+   {
+    "text": "O corpo do módulo roda uma vez, sob a trava do próprio sistema de importação, antes de alguém recebê-lo",
+    "why": "Isso. Um segundo importador espera o primeiro e então recebe o módulo pronto."
+   },
+   {
+    "text": "A GIL impede outras threads de rodar durante qualquer construtor",
+    "why": "O primeiro catalogue.py teve quatro construtores rodando juntos sob a mesma GIL."
+   }
+  ]
+ },
+ "ex-bpkhhv42": {
+  "prompt": "No primeiro observers.py, o ouvinte das estatísticas nunca recebeu o evento. Por quê?",
+  "choices": [
+   {
+    "text": "O ouvinte do e-mail lançou uma exceção que parou o laço",
+    "why": "Nada lançou erro; o e-mail foi anotado e o programa terminou normalmente."
+   },
+   {
+    "text": "Uma remoção deslocou a lista debaixo do laço, que então passou do fim",
+    "why": "Isso. O laço guarda uma posição; as estatísticas escorregaram para a posição 1, que ele já tinha passado."
+   },
+   {
+    "text": "Desinscrever o balcão de multas removeu também todo ouvinte depois dele",
+    "why": "remove tira um item; os ouvintes do e-mail e das estatísticas continuavam na lista."
+   }
+  ]
+ },
+ "ex-r46rk7f9": {
+  "prompt": "Por que o publish corrigido copia a lista dentro da trava e chama os ouvintes depois de soltá-la?",
+  "choices": [
+   {
+    "text": "Chamar uma função segurando uma trava é proibido pelo Python",
+    "why": "O Python permite; a cópia é uma escolha de projeto, não uma regra da linguagem."
+   },
+   {
+    "text": "Copiar faz os ouvintes rodarem em paralelo em vários núcleos",
+    "why": "Eles continuam rodando um depois do outro na thread de quem publica."
+   },
+   {
+    "text": "Um ouvinte lento seguraria todos, e um que se inscreve no callback travaria",
+    "why": "Isso. Segure uma trava em volta dos seus dados, nunca em volta de uma chamada a código que você não controla."
+   },
+   {
+    "text": "A cópia é mais rápida de percorrer que a lista original",
+    "why": "Percorrer qualquer uma das listas custa o mesmo; o ponto é que ninguém consegue mudar a cópia."
+   }
+  ]
+ },
+ "ex-1559ewnd": {
+  "prompt": "Com a correção do retrato, um ouvinte é desinscrito enquanto um evento está sendo publicado. O que pode acontecer?",
+  "choices": [
+   {
+    "text": "Ele ainda recebe aquele evento, porque estava na cópia",
+    "why": "Isso. Ele estava na cópia; a seção cita esse custo, e só o ouvinte consegue se proteger dele."
+   },
+   {
+    "text": "O publish lança RuntimeError, porque a lista mudou de tamanho",
+    "why": "O laço percorre a cópia, que não mudou; esse erro é de dicionários e conjuntos."
+   },
+   {
+    "text": "O unsubscribe espera até todo ouvinte ter sido chamado",
+    "why": "A trava é solta antes das chamadas, então o unsubscribe passa na hora."
+   }
+  ]
+ },
+ "ex-m39vgdrn": {
+  "prompt": "As regras mudam de 50 centavos por dia sem carência para 100 centavos com 2 dias de carência. Um leitor do dicionário mutável vê o preço já mudado e a carência ainda não. Quanto ele cobra por 4 dias de atraso?",
+  "choices": [
+   {
+    "text": "200 centavos, como pelas regras antigas",
+    "why": "As regras antigas cobrariam 200, mas este leitor está usando o preço novo."
+   },
+   {
+    "text": "Nada: ler um dicionário enquanto outra thread o escreve lança um erro",
+    "why": "Só percorrer um dicionário enquanto o tamanho muda lança erro; ler duas chaves não."
+   },
+   {
+    "text": "400 centavos, que nenhum dos dois conjuntos cobraria",
+    "why": "Isso. 4 x 100 sem carência: uma leitura rasgada, feita de metade de cada conjunto."
+   }
+  ]
+ },
+ "ex-mksaeyk3": {
+  "prompt": "Uma dataclass congelada Shelf tem um campo books: list[str]. Duas threads compartilham um Shelf. O que frozen=True garante?",
+  "choices": [
+   {
+    "text": "Nada no Shelf pode mudar depois de construído",
+    "why": "Congelado só vai até a profundidade dos campos: a lista de dentro ainda aceita append."
+   },
+   {
+    "text": "O campo não pode apontar para outra lista; a própria lista ainda pode mudar",
+    "why": "Isso. Use uma tupla até o fim, ou a trava volta pela porta dos fundos."
+   },
+   {
+    "text": "Os appends na lista são tornados atômicos pela dataclass",
+    "why": "A dataclass não faz nada com os métodos da lista; ela só recusa atribuição aos próprios campos."
+   },
+   {
+    "text": "Cada thread ganha sua própria cópia da lista quando lê o campo",
+    "why": "Ler um campo entrega o mesmo objeto lista a todo leitor."
+   }
+  ]
+ },
+ "ex-14vym9tw": {
+  "prompt": "Em Java, uma thread publica regras congeladas novas atribuindo-as a um campo comum. O que pode dar errado?",
+  "choices": [
+   {
+    "text": "Outra thread pode continuar lendo as regras antigas e nunca ver as novas",
+    "why": "Isso. Java precisa de volatile ou de uma AtomicReference para tornar a publicação visível."
+   },
+   {
+    "text": "O objeto de regras pode ser mudado pela thread que lê",
+    "why": "O objeto é imutável em qualquer linguagem; a questão é se a referência nova é vista."
+   },
+   {
+    "text": "O compilador recusa atribuição a um campo compartilhado entre threads",
+    "why": "Java compila sem reclamar, e é exatamente por isso que o erro é fácil de cometer."
+   }
+  ]
+ },
+ "ex-0eh0pxc5": {
+  "prompt": "Ponha as formas de lidar com estado compartilhado na ordem em que a seção diz para tentá-las.",
+  "items": [
+   "Não compartilhar nada: cada tarefa tem seus próprios dados",
+   "Compartilhar só valores imutáveis, trocando uma referência para publicar",
+   "Confinar cada coisa mutável a um dono e mandar mensagens a ele",
+   "Travar em volta dos seus dados, por pouco tempo, numa ordem combinada"
+  ],
+  "trap": "Pegar a trava primeiro é o hábito contra o qual a seção argumenta: é a única cuja correção depende de todo chamador."
+ },
+ "ex-7m21gz15": {
+  "prompt": "Associe cada tipo de trabalho ao modelo em Python que a seção sugere para ele.",
+  "pairs": [
+   {
+    "left": "Milhares de conexões abertas, quase sempre esperando",
+    "right": "asyncio"
+   },
+   {
+    "left": "Esperar por meio de uma biblioteca que bloqueia e não tem versão async",
+    "right": "ThreadPoolExecutor"
+   },
+   {
+    "left": "Partes independentes de aritmética pesada",
+    "right": "ProcessPoolExecutor"
+   },
+   {
+    "left": "Estado duradouro que muitos chamadores mudam",
+    "right": "um ator que é dono dele"
+   }
+  ]
+ },
+ "ex-a2360s6g": {
+  "prompt": "Um handler asyncio lê a contagem de empréstimos de um membro, faz await numa chamada ao banco e escreve contagem + 1. Chegam juntas duas requisições do mesmo membro. O que acontece?",
+  "choices": [
+   {
+    "text": "Nada pode dar errado: o asyncio roda numa thread só",
+    "why": "Uma thread remove os vãos que você não escreveu, não os que escreveu; o await é um deles."
+   },
+   {
+    "text": "Uma atualização pode se perder, porque o await é um vão entre ler e escrever",
+    "why": "Isso. É o race.py de novo, com o await no lugar do sleep(0)."
+   },
+   {
+    "text": "O event loop roda a segunda requisição depois que a primeira termina",
+    "why": "O loop inicia a segunda assim que a primeira faz await; é para isso que o await existe."
+   },
+   {
+    "text": "O asyncio lança um erro porque duas tarefas mexeram no mesmo valor",
+    "why": "Nada vigia isso; a atualização perdida é tão silenciosa quanto era com threads."
+   }
+  ]
+ },
+ "ex-3drf4ykn": {
+  "prompt": "Quais destes podem perder ou corromper dados quando rodados por várias threads ao mesmo tempo? Marque todos que se aplicam.",
+  "choices": [
+   {
+    "text": "if isbn not in cache: cache[isbn] = fetch(isbn), com um fetch lento",
+    "why": "Isso. Verificar-depois-agir: duas threads podem errar as duas e buscar as duas, como os quatro catálogos."
+   },
+   {
+    "text": "Várias threads lendo um único objeto FineRules congelado",
+    "why": "Sem escritor, nada sobre o que correr: todo leitor vê o mesmo valor completo."
+   },
+   {
+    "text": "Atualizar um total lendo, chamando uma função e escrevendo de volta",
+    "why": "Isso. Ler-modificar-escrever com um vão no meio, que é o race.py."
+   },
+   {
+    "text": "Percorrer uma lista de ouvintes enquanto outra thread remove um",
+    "why": "Isso. Um ouvinte é pulado em silêncio, como as estatísticas foram."
+   }
+  ]
+ },
+ "ex-54ehbhap": {
+  "prompt": "Uma equipe passa seu serviço Python para a versão free-threaded. Que programa desta lição tem mais chance de começar a se comportar diferente?",
+  "choices": [
+   {
+    "text": "rules.py, porque dataclasses congeladas dependem da GIL",
+    "why": "Dataclasses congeladas recusam atribuição em qualquer versão; a imutabilidade nunca precisou da GIL."
+   },
+   {
+    "text": "locks.py, porque uma Lock deixa de funcionar sem a GIL",
+    "why": "Uma Lock é a ferramenta que funciona igual nas duas versões; ela nunca se apoiou na GIL."
+   },
+   {
+    "text": "plus_equals.py",
+    "why": "Isso. A segurança dele era um acaso de quando o 3.12 troca de thread, e threads rodando de fato juntas removem o acaso."
+   },
+   {
+    "text": "a metade de espera de models.py, que pararia de sobrepor as consultas",
+    "why": "A espera já se sobrepunha sob a GIL; sem ela, o que muda é a metade de cálculo."
+   }
+  ]
+ },
+ "ex-dy4zbarm": {
+  "prompt": "Uma troca precisa travar um membro e um livro, e outro código trava um livro e depois um membro. Qual é a mudança mais simples que elimina um deadlock entre eles?",
+  "choices": [
+   {
+    "text": "Dar a toda trava um timeout de um segundo",
+    "why": "Um timeout transforma um deadlock permanente numa operação que falha; o ciclo ainda pode se formar."
+   },
+   {
+    "text": "Fixar uma ordem única para as duas travas e segui-la em todo lugar",
+    "why": "Isso. A mesma regra de ordenar pelo número do membro: uma ordem, então nenhum ciclo."
+   },
+   {
+    "text": "Trocar as duas travas por RLocks",
+    "why": "Uma RLock deixa uma thread pegá-la duas vezes; não faz nada por duas threads esperando uma pela outra."
+   }
+  ]
+ }
+}

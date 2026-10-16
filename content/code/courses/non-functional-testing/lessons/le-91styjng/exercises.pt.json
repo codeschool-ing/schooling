@@ -1,0 +1,329 @@
+{
+ "ex-9bgf4kan": {
+  "prompt": "Uma consulta ao espetáculo 990 devolveu `Server-Timing: db;dur=10.2, pay;dur=0.0, total;dur=10.7`, e o curl mediu 11.461 ms ao todo. Para onde foi o tempo?",
+  "hint": "Subtraia cada relógio do que está por fora dele.",
+  "choices": [
+   {
+    "text": "Para a rede entre o curl e o servidor",
+    "why": "O total do curl e o total do servidor diferem menos de um milissegundo; a rede quase não somou nada."
+   },
+   {
+    "text": "Para os 40 ms do provedor de pagamento",
+    "why": "pay é 0.0: consultar um espetáculo não paga nada."
+   },
+   {
+    "text": "Para a consulta ao banco",
+    "why": "Certo. 10.2 dos 10.7 ms do servidor, que também são quase todos os 11.461 do curl."
+   },
+   {
+    "text": "Para o Python iniciando uma thread para a requisição",
+    "why": "Esse custo está dentro do total do servidor mas fora de db, e a diferença é só 0.5 ms."
+   }
+  ]
+ },
+ "ex-y8dd4eqk": {
+  "prompt": "Uma reserva devolveu `Server-Timing: db;dur=15.7, pay;dur=40.1, total;dur=58.2`. Quantos milissegundos dela nenhuma parte nomeada explicou?",
+  "hint": "Total menos as partes.",
+  "unit": "ms"
+ },
+ "ex-58e6x96z": {
+  "prompt": "Ligue cada observação desta aula à pergunta do USE que ela responde.",
+  "hint": "Ocupado, esperando, recusado.",
+  "pairs": [
+   {
+    "left": "python3 app.py a 212.5% de CPU",
+    "right": "utilização"
+   },
+   {
+    "left": "quinze threads esperando a booking_lock",
+    "right": "saturação"
+   },
+   {
+    "left": "190 TcpExtListenOverflows em cinco segundos",
+    "right": "erros"
+   }
+  ],
+  "right_distractors": [
+   "vazão"
+  ]
+ },
+ "ex-1mpdswfh": {
+  "prompt": "Com oito workers consultando espetáculos, o segundo retrato do top mostrou `python3 app.py` em 212.5% e `python3 measure.py 8 12` em 6.5%. O que esse par de números descarta?",
+  "hint": "Qual dos dois programas poderia ser o limite?",
+  "choices": [
+   {
+    "text": "Que o gerador era o que limitava o teste",
+    "why": "Certo. O gerador estava quase ocioso; o processo do servidor usava mais de dois processadores."
+   },
+   {
+    "text": "Que o banco estava lento",
+    "why": "O SQLite roda dentro do processo do servidor, então o trabalho dele faz parte dos 212.5%."
+   },
+   {
+    "text": "Que faltava memória na máquina",
+    "why": "%CPU não diz nada sobre memória; free e as colunas si e so do vmstat dizem."
+   },
+   {
+    "text": "Que havia uma trava envolvida em algum lugar do servidor",
+    "why": "Uma trava pode estar num processo ocupado também; esse par só diz que o servidor é o ocupado."
+   }
+  ]
+ },
+ "ex-4xhmgr20": {
+  "prompt": "O `EXPLAIN QUERY PLAN` imprimiu `SCAN bookings` para a contagem das reservas de um espetáculo. O que SCAN diz?",
+  "hint": "Compare com o SEARCH que veio depois do índice.",
+  "choices": [
+   {
+    "text": "A consulta está errada e devolve linhas demais",
+    "why": "A contagem estava certa; uma varredura é questão de custo, não de correção."
+   },
+   {
+    "text": "Ele lê todas as linhas da tabela",
+    "why": "Certo. Cada uma das quase trezentas mil linhas, a cada requisição."
+   },
+   {
+    "text": "O resultado fica em cache depois da primeira requisição",
+    "why": "Nada no plano diz isso, e os tempos não caíram na repetição."
+   },
+   {
+    "text": "A tabela fica travada enquanto a contagem roda",
+    "why": "Leitores não se bloqueiam no SQLite; a trava desta aula é a do próprio app.py."
+   }
+  ]
+ },
+ "ex-8n24gjqs": {
+  "prompt": "Depois do índice, o plano disse `USING COVERING INDEX bookings_by_show`. O que COVERING acrescenta ao SEARCH?",
+  "hint": "O que uma contagem de linhas de um espetáculo precisa ler?",
+  "choices": [
+   {
+    "text": "A tabela em si nem é lida",
+    "why": "Certo. Uma contagem por show_id não precisa de nada além dos valores de show_id que o índice já tem."
+   },
+   {
+    "text": "O índice cobre todas as colunas da tabela bookings",
+    "why": "Ele tem uma coluna, show_id; ele cobre a consulta, não a tabela."
+   },
+   {
+    "text": "Todo espetáculo tem pelo menos uma reserva nele",
+    "why": "A palavra trata de quais dados a consulta precisa, não do conteúdo dos dados."
+   },
+   {
+    "text": "O índice fica em memória e nunca é gravado em disco",
+    "why": "Um índice é guardado no arquivo do banco, como a tabela."
+   }
+  ]
+ },
+ "ex-psgx0dsb": {
+  "prompt": "No SQLite, pôr EXPLAIN QUERY ___ antes de uma consulta imprime como ela será executada, sem executá-la.",
+  "hint": "A palavra depois de QUERY.",
+  "blanks": [
+   {
+    "accept": [
+     "plan"
+    ]
+   }
+  ]
+ },
+ "ex-g1fsbv7f": {
+  "prompt": "Quanto o índice sobre bookings(show_id) custa à bilheteria?",
+  "hint": "Pense no que acontece quando uma linha é acrescentada.",
+  "choices": [
+   {
+    "text": "Nada, já que um índice só acelera as coisas",
+    "why": "Índices são pagos a cada escrita e em espaço de disco."
+   },
+   {
+    "text": "Cada reserva grava uma entrada de índice além da linha",
+    "why": "Certo. Vale a pena numa tabela lida muito mais do que escrita; um teste de carga das escritas diz quando não vale."
+   },
+   {
+    "text": "As contagens passam a ser aproximadas em vez de exatas",
+    "why": "Um índice muda como as linhas são achadas, nunca quais linhas existem."
+   },
+   {
+    "text": "Duas reservas para o mesmo assento ficam impossíveis",
+    "why": "Isso é um índice único sobre (show_id, seat), o que o app_fixed.py cria."
+   }
+  ]
+ },
+ "ex-z3gcza2v": {
+  "prompt": "Toda reserva bem-sucedida segura uma trava global por pelo menos os 40 ms do pagamento. No máximo quantas reservas bem-sucedidas conseguem terminar por segundo, seja qual for a carga?",
+  "hint": "Um segundo dividido pelo tempo que cada uma segura a trava.",
+  "unit": "reservas/s"
+ },
+ "ex-0gw1mpjz": {
+  "prompt": "Com dezesseis workers reservando, a vazão ficou plana, a mediana foi 401.2 ms e o top mostrou o app.py em 10% de um processador. Que tipo de recurso é o gargalo?",
+  "hint": "Quais recursos não têm %CPU?",
+  "choices": [
+   {
+    "text": "Os processadores, lentos demais para o Python",
+    "why": "Eles estavam quase ociosos; um processador ocupado aparece no %CPU."
+   },
+   {
+    "text": "O disco, em que toda reserva escreve",
+    "why": "Possível em geral, mas um servidor preso ao disco mostra o wa subindo; aqui a correção da trava multiplicou as reservas."
+   },
+   {
+    "text": "Um recurso de software com fila de espera",
+    "why": "Certo. Hardware ocioso, vazão plana, latência subindo: uma trava, um pool ou uma fila. Aqui, a booking_lock."
+   },
+   {
+    "text": "O gerador, que não consegue mandar mais rápido",
+    "why": "O measure.py estava em poucos por cento; ele esperava respostas, não faltava processador."
+   }
+  ]
+ },
+ "ex-qj4dcd68": {
+  "prompt": "Ponha em ordem os passos que o app_fixed.py segue numa reserva.",
+  "hint": "O banco decide o vencedor antes de alguém pagar.",
+  "items": [
+   "Ler show_id, seat e customer da requisição",
+   "Conferir que o assento existe num espetáculo à venda",
+   "Inserir a linha e fazer commit, ou responder 409 se o índice único recusar",
+   "Cobrar o cliente, sem trava nenhuma presa",
+   "Responder 201 com o id da reserva"
+  ],
+  "trap": "Pagar antes do insert cobraria o perdedor de uma disputa por um assento que ele não pode ter."
+ },
+ "ex-5jn3358b": {
+  "prompt": "Vinte threads reservaram o assento 1 do espetáculo 990 ao mesmo tempo contra o app_fixed.py e receberam um 201 e dezenove 409. Que parte do app_fixed.py garantiu esse resultado?",
+  "hint": "O app_fixed.py não tem booking_lock.",
+  "choices": [
+   {
+    "text": "A barreira no race.py, que manda as requisições juntas",
+    "why": "A barreira deixa o teste hostil; ela não faz nada para proteger o assento."
+   },
+   {
+    "text": "O disable_nagle_algorithm, que responde cada requisição na hora",
+    "why": "Isso muda quando os bytes saem do servidor, não quem fica com o assento."
+   },
+   {
+    "text": "O índice único sobre (show_id, seat)",
+    "why": "Certo. O banco recusa uma segunda linha para o assento, seja qual for o insert que chega depois."
+   },
+   {
+    "text": "A fila de 128 conexões, que as atende em ordem",
+    "why": "A fila de aceite ordena conexões, não commits; as vinte threads continuam rodando juntas."
+   }
+  ]
+ },
+ "ex-qqkxq11p": {
+  "prompt": "No app.py, toda requisição depois da primeira numa conexão mantida levou cerca de 44 ms no cliente, enquanto o servidor informou 0.3 ms para a segunda. O que segurou a resposta?",
+  "hint": "Duas regras do TCP, uma de cada lado.",
+  "choices": [
+   {
+    "text": "Nagle no servidor, esperando o ACK atrasado do cliente",
+    "why": "Certo. O corpo espera os cabeçalhos serem confirmados, e o cliente atrasa essa confirmação em 40 ms."
+   },
+   {
+    "text": "O banco, que conta as reservas de um espetáculo a cada requisição",
+    "why": "Eram requisições a /health, que não roda consulta nenhuma."
+   },
+   {
+    "text": "O provedor de pagamento de 40 ms",
+    "why": "/health não paga nada; a coincidência com 40 ms é de duas constantes diferentes."
+   },
+   {
+    "text": "Abrir uma conexão nova para cada requisição",
+    "why": "Essas requisições reusaram uma conexão; as conexões novas foram as rápidas."
+   }
+  ]
+ },
+ "ex-rk9692yp": {
+  "prompt": "Uma execução com 32 workers no app.py teve mediana de 9.0 ms, p99 de 1035.5 ms e 190 TcpExtListenOverflows. Onde as requisições perto de um segundo passaram esse segundo?",
+  "hint": "A aplicação nunca as viu durante ele.",
+  "choices": [
+   {
+    "text": "Esperando a booking_lock",
+    "why": "Essa execução só consultou espetáculos; nenhuma reserva pegou a trava."
+   },
+   {
+    "text": "Antes de a conexão ser aceita, esperando para tentar de novo",
+    "why": "Certo. O kernel descartou o pacote de abertura enquanto a fila de aceite de 5 estava cheia, e o cliente tentou de novo um segundo depois."
+   },
+   {
+    "text": "Numa consulta lenta ao banco",
+    "why": "Com o índice, toda consulta levava uma fração de milissegundo."
+   },
+   {
+    "text": "Dentro do measure.py, que não dava conta",
+    "why": "Um gerador no limite manda menos; ele não acrescenta um segundo a uma requisição que mediu."
+   }
+  ]
+ },
+ "ex-12zzpgd1": {
+  "prompt": "Depois que a fila de aceite aumentou, 32 workers completaram 626.2 requisições por segundo. Pela lei de Little, que tempo de resposta médio o relatório deve mostrar, em ms?",
+  "hint": "Requisições dentro do sistema = vazão × tempo que cada uma passa ali.",
+  "unit": "ms"
+ },
+ "ex-7c5k64cv": {
+  "prompt": "Um testador roda um gerador de carga num notebook contra um servidor de homologação em outro país. O cliente vê 310 ms por requisição, o Server-Timing diz total de 22 ms, e o time_connect do curl é 145 ms. Onde está a maior parte do tempo?",
+  "hint": "Subtraia o relógio do servidor do relógio do cliente, depois leia o time_connect.",
+  "choices": [
+   {
+    "text": "No banco, que o Server-Timing não enxerga",
+    "why": "O banco está dentro do total de 22 ms do servidor."
+   },
+   {
+    "text": "Na aplicação, onde os 22 ms são gastos",
+    "why": "22 de 310 ms é a parte menor; a diferença está fora do servidor."
+   },
+   {
+    "text": "Na rede: cerca de 145 ms por ida e volta, e uma requisição precisa de duas",
+    "why": "Certo. Uma ida e volta para conectar, outra para a requisição: cerca de 290 dos 310 ms antes dos 22 do servidor."
+   },
+   {
+    "text": "Nos processadores do notebook, que atrasam o gerador",
+    "why": "Um gerador ocupado manda menos requisições; ele não faz o time_connect dar 145 ms."
+   }
+  ]
+ },
+ "ex-syrj4sf0": {
+  "prompt": "Um gerador de carga em Python mostra um processador inteiro usado pelo próprio processo, o processo do servidor em 40%, e a vazão plana conforme workers são acrescentados. O que o testador deve fazer em seguida?",
+  "hint": "Qual dos dois programas está no teto?",
+  "choices": [
+   {
+    "text": "Informar a vazão plana como a capacidade do servidor sob teste",
+    "why": "A linha plana é o teto do gerador; o servidor nunca foi empurrado até o dele."
+   },
+   {
+    "text": "Pôr um segundo gerador e medir de novo",
+    "why": "Certo. Ou um gerador mais eficiente: enquanto o gerador não tiver folga, o teste mede o gerador."
+   },
+   {
+    "text": "Criar um índice na consulta mais pesada do servidor",
+    "why": "O servidor está em 40%; nada diz ainda que o banco limita alguma coisa."
+   },
+   {
+    "text": "Aumentar a fila de aceite do servidor",
+    "why": "Conexões descartadas aparecem como uma cauda perto de um segundo e um contador no nstat, e nada disso foi descrito."
+   }
+  ]
+ },
+ "ex-f46zzc3a": {
+  "prompt": "Quais destes podem saturar enquanto todo processador, disco e enlace de rede da máquina parece ocioso? Escolha todos os que podem.",
+  "hint": "Sem %CPU, sem bo, sem banda.",
+  "choices": [
+   {
+    "text": "Uma trava segurada enquanto se chama um serviço externo lento",
+    "why": "Sim. A booking_lock fez exatamente isso com 10% de CPU."
+   },
+   {
+    "text": "Um pool de conexões de banco menor que o número de threads",
+    "why": "Sim. As threads esperam uma conexão livre enquanto nada está ocupado."
+   },
+   {
+    "text": "A fila do kernel de conexões esperando para serem aceitas",
+    "why": "Sim. Ela transbordou em 5 enquanto o servidor respondia em milissegundos."
+   },
+   {
+    "text": "Uma varredura numa tabela sem índice",
+    "why": "Uma varredura é trabalho: ela aparece como tempo de processador, como apareceu em 212.5%."
+   },
+   {
+    "text": "Um processo fazendo swap da memória para o disco",
+    "why": "Swap é o disco trabalhando, e aparece em si, so e wa."
+   }
+  ]
+ }
+}

@@ -1,0 +1,564 @@
+[
+ {
+  "id": "ex-7pwtgydv",
+  "version": 1,
+  "section": "symptoms",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of these should page somebody at night?",
+  "hint": "Which one does a customer feel?",
+  "choices": [
+   {
+    "text": "The 95th percentile of booking above 500 ms",
+    "correct": true,
+    "why": "Right. It is a symptom: people waiting longer than the requirement allows."
+   },
+   {
+    "text": "CPU above 90% on the database host",
+    "correct": false,
+    "why": "A cause. A busy processor serving every booking in time is not a problem for anybody."
+   },
+   {
+    "text": "A disk three quarters full",
+    "correct": false,
+    "why": "A cause, and one that grows slowly: a ticket for working hours."
+   },
+   {
+    "text": "One of three servers restarted and came back",
+    "correct": false,
+    "why": "If the other two served everybody, nobody felt it."
+   }
+  ]
+ },
+ {
+  "id": "ex-4ecydqdp",
+  "version": 1,
+  "section": "symptoms",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Lesson 23's slow payment provider left every machine idle. What does that say about alerts on causes?",
+  "hint": "Which outage did nobody write a cause for?",
+  "choices": [
+   {
+    "text": "They would have fired, a few minutes late",
+    "correct": false,
+    "why": "No CPU, memory or disk threshold was crossed, so none would have fired at all."
+   },
+   {
+    "text": "Nobody had written a cause alert for this outage",
+    "correct": true,
+    "why": "Right. A symptom alert on duration catches it whatever the cause turns out to be."
+   },
+   {
+    "text": "Causes should be alerted on the network rather than on the hosts",
+    "correct": false,
+    "why": "The network was fine too; the provider was slow."
+   },
+   {
+    "text": "Idle machines are themselves the alert to write",
+    "correct": false,
+    "why": "Idle machines are normal at night; that alert would fire every evening."
+   }
+  ]
+ },
+ {
+  "id": "ex-27vbw4jm",
+  "version": 1,
+  "section": "symptoms",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The SLO is 99.5% of bookings succeeding over 30 days. The error ratio is 2%. What is the burn rate, how many times faster than allowed the budget is being spent?",
+  "hint": "Divide the ratio by the budget.",
+  "value": 4,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-0xgvh5yj",
+  "version": 1,
+  "section": "symptoms",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does for: 2m change about a rule?",
+  "hint": "Pending comes before firing.",
+  "choices": [
+   {
+    "text": "It evaluates the rule every two minutes",
+    "correct": false,
+    "why": "Evaluation follows evaluation_interval; for is about how long the condition holds."
+   },
+   {
+    "text": "It sends the alert again every two minutes",
+    "correct": false,
+    "why": "Repeating is Alertmanager's repeat_interval."
+   },
+   {
+    "text": "It has to hold for two minutes first",
+    "correct": true,
+    "why": "Right. A blip that falls back within two minutes never pages anybody."
+   },
+   {
+    "text": "It widens the rate() window to two minutes",
+    "correct": false,
+    "why": "The window is the [5m] inside expr; for does not touch it."
+   }
+  ]
+ },
+ {
+  "id": "ex-5gz9w6x3",
+  "version": 1,
+  "section": "symptoms",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "An alert fires every week and every time the service turns out to be fine. What is the right response?",
+  "hint": "What does a page that needs no action teach the person?",
+  "choices": [
+   {
+    "text": "Keep it, since a false alarm is better than a missed one",
+    "correct": false,
+    "why": "Each false alarm teaches the team to ignore the next real one."
+   },
+   {
+    "text": "Lengthen repeat_interval so it arrives less often",
+    "correct": false,
+    "why": "It still pages for nothing, only less often."
+   },
+   {
+    "text": "Route it to a second person as well",
+    "correct": false,
+    "why": "Now two people learn to ignore it."
+   },
+   {
+    "text": "Move the threshold, or delete the alert",
+    "correct": true,
+    "why": "Right. A page must need a human now; deleting an alert is part of the work."
+   }
+  ]
+ },
+ {
+  "id": "ex-4v15k9wq",
+  "version": 1,
+  "section": "rule",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each part of an alerting rule to what it decides.",
+  "hint": "The list under the rule file.",
+  "pairs": [
+   {
+    "left": "expr",
+    "right": "the symptom, in PromQL"
+   },
+   {
+    "left": "for",
+    "right": "how long it must hold before firing"
+   },
+   {
+    "left": "labels",
+    "right": "what the routing reads"
+   },
+   {
+    "left": "annotations",
+    "right": "what the person on call reads"
+   }
+  ],
+  "right_distractors": [
+   "how often Prometheus scrapes the target"
+  ]
+ },
+ {
+  "id": "ex-9j30f5te",
+  "version": 1,
+  "section": "rule",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "promtool check rules says SUCCESS. What has that not shown?",
+  "hint": "It reads the file; it feeds it nothing.",
+  "choices": [
+   {
+    "text": "That the rule fires at the moments it is meant to",
+    "correct": true,
+    "why": "Right. Only a test with series and expected alerts shows that."
+   },
+   {
+    "text": "That the YAML parses",
+    "correct": false,
+    "why": "That is exactly what it checks."
+   },
+   {
+    "text": "That the PromQL in each expression is valid",
+    "correct": false,
+    "why": "It parses every expression, so a syntax error fails it."
+   },
+   {
+    "text": "How many rules the file contains",
+    "correct": false,
+    "why": "It prints that: 2 rules found."
+   }
+  ]
+ },
+ {
+  "id": "ex-hc7c9kg9",
+  "version": 1,
+  "section": "rule",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An alert whose expression is true but whose for: has not yet run out is in the state Prometheus calls ___.",
+  "hint": "It comes before firing.",
+  "blanks": [
+   {
+    "accept": [
+     "pending"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-hjy73t2c",
+  "version": 1,
+  "section": "rule",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Errors start at minute 10 of the test and the 5-minute ratio passes 2% at minute 12. With for: 5m, when does the alert fire?",
+  "hint": "for counts from when the expression became true.",
+  "choices": [
+   {
+    "text": "At minute 15, five minutes after the first error",
+    "correct": false,
+    "why": "for counts from the expression being true, at 12, not from the first error."
+   },
+   {
+    "text": "At minute 17",
+    "correct": true,
+    "why": "Right: 12 plus 5. The whole of lesson 1's five minutes, spent before anything is sent."
+   },
+   {
+    "text": "At minute 14, the same as with for: 2m",
+    "correct": false,
+    "why": "The failing test showed nothing firing at 14."
+   },
+   {
+    "text": "Never, since the ratio falls back first",
+    "correct": false,
+    "why": "The failures keep growing at 5 a minute; the ratio stays above 2%."
+   }
+  ]
+ },
+ {
+  "id": "ex-a10zfnjd",
+  "version": 1,
+  "section": "firing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "One payment in three failed, and the alert said about 3%. Why so low?",
+  "hint": "Which requests are in the bottom of the ratio?",
+  "choices": [
+   {
+    "text": "Prometheus only samples one request in ten",
+    "correct": false,
+    "why": "Counters count every request; nothing is sampled."
+   },
+   {
+    "text": "humanizePercentage divides the value by ten",
+    "correct": false,
+    "why": "It only formats 0.0333 as 3.331%."
+   },
+   {
+    "text": "Bookings were 13.5% of all requests",
+    "correct": true,
+    "why": "Right, and 409s never reach the payment. A broken journey hides in a healthy average."
+   },
+   {
+    "text": "flaky.py's failures are counted as 409s",
+    "correct": false,
+    "why": "They are 500s; the log shows status 500 with the exception."
+   }
+  ]
+ },
+ {
+  "id": "ex-cywphqjw",
+  "version": 1,
+  "section": "firing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The alert reached firing, and nobody's phone rang. Why?",
+  "hint": "Who did Prometheus try to tell?",
+  "choices": [
+   {
+    "text": "The rule had no runbook_url",
+    "correct": false,
+    "why": "It had one, and an annotation never stops delivery anyway."
+   },
+   {
+    "text": "for: 2m had not run out yet",
+    "correct": false,
+    "why": "Firing means it had; pending is the state before."
+   },
+   {
+    "text": "severity: page is not a label Prometheus knows",
+    "correct": false,
+    "why": "No label needs to be known; routing on it is Alertmanager's job."
+   },
+   {
+    "text": "Nothing was listening on port 9093",
+    "correct": true,
+    "why": "Right. Prometheus decides that an alert fires; Alertmanager decides who hears, and there was none."
+   }
+  ]
+ },
+ {
+  "id": "ex-0fqb6xvm",
+  "version": 1,
+  "section": "firing",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each Alertmanager setting to what it does.",
+  "hint": "The four jobs under the configuration.",
+  "pairs": [
+   {
+    "left": "routes with matchers",
+    "right": "sends page alerts to the person on call"
+   },
+   {
+    "left": "group_wait: 30s",
+    "right": "waits for the rest of a group before the first notice"
+   },
+   {
+    "left": "repeat_interval: 4h",
+    "right": "re-sends a firing alert after four hours"
+   },
+   {
+    "left": "inhibit_rules",
+    "right": "holds one alert back while another fires"
+   }
+  ],
+  "right_distractors": [
+   "decides when the rule's expression is true"
+  ]
+ },
+ {
+  "id": "ex-v5dnhm4f",
+  "version": 1,
+  "section": "firing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "What is a dead man's switch for?",
+  "hint": "Who watches the watcher?",
+  "choices": [
+   {
+    "text": "Paging when a constant alert stops arriving at all",
+    "correct": true,
+    "why": "Right. Silence is the symptom of a broken alerting path, so silence is what it alerts on."
+   },
+   {
+    "text": "Stopping boxoffice when the error ratio passes 2%",
+    "correct": false,
+    "why": "Nothing here stops the service; alerts tell people."
+   },
+   {
+    "text": "Muting every alert while somebody deploys",
+    "correct": false,
+    "why": "That is a silence, and a dangerous habit, not a dead man's switch."
+   },
+   {
+    "text": "Escalating to a manager after ten minutes",
+    "correct": false,
+    "why": "That is an escalation policy, in the paging service."
+   }
+  ]
+ },
+ {
+  "id": "ex-8sqqg32n",
+  "version": 1,
+  "section": "on-call",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put a runbook's four questions in the order it answers them.",
+  "hint": "From what it means to whom to call.",
+  "items": [
+   "what this means for customers",
+   "how to confirm it",
+   "what to try first",
+   "who to call when that fails"
+  ]
+ },
+ {
+  "id": "ex-8bxv3bb2",
+  "version": 1,
+  "section": "on-call",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is a postmortem written without blame?",
+  "hint": "What happens to the next mistake if this one is punished?",
+  "choices": [
+   {
+    "text": "Because nobody is ever at fault in an incident",
+    "correct": false,
+    "why": "People make mistakes; the question is why the system let a reasonable one through."
+   },
+   {
+    "text": "So mistakes are told, and the system changes",
+    "correct": true,
+    "why": "Right. Blame teaches people to hide the next mistake, and a hidden one cannot be learnt from."
+   },
+   {
+    "text": "Because the law forbids naming the people involved",
+    "correct": false,
+    "why": "No law is the reason; it is a working rule."
+   },
+   {
+    "text": "So the incident can be closed faster",
+    "correct": false,
+    "why": "Speed is not the point; learning is."
+   }
+  ]
+ },
+ {
+  "id": "ex-n5429pfn",
+  "version": 1,
+  "section": "on-call",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The primary on call does not acknowledge a page within ten minutes. In an escalation policy, what happens?",
+  "hint": "Primary, secondary, manager.",
+  "choices": [
+   {
+    "text": "The page is dropped until the next evaluation",
+    "correct": false,
+    "why": "Dropping a page is how an outage goes unnoticed."
+   },
+   {
+    "text": "Prometheus lowers the threshold",
+    "correct": false,
+    "why": "Thresholds are in the rule file; nothing changes them at runtime."
+   },
+   {
+    "text": "The paging service calls the secondary",
+    "correct": true,
+    "why": "Right, and after the secondary, a manager."
+   },
+   {
+    "text": "Alertmanager inhibits the alert",
+    "correct": false,
+    "why": "Inhibition is about another alert firing, not about nobody answering."
+   }
+  ]
+ },
+ {
+  "id": "ex-ws8487ev",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The provider starts failing one call in ten. The overall ratio sits near 1% and nothing fires, while a tenth of payers are turned away. What is the best change?",
+  "hint": "Which journey earns the money?",
+  "choices": [
+   {
+    "text": "Lower the overall threshold from 2% down to 0.5% for the service",
+    "correct": false,
+    "why": "It would page on noise from every route, and still hide a smaller failure of bookings."
+   },
+   {
+    "text": "Raise for: to ten minutes so that the alert is quite sure",
+    "correct": false,
+    "why": "The ratio never crosses 2%; waiting longer changes nothing."
+   },
+   {
+    "text": "Alert on the payment provider's CPU",
+    "correct": false,
+    "why": "A cause, on a machine you do not own."
+   },
+   {
+    "text": "A second rule on the booking route's own error ratio",
+    "correct": true,
+    "why": "Right. The journey that earns the money gets its own symptom and threshold."
+   }
+  ]
+ },
+ {
+  "id": "ex-ytbst29n",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are spent inside lesson 1's five minutes? Choose every one that is.",
+  "hint": "The figure of the time budget.",
+  "choices": [
+   {
+    "text": "the two minutes of for",
+    "correct": true,
+    "why": "Yes, the largest block."
+   },
+   {
+    "text": "Alertmanager's group_wait",
+    "correct": true,
+    "why": "Yes, 30 seconds."
+   },
+   {
+    "text": "the repeat_interval of four hours",
+    "correct": false,
+    "why": "No: it applies after the first notice, to repeats."
+   },
+   {
+    "text": "scraping the failures and evaluating the rule",
+    "correct": true,
+    "why": "Yes, a few seconds each."
+   },
+   {
+    "text": "writing the postmortem",
+    "correct": false,
+    "why": "No: that comes after the incident."
+   }
+  ]
+ },
+ {
+  "id": "ex-z5e0zr4n",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "What did all four thirds of this course do before running their tools?",
+  "hint": "Lesson 1's first move.",
+  "choices": [
+   {
+    "text": "Turned an adjective into a number or a named list",
+    "correct": true,
+    "why": "Right: a percentile, WCAG 2.2 AA, the OWASP risks, an error ratio with a time to reach a person."
+   },
+   {
+    "text": "Installed every tool from Ubuntu's archive",
+    "correct": false,
+    "why": "Several came from elsewhere; installing was never the hard part."
+   },
+   {
+    "text": "Ran the tool once first, to see what kind of result it gave",
+    "correct": false,
+    "why": "That is writing the requirement around the number you got, which lesson 1 warned against."
+   },
+   {
+    "text": "Agreed that a person reviews each result",
+    "correct": false,
+    "why": "People read some results, but the move was to make a machine able to say fail."
+   }
+  ]
+ }
+]

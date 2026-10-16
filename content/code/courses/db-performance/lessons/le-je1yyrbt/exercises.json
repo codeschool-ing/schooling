@@ -1,0 +1,607 @@
+[
+  {
+    "id": "ex-vehz6yhr",
+    "version": 1,
+    "section": "btree",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `ORDER BY placed_at DESC LIMIT 5` need no Sort node when `placed_at` has a B-tree?",
+    "hint": "What order are the index entries in?",
+    "choices": [
+      {
+        "text": "The index is read backwards from its end",
+        "correct": true,
+        "why": "Right: the entries are already sorted, and the Limit stops after five."
+      },
+      {
+        "text": "PostgreSQL caches the last five rows of every table in memory for this",
+        "correct": false,
+        "why": "There is no such cache; the plan is an Index Scan Backward."
+      },
+      {
+        "text": "The table itself is stored in placed_at order, so no index is used",
+        "correct": false,
+        "why": "The plan names orders_placed_at_idx; a table has no guaranteed order."
+      },
+      {
+        "text": "A Sort node is there but hidden by EXPLAIN when LIMIT is small",
+        "correct": false,
+        "why": "EXPLAIN hides no nodes; the plan is Limit over Index Scan Backward."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpegdgmd",
+    "version": 1,
+    "section": "btree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`customers.email` has a unique B-tree, and `LIKE 'user42@%'` still gets a sequential scan. Why?",
+    "hint": "Look at how text is sorted in that database.",
+    "choices": [
+      {
+        "text": "Unique indexes are never used for LIKE",
+        "correct": false,
+        "why": "Uniqueness has nothing to do with it; a non-unique index on the same collation fails the same way."
+      },
+      {
+        "text": "The pattern has an @, which LIKE treats as a wildcard",
+        "correct": false,
+        "why": "Only % and _ are wildcards in LIKE."
+      },
+      {
+        "text": "The index uses the column's collation, and PostgreSQL 16 only turns a prefix into a range under C",
+        "correct": true,
+        "why": "Right: C.UTF-8 does not count, so the planner needs text_pattern_ops."
+      },
+      {
+        "text": "customers is too small for an index to be worth it",
+        "correct": false,
+        "why": "With text_pattern_ops the same query used an index at cost 8.44."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0e6h96e",
+    "version": 1,
+    "section": "btree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a `text_pattern_ops` index on `email` serve?",
+    "hint": "A prefix is a range; a suffix is not.",
+    "choices": [
+      {
+        "text": "`email LIKE '%@example.com'`",
+        "correct": false,
+        "why": "A leading wildcard is not a range in any order; it stayed a sequential scan."
+      },
+      {
+        "text": "`email LIKE 'user7%'`",
+        "correct": true,
+        "why": "Right: a prefix becomes the range from user7 to user8."
+      },
+      {
+        "text": "`ORDER BY email` in the database's collation",
+        "correct": false,
+        "why": "Its order is byte order, not the collation's; the ordinary index serves that."
+      },
+      {
+        "text": "`lower(email) = 'user7@example.com'`",
+        "correct": false,
+        "why": "A function of the column needs an index on that expression, lesson 9's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwfyxr4e",
+    "version": 1,
+    "section": "hash",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a hash index answer?",
+    "hint": "It keeps hash codes, not an order.",
+    "choices": [
+      {
+        "text": "Equality, ranges and ORDER BY, faster than a B-tree",
+        "correct": false,
+        "why": "Without an order it answers no range and no ORDER BY."
+      },
+      {
+        "text": "Equality and prefix searches",
+        "correct": false,
+        "why": "A prefix is a range, which needs order."
+      },
+      {
+        "text": "Only =",
+        "correct": true,
+        "why": "Right: the email > query went to the B-tree instead."
+      },
+      {
+        "text": "Equality, and uniqueness when declared UNIQUE",
+        "correct": false,
+        "why": "A hash index cannot enforce UNIQUE; only a B-tree can."
+      }
+    ]
+  },
+  {
+    "id": "ex-91a47d77",
+    "version": 1,
+    "section": "hash",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The B-tree on `customers.email` was 14 MB and the hash index on the same column 6568 kB. Roughly what fraction of the B-tree's size is the hash, as a percentage?",
+    "hint": "6568 kB is about 6.4 MB.",
+    "value": 46,
+    "tolerance": 4,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6kdzd6mk",
+    "version": 1,
+    "section": "hash",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would a hash index on `customers.email` not let you drop the B-tree there?",
+    "hint": "What does the B-tree do besides speed up lookups?",
+    "choices": [
+      {
+        "text": "Because two indexes on one column always perform better than one",
+        "correct": false,
+        "why": "Each extra index costs every write; more is not better by itself."
+      },
+      {
+        "text": "Because the B-tree enforces the UNIQUE constraint",
+        "correct": true,
+        "why": "Right: a hash index cannot enforce it, so the B-tree stays whatever else exists."
+      },
+      {
+        "text": "Because hash indexes are not crash-safe",
+        "correct": false,
+        "why": "That stopped being true in PostgreSQL 10."
+      },
+      {
+        "text": "Because the hash index is only used after the B-tree is warm",
+        "correct": false,
+        "why": "The planner chose the hash index for equality with the B-tree present."
+      }
+    ]
+  },
+  {
+    "id": "ex-tn7bkcj3",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a GIN index on `tags` keep?",
+    "hint": "Inverted.",
+    "choices": [
+      {
+        "text": "Each array, sorted as a whole value",
+        "correct": false,
+        "why": "That is a B-tree over arrays, which cannot find one element."
+      },
+      {
+        "text": "For each tag, the rows that contain it",
+        "correct": true,
+        "why": "Right: eleven entries, one per tag, each with its list of products."
+      },
+      {
+        "text": "A hash of each array",
+        "correct": false,
+        "why": "A hash of the whole array answers only whether two arrays are equal."
+      },
+      {
+        "text": "The smallest and largest tag of every 128 pages",
+        "correct": false,
+        "why": "That is BRIN's summary, and it would not find tags inside arrays."
+      }
+    ]
+  },
+  {
+    "id": "ex-90hs6t3z",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The GIN index took the tag search from 58.7 ms to 19.8 ms under load. Where did most of the remaining time go?",
+    "hint": "A fifth of all products wear the tag.",
+    "choices": [
+      {
+        "text": "Into the Bitmap Index Scan on the GIN index",
+        "correct": false,
+        "why": "That took about 1.4 ms of the 17."
+      },
+      {
+        "text": "Into planning, since GIN plans are expensive to make",
+        "correct": false,
+        "why": "Planning Time was 0.63 ms."
+      },
+      {
+        "text": "Into the network round trip to pgbench",
+        "correct": false,
+        "why": "pgbench ran on the same machine; EXPLAIN ANALYZE showed 17 ms inside the server."
+      },
+      {
+        "text": "Into reading all 649 pages and sorting 9917 rows",
+        "correct": true,
+        "why": "Right: the WHERE was answered, and the ORDER BY LIMIT was the costly half."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddrmjgbz",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a B-tree on `price_cents`, the tag search read 74 rows instead of 9917. Why so few?",
+    "hint": "The index hands rows over in price order.",
+    "choices": [
+      {
+        "text": "The B-tree also indexes the tags",
+        "correct": false,
+        "why": "It indexes only price_cents; the tag test is a Filter, with 54 rows removed."
+      },
+      {
+        "text": "Walking from the cheapest, one in five carries the tag, so twenty turn up quickly and the Limit stops",
+        "correct": true,
+        "why": "Right: about a hundred rows were expected and 74 were read."
+      },
+      {
+        "text": "The planner switched to a sample of the table",
+        "correct": false,
+        "why": "Plans never sample; the answer is exact."
+      },
+      {
+        "text": "The GIN index pre-filtered the rows",
+        "correct": false,
+        "why": "The plan used only products_price_cents_idx."
+      }
+    ]
+  },
+  {
+    "id": "ex-stdzp4s6",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A search for the tag `kitchn`, which no product has, took 41 ms with both indexes present. What made the planner pick the slow plan?",
+    "hint": "Compare rows= with what came out.",
+    "choices": [
+      {
+        "text": "The GIN index was not valid yet",
+        "correct": false,
+        "why": "It had been used for kitchen minutes earlier."
+      },
+      {
+        "text": "GIN cannot answer a search that matches nothing",
+        "correct": false,
+        "why": "An empty list is the cheapest answer GIN gives."
+      },
+      {
+        "text": "It expected 250 rows, so the walk looked short",
+        "correct": true,
+        "why": "Right: with no match the walk read all 50,000 products. A wrong estimate picked between two good indexes."
+      },
+      {
+        "text": "B-trees take priority over GIN when both apply",
+        "correct": false,
+        "why": "There is no priority; the planner compares estimated costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdbzsfxp",
+    "version": 1,
+    "section": "gin",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about `jsonb_path_ops` compared with the default `jsonb_ops` match this lesson? Choose all that apply.",
+    "hint": "Sizes, build times and operators.",
+    "choices": [
+      {
+        "text": "It was smaller, 42 MB against 55 MB",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It built faster, 9.6 s against 20.8 s",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It answers the ? operator, does this key exist",
+        "correct": false,
+        "why": "Only jsonb_ops does; jsonb_path_ops answers @> only."
+      },
+      {
+        "text": "The planner chose it for @> when both existed",
+        "correct": true,
+        "why": "Right: the plan named events_payload_path_idx."
+      }
+    ]
+  },
+  {
+    "id": "ex-76mcsf5p",
+    "version": 1,
+    "section": "gist",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a GiST trigram index offer that a GIN trigram index does not?",
+    "hint": "Look at the Order By line in the plan.",
+    "choices": [
+      {
+        "text": "Support for ILIKE with a leading wildcard",
+        "correct": false,
+        "why": "Both serve that, and GIN is usually faster for it."
+      },
+      {
+        "text": "Nearest-first ordering by distance",
+        "correct": true,
+        "why": "Right: the index itself hands rows over by <-> distance and the Limit stops."
+      },
+      {
+        "text": "Case-insensitive equality on titles",
+        "correct": false,
+        "why": "That is an expression index on lower(title)."
+      },
+      {
+        "text": "A smaller index than the table",
+        "correct": false,
+        "why": "Both are smaller than the table; that is not what sets GiST apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqf5sb24",
+    "version": 1,
+    "section": "gist",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A booking table must refuse two bookings of the same room that overlap in time. Which tool does the lesson point to?",
+    "hint": "Two overlapping ranges are not equal.",
+    "choices": [
+      {
+        "text": "A UNIQUE constraint on (room, during)",
+        "correct": false,
+        "why": "Two different ranges that overlap are not equal, so UNIQUE lets both in."
+      },
+      {
+        "text": "A SELECT for overlaps before every INSERT",
+        "correct": false,
+        "why": "Two requests arriving together both find nothing and both insert."
+      },
+      {
+        "text": "A BRIN index on the start time",
+        "correct": false,
+        "why": "BRIN speeds up range reads; it enforces nothing."
+      },
+      {
+        "text": "EXCLUDE USING gist (room WITH =, during WITH &&), with btree_gist",
+        "correct": true,
+        "why": "Right: the shape of seller_away, with btree_gist for the = on an ordinary type."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkpb3gxn",
+    "version": 1,
+    "section": "gist",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The extension that cuts strings into runs of three characters, so that `ILIKE '%…%'` can use an index, is ___.",
+    "hint": "Its name ends in trgm.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_trgm"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-svym838w",
+    "version": 1,
+    "section": "brin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a BRIN index store for each range of 128 pages?",
+    "hint": "One small summary per stretch.",
+    "choices": [
+      {
+        "text": "Every value in the range, sorted",
+        "correct": false,
+        "why": "That would be as big as a B-tree; BRIN was 32 kB."
+      },
+      {
+        "text": "A pointer to each row whose value changed",
+        "correct": false,
+        "why": "BRIN keeps no per-row pointers at all."
+      },
+      {
+        "text": "The smallest and largest value",
+        "correct": true,
+        "why": "Right: and a search skips every range they rule out."
+      },
+      {
+        "text": "The number of rows in the range and their average",
+        "correct": false,
+        "why": "An average cannot rule a value out; BRIN keeps the minimum and maximum."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtfg8jtx",
+    "version": 1,
+    "section": "brin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A BRIN index on `events.customer_id` made `customer_id = 4242` take 445 ms. Which number would have warned you before you built it?",
+    "hint": "Lesson 7 read it for every column.",
+    "choices": [
+      {
+        "text": "n_distinct of customer_id, 181538",
+        "correct": false,
+        "why": "Many distinct values do not hurt BRIN if they are in table order."
+      },
+      {
+        "text": "correlation, -0.0032",
+        "correct": true,
+        "why": "Right: no relation to table order, so every range covers every customer."
+      },
+      {
+        "text": "null_frac, 0.3054",
+        "correct": false,
+        "why": "NULLs are recorded separately in BRIN's summary and are not the problem."
+      },
+      {
+        "text": "The size of the table, 511 MB",
+        "correct": false,
+        "why": "The same table gave 18 ms for a day of at."
+      }
+    ]
+  },
+  {
+    "id": "ex-39wvn6g9",
+    "version": 1,
+    "section": "brin",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A day's events by `at` with the BRIN index showed `Heap Blocks: lossy=896`. With 128 pages per range, how many ranges is that?",
+    "hint": "Divide.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "ranges"
+  },
+  {
+    "id": "ex-bfejf719",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the index type this lesson used for it.",
+    "hint": "One structure per shape of question.",
+    "pairs": [
+      {
+        "left": "the twenty cheapest products",
+        "right": "B-tree"
+      },
+      {
+        "left": "events whose payload contains a product",
+        "right": "GIN"
+      },
+      {
+        "left": "titles nearest to a misspelling",
+        "right": "GiST"
+      },
+      {
+        "left": "a day of events in a table written in time order",
+        "right": "BRIN"
+      }
+    ],
+    "right_distractors": [
+      "hash"
+    ]
+  },
+  {
+    "id": "ex-ksmykrq3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the indexes on `events.at` and `customers.email` measured in this lesson from smallest to largest.",
+    "hint": "32 kB, 6568 kB, 14 MB, 107 MB.",
+    "items": [
+      "BRIN on events.at",
+      "hash on customers.email",
+      "B-tree of the UNIQUE on customers.email",
+      "B-tree on events.at"
+    ],
+    "trap": "A B-tree on five million timestamps is the largest by far."
+  },
+  {
+    "id": "ex-bqqds9kx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of sensor readings is append-only and queried by time ranges, and its B-tree on `read_at` is now a fifth of the disk. What does the lesson suggest checking first?",
+    "hint": "BRIN makes a bet.",
+    "choices": [
+      {
+        "text": "Whether a hash index on read_at would be smaller",
+        "correct": false,
+        "why": "A hash index cannot answer ranges at all."
+      },
+      {
+        "text": "Whether its correlation is near 1, for BRIN",
+        "correct": true,
+        "why": "Right: a time column in a table that only grows at the end follows table order, and then BRIN is a few kB."
+      },
+      {
+        "text": "Whether GIN supports timestamps",
+        "correct": false,
+        "why": "GIN is for values made of parts; a timestamp has none."
+      },
+      {
+        "text": "Whether the B-tree needs a REINDEX",
+        "correct": false,
+        "why": "A rebuilt B-tree on every row would still be far larger than a BRIN."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3kw308s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen lists the ten newest orders with a given status, `WHERE status = $1 ORDER BY placed_at DESC LIMIT 10`, and is slow. Applying this lesson's tag-search finding, which index is worth trying first?",
+    "hint": "The question is the whole text, not its WHERE.",
+    "choices": [
+      {
+        "text": "A hash index on status",
+        "correct": false,
+        "why": "It finds the rows but hands them over in no order, so the sort remains."
+      },
+      {
+        "text": "A GIN index on status",
+        "correct": false,
+        "why": "status is a single word, not a value made of parts."
+      },
+      {
+        "text": "A two-column B-tree, filter column first",
+        "correct": true,
+        "why": "Right: it finds one status and walks it already in placed_at order, so the Limit stops at ten."
+      },
+      {
+        "text": "A BRIN index on status",
+        "correct": false,
+        "why": "status does not follow table order, so every range would match."
+      }
+    ]
+  }
+]

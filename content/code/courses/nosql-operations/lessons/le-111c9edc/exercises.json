@@ -1,0 +1,624 @@
+[
+  {
+    "id": "ex-1fm7bz9w",
+    "version": 1,
+    "section": "mongodb-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During the load, `mongostat` printed `SLV` in its `repl` column on every line, while `rs.status()` listed `mongo1` as `PRIMARY`. Which answer do you act on?",
+    "hint": "Which of the two is the replica set's own account of itself?",
+    "choices": [
+      {
+        "text": "`rs.status()`, the replica set's own answer",
+        "correct": true,
+        "why": "Right. A monitoring tool is software with bugs of its own; this version misreports the role against an 8.0 server."
+      },
+      {
+        "text": "`mongostat`, because it samples every second and `rs.status()` is a snapshot",
+        "correct": false,
+        "why": "Sampling more often does not make a wrong column right."
+      },
+      {
+        "text": "Neither: the member is switching roles back and forth",
+        "correct": false,
+        "why": "`rs.status()` said `PRIMARY` before and after the five lines; no election happened."
+      },
+      {
+        "text": "`mongostat`, since `rs.status()` lags behind elections",
+        "correct": false,
+        "why": "There was no election to lag behind, and the replica set's own status is the authority on roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1p81fy7",
+    "version": 1,
+    "section": "mongodb-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The WiredTiger cache shows 82% used and 3% dirty, and stays there. What does that say about the server?",
+    "hint": "Recall where background eviction starts and where application threads are drafted.",
+    "choices": [
+      {
+        "text": "The cache is about to fail and needs more memory today",
+        "correct": false,
+        "why": "82% is past the background target and far from the 95% where queries start doing eviction themselves."
+      },
+      {
+        "text": "Nothing alarming: eviction is at work",
+        "correct": true,
+        "why": "Right. 80% used and 5% dirty are where WiredTiger starts evicting in the background; this is a cache doing its job."
+      },
+      {
+        "text": "Writes are stalled, because dirty data is above its trigger",
+        "correct": false,
+        "why": "The dirty trigger is 20%; 3% is under even the 5% background target."
+      },
+      {
+        "text": "The data no longer fits and every read goes to disk",
+        "correct": false,
+        "why": "A full cache holds the hot pages; nothing here says every read misses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-620s5vsh",
+    "version": 1,
+    "section": "mongodb-signals",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`rs.printSecondaryReplicationInfo()` reported `mongo3` as `syncedTo` 07:41:26 while `mongo2` was at 07:41:44, in step with the primary. How many seconds behind the primary was `mongo3`?",
+    "value": 18,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-a96q8g9s",
+    "version": 1,
+    "section": "mongodb-signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While `mongo3` was locked with `db.fsyncLock()`, the load's writes kept succeeding with the default write concern. Why did nothing the application saw reveal the lag?",
+    "choices": [
+      {
+        "text": "The default write concern needs a majority, and `mongo1` and `mongo2` were one",
+        "correct": true,
+        "why": "Right. Two of three acknowledged every write, so the third could fall behind in silence."
+      },
+      {
+        "text": "`fsyncLock` only blocks reads on a secondary, not replication",
+        "correct": false,
+        "why": "The lock stopped `mongo3` applying writes, which is why it fell 18 seconds behind."
+      },
+      {
+        "text": "The primary buffers writes for a locked member and replays them later, invisibly",
+        "correct": false,
+        "why": "The secondary pulls from the oplog when it can; the primary does not hold anything back for it."
+      },
+      {
+        "text": "The default write concern is `w: 1`, so no secondary matters",
+        "correct": false,
+        "why": "The default on a replica set is majority, as lesson 1's table said."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppfg7a02",
+    "version": 1,
+    "section": "mongodb-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query appears in `db.currentOp()` with `planSummary: 'COLLSCAN'` and `secs_running` climbing. What is the most useful thing that field tells you?",
+    "choices": [
+      {
+        "text": "The query holds a lock that blocks every other operation",
+        "correct": false,
+        "why": "A collection scan yields to other operations; nothing in the output showed anything blocked."
+      },
+      {
+        "text": "No index serves its filter",
+        "correct": true,
+        "why": "Right. COLLSCAN is a scan of every document, the thing lesson 7's indexes exist to avoid."
+      },
+      {
+        "text": "The query has already been written to the slow query log",
+        "correct": false,
+        "why": "An operation is logged when it ends; the killed one appeared there only after `killOp`."
+      },
+      {
+        "text": "The query came from a secondary",
+        "correct": false,
+        "why": "The plan summary is about how the query reads, not where it came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxb0xz5k",
+    "version": 1,
+    "section": "redis-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `allkeys-lru`, `INFO` showed `keyspace_hits:122951` and `keyspace_misses:93717` while 100,000 random keys were read and about 59,400 fit. What does the 56.7% hit ratio say?",
+    "hint": "Compare it with the share of the keyspace that fits.",
+    "choices": [
+      {
+        "text": "Redis is broken: a working cache hits above 90%",
+        "correct": false,
+        "why": "With random reads, no cache does better than the share of keys it holds."
+      },
+      {
+        "text": "The replica is answering half the reads",
+        "correct": false,
+        "why": "The benchmark read only from the primary; the replica served nothing."
+      },
+      {
+        "text": "It is about what random reads should give",
+        "correct": true,
+        "why": "Right. About 59% of the keys fit, and the ratio sits close to that."
+      },
+      {
+        "text": "Half of the evictions failed",
+        "correct": false,
+        "why": "Evictions do not fail under `allkeys-lru`; 212,690 succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4gfckx5",
+    "version": 1,
+    "section": "redis-signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Redis replica shows `state=online` and `lag=1`, yet the gap between `master_repl_offset` and its `offset` has grown by 30 MB over ten minutes. What is going on?",
+    "hint": "`lag` counts something other than bytes.",
+    "choices": [
+      {
+        "text": "Nothing: `lag=1` proves the replica is in step",
+        "correct": false,
+        "why": "`lag` is seconds since the last acknowledgement; a replica acknowledging slowly keeps it small."
+      },
+      {
+        "text": "The replica acknowledges too slowly to keep up",
+        "correct": true,
+        "why": "Right. The byte gap is what a failover would lose, and it is the one to alert on."
+      },
+      {
+        "text": "The offsets count different things and are not comparable",
+        "correct": false,
+        "why": "Both count bytes of the same replication stream; after the unpause they were equal."
+      },
+      {
+        "text": "The primary has stopped accepting writes",
+        "correct": false,
+        "why": "A growing offset is the primary producing writes; the replica is what falls behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7knzne4",
+    "version": 1,
+    "section": "redis-signals",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the replica paused, `master_repl_offset` was 205882318 and the replica's `offset` was 154056900. How many bytes of writes existed on the primary only?",
+    "value": 51825418,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-mvccgefr",
+    "version": 1,
+    "section": "redis-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SLOWLOG GET 1` listed `KEYS order:*` with a third field of 4517, and the command matched no key. Why was it slow?",
+    "choices": [
+      {
+        "text": "It took 4517 seconds because the replica was paused",
+        "correct": false,
+        "why": "The field is microseconds, and reads do not wait for a replica."
+      },
+      {
+        "text": "It had to look at every key to find that none matched",
+        "correct": true,
+        "why": "Right. 4,517 µs for some sixty thousand keys; on millions it takes seconds, and Redis answers nobody meanwhile."
+      },
+      {
+        "text": "The pattern was compiled into a regular expression first",
+        "correct": false,
+        "why": "Compiling a short pattern is trivial; walking the keyspace is the cost."
+      },
+      {
+        "text": "Evictions ran during the command and held it up",
+        "correct": false,
+        "why": "The benchmark had finished; nothing was being written."
+      }
+    ]
+  },
+  {
+    "id": "ex-es5ed654",
+    "version": 1,
+    "section": "redis-signals",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Clients turned away because `maxclients` was reached are counted in the `INFO` field ___.",
+    "hint": "It went from 0 to 1 after the refused `PING`.",
+    "blanks": [
+      {
+        "accept": [
+          "rejected_connections"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kmvzdyex",
+    "version": 1,
+    "section": "cassandra-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tablestats` reported `Average tombstones per slice` of 10.1 and `Maximum tombstones per slice` of 2299 for the basket table. Which one tells you the table has a problem?",
+    "choices": [
+      {
+        "text": "The average, because it is computed over every read of the last five minutes",
+        "correct": false,
+        "why": "Covering every read is what dilutes one bad partition into 10.1."
+      },
+      {
+        "text": "The maximum",
+        "correct": true,
+        "why": "Right. Ana's basket returned 10 rows after reading 1,990 tombstones; the average hides it."
+      },
+      {
+        "text": "Neither, until compaction has removed the tombstones",
+        "correct": false,
+        "why": "Compaction keeps tombstones until gc_grace_seconds has passed (lesson 18); the reads pay now."
+      },
+      {
+        "text": "Both equally, since 2299 is an exact count",
+        "correct": false,
+        "why": "2299 is a histogram bucket edge; the read counted 1,990."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tt09512",
+    "version": 1,
+    "section": "cassandra-signals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `tablestats` say 2299 tombstones when the `cqlsh` warning said the read met 1990?",
+    "choices": [
+      {
+        "text": "Some deletes were counted twice",
+        "correct": false,
+        "why": "1,990 deletes were sent and 1,990 tombstones were read."
+      },
+      {
+        "text": "The statistics are kept in fixed buckets, and 2299 is the top of the one holding 1990",
+        "correct": true,
+        "why": "Right. The same bucketing gives 1131752 and 51012 elsewhere in the output."
+      },
+      {
+        "text": "The flush added 309 tombstones of its own",
+        "correct": false,
+        "why": "A flush writes what is in memory; it creates no deletions."
+      },
+      {
+        "text": "The warning rounds down to the threshold",
+        "correct": false,
+        "why": "The warning prints the count the read met; the threshold is 1,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzw4abyx",
+    "version": 1,
+    "section": "cassandra-signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`tpstats` on one node of a cluster shows a steady rate of dropped `MUTATION_REQ`, while clients writing at `QUORUM` report no errors. What follows?",
+    "choices": [
+      {
+        "text": "The drops are harmless because the clients were told the writes succeeded",
+        "correct": false,
+        "why": "Success at QUORUM says other replicas have the write, not this one."
+      },
+      {
+        "text": "This node is missing writes the others hold, until repair puts them back",
+        "correct": true,
+        "why": "Right. Each dropped mutation is a copy that does not exist here; lesson 19's repair is what restores it."
+      },
+      {
+        "text": "The clients are lying: a dropped write is reported as an error",
+        "correct": false,
+        "why": "A replica dropping its copy does not fail a write the quorum already satisfied."
+      },
+      {
+        "text": "The node is down and its writes are kept as hints",
+        "correct": false,
+        "why": "A node that reports `tpstats` is up; it is overloaded, dropping work it received."
+      }
+    ]
+  },
+  {
+    "id": "ex-dskypgsd",
+    "version": 1,
+    "section": "cassandra-signals",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `nodetool` command to the question it answers.",
+    "pairs": [
+      {
+        "left": "`status`",
+        "right": "is every node up and normal, and how is the data spread?"
+      },
+      {
+        "left": "`proxyhistograms`",
+        "right": "how long do whole requests take at the coordinator?"
+      },
+      {
+        "left": "`tpstats`",
+        "right": "is work queuing, blocked or dropped inside the node?"
+      },
+      {
+        "left": "`compactionstats`",
+        "right": "are SSTable merges waiting to run?"
+      }
+    ],
+    "right_distractors": [
+      "which queries have the slowest plans?"
+    ]
+  },
+  {
+    "id": "ex-mr3pj1r5",
+    "version": 1,
+    "section": "cassandra-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reads had a median of 258 µs and a p99 of 4768 µs in `proxyhistograms`. Why is the p99 the number to watch?",
+    "choices": [
+      {
+        "text": "It is what one request in a hundred waits for, and a page makes many requests",
+        "correct": true,
+        "why": "Right. The median describes most requests; the tail is where users feel a sick node."
+      },
+      {
+        "text": "The median is not measured on a single node",
+        "correct": false,
+        "why": "The output shows a median for every column."
+      },
+      {
+        "text": "The p99 excludes the bulk load, so it is cleaner",
+        "correct": false,
+        "why": "Nothing is excluded; the bulk load is why the write p99 was 105,778 µs."
+      },
+      {
+        "text": "The median is reset every five minutes and the p99 never is",
+        "correct": false,
+        "why": "Both come from the same histograms, kept since the node started."
+      }
+    ]
+  },
+  {
+    "id": "ex-b48nq1kf",
+    "version": 1,
+    "section": "what-pages-you",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should page somebody at three in the morning?",
+    "hint": "Ask whether data is about to be lost or work refused.",
+    "choices": [
+      {
+        "text": "A Redis cache at 97% of `maxmemory` under `allkeys-lru`",
+        "correct": false,
+        "why": "That is a cache with a limit doing its job."
+      },
+      {
+        "text": "A MongoDB secondary 18 seconds behind on a quiet afternoon",
+        "correct": false,
+        "why": "It catches up by itself; it belongs on a dashboard."
+      },
+      {
+        "text": "A Cassandra node `DN` for longer than `max_hint_window`",
+        "correct": true,
+        "why": "Right. Past the window the others stop keeping hints, and only a repair a person runs restores the missed writes."
+      },
+      {
+        "text": "MongoDB's `opcounters.insert` passing a million",
+        "correct": false,
+        "why": "A counter since start-up only grows; its value means nothing alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8zp5404",
+    "version": 1,
+    "section": "what-pages-you",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same Redis metric, `evicted_keys` rising, is a dashboard figure on one server and an alert on another. What decides which?",
+    "choices": [
+      {
+        "text": "The size of `maxmemory`",
+        "correct": false,
+        "why": "A small or large limit is reached the same way; what matters is what an eviction deletes."
+      },
+      {
+        "text": "Whether a replica is attached",
+        "correct": false,
+        "why": "Evictions replicate to the replica as deletes; it changes nothing about their meaning."
+      },
+      {
+        "text": "Whether Redis is a cache in front of a database or the only home of that data",
+        "correct": true,
+        "why": "Right. In a cache an eviction is a miss later; where Redis is the database, it is data deleted on purpose."
+      },
+      {
+        "text": "The hour of the day the evictions happen",
+        "correct": false,
+        "why": "Timing changes who is awake, not whether data was lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-8evbp8k0",
+    "version": 1,
+    "section": "what-pages-you",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Replication lag is a cause, not a symptom users feel. Why does the lesson still let it page somebody?",
+    "choices": [
+      {
+        "text": "Its symptom, data lost at a failover, is irreversible",
+        "correct": true,
+        "why": "Right. Databases bend the symptom rule exactly where waiting for the symptom means losing data."
+      },
+      {
+        "text": "Because every cause deserves a page in a database",
+        "correct": false,
+        "why": "Most causes go on dashboards; only the ones heading for loss or refusal page."
+      },
+      {
+        "text": "Because users notice stale reads within seconds",
+        "correct": false,
+        "why": "With reads on the primary, users see no lag at all; that is why it is invisible."
+      },
+      {
+        "text": "Because exporters publish nothing else for replica sets",
+        "correct": false,
+        "why": "`mongodb_exporter` reads `serverStatus` and `replSetGetStatus`, far more than lag."
+      }
+    ]
+  },
+  {
+    "id": "ex-w81rbnjm",
+    "version": 1,
+    "section": "what-pages-you",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each product to the exporter commonly used to publish its metrics to Prometheus.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "`mongodb_exporter`"
+      },
+      {
+        "left": "Redis",
+        "right": "`redis_exporter`"
+      },
+      {
+        "left": "Cassandra",
+        "right": "the JMX exporter, as a Java agent"
+      }
+    ],
+    "right_distractors": [
+      "`node_exporter`"
+    ]
+  },
+  {
+    "id": "ex-r9fmpcpw",
+    "version": 1,
+    "section": "what-pages-you",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Redis server runs with `noeviction` and holds the shop's sessions. `used_memory` reaches `maxmemory`. What do clients see?",
+    "choices": [
+      {
+        "text": "Old sessions disappear to make room",
+        "correct": false,
+        "why": "That is what an eviction policy does; `noeviction` deletes nothing."
+      },
+      {
+        "text": "Writes refused with `OOM`",
+        "correct": true,
+        "why": "Right. This is the Redis alert that pages: work is being refused."
+      },
+      {
+        "text": "Nothing visible, because Redis writes whatever does not fit in memory to disk",
+        "correct": false,
+        "why": "Persistence copies memory to disk; it does not extend memory (lesson 13)."
+      },
+      {
+        "text": "Redis restarts and reloads its snapshot",
+        "correct": false,
+        "why": "Reaching the limit is not a crash; Redis stays up and refuses writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5kvbz6g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the replication-lag experiment of this lesson in order.",
+    "items": [
+      "Lock `mongo3` with `db.fsyncLock()`",
+      "Run the load again on the primary",
+      "Read the lag with `rs.printSecondaryReplicationInfo()`",
+      "Unlock `mongo3` with `db.fsyncUnlock()`",
+      "Read the lag again and see it at zero"
+    ],
+    "trap": "Lag only accumulates while writes arrive and the member cannot apply them."
+  },
+  {
+    "id": "ex-b9vdmprw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these readings from the lesson describe a server behaving as designed rather than a problem? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Redis at 97% of `maxmemory`, evicting, under `allkeys-lru`",
+        "correct": true,
+        "why": "Right: a cache with a limit at its limit."
+      },
+      {
+        "text": "Ana's basket read through 1,990 tombstones to return 10 rows",
+        "correct": false,
+        "why": "That is the queue-like pattern lesson 18 warns about: a modelling problem."
+      },
+      {
+        "text": "`tpstats` with every pending, blocked and dropped count at zero",
+        "correct": true,
+        "why": "Right: a node keeping up with its work."
+      },
+      {
+        "text": "A query found by `currentOp` as a `COLLSCAN` that would run for 100 minutes",
+        "correct": false,
+        "why": "A whole-collection scan nobody meant is the slow operation the section kills."
+      },
+      {
+        "text": "The WiredTiger cache at 68.7% used and 4.2% dirty",
+        "correct": true,
+        "why": "Right: below both background targets."
+      }
+    ]
+  }
+]

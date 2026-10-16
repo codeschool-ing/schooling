@@ -1,0 +1,678 @@
+{
+  "ex-27ytytq2": {
+    "prompt": "O que a consistência eventual garante?",
+    "hint": "Leia a definição prestando atenção no que fica de fora.",
+    "choices": [
+      {
+        "text": "Toda leitura vê a última escrita em até um segundo",
+        "why": "Nenhum limite de tempo é prometido."
+      },
+      {
+        "text": "Se as escritas pararem, toda cópia termina com o mesmo valor",
+        "why": "Isso, e nada sobre quanto tempo ou o que se vê nesse meio-tempo."
+      },
+      {
+        "text": "Cópias nunca discordam depois que uma escrita retornou",
+        "why": "Isso é consistência forte."
+      },
+      {
+        "text": "Escritas são aplicadas na mesma ordem em toda cópia, em todo lugar",
+        "why": "A ordem é uma das coisas que ela deixa em aberto."
+      }
+    ]
+  },
+  "ex-s3rx5zdm": {
+    "prompt": "Qual destes NÃO fica em aberto na definição de consistência eventual?",
+    "hint": "Um dos itens é a própria definição.",
+    "choices": [
+      {
+        "text": "Quanto as cópias levam para concordar",
+        "why": "Em aberto: \"eventualmente\" não tem limite."
+      },
+      {
+        "text": "O que um leitor vê nesse meio-tempo",
+        "why": "Em aberto; é disso que tratam as garantias de sessão."
+      },
+      {
+        "text": "Que cópias paradas convergem para um valor",
+        "why": "Isso: a convergência é a única coisa que ela promete."
+      },
+      {
+        "text": "Qual escrita concorrente sobrevive",
+        "why": "Em aberto; a seção do último a escrever vence trata disso."
+      }
+    ]
+  },
+  "ex-zzexypry": {
+    "prompt": "Qual destes é uma cópia que pode estar velha, mesmo que ninguém a tenha projetado como cópia?",
+    "hint": "Alguma coisa fica na frente de um serviço e responde por ele.",
+    "choices": [
+      {
+        "text": "Um banco primário para onde vai toda escrita",
+        "why": "O primário é o dono, não uma cópia."
+      },
+      {
+        "text": "Um cache na frente do serviço de catálogo",
+        "why": "Isso: ele responde com o que guardou antes."
+      },
+      {
+        "text": "Um standby síncrono do qual nunca se lê",
+        "why": "Ninguém lê dele, então ninguém o vê velho."
+      },
+      {
+        "text": "O serviço de estoque do laboratório, com suas versões",
+        "why": "O serviço de estoque é o dono dos números."
+      }
+    ]
+  },
+  "ex-7mej2e57": {
+    "prompt": "Associe cada termo ao que ele significa.",
+    "hint": "Um deles é sobre uma pessoa, não sobre todo mundo.",
+    "pairs": [
+      {
+        "left": "linearizabilidade",
+        "right": "depois que uma escrita retorna, toda leitura em qualquer lugar a vê"
+      },
+      {
+        "left": "consistência eventual",
+        "right": "as cópias concordam quando as escritas param"
+      },
+      {
+        "left": "ler as próprias escritas",
+        "right": "as leituras de uma pessoa veem as escritas dela"
+      },
+      {
+        "left": "leituras monotônicas",
+        "right": "uma pessoa nunca vê uma versão mais velha que uma já vista"
+      }
+    ]
+  },
+  "ex-st30gwfx": {
+    "prompt": "No laboratório, de onde a loja tira o número que mostra na página de um produto?",
+    "hint": "Olhe o `do_GET` do `shop.py`.",
+    "choices": [
+      {
+        "text": "Chama o serviço de estoque em toda requisição",
+        "why": "Só quando `?after=` diz que a cópia está atrasada."
+      },
+      {
+        "text": "Lê direto o banco do serviço de estoque",
+        "why": "O serviço de estoque guarda os números em memória, e nenhum módulo lê os dados de outro."
+      },
+      {
+        "text": "Da cópia dela, vinda de eventos",
+        "why": "Isso."
+      },
+      {
+        "text": "Da outra loja, a quem pergunta primeiro",
+        "why": "As lojas dividem eventos, não leituras."
+      }
+    ]
+  },
+  "ex-rz5jpxe2": {
+    "prompt": "Logo depois do `PUT /stock/coffee` com 12, as duas lojas responderam \"no copy yet\". O que isso mostra?",
+    "hint": "Três segundos depois a loja b o tinha.",
+    "choices": [
+      {
+        "text": "O evento se perdeu e teve de ser reenviado",
+        "why": "Ele chegou sem ser reenviado."
+      },
+      {
+        "text": "As lojas estavam mal configuradas",
+        "why": "Nada estava mal configurado."
+      },
+      {
+        "text": "O evento ainda estava a caminho delas",
+        "why": "Isso: a janela, num sistema que funciona."
+      },
+      {
+        "text": "O broker recusou o evento",
+        "why": "Aí o serviço de estoque teria respondido 503."
+      }
+    ]
+  },
+  "ex-0f5hbzzd": {
+    "prompt": "Por que o `stock.py` publica o evento antes de guardar a mudança?",
+    "hint": "Pense num broker fora do ar.",
+    "choices": [
+      {
+        "text": "Para as cópias das lojas se atualizarem mais rápido",
+        "why": "A ordem não muda a velocidade das cópias."
+      },
+      {
+        "text": "Para um publish que falhou não mudar nada e devolver 503",
+        "why": "Isso: o dono nunca guarda uma mudança de que as cópias nunca vão saber."
+      },
+      {
+        "text": "Porque o pika precisa que a exchange exista antes",
+        "why": "O pika não tem opinião sobre isso."
+      },
+      {
+        "text": "Para dar uma versão ao evento",
+        "why": "A versão é calculada antes das duas etapas."
+      }
+    ]
+  },
+  "ex-tsqg290d": {
+    "prompt": "Num sistema ocioso, de que tamanho foi a janela da loja b no laboratório?",
+    "hint": "Conte as leituras de meio segundo que ainda diziam 12.",
+    "choices": [
+      {
+        "text": "Uns vinte segundos",
+        "why": "Isso foi depois da rajada de dez mudanças."
+      },
+      {
+        "text": "Uns dois segundos, o LAG dela",
+        "why": "Isso."
+      },
+      {
+        "text": "Zero; ela se atualizou na hora",
+        "why": "Quatro leituras seguidas ainda diziam 12."
+      },
+      {
+        "text": "Cerca de um quinto de segundo",
+        "why": "Esse é o tempo por evento da loja a."
+      }
+    ]
+  },
+  "ex-8yaj32w0": {
+    "prompt": "Uma cópia trata um evento em 0,5 segundo e tem 40 eventos esperando na fila. Mais ou menos quantos segundos de idade tem o que ela mostra para a última mudança?",
+    "hint": "Comprimento da fila vezes tempo por evento.",
+    "unit": "segundos"
+  },
+  "ex-rynp393b": {
+    "prompt": "Por que a janela tende a ser maior quando mais clientes estão olhando?",
+    "hint": "O que uma tarde movimentada faz com a fila?",
+    "choices": [
+      {
+        "text": "Porque o broker fica mais lento sob carga de propósito",
+        "why": "O broker não era a parte lenta."
+      },
+      {
+        "text": "Porque as leituras dos clientes bloqueiam o consumidor",
+        "why": "Leituras e consumidor não competiram no laboratório."
+      },
+      {
+        "text": "Horas movimentadas acumulam mais mudanças na fila da cópia",
+        "why": "Isso: janela = comprimento da fila × tempo por evento."
+      },
+      {
+        "text": "Porque o dono segura uma trava enquanto os clientes leem",
+        "why": "A trava do dono só é segurada enquanto ele publica."
+      }
+    ]
+  },
+  "ex-afb47yme": {
+    "prompt": "Que medida diz, em tempo, quanto uma cópia está atrasada?",
+    "hint": "Uma delas conta mensagens, não segundos.",
+    "choices": [
+      {
+        "text": "O número de mensagens na fila dela",
+        "why": "Isso é em mensagens; não diz nada sobre a idade delas."
+      },
+      {
+        "text": "A idade do evento mais novo que ela aplicou",
+        "why": "Isso, desde que cada evento carregue quando foi criado."
+      },
+      {
+        "text": "O número de requisições que ela responde por segundo",
+        "why": "Ocupada e atrasada são coisas diferentes."
+      },
+      {
+        "text": "Se o health check dela passa",
+        "why": "Uma cópia atrasada está perfeitamente saudável."
+      }
+    ]
+  },
+  "ex-t6359e8e": {
+    "prompt": "Quem é mais prejudicado pela janela de inconsistência?",
+    "hint": "Quem sabe qual deveria ser o número?",
+    "choices": [
+      {
+        "text": "Um cliente navegando no catálogo",
+        "why": "Ele não distingue 12 de 11."
+      },
+      {
+        "text": "A pessoa que acabou de fazer a mudança",
+        "why": "Isso: ela sabe que o valor velho está errado."
+      },
+      {
+        "text": "O serviço de estoque, que é o dono do número",
+        "why": "O dono nunca está atrasado em relação a si mesmo."
+      },
+      {
+        "text": "O broker que leva os eventos",
+        "why": "O broker não lê estoque."
+      }
+    ]
+  },
+  "ex-d67gehsh": {
+    "prompt": "O que o `?after=13` faz a loja b fazer quando a cópia dela está na versão 12?",
+    "hint": "Olhe a resposta que ela deu no laboratório.",
+    "choices": [
+      {
+        "text": "Esperar até a versão 13 chegar",
+        "why": "Ela não espera neste laboratório."
+      },
+      {
+        "text": "Recusar a requisição com um erro",
+        "why": "Ela responde."
+      },
+      {
+        "text": "Responder da cópia e avisar",
+        "why": "A cópia não é usada quando está atrasada."
+      },
+      {
+        "text": "Perguntar ao serviço de estoque e dizer isso",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ax6efx26": {
+    "prompt": "Por que ler as próprias escritas é bem mais barato que consistência forte?",
+    "hint": "A quem a promessa é feita?",
+    "choices": [
+      {
+        "text": "É prometida a uma pessoa, sobre as próprias mudanças",
+        "why": "Isso."
+      },
+      {
+        "text": "Não precisa de números de versão",
+        "why": "A versão do laboratório precisa de um."
+      },
+      {
+        "text": "Só funciona enquanto a cópia nunca fica atrás do dono",
+        "why": "Ela existe para quando a cópia atrasa."
+      },
+      {
+        "text": "Pula o broker",
+        "why": "Os eventos ainda passam pelo broker."
+      }
+    ]
+  },
+  "ex-2bh258ve": {
+    "prompt": "\"Depois que uma pessoa escreve, mandar as leituras dela para o dono durante o próximo minuto.\" Qual é a fraqueza?",
+    "hint": "Qual o tamanho da janela?",
+    "choices": [
+      {
+        "text": "Manda as leituras de todos os clientes para o dono",
+        "why": "Só as leituras de quem escreveu."
+      },
+      {
+        "text": "O minuto é um palpite; uma janela maior o quebra",
+        "why": "Isso: a janela não tem limite."
+      },
+      {
+        "text": "O dono não consegue responder leituras rápido o bastante",
+        "why": "O dono responde leituras no laboratório."
+      },
+      {
+        "text": "Exige um número de versão em cada um dos eventos",
+        "why": "Essa é a outra abordagem."
+      }
+    ]
+  },
+  "ex-cgtwjyve": {
+    "prompt": "No laboratório, o cliente viu 7 e depois 0. Por quê?",
+    "hint": "Que loja respondeu cada requisição?",
+    "choices": [
+      {
+        "text": "O estoque de verdade foi de 7 para 0 nesse meio-tempo",
+        "why": "O dono foi de 0 para 7."
+      },
+      {
+        "text": "A segunda leitura chegou a uma cópia mais atrasada",
+        "why": "Isso."
+      },
+      {
+        "text": "A loja b aplicou um evento velho duas vezes",
+        "why": "Nada foi reenviado naquela seção."
+      },
+      {
+        "text": "O balanceador guardou a primeira resposta em cache",
+        "why": "Não havia cache; duas cópias responderam."
+      }
+    ]
+  },
+  "ex-55fww7gk": {
+    "prompt": "Que correção dá leituras monotônicas sem prender uma pessoa a uma cópia?",
+    "hint": "O mesmo mecanismo de ler as próprias escritas.",
+    "choices": [
+      {
+        "text": "Sticky sessions",
+        "why": "Essa é a que prende a pessoa a uma cópia."
+      },
+      {
+        "text": "Fazer toda cópia tratar eventos na mesma velocidade",
+        "why": "Cópias nunca andam exatamente juntas."
+      },
+      {
+        "text": "Mandar junto com toda leitura a maior versão já vista",
+        "why": "Isso."
+      },
+      {
+        "text": "Tirar a cópia mais lenta",
+        "why": "Sempre há uma cópia mais lenta."
+      }
+    ]
+  },
+  "ex-gf7gty88": {
+    "prompt": "Qual é a fraqueza das sticky sessions para leituras monotônicas?",
+    "hint": "O que acontece com a cópia a que a pessoa está presa?",
+    "choices": [
+      {
+        "text": "Precisam de uma versão em todo evento",
+        "why": "Não precisam de versão nenhuma."
+      },
+      {
+        "text": "Essa cópia reinicia, e a carga fica desigual",
+        "why": "Isso."
+      },
+      {
+        "text": "Mandam toda leitura para o dono em vez de uma cópia",
+        "why": "As leituras ficam na cópia."
+      },
+      {
+        "text": "Só alguns brokers as oferecem",
+        "why": "Quem as oferece é um balanceador, não um broker."
+      }
+    ]
+  },
+  "ex-k4t5qej9": {
+    "prompt": "Depois de a versão 15 ser enviada de novo, a loja b disse 5 e o dono disse 4. Quando a loja b teria se corrigido?",
+    "hint": "O que traria um evento novo?",
+    "choices": [
+      {
+        "text": "Depois do LAG de dois segundos",
+        "why": "O LAG já tinha passado; ela tinha aplicado o evento velho."
+      },
+      {
+        "text": "Quando o broker notasse a duplicata",
+        "why": "O broker não compara conteúdos."
+      },
+      {
+        "text": "Quando o café mudasse de novo",
+        "why": "Isso: a cópia convergiu para um valor errado."
+      },
+      {
+        "text": "Nunca; reiniciá-la manteria o 5",
+        "why": "Reiniciar esvazia a cópia em memória."
+      }
+    ]
+  },
+  "ex-1zesq2w6": {
+    "prompt": "O que o `CHECK_VERSION=1` faz a loja fazer?",
+    "hint": "Leia o log da loja depois do segundo reenvio.",
+    "choices": [
+      {
+        "text": "Ignorar um evento que não é mais novo que a versão que ela tem",
+        "why": "Isso."
+      },
+      {
+        "text": "Perguntar ao dono antes de aplicar cada evento",
+        "why": "Ela nunca pergunta ao dono enquanto aplica."
+      },
+      {
+        "text": "Aplicar eventos na ordem dos carimbos de tempo",
+        "why": "Os eventos carregam versões, não carimbos de tempo."
+      },
+      {
+        "text": "Rejeitar o evento reenviado no broker, antes da entrega",
+        "why": "O broker o entrega; a loja decide."
+      }
+    ]
+  },
+  "ex-kn8e3gsz": {
+    "prompt": "Por que a versão tem de vir do dono e não do relógio de cada máquina?",
+    "hint": "Dois relógios podem discordar.",
+    "choices": [
+      {
+        "text": "Relógios são grosseiros demais para separar dois eventos próximos",
+        "why": "A resolução não é o problema principal."
+      },
+      {
+        "text": "Só o dono ordena as mudanças daquela coisa",
+        "why": "Isso: relógios se afastam, e a mudança posterior pode carregar o horário anterior."
+      },
+      {
+        "text": "Versões são menores que carimbos de tempo",
+        "why": "Tamanho não é o ponto."
+      },
+      {
+        "text": "O broker rejeita mensagens que carregam carimbo de tempo",
+        "why": "Não rejeita."
+      }
+    ]
+  },
+  "ex-mwkvy0zq": {
+    "prompt": "Que evento pode ser aplicado em qualquer ordem, quantas vezes for, e ainda convergir?",
+    "hint": "Estado, ou uma mudança?",
+    "choices": [
+      {
+        "text": "\"Dois pacotes de café vendidos\"",
+        "why": "Aplicado duas vezes, vende quatro."
+      },
+      {
+        "text": "\"O café diminuiu um\"",
+        "why": "Ainda é uma mudança; repetição e ordem importam."
+      },
+      {
+        "text": "\"O café está em 4, versão 18\"",
+        "why": "Isso, com uma cópia que guarda a versão mais nova."
+      },
+      {
+        "text": "\"Repor café\"",
+        "why": "Um comando, não um estado."
+      }
+    ]
+  },
+  "ex-c9zw2c5d": {
+    "prompt": "Com `MERGE=lww`, o que aconteceu com o chá da ana?",
+    "hint": "Olhe as duas cestas cinco segundos depois.",
+    "choices": [
+      {
+        "text": "Ficou só na loja a",
+        "why": "As duas cópias terminaram iguais."
+      },
+      {
+        "text": "Um erro disse que houve conflito",
+        "why": "Não houve erro nenhum."
+      },
+      {
+        "text": "Sumiu das duas cópias, sem nenhum erro",
+        "why": "Isso."
+      },
+      {
+        "text": "Substituiu o café nas duas",
+        "why": "A cesta mais recente, com café, venceu."
+      }
+    ]
+  },
+  "ex-333jxch9": {
+    "prompt": "Para que dados o último a escrever vence é uma regra razoável?",
+    "hint": "Quando a escrita mais nova de fato substitui a mais velha?",
+    "choices": [
+      {
+        "text": "Uma cesta editada em dois aparelhos",
+        "why": "As duas edições eram para valer; uma se perde."
+      },
+      {
+        "text": "O endereço de entrega de um cliente",
+        "why": "Isso: o mais novo é o que ele quer."
+      },
+      {
+        "text": "Uma contagem de unidades vendidas",
+        "why": "Cada venda conta; descartar uma perde dinheiro."
+      },
+      {
+        "text": "Comentários publicados num produto",
+        "why": "Cada comentário é próprio; nenhum substitui outro."
+      }
+    ]
+  },
+  "ex-7qyynb0q": {
+    "prompt": "Com `MERGE=union`, por que o chá voltou depois de ser tirado?",
+    "hint": "O que a loja b ainda tinha quando publicou?",
+    "choices": [
+      {
+        "text": "O DELETE da loja a falhou e deixou o chá ali",
+        "why": "Ela respondeu só com café."
+      },
+      {
+        "text": "O broker reentregou uma cesta mais velha à loja a",
+        "why": "Foi a publicação nova da loja b."
+      },
+      {
+        "text": "A verificação de versão rejeitou a remoção por velha",
+        "why": "Cestas não carregam versão."
+      },
+      {
+        "text": "A união não distingue remoção de item que faltava",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pvtyevsr": {
+    "prompt": "Para a maioria dos sistemas, qual é o jeito mais simples de evitar reconciliar escritas concorrentes?",
+    "hint": "A última linha da tabela.",
+    "choices": [
+      {
+        "text": "Usar um CRDT para todo tipo de dado do sistema",
+        "why": "Certo para alguns dados, e longe de ser o mais simples."
+      },
+      {
+        "text": "Dar a cada coisa um dono; cópias só leem",
+        "why": "Isso."
+      },
+      {
+        "text": "Sincronizar antes o relógio de todo servidor com NTP",
+        "why": "Relógios ainda se afastam, e as duas escritas eram para valer."
+      },
+      {
+        "text": "Guardar as duas versões e pedir ao usuário que escolha",
+        "why": "Isso é reconciliar, não evitar."
+      }
+    ]
+  },
+  "ex-2722skt7": {
+    "prompt": "Associe cada jeito de tratar escritas concorrentes ao que ele faz.",
+    "hint": "Qual perde uma escrita, e qual pode trazer uma de volta?",
+    "pairs": [
+      {
+        "left": "o último a escrever vence",
+        "right": "fica com o carimbo mais novo, descarta o resto"
+      },
+      {
+        "left": "união",
+        "right": "fica com todos os itens; remoções podem voltar"
+      },
+      {
+        "left": "siblings",
+        "right": "entrega toda versão concorrente a quem lê"
+      },
+      {
+        "left": "CRDT",
+        "right": "um tipo cuja junção está sempre certa para o seu tipo"
+      }
+    ]
+  },
+  "ex-ecw3xac9": {
+    "prompt": "Depois que o checkout cria um pedido, o que a página seguinte deveria mostrar?",
+    "hint": "O ler as próprias escritas mais barato.",
+    "choices": [
+      {
+        "text": "A lista de pedidos, lida de uma cópia",
+        "why": "A cópia talvez ainda não tenha o pedido."
+      },
+      {
+        "text": "A resposta da escrita",
+        "why": "Isso."
+      },
+      {
+        "text": "Um indicador de carregamento até toda cópia o ter",
+        "why": "Cópias não têm limite; o indicador poderia nunca parar."
+      },
+      {
+        "text": "Nada, para não mostrar dado velho",
+        "why": "Quem não vê nada supõe que falhou."
+      }
+    ]
+  },
+  "ex-wvdqzwm4": {
+    "prompt": "Uma página de produto mostra a contagem de café a partir de uma cópia. O que ela deveria dizer?",
+    "hint": "A contagem exata fica no checkout.",
+    "choices": [
+      {
+        "text": "A contagem exata, atualizada a cada segundo",
+        "why": "Ainda é uma cópia, ainda pode estar atrasada."
+      },
+      {
+        "text": "Nada sobre estoque",
+        "why": "O número aproximado ainda é útil."
+      },
+      {
+        "text": "Um aproximado \"restam poucos\"",
+        "why": "Isso; o dono decide no checkout."
+      },
+      {
+        "text": "O número da outra cópia também",
+        "why": "Duas cópias numa tela é a discordância tornada visível."
+      }
+    ]
+  },
+  "ex-csk1n8s7": {
+    "prompt": "Que decisão tem de ser tomada no dono e não a partir de uma cópia?",
+    "hint": "Que erro custa dinheiro?",
+    "choices": [
+      {
+        "text": "Mostrar a foto de um produto",
+        "why": "A foto de ontem é inofensiva."
+      },
+      {
+        "text": "Listar produtos de uma categoria",
+        "why": "Uma lista de um instante atrás serve."
+      },
+      {
+        "text": "Mostrar no cabeçalho quantos itens há na cesta",
+        "why": "Deve bater com a página da cesta, mas um instante de atraso não custa nada."
+      },
+      {
+        "text": "Pegar o último pacote de café quando o cliente paga",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8chw8a8n": {
+    "prompt": "Ponha o experimento do evento atrasado do laboratório em ordem.",
+    "hint": "Mudar, mudar, esperar, reenviar, olhar.",
+    "items": [
+      "Definir o café como 5",
+      "Definir o café como 4",
+      "Esperar as duas lojas aplicarem as mudanças",
+      "Enviar de novo o evento do 5",
+      "A loja b mostra 5 enquanto o dono diz 4"
+    ]
+  },
+  "ex-fa9xvpwb": {
+    "prompt": "A página de busca da Quitanda é alimentada pelo catálogo por eventos, e uma pessoa da equipe reclama que um preço que ela mudou \"não salva\". Qual a causa mais provável e a correção?",
+    "hint": "A mudança falhou, ou quem lê está olhando uma cópia?",
+    "choices": [
+      {
+        "text": "O catálogo está perdendo escritas; tornar a replicação dele síncrona",
+        "why": "O dono tinha a mudança."
+      },
+      {
+        "text": "A tela lê uma cópia atrasada; mostrar a quem mudou a resposta do dono",
+        "why": "Isso: ler as próprias escritas."
+      },
+      {
+        "text": "O broker está descartando eventos; levar os eventos para o Kafka",
+        "why": "Nada aponta para o broker."
+      },
+      {
+        "text": "O preço tem dois donos; resolver com o último a escrever vence",
+        "why": "Há um dono: o catálogo."
+      }
+    ]
+  }
+}

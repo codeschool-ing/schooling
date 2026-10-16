@@ -1,0 +1,438 @@
+{
+  "ex-zf8204e0": {
+    "prompt": "O que um `UPDATE` faz com a linha que altera, no PostgreSQL?",
+    "hint": "Pense em para que serve o VACUUM.",
+    "choices": [
+      {
+        "text": "Sobrescreve a linha no lugar, dentro da página",
+        "why": "É o que a seção diz que o PostgreSQL nunca faz; os leitores perderiam a versão a que têm direito."
+      },
+      {
+        "text": "Grava uma versão nova e deixa a antiga para trás",
+        "why": "Isso: a versão antiga fica até o VACUUM poder removê-la."
+      },
+      {
+        "text": "Move a linha para o fim da tabela e libera o lugar antigo na hora",
+        "why": "O lugar antigo só fica livre quando ninguém mais vê a versão antiga."
+      },
+      {
+        "text": "Trava a tabela inteira até o commit",
+        "why": "Um UPDATE trava as linhas que muda, não a tabela; e esse é outro assunto."
+      }
+    ]
+  },
+  "ex-vtftcxgp": {
+    "prompt": "O `VACUUM VERBOSE` relata `1 are dead but not yet removable` e `removable cutoff: 1098934, which was 2 XIDs old`. O que é o corte?",
+    "hint": "Quem ainda tem direito de ler a versão antiga?",
+    "choices": [
+      {
+        "text": "O número da transação que fez a versão morta",
+        "why": "Essa foi o UPDATE, que veio depois do corte; o corte pertence ao snapshot mais antigo."
+      },
+      {
+        "text": "A última transação que o próprio VACUUM rodou",
+        "why": "O VACUUM não pega número de transação para isso; o corte vem de outras sessões."
+      },
+      {
+        "text": "O horizonte: o snapshot mais antigo ainda em uso",
+        "why": "Isso: na aula era o da Sessão A, e nada depois dele podia ser removido."
+      },
+      {
+        "text": "Quantas linhas a tabela tinha quando o VACUUM começou",
+        "why": "Essa é a contagem `remain` da linha de cima."
+      }
+    ]
+  },
+  "ex-3hvbt7gn": {
+    "prompt": "A Sessão A abriu `REPEATABLE READ`, leu a soma dos preços e ficou ociosa enquanto a Sessão B aumentava o preço do produto 7. O que mostrou a segunda soma da Sessão A, e por quê?",
+    "hint": "Os dois totais da transcrição.",
+    "choices": [
+      {
+        "text": "Cem centavos a mais, porque a Sessão B fez commit",
+        "why": "É o que o READ COMMITTED mostraria; o REPEATABLE READ mantém o primeiro snapshot."
+      },
+      {
+        "text": "O mesmo total, da versão antiga da linha",
+        "why": "Isso: é por isso que o VACUUM não podia remover a versão antiga com a transação aberta."
+      },
+      {
+        "text": "Um erro, porque a linha mudou por baixo dela",
+        "why": "Uma leitura nunca falha por isso; uma escrita em conflito no REPEATABLE READ é assunto da aula 14."
+      },
+      {
+        "text": "Esperou a transação da Sessão B terminar",
+        "why": "Leitores não esperam escritores; é para isso que servem as versões."
+      }
+    ]
+  },
+  "ex-s5ky69ts": {
+    "prompt": "Quais destes seguram o horizonte enquanto duram? Marque todos os que se aplicam.",
+    "hint": "Um deles tira um snapshot novo a cada comando.",
+    "choices": [
+      {
+        "text": "Uma transação ociosa que atualizou uma linha",
+        "why": "Certo: o número da transação está em backend_xid, e toda versão posterior espera por ela."
+      },
+      {
+        "text": "Uma consulta de relatório que roda há vinte minutos",
+        "why": "Certo: um comando em execução mantém o snapshot até terminar."
+      },
+      {
+        "text": "Uma transação REPEATABLE READ ociosa que leu uma tabela",
+        "why": "Certo: é a Sessão A."
+      },
+      {
+        "text": "Uma transação READ COMMITTED ociosa que só leu",
+        "why": "Ela solta cada snapshot quando o comando termina, e a consulta de busca não a listou."
+      },
+      {
+        "text": "Uma conexão sem transação aberta",
+        "why": "Sem transação não há snapshot nem número de transação para segurar nada."
+      }
+    ]
+  },
+  "ex-2hnrcx9m": {
+    "prompt": "Com a Sessão A segurando o horizonte, trinta segundos do robô de preços levaram `products` de 5544 kB a quantos megabytes?",
+    "hint": "A consulta de tamanho depois da segunda execução.",
+    "unit": "MB"
+  },
+  "ex-gfcr9eet": {
+    "prompt": "Por que `products` ficou quase do mesmo tamanho depois dos primeiros trinta segundos do robô, sem mais nada aberto?",
+    "hint": "Para onde foram as versões novas?",
+    "choices": [
+      {
+        "text": "O robô atualizou poucas linhas para fazer diferença",
+        "why": "Ele fez 141981 updates, tanto quanto na segunda execução."
+      },
+      {
+        "text": "O autovacuum reescreveu a tabela enquanto o robô rodava",
+        "why": "O autovacuum não reescreve tabelas, e a aula credita a arrumação das páginas, não o autovacuum."
+      },
+      {
+        "text": "O UPDATE grava no lugar quando o preço é um inteiro",
+        "why": "Todo UPDATE faz uma versão nova, qualquer que seja o tipo."
+      },
+      {
+        "text": "As versões mortas saíram quando as páginas enchiam",
+        "why": "Isso: o horizonte estava livre para andar, então as versões mortas não se acumularam."
+      }
+    ]
+  },
+  "ex-hxqrk9ve": {
+    "prompt": "A busca por tag da aula 2 levava 14,5 ms antes e 21,1 ms com a Sessão A aberta, embora nunca tenha tocado a Sessão A. O que a deixou mais lenta?",
+    "hint": "Ela é uma leitura sequencial.",
+    "choices": [
+      {
+        "text": "Esperou a trava da Sessão A em `products`",
+        "why": "A Sessão A só leu; uma leitura não pega trava que bloqueie outra leitura."
+      },
+      {
+        "text": "Leu mais de três vezes mais páginas",
+        "why": "Isso: a tabela foi de uns 5 MB para 19 MB, e uma leitura sequencial lê todas as páginas."
+      },
+      {
+        "text": "Os updates do robô mudaram o plano para uma leitura por índice",
+        "why": "Não há índice que responda a busca por tag; a aula 8 cria um."
+      },
+      {
+        "text": "Os processadores estavam ocupados com o robô no mesmo momento",
+        "why": "A busca foi medida depois que o robô parou, e continuou lenta depois do commit também."
+      }
+    ]
+  },
+  "ex-py30x000": {
+    "prompt": "Depois do commit da Sessão A, o `VACUUM` removeu as 139519 versões mortas. O que aconteceu com o tamanho da tabela?",
+    "hint": "Para onde vai o espaço liberado?",
+    "choices": [
+      {
+        "text": "Voltou a uns 5 MB",
+        "why": "Ficou em 19 MB; o VACUUM não devolve espaço, a não ser páginas vazias no fim."
+      },
+      {
+        "text": "Ficou em 19 MB, com o espaço livre para versões novas",
+        "why": "Isso: devolvê-lo exige reescrever, como o VACUUM FULL, que db-administration cobre."
+      },
+      {
+        "text": "Dobrou, porque o VACUUM grava uma cópia primeiro",
+        "why": "O VACUUM simples trabalha no lugar; é o VACUUM FULL que grava uma cópia nova."
+      },
+      {
+        "text": "Encolheu para o tamanho das páginas das linhas vivas",
+        "why": "As linhas vivas estão espalhadas pelos 19 MB, então nada no fim ficou vazio."
+      }
+    ]
+  },
+  "ex-ym4kgmy2": {
+    "prompt": "Uma rotina noturna segura uma transação `REPEATABLE READ` aberta por três horas para exportar uma cópia consistente, enquanto uma tabela de fila é atualizada a noite toda. De manhã a fila tem 2.000 linhas e a tela dela está lenta. Qual o motivo mais provável?",
+    "hint": "A exportação nunca lê a fila.",
+    "choices": [
+      {
+        "text": "As linhas da fila estão travadas pela exportação",
+        "why": "Uma exportação só lê, e não trava linhas contra updates."
+      },
+      {
+        "text": "2.000 linhas são demais para a tela da fila",
+        "why": "2.000 linhas é pouco; o que cresceu foi a tabela por trás delas."
+      },
+      {
+        "text": "Versões mortas que o VACUUM não pôde remover",
+        "why": "Isso: o horizonte é do banco, então a exportação segurou o VACUUM numa tabela que nunca leu."
+      },
+      {
+        "text": "O autovacuum foi desligado pela exportação",
+        "why": "O autovacuum rodou; só não pôde remover versões mais novas que o horizonte."
+      }
+    ]
+  },
+  "ex-4frkb8cq": {
+    "prompt": "O que o `idle_in_transaction_session_timeout` faz quando dispara?",
+    "hint": "Leia a severidade na transcrição.",
+    "choices": [
+      {
+        "text": "Cancela o comando em execução",
+        "why": "Não há comando rodando; esse é o trabalho do statement_timeout."
+      },
+      {
+        "text": "Encerra a sessão inteira, com FATAL",
+        "why": "Isso: a transação é desfeita e a conexão fechada."
+      },
+      {
+        "text": "Faz commit da transação aberta para não perder nada",
+        "why": "Ela nunca faz commit; fazer commit de meia transação é o que transações existem para evitar."
+      },
+      {
+        "text": "Escreve um aviso no log e continua esperando",
+        "why": "Ela age: a sessão acabou na transcrição."
+      }
+    ]
+  },
+  "ex-k1yxvr8h": {
+    "prompt": "Um relatório roda um `SELECT` de 40 minutos toda noite e segura o horizonte o tempo todo. Que configuração o interromperia?",
+    "hint": "Qual o estado dele na pg_stat_activity?",
+    "choices": [
+      {
+        "text": "`idle_in_transaction_session_timeout`, em dez minutos",
+        "why": "O relatório está active, não ocioso; essa configuração nunca o toca."
+      },
+      {
+        "text": "`max_connections`, baixado para o número de relatórios",
+        "why": "Isso limita quantas sessões conectam, não quanto tempo uma roda."
+      },
+      {
+        "text": "`statement_timeout`, configurado para o papel do relatório",
+        "why": "Isso: ele cancela um comando que roda demais, com um ERROR."
+      },
+      {
+        "text": "`max_prepared_transactions`, em zero",
+        "why": "Isso só diz respeito ao commit em duas fases, e zero já é o padrão."
+      }
+    ]
+  },
+  "ex-2y2gpaep": {
+    "prompt": "Um checkout faz `BEGIN`, atualiza o pedido, chama um provedor de pagamento que responde em dois segundos e depois faz commit. O que a aula recomenda?",
+    "hint": "Qual das três formas é essa?",
+    "choices": [
+      {
+        "text": "Chamar o provedor fora da transação, antes ou depois dela",
+        "why": "Isso: deixe na transação só os comandos que precisam dar certo ou errado juntos."
+      },
+      {
+        "text": "Ajustar o idle_in_transaction_session_timeout para um segundo",
+        "why": "Isso encerraria todo checkout correto no meio, com FATAL."
+      },
+      {
+        "text": "Mudar a transação para REPEATABLE READ",
+        "why": "O nível não encurta a espera; uma transação que escreveu segura o horizonte em qualquer nível."
+      },
+      {
+        "text": "Rodar VACUUM depois de cada pedido",
+        "why": "O VACUUM não remove o que as transações abertas ainda seguram."
+      }
+    ]
+  },
+  "ex-n682f52z": {
+    "prompt": "Para dar a toda sessão nova em `market` um limite de um minuto em transações ociosas, você roda `ALTER ___ market SET idle_in_transaction_session_timeout = '1min';`.",
+    "hint": "A configuração fica presa a um objeto, não a uma sessão.",
+    "blanks": [
+      {
+        "accept": [
+          "DATABASE"
+        ]
+      }
+    ]
+  },
+  "ex-epmxhmaf": {
+    "prompt": "Uma equipe configura `idle_in_transaction_session_timeout = '2s'` para o servidor inteiro depois de um incidente. Qual a primeira coisa com chance de quebrar?",
+    "hint": "Quem tem intervalos ociosos legítimos maiores que isso?",
+    "choices": [
+      {
+        "text": "Nada; código correto nunca fica ocioso por dois segundos",
+        "why": "Uma transação correta pode esperar uma pessoa, uma rede lenta ou um passo de migração."
+      },
+      {
+        "text": "Toda consulta em execução com mais de dois segundos",
+        "why": "Consultas em execução estão active, não ociosas; essa configuração não as toca."
+      },
+      {
+        "text": "O autovacuum, que não roda com um timeout configurado",
+        "why": "O autovacuum não é uma transação ociosa de cliente."
+      },
+      {
+        "text": "Transações corretas com pausas mais longas, encerradas com FATAL",
+        "why": "Isso: o valor tem de ficar acima do maior intervalo ocioso de uma transação correta."
+      }
+    ]
+  },
+  "ex-wxfcd2hb": {
+    "prompt": "Por que o `oldest.sql` ordena pela idade em transações e não por há quanto tempo a transação está aberta?",
+    "hint": "O que torna caro um horizonte preso?",
+    "choices": [
+      {
+        "text": "Porque `xact_start` fica vazio em sessões ociosas",
+        "why": "Ele é preenchido para qualquer transação aberta; a busca imprimiu open_for a partir dele."
+      },
+      {
+        "text": "Ela acompanha as escritas, e logo o estrago",
+        "why": "Isso: uma transação velha num servidor parado custa pouco; uma nova num servidor ocupado custa muito."
+      },
+      {
+        "text": "Porque o relógio de um servidor não é confiável",
+        "why": "O relógio está certo; só mede tempo, não versões mortas."
+      },
+      {
+        "text": "Porque age() é mais rápida de calcular",
+        "why": "Velocidade não é o motivo; as duas são triviais."
+      }
+    ]
+  },
+  "ex-ja28xynn": {
+    "prompt": "Na saída da busca, uma linha tem um número em `xid` e nada em `xmin`. Que tipo de sessão é essa?",
+    "hint": "Uma transação só ganha número próprio quando faz uma coisa.",
+    "choices": [
+      {
+        "text": "Uma transação REPEATABLE READ que só leu",
+        "why": "Essa tinha snapshot (xmin) e nenhum número próprio."
+      },
+      {
+        "text": "Um comando ainda em execução",
+        "why": "Um comando em execução tem snapshot, então xmin está preenchido."
+      },
+      {
+        "text": "Uma transação ociosa que escreveu alguma coisa",
+        "why": "Isso: o UPDATE lhe deu um número de transação, e ociosa ela não segura snapshot."
+      },
+      {
+        "text": "Uma conexão fora de qualquer transação",
+        "why": "Sem transação ela não teria nenhuma das colunas, e a busca não a listaria."
+      }
+    ]
+  },
+  "ex-qwwepp9f": {
+    "prompt": "O `~/oldest.sql` não devolve linha nenhuma, e mesmo assim o `VACUUM VERBOSE` relata um corte de milhões de transações. Onde você olha em seguida?",
+    "hint": "Alguns que seguram não têm linha na pg_stat_activity.",
+    "choices": [
+      {
+        "text": "`pg_stat_user_tables`, atrás das linhas mortas",
+        "why": "Isso mostra o sintoma, não quem segura o horizonte."
+      },
+      {
+        "text": "`pg_locks`, atrás de uma trava na tabela",
+        "why": "Uma trava não segura o horizonte; uma transação ou um slot seguram."
+      },
+      {
+        "text": "O log do servidor, atrás do último checkpoint",
+        "why": "Checkpoints não têm nada a ver com quais versões o VACUUM pode remover."
+      },
+      {
+        "text": "`pg_prepared_xacts` e `pg_replication_slots`",
+        "why": "Isso: uma transação preparada esquecida ou um slot que ninguém lê seguram o horizonte sem sessão."
+      }
+    ]
+  },
+  "ex-8dd1e4bz": {
+    "prompt": "Ligue cada um que segura o horizonte à configuração ou ação que o encerra.",
+    "hint": "Dois são timeouts, e dois nem são sessões.",
+    "pairs": [
+      {
+        "left": "uma sessão ociosa numa transação",
+        "right": "`idle_in_transaction_session_timeout`"
+      },
+      {
+        "left": "um comando rodando há uma hora",
+        "right": "`statement_timeout`"
+      },
+      {
+        "left": "uma transação preparada esquecida",
+        "right": "`ROLLBACK PREPARED`"
+      },
+      {
+        "left": "um slot de replicação que ninguém lê",
+        "right": "remover o slot"
+      }
+    ],
+    "right_distractors": [
+      "`VACUUM FULL`"
+    ]
+  },
+  "ex-4wmyg1a2": {
+    "prompt": "Na saída da busca, quantas transações de idade tinham as três sessões que seguravam o horizonte?",
+    "hint": "A coluna xid_age.",
+    "unit": "transações"
+  },
+  "ex-y81drs89": {
+    "prompt": "Ponha o experimento da seção de inchaço na ordem em que foi feito.",
+    "hint": "A linha de base vem antes de segurar qualquer coisa.",
+    "items": [
+      "Medir o tamanho da tabela e a busca por tag",
+      "Rodar o robô sem mais nada aberto",
+      "Abrir a Sessão A e deixá-la ociosa",
+      "Rodar o robô de novo pelos mesmos trinta segundos",
+      "Fazer commit na Sessão A e rodar o VACUUM"
+    ],
+    "trap": "Sem a primeira execução não há com o que comparar a execução presa; sem o commit, o VACUUM não remove nada."
+  },
+  "ex-z6k9nwpf": {
+    "prompt": "Um alerta dispara quando qualquer sessão fica `idle in transaction` por mais de cinco minutos. O `psql` de um desenvolvedor ficou em `BEGIN` o fim de semana todo num servidor que não recebeu nenhuma escrita, e o alerta disparou. Quanto inchaço essa transação causou?",
+    "hint": "Versões mortas vêm de escritas.",
+    "choices": [
+      {
+        "text": "O de um fim de semana, em todas as tabelas do banco",
+        "why": "Sem escritas não houve versões mortas a manter; o relógio sozinho não faz nenhuma."
+      },
+      {
+        "text": "Quase nenhum: nada foi escrito",
+        "why": "Isso: é por isso que a aula alerta pela idade em transações, e não só pelo tempo."
+      },
+      {
+        "text": "Exatamente o tamanho das tabelas que ele leu",
+        "why": "Ler não faz cópia nenhuma."
+      },
+      {
+        "text": "Só dá para saber depois de rodar o VACUUM FULL",
+        "why": "O VACUUM VERBOSE e o n_dead_tup respondem sem reescrever nada."
+      }
+    ]
+  },
+  "ex-hreht4wh": {
+    "prompt": "Qual a ordem certa de correção quando o `oldest.sql` lista uma que escreveu, uma leitora REPEATABLE READ e um relatório em execução, todos da mesma idade?",
+    "hint": "Uma delas segura algo além do horizonte.",
+    "choices": [
+      {
+        "text": "O relatório primeiro, porque está ativo",
+        "why": "Estar ativo não é o que o torna urgente; a que escreveu também segura travas."
+      },
+      {
+        "text": "A que escreveu primeiro, e olhar de novo",
+        "why": "Isso: e a próxima mais antiga vira o horizonte assim que a primeira sai."
+      },
+      {
+        "text": "As três de uma vez, reiniciando o servidor",
+        "why": "Um reinício encerra o trabalho de todo mundo para encerrar três transações."
+      },
+      {
+        "text": "Nenhuma, porque o VACUUM vai se pôr em dia sozinho",
+        "why": "O VACUUM não passa do horizonte por mais que rode."
+      }
+    ]
+  }
+}

@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-vyq64h2p",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two workers each ran `GET visits`, added one in the shell and ran `SET visits` with the result, 500 times each. The counter ended at 554. What happened to the rest?",
+    "hint": "Where did the addition happen?",
+    "choices": [
+      {
+        "text": "Redis dropped writes it had no time to persist",
+        "correct": false,
+        "why": "Nothing was dropped: every `SET` ran. Persistence is lesson 13 and plays no part here."
+      },
+      {
+        "text": "Both workers read the same value and wrote back the same number, so one increment of each such pair vanished",
+        "correct": true,
+        "why": "Right. The race was between each worker's `GET` and its `SET`, outside Redis; `INCR` closes it."
+      },
+      {
+        "text": "The two loops ran one after the other instead of together, and the second loop overwrote everything the first had written",
+        "correct": false,
+        "why": "Run one after the other, they would have reached 1,000. The loss needs them to overlap."
+      },
+      {
+        "text": "`redis-cli` loses commands when two copies of it run in one container",
+        "correct": false,
+        "why": "The same two loops with `INCR` reached exactly 1,000, from the same container."
+      }
+    ]
+  },
+  {
+    "id": "ex-913k6ptm",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker takes a lock with `SET lock:order:7 w1 NX EX 30` at 10:00:00 and crashes at 10:00:05 without releasing it. How many seconds after the crash can another worker take the lock, at the earliest?",
+    "hint": "The lifetime started when the key was written.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-zn2rrsah",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson release a lock with a Lua script that checks the owner before deleting, instead of a plain `DEL`?",
+    "hint": "Think of a worker that took longer than the lock's lifetime.",
+    "choices": [
+      {
+        "text": "`DEL` cannot delete a key that still has an expiry set on it, so the lock would stay until it expired",
+        "correct": false,
+        "why": "`DEL` deletes any key, expiry or not; that is precisely the danger."
+      },
+      {
+        "text": "Lua scripts are faster than separate commands",
+        "correct": false,
+        "why": "Speed is not the point; the check and the delete must not be separable."
+      },
+      {
+        "text": "A worker past its 30 seconds would delete a lock that another worker has since taken",
+        "correct": true,
+        "why": "Right. Checking the value first, in one command, means a worker only ever deletes its own lock."
+      },
+      {
+        "text": "A `DEL` is replicated to the replicas and a script is not, so the replicas would keep a lock nobody holds",
+        "correct": false,
+        "why": "Both reach the replicas. The problem is on the primary, between the check and the delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-kde0hwvn",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cart key was written with `EX 600`. A minute later the application changes the cart with a plain `SET cart:ana …`. What happens to the key's lifetime?",
+    "choices": [
+      {
+        "text": "It keeps the 540 seconds it had left",
+        "correct": false,
+        "why": "That is what `KEEPTTL` asks for; a plain `SET` does not."
+      },
+      {
+        "text": "It starts again from 600 seconds",
+        "correct": false,
+        "why": "A plain `SET` sets no lifetime at all, so there is nothing to restart from."
+      },
+      {
+        "text": "Removed: the cart never expires",
+        "correct": true,
+        "why": "Right: `TTL` answers `-1`. The lesson's capture shows exactly this, and nothing reports it."
+      },
+      {
+        "text": "The `SET` is refused while the key has a lifetime",
+        "correct": false,
+        "why": "It answered `OK`; that is why the change goes unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-37x436dp",
+    "version": 1,
+    "section": "strings-and-counters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `SET lock:order:1001 worker-a ___ EX 30`, the missing option makes Redis write the key only if it does not exist yet.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-315mrjty",
+    "version": 1,
+    "section": "hashes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product's stock goes down by one on every sale, and listing pages read only its price. Why does the lesson store it as a hash rather than as a JSON string?",
+    "choices": [
+      {
+        "text": "Each sale is one atomic `HINCRBY`, and a listing reads one field",
+        "correct": true,
+        "why": "Right. With a string, each sale is a read, a parse and a write, with a race between them."
+      },
+      {
+        "text": "A hash survives a restart of the server, and a JSON string is lost with the memory",
+        "correct": false,
+        "why": "Persistence treats every type the same; lesson 13 is about it."
+      },
+      {
+        "text": "Redis cannot store a JSON document in a string, so it has to be split into fields",
+        "correct": false,
+        "why": "The lesson stored the same product as a JSON string a line later."
+      },
+      {
+        "text": "A hash is the only Redis type that can hold a number and do arithmetic on it",
+        "correct": false,
+        "why": "A string holds a number too: the stock counter of the previous section was one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rm2052a",
+    "version": 1,
+    "section": "hashes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop caches a shipping-rates API's whole JSON answer for 60 seconds, and always sends it to the browser unchanged. Which way of storing it fits?",
+    "hint": "How is it read, and is any field ever changed on its own?",
+    "choices": [
+      {
+        "text": "A hash, so that each rate can be read with `HGET`",
+        "correct": false,
+        "why": "Nothing reads one rate; the whole answer goes out as it came in."
+      },
+      {
+        "text": "A sorted set of rates, scored by price",
+        "correct": false,
+        "why": "Nothing ranks them either; that would rebuild a document nobody asked to change."
+      },
+      {
+        "text": "A string with `EX 60`, holding the answer exactly as the API sent it",
+        "correct": true,
+        "why": "Right. A copy of another system's answer, read whole and never changed field by field, is the case where a string wins."
+      },
+      {
+        "text": "A list with one rate per element, trimmed to the latest ones the API has sent",
+        "correct": false,
+        "why": "Order and length are not the question; the shape of the access is."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbvv1smg",
+    "version": 1,
+    "section": "hashes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Adding one 92-character description to the product hash took `MEMORY USAGE` from 120 bytes to 424. Why so much more than 92?",
+    "choices": [
+      {
+        "text": "Redis stores every field of a hash twice, once for each replica that will receive it",
+        "correct": false,
+        "why": "There are no replicas here, and a replica keeps its own copy in its own memory."
+      },
+      {
+        "text": "A value over 64 bytes turned the compact `listpack` into a `hashtable`",
+        "correct": true,
+        "why": "Right: `hash-max-listpack-value` is 64, and the whole hash changed encoding, not only the new field."
+      },
+      {
+        "text": "Text is stored in UTF-16, which doubles its size, and the field names are stored again",
+        "correct": false,
+        "why": "Redis stores bytes as they were sent; the jump came from the encoding of the hash."
+      },
+      {
+        "text": "A description field is indexed for searching",
+        "correct": false,
+        "why": "Redis indexes nothing inside a hash on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-8btp00kk",
+    "version": 1,
+    "section": "lists-and-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker runs `RPOP jobs:email`, gets `order-1001`, and crashes before sending the email. Where is the job now?",
+    "choices": [
+      {
+        "text": "Back at the head of the list, returned when the connection closed",
+        "correct": false,
+        "why": "Redis does not know the pop was unfinished; nothing puts it back."
+      },
+      {
+        "text": "In a pending list, waiting for an acknowledgement",
+        "correct": false,
+        "why": "That is what a stream's consumer group keeps; a list keeps nothing of the kind."
+      },
+      {
+        "text": "Nowhere: the pop removed it, and `LLEN` says 0",
+        "correct": true,
+        "why": "Right. That is the reason streams, or `LMOVE` to an in-progress list, exist."
+      },
+      {
+        "text": "In the replica, which keeps every popped element for a day",
+        "correct": false,
+        "why": "A replica applies the same pop; it removes the job too."
+      }
+    ]
+  },
+  {
+    "id": "ex-acevgmqx",
+    "version": 1,
+    "section": "lists-and-sets",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need of the shop to the structure the lesson used for it.",
+    "hint": "One structure is left over.",
+    "pairs": [
+      {
+        "left": "the last three products a customer opened, newest first",
+        "right": "a list, with `LPUSH` and `LTRIM`"
+      },
+      {
+        "left": "the products tagged both `office` and `usb-c`",
+        "right": "two sets, with `SINTER`"
+      },
+      {
+        "left": "the three best sellers this month",
+        "right": "a sorted set, with `ZREVRANGE`"
+      },
+      {
+        "left": "the stock of one product, one unit off per sale",
+        "right": "a string holding an integer, with `DECR`"
+      }
+    ],
+    "right_distractors": [
+      "a stream with a consumer group"
+    ]
+  },
+  {
+    "id": "ex-317hx1ez",
+    "version": 1,
+    "section": "lists-and-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every night at 02:00 every client of the shop's Redis waits for about a second, while a report runs `SMEMBERS` on a set with several million members. What explains it?",
+    "hint": "How many commands does Redis run at the same time?",
+    "choices": [
+      {
+        "text": "The report's connection uses up the connection limit, so the other clients are refused",
+        "correct": false,
+        "why": "One connection is far from any limit; the other clients are connected and waiting."
+      },
+      {
+        "text": "Sets are written to disk whenever they are read, and the disk is slow at night",
+        "correct": false,
+        "why": "A read writes nothing; the time is spent walking the set in memory."
+      },
+      {
+        "text": "Commands run one at a time, so the whole walk holds everyone else up",
+        "correct": true,
+        "why": "Right. A big key read whole is a stall for everybody; `SSCAN` reads it in small pieces instead."
+      },
+      {
+        "text": "`SMEMBERS` locks the set while it reads, and the other clients are writing to it",
+        "correct": false,
+        "why": "There are no per-key locks; every client waits, whatever key it wants."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkj35e5v",
+    "version": 1,
+    "section": "lists-and-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SADD tag:usb-c CB-012` answered `(integer) 0`. What does that mean?",
+    "choices": [
+      {
+        "text": "The command failed and the set is unchanged because of an error",
+        "correct": false,
+        "why": "An error would have said `(error)`. Zero is a count."
+      },
+      {
+        "text": "`CB-012` was already a member, so nothing was added",
+        "correct": true,
+        "why": "Right. `SADD` answers how many members were new, and a set holds no duplicates."
+      },
+      {
+        "text": "The set `tag:usb-c` is now empty",
+        "correct": false,
+        "why": "`SCARD` still counted 2 right after it."
+      },
+      {
+        "text": "`CB-012` was added at position 0",
+        "correct": false,
+        "why": "A set has no positions; that is a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpz8zevk",
+    "version": 1,
+    "section": "sorted-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`KB-101` and `CB-012` both have a score of 5, and `ZREVRANGE` listed `KB-101` first. Why?",
+    "choices": [
+      {
+        "text": "`KB-101` reached 5 first",
+        "correct": false,
+        "why": "It did not: `CB-012` got its 5 in one call before the keyboard's second sale. Time is not recorded."
+      },
+      {
+        "text": "Equal scores are ordered by member name, and in reverse `K` comes before `C`",
+        "correct": true,
+        "why": "Right. To break ties another way, the tie-breaker has to be folded into the score."
+      },
+      {
+        "text": "`KB-101` was sold more times, in two calls against one",
+        "correct": false,
+        "why": "A sorted set keeps the sum, not the number of calls."
+      },
+      {
+        "text": "The order of equal scores is random, chosen again on every call, so the page will flicker",
+        "correct": false,
+        "why": "It is fixed: by name, byte by byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-h556hwvd",
+    "version": 1,
+    "section": "sorted-sets",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ZREVRANK bestsellers:2026-10 MS-204` answered `(integer) 2`. In which place does the best-seller box show the mouse, counting the top product as place 1?",
+    "hint": "Ranks count from zero.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z5tr3psa",
+    "version": 1,
+    "section": "sorted-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Orders not paid within 30 minutes must be cancelled by a job that runs every minute. Which Redis design gives that job exactly the orders that are due?",
+    "hint": "The section's table has a row for this.",
+    "choices": [
+      {
+        "text": "One key per order with `EX 1800`, and the job reacts when each key expires",
+        "correct": false,
+        "why": "An expired key leaves memory when Redis gets to it, not at the second it expires (lesson 14), so the job would learn late or not at all."
+      },
+      {
+        "text": "A list of order numbers that the job reads whole and checks one by one",
+        "correct": false,
+        "why": "It works and reads every order every minute, including the thousands not yet due."
+      },
+      {
+        "text": "A set of unpaid orders, with `SINTER` against a set of expired ones",
+        "correct": false,
+        "why": "Something would still have to work out which orders are expired; the set cannot."
+      },
+      {
+        "text": "A sorted set scored by each order's deadline, read with `ZRANGE … -inf <now> BYSCORE`",
+        "correct": true,
+        "why": "Right. The range by score returns only the members whose deadline has passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-scntxtjc",
+    "version": 1,
+    "section": "streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `0` in `XGROUP CREATE orders shipping 0` decide?",
+    "choices": [
+      {
+        "text": "The group starts at the beginning, so it sees the entries already there",
+        "correct": true,
+        "why": "Right. `$` would start it at the end, with only new entries."
+      },
+      {
+        "text": "That the group starts with no consumers, and they are added when they first read",
+        "correct": false,
+        "why": "Consumers appear when they first read; the argument is a position."
+      },
+      {
+        "text": "That the entries are delivered to the workers with no acknowledgement needed",
+        "correct": false,
+        "why": "That would be the `NOACK` option of `XREADGROUP`, not this argument."
+      },
+      {
+        "text": "That the stream is capped at zero entries of history",
+        "correct": false,
+        "why": "A cap is `MAXLEN` on `XADD` or `XTRIM`; `0` here is an id."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc5e2kyd",
+    "version": 1,
+    "section": "streams",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of one order event in a consumer group in order.",
+    "items": [
+      "`XADD` appends it to the stream",
+      "`XREADGROUP … >` hands it to one worker",
+      "It sits in the group's pending entries list",
+      "`XACK` takes it off the pending list",
+      "`XTRIM` removes it from the stream itself"
+    ],
+    "trap": "Acknowledging does not delete."
+  },
+  {
+    "id": "ex-s12fwbqn",
+    "version": 1,
+    "section": "streams",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`worker-1` crashed holding two entries. A new `worker-3` joins the group and runs `XREADGROUP GROUP shipping worker-3 COUNT 10 STREAMS orders >`. Does it receive the two entries?",
+    "hint": "What does `>` ask for?",
+    "choices": [
+      {
+        "text": "Yes, because a crashed consumer's entries return to the group after a timeout",
+        "correct": false,
+        "why": "No timer does that; they stay pending until somebody claims them."
+      },
+      {
+        "text": "No: `>` returns only entries never delivered to the group, so they have to be claimed with `XAUTOCLAIM` or `XCLAIM`",
+        "correct": true,
+        "why": "Right. That is the step the lesson ran with `worker-2`."
+      },
+      {
+        "text": "Yes, because a new consumer starts from the beginning of the stream",
+        "correct": false,
+        "why": "The position belongs to the group, not to each consumer."
+      },
+      {
+        "text": "No, because those entries were deleted when `worker-1` crashed",
+        "correct": false,
+        "why": "They are still in the stream and still pending; nothing deleted them."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9m3er5v",
+    "version": 1,
+    "section": "streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`XPENDING` shows one entry with a delivery count of 7 and every other entry at 1. What is the likeliest explanation, and the usual response?",
+    "choices": [
+      {
+        "text": "The entry is very old; trim the stream",
+        "correct": false,
+        "why": "Age shows as idle time. The count says it was handed out seven times."
+      },
+      {
+        "text": "Seven workers are reading it at once; reduce the group's size",
+        "correct": false,
+        "why": "An entry belongs to one consumer at a time; the count is how often it changed hands."
+      },
+      {
+        "text": "It has been claimed after failing seven times; move it to a separate stream for a person to look at",
+        "correct": true,
+        "why": "Right. An entry that crashes every worker that takes it keeps coming back unless something sets it aside."
+      },
+      {
+        "text": "Redis delivered it seven times on its own, to make sure that at least one copy reached a worker that was alive",
+        "correct": false,
+        "why": "Redis delivers once per read or claim; it never resends on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-9x0t269f",
+    "version": 1,
+    "section": "streams",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `shipping` group has acknowledged all three entries. Which of these are true? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`XLEN orders` still answers 3",
+        "correct": true,
+        "why": "Right: acknowledging does not delete."
+      },
+      {
+        "text": "The `shipping` group's pending list is empty",
+        "correct": true,
+        "why": "Right: every entry was acknowledged."
+      },
+      {
+        "text": "A `billing` group created at `0` afterwards still sees all three",
+        "correct": true,
+        "why": "Right: its lag was 3."
+      },
+      {
+        "text": "The three entries were removed from the stream",
+        "correct": false,
+        "why": "Only trimming removes entries."
+      },
+      {
+        "text": "Every other group's pending list was cleared as well",
+        "correct": false,
+        "why": "Each group keeps its own pending list."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vggw16h",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis runs commands one at a time, on a single ___, which is why `INCR` cannot lose an update and why one slow command makes every client wait.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2ac6v9e0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment service guards against retries with `SET done:payment:<order> charged NX EX 86400` on a Redis primary that replicates in the background. The primary fails and a replica takes over without the last few writes. What can now go wrong?",
+    "hint": "The key is a write like any other.",
+    "choices": [
+      {
+        "text": "Nothing, because the key was written with `NX`",
+        "correct": false,
+        "why": "`NX` decides whether the write happens, not whether it survives a failover."
+      },
+      {
+        "text": "Every key in the replica loses its expiry",
+        "correct": false,
+        "why": "Expiry is replicated along with the key."
+      },
+      {
+        "text": "A retry that arrives after the failover finds no key and charges the card a second time",
+        "correct": true,
+        "why": "Right. If the lost writes include that key, the guard is gone; lesson 15 loses a write this way on purpose."
+      },
+      {
+        "text": "The replica refuses every `SET … NX` until the old primary returns",
+        "correct": false,
+        "why": "A promoted replica accepts writes; that is what promotion means."
+      }
+    ]
+  }
+]
