@@ -1,0 +1,416 @@
+{
+  "ex-vzwd0epm": {
+    "prompt": "O que o PostgreSQL inicia no servidor para cada cliente que se conecta?",
+    "hint": "Olhe a saída do ps depois de três sessões psql.",
+    "choices": [
+      {
+        "text": "Uma thread dentro do postmaster",
+        "why": "O PostgreSQL não usa threads para clientes; o ps mostrou processos separados."
+      },
+      {
+        "text": "Um processo inteiro do sistema operacional",
+        "why": "Isso: `ana market [local] idle`, um por sessão."
+      },
+      {
+        "text": "Nada até o cliente mandar a primeira consulta",
+        "why": "As três sessões ociosas tinham processos antes de mandar qualquer coisa."
+      },
+      {
+        "text": "Uma vaga numa fila compartilhada servida pelo background writer",
+        "why": "O background writer grava páginas; não atende clientes."
+      }
+    ]
+  },
+  "ex-ar8hvvgx": {
+    "prompt": "O `ps` mostra cada conexão ociosa com uns 13 MB de RSS. Por que isso exagera o custo de cada uma?",
+    "hint": "RssAnon contra RssShmem.",
+    "choices": [
+      {
+        "text": "O RSS conta a memória compartilhada que todo processo toca",
+        "why": "Isso: a parte privada, RssAnon, era de uns 3 MB."
+      },
+      {
+        "text": "O RSS é medido em páginas de 8 kB, não em kilobytes",
+        "why": "O ps informa o RSS em kilobytes."
+      },
+      {
+        "text": "Os 13 MB são liberados assim que a sessão roda uma consulta",
+        "why": "Uma consulta faz um processo usar mais memória, não menos."
+      },
+      {
+        "text": "Sessões ociosas vão para o swap",
+        "why": "A máquina não tinha swap nenhum."
+      }
+    ]
+  },
+  "ex-dcnhayc7": {
+    "prompt": "Quantas conexões o servidor permite com o `max_connections` padrão do Ubuntu?",
+    "hint": "SHOW max_connections.",
+    "unit": "conexões"
+  },
+  "ex-3rap0d04": {
+    "prompt": "Por que o `work_mem` torna difícil prever a memória de muitas conexões ocupadas?",
+    "hint": "Não é um número por servidor.",
+    "choices": [
+      {
+        "text": "É um total dividido entre todas as conexões",
+        "why": "É o contrário: cada operação pode ocupá-lo."
+      },
+      {
+        "text": "Cada ordenação ou hash ganha até esse valor, por conexão",
+        "why": "Isso: e um plano complexo tem várias dessas operações ao mesmo tempo."
+      },
+      {
+        "text": "Só vale para superusuários",
+        "why": "Vale para toda sessão."
+      },
+      {
+        "text": "Cresce a cada vez que uma conexão é reaproveitada, até um reinício",
+        "why": "É um limite por operação, não um contador que cresce."
+      }
+    ]
+  },
+  "ex-h58ypr92": {
+    "prompt": "Na curva, o que aconteceu com a vazão entre 4 e 90 clientes?",
+    "hint": "Leia a coluna tps.",
+    "choices": [
+      {
+        "text": "Cresceu na proporção dos clientes",
+        "why": "Noventa clientes não fizeram vinte vezes o trabalho de quatro."
+      },
+      {
+        "text": "Caiu sem parar conforme entravam clientes",
+        "why": "Ficou entre 1334 e 1481; não caiu sem parar."
+      },
+      {
+        "text": "Ficou mais ou menos estável",
+        "why": "Isso: quatro processadores estavam ocupados a partir de uns quatro clientes."
+      },
+      {
+        "text": "Dobrou a cada passo",
+        "why": "Só de um para quatro clientes ela cresceu muito."
+      }
+    ]
+  },
+  "ex-ph6q3yy6": {
+    "prompt": "Com noventa clientes e 1481 transações por segundo, que latência média a lei de Little dá, em milissegundos?",
+    "hint": "Clientes em andamento divididos pela vazão.",
+    "unit": "ms"
+  },
+  "ex-cexqv86y": {
+    "prompt": "Por que a dobra da curva fica em uns quatro clientes nesta máquina?",
+    "hint": "De que a máquina tinha quatro?",
+    "choices": [
+      {
+        "text": "Porque o pgbench usa quatro threads",
+        "why": "As threads só mandam o trabalho; noventa clientes foram espalhados por elas."
+      },
+      {
+        "text": "Porque o max_connections se divide em grupos de quatro",
+        "why": "Não existe esse agrupamento."
+      },
+      {
+        "text": "Porque a mistura da aula 2 tem quatro scripts",
+        "why": "Ela tem seis, e os scripts não definem quantos rodam juntos."
+      },
+      {
+        "text": "Porque ela tem quatro processadores e a mistura é quase toda trabalho de processador",
+        "why": "Isso: uma mistura que espera o disco dobraria mais tarde."
+      }
+    ]
+  },
+  "ex-j6xgy5z6": {
+    "prompt": "O banco de uma equipe recusa conexões no pico, com os processadores em 100%. Eles sobem o `max_connections` de 100 para 400. O que a curva prevê?",
+    "hint": "A vazão depois da dobra.",
+    "choices": [
+      {
+        "text": "Nenhuma transação a mais por segundo, e cada uma mais lenta",
+        "why": "Isso: os erros param e a espera vai para dentro do servidor, a um custo maior."
+      },
+      {
+        "text": "Quatro vezes a vazão",
+        "why": "Os processadores já estavam cheios; o limite não era o que segurava o trabalho."
+      },
+      {
+        "text": "A mesma latência de antes, com mais clientes atendidos",
+        "why": "A latência cresceu a cada cliente acrescentado depois da dobra."
+      },
+      {
+        "text": "Um servidor que se recusa a iniciar",
+        "why": "Ele inicia; o custo é pago em memória e disputa enquanto roda."
+      }
+    ]
+  },
+  "ex-cfq0cs5n": {
+    "prompt": "Com `default_pool_size = 8` e 200 clientes, quantas conexões o servidor viu vindas do PgBouncer?",
+    "hint": "SHOW POOLS e pg_stat_activity.",
+    "choices": [
+      {
+        "text": "200, uma por cliente",
+        "why": "O servidor teria recusado; foi o que as conexões diretas tentaram."
+      },
+      {
+        "text": "Oito",
+        "why": "Isso: 192 clientes esperaram no PgBouncer."
+      },
+      {
+        "text": "100, o máximo do servidor",
+        "why": "O tamanho do pool, e não o limite do servidor, define quantas ele abre."
+      },
+      {
+        "text": "Uma, dividida por todos os clientes",
+        "why": "Havia oito conexões com o servidor ativas."
+      }
+    ]
+  },
+  "ex-hfrjc0qk": {
+    "prompt": "Por que a aula aponta o PgBouncer para o servidor por `host=127.0.0.1`, e não pelo socket Unix?",
+    "hint": "O PgBouncer roda como o usuário postgres.",
+    "choices": [
+      {
+        "text": "O socket é mais lento que o TCP",
+        "why": "Numa só máquina o socket é o mais rápido dos dois; velocidade não é o motivo."
+      },
+      {
+        "text": "Pelo socket, a autenticação peer o faria entrar como postgres, e não como ana",
+        "why": "Isso: por TCP o servidor pede a prova SCRAM que o PgBouncer consegue repassar."
+      },
+      {
+        "text": "O PgBouncer não abre sockets",
+        "why": "Ele mesmo abre um, no unix_socket_dir."
+      },
+      {
+        "text": "O servidor só escuta em 127.0.0.1",
+        "why": "Ele escuta também no socket; o psql o usou o tempo todo."
+      }
+    ]
+  },
+  "ex-fkg9ew0t": {
+    "prompt": "Pelo PgBouncer, 200 clientes tiveram média de 149 ms por transação. Onde foi gasto a maior parte desse tempo?",
+    "hint": "cl_waiting.",
+    "choices": [
+      {
+        "text": "Entrando no servidor a cada transação",
+        "why": "As conexões com o servidor ficam abertas; é o propósito do pool."
+      },
+      {
+        "text": "No TCP entre o pgbench e o PgBouncer",
+        "why": "Numa só máquina isso é uma fração de milissegundo."
+      },
+      {
+        "text": "Esperando na fila do PgBouncer",
+        "why": "Isso: 192 esperavam, e um cliente esperando custa só alguns kilobytes."
+      },
+      {
+        "text": "Rodando cada consulta oito vezes",
+        "why": "Cada consulta roda uma vez, numa das oito conexões."
+      }
+    ]
+  },
+  "ex-92t7pv1j": {
+    "prompt": "Ponha na ordem os passos da instalação do PgBouncer da aula.",
+    "hint": "A senha tem de existir antes de o segredo dela ser copiado.",
+    "items": [
+      "Instalar o pgbouncer com o apt",
+      "Guardar uma cópia do pgbouncer.ini original e escrever o curto",
+      "Dar uma senha a ana",
+      "Copiar o segredo SCRAM de ana para o userlist.txt",
+      "Reiniciar o pgbouncer e conectar na porta 6432"
+    ],
+    "trap": "Copiar o segredo antes de a senha existir não copia nada, e reiniciar antes de os arquivos estarem prontos sobe um pool em que ninguém entra."
+  },
+  "ex-b49vhyr8": {
+    "prompt": "Em `pool_mode = transaction`, quando um cliente devolve a conexão com o servidor?",
+    "hint": "O nome do modo.",
+    "choices": [
+      {
+        "text": "Quando desconecta",
+        "why": "Isso é o modo sessão."
+      },
+      {
+        "text": "Depois de cada comando, mesmo dentro de uma transação",
+        "why": "Isso é o modo statement, que recusa transações com vários comandos."
+      },
+      {
+        "text": "No fim de cada transação",
+        "why": "Isso: no COMMIT ou ROLLBACK, e um comando sozinho é a própria transação."
+      },
+      {
+        "text": "Quando o pool enche e outro cliente pede",
+        "why": "Ela devolve ao fim de toda transação, haja alguém esperando ou não."
+      }
+    ]
+  },
+  "ex-4623wy23": {
+    "prompt": "A Sessão A rodou `SET statement_timeout = '1s'` por um pool de transação. Depois, a Sessão B, que não definiu nada, mostrou `1s`. Por quê?",
+    "hint": "Compare os valores de pg_backend_pid.",
+    "choices": [
+      {
+        "text": "O PgBouncer copia configurações para todo cliente",
+        "why": "Ele não copia nada; se copiasse, a Sessão A teria mantido a dela."
+      },
+      {
+        "text": "B rodou na conexão em que A o tinha definido",
+        "why": "Isso: o processo 8617 guardou o SET de A, e B o recebeu."
+      },
+      {
+        "text": "A configuração foi feita para o banco inteiro",
+        "why": "SET muda uma sessão; ALTER DATABASE é que seria o banco inteiro."
+      },
+      {
+        "text": "O statement_timeout vale um segundo por padrão num pool",
+        "why": "O primeiro SHOW da Sessão A devolveu 0, o padrão."
+      }
+    ]
+  },
+  "ex-5babxftk": {
+    "prompt": "Quais destes quebram, ou se comportam diferente, por um pool em modo transação? Marque todos os que se aplicam.",
+    "hint": "Tudo o que vive na sessão.",
+    "choices": [
+      {
+        "text": "Um `SET` de sessão",
+        "why": "Certo: ele fica na conexão do servidor, como a Sessão A descobriu."
+      },
+      {
+        "text": "`pg_advisory_lock`",
+        "why": "Certo: a trava fica numa conexão que o cliente já não segura."
+      },
+      {
+        "text": "`LISTEN`",
+        "why": "Certo: entre transações o cliente não tem conexão para ser notificado."
+      },
+      {
+        "text": "`SET LOCAL` dentro de uma transação",
+        "why": "Ele termina com a transação, na mesma conexão."
+      },
+      {
+        "text": "Um `SELECT` comum fora de transação",
+        "why": "Ele é uma transação sozinho e funciona como antes."
+      }
+    ]
+  },
+  "ex-w91yx5yk": {
+    "prompt": "No modo transação, um cliente devolve a conexão com o servidor ao PgBouncer no `COMMIT` ou no `___`.",
+    "hint": "O outro jeito de uma transação terminar.",
+    "blanks": [
+      {
+        "accept": [
+          "ROLLBACK"
+        ]
+      }
+    ]
+  },
+  "ex-tbe1gzk1": {
+    "prompt": "O pool de oito deu 1342 tps numa execução e 1235 em outra. O que isso faz com a leitura de 16 contra 32 (1297 e 1353)?",
+    "hint": "A regra da aula 1 sobre ruído.",
+    "choices": [
+      {
+        "text": "32 é melhor por 56 tps, então deve ser usado",
+        "why": "56 é menos que os 107 que a mesma configuração variou."
+      },
+      {
+        "text": "A diferença está dentro do ruído, então não dá para distingui-los",
+        "why": "Isso: e entre dois tamanhos indistinguíveis, fique com o menor."
+      },
+      {
+        "text": "16 é melhor, porque a latência importa mais que a vazão",
+        "why": "A latência também foi menor em 32, por menos que o ruído."
+      },
+      {
+        "text": "As execuções precisam ser repetidas com menos clientes",
+        "why": "O número de clientes fica em 200 para comparar tamanhos de pool; a questão é o ruído."
+      }
+    ]
+  },
+  "ex-drwknfzk": {
+    "prompt": "Três servidores de aplicação rodam cada um um PgBouncer com `default_pool_size = 30` contra um banco com `max_connections = 100`. O que está errado?",
+    "hint": "Todo pool se soma.",
+    "choices": [
+      {
+        "text": "Nada: cada pool fica abaixo de 100",
+        "why": "O servidor vê a soma dos três pools."
+      },
+      {
+        "text": "O PgBouncer recusa pools acima de 20",
+        "why": "Não existe esse limite; o custo fica no servidor."
+      },
+      {
+        "text": "90 conexões no servidor deixam pouco espaço para pessoas, e ficam muito além da dobra",
+        "why": "Isso: migrações e incidentes precisam de espaço, e com quatro processadores 90 conexões ocupadas só fazem fila."
+      },
+      {
+        "text": "Três poolers fazem as transações rodarem três vezes",
+        "why": "Cada transação roda uma vez, pelo pooler que o cliente dela usa."
+      }
+    ]
+  },
+  "ex-wbhkkcak": {
+    "prompt": "Ligue cada número do `SHOW POOLS` do PgBouncer ao que ele diz.",
+    "hint": "As colunas cl_ são clientes, as sv_ são conexões com o servidor.",
+    "pairs": [
+      {
+        "left": "`cl_waiting`",
+        "right": "clientes na fila por uma conexão"
+      },
+      {
+        "left": "`sv_active`",
+        "right": "conexões com o servidor rodando uma transação"
+      },
+      {
+        "left": "`maxwait`",
+        "right": "há quanto tempo espera o cliente mais antigo da fila"
+      },
+      {
+        "left": "`pool_mode`",
+        "right": "quando uma conexão é devolvida"
+      }
+    ],
+    "right_distractors": [
+      "quantos clientes o servidor recusou"
+    ]
+  },
+  "ex-je5z2xb6": {
+    "prompt": "Uma aplicação passou para um pool em modo transação. Os relatórios começam a falhar com `canceling statement due to statement timeout`, embora o código do relatório nunca defina timeout. Qual a causa mais provável?",
+    "hint": "Quem mais usa as mesmas conexões com o servidor?",
+    "choices": [
+      {
+        "text": "Um `SET` de sessão de outro cliente, deixado numa conexão compartilhada",
+        "why": "Isso: exatamente o que a Sessão B recebeu da Sessão A."
+      },
+      {
+        "text": "O PgBouncer cancela qualquer comando mais longo que o timeout do pool",
+        "why": "A mensagem é o statement_timeout do servidor, que o PgBouncer não definiu."
+      },
+      {
+        "text": "O pool é pequeno demais, e os relatórios estouram o tempo esperando",
+        "why": "Esperar no pool não gera este erro do servidor."
+      },
+      {
+        "text": "Relatórios não rodam por um pool",
+        "why": "Eles rodam; o que quebra é o estado deixado na sessão."
+      }
+    ]
+  },
+  "ex-pz165gd5": {
+    "prompt": "Que afirmação a medida da aula sustenta?",
+    "hint": "Duzentos clientes, um servidor.",
+    "choices": [
+      {
+        "text": "Um pool fez o servidor trabalhar mais do que conseguiria sozinho",
+        "why": "A vazão pelo pool foi mais ou menos a de noventa clientes diretos."
+      },
+      {
+        "text": "Um pool deixou 200 clientes entrarem sem recusas",
+        "why": "Isso: o trabalho feito ficou mais ou menos igual; as recusas sumiram."
+      },
+      {
+        "text": "Subir o max_connections para 200 teria igualado o pool",
+        "why": "Teria rodado 200 processos além da dobra, a um custo maior."
+      },
+      {
+        "text": "O modo sessão teria atendido os 200 clientes com oito conexões",
+        "why": "O modo sessão precisa de uma conexão por cliente."
+      }
+    ]
+  }
+}
