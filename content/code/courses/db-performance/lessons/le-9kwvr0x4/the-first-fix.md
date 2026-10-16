@@ -3,9 +3,9 @@ title: The first fix, and the way back
 version: 1
 ---
 
-The tally named three statements. Two of them need tools later lessons teach: the tag search wants
-an index type that understands arrays (lesson 8), and the pending count wants an index on a small
-part of a table (lesson 9). The third one can be fixed today, with what lesson 1 showed you.
+The tally named three statements. Two of them need lessons still to come: the tag search is lesson 8's,
+where the obvious index turns out not to be the best one, and the pending count wants an index on a
+small part of a table (lesson 9). The third one can be fixed today, with what lesson 1 showed you.
 
 The seller dashboard asks for one seller's December orders. `orders` has an index on `placed_at`,
 so the server can find December quickly:

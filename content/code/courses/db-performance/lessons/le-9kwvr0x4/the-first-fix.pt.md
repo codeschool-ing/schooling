@@ -3,9 +3,9 @@ title: O primeiro conserto, e o caminho de volta
 version: 1
 ---
 
-O placar apontou três comandos. Dois deles precisam de ferramentas que aulas seguintes ensinam: a
-busca por etiqueta quer um tipo de índice que entenda arrays (aula 8), e a contagem de pendentes
-quer um índice sobre uma parte pequena de uma tabela (aula 9). O terceiro dá para consertar hoje,
+O placar apontou três comandos. Dois deles dependem de aulas que ainda vêm: a busca por etiqueta é da
+aula 8, onde o índice óbvio acaba não sendo o melhor, e a contagem de pendentes quer um índice
+sobre uma parte pequena de uma tabela (aula 9). O terceiro dá para consertar hoje,
 com o que a aula 1 mostrou.
 
 O painel do vendedor pede os pedidos de dezembro de um vendedor. `orders` tem um índice em

@@ -61,7 +61,7 @@ hour, and a list sorted by the mean would never show it.
 
 So the rule this course follows is: **find candidates by total, then read their mean** to know what
 fixing one would give each user. The tag search wins on both counts, which makes it the first
-target by any measure. Lesson 8 is where it gets the index it needs.
+target by any measure. Lesson 8 is where it gets fixed, and the fix is not the index you would guess.
 
 ## One row, read whole
 

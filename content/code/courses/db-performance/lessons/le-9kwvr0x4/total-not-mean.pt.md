@@ -61,7 +61,7 @@ por hora, e uma lista ordenada pela média nunca o mostraria.
 
 Então a regra que este curso segue é: **ache os candidatos pelo total, depois leia a média deles**
 para saber o que consertar um daria a cada usuário. A busca por etiqueta ganha nos dois critérios, o
-que a torna o primeiro alvo por qualquer medida. A aula 8 é onde ela ganha o índice de que precisa.
+que a torna o primeiro alvo por qualquer medida. A aula 8 é onde ela é consertada, e o conserto não é o índice que você adivinharia.
 
 ## Uma linha, lida inteira
 
