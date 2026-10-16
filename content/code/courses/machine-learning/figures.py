@@ -952,6 +952,38 @@ def l08_growth(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-grid-random', 9)
+def l09_grid_random(lang):
+    fig = Fig('l09-grid-random', 640, 290, T(lang,
+        'Two squares, each with nine points. Horizontal: the hyperparameter that matters; vertical: '
+        'one that does not. The grid\'s nine points sit on three columns, so they try three values of '
+        'the dial that matters; the nine random points try nine different values. Tick marks under '
+        'each square show the values tried.',
+        'Dois quadrados, cada um com nove pontos. Horizontal: o hiperparâmetro que importa; vertical: '
+        'um que não importa. Os nove pontos da grade ficam em três colunas, então testam três valores '
+        'do botão que importa; os nove pontos ao acaso testam nove valores diferentes. Marcas abaixo '
+        'de cada quadrado mostram os valores testados.'))
+    rng = np.random.default_rng(3)
+    grid = [(a, b) for a in (0.2, 0.5, 0.8) for b in (0.2, 0.5, 0.8)]
+    rand = list(zip(rng.random(9), rng.random(9)))
+    for i, (pts, title) in enumerate([(grid, T(lang, 'grid: 3 values tried', 'grade: 3 valores testados')),
+                                      (rand, T(lang, 'random: 9 values tried', 'ao acaso: 9 valores testados'))]):
+        x0 = 60 + i * 300
+        fig.rect(x0, 40, 200, 180, stroke='--wire', fill='--panel', width=1, rx=0)
+        fig.text(x0 + 100, 22, title, size=11, weight='600')
+        for a, b in pts:
+            fig.circle(x0 + 200 * a, 40 + 180 * (1 - b), 5, fill='--phosphor')
+            fig.line(x0 + 200 * a, 228, x0 + 200 * a, 240, stroke='--amber', width=2)
+        fig.text(x0 + 100, 258, T(lang, 'the dial that matters', 'o botão que importa'), size=10, fill='--paper-dim')
+    cap = T(lang, 'Nine fits each. When only one dial matters, the random points have tried three times '
+                  'as many values of it.',
+            'Nove ajustes cada. Quando só um botão importa, os pontos ao acaso testaram três vezes mais '
+            'valores dele.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
