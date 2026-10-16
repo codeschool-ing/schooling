@@ -1457,6 +1457,122 @@ def l17_threshold(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 18
+
+REGIONS = ['North', 'Northeast', 'South', 'Southeast']
+REGIONS_PT = {'North': 'Norte', 'Northeast': 'Nordeste', 'South': 'Sul', 'Southeast': 'Sudeste'}
+
+
+def false_alarms(te, threshold=0.2):
+    """The false-alarm rate among stayers, per region, with its margin of error."""
+    rows = []
+    for r in REGIONS:
+        st = te[(te['region'] == r) & (te['churned'] == 0)]
+        p = float((st['risk'] >= threshold).mean())
+        rows.append((p * 100, 196 * (p * (1 - p) / len(st)) ** 0.5))
+    return rows
+
+
+def fair_scores():
+    """Lesson 19's model: recency and the order count read against the customer's own rhythm."""
+    from sklearn.linear_model import LogisticRegression
+    cu = csv('customers.csv', parse_dates=['signup']).set_index('customer')
+    o = csv('orders.csv', parse_dates=['date']).sort_values('date')
+
+    def snap(day):
+        day = pd.Timestamp(day)
+        past = o[o['date'] <= day]
+        recent = past[past['date'] > day - pd.Timedelta(days=90)]
+        after = o[(o['date'] > day) & (o['date'] <= day + pd.Timedelta(days=90))]
+        t = pd.DataFrame({'recency': (day - past.groupby('customer')['date'].max()).dt.days,
+                          'orders_90': recent.groupby('customer').size()}).fillna({'orders_90': 0})
+        t = t.join(cu)
+        t['tenure'] = (day - t['signup']).dt.days
+        t['social'] = (t['channel'] == 'social').astype(int)
+        t['referral'] = (t['channel'] == 'referral').astype(int)
+        t['weekly'] = (t['plan'] == 'weekly').astype(int)
+        t = t[t['recency'] <= 60]
+        t['churned'] = (~t.index.isin(after['customer'])).astype(int)
+        usual = past.groupby('customer')['date'].diff().dt.days.groupby(past['customer']).median()
+        t['usual_gap'] = usual.reindex(t.index).fillna(t['plan'].map({'weekly': 7, 'fortnightly': 14}))
+        t['overdue'] = t['recency'] / t['usual_gap']
+        t['orders_rel'] = t['orders_90'] * t['usual_gap'] / 90
+        return t
+    inputs = ['overdue', 'orders_rel', 'tenure', 'social', 'referral', 'weekly']
+    tr, te = snap('2024-12-31'), snap('2025-06-30')
+    m = LogisticRegression(max_iter=1000).fit(tr[inputs], tr['churned'])
+    te['risk'] = m.predict_proba(te[inputs])[:, 1]
+    return te
+
+
+def interval_rows(f, p, rows, names, y0, step, col, weight=None):
+    for i, (est, mar) in enumerate(rows):
+        y = y0 + i * step
+        f.line(p.sx(est - mar), y, p.sx(est + mar), y, stroke=col, width=3, cap='round')
+        f.circle(p.sx(est), y, 4.5, fill='--panel', stroke=col, width=2)
+        if names:
+            f.text(p.x0 - 12, y, names[i], size=10.5, anchor='end', weight=weight)
+
+
+@figure('l18-audit', 18)
+def l18_audit(lang):
+    rows = false_alarms(churn_scores())
+    names = REGIONS if lang == 'en' else [REGIONS_PT[r] for r in REGIONS]
+    desc = '; '.join(f'{n} {num(lang, e, 1)} ± {num(lang, m, 1)}' for n, (e, m) in zip(names, rows))
+    t = {'en': dict(
+        label='The false-alarm rate among customers who stayed, per region, at a threshold of 0.2, each '
+              f'as a point with its margin of error, in per cent: {desc}. The North\'s whole interval '
+              'lies above the other three.',
+        x='loyal customers flagged as leavers, per cent',
+        cap='The North\'s interval is wide, because it rests on a hundred customers, and it still clears '
+            'everybody else\'s.'),
+        'pt': dict(
+        label='A taxa de alarmes falsos entre os clientes que ficaram, por região, com limiar de 0,2, cada '
+              f'uma como um ponto com sua margem de erro, em por cento: {desc}. O intervalo inteiro do '
+              'Norte fica acima dos outros três.',
+        x='clientes fiéis marcados como de saída, por cento',
+        cap='O intervalo do Norte é largo, porque se apoia em cem clientes, e mesmo assim passa por cima '
+            'de todos os outros.')}[lang]
+    f = Fig('l18-audit', 600, 220, t['label'])
+    p = Plot(f, 130, 20, 570, 170, 0, 35, 0, 1)
+    p.xaxis([0, 5, 10, 15, 20, 25, 30, 35], label=t['x'])
+    interval_rows(f, p, rows, names, p.y0 + 22, 34, '--phosphor', weight='600')
+    return f, t['cap']
+
+
+# ------------------------------------------------------------------ lesson 19
+
+@figure('l19-fixed', 19)
+def l19_fixed(lang):
+    before, after = false_alarms(churn_scores()), false_alarms(fair_scores())
+    names = REGIONS if lang == 'en' else [REGIONS_PT[r] for r in REGIONS]
+    desc = lambda rows: '; '.join(f'{n} {num(lang, e, 1)}' for n, (e, m) in zip(names, rows))
+    t = {'en': dict(
+        label='The false-alarm rate among loyal customers, per region, with lesson 17\'s model and with '
+              f'the model that reads each customer against their own rhythm, in per cent. Before: '
+              f'{desc(before)}. After: {desc(after)}. The North moves into line with the others.',
+        x='loyal customers flagged as leavers, per cent', b='lesson 17\'s model', a='rhythm inputs',
+        cap='One change to two inputs, and the North\'s rate falls into the range of the other regions. '
+            'Nothing about the region was added.'),
+        'pt': dict(
+        label='A taxa de alarmes falsos entre clientes fiéis, por região, com o modelo da aula 17 e com o '
+              f'modelo que lê cada cliente contra o próprio ritmo, em por cento. Antes: {desc(before)}. '
+              f'Depois: {desc(after)}. O Norte entra na faixa dos outros.',
+        x='clientes fiéis marcados como de saída, por cento', b='modelo da aula 17', a='entradas de ritmo',
+        cap='Uma mudança em duas entradas, e a taxa do Norte cai para a faixa das outras regiões. Nada '
+            'sobre a região foi acrescentado.')}[lang]
+    f = Fig('l19-fixed', 600, 270, t['label'])
+    p = Plot(f, 130, 40, 570, 220, 0, 35, 0, 1)
+    p.xaxis([0, 5, 10, 15, 20, 25, 30, 35], label=t['x'])
+    interval_rows(f, p, before, names, p.y0 + 18, 42, '--amber', weight='600')
+    interval_rows(f, p, after, None, p.y0 + 32, 42, '--phosphor')
+    f.line(p.x0 + 250, 14, p.x0 + 266, 14, stroke='--amber', width=3, cap='round')
+    f.text(p.x0 + 272, 14, t['b'], size=10, anchor='start', fill='--paper-dim')
+    f.line(p.x0 + 250, 30, p.x0 + 266, 30, stroke='--phosphor', width=3, cap='round')
+    f.text(p.x0 + 272, 30, t['a'], size=10, anchor='start', fill='--paper-dim')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
