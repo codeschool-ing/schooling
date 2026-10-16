@@ -1,0 +1,566 @@
+[
+  {
+    "id": "ex-2adzmz9y",
+    "version": 1,
+    "section": "run-and-build",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The second `GOCACHE=/tmp/cold go run -x . top -n 1 access.log` printed a single command, the path of an executable inside `/tmp/cold`. Why was there no compile and no link?",
+    "hint": "Look at where that path points.",
+    "choices": [
+      {
+        "text": "The first `go run` stored its executable in the cache; this one ran it",
+        "correct": true,
+        "why": "Right. The first run linked into `$WORK`, copied the result into the cache, and every later run with the same inputs starts the cached file."
+      },
+      {
+        "text": "`go run` interprets the source when nothing has changed",
+        "correct": false,
+        "why": "There is no interpreter in the go command. Even the first run compiled and linked; the path shows a real executable."
+      },
+      {
+        "text": "It reused `./hits`, the binary that `go build -o hits` had written just before it",
+        "correct": false,
+        "why": "The path it ran is inside `/tmp/cold`, not `./hits`. `go run` builds without debugger information, so the two executables are different files."
+      },
+      {
+        "text": "`-x` only prints commands the first time",
+        "correct": false,
+        "why": "`-x` prints every command that runs. The second run printed one line because one command ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-19h9yw1y",
+    "version": 1,
+    "section": "run-and-build",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CI step runs `go run . count \"$f\"` and treats exit status 2 as \"the job was misconfigured\". The branch never fires, even when the command line is wrong. Why?",
+    "hint": "`hits` itself does return 2 for a usage error.",
+    "choices": [
+      {
+        "text": "`go run` reports the child's status as a message and exits 1",
+        "correct": true,
+        "why": "Right. `go run .` printed `exit status 2` and returned 1. Build the binary and run it when the exit code matters."
+      },
+      {
+        "text": "A CI shell turns every non-zero exit status into 1 before the step sees it",
+        "correct": false,
+        "why": "The shell passes statuses through unchanged; lesson 1's `./hits; echo $?` printed 2."
+      },
+      {
+        "text": "`hits` returns 2 only when it is started from a terminal",
+        "correct": false,
+        "why": "`run` returns 2 for a usage error whoever calls it; the table test in lesson 1 checked it with no terminal at all."
+      },
+      {
+        "text": "The build failed first, so the program never ran",
+        "correct": false,
+        "why": "The usage text was printed, so the program ran; it is the status on the way out that changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-91n9qh5h",
+    "version": 1,
+    "section": "run-and-build",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `touch main.go internal/tally/tally.go`, how many package names did `GOCACHE=/tmp/cold go build -v -o hits .` print?",
+    "hint": "`touch` changes the modification time and nothing else.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-15xycyr9",
+    "version": 1,
+    "section": "run-and-build",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Starting in `~/daily` with no executable in it, which of these commands leave an executable file somewhere under `~/daily`? Choose every one that does.",
+    "hint": "An executable is written only for exactly one `main` package, unless `-o` names a directory.",
+    "choices": [
+      {
+        "text": "`go build`",
+        "correct": true,
+        "why": "Yes. One `main` package, in the current directory, so it writes `hits`, named after `example.com/hits`."
+      },
+      {
+        "text": "`go build -o bin/ ./...`",
+        "correct": true,
+        "why": "Yes. `-o` with a directory writes every `main` package of the list there: `bin/hits` and `bin/genlog`."
+      },
+      {
+        "text": "`go build ./...`",
+        "correct": false,
+        "why": "Three packages, so nothing is written: the command only checks that they build."
+      },
+      {
+        "text": "`go build ./internal/tally`",
+        "correct": false,
+        "why": "`tally` is not a `main` package. It is compiled into the cache and the result is discarded."
+      },
+      {
+        "text": "`go run .`",
+        "correct": false,
+        "why": "`go run` links into a temporary directory and keeps the executable in the build cache, which is under `~/.cache`, not `~/daily`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x030bm43",
+    "version": 1,
+    "section": "install",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `~/daily`, `go install golang.org/x/tools/cmd/stringer` fails with `no required module provides package`. What does the message mean?",
+    "hint": "Without a version, `go install` works in the context of the current module.",
+    "choices": [
+      {
+        "text": "The proxy has no module called `golang.org/x/tools`",
+        "correct": false,
+        "why": "The same path with `@v0.52.0` downloaded at once. The module exists; `go.mod` just does not require it."
+      },
+      {
+        "text": "`go.mod` requires nothing that contains this package",
+        "correct": true,
+        "why": "Right. With no version the build uses this module's requirements, and `hits` has none. `@version` builds outside them."
+      },
+      {
+        "text": "`stringer` is not a `main` package and cannot be installed",
+        "correct": false,
+        "why": "It is a command; installed at a version it landed in `~/go/bin` and `go version -m` read it."
+      },
+      {
+        "text": "`GOBIN` is unset, so there is nowhere to install to",
+        "correct": false,
+        "why": "Unset `GOBIN` falls back to `~/go/bin`, where `hits` was installed a moment before."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qc8169d",
+    "version": 1,
+    "section": "install",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `go install golang.org/x/tools/cmd/stringer@v0.52.0` succeeded inside `~/daily`, what did `go.mod` contain?",
+    "hint": "`cat go.mod` was run right after.",
+    "choices": [
+      {
+        "text": "A `require golang.org/x/tools v0.52.0` line",
+        "correct": false,
+        "why": "That is what `go get` would add. An install with `@version` ignores the current module's `go.mod`."
+      },
+      {
+        "text": "The same two lines as before",
+        "correct": true,
+        "why": "Right. `module example.com/hits` and `go 1.27.1`, untouched: the tool is not a dependency of the code."
+      },
+      {
+        "text": "A `tool golang.org/x/tools/cmd/stringer` line",
+        "correct": false,
+        "why": "A `tool` line is what `go get -tool` writes, a different command chosen on purpose."
+      },
+      {
+        "text": "Three `require` lines: x/tools, x/mod and x/sync",
+        "correct": false,
+        "why": "Those three are inside the binary, as `go version -m` shows, and none of them reached `go.mod`."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2h9jb1k",
+    "version": 1,
+    "section": "install",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For the `hits` installed from `~/daily`, `go version -m` printed `mod example.com/hits ___`: the version a module gets when it is built from a directory rather than fetched at a version.",
+    "hint": "A word in parentheses.",
+    "blanks": [
+      {
+        "accept": [
+          "(devel)",
+          "devel"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jzkgkgh4",
+    "version": 1,
+    "section": "install",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Makefile` target runs `go install golang.org/x/tools/cmd/stringer@latest`. Two developers who ran it a month apart get different generated files from the same source. What is the fix?",
+    "hint": "Which part of that command means something different next month?",
+    "choices": [
+      {
+        "text": "Run `go clean -i` before every install",
+        "correct": false,
+        "why": "That removes the old executable and then installs whatever `@latest` means today; the drift stays."
+      },
+      {
+        "text": "Drop the suffix and run it as plain `go install golang.org/x/tools/cmd/stringer`",
+        "correct": false,
+        "why": "Without a version the build uses the project's `go.mod`, which does not require x/tools, and the command fails."
+      },
+      {
+        "text": "Write the version out, `@v0.52.0`",
+        "correct": true,
+        "why": "Right. A written version builds the same program on every machine; `@latest` is resolved again on each run."
+      },
+      {
+        "text": "Set `GOBIN` to a directory inside the project",
+        "correct": false,
+        "why": "That decides where the executable lands, not which version of it is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-hesperw3",
+    "version": 1,
+    "section": "test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test ./...` printed `ok example.com/hits/internal/tally (cached)`. What happened to `tally`'s tests in that run?",
+    "hint": "Compare the time column with the run before.",
+    "choices": [
+      {
+        "text": "They ran in less time than the clock could measure",
+        "correct": false,
+        "why": "A run would print a time, as the first run did with 0.483 seconds. `(cached)` replaces the time because nothing ran."
+      },
+      {
+        "text": "Only the tests whose code changed since the previous run were run again",
+        "correct": false,
+        "why": "The cache works per package and test binary: either the whole result is reused or the binary runs."
+      },
+      {
+        "text": "Nothing ran; the go command printed the result it had stored",
+        "correct": true,
+        "why": "Right. Same test binary, cacheable flags: the stored output was printed again. `-count=1` forces a run."
+      },
+      {
+        "text": "The tests were skipped, because `-short` is switched on by default in package list mode",
+        "correct": false,
+        "why": "`-short` is off unless given; the skip message appears only with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9p7kd1s",
+    "version": 1,
+    "section": "test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go test -run Top -v ./internal/tally` ran `TestTop` and also `ExampleTop`. Which pattern runs `TestTop` alone?",
+    "hint": "The expression is a regular expression, and it is not anchored.",
+    "choices": [
+      {
+        "text": "`-run Top$`",
+        "correct": false,
+        "why": "Anchoring the end is half of it: `ExampleTop` also ends in `Top`, so both still run."
+      },
+      {
+        "text": "`-run '^TestTop$'`",
+        "correct": true,
+        "why": "Right. The anchors say the whole name, so `ExampleTop` no longer matches."
+      },
+      {
+        "text": "`-run Top -list .`",
+        "correct": false,
+        "why": "`-list` prints names and runs nothing at all."
+      },
+      {
+        "text": "`-run Top -failfast`",
+        "correct": false,
+        "why": "`-failfast` changes what happens after a failure, not which tests match."
+      }
+    ]
+  },
+  {
+    "id": "ex-craseb1h",
+    "version": 1,
+    "section": "test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A row named `short line` in `TestParse`'s table runs as the subtest `TestParse/___` in the `-v` output.",
+    "hint": "Spaces in a subtest name are replaced.",
+    "blanks": [
+      {
+        "accept": [
+          "short_line"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-57nx0rfw",
+    "version": 1,
+    "section": "test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test in `tally` reads `testdata/sample.log`, a file inside the module. You edit that file and run `go test ./...` again, with no other change. What does the `tally` line show?",
+    "hint": "`go help test` names what else a cached result depends on.",
+    "choices": [
+      {
+        "text": "A time: the content of a file the test reads is part of the cache key",
+        "correct": true,
+        "why": "Right. For files opened within the module, the cache key includes their content, so an edit makes the old result miss."
+      },
+      {
+        "text": "`(cached)`, because the Go source did not change",
+        "correct": false,
+        "why": "That is the belief the cache rule was written to avoid: files inside the module and environment variables the test reads are part of the key."
+      },
+      {
+        "text": "`(cached)` until somebody runs `go clean -testcache` to throw the old result away",
+        "correct": false,
+        "why": "Clearing works, but it is not needed here: the edited file already invalidates the result."
+      },
+      {
+        "text": "`[no test files]`, because the go command ignores everything under a `testdata` directory",
+        "correct": false,
+        "why": "`testdata` is ignored as a package directory, which is why it holds fixtures; the test files of `tally` are still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-00nsx1wt",
+    "version": 1,
+    "section": "test",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `go test` flag with what it did to `tally`'s tests.",
+    "hint": "One description belongs to no flag here.",
+    "pairs": [
+      {
+        "left": "`-short`",
+        "right": "`TestCountMillion` skipped itself, with its reason"
+      },
+      {
+        "left": "`-failfast`",
+        "right": "no new test started after `TestParse/good` failed"
+      },
+      {
+        "left": "`-count=1`",
+        "right": "the package ran although a cached result existed"
+      },
+      {
+        "left": "`-list .`",
+        "right": "four names printed and nothing run"
+      }
+    ],
+    "right_distractors": [
+      "the tests ran in a random order"
+    ]
+  },
+  {
+    "id": "ex-csphrrd5",
+    "version": 1,
+    "section": "doc-and-list",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `go doc tally.summary`, all in lowercase, print the type `Summary`?",
+    "hint": "`go help doc` has a rule about case.",
+    "choices": [
+      {
+        "text": "Lowercase letters in the argument match either case",
+        "correct": true,
+        "why": "Right. Uppercase letters match exactly and lowercase ones match both, so `summary` finds `Summary`."
+      },
+      {
+        "text": "`go doc` lowercases every name before it searches",
+        "correct": false,
+        "why": "Then `go doc Foo` could not be told from a package path, and the help says an uppercase start means a symbol in the current directory."
+      },
+      {
+        "text": "Go identifiers are case-insensitive",
+        "correct": false,
+        "why": "They are case-sensitive: the case of the first letter decides whether a name is exported."
+      },
+      {
+        "text": "There is an unexported `summary` that documents the type",
+        "correct": false,
+        "why": "`tally` declares no such name; `go doc` matched the exported type."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5nx28h1",
+    "version": 1,
+    "section": "doc-and-list",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these four packages in the order `go list -deps .` prints them for `hits`.",
+    "hint": "A package is printed after everything it imports.",
+    "items": [
+      "`unsafe`",
+      "`bufio`",
+      "`example.com/hits/internal/tally`",
+      "`example.com/hits`"
+    ]
+  },
+  {
+    "id": "ex-frd758hp",
+    "version": 1,
+    "section": "doc-and-list",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go list` put `main_test.go` in `TestGoFiles` and `tally_test.go` in `XTestGoFiles`. What decides which list a test file goes in?",
+    "hint": "Read the first line of each file.",
+    "choices": [
+      {
+        "text": "Whether the file sits at the module root or in a subdirectory",
+        "correct": false,
+        "why": "The directory decides which package's lists it appears in, not which of the two lists."
+      },
+      {
+        "text": "Its package clause: the package itself, or the package name with `_test` added",
+        "correct": true,
+        "why": "Right. `package main` is an in-package test; `package tally_test` is compiled as a separate package that imports `tally`."
+      },
+      {
+        "text": "Whether it contains examples as well as tests",
+        "correct": false,
+        "why": "Examples can live in either kind of test file; `ExampleTop` is in `tally_test.go` by choice."
+      },
+      {
+        "text": "Whether the file tests a `main` package",
+        "correct": false,
+        "why": "A library can have both kinds; it is the package clause, not what is under test."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqcn38ya",
+    "version": 1,
+    "section": "doc-and-list",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log arrives with one request whose URL is 100,000 characters long, on line 7 of 20,000. What does `hits count` do with that file?",
+    "hint": "`go doc bufio.MaxScanTokenSize` printed the limit, and `Count` never calls `Buffer`.",
+    "choices": [
+      {
+        "text": "Counts the other 19,999 lines and skips the long one",
+        "correct": false,
+        "why": "`Count` stops at the first error and returns it; nothing in `hits` skips a line."
+      },
+      {
+        "text": "Reports `bufio.Scanner: token too long` and exits 1, with no table",
+        "correct": true,
+        "why": "Right. A line over 64 KiB stops the `Scanner`, and `summarise` prints the error and returns 1, as the 70,000-byte line did."
+      },
+      {
+        "text": "Reads the line in pieces and reports it as 5 malformed lines",
+        "correct": false,
+        "why": "The `Scanner` does not split an over-long line; it gives up with an error."
+      },
+      {
+        "text": "Panics, because `Buffer` was never called",
+        "correct": false,
+        "why": "`Buffer` panics only when called after scanning started. Not calling it leaves the default limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjs41jcw",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go list -deps . | wc -l` printed 80 for `hits`, and the template that hides the standard library printed two lines. How many standard library packages go into `hits`?",
+    "hint": "Subtract.",
+    "value": 78,
+    "tolerance": 0,
+    "unit": "packages"
+  },
+  {
+    "id": "ex-az6rw23y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A CI job runs `go build ./...` and then a step that runs `./hits count sample.log`. The second step fails with `No such file or directory`. What is wrong?",
+    "hint": "Count the packages that `./...` names in this module.",
+    "choices": [
+      {
+        "text": "The build cache was empty on the CI machine",
+        "correct": false,
+        "why": "An empty cache makes the build slower, not absent; the result would still be written."
+      },
+      {
+        "text": "`./...` excludes the root package",
+        "correct": false,
+        "why": "It includes the root: `go list ./...` printed `example.com/hits` first."
+      },
+      {
+        "text": "With several packages `go build` writes nothing; `go build -o bin/ ./...` or `go build -o hits .` writes the file",
+        "correct": true,
+        "why": "Right. Three packages make it a check only. Name one `main` package, or give `-o` a directory."
+      },
+      {
+        "text": "The executable went to `~/go/bin`",
+        "correct": false,
+        "why": "That is `go install`. `go build` never writes to `GOBIN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj6h9h5m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate asks which directory the compiler reads `internal/tally` from, because they suspect a stale copy. Which command answers exactly that?",
+    "hint": "One of these prints a field of the package structure.",
+    "choices": [
+      {
+        "text": "`go doc -src tally.Top`",
+        "correct": false,
+        "why": "It prints the source of one declaration, not where the package's files live."
+      },
+      {
+        "text": "`go env GOCACHE`",
+        "correct": false,
+        "why": "That names where compiled results are kept, not the source the compiler reads."
+      },
+      {
+        "text": "`go list -f '{{.Dir}}' ./internal/tally`",
+        "correct": true,
+        "why": "Right. `.Dir` is the directory containing the package sources the build uses: `/home/ana/daily/internal/tally` here."
+      },
+      {
+        "text": "`go version -m ./bin/hits`",
+        "correct": false,
+        "why": "It names modules and versions inside a binary, not directories."
+      }
+    ]
+  }
+]
