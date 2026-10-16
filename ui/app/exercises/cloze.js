@@ -15,9 +15,21 @@
 
    Each box is labelled "Blank 1", "Blank 2" — invisible on screen and the only
    thing a screen reader has to tell one hole from another (X-05).
+
+   THE SENTENCE IS FORMATTED LIKE EVERY OTHER PROMPT, AND AS ONE PIECE. It was
+   escaped and nothing else, so `backticks` and **bold** reached the screen as
+   the characters themselves — in 2,093 cloze prompts across 67 courses, while
+   every other type drew the same markup as code through `formatted()`. Nobody
+   reported it because a backtick reads as a typo rather than a defect, and two
+   track-exam walks found it by looking. Formatting part by part, after the
+   split, would have been the obvious fix and the wrong one: 643 of those
+   prompts put the hole INSIDE the code span (`x = ___`), and a span cut in two
+   at the hole leaves a lone backtick at each end. So the holes become markers
+   that `esc()` cannot touch, the whole sentence is formatted once, and only
+   then does each marker become its box — inside the <code> where it belongs.
    ========================================================================== */
 
-import { esc } from '../text.js';
+import { esc, formatted } from '../text.js';
 
 export default {
   types: ['cloze'],
@@ -26,20 +38,22 @@ export default {
   promptIsTheBody: true,
 
   body(ex, uid) {
-    const parts = String(ex.prompt || '').split('___');
     const count = (ex.blanks || []).length;
 
-    let html = '<p class="cloze">';
-    parts.forEach((part, i) => {
-      html += esc(part);
-      if (i < parts.length - 1 && i < count) {
-        html += '<input type="text" class="blank" data-blank="' + i + '" '
-          + 'id="' + uid + '-blank-' + i + '" autocomplete="off" autocapitalize="off" '
-          + 'spellcheck="false" aria-label="' + esc(txt('Blank') + ' ' + (i + 1)) + '" />';
-      }
+    // A NUL cannot appear in a prompt that came out of JSON text a person
+    // wrote, and esc() leaves it alone, so it survives formatting untouched.
+    let hole = 0;
+    const marked = String(ex.prompt || '').replace(/___/g, () => '\u0000' + (hole++) + '\u0000');
+
+    const sentence = formatted(marked).replace(/\u0000(\d+)\u0000/g, (_, n) => {
+      const i = Number(n);
+      // More holes than blanks: the extra ones draw nothing, as they always did.
+      if (i >= count) return '';
+      return '<input type="text" class="blank" data-blank="' + i + '" '
+        + 'id="' + uid + '-blank-' + i + '" autocomplete="off" autocapitalize="off" '
+        + 'spellcheck="false" aria-label="' + esc(txt('Blank') + ' ' + (i + 1)) + '" />';
     });
-    html += '</p>';
-    return html;
+    return '<p class="cloze">' + sentence + '</p>';
   },
 
   /* ANSWERED IF ANY BOX HAS SOMETHING IN IT, and the empty ones travel as empty
