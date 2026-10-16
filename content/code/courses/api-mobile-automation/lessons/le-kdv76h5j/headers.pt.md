@@ -39,7 +39,7 @@ etag: "287e9ace94be5cc6"
 ana@laptop:~/boxoffice$ curl -si localhost:8080/v1/shows/sh-101 -H 'if-none-match: "287e9ace94be5cc6"'
 HTTP/1.1 304 Not Modified
 etag: "287e9ace94be5cc6"
-Date: Sat, 10 Oct 2026 07:13:50 GMT
+Date: Fri, 16 Oct 2026 03:59:04 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 ```

@@ -51,8 +51,8 @@ Com ele, um pedido de três lugares da sessão pequena é aceito:
 ana@laptop:~/boxoffice$ curl -si localhost:8080/v1/orders -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' -d '{"show_id":"sh-103","seats":3}'
 HTTP/1.1 201 Created
 content-type: application/json
-location: ]8;;http://localhost:8080/v1/orders/ord-1001\/v1/orders/ord-1001
-]8;;\Date: Sat, 10 Oct 2026 07:13:50 GMT
+location: /v1/orders/ord-1001
+Date: Fri, 16 Oct 2026 03:59:04 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Transfer-Encoding: chunked

@@ -156,7 +156,8 @@ as_ana() {
 }"
 }
 
-strip() { sed -e 's/\x1b\[[0-9;?]*[A-Za-z]//g' -e 's/\r$//'; }
+# Colour codes, and curl's OSC 8 hyperlinks around a location header.
+strip() { sed -e 's/\x1b\]8;[^\x1b]*\x1b\\//g' -e 's/\x1b\[[0-9;?]*[A-Za-z]//g' -e 's/\r$//'; }
 
 # run CMD: print the prompt and the command, then what it printed. It runs on
 # a pseudo-terminal, as it would in the student's, so a program that behaves

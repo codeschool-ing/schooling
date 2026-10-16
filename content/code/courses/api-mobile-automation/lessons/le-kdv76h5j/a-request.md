@@ -24,7 +24,7 @@ ana@laptop:~/boxoffice$ curl -v localhost:8080/v1/shows/sh-103
 < HTTP/1.1 200 OK
 < content-type: application/json
 < etag: "a2cce3d151c58812"
-< Date: Sat, 10 Oct 2026 07:13:49 GMT
+< Date: Fri, 16 Oct 2026 03:59:04 GMT
 < Connection: keep-alive
 < Keep-Alive: timeout=5
 < Transfer-Encoding: chunked
@@ -73,7 +73,7 @@ How long the answer took is worth a glance too. curl can print it on its own, in
 
 ```
 ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{time_total}\n' localhost:8080/v1/shows/sh-103
-0.001588
+0.001350
 ```
 
 Under two thousandths of a second, which is what section 01 meant by fast: no screen, no

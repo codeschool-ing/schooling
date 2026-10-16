@@ -35,7 +35,7 @@ ana@laptop:~/boxoffice$ curl -i -X DELETE localhost:8080/v1/shows/sh-103
 HTTP/1.1 405 Method Not Allowed
 content-type: application/problem+json
 allow: GET
-Date: Sat, 10 Oct 2026 07:13:50 GMT
+Date: Fri, 16 Oct 2026 03:59:04 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Transfer-Encoding: chunked
@@ -57,7 +57,7 @@ ana@laptop:~/boxoffice$ curl -I localhost:8080/v1/shows/sh-103
 HTTP/1.1 405 Method Not Allowed
 content-type: application/problem+json
 allow: GET
-Date: Sat, 10 Oct 2026 07:13:50 GMT
+Date: Fri, 16 Oct 2026 03:59:04 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 ```

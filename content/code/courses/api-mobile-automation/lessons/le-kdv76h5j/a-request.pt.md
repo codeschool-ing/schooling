@@ -24,7 +24,7 @@ ana@laptop:~/boxoffice$ curl -v localhost:8080/v1/shows/sh-103
 < HTTP/1.1 200 OK
 < content-type: application/json
 < etag: "a2cce3d151c58812"
-< Date: Sat, 10 Oct 2026 07:13:49 GMT
+< Date: Fri, 16 Oct 2026 03:59:04 GMT
 < Connection: keep-alive
 < Keep-Alive: timeout=5
 < Transfer-Encoding: chunked
@@ -76,7 +76,7 @@ segundos:
 
 ```
 ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{time_total}\n' localhost:8080/v1/shows/sh-103
-0.001588
+0.001350
 ```
 
 Menos de dois milésimos de segundo, que é o que a seção 01 quis dizer com rápido: sem tela, sem
