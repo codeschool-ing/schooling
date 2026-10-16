@@ -418,6 +418,88 @@ def l03_blocks(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-mapreduce', 4)
+def l04_mapreduce(lang):
+    t = {'en': dict(
+            label='The flow of a MapReduce job. Three input splits feed three map tasks. Each map '
+                  'task writes its pairs into two partitions, one per reduce task, chosen by the '
+                  'key. Every reduce task fetches its partition from every map task, sorts what it '
+                  'received by key, and runs the reduce function on each key.',
+            split='split', mapt='map', red='reduce', shuffle='shuffle: partition by key, then sort',
+            out='output', cap='The programmer writes the two functions; the framework splits, '
+                              'partitions, moves, sorts and reruns.'),
+         'pt': dict(
+            label='O fluxo de um job MapReduce. Três fatias da entrada alimentam três tarefas de map. '
+                  'Cada tarefa de map escreve os pares em duas partições, uma por tarefa de reduce, '
+                  'escolhidas pela chave. Cada tarefa de reduce busca a sua partição em toda tarefa '
+                  'de map, ordena o que recebeu pela chave e roda a função de reduce em cada chave.',
+            split='fatia', mapt='map', red='reduce', shuffle='shuffle: partição por chave, depois ordenação',
+            out='saída', cap='Quem programa escreve as duas funções; o framework divide, particiona, '
+                             'move, ordena e roda de novo.')}[lang]
+    f = Fig('l04-mapreduce', 720, 260, t['label'])
+    for i in range(3):
+        y = 30 + i * 70
+        box(f, 20, y, 90, 44, f"{t['split']} {i}")
+        f.line(110, y + 22, 148, y + 22, arrow=True)
+        box(f, 150, y, 110, 44, t['mapt'], stroke='--phosphor')
+        for j in range(2):
+            f.line(260, y + 22, 468, 75 + j * 100, stroke='--paper-dim', width=1, arrow=True)
+    for j in range(2):
+        y = 50 + j * 100
+        box(f, 470, y, 110, 50, t['red'], stroke='--amber')
+        f.line(580, y + 25, 618, y + 25, arrow=True)
+        box(f, 620, y, 80, 50, t['out'])
+    f.text(365, 250, t['shuffle'], size=10.5, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l04-joins', 4)
+def l04_joins(lang):
+    t = {'en': dict(
+            label='Two ways to join purchases with books. On the left, the reduce-side join: both '
+                  'inputs are mapped, tagged and shuffled by book id, and each reducer meets a book '
+                  'with its purchases. On the right, the map-side join: the small book table is '
+                  'copied to every map task, which looks each purchase up as it reads, and nothing '
+                  'is shuffled.',
+            rs='reduce-side join', ms='map-side join', books='books', purch='purchases',
+            shuffle='shuffle by book_id', red='reducer: a book and its purchases',
+            copy='a copy of the books in every task', mapt='map task',
+            cap='The reduce-side join moves everything; the map-side join moves the small table '
+                'to every task and nothing else.'),
+         'pt': dict(
+            label='Dois jeitos de juntar compras com livros. À esquerda, o join no reduce: as duas '
+                  'entradas passam pelo map, recebem uma marca e são embaralhadas pelo id do livro, e '
+                  'cada reducer encontra um livro com as suas compras. À direita, o join no map: a '
+                  'pequena tabela de livros é copiada para cada tarefa de map, que procura cada compra '
+                  'enquanto lê, e nada é embaralhado.',
+            rs='join no reduce', ms='join no map', books='livros', purch='compras',
+            shuffle='shuffle por book_id', red='reducer: um livro e as suas compras',
+            copy='uma cópia dos livros em cada tarefa', mapt='tarefa de map',
+            cap='O join no reduce move tudo; o join no map move a tabela pequena para cada tarefa '
+                'e mais nada.')}[lang]
+    f = Fig('l04-joins', 720, 250, t['label'])
+    f.text(170, 20, t['rs'], size=11, weight='600')
+    box(f, 20, 40, 120, 40, t['books'])
+    box(f, 200, 40, 120, 40, t['purch'])
+    f.line(80, 80, 160, 140, arrow=True)
+    f.line(260, 80, 180, 140, arrow=True)
+    f.text(20, 112, t['shuffle'], size=9.5, fill='--amber', anchor='start')
+    box(f, 40, 142, 260, 46, t['red'], stroke='--amber')
+    f.line(360, 20, 360, 230, stroke='--wire', dash='4 4')
+    f.text(540, 20, t['ms'], size=11, weight='600')
+    box(f, 390, 40, 120, 40, t['books'])
+    f.text(522, 60, t['copy'], size=9.5, fill='--phosphor', anchor='start')
+    for i in range(3):
+        x = 390 + i * 110
+        box(f, x, 142, 100, 46, t['mapt'], stroke='--phosphor')
+        f.line(450, 80, x + 50, 140, stroke='--paper-dim', width=1, arrow=True)
+        f.text(x + 50, 205, t['purch'], size=9.5, fill='--paper-dim')
+        f.line(x + 50, 222, x + 50, 190, stroke='--paper-dim', width=1, arrow=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

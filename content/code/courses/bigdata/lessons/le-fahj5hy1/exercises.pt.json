@@ -1,0 +1,533 @@
+{
+  "ex-qfv2dk35": {
+    "prompt": "No MapReduce, que parte quem programa escreve?",
+    "hint": "Duas funções.",
+    "choices": [
+      {
+        "text": "O particionador, a ordenação e a recuperação de tarefas que falham",
+        "why": "É justamente isso que o framework faz por você."
+      },
+      {
+        "text": "A colocação das tarefas nas máquinas que guardam cada bloco",
+        "why": "O framework coloca as tarefas perto dos dados."
+      },
+      {
+        "text": "Tudo, em Java",
+        "why": "O propósito do modelo é o pouco que se escreve."
+      },
+      {
+        "text": "As funções de map e de reduce",
+        "why": "Isso. Dividir, particionar, ordenar e repetir são do framework."
+      }
+    ]
+  },
+  "ex-wcx98jep": {
+    "prompt": "Ordene os passos de um job MapReduce.",
+    "hint": "A ordenação vem logo antes do reduce.",
+    "items": [
+      "Dividir a entrada, uma tarefa de map por bloco",
+      "Rodar o map em cada registro",
+      "Particionar os pares pela chave",
+      "Ordenar a entrada de cada reducer pela chave",
+      "Rodar o reduce em cada chave"
+    ]
+  },
+  "ex-rmdd2zgm": {
+    "prompt": "Por que um mapper não pode guardar estado que dependa de registros vistos por outras tarefas de map?",
+    "hint": "O que o framework precisa poder fazer com cópias dele?",
+    "choices": [
+      {
+        "text": "O Python não compartilha variáveis entre processos",
+        "why": "Isso é verdade e não vem ao caso: a regra vale em toda linguagem."
+      },
+      {
+        "text": "O reducer recusaria",
+        "why": "Nada recusaria; a resposta só sairia errada."
+      },
+      {
+        "text": "O estado usaria memória demais",
+        "why": "A questão é a correção diante de repetições, não o tamanho."
+      },
+      {
+        "text": "As cópias têm de concordar",
+        "why": "Isso. Cada restrição é uma promessa de que o framework precisa para escalar."
+      }
+    ]
+  },
+  "ex-pbrqpxaq": {
+    "prompt": "No pipe, o que aconteceria com a saída do `reducer.py` se o `sort` fosse retirado?",
+    "hint": "Ele só percebe onde termina uma sequência de chaves iguais.",
+    "choices": [
+      {
+        "text": "Os totais estariam certos, em outra ordem",
+        "why": "Os próprios totais sairiam em pedaços."
+      },
+      {
+        "text": "Daria erro",
+        "why": "Roda bem e imprime uma resposta errada, o que é pior."
+      },
+      {
+        "text": "Nada; o reducer ordena a própria entrada",
+        "why": "Não ordena; ele depende da entrada já ordenada."
+      },
+      {
+        "text": "Cada tipo sairia várias vezes",
+        "why": "Isso. Entrada não ordenada quebra chaves iguais em muitas sequências curtas."
+      }
+    ]
+  },
+  "ex-895a9heb": {
+    "prompt": "O que permite ao Hadoop rodar o `mapper.py` e o `reducer.py` sem mudança?",
+    "hint": "O que eles leem e escrevem?",
+    "choices": [
+      {
+        "text": "Eles só usam entrada e saída padrão",
+        "why": "Isso. Esse contrato é tudo de que o Hadoop Streaming precisa."
+      },
+      {
+        "text": "Programas Python são compilados para Java antes",
+        "why": "O Hadoop inicia o `python3` como processo separado."
+      },
+      {
+        "text": "Eles importam uma biblioteca Hadoop para Python",
+        "why": "Eles não importam nada além do `sys`."
+      },
+      {
+        "text": "Eles leem os caminhos do HDFS direto",
+        "why": "Eles nunca veem um caminho."
+      }
+    ]
+  },
+  "ex-47jkbnxn": {
+    "prompt": "Sem `mapreduce.framework.name` definido, como o Hadoop rodou o job?",
+    "hint": "A aula 12 muda isso.",
+    "choices": [
+      {
+        "text": "Nos três workers do cluster Spark",
+        "why": "O MapReduce não usa o master nem os workers do Spark."
+      },
+      {
+        "text": "Dentro do namenode, que tem memória sobrando",
+        "why": "O namenode guarda metadados e não roda jobs."
+      },
+      {
+        "text": "No YARN, pelos datanodes",
+        "why": "O YARN ainda não está rodando; a aula 12 o inicia."
+      },
+      {
+        "text": "Num processo Java local",
+        "why": "Isso. O executor local; o HDFS continuou sendo entrada e saída."
+      }
+    ]
+  },
+  "ex-v67aw8nf": {
+    "prompt": "Quantas tarefas de map o job sobre `/raw/clicks-2025.csv` rodou?",
+    "hint": "Uma por bloco."
+  },
+  "ex-rq846b9x": {
+    "prompt": "Por que o diretório de saída não pode existir antes do job começar?",
+    "hint": "O que um diretório meio sobrescrito teria?",
+    "choices": [
+      {
+        "text": "O HDFS não sobrescreve arquivos",
+        "why": "Ele pode apagar e escrever de novo; a regra é de segurança."
+      },
+      {
+        "text": "O reducer o cria com uma marca especial",
+        "why": "O framework o cria, pelo committer."
+      },
+      {
+        "text": "Para economizar espaço",
+        "why": "Espaço não tem nada a ver."
+      },
+      {
+        "text": "Para saídas de dois jobs não se misturarem",
+        "why": "Isso. Um diretório novo guarda exatamente o resultado de um job."
+      }
+    ]
+  },
+  "ex-49kb23fr": {
+    "prompt": "`Reduce shuffle bytes` foi 223.679.952. O que esse número mede?",
+    "hint": "Num cluster seria tráfego de rede.",
+    "choices": [
+      {
+        "text": "O tamanho do arquivo de entrada",
+        "why": "A entrada tem 1,29 GB; isto é a saída do map."
+      },
+      {
+        "text": "O tamanho da resposta",
+        "why": "A resposta tem 58 bytes."
+      },
+      {
+        "text": "O que os reducers buscaram das tarefas de map",
+        "why": "Isso. Todo par viajou até o único reducer."
+      },
+      {
+        "text": "A memória usada pelo reducer",
+        "why": "São bytes movidos, não guardados."
+      }
+    ]
+  },
+  "ex-bxfczb4s": {
+    "prompt": "`Spilled Records` foi 48.000.000 para 24.000.000 saídas do map. O que isso diz?",
+    "hint": "Spilled quer dizer escrito em disco porque não coube.",
+    "choices": [
+      {
+        "text": "O job leu a entrada duas vezes",
+        "why": "Map input records foi 24 milhões, uma vez."
+      },
+      {
+        "text": "Metade dos registros se perdeu e foi reescrita",
+        "why": "Nada se perdeu; o spill é normal."
+      },
+      {
+        "text": "Cada registro foi replicado em dois datanodes",
+        "why": "Spills vão ao disco local, não ao HDFS."
+      },
+      {
+        "text": "Cada par foi ao disco duas vezes",
+        "why": "Isso. A memória não os segurou em nenhuma das pontas."
+      }
+    ]
+  },
+  "ex-h8rakxgb": {
+    "prompt": "Quantos grupos de entrada do reduce o job contou, um por chave distinta?",
+    "hint": "Quantos tipos de evento existem?"
+  },
+  "ex-fchybnz4": {
+    "prompt": "Com o `reducer.py` como combiner, os bytes do shuffle caíram de uns 224 MB para 684 bytes. Por que tanto?",
+    "hint": "Quantas chaves distintas cada tarefa de map tinha?",
+    "choices": [
+      {
+        "text": "O combiner pulou a maior parte da entrada",
+        "why": "Combine input records foi 24 milhões: leu tudo."
+      },
+      {
+        "text": "O reducer rodou no lado do map no lugar",
+        "why": "O reducer ainda rodou; o combiner rodou também."
+      },
+      {
+        "text": "O combiner compacta os pares com gzip",
+        "why": "Ele os soma; nada é compactado."
+      },
+      {
+        "text": "Cada tarefa tinha só quatro chaves",
+        "why": "Isso. Dez tarefas vezes quatro pares dá quarenta."
+      }
+    ]
+  },
+  "ex-5bc5xh5v": {
+    "prompt": "Para quais destes o reducer também pode ser usado, sem mudança, como combiner? Escolha todos que se aplicam.",
+    "hint": "O combiner pode rodar zero, uma ou várias vezes.",
+    "choices": [
+      {
+        "text": "O maior preço visto",
+        "why": "Sim. O máximo dos máximos é o máximo."
+      },
+      {
+        "text": "O número de visitantes distintos",
+        "why": "Contagens distintas parciais não se somam entre tarefas."
+      },
+      {
+        "text": "O preço médio",
+        "why": "Uma média de médias erra quando as partes têm tamanhos diferentes; carregue soma e contagem."
+      },
+      {
+        "text": "Uma soma de vendas",
+        "why": "Sim. Uma soma de somas parciais é a soma."
+      }
+    ]
+  },
+  "ex-2hmxd0sc": {
+    "prompt": "Um reducer que roda no lado do map, antes do shuffle, se chama ___.",
+    "hint": "Ele combina.",
+    "blanks": [
+      {
+        "accept": [
+          "combiner",
+          "combinador"
+        ]
+      }
+    ]
+  },
+  "ex-cfm8wcb6": {
+    "prompt": "Com duas tarefas de reduce, o que garante que todos os pares `view` cheguem à mesma?",
+    "hint": "A mesma função do `buckets.py`.",
+    "choices": [
+      {
+        "text": "Faixas alfabéticas da chave",
+        "why": "Isso é um particionador por faixas, não o padrão do Hadoop."
+      },
+      {
+        "text": "O namenode atribui chaves aos reducers",
+        "why": "O namenode não sabe nada de chaves."
+      },
+      {
+        "text": "Um hash da chave, módulo o número de reducers",
+        "why": "Isso. A mesma chave sempre cai no mesmo lugar."
+      },
+      {
+        "text": "A ordem em que as tarefas de map terminam",
+        "why": "A ordem espalharia uma chave pelos reducers."
+      }
+    ]
+  },
+  "ex-1j2b73p2": {
+    "prompt": "Cada um dos dois arquivos de saída está ordenado. Por que os dois juntos, lidos um após o outro, não estão?",
+    "hint": "Como as chaves foram divididas entre os reducers?",
+    "choices": [
+      {
+        "text": "O HDFS reordena arquivos ao listá-los",
+        "why": "A listagem é por nome; o que importa são as chaves dentro."
+      },
+      {
+        "text": "As chaves se dividiram por hash, não por faixa",
+        "why": "Isso. Uma ordem global exige um particionador por faixas."
+      },
+      {
+        "text": "O segundo reducer esqueceu de ordenar",
+        "why": "Os dois ordenaram a própria entrada."
+      },
+      {
+        "text": "Combiners embaralham a ordem",
+        "why": "A ordenação acontece depois de qualquer combinação."
+      }
+    ]
+  },
+  "ex-xek63fg5": {
+    "prompt": "Num job com o visitante como chave, por que uma tarefa de reduce demoraria muito mais que as outras?",
+    "hint": "O robô da aula 1.",
+    "choices": [
+      {
+        "text": "Ela escreve no HDFS e as outras não",
+        "why": "Todo reducer escreve o próprio arquivo."
+      },
+      {
+        "text": "Ela começa por último",
+        "why": "Os reducers começam juntos; um só tem muito mais a fazer."
+      },
+      {
+        "text": "Ela recebe os 960.905 eventos do robô",
+        "why": "Isso. Uma chave vai inteira para um reducer."
+      },
+      {
+        "text": "A máquina dela é mais lenta",
+        "why": "A causa não é a máquina; são os dados."
+      }
+    ]
+  },
+  "ex-8tkdx8te": {
+    "prompt": "Ligue cada join ao que ele move ou precisa.",
+    "hint": "Um embaralha os dois lados; o outro copia o lado pequeno para todo lugar.",
+    "pairs": [
+      {
+        "left": "Join no reduce",
+        "right": "As duas entradas atravessam a rede inteiras"
+      },
+      {
+        "left": "Join no map",
+        "right": "A tabela pequena inteira na memória de cada tarefa"
+      },
+      {
+        "left": "Marcar registros com a origem",
+        "right": "Como um reducer distingue livros de compras"
+      }
+    ],
+    "right_distractors": [
+      "Uma ordenação da saída por preço"
+    ]
+  },
+  "ex-e00ykqjn": {
+    "prompt": "Quando um join no map deixa de ser opção?",
+    "hint": "Cada tarefa guarda uma cópia.",
+    "choices": [
+      {
+        "text": "Quando a entrada maior tem mais de dez blocos",
+        "why": "O lado grande é lido em fluxo; o tamanho dele não importa aqui."
+      },
+      {
+        "text": "Quando a chave é uma string",
+        "why": "Qualquer tipo de chave pode ser procurado."
+      },
+      {
+        "text": "Quando o lado pequeno não cabe numa tarefa",
+        "why": "Isso. Aí só sobra o join no reduce."
+      },
+      {
+        "text": "Nunca; sempre funciona",
+        "why": "Um lado pequeno que não é pequeno o quebra."
+      }
+    ]
+  },
+  "ex-7fds8h4c": {
+    "prompt": "Por que o histograma precisou de dois jobs MapReduce?",
+    "hint": "Quantos shuffles um job tem?",
+    "choices": [
+      {
+        "text": "Um job tem um shuffle só",
+        "why": "Isso. Cada agrupamento precisa do próprio shuffle."
+      },
+      {
+        "text": "Mappers Python só emitem uma chave",
+        "why": "Eles emitem o que imprimirem."
+      },
+      {
+        "text": "Para usar o combiner no primeiro",
+        "why": "Um combiner cabe em qualquer job; não é por isso que são dois."
+      },
+      {
+        "text": "Os dados são grandes demais para um job",
+        "why": "O job 1 leu tudo sozinho."
+      }
+    ]
+  },
+  "ex-zb5wb07g": {
+    "prompt": "A saída do job 1 tinha 19,3 MB. Com replicação três, cerca de quantos MB ela ocupou em disco?",
+    "hint": "Multiplique.",
+    "unit": "MB"
+  },
+  "ex-vpzye23g": {
+    "prompt": "O Spark levou mais ou menos o mesmo que os dois jobs MapReduce no laboratório. Onde a aula diz que a vantagem do Spark cresce?",
+    "hint": "Conte as idas e voltas pelo HDFS.",
+    "choices": [
+      {
+        "text": "Passadas únicas sobre arquivos muito grandes",
+        "why": "É para isso que o MapReduce foi feito, e faz bem."
+      },
+      {
+        "text": "Jobs escritos em Java",
+        "why": "A linguagem não é onde a diferença cresce."
+      },
+      {
+        "text": "Jobs iterativos, de muitos passos",
+        "why": "Isso. No MapReduce cada passo é um job, uma leitura e uma escrita replicada."
+      },
+      {
+        "text": "Jobs numa máquina só",
+        "why": "O laboratório é uma máquina só, e a diferença foi pequena."
+      }
+    ]
+  },
+  "ex-41esvp5w": {
+    "prompt": "Ligue cada limite do MapReduce ao que ele custa.",
+    "hint": "Pense no que cada um obriga a fazer.",
+    "pairs": [
+      {
+        "left": "Um shuffle por job",
+        "right": "Perguntas de vários passos viram cadeias de jobs"
+      },
+      {
+        "left": "Saída sempre escrita no HDFS",
+        "right": "Algoritmos iterativos pagam uma escrita replicada por passo"
+      },
+      {
+        "left": "Minutos de início num cluster",
+        "right": "Nada de perguntas interativas"
+      },
+      {
+        "left": "Só map e reduce",
+        "right": "Joins e filtros escritos à mão nesses formatos"
+      }
+    ]
+  },
+  "ex-936q9cdh": {
+    "prompt": "O que o Hive e o Pig consertaram, e o que mantiveram?",
+    "hint": "Eles compilavam para alguma coisa.",
+    "choices": [
+      {
+        "text": "Substituíram o HDFS",
+        "why": "Os dois liam e escreviam no HDFS."
+      },
+      {
+        "text": "Consertaram como os jobs se escrevem e mantiveram o custo do MapReduce",
+        "why": "Isso. Eles compilavam para cadeias de jobs MapReduce."
+      },
+      {
+        "text": "Consertaram a iteração mantendo dados na memória",
+        "why": "Essa foi a contribuição do Spark."
+      },
+      {
+        "text": "Consertaram o custo e mantiveram o Java",
+        "why": "O custo ficou; a linguagem mudou."
+      }
+    ]
+  },
+  "ex-2wb85f6k": {
+    "prompt": "Quais ideias do MapReduce continuam vivas no Spark? Escolha todas que se aplicam.",
+    "hint": "As aulas 2 e 3 já encontraram algumas.",
+    "choices": [
+      {
+        "text": "Recuperação rodando a tarefa de novo a partir da entrada",
+        "why": "Sim. A aula 2 viu isso."
+      },
+      {
+        "text": "Um job separado para cada agrupamento",
+        "why": "O Spark roda muitos agrupamentos numa aplicação."
+      },
+      {
+        "text": "Mandar tarefas para onde estão os dados",
+        "why": "Sim. Os níveis de localidade da aula 3."
+      },
+      {
+        "text": "O shuffle por chave",
+        "why": "Sim. Todo agrupamento e todo join terminam num."
+      }
+    ]
+  },
+  "ex-1z7vpswd": {
+    "prompt": "O MapReduce obrigava tarefas a serem funções da entrada sem ___ colaterais; o Spark só pede isso.",
+    "hint": "Como mandar um e-mail.",
+    "blanks": [
+      {
+        "accept": [
+          "efeitos",
+          "efeito"
+        ]
+      }
+    ]
+  },
+  "ex-kzhqf9kn": {
+    "prompt": "A Ana precisa da receita por categoria: compras de 24 milhões de eventos, preços e categorias de 3.000 livros. No MapReduce, que projeto?",
+    "hint": "Qual o tamanho da tabela de livros?",
+    "choices": [
+      {
+        "text": "Só um combiner, sem join",
+        "why": "Preço e categoria não estão nos eventos."
+      },
+      {
+        "text": "Um job com o visitante como chave",
+        "why": "O visitante não tem nada a ver com receita por categoria."
+      },
+      {
+        "text": "Um join no map, depois uma soma por categoria",
+        "why": "Isso. 3.000 livros cabem em qualquer lugar, e só as somas são embaralhadas."
+      },
+      {
+        "text": "Um join no reduce das duas entradas, depois um segundo job somando por categoria",
+        "why": "Correto, mas embaralha toda compra para encontrar uma tabela minúscula."
+      }
+    ]
+  },
+  "ex-pv129xr5": {
+    "prompt": "Ligue cada contador à pergunta que ele responde.",
+    "hint": "Siga os dados da entrada à saída.",
+    "pairs": [
+      {
+        "left": "Map input records",
+        "right": "Quanto foi lido?"
+      },
+      {
+        "left": "Reduce shuffle bytes",
+        "right": "Quanto atravessou até os reducers?"
+      },
+      {
+        "left": "Spilled Records",
+        "right": "Quanto não coube na memória?"
+      },
+      {
+        "left": "Reduce input groups",
+        "right": "Quantas chaves distintas?"
+      }
+    ]
+  }
+}
