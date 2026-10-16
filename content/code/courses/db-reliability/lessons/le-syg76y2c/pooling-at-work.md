@@ -33,7 +33,7 @@ tps = 1639.120555 (without initial connection time)
 
 `cl_active` 20, `cl_waiting` 100: twenty clients hold a server connection at this instant and a
 hundred are queued for one. On the server, `shop_app` has **21** processes, the pool of 20 for `bench`
-and the one serving `shop`. An extra `SELECT 1` arriving in the middle of it waited behind the queue
+and the one serving `shop`, still open from the count at the end of the last section. An extra `SELECT 1` arriving in the middle of it waited behind the queue
 and finished in **0.143 seconds**. And `pgbench` itself reports **no failed transaction**: every one
 of the 120 clients was served, through 20 connections, because in **transaction mode** a client holds
 a server connection only for the length of one transaction and gives it back.
