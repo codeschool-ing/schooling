@@ -17,7 +17,20 @@ the ground the function stands on. The shell variables keep the ids moto invents
 commands can use them:
 
 ```
-@@CAP:network@@
+ana@laptop:~/aws$ VPC=$(aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query Vpc.VpcId --output text)
+ana@laptop:~/aws$ A=$(aws ec2 create-subnet --vpc-id $VPC --cidr-block 10.0.1.0/24 --availability-zone sa-east-1a --query Subnet.SubnetId --output text)
+ana@laptop:~/aws$ B=$(aws ec2 create-subnet --vpc-id $VPC --cidr-block 10.0.2.0/24 --availability-zone sa-east-1b --query Subnet.SubnetId --output text)
+ana@laptop:~/aws$ FN=$(aws ec2 create-security-group --vpc-id $VPC --group-name orders-fn --description "the function" --query GroupId --output text)
+ana@laptop:~/aws$ DB=$(aws ec2 create-security-group --vpc-id $VPC --group-name orders-db --description "the database" --query GroupId --output text)
+ana@laptop:~/aws$ echo $VPC $A $B $FN $DB
+vpc-8c3e928502e59b35a subnet-dfadb89736d4aa1a9 subnet-2703629957a6494c1 sg-3e0f3ea4cf6cf0f8a sg-f697fa39575f20885
+ana@laptop:~/aws$ aws ec2 authorize-security-group-ingress --group-id $DB --protocol tcp --port 5432 --source-group $FN --query "SecurityGroupRules[].{Port: FromPort, From: ReferencedGroupInfo.GroupId}"
+[
+    {
+        "Port": 5432,
+        "From": "sg-3e0f3ea4cf6cf0f8a"
+    }
+]
 ```
 
 The last command is the rule that matters. **The database's security group admits port 5432 from
@@ -45,7 +58,15 @@ The trust policy is the same as in lesson 16's role, and the permissions go on a
 policy:
 
 ```
-@@CAP:role@@
+ana@laptop:~/aws$ aws iam create-role --role-name orders-vpc-role --query Role.Arn --output text --assume-role-policy-document '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+arn:aws:iam::123456789012:role/orders-vpc-role
+ana@laptop:~/aws$ aws iam put-role-policy --role-name orders-vpc-role --policy-name vpc-access --policy-document file://vpc-access.json
+ana@laptop:~/aws$ aws iam list-role-policies --role-name orders-vpc-role
+{
+    "PolicyNames": [
+        "vpc-access"
+    ]
+}
 ```
 
 On AWS, leaving these permissions out is refused at once: `create-function` fails with an
@@ -65,7 +86,19 @@ def handler(event, context):
 ```
 
 ```
-@@CAP:function@@
+ana@laptop:~/aws$ zip -j orders.zip bare/app.py
+  adding: app.py (stored 0%)
+ana@laptop:~/aws$ aws lambda create-function --function-name orders --runtime python3.12 --handler app.handler --role arn:aws:iam::123456789012:role/orders-vpc-role --zip-file fileb://orders.zip --vpc-config SubnetIds=$A,$B,SecurityGroupIds=$FN --query VpcConfig
+{
+    "SubnetIds": [
+        "subnet-dfadb89736d4aa1a9",
+        "subnet-2703629957a6494c1"
+    ],
+    "SecurityGroupIds": [
+        "sg-3e0f3ea4cf6cf0f8a"
+    ],
+    "VpcId": "vpc-123abc"
+}
 ```
 
 The subnets and the security group came back as given. **The `VpcId` did not**: moto answers
@@ -74,7 +107,11 @@ out from the subnets and returns it. That is the first sign of how little moto c
 the next one is plainer. A subnet and a security group that do not exist:
 
 ```
-@@CAP:nothing-there@@
+ana@laptop:~/aws$ aws lambda create-function --function-name ghost --runtime python3.12 --handler app.handler --role arn:aws:iam::123456789012:role/orders-vpc-role --zip-file fileb://orders.zip --vpc-config SubnetIds=subnet-0000000000000000a,SecurityGroupIds=sg-0000000000000000a --query "{Name: FunctionName, State: State}"
+{
+    "Name": "ghost",
+    "State": "Active"
+}
 ```
 
 moto created the function. AWS refuses it, because it looks the subnets and the group up before
@@ -87,7 +124,11 @@ A function leaves its VPC by being given two empty lists, and on AWS it then goe
 reaching the internet the way any function outside a VPC does:
 
 ```
-@@CAP:leave@@
+ana@laptop:~/aws$ aws lambda update-function-configuration --function-name orders --vpc-config SubnetIds=[],SecurityGroupIds=[] --query VpcConfig
+{
+    "SubnetIds": [],
+    "SecurityGroupIds": []
+}
 ```
 
 What AWS does with the network interfaces when a function joins or leaves, and why that once cost

@@ -19,7 +19,7 @@
 #     they are extracted from the lesson without being shown;
 #   - the price cache was filled by an earlier run of prices.py, so the sheet
 #     prints without the network;
-#   - the shell variables VPC, A, B, FN and DB are set by the commands shown,
+#   - the shell variables VPC, A, B, FN, DB, RT and EP are set by the commands shown,
 #     in one shell, as they would be in the student's terminal.
 #
 # Recorded 2026-10-16 on Ubuntu 24.04, no AWS account, TZ=America/Sao_Paulo.
@@ -66,6 +66,8 @@ run "python3 prices.py ec2 | grep -A2 '^Network'"
 block endpoints
 run 'RT=$(aws ec2 describe-route-tables --filters Name=vpc-id,Values=$VPC --query "RouteTables[0].RouteTableId" --output text)'
 run 'aws ec2 create-vpc-endpoint --vpc-id $VPC --vpc-endpoint-type Gateway --service-name com.amazonaws.sa-east-1.s3 --route-table-ids $RT --query "VpcEndpoint.{Id: VpcEndpointId, Type: VpcEndpointType, State: State}"'
-run 'aws ec2 create-vpc-endpoint --vpc-id $VPC --vpc-endpoint-type Interface --service-name com.amazonaws.sa-east-1.secretsmanager --subnet-ids $A $B --security-group-ids $FN --query "VpcEndpoint.{Id: VpcEndpointId, Type: VpcEndpointType, Interfaces: NetworkInterfaceIds}"'
+run 'EP=$(aws ec2 create-security-group --vpc-id $VPC --group-name orders-endpoints --description "the endpoints" --query GroupId --output text)'
+run 'aws ec2 authorize-security-group-ingress --group-id $EP --protocol tcp --port 443 --source-group $FN --query "SecurityGroupRules[].{Port: FromPort, From: ReferencedGroupInfo.GroupId}"'
+run 'aws ec2 create-vpc-endpoint --vpc-id $VPC --vpc-endpoint-type Interface --service-name com.amazonaws.sa-east-1.secretsmanager --subnet-ids $A $B --security-group-ids $EP --query "VpcEndpoint.{Id: VpcEndpointId, Type: VpcEndpointType, Interfaces: NetworkInterfaceIds}"'
 run 'aws ec2 describe-route-tables --route-table-ids $RT --query "RouteTables[0].Routes[].[DestinationCidrBlock || DestinationPrefixListId, GatewayId]" --output text'
 run 'aws ec2 describe-network-interfaces --query "NetworkInterfaces[].[NetworkInterfaceId, SubnetId]" --output text'

@@ -10,6 +10,11 @@
     "hint": "In awsvpc mode, what carries the network interface?",
     "choices": [
       {
+        "text": "On a security group the tasks carry",
+        "correct": true,
+        "why": "Each task has its own interface, and the group named in the network configuration is on it."
+      },
+      {
         "text": "On the security group of the instance the tasks run on",
         "correct": false,
         "why": "There is no instance of yours; the host is AWS's."
@@ -18,11 +23,6 @@
         "text": "In the task definition's portMappings",
         "correct": false,
         "why": "portMappings opens the container's port; it says nothing about who may reach it."
-      },
-      {
-        "text": "On a security group the tasks carry",
-        "correct": true,
-        "why": "Each task has its own interface, and the group named in the network configuration is on it."
       },
       {
         "text": "In the cluster's settings, for every task in it",
@@ -55,7 +55,7 @@
     "hint": "The task has to reach the registry before it can start.",
     "choices": [
       {
-        "text": "A route to a NAT gateway, or endpoints for ECR, CloudWatch Logs and S3",
+        "text": "A NAT route, or endpoints for ECR, Logs and S3",
         "correct": true,
         "why": "Either gives the task a way to the registry and to the logs without a public address."
       },
@@ -92,7 +92,7 @@
         "why": "It is in the task's subnet with the task's security group, created by the run-task call."
       },
       {
-        "text": "The task's own network interface, the piece of awsvpc that moto did create",
+        "text": "The task's own interface, which moto did create",
         "correct": true,
         "why": "On AWS the same interface is listed in the task's attachments and deleted when the task stops."
       },
@@ -233,11 +233,6 @@
         "why": "Fargate does not meter use; what is reserved is what is billed."
       },
       {
-        "text": "1 vCPU-hour per hour, the whole reservation",
-        "correct": true,
-        "why": "The bill follows cpu in the task definition, by the second, used or not."
-      },
-      {
         "text": "Nothing until it passes 50% of its reservation",
         "correct": false,
         "why": "There is no such threshold; billing starts with the image download."
@@ -246,6 +241,11 @@
         "text": "The instance it runs on, shared with other tasks",
         "correct": false,
         "why": "No instance appears on a Fargate bill."
+      },
+      {
+        "text": "1 vCPU-hour per hour, the whole reservation",
+        "correct": true,
+        "why": "The bill follows cpu in the task definition, by the second, used or not."
       }
     ]
   },
@@ -592,7 +592,7 @@
         "why": "A run-task on Fargate suits it."
       },
       {
-        "text": "A container that loads a kernel module, run privileged",
+        "text": "A privileged container",
         "correct": true,
         "why": "privileged is refused on Fargate, because it would control a host that is not yours."
       },
@@ -614,7 +614,7 @@
     "hint": "120 seconds is less than five minutes.",
     "choices": [
       {
-        "text": "On SIGTERM, stop taking messages and let the unfinished one become visible again",
+        "text": "On SIGTERM, stop taking messages and release the current one",
         "correct": true,
         "why": "The message goes back to the queue and another worker does it whole; nothing is half done."
       },
@@ -624,7 +624,7 @@
         "why": "Fargate allows at most 120."
       },
       {
-        "text": "Ignore SIGTERM so the work is not interrupted",
+        "text": "Ignore SIGTERM so that the message in hand is never interrupted halfway",
         "correct": false,
         "why": "SIGKILL arrives at stopTimeout anyway, mid-message."
       },

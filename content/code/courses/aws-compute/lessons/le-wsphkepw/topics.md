@@ -74,6 +74,10 @@ own; a message published before a subscription existed is never delivered to it.
 other reason for the queue behind each subscription: the queue keeps the message until the
 consumer is ready, for up to fourteen days, and the topic only has to reach the queue.
 
+Order is the one thing a standard topic does not keep either. An **SNS FIFO topic**, whose name
+ends in `.fifo`, delivers to SQS FIFO queues in order and drops duplicates, with the same group and
+deduplication ids as the FIFO queue in the last section of this lesson.
+
 SNS also delivers to other kinds of endpoint: a Lambda function, an HTTPS address, an e-mail
 address, a phone number. With SQS behind it, the topic's job is narrow and dependable, and every
 team keeps its own retries, its own dead-letter queue and its own speed.

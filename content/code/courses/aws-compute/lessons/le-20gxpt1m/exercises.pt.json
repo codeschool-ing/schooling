@@ -4,16 +4,16 @@
     "hint": "No modo awsvpc, o que leva a interface de rede?",
     "choices": [
       {
+        "text": "Num security group que as tasks levam",
+        "why": "Cada task tem a própria interface, e o grupo nomeado na configuração de rede fica nela."
+      },
+      {
         "text": "No security group da instância em que as tasks rodam",
         "why": "Não há instância sua; o host é da AWS."
       },
       {
         "text": "No portMappings da definição de task",
         "why": "O portMappings abre a porta do contêiner; não diz nada sobre quem pode alcançá-la."
-      },
-      {
-        "text": "Num security group que as tasks levam",
-        "why": "Cada task tem a própria interface, e o grupo nomeado na configuração de rede fica nela."
       },
       {
         "text": "Nas configurações do cluster, para toda task dele",
@@ -31,7 +31,7 @@
     "hint": "A task precisa alcançar o registry antes de poder começar.",
     "choices": [
       {
-        "text": "Uma rota para um NAT gateway, ou endpoints para ECR, CloudWatch Logs e S3",
+        "text": "Uma rota para NAT, ou endpoints para ECR, Logs e S3",
         "why": "Os dois dão à task um caminho até o registry e os logs sem endereço público."
       },
       {
@@ -57,7 +57,7 @@
         "why": "Ela está na subnet da task com o security group da task, criada pela chamada de run-task."
       },
       {
-        "text": "A interface de rede da própria task, a parte do awsvpc que o moto chegou a criar",
+        "text": "A interface da própria task, que o moto chegou a criar",
         "why": "Na AWS a mesma interface aparece nos attachments da task e é apagada quando a task para."
       },
       {
@@ -144,16 +144,16 @@
         "why": "O Fargate não mede uso; o que é reservado é o que é cobrado."
       },
       {
-        "text": "1 vCPU-hora por hora, a reserva inteira",
-        "why": "A conta segue o cpu da definição de task, por segundo, usado ou não."
-      },
-      {
         "text": "Nada até passar de 50% da reserva",
         "why": "Não existe esse limite; a cobrança começa com o download da imagem."
       },
       {
         "text": "A instância em que roda, dividida com outras tasks",
         "why": "Nenhuma instância aparece numa conta de Fargate."
+      },
+      {
+        "text": "1 vCPU-hora por hora, a reserva inteira",
+        "why": "A conta segue o cpu da definição de task, por segundo, usado ou não."
       }
     ]
   },
@@ -391,7 +391,7 @@
         "why": "Um run-task no Fargate serve bem."
       },
       {
-        "text": "Um contêiner que carrega um módulo do kernel, rodando privilegiado",
+        "text": "Um contêiner privilegiado",
         "why": "privileged é recusado no Fargate, porque controlaria um host que não é seu."
       },
       {
@@ -405,7 +405,7 @@
     "hint": "120 segundos é menos que cinco minutos.",
     "choices": [
       {
-        "text": "No SIGTERM, parar de pegar mensagens e deixar a inacabada ficar visível de novo",
+        "text": "No SIGTERM, parar de pegar mensagens e devolver a atual",
         "why": "A mensagem volta para a fila e outro worker a faz inteira; nada fica pela metade."
       },
       {
@@ -413,7 +413,7 @@
         "why": "O Fargate permite no máximo 120."
       },
       {
-        "text": "Ignorar o SIGTERM para o trabalho não ser interrompido",
+        "text": "Ignorar o SIGTERM para que a mensagem em mãos nunca seja interrompida no meio",
         "why": "O SIGKILL chega no stopTimeout de qualquer forma, no meio da mensagem."
       },
       {

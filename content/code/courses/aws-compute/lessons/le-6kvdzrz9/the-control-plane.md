@@ -130,7 +130,7 @@ The price sheet of lesson 1, published on 16 October 2026, has two lines for it:
 ana@laptop:~/aws$ python3 prices.py containers | grep -A3 "EKS and ECR"
 EKS and ECR
   EKS cluster, standard support                      0.1  per hour
-  EKS cluster, extended support                      0.5  per hour
+  EKS extended support, on top of that               0.5  per hour
   ECR storage                                        0.1  per GB-month
 ```
 

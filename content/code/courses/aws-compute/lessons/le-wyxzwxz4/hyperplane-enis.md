@@ -64,7 +64,8 @@ in two subnets with one security group, and on AWS that is two Hyperplane interf
 subnet. Ask moto for the account's network interfaces:
 
 ```
-@@CAP:enis@@
+ana@laptop:~/aws$ aws ec2 describe-network-interfaces --query "NetworkInterfaces[].NetworkInterfaceId"
+[]
 ```
 
 The list is empty. moto records a function's `VpcConfig` and does nothing with it, so the

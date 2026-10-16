@@ -1,0 +1,695 @@
+[
+  {
+    "id": "ex-zdyjs1zt",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer calls `receive-message` and gets `order 42`. What has happened to the message in the queue?",
+    "hint": "Think of the first transcript after the delete.",
+    "choices": [
+      {
+        "text": "It is gone; the queue handed it over",
+        "correct": false,
+        "why": "Receiving does not remove; only `delete-message` does."
+      },
+      {
+        "text": "It is copied to every other consumer of the queue",
+        "correct": false,
+        "why": "Copies per subscriber are what a topic does."
+      },
+      {
+        "text": "It moves to the dead-letter queue straight away",
+        "correct": false,
+        "why": "Only after `maxReceiveCount` receives without a delete."
+      },
+      {
+        "text": "Hidden until the timeout ends, unless deleted",
+        "correct": true,
+        "why": "Yes. That is how a queue survives a consumer that crashes."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rpc7ehm",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each message takes a consumer 45 seconds to process, and the queue keeps the default visibility timeout of 30 seconds. Two consumers read the queue. What happens?",
+    "hint": "When does the message become visible again?",
+    "choices": [
+      {
+        "text": "Nothing; the timeout only matters for consumers that crash",
+        "correct": false,
+        "why": "The queue cannot tell slow from crashed; at 30 seconds it hands the message out again."
+      },
+      {
+        "text": "The queue extends the timeout while the consumer works",
+        "correct": false,
+        "why": "Only a `change-message-visibility` call from the consumer does that."
+      },
+      {
+        "text": "The first delete fails, so the message is lost",
+        "correct": false,
+        "why": "Nothing is lost; the risk is the opposite, the work done twice."
+      },
+      {
+        "text": "It reappears at 30 s and the other consumer starts it",
+        "correct": true,
+        "why": "Yes. Set the timeout above the slowest processing time."
+      }
+    ]
+  },
+  {
+    "id": "ex-2exxxj0g",
+    "version": 1,
+    "section": "queues",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue's redrive policy has `maxReceiveCount` 5. A message is never deleted. How many times is it received before the queue moves it to the dead-letter queue?",
+    "hint": "With 3, the run showed counts 1, 2 and 3.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "receives"
+  },
+  {
+    "id": "ex-j2j3enem",
+    "version": 1,
+    "section": "queues",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of `order 42` in the queue `work` in order, as the run showed it.",
+    "hint": "`maxReceiveCount` was 3.",
+    "items": [
+      "sent to `work`",
+      "received, count 1, then hidden",
+      "received, count 2, then hidden",
+      "received, count 3, then hidden",
+      "moved to `work-dlq` at the next receive"
+    ],
+    "trap": "The move happens when a fourth receive would exceed the count, not right after the third."
+  },
+  {
+    "id": "ex-xbt9as96",
+    "version": 1,
+    "section": "queues",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`delete-message` does not take the message id; it takes the receipt ___, which names one receipt of the message.",
+    "hint": "The CLI option is `--receipt-` followed by this word.",
+    "blanks": [
+      {
+        "accept": [
+          "handle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hg13njr5",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does long polling (`--wait-time-seconds 20`) change for a consumer of an idle queue?",
+    "hint": "SQS charges per request, empty or not.",
+    "choices": [
+      {
+        "text": "Far fewer empty receives are paid for",
+        "correct": true,
+        "why": "Yes. Each request waits on the server: three a minute instead of one per loop."
+      },
+      {
+        "text": "Messages are delivered faster",
+        "correct": false,
+        "why": "A message arriving during the wait is returned at once, but speed was never the problem."
+      },
+      {
+        "text": "The visibility timeout grows to 20 seconds",
+        "correct": false,
+        "why": "The two settings are separate: one is how long to wait for a message, the other how long to hide it."
+      },
+      {
+        "text": "Messages are kept 20 seconds longer before expiring",
+        "correct": false,
+        "why": "Retention is its own attribute, four days by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebmmp14r",
+    "version": 1,
+    "section": "topics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Billing and shipping both read paid orders from one SQS queue. What goes wrong?",
+    "hint": "A queue gives each message to how many consumers?",
+    "choices": [
+      {
+        "text": "Nothing; each team receives every order",
+        "correct": false,
+        "why": "A queue hands each message to one consumer."
+      },
+      {
+        "text": "The queue refuses a second consumer",
+        "correct": false,
+        "why": "Any number of consumers may read; they compete for messages."
+      },
+      {
+        "text": "Each team sees about half the orders",
+        "correct": true,
+        "why": "Yes. They need a topic, with a queue each behind it."
+      },
+      {
+        "text": "Every order is delivered twice to both teams",
+        "correct": false,
+        "why": "The opposite: each order reaches one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksfemxy0",
+    "version": 1,
+    "section": "topics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, Ana subscribes a queue to a topic exactly as in the lab, publishes, and the queue stays empty. In moto it worked. What is the likely cause?",
+    "hint": "What does moto not check?",
+    "choices": [
+      {
+        "text": "The queue lacks a policy for `sns.amazonaws.com`",
+        "correct": true,
+        "why": "Yes. Without it SNS delivers nothing and the subscription looks fine."
+      },
+      {
+        "text": "Raw delivery has to be turned on for every SQS endpoint",
+        "correct": false,
+        "why": "Raw only changes the shape of what arrives."
+      },
+      {
+        "text": "SNS delivers to SQS only once a day",
+        "correct": false,
+        "why": "Delivery is immediate."
+      },
+      {
+        "text": "A topic needs at least two subscriptions",
+        "correct": false,
+        "why": "One subscription is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fyn978v",
+    "version": 1,
+    "section": "topics",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the two publishes, which of these were true? Choose all that apply.",
+    "hint": "One subscription had a filter and raw delivery.",
+    "choices": [
+      {
+        "text": "`billing` received both orders",
+        "correct": true,
+        "why": "Yes; it has no filter."
+      },
+      {
+        "text": "`shipping` received the digital order",
+        "correct": false,
+        "why": "The filter dropped it before delivery."
+      },
+      {
+        "text": "`shipping` received the published text and nothing else",
+        "correct": true,
+        "why": "Yes, because of raw delivery."
+      },
+      {
+        "text": "`billing` received SNS's JSON envelope around each message",
+        "correct": true,
+        "why": "Yes, with `Type`, `Message` and the attributes."
+      },
+      {
+        "text": "The filter was applied by the `shipping` queue after delivery",
+        "correct": false,
+        "why": "SNS applies it before delivery; a queue has no filters."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgtb1jbj",
+    "version": 1,
+    "section": "topics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A third team subscribes a queue to `orders` an hour after `order 42 paid` was published. Does its queue receive that message?",
+    "hint": "What does a topic keep?",
+    "choices": [
+      {
+        "text": "Yes, once, when the subscription is confirmed",
+        "correct": false,
+        "why": "There is nothing to replay; the message was delivered and not kept."
+      },
+      {
+        "text": "Yes, if it asks for messages from the last 14 days",
+        "correct": false,
+        "why": "Fourteen days is a queue's longest retention; a topic keeps none."
+      },
+      {
+        "text": "No; a topic keeps nothing",
+        "correct": true,
+        "why": "Yes. A subscription only receives what is published after it exists."
+      },
+      {
+        "text": "Only with raw delivery",
+        "correct": false,
+        "why": "Raw changes the format, not what is delivered."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmgdkkq8",
+    "version": 1,
+    "section": "topics",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Set to `MessageBody`, the subscription attribute `___` makes a filter policy read the JSON of the message instead of its attributes.",
+    "hint": "It starts with the words `FilterPolicy`.",
+    "blanks": [
+      {
+        "accept": [
+          "FilterPolicyScope"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eb18rkkr",
+    "version": 1,
+    "section": "event-buses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bus `shop` has one rule, `big-orders`, for totals above 1000. An event with a total of 300 is put on it. What happens to the event?",
+    "hint": "What did `review` receive?",
+    "choices": [
+      {
+        "text": "It waits on the bus until a rule matches it",
+        "correct": false,
+        "why": "A bus keeps nothing; only an archive would."
+      },
+      {
+        "text": "`put-events` refuses it with a failed entry",
+        "correct": false,
+        "why": "`FailedEntryCount` was 0; the event was accepted."
+      },
+      {
+        "text": "It goes to the default bus instead",
+        "correct": false,
+        "why": "Events never move between buses on their own."
+      },
+      {
+        "text": "It is dropped: no rule matched, so no target gets it",
+        "correct": true,
+        "why": "Yes. Without an archive it is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzjhy3sn",
+    "version": 1,
+    "section": "event-buses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rule's pattern names `source` and `detail.total > 1000`. An event arrives from `shop.orders` with the detail `{\"id\": \"9\", \"amount\": 2000}`. Does it match?",
+    "hint": "Every field the pattern names has to match.",
+    "choices": [
+      {
+        "text": "Yes: 2000 is above 1000",
+        "correct": false,
+        "why": "The 2000 is in `amount`, which the pattern does not read."
+      },
+      {
+        "text": "No: the event has no `total`, a field the pattern names",
+        "correct": true,
+        "why": "Yes. An event without a named field does not match."
+      },
+      {
+        "text": "Yes: a missing field is ignored",
+        "correct": false,
+        "why": "Fields the pattern leaves out are ignored; fields it names are required."
+      },
+      {
+        "text": "It depends on the order of the fields in the detail",
+        "correct": false,
+        "why": "Matching is by name, never by position."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t9g777r",
+    "version": 1,
+    "section": "event-buses",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with the service that fits it.",
+    "hint": "Who decides where the message goes?",
+    "pairs": [
+      {
+        "left": "each job must be done by one worker",
+        "right": "an SQS queue"
+      },
+      {
+        "left": "billing and shipping each need every payment",
+        "right": "an SNS topic"
+      },
+      {
+        "left": "new consumers appear, and the content decides who gets what",
+        "right": "an EventBridge bus with rules"
+      },
+      {
+        "left": "start a report every night at 03:00 São Paulo time",
+        "right": "an EventBridge Scheduler schedule"
+      }
+    ],
+    "right_distractors": [
+      "a Step Functions `Wait` state in a loop"
+    ]
+  },
+  {
+    "id": "ex-zems4j6p",
+    "version": 1,
+    "section": "event-buses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both SNS and EventBridge deliver one message to several places. What is the difference the section insists on?",
+    "hint": "Where does the routing live?",
+    "choices": [
+      {
+        "text": "EventBridge keeps events for 14 days and SNS does not",
+        "correct": false,
+        "why": "Neither keeps messages by default; EventBridge does only with an archive."
+      },
+      {
+        "text": "On a bus, rules on content choose the targets",
+        "correct": true,
+        "why": "Yes. The producer only says what happened."
+      },
+      {
+        "text": "SNS delivers only to queues",
+        "correct": false,
+        "why": "SNS also delivers to Lambda, HTTPS, e-mail and SMS."
+      },
+      {
+        "text": "EventBridge is cheaper per message",
+        "correct": false,
+        "why": "On the sheet a custom event costs 1, an SNS publish 0.5 per million."
+      }
+    ]
+  },
+  {
+    "id": "ex-44mtkazg",
+    "version": 1,
+    "section": "event-buses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What arrives on an account's bus called `default` without anybody putting events on it?",
+    "hint": "An instance changing state is one example.",
+    "choices": [
+      {
+        "text": "Nothing until a custom bus is created",
+        "correct": false,
+        "why": "The default bus exists in every account and receives AWS's events."
+      },
+      {
+        "text": "Every SNS message published in the account",
+        "correct": false,
+        "why": "SNS publishes go to topics, not to the bus."
+      },
+      {
+        "text": "Events from AWS services",
+        "correct": true,
+        "why": "Yes: EC2, S3, Step Functions and others publish there."
+      },
+      {
+        "text": "A copy of every custom bus's events",
+        "correct": false,
+        "why": "Buses are separate; nothing is copied between them unless a rule targets another bus."
+      }
+    ]
+  },
+  {
+    "id": "ex-48spqpyx",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A producer sends to a FIFO queue with the deduplication id `42-paid`, gets no answer, and sends again a minute later with the same id. What happens?",
+    "hint": "How long does a FIFO queue remember an id?",
+    "choices": [
+      {
+        "text": "The second send is refused with an error",
+        "correct": false,
+        "why": "It is accepted; that is what makes retrying safe."
+      },
+      {
+        "text": "Both are accepted and one message is delivered",
+        "correct": true,
+        "why": "Yes; the id is remembered for five minutes."
+      },
+      {
+        "text": "Both are delivered, one after the other",
+        "correct": false,
+        "why": "Within five minutes, a repeated id is dropped."
+      },
+      {
+        "text": "The second replaces the first in the queue",
+        "correct": false,
+        "why": "Nothing is replaced; the repeat is simply not delivered."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvabhyk4",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "4 million orders a month go through a FIFO queue, each sent, received and deleted once. At 0.5 USD per million requests, what does the month cost?",
+    "hint": "Three requests per message.",
+    "value": 6,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-26ya09p0",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer with no long polling asks an idle standard queue 5 times a second for a 30-day month. At 0.4 USD per million requests, what do the empty receives cost?",
+    "hint": "A 30-day month is 2,592,000 seconds.",
+    "value": 5.184,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-0k9ye961",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`consumer.py` inserts the key and calls `charge` inside one transaction. Why not insert the key after the charge has succeeded, in a transaction of its own?",
+    "hint": "Picture two consumers holding copies of the same message at the same moment.",
+    "choices": [
+      {
+        "text": "SQLite cannot run two statements in separate transactions",
+        "correct": false,
+        "why": "It can; the order is a design choice, not a limit."
+      },
+      {
+        "text": "It would be faster, but harder to read",
+        "correct": false,
+        "why": "Speed is not the point; correctness under duplicates is."
+      },
+      {
+        "text": "Both copies could charge before either key is written",
+        "correct": true,
+        "why": "Yes. Claiming the key first lets the unique constraint stop the second."
+      },
+      {
+        "text": "The message would not be deleted",
+        "correct": false,
+        "why": "The delete happens either way, after the block."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp8fr1jh",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team puts every order of the shop into one FIFO message group, `all`. What does that cost them?",
+    "hint": "What does a group allow while one of its messages is being processed?",
+    "choices": [
+      {
+        "text": "One message at a time, however many consumers",
+        "correct": true,
+        "why": "Yes. Groups are where FIFO's parallelism comes from."
+      },
+      {
+        "text": "Duplicates are no longer dropped",
+        "correct": false,
+        "why": "Deduplication does not depend on the group."
+      },
+      {
+        "text": "The queue refuses to accept more than one group name",
+        "correct": false,
+        "why": "Any number of groups is allowed; that is the point."
+      },
+      {
+        "text": "The price per request doubles",
+        "correct": false,
+        "why": "The price is the same; the throughput is what suffers."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3p544vd",
+    "version": 1,
+    "section": "ordering-and-duplicates",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can still deliver the same work twice from a FIFO queue? Choose all that apply.",
+    "hint": "Deduplication covers five minutes, at the sending end.",
+    "choices": [
+      {
+        "text": "A producer retries with the same id after six minutes",
+        "correct": true,
+        "why": "Yes; the window has closed."
+      },
+      {
+        "text": "A consumer does the work and crashes before deleting",
+        "correct": true,
+        "why": "Yes; the message comes back after the visibility timeout."
+      },
+      {
+        "text": "A visibility timeout shorter than the processing time",
+        "correct": true,
+        "why": "Yes; the message is handed out again while still being worked on."
+      },
+      {
+        "text": "Two sends with the same id one minute apart",
+        "correct": false,
+        "why": "That is exactly the case deduplication drops."
+      },
+      {
+        "text": "Identical bodies within five minutes under `ContentBasedDeduplication`",
+        "correct": false,
+        "why": "The hash of the body is the id, so the second is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-fces4pta",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stock service receives increases and decreases for 2,000 products at a high rate. For each product the changes must be applied in the order they were made; across products, order does not matter. Which design fits?",
+    "hint": "Order within a key, parallelism across keys.",
+    "choices": [
+      {
+        "text": "A standard queue, with the consumer sorting what it receives",
+        "correct": false,
+        "why": "A consumer cannot sort what it has not received yet, and two consumers see different halves."
+      },
+      {
+        "text": "An SNS topic with a subscription per product",
+        "correct": false,
+        "why": "A topic copies messages; it promises no order to a standard queue."
+      },
+      {
+        "text": "A FIFO queue with one message group for everything",
+        "correct": false,
+        "why": "Correct order, but one change at a time across all 2,000 products."
+      },
+      {
+        "text": "A FIFO queue whose message group id is the product id",
+        "correct": true,
+        "why": "Yes: in order per product, in parallel across them."
+      }
+    ]
+  },
+  {
+    "id": "ex-sch5abjq",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "6 million messages a month are published to an SNS topic with two SQS subscriptions. At 0.5 USD per million publishes after the first free million, and nothing for deliveries to SQS, what does SNS cost for the month?",
+    "hint": "The subscriptions do not multiply the publishes.",
+    "value": 2.5,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-c8rx2nd7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A producer sends 150 KB messages to SQS. How is each send billed?",
+    "hint": "Requests are counted in steps of 64 KB.",
+    "choices": [
+      {
+        "text": "As one request, whatever its size",
+        "correct": false,
+        "why": "Each 64 KB step is a request."
+      },
+      {
+        "text": "As three requests",
+        "correct": true,
+        "why": "Yes: 150 KB spans three 64 KB steps."
+      },
+      {
+        "text": "As two requests, rounding to the nearest step",
+        "correct": false,
+        "why": "The steps round up, not to the nearest."
+      },
+      {
+        "text": "It is refused for being over 64 KB",
+        "correct": false,
+        "why": "64 KB is the billing step, not the size limit."
+      }
+    ]
+  }
+]

@@ -6,7 +6,7 @@ version: 1
 The comfortable assumption is that a message is delivered once and in the order it was sent.
 **A standard SQS queue promises neither.** It delivers every message at least once, and
 occasionally twice, and in roughly the order sent but not exactly. The first section showed one
-cause of the second delivery, a consumer that does not delete in time; another is inside SQS,
+cause of the second delivery, a consumer that does not delete in time. Another is inside SQS,
 which stores each message on several servers and can, rarely, hand out a copy one of them still
 holds. In exchange a standard queue takes nearly unlimited throughput. Both promises can be bought
 back, with a FIFO queue, and both can be made not to matter, with a consumer that does the same

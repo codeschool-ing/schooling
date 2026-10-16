@@ -19,7 +19,10 @@ table sends their internet traffic to it. `aws-foundations` lesson 17 builds one
 whole internet to the function, and the price sheet of 16 October 2026 has its two meters:
 
 ```
-@@CAP:nat-price@@
+ana@laptop:~/aws$ python3 prices.py ec2 | grep -A2 '^Network'
+Network
+  NAT gateway                                      0.093  per hour
+  NAT gateway, data processed                      0.093  per GB
 ```
 
 **Both meters run on their own.** The hourly charge is paid for every hour the gateway exists,
@@ -52,10 +55,42 @@ change. It is billed per hour per zone and per gigabyte; **those prices are not 
 price sheet**, so this lesson quotes no figure for them, and AWS's pricing page for PrivateLink is
 where they are published.
 
-Both run against moto. The route table is the one the VPC was created with:
+Both run against moto. The route table is the one the VPC was created with. The interface endpoint
+gets a security group of its own, which admits HTTPS, port 443, from the function's group: the SDK
+talks to the endpoint over HTTPS, and on AWS an endpoint whose group admits nothing answers
+nothing.
 
 ```
-@@CAP:endpoints@@
+ana@laptop:~/aws$ RT=$(aws ec2 describe-route-tables --filters Name=vpc-id,Values=$VPC --query "RouteTables[0].RouteTableId" --output text)
+ana@laptop:~/aws$ aws ec2 create-vpc-endpoint --vpc-id $VPC --vpc-endpoint-type Gateway --service-name com.amazonaws.sa-east-1.s3 --route-table-ids $RT --query "VpcEndpoint.{Id: VpcEndpointId, Type: VpcEndpointType, State: State}"
+{
+    "Id": "vpce-1020c426d8afd2870",
+    "Type": "Gateway",
+    "State": "available"
+}
+ana@laptop:~/aws$ EP=$(aws ec2 create-security-group --vpc-id $VPC --group-name orders-endpoints --description "the endpoints" --query GroupId --output text)
+ana@laptop:~/aws$ aws ec2 authorize-security-group-ingress --group-id $EP --protocol tcp --port 443 --source-group $FN --query "SecurityGroupRules[].{Port: FromPort, From: ReferencedGroupInfo.GroupId}"
+[
+    {
+        "Port": 443,
+        "From": "sg-3e0f3ea4cf6cf0f8a"
+    }
+]
+ana@laptop:~/aws$ aws ec2 create-vpc-endpoint --vpc-id $VPC --vpc-endpoint-type Interface --service-name com.amazonaws.sa-east-1.secretsmanager --subnet-ids $A $B --security-group-ids $EP --query "VpcEndpoint.{Id: VpcEndpointId, Type: VpcEndpointType, Interfaces: NetworkInterfaceIds}"
+{
+    "Id": "vpce-c1d15a50458422a04",
+    "Type": "Interface",
+    "Interfaces": [
+        "eni-d8d8e16d0c205af12",
+        "eni-3b1b17dee817d5abd"
+    ]
+}
+ana@laptop:~/aws$ aws ec2 describe-route-tables --route-table-ids $RT --query "RouteTables[0].Routes[].[DestinationCidrBlock || DestinationPrefixListId, GatewayId]" --output text
+10.0.0.0/16	local
+pl-fe6f0c1379a3c5867	vpce-1020c426d8afd2870
+ana@laptop:~/aws$ aws ec2 describe-network-interfaces --query "NetworkInterfaces[].[NetworkInterfaceId, SubnetId]" --output text
+eni-d8d8e16d0c205af12	subnet-dfadb89736d4aa1a9
+eni-3b1b17dee817d5abd	subnet-2703629957a6494c1
 ```
 
 The gateway endpoint appears in the route table as a route to a prefix list, `pl-` and an id,
