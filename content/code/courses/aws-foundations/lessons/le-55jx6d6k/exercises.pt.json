@@ -1,0 +1,404 @@
+{
+  "ex-kd89b7ty": {
+    "prompt": "A que um security group fica preso?",
+    "hint": "É por isso que duas máquinas na mesma sub-rede podem ter regras diferentes.",
+    "choices": [
+      {
+        "text": "A uma sub-rede, como uma tabela de rotas",
+        "why": "Essa é a network ACL. Um security group julga cada interface por si, até entre vizinhas."
+      },
+      {
+        "text": "A uma interface de rede",
+        "why": "Isso. A interface pela qual uma máquina, um load balancer ou um banco de dados conversa."
+      },
+      {
+        "text": "À VPC como um todo, na borda dela",
+        "why": "Um grupo pertence a uma VPC, mas não filtra nada até uma interface carregá-lo."
+      },
+      {
+        "text": "Ao internet gateway, para o tráfego de fora",
+        "why": "Um gateway encaminha e traduz; não carrega grupo. Tráfego entre duas máquinas lá dentro nunca passa por ele."
+      }
+    ]
+  },
+  "ex-ennt4y0q": {
+    "prompt": "O `db-sg` não tem regra de saída nenhuma. O banco de dados ainda consegue responder às consultas da aplicação?",
+    "hint": "O que ter estado significa para uma resposta?",
+    "choices": [
+      {
+        "text": "Não: um pacote que sai precisa de regra de saída",
+        "why": "É assim que uma network ACL se comporta. Um security group lembra das conexões que deixou entrar."
+      },
+      {
+        "text": "Sim: o grupo tem estado, e as respostas saem",
+        "why": "Isso. O grupo tem estado. O que a lista de saída vazia impede é o banco de dados abrir uma conexão por conta própria."
+      },
+      {
+        "text": "Quando o grupo padrão também estiver preso a ele",
+        "why": "Um segundo grupo acrescentaria regras, mas nenhuma é necessária para respostas; o primeiro já as deixa sair."
+      },
+      {
+        "text": "Dentro da própria sub-rede",
+        "why": "Sub-redes não entram na decisão de um security group, e a aplicação fica em outra sub-rede de qualquer forma."
+      }
+    ]
+  },
+  "ex-0xpa2dmp": {
+    "prompt": "Por que o `app-sg` deixa entrar a porta 8080 vinda do `alb-sg` e não de `10.20.0.0/20`, o intervalo de `public-a`?",
+    "hint": "O que mais tem endereço em `public-a`?",
+    "choices": [
+      {
+        "text": "Uma regra não pode nomear um intervalo de endereços dentro da VPC",
+        "why": "Pode; a própria regra do load balancer nomeia um intervalo. A questão é o que o intervalo deixaria entrar."
+      },
+      {
+        "text": "Referências são conferidas mais rápido",
+        "why": "Velocidade não é o motivo, e a lição não afirma nada sobre isso."
+      },
+      {
+        "text": "Ele também deixaria passar o NAT gateway e mais coisas",
+        "why": "Isso. Uma referência quer dizer o load balancer, sejam quais forem os endereços dele; um intervalo quer dizer o que estiver nele."
+      },
+      {
+        "text": "O load balancer não tem endereço próprio em `public-a`",
+        "why": "Ele tem interfaces nas sub-redes públicas; o problema é que ele não é a única coisa ali."
+      }
+    ]
+  },
+  "ex-qtkb11we": {
+    "prompt": "A loja quer que todo mundo alcance o load balancer na 443 menos `198.51.100.7`. Que mudança faz isso?",
+    "hint": "Um dos dois filtros não tem como dizer não.",
+    "choices": [
+      {
+        "text": "Uma regra de negação para esse endereço no `alb-sg`, escrita antes da permissão",
+        "why": "Um security group só guarda permissões, e as regras dele não têm ordem; não há negação para escrever."
+      },
+      {
+        "text": "Uma negação de entrada na network ACL das sub-redes públicas, numerada abaixo da permissão da 443",
+        "why": "Isso. É a regra 90 da network ACL `public` da loja; o pacote é descartado antes de o `alb-sg` vê-lo."
+      },
+      {
+        "text": "Uma negação de saída para esse endereço no `alb-sg`, para nenhuma resposta chegar a ele",
+        "why": "Regras de saída também são permissões, e as respostas saem sozinhas porque o grupo tem estado."
+      },
+      {
+        "text": "Tirar `0.0.0.0/0` do `alb-sg` e acrescentar os endereços dos clientes um a um",
+        "why": "Ninguém conhece os endereços dos clientes de antemão, e um grupo comporta 60 regras de entrada por padrão."
+      }
+    ]
+  },
+  "ex-x79tcvb7": {
+    "prompt": "O security group padrão do moto não tinha regra de entrada. O que o security group padrão da AWS deixa entrar?",
+    "hint": "Máquinas deixadas no padrão conseguem conversar entre si.",
+    "choices": [
+      {
+        "text": "Nada, como no moto",
+        "why": "O padrão da AWS tem uma regra de entrada que o moto deixa de fora."
+      },
+      {
+        "text": "SSH de qualquer lugar, para que uma primeira máquina possa ser alcançada",
+        "why": "Nenhuma regra padrão abre uma porta para a internet; uma regra de SSH de qualquer lugar é algo que as pessoas acrescentam, e se arrependem."
+      },
+      {
+        "text": "Todo tráfego de interfaces que carregam o mesmo grupo",
+        "why": "Isso. Uma regra cuja origem é o próprio grupo, então os membros se alcançam e nada mais os alcança."
+      },
+      {
+        "text": "Todo tráfego de dentro do intervalo da VPC",
+        "why": "A regra nomeia o grupo, não o intervalo: uma máquina em outro lugar da VPC sem o grupo padrão não entra."
+      }
+    ]
+  },
+  "ex-mbzcb5ew": {
+    "prompt": "O `create-security-group` acabou de criar o `db-sg`. Quais destes valem para ele antes de qualquer regra ser acrescentada? Marque todos os que se aplicam.",
+    "hint": "A transcrição imprimiu a única regra dele.",
+    "choices": [
+      {
+        "text": "Ele não deixa nada entrar",
+        "why": "Isso. Um grupo novo não tem regra de entrada."
+      },
+      {
+        "text": "Ele deixa toda conexão de saída sair",
+        "why": "Isso. `True -1 0.0.0.0/0`: saída, todo protocolo, todo lugar."
+      },
+      {
+        "text": "Ele nega `198.51.100.7`",
+        "why": "Um security group não nega nada por nome; essa negação mora na network ACL."
+      },
+      {
+        "text": "Ele filtra as sub-redes da camada de dados",
+        "why": "Ele filtra as interfaces que o carregam, onde quer que estejam, e nenhuma o carrega ainda."
+      },
+      {
+        "text": "Ele só pode guardar regras de permissão",
+        "why": "Isso. Isso vale para todo security group."
+      }
+    ]
+  },
+  "ex-snrybacz": {
+    "prompt": "Em que ordem uma network ACL lê as regras dela?",
+    "hint": "Os números são a ordem.",
+    "choices": [
+      {
+        "text": "Todas juntas, e uma negação em qualquer lugar vence",
+        "why": "Isso lembra mais como o IAM julga uma política. Uma network ACL para na primeira regra que casa."
+      },
+      {
+        "text": "Por número, a menor primeiro; a primeira que casa decide",
+        "why": "Isso. Por isso a negação da loja é a regra 90 e a permissão da 443 é a regra 100."
+      },
+      {
+        "text": "Na ordem em que as regras foram criadas",
+        "why": "A ordem de criação não conta; o número conta. Passos de dez deixam espaço para inserir uma entre outras duas."
+      },
+      {
+        "text": "Por número, a maior primeiro, então a regra `*` vem antes",
+        "why": "A regra `*`, 32767, é a última palavra: ela nega só o que nada mais casou."
+      }
+    ]
+  },
+  "ex-vepbf6nn": {
+    "prompt": "As regras de entrada de uma network ACL são: 100 permite TCP 443 de `0.0.0.0/0`; 200 nega tudo de `198.51.100.7/32`. `198.51.100.7` passa na porta 443?",
+    "hint": "Leia as regras do jeito que a network ACL lê.",
+    "choices": [
+      {
+        "text": "Sim: a regra 100 casa primeiro e o permite",
+        "why": "Isso. A negação nunca é alcançada para esse pacote. Numerá-la abaixo de 100, como a regra 90 da loja, é o que a faz funcionar."
+      },
+      {
+        "text": "Não: uma negação vence uma permissão onde quer que esteja",
+        "why": "Essa é a regra das políticas do IAM, não das network ACLs, onde a primeira que casa decide."
+      },
+      {
+        "text": "Não: a regra mais específica, o `/32`, vence",
+        "why": "O prefixo mais longo decide rotas. Uma network ACL vai pelo número da regra, sejam quais forem os prefixos."
+      },
+      {
+        "text": "Depende do security group, que decide entre as duas",
+        "why": "A network ACL decide sozinha, antes de o security group ver o pacote."
+      }
+    ]
+  },
+  "ex-3558fqy0": {
+    "prompt": "Por que a network ACL `public` permite saída TCP de 1024 a 65535 para todo lugar?",
+    "hint": "Para onde vai a resposta a um cliente?",
+    "choices": [
+      {
+        "text": "Para que o load balancer possa abrir conexões com qualquer servidor",
+        "why": "Servidores escutam em portas baixas e conhecidas, como a 443. Portas altas são onde clientes esperam respostas."
+      },
+      {
+        "text": "As respostas voltam à porta efêmera do cliente",
+        "why": "Isso. A resposta é um pacote novo para a network ACL, então precisa de regra própria; a AWS recomenda a faixa inteira a partir de 1024."
+      },
+      {
+        "text": "Porque a AWS acrescenta essa regra a toda network ACL que cria",
+        "why": "Uma network ACL nova só tem as regras `*`. Quem escreveu esta foi a loja."
+      },
+      {
+        "text": "Para ajudar os security groups",
+        "why": "Os security groups não dependem dela; as respostas que eles deixam sair morreriam nesta borda sem ela."
+      }
+    ]
+  },
+  "ex-pw3z9n52": {
+    "prompt": "O `describe-network-acls` numera a última regra de toda network ACL, a que o console mostra como `*`, como regra ___.",
+    "hint": "A transcrição da network ACL padrão o imprimiu duas vezes.",
+    "blanks": [
+      {
+        "accept": [
+          "32767"
+        ]
+      }
+    ]
+  },
+  "ex-tg02feb8": {
+    "prompt": "Uma network ACL não lembra nada de uma conexão, então uma resposta precisa de regra própria: a palavra para essa propriedade é ___.",
+    "hint": "O contrário da de um security group.",
+    "blanks": [
+      {
+        "accept": [
+          "stateless",
+          "sem estado"
+        ]
+      }
+    ]
+  },
+  "ex-4gy10d8y": {
+    "prompt": "O moto respondeu `[]` para as regras de uma network ACL que acabara de criar. O que uma network ACL nova deixa passar na AWS?",
+    "hint": "Compare com a network ACL padrão.",
+    "choices": [
+      {
+        "text": "Tudo, como a network ACL padrão",
+        "why": "A padrão permite tudo por causa da regra 100. Uma nova não tem essa regra."
+      },
+      {
+        "text": "Nada até regras serem acrescentadas: ela só tem as negações `*`",
+        "why": "Isso. Por isso associar uma network ACL nova e vazia a uma sub-rede a corta na hora."
+      },
+      {
+        "text": "Nada na entrada, tudo na saída, como um security group novo",
+        "why": "Esse é um security group novo. As duas regras `*` de uma network ACL negam nos dois sentidos."
+      },
+      {
+        "text": "O que os security groups da sub-rede permitirem",
+        "why": "Os dois filtros são independentes, e sub-redes não têm security groups; interfaces têm."
+      }
+    ]
+  },
+  "ex-dfz8v9fq": {
+    "prompt": "O pacote de um cliente chega ao load balancer, e o load balancer responde. Ponha as verificações na ordem em que acontecem.",
+    "hint": "Na entrada, a sub-rede vem antes da interface; na saída, ao contrário.",
+    "items": [
+      "as regras de entrada da network ACL `public`",
+      "as regras de entrada do `alb-sg`",
+      "o `alb-sg` deixa a resposta sair, já que ela pertence a uma conexão permitida",
+      "as regras de saída da network ACL `public`"
+    ],
+    "trap": "A resposta encontra o security group antes da network ACL, porque a interface fica dentro da sub-rede."
+  },
+  "ex-rzrgw6by": {
+    "prompt": "No terceiro percurso o load balancer manda direto para o banco de dados na 5432. Que filtro o recusa?",
+    "hint": "Toda verificação de endereço o permitiu.",
+    "choices": [
+      {
+        "text": "A network ACL `public`, na saída",
+        "why": "A regra 120 de saída permite tudo para `10.20.0.0/16`."
+      },
+      {
+        "text": "A network ACL de `data-a`, na entrada",
+        "why": "`data-a` está na network ACL padrão, que deixa tudo entrar."
+      },
+      {
+        "text": "O `db-sg`, que só confia em interfaces com `app-sg`",
+        "why": "Isso. O load balancer carrega o `alb-sg`. A recusa é por identidade, que nenhuma regra de endereço faria."
+      },
+      {
+        "text": "O `alb-sg`, que não tem regra para a 5432",
+        "why": "A regra de saída do `alb-sg` permite tudo; a recusa acontece na interface do banco de dados."
+      }
+    ]
+  },
+  "ex-s15n64dx": {
+    "prompt": "Antes de mudar uma regra, a loja quer que a AWS diga se o load balancer conseguiria alcançar o banco de dados, e qual regra o impediria, sem mandar tráfego. Que ferramenta é essa?",
+    "hint": "Uma ferramenta registra o que aconteceu; a outra lê a configuração.",
+    "choices": [
+      {
+        "text": "VPC Flow Logs",
+        "why": "Os Flow Logs registram conexões que foram tentadas. Sem tráfego não há nada para registrar."
+      },
+      {
+        "text": "VPC Reachability Analyzer",
+        "why": "Isso. Ele lê tabelas de rotas, network ACLs e security groups entre dois pontos e nomeia a regra que bloqueia. Dez centavos por análise em São Paulo."
+      },
+      {
+        "text": "`describe-security-group-rules`",
+        "why": "Ele lista regras; não as combina com rotas e network ACLs numa resposta sobre um caminho."
+      },
+      {
+        "text": "O moto, já que guarda toda regra",
+        "why": "O moto guarda as regras e não filtra nada, então não sabe dizer se um pacote passaria."
+      }
+    ]
+  },
+  "ex-n03mgvm3": {
+    "prompt": "Pelo preço que a lição leu para São Paulo, quantos dólares custam cinco análises do Reachability Analyzer?",
+    "hint": "Uma linha da oferta da VPC.",
+    "unit": "dólares"
+  },
+  "ex-zhewqhfe": {
+    "prompt": "Alguém passa as sub-redes de dados para uma network ACL nova com uma regra de entrada, 100 permitindo TCP 5432 de `10.20.0.0/16`, e nenhuma regra de saída própria. As consultas da aplicação param de funcionar. Por quê?",
+    "hint": "As consultas entram. E as respostas?",
+    "choices": [
+      {
+        "text": "O `db-sg` recusa as consultas, já que a network ACL mudou",
+        "why": "Os dois filtros são independentes; o `db-sg` ainda confia no `app-sg` exatamente como antes."
+      },
+      {
+        "text": "A regra de entrada está errada: a 5432 tem de ser permitida a partir do `app-sg`",
+        "why": "Uma network ACL não sabe nomear um security group; ela recebe um intervalo de endereços, e este está certo."
+      },
+      {
+        "text": "As respostas saem para as portas efêmeras da aplicação, e a regra `*` as nega",
+        "why": "Isso. Uma network ACL não tem estado: sem uma regra de saída de 1024 a 65535 rumo à VPC, toda resposta morre na borda das sub-redes de dados."
+      },
+      {
+        "text": "Uma sub-rede não pode sair da network ACL padrão enquanto há máquinas rodando nela",
+        "why": "Substituir a associação funciona a qualquer momento, e é exatamente assim que essa queda pôde acontecer na hora."
+      }
+    ]
+  },
+  "ex-47ndzvef": {
+    "prompt": "Ligue cada descrição ao que ela descreve.",
+    "hint": "Dois filtros e duas ferramentas.",
+    "pairs": [
+      {
+        "left": "regras numeradas de permissão e negação na borda de uma sub-rede",
+        "right": "network ACL"
+      },
+      {
+        "left": "regras de permissão numa interface que podem nomear outro grupo",
+        "right": "security group"
+      },
+      {
+        "left": "um registro por interface de cada conexão, com `ACCEPT` ou `REJECT`",
+        "right": "VPC Flow Logs"
+      },
+      {
+        "left": "uma resposta sobre um caminho, lida da configuração",
+        "right": "Reachability Analyzer"
+      }
+    ],
+    "right_distractors": [
+      "NAT gateway"
+    ]
+  },
+  "ex-ezg0ksyp": {
+    "prompt": "Uma pessoa arruma a network ACL `public` e apaga a regra de entrada 110, TCP de 1024 a 65535 de qualquer lugar. Os clientes ainda alcançam a loja. O que para de funcionar?",
+    "hint": "Quais conexões nas sub-redes públicas são abertas de dentro?",
+    "choices": [
+      {
+        "text": "Nada, já que as respostas aos clientes saem pelas regras de saída",
+        "why": "Isso cobre as conexões que os clientes abrem. Os NAT gateways também abrem conexões, e as respostas delas entram."
+      },
+      {
+        "text": "As chamadas da aplicação para fora, pelo NAT",
+        "why": "Isso. Os NAT gateways ficam nas sub-redes públicas; as respostas do provedor de pagamentos voltam para portas efêmeras, que só a regra 110 deixava entrar."
+      },
+      {
+        "text": "Clientes em IPv6",
+        "why": "As regras em questão são IPv4, e os clientes da loja chegam por IPv4."
+      },
+      {
+        "text": "A negação para `198.51.100.7`, que dependia da regra 110",
+        "why": "A regra 90 se sustenta sozinha: é lida primeiro e casa com esse endereço seja o que for que venha depois."
+      }
+    ]
+  },
+  "ex-dthnqncr": {
+    "prompt": "Quais destes o laboratório mostrou sobre o moto? Marque todos os que se aplicam.",
+    "hint": "Três são sobre o que ele guarda ou recusa; dois são sobre o que ele teria de transportar.",
+    "choices": [
+      {
+        "text": "Ele recusa a mesma regra de security group acrescentada duas vezes",
+        "why": "Isso. `InvalidPermission.Duplicate`, como na AWS."
+      },
+      {
+        "text": "Ele descartou os pacotes de `198.51.100.7`",
+        "why": "Não existia pacote para descartar; o percurso foi raciocínio a partir das regras."
+      },
+      {
+        "text": "O security group padrão dele não tem regra de entrada",
+        "why": "Isso. O da AWS tem a regra que confia no próprio grupo."
+      },
+      {
+        "text": "Uma network ACL nova nele começa sem regra nenhuma",
+        "why": "Isso. A da AWS começa com as duas negações `*`."
+      },
+      {
+        "text": "Ele gravou um Flow Log do pedido recusado do load balancer",
+        "why": "Não houve pedido nem Flow Log; os dois são da AWS, e nenhum foi executado."
+      }
+    ]
+  }
+}
