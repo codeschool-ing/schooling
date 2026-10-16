@@ -16,6 +16,7 @@ links/
 │   ├── app.js          builds the Express application, and does not listen (lesson 6)
 │   ├── links.js        the routes under /links (lessons 6, 7)
 │   ├── store.js        keeps the links, in memory and then in a file (lessons 6, 8)
+│   ├── admin.js        checks the admin key (lessons 6, 9)
 │   └── config.js       reads and checks the environment, once (lesson 9)
 └── test/
     └── links.test.js   asks the app questions on a spare port (lessons 4, 6)

@@ -40,7 +40,7 @@ shown() {
 bg() {
   local name=$1 dir=$2 cmd=$3
   printf '%s\n%s\n' "$dir" "$cmd" > $STATE/$name.cmd
-  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "exec $cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
 }
 # bg_show NAME: that terminal as it stands, prompt first.
 bg_show() {
@@ -54,9 +54,11 @@ bg_show() {
 bg_stop() {
   local pid
   pid=$(cat $STATE/$1.pid 2>/dev/null) || return 0
-  kill -"${2:-INT}" "$pid" 2>/dev/null || true
-  for _ in $(seq 50); do kill -0 "$pid" 2>/dev/null || return 0; sleep 0.1; done
-  kill -KILL "$pid" 2>/dev/null || true
+  # The program runs in a session of its own, so the signal goes to its whole
+  # process group, as a terminal's Ctrl-C does.
+  kill -"${2:-INT}" -- -"$pid" 2>/dev/null || true
+  for _ in $(seq 50); do kill -0 -- -"$pid" 2>/dev/null || return 0; sleep 0.1; done
+  kill -KILL -- -"$pid" 2>/dev/null || true
 }
 bg_pid() { cat $STATE/$1.pid; }
 

@@ -16,6 +16,7 @@ links/
 │   ├── app.js          monta a aplicação Express, e não escuta (aula 6)
 │   ├── links.js        as rotas sob /links (aulas 6, 7)
 │   ├── store.js        guarda os links, na memória e depois num arquivo (aulas 6, 8)
+│   ├── admin.js        confere a chave de administração (aulas 6, 9)
 │   └── config.js       lê e confere o ambiente, uma vez (aula 9)
 └── test/
     └── links.test.js   faz perguntas à app numa porta livre (aulas 4, 6)
