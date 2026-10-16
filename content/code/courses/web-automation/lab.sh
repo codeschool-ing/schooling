@@ -132,7 +132,11 @@ while i < len(lines):
         j += 1
     label = re.search(r"\bas `([\w./-]+)`:$", prev.rstrip())
     if label and label.group(1) == want:
-        print("\n".join(lines[i + 1:j]))
+        body = "\n".join(lines[i + 1:j])
+        if m.group(2) == "schooling-example":
+            import json
+            body = "\n".join(p["code"] for p in json.loads(body)["parts"])
+        print(body)
         sys.exit(0)
     prev, i = "", j + 1
 sys.exit(f"fence: {sys.argv[1]} labels no block {want}")
