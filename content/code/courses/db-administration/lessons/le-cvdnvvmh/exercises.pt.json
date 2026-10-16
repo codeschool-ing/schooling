@@ -1,0 +1,478 @@
+{
+  "ex-fg98jpms": {
+    "prompt": "O que um checkpoint faz?",
+    "hint": "Depois de um, a contagem de sujas era 0 e o grep achou a linha no arquivo da tabela.",
+    "choices": [
+      {
+        "text": "Copia o diretório de dados para um backup",
+        "why": "Nada é copiado para lugar nenhum. Backups são do db-reliability."
+      },
+      {
+        "text": "Grava toda página suja no arquivo e registra onde a recuperação começaria",
+        "why": "Isso. Depois dele, o log escrito antes do ponto de redo não é mais necessário."
+      },
+      {
+        "text": "Confirma toda transação ainda aberta, para nenhuma se perder numa queda",
+        "why": "Um checkpoint nunca decide o destino de uma transação; as abertas continuam abertas."
+      },
+      {
+        "text": "Grava os buffers de WAL, que o COMMIT deixa na memória",
+        "why": "O COMMIT grava os próprios registros de log antes de responder. Um checkpoint é sobre páginas de tabela."
+      }
+    ]
+  },
+  "ex-trc38s18": {
+    "prompt": "O `pg_controldata` mostra uma REDO location anterior à checkpoint location. Por que são diferentes?",
+    "hint": "O log continua crescendo enquanto as páginas são gravadas.",
+    "choices": [
+      {
+        "text": "O checkpoint começa numa e escreve o registro na outra",
+        "why": "Isso. As alterações feitas enquanto as páginas eram gravadas ficam cobertas refazendo a partir do ponto de início."
+      },
+      {
+        "text": "A REDO location pertence ao checkpoint anterior",
+        "why": "As duas linhas descrevem o último checkpoint: a primeira é onde ele começou, a segunda onde terminou."
+      },
+      {
+        "text": "Uma está no log, a outra nos arquivos das tabelas",
+        "why": "As duas são posições no log. Os arquivos das tabelas não têm LSN próprio no pg_control."
+      },
+      {
+        "text": "Uma réplica empurrou a REDO location para trás",
+        "why": "Este servidor não tinha réplica; a distância é como todo checkpoint funciona."
+      }
+    ]
+  },
+  "ex-1bmzaax8": {
+    "prompt": "Ligue cada parte de uma linha `checkpoint complete` ao que ela relata.",
+    "hint": "Uma é páginas, uma é segmentos, uma é log, uma é o disco.",
+    "pairs": [
+      {
+        "left": "wrote 15324 buffers",
+        "right": "páginas sujas gravadas nos arquivos"
+      },
+      {
+        "left": "20 recycled",
+        "right": "segmentos antigos renomeados para reuso"
+      },
+      {
+        "left": "distance=331151 kB",
+        "right": "log escrito desde o checkpoint anterior"
+      },
+      {
+        "left": "sync=0.160 s",
+        "right": "tempo esperando o disco confirmar"
+      }
+    ],
+    "right_distractors": [
+      "transações confirmadas durante o checkpoint"
+    ]
+  },
+  "ex-spvxk6ee": {
+    "prompt": "Logo depois do comando `CHECKPOINT`, a contagem de sujas no `pg_buffercache` era 0. Um minuto depois, num servidor movimentado, é 3000. O que isso quer dizer?",
+    "hint": "Os commits continuam alterando páginas na memória.",
+    "choices": [
+      {
+        "text": "3000 páginas mudaram desde então",
+        "why": "Isso. Cada uma está segura no log e espera o próximo checkpoint ou o background writer."
+      },
+      {
+        "text": "O checkpoint falhou",
+        "why": "Ele relatou checkpoint complete e a contagem chegou a 0. Alterações novas vieram depois."
+      },
+      {
+        "text": "Esses 3000 commits correm risco até o próximo checkpoint",
+        "why": "Os registros de log deles chegaram ao disco no COMMIT. Páginas sujas são reconstruídas do log depois de uma queda."
+      },
+      {
+        "text": "O shared_buffers é pequeno demais e precisa aumentar",
+        "why": "Páginas sujas são trabalho normal, não sinal de falta de memória."
+      }
+    ]
+  },
+  "ex-jvegmnat": {
+    "prompt": "O log mostra `checkpoint starting: wal`. O que começou esse checkpoint?",
+    "hint": "O outro tipo de rotina diz time.",
+    "choices": [
+      {
+        "text": "O checkpoint_timeout se esgotando",
+        "why": "Esse aparece no log como time."
+      },
+      {
+        "text": "Alguém digitando CHECKPOINT",
+        "why": "O comando aparece como immediate force wait."
+      },
+      {
+        "text": "O walwriter enchendo os buffers de WAL",
+        "why": "O walwriter grava buffers; nunca começa um checkpoint."
+      },
+      {
+        "text": "Log suficiente escrito desde o último",
+        "why": "Isso. Um pouco abaixo da metade do max_wal_size, pela conta do servidor."
+      }
+    ]
+  },
+  "ex-93yre6g7": {
+    "prompt": "Com o `max_wal_size` em 64MB, quantos checkpoints o `pg_stat_bgwriter` contou como `checkpoints_req` durante a execução de 40.000 transações?",
+    "hint": "Nenhum deles foi por tempo."
+  },
+  "ex-rb3xper1": {
+    "prompt": "Com `max_wal_size = 1GB` e o completion target padrão, mais ou menos quanto log é escrito entre dois checkpoints forçados pelo WAL?",
+    "hint": "Com 64MB a distância foi 32780 kB.",
+    "choices": [
+      {
+        "text": "Uns 500 MB",
+        "why": "Isso. Um pouco abaixo da metade, como 32 MB foi para 64 MB."
+      },
+      {
+        "text": "1 GB, a própria configuração",
+        "why": "O ciclo inteiro tem de caber no max_wal_size, então o gatilho vem antes."
+      },
+      {
+        "text": "80 MB, o min_wal_size",
+        "why": "O min_wal_size é o piso guardado para reciclar, não um gatilho."
+      },
+      {
+        "text": "16 MB, um segmento por checkpoint",
+        "why": "Um segmento é a unidade dos arquivos, não do intervalo de checkpoint."
+      }
+    ]
+  },
+  "ex-vbtn9bz7": {
+    "prompt": "O log de um servidor traz `checkpoints are occurring too frequently` a cada poucos minutos durante a importação noturna, e nunca de dia. Qual é a mudança adequada?",
+    "hint": "O HINT diz qual; pense no que custa.",
+    "choices": [
+      {
+        "text": "Aumentar o checkpoint_warning para a mensagem parar",
+        "why": "Isso cala o alarme e deixa o WAL extra e as imagens de página onde estão."
+      },
+      {
+        "text": "Aumentar o max_wal_size, com espaço em disco para isso",
+        "why": "Isso. Menos checkpoints forçados durante a importação, pagos em espaço no pg_wal e tempo de recuperação."
+      },
+      {
+        "text": "Baixar o checkpoint_timeout para espalhar a carga",
+        "why": "Mais checkpoints por tempo pioram o problema; estes já são forçados pelo log."
+      },
+      {
+        "text": "Desligar o log_checkpoints durante a importação",
+        "why": "Os checkpoints continuam acontecendo; você só deixaria de vê-los."
+      }
+    ]
+  },
+  "ex-q7csy900": {
+    "prompt": "As mesmas 40.000 transações escreveram 461 MB de WAL com 14 checkpoints e 224 MB sem nenhum. De onde veio a maior parte da diferença?",
+    "hint": "Compare wal_records e wal_fpi.",
+    "choices": [
+      {
+        "text": "Dos próprios registros de checkpoint",
+        "why": "Catorze registros pequenos não são nada perto de 237 MB."
+      },
+      {
+        "text": "De mais transações confirmadas na primeira execução, que os checkpoints aceleraram",
+        "why": "As duas rodaram exatamente 40.000: -t 10000 para cada um dos quatro clientes."
+      },
+      {
+        "text": "Das imagens de página inteira, tiradas de novo a cada checkpoint",
+        "why": "Isso. Os registros quase não mudaram; as imagens mais que dobraram, 59334 contra 27489."
+      },
+      {
+        "text": "Das páginas sujas que os checkpoints gravaram no log",
+        "why": "Os checkpoints gravam páginas nos arquivos das tabelas, não no log."
+      }
+    ]
+  },
+  "ex-vmnteywc": {
+    "prompt": "Um colega quer `full_page_writes = off` num servidor ext4 para cortar o WAL pela metade. Qual é o argumento contra?",
+    "hint": "O que conserta uma página rasgada por uma queda de energia?",
+    "choices": [
+      {
+        "text": "Uma página rasgada ficaria corrompida, sem nada para consertá-la",
+        "why": "Isso. A recuperação aplicaria registros pequenos numa página meio gravada, e nada denunciaria."
+      },
+      {
+        "text": "As réplicas param de funcionar sem as imagens",
+        "why": "As réplicas refazem os registros de qualquer jeito; o perigo é para as páginas do próprio primário depois de uma queda de energia."
+      },
+      {
+        "text": "O servidor se recusa a subir com ela desligada",
+        "why": "Ele sobe sem reclamar, e esse é o perigo: nada reclama até uma página rasgada ser lida."
+      },
+      {
+        "text": "Não economiza nada, porque as imagens são comprimidas",
+        "why": "O wal_compression vem desligado, e as imagens eram a maior parte do volume extra."
+      }
+    ]
+  },
+  "ex-n2r97wk9": {
+    "prompt": "A execução com o `max_wal_size` padrão ainda tirou 27489 imagens de página sem checkpoint durante ela. Por que alguma?",
+    "hint": "O que rodou logo antes dela?",
+    "choices": [
+      {
+        "text": "Toda atualização registra uma imagem independente de checkpoints",
+        "why": "Aí as imagens igualariam as atualizações; 27489 está muito abaixo das alterações de linha feitas."
+      },
+      {
+        "text": "O background writer acrescenta imagens quando grava páginas",
+        "why": "As imagens vão com a primeira alteração da página, não com a gravação dela."
+      },
+      {
+        "text": "Ela começou logo depois de um CHECKPOINT",
+        "why": "Isso. Cada página que ela tocou foi alterada pela primeira vez desde aquele checkpoint, uma vez."
+      },
+      {
+        "text": "O pgbench força um full-page write no fim de cada transação",
+        "why": "O pgbench só manda SQL; não tem voz sobre o que o log registra."
+      }
+    ]
+  },
+  "ex-rsr0f0kq": {
+    "prompt": "Depois de uma queda do processo do servidor, qual é a primeira coisa a fazer?",
+    "hint": "O servidor da lição se consertou sozinho.",
+    "choices": [
+      {
+        "text": "Restaurar o backup da noite passada",
+        "why": "Isso joga fora todo commit desde o backup, que a recuperação teria mantido."
+      },
+      {
+        "text": "Rodar o pg_resetwal para ele subir limpo",
+        "why": "Isso descarta o log de que a recuperação precisa, que é como um servidor recuperável vira um corrompido."
+      },
+      {
+        "text": "Subi-lo de novo e ler o que o log dele diz",
+        "why": "Isso. A recuperação refaz a partir do ponto de redo sozinha e diz isso linha por linha."
+      },
+      {
+        "text": "Apagar o postmaster.pid e os segmentos mais antigos do pg_wal",
+        "why": "Nada precisava ser apagado; os segmentos são o material que a recuperação refaz."
+      }
+    ]
+  },
+  "ex-rzmdyzk0": {
+    "prompt": "A recuperação registrou `invalid record length at 0/535AA2E0: expected at least 24, got 0`. O que essa linha quer dizer?",
+    "hint": "É uma linha LOG, e toda recuperação termina com uma parecida.",
+    "choices": [
+      {
+        "text": "Um segmento está corrompido e dados se perderam",
+        "why": "A contagem de acks bateu exatamente com a lista do cliente. Nada se perdeu."
+      },
+      {
+        "text": "A recuperação chegou ao fim do log",
+        "why": "Isso. Os bytes seguintes eram zeros, nunca escritos, então a refação parou ali."
+      },
+      {
+        "text": "Um registro era curto demais e foi pulado",
+        "why": "A recuperação nunca pula um registro e segue; ela para no primeiro que não é válido."
+      },
+      {
+        "text": "O kill interrompeu o pg_waldump",
+        "why": "O pg_waldump não estava rodando; é o servidor lendo o próprio log na subida."
+      }
+    ]
+  },
+  "ex-0vny89pz": {
+    "prompt": "Depois da queda, o `acked.txt` do cliente termina em 13003. Qual resultado de `SELECT max(id), count(*) FROM acks` mostraria uma garantia quebrada?",
+    "hint": "Um commit pode chegar ao disco antes de a resposta chegar ao cliente.",
+    "choices": [
+      {
+        "text": "13002 e 13002",
+        "why": "Isso. Falta um commit que o cliente ouviu como confirmado, o que um servidor configurado corretamente nunca faz."
+      },
+      {
+        "text": "13003 e 13003",
+        "why": "É o que a lição obteve: todo commit confirmado presente."
+      },
+      {
+        "text": "13004 e 13004",
+        "why": "Um a mais está certo: esse commit chegou ao disco e a resposta morreu com o servidor."
+      }
+    ]
+  },
+  "ex-6h5st7v7": {
+    "prompt": "Ponha em ordem as linhas que uma subida depois de uma queda escreve.",
+    "hint": "Ela percebe, refaz, acha o fim, faz checkpoint, abre.",
+    "items": [
+      "database system was not properly shut down; automatic recovery in progress",
+      "redo starts at 0/420F91E0",
+      "invalid record length at 0/535AA2E0: expected at least 24, got 0",
+      "checkpoint starting: end-of-recovery immediate wait",
+      "database system is ready to accept connections"
+    ],
+    "trap": "As conexões só são aceitas depois do checkpoint de fim de recuperação, não assim que a refação termina."
+  },
+  "ex-bxhjx1sy": {
+    "prompt": "Com `synchronous_commit = off`, o que uma queda perde?",
+    "hint": "O walwriter grava a cada wal_writer_delay.",
+    "choices": [
+      {
+        "text": "Nada, porque o walwriter grava antes da queda",
+        "why": "Uma queda não espera o walwriter acordar de novo."
+      },
+      {
+        "text": "A última fração de segundo de commits",
+        "why": "Isso. Essas transações somem por inteiro; o banco continua consistente."
+      },
+      {
+        "text": "Toda alteração desde o último checkpoint",
+        "why": "Tudo o que foi gravado no log sobrevive; só a ponta não gravada vai embora."
+      },
+      {
+        "text": "Páginas aleatórias, deixando as tabelas corrompidas",
+        "why": "Isso é o fsync = off. A ordem do write-ahead continua valendo com synchronous_commit desligado."
+      }
+    ]
+  },
+  "ex-jxqaqrks": {
+    "prompt": "Por que a lição não demonstrou o `fsync = off` corrompendo o banco com `kill -9`?",
+    "hint": "O que sobrevive a um kill dos processos do servidor?",
+    "choices": [
+      {
+        "text": "O kill -9 é recusado enquanto o fsync está desligado",
+        "why": "O kernel entrega o SIGKILL sejam quais forem as configurações do servidor."
+      },
+      {
+        "text": "O fsync = off precisa de reinício, e o laboratório não podia reiniciar",
+        "why": "O servidor reiniciou na seção da queda. O obstáculo é o que um kill deixa para trás."
+      },
+      {
+        "text": "O PostgreSQL 16 ignora o fsync = off",
+        "why": "Ele obedece, e esse é exatamente o perigo."
+      },
+      {
+        "text": "O cache do sistema operacional sobrevive ao kill e é gravado depois",
+        "why": "Isso. Só uma queda de energia ou do kernel perde esse cache, por isso o fsync = off passa em testes comuns."
+      }
+    ]
+  },
+  "ex-tb6wmc66": {
+    "prompt": "Para pular a espera pelo disco numa transação só, escreva `SET ___ synchronous_commit = off;` depois do BEGIN.",
+    "hint": "Dura até o fim da transação.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL"
+        ]
+      }
+    ]
+  },
+  "ex-etq63qvw": {
+    "prompt": "A lição mediu mais ou menos o dobro de vazão com `synchronous_commit = off`. Num servidor cujo disco demora dez vezes mais para confirmar uma gravação, o que você esperaria?",
+    "hint": "O que um commit espera quando a configuração está ligada?",
+    "choices": [
+      {
+        "text": "Uma distância maior",
+        "why": "Isso. Com a configuração ligada, cada commit espera essa gravação lenta; desligada, não espera nada."
+      },
+      {
+        "text": "A mesma razão, já que a configuração faz a mesma coisa",
+        "why": "A razão é dada pelo custo da espera que a configuração tira, e esse custo cresceu."
+      },
+      {
+        "text": "Uma distância menor, porque discos lentos ganham menos",
+        "why": "É o contrário: quanto mais lenta a gravação, mais há a ganhar não esperando por ela."
+      },
+      {
+        "text": "Nenhuma diferença, porque o pgbench é limitado pelos processadores",
+        "why": "A execução da lição já mostrou que a gravação importava, cortando a latência pela metade."
+      }
+    ]
+  },
+  "ex-j2mpvhwz": {
+    "prompt": "Ligue cada configuração, quando desligada, ao que uma queda pode custar.",
+    "hint": "Uma perde um instante, uma perde a garantia, uma perde um conserto.",
+    "pairs": [
+      {
+        "left": "synchronous_commit",
+        "right": "a última fração de segundo de commits confirmados"
+      },
+      {
+        "left": "fsync",
+        "right": "qualquer coisa, já que nada ordena as escritas no disco"
+      },
+      {
+        "left": "full_page_writes",
+        "right": "uma página rasgada por queda de energia fica corrompida"
+      }
+    ],
+    "right_distractors": [
+      "nada, só muda o que vai para o log"
+    ]
+  },
+  "ex-mb31e6ef": {
+    "prompt": "Uma aplicação insere eventos de visualização e também registra pagamentos. A vazão dos eventos é o problema. Que mudança mantém toda garantia de que os pagamentos precisam?",
+    "hint": "Uma configuração pode valer para uma transação.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM SET synchronous_commit = off",
+        "why": "Isso enfraquece todo commit do servidor, os dos pagamentos também."
+      },
+      {
+        "text": "fsync = off no horário comercial",
+        "why": "Isso arrisca corromper o banco inteiro, pagamentos incluídos, numa queda de energia."
+      },
+      {
+        "text": "full_page_writes = off, mas só para a tabela que guarda os eventos",
+        "why": "Não é configuração por tabela, e tira o conserto de página rasgada em todo lugar."
+      },
+      {
+        "text": "SET LOCAL synchronous_commit = off nas transações de eventos",
+        "why": "Isso. Os eventos trocam um instante de perda por velocidade; os pagamentos continuam esperando o disco."
+      }
+    ]
+  },
+  "ex-q19brgtj": {
+    "prompt": "Aumentar o `max_wal_size` de 1GB para 16GB num servidor movimentado piora qual destes?",
+    "hint": "Menos checkpoints, mais log entre eles.",
+    "choices": [
+      {
+        "text": "O volume de imagens de página inteira escritas no log a cada hora",
+        "why": "Menos checkpoints quer dizer menos imagens; isso melhora."
+      },
+      {
+        "text": "O tempo que a recuperação leva depois de uma queda",
+        "why": "Isso. Mais log desde o último checkpoint quer dizer mais para refazer."
+      },
+      {
+        "text": "A frequência com que o checkpoints_req sobe",
+        "why": "Os checkpoints forçados ficam mais raros, não mais frequentes."
+      },
+      {
+        "text": "Quanto cada COMMIT espera",
+        "why": "O COMMIT espera a gravação do próprio log, que o max_wal_size não muda."
+      }
+    ]
+  },
+  "ex-yjf58ve2": {
+    "prompt": "No Ubuntu, o programa que imprime o pg_control, incluindo a REDO location do último checkpoint, é /usr/lib/postgresql/16/bin/___.",
+    "hint": "O nome do arquivo, depois data.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_controldata"
+        ]
+      }
+    ]
+  },
+  "ex-z4ssgvd2": {
+    "prompt": "Um servidor caiu às 10:00. O último checkpoint dele terminou às 09:58, e o anterior às 09:53. A partir de que ponto a recuperação refaz?",
+    "hint": "O pg_control aponta o último registro de checkpoint; esse registro aponta uma posição.",
+    "choices": [
+      {
+        "text": "O registro do checkpoint das 09:58",
+        "why": "As alterações feitas enquanto esse checkpoint gravava páginas ficam antes do registro dele, então a refação começa antes."
+      },
+      {
+        "text": "O ponto de redo do checkpoint das 09:58",
+        "why": "Isso. Onde esse checkpoint começou; tudo antes disso já está nos arquivos das tabelas."
+      },
+      {
+        "text": "O ponto de redo do checkpoint das 09:53",
+        "why": "Só o último checkpoint importa depois de terminado."
+      },
+      {
+        "text": "O arquivo de segmento mais antigo ainda presente no pg_wal",
+        "why": "Segmentos antigos podem continuar lá, reciclados; a recuperação vai pelo ponto de redo, não pelos arquivos presentes."
+      }
+    ]
+  }
+}

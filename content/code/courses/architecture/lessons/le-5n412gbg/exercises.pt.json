@@ -1,0 +1,472 @@
+{
+  "ex-v1whmrkn": {
+    "prompt": "Por que o checkout não pode ser uma transação quando atravessa três serviços?",
+    "hint": "Quem é dono de cada banco?",
+    "choices": [
+      {
+        "text": "Transações são mais lentas que sagas",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Cada serviço é dono do seu banco",
+        "why": "Isso: nenhum desfaz o de outro."
+      },
+      {
+        "text": "O HTTP não permite transações",
+        "why": "O protocolo não é o motivo."
+      },
+      {
+        "text": "O PostgreSQL limita transações a uma tabela",
+        "why": "Não limita."
+      }
+    ]
+  },
+  "ex-yevdr0vk": {
+    "prompt": "Por que o commit em duas fases raramente é usado entre serviços?",
+    "hint": "O que os participantes seguram enquanto esperam?",
+    "choices": [
+      {
+        "text": "Não consegue garantir atomicidade",
+        "why": "É isso que ele garante."
+      },
+      {
+        "text": "Foi removido do PostgreSQL",
+        "why": "`PREPARE TRANSACTION` existe."
+      },
+      {
+        "text": "Travas seguras enquanto esperam",
+        "why": "Isso, e muitos sistemas nem o falam."
+      },
+      {
+        "text": "Precisa de um broker de mensagens",
+        "why": "Não precisa."
+      }
+    ]
+  },
+  "ex-dny9p0ed": {
+    "prompt": "O que é uma saga?",
+    "hint": "Garcia-Molina e Salem, 1987.",
+    "choices": [
+      {
+        "text": "Uma transação que atravessa vários bancos de uma vez",
+        "why": "Isso é commit em duas fases."
+      },
+      {
+        "text": "Transações locais, cada uma com compensação",
+        "why": "Isso."
+      },
+      {
+        "text": "Um log longo de todo evento de um sistema",
+        "why": "Isso está mais perto de event sourcing."
+      },
+      {
+        "text": "Uma fila que repete até todo passo dar certo",
+        "why": "Não é isso."
+      }
+    ]
+  },
+  "ex-d9rkamys": {
+    "prompt": "O que faz o serviço de pagamentos recusar um cartão no laboratório?",
+    "hint": "Leia o `charge`.",
+    "choices": [
+      {
+        "text": "Um valor acima de 5.000 centavos",
+        "why": "O valor não é conferido."
+      },
+      {
+        "text": "Uma cidade que as entregas não atendem",
+        "why": "Isso faz falhar a entrega."
+      },
+      {
+        "text": "Um cartão terminado em 0002",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma segunda cobrança do mesmo pedido",
+        "why": "Não é conferida."
+      }
+    ]
+  },
+  "ex-6bqkd7ja": {
+    "prompt": "Quando as entregas falharam para o o-3, que compensações rodaram, e em que ordem?",
+    "hint": "Ordem inversa dos passos feitos.",
+    "choices": [
+      {
+        "text": "Liberar estoque, depois reembolsar",
+        "why": "Essa é a ordem de ida."
+      },
+      {
+        "text": "Reembolsar, depois liberar estoque",
+        "why": "Isso."
+      },
+      {
+        "text": "Só o reembolso",
+        "why": "A reserva também foi liberada."
+      },
+      {
+        "text": "Cancelar a entrega, reembolsar, liberar",
+        "why": "Não havia entrega a cancelar."
+      }
+    ]
+  },
+  "ex-rnd6acy0": {
+    "prompt": "Por que um orquestrador de verdade tem de gravar cada passo num banco?",
+    "hint": "Pense numa queda entre cobrar e agendar.",
+    "choices": [
+      {
+        "text": "Para os serviços conseguirem ler o plano",
+        "why": "Os serviços nunca o leem."
+      },
+      {
+        "text": "Porque chamadas HTTP não ficam no log",
+        "why": "Log não é o ponto."
+      },
+      {
+        "text": "Para os passos rodarem mais rápido",
+        "why": "Os deixa um pouco mais lentos."
+      },
+      {
+        "text": "Para retomar depois de uma queda",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-tr3wetja": {
+    "prompt": "Associe cada produto ao jeito como roda uma saga.",
+    "hint": "Código, máquina de estados, diagrama.",
+    "pairs": [
+      {
+        "left": "Temporal",
+        "right": "workflows escritos como código comum, reaplicados depois de uma queda"
+      },
+      {
+        "left": "AWS Step Functions",
+        "right": "uma máquina de estados descrita em JSON"
+      },
+      {
+        "left": "Camunda",
+        "right": "diagramas BPMN"
+      }
+    ]
+  },
+  "ex-j8eq56nf": {
+    "prompt": "Em que uma compensação é diferente de um rollback?",
+    "hint": "O extrato do o-3.",
+    "choices": [
+      {
+        "text": "É uma ação nova; a original ainda aconteceu",
+        "why": "Isso."
+      },
+      {
+        "text": "É mais rápida",
+        "why": "Velocidade não é a diferença."
+      },
+      {
+        "text": "Apaga a original do banco",
+        "why": "Nada é apagado."
+      },
+      {
+        "text": "Só roda dentro da transação de um serviço",
+        "why": "É um passo próprio."
+      }
+    ]
+  },
+  "ex-0gzbxr4e": {
+    "prompt": "Por que `release` e `refund` têm de ser idempotentes?",
+    "hint": "Elas vão ser repetidas.",
+    "choices": [
+      {
+        "text": "Para poderem rodar em paralelo",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Uma compensação repetida não pode desfazer duas vezes",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o HTTP exige isso para POST",
+        "why": "Não exige."
+      },
+      {
+        "text": "Para ficarem mais baratas",
+        "why": "Custo não é o ponto."
+      }
+    ]
+  },
+  "ex-fjvhhdkn": {
+    "prompt": "Onde deveria ficar um passo que não pode ser desfeito, como enviar um e-mail?",
+    "hint": "Depois do pivô.",
+    "choices": [
+      {
+        "text": "Primeiro, para ser feito cedo",
+        "why": "Aí uma falha depois não consegue desenviá-lo."
+      },
+      {
+        "text": "Antes do pagamento",
+        "why": "Um cartão recusado deixaria o e-mail enviado."
+      },
+      {
+        "text": "Depois do passo que decide o resultado",
+        "why": "Isso."
+      },
+      {
+        "text": "Numa saga separada sem compensações",
+        "why": "A ordem ainda importa."
+      }
+    ]
+  },
+  "ex-tmx1k6ak": {
+    "prompt": "Por que o checkout reserva estoque antes de cobrar, e cobra antes de entregar?",
+    "hint": "Quão difícil é desfazer cada um?",
+    "choices": [
+      {
+        "text": "Ordem alfabética dos serviços",
+        "why": "Não é motivo."
+      },
+      {
+        "text": "Cada serviço precisa da resposta do anterior",
+        "why": "Precisam só do pedido."
+      },
+      {
+        "text": "Entregar é o passo mais lento",
+        "why": "Velocidade não é o critério."
+      },
+      {
+        "text": "O mais barato de desfazer primeiro",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6mscn3nb": {
+    "prompt": "Por que o o-5 foi recusado?",
+    "hint": "Quem segurava os pacotes?",
+    "choices": [
+      {
+        "text": "A prateleira estava vazia o tempo todo",
+        "why": "Havia dois pacotes."
+      },
+      {
+        "text": "O o-4 segurava os dois",
+        "why": "Isso."
+      },
+      {
+        "text": "O cartão dele foi recusado",
+        "why": "Ele nem chegou ao pagamento."
+      },
+      {
+        "text": "As entregas não atendem a cidade dele",
+        "why": "Ele nem chegou às entregas."
+      }
+    ]
+  },
+  "ex-8bvh50v3": {
+    "prompt": "Que propriedade de uma transação uma saga não tem?",
+    "hint": "ACD.",
+    "choices": [
+      {
+        "text": "Atomicidade",
+        "why": "Ela se completa ou é compensada."
+      },
+      {
+        "text": "Durabilidade",
+        "why": "Cada passo confirma de forma durável."
+      },
+      {
+        "text": "Isolamento",
+        "why": "Isso."
+      },
+      {
+        "text": "Consistência",
+        "why": "Mantém cada serviço consistente."
+      }
+    ]
+  },
+  "ex-n8v9jde9": {
+    "prompt": "Sem a reserva, o que poderia ter dado errado entre o o-4 e o o-5?",
+    "hint": "O contrário do que aconteceu.",
+    "choices": [
+      {
+        "text": "O o-5 teria sido recusado de qualquer jeito",
+        "why": "Havia café para ele."
+      },
+      {
+        "text": "Os dois cartões teriam sido recusados",
+        "why": "Cartões são independentes."
+      },
+      {
+        "text": "Nada; reservas só acrescentam atraso",
+        "why": "Elas impedem vender demais."
+      },
+      {
+        "text": "Dois clientes comprando o mesmo café",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-map4qzqh": {
+    "prompt": "Como uma loja mantém pequeno o custo de uma trava semântica?",
+    "hint": "Tempo.",
+    "choices": [
+      {
+        "text": "Travar a prateleira inteira para todo pedido",
+        "why": "Isso piora."
+      },
+      {
+        "text": "Segurar a reserva o menor tempo possível",
+        "why": "Isso."
+      },
+      {
+        "text": "Reservar quando o item entra na cesta",
+        "why": "Isso a segura por muito mais tempo."
+      },
+      {
+        "text": "Nunca liberar reservas",
+        "why": "Aí o estoque se perde."
+      }
+    ]
+  },
+  "ex-0789a5s6": {
+    "prompt": "Na saga coreografada, o que o `place.py` faz?",
+    "hint": "Leia-o.",
+    "choices": [
+      {
+        "text": "Chama cada serviço em sequência",
+        "why": "Isso é o `saga.py`."
+      },
+      {
+        "text": "Publica `OrderPlaced` e termina",
+        "why": "Isso."
+      },
+      {
+        "text": "Espera `ShippingScheduled`",
+        "why": "Termina na hora."
+      },
+      {
+        "text": "Roda as compensações",
+        "why": "Os serviços rodam."
+      }
+    ]
+  },
+  "ex-qxywxwr5": {
+    "prompt": "Como você descobriu o que aconteceu com o o-7?",
+    "hint": "Nada o imprimiu.",
+    "choices": [
+      {
+        "text": "Perguntou ao orquestrador",
+        "why": "Não há um."
+      },
+      {
+        "text": "Leu a saída do `place.py`",
+        "why": "Ela só disse OrderPlaced."
+      },
+      {
+        "text": "Juntou os logs dos serviços em ordem de tempo",
+        "why": "Isso."
+      },
+      {
+        "text": "Consultou o broker",
+        "why": "O broker não guarda histórico."
+      }
+    ]
+  },
+  "ex-je4d6h4d": {
+    "prompt": "Como fica acrescentar um passo de fidelidade na coreografia?",
+    "hint": "Quem mudaria?",
+    "choices": [
+      {
+        "text": "Mudar todo serviço para chamá-lo",
+        "why": "Nenhum serviço muda."
+      },
+      {
+        "text": "Mudar o `place.py`",
+        "why": "Ele só publica o primeiro evento."
+      },
+      {
+        "text": "Um ouvinte novo",
+        "why": "Isso."
+      },
+      {
+        "text": "Acrescentar um passo ao `saga.py`",
+        "why": "Essa é a versão orquestrada."
+      }
+    ]
+  },
+  "ex-3jv32mnr": {
+    "prompt": "Quando a aula recomenda orquestração em vez de coreografia?",
+    "hint": "Passos, ramificações, compensações.",
+    "choices": [
+      {
+        "text": "Sempre que houver um broker disponível",
+        "why": "Não é o critério."
+      },
+      {
+        "text": "Só para dois passos ou menos",
+        "why": "O contrário."
+      },
+      {
+        "text": "Nunca; coreografia é sempre mais simples",
+        "why": "Fica mais difícil de acompanhar conforme cresce."
+      },
+      {
+        "text": "Com mais de três ou quatro passos",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-h7rtckya": {
+    "prompt": "Associe cada propriedade ao estilo a que pertence.",
+    "hint": "Onde mora o plano?",
+    "pairs": [
+      {
+        "left": "o plano fica num lugar só",
+        "right": "orquestração"
+      },
+      {
+        "left": "um passo entra com um ouvinte novo",
+        "right": "coreografia"
+      },
+      {
+        "left": "estado de um pedido num registro só",
+        "right": "orquestração, de novo"
+      },
+      {
+        "left": "nenhum ponto único de falha",
+        "right": "coreografia, de novo"
+      }
+    ]
+  },
+  "ex-634asb07": {
+    "prompt": "Ponha a coreografia do o-7 em ordem.",
+    "hint": "Leia os logs ordenados.",
+    "items": [
+      "`OrderPlaced`",
+      "`StockReserved`",
+      "`PaymentCharged`",
+      "`ShippingFailed`",
+      "`PaymentRefunded`",
+      "`StockReleased`"
+    ]
+  },
+  "ex-h67b2916": {
+    "prompt": "Um reembolso na saga da Quitanda às vezes falha permanentemente porque o gateway de pagamento encerrou o cartão do cliente. O que o projeto deveria fazer?",
+    "hint": "Uma compensação não pode falhar de vez.",
+    "choices": [
+      {
+        "text": "Ignorar; o estoque foi liberado",
+        "why": "O cliente tem dinheiro a receber."
+      },
+      {
+        "text": "Repetir o reembolso a cada minuto para sempre",
+        "why": "Nunca vai dar certo."
+      },
+      {
+        "text": "Um passo que não falha de vez, como crédito na loja",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer rollback da cobrança original no banco do gateway",
+        "why": "Ninguém desfaz o banco de outro."
+      }
+    ]
+  }
+}

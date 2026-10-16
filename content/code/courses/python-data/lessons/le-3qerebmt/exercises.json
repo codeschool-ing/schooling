@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-56zyrbkt",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`daily.merge(weather, on=\"date\")` raised `ValueError: You are trying to merge on datetime64[us] and str columns`. What is wrong?",
+    "hint": "Compare the two key columns.",
+    "choices": [
+      {
+        "text": "Some days in `weather` have no trips, so the keys cannot line up",
+        "correct": false,
+        "why": "Every day has trips, and a missing partner raises nothing."
+      },
+      {
+        "text": "Datetime against text",
+        "correct": true,
+        "why": "Right: convert the text with `pd.to_datetime`."
+      },
+      {
+        "text": "`on=` needs a list",
+        "correct": false,
+        "why": "A single name is fine."
+      },
+      {
+        "text": "Some dates are missing from `weather`",
+        "correct": false,
+        "why": "Missing partners do not raise errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmv6jys9",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `validate=\"one_to_one\"` do in a merge?",
+    "hint": "A promise that is checked.",
+    "choices": [
+      {
+        "text": "Drops duplicate keys before joining",
+        "correct": false,
+        "why": "It changes nothing; it checks."
+      },
+      {
+        "text": "Keeps only the first match of each row and quietly drops the later ones",
+        "correct": false,
+        "why": "It does not choose matches."
+      },
+      {
+        "text": "Raises an error if a key repeats on either side",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sorts both tables by the key",
+        "correct": false,
+        "why": "Sorting is not its job."
+      }
+    ]
+  },
+  {
+    "id": "ex-me3ptre4",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The key column is `station_id` in one table and `start_station` in the other. How do you name them?",
+    "hint": "One argument per side.",
+    "choices": [
+      {
+        "text": "`on=[\"station_id\", \"start_station\"]`",
+        "correct": false,
+        "why": "That asks for both columns in both tables."
+      },
+      {
+        "text": "Rename one first; `merge` cannot do it",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "`by=` and `on=`",
+        "correct": false,
+        "why": "`by` is a `merge_asof` argument."
+      },
+      {
+        "text": "`left_on=` and `right_on=`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jee2agtf",
+    "version": 1,
+    "section": "which-rows-survive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `merge` do with unmatched rows when `how` is not given?",
+    "hint": "The default is `inner`.",
+    "choices": [
+      {
+        "text": "Drops them, without a warning",
+        "correct": true,
+        "why": "Right: `inner` keeps only keys on both sides."
+      },
+      {
+        "text": "Keeps them with `NaN`",
+        "correct": false,
+        "why": "That is `left` or `outer`."
+      },
+      {
+        "text": "Raises a `MergeError`",
+        "correct": false,
+        "why": "Only `validate` raises that."
+      },
+      {
+        "text": "Moves them to the end of the result",
+        "correct": false,
+        "why": "They are not in the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fdtresh",
+    "version": 1,
+    "section": "which-rows-survive",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Left has keys S01, S02, S03; right has S02, S03, S04. Which joins keep S01? Choose all that apply.",
+    "hint": "S01 is only on the left.",
+    "choices": [
+      {
+        "text": "`how=\"inner\"`",
+        "correct": false,
+        "why": "Inner keeps keys on both sides."
+      },
+      {
+        "text": "`how=\"left\"`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`how=\"right\"`",
+        "correct": false,
+        "why": "Right keeps the right table's keys."
+      },
+      {
+        "text": "`how=\"outer\"`",
+        "correct": true,
+        "why": "Yes: it keeps everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj2t951x",
+    "version": 1,
+    "section": "which-rows-survive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A left merge with `indicator=True` shows `left_only 146`. What are those rows?",
+    "hint": "They are in the left table.",
+    "choices": [
+      {
+        "text": "Rows from the right table with no partner",
+        "correct": false,
+        "why": "That would be `right_only`."
+      },
+      {
+        "text": "Rows that matched twice",
+        "correct": false,
+        "why": "Those show as `both`, repeated."
+      },
+      {
+        "text": "Left rows with no partner",
+        "correct": true,
+        "why": "Right: here, the lost bikes."
+      },
+      {
+        "text": "Rows dropped by the merge",
+        "correct": false,
+        "why": "A left join keeps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-se4nfcvq",
+    "version": 1,
+    "section": "which-rows-survive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Both tables have a row whose key is `NaN`. What does `merge` do with them?",
+    "hint": "pandas is not SQL here.",
+    "choices": [
+      {
+        "text": "Drops both, as SQL would",
+        "correct": false,
+        "why": "pandas differs from SQL here."
+      },
+      {
+        "text": "Pairs them, as though missing were a key",
+        "correct": true,
+        "why": "Right: decide what a missing key means first."
+      },
+      {
+        "text": "Raises a `MergeError`",
+        "correct": false,
+        "why": "Nothing fails."
+      },
+      {
+        "text": "Keeps them only with `how=\"outer\"`",
+        "correct": false,
+        "why": "They match under any `how`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9f6agz2a",
+    "version": 1,
+    "section": "the-rows-that-duplicated",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "2,636 trips start at `S07`, which has two rows in `stations.csv`. A plain merge of the 33,337 trips with the stations gives how many rows?",
+    "hint": "Each S07 trip comes out twice.",
+    "value": 35973,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a4ye0rdf",
+    "version": 1,
+    "section": "the-rows-that-duplicated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the duplicated merge, which of these is still right for `S07`?",
+    "hint": "Both copies have the same bike.",
+    "choices": [
+      {
+        "text": "Its number of trips",
+        "correct": false,
+        "why": "Doubled."
+      },
+      {
+        "text": "Its total minutes ridden over the year",
+        "correct": false,
+        "why": "Doubled."
+      },
+      {
+        "text": "Its share of trips made on electric bikes",
+        "correct": true,
+        "why": "Right: a ratio of two doubled counts."
+      },
+      {
+        "text": "Nothing about it",
+        "correct": false,
+        "why": "A share survives, which is how it hides."
+      }
+    ]
+  },
+  {
+    "id": "ex-nezw5ht1",
+    "version": 1,
+    "section": "the-rows-that-duplicated",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make pandas check that each trip matches at most one station, pass `validate=\"___\"`.",
+    "hint": "Many trips, one station.",
+    "blanks": [
+      {
+        "accept": [
+          "many_to_one",
+          "m:1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4v45jv1z",
+    "version": 1,
+    "section": "the-rows-that-duplicated",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which check, run after any merge, would have caught the doubled `S07` trips?",
+    "hint": "A number before, a number after.",
+    "choices": [
+      {
+        "text": "`named.isna().sum()`, the gaps in each column",
+        "correct": false,
+        "why": "The duplicates have no missing values."
+      },
+      {
+        "text": "`named.dtypes`",
+        "correct": false,
+        "why": "The types are unchanged."
+      },
+      {
+        "text": "`named.head()`",
+        "correct": false,
+        "why": "The first rows look fine."
+      },
+      {
+        "text": "`len(named) == len(trips)`, rows before and after",
+        "correct": true,
+        "why": "Right: it is `False`."
+      }
+    ]
+  },
+  {
+    "id": "ex-94p0b7cb",
+    "version": 1,
+    "section": "the-row-true-at-the-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `stations.drop_duplicates(\"station_id\", keep=\"last\")` the wrong fix for `S07`?",
+    "hint": "Which name do the January trips get?",
+    "choices": [
+      {
+        "text": "It raises an error on a string key",
+        "correct": false,
+        "why": "It runs."
+      },
+      {
+        "text": "It gives the July name to trips made before July",
+        "correct": true,
+        "why": "Right: the count is fixed and the history changes."
+      },
+      {
+        "text": "It still doubles the trips, because `trips` repeats each station code",
+        "correct": false,
+        "why": "Repeats on the left are expected; one row per code on the right keeps the count."
+      },
+      {
+        "text": "It drops the trips from `S07`",
+        "correct": false,
+        "why": "They still match one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-s58attx2",
+    "version": 1,
+    "section": "the-row-true-at-the-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lesson's `merge_asof`, what do `left_by=\"start_station\"` and `right_by=\"station_id\"` add?",
+    "hint": "Without them, any station's row could be the latest.",
+    "choices": [
+      {
+        "text": "They sort the result by station",
+        "correct": false,
+        "why": "The result is sorted by time."
+      },
+      {
+        "text": "They are the times compared",
+        "correct": false,
+        "why": "Those are `left_on` and `right_on`."
+      },
+      {
+        "text": "They make the match exact on both station and time, not as-of",
+        "correct": false,
+        "why": "The time match stays as-of."
+      },
+      {
+        "text": "Same station only",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvqhyykr",
+    "version": 1,
+    "section": "the-row-true-at-the-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A trip from `S07` starts on 15 September. Which station row does `merge_asof` give it?",
+    "hint": "The last `valid_from` on or before the trip.",
+    "choices": [
+      {
+        "text": "Espinheiro, valid from 1 July",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rua da Hora, valid from 1 January",
+        "correct": false,
+        "why": "There is a later row on or before September."
+      },
+      {
+        "text": "Both, one row each",
+        "correct": false,
+        "why": "As-of picks one."
+      },
+      {
+        "text": "Neither: no row is dated 15 September",
+        "correct": false,
+        "why": "As-of does not need an exact date."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdwrgw4k",
+    "version": 1,
+    "section": "keys-that-do-not-match",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A contacts table has the key `\"S03 \"`. What happens when it is merged on `station_id`?",
+    "hint": "Equal byte for byte.",
+    "choices": [
+      {
+        "text": "pandas strips the space and it matches",
+        "correct": false,
+        "why": "It compares exactly."
+      },
+      {
+        "text": "A `ValueError` about whitespace",
+        "correct": false,
+        "why": "Nothing fails."
+      },
+      {
+        "text": "It matches nothing, silently",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It matches S03 and also every other station",
+        "correct": false,
+        "why": "It matches none."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe47dhvx",
+    "version": 1,
+    "section": "keys-that-do-not-match",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A merge on `code` fails: `int64` on one side, `str` on the other. The codes are CEPs, like `\"01310-100\"`, with leading zeros. Which side should change?",
+    "hint": "Which type keeps the zeros?",
+    "choices": [
+      {
+        "text": "The text side, made into numbers",
+        "correct": false,
+        "why": "That loses the leading zeros."
+      },
+      {
+        "text": "The number side",
+        "correct": true,
+        "why": "Right: the codes are text, and its zeros were lost when it was read."
+      },
+      {
+        "text": "Neither: pass `validate`",
+        "correct": false,
+        "why": "`validate` checks counts, not types."
+      },
+      {
+        "text": "Both sides, made into floats so that they agree",
+        "correct": false,
+        "why": "Floats lose the zeros too."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn2xh6yj",
+    "version": 1,
+    "section": "concat-and-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twelve monthly files are read and stacked with `pd.concat(parts)`. What is wrong with the index?",
+    "hint": "Each file starts counting at 0.",
+    "choices": [
+      {
+        "text": "Nothing: concat numbers the stacked rows from 0 again",
+        "correct": false,
+        "why": "Only with `ignore_index=True`."
+      },
+      {
+        "text": "Each label appears up to twelve times",
+        "correct": true,
+        "why": "Right: pass `ignore_index=True`."
+      },
+      {
+        "text": "It is sorted by month",
+        "correct": false,
+        "why": "Order is not the issue."
+      },
+      {
+        "text": "It becomes a MultiIndex",
+        "correct": false,
+        "why": "Only with `keys=`."
+      }
+    ]
+  },
+  {
+    "id": "ex-313f6fx5",
+    "version": 1,
+    "section": "concat-and-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips.join(docks, on=\"start_station\").join(docks, on=\"end_station\")` raises `columns overlap but no suffix specified`. What fixes it?",
+    "hint": "Two columns want the same name.",
+    "choices": [
+      {
+        "text": "`how=\"outer\"`",
+        "correct": false,
+        "why": "The names still collide."
+      },
+      {
+        "text": "Dropping duplicates from `docks`",
+        "correct": false,
+        "why": "It already has one row per station."
+      },
+      {
+        "text": "`rsuffix=\"_end\"` on the second join",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Using `concat` instead",
+        "correct": false,
+        "why": "That stacks; it does not match keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hpbfpdq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to its key.",
+    "hint": "Column, index, or none.",
+    "pairs": [
+      {
+        "left": "`merge`",
+        "right": "Values in a column on each side"
+      },
+      {
+        "left": "`join`",
+        "right": "The right table's index"
+      },
+      {
+        "left": "`concat`",
+        "right": "No key: rows stacked, columns by name"
+      },
+      {
+        "left": "`merge_asof`",
+        "right": "The latest earlier time"
+      }
+    ],
+    "right_distractors": [
+      "The row position"
+    ]
+  },
+  {
+    "id": "ex-w8pkwf90",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of joining station names onto the trips safely.",
+    "hint": "Know the data, join, then check.",
+    "items": [
+      "Check whether `station_id` is unique in `stations`",
+      "Normalise both keys to the same type and spelling",
+      "Merge with `how=\"left\"` and `validate`",
+      "Compare the row count with the trips'"
+    ],
+    "trap": "Checking only at the end finds the surplus but not its cause."
+  }
+]

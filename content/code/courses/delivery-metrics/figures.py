@@ -1,0 +1,1883 @@
+#!/usr/bin/env python3
+"""Every diagram in the delivery-metrics course, drawn from the Billing team's data.
+
+The charts in this course are the course: a cumulative flow diagram, an ageing
+chart, a cycle-time scatter, a Monte Carlo histogram. Each one is drawn from
+the files billing.py writes, and billing.py is read OUT OF LESSON 1'S PROSE and
+run in a temporary folder, so a chart cannot drift from the program the
+student saves or from the numbers the lessons quote.
+
+    python3 figures.py            # rewrite every figure in the lessons
+    python3 figures.py --list     # the names, and the lesson each lives in
+
+A figure lives in a lesson's prose as an ordinary `schooling-figure` fence. Its
+SVG carries `data-fig="<name>"`, which is how this file finds it again: running
+it replaces each fence, in both languages, with what the code below draws now.
+A placeholder line `@@fig:<name>@@` is replaced the same way, which is how a
+figure enters a section the first time.
+
+Only palette tokens are used, so each drawing turns over with the theme like
+the page around it. Text is never drawn in `--wire` or `--phosphor-dim`, which
+do not reach AA on the light panel. Bars are paths rather than rects, because
+`figure-fit` reads every rect as a box that a gridline may not cross.
+
+The drawing kit (Fig, Plot and the fence machinery) is data-storytelling's,
+copied rather than imported: two courses sharing one file would make either
+one's figures a reason to edit the other's.
+
+Standard library only.
+"""
+import csv
+import glob
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+from datetime import date, datetime, timedelta
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+LESSON1 = os.path.join(HERE, 'lessons', 'le-zz75x0ba')
+
+
+import functools
+
+
+@functools.lru_cache(maxsize=None)
+def billing(*args):
+    """Run lesson 1's billing.py in a fresh folder; return its items and deploys."""
+    program = subprocess.run([sys.executable, os.path.join(HERE, 'lab', 'extract.py'), LESSON1,
+                              'billing.py'], capture_output=True, text=True, check=True).stdout
+    with tempfile.TemporaryDirectory() as d:
+        open(os.path.join(d, 'billing.py'), 'w').write(program)
+        subprocess.run([sys.executable, 'billing.py', *args], cwd=d, check=True,
+                       capture_output=True)
+        items = list(csv.DictReader(open(os.path.join(d, 'items.csv'))))
+        deploys = list(csv.DictReader(open(os.path.join(d, 'deploys.csv'))))
+    return items, deploys
+
+
+def when(text):
+    return date.fromisoformat(text[:10]) if text else None
+
+
+SANS = "'IBM Plex Sans', sans-serif"
+MONO = "'IBM Plex Mono', monospace"
+
+
+def esc(s):
+    return (str(s).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            .replace('"', '&quot;'))
+
+
+def num(lang, x, d=1):
+    """A number as the reader writes it: 3.5 in English, 3,5 in Portuguese."""
+    s = f'{x:,.{d}f}'
+    if lang == 'pt':
+        s = s.replace(',', '\0').replace('.', ',').replace('\0', '.')
+    return s
+
+
+def pct(lang, x, d=1):
+    return num(lang, 100 * x, d) + '%'
+
+
+def brl(lang, cents, d=0):
+    return 'R$ ' + num(lang, cents / 100, d)
+
+
+def T(lang, en, pt):
+    return pt if lang == 'pt' else en
+
+
+class Fig:
+    def __init__(self, name, w, h, label):
+        self.name, self.w, self.h, self.label = name, w, h, label
+        self.parts = []
+        self.markers = set()
+
+    def text(self, x, y, s, size=10, anchor='middle', fill='--paper', weight=None, mono=False,
+             italic=False):
+        w = f' font-weight="{weight}"' if weight else ''
+        it = ' font-style="italic"' if italic else ''
+        self.parts.append(
+            f'<text x="{x:.1f}" y="{y:.1f}" text-anchor="{anchor}" dominant-baseline="middle" '
+            f'font-family="{MONO if mono else SANS}" font-size="{size}"{w}{it} '
+            f'fill="var({fill})">{esc(s)}</text>')
+
+    def lines(self, x, y, rows, size=10, gap=None, **kw):
+        """Several lines of text, one under the other, starting at y."""
+        gap = gap or size * 1.35
+        for i, r in enumerate(rows):
+            self.text(x, y + i * gap, r, size=size, **kw)
+
+    def path(self, d, stroke='--paper-dim', width=1.2, fill='none', dash=None, arrow=False,
+             opacity=None, cap=None):
+        extra = ''
+        if dash:
+            extra += f' stroke-dasharray="{dash}"'
+        if arrow:
+            mid = f'dm-ah{stroke.replace("--", "-")}'
+            self.markers.add((mid, stroke))
+            extra += f' marker-end="url(#{mid})"'
+        if opacity is not None:
+            extra += f' fill-opacity="{opacity}"'
+        if cap:
+            extra += f' stroke-linecap="{cap}"'
+        sv = 'none' if stroke is None else f'var({stroke})'
+        fv = fill if fill == 'none' else f'var({fill})'
+        self.parts.append(f'<path d="{d}" stroke="{sv}" stroke-width="{width}" fill="{fv}"{extra}></path>')
+
+    def line(self, x1, y1, x2, y2, **kw):
+        self.path(f'M{x1:.1f} {y1:.1f} L{x2:.1f} {y2:.1f}', **kw)
+
+    def bar(self, x, y, w, h, fill='--phosphor-dim', stroke='--phosphor', width=1):
+        """A filled block drawn as a path, so it is not a box to figure-fit."""
+        self.path(f'M{x:.1f} {y:.1f} L{x + w:.1f} {y:.1f} L{x + w:.1f} {y + h:.1f} '
+                  f'L{x:.1f} {y + h:.1f} Z', stroke=stroke, width=width, fill=fill)
+
+    def rect(self, x, y, w, h, stroke='--wire', fill='--panel', width=1.2, rx=4, dash=None):
+        extra = f' stroke-dasharray="{dash}"' if dash else ''
+        self.parts.append(
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" '
+            f'fill="var({fill})" stroke="var({stroke})" stroke-width="{width}"{extra}></rect>')
+
+    def circle(self, x, y, r, fill='--phosphor', stroke=None, width=1.2):
+        st = f' stroke="var({stroke})" stroke-width="{width}"' if stroke else ''
+        fv = 'none' if fill is None else f'var({fill})'
+        self.parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fv}"{st}></circle>')
+
+    def svg(self, standalone=False):
+        defs = ''
+        if self.markers:
+            defs = '<defs>' + ''.join(
+                f'<marker id="{m}" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" '
+                f'markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" '
+                f'fill="var({c})"></path></marker>' for m, c in sorted(self.markers)) + '</defs>'
+        ns = ' xmlns="http://www.w3.org/2000/svg"' if standalone else ''
+        fig = '' if standalone else f' data-fig="{self.name}"'
+        return (f'<svg{ns} viewBox="0 0 {self.w} {self.h}" role="img"{fig} '
+                f'aria-label="{esc(self.label)}">{defs}{"".join(self.parts)}</svg>')
+
+
+class Plot:
+    """A pair of axes inside a figure, mapping data to the page."""
+
+    def __init__(self, fig, x0, y0, x1, y1, xmin, xmax, ymin, ymax):
+        self.f = fig
+        self.x0, self.y0, self.x1, self.y1 = x0, y0, x1, y1  # y0 is the TOP
+        self.xmin, self.xmax, self.ymin, self.ymax = xmin, xmax, ymin, ymax
+
+    def sx(self, v):
+        return self.x0 + (v - self.xmin) / (self.xmax - self.xmin) * (self.x1 - self.x0)
+
+    def sy(self, v):
+        return self.y1 - (v - self.ymin) / (self.ymax - self.ymin) * (self.y1 - self.y0)
+
+    def yaxis(self, ticks, fmt=str, grid=True, size=9, axis=True):
+        f = self.f
+        if axis:
+            f.line(self.x0, self.y0, self.x0, self.y1, stroke='--paper-dim', width=1)
+        for t in ticks:
+            y = self.sy(t)
+            if grid and t != self.ymin:
+                f.line(self.x0, y, self.x1, y, stroke='--wire', width=1)
+            f.text(self.x0 - 6, y, fmt(t), size=size, anchor='end', fill='--paper-dim')
+
+    def baseline(self):
+        self.f.line(self.x0, self.y1, self.x1, self.y1, stroke='--paper-dim', width=1.2)
+
+    def polyline(self, xs, ys, stroke='--phosphor', width=2, dash=None):
+        d = 'M' + ' L'.join(f'{self.sx(x):.1f} {self.sy(y):.1f}' for x, y in zip(xs, ys))
+        self.f.path(d, stroke=stroke, width=width, dash=dash)
+
+
+# --------------------------------------------------------------- the machinery
+
+FIGURES = {}
+
+
+def figure(name, lesson):
+    def wrap(f):
+        FIGURES[name] = (lesson, f)
+        return f
+    return wrap
+
+
+def fence(name, lang):
+    _, f = FIGURES[name]
+    fig, caption = f(lang)
+    return {'svg': fig.svg(), 'caption': caption}
+
+
+def prose_labels(svg):
+    out = []
+    for m in re.finditer(r'<text [^>]*font-family="([^"]*)"[^>]*>(.*?)</text>', svg):
+        if 'Plex Sans' not in m.group(1):
+            continue
+        t = re.sub(r'<[^>]+>', '', m.group(2))
+        t = (t.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"')
+             .replace('&amp;', '&'))
+        t = ' '.join(t.split())
+        if t and re.search(r'[^\W\d_]', t):
+            out.append(t)
+    return out
+
+
+def render(name, lang):
+    block = fence(name, lang)
+    if lang != 'en':
+        en = prose_labels(fence(name, 'en')['svg'])
+        mine = prose_labels(block['svg'])
+        if len(en) != len(mine):
+            raise SystemExit(f'{name}: {len(en)} English labels and {len(mine)} in {lang}')
+        same = sorted({a for a, b in zip(en, mine) if a == b})
+        if same:
+            block['same'] = same
+    return '```schooling-figure\n' + json.dumps(block, ensure_ascii=False) + '\n```'
+
+
+FENCE = re.compile(r'```schooling-figure\n(\{.*?\})\n```', re.S)
+PLACEHOLDER = re.compile(r'^@@fig:([a-z0-9-]+)@@$', re.M)
+
+
+def apply(path):
+    lang = 'pt' if path.endswith('.pt.md') else 'en'
+    text = open(path, encoding='utf-8').read()
+
+    def swap_fence(m):
+        found = re.search(r'data-fig=\\"([a-z0-9-]+)\\"', m.group(1))
+        if not found or found.group(1) not in FIGURES:
+            return m.group(0)
+        return render(found.group(1), lang)
+
+    new = FENCE.sub(swap_fence, text)
+    def swap_placeholder(m):
+        if m.group(1) not in FIGURES:
+            # Left in the file, where validate-content and the render walk both refuse
+            # it; said here so the run does not look complete.
+            print(f'{path}: no figure called {m.group(1)}, placeholder left', file=sys.stderr)
+            return m.group(0)
+        return render(m.group(1), lang)
+    new = PLACEHOLDER.sub(swap_placeholder, new)
+    if new != text:
+        open(path, 'w', encoding='utf-8').write(new)
+        return True
+    return False
+
+
+
+
+def main():
+    if '--list' in sys.argv:
+        for name, (lesson, _) in FIGURES.items():
+            print(f'{lesson:>3}  {name}')
+        return
+    changed = 0
+    for path in sorted(glob.glob(os.path.join(HERE, 'lessons', '*', '*.md'))):
+        changed += apply(path)
+    print(f'{len(FIGURES)} figures drawn, {changed} file(s) rewritten')
+
+
+# ------------------------------------------------------------------ helpers
+
+MONTHS = {'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          'pt': ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']}
+
+
+def day_label(lang, d):
+    return f'{d.day} {MONTHS[lang][d.month - 1]}'
+
+
+def span(first, last):
+    return [first + timedelta(n) for n in range((last - first).days + 1)]
+
+
+def open_on(items, d):
+    return [i for i in items if i['started'] and when(i['started']) <= d
+            and (not i['merged'] or when(i['merged']) > d)]
+
+
+def card(f, x, y, w=34, h=22, stroke='--phosphor', fill='--scan'):
+    f.rect(x, y, w, h, stroke=stroke, fill=fill, width=1.2, rx=3)
+
+
+# ------------------------------------------------------------------ lesson 1
+
+@figure('l01-box', 1)
+def l01_box(lang):
+    f = Fig('l01-box', 680, 250, T(
+        lang,
+        'A box standing for the team, with six cards inside it. Cards arrive from the left, '
+        'and finished cards leave on the right. The number of cards inside is the work in '
+        'progress, L; the rate at which they leave is the throughput, lambda; the time each '
+        'card spends inside, from entering to leaving, is the cycle time, W.',
+        'Uma caixa que representa o time, com seis cartões dentro. Cartões chegam pela '
+        'esquerda, e os terminados saem pela direita. O número de cartões dentro é o trabalho '
+        'em andamento, L; o ritmo em que saem é a vazão, lambda; o tempo que cada cartão passa '
+        'dentro, de entrar a sair, é o tempo de ciclo, W.'))
+    f.rect(190, 40, 300, 130, stroke='--phosphor', fill='--panel', width=1.6, rx=8)
+    f.text(340, 58, T(lang, 'the team', 'o time'), size=11, weight='600')
+    for k in range(6):
+        card(f, 214 + (k % 3) * 92, 78 + (k // 3) * 42, w=70, h=28)
+    for k in range(3):
+        card(f, 24 + k * 44, 104, stroke='--wire', fill='--panel')
+    f.line(160, 118, 186, 118, stroke='--paper-dim', width=1.4, arrow=True)
+    f.line(494, 118, 520, 118, stroke='--paper-dim', width=1.4, arrow=True)
+    for k in range(3):
+        card(f, 530 + k * 44, 104, stroke='--amber', fill='--panel')
+    f.text(90, 84, T(lang, 'requests arrive', 'pedidos chegam'), size=10, fill='--paper-dim')
+    f.text(596, 84, T(lang, 'items finish', 'itens terminam'), size=10, fill='--paper-dim')
+    f.line(190, 196, 490, 196, stroke='--amber', width=1.4, arrow=True)
+    f.line(190, 188, 190, 204, stroke='--amber', width=1.4)
+    f.text(340, 214, T(lang, 'W: the days each item spends inside (cycle time)',
+                       'W: os dias que cada item passa dentro (tempo de ciclo)'), size=10.5)
+    f.text(340, 20, T(lang, 'L: the items inside at any moment (work in progress)',
+                      'L: os itens dentro a cada momento (trabalho em andamento)'), size=10.5)
+    f.text(596, 150, T(lang, 'λ: items leaving per day', 'λ: itens que saem por dia'),
+           size=10.5)
+    f.text(596, 166, T(lang, '(throughput)', '(vazão)'), size=10.5, fill='--paper-dim')
+    f.text(340, 238, 'L = λ × W', size=11, fill='--paper-dim')
+    return f, T(lang,
+                'Any system that work enters and leaves. Know two of the three numbers and the '
+                'law gives the third.',
+                'Qualquer sistema por onde o trabalho entra e sai. Conhecidos dois dos três '
+                'números, a lei dá o terceiro.')
+
+
+@figure('l01-wip-days', 1)
+def l01_wip_days(lang):
+    items, _ = billing()
+    days = span(date(2026, 6, 1), date(2026, 9, 30))
+    wip = [len(open_on(items, d)) for d in days]
+    f = Fig('l01-wip-days', 680, 280, T(
+        lang,
+        'A line chart of the Billing team\'s work in progress at the end of each day, from '
+        f'1 June to 30 September 2026. It sits between {min(wip[:60])} and {max(wip[:60])} '
+        'items through June and July, falls through August after the rules change on 3 '
+        f'August, and stays at {max(wip[-30:])} or fewer in September.',
+        'Um gráfico de linha do trabalho em andamento do time de Billing no fim de cada dia, '
+        f'de 1º de junho a 30 de setembro de 2026. Fica entre {min(wip[:60])} e '
+        f'{max(wip[:60])} itens em junho e julho, cai ao longo de agosto depois que as regras '
+        f'mudam em 3 de agosto, e fica em {max(wip[-30:])} ou menos em setembro.'))
+    p = Plot(f, 60, 40, 650, 230, 0, len(days) - 1, 0, 30)
+    p.yaxis([0, 10, 20, 30])
+    p.baseline()
+    for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
+        x = p.sx((d - days[0]).days)
+        f.text(x, 246, day_label(lang, d), size=9.5, anchor='start', fill='--paper-dim')
+    xa = p.sx((date(2026, 8, 3) - days[0]).days)
+    f.line(xa, 40, xa, 230, stroke='--amber', width=1.2, dash='4 3')
+    f.text(xa + 6, 34, T(lang, '3 Aug: one item each, review first',
+                         '3 ago: um item cada, revisão primeiro'),
+           size=10, anchor='start', fill='--amber')
+    p.polyline(range(len(days)), wip, stroke='--phosphor', width=1.8)
+    f.text(60, 16, T(lang, 'items open at the end of each day', 'itens abertos no fim de cada dia'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Two policies and the transition between them. Little\'s law holds in '
+                'September and fails across August, where the board was emptying.',
+                'Duas políticas e a transição entre elas. A lei de Little vale em setembro e '
+                'falha em agosto, quando o quadro estava esvaziando.')
+
+
+# ------------------------------------------------------------------ lesson 2
+
+def cycle_days(items, first, last):
+    """(merge date, cycle days, start date) for items merged in [first, last]."""
+    return [(when(i['merged']), (when(i['merged']) - when(i['started'])).days, when(i['started']))
+            for i in items if i['merged'] and first <= when(i['merged']) <= last]
+
+
+def pctl(values, p):
+    ordered = sorted(values)
+    return ordered[-(-p * len(ordered) // 100) - 1]
+
+
+@figure('l02-clocks', 2)
+def l02_clocks(lang):
+    f = Fig('l02-clocks', 680, 250, T(
+        lang,
+        'A timeline of one item with five moments: created, started, handed to review, merged '
+        'and deployed. Cycle time runs from started to merged. Lead time runs from created to '
+        'deployed and contains cycle time, the wait in the backlog before it and the wait for '
+        'a deployment after it. A third bracket, lead time for changes, runs from the commit to '
+        'the deployment.',
+        'Uma linha do tempo de um item com cinco momentos: criado, começado, entregue para '
+        'revisão, integrado e com deploy. O tempo de ciclo vai de começado a integrado. O lead '
+        'time vai de criado ao deploy e contém o tempo de ciclo, a espera no backlog antes dele '
+        'e a espera pelo deploy depois. Uma terceira chave, o lead time de mudanças, vai do '
+        'commit ao deploy.'))
+    xs = [60, 250, 400, 500, 610]
+    names = T(lang, ['request written', 'work starts', 'handed to review', 'change merged',
+                     'in production'],
+              ['pedido registrado', 'trabalho começa', 'vai para revisão', 'mudança integrada',
+               'em produção'])
+    cols = ['created', 'started', 'review', 'merged', 'deployed']
+    f.line(40, 110, 640, 110, stroke='--paper-dim', width=1.4)
+    for x, n, c in zip(xs, names, cols):
+        f.circle(x, 110, 5, fill='--phosphor')
+        f.text(x, 92, n, size=10.5)
+        f.text(x, 130, c, size=9, mono=True, fill='--paper-dim')
+    segs = [(60, 250, T(lang, 'backlog', 'backlog')), (250, 400, T(lang, 'development', 'desenvolvimento')),
+            (400, 500, T(lang, 'review', 'revisão')), (500, 610, T(lang, 'to deploy', 'até o deploy'))]
+    for a, b, t in segs:
+        f.text((a + b) / 2, 70, t, size=9.5, fill='--paper-dim', italic=True)
+
+    def bracket(a, b, y, label, colour):
+        f.line(a, y, b, y, stroke=colour, width=1.6)
+        f.line(a, y - 6, a, y + 6, stroke=colour, width=1.6)
+        f.line(b, y - 6, b, y + 6, stroke=colour, width=1.6)
+        f.text((a + b) / 2, y + 16, label, size=10.5, fill=colour)
+    bracket(250, 500, 158, T(lang, 'cycle time: the team\'s clock', 'tempo de ciclo: o relógio do time'),
+            '--phosphor')
+    bracket(60, 610, 196, T(lang, 'lead time: the requester\'s clock', 'lead time: o relógio de quem pediu'),
+            '--amber')
+    f.line(452, 30, 610, 30, stroke='--paper-dim', width=1.2, dash='4 3')
+    f.line(452, 24, 452, 36, stroke='--paper-dim', width=1.2)
+    f.line(610, 24, 610, 36, stroke='--paper-dim', width=1.2)
+    f.text(531, 16, T(lang, 'lead time for changes (lesson 5)', 'lead time de mudanças (aula 5)'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Two clocks on one item. Cycle time is inside lead time, and the two stretches '
+                'outside it, the backlog and the wait for a deployment, are the team\'s too.',
+                'Dois relógios num item. O tempo de ciclo está dentro do lead time, e os dois '
+                'trechos de fora, o backlog e a espera pelo deploy, também são do time.')
+
+
+@figure('l02-scatter', 2)
+def l02_scatter(lang):
+    items, _ = billing()
+    pts = cycle_days(items, date(2026, 6, 1), date(2026, 9, 30))
+    first = date(2026, 6, 1)
+    before = [c for m, c, s in pts if m <= date(2026, 7, 31)]
+    after = [c for m, c, s in pts if m >= date(2026, 9, 1)]
+    f = Fig('l02-scatter', 680, 300, T(
+        lang,
+        f'A scatterplot of the {len(pts)} items the Billing team merged from June to September '
+        '2026: each dot sits at the date the item merged and at its cycle time in days. In June '
+        f'and July the dots spread from 1 to {max(before)} days, with the 85th percentile at '
+        f'{pctl(before, 85)}. In August, items started before the change keep finishing with '
+        'long cycle times while new ones finish within a week. In September the dots sit low, '
+        f'with the 85th percentile at {pctl(after, 85)}.',
+        f'Um gráfico de dispersão dos {len(pts)} itens que o time de Billing integrou de junho a '
+        'setembro de 2026: cada ponto fica na data em que o item foi integrado e na altura do '
+        f'seu tempo de ciclo em dias. Em junho e julho os pontos se espalham de 1 a {max(before)} '
+        f'dias, com o percentil 85 em {pctl(before, 85)}. Em agosto, itens começados antes da '
+        'mudança continuam terminando com ciclos longos enquanto os novos terminam em uma '
+        f'semana. Em setembro os pontos ficam baixos, com o percentil 85 em {pctl(after, 85)}.'))
+    p = Plot(f, 60, 36, 650, 240, 0, 121, 0, 60)
+    p.yaxis([0, 10, 20, 30, 40, 50, 60])
+    p.baseline()
+    for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
+        f.text(p.sx((d - first).days), 256, day_label(lang, d), size=9.5, anchor='start',
+               fill='--paper-dim')
+    xa = p.sx((date(2026, 8, 3) - first).days)
+    f.line(xa, 36, xa, 240, stroke='--paper-dim', width=1, dash='4 3')
+    for m, c, s in pts:
+        old = s < date(2026, 8, 3)
+        f.circle(p.sx((m - first).days), p.sy(c), 3,
+                 fill='--phosphor' if old else '--amber')
+    for lo, hi, vals in ((date(2026, 6, 1), date(2026, 7, 31), before),
+                         (date(2026, 9, 1), date(2026, 9, 30), after)):
+        y = p.sy(pctl(vals, 85))
+        f.line(p.sx((lo - first).days), y, p.sx((hi - first).days), y, stroke='--paper', width=1.2,
+               dash='6 3')
+        f.text(p.sx((hi - first).days), y - 8, T(lang, f'85th: {pctl(vals, 85)} days',
+                                                 f'p85: {pctl(vals, 85)} dias'),
+               size=9.5, anchor='end')
+    f.text(60, 16, T(lang, 'cycle time in days, by the date each item merged',
+                     'tempo de ciclo em dias, pela data em que cada item foi integrado'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.circle(430, 16, 3, fill='--phosphor')
+    f.text(438, 16, T(lang, 'started before 3 Aug', 'começado antes de 3 ago'), size=9.5,
+           anchor='start', fill='--paper-dim')
+    f.circle(560, 16, 3, fill='--amber')
+    f.text(568, 16, T(lang, 'started after', 'começado depois'), size=9.5, anchor='start',
+           fill='--paper-dim')
+    return f, T(lang,
+                'August holds two systems at once: the old one draining out in tall dots, and the '
+                'new one finishing within a week.',
+                'Agosto tem dois sistemas ao mesmo tempo: o antigo escoando em pontos altos, e o '
+                'novo terminando em uma semana.')
+
+
+def stage_days(first, last):
+    """stages.py's four averages for items deployed in [first, last], rounded as it prints."""
+    items, deploys = billing()
+    shipped = {}
+    for d in deploys:
+        for i in d['items'].split():
+            shipped[i] = datetime.fromisoformat(d['at'])
+    cols = [[], [], [], []]
+    for i in items:
+        if i['id'] not in shipped or not first <= shipped[i['id']].date() <= last:
+            continue
+        merged = datetime.fromisoformat(i['merged'])
+        cols[0].append((when(i['started']) - when(i['created'])).days)
+        cols[1].append((when(i['review']) - when(i['started'])).days)
+        cols[2].append((merged.date() - when(i['review'])).days)
+        cols[3].append((shipped[i['id']] - merged).total_seconds() / 86400)
+    return [round(sum(c) / len(c), 1) for c in cols]
+
+
+@figure('l02-stages', 2)
+def l02_stages(lang):
+    a = stage_days(date(2026, 6, 1), date(2026, 7, 31))
+    b = stage_days(date(2026, 9, 1), date(2026, 9, 30))
+    rows = [(T(lang, 'June and July', 'junho e julho'), a), (T(lang, 'September', 'setembro'), b)]
+    names = T(lang, ['backlog', 'development', 'review', 'to deploy'],
+              ['backlog', 'desenvolvimento', 'revisão', 'até o deploy'])
+    styles = [('--panel', '--paper-dim'), ('--scan', '--phosphor'), ('--panel', '--amber'),
+              ('--scan', '--paper')]
+    f = Fig('l02-stages', 680, 220, T(
+        lang,
+        f'Two stacked bars of average lead time in days. June and July: {num(lang, sum(a))} days, '
+        f'of which {a[0]} in the backlog, {a[1]} in development, {a[2]} in review and {a[3]} '
+        f'waiting to deploy. September: {num(lang, sum(b))} days, of which {b[0]} in the '
+        f'backlog, {b[1]} in development, {b[2]} in review and {b[3]} waiting to deploy.',
+        f'Duas barras empilhadas do lead time médio em dias. Junho e julho: {num(lang, sum(a))} '
+        f'dias, sendo {num(lang, a[0])} no backlog, {num(lang, a[1])} em desenvolvimento, '
+        f'{num(lang, a[2])} em revisão e {num(lang, a[3])} esperando o deploy. Setembro: '
+        f'{num(lang, sum(b))} dias, sendo {num(lang, b[0])} no backlog, {num(lang, b[1])} em '
+        f'desenvolvimento, {num(lang, b[2])} em revisão e {num(lang, b[3])} esperando o deploy.'))
+    x0, scale = 130, 11.5
+    for r, (label, vals) in enumerate(rows):
+        y = 50 + r * 70
+        f.text(x0 - 10, y + 16, label, size=10.5, anchor='end')
+        x = x0
+        for k, v in enumerate(vals):
+            fill, stroke = styles[k]
+            f.bar(x, y, v * scale, 32, fill=fill, stroke=stroke, width=1.2)
+            if v * scale > 44:
+                f.text(x + v * scale / 2, y + 16, num(lang, v), size=9.5)
+            x += v * scale
+        f.text(x + 8, y + 16, T(lang, f'{num(lang, sum(vals))} days', f'{num(lang, sum(vals))} dias'),
+               size=10.5, anchor='start', weight='600')
+    for k, n in enumerate(names):
+        fill, stroke = styles[k]
+        lx = 130 + k * 130
+        f.bar(lx, 190, 14, 12, fill=fill, stroke=stroke, width=1.2)
+        f.text(lx + 20, 196, n, size=9.5, anchor='start', fill='--paper-dim')
+    f.text(130, 24, T(lang, 'average lead time of items deployed in the period, by column',
+                      'lead time médio dos itens com deploy no período, por coluna'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Every queue inside the team shrank, and the requester waits only ten days less: '
+                'the backlog grew to fill most of the gain.',
+                'Toda fila dentro do time encolheu, e quem pediu espera só dez dias a menos: o '
+                'backlog cresceu e ocupou quase todo o ganho.')
+
+
+# ------------------------------------------------------------------ lesson 3
+
+def cfd_counts(items, deploys, days):
+    shipped = {}
+    for d in deploys:
+        for i in d['items'].split():
+            shipped[i] = d['at'][:10]
+    cols = ['created', 'started', 'review', 'merged']
+    out = {c: [] for c in cols + ['deployed']}
+    for day in days:
+        iso = day.isoformat()
+        for c in cols:
+            out[c].append(sum(1 for i in items if i[c] and i[c][:10] <= iso))
+        out['deployed'].append(sum(1 for v in shipped.values() if v <= iso))
+    return out
+
+
+@figure('l03-cfd', 3)
+def l03_cfd(lang):
+    items, deploys = billing()
+    days = span(date(2026, 6, 1), date(2026, 9, 30))
+    c = cfd_counts(items, deploys, days)
+    f = Fig('l03-cfd', 680, 320, T(
+        lang,
+        'A cumulative flow diagram of the Billing team from June to September 2026: five rising '
+        'lines, arrived, started, to review, merged and deployed, with the bands between them '
+        'shaded. Through July the band between to review and merged widens, the review queue. '
+        'From August the bands between started and deployed are thin, and the merged and '
+        'deployed lines lie on top of each other.',
+        'Um diagrama de fluxo cumulativo do time de Billing de junho a setembro de 2026: cinco '
+        'linhas que sobem, chegou, começou, para revisão, integrado e com deploy, com as faixas '
+        'entre elas sombreadas. Em julho a faixa entre para revisão e integrado alarga, a fila '
+        'de revisão. A partir de agosto as faixas entre começou e deploy ficam finas, e as linhas '
+        'de integrado e deploy ficam uma sobre a outra.'))
+    p = Plot(f, 56, 30, 560, 270, 0, len(days) - 1, 0, 150)
+    p.yaxis([0, 50, 100, 150])
+    p.baseline()
+    order = ['created', 'started', 'review', 'merged', 'deployed']
+    fills = ['--panel', '--scan', '--panel', '--scan', None]
+    strokes = ['--paper-dim', '--phosphor', '--amber', '--paper', '--paper-dim']
+    xs = list(range(len(days)))
+    for k in range(4):
+        top, bot = c[order[k]], c[order[k + 1]]
+        d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, top))
+        d += ' L' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in reversed(list(zip(xs, bot))))
+        f.path(d + ' Z', stroke=None, fill=fills[k], width=0)
+    for k, col in enumerate(order):
+        p.polyline(xs, c[col], stroke=strokes[k], width=1.5, dash='3 2' if col == 'deployed' else None)
+    names = T(lang, ['arrived', 'started', 'to review', 'merged', 'deployed'],
+              ['chegou', 'começou', 'para revisão', 'integrado', 'com deploy'])
+    ys, last = [], None
+    for o in order:
+        y = p.sy(c[o][-1])
+        if last is not None and y < last + 13:
+            y = last + 13
+        ys.append(y)
+        last = y
+    for k, n in enumerate(names):
+        f.text(566, ys[k], n, size=10, anchor='start', fill='--paper' if k != 4 else '--paper-dim')
+    for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
+        f.text(p.sx((d - days[0]).days), 286, day_label(lang, d), size=9.5, anchor='start',
+               fill='--paper-dim')
+    xa = p.sx((date(2026, 8, 3) - days[0]).days)
+    f.line(xa, 30, xa, 270, stroke='--paper-dim', width=1, dash='4 3')
+    f.text(56, 14, T(lang, 'items that had reached each column, day by day',
+                     'itens que tinham chegado a cada coluna, dia a dia'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The board\'s history in one picture: the thickness of each band is how many items '
+                'were in that state, and the steepness of each line is how fast items crossed it.',
+                'A história do quadro numa imagem: a espessura de cada faixa é quantos itens '
+                'estavam naquele estado, e a inclinação de cada linha é a rapidez com que os itens '
+                'a cruzaram.')
+
+
+@figure('l03-patterns', 3)
+def l03_patterns(lang):
+    f = Fig('l03-patterns', 680, 220, T(
+        lang,
+        'Three small cumulative flow diagrams drawn as sketches. In the first, the band between '
+        'two lines widens because the upper line rises faster than the lower one: a bottleneck. '
+        'In the second, the lower line goes flat while the upper one keeps rising: nothing is '
+        'finishing. In the third, the lower line rises in steps: work crosses that boundary in '
+        'batches.',
+        'Três pequenos diagramas de fluxo cumulativo desenhados como esboço. No primeiro, a '
+        'faixa entre duas linhas alarga porque a de cima sobe mais rápido que a de baixo: um '
+        'gargalo. No segundo, a linha de baixo fica plana enquanto as outras continuam subindo: '
+        'nada está terminando. No terceiro, a linha de baixo sobe em degraus: o trabalho cruza '
+        'essa fronteira em lotes.'))
+    titles = T(lang, ['a band that widens', 'a line that goes flat', 'stairs instead of a slope'],
+               ['uma faixa que alarga', 'uma linha que fica plana', 'degraus em vez de rampa'])
+    notes = T(lang, ['a queue is growing', 'nothing is finishing', 'work moves in batches'],
+              ['uma fila está crescendo', 'nada está terminando', 'o trabalho anda em lotes'])
+    for k in range(3):
+        x0 = 20 + k * 226
+        f.rect(x0, 30, 200, 150, stroke='--wire', fill='--panel', width=1, rx=4)
+        f.text(x0 + 100, 18, titles[k], size=10.5, weight='600')
+        f.text(x0 + 100, 198, notes[k], size=10, fill='--paper-dim', italic=True)
+        bx, by, w, h = x0 + 14, 166, 172, 120
+        if k == 0:
+            top = [(0, 30), (1, 70), (2, 110)]
+            bot = [(0, 20), (1, 40), (2, 58)]
+        elif k == 1:
+            top = [(0, 30), (1, 70), (2, 108)]
+            bot = [(0, 20), (1, 56), (1.2, 62), (2, 62)]
+        else:
+            top = [(0, 30), (1, 70), (2, 108)]
+            bot = [(0, 18), (0.45, 18), (0.45, 42), (1.1, 42), (1.1, 68), (1.75, 68), (1.75, 92),
+                   (2, 92)]
+
+        def pts(seq):
+            return ' L'.join(f'{bx + a / 2 * w:.1f} {by - v:.1f}' for a, v in seq)
+        f.path('M' + pts(top), stroke='--phosphor', width=1.6)
+        f.path('M' + pts(bot), stroke='--amber', width=1.6)
+    return f, T(lang,
+                'Three shapes worth knowing on sight. Each is visible days before the cycle times '
+                'of finished items change.',
+                'Três formas que vale reconhecer de relance. Cada uma aparece dias antes de os '
+                'tempos de ciclo dos itens terminados mudarem.')
+
+
+def ages_on(items, today):
+    recent = [(when(i['merged']) - when(i['started'])).days for i in items
+              if i['merged'] and today - timedelta(days=30) < when(i['merged']) <= today]
+    bands = {p: pctl(recent, p) for p in (50, 70, 85, 95)}
+    dots = []
+    for i in items:
+        s, r, m = when(i['started']), when(i['review']), when(i['merged'])
+        if not s or s > today or (m and m <= today):
+            continue
+        dots.append(('review' if r and r <= today else 'development', (today - s).days))
+    return bands, dots
+
+
+@figure('l03-ageing', 3)
+def l03_ageing(lang):
+    items, _ = billing()
+    panels = [(date(2026, 7, 15), T(lang, '15 July', '15 de julho')),
+              (date(2026, 9, 30), T(lang, '30 September', '30 de setembro'))]
+    data = [ages_on(items, d) for d, _ in panels]
+    b1, d1 = data[0]
+    b2, d2 = data[1]
+    f = Fig('l03-ageing', 680, 320, T(
+        lang,
+        f'Two ageing charts of the Billing team\'s board. On 15 July, {len(d1)} items are open; '
+        'the oldest are all in review, up to '
+        f'{max(a for c, a in d1 if c == "review")} days, above the 85th-percentile band at '
+        f'{b1[85]} days. On 30 September, {len(d2)} items are open; one item in development is '
+        f'{max(a for c, a in d2)} days old, far above the 95th-percentile band at {b2[95]} days, '
+        'and the rest are under a week.',
+        f'Dois gráficos de envelhecimento do quadro do time de Billing. Em 15 de julho há '
+        f'{len(d1)} itens abertos; os mais velhos estão todos em revisão, até '
+        f'{max(a for c, a in d1 if c == "review")} dias, acima da faixa do percentil 85 em '
+        f'{b1[85]} dias. Em 30 de setembro há {len(d2)} itens abertos; um item em desenvolvimento '
+        f'tem {max(a for c, a in d2)} dias, bem acima da faixa do percentil 95 em {b2[95]} dias, '
+        'e os outros têm menos de uma semana.'))
+    cols = T(lang, ['development', 'review'], ['desenvolvimento', 'revisão'])
+    for k, ((day, title), (bands, dots)) in enumerate(zip(panels, data)):
+        x0 = 60 + k * 320
+        p = Plot(f, x0, 40, x0 + 260, 270, 0, 2, 0, 45)
+        if k == 0:
+            p.yaxis([0, 15, 30, 45])
+        else:
+            p.yaxis([0, 15, 30, 45], fmt=lambda t: '')
+        p.baseline()
+        f.text(x0 + 130, 24, title, size=11, weight='600')
+        prev = 0
+        for q, fill in ((50, '--scan'), (70, '--panel'), (85, '--scan'), (95, '--panel')):
+            v = bands[q]
+            if v > prev:
+                f.bar(x0, p.sy(v), 260, p.sy(prev) - p.sy(v), fill=fill, stroke=None, width=0)
+            f.line(x0, p.sy(v), x0 + 260, p.sy(v), stroke='--paper-dim', width=0.8, dash='3 3')
+            prev = v
+        f.text(x0 + 258, p.sy(bands[85]) - 6, T(lang, f'85th: {bands[85]}', f'p85: {bands[85]}'),
+               size=9, anchor='end', fill='--paper-dim')
+        for j, col in enumerate(['development', 'review']):
+            cx = p.sx(0.5 + j)
+            f.text(cx, 286, cols[j], size=10)
+            same = {}
+            for c, a in dots:
+                if c != col:
+                    continue
+                n = same.get(a, 0)
+                same[a] = n + 1
+                f.circle(cx - 30 + (n % 7) * 10, p.sy(a), 4,
+                         fill='--amber' if a > bands[85] else '--phosphor')
+    f.text(60, 304, T(lang, 'age in days; bands are the 50th, 70th, 85th and 95th percentiles of recent cycle times',
+                      'idade em dias; as faixas são os percentis 50, 70, 85 e 95 dos tempos de ciclo recentes'),
+           size=9.5, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'A queue and a stuck item look different. In July the old dots crowd one column; '
+                'in September one dot stands alone far above everything else.',
+                'Uma fila e um item travado têm cara diferente. Em julho os pontos velhos lotam uma '
+                'coluna; em setembro um ponto fica sozinho, muito acima de todo o resto.')
+
+
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-before-after', 4)
+def l04_before_after(lang):
+    items, _ = billing()
+    a = [c for m, c, s in cycle_days(items, date(2026, 6, 1), date(2026, 7, 31))]
+    b = [c for m, c, s in cycle_days(items, date(2026, 9, 1), date(2026, 9, 30))]
+    f = Fig('l04-before-after', 680, 310, T(
+        lang,
+        f'Two dot histograms of cycle time in days, one dot per item. June and July, {len(a)} '
+        f'items, spread from {min(a)} to {max(a)} days with the median at {pctl(a, 50)} and the '
+        f'85th percentile at {pctl(a, 85)}. September, {len(b)} items, packed between {min(b)} '
+        f'and {max(b)} days with the median at {pctl(b, 50)} and the 85th percentile at '
+        f'{pctl(b, 85)}.',
+        f'Dois histogramas de pontos do tempo de ciclo em dias, um ponto por item. Junho e julho, '
+        f'{len(a)} itens, espalhados de {min(a)} a {max(a)} dias, com mediana em {pctl(a, 50)} e '
+        f'percentil 85 em {pctl(a, 85)}. Setembro, {len(b)} itens, concentrados entre {min(b)} e '
+        f'{max(b)} dias, com mediana em {pctl(b, 50)} e percentil 85 em {pctl(b, 85)}.'))
+    x0, x1, top = 150, 650, 50
+    sx = lambda d: x0 + d / 50 * (x1 - x0)
+    rows = [(T(lang, 'June and July', 'junho e julho'), a, 110, '--phosphor'),
+            (T(lang, 'September', 'setembro'), b, 262, '--amber')]
+    for label, vals, base, colour in rows:
+        f.line(x0, base, x1, base, stroke='--paper-dim', width=1)
+        f.text(x0 - 12, base - 10, label, size=10.5, anchor='end')
+        f.text(x0 - 12, base + 6, T(lang, f'{len(vals)} items', f'{len(vals)} itens'), size=9.5,
+               anchor='end', fill='--paper-dim')
+        seen = {}
+        for v in sorted(vals):
+            k = v // 2
+            n = seen.get(k, 0)
+            seen[k] = n + 1
+            f.circle(sx(k * 2 + 1), base - 6 - n * 8, 3.2, fill=colour)
+        for q in (50, 85):
+            x = sx(pctl(vals, q))
+            f.line(x, base + 2, x, base + 12, stroke='--paper', width=1.4)
+            f.text(x, base + 22, T(lang, f'{"median" if q == 50 else "85th"} {pctl(vals, q)}',
+                                   f'{"mediana" if q == 50 else "p85"} {pctl(vals, q)}'),
+                   size=9, fill='--paper-dim')
+    for t in range(0, 51, 10):
+        f.text(sx(t), 300, str(t), size=9, fill='--paper-dim')
+    f.text(x0, 20, T(lang, 'cycle time in days, one dot per item merged',
+                     'tempo de ciclo em dias, um ponto por item integrado'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The same team before and after the limit: fewer items open, about the same '
+                'number finished, and each one done in a quarter of the time.',
+                'O mesmo time antes e depois do limite: menos itens abertos, mais ou menos o mesmo '
+                'número terminado, e cada um pronto em um quarto do tempo.')
+
+
+# ------------------------------------------------------------------ lesson 5
+
+def dora_periods():
+    """The four metrics for June-July and for August-September."""
+    items, deploys = billing()
+    merged = {i['id']: datetime.fromisoformat(i['merged']) for i in items if i['merged']}
+    out = []
+    for lo, hi, weeks in (('2026-06', '2026-07', 61 / 7), ('2026-08', '2026-09', 61 / 7)):
+        ds = [d for d in deploys if lo <= d['at'][:7] <= hi]
+        lead = sorted((datetime.fromisoformat(d['at']) - merged[i]).total_seconds() / 3600
+                      for d in ds for i in d['items'].split())
+        fails = [d for d in ds if d['failed'] == '1']
+        rest = sorted((datetime.fromisoformat(d['restored']) - datetime.fromisoformat(d['at']))
+                      .total_seconds() / 60 for d in fails)
+        mid = lambda v: (v[len(v) // 2] if len(v) % 2 else (v[len(v) // 2 - 1] + v[len(v) // 2]) / 2)
+        out.append({'freq': len(ds) / weeks, 'lead': mid(lead), 'cfr': len(fails) / len(ds),
+                    'restore': mid(rest), 'n': len(ds), 'f': len(fails)})
+    return out
+
+
+@figure('l05-timeline', 5)
+def l05_timeline(lang):
+    f = Fig('l05-timeline', 680, 230, T(
+        lang,
+        'A timeline of one change: committed, merged, deployed, a failure noticed, service '
+        'restored. Lead time for changes runs from the commit to the deployment. Time to restore '
+        'runs from the failed deployment to the restore. Deployment frequency counts the '
+        'deployments, and change failure rate is the share of them that fail.',
+        'Uma linha do tempo de uma mudança: commit, integração, deploy, uma falha percebida, '
+        'serviço restaurado. O lead time de mudanças vai do commit ao deploy. O tempo para '
+        'restaurar vai do deploy com falha à restauração. A frequência de deploy conta os '
+        'deploys, e a taxa de falha de mudanças é a fração deles que falha.'))
+    xs = [60, 210, 360, 470, 620]
+    names = T(lang, ['commit', 'merge', 'deploy', 'failure noticed', 'restored'],
+              ['commit', 'integração', 'deploy', 'falha percebida', 'restaurado'])
+    f.line(40, 100, 640, 100, stroke='--paper-dim', width=1.4)
+    for k, (x, n) in enumerate(zip(xs, names)):
+        f.circle(x, 100, 5, fill='--amber' if k >= 3 else '--phosphor')
+        f.text(x, 80, n, size=10.5)
+
+    def bracket(a, b, y, label, colour, dash=None):
+        f.line(a, y, b, y, stroke=colour, width=1.6, dash=dash)
+        f.line(a, y - 6, a, y + 6, stroke=colour, width=1.6)
+        f.line(b, y - 6, b, y + 6, stroke=colour, width=1.6)
+        f.text((a + b) / 2, y + 16, label, size=10.5, fill=colour)
+    bracket(60, 360, 132, T(lang, 'lead time for changes', 'lead time de mudanças'), '--phosphor')
+    bracket(210, 360, 30, T(lang, 'what this course measures, from the merge',
+                            'o que este curso mede, a partir da integração'), '--paper-dim', dash='4 3')
+    bracket(360, 620, 170, T(lang, 'time to restore', 'tempo para restaurar'), '--amber')
+    f.text(360, 214, T(lang, 'deployment frequency counts these; change failure rate is the share that fail',
+                       'a frequência de deploy conta estes; a taxa de falha é a fração que falha'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Two of the metrics are durations on this line and two are counts of the deployments '
+                'on it.',
+                'Duas das métricas são durações nesta linha e duas são contagens dos deploys nela.')
+
+
+@figure('l05-four', 5)
+def l05_four(lang):
+    a, b = dora_periods()
+    f = Fig('l05-four', 680, 250, T(
+        lang,
+        'Four small bar charts, each comparing June and July with August and September. '
+        f'Deployments per week: {num(lang, a["freq"])} then {num(lang, b["freq"])}. Median lead '
+        f'time for changes in hours: {num(lang, a["lead"])} then {num(lang, b["lead"])}. Change '
+        f'failure rate: {pct(lang, a["cfr"], 0)} then {pct(lang, b["cfr"], 0)}. Median time to '
+        f'restore in minutes: {a["restore"]:.0f} then {b["restore"]:.0f}.',
+        'Quatro pequenos gráficos de barras, cada um comparando junho e julho com agosto e '
+        f'setembro. Deploys por semana: {num(lang, a["freq"])} e depois {num(lang, b["freq"])}. '
+        f'Lead time de mudanças mediano em horas: {num(lang, a["lead"])} e depois '
+        f'{num(lang, b["lead"])}. Taxa de falha de mudanças: {pct(lang, a["cfr"], 0)} e depois '
+        f'{pct(lang, b["cfr"], 0)}. Tempo para restaurar mediano em minutos: '
+        f'{a["restore"]:.0f} e depois {b["restore"]:.0f}.'))
+    panels = [(T(lang, 'deploys per week', 'deploys por semana'), 'freq', lambda v: num(lang, v), T(lang, 'higher is better', 'maior é melhor')),
+              (T(lang, 'lead time (hours)', 'lead time (horas)'), 'lead', lambda v: num(lang, v), T(lang, 'lower is better', 'menor é melhor')),
+              (T(lang, 'change failure rate', 'taxa de falha'), 'cfr', lambda v: pct(lang, v, 0), T(lang, 'lower is better', 'menor é melhor')),
+              (T(lang, 'time to restore (min)', 'tempo p/ restaurar (min)'), 'restore', lambda v: f'{v:.0f}', T(lang, 'lower is better', 'menor é melhor'))]
+    for k, (title, key, fmt, note) in enumerate(panels):
+        x0 = 20 + k * 166
+        f.text(x0 + 70, 20, title, size=10.5, weight='600')
+        f.text(x0 + 70, 36, note, size=9, fill='--paper-dim', italic=True)
+        top = max(a[key], b[key])
+        for j, (v, colour, lab) in enumerate(((a[key], '--phosphor', T(lang, 'Jun–Jul', 'jun–jul')),
+                                              (b[key], '--amber', T(lang, 'Aug–Sep', 'ago–set')))):
+            h = 140 * v / top
+            bx = x0 + 22 + j * 64
+            f.bar(bx, 200 - h, 44, h, fill='--scan', stroke=colour, width=1.4)
+            f.text(bx + 22, 192 - h, fmt(v), size=10, weight='600')
+            f.text(bx + 22, 214, lab, size=9.5, fill='--paper-dim')
+        f.line(x0 + 10, 200, x0 + 140, 200, stroke='--paper-dim', width=1)
+    f.text(340, 240, T(lang, f'{a["n"]} deployments ({a["f"]} failed) before, {b["n"]} ({b["f"]} failed) after',
+                       f'{a["n"]} deploys ({a["f"]} com falha) antes, {b["n"]} ({b["f"]} com falha) depois'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'All four moved the right way at once: more deployments, faster, failing less and '
+                'recovering sooner.',
+                'As quatro andaram para o lado certo ao mesmo tempo: mais deploys, mais rápidos, '
+                'falhando menos e voltando antes.')
+
+
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-chain', 6)
+def l06_chain(lang):
+    f = Fig('l06-chain', 680, 260, T(
+        lang,
+        'Three columns joined by arrows. On the left, four families of capabilities: technical, '
+        'architecture, process and flow, culture, marked "change these". In the middle, the four '
+        'DORA metrics, marked "read these". On the right, what the organisation wants: users '
+        'served, a business that works, people who stay. Habits move the metrics, and the '
+        'metrics are associated with the outcomes.',
+        'Três colunas ligadas por setas. À esquerda, quatro famílias de capacidades: técnicas, '
+        'arquitetura, processo e fluxo, cultura, marcadas "mude estas". No meio, as quatro '
+        'métricas DORA, marcadas "leia estas". À direita, o que a organização quer: usuários '
+        'atendidos, um negócio que funciona, pessoas que ficam. Hábitos movem as métricas, e as '
+        'métricas andam junto com os resultados.'))
+    left = T(lang, ['technical', 'architecture', 'process and flow', 'culture'],
+             ['técnicas', 'arquitetura', 'processo e fluxo', 'cultura'])
+    mid = T(lang, ['deployment frequency', 'lead time for changes', 'change failure rate', 'time to restore'],
+            ['frequência de deploy', 'lead time de mudanças', 'taxa de falha', 'tempo para restaurar'])
+    right = T(lang, ['users served', 'a business that works', 'people who stay'],
+              ['usuários atendidos', 'um negócio que funciona', 'pessoas que ficam'])
+    f.text(100, 24, T(lang, 'capabilities: change these', 'capacidades: mude estas'), size=10.5, weight='600')
+    f.text(340, 24, T(lang, 'the four metrics: read these', 'as quatro métricas: leia estas'), size=10.5, weight='600')
+    f.text(580, 24, T(lang, 'what the company wants', 'o que a empresa quer'), size=10.5, weight='600')
+    for k, t in enumerate(left):
+        f.rect(20, 44 + k * 50, 160, 36, stroke='--phosphor', fill='--panel', width=1.2)
+        f.text(100, 62 + k * 50, t, size=10.5)
+    for k, t in enumerate(mid):
+        f.rect(250, 44 + k * 50, 180, 36, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(340, 62 + k * 50, t, size=10.5)
+    for k, t in enumerate(right):
+        f.rect(500, 69 + k * 50, 160, 36, stroke='--amber', fill='--panel', width=1.2)
+        f.text(580, 87 + k * 50, t, size=10.5)
+    f.line(186, 137, 244, 137, stroke='--paper-dim', width=1.6, arrow=True)
+    f.line(436, 137, 494, 137, stroke='--paper-dim', width=1.6, arrow=True)
+    f.text(215, 124, T(lang, 'move', 'movem'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(465, 124, T(lang, 'go with', 'andam com'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(340, 250, T(lang, 'a target set on the middle column skips the left one',
+                       'uma meta posta na coluna do meio pula a da esquerda'),
+           size=10, fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'The work happens in the left column. The middle one is where you look to see '
+                'whether it worked.',
+                'O trabalho acontece na coluna da esquerda. A do meio é onde você olha para ver se '
+                'funcionou.')
+
+
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-split', 7)
+def l07_split(lang):
+    f = Fig('l07-split', 680, 230, T(
+        lang,
+        'Two rows showing the same pipeline run at 17:20 carrying three changes, the first of which failed. In the top row '
+        'it is counted as one deployment; in the bottom row as three deployments at the same '
+        'minute. The changes, the time they reached users and the one failure are identical in '
+        'both rows; only the count differs.',
+        'Duas linhas mostrando a mesma rodada do pipeline às 17h20 levando três mudanças, a primeira com falha. Na de '
+        'cima ela conta como um deploy; na de baixo como três deploys no mesmo minuto. As '
+        'mudanças, a hora em que chegaram aos usuários e a única falha são idênticas nas duas '
+        'linhas; só a contagem muda.'))
+    rows = [(T(lang, 'as recorded', 'como registrado'), 1, 70), (T(lang, 'one per change', 'um por mudança'), 3, 160)]
+    for label, n, y in rows:
+        f.text(20, y, label, size=10.5, anchor='start', weight='600')
+        f.line(160, y, 640, y, stroke='--paper-dim', width=1.2)
+        f.circle(400, y, 5, fill='--phosphor')
+        f.text(400, y + 22, '17:20', size=9.5, mono=True, fill='--paper-dim')
+        for k in range(3):
+            cx = 280 + k * 40
+            bad = k == 0
+            f.rect(cx - 16, y - 34, 32, 20, stroke='--amber' if bad else '--phosphor', fill='--scan', width=1.2, rx=3)
+        boxes = [(256, y - 40, 128, 32)] if n == 1 else [(260 + k * 40, y - 38, 40, 28) for k in range(3)]
+        for bx, by, bw, bh in boxes:
+            f.path(f'M{bx} {by} L{bx + bw} {by} L{bx + bw} {by + bh} L{bx} {by + bh} Z',
+                   stroke='--paper', width=1, dash='4 3')
+        f.text(560, y - 10, T(lang, f'{n} deployment' + ('' if n == 1 else 's'), f'{n} deploy' + ('' if n == 1 else 's')),
+               size=11, weight='600')
+        f.text(560, y + 8, T(lang, f'failure rate {1 / n:.0%}', f'taxa de falha {1 / n:.0%}'.replace('%', '%')),
+               size=10, fill='--paper-dim')
+    f.text(340, 214, T(lang, 'the first change failed; all three reached users at the same minute in both rows',
+                       'a primeira mudança falhou; as três chegaram aos usuários no mesmo minuto nas duas linhas'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Splitting changes the count, not the event. Lead time and time to restore are '
+                'measured on the changes and the failure, so they do not move.',
+                'Dividir muda a contagem, não o evento. Lead time e tempo para restaurar são medidos '
+                'nas mudanças e na falha, então não se mexem.')
+
+
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-points', 9)
+def l09_points(lang):
+    items, _ = billing()
+    def group(lo, hi):
+        out = {}
+        for i in items:
+            if i['merged'] and lo <= i['started'] <= hi:
+                out.setdefault(int(i['points']), []).append(
+                    (when(i['merged']) - when(i['started'])).days)
+        return out
+    panels = [(T(lang, 'started in June and July', 'começados em junho e julho'), group('2026-06-01', '2026-07-31')),
+              (T(lang, 'started from 3 August', 'começados a partir de 3 de agosto'), group('2026-08-03', '2026-09-30'))]
+    f = Fig('l09-points', 680, 300, T(
+        lang,
+        'Two strip charts of cycle time in days against the story points each item was given, '
+        'one dot per item. For items started in June and July, every points value spreads over '
+        'weeks and the groups overlap almost completely. For items started from 3 August, all '
+        'groups sit lower and rise slightly with points, and still overlap.',
+        'Dois gráficos de faixa do tempo de ciclo em dias contra os story points de cada item, '
+        'um ponto por item. Para itens começados em junho e julho, todo valor de pontos se '
+        'espalha por semanas e os grupos se sobrepõem quase por completo. Para itens começados a '
+        'partir de 3 de agosto, todos os grupos ficam mais baixos e sobem um pouco com os pontos, '
+        'e ainda se sobrepõem.'))
+    for k, (title, g) in enumerate(panels):
+        x0 = 60 + k * 320
+        p = Plot(f, x0, 40, x0 + 260, 250, 0, 5, 0, 60)
+        p.yaxis([0, 20, 40, 60], fmt=(str if k == 0 else (lambda t: '')))
+        p.baseline()
+        f.text(x0 + 130, 24, title, size=10.5, weight='600')
+        for j, pts in enumerate([1, 2, 3, 5, 8]):
+            cx = p.sx(j + 0.5)
+            f.text(cx, 266, str(pts), size=10, fill='--paper-dim')
+            seen = {}
+            for d in sorted(g.get(pts, [])):
+                n = seen.get(d, 0)
+                seen[d] = n + 1
+                f.circle(cx - 8 + (n % 5) * 4, p.sy(d), 2.6,
+                         fill='--phosphor' if k == 0 else '--amber')
+    f.text(340, 290, T(lang, 'story points given to the item; cycle time in days up the side',
+                       'story points dados ao item; tempo de ciclo em dias na vertical'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Removing the waiting made every item faster and made the estimates matter a little '
+                'more. It did not make a three reliably longer than a one.',
+                'Tirar a espera deixou todo item mais rápido e fez as estimativas importarem um pouco '
+                'mais. Não fez um três ser sempre mais longo que um um.')
+
+
+# ------------------------------------------------------------------ lesson 10
+
+def daily_history(items, first, last):
+    merged = [when(i['merged']) for i in items if i['merged']]
+    return [sum(1 for m in merged if m == d) for d in span(first, last)]
+
+
+def howmany_runs(days_ahead, first=date(2026, 8, 17), last=date(2026, 9, 30)):
+    """howmany.py's ten thousand futures, drawn exactly as it draws them."""
+    import random
+    items, _ = billing()
+    history = daily_history(items, first, last)
+    rng = random.Random(2026)
+    return sorted(sum(rng.choice(history) for _ in range(days_ahead)) for _ in range(10000))
+
+
+@figure('l10-sampling', 10)
+def l10_sampling(lang):
+    items, _ = billing()
+    hist = daily_history(items, date(2026, 8, 17), date(2026, 8, 30))
+    f = Fig('l10-sampling', 680, 250, T(
+        lang,
+        'On the left, a row of real days from the history, each a box holding the number of items '
+        'merged that day, weekends showing zero. Arrows draw days from it at random into three '
+        'rows on the right, each a possible future of seven days with its total. Repeating the '
+        'draw ten thousand times gives the spread of totals.',
+        'À esquerda, uma fileira de dias reais do histórico, cada um uma caixa com o número de '
+        'itens integrados naquele dia, fins de semana com zero. Setas sorteiam dias dela para três '
+        'fileiras à direita, cada uma um futuro possível de sete dias com o seu total. Repetir o '
+        'sorteio dez mil vezes dá a dispersão dos totais.'))
+    f.text(150, 20, T(lang, 'the history: real days', 'o histórico: dias reais'), size=10.5, weight='600')
+    for k, v in enumerate(hist):
+        x, y = 20 + (k % 7) * 38, 40 + (k // 7) * 40
+        f.rect(x, y, 32, 28, stroke='--phosphor', fill='--scan', width=1.2, rx=3)
+        f.text(x + 16, y + 14, str(v), size=11, mono=True)
+    import random
+    rng = random.Random(7)
+    f.text(500, 20, T(lang, 'three possible futures', 'três futuros possíveis'), size=10.5, weight='600')
+    for r in range(3):
+        y = 50 + r * 56
+        draw = [rng.choice(hist) for _ in range(7)]
+        for k, v in enumerate(draw):
+            x = 360 + k * 34
+            f.rect(x, y, 28, 26, stroke='--amber', fill='--panel', width=1.2, rx=3)
+            f.text(x + 14, y + 13, str(v), size=10.5, mono=True)
+        f.text(608, y + 13, T(lang, f'= {sum(draw)} items', f'= {sum(draw)} itens'), size=10.5,
+               anchor='start')
+    f.line(292, 110, 350, 110, stroke='--paper-dim', width=1.4, arrow=True)
+    f.text(320, 96, T(lang, 'draw', 'sorteio'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(340, 236, T(lang, '... then ten thousand more, and look at how the totals spread',
+                       '... depois mais dez mil, e veja como os totais se espalham'),
+           size=10, fill='--paper-dim')
+    return f, T(lang,
+                'Every simulated day is a day that really happened, so every interruption and every '
+                'wait is already inside it.',
+                'Todo dia simulado é um dia que aconteceu de verdade, então toda interrupção e toda '
+                'espera já estão dentro dele.')
+
+
+@figure('l10-histogram', 10)
+def l10_histogram(lang):
+    res = howmany_runs(31)
+    q = {p: res[int((100 - p) / 100 * 10000)] for p in (50, 85, 95)}
+    lo, hi = res[0], res[-1]
+    counts = {v: res.count(v) for v in range(lo, hi + 1)}
+    f = Fig('l10-histogram', 680, 280, T(
+        lang,
+        f'A histogram of ten thousand simulated Octobers for the Billing team: items finished in '
+        f'31 days, from {lo} to {hi}. The bars peak in the mid thirties. Lines mark 95% of runs '
+        f'finishing at least {q[95]}, 85% at least {q[85]}, and half at least {q[50]}.',
+        f'Um histograma de dez mil outubros simulados do time de Billing: itens terminados em 31 '
+        f'dias, de {lo} a {hi}. As barras têm pico em meados dos trinta. Linhas marcam 95% das '
+        f'rodadas terminando pelo menos {q[95]}, 85% pelo menos {q[85]}, e metade pelo menos '
+        f'{q[50]}.'))
+    top = max(counts.values())
+    p = Plot(f, 60, 40, 650, 230, lo - 1, hi + 1, 0, top * 1.55)
+    p.baseline()
+    for v, c in counts.items():
+        x0, x1 = p.sx(v - 0.4), p.sx(v + 0.4)
+        f.bar(x0, p.sy(c), x1 - x0, p.sy(0) - p.sy(c),
+              fill='--scan', stroke='--amber' if v < q[85] else '--phosphor', width=1)
+    for v in range(lo - lo % 5, hi + 1, 5):
+        if v >= lo - 1:
+            f.text(p.sx(v), 246, str(v), size=9.5, fill='--paper-dim')
+    for pp, y in ((95, 92), (85, 72), (50, 52)):
+        x = p.sx(q[pp] - 0.5)
+        f.line(x, y + 8, x, 230, stroke='--paper', width=1.2, dash='4 3')
+        f.text(x - 4, y, T(lang, f'{pp}%: at least {q[pp]}', f'{pp}%: pelo menos {q[pp]}'),
+               size=10, anchor='end')
+    f.text(60, 18, T(lang, 'items finished in 31 days, in 10,000 simulated futures',
+                     'itens terminados em 31 dias, em 10.000 futuros simulados'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(355, 268, T(lang, 'items finished', 'itens terminados'), size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'The forecast is the whole shape. The number to promise sits low in it, where most '
+                'futures have already reached.',
+                'A previsão é a forma inteira. O número a prometer fica embaixo dela, onde a maioria '
+                'dos futuros já chegou.')
+
+
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-horizon', 11)
+def l11_horizon(lang):
+    f = Fig('l11-horizon', 680, 230, T(
+        lang,
+        'A roadmap drawn three ways along a timeline of three quarters. The first quarter holds '
+        'solid bars with dates. The second holds bars whose ends fade, sized only roughly. The '
+        'third holds dashed outlines with no end, in priority order. Confidence falls with '
+        'distance, and the drawing shows it.',
+        'Um roadmap desenhado de três jeitos ao longo de uma linha do tempo de três trimestres. O '
+        'primeiro tem barras sólidas com datas. O segundo tem barras de pontas que se apagam, '
+        'dimensionadas só por alto. O terceiro tem contornos tracejados sem fim, em ordem de '
+        'prioridade. A confiança cai com a distância, e o desenho mostra isso.'))
+    heads = T(lang, ['now: items, forecast with dates', 'next: goals, sized roughly', 'later: directions, in order'],
+              ['agora: itens, previstos com datas', 'depois: metas, por alto', 'mais tarde: direções, em ordem'])
+    for k, h in enumerate(heads):
+        x0 = 20 + k * 220
+        f.text(x0 + 100, 22, h, size=10.5, weight='600')
+        f.line(x0 + 210, 36, x0 + 210, 200, stroke='--wire', width=1, dash='3 3')
+    for r in range(3):
+        y = 50 + r * 46
+        f.bar(30, y, 120 - r * 20, 26, fill='--scan', stroke='--phosphor', width=1.4)
+        f.text(36, y + 13, T(lang, ['invoicing screen', 'card refunds', 'statement export'][r],
+                             ['tela de faturas', 'estorno no cartão', 'exportar extrato'][r]),
+               size=9.5, anchor='start')
+        x = 250 + r * 15
+        f.bar(x, y, 110, 26, fill='--panel', stroke='--paper-dim', width=1.2)
+        for j in range(4):
+            f.bar(x + 110 + j * 9, y + 4, 6, 18, fill='--panel', stroke='--wire', width=1)
+        f.text(x + 6, y + 13, T(lang, ['partial payments', 'tax report', 'multi-store'][r],
+                                ['pagamento parcial', 'relatório fiscal', 'várias lojas'][r]),
+               size=9.5, anchor='start')
+        f.path(f'M{470 + r * 10} {y} L640 {y} M{470 + r * 10} {y + 26} L640 {y + 26} '
+               f'M{470 + r * 10} {y} L{470 + r * 10} {y + 26}', stroke='--paper-dim', width=1.2, dash='4 3')
+        f.text(478 + r * 10, y + 13, T(lang, ['open banking', 'new markets', 'offline mode'][r],
+                                       ['open banking', 'novos mercados', 'modo offline'][r]),
+               size=9.5, anchor='start')
+    f.text(340, 216, T(lang, 'the drawing claims less where the team knows less',
+                       'o desenho afirma menos onde o time sabe menos'), size=10, fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'A date appears on a piece of work only once it has been broken down far enough to '
+                'be forecast.',
+                'Uma data só aparece num trabalho quando ele foi quebrado o bastante para ser previsto.')
+
+
+@figure('l11-burnup', 11)
+def l11_burnup(lang):
+    import random
+    items, _ = billing()
+    history = daily_history(items, date(2026, 8, 17), date(2026, 9, 30))
+    rng = random.Random(11)
+    horizon = 60
+    done_runs, scope_runs = [], []
+    for _ in range(2000):
+        g = rng.uniform(0.1, 0.4)
+        scope, done, d_line, s_line = 30, 0, [], []
+        for _ in range(horizon):
+            n = min(scope - done, rng.choice(history))
+            done += n
+            scope += sum(1 for _ in range(n) if rng.random() < g)
+            d_line.append(done)
+            s_line.append(scope)
+        done_runs.append(d_line)
+        scope_runs.append(s_line)
+    def q(runs, day, p):
+        vals = sorted(r[day] for r in runs)
+        return vals[int(p * (len(vals) - 1))]
+    f = Fig('l11-burnup', 680, 290, T(
+        lang,
+        'A burn-up chart for thirty items starting on 1 October. A rising line shows the total '
+        'scope as new work is found. A shaded fan shows where the finished line is likely to be, '
+        'from the 15th to the 85th percentile of simulated futures, with the median as a line; '
+        'the fan meets the scope line from late October to late November.',
+        'Um gráfico de burn-up para trinta itens a partir de 1º de outubro. Uma linha que sobe '
+        'mostra o escopo total conforme trabalho novo aparece. Um leque sombreado mostra onde a '
+        'linha de terminados provavelmente vai estar, do percentil 15 ao 85 dos futuros '
+        'simulados, com a mediana como linha; o leque encontra a linha de escopo do fim de '
+        'outubro ao fim de novembro.'))
+    p = Plot(f, 60, 40, 640, 240, 0, horizon - 1, 0, 50)
+    p.yaxis([0, 10, 20, 30, 40, 50])
+    p.baseline()
+    xs = list(range(horizon))
+    lo = [q(done_runs, d, 0.15) for d in xs]
+    hi = [q(done_runs, d, 0.85) for d in xs]
+    d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, hi))
+    d += ' L' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in reversed(list(zip(xs, lo))))
+    f.path(d + ' Z', stroke=None, fill='--scan', width=0)
+    p.polyline(xs, [q(done_runs, d, 0.5) for d in xs], stroke='--phosphor', width=1.8)
+    p.polyline(xs, [q(scope_runs, d, 0.5) for d in xs], stroke='--amber', width=1.8, dash='5 3')
+    for k, label in ((0, '1 Oct'), (31, '1 Nov'), (61 - 2, '30 Nov')):
+        lab = T(lang, label, label.replace('Oct', 'out').replace('Nov', 'nov'))
+        f.text(p.sx(min(k, horizon - 1)), 256, lab, size=9.5, fill='--paper-dim')
+    f.text(p.sx(4), p.sy(q(scope_runs, 4, 0.5)) - 18, T(lang, 'total scope, growing', 'escopo total, crescendo'),
+           size=10, anchor='start', fill='--amber')
+    f.text(p.sx(30), p.sy(q(done_runs, 30, 0.5)) + 26, T(lang, 'finished: median and 15th–85th percentile',
+                                                      'terminados: mediana e percentis 15 a 85'),
+           size=10, anchor='start', fill='--phosphor')
+    f.text(60, 18, T(lang, 'items, from 1 October', 'itens, a partir de 1º de outubro'), size=10,
+           anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The work is done where the fan meets the scope line, and both of them move: the '
+                'scope rises as the work is understood.',
+                'O trabalho termina onde o leque encontra a linha de escopo, e os dois se movem: o '
+                'escopo sobe conforme o trabalho é entendido.')
+
+
+# ------------------------------------------------------------------ lesson 12
+
+def queue_waits():
+    import random
+    rng = random.Random(12)
+    out = []
+    for busy in (0.5, 0.6, 0.7, 0.8, 0.9, 0.95):
+        free_at, arrival, total = 0.0, 0.0, 0.0
+        for _ in range(20000):
+            arrival += rng.expovariate(busy)
+            start = max(arrival, free_at)
+            total += start - arrival
+            free_at = start + rng.expovariate(1.0)
+        out.append((busy, total / 20000))
+    return out
+
+
+@figure('l12-curve', 12)
+def l12_curve(lang):
+    sims = queue_waits()
+    f = Fig('l12-curve', 680, 290, T(
+        lang,
+        'A curve of waiting time against how busy one person is, from 30% to 97%. The curve, '
+        'busy divided by one minus busy, stays under two days up to about 65% and then climbs '
+        'steeply, passing 9 days at 90% and 19 at 95%. Dots mark the six simulated averages, '
+        'which sit close to the curve.',
+        'Uma curva do tempo de espera contra a ocupação de uma pessoa, de 30% a 97%. A curva, '
+        'ocupação dividida por um menos a ocupação, fica abaixo de dois dias até uns 65% e então '
+        'sobe forte, passando de 9 dias em 90% e 19 em 95%. Pontos marcam as seis médias '
+        'simuladas, que ficam perto da curva.'))
+    p = Plot(f, 60, 40, 640, 240, 0.3, 1.0, 0, 25)
+    p.yaxis([0, 5, 10, 15, 20, 25])
+    p.baseline()
+    xs = [0.3 + k * 0.005 for k in range(int((0.96 - 0.3) / 0.005) + 1)]
+    p.polyline(xs, [x / (1 - x) for x in xs], stroke='--phosphor', width=2)
+    for b, w in sims:
+        f.circle(p.sx(b), p.sy(w), 4.5, fill='--amber')
+    for t in (0.3, 0.5, 0.7, 0.9, 1.0):
+        f.text(p.sx(t), 256, f'{t:.0%}', size=9.5, fill='--paper-dim')
+    f.text(350, 276, T(lang, 'how busy the person is: work arriving ÷ work they can do',
+                       'quão ocupada a pessoa está: trabalho que chega ÷ trabalho que ela faz'),
+           size=9.5, fill='--paper-dim')
+    f.text(60, 18, T(lang, 'average days a request waits before work on it starts',
+                     'dias, em média, que um pedido espera antes de começar'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(p.sx(0.62), p.sy(9), T(lang, 'the formula: busy ÷ (1 − busy)', 'a fórmula: ocupação ÷ (1 − ocupação)'),
+           size=10, anchor='end', fill='--phosphor')
+    f.text(p.sx(0.62), p.sy(7), T(lang, 'dots: queue.py', 'pontos: queue.py'), size=10, anchor='end', fill='--amber')
+    return f, T(lang,
+                'Waiting is small and almost flat for a long way, and then it is not. The last ten '
+                'points of busyness cost more than the first ninety.',
+                'A espera é pequena e quase plana por um bom trecho, e depois não é mais. Os últimos '
+                'dez pontos de ocupação custam mais que os noventa primeiros.')
+
+
+# ------------------------------------------------------------------ lesson 13
+
+@figure('l13-roles', 13)
+def l13_roles(lang):
+    f = Fig('l13-roles', 680, 260, T(
+        lang,
+        'The incident commander at the top, coordinating three roles below: the technical lead, '
+        'who investigates and fixes; the communications lead, who tells support, leadership and '
+        'users; and the scribe, who writes the timeline. Arrows run from the commander to each '
+        'role, and from the communications lead out to the three audiences.',
+        'A comandante do incidente no topo, coordenando três papéis abaixo: o líder técnico, que '
+        'investiga e corrige; o líder de comunicação, que informa suporte, liderança e usuários; '
+        'e o escriba, que escreve a linha do tempo. Setas vão da comandante a cada papel, e do '
+        'líder de comunicação para os três públicos.'))
+    f.rect(250, 20, 180, 52, stroke='--amber', fill='--panel', width=1.6)
+    f.text(340, 38, T(lang, 'incident commander', 'comandante do incidente'), size=11, weight='600')
+    f.text(340, 56, T(lang, 'decides, coordinates; does not debug', 'decide, coordena; não depura'),
+           size=9.5, fill='--paper-dim')
+    roles = T(lang, [('technical lead', 'investigates and fixes'), ('communications lead', 'tells everybody else'),
+                     ('scribe', 'writes it down, with times')],
+              [('líder técnico', 'investiga e corrige'), ('líder de comunicação', 'informa todo o resto'),
+               ('escriba', 'anota tudo, com horário')])
+    for k, (name, what) in enumerate(roles):
+        x = 30 + k * 220
+        f.rect(x, 120, 180, 52, stroke='--phosphor', fill='--panel', width=1.3)
+        f.text(x + 90, 138, name, size=10.5, weight='600')
+        f.text(x + 90, 156, what, size=9.5, fill='--paper-dim')
+        f.line(340, 74, x + 90, 116, stroke='--paper-dim', width=1.2, arrow=True)
+    aud = T(lang, ['support', 'leadership', 'users'], ['suporte', 'liderança', 'usuários'])
+    for k, a in enumerate(aud):
+        x = 210 + k * 90
+        f.rect(x, 210, 80, 30, stroke='--wire', fill='--panel', width=1.1)
+        f.text(x + 40, 225, a, size=10)
+        f.line(340, 174, x + 40, 206, stroke='--paper-dim', width=1, arrow=True)
+    return f, T(lang,
+                'Four responsibilities, which may be held by one person or six. The one rule that '
+                'does not bend is that whoever coordinates does not also debug.',
+                'Quatro responsabilidades, que podem estar com uma pessoa ou com seis. A regra que '
+                'não se dobra é que quem coordena não depura ao mesmo tempo.')
+
+
+# ------------------------------------------------------------------ lesson 14
+
+def incident_events():
+    """The first time of each kind in timeline.py's TIMELINE, in minutes, read from lesson 14."""
+    program = subprocess.run([sys.executable, os.path.join(HERE, 'lab', 'extract.py'),
+                              os.path.join(HERE, 'lessons', 'le-dkwpznqv'), 'timeline.py'],
+                             capture_output=True, text=True, check=True).stdout
+    text = re.search(r'TIMELINE = """(.*?)"""', program, re.S).group(1)
+    events = {}
+    for line in text.strip().splitlines():
+        clock, kind, _ = line.split(maxsplit=2)
+        h, m = clock.split(':')
+        events.setdefault(kind, int(h) * 60 + int(m))
+    return events
+
+
+@figure('l14-phases', 14)
+def l14_phases(lang):
+    e = incident_events()
+    phases = [('impact', 'detect', T(lang, 'nobody knew', 'ninguém sabia'), '--amber'),
+              ('detect', 'declare', T(lang, 'to declare', 'até declarar'), '--paper-dim'),
+              ('declare', 'decide', T(lang, 'to decide', 'até decidir'), '--paper-dim'),
+              ('decide', 'restore', T(lang, 'rollback', 'rollback'), '--phosphor'),
+              ('restore', 'resolve', T(lang, 'refunding every shop', 'estornando cada loja'), '--paper-dim')]
+    f = Fig('l14-phases', 680, 220, T(
+        lang,
+        'A timeline of the incident of 30 September from 17:21 to 21:10, in phases: '
+        f'{e["detect"] - e["impact"]} minutes before anybody knew, {e["declare"] - e["detect"]} to '
+        f'declare, {e["decide"] - e["declare"]} to decide, {e["restore"] - e["decide"]} to restore '
+        f'by rolling back, and {e["resolve"] - e["restore"]} to refund every shop. The shops were '
+        f'being harmed for the first {e["restore"] - e["impact"]} minutes.',
+        'Uma linha do tempo do incidente de 30 de setembro, das 17h21 às 21h10, em fases: '
+        f'{e["detect"] - e["impact"]} minutos sem ninguém saber, {e["declare"] - e["detect"]} até '
+        f'declarar, {e["decide"] - e["declare"]} até decidir, {e["restore"] - e["decide"]} até '
+        f'restaurar com o rollback, e {e["resolve"] - e["restore"]} até estornar cada loja. As '
+        f'lojas foram prejudicadas nos primeiros {e["restore"] - e["impact"]} minutos.'))
+    t0, t1 = e['impact'], e['resolve']
+    sx = lambda t: 30 + (t - t0) / (t1 - t0) * 620
+    for k, (a, b, label, colour) in enumerate(phases):
+        x0, x1 = sx(e[a]), sx(e[b])
+        f.bar(x0, 80, x1 - x0, 34, fill='--scan', stroke=colour, width=1.4)
+        mins = e[b] - e[a]
+        if x1 - x0 > 60:
+            f.text((x0 + x1) / 2, 97, T(lang, f'{label}: {mins} min', f'{label}: {mins} min'), size=10)
+        else:
+            mid = (x0 + x1) / 2
+            if k < 3:
+                y = 30 + k * 16
+                f.line(mid, 78, mid, y + 6, stroke=colour, width=1)
+            else:
+                y = 140
+                f.line(mid, 116, mid, y - 6, stroke=colour, width=1)
+            f.text(mid - 3, y, T(lang, f'{label}: {mins} min', f'{label}: {mins} min'), size=9.5,
+                   anchor='start')
+    for name, t in (('17:21', e['impact']), ('18:15', e['restore']), ('21:10', e['resolve'])):
+        f.line(sx(t), 118, sx(t), 160, stroke='--paper-dim', width=1, dash='3 3')
+        f.text(sx(t), 172, name, size=9.5, mono=True, fill='--paper-dim')
+    f.text(sx(e['impact']) + 4, 196, T(lang, 'shops being double-charged', 'lojas sendo cobradas em dobro'),
+           size=10, anchor='start', fill='--amber')
+    f.line(sx(e['impact']), 188, sx(e['restore']), 188, stroke='--amber', width=2)
+    f.text(650, 20, T(lang, 'the incident of 30 September, phase by phase', 'o incidente de 30 de setembro, fase a fase'),
+           size=10, anchor='end', fill='--paper-dim')
+    return f, T(lang,
+                'Restoring took under an hour and resolving took four. DORA counts the first; the '
+                'shops lived through both.',
+                'Restaurar levou menos de uma hora e resolver levou quatro. O DORA conta a primeira; '
+                'as lojas viveram as duas.')
+
+
+# ------------------------------------------------------------------ lesson 15
+
+@figure('l15-factors', 15)
+def l15_factors(lang):
+    f = Fig('l15-factors', 680, 300, T(
+        lang,
+        'The incident of 30 September in the centre, with six contributing factors around it, '
+        'each joined to it by a line: a retry with no idempotency key; tests with no slow '
+        'provider; a review that did not ask about retries; a release on the busiest afternoon of '
+        'the month; no alert on duplicate charges; and a release to every shop at once. Each is '
+        'labelled with what fixing it would do: prevent, detect or limit.',
+        'O incidente de 30 de setembro no centro, com seis fatores contribuintes em volta, cada '
+        'um ligado a ele por uma linha: um retry sem chave de idempotência; testes sem provedor '
+        'lento; uma revisão que não perguntou sobre retries; um release na tarde mais movimentada '
+        'do mês; nenhum alerta de cobrança duplicada; e um release para todas as lojas de uma vez. '
+        'Cada um traz o que consertá-lo faria: prevenir, detectar ou limitar.'))
+    f.rect(250, 125, 180, 50, stroke='--amber', fill='--panel', width=1.8)
+    f.text(340, 143, T(lang, 'shops charged twice', 'lojas cobradas em dobro'), size=11, weight='600')
+    f.text(340, 161, T(lang, '30 September, 54 minutes', '30 de setembro, 54 minutos'), size=9.5, fill='--paper-dim')
+    factors = T(lang, [('retry with no idempotency key', 'prevent'), ('tests had no slow provider', 'prevent'),
+                       ('review did not ask about retries', 'prevent'), ('released on the month-end afternoon', 'prevent'),
+                       ('no alert on duplicate charges', 'detect'), ('released to every shop at once', 'limit')],
+                [('retry sem chave de idempotência', 'prevenir'), ('testes sem provedor lento', 'prevenir'),
+                 ('revisão não perguntou de retries', 'prevenir'), ('release na tarde do fim do mês', 'prevenir'),
+                 ('nenhum alerta de cobrança duplicada', 'detectar'), ('release para todas as lojas de uma vez', 'limitar')])
+    spots = [(20, 20), (20, 125), (20, 230), (460, 20), (460, 125), (460, 230)]
+    for (text, kind), (x, y) in zip(factors, spots):
+        f.rect(x, y, 200, 50, stroke='--phosphor', fill='--panel', width=1.2)
+        f.text(x + 100, y + 19, text, size=9.5)
+        f.text(x + 100, y + 36, kind, size=9, fill='--paper-dim', italic=True)
+        cx = x + 200 if x < 300 else x
+        f.line(cx, y + 25, 250 if x < 300 else 430, 150, stroke='--paper-dim', width=1)
+    return f, T(lang,
+                'Six threads, any one of which, changed, would have prevented the incident or made '
+                'it much smaller. A root cause is one of them chosen afterwards.',
+                'Seis fios, e mudar qualquer um teria evitado o incidente ou o deixado bem menor. Uma '
+                'causa raiz é um deles escolhido depois.')
+
+
+# ------------------------------------------------------------------ lesson 16
+
+LESSON16 = os.path.join(HERE, 'lessons', 'le-fa920eqc')
+
+
+@functools.lru_cache(maxsize=None)
+def lesson_program(lesson, name):
+    """Run a program read out of a lesson, silently, and return what it defined."""
+    program = subprocess.run([sys.executable, os.path.join(HERE, 'lab', 'extract.py'), lesson, name],
+                             capture_output=True, text=True, check=True).stdout
+    scope = {'__name__': name, 'print': lambda *a, **k: None}
+    exec(compile(program, name, 'exec'), scope)
+    return scope
+
+
+@figure('l16-burndown', 16)
+def l16_burndown(lang):
+    v = lesson_program(LESSON16, 'budget.py')
+    days, budget = v['days'], v['budget']
+    left, spent = [100.0], 0
+    for _, _, bad in days:
+        spent += bad
+        left.append(100 * (1 - spent / budget))
+    f = Fig('l16-burndown', 680, 290, T(
+        lang,
+        'A line showing how much of September\'s error budget was left at the end of each day. It '
+        'falls slowly from 100% to about 90% in the first two weeks, drops to 53% on 16 September, '
+        'when the card provider was slow for an hour, drifts down to 47% by the 29th, and falls '
+        'through zero to minus 101% on 30 September, the day of the incident.',
+        'Uma linha mostrando quanto do orçamento de erro de setembro sobrava no fim de cada dia. '
+        'Ela cai devagar de 100% para uns 90% nas duas primeiras semanas, despenca para 53% em 16 '
+        'de setembro, quando o provedor de cartão ficou lento por uma hora, desce até 47% no dia 29 '
+        'e atravessa o zero até menos 101% em 30 de setembro, o dia do incidente.'))
+    p = Plot(f, 70, 40, 640, 250, 0, 30, -120, 100)
+    p.yaxis([-100, -50, 0, 50, 100], fmt=lambda t: f'{t}%')
+    p.baseline()
+    f.line(p.sx(0), p.sy(0), p.sx(30), p.sy(0), stroke='--amber', width=1.4, dash='5 3')
+    p.polyline(list(range(31)), left, stroke='--phosphor', width=2)
+    for k in (1, 8, 15, 22, 29):
+        lab = T(lang, f'{k} Sep', f'{k} set')
+        f.text(p.sx(k - 0.5), 266, lab, size=9.5, fill='--paper-dim')
+    f.text(p.sx(26), p.sy(0) - 10, T(lang, 'budget spent', 'orçamento gasto'), size=10,
+           anchor='end', fill='--amber')
+    f.text(p.sx(16) + 6, p.sy(left[16]) + 18, T(lang, '16 Sep: the provider slow for an hour',
+                                               '16 set: o provedor lento por uma hora'),
+           size=10, anchor='start', fill='--paper')
+    f.text(p.sx(30) - 8, p.sy(left[30]), T(lang, '30 Sep: the incident', '30 set: o incidente'),
+           size=10, anchor='end', fill='--paper')
+    f.text(70, 18, T(lang, 'error budget left at the end of each day, card charges, September',
+                     'orçamento de erro restante no fim de cada dia, cobranças no cartão, setembro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Two weeks of ordinary days spent less than a tenth of the budget. One slow hour '
+                'spent more than a third, and one afternoon spent more than the whole month.',
+                'Duas semanas de dias comuns gastaram menos de um décimo do orçamento. Uma hora '
+                'lenta gastou mais de um terço, e uma tarde gastou mais que o mês inteiro.')
+
+
+@figure('l16-burn', 16)
+def l16_burn(lang):
+    v = lesson_program(LESSON16, 'burn.py')
+    buckets, burn = v['buckets'], v['burn']
+    f = Fig('l16-burn', 680, 310, T(
+        lang,
+        'Bars show the burn rate of card charges in each five minutes from 15:00 to 21:00 on '
+        '30 September, and a line shows the burn rate over the last hour. Both stay under 7 until '
+        '17:20, when the release goes out; the bars jump to about 80 and the hourly line climbs '
+        'through the paging threshold of 14.4 at 17:30, eight minutes before a shop calls. The '
+        'bars drop back after the rollback at 18:15, and the hourly line follows an hour later.',
+        'Barras mostram o burn rate das cobranças no cartão a cada cinco minutos, das 15:00 às '
+        '21:00 de 30 de setembro, e uma linha mostra o burn rate da última hora. As duas ficam '
+        'abaixo de 7 até as 17:20, quando sai o release; as barras saltam para uns 80 e a linha da '
+        'hora atravessa o limite de acionamento de 14,4 às 17:30, oito minutos antes de uma loja '
+        'ligar. As barras caem depois do rollback às 18:15, e a linha da hora acompanha uma hora '
+        'depois.'))
+    p = Plot(f, 60, 80, 640, 270, 0, 360, 0, 100)
+    p.yaxis([0, 25, 50, 75, 100])
+    p.baseline()
+    w = p.sx(5) - p.sx(0)
+    for i, _ in enumerate(buckets):
+        r = min(burn(i, 5), 100)
+        f.bar(p.sx(5 * i) + 0.5, p.sy(r), w - 1, p.sy(0) - p.sy(r), fill='--phosphor-dim',
+              stroke='--phosphor-dim', width=0.5)
+    p.polyline([5 * i + 5 for i in range(len(buckets))], [burn(i, 60) for i in range(len(buckets))],
+               stroke='--phosphor', width=2)
+    f.line(p.sx(0), p.sy(14.4), p.sx(360), p.sy(14.4), stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.sx(360) - 2, p.sy(14.4) - 9, T(lang, 'page at 14.4', 'aciona em 14,4'), size=10,
+           anchor='end', fill='--amber')
+    marks = [(140, '--paper-dim'), (150, '--amber'), (158, '--paper'), (195, '--paper-dim')]
+    for m, c in marks:
+        f.line(p.sx(m), p.y0 - 4, p.sx(m), p.y1, stroke=c, width=1, dash='3 3')
+    f.text(p.sx(140) - 4, p.y0 - 10, T(lang, '17:20 release', '17:20 release'), size=10,
+           anchor='end', fill='--paper-dim')
+    f.text(p.sx(158) + 4, p.y0 - 38, T(lang, '17:30 the page fires', '17:30 o acionamento dispara'),
+           size=10, anchor='start', fill='--amber')
+    f.text(p.sx(158) + 4, p.y0 - 24, T(lang, '17:38 a shop calls', '17:38 uma loja liga'), size=10,
+           anchor='start', fill='--paper')
+    f.text(p.sx(195) + 4, p.y0 - 10, T(lang, '18:15 rollback', '18:15 rollback'), size=10,
+           anchor='start', fill='--paper-dim')
+    for k in range(0, 361, 60):
+        f.text(p.sx(k), 286, f'{15 + k // 60}:00', size=9.5, fill='--paper-dim')
+    f.text(60, 18, T(lang, 'burn rate, card charges, 30 September: bars every 5 minutes, line over the last hour',
+                     'burn rate, cobranças no cartão, 30 de setembro: barras a cada 5 minutos, linha na última hora'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The hourly line crosses the threshold ten minutes after the release, and the short '
+                'window is what lets the page stop soon after the rollback.',
+                'A linha da hora cruza o limite dez minutos depois do release, e a janela curta é o '
+                'que deixa o acionamento parar logo depois do rollback.')
+
+
+# ------------------------------------------------------------------ lesson 17
+
+LESSON17 = os.path.join(HERE, 'lessons', 'le-7ebrxafx')
+
+
+def oncall_counts():
+    v = lesson_program(LESSON17, 'oncall.py')
+    rota, pages = v['ROTA'], v['pages']
+    own = {p: sum(1 for _, on, _ in pages if on == p) for p in rota}
+    passed = {p: sum(1 for _, _, ex in pages if ex == p) for p in rota}
+    return v, rota, own, passed
+
+
+@figure('l17-load', 17)
+def l17_load(lang):
+    v, rota, own, passed = oncall_counts()
+    names = {'Ines': 'Inês', 'Teo': 'Téo'}
+    f = Fig('l17-load', 680, 270, T(
+        lang,
+        'Horizontal bars, one per person on the Billing team\'s rota, showing how many pages woke '
+        f'them in thirteen weeks. Duda {own["Duda"]}, Inês {own["Ines"]}, Téo {own["Teo"]} and '
+        f'Caio {own["Caio"]}, all from their own weeks. Rafa {own["Rafa"] + passed["Rafa"]}: '
+        f'{own["Rafa"]} from his own weeks and {passed["Rafa"]} passed on from other people\'s.',
+        'Barras horizontais, uma por pessoa da escala do time de Billing, mostrando quantos '
+        f'acionamentos as acordaram em treze semanas. Duda {own["Duda"]}, Inês {own["Ines"]}, Téo '
+        f'{own["Teo"]} e Caio {own["Caio"]}, todos das próprias semanas. Rafa '
+        f'{own["Rafa"] + passed["Rafa"]}: {own["Rafa"]} das próprias semanas e {passed["Rafa"]} '
+        'repassados das semanas dos outros.'))
+    p = Plot(f, 110, 50, 600, 220, 0, 60, 0, 5)
+    for i, person in enumerate(rota):
+        y = 58 + i * 32
+        a, b = own[person], passed[person]
+        f.text(100, y + 10, names.get(person, person), size=11, anchor='end')
+        f.bar(p.sx(0), y, p.sx(a) - p.sx(0), 20)
+        if b:
+            f.bar(p.sx(a), y, p.sx(a + b) - p.sx(a), 20, fill='--amber', stroke='--amber')
+        f.text(p.sx(a + b) + 8, y + 10, str(a + b), size=10.5, anchor='start')
+    for t in (0, 20, 40, 60):
+        f.text(p.sx(t), 236, str(t), size=9.5, fill='--paper-dim')
+    f.line(p.sx(0), 50, p.sx(0), 222, stroke='--paper-dim', width=1)
+    f.bar(110, 250, 14, 10)
+    f.text(130, 255, T(lang, 'in their own week on call', 'na própria semana de plantão'), size=10,
+           anchor='start', fill='--paper-dim')
+    f.bar(340, 250, 14, 10, fill='--amber', stroke='--amber')
+    f.text(360, 255, T(lang, 'passed on from somebody else\'s week', 'repassado da semana de outra pessoa'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(110, 22, T(lang, 'pages that woke each person, 8 July to 6 October',
+                      'acionamentos que acordaram cada pessoa, de 8 de julho a 6 de outubro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The rota shares the weeks evenly. The pager does not share the pages.',
+                'A escala divide as semanas por igual. O pager não divide os acionamentos.')
+
+
+@figure('l17-rota', 17)
+def l17_rota(lang):
+    v, rota, own, passed = oncall_counts()
+    names = {'Ines': 'Inês', 'Teo': 'Téo'}
+    start = v['datetime'](2026, 7, 8)
+    td = v['timedelta']
+    f = Fig('l17-rota', 680, 250, T(
+        lang,
+        'Thirteen weekly blocks in a row, from 8 July to 6 October, each labelled with the person '
+        'on call that week. The rota repeats Duda, Inês, Rafa, Téo, Caio. Bars under the blocks mark '
+        'the last days of each month. The July month-end falls in Rafa\'s and Téo\'s weeks, August\'s '
+        'in Inês\'s and Rafa\'s, and September\'s in Inês\'s and Rafa\'s; Caio\'s weeks never include one.',
+        'Treze blocos semanais em fila, de 8 de julho a 6 de outubro, cada um com o nome de quem '
+        'estava de plantão. A escala repete Duda, Inês, Rafa, Téo, Caio. Barras sob os blocos marcam '
+        'os últimos dias de cada mês. O fim de julho cai nas semanas do Rafa e do Téo, o de agosto nas '
+        'da Inês e do Rafa, e o de setembro nas da Inês e do Rafa; as semanas do Caio nunca têm um.'))
+    x0, w = 30, 47.0
+    for k in range(13):
+        person = rota[k % len(rota)]
+        x = x0 + k * w
+        hot = person == 'Rafa'
+        f.rect(x + 2, 70, w - 4, 60, stroke='--amber' if hot else '--phosphor',
+               fill='--scan' if hot else '--panel', width=1.4)
+        f.text(x + w / 2, 100, names.get(person, person), size=10.5)
+        day = start + td(weeks=k)
+        lab = f'{day.day}/{day.month}'
+        f.text(x + w / 2, 58, lab, size=9, fill='--paper-dim')
+        for d in range(7):
+            dd = day + td(days=d)
+            if dd.day >= 25:
+                f.bar(x + 2 + d * (w - 4) / 7, 140, (w - 4) / 7 - 1, 12, fill='--amber', stroke='--amber')
+    f.text(x0 + 2, 172, T(lang, 'the last days of the month, from the 25th, when the pages come in threes',
+                          'os últimos dias do mês, a partir do dia 25, quando os acionamentos vêm de três em três'),
+           size=10, anchor='start', fill='--amber')
+    rows = T(lang, ['month-end fell in Rafa\'s week all three times, in Inês\'s twice, and in Caio\'s never:',
+                    'a rota of five weeks against months of about four and a third drifts slowly'],
+             ['o fim do mês caiu na semana do Rafa as três vezes, na da Inês duas, e na do Caio nunca:',
+              'uma escala de cinco semanas contra meses de uns quatro e um terço anda devagar'])
+    f.lines(x0 + 2, 200, rows, size=10.5, anchor='start', fill='--paper')
+    f.text(x0 + 2, 26, T(lang, 'the Billing team\'s rota, one week each, handing over on Wednesdays',
+                         'a escala do time de Billing, uma semana cada, com troca às quartas'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Nobody chose who would get the month-end. The calendar did, and kept choosing the same people.',
+                'Ninguém escolheu quem pegaria o fim do mês. O calendário escolheu, e continuou escolhendo as mesmas pessoas.')
+
+
+# ------------------------------------------------------------------ lesson 18
+
+LESSON18 = os.path.join(HERE, 'lessons', 'le-s1dk8vgm')
+
+ALERT_PT = {
+    'database disk over 80%': 'disco do banco acima de 80%',
+    'card provider p99 over 2 s': 'p99 do provedor de cartão acima de 2 s',
+    'statement queue over 500': 'fila de extratos acima de 500',
+    'API CPU over 85%': 'CPU da API acima de 85%',
+    'health check failed once': 'health check falhou uma vez',
+    'TLS certificate expires in 30 d': 'certificado TLS vence em 30 d',
+    'card charge errors over 1%': 'erros de cobrança no cartão acima de 1%',
+    'statement job failed': 'job de extrato falhou',
+    'refunds failing': 'estornos falhando',
+}
+
+
+@figure('l18-actionable', 18)
+def l18_actionable(lang):
+    alerts = lesson_program(LESSON18, 'pages.py')['ALERTS']
+    desc_en = '; '.join(f'{n}, {p} pages, {u} needed' for n, p, u, _ in alerts)
+    desc_pt = '; '.join(f'{ALERT_PT[n]}, {p} acionamentos, {u} necessários' for n, p, u, _ in alerts)
+    f = Fig('l18-actionable', 680, 380, T(
+        lang,
+        'Horizontal bars, one per alert, longest first, each split into the pages that needed a '
+        'person and the pages that did not. ' + desc_en + '. The four longest bars are almost '
+        'entirely pages that needed nobody; the three short bars at the bottom are almost entirely '
+        'pages that did.',
+        'Barras horizontais, uma por alerta, da mais longa para a mais curta, cada uma dividida '
+        'entre os acionamentos que precisaram de alguém e os que não precisaram. ' + desc_pt + '. '
+        'As quatro barras mais longas são quase só acionamentos que não precisaram de ninguém; as '
+        'três barras curtas embaixo são quase só acionamentos que precisaram.'))
+    p = Plot(f, 290, 50, 620, 330, 0, 20, 0, 1)
+    for i, (name, paged, useful, _) in enumerate(alerts):
+        y = 56 + i * 30
+        f.text(280, y + 9, T(lang, name, ALERT_PT[name]), size=10.5, anchor='end')
+        if useful:
+            f.bar(p.sx(0), y, p.sx(useful) - p.sx(0), 18)
+        if paged > useful:
+            f.bar(p.sx(useful), y, p.sx(paged) - p.sx(useful), 18, fill='--panel', stroke='--amber')
+        f.text(p.sx(paged) + 8, y + 9, f'{useful}/{paged}', size=10, anchor='start', fill='--paper-dim')
+    f.line(p.sx(0), 50, p.sx(0), 328, stroke='--paper-dim', width=1)
+    f.bar(290, 352, 14, 10)
+    f.text(310, 357, T(lang, 'needed a person', 'precisou de alguém'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.bar(450, 352, 14, 10, fill='--panel', stroke='--amber')
+    f.text(470, 357, T(lang, 'needed nobody', 'não precisou de ninguém'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.text(290, 24, T(lang, 'pages per alert, 8 July to 6 October', 'acionamentos por alerta, de 8 de julho a 6 de outubro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The alerts that paged most needed somebody least. The ones worth keeping are short '
+                'bars, and almost all of them is signal.',
+                'Os alertas que mais acionaram foram os que menos precisaram de alguém. Os que valem '
+                'manter são barras curtas, e quase todas são sinal.')
+
+
+@figure('l18-routes', 18)
+def l18_routes(lang):
+    f = Fig('l18-routes', 680, 300, T(
+        lang,
+        'A decision path for a signal. First question: are users hurt, or about to be? If not, it '
+        'goes to a log line or a dashboard. If so, second question: can somebody do something? If '
+        'not, the dashboard again. If so, third question: does it need doing tonight? If not, a '
+        'ticket for working hours. If so, a page, which wakes somebody now and comes with a runbook.',
+        'Um caminho de decisão para um sinal. Primeira pergunta: os usuários estão sendo '
+        'prejudicados, ou estão para ser? Se não, vai para uma linha de log ou um painel. Se sim, '
+        'segunda pergunta: alguém pode fazer algo? Se não, painel de novo. Se sim, terceira '
+        'pergunta: precisa ser feito esta noite? Se não, um chamado para o horário de trabalho. Se '
+        'sim, um acionamento, que acorda alguém agora e vem com um runbook.'))
+    qs = [T(lang, ['users hurt,', 'or about to be?'], ['usuários prejudicados,', 'ou quase?']),
+          T(lang, ['can somebody', 'do something?'], ['alguém pode', 'fazer algo?']),
+          T(lang, ['does it need', 'doing tonight?'], ['precisa ser', 'feito esta noite?'])]
+    xs = [40, 230, 420]
+    for x, q in zip(xs, qs):
+        f.rect(x, 60, 150, 60, stroke='--phosphor', fill='--panel')
+        f.lines(x + 75, 82, q, size=10.5)
+    for a, b in ((190, 230), (380, 420)):
+        f.line(a + 2, 90, b - 2, 90, stroke='--phosphor', arrow=True)
+        f.text((a + b) / 2, 80, T(lang, 'yes', 'sim'), size=10, fill='--phosphor')
+    f.line(572, 90, 600, 90, stroke='--phosphor', arrow=True)
+    f.text(586, 80, T(lang, 'yes', 'sim'), size=10, fill='--phosphor')
+    f.rect(602, 66, 66, 48, stroke='--amber', fill='--scan', width=1.6)
+    f.text(635, 90, T(lang, 'page', 'acionar'), size=11, weight='600')
+    f.rect(40, 200, 340, 50, stroke='--wire', fill='--panel')
+    f.text(210, 225, T(lang, 'log line or dashboard', 'linha de log ou painel'), size=11)
+    f.rect(420, 200, 150, 50, stroke='--wire', fill='--panel')
+    f.text(495, 225, T(lang, 'ticket', 'chamado'), size=11)
+    for x, target in ((115, 198), (305, 198), (495, 198)):
+        f.line(x, 122, x, target, stroke='--paper-dim', arrow=True)
+        f.text(x + 8, 160, T(lang, 'no', 'não'), size=10, anchor='start', fill='--paper-dim')
+    f.text(635, 140, T(lang, 'with a', 'com um'), size=10, fill='--paper-dim')
+    f.text(635, 154, T(lang, 'runbook', 'runbook'), size=10, fill='--paper-dim')
+    f.text(40, 30, T(lang, 'where a signal goes', 'para onde vai um sinal'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.text(40, 280, T(lang, 'a page passes all three; everything else still has a place, just not in a pocket',
+                      'um acionamento passa nas três; todo o resto ainda tem lugar, só não no bolso de alguém'),
+           size=10.5, anchor='start', fill='--paper')
+    return f, T(lang,
+                'Three questions decide where a signal goes. Only one of the four ways out wakes anybody.',
+                'Três perguntas decidem para onde vai um sinal. Só uma das quatro saídas acorda alguém.')
+
+
+# ------------------------------------------------------------------ lesson 19
+
+@figure('l19-quarter', 19)
+def l19_quarter(lang):
+    items, _ = billing()
+    import calendar
+    rows = []
+    for m in (7, 8, 9):
+        days = [d for _, d, _ in cycle_days(items, date(2026, m, 1), date(2026, m, calendar.monthrange(2026, m)[1]))]
+        rows.append((m, pctl(days, 50), pctl(days, 85)))
+    names = {6: ('June', 'junho'), 7: ('July', 'julho'), 8: ('August', 'agosto'), 9: ('September', 'setembro')}
+    desc_en = '; '.join(f'{names[m][0]}, median {a} days and 85th percentile {b}' for m, a, b in rows)
+    desc_pt = '; '.join(f'{names[m][1]}, mediana de {a} dias e percentil 85 de {b}' for m, a, b in rows)
+    f = Fig('l19-quarter', 680, 290, T(
+        lang,
+        'Cycle time of the items merged each month, from July to September, as a filled bar for the '
+        'median and a taller outlined bar for the 85th percentile: ' + desc_en + '. A dashed line '
+        'between July and August marks 3 August, when the team changed its rules.',
+        'Tempo de ciclo dos itens integrados em cada mês, de julho a setembro, com uma barra cheia '
+        'para a mediana e uma barra contornada mais alta para o percentil 85: ' + desc_pt + '. Uma '
+        'linha tracejada entre julho e agosto marca 3 de agosto, quando o time mudou as regras.'))
+    p = Plot(f, 70, 50, 640, 240, 0, 3, 0, 40)
+    p.yaxis([0, 10, 20, 30, 40], fmt=lambda t: f'{t} d')
+    p.baseline()
+    for k, (m, med, hi) in enumerate(rows):
+        cx = p.sx(k + 0.5)
+        f.bar(cx - 40, p.sy(hi), 80, p.sy(0) - p.sy(hi), fill='--panel', stroke='--phosphor')
+        f.bar(cx - 40, p.sy(med), 80, p.sy(0) - p.sy(med))
+        f.text(cx, p.sy(hi) - 10, T(lang, f'85th: {hi}', f'p85: {hi}'), size=10, fill='--paper-dim')
+        f.text(cx, p.sy(med) - 10 if hi - med > 4 else p.sy(med) + 12, T(lang, f'median {med}', f'mediana {med}'),
+               size=10, fill='--paper')
+        f.text(cx, 256, T(lang, *names[m]), size=10.5, fill='--paper-dim')
+    f.line(p.sx(1), 44, p.sx(1), 240, stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.sx(1) + 6, 44, T(lang, '3 Aug: one item each, reviews first', '3 ago: um item cada, revisões primeiro'),
+           size=10, anchor='start', fill='--amber')
+    f.text(70, 20, T(lang, 'cycle time of the items merged each month, in days',
+                     'tempo de ciclo dos itens integrados em cada mês, em dias'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The chart that carries the review: the change, its size and its timing, in one picture.',
+                'O gráfico que sustenta a revisão: a mudança, o tamanho dela e quando aconteceu, numa imagem só.')
+
+
+# ------------------------------------------------------------------ lesson 20
+
+@figure('l20-two-hands', 20)
+def l20_two_hands(lang):
+    f = Fig('l20-two-hands', 680, 330, T(
+        lang,
+        'One number in the centre: pages per person last quarter, Rafa 54 and Caio 6. An arrow to '
+        'the left leads to the team\'s monthly review, which finds one person carrying half the '
+        'pager, leads to runbooks and a fairer rota, and loops back: the number stays honest. An '
+        'arrow to the right leads to a performance review, where people stop passing problems on and '
+        'stop writing pages down, and the number changes while the problem stays: the number is lost.',
+        'Um número no centro: acionamentos por pessoa no último trimestre, Rafa 54 e Caio 6. Uma '
+        'seta para a esquerda leva à revisão mensal do time, que acha uma pessoa carregando metade '
+        'do pager, leva a runbooks e a uma escala mais justa, e volta ao início: o número continua '
+        'honesto. Uma seta para a direita leva a uma avaliação de desempenho, onde as pessoas param '
+        'de repassar problemas e de registrar acionamentos, e o número muda enquanto o problema '
+        'fica: o número se perde.'))
+    f.rect(250, 40, 180, 64, stroke='--paper', fill='--panel', width=1.6)
+    f.lines(340, 60, T(lang, ['pages per person', 'Rafa 54 · Caio 6'], ['acionamentos por pessoa', 'Rafa 54 · Caio 6']),
+            size=11)
+    left = T(lang, [['in the team\'s', 'monthly review'], ['one person carries', 'half the pager'],
+                    ['runbooks, a call,', 'a fairer rota']],
+             [['na revisão mensal', 'do time'], ['uma pessoa carrega', 'metade do pager'],
+              ['runbooks, chamada,', 'escala mais justa']])
+    right = T(lang, [['in a performance', 'review'], ['people stop passing on', 'and writing down'],
+                     ['the number changes;', 'the problem stays']],
+              [['numa avaliação', 'de desempenho'], ['param de repassar', 'e de registrar'],
+               ['o número muda;', 'o problema fica']])
+    for col, x, stroke in ((left, 30, '--phosphor'), (right, 470, '--amber')):
+        for k, rows in enumerate(col):
+            y = 130 + k * 62
+            f.rect(x, y, 180, 46, stroke=stroke, fill='--panel')
+            f.lines(x + 90, y + 16, rows, size=10.5)
+            if k:
+                f.line(x + 90, y - 15, x + 90, y - 2, stroke=stroke, arrow=True)
+    f.path('M250 72 L120 72 L120 128', stroke='--phosphor', width=1.4, arrow=True)
+    f.path('M430 72 L560 72 L560 128', stroke='--amber', width=1.4, arrow=True)
+    f.path('M210 276 L240 276 L240 90 L248 90', stroke='--phosphor', width=1.2, dash='4 3', arrow=True)
+    f.text(30, 312, T(lang, 'the number stays honest', 'o número continua honesto'), size=10.5,
+           anchor='start', fill='--phosphor')
+    f.text(650, 312, T(lang, 'the number is lost', 'o número se perde'), size=10.5, anchor='end',
+           fill='--amber')
+    f.text(340, 20, T(lang, 'one number, two uses', 'um número, dois usos'), size=10, fill='--paper-dim')
+    return f, T(lang,
+                'The number does not decide its own use. On the left it gets more accurate every month; '
+                'on the right it stops meaning anything within a quarter.',
+                'O número não decide o próprio uso. À esquerda ele fica mais preciso a cada mês; à '
+                'direita deixa de significar qualquer coisa em um trimestre.')
+
+
+# @@LESSONS@@
+
+if __name__ == '__main__':
+    main()

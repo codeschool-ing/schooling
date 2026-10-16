@@ -1,0 +1,761 @@
+[
+  {
+    "id": "ex-7k2rne6g",
+    "version": 1,
+    "section": "roles-not-users",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `CREATE USER bruno` and `CREATE ROLE bruno`?",
+    "hint": "Look at what `\\du` printed beside `reporting`.",
+    "choices": [
+      {
+        "text": "Only LOGIN: CREATE USER switches it on and CREATE ROLE leaves it off",
+        "correct": true,
+        "why": "Right. `CREATE USER` is `CREATE ROLE` with `LOGIN` switched on; nothing else differs."
+      },
+      {
+        "text": "`CREATE USER` also makes an account in /etc/passwd",
+        "correct": false,
+        "why": "The server never touches the operating system's accounts. `id bruno` still said no such user."
+      },
+      {
+        "text": "A user belongs to one database and a role to the cluster",
+        "correct": false,
+        "why": "Both are the same object, stored in `pg_authid`, which every database shares."
+      },
+      {
+        "text": "A user gets a password and a role cannot have one",
+        "correct": false,
+        "why": "Neither statement sets a password, and any role can be given one with `\\password`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a43xe5jq",
+    "version": 1,
+    "section": "roles-not-users",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bruno` was created while connected to `shop`. A colleague connects to the database `ana` and runs `SELECT rolname FROM pg_roles`. Is `bruno` in the result?",
+    "hint": "Which catalogue table holds roles, and is it per database?",
+    "choices": [
+      {
+        "text": "No, roles exist only in the database they were created in",
+        "correct": false,
+        "why": "That is how tables behave. `pg_authid` has `relisshared` true: one copy for the whole cluster."
+      },
+      {
+        "text": "Only after `GRANT CONNECT ON DATABASE ana TO bruno`",
+        "correct": false,
+        "why": "`CONNECT` decides whether bruno may log in to `ana`, not whether the role is visible there."
+      },
+      {
+        "text": "Only if the colleague is a superuser, because pg_roles is hidden",
+        "correct": false,
+        "why": "`pg_roles` is readable by everybody; it is `pg_authid`, with the passwords, that only a superuser reads."
+      },
+      {
+        "text": "Yes, because a role is stored once for the whole cluster and every database sees it",
+        "correct": true,
+        "why": "Right. Roles are cluster-wide; only what a role may do inside each database is per database."
+      }
+    ]
+  },
+  {
+    "id": "ex-x943th0f",
+    "version": 1,
+    "section": "roles-not-users",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each engine to what an account is there.",
+    "hint": "One of them keys an account by where it connects from.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "A role, with LOGIN or without, for the whole cluster"
+      },
+      {
+        "left": "MySQL",
+        "right": "A name and a host together, so one name can be two accounts"
+      },
+      {
+        "left": "SQL Server",
+        "right": "A login at the server, mapped to a user in each database"
+      },
+      {
+        "left": "Oracle",
+        "right": "A user that is also a schema for its objects"
+      }
+    ]
+  },
+  {
+    "id": "ex-4xrmfqzk",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An analyst is leaving next week, but the tables he created must stay. Which statement stops him from connecting today without touching what he owns?",
+    "hint": "Every attribute has a NO form.",
+    "choices": [
+      {
+        "text": "`DROP ROLE` him and recreate the tables",
+        "correct": false,
+        "why": "The server refuses to drop a role that owns objects, and recreating tables is a migration, not an account change."
+      },
+      {
+        "text": "`REVOKE ALL ON ALL TABLES IN SCHEMA public FROM him`",
+        "correct": false,
+        "why": "That removes table privileges; he could still log in, and an owner keeps every right on his own tables anyway."
+      },
+      {
+        "text": "`ALTER ROLE ... NOINHERIT`",
+        "correct": false,
+        "why": "That changes how he uses his groups' privileges, not whether he can connect."
+      },
+      {
+        "text": "`ALTER ROLE ... NOLOGIN`, which closes the door",
+        "correct": true,
+        "why": "Right. The role and everything it owns stay; only the door closes."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjzxpz61",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On PostgreSQL 16, the role `steward` has `CREATEROLE` and tries `ALTER ROLE bruno CREATEDB`, where `bruno` was created by `ana`. What happens?",
+    "hint": "What did the DETAIL line ask for?",
+    "choices": [
+      {
+        "text": "Refused: no ADMIN option on bruno",
+        "correct": true,
+        "why": "Right. steward has ADMIN only on the roles it created itself."
+      },
+      {
+        "text": "It works: CREATEROLE manages every role that is not a superuser",
+        "correct": false,
+        "why": "That was version 15 and earlier. Since 16 it needs the ADMIN option on that role."
+      },
+      {
+        "text": "It works, but only until the next restart",
+        "correct": false,
+        "why": "Role attributes are stored in the catalogue and survive restarts; nothing about this is temporary."
+      },
+      {
+        "text": "Refused, because only a superuser may run ALTER ROLE at all",
+        "correct": false,
+        "why": "steward could alter `intern`, the role it created. The rule is about ADMIN, not about being a superuser."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhh3q2nw",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit a PostgreSQL 13 server where a support account has `CREATEROLE` and nothing else. How worried should you be?",
+    "hint": "Before 16, what could CREATEROLE grant?",
+    "choices": [
+      {
+        "text": "Not at all: it can only create new roles",
+        "correct": false,
+        "why": "On 15 and earlier it could also alter other roles and grant membership in any role."
+      },
+      {
+        "text": "A little: it can rename other people's roles",
+        "correct": false,
+        "why": "Renaming is the least of it. Granting itself a role that runs programs on the server is the problem."
+      },
+      {
+        "text": "Not at all, because version 13 has no CREATEROLE",
+        "correct": false,
+        "why": "CREATEROLE is far older than 13; what changed in 16 is what it allows."
+      },
+      {
+        "text": "As much as about a superuser",
+        "correct": true,
+        "why": "Right. It could grant itself the predefined roles that read files and run programs, and the docs of those versions said to treat it as almost a superuser."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn5geymp",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ALTER ROLE reporting SET statement_timeout = '5min'` is run. bruno, a member of reporting, logs in and starts a report that runs for twenty minutes. What happens?",
+    "hint": "Which role's settings does a session load?",
+    "choices": [
+      {
+        "text": "It finishes: the timeout does not reach him",
+        "correct": true,
+        "why": "Right. Per-role settings apply to the role that logged in, and nobody logs in as reporting."
+      },
+      {
+        "text": "It is cancelled after five minutes",
+        "correct": false,
+        "why": "That would need the setting on bruno. A setting on a group reaches none of its members."
+      },
+      {
+        "text": "bruno's login is refused until he leaves the group",
+        "correct": false,
+        "why": "A parameter never decides whether somebody may log in."
+      },
+      {
+        "text": "It is cancelled at once, because a group setting is applied with every SET ROLE",
+        "correct": false,
+        "why": "bruno never ran SET ROLE, and the setting is read at login anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns73drzg",
+    "version": 1,
+    "section": "membership",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `SET ROLE bruno` in ana's session, what do `current_user` and `session_user` return?",
+    "hint": "One of them is who logged in.",
+    "choices": [
+      {
+        "text": "bruno and bruno",
+        "correct": false,
+        "why": "That is what a real login as bruno shows. SET ROLE does not change who logged in."
+      },
+      {
+        "text": "ana and bruno",
+        "correct": false,
+        "why": "The other way round: the privileges being checked are bruno's."
+      },
+      {
+        "text": "ana and ana, because SET ROLE only lasts one statement",
+        "correct": false,
+        "why": "SET ROLE lasts until RESET ROLE or the end of the session."
+      },
+      {
+        "text": "bruno, then ana",
+        "correct": true,
+        "why": "Right. current_user is whose privileges are checked; session_user is who logged in."
+      }
+    ]
+  },
+  {
+    "id": "ex-k92srmg6",
+    "version": 1,
+    "section": "membership",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each option of a PostgreSQL 16 membership to the question it answers.",
+    "hint": "Three options, three questions; one answer belongs to an attribute instead.",
+    "pairs": [
+      {
+        "left": "INHERIT",
+        "right": "Are the group's privileges used without asking?"
+      },
+      {
+        "left": "SET",
+        "right": "May the member switch to the group with SET ROLE?"
+      },
+      {
+        "left": "ADMIN",
+        "right": "May the member grant the group to others?"
+      }
+    ],
+    "right_distractors": [
+      "May the member log in at all?"
+    ]
+  },
+  {
+    "id": "ex-433vtz94",
+    "version": 1,
+    "section": "membership",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bruno is in reporting `WITH INHERIT FALSE`, and reporting has SELECT on customers. As bruno, `SELECT count(*) FROM customers` is refused. What does he do to read the table?",
+    "hint": "He is still a member.",
+    "choices": [
+      {
+        "text": "Ask for `GRANT reporting TO bruno` again, which resets the options",
+        "correct": false,
+        "why": "A repeated GRANT changes only the options it names; with none named, INHERIT FALSE stays."
+      },
+      {
+        "text": "Run `SET ROLE reporting` first, switching to the group for as long as he needs it",
+        "correct": true,
+        "why": "Right. Without inheritance, the privilege is reached by becoming the group for a moment."
+      },
+      {
+        "text": "Reconnect, because inheritance applies from the next login",
+        "correct": false,
+        "why": "INHERIT FALSE is a property of the membership, and a new login does not change it."
+      },
+      {
+        "text": "Nothing: a member without INHERIT has no way to use the privilege",
+        "correct": false,
+        "why": "SET ROLE is that way, as long as the SET option is on, which is the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-8thtt3v6",
+    "version": 1,
+    "section": "membership",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To check that bruno cannot become reporting, a colleague runs `SET ROLE bruno; SET ROLE reporting;` from her superuser session, sees `SET` twice, and concludes the SET option is on. What is wrong with the test?",
+    "hint": "Whose membership does SET ROLE check?",
+    "choices": [
+      {
+        "text": "Nothing: two SETs prove the option is on",
+        "correct": false,
+        "why": "In the lesson the option was off and both SETs still worked."
+      },
+      {
+        "text": "She should have used RESET ROLE between the two statements",
+        "correct": false,
+        "why": "RESET ROLE goes back to ana; the second SET would then test ana, not bruno."
+      },
+      {
+        "text": "The check was made against ana, and she becomes whoever she asks to be",
+        "correct": true,
+        "why": "Right. Only a real login as bruno makes him the session user, and then the switch is refused."
+      },
+      {
+        "text": "SET ROLE never checks memberships, so the test measures nothing",
+        "correct": false,
+        "why": "It does check them, against the session user; logged in as bruno it refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfn41dbq",
+    "version": 1,
+    "section": "membership",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "psql 16 lists every membership with its options using the backslash command \\___.",
+    "hint": "Three letters, the last one for grants.",
+    "blanks": [
+      {
+        "accept": [
+          "drg"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6kvev64x",
+    "version": 1,
+    "section": "os-and-db",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Over the local socket, with Ubuntu's pg_hba.conf, ana runs `psql -U bruno shop`. Why is it refused?",
+    "hint": "What does peer compare?",
+    "choices": [
+      {
+        "text": "bruno has no password yet",
+        "correct": false,
+        "why": "Peer asks for no password at all; it asks the kernel who opened the socket."
+      },
+      {
+        "text": "bruno lacks CONNECT on shop",
+        "correct": false,
+        "why": "At that point every role had CONNECT through PUBLIC; the message named peer authentication."
+      },
+      {
+        "text": "Her OS user is ana, not bruno",
+        "correct": true,
+        "why": "Right. Peer lets an operating-system user in as the role with the same name only."
+      },
+      {
+        "text": "Roles created with CREATE USER cannot use the local socket",
+        "correct": false,
+        "why": "Any role may use the socket; the map later let ana in as bruno through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tmye3y1",
+    "version": 1,
+    "section": "os-and-db",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `map=shop` on the local line and pg_ident.conf listing only `shop ana bruno`, what happens to ana's ordinary `psql`?",
+    "hint": "Once a map is on the line, what stops?",
+    "choices": [
+      {
+        "text": "It is refused",
+        "correct": true,
+        "why": "Right. Without a line `shop ana ana`, ana has locked herself out of her own role."
+      },
+      {
+        "text": "It still lands as ana, because peer allows matching names anyway",
+        "correct": false,
+        "why": "With a map, plain name matching stops; only the listed pairs are allowed."
+      },
+      {
+        "text": "It lands as bruno, the only role in the map",
+        "correct": false,
+        "why": "psql still asks for the role named like you; the map only says whether that is allowed."
+      },
+      {
+        "text": "The server refuses to reload a map with only one line",
+        "correct": false,
+        "why": "One line is a valid map; the file views report no error for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pfckbm4",
+    "version": 1,
+    "section": "os-and-db",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of changing pg_hba.conf safely in order.",
+    "hint": "Ask the server before you make it act.",
+    "items": [
+      "Copy the file with sudo cp -p",
+      "Edit the line with an editor",
+      "Read pg_hba_file_rules and look at the error column",
+      "Reload with pg_reload_conf()",
+      "Test a connection"
+    ]
+  },
+  {
+    "id": "ex-fsmzb9t8",
+    "version": 1,
+    "section": "os-and-db",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The map lists `shop ana reporting`, and pg_hba.conf accepts the connection. Why is `psql -U reporting shop` still refused?",
+    "hint": "Two checks, in two places.",
+    "choices": [
+      {
+        "text": "A map cannot name a group",
+        "correct": false,
+        "why": "pg_ident_file_mappings showed the line with no error; the map accepted it."
+      },
+      {
+        "text": "The server was not reloaded after the map changed",
+        "correct": false,
+        "why": "It was, and bruno, from the same map, logged in a moment later."
+      },
+      {
+        "text": "reporting has no LOGIN attribute",
+        "correct": true,
+        "why": "Right. Authentication says who you are; the role's own attribute says whether that identity may open a session."
+      },
+      {
+        "text": "reporting holds no CONNECT on shop",
+        "correct": false,
+        "why": "Every role still had CONNECT through PUBLIC, and the message said the role is not permitted to log in."
+      }
+    ]
+  },
+  {
+    "id": "ex-bh0m3tt4",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does pg_authid hold for a role whose password was set on PostgreSQL 16 with default settings?",
+    "hint": "Look at the start of what the query printed.",
+    "choices": [
+      {
+        "text": "The password, encrypted with a key in postgresql.conf",
+        "correct": false,
+        "why": "Nothing reversible is stored; there is no key that turns it back into the password."
+      },
+      {
+        "text": "An md5 hash of the password and the role's name",
+        "correct": false,
+        "why": "That was the default before version 14; password_encryption is scram-sha-256 now."
+      },
+      {
+        "text": "The password in clear text, readable by superusers",
+        "correct": false,
+        "why": "A superuser can read pg_authid, and what it finds there is a verifier, not the password."
+      },
+      {
+        "text": "A SCRAM verifier: a salted value from which the password cannot be recovered",
+        "correct": true,
+        "why": "Right. A salted value from 4096 rounds of hashing; the password cannot be read back from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxrzam0y",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the misspelled `ALTER ROLE brunno PASSWORD '...'` leak bruno's password, when the statement changed nothing?",
+    "hint": "What does the server write when a statement fails?",
+    "choices": [
+      {
+        "text": "psql sends every statement to the system journal before running it",
+        "correct": false,
+        "why": "psql does no such thing. The line was in the server's own log, written by the server."
+      },
+      {
+        "text": "Because brunno was created by the failed statement, with that password",
+        "correct": false,
+        "why": "ALTER ROLE never creates a role; it answered that brunno does not exist."
+      },
+      {
+        "text": "The server logs a failing statement's text",
+        "correct": true,
+        "why": "Right. The STATEMENT line carried the password in clear text into the log."
+      },
+      {
+        "text": "It did not leak: an error rolls back the log line too",
+        "correct": false,
+        "why": "A log is not transactional; tail showed the line after the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0t02gaf",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script runs `psql -w -h localhost -U app shop` and fails with `fe_sendauth: no password supplied`, though ~/.pgpass has the right line. What is the likeliest cause?",
+    "hint": "What did the warning above that line say?",
+    "choices": [
+      {
+        "text": "The server's pg_hba.conf has no line for localhost",
+        "correct": false,
+        "why": "Then the server would refuse with its own FATAL; this message is the client giving up before asking."
+      },
+      {
+        "text": "-w makes psql ignore ~/.pgpass",
+        "correct": false,
+        "why": "-w only forbids prompting; after chmod 600 the same command worked."
+      },
+      {
+        "text": "The file is readable by others",
+        "correct": true,
+        "why": "Right. libpq ignores a password file with group or world access, and only warns."
+      },
+      {
+        "text": "app's password has expired",
+        "correct": false,
+        "why": "An expired password fails at the server, with password authentication failed and a DETAIL in the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9x5yxfs",
+    "version": 1,
+    "section": "passwords",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which octal mode was given to chmod so that ~/.pgpass is readable by its owner only?",
+    "hint": "Read and write for the owner, nothing for anybody else.",
+    "value": 600,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3fncxbg2",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "app's password has `VALID UNTIL` yesterday. Which of these still works?",
+    "hint": "VALID UNTIL is about a credential.",
+    "choices": [
+      {
+        "text": "A new connection over -h localhost with the password from ~/.pgpass",
+        "correct": false,
+        "why": "That is exactly what failed, with User app has an expired password in the log."
+      },
+      {
+        "text": "A session app opened this morning, before the date passed, and has kept open since",
+        "correct": true,
+        "why": "Right. The date is checked when a password is presented, and an open session presents none."
+      },
+      {
+        "text": "A new connection with the correct password typed by hand",
+        "correct": false,
+        "why": "The password was right in the lesson too; it was its date that failed."
+      },
+      {
+        "text": "A new connection after app's password is set again with the same value",
+        "correct": false,
+        "why": "Setting a password does not clear VALID UNTIL; the date stays until it is changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-a35bnz1y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deployment tool must create tables as `shop_owner`, but should run every other statement with its own ordinary rights. Which membership fits?",
+    "hint": "Inherit, or switch on purpose?",
+    "choices": [
+      {
+        "text": "`GRANT shop_owner TO deployer WITH INHERIT TRUE, SET FALSE`",
+        "correct": false,
+        "why": "That gives the owner's rights all the time and forbids switching: the opposite of what is asked."
+      },
+      {
+        "text": "`GRANT shop_owner TO deployer WITH INHERIT FALSE`",
+        "correct": true,
+        "why": "Right. SET stays on by default, so it switches with SET ROLE while it migrates and has nothing extra the rest of the time."
+      },
+      {
+        "text": "`GRANT shop_owner TO deployer WITH ADMIN TRUE`",
+        "correct": false,
+        "why": "ADMIN lets it hand shop_owner to others, which nobody asked for, and inheritance stays on."
+      },
+      {
+        "text": "`ALTER ROLE deployer SUPERUSER`",
+        "correct": false,
+        "why": "That removes every check, all the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-smfbwtm6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application fails to log in, and its log says only `password authentication failed for user \"app\"`. Where is the actual reason?",
+    "hint": "The server tells strangers as little as possible.",
+    "choices": [
+      {
+        "text": "In the server's log, on the DETAIL line written beside the FATAL one",
+        "correct": true,
+        "why": "Right. The DETAIL there says whether the password was wrong or expired, and which pg_hba.conf line matched."
+      },
+      {
+        "text": "In pg_authid, in a column that records the last failure",
+        "correct": false,
+        "why": "pg_authid holds no record of attempts; failures go to the log."
+      },
+      {
+        "text": "In the client's message: it has said everything",
+        "correct": false,
+        "why": "The client gets the same sentence for a wrong password and an expired one, on purpose."
+      },
+      {
+        "text": "In pg_hba_file_rules, whose error column lists refused logins",
+        "correct": false,
+        "why": "That column reports lines of the file the server cannot parse, not connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-11z4rcke",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the checks a connection meets, from first to last, for `psql -h localhost -U bruno shop`.",
+    "hint": "The file chooses the method before the method runs.",
+    "items": [
+      "pg_hba.conf picks the matching line",
+      "The password is checked with scram-sha-256",
+      "The role's LOGIN attribute and password date are checked",
+      "Privileges are checked statement by statement"
+    ]
+  },
+  {
+    "id": "ex-z1ehadfx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these keep a password out of every file on the server and in your home directory? Choose all that apply.",
+    "hint": "Think about the log, ~/.psql_history and ~/.bash_history.",
+    "choices": [
+      {
+        "text": "`\\password app` in psql",
+        "correct": true,
+        "why": "Yes. psql sends a verifier; the password is in no statement."
+      },
+      {
+        "text": "`psql -c \"ALTER ROLE app PASSWORD 'x'\"` at the shell",
+        "correct": false,
+        "why": "The shell history keeps it, and a failure or log_statement puts it in the server log."
+      },
+      {
+        "text": "`ALTER ROLE app PASSWORD 'x'` typed in interactive psql",
+        "correct": false,
+        "why": "~/.psql_history keeps everything typed."
+      },
+      {
+        "text": "A driver that computes the SCRAM verifier and sends it",
+        "correct": true,
+        "why": "Yes. That is what \\password does, done by a program."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh30g07g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which psql command shows `Cannot login` beside a role?",
+    "hint": "The same one that shows Superuser.",
+    "choices": [
+      {
+        "text": "\\drg",
+        "correct": false,
+        "why": "\\drg lists memberships and their options, not attributes."
+      },
+      {
+        "text": "\\du",
+        "correct": true,
+        "why": "Right. It lists roles with their attributes."
+      },
+      {
+        "text": "\\dp, the access privileges of every table",
+        "correct": false,
+        "why": "\\dp shows grants on objects; LOGIN is an attribute of the role."
+      },
+      {
+        "text": "\\conninfo, which describes the current connection",
+        "correct": false,
+        "why": "It says who you are connected as, nothing about other roles."
+      }
+    ]
+  }
+]
