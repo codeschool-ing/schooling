@@ -6,9 +6,9 @@ version: 1
 **A JSON Schema is a JSON document that describes other JSON documents: which fields they have, what
 type each is, which values are allowed.** A test that asserts `seats_left` equals 4 checks one field
 of one answer. A schema checks every field of every answer it is given, including the fields nobody
-thought to assert on, and the same file serves every tool that reads JSON Schema. Lesson 2's
-`openapi.yaml` already holds schemas, in its `components`; OpenAPI 3.1 uses JSON Schema for them. This
-lesson takes two of them out into files of their own, so that a test can load them directly.
+thought to assert on. The same file serves every tool that reads JSON Schema. Lesson 2's
+`openapi.yaml` already holds schemas, in its `components`; OpenAPI 3.1 uses JSON Schema for them.
+This lesson takes two of them out into files of their own, so that a test can load them directly.
 
 JSON Schema has several published versions, called drafts. The current one is **2020-12**, and the
 `$schema` field at the top of a schema says which one it is written in. That field matters more than
@@ -77,13 +77,13 @@ Save it as `schemas/order.json`:
 | `enum` | the order's `status` | the value must be one of these |
 | `if` / `then` | a `confirmed` order | when the `if` part matches, the `then` part applies: a confirmed order must carry its `payment` |
 
-Two of those deserve a second look. **`additionalProperties: false` is a choice, not a default.** In a
-schema that tests boxoffice's own answers it is right: boxoffice builds an order with a `client` field
-and removes it before answering, with `const { client, ...body } = order`, and a strict schema is what
-would catch the day somebody forgets that line and starts telling every caller which program placed
-each order. In a schema a *client* uses to read boxoffice, the same keyword would make the client
-break whenever boxoffice adds a harmless field. Who owns the schema decides which way it should lean,
-and section 05 comes back to that.
+Two of those deserve a second look. **`additionalProperties: false` is a choice, not a default.** In
+a schema that tests boxoffice's own answers it is right. boxoffice builds an order with a `client`
+field and removes it before answering, with `const { client, ...body } = order`. A strict schema is
+what would catch the day somebody forgets that line and starts telling every caller which program
+placed each order. In a schema a *client* uses to read boxoffice, the same keyword would make the
+client break whenever boxoffice adds a harmless field. Who owns the schema decides which way it
+should lean, and section 05 comes back to that.
 
 **`format` is checked only if the validator is asked to.** The JSON Schema standard leaves format
 checking optional, so `"format": "date-time"` on its own may be no more than a note. Section 03 turns

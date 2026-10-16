@@ -34,7 +34,7 @@ não tem nenhum.
 ## Parando na primeira falha
 
 `--bail` encerra a execução na primeira falha em vez de terminá-la. A saída dele no terminal traz um
-caractere que as transcrições do curso não conseguem mostrar, então esta execução grava o relatório
+caractere que as transcrições do curso não conseguem mostrar. Então esta execução grava o relatório
 JSON da seção 05 no lugar, e o jq lista as requisições que de fato foram mandadas:
 
 ```

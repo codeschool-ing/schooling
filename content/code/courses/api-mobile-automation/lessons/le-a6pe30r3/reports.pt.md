@@ -92,12 +92,12 @@ boxoffice.match.html  boxoffice.seats.html
 
 Abra o `karate-summary.html` num navegador. Para este curso ele foi aberto num Chromium sem tela, e
 não à mão, então é descrito aqui em vez de mostrado. A página de resumo lista cada feature com o seu
-número de cenários aprovados e reprovados, e o cenário que falhou, `HEAD on a show`, numa lista de
-falhas no topo. Cada feature tem uma página própria em `feature-html`, e nela cada passo de cada
+número de cenários aprovados e reprovados. O cenário que falhou, `HEAD on a show`, fica numa lista
+de falhas no topo. Cada feature tem uma página própria em `feature-html`, e nela cada passo de cada
 cenário é uma linha com o tempo que levou. Embaixo de `When method head` há um `log` para abrir, e
 ele guarda a requisição que o Karate mandou e a resposta que recebeu.
 
-**Esse log é a evidência para um relatório de defeito**, e também a conferência que a seção 05
+**Esse log é a evidência para um relatório de defeito.** Ele também é a conferência que a seção 05
 pediu: antes de chamar um cenário vermelho de defeito do servidor, abra o passo que mandou a
 requisição e leia o que saiu. O token na requisição do auditor estaria ali, claramente o errado.
 

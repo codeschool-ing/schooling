@@ -68,16 +68,16 @@ it is built. Save it as `restassured/pom.xml`:
 
 Read it from the top:
 
-- **the coordinates**, `groupId`, `artifactId` and `version`, name this project the same way
-  the dependencies below are named. Nothing downloads it; they only have to be there.
-- **the properties** say the code is Java 21 and the files are UTF-8, so `São Paulo` in a test
-  means the same on every machine.
-- **the dependencies** are the two libraries the tests use. REST Assured sends the requests and
-  checks the answers; JUnit Jupiter is the test framework, which finds the methods marked as
-  tests and runs them. `<scope>test</scope>` says they exist only for the tests, which in this
-  project is all there is.
-- **the plugins** pin the versions of the two plugins that compile and run the tests. Section 07
-  removes them and shows what goes wrong.
+- the coordinates, `groupId`, `artifactId` and `version`, name this project the same way the
+  dependencies below are named. Nothing downloads it; they only have to be there.
+- the properties say the code is Java 21 and the files are UTF-8, so `São Paulo` in a test means the
+  same on every machine.
+- the dependencies are the two libraries the tests use. REST Assured sends the requests and checks
+  the answers. JUnit Jupiter is the test framework, which finds the methods marked as tests and runs
+  them. `<scope>test</scope>` says they exist only for the tests, which in this project is all there
+  is.
+- the plugins pin the versions of the two plugins that compile and run the tests. Section 07 removes
+  them and shows what goes wrong.
 
 | what | version | what it does here |
 |---|---|---|
@@ -86,11 +86,10 @@ Read it from the top:
 | `maven-compiler-plugin` | 3.15.0 | compiles the tests as Java 21 |
 | `maven-surefire-plugin` | 3.6.0 | runs them, writes the reports |
 
-Every version was resolved from Maven Central when the transcripts were recorded, in October
-2026, and they are written out whole on purpose. **A version written out is a build that does
-the same thing next year**; a version left to "whatever is newest" is a build that changes when
-somebody else publishes. REST Assured 6.1.0 appeared the day before the recording and was not
-tried.
+Every version was resolved from Maven Central when the transcripts were recorded, in October 2026,
+and they are written out whole on purpose. **A version written out is a build that does the same
+thing next year.** A version left to "whatever is newest" is a build that changes when somebody else
+publishes. REST Assured 6.1.0 appeared the day before the recording and was not tried.
 
 ## The first test
 
@@ -197,8 +196,8 @@ ana@laptop:~/boxoffice/restassured$ mvn test
 ```
 
 The first `mvn test` on a new machine **downloads REST Assured, JUnit, the two plugins and
-everything they depend on**, which fills the screen with `Downloading from central` lines and
-takes a while. The transcript was recorded with those already in `~/.m2`, so it shows
-what every later run prints. Read it down the middle: the plugins run in the order the phases
-need them, resources, then the compiler, then Surefire, and under `T E S T S` one class ran one
-test with no failures. `BUILD SUCCESS` is Maven's verdict on the whole run.
+everything they depend on**. That fills the screen with `Downloading from central` lines and takes a
+while. The transcript was recorded with those already in `~/.m2`, so it shows what every later run
+prints. Read it down the middle. The plugins run in the order the phases need them: resources, then
+the compiler, then Surefire. Under `T E S T S`, one class ran one test with no failures.
+`BUILD SUCCESS` is Maven's verdict on the whole run.

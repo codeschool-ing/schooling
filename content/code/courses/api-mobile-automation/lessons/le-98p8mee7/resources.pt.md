@@ -3,10 +3,10 @@ title: Recursos, endereços e uma requisição que se basta
 version: 1
 ---
 
-**REST é um jeito de organizar uma API: toda coisa que a API conhece é um recurso, todo recurso tem
-um endereço, e os métodos do HTTP são os únicos verbos.** É um estilo, descrito por Roy Fielding em
-2000, e não um padrão que alguém certifique. A maioria das APIs que se dizem REST segue parte dele,
-e essa parte é a que quem testa encontra todo dia: substantivos no caminho, verbos no método.
+**REST é um jeito de organizar uma API.** Toda coisa que a API conhece é um recurso, todo recurso
+tem um endereço, e os métodos do HTTP são os únicos verbos. É um estilo, descrito por Roy Fielding
+em 2000, e não um padrão que alguém certifique. A maioria das APIs que se dizem REST segue parte
+dele, e essa parte é a que quem testa encontra todo dia: substantivos no caminho, verbos no método.
 
 Uma primeira imagem comum é a de uma API como uma lista de funções com nomes esquisitos,
 `getShows`, `createOrder`, `cancelOrder`. O boxoffice não tem nome assim em lugar nenhum. Ele tem
@@ -20,8 +20,8 @@ coisas, e você age sobre elas com o método:
 | `/v1/orders/ord-1001` | um pedido | `GET` o lê, `DELETE` o cancela |
 
 O `v1` na frente é a versão da API. Uma mudança que quebraria clientes existentes vai para debaixo
-de `/v2/`, e o endereço antigo continua respondendo aos clientes que ninguém consegue atualizar,
-como um app num celular que nunca foi atualizado.
+de `/v2/`. O endereço antigo continua respondendo aos clientes que ninguém consegue atualizar, como
+um app num celular que nunca foi atualizado.
 
 ## Uma coleção, e um filtro sobre ela
 
@@ -43,9 +43,8 @@ ana@laptop:~/boxoffice$ curl -s 'localhost:8080/v1/shows?date=2026-11-07' | jq -
 {"id":"sh-102","starts_at":"2026-11-07T20:00:00-03:00"}
 ```
 
-O caminho diz *qual* recurso; a query diz *que parte dele*. Quem testa trata cada parâmetro de
-query como uma entrada própria, com valores válidos, inválidos e uma borda, e a seção 06 volta a
-este.
+O caminho diz *qual* recurso; a query diz *que parte dele*. Quem testa trata cada parâmetro de query
+como uma entrada própria, com valores válidos, inválidos e uma borda. A seção 06 volta a este.
 
 ## Criando, e ouvindo onde ficou
 
@@ -70,8 +69,8 @@ O pedido novo agora é um recurso por direito próprio, no endereço que o servi
 ## Toda requisição carrega tudo
 
 **Um servidor REST não guarda memória da conversa entre uma requisição e outra.** Essa propriedade
-se chama ausência de estado (*statelessness*), e a imagem errada dela é a de um site em que você
-entra uma vez e depois toda página sabe quem você é. O boxoffice sabe quem você é só durante uma
+se chama ausência de estado (*statelessness*). A imagem errada dela é a de um site em que você entra
+uma vez e depois toda página sabe quem você é. O boxoffice sabe quem você é só durante uma
 requisição, e só porque aquela requisição disse:
 
 ```
@@ -86,9 +85,9 @@ recebeu o pedido; a segunda não levava, e o boxoffice não fazia ideia de que t
 responder ao mesmo cliente. Nada da primeira requisição sobreviveu até a segunda.
 
 **É isso que torna possível testar uma API requisição por requisição.** Cada requisição contém a
-pergunta inteira, então pode ser mandada por qualquer programa, em qualquer ordem, quantas vezes for,
-e a resposta depende só do que ela diz e dos dados que o servidor guarda, nunca de qual requisição
-veio antes. Um teste de `GET /v1/orders/ord-1001` precisa de um token e de um pedido existente; não
+pergunta inteira, então qualquer programa pode mandá-la, em qualquer ordem, quantas vezes for. A
+resposta depende só do que ela diz e dos dados que o servidor guarda, nunca de qual requisição veio
+antes. Um teste de `GET /v1/orders/ord-1001` precisa de um token e de um pedido existente; não
 precisa de uma sequência de telas repetida para chegar ao estado certo.
 
 Os dados são a metade que ainda pode morder. O pedido acima existe porque uma requisição anterior o

@@ -56,10 +56,10 @@ if (validate(data)) {
 }
 ```
 
-Three details carry the weight. **`Ajv2020` is the build for the 2020-12 draft**; the default `Ajv`
-class reads draft-07 and would refuse the `$schema` line. `allErrors: true` reports every broken rule
-instead of stopping at the first, which is what a person reading a failure wants. And **the exit
-code is 1 on a failure**, so a shell script or a pipeline step can tell the difference without
+Three details carry the weight. **`Ajv2020` is the build for the 2020-12 draft.** The default `Ajv`
+class reads draft-07 and would refuse the `$schema` line. `allErrors: true` reports every broken
+rule instead of stopping at the first, which is what a person reading a failure wants. And **the
+exit code is 1 on a failure**, so a shell script or a pipeline step can tell the difference without
 reading the text.
 
 boxoffice is running in its terminal, as in every lesson. The show it answers with:
@@ -147,7 +147,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders/ord-1001 -H "authorizat
 valid against Order
 ```
 
-The other direction happens too, and is the reason schemas earn their keep: a field that comes back
-as a string where the contract says integer, a `null` where a value is required, a field that should
-never have left the server. All three are defects of the API, and each fails a schema in exactly the
-way above.
+The other direction happens too, and it is the reason schemas earn their keep. A field comes back as
+a string where the contract says integer, a `null` arrives where a value is required, or a field
+leaves the server that never should have. All three are defects of the API, and each fails a schema
+in exactly the way above.

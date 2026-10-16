@@ -116,12 +116,13 @@ SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
 [INFO] ------------------------------------------------------------------------
 ```
 
-A parte do Maven é a da lição 7: recursos, o compilador, o Surefire. Duas linhas são novas. `Copying
-2 resources` é o bloco `testResources` trabalhando, pondo no classpath a feature e a configuração,
-os dois arquivos que não são Java; sem ele, o Karate não acharia feature nenhuma e não rodaria nada.
-E as três linhas `SLF4J(W)` são um aviso da biblioteca de log pela qual o Karate escreve: não há
-nenhum destino de log instalado, então o log do próprio Karate não vai a lugar nenhum. Isso não muda
-nada nos resultados, e o relatório da seção 07 registra cada requisição de qualquer jeito.
+A parte do Maven é a da lição 7: recursos, o compilador, o Surefire. Duas linhas são novas.
+`Copying 2 resources` é o bloco `testResources` trabalhando, pondo no classpath a feature e a
+configuração, os dois arquivos que não são Java. Sem ele, o Karate não acharia feature nenhuma e não
+rodaria nada. E as três linhas `SLF4J(W)` são um aviso da biblioteca de log pela qual o Karate
+escreve: não há nenhum destino de log instalado, então o log do próprio Karate não vai a lugar
+nenhum. Isso não muda nada nos resultados, e o relatório da seção 07 registra cada requisição de
+qualquer jeito.
 
 **Uma classe JUnit, três testes.** O Surefire conta cada cenário como um teste do `BoxofficeTest`,
 porque o método `@TestFactory` entregou ao JUnit um teste por cenário. Uma feature com dez cenários

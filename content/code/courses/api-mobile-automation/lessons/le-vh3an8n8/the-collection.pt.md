@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Um teste no Postman são algumas linhas de JavaScript presas a uma requisição, que rodam depois que
-a resposta chega.** A requisição é a mesma da lição 4; o script lê a resposta e diz, pelo nome, o que
-estava certo e o que não estava. Esta seção entrega a coleção inteira com os scripts e a roda. As
-quatro seções seguintes desmontam os scripts.
+a resposta chega.** A requisição é a mesma da lição 4. O script lê a resposta e diz, pelo nome, o
+que estava certo e o que não estava. Esta seção entrega a coleção inteira com os scripts e a roda.
+As quatro seções seguintes desmontam os scripts.
 
 Ela substitui o arquivo da lição 4, então salve como `postman/boxoffice.postman_collection.json`:
 
@@ -321,12 +321,12 @@ Ela substitui o arquivo da lição 4, então salve como `postman/boxoffice.postm
 }
 ```
 
-Ela está maior por três motivos. Cada requisição traz um `event` com `"listen": "test"`, o script que
-o Postman roda depois da resposta. A coleção traz um com `"listen": "prerequest"`, que roda antes de
-toda requisição. E há três requisições novas: **HEAD one show**, **Read cancelled order** e uma quinta
-pasta, `seat rules`, com uma requisição dentro. No Postman os scripts aparecem na aba **Scripts** de
-cada requisição, como *Pre-request* e *Post-response*; versões antigas do aplicativo chamavam a
-segunda de *Tests*, e por isso o arquivo ainda diz `test`.
+Ela está maior por três motivos. Cada requisição traz um `event` com `"listen": "test"`, o script
+que o Postman roda depois da resposta. A coleção traz um com `"listen": "prerequest"`, que roda
+antes de toda requisição. E há três requisições novas: **HEAD one show**, **Read cancelled order** e
+uma quinta pasta, `seat rules`, com uma requisição dentro. No Postman os scripts aparecem na aba
+**Scripts** de cada requisição, como *Pre-request* e *Post-response*. Versões antigas do aplicativo
+chamavam a segunda de *Tests*, e por isso o arquivo ainda diz `test`.
 
 ## Rodando sem a janela
 
@@ -345,12 +345,12 @@ npm warn deprecated @faker-js/faker@5.5.3: Please update to a newer version.
 ```
 
 `--yes` deixa o npx baixar sem perguntar, e `@6.2.3` fixa a versão com que cada transcrição foi
-gravada. As quatro linhas `npm warn deprecated` aparecem só nesse primeiro download: dizem que
+gravada. As quatro linhas `npm warn deprecated` aparecem só nesse primeiro download. Elas dizem que
 algumas bibliotecas sobre as quais o Newman foi construído não são mais mantidas pelos autores. Isso
 é um fato sobre o Newman, não um defeito na sua máquina, e nada neste curso depende delas.
 
-Toda execução abaixo também passa `--disable-unicode`. Sem isso o Newman marca pastas, requisições e
-testes aprovados com pequenos símbolos que algumas fontes de terminal não conseguem desenhar; com
+Toda execução abaixo também passa `--disable-unicode`. Sem isso, o Newman marca pastas, requisições
+e testes aprovados com pequenos símbolos que algumas fontes de terminal não conseguem desenhar. Com
 isso, ele os escreve por extenso: `Folder`, `Sub-folder` para uma requisição dentro de uma pasta,
 `Root` para uma fora de qualquer pasta, e `Pass`.
 
@@ -463,10 +463,11 @@ Sub-folder Read cancelled order
 ```
 
 Toda requisição da pasta falhou, e a primeira falha é a única que importa. **Create order**
-respondeu `401`: o boxoffice não recebeu token. A requisição de token rodou, sim, dentro do script de
-pré-requisição da coleção, e o script guardou o token numa variável da coleção. Mas o ambiente `lab`
-ainda define `token`, vazio, e a seção 04 da lição 4 disse o que acontece aí: o ambiente é o escopo
-mais estreito, então o valor vazio dele vence, e toda requisição saiu sem nada depois de `Bearer`.
+respondeu `401`: o boxoffice não recebeu token. A requisição de token rodou, sim, dentro do script
+de pré-requisição da coleção, e o script guardou o token numa variável da coleção. Mas o ambiente
+`lab` ainda define `token`, vazio, e a seção 04 da lição 4 disse o que acontece aí. O ambiente é o
+escopo mais estreito, então o valor vazio dele vence, e toda requisição saiu sem nada depois de
+`Bearer`.
 
 O resto é efeito cascata. Create order não respondeu `201`, então não tinha cabeçalho `location`
 para guardar, e `orderUrl` virou `null`. Os três endereços seguintes foram montados a partir dele,
@@ -587,5 +588,5 @@ Sub-folder Order seats
 Dezessete aprovações e uma falha, que é a que esta coleção existe para falhar. **HEAD one show**
 confere que `HEAD` responde como `GET`, e o boxoffice continua recusando com `405`, o defeito que a
 lição 1 achou. Um teste que falha até um defeito ser corrigido é o relato do defeito numa forma que
-uma máquina consegue repetir, e ele fica verde no dia em que alguém corrigir o boxoffice, sem ninguém
+uma máquina consegue repetir. Ele fica verde no dia em que alguém corrigir o boxoffice, sem ninguém
 precisar lembrar de conferir. A lição 6 lê a tabela de baixo linha por linha.

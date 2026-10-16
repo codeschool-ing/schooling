@@ -53,13 +53,13 @@ ana@laptop:~/boxoffice$ node -e 'const c = JSON.parse(Buffer.from(process.argv[1
 ```
 
 900 segundos entre a emissão e a expiração, o `expires_in` da seção 03, e o momento em que ele para
-de funcionar, no horário local. **Duas verificações que quem testa faz em todo token**: a duração é
+de funcionar, no horário local. **Duas verificações que quem testa faz em todo token.** A duração é
 a que a API documenta, e o escopo não é mais amplo do que o concedido ao cliente.
 
 ## Mudando uma claim
 
 Já que qualquer um lê um token, qualquer um também consegue editá-lo. O cliente `auditor` só pode
-ler; pegue um token dele e reescreva o escopo para que ele diga que também escreve. Primeiro o token
+ler. Pegue um token dele e reescreva o escopo para que ele diga que também escreve. Primeiro o token
 do auditor, do jeito que a seção 03 buscou o outro:
 
 ```
@@ -81,13 +81,13 @@ HTTP/1.1 401 Unauthorized
 www-authenticate: Bearer error="invalid_token", error_description="bad signature"
 ```
 
-`bad signature`. A assinatura foi feita sobre o cabeçalho e o payload originais; o boxoffice a
+`bad signature`. A assinatura foi feita sobre o cabeçalho e o payload originais. O boxoffice a
 recalculou sobre os editados, as duas diferem, e o token é recusado antes mesmo de as claims serem
 lidas. Este é o teste mais importante da lição: **um servidor que aceitasse um token editado
 deixaria todo cliente se dar qualquer escopo**. O companheiro dele é um token cujo cabeçalho diz
 `"alg": "none"` e cuja assinatura está vazia, que uma biblioteca descuidada trata como dispensado de
 conferência. O `readToken` do `boxoffice.mjs` nunca olha o `alg` e sempre recalcula a própria
-assinatura, então recusaria esse também; contra uma API cujo código você não pode ler, você manda e
+assinatura, então recusaria esse também. Contra uma API cujo código você não pode ler, você manda e
 vê.
 
 ## O que reiniciar faz com um token
@@ -134,9 +134,9 @@ HTTP/1.1 401 Unauthorized
 www-authenticate: Bearer error="invalid_token", error_description="token expired"
 ```
 
-O mesmo token, um `201` e depois um `401`, e o cabeçalho `www-authenticate` diz por quê: `token
-expired`. Um teste de expiração não precisa da duração real, só de um servidor configurado para
-encurtá-la, que é exatamente para o que serve uma configuração como `TOKEN_TTL`. Reinicie o
+O mesmo token, um `201` e depois um `401`, e o cabeçalho `www-authenticate` diz por quê:
+`token expired`. Um teste de expiração não precisa da duração real, só de um servidor configurado
+para encurtá-la, que é exatamente para o que serve uma configuração como `TOKEN_TTL`. Reinicie o
 boxoffice mais uma vez com um `node boxoffice.mjs` simples antes de seguir, e busque o `TOKEN` de
-novo: o que você tinha foi emitido por um servidor cujos tokens viviam quinze minutos, e pode ter
+novo. O que você tinha foi emitido por um servidor cujos tokens viviam quinze minutos, e pode ter
 acabado a esta altura.

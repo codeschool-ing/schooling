@@ -30,18 +30,18 @@ fails if any of them is not honoured.
 The picture is the reason the idea exists. The schema's column covers every field. The Tickets app
 reads three of them. A ticket kiosk the theatre is planning needs a field boxoffice has never had.
 From those columns the provider team can read two things no schema shows. **It may change `id` and
-`price_cents` freely**, as far as these consumers go: no contract reads them, so renaming them breaks
-nobody who wrote one down. And it is being asked for something: the kiosk's `venue` is a request,
-found on the provider's side before the kiosk ships, as a failed check rather than as a support
-ticket.
+`price_cents` freely**, as far as these consumers go: no contract reads them, so renaming them
+breaks nobody who wrote one down. And it is being asked for something. The kiosk's `venue` is a
+request, found on the provider's side before the kiosk ships, as a failed check rather than as a
+support ticket.
 
 ## What it costs, and what it does not replace
 
 Contracts only cover consumers who write them. A public API with strangers for clients cannot ask
 them all, which is why consumer-driven contracts fit best inside an organisation, where the
 consumers are known teams. The contracts also have to travel from the consumers to the provider's
-build; teams that use Pact usually run a *Pact Broker*, a server that stores the contracts and the
-verification results, or the hosted PactFlow. This course passes the file by hand.
+build. Teams that use Pact usually run a *Pact Broker*, a server that stores the contracts and the
+verification results, or use the hosted PactFlow. This course passes the file by hand.
 
 None of it replaces the schema or the end-to-end test. The schema checks everything the provider
 sends, the contract checks what each consumer relies on, and lesson 12's integration tests check

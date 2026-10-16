@@ -3,12 +3,11 @@ title: Given, when, then
 version: 1
 ---
 
-**Um teste do REST Assured é uma frase em três partes, e cada parte é uma parte de uma troca
-HTTP.** `given()` descreve a requisição: para onde vai, os cabeçalhos, os parâmetros, o corpo.
-`when()` diz o método e o caminho, e a envia. `then()` lista como a resposta tem de ser. As
-palavras vêm do jeito como testadores escreviam comportamento muito antes desta biblioteca
-existir, e o REST Assured as pegou emprestadas para que um teste se leia na ordem em que uma
-pessoa pensa nele.
+**Um teste do REST Assured é uma frase em três partes, e cada parte é uma parte de uma troca HTTP.**
+`given()` descreve a requisição: para onde vai, os cabeçalhos, os parâmetros, o corpo. `when()` diz
+o método e o caminho, e a envia. `then()` lista como a resposta tem de ser. As palavras vêm do jeito
+como testadores escreviam comportamento muito antes desta biblioteca existir. O REST Assured as
+pegou emprestadas para que um teste se leia na ordem em que uma pessoa pensa nele.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 700 250\" role=\"img\" aria-label=\"Um teste do REST Assured tem três partes. given() descreve a requisição e when() a envia, como GET /v1/shows?date=… ao boxoffice. O boxoffice responde com um status, cabeçalhos e JSON, e then() confere essa resposta.\"><defs><marker id=\"f07chain-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"95\" y=\"14\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">no teste</text><text x=\"330\" y=\"14\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">na rede</text><rect x=\"20\" y=\"30\" width=\"150\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"95\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">given()</text><text x=\"95\" y=\"61\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">descreve a requisição</text><rect x=\"20\" y=\"100\" width=\"150\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"95\" y=\"116\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">when()</text><text x=\"95\" y=\"131\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">método, caminho: envia</text><rect x=\"20\" y=\"170\" width=\"150\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"95\" y=\"186\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">then()</text><text x=\"95\" y=\"201\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">confere a resposta</text><rect x=\"230\" y=\"46\" width=\"200\" height=\"54\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"330\" y=\"66\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">a requisição</text><text x=\"330\" y=\"81\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">GET /v1/shows?date=…</text><rect x=\"230\" y=\"150\" width=\"200\" height=\"54\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"330\" y=\"170\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">a resposta</text><text x=\"330\" y=\"185\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">200 · headers · JSON</text><rect x=\"530\" y=\"98\" width=\"150\" height=\"54\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"605\" y=\"118\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">servidor</text><text x=\"605\" y=\"133\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">boxoffice</text><line x1=\"170\" y1=\"53\" x2=\"228\" y2=\"66\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#f07chain-ah)\"></line><line x1=\"170\" y1=\"123\" x2=\"228\" y2=\"86\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#f07chain-ah)\"></line><line x1=\"430\" y1=\"73\" x2=\"528\" y2=\"112\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#f07chain-ah)\"></line><line x1=\"528\" y1=\"138\" x2=\"432\" y2=\"177\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#f07chain-ah)\"></line><line x1=\"228\" y1=\"182\" x2=\"172\" y2=\"192\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#f07chain-ah)\"></line><text x=\"330\" y=\"236\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">uma verificação que falha para o teste naquela linha</text></svg>", "caption": "given() e when() montam e enviam a requisição; then() confere o que voltou."}
@@ -157,7 +156,7 @@ o valor não satisfaz, é o matcher que escreve a mensagem. Estes são os que es
 | `matchesPattern(…)` | é um texto que a expressão regular casa inteiro | um `etag` sem aspas |
 
 **`contains` é o que as pessoas leem errado.** O nome soa como "tem isto entre outros", que é o
-`hasItems`. `contains` quer dizer a lista inteira, em ordem, e nada mais, então é o estrito, e o
+`hasItems`. `contains` quer dizer a lista inteira, em ordem, e nada mais, então é o estrito. É o
 certo para `aDateNarrowsTheList`: um filtro de data que também devolvesse o `sh-101` seria um
 defeito, e `hasItems("sh-103")` o deixaria passar.
 
@@ -224,7 +223,7 @@ Expected: a collection with size <4>
 ```
 
 Leia a partir da linha que cita o seu arquivo. `ShowsTest.theListHasThreeShows:29` é o teste e a
-linha da verificação que falhou, e a mensagem acima diz o resto: o matcher esperava `a collection
-with size <4>`, e o valor real é a lista dos três espetáculos, impressa inteira, para você ver o que
-voltou sem rodar mais nada. As linhas que começam com `at org.codehaus` são a maquinaria do próprio
-REST Assured, e você pode pulá-las. Volte o `3` antes de continuar.
+linha da verificação que falhou. A mensagem acima diz o resto: o matcher esperava
+`a collection with size <4>`, e o valor real é a lista dos três espetáculos. Ela vem impressa
+inteira, para você ver o que voltou sem rodar mais nada. As linhas que começam com `at org.codehaus`
+são a maquinaria do próprio REST Assured, e você pode pulá-las. Volte o `3` antes de continuar.

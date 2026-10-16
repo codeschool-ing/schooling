@@ -4,10 +4,10 @@ version: 1
 ---
 
 **A pipeline is a machine that runs your commands every time the code changes, and stops the change
-when a command exits with anything but 0.** Everything in it is something you could type. The work is
-in getting the order right: a fresh machine has no Newman, no boxoffice running and no `node_modules`,
-so the pipeline has to build each of those before the run, and keep the report after it whatever
-happened.
+when a command exits with anything but 0.** Everything in it is something you could type. The work
+is in getting the order right. A fresh machine has no Newman, no boxoffice running and no
+`node_modules`. The pipeline has to build each of those before the run, and keep the report after it
+whatever happened.
 
 This one is for GitHub Actions, which runs a workflow file kept in the repository. Make the directory
 with `mkdir -p .github/workflows`, then save it as `.github/workflows/api-tests.yml`:
@@ -88,9 +88,9 @@ repository's **Actions** tab.
   download from the run's page. `if: always()` runs it even after the step before failed, which is
   exactly when the report is wanted.
 
-boxoffice starts with its built-in lab secret here, because `.env` is ignored by git and never reaches
-the runner. A real service would take its secret from the repository's encrypted secrets, as lesson 3
-said, and so would the client secret in the environment file, passed to Newman with
+boxoffice starts with its built-in lab secret here, because `.env` is ignored by git and never
+reaches the runner. A real service would take its secret from the repository's encrypted secrets, as
+lesson 3 said. So would the client secret in the environment file, passed to Newman with
 `--env-var clientSecret=...` instead of written in a committed file.
 
 ## Why each action is pinned to a commit
@@ -233,9 +233,9 @@ exit code 1
 ```
 
 `npm ci` removed `node_modules` and installed it again from the lock, which is the clean start a
-runner has. boxoffice started, answered `/health`, and the run is the run of section 03, with one
-failure and exit code 1, which is what the pipeline will report until boxoffice answers `HEAD`.
-**A red pipeline here is the correct result**: it is the defect report of lesson 1, run on every push.
+runner has. boxoffice started and answered `/health`, and the run is the run of section 03: one
+failure and exit code 1. That is what the pipeline will report until boxoffice answers `HEAD`. **A
+red pipeline here is the correct result**: it is the defect report of lesson 1, run on every push.
 
 What the project should now hold, as git sees it:
 

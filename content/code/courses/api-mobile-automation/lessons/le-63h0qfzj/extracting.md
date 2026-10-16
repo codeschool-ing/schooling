@@ -111,30 +111,30 @@ class OrdersTest {
 
 ## The token, once for the class
 
-`askForAToken` is marked `@BeforeAll`, so JUnit runs it **once, before any test of the class**,
-and it is `static` because it runs before there is anything else to run it on. It is lesson 3's
-token request written in Java: `formParam` sends the fields as a form, the way `curl -d` did,
-and the answer is checked like any other before anything is taken out of it. Then
-`.extract().path("access_token")` reads one field and returns it, and the static field `token`
-keeps it for the tests below.
+`askForAToken` is marked `@BeforeAll`, so JUnit runs it **once, before any test of the class**, and
+it is `static` because it runs before there is anything else to run it on. It is lesson 3's token
+request written in Java. `formParam` sends the fields as a form, the way `curl -d` did, and the
+answer is checked like any other before anything is taken out of it. Then
+`.extract().path("access_token")` reads one field and returns it, and the static field `token` keeps
+it for the tests below.
 
-Checking before extracting is the point of the order. **A token taken from a `401` is `null`**,
-and every test after it fails with a message about orders, a long way from the cause; a
+Checking before extracting is the point of the order. **A token taken from a `401` is `null`**, and
+every test after it fails with a message about orders, a long way from the cause. A
 `statusCode(200)` in front of `extract()` makes the failure say what actually went wrong.
 
 ## An order, and the order read back
 
 `anOrderCanBeReadBack` makes three moves:
 
-1. `auth().oauth2(token)` adds `Authorization: Bearer` and the token, the header lesson 3
-   built by hand, and `contentType(ContentType.JSON)` labels the body, which lesson 1 showed
-   boxoffice refuses with `415` otherwise.
-2. The body is a **text block**, Java's way of writing text over several lines between `"""`
-   marks. The JSON in it is exactly what curl sent in lesson 1.
-3. `.extract().response()` keeps the whole response rather than one field, because the test
-   needs two things from it: the `id` from the body and the `location` header. The `GET` that
-   follows goes to that `location`, so the test also checks that the address the server gave
-   out works, which is one of the questions lesson 1 said to ask of a `201`.
+1. `auth().oauth2(token)` adds `Authorization: Bearer` and the token, the header lesson 3 built by
+   hand. `contentType(ContentType.JSON)` labels the body, which lesson 1 showed boxoffice refuses
+   with `415` otherwise.
+2. The body is a **text block**, Java's way of writing text over several lines between `"""` marks.
+   The JSON in it is exactly what curl sent in lesson 1.
+3. `.extract().response()` keeps the whole response rather than one field, because the test needs
+   two things from it: the `id` from the body and the `location` header. The `GET` that follows goes
+   to that `location`, so the test also checks that the address the server gave out works. Lesson 1
+   said to ask that of a `201`.
 
 The two other tests ask what the server refuses: an order with no token, which must be a `401`
 that says why in `www-authenticate`, and seven seats, one more than the rule allows.

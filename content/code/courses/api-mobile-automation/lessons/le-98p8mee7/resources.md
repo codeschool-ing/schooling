@@ -3,11 +3,11 @@ title: Resources, addresses, and a request that stands alone
 version: 1
 ---
 
-**REST is a way of laying out an API: every thing the API knows about is a resource, every
-resource has an address, and the methods of HTTP are the only verbs.** It is a style, described by
-Roy Fielding in 2000, and not a standard anybody certifies. Most APIs that call themselves REST
-follow part of it, and that part is the one a tester meets every day: nouns in the path, verbs in
-the method.
+**REST is a way of laying out an API.** Every thing the API knows about is a resource, every
+resource has an address, and the methods of HTTP are the only verbs. It is a style, described by Roy
+Fielding in 2000, and not a standard anybody certifies. Most APIs that call themselves REST follow
+part of it, and that part is the one a tester meets every day: nouns in the path, verbs in the
+method.
 
 A common first picture is an API as a list of functions with odd names, `getShows`,
 `createOrder`, `cancelOrder`. boxoffice has no such names anywhere. It has things, and you act on
@@ -20,9 +20,9 @@ them with the method:
 | `/v1/orders` | the collection of orders | `POST` adds one |
 | `/v1/orders/ord-1001` | one order | `GET` reads it, `DELETE` cancels it |
 
-The `v1` at the front is the version of the API. A change that would break existing clients
-goes under `/v2/`, and the old address keeps answering for the clients nobody can update, such as
-an app on a phone that was never upgraded.
+The `v1` at the front is the version of the API. A change that would break existing clients goes
+under `/v2/`. The old address keeps answering for the clients nobody can update, such as an app on a
+phone that was never upgraded.
 
 ## A collection, and a filter on it
 
@@ -45,8 +45,8 @@ ana@laptop:~/boxoffice$ curl -s 'localhost:8080/v1/shows?date=2026-11-07' | jq -
 ```
 
 The path says *which* resource; the query says *which part of it*. A tester treats each query
-parameter as an input of its own, with valid values, invalid ones and a boundary, and section 06
-comes back to this one.
+parameter as an input of its own, with valid values, invalid ones and a boundary. Section 06 comes
+back to this one.
 
 ## Creating, and being told where
 
@@ -71,9 +71,9 @@ The new order is a resource in its own right now, at the address the server name
 ## Every request carries everything
 
 **A REST server keeps no memory of the conversation between requests.** That property is called
-statelessness, and the wrong picture of it is a website you log in to once, after which every page
-knows who you are. boxoffice knows who you are only for the length of one request, and only
-because that request said so:
+statelessness. The wrong picture of it is a website you log in to once, after which every page knows
+who you are. boxoffice knows who you are only for the length of one request, and only because that
+request said so:
 
 ```
 ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders/ord-1001 -H "authorization: Bearer $TOKEN"
@@ -82,13 +82,13 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders/ord-1001
 {"type":"about:blank","title":"Unauthorized","status":401,"detail":"no bearer token"}
 ```
 
-The same address, one request after the other, from the same terminal. The first request carried the token and
-got the order; the second did not, and boxoffice had no idea it had just answered the same client.
-Nothing about the first request survived into the second.
+The same address, one request after the other, from the same terminal. The first request carried the
+token and got the order; the second did not, and boxoffice had no idea it had just answered the same
+client. Nothing about the first request survived into the second.
 
-**This is what makes an API test possible on its own.** Every request holds the whole question,
-so it can be sent by any program, in any order, any number of times, and its answer depends only on
-what it says and on the data the server holds, never on which request came before it. A test of
+**This is what makes an API test possible on its own.** Every request holds the whole question, so
+any program can send it, in any order, any number of times. Its answer depends only on what it says
+and on the data the server holds, never on which request came before it. A test of
 `GET /v1/orders/ord-1001` needs a token and an order to exist; it does not need a sequence of
 screens replayed to reach the right state.
 

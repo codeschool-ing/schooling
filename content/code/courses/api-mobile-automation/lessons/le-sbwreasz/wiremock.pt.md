@@ -8,7 +8,7 @@ Cada resposta é um *mapping*, um arquivo JSON que diz que requisições ele ace
 volta. O WireMock lê um diretório deles, responde o que casa, registra tudo o que recebe e diz em
 detalhe quando uma requisição não casou com nada. Ele é escrito em Java, é livre e de código aberto,
 sob a licença Apache. Roda como biblioteca dentro de um teste Java, como os testes REST Assured da
-lição 7 poderiam usar, ou como servidor sozinho, que é como esta seção o roda.
+lição 7 poderiam usar. Também roda como servidor sozinho, que é como esta seção o roda.
 
 ## Dois mappings
 
@@ -63,9 +63,9 @@ linha por linha:
 | `bodyPatterns` | `matchesJsonPath` | um corpo em que esse JSONPath encontra algo: um campo que existe, ou um filtro que vale |
 | `priority` | 1 e 5 | quando dois mappings casam, **o número menor vence** |
 
-O pedido de seis lugares do sh-101, 48000 centavos, casa com os dois arquivos. A prioridade 1 escolhe
-a recusa, e sem ela o WireMock escolheria pela regra dele, o mapping acrescentado mais recentemente,
-que não é uma regra da qual você quer que um teste dependa.
+O pedido de seis lugares do sh-101, 48000 centavos, casa com os dois arquivos. A prioridade 1
+escolhe a recusa. Sem ela, o WireMock escolheria pela regra dele, o mapping acrescentado mais
+recentemente, e essa não é uma regra da qual você quer que um teste dependa.
 
 ## Iniciando
 
@@ -143,11 +143,12 @@ $[?(@.amount_cents > 40000)]                               | {"amount":16000,"re
 -----------------------------------------------------------------------------------------------------------------------
 ```
 
-A coluna da esquerda é o mapping mais próximo, a da direita é a requisição, e a linha com `<<<<<` é a
-diferença. O WireMock escolheu o mapping de recusa como o mais próximo porque ele tem menos condições
-para falhar, e os dois mappings recusaram o corpo pelo mesmo motivo: nenhum dos JSONPath encontra um
-`amount_cents`. Quando um teste falha porque o substituto "não respondeu", este relatório é a
-primeira coisa a ler, e em geral ele transforma o problema numa correção de uma palavra.
+A coluna da esquerda é o mapping mais próximo, a da direita é a requisição, e a linha com `<<<<<` é
+a diferença. O WireMock escolheu o mapping de recusa como o mais próximo porque ele tem menos
+condições para falhar. Os dois mappings recusaram o corpo pelo mesmo motivo: nenhum dos JSONPath
+encontra um `amount_cents`. Quando um teste falha porque o substituto "não respondeu", este
+relatório é a primeira coisa a ler, e em geral ele transforma o problema numa correção de uma
+palavra.
 
 ## O boxoffice, apontado para o WireMock
 
@@ -166,7 +167,7 @@ ana@laptop:~/boxoffice$ PAYMENTS_URL=http://localhost:8091 node boxoffice.mjs
 boxoffice listening on http://localhost:8080
 ```
 
-O seu token da seção 03 continua valendo, embora o boxoffice tenha reiniciado: um token é conferido
+O seu token da seção 03 continua valendo, embora o boxoffice tenha reiniciado. Um token é conferido
 pela assinatura e pela validade, e nada sobre ele ficou guardado na memória que o reinício apagou.
 Peça dois lugares, depois seis:
 

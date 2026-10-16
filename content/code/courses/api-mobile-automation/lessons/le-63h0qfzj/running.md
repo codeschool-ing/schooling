@@ -4,8 +4,8 @@ version: 1
 ---
 
 **`mvn test` runs every test class the project has, and a failure is the part of the output worth
-reading.** This section adds the test that fails, reads what it prints, finds the reports a
-pipeline reads, and then removes two blocks from the `pom.xml` to show the most dangerous result a
+reading.** This section adds the test that fails, reads what it prints and finds the reports a
+pipeline reads. Then it removes two blocks from the `pom.xml` to show the most dangerous result a
 test run can give: a success that tested nothing.
 
 ## The test that fails on purpose
@@ -100,16 +100,16 @@ ana@laptop:~/boxoffice/restassured$ echo $?
 
 Read it in four blocks, from the top:
 
-1. **The request and the response**, printed because `HeadTest` uses `Api.ANYONE` and a check
-   failed. `Request method: HEAD` and the URI are what was sent; `HTTP/1.1 405 Method Not
-   Allowed` with `allow: GET` is what came back. That is the evidence a defect report needs,
-   produced by the failing run itself.
-2. **The failure**: `Expected status code <200> but was <405>`, and under it the stack trace. Look
-   for the one line that names your own file, `HeadTest.java:19`, and skip the rest.
-3. **The summary**: `Tests run: 11, Failures: 1`. Eleven is one in `HealthTest`, five in
-   `ShowsTest`, four in `OrdersTest` and this one.
-4. **The exit code**, `1`. A pipeline reads that number and nothing else, which is how one red
-   test stops a merge, as lesson 6 did with Newman.
+1. The request and the response, printed because `HeadTest` uses `Api.ANYONE` and a check failed.
+   `Request method: HEAD` and the URI are what was sent; `HTTP/1.1 405 Method Not Allowed` with
+   `allow: GET` is what came back. That is the evidence a defect report needs, produced by the
+   failing run itself.
+2. The failure: `Expected status code <200> but was <405>`, and under it the stack trace. Look for
+   the one line that names your own file, `HeadTest.java:19`, and skip the rest.
+3. The summary: `Tests run: 11, Failures: 1`. Eleven is one in `HealthTest`, five in `ShowsTest`,
+   four in `OrdersTest` and this one.
+4. The exit code, `1`. A pipeline reads that number and nothing else, which is how one red test
+   stops a merge, as lesson 6 did with Newman.
 
 A **failure** is a check that did not hold. Maven also counts **errors**, a test that could not
 finish at all, such as one whose server was not running: the request throws before any check is
@@ -133,10 +133,10 @@ ana@laptop:~/boxoffice/restassured$ grep '<testcase' target/surefire-reports/TES
   <testcase name="anOrderCanBeReadBack" classname="boxoffice.OrdersTest" time="0.118"/>
 ```
 
-The `.txt` files are the summary you read above. The `TEST-….xml` files are in the JUnit XML
-format, the same one lesson 6 asked Newman for, and it is what a CI server reads to draw its list
-of tests: one `<testcase>` per method, with a `<failure>` inside the ones that failed. Their order
-here is the order the tests ran, which is again not the order of the file.
+The `.txt` files are the summary you read above. The `TEST-….xml` files are in the JUnit XML format,
+the same one lesson 6 asked Newman for. A CI server reads it to draw its list of tests: one
+`<testcase>` per method, with a `<failure>` inside the ones that failed. Their order here is the
+order the tests ran, which is again not the order of the file.
 
 To run less than everything, `-Dtest` takes a class, or a class and a method after `#`:
 
@@ -244,7 +244,7 @@ longer accepts.
 ```
 
 A newer Maven ships newer default plugins, and those find the tests. That does not make the pins
-unnecessary; it means the result of the same project depends on which Maven is installed, on your
+unnecessary. It means the result of the same project depends on which Maven is installed, on your
 laptop, on a colleague's and on the pipeline's machine. **Read the count of tests, never only the
-colour of the build.** A suite of eleven tests that reports zero is a broken suite, and the habit
-of checking that number is what catches it on the day somebody tidies a `pom.xml`.
+colour of the build.** A suite of eleven tests that reports zero is a broken suite. Checking that
+number is the habit that catches it on the day somebody tidies a `pom.xml`.

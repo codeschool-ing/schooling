@@ -3,10 +3,10 @@ title: The contract, written down
 version: 1
 ---
 
-**A contract is the API's promise to its clients, written where both sides can read it: which
-addresses exist, what each one accepts, and every answer it may give.** Without one, the only
-statement of what boxoffice does is boxoffice itself, and a test can then only check that the
-server does what the server does. That test passes forever and finds nothing.
+**A contract is the API's promise to its clients, written where both sides can read it.** It says
+which addresses exist, what each one accepts, and every answer it may give. Without one, the only
+statement of what boxoffice does is boxoffice itself. A test can then only check that the server
+does what the server does. That test passes forever and finds nothing.
 
 The common belief is that the code is the truth and the document is a description of it, drafted
 afterwards and allowed to lag. A tester takes the opposite view. **The contract is what was
@@ -19,13 +19,13 @@ document. Either way the disagreement is a finding, and section 06 finds three.
 
 Two kinds of program depend on the contract and never on each other's code. The **consumer** is
 anything that calls the API: an app, a website, a test. The **provider** is the server that answers.
-The consumer is built against the document, the provider is checked against it, and when both hold
-to it they work together without either team reading the other's source.
+The consumer is built against the document and the provider is checked against it. When both hold to
+it, they work together without either team reading the other's source.
 
 ## OpenAPI
 
 The usual language for an HTTP contract is OpenAPI, a document in YAML or JSON. This one is written
-in version 3.1, which the tools in this course understand: Postman imports it, lesson 10 checks
+in version 3.1, which the tools in this course understand. Postman imports it, lesson 10 checks
 responses against schemas like the ones inside it, and the mock server of lesson 11 runs from it
 directly. Here is boxoffice's. Copy it with the button on its block, then open your editor in the
 project directory, paste it and save it as `openapi.yaml`:
@@ -308,8 +308,8 @@ character breaks YAML, which is a good reason to copy the file rather than retyp
 
 ## How to read it
 
-The file has four parts. `info` and `servers` say what it describes and where; `paths` lists every
-address and what each method does there; `components` holds the pieces several paths share, which a
+The file has four parts. `info` and `servers` say what it describes and where. `paths` lists every
+address and what each method does there. `components` holds the pieces several paths share, which a
 path points at with `$ref`. Most of the reading happens under `paths`, and the operation that buys
 seats has every kind of entry in it:
 
@@ -318,10 +318,10 @@ seats has every kind of entry in it:
 ```
 
 Reading a contract is answering one question per request: **for this input, which answers are
-allowed?** For `POST /v1/orders` the file says a body with `show_id` and between 1 and 6 seats, and
-nothing else, can be answered with a `201` and a `location`; every other answer is one of nine error
-codes, all in the same shape. A response outside that list, a `500` for instance, breaks the contract whatever its body
-says.
+allowed?** For `POST /v1/orders`, the file says a body with `show_id` and between 1 and 6 seats, and
+nothing else, can be answered with a `201` and a `location`. Every other answer is one of nine error
+codes, all in the same shape. A response outside that list, a `500` for instance, breaks the
+contract whatever its body says.
 
 ## Checking one promise by hand
 

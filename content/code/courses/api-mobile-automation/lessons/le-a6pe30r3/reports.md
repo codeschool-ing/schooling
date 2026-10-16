@@ -91,14 +91,14 @@ boxoffice.head.html   boxoffice.orders.html  boxoffice.shows.html
 boxoffice.match.html  boxoffice.seats.html
 ```
 
-Open `karate-summary.html` in a browser. For this course it was opened in a headless Chromium
-rather than by hand, so it is described here rather than shown. The summary page lists each feature
-with its number of scenarios passed and failed, and the failed scenario, `HEAD on a show`, in a
-list of failures at the top. Each feature has a page of its own in `feature-html`, and on it each
-step of each scenario is a line with the time it took. Under `When method head` there is a `log`
-to open, and it holds the request Karate sent and the response it got.
+Open `karate-summary.html` in a browser. For this course it was opened in a headless Chromium rather
+than by hand, so it is described here rather than shown. The summary page lists each feature with
+its number of scenarios passed and failed. The failed scenario, `HEAD on a show`, sits in a list of
+failures at the top. Each feature has a page of its own in `feature-html`, and on it each step of
+each scenario is a line with the time it took. Under `When method head` there is a `log` to open,
+and it holds the request Karate sent and the response it got.
 
-**That log is the evidence for a defect report**, and also the check section 05 asked for: before
+**That log is the evidence for a defect report.** It is also the check section 05 asked for: before
 calling a red scenario a defect of the server, open the step that sent the request and read what
 went out. The token on the auditor's request would have been there, plainly the wrong one.
 

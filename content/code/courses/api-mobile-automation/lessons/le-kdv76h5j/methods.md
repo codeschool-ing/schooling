@@ -43,8 +43,8 @@ Transfer-Encoding: chunked
 ```
 
 That is the right refusal. `405 Method Not Allowed` says the address exists and the method is not
-accepted there, and the `allow` header lists what is, which the standard requires with a 405. A
-`404` here would be wrong, because the show exists, and a `200` would be alarming.
+accepted there. The `allow` header lists what is, and the standard requires it with a 405. A `404`
+here would be wrong, because the show exists, and a `200` would be alarming.
 
 ## The first defect
 
@@ -61,12 +61,12 @@ Connection: keep-alive
 Keep-Alive: timeout=5
 ```
 
-boxoffice refuses it, and the refusal contradicts itself: the `allow` header says `GET` is fine,
-and the standard is explicit that **every general-purpose server must support `GET` and `HEAD`**
-(RFC 9110, §9.1). This is a defect, and a typical one: nothing on any screen will ever show
-it, nobody wrote a case for it, and it was found by asking the API a question nobody else asks.
+boxoffice refuses it, and the refusal contradicts itself. The `allow` header says `GET` is fine, and
+the standard is explicit that **every general-purpose server must support `GET` and `HEAD`** (RFC
+9110, §9.1). This is a defect, and a typical one. Nothing on any screen will ever show it and nobody
+wrote a case for it. It was found by asking the API a question nobody else asks.
 
-If you took `manual-testing`, this is the moment to write it up the way that course taught: what
-you sent, what came back, what the standard says should have come back, and the evidence, which is
-the transcript above. The fix is a few lines in boxoffice, and the course leaves it unfixed so you
-can watch the tests of later lessons catch it.
+If you took `manual-testing`, write it up now the way that course taught. Say what you sent, what
+came back and what the standard says should have come back, and give the evidence, which is the
+transcript above. The fix is a few lines in boxoffice, and the course leaves it unfixed so you can
+watch the tests of later lessons catch it.

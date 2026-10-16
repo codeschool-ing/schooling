@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Um teste deve falhar quando a API está errada, e só então.** Um teste que também falha quando o
-relógio anda, quando outro teste rodou antes ou quando o servidor acrescenta um campo inofensivo é um
-teste que as pessoas aprendem a ignorar, e um teste ignorado não pega nada. A causa de costume é
+relógio anda, quando outro teste rodou antes ou quando o servidor acrescenta um campo inofensivo é
+um teste que as pessoas aprendem a ignorar. Um teste ignorado não pega nada. A causa de costume é
 afirmar algo que a API nunca prometeu.
 
 Esta coleção erra de propósito, três vezes. Salve como `postman/brittle.postman_collection.json`:
@@ -195,19 +195,20 @@ seção 04.
 
 ## O corpo inteiro
 
-`eql` contra o corpo inteiro repete o problema do id em cada campo, e acrescenta um problema próprio:
-falha no dia em que o boxoffice acrescenta um campo, como um `created_at`, que nenhum cliente lê.
-**Afirme os campos de que o teste trata.** O Create order da coleção confere `show_id`, `seats` e
-`status`, porque é isso que a requisição pediu. `total_cents` e `payment` merecem testes também, mas
-testes próprios, com nomes que digam que regra conferem: o preço vezes os lugares, a referência do
-pagamento.
+`eql` contra o corpo inteiro repete o problema do id em cada campo, e acrescenta um problema
+próprio. Ele falha no dia em que o boxoffice acrescenta um campo, como um `created_at`, que nenhum
+cliente lê. **Afirme os campos de que o teste trata.** O Create order da coleção confere `show_id`,
+`seats` e `status`, porque é isso que a requisição pediu. `total_cents` e `payment` merecem testes
+também, mas testes próprios, com nomes que digam que regra conferem: o preço vezes os lugares, a
+referência do pagamento.
 
 ## O cabeçalho Date
 
-O terceiro teste passou nas duas vezes, e é o pior dos três. Ele confere que o cabeçalho `Date` contém
-`10 Oct 2026`, o que é verdade no dia em que as transcrições foram gravadas e falso em qualquer outro:
-**quem rodar hoje vai vê-lo falhar já na primeira execução.** `Date` é quando o servidor respondeu.
-Um teste pode conferir que ele existe e que é uma data válida; o valor pertence ao relógio.
+O terceiro teste passou nas duas vezes, e é o pior dos três. Ele confere que o cabeçalho `Date`
+contém `10 Oct 2026`, o que é verdade no dia em que as transcrições foram gravadas e falso em
+qualquer outro. **Quem rodar hoje vai vê-lo falhar já na primeira execução.** `Date` é quando o
+servidor respondeu. Um teste pode conferir que ele existe e que é uma data válida; o valor pertence
+ao relógio.
 
 ## A mesma regra, em quatro linhas
 

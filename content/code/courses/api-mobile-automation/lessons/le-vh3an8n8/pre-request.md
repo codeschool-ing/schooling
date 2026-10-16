@@ -24,12 +24,12 @@ random identifier. `replaceIn` resolves it now, and `pm.variables.set` keeps the
 result in the local scope, which lives for this one request. The request's header
 `Idempotency-Key: {{idempotencyKey}}` then sends it.
 
-The key is the client's promise that a repeated request is the same request: boxoffice remembers a key
-with the reply it gave, and answers a second request with that key by replaying the first reply
-instead of selling the seat again. **That is exactly why a test must not reuse one.** A collection
-with a fixed key in its header would create an order on its first run, and on every later run against
-the same boxoffice it would be handed the first run's order back, every test passing, no new order
-made. Lesson 13 tests idempotency itself, including a defect in how boxoffice keeps its promise.
+The key is the client's promise that a repeated request is the same request. boxoffice remembers a
+key with the reply it gave. A second request with that key gets the first reply again, and no second
+seat is sold. **That is exactly why a test must not reuse one.** A collection with a fixed key in
+its header would create an order on its first run. On every later run against the same boxoffice it
+would be handed the first run's order back: every test passing, no new order made. Lesson 13 tests
+idempotency itself, including a defect in how boxoffice keeps its promise.
 
 ## A token, only when needed
 
@@ -42,8 +42,8 @@ if (!pm.collectionVariables.get('token') || Date.now() >= expires) {
 ```
 
 It asks for a token only when there is none, or when the time saved by **Get token** has passed.
-`pm.sendRequest` sends that request from inside the script, the same `POST /oauth/token` with the
-client's id and secret from the environment, and its callback saves the answer exactly as Get token
+`pm.sendRequest` sends that request from inside the script: the same `POST /oauth/token`, with the
+client's id and secret from the environment. Its callback saves the answer exactly as Get token
 does. If the answer is not a `200`, it throws, and the error names the status.
 
 Two runs show why it is there:
@@ -58,7 +58,7 @@ Two runs show why it is there:
 The thirty seconds taken off the expiry are a margin. A token that expires while a request is on its
 way is refused, and a margin costs one extra token request now and then.
 
-**A pre-request script is code in your test that nobody tests.** Keep it short, keep it in one place,
-the collection rather than a copy per request, and make it fail loudly, as this one does with
+**A pre-request script is code in your test that nobody tests.** Keep it short and keep it in one
+place, the collection rather than a copy per request. Make it fail loudly, as this one does with
 `throw`. A script that swallowed a refused token would send every order without one and leave you
 reading a column of `401`s for the cause.

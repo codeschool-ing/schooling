@@ -57,10 +57,10 @@ if (validate(data)) {
 }
 ```
 
-Três detalhes carregam o peso. **`Ajv2020` é a versão para o draft 2020-12**; a classe `Ajv` padrão lê
-o draft-07 e recusaria a linha `$schema`. `allErrors: true` relata toda regra quebrada em vez de parar
-na primeira, que é o que quer quem lê uma falha. E **o código de saída é 1 numa falha**, para que um
-script de shell ou um passo de pipeline perceba a diferença sem ler o texto.
+Três detalhes carregam o peso. **`Ajv2020` é a versão para o draft 2020-12.** A classe `Ajv` padrão
+lê o draft-07 e recusaria a linha `$schema`. `allErrors: true` relata toda regra quebrada em vez de
+parar na primeira, que é o que quer quem lê uma falha. E **o código de saída é 1 numa falha**, para
+que um script de shell ou um passo de pipeline perceba a diferença sem ler o texto.
 
 O boxoffice está rodando no terminal dele, como em toda lição. O espetáculo com que ele responde:
 
@@ -150,7 +150,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders/ord-1001 -H "authorizat
 valid against Order
 ```
 
-A outra direção também acontece, e é o motivo de os schemas valerem o que custam: um campo que volta
-como string onde o contrato diz inteiro, um `null` onde um valor é obrigatório, um campo que nunca
-deveria ter saído do servidor. Os três são defeitos da API, e cada um reprova um schema exatamente do
-jeito acima.
+A outra direção também acontece, e é o motivo de os schemas valerem o que custam. Um campo volta
+como string onde o contrato diz inteiro, um `null` chega onde um valor é obrigatório, ou sai do
+servidor um campo que nunca deveria ter saído. Os três são defeitos da API, e cada um reprova um
+schema exatamente do jeito acima.

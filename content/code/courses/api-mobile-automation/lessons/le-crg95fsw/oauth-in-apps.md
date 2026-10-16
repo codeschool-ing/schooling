@@ -12,7 +12,7 @@ the sequence and what a tester checks at each step.
 The wrong picture is an app holding a `client_secret` the way `ci-tests` does. Anything shipped
 inside an app can be pulled out of it: an Android package is a zip file, and the strings in it can
 be listed in minutes. A secret in an app is a secret every user has a copy of. So the app is a
-**public client**, it has an id and no secret, and it proves itself a different way, one login at a
+**public client**: it has an id and no secret, and it proves itself a different way, one login at a
 time.
 
 ## The sequence

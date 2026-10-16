@@ -5,7 +5,7 @@ version: 1
 
 **O Newman é um programa Node que roda uma coleção do Postman pela linha de comando**, com os mesmos
 scripts e as mesmas regras de variáveis do aplicativo. A lição 5 já o usou, buscado pelo `npx` para
-um cache em cada máquina. Isso serve para experimentar e é errado para um projeto: a versão vivia só
+um cache em cada máquina. Isso serve para experimentar e é errado para um projeto. A versão vivia só
 num comando que alguém digitou, e um colega, ou um pipeline, teria de digitar o mesmo. **Um projeto
 nomeia as suas ferramentas num arquivo**, para que quem o baixar receba as mesmas.
 
@@ -87,8 +87,8 @@ que só roda nas suas próprias máquinas.
 O que quem testa faz no lugar disso é pesar onde o código roda. O Newman aqui é uma dependência de
 desenvolvimento: roda na sua máquina e no seu pipeline, contra um servidor que você iniciou, lendo
 uma coleção que você escreveu. Ele nunca chega a um usuário. **Então o achado fica registrado, a
-versão continua fixada, e a próxima versão do Newman é conferida em busca de correção**, o que é uma
-decisão, e não um hábito de ignorar texto vermelho. Uma dependência que fosse junto dentro do
+versão continua fixada, e a próxima versão do Newman é conferida em busca de correção.** Isso é uma
+decisão, onde ignorar texto vermelho seria um hábito. Uma dependência que fosse junto dentro do
 boxoffice, atendendo requisições de estranhos, receberia outra resposta.
 
 ## Um nome para a execução
@@ -114,7 +114,7 @@ entrada `scripts` por uma chamada `test:api` e salve como `package.json`:
 }
 ```
 
-O script é o comando que a lição 5 digitou, sem o `npx`: dentro de um script do npm, os programas em
+O script é o comando que a lição 5 digitou, sem o `npx`. Dentro de um script do npm, os programas em
 `node_modules/.bin` estão no caminho, então `newman` é o que este projeto instalou. Pergunte qual é:
 
 ```

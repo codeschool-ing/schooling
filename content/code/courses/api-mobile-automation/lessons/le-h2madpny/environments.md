@@ -61,9 +61,9 @@ for one reason: boxoffice prints the same secret in its own source and listens o
 requests. For a real API, leave the value empty in the file you share and type it into Postman on
 your machine only, for the reasons lesson 3 gave about secrets in files.
 
-Postman keeps two values for each variable for exactly that purpose: one that travels when the
-environment is exported or shared with a team, and one that stays on your computer. The app has
-renamed those two columns over its versions; what matters is which one a file carries, and an
+Postman keeps two values for each variable for exactly that purpose. One travels when the
+environment is exported or shared with a team, and the other stays on your computer. The app has
+renamed those two columns over its versions. What matters is which one a file carries, and an
 exported file carries only the shared one.
 
 ## Importing it
@@ -83,6 +83,6 @@ ana@laptop:~/boxoffice$ jq empty postman/lab.postman_environment.json
 jq: parse error: Expected separator between values at line 5, column 5
 ```
 
-jq names the line and column where it gave up, and the column is past the mistake rather than on
-it: the comma is missing at the end of line 4, and jq only noticed at the start of the next value.
+jq names the line and column where it gave up, and the column is past the mistake rather than on it.
+The comma is missing at the end of line 4, and jq only noticed at the start of the next value.
 Postman's own message is usually less precise, so run `jq empty` on the file first.

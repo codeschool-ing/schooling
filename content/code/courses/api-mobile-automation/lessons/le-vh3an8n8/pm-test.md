@@ -4,8 +4,8 @@ version: 1
 ---
 
 **A test is a name and a function, and it fails when the function throws.** That is the whole
-mechanism. `pm.test('status is 200', fn)` runs `fn`; if nothing inside it complains, Newman prints
-`Pass  status is 200`, and if something does, it prints a number and lists the failure at the end.
+mechanism. `pm.test('status is 200', fn)` runs `fn`. If nothing inside it complains, Newman prints
+`Pass  status is 200`; if something does, it prints a number and lists the failure at the end.
 Everything else in a Postman test is a way of complaining clearly.
 
 It helps to drop one belief early: a script that runs without error is not a passing test. Lines
@@ -38,7 +38,7 @@ the same line with `eql` passes.
 ## What a failure tells you
 
 A good test name is the claim, written so that a failure reads as a sentence. The run in section 02
-failed one test, and at the bottom of its output Newman wrote the name, `HEAD answers like GET`, and
+failed one test. At the bottom of its output Newman wrote the name, `HEAD answers like GET`, and
 under it `expected response to have status code 200 but got 405`.
 
 Together those two lines are a complete defect report: what was claimed,
@@ -48,6 +48,6 @@ the value itself, not on a comparison you made first**, and Chai writes the mess
 
 Two more habits, both visible in the collection. Name the test after what a reader would check, not
 after the code: *location says where it lives*, not *header test*. And keep the claims of one
-request in separate tests, so that one failure does not hide the next: **Create order** checks the
-status, the body and `location` in three tests, and when the status is wrong you still learn
-whether `location` was there.
+request in separate tests, so that one failure does not hide the next. **Create order** checks the
+status, the body and `location` in three tests, so when the status is wrong you still learn whether
+`location` was there.

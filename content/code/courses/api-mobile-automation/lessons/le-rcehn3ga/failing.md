@@ -33,7 +33,7 @@ has none.
 ## Stopping at the first failure
 
 `--bail` ends the run at the first failure instead of finishing it. Its terminal output carries a
-character the course's transcripts cannot show, so this run writes the JSON report of section 05
+character the course's transcripts cannot show. So this run writes the JSON report of section 05
 instead, and jq lists the requests that were actually sent:
 
 ```

@@ -3,15 +3,16 @@ title: Um provedor de pagamento só seu
 version: 1
 ---
 
-**O primeiro substituto tem umas sessenta linhas de Node, escritas para este curso, sem pacotes.** Ele
-faz o papel do provedor de pagamento que o boxoffice chama: recebe uma cobrança em `POST /charges` e
-responde `201` com um id e um status. Ele também faz as duas coisas que o provedor de verdade nunca
-faria. Responde do jeito que você mandar, e guarda uma lista de toda cobrança que recebeu.
+**O primeiro substituto tem umas sessenta linhas de Node, escritas para este curso, sem pacotes.**
+Ele faz o papel do provedor de pagamento que o boxoffice chama: recebe uma cobrança em
+`POST /charges` e responde `201` com um id e um status. Ele também faz as duas coisas que o provedor
+de verdade nunca faria. Responde do jeito que você mandar, e guarda uma lista de toda cobrança que
+recebeu.
 
-O que ele precisa imitar está fixado pelo próprio código do boxoffice, na função `charge`: um `POST`
-para `$PAYMENTS_URL/charges` com um corpo JSON contendo `amount_cents` e `reference`, um cabeçalho
-`idempotency-key`, uma resposta esperada em até dois segundos, e **qualquer coisa diferente de `201`
-tratada como falha**. Essa última regra volta na seção 06.
+O que ele precisa imitar está fixado pelo próprio código do boxoffice, na função `charge`. Ele manda
+um `POST` para `$PAYMENTS_URL/charges` com um corpo JSON contendo `amount_cents` e `reference`, e um
+cabeçalho `idempotency-key`. Ele espera uma resposta em até dois segundos, e **trata qualquer coisa
+diferente de `201` como falha**. Essa última regra volta na seção 06.
 
 Em `~/boxoffice`, abra um arquivo novo e salve como `payments-stub.mjs`:
 
@@ -79,9 +80,9 @@ http.createServer(async (req, res) => {
 }).listen(PORT, () => console.log(`payments stub listening on http://localhost:${PORT}, mode ${mode}`));
 ```
 
-O painel de controle dele são quatro requisições, separadas do endereço do próprio provedor por nomes
-que começam com dois sublinhados, uma convenção comum para "isto pertence ao substituto, não à coisa
-que ele imita":
+O painel de controle dele são quatro requisições, separadas do endereço do próprio provedor. Os
+nomes delas começam com dois sublinhados, uma convenção comum para "isto pertence ao substituto, não
+à coisa que ele imita":
 
 | requisição | faz |
 |---|---|
@@ -140,8 +141,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8090/__requests | jq
 ```
 
 Essa é a observação que o provedor de verdade nunca daria a você. O valor são dois lugares a 8000
-centavos, a referência é o id do pedido, e **a chave de idempotência também é o id do pedido**, porque
-a requisição não trouxe um `Idempotency-Key` próprio; o código do boxoffice diz `key || id`. A lição
+centavos, a referência é o id do pedido, e **a chave de idempotência também é o id do pedido**. A
+requisição não trouxe um `Idempotency-Key` próprio, e o código do boxoffice diz `key || id`. A lição
 13 é sobre essa chave.
 
 ## Uma falha, sob encomenda
@@ -170,7 +171,7 @@ POST /charges 201 (decline)
 
 Os outros dois modos, `slow` e `down`, fazem o boxoffice responder `504` e `502`; a lição 13 testa
 os dois, e o que um pedido que falhou deixa para trás. Um substituto que confiasse na própria
-configuração seria uma falha silenciosa esperando para acontecer, então este recusa um modo que não
+configuração seria uma falha silenciosa esperando para acontecer. Este recusa um modo que não
 conhece, antes de escutar qualquer coisa:
 
 ```

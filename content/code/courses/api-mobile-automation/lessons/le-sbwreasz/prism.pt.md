@@ -4,16 +4,16 @@ version: 1
 ---
 
 **O Prism lê um documento OpenAPI e responde como a API que ele descreve.** Ninguém escreve um
-mapping: todo caminho, parâmetro e status do `openapi.yaml` da lição 2 vira algo que o Prism responde,
-com corpos montados a partir dos schemas e dos exemplos deles. Ele também confere toda requisição
-contra o contrato e recusa a que o quebra, dizendo exatamente como. O Prism é feito pela Stoplight, é
-livre e de código aberto, e roda em Node.
+mapping. Todo caminho, parâmetro e status do `openapi.yaml` da lição 2 vira algo que o Prism
+responde, com corpos montados a partir dos schemas e dos exemplos deles. Ele também confere toda
+requisição contra o contrato e recusa a que o quebra, dizendo exatamente como. O Prism é feito pela
+Stoplight, é livre e de código aberto, e roda em Node.
 
-Vale dizer primeiro quem usa isto, porque não é quem testa o boxoffice. **Um mock do boxoffice serve a
-quem chama o boxoffice**: o time que constrói o app Tickets da lição 14 pode trabalhar contra o Prism
-antes de o boxoffice existir, ou enquanto ele está fora do ar, ou quando precisa de uma resposta que o
-boxoffice não dá sob encomenda. O interesse de quem testa está no que um mock assim pode e não pode
-prometer a eles.
+Vale dizer primeiro quem usa isto, porque não é quem testa o boxoffice. **Um mock do boxoffice serve
+a quem chama o boxoffice.** O time que constrói o app Tickets da lição 14 pode trabalhar contra o
+Prism antes de o boxoffice existir, ou enquanto ele está fora do ar, ou quando precisa de uma
+resposta que o boxoffice não dá sob encomenda. O interesse de quem testa está no que um mock assim
+pode e não pode prometer a eles.
 
 ## Qual Prism
 
@@ -40,11 +40,11 @@ Não pare nada: o boxoffice fica na 8080, e o Prism escuta na 4010. Num terminal
 npx --yes @stoplight/prism-cli@5.14.2 mock openapi.yaml
 ```
 
-Ele imprime uma linha para cada operação que encontrou no contrato, oito delas, e depois `Prism is
-listening on http://127.0.0.1:4010`; dali em diante, algumas linhas para cada requisição que trata,
-dizendo o que conferiu e que resposta escolheu. Vale ler essas linhas quando uma resposta surpreende.
-Elas não aparecem aqui, porque o Prism marca cada uma com símbolos que as transcrições do curso não
-conseguem desenhar.
+Ele imprime uma linha para cada operação que encontrou no contrato, oito delas, e depois
+`Prism is listening on http://127.0.0.1:4010`. Dali em diante ele imprime algumas linhas para cada
+requisição que trata, dizendo o que conferiu e que resposta escolheu. Vale ler essas linhas quando
+uma resposta surpreende. Elas não aparecem aqui, porque o Prism marca cada uma com símbolos que as
+transcrições do curso não conseguem desenhar.
 
 ## O que ele responde
 
@@ -66,8 +66,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:4010/v1/shows | jq
 ```
 
 **A forma está certa e o conteúdo é inventado.** Um espetáculo só, porque o schema diz que `shows` é
-um array e o Prism faz o menor possível; o id e a data são os valores de `example` escritos no
-contrato; o título é a palavra `string` e os números são `0`, porque nada melhor foi escrito. Um
+um array e o Prism faz o menor possível. O id e a data são os valores de `example` escritos no
+contrato. O título é a palavra `string` e os números são `0`, porque nada melhor foi escrito. Um
 pedido:
 
 ```
@@ -147,9 +147,9 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/
 ```
 
 O Prism recusa `seat_class`, porque o `NewOrder` do contrato diz `additionalProperties: false`; o
-boxoffice cria o pedido. Um time de cliente que desenvolve contra o Prism encontra o mais rigoroso dos
-dois, então essa divergência não surpreenderia ninguém em produção; ela só esconde que o servidor de
-verdade deixa erros passarem. Uma data que não é uma data:
+boxoffice cria o pedido. Um time de cliente que desenvolve contra o Prism encontra o mais rigoroso
+dos dois, então essa divergência não surpreenderia ninguém em produção. Ela só esconde que o
+servidor de verdade deixa erros passarem. Uma data que não é uma data:
 
 ```
 ana@laptop:~/boxoffice$ curl -si 'localhost:4010/v1/shows?date=tomorrow' | grep -iE '^HTTP|^sl-violations'
@@ -159,12 +159,12 @@ ana@laptop:~/boxoffice$ curl -s 'localhost:8080/v1/shows?date=tomorrow'
 {"shows":[]}
 ```
 
-O contrato declara `date` como `format: date` e lista um `400` para a lista de espetáculos, e o Prism
-responde isso. O boxoffice nunca confere o formato: responde `200` com uma lista vazia, então um
-cliente que mandou `tomorrow` em vez de `2026-11-07` ouve que não há espetáculos naquele dia. **Esta
-morde em produção**: um app construído contra o Prism mostra uma mensagem de erro para uma data
-malformada que o boxoffice nunca vai mandar. Ou o código aprende a recusar, ou o contrato para de
-prometer, e o relatório de quem testa diz que lado divergiu e deixa a escolha para quem é dono do
+O contrato declara `date` como `format: date` e lista um `400` para a lista de espetáculos, e o
+Prism responde isso. O boxoffice nunca confere o formato: responde `200` com uma lista vazia, então
+um cliente que mandou `tomorrow` em vez de `2026-11-07` ouve que não há espetáculos naquele dia.
+**Esta morde em produção**: um app construído contra o Prism mostra uma mensagem de erro para uma
+data malformada que o boxoffice nunca vai mandar. Ou o código aprende a recusar, ou o contrato para
+de prometer. O relatório de quem testa diz que lado divergiu e deixa a escolha para quem é dono do
 contrato.
 
 ## Escolhendo a resposta
@@ -177,7 +177,7 @@ ana@laptop:~/boxoffice$ curl -si localhost:4010/v1/orders -H 'authorization: Bea
 HTTP/1.1 409 Conflict
 ```
 
-Qualquer status que o contrato liste para aquela operação pode ser pedido assim, `402`, `502`, `504`,
-e é desse jeito que as telas de erro de um app são construídas antes de o servidor conseguir produzir
-qualquer um deles. Pare o Prism com Ctrl-C quando terminar: a seção 06 o inicia de novo, na mesma
-porta, num outro papel.
+Qualquer status que o contrato liste para aquela operação pode ser pedido assim: `402`, `502`,
+`504`. É desse jeito que as telas de erro de um app são construídas antes de o servidor conseguir
+produzir qualquer um deles. Pare o Prism com Ctrl-C quando terminar: a seção 06 o inicia de novo, na
+mesma porta, num outro papel.

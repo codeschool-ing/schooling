@@ -5,7 +5,7 @@ version: 1
 
 **Uma coleção são as requisições de uma API, em pastas, com o que elas compartilham escrito uma vez
 só.** Compartilhar quer dizer a autorização, as variáveis e, depois, os scripts da lição 5. Uma
-coleção também é uma ordem: quando ela roda inteira, as requisições vão de cima para baixo, pasta
+coleção também é uma ordem. Quando ela roda inteira, as requisições vão de cima para baixo, pasta
 por pasta, e é isso que deixa uma requisição usar o que outra anterior recebeu.
 
 A coleção do boxoffice tem três pastas e seis requisições. Salve como `postman/boxoffice.postman_collection.json`:
@@ -175,11 +175,11 @@ terminal dele, para que comece sem pedidos, e mande as requisições em ordem:
 4. **Read order** responde `200` para `ord-1001`, e **Cancel order** responde `204`.
 
 O passo 4 só funciona porque o boxoffice numera o primeiro pedido como `ord-1001` depois de
-reiniciar; reinicie de novo antes da próxima vez, ou edite `orderId` à mão. O passo 2 precisa ser
-repetido depois de 15 minutos, quando o token expira e toda requisição de pedido responde `401`.
-**Os dois passos manuais são o que a lição 5 elimina**: um script guarda o token e o `location` do
-pedido assim que chegam, e as requisições os leem dali.
+reiniciar. Reinicie de novo antes da próxima vez, ou edite `orderId` à mão. O passo 2 precisa ser
+repetido depois de 15 minutos, quando o token expira e toda requisição de pedido responde `401`. **A
+lição 5 elimina os dois passos manuais.** Um script guarda o token e o `location` do pedido assim
+que chegam, e as requisições os leem dali.
 
 O Runner, que o Postman abre pelo botão **Run** da coleção, manda as seis nessa ordem e mostra cada
-resposta, e também não foi capturado para este curso. A lição 6 roda o mesmo arquivo pelo terminal
+resposta. Ele também não foi capturado para este curso. A lição 6 roda o mesmo arquivo pelo terminal
 com o Newman, onde cada linha pode ser mostrada.

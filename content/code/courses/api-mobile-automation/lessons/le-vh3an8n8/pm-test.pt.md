@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Um teste é um nome e uma função, e ele falha quando a função lança um erro.** Esse é o mecanismo
-inteiro. `pm.test('status is 200', fn)` roda `fn`; se nada lá dentro reclamar, o Newman imprime
-`Pass  status is 200`, e se algo reclamar, ele imprime um número e lista a falha no fim. Todo o resto
+inteiro. `pm.test('status is 200', fn)` roda `fn`. Se nada lá dentro reclamar, o Newman imprime
+`Pass  status is 200`; se algo reclamar, ele imprime um número e lista a falha no fim. Todo o resto
 num teste do Postman é um jeito de reclamar com clareza.
 
 Ajuda largar cedo uma crença: um script que roda sem erro não é um teste aprovado. Linhas fora de
@@ -37,7 +37,7 @@ falha; a mesma linha com `eql` passa.
 ## O que uma falha diz
 
 Um bom nome de teste é a afirmação, escrita para que uma falha se leia como uma frase. A execução da
-seção 02 falhou num teste, e no fim da saída o Newman escreveu o nome, `HEAD answers like GET`, e
+seção 02 falhou num teste. No fim da saída o Newman escreveu o nome, `HEAD answers like GET`, e
 embaixo `expected response to have status code 200 but got 405`.
 
 Juntas, essas duas linhas são um relato de defeito completo: o que foi afirmado, o que se esperava,
@@ -48,6 +48,6 @@ mensagem por você.
 
 Mais dois hábitos, os dois visíveis na coleção. Dê ao teste o nome do que um leitor conferiria, não
 do código: *location says where it lives*, não *header test*. E mantenha as afirmações de uma
-requisição em testes separados, para que uma falha não esconda a seguinte: **Create order** confere o
-status, o corpo e o `location` em três testes, e quando o status está errado você ainda fica sabendo
-se o `location` veio.
+requisição em testes separados, para que uma falha não esconda a seguinte. **Create order** confere
+o status, o corpo e o `location` em três testes, então quando o status está errado você ainda fica
+sabendo se o `location` veio.

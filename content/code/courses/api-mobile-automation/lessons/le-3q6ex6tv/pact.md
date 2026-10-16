@@ -3,13 +3,12 @@ title: Pact, a contract the consumer writes
 version: 1
 ---
 
-**Pact is the best-known tool for consumer-driven contracts, and it works in two halves.** On
-the consumer's side, a test describes a request and the answer it expects, and Pact runs a mock
-provider that answers exactly that, so the consumer's own code is exercised against it; when the test
-passes, Pact writes the interaction to a pact file. On the provider's side, Pact reads the file,
-sends each request to the real provider and compares the answers with what the consumer said it
-needs. Lesson 11 is about mock servers in general; here the mock is only the means of writing the
-contract down.
+**Pact is the best-known tool for consumer-driven contracts, and it works in two halves.** On the
+consumer's side, a test describes a request and the answer it expects. Pact runs a mock provider
+that answers exactly that, so the consumer's own code is exercised against it. When the test passes,
+Pact writes the interaction to a pact file. On the provider's side, Pact reads the file, sends each
+request to the real provider and compares the answers with what the consumer said it needs. Lesson
+11 is about mock servers in general; here the mock is only the means of writing the contract down.
 
 Pact for JavaScript is on npm. Its core is a native library, written in Rust, that npm installs as a
 ready-built package for your operating system, so there is nothing to compile:

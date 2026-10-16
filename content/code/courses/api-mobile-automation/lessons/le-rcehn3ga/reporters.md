@@ -45,8 +45,9 @@ ana@laptop:~/boxoffice$ grep -B1 -A2 '<failure' results/newman.xml
 ```
 
 Eighteen test cases, one per assertion, and the failure carries the same message the terminal
-showed. A CI system that reads the file draws the eighteen names, marks one red, and can tell you
-that the same test has failed on every run since it was written, which the terminal output cannot.
+showed. A CI system that reads the file draws the eighteen names and marks one red. It can also tell
+you that the same test has failed on every run since it was written, which the terminal output
+cannot.
 
 ## JSON, the format your own scripts read
 
@@ -68,7 +69,7 @@ the shape a script would post to a chat channel or append to a file. **When a qu
 not answered by the table, the answer is in this file**, and it can be asked of yesterday's run as
 well as today's.
 
-`htmlextra` makes a page a person can browse, with each request and response laid out. It is not part
-of Newman, it is installed like any other package with `npm install --save-dev`, and it was not used
-for this course. **A third-party reporter is code that reads every request and response of your run**,
-tokens included, so it deserves the same look as any other dependency before it goes in.
+`htmlextra` makes a page a person can browse, with each request and response laid out. It is not
+part of Newman: it installs like any other package, with `npm install --save-dev`. It was not used
+for this course. **A third-party reporter is code that reads every request and response of your
+run**, tokens included, so it deserves the same look as any other dependency before it goes in.

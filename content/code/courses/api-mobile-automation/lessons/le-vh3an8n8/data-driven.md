@@ -21,8 +21,8 @@ seats,expected
 ```
 
 The first line names the columns, and each line after it is one case. The last value is the string
-`"2"`: in CSV a quote inside a quoted field is written twice, so `"""2"""` is a field holding `"2"`,
-quotes included, which lands in the JSON body as a string rather than a number.
+`"2"`. In CSV a quote inside a quoted field is written twice, so `"""2"""` is a field holding `"2"`,
+quotes included. It lands in the JSON body as a string rather than a number.
 
 The `seat rules` folder holds one request, **Order seats**, whose body uses the two columns:
 
@@ -113,17 +113,17 @@ Sub-folder Order seats
 ```
 
 Six iterations, one per row, and six passes. The token was fetched once, before the first iteration,
-by the collection's pre-request script of section 05; the later iterations found it still valid.
-In Postman the same file goes into the Runner, under *Data*, which then shows each iteration.
+by the collection's pre-request script of section 05. The later iterations found it still valid. In
+Postman the same file goes into the Runner, under *Data*, which then shows each iteration.
 
 ## Where the row's values live
 
 The data file is the **data** scope of lesson 4 section 04, narrower than collection and
-environment. The collection defines `seats` as `1` and `expected` as `201`, which is why the folder
-also runs in a whole-collection run without any file, as one ordinary order that should succeed:
-that was the **Order seats** line at the end of section 02's run. Given a file, the row's values win,
-because the data scope is narrower. A default in the wider scope and a case in the narrower one is the
-precedence rule of lesson 4 doing useful work.
+environment. The collection defines `seats` as `1` and `expected` as `201`. That is why the folder
+also runs in a whole-collection run without any file, as one ordinary order that should succeed. It
+was the **Order seats** line at the end of section 02's run. Given a file, the row's values win,
+because the data scope is narrower. A default in the wider scope and a case in the narrower one is
+the precedence rule of lesson 4 doing useful work.
 
 **Every row is a claim, so choose them as you would choose cases.** These six are the boundaries
 lesson 2 derived from the contract: the lowest valid value and the one below it, the highest and the

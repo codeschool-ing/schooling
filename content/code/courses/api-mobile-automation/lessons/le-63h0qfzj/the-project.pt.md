@@ -68,16 +68,16 @@ construído. Salve como `restassured/pom.xml`:
 
 Leia de cima para baixo:
 
-- **as coordenadas**, `groupId`, `artifactId` e `version`, dão nome a este projeto do mesmo jeito
-  que as dependências abaixo têm nome. Ninguém o baixa; elas só precisam estar ali.
-- **as propriedades** dizem que o código é Java 21 e os arquivos são UTF-8, para que `São Paulo`
-  num teste signifique o mesmo em qualquer máquina.
-- **as dependências** são as duas bibliotecas que os testes usam. O REST Assured manda as
-  requisições e confere as respostas; o JUnit Jupiter é o framework de testes, que acha os métodos
-  marcados como teste e os roda. `<scope>test</scope>` diz que elas existem só para os testes, que
-  neste projeto são tudo o que há.
-- **os plugins** fixam as versões dos dois plugins que compilam e rodam os testes. A seção 07 os
-  remove e mostra o que dá errado.
+- as coordenadas, `groupId`, `artifactId` e `version`, dão nome a este projeto do mesmo jeito que as
+  dependências abaixo têm nome. Ninguém o baixa; elas só precisam estar ali.
+- as propriedades dizem que o código é Java 21 e os arquivos são UTF-8, para que `São Paulo` num
+  teste signifique o mesmo em qualquer máquina.
+- as dependências são as duas bibliotecas que os testes usam. O REST Assured manda as requisições e
+  confere as respostas. O JUnit Jupiter é o framework de testes, que acha os métodos marcados como
+  teste e os roda. `<scope>test</scope>` diz que elas existem só para os testes, que neste projeto
+  são tudo o que há.
+- os plugins fixam as versões dos dois plugins que compilam e rodam os testes. A seção 07 os remove
+  e mostra o que dá errado.
 
 | o quê | versão | o que faz aqui |
 |---|---|---|
@@ -88,7 +88,7 @@ Leia de cima para baixo:
 
 Toda versão foi resolvida no Maven Central quando as transcrições foram gravadas, em outubro de
 2026, e elas estão escritas por inteiro de propósito. **Uma versão escrita por inteiro é um build
-que faz a mesma coisa no ano que vem**; uma versão deixada como "a mais nova que houver" é um build
+que faz a mesma coisa no ano que vem.** Uma versão deixada como "a mais nova que houver" é um build
 que muda quando outra pessoa publica algo. O REST Assured 6.1.0 saiu na véspera da gravação e não
 foi testado.
 
@@ -197,7 +197,8 @@ ana@laptop:~/boxoffice/restassured$ mvn test
 ```
 
 O primeiro `mvn test` numa máquina nova **baixa o REST Assured, o JUnit, os dois plugins e tudo de
-que eles dependem**, o que enche a tela de linhas `Downloading from central` e demora um pouco. A transcrição foi gravada com tudo isso já em `~/.m2`, então mostra o que toda execução
-seguinte imprime. Leia pelo meio: os plugins rodam na ordem em que as fases precisam deles,
-recursos, depois o compilador, depois o Surefire, e embaixo de `T E S T S` uma classe rodou um
-teste sem falhas. `BUILD SUCCESS` é o veredito do Maven sobre a execução inteira.
+que eles dependem**. Isso enche a tela de linhas `Downloading from central` e demora um pouco. A
+transcrição foi gravada com tudo isso já em `~/.m2`, então mostra o que toda execução seguinte
+imprime. Leia pelo meio. Os plugins rodam na ordem em que as fases precisam deles: recursos, depois
+o compilador, depois o Surefire. Embaixo de `T E S T S`, uma classe rodou um teste sem falhas.
+`BUILD SUCCESS` é o veredito do Maven sobre a execução inteira.

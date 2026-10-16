@@ -11,18 +11,17 @@ de duas empresas conversarem, e continuam funcionando. Trocar uma integração q
 
 ## Três lugares onde ele vive
 
-- **Governo.** No Brasil, toda nota fiscal eletrônica de mercadoria, a **NF-e**, é mandada aos web
-  services da secretaria da fazenda do estado como uma mensagem SOAP, e a nota dentro dela é XML
-  assinado com um certificado digital. O eSocial, o sistema federal em que os empregadores
-  informam suas obrigações trabalhistas e tributárias, também recebe XML assinado por web services
-  SOAP, então toda empresa com funcionários manda mensagens SOAP, saibam disso os desenvolvedores
-  dela ou não.
-- **Bancos e seguradoras.** Redes de pagamento, consultas de crédito e sistemas de apólices muitas
-  vezes ficam atrás de uma interface SOAP que o próprio app do banco nunca vê. O app fala JSON com
-  o backend do banco, e o backend fala SOAP com o sistema central.
-- **Grandes empresas, por dentro.** Companhias aéreas, operadoras de telefonia e varejistas ligaram
-  seus sistemas por SOAP durante duas décadas. Um app novo numa delas muitas vezes é uma camada JSON
-  por cima desses serviços.
+- Governo. No Brasil, toda nota fiscal eletrônica de mercadoria, a **NF-e**, é mandada aos web
+  services da secretaria da fazenda do estado como uma mensagem SOAP. A nota dentro dela é XML
+  assinado com um certificado digital. O eSocial, o sistema federal em que os empregadores informam
+  suas obrigações trabalhistas e tributárias, também recebe XML assinado por web services SOAP. Toda
+  empresa com funcionários manda mensagens SOAP, saibam disso os desenvolvedores dela ou não.
+- Bancos e seguradoras. Redes de pagamento, consultas de crédito e sistemas de apólices muitas vezes
+  ficam atrás de uma interface SOAP que o próprio app do banco nunca vê. O app fala JSON com o
+  backend do banco, e o backend fala SOAP com o sistema central.
+- Grandes empresas, por dentro. Companhias aéreas, operadoras de telefonia e varejistas ligaram seus
+  sistemas por SOAP durante duas décadas. Um app novo numa delas muitas vezes é uma camada JSON por
+  cima desses serviços.
 
 Esse último padrão é onde quem começa em testes tem mais chance de encontrar o SOAP: **atrás de uma
 API que você está testando, e não na sua frente.** O boxoffice poderia funcionar assim. Um teatro em

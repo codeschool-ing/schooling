@@ -8,8 +8,8 @@ programa prova quem é uma vez, a um endpoint de token, e recebe uma string que 
 até expirar. Toda requisição seguinte leva o token, nunca o segredo original. Se um token vaza, ele
 serve por minutos; se o segredo vazasse em toda requisição, serviria até alguém perceber.
 
-Os pedidos do boxoffice funcionam assim, com o grant **client credentials** do OAuth 2.0, o feito
-para um programa agindo por conta própria, sem pessoa envolvida: uma suíte de testes, um job
+Os pedidos do boxoffice funcionam assim. Eles usam o grant **client credentials** do OAuth 2.0, o
+feito para um programa agindo por conta própria, sem pessoa envolvida: uma suíte de testes, um job
 noturno, outro servidor. O programa manda três campos de formulário para `POST /oauth/token`: o tipo
 de grant, o `client_id` e o `client_secret`. O boxoffice conhece dois clientes, e a linha da lição 1
 usou o primeiro:
@@ -45,15 +45,15 @@ O corpo tem quatro campos, e cada um é algo a conferir:
 
 Um cabeçalho importa tanto quanto o corpo. **`cache-control: no-store` proíbe qualquer cache de
 guardar a resposta**, para que nenhum proxy entre o programa e o servidor segure uma cópia de um
-token válido para a próxima pessoa receber. O OAuth exige isso neste endpoint (RFC 6749, §5.1),
-e uma resposta de token sem ele é um defeito mesmo com todo campo do corpo certo. A mesma seção pede
-também `Pragma: no-cache`, a grafia HTTP/1.0 da mesma instrução, e o boxoffice não o manda; isso só
-importa para caches velhos o bastante para ignorar `cache-control`, e um relatório pode chamá-lo de
-menor.
+token válido para a próxima pessoa receber. O OAuth exige isso neste endpoint (RFC 6749, §5.1), e
+uma resposta de token sem ele é um defeito mesmo com todo campo do corpo certo. A mesma seção pede
+também `Pragma: no-cache`, a grafia HTTP/1.0 da mesma instrução, e o boxoffice não o manda. Isso só
+importa para caches velhos o bastante para ignorar `cache-control`, então um relatório pode chamá-lo
+de menor.
 
 `expires_in` é relativo: "900 segundos a partir de agora". Um cliente calcula quando buscar um token
-novo a partir do momento em que recebeu este, e é por isso que um cliente bem-comportado pede de novo
-um pouco antes do fim do prazo em vez de esperar uma recusa.
+novo a partir do momento em que recebeu este. Um cliente bem-comportado pede de novo um pouco antes
+do fim do prazo, em vez de esperar uma recusa.
 
 ## Um segredo errado
 
@@ -63,8 +63,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/oauth/token -d grant_type=client_
 ```
 
 `invalid_client`, na forma de erro do próprio OAuth, que a lição 2 seção 05 explicou. A resposta é a
-mesma quer o cliente exista e o segredo esteja errado, quer o cliente nem exista, pelo mesmo motivo
-que as recusas da chave da equipe eram iguais na seção 02.
+mesma quer o cliente exista e o segredo esteja errado, quer o cliente nem exista. O motivo é o mesmo
+que fez as recusas da chave da equipe serem iguais na seção 02.
 
 ## Guardando numa variável
 

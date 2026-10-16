@@ -5,9 +5,9 @@ version: 1
 
 **Newman is a Node program that runs a Postman collection from the command line**, with the same
 scripts and the same variable rules as the app. Lesson 5 already used it, fetched by `npx` into a
-cache on each machine. That is fine for trying it and wrong for a project: the version lived only in
-a command somebody typed, and a teammate, or a pipeline, would have had to type the same one.
-**A project names its tools in a file**, so that anyone who checks it out gets the same ones.
+cache on each machine. That is fine for trying it and wrong for a project. The version lived only in
+a command somebody typed, and a teammate, or a pipeline, would have had to type the same one. **A
+project names its tools in a file**, so that anyone who checks it out gets the same ones.
 
 For a Node program that file is `package.json`. boxoffice has never needed one, because it uses
 nothing but Node's own modules. Newman is the first package the project depends on, so create the
@@ -85,7 +85,7 @@ with for an old one, to silence a report about code that runs only on your own m
 What a tester does instead is weigh where the code runs. Newman here is a dev dependency: it runs on
 your machine and in your pipeline, against a server you started, reading a collection you wrote. It
 never reaches a user. **So the finding is recorded, the version stays pinned, and the next Newman
-release is checked for a fix**, which is a decision rather than a habit of ignoring red text. A
+release is checked for a fix.** That is a decision, where ignoring red text would be a habit. A
 dependency that shipped inside boxoffice, answering requests from strangers, would get a different
 answer.
 
@@ -112,7 +112,7 @@ answer.
 }
 ```
 
-The script is the command lesson 5 typed, without `npx`: inside an npm script, the programs in
+The script is the command lesson 5 typed, without `npx`. Inside an npm script, the programs in
 `node_modules/.bin` are on the path, so `newman` is the one this project installed. Ask it which it
 is:
 

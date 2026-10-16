@@ -3,13 +3,13 @@ title: JSON Schema, como uma resposta precisa ser
 version: 1
 ---
 
-**Um JSON Schema é um documento JSON que descreve outros documentos JSON: que campos eles têm, de que
-tipo é cada um, que valores são permitidos.** Um teste que afirma que `seats_left` é 4 confere um
-campo de uma resposta. Um schema confere todo campo de toda resposta que recebe, inclusive os campos
-sobre os quais ninguém pensou em afirmar nada, e o mesmo arquivo serve a toda ferramenta que lê JSON
-Schema. O `openapi.yaml` da lição 2 já tem schemas, nos `components`; o OpenAPI 3.1 usa JSON Schema
-para eles. Esta lição tira dois deles para arquivos próprios, para que um teste possa carregá-los
-diretamente.
+**Um JSON Schema é um documento JSON que descreve outros documentos JSON: que campos eles têm, de
+que tipo é cada um, que valores são permitidos.** Um teste que afirma que `seats_left` é 4 confere
+um campo de uma resposta. Um schema confere todo campo de toda resposta que recebe, inclusive os
+campos sobre os quais ninguém pensou em afirmar nada. O mesmo arquivo serve a toda ferramenta que lê
+JSON Schema. O `openapi.yaml` da lição 2 já tem schemas, nos `components`; o OpenAPI 3.1 usa JSON
+Schema para eles. Esta lição tira dois deles para arquivos próprios, para que um teste possa
+carregá-los diretamente.
 
 O JSON Schema tem várias versões publicadas, chamadas drafts. A atual é a **2020-12**, e o campo
 `$schema` no alto de um schema diz em qual ele está escrito. Esse campo importa mais do que parece: a
@@ -79,12 +79,12 @@ Salve como `schemas/order.json`:
 | `if` / `then` | um pedido `confirmed` | quando a parte `if` casa, a parte `then` vale: um pedido confirmado precisa trazer o `payment` |
 
 Duas delas merecem um segundo olhar. **`additionalProperties: false` é uma escolha, não um padrão.**
-Num schema que testa as respostas do próprio boxoffice ele está certo: o boxoffice monta um pedido com
-um campo `client` e o tira antes de responder, com `const { client, ...body } = order`, e um schema
-rigoroso é o que pegaria o dia em que alguém esquecesse essa linha e passasse a contar a todo cliente
-que programa fez cada pedido. Num schema que um *cliente* usa para ler o boxoffice, a mesma palavra
-faria o cliente quebrar toda vez que o boxoffice acrescentasse um campo inofensivo. Quem é dono do
-schema decide para que lado ele deve pender, e a seção 05 volta a isso.
+Num schema que testa as respostas do próprio boxoffice ele está certo. O boxoffice monta um pedido
+com um campo `client` e o tira antes de responder, com `const { client, ...body } = order`. Um
+schema rigoroso é o que pegaria o dia em que alguém esquecesse essa linha e passasse a contar a todo
+cliente que programa fez cada pedido. Num schema que um *cliente* usa para ler o boxoffice, a mesma
+palavra faria o cliente quebrar toda vez que o boxoffice acrescentasse um campo inofensivo. Quem é
+dono do schema decide para que lado ele deve pender, e a seção 05 volta a isso.
 
 **O `format` só é conferido se o validador for avisado.** O padrão JSON Schema deixa a conferência de
 formatos opcional, então `"format": "date-time"` sozinho pode não passar de uma anotação. A seção 03

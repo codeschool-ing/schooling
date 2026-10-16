@@ -24,13 +24,13 @@ identificador aleatório novo. `replaceIn` a resolve agora, e `pm.variables.set`
 escopo local, que dura esta requisição. O cabeçalho da requisição, `Idempotency-Key:
 {{idempotencyKey}}`, então o manda.
 
-A chave é a promessa do cliente de que uma requisição repetida é a mesma requisição: o boxoffice
-guarda uma chave junto com a resposta que deu, e responde a uma segunda requisição com aquela chave
-repetindo a primeira resposta, em vez de vender o lugar de novo. **É exatamente por isso que um teste
-não deve reaproveitar uma.** Uma coleção com chave fixa no cabeçalho criaria um pedido na primeira
-execução, e em toda execução seguinte contra o mesmo boxoffice receberia de volta o pedido da
-primeira, todos os testes passando, nenhum pedido novo criado. A lição 13 testa a idempotência em si,
-incluindo um defeito no jeito como o boxoffice cumpre a promessa.
+A chave é a promessa do cliente de que uma requisição repetida é a mesma requisição. O boxoffice
+guarda uma chave junto com a resposta que deu. Uma segunda requisição com aquela chave recebe a
+primeira resposta de novo, e nenhum lugar a mais é vendido. **É exatamente por isso que um teste não
+deve reaproveitar uma.** Uma coleção com chave fixa no cabeçalho criaria um pedido na primeira
+execução. Em toda execução seguinte contra o mesmo boxoffice, receberia de volta o pedido da
+primeira: todos os testes passando, nenhum pedido novo criado. A lição 13 testa a idempotência em
+si, incluindo um defeito no jeito como o boxoffice cumpre a promessa.
 
 ## Um token, só quando preciso
 
@@ -43,8 +43,8 @@ if (!pm.collectionVariables.get('token') || Date.now() >= expires) {
 ```
 
 Ele só pede um token quando não há nenhum, ou quando o horário guardado por **Get token** já passou.
-`pm.sendRequest` manda essa requisição de dentro do script, o mesmo `POST /oauth/token` com o id e o
-segredo do cliente vindos do ambiente, e o callback dele guarda a resposta exatamente como Get token
+`pm.sendRequest` manda essa requisição de dentro do script: o mesmo `POST /oauth/token`, com o id e
+o segredo do cliente vindos do ambiente. O callback dele guarda a resposta exatamente como Get token
 faz. Se a resposta não for `200`, ele lança um erro, e o erro diz o status.
 
 Duas execuções mostram por que ele está ali:
@@ -59,7 +59,7 @@ Duas execuções mostram por que ele está ali:
 Os trinta segundos tirados da expiração são uma folga. Um token que expira enquanto a requisição está
 a caminho é recusado, e uma folga custa uma requisição de token a mais de vez em quando.
 
-**Um script de pré-requisição é código no seu teste que ninguém testa.** Mantenha-o curto, num lugar
-só, na coleção e não numa cópia por requisição, e faça-o falhar alto, como este faz com `throw`. Um
-script que engolisse um token recusado mandaria todo pedido sem token e deixaria você lendo uma
+**Um script de pré-requisição é código no seu teste que ninguém testa.** Mantenha-o curto e num
+lugar só, na coleção e não numa cópia por requisição. Faça-o falhar alto, como este faz com `throw`.
+Um script que engolisse um token recusado mandaria todo pedido sem token e deixaria você lendo uma
 coluna de `401` atrás da causa.

@@ -8,9 +8,9 @@ version: 1
 `http://localhost:8080/v1/shows`. The server never sees the braces. Variables work anywhere in a
 request: the address, a header, the body, the authorization.
 
-The first variable every collection gets is the address of the server, and the reason is the day
-the server moves. Twenty requests that each spell out `http://localhost:8080` are twenty edits when
-the same tests have to run against a test server; twenty requests that say `{{baseUrl}}` are one.
+The first variable every collection gets is the address of the server, and the reason is the day the
+server moves. Twenty requests that each spell out `http://localhost:8080` are twenty edits when the
+same tests have to run against a test server. Twenty requests that say `{{baseUrl}}` are one.
 
 ## Five places a variable can live
 
@@ -42,8 +42,8 @@ outside.
 
 ## A name nobody defined
 
-When no scope defines a name, Postman draws it in red in the request and, if you send it anyway,
-sends the braces as they are: `{{baseUrl}}/v1/shows` is not an address, and the request fails
-before it reaches any server. A tester checks the other direction too: **which names does a
-collection use, and is each one defined somewhere?** Section 06 asks that of the collection you
-save, with one line of grep.
+When no scope defines a name, Postman draws it in red in the request. If you send it anyway, it
+sends the braces as they are. `{{baseUrl}}/v1/shows` is not an address, and the request fails before
+it reaches any server. A tester checks the other direction too: **which names does a collection use,
+and is each one defined somewhere?** Section 06 asks that of the collection you save, with one line
+of grep.

@@ -16,7 +16,7 @@ certo.
 | `5xx` | o servidor falhou | o servidor; a mesma requisição pode funcionar mais tarde |
 
 A linha entre `4xx` e `5xx` é a que mais importa. Um `4xx` culpa a requisição e um `5xx` culpa o
-servidor, então **um servidor que responde `500` a uma requisição malformada tem dois defeitos**:
+servidor. Então **um servidor que responde `500` a uma requisição malformada tem dois defeitos**:
 quebrou com uma entrada ruim e disse ao cliente para tentar de novo quando tentar de novo não pode
 ajudar.
 

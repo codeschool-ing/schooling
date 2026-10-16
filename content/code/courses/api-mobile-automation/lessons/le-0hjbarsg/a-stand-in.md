@@ -7,8 +7,8 @@ version: 1
 plays the city's invoice web service from section 03, with one address, `/invoice`, and one
 operation, `IssueInvoice`. The operation takes an order id, an amount in cents and the buyer's tax
 id, and answers with an invoice number. It serves its own WSDL, and it answers a request it cannot
-accept with a fault. It is not a copy of any real government service, whose messages are larger and signed; it has the
-same shape, which is what a test sees.
+accept with a fault. It is not a copy of any real government service, whose messages are larger and
+signed. It has the same shape, and the shape is what a test sees.
 
 Make a directory for this lesson's files inside your project, `mkdir ~/boxoffice/soap`, then open a
 new file there and save it as `soap/invoice-service.mjs`:
@@ -170,10 +170,10 @@ Transfer-Encoding: chunked
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 ```
 
-`content-type: text/xml` is SOAP 1.1's type. The document is the same one the file printed, with
-the namespace `urn:example:invoice:v1` filled in. A namespace is a name for a vocabulary, written
-like an address and never visited: it says that `IssueInvoice` here is this service's
-`IssueInvoice` and not somebody else's.
+`content-type: text/xml` is SOAP 1.1's type. The document is the same one the file printed, with the
+namespace `urn:example:invoice:v1` filled in. A namespace is a name for a vocabulary, written like
+an address and never visited. It says that `IssueInvoice` here is this service's `IssueInvoice` and
+not somebody else's.
 
 ## Reading a WSDL from the bottom up
 
@@ -188,7 +188,7 @@ A WSDL 1.1 document has five parts, and it reads best backwards, from the addres
 | `types` | an XML Schema declaring `IssueInvoice` and `IssueInvoiceResponse` field by field | what shape, exactly? |
 
 **The `types` part is where test cases come from.** It declares three fields in the request, in
-order, and gives each a type: `orderId` and `buyerTaxId` are strings, and `amountCents` is a
+order, and gives each a type. `orderId` and `buyerTaxId` are strings, and `amountCents` is a
 `positiveInteger`, so `0`, `-5` and `19.50` are already invalid before anybody wrote a business
 rule. None of the three says `minOccurs="0"`, and in XML Schema that means each must appear exactly
 once. A request without `amountCents` breaks the contract, and the service should say so with a
@@ -200,5 +200,5 @@ as a question for whoever owns the contract, because a client generated from thi
 send `123`.
 
 `document` and `literal` in the binding mean that the `Body` holds the element from `types` exactly
-as declared. That is the style you will meet almost everywhere today; the older `rpc` and `encoded`
+as declared. That is the style you will meet almost everywhere today. The older `rpc` and `encoded`
 styles wrap the arguments differently, and tools such as SoapUI read whichever the WSDL declares.

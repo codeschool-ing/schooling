@@ -3,10 +3,10 @@ title: JSON, and the three things it gets wrong for you
 version: 1
 ---
 
-**JSON has six kinds of value: string, number, boolean, null, array and object.** That is the
-whole format, and every answer boxoffice gives is built from those six. Its simplicity is the
-trap: the format cannot say *money*, *date* or *identifier*, so an API has to choose how to spell
-each one in the six, and each choice is something a tester checks.
+**JSON has six kinds of value: string, number, boolean, null, array and object.** That is the whole
+format, and every answer boxoffice gives is built from those six. Its simplicity is the trap. The
+format cannot say *money*, *date* or *identifier*, so an API has to choose how to spell each one in
+the six, and a tester checks each choice.
 
 jq's `type` names the kind of each field, which is the first thing to look at in an unfamiliar
 answer:
@@ -20,13 +20,12 @@ price_cents: number
 seats_left: number
 ```
 
-Three strings and two numbers. `starts_at` is a date and `id` looks like a code, and JSON calls
-both of them strings; what they mean is a promise the API makes elsewhere, which section 04 writes
-down.
+Three strings and two numbers. `starts_at` is a date and `id` looks like a code, and JSON calls both
+of them strings. What they mean is a promise the API makes elsewhere, and section 04 writes it down.
 
 ## Missing is not null
 
-A field can be absent, or present with the value `null`, and **the two mean different things**: an
+A field can be absent, or present with the value `null`, and **the two mean different things**. An
 order with no `payment` field has not been charged, while `"payment": null` would say somebody
 looked and found nothing. jq hides the difference. Asked for a field that is not there, it answers
 `null`, and only `has` tells the cases apart:
@@ -106,8 +105,8 @@ for a user in another time zone**, and every date in boxoffice carries one.
 ## Identifiers are strings
 
 boxoffice's ids are `sh-103` and `ord-1001`, which could never be numbers. An API whose ids are
-large numbers has a quieter problem: JavaScript reads every JSON number as floating point with 53 bits of
-precision, and a larger integer is silently changed to the nearest one it can hold:
+large numbers has a quieter problem. JavaScript reads every JSON number as floating point with 53
+bits of precision, and a larger integer is silently changed to the nearest one it can hold:
 
 ```
 ana@laptop:~/boxoffice$ node -e 'console.log(JSON.parse("{\"id\": 9007199254740993}").id)'

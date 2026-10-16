@@ -3,10 +3,10 @@ title: JSON, e as três coisas que ele erra por você
 version: 1
 ---
 
-**O JSON tem seis tipos de valor: string, número, booleano, null, array e objeto.** Esse é o
-formato inteiro, e toda resposta do boxoffice é feita desses seis. A simplicidade é a armadilha: o
-formato não sabe dizer *dinheiro*, *data* nem *identificador*, então uma API precisa escolher como
-escrever cada um deles com os seis, e cada escolha é algo que quem testa confere.
+**O JSON tem seis tipos de valor: string, número, booleano, null, array e objeto.** Esse é o formato
+inteiro, e toda resposta do boxoffice é feita desses seis. A simplicidade é a armadilha. O formato
+não sabe dizer *dinheiro*, *data* nem *identificador*, então uma API precisa escolher como escrever
+cada um deles com os seis, e quem testa confere cada escolha.
 
 O `type` do jq dá o tipo de cada campo, que é a primeira coisa a olhar numa resposta desconhecida:
 
@@ -20,13 +20,13 @@ seats_left: number
 ```
 
 Três strings e dois números. `starts_at` é uma data e `id` parece um código, e o JSON chama os dois
-de string; o que eles significam é uma promessa que a API faz em outro lugar, que a seção 04 põe
-por escrito.
+de string. O que eles significam é uma promessa que a API faz em outro lugar, e a seção 04 a põe por
+escrito.
 
 ## Ausente não é null
 
 Um campo pode estar ausente, ou presente com o valor `null`, e **os dois casos não querem dizer a
-mesma coisa**: um pedido sem o campo `payment` não foi cobrado, enquanto `"payment": null` diria que
+mesma coisa**. Um pedido sem o campo `payment` não foi cobrado, enquanto `"payment": null` diria que
 alguém procurou e não achou nada. O jq esconde a diferença. Quando você pede um campo que não está
 lá, ele responde `null`, e só o `has` separa os casos:
 
@@ -104,7 +104,7 @@ defeito esperando um usuário em outro fuso**, e toda data do boxoffice leva o s
 ## Identificadores são strings
 
 Os ids do boxoffice são `sh-103` e `ord-1001`, que nunca poderiam ser números. Uma API cujos ids são
-números grandes tem um problema mais silencioso: o JavaScript lê todo número JSON como ponto
+números grandes tem um problema mais silencioso. O JavaScript lê todo número JSON como ponto
 flutuante com 53 bits de precisão, e um inteiro maior que isso é trocado sem aviso pelo mais próximo
 que ele consegue guardar:
 

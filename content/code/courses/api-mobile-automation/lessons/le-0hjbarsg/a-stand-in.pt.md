@@ -8,7 +8,7 @@ faz o papel do web service de notas da prefeitura da seção 03, com um endereç
 operação, `IssueInvoice`. A operação recebe um id de pedido, um valor em centavos e o CPF de quem
 compra, e responde com um número de nota. Ele serve o próprio WSDL, e responde com uma falha a uma
 requisição que não pode aceitar. Não é cópia de nenhum serviço real do governo, cujas mensagens são
-maiores e assinadas; ele tem a mesma forma, que é o que um teste enxerga.
+maiores e assinadas. Ele tem a mesma forma, e a forma é o que um teste enxerga.
 
 Crie um diretório para os arquivos desta lição dentro do seu projeto, `mkdir ~/boxoffice/soap`,
 depois abra um arquivo novo ali e salve como `soap/invoice-service.mjs`:
@@ -173,7 +173,7 @@ Transfer-Encoding: chunked
 
 `content-type: text/xml` é o tipo do SOAP 1.1. O documento é o mesmo que o arquivo imprimiu, com o
 namespace `urn:example:invoice:v1` preenchido. Um namespace é um nome para um vocabulário, escrito
-como um endereço e nunca visitado: ele diz que o `IssueInvoice` daqui é o `IssueInvoice` deste
+como um endereço e nunca visitado. Ele diz que o `IssueInvoice` daqui é o `IssueInvoice` deste
 serviço, e não o de outro.
 
 ## Lendo um WSDL de baixo para cima
@@ -190,7 +190,7 @@ tipos:
 | `types` | um XML Schema que declara `IssueInvoice` e `IssueInvoiceResponse` campo a campo | que forma, exatamente? |
 
 **A parte `types` é de onde vêm os casos de teste.** Ela declara três campos na requisição, em
-ordem, e dá um tipo a cada um: `orderId` e `buyerTaxId` são strings, e `amountCents` é um
+ordem, e dá um tipo a cada um. `orderId` e `buyerTaxId` são strings, e `amountCents` é um
 `positiveInteger`, então `0`, `-5` e `19.50` já são inválidos antes de alguém escrever uma regra de
 negócio. Nenhum dos três diz `minOccurs="0"`, e em XML Schema isso significa que cada um tem de
 aparecer exatamente uma vez. Uma requisição sem `amountCents` quebra o contrato, e o serviço deveria
@@ -202,6 +202,6 @@ pergunta para o dono do contrato, porque um cliente gerado a partir deste WSDL v
 reclamar.
 
 `document` e `literal` no binding querem dizer que o `Body` guarda o elemento de `types` exatamente
-como foi declarado. É o estilo que você vai encontrar em quase todo lugar hoje; os estilos mais
+como foi declarado. É o estilo que você vai encontrar em quase todo lugar hoje. Os estilos mais
 antigos, `rpc` e `encoded`, embrulham os argumentos de outro jeito, e ferramentas como o SoapUI leem
 o que o WSDL declarar.

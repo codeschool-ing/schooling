@@ -5,7 +5,7 @@ version: 1
 
 **O Postman é um aplicativo de desktop que manda requisições HTTP e as guarda**, para que uma
 requisição montada uma vez possa ser mandada amanhã exatamente como era. Tudo o que ele manda, o
-curl mandou na lição 1. O que ele acrescenta é memória e uma janela: cada requisição fica salva com
+curl mandou na lição 1. O que ele acrescenta é memória e uma janela. Cada requisição fica salva com
 um nome, a resposta aparece dividida em painéis, e as requisições de uma API ficam juntas numa
 *coleção*. Também é a ferramenta que a maioria dos times de QA abre primeiro quando chega uma API
 nova, o que já basta para valer a pena conhecê-lo.
@@ -29,7 +29,7 @@ sem configurar nada. Inicie o boxoffice no terminal dele, como na lição 1, ant
 coisa.
 
 **O plano gratuito pede que você entre com uma conta, e guarda as suas coleções na nuvem do
-Postman.** Esse é o negócio do Postman, e os termos são dele para mudar: mudaram em 2023, quando o
+Postman.** Esse é o negócio do Postman, e os termos são dele para mudar. Mudaram em 2023, quando o
 Scratch Pad, o jeito de trabalhar sem conta, foi aposentado. Por isso este curso guarda toda coleção
 como um arquivo JSON no seu próprio projeto, em `~/boxoffice/postman/`. Você salva os arquivos a
 partir destas lições e os importa no aplicativo. Um arquivo é seu, seja qual for o plano amanhã: o

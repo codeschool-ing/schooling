@@ -10,10 +10,9 @@ teatro em `/v1/reports/sales`, e a espera num cabeçalho chamado `X-Api-Key`.
 
 A crença que vale abandonar é a de que uma chave diz *quem* está pedindo. Ela diz *qual programa*,
 ou qual cópia de um arquivo de configuração. Toda pessoa e todo script que tem a string é o mesmo
-chamador para o servidor, então uma chave não distingue o gerente da bilheteria de um script em que
-alguém a copiou no ano passado. Por isso chaves servem para um relatório que poucos programas
-internos leem, e por isso o boxoffice não usa uma para pedidos, onde importa qual cliente fez qual
-pedido.
+chamador para o servidor. Uma chave não distingue o gerente da bilheteria de um script em que alguém
+a copiou no ano passado. Por isso chaves servem para um relatório que poucos programas internos
+leem, e por isso o boxoffice não usa uma para pedidos, onde importa qual cliente fez qual pedido.
 
 ## Três requisições
 
@@ -47,7 +46,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/reports/sales -H 'X-Api-Key: l
 ```
 
 A chave errada recebe a mesma resposta que nenhuma chave, palavra por palavra. **Essa igualdade está
-certa**: um servidor que dissesse *"chave não reconhecida"* para uma e *"chave ausente"* para a
+certa.** Um servidor que dissesse *"chave não reconhecida"* para uma e *"chave ausente"* para a
 outra contaria a um estranho quais palpites chegaram perto de ser uma chave. A chave certa recebe o
 relatório, ainda sem nada vendido.
 
@@ -61,16 +60,15 @@ ana@laptop:~/boxoffice$ curl -s 'localhost:8080/v1/reports/sales?key=lab-only-st
 {"type":"about:blank","title":"Unauthorized","status":401,"detail":"send the staff key in X-Api-Key"}
 ```
 
-A recusa não é a parte interessante. Olhe o segundo terminal, onde o boxoffice registra toda
-requisição que responde:
+Agora olhe o segundo terminal, onde o boxoffice registra toda requisição que responde:
 
 ```
 GET /v1/reports/sales?key=lab-only-staff-key 401
 ```
 
 **A chave está no log, em texto puro.** O log do boxoffice escreve o método, o endereço e o status,
-que é o que quase todo servidor web, proxy e balanceador de carga registra por padrão; um endereço
+que é o que quase todo servidor web, proxy e balanceador de carga registra por padrão. Um endereço
 também vai para o histórico do navegador e para o cabeçalho `Referer` mandado a outros sites. Um
-cabeçalho não é registrado a menos que alguém escolha registrá-lo. Então o teste que quem testa
-acrescenta não é só "a chave funciona no cabeçalho", mas **"a chave não funciona no endereço"**,
-porque uma API que a aceitasse ali convidaria todo cliente a vazá-la.
+cabeçalho não é registrado a menos que alguém escolha registrá-lo. Então, ao lado de "a chave
+funciona no cabeçalho", quem testa acrescenta um segundo teste: **"a chave não funciona no
+endereço"**. Uma API que a aceitasse ali convidaria todo cliente a vazá-la.

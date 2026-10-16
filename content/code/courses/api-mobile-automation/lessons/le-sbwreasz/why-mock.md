@@ -5,7 +5,7 @@ version: 1
 
 **boxoffice does not take money itself.** For every order it calls a payment provider, waits for an
 answer, and confirms or refuses the order according to what came back. Up to now that call never
-happened: with `PAYMENTS_URL` empty, boxoffice approves every charge on its own, which is why every
+happened. With `PAYMENTS_URL` empty, boxoffice approves every charge on its own, which is why every
 order so far carried a payment called `ch-local-ord-…`. A real deployment sets the variable, and
 from then on a part of boxoffice's behaviour belongs to a program somebody else runs.
 
@@ -13,14 +13,14 @@ A test of boxoffice still has to cover that part. **The usual answer is to put a
 provider would be**: a small server that answers the way the provider answers, run by you, on your
 machine. Four reasons, and each is a thing the real provider cannot give a test:
 
-- **Money.** A charge against a real provider is a real charge. Providers offer a sandbox for
-  testing, with test cards and no money moving, but it is still their server, on their terms.
-- **Failures on demand.** The tests that matter most are the ones where payment goes wrong: a
-  decline, an error, an answer that never arrives. Nobody can ask a real provider to time out at
-  10:15 on a Tuesday, and lesson 13 needs exactly that, every run.
-- **Speed and availability.** A test that crosses the internet takes the provider's time and fails
-  when the provider has an outage, so your suite goes red for somebody else's bad morning.
-- **Observation.** A test wants to know what boxoffice *sent*: the amount, the reference, the
+- Money. A charge against a real provider is a real charge. Providers offer a sandbox for testing,
+  with test cards and no money moving, but it is still their server, on their terms.
+- Failures on demand. The tests that matter most are the ones where payment goes wrong: a decline,
+  an error, an answer that never arrives. Nobody can ask a real provider to time out at 10:15 on a
+  Tuesday, and lesson 13 needs exactly that, every run.
+- Speed and availability. A test that crosses the internet takes the provider's time and fails when
+  the provider has an outage, so your suite goes red for somebody else's bad morning.
+- Observation. A test wants to know what boxoffice *sent*: the amount, the reference, the
   idempotency key. The provider does not show you the requests it received. A stand-in can.
 
 ## What a stand-in is called
@@ -53,6 +53,6 @@ an address pointed elsewhere. Replacing part of boxoffice as well would be testi
 ```
 
 That picture also shows what a stand-in costs. **A test against a stand-in proves that boxoffice
-handles the answers you wrote.** It says nothing about whether the provider really answers that way,
-and the day the provider changes, the stand-in goes on answering as before and every test stays
-green. Section 06 makes that happen on purpose and shows how to catch it.
+handles the answers you wrote.** It says nothing about whether the provider really answers that way.
+The day the provider changes, the stand-in goes on answering as before and every test stays green.
+Section 06 makes that happen on purpose and shows how to catch it.

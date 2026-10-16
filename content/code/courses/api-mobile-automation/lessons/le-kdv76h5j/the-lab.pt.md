@@ -5,17 +5,16 @@ version: 1
 
 **Toda lição deste curso roda alguma coisa no seu próprio computador**: uma API, uma coleção de
 requisições, uma suíte de testes em JavaScript ou Java e, a partir da lição 14, um app num emulador
-Android. Nada fica hospedado para você. Esta seção diz do que a máquina precisa na primeira metade e
-três jeitos de tê-la; a lição 14 acrescenta o que a segunda metade pede, e a seção depois da próxima
-diz o que fazer quando a instalação falha.
+Android. Nada fica hospedado para você. Esta seção diz do que a máquina precisa na primeira metade,
+e três jeitos de tê-la. A lição 14 acrescenta o que a segunda metade pede, e a seção 05 diz o que
+fazer quando a instalação falha.
 
 Para as lições 1 a 6 o laboratório é pequeno:
 
-- **um terminal** com bash, com `curl` para mandar requisições e `jq` para ler JSON;
-- **Node.js 22**, o ambiente de execução de JavaScript. O boxoffice, a API que toda lição testa, é
-  um arquivo de JavaScript sem pacotes para instalar, e o Newman da lição 6 também é um programa
-  Node;
-- **um editor de texto** com que você se sinta à vontade. O Visual Studio Code é gratuito e é o que o
+- um terminal com bash, com `curl` para mandar requisições e `jq` para ler JSON;
+- Node.js 22, o ambiente de execução de JavaScript. O boxoffice, a API que toda lição testa, é um
+  arquivo de JavaScript sem pacotes para instalar, e o Newman da lição 6 também é um programa Node;
+- um editor de texto com que você se sinta à vontade. O Visual Studio Code é gratuito e é o que o
   curso supõe quando diz "abra o arquivo", mas qualquer editor que salve texto puro serve.
 
 A lição 4 instala o Postman, a lição 7 um kit de desenvolvimento Java e o Maven, e cada uma diz como.
@@ -31,31 +30,31 @@ A lição 4 instala o Postman, a lição 7 um kit de desenvolvimento Java e o Ma
 **Instalado é o caminho recomendado, e o motivo é a lição 14.** O emulador Android é ele mesmo uma
 máquina virtual, e precisa do suporte de virtualização do seu processador diretamente. Dentro de
 outra máquina virtual ele precisa de virtualização *aninhada*, que muitos notebooks e hipervisores
-não oferecem, e um emulador sem ela se recusa a iniciar ou roda devagar demais para testar qualquer
-coisa. Então a segunda metade do curso roda no seu próprio sistema seja qual for a escolha agora, e
-fazer a primeira metade ali também significa um conjunto de ferramentas em vez de dois.
+não oferecem. Sem ela, um emulador se recusa a iniciar ou roda devagar demais para testar qualquer
+coisa. Então a segunda metade do curso roda no seu próprio sistema seja qual for a escolha agora.
+Fazer a primeira metade ali também significa um conjunto de ferramentas em vez de dois.
 
 O que "instalado" quer dizer depende do seu sistema:
 
-- **Linux.** Use o terminal como está. Os comandos abaixo são do Ubuntu 24.04; outra distribuição
-  tem as mesmas ferramentas com os mesmos nomes no próprio gerenciador de pacotes.
-- **Windows.** Instale o WSL, o Subsistema do Windows para Linux, com o Ubuntu 24.04 (`wsl --install
-  -d Ubuntu-24.04` num PowerShell aberto como administrador, depois reinicie). O WSL é um Linux
-  pequeno que compartilha seus arquivos e sua rede, e todo comando abaixo roda dentro dele sem
-  mudança. O Postman e o Android Studio, que têm janelas, são instalados no próprio Windows.
-- **macOS.** O app Terminal roda zsh, que aceita todo comando deste curso. O curl já vem. Instale o
-  Node 22 com o instalador de nodejs.org e o jq com o Homebrew (`brew install jq`). Nenhum passo do
-  macOS foi executado para este curso, então um número de versão pode diferir do seu.
+- Linux. Use o terminal como está. Os comandos abaixo são do Ubuntu 24.04; outra distribuição tem as
+  mesmas ferramentas com os mesmos nomes no próprio gerenciador de pacotes.
+- Windows. Instale o WSL, o Subsistema do Windows para Linux, com o Ubuntu 24.04 (`wsl --install -d
+  Ubuntu-24.04` num PowerShell aberto como administrador, depois reinicie). O WSL é um Linux pequeno
+  que compartilha seus arquivos e sua rede, e todo comando abaixo roda dentro dele sem mudança. O
+  Postman e o Android Studio, que têm janelas, são instalados no próprio Windows.
+- macOS. O app Terminal roda zsh, que aceita todo comando deste curso. O curl já vem. Instale o Node
+  22 com o instalador de nodejs.org e o jq com o Homebrew (`brew install jq`). Nenhum passo do macOS
+  foi executado para este curso, então um número de versão pode diferir do seu.
 
-**Uma máquina virtual** serve para as lições 1 a 13 se você preferir manter as ferramentas longe do
-seu sistema: VirtualBox no Windows ou no Linux, UTM num Mac, com uma imagem do Ubuntu Server 24.04 de
-ubuntu.com. A lição 4 de `virtualization` monta uma passo a passo. Conte com instalar o Android
-Studio no seu próprio sistema quando a lição 14 chegar, de qualquer forma.
+Uma máquina virtual serve para as lições 1 a 13 se você preferir manter as ferramentas longe do seu
+sistema. Use VirtualBox no Windows ou no Linux, ou UTM num Mac, com uma imagem do Ubuntu Server
+24.04 de ubuntu.com. A lição 4 de `virtualization` monta uma passo a passo. Conte com instalar o
+Android Studio no seu próprio sistema quando a lição 14 chegar, de qualquer forma.
 
-**Online**, o GitHub Codespaces dá uma máquina Linux com terminal no navegador, sem custo para o seu
+Online, o GitHub Codespaces dá uma máquina Linux com terminal no navegador, sem custo para o seu
 computador. O GitHub dá às contas pessoais uma cota mensal de horas e cobra além dela, em termos que
-ele define e pode mudar. Não foi executado para este curso. Basta para as lições 1 a 13, e não roda
-um emulador Android, que precisa de um hardware que um codespace não expõe.
+ele define e pode mudar. Não foi executado para este curso. Basta para as lições 1 a 13, mas não
+roda um emulador Android, que precisa de um hardware que um codespace não expõe.
 
 ## Montando
 
@@ -102,6 +101,6 @@ Um Node 22 mais novo se comporta igual para este curso. O Node 24 também deve, 
 
 Toda transcrição do curso foi gravada no Ubuntu 24.04 e mostra o prompt `ana@laptop:~/boxoffice$`.
 Ana é a testadora de cujo terminal elas vêm; o seu mostra o seu usuário e a sua máquina. Quase tudo
-o que o boxoffice responde é igual em qualquer máquina, com duas exceções: o cabeçalho `Date`, que é
+o que o boxoffice responde é igual em qualquer máquina. Há duas exceções: o cabeçalho `Date`, que é
 o instante em que a requisição foi feita, e os tokens da lição 3, que carregam a hora em que foram
 emitidos.

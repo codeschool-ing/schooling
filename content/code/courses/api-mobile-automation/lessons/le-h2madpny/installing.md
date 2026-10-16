@@ -3,9 +3,9 @@ title: Postman, and keeping your work in files
 version: 1
 ---
 
-**Postman is a desktop application that sends HTTP requests and keeps them**, so a request you
-built once can be sent tomorrow exactly as it was. Everything it sends, curl sent in lesson 1. What
-it adds is memory and a window: each request is saved under a name, the answer is laid out in panes,
+**Postman is a desktop application that sends HTTP requests and keeps them**, so a request you built
+once can be sent tomorrow exactly as it was. Everything it sends, curl sent in lesson 1. What it
+adds is memory and a window. Each request is saved under a name, the answer is laid out in panes,
 and the requests of one API sit together in a *collection*. It is also the tool most QA teams open
 first when a new API arrives, which is reason enough to know it.
 
@@ -27,10 +27,10 @@ with nothing to configure. Start boxoffice in its own terminal, as in lesson 1, 
 anything.
 
 **The free plan asks you to sign in, and keeps your collections in Postman's cloud.** That is
-Postman's business, and the terms are Postman's to change: they did in 2023, when the Scratch Pad,
-the way of working without an account, was retired. So this course keeps every collection as a
-JSON file in your own project, under `~/boxoffice/postman/`. You save the files from these lessons
-and import them into the app. A file is yours whatever the plan becomes: Newman runs it in lesson 6
+Postman's business, and the terms are Postman's to change. They did in 2023, when the Scratch Pad,
+the way of working without an account, was retired. So this course keeps every collection as a JSON
+file in your own project, under `~/boxoffice/postman/`. You save the files from these lessons and
+import them into the app. A file is yours whatever the plan becomes: Newman runs it in lesson 6
 without an account, and git keeps its history like any other file.
 
 Make the directory now, in your first terminal:

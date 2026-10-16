@@ -272,8 +272,8 @@ Three shows, at fixed dates in November 2026, so the course reads the same whene
 | `sh-102` | Auto da Compadecida | 7 November, 20:00 | R$ 80,00 | 120 |
 | `sh-103` | O Pagador de Promessas | 8 November, 18:00 | R$ 65,00 | 4 |
 
-The last one is small on purpose: four seats is a show you can sell out with two requests, which
-is how lesson 2 tests what happens when there are none left.
+The last one is small on purpose. Four seats is a show you can sell out with two requests, which is
+how lesson 2 tests what happens when there are none left.
 
 Everything lives in the program's memory. **Stopping boxoffice and starting it again puts it back
 exactly as it began**, with every seat free and the first order numbered `ord-1001`. Tests depend on
@@ -300,7 +300,7 @@ ana@laptop:~/boxoffice$ curl localhost:8080/health
 
 `{"status":"ok"}` is the answer. Two notes on the request. `localhost` is the name every computer
 gives itself, so the request never leaves your machine, and `:8080` is the port boxoffice listens
-on. The next request lists the shows; `-s` keeps curl quiet about its progress, and `| jq` hands the
+on. The next request lists the shows. `-s` keeps curl quiet about its progress, and `| jq` hands the
 answer to jq, which lays JSON out one field per line:
 
 ```

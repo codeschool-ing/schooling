@@ -14,7 +14,7 @@ a sua sintaxe.
 A sintaxe dos cenários é o **Gherkin**, a linguagem do Cucumber, uma ferramenta para descrever
 comportamento em passos que uma pessoa consegue ler: `Given`, `When`, `Then`, `And`. No Cucumber, um
 passo como `When the customer asks for the list of shows` não significa nada sozinho. Alguém escreve
-um método Java com essa frase numa anotação, e o método manda a requisição, guarda a resposta num
+um método Java com essa frase numa anotação. O método manda a requisição, guarda a resposta num
 campo e deixa o método do passo seguinte conferi-la. Esses métodos são o **código de cola**, e numa
 suíte Cucumber existe um para cada frase distinta, muitas vezes mais código que os próprios
 cenários.
@@ -22,7 +22,7 @@ cenários.
 Os passos do Karate não são frases livres. `url`, `path`, `method`, `status`, `header` e `match` são
 palavras-chave que o Karate já sabe executar, então `When method get` manda uma requisição sem
 nenhum método seu por trás. O cenário é o teste. O que você perde é a liberdade de escrever um passo
-nas palavras do negócio; um cenário do Karate se lê como HTTP, porque é isso que ele descreve.
+nas palavras do negócio. Um cenário do Karate se lê como HTTP, porque é isso que ele descreve.
 
 ## O projeto
 
@@ -93,16 +93,16 @@ Salve como `karate/pom.xml`:
 
 Ele tem a forma do da lição 7, com três diferenças:
 
-- **as dependências** são o Karate e o JUnit. `io.karatelabs:karate-junit6` é o Karate com a sua
-  ponte para o JUnit 6, e ele declara o JUnit como algo que o projeto fornece, e não algo que ele
-  traz, então o `pom.xml` cita o `junit-jupiter` por conta própria, na mesma versão que a lição 7
-  usou. Sem ele o único arquivo Java não compila, porque nada traz a anotação `@TestFactory` que
-  ele usa. O grupo é `io.karatelabs`; artigos mais antigos mostram `com.intuit.karate`, o grupo com
-  que o Karate era publicado antes de se mudar, e o Karate 2 só existe no novo.
-- **`testResources`**, que diz ao Maven para copiar para o classpath tudo o que não é Java em
+- as dependências são o Karate e o JUnit. `io.karatelabs:karate-junit6` é o Karate com a sua ponte
+  para o JUnit 6. Ele declara o JUnit como algo que o projeto fornece, e não algo que ele traz,
+  então o `pom.xml` cita o `junit-jupiter` por conta própria, na mesma versão que a lição 7 usou.
+  Sem ele o único arquivo Java não compila, porque nada traz a anotação `@TestFactory` que ele usa.
+  O grupo é `io.karatelabs`. Artigos mais antigos mostram `com.intuit.karate`, o grupo com que o
+  Karate era publicado antes de se mudar, e o Karate 2 só existe no novo.
+- `testResources`, que diz ao Maven para copiar para o classpath tudo o que não é Java em
   `src/test/java`. A convenção do Karate é manter cada arquivo `.feature` ao lado do runner que o
-  inicia, e sem esse bloco o Maven os deixaria para trás e o Karate não acharia nada.
-- os **plugins** têm versão fixa pelo mesmo motivo da seção 07 da lição 7.
+  inicia. Sem esse bloco, o Maven os deixaria para trás e o Karate não acharia nada.
+- os plugins têm versão fixa pelo mesmo motivo da seção 07 da lição 7.
 
 | o quê | versão | o que faz aqui |
 |---|---|---|
@@ -136,7 +136,7 @@ class BoxofficeTest {
 ```
 
 Esse é todo o Java. `@TestFactory` marca um método que não testa nada sozinho, mas devolve testes
-para o JUnit rodar, e `Karate.run().relativeTo(getClass())` devolve um para cada cenário de cada
+para o JUnit rodar. `Karate.run().relativeTo(getClass())` devolve um para cada cenário de cada
 arquivo `.feature` no mesmo diretório da classe. O nome da classe termina em `Test` para que o
 Surefire a encontre, como a lição 7 descobriu do jeito difícil.
 

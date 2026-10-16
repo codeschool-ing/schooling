@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A test in Postman is a few lines of JavaScript attached to a request, run after its answer
-arrives.** The request is the same as in lesson 4; the script reads the answer and says, by name,
+arrives.** The request is the same as in lesson 4. The script reads the answer and says, by name,
 what was right and what was not. This section gives you the whole collection with its scripts and
 runs it. The four sections after it take the scripts apart.
 
@@ -322,11 +322,11 @@ It replaces the file of lesson 4, so save it as `postman/boxoffice.postman_colle
 ```
 
 It is longer for three reasons. Each request carries an `event` with `"listen": "test"`, the script
-Postman runs after the response. The collection carries one with `"listen": "prerequest"`, which runs
-before every request. And there are three new requests: **HEAD one show**, **Read cancelled order**,
-and a fifth folder, `seat rules`, with one request in it. In Postman the scripts appear on each
-request's **Scripts** tab, as *Pre-request* and *Post-response*; older versions of the app called the
-second one *Tests*, which is why the file still says `test`.
+Postman runs after the response. The collection carries one with `"listen": "prerequest"`, which
+runs before every request. And there are three new requests: **HEAD one show**, **Read cancelled
+order**, and a fifth folder, `seat rules`, with one request in it. In Postman the scripts appear on
+each request's **Scripts** tab, as *Pre-request* and *Post-response*. Older versions of the app
+called the second one *Tests*, which is why the file still says `test`.
 
 ## Running it without the window
 
@@ -345,14 +345,14 @@ npm warn deprecated @faker-js/faker@5.5.3: Please update to a newer version.
 ```
 
 `--yes` lets npx download without asking, and `@6.2.3` pins the version every transcript was
-recorded with. The four `npm warn deprecated` lines appear only on that first download: they say that
-some libraries Newman is built on are no longer maintained by their authors. They are a fact about
-Newman, not a fault on your machine, and nothing in this course depends on them.
+recorded with. The four `npm warn deprecated` lines appear only on that first download. They say
+that some libraries Newman is built on are no longer maintained by their authors. They are a fact
+about Newman, not a fault on your machine, and nothing in this course depends on them.
 
-Every run below also passes `--disable-unicode`. Without it Newman marks folders,
-requests and passed tests with small symbols that some terminal fonts cannot draw; with it, it
-writes them out as words: `Folder`, `Sub-folder` for a request inside a folder, `Root` for one
-outside any folder, and `Pass`.
+Every run below also passes `--disable-unicode`. Without it, Newman marks folders, requests and
+passed tests with small symbols that some terminal fonts cannot draw. With it, Newman writes them
+out as words: `Folder`, `Sub-folder` for a request inside a folder, `Root` for one outside any
+folder, and `Pass`.
 
 ## A first run that goes wrong
 
@@ -465,7 +465,7 @@ Sub-folder Read cancelled order
 Every request in the folder failed, and the first failure is the only one that matters. **Create
 order** answered `401`: boxoffice received no token. The token request did run, inside the
 collection's pre-request script, and the script saved the token in a collection variable. But the
-`lab` environment still defines `token`, empty, and lesson 4 section 04 said what happens then: the
+`lab` environment still defines `token`, empty, and lesson 4 section 04 said what happens then. The
 environment is the narrower scope, so its empty value wins, and every request went out with nothing
 after `Bearer`.
 
@@ -588,5 +588,5 @@ Sub-folder Order seats
 Seventeen passes and one failure, which is the one this collection is meant to fail. **HEAD one
 show** checks that `HEAD` answers like `GET`, and boxoffice still refuses it with `405`, the defect
 lesson 1 found. A test that fails until a defect is fixed is the defect report in a form a machine
-can repeat, and it turns green on the day somebody fixes boxoffice, without anybody remembering to
+can repeat. It turns green on the day somebody fixes boxoffice, without anybody remembering to
 check. Lesson 6 reads the table at the bottom line by line.

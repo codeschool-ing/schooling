@@ -48,10 +48,10 @@ The request for an invoice is a file. It is the order of three seats for sh-103 
 </soap:Envelope>
 ```
 
-The `soap` prefix is bound to SOAP 1.1's namespace, so this envelope speaks 1.1. The `inv` prefix
-is bound to `urn:example:invoice:v1`, the `targetNamespace` of the WSDL, which is how a real service
-knows these are its elements; the stand-in's regular expressions ignore the prefix. The empty `soap:Header` could be left out; it is there to show where
-a signature or a security token would go.
+The `soap` prefix is bound to SOAP 1.1's namespace, so this envelope speaks 1.1. The `inv` prefix is
+bound to `urn:example:invoice:v1`, the `targetNamespace` of the WSDL, which is how a real service
+knows these are its elements. The stand-in's regular expressions ignore the prefix. The empty
+`soap:Header` could be left out; it is there to show where a signature or a security token would go.
 
 ## A request that works
 
@@ -91,7 +91,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8085/invoice -H 'content-type: text/xm
 ```
 
 The same request a second time got the next number. The `issuedAt` and `verificationCode` you get
-will differ from these: the first is the moment of the call, in UTC as the `Z` says, and the second
+will differ from these. The first is the moment of the call, in UTC as the `Z` says, and the second
 is computed from the number, the order and the amount.
 
 ## Three faults the service should give
@@ -170,8 +170,9 @@ ana@laptop:~/boxoffice$ sed '/amountCents/d' soap/issue.xml | curl -s localhost:
 ```
 
 **`soap:Server` for a request that broke the contract.** The service blamed itself, and the
-`faultstring` is a JavaScript error, the sign of a check that was never written: the code called
-`.trim()` on a field that was not there. Two things are wrong, and a defect report names both:
+`faultstring` is a JavaScript error. That is the sign of a check that was never written: the code
+called `.trim()` on a field that was not there. Two things are wrong, and a defect report names
+both:
 
 | | |
 |---|---|
@@ -182,5 +183,5 @@ ana@laptop:~/boxoffice$ sed '/amountCents/d' soap/issue.xml | curl -s localhost:
 | **why it matters** | a caller that retries `Server` faults will retry a request that can never succeed; the message tells a stranger what the service is written in |
 
 The second point is a security finding as well as a tidiness one. An error message that repeats the
-internals helps nobody using the service and helps anybody probing it, so a tester checks that a
-fault says what was wrong with the request and nothing about the code.
+internals helps nobody using the service and helps anybody probing it. A tester checks that a fault
+says what was wrong with the request and nothing about the code.

@@ -3,15 +3,15 @@ title: A payment provider of your own
 version: 1
 ---
 
-**The first stand-in is about sixty lines of Node, written for this course, with no packages.** It plays
-the payment provider boxoffice calls: it takes a charge at `POST /charges` and answers `201` with an
-id and a status. It also does the two things the real provider never would. It answers however you
-tell it to, and it keeps a list of every charge it received.
+**The first stand-in is about sixty lines of Node, written for this course, with no packages.** It
+plays the payment provider boxoffice calls: it takes a charge at `POST /charges` and answers `201`
+with an id and a status. It also does the two things the real provider never would. It answers
+however you tell it to, and it keeps a list of every charge it received.
 
-What it has to imitate is fixed by boxoffice's own code, in the function `charge`: a `POST` to
-`$PAYMENTS_URL/charges` with a JSON body holding `amount_cents` and `reference`, an `idempotency-key`
-header, an answer expected within two seconds, and **anything but `201` treated as a failure**. That
-last rule comes back in section 06.
+What it has to imitate is fixed by boxoffice's own code, in the function `charge`. It sends a `POST`
+to `$PAYMENTS_URL/charges` with a JSON body holding `amount_cents` and `reference`, and an
+`idempotency-key` header. It expects an answer within two seconds, and **it treats anything but
+`201` as a failure**. That last rule comes back in section 06.
 
 In `~/boxoffice`, open a new file and save it as `payments-stub.mjs`:
 
@@ -79,7 +79,7 @@ http.createServer(async (req, res) => {
 }).listen(PORT, () => console.log(`payments stub listening on http://localhost:${PORT}, mode ${mode}`));
 ```
 
-Its control surface is four requests, kept apart from the provider's own address by names starting
+Its control surface is four requests, kept apart from the provider's own address. Their names start
 with two underscores, a common convention for "this belongs to the stand-in, not to the thing it
 imitates":
 
@@ -140,8 +140,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8090/__requests | jq
 ```
 
 That is the observation the real provider would never give you. The amount is two seats at 8000
-cents, the reference is the order's id, and **the idempotency key is the order's id too**, because
-the request did not carry an `Idempotency-Key` of its own; boxoffice's code says `key || id`. Lesson
+cents, the reference is the order's id, and **the idempotency key is the order's id too**. The
+request did not carry an `Idempotency-Key` of its own, and boxoffice's code says `key || id`. Lesson
 13 is about that key.
 
 ## A failure, on demand
@@ -169,7 +169,7 @@ POST /charges 201 (decline)
 
 The other two modes, `slow` and `down`, make boxoffice answer `504` and `502`; lesson 13 tests both,
 and what a failed order leaves behind. A stand-in that trusted its own configuration would be a
-silent failure waiting to happen, so this one refuses a mode it does not know, before it listens on
+silent failure waiting to happen. This one refuses a mode it does not know, before it listens on
 anything:
 
 ```

@@ -41,7 +41,7 @@ max-age=60`, os dois cabeçalhos que dizem como ler e como guardar esta resposta
 
 **Pretty não é o que o servidor mandou.** É o corpo interpretado e organizado de novo, um campo por
 linha, do jeito que o jq organizou. O servidor mandou uma linha só, sem espaços. Na maioria dos dias
-isso não faz diferença; quando os bytes exatos importam, como num teste de espaços, de ordem dos
+isso não faz diferença. Quando os bytes exatos importam, como num teste de espaços, de ordem dos
 campos ou de um corpo que não é bem JSON, mude para *Raw*, que é o texto como chegou.
 
 Agora peça um espetáculo que não existe, `http://localhost:8080/v1/shows/sh-999`. O status vira
@@ -53,10 +53,10 @@ que um cliente decide como interpretar o corpo.
 
 **O Postman manda mais cabeçalhos do que você digitou.** Ele acrescenta um `User-Agent` com o
 próprio nome, um `Accept`, um `Postman-Token` com um valor aleatório e alguns sobre a conexão. Eles
-aparecem na aba Headers da requisição, atrás de uma opção de cabeçalhos *ocultos*, e o Console do
-Postman, aberto pela barra de baixo, mostra cada requisição exatamente como saiu. Isso importa no dia
-em que uma requisição funciona no Postman e falha no seu app: a diferença pode ser um cabeçalho que o
-Postman acrescentou e o seu app não manda.
+aparecem na aba Headers da requisição, atrás de uma opção de cabeçalhos *ocultos*. O Console do
+Postman, aberto pela barra de baixo, mostra cada requisição exatamente como saiu. Isso importa no
+dia em que uma requisição funciona no Postman e falha no seu app: a diferença pode ser um cabeçalho
+que o Postman acrescentou e o seu app não manda.
 
 Não salve esta requisição ainda. A seção 06 importa uma coleção inteira, com esta requisição já
 dentro, com um nome.

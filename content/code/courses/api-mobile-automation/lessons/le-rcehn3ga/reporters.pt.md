@@ -47,8 +47,9 @@ ana@laptop:~/boxoffice$ grep -B1 -A2 '<failure' results/newman.xml
 ```
 
 Dezoito casos de teste, um por asserção, e a falha traz a mesma mensagem que o terminal mostrou. Um
-sistema de CI que lê o arquivo desenha os dezoito nomes, marca um de vermelho e consegue dizer que o
-mesmo teste falhou em toda execução desde que foi escrito, o que a saída do terminal não consegue.
+sistema de CI que lê o arquivo desenha os dezoito nomes e marca um de vermelho. Ele também consegue
+dizer que o mesmo teste falhou em toda execução desde que foi escrito, o que a saída do terminal não
+consegue.
 
 ## JSON, o formato que os seus scripts leem
 
@@ -72,7 +73,7 @@ uma pergunta sobre uma execução não é respondida pela tabela, a resposta est
 para fazê-la sobre a execução de ontem tanto quanto sobre a de hoje.
 
 O `htmlextra` faz uma página que uma pessoa consegue navegar, com cada requisição e resposta
-organizadas. Ele não faz parte do Newman, é instalado como qualquer outro pacote com
-`npm install --save-dev`, e não foi usado neste curso. **Um reporter de terceiros é código que lê toda
+organizadas. Ele não faz parte do Newman: é instalado como qualquer outro pacote, com
+`npm install --save-dev`. Não foi usado neste curso. **Um reporter de terceiros é código que lê toda
 requisição e resposta da sua execução**, tokens incluídos, então merece a mesma olhada que qualquer
 outra dependência antes de entrar.

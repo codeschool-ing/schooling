@@ -8,11 +8,11 @@ is.** It is the simplest credential there is: no login, no expiry, one string ag
 boxoffice protects one address with a key, the theatre's sales report at `/v1/reports/sales`, and
 expects it in a header called `X-Api-Key`.
 
-The belief worth dropping is that a key says *who* is asking. It says *which program*, or which
-copy of a configuration file. Every person and every script that holds the string is the same
-caller to the server, so a key cannot tell the box-office manager from a script somebody copied it
-into last year. That is why keys suit a report a few internal programs read, and why boxoffice
-does not use one for orders, where it matters which client placed which order.
+The belief worth dropping is that a key says *who* is asking. It says *which program*, or which copy
+of a configuration file. Every person and every script that holds the string is the same caller to
+the server. A key cannot tell the box-office manager from a script somebody copied it into last
+year. That is why keys suit a report a few internal programs read, and why boxoffice does not use
+one for orders, where it matters which client placed which order.
 
 ## Three requests
 
@@ -45,9 +45,9 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/reports/sales -H 'X-Api-Key: l
 {"orders":0,"seats":0,"revenue_cents":0}
 ```
 
-The wrong key gets the same answer as no key, word for word. **That sameness is correct**: a server
-that said *"key not recognised"* to one and *"key missing"* to the other would tell a stranger
-which guesses came close to being a key. The right key gets the report, with nothing sold yet.
+The wrong key gets the same answer as no key, word for word. **That sameness is correct.** A server
+that said *"key not recognised"* to one and *"key missing"* to the other would tell a stranger which
+guesses came close to being a key. The right key gets the report, with nothing sold yet.
 
 ## Why a header, and not the address
 
@@ -59,16 +59,15 @@ ana@laptop:~/boxoffice$ curl -s 'localhost:8080/v1/reports/sales?key=lab-only-st
 {"type":"about:blank","title":"Unauthorized","status":401,"detail":"send the staff key in X-Api-Key"}
 ```
 
-The refusal is not the interesting part. Look at the second terminal, where boxoffice logs every
-request it answers:
+Now look at the second terminal, where boxoffice logs every request it answers:
 
 ```
 GET /v1/reports/sales?key=lab-only-staff-key 401
 ```
 
 **The key is in the log, in plain text.** boxoffice's log writes the method, the address and the
-status, which is what nearly every web server, proxy and load balancer logs by default; an address
+status, which is what nearly every web server, proxy and load balancer logs by default. An address
 also lands in browser history and in the `Referer` header sent to other sites. A header is not
-logged unless somebody chooses to log it. So the test a tester adds is not only "the key works in
-the header", but **"the key does not work in the address"**, because an API that accepted it there
-would invite every client to leak it.
+logged unless somebody chooses to log it. So beside "the key works in the header", a tester adds a
+second test: **"the key does not work in the address"**. An API that accepted it there would invite
+every client to leak it.

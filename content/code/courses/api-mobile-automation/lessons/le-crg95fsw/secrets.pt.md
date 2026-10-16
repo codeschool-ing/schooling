@@ -70,7 +70,7 @@ ana@laptop:~/boxoffice$ git status --short
 ```
 
 Três arquivos, e o `.env` não está entre eles. **Confira isso antes do primeiro commit, não
-depois**: um segredo que chegou a um repositório precisa ser tratado como vazado mesmo que o commit
+depois.** Um segredo que chegou a um repositório precisa ser tratado como vazado mesmo que o commit
 seja removido, porque todo clone feito nesse meio-tempo ainda o tem. A correção, então, é trocar o
 segredo, não reescrever o histórico.
 
@@ -86,10 +86,10 @@ ana@laptop:~/boxoffice$ bash -xc 'curl -s -o /dev/null localhost:8080/v1/orders/
 ```
 
 O token inteiro, às claras, numa linha que parece depuração inofensiva. A lição 6 roda requisições
-no GitHub Actions, que esconde os valores que você registra como segredos onde quer que apareçam
-num log; **um token que o job buscou sozinho não está registrado, então nada o esconde**, a menos que
-o passo o marque antes com `::add-mask::`. Isso não foi rodado para este curso, e a lição 6 mostra o
-workflow. O que quem testa pode conferir em qualquer lugar é o próprio log: procure na saída de uma
+no GitHub Actions, que esconde os valores que você registra como segredos onde quer que apareçam num
+log. **Um token que o job buscou sozinho não está registrado, então nada o esconde**, a menos que o
+passo o marque antes com `::add-mask::`. Isso não foi rodado para este curso, e a lição 6 mostra o
+workflow. O que quem testa pode conferir em qualquer lugar é o próprio log. Procure na saída de uma
 execução por `Bearer ` e pelo começo de um JWT, `eyJ`, e trate qualquer um dos dois como defeito do
 pipeline.
 

@@ -21,7 +21,7 @@ A terminal reads `~/.bashrc` once, when it opens. **Open a new terminal**, or ru
 in this one. If a new terminal still cannot find it, `ls /opt/node/bin` says whether the unpacking
 worked, and `tail -1 ~/.bashrc` shows whether the `export` line is there. On Ubuntu Desktop the
 message is longer and suggests `sudo apt install nodejs`. Do not take the suggestion: that is the
-old Node 18 the last section went around.
+old Node 18 that section 03 went around.
 
 ## `Failed to connect`
 

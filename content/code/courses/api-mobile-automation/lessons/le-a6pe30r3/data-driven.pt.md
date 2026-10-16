@@ -54,7 +54,7 @@ A lição 2 perguntou qual deles o boxoffice deveria aceitar; esta tabela diz o 
 As linhas usam o `sh-102`, de que nenhuma outra feature compra, então este arquivo e o
 `orders.feature` não conseguem esgotar os lugares um do outro. Cada execução compra sete lugares
 dele, um e seis, então os 120 lugares duram dezessete execuções e a décima oitava vê um `409` na
-linha de seis lugares; reiniciar o boxoffice os devolve.
+linha de seis lugares. Reiniciar o boxoffice os devolve.
 
 ```
 ana@laptop:~/boxoffice/karate$ mvn -q test -Dkarate.options=classpath:boxoffice/seats.feature
@@ -76,5 +76,5 @@ POST /v1/orders 422
 ```
 
 Um token, depois seis pedidos, um por linha, com os status da tabela. **O Karate rodou as linhas na
-ordem da tabela**, então o log se lê como a tabela lida de cima para baixo, o que facilita casar uma
+ordem da tabela**, então o log se lê como a tabela lida de cima para baixo. Isso facilita casar uma
 linha do log do servidor com uma linha de uma execução que falhou.

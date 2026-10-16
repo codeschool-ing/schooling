@@ -52,13 +52,13 @@ ana@laptop:~/boxoffice$ node -e 'const c = JSON.parse(Buffer.from(process.argv[1
 ```
 
 900 seconds between issue and expiry, the `expires_in` of section 03, and the moment it stops
-working in local time. **Two checks a tester makes on every token**: the lifetime is what the API
+working in local time. **Two checks a tester makes on every token.** The lifetime is what the API
 documents, and the scope is no wider than the client was granted.
 
 ## Changing a claim
 
 Since anyone can read a token, anyone can also edit one. The `auditor` client is allowed only to
-read; take a token of its own and rewrite its scope so that it claims to write too. First the
+read. Take a token of its own and rewrite its scope so that it claims to write too. First the
 auditor's token, the way section 03 fetched the other one:
 
 ```
@@ -80,13 +80,13 @@ HTTP/1.1 401 Unauthorized
 www-authenticate: Bearer error="invalid_token", error_description="bad signature"
 ```
 
-`bad signature`. The signature was made over the original header and payload; boxoffice recomputed
+`bad signature`. The signature was made over the original header and payload. boxoffice recomputed
 it over the edited ones, they differ, and the token is refused before its claims are even read. This
 is the most important test in the lesson: **a server that accepted an edited token would let every
 client grant itself any scope**. Its companion is a token whose header says `"alg": "none"` and
 whose signature is empty, which a careless library treats as needing no check. `readToken` in
-`boxoffice.mjs` never looks at `alg` and always recomputes its own signature, so it would refuse that
-one too; against an API whose code you cannot read, you send it and see.
+`boxoffice.mjs` never looks at `alg` and always recomputes its own signature, so it would refuse
+that one too. Against an API whose code you cannot read, you send it and see.
 
 ## What a restart does to a token
 
@@ -99,8 +99,8 @@ ana@laptop:~/boxoffice$ node boxoffice.mjs
 boxoffice listening on http://localhost:8080
 ```
 
-Every order is gone and every seat is free again, as lesson 1 said. Then the token fetched before the restart, in
-an order:
+Every order is gone and every seat is free again, as lesson 1 said. Then the token fetched before
+the restart, in an order:
 
 ```
 ana@laptop:~/boxoffice$ code localhost:8080/v1/orders -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' -d '{"show_id":"sh-101","seats":1}'
@@ -132,8 +132,8 @@ HTTP/1.1 401 Unauthorized
 www-authenticate: Bearer error="invalid_token", error_description="token expired"
 ```
 
-The same token, a `201` and then a `401`, and the `www-authenticate` header says why: `token
-expired`. An expiry test does not need the real lifetime, only a server configured to shorten it,
-which is exactly what a setting like `TOKEN_TTL` is for. Restart boxoffice once more with a plain
-`node boxoffice.mjs` before going on, and fetch `TOKEN` again: the one you had was issued by a server
-whose tokens lived fifteen minutes, and it may have run out by now.
+The same token, a `201` and then a `401`, and the `www-authenticate` header says why:
+`token expired`. An expiry test does not need the real lifetime, only a server configured to shorten
+it, which is exactly what a setting like `TOKEN_TTL` is for. Restart boxoffice once more with a
+plain `node boxoffice.mjs` before going on, and fetch `TOKEN` again. The one you had was issued by a
+server whose tokens lived fifteen minutes, and it may have run out by now.

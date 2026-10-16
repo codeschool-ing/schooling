@@ -9,11 +9,10 @@ proof until it expires. Every later request carries the token, never the origina
 token leaks, it is useful for minutes; if the secret leaked on every request, it would be useful
 until somebody noticed.
 
-boxoffice's orders work that way, using the OAuth 2.0 **client credentials** grant, the one meant
+boxoffice's orders work that way. They use the OAuth 2.0 **client credentials** grant, the one meant
 for a program acting on its own behalf with no person involved: a test suite, a nightly job, another
-server. The program sends three form fields to `POST /oauth/token`: the grant type, its
-`client_id` and its `client_secret`. boxoffice knows two clients, and lesson 1's one-liner used the
-first:
+server. The program sends three form fields to `POST /oauth/token`: the grant type, its `client_id`
+and its `client_secret`. boxoffice knows two clients, and lesson 1's one-liner used the first:
 
 | client | secret | scope |
 |---|---|---|
@@ -46,15 +45,14 @@ The body has four fields, and each is something to check:
 
 One header matters as much as the body. **`cache-control: no-store` forbids any cache from keeping
 the response**, so no proxy between the program and the server holds a copy of a live token for the
-next person to receive. OAuth requires it on this endpoint (RFC 6749, §5.1), and a token
-response without it is a defect even when every field in the body is right. The same section also
-asks for `Pragma: no-cache`, the HTTP/1.0 spelling of the same instruction, and boxoffice does not
-send it; it only matters to caches old enough to ignore `cache-control`, and a report can call it
-minor.
+next person to receive. OAuth requires it on this endpoint (RFC 6749, §5.1), and a token response
+without it is a defect even when every field in the body is right. The same section also asks for
+`Pragma: no-cache`, the HTTP/1.0 spelling of the same instruction, and boxoffice does not send it.
+It only matters to caches old enough to ignore `cache-control`, so a report can call it minor.
 
 `expires_in` is relative: "900 seconds from now". A client works out when to fetch a new token from
-the moment it received this one, which is why a well-behaved client asks again a little before the
-time is up rather than waiting for a refusal.
+the moment it received this one. A well-behaved client asks again a little before the time is up,
+rather than waiting for a refusal.
 
 ## A wrong secret
 
@@ -64,8 +62,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/oauth/token -d grant_type=client_
 ```
 
 `invalid_client`, in OAuth's own error shape, which lesson 2 section 05 explained. The answer is the
-same whether the client exists and the secret is wrong or the client does not exist at all, for the
-same reason the staff key's refusals were the same in section 02.
+same whether the client exists and the secret is wrong, or the client does not exist at all. The
+reason is the one that made the staff key's refusals the same in section 02.
 
 ## Keeping it in a variable
 

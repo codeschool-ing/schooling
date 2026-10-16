@@ -3,14 +3,14 @@ title: Prism, a stand-in made from the contract
 version: 1
 ---
 
-**Prism reads an OpenAPI document and answers as the API it describes.** Nobody writes a mapping:
-every path, parameter and status code in `openapi.yaml` from lesson 2 becomes something Prism
-answers, with bodies built from the schemas and their examples. It also checks every request
-against the contract and refuses one that breaks it, saying exactly how. Prism is made by
-Stoplight, free and open source, and runs on Node.
+**Prism reads an OpenAPI document and answers as the API it describes.** Nobody writes a mapping.
+Every path, parameter and status code in `openapi.yaml` from lesson 2 becomes something Prism
+answers, with bodies built from the schemas and their examples. It also checks every request against
+the contract and refuses one that breaks it, saying exactly how. Prism is made by Stoplight, free
+and open source, and runs on Node.
 
 Who uses this is worth saying first, because it is not boxoffice's tester. **A mock of boxoffice
-serves the people who call boxoffice**: the team building the Tickets app of lesson 14 can work
+serves the people who call boxoffice.** The team building the Tickets app of lesson 14 can work
 against Prism before boxoffice exists, or while it is down, or when they need an answer boxoffice
 will not give on demand. The tester's interest is in what such a mock can and cannot promise them.
 
@@ -39,11 +39,11 @@ Stop nothing: boxoffice stays on 8080, and Prism listens on 4010. In a terminal 
 npx --yes @stoplight/prism-cli@5.14.2 mock openapi.yaml
 ```
 
-It prints one line for each operation it found in the contract, eight of them, and then `Prism is
-listening on http://127.0.0.1:4010`; after that, a few lines for every request it handles, saying
-what it checked and which response it chose. Those lines are worth reading when an answer surprises
-you. They are not shown here, because Prism marks each one with symbols the course's transcripts
-cannot draw.
+It prints one line for each operation it found in the contract, eight of them, and then
+`Prism is listening on http://127.0.0.1:4010`. After that it prints a few lines for every request it
+handles, saying what it checked and which response it chose. Those lines are worth reading when an
+answer surprises you. They are not shown here, because Prism marks each one with symbols the
+course's transcripts cannot draw.
 
 ## What it answers
 
@@ -65,8 +65,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:4010/v1/shows | jq
 ```
 
 **The shape is right and the content is invented.** One show, because the schema says `shows` is an
-array and Prism makes the smallest one; the id and the date are the `example` values written in the
-contract; the title is the word `string` and the numbers are `0`, because nothing better was written
+array and Prism makes the smallest one. The id and the date are the `example` values written in the
+contract. The title is the word `string` and the numbers are `0`, because nothing better was written
 down. An order:
 
 ```
@@ -149,7 +149,7 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/
 
 Prism refuses `seat_class`, because the contract's `NewOrder` says `additionalProperties: false`;
 boxoffice creates the order. A client team developing against Prism meets the stricter of the two,
-so this disagreement would surprise nobody in production; it only hides that the real server lets
+so this disagreement would surprise nobody in production. It only hides that the real server lets
 mistakes through. A date that is not a date:
 
 ```
@@ -164,7 +164,7 @@ The contract declares `date` as `format: date` and lists a `400` for the list of
 answers it. boxoffice never checks the format: it answers `200` with an empty list, so a client that
 sent `tomorrow` instead of `2026-11-07` is told there are no shows that day. **This one bites in
 production**: an app built against Prism shows an error message for a malformed date that boxoffice
-will never send. Either the code learns to refuse, or the contract stops promising, and a tester's
+will never send. Either the code learns to refuse, or the contract stops promising. A tester's
 report says which side disagreed and leaves the choice to whoever owns the contract.
 
 ## Choosing the answer
@@ -176,6 +176,6 @@ ana@laptop:~/boxoffice$ curl -si localhost:4010/v1/orders -H 'authorization: Bea
 HTTP/1.1 409 Conflict
 ```
 
-Any status the contract lists for that operation can be asked for this way, `402`, `502`, `504`,
-which is how an app's error screens get built before the server can produce any of them. Stop Prism
+Any status the contract lists for that operation can be asked for this way: `402`, `502`, `504`.
+That is how an app's error screens get built before the server can produce any of them. Stop Prism
 with Ctrl-C when you are done: section 06 starts it again, on the same port, in a different role.

@@ -28,21 +28,21 @@ deles não for cumprido.
 ```
 
 O desenho é o motivo de a ideia existir. A coluna do schema cobre todo campo. O app Tickets lê três
-deles. Um quiosque de ingressos que o teatro está planejando precisa de um campo que o boxoffice nunca
-teve. Dessas colunas o time do provedor consegue ler duas coisas que nenhum schema mostra. **Ele pode
-mudar `id` e `price_cents` à vontade**, no que depende destes consumidores: nenhum contrato os lê,
-então renomeá-los não quebra ninguém que tenha escrito um. E estão pedindo algo a ele: o `venue` do
-quiosque é um pedido, achado do lado do provedor antes de o quiosque ser lançado, como uma conferência
-que falhou e não como um chamado de suporte.
+deles. Um quiosque de ingressos que o teatro está planejando precisa de um campo que o boxoffice
+nunca teve. Dessas colunas o time do provedor consegue ler duas coisas que nenhum schema mostra.
+**Ele pode mudar `id` e `price_cents` à vontade**, no que depende destes consumidores: nenhum
+contrato os lê, então renomeá-los não quebra ninguém que tenha escrito um. E estão pedindo algo a
+ele. O `venue` do quiosque é um pedido, achado do lado do provedor antes de o quiosque ser lançado,
+como uma conferência que falhou e não como um chamado de suporte.
 
 ## O que custa, e o que não substitui
 
 Os contratos só cobrem os consumidores que os escrevem. Uma API pública com desconhecidos como
 clientes não tem como perguntar a todos, e é por isso que contratos guiados pelo consumidor servem
 melhor dentro de uma organização, onde os consumidores são times conhecidos. Os contratos também
-precisam viajar dos consumidores até o build do provedor; times que usam Pact em geral mantêm um
-*Pact Broker*, um servidor que guarda os contratos e os resultados das verificações, ou o PactFlow
-hospedado. Este curso passa o arquivo à mão.
+precisam viajar dos consumidores até o build do provedor. Times que usam Pact em geral mantêm um
+*Pact Broker*, um servidor que guarda os contratos e os resultados das verificações, ou usam o
+PactFlow hospedado. Este curso passa o arquivo à mão.
 
 Nada disso substitui o schema nem o teste de ponta a ponta. O schema confere tudo o que o provedor
 manda, o contrato confere aquilo de que cada consumidor depende, e os testes de integração da lição 12

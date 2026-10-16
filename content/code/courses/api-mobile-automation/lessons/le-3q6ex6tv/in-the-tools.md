@@ -80,7 +80,7 @@ Save it as `postman/schemas.postman_collection.json`:
 ```
 
 In the Postman app it imports like lesson 4's collection, and the variable is on the collection's
-*Variables* tab; the app was not run for this course. Run it with the Newman lesson 6 installed,
+*Variables* tab. The app was not run for this course. Run it with the Newman lesson 6 installed,
 against the lab environment:
 
 ```
@@ -153,7 +153,7 @@ draft-07 does not have would now be checked without it, and the next tool shows 
 ## REST Assured
 
 REST Assured has a module for schemas, `json-schema-validator`, released with the same version
-numbers as REST Assured itself. Add it to the project of lesson 7: the whole file has one new
+numbers as REST Assured itself. Add it to the project of lesson 7. The whole file has one new
 dependency, after `rest-assured`; save it as `restassured/pom.xml`:
 
 ```xml
@@ -315,17 +315,18 @@ ana@laptop:~/boxoffice/restassured$ echo $?
 
 **The third test failed: REST Assured says the order without a payment matches the schema.** The
 first two passed, so nothing looked wrong with live answers, and that is the danger. Its validator
-implements draft 4, from 2013, which has no `if` and no `then`. It skips keywords it does not know,
-and the warning that says so, `the following keywords are unknown and will be ignored: [$id, if,
-then]`, is printed only inside a failure message like this one. The two live checks passed and
-printed nothing at all. **A rule in the schema was silently not enforced**, and only a test
-aimed at the rule itself showed it.
+implements draft 4, from 2013, which has no `if` and no `then`. It skips keywords it does not know.
+The warning that says so, `the following keywords are unknown and will be ignored: [$id, if, then]`,
+is printed only inside a failure message like this one. The two live checks passed and printed
+nothing at all. **A rule in the schema was silently not enforced**, and only a test aimed at the
+rule itself showed it.
 
-A tester has three honest answers, and pretending the rule is checked is not one of them. Keep the
-`if`/`then` rule in the Node check of section 03, which enforces it, and say so in the Java test;
-assert it in Java with an ordinary assertion instead; or replace the module with a validator that
-implements 2020-12. This course takes the first, and marks the test so the gap shows on every run
-instead of being deleted. Add the import and the annotation:
+A tester has three honest answers, and pretending the rule is checked is not one of them. The first
+is to keep the `if`/`then` rule in the Node check of section 03, which enforces it, and say so in
+the Java test. The second is to assert it in Java with an ordinary assertion instead. The third is
+to replace the module with a validator that implements 2020-12. This course takes the first, and
+marks the test so the gap shows on every run instead of being deleted. Add the import and the
+annotation:
 
 ```java
 import org.junit.jupiter.api.Disabled;

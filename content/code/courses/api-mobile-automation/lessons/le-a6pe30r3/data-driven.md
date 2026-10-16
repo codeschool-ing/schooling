@@ -51,10 +51,10 @@ failures under one title. The rows, and what each one is for:
 `2` would send the number and `'2'` sends the string, and the two are different inputs to the
 server. Lesson 2 asked which of them boxoffice should accept; this table says what it does.
 
-The rows use `sh-102`, which none of the other features buys from, so this file and
-`orders.feature` cannot run each other out of seats. Each run buys seven seats of it, one and six,
-so the 120 seats last seventeen runs and the eighteenth sees a `409` on its six-seat row; a restart
-of boxoffice puts them back.
+The rows use `sh-102`, which none of the other features buys from, so this file and `orders.feature`
+cannot run each other out of seats. Each run buys seven seats of it, one and six, so the 120 seats
+last seventeen runs and the eighteenth sees a `409` on its six-seat row. A restart of boxoffice puts
+them back.
 
 ```
 ana@laptop:~/boxoffice/karate$ mvn -q test -Dkarate.options=classpath:boxoffice/seats.feature
@@ -76,5 +76,5 @@ POST /v1/orders 422
 ```
 
 One token, then six orders, one per row, with the statuses of the table. **Karate ran the rows in
-the order of the table**, so the log reads like the table read down, which makes it easy to match
-a line of the server's log to a row of a failed run.
+the order of the table**, so the log reads like the table read down. That makes it easy to match a
+line of the server's log to a row of a failed run.

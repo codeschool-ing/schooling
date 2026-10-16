@@ -11,16 +11,16 @@ keeping it, so it is kept.
 
 ## Three places it lives
 
-- **Government.** In Brazil, every electronic invoice for goods, the **NF-e**, is sent to the state
-  tax office's web services as a SOAP message, and the invoice inside it is XML signed with a
-  digital certificate. eSocial, the federal system where employers report their labour and tax
-  obligations, takes signed XML through SOAP web services too, so any company with employees sends
-  SOAP messages whether its developers know it or not.
-- **Banks and insurers.** Payment networks, credit checks and policy systems often sit behind a
-  SOAP interface that the bank's own mobile app never sees. The app speaks JSON to the bank's
-  backend, and the backend speaks SOAP to the core system.
-- **Large companies inside.** Airlines, telecoms and retailers connected their systems through SOAP
-  for two decades. A new mobile app at one of them is often a JSON layer on top of those services.
+- Government. In Brazil, every electronic invoice for goods, the **NF-e**, is sent to the state tax
+  office's web services as a SOAP message. The invoice inside it is XML signed with a digital
+  certificate. eSocial, the federal system where employers report their labour and tax obligations,
+  takes signed XML through SOAP web services too. Any company with employees sends SOAP messages,
+  whether its developers know it or not.
+- Banks and insurers. Payment networks, credit checks and policy systems often sit behind a SOAP
+  interface that the bank's own mobile app never sees. The app speaks JSON to the bank's backend,
+  and the backend speaks SOAP to the core system.
+- Large companies inside. Airlines, telecoms and retailers connected their systems through SOAP for
+  two decades. A new mobile app at one of them is often a JSON layer on top of those services.
 
 That last pattern is where a junior tester is most likely to meet SOAP: **behind an API you are
 testing, rather than in front of you.** boxoffice could work the same way. A theatre in São Paulo

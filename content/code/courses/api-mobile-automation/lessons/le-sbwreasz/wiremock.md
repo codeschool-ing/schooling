@@ -8,7 +8,7 @@ a *mapping*, a JSON file that says which requests it matches and what to send ba
 directory of them, answers what matches, records everything it receives, and tells you in detail
 when a request matched nothing. It is written in Java and is free and open source, under the Apache
 licence. It runs as a library inside a Java test, as the REST Assured tests of lesson 7 could use
-it, or as a server on its own, which is how this section runs it.
+it. It also runs as a server on its own, which is how this section runs it.
 
 ## Two mappings
 
@@ -62,9 +62,9 @@ patterns line by line:
 | `bodyPatterns` | `matchesJsonPath` | a body in which that JSONPath finds something: a field that exists, or a filter that holds |
 | `priority` | 1 and 5 | when two mappings match, **the lower number wins** |
 
-The order of six seats of sh-101, 48000 cents, matches both files. Priority 1 picks the decline, and
-without it WireMock would choose by its own rule, the mapping added most recently, which is not a
-rule you want a test to depend on.
+The order of six seats of sh-101, 48000 cents, matches both files. Priority 1 picks the decline.
+Without it, WireMock would choose by its own rule, the mapping added most recently, and that is not
+a rule you want a test to depend on.
 
 ## Starting it
 
@@ -144,8 +144,8 @@ $[?(@.amount_cents > 40000)]                               | {"amount":16000,"re
 
 The left column is the closest mapping, the right column is the request, and the line with `<<<<<`
 is the difference. WireMock picked the declining mapping as the closest because it has fewer
-conditions to fail, and both mappings refused the body for the same reason: neither JSONPath finds
-an `amount_cents`. When a test fails because the stand-in "did not answer", this report is the first
+conditions to fail. Both mappings refused the body for the same reason: neither JSONPath finds an
+`amount_cents`. When a test fails because the stand-in "did not answer", this report is the first
 thing to read, and it usually turns the problem into a one-word fix.
 
 ## boxoffice, pointed at WireMock
@@ -165,8 +165,9 @@ ana@laptop:~/boxoffice$ PAYMENTS_URL=http://localhost:8091 node boxoffice.mjs
 boxoffice listening on http://localhost:8080
 ```
 
-Your token from section 03 still works, though boxoffice restarted: a token is checked by its
-signature and its expiry, and nothing about it was kept in the memory the restart wiped. Order two seats, then six:
+Your token from section 03 still works, though boxoffice restarted. A token is checked by its
+signature and its expiry, and nothing about it was kept in the memory the restart wiped. Order two
+seats, then six:
 
 ```
 ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' -d '{"show_id":"sh-101","seats":2}'

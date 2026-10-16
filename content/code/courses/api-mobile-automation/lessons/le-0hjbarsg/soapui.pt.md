@@ -13,7 +13,7 @@ descreve as telas dele em palavras, e nada disso é uma captura.
 ## O produto e a licença
 
 Há dois produtos com um nome dentro. O **SoapUI Open Source** é gratuito, publicado pela SmartBear
-sob a European Union Public Licence e baixado de soapui.org; é ele que esta seção descreve. O
+sob a European Union Public Licence e baixado de soapui.org. É ele que esta seção descreve. O
 **ReadyAPI** é o produto pago da SmartBear construído sobre ele, com um editor melhor para testes
 orientados a dados, relatórios e suporte, vendido por assinatura em termos que a SmartBear define e
 pode mudar. Artigos mais antigos chamam o pago de *SoapUI Pro*, o nome que ele tinha antes.
@@ -41,8 +41,7 @@ WSDL, visto da cadeira de quem testa.
 ## Suítes, casos, passos e asserções
 
 Uma requisição sozinha é uma verificação manual. Para um teste repetível você acrescenta uma
-**TestSuite**, e dentro dela um **TestCase**, que é uma lista de **passos de teste** rodados em
-ordem:
+TestSuite, e dentro dela um TestCase, que é uma lista de passos de teste rodados em ordem:
 
 | passo | faz | o equivalente no curl |
 |---|---|---|
@@ -79,15 +78,15 @@ construir quem chama antes de o serviço real existir, ou para fazer o real falh
 ideia da lição 11, que constrói mocks para uma dependência REST.
 
 O projeto inteiro é salvo como um arquivo XML, que vai para o controle de versão ao lado do código.
-Um script chamado `testrunner.sh` (`testrunner.bat` no Windows), no diretório `bin` do SoapUI, roda
-as suítes de um projeto sem a janela e pode escrever relatórios JUnit, que é como um pipeline as
+Um script no diretório `bin` do SoapUI, `testrunner.sh`, ou `testrunner.bat` no Windows, roda as
+suítes de um projeto sem a janela. Ele pode escrever relatórios JUnit, que é como um pipeline as
 roda, do jeito que o Newman roda uma coleção do Postman na lição 6.
 
 ## Você não precisa do SoapUI para testar SOAP
 
 O SoapUI é uma comodidade, e grande quando um WSDL tem quarenta operações. Nada do que ele manda é
 especial: a seção 05 chamou o serviço com o curl, e as ferramentas das lições anteriores também
-conseguem. O Postman manda um envelope como corpo XML cru com os dois cabeçalhos; o REST Assured,
-na lição 7, posta XML e lê as respostas com o `XmlPath` dele; o Karate, na lição 8, tem uma palavra
+conseguem. O Postman manda um envelope como corpo XML cru com os dois cabeçalhos. O REST Assured, na
+lição 7, posta XML e lê as respostas com o `XmlPath` dele. O Karate, na lição 8, tem uma palavra
 `soap action` exatamente para isso. Escolha o SoapUI quando a equipe já guarda os projetos nele ou o
 WSDL é grande, e escolha a ferramenta onde seus testes de API já moram quando não é.

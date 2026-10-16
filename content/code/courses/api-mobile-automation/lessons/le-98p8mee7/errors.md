@@ -5,8 +5,8 @@ version: 1
 
 **An error response is an answer like any other, and a client is written against its shape.** The
 belief to drop is that errors are the unplanned part of an API, where anything goes as long as the
-status code is right. An app that tells a user *"only 1 seat left"* is reading the body of a `409`;
-if one endpoint puts the message in `detail` and another in `message`, the app shows an empty box
+status code is right. An app that tells a user *"only 1 seat left"* is reading the body of a `409`.
+If one endpoint puts the message in `detail` and another in `message`, the app shows an empty box
 for one of them.
 
 boxoffice answers every error in one shape, the one RFC 9457 defines under the name **problem
@@ -34,7 +34,7 @@ The RFC allows a fifth, `instance`, naming the occurrence, and any further field
 add; boxoffice uses neither. The split between `type` and `detail` is the one a tester cares about:
 **a program branches on `status` and `type`, and never on the wording of `detail`.** boxoffice's
 `type` is always `about:blank`, so here the status code is all a client can branch on. An API with
-two kinds of `422` worth telling apart would give each a `type` of its own, and a test would check
+two kinds of `422` worth telling apart would give each a `type` of its own. A test would then check
 the `type` rather than parse an English sentence that somebody will one day reword.
 
 ## The label on the body
@@ -50,9 +50,9 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{content_type}\n'
 ```
 
 The label is part of the contract, and it catches tests out. **A test that checks the content type
-starts with `application/json` fails on every error boxoffice gives**, and a client that parses
-only bodies labelled exactly `application/json` ignores them. The body is still JSON; the `+json`
-at the end of the label says so, and a check should accept it.
+starts with `application/json` fails on every error boxoffice gives**. A client that parses only
+bodies labelled exactly `application/json` ignores them. The body is still JSON; the `+json` at the
+end of the label says so, and a check should accept it.
 
 ## The exception, and why it is allowed
 

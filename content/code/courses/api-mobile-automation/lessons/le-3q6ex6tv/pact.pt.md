@@ -4,12 +4,12 @@ version: 1
 ---
 
 **O Pact é a ferramenta mais conhecida para contratos guiados pelo consumidor, e funciona em duas
-metades.** Do lado do consumidor, um teste descreve uma requisição e a resposta que espera, e o Pact
-roda um provedor de mentira que responde exatamente isso, para que o próprio código do consumidor seja
-exercitado contra ele; quando o teste passa, o Pact escreve a interação num arquivo de pact. Do lado
-do provedor, o Pact lê o arquivo, manda cada requisição ao provedor de verdade e compara as respostas
-com o que o consumidor disse que precisa. A lição 11 é sobre servidores mock em geral; aqui o mock é
-só o meio de escrever o contrato.
+metades.** Do lado do consumidor, um teste descreve uma requisição e a resposta que espera. O Pact
+roda um provedor de mentira que responde exatamente isso, para que o próprio código do consumidor
+seja exercitado contra ele. Quando o teste passa, o Pact escreve a interação num arquivo de pact. Do
+lado do provedor, o Pact lê o arquivo, manda cada requisição ao provedor de verdade e compara as
+respostas com o que o consumidor disse que precisa. A lição 11 é sobre servidores mock em geral;
+aqui o mock é só o meio de escrever o contrato.
 
 O Pact para JavaScript está no npm. O núcleo dele é uma biblioteca nativa, escrita em Rust, que o npm
 instala como um pacote já compilado para o seu sistema operacional, então não há nada para compilar:

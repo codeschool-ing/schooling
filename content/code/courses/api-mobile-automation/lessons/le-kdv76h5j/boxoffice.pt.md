@@ -273,7 +273,7 @@ você o faça:
 | `sh-102` | Auto da Compadecida | 7 de novembro, 20:00 | R$ 80,00 | 120 |
 | `sh-103` | O Pagador de Promessas | 8 de novembro, 18:00 | R$ 65,00 | 4 |
 
-O último é pequeno de propósito: quatro lugares é uma sessão que se esgota com duas requisições, e é
+O último é pequeno de propósito. Quatro lugares é uma sessão que se esgota com duas requisições, e é
 assim que a lição 2 testa o que acontece quando não sobra nenhum.
 
 Tudo vive na memória do programa. **Parar o boxoffice e iniciá-lo de novo o deixa exatamente como
@@ -301,7 +301,7 @@ ana@laptop:~/boxoffice$ curl localhost:8080/health
 
 `{"status":"ok"}` é a resposta. Duas observações sobre a requisição. `localhost` é o nome que todo
 computador dá a si mesmo, então a requisição nunca sai da sua máquina, e `:8080` é a porta em que o
-boxoffice escuta. A próxima requisição lista os espetáculos; `-s` cala o progresso do curl, e `| jq`
+boxoffice escuta. A próxima requisição lista os espetáculos. `-s` cala o progresso do curl, e `| jq`
 passa a resposta ao jq, que dispõe o JSON um campo por linha:
 
 ```

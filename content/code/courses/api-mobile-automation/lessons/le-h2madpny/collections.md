@@ -5,7 +5,7 @@ version: 1
 
 **A collection is the requests of one API, in folders, with what they share written once.** Shared
 means the authorization, the variables, and later the scripts of lesson 5. A collection is also an
-order: when it runs as a whole, its requests go top to bottom, folder by folder, which is what lets
+order. When it runs as a whole, its requests go top to bottom, folder by folder, which is what lets
 one request use what an earlier one received.
 
 The collection for boxoffice has three folders and six requests. Save it as `postman/boxoffice.postman_collection.json`:
@@ -172,12 +172,12 @@ own terminal, so it starts with no orders, and send the requests in order:
 3. **Create order** answers `201 Created` for one seat of `sh-103`.
 4. **Read order** answers `200` for `ord-1001`, and **Cancel order** answers `204`.
 
-Step 4 works only because boxoffice numbers its first order `ord-1001` after a restart; restart it
+Step 4 works only because boxoffice numbers its first order `ord-1001` after a restart. Restart it
 again before the next time, or edit `orderId` by hand. Step 2 has to be repeated after 15 minutes,
-when the token expires and every order request answers `401`. **Both hand steps are what lesson 5
-removes**: a script saves the token and the order's `location` as they arrive, and the requests read
-them from there.
+when the token expires and every order request answers `401`. **Lesson 5 removes both hand steps.**
+A script saves the token and the order's `location` as they arrive, and the requests read them from
+there.
 
 The Runner, which Postman opens from the collection's **Run** button, sends the six in that order
-and shows each answer, and it was not captured for this course either. Lesson 6 runs the same file
-from the terminal with Newman, where every line can be shown.
+and shows each answer. It was not captured for this course either. Lesson 6 runs the same file from
+the terminal with Newman, where every line can be shown.

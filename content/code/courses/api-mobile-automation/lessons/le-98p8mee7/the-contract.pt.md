@@ -3,10 +3,10 @@ title: O contrato, por escrito
 version: 1
 ---
 
-**Um contrato é a promessa da API aos clientes, escrita onde os dois lados conseguem ler: que
-endereços existem, o que cada um aceita e toda resposta que ele pode dar.** Sem um, a única
-descrição do que o boxoffice faz é o próprio boxoffice, e um teste só consegue conferir que o
-servidor faz o que o servidor faz. Esse teste passa para sempre e não acha nada.
+**Um contrato é a promessa da API aos clientes, escrita onde os dois lados conseguem ler.** Ele diz
+que endereços existem, o que cada um aceita e toda resposta que pode dar. Sem um, a única descrição
+do que o boxoffice faz é o próprio boxoffice. Um teste então só consegue conferir que o servidor faz
+o que o servidor faz. Esse teste passa para sempre e não acha nada.
 
 A crença comum é que o código é a verdade e o documento é uma descrição dele, escrita depois e
 autorizada a ficar para trás. Quem testa olha ao contrário. **O contrato é o que foi prometido, e
@@ -19,13 +19,13 @@ discordância é um achado, e a seção 06 acha três.
 
 Dois tipos de programa dependem do contrato e nunca do código um do outro. O **consumidor** é
 qualquer coisa que chama a API: um app, um site, um teste. O **provedor** é o servidor que responde.
-O consumidor é construído contra o documento, o provedor é conferido contra ele, e quando os dois o
-respeitam eles funcionam juntos sem que nenhuma das equipes leia o código da outra.
+O consumidor é construído contra o documento e o provedor é conferido contra ele. Quando os dois o
+respeitam, eles funcionam juntos sem que nenhuma das equipes leia o código da outra.
 
 ## OpenAPI
 
 A linguagem mais usada para um contrato HTTP é o OpenAPI, um documento em YAML ou JSON. Este está
-escrito na versão 3.1, que as ferramentas deste curso entendem: o Postman o importa, a lição 10
+escrito na versão 3.1, que as ferramentas deste curso entendem. O Postman o importa, a lição 10
 confere respostas contra schemas como os que estão dentro dele, e o servidor simulado da lição 11
 roda direto a partir dele. Aqui está o do boxoffice. Copie com o botão do bloco, abra seu editor no
 diretório do projeto, cole e salve como `openapi.yaml`:
@@ -309,10 +309,10 @@ redigitá-lo.
 
 ## Como lê-lo
 
-O arquivo tem quatro partes. `info` e `servers` dizem o que ele descreve e onde; `paths` lista todo
-endereço e o que cada método faz ali; `components` guarda as peças que vários caminhos
-compartilham, e um caminho aponta para elas com `$ref`. Quase toda a leitura acontece em `paths`, e
-a operação que compra lugares tem todo tipo de entrada:
+O arquivo tem quatro partes. `info` e `servers` dizem o que ele descreve e onde. `paths` lista todo
+endereço e o que cada método faz ali. `components` guarda as peças que vários caminhos compartilham,
+e um caminho aponta para elas com `$ref`. Quase toda a leitura acontece em `paths`, e a operação que
+compra lugares tem todo tipo de entrada:
 
 ```schooling-example
 {"language": "yaml", "parts": [{"code": "  /v1/orders:\n    post:\n      summary: Buy seats for a show", "note": "Um caminho, e debaixo dele uma entrada por método que ele aceita. `/v1/orders` só aceita `post`, então qualquer outra coisa ali está fora do contrato."}, {"code": "      security:\n        - oauth: ['orders:write']", "note": "Quem pode chamar: um token do esquema `oauth` com o escopo `orders:write`. O esquema é definido no fim do arquivo, e a lição 3 o testa."}, {"code": "      parameters:\n        - name: Idempotency-Key\n          in: header\n          required: false\n          description: Sending the same key again replays the first answer.\n          schema: { type: string }", "note": "Um cabeçalho opcional. `in` diz por onde um parâmetro viaja: `path`, `query` ou `header`. O que a chave faz é a lição 13."}, {"code": "      requestBody:\n        required: true\n        content:\n          application/json:\n            schema: { $ref: '#/components/schemas/NewOrder' }", "note": "O corpo é obrigatório e precisa ser JSON. A forma dele mora em `components` com o nome `NewOrder`, e o `$ref` aponta para lá em vez de repeti-la."}, {"code": "      responses:\n        '201':\n          description: The order, confirmed and paid.\n          headers:\n            location:\n              description: Where the order lives.\n              schema: { type: string, example: /v1/orders/ord-1001 }\n          content:\n            application/json:\n              schema: { $ref: '#/components/schemas/Order' }", "note": "As respostas são indexadas pelo código de status, entre aspas porque senão o YAML as leria como números. O `201` promete um cabeçalho `location` e um `Order` no corpo."}, {"code": "        '400': { $ref: '#/components/responses/Problem' }\n        '401': { $ref: '#/components/responses/Problem' }\n        '402': { $ref: '#/components/responses/Problem' }\n        '403': { $ref: '#/components/responses/Problem' }\n        '409': { $ref: '#/components/responses/Problem' }\n        '415': { $ref: '#/components/responses/Problem' }\n        '422': { $ref: '#/components/responses/Problem' }\n        '502': { $ref: '#/components/responses/Problem' }\n        '504': { $ref: '#/components/responses/Problem' }", "note": "Todo erro que esta operação pode dar, e todos com a mesma forma. Essa lista também é uma promessa: um código que não está nela, como o `500`, é um código que o cliente ouviu que nunca veria. A seção 05 lê a forma."}, {"code": "    NewOrder:\n      type: object\n      required: [show_id, seats]\n      additionalProperties: false\n      properties:\n        show_id: { type: string, example: sh-103 }\n        seats: { type: integer, minimum: 1, maximum: 6 }", "note": "As regras do corpo, mais abaixo no arquivo, em `components`. Os dois campos são obrigatórios; nenhum outro campo é permitido; `seats` é um inteiro de 1 a 6. Cada uma dessas cláusulas vira casos de teste na seção 06."}]}
@@ -320,9 +320,9 @@ a operação que compra lugares tem todo tipo de entrada:
 
 Ler um contrato é responder uma pergunta por requisição: **para esta entrada, que respostas são
 permitidas?** Para `POST /v1/orders`, o arquivo diz que um corpo com `show_id` e de 1 a 6 lugares, e
-nada mais, pode ser respondido com um `201` e um `location`; toda outra resposta é um de nove
-códigos de erro, todos com a mesma forma. Uma resposta fora dessa lista, um `500` por exemplo, quebra
-o contrato, diga o corpo o que disser.
+nada mais, pode ser respondido com um `201` e um `location`. Toda outra resposta é um de nove
+códigos de erro, todos com a mesma forma. Uma resposta fora dessa lista, um `500` por exemplo,
+quebra o contrato, diga o corpo o que disser.
 
 ## Conferindo uma promessa à mão
 

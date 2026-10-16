@@ -48,9 +48,9 @@ Salve como `soap/issue.xml`:
 </soap:Envelope>
 ```
 
-O prefixo `soap` está ligado ao namespace do SOAP 1.1, então este envelope fala 1.1. O prefixo
-`inv` está ligado a `urn:example:invoice:v1`, o `targetNamespace` do WSDL, que é como um serviço de
-verdade sabe que esses elementos são dele; as expressões regulares do substituto ignoram o prefixo.
+O prefixo `soap` está ligado ao namespace do SOAP 1.1, então este envelope fala 1.1. O prefixo `inv`
+está ligado a `urn:example:invoice:v1`, o `targetNamespace` do WSDL, que é como um serviço de
+verdade sabe que esses elementos são dele. As expressões regulares do substituto ignoram o prefixo.
 O `soap:Header` vazio poderia ficar de fora; ele está ali para mostrar onde iria uma assinatura ou
 um token de segurança.
 
@@ -91,7 +91,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8085/invoice -H 'content-type: text/xm
 ```
 
 A mesma requisição uma segunda vez recebeu o número seguinte. O `issuedAt` e o `verificationCode`
-que você receber vão ser diferentes destes: o primeiro é o momento da chamada, em UTC como diz o
+que você receber vão ser diferentes destes. O primeiro é o momento da chamada, em UTC como diz o
 `Z`, e o segundo é calculado a partir do número, do pedido e do valor.
 
 ## Três falhas que o serviço deveria dar
@@ -170,7 +170,7 @@ ana@laptop:~/boxoffice$ sed '/amountCents/d' soap/issue.xml | curl -s localhost:
 ```
 
 **`soap:Server` para uma requisição que quebrou o contrato.** O serviço culpou a si mesmo, e a
-`faultstring` é um erro de JavaScript, o sinal de uma verificação que nunca foi escrita: o código
+`faultstring` é um erro de JavaScript. É o sinal de uma verificação que nunca foi escrita: o código
 chamou `.trim()` num campo que não estava ali. Duas coisas estão erradas, e um relatório de defeito
 nomeia as duas:
 
@@ -184,5 +184,5 @@ nomeia as duas:
 
 O segundo ponto é um achado de segurança, além de uma questão de capricho. Uma mensagem de erro que
 repete o funcionamento interno não ajuda ninguém que usa o serviço e ajuda qualquer um que o esteja
-sondando, então quem testa confere que uma falha diz o que estava errado na requisição e nada sobre
-o código.
+sondando. Quem testa confere que uma falha diz o que estava errado na requisição e nada sobre o
+código.

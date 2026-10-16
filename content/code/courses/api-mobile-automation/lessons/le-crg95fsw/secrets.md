@@ -68,7 +68,7 @@ ana@laptop:~/boxoffice$ git status --short
 ?? openapi.yaml
 ```
 
-Three files, and `.env` is not among them. **Check this before the first commit, not after**: a
+Three files, and `.env` is not among them. **Check this before the first commit, not after.** A
 secret that reached a repository has to be treated as leaked even if the commit is removed, because
 every clone made in between still has it. The fix then is to change the secret, not to rewrite
 history.
@@ -86,10 +86,10 @@ ana@laptop:~/boxoffice$ bash -xc 'curl -s -o /dev/null localhost:8080/v1/orders/
 ```
 
 The whole token, in the clear, in a line that looks like harmless debugging. Lesson 6 runs requests
-in GitHub Actions, which hides the values you register as secrets wherever they appear in a log;
-**a token the job fetched for itself is not registered, so nothing hides it** unless the step marks
-it with `::add-mask::` first. That was not run for this course, and lesson 6 shows the workflow. What
-a tester can check anywhere is the log itself: search a run's output for `Bearer ` and for the start
+in GitHub Actions, which hides the values you register as secrets wherever they appear in a log. **A
+token the job fetched for itself is not registered, so nothing hides it** unless the step marks it
+with `::add-mask::` first. That was not run for this course, and lesson 6 shows the workflow. What a
+tester can check anywhere is the log itself. Search a run's output for `Bearer ` and for the start
 of a JWT, `eyJ`, and treat either as a defect in the pipeline.
 
 The same rule covers test reports. A tool that saves every request and response for a failed test

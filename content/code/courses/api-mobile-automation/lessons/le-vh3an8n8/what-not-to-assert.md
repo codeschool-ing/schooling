@@ -4,8 +4,8 @@ version: 1
 ---
 
 **A test should fail when the API is wrong, and only then.** A test that also fails when the clock
-moves, when another test ran first, or when the server adds a harmless field is a test people learn to
-ignore, and an ignored test catches nothing. The usual cause is asserting on something the API never
+moves, when another test ran first, or when the server adds a harmless field is a test people learn
+to ignore. An ignored test catches nothing. The usual cause is asserting on something the API never
 promised.
 
 This collection gets it wrong on purpose, three times. Save it as `postman/brittle.postman_collection.json`:
@@ -195,17 +195,18 @@ section 04 does.
 
 ## The whole body
 
-`eql` against the whole body repeats the id problem in every field, and adds one of its own: it fails
-the day boxoffice adds a field, such as a `created_at`, that no client reads. **Assert the fields the
-test is about.** The collection's Create order checks `show_id`, `seats` and `status`, because those
-are what the request asked for. `total_cents` and `payment` deserve tests too, but tests of their own,
-with names that say what rule they check: the price times the seats, the payment's reference.
+`eql` against the whole body repeats the id problem in every field, and adds one of its own. It
+fails the day boxoffice adds a field, such as a `created_at`, that no client reads. **Assert the
+fields the test is about.** The collection's Create order checks `show_id`, `seats` and `status`,
+because those are what the request asked for. `total_cents` and `payment` deserve tests too, but
+tests of their own, with names that say what rule they check: the price times the seats, the
+payment's reference.
 
 ## The Date header
 
 The third test passed both times, and it is the worst of the three. It checks that the `Date` header
 contains `10 Oct 2026`, which is true on the day the transcripts were recorded and false on every
-other: **a student running it today sees it fail on the first run.** `Date` is when the server
+other. **A student running it today sees it fail on the first run.** `Date` is when the server
 answered. A test may check that it exists and parses as a date; its value belongs to the clock.
 
 ## The same rule, in four lines

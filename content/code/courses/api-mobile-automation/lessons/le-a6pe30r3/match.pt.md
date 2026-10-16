@@ -65,15 +65,15 @@ da lição 7 resolveu não afirmando nada.
 
 ## Os três jeitos de comparar
 
-- **`match a == b`** é estrito: as mesmas chaves, os mesmos valores, nada a mais. `one show, whole`
-  o usa, então um campo novo na resposta do boxoffice reprova esse cenário até alguém decidir se o
+- `match a == b` é estrito: as mesmas chaves, os mesmos valores, nada a mais. `one show, whole` o
+  usa, então um campo novo na resposta do boxoffice reprova esse cenário até alguém decidir se o
   campo novo está certo.
-- **`match a contains b`** passa quando `a` contém `b`: uma lista que tem este item entre outros, um
+- `match a contains b` passa quando `a` contém `b`: uma lista que tem este item entre outros, um
   objeto que tem estas chaves entre outras. `the list holds the small show` acha o `sh-103` sem se
   importar com a posição.
-- **`match each a == b`** aplica `b` a cada item da lista `a`. `every show has the same shape`
-  confere os três espetáculos contra um modelo só, e um quarto espetáculo acrescentado amanhã também
-  é conferido.
+- `match each a == b` aplica `b` a cada item da lista `a`. `every show has the same shape` confere
+  os três espetáculos contra um modelo só, e um quarto espetáculo acrescentado amanhã também é
+  conferido.
 
 `match header etag == …` lê um cabeçalho da resposta pelo nome, sem ligar para maiúsculas, do jeito
 que a lição 1 disse que um teste deve fazer.
@@ -155,5 +155,5 @@ error, e não como failure, `Errors: 1`; o build fica vermelho do mesmo jeito. P
 antes de continuar.
 
 Essa rigidez é uma escolha. A lição 2 descobriu que o boxoffice aceita campos desconhecidos numa
-requisição sem reclamar; `==` é o hábito oposto do lado da resposta, e é o que percebe quando uma API
-começa a dizer mais do que o contrato prometeu.
+requisição sem reclamar. `==` é o hábito oposto do lado da resposta, e percebe quando uma API começa
+a dizer mais do que o contrato prometeu.

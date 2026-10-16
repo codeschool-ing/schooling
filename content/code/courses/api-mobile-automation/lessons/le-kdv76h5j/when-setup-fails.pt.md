@@ -18,10 +18,10 @@ bash: node: command not found
 ```
 
 Um terminal lê o `~/.bashrc` uma vez, quando abre. **Abra um terminal novo**, ou rode `source
-~/.bashrc` neste. Se um terminal novo ainda não o encontra, `ls /opt/node/bin` diz se a descompactação
-funcionou, e `tail -1 ~/.bashrc` mostra se a linha do `export` está lá. No Ubuntu Desktop a mensagem é
-mais longa e sugere `sudo apt install nodejs`. Não aceite a sugestão: esse é o Node 18 antigo que a
-seção anterior contornou.
+~/.bashrc` neste. Se um terminal novo ainda não o encontra, `ls /opt/node/bin` diz se a
+descompactação funcionou, e `tail -1 ~/.bashrc` mostra se a linha do `export` está lá. No Ubuntu
+Desktop a mensagem é mais longa e sugere `sudo apt install nodejs`. Não aceite a sugestão: esse é o
+Node 18 antigo que a seção 03 contornou.
 
 ## `Failed to connect`
 

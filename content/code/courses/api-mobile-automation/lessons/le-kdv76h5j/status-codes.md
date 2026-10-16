@@ -15,7 +15,7 @@ turn up every week, and the habit of asking whether the code a server chose was 
 | `5xx` | the server failed | the server; the same request may work later |
 
 The line between `4xx` and `5xx` is the one that matters most. A `4xx` blames the request and a
-`5xx` blames the server, so **a server that answers `500` to a malformed request has two defects**:
+`5xx` blames the server. So **a server that answers `500` to a malformed request has two defects**:
 it crashed on bad input, and it told the client to try again when trying again cannot help.
 
 ## Making boxoffice say each one

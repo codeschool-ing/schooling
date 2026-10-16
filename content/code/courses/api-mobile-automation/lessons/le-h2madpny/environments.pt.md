@@ -62,10 +62,10 @@ só atende as suas próprias requisições. Para uma API de verdade, deixe o val
 você compartilha e digite-o no Postman só na sua máquina, pelos motivos que a lição 3 deu sobre
 segredos em arquivos.
 
-O Postman guarda dois valores para cada variável justamente para isso: um que viaja quando o
-ambiente é exportado ou compartilhado com um time, e outro que fica no seu computador. O aplicativo
-já renomeou essas duas colunas ao longo das versões; o que importa é qual delas um arquivo leva, e um
-arquivo exportado leva só a compartilhada.
+O Postman guarda dois valores para cada variável justamente para isso. Um viaja quando o ambiente é
+exportado ou compartilhado com um time, e o outro fica no seu computador. O aplicativo já renomeou
+essas duas colunas ao longo das versões. O que importa é qual delas um arquivo leva, e um arquivo
+exportado leva só a compartilhada.
 
 ## Importando
 
@@ -84,6 +84,6 @@ ana@laptop:~/boxoffice$ jq empty postman/lab.postman_environment.json
 jq: parse error: Expected separator between values at line 5, column 5
 ```
 
-O jq diz a linha e a coluna onde desistiu, e a coluna fica depois do erro, não em cima dele: a
+O jq diz a linha e a coluna onde desistiu, e a coluna fica depois do erro, não em cima dele. A
 vírgula falta no fim da linha 4, e o jq só percebeu no começo do valor seguinte. A mensagem do
 próprio Postman costuma ser menos precisa, então rode `jq empty` no arquivo primeiro.

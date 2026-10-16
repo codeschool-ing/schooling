@@ -64,15 +64,14 @@ lesson 7, section 04, solved by not asserting at all.
 
 ## The three ways to compare
 
-- **`match a == b`** is strict: the same keys, the same values, nothing extra. `one show, whole`
-  uses it, so a new field in boxoffice's answer fails that scenario until somebody decides whether
-  the new field is right.
-- **`match a contains b`** passes when `a` holds `b`: a list that has this item among others, an
-  object that has these keys among others. `the list holds the small show` finds `sh-103` without
-  caring where it sits.
-- **`match each a == b`** applies `b` to every item of the list `a`. `every show has the same
-  shape` checks all three shows against one template, and a fourth show added tomorrow is checked
-  too.
+- `match a == b` is strict: the same keys, the same values, nothing extra. `one show, whole` uses
+  it, so a new field in boxoffice's answer fails that scenario until somebody decides whether the
+  new field is right.
+- `match a contains b` passes when `a` holds `b`: a list that has this item among others, an object
+  that has these keys among others. `the list holds the small show` finds `sh-103` without caring
+  where it sits.
+- `match each a == b` applies `b` to every item of the list `a`. `every show has the same shape`
+  checks all three shows against one template, and a fourth show added tomorrow is checked too.
 
 `match header etag == …` reads a response header by name, in any case, the way lesson 1 said a
 test must.
@@ -154,5 +153,5 @@ step as an error rather than a failure, `Errors: 1`; the build is red either way
 back before going on.
 
 That strictness is a choice. Lesson 2 found that boxoffice accepts unknown fields in a request
-without complaint; `==` is the opposite habit on the response side, and it is the one that notices
-when an API starts saying more than its contract promised.
+without complaint. `==` is the opposite habit on the response side, and it notices when an API
+starts saying more than its contract promised.

@@ -5,9 +5,9 @@ version: 1
 
 **Um pipeline é uma máquina que roda os seus comandos toda vez que o código muda, e barra a mudança
 quando um comando sai com qualquer coisa que não seja 0.** Tudo ali é algo que você poderia digitar.
-O trabalho está em acertar a ordem: uma máquina nova não tem Newman, nem boxoffice rodando, nem
-`node_modules`, então o pipeline precisa construir cada um deles antes da execução, e guardar o
-relatório depois dela, aconteça o que acontecer.
+O trabalho está em acertar a ordem. Uma máquina nova não tem Newman, nem boxoffice rodando, nem
+`node_modules`. O pipeline precisa construir cada um deles antes da execução, e guardar o relatório
+depois dela, aconteça o que acontecer.
 
 Este é para o GitHub Actions, que roda um arquivo de workflow guardado no repositório. Crie o
 diretório com `mkdir -p .github/workflows` e então salve como `.github/workflows/api-tests.yml`:
@@ -91,7 +91,7 @@ execução aparece na aba **Actions** do repositório.
 
 O boxoffice inicia aqui com o segredo de laboratório embutido, porque o `.env` é ignorado pelo git e
 nunca chega ao runner. Um serviço de verdade pegaria o segredo dos segredos criptografados do
-repositório, como a lição 3 disse, e o segredo do cliente no arquivo de ambiente também, passado ao
+repositório, como a lição 3 disse. O segredo do cliente no arquivo de ambiente também, passado ao
 Newman com `--env-var clientSecret=...` em vez de escrito num arquivo que vai para o commit.
 
 ## Por que cada action está fixada num commit
@@ -233,9 +233,9 @@ Sub-folder Order seats
 exit code 1
 ```
 
-O `npm ci` apagou o `node_modules` e o instalou de novo a partir do lock, que é o começo limpo que um
-runner tem. O boxoffice iniciou, respondeu o `/health`, e a execução é a da seção 03, com uma falha e
-código de saída 1, que é o que o pipeline vai relatar até o boxoffice responder `HEAD`. **Um pipeline
+O `npm ci` apagou o `node_modules` e o instalou de novo a partir do lock, que é o começo limpo que
+um runner tem. O boxoffice iniciou e respondeu o `/health`, e a execução é a da seção 03: uma falha
+e código de saída 1. É o que o pipeline vai relatar até o boxoffice responder `HEAD`. **Um pipeline
 vermelho aqui é o resultado correto**: é o relato de defeito da lição 1, rodando a cada push.
 
 O que o projeto deve ter agora, do jeito que o git vê:

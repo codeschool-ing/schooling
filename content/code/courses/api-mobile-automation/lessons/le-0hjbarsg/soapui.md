@@ -12,11 +12,11 @@ words, and none of it is a capture.
 
 ## The product and the licence
 
-There are two products with one name in them. **SoapUI Open Source** is free, published by
-SmartBear under the European Union Public Licence, and downloaded from soapui.org; it is the one
-this section describes. **ReadyAPI** is SmartBear's paid product built on it, with a nicer editor
-for data-driven tests, reports and support, sold by subscription on terms SmartBear sets and can
-change. Older articles call the paid one *SoapUI Pro*, the name it had before.
+There are two products with one name in them. **SoapUI Open Source** is free, published by SmartBear
+under the European Union Public Licence, and downloaded from soapui.org. It is the one this section
+describes. **ReadyAPI** is SmartBear's paid product built on it, with a nicer editor for data-driven
+tests, reports and support, sold by subscription on terms SmartBear sets and can change. Older
+articles call the paid one *SoapUI Pro*, the name it had before.
 
 SoapUI also tests REST APIs, and many teams use it only for that. Its strength is still the WSDL:
 for REST it has nothing to read the operations from unless you give it an OpenAPI document.
@@ -40,8 +40,8 @@ chair.
 
 ## Test suites, cases, steps and assertions
 
-A request on its own is a manual check. For a repeatable test you add a **TestSuite**, and inside
-it a **TestCase**, which is a list of **test steps** run in order:
+A request on its own is a manual check. For a repeatable test you add a TestSuite, and inside it a
+TestCase, which is a list of test steps run in order:
 
 | step | does | the curl equivalent |
 |---|---|---|
@@ -79,15 +79,15 @@ the real service exists, or to make the real one fail on demand. That is the ide
 which builds mocks for a REST dependency.
 
 The whole project is saved as one XML file, which belongs in version control beside the code. A
-script called `testrunner.sh` (`testrunner.bat` on Windows), in SoapUI's `bin` directory, runs a
-project's test suites without the window and can write JUnit reports, which is how a pipeline runs
+script in SoapUI's `bin` directory, `testrunner.sh`, or `testrunner.bat` on Windows, runs a
+project's test suites without the window. It can write JUnit reports, which is how a pipeline runs
 them, as Newman runs a Postman collection in lesson 6.
 
 ## You do not need SoapUI to test SOAP
 
 SoapUI is a convenience, and a big one when a WSDL has forty operations. Nothing it sends is
-special: section 05 called the service with curl, and the tools of earlier lessons can too.
-Postman sends an envelope as a raw XML body with the two headers; REST Assured, in lesson 7, posts
-XML and reads replies with its `XmlPath`; Karate, in lesson 8, has a `soap action` keyword for
-exactly this. Choose SoapUI when the team already keeps its projects there or the WSDL is large,
-and choose the tool your API tests already live in when it is not.
+special: section 05 called the service with curl, and the tools of earlier lessons can too. Postman
+sends an envelope as a raw XML body with the two headers. REST Assured, in lesson 7, posts XML and
+reads replies with its `XmlPath`. Karate, in lesson 8, has a `soap action` keyword for exactly this.
+Choose SoapUI when the team already keeps its projects there or the WSDL is large, and choose the
+tool your API tests already live in when it is not.

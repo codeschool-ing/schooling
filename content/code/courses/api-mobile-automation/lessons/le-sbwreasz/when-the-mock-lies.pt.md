@@ -12,8 +12,8 @@ suíte de testes pode ter: está tudo verde, e a produção está quebrada.
 
 Imagine que o mapping do WireMock tivesse sido escrito de memória, por alguém que achava que um
 provedor de pagamento responde `200 OK` a uma cobrança. O WireMock aceita um mapping pela API de
-administração além de por arquivo, que é como um teste prepara um substituto para um caso só, então o
-errado pode ser acrescentado com ele rodando. A prioridade 1 o põe na frente dos dois arquivos:
+administração além de por arquivo, que é como um teste prepara um substituto para um caso só. Então
+o errado pode ser acrescentado com ele rodando. A prioridade 1 o põe na frente dos dois arquivos:
 
 ```
 ana@laptop:~/boxoffice$ curl -s localhost:8091/__admin/mappings -d '{"priority":1,"request":{"method":"POST","url":"/charges"},"response":{"status":200,"jsonBody":{"id":"ch-wm-3","status":"approved"}}}' | jq -c '{id, response}'
@@ -43,7 +43,7 @@ POST /v1/orders 502
 `payments answered 200`: o boxoffice só aceita `201`, então tratou a cobrança como falha e recusou o
 pedido. **Aqui o boxoffice está certo e o mock está errado**, e o teste ficou vermelho, que é o caso
 de sorte. Inverta e a sorte acaba. Se o boxoffice tivesse sido escrito contra esse mock, por alguém
-que conferisse `200`, todo teste passaria, e em produção todo pedido falharia contra um provedor que
+que conferisse `200`, todo teste passaria. Em produção, todo pedido falharia contra um provedor que
 responde `201`. A suíte teria testado o boxoffice contra um provedor que não existe.
 
 Então, quando um teste contra um substituto falha, há sempre dois suspeitos, e **a pergunta "quem está
@@ -100,10 +100,10 @@ uma cobrança é respondida com `201`, e `status` é `approved` ou `declined` e 
 ## O Prism como árbitro
 
 A seção 05 usou o Prism para responder a partir de um contrato. Ele tem um segundo modo, `proxy`, em
-que **não responde nada por conta própria**: repassa cada requisição a um servidor de verdade e confere
-a requisição e a resposta contra o contrato no caminho. Com `--errors`, uma violação em qualquer
-direção vira uma resposta de erro em vez de uma linha no log do Prism. Pare o mock do Prism com Ctrl-C
-se ele ainda estiver rodando, e inicie o árbitro no lugar dele, na frente do WireMock:
+que **não responde nada por conta própria**. Ele repassa cada requisição a um servidor de verdade e
+confere a requisição e a resposta contra o contrato no caminho. Com `--errors`, uma violação em
+qualquer direção vira uma resposta de erro em vez de uma linha no log do Prism. Pare o mock do Prism
+com Ctrl-C se ele ainda estiver rodando, e inicie o árbitro no lugar dele, na frente do WireMock:
 
 ```sh
 npx --yes @stoplight/prism-cli@5.14.2 proxy payments.yaml http://localhost:8091 --errors
@@ -152,17 +152,17 @@ recusasse, talvez não.
 ```
 
 Duas conferências se encontram no contrato, e um substituto só é honesto enquanto as duas passam. A
-primeira é o substituto contra o contrato: rode os testes do boxoffice com o `PAYMENTS_URL` apontando
-para um proxy do Prism na frente do substituto, e toda cobrança que qualquer teste fizer é conferida
-no caminho, então um mapping que se desviou reprova a execução que o usa. A segunda é o provedor
-contra o contrato, porque o contrato também é só uma afirmação até alguém conferir o provedor de
-verdade contra ele. Esse é o teste de contrato da lição 10, e é tarefa do provedor tanto quanto sua;
-pergunte se eles fazem.
+primeira é o substituto contra o contrato. Rode os testes do boxoffice com o `PAYMENTS_URL`
+apontando para um proxy do Prism na frente do substituto, e toda cobrança que qualquer teste fizer é
+conferida no caminho. Um mapping que se desviou então reprova a execução que o usa. A segunda é o
+provedor contra o contrato, porque o contrato também é só uma afirmação até alguém conferir o
+provedor de verdade contra ele. Esse é o teste de contrato da lição 10, e é tarefa do provedor tanto
+quanto sua; pergunte se eles fazem.
 
 Dois hábitos fazem o resto. **Construa substitutos a partir da documentação e do contrato do
-provedor**, nunca de memória nem do que o seu próprio código espera, porque um substituto escrito a
-partir do seu código concorda com o seu código por construção. E quando o provedor anunciar uma
-mudança, mude o contrato primeiro e deixe o árbitro dizer quais substitutos estão mentindo agora.
+provedor**, nunca de memória nem do que o seu próprio código espera. Um substituto escrito a partir
+do seu código concorda com o seu código por construção. E quando o provedor anunciar uma mudança,
+mude o contrato primeiro e deixe o árbitro dizer quais substitutos estão mentindo agora.
 
 Um contrato também tem buracos. Este não lista nenhum `500`, embora provedores de verdade respondam um
 de vez em quando, e o stub da seção 03 o responde de propósito no modo `down`. Este proxy aponta

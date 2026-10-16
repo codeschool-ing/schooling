@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Uma execução do Newman imprime três coisas, em ordem: cada requisição com os seus testes, uma
-tabela que os conta e as falhas em detalhe.** A primeira parte serve para acompanhar a execução
-enquanto acontece, a tabela serve para saber de relance se algo deu errado, e a última parte é onde
-você descobre o quê. Com o boxoffice rodando no terminal dele:
+tabela que os conta e as falhas em detalhe.** A primeira parte acompanha a execução enquanto
+acontece. A tabela diz de relance se algo deu errado, e a última parte diz o quê. Com o boxoffice
+rodando no terminal dele:
 
 ```
 ana@laptop:~/boxoffice$ npm run test:api
@@ -100,9 +100,9 @@ Sub-folder Order seats
 
 As duas linhas que começam com `>` vêm do npm, não do Newman: o nome do script e o comando que ele
 roda. Depois o Newman nomeia a coleção e a percorre na ordem do arquivo, como a seção 06 da lição 4
-disse que faria. Cada requisição é uma linha de fatos, como o `GET` embaixo de **List shows**: o
-método, o endereço depois de as variáveis serem trocadas e, entre colchetes, o status, o tamanho da
-resposta e quanto ela demorou. Uma linha acima dela sem requisição própria, o `POST` para
+disse que faria. Cada requisição é uma linha de fatos, como o `GET` embaixo de **List shows**. Ela
+traz o método, o endereço depois de as variáveis serem trocadas e, entre colchetes, o status, o
+tamanho da resposta e quanto ela demorou. Uma linha acima dela sem requisição própria, o `POST` para
 `/oauth/token` embaixo de **List shows**, é o script de pré-requisição da coleção buscando um token,
 que a seção 05 da lição 5 explicou. Embaixo de cada requisição vêm os testes dela: `Pass` e o nome,
 ou um número e o nome, para uma falha.
@@ -121,7 +121,7 @@ ou um número e o nome, para uma falha.
 recusada ou um endereço quebrado, e não requisições que receberam status de erro. Um `405` é uma
 resposta, então **HEAD one show** conta como requisição que funcionou e asserção que falhou. Uma
 tabela com zero em toda célula `failed`, menos em `assertions`, diz que o servidor respondeu tudo e
-discordou dos testes em algum ponto; uma linha `requests` diferente de zero diz que algo mais básico
+discordou dos testes em algum ponto. Uma linha `requests` diferente de zero diz que algo mais básico
 está errado, como o boxoffice não estar rodando.
 
 As três linhas embaixo da tabela são tempos e um tamanho. `total run duration` é a execução inteira, e

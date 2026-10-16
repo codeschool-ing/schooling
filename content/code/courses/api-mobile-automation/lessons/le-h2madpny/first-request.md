@@ -41,7 +41,7 @@ max-age=60`, the two headers that say how to read and keep this answer.
 
 **Pretty is not what the server sent.** It is the body parsed and laid out again, one field per
 line, the way jq laid it out. The server sent one line with no spaces. Most days that makes no
-difference; when the exact bytes matter, such as a test of whitespace, of field order, or of a body
+difference. When the exact bytes matter, such as a test of whitespace, of field order, or of a body
 that is not quite JSON, switch to *Raw*, which is the text as it arrived.
 
 Now ask for a show that does not exist, `http://localhost:8080/v1/shows/sh-999`. The status turns
@@ -53,7 +53,7 @@ decides how to parse the body from it.
 
 **Postman sends more headers than you typed.** It adds a `User-Agent` naming itself, an `Accept`, a
 `Postman-Token` with a random value, and a few about the connection. They are visible on the
-request's Headers tab under a *hidden* toggle, and the Postman Console, opened from the bottom bar,
+request's Headers tab under a *hidden* toggle. The Postman Console, opened from the bottom bar,
 shows every request exactly as it went out. That matters the day a request works in Postman and
 fails in your app: the difference may be a header Postman added that your app does not send.
 

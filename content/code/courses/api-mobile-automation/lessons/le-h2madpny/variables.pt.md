@@ -10,7 +10,7 @@ qualquer parte de uma requisição: o endereço, um cabeçalho, o corpo, a autor
 
 A primeira variável que toda coleção ganha é o endereço do servidor, e o motivo é o dia em que o
 servidor muda de lugar. Vinte requisições que escrevem `http://localhost:8080` por extenso são vinte
-edições quando os mesmos testes precisam rodar num servidor de teste; vinte requisições que dizem
+edições quando os mesmos testes precisam rodar num servidor de teste. Vinte requisições que dizem
 `{{baseUrl}}` são uma.
 
 ## Cinco lugares onde uma variável pode morar
@@ -43,8 +43,8 @@ cai nisso de propósito, e mostra como fica visto de fora.
 
 ## Um nome que ninguém definiu
 
-Quando nenhum escopo define um nome, o Postman o pinta de vermelho na requisição e, se você mandar
-mesmo assim, manda as chaves como estão: `{{baseUrl}}/v1/shows` não é um endereço, e a requisição
-falha antes de chegar a qualquer servidor. Quem testa confere também a outra direção: **que nomes uma
-coleção usa, e cada um está definido em algum lugar?** A seção 06 pergunta isso da coleção que você
-salvar, com uma linha de grep.
+Quando nenhum escopo define um nome, o Postman o pinta de vermelho na requisição. Se você mandar
+mesmo assim, ele manda as chaves como estão. `{{baseUrl}}/v1/shows` não é um endereço, e a
+requisição falha antes de chegar a qualquer servidor. Quem testa confere também a outra direção:
+**que nomes uma coleção usa, e cada um está definido em algum lugar?** A seção 06 pergunta isso da
+coleção que você salvar, com uma linha de grep.

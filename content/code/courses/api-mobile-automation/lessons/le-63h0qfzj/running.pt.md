@@ -4,8 +4,8 @@ version: 1
 ---
 
 **`mvn test` roda toda classe de teste que o projeto tem, e uma falha é a parte da saída que vale
-ler.** Esta seção acrescenta o teste que falha, lê o que ele imprime, acha os relatórios que um
-pipeline lê e depois remove dois blocos do `pom.xml` para mostrar o resultado mais perigoso que uma
+ler.** Esta seção acrescenta o teste que falha, lê o que ele imprime e acha os relatórios que um
+pipeline lê. Depois remove dois blocos do `pom.xml` para mostrar o resultado mais perigoso que uma
 execução de testes pode dar: um sucesso que não testou nada.
 
 ## O teste que falha de propósito
@@ -100,16 +100,16 @@ ana@laptop:~/boxoffice/restassured$ echo $?
 
 Leia em quatro blocos, de cima para baixo:
 
-1. **A requisição e a resposta**, impressas porque o `HeadTest` usa `Api.ANYONE` e uma verificação
+1. A requisição e a resposta, impressas porque o `HeadTest` usa `Api.ANYONE` e uma verificação
    falhou. `Request method: HEAD` e o URI são o que foi mandado; `HTTP/1.1 405 Method Not Allowed`
    com `allow: GET` é o que voltou. É a evidência de que um relatório de defeito precisa, produzida
    pela própria execução que falhou.
-2. **A falha**: `Expected status code <200> but was <405>`, e embaixo o stack trace. Procure a única
+2. A falha: `Expected status code <200> but was <405>`, e embaixo o stack trace. Procure a única
    linha que cita o seu arquivo, `HeadTest.java:19`, e pule o resto.
-3. **O resumo**: `Tests run: 11, Failures: 1`. Onze são um no `HealthTest`, cinco no `ShowsTest`,
-   quatro no `OrdersTest` e este.
-4. **O código de saída**, `1`. Um pipeline lê esse número e mais nada, e é assim que um teste
-   vermelho barra um merge, como a lição 6 fez com o Newman.
+3. O resumo: `Tests run: 11, Failures: 1`. Onze são um no `HealthTest`, cinco no `ShowsTest`, quatro
+   no `OrdersTest` e este.
+4. O código de saída, `1`. Um pipeline lê esse número e mais nada, e é assim que um teste vermelho
+   barra um merge, como a lição 6 fez com o Newman.
 
 Uma **failure** é uma verificação que não se confirmou. O Maven também conta **errors**, um teste
 que nem conseguiu terminar, como um cujo servidor não estava rodando: a requisição lança uma exceção
@@ -134,9 +134,9 @@ ana@laptop:~/boxoffice/restassured$ grep '<testcase' target/surefire-reports/TES
 ```
 
 Os arquivos `.txt` são o resumo que você leu acima. Os arquivos `TEST-….xml` estão no formato JUnit
-XML, o mesmo que a lição 6 pediu ao Newman, e é o que um servidor de CI lê para desenhar a lista de
-testes: um `<testcase>` por método, com um `<failure>` dentro dos que falharam. A ordem deles aqui é
-a ordem em que os testes rodaram, que de novo não é a ordem do arquivo.
+XML, o mesmo que a lição 6 pediu ao Newman. Um servidor de CI o lê para desenhar a lista de testes:
+um `<testcase>` por método, com um `<failure>` dentro dos que falharam. A ordem deles aqui é a ordem
+em que os testes rodaram, que de novo não é a ordem do arquivo.
 
 Para rodar menos que tudo, `-Dtest` aceita uma classe, ou uma classe e um método depois de `#`:
 
@@ -245,7 +245,7 @@ Agora falha alto: o plugin de compilador antigo pede ao Java para compilar para 
 ```
 
 Um Maven mais novo traz plugins padrão mais novos, e esses acham os testes. Isso não torna as
-versões fixas desnecessárias; quer dizer que o resultado do mesmo projeto depende de qual Maven está
+versões fixas desnecessárias. Quer dizer que o resultado do mesmo projeto depende de qual Maven está
 instalado, no seu notebook, no de um colega e na máquina do pipeline. **Leia a contagem de testes,
-nunca só a cor do build.** Uma suíte de onze testes que informa zero é uma suíte quebrada, e o
-hábito de conferir esse número é o que a pega no dia em que alguém arruma um `pom.xml`.
+nunca só a cor do build.** Uma suíte de onze testes que informa zero é uma suíte quebrada. Conferir
+esse número é o hábito que a pega no dia em que alguém arruma um `pom.xml`.

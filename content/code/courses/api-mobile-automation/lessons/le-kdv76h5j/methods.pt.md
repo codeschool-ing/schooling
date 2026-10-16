@@ -44,7 +44,7 @@ Transfer-Encoding: chunked
 ```
 
 Essa é a recusa certa. `405 Method Not Allowed` diz que o endereço existe e o método não é aceito
-ali, e o cabeçalho `allow` lista o que é, como o padrão exige num 405. Um `404` aqui estaria errado,
+ali. O cabeçalho `allow` lista o que é, e o padrão o exige num 405. Um `404` aqui estaria errado,
 porque o espetáculo existe, e um `200` seria alarmante.
 
 ## O primeiro defeito
@@ -62,12 +62,12 @@ Connection: keep-alive
 Keep-Alive: timeout=5
 ```
 
-O boxoffice recusa, e a recusa se contradiz: o cabeçalho `allow` diz que `GET` pode, e o padrão é
-explícito em que **todo servidor de uso geral deve suportar `GET` e `HEAD`** (RFC 9110, §9.1).
-Isso é um defeito, e um defeito típico: nada em tela alguma vai mostrá-lo, ninguém escreveu um caso
-para ele, e ele foi achado fazendo à API uma pergunta que mais ninguém faz.
+O boxoffice recusa, e a recusa se contradiz. O cabeçalho `allow` diz que `GET` pode, e o padrão é
+explícito em que **todo servidor de uso geral deve suportar `GET` e `HEAD`** (RFC 9110, §9.1). Isso
+é um defeito, e um defeito típico. Nada em tela alguma vai mostrá-lo e ninguém escreveu um caso para
+ele. Ele foi achado fazendo à API uma pergunta que mais ninguém faz.
 
-Se você fez `manual-testing`, este é o momento de registrá-lo do jeito que aquele curso ensinou: o
-que você mandou, o que voltou, o que o padrão diz que deveria ter voltado, e a evidência, que é a
-transcrição acima. A correção são poucas linhas no boxoffice, e o curso a deixa sem corrigir para que
-você veja os testes das lições seguintes pegarem o defeito.
+Se você fez `manual-testing`, registre-o agora do jeito que aquele curso ensinou. Diga o que você
+mandou, o que voltou e o que o padrão diz que deveria ter voltado, e dê a evidência, que é a
+transcrição acima. A correção são poucas linhas no boxoffice, e o curso a deixa sem corrigir para
+que você veja os testes das lições seguintes pegarem o defeito.

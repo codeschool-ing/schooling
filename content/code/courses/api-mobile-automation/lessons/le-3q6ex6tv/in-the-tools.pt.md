@@ -81,7 +81,7 @@ Salve como `postman/schemas.postman_collection.json`:
 ```
 
 No app do Postman ela é importada como a coleção da lição 4, e a variável fica na aba *Variables* da
-coleção; o app não foi rodado para este curso. Rode com o Newman que a lição 6 instalou, contra o
+coleção. O app não foi rodado para este curso. Rode com o Newman que a lição 6 instalou, contra o
 ambiente do laboratório:
 
 ```
@@ -154,8 +154,8 @@ isso fica.
 
 ## REST Assured
 
-O REST Assured tem um módulo para schemas, o `json-schema-validator`, lançado com os mesmos números de
-versão do próprio REST Assured. Acrescente-o ao projeto da lição 7: o arquivo inteiro tem uma
+O REST Assured tem um módulo para schemas, o `json-schema-validator`, lançado com os mesmos números
+de versão do próprio REST Assured. Acrescente-o ao projeto da lição 7. O arquivo inteiro tem uma
 dependência nova, depois de `rest-assured`; salve como `restassured/pom.xml`:
 
 ```xml
@@ -315,19 +315,20 @@ ana@laptop:~/boxoffice/restassured$ echo $?
 1
 ```
 
-**O terceiro teste falhou: o REST Assured diz que o pedido sem pagamento casa com o schema.** Os dois
-primeiros passaram, então nada parecia errado com as respostas ao vivo, e esse é o perigo. O validador
-dele implementa o draft 4, de 2013, que não tem `if` nem `then`. Ele pula palavras-chave que não
-conhece, e o aviso que diz isso, `the following keywords are unknown and will be ignored: [$id, if,
-then]`, só é impresso dentro de uma mensagem de falha como esta. As duas conferências ao vivo passaram
-sem imprimir nada. **Uma regra do schema deixou de ser aplicada em silêncio**, e só um teste mirado na
-própria regra mostrou isso.
+**O terceiro teste falhou: o REST Assured diz que o pedido sem pagamento casa com o schema.** Os
+dois primeiros passaram, então nada parecia errado com as respostas ao vivo, e esse é o perigo. O
+validador dele implementa o draft 4, de 2013, que não tem `if` nem `then`. Ele pula palavras-chave
+que não conhece. O aviso que diz isso,
+`the following keywords are unknown and will be ignored: [$id, if, then]`, só é impresso dentro de
+uma mensagem de falha como esta. As duas conferências ao vivo passaram sem imprimir nada. **Uma
+regra do schema deixou de ser aplicada em silêncio**, e só um teste mirado na própria regra mostrou
+isso.
 
-Quem testa tem três respostas honestas, e fingir que a regra é conferida não é uma delas. Manter a
-regra do `if`/`then` na conferência em Node da seção 03, que a aplica, e dizer isso no teste em Java;
-afirmá-la em Java com uma asserção comum; ou trocar o módulo por um validador que implemente o
-2020-12. Este curso fica com a primeira, e marca o teste para a lacuna aparecer em toda execução em vez
-de ser apagada. Acrescente o import e a anotação:
+Quem testa tem três respostas honestas, e fingir que a regra é conferida não é uma delas. A primeira
+é manter a regra do `if`/`then` na conferência em Node da seção 03, que a aplica, e dizer isso no
+teste em Java. A segunda é afirmá-la em Java com uma asserção comum. A terceira é trocar o módulo
+por um validador que implemente o 2020-12. Este curso fica com a primeira, e marca o teste para a
+lacuna aparecer em toda execução em vez de ser apagada. Acrescente o import e a anotação:
 
 ```java
 import org.junit.jupiter.api.Disabled;

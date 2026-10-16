@@ -24,9 +24,10 @@ a test with a defect of its own.
 | `etag` | response | a fingerprint of this version of the thing | that it changes when the thing does |
 | `authorization` | request | the client's credentials | that it never appears in a log (lesson 3) |
 
-Look back at the order of section 08 and three of these are already there: `location` on the `201`,
-`allow` on the `405`, and `content-type` on every answer, including the errors, which say
-`application/problem+json`. That label names a standard format for errors, and lesson 2 tests it.
+Look back at the order of section 08 and three of these are already there. `location` is on the
+`201` and `allow` on the `405`, and `content-type` is on every answer, including the errors, which
+say `application/problem+json`. That label names a standard format for errors, and lesson 2 tests
+it.
 
 ## A fingerprint, and the answer that saves a download
 
@@ -47,7 +48,7 @@ Keep-Alive: timeout=5
 `304 Not Modified`, with no body: the copy the client holds is still current, so nothing is sent
 again. On a phone with a weak signal that is the difference between an app that refreshes at once
 and one that waits, which lesson 22 measures. For a tester it opens two questions, and both have
-caught real defects: **does the fingerprint change when the thing changes**, and does the server
+caught real defects. **Does the fingerprint change when the thing changes?** And does the server
 still answer `304` after it should have stopped? Selling a seat changes `seats_left`, so it must
 change the `etag` of that show. The drill at the end of this lesson asks how you would check.
 
@@ -81,5 +82,5 @@ GET /v1/shows/sh-101 200
 GET /v1/shows/sh-101 304
 ```
 
-That is the server's side of every exchange above, and a log like it is the first place to look
-when a test fails and the response alone does not say why.
+That is the server's side of every exchange above. A log like it is the first place to look when a
+test fails and the response alone does not say why.

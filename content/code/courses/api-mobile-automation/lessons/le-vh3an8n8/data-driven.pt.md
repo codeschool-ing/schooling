@@ -21,8 +21,8 @@ seats,expected
 ```
 
 A primeira linha dá nome às colunas, e cada linha depois dela é um caso. O último valor é a string
-`"2"`: em CSV, uma aspa dentro de um campo entre aspas é escrita duas vezes, então `"""2"""` é um
-campo que contém `"2"`, com as aspas, e que chega ao corpo JSON como string, não como número.
+`"2"`. Em CSV, uma aspa dentro de um campo entre aspas é escrita duas vezes, então `"""2"""` é um
+campo que contém `"2"`, com as aspas. Ele chega ao corpo JSON como string, não como número.
 
 A pasta `seat rules` tem uma requisição, **Order seats**, cujo corpo usa as duas colunas:
 
@@ -113,17 +113,17 @@ Sub-folder Order seats
 ```
 
 Seis iterações, uma por linha, e seis aprovações. O token foi buscado uma vez, antes da primeira
-iteração, pelo script de pré-requisição da coleção da seção 05; as iterações seguintes o encontraram
+iteração, pelo script de pré-requisição da coleção da seção 05. As iterações seguintes o encontraram
 ainda válido. No Postman o mesmo arquivo vai no Runner, em *Data*, que então mostra cada iteração.
 
 ## Onde moram os valores da linha
 
-O arquivo de dados é o escopo **dados** da seção 04 da lição 4, mais estreito que coleção e ambiente.
-A coleção define `seats` como `1` e `expected` como `201`, e é por isso que a pasta também roda numa
-execução da coleção inteira sem arquivo nenhum, como um pedido comum que deveria dar certo: foi a
-linha de **Order seats** no fim da execução da seção 02. Com um arquivo, os valores da linha vencem,
-porque o escopo de dados é mais estreito. Um padrão no escopo mais amplo e um caso no mais estreito é
-a regra de precedência da lição 4 trabalhando a seu favor.
+O arquivo de dados é o escopo **dados** da seção 04 da lição 4, mais estreito que coleção e
+ambiente. A coleção define `seats` como `1` e `expected` como `201`. É por isso que a pasta também
+roda numa execução da coleção inteira sem arquivo nenhum, como um pedido comum que deveria dar
+certo. Foi a linha de **Order seats** no fim da execução da seção 02. Com um arquivo, os valores da
+linha vencem, porque o escopo de dados é mais estreito. Um padrão no escopo mais amplo e um caso no
+mais estreito é a regra de precedência da lição 4 trabalhando a seu favor.
 
 **Cada linha é uma afirmação, então escolha-as como escolheria casos.** Estas seis são os limites que
 a lição 2 tirou do contrato: o menor valor válido e o de baixo dele, o maior e o de cima dele, e dois

@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Every clause of a contract is a source of test cases, and reading them off is mechanical.** The
-techniques are the ones `manual-testing` taught for a form on a screen: split the inputs into
+techniques are the ones `manual-testing` taught for a form on a screen. Split the inputs into
 classes that should behave alike, take one value from each, and add the values on every edge. What
 changes is where the rules come from. On a screen you guess them from the labels; here they are
 written down, in `NewOrder`, one per line:
@@ -20,14 +20,14 @@ written down, in `NewOrder`, one per line:
 {"svg": "<svg viewBox=\"0 0 700 220\" role=\"img\" aria-label=\"A number line of seats from 0 to 7. The stretch from 1 to 6 is marked valid, answered 201; 0 and 7, just outside it, are answered 422; 1 and 6 are marked just inside. Below, four values that are not on the line: 2.5 answered 422, the text &quot;2&quot; answered 422, 2.0 answered 201 because it is the same number as 2, and an order with seats missing answered 422.\"><text x=\"350\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">seats in one order, against the rule of 1 to 6</text><rect x=\"136\" y=\"56\" width=\"398\" height=\"30\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1\"></rect><text x=\"335\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">valid: 201</text><text x=\"90\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">422</text><text x=\"580\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">422</text><line x1=\"60\" y1=\"96\" x2=\"610\" y2=\"96\" stroke=\"var(--wire)\" stroke-width=\"1.6\"></line><line x1=\"90\" y1=\"91\" x2=\"90\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"90\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">0</text><line x1=\"160\" y1=\"91\" x2=\"160\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"160\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">1</text><line x1=\"230\" y1=\"91\" x2=\"230\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"230\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">2</text><line x1=\"300\" y1=\"91\" x2=\"300\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"300\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">3</text><line x1=\"370\" y1=\"91\" x2=\"370\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"370\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">4</text><line x1=\"440\" y1=\"91\" x2=\"440\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"440\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">5</text><line x1=\"510\" y1=\"91\" x2=\"510\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"510\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">6</text><line x1=\"580\" y1=\"91\" x2=\"580\" y2=\"101\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\"></line><text x=\"580\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">7</text><text x=\"90\" y=\"130\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">just outside</text><text x=\"160\" y=\"130\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">just inside</text><text x=\"510\" y=\"130\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">just inside</text><text x=\"580\" y=\"130\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">just outside</text><text x=\"350\" y=\"152\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">values that are not on the line at all</text><rect x=\"30\" y=\"166\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"105\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">2.5</text><text x=\"105\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">422</text><rect x=\"195\" y=\"166\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"270\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">\"2\"</text><text x=\"270\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">422</text><rect x=\"360\" y=\"166\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"435\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">2.0</text><text x=\"435\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">201, the same number as 2</text><rect x=\"525\" y=\"166\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"600\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">seats missing</text><text x=\"600\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">422</text></svg>", "caption": "The cases a range gives: the two values on each edge, and the values that are not points on the line at all."}
 ```
 
-Every case has an expected answer before it is sent, and the contract gives it: a `201` for the
-valid ones, a `422` for content that breaks a rule, a `400` for a body that cannot be read as an
+Every case has an expected answer before it is sent, and the contract gives it. It is a `201` for
+the valid ones, a `422` for content that breaks a rule, a `400` for a body that cannot be read as an
 order. A case with no expected answer is not a test, it is a look around.
 
 ## A function, to keep the requests short
 
-Each case is the same request with a different body. A shell function saves typing it out each
-time; type this once in your terminal, after the `TOKEN` of section 02:
+Each case is the same request with a different body. A shell function saves typing it out each time.
+Type this once in your terminal, after the `TOKEN` of section 02:
 
 ```
 ana@laptop:~/boxoffice$ order() { curl -s -w '%{http_code}\n' localhost:8080/v1/orders -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' -d "$1"; }
@@ -55,8 +55,8 @@ ana@laptop:~/boxoffice$ order '{"show_id":"sh-101","seats":7}'
 ```
 
 `0` and `7` refused with `422`, `1` and `6` accepted. That is the rule exactly as written, on both
-edges, and it is the result a tester most wants and least often gets: a limit coded as `< 6` instead
-of `<= 6` shows up here and nowhere else.
+edges. It is the check worth making, because a limit coded as `< 6` instead of `<= 6` shows up here
+and nowhere else.
 
 ## The wrong kind of value
 
@@ -72,10 +72,10 @@ ana@laptop:~/boxoffice$ order '{"show_id":"sh-101","seats":2.0}'
 201
 ```
 
-A fraction and a number written as text are refused, which is right. `2.0` is accepted, and
-**that is right too**, not a defect to report: section 03 showed that `2.0` and `2` are the same JSON
-number, and the contract's `integer` is a rule about the value. A report saying "boxoffice accepts
-decimals" would be closed as not a defect, and it would cost the tester some credibility.
+A fraction and a number written as text are refused, which is right. `2.0` is accepted, and **that
+is right too**. Section 03 showed that `2.0` and `2` are the same JSON number, and the contract's
+`integer` is a rule about the value. A report saying "boxoffice accepts decimals" would be closed as
+not a defect, and it would cost the tester some credibility.
 
 ## The fields that are required
 
@@ -106,7 +106,7 @@ ana@laptop:~/boxoffice$ order '{"show_id":"sh-101","seats":1,"price_cents":1}'
 The contract says `additionalProperties: false`: no field beyond the two it names. boxoffice
 accepted `price_cents` without a word and created the order. Here no harm came of it, because
 boxoffice ignored the field and charged the real price of 8000 cents. The danger is the client that
-sent it. **A client that sends a field the server ignores believes it was obeyed**: an app that
+sent it. **A client that sends a field the server ignores believes it was obeyed**. An app that
 sends `"seats_preferred": "front row"` and gets a `201` has every reason to think the front row was
 booked. Refusing unknown fields with `422` turns that misunderstanding into an error somebody sees
 during development. This is a disagreement between the contract and the code, and the report says
@@ -123,9 +123,9 @@ ana@laptop:~/boxoffice$ order 'null'
 500
 ```
 
-**A `500`.** boxoffice crashed on a request a client could send by mistake, and its answer tells
-that client the fault was on the server's side and that trying again might help, both of them
-untrue. Lesson 1 called that two defects in one. The second terminal shows what happened inside:
+**A `500`.** boxoffice crashed on a request a client could send by mistake. Its answer tells that
+client the fault was on the server's side and that trying again might help, and both are untrue.
+Lesson 1 called that two defects in one. The second terminal shows what happened inside:
 
 ```
 TypeError: Cannot read properties of null (reading 'show_id')

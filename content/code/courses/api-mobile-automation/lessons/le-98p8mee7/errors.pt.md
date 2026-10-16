@@ -6,8 +6,8 @@ version: 1
 **Uma resposta de erro é uma resposta como outra qualquer, e um cliente é escrito contra a forma
 dela.** A crença a abandonar é a de que erros são a parte não planejada de uma API, onde vale tudo
 desde que o código de status esteja certo. Um app que diz ao usuário *"só resta 1 lugar"* está lendo
-o corpo de um `409`; se um endpoint põe a mensagem em `detail` e outro em `message`, o app mostra uma
-caixa vazia para um deles.
+o corpo de um `409`. Se um endpoint põe a mensagem em `detail` e outro em `message`, o app mostra
+uma caixa vazia para um deles.
 
 O boxoffice responde todo erro numa forma só, a que a RFC 9457 define com o nome de **problem
 details**. Três erros de três partes diferentes da API:
@@ -36,7 +36,7 @@ queira acrescentar; o boxoffice não usa nenhum dos dois. A separação entre `t
 interessa a quem testa: **um programa decide pelo `status` e pelo `type`, e nunca pelo texto do
 `detail`.** O `type` do boxoffice é sempre `about:blank`, então aqui o código de status é tudo o que
 um cliente tem para decidir. Uma API com dois tipos de `422` que valesse a pena distinguir daria a
-cada um o seu `type`, e um teste conferiria o `type` em vez de analisar uma frase em inglês que
+cada um o seu `type`. Um teste então conferiria o `type` em vez de analisar uma frase em inglês que
 alguém um dia vai reescrever.
 
 ## O rótulo do corpo
@@ -52,9 +52,9 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{content_type}\n'
 ```
 
 O rótulo faz parte do contrato, e ele pega testes desprevenidos. **Um teste que confere se o tipo de
-conteúdo começa com `application/json` falha em todo erro do boxoffice**, e um cliente que só
-analisa corpos rotulados exatamente `application/json` os ignora. O corpo continua sendo JSON; o
-`+json` no fim do rótulo diz isso, e uma verificação deveria aceitá-lo.
+conteúdo começa com `application/json` falha em todo erro do boxoffice**. Um cliente que só analisa
+corpos rotulados exatamente `application/json` os ignora. O corpo continua sendo JSON; o `+json` no
+fim do rótulo diz isso, e uma verificação deveria aceitá-lo.
 
 ## A exceção, e por que ela é permitida
 

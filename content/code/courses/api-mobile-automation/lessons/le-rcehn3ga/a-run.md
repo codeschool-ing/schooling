@@ -3,10 +3,9 @@ title: A run, read line by line
 version: 1
 ---
 
-**A Newman run prints three things in order: every request with its tests, a table that counts
-them, and the failures in detail.** The first part is for following a run as it happens, the table
-is for knowing at a glance whether anything went wrong, and the last part is where you find out
-what. With boxoffice running in its terminal:
+**A Newman run prints three things in order: every request with its tests, a table that counts them,
+and the failures in detail.** The first part follows a run as it happens. The table says at a glance
+whether anything went wrong, and the last part says what. With boxoffice running in its terminal:
 
 ```
 ana@laptop:~/boxoffice$ npm run test:api
@@ -100,9 +99,9 @@ Sub-folder Order seats
 
 The two lines starting with `>` come from npm, not Newman: the script's name and the command it
 runs. Then Newman names the collection and walks it in the order of the file, as lesson 4 section 06
-said it would. Each request is one line of facts, such as the `GET` under **List shows**: the method,
-the address after the variables were replaced, and in brackets the status, the size of the response
-and how long it took. A line above it with no request of its own, the `POST` to
+said it would. Each request is one line of facts, such as the `GET` under **List shows**. It gives
+the method, the address after the variables were replaced, and in brackets the status, the size of
+the response and how long it took. A line above it with no request of its own, the `POST` to
 `/oauth/token` under **List shows**, is the collection's pre-request script fetching a token, which
 lesson 5 section 05 explained. Under each request come its tests: `Pass` and the name, or a number
 and the name for a failure.
@@ -119,10 +118,10 @@ and the name for a failure.
 
 **The `failed` column of `requests` counts requests that could not be sent at all**, a refused
 connection or a broken address, not requests that got an error status. A `405` is an answer, so
-**HEAD one show** counts as a request that worked and an assertion that failed. A table with zeroes in
-every `failed` cell except `assertions` says the server answered everything and disagreed with the
-tests somewhere; a non-zero `requests` row says something more basic is wrong, such as boxoffice not
-running.
+**HEAD one show** counts as a request that worked and an assertion that failed. A table with zeroes
+in every `failed` cell except `assertions` says the server answered everything and disagreed with
+the tests somewhere. A non-zero `requests` row says something more basic is wrong, such as boxoffice
+not running.
 
 The three lines under the table are timings and a size. `total run duration` is the whole run, and
 `average response time` is over the requests, with the fastest, the slowest and the standard deviation

@@ -5,26 +5,27 @@ version: 1
 
 **O boxoffice não recebe dinheiro sozinho.** Para cada pedido ele chama um provedor de pagamento,
 espera a resposta e confirma ou recusa o pedido conforme o que voltou. Até aqui essa chamada nunca
-aconteceu: com `PAYMENTS_URL` vazio, o boxoffice aprova toda cobrança por conta própria, e é por isso
-que todo pedido até agora trouxe um pagamento chamado `ch-local-ord-…`. Uma instalação de verdade
-define a variável, e a partir daí uma parte do comportamento do boxoffice pertence a um programa que
-outra pessoa roda.
+aconteceu. Com `PAYMENTS_URL` vazio, o boxoffice aprova toda cobrança por conta própria, e é por
+isso que todo pedido até agora trouxe um pagamento chamado `ch-local-ord-…`. Uma instalação de
+verdade define a variável, e a partir daí uma parte do comportamento do boxoffice pertence a um
+programa que outra pessoa roda.
 
 Um teste do boxoffice ainda precisa cobrir essa parte. **A resposta de costume é pôr um substituto
 onde o provedor estaria**: um servidor pequeno que responde como o provedor responde, rodado por você,
 na sua máquina. São quatro motivos, e cada um é algo que o provedor de verdade não consegue dar a um
 teste:
 
-- **Dinheiro.** Uma cobrança num provedor de verdade é uma cobrança de verdade. Os provedores oferecem
+- Dinheiro. Uma cobrança num provedor de verdade é uma cobrança de verdade. Os provedores oferecem
   um sandbox para testes, com cartões de teste e sem dinheiro circulando, mas continua sendo o
   servidor deles, nas condições deles.
-- **Falhas sob encomenda.** Os testes que mais importam são aqueles em que o pagamento dá errado: uma
+- Falhas sob encomenda. Os testes que mais importam são aqueles em que o pagamento dá errado: uma
   recusa, um erro, uma resposta que nunca chega. Ninguém consegue pedir a um provedor de verdade que
-  demore demais às 10h15 de uma terça-feira, e a lição 13 precisa exatamente disso, em toda execução.
-- **Velocidade e disponibilidade.** Um teste que atravessa a internet gasta o tempo do provedor e
-  falha quando o provedor está fora do ar, então a sua suíte fica vermelha pela manhã ruim de outra
+  demore demais às 10h15 de uma terça-feira, e a lição 13 precisa exatamente disso, em toda
+  execução.
+- Velocidade e disponibilidade. Um teste que atravessa a internet gasta o tempo do provedor e falha
+  quando o provedor está fora do ar, então a sua suíte fica vermelha pela manhã ruim de outra
   pessoa.
-- **Observação.** Um teste quer saber o que o boxoffice *mandou*: o valor, a referência, a chave de
+- Observação. Um teste quer saber o que o boxoffice *mandou*: o valor, a referência, a chave de
   idempotência. O provedor não mostra as requisições que recebeu. Um substituto mostra.
 
 ## Como se chama um substituto
@@ -59,5 +60,5 @@ testar o substituto.
 
 Esse desenho também mostra quanto custa um substituto. **Um teste contra um substituto prova que o
 boxoffice trata as respostas que você escreveu.** Ele não diz nada sobre o provedor responder mesmo
-desse jeito, e no dia em que o provedor mudar, o substituto continua respondendo como antes e todo
+desse jeito. No dia em que o provedor mudar, o substituto continua respondendo como antes e todo
 teste continua verde. A seção 06 faz isso acontecer de propósito e mostra como pegar.
