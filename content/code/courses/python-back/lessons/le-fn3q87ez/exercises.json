@@ -1,0 +1,705 @@
+[
+  {
+    "id": "ex-4tt840s9",
+    "version": 1,
+    "section": "template-language",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the events app keep its templates in events/templates/events/ rather than events/templates/?",
+    "hint": "Django searches every app's directory.",
+    "choices": [
+      {
+        "text": "So events/event_list.html cannot collide with another app's file",
+        "correct": true,
+        "why": "Right. Django takes the first match across all apps."
+      },
+      {
+        "text": "APP_DIRS requires two levels of directories",
+        "correct": false,
+        "why": "It requires templates/; the second level is a convention for names."
+      },
+      {
+        "text": "The admin reads templates only from that path",
+        "correct": false,
+        "why": "The admin has its own templates."
+      },
+      {
+        "text": "Without it, the templates would also be served as static files",
+        "correct": false,
+        "why": "Templates are never served as files."
+      }
+    ]
+  },
+  {
+    "id": "ex-66jzna62",
+    "version": 1,
+    "section": "template-language",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of template syntax to what it is.",
+    "hint": "Variables, filters, tags.",
+    "pairs": [
+      {
+        "left": "{{ event.title }}",
+        "right": "a variable, printed"
+      },
+      {
+        "left": "{{ events|length }}",
+        "right": "a variable through a filter"
+      },
+      {
+        "left": "{% for event in events %}",
+        "right": "a tag that loops"
+      },
+      {
+        "left": "{% url 'events:detail' event.slug %}",
+        "right": "a link built from a pattern's name"
+      }
+    ],
+    "right_distractors": [
+      "a comment the browser shows"
+    ]
+  },
+  {
+    "id": "ex-vyrenyhk",
+    "version": 1,
+    "section": "template-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same template prints {{ event.title }} for a dictionary now and for a model object in lesson 4. Why does it work for both?",
+    "hint": "What does the dot try?",
+    "choices": [
+      {
+        "text": "Django converts every object to a dictionary before rendering",
+        "correct": false,
+        "why": "No conversion happens."
+      },
+      {
+        "text": "Models are dictionaries underneath",
+        "correct": false,
+        "why": "They are classes with attributes."
+      },
+      {
+        "text": "The dot tries a key, then an attribute",
+        "correct": true,
+        "why": "Right, then a list index: one syntax, several kinds of lookup."
+      },
+      {
+        "text": "Only because title is a reserved name in templates",
+        "correct": false,
+        "why": "Any name works the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe43dpsv",
+    "version": 1,
+    "section": "template-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The list printed Thu 12 Nov, 19:00 for Django Night. What decided that it was 19:00 and not 22:00?",
+    "hint": "Lesson 2 changed one setting.",
+    "choices": [
+      {
+        "text": "The date filter rounds to the venue's local time by guessing",
+        "correct": false,
+        "why": "Nothing is guessed."
+      },
+      {
+        "text": "The TIME_ZONE setting",
+        "correct": true,
+        "why": "Right: America/Sao_Paulo. The filter shows the value in the current zone."
+      },
+      {
+        "text": "The browser converted it",
+        "correct": false,
+        "why": "The server wrote the text; curl converted nothing."
+      },
+      {
+        "text": "USE_TZ is False in agenda",
+        "correct": false,
+        "why": "It is True; values are aware datetimes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rnewt6s",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does {% block content %}{% endblock %} in base.html declare?",
+    "choices": [
+      {
+        "text": "A part of the page that child templates may not change",
+        "correct": false,
+        "why": "It is the opposite: a part children fill."
+      },
+      {
+        "text": "An include of content.html",
+        "correct": false,
+        "why": "That would be {% include %}."
+      },
+      {
+        "text": "A hole a child fills",
+        "correct": true,
+        "why": "Right: a named hole, with an empty default here."
+      },
+      {
+        "text": "A cache region for the rendered HTML",
+        "correct": false,
+        "why": "Blocks have nothing to do with caching."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrzxyn1b",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A child template has {% load static %} on its first line and {% extends \"base.html\" %} on the second. What happens?",
+    "hint": "Which tag must come first?",
+    "choices": [
+      {
+        "text": "TemplateSyntaxError: extends must be the first tag",
+        "correct": true,
+        "why": "Right. Text and comments before it are allowed; another tag is not."
+      },
+      {
+        "text": "It works, since load only affects this file",
+        "correct": false,
+        "why": "load is a tag, and extends must be the first one."
+      },
+      {
+        "text": "The load is ignored and a warning is logged",
+        "correct": false,
+        "why": "It is an error, not a warning."
+      },
+      {
+        "text": "The page renders without the base template and its header",
+        "correct": false,
+        "why": "Nothing renders; the template fails to load."
+      }
+    ]
+  },
+  {
+    "id": "ex-fa8hzp1w",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A child template puts a paragraph between {% extends %} and its first {% block %}. What becomes of the paragraph?",
+    "hint": "Where would it go in the parent's page?",
+    "choices": [
+      {
+        "text": "It appears at the top of the page",
+        "correct": false,
+        "why": "The child has no page of its own; only blocks are used."
+      },
+      {
+        "text": "Rendering fails with an error naming the line",
+        "correct": false,
+        "why": "No error is raised."
+      },
+      {
+        "text": "It is appended to the content block",
+        "correct": false,
+        "why": "Text outside blocks is not moved into one."
+      },
+      {
+        "text": "It is silently thrown away",
+        "correct": true,
+        "why": "Right, which is worse than an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b03sfmg",
+    "version": 1,
+    "section": "inheritance",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a child's block, {{ block.___ }} prints the parent's version of that block.",
+    "hint": "A word for the parent class in Python.",
+    "blanks": [
+      {
+        "accept": [
+          "super"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rch66g2m",
+    "version": 1,
+    "section": "escaping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The search term <b>dojo</b> came back in the page as &lt;b&gt;dojo&lt;/b&gt;. What did that?",
+    "hint": "It happens to every variable.",
+    "choices": [
+      {
+        "text": "The browser, when it sent the request",
+        "correct": false,
+        "why": "curl sent it as typed; the server changed it."
+      },
+      {
+        "text": "Django's automatic escaping of {{ q }}",
+        "correct": true,
+        "why": "Right. Every variable is escaped unless told otherwise."
+      },
+      {
+        "text": "A filter in the view that removes tags",
+        "correct": false,
+        "why": "The view passes q unchanged."
+      },
+      {
+        "text": "CsrfViewMiddleware, which cleans query strings",
+        "correct": false,
+        "why": "It only checks POSTs."
+      }
+    ]
+  },
+  {
+    "id": "ex-sf6jwrqc",
+    "version": 1,
+    "section": "escaping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is the defence against cross-site scripting that the lesson recommends?",
+    "hint": "Where does the defence happen: on the way in or on the way out?",
+    "choices": [
+      {
+        "text": "Filtering dangerous words like script out of every form field",
+        "correct": false,
+        "why": "Filters always miss a case."
+      },
+      {
+        "text": "Marking trusted variables with |safe",
+        "correct": false,
+        "why": "|safe turns protection off."
+      },
+      {
+        "text": "Escaping on output, everywhere",
+        "correct": true,
+        "why": "Right, which the template does by default."
+      },
+      {
+        "text": "Refusing requests whose URL has < in it",
+        "correct": false,
+        "why": "Legitimate text contains <, and escaping handles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gr7jb6a",
+    "version": 1,
+    "section": "escaping",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may reasonably go through |safe? Choose all that apply.",
+    "hint": "Who produced the HTML?",
+    "choices": [
+      {
+        "text": "HTML produced by a Markdown renderer the application trusts",
+        "correct": true,
+        "why": "Right. The application made it."
+      },
+      {
+        "text": "The name a person typed into the registration form",
+        "correct": false,
+        "why": "Never: that is the defect itself."
+      },
+      {
+        "text": "A fragment built by your own code with every variable escaped",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The search term from the query string",
+        "correct": false,
+        "why": "It came from whoever wrote the link."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z508ye5",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A POST to the detail page without csrfmiddlewaretoken answered 403. What would make the same POST pass?",
+    "hint": "Two things that must match.",
+    "choices": [
+      {
+        "text": "Sending it twice",
+        "correct": false,
+        "why": "Repeating changes nothing."
+      },
+      {
+        "text": "Adding a Referer header",
+        "correct": false,
+        "why": "Over plain HTTP the cookie and the token are what is checked."
+      },
+      {
+        "text": "The csrftoken cookie and a matching token field",
+        "correct": true,
+        "why": "Right, as curl did with cookies.txt."
+      },
+      {
+        "text": "Logging in first",
+        "correct": false,
+        "why": "CSRF is checked whether or not anybody is logged in."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dp8af75",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a page on another site not forge agenda's registration POST, even though the browser attaches agenda's cookies?",
+    "hint": "What does the attacker's page lack?",
+    "choices": [
+      {
+        "text": "It cannot read agenda's HTML to learn the token",
+        "correct": true,
+        "why": "Right. The cookie goes along; the token does not."
+      },
+      {
+        "text": "Browsers refuse to post forms to another site",
+        "correct": false,
+        "why": "They allow it, which is why CSRF exists."
+      },
+      {
+        "text": "agenda checks the visitor's IP address",
+        "correct": false,
+        "why": "It checks nothing of the kind."
+      },
+      {
+        "text": "The cookie expires when the person opens another site in a tab",
+        "correct": false,
+        "why": "Cookies do not expire that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzh5s90n",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a successful registration in order, as the lesson's figure draws it.",
+    "hint": "Post, redirect, get.",
+    "items": [
+      "GET the page: form, token, csrftoken cookie",
+      "POST the form with the cookie and the token",
+      "302 back to the same address",
+      "GET the page again: 1 of 12 seats taken"
+    ],
+    "trap": "Rendering the page in answer to the POST, instead of redirecting, would make F5 register the person again."
+  },
+  {
+    "id": "ex-j8vs1gkj",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The browser shows a required name field and checks the email type itself. Why does the server validate anyway?",
+    "hint": "Who else can send a POST?",
+    "choices": [
+      {
+        "text": "Browsers validate only in development mode",
+        "correct": false,
+        "why": "They validate always; that is not the reason."
+      },
+      {
+        "text": "Django cannot read the browser's verdict",
+        "correct": false,
+        "why": "There is no verdict sent; the point is who sends."
+      },
+      {
+        "text": "Anything that skips the page, curl for one, sends whatever it likes",
+        "correct": true,
+        "why": "Right. Browser checks are a convenience for the person."
+      },
+      {
+        "text": "To translate the error messages",
+        "correct": false,
+        "why": "Translation is not why validation runs twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3ntp7tk",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two people submit the last seat of the workshop at the same instant. With lesson 3's code, what can happen?",
+    "hint": "A count, then an append.",
+    "choices": [
+      {
+        "text": "Django queues the requests, so the second always sees the event full",
+        "correct": false,
+        "why": "Nothing serialises the check and the append."
+      },
+      {
+        "text": "Both see eleven taken and both are registered",
+        "correct": true,
+        "why": "Right. Lesson 4 makes the database enforce the capacity."
+      },
+      {
+        "text": "Both get This event is full",
+        "correct": false,
+        "why": "Neither saw twelve."
+      },
+      {
+        "text": "The CSRF check refuses the second, since its token was already used",
+        "correct": false,
+        "why": "Tokens are not single-use; both are valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvygr1ct",
+    "version": 1,
+    "section": "forms-and-csrf",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After Bruno and eleven more people registered, how many seats did the workshop page say were taken?",
+    "hint": "Its capacity.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "seats"
+  },
+  {
+    "id": "ex-s4ezrxmd",
+    "version": 1,
+    "section": "static-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did runserver serve /static/events/agenda.css?",
+    "hint": "Which setting is on?",
+    "choices": [
+      {
+        "text": "DEBUG is on, so staticfiles serves it",
+        "correct": true,
+        "why": "Right: staticfiles adds a handler to the development server. With DEBUG off nothing in Django serves it."
+      },
+      {
+        "text": "Every Django view also serves files",
+        "correct": false,
+        "why": "Views run code; they do not serve directories."
+      },
+      {
+        "text": "The {% static %} tag uploaded it",
+        "correct": false,
+        "why": "The tag only writes an address."
+      },
+      {
+        "text": "collectstatic ran automatically at start-up",
+        "correct": false,
+        "why": "Nobody ran collectstatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqwdssd5",
+    "version": 1,
+    "section": "static-files",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece to its job in serving static files in production.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "STATIC_ROOT",
+        "right": "the one directory files are gathered into"
+      },
+      {
+        "left": "collectstatic",
+        "right": "copies every app's static/ into it"
+      },
+      {
+        "left": "nginx",
+        "right": "serves that directory at /static/"
+      },
+      {
+        "left": "{% static %}",
+        "right": "writes the address in templates"
+      }
+    ],
+    "right_distractors": [
+      "compresses Python files"
+    ]
+  },
+  {
+    "id": "ex-g1j9a653",
+    "version": 1,
+    "section": "when-a-template-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these template mistakes produces no error at all?",
+    "hint": "One of them prints an empty string.",
+    "choices": [
+      {
+        "text": "{% for %} with no {% endfor %}",
+        "correct": false,
+        "why": "TemplateSyntaxError: Unclosed tag."
+      },
+      {
+        "text": "{{ event.titel }}",
+        "correct": true,
+        "why": "Right. An unresolved variable prints nothing."
+      },
+      {
+        "text": "{{ event.starts_at|dat }}",
+        "correct": false,
+        "why": "TemplateSyntaxError: Invalid filter."
+      },
+      {
+        "text": "render(request, 'events/event_lsit.html')",
+        "correct": false,
+        "why": "TemplateDoesNotExist."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1nprgav",
+    "version": 1,
+    "section": "when-a-template-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Django print an empty string for a variable it cannot resolve, instead of failing?",
+    "hint": "Think of optional values.",
+    "choices": [
+      {
+        "text": "Templates cannot raise exceptions",
+        "correct": false,
+        "why": "They raise several, as this section showed."
+      },
+      {
+        "text": "It is a bug Django keeps for compatibility with old templates",
+        "correct": false,
+        "why": "It is a deliberate choice."
+      },
+      {
+        "text": "To hide the database from attackers",
+        "correct": false,
+        "why": "The database has nothing to do with it."
+      },
+      {
+        "text": "So a missing optional value does not take the page down",
+        "correct": true,
+        "why": "Right, at the price of silent typos."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzwsdakh",
+    "version": 1,
+    "section": "when-a-template-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which development-only setting makes misspelled variables visible on the page?",
+    "hint": "It goes in the OPTIONS of TEMPLATES.",
+    "choices": [
+      {
+        "text": "DEBUG = True",
+        "correct": false,
+        "why": "DEBUG was already on, and the typo printed nothing."
+      },
+      {
+        "text": "string_if_invalid",
+        "correct": true,
+        "why": "Right, with something like 'MISSING %s'."
+      },
+      {
+        "text": "APP_DIRS = False",
+        "correct": false,
+        "why": "That stops Django finding app templates."
+      },
+      {
+        "text": "TEMPLATE_DEBUG = True",
+        "correct": false,
+        "why": "That setting was removed long ago."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg9yajrf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the pieces of a new page in the order you would write them.",
+    "hint": "Template, view, URL, check.",
+    "items": [
+      "a template that extends base.html",
+      "a view that renders it with a context",
+      "a named pattern in urls.py",
+      "a {% url %} link to it in base.html",
+      "curl the page and read it"
+    ]
+  },
+  {
+    "id": "ex-2fnt0ntq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague fixes a page that shows a blank where the event title should be by adding |default:'Untitled' to {{ event.titel }}. What is the problem?",
+    "hint": "Read the variable's name.",
+    "choices": [
+      {
+        "text": "default does not accept strings",
+        "correct": false,
+        "why": "It accepts any value."
+      },
+      {
+        "text": "Filters cannot follow a dotted variable",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "The name is misspelled; every event will now say Untitled",
+        "correct": true,
+        "why": "Right. The real fix is titel to title."
+      },
+      {
+        "text": "Nothing; that is the recommended fix",
+        "correct": false,
+        "why": "It hides the typo instead of fixing it."
+      }
+    ]
+  }
+]

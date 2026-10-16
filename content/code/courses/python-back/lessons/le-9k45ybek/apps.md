@@ -86,8 +86,8 @@ EVENTS = [
 ```
 
 **The dates are written as strings and carry no zone.** That is a shortcut this file can afford
-because nothing compares them yet; lesson 4 turns them into real date and time values, stored in
-UTC.
+because nothing compares or formats them yet; lesson 3 turns them into real date and time values,
+and lesson 4 stores them in UTC.
 
 ## One app or several
 

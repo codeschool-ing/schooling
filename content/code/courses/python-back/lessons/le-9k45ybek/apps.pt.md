@@ -86,7 +86,8 @@ EVENTS = [
 ```
 
 **As datas estão escritas como texto e sem fuso.** É um atalho que este arquivo pode se dar porque
-nada as compara ainda; a aula 4 as transforma em valores reais de data e hora, gravados em UTC.
+nada as compara nem formata ainda; a aula 3 as transforma em valores reais de data e hora, e a aula 4
+as grava em UTC.
 
 ## Um app ou vários
 

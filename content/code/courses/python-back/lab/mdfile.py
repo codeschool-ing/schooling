@@ -2,7 +2,8 @@
 """mdfile.py LESSON.md PATH -- print the file PATH exactly as the lesson shows it.
 
 A whole file in a lesson is either a fenced block whose first line is a
-comment naming it (`# events/views.py`, `{# templates/base.html #}`), or a
+comment naming it (`# events/views.py`, `{# templates/base.html #}`,
+`/* a.css */`), or a
 `schooling-example` whose "file" is it, in which case its parts are joined.
 Exit 1 if the lesson does not show it, or shows it twice.
 """
@@ -19,7 +20,7 @@ for m in re.finditer(r"^```([^\n]*)\n(.*?)^```$", text, re.S | re.M):
             found.append("".join(p["code"] for p in ex["parts"]))
         continue
     first = body.split("\n", 1)[0].strip()
-    names = re.findall(r"^(?:#|//|--|<!--|\{#)\s*(\S+)", first)
+    names = re.findall(r"^(?:#|//|--|<!--|\{#|/\*)\s*(\S+)", first)
     if names and names[0] == path:
         found.append(body)
 if len(found) != 1:
