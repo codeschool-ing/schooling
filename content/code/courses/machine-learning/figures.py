@@ -984,6 +984,81 @@ def l09_grid_random(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 10
+
+def pct(lang, v, d=1):
+    s = f'{100 * v:.{d}f}%'
+    return s.replace('.', ',') if lang == 'pt' else s
+
+
+@figure('l10-roc', 10)
+def l10_roc(lang):
+    from sklearn.metrics import roc_curve, roc_auc_score
+    t = first_model_scores()
+    fpr, tpr, _ = roc_curve(t['churned'], t['chance'])
+    auc = roc_auc_score(t['churned'], t['chance'])
+    fig = Fig('l10-roc', 560, 380, T(lang,
+        f'The ROC curve of the model: true positive rate against false positive rate, bowing up and '
+        f'to the left of the diagonal, with an area of {auc:.3f}. Two points are marked: the cut of 0.5 '
+        f'near the bottom left, and the cut of 0.278 a little higher.',
+        f'A curva ROC do modelo: taxa de verdadeiros positivos contra taxa de falsos positivos, '
+        f'curvando para cima e para a esquerda da diagonal, com área {auc:.3f}. Dois pontos marcados: '
+        f'o corte de 0,5 perto do canto de baixo à esquerda, e o corte de 0,278 um pouco acima.'.replace(f'{auc:.3f}', f'{auc:.3f}'.replace('.', ','))))
+    p = Plot(fig, 70, 30, 410, 330, 0, 1, 0, 1)
+    dec = (lambda v: f'{v:.1f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.1f}')
+    p.yaxis([0, 0.2, 0.4, 0.6, 0.8, 1], fmt=dec, label=T(lang, 'true positive rate: leavers reached', 'taxa de verdadeiros positivos: quem sai alcançado'))
+    p.xaxis([0, 0.2, 0.4, 0.6, 0.8, 1], fmt=dec, label=T(lang, 'false positive rate: stayers given a credit', 'taxa de falsos positivos: quem fica e recebe crédito'))
+    fig.line(p.sx(0), p.sy(0), p.sx(1), p.sy(1), stroke='--paper-dim', width=1.2, dash='4 4')
+    fig.text(p.sx(0.75), p.sy(0.62), T(lang, 'knows nothing', 'não sabe nada'), size=10, fill='--paper-dim',
+             anchor='start')
+    fig.path('M' + ' L'.join(f'{p.sx(a):.1f} {p.sy(b):.1f}' for a, b in zip(fpr, tpr)), stroke='--phosphor', width=2.4)
+    y = t['churned'].to_numpy() == 1
+    for cut, label, dy in [(0.5, '0.5', 14), (40 / 144, '0.278', -14)]:
+        s_ = t['chance'].to_numpy() >= cut
+        a, b = (s_ & ~y).sum() / (~y).sum(), (s_ & y).sum() / y.sum()
+        fig.circle(p.sx(a), p.sy(b), 4.5, fill='--amber')
+        fig.text(p.sx(a) + 10, p.sy(b) + dy, T(lang, f'cut {label}', f'corte {label}'.replace('.', ',')), size=10,
+                 anchor='start', fill='--amber')
+    fig.text(p.sx(0.55), p.sy(0.3), T(lang, f'area under the curve: {auc:.3f}', f'área sob a curva: {auc:.3f}'.replace('.', ',')),
+             size=11, weight='600', fill='--phosphor', anchor='start')
+    cap = T(lang, 'Every cut is a point on the curve. The decisions Feira em Casa makes all happen in the '
+                  'bottom left corner.',
+            'Todo corte é um ponto da curva. As decisões da Feira em Casa acontecem todas no canto de baixo '
+            'à esquerda.')
+    return fig, cap
+
+
+@figure('l10-pr', 10)
+def l10_pr(lang):
+    from sklearn.metrics import average_precision_score, precision_recall_curve
+    t = first_model_scores()
+    prec, rec, _ = precision_recall_curve(t['churned'], t['chance'])
+    base = t['churned'].mean()
+    fig = Fig('l10-pr', 560, 360, T(lang,
+        'The precision-recall curve: precision on the vertical axis against recall. It starts above 0.6 '
+        'for the first few leavers, falls quickly, and approaches the dotted line at 0.061, the share of '
+        'leavers. A line at 0.278 marks where a credit pays for itself.',
+        'A curva de precisão e revocação: precisão no eixo vertical contra revocação. Ela começa acima '
+        'de 0,6 nos primeiros que saem, cai rápido e se aproxima da linha pontilhada em 0,061, a '
+        'proporção de quem sai. Uma linha em 0,278 marca onde um crédito se paga.'))
+    p = Plot(fig, 70, 30, 470, 310, 0, 1, 0, 1)
+    dec = (lambda v: f'{v:.1f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.1f}')
+    p.yaxis([0, 0.2, 0.4, 0.6, 0.8, 1], fmt=dec, label=T(lang, 'precision', 'precisão'))
+    p.xaxis([0, 0.2, 0.4, 0.6, 0.8, 1], fmt=dec, label=T(lang, 'recall', 'revocação'))
+    keep = rec < 0.999
+    pts = [(r, pr) for r, pr in zip(rec[keep], prec[keep])]
+    fig.path('M' + ' L'.join(f'{p.sx(a):.1f} {p.sy(b):.1f}' for a, b in pts), stroke='--phosphor', width=2.2)
+    fig.line(p.sx(0), p.sy(base), p.sx(1), p.sy(base), stroke='--paper-dim', width=1.2, dash='2 3')
+    fig.text(p.sx(0.02), p.sy(base) - 9, T(lang, f'send everybody: {base:.3f}', f'mandar a todos: {base:.3f}'.replace('.', ',')),
+             size=10, anchor='start', fill='--paper-dim')
+    fig.line(p.sx(0), p.sy(40 / 144), p.sx(1), p.sy(40 / 144), stroke='--amber', width=1.4, dash='5 4')
+    fig.text(p.sx(0.98), p.sy(40 / 144) - 9, T(lang, 'a credit pays above 0.278', 'um crédito se paga acima de 0,278'),
+             size=10, anchor='end', fill='--amber')
+    cap = T(lang, 'Above the dashed line a cut makes money; the curve crosses it at a recall of about half.',
+            'Acima da linha tracejada um corte dá dinheiro; a curva a cruza numa revocação de mais ou menos metade.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
