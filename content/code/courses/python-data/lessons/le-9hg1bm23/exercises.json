@@ -1,0 +1,642 @@
+[
+  {
+    "id": "ex-wf40nxja",
+    "version": 1,
+    "section": "why-arrays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a NumPy array store that a Python list of floats does not?",
+    "hint": "Where are the numbers themselves?",
+    "choices": [
+      {
+        "text": "The numbers themselves, side by side, all of one type",
+        "correct": true,
+        "why": "Right. A list stores references to separate objects."
+      },
+      {
+        "text": "Column names",
+        "correct": false,
+        "why": "An array has none; pandas adds them."
+      },
+      {
+        "text": "A pointer to each Python `float` object",
+        "correct": false,
+        "why": "That is what the list stores."
+      },
+      {
+        "text": "The source file it was read from, so it can reload it",
+        "correct": false,
+        "why": "Nothing of the kind is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wmz6yx4",
+    "version": 1,
+    "section": "why-arrays",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`rain.nbytes` was 2920 for 365 readings. How many bytes does each reading take?",
+    "hint": "2920 ÷ 365.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rffbtjx4",
+    "version": 1,
+    "section": "why-arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`genfromtxt` read a rain column with six empty fields. What did those fields become?",
+    "hint": "A float can hold a value that is not a number.",
+    "choices": [
+      {
+        "text": "0.0",
+        "correct": false,
+        "why": "That would make six dry days out of six unknown ones."
+      },
+      {
+        "text": "An error that stopped the file loading",
+        "correct": false,
+        "why": "The file loaded; `shape` was `(365, 2)`."
+      },
+      {
+        "text": "`nan`",
+        "correct": true,
+        "why": "Right; `np.isnan(rain).sum()` counted 6."
+      },
+      {
+        "text": "Python's `None`, which turns the whole array into objects",
+        "correct": false,
+        "why": "The dtype stayed `float64`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s04g61p",
+    "version": 1,
+    "section": "why-arrays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `np.isnan(rain).sum()` a count of missing days?",
+    "hint": "What does summing booleans do?",
+    "choices": [
+      {
+        "text": "`sum` skips the `nan` values and counts the rest",
+        "correct": false,
+        "why": "It sums an array of `True`/`False`, not the rain."
+      },
+      {
+        "text": "`True` counts as 1 and `False` as 0",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`isnan` returns the positions of the missing values, and `sum` adds the positions together",
+        "correct": false,
+        "why": "It returns booleans, one per value."
+      },
+      {
+        "text": "`sum` on a float array always returns a count",
+        "correct": false,
+        "why": "It returns a total."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbywc7s9",
+    "version": 1,
+    "section": "shape-and-dtype",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the dtype of `np.array([14, \"20\"])`?",
+    "hint": "One string in the list.",
+    "choices": [
+      {
+        "text": "`int64`, with the string converted",
+        "correct": false,
+        "why": "NumPy does not convert text to numbers here."
+      },
+      {
+        "text": "`object`",
+        "correct": false,
+        "why": "It found a type that holds both: text."
+      },
+      {
+        "text": "A string type, `<U21`",
+        "correct": true,
+        "why": "Right, and no arithmetic works on it."
+      },
+      {
+        "text": "It raises a `TypeError` because the list is mixed",
+        "correct": false,
+        "why": "NumPy does not refuse a mixed list."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncx2kab9",
+    "version": 1,
+    "section": "shape-and-dtype",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shape of a one-dimensional array of five numbers is written `(5___)`.",
+    "hint": "A tuple of one needs one character.",
+    "blanks": [
+      {
+        "accept": [
+          ","
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jms4a6av",
+    "version": 1,
+    "section": "shape-and-dtype",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need 11 evenly spaced values from 0 to 1, both ends included. Which call is the safe one?",
+    "hint": "One takes a count; one takes a step.",
+    "choices": [
+      {
+        "text": "`np.arange(0, 1, 0.1)`",
+        "correct": false,
+        "why": "It leaves out the stop, and a float step can give one element more or fewer."
+      },
+      {
+        "text": "`np.linspace(0, 1, 11)`",
+        "correct": true,
+        "why": "Right: a count of points, stop included."
+      },
+      {
+        "text": "`np.zeros(11) + 0.1`",
+        "correct": false,
+        "why": "Eleven copies of 0.1."
+      },
+      {
+        "text": "`np.arange(0, 1.1, 0.1)`, stretching the stop to catch 1.0",
+        "correct": false,
+        "why": "Still a float step: whether the last value lands where you meant depends on rounding."
+      }
+    ]
+  },
+  {
+    "id": "ex-znm8wxa1",
+    "version": 1,
+    "section": "shape-and-dtype",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `np.arange(24).reshape(5, 5)` fail?",
+    "hint": "Multiply the new shape.",
+    "choices": [
+      {
+        "text": "reshape only accepts shapes with a `-1`",
+        "correct": false,
+        "why": "`reshape(4, 6)` worked."
+      },
+      {
+        "text": "Square shapes need a float array",
+        "correct": false,
+        "why": "Shape and dtype are independent."
+      },
+      {
+        "text": "The array must be copied first",
+        "correct": false,
+        "why": "Copying does not change its size."
+      },
+      {
+        "text": "25 elements do not fit 24",
+        "correct": true,
+        "why": "Right: the product of the shape must equal the size."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfw2rz6j",
+    "version": 1,
+    "section": "what-a-dtype-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`np.array([127], dtype=np.int8) + 5` gives what?",
+    "hint": "Eight bits, signed.",
+    "choices": [
+      {
+        "text": "`array([132])`, promoted to a wider type",
+        "correct": false,
+        "why": "The array's type wins in NumPy 2."
+      },
+      {
+        "text": "`OverflowError`",
+        "correct": false,
+        "why": "5 fits in int8; only the result overflows, and that wraps."
+      },
+      {
+        "text": "`array([-124], dtype=int8)`, wrapped round",
+        "correct": true,
+        "why": "Right, silently."
+      },
+      {
+        "text": "`array([127])`, capped at the maximum",
+        "correct": false,
+        "why": "Integers wrap; they do not saturate."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y3pca22",
+    "version": 1,
+    "section": "what-a-dtype-holds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`x = np.array([0.1, 0.2]); x.sum() == 0.3` is `False`. What is the right test?",
+    "hint": "Within a tolerance.",
+    "choices": [
+      {
+        "text": "`np.isclose(x.sum(), 0.3)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`x.sum() is 0.3`",
+        "correct": false,
+        "why": "`is` compares identity, which is worse."
+      },
+      {
+        "text": "`round(x.sum()) == 0.3`",
+        "correct": false,
+        "why": "`round` with no digits gives 0."
+      },
+      {
+        "text": "`x.astype(int).sum() == 0`",
+        "correct": false,
+        "why": "Truncating to integers throws the values away."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqbh6k01",
+    "version": 1,
+    "section": "what-a-dtype-holds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`np.array([-0.7]).astype(int)` gives an array of one value. What is it?",
+    "hint": "Truncation goes towards zero.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-759704bm",
+    "version": 1,
+    "section": "what-a-dtype-holds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A float column with some `nan` is cast with `astype(int)`. What do you get?",
+    "hint": "NumPy warns, and does not refuse.",
+    "choices": [
+      {
+        "text": "A `ValueError`, and no array",
+        "correct": false,
+        "why": "It does not raise; it warns."
+      },
+      {
+        "text": "The `nan` values become 0",
+        "correct": false,
+        "why": "They become an integer that means nothing; here the smallest int64."
+      },
+      {
+        "text": "A `RuntimeWarning`, and meaningless integers where the `nan` were",
+        "correct": true,
+        "why": "Right. Keep a column with gaps as float."
+      },
+      {
+        "text": "An array of `object` holding `nan` and integers",
+        "correct": false,
+        "why": "The dtype is int64."
+      }
+    ]
+  },
+  {
+    "id": "ex-axf49ak8",
+    "version": 1,
+    "section": "numpy-2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under NumPy 2, `np.array([14, 20, 12], dtype=np.uint8) + 300` raises `OverflowError`. Under NumPy 1 it gave `[314 320 312]`. What changed?",
+    "hint": "Value or type?",
+    "choices": [
+      {
+        "text": "NumPy 2 dropped `uint8`",
+        "correct": false,
+        "why": "The array was made with it."
+      },
+      {
+        "text": "The array's type now decides, not the Python number's value",
+        "correct": true,
+        "why": "Right: NEP 50."
+      },
+      {
+        "text": "Python integers are now 8-bit",
+        "correct": false,
+        "why": "Python's integers did not change."
+      },
+      {
+        "text": "Addition of a scalar is no longer allowed",
+        "correct": false,
+        "why": "`docks.astype(np.int64) + 300` worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzmzvjh8",
+    "version": 1,
+    "section": "numpy-2",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cell's last line is `docks.max()` and the output is `np.uint8(20)`. Is something wrong?",
+    "hint": "NumPy 2's representation of one number.",
+    "choices": [
+      {
+        "text": "No: NumPy 2 shows the scalar's type in its representation",
+        "correct": true,
+        "why": "Right; the value is 20."
+      },
+      {
+        "text": "Yes: the maximum came back as an array",
+        "correct": false,
+        "why": "It is a scalar, shown with its type."
+      },
+      {
+        "text": "Yes: the value overflowed",
+        "correct": false,
+        "why": "20 fits in uint8."
+      },
+      {
+        "text": "No, but it means the notebook is running NumPy 1",
+        "correct": false,
+        "why": "NumPy 1 printed `20`."
+      }
+    ]
+  },
+  {
+    "id": "ex-90tmtgsw",
+    "version": 1,
+    "section": "numpy-2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Old code relied on NumPy 1 widening a small integer type when needed. What is the robust fix?",
+    "hint": "Say what you mean.",
+    "choices": [
+      {
+        "text": "Pin NumPy 1 forever",
+        "correct": false,
+        "why": "That postpones the problem and blocks every upgrade."
+      },
+      {
+        "text": "Catch `OverflowError` and retry with `float`",
+        "correct": false,
+        "why": "That hides the decision in an exception handler."
+      },
+      {
+        "text": "Choose the dtype explicitly",
+        "correct": true,
+        "why": "Right, with `astype` or `dtype=`."
+      },
+      {
+        "text": "Use Python lists instead of arrays for small numbers",
+        "correct": false,
+        "why": "That gives up everything the array is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-q10n08r5",
+    "version": 1,
+    "section": "memory-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hours` is a 4 × 6 `int64` array in C order. Why are its strides `(48, 8)`?",
+    "hint": "Bytes to the next row, bytes to the next column.",
+    "choices": [
+      {
+        "text": "48 is the number of elements and 8 the number of rows",
+        "correct": false,
+        "why": "There are 24 elements and 4 rows."
+      },
+      {
+        "text": "A row is six 8-byte numbers; the next column is one",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "NumPy pads each row to 48 bytes for alignment",
+        "correct": false,
+        "why": "Six int64 are exactly 48 bytes; no padding."
+      },
+      {
+        "text": "Strides are always (48, 8) for 2-D arrays",
+        "correct": false,
+        "why": "They depend on shape and dtype."
+      }
+    ]
+  },
+  {
+    "id": "ex-7d2esdpy",
+    "version": 1,
+    "section": "memory-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `hours.T` cost for a 100-million-element array?",
+    "hint": "What does a transpose change?",
+    "choices": [
+      {
+        "text": "A copy of all 800 MB",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "Time proportional to the number of rows",
+        "correct": false,
+        "why": "No element is touched."
+      },
+      {
+        "text": "Almost nothing: it swaps the strides",
+        "correct": true,
+        "why": "Right; it is a view."
+      },
+      {
+        "text": "It fails: transposes need a contiguous array, which a large one rarely is",
+        "correct": false,
+        "why": "It works on any array."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv1xmmpn",
+    "version": 1,
+    "section": "views-and-copies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operation on an array `a` to what it gives.",
+    "hint": "Describe or compute?",
+    "pairs": [
+      {
+        "left": "`a[2:5]`",
+        "right": "A view"
+      },
+      {
+        "left": "`a[a > 10]`",
+        "right": "A copy"
+      },
+      {
+        "left": "`a.T`",
+        "right": "A view, with swapped strides"
+      },
+      {
+        "left": "`a + 1`",
+        "right": "A new array of computed values"
+      }
+    ],
+    "right_distractors": [
+      "An error"
+    ]
+  },
+  {
+    "id": "ex-gs0cd7hz",
+    "version": 1,
+    "section": "views-and-copies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`week = rain[:7]; week[0] = 5.0`. What is `weather[0, 0]` now?",
+    "hint": "`rain` is a column of `weather`.",
+    "choices": [
+      {
+        "text": "5.0",
+        "correct": true,
+        "why": "Right: all three share the bytes."
+      },
+      {
+        "text": "0.0, the original value",
+        "correct": false,
+        "why": "A slice is a view, not a copy."
+      },
+      {
+        "text": "`nan`, since the view was detached",
+        "correct": false,
+        "why": "Nothing detaches a view."
+      },
+      {
+        "text": "It raises an error: views are read-only",
+        "correct": false,
+        "why": "Views are writable."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7jx49gq",
+    "version": 1,
+    "section": "views-and-copies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call tells you whether two arrays use any of the same bytes?",
+    "hint": "It is a question you can ask instead of reasoning.",
+    "choices": [
+      {
+        "text": "`a is b`",
+        "correct": false,
+        "why": "Two views are different objects over the same bytes."
+      },
+      {
+        "text": "`a == b`",
+        "correct": false,
+        "why": "That compares values, element by element."
+      },
+      {
+        "text": "`a.flags[\"C_CONTIGUOUS\"]`",
+        "correct": false,
+        "why": "That is about layout, not sharing."
+      },
+      {
+        "text": "`np.shares_memory(a, b)`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5e1y6jx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these dtypes from the fewest bytes per element to the most.",
+    "hint": "The number in the name is bits.",
+    "items": [
+      "`int8`",
+      "`float32`",
+      "`int64`",
+      "`<U21`"
+    ],
+    "trap": "`<U21` looks short and holds up to 21 characters of 4 bytes each."
+  },
+  {
+    "id": "ex-6hx8yvra",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these change an array silently, with no error? Choose all that apply.",
+    "hint": "NumPy chooses speed over checking.",
+    "choices": [
+      {
+        "text": "An int8 sum past 127",
+        "correct": true,
+        "why": "Yes: it wraps."
+      },
+      {
+        "text": "Writing to a slice of another array",
+        "correct": true,
+        "why": "Yes: the original changes."
+      },
+      {
+        "text": "`astype(int)` on 29.9",
+        "correct": true,
+        "why": "Yes: it truncates to 29."
+      },
+      {
+        "text": "`reshape(5, 5)` on 24 elements",
+        "correct": false,
+        "why": "No: that raises `ValueError`."
+      },
+      {
+        "text": "`uint8` array + 300 in NumPy 2",
+        "correct": false,
+        "why": "No: that raises `OverflowError`."
+      }
+    ]
+  }
+]

@@ -1,0 +1,741 @@
+[
+  {
+    "id": "ex-gn9m16fj",
+    "version": 1,
+    "section": "a-database-to-look-after",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does shop.sql compute every value from the row's number instead of calling random()?",
+    "hint": "Think about comparing your screen with the course's.",
+    "choices": [
+      {
+        "text": "random() is not available in PostgreSQL 16",
+        "correct": false,
+        "why": "It exists. It was avoided on purpose."
+      },
+      {
+        "text": "Arithmetic is faster than random()",
+        "correct": false,
+        "why": "Speed is not the reason; the load takes about fourteen seconds either way."
+      },
+      {
+        "text": "So your numbers match the course's",
+        "correct": true,
+        "why": "Right. Same rows, same numbers."
+      },
+      {
+        "text": "Random values would break the foreign key",
+        "correct": false,
+        "why": "A random customer between 1 and 50,000 would satisfy it just as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-1921h4dd",
+    "version": 1,
+    "section": "a-database-to-look-after",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\\dt+` shows orders at 65 MB and `\\di+` shows its three indexes at 12 MB, 9408 kB and 21 MB. What does that tell you?",
+    "hint": "Add the indexes up.",
+    "choices": [
+      {
+        "text": "The indexes are corrupt",
+        "correct": false,
+        "why": "Nothing here suggests damage; this is the ordinary size of three B-tree indexes."
+      },
+      {
+        "text": "Indexes cost real space",
+        "correct": true,
+        "why": "Right. About 42 MB of index for 65 MB of table."
+      },
+      {
+        "text": "The table is mostly empty pages",
+        "correct": false,
+        "why": "It was just loaded; there are no dead rows yet."
+      },
+      {
+        "text": "\\dt+ is counting the indexes twice",
+        "correct": false,
+        "why": "\\dt+ shows the table without its indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1p2jdcs",
+    "version": 1,
+    "section": "a-database-to-look-after",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps to rebuild shop exactly as it was in order.",
+    "hint": "Remove, make empty, fill.",
+    "items": [
+      "dropdb shop",
+      "createdb shop",
+      "psql shop -f shop.sql"
+    ],
+    "trap": "Running the file into an existing shop fails at the first CREATE TABLE: the tables are already there."
+  },
+  {
+    "id": "ex-efgk8ag9",
+    "version": 1,
+    "section": "where-the-files-live",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each entry of the data directory to what it holds.",
+    "hint": "One per database, one shared, one log, one record of commits.",
+    "pairs": [
+      {
+        "left": "base/",
+        "right": "a subdirectory per database"
+      },
+      {
+        "left": "global/",
+        "right": "tables every database shares"
+      },
+      {
+        "left": "pg_wal/",
+        "right": "every change, written down first"
+      },
+      {
+        "left": "pg_xact/",
+        "right": "whether each transaction committed"
+      }
+    ],
+    "right_distractors": [
+      "the server's configuration"
+    ]
+  },
+  {
+    "id": "ex-w51pjqar",
+    "version": 1,
+    "section": "where-the-files-live",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after loading shop, pg_wal was 337M and base was 153M. What is the right reading?",
+    "hint": "Every change goes to the log first.",
+    "choices": [
+      {
+        "text": "Something is wrong: the log should never exceed the data",
+        "correct": false,
+        "why": "After a bulk load it routinely does, for a while."
+      },
+      {
+        "text": "The load went through the log first",
+        "correct": true,
+        "why": "Right. Bounded, and lesson 7 says by what."
+      },
+      {
+        "text": "The old segments are safe to delete now",
+        "correct": false,
+        "why": "Never by hand. The server decides when a segment is no longer needed."
+      },
+      {
+        "text": "pg_wal holds a second copy of every table",
+        "correct": false,
+        "why": "It holds a record of changes, not copies of tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-kavrw8jj",
+    "version": 1,
+    "section": "where-the-files-live",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server was killed with kill -9 and postmaster.pid is still in the data directory. What happens at the next start?",
+    "hint": "The file records a process id.",
+    "choices": [
+      {
+        "text": "It checks that process first",
+        "correct": true,
+        "why": "Right. The file only blocks a server that is really running."
+      },
+      {
+        "text": "It refuses to start until somebody deletes the file",
+        "correct": false,
+        "why": "It checks the process first; deleting the file by hand is the dangerous habit."
+      },
+      {
+        "text": "It starts a second server beside the old one",
+        "correct": false,
+        "why": "Two servers on one directory is exactly what the file exists to prevent."
+      },
+      {
+        "text": "It recreates the cluster from scratch",
+        "correct": false,
+        "why": "Nothing is recreated; crash recovery replays the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5g13n1p",
+    "version": 1,
+    "section": "where-the-files-live",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The file that records which major version made a data directory is called ___.",
+    "hint": "Its name says it, in capitals.",
+    "blanks": [
+      {
+        "accept": [
+          "PG_VERSION"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5f2pkttp",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the right way to find the file that holds a table?",
+    "hint": "Ask the server.",
+    "choices": [
+      {
+        "text": "Look for a file named after the table under base/",
+        "correct": false,
+        "why": "No file is named after a table."
+      },
+      {
+        "text": "SELECT pg_relation_filepath('the_table')",
+        "correct": true,
+        "why": "Right. The number can change, so look it up each time."
+      },
+      {
+        "text": "Take the newest file in the database's directory",
+        "correct": false,
+        "why": "The newest file is whatever changed last, which tells you nothing about which table it is."
+      },
+      {
+        "text": "Add 12 to the database's oid",
+        "correct": false,
+        "why": "There is no arithmetic between the two numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgx3cyfr",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fork of a table appears only after the first VACUUM?",
+    "hint": "Two bits per page.",
+    "choices": [
+      {
+        "text": "The visibility map, _vm",
+        "correct": true,
+        "why": "Right. VACUUM is what fills it in."
+      },
+      {
+        "text": "The main fork",
+        "correct": false,
+        "why": "It holds the rows, so it exists from the first insert."
+      },
+      {
+        "text": "The free space map, _fsm",
+        "correct": false,
+        "why": "It was already there after the load."
+      },
+      {
+        "text": "The index file",
+        "correct": false,
+        "why": "An index is a relation of its own, not a fork of the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewst38xw",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "orders' main fork is 68,272,128 bytes and a page is 8192 bytes. How many pages does it hold?",
+    "hint": "Divide.",
+    "value": 8334,
+    "tolerance": 0,
+    "unit": "pages"
+  },
+  {
+    "id": "ex-7z0rtz6b",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody asks how big orders is. Which function answers with the table, its maps and every index together?",
+    "hint": "The one with total in its name.",
+    "choices": [
+      {
+        "text": "pg_total_relation_size",
+        "correct": true,
+        "why": "Right: 108 MB here."
+      },
+      {
+        "text": "pg_relation_size",
+        "correct": false,
+        "why": "That is the main fork alone: 65 MB."
+      },
+      {
+        "text": "pg_table_size",
+        "correct": false,
+        "why": "That adds the maps and TOAST, but no index."
+      },
+      {
+        "text": "pg_indexes_size",
+        "correct": false,
+        "why": "That is the indexes alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv7b8xxb",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of 3.5 GB lives in base/16386. How many files hold its main fork?",
+    "hint": "segment_size is 1GB.",
+    "choices": [
+      {
+        "text": "Four: the number, then .1, .2 and .3",
+        "correct": true,
+        "why": "Right. Three full gigabytes and half of a fourth."
+      },
+      {
+        "text": "One, of 3.5 GB",
+        "correct": false,
+        "why": "No file grows past segment_size."
+      },
+      {
+        "text": "Three, and the remainder goes in the free space map",
+        "correct": false,
+        "why": "The free space map holds no rows."
+      },
+      {
+        "text": "It depends on the filesystem's block size",
+        "correct": false,
+        "why": "The split is PostgreSQL's, fixed at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-pw10nkby",
+    "version": 1,
+    "section": "a-table-is-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After TRUNCATE scratch, pg_relation_filepath gave a different number. Why is TRUNCATE instant on a table of any size?",
+    "hint": "It did not touch the old rows.",
+    "choices": [
+      {
+        "text": "It marks every row deleted in one pass",
+        "correct": false,
+        "why": "That is DELETE, and it takes time in proportion to the rows."
+      },
+      {
+        "text": "It defers the work to the next VACUUM",
+        "correct": false,
+        "why": "Nothing is left for VACUUM: the old file is gone at commit."
+      },
+      {
+        "text": "It swaps in a new empty file",
+        "correct": true,
+        "why": "Right. The oid stays; the relfilenode changes."
+      },
+      {
+        "text": "The table was small",
+        "correct": false,
+        "why": "It would be just as fast at a billion rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-fghm0q4s",
+    "version": 1,
+    "section": "the-ubuntu-layout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Ubuntu, where is pg_hba.conf for the cluster 16/main?",
+    "hint": "Where every other service keeps its configuration.",
+    "choices": [
+      {
+        "text": "/var/lib/postgresql/16/main",
+        "correct": false,
+        "why": "That is upstream's place, and the data directory."
+      },
+      {
+        "text": "/usr/lib/postgresql/16",
+        "correct": false,
+        "why": "That holds the programs."
+      },
+      {
+        "text": "/etc/postgresql/16/main",
+        "correct": true,
+        "why": "Right. Debian and Ubuntu keep the data directory pure data."
+      },
+      {
+        "text": "/var/run/postgresql",
+        "correct": false,
+        "why": "That holds the socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt5g9q1x",
+    "version": 1,
+    "section": "the-ubuntu-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You keep a second cluster for rehearsals and do not want it running after every reboot. What do you change?",
+    "hint": "One word in one small file.",
+    "choices": [
+      {
+        "text": "Delete its postmaster.pid",
+        "correct": false,
+        "why": "That changes nothing about boot, and is never done by hand."
+      },
+      {
+        "text": "Set start.conf to manual",
+        "correct": true,
+        "why": "Right. auto, manual or disabled."
+      },
+      {
+        "text": "Drop it with pg_dropcluster and recreate it when needed",
+        "correct": false,
+        "why": "That deletes its data, configuration and log."
+      },
+      {
+        "text": "Edit pg_ctl.conf",
+        "correct": false,
+        "why": "That holds extra options for pg_ctl, not whether it starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1s2wtah",
+    "version": 1,
+    "section": "the-ubuntu-layout",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does `sudo pg_dropcluster --stop 16 main` delete? Choose all that apply.",
+    "hint": "The three places a cluster lives on Ubuntu.",
+    "choices": [
+      {
+        "text": "/var/lib/postgresql/16/main",
+        "correct": true,
+        "why": "Yes, the data directory."
+      },
+      {
+        "text": "/etc/postgresql/16/main",
+        "correct": true,
+        "why": "Yes, its configuration."
+      },
+      {
+        "text": "Its log in /var/log/postgresql",
+        "correct": true,
+        "why": "Yes, the log too."
+      },
+      {
+        "text": "The postgresql-16 package",
+        "correct": false,
+        "why": "The programs stay; pg_createcluster can make a new cluster at once."
+      },
+      {
+        "text": "Other clusters on the machine",
+        "correct": false,
+        "why": "Only the one named."
+      }
+    ]
+  },
+  {
+    "id": "ex-532e1zc4",
+    "version": 1,
+    "section": "the-ubuntu-layout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does moving the configuration out of the data directory make possible?",
+    "hint": "Think about replacing the data directory.",
+    "choices": [
+      {
+        "text": "Running two major versions from one data directory",
+        "correct": false,
+        "why": "No data directory serves two major versions."
+      },
+      {
+        "text": "Replacing the data, keeping the settings",
+        "correct": true,
+        "why": "Right. The data directory becomes pure data."
+      },
+      {
+        "text": "Editing settings without sudo",
+        "correct": false,
+        "why": "The files still belong to postgres."
+      },
+      {
+        "text": "Starting the server without postmaster.pid",
+        "correct": false,
+        "why": "postmaster.pid is still written in the data directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5nkacfc",
+    "version": 1,
+    "section": "tablespaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does ALTER TABLE customers SET TABLESPACE fast do while it runs?",
+    "hint": "The files move.",
+    "choices": [
+      {
+        "text": "Changes a pointer; the files stay where they are",
+        "correct": false,
+        "why": "The new path is in the new directory: the data was copied."
+      },
+      {
+        "text": "Moves the table and all its indexes",
+        "correct": false,
+        "why": "Only the table moved; each index needs its own ALTER INDEX."
+      },
+      {
+        "text": "Copies the table in the background without locks",
+        "correct": false,
+        "why": "It holds a lock that blocks everyone until the copy ends."
+      },
+      {
+        "text": "Copies it, blocking everyone meanwhile",
+        "correct": true,
+        "why": "Right. Nothing for 4.5 MB, an outage for 200 GB."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy2np21k",
+    "version": 1,
+    "section": "tablespaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the cluster remember where tablespace fast is after a restart?",
+    "hint": "Look in pg_tblspc.",
+    "choices": [
+      {
+        "text": "A symbolic link in pg_tblspc, named by the tablespace's oid",
+        "correct": true,
+        "why": "Right. It points at /srv/pg/fast."
+      },
+      {
+        "text": "A line in postgresql.conf",
+        "correct": false,
+        "why": "No configuration was written."
+      },
+      {
+        "text": "An entry in /etc/fstab",
+        "correct": false,
+        "why": "fstab mounts disks; it knows nothing about tablespaces."
+      },
+      {
+        "text": "It scans /srv at startup",
+        "correct": false,
+        "why": "Nothing is scanned; the link is followed."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw7r6ta9",
+    "version": 1,
+    "section": "tablespaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cloud server has one network volume type for every disk. A colleague wants a tablespace for the hottest table. What is the strongest objection?",
+    "hint": "What would the tablespace buy here?",
+    "choices": [
+      {
+        "text": "Tablespaces are deprecated in PostgreSQL 16",
+        "correct": false,
+        "why": "They are fully supported."
+      },
+      {
+        "text": "A tablespace cannot hold an indexed table",
+        "correct": false,
+        "why": "Tables and indexes both go in tablespaces."
+      },
+      {
+        "text": "Only superusers may read a table in a tablespace",
+        "correct": false,
+        "why": "Privileges are the same wherever the files are."
+      },
+      {
+        "text": "There is no faster place to put it",
+        "correct": true,
+        "why": "Right. All the cost, none of the gain."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnvy4hg1",
+    "version": 1,
+    "section": "hands-off",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The disk is nearly full and pg_wal is the biggest directory. What should you do first?",
+    "hint": "The server decides which segments it still needs.",
+    "choices": [
+      {
+        "text": "Delete the oldest files in pg_wal",
+        "correct": false,
+        "why": "The cluster may never start again."
+      },
+      {
+        "text": "Compress pg_wal with gzip",
+        "correct": false,
+        "why": "The server would find segments it cannot read."
+      },
+      {
+        "text": "Find out why it grew",
+        "correct": true,
+        "why": "Right. Lesson 7 says why; lesson 24 writes the runbook."
+      },
+      {
+        "text": "Move pg_wal to /tmp",
+        "correct": false,
+        "why": "Moving files by hand under the server is the same mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcxqr895",
+    "version": 1,
+    "section": "hands-off",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `cp -a` of a running server's data directory not a backup?",
+    "hint": "The files change while cp reads them.",
+    "choices": [
+      {
+        "text": "cp cannot read files owned by postgres",
+        "correct": false,
+        "why": "With sudo it reads them fine. The problem is when."
+      },
+      {
+        "text": "The copy mixes moments that no recovery reconciles",
+        "correct": true,
+        "why": "Right. Stopped, or with tools built for it."
+      },
+      {
+        "text": "cp does not copy symbolic links",
+        "correct": false,
+        "why": "-a copies them; that is not the problem."
+      },
+      {
+        "text": "The copy is too big",
+        "correct": false,
+        "why": "Size has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkdrj1dq",
+    "version": 1,
+    "section": "hands-off",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server refuses to start, saying another server may be running on the data directory. ps shows no postgres process. What is the right reading?",
+    "hint": "Read the whole message before touching anything.",
+    "choices": [
+      {
+        "text": "Delete postmaster.pid and start again",
+        "correct": false,
+        "why": "If something else holds that pid, you have just allowed two servers on one directory."
+      },
+      {
+        "text": "Reinstall the package",
+        "correct": false,
+        "why": "Nothing is wrong with the programs."
+      },
+      {
+        "text": "Read the log first, then check whose pid that is",
+        "correct": true,
+        "why": "Right. The log names what it found, and that decides the next step."
+      },
+      {
+        "text": "Change the data directory's permissions to 777",
+        "correct": false,
+        "why": "The server would then refuse for a second reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zb5qn3q",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The number a table's file carries on disk, which TRUNCATE changes while the table's oid stays, is its ___.",
+    "hint": "Relation, file, node.",
+    "blanks": [
+      {
+        "accept": [
+          "relfilenode"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n2sr2ez9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the command that answers it.",
+    "hint": "Server for meaning, shell for bytes.",
+    "pairs": [
+      {
+        "left": "Which file is the orders table?",
+        "right": "SELECT pg_relation_filepath('orders')"
+      },
+      {
+        "left": "How big is each part of the cluster?",
+        "right": "sudo du -h -d1 /var/lib/postgresql/16/main"
+      },
+      {
+        "left": "Where does the cluster keep its log?",
+        "right": "pg_lsclusters"
+      },
+      {
+        "left": "Which tablespaces exist?",
+        "right": "\\db"
+      }
+    ]
+  }
+]

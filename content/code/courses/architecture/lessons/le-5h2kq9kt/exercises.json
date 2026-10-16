@@ -1,0 +1,717 @@
+[
+  {
+    "id": "ex-hznwj4mg",
+    "version": 1,
+    "section": "threads-are-a-resource",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a slow dependency take down pages that never call it?",
+    "hint": "What do those pages also need?",
+    "choices": [
+      {
+        "text": "It sends errors to every page of the service",
+        "correct": false,
+        "why": "It sends no errors at all."
+      },
+      {
+        "text": "Its callers hold the shared threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Requests to it are retried by every other page",
+        "correct": false,
+        "why": "Other pages do not call it."
+      },
+      {
+        "text": "It locks the database that all the pages read from",
+        "correct": false,
+        "why": "The catalogue answered from memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-3687twj0",
+    "version": 1,
+    "section": "threads-are-a-resource",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a cascading failure?",
+    "hint": "It moves outwards one hop at a time.",
+    "choices": [
+      {
+        "text": "Several bugs released in one deploy",
+        "correct": false,
+        "why": "That is a bad deploy."
+      },
+      {
+        "text": "A database replicated to several regions",
+        "correct": false,
+        "why": "That is replication."
+      },
+      {
+        "text": "Slowness spreading from caller to caller",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A queue that passes messages through several brokers",
+        "correct": false,
+        "why": "Not a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1yqvnbz",
+    "version": 1,
+    "section": "threads-are-a-resource",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way a resource runs out to the tool for it.",
+    "hint": "Dependency, client, work.",
+    "pairs": [
+      {
+        "left": "one slow dependency",
+        "right": "a bulkhead"
+      },
+      {
+        "left": "one client asking too often",
+        "right": "a rate limit"
+      },
+      {
+        "left": "more work than can be done now",
+        "right": "a bounded queue"
+      }
+    ]
+  },
+  {
+    "id": "ex-wz2mfs6x",
+    "version": 1,
+    "section": "the-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many threads does the lab's shop serve requests with?",
+    "hint": "`max_workers`.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "threads"
+  },
+  {
+    "id": "ex-2hesgmg1",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the lab's pool only eight threads?",
+    "hint": "A real pool fills too.",
+    "choices": [
+      {
+        "text": "Python cannot run more than eight threads",
+        "correct": false,
+        "why": "It can run far more."
+      },
+      {
+        "text": "So the effect shows quickly",
+        "correct": true,
+        "why": "Right; a bigger pool fills later."
+      },
+      {
+        "text": "Eight is what Tomcat uses by default",
+        "correct": false,
+        "why": "Tomcat's default is 200."
+      },
+      {
+        "text": "The stock service only accepts eight connections",
+        "correct": false,
+        "why": "The stock service has no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-673ywh8k",
+    "version": 1,
+    "section": "one-slow-dependency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the stock service taking five seconds, what happened to the catalogue?",
+    "hint": "Look at its line in the output.",
+    "choices": [
+      {
+        "text": "Nothing; it answers from memory",
+        "correct": false,
+        "why": "193 of 200 timed out."
+      },
+      {
+        "text": "It returned errors from the stock service",
+        "correct": false,
+        "why": "It never called the stock service."
+      },
+      {
+        "text": "It timed out too, starved of threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It slowed to about five seconds an answer",
+        "correct": false,
+        "why": "The load gave up at three."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8qxjy23",
+    "version": 1,
+    "section": "one-slow-dependency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would a one-second timeout on the stock call not be enough?",
+    "hint": "Twenty a second, eight threads.",
+    "choices": [
+      {
+        "text": "Timeouts do not work inside a thread pool",
+        "correct": false,
+        "why": "They work."
+      },
+      {
+        "text": "The stock service ignores timeouts",
+        "correct": false,
+        "why": "The timeout is on the caller's side."
+      },
+      {
+        "text": "One second is longer than the stock service's delay",
+        "correct": false,
+        "why": "It is shorter than five."
+      },
+      {
+        "text": "It still needs over eight threads",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzv1rebg",
+    "version": 1,
+    "section": "one-slow-dependency",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Stock requests arrive at 20 a second and each holds a thread for 5 seconds. How many threads would they need to all run at once?",
+    "hint": "Arrival rate × time held.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "threads"
+  },
+  {
+    "id": "ex-9q5k2m9r",
+    "version": 1,
+    "section": "bulkheads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the shop's bulkhead do when three threads are already waiting on the stock service?",
+    "hint": "`acquire(blocking=False)`.",
+    "choices": [
+      {
+        "text": "Queues the fourth request until one is free",
+        "correct": false,
+        "why": "It does not wait."
+      },
+      {
+        "text": "Refuses the fourth at once with 503",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sends the fourth to another stock instance",
+        "correct": false,
+        "why": "There is one stock service."
+      },
+      {
+        "text": "Raises the pool to nine threads",
+        "correct": false,
+        "why": "The pool stays at eight."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e2dzext",
+    "version": 1,
+    "section": "bulkheads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the bulkhead on and the stock service slow, why did the stock page still fail?",
+    "hint": "What was its dependency doing?",
+    "choices": [
+      {
+        "text": "The bulkhead was set too low",
+        "correct": false,
+        "why": "A larger one would hold more threads to the same end."
+      },
+      {
+        "text": "Its dependency really was taking five seconds",
+        "correct": true,
+        "why": "Right: the bulkhead contains a failure, it does not fix it."
+      },
+      {
+        "text": "The catalogue took its threads",
+        "correct": false,
+        "why": "The catalogue used little."
+      },
+      {
+        "text": "The bulkhead blocks every stock request",
+        "correct": false,
+        "why": "It let three through at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-avx7h8q2",
+    "version": 1,
+    "section": "bulkheads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did lesson 2 promise that the bulkhead shows?",
+    "hint": "Isolation and services.",
+    "choices": [
+      {
+        "text": "That every dependency needs its own service",
+        "correct": false,
+        "why": "The lab is one process."
+      },
+      {
+        "text": "That monoliths cannot be isolated",
+        "correct": false,
+        "why": "The opposite."
+      },
+      {
+        "text": "Isolation inside one process",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That threads are cheaper than processes",
+        "correct": false,
+        "why": "Not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdv2atva",
+    "version": 1,
+    "section": "bulkheads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does a cell-based architecture limit?",
+    "hint": "The last row of the table.",
+    "choices": [
+      {
+        "text": "The number of threads per service",
+        "correct": false,
+        "why": "That is the first row."
+      },
+      {
+        "text": "How many customers one failure can reach",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The number of services a team may own",
+        "correct": false,
+        "why": "Not an organisational rule."
+      },
+      {
+        "text": "The size of each database table",
+        "correct": false,
+        "why": "Not about storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d4mxy60",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which status code tells a client it is asking too often?",
+    "hint": "\"You, slow down.\"",
+    "choices": [
+      {
+        "text": "`503 Service Unavailable`",
+        "correct": false,
+        "why": "That says the service is in trouble."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "correct": false,
+        "why": "The request was well formed."
+      },
+      {
+        "text": "`429 Too Many Requests`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`403 Forbidden`",
+        "correct": false,
+        "why": "The client is allowed, just not that often."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6hys8sa",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana get every answer while the greedy client was refused?",
+    "hint": "Whose bucket emptied?",
+    "choices": [
+      {
+        "text": "Ana asked first",
+        "correct": false,
+        "why": "Both started together."
+      },
+      {
+        "text": "Limits are per client",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Her requests had a higher priority",
+        "correct": false,
+        "why": "There is no priority."
+      },
+      {
+        "text": "The greedy client used a different page",
+        "correct": false,
+        "why": "Both asked for the catalogue."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8twpfqr",
+    "version": 1,
+    "section": "throttling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket holds 10 tokens and refills at 10 a second. A client starts with a full bucket and asks as fast as it can for 5 seconds. Roughly how many requests get through?",
+    "hint": "The burst, then the rate.",
+    "value": 60,
+    "tolerance": 2,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-7f54sbd3",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three gateway instances each keep their own bucket of 10 a second per client. What is the real limit?",
+    "hint": "Each instance allows the full rate.",
+    "choices": [
+      {
+        "text": "10 a second",
+        "correct": false,
+        "why": "Only if the buckets were shared."
+      },
+      {
+        "text": "About 3 a second per instance",
+        "correct": false,
+        "why": "Nothing divides it."
+      },
+      {
+        "text": "Up to 30 a second",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No limit at all",
+        "correct": false,
+        "why": "Each instance still limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tj76p0w",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does load shedding decide by, unlike a rate limit?",
+    "hint": "Recommendations first, checkout last.",
+    "choices": [
+      {
+        "text": "The importance of the request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The client who sent it",
+        "correct": false,
+        "why": "That is a rate limit."
+      },
+      {
+        "text": "The request's size in bytes",
+        "correct": false,
+        "why": "Size is not importance."
+      },
+      {
+        "text": "The time of day it arrives",
+        "correct": false,
+        "why": "Not the criterion described."
+      }
+    ]
+  },
+  {
+    "id": "ex-e17v730c",
+    "version": 1,
+    "section": "queues-and-back-pressure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With an unbounded queue, what did the burst of 100 orders turn into?",
+    "hint": "Look at the longest wait.",
+    "choices": [
+      {
+        "text": "Rejected orders",
+        "correct": false,
+        "why": "All were accepted."
+      },
+      {
+        "text": "Lost orders",
+        "correct": false,
+        "why": "All were handled."
+      },
+      {
+        "text": "Waiting, almost ten seconds for the last",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A faster worker",
+        "correct": false,
+        "why": "The worker's speed did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvkwvsk8",
+    "version": 1,
+    "section": "queues-and-back-pressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is back pressure?",
+    "hint": "Where does the limit go when it is reached?",
+    "choices": [
+      {
+        "text": "A queue that grows to absorb any burst",
+        "correct": false,
+        "why": "That hides the limit."
+      },
+      {
+        "text": "The limit travelling back to whoever produces the work",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Retrying refused work until it is accepted",
+        "correct": false,
+        "why": "That ignores the pressure."
+      },
+      {
+        "text": "Adding workers whenever the queue is long",
+        "correct": false,
+        "why": "That is scaling."
+      }
+    ]
+  },
+  {
+    "id": "ex-0979kmqs",
+    "version": 1,
+    "section": "queues-and-back-pressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the queue bounded at 20, what did the refused orders get?",
+    "hint": "Read `do_POST`.",
+    "choices": [
+      {
+        "text": "A `202` and a later cancellation",
+        "correct": false,
+        "why": "They were never accepted."
+      },
+      {
+        "text": "No answer, after the timeout",
+        "correct": false,
+        "why": "They were answered at once."
+      },
+      {
+        "text": "A `429`, since they came too fast",
+        "correct": false,
+        "why": "The shop used 503 here."
+      },
+      {
+        "text": "A `503` with `Retry-After: 2` at once",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc87pss6",
+    "version": 1,
+    "section": "queues-and-back-pressure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does back pressure show in a Kafka pipeline with a slow consumer?",
+    "hint": "The log never refuses.",
+    "choices": [
+      {
+        "text": "The producer gets errors",
+        "correct": false,
+        "why": "It is told nothing."
+      },
+      {
+        "text": "Only in the consumer's lag",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The broker blocks new topics",
+        "correct": false,
+        "why": "Not what happens."
+      },
+      {
+        "text": "The partitions shrink",
+        "correct": false,
+        "why": "Partitions do not shrink."
+      }
+    ]
+  },
+  {
+    "id": "ex-es8tkvgv",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Resilience4j's default arrangement, which is outermost?",
+    "hint": "A retry should pass every limit again.",
+    "choices": [
+      {
+        "text": "The bulkhead",
+        "correct": false,
+        "why": "It sits next to the call."
+      },
+      {
+        "text": "The timeout",
+        "correct": false,
+        "why": "It is inside the breaker."
+      },
+      {
+        "text": "The retry",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The breaker",
+        "correct": false,
+        "why": "It is inside the retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqjjt7xs",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the tool that answers it.",
+    "hint": "Six questions, six tools; four here.",
+    "pairs": [
+      {
+        "left": "how long do I wait?",
+        "right": "a timeout"
+      },
+      {
+        "left": "should I stop calling a service that is down?",
+        "right": "a circuit breaker"
+      },
+      {
+        "left": "how much capacity may one dependency hold?",
+        "right": "a bulkhead"
+      },
+      {
+        "left": "what happens to work I cannot do yet?",
+        "right": "a bounded queue"
+      }
+    ]
+  },
+  {
+    "id": "ex-cn6jx49x",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the bulkhead experiment in order.",
+    "hint": "Restart, slow down, load, read.",
+    "items": [
+      "Restart the shop with `BULKHEAD=3`",
+      "Make the stock service take five seconds",
+      "Run the mixed load",
+      "See the catalogue answer every request"
+    ]
+  },
+  {
+    "id": "ex-temtd4r9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's nightly report calls the orders database through the same connection pool as the checkout, and every night at 2 a.m. the checkout slows down. What is the fix this lesson suggests?",
+    "hint": "One resource, two kinds of work.",
+    "choices": [
+      {
+        "text": "Rate-limit the checkout at night",
+        "correct": false,
+        "why": "The checkout is the victim."
+      },
+      {
+        "text": "Add retries to the checkout's queries",
+        "correct": false,
+        "why": "More load on the same pool."
+      },
+      {
+        "text": "A separate, smaller pool for the report",
+        "correct": true,
+        "why": "Right: a bulkhead."
+      },
+      {
+        "text": "An unbounded queue in front of the database",
+        "correct": false,
+        "why": "That hides the problem as delay."
+      }
+    ]
+  }
+]

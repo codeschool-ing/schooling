@@ -1,0 +1,677 @@
+[
+  {
+    "id": "ex-0bbf2n4k",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ps -u postgres -o pid,ppid,cmd`, every client backend has the same PPID. Whose pid is it?",
+    "hint": "Who starts a process for each new client?",
+    "choices": [
+      {
+        "text": "The psql process that opened the connection",
+        "correct": false,
+        "why": "psql is the client, a different program; the backend is started on the server's side."
+      },
+      {
+        "text": "systemd's, since it starts every service",
+        "correct": false,
+        "why": "systemd is the postmaster's parent (PPID 1), not the backends'."
+      },
+      {
+        "text": "The postmaster's",
+        "correct": true,
+        "why": "Right. The postmaster accepts each connection and starts a backend to serve it."
+      },
+      {
+        "text": "The checkpointer's",
+        "correct": false,
+        "why": "The checkpointer is a sibling of the backends, also started by the postmaster."
+      }
+    ]
+  },
+  {
+    "id": "ex-rr2nqhc1",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backend's `state` is `idle` and its `query` is `SELECT pg_sleep(600)`. What is it doing?",
+    "hint": "What does query hold for an idle backend?",
+    "choices": [
+      {
+        "text": "Sleeping for 600 seconds inside pg_sleep",
+        "correct": false,
+        "why": "That would show active. idle means no statement is running now."
+      },
+      {
+        "text": "Nothing; that was its last statement",
+        "correct": true,
+        "why": "Right. For an idle backend, query is simply the most recent statement it ran."
+      },
+      {
+        "text": "Waiting for a lock held by another session",
+        "correct": false,
+        "why": "A backend waiting on a lock is still active, running its statement."
+      },
+      {
+        "text": "Holding an open transaction",
+        "correct": false,
+        "why": "That state has its own name, idle in transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ys8qgwt",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of the process name `postgres: 16/main: ana shop [local] idle` to what it says.",
+    "hint": "The backend rewrites its own name for ps.",
+    "pairs": [
+      {
+        "left": "16/main",
+        "right": "The cluster"
+      },
+      {
+        "left": "ana",
+        "right": "The role"
+      },
+      {
+        "left": "shop",
+        "right": "The database"
+      },
+      {
+        "left": "[local]",
+        "right": "Where the client is: the socket"
+      },
+      {
+        "left": "idle",
+        "right": "What it is doing now"
+      }
+    ]
+  },
+  {
+    "id": "ex-mftcrh24",
+    "version": 1,
+    "section": "max-connections",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did changing max_connections need `systemctl restart` rather than a reload?",
+    "hint": "Its context in pg_settings.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM never takes effect with a reload, for any parameter at all",
+        "correct": false,
+        "why": "Many parameters set with ALTER SYSTEM apply on a reload; lesson 5 showed it. This one does not."
+      },
+      {
+        "text": "Its context is postmaster: the slots are sized when the server starts",
+        "correct": true,
+        "why": "Right. Slots are sized in shared memory at start, so only a restart changes them."
+      },
+      {
+        "text": "Open sessions would otherwise keep the old limit",
+        "correct": false,
+        "why": "The limit is not per session; it is the size of a table in shared memory."
+      },
+      {
+        "text": "A reload only reads pg_hba.conf",
+        "correct": false,
+        "why": "A reload rereads postgresql.conf too, for sighup and user parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-f98krdzr",
+    "version": 1,
+    "section": "max-connections",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "max_connections is 20 and superuser_reserved_connections is 3, reserved_connections 0. How many connections can an ordinary role open in total?",
+    "hint": "The reserve comes off the top.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-efttwxp8",
+    "version": 1,
+    "section": "max-connections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every connection attempt, including `sudo -u postgres psql`, now fails with `sorry, too many clients already`. What does that tell you?",
+    "hint": "Compare with the message app got first.",
+    "choices": [
+      {
+        "text": "Peer authentication is refusing the postgres role",
+        "correct": false,
+        "why": "A refused authentication says Peer authentication failed. This is about slots."
+      },
+      {
+        "text": "The reserved slots are taken too",
+        "correct": true,
+        "why": "Right. Superuser sessions filled them, so not even a superuser has a door left."
+      },
+      {
+        "text": "The server is down and only the socket remains, answering refusals for it",
+        "correct": false,
+        "why": "A down server gives No such file or directory. Something answered with FATAL, so it is running."
+      },
+      {
+        "text": "Only ordinary slots are full",
+        "correct": false,
+        "why": "Then a superuser would get in, and ordinary roles would see the reserved-slots message."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhph6jd9",
+    "version": 1,
+    "section": "max-connections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "No slot is free and you need one session to clean up. Why `pkill` (SIGTERM) on one backend and never `kill -9`?",
+    "hint": "What does the postmaster do when a backend dies without cleaning up?",
+    "choices": [
+      {
+        "text": "kill -9 is refused for processes owned by postgres",
+        "correct": false,
+        "why": "With sudo it works, which is exactly the danger."
+      },
+      {
+        "text": "SIGKILL makes the postmaster restart everyone",
+        "correct": true,
+        "why": "Right. A killed backend may have left shared memory half changed, so the postmaster treats it as a crash."
+      },
+      {
+        "text": "SIGTERM is faster",
+        "correct": false,
+        "why": "Speed is not the difference; what happens to every other session is."
+      },
+      {
+        "text": "SIGTERM also raises max_connections by one",
+        "correct": false,
+        "why": "It only ends one backend, freeing its slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-hg8ab21r",
+    "version": 1,
+    "section": "raising-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the recording machine, raising max_connections from 100 to 1000 took shared_memory_size from 143MB to 184MB with nobody connected. Why?",
+    "hint": "When are slots paid for?",
+    "choices": [
+      {
+        "text": "Shared buffers grow with max_connections",
+        "correct": false,
+        "why": "shared_buffers is its own setting and stayed 128MB."
+      },
+      {
+        "text": "Each slot preallocates work_mem for its future sorts",
+        "correct": false,
+        "why": "work_mem is private and taken only when a sort runs."
+      },
+      {
+        "text": "Every slot is reserved at start",
+        "correct": true,
+        "why": "Right. Lock table entries and transaction bookkeeping are sized for every possible backend."
+      },
+      {
+        "text": "Idle backends were started in advance for each new slot so connecting later would be quicker",
+        "correct": false,
+        "why": "PostgreSQL starts no backend before a client connects."
+      }
+    ]
+  },
+  {
+    "id": "ex-es7w2pqc",
+    "version": 1,
+    "section": "raising-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On four processors, pgbench --select-only with 80 clients did fewer transactions a second than with 4, and each took far longer. What explains it?",
+    "hint": "How many backends can run at the same instant?",
+    "choices": [
+      {
+        "text": "Only four run at once; the rest wait",
+        "correct": true,
+        "why": "Right. The extra backends add switching and contention, not throughput."
+      },
+      {
+        "text": "The disk could not keep up with eighty clients",
+        "correct": false,
+        "why": "--select-only reads a table that fits in memory; the disk is out of the picture."
+      },
+      {
+        "text": "max_connections refused most of the eighty",
+        "correct": false,
+        "why": "It was 1000 then, and pgbench reported no failed transactions."
+      },
+      {
+        "text": "Each new client made the shared buffers smaller",
+        "correct": false,
+        "why": "Shared buffers are fixed at start and shared by all."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqe8abp3",
+    "version": 1,
+    "section": "raising-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fresh backend reported 1504 kB in pg_backend_memory_contexts and 2154 kB after `\\d+ orders`. What grew?",
+    "hint": "What did the queries behind \\d+ read?",
+    "choices": [
+      {
+        "text": "The shared buffers",
+        "correct": false,
+        "why": "Shared buffers are not counted in a backend's own memory contexts."
+      },
+      {
+        "text": "Its private catalogue caches",
+        "correct": true,
+        "why": "Right. They fill as a backend touches tables, and they are not shared with other backends."
+      },
+      {
+        "text": "work_mem, reserved for the next sort",
+        "correct": false,
+        "why": "Nothing is reserved ahead; work_mem is taken while a sort runs and given back."
+      },
+      {
+        "text": "The postmaster's memory, shared by all sessions",
+        "correct": false,
+        "why": "The view reports the backend that queries it, nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wpgykyh",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_cancel_backend` on a session idle in transaction returned `t`, and the session stayed idle in transaction. Why?",
+    "hint": "What does a cancel act on?",
+    "choices": [
+      {
+        "text": "The cancel was refused because app is not a superuser",
+        "correct": false,
+        "why": "It was sent by a superuser and returned t; it simply had nothing to cancel."
+      },
+      {
+        "text": "It takes effect when idle_in_transaction_session_timeout expires",
+        "correct": false,
+        "why": "The timeout was 0 then, and the two are unrelated."
+      },
+      {
+        "text": "It cancels a running statement; there was none",
+        "correct": true,
+        "why": "Right. t only means the signal was sent. Ending the session takes pg_terminate_backend."
+      },
+      {
+        "text": "Cancels are queued until the client sends its next statement to the server",
+        "correct": false,
+        "why": "There is no queue. A cancel interrupts what is running now, and nothing was."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ay8n7t7",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which two things does a session idle in transaction keep holding?",
+    "hint": "One affects other writers, one affects vacuum.",
+    "choices": [
+      {
+        "text": "A CPU and a share of the shared buffers",
+        "correct": false,
+        "why": "An idle backend uses no processor, and shared buffers are not owned per session."
+      },
+      {
+        "text": "Its work_mem and a WAL segment",
+        "correct": false,
+        "why": "No sort is running, and WAL segments belong to the server, not to a session."
+      },
+      {
+        "text": "The row locks of what it changed, and a snapshot vacuum must respect",
+        "correct": true,
+        "why": "Right. Writers to those rows wait, and vacuum keeps row versions the snapshot might need."
+      },
+      {
+        "text": "Two of the three reserved superuser slots, since it was opened by a role with privileges",
+        "correct": false,
+        "why": "It holds one ordinary slot, like any session of an ordinary role."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1d484d2",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make the server end the application's sessions that sit inside an unfinished transaction for over a minute: ALTER ROLE app SET ___ = '60s';",
+    "hint": "idle, in, transaction, session, timeout, joined by underscores.",
+    "blanks": [
+      {
+        "accept": [
+          "idle_in_transaction_session_timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eys76vzp",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson set the timeout on the role `app` rather than for the whole server in postgresql.conf?",
+    "hint": "Who else opens transactions on the server?",
+    "choices": [
+      {
+        "text": "The parameter cannot be set in postgresql.conf",
+        "correct": false,
+        "why": "It can; its context is user. The lesson chose the role on purpose."
+      },
+      {
+        "text": "So your own sessions and maintenance jobs are not caught",
+        "correct": true,
+        "why": "Right. The limit is chosen from the application's transactions and should apply to it alone."
+      },
+      {
+        "text": "A role setting applies to sessions already open",
+        "correct": false,
+        "why": "The reverse: it applies from the next connection, which is why the demo opened a new session."
+      },
+      {
+        "text": "Server-wide, it would also end idle sessions with no transaction",
+        "correct": false,
+        "why": "That is idle_session_timeout, a different parameter."
+      }
+    ]
+  },
+  {
+    "id": "ex-skh1mwas",
+    "version": 1,
+    "section": "pooling-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `pgbench --connect`, four clients managed hundreds of transactions a second instead of tens of thousands. What did each transaction pay for?",
+    "hint": "--connect opens a fresh connection each time.",
+    "choices": [
+      {
+        "text": "A disk flush, because each connection commits",
+        "correct": false,
+        "why": "--select-only writes nothing; there was no commit to flush."
+      },
+      {
+        "text": "A lock on pgbench_accounts",
+        "correct": false,
+        "why": "Reads by primary key do not block one another."
+      },
+      {
+        "text": "A new backend: process, authentication, cold caches",
+        "correct": true,
+        "why": "Right. The connection took several milliseconds for a lookup that took a fraction of one."
+      },
+      {
+        "text": "A reload of postgresql.conf",
+        "correct": false,
+        "why": "Connecting reads no configuration file into the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-89x9kq73",
+    "version": 1,
+    "section": "pooling-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a pooler such as PgBouncer change for the server?",
+    "hint": "Many clients, few backends.",
+    "choices": [
+      {
+        "text": "It caches query results so the server is asked less often for the same rows",
+        "correct": false,
+        "why": "A pooler lends connections; it does not cache results."
+      },
+      {
+        "text": "It raises max_connections automatically",
+        "correct": false,
+        "why": "It does the opposite job: it lets the setting stay small."
+      },
+      {
+        "text": "Many application clients take turns on a few real server backends",
+        "correct": true,
+        "why": "Right. max_connections can stay small while the number of clients grows."
+      },
+      {
+        "text": "It replaces the postmaster",
+        "correct": false,
+        "why": "The server is unchanged; the pooler sits in front of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8m2zwzr",
+    "version": 1,
+    "section": "pooling-in-brief",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `dropuser app` need a `REVOKE` first?",
+    "hint": "What did the role still hold?",
+    "choices": [
+      {
+        "text": "It still had an open session",
+        "correct": false,
+        "why": "Its sessions had ended; the obstacle was the grants on two tables."
+      },
+      {
+        "text": "The operating-system user had to go first",
+        "correct": false,
+        "why": "The two are independent; userdel came after."
+      },
+      {
+        "text": "Its timeout setting blocked the drop",
+        "correct": false,
+        "why": "Role settings go with the role."
+      },
+      {
+        "text": "It still held privileges",
+        "correct": true,
+        "why": "Right. A role cannot be dropped while privileges or objects depend on it; lesson 13 has DROP OWNED."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ehpyy8h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application logs `remaining connection slots are reserved for roles with the SUPERUSER attribute`, and pg_stat_activity shows 90 of its sessions idle in transaction for hours. What is the first fix?",
+    "hint": "Raising the limit makes room for more of the same.",
+    "choices": [
+      {
+        "text": "Raise max_connections to 500",
+        "correct": false,
+        "why": "The leak continues, more memory is reserved, and the busy sessions get slower."
+      },
+      {
+        "text": "End them and set a timeout on its role",
+        "correct": true,
+        "why": "Right. The slots are held by sessions doing nothing; the application then needs fixing to commit."
+      },
+      {
+        "text": "Make the application's role a superuser so it can use the reserved slots",
+        "correct": false,
+        "why": "Then it eats the reserve as well, and nobody can get in to fix it."
+      },
+      {
+        "text": "Restart PostgreSQL every night",
+        "correct": false,
+        "why": "It clears the symptom for a few hours and cuts every session at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-cebczffq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every slot is taken by superuser sessions and you must get in without restarting. Put the steps in order.",
+    "hint": "From the shell first, then SQL.",
+    "items": [
+      "Find the backends with ps -u postgres",
+      "Send SIGTERM to one of them with pkill",
+      "Connect with psql in the freed slot",
+      "End the rest with pg_terminate_backend"
+    ],
+    "trap": "SQL needs a connection, so the first slot has to be freed from the shell."
+  },
+  {
+    "id": "ex-naq9581g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web service opens a new database connection for every HTTP request and closes it afterwards. It is slow under load though the server's processors are mostly idle. What do you suggest?",
+    "hint": "Which measurement in the lesson looks like this?",
+    "choices": [
+      {
+        "text": "More shared_buffers, so the backends find the rows they need already in memory",
+        "correct": false,
+        "why": "The processors are idle and the cost is per connection; caching rows does not touch it."
+      },
+      {
+        "text": "A higher max_connections",
+        "correct": false,
+        "why": "Nothing is refused; each connection is simply expensive to make."
+      },
+      {
+        "text": "A connection pool",
+        "correct": true,
+        "why": "Right. That is the pgbench --connect case: the time goes on starting backends, not on queries."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout",
+        "correct": false,
+        "why": "Its connections close straight away; none sits in a transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfn8d87t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these grow when max_connections is raised, even if nobody connects? Choose all that apply.",
+    "hint": "What is sized per slot at start?",
+    "choices": [
+      {
+        "text": "shared_memory_size",
+        "correct": true,
+        "why": "Yes. It went from 143MB to 184MB between 100 and 1000."
+      },
+      {
+        "text": "The lock table's capacity",
+        "correct": true,
+        "why": "Yes. It is sized per possible backend."
+      },
+      {
+        "text": "shared_buffers",
+        "correct": false,
+        "why": "No. It is its own setting and stays where it is."
+      },
+      {
+        "text": "The number of backend processes",
+        "correct": false,
+        "why": "No. A backend exists only while a client is connected."
+      },
+      {
+        "text": "work_mem",
+        "correct": false,
+        "why": "No. It is a per-operation ceiling, unrelated to the number of slots."
+      }
+    ]
+  },
+  {
+    "id": "ex-679g2fc6",
+    "version": 1,
+    "section": "raising-it",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Going from 100 to 1000 slots took shared_memory_size from 143MB to 184MB. Roughly how many kB is that per added slot? (1 MB = 1024 kB)",
+    "hint": "41 MB over 900 slots.",
+    "value": 46,
+    "tolerance": 2,
+    "unit": "kB"
+  },
+  {
+    "id": "ex-715ywdbz",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `*` in the prompt `shop=*>` tell you?",
+    "hint": "It appeared right after BEGIN.",
+    "choices": [
+      {
+        "text": "psql is inside a transaction that has not been committed yet",
+        "correct": true,
+        "why": "Right. It is worth noticing in your own sessions before you walk away from one."
+      },
+      {
+        "text": "The role is a superuser",
+        "correct": false,
+        "why": "A superuser's prompt ends in #; app's ends in >."
+      },
+      {
+        "text": "A statement failed",
+        "correct": false,
+        "why": "A failed transaction shows !, as in shop=!>."
+      },
+      {
+        "text": "The connection was reset",
+        "correct": false,
+        "why": "After the reset psql was back at shop=> with no transaction."
+      }
+    ]
+  }
+]

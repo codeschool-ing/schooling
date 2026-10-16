@@ -1,0 +1,35 @@
+---
+title: A reescrita é o risco
+version: 1
+---
+
+Todo sistema velho o bastante para valer a pena substituir tem o mesmo problema: ele funciona, gente
+depende dele, e ninguém lembra de tudo o que ele faz. O plano que vem naturalmente é escrever o sistema
+novo ao lado, alcançar todas as funcionalidades, e trocar num dia escolhido. Isso se chama **reescrita
+big-bang**, e o histórico dela é ruim por motivos que não têm nada a ver com a competência da equipe:
+
+- **O sistema velho continua mudando.** Enquanto o novo está sendo escrito, o negócio ainda precisa de
+  mudanças, então elas são feitas duas vezes ou o sistema novo fica ainda mais para trás.
+- **Nada é entregue até tudo ser.** Meses de trabalho não produzem valor nem retorno, e o primeiro teste
+  de verdade do sistema novo é o dia em que ele carrega todo o tráfego.
+- **O comportamento que ninguém escreveu aparece no dia da troca.** Um relatório que alguém roda no fim
+  do mês, uma regra de arredondamento, um cliente que depende de um defeito.
+
+Martin Fowler descreveu a alternativa em 2004 e a batizou com o nome das **figueiras estranguladoras**
+(*strangler figs*) que viu em Queensland, que crescem de uma semente numa árvore hospedeira, descem raízes
+em volta dela, e ficam de pé sozinhas quando a hospedeira se vai. Aplicado a software:
+
+1. Pôr uma **fachada** na frente do sistema velho, um proxy ou um gateway por onde toda requisição
+   passa. No começo ela manda tudo para o sistema velho e não muda nada.
+2. Construir **um pedaço** do sistema novo, e mandar o tráfego desse pedaço para ele pela fachada, uma
+   parte de cada vez.
+3. Quando o pedaço carrega todo o tráfego dele, **apagar** o código velho correspondente. Repetir com o
+   próximo pedaço.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Três estágios de uma migração strangler fig. Primeiro, uma fachada na frente do monólito, mandando tudo para ele. Segundo, a fachada manda as requisições de estoque para um serviço de estoque novo e todo o resto para o monólito, cujo módulo de estoque agora está sem uso. Terceiro, mais pedaços se mudaram, e o monólito está pequeno ou sumiu.\"><defs><marker id=\"l15-phases-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"10\" y=\"10\" width=\"700\" height=\"230\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"125\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">1. uma fachada</text><rect x=\"50\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"125\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">borda</text><path d=\"M125 82 L125 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><text x=\"355\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">2. o estoque se muda</text><rect x=\"280\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">borda</text><path d=\"M355 82 L355 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><text x=\"585\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">3. outros seguem</text><rect x=\"510\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"585\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">borda</text><path d=\"M585 82 L585 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><rect x=\"50\" y=\"110\" width=\"150\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"125.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">monólito</text><rect x=\"280\" y=\"110\" width=\"110\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"335.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">monólito</text><rect x=\"510\" y=\"110\" width=\"50\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"535.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">…</text><rect x=\"400\" y=\"110\" width=\"70\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"435\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">estoque</text><rect x=\"575\" y=\"110\" width=\"58\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"604\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">estoque</text><rect x=\"640\" y=\"110\" width=\"58\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"669\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">pedidos</text><text x=\"360\" y=\"215\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">os clientes falam com a borda o tempo todo</text></svg>", "caption": "Uma fachada primeiro, depois um pedaço de cada vez atrás dela. Os clientes só veem a fachada, então nunca percebem um pedaço se mudando."}
+```
+
+Todo passo pode ser revertido mudando uma rota na fachada, todo passo entrega alguma coisa, e o sistema
+velho continua funcionando o tempo todo. A aula 2 disse que um módulo dono dos seus dados e com uma
+superfície pública é um serviço esperando uma rede; é assim que ele ganha uma.

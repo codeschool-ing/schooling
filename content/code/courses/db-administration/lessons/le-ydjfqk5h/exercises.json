@@ -1,0 +1,692 @@
+[
+  {
+    "id": "ex-8pwnfd78",
+    "version": 1,
+    "section": "what-bloat-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After every row of the copy was updated once and then vacuumed, the table was 130 MB instead of 66 MB. What is in the extra 64 MB?",
+    "hint": "VACUUM had already run.",
+    "choices": [
+      {
+        "text": "Dead versions waiting for the next VACUUM",
+        "correct": false,
+        "why": "VACUUM had run; pgstattuple later counted 0 dead tuples."
+      },
+      {
+        "text": "A second copy of the indexes, which VACUUM keeps for rollback",
+        "correct": false,
+        "why": "The indexes are measured separately, at 75 MB; the table's own file holds no index."
+      },
+      {
+        "text": "Free space",
+        "correct": true,
+        "why": "Right. The old versions were freed and the room stayed inside the file."
+      },
+      {
+        "text": "Write-ahead log for the UPDATE",
+        "correct": false,
+        "why": "WAL lives in pg_wal, not in the table's file."
+      }
+    ]
+  },
+  {
+    "id": "ex-25jxr7bp",
+    "version": 1,
+    "section": "what-bloat-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deleting the top 100,000 ids and vacuuming left the copy at 130 MB; deleting the next 100,000 took it to 117 MB. Why the difference?",
+    "hint": "VACUUM truncates only a tail big enough.",
+    "choices": [
+      {
+        "text": "The first DELETE had not committed yet",
+        "correct": false,
+        "why": "psql commits each statement by itself; the deleted rows were dead before the VACUUM."
+      },
+      {
+        "text": "The second VACUUM ran as VACUUM FULL",
+        "correct": false,
+        "why": "Both were plain VACUUM; a FULL would have taken the table to about 52 MB."
+      },
+      {
+        "text": "Only the second delete reached rows stored at the start of the file",
+        "correct": false,
+        "why": "Only empty pages at the end of the file are cut; the start of the file is never returned by a plain VACUUM."
+      },
+      {
+        "text": "The first tail was under 1,000 pages and under a sixteenth of the table",
+        "correct": true,
+        "why": "Right. Truncating needs a brief exclusive lock, and VACUUM only takes it for a tail past one of those limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkzg1529",
+    "version": 1,
+    "section": "what-bloat-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is NOT a cost of a table that is half free space?",
+    "hint": "Think of what reads the whole file, and what reads only rows.",
+    "choices": [
+      {
+        "text": "Sequential scans read the empty space too",
+        "correct": false,
+        "why": "They do: a sequential scan reads every page."
+      },
+      {
+        "text": "Backups copy it",
+        "correct": false,
+        "why": "A file-level backup copies the file, empty space included."
+      },
+      {
+        "text": "The disk holds it and the operating system cannot use it",
+        "correct": false,
+        "why": "That is exactly what bloat costs a disk."
+      },
+      {
+        "text": "Wrong query results",
+        "correct": true,
+        "why": "Right. Free space holds no rows, so bloat never changes an answer; it only costs reading and storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wg3ffj8",
+    "version": 1,
+    "section": "measuring",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What `free_percent` did `pgstattuple` report for the bloated copy? Answer to the nearest whole number.",
+    "hint": "A little more than half.",
+    "value": 55,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-wwxd3vv6",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pgstattuple_approx` answered with `scanned_percent` 0 and a row count of 902,407 for a table holding 800,000. Why was the count off?",
+    "hint": "It read no pages. Where did the number come from?",
+    "choices": [
+      {
+        "text": "From statistics taken before the last DELETE",
+        "correct": true,
+        "why": "Right. The row count comes from the planner's estimate, which was older than the delete."
+      },
+      {
+        "text": "It counts dead tuples as live",
+        "correct": false,
+        "why": "There were no dead tuples; VACUUM had run."
+      },
+      {
+        "text": "Its sampling of a few random pages happened to land on fuller ones",
+        "correct": false,
+        "why": "It scanned 0% of the table; there was no sample at all."
+      },
+      {
+        "text": "pg_repack had not yet run",
+        "correct": false,
+        "why": "pg_repack changes the file, not how an estimate is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnpjydre",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring tool's estimate reports 12% bloat on a table that was bulk-loaded last night and never updated. What is the most likely reading?",
+    "hint": "Remember the `orders` line.",
+    "choices": [
+      {
+        "text": "The load left dead versions behind",
+        "correct": false,
+        "why": "A load of inserts leaves live rows, not dead ones."
+      },
+      {
+        "text": "The table needs VACUUM FULL tonight",
+        "correct": false,
+        "why": "Nothing has been measured yet; rebuilding on an estimate's word buys an exclusive lock for nothing."
+      },
+      {
+        "text": "The estimate's own error; measure with pgstattuple before acting",
+        "correct": true,
+        "why": "Right. On orders, which has no bloat, the same arithmetic showed about a tenth of the table as wasted."
+      },
+      {
+        "text": "The fill factor of the table was lowered during the load",
+        "correct": false,
+        "why": "Nothing in the scenario changed a fill factor; the estimate's padding error explains the number by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw820h6s",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why run `pgstattuple` on a 500 GB table at a quiet hour?",
+    "hint": "How did it get an exact answer?",
+    "choices": [
+      {
+        "text": "It locks the table against writes",
+        "correct": false,
+        "why": "It only reads, with the lock any SELECT takes."
+      },
+      {
+        "text": "It rewrites the table to count it",
+        "correct": false,
+        "why": "That is VACUUM FULL. pgstattuple writes nothing."
+      },
+      {
+        "text": "It reads every page through shared buffers",
+        "correct": true,
+        "why": "Right. Exact means a full scan, and 500 GB of reading competes with the application."
+      },
+      {
+        "text": "It needs the server restarted to load",
+        "correct": false,
+        "why": "CREATE EXTENSION pgstattuple worked without a restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-k28q040j",
+    "version": 1,
+    "section": "index-bloat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `pgstatindex` column is the number to act on for index bloat?",
+    "hint": "How full are the leaves?",
+    "choices": [
+      {
+        "text": "leaf_fragmentation",
+        "correct": false,
+        "why": "orders_customer_id is near 50 with no bloat at all; fragmentation is a detail."
+      },
+      {
+        "text": "tree_level",
+        "correct": false,
+        "why": "Depth grows with size slowly and says little about wasted space."
+      },
+      {
+        "text": "root_block_no",
+        "correct": false,
+        "why": "That is where the root page sits, not how full anything is."
+      },
+      {
+        "text": "avg_leaf_density",
+        "correct": true,
+        "why": "Right. The copy's primary key at 45 against 90 for the original is the bloat."
+      }
+    ]
+  },
+  {
+    "id": "ex-syx33cv9",
+    "version": 1,
+    "section": "index-bloat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders_created_at` sits at 78% leaf density although `orders` has never been updated. What does that tell you?",
+    "hint": "How did its keys arrive?",
+    "choices": [
+      {
+        "text": "It is bloated and should be reindexed",
+        "correct": false,
+        "why": "Nothing dead is in it; out-of-order inserts split leaves and they settle below 90."
+      },
+      {
+        "text": "Its fill factor was set to 78",
+        "correct": false,
+        "why": "Nobody set one; the default for a B-tree is 90."
+      },
+      {
+        "text": "90% is the wrong yardstick here",
+        "correct": true,
+        "why": "Right. Compare an index with the same index unbloated, not with a fixed number."
+      },
+      {
+        "text": "pgstatindex cannot read timestamp columns",
+        "correct": false,
+        "why": "It reads any B-tree; the column type is irrelevant."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cjk8dce",
+    "version": 1,
+    "section": "index-bloat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An `UPDATE` changes only `status`, which no index covers, on a table whose pages have plenty of free room. What happens to the table's indexes?",
+    "hint": "HOT.",
+    "choices": [
+      {
+        "text": "Nothing: the update is HOT",
+        "correct": true,
+        "why": "Right. The new version stays on the same page and no index is touched, which is what a lower table fillfactor buys room for."
+      },
+      {
+        "text": "Every index gets a new entry",
+        "correct": false,
+        "why": "That is the non-HOT case: no room on the page, or an indexed column changed."
+      },
+      {
+        "text": "Only the primary key gets a new entry",
+        "correct": false,
+        "why": "A non-HOT update touches every index, and a HOT one touches none."
+      },
+      {
+        "text": "The indexes are rebuilt at the next VACUUM",
+        "correct": false,
+        "why": "VACUUM removes dead entries; it never rebuilds an index."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4azkb16",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While `VACUUM FULL orders_copy` ran, a plain `SELECT count(*)` on the copy waited. Which lock was it waiting for?",
+    "hint": "Read the granted column.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock",
+        "correct": false,
+        "why": "That is the one VACUUM FULL held, granted."
+      },
+      {
+        "text": "ShareLock",
+        "correct": false,
+        "why": "Those rows belonged to the index builds inside the rebuild."
+      },
+      {
+        "text": "AccessShareLock",
+        "correct": true,
+        "why": "Right: the weakest lock there is, and it still conflicts with the AccessExclusiveLock VACUUM FULL holds."
+      },
+      {
+        "text": "A row lock on the first row",
+        "correct": false,
+        "why": "A count takes no row locks; it waited at the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tr9ew2t",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each fact to the tool it belongs to.",
+    "hint": "One is built in, one is installed.",
+    "pairs": [
+      {
+        "left": "Holds ACCESS EXCLUSIVE from start to finish",
+        "right": "VACUUM FULL"
+      },
+      {
+        "left": "Needs a primary key or a unique not-null index",
+        "right": "pg_repack"
+      },
+      {
+        "left": "Frees space for reuse without returning it",
+        "right": "plain VACUUM"
+      }
+    ],
+    "right_distractors": [
+      "REINDEX"
+    ]
+  },
+  {
+    "id": "ex-4b3hvxfk",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A disk is 95% full, and most of it is one bloated table. Why might `VACUUM FULL` fail to fix it?",
+    "hint": "When is the old file removed?",
+    "choices": [
+      {
+        "text": "It refuses tables over a size limit",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "It needs the WAL to hold the whole table first, so it fills pg_wal on a separate disk",
+        "correct": false,
+        "why": "The problem is on this disk: the old and new files coexist until the swap."
+      },
+      {
+        "text": "The new file is written before the old one goes",
+        "correct": true,
+        "why": "Right. It needs room for the compact copy and its indexes while the bloated ones still exist; pg_repack has the same need."
+      },
+      {
+        "text": "It needs the server stopped",
+        "correct": false,
+        "why": "It ran on a running server; it only locks the one table."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfwvx01t",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You start `pg_repack` on a busy table at noon. A report has held a transaction on that table since 11:00. What happens at the swap?",
+    "hint": "The swap needs a brief exclusive lock.",
+    "choices": [
+      {
+        "text": "The swap goes through, since pg_repack only needs AccessShareLock",
+        "correct": false,
+        "why": "It holds AccessShareLock while copying; the swap still needs the exclusive lock for a moment."
+      },
+      {
+        "text": "It finishes the swap at once and the report reads the new file",
+        "correct": false,
+        "why": "An exclusive lock cannot be granted while the report holds the table."
+      },
+      {
+        "text": "It waits, queries queue behind it, and after 60 s it cancels the report",
+        "correct": true,
+        "why": "Right, by default. --no-kill-backend makes it give up instead."
+      },
+      {
+        "text": "It falls back to VACUUM FULL",
+        "correct": false,
+        "why": "pg_repack has no such fallback."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkn0xj8v",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put pg_repack's work in order.",
+    "hint": "Exclusive at both ends, shared in the middle.",
+    "items": [
+      "A brief exclusive lock to set up the trigger",
+      "Copy the rows into a new table while the trigger records changes",
+      "Build the indexes on the new table",
+      "Replay the recorded changes",
+      "A brief exclusive lock to swap the files"
+    ],
+    "trap": "The changes are replayed before the swap, so nothing written during the copy is lost."
+  },
+  {
+    "id": "ex-bedmz2ze",
+    "version": 1,
+    "section": "when-not-to-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After a rebuild to 52 MB, three rounds of updating a fifth of the rows left the copy at 63 MB, 63 MB and 63 MB. What is 63 MB?",
+    "hint": "The second and third rounds did not grow it.",
+    "choices": [
+      {
+        "text": "Its working size",
+        "correct": true,
+        "why": "Right. Rebuilding back to 52 MB would only last until the next round of updates."
+      },
+      {
+        "text": "Bloat that the next rebuild should remove for good",
+        "correct": false,
+        "why": "Space reused round after round is the healthy shape, not bloat to remove."
+      },
+      {
+        "text": "A limit autovacuum enforces",
+        "correct": false,
+        "why": "Nothing caps the size; reuse of freed space kept it steady."
+      },
+      {
+        "text": "The size of the indexes",
+        "correct": false,
+        "why": "The indexes were measured beside it, at 56 to 57 MB."
+      }
+    ]
+  },
+  {
+    "id": "ex-86pxhe57",
+    "version": 1,
+    "section": "when-not-to-fix",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these justify rebuilding a bloated table? Choose all that apply.",
+    "hint": "Will the traffic ever use the space?",
+    "choices": [
+      {
+        "text": "A one-off backfill doubled it",
+        "correct": true,
+        "why": "Yes. The space will not be reused at the rate it was made."
+      },
+      {
+        "text": "The disk is running out now",
+        "correct": true,
+        "why": "Yes, if there is room for the new copy while it is built."
+      },
+      {
+        "text": "Its free percentage has been steady for months",
+        "correct": false,
+        "why": "Steady free space is being reused; a rebuild would grow back."
+      },
+      {
+        "text": "It grew back to the same size within days of the last rebuild",
+        "correct": false,
+        "why": "That is its working size telling you so."
+      },
+      {
+        "text": "Its sequential scans read mostly empty pages",
+        "correct": true,
+        "why": "Yes, when pgstattuple confirms it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ahxb5tn",
+    "version": 1,
+    "section": "when-not-to-fix",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To leave a tenth of each page empty so updates can stay on the same page, set the table's ___ to 90.",
+    "hint": "A storage parameter set with ALTER TABLE ... SET.",
+    "blanks": [
+      {
+        "accept": [
+          "fillfactor"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f0psem5w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 400 GB `events` table is 60% free space according to pgstattuple, after a purge of two years of old rows. The application inserts 1 GB a day. What is the right move?",
+    "hint": "How long would the traffic take to reuse 240 GB?",
+    "choices": [
+      {
+        "text": "Leave it: the inserts will reuse the space",
+        "correct": false,
+        "why": "At 1 GB a day, 240 GB takes most of a year. This is the one-off case."
+      },
+      {
+        "text": "VACUUM it, which returns the free space",
+        "correct": false,
+        "why": "A plain VACUUM returns only an empty tail; the free space is spread through the file."
+      },
+      {
+        "text": "VACUUM FULL it during business hours",
+        "correct": false,
+        "why": "That blocks every query on events for as long as copying 160 GB takes."
+      },
+      {
+        "text": "pg_repack it, with room for the 160 GB copy",
+        "correct": true,
+        "why": "Right. A purge is a one-off, and pg_repack keeps the table usable while the live 160 GB are copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6w8pawb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `pg_repack` the copy's indexes were 31 MB; one round of updating a fifth of the rows took them to 56 MB, while the table grew only from 52 MB to 63 MB. Why did the indexes grow so much more?",
+    "hint": "Freshly built leaves are 90% full.",
+    "choices": [
+      {
+        "text": "pg_repack builds indexes without a fill factor",
+        "correct": false,
+        "why": "They were built at the default 90%, like VACUUM FULL's."
+      },
+      {
+        "text": "The trigger pg_repack left behind writes extra index entries",
+        "correct": false,
+        "why": "The trigger is removed at the swap; nothing of pg_repack's stays on the table."
+      },
+      {
+        "text": "Non-HOT updates added entries to full leaves, which split",
+        "correct": true,
+        "why": "Right. Each new version needed an entry in every index, and a full leaf splits into two half-full pages."
+      },
+      {
+        "text": "VACUUM did not run on the indexes",
+        "correct": false,
+        "why": "VACUUM ran each round; the size stayed near 56 MB in the next two rounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ard4js0g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 14 left a table bloated by a session idle in transaction for a day. You run `pg_repack` before ending that session. What do you get?",
+    "hint": "Which versions does the copy have to keep?",
+    "choices": [
+      {
+        "text": "A wait at the swap, and no lasting fix",
+        "correct": true,
+        "why": "Right. End the session first: as long as it holds the horizon, dead versions pile up again whatever is rebuilt."
+      },
+      {
+        "text": "A compact table, since pg_repack ignores snapshots",
+        "correct": false,
+        "why": "It does not ignore them; and the session holds the table, so the swap cannot even get its lock."
+      },
+      {
+        "text": "An error that the table has no primary key",
+        "correct": false,
+        "why": "Nothing in the scenario removes the key; the held snapshot is the problem."
+      },
+      {
+        "text": "The idle session is ended automatically by pg_repack before the copy starts",
+        "correct": false,
+        "why": "pg_repack cancels conflicting queries only at the lock waits, after a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-xf0bh9hx",
+    "version": 1,
+    "section": "table-fixes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While `pg_repack` copied the rows, which lock did it hold on `orders_copy`?",
+    "hint": "The UPDATE from another terminal went straight through.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock for the whole copy, released only at the end",
+        "correct": false,
+        "why": "That is VACUUM FULL's way. pg_repack takes the exclusive lock only for a moment at each end."
+      },
+      {
+        "text": "No lock at all",
+        "correct": false,
+        "why": "pg_locks showed AccessShareLock held by its sessions."
+      },
+      {
+        "text": "AccessShareLock, as a SELECT does",
+        "correct": true,
+        "why": "Right, plus an SIReadLock from copying at SERIALIZABLE. Neither blocks reads or writes."
+      },
+      {
+        "text": "ShareLock, which allows reads and blocks writes",
+        "correct": false,
+        "why": "A ShareLock would have made the UPDATE wait; it took a few milliseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab61qvd9",
+    "version": 1,
+    "section": "what-bloat-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job deletes the oldest 1% of `events` rows, and the application inserts about as many new rows each day. Will the table's file keep growing?",
+    "hint": "Where do the new rows go once VACUUM has run?",
+    "choices": [
+      {
+        "text": "Yes, by 1% a day, since VACUUM returns nothing",
+        "correct": false,
+        "why": "VACUUM returns nothing to the operating system, but the freed room is reused by the next inserts."
+      },
+      {
+        "text": "No, because DELETE shrinks the file immediately",
+        "correct": false,
+        "why": "A DELETE only marks versions dead; the file stays as it was."
+      },
+      {
+        "text": "No, once vacuumed the freed space takes the new rows",
+        "correct": true,
+        "why": "Right. The free space map sends inserts into the room the deletes left, and the size settles."
+      },
+      {
+        "text": "Yes, unless the job also runs VACUUM FULL every night",
+        "correct": false,
+        "why": "A nightly VACUUM FULL would lock the table every night for nothing; plain VACUUM and reuse keep the size steady."
+      }
+    ]
+  }
+]

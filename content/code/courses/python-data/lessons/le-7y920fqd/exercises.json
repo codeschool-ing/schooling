@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-h2j382cd",
+    "version": 1,
+    "section": "split-apply-combine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `trips.groupby(\"plan\")[\"minutes\"].mean()`, which part is the split?",
+    "hint": "Read it in the order it works.",
+    "choices": [
+      {
+        "text": "`groupby(\"plan\")`",
+        "correct": true,
+        "why": "Right: it sorts the rows into groups."
+      },
+      {
+        "text": "`[\"minutes\"]`",
+        "correct": false,
+        "why": "That picks the column each group hands over."
+      },
+      {
+        "text": "`.mean()`",
+        "correct": false,
+        "why": "That is the apply."
+      },
+      {
+        "text": "The Series that comes back, indexed by plan",
+        "correct": false,
+        "why": "That is the combine."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v8kz5eb",
+    "version": 1,
+    "section": "split-apply-combine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the day plan, `size()` gives 9899 and `count()` on `minutes` gives 9858. What are the other 41?",
+    "hint": "Which rows have no minutes?",
+    "choices": [
+      {
+        "text": "Duplicate trips counted twice by `size`",
+        "correct": false,
+        "why": "`size` counts each row once."
+      },
+      {
+        "text": "Trips shorter than a minute",
+        "correct": false,
+        "why": "They have minutes."
+      },
+      {
+        "text": "Lost bikes, with no `minutes` value",
+        "correct": true,
+        "why": "Right: `size` counts rows, `count` counts values."
+      },
+      {
+        "text": "Rows `groupby` dropped",
+        "correct": false,
+        "why": "The plan is never missing, so no row was dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e7dxtm6",
+    "version": 1,
+    "section": "split-apply-combine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `trips.groupby(\"plan\")` compute on its own?",
+    "hint": "It waits.",
+    "choices": [
+      {
+        "text": "The mean of every numeric column per plan",
+        "correct": false,
+        "why": "Nothing is computed until you ask."
+      },
+      {
+        "text": "A copy of the table, sorted by plan",
+        "correct": false,
+        "why": "It returns a group object, not a table."
+      },
+      {
+        "text": "The number of rows per plan",
+        "correct": false,
+        "why": "That is `size()`."
+      },
+      {
+        "text": "Nothing: an object that knows the split",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3wknkeq",
+    "version": 1,
+    "section": "aggregating",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In named aggregation, `trips=(\"trip_id\", \"___\")` counts the rows of each group, missing values included.",
+    "hint": "Not `count`.",
+    "blanks": [
+      {
+        "accept": [
+          "size"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-76gp26bq",
+    "version": 1,
+    "section": "aggregating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why pass `\"mean\"` to `agg` rather than a `lambda` that computes the mean?",
+    "hint": "Who runs the calculation?",
+    "choices": [
+      {
+        "text": "A `lambda` gives a different answer",
+        "correct": false,
+        "why": "The answer is the same."
+      },
+      {
+        "text": "pandas runs a known name in compiled code, not once per group in Python",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`agg` refuses functions",
+        "correct": false,
+        "why": "It accepts them; the lesson used one."
+      },
+      {
+        "text": "Only names can be given a new column name",
+        "correct": false,
+        "why": "Named aggregation names a `lambda` too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkxxvevc",
+    "version": 1,
+    "section": "aggregating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips[\"bike\"].value_counts()` and `trips.groupby(\"bike\").size()` give the same counts. What differs?",
+    "hint": "Look at the order.",
+    "choices": [
+      {
+        "text": "`value_counts` leaves out the rarer value",
+        "correct": false,
+        "why": "Both list every value."
+      },
+      {
+        "text": "`size` counts missing bikes as a group",
+        "correct": false,
+        "why": "Missing keys are dropped by default."
+      },
+      {
+        "text": "The order: by count, or by group",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing; they are the same call",
+        "correct": false,
+        "why": "Same counts, different sorting."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cnsxtvj",
+    "version": 1,
+    "section": "aggregating",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "S05 had 4154 trips and S03, the next, 2728. How many times as many trips did S05 have? Give it to one decimal place.",
+    "hint": "Divide.",
+    "value": 1.5,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-dn5g13vz",
+    "version": 1,
+    "section": "several-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`per = trips.groupby([\"weekday\", \"plan\"]).size()`. What does `per.loc[\"Sunday\"]` return?",
+    "hint": "The outer level.",
+    "choices": [
+      {
+        "text": "A KeyError: the index has two levels",
+        "correct": false,
+        "why": "A label of the outer level is enough."
+      },
+      {
+        "text": "Sunday's counts, one per plan",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The total number of Sunday trips",
+        "correct": false,
+        "why": "It returns the inner level, not a sum."
+      },
+      {
+        "text": "Every row with a plan called Sunday",
+        "correct": false,
+        "why": "Sunday is a weekday label."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sv0jh51",
+    "version": 1,
+    "section": "several-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `groupby(\"weekday\")`, Friday comes before Monday. Why?",
+    "hint": "How are keys sorted?",
+    "choices": [
+      {
+        "text": "Fridays had more trips",
+        "correct": false,
+        "why": "Groups are not sorted by size."
+      },
+      {
+        "text": "The file starts on a Friday",
+        "correct": false,
+        "why": "Order of appearance is not kept by default."
+      },
+      {
+        "text": "pandas uses a week that starts on Friday",
+        "correct": false,
+        "why": "It knows nothing of weeks here; these are strings."
+      },
+      {
+        "text": "The keys are sorted alphabetically",
+        "correct": true,
+        "why": "Right: `.loc[order]` puts the week back."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhx94k6p",
+    "version": 1,
+    "section": "several-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `unstack(\"plan\")` do to a Series indexed by weekday and plan?",
+    "hint": "From long to wide.",
+    "choices": [
+      {
+        "text": "Moves the plans into columns, one row per weekday",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sorts the weekdays",
+        "correct": false,
+        "why": "The order stays alphabetical."
+      },
+      {
+        "text": "Adds up the two plans",
+        "correct": false,
+        "why": "Nothing is summed."
+      },
+      {
+        "text": "Turns the index into ordinary columns",
+        "correct": false,
+        "why": "That is `reset_index`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv2dr2xb",
+    "version": 1,
+    "section": "transform",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`trips.groupby(\"start_station\")[\"minutes\"].transform(\"median\")` has how many values?",
+    "hint": "One per what?",
+    "choices": [
+      {
+        "text": "One per station",
+        "correct": false,
+        "why": "That is `agg`."
+      },
+      {
+        "text": "One per station that has a median",
+        "correct": false,
+        "why": "It is per row, not per group."
+      },
+      {
+        "text": "One per trip, 33,337",
+        "correct": true,
+        "why": "Right: the group's answer on every row."
+      },
+      {
+        "text": "One, the median of all trips",
+        "correct": false,
+        "why": "Each group has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3d9cjhr",
+    "version": 1,
+    "section": "transform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why compare each trip with its station's median rather than with a fixed 70 minutes?",
+    "hint": "Stations differ.",
+    "choices": [
+      {
+        "text": "A fixed number cannot be compared with a Series",
+        "correct": false,
+        "why": "It can; the lesson's point is different."
+      },
+      {
+        "text": "The rule then adapts to what is usual at each station",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "70 minutes would find no trips",
+        "correct": false,
+        "why": "It would find some, treating every station alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t6gkdka",
+    "version": 1,
+    "section": "transform",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`daily[\"trips\"] / daily.groupby(\"started_at\")[\"trips\"].transform(\"sum\")`. Within one day, what do the results add up to?",
+    "hint": "Parts over their total.",
+    "choices": [
+      {
+        "text": "The day's number of trips",
+        "correct": false,
+        "why": "Each was divided by that."
+      },
+      {
+        "text": "It depends on the day's size",
+        "correct": false,
+        "why": "Shares of a whole add to one whatever the whole."
+      },
+      {
+        "text": "2, one per plan",
+        "correct": false,
+        "why": "Each plan gives a share, not a 1."
+      },
+      {
+        "text": "1",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6q2j7wkm",
+    "version": 1,
+    "section": "filter-and-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `trips.groupby(\"start_station\").filter(lambda g: len(g) < 1000)` return?",
+    "hint": "Rows or groups?",
+    "choices": [
+      {
+        "text": "One row per quiet station, with its count",
+        "correct": false,
+        "why": "`filter` returns rows of the table, not a summary."
+      },
+      {
+        "text": "Every trip from the stations with fewer than 1000",
+        "correct": true,
+        "why": "Right: 3834 of them."
+      },
+      {
+        "text": "The first 1000 trips of every station",
+        "correct": false,
+        "why": "It keeps or drops whole groups."
+      },
+      {
+        "text": "The stations' names",
+        "correct": false,
+        "why": "It returns rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-18pwbzeg",
+    "version": 1,
+    "section": "filter-and-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is `apply` on a groupby the right choice?",
+    "hint": "It is the slow path.",
+    "choices": [
+      {
+        "text": "Whenever the calculation is a mean or a sum",
+        "correct": false,
+        "why": "`agg` does those in compiled code."
+      },
+      {
+        "text": "Always: it is the general form",
+        "correct": false,
+        "why": "General is not the same as best."
+      },
+      {
+        "text": "When the calculation needs the whole group at once",
+        "correct": true,
+        "why": "Right, such as the top three rows of each."
+      },
+      {
+        "text": "When the key has missing values",
+        "correct": false,
+        "why": "That is `dropna=False`."
+      }
+    ]
+  },
+  {
+    "id": "ex-19jq9qa6",
+    "version": 1,
+    "section": "the-groups-you-did-not-see",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips.groupby(\"end_station\").size().sum()` is 33191, and the table has 33337 rows. Why?",
+    "hint": "Which trips have no end station?",
+    "choices": [
+      {
+        "text": "Rows with a missing key are dropped by default",
+        "correct": true,
+        "why": "Right: the 146 lost bikes."
+      },
+      {
+        "text": "`size` skips the missing minutes",
+        "correct": false,
+        "why": "`size` counts rows; the key is what is missing."
+      },
+      {
+        "text": "Some trips ended at two stations",
+        "correct": false,
+        "why": "A trip has one end."
+      },
+      {
+        "text": "The sum overflowed",
+        "correct": false,
+        "why": "33,337 fits easily."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pdb9zxy",
+    "version": 1,
+    "section": "the-groups-you-did-not-see",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To keep a missing key as a group of its own, pass `___=False` to `groupby`.",
+    "hint": "The argument named after missing values.",
+    "blanks": [
+      {
+        "accept": [
+          "dropna"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sxjdweyt",
+    "version": 1,
+    "section": "the-groups-you-did-not-see",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A categorical key has a category with no rows. What decides whether it appears as a group of 0?",
+    "hint": "An argument, with a default that changed.",
+    "choices": [
+      {
+        "text": "`dropna`",
+        "correct": false,
+        "why": "That is about missing keys."
+      },
+      {
+        "text": "Nothing: empty categories never appear",
+        "correct": false,
+        "why": "They do with `observed=False`."
+      },
+      {
+        "text": "`observed`",
+        "correct": true,
+        "why": "Right: `False` shows it, and pandas 3 defaults to `True`."
+      },
+      {
+        "text": "Whether the categories are ordered",
+        "correct": false,
+        "why": "Order does not decide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2yg8ybf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method to what it returns.",
+    "hint": "Count the rows of the result.",
+    "pairs": [
+      {
+        "left": "`agg`",
+        "right": "One row per group"
+      },
+      {
+        "left": "`transform`",
+        "right": "One value per original row"
+      },
+      {
+        "left": "`filter`",
+        "right": "The original rows of the kept groups"
+      },
+      {
+        "left": "`apply`",
+        "right": "Whatever the function returns, combined"
+      }
+    ],
+    "right_distractors": [
+      "One row per column"
+    ]
+  },
+  {
+    "id": "ex-z25mc229",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of a per-station summary you can trust.",
+    "hint": "Build, then check.",
+    "items": [
+      "Group by `start_station`",
+      "Aggregate with named columns",
+      "Check the group sizes add up to the table",
+      "Sort and read the result"
+    ],
+    "trap": "Reading before checking reports a table that may have lost rows."
+  }
+]
