@@ -1,0 +1,881 @@
+[
+  {
+    "id": "ex-b74x93qe",
+    "version": 1,
+    "section": "one-address",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did lessons 1 and 2 get away with reading `data/raw/clicks` from a local path?",
+    "hint": "Where were all the executors?",
+    "choices": [
+      {
+        "text": "The master serves the file to the workers",
+        "correct": false,
+        "why": "The master hands out cores and never touches data."
+      },
+      {
+        "text": "Every executor was on the one machine that had the file",
+        "correct": true,
+        "why": "Right. On a real cluster each worker would look on its own disk and find nothing."
+      },
+      {
+        "text": "Spark copies a local file to every worker before the first task starts, so each finds its own copy",
+        "correct": false,
+        "why": "It does not; each executor opens the path where it runs."
+      },
+      {
+        "text": "Compressed files are readable from any machine",
+        "correct": false,
+        "why": "Compression changes the size, not where the file is."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yzatx09",
+    "version": 1,
+    "section": "one-address",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each way of storing a lake to what it is.",
+    "hint": "One lives on the machines that compute; one is a service elsewhere.",
+    "pairs": [
+      {
+        "left": "HDFS",
+        "right": "Files spread over the disks of the cluster’s own machines"
+      },
+      {
+        "left": "An object store",
+        "right": "A separate service reached over the network"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the data in the driver’s memory"
+    ]
+  },
+  {
+    "id": "ex-ashktvez",
+    "version": 1,
+    "section": "hdfs-design",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the namenode store?",
+    "hint": "It answers 'where is this file?' without touching a disk.",
+    "choices": [
+      {
+        "text": "The data of small files, and the metadata of large ones",
+        "correct": false,
+        "why": "Size makes no difference; the namenode never stores file contents."
+      },
+      {
+        "text": "The log of every job that read a file",
+        "correct": false,
+        "why": "That is not HDFS's business at all."
+      },
+      {
+        "text": "One copy of every block, for safety",
+        "correct": false,
+        "why": "Datanodes hold all the copies; the namenode holds none."
+      },
+      {
+        "text": "Metadata only",
+        "correct": true,
+        "why": "Yes: the tree, the blocks of each file and where each copy is. No data."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9956ghm",
+    "version": 1,
+    "section": "hdfs-design",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of reading a file from HDFS.",
+    "hint": "The namenode is asked first and never carries the data.",
+    "items": [
+      "The client asks the namenode which blocks make up the file",
+      "The namenode answers with the datanodes that hold each block",
+      "The client reads each block straight from a datanode"
+    ]
+  },
+  {
+    "id": "ex-72w1j92v",
+    "version": 1,
+    "section": "hdfs-design",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many 128 MB blocks does a 1 GB (1,024 MB) file take in HDFS?",
+    "hint": "Divide.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6f2jyjbn",
+    "version": 1,
+    "section": "hdfs-design",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When a client writes a block, how do its three copies get made?",
+    "hint": "The client sends the block once.",
+    "choices": [
+      {
+        "text": "Through a pipeline: datanode to datanode",
+        "correct": true,
+        "why": "Right. The first passes it to the second as it arrives, and the second to the third."
+      },
+      {
+        "text": "One copy is written now and two at night",
+        "correct": false,
+        "why": "The write succeeds when all three hold the block."
+      },
+      {
+        "text": "The client sends it three times, once to each datanode",
+        "correct": false,
+        "why": "That would triple the client's traffic; the pipeline avoids it."
+      },
+      {
+        "text": "The namenode copies it after the write",
+        "correct": false,
+        "why": "The namenode never carries data."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6dyxx6k",
+    "version": 1,
+    "section": "hdfs-design",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is HDFS a poor disk to run a transactional database on?",
+    "hint": "What can you not do to a file once written?",
+    "choices": [
+      {
+        "text": "Its blocks are too small for database pages",
+        "correct": false,
+        "why": "They are huge, 128 MB; size is not the problem."
+      },
+      {
+        "text": "A namenode refuses files that are open for long",
+        "correct": false,
+        "why": "No such rule; the obstacle is in-place change."
+      },
+      {
+        "text": "Files cannot be edited in place",
+        "correct": true,
+        "why": "Right. A database rewrites pages all the time; HDFS only creates, appends and deletes."
+      },
+      {
+        "text": "It keeps only one copy of each block, which is too risky for a database",
+        "correct": false,
+        "why": "It keeps three."
+      }
+    ]
+  },
+  {
+    "id": "ex-43863cts",
+    "version": 1,
+    "section": "installing-hdfs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the setup put only Hadoop's `bin` on the path, and not its `sbin`?",
+    "hint": "Spark has an `sbin` too.",
+    "choices": [
+      {
+        "text": "Hadoop has no `sbin` directory in the 3.5.0 release, only `bin` and `etc`",
+        "correct": false,
+        "why": "It has one, with `start-all.sh` in it."
+      },
+      {
+        "text": "`sbin` holds programs that only the root user is allowed to run on Ubuntu, so it stays off the path",
+        "correct": false,
+        "why": "Hadoop's `sbin` scripts run as any user."
+      },
+      {
+        "text": "To save memory",
+        "correct": false,
+        "why": "The path costs no memory."
+      },
+      {
+        "text": "Both projects ship a `start-all.sh`, and the second would quietly win",
+        "correct": true,
+        "why": "Yes. A name clash on the path picks one silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrn42t28",
+    "version": 1,
+    "section": "installing-hdfs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab run four datanodes rather than three, with replication of three?",
+    "hint": "After losing one, where would a third copy go?",
+    "choices": [
+      {
+        "text": "To make writes four times faster",
+        "correct": false,
+        "why": "All four share one disk here; the reason is the failure exercise."
+      },
+      {
+        "text": "So that after losing one, three remain to hold three copies",
+        "correct": true,
+        "why": "Right. With three datanodes, a lost one leaves nowhere for the third copy."
+      },
+      {
+        "text": "One datanode per Spark worker, plus one more that the namenode needs for its own metadata",
+        "correct": false,
+        "why": "The namenode needs no datanode of its own."
+      },
+      {
+        "text": "HDFS needs an even number of datanodes so that every block has a partner on the opposite side",
+        "correct": false,
+        "why": "No such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkkr846x",
+    "version": 1,
+    "section": "installing-hdfs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana runs `sh hdfs.sh setup` a second time and starts everything. A datanode log says `Incompatible clusterIDs`. What happened?",
+    "hint": "What does formatting give the filesystem?",
+    "choices": [
+      {
+        "text": "Two datanodes were given the same port",
+        "correct": false,
+        "why": "That fails as an address already in use."
+      },
+      {
+        "text": "The namenode ran out of memory",
+        "correct": false,
+        "why": "Nothing here is large enough for that."
+      },
+      {
+        "text": "The new format gave the namenode a new identity the datanodes do not recognise",
+        "correct": true,
+        "why": "Right. Remove `~/hdfs`, then set up and start again."
+      },
+      {
+        "text": "Java 17 is too new for Hadoop",
+        "correct": false,
+        "why": "The first setup ran on the same Java."
+      }
+    ]
+  },
+  {
+    "id": "ex-5j4xesam",
+    "version": 1,
+    "section": "a-file-in-blocks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The year's file is 1,291,239,322 bytes and a block is 134,217,728. How many blocks does it take?",
+    "hint": "Round up: the last block holds what is left.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-s4hg2cdy",
+    "version": 1,
+    "section": "a-file-in-blocks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten blocks at replication three: how many block copies are on the datanodes' disks?",
+    "hint": "Multiply.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3b43z3at",
+    "version": 1,
+    "section": "a-file-in-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the small `.meta` file beside each block file for?",
+    "hint": "It is checked on every read.",
+    "choices": [
+      {
+        "text": "The list of the other datanodes holding copies",
+        "correct": false,
+        "why": "That is metadata, and the namenode keeps it."
+      },
+      {
+        "text": "The block's checksums",
+        "correct": true,
+        "why": "Yes. A damaged block is noticed and read from another copy."
+      },
+      {
+        "text": "The name of the file the block belongs to",
+        "correct": false,
+        "why": "Datanodes do not know file names; the namenode does."
+      },
+      {
+        "text": "A compressed copy of the block",
+        "correct": false,
+        "why": "It is tiny; it holds checksums."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdbvhhsb",
+    "version": 1,
+    "section": "a-file-in-blocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does HDFS put a block's second and third copies on a different rack from the first?",
+    "hint": "What is the commonest way to lose several machines at once?",
+    "choices": [
+      {
+        "text": "So a rack losing power cannot take every copy",
+        "correct": true,
+        "why": "Right. Machines in one rack share power and a switch."
+      },
+      {
+        "text": "A rack can hold only one copy of any block, by a rule HDFS enforces whatever the replication",
+        "correct": false,
+        "why": "The second and third share a rack."
+      },
+      {
+        "text": "To spread the namenode's memory",
+        "correct": false,
+        "why": "Placement does not change what the namenode stores."
+      },
+      {
+        "text": "Reads from another rack are faster, because the switch in each rack is shared by fewer machines",
+        "correct": false,
+        "why": "They are usually slower; the rule is about surviving."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y4ebme2",
+    "version": 1,
+    "section": "losing-a-datanode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the namenode wait before copying a silent datanode's blocks elsewhere?",
+    "hint": "What does copying cost, and what else could silence mean?",
+    "choices": [
+      {
+        "text": "It cannot know which blocks were there",
+        "correct": false,
+        "why": "It knows exactly, from the block reports."
+      },
+      {
+        "text": "Silence is no proof of death, and copying costs the whole cluster",
+        "correct": true,
+        "why": "Right. Copying terabytes for a datanode that comes back a minute later would be waste."
+      },
+      {
+        "text": "A client has to ask for the repair",
+        "correct": false,
+        "why": "Nobody asked; the namenode did it on its own."
+      },
+      {
+        "text": "The blocks must first be read back from the dead datanode",
+        "correct": false,
+        "why": "The copies come from the survivors, not the dead one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gphrj7z4",
+    "version": 1,
+    "section": "losing-a-datanode",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When datanode 2 died, the file was short of copies but could still be read throughout. Why?",
+    "hint": "How many copies did each affected block still have?",
+    "choices": [
+      {
+        "text": "Each affected block still had two",
+        "correct": true,
+        "why": "Right. Reading needs one."
+      },
+      {
+        "text": "The namenode served the missing blocks itself",
+        "correct": false,
+        "why": "The namenode holds no data."
+      },
+      {
+        "text": "Spark had cached the file in memory",
+        "correct": false,
+        "why": "No job was running; HDFS alone kept it readable."
+      },
+      {
+        "text": "Datanode 2 held no blocks of that file",
+        "correct": false,
+        "why": "It held seven of the ten, which is why seven were short."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g24rzs5",
+    "version": 1,
+    "section": "losing-a-datanode",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If all three machines holding a block fail together, `fsck` reports the file as ___.",
+    "hint": "The block is gone.",
+    "blanks": [
+      {
+        "accept": [
+          "corrupt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2s2b99kn",
+    "version": 1,
+    "section": "losing-a-datanode",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Seven blocks of 128 MB were copied to restore replication. About how many MB moved?",
+    "hint": "Multiply.",
+    "value": 896,
+    "tolerance": 10,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-xaph5ved",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same petabyte in files of 1 MB instead of 1 GB. What grows, and where?",
+    "hint": "The data did not get bigger.",
+    "choices": [
+      {
+        "text": "Nothing that matters",
+        "correct": false,
+        "why": "It decides whether the namenode copes."
+      },
+      {
+        "text": "The disk space on the datanodes, by about a thousand times",
+        "correct": false,
+        "why": "Disk use stays about the same; the bytes are the same bytes."
+      },
+      {
+        "text": "The number of copies of each block",
+        "correct": false,
+        "why": "Replication stays three."
+      },
+      {
+        "text": "Objects in the namenode's memory",
+        "correct": true,
+        "why": "Right. About 2 billion objects instead of 9 million."
+      }
+    ]
+  },
+  {
+    "id": "ex-d658j40v",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why will Spark be slower reading the 365 daily files than the one file of ten blocks, for the same events?",
+    "hint": "Lesson 2's cost per task.",
+    "choices": [
+      {
+        "text": "365 tiny tasks each pay the fixed cost per task",
+        "correct": true,
+        "why": "Right. Ten tasks of a full block spend their time reading."
+      },
+      {
+        "text": "Daily files are stored with fewer copies",
+        "correct": false,
+        "why": "Replication is three for both."
+      },
+      {
+        "text": "gzip cannot be read by Spark",
+        "correct": false,
+        "why": "Lesson 1 read them fine."
+      },
+      {
+        "text": "The namenode refuses more than 100 files per job",
+        "correct": false,
+        "why": "No such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3jq8wdg",
+    "version": 1,
+    "section": "small-files",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A job that reads many small files and rewrites them as a few large ones is called ___.",
+    "hint": "Squeezing together.",
+    "blanks": [
+      {
+        "accept": [
+          "compaction"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-65fk8gg0",
+    "version": 1,
+    "section": "spark-reads-hdfs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Stage 1 of `hdfs_count.py` ran ten tasks, all `NODE_LOCAL`. What does that mean?",
+    "hint": "Where was each task's block?",
+    "choices": [
+      {
+        "text": "The tasks ran inside the namenode, which is the process that knows where every block is kept",
+        "correct": false,
+        "why": "Tasks run in executors."
+      },
+      {
+        "text": "Each read its block from a disk in its own machine",
+        "correct": true,
+        "why": "Right. No block crossed the network."
+      },
+      {
+        "text": "Each read its data from the executor's memory, where an earlier stage of the same job had left it",
+        "correct": false,
+        "why": "That is `PROCESS_LOCAL`, lesson 9."
+      },
+      {
+        "text": "The data was copied to the driver first",
+        "correct": false,
+        "why": "The driver never received the blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzz6h6tj",
+    "version": 1,
+    "section": "spark-reads-hdfs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order Spark's locality levels from best to worst.",
+    "hint": "From memory to anywhere.",
+    "items": [
+      "PROCESS_LOCAL",
+      "NODE_LOCAL",
+      "RACK_LOCAL",
+      "ANY"
+    ]
+  },
+  {
+    "id": "ex-566256yk",
+    "version": 1,
+    "section": "spark-reads-hdfs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without `dfs.datanode.hostname`, every reading task ran at `ANY` on one machine. Why?",
+    "hint": "How does Spark decide two things are on the same machine?",
+    "choices": [
+      {
+        "text": "The file was too large to read locally",
+        "correct": false,
+        "why": "Size has nothing to do with locality."
+      },
+      {
+        "text": "The executors were busy, so Spark gave up waiting",
+        "correct": false,
+        "why": "Even an idle executor would not have matched `localhost`."
+      },
+      {
+        "text": "HDFS forbids local reads by default",
+        "correct": false,
+        "why": "Nothing forbade them; Spark did not recognise the host."
+      },
+      {
+        "text": "Spark matches names, and `localhost` was not `127.0.0.1`",
+        "correct": true,
+        "why": "Right. Same machine, two names, and locality silently off."
+      }
+    ]
+  },
+  {
+    "id": "ex-659j89cf",
+    "version": 1,
+    "section": "object-storage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you rename an object in an object store?",
+    "hint": "There is no rename.",
+    "choices": [
+      {
+        "text": "By editing its key in place with a metadata request, leaving the bytes where they are",
+        "correct": false,
+        "why": "Nothing about an object is edited in place."
+      },
+      {
+        "text": "With one rename request, which the store carries out without moving a byte of the object",
+        "correct": false,
+        "why": "The S3 API has none."
+      },
+      {
+        "text": "Copy it under the new key, then delete the old one",
+        "correct": true,
+        "why": "Right. Two requests, and the copy moves every byte."
+      },
+      {
+        "text": "By moving its directory",
+        "correct": false,
+        "why": "There are no directories, only keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-esksjc2w",
+    "version": 1,
+    "section": "object-storage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s3_demo.py` listed 31 'folders'. What were they really?",
+    "hint": "What did `Delimiter` do?",
+    "choices": [
+      {
+        "text": "Empty objects whose names end in a slash",
+        "correct": false,
+        "why": "Some tools create those, but this program did not."
+      },
+      {
+        "text": "Buckets",
+        "correct": false,
+        "why": "There was one bucket, `pontofinal-lake`."
+      },
+      {
+        "text": "Directories created by `create_bucket`",
+        "correct": false,
+        "why": "A bucket is created empty; there are no directories in it."
+      },
+      {
+        "text": "Key prefixes, grouped up to the next slash",
+        "correct": true,
+        "why": "Right. No folder object exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-dmc2st91",
+    "version": 1,
+    "section": "object-storage",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Moving 50,000 objects one by one, as `s3_demo.py` moved 31, takes how many requests?",
+    "hint": "Two per object.",
+    "value": 100000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yg6ef5yk",
+    "version": 1,
+    "section": "rename-and-commit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job moved from HDFS to an object store, unchanged, writes 10,000 files. What goes wrong at the end?",
+    "hint": "The committer's moves.",
+    "choices": [
+      {
+        "text": "Every move becomes a copy, slowly, and readers meanwhile see half the result",
+        "correct": true,
+        "why": "Right. Slow and not atomic, and no error says so."
+      },
+      {
+        "text": "It fails, because object stores refuse temporary directories",
+        "correct": false,
+        "why": "It runs; the trouble is quieter than a failure."
+      },
+      {
+        "text": "The files are written with one copy instead of three",
+        "correct": false,
+        "why": "The provider keeps its own copies."
+      },
+      {
+        "text": "Nothing, since the path is the only change",
+        "correct": false,
+        "why": "The path is the only change in the code, not in the behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-fm10b02b",
+    "version": 1,
+    "section": "rename-and-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a table format make a write appear all at once on an object store?",
+    "hint": "It never renames.",
+    "choices": [
+      {
+        "text": "It renames the files faster than Hadoop does",
+        "correct": false,
+        "why": "It does not rename at all."
+      },
+      {
+        "text": "It locks the bucket while writing",
+        "correct": false,
+        "why": "Object stores have no bucket locks."
+      },
+      {
+        "text": "It writes all the data into a single object",
+        "correct": false,
+        "why": "Data stays in many files; only the commit is one."
+      },
+      {
+        "text": "One small commit file lists the table's files",
+        "correct": true,
+        "why": "Right. Writing one file is atomic anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkq63nsy",
+    "version": 1,
+    "section": "lake-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column makes a good partition for the clicks?",
+    "hint": "Few values, and what queries filter on.",
+    "choices": [
+      {
+        "text": "`day`",
+        "correct": true,
+        "why": "Right. 365 values, and almost every question names a period."
+      },
+      {
+        "text": "`visitor_id`",
+        "correct": false,
+        "why": "Two million values: two million directories of tiny files."
+      },
+      {
+        "text": "`event_id`",
+        "correct": false,
+        "why": "Unique per row, the worst choice there is."
+      },
+      {
+        "text": "`ts`, to the second",
+        "correct": false,
+        "why": "Over thirty million values in a year."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx6m92pq",
+    "version": 1,
+    "section": "lake-layout",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer of a lake to what it holds.",
+    "hint": "Raw, cleaned, answered.",
+    "pairs": [
+      {
+        "left": "Bronze",
+        "right": "The data as it arrived, never edited"
+      },
+      {
+        "left": "Silver",
+        "right": "The same data, cleaned and typed"
+      },
+      {
+        "left": "Gold",
+        "right": "Tables built for questions"
+      }
+    ],
+    "right_distractors": [
+      "Backups of the namenode"
+    ]
+  },
+  {
+    "id": "ex-v9rd77dg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team shuts its cluster down every night to save money. Where should its data live, and why?",
+    "hint": "Where does HDFS keep the bytes?",
+    "choices": [
+      {
+        "text": "An object store: HDFS lives on the cluster's own disks",
+        "correct": true,
+        "why": "Right. Shut the machines and HDFS is gone; the object store stays."
+      },
+      {
+        "text": "Either; replication keeps it safe when the cluster is off",
+        "correct": false,
+        "why": "Replication is across the cluster's machines, which are off."
+      },
+      {
+        "text": "HDFS, because it is faster to read",
+        "correct": false,
+        "why": "Speed does not help data that vanished with the machines."
+      },
+      {
+        "text": "The driver's disk",
+        "correct": false,
+        "why": "One machine's disk is the problem this lesson started from."
+      }
+    ]
+  },
+  {
+    "id": "ex-xctcwxky",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each operation to what it costs on HDFS and on an object store.",
+    "hint": "Which one moves bytes?",
+    "pairs": [
+      {
+        "left": "Rename a 1 GB file on HDFS",
+        "right": "One change in the namenode’s memory"
+      },
+      {
+        "left": "Rename a 1 GB object",
+        "right": "A copy of every byte, then a delete"
+      },
+      {
+        "left": "List the files of one day",
+        "right": "A request for keys with a prefix, on an object store"
+      }
+    ],
+    "right_distractors": [
+      "Nothing at all, on either"
+    ]
+  }
+]

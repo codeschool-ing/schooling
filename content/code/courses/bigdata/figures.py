@@ -379,6 +379,45 @@ def l02_waves(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-blocks', 3)
+def l03_blocks(lang):
+    t = {'en': dict(
+            label='A file cut into blocks of 128 MB, numbered 0 to 3 here. The namenode holds '
+                  'only the list of blocks and where each copy is. Four datanodes hold the copies: '
+                  'every block is on three of them, never twice on the same one, and each datanode '
+                  'holds some blocks and not others.',
+            file='one file', nn='namenode', nn2='file → blocks → datanodes', dn='datanode',
+            blk='block', cap='Every block is stored three times, on three different datanodes. '
+                             'The namenode knows where; it never holds the data.'),
+         'pt': dict(
+            label='Um arquivo cortado em blocos de 128 MB, numerados aqui de 0 a 3. O namenode '
+                  'guarda só a lista de blocos e onde está cada cópia. Quatro datanodes guardam as '
+                  'cópias: cada bloco está em três deles, nunca duas vezes no mesmo, e cada '
+                  'datanode guarda alguns blocos e outros não.',
+            file='um arquivo', nn='namenode', nn2='arquivo → blocos → datanodes', dn='datanode',
+            blk='bloco', cap='Cada bloco é guardado três vezes, em três datanodes diferentes. O '
+                             'namenode sabe onde; ele nunca guarda os dados.')}[lang]
+    f = Fig('l03-blocks', 720, 300, t['label'])
+    f.text(20, 30, t['file'], size=10.5, anchor='start', weight='600')
+    for i in range(4):
+        f.rect(100 + i * 70, 16, 66, 28, stroke='--phosphor', fill='--scan', rx=2)
+        f.text(133 + i * 70, 30, f"{t['blk']} {i}", size=10)
+    box(f, 440, 12, 260, 56, t['nn'], t['nn2'])
+    place = {1: [0, 1], 2: [0, 1, 2, 3], 3: [1, 2, 3], 4: [0, 2, 3]}
+    for n in range(1, 5):
+        x = 20 + (n - 1) * 175
+        f.rect(x, 130, 160, 140, stroke='--wire', fill='--panel')
+        f.text(x + 80, 148, f"{t['dn']} {n}", size=10.5, weight='600')
+        for j, b in enumerate(place[n]):
+            f.rect(x + 14 + (j % 2) * 70, 166 + (j // 2) * 44, 62, 34, stroke='--phosphor',
+                   fill='--scan', rx=2)
+            f.text(x + 45 + (j % 2) * 70, 183 + (j // 2) * 44, f"{t['blk']} {b}", size=10)
+        f.line(570, 68, x + 80, 128, stroke='--paper-dim', dash='3 3', width=1)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
