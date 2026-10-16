@@ -43,6 +43,6 @@ code was hard to write. The impact is Joana's to judge, because she knows what a
 usage comes from data, and the history from the defect records. Lia's part is to ask all four questions, put the
 answers in one place, and turn them into an order everybody can see.
 
-The output is not just an order of testing. It is also a statement of **what will be tested lightly or not at all**,
-said out loud before Friday, which is lesson 21's subject: a release decision made with the gaps visible is a
+Besides an order of testing, the output is a statement of **what will be tested lightly or not at all**, said out
+loud before Friday, which is lesson 21's subject: a release decision made with the gaps visible is a
 decision; one made without them is a surprise waiting to happen.

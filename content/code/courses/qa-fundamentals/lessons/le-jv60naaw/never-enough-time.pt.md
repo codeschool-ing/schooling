@@ -43,6 +43,6 @@ que sabem que código foi difícil de escrever. O impacto é a Joana quem julga,
 ao negócio. O uso vem dos dados, e o histórico dos registros de defeito. A parte da Lia é fazer as quatro perguntas,
 juntar as respostas num lugar só, e transformá-las numa ordem que todos conseguem ver.
 
-O resultado não é só uma ordem de teste. É também uma declaração do **que vai ser testado de leve ou não vai ser
+Além de uma ordem de teste, o resultado é uma declaração do **que vai ser testado de leve ou não vai ser
 testado**, dita em voz alta antes de sexta, que é o assunto da aula 21: uma decisão de entrega tomada com as lacunas
 visíveis é uma decisão; uma tomada sem elas é uma surpresa esperando para acontecer.

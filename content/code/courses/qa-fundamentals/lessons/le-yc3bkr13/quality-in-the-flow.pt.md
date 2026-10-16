@@ -55,9 +55,9 @@ estar nela de cada vez. Sem essa segunda linha, tudo vira urgente, e a faixa vir
 
 ## Cadências em vez de eventos
 
-O Kanban continua tendo reuniões; chama-as de cadências, e o time escolhe o ritmo. O Cine Aurora tem três: uma
-conversa curta em pé diante do quadro toda manhã, que percorre o quadro da direita para a esquerda, dos cartões
-mais perto do pronto até os mais novos, para terminar vir antes de começar; uma reunião semanal de
-**reabastecimento**, em que a Joana escolhe o que entra em "a fazer"; e uma revisão mensal das medidas de fluxo,
-em que a Lia leva o diagrama de fluxo cumulativo. A pergunta da retrospectiva também é feita ali, sobre cada
+O Kanban continua tendo reuniões; chama-as de cadências, e o time escolhe o ritmo. O Cine Aurora tem três. Toda
+manhã há uma conversa curta em pé diante do quadro, que o percorre da direita para a esquerda, dos cartões mais perto
+do pronto até os mais novos, para terminar vir antes de começar. Toda semana uma reunião de **reabastecimento** deixa
+a Joana escolher o que entra em "a fazer". E todo mês o time revisa as medidas de fluxo, com a Lia levando o diagrama
+de fluxo cumulativo. A pergunta da retrospectiva também é feita ali, sobre cada
 cartão que ficou bloqueado.

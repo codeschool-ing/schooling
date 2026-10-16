@@ -55,8 +55,7 @@ may be in it at a time. Without that second line, everything becomes urgent, and
 
 ## Cadences instead of events
 
-Kanban still has meetings; it calls them cadences, and the team picks their rhythm. Cine Aurora has three:
-a short stand-up at the board every morning that walks the board from right to left, from the cards nearest
-done back to the newest, so finishing comes before starting; a weekly **replenishment** meeting where Joana
-chooses what goes into "ready"; and a monthly review of the flow measures, where Lia brings the cumulative
-flow diagram. The retrospective's question is asked there too, about every card that was blocked.
+Kanban still has meetings; it calls them cadences, and the team picks their rhythm. Cine Aurora has three. Every
+morning there is a short stand-up at the board that walks it from right to left, from the cards nearest done back to
+the newest, so finishing comes before starting. Every week a **replenishment** meeting lets Joana choose what goes
+into "ready". And every month the team reviews the flow measures, with Lia bringing the cumulative flow diagram. The retrospective's question is asked there too, about every card that was blocked.
