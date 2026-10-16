@@ -1,0 +1,805 @@
+[
+  {
+    "id": "ex-d0356sq3",
+    "version": 1,
+    "section": "starters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop's `pom.xml` names `spring-boot-starter-webmvc` with no `<version>`. Where does its version come from?",
+    "hint": "Look at the first block of the pom.",
+    "choices": [
+      {
+        "text": "Maven takes the newest release on Central",
+        "correct": false,
+        "why": "Maven never picks a version by itself; a dependency with no version and nothing managing it is an error, not a request for the latest."
+      },
+      {
+        "text": "From whatever copy is already in ~/.m2",
+        "correct": false,
+        "why": "The local repository is a cache of what was downloaded. It answers which files are there, never which version a project should use."
+      },
+      {
+        "text": "From the parent, spring-boot-starter-parent 4.1.1",
+        "correct": true,
+        "why": "Right. The parent imports spring-boot-dependencies, whose dependency management names a version for every artifact Boot knows, the starters included."
+      },
+      {
+        "text": "A starter has no version of its own",
+        "correct": false,
+        "why": "It has one, 4.1.1, like every artifact on Central. The pom only leaves it out because the parent supplies it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjx15dck",
+    "version": 1,
+    "section": "starters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`unzip -l` on `spring-boot-starter-webmvc-4.1.1.jar` lists a manifest, a licence and a notice, and no class. What does the starter contribute, then?",
+    "hint": "Run `mvn dependency:tree` and look under it.",
+    "choices": [
+      {
+        "text": "Code that Maven runs while it builds the project",
+        "correct": false,
+        "why": "Code run during a build comes from plugins, such as spring-boot-maven-plugin. A dependency is put on the classpath and never executed by Maven."
+      },
+      {
+        "text": "Nothing; it is a leftover kept for older projects",
+        "correct": false,
+        "why": "Swap it for the core starter and Tomcat, Jackson and Spring MVC leave the classpath: the detour's tree went from 39 artifacts to 21."
+      },
+      {
+        "text": "A template that generates the project's first files",
+        "correct": false,
+        "why": "That is what start.spring.io does, once, before the project exists. A starter is read on every build."
+      },
+      {
+        "text": "Its own dependencies, which arrive with it",
+        "correct": true,
+        "why": "Right. A starter is a pom whose whole job is its dependency list; the jar is empty because the value is in what it pulls in transitively."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gydr4je",
+    "version": 1,
+    "section": "starters",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these did `spring-boot-starter-webmvc` bring into the bookshop with no other line in the pom? Choose all that apply.",
+    "hint": "The tree in the first section.",
+    "choices": [
+      {
+        "text": "Tomcat, embedded",
+        "correct": true,
+        "why": "Right: tomcat-embed-core arrives through spring-boot-starter-tomcat."
+      },
+      {
+        "text": "Jackson, which writes JSON",
+        "correct": true,
+        "why": "Right: through spring-boot-starter-jackson, at version 3."
+      },
+      {
+        "text": "The PostgreSQL JDBC driver",
+        "correct": false,
+        "why": "No database is in the tree. A driver is a choice the starter cannot make for you; lesson 9 adds it by name."
+      },
+      {
+        "text": "Logback, behind SLF4J",
+        "correct": true,
+        "why": "Right: spring-boot-starter-logging comes with every starter, through spring-boot-starter."
+      },
+      {
+        "text": "Hibernate",
+        "correct": false,
+        "why": "Hibernate belongs to persistence and arrives with spring-boot-starter-data-jpa in lesson 10, not with the web starter."
+      }
+    ]
+  },
+  {
+    "id": "ex-418798xj",
+    "version": 1,
+    "section": "starters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Tomcat security fix ships as 11.0.25 before the next Spring Boot release. What is the change in the bookshop's pom that moves every Tomcat jar to it?",
+    "hint": "The parent names each library's version in a property.",
+    "choices": [
+      {
+        "text": "Add <version>11.0.25</version> to spring-boot-starter-webmvc",
+        "correct": false,
+        "why": "That asks for version 11.0.25 of the starter itself, which does not exist; the starter's version is Boot's, not Tomcat's."
+      },
+      {
+        "text": "Set <tomcat.version>11.0.25</tomcat.version> in <properties>",
+        "correct": true,
+        "why": "Right. Every Tomcat artifact in spring-boot-dependencies reads that one property, so core, el and websocket all move together."
+      },
+      {
+        "text": "Declare tomcat-embed-core 11.0.25 as a direct dependency",
+        "correct": false,
+        "why": "That moves one jar and leaves tomcat-embed-el and tomcat-embed-websocket at 11.0.24: a Tomcat assembled from two releases."
+      },
+      {
+        "text": "Delete the copy of Tomcat in ~/.m2 so Maven fetches it again",
+        "correct": false,
+        "why": "Maven would fetch 11.0.24 again, because that is still the version the build asks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cpd516b",
+    "version": 1,
+    "section": "the-application-class",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of `@SpringBootApplication`, and the call in `main`, to what it does.",
+    "hint": "Three annotations and one method.",
+    "pairs": [
+      {
+        "left": "@SpringBootConfiguration",
+        "right": "this class may declare beans"
+      },
+      {
+        "left": "@EnableAutoConfiguration",
+        "right": "configure what the classpath holds"
+      },
+      {
+        "left": "@ComponentScan",
+        "right": "find components in this package and below"
+      },
+      {
+        "left": "SpringApplication.run",
+        "right": "build the context and start it"
+      }
+    ],
+    "right_distractors": [
+      "download the libraries the starter names"
+    ]
+  },
+  {
+    "id": "ex-r5hdp54j",
+    "version": 1,
+    "section": "the-application-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate adds a class annotated `@Component` in the package `com.example.reports`. The bookshop starts and never creates it. Why?",
+    "hint": "Where does the scan start?",
+    "choices": [
+      {
+        "text": "`@Component` only works together with `@Service`",
+        "correct": false,
+        "why": "Either annotation alone marks a class as a component; lesson 5 compares them."
+      },
+      {
+        "text": "Components are created lazily, on first use",
+        "correct": false,
+        "why": "Spring creates singleton beans at start-up by default. This one was never found, so it was never created at all."
+      },
+      {
+        "text": "Its package is not below the main class's package",
+        "correct": true,
+        "why": "Right. `@ComponentScan` on BookshopApplication scans its own package and the packages below it; `com.example.reports` is a sibling, not a child."
+      },
+      {
+        "text": "The class needs to be listed in application.properties",
+        "correct": false,
+        "why": "No property lists components. Being under the scanned package is the whole rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-637ts1m2",
+    "version": 1,
+    "section": "the-application-class",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`target/` holds `bookshop-0.1.0.jar` at about 19 MB and `bookshop-0.1.0.jar.original` at under 3 kB. What is the difference?",
+    "hint": "Which plugin ran after the ordinary jar was built?",
+    "choices": [
+      {
+        "text": "The big one carries every dependency, for `java -jar`",
+        "correct": true,
+        "why": "Right. spring-boot-maven-plugin's repackage goal put the libraries under BOOT-INF/lib and added a launcher; the .original is what Maven built before that."
+      },
+      {
+        "text": "The big one was compiled with debugging information",
+        "correct": false,
+        "why": "Debugging information adds bytes to each class, not megabytes to a project with one class."
+      },
+      {
+        "text": "The .original is a backup from the previous build",
+        "correct": false,
+        "why": "Both are written by the same `mvn package`; nothing in the build keeps the previous one."
+      },
+      {
+        "text": "The big one bundles a JDK, so the server needs no Java",
+        "correct": false,
+        "why": "Neither contains a JDK; `java -jar` needs Java 25 installed. Putting Java into the artefact is what a container image does, in lesson 23."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf8v9k6y",
+    "version": 1,
+    "section": "the-application-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the bookshop running, `curl -s localhost:8080/` answers a JSON body with `\"status\":404`. What does that tell you?",
+    "hint": "Who wrote that JSON?",
+    "choices": [
+      {
+        "text": "Tomcat failed to start, so curl got an error page",
+        "correct": false,
+        "why": "A server that failed to start answers nothing at all; curl would report a refused connection."
+      },
+      {
+        "text": "The server works; no code handles `/` yet",
+        "correct": true,
+        "why": "Right. The request reached Spring MVC, nothing was mapped to `/`, and Boot's default error handling wrote the body. Lesson 6 adds the first controller."
+      },
+      {
+        "text": "The port is wrong; the application listens on 8081",
+        "correct": false,
+        "why": "Without a profile the bookshop listens on 8080, the default; 8081 comes only with the dev profile."
+      },
+      {
+        "text": "curl needs `-H 'Accept: application/json'` to get a page",
+        "correct": false,
+        "why": "The answer was already JSON. A header changes the shape of the error, not whether something is mapped to `/`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nerqr4m7",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does Spring Boot find the list of autoconfiguration classes it considers?",
+    "hint": "You read one with `unzip -p`.",
+    "choices": [
+      {
+        "text": "In a central registry Spring downloads at start-up",
+        "correct": false,
+        "why": "Nothing is downloaded at start-up; the bookshop starts with no network."
+      },
+      {
+        "text": "By scanning every class on the classpath for an annotation",
+        "correct": false,
+        "why": "That would mean opening thousands of classes on every start. Scanning is for your own package; autoconfiguration is listed."
+      },
+      {
+        "text": "In a file inside each jar, under META-INF/spring",
+        "correct": true,
+        "why": "Right. Every jar may carry that file, one class name per line, and Boot reads the files of whatever jars are on the classpath."
+      },
+      {
+        "text": "In application.properties, under `spring.autoconfigure`",
+        "correct": false,
+        "why": "That prefix can exclude a candidate, but the list of candidates comes from the jars, not from your properties."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppsr0yb4",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report lists `GsonHttpMessageConvertersConfiguration` under negative matches. What would turn it into a positive match?",
+    "hint": "Read the reason it printed.",
+    "choices": [
+      {
+        "text": "Setting `debug=true` in application.properties",
+        "correct": false,
+        "why": "`debug=true` prints the same report; it changes what you see, never what is decided."
+      },
+      {
+        "text": "Annotating BookshopApplication with `@EnableAutoConfiguration` a second time",
+        "correct": false,
+        "why": "Autoconfiguration is already on; this candidate was considered and refused for its own reason."
+      },
+      {
+        "text": "Adding a Gson dependency to the pom",
+        "correct": true,
+        "why": "Right. The condition was `@ConditionalOnClass` on `com.google.gson.Gson`, and a jar on the classpath is the only thing that answers it."
+      },
+      {
+        "text": "Running with `--spring.profiles.active=dev`",
+        "correct": false,
+        "why": "The dev profile sets a port and a log level; neither puts a class on the classpath."
+      }
+    ]
+  },
+  {
+    "id": "ex-3c8acm7x",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In lesson 23 you declare your own `@Bean` of type `ServletWebServerFactory`, configured the way production needs it. What does Boot do with `tomcatServletWebServerFactory`?",
+    "hint": "Read its condition in the report again.",
+    "choices": [
+      {
+        "text": "Fails at start-up: two beans of one type",
+        "correct": false,
+        "why": "There would be only one. The condition exists exactly to avoid that clash."
+      },
+      {
+        "text": "Creates both and lets the last one defined win",
+        "correct": false,
+        "why": "Spring does not quietly pick one of two beans of the same type to start a server with; Boot's factory is never created."
+      },
+      {
+        "text": "Copies your settings into its own factory",
+        "correct": false,
+        "why": "Boot's configuration never reads another bean's settings into its own; it either creates its bean or does not."
+      },
+      {
+        "text": "Skips its own, because yours already exists",
+        "correct": true,
+        "why": "Right. The condition is `@ConditionalOnMissingBean`: Boot's default backs off whenever you supply one, and the report lists it as a negative match."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgbtxk9g",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To print the conditions evaluation report at start-up, you add one argument: `java -jar target/bookshop-0.1.0.jar --___`.",
+    "blanks": [
+      {
+        "accept": [
+          "debug"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tjqptrfc",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did a condition in the bookshop's report check before a configuration was applied? Choose all that apply.",
+    "hint": "Read the parentheses at the end of each line: OnClassCondition, OnBeanCondition…",
+    "choices": [
+      {
+        "text": "Whether a class is on the classpath",
+        "correct": true,
+        "why": "Right: `@ConditionalOnClass`, the commonest, as in Gson's negative match."
+      },
+      {
+        "text": "Whether a database answers on its usual port",
+        "correct": false,
+        "why": "No condition opens a connection. Boot decides from what is installed and configured, before anything is contacted."
+      },
+      {
+        "text": "Whether a property has a given value",
+        "correct": true,
+        "why": "Right: `@ConditionalOnBooleanProperty`, as in `spring.mvc.problemdetails.enabled`."
+      },
+      {
+        "text": "Whether a bean of some type is missing",
+        "correct": true,
+        "why": "Right: `@ConditionalOnMissingBean`, which is how a default backs off."
+      },
+      {
+        "text": "How much memory the machine has free",
+        "correct": false,
+        "why": "Nothing in the report measures the machine; the same jar makes the same decisions on a laptop and on a server."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnx2cv9c",
+    "version": 1,
+    "section": "autoconfiguration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague on Spring Boot 3 says the report should show `DataSourceAutoConfiguration` as a negative match. The bookshop's report on Boot 4.1.1 does not mention it at all. Why?",
+    "hint": "Which jar lists a candidate?",
+    "choices": [
+      {
+        "text": "Its module's jar is not on the classpath",
+        "correct": true,
+        "why": "Right. Boot 4 splits autoconfiguration into modules; DataSource's lives in spring-boot-jdbc, which only a JDBC starter brings. A candidate nobody lists is never evaluated."
+      },
+      {
+        "text": "Boot 4 removed DataSource support",
+        "correct": false,
+        "why": "Lesson 9 configures a DataSource with Boot 4.1.1; the support moved to a module, it did not go away."
+      },
+      {
+        "text": "The report hides configurations with no database",
+        "correct": false,
+        "why": "The report prints every candidate it evaluated, positive or negative; it filters nothing by subject."
+      },
+      {
+        "text": "`--debug` only shows the configurations that matched",
+        "correct": false,
+        "why": "The bookshop's own report has a long negative section, Gson's entry among it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t8v41h5",
+    "version": 1,
+    "section": "without-a-web-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only `spring-boot-starter` in the pom, `java -jar` prints `Started BookshopApplication` and the prompt comes back. Why does the process end?",
+    "hint": "What was keeping it alive before?",
+    "choices": [
+      {
+        "text": "Spring stops any application that has no controller in it",
+        "correct": false,
+        "why": "Nothing in Spring checks for controllers. With the web starter and no controller the bookshop kept running, as the first run showed."
+      },
+      {
+        "text": "It crashed after start-up, silently",
+        "correct": false,
+        "why": "It ended normally: `main` returned and nothing else was left to run. A crash prints an exception and `APPLICATION FAILED TO START`."
+      },
+      {
+        "text": "No web server started, so nothing keeps the JVM alive",
+        "correct": true,
+        "why": "Right. Tomcat's threads are what kept the JVM alive. Without a web server on the classpath there is no server to start, and the JVM exits when its work is done."
+      },
+      {
+        "text": "The jar was built without spring-boot-maven-plugin's repackage goal",
+        "correct": false,
+        "why": "The jar ran, and printed Boot's banner and start-up line, so it was an executable jar."
+      }
+    ]
+  },
+  {
+    "id": "ex-rv29hgpf",
+    "version": 1,
+    "section": "without-a-web-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job reads a file, writes a report and must exit when done. Which starter suits it best?",
+    "hint": "What made the detour's application end?",
+    "choices": [
+      {
+        "text": "spring-boot-starter-webmvc, and call System.exit at the end",
+        "correct": false,
+        "why": "That starts Tomcat for a job that has no requests to answer, and then has to kill it by hand."
+      },
+      {
+        "text": "spring-boot-starter, the core with no web server",
+        "correct": true,
+        "why": "Right. The detour showed it: the context starts, the work runs, `main` returns and the JVM exits on its own."
+      },
+      {
+        "text": "No starter; Spring Boot only builds web applications",
+        "correct": false,
+        "why": "The detour built and ran a Boot application with no web layer at all."
+      },
+      {
+        "text": "spring-boot-starter-tomcat, which is smaller than the web starter",
+        "correct": false,
+        "why": "That is the web server alone, and its threads would keep the job from exiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfqz0d7r",
+    "version": 1,
+    "section": "profiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop starts with `--spring.profiles.active=dev`. Which properties files does Boot read?",
+    "hint": "A profile adds; it does not replace.",
+    "choices": [
+      {
+        "text": "Only application-dev.properties",
+        "correct": false,
+        "why": "Then `spring.application.name` would be lost and the log would not say `[bookshop]`; it still does."
+      },
+      {
+        "text": "Only application.properties; profiles are for beans",
+        "correct": false,
+        "why": "A profile also selects a file, and the port 8081 in the log comes from that file."
+      },
+      {
+        "text": "Both; the dev file wins where they disagree",
+        "correct": true,
+        "why": "Right. The main file is always read; the profile's file is read on top of it, so its values win and everything else is kept."
+      },
+      {
+        "text": "Every application-*.properties in the jar",
+        "correct": false,
+        "why": "Only the active profiles' files are read; an application-prod.properties would sit unused."
+      }
+    ]
+  },
+  {
+    "id": "ex-02hwf6wc",
+    "version": 1,
+    "section": "profiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody starts the bookshop with `--spring.profiles.active=dve`. What happens?",
+    "hint": "Is there an application-dve.properties?",
+    "choices": [
+      {
+        "text": "It runs on 8080 with none of the dev file's settings",
+        "correct": true,
+        "why": "Right, and the log says so in one line that is easy to miss. A profile with no file is legal, so a typo is never refused: read the profile line after every start."
+      },
+      {
+        "text": "It refuses to start: no such profile",
+        "correct": false,
+        "why": "Boot has no list of valid profiles to check against; any name is accepted."
+      },
+      {
+        "text": "Boot corrects the name to the closest profile it knows, dev",
+        "correct": false,
+        "why": "Nothing guesses. The name is used exactly as typed."
+      },
+      {
+        "text": "It starts with no profile at all and logs a warning about it",
+        "correct": false,
+        "why": "The log reports \"dve\" as active, at INFO, with no warning; that quietness is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-tarrsv3s",
+    "version": 1,
+    "section": "profiles",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without changing the command line, you choose the dev profile with an environment variable: `___=dev java -jar target/bookshop-0.1.0.jar`.",
+    "blanks": [
+      {
+        "accept": [
+          "SPRING_PROFILES_ACTIVE"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ],
+    "hint": "The property is spring.profiles.active, written the way environment variables are."
+  },
+  {
+    "id": "ex-rrmnewzb",
+    "version": 1,
+    "section": "precedence",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop is started as `SPRING_PROFILES_ACTIVE=dev SERVER_PORT=9092 java -jar target/bookshop-0.1.0.jar`. On which port does Tomcat start?",
+    "hint": "The dev file says 8081. Which is stronger, the file or the environment?",
+    "value": 9092,
+    "tolerance": 0,
+    "unit": "port"
+  },
+  {
+    "id": "ex-nctyk1y2",
+    "version": 1,
+    "section": "precedence",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these places a setting can come from in order, from the one that wins to the one that loses.",
+    "hint": "The more deliberate and the later it is given, the stronger.",
+    "items": [
+      "A --server.port=… argument on the command line",
+      "A SERVER_PORT environment variable",
+      "server.port in application-dev.properties, with dev active",
+      "server.port in application.properties",
+      "Boot's default, 8080"
+    ],
+    "trap": "A file inside the jar is the weakest written source, because it is the one decided before anybody knew where the jar would run."
+  },
+  {
+    "id": "ex-3e1pqe5x",
+    "version": 1,
+    "section": "precedence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Operations start the bookshop with `SERVER_PORT=8443` in a service definition. A developer adds `server.port=8085` to application.properties, rebuilds and deploys. Which port does it use?",
+    "hint": "Nothing about the environment changed.",
+    "choices": [
+      {
+        "text": "8085, because the newer setting wins",
+        "correct": false,
+        "why": "Precedence is about where a value comes from, not when somebody wrote it; the file is still a weaker source than the environment."
+      },
+      {
+        "text": "8443; the environment outranks the file",
+        "correct": true,
+        "why": "Right. The developer's line is read and then hidden by SERVER_PORT. That is the point of the order: a deployment can override a jar without rebuilding it."
+      },
+      {
+        "text": "It fails to start because the two disagree",
+        "correct": false,
+        "why": "Disagreement is the normal case; Boot resolves it by order and starts with no warning."
+      },
+      {
+        "text": "8080, because the two cancel each other out",
+        "correct": false,
+        "why": "Values do not cancel; one source wins and the rest are ignored for that property."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcfe9j33",
+    "version": 1,
+    "section": "precedence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the environment variable `SERVER_PORT` set the property `server.port` at all?",
+    "hint": "Shells do not allow a dot in a variable's name.",
+    "choices": [
+      {
+        "text": "Tomcat reads SERVER_PORT itself, before Spring starts",
+        "correct": false,
+        "why": "Embedded Tomcat reads nothing from the environment; Boot hands it the port."
+      },
+      {
+        "text": "application.properties maps it with a line you can remove",
+        "correct": false,
+        "why": "The bookshop's file has no such line; the mapping is a rule, not configuration."
+      },
+      {
+        "text": "It is a special case for the port; other properties need their exact name",
+        "correct": false,
+        "why": "The same rule turns SPRING_PROFILES_ACTIVE into spring.profiles.active, as the env var run showed."
+      },
+      {
+        "text": "Boot binds names loosely: upper case, with underscores for dots",
+        "correct": true,
+        "why": "Right. Relaxed binding reads SERVER_PORT, server.port and --server.port as one property, so each source can spell it the way it is able to."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs47g1t3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what happens inside `SpringApplication.run` for the bookshop in the order it happens.",
+    "hint": "Configuration has to be known before anything is decided from it.",
+    "items": [
+      "The active profiles are settled and their files read",
+      "Each autoconfiguration candidate's conditions are evaluated",
+      "Tomcat is initialised with the chosen port",
+      "Tomcat starts accepting connections",
+      "`Started BookshopApplication` is logged"
+    ],
+    "trap": "The port is a property, so it has to be resolved before Tomcat can be built with it."
+  },
+  {
+    "id": "ex-c5tyr1nb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each thing you see to what explains it.",
+    "hint": "Each comes from a different section.",
+    "pairs": [
+      {
+        "left": "Tomcat started on port 8080 though you asked for dev",
+        "right": "the profile name was mistyped"
+      },
+      {
+        "left": "The application starts and the prompt returns",
+        "right": "no web server on the classpath"
+      },
+      {
+        "left": "A configuration is under negative matches",
+        "right": "one of its conditions failed"
+      },
+      {
+        "left": "tomcat-embed-core arrives at 11.0.24",
+        "right": "the parent manages its version"
+      }
+    ],
+    "right_distractors": [
+      "the JVM ran out of memory"
+    ]
+  },
+  {
+    "id": "ex-j2gsa1dq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A staging server must run the same jar with port 8090 and DEBUG logging for `org.springframework.web`, without a rebuild for every change. Which setup fits what this lesson showed?",
+    "hint": "Which sources can change without touching the jar?",
+    "choices": [
+      {
+        "text": "Edit application.properties on the server after each deploy",
+        "correct": false,
+        "why": "That file is inside the jar; editing it means rebuilding, which is what was ruled out."
+      },
+      {
+        "text": "Build a second jar with a staging pom",
+        "correct": false,
+        "why": "Two jars are two artefacts to test, and the one in staging is no longer the one that ships."
+      },
+      {
+        "text": "Two environment variables in the service definition",
+        "correct": true,
+        "why": "Right: SERVER_PORT and LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB. Both are ordinary properties, the environment outranks every file in the jar, and changing a variable needs a restart, not a build."
+      },
+      {
+        "text": "Add `@Profile(\"staging\")` to BookshopApplication",
+        "correct": false,
+        "why": "`@Profile` decides whether a bean exists; it sets no property, and on the main class it would switch the whole application off outside staging."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmfee6m6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these change what the bookshop does WITHOUT running `mvn package` again? Choose all that apply.",
+    "hint": "What is read when the jar starts, and what was fixed when it was built?",
+    "choices": [
+      {
+        "text": "Adding `--spring.profiles.active=dev` to the command",
+        "correct": true,
+        "why": "Right: read at start-up, like every command-line argument."
+      },
+      {
+        "text": "Removing a starter from pom.xml",
+        "correct": false,
+        "why": "The classpath is decided at build time; the jar keeps every library it was built with until you package again."
+      },
+      {
+        "text": "Setting SERVER_PORT in the environment",
+        "correct": true,
+        "why": "Right: the environment is read on every start."
+      },
+      {
+        "text": "Changing server.port in src/main/resources/application-dev.properties",
+        "correct": false,
+        "why": "The jar carries a copy of that file made by the last build; the edit reaches the application only after `mvn package`."
+      },
+      {
+        "text": "Adding `--debug` to the command",
+        "correct": true,
+        "why": "Right: a command-line argument, so the next start prints the report."
+      }
+    ]
+  }
+]

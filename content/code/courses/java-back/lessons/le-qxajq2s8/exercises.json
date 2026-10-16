@@ -1,0 +1,827 @@
+[
+  {
+    "id": "ex-8zfe7wbp",
+    "version": 1,
+    "section": "objects-and-tables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do JPA and Hibernate relate to each other?",
+    "hint": "One of them is only a set of interfaces and annotations.",
+    "choices": [
+      {
+        "text": "Hibernate is a specification, and JPA is Spring's implementation of it",
+        "correct": false,
+        "why": "The other way round, and Spring is not part of it: JPA is the specification, Hibernate implements it, and Spring Boot only configures it."
+      },
+      {
+        "text": "JPA is a specification, and Hibernate is one implementation of it",
+        "correct": true,
+        "why": "Right. `jakarta.persistence` defines the annotations, the `EntityManager` and JPQL; Hibernate does the work. EclipseLink implements the same specification."
+      },
+      {
+        "text": "They are two competing mappers, and a project picks one or the other",
+        "correct": false,
+        "why": "A project picks an implementation of JPA, and Hibernate is one. Code written against `jakarta.persistence` runs on Hibernate without naming it."
+      },
+      {
+        "text": "JPA is the older name of Hibernate, kept for compatibility",
+        "correct": false,
+        "why": "The old name is of the specification itself: Java Persistence API, now Jakarta Persistence. Hibernate has always been a separate project."
+      }
+    ]
+  },
+  {
+    "id": "ex-y1vtnnj3",
+    "version": 1,
+    "section": "objects-and-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says that with Hibernate the application stops sending SQL to the database and works on objects kept in memory instead. What is wrong with that?",
+    "hint": "Where does every entity come from, and how does a change get stored?",
+    "choices": [
+      {
+        "text": "Nothing: Hibernate keeps the entities cached in memory and reads the database only once, at start-up",
+        "correct": false,
+        "why": "This is the wrong picture the lesson starts from. Every entity is loaded by a `SELECT` when it is asked for, and the catalogue report's log shows one."
+      },
+      {
+        "text": "Every entity still comes from a SELECT and every change leaves as an UPDATE; Hibernate writes them",
+        "correct": true,
+        "why": "Right. What changes is who writes the statements and when they run. The SQL log in this lesson shows each one."
+      },
+      {
+        "text": "Hibernate sends JPQL to the database instead of SQL",
+        "correct": false,
+        "why": "The database never sees JPQL. Hibernate translates `select b from Book b` into SQL for PostgreSQL before sending it."
+      },
+      {
+        "text": "Hibernate only sends SQL when save() is called",
+        "correct": false,
+        "why": "The reprice demonstration changed a price with no save at all, and an `UPDATE` went out at the commit. Loading sends SQL too."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej4btk5y",
+    "version": 1,
+    "section": "objects-and-tables",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each thing in the Java code to what stands for it in PostgreSQL.",
+    "hint": "Class to table, object to row, and the reference to the column that replaces it.",
+    "pairs": [
+      {
+        "left": "the entity class Book",
+        "right": "the table book"
+      },
+      {
+        "left": "one Book object",
+        "right": "one row of book"
+      },
+      {
+        "left": "the field priceCents",
+        "right": "the column price_cents"
+      },
+      {
+        "left": "the field author, holding an Author",
+        "right": "the column author_id, holding a number"
+      }
+    ],
+    "right_distractors": [
+      "the index on isbn"
+    ]
+  },
+  {
+    "id": "ex-by87gtx1",
+    "version": 1,
+    "section": "a-new-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson drop and recreate the bookshop database instead of letting the new schema.sql run against it?",
+    "hint": "Read the first words of each statement in schema.sql.",
+    "choices": [
+      {
+        "text": "Hibernate refuses to start when a database already contains tables",
+        "correct": false,
+        "why": "With `ddl-auto=none` Hibernate does not touch tables at all, and it starts against existing ones every day. The failure comes from `data.sql`."
+      },
+      {
+        "text": "PostgreSQL cannot add a foreign key to a table that already has rows",
+        "correct": false,
+        "why": "It can, with `ALTER TABLE`, as long as every row satisfies it. Nothing here runs an `ALTER`; the old table is simply left as it was."
+      },
+      {
+        "text": "The role bookshop loses its password when the schema changes",
+        "correct": false,
+        "why": "The role and its password belong to the cluster, not to a schema, and the two commands keep the same owner."
+      },
+      {
+        "text": "`IF NOT EXISTS` keeps lesson 9's `book` table as it was",
+        "correct": true,
+        "why": "Right. The old table exists, so the statement does nothing, and the `INSERT` naming `author_id` meets a table without it. The failure is shown in the section on the entity manager."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjbg61k2",
+    "version": 1,
+    "section": "a-new-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `spring.jpa.hibernate.ddl-auto=none` tell Hibernate?",
+    "hint": "DDL is CREATE, ALTER and DROP.",
+    "choices": [
+      {
+        "text": "To leave the tables alone: they are created by something else",
+        "correct": true,
+        "why": "Right. Here `schema.sql` owns them, and lesson 13 hands them to a migration tool."
+      },
+      {
+        "text": "To create the tables from the entities when the application starts",
+        "correct": false,
+        "why": "That is `create`. It is tempting on the first day, and then the schema is whatever the Java says that morning."
+      },
+      {
+        "text": "To check that the tables match the entities, and refuse to start if not",
+        "correct": false,
+        "why": "That is `validate`, which lesson 13 switches on."
+      },
+      {
+        "text": "To run no SQL at all until the first request arrives",
+        "correct": false,
+        "why": "`ddl-auto` is about the schema only. The catalogue report runs a `SELECT` at start-up whatever this says."
+      }
+    ]
+  },
+  {
+    "id": "ex-krh55frx",
+    "version": 1,
+    "section": "a-new-schema",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `spring-boot-starter-data-jpa` bring into the bookshop? Choose all that apply.",
+    "hint": "The section ran `mvn dependency:tree` and kept six lines.",
+    "choices": [
+      {
+        "text": "Hibernate itself, `hibernate-core`",
+        "correct": true,
+        "why": "Right: the implementation of the specification."
+      },
+      {
+        "text": "The JPA annotations and interfaces, `jakarta.persistence-api`",
+        "correct": true,
+        "why": "Right: what the entities and repositories import."
+      },
+      {
+        "text": "Everything the JDBC starter brought, HikariCP included",
+        "correct": true,
+        "why": "Right. It depends on `spring-boot-starter-jdbc`, which is why replacing one with the other loses nothing."
+      },
+      {
+        "text": "The PostgreSQL driver",
+        "correct": false,
+        "why": "The driver is still its own dependency in the pom, with `runtime` scope. The starter works with any database whose driver you add."
+      },
+      {
+        "text": "A migration tool for the schema",
+        "correct": false,
+        "why": "No starter in this pom manages migrations. Lesson 13 adds Flyway for that."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ygbw3f4",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 5's `Book` was a record. Why is it a class with a `protected` constructor now?",
+    "hint": "Think of how Hibernate builds the object, and of what happens to it afterwards.",
+    "choices": [
+      {
+        "text": "A record cannot hold a reference to another record, so a book could not point at its author",
+        "correct": false,
+        "why": "It can; lesson 5's `Book` could have held an `Author` record. The problem is how the mapper creates and changes its objects."
+      },
+      {
+        "text": "Hibernate creates it empty, fills it in and later spots changes, and a record allows none of that",
+        "correct": true,
+        "why": "Right. The `protected` no-argument constructor is for Hibernate; application code uses the one that takes every value."
+      },
+      {
+        "text": "Spring cannot inject a record into a service",
+        "correct": false,
+        "why": "Entities are not injected at all. Spring injects the repository; Hibernate creates the entities."
+      },
+      {
+        "text": "Jackson cannot turn a record into JSON",
+        "correct": false,
+        "why": "Jackson turns records into JSON happily: `BookResponse` is a record, and it is what the API sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp880bpc",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `@ManyToOne(fetch = FetchType.LAZY)`, what does a freshly loaded `Book` hold in its `author` field?",
+    "hint": "It knows the author's id and nothing else.",
+    "choices": [
+      {
+        "text": "`null`, until the code calls a setter",
+        "correct": false,
+        "why": "The field is never `null` for a book with an author; and the entity has no setter for it."
+      },
+      {
+        "text": "The author itself, read from the same SELECT that loaded the book a moment earlier",
+        "correct": false,
+        "why": "That is what `join fetch` asks for. On its own, `LAZY` leaves the author out of the book's query."
+      },
+      {
+        "text": "The number from the `author_id` column, stored as a `Long` until somebody needs the name",
+        "correct": false,
+        "why": "The field's type is `Author`. The number is inside the proxy, which is an `Author` subclass Hibernate generated."
+      },
+      {
+        "text": "A proxy that loads the author's row the first time its data is asked for",
+        "correct": true,
+        "why": "Right. The `getName()` in `BookResponse.from` is what sends the second statement in the section on the entity manager."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ynfr2z7",
+    "version": 1,
+    "section": "entities",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody removes `fetch = FetchType.LAZY` and leaves `@ManyToOne(optional = false)`. What fetch type does the relationship have then?",
+    "hint": "JPA's default for a single reference is the opposite of what this lesson recommends.",
+    "choices": [
+      {
+        "text": "LAZY, because Hibernate makes every relationship lazy",
+        "correct": false,
+        "why": "Hibernate follows the specification's defaults, and for `@ManyToOne` that is `EAGER`."
+      },
+      {
+        "text": "LAZY, because `optional = false` implies it",
+        "correct": false,
+        "why": "`optional = false` says every book has an author, which lets Hibernate join with `inner join`. It says nothing about when the author is loaded."
+      },
+      {
+        "text": "EAGER, the specification's default for `@ManyToOne`",
+        "correct": true,
+        "why": "Right, which is why the bookshop writes `LAZY` out. The section on N+1 shows that `EAGER` does not prevent the extra queries anyway."
+      },
+      {
+        "text": "None: the annotation refuses to compile without a fetch type",
+        "correct": false,
+        "why": "`fetch` has a default, so the annotation is complete without it. That default is the trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkeyy9fx",
+    "version": 1,
+    "section": "entities",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The id column is a `bigserial`, so the database invents each number. The entity says so with `@GeneratedValue(strategy = GenerationType.___)`.",
+    "blanks": [
+      {
+        "accept": [
+          "IDENTITY"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jmwq7dqe",
+    "version": 1,
+    "section": "entity-manager",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the JPQL query `select b from Book b order by b.id`, what is `Book`?",
+    "hint": "JPQL never names a table.",
+    "choices": [
+      {
+        "text": "The name of the table in PostgreSQL",
+        "correct": false,
+        "why": "The table happens to be called `book`, but JPQL names the entity. Rename the class and the query changes; rename the table and only the mapping does."
+      },
+      {
+        "text": "The entity class `Book`",
+        "correct": true,
+        "why": "Right. JPQL speaks of entities and fields, and Hibernate writes the SQL with the table and column names."
+      },
+      {
+        "text": "A view Hibernate creates in the database at start-up",
+        "correct": false,
+        "why": "Hibernate creates nothing here (`ddl-auto=none`), and the SQL it sends reads the `book` table directly."
+      },
+      {
+        "text": "An alias, chosen freely like `b`",
+        "correct": false,
+        "why": "`b` is the alias. `Book` has to match an `@Entity` class, or Hibernate refuses the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zw3ptg0",
+    "version": 1,
+    "section": "entity-manager",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `BookService.list()` build the `BookResponse` records itself, instead of returning the `Book` entities to the controller?",
+    "hint": "Where does the transaction end, and what still needs the database after that?",
+    "choices": [
+      {
+        "text": "Controllers are not allowed to import classes annotated with `@Entity`",
+        "correct": false,
+        "why": "Nothing forbids it, and it would compile. The problem shows up when the code runs."
+      },
+      {
+        "text": "Records are faster for Jackson to serialise than classes, and the list can be long",
+        "correct": false,
+        "why": "Speed is not the reason. The reason is what the mapping reads: the author's name, from a lazy relationship."
+      },
+      {
+        "text": "The author's name only loads while the service's transaction is open",
+        "correct": true,
+        "why": "Right. Built inside the transaction, the records carry the names; an entity handed out would reach the controller detached, and the last section shows the exception that follows."
+      },
+      {
+        "text": "The entity has no getters the controller could call",
+        "correct": false,
+        "why": "It has getters for every field. They work on a detached book; it is the lazy author behind `getAuthor()` that cannot load."
+      }
+    ]
+  },
+  {
+    "id": "ex-xz2bwzv0",
+    "version": 1,
+    "section": "entity-manager",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `sql` profile on, `curl -s localhost:8080/books/2` runs `BookService.get`, which calls `em.find(Book.class, 2L)` and then `BookResponse.from`. How many SQL statements does the request send?",
+    "hint": "`find` loads the book alone, and the author is lazy.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "statements"
+  },
+  {
+    "id": "ex-7hcpdw1r",
+    "version": 1,
+    "section": "persistence-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside one transaction, `em.find(Book.class, 3L)` is called twice. What happens?",
+    "hint": "The persistence context is a map from key to object.",
+    "choices": [
+      {
+        "text": "One SELECT, and the same object returned both times",
+        "correct": true,
+        "why": "Right: the log showed one `select` and `the same object twice: true`."
+      },
+      {
+        "text": "Two SELECTs, and two different objects that are `equals` to each other",
+        "correct": false,
+        "why": "That is what two JDBC queries do. Inside one persistence context, the second `find` is answered by the map."
+      },
+      {
+        "text": "Two SELECTs, and the same object returned both times",
+        "correct": false,
+        "why": "The same object, yes, but no second `select`: the map already holds book 3."
+      },
+      {
+        "text": "One SELECT, and a copy of the first object the second time",
+        "correct": false,
+        "why": "A copy would make `==` false. The demonstration printed `true`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fp6n1e7",
+    "version": 1,
+    "section": "persistence-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`RepriceOnce` changed a field and never called a save method. Why did an UPDATE reach the database?",
+    "hint": "It came out after both log lines, not when `reprice` ran.",
+    "choices": [
+      {
+        "text": "`reprice` sends an UPDATE as soon as it changes the field",
+        "correct": false,
+        "why": "Both log lines came out before the `update`; nothing is sent when the field changes. Hibernate does not even see that moment."
+      },
+      {
+        "text": "Spring calls `save` on every entity at the end of a `@Transactional` method",
+        "correct": false,
+        "why": "Spring only commits the transaction. What writes the change is Hibernate, during the flush that the commit starts."
+      },
+      {
+        "text": "The commit compared the book with its copy from loading",
+        "correct": true,
+        "why": "Right. That is dirty checking: the flush writes an `UPDATE` for every managed object whose values changed."
+      },
+      {
+        "text": "PostgreSQL saw the new price in the open connection and stored it",
+        "correct": false,
+        "why": "The database knows nothing about Java objects. It only stores what an SQL statement tells it to."
+      }
+    ]
+  },
+  {
+    "id": "ex-0sjmmwz3",
+    "version": 1,
+    "section": "persistence-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The bookshop is started a second time with `RepriceOnce` still in it. The book is loaded and `reprice(3800)` is called again, but the log shows no UPDATE. Why?",
+    "hint": "What does the flush compare?",
+    "choices": [
+      {
+        "text": "The persistence context remembered the first run's UPDATE and skipped it",
+        "correct": false,
+        "why": "A persistence context lives for one transaction, and this is a new process. Nothing from the first run is remembered."
+      },
+      {
+        "text": "Hibernate only writes an entity once per application start",
+        "correct": false,
+        "why": "There is no such rule; any transaction can write any entity. The second run had nothing to write."
+      },
+      {
+        "text": "`@Order(1)` made it run after the commit of the catalogue report",
+        "correct": false,
+        "why": "`@Order(1)` only puts this task before the report. Each runs its own transaction."
+      },
+      {
+        "text": "The row already said 3800, so nothing differed",
+        "correct": true,
+        "why": "Right. Dirty checking compares values, not calls: setting a field to what it already holds is no change."
+      }
+    ]
+  },
+  {
+    "id": "ex-jf73m34k",
+    "version": 1,
+    "section": "persistence-context",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens during `RepriceOnce.run` in order.",
+    "hint": "Nothing is written until the method has returned.",
+    "items": [
+      "The first find sends a SELECT and keeps a copy of the row's values",
+      "The second find returns the same object without any SQL",
+      "reprice changes the price on the object, and nothing is sent",
+      "The method returns, and the transaction begins to commit",
+      "The flush compares the object with its copy and sends an UPDATE"
+    ],
+    "trap": "The UPDATE does not follow the call to reprice; it follows the comparison at the commit."
+  },
+  {
+    "id": "ex-5d0xndkw",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plain query loaded six books, but the log showed only four SELECTs on `author`. Why not six?",
+    "hint": "Two authors wrote two books each.",
+    "choices": [
+      {
+        "text": "Hibernate batches the last two authors into one statement",
+        "correct": false,
+        "why": "No batching is configured; each statement in the log names one id. The last two books sent nothing at all."
+      },
+      {
+        "text": "Two books have no author",
+        "correct": false,
+        "why": "`author_id` is `NOT NULL`, and every book in the JSON has an author's name."
+      },
+      {
+        "text": "The second book by an author found that author already in the persistence context",
+        "correct": true,
+        "why": "Right. Machado de Assis and H. G. Wells were loaded for their first books; Quincas Borba and The War of the Worlds were answered by the map."
+      },
+      {
+        "text": "PostgreSQL answered the repeated statements from its cache without Hibernate sending them",
+        "correct": false,
+        "why": "A statement the database answers from a cache is still a statement in Hibernate's log. These were never sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hg5vk5a",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page lists 20 books written by 3 different authors, using `select b from Book b` with a LAZY author, and reads every author's name inside one transaction. How many SQL statements does it send?",
+    "hint": "One for the list, then one per author that is not yet in the persistence context.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "statements"
+  },
+  {
+    "id": "ex-1atj9039",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `LAZY` was changed to `EAGER`, the list still sent one SELECT on `book` and four on `author`. Why did EAGER not help?",
+    "hint": "Who wrote the SQL for the list, and did it mention the author?",
+    "choices": [
+      {
+        "text": "The query names no author, so they still load one by one",
+        "correct": true,
+        "why": "Right. `EAGER` decides that the author arrives with the book, not how; a JPQL query is translated as written. It only helped `find`, whose SQL Hibernate writes itself."
+      },
+      {
+        "text": "EAGER takes effect only after the application is restarted twice",
+        "correct": false,
+        "why": "The application was rebuilt and restarted once, and the change did take effect: the authors were loaded at query time instead of later."
+      },
+      {
+        "text": "EAGER applies to `@OneToMany` only",
+        "correct": false,
+        "why": "It applies to `@ManyToOne` too, and `find` on one book became a single joined `select`."
+      },
+      {
+        "text": "The persistence context ignores EAGER inside a read-only transaction",
+        "correct": false,
+        "why": "`readOnly` skips change detection. It does not change how relationships load."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehrds2gh",
+    "version": 1,
+    "section": "open-in-view",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`LazyInitializationException: Could not initialize proxy [com.example.bookshop.catalogue.Author#1] - no session`. What does it say?",
+    "hint": "Session is Hibernate's word for the persistence context.",
+    "choices": [
+      {
+        "text": "Author 1 does not exist in the database",
+        "correct": false,
+        "why": "Then there would be no proxy: book 1 points at author 1 and the row is there. The proxy could not ask for it."
+      },
+      {
+        "text": "The HTTP session that Tomcat keeps for the user who sent the request had expired",
+        "correct": false,
+        "why": "The bookshop has no HTTP sessions. Here session means Hibernate's session, the persistence context."
+      },
+      {
+        "text": "The connection pool ran out of connections",
+        "correct": false,
+        "why": "Then the error would come from the pool, waiting for a connection. Here nobody even tried to get one."
+      },
+      {
+        "text": "The author was read after its book's persistence context closed",
+        "correct": true,
+        "why": "Right. Without a transaction around `get`, the book was detached by the time `BookResponse.from` asked for the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qx2af42",
+    "version": 1,
+    "section": "open-in-view",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `@Transactional` removed from `get`, the request failed with `open-in-view=false` and worked with `open-in-view=true`. What did the setting change?",
+    "hint": "When does each setting open and close the persistence context?",
+    "choices": [
+      {
+        "text": "It made `get` transactional again",
+        "correct": false,
+        "why": "No transaction was involved: the author was loaded by a persistence context with none, kept open by the setting."
+      },
+      {
+        "text": "It kept a persistence context open for the whole web request, so the proxy could still load",
+        "correct": true,
+        "why": "Right. Open session in view opens one when the request arrives and closes it after the response, and the author's `select` ran inside it."
+      },
+      {
+        "text": "It loaded every author into memory at start-up, before the first request arrived, so no query was needed",
+        "correct": false,
+        "why": "The log of that request showed the author's `select` running during the request, after the book's."
+      },
+      {
+        "text": "It switched the relationship to EAGER for web requests",
+        "correct": false,
+        "why": "The book was still loaded alone and the author by a second statement, which is lazy loading."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j3kh7r6",
+    "version": 1,
+    "section": "open-in-view",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `spring.jpa.open-in-view` set to `false` in the bookshop? Choose all that apply.",
+    "hint": "The section gives three reasons.",
+    "choices": [
+      {
+        "text": "Any code touching a getter can run a query, so the service no longer decides what is loaded",
+        "correct": true,
+        "why": "Right. With it off, the service's transaction is the only place loading happens."
+      },
+      {
+        "text": "It can hold a database connection until the response has been written",
+        "correct": true,
+        "why": "Right, including the time a slow client takes to receive it; lesson 14 counts connections."
+      },
+      {
+        "text": "It only exists for web requests, so the same code can work from a controller and fail from a start-up task",
+        "correct": true,
+        "why": "Right. A scheduled job or a `CommandLineRunner` gets no such context."
+      },
+      {
+        "text": "With it on, Hibernate refuses `join fetch` queries",
+        "correct": false,
+        "why": "A `join fetch` query can run either way. OSIV changes how long the persistence context lives, not what queries may say."
+      },
+      {
+        "text": "With it on, dirty checking stops working",
+        "correct": false,
+        "why": "Dirty checking happens at a commit, and OSIV changes nothing there."
+      }
+    ]
+  },
+  {
+    "id": "ex-nn8c6ke6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's version of the bookshop has a `@Transactional` service that returns `List<Book>` entities, and a controller that maps them with `BookResponse.from`. `findAll` has no `join fetch` and `open-in-view` is false. What does `GET /books` do?",
+    "hint": "Where does the transaction end, and where is the author's name read?",
+    "choices": [
+      {
+        "text": "It works, sending one SELECT on book and then one on author for each of the four authors, as the lesson counted",
+        "correct": false,
+        "why": "Those statements would need an open persistence context, and the mapping runs in the controller, after the service's transaction has closed."
+      },
+      {
+        "text": "It fails with a LazyInitializationException when the controller reads the first author's name",
+        "correct": true,
+        "why": "Right. The entities leave the transaction detached and their authors are still proxies, so the first `getName()` in the controller throws."
+      },
+      {
+        "text": "It works, with a single joined SELECT",
+        "correct": false,
+        "why": "Nothing asked for a join: without `join fetch` the query loads books alone."
+      },
+      {
+        "text": "It fails at start-up, when the catalogue report asks for the list before any request has arrived",
+        "correct": false,
+        "why": "The catalogue report calls `list().size()`, which counts entities without touching an author. Start-up succeeds; the request fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-katvhpj2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside a `@Transactional` method, a book is loaded with `find`, its title is changed on the object, and then a later line throws a `RuntimeException`, so the transaction rolls back. Is the new title in the database afterwards?",
+    "hint": "When does dirty checking send its UPDATE, and what does a rollback do with it?",
+    "choices": [
+      {
+        "text": "Yes: changing a managed object writes it straight away",
+        "correct": false,
+        "why": "The reprice demonstration showed the opposite: both log lines came out before any `update`. The change waits for the flush."
+      },
+      {
+        "text": "Yes, because dirty checking runs even when the method throws",
+        "correct": false,
+        "why": "A flush on the way to a rollback would only send statements the rollback then undoes. Nothing the transaction did is kept."
+      },
+      {
+        "text": "No, because `find` returns a copy that is never written back",
+        "correct": false,
+        "why": "`find` returns a managed object, the one the persistence context watches. A commit would have written it."
+      },
+      {
+        "text": "No: there was no commit to write it",
+        "correct": true,
+        "why": "Right. The object changed in memory only; lesson 14 shows rollback on the bookshop's own orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdmx2byz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the lesson's final code, put the steps of `GET /books` in order.",
+    "hint": "The transaction is the service's, and the JSON is written last.",
+    "items": [
+      "The controller calls BookService.list()",
+      "A read-only transaction begins",
+      "One SELECT joins book and author",
+      "Each Book is mapped to a BookResponse, with its author's name already loaded",
+      "The transaction commits and the persistence context closes",
+      "Jackson writes the records as JSON"
+    ],
+    "trap": "The records are built before the commit; that is what lets the persistence context close without anything left to load."
+  },
+  {
+    "id": "ex-f178sch3",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Starting from the lesson's final code, which of these changes would bring the N+1 statements back to `GET /books`? Choose all that apply.",
+    "hint": "N+1 needs two things: a query that leaves the authors out, and code that reads them.",
+    "choices": [
+      {
+        "text": "Removing `join fetch b.author` from the query",
+        "correct": true,
+        "why": "Right. That is exactly the version the lesson counted: one SELECT on book and four on author."
+      },
+      {
+        "text": "Removing `join fetch b.author` and changing the relationship to EAGER",
+        "correct": true,
+        "why": "Right. The EAGER detour showed the same five statements, sent at query time instead of later."
+      },
+      {
+        "text": "Setting `spring.jpa.open-in-view=true`",
+        "correct": false,
+        "why": "The query still joins the authors, so nothing is left to load lazily, whoever keeps the context open."
+      },
+      {
+        "text": "Removing `@Transactional(readOnly = true)` from `list()`",
+        "correct": false,
+        "why": "The authors arrive with the books in the joined query, so the mapping touches no proxy, and the query runs the same with or without the annotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgx170gx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "hint": "Each symptom appeared in this lesson.",
+    "pairs": [
+      {
+        "left": "LazyInitializationException ... no session",
+        "right": "a lazy field read after the transaction ended"
+      },
+      {
+        "left": "a column of identical SELECTs on author in the log",
+        "right": "a lazy relationship read in a loop"
+      },
+      {
+        "left": "an UPDATE that no code in the project contains",
+        "right": "a managed object changed before the commit"
+      },
+      {
+        "left": "column \"author_id\" of relation \"book\" does not exist",
+        "right": "a table left over from an older schema"
+      }
+    ],
+    "right_distractors": [
+      "a JPQL query that names a table instead of an entity"
+    ]
+  }
+]

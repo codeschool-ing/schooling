@@ -1,0 +1,515 @@
+{
+  "ex-hwwt3kc3": {
+    "prompt": "De onde vem o objeto que implementa o `BookRepository`?",
+    "hint": "Olhe o `target/` depois de um build: nada ali o implementa.",
+    "choices": [
+      {
+        "text": "Um arquivo-fonte que um plugin do Maven gera dentro de `target/` durante o build",
+        "why": "Isso é geração de código, e nada disso é escrito: o build compila só a interface."
+      },
+      {
+        "text": "Um proxy que o Spring Data cria quando a aplicação sobe",
+        "why": "Certo. Na inicialização o Spring Data encontra a interface e cria um objeto que a implementa, mandando os métodos herdados para o `SimpleJpaRepository` e os declarados para consultas que ele monta ali."
+      },
+      {
+        "text": "Uma classe chamada `BookRepositoryImpl` que você escreve ao lado da interface",
+        "why": "A graça da interface é que você não escreve implementação nenhuma. A loja não tem nenhuma e roda assim mesmo."
+      },
+      {
+        "text": "O Hibernate, a partir do mapeamento da entidade, quando a unidade de persistência é montada",
+        "why": "O Hibernate mapeia o `Book` para uma tabela, mas não sabe nada de interfaces de repositório; elas são do Spring Data."
+      }
+    ]
+  },
+  "ex-fbnb8q2b": {
+    "prompt": "Um `Book` com id 7, carregado numa transação anterior e alterado depois, é passado ao `save`. O que o `save` faz com ele?",
+    "hint": "O id não é `null`.",
+    "choices": [
+      {
+        "text": "Chama `persist`, que insere uma segunda linha com um id novo",
+        "why": "`persist` é para uma entidade que o Spring Data considera nova, o que por padrão quer dizer id `null`. Esta tem id."
+      },
+      {
+        "text": "Recusa a entidade porque ela está desanexada",
+        "why": "Uma entidade desanexada é justamente para o que o `merge` existe, e o `save` o chama em vez de recusar."
+      },
+      {
+        "text": "Chama `merge`, copiando as mudanças para uma cópia gerenciada que ele devolve",
+        "why": "Certo. É por isso que quem chama deve usar o que o `save` devolve: o objeto passado continua desanexado."
+      },
+      {
+        "text": "Não faz nada até alguém chamar `flush` no repositório",
+        "why": "O `flush` decide quando o SQL é mandado, não se as mudanças são aceitas. O `save` faz o merge do estado na hora."
+      }
+    ]
+  },
+  "ex-dckg1jt7": {
+    "prompt": "Quais destes um código pode chamar no `AuthorRepository` como esta aula o declara, sem acrescentar nada à interface? Marque todos os que se aplicam.",
+    "hint": "Herdado, declarado, ou nenhum dos dois.",
+    "choices": [
+      {
+        "text": "`save(author)`",
+        "why": "Herdado do `CrudRepository`; a aula 10 o escrevia à mão e agora ninguém escreve."
+      },
+      {
+        "text": "`count()`",
+        "why": "Herdado do `CrudRepository`, e vira um único `select count(*)`."
+      },
+      {
+        "text": "`findAll(Pageable)`",
+        "why": "Herdado por meio do `ListPagingAndSortingRepository`, que o `JpaRepository` estende."
+      },
+      {
+        "text": "`findByNameStartingWith(String prefix)`",
+        "why": "Uma consulta derivada válida, mas que só existe depois que alguém a declara. O Spring Data monta consultas para os métodos da interface, não para todo nome que ele conseguiria ler."
+      }
+    ]
+  },
+  "ex-rq2j5ab9": {
+    "prompt": "Ligue cada interface ao que ela acrescenta às que estende.",
+    "hint": "O `javap` imprimiu duas delas.",
+    "pairs": [
+      {
+        "left": "CrudRepository",
+        "right": "save, findById, count e delete"
+      },
+      {
+        "left": "ListCrudRepository",
+        "right": "uma List onde a mãe devolve um Iterable"
+      },
+      {
+        "left": "ListPagingAndSortingRepository",
+        "right": "findAll com um Sort ou um Pageable"
+      },
+      {
+        "left": "JpaRepository",
+        "right": "flush, saveAndFlush e getReferenceById"
+      }
+    ],
+    "right_distractors": [
+      "consultas lidas do nome dos métodos"
+    ]
+  },
+  "ex-qkeevstp": {
+    "prompt": "Qual linha do log de inicialização diz que o Spring Data encontrou os repositórios que vai implementar?",
+    "hint": "Ela aparece antes de o banco ser acessado.",
+    "choices": [
+      {
+        "text": "`HikariPool-1 - Start completed.`",
+        "why": "Esse é o pool de conexões abrindo a primeira conexão com o PostgreSQL, o que acontece depois da varredura."
+      },
+      {
+        "text": "`Initialized JPA EntityManagerFactory for persistence unit 'default'`",
+        "why": "Esse é o Hibernate pronto para mapear entidades. Os repositórios são do Spring Data, e foram encontrados antes."
+      },
+      {
+        "text": "`Found 2 JPA repository interfaces.`",
+        "why": "Certo: `AuthorRepository` e `BookRepository`, um proxy para cada."
+      },
+      {
+        "text": "`Started BookshopApplication`",
+        "why": "Essa linha diz que a aplicação inteira subiu, repositórios incluídos, mas não nomeia nenhum."
+      }
+    ]
+  },
+  "ex-1146wbpp": {
+    "prompt": "O `CatalogueReport` registrava `books.list().size()` e agora registra `books.count()`. O que a linha antiga custava que a nova não custa?",
+    "hint": "Compare o que cada uma pede ao banco.",
+    "choices": [
+      {
+        "text": "Nada: o Hibernate transforma `list().size()` num `count(*)` sozinho",
+        "why": "O Hibernate não enxerga a chamada de `size()` numa lista que o Java já tem. Ele mandou o select completo antes."
+      },
+      {
+        "text": "Carregar todos os livros como entidades, e converter cada um num DTO, só para contá-los",
+        "why": "Certo. O `count()` é um único `select count(*) from book`, e as linhas nunca saem do PostgreSQL."
+      },
+      {
+        "text": "Uma transação: o `count()` roda sem nenhuma",
+        "why": "Os dois rodam numa transação. O `BookService.count` é `@Transactional(readOnly = true)`, e o `count` herdado ainda tem a dele."
+      },
+      {
+        "text": "Uma segunda conexão do pool",
+        "why": "Uma conexão atende a chamada inteira ao serviço nas duas versões; a diferença está em quanto dado passa por ela."
+      }
+    ]
+  },
+  "ex-pkq56t3y": {
+    "prompt": "No nome de uma consulta derivada, o sujeito (`find`, `count`, `exists`) termina no primeiro `___`.",
+    "hint": "`findByIsbn`.",
+    "blanks": [
+      {
+        "accept": [
+          "By"
+        ]
+      }
+    ]
+  },
+  "ex-4mjbxm39": {
+    "prompt": "Um cliente chama `/books/search?q=ma_`. Como o `findByTitleContainingIgnoreCaseOrderByTitle` trata o sublinhado?",
+    "hint": "Pense no que o `escape '\\'` faz no SQL.",
+    "choices": [
+      {
+        "text": "Como curinga, então \"The Time Machine\" casa por causa de \"Mac\"",
+        "why": "No `like`, `_` é curinga para um caractere, e é justamente por isso que o Spring Data o escapa antes de envolver o texto em `%`."
+      },
+      {
+        "text": "Como um sublinhado literal, escapado antes de os `%` serem acrescentados",
+        "why": "Certo. O texto do cliente é comparado como texto; só os `%` que o Spring Data põe de cada lado são curingas."
+      },
+      {
+        "text": "Ele é removido, e a busca roda com \"ma\"",
+        "why": "Nada é tirado do argumento. Ele é escapado e vinculado como parâmetro."
+      },
+      {
+        "text": "A requisição é recusada com um 400 antes de qualquer SQL rodar",
+        "why": "Um sublinhado é um caractere legítimo num título, e o endpoint aceita qualquer texto."
+      }
+    ]
+  },
+  "ex-21j5hrwd": {
+    "prompt": "Alguém acrescenta `List<Book> findByAuthorNmae(String name);` ao `BookRepository`. Quando o erro é apontado?",
+    "hint": "O compilador vê um método comum.",
+    "choices": [
+      {
+        "text": "Quando o `mvn -q package` compila a interface",
+        "why": "Para o compilador o nome é só um nome; o build passa, como passou com o `findByTitel`."
+      },
+      {
+        "text": "Quando a aplicação sobe: ela se recusa com uma `PropertyReferenceException`",
+        "why": "Certo. O Spring Data lê todo nome derivado na inicialização e para numa propriedade que o `Book` não tem; aqui ele seguiria o `author` e não acharia `nmae` no `Author`."
+      },
+      {
+        "text": "Na primeira chamada, como um 500",
+        "why": "É o que uma consulta nativa faz, já que nada a confere antes. Uma consulta derivada nunca chega tão longe."
+      },
+      {
+        "text": "Nunca: o método devolve uma lista vazia",
+        "why": "O Spring Data não inventa um resultado vazio para um nome que não consegue ler; ele se recusa a subir."
+      }
+    ]
+  },
+  "ex-mtj2e6z4": {
+    "prompt": "A loja quer os livros mais baratos que um certo número de centavos, do mais barato para o mais caro. Qual nome de método derivado pede isso?",
+    "hint": "Propriedade, depois palavra-chave, depois a ordem no fim.",
+    "choices": [
+      {
+        "text": "`findByPrice_centsLessThanOrderByPrice_cents(int cents)`",
+        "why": "`price_cents` é a coluna. Uma consulta derivada nomeia o campo da entidade, `priceCents`, porque vira JPQL primeiro."
+      },
+      {
+        "text": "`findByLessThanPriceCentsOrderByPriceCents(int cents)`",
+        "why": "A palavra-chave vem depois da propriedade a que se aplica: `PriceCentsLessThan`, não `LessThanPriceCents`."
+      },
+      {
+        "text": "`findByPriceCentsLessThanOrderByPriceCentsAsc(int cents)`",
+        "why": "Certo: o campo, a comparação, e um `OrderBy` com a direção no fim."
+      },
+      {
+        "text": "`findByPriceCentsOrderByPriceCentsLessThan(int cents)`",
+        "why": "O `OrderBy` fecha o nome; uma condição depois dele é lida como parte da ordenação e o nome é recusado."
+      }
+    ]
+  },
+  "ex-7ze0vy7e": {
+    "prompt": "Sem o `@EntityGraph` no `findAllBy`, a primeira página tinha os sete livros de cinco autores. Quantos comandos SQL essa única requisição mandou?",
+    "hint": "Um para os livros, depois um por autor, cada um contado uma vez."
+  },
+  "ex-d1tvcm12": {
+    "prompt": "Com o entity graph, a consulta da página junta o `author` com um `join` simples, não um `left join`. Por que isso é seguro aqui?",
+    "hint": "Olhe os atributos do `@ManyToOne` em `Book.author`.",
+    "choices": [
+      {
+        "text": "`optional = false` diz que todo livro tem autor, então exigir um não perde linha nenhuma",
+        "why": "Certo, e o esquema concorda: `author_id` é `NOT NULL`. Com o padrão, `optional = true`, o Hibernate usaria um `left join` para manter livros sem autor."
+      },
+      {
+        "text": "Um entity graph sempre produz um inner join",
+        "why": "O tipo de join segue o mapeamento. Num relacionamento opcional, o mesmo grafo produz um `left join`."
+      },
+      {
+        "text": "Porque `fetch = FetchType.LAZY` está no relacionamento",
+        "why": "`LAZY` decide quando o autor é carregado se ninguém pede por ele. Não diz nada sobre um livro poder ficar sem autor."
+      },
+      {
+        "text": "O PostgreSQL reescreve `left join` como `join` quando o resultado é paginado",
+        "why": "A paginação acrescenta `offset` e `fetch first`; ela não muda o tipo de join que o Hibernate escreveu."
+      }
+    ]
+  },
+  "ex-zwq7ajpa": {
+    "prompt": "Um colega propõe `fetch = FetchType.EAGER` em `Book.author` no lugar das anotações `@EntityGraph`. Qual é o argumento contra?",
+    "hint": "De quem é a decisão, e quantas consultas ela alcança?",
+    "choices": [
+      {
+        "text": "O JPA não permite `EAGER` num `@ManyToOne`",
+        "why": "Permite, e `EAGER` é inclusive o padrão do JPA para `@ManyToOne`; o mapeamento da aula 10 escolheu `LAZY` de propósito."
+      },
+      {
+        "text": "Um autor `EAGER` torna a paginação impossível",
+        "why": "A paginação é sobre as linhas de livros; um `@ManyToOne` acrescenta no máximo um autor por linha e deixa a página intacta."
+      },
+      {
+        "text": "Carrega o autor em toda consulta que um dia tocar num livro, inclusive nas que nunca o leem",
+        "why": "Certo. `EAGER` é uma decisão sobre a entidade, tomada para toda consulta; um entity graph é uma decisão sobre uma consulta, onde o autor é de fato lido."
+      },
+      {
+        "text": "Ele precisa de `spring.jpa.open-in-view=true` para funcionar",
+        "why": "O open-in-view importa para carregamento preguiçoso fora de uma transação. Um autor carregado de antemão já está lá."
+      }
+    ]
+  },
+  "ex-3gdeb6z4": {
+    "prompt": "O `GET /books/2` manda dois comandos: o livro, depois o autor. Por que a aula deixa assim?",
+    "hint": "O que cresce com os dados, e o que não cresce?",
+    "choices": [
+      {
+        "text": "Porque o `findById` é herdado e não pode ter entity graph",
+        "why": "Pode: declarar o `findById` de novo na interface com `@EntityGraph` resolveria. A aula escolhe não fazer."
+      },
+      {
+        "text": "É um comando a mais para um livro; o problema N+1 é sobre listas, em que o N cresce",
+        "why": "Certo. Uma leitura isolada com uma referência preguiçosa custa uma ida a mais ao banco, seja qual for o tamanho do catálogo."
+      },
+      {
+        "text": "Porque o segundo comando é servido pelo contexto de persistência e não custa nada",
+        "why": "Ele chegou ao PostgreSQL: o segundo terminal mostrou. O contexto só evita carregar o que já está nele."
+      },
+      {
+        "text": "Porque juntar duas tabelas é sempre mais lento que dois selects",
+        "why": "Para uma lista, um join é muito mais barato que um select por linha, que é toda a lição do N+1."
+      }
+    ]
+  },
+  "ex-3h847bmz": {
+    "prompt": "O que o JPQL do `@Query` nomeia?",
+    "hint": "`Book` e `priceCents`.",
+    "choices": [
+      {
+        "text": "As tabelas e colunas, `book` e `price_cents`",
+        "why": "Isso é SQL, que o `@Query` só manda com `nativeQuery = true`."
+      },
+      {
+        "text": "A entidade e os campos dela, `Book` e `priceCents`",
+        "why": "Certo. O Hibernate os traduz para a tabela e as colunas quando escreve o SQL."
+      },
+      {
+        "text": "Os getters do DTO, `getTitle` e `getPriceCents`",
+        "why": "Esses são da projeção. A consulta nomeia a entidade; os apelidos ligam os resultados dela aos getters."
+      },
+      {
+        "text": "As propriedades JSON que o endpoint devolve",
+        "why": "O JSON vem dos getters da projeção, depois que a consulta rodou."
+      }
+    ]
+  },
+  "ex-t1vgb3xd": {
+    "prompt": "Por que a consulta diz `b.title as title, b.priceCents as priceCents`?",
+    "hint": "`TitleAndPrice` não tem implementação no projeto.",
+    "choices": [
+      {
+        "text": "O PostgreSQL precisa de um apelido para cada coluna selecionada",
+        "why": "Não precisa; o SQL que o Hibernate mandou não tem apelido nenhum nas colunas."
+      },
+      {
+        "text": "Para renomear os campos no JSON",
+        "why": "Os nomes das propriedades JSON vêm dos getters, que seriam os mesmos com qualquer apelido."
+      },
+      {
+        "text": "Para o Spring Data casar cada valor com o getter de mesmo nome no `TitleAndPrice`",
+        "why": "Certo: `getTitle` lê `title` e `getPriceCents` lê `priceCents` de cada linha."
+      },
+      {
+        "text": "O JPQL recusa um caminho como `b.priceCents` num select sem apelido",
+        "why": "O JPQL aceita o caminho sozinho; o apelido é para a projeção, não para o analisador."
+      }
+    ]
+  },
+  "ex-m7fbb0q4": {
+    "prompt": "Depois que `findTitlesByAuthor(\"H. G. Wells\")` retorna, o que entrou no contexto de persistência?",
+    "hint": "O que o comando selecionou?",
+    "choices": [
+      {
+        "text": "As duas entidades `Book`, cada uma com um autor preguiçoso",
+        "why": "Nenhum `Book` foi carregado: o comando selecionou duas colunas, não entidades."
+      },
+      {
+        "text": "O `Author` chamado H. G. Wells, carregado pelo join",
+        "why": "O join filtra pelo nome e não seleciona nada de `author`; nenhuma entidade sai dele."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Uma projeção lê valores, então não há nada a gerenciar, nenhum substituto de autor e nenhum N+1 possível."
+      },
+      {
+        "text": "Duas entidades `TitleAndPrice`",
+        "why": "`TitleAndPrice` é uma interface, não uma entidade; os proxies dela não são acompanhados pelo contexto de persistência."
+      }
+    ]
+  },
+  "ex-mbsbj62s": {
+    "prompt": "Ponha em ordem o que acontece com `GET /books/by-author?name=H.%20G.%20Wells`.",
+    "hint": "Do controller até o PostgreSQL e de volta até o JSON.",
+    "items": [
+      "BookController.byAuthor recebe o nome",
+      "BookService.titlesBy abre uma transação somente leitura",
+      "O proxy roda a consulta que preparou na inicialização, com o nome vinculado",
+      "O PostgreSQL devolve o título e o preço de cada livro",
+      "Cada linha é embrulhada num proxy TitleAndPrice",
+      "O Jackson escreve a lista como JSON"
+    ],
+    "trap": "A consulta foi montada e conferida na inicialização, não quando a requisição chegou."
+  },
+  "ex-0jsfdaqg": {
+    "prompt": "Com o catálogo ordenado por título, quais livros o `?size=3&page=1&sort=title` devolve?",
+    "hint": "As páginas são contadas a partir de 0.",
+    "choices": [
+      {
+        "text": "Os três primeiros",
+        "why": "Isso é `page=0`."
+      },
+      {
+        "text": "O quarto, o quinto e o sexto",
+        "why": "Certo. A página 1 é a segunda, então a consulta pula três linhas e busca três."
+      },
+      {
+        "text": "Só o primeiro: `page=1` pede uma página de um livro",
+        "why": "`page` diz qual página, não quantos; quem diz quantos é o `size`."
+      },
+      {
+        "text": "O segundo, o terceiro e o quarto",
+        "why": "Isso seria um offset de uma linha. O limite de uma página cai num múltiplo do tamanho."
+      }
+    ]
+  },
+  "ex-qyqqyr69": {
+    "prompt": "Um cliente pede `GET /books?size=5000`. Qual `size` a página na resposta informa?",
+    "hint": "O Spring Data tem um teto, e a loja não o muda."
+  },
+  "ex-c2bd727p": {
+    "prompt": "O primeiro `GET /books`, com o tamanho padrão de 20, mandou um comando e nenhum `count(*)`. Por que sem contagem?",
+    "hint": "Quantas linhas voltaram, contra quantas a página comportava?",
+    "choices": [
+      {
+        "text": "A contagem só é mandada quando o cliente pede `totalElements`",
+        "why": "O cliente não pede nada disso: os números sempre vêm na resposta, e aqui vieram de uma conta."
+      },
+      {
+        "text": "A contagem ficou em cache desde o `count()` do relatório da inicialização",
+        "why": "Nada guarda isso; uma requisição posterior pela página 1 mandou um `count(*)` novo."
+      },
+      {
+        "text": "Voltaram menos linhas que o tamanho da página, então ela era a última e as linhas dela eram o total",
+        "why": "Certo. O Spring Data faz a conta em vez de perguntar: primeira página, sete linhas, espaço para vinte."
+      },
+      {
+        "text": "A página 0 nunca precisa de contagem",
+        "why": "A página 0 com mais linhas que o tamanho precisa sim: o total é desconhecido a partir de uma página cheia."
+      }
+    ]
+  },
+  "ex-q1gdgv0v": {
+    "prompt": "`GET /books?sort=price` responde 500 e o segundo terminal não mostra SQL para ela. O que aconteceu?",
+    "hint": "`Book` tem `priceCents`.",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusou `order by price` porque a coluna é `price_cents`",
+        "why": "O comando nunca chegou ao PostgreSQL; o segundo terminal o teria mostrado."
+      },
+      {
+        "text": "O texto da ordenação foi colado no SQL e quebrou a sintaxe",
+        "why": "Parâmetros de ordenação nunca são colados como texto; é justamente isso que os impede de ser um ponto de injeção."
+      },
+      {
+        "text": "O Spring Data não achou a propriedade `price` no `Book`, e nenhum handler converte essa exceção num 400",
+        "why": "Certo. A recusa está certa e o status não: o erro é do cliente, e o handler da aula 7 não tem um caso para `PropertyReferenceException`."
+      },
+      {
+        "text": "O tamanho da página passou do limite de 2000",
+        "why": "Nenhum tamanho foi pedido, então valeu o padrão de 20."
+      }
+    ]
+  },
+  "ex-3aj8y4nn": {
+    "prompt": "Quais destes erros impedem a loja de subir? Marque todos os que se aplicam.",
+    "hint": "Quais strings alguém lê enquanto a aplicação sobe?",
+    "choices": [
+      {
+        "text": "Um método derivado `findByTitel(String titel)`",
+        "why": "O Spring Data lê todo nome derivado na inicialização, e `titel` não é propriedade do `Book`."
+      },
+      {
+        "text": "Um `@Query` que seleciona `b.price`",
+        "why": "O Hibernate analisa o JPQL contra as entidades na inicialização e não acha `price`."
+      },
+      {
+        "text": "Um `@Query(nativeQuery = true)` que seleciona uma coluna `price`",
+        "why": "Uma consulta nativa é SQL que nada confere contra as entidades, então o erro dela espera a primeira chamada."
+      },
+      {
+        "text": "Um cliente mandando `?sort=price` para `/books`",
+        "why": "Isso chega com uma requisição, muito depois da inicialização, e é recusado ali, com um 500."
+      }
+    ]
+  },
+  "ex-vypn1sbd": {
+    "prompt": "Ligue cada requisição ao SQL que o segundo terminal mostrou para ela.",
+    "hint": "Procure aquilo de que cada uma não podia abrir mão.",
+    "pairs": [
+      {
+        "left": "GET /books/search?q=the",
+        "right": "upper(b1_0.title) like upper(?) escape"
+      },
+      {
+        "left": "GET /books/by-author?name=…",
+        "right": "select b1_0.title,b1_0.price_cents from book"
+      },
+      {
+        "left": "GET /books?size=2&page=1",
+        "right": "offset ? rows fetch first ? rows only, depois uma contagem"
+      },
+      {
+        "left": "GET /books/2",
+        "right": "where b1_0.id=?, depois o autor pelo id"
+      }
+    ],
+    "right_distractors": [
+      "insert into author (name) values (?)"
+    ]
+  },
+  "ex-17fnwgf7": {
+    "prompt": "Um endpoint novo lista o título e o preço dos livros abaixo de um certo preço, do mais barato ao mais caro, vinte por página. Qual método de repositório serve melhor?",
+    "hint": "Uma consulta derivada, uma projeção e paginação podem ser combinadas.",
+    "choices": [
+      {
+        "text": "`@EntityGraph(attributePaths = \"author\") List<Book> findAll()`, filtrado e paginado no serviço",
+        "why": "Carrega todos os livros e todos os autores para ficar com alguns, e nada do que busca é necessário: o endpoint não mostra autor."
+      },
+      {
+        "text": "`Page<TitleAndPrice> findByPriceCentsLessThan(int cents, Pageable pageable)`",
+        "why": "Certo. O nome dá a condição, a projeção a restringe a duas colunas sem entidade, e o `Pageable` traz o tamanho e a ordenação por `priceCents`."
+      },
+      {
+        "text": "`List<TitleAndPrice> findByPriceCentsLessThanOrderByPriceCents(int cents)`",
+        "why": "Condição certa, projeção certa e ordem certa, mas sem paginação: todos os livros que casam voltam numa lista só."
+      },
+      {
+        "text": "`@Query(nativeQuery = true)` com `limit 20` escrito no SQL",
+        "why": "Um `limit` fixo é uma página sem como pedir a próxima, e a consulta deixa de ser conferida na inicialização."
+      }
+    ]
+  },
+  "ex-4wc98xtv": {
+    "prompt": "Ponha em ordem o que acontece com `findByTitleContainingIgnoreCaseOrderByTitle`, da aplicação subindo até o SQL chegar ao PostgreSQL.",
+    "hint": "Parte acontece uma vez, parte a cada chamada.",
+    "items": [
+      "O Spring Data encontra o BookRepository e cria o proxy dele",
+      "O nome é dividido no By e Title é conferido contra o Book",
+      "Containing, IgnoreCase e OrderByTitle viram a condição e a ordem da consulta",
+      "Uma chamada chega e o texto tem os seus % e _ escapados",
+      "O texto escapado é envolvido em % e vinculado à consulta",
+      "O Hibernate manda o select com upper(...) like upper(?)"
+    ],
+    "trap": "O escape não pode acontecer na inicialização: o texto só existe quando uma chamada o traz."
+  }
+}

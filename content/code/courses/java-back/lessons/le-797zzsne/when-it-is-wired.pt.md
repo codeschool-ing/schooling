@@ -1,0 +1,47 @@
+---
+title: Quando a aplicação é ligada
+version: 1
+---
+
+O jeito óbvio de comparar frameworks web é pela cara de uma rota: uma anotação num, um lambda em
+outro. Essa é a menor diferença entre eles. **A diferença que decide quase todo o resto é quando a
+aplicação é ligada**: quando alguma coisa descobre quais objetos existem, qual objeto cada construtor
+recebe e qual URL chega a qual método.
+
+O Spring Boot faz esse trabalho **toda vez que a aplicação inicia**. A aula 4 leu o relatório de
+condições, em que a autoconfiguração testou suas condições uma a uma, e a aula 5 viu o contêiner
+montar os beans do bookshop; as duas coisas acontecem dentro do `java -jar`, depois que a JVM já está
+rodando. O contêiner varre `com.example.bookshop` atrás de classes com `@Component` e seus parentes, lê
+os construtores delas por reflexão, confere as condições de cada autoconfiguração contra o classpath e
+as propriedades, embrulha num proxy os beans que precisam de um e só então abre a porta 8080. Nada disso
+é guardado entre uma execução e outra, então o próximo início faz tudo de novo.
+
+Esse desenho é uma troca, e para os serviços para os quais foi feito é uma boa troca. Um serviço que
+inicia uma vez e roda por semanas paga alguns segundos no começo e nunca percebe. Em troca, tudo pode
+ser decidido tarde: uma biblioteca acrescentada ao pom se configura sozinha, uma propriedade muda um
+bean sem rebuild, e segurança, acesso a dados e métricas se encaixam todos num contêiner só. A maior
+parte deste curso é esse ecossistema, da aula 9 à aula 22.
+
+O custo aparece onde as instâncias vivem pouco ou são muitas. Uma função iniciada a cada rajada de
+requisições, um serviço que escala a partir de zero cópias quando o tráfego chega, algumas centenas de
+serviços pequenos dividindo máquinas em que a memória de cada um é paga: ali, os segundos gastos no
+início e a memória que os metadados do contêiner ocupam viram usuários esperando e uma conta. Os quatro
+frameworks desta aula são quatro respostas a esse custo, e o único eixo que os separa é onde a ligação
+acontece.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 700 300\" role=\"img\" aria-label=\"Cinco frameworks numa linha do tempo que vai de escrever o código, passando por compilar e empacotar, até iniciar a aplicação. O Javalin é ligado à mão no main, enquanto o código é escrito. O Micronaut é ligado na compilação, por processadores de anotação. O Quarkus é ligado durante o build, em que as extensões dele gravam o resultado. O Spring Boot e o Play são ligados a cada vez que iniciam, o Spring por varredura e reflexão, o Play pelo Guice.\"><defs><marker id=\"wh-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><line x1=\"150\" y1=\"24\" x2=\"686\" y2=\"24\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" marker-end=\"url(#wh-ah)\"></line><text x=\"212.5\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">você escreve</text><rect x=\"150\" y=\"54\" width=\"125\" height=\"236\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"347.5\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o javac compila</text><rect x=\"285\" y=\"54\" width=\"125\" height=\"236\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"482.5\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o build empacota</text><rect x=\"420\" y=\"54\" width=\"125\" height=\"236\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"617.5\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o java -jar inicia</text><rect x=\"555\" y=\"54\" width=\"125\" height=\"236\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1\"></rect><text x=\"140\" y=\"78\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Javalin</text><line x1=\"150\" y1=\"78\" x2=\"680\" y2=\"78\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 3\"></line><rect x=\"156\" y=\"61\" width=\"113\" height=\"34\" rx=\"5\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"212.5\" y=\"71\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">à mão,</text><text x=\"212.5\" y=\"85\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">no main</text><text x=\"140\" y=\"124\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Micronaut</text><line x1=\"150\" y1=\"124\" x2=\"680\" y2=\"124\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 3\"></line><rect x=\"291\" y=\"107\" width=\"113\" height=\"34\" rx=\"5\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"347.5\" y=\"117\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">processadores</text><text x=\"347.5\" y=\"131\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">de anotação</text><text x=\"140\" y=\"170\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Quarkus</text><line x1=\"150\" y1=\"170\" x2=\"680\" y2=\"170\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 3\"></line><rect x=\"426\" y=\"153\" width=\"113\" height=\"34\" rx=\"5\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"482.5\" y=\"163\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">extensões</text><text x=\"482.5\" y=\"177\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">gravam tudo</text><text x=\"140\" y=\"216\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Spring Boot</text><line x1=\"150\" y1=\"216\" x2=\"680\" y2=\"216\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 3\"></line><rect x=\"561\" y=\"199\" width=\"113\" height=\"34\" rx=\"5\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"617.5\" y=\"209\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">varredura e</text><text x=\"617.5\" y=\"223\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">reflexão</text><text x=\"140\" y=\"262\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Play</text><line x1=\"150\" y1=\"262\" x2=\"680\" y2=\"262\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"3 3\"></line><rect x=\"561\" y=\"245\" width=\"113\" height=\"34\" rx=\"5\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"617.5\" y=\"255\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">Guice, por</text><text x=\"617.5\" y=\"269\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">reflexão</text></svg>", "caption": "Onde cada framework descobre quais objetos existem e como eles se ligam. Quanto mais à esquerda isso acontece, menos sobra para fazer a cada início.", "same": ["Javalin", "Micronaut", "Quarkus", "Spring Boot", "Play"]}
+```
+
+Leia da direita para a esquerda. O **Spring Boot** e o **Play** ligam a aplicação quando ela inicia,
+por reflexão. O **Quarkus** leva esse trabalho para o build, o **Micronaut** o leva para o compilador, e
+o **Javalin** não tem contêiner nenhum: é você quem chama `new`, no `main`. Ir para a esquerda tem um
+preço próprio, que é deixar mais da aplicação fixado antes de ela rodar. O Quarkus, por exemplo, divide
+a configuração em propriedades lidas no início e propriedades fixadas no build, e mudar uma do segundo
+tipo significa fazer o build de novo.
+
+O Spring também vem andando para a esquerda. Desde o Spring Boot 3, um passo opcional **ahead-of-time**
+(AOT) no build pode adiantar parte da análise do contêiner, principalmente para que a aplicação possa
+virar uma imagem nativa (a próxima seção diz o que é isso). É um passo em que o projeto entra por
+escolha, com restrições a como os beans podem ser declarados; uma aplicação Spring Boot construída como
+este curso constrói o bookshop continua se ligando no início.

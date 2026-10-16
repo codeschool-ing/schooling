@@ -1,0 +1,753 @@
+[
+  {
+    "id": "ex-hwwt3kc3",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the object that implements `BookRepository` come from?",
+    "hint": "Look in `target/` after a build: nothing there implements it.",
+    "choices": [
+      {
+        "text": "A source file a Maven plugin generates under `target/` during the build",
+        "correct": false,
+        "why": "That is code generation, and nothing of the kind is written: the build compiles only the interface."
+      },
+      {
+        "text": "A proxy Spring Data creates when the application starts",
+        "correct": true,
+        "why": "Right. At startup Spring Data finds the interface and makes an object that implements it, sending inherited methods to `SimpleJpaRepository` and declared ones to queries it builds then."
+      },
+      {
+        "text": "A class named `BookRepositoryImpl` that you write next to the interface",
+        "correct": false,
+        "why": "The point of the interface is that you write no implementation. The bookshop has none and still runs."
+      },
+      {
+        "text": "Hibernate, from the entity mapping, when the persistence unit is built",
+        "correct": false,
+        "why": "Hibernate maps `Book` to a table, but it knows nothing about repository interfaces; those are Spring Data's."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbnb8q2b",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `Book` with id 7, loaded in an earlier transaction and changed since, is passed to `save`. What does `save` do with it?",
+    "hint": "The id is not `null`.",
+    "choices": [
+      {
+        "text": "It calls `persist`, which inserts a second row with a new id",
+        "correct": false,
+        "why": "`persist` is for an entity Spring Data considers new, which by default means a `null` id. This one has an id."
+      },
+      {
+        "text": "It refuses the entity because it is detached",
+        "correct": false,
+        "why": "A detached entity is exactly what `merge` exists for, and `save` calls it instead of refusing."
+      },
+      {
+        "text": "It calls `merge`, copying the changes onto a managed copy that it returns",
+        "correct": true,
+        "why": "Right. That is why the caller should use what `save` returns: the object passed in stays detached."
+      },
+      {
+        "text": "It does nothing until somebody calls `flush` on the repository",
+        "correct": false,
+        "why": "`flush` decides when SQL is sent, not whether the changes are taken. `save` merges the state immediately."
+      }
+    ]
+  },
+  {
+    "id": "ex-dckg1jt7",
+    "version": 1,
+    "section": "repositories",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can code call on `AuthorRepository` as this lesson declares it, without adding anything to the interface? Choose all that apply.",
+    "hint": "Inherited, or declared, or neither.",
+    "choices": [
+      {
+        "text": "`save(author)`",
+        "correct": true,
+        "why": "Inherited from `CrudRepository`; lesson 10 wrote it by hand and now nobody does."
+      },
+      {
+        "text": "`count()`",
+        "correct": true,
+        "why": "Inherited from `CrudRepository`, and it becomes one `select count(*)`."
+      },
+      {
+        "text": "`findAll(Pageable)`",
+        "correct": true,
+        "why": "Inherited through `ListPagingAndSortingRepository`, which `JpaRepository` extends."
+      },
+      {
+        "text": "`findByNameStartingWith(String prefix)`",
+        "correct": false,
+        "why": "A valid derived query, but one that exists only once somebody declares it. Spring Data builds queries for the methods in the interface, not for every name it could parse."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq2j5ab9",
+    "version": 1,
+    "section": "repositories",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each interface to what it adds to the ones it extends.",
+    "hint": "`javap` printed two of them.",
+    "pairs": [
+      {
+        "left": "CrudRepository",
+        "right": "save, findById, count and delete"
+      },
+      {
+        "left": "ListCrudRepository",
+        "right": "a List wherever the parent returns an Iterable"
+      },
+      {
+        "left": "ListPagingAndSortingRepository",
+        "right": "findAll with a Sort or a Pageable"
+      },
+      {
+        "left": "JpaRepository",
+        "right": "flush, saveAndFlush and getReferenceById"
+      }
+    ],
+    "right_distractors": [
+      "queries read from method names"
+    ]
+  },
+  {
+    "id": "ex-qkeevstp",
+    "version": 1,
+    "section": "the-change",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line of the startup log says that Spring Data has found the repositories it will implement?",
+    "hint": "It is printed before the database is reached.",
+    "choices": [
+      {
+        "text": "`HikariPool-1 - Start completed.`",
+        "correct": false,
+        "why": "That is the connection pool opening its first connection to PostgreSQL, which happens after the scan."
+      },
+      {
+        "text": "`Initialized JPA EntityManagerFactory for persistence unit 'default'`",
+        "correct": false,
+        "why": "That is Hibernate ready to map entities. The repositories are Spring Data's, and they were found earlier."
+      },
+      {
+        "text": "`Found 2 JPA repository interfaces.`",
+        "correct": true,
+        "why": "Right: `AuthorRepository` and `BookRepository`, one proxy each."
+      },
+      {
+        "text": "`Started BookshopApplication`",
+        "correct": false,
+        "why": "That line says the whole application is up, repositories included, but it names none of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1146wbpp",
+    "version": 1,
+    "section": "the-change",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`CatalogueReport` used to log `books.list().size()` and now logs `books.count()`. What did the old line cost that the new one does not?",
+    "hint": "Compare what each one asks the database for.",
+    "choices": [
+      {
+        "text": "Nothing: Hibernate turns `list().size()` into a `count(*)` on its own",
+        "correct": false,
+        "why": "Hibernate cannot see the `size()` call on a list Java already has. It sent the full select first."
+      },
+      {
+        "text": "Loading every book as an entity, and mapping each to a DTO, just to count them",
+        "correct": true,
+        "why": "Right. `count()` is one `select count(*) from book`, and the rows never leave PostgreSQL."
+      },
+      {
+        "text": "A transaction: `count()` runs without one",
+        "correct": false,
+        "why": "Both run in a transaction. `BookService.count` is `@Transactional(readOnly = true)`, and the inherited `count` has one of its own besides."
+      },
+      {
+        "text": "A second connection from the pool",
+        "correct": false,
+        "why": "One connection serves the whole service call in both versions; the difference is in how much data crosses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkq56t3y",
+    "version": 1,
+    "section": "derived-queries",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a derived query's method name, the subject (`find`, `count`, `exists`) ends at the first `___`.",
+    "hint": "`findByIsbn`.",
+    "blanks": [
+      {
+        "accept": [
+          "By"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4mjbxm39",
+    "version": 1,
+    "section": "derived-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client calls `/books/search?q=ma_`. How does `findByTitleContainingIgnoreCaseOrderByTitle` treat the underscore?",
+    "hint": "Think of what `escape '\\'` is doing in the SQL.",
+    "choices": [
+      {
+        "text": "As a wildcard, so \"The Time Machine\" matches through \"Mac\"",
+        "correct": false,
+        "why": "In `like`, `_` is a wildcard for one character, which is exactly why Spring Data escapes it before wrapping the text in `%`."
+      },
+      {
+        "text": "As a literal underscore, escaped before the `%` signs are added",
+        "correct": true,
+        "why": "Right. The client's text is matched as text; only the `%` Spring Data adds on each side is a wildcard."
+      },
+      {
+        "text": "It is removed, and the search runs for \"ma\"",
+        "correct": false,
+        "why": "Nothing is removed from the argument. It is escaped and bound as a parameter."
+      },
+      {
+        "text": "The request is refused with a 400 before any SQL runs",
+        "correct": false,
+        "why": "An underscore is a legitimate character in a title, and the endpoint accepts any text."
+      }
+    ]
+  },
+  {
+    "id": "ex-21j5hrwd",
+    "version": 1,
+    "section": "derived-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody adds `List<Book> findByAuthorNmae(String name);` to `BookRepository`. When is the mistake reported?",
+    "hint": "The compiler sees an ordinary method.",
+    "choices": [
+      {
+        "text": "When `mvn -q package` compiles the interface",
+        "correct": false,
+        "why": "To the compiler the name is just a name; the build succeeds, as it did for `findByTitel`."
+      },
+      {
+        "text": "When the application starts: it refuses with a `PropertyReferenceException`",
+        "correct": true,
+        "why": "Right. Spring Data parses every derived name at startup and stops at a property `Book` does not have; here it would follow `author` and find no `nmae` on `Author`."
+      },
+      {
+        "text": "On the first call, as a 500",
+        "correct": false,
+        "why": "That is what a native query does, since nothing checks it early. A derived query never gets that far."
+      },
+      {
+        "text": "Never: the method returns an empty list",
+        "correct": false,
+        "why": "Spring Data does not guess an empty result for a name it cannot read; it refuses to start."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtj2e6z4",
+    "version": 1,
+    "section": "derived-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants the books cheaper than a given number of cents, cheapest first. Which derived method name asks for that?",
+    "hint": "Property, then keyword, then the order at the end.",
+    "choices": [
+      {
+        "text": "`findByPrice_centsLessThanOrderByPrice_cents(int cents)`",
+        "correct": false,
+        "why": "`price_cents` is the column. A derived query names the entity's field, `priceCents`, because it becomes JPQL first."
+      },
+      {
+        "text": "`findByLessThanPriceCentsOrderByPriceCents(int cents)`",
+        "correct": false,
+        "why": "The keyword follows the property it applies to: `PriceCentsLessThan`, not `LessThanPriceCents`."
+      },
+      {
+        "text": "`findByPriceCentsLessThanOrderByPriceCentsAsc(int cents)`",
+        "correct": true,
+        "why": "Right: the field, the comparison, and an `OrderBy` with its direction at the end."
+      },
+      {
+        "text": "`findByPriceCentsOrderByPriceCentsLessThan(int cents)`",
+        "correct": false,
+        "why": "`OrderBy` closes the name; a condition after it is read as part of the sort and the name is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ze0vy7e",
+    "version": 1,
+    "section": "fetching-the-author",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `@EntityGraph` removed from `findAllBy`, the first page held the seven books of five authors. How many SQL statements did that one request send?",
+    "hint": "One for the books, then one per author, counted once each.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-d1tvcm12",
+    "version": 1,
+    "section": "fetching-the-author",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the entity graph, the page query joins `author` with a plain `join`, not a `left join`. Why is that safe here?",
+    "hint": "Look at the attributes of `@ManyToOne` on `Book.author`.",
+    "choices": [
+      {
+        "text": "`optional = false` says every book has an author, so requiring one loses no row",
+        "correct": true,
+        "why": "Right, and the schema agrees: `author_id` is `NOT NULL`. With the default, `optional = true`, Hibernate would use a `left join` to keep books without an author."
+      },
+      {
+        "text": "An entity graph always produces an inner join",
+        "correct": false,
+        "why": "The join type follows the mapping. On an optional relationship the same graph produces a `left join`."
+      },
+      {
+        "text": "Because `fetch = FetchType.LAZY` is set on the relationship",
+        "correct": false,
+        "why": "`LAZY` decides when the author is loaded when nobody asks for it. It says nothing about whether a book can lack one."
+      },
+      {
+        "text": "PostgreSQL rewrites `left join` to `join` when the result is paged",
+        "correct": false,
+        "why": "Paging adds `offset` and `fetch first`; it does not change the kind of join Hibernate wrote."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwq7ajpa",
+    "version": 1,
+    "section": "fetching-the-author",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes `fetch = FetchType.EAGER` on `Book.author` instead of the `@EntityGraph` annotations. What is the argument against it?",
+    "hint": "Whose decision is it, and how many queries does it reach?",
+    "choices": [
+      {
+        "text": "JPA does not allow `EAGER` on a `@ManyToOne`",
+        "correct": false,
+        "why": "It allows it, and `EAGER` is in fact the JPA default for `@ManyToOne`; lesson 10's mapping chose `LAZY` on purpose."
+      },
+      {
+        "text": "An `EAGER` author makes paging impossible",
+        "correct": false,
+        "why": "Paging is about the books' rows; a `@ManyToOne` adds at most one author per row and leaves the page intact."
+      },
+      {
+        "text": "It loads the author in every query that ever touches a book, including those that never read it",
+        "correct": true,
+        "why": "Right. `EAGER` is a decision about the entity, taken for every query; an entity graph is a decision about one query, where the author is actually read."
+      },
+      {
+        "text": "It needs `spring.jpa.open-in-view=true` to work",
+        "correct": false,
+        "why": "Open-in-view matters for lazy loading outside a transaction. An eagerly loaded author is already there."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gdeb6z4",
+    "version": 1,
+    "section": "fetching-the-author",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GET /books/2` sends two statements: the book, then its author. Why does the lesson leave it that way?",
+    "hint": "What grows with the data, and what does not?",
+    "choices": [
+      {
+        "text": "Because `findById` is inherited and cannot carry an entity graph",
+        "correct": false,
+        "why": "It can: declaring `findById` again in the interface with `@EntityGraph` would do it. The lesson chooses not to."
+      },
+      {
+        "text": "It is one extra statement for one book; the N+1 problem is about lists, where N grows",
+        "correct": true,
+        "why": "Right. A single read with one lazy reference costs one more round trip, whatever the size of the catalogue."
+      },
+      {
+        "text": "Because the second statement is served from the persistence context and is free",
+        "correct": false,
+        "why": "It reached PostgreSQL: the second terminal showed it. The context only spares a load of something already in it."
+      },
+      {
+        "text": "Because joining two tables is always slower than two selects",
+        "correct": false,
+        "why": "For a list a join is much cheaper than one select per row, which is the whole N+1 lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h847bmz",
+    "version": 1,
+    "section": "query-and-projection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the JPQL in `@Query` name?",
+    "hint": "`Book` and `priceCents`.",
+    "choices": [
+      {
+        "text": "The tables and columns, `book` and `price_cents`",
+        "correct": false,
+        "why": "That is SQL, which `@Query` sends only with `nativeQuery = true`."
+      },
+      {
+        "text": "The entity and its fields, `Book` and `priceCents`",
+        "correct": true,
+        "why": "Right. Hibernate translates them to the table and columns when it writes the SQL."
+      },
+      {
+        "text": "The getters of the DTO, `getTitle` and `getPriceCents`",
+        "correct": false,
+        "why": "Those belong to the projection. The query names the entity; the aliases connect its results to the getters."
+      },
+      {
+        "text": "The JSON properties the endpoint returns",
+        "correct": false,
+        "why": "The JSON comes from the projection's getters, after the query has run."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1vgb3xd",
+    "version": 1,
+    "section": "query-and-projection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the query say `b.title as title, b.priceCents as priceCents`?",
+    "hint": "`TitleAndPrice` has no implementation in the project.",
+    "choices": [
+      {
+        "text": "PostgreSQL needs an alias for every selected column",
+        "correct": false,
+        "why": "It does not; the SQL Hibernate sent has no aliases on the columns at all."
+      },
+      {
+        "text": "To rename the fields in the JSON",
+        "correct": false,
+        "why": "The JSON property names come from the getters, which would be the same with any alias."
+      },
+      {
+        "text": "So Spring Data can match each value to the getter of the same name in `TitleAndPrice`",
+        "correct": true,
+        "why": "Right: `getTitle` reads `title` and `getPriceCents` reads `priceCents` from each row."
+      },
+      {
+        "text": "JPQL refuses a path such as `b.priceCents` in a select without one",
+        "correct": false,
+        "why": "JPQL accepts the path alone; the alias is for the projection, not for the parser."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7fbb0q4",
+    "version": 1,
+    "section": "query-and-projection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `findTitlesByAuthor(\"H. G. Wells\")` returns, what has entered the persistence context?",
+    "hint": "What did the statement select?",
+    "choices": [
+      {
+        "text": "The two `Book` entities, each with a lazy author",
+        "correct": false,
+        "why": "No `Book` was loaded: the statement selected two columns, not entities."
+      },
+      {
+        "text": "The `Author` named H. G. Wells, loaded by the join",
+        "correct": false,
+        "why": "The join filters on the name and selects nothing from `author`; no entity comes out of it."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. A projection reads values, so there is nothing to manage, no author placeholder and no N+1 to have."
+      },
+      {
+        "text": "Two `TitleAndPrice` entities",
+        "correct": false,
+        "why": "`TitleAndPrice` is an interface, not an entity; its proxies are not tracked by the persistence context."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbsbj62s",
+    "version": 1,
+    "section": "query-and-projection",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to `GET /books/by-author?name=H.%20G.%20Wells`.",
+    "hint": "From the controller down to PostgreSQL and back up to JSON.",
+    "items": [
+      "BookController.byAuthor receives the name",
+      "BookService.titlesBy opens a read-only transaction",
+      "The proxy runs the query it prepared at startup, with the name bound",
+      "PostgreSQL returns the title and price of each book",
+      "Each row is wrapped in a TitleAndPrice proxy",
+      "Jackson writes the list as JSON"
+    ],
+    "trap": "The query was built and checked at startup, not when the request arrived."
+  },
+  {
+    "id": "ex-0jsfdaqg",
+    "version": 1,
+    "section": "paging-and-sorting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the catalogue sorted by title, which books does `?size=3&page=1&sort=title` return?",
+    "hint": "Pages are counted from 0.",
+    "choices": [
+      {
+        "text": "The first three",
+        "correct": false,
+        "why": "That is `page=0`."
+      },
+      {
+        "text": "The fourth, fifth and sixth",
+        "correct": true,
+        "why": "Right. Page 1 is the second page, so the query skips three rows and fetches three."
+      },
+      {
+        "text": "Only the first: `page=1` asks for one page of one book",
+        "correct": false,
+        "why": "`page` says which page, not how many; `size` says how many."
+      },
+      {
+        "text": "The second, third and fourth",
+        "correct": false,
+        "why": "That would be an offset of one row. A page boundary falls at a multiple of the size."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyqqyr69",
+    "version": 1,
+    "section": "paging-and-sorting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client asks for `GET /books?size=5000`. What `size` does the page in the answer report?",
+    "hint": "Spring Data has a ceiling, and the bookshop does not change it.",
+    "value": 2000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c2bd727p",
+    "version": 1,
+    "section": "paging-and-sorting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `GET /books`, with the default size of 20, sent one statement and no `count(*)`. Why no count?",
+    "hint": "How many rows came back, against how many the page could hold?",
+    "choices": [
+      {
+        "text": "The count is only sent when the client asks for `totalElements`",
+        "correct": false,
+        "why": "The client asks for nothing of the kind: the numbers are always in the answer, and here they came from arithmetic."
+      },
+      {
+        "text": "The count was cached from the startup report's `count()`",
+        "correct": false,
+        "why": "Nothing caches it; a later request for page 1 sent a fresh `count(*)`."
+      },
+      {
+        "text": "Fewer rows than the page size came back, so that page was the last and its rows were the total",
+        "correct": true,
+        "why": "Right. Spring Data does the arithmetic instead of asking: first page, seven rows, room for twenty."
+      },
+      {
+        "text": "Page 0 never needs a count",
+        "correct": false,
+        "why": "Page 0 with more rows than the size does need one: the total is unknown from a full page."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1gdgv0v",
+    "version": 1,
+    "section": "paging-and-sorting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GET /books?sort=price` answers 500 and the second terminal shows no SQL for it. What happened?",
+    "hint": "`Book` has `priceCents`.",
+    "choices": [
+      {
+        "text": "PostgreSQL refused `order by price` because the column is `price_cents`",
+        "correct": false,
+        "why": "The statement never reached PostgreSQL; the second terminal would have shown it."
+      },
+      {
+        "text": "The sort text was pasted into the SQL and broke its syntax",
+        "correct": false,
+        "why": "Sort parameters are never pasted in as text; that is exactly what keeps them from being an injection point."
+      },
+      {
+        "text": "Spring Data found no property `price` on `Book`, and no handler maps that exception to a 400",
+        "correct": true,
+        "why": "Right. The refusal is correct and the status is not: the mistake is the client's, and lesson 7's handler has no case for `PropertyReferenceException`."
+      },
+      {
+        "text": "The page size went over the limit of 2000",
+        "correct": false,
+        "why": "No size was given, so the default of 20 applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-3aj8y4nn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these mistakes stop the bookshop from starting? Choose all that apply.",
+    "hint": "Which strings does somebody read while the application starts?",
+    "choices": [
+      {
+        "text": "A derived method `findByTitel(String titel)`",
+        "correct": true,
+        "why": "Spring Data parses every derived name at startup, and `titel` is no property of `Book`."
+      },
+      {
+        "text": "An `@Query` that selects `b.price`",
+        "correct": true,
+        "why": "Hibernate parses the JPQL against the entities at startup and finds no `price`."
+      },
+      {
+        "text": "An `@Query(nativeQuery = true)` that selects a column `price`",
+        "correct": false,
+        "why": "A native query is SQL that nothing checks against the entities, so its mistake waits for the first call."
+      },
+      {
+        "text": "A client sending `?sort=price` to `/books`",
+        "correct": false,
+        "why": "That arrives with a request, long after startup, and is refused then, with a 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-vypn1sbd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to the SQL the second terminal showed for it.",
+    "hint": "Look for what each one could not do without.",
+    "pairs": [
+      {
+        "left": "GET /books/search?q=the",
+        "right": "upper(b1_0.title) like upper(?) escape"
+      },
+      {
+        "left": "GET /books/by-author?name=…",
+        "right": "select b1_0.title,b1_0.price_cents from book"
+      },
+      {
+        "left": "GET /books?size=2&page=1",
+        "right": "offset ? rows fetch first ? rows only, then a count"
+      },
+      {
+        "left": "GET /books/2",
+        "right": "where b1_0.id=?, then the author by its id"
+      }
+    ],
+    "right_distractors": [
+      "insert into author (name) values (?)"
+    ]
+  },
+  {
+    "id": "ex-17fnwgf7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new endpoint lists the title and price of the books under a given price, cheapest first, twenty per page. Which repository method fits it best?",
+    "hint": "A derived query, a projection and paging can be combined.",
+    "choices": [
+      {
+        "text": "`@EntityGraph(attributePaths = \"author\") List<Book> findAll()`, filtered and paged in the service",
+        "correct": false,
+        "why": "It loads every book and every author to keep a few, and nothing it fetches is needed: the endpoint shows no author."
+      },
+      {
+        "text": "`Page<TitleAndPrice> findByPriceCentsLessThan(int cents, Pageable pageable)`",
+        "correct": true,
+        "why": "Right. The name gives the condition, the projection keeps it to two columns with no entity, and the `Pageable` brings the size and the sort by `priceCents`."
+      },
+      {
+        "text": "`List<TitleAndPrice> findByPriceCentsLessThanOrderByPriceCents(int cents)`",
+        "correct": false,
+        "why": "Right condition, right projection and right order, but no paging: every matching book comes back in one list."
+      },
+      {
+        "text": "`@Query(nativeQuery = true)` with `limit 20` written in the SQL",
+        "correct": false,
+        "why": "A fixed `limit` is one page with no way to ask for the next, and the query is no longer checked at startup."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wc98xtv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put in order what happens to `findByTitleContainingIgnoreCaseOrderByTitle`, from the application starting to the SQL reaching PostgreSQL.",
+    "hint": "Some of it happens once, some of it on every call.",
+    "items": [
+      "Spring Data finds BookRepository and makes its proxy",
+      "The name is split at By and Title is checked against Book",
+      "Containing, IgnoreCase and OrderByTitle become the query's condition and order",
+      "A call arrives and the text has its % and _ escaped",
+      "The escaped text is wrapped in % and bound to the query",
+      "Hibernate sends the select with upper(...) like upper(?)"
+    ],
+    "trap": "Escaping cannot happen at startup: the text only exists once a call brings it."
+  }
+]

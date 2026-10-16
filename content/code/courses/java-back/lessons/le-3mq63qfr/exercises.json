@@ -1,0 +1,746 @@
+[
+  {
+    "id": "ex-wxh3zkhw",
+    "version": 1,
+    "section": "installing-gradle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "This lesson unzips Gradle into `~/opt` and never adds it to `PATH`. Why is that enough?",
+    "hint": "Count how many times the lesson types the full path.",
+    "choices": [
+      {
+        "text": "Gradle stops working when it is found through PATH, so it has to be called by its full path",
+        "correct": false,
+        "why": "Gradle runs the same from PATH as from a full path; leaving it off PATH is a choice about how often you need it."
+      },
+      {
+        "text": "A command on PATH would hide `mvn`, and the two tools cannot both be on it",
+        "correct": false,
+        "why": "Two programs with different names live on PATH side by side; `gradle` and `mvn` never collide."
+      },
+      {
+        "text": "It is used once, to generate the wrapper, and every later build runs `./gradlew`",
+        "correct": true,
+        "why": "Right. The project's wrapper fetches and runs its own Gradle, so the copy in `~/opt` only has to start that once."
+      },
+      {
+        "text": "A change to PATH needs the computer restarted before it takes effect",
+        "correct": false,
+        "why": "A new PATH takes effect in a new shell, or at once with `export`; no restart is involved, and that is not the reason here anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvc596tn",
+    "version": 1,
+    "section": "installing-gradle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sha256sum` printed the same 64 characters that services.gradle.org publishes for 9.8.1. What does that match establish?",
+    "hint": "A checksum compares two copies of the same bytes.",
+    "choices": [
+      {
+        "text": "That the zip will run on the JDK installed on this machine",
+        "correct": false,
+        "why": "A checksum says nothing about compatibility; `gradle --version` running is what showed that."
+      },
+      {
+        "text": "That the zip on disk is byte for byte the file Gradle published, not truncated or swapped on the way",
+        "correct": true,
+        "why": "Right. A redirect, a mirror or a broken download would each give a different sum."
+      },
+      {
+        "text": "That 9.8.1 is the newest Gradle release",
+        "correct": false,
+        "why": "Every release has its own checksum, old or new; a match only ties this file to the version you asked for."
+      },
+      {
+        "text": "That services.gradle.org itself can never be tampered with",
+        "correct": false,
+        "why": "Both the zip and the sum came from Gradle's servers, so a check like this cannot vouch for those servers; it vouches for the transfer."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4gms3y0",
+    "version": 1,
+    "section": "the-build-script",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of lesson 1's pom to the line of the Gradle build that says the same thing.",
+    "hint": "One line on the right has no counterpart in the pom.",
+    "pairs": [
+      {
+        "left": "<groupId>com.example</groupId>",
+        "right": "group = \"com.example\""
+      },
+      {
+        "left": "<artifactId>isbn-check</artifactId>",
+        "right": "rootProject.name = \"isbn-check\""
+      },
+      {
+        "left": "<scope>test</scope> on JUnit Jupiter",
+        "right": "testImplementation(...)"
+      },
+      {
+        "left": "<maven.compiler.release>25</maven.compiler.release>",
+        "right": "languageVersion = JavaLanguageVersion.of(25)"
+      }
+    ],
+    "right_distractors": [
+      "mainClass = \"com.example.isbn.IsbnCheck\""
+    ]
+  },
+  {
+    "id": "ex-rbgjq182",
+    "version": 1,
+    "section": "the-build-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague copies this lesson's `build.gradle.kts` and deletes the `repositories` block, reasoning that Central is the default anyway. What happens on the next build?",
+    "hint": "Compare what Maven and Gradle each assume when nothing is said.",
+    "choices": [
+      {
+        "text": "It builds as before, because Gradle falls back to Maven Central the way Maven does",
+        "correct": false,
+        "why": "That is Maven's behaviour. Gradle declares no repository unless the build names one."
+      },
+      {
+        "text": "Resolving the dependencies fails, because Gradle has nowhere to look for them",
+        "correct": true,
+        "why": "Right. With no repository declared, Gradle cannot find commons-validator or JUnit and says so."
+      },
+      {
+        "text": "Gradle reads the jars from `~/.m2/repository`, which lesson 1 already filled",
+        "correct": false,
+        "why": "Gradle keeps its own cache under `~/.gradle/caches` and only reads a Maven local repository when the build names `mavenLocal()`."
+      },
+      {
+        "text": "It builds, fetching everything from the Gradle Plugin Portal instead",
+        "correct": false,
+        "why": "The plugin portal serves plugins to the `plugins` block; ordinary dependencies need a repository named in `repositories`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1058e7hx",
+    "version": 1,
+    "section": "the-build-script",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `build.gradle.kts`, a library that the main code compiles against and needs at run time is declared inside `dependencies` with the configuration `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "implementation",
+          "implementation()",
+          "implementation(...)"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ab2kc7a1",
+    "version": 1,
+    "section": "the-build-script",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `plugins { application }` add to this build? Choose all that apply.",
+    "hint": "One of these is what lesson 23 does for the bookshop with another tool.",
+    "choices": [
+      {
+        "text": "Everything the `java` plugin brings: compiling, testing and the jar",
+        "correct": true,
+        "why": "Right. `application` applies `java` first and builds on it."
+      },
+      {
+        "text": "A `run` task that starts `mainClass` with the dependencies on the classpath",
+        "correct": true,
+        "why": "Right. That is how `./gradlew run --args=...` worked without anybody typing a classpath."
+      },
+      {
+        "text": "Launcher scripts and a distribution zip with the dependencies beside the jar",
+        "correct": true,
+        "why": "Right. `startScripts`, `distZip` and `distTar` are the plugin's, and the archive carries a `lib/` directory."
+      },
+      {
+        "text": "A single jar with commons-validator unpacked inside it, runnable with `java -jar`",
+        "correct": false,
+        "why": "The jar still holds only the project's own classes. A jar with its dependencies inside is a different technique; lesson 23 builds Spring Boot's."
+      }
+    ]
+  },
+  {
+    "id": "ex-d14a9wkr",
+    "version": 1,
+    "section": "the-wrapper",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which files that `gradle wrapper` wrote belong in the repository, so that a colleague can clone it and build?",
+    "hint": "A colleague who has never installed Gradle has to be able to type `./gradlew build`.",
+    "choices": [
+      {
+        "text": "`gradle/wrapper/gradle-wrapper.properties` alone; the scripts are generated again on each machine",
+        "correct": false,
+        "why": "Nothing regenerates them: a fresh clone without `gradlew` has no command to type."
+      },
+      {
+        "text": "`gradlew` and `gradlew.bat` alone; the jar is downloaded on first use",
+        "correct": false,
+        "why": "The scripts start `gradle-wrapper.jar`, which is what does the downloading; without it they have nothing to run."
+      },
+      {
+        "text": "`gradlew`, `gradlew.bat`, and both files under `gradle/wrapper/`",
+        "correct": true,
+        "why": "Right. Scripts, the small jar they start, and the properties that name the version and its checksum: all four are committed."
+      },
+      {
+        "text": "None of them: each developer runs `gradle wrapper` after cloning",
+        "correct": false,
+        "why": "That needs Gradle installed on every machine, at a version nobody controls, which is what the wrapper exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnxrbq2p",
+    "version": 1,
+    "section": "the-wrapper",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague has an older Gradle 8 installed system-wide and runs `./gradlew build` in this project. Which Gradle runs the build?",
+    "hint": "Read `distributionUrl`.",
+    "choices": [
+      {
+        "text": "Gradle 8, because an installed Gradle always takes precedence over a download",
+        "correct": false,
+        "why": "`./gradlew` never looks for an installed Gradle; it reads the properties file and nothing else."
+      },
+      {
+        "text": "Gradle 9.8.1, downloaded once into `~/.gradle/wrapper/dists` and reused afterwards",
+        "correct": true,
+        "why": "Right. The version is the project's, written in `gradle-wrapper.properties`, whatever the machine has installed."
+      },
+      {
+        "text": "Neither: the wrapper stops and asks which one to use",
+        "correct": false,
+        "why": "The wrapper asks nothing; the answer is already in the properties file."
+      },
+      {
+        "text": "Gradle 8, after it rewrites `gradle-wrapper.properties` to match itself",
+        "correct": false,
+        "why": "Only running the `wrapper` task changes that file, and an installed Gradle is never consulted by `./gradlew`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqfx24fv",
+    "version": 1,
+    "section": "the-wrapper",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A proxy at a colleague's company serves a different file at the `distributionUrl` address. With `distributionSha256Sum` in `gradle-wrapper.properties`, what does `./gradlew` do?",
+    "hint": "The sum was written into the file by the command that generated the wrapper.",
+    "choices": [
+      {
+        "text": "It prints a warning and builds with the file it received",
+        "correct": false,
+        "why": "A checksum that only warned would be a checksum anybody could ignore; the wrapper treats a mismatch as fatal."
+      },
+      {
+        "text": "It downloads the file again until the sum matches",
+        "correct": false,
+        "why": "The same address through the same proxy gives the same wrong bytes; the wrapper does not loop."
+      },
+      {
+        "text": "It builds, because `validateDistributionUrl=true` already proved the address is genuine",
+        "correct": false,
+        "why": "That setting checks that the URL answers before writing it into the file; it says nothing about the bytes served later."
+      },
+      {
+        "text": "It refuses to use the file and stops, naming the expected and the actual checksum",
+        "correct": true,
+        "why": "Right. That refusal is what writing the sum into a committed file buys: every machine checks the download the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt88vdag",
+    "version": 1,
+    "section": "the-wrapper",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens the first time `./gradlew build` runs on a machine that has never seen this project.",
+    "hint": "The script can only start what is in the repository.",
+    "items": [
+      "`gradlew` starts `gradle-wrapper.jar` with the JDK it finds",
+      "The wrapper reads `distributionUrl` from `gradle-wrapper.properties`",
+      "The zip is downloaded and its SHA-256 compared with `distributionSha256Sum`",
+      "The distribution is unpacked under `~/.gradle/wrapper/dists`",
+      "A daemon of that Gradle starts and runs the build"
+    ],
+    "trap": "Unpacking before checking the sum would run code from a file nobody has verified."
+  },
+  {
+    "id": "ex-196033kd",
+    "version": 1,
+    "section": "tasks-and-the-graph",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tasks does `./gradlew run` execute in this project?",
+    "hint": "Follow the arrows into `run` in the graph, and no further.",
+    "choices": [
+      {
+        "text": "`compileJava`, `classes` and `run`",
+        "correct": true,
+        "why": "Right. `run` needs the compiled classes and their classpath, nothing more; `processResources` is in the chain too, with nothing to do."
+      },
+      {
+        "text": "Every task of `build`, and then `run`",
+        "correct": false,
+        "why": "That is Maven's picture, where a later phase includes every earlier one. Gradle runs only what `run` depends on."
+      },
+      {
+        "text": "`compileJava`, `compileTestJava`, `test` and `run`, so that untested code is never started",
+        "correct": false,
+        "why": "Nothing in the graph links `run` to the tests, as the transcript shows: no test task appears in it."
+      },
+      {
+        "text": "`jar` and `run`, because `run` starts the jar",
+        "correct": false,
+        "why": "`run` puts `build/classes` on the classpath directly; no jar is made for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ts5k6f08",
+    "version": 1,
+    "section": "tasks-and-the-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In lesson 1, `mvn package` ran the tests before making the jar. What does `./gradlew jar` do with the tests?",
+    "hint": "Maven's phases form a line; Gradle's tasks form a graph.",
+    "choices": [
+      {
+        "text": "It runs them first, because a jar must never be built from untested code",
+        "correct": false,
+        "why": "That is what Maven's lifecycle enforces by position. In Gradle, `jar` depends on `classes` and on nothing about tests."
+      },
+      {
+        "text": "It compiles them but does not run them",
+        "correct": false,
+        "why": "`compileTestJava` is on the test branch of the graph, which `jar` never reaches."
+      },
+      {
+        "text": "It neither compiles nor runs them: `jar` needs only the main classes",
+        "correct": true,
+        "why": "Right. To make a jar only after the tests pass, ask for `build`, which needs both `assemble` and `check`."
+      },
+      {
+        "text": "It runs them only if a test file changed since the last build",
+        "correct": false,
+        "why": "Change detection decides whether a task in the graph runs again; it never adds a task the request did not need."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pkapfvw",
+    "version": 1,
+    "section": "tasks-and-the-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After deleting the launcher line, `./gradlew test` failed with \"Failed to load JUnit Platform\". Which tasks had already succeeded by then?",
+    "hint": "The failure is about starting the tests, not about compiling them.",
+    "choices": [
+      {
+        "text": "None: Gradle checks every dependency before running any task",
+        "correct": false,
+        "why": "Gradle resolves a configuration when a task needs it; the test runtime classpath was only needed by `test` itself."
+      },
+      {
+        "text": "Only `compileJava`; the test classes need the launcher to compile",
+        "correct": false,
+        "why": "No test class mentions the launcher, so the test sources compile without it."
+      },
+      {
+        "text": "All of `build` except `test`",
+        "correct": false,
+        "why": "`./gradlew test` never asked for `jar` or the distributions; they are not in that request's graph."
+      },
+      {
+        "text": "The compile tasks for both the main and the test code",
+        "correct": true,
+        "why": "Right. Both compiled; only starting the tests needed the launcher, so `test` was the first task to fail."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezdkyfaq",
+    "version": 1,
+    "section": "tasks-and-the-graph",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each task to what it leaves under `build/`.",
+    "hint": "The `ls` after the first build shows two of them.",
+    "pairs": [
+      {
+        "left": "jar",
+        "right": "libs/isbn-check-1.0.0.jar"
+      },
+      {
+        "left": "distZip",
+        "right": "distributions/isbn-check-1.0.0.zip"
+      },
+      {
+        "left": "test",
+        "right": "test-results/test/TEST-com.example.isbn.IsbnCheckTest.xml"
+      },
+      {
+        "left": "compileJava",
+        "right": "classes/java/main/com/example/isbn/IsbnCheck.class"
+      }
+    ],
+    "right_distractors": [
+      "target/isbn-check-1.0.0.jar"
+    ]
+  },
+  {
+    "id": "ex-nt902yhp",
+    "version": 1,
+    "section": "incremental-builds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The second `./gradlew build` in a row printed `UP-TO-DATE` beside every task. What did Gradle compare to decide that?",
+    "hint": "It is the same comparison for every task.",
+    "choices": [
+      {
+        "text": "The time of the last build against the clock",
+        "correct": false,
+        "why": "Time passing changes nothing about a task's inputs, and an idle hour does not make a build stale."
+      },
+      {
+        "text": "Each task's inputs and outputs against what it recorded at the end of the last run",
+        "correct": true,
+        "why": "Right. Same sources, same classpath, same settings and the outputs still in place: there is nothing to do."
+      },
+      {
+        "text": "The Git commit of the project against the previous build's commit",
+        "correct": false,
+        "why": "Gradle knows nothing about Git here; it fingerprints files, which works in a directory that is not a repository at all."
+      },
+      {
+        "text": "The modification times of the source files against the class files",
+        "correct": false,
+        "why": "That is the stale-source check Maven's compiler plugin makes. The `touch` that follows in this section shows Gradle does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd7yfker",
+    "version": 1,
+    "section": "incremental-builds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `touch src/main/java/com/example/isbn/IsbnCheck.java`, every task stayed `UP-TO-DATE`. What would lesson 1's `mvn package` most likely have done after the same `touch`?",
+    "hint": "Maven's compiler plugin decides staleness by comparing two dates.",
+    "choices": [
+      {
+        "text": "Compiled the class again, because the source is now newer than its class file",
+        "correct": true,
+        "why": "Right. A newer timestamp is a stale source to Maven's compiler plugin, while Gradle hashes the contents and sees no change."
+      },
+      {
+        "text": "Nothing, because Maven also compares file contents",
+        "correct": false,
+        "why": "Maven's compiler plugin compares timestamps; that is exactly the difference this demonstration isolates."
+      },
+      {
+        "text": "Failed, because a touched file counts as a corrupted file",
+        "correct": false,
+        "why": "A new modification time is an ordinary event to every build tool; nothing treats it as damage."
+      },
+      {
+        "text": "Deleted `target/` and rebuilt everything from scratch",
+        "correct": false,
+        "why": "Only `mvn clean` deletes `target/`; a changed timestamp makes the compiler recompile, it does not clean."
+      }
+    ]
+  },
+  {
+    "id": "ex-2my6kf7z",
+    "version": 1,
+    "section": "incremental-builds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Changing the separator printed by `main` re-ran `compileJava` and `test`, yet `compileTestJava` stayed `UP-TO-DATE`. Why the difference between the two test tasks?",
+    "hint": "One task reads the test sources against the main code's signatures; the other runs the main code.",
+    "choices": [
+      {
+        "text": "Gradle skips compiling tests whenever they passed on the previous run",
+        "correct": false,
+        "why": "A passing result has nothing to do with it: edit a test file and `compileTestJava` runs whether or not the tests passed before."
+      },
+      {
+        "text": "Compiling the tests depends on the main class's public signatures, which did not change; running them depends on its bytecode, which did",
+        "correct": true,
+        "why": "Right. This is compile avoidance: a change inside a method body cannot break code compiled against the class, but it can change what a test observes."
+      },
+      {
+        "text": "`compileTestJava` only looks at `src/test`, so a change in `src/main` can never affect it",
+        "correct": false,
+        "why": "Add a public method to `IsbnCheck` and `compileTestJava` runs again: the main classes are one of its inputs, compared by their signatures."
+      },
+      {
+        "text": "The configuration cache kept the test classes from the earlier build",
+        "correct": false,
+        "why": "The configuration cache stores the task graph, not any task's output, and it was not even switched on at that point."
+      }
+    ]
+  },
+  {
+    "id": "ex-stct656d",
+    "version": 1,
+    "section": "incremental-builds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the second `./gradlew clean build` with the build cache on, how many tasks came `FROM-CACHE`?",
+    "hint": "Read the summary line under `BUILD SUCCESSFUL`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-49etwxhm",
+    "version": 1,
+    "section": "incremental-builds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `clean`, the second build still took `compileJava` `FROM-CACHE`, where `UP-TO-DATE` was no longer possible. What tells the two apart?",
+    "hint": "Think about where the outputs were when the build started.",
+    "choices": [
+      {
+        "text": "`UP-TO-DATE` means the outputs are still in `build/` from the last run here; `FROM-CACHE` means they were copied in from the build cache, found by the inputs' fingerprint",
+        "correct": true,
+        "why": "Right. `clean` removed `build/`, so nothing was up to date, but the cache under `~/.gradle/caches` still held outputs for the same inputs."
+      },
+      {
+        "text": "`FROM-CACHE` is reported when the task ran faster than usual",
+        "correct": false,
+        "why": "The labels are not timings; each names where the outputs came from."
+      },
+      {
+        "text": "`UP-TO-DATE` reuses outputs from another machine; `FROM-CACHE` reuses them from this one",
+        "correct": false,
+        "why": "It is closer to the reverse: up to date is always local, and a build cache can be shared, as a remote cache on a server."
+      },
+      {
+        "text": "They are two names for the same outcome, chosen by the console mode",
+        "correct": false,
+        "why": "Delete `build/` and only the cache can help; the two outcomes need different things to be true."
+      }
+    ]
+  },
+  {
+    "id": "ex-70vq5csg",
+    "version": 1,
+    "section": "maven-or-gradle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two dependencies ask for different versions of the same library, one directly and one deeper in the tree. Which rule does each tool apply by default?",
+    "hint": "This lesson's dependency report showed Gradle's rule as an arrow.",
+    "choices": [
+      {
+        "text": "Both take the highest version requested",
+        "correct": false,
+        "why": "That is Gradle's rule only. Maven picks by position in the tree."
+      },
+      {
+        "text": "Maven takes the declaration nearest the project; Gradle takes the highest version",
+        "correct": true,
+        "why": "Right. Here the two happened to agree on commons-logging 1.4.0, for different reasons; on another tree they can disagree."
+      },
+      {
+        "text": "Maven takes the highest version; Gradle takes the nearest declaration",
+        "correct": false,
+        "why": "The other way round: `1.3.5 -> 1.4.0` was Gradle raising a deeper request to the highest one."
+      },
+      {
+        "text": "Both stop the build and ask for the conflict to be resolved by hand",
+        "correct": false,
+        "why": "Neither fails by default; both choose silently, which is why reading the tree matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-qt9ygswj",
+    "version": 1,
+    "section": "maven-or-gradle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course build the bookshop with Maven from lesson 4 onwards?",
+    "hint": "The section says what the choice is about, and what it is not about.",
+    "choices": [
+      {
+        "text": "Spring Boot cannot be built with Gradle",
+        "correct": false,
+        "why": "Spring Boot ships a Gradle plugin, and its own source code builds with Gradle."
+      },
+      {
+        "text": "Gradle cannot run JUnit tests without extra plugins",
+        "correct": false,
+        "why": "This lesson ran JUnit 6 tests with Gradle using nothing beyond the `java` plugin and the launcher."
+      },
+      {
+        "text": "A pom is one declarative file each lesson can show changing and the student can read top to bottom",
+        "correct": true,
+        "why": "Right. The choice is about reading the build, and nothing taught later depends on it."
+      },
+      {
+        "text": "Maven builds are faster on large projects",
+        "correct": false,
+        "why": "If anything the model favours Gradle on large projects; speed is not the reason given."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwstkwn1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A CI server builds every pull request from a fresh clone, in a new container each time. Which of Gradle's mechanisms can save it from compiling code that has not changed?",
+    "hint": "Ask which mechanism needs a previous `build/` directory to be there.",
+    "choices": [
+      {
+        "text": "Up-to-date checks, because the inputs are the same as on the last run",
+        "correct": false,
+        "why": "An up-to-date check compares against what is in `build/` on this machine, and a fresh clone has no `build/` at all."
+      },
+      {
+        "text": "The configuration cache, because it stores the compiled classes",
+        "correct": false,
+        "why": "The configuration cache stores the task graph; it never holds a task's outputs."
+      },
+      {
+        "text": "The daemon, because it keeps the classes in memory between builds",
+        "correct": false,
+        "why": "A new container starts a new daemon, and a daemon keeps a warm JVM, not the project's outputs."
+      },
+      {
+        "text": "A build cache the CI machines share, so outputs found by the inputs' fingerprint are copied in",
+        "correct": true,
+        "why": "Right. A shared, remote build cache is the one mechanism that works across clean checkouts and machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-evz443b2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate writes a task that renders a version banner from a template file and from the current Git commit, but declares only the template as an input. After a new commit, `./gradlew build` reports the task `UP-TO-DATE` and the banner shows the old commit. Why?",
+    "hint": "Gradle can only compare what it was told about.",
+    "choices": [
+      {
+        "text": "Gradle never re-runs a custom task, only the ones plugins provide",
+        "correct": false,
+        "why": "Custom tasks get exactly the same checks; the check is only as complete as the inputs declared."
+      },
+      {
+        "text": "The commit is an undeclared input, so the fingerprint did not change when it did",
+        "correct": true,
+        "why": "Right. An input Gradle does not know about cannot make a task stale; declaring the commit as an input fixes it."
+      },
+      {
+        "text": "The daemon cached the old commit in memory and must be stopped",
+        "correct": false,
+        "why": "Stopping the daemon changes nothing: the next build compares the same declared inputs and finds them equal."
+      },
+      {
+        "text": "Up-to-date checks only look at timestamps, and the template file was not touched",
+        "correct": false,
+        "why": "Gradle compares contents, not times; the trouble is which contents it was told to compare."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj6nxfe2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes make `compileTestJava` run again on the next build? Choose all that apply.",
+    "hint": "Its inputs are the test sources, the test compile classpath, and the main classes' signatures.",
+    "choices": [
+      {
+        "text": "Adding a public method to `IsbnCheck`",
+        "correct": true,
+        "why": "Right. A new public method changes the class's signatures, which is what the test compilation is compared against."
+      },
+      {
+        "text": "Editing `IsbnCheckTest.java`",
+        "correct": true,
+        "why": "Right. The test sources are its own input."
+      },
+      {
+        "text": "Raising `junit-jupiter` from 6.0.3 to a later version",
+        "correct": true,
+        "why": "Right. A different jar on the test compile classpath is a different input."
+      },
+      {
+        "text": "Changing the text `main` prints between an ISBN and its verdict",
+        "correct": false,
+        "why": "That changes a method body and no signature, which this lesson's transcript showed: `compileTestJava` stayed `UP-TO-DATE`."
+      },
+      {
+        "text": "Running `touch` on `IsbnCheck.java`",
+        "correct": false,
+        "why": "A new timestamp with the same contents is no change at all to Gradle."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxxqsk62",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these tasks in an order `./gradlew build` can run them in.",
+    "hint": "Each task comes after everything it needs.",
+    "items": [
+      "compileJava",
+      "classes",
+      "compileTestJava",
+      "testClasses",
+      "test",
+      "check"
+    ],
+    "trap": "`compileTestJava` cannot come before `classes`: the tests are compiled against the main classes."
+  }
+]
