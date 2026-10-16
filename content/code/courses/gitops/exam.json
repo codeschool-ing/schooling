@@ -2158,5 +2158,845 @@
         "why": "It reads a downloaded file fine."
       }
     ]
+  },
+  {
+    "id": "ex-qzg0q72a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An application gets its database password from Vault's database engine. What happens to that account when its lease ends?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The password resets to the original",
+        "correct": false,
+        "why": "Each account has its own password, and goes."
+      },
+      {
+        "text": "Vault drops it",
+        "correct": true,
+        "why": "Right. The role's lifetime ends it."
+      },
+      {
+        "text": "It stays until someone rotates it",
+        "correct": false,
+        "why": "Nobody has to; that is the point."
+      },
+      {
+        "text": "PostgreSQL disables it for a day",
+        "correct": false,
+        "why": "Vault removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n771vzae",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A dynamic database credential appears in a pasted log. What ends it immediately?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Rotating the root password",
+        "correct": false,
+        "why": "That changes Vault's own account, not this one."
+      },
+      {
+        "text": "Deleting the ExternalSecret",
+        "correct": false,
+        "why": "The account in the database would remain."
+      },
+      {
+        "text": "Waiting for the hour to pass",
+        "correct": false,
+        "why": "That leaves it working until then."
+      },
+      {
+        "text": "Revoking its lease",
+        "correct": true,
+        "why": "Right. The cleanup runs at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dn71k7e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After database/rotate-root, who knows the database's administrator password?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The PostgreSQL container's environment",
+        "correct": false,
+        "why": "That still says the initial value, which no longer works."
+      },
+      {
+        "text": "Only Vault",
+        "correct": true,
+        "why": "Right. Nobody typed the new one."
+      },
+      {
+        "text": "Every application with a role",
+        "correct": false,
+        "why": "They get their own accounts."
+      },
+      {
+        "text": "Whoever ran the first config",
+        "correct": false,
+        "why": "They know the old one, which no longer works."
+      }
+    ]
+  },
+  {
+    "id": "ex-4z3sakdz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a planned rotation of image-bot's token, why is the old token revoked last?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The new one needs the old to work",
+        "correct": false,
+        "why": "They are independent."
+      },
+      {
+        "text": "Gitea allows one token per account",
+        "correct": false,
+        "why": "It allows several."
+      },
+      {
+        "text": "Nothing is wrong with it yet",
+        "correct": true,
+        "why": "Right. Revoking early only causes an outage."
+      },
+      {
+        "text": "Flux caches the old token",
+        "correct": false,
+        "why": "Flux reads the Secret it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx95r4yj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "image-bot's token was posted publicly. What is the first step?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Rewrite fleet's history",
+        "correct": false,
+        "why": "The token was never in Git."
+      },
+      {
+        "text": "Read the audit logs",
+        "correct": false,
+        "why": "Do that once it can no longer be used."
+      },
+      {
+        "text": "Revoke it",
+        "correct": true,
+        "why": "Right. After a leak the order turns around."
+      },
+      {
+        "text": "Make a new token",
+        "correct": false,
+        "why": "The leaked one keeps working meanwhile."
+      }
+    ]
+  },
+  {
+    "id": "ex-438w3072",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A password was committed to fleet and removed in the next commit. Which statement is true?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Only Flux could read it",
+        "correct": false,
+        "why": "Anyone with the repository could."
+      },
+      {
+        "text": "It must be treated as read",
+        "correct": true,
+        "why": "Right. Revoke and replace it."
+      },
+      {
+        "text": "Squashing the commits removes it everywhere",
+        "correct": false,
+        "why": "Existing clones keep it."
+      },
+      {
+        "text": "It is gone once the commit is pushed",
+        "correct": false,
+        "why": "The earlier commit still has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-grht4rs3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does serviceAccountName on a Flux Kustomization change?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Whose permissions apply its objects",
+        "correct": true,
+        "why": "Right. The controller impersonates that account."
+      },
+      {
+        "text": "Which account the pods run as",
+        "correct": false,
+        "why": "That is the Deployment's field."
+      },
+      {
+        "text": "Who may merge to its path",
+        "correct": false,
+        "why": "That is the Git server's job."
+      },
+      {
+        "text": "Which account pulls the repository",
+        "correct": false,
+        "why": "That is the source's secretRef."
+      }
+    ]
+  },
+  {
+    "id": "ex-70r4rxsm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "staging is applied as an account bound to admin in staging. A merged commit adds a ClusterRoleBinding to staging's path. What happens?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The binding is created",
+        "correct": false,
+        "why": "Not with that account's permissions."
+      },
+      {
+        "text": "Flux's apply is refused",
+        "correct": true,
+        "why": "Right. The account may not create it."
+      },
+      {
+        "text": "kubeconform refuses the merge",
+        "correct": false,
+        "why": "The YAML is valid."
+      },
+      {
+        "text": "Flux skips that one object",
+        "correct": false,
+        "why": "The whole apply stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bnt27es",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does Kubernetes' built-in ClusterRole admin allow when bound with a RoleBinding?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Only reading",
+        "correct": false,
+        "why": "That is view."
+      },
+      {
+        "text": "Most things inside one namespace",
+        "correct": true,
+        "why": "Right. Nothing outside it."
+      },
+      {
+        "text": "Creating namespaces",
+        "correct": false,
+        "why": "Namespaces are outside any namespace."
+      },
+      {
+        "text": "Everything in the cluster",
+        "correct": false,
+        "why": "That is cluster-admin."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9gftn9h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which pair describes rotation and least privilege?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "How long, and how much",
+        "correct": true,
+        "why": "Right. They are independent."
+      },
+      {
+        "text": "Encrypted, and signed",
+        "correct": false,
+        "why": "Those are lessons 8 and 9."
+      },
+      {
+        "text": "Who, and when",
+        "correct": false,
+        "why": "That is auditing."
+      },
+      {
+        "text": "Where, and why",
+        "correct": false,
+        "why": "Neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-xn9ck40r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which record tells you which account read production's token from Vault on Tuesday?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The API server's audit log",
+        "correct": false,
+        "why": "It sees Kubernetes requests, not Vault's."
+      },
+      {
+        "text": "Vault's audit log",
+        "correct": true,
+        "why": "Right. It names the role and the ServiceAccount."
+      },
+      {
+        "text": "Flux's events",
+        "correct": false,
+        "why": "Flux never reads the token."
+      },
+      {
+        "text": "The pull request",
+        "correct": false,
+        "why": "It describes changes, not reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajn53q1e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Production was scaled by hand and Flux put it back an hour ago. Where is the person who did it found?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The API server's audit log",
+        "correct": true,
+        "why": "Right. The only record of a change outside Git."
+      },
+      {
+        "text": "Flux's events",
+        "correct": false,
+        "why": "They say Flux corrected something, not who changed it."
+      },
+      {
+        "text": "Git's history",
+        "correct": false,
+        "why": "Nothing was committed."
+      },
+      {
+        "text": "managedFields",
+        "correct": false,
+        "why": "Flux took the field back, so its entry is Flux's again."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh4rs9a5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A commit page in Gitea shows a status from Flux's notification controller. What does it add to validate.sh's status?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "That the commit was signed",
+        "correct": false,
+        "why": "Signatures are checked by Git."
+      },
+      {
+        "text": "That the image was signed",
+        "correct": false,
+        "why": "That is Flux's source verification."
+      },
+      {
+        "text": "That the commit was reviewed",
+        "correct": false,
+        "why": "Reviews are on the pull request."
+      },
+      {
+        "text": "That the commit was applied, and where",
+        "correct": true,
+        "why": "Right. Deployed, not only checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-n59fcz0r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An audit policy records everything at RequestResponse. What is the problem?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The API server refuses the policy",
+        "correct": false,
+        "why": "It accepts it."
+      },
+      {
+        "text": "Reads are not recorded",
+        "correct": false,
+        "why": "They would be, all of them."
+      },
+      {
+        "text": "Secret values end up in the log",
+        "correct": true,
+        "why": "Right. Secrets belong at Metadata."
+      },
+      {
+        "text": "Flux stops working",
+        "correct": false,
+        "why": "Flux is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmt3tfy7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "kubectl scale changed a Deployment a minute ago, before Flux's next pass. What does managedFields show?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "kubectl owns spec.replicas",
+        "correct": true,
+        "why": "Right. The last writer of the field."
+      },
+      {
+        "text": "Nothing; it needs an audit policy",
+        "correct": false,
+        "why": "It is always on."
+      },
+      {
+        "text": "Flux owns every field",
+        "correct": false,
+        "why": "kubectl set replicas last."
+      },
+      {
+        "text": "The person's name",
+        "correct": false,
+        "why": "It names the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptnta747",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can Vault's audit log be shipped to a shared log service?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Values in it are HMACs",
+        "correct": true,
+        "why": "Right. Not copies of the secrets."
+      },
+      {
+        "text": "It is encrypted with the root token",
+        "correct": false,
+        "why": "It is hashed, not encrypted."
+      },
+      {
+        "text": "It records only failures",
+        "correct": false,
+        "why": "It records every request."
+      },
+      {
+        "text": "It records only paths",
+        "correct": false,
+        "why": "It records identities too."
+      }
+    ]
+  },
+  {
+    "id": "ex-esfp0x1j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Which hop links a running image back to a commit in the application's repository?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Flux's events",
+        "correct": false,
+        "why": "They name fleet's revision."
+      },
+      {
+        "text": "The image's provenance",
+        "correct": true,
+        "why": "Right. It records the revision it was built from."
+      },
+      {
+        "text": "The registry's tag list",
+        "correct": false,
+        "why": "Tags are names, not sources."
+      },
+      {
+        "text": "The Deployment's labels",
+        "correct": false,
+        "why": "They say nothing about the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-snky3vdh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is the last step the course takes with Vault's root token?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "It is revoked",
+        "correct": true,
+        "why": "Right. A new one needs the unseal keys."
+      },
+      {
+        "text": "It is stored in a Secret",
+        "correct": false,
+        "why": "That would spread it."
+      },
+      {
+        "text": "It is given to Flux",
+        "correct": false,
+        "why": "Flux never talks to Vault."
+      },
+      {
+        "text": "It is rotated monthly",
+        "correct": false,
+        "why": "It is revoked, not rotated."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdsxnbkh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why do the application's source and fleet live in two repositories?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "To hide the manifests from developers",
+        "correct": false,
+        "why": "Both are readable."
+      },
+      {
+        "text": "Git cannot hold YAML and Go together",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "Different people change them, at different rates",
+        "correct": true,
+        "why": "Right. A build pushes code; a review promotes it."
+      },
+      {
+        "text": "Flux reads only one directory per repository",
+        "correct": false,
+        "why": "It reads any path."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cvef3h8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Kustomization dependsOn a name that no Kustomization has. What does Flux do?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Creates the missing Kustomization",
+        "correct": false,
+        "why": "Flux never invents objects."
+      },
+      {
+        "text": "Refuses to apply it, naming the missing dependency",
+        "correct": true,
+        "why": "Right. Ready False, dependency not found."
+      },
+      {
+        "text": "Deletes the Kustomization",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "Applies it, ignoring the field",
+        "correct": false,
+        "why": "The dependency blocks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn35ebjd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does a configMapGenerator add a hash to the ConfigMap's name?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Because Kubernetes requires unique suffixes",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "So two environments never share one",
+        "correct": false,
+        "why": "Namespaces already separate them."
+      },
+      {
+        "text": "To encrypt the values",
+        "correct": false,
+        "why": "A hash of the name encrypts nothing."
+      },
+      {
+        "text": "So a change rolls the pods",
+        "correct": true,
+        "why": "Right. The Deployment points at a new name."
+      }
+    ]
+  },
+  {
+    "id": "ex-ra65ptzs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What does rendering a chart in Git, rather than in the agent, give a reviewer?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Fewer files to review",
+        "correct": false,
+        "why": "It adds the rendered output."
+      },
+      {
+        "text": "Automatic upgrades of the chart",
+        "correct": false,
+        "why": "Nothing upgrades on its own."
+      },
+      {
+        "text": "Signed charts",
+        "correct": false,
+        "why": "Rendering has nothing to do with signing."
+      },
+      {
+        "text": "The exact objects in the diff",
+        "correct": true,
+        "why": "Right. At the cost of committing generated files."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfhhn9qe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two images share a base layer. How many copies of that layer does the registry store?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "None until pulled",
+        "correct": false,
+        "why": "Pushing stores them."
+      },
+      {
+        "text": "One per image",
+        "correct": false,
+        "why": "Equal digests are the same blob."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. Layers are stored by digest."
+      },
+      {
+        "text": "One per tag",
+        "correct": false,
+        "why": "Tags point at manifests, not layers."
+      }
+    ]
+  },
+  {
+    "id": "ex-739737g8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a repository manager, what is a hosted repository for?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Secrets",
+        "correct": false,
+        "why": "That is a secret store."
+      },
+      {
+        "text": "Source code",
+        "correct": false,
+        "why": "That is the Git server."
+      },
+      {
+        "text": "Artefacts the company builds",
+        "correct": true,
+        "why": "Right. A proxy is for others' artefacts."
+      },
+      {
+        "text": "Copies of public packages",
+        "correct": false,
+        "why": "That is a proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bhm7b6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a ClusterSecretStore allow that a SecretStore does not?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Writing to Git",
+        "correct": false,
+        "why": "Neither writes to Git."
+      },
+      {
+        "text": "Logging in without an identity",
+        "correct": false,
+        "why": "Both need one."
+      },
+      {
+        "text": "Use from every namespace",
+        "correct": true,
+        "why": "Right. Which is also its risk."
+      },
+      {
+        "text": "Reading several stores at once",
+        "correct": false,
+        "why": "Each store is one store."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhn0ce0s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Vault was sealed a minute ago, and production's SecretStore still says Valid. Why?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The operator caches Vault's answers",
+        "correct": false,
+        "why": "It asked, and the login failed."
+      },
+      {
+        "text": "A store is checked on its own schedule",
+        "correct": true,
+        "why": "Right. The ExternalSecret shows the error first."
+      },
+      {
+        "text": "A sealed Vault still accepts logins",
+        "correct": false,
+        "why": "The login came back 503."
+      },
+      {
+        "text": "Valid means the YAML is correct",
+        "correct": false,
+        "why": "It is the operator's check of the store."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht65zdr5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the audit policy drop leases first?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Flux needs them unrecorded",
+        "correct": false,
+        "why": "Flux does not care."
+      },
+      {
+        "text": "The API server cannot record them",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "They are frequent and say nothing",
+        "correct": true,
+        "why": "Right. Every controller renews them."
+      },
+      {
+        "text": "They hold secrets",
+        "correct": false,
+        "why": "They hold nothing secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv0rkg27",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An Alert lists eventSources with kind Kustomization and name '*'. What is reported?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Events from every Kustomization in its namespace",
+        "correct": true,
+        "why": "Right. The wildcard is per kind."
+      },
+      {
+        "text": "Only flux-system's events",
+        "correct": false,
+        "why": "The name is a wildcard."
+      },
+      {
+        "text": "Events from every Flux object",
+        "correct": false,
+        "why": "Only Kustomizations."
+      },
+      {
+        "text": "Only failures",
+        "correct": false,
+        "why": "Severity is a separate field."
+      }
+    ]
   }
 ]
