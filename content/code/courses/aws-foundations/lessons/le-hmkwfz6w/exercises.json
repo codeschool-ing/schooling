@@ -1,0 +1,656 @@
+[
+  {
+    "id": "ex-66hyhbs3",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio holds `AmazonS3ReadOnlyAccess`, which allows `s3:Get*` on every resource, and an inline policy denying `s3:*` on `shop-backups`. He asks for an object in `shop-backups`. What happens?",
+    "hint": "Does specificity count?",
+    "choices": [
+      {
+        "text": "Allowed: `s3:Get*` names the action more precisely than `s3:*`",
+        "correct": false,
+        "why": "Specificity decides nothing in IAM. An explicit `Deny` that matches ends the request."
+      },
+      {
+        "text": "Refused: an explicit `Deny` that matches beats every `Allow`",
+        "correct": true,
+        "why": "Right, and moto judged exactly this the way AWS does: `shop-assets` listed, `shop-backups` was refused."
+      },
+      {
+        "text": "Allowed, because the managed policy was attached before the inline one",
+        "correct": false,
+        "why": "Order of attachment, like order of statements, plays no part."
+      },
+      {
+        "text": "It depends on which of the two policies AWS happens to read first",
+        "correct": false,
+        "why": "AWS reads all of them together; the outcome is the same every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppbx5xsw",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A brand-new IAM user with no policies runs `aws s3 ls` and is refused. What refused it?",
+    "hint": "Nobody wrote anything about this user.",
+    "choices": [
+      {
+        "text": "A `Deny` that AWS attaches to every new user",
+        "correct": false,
+        "why": "No policy is attached to a new user. The refusal needs none."
+      },
+      {
+        "text": "Nothing allowed it",
+        "correct": true,
+        "why": "Right: the implicit deny. It is where every request starts, and only an `Allow` moves it."
+      },
+      {
+        "text": "S3 refuses every user who has no MFA device",
+        "correct": false,
+        "why": "MFA matters only where a policy's condition asks for it."
+      },
+      {
+        "text": "moto's count of free requests had run out",
+        "correct": false,
+        "why": "Running out of the count is what makes moto judge; the judgement itself is the missing `Allow`."
+      }
+    ]
+  },
+  {
+    "id": "ex-13nfg961",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An SCP on `shop-prod` allows `s3:*`. A role in that account has no identity policies, and the bucket it reads has no bucket policy. Can the role read the bucket?",
+    "hint": "Which kind of layer is an SCP?",
+    "choices": [
+      {
+        "text": "Yes: the SCP allows it, and nothing denies it",
+        "correct": false,
+        "why": "An SCP only limits. Its `Allow` says how far the account's policies may go, and here none goes anywhere."
+      },
+      {
+        "text": "Yes, for buckets that belong to the same organisation",
+        "correct": false,
+        "why": "Belonging to an organisation grants nothing either; a granting layer has to allow the action."
+      },
+      {
+        "text": "No: nothing in a granting layer allows it",
+        "correct": true,
+        "why": "Right. Passing every limit is half of the rule; the other half is an `Allow` in an identity or resource policy."
+      },
+      {
+        "text": "No, because an SCP that allows something denies everything else to root",
+        "correct": false,
+        "why": "The SCP caps every principal, root included, but it was not what refused this request: the missing grant was."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqcxzg25",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role in `shop-prod` writes to `shop-logs`, a bucket in `log-archive`. The bucket policy allows the role; the role's own policies say nothing about S3. Is the write allowed?",
+    "hint": "How many accounts are involved?",
+    "choices": [
+      {
+        "text": "Yes: a bucket policy that allows a principal is enough",
+        "correct": false,
+        "why": "Within one account, it would be. Across accounts the caller's side has to allow it as well."
+      },
+      {
+        "text": "No: the role's own side grants nothing",
+        "correct": true,
+        "why": "Right. The role needs `s3:PutObject` on the bucket in its own policy too. That rule was not run here, since moto judges no bucket policy."
+      },
+      {
+        "text": "Yes, since both accounts are in the shop's organisation",
+        "correct": false,
+        "why": "Sharing an organisation grants nothing; each account's policies still decide."
+      },
+      {
+        "text": "No: AWS forbids writing to another account's bucket",
+        "correct": false,
+        "why": "It is allowed and common, as long as both sides grant it; central logging works exactly like this."
+      }
+    ]
+  },
+  {
+    "id": "ex-5npnq67d",
+    "version": 1,
+    "section": "the-rule",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of AWS's evaluation, as the lesson's figure draws them, in order.",
+    "hint": "The step that can end everything at once comes first.",
+    "items": [
+      "look for an explicit `Deny` in any policy",
+      "check that the organisation's SCPs and RCPs allow it",
+      "find an `Allow` in an identity or resource policy",
+      "check the permission boundary, if one is set",
+      "check the session policy, if one was passed"
+    ],
+    "trap": "Putting the `Allow` first is the usual slip. An `Allow` found early decides nothing, because a `Deny` or a limit later still refuses."
+  },
+  {
+    "id": "ex-3953f63p",
+    "version": 1,
+    "section": "the-rule",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each layer to who writes it.",
+    "hint": "The table in the first section.",
+    "pairs": [
+      {
+        "left": "a service control policy",
+        "right": "the organisation"
+      },
+      {
+        "left": "a permission boundary",
+        "right": "an administrator, on a user or role"
+      },
+      {
+        "left": "a session policy",
+        "right": "whoever assumes the role"
+      },
+      {
+        "left": "a bucket policy",
+        "right": "the owner of the resource"
+      }
+    ],
+    "right_distractors": [
+      "AWS, the same for every account"
+    ]
+  },
+  {
+    "id": "ex-htr6vccn",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user has no policies of his own and a permission boundary of `s3:*`. In AWS, can he list the buckets?",
+    "hint": "Intersection or sum?",
+    "choices": [
+      {
+        "text": "Yes: the boundary allows every S3 action",
+        "correct": false,
+        "why": "A boundary grants nothing. Its `Allow` is a ceiling, and with no identity policy there is nothing under it."
+      },
+      {
+        "text": "No: the intersection of nothing and S3 is nothing",
+        "correct": true,
+        "why": "Right. The boundary only removes; an identity policy still has to allow the listing."
+      },
+      {
+        "text": "Yes, but only for buckets he created himself",
+        "correct": false,
+        "why": "Creating a bucket grants its creator nothing in IAM, and he could not have created one anyway."
+      },
+      {
+        "text": "Only after the boundary propagates, a few minutes later",
+        "correct": false,
+        "why": "Timing is not the issue; no amount of waiting turns a ceiling into a grant."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtqbvd6k",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`app-admin` holds `AdministratorAccess` and an S3-only boundary. A session of it calls `iam:ListUsers`. What would AWS answer, and what did moto answer?",
+    "hint": "moto stores boundaries.",
+    "choices": [
+      {
+        "text": "Both list the users: `AdministratorAccess` is above any boundary",
+        "correct": false,
+        "why": "No policy is above a boundary; that is what a boundary is for. Only moto listed them."
+      },
+      {
+        "text": "Both refuse, because moto applies the boundary as AWS does",
+        "correct": false,
+        "why": "moto stores the boundary and never applies it: the session listed `admin`, `caio` and `dani`."
+      },
+      {
+        "text": "AWS refuses; moto listed every user",
+        "correct": true,
+        "why": "Right. `iam:ListUsers` is outside the intersection, so AWS refuses it. The refusal was not run here."
+      },
+      {
+        "text": "AWS lists them; moto refused, because the boundary names S3",
+        "correct": false,
+        "why": "It is the other way round: AWS applies boundaries and moto does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-h15ez9b4",
+    "version": 1,
+    "section": "boundaries",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto ignore in this lesson, though AWS would apply them? Choose all that apply.",
+    "hint": "Two of them it judged exactly as AWS does.",
+    "choices": [
+      {
+        "text": "A permission boundary on a role",
+        "correct": true,
+        "why": "Right. Stored, and never applied."
+      },
+      {
+        "text": "An explicit `Deny` in an inline user policy",
+        "correct": false,
+        "why": "That one moto applied: `shop-backups` was refused to caio."
+      },
+      {
+        "text": "A session policy passed to `assume-role`",
+        "correct": true,
+        "why": "Right. Even a `Deny` on every IAM action changed nothing."
+      },
+      {
+        "text": "A bucket policy denying the bucket's deletion",
+        "correct": true,
+        "why": "Right. The bucket was deleted."
+      },
+      {
+        "text": "The implicit deny for a user with no policy",
+        "correct": false,
+        "why": "moto refused caio everything before any policy was attached, as AWS would."
+      },
+      {
+        "text": "A condition demanding MFA",
+        "correct": true,
+        "why": "Right. dani listed the buckets with a plain key."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x4ry8hk",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is it dangerous to let a developer create roles and attach any policy to them, with no boundary in the way?",
+    "hint": "What could the developer make, and then become?",
+    "choices": [
+      {
+        "text": "Every role costs money for as long as it exists",
+        "correct": false,
+        "why": "Roles are free. The cost is in what one can be made to do."
+      },
+      {
+        "text": "A role they make would turn them into administrators",
+        "correct": true,
+        "why": "Right: create it, trust yourself, assume it. The boundary is what caps every role such a developer makes."
+      },
+      {
+        "text": "Two developers might create roles with the same name",
+        "correct": false,
+        "why": "IAM refuses a duplicate name; that is a nuisance, not an escalation."
+      },
+      {
+        "text": "A role skips the MFA its creator was required to use",
+        "correct": false,
+        "why": "Whether MFA is demanded depends on conditions, not on the role existing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrk3fhgq",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the delegation policy, why does the second statement deny `iam:DeleteRolePermissionsBoundary` and `iam:CreatePolicyVersion` on the boundary?",
+    "hint": "What could a developer do just after creating a role correctly?",
+    "choices": [
+      {
+        "text": "To keep the boundary under the limit of five versions",
+        "correct": false,
+        "why": "The limit of five is enforced anyway. The deny is about who may change the boundary at all."
+      },
+      {
+        "text": "Because every `Allow` in a policy needs a matching `Deny`",
+        "correct": false,
+        "why": "No such rule exists; most policies have no `Deny` at all."
+      },
+      {
+        "text": "So the cap cannot be removed or rewritten afterwards",
+        "correct": true,
+        "why": "Right. The first statement makes the boundary the price of a role; the second stops the price being taken back."
+      },
+      {
+        "text": "To stop developers deleting the roles they created",
+        "correct": false,
+        "why": "`DeleteRole` is not in the list; deleting a role of one's own is harmless here."
+      }
+    ]
+  },
+  {
+    "id": "ex-7smrnfjv",
+    "version": 1,
+    "section": "boundaries",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The condition key a delegation policy uses to demand a ceiling on every new role is `iam:___`.",
+    "hint": "It names the managed policy given in the request.",
+    "blanks": [
+      {
+        "accept": [
+          "PermissionsBoundary"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fh2me9dv",
+    "version": 1,
+    "section": "boundaries",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role's identity policies allow `s3:*` and `iam:*`. Its boundary allows `s3:*` and `logs:*`. Of the three services S3, IAM and CloudWatch Logs, how many can its sessions use in AWS?",
+    "hint": "The overlap of the two lists.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "services"
+  },
+  {
+    "id": "ex-1vapqpk9",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-assets` has a bucket policy denying `s3:DeleteBucket` to `\"*\"`. In AWS, `admin`, holding `AdministratorAccess` in the same account, empties the bucket and deletes it. What happens?",
+    "hint": "Where does an explicit `Deny` count?",
+    "choices": [
+      {
+        "text": "Deleted: an administrator is above a bucket policy",
+        "correct": false,
+        "why": "Nothing is above an explicit `Deny`, `AdministratorAccess` included."
+      },
+      {
+        "text": "Deleted: a bucket policy applies only to other accounts",
+        "correct": false,
+        "why": "It applies to whoever it names, and `\"*\"` names everybody, the owner's principals included."
+      },
+      {
+        "text": "Refused: the explicit `Deny` ends the request wherever it is written",
+        "correct": true,
+        "why": "Right. moto deleted it, since it never reads bucket policies; AWS's refusal was not run here."
+      },
+      {
+        "text": "Refused, until admin first deletes the bucket policy, which he cannot",
+        "correct": false,
+        "why": "He can delete the policy, since nothing denies that, and then the bucket. The `Deny` guards against accidents, not against a determined administrator."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6zz9qz9",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy denies everything when `{\"Bool\": {\"aws:MultiFactorAuthPresent\": \"false\"}}`. In AWS, a script signs a request with a long-term access key and no MFA. Is the request denied by that statement?",
+    "hint": "Is the key `false`, or absent?",
+    "choices": [
+      {
+        "text": "No: for a long-term key the MFA key is absent",
+        "correct": true,
+        "why": "Right. That is why the documented form is `BoolIfExists`, which also matches a missing key."
+      },
+      {
+        "text": "Yes: with no MFA, the key's value is `false`",
+        "correct": false,
+        "why": "For a long-term key the key is not present at all, which is the trap."
+      },
+      {
+        "text": "Yes, and moto would deny it the same way",
+        "correct": false,
+        "why": "moto treats every condition as met, so it would deny; AWS would not. They differ here."
+      },
+      {
+        "text": "The policy is refused as malformed, since `Bool` takes no strings",
+        "correct": false,
+        "why": "`\"false\"` is how a boolean value is written in a condition; the document is valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahemhjcr",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket allows reads only with `IpAddress` on `aws:SourceIp` `203.0.113.0/24`, the office. An application on an EC2 machine reaches S3 through a VPC endpoint and is refused. Why?",
+    "hint": "What does the request through the endpoint carry?",
+    "choices": [
+      {
+        "text": "The machine's public address is outside the office range",
+        "correct": false,
+        "why": "Through an endpoint there is no public address in the request at all."
+      },
+      {
+        "text": "VPC endpoints do not support S3",
+        "correct": false,
+        "why": "S3 is one of the commonest endpoints; lesson 19 builds one."
+      },
+      {
+        "text": "Conditions are not evaluated for requests from EC2",
+        "correct": false,
+        "why": "They are evaluated for every request. This one simply lacks the key."
+      },
+      {
+        "text": "The request carries no public address to compare",
+        "correct": true,
+        "why": "Right. The endpoint has keys of its own, and a policy meant for both paths names both."
+      }
+    ]
+  },
+  {
+    "id": "ex-s655yw1h",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each condition key to what it holds.",
+    "hint": "The table of four keys.",
+    "pairs": [
+      {
+        "left": "`aws:SourceIp`",
+        "right": "the public address the request came from"
+      },
+      {
+        "left": "`aws:MultiFactorAuthPresent`",
+        "right": "whether the credentials were obtained with MFA"
+      },
+      {
+        "left": "`aws:PrincipalTag/team`",
+        "right": "a tag on the calling user or role"
+      },
+      {
+        "left": "`aws:RequestedRegion`",
+        "right": "the region the request is for"
+      }
+    ],
+    "right_distractors": [
+      "the region the caller is in"
+    ]
+  },
+  {
+    "id": "ex-dgwrky2h",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool says, for a principal and a list of actions, whether each would be allowed and which statement decided, without making the requests?",
+    "hint": "One tool simulates; the others validate or survey.",
+    "choices": [
+      {
+        "text": "`aws accessanalyzer validate-policy`",
+        "correct": false,
+        "why": "It checks one document's grammar and practice, not what a principal may do."
+      },
+      {
+        "text": "`aws iam simulate-principal-policy`",
+        "correct": true,
+        "why": "Right. It reads the principal's real policies and answers per action; moto answers it with HTTP 500, so it runs against AWS."
+      },
+      {
+        "text": "An Access Analyzer for external access",
+        "correct": false,
+        "why": "It lists resources shared outside the account or organisation, not decisions for one principal."
+      },
+      {
+        "text": "`aws iam get-account-summary`",
+        "correct": false,
+        "why": "It counts users, policies and quotas; it judges nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-m24spwpd",
+    "version": 1,
+    "section": "resources-and-conditions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In moto, a `Deny` limited to regions other than `sa-east-1` refused caio a request in `sa-east-1`. Why?",
+    "hint": "What does moto do with a condition?",
+    "choices": [
+      {
+        "text": "`AWS_DEFAULT_REGION` was set to another region",
+        "correct": false,
+        "why": "The transcript printed `sa-east-1` just before the request."
+      },
+      {
+        "text": "moto treats every condition as met, so the `Deny` applied",
+        "correct": true,
+        "why": "Right. AWS would have compared the region and let the request through."
+      },
+      {
+        "text": "Listing buckets is a global call, so its region is `us-east-1`",
+        "correct": false,
+        "why": "A plausible worry, but moto never compared any region: removing the policy let the same call through."
+      },
+      {
+        "text": "caio had no `Allow` for listing buckets",
+        "correct": false,
+        "why": "He had `AmazonS3ReadOnlyAccess`; once the `Deny` was removed, the listing worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-b12vwzkr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants a guarantee that nobody in `shop-prod`, its root user included, can stop CloudTrail. Which layer can give it?",
+    "hint": "Which layer reaches the root user of a member account?",
+    "choices": [
+      {
+        "text": "A `Deny` in an identity policy on every user and role",
+        "correct": false,
+        "why": "Root takes no identity policy, and every new identity would need the policy too."
+      },
+      {
+        "text": "A permission boundary on every role in the account",
+        "correct": false,
+        "why": "A boundary is set per identity, root cannot have one, and a role made tomorrow would start without it."
+      },
+      {
+        "text": "A service control policy with a `Deny`, set by the organisation",
+        "correct": true,
+        "why": "Right. An SCP caps every principal of the account, root and identities not yet created included; lesson 4 builds one."
+      },
+      {
+        "text": "A session policy passed whenever somebody assumes a role",
+        "correct": false,
+        "why": "A session policy is chosen by the caller, so it guarantees nothing about callers who leave it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxfk8kyh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer tests a new policy in the lab with moto's checking on, sees the call allowed, and concludes AWS will allow it too. What is the strongest reason that does not follow?",
+    "hint": "What did moto skip in this lesson that could have refused the call?",
+    "choices": [
+      {
+        "text": "moto's keys are not real, so nothing it allows counts",
+        "correct": false,
+        "why": "The keys are moto's, but the identity policies were judged as AWS judges them. The gap is elsewhere."
+      },
+      {
+        "text": "moto applies no boundary, SCP or resource policy and treats every condition as met",
+        "correct": true,
+        "why": "Right. Any of those could refuse in AWS what moto allowed; the simulator and Access Analyzer are where to find out."
+      },
+      {
+        "text": "moto evaluates statements in order, and AWS does not",
+        "correct": false,
+        "why": "Neither has an order; moto's explicit deny beat an allow exactly as AWS's does."
+      },
+      {
+        "text": "A moto restart would have changed the answer",
+        "correct": false,
+        "why": "A restart empties moto; it does not change how it judges a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2c4m18b",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every request to AWS starts as an implicit ___.",
+    "hint": "The answer before any policy is read.",
+    "blanks": [
+      {
+        "accept": [
+          "deny",
+          "denial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

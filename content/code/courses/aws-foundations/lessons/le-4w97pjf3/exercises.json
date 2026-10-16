@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-vdcrbckv",
+    "version": 1,
+    "section": "policy-grammar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A policy allows `s3:ListBucket` on `arn:aws:s3:::shop-assets/*` and `s3:GetObject` on `arn:aws:s3:::shop-assets`. What can its holder do?",
+    "hint": "Which action acts on the bucket, and which on its objects?",
+    "choices": [
+      {
+        "text": "Both, since the bucket's ARN covers the objects inside it",
+        "correct": false,
+        "why": "The bucket and its objects are separate resources with separate ARNs; neither covers the other."
+      },
+      {
+        "text": "List the bucket, but not read its objects",
+        "correct": false,
+        "why": "Listing is an action on the bucket, and this policy gives it only on objects, so listing fails too."
+      },
+      {
+        "text": "Neither: each action names the wrong kind of resource",
+        "correct": true,
+        "why": "Right. The two resources are swapped, so the policy grants nothing it meant to. bia's policy pairs `ListBucket` with the bucket and the object actions with `shop-assets/*`."
+      },
+      {
+        "text": "Nothing, because AWS refuses the document as malformed",
+        "correct": false,
+        "why": "The document is well formed: every element is valid. It is wrong in meaning, which no grammar check sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-7c4amsy6",
+    "version": 1,
+    "section": "policy-grammar",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `2012-10-17` in a policy's `Version` line?",
+    "hint": "It is the same in every policy you write.",
+    "choices": [
+      {
+        "text": "The date the policy was first written",
+        "correct": false,
+        "why": "It does not change with your documents. A policy written today carries the same date."
+      },
+      {
+        "text": "The date AWS fixed the grammar",
+        "correct": true,
+        "why": "Right. It is the date AWS fixed the language; the older `2008-10-17` lacks policy variables, and a document without the line is read as the older one."
+      },
+      {
+        "text": "The version number AWS shows as `v1`, `v2` and so on",
+        "correct": false,
+        "why": "Those are versions of a managed policy, kept by IAM. The `Version` element is inside every one of them, unchanged."
+      },
+      {
+        "text": "The release of the IAM API the command line calls",
+        "correct": false,
+        "why": "The API has a version of its own in every request. The policy's `Version` is about the language of the document."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sqy2r3c",
+    "version": 1,
+    "section": "policy-grammar",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A statement allows `s3:Get*` on every resource. Next year AWS adds a new S3 operation whose name begins with `Get`. Does the statement allow it?",
+    "hint": "When is the wildcard compared with the action's name?",
+    "choices": [
+      {
+        "text": "No: a wildcard is expanded into a fixed list when the policy is saved",
+        "correct": false,
+        "why": "Nothing is expanded at save time. The pattern is matched against the action of each request as it arrives."
+      },
+      {
+        "text": "Yes, from the day it exists, with no edit to the policy",
+        "correct": true,
+        "why": "Right. The pattern matches names, including names that did not exist when it was written, which is the reason to think before writing one."
+      },
+      {
+        "text": "Only after somebody publishes a new version of the policy",
+        "correct": false,
+        "why": "A new version changes the document; it is not needed for an old pattern to match a new name."
+      },
+      {
+        "text": "Only if the policy is AWS-managed, since AWS updates those itself",
+        "correct": false,
+        "why": "AWS does edit its own policies, but a wildcard in yours matches the new name without anybody editing anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r0fb60a",
+    "version": 1,
+    "section": "policy-grammar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two policies are identical except that one lists its `Deny` statement before its `Allow` statement and the other after it. How do they differ in effect?",
+    "hint": "Is a policy read like a firewall?",
+    "choices": [
+      {
+        "text": "The first match wins, so the first policy denies and the second allows",
+        "correct": false,
+        "why": "That is a firewall's rule. IAM considers every statement together, whatever their order."
+      },
+      {
+        "text": "The last statement wins, as in a configuration file",
+        "correct": false,
+        "why": "Nothing is overridden by position. Lesson 8 gives the rule that does settle them."
+      },
+      {
+        "text": "In nothing: IAM has no order among statements",
+        "correct": true,
+        "why": "Right. The statements are a set, and lesson 8 settles them by effect, never by position."
+      },
+      {
+        "text": "Statements are applied in the alphabetical order of their `Sid`",
+        "correct": false,
+        "why": "A `Sid` is only a label, and optional. It never decides anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-d32cpmhj",
+    "version": 1,
+    "section": "policy-grammar",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The element that names who a trust policy trusts, and that an identity policy leaves out, is called ___.",
+    "hint": "It appeared in lesson 6's trust policy, with `AWS` or `Federated` inside it.",
+    "blanks": [
+      {
+        "accept": [
+          "Principal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7k8wq14y",
+    "version": 1,
+    "section": "checking-on",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto is started with `INITIAL_NO_AUTH_ACTION_COUNT=3`. A student first runs `aws sts get-caller-identity` to see that it answers, then the three bootstrap commands. How many of the three bootstrap commands get through unchecked?",
+    "hint": "Every request counts, whatever it asks.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "commands"
+  },
+  {
+    "id": "ex-cc7qazzn",
+    "version": 1,
+    "section": "checking-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the bootstrap, `aws iam list-users` came fourth and was refused with `InvalidClientTokenId`. Why?",
+    "hint": "What was the terminal still signing with at that moment?",
+    "choices": [
+      {
+        "text": "admin had no permission to list users yet",
+        "correct": false,
+        "why": "admin already held `AdministratorAccess`. But the request was not signed as admin at all."
+      },
+      {
+        "text": "It was signed with `test`, a key moto's IAM never issued",
+        "correct": true,
+        "why": "Right. The three free requests were spent, so the fourth was checked, and `test` belongs to nobody. The `export` line fixes it."
+      },
+      {
+        "text": "The new access key takes a minute to become active",
+        "correct": false,
+        "why": "moto's keys are active at once, and the new key had not been used yet in any case."
+      },
+      {
+        "text": "moto refuses `list-users` once its checking is on",
+        "correct": false,
+        "why": "Three commands later the same call, signed with admin's key, listed the users."
+      }
+    ]
+  },
+  {
+    "id": "ex-1f0q7711",
+    "version": 1,
+    "section": "checking-on",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these requests does NOT spend one of the free requests of `INITIAL_NO_AUTH_ACTION_COUNT`?",
+    "hint": "One address belongs to moto itself, not to the AWS it imitates.",
+    "choices": [
+      {
+        "text": "A request that fails with an error",
+        "correct": false,
+        "why": "A failure still counts, which is how a typo in the bootstrap ruins it."
+      },
+      {
+        "text": "`aws sts get-caller-identity`",
+        "correct": false,
+        "why": "It reaches moto's AWS API like any other call, so it is counted like any other."
+      },
+      {
+        "text": "A request to moto's own `/moto-api/` address",
+        "correct": true,
+        "why": "Right. That is moto's control address, outside the AWS it imitates, and the command line never sends anything there."
+      },
+      {
+        "text": "A request sent from the first terminal instead of the second",
+        "correct": false,
+        "why": "moto counts requests, not terminals; where it was typed makes no difference."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc4x9ahd",
+    "version": 1,
+    "section": "checking-on",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the bootstrap, a student opens a third terminal, reads `env.sh` and runs `aws iam list-users`. It is refused. What is the right fix?",
+    "hint": "What does `env.sh` set the keys to, and where does `key` live?",
+    "choices": [
+      {
+        "text": "Restart moto, since a new terminal resets the count",
+        "correct": false,
+        "why": "The count is moto's and has nothing to do with terminals. Restarting would throw away admin and everything else."
+      },
+      {
+        "text": "Write admin's key into `env.sh`, so every terminal starts with it",
+        "correct": false,
+        "why": "A key in a file is the habit this course refuses, even for moto's worthless keys: the habit is what reaches a real one."
+      },
+      {
+        "text": "Use the shell where admin's key is exported",
+        "correct": true,
+        "why": "Right. The new terminal signs with `test`, which moto now refuses, and the variable `key` exists only in the old shell."
+      },
+      {
+        "text": "Attach `AdministratorAccess` to the user `test`",
+        "correct": false,
+        "why": "There is no user `test`: it is a key moto's IAM never issued, and no policy makes it one."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0m6ex5q",
+    "version": 1,
+    "section": "checking-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `with_key \"$bia\" aws s3 ls` change in the terminal?",
+    "hint": "Look at where the two variables are set inside the function.",
+    "choices": [
+      {
+        "text": "Only that one command is signed with bia's key",
+        "correct": true,
+        "why": "Right. The variables are set in front of the command, so they last for that command alone, and the next one is admin's again."
+      },
+      {
+        "text": "It switches the terminal to bia until the shell exits",
+        "correct": false,
+        "why": "That is what `export` does, as in the bootstrap. The function never exports anything."
+      },
+      {
+        "text": "It creates a new access key for bia each time it runs",
+        "correct": false,
+        "why": "It reads the key already kept in `$bia`; creating one would be `create-access-key`, run once."
+      },
+      {
+        "text": "It asks moto to act as bia without signing the request",
+        "correct": false,
+        "why": "Every request is signed; the function only chooses which key signs this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt04q1vm",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An external auditor is given `ReadOnlyAccess` in the shop's account. What can the auditor now see?",
+    "hint": "Read the S3 lines of its default version.",
+    "choices": [
+      {
+        "text": "The settings of each service, but not the data inside them",
+        "correct": false,
+        "why": "`s3:Get*` includes `GetObject`, which is the data itself."
+      },
+      {
+        "text": "Every object in every bucket, the backups included",
+        "correct": true,
+        "why": "Right. Read-only is a promise about writing. For an auditor, a customer-managed policy naming what the audit needs is the narrower answer."
+      },
+      {
+        "text": "Only what the shop adds to the policy later",
+        "correct": false,
+        "why": "The shop cannot edit an AWS-managed policy. AWS does, and has 188 times."
+      },
+      {
+        "text": "The list of buckets, but no object in any of them",
+        "correct": false,
+        "why": "`s3:List*` gives the lists, and `s3:Get*` gives the objects as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vtnsddz",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these ARNs is an AWS-managed policy?",
+    "hint": "Look where the account number would be.",
+    "choices": [
+      {
+        "text": "`arn:aws:iam::123456789012:policy/shop-assets-rw`",
+        "correct": false,
+        "why": "That one carries the shop's account: it is customer-managed."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:user/admin`",
+        "correct": false,
+        "why": "That is a user, not a policy."
+      },
+      {
+        "text": "`arn:aws:s3:::shop-assets`",
+        "correct": false,
+        "why": "That is a bucket, with neither account nor region in its ARN."
+      },
+      {
+        "text": "`arn:aws:iam::aws:policy/ReadOnlyAccess`",
+        "correct": true,
+        "why": "Right: `aws` in the account's place, which is how every account can name the same policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzvjmy3z",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-assets-rw` already has five versions. Put in order the steps to publish an edit safely and undo it if it is wrong.",
+    "hint": "There is no room for a sixth.",
+    "items": [
+      "delete the oldest version that is not the default",
+      "create the new version with `--set-as-default`",
+      "try the change as the user who holds the policy",
+      "if it is wrong, `set-default-policy-version` back to the previous one"
+    ],
+    "trap": "Creating first is the usual slip: at five versions it is refused with `LimitExceeded`, before anything changes."
+  },
+  {
+    "id": "ex-fftyfa9z",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "bia's request to delete an object came back `Access Denied`. A colleague says her key must be wrong. What does the error tell you?",
+    "hint": "Compare it with the error the `test` key got.",
+    "choices": [
+      {
+        "text": "That the key is wrong, as S3 words every failure the same way",
+        "correct": false,
+        "why": "A key moto never issued got `InvalidClientTokenId` in the bootstrap. S3 has its own word for a bad key too."
+      },
+      {
+        "text": "That the key passed, and nothing allowed the deletion",
+        "correct": true,
+        "why": "Right. Access Denied comes after the signature is checked; her policy never named `s3:DeleteObject`."
+      },
+      {
+        "text": "That the object does not exist",
+        "correct": false,
+        "why": "`logo.txt` was there; bia had just read it. A missing object is a different answer."
+      },
+      {
+        "text": "That moto does not implement deleting objects",
+        "correct": false,
+        "why": "moto deletes objects for whoever is allowed to; the refusal came from the policy check."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mea55s9",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson list objects with `s3api list-objects-v2` rather than `aws s3 ls s3://shop-assets`?",
+    "hint": "admin got the same answer as bia would.",
+    "choices": [
+      {
+        "text": "`aws s3 ls` needs `s3:ListAllMyBuckets`, which bia lacks",
+        "correct": false,
+        "why": "That permission is for listing the buckets, `aws s3 ls` with no address. And admin, who has everything, was refused too."
+      },
+      {
+        "text": "moto refuses its signature, whoever signs; AWS accepts both",
+        "correct": true,
+        "why": "Right. The `/` delimiter it sends trips moto's signature check, so the answer is `SignatureDoesNotMatch` even for admin."
+      },
+      {
+        "text": "`aws s3 ls` is deprecated in AWS CLI version 2",
+        "correct": false,
+        "why": "It is current and works against AWS; the problem was moto's."
+      },
+      {
+        "text": "bia's policy allows `s3api` calls but not `s3` calls",
+        "correct": false,
+        "why": "A policy names API actions, and both commands call the same `ListObjectsV2` action."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqp9d01r",
+    "version": 1,
+    "section": "managed-policies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer-managed policy has versions `v1` to `v5`, with `v1` the default. How many versions must be deleted before two new versions can be created?",
+    "hint": "The limit counts every version, the default included.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "versions"
+  },
+  {
+    "id": "ex-0a82yhsv",
+    "version": 1,
+    "section": "inline-and-choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws iam delete-user --user-name edu` answers `DeleteConflict ... must delete policies first`. What does that mean?",
+    "hint": "Which kind of policy lives inside the user?",
+    "choices": [
+      {
+        "text": "The policy is attached to other users, who would lose it",
+        "correct": false,
+        "why": "An inline policy belongs to edu alone; nobody else can hold it."
+      },
+      {
+        "text": "edu still holds an inline policy, and it has to be deleted first",
+        "correct": true,
+        "why": "Right. The API names each inline policy before the user goes, and once both are deleted there is no copy to reuse."
+      },
+      {
+        "text": "A deleted user is kept for a week, and the policy with him",
+        "correct": false,
+        "why": "There is no waiting period; `get-user` answered `NoSuchEntity` straight after."
+      },
+      {
+        "text": "The inline policy will survive the user and stay attachable",
+        "correct": false,
+        "why": "That is what a managed policy does. An inline one has no ARN to survive by."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wdqgqc3",
+    "version": 1,
+    "section": "inline-and-choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thirty roles need the same permission, which must be changed in one place and rolled back quickly if a change is wrong. Which kind of policy fits?",
+    "hint": "Count the places an edit would have to be made.",
+    "choices": [
+      {
+        "text": "An inline policy in each role, so that none of them shares it",
+        "correct": false,
+        "why": "Thirty copies are thirty edits, with no versions to roll back to."
+      },
+      {
+        "text": "An inline policy in a group, with the roles in that group",
+        "correct": false,
+        "why": "A group holds users, never roles, so the roles cannot join it."
+      },
+      {
+        "text": "A single customer-managed document, attached to every one of them",
+        "correct": true,
+        "why": "Right. One document, one edit, and a rollback that is a change of default version."
+      },
+      {
+        "text": "AWS's `PowerUserAccess`, which AWS keeps current for everyone",
+        "correct": false,
+        "why": "It is not this permission, and its changes are AWS's, on AWS's schedule, with no rollback of yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn0yr4dv",
+    "version": 1,
+    "section": "inline-and-choosing",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each need to the kind of policy the lesson recommends.",
+    "hint": "The last row of the table.",
+    "pairs": [
+      {
+        "left": "a permission that must never reach a second identity",
+        "right": "inline"
+      },
+      {
+        "left": "a job function AWS describes and keeps current",
+        "right": "AWS-managed"
+      },
+      {
+        "left": "the shop's own permission, shared and versioned",
+        "right": "customer-managed"
+      }
+    ],
+    "right_distractors": [
+      "a trust policy"
+    ]
+  },
+  {
+    "id": "ex-0nwq7zre",
+    "version": 1,
+    "section": "inline-and-choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an inline policy on a user? Choose all that apply.",
+    "hint": "Compare it with `shop-assets-rw`.",
+    "choices": [
+      {
+        "text": "It has a name but no ARN",
+        "correct": true,
+        "why": "Right, which is why nothing else can name it to attach it."
+      },
+      {
+        "text": "It can be attached to a second user",
+        "correct": false,
+        "why": "It is written into one identity; another gets its own copy or nothing."
+      },
+      {
+        "text": "An edit overwrites it, with no earlier version kept",
+        "correct": true,
+        "why": "Right. Versions belong to managed policies only."
+      },
+      {
+        "text": "It may hold 6,144 characters",
+        "correct": false,
+        "why": "That is the limit of a managed policy; a user's inline policies stop at 2,048."
+      },
+      {
+        "text": "It is gone once the user is deleted",
+        "correct": true,
+        "why": "Right. The API makes you delete it first, and then there is nothing left."
+      }
+    ]
+  },
+  {
+    "id": "ex-epex6k5z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto accepted an identity policy with a `Principal` element and obeyed it. Before the same policy is used in a real account, what should be done?",
+    "hint": "moto's acceptance is not AWS's.",
+    "choices": [
+      {
+        "text": "Nothing, because moto obeyed it and moto answers as AWS does",
+        "correct": false,
+        "why": "moto answers in AWS's format and checks less. AWS refuses this document before storing it."
+      },
+      {
+        "text": "Make it customer-managed, since managed policies accept a `Principal`",
+        "correct": false,
+        "why": "Every identity policy is refused with a `Principal`, managed or inline: the principal is whoever it is attached to."
+      },
+      {
+        "text": "Remove `Principal` and validate against AWS's grammar",
+        "correct": true,
+        "why": "Right. Lesson 8 names IAM Access Analyzer's policy validation as that check; moto answers it with an error, so it runs against AWS."
+      },
+      {
+        "text": "Change its `Version` to `2008-10-17`, which allows a `Principal`",
+        "correct": false,
+        "why": "The old language lacks policy variables; it does not make an identity policy accept a principal."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4agaaar",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws iam list-user-policies --user-name caio` prints an empty list, yet caio reads every bucket. Where should you look next?",
+    "hint": "That command lists one kind of policy only.",
+    "choices": [
+      {
+        "text": "His attached managed policies, and those of his groups",
+        "correct": true,
+        "why": "Right. `list-user-policies` shows inline ones; `list-attached-user-policies` and `list-groups-for-user` show the rest."
+      },
+      {
+        "text": "Nowhere: an empty list means he holds no policy",
+        "correct": false,
+        "why": "It means he holds no inline policy. Half of what a user can do is in the other list."
+      },
+      {
+        "text": "At the buckets' own settings, since S3 is open by default",
+        "correct": false,
+        "why": "A new bucket is private. Something gave caio access, and it is in IAM first."
+      },
+      {
+        "text": "At moto's count, which may still be letting him through",
+        "correct": false,
+        "why": "The three free requests were spent in the bootstrap; every request since is judged."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4zk002b",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A managed policy keeps at most ___ versions.",
+    "hint": "`LimitExceeded` said the number.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

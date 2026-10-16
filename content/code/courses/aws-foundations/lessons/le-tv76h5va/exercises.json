@@ -1,0 +1,632 @@
+[
+  {
+    "id": "ex-9makam24",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An EC2 instance wears the role `shop-app` through its profile. An old script also left `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the machine's environment. Which credentials does the AWS command line on that machine sign with?",
+    "hint": "The chain stops at the first answer.",
+    "choices": [
+      {
+        "text": "The role's, because a role always takes precedence over a key",
+        "correct": false,
+        "why": "Nothing ranks a role above a key. The order of the chain decides, and the metadata provider is the last one in it."
+      },
+      {
+        "text": "The key in the environment",
+        "correct": true,
+        "why": "Right. `env` is the first provider and it answered, so the chain never reached `iam-role`. The machine now acts as whoever owns that key, silently."
+      },
+      {
+        "text": "Neither: the command line refuses when two providers disagree",
+        "correct": false,
+        "why": "The chain never compares providers. It takes the first that answers and does not look further."
+      },
+      {
+        "text": "Both, merged into a single session",
+        "correct": false,
+        "why": "A request is signed with one set of credentials. There is no merging of two identities."
+      }
+    ]
+  },
+  {
+    "id": "ex-88m2n6sj",
+    "version": 1,
+    "section": "the-chain",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these providers in the order AWS CLI 2.37.4 tried them in the lesson's `--debug` output.",
+    "hint": "Typed keys first, the network last.",
+    "items": [
+      "`env`",
+      "`assume-role-with-web-identity`",
+      "`shared-credentials-file`",
+      "`container-role`",
+      "`iam-role`"
+    ],
+    "trap": "`container-role` sits just before `iam-role`, and the file in your home directory comes well before both."
+  },
+  {
+    "id": "ex-ktpzzzpv",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws configure list` shows `iam-role` in the `TYPE` column and nothing under `LOCATION`. Where did the credentials come from?",
+    "hint": "There is no file to name.",
+    "choices": [
+      {
+        "text": "From `~/.aws/credentials`, under a profile called `iam-role`",
+        "correct": false,
+        "why": "That provider is `shared-credentials-file`, and it names the file it read in `LOCATION`."
+      },
+      {
+        "text": "From `AWS_ROLE_ARN` in the environment",
+        "correct": false,
+        "why": "`AWS_ROLE_ARN` with a token file is the web identity provider, which `configure list` reports as `assume-role-with-web-identity`."
+      },
+      {
+        "text": "From the instance metadata service, over HTTP",
+        "correct": true,
+        "why": "Right. `iam-role` is botocore's name for the metadata provider; the credentials arrived in an HTTP answer, so there is no location to show."
+      },
+      {
+        "text": "From the role's own access key, created when the role was",
+        "correct": false,
+        "why": "A role has no access key of its own. Whoever assumes it receives temporary credentials, which is the point of a role."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbvwzye0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does IMDSv2 ask for that IMDSv1 does not?",
+    "hint": "Count the requests before the first answer.",
+    "choices": [
+      {
+        "text": "An access key, signed into every request to the service",
+        "correct": false,
+        "why": "Nothing at the metadata address is signed. The instance has no key yet; that is what it is asking for."
+      },
+      {
+        "text": "A token from a `PUT`, sent with every read",
+        "correct": true,
+        "why": "Right. The `PUT` carries a header with the token's lifetime, and every `GET` after it carries the token."
+      },
+      {
+        "text": "HTTPS instead of plain HTTP",
+        "correct": false,
+        "why": "Both versions answer plain HTTP on `169.254.169.254`. The difference is the token, not the transport."
+      },
+      {
+        "text": "The name of the role, given in the path",
+        "correct": false,
+        "why": "Both versions put the role's name in the path, and both answer it when asked for the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gv1bq26",
+    "version": 1,
+    "section": "the-chain",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On an EC2 instance, the metadata service answers at `http://___/`.",
+    "hint": "A link-local address, the same on every instance.",
+    "blanks": [
+      {
+        "accept": [
+          "169.254.169.254"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fy7j96kz",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a laptop with no credentials anywhere, `aws s3 ls` waits a moment before saying `Unable to locate credentials`. Why the wait?",
+    "hint": "Which provider is not a file or a variable?",
+    "choices": [
+      {
+        "text": "It asks AWS whether an account exists for this computer",
+        "correct": false,
+        "why": "No provider asks AWS about the computer. Without credentials there is nothing to ask with."
+      },
+      {
+        "text": "It retries `env` until the variables appear",
+        "correct": false,
+        "why": "Each provider is tried once. The environment is read in an instant and found empty."
+      },
+      {
+        "text": "The last provider sends requests to the metadata address and waits for a reply that never comes",
+        "correct": true,
+        "why": "Right. `iam-role` makes network requests, and off EC2 nothing answers at `169.254.169.254`, so it waits for its timeout."
+      },
+      {
+        "text": "It downloads the list of providers before trying them",
+        "correct": false,
+        "why": "The order is built into botocore, which is inside the command line. Nothing is downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-bna1mskk",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `run-instances` take to give a new instance the permissions of the role `shop-app`?",
+    "hint": "The console hides a step the command line does not.",
+    "choices": [
+      {
+        "text": "The role's ARN, passed as `--role-arn`",
+        "correct": false,
+        "why": "`run-instances` has no such option. A role reaches an instance inside a profile."
+      },
+      {
+        "text": "An access key of the role, written into user data",
+        "correct": false,
+        "why": "A role has no key, and a key in user data is a key anybody on the machine can read. Nothing in this lesson writes one."
+      },
+      {
+        "text": "An instance profile that holds the role",
+        "correct": true,
+        "why": "Right. `--iam-instance-profile Name=shop-app` names the profile, and the profile holds exactly one role."
+      },
+      {
+        "text": "Nothing: every instance may assume every role whose name it knows",
+        "correct": false,
+        "why": "A role's trust policy decides who may assume it, and an instance gets only the role in its profile."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2qs28hj",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which principal does the trust policy of a role for EC2 instances name?",
+    "hint": "The service that will assume it.",
+    "choices": [
+      {
+        "text": "The instance's id, such as `i-0ee42130b0c3e009d`",
+        "correct": false,
+        "why": "An instance id is not a principal. The id appears later, as the session name when the role is assumed."
+      },
+      {
+        "text": "`{\"Service\": \"ec2.amazonaws.com\"}`",
+        "correct": true,
+        "why": "Right. EC2 assumes the role on the instance's behalf, so the service is the principal."
+      },
+      {
+        "text": "The account root, so that every instance in it qualifies",
+        "correct": false,
+        "why": "Naming the account trusts its users and roles, not EC2. An instance would still have nothing to assume it with."
+      },
+      {
+        "text": "The instance profile's ARN",
+        "correct": false,
+        "why": "The profile is a container for the role, not a principal that assumes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-33amrtz9",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bia` may call `ec2:RunInstances`. Launching with `--iam-instance-profile Name=shop-app` fails with `AccessDenied`. What is she missing?",
+    "hint": "Handing a role to a machine is its own permission.",
+    "choices": [
+      {
+        "text": "`sts:AssumeRole` on `shop-app`",
+        "correct": false,
+        "why": "She is not assuming the role; EC2 is. What she does is hand it over, and that needs a different permission."
+      },
+      {
+        "text": "`ec2:AssociateIamInstanceProfile`, which every launch with a profile also calls",
+        "correct": false,
+        "why": "That action replaces or adds a profile on an existing instance. A launch with a profile is checked for something else."
+      },
+      {
+        "text": "`iam:PassRole` on the role `shop-app`",
+        "correct": true,
+        "why": "Right. Without it anyone who may start machines could start one wearing the account's most powerful role."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tnjxzma",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are rules of IMDSv2, as AWS documents it? Choose all that apply.",
+    "hint": "Three of the five are in the section's list.",
+    "choices": [
+      {
+        "text": "A read needs a token obtained with a `PUT` and a custom header",
+        "correct": true,
+        "why": "Right. A request forged through a URL parameter is usually a `GET` and cannot add the header."
+      },
+      {
+        "text": "A `PUT` carrying `X-Forwarded-For` gets no token",
+        "correct": true,
+        "why": "Right. That header is the mark of a proxy, so a proxy on the instance cannot fetch a token for somebody else."
+      },
+      {
+        "text": "The token's answer leaves with an IP time-to-live equal to the hop limit",
+        "correct": true,
+        "why": "Right. With the default of 1 it dies after one hop and never reaches anything behind another network device."
+      },
+      {
+        "text": "The credentials come back encrypted with the instance's own key",
+        "correct": false,
+        "why": "They come back in plain JSON, which is why who may ask is the whole defence."
+      },
+      {
+        "text": "Applications on the instance can no longer read the metadata",
+        "correct": false,
+        "why": "They can, with a token. The SDK on the instance does the `PUT` itself, as the lesson's `--debug` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjsy19ha",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After launching with `HttpTokens=required`, a plain `curl` with no token to moto's metadata address answers `200`. What does that measurement establish?",
+    "hint": "Separate what moto stores from what moto enforces.",
+    "choices": [
+      {
+        "text": "That `HttpTokens=required` does not take effect until the instance restarts",
+        "correct": false,
+        "why": "There is no instance to restart in moto, and on AWS the setting applies at launch. The cause is moto's imitation."
+      },
+      {
+        "text": "That the token is optional on AWS too, whatever the setting says",
+        "correct": false,
+        "why": "A result in moto proves nothing about AWS. AWS documents a `401 Unauthorized` for exactly this request."
+      },
+      {
+        "text": "That `curl` sent a token without being asked to",
+        "correct": false,
+        "why": "`curl` sends only the headers it is given, and none was given."
+      },
+      {
+        "text": "Only that moto records the setting without enforcing it",
+        "correct": true,
+        "why": "Right. `describe-instances` shows `required`, and moto's metadata service ignores it. What AWS refuses has to come from its documentation."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8gmx1jd",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two machines: an EKS node, whose pods must NOT use the node's role, and a single instance running the shop's app in Docker, which SHOULD use the instance's role. Which hop limits fit?",
+    "hint": "A container on a bridge is one hop further than the instance.",
+    "choices": [
+      {
+        "text": "1 on the node, 2 on the Docker instance",
+        "correct": true,
+        "why": "Right. At 1 the token dies before reaching a pod; at 2 it reaches a container on the bridge."
+      },
+      {
+        "text": "2 on the node, 1 on the Docker instance",
+        "correct": false,
+        "why": "That is the reverse: the pods would reach the node's role, and the container would not reach the one it needs."
+      },
+      {
+        "text": "1 on both, since a higher limit is never safe",
+        "correct": false,
+        "why": "At 1 the shop's container gets no token and cannot use the role it was meant to use."
+      },
+      {
+        "text": "2 on both, since containers are a hop away in each case",
+        "correct": false,
+        "why": "On the node, reaching the role is exactly what should fail, so the extra hop is the hole."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbf2pa0e",
+    "version": 1,
+    "section": "instance-profiles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many roles may one instance profile hold? moto refused the next one with `LimitExceeded`.",
+    "hint": "The quota named in the error.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "roles"
+  },
+  {
+    "id": "ex-8qea908e",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an IRSA trust policy, what does the condition on `...:sub` restrict?",
+    "hint": "Read the value: `system:serviceaccount:shop:checkout`.",
+    "choices": [
+      {
+        "text": "Which cluster may issue tokens for the role",
+        "correct": false,
+        "why": "The issuer is the `Federated` principal, the registered provider. `sub` is about the workload inside it."
+      },
+      {
+        "text": "Which service account, in which namespace, may assume the role",
+        "correct": true,
+        "why": "Right. Without it every pod of the cluster holding a token could become the role."
+      },
+      {
+        "text": "Who the token is meant for, which for IRSA is STS",
+        "correct": false,
+        "why": "That is `aud`, the other condition. The two are separate checks on separate claims."
+      },
+      {
+        "text": "How long the credentials returned may last",
+        "correct": false,
+        "why": "Duration is a setting of the role and the request. A trust policy condition decides who, not how long."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d4fza4z",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `sts:AssumeRoleWithWebIdentity` sent without a signature?",
+    "hint": "What does the pod hold before the call?",
+    "choices": [
+      {
+        "text": "Because STS is a global service and accepts unsigned calls from anyone",
+        "correct": false,
+        "why": "Almost every STS call is signed, `AssumeRole` included. This one is the exception, for a reason that belongs to it."
+      },
+      {
+        "text": "The pod has no AWS credential yet; the signed token is the proof",
+        "correct": true,
+        "why": "Right. The cluster signed the token, and STS checks that signature instead of an AWS one."
+      },
+      {
+        "text": "Because the role's trust policy turns signing off",
+        "correct": false,
+        "why": "A trust policy decides who may assume the role. It has no say in how a request is sent."
+      },
+      {
+        "text": "To save time, since pods start often",
+        "correct": false,
+        "why": "Signing costs microseconds. The reason is that there is nothing to sign with."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqnhrakz",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, a token for `system:serviceaccount:other:intruder` got credentials for `shop-checkout`, whose trust policy names only `shop:checkout`. What should a reader conclude?",
+    "hint": "Which part of the lesson was measured, and which was read?",
+    "choices": [
+      {
+        "text": "That `StringEquals` compares only the start of the value",
+        "correct": false,
+        "why": "`StringEquals` is an exact comparison. The cause is that moto never evaluated it."
+      },
+      {
+        "text": "That AWS lets any token in until the provider is verified",
+        "correct": false,
+        "why": "AWS refuses such a token at the trust policy with `AccessDenied`. The lab says nothing about AWS here."
+      },
+      {
+        "text": "That moto checks nothing about web identity, so the refusal is AWS's documented behaviour",
+        "correct": true,
+        "why": "Right. It even accepted a role that does not exist. The lab shows how the credentials travel; what STS refuses comes from AWS's documentation."
+      },
+      {
+        "text": "That the `sub` condition belongs in the role's permission policy instead",
+        "correct": false,
+        "why": "Who may assume a role is the trust policy's question, and that is where the condition goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfgwcmmz",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of giving a workload a role to the principal its trust policy names.",
+    "hint": "Three services and one registered provider.",
+    "pairs": [
+      {
+        "left": "an EC2 instance profile",
+        "right": "`ec2.amazonaws.com`"
+      },
+      {
+        "left": "an ECS task role",
+        "right": "`ecs-tasks.amazonaws.com`"
+      },
+      {
+        "left": "EKS Pod Identity",
+        "right": "`pods.eks.amazonaws.com`"
+      },
+      {
+        "left": "IRSA",
+        "right": "the cluster's OIDC provider, as `Federated`"
+      }
+    ],
+    "right_distractors": [
+      "`eks.amazonaws.com`"
+    ]
+  },
+  {
+    "id": "ex-kgew7d8g",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop runs three EKS clusters and wants one role, `shop-checkout`, usable by the checkout in all of them. Why does Pod Identity make that simpler than IRSA?",
+    "hint": "Count what each cluster adds to the trust policy.",
+    "choices": [
+      {
+        "text": "Pod Identity credentials never expire, so nothing has to be renewed across clusters",
+        "correct": false,
+        "why": "They expire like every temporary credential. The simplification is in the trust policy, not the lifetime."
+      },
+      {
+        "text": "Pod Identity puts the clusters in one account automatically",
+        "correct": false,
+        "why": "Pod Identity does not move clusters between accounts. The three were already in one."
+      },
+      {
+        "text": "Its trust names one service principal, the same in every cluster",
+        "correct": true,
+        "why": "Right. With IRSA each cluster is another provider to register and another condition in the trust policy."
+      },
+      {
+        "text": "IRSA forbids a role being assumed from more than one cluster",
+        "correct": false,
+        "why": "It allows it, with one `Federated` principal and condition per cluster. It is more to write, not forbidden."
+      }
+    ]
+  },
+  {
+    "id": "ex-2asxfm0f",
+    "version": 1,
+    "section": "workload-roles",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On ECS, the agent serves a task role's credentials at `169.254.170.___`, and the container finds the path in `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`.",
+    "hint": "Not the Pod Identity agent's address.",
+    "blanks": [
+      {
+        "accept": [
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8skxs81g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's deploy pipeline runs on a CI service that issues each job a signed OIDC token. Which arrangement from this lesson lets it deploy with no stored AWS key?",
+    "hint": "The CI service is an issuer, like a cluster.",
+    "choices": [
+      {
+        "text": "An instance profile on the CI service's machines",
+        "correct": false,
+        "why": "Those machines are not in the shop's account, so the shop cannot give them a profile."
+      },
+      {
+        "text": "Register the CI's issuer as an OIDC provider and let `deployer` trust it, with a `sub` condition naming the repository",
+        "correct": true,
+        "why": "Right. It is IRSA's mechanism with a different issuer: the job's token is traded for `deployer` through `AssumeRoleWithWebIdentity`."
+      },
+      {
+        "text": "Store a key as a CI secret and rotate it every month",
+        "correct": false,
+        "why": "That is a stored key, which the question rules out. Lesson 12 treats it as the last resort."
+      },
+      {
+        "text": "Point `AWS_CONTAINER_CREDENTIALS_FULL_URI` at the CI service",
+        "correct": false,
+        "why": "The container provider reads credentials somebody already holds. The CI service holds a token, not AWS credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhan2p1r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of IRSA at run time in order, from a pod starting to its first call to S3.",
+    "hint": "The token exists before anyone checks it.",
+    "items": [
+      "the cluster writes a signed token into the pod's file",
+      "the SDK calls `AssumeRoleWithWebIdentity` with the token",
+      "STS verifies the signature with the issuer's keys",
+      "STS evaluates the trust policy's `sub` and `aud`",
+      "the pod signs a call to S3 with the credentials"
+    ],
+    "trap": "A trust policy is evaluated only for a token whose signature has already been verified."
+  },
+  {
+    "id": "ex-kmg2np6v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A review finds an SSRF in the shop's image preview, on an instance where IMDSv1 is still on. Which change closes the path to the role's credentials?",
+    "hint": "The forged request is a plain GET.",
+    "choices": [
+      {
+        "text": "A security group rule refusing traffic to `169.254.169.254`",
+        "correct": false,
+        "why": "Security groups filter the instance's network interface, and the metadata service is reached without crossing them."
+      },
+      {
+        "text": "Delete the instance profile",
+        "correct": false,
+        "why": "That removes the credentials from the attacker and from the shop's app alike, which then cannot read `shop-assets`."
+      },
+      {
+        "text": "`modify-instance-metadata-options --http-tokens required`, then fix the preview",
+        "correct": true,
+        "why": "Right. With tokens required a plain `GET` gets a `401`, and the SSRF itself still deserves its own fix."
+      },
+      {
+        "text": "Rotate the access key in `~/.aws/credentials` on the instance",
+        "correct": false,
+        "why": "An instance with a profile has no such key. The credentials at risk come from the metadata service."
+      }
+    ]
+  }
+]

@@ -1,0 +1,407 @@
+{
+  "ex-c3dvrrjn": {
+    "prompt": "Que parte de uma requisição SigV4 leva a prova de quem a mandou?",
+    "hint": "Um cabeçalho, com vários campos.",
+    "choices": [
+      {
+        "text": "O corpo, que contém a chave secreta codificada",
+        "why": "O segredo nunca está na requisição. O corpo aqui tinha só `Action` e `Version`."
+      },
+      {
+        "text": "O `User-Agent`, que nomeia o cliente",
+        "why": "Ele diz que programa montou a requisição, e qualquer um escreve qualquer valor nele."
+      },
+      {
+        "text": "O cabeçalho `Authorization`, com a assinatura",
+        "why": "Isso. Ele leva o id da chave, o escopo, os cabeçalhos assinados e a assinatura."
+      },
+      {
+        "text": "O `X-Amz-Date`, que só a AWS consegue produzir",
+        "why": "O próprio cliente escreve a data; o que a faz valer é ela ser assinada."
+      }
+    ]
+  },
+  "ex-4w83kxf1": {
+    "prompt": "Como a AWS confere uma assinatura se o segredo nunca é enviado?",
+    "hint": "Os dois lados conseguem fazer a mesma conta.",
+    "choices": [
+      {
+        "text": "Ela decifra a assinatura com o id da chave",
+        "why": "Uma assinatura é um hash com chave, não algo a decifrar, e o id é público."
+      },
+      {
+        "text": "Ela pede ao cliente para mandar o segredo numa segunda conexão cifrada",
+        "why": "Há uma requisição e nenhum segundo canal; o segredo fica no cliente."
+      },
+      {
+        "text": "Com a cópia dela, assina de novo e compara",
+        "why": "Isso. Mesma requisição canônica, mesma chave derivada, mesmo resultado, ou a requisição é recusada."
+      },
+      {
+        "text": "Ela confia em qualquer assinatura de um id de chave conhecido",
+        "why": "Aí o id, que é impresso em todo lugar, bastaria para agir como o usuário."
+      }
+    ]
+  },
+  "ex-4pafnz2z": {
+    "prompt": "Ordene os passos para fazer uma assinatura SigV4.",
+    "hint": "A requisição é reduzida primeiro; a chave entra por último.",
+    "items": [
+      "escrever a requisição na forma canônica",
+      "fazer o hash da requisição canônica",
+      "montar a string a assinar com a data e o escopo",
+      "assiná-la com a chave derivada do segredo",
+      "pôr a assinatura em `Authorization`"
+    ],
+    "trap": "A string a assinar contém o hash, então o hash precisa existir antes."
+  },
+  "ex-fqgmvvzm": {
+    "prompt": "Por que a chave de assinatura é derivada do segredo, da data, da região e do serviço, em vez de ser o próprio segredo?",
+    "hint": "Para que uma chave derivada serve?",
+    "choices": [
+      {
+        "text": "Porque o segredo é curto demais para assinar",
+        "why": "Quarenta caracteres bastam para um HMAC. Comprimento não é o motivo."
+      },
+      {
+        "text": "Para uma cópia roubada valer um dia, num lugar, para uma API",
+        "why": "Isso. O segredo nunca encontra uma requisição diretamente, e cada chave derivada é estreita."
+      },
+      {
+        "text": "Para que o moto consiga assinar requisições sem saber o segredo",
+        "why": "O servidor confere assinaturas, não as faz, e o moto aqui não confere nada."
+      },
+      {
+        "text": "Para que a mesma assinatura funcione em toda região",
+        "why": "O contrário: a região está na derivação, então uma assinatura para uma região falha em outra."
+      }
+    ]
+  },
+  "ex-gs87macb": {
+    "prompt": "O `curl` assina uma requisição ao STS em São Paulo com `--aws-sigv4 \"aws:amz:___:sts\"`.",
+    "hint": "A região do laboratório.",
+    "blanks": [
+      {
+        "accept": [
+          "sa-east-1"
+        ]
+      }
+    ]
+  },
+  "ex-a5gjdvej": {
+    "prompt": "O `curl --aws-sigv4` contra o moto recebeu resposta. Por que isso não prova que a assinatura estava certa?",
+    "hint": "O que o moto verifica antes da chave da lição 7?",
+    "choices": [
+      {
+        "text": "O moto aqui responde até sem assinatura",
+        "why": "Isso. Na AWS, ou no moto com a verificação ligada, uma assinatura errada é recusada."
+      },
+      {
+        "text": "Porque o `curl` assina só dois cabeçalhos, que a AWS ignora",
+        "why": "Assinar menos cabeçalhos é permitido; o `SignedHeaders` diz quais, e esses são conferidos."
+      },
+      {
+        "text": "Porque respostas XML nunca são assinadas",
+        "why": "Respostas não são assinadas em formato nenhum; a pergunta é se a requisição foi."
+      },
+      {
+        "text": "Porque `test:test` é a chave de administrador do moto",
+        "why": "O moto não tem chave de administrador; `test` é um marcador que ele aceita enquanto não verifica nada."
+      }
+    ]
+  },
+  "ex-tba5h688": {
+    "prompt": "Ligue cada serviço da lição ao protocolo que a requisição dele mostrou.",
+    "hint": "Veja onde a ação foi nomeada.",
+    "pairs": [
+      {
+        "left": "STS",
+        "right": "query: `Action=` num formulário"
+      },
+      {
+        "left": "Organizations",
+        "right": "JSON: um cabeçalho `X-Amz-Target`"
+      },
+      {
+        "left": "S3",
+        "right": "REST-XML: um `PUT` no caminho do bucket"
+      }
+    ],
+    "right_distractors": [
+      "SOAP: um envelope XML"
+    ]
+  },
+  "ex-xc5xs07s": {
+    "prompt": "O que o `Version=2011-06-15` numa requisição ao STS nomeia?",
+    "hint": "Todo serviço tem uma, e é uma data.",
+    "choices": [
+      {
+        "text": "Qual edição da interface do STS ela fala",
+        "why": "Isso. A do EC2 é `2016-11-15`, a do S3 `2006-03-01`; operações novas chegam sob a mesma data."
+      },
+      {
+        "text": "A versão do AWS CLI que a mandou",
+        "why": "O CLI é o 2.37.4 e diz isso no `User-Agent`. A data pertence ao serviço."
+      },
+      {
+        "text": "O dia em que as credenciais foram criadas",
+        "why": "A data das credenciais está no escopo da assinatura, e é a de hoje."
+      },
+      {
+        "text": "O cliente mais antigo que o STS ainda aceita",
+        "why": "Ela nomeia a API, não um cliente; clientes antigos seguem funcionando porque a versão os mantém."
+      }
+    ]
+  },
+  "ex-v6f2e6kx": {
+    "prompt": "Uma ferramenta monta `POST /` com `Action=CreateBucket` num corpo de formulário e o manda, assinado certo, ao S3. O que acontece?",
+    "hint": "Uma assinatura não escolhe o protocolo.",
+    "choices": [
+      {
+        "text": "O S3 cria o bucket, já que a assinatura é válida",
+        "why": "Uma assinatura válida numa requisição que o S3 não entende continua sendo uma requisição que ele não entende."
+      },
+      {
+        "text": "Recusada: no S3, criar um bucket é um `PUT` no caminho dele",
+        "why": "Isso. A forma query é o dialeto do EC2, do IAM e do STS, não do S3."
+      },
+      {
+        "text": "O S3 a traduz para a forma REST e segue",
+        "why": "Nenhum serviço traduz entre protocolos; é para isso que o SDK serve, do lado do cliente."
+      },
+      {
+        "text": "Ela vai para o STS no lugar, que é dono das requisições `Action=`",
+        "why": "O endpoint decide o serviço, e a requisição foi para o do S3."
+      }
+    ]
+  },
+  "ex-sp1gax3f": {
+    "prompt": "Por que o boto3 já estava no laboratório quando esta lição começou?",
+    "hint": "Leia a linha `Required-by`.",
+    "choices": [
+      {
+        "text": "Porque o AWS CLI o instalou em `~/.local`",
+        "why": "O CLI v2 traz o próprio Python e botocore na instalação; este boto3 está no venv."
+      },
+      {
+        "text": "Porque o Ubuntu o traz junto com o Python",
+        "why": "O `which python3` apontou para o venv, e o pacote mora lá, não no sistema."
+      },
+      {
+        "text": "Porque o `env.sh` o baixa a cada `source`",
+        "why": "O `env.sh` define variáveis e ativa o venv; ele não baixa nada."
+      },
+      {
+        "text": "Ele é dependência do moto",
+        "why": "Isso. O `pip show` nomeou o moto como quem o exige."
+      }
+    ]
+  },
+  "ex-c6dq1ma6": {
+    "prompt": "O `shop-check.py` não nomeia chave nem endpoint, e mesmo assim chegou ao moto assinado com as chaves de teste. Como?",
+    "hint": "O SDK e a linha de comando dividem uma biblioteca.",
+    "choices": [
+      {
+        "text": "O boto3 lê o `~/aws/env.sh` sozinho",
+        "why": "Ele não sabe nada desse arquivo; lê as variáveis que o arquivo exportou."
+      },
+      {
+        "text": "O `Config` do programa as define",
+        "why": "O `Config` definiu a região e as novas tentativas; credenciais e endpoint vieram de outro lugar."
+      },
+      {
+        "text": "Do ambiente, pelo botocore",
+        "why": "Isso. O botocore percorre a cadeia da lição 10 e lê a variável de endpoint, como a linha de comando."
+      },
+      {
+        "text": "O moto aceita chamadas sem assinatura do Python",
+        "why": "As chamadas foram assinadas; o `Arn` voltou porque as chaves foram achadas no ambiente."
+      }
+    ]
+  },
+  "ex-034vvjg2": {
+    "prompt": "Quantas páginas o paginador do boto3 percorreu para contar as 1544 políticas gerenciadas pela AWS no moto?",
+    "hint": "O mesmo que a linha de comando na lição 25.",
+    "unit": "páginas"
+  },
+  "ex-6dba47s8": {
+    "prompt": "Uma chamada que sempre falha terminou com `reached max retries: 2`. Quantas requisições chegaram ao serviço?",
+    "hint": "As novas tentativas vêm depois da primeira.",
+    "choices": [
+      {
+        "text": "Duas",
+        "why": "Dois é o número de novas tentativas. A primeira tentativa não é uma."
+      },
+      {
+        "text": "Três",
+        "why": "Isso. O `amz-sdk-request` contou `attempt=1`, depois `attempt=2; max=3` e `attempt=3; max=3`."
+      },
+      {
+        "text": "Uma, repetida dentro do serviço",
+        "why": "As novas tentativas são do cliente: cada uma é uma requisição nova, e o `--debug` viu cada envio."
+      },
+      {
+        "text": "Quatro, já que a linha de comando acrescenta uma verificação final",
+        "why": "Não há requisição extra; com `AWS_MAX_ATTEMPTS=1` a contagem foi exatamente uma."
+      }
+    ]
+  },
+  "ex-xvk7scpq": {
+    "prompt": "Por que as esperas entre novas tentativas são aleatórias e não fixas?",
+    "hint": "Pense em mil clientes falhando no mesmo segundo.",
+    "choices": [
+      {
+        "text": "Porque o serviço diz a cada cliente quanto esperar",
+        "why": "O cliente escolhe a espera, como as linhas `Retry needed` mostraram, sem nada vindo do serviço."
+      },
+      {
+        "text": "Para esconder as novas tentativas do CloudTrail",
+        "why": "Cada nova tentativa é uma requisição como qualquer outra, registrada ou recusada como qualquer outra."
+      },
+      {
+        "text": "Para espalhar clientes que falharam juntos",
+        "why": "Isso. A espera dobra a partir de uma base pequena, e a parte aleatória espalha a multidão."
+      },
+      {
+        "text": "Porque os erros do moto chegam em horários aleatórios",
+        "why": "O moto falhou na hora toda vez; a aleatoriedade era do próprio cliente."
+      }
+    ]
+  },
+  "ex-9r5213eg": {
+    "prompt": "Quais destas um SDK no modo `standard` repete, como a AWS documenta? Marque todas as que se aplicam.",
+    "hint": "Uma nova tentativa precisa ter chance de dar certo.",
+    "choices": [
+      {
+        "text": "`ThrottlingException`",
+        "why": "Isso. A limitação de taxa é a falha para a qual as novas tentativas existem."
+      },
+      {
+        "text": "Um erro interno do serviço, HTTP 500",
+        "why": "Isso. Foi o que a transcrição repetiu duas vezes."
+      },
+      {
+        "text": "`AccessDenied`",
+        "why": "Uma recusa por política vai ser a mesma recusa na próxima tentativa."
+      },
+      {
+        "text": "Um parâmetro malformado",
+        "why": "A mesma requisição errada falha do mesmo jeito; só corrigi-la ajuda."
+      },
+      {
+        "text": "`TooManyRequestsException`",
+        "why": "Isso. É o nome que outro serviço dá à limitação de taxa."
+      }
+    ]
+  },
+  "ex-wqcw3ajx": {
+    "prompt": "Um usuário consegue ver o EC2 no console, mas o botão de lançar responde `AccessDenied`. O que isso diz?",
+    "hint": "O que o botão mandou?",
+    "choices": [
+      {
+        "text": "As políticas dele permitem só `DescribeInstances`",
+        "why": "Isso. O console é um cliente: a mesma política decide a mesma chamada, clicada ou digitada."
+      },
+      {
+        "text": "Que o console exige uma permissão de console à parte para lançar",
+        "why": "Não existe permissão de console. O botão mandou `RunInstances`, julgado como qualquer outra chamada."
+      },
+      {
+        "text": "Que o console está quebrado, já que a linha de comando funcionaria",
+        "why": "A linha de comando, assinada pela mesma identidade, recebe o mesmo `AccessDenied`."
+      },
+      {
+        "text": "Que o console usa uma versão de API mais antiga",
+        "why": "Versões não mudam permissões; o nome da ação é o que a política compara."
+      }
+    ]
+  },
+  "ex-m1hrk570": {
+    "prompt": "Que serviço registra toda chamada, do console, da linha de comando, de um SDK ou do `curl`?",
+    "hint": "A lição 12 buscou nele pelo id da chave.",
+    "choices": [
+      {
+        "text": "O IAM, no relatório de credenciais",
+        "why": "O relatório lista usuários e chaves, não chamadas."
+      },
+      {
+        "text": "O STS, na resposta do `get-caller-identity`",
+        "why": "Essa resposta diz quem está chamando agora; ela não guarda histórico."
+      },
+      {
+        "text": "A página de atividade do próprio console",
+        "why": "Ela perderia toda chamada não feita pelo console, que é a maioria."
+      },
+      {
+        "text": "O AWS CloudTrail, que guarda o `User-Agent` de cada cliente",
+        "why": "Isso. Cada registro diz quem, de onde, quando e o quê, com o `User-Agent` do cliente."
+      }
+    ]
+  },
+  "ex-6pj0w4m7": {
+    "prompt": "Um job noturno que lista todo objeto de um bucket grande falha algumas vezes por mês com `SlowDown`. O que deve mudar?",
+    "hint": "`SlowDown` é a palavra do S3 para limitação de taxa.",
+    "choices": [
+      {
+        "text": "Rodar em outro horário e torcer para o limite ser maior",
+        "why": "O limite é por conta e prefixo, não por hora, e torcer não é nova tentativa."
+      },
+      {
+        "text": "Embrulhá-lo num laço que repete na hora até dar certo",
+        "why": "Repetir sem esperar é o que piora a limitação, para este job e para a conta."
+      },
+      {
+        "text": "Deixar as novas tentativas ao SDK: espera, mais tentativas, ou o modo `adaptive`",
+        "why": "Isso. Espera com jitter foi feita exatamente para isso, e o `adaptive` também baixa a taxa do cliente."
+      },
+      {
+        "text": "Pedir à AWS para tirar a limitação do bucket",
+        "why": "Limites protegem o serviço para todo mundo; espera-se que o cliente recue."
+      }
+    ]
+  },
+  "ex-j7kr5t0g": {
+    "prompt": "Uma equipe quer chamar a AWS de uma linguagem sem SDK da AWS. O que a lição sugere?",
+    "hint": "Todo cliente monta a mesma coisa.",
+    "choices": [
+      {
+        "text": "Assinar as requisições HTTPS à mão, como o `curl`",
+        "why": "Isso. SigV4 mais o protocolo certo é o contrato inteiro; novas tentativas e páginas passam a ser deles."
+      },
+      {
+        "text": "Não dá: a API só aceita os SDKs oficiais",
+        "why": "O `curl` chamou o STS sem SDK nenhum; o serviço só vê uma requisição assinada."
+      },
+      {
+        "text": "Dirigir o console com uma ferramenta de automação de navegador",
+        "why": "Isso passa por um cliente cujas telas mudam no ritmo da AWS, para chegar à mesma API."
+      },
+      {
+        "text": "Pôr uma chave de acesso no corpo da requisição",
+        "why": "O segredo nunca viaja; ele assina. Uma chave num corpo é uma chave vazada."
+      }
+    ]
+  },
+  "ex-zsrw5qe3": {
+    "prompt": "O `aws --debug` mostrou `'X-Amz-Target': b'AWSOrganizationsV20161128.CreateOrganization'`. O que as partes dizem?",
+    "hint": "Serviço, versão, ação.",
+    "choices": [
+      {
+        "text": "A conta, a região e o usuário que chamou",
+        "why": "Isso está nas credenciais e no escopo da assinatura, não no target."
+      },
+      {
+        "text": "Que o Organizations fala o protocolo query",
+        "why": "O query nomeia a ação no corpo; um cabeçalho target é o protocolo JSON."
+      },
+      {
+        "text": "Serviço, versão da API e ação, à moda JSON",
+        "why": "Isso. O corpo era JSON, o caminho `/`, e o cabeçalho disse o que fazer."
+      },
+      {
+        "text": "A data em que a organização foi criada",
+        "why": "É a data de versão da API, a mesma nas requisições de toda conta."
+      }
+    ]
+  }
+}

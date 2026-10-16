@@ -1,0 +1,404 @@
+{
+  "ex-mzjqfaq1": {
+    "prompt": "Duas contas da organização da loja ainda só têm a VPC padrão em `sa-east-1`. Essas duas VPCs podem ser ligadas por peering para que as máquinas de uma alcancem a outra?",
+    "hint": "Compare os dois intervalos.",
+    "choices": [
+      {
+        "text": "Sim, porque as duas contas pertencem à mesma organização",
+        "why": "Pertencer a uma organização decide quem pode pedir um peering, não se os dois intervalos podem ser roteados um para o outro."
+      },
+      {
+        "text": "Não: as duas usam `172.31.0.0/16`, que se sobrepõe",
+        "why": "Isso. Toda VPC padrão tem o mesmo intervalo, então um endereço numa também é um endereço na outra, e nenhuma rota consegue separá-los."
+      },
+      {
+        "text": "Sim, depois que a segunda conta aceitar o pedido",
+        "why": "Aceitar é um passo de todo peering, e não resolve a sobreposição. A AWS recusa um peering entre intervalos sobrepostos."
+      },
+      {
+        "text": "Só se as duas VPCs ficarem em zonas diferentes",
+        "why": "Uma VPC abrange todas as zonas da região; ela não fica numa só. O problema é o intervalo, que as zonas não mudam."
+      }
+    ]
+  },
+  "ex-wwtkffgy": {
+    "prompt": "Uma conta nova no moto responde `[]` a `describe-internet-gateways`. O que a VPC que a AWS cria em toda conta nova tem que a do moto não tem?",
+    "hint": "Por que toda sub-rede padrão fica aberta desde o primeiro minuto?",
+    "choices": [
+      {
+        "text": "Um NAT gateway em cada uma das zonas",
+        "why": "Um NAT gateway é algo que você constrói e paga por hora; nenhuma VPC padrão vem com um."
+      },
+      {
+        "text": "Nada a mais; a VPC padrão da AWS também é fechada",
+        "why": "A VPC padrão da AWS é aberta de propósito, para que uma primeira máquina possa ser alcançada. Quem deixou o gateway de fora foi o moto."
+      },
+      {
+        "text": "Um gateway para a internet, e uma rota até ele",
+        "why": "Isso. Junto com a flag que distribui endereços públicos, isso torna pública toda sub-rede padrão. O moto não cria nenhuma das duas peças."
+      },
+      {
+        "text": "Um internet gateway sem nenhuma rota apontando para ele",
+        "why": "Um gateway para o qual ninguém roteia deixaria as sub-redes privadas. A AWS acrescenta a rota também."
+      }
+    ]
+  },
+  "ex-kp321s25": {
+    "prompt": "Alguém sugere um `/24` para a VPC de produção da loja, \"para economizar endereços\". Por que a lição fica com um `/16`?",
+    "hint": "Quanto custa um endereço privado, e quanto custa ficar sem eles?",
+    "choices": [
+      {
+        "text": "Um `/24` é menor que o menor intervalo que a AWS aceita para uma VPC",
+        "why": "O menor é um `/28`, então um `/24` seria aceito. O tamanho mínimo não é a objeção."
+      },
+      {
+        "text": "Endereços privados são grátis, e o intervalo de uma VPC não pode ser trocado depois",
+        "why": "Isso. Nada se economiza com um intervalo pequeno, e uma VPC que fica sem espaço é uma migração."
+      },
+      {
+        "text": "A AWS cobra uma VPC pelo número de endereços privados que o intervalo guarda, usados ou não",
+        "why": "A lista de preços cobra endereços IPv4 públicos em uso, não o intervalo privado de uma VPC."
+      },
+      {
+        "text": "Espalhar por três zonas exige pelo menos um `/16`",
+        "why": "Três zonas precisam de três sub-redes, que um `/24` comportaria como três pequenas. O motivo é espaço, não uma regra sobre zonas."
+      }
+    ]
+  },
+  "ex-fwnaapzr": {
+    "prompt": "Quantos endereços o intervalo `10.20.0.0/16` guarda?",
+    "hint": "Sobram 16 bits livres.",
+    "unit": "endereços"
+  },
+  "ex-djy91zr4": {
+    "prompt": "O `create-vpc` acabou de responder. Quais destes a nova VPC já tem? Marque todos os que se aplicam.",
+    "hint": "Os três últimos comandos da transcrição os contaram.",
+    "choices": [
+      {
+        "text": "Uma tabela de rotas principal",
+        "why": "Isso. Uma tabela, com uma rota `local` para o intervalo da VPC."
+      },
+      {
+        "text": "Uma sub-rede em cada zona",
+        "why": "Esse é o arranjo da VPC padrão. Uma VPC que você cria não tem sub-redes até você criá-las."
+      },
+      {
+        "text": "Um security group chamado `default`",
+        "why": "Isso. A lição 18 lê as regras dele."
+      },
+      {
+        "text": "Uma network ACL padrão",
+        "why": "Isso. `IsDefault` voltou `True`; a lição 18 também a lê."
+      },
+      {
+        "text": "Um internet gateway",
+        "why": "Um gateway é criado e anexado à parte, na lição 17. Uma VPC nova não alcança nada fora dela."
+      }
+    ]
+  },
+  "ex-75m81t6z": {
+    "prompt": "Em quantas Availability Zones uma sub-rede mora?",
+    "hint": "É o motivo de o plano ter nove sub-redes, e não três.",
+    "choices": [
+      {
+        "text": "Em todas as zonas da região, como a VPC que a contém",
+        "why": "Isso vale para a VPC e não para a sub-rede. Uma sub-rede fica presa a uma zona quando é criada."
+      },
+      {
+        "text": "Duas, para sobreviver à perda de uma",
+        "why": "Sobreviver a uma zona se faz com uma sub-rede em cada zona, não com uma sub-rede em duas."
+      },
+      {
+        "text": "Exatamente uma, fixada de vez quando a sub-rede é criada",
+        "why": "Isso. Então cada camada precisa de uma sub-rede por zona: três camadas em três zonas são nove."
+      },
+      {
+        "text": "A zona em que a primeira máquina dela ligar",
+        "why": "É o contrário: a zona da sub-rede decide onde as máquinas dela rodam."
+      }
+    ]
+  },
+  "ex-x642qw07": {
+    "prompt": "Uma sub-rede é criada como `/22`. Quantos endereços dela podem ser dados a máquinas?",
+    "hint": "Um `/22` deixa 10 bits livres, e a AWS guarda o mesmo número em toda sub-rede.",
+    "unit": "endereços"
+  },
+  "ex-1861n4vh": {
+    "prompt": "Seja qual for o tamanho, toda sub-rede perde ___ endereços para a AWS: o de rede, o roteador, o resolvedor de DNS, um para uso futuro e o de broadcast.",
+    "hint": "Conte a lista.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  },
+  "ex-4th2nmmn": {
+    "prompt": "Ligue cada endereço da sub-rede `public-b`, `10.20.16.0/20`, ao uso que a AWS faz dele.",
+    "hint": "Os reservados são os quatro primeiros e o último; calcule onde o `/20` termina.",
+    "pairs": [
+      {
+        "left": "`10.20.16.0`",
+        "right": "o endereço de rede da sub-rede"
+      },
+      {
+        "left": "`10.20.16.1`",
+        "right": "o roteador da VPC"
+      },
+      {
+        "left": "`10.20.16.3`",
+        "right": "guardado para uso futuro"
+      },
+      {
+        "left": "`10.20.31.255`",
+        "right": "o endereço de broadcast"
+      }
+    ],
+    "right_distractors": [
+      "o primeiro endereço que uma máquina pode receber"
+    ]
+  },
+  "ex-w50qn9cw": {
+    "prompt": "Um ano depois, a loja quer uma quarta camada, `cache`, nas três zonas, e as nove sub-redes estão ocupadas. Que plano a AWS aceita sem mudar nada de lugar?",
+    "hint": "Duas regras da seção: o intervalo de uma sub-rede é fixo, e uma sub-rede mora numa zona.",
+    "choices": [
+      {
+        "text": "Alargar as três sub-redes `app` de `/20` para `/19` e compartilhá-las",
+        "why": "O intervalo de uma sub-rede não pode ser mudado depois de criado; aumentar uma significa substituí-la e mudar o que está dentro."
+      },
+      {
+        "text": "Três `/20` novos tirados dos blocos de reserva, um por zona",
+        "why": "Isso. O plano deixou sete `/20` livres a partir de `10.20.144.0`, justamente para uma camada em que ninguém tinha pensado."
+      },
+      {
+        "text": "Um `/20` do espaço de reserva, compartilhado pelas três zonas",
+        "why": "Uma sub-rede mora numa zona, então um único `/20` dá à camada de cache uma zona e nenhuma sobrevivência."
+      },
+      {
+        "text": "Três sub-redes em `10.21.0.0/20`, `10.21.16.0/20` e `10.21.32.0/20`",
+        "why": "Elas ficam fora de `10.20.0.0/16`, e uma sub-rede fora dos intervalos da VPC é recusada como inválida, como a transcrição mostrou."
+      }
+    ]
+  },
+  "ex-rs530pha": {
+    "prompt": "O moto aceitou `10.20.250.0/29` e informou 3 endereços disponíveis. O que a AWS faz com o mesmo pedido?",
+    "hint": "A seção dá os tamanhos que a AWS permite.",
+    "choices": [
+      {
+        "text": "Aceita, com 3 endereços utilizáveis, como o moto",
+        "why": "Aqui o moto é mais tolerante que a AWS. A conta está certa; o tamanho é que não é permitido."
+      },
+      {
+        "text": "Aceita, com os 8 endereços utilizáveis, já que é minúscula",
+        "why": "Os cinco endereços reservados não diminuem com a sub-rede, e por isso sub-redes pequenas custam tanto."
+      },
+      {
+        "text": "Recusa: a menor sub-rede que a AWS aceita é um `/28`",
+        "why": "Isso. Uma sub-rede vai de `/28` a `/16`. Essa recusa não foi executada no laboratório, porque o moto não a faz."
+      },
+      {
+        "text": "Aceita depois que um aumento de cota é aprovado",
+        "why": "Uma cota conta coisas, como intervalos por VPC. O limite de tamanho de uma sub-rede não é uma cota."
+      }
+    ]
+  },
+  "ex-hy54r1kg": {
+    "prompt": "Por que o laço do `16-vpc.sh` termina a linha do `aws ec2 create-subnet` com `< /dev/null`?",
+    "hint": "De onde o `read` tira as linhas dele?",
+    "choices": [
+      {
+        "text": "Para que o `aws` não coma as linhas do plano",
+        "why": "Isso. A entrada do laço é o pipe vindo do `plan.py`; um comando lá dentro que a lesse engoliria as linhas e encerraria o laço cedo."
+      },
+      {
+        "text": "Para descartar as mensagens de erro que o `aws` imprime",
+        "why": "Erros vão para a saída de erro, e `< /dev/null` mexe só na entrada. Uma recusa ainda seria impressa."
+      },
+      {
+        "text": "Para rodar as nove chamadas de `create-subnet` ao mesmo tempo",
+        "why": "Redirecionar a entrada não muda a ordem; o laço ainda cria uma sub-rede depois da outra."
+      },
+      {
+        "text": "Para responder a uma pergunta de confirmação que o `aws` faria",
+        "why": "O `create-subnet` não pergunta nada antes de agir. O redirecionamento é sobre o que o `aws` poderia ler, não sobre uma pergunta."
+      }
+    ]
+  },
+  "ex-dvexf95n": {
+    "prompt": "O que torna uma sub-rede pública?",
+    "hint": "Para onde seria mandado um pacote destinado à internet?",
+    "choices": [
+      {
+        "text": "`MapPublicIpOnLaunch` definido como `True` na sub-rede",
+        "why": "Essa flag dá um endereço público a uma máquina que liga, e um endereço sem rota para fora não vai a lugar nenhum."
+      },
+      {
+        "text": "Uma rota `0.0.0.0/0` para um internet gateway",
+        "why": "Isso. Público é uma rota, não uma configuração; a lição 17 acrescenta essa rota para as três sub-redes públicas."
+      },
+      {
+        "text": "Uma tag `Name` que começa com `public`",
+        "why": "A `public-a` da loja tem esse nome e hoje é privada. Uma tag é uma palavra para pessoas."
+      },
+      {
+        "text": "Um `/64` IPv6 associado à sub-rede, que é público por natureza",
+        "why": "Endereços IPv6 são únicos no mundo, mas sem uma rota para um gateway também não alcançam nada."
+      }
+    ]
+  },
+  "ex-h8jde39q": {
+    "prompt": "Uma sub-rede tem `MapPublicIpOnLaunch` como `True`, e a tabela de rotas dela tem só a rota `local`. Uma máquina liga ali e ganha um endereço público. Alguém na internet consegue abrir uma conexão com ela?",
+    "hint": "Uma conexão precisa de pacotes nos dois sentidos.",
+    "choices": [
+      {
+        "text": "Sim: um endereço público é alcançável por definição",
+        "why": "O endereço é um rótulo. Sem uma rota para um internet gateway, nada leva tráfego entre ele e a internet."
+      },
+      {
+        "text": "Sim, desde que o security group libere a porta",
+        "why": "Um security group filtra o tráfego que chega; ele não faz o tráfego chegar. A peça que falta é a rota."
+      },
+      {
+        "text": "Não: a tabela de rotas dela não tem saída",
+        "why": "Isso. É a ideia da lição num caso só: uma sub-rede é pública por causa da tabela de rotas, e esta é privada diga a flag o que disser."
+      },
+      {
+        "text": "Por IPv6, que dispensa gateway",
+        "why": "IPv6 também precisa de uma rota para um gateway, e esta tabela não tem nenhuma para destino fora da VPC."
+      }
+    ]
+  },
+  "ex-devgh1bp": {
+    "prompt": "`describe-route-tables --filters Name=association.subnet-id,Values=$pa` respondeu `[]` para a `public-a`. O que isso significa?",
+    "hint": "Toda sub-rede usa alguma tabela de rotas.",
+    "choices": [
+      {
+        "text": "A sub-rede não tem tabela de rotas, então os pacotes dela não vão a lugar algum",
+        "why": "Não existe sub-rede sem tabela: uma sem associação própria usa a principal."
+      },
+      {
+        "text": "Ela usa a tabela de rotas principal, por falta de associação própria",
+        "why": "Isso. A tabela principal responde por toda sub-rede que ninguém associou a outra."
+      },
+      {
+        "text": "O nome do filtro está errado, então a busca não achou nada",
+        "why": "O filtro existe; a lição 17 o usa de novo e ele acha a tabela quando há uma associação explícita."
+      },
+      {
+        "text": "A sub-rede é pública, já que as sub-redes privadas é que têm tabela associada",
+        "why": "Os dois tipos têm tabelas. O que decide público ou privado é o que a tabela diz, não se ela está associada por nome."
+      }
+    ]
+  },
+  "ex-yjcwj9kb": {
+    "prompt": "A VPC da loja, `10.20.0.0/16`, precisa de um segundo intervalo. Qual destes a AWS aceita?",
+    "hint": "Três deles quebram uma regra que a seção cita.",
+    "choices": [
+      {
+        "text": "`10.20.128.0/17`",
+        "why": "É metade do próprio intervalo primário da VPC. O moto aceitou; a AWS recusa uma sobreposição."
+      },
+      {
+        "text": "`192.168.0.0/16`",
+        "why": "Uma VPC cujo primário está em `10.0.0.0/8` não pode acrescentar um de `192.168.0.0/16`, e esse ainda é o intervalo do escritório."
+      },
+      {
+        "text": "`172.31.0.0/16`",
+        "why": "Ele vem de `172.16.0.0/12`, que uma VPC com primário `10.x` não pode acrescentar, e ainda é o intervalo de toda VPC padrão."
+      },
+      {
+        "text": "`100.64.0.0/16`",
+        "why": "Isso. É o bloco reservado para redes de operadoras, não se sobrepõe a nada no plano da loja, e a AWS o permite ao lado de um intervalo `10.x`."
+      }
+    ]
+  },
+  "ex-pzqcxv2g": {
+    "prompt": "Todo endereço IPv6 que a AWS dá a uma VPC é único no mundo. O que impede que uma máquina com um deles seja alcançada de fora?",
+    "hint": "A lição 17 o constrói.",
+    "choices": [
+      {
+        "text": "Um intervalo IPv6 privado que a AWS distribui no lugar, como `10.0.0.0/8`",
+        "why": "Não existe esse intervalo na AWS: o `/56` vem do pool público da AWS."
+      },
+      {
+        "text": "Um NAT gateway que traduz o endereço",
+        "why": "NAT é como o IPv4 privado sai. O IPv6 não tem tradução a fazer, já que o endereço já é público."
+      },
+      {
+        "text": "Um egress-only internet gateway",
+        "why": "Isso. No IPv6, privado é um gateway que só abre para fora."
+      },
+      {
+        "text": "O tamanho do `/64`, grande demais para ser varrido",
+        "why": "Um espaço grande é difícil de adivinhar, mas um endereço que vaza é alcançado mesmo assim. Esconder não é filtrar."
+      }
+    ]
+  },
+  "ex-myyreygf": {
+    "prompt": "Na AWS, uma pessoa desenvolvedora lança um banco de dados numa sub-rede padrão de `sa-east-1` sem escolher nada. O que aconteceu?",
+    "hint": "Junte a flag e a rota da VPC padrão na AWS.",
+    "choices": [
+      {
+        "text": "Ele tem endereço público e rota para a internet; o security group é tudo o que fica entre ele e o mundo",
+        "why": "Isso. Na AWS a sub-rede padrão distribui endereços públicos e roteia `0.0.0.0/0` para um internet gateway. É o arranjo inseguro que o padrão entrega."
+      },
+      {
+        "text": "Nada arriscado: uma sub-rede padrão é privada até alguém acrescentar uma rota",
+        "why": "Essa é a VPC padrão do moto. A da AWS já vem com o gateway e a rota no lugar."
+      },
+      {
+        "text": "Ele tem endereço público mas nenhuma rota, então não pode ser alcançado",
+        "why": "A parte do endereço está certa. A rota também existe na AWS: a tabela principal da VPC padrão manda `0.0.0.0/0` para o gateway."
+      },
+      {
+        "text": "O lançamento falha, já que bancos de dados precisam de uma VPC criada à mão",
+        "why": "A VPC padrão aceita tudo o que é lançado sem nomear uma VPC. É por isso que ela junta os acidentes."
+      }
+    ]
+  },
+  "ex-c5narsnf": {
+    "prompt": "Ponha os passos de construir a VPC da loja na ordem em que a lição os faz.",
+    "hint": "Um intervalo é escolhido antes de qualquer coisa ser criada, e uma sub-rede precisa de uma VPC.",
+    "items": [
+      "escolher um intervalo que não se sobreponha a nenhuma outra rede da loja",
+      "criar a VPC com esse intervalo e as tags",
+      "calcular um `/20` por zona e camada com o `plan.py`",
+      "criar as nove sub-redes a partir do plano",
+      "dar à camada pública uma tabela de rotas com rota para um internet gateway"
+    ],
+    "trap": "A tabela de rotas vem por último: é a lição 17, e até lá as nove sub-redes são privadas."
+  },
+  "ex-h9pfzv16": {
+    "prompt": "Suponha que a camada de dados usasse um `/24` em cada uma das três zonas em vez de um `/20`. Quantos endereços a camada inteira ofereceria a máquinas?",
+    "hint": "Primeiro um `/24`, depois três.",
+    "unit": "endereços"
+  },
+  "ex-zxzxb5gb": {
+    "prompt": "Quais destes o laboratório mostrou o moto fazendo diferente da AWS? Marque todos os que se aplicam.",
+    "hint": "Dois dos cinco são coisas que os dois fazem do mesmo jeito.",
+    "choices": [
+      {
+        "text": "A VPC padrão dele não tem internet gateway",
+        "why": "Isso. A da AWS tem um anexado, com rota para ele."
+      },
+      {
+        "text": "Ele recusa uma sub-rede que se sobrepõe a outra",
+        "why": "Os dois recusam, com `InvalidSubnet.Conflict` no caso do moto."
+      },
+      {
+        "text": "Ele aceita uma sub-rede `/29`",
+        "why": "Isso. A menor sub-rede da AWS é um `/28`."
+      },
+      {
+        "text": "Ele guarda cinco endereços de toda sub-rede",
+        "why": "Os dois guardam: 251 num `/24` e 4.091 num `/20`."
+      },
+      {
+        "text": "Ele aceita um segundo intervalo que se sobrepõe ao primeiro",
+        "why": "Isso. O moto aceitou `10.20.128.0/17`; a AWS recusa uma sobreposição."
+      }
+    ]
+  }
+}

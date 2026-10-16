@@ -1,0 +1,404 @@
+{
+  "ex-wmg19326": {
+    "prompt": "Quantas tabelas de rotas uma sub-rede usa de cada vez?",
+    "hint": "A lição 16 achou as nove sub-redes usando uma sem que ninguém mandasse.",
+    "choices": [
+      {
+        "text": "Quantas estiverem associadas a ela, lidas uma após a outra",
+        "why": "Uma sub-rede fica associada a uma tabela de cada vez; associar outra substitui a primeira."
+      },
+      {
+        "text": "Uma: a principal, a menos que outra seja associada",
+        "why": "Isso. Uma sub-rede sem associação própria usa a tabela principal implicitamente."
+      },
+      {
+        "text": "Nenhuma, até que uma seja associada",
+        "why": "Isso deixaria uma sub-rede nova sem rotear nem dentro da VPC. A tabela principal a cobre desde o início."
+      },
+      {
+        "text": "Uma para cada zona que a VPC abrange",
+        "why": "Zonas não têm tabelas de rotas; sub-redes têm. A loja tem uma tabela privada por zona porque escolheu ter."
+      }
+    ]
+  },
+  "ex-da3n2z50": {
+    "prompt": "Uma máquina em `app-b` manda um pacote para `10.20.100.5`, um banco de dados em `data-a`, em outra zona. Que rota da tabela de `app-b` o leva?",
+    "hint": "Dentro de que intervalo está `10.20.100.5`?",
+    "choices": [
+      {
+        "text": "O NAT gateway da zona b, já que `data-a` está em outra zona",
+        "why": "Um NAT gateway é a saída da VPC. Outra zona da mesma VPC continua dentro dela."
+      },
+      {
+        "text": "Nenhuma: atravessar zonas exige uma conexão de peering",
+        "why": "Peering liga duas VPCs (lição 20). As zonas de uma VPC são ligadas pela rota `local`."
+      },
+      {
+        "text": "`local`, que toda tabela da VPC carrega",
+        "why": "Isso. `10.20.100.5` está dentro de `10.20.0.0/16`, e `local` cobre toda sub-rede da VPC seja qual for a zona."
+      },
+      {
+        "text": "O internet gateway, para fora e de volta",
+        "why": "O pacote não sai da VPC: o `/16` é mais específico que `0.0.0.0/0`, e `app-b` nem tem rota para o internet gateway."
+      }
+    ]
+  },
+  "ex-b1pbc14y": {
+    "prompt": "Depois do `17-routes.sh`, alguém resolve um problema às pressas acrescentando `0.0.0.0/0` para o internet gateway na tabela PRINCIPAL. Hoje nada muda. O que mudou para o mês que vem?",
+    "hint": "Quais sub-redes usam a tabela principal, hoje e depois?",
+    "choices": [
+      {
+        "text": "As três sub-redes públicas ganham uma segunda saída",
+        "why": "Elas usam a tabela `public`, associada por nome; a tabela principal não se aplica a elas."
+      },
+      {
+        "text": "Uma sub-rede criada sem associação é pública desde o primeiro minuto",
+        "why": "Isso. Toda sub-rede tem tabela explícita hoje, então nada se mexe agora; uma nova cai na principal, que agora se abre para a internet."
+      },
+      {
+        "text": "As sub-redes privadas passam a mandar o tráfego direto para o internet gateway",
+        "why": "Cada sub-rede privada está associada à tabela da sua zona, que continua apontando para o NAT gateway."
+      },
+      {
+        "text": "Nada, já que a AWS recusa uma rota para internet gateway na tabela principal",
+        "why": "A AWS aceita; a tabela principal da VPC padrão tem exatamente essa rota. Por isso o hábito de deixá-la privada importa."
+      }
+    ]
+  },
+  "ex-pa5mfmjm": {
+    "prompt": "O destino que contém todo endereço IPv4, e portanto a rota que um pacote toma quando nada mais específico casa, se escreve ___.",
+    "hint": "Um prefixo de tamanho zero.",
+    "blanks": [
+      {
+        "accept": [
+          "0.0.0.0/0"
+        ]
+      }
+    ]
+  },
+  "ex-at16390q": {
+    "prompt": "Qual destes vale para um internet gateway?",
+    "hint": "Compare com um NAT gateway em dois pontos: zona e preço.",
+    "choices": [
+      {
+        "text": "Ele mora numa zona, então falha junto com ela",
+        "why": "Esse é o NAT gateway. A AWS opera o internet gateway em todas as zonas da região."
+      },
+      {
+        "text": "Ele é cobrado por hora, como um NAT gateway",
+        "why": "Um internet gateway não tem cobrança por hora. O que ele carrega é cobrado como transferência de dados."
+      },
+      {
+        "text": "Ele não tem zona própria nem preço por hora",
+        "why": "Isso. Um por VPC, operado pela AWS na região inteira, e a fatura só enxerga os bytes."
+      },
+      {
+        "text": "Ele filtra conexões vindas de fora, como um firewall",
+        "why": "Ele traduz e encaminha. Filtrar é trabalho do security group e da network ACL, na lição 18."
+      }
+    ]
+  },
+  "ex-rv8wmw8j": {
+    "prompt": "Por que as seis sub-redes privadas não podem simplesmente usar a tabela `public`?",
+    "hint": "Em que o internet gateway traduziria os endereços delas?",
+    "choices": [
+      {
+        "text": "Elas não têm endereço público para o gateway usar",
+        "why": "Isso. O internet gateway mapeia o endereço privado de uma máquina para o público dela; sem um, o pacote não tem como voltar. E um banco de dados não deveria estar a uma rota da internet."
+      },
+      {
+        "text": "Uma tabela de rotas serve uma sub-rede no máximo",
+        "why": "A tabela `public` serve três sub-redes. Uma tabela pode servir muitas; uma sub-rede usa uma."
+      },
+      {
+        "text": "Uma tabela não pode ter sub-redes de camadas diferentes",
+        "why": "Camadas são nomes no plano da loja. Uma tabela de rotas não sabe nada delas."
+      },
+      {
+        "text": "O internet gateway aceita tráfego de uma zona só",
+        "why": "Ele serve a VPC inteira em todas as zonas; é por isso que uma tabela serve `public-a`, `public-b` e `public-c`."
+      }
+    ]
+  },
+  "ex-qm0976x3": {
+    "prompt": "Por que `nat-a` é criado em `public-a` e não em `app-a`, ao lado das máquinas que ele serve?",
+    "hint": "Os próprios pacotes do gateway também são roteados.",
+    "choices": [
+      {
+        "text": "Um NAT gateway numa sub-rede privada ficaria alcançável pela internet",
+        "why": "É o contrário: numa sub-rede privada ele nem conseguiria alcançar a internet."
+      },
+      {
+        "text": "Os pacotes dele são roteados pela tabela da sub-rede dele, e só a pública tem saída",
+        "why": "Isso. É o segundo salto do terceiro pacote: a tabela de `public-a` o manda para o internet gateway."
+      },
+      {
+        "text": "Sub-redes públicas são mais baratas por hora",
+        "why": "Uma sub-rede não tem preço. O NAT gateway custa os mesmos 0,093 por hora onde quer que fique."
+      },
+      {
+        "text": "A AWS reserva as sub-redes privadas para máquinas",
+        "why": "Não existe essa regra; o motivo é roteamento, não reserva."
+      }
+    ]
+  },
+  "ex-x6wt60a9": {
+    "prompt": "Um NAT gateway deixa a aplicação da loja chamar para fora e não deixa ninguém chamar para dentro. Por que nada de fora entra?",
+    "hint": "Pense no que o gateway sabe quando chega um pacote que ninguém pediu.",
+    "choices": [
+      {
+        "text": "Ele inspeciona cada pacote e descarta os perigosos",
+        "why": "Ele não inspeciona nada. É um tradutor, e os filtros são a lição 18."
+      },
+      {
+        "text": "O Elastic IP dele recusa tráfego de entrada",
+        "why": "Um endereço não recusa nada; é um rótulo. O motivo é para onde o gateway consegue mapear o pacote."
+      },
+      {
+        "text": "Ele não tem como saber para qual máquina privada vai um pacote que ninguém pediu",
+        "why": "Isso. Uma resposta casa com uma conexão que alguém de dentro abriu; uma conexão nova vinda de fora não casa com nada, então não vai a lugar algum."
+      },
+      {
+        "text": "A tabela de rotas dele não tem rota de volta para a internet",
+        "why": "Tem: a tabela de `public-a` manda `0.0.0.0/0` para o internet gateway, e é assim que as chamadas da loja saem."
+      }
+    ]
+  },
+  "ex-c1zjjdy5": {
+    "prompt": "Uma máquina em `app-a` chama o provedor de pagamentos em `198.51.100.7`. Ponha em ordem os passos do caminho de saída do pacote.",
+    "hint": "Duas tabelas são lidas, uma depois da outra.",
+    "items": [
+      "a `private-a` casa `0.0.0.0/0` e o manda para `nat-a`",
+      "o `nat-a` põe o próprio endereço público no lugar do da máquina",
+      "a tabela de `public-a` casa `0.0.0.0/0` e o manda para o internet gateway",
+      "o internet gateway o entrega à internet"
+    ],
+    "trap": "O endereço é trocado pelo NAT gateway, então acontece entre as duas tabelas."
+  },
+  "ex-d4bkc61h": {
+    "prompt": "Uma tabela de rotas tem `0.0.0.0/0` para `nat-a`, `192.168.0.0/16` para o virtual private gateway, e `192.168.4.0/24` para uma conexão de peering, `pcx-…`. Para onde vai um pacote para `192.168.4.20`?",
+    "hint": "Três rotas contêm o endereço. Compare os prefixos.",
+    "choices": [
+      {
+        "text": "Para o virtual private gateway, a rota do escritório",
+        "why": "O `/16` contém o endereço, e uma rota mais longa também. A mais longa vence."
+      },
+      {
+        "text": "Para a conexão de peering",
+        "why": "Isso. `192.168.4.0/24` é a rota mais específica que contém `192.168.4.20`; a ordem em que as rotas foram escritas não importa."
+      },
+      {
+        "text": "Para `nat-a`, já que `0.0.0.0/0` casa com todo endereço",
+        "why": "Ele casa, e é o prefixo mais curto que existe, então perde para qualquer outra rota que case."
+      },
+      {
+        "text": "A lugar nenhum: duas rotas se sobrepõem, então a tabela é recusada",
+        "why": "Rotas sobrepostas são permitidas e normais; o que se recusa são duas rotas para o mesmo destino."
+      }
+    ]
+  },
+  "ex-646b2hfh": {
+    "prompt": "Na mesma tabela, um pacote vai para `192.168.9.1`. Qual é o tamanho do prefixo da rota que o leva?",
+    "hint": "Ele está dentro de `192.168.4.0/24`?",
+    "unit": "bits"
+  },
+  "ex-9aykafpa": {
+    "prompt": "As máquinas de uma sub-rede privada têm endereços IPv6 e precisam alcançar a internet por IPv6 sem serem alcançáveis por ela. Para onde aponta `::/0`?",
+    "hint": "IPv6 não precisa de tradução.",
+    "choices": [
+      {
+        "text": "O NAT gateway da zona, como no IPv4",
+        "why": "Um NAT gateway traduz endereços IPv4 privados. Um endereço IPv6 já é público e só precisa de uma porta de mão única."
+      },
+      {
+        "text": "O internet gateway",
+        "why": "Isso tornaria a sub-rede pública por IPv6: conexões poderiam ser abertas de fora para as máquinas dela."
+      },
+      {
+        "text": "Um egress-only internet gateway",
+        "why": "Isso. Ele deixa conexões saírem por IPv6 e nenhuma entrar, e não tem cobrança por hora."
+      },
+      {
+        "text": "O virtual private gateway, que mantém o tráfego privado",
+        "why": "Um virtual private gateway é a ponta da VPC numa VPN para o escritório (lição 24), não um caminho para a internet."
+      }
+    ]
+  },
+  "ex-94xm1req": {
+    "prompt": "O moto guardou todas as rotas da lição. O que isso prova sobre para onde vai um pacote?",
+    "hint": "O que o moto transporta?",
+    "choices": [
+      {
+        "text": "Que o caminho funciona, já que o moto recusaria uma rota quebrada",
+        "why": "O moto recusa alguns pedidos malformados, como um destino repetido, mas nunca manda um pacote por uma rota."
+      },
+      {
+        "text": "Nada: o moto não roteia pacote nenhum",
+        "why": "Isso. Na AWS, o Reachability Analyzer verifica um caminho a partir da configuração e os Flow Logs registram o que se moveu; nenhum foi executado aqui."
+      },
+      {
+        "text": "Que a AWS rotearia do mesmo jeito, porque o moto é código da AWS",
+        "why": "O moto é uma imitação independente e de código aberto da API da AWS, não código da AWS."
+      },
+      {
+        "text": "Que o NAT gateway está de pé, já que o estado é `available`",
+        "why": "O estado é um campo num registro. No moto não há gateway por trás dele para estar de pé ou não."
+      }
+    ]
+  },
+  "ex-0pybq7f6": {
+    "prompt": "Com os preços da lição e 730 horas no mês, quantos dólares por mês custam DOIS NAT gateways, cada um com o seu Elastic IP, antes de qualquer tráfego?",
+    "hint": "0,093 e 0,005 por hora, para cada um de dois.",
+    "unit": "dólares"
+  },
+  "ex-48mt512q": {
+    "prompt": "A loja passa de três NAT gateways para um compartilhado, com os mesmos 200 GB por mês saindo. Que linha da fatura NÃO muda?",
+    "hint": "Um dos três preços é por gigabyte, seja qual for o número de gateways.",
+    "choices": [
+      {
+        "text": "As horas de NAT gateway",
+        "why": "Elas caem do valor de três gateways para um: de 203,67 por mês para 67,89."
+      },
+      {
+        "text": "As horas de endereço IPv4 público, já que cada gateway tinha o seu",
+        "why": "Dois Elastic IPs vão embora com os dois gateways, então essa linha cai também."
+      },
+      {
+        "text": "Os gigabytes processados pelo NAT",
+        "why": "Isso. 200 × 0,093 = 18,60, seja um gateway levando todos ou três dividindo."
+      },
+      {
+        "text": "A transferência de dados entre zonas",
+        "why": "Essa aparece: as zonas b e c agora atravessam para a zona a a cada gigabyte."
+      }
+    ]
+  },
+  "ex-jyfmxbeg": {
+    "prompt": "Outra loja usa um NAT gateway compartilhado, e 10 TB por mês (10.240 GB) do tráfego de NAT dela vêm das duas zonas sem o gateway. Só pelo dinheiro, qual arranjo sai mais barato?",
+    "hint": "Compare a travessia a 0,02 por gigabyte com os 143,08 que dois gateways a mais custam.",
+    "choices": [
+      {
+        "text": "O compartilhado, já que um gateway custa mais que qualquer travessia",
+        "why": "Nesse volume a travessia é 10.240 × 0,02 = 204,80 por mês, mais que os 143,08 dos gateways a mais."
+      },
+      {
+        "text": "Um por zona: a travessia custaria 204,80 por mês, mais que 143,08",
+        "why": "Isso. O equilíbrio era uns 7.154 GB por mês; 10.240 passa disso, então três gateways ganham no dinheiro além de na falha."
+      },
+      {
+        "text": "Custam o mesmo, já que o processamento é por gigabyte de qualquer jeito",
+        "why": "O processamento é igual nos dois, mas as horas e a travessia não, e são elas o assunto da comparação."
+      },
+      {
+        "text": "O compartilhado, porque a travessia é grátis dentro de uma região",
+        "why": "Entre duas zonas de uma região são 0,01 por gigabyte em cada sentido, como a lição 1 mediu. Só dentro de uma zona é grátis."
+      }
+    ]
+  },
+  "ex-ds8g9qx7": {
+    "prompt": "Compartilhar um NAT gateway economiza uns 140 dólares por mês para a loja. Por que a produção ainda usa três?",
+    "hint": "O que acontece com as zonas b e c quando a zona a falha?",
+    "choices": [
+      {
+        "text": "Uma falha da zona a cortaria b e c da internet também",
+        "why": "Isso. A loja se espalhou por zonas para sobreviver à perda de uma; um gateway compartilhado desfaz isso para toda chamada de saída."
+      },
+      {
+        "text": "Um NAT gateway só carrega tráfego da própria zona",
+        "why": "Ele carrega tráfego de qualquer sub-rede cuja tabela aponte para ele; o desenho compartilhado depende exatamente disso."
+      },
+      {
+        "text": "A travessia entre zonas custaria mais que os gateways com 200 GB",
+        "why": "Com 200 GB a travessia dá uns 2,67 dólares por mês. O dinheiro favorece o compartilhamento; o motivo é a falha."
+      },
+      {
+        "text": "A AWS exige um NAT gateway por zona em contas de produção",
+        "why": "A AWS não exige nada disso; o staging compartilha um na mesma organização. A decisão é da loja."
+      }
+    ]
+  },
+  "ex-4mphwa3f": {
+    "prompt": "Ligue cada linha da lista de preços ao preço dela em São Paulo, pelas ofertas que a lição leu.",
+    "hint": "Duas delas são o mesmo número em unidades diferentes.",
+    "pairs": [
+      {
+        "left": "`SAE1-NatGateway-Hours`",
+        "right": "0,093 por hora"
+      },
+      {
+        "left": "`SAE1-NatGateway-Bytes`",
+        "right": "0,093 por GB"
+      },
+      {
+        "left": "`SAE1-PublicIPv4:InUseAddress`",
+        "right": "0,005 por hora"
+      },
+      {
+        "left": "`SAE1-DataTransfer-Regional-Bytes`",
+        "right": "0,01 por GB, em cada sentido"
+      }
+    ],
+    "right_distractors": [
+      "0,138 por GB"
+    ]
+  },
+  "ex-dvkpnhxy": {
+    "prompt": "Depois dos dois scripts, alguém cria uma sub-rede `cache-a` na zona a e não associa nada a ela. Para onde as máquinas dela conseguem mandar pacotes?",
+    "hint": "Que tabela uma sub-rede sem associação usa, e o que há nela agora?",
+    "choices": [
+      {
+        "text": "Para a internet por `nat-a`, como as outras sub-redes da zona a",
+        "why": "Estar na zona a não lhe dá nada; a `private-a` serve as sub-redes associadas a ela, e `cache-a` não é uma delas."
+      },
+      {
+        "text": "Para a internet pelo internet gateway, já que uma sub-rede nova começa pública",
+        "why": "Uma sub-rede nova começa na tabela principal, e a tabela principal da loja não tem saída."
+      },
+      {
+        "text": "Dentro da VPC e em nenhum outro lugar",
+        "why": "Isso. Ela usa a tabela principal, que só tem `local`. É o padrão seguro que a lição montou de propósito."
+      },
+      {
+        "text": "A lugar nenhum, até que uma tabela seja associada",
+        "why": "A tabela principal ainda lhe dá `local`, então ela alcança toda outra sub-rede da VPC."
+      }
+    ]
+  },
+  "ex-vyfg142k": {
+    "prompt": "Quais destes valem para a VPC da loja depois do `16-vpc.sh` e do `17-routes.sh`? Marque todos os que se aplicam.",
+    "hint": "A última transcrição lista todas as tabelas.",
+    "choices": [
+      {
+        "text": "Uma tabela, `public`, serve as três sub-redes públicas",
+        "why": "Isso. Três associações, e `0.0.0.0/0` para o internet gateway."
+      },
+      {
+        "text": "`app-b` alcança a internet por `nat-a`",
+        "why": "`app-b` usa a `private-b`, que aponta para `nat-b`. Nada atravessa zona."
+      },
+      {
+        "text": "A tabela principal não serve sub-rede nenhuma",
+        "why": "Isso. A única associação dela é o marcador que a faz principal."
+      },
+      {
+        "text": "Cada tabela privada serve duas sub-redes",
+        "why": "Isso. As sub-redes `app` e `data` da zona."
+      },
+      {
+        "text": "As tabelas privadas roteiam `192.168.0.0/16` para o escritório",
+        "why": "Essa rota foi acrescentada à mão para ser lida, e o script a deixa de fora."
+      }
+    ]
+  },
+  "ex-rhp2stzr": {
+    "prompt": "Uma máquina em `app-c` chama um provedor de pagamentos. O pacote dela é roteado primeiro pela `private-c`, que o entrega ao NAT gateway chamado ___.",
+    "hint": "Cada zona tem o seu, com o nome da letra da zona.",
+    "blanks": [
+      {
+        "accept": [
+          "nat-c"
+        ]
+      }
+    ]
+  }
+}

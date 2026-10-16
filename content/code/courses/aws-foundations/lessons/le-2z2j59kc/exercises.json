@@ -1,0 +1,537 @@
+[
+  {
+    "id": "ex-ym733c2t",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many VPCs does one peering connection join?",
+    "hint": "It is a pair.",
+    "choices": [
+      {
+        "text": "As many as accept the request",
+        "correct": false,
+        "why": "A request names one peer VPC, and one VPC accepts it."
+      },
+      {
+        "text": "Exactly two",
+        "correct": true,
+        "why": "Right. Each further pair needs a peering of its own."
+      },
+      {
+        "text": "Every VPC of the region that shares its account",
+        "correct": false,
+        "why": "Accounts and regions do not widen a peering; it stays a pair, even across both."
+      },
+      {
+        "text": "Two, plus any VPC peered with either of them",
+        "correct": false,
+        "why": "That would make it transitive, which is the one thing it is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjrpy0nj",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Production is peered with staging and with the copy in Virginia. Somebody adds a route in staging's table: `10.40.0.0/16` to the production peering. What happens to a packet from staging for `10.40.0.5`?",
+    "hint": "A peering carries traffic between which VPCs?",
+    "choices": [
+      {
+        "text": "It reaches Virginia through production's peering",
+        "correct": false,
+        "why": "That would be transitive routing, which peering does not do whatever the routes say."
+      },
+      {
+        "text": "It reaches Virginia once production adds a matching route",
+        "correct": false,
+        "why": "No route in production makes a peering carry traffic that is not between its own two VPCs."
+      },
+      {
+        "text": "It is dropped: the peering carries only staging to production",
+        "correct": true,
+        "why": "Right. Staging and Virginia need a peering of their own, or a hub."
+      },
+      {
+        "text": "It goes to the internet, since no route matches",
+        "correct": false,
+        "why": "A route matches, the one just added; the packet goes to the peering and is not passed on."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrvfvha1",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted a peering request between production and a copy with the same `10.20.0.0/16`. What does AWS do?",
+    "hint": "Could a route table tell the two apart?",
+    "choices": [
+      {
+        "text": "Refuses it: the two ranges overlap",
+        "correct": true,
+        "why": "Right. An address in `10.20.0.0/16` would be in both VPCs, so no route could say which one a packet is for."
+      },
+      {
+        "text": "Accepts it, and the more specific route decides",
+        "correct": false,
+        "why": "Both ranges are the same `/16`; there is nothing more specific to decide with."
+      },
+      {
+        "text": "Accepts it if the two VPCs are in different accounts",
+        "correct": false,
+        "why": "The overlap is about addresses, and accounts do not change addresses."
+      },
+      {
+        "text": "Accepts it and translates one side's addresses",
+        "correct": false,
+        "why": "Peering translates nothing. PrivateLink is the tool that does not care about overlap."
+      }
+    ]
+  },
+  {
+    "id": "ex-7b5ss1eq",
+    "version": 1,
+    "section": "peering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The peering is `active` and production's private tables have a route for `10.30.0.0/16`, but staging's table has none for `10.20.0.0/16`. A machine in `app-a` opens a connection to staging. What happens?",
+    "hint": "Follow the reply.",
+    "choices": [
+      {
+        "text": "It works, since one route is enough for a peering",
+        "correct": false,
+        "why": "A connection needs packets in both directions, and each direction needs its own route."
+      },
+      {
+        "text": "The packet arrives; the reply has no route back",
+        "correct": true,
+        "why": "Right. The classic fault of peering: routes on both sides."
+      },
+      {
+        "text": "The packet never leaves production",
+        "correct": false,
+        "why": "Production's route sends it to the peering, and it reaches staging."
+      },
+      {
+        "text": "The reply goes back through the NAT gateway",
+        "correct": false,
+        "why": "Staging has no route for `10.20.0.0/16`, and a reply for a private address would not return through the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-db5pqvep",
+    "version": 1,
+    "section": "peering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly copy from production to the peered VPC in Virginia is 300 GB a month. At lesson 1's price out of São Paulo, how many dollars a month is that?",
+    "hint": "Traffic between regions, out of `sa-east-1`.",
+    "value": 41.4,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-srnvpr62",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a Transit Gateway do that peering does not?",
+    "hint": "It is the word peering refuses.",
+    "choices": [
+      {
+        "text": "It joins VPCs whose ranges overlap",
+        "correct": false,
+        "why": "It routes between ranges, so overlap is as much a problem for it as for peering."
+      },
+      {
+        "text": "It routes transitively between its attachments",
+        "correct": true,
+        "why": "Right. Every network attaches once, and the hub's tables decide who reaches whom."
+      },
+      {
+        "text": "It carries traffic without any charge per hour",
+        "correct": false,
+        "why": "That is peering. The hub costs 0.09 an hour per attachment."
+      },
+      {
+        "text": "It removes the need for routes in the VPCs' own tables",
+        "correct": false,
+        "why": "Each VPC still needs a route pointing at the hub."
+      }
+    ]
+  },
+  {
+    "id": "ex-ann389vj",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each word of the hub to what it decides.",
+    "hint": "Four words, four questions.",
+    "pairs": [
+      {
+        "left": "attachment",
+        "right": "a network joined to the hub"
+      },
+      {
+        "left": "association",
+        "right": "which hub table an attachment's traffic is looked up in"
+      },
+      {
+        "left": "propagation",
+        "right": "which hub tables learn an attachment's range"
+      },
+      {
+        "left": "static route",
+        "right": "a range written by hand into a hub table"
+      }
+    ],
+    "right_distractors": [
+      "the price of an attachment per hour"
+    ]
+  },
+  {
+    "id": "ex-5rg3vvha",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, propagation was `enabled` for both attachments and the search for propagated routes answered `[]`. What would AWS have listed?",
+    "hint": "Each attachment propagates its VPC's range.",
+    "choices": [
+      {
+        "text": "Nothing either, until static routes are added",
+        "correct": false,
+        "why": "Propagation is exactly what makes static routes unnecessary for attached VPCs."
+      },
+      {
+        "text": "`0.0.0.0/0` towards each attachment",
+        "correct": false,
+        "why": "A VPC attachment propagates its VPC's range, not a default route."
+      },
+      {
+        "text": "`10.20.0.0/16` and `10.30.0.0/16`, of type `propagated`",
+        "correct": true,
+        "why": "Right. moto stops short there, which is why the lesson wrote the two routes as static ones."
+      },
+      {
+        "text": "Each subnet of the attachments as a separate route",
+        "correct": false,
+        "why": "The range propagated is the VPC's, one route per VPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-emanv105",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Staging must not reach production, and both must reach a shared tools VPC. Which hub arrangement says that?",
+    "hint": "Association picks the table; the table's routes decide where traffic can go.",
+    "choices": [
+      {
+        "text": "One default table, with security groups refusing the other side",
+        "correct": false,
+        "why": "That can block connections, but the hub still routes everybody to everybody; the routing does not say it."
+      },
+      {
+        "text": "Prod and staging on a table with only the tools route; tools on one with both",
+        "correct": true,
+        "why": "Right. Each reaches the tools, the tools reach both, and no table gives staging a route to production."
+      },
+      {
+        "text": "Two peerings to the tools VPC, and the hub for the rest",
+        "correct": false,
+        "why": "It can be built, but the question asks for the hub arrangement, and two systems of routing are harder to read than one."
+      },
+      {
+        "text": "Turn off propagation on the staging attachment",
+        "correct": false,
+        "why": "Then nobody learns staging's range, the tools included, and production could still reach whatever its table holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms8m5jc9",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Production's private tables had `10.30.0.0/16` to the peering. What moved that traffic onto the hub?",
+    "hint": "The destination stayed the same.",
+    "choices": [
+      {
+        "text": "Attaching the VPC to the hub, which rewrites its routes",
+        "correct": false,
+        "why": "An attachment changes nothing in the VPC's own tables."
+      },
+      {
+        "text": "Deleting the peering, after which the hub takes over",
+        "correct": false,
+        "why": "Deleting it would leave the route pointing at nothing. The target has to be changed."
+      },
+      {
+        "text": "`replace-route` with the hub as the new target",
+        "correct": true,
+        "why": "Right. Same destination, new target, one table at a time; then the peering is removed."
+      },
+      {
+        "text": "A second route for `10.30.0.0/16`, which wins by being newer",
+        "correct": false,
+        "why": "One destination, one route: a second is refused, and age decides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckhxkdw0",
+    "version": 1,
+    "section": "transit-gateway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `shop-hub`, which belongs to one account, become usable by `shop-staging`'s account?",
+    "hint": "The section names the service that shares it.",
+    "choices": [
+      {
+        "text": "By a peering between the two accounts",
+        "correct": false,
+        "why": "Peering joins VPCs, not accounts, and it does not share a hub."
+      },
+      {
+        "text": "A share in AWS Resource Access Manager",
+        "correct": true,
+        "why": "Right. The other account then attaches its own VPC to the shared hub."
+      },
+      {
+        "text": "By copying the hub into the other account",
+        "correct": false,
+        "why": "There is no copying; the hub stays one, owned by one account."
+      },
+      {
+        "text": "An endpoint service in front of the hub, as in lesson 19",
+        "correct": false,
+        "why": "Endpoint services share one service behind a load balancer, not a router."
+      }
+    ]
+  },
+  {
+    "id": "ex-nq8prm3q",
+    "version": 1,
+    "section": "which-one",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the lesson's prices and 730 hours, how many dollars a month do four Transit Gateway attachments cost, before any gigabyte?",
+    "hint": "0.09 an hour each.",
+    "value": 262.8,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-h7m8q6w2",
+    "version": 1,
+    "section": "which-one",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Eight VPCs must all reach each other with peering only. How many peering connections is that?",
+    "hint": "Every pair once.",
+    "value": 28,
+    "tolerance": 0,
+    "unit": "peerings"
+  },
+  {
+    "id": "ex-d0bm16g4",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `price.py` print six lines for `SAE1-TransitGateway-Hours`?",
+    "hint": "The second command listed them.",
+    "choices": [
+      {
+        "text": "Six tiers of monthly use, each cheaper than the last",
+        "correct": false,
+        "why": "Tiers have different ranges and prices; these all run from 0 to Inf at 0.09."
+      },
+      {
+        "text": "One line per zone of the region, and two spare",
+        "correct": false,
+        "why": "`sa-east-1` has three zones, and the list prices attachments, not zones."
+      },
+      {
+        "text": "One product for each kind of attachment, same price",
+        "correct": true,
+        "why": "Right. VPC, VPN, Direct Connect, Connect, peering between hubs and the VPN concentrator."
+      },
+      {
+        "text": "A bug in `price.py`, which prints each line six times",
+        "correct": false,
+        "why": "It printed the peering lines once each; the six are six products in the offer."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nmnn45v",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three VPCs exchange heavy traffic, about 20 TB a month in all, and every pair talks. Nothing needs to pass through a VPC to reach another. Which is cheaper, and why?",
+    "hint": "Count the per-gigabyte prices, not only the hours.",
+    "choices": [
+      {
+        "text": "Peering: no hours, and no 0.02 a gigabyte processed",
+        "correct": true,
+        "why": "Right. The hub would charge 3 × 65.70 a month and about 20,480 × 0.02 ≈ 409.60 for processing; peering charges only the crossing of zones, which the hub's traffic pays too."
+      },
+      {
+        "text": "The hub, since it processes heavy traffic more cheaply",
+        "correct": false,
+        "why": "Its processing has a single price, 0.02, with no tiers that fall with volume."
+      },
+      {
+        "text": "The hub, because three peerings cost more than three attachments",
+        "correct": false,
+        "why": "A peering has no hourly line; three of them cost nothing to have."
+      },
+      {
+        "text": "They cost the same once both pay for crossing zones",
+        "correct": false,
+        "why": "Both pay the crossing; only the hub adds hours and processing on top."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpd8a61t",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change in the shop's network is the signal to move from peering to the hub?",
+    "hint": "Think of lesson 24.",
+    "choices": [
+      {
+        "text": "The traffic between production and staging doubles",
+        "correct": false,
+        "why": "More traffic favours peering, which charges no processing."
+      },
+      {
+        "text": "An office VPN that every VPC must use",
+        "correct": true,
+        "why": "Right. Reaching the office through one attachment is transitive routing, which only the hub does."
+      },
+      {
+        "text": "A second region for the disaster-recovery copy",
+        "correct": false,
+        "why": "A peering crosses regions, as the lesson's own Virginia copy shows."
+      },
+      {
+        "text": "A new security group for the staging machines",
+        "correct": false,
+        "why": "Filters change nothing about which joining tool fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-3762g9e4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of joining production and staging by peering in order.",
+    "hint": "Nothing changes for a packet until both tables name the peering.",
+    "items": [
+      "check that the two ranges do not overlap",
+      "request the peering from production",
+      "accept it on staging's side",
+      "add routes on both sides for the other's range"
+    ],
+    "trap": "The ranges come first: AWS refuses an overlapping request, and it is too late to change a range by then."
+  },
+  {
+    "id": "ex-7fxds7a9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto show differently from AWS in this lesson? Choose all that apply.",
+    "hint": "Two are differences; two are the same in both.",
+    "choices": [
+      {
+        "text": "It accepted a peering between overlapping ranges",
+        "correct": true,
+        "why": "Right. AWS refuses it."
+      },
+      {
+        "text": "A new peering waits for acceptance",
+        "correct": false,
+        "why": "Both show `pending-acceptance` until the other side accepts."
+      },
+      {
+        "text": "It listed no propagated routes",
+        "correct": true,
+        "why": "Right. AWS would list both VPCs' ranges."
+      },
+      {
+        "text": "It associated the attachments with the default table by itself",
+        "correct": false,
+        "why": "AWS does that too, with the defaults the hub was created with."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqdqr9y3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Staging needs one read-only API of production, and staging's VPC was created long ago as `10.20.0.0/16`. Which way works without renumbering anything?",
+    "hint": "One of the tools does not care about ranges.",
+    "choices": [
+      {
+        "text": "A peering, with routes for the API's addresses only",
+        "correct": false,
+        "why": "The peering itself is refused, because the two ranges overlap."
+      },
+      {
+        "text": "A Transit Gateway with a static route for the API",
+        "correct": false,
+        "why": "The hub routes between ranges too, and the same range on both sides leaves it nothing to route by."
+      },
+      {
+        "text": "PrivateLink: an endpoint service on production's side",
+        "correct": true,
+        "why": "Right. Lesson 19: staging sees an interface in its own subnet, and no route joins the ranges."
+      },
+      {
+        "text": "A peering across regions, which tolerates overlap",
+        "correct": false,
+        "why": "Crossing regions changes the price, not the rule about overlapping ranges."
+      }
+    ]
+  }
+]

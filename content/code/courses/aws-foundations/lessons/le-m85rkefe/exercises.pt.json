@@ -1,0 +1,394 @@
+{
+  "ex-18z7akck": {
+    "prompt": "Onde a AWS põe uma exportação CUR 2.0?",
+    "hint": "Ninguém o lê por você.",
+    "choices": [
+      {
+        "text": "No Cost Explorer, como um relatório novo na tela",
+        "why": "O Cost Explorer desenha as telas a partir dos mesmos dados, mas a exportação são arquivos, entregues num lugar onde você os consulta."
+      },
+      {
+        "text": "Como arquivos num bucket S3 que você nomeia",
+        "why": "Isso. Parquet ou CSV comprimido, sob o bucket e o prefixo que a exportação nomeia, atualizados durante o mês."
+      },
+      {
+        "text": "Anexado ao e-mail mensal da fatura",
+        "why": "A fatura é um resumo. O relatório tem uma linha por linha da fatura, demais para um anexo."
+      },
+      {
+        "text": "Num banco de dados que a AWS roda para a conta",
+        "why": "A AWS entrega arquivos; consultá-los, com o Athena ou outra coisa, é uma escolha separada que você faz."
+      }
+    ]
+  },
+  "ex-q7923j1d": {
+    "prompt": "`aws bcm-data-exports create-export --export file://export.json` responde com um 500 no laboratório. O que a execução ainda mostra?",
+    "hint": "O que a linha de comando fez antes de enviar?",
+    "choices": [
+      {
+        "text": "Que a exportação foi criada e os primeiros arquivos estão a caminho",
+        "why": "Um 500 é uma falha, e o moto não tem Data Exports nenhum; nada foi criado."
+      },
+      {
+        "text": "Que os nomes dos campos batem com a API da AWS; os valores não foram julgados",
+        "why": "Isso. Um campo escrito errado é recusado com `Unknown parameter` antes de enviar, então a requisição chegou ao moto."
+      },
+      {
+        "text": "Que `PARQUET` é um formato que a AWS aceita para exportações",
+        "why": "Isso vem da documentação da AWS. Nada no laboratório conferiu o valor."
+      },
+      {
+        "text": "Que o bucket `shop-logs` não tem política para o serviço de faturamento",
+        "why": "O bucket nem foi consultado: o 500 é o moto sem o serviço inteiro."
+      }
+    ]
+  },
+  "ex-cgw92ryc": {
+    "prompt": "Sem `INCLUDE_RESOURCES`, que pergunta a exportação não consegue mais responder?",
+    "hint": "Que coluna ela acrescenta?",
+    "choices": [
+      {
+        "text": "Qual conta usou uma linha",
+        "why": "`line_item_usage_account_id` está lá de qualquer jeito."
+      },
+      {
+        "text": "Qual o tipo de uso de uma linha",
+        "why": "`line_item_usage_type` não depende da opção."
+      },
+      {
+        "text": "Qual instância ou gateway causou uma linha",
+        "why": "Isso. A opção acrescenta `line_item_resource_id`; sem ela uma linha diz o quê e onde, não qual."
+      },
+      {
+        "text": "Quanto uma linha custou na tarifa não combinada",
+        "why": "O custo está em toda linha, com recurso ou não."
+      }
+    ]
+  },
+  "ex-4864q081": {
+    "prompt": "Ligue cada coluna do CUR 2.0 ao que ela guarda.",
+    "hint": "Pagadora e usuária são contas diferentes.",
+    "pairs": [
+      {
+        "left": "`bill_payer_account_id`",
+        "right": "a conta que paga"
+      },
+      {
+        "left": "`line_item_usage_account_id`",
+        "right": "a conta que usou"
+      },
+      {
+        "left": "`line_item_usage_type`",
+        "right": "a coisa exata, como horas de NAT gateway"
+      },
+      {
+        "left": "`resource_tags`",
+        "right": "as tags ativadas, como um mapa"
+      }
+    ],
+    "right_distractors": [
+      "a versão da lista de preços"
+    ]
+  },
+  "ex-jj2fgfta": {
+    "prompt": "A loja acrescenta uma chave de tag nova, `cost-centre`, e a ativa. O que muda numa tabela CUR 2.0 comparada com o relatório antigo?",
+    "hint": "Uma coluna, ou uma coluna por tag?",
+    "choices": [
+      {
+        "text": "Uma coluna nova `resource_tags_user_cost_centre` aparece, como antes",
+        "why": "Essa era a forma do relatório antigo. O CUR 2.0 mantém uma coluna de mapa."
+      },
+      {
+        "text": "Nada na forma da tabela: a chave aparece dentro de `resource_tags`",
+        "why": "Isso. O mapa ganha uma chave nas linhas que a têm, e toda consulta escrita antes continua funcionando."
+      },
+      {
+        "text": "Toda linha anterior ganha a chave, até o começo do ano",
+        "why": "A ativação não é retroativa (lição 13), e a tag precisa ter estado no recurso na hora."
+      },
+      {
+        "text": "A exportação tem de ser apagada e criada de novo para incluí-la",
+        "why": "Tags ativadas chegam a `resource_tags` sem editar a exportação."
+      }
+    ]
+  },
+  "ex-n9fx5knr": {
+    "prompt": "Três times rodam contêineres num cluster EKS de instâncias EC2 compartilhadas. O que os dados de alocação dividida de custos acrescentam ao relatório?",
+    "hint": "A instância é uma linha; os times são três.",
+    "choices": [
+      {
+        "text": "Uma tag em cada instância nomeando o time que mais a usou",
+        "why": "A opção não marca nada, e um dono só por instância é o que ela existe para evitar."
+      },
+      {
+        "text": "Uma fatura separada para cada namespace do Kubernetes",
+        "why": "Continua havendo uma fatura. A opção acrescenta colunas ao mesmo relatório."
+      },
+      {
+        "text": "Colunas que dividem o custo de cada instância",
+        "why": "Isso. As colunas `split_line_item_*` o dividem pelo processador e pela memória que cada contêiner reservou ou usou, então cada time recebe a sua parte de uma máquina compartilhada."
+      },
+      {
+        "text": "Nada: contêineres não estão no Cost and Usage Report",
+        "why": "As instâncias estão, como linhas; a opção é o que as divide entre contêineres."
+      }
+    ]
+  },
+  "ex-fjvnpz8p": {
+    "prompt": "De onde vieram os custos do `cur.csv`?",
+    "hint": "Leia a docstring do `make_cur.py`.",
+    "choices": [
+      {
+        "text": "Do moto, que guardou um registro dos recursos do laboratório",
+        "why": "O moto não cobra nada e não tem relatório; o arquivo foi escrito por um programa."
+      },
+      {
+        "text": "Quantidades inventadas vezes tarifas da lista das lições anteriores",
+        "why": "Isso. As tarifas foram lidas nas lições 1, 13 e 14; as contas, quantidades, crédito e imposto são inventados."
+      },
+      {
+        "text": "De uma exportação real da conta de gerenciamento da loja",
+        "why": "Não há conta AWS por trás do curso, então não há exportação para copiar."
+      },
+      {
+        "text": "Do relatório de exemplo da AWS, publicado com a documentação do Data Exports",
+        "why": "O arquivo é gerado pelo programa da lição, linha por linha."
+      }
+    ]
+  },
+  "ex-q7cdsvcf": {
+    "prompt": "No `cur.csv`, `SavingsPlanCoveredUsage` é 117,27 e `SavingsPlanNegation` é -117,27. Quanto somam as três linhas do plano, em dólares?",
+    "hint": "As duas linhas de uso se anulam; sobra uma linha.",
+    "unit": "dólares"
+  },
+  "ex-823f43hq": {
+    "prompt": "Alguém soma só as linhas do tipo `Usage` e informa 673,59 como o mês. O que falta nesse número?",
+    "hint": "Leia a tabela da segunda consulta.",
+    "choices": [
+      {
+        "text": "Nada; `Usage` é toda cobrança",
+        "why": "É um tipo entre seis no arquivo; o plano, o imposto e o crédito são outros tipos."
+      },
+      {
+        "text": "Só o imposto, que entra no fim do mês",
+        "why": "O imposto falta, e também a taxa do plano e o crédito do sandbox."
+      },
+      {
+        "text": "A taxa do plano, o imposto e o crédito",
+        "why": "Isso. Cada um é um tipo de linha próprio. Todos os tipos juntos são os 806,60 que a primeira consulta imprimiu."
+      },
+      {
+        "text": "A instância coberta pelo plano, que `Usage` deixa de fora de propósito",
+        "why": "O uso coberto e a negação se anulam de qualquer jeito; o que falta é a taxa que pagou por ela, mais imposto e crédito."
+      }
+    ]
+  },
+  "ex-j081tp0m": {
+    "prompt": "O `ask.py` não precisa de nada instalado porque a própria biblioteca do Python traz o ___, um banco de dados SQL inteiro num módulo.",
+    "hint": "O nome está no import.",
+    "blanks": [
+      {
+        "accept": [
+          "sqlite3",
+          "sqlite"
+        ]
+      }
+    ]
+  },
+  "ex-fstr47th": {
+    "prompt": "O `ask.py` declara três colunas `REAL` e toda outra coluna `TEXT`. O que daria errado se as colunas de dinheiro fossem texto?",
+    "hint": "Pense em ordenar pelo resultado.",
+    "choices": [
+      {
+        "text": "O `sum` se recusaria a rodar nelas",
+        "why": "O SQLite converte texto que parece número quando soma; a soma rodaria."
+      },
+      {
+        "text": "`9.5` viria depois de `117.27`",
+        "why": "Isso. Texto compara caractere por caractere. Declarar a coluna `REAL` mantém toda comparação numérica."
+      },
+      {
+        "text": "O CSV não carregaria",
+        "why": "Texto carrega qualquer coisa; é por isso que carregaria e depois compararia errado."
+      },
+      {
+        "text": "Custos negativos perderiam o sinal de menos",
+        "why": "O sinal fica como caractere no texto, e como sinal num número."
+      }
+    ]
+  },
+  "ex-q2bajgqz": {
+    "prompt": "Sem combinar, o mês do time web é 376,55; amortizado, 456,23. Onde estavam os outros 79,68 na visão não combinada?",
+    "hint": "Qual linha não tem tag?",
+    "choices": [
+      {
+        "text": "No time de dados, que usa o mesmo tipo de instância",
+        "why": "O time de dados é 165,90 nas duas colunas; nada mudou ali."
+      },
+      {
+        "text": "Em `(no team)`, na linha da taxa do plano, que não tem tags",
+        "why": "Isso. O amortizado põe a taxa na linha coberta, que tem a tag `web`, e o resto cai os mesmos 79,68."
+      },
+      {
+        "text": "No imposto, que a consulta deixou de fora",
+        "why": "O imposto está fora das duas colunas igualmente, então não explica uma diferença entre elas."
+      },
+      {
+        "text": "Em lugar nenhum; o amortizado acrescenta uma cobrança que a AWS nunca fez",
+        "why": "Os 79,68 foram cobrados, como taxa do plano. O amortizado só diz de quem foram."
+      }
+    ]
+  },
+  "ex-hh9zr717": {
+    "prompt": "O time de finanças faz duas perguntas: quanto pagamos à AWS este mês, e quanto custou o uso de cada time. Qual coluna responde a qual?",
+    "hint": "Uma é sobre a fatura; outra é sobre as horas.",
+    "choices": [
+      {
+        "text": "Amortizado para as duas, porque é a coluna honesta",
+        "why": "Honesta para os times. Um ano pago adiantado aparece como um doze avos por mês amortizado, o que não é o que se pagou naquele mês."
+      },
+      {
+        "text": "Não combinado para as duas, porque é o que a AWS cobrou",
+        "why": "Por time ele cobra um compromisso compartilhado de ninguém, e o time que o usou parece de graça."
+      },
+      {
+        "text": "Amortizado para a fatura, não combinado para os times",
+        "why": "É o par invertido: espalharia pagamentos pelos meses e deixaria a taxa do plano sem tag."
+      },
+      {
+        "text": "Não combinado para a fatura, amortizado para os times",
+        "why": "Isso. O não combinado é o que foi cobrado; o amortizado cobra um compromisso do uso que ele cobriu."
+      }
+    ]
+  },
+  "ex-z072bd14": {
+    "prompt": "O uso de staging é 227,06 dólares, dos quais 93,79 não têm tag `team`. Que porcentagem está sem tag, ao número inteiro mais próximo?",
+    "hint": "Sem tag dividido pelo uso, vezes 100.",
+    "unit": "por cento"
+  },
+  "ex-04dx0nk6": {
+    "prompt": "Quais destes um esquema de showback ou chargeback tem de decidir por uma regra escrita, porque nenhuma tag os resolve? Marque todos os que se aplicam.",
+    "hint": "A seção cita três.",
+    "choices": [
+      {
+        "text": "Quem é dono do resto sem tag",
+        "why": "Isso. O dono da conta, ou uma divisão na proporção do que os times reivindicaram."
+      },
+      {
+        "text": "Como imposto e suporte são divididos",
+        "why": "Isso. São linhas compartilhadas, em geral divididas na proporção do uso."
+      },
+      {
+        "text": "A que conta pertencem as horas de uma instância",
+        "why": "Isso é uma coluna, `line_item_usage_account_id`, em toda linha; não precisa de regra."
+      },
+      {
+        "text": "Se compromissos são cobrados amortizados do uso que cobriram",
+        "why": "Isso. Senão o time que comprou o plano para todos parece caro."
+      },
+      {
+        "text": "Qual o tipo de uso das horas de um NAT gateway",
+        "why": "A AWS escreve o tipo de uso na linha; não cabe à loja decidir."
+      }
+    ]
+  },
+  "ex-d7pm7t3j": {
+    "prompt": "Qual a diferença entre showback e chargeback?",
+    "hint": "Um move dinheiro; o outro não.",
+    "choices": [
+      {
+        "text": "Showback informa o custo de cada time; chargeback o põe no orçamento do time",
+        "why": "Isso. Os dois precisam das mesmas regras; o chargeback faz cada regra pesar mais, porque o dinheiro as segue."
+      },
+      {
+        "text": "Showback usa custo não combinado; chargeback usa amortizado",
+        "why": "Os dois podem usar qualquer coluna. A diferença é o que acontece com o número, não como ele é contado."
+      },
+      {
+        "text": "Showback é o Cost Explorer; chargeback é o Cost and Usage Report",
+        "why": "São jeitos de usar a resposta, não ferramentas para obtê-la."
+      },
+      {
+        "text": "Showback cobre só custos com tag; chargeback cobre o resto",
+        "why": "Os dois têm de dar conta do resto sem tag, por uma regra."
+      }
+    ]
+  },
+  "ex-f8mmyqrp": {
+    "prompt": "No tamanho de uma organização real, que dupla é o jeito da AWS de consultar o relatório e desenhá-lo?",
+    "hint": "Um roda SQL sobre o S3; outro desenha painéis.",
+    "choices": [
+      {
+        "text": "Cost Explorer e Budgets",
+        "why": "Eles leem os mesmos dados por telas fixas; nenhum consulta os arquivos do relatório."
+      },
+      {
+        "text": "Athena e QuickSight",
+        "why": "Isso. O Athena roda SQL direto sobre o Parquet no S3; o QuickSight desenha painéis a partir das respostas dele. Nenhum foi rodado aqui."
+      },
+      {
+        "text": "sqlite3 e `ask.py`, copiados para o bucket",
+        "why": "São os substitutos do laboratório na sua máquina, não algo que a AWS roda."
+      },
+      {
+        "text": "Cost Anomaly Detection e SNS",
+        "why": "Eles vigiam padrões e mandam alertas; não consultam o relatório."
+      }
+    ]
+  },
+  "ex-s66j95v7": {
+    "prompt": "Ponha em ordem o que tem de existir antes de um relatório dividir os custos de setembro por `team`.",
+    "hint": "A tag primeiro, depois o faturamento, depois os arquivos, depois a pergunta.",
+    "items": [
+      "os recursos têm `team` enquanto rodam em setembro",
+      "a chave `team` é ativada na conta de gerenciamento",
+      "a exportação grava as linhas de setembro no bucket",
+      "uma consulta as agrupa por `resource_tags`"
+    ],
+    "trap": "Pôr a ativação antes das tags também é possível na prática, mas a chave só aparece no Billing depois que algo a tem; a tag no recurso durante o mês é o que nada depois consegue suprir."
+  },
+  "ex-zcsmggym": {
+    "prompt": "Um relatório real mostra 30% do uso de produção sem tag, a maior parte `SAE1-PublicIPv4:InUseAddress` e `USE1-APIRequest`. Qual o primeiro passo, e o mais barato?",
+    "hint": "Algumas linhas podem ser reivindicadas por uma regra mais rápido que por tags.",
+    "choices": [
+      {
+        "text": "Apagar todo recurso sem a tag `team`",
+        "why": "Os endereços estão em uso por algo rodando; apagar o que não tem dono não é o mesmo que apagar o que não é usado."
+      },
+      {
+        "text": "Mudar o relatório de não combinado para amortizado",
+        "why": "O amortizado move compromissos; estas linhas são sob demanda e continuariam sem tag."
+      },
+      {
+        "text": "Lê-las por tipo de uso e recurso, e atribuir cada uma por uma regra",
+        "why": "Isso. Cada linha sem tag nomeia o que é; o resto é sem dono, não desconhecido, e a regra diz de quem passa a ser."
+      },
+      {
+        "text": "Pedir um backfill para as tags valerem nos últimos doze meses",
+        "why": "Um backfill aplica uma ativação, não uma tag que os recursos nunca tiveram."
+      }
+    ]
+  },
+  "ex-8gzmrs8j": {
+    "prompt": "Uma consulta agrupa por `line_item_usage_account_id` e outra por `bill_payer_account_id`. Numa fatura consolidada, o que a segunda imprime?",
+    "hint": "Lição 3: quem recebe a fatura?",
+    "choices": [
+      {
+        "text": "As mesmas três contas da primeira",
+        "why": "As contas-membro usam; não pagam. Só a primeira consulta divide por elas."
+      },
+      {
+        "text": "Uma linha: a conta de gerenciamento, com a fatura inteira",
+        "why": "Isso. No `cur.csv` a pagadora de toda linha é `123456789012`, como numa fatura consolidada real."
+      },
+      {
+        "text": "Um erro, porque a coluna fica vazia nas contas-membro",
+        "why": "A coluna é preenchida em toda linha; para uma conta-membro ela nomeia a pagadora."
+      },
+      {
+        "text": "Cada time, já que os times é que pagam",
+        "why": "Times são tags. A pagadora é uma conta."
+      }
+    ]
+  }
+}

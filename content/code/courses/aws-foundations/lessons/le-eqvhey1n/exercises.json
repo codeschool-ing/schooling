@@ -1,0 +1,627 @@
+[
+  {
+    "id": "ex-cnfng9p4",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With IAM Identity Center in place, where does a person's login live?",
+    "hint": "Not in any of the accounts.",
+    "choices": [
+      {
+        "text": "In an IAM user created in each account the person works in",
+        "correct": false,
+        "why": "That is the arrangement Identity Center replaces: one user per person per account, each to create and delete."
+      },
+      {
+        "text": "In the one identity source, outside every account",
+        "correct": true,
+        "why": "Right. The accounts hold roles; the person is in the Identity Center directory, Active Directory or an external provider."
+      },
+      {
+        "text": "In the management account, as an IAM user with a role in each account",
+        "correct": false,
+        "why": "Identity Center creates no IAM users at all, in the management account or anywhere else."
+      },
+      {
+        "text": "In `~/.aws/credentials`, on the laptop the person works from",
+        "correct": false,
+        "why": "That file holds keys. A sign-in through Identity Center leaves only a cached token, and only for the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n2vckt9",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop connects Google Workspace to Identity Center. What is SCIM's job in that connection, as opposed to SAML's?",
+    "hint": "One protocol is about the moment of signing in; the other is not.",
+    "choices": [
+      {
+        "text": "Checking the person's password and second factor at sign-in",
+        "correct": false,
+        "why": "Google checks those, and SAML carries the result to Identity Center as a signed assertion."
+      },
+      {
+        "text": "Encrypting the assertion so that no password reaches AWS",
+        "correct": false,
+        "why": "No password reaches AWS in either protocol. The assertion is signed, and that is SAML's part."
+      },
+      {
+        "text": "Keeping the users and groups current, before and after sign-ins",
+        "correct": true,
+        "why": "Right. SAML says who is signing in now; SCIM says who exists and in which groups, before and after."
+      },
+      {
+        "text": "Handing the command line its role credentials after each sign-in",
+        "correct": false,
+        "why": "The command line gets role credentials from the portal with its cached token. SCIM runs between Google and Identity Center."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfa0xgns",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody adds a policy by hand to the role `AWSReservedSSO_ReadOnly_…` inside `shop-prod`. What becomes of the change?",
+    "hint": "Who manages that role?",
+    "choices": [
+      {
+        "text": "It spreads to every other account that has the same permission set",
+        "correct": false,
+        "why": "Changes flow from the permission set to the roles, never from one role back to the others."
+      },
+      {
+        "text": "It is overwritten the next time the permission set is provisioned to that account",
+        "correct": true,
+        "why": "Right. Until then this one account quietly disagrees with the others, which is the worse half of it."
+      },
+      {
+        "text": "IAM refuses it: the role can only be read inside the account",
+        "correct": false,
+        "why": "Edits are possible, which is exactly why the rule against them has to be stated."
+      },
+      {
+        "text": "It becomes part of the permission set itself",
+        "correct": false,
+        "why": "The permission set is defined in Identity Center, not read back from the roles it provisioned."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpvj2k4p",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop has six accounts and five people. With one IAM user per person in every account, how many IAM users would there be to audit?",
+    "hint": "People times accounts.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "users"
+  },
+  {
+    "id": "ex-k116kqpz",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each identity source to the organisation it fits.",
+    "hint": "Three rows of the section's table.",
+    "pairs": [
+      {
+        "left": "the Identity Center directory",
+        "right": "a small team with no directory of its own"
+      },
+      {
+        "left": "Active Directory",
+        "right": "a company already running AD"
+      },
+      {
+        "left": "an external identity provider",
+        "right": "people who already sign in at Google or Entra ID"
+      }
+    ],
+    "right_distractors": [
+      "a program that runs outside AWS"
+    ]
+  },
+  {
+    "id": "ex-ndsm57dq",
+    "version": 1,
+    "section": "workforce-identity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Google is connected by SAML only, with no SCIM. `caio` leaves and is disabled in Google. What is left on the AWS side?",
+    "hint": "Separate signing in from existing.",
+    "choices": [
+      {
+        "text": "Nothing: disabling him in Google deletes him everywhere",
+        "correct": false,
+        "why": "Deleting him in Identity Center is SCIM's job, and there is no SCIM here."
+      },
+      {
+        "text": "A user who can still sign in, since Identity Center keeps its own password for him",
+        "correct": false,
+        "why": "With an external provider, Identity Center holds no password. Every sign-in goes to Google, which now refuses him."
+      },
+      {
+        "text": "His user, groups and assignments, which cannot be used and still need deleting",
+        "correct": true,
+        "why": "Right. SAML stops the sign-in; only SCIM, or somebody remembering, removes what is left."
+      },
+      {
+        "text": "An IAM user in each account he was assigned to",
+        "correct": false,
+        "why": "Assignments provision roles, not users. There were never IAM users for him."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pg551c6",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What three things make up an account assignment?",
+    "hint": "The triple of the section.",
+    "choices": [
+      {
+        "text": "A user or group, a permission set, and one account",
+        "correct": true,
+        "why": "Right. Each assignment is one cell of the grid, and one role in that account."
+      },
+      {
+        "text": "A role, a trust policy, and a permission policy",
+        "correct": false,
+        "why": "Those are what a provisioned role is made of. The assignment is what causes it."
+      },
+      {
+        "text": "A user, a password, and a second factor",
+        "correct": false,
+        "why": "Those belong to the identity source. An assignment says nothing about how a person signs in."
+      },
+      {
+        "text": "A permission set, an organisational unit, and a region",
+        "correct": false,
+        "why": "An assignment targets one account, and a permission set is valid in every region of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g15he5s1",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section assign permission sets to the group `developers` rather than to `bia` directly?",
+    "hint": "Count the commands for the next developer.",
+    "choices": [
+      {
+        "text": "Because Identity Center refuses assignments to users",
+        "correct": false,
+        "why": "`--principal-type USER` is accepted. The choice is about upkeep, not a refusal."
+      },
+      {
+        "text": "Because groups get longer sessions than users do, whatever the set says",
+        "correct": false,
+        "why": "The session length belongs to the permission set, whoever it is assigned to."
+      },
+      {
+        "text": "So one membership replaces three assignments",
+        "correct": true,
+        "why": "Right. Joining the group gives every cell of its row, and leaving it removes them together."
+      },
+      {
+        "text": "Because SCIM can provision groups and not single users",
+        "correct": false,
+        "why": "SCIM provisions users and groups alike. This lab has no SCIM at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzd9vcbr",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A permission set whose sessions last four hours is created with `--session-duration ___`.",
+    "hint": "An ISO 8601 duration.",
+    "blanks": [
+      {
+        "accept": [
+          "PT4H"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9a5twxhy",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`create-account-assignment` answered `SUCCEEDED`, yet `shop-prod` lists only `OrganizationAccountAccessRole`. What does the measurement show?",
+    "hint": "Which side of Identity Center does moto imitate?",
+    "choices": [
+      {
+        "text": "That the role is created only when somebody first signs in",
+        "correct": false,
+        "why": "In AWS the role exists once provisioning finishes, before anybody signs in. moto never creates it."
+      },
+      {
+        "text": "That the assignment was made to the wrong account",
+        "correct": false,
+        "why": "`list-account-assignments` for `shop-prod` names both groups, so the account is right."
+      },
+      {
+        "text": "That moto records the assignments and never provisions the role AWS would create there",
+        "correct": true,
+        "why": "Right. AWS would hold `AWSReservedSSO_ReadOnly_…` there; the lab covers the administrative side only."
+      },
+      {
+        "text": "That `OrganizationAccountAccessRole` is the role Identity Center provisions",
+        "correct": false,
+        "why": "That role was made with the account, by Organizations, before any assignment existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-g2fz0z9s",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the longest session, in hours, that AWS accepts for a permission set?",
+    "hint": "The section gives the range.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-74j1nkmz",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`caio` opens `shop-prod` with `ReadOnly`: `ReadOnlyAccess` plus the inline deny of `s3:GetObject` on `shop-backups/*`. Can he download a backup?",
+    "hint": "Lesson 8's first rule of evaluation.",
+    "choices": [
+      {
+        "text": "Yes: `ReadOnlyAccess` allows `s3:GetObject` everywhere",
+        "correct": false,
+        "why": "It does allow it, and an explicit deny beats any allow. The allow is not the end of the evaluation."
+      },
+      {
+        "text": "No: the explicit deny wins over the managed policy's allow",
+        "correct": true,
+        "why": "Right. He can still list the bucket, since only `GetObject` is refused."
+      },
+      {
+        "text": "Only from the console, where inline policies are not applied",
+        "correct": false,
+        "why": "The console signs the same requests with the same role. The deny applies to every client."
+      },
+      {
+        "text": "It depends on which policy was attached first",
+        "correct": false,
+        "why": "Evaluation has no order of attachment. An explicit deny wins wherever it sits."
+      }
+    ]
+  },
+  {
+    "id": "ex-y90263bx",
+    "version": 1,
+    "section": "permission-sets",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto 5.2.3 answer as AWS would, in this lesson? Choose all that apply.",
+    "hint": "The administrative calls, and not what follows from them.",
+    "choices": [
+      {
+        "text": "Listing the Identity Center instance and its identity store",
+        "correct": true,
+        "why": "Right. It even had one before anything was created."
+      },
+      {
+        "text": "Creating a permission set with a managed and an inline policy",
+        "correct": true,
+        "why": "Right. `describe-permission-set` returned the name and the session duration."
+      },
+      {
+        "text": "Creating users, groups and memberships in the identity store",
+        "correct": true,
+        "why": "Right. `list-users` and `list-groups` returned them with their ids."
+      },
+      {
+        "text": "Creating the `AWSReservedSSO_` role in the assigned account",
+        "correct": false,
+        "why": "That is the step moto leaves out: the account held only `OrganizationAccountAccessRole`."
+      },
+      {
+        "text": "Signing in with `aws sso login`",
+        "correct": false,
+        "why": "moto has no sign-in service: the first request, `RegisterClient`, answered 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjx15w3a",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `~/.aws/config`, what does the `[sso-session shop]` section hold that the `[profile prod-readonly]` section does not?",
+    "hint": "One section is the sign-in, the other a destination.",
+    "choices": [
+      {
+        "text": "The account id and the name of the permission set to open there",
+        "correct": false,
+        "why": "Those are the destination, and they are in the profile."
+      },
+      {
+        "text": "The portal's address, its region and the scope",
+        "correct": true,
+        "why": "Right. One session serves every profile that names it, so one sign-in opens all of them."
+      },
+      {
+        "text": "A copy of the cached token, refreshed at each sign-in",
+        "correct": false,
+        "why": "The token lives in `~/.aws/sso/cache/`, never in the config file."
+      },
+      {
+        "text": "The access key the session signs with",
+        "correct": false,
+        "why": "There is no access key anywhere in this arrangement. That is its point."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks5aaafm",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`env.sh` exports test keys, yet `aws sts get-caller-identity --profile prod-readonly` stops with `Error loading SSO Token` instead of using them. Why?",
+    "hint": "How was the profile named?",
+    "choices": [
+      {
+        "text": "Because the test keys expired when moto restarted",
+        "correct": false,
+        "why": "`test` and `test` never expire; they are placeholders moto accepts until its checking is on."
+      },
+      {
+        "text": "Because an `sso-session` profile disables every other provider for good, in every terminal",
+        "correct": false,
+        "why": "Nothing is disabled for good. Without `--profile` the same terminal still uses the test keys."
+      },
+      {
+        "text": "`--profile` takes the environment's keys out of the chain",
+        "correct": true,
+        "why": "Right. The command line then has only the profile's way in, and that way needs a sign-in first."
+      },
+      {
+        "text": "Because moto refused the keys for that account",
+        "correct": false,
+        "why": "No request reached moto. The command line stopped before sending anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-es032f6q",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `aws sso login` against AWS in order, as AWS's documentation describes them.",
+    "hint": "The registration comes before anybody types anything.",
+    "items": [
+      "the command line registers with `RegisterClient`",
+      "it prints an address and a code",
+      "the person signs in at the identity provider, with MFA",
+      "a token is written into `~/.aws/sso/cache/`",
+      "each command trades the token for role credentials"
+    ],
+    "trap": "The token can only be cached after the person has signed in and allowed the access."
+  },
+  {
+    "id": "ex-4kph9czd",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ReadOnly` has `PT4H`, and the Identity Center session lasts eight hours. Five hours after `aws sso login`, `caio` runs a command with `prod-readonly`. What happens?",
+    "hint": "Two clocks, and only one of them has run out.",
+    "choices": [
+      {
+        "text": "The command line asks him to run `aws sso login` again",
+        "correct": false,
+        "why": "That happens when the Identity Center session ends, at eight hours. Three are left."
+      },
+      {
+        "text": "The command fails, since four hours is the most any credential may last",
+        "correct": false,
+        "why": "Four hours limits each set of role credentials, not the sign-in. New ones can be fetched."
+      },
+      {
+        "text": "It quietly trades the cached token for a new set of role credentials, without asking him",
+        "correct": true,
+        "why": "Right. The first set expired at four hours; the token is still valid, so the `sso` provider fetches another."
+      },
+      {
+        "text": "It falls back to the test keys that `env.sh` exports",
+        "correct": false,
+        "why": "With `--profile` the environment's keys are out of the chain, and here they are not needed anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4v1vft7",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws sso login` writes its token into `~/.aws/sso/___/`, and `aws sso logout` removes it.",
+    "hint": "The directory the command line looked in before anybody signed in.",
+    "blanks": [
+      {
+        "accept": [
+          "cache"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-awac01y5",
+    "version": 1,
+    "section": "the-cli-side",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting of the lesson's `~/.aws/config` to what it names.",
+    "hint": "Two belong to the session, two to the profile.",
+    "pairs": [
+      {
+        "left": "`sso_start_url`",
+        "right": "the access portal's address"
+      },
+      {
+        "left": "`sso_region`",
+        "right": "where Identity Center lives"
+      },
+      {
+        "left": "`sso_account_id`",
+        "right": "the account to open"
+      },
+      {
+        "left": "`sso_role_name`",
+        "right": "the permission set, by name"
+      }
+    ],
+    "right_distractors": [
+      "the IAM user to sign in as"
+    ]
+  },
+  {
+    "id": "ex-63yh8gaz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop hires `edu`, a contractor, for three months to read logs in `shop-staging`. Which arrangement follows this lesson?",
+    "hint": "Leaving should be one action.",
+    "choices": [
+      {
+        "text": "An IAM user in `shop-staging` with an access key, deleted at the end of the contract",
+        "correct": false,
+        "why": "That works until somebody forgets the date, and the key works from anywhere until then. People are not on the list for IAM users."
+      },
+      {
+        "text": "His own user in a group given `ReadOnly` in `shop-staging`, disabled at the end",
+        "correct": true,
+        "why": "Right. He signs in with a second factor, his sessions expire, and disabling him ends every future sign-in."
+      },
+      {
+        "text": "The credentials of `bia`'s `ReadOnly` session, shared with him for the three months",
+        "correct": false,
+        "why": "Those expire within hours, and CloudTrail would name `bia` for everything he did."
+      },
+      {
+        "text": "A new permission set made just for him, assigned in every account",
+        "correct": false,
+        "why": "He needs one account, and `ReadOnly` already says what reading means. Every account is far wider than asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbtd80qp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "CloudTrail in `shop-staging` shows a bucket deleted by `arn:aws:sts::132607488945:assumed-role/AWSReservedSSO_Developer_…/bia`. What does the ARN tell you?",
+    "hint": "Read it from the end.",
+    "choices": [
+      {
+        "text": "An IAM user called `bia` in `shop-staging` deleted it with her key",
+        "correct": false,
+        "why": "An IAM user's ARN has `:user/` in it. `assumed-role` means a role session."
+      },
+      {
+        "text": "The role `Developer` was edited by `bia` beforehand to allow the deletion",
+        "correct": false,
+        "why": "Nothing in the ARN speaks of an edit. `PowerUserAccess` already allows deleting buckets."
+      },
+      {
+        "text": "`bia`, signed in through Identity Center, used `Developer`",
+        "correct": true,
+        "why": "Right. The role is the provisioned `Developer`, reached through the group's assignment, and the session carries her name."
+      },
+      {
+        "text": "Somebody used the management account's credentials while signed in as `bia`",
+        "correct": false,
+        "why": "The account in the ARN is `shop-staging`'s, and the role belongs to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p6yah89",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer copies the short-lived credentials from the access portal into `~/.aws/credentials` every morning. What does the lesson offer instead?",
+    "hint": "The same job, without the file.",
+    "choices": [
+      {
+        "text": "An IAM user, so the credentials last longer",
+        "correct": false,
+        "why": "Lasting longer is the problem with a key, not a cure for copying."
+      },
+      {
+        "text": "A longer session duration on the permission set",
+        "correct": false,
+        "why": "That makes the copied secret valid for longer and leaves the copying in place."
+      },
+      {
+        "text": "An `sso-session` profile and `aws sso login`",
+        "correct": true,
+        "why": "Right. One sign-in fills the cache, and every command fetches fresh role credentials on its own."
+      },
+      {
+        "text": "`credential_process` pointing at the portal's page",
+        "correct": false,
+        "why": "`credential_process` runs a program, and a web page is not one. The `sso` provider already does this properly."
+      }
+    ]
+  }
+]

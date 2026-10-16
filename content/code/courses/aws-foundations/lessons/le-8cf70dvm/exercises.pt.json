@@ -1,0 +1,420 @@
+{
+  "ex-0km44p0q": {
+    "prompt": "O orçamento `shop-monthly` chega a 100% dos seus 50 dólares no dia 25. O que acontece com as máquinas que estão gastando?",
+    "hint": "Um orçamento só com notificações.",
+    "choices": [
+      {
+        "text": "A AWS as para, e as liga de novo no dia 1º",
+        "why": "Nada num orçamento só com notificações toca num recurso. É essa crença que faz a fatura passar do número."
+      },
+      {
+        "text": "Continuam rodando, e a AWS se recusa a cobrar além de 50 dólares",
+        "why": "O orçamento não é um teto da fatura. Cada hora depois do dia 25 é cobrada como cada hora antes."
+      },
+      {
+        "text": "Continuam rodando e cobrando; os assinantes são avisados",
+        "why": "Isso. Uma notificação informa alguém, e alguém tem de agir. Mesmo uma ação de orçamento só aplica uma política ou para instâncias nomeadas."
+      },
+      {
+        "text": "Máquinas novas são recusadas, e as que rodam continuam",
+        "why": "Isso é o que uma AÇÃO de orçamento com uma política de negação faria, se tivesse sido configurada. Uma notificação não recusa nada."
+      }
+    ]
+  },
+  "ex-0a1h4p24": {
+    "prompt": "No dia 4 do mês, com 6 dos 50 dólares gastos, `aws+billing@example.com` recebe um alerta do `shop-monthly`. Qual notificação o mandou?",
+    "hint": "6 dólares são 12% do orçamento.",
+    "choices": [
+      {
+        "text": "A real em 80%, porque a previsão precisa antes de um mês de histórico",
+        "why": "A real compara o que foi gasto, 12% aqui, com 80%. Ela não dispara em 12%."
+      },
+      {
+        "text": "A de previsão em 100%: o mês está projetado para terminar acima de 50",
+        "why": "Isso. O ritmo do gasto mudou, e a projeção para o fim do mês passou de 50 dólares. É o aviso antecipado."
+      },
+      {
+        "text": "Nenhuma: um orçamento não manda nada até o período fechar e a fatura ser emitida",
+        "why": "Orçamentos são verificados durante o período, a cada atualização, que é a razão de existirem."
+      },
+      {
+        "text": "O tópico SNS, que avisa todo assinante a cada atualização",
+        "why": "O tópico é assinante da notificação de previsão, não uma notificação própria. Ele só ouve o que essa notificação manda."
+      }
+    ]
+  },
+  "ex-msx9x24a": {
+    "prompt": "Uma conta nova roda com créditos promocionais. O orçamento de custo dela, criado com os padrões, mostra quase nada há três meses. Qual o risco?",
+    "hint": "Leia `CostTypes` na transcrição.",
+    "choices": [
+      {
+        "text": "Nenhum: créditos não são dinheiro, então o uso que cobrem não é custo",
+        "why": "O uso é real e tem preço; os créditos o pagam por enquanto. Quando acabam, o mesmo uso é pago com o cartão."
+      },
+      {
+        "text": "O orçamento está quebrado, porque um orçamento não vigia conta com créditos",
+        "why": "Ele funciona como mandado: com `IncludeCredit` verdadeiro ele subtrai os créditos, então informa o que é cobrado depois deles."
+      },
+      {
+        "text": "Créditos são subtraídos por padrão, então o uso fica escondido até eles acabarem",
+        "why": "Isso. `IncludeCredit: true` desconta os créditos. Um orçamento com ele em false vigia o próprio uso, e mostra o mês que está vindo."
+      },
+      {
+        "text": "A previsão está errada, já que nunca tem cinco semanas de histórico real",
+        "why": "Três meses é mais que cinco semanas. A previsão é do custo líquido, que é a configuração do orçamento, não falta de histórico."
+      }
+    ]
+  },
+  "ex-2g433rww": {
+    "prompt": "Quais destas uma AÇÃO de orçamento pode fazer quando o limiar é ultrapassado, segundo a documentação da AWS? Marque todas as que se aplicam.",
+    "hint": "Três tipos, e nenhum remove nada.",
+    "choices": [
+      {
+        "text": "Anexar uma política do IAM a uma role, como uma que nega instâncias novas",
+        "why": "Isso. A política é aplicada pela role que você entrega ao orçamento, e as instâncias rodando não são tocadas."
+      },
+      {
+        "text": "Apagar os volumes das instâncias que causaram o custo",
+        "why": "Nenhuma ação de orçamento apaga. Apagar é a única coisa que encerra o custo de um recurso, e continua sendo decisão de uma pessoa."
+      },
+      {
+        "text": "Aplicar uma SCP a uma unidade organizacional, a partir da conta de gerenciamento",
+        "why": "Isso. Só a conta de gerenciamento anexa SCPs, então só os orçamentos dela podem tomar esta ação."
+      },
+      {
+        "text": "Parar instâncias do EC2 nomeadas",
+        "why": "Isso. Pelo Systems Manager. Os discos de uma instância parada continuam cobrando o que guardam."
+      },
+      {
+        "text": "Aumentar o limite do próprio orçamento para o alerta parar de repetir",
+        "why": "Um orçamento não edita a si mesmo. Mudar o número é `update-budget`, feito por alguém."
+      }
+    ]
+  },
+  "ex-0p53379n": {
+    "prompt": "O `shop-monthly` é de 50 dólares por mês com uma notificação real em 80%. Em quantos dólares de custo real ela dispara?",
+    "hint": "80% do limite.",
+    "unit": "dólares"
+  },
+  "ex-bas1hfbw": {
+    "prompt": "No laboratório, `describe-subscribers-for-notification` responde com um erro de servidor. O que você pode concluir sobre o assinante SNS do `notifications.json`?",
+    "hint": "Um 500 é sobre o moto, não sobre o seu arquivo.",
+    "choices": [
+      {
+        "text": "Nada, para nenhum lado: o moto não consegue mostrar os assinantes",
+        "why": "Isso. O `create-budget` aceitou o arquivo, e a operação que leria os assinantes de volta falta no moto."
+      },
+      {
+        "text": "Que o tópico foi recusado, então o alerta chega só à caixa de e-mail",
+        "why": "Uma recusa teria feito o `create-budget` falhar, e ele não imprimiu nada e deu certo. O 500 veio de outra operação."
+      },
+      {
+        "text": "Que o tópico precisa de uma política deixando `budgets.amazonaws.com` publicar",
+        "why": "Verdade na AWS, e a seção diz isso, mas o moto não julga políticas de tópico; o erro não diz nada sobre uma."
+      },
+      {
+        "text": "Que assinantes SNS só são permitidos em notificações reais",
+        "why": "Qualquer tipo de notificação pode avisar um tópico; a de previsão da loja avisa."
+      }
+    ]
+  },
+  "ex-2fha99gj": {
+    "prompt": "O `get-resources` sem filtro imprimiu o bucket `shop-assets` e uma instância. O bucket `shop-logs` e um `t3.medium` também existem. Por que faltam?",
+    "hint": "O que essa API lista?",
+    "choices": [
+      {
+        "text": "O moto esquece recursos criados sem região",
+        "why": "Os dois foram criados em `sa-east-1`, e o `describe-instances` ainda lista o `t3.medium`."
+      },
+      {
+        "text": "A API só lista recursos que têm tags ou já tiveram",
+        "why": "Isso. Um recurso que nunca recebeu tag é invisível para ela, então os sem tag têm de ser achados perguntando a cada serviço."
+      },
+      {
+        "text": "Uma consulta sem filtro devolve só a primeira página de resultados",
+        "why": "Dois recursos estão longe de uma página. A resposta é completa para o que a API cobre."
+      },
+      {
+        "text": "Políticas de tag escondem recursos que não as cumprem",
+        "why": "Nenhuma política de tag existia ainda naquele ponto, e uma política nunca esconde um recurso de uma listagem."
+      }
+    ]
+  },
+  "ex-71banc8p": {
+    "prompt": "A loja quer que a AWS recuse qualquer instância iniciada sem a tag `team`. Que ferramenta faz isso?",
+    "hint": "Uma ferramenta fixa a grafia; outra recusa a requisição.",
+    "choices": [
+      {
+        "text": "Uma política de tag com `enforced_for` citando `ec2:instance`",
+        "why": "Isso recusa um valor ou grafia errados. Um recurso sem tag nenhuma não é apontado como não conforme, então passa."
+      },
+      {
+        "text": "Ativar `team` como tag de alocação de custos no Billing",
+        "why": "A ativação decide quais chaves dividem a fatura. Ela não recusa requisição nem exige tag."
+      },
+      {
+        "text": "Uma SCP negando `ec2:RunInstances` quando `aws:RequestTag/team` está ausente",
+        "why": "Isso. A condição olha as tags da própria requisição, e o deny recusa um lançamento que não traz nenhuma; a lição 4 escreve SCPs."
+      },
+      {
+        "text": "Um orçamento filtrado pela tag `team`, com uma ação em 100%",
+        "why": "Um orçamento vigia o custo depois que ele acontece, e a ação dele viria depois do gasto. Ele nunca vê uma requisição de lançamento."
+      }
+    ]
+  },
+  "ex-bckg96x0": {
+    "prompt": "No laboratório, uma instância com `team=marketing` inicia embora a política de tag anexada só permita web, data e finance. O que isso mostra?",
+    "hint": "Quem guardou a política, e quem a julgou?",
+    "choices": [
+      {
+        "text": "Que `enforced_for` só cobre instâncias criadas depois da política",
+        "why": "Esta instância foi criada depois de a política ser anexada, e ainda assim foi aceita."
+      },
+      {
+        "text": "Que o moto guarda políticas de tag e não as aplica",
+        "why": "Isso. O moto guardou e anexou a política e não julgou nada. A AWS recusa esse valor numa conta que a política cobre."
+      },
+      {
+        "text": "Que políticas de tag valem para buckets e nunca para instâncias",
+        "why": "A política citou `ec2:instance` em `enforced_for`; o tipo de recurso é o que ela pediu."
+      },
+      {
+        "text": "Que a política foi anexada à raiz errada",
+        "why": "Uma organização tem uma raiz, e o `list-roots` a imprimiu antes de a política ser anexada a ela."
+      }
+    ]
+  },
+  "ex-gvttac6c": {
+    "prompt": "O `t3.medium` rodou sem tag de 1 a 14 de outubro e recebeu `team=data` no dia 15. A chave `team` foi ativada em setembro. Que parte do custo de outubro dele aparece em `team$data`?",
+    "hint": "A chave estava pronta; e a tag?",
+    "choices": [
+      {
+        "text": "Outubro inteiro, porque a chave estava ativa antes de o mês começar",
+        "why": "Uma chave ativa divide as linhas que a trazem. As linhas dos primeiros catorze dias não trazem tag nenhuma."
+      },
+      {
+        "text": "Outubro inteiro, depois que se pede um backfill do mês",
+        "why": "Um backfill aplica uma ativação a meses anteriores. Ele não consegue acrescentar uma tag que o recurso não tinha na hora."
+      },
+      {
+        "text": "Nada até novembro, quando a próxima fatura é gerada",
+        "why": "Linhas são divididas conforme são registradas, quando a tag está nelas; ninguém espera a próxima fatura."
+      },
+      {
+        "text": "Do dia 15 em diante; os primeiros catorze dias ficam em `team$`",
+        "why": "Isso. A tag tem de estar no recurso quando o custo acontece. Os dias antes dela são o resto sem tag."
+      }
+    ]
+  },
+  "ex-41sq7mvx": {
+    "prompt": "Ponha em ordem o que acontece entre uma chave de tag nova e o primeiro relatório que divide custos por ela, como a documentação da AWS descreve.",
+    "hint": "Duas esperas de até um dia, uma de cada lado do clique de uma pessoa.",
+    "items": [
+      "a chave `team` é usada pela primeira vez num recurso",
+      "a chave aparece na lista de tags de alocação de custos do Billing",
+      "alguém na conta de gerenciamento a ativa",
+      "os relatórios dividem os custos novos por `team`"
+    ],
+    "trap": "Pôr a ativação antes de a chave aparecer na lista é o deslize comum: o Billing só oferece uma chave que já viu num recurso."
+  },
+  "ex-sbczcw4r": {
+    "prompt": "As chaves de tag usadas para dividir a fatura têm de ser ativadas no Billing na conta de ___ da organização.",
+    "hint": "A conta a quem a fatura consolidada pertence.",
+    "blanks": [
+      {
+        "accept": [
+          "gerenciamento",
+          "management",
+          "pagadora"
+        ]
+      }
+    ]
+  },
+  "ex-tnh8y3jg": {
+    "prompt": "`aws ce get-cost-and-usage` contra o moto responde `\"ResultsByTime\": []`. Por quê?",
+    "hint": "O que o moto somaria?",
+    "choices": [
+      {
+        "text": "A chave `team` não foi ativada",
+        "why": "A consulta agrupada por dimensão também veio vazia. Não há nada para agrupar."
+      },
+      {
+        "text": "O período termina no dia 1º, o que exclui o mês inteiro",
+        "why": "O fim é exclusivo, então `End=2026-10-01` é setembro inteiro. O período está certo."
+      },
+      {
+        "text": "O moto não cobra nada, então não há gasto para informar",
+        "why": "Isso. O moto registra recursos e nunca os cobra. A forma da consulta é a lição; os números viriam de uma fatura real."
+      },
+      {
+        "text": "O Cost Explorer precisa ser ligado antes, e preparar os dados leva até um dia",
+        "why": "Verdade numa conta real na primeira vez, mas o moto não tem esse passo, e esperar não encheria a resposta."
+      }
+    ]
+  },
+  "ex-kmhk2ck9": {
+    "prompt": "O time de dados pagou 1.200 dólares adiantados em 2 de janeiro por um ano de capacidade. Lido com `UnblendedCost`, como fica o ano deles?",
+    "hint": "Quando um pagamento adiantado é contado, sem combinar?",
+    "choices": [
+      {
+        "text": "Um pico no primeiro mês, depois onze meses que parecem de graça",
+        "why": "Isso. O não combinado conta a cobrança no dia em que foi cobrada. O amortizado mostraria 100 dólares em cada mês."
+      },
+      {
+        "text": "100 dólares em cada um dos doze meses, o pagamento espalhado por igual no ano",
+        "why": "Isso é o `AmortizedCost`, que espalha um pagamento adiantado pelas horas que ele paga."
+      },
+      {
+        "text": "Nada, já que pagamentos adiantados não são uso",
+        "why": "O pagamento é uma cobrança na fatura, e toda métrica a conta em algum lugar; elas diferem no quando."
+      },
+      {
+        "text": "O mesmo que `NetUnblendedCost`, menos os 1.200",
+        "why": "O líquido subtrai descontos que a conta recebeu, não pagamentos adiantados."
+      }
+    ]
+  },
+  "ex-rzykf0fz": {
+    "prompt": "Ligue cada métrica do Cost Explorer ao que ela conta.",
+    "hint": "Duas diferem no quando; uma no que é subtraído.",
+    "pairs": [
+      {
+        "left": "`UnblendedCost`",
+        "right": "cada cobrança no dia em que foi cobrada"
+      },
+      {
+        "left": "`AmortizedCost`",
+        "right": "pagamentos adiantados espalhados pelas horas que cobrem"
+      },
+      {
+        "left": "`NetUnblendedCost`",
+        "right": "cobranças depois dos descontos da conta"
+      },
+      {
+        "left": "`BlendedCost`",
+        "right": "uma tarifa média numa fatura consolidada"
+      }
+    ],
+    "right_distractors": [
+      "cobranças antes de imposto e suporte"
+    ]
+  },
+  "ex-mr8c6nhw": {
+    "prompt": "Um painel chama `get-cost-and-usage` a cada 5 minutos, um mês inteiro de 30 dias. A 0,01 dólar por requisição, pela lista de preços, quanto custa o mês de requisições?",
+    "hint": "12 por hora, 24 horas, 30 dias.",
+    "unit": "dólares"
+  },
+  "ex-fy2p2h2n": {
+    "prompt": "Uma consulta diz `--time-period Start=2026-09-01,End=2026-09-30 --granularity MONTHLY`. O que ela perde?",
+    "hint": "O fim entra?",
+    "choices": [
+      {
+        "text": "Nada; setembro tem trinta dias",
+        "why": "Tem, e a data de fim é exclusiva, então o dia 30 fica fora do período."
+      },
+      {
+        "text": "O primeiro dia, porque o início é exclusivo",
+        "why": "O início é inclusivo. É o fim que fica de fora."
+      },
+      {
+        "text": "O imposto do mês, que a granularidade MONTHLY informa à parte",
+        "why": "A granularidade decide o tamanho de cada fatia de tempo, não quais cobranças são contadas."
+      },
+      {
+        "text": "O dia 30, sem aviso",
+        "why": "Isso. O fim é exclusivo, então o mês inteiro é `End=2026-10-01`. Nada avisa que falta um dia."
+      }
+    ]
+  },
+  "ex-kh29s1bj": {
+    "prompt": "O gasto com NAT gateways triplica numa semana, enquanto o mês da conta fica abaixo do orçamento. Que instrumento é feito para perceber?",
+    "hint": "Um compara um total com uma linha; outro compara um dia com um padrão.",
+    "choices": [
+      {
+        "text": "A notificação real do orçamento, em 80%",
+        "why": "O total está abaixo da linha, então a notificação real não tem com o que disparar."
+      },
+      {
+        "text": "Um monitor do Cost Anomaly Detection vigiando custos por serviço",
+        "why": "Isso. Ele aprende o padrão de costume de cada serviço e informa um dia que foge dele, faça o total o que fizer."
+      },
+      {
+        "text": "Uma consulta do Cost Explorer agrupada por `SERVICE`, que alerta na mudança",
+        "why": "Ela mostraria a mudança a quem perguntasse. O Cost Explorer responde perguntas; não manda alerta."
+      },
+      {
+        "text": "Uma política de tag nos NAT gateways",
+        "why": "Uma política de tag governa como tags são escritas. Ela não sabe nada de custo."
+      }
+    ]
+  },
+  "ex-bkzzffbf": {
+    "prompt": "O financeiro pergunta quanto o time web custou em setembro. A chave `team` foi ativada em 20 de setembro. O que uma resposta honesta pode dizer?",
+    "hint": "A ativação não é retroativa por si só.",
+    "choices": [
+      {
+        "text": "O total em `team$web` de setembro, que é completo",
+        "why": "Antes do dia 20 a chave não estava ativa, então os custos desses dias não são divididos por time."
+      },
+      {
+        "text": "`team$web` a partir do dia 20; os dias anteriores só depois de um backfill",
+        "why": "Isso. Um backfill aplica a ativação a meses anteriores, e só ajuda onde os recursos já tinham a tag."
+      },
+      {
+        "text": "Nada até outubro, o primeiro mês inteiro com a chave",
+        "why": "Os dez dias depois da ativação são divididos corretamente; há algo a informar, com a lacuna nomeada."
+      },
+      {
+        "text": "O total de setembro dividido pelo número de times",
+        "why": "Isso é uma invenção vestida de número. Times não gastam igual, e nada na fatura diz que gastaram."
+      }
+    ]
+  },
+  "ex-kmv26qx1": {
+    "prompt": "Ligue cada pergunta ao instrumento desta lição que a responde.",
+    "hint": "Três instrumentos e uma porta.",
+    "pairs": [
+      {
+        "left": "o mês está passando do limite?",
+        "right": "um orçamento"
+      },
+      {
+        "left": "o padrão de um serviço mudou?",
+        "right": "Cost Anomaly Detection"
+      },
+      {
+        "left": "de quem foi este custo?",
+        "right": "Cost Explorer, agrupado por tag"
+      },
+      {
+        "left": "`Team` está escrito como `team`?",
+        "right": "uma política de tag"
+      }
+    ],
+    "right_distractors": [
+      "uma service control policy"
+    ]
+  },
+  "ex-rbw7h38w": {
+    "prompt": "Uma instância com GPU de uma conta de staging fica ligada num fim de semana. O orçamento da conta de gerenciamento cobre a organização inteira e tem uma notificação real em 80%. Por que ninguém pode ficar sabendo até segunda à tarde?",
+    "hint": "Pense no que o orçamento compara e com que frequência.",
+    "choices": [
+      {
+        "text": "Orçamentos na conta de gerenciamento não veem contas-membro",
+        "why": "Eles veem a fatura consolidada inteira; é por isso que o orçamento da organização mora lá."
+      },
+      {
+        "text": "Alertas ficam retidos até o próximo dia útil, então um fim de semana é informado na segunda",
+        "why": "Nada na documentação da AWS retém alertas para dias úteis. O atraso vem das atualizações e do limiar."
+      },
+      {
+        "text": "O pico de uma conta é pequeno diante do total inteiro, e os dados atualizam poucas vezes por dia",
+        "why": "Isso. Um orçamento por conta, ou um monitor de anomalias por conta, teria visto o pico de staging sozinho."
+      },
+      {
+        "text": "Uma instância com GPU é cobrada no fim do mês, não por hora",
+        "why": "Instâncias são cobradas pelas horas que rodam, e essas horas chegam ao orçamento a cada atualização."
+      }
+    ]
+  }
+}

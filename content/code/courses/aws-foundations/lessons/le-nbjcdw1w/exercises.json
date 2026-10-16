@@ -1,0 +1,600 @@
+[
+  {
+    "id": "ex-mzjqfaq1",
+    "version": 1,
+    "section": "default-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two accounts of the shop's organisation still have nothing but their default VPC in `sa-east-1`. Can those two VPCs be peered so that machines in one reach the other?",
+    "hint": "Compare the two ranges.",
+    "choices": [
+      {
+        "text": "Yes, because both accounts belong to the same organisation",
+        "correct": false,
+        "why": "Belonging to one organisation decides who may ask for a peering, not whether the two ranges can be routed to each other."
+      },
+      {
+        "text": "No: both use `172.31.0.0/16`, so their ranges overlap",
+        "correct": true,
+        "why": "Right. Every default VPC has the same range, so an address in one is also an address in the other, and no route can tell them apart."
+      },
+      {
+        "text": "Yes, once the second account accepts the request",
+        "correct": false,
+        "why": "Accepting is a step of every peering, and it does not get past the overlap. AWS refuses a peering between overlapping ranges."
+      },
+      {
+        "text": "Only if the two VPCs sit in different zones",
+        "correct": false,
+        "why": "A VPC spans every zone of its region; it does not sit in one. The trouble is the range, which zones do not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwtkffgy",
+    "version": 1,
+    "section": "default-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A fresh moto account answers `[]` to `describe-internet-gateways`. What does the VPC that AWS makes in every new account carry that moto's lacks?",
+    "hint": "Why is every default subnet open from the first minute?",
+    "choices": [
+      {
+        "text": "A NAT gateway in each of its zones",
+        "correct": false,
+        "why": "A NAT gateway is something you build and pay for by the hour; no default VPC comes with one."
+      },
+      {
+        "text": "Nothing more; AWS's default VPC is closed as well",
+        "correct": false,
+        "why": "AWS's default VPC is open on purpose, so that a first machine can be reached. moto is the one that left the gateway out."
+      },
+      {
+        "text": "A gateway to the internet, and a route to it",
+        "correct": true,
+        "why": "Right. With the flag that hands out public addresses, that makes every default subnet public. moto creates neither piece."
+      },
+      {
+        "text": "An internet gateway with no route pointing at it",
+        "correct": false,
+        "why": "A gateway nobody routes to would leave the subnets private. AWS adds the route as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp321s25",
+    "version": 1,
+    "section": "default-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody suggests a `/24` for the shop's production VPC, \"to save addresses\". Why does the lesson take a `/16` instead?",
+    "hint": "What does a private address cost, and what does running out cost?",
+    "choices": [
+      {
+        "text": "A `/24` is smaller than the smallest range AWS accepts for a VPC",
+        "correct": false,
+        "why": "The smallest is a `/28`, so a `/24` would be accepted. Size is not the objection."
+      },
+      {
+        "text": "Private addresses are free, and a VPC's range cannot be swapped later",
+        "correct": true,
+        "why": "Right. Nothing is saved by a small range, and a VPC that runs out of room is a migration."
+      },
+      {
+        "text": "AWS bills a VPC by the number of private addresses its range holds, used or not",
+        "correct": false,
+        "why": "The price list charges public IPv4 addresses in use, not the private range of a VPC."
+      },
+      {
+        "text": "Spreading across three zones takes a `/16` at least",
+        "correct": false,
+        "why": "Three zones need three subnets, which a `/24` could hold as three small ones. The reason is room, not a rule about zones."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwnaapzr",
+    "version": 1,
+    "section": "default-vpc",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses does the range `10.20.0.0/16` hold?",
+    "hint": "16 bits are left free.",
+    "value": 65536,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-djy91zr4",
+    "version": 1,
+    "section": "default-vpc",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`create-vpc` has just returned. Which of these does the new VPC already hold? Choose all that apply.",
+    "hint": "The last three commands of the transcript counted them.",
+    "choices": [
+      {
+        "text": "A main route table",
+        "correct": true,
+        "why": "Right. One table, with a `local` route for the VPC's range."
+      },
+      {
+        "text": "One subnet in each zone",
+        "correct": false,
+        "why": "That is the default VPC's arrangement. A VPC you create has no subnets until you make them."
+      },
+      {
+        "text": "A security group called `default`",
+        "correct": true,
+        "why": "Right. Lesson 18 reads its rules."
+      },
+      {
+        "text": "A default network ACL",
+        "correct": true,
+        "why": "Right. `IsDefault` came back `True`; lesson 18 reads it too."
+      },
+      {
+        "text": "An internet gateway",
+        "correct": false,
+        "why": "A gateway is created and attached separately, in lesson 17. A new VPC reaches nothing outside itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-75m81t6z",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many Availability Zones does one subnet live in?",
+    "hint": "It is the reason the plan has nine subnets rather than three.",
+    "choices": [
+      {
+        "text": "Every zone of the region, like the VPC that holds it",
+        "correct": false,
+        "why": "That is true of the VPC and false of the subnet. A subnet is pinned to one zone when it is created."
+      },
+      {
+        "text": "Two, so that it survives losing one",
+        "correct": false,
+        "why": "Surviving a zone is done with a subnet in each zone, not with one subnet in two."
+      },
+      {
+        "text": "Exactly one, fixed for good when the subnet is created",
+        "correct": true,
+        "why": "Right. So each tier needs one subnet per zone: three tiers in three zones are nine."
+      },
+      {
+        "text": "Whichever zone its first machine starts in",
+        "correct": false,
+        "why": "It is the other way round: the subnet's zone decides where its machines run."
+      }
+    ]
+  },
+  {
+    "id": "ex-x642qw07",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A subnet is created as a `/22`. How many of its addresses can be given to machines?",
+    "hint": "A `/22` leaves 10 bits free, and AWS keeps the same number in every subnet.",
+    "value": 1019,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-1861n4vh",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Whatever its size, every subnet loses ___ addresses to AWS: the network address, the router, the DNS resolver, one for future use and the broadcast address.",
+    "hint": "Count the list.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4th2nmmn",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each address of the subnet `public-b`, `10.20.16.0/20`, to what AWS uses it for.",
+    "hint": "The reserved ones are the first four and the last; work out where the `/20` ends.",
+    "pairs": [
+      {
+        "left": "`10.20.16.0`",
+        "right": "the subnet's network address"
+      },
+      {
+        "left": "`10.20.16.1`",
+        "right": "the VPC router"
+      },
+      {
+        "left": "`10.20.16.3`",
+        "right": "kept for future use"
+      },
+      {
+        "left": "`10.20.31.255`",
+        "right": "the broadcast address"
+      }
+    ],
+    "right_distractors": [
+      "the first address a machine can be given"
+    ]
+  },
+  {
+    "id": "ex-w50qn9cw",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A year on, the shop wants a fourth tier, `cache`, in all three zones, and the nine subnets are busy. Which plan does AWS accept without moving anything?",
+    "hint": "Two rules from the section: a subnet's range is fixed, and a subnet lives in one zone.",
+    "choices": [
+      {
+        "text": "Widen the three `app` subnets from `/20` to `/19` and share them",
+        "correct": false,
+        "why": "A subnet's range cannot be changed after it is created; growing one means replacing it and moving what is inside."
+      },
+      {
+        "text": "Three new `/20`s taken from the spare blocks, one per zone",
+        "correct": true,
+        "why": "Right. The plan kept seven `/20`s free from `10.20.144.0` up, exactly for a tier nobody had thought of."
+      },
+      {
+        "text": "One `/20` from the spare room, shared by the three zones",
+        "correct": false,
+        "why": "One subnet lives in one zone, so a single `/20` gives the cache tier one zone and no survival."
+      },
+      {
+        "text": "Three subnets in `10.21.0.0/20`, `10.21.16.0/20` and `10.21.32.0/20`",
+        "correct": false,
+        "why": "Those lie outside `10.20.0.0/16`, and a subnet outside the VPC's ranges is refused as invalid, as the transcript showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs530pha",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted `10.20.250.0/29` and reported 3 available addresses. What does AWS do with the same request?",
+    "hint": "The section gives the sizes AWS allows.",
+    "choices": [
+      {
+        "text": "Accepts it with 3 usable addresses, like moto",
+        "correct": false,
+        "why": "Here moto is more lenient than AWS. The arithmetic is right; the size is not allowed."
+      },
+      {
+        "text": "Accepts it with all 8 addresses usable, since it is tiny",
+        "correct": false,
+        "why": "The five reserved addresses do not shrink with the subnet, which is why small subnets are so costly."
+      },
+      {
+        "text": "Refuses it: the smallest subnet AWS accepts is a `/28`",
+        "correct": true,
+        "why": "Right. A subnet runs from `/28` to `/16`. That refusal was not run in the lab, because moto does not make it."
+      },
+      {
+        "text": "Accepts it once a quota increase is approved",
+        "correct": false,
+        "why": "A quota counts things, such as ranges per VPC. The size limit of a subnet is not a quota."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy54r1kg",
+    "version": 1,
+    "section": "cutting-the-range",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the loop in `16-vpc.sh` end its `aws ec2 create-subnet` line with `< /dev/null`?",
+    "hint": "Where does `read` get its lines from?",
+    "choices": [
+      {
+        "text": "So that `aws` cannot eat the plan's lines",
+        "correct": true,
+        "why": "Right. The loop's input is the pipe from `plan.py`; a command inside that reads it would swallow the lines and end the loop early."
+      },
+      {
+        "text": "To throw away the error messages `aws` prints",
+        "correct": false,
+        "why": "Errors go to the standard error, and `< /dev/null` touches only the input. A refusal would still be printed."
+      },
+      {
+        "text": "To run the nine `create-subnet` calls at the same time",
+        "correct": false,
+        "why": "Redirecting input changes nothing about order; the loop still creates one subnet after another."
+      },
+      {
+        "text": "To answer a confirmation question `aws` would ask",
+        "correct": false,
+        "why": "`create-subnet` asks nothing before acting. The redirection is about what `aws` could read, not about a prompt."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvexf95n",
+    "version": 1,
+    "section": "public-or-private",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a subnet public?",
+    "hint": "Where would a packet for the internet be sent?",
+    "choices": [
+      {
+        "text": "`MapPublicIpOnLaunch` set to `True` on the subnet",
+        "correct": false,
+        "why": "That flag hands a starting machine a public address, and an address with no route out goes nowhere."
+      },
+      {
+        "text": "A `0.0.0.0/0` route to an internet gateway",
+        "correct": true,
+        "why": "Right. Public is a route, not a setting; lesson 17 adds that route for the three public subnets."
+      },
+      {
+        "text": "A `Name` tag that starts with `public`",
+        "correct": false,
+        "why": "The shop's `public-a` is named that way and is private today. A tag is a word for people."
+      },
+      {
+        "text": "An IPv6 `/64` associated with the subnet, which is public by nature",
+        "correct": false,
+        "why": "IPv6 addresses are globally unique, but without a route to a gateway they reach nothing either."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8jde39q",
+    "version": 1,
+    "section": "public-or-private",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A subnet has `MapPublicIpOnLaunch` set to `True`, and its route table holds only the `local` route. A machine starts there and gets a public address. Can somebody on the internet open a connection to it?",
+    "hint": "A connection needs packets in both directions.",
+    "choices": [
+      {
+        "text": "Yes: a public address is reachable by definition",
+        "correct": false,
+        "why": "The address is a label. Without a route to an internet gateway, nothing carries traffic between it and the internet."
+      },
+      {
+        "text": "Yes, as long as its security group allows the port",
+        "correct": false,
+        "why": "A security group filters traffic that arrives; it cannot make traffic arrive. The missing piece is the route."
+      },
+      {
+        "text": "No: its route table has no way out of the VPC",
+        "correct": true,
+        "why": "Right. This is the lesson's idea in one case: a subnet is public because of its route table, and this one is private whatever the flag says."
+      },
+      {
+        "text": "Over IPv6 alone, which needs no gateway",
+        "correct": false,
+        "why": "IPv6 needs a route to a gateway too, and this table has none for any destination outside the VPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-devgh1bp",
+    "version": 1,
+    "section": "public-or-private",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe-route-tables --filters Name=association.subnet-id,Values=$pa` answered `[]` for `public-a`. What does that mean?",
+    "hint": "Every subnet uses some route table.",
+    "choices": [
+      {
+        "text": "The subnet has no route table, so its packets go nowhere",
+        "correct": false,
+        "why": "There is no such thing as a subnet without a table: one with no association of its own uses the main one."
+      },
+      {
+        "text": "It uses the main route table, without an association of its own",
+        "correct": true,
+        "why": "Right. The main table answers for every subnet nobody associated with another one."
+      },
+      {
+        "text": "The filter's name is wrong, so the search matched nothing",
+        "correct": false,
+        "why": "The filter is a real one; lesson 17 uses it again and it finds the table once there is an explicit association."
+      },
+      {
+        "text": "The subnet is public, since private subnets are the ones with an associated table",
+        "correct": false,
+        "why": "Both kinds have tables. What decides public or private is what the table says, not whether it is associated by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjcwj9kb",
+    "version": 1,
+    "section": "public-or-private",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's VPC, `10.20.0.0/16`, needs a second range. Which of these does AWS accept?",
+    "hint": "Three of them break a rule the section names.",
+    "choices": [
+      {
+        "text": "`10.20.128.0/17`",
+        "correct": false,
+        "why": "It is half of the VPC's own primary range. moto accepted it; AWS refuses an overlap."
+      },
+      {
+        "text": "`192.168.0.0/16`",
+        "correct": false,
+        "why": "A VPC whose primary range is in `10.0.0.0/8` cannot add one from `192.168.0.0/16`, and it is also the office's range."
+      },
+      {
+        "text": "`172.31.0.0/16`",
+        "correct": false,
+        "why": "It comes from `172.16.0.0/12`, which a VPC with a `10.x` primary cannot add, and it is every default VPC's range besides."
+      },
+      {
+        "text": "`100.64.0.0/16`",
+        "correct": true,
+        "why": "Right. It is the block set aside for carrier networks, it overlaps nothing in the shop's plan, and AWS allows it beside a `10.x` range."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzqcxv2g",
+    "version": 1,
+    "section": "public-or-private",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every IPv6 address AWS gives a VPC is globally unique. What keeps a machine with one from being reached from outside?",
+    "hint": "Lesson 17 builds it.",
+    "choices": [
+      {
+        "text": "A private IPv6 range that AWS hands out instead, like `10.0.0.0/8`",
+        "correct": false,
+        "why": "There is no such range on AWS: the `/56` comes from AWS's public pool."
+      },
+      {
+        "text": "A NAT gateway that translates the address",
+        "correct": false,
+        "why": "NAT is how private IPv4 reaches out. IPv6 has no translation to do, since the address is already public."
+      },
+      {
+        "text": "An egress-only internet gateway",
+        "correct": true,
+        "why": "Right. For IPv6, private is a gateway that only opens outwards."
+      },
+      {
+        "text": "The size of the `/64`, too large to be scanned",
+        "correct": false,
+        "why": "A large space is hard to guess, but an address that leaks is reached anyway. Hiding is not a filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-myyreygf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On AWS, a developer launches a database in a default subnet of `sa-east-1` without choosing anything. What has happened?",
+    "hint": "Put together the flag and the route of the default VPC on AWS.",
+    "choices": [
+      {
+        "text": "It has a public address and a route to the internet; its security group is all that stands between it and the world",
+        "correct": true,
+        "why": "Right. On AWS the default subnet hands out public addresses and routes `0.0.0.0/0` to an internet gateway. That is the unsafe arrangement the default hands you."
+      },
+      {
+        "text": "Nothing risky: a default subnet is private until somebody adds a route",
+        "correct": false,
+        "why": "That is moto's default VPC. AWS's comes with the gateway and the route already in place."
+      },
+      {
+        "text": "It has a public address but no route, so it cannot be reached",
+        "correct": false,
+        "why": "The address part is right. The route is there too on AWS: the default VPC's main table sends `0.0.0.0/0` to its gateway."
+      },
+      {
+        "text": "The launch fails, since databases need a VPC created by hand",
+        "correct": false,
+        "why": "The default VPC accepts anything launched without naming a VPC. That is why it collects the accidents."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5narsnf",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building the shop's VPC in the order the lesson takes them.",
+    "hint": "A range is chosen before anything is created, and a subnet needs a VPC.",
+    "items": [
+      "choose a range that overlaps no other network of the shop",
+      "create the VPC with that range and its tags",
+      "work out one `/20` per zone and tier with `plan.py`",
+      "create the nine subnets from the plan",
+      "give the public tier a route table with a route to an internet gateway"
+    ],
+    "trap": "The route table comes last: it is lesson 17, and until then all nine subnets are private."
+  },
+  {
+    "id": "ex-h9pfzv16",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose the data tier used a `/24` in each of the three zones instead of a `/20`. How many addresses would the whole tier offer to machines?",
+    "hint": "One `/24` first, then three of them.",
+    "value": 753,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-zxzxb5gb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab show moto doing differently from AWS? Choose all that apply.",
+    "hint": "Two of the five are things both do the same way.",
+    "choices": [
+      {
+        "text": "Its default VPC has no internet gateway",
+        "correct": true,
+        "why": "Right. AWS's has one attached, with a route to it."
+      },
+      {
+        "text": "It refuses a subnet that overlaps another",
+        "correct": false,
+        "why": "Both refuse it, with `InvalidSubnet.Conflict` in moto's case."
+      },
+      {
+        "text": "It accepts a `/29` subnet",
+        "correct": true,
+        "why": "Right. AWS's smallest subnet is a `/28`."
+      },
+      {
+        "text": "It keeps five addresses of every subnet",
+        "correct": false,
+        "why": "Both do: 251 in a `/24` and 4,091 in a `/20`."
+      },
+      {
+        "text": "It accepts a second range that overlaps the first",
+        "correct": true,
+        "why": "Right. moto took `10.20.128.0/17`; AWS refuses an overlap."
+      }
+    ]
+  }
+]

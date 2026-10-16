@@ -1,0 +1,588 @@
+[
+  {
+    "id": "ex-1khvwnv6",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request for `/static/logo.png` misses at the edge location in Recife. Where does it go next?",
+    "hint": "There is a tier between the edges and the shop.",
+    "choices": [
+      {
+        "text": "Straight to the bucket in `sa-east-1`",
+        "correct": false,
+        "why": "Only a miss at the regional edge cache reaches the origin."
+      },
+      {
+        "text": "To a regional edge cache, shared by several edges",
+        "correct": true,
+        "why": "Right. A hit there is answered without the origin; only a second miss goes back to the shop."
+      },
+      {
+        "text": "To the next nearest edge location, then the next",
+        "correct": false,
+        "why": "Edges do not ask each other. Behind each of them sits a regional cache."
+      },
+      {
+        "text": "Back to the viewer, with an error until the edge is filled",
+        "correct": false,
+        "why": "A miss is fetched, not refused. The viewer waits a little longer and gets the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hbw4c95",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bucket `shop-assets` must stay private, and its files must still be served to everybody through the distribution. What makes that work in AWS?",
+    "hint": "Two halves: one signs, the other agrees.",
+    "choices": [
+      {
+        "text": "Turning off Block Public Access, so CloudFront can read it",
+        "correct": false,
+        "why": "That would let anybody read it directly. OAC exists so that nothing has to be made public."
+      },
+      {
+        "text": "Making the bucket a custom origin over HTTPS",
+        "correct": false,
+        "why": "A custom origin reaches what is public. The bucket stays closed to it."
+      },
+      {
+        "text": "OAC signing the requests, and a policy that trusts only those",
+        "correct": true,
+        "why": "Right. The condition on `AWS:SourceArn` names the distribution, and a direct request to S3 is refused."
+      },
+      {
+        "text": "A cache policy that keeps the files at the edge forever",
+        "correct": false,
+        "why": "How long a copy is kept says nothing about who may read the bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-rv05htdc",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, `get-distribution` shows the bucket origin with `None` where the `OriginAccessControlId` should be. What follows?",
+    "hint": "The file sent had the id in it.",
+    "choices": [
+      {
+        "text": "Only that moto 5.2.3 drops the OAC, which AWS would keep",
+        "correct": true,
+        "why": "Right. The configuration was right; the lab simply does not keep that field, so it cannot show the protection."
+      },
+      {
+        "text": "The OAC was created in the wrong region",
+        "correct": false,
+        "why": "CloudFront is global, and so is its OAC; there was no region to get wrong."
+      },
+      {
+        "text": "The bucket policy was missing, so the OAC was removed",
+        "correct": false,
+        "why": "The policy came after, and AWS never removes an OAC for a missing policy; it would simply refuse the reads."
+      },
+      {
+        "text": "The distribution was still `InProgress`",
+        "correct": false,
+        "why": "A distribution being deployed still returns the configuration it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cbmd084",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's account works in `sa-east-1`. A colleague requests the certificate for `cdn.shop.example.com` in `sa-east-1` and cannot select it in the distribution. Why?",
+    "hint": "CloudFront looks for certificates in one region only.",
+    "choices": [
+      {
+        "text": "It has to be validated first, and validation takes a day",
+        "correct": false,
+        "why": "Validation is needed, but a validated certificate in São Paulo would still not appear."
+      },
+      {
+        "text": "A distribution can only use the default `cloudfront.net` certificate",
+        "correct": false,
+        "why": "A distribution serves its own names with an ACM certificate; the question is where that certificate lives."
+      },
+      {
+        "text": "CloudFront takes ACM certificates only from `us-east-1`",
+        "correct": true,
+        "why": "Right. A certificate lives in the region that issued it, and CloudFront reads `us-east-1`'s, wherever the shop runs."
+      },
+      {
+        "text": "The name must first be added as an alias in Route 53",
+        "correct": false,
+        "why": "The alias record comes after; the certificate list would be empty either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-7az16ejx",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A distribution's own address ends in `___.net`, and that is the name viewers are sent to until an alias is added.",
+    "hint": "The domain in the transcript, after the random part.",
+    "blanks": [
+      {
+        "accept": [
+          "cloudfront"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wmcn01kv",
+    "version": 1,
+    "section": "distributions-and-origins",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the CLI show that CloudFront belongs to no region? Choose all that apply.",
+    "hint": "Three places in the section's transcripts.",
+    "choices": [
+      {
+        "text": "The `Location` is `cloudfront.amazonaws.com`, with no region in it",
+        "correct": true,
+        "why": "Right. One address for the whole service."
+      },
+      {
+        "text": "The ARN has an empty region field",
+        "correct": true,
+        "why": "Right. `arn:aws:cloudfront::123456789012:…`, two colons together."
+      },
+      {
+        "text": "`--region ap-southeast-2` lists the same distribution",
+        "correct": true,
+        "why": "Right. The region flag changes nothing for a global service."
+      },
+      {
+        "text": "The domain name ends in `sa-east-1.cloudfront.net`",
+        "correct": false,
+        "why": "It does not: the domain is a random name under `cloudfront.net`, with no region."
+      },
+      {
+        "text": "The ACM certificate was listed in São Paulo",
+        "correct": false,
+        "why": "It was listed in `us-east-1` and not in São Paulo; ACM is regional, which is the point of that transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-hq3nb84h",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To be safe, a colleague adds the session cookie to the cache key of `/static/*`. What happens to the images?",
+    "hint": "Everything in the key divides the hit rate.",
+    "choices": [
+      {
+        "text": "Nothing changes, since images do not read cookies",
+        "correct": false,
+        "why": "The image does not read it, but the cache does: a different cookie is a different key."
+      },
+      {
+        "text": "One copy per customer, so the cache barely helps",
+        "correct": true,
+        "why": "Right. One copy per session is no cache at all. A cookie the origin needs goes in an origin request policy instead."
+      },
+      {
+        "text": "The images become private to each customer, which is safer",
+        "correct": false,
+        "why": "The key decides which copy answers, not who may ask. Privacy is a signed URL's job."
+      },
+      {
+        "text": "CloudFront refuses the policy, since cookies are not allowed in a key",
+        "correct": false,
+        "why": "Cookies are allowed in a cache key, which is exactly why this mistake is possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-bt7wj5g7",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each managed policy to what it does.",
+    "hint": "Two cache policies and one origin request policy.",
+    "pairs": [
+      {
+        "left": "`CachingOptimized`",
+        "right": "keys on the path and keeps a copy for a day by default"
+      },
+      {
+        "left": "`CachingDisabled`",
+        "right": "keeps nothing, so every request reaches the origin"
+      },
+      {
+        "left": "`AllViewer`",
+        "right": "forwards every header, cookie and query string to the origin"
+      }
+    ],
+    "right_distractors": [
+      "signs every request to the bucket"
+    ]
+  },
+  {
+    "id": "ex-4e1tvkst",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `CachingOptimized`, the origin sends a file with no `Cache-Control` header at all. How long may an edge keep it?",
+    "hint": "The policy has a minimum, a default and a maximum.",
+    "choices": [
+      {
+        "text": "Not at all: without a header nothing is cached",
+        "correct": false,
+        "why": "A file that says nothing gets the policy's default, which is not zero here."
+      },
+      {
+        "text": "A year, the policy's maximum",
+        "correct": false,
+        "why": "The maximum applies when the origin asks for more; a silent file gets the default."
+      },
+      {
+        "text": "A day, the policy's default",
+        "correct": true,
+        "why": "Right. One second, a day and a year are its minimum, default and maximum."
+      },
+      {
+        "text": "One second, the policy's minimum",
+        "correct": false,
+        "why": "The minimum stops an origin asking for less; it is not what a silent file gets."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqcce4t0",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a deployment the shop invalidates `/static/css/shop.css`. The invalidation completes, and some customers still see the old styles for hours. Which explanation fits?",
+    "hint": "Whose caches can CloudFront reach?",
+    "choices": [
+      {
+        "text": "The invalidation needs a wildcard to reach every edge",
+        "correct": false,
+        "why": "A path without a wildcard is removed from every edge; the wildcard only widens the set of paths."
+      },
+      {
+        "text": "Their browsers kept a copy of their own",
+        "correct": true,
+        "why": "Right. An invalidation clears CloudFront's caches only. A versioned name is new to the browser too."
+      },
+      {
+        "text": "The regional edge cache keeps a copy the invalidation skips",
+        "correct": false,
+        "why": "The regional caches are CloudFront's and are cleared too."
+      },
+      {
+        "text": "`COMPLETED` in AWS means queued, not done",
+        "correct": false,
+        "why": "Queued is `InProgress`. Completed means every edge has dropped the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjbq9hab",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of releasing a new stylesheet with versioned names in order.",
+    "hint": "The new file has to exist before anything links to it.",
+    "items": [
+      "build `shop.81d0e7.css` from the changed source",
+      "upload it to the bucket with a year's `max-age`",
+      "publish the page that links to the new name",
+      "leave `shop.3f9a2c.css` in place for pages still cached"
+    ],
+    "trap": "Publishing the page before the file is uploaded is the usual slip: for a moment the page links to a name that does not exist yet."
+  },
+  {
+    "id": "ex-99yvc7bb",
+    "version": 1,
+    "section": "caching-and-invalidation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In moto, an invalidation is `COMPLETED` the moment it is created. What does that say about AWS?",
+    "hint": "Were there any edges to clear?",
+    "choices": [
+      {
+        "text": "That AWS also finishes invalidations instantly",
+        "correct": false,
+        "why": "AWS's starts `InProgress` and finishes when every edge has dropped the paths."
+      },
+      {
+        "text": "Nothing: moto has no edges, so there is nothing to wait for",
+        "correct": true,
+        "why": "Right. It is the same as `INSYNC` in lesson 21: a status with nothing behind it."
+      },
+      {
+        "text": "That small invalidations skip the `InProgress` state",
+        "correct": false,
+        "why": "Size has nothing to do with moto's answer; it says the same for any path."
+      },
+      {
+        "text": "That the paths were never cached, so nothing had to be removed",
+        "correct": false,
+        "why": "That would also be true in moto, which caches nothing anywhere; it still says nothing about AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp3gw564",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the list of 16 September 2026, what do 2,048 GB sent to viewers in South America through CloudFront cost, in dollars, counting transfer only?",
+    "hint": "0.110 a GB in the first 10 TB.",
+    "value": 225.28,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-tkppm08e",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the shop pay for the bytes CloudFront fetches from the bucket in `sa-east-1`?",
+    "hint": "A line of lesson 1's own offer.",
+    "choices": [
+      {
+        "text": "0.15 a GB, the same as to the internet",
+        "correct": false,
+        "why": "That is the price of leaving the region to the internet. To CloudFront it is a different line."
+      },
+      {
+        "text": "0.01 a GB each way, like crossing a zone",
+        "correct": false,
+        "why": "Crossing a zone is inside the region. The fetch to CloudFront has its own line."
+      },
+      {
+        "text": "Nothing: `SAE1-CloudFront-Out-Bytes` is priced at zero",
+        "correct": true,
+        "why": "Right. The shop pays when CloudFront sends the bytes to viewers, not when it fetches them."
+      },
+      {
+        "text": "0.110 a GB, the CloudFront price for South America",
+        "correct": false,
+        "why": "That is what the viewer's side costs. The fetch from the origin is free."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbz7brvj",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In one month the shop invalidates 2,400 paths, none of them with a wildcard. At 0.005 a path after the first 1,000, what does that cost, in dollars?",
+    "hint": "Only the paths past 1,000 are billed.",
+    "value": 7,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-2ctcbx77",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save money, a colleague moves the shop's distribution to `PriceClass_200`. Most customers are in Brazil. What happens to them?",
+    "hint": "Which part of the world does the cheaper class leave out?",
+    "choices": [
+      {
+        "text": "Nothing changes for them; the class only affects Asia and Africa",
+        "correct": false,
+        "why": "Price Class 200 includes Asia and Africa. South America is what it leaves out."
+      },
+      {
+        "text": "They are served from edges abroad, further away",
+        "correct": true,
+        "why": "Right. For a shop whose customers are in Brazil the saving is a slower shop."
+      },
+      {
+        "text": "Their requests go straight to the origin in `sa-east-1`",
+        "correct": false,
+        "why": "Viewers are still served by CloudFront, only from edges in the included parts of the world."
+      },
+      {
+        "text": "They are refused until the class includes Brazil",
+        "correct": false,
+        "why": "A price class never refuses anybody; geographic restriction would."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kbfj95c",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file sold to one customer must be downloadable by that customer only, and only until Friday. Which feature fits?",
+    "hint": "A link that carries its own proof and its own expiry.",
+    "choices": [
+      {
+        "text": "Geographic restriction to the customer's country",
+        "correct": false,
+        "why": "A country holds millions of people; it cannot pick one customer."
+      },
+      {
+        "text": "A WAF rule that allows the customer's IP address",
+        "correct": false,
+        "why": "An address changes with the network the customer is on, and says nothing about Friday."
+      },
+      {
+        "text": "A signed URL that expires on Friday",
+        "correct": true,
+        "why": "Right. CloudFront checks the signature against the key group and refuses it after the time the shop chose."
+      },
+      {
+        "text": "An invalidation of the file on Friday",
+        "correct": false,
+        "why": "An invalidation removes a copy from the edges; anybody could still download it before and after."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4ke37d9",
+    "version": 1,
+    "section": "price-and-protection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The distribution has a WAF web ACL and the bucket is behind OAC. A tester still reaches the shop's load balancer directly, around every rule. What closes that?",
+    "hint": "The origin has to admit only CloudFront.",
+    "choices": [
+      {
+        "text": "A second web ACL in `sa-east-1`, attached to the load balancer as well as the distribution",
+        "correct": false,
+        "why": "It could filter at the ALB too, but it leaves the door to it open to the whole internet."
+      },
+      {
+        "text": "An OAC on the load balancer origin",
+        "correct": false,
+        "why": "OAC is for buckets and a few other AWS origins; it does not close a load balancer."
+      },
+      {
+        "text": "Turning on `redirect-to-https`",
+        "correct": false,
+        "why": "That changes what viewers of the distribution get, not who may reach the load balancer."
+      },
+      {
+        "text": "A security group on the load balancer that admits only CloudFront's managed prefix list",
+        "correct": true,
+        "why": "Right. Then CloudFront is the only way in, and the web ACL sees every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7t2mftj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's pages are different for every logged-in customer. Which behaviour fits them?",
+    "hint": "A copy shared by everybody would show one customer's basket to another.",
+    "choices": [
+      {
+        "text": "`CachingOptimized`, so the load balancer does less work",
+        "correct": false,
+        "why": "Keyed on the path only, every customer would get the first customer's page."
+      },
+      {
+        "text": "`CachingDisabled` with `AllViewer`, forwarding the cookies",
+        "correct": true,
+        "why": "Right. Nothing is kept, and the origin receives what it needs to know who is asking."
+      },
+      {
+        "text": "`CachingOptimized` with the session cookie added to the key",
+        "correct": false,
+        "why": "That stores a copy per customer that nobody else can use, a cache that only costs."
+      },
+      {
+        "text": "No behaviour: pages cannot go through CloudFront",
+        "correct": false,
+        "why": "They can, and the shop's do, under the default behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq8msbn7",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop sends 10,240 GB a month to viewers in Brazil. How many dollars a month does CloudFront's transfer save against sending the same bytes straight from `sa-east-1`, at 0.110 against 0.150?",
+    "hint": "The difference per GB, times the GB.",
+    "value": 409.6,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-3ap5gjgz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the CloudFront feature that meets it.",
+    "hint": "Four features of the lesson, and one left over.",
+    "pairs": [
+      {
+        "left": "keep the bucket private and still serve its files",
+        "right": "Origin Access Control"
+      },
+      {
+        "left": "make edges forget a file published by mistake",
+        "right": "an invalidation"
+      },
+      {
+        "left": "refuse viewers from a country the licence excludes",
+        "right": "geographic restriction"
+      },
+      {
+        "left": "rate-limit an address hammering the checkout",
+        "right": "a WAF web ACL"
+      }
+    ],
+    "right_distractors": [
+      "a price class"
+    ]
+  }
+]

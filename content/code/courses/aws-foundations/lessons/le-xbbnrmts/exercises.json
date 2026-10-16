@@ -1,0 +1,633 @@
+[
+  {
+    "id": "ex-rx908xq1",
+    "version": 1,
+    "section": "assuming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio holds `AdministratorAccess`, yet his `assume-role` on `deployer` is refused. Why?",
+    "hint": "Two policies have to agree.",
+    "choices": [
+      {
+        "text": "`AdministratorAccess` leaves out the `sts` actions",
+        "correct": false,
+        "why": "It allows `*` on `*`, which includes `sts:AssumeRole`. His side agreed."
+      },
+      {
+        "text": "The role's trust policy names bia, and only bia, not him",
+        "correct": true,
+        "why": "Right. The trust policy is the role's half of the agreement, and no permission of the caller's replaces it."
+      },
+      {
+        "text": "A role gives one session at a time, and bia held it",
+        "correct": false,
+        "why": "Any number of sessions of one role can exist at once; caio was refused before bia asked."
+      },
+      {
+        "text": "caio has to wait for his key to be accepted by STS",
+        "correct": false,
+        "why": "The key was accepted: the error names `user/caio`, which only a verified signature reveals."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgvpec4m",
+    "version": 1,
+    "section": "assuming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "bia assumes `deployer`. Whose permissions does the session have?",
+    "hint": "What did the session's `iam list-users` answer?",
+    "choices": [
+      {
+        "text": "bia's own, plus the role's",
+        "correct": false,
+        "why": "Nothing of bia's comes along. Roles do not add to a caller."
+      },
+      {
+        "text": "The role's, and nothing else",
+        "correct": true,
+        "why": "Right. bia's policy let her ask for the session; inside it, only the role's policies count."
+      },
+      {
+        "text": "bia's own, since she is the one who signed the call",
+        "correct": false,
+        "why": "She signed the `AssumeRole` call. The session's calls are signed with the session's key."
+      },
+      {
+        "text": "Only what bia's policy and the role's policy both allow",
+        "correct": false,
+        "why": "That intersection is how a boundary or a session policy works, not the caller's own policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztz10g0x",
+    "version": 1,
+    "section": "assuming",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A trust policy names `\"AWS\": \"arn:aws:iam::123456789012:root\"`. In AWS, who can assume the role?",
+    "hint": "The account decides, through something.",
+    "choices": [
+      {
+        "text": "Only the root user of that account",
+        "correct": false,
+        "why": "`:root` here means the account itself, not its root user."
+      },
+      {
+        "text": "Whoever in that account its own policies allow",
+        "correct": true,
+        "why": "Right. The trust lets the account in; the account's identity policies choose which of its principals."
+      },
+      {
+        "text": "Every principal of every account in the organisation",
+        "correct": false,
+        "why": "The ARN names one account, and the organisation plays no part in a trust policy unless a condition names it."
+      },
+      {
+        "text": "Nobody, until a user of that account is named as well",
+        "correct": false,
+        "why": "Naming the account is enough on the role's side; moto refused it, AWS does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf2qx2p8",
+    "version": 1,
+    "section": "assuming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, admin was refused a role whose trust policy names admin's own account, `arn:aws:iam::123456789012:root`. What does that show?",
+    "hint": "How does moto compare a caller with a principal?",
+    "choices": [
+      {
+        "text": "That AWS refuses it too, since admin is not the root user",
+        "correct": false,
+        "why": "AWS reads `:root` as the account, and admin's `AdministratorAccess` allows the call: AWS gives the session."
+      },
+      {
+        "text": "That moto matches ARNs as plain strings",
+        "correct": true,
+        "why": "Right. `user/admin` and `root` are different strings; the same comparison breaks role chaining in the next section."
+      },
+      {
+        "text": "That a trust policy may not name the account it belongs to",
+        "correct": false,
+        "why": "It may, and it is common; the refusal was moto's."
+      },
+      {
+        "text": "That moto's count of free requests had run out for admin",
+        "correct": false,
+        "why": "The count is spent once, for everybody, and admin's requests have been judged since."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrp30f27",
+    "version": 1,
+    "section": "assuming",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when bia assumes `deployer`.",
+    "hint": "Her side is checked before the role's.",
+    "items": [
+      "bia signs an `AssumeRole` call with her own key",
+      "AWS checks that bia's policy allows `sts:AssumeRole` on the role",
+      "AWS checks that the role's trust policy names bia",
+      "STS returns a key, a secret, a token and an expiry",
+      "bia signs her next calls with the session's key"
+    ],
+    "trap": "Signing the later calls with her own key is the usual slip: they would act as bia, not as `deployer`."
+  },
+  {
+    "id": "ex-k647n3p7",
+    "version": 1,
+    "section": "assuming",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each question to the policy that answers it.",
+    "hint": "Three policies, three questions.",
+    "pairs": [
+      {
+        "left": "may bia ask for the role?",
+        "right": "bia's identity policy"
+      },
+      {
+        "left": "does the role accept bia?",
+        "right": "the role's trust policy"
+      },
+      {
+        "left": "what may the session do?",
+        "right": "the role's permissions policies"
+      }
+    ],
+    "right_distractors": [
+      "the policy of bia's group, `developers`"
+    ]
+  },
+  {
+    "id": "ex-h5vggktj",
+    "version": 1,
+    "section": "sessions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hours is the longest `MaxSessionDuration` a role can be given?",
+    "hint": "The default is one.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-pmngmp55",
+    "version": 1,
+    "section": "sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`deployer` has `MaxSessionDuration` 3600, and bia asks for `--duration-seconds 7200`. What does AWS do, and what did moto do?",
+    "hint": "Who raises the maximum?",
+    "choices": [
+      {
+        "text": "Both grant one hour, the most the role allows",
+        "correct": false,
+        "why": "Neither trims the request. AWS refuses it whole, and moto granted all of it."
+      },
+      {
+        "text": "Both grant two hours, since the caller chooses",
+        "correct": false,
+        "why": "The caller chooses within the role's maximum; above it, AWS refuses."
+      },
+      {
+        "text": "AWS refuses the request; moto granted two hours",
+        "correct": true,
+        "why": "Right. The maximum is raised on the role, with `update-role`, not by asking for more. AWS's refusal was not run here."
+      },
+      {
+        "text": "The command line refuses it before sending, in both",
+        "correct": false,
+        "why": "The command line checks only the floor of 900 seconds, not the role's maximum, which it cannot know."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap63kzn0",
+    "version": 1,
+    "section": "sessions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Both `deployer` and `auditor` allow twelve-hour sessions. A `deployer` session assumes `auditor` and asks for four hours. What does AWS answer?",
+    "hint": "This is role chaining.",
+    "choices": [
+      {
+        "text": "Four hours, since both roles allow twelve",
+        "correct": false,
+        "why": "Each role's maximum applies to a first session. A chained one has a limit of its own."
+      },
+      {
+        "text": "A refusal: chaining caps it at one hour",
+        "correct": true,
+        "why": "Right, according to AWS's documentation. That limit was not measured here: moto granted a chained session two hours."
+      },
+      {
+        "text": "Whatever is left of the first session's time",
+        "correct": false,
+        "why": "The second session's length is not taken from the first's remainder."
+      },
+      {
+        "text": "Twelve hours, the larger of the two maximums",
+        "correct": false,
+        "why": "Nothing chooses the larger maximum; the request asked for four and is refused for exceeding one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vfbf5ze",
+    "version": 1,
+    "section": "sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a source identity stronger evidence of who did something than a session name?",
+    "hint": "Who picks each one, and when can it change?",
+    "choices": [
+      {
+        "text": "A source identity is encrypted, and a session name is not",
+        "correct": false,
+        "why": "Neither is secret; both are written into the log in plain text."
+      },
+      {
+        "text": "It carries over to every chained role, and nobody can change it",
+        "correct": true,
+        "why": "Right, and a trust policy can demand it. A session name is chosen afresh for every session."
+      },
+      {
+        "text": "CloudTrail records source identities and drops session names",
+        "correct": false,
+        "why": "The session name is in every log line, as the end of the session's ARN."
+      },
+      {
+        "text": "moto checks a source identity, so the lab can prove it",
+        "correct": false,
+        "why": "moto returned none at all; this part was not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-an038r2w",
+    "version": 1,
+    "section": "sessions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a caller to set a source identity, the role's trust policy must allow `sts:AssumeRole` and also `sts:___`.",
+    "hint": "A verb, then the two words.",
+    "blanks": [
+      {
+        "accept": [
+          "SetSourceIdentity"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8q6k1pdn",
+    "version": 1,
+    "section": "sessions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A session's key and a user's `AKIA` key leak on the same day. Why is the session's worth less to whoever found it?",
+    "hint": "Look at `Expiration`.",
+    "choices": [
+      {
+        "text": "It stops working on its own after an hour",
+        "correct": true,
+        "why": "Right. An `AKIA` key works until somebody notices and deletes it."
+      },
+      {
+        "text": "It needs MFA to be used, and the `AKIA` key does not",
+        "correct": false,
+        "why": "A session needs its token, not MFA; whoever holds all three values can use it."
+      },
+      {
+        "text": "It only works from the machine that assumed the role",
+        "correct": false,
+        "why": "Nothing ties it to a machine unless a condition does."
+      },
+      {
+        "text": "AWS revokes every session when a leak is reported",
+        "correct": false,
+        "why": "No such automatic revocation exists; the expiry is what limits it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fak5424y",
+    "version": 1,
+    "section": "cross-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, the session of `OrganizationAccountAccessRole` in `shop-prod` was refused a list of VPCs. In AWS, what would the same session be?",
+    "hint": "What does AWS attach to the role it creates?",
+    "choices": [
+      {
+        "text": "The same: a role in a new account starts with no permissions",
+        "correct": false,
+        "why": "That is moto's version. AWS attaches `AdministratorAccess` to this role."
+      },
+      {
+        "text": "An administrator of `shop-prod`",
+        "correct": true,
+        "why": "Right. AWS attaches `AdministratorAccess`, which is why who may assume the role matters so much."
+      },
+      {
+        "text": "A read-only session, until the member account grants more",
+        "correct": false,
+        "why": "No read-only policy is involved; it is full administration."
+      },
+      {
+        "text": "The root user of `shop-prod`",
+        "correct": false,
+        "why": "A role session is never the root user, even with every permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-gexjcgs7",
+    "version": 1,
+    "section": "cross-account",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the confused-deputy story, who is trying to misuse the shop's role?",
+    "hint": "Not the one holding the permission.",
+    "choices": [
+      {
+        "text": "The monitoring company, which holds the permission",
+        "correct": false,
+        "why": "The company is the deputy: it is used, not the user. It acts on whatever role ARN a customer gives it."
+      },
+      {
+        "text": "Another of the company's customers, posing as the shop",
+        "correct": true,
+        "why": "Right. They give the company the shop's role ARN as their own, and the external id is what stops the company acting on it."
+      },
+      {
+        "text": "A developer of the shop with access to the role's ARN",
+        "correct": false,
+        "why": "The shop's own people have their own ways in; the story is about a stranger using the company."
+      },
+      {
+        "text": "The root user of the company's account",
+        "correct": false,
+        "why": "Nothing in the story needs the company's root user; it works through the company's normal service."
+      }
+    ]
+  },
+  {
+    "id": "ex-k10x4s4h",
+    "version": 1,
+    "section": "cross-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the external id in the shop's trust policy establish?",
+    "hint": "Not who the company is; the account already says that.",
+    "choices": [
+      {
+        "text": "That the request comes from the company's account",
+        "correct": false,
+        "why": "The principal already establishes that, with the company's signature."
+      },
+      {
+        "text": "A password that encrypts the session the company receives",
+        "correct": false,
+        "why": "Nothing is encrypted with it; it is compared, as a string, with the trust policy."
+      },
+      {
+        "text": "That the company is acting on the shop's own setup",
+        "correct": true,
+        "why": "Right. The company sends the id of the customer who configured the request, so another customer cannot send the shop's."
+      },
+      {
+        "text": "That the session will last no longer than one hour",
+        "correct": false,
+        "why": "Duration is a separate setting; the external id says nothing about time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ad6qnma9",
+    "version": 1,
+    "section": "cross-account",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto do differently from AWS in this lesson? Choose all that apply.",
+    "hint": "Two of them it judged as AWS does.",
+    "choices": [
+      {
+        "text": "Granted two hours on a role whose maximum was one",
+        "correct": true,
+        "why": "Right. AWS refuses a duration above the role's maximum."
+      },
+      {
+        "text": "Refused caio, whom the trust policy does not name",
+        "correct": false,
+        "why": "That is exactly AWS's answer."
+      },
+      {
+        "text": "Accepted an `AssumeRole` with no external id",
+        "correct": true,
+        "why": "Right. AWS refuses it, since the `StringEquals` has nothing to match."
+      },
+      {
+        "text": "Handed out a session in an account that does not exist",
+        "correct": true,
+        "why": "Right. moto does not judge the other account's side at all."
+      },
+      {
+        "text": "Refused bia a role her own policy does not name",
+        "correct": false,
+        "why": "The caller's side is judged as AWS judges it."
+      },
+      {
+        "text": "Refused a session of `deployer` a role that trusts `role/deployer`",
+        "correct": true,
+        "why": "Right. AWS takes a role's ARN in a trust policy to mean its sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5v9bab2",
+    "version": 1,
+    "section": "cross-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's profile use `credential_source = Environment` rather than `source_profile`?",
+    "hint": "Where would a source profile's credentials live?",
+    "choices": [
+      {
+        "text": "`source_profile` cannot assume a role in another account",
+        "correct": false,
+        "why": "It can; it is the usual form. The difference is where the signing credentials come from."
+      },
+      {
+        "text": "No key has to be written to a file",
+        "correct": true,
+        "why": "Right. A source profile with keys would mean writing admin's key into `~/.aws/credentials`."
+      },
+      {
+        "text": "moto refuses profiles that name another profile",
+        "correct": false,
+        "why": "moto never sees profiles; the command line resolves them before sending anything."
+      },
+      {
+        "text": "`credential_source` makes the session last longer",
+        "correct": false,
+        "why": "Duration is `duration_seconds`, a separate setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrxbk975",
+    "version": 1,
+    "section": "cross-account",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws sts get-caller-identity --profile shop-prod` answered with the account of `shop-prod`. What did the command line do first?",
+    "hint": "Read the profile.",
+    "choices": [
+      {
+        "text": "It switched moto to the other account",
+        "correct": false,
+        "why": "Nothing switches moto; the account follows the credentials that sign the call."
+      },
+      {
+        "text": "It signed with admin's key and asked about shop-prod",
+        "correct": false,
+        "why": "admin's key belongs to the management account and would have answered with it, as the last command did."
+      },
+      {
+        "text": "It assumed the profile's role before anything",
+        "correct": true,
+        "why": "Right. `configure list` showed `assume-role` as the type of the credentials."
+      },
+      {
+        "text": "It read a key for shop-prod from `~/.aws/credentials`",
+        "correct": false,
+        "why": "There is no such file in the lab, and no key for shop-prod anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4emvjzq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The data team works in the management account and needs to read data in `shop-prod`. Which arrangement fits what this lesson taught?",
+    "hint": "A door in the account being entered, and a key on the other side.",
+    "choices": [
+      {
+        "text": "IAM users for each of them in `shop-prod`, with access keys",
+        "correct": false,
+        "why": "Long-term keys in a second account are exactly what a role avoids."
+      },
+      {
+        "text": "A read role in `shop-prod` trusting the data team's role in management",
+        "correct": true,
+        "why": "Right. The trust names one role, not the whole account, and that role's own policy allows `sts:AssumeRole` on it."
+      },
+      {
+        "text": "Adding `shop-prod` to the `data` group",
+        "correct": false,
+        "why": "A group holds users of one account; an account cannot join it."
+      },
+      {
+        "text": "`OrganizationAccountAccessRole`, which every member account already has",
+        "correct": false,
+        "why": "It works, and it is administration of the whole account, far more than reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpjgg9et",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring vendor says it needs no external id, because its AWS account number is unique. Why is that not enough?",
+    "hint": "Whom does the account number identify?",
+    "choices": [
+      {
+        "text": "Account numbers can be reused once an account is closed",
+        "correct": false,
+        "why": "The concern is not reuse; it is that one account serves every customer."
+      },
+      {
+        "text": "Its account number is public, so anybody can sign as it",
+        "correct": false,
+        "why": "Knowing an account number lets nobody sign as that account."
+      },
+      {
+        "text": "It names the vendor, not which of the vendor's customers is asking",
+        "correct": true,
+        "why": "Right. The same account assumes roles for every customer, and only the external id ties a request to one of them."
+      },
+      {
+        "text": "Trust policies cannot name an account from outside the organisation",
+        "correct": false,
+        "why": "They can, and third parties are named exactly that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3vxn4nm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, a cross-account `assume-role` succeeds. What has that proved?",
+    "hint": "Which side of the agreement does moto judge across accounts?",
+    "choices": [
+      {
+        "text": "That the caller's own side allows the call, and nothing more",
+        "correct": true,
+        "why": "Right. moto gave a session in an account that does not exist, so the trust policy over there was never read."
+      },
+      {
+        "text": "That both trust and identity policies agree, as in AWS",
+        "correct": false,
+        "why": "Only the identity side was judged. The trust side is the one moto skips across accounts."
+      },
+      {
+        "text": "That the other account exists and holds the role",
+        "correct": false,
+        "why": "`111122223333` exists nowhere, and moto answered all the same."
+      },
+      {
+        "text": "That the role carries `AdministratorAccess`",
+        "correct": false,
+        "why": "moto's `OrganizationAccountAccessRole` carries no policy at all."
+      }
+    ]
+  }
+]
