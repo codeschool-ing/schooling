@@ -1,0 +1,445 @@
+{
+  "ex-gb44xmp3": {
+    "prompt": "Qual dos quatro tipos de lock-in é o único com data de fim escrita?",
+    "hint": "Um deles é assinado por um ou três anos.",
+    "choices": [
+      {
+        "text": "Lock-in de API",
+        "why": "Código com a forma de um provedor continua com essa forma até alguém reescrevê-lo."
+      },
+      {
+        "text": "Gravidade dos dados",
+        "why": "Os dados ficam mais pesados a cada mês que ficam; nada os encerra numa data."
+      },
+      {
+        "text": "Lock-in de habilidades",
+        "why": "O que uma equipe sabe se apaga devagar e sem calendário."
+      },
+      {
+        "text": "Um contrato",
+        "why": "Isso: um Savings Plan de um ou três anos, por exemplo. Também é o único tipo puramente financeiro: nada no código muda."
+      }
+    ]
+  },
+  "ex-rkj30dak": {
+    "prompt": "Ligue cada tipo de lock-in ao exemplo dele nesta aula.",
+    "hint": "Código, dados, pessoas, assinatura.",
+    "pairs": [
+      {
+        "left": "API",
+        "right": "Um handler que lê o formato de um event da AWS"
+      },
+      {
+        "left": "gravidade dos dados",
+        "right": "Dois terabytes de fotos e relatórios no S3"
+      },
+      {
+        "left": "habilidades",
+        "right": "Três pessoas que conhecem ECS e CloudWatch"
+      },
+      {
+        "left": "contrato",
+        "right": "Um Savings Plan de três anos"
+      }
+    ],
+    "right_distractors": [
+      "Um bug na regra de preços da loja"
+    ]
+  },
+  "ex-6sda53cx": {
+    "prompt": "Um fluxo é escrito como máquina de estados em Amazon States Language. Que tipo de lock-in isso carrega acima de tudo?",
+    "hint": "Onde mais esse arquivo roda?",
+    "choices": [
+      {
+        "text": "Lock-in de contrato, já que o Step Functions exige um compromisso anual para rodar",
+        "why": "O Step Functions não oferece compromisso para assinar; é cobrado por uso."
+      },
+      {
+        "text": "Lock-in de API: a definição roda no Step Functions e em nenhum outro lugar",
+        "why": "Isso. O que ele compra são novas tentativas, esperas e um histórico que outra pessoa opera."
+      },
+      {
+        "text": "Gravidade dos dados, porque o estado fica guardado no S3",
+        "why": "As execuções guardam o próprio histórico; o lock-in está na linguagem da definição."
+      },
+      {
+        "text": "Nenhum, porque a definição é JSON e JSON é portável",
+        "why": "O formato é portável; o significado dos estados é de um serviço só."
+      }
+    ]
+  },
+  "ex-w3njap7s": {
+    "prompt": "Uma empresa pede à sua equipe de especialistas em Kubernetes que rode tudo no Lambda daqui em diante. Que tipo de lock-in, segundo esta aula, eles encontram?",
+    "hint": "Ele corre nos dois sentidos.",
+    "choices": [
+      {
+        "text": "Lock-in de API, porque manifests do Kubernetes são específicos da AWS",
+        "why": "Manifests são do Kubernetes, legíveis por qualquer cluster conforme; é a linha de API baixa do EKS."
+      },
+      {
+        "text": "Um contrato, porque o cluster foi reservado",
+        "why": "Nada no caso fala de compromisso, e uma reserva não os impediria de aprender Lambda."
+      },
+      {
+        "text": "Habilidades, ao contrário: a experiência deles fica de fora",
+        "why": "Isso. Uma equipe fica presa ao que sabe nos dois sentidos, e a mudança custa semanas de aprendizado."
+      },
+      {
+        "text": "Gravidade dos dados, porque os pods guardam os dados nos nós",
+        "why": "Nada se disse sobre dados; o obstáculo é a experiência de três pessoas."
+      }
+    ]
+  },
+  "ex-8qb672sq": {
+    "prompt": "O lock-in de API é o preço de um ___ gerenciado: o gatilho, as novas tentativas e a escala que outra pessoa escreveu e opera.",
+    "hint": "O que você ganha da plataforma e, sem ela, teria de construir.",
+    "blanks": [
+      {
+        "accept": [
+          "recurso",
+          "serviço"
+        ]
+      }
+    ]
+  },
+  "ex-1n9x66re": {
+    "prompt": "Nos três arquivos da loja, onde aparece alguma coisa sobre Lambda ou HTTP?",
+    "hint": "Que arquivo não importa nada além da própria regra?",
+    "choices": [
+      {
+        "text": "No orders.py, que guarda os preços",
+        "why": "O orders.py não importa nada e não sabe nada de onde roda; é para isso que ele existe."
+      },
+      {
+        "text": "Só nos adaptadores, lambda_app.py e server.py",
+        "why": "Isso. Cada um toca a regra em duas linhas, o import e a chamada."
+      },
+      {
+        "text": "Nos três, já que todo arquivo precisa tratar a requisição",
+        "why": "Só os adaptadores tratam requisições; a regra recebe um dicionário e devolve um status e um corpo."
+      },
+      {
+        "text": "Em lugar nenhum: o Runtime Interface Emulator traduz HTTP para os dois",
+        "why": "O emulador roda só o caminho do Lambda; o server.py fala HTTP sozinho."
+      }
+    ]
+  },
+  "ex-j8t0589f": {
+    "prompt": "Ponha em ordem o que acontece quando o curl pede um orçamento à versão Lambda da loja.",
+    "hint": "Da porta do emulador ao JSON que volta.",
+    "items": [
+      "O curl envia um event cujo body é o pedido, como string",
+      "O emulador chama lambda_app.handler com esse event",
+      "O handler interpreta o body e chama quote do orders.py",
+      "O handler embrulha o status e o corpo como statusCode, headers e body"
+    ],
+    "trap": "Chamar quote antes de interpretar o body entregaria à regra uma string onde ela espera um dicionário."
+  },
+  "ex-t8bgmr12": {
+    "prompt": "Para continuar portável, uma equipe embrulha o Step Functions numa camada de fluxo própria, para poder trocar o motor um dia. O que ela comprou?",
+    "hint": "Uma costura é código, e código se paga.",
+    "choices": [
+      {
+        "text": "Portabilidade sem custo, porque a camada é só uma interface",
+        "why": "Uma interface que cobre novas tentativas, esperas e histórico precisa implementá-los em algum lugar, e esse lugar é dela."
+      },
+      {
+        "text": "Contas menores de Step Functions, já que a camada agrupa transições",
+        "why": "Nada num embrulho muda como as transições são cobradas."
+      },
+      {
+        "text": "Um software que ela agora mantém em todos os dias em que fica onde está",
+        "why": "Isso. O preço cresce a cada recurso da plataforma que ela decide não usar diretamente."
+      },
+      {
+        "text": "Liberdade do lock-in de habilidades, já que a camada esconde o Step Functions da equipe",
+        "why": "A equipe agora precisa conhecer o Step Functions e também a própria camada."
+      }
+    ]
+  },
+  "ex-x6t4c1p9": {
+    "prompt": "Quais destes são costuras que mantêm o provedor fora do código da loja? Marque todas as que se aplicam.",
+    "hint": "Uma costura é algo que vai com você, ou um lugar só onde o provedor pode aparecer.",
+    "choices": [
+      {
+        "text": "Uma imagem OCI construída a partir de um Dockerfile",
+        "why": "Ela roda em qualquer serviço de contêineres; a task definition em volta fica para trás."
+      },
+      {
+        "text": "SQL para o banco de dados",
+        "why": "Um protocolo aberto: a consulta não se importa com quem é o servidor que responde."
+      },
+      {
+        "text": "Uma função save_report que chama o S3 num lugar só",
+        "why": "No dia em que os relatórios mudarem de lugar, uma função muda."
+      },
+      {
+        "text": "A task definition do ECS",
+        "why": "Esse é o formato do ECS, a parte que fica para trás quando a imagem vai embora."
+      },
+      {
+        "text": "Um event do Lambda lido diretamente em quarenta arquivos",
+        "why": "Isso é o provedor espalhado pelo código, o contrário de uma costura."
+      }
+    ]
+  },
+  "ex-zyt8xafv": {
+    "prompt": "Com os preços do orders.py (tee 7990, mug 3490, cap 5990 centavos), que total_cents o quote devolve para três caps e uma tee?",
+    "hint": "Preço vezes quantidade, somados.",
+    "unit": "centavos"
+  },
+  "ex-98tkfdw0": {
+    "prompt": "A partir de São Paulo, o primeiro gigabyte do mês para a internet é grátis e o resto, até 10 TB, custa 0,25 USD por GB. Quanto custa mandar 500 GB para fora num mês, a preço de lista, em USD?",
+    "hint": "Tire primeiro o gigabyte grátis.",
+    "unit": "USD"
+  },
+  "ex-k464tzrb": {
+    "prompt": "O wc e o grep mostraram o orders.py com 14 linhas, os adaptadores com 11 e 20, e cada adaptador tocando a regra em duas linhas. O que isso diz sobre sair do Lambda para um contêiner?",
+    "hint": "Que arquivo guarda uma regra, e quais só a alcançam?",
+    "choices": [
+      {
+        "text": "As 14 linhas de regras precisam ser reescritas para o contêiner",
+        "why": "A regra nunca aprendeu onde roda; ela muda de lugar sem mudar."
+      },
+      {
+        "text": "As 45 linhas se perdem, já que código de Lambda não roda em outro lugar",
+        "why": "O orders.py rodou nos dois runtimes; só o handler é do Lambda."
+      },
+      {
+        "text": "O trabalho é o adaptador, e o server.py já existe",
+        "why": "Isso. A superfície de reescrita é o lado fino da costura."
+      },
+      {
+        "text": "Nada, porque o grep não achou boto3",
+        "why": "O handler continua com a forma do Lambda; sair quer dizer usar o outro adaptador."
+      }
+    ]
+  },
+  "ex-2p6svybk": {
+    "prompt": "A AWS anunciou em março de 2024 que dispensa a cobrança de transferência de dados para clientes que estão saindo da AWS, a pedido. Como a estimativa de saída da loja deve tratar isso?",
+    "hint": "Que número vale sem a aprovação de ninguém?",
+    "choices": [
+      {
+        "text": "Zerar a linha de dados, já que a transferência é grátis",
+        "why": "Ela só é grátis se um pedido for aprovado, em termos que podem mudar; zero é o caso otimista."
+      },
+      {
+        "text": "Manter o preço de lista e anotar o benefício como economia possível",
+        "why": "Isso. 511,75 USD vale em qualquer dia; a dispensa é uma condição a conferir quando a mudança for real."
+      },
+      {
+        "text": "Deixar a linha de dados de fora, porque é pequena perto das pessoas",
+        "why": "Aqui ela é menor, mas deixar uma linha de fora é como uma estimativa deixa de ser uma."
+      },
+      {
+        "text": "Dobrar o preço de lista para cobrir uma recusa da dispensa",
+        "why": "Uma recusa deixa o preço de lista, não o dobro dele."
+      }
+    ]
+  },
+  "ex-zths83q8": {
+    "prompt": "Depois do primeiro gigabyte do mês, mandar dados de São Paulo para a internet custa ___ USD por GB, até 10 TB.",
+    "hint": "A segunda faixa que o egress.py imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "0,25",
+          "0.25",
+          ",25"
+        ]
+      }
+    ]
+  },
+  "ex-rxmt5zen": {
+    "prompt": "Na estimativa de saída da loja, qual linha é a maior?",
+    "hint": "Compare 511,75 USD com três pessoas aprendendo uma plataforma.",
+    "choices": [
+      {
+        "text": "Os dados: 511,75 USD de transferência",
+        "why": "É dinheiro de verdade, mas pequeno perto de três pessoas passando dias numa plataforma nova."
+      },
+      {
+        "text": "As habilidades de três pessoas",
+        "why": "Isso: três pessoas aprendendo a nova plataforma, o que é comum numa equipe pequena, e nenhum adaptador reduz isso."
+      },
+      {
+        "text": "A reescrita: 31 linhas de adaptadores",
+        "why": "A costura deixou essa linha quase em nada."
+      },
+      {
+        "text": "A sobreposição: um mês de Fargate a 49,60 USD",
+        "why": "Um mês da conta antiga é a menor das quatro linhas."
+      }
+    ]
+  },
+  "ex-z44655j6": {
+    "prompt": "Um registro de decisão de arquitetura já aceito se mostra errado um ano depois. O que acontece com ele?",
+    "hint": "A história do porquê vale a pena guardar.",
+    "choices": [
+      {
+        "text": "É editado para dizer o que é verdade agora",
+        "why": "Editá-lo apaga por que a decisão antiga foi tomada, que é para que o registro serve."
+      },
+      {
+        "text": "É apagado, para ninguém segui-lo por engano",
+        "why": "Apagá-lo perde também o raciocínio, e a próxima pessoa o repete."
+      },
+      {
+        "text": "Um registro novo o substitui, e o antigo aponta para o novo",
+        "why": "Isso. O registro 9 diz isso e aponta para o registro 4; os dois ficam."
+      },
+      {
+        "text": "Nada; registros só são lidos na data de revisão",
+        "why": "Um registro superado precisa dizer isso, ou o próximo leitor confia nele."
+      }
+    ]
+  },
+  "ex-55wrjr1s": {
+    "prompt": "Qual destes é um gatilho de saída no sentido que esta aula pede?",
+    "hint": "Um painel conseguiria mostrá-lo?",
+    "choices": [
+      {
+        "text": "Se o Fargate ficar caro demais",
+        "why": "Caro demais por qual medida? Ninguém consegue dizer quando este disparou."
+      },
+      {
+        "text": "Tráfego médio abaixo de 21,8 requisições por segundo durante um trimestre",
+        "why": "Isso. É um número que um alarme do CloudWatch consegue vigiar, e vem do programa da aula 23."
+      },
+      {
+        "text": "Quando a equipe se sentir pronta para serverless",
+        "why": "Uma sensação não tem limiar, então dispara quando alguém quiser."
+      },
+      {
+        "text": "Se a AWS deixar de ser o melhor provedor",
+        "why": "Melhor não é mensurável, então a decisão nunca seria reaberta com evidência."
+      }
+    ]
+  },
+  "ex-n1pe7eem": {
+    "prompt": "Ponha as partes do registro de decisão da loja na ordem em que o arquivo as traz.",
+    "hint": "Quem e quando, por quê, o quê, depois os preços e a saída.",
+    "items": [
+      "id, título, status, data e quem decidiu",
+      "contexto: o perfil e a equipe",
+      "decisão: duas tasks de Fargate e um relatório agendado",
+      "lock-in aceito, com um custo de saída para cada um",
+      "lock-in recusado",
+      "gatilhos de saída e a data de revisão"
+    ],
+    "trap": "Pôr os gatilhos de saída antes do lock-in aceito faz o leitor lê-los antes de saber o que eles desfariam."
+  },
+  "ex-6gr16evk": {
+    "prompt": "O que o registro de decisão da loja diz sobre lock-in? Marque todas as que se aplicam.",
+    "hint": "Leia de novo as linhas de lock-in e repare no que elas não afirmam.",
+    "choices": [
+      {
+        "text": "Que lock-in foi aceito, tipo por tipo",
+        "why": "API, dados, habilidades e contrato têm cada um a sua linha."
+      },
+      {
+        "text": "Quanto custaria sair em cada tipo",
+        "why": "Da estimativa da seção 04: 511,75 USD de dados, três pessoas por três dias."
+      },
+      {
+        "text": "Que travessias de uma costura são recusadas",
+        "why": "Regras da loja que importam boto3, e chamadas ao S3 fora de um módulo."
+      },
+      {
+        "text": "Que a loja evitou o lock-in",
+        "why": "Ele diz o contrário: quatro tipos aceitos, cada um com um preço."
+      },
+      {
+        "text": "Uma promessa de que nenhum Savings Plan jamais será assinado",
+        "why": "Ele diz nenhum antes de seis meses de tráfego constante, o que é uma condição, não uma promessa."
+      }
+    ]
+  },
+  "ex-seg5mf4g": {
+    "prompt": "Um serviço novo assina um Savings Plan de três anos no primeiro mês, antes de o tráfego ser conhecido. Que tipo de lock-in é esse, e qual é o risco?",
+    "hint": "O que precisa continuar verdadeiro por trinta e seis meses?",
+    "choices": [
+      {
+        "text": "Lock-in de API: o código agora depende do Savings Plan",
+        "why": "Um Savings Plan muda a conta e nada no código."
+      },
+      {
+        "text": "Um contrato, apostando no mês 36",
+        "why": "Isso: que o serviço, o tamanho e a plataforma ainda vão estar certos no mês 36. É o único tipo com data de fim, e a data está longe."
+      },
+      {
+        "text": "Lock-in de habilidades, já que só o financeiro o entende",
+        "why": "Seja quem for que o entende, o compromisso amarra a conta do mesmo jeito."
+      },
+      {
+        "text": "Gravidade dos dados, porque o plano guarda o histórico de uso",
+        "why": "O plano não guarda dados; é um compromisso de gasto."
+      }
+    ]
+  },
+  "ex-saamkk54": {
+    "prompt": "A loja sai da AWS. A mudança leva dois meses, durante os quais as tasks de Fargate continuam rodando a 49,60 USD por mês, e 2.048 GB saem de São Paulo num mês, a preço de lista (primeiro GB grátis, depois 0,25 USD por GB). Quanto somam essas duas linhas, em USD?",
+    "hint": "Primeiro a sobreposição, depois os dados.",
+    "unit": "USD"
+  },
+  "ex-xwhcp89h": {
+    "prompt": "Por que a matriz de escolhas de computação da aula deixa a gravidade dos dados de fora?",
+    "hint": "Um bucket pesa mais quando o Lambda o lê?",
+    "choices": [
+      {
+        "text": "Porque gravidade dos dados é um mito nas redes modernas",
+        "why": "Mover dados ainda custa por gigabyte e leva tempo; a seção 04 deu o preço."
+      },
+      {
+        "text": "Porque ela é do armazenamento, e pesa o mesmo seja qual for a computação que o lê",
+        "why": "Isso. A computação decide o quanto o código precisa ficar perto dos dados, não o quanto eles pesam."
+      },
+      {
+        "text": "Porque só o EC2 guarda dados",
+        "why": "S3 e bancos de dados guardam os dados de todas as linhas da matriz."
+      },
+      {
+        "text": "Porque a AWS dispensa a transferência para todo mundo",
+        "why": "A dispensa é a pedido, para clientes saindo da AWS, em termos que podem mudar."
+      }
+    ]
+  },
+  "ex-vgyvxnwk": {
+    "prompt": "Ligue cada escolha de computação ao que a matriz da aula diz sobre ela.",
+    "hint": "Leia cada linha pelo tipo mais forte.",
+    "pairs": [
+      {
+        "left": "Lambda",
+        "right": "Handlers com o formato dos events da AWS"
+      },
+      {
+        "left": "EKS",
+        "right": "Habilidades de Kubernetes que a equipe precisa manter"
+      },
+      {
+        "left": "Step Functions",
+        "right": "Uma máquina de estados que só um serviço roda"
+      },
+      {
+        "left": "EC2",
+        "right": "Uma máquina Linux, a que menos tem a forma do provedor"
+      }
+    ],
+    "right_distractors": [
+      "Um contrato sem data de fim"
+    ]
+  },
+  "ex-mts71cey": {
+    "prompt": "Quando um registro de decisão novo toma o lugar de um antigo, diz-se que ele o ___, e o registro antigo continua no repositório.",
+    "hint": "O registro 9 faz isso com o registro 4.",
+    "blanks": [
+      {
+        "accept": [
+          "substitui",
+          "supera",
+          "substituir"
+        ]
+      }
+    ]
+  }
+}

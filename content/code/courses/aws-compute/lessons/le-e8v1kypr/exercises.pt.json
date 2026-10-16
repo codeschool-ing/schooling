@@ -1,0 +1,452 @@
+{
+  "ex-dxcexyc5": {
+    "prompt": "Que desempenho um volume gp3 de 100 GiB recebe sem pagar nada a mais?",
+    "hint": "É o mesmo em qualquer tamanho.",
+    "choices": [
+      {
+        "text": "300 IOPS, três por GiB, e o throughput que isso permite",
+        "why": "Esse é o gp2, em que o desempenho só cresce com o tamanho."
+      },
+      {
+        "text": "3.000 IOPS e 125 MiB/s, seja qual for o tamanho do volume",
+        "why": "Isso. O que passar disso é uma linha separada na conta."
+      },
+      {
+        "text": "O que o tipo de instância permitir, sem limite próprio",
+        "why": "O volume tem limites próprios, e a instância tem outros por cima."
+      },
+      {
+        "text": "Só o armazenamento; todo IOPS é comprado à parte",
+        "why": "Isso se parece mais com o io2. O gp3 inclui uma linha de base."
+      }
+    ]
+  },
+  "ex-kntvr8rb": {
+    "prompt": "Um volume gp3 de 200 GB é subido para 5.000 IOPS e fica em 125 MiB/s. A 0,152 USD por GB-mês e 0,0095 por IOPS-mês acima de 3.000, quanto custa por mês, em USD?",
+    "hint": "Armazenamento, mais os IOPS acima dos 3.000 incluídos.",
+    "unit": "USD"
+  },
+  "ex-0arnqaxp": {
+    "prompt": "Um banco precisa de 3.000 IOPS sobre 100 GiB de dados. Por que o gp3 é escolha melhor que o gp2?",
+    "hint": "Três IOPS por GiB.",
+    "choices": [
+      {
+        "text": "O gp2 não pode ser anexado aos tipos de instância atuais",
+        "why": "Pode; ele é mais antigo, não retirado."
+      },
+      {
+        "text": "O gp2 precisaria de 1.000 GiB para chegar a 3.000 IOPS, e o gp3 os inclui em qualquer tamanho",
+        "why": "Isso. No gp2 a única alavanca é o tamanho."
+      },
+      {
+        "text": "O gp3 é um disco rígido, e discos rígidos são mais rápidos para bancos",
+        "why": "O gp3 é SSD; os tipos de disco rígido são st1 e sc1, e são fracos em IOPS aleatórios."
+      },
+      {
+        "text": "O gp2 não tem limite de IOPS, o que o torna imprevisível",
+        "why": "Ele tem: três por GiB."
+      }
+    ]
+  },
+  "ex-2yy0fhgs": {
+    "prompt": "O moto criou um volume gp3 de 100 GiB com 90.000 IOPS. O que a AWS faz com o mesmo pedido?",
+    "hint": "Uma proporção entre IOPS e tamanho.",
+    "choices": [
+      {
+        "text": "Cria e limita os IOPS ao limite da instância",
+        "why": "O limite do volume é conferido na criação, antes de qualquer instância."
+      },
+      {
+        "text": "Cria, e cobra os IOPS que forem usados",
+        "why": "IOPS provisionados são cobrados usados ou não, e esses tantos são recusados de qualquer jeito."
+      },
+      {
+        "text": "Transforma em io2, que permite essa taxa",
+        "why": "A AWS nunca troca o tipo que você pediu."
+      },
+      {
+        "text": "Recusa: o gp3 permite no máximo 500 IOPS por GiB",
+        "why": "Isso, então 100 GiB param em 50.000."
+      }
+    ]
+  },
+  "ex-kw6s7mfp": {
+    "prompt": "Um volume gp3 provisionado a 250 MiB/s está anexado a uma m7i.large. O que o throughput extra compra?",
+    "hint": "Leia a linha de base de EBS da instância.",
+    "choices": [
+      {
+        "text": "Tudo, sustentado, já que o volume foi provisionado para isso",
+        "why": "A instância é um limite à parte, seja o que for que o volume consiga."
+      },
+      {
+        "text": "Nada, porque o throughput do gp3 só vale para instâncias io2",
+        "why": "io2 é um tipo de volume, não de instância."
+      },
+      {
+        "text": "O dobro, porque dois volumes dividem a banda da instância",
+        "why": "Dividir reparte a banda; nunca a dobra."
+      },
+      {
+        "text": "Só picos: a instância sustenta 81,25 MB/s para o EBS",
+        "why": "Isso. Dimensione a instância e o volume juntos."
+      }
+    ]
+  },
+  "ex-7m4jqtsh": {
+    "prompt": "Quais destas são verdadeiras sobre um volume st1? Marque todas as que se aplicam.",
+    "hint": "É um disco rígido vendido por throughput.",
+    "choices": [
+      {
+        "text": "Não pode ser volume de boot",
+        "why": "Nenhum dos tipos de disco rígido pode."
+      },
+      {
+        "text": "A AWS o vende a partir de 125 GiB",
+        "why": "O moto aceitou 10 GiB; a AWS recusa."
+      },
+      {
+        "text": "Serve para leituras sequenciais grandes, como logs",
+        "why": "O throughput cresce com o tamanho."
+      },
+      {
+        "text": "É rápido em leituras pequenas e aleatórias",
+        "why": "É onde um disco rígido é mais fraco."
+      },
+      {
+        "text": "Inclui 3.000 IOPS em qualquer tamanho",
+        "why": "Esse é o gp3."
+      }
+    ]
+  },
+  "ex-ky8dnq8j": {
+    "prompt": "O que a AWS responde a anexar um volume em sa-east-1b a uma instância em sa-east-1a?",
+    "hint": "O moto respondeu diferente.",
+    "choices": [
+      {
+        "text": "Anexa, mais devagar, entre as zonas",
+        "why": "Essa é a resposta do moto, sem a lentidão. A AWS nunca anexa entre zonas."
+      },
+      {
+        "text": "Move o volume para sa-east-1a, depois anexa",
+        "why": "Um volume nunca sai da zona; mudar significa um snapshot e um volume novo."
+      },
+      {
+        "text": "Recusa: InvalidVolume.ZoneMismatch",
+        "why": "Isso. Um volume só se anexa dentro da própria zona."
+      },
+      {
+        "text": "Anexa como somente leitura",
+        "why": "O EBS não tem esse modo para um anexo entre zonas; ele recusa."
+      }
+    ]
+  },
+  "ex-4qejc6q6": {
+    "prompt": "Ponha em ordem os passos de aumentar um volume de dados XFS em uso de 100 para 200 GiB.",
+    "hint": "Primeiro o volume, depois o que está dentro dele.",
+    "items": [
+      "Rodar o modify-volume com o tamanho novo",
+      "Esperar a modificação chegar a optimizing ou completed",
+      "Aumentar a partição com o growpart",
+      "Aumentar o sistema de arquivos com o xfs_growfs"
+    ],
+    "trap": "Aumentar o sistema de arquivos antes da partição, ou antes do volume, não encontra espaço para crescer."
+  },
+  "ex-97parvgx": {
+    "prompt": "Uma instância é encerrada. Um volume de dados anexado a ela depois do launch, com a opção padrão, agora está como?",
+    "hint": "DeleteOnTermination é false por padrão para esses.",
+    "choices": [
+      {
+        "text": "Available: desanexado, intacto e ainda cobrado todo mês",
+        "why": "Isso. Ninguém é avisado de que ele continua lá."
+      },
+      {
+        "text": "Apagado junto com a instância, como o raiz",
+        "why": "Só saem os volumes cuja opção é true; a do raiz é, a deste não."
+      },
+      {
+        "text": "Anexado à próxima instância lançada na zona",
+        "why": "Nada anexa um volume sozinho."
+      },
+      {
+        "text": "Transformado em snapshot automaticamente, e depois apagado",
+        "why": "Nenhum snapshot é tirado a menos que alguém tire."
+      }
+    ]
+  },
+  "ex-jq35dzp8": {
+    "prompt": "Uma conta acha 12 volumes gp3 esquecidos de 100 GB no estado available. A 0,152 USD por GB-mês, quanto custam por mês, em USD?",
+    "hint": "Volumes vezes tamanho vezes preço.",
+    "unit": "USD"
+  },
+  "ex-31s36nfa": {
+    "prompt": "Um volume anexado a uma instância depois do launch tem DeleteOnTermination em ___ a menos que alguém mude.",
+    "hint": "O raiz é o outro valor.",
+    "blanks": [
+      {
+        "accept": [
+          "false",
+          "falso"
+        ]
+      }
+    ]
+  },
+  "ex-yqsvp02p": {
+    "prompt": "Um volume de rascunho não significa nada sem a instância e não deveria sobreviver a ela. Qual é a correção certa?",
+    "hint": "A opção pode ser mudada numa instância em execução.",
+    "choices": [
+      {
+        "text": "Um job semanal que apaga todo volume available",
+        "why": "Ele também apagaria os volumes de dados que alguém guardou de propósito."
+      },
+      {
+        "text": "Transformá-lo em instance store com modify-volume",
+        "why": "O modify-volume muda tamanho, tipo e desempenho entre tipos EBS; instance store vem com o tipo."
+      },
+      {
+        "text": "Desanexá-lo antes de cada encerramento",
+        "why": "Um volume desanexado sobrevive do mesmo jeito, e continua cobrado."
+      },
+      {
+        "text": "Pôr DeleteOnTermination em true nele",
+        "why": "Isso, ou no mapeamento do launch template para uma frota inteira."
+      }
+    ]
+  },
+  "ex-jhdfam3p": {
+    "prompt": "Uma i4i.large é parada e iniciada de novo. O que há no disco NVMe de 468 GB dela?",
+    "hint": "Onde a instância inicia?",
+    "choices": [
+      {
+        "text": "Tudo o que havia antes da parada",
+        "why": "Isso é um reboot, que fica no mesmo host."
+      },
+      {
+        "text": "Os dados, restaurados de um snapshot automático",
+        "why": "Instance store não pode ter snapshot."
+      },
+      {
+        "text": "Os dados, somente leitura até o próximo reboot",
+        "why": "Não sobram dados para ler."
+      },
+      {
+        "text": "Nada: começa vazio, num host novo",
+        "why": "Isso. O disco antigo ficou com o host antigo e foi apagado."
+      }
+    ]
+  },
+  "ex-ghgbd4p7": {
+    "prompt": "Qual destes cabe num instance store?",
+    "hint": "Temporário, ou copiado em outro lugar.",
+    "choices": [
+      {
+        "text": "A única cópia de um banco PostgreSQL",
+        "why": "Uma parada ou uma falha de host a leva sem volta."
+      },
+      {
+        "text": "Fotos que os usuários enviaram",
+        "why": "Ninguém consegue enviá-las de novo por você."
+      },
+      {
+        "text": "Um cache de build cujos originais ficam no S3",
+        "why": "Isso. Perdê-lo custa um reabastecimento e mais nada."
+      },
+      {
+        "text": "A configuração da aplicação, editada à mão",
+        "why": "Uma edição à mão num disco que some se perde junto."
+      }
+    ]
+  },
+  "ex-9pr68f9m": {
+    "prompt": "Três i4i.large (0,274 USD por hora) substituem três r7i.large (0,21105) com as mesmas vCPU e memória. Quanto custam a mais num mês de 730 horas, em USD?",
+    "hint": "A diferença por hora, vezes 730, vezes três.",
+    "unit": "USD"
+  },
+  "ex-dz80h4hw": {
+    "prompt": "Ligue cada evento ao que ele faz com um disco de instance store e com um volume EBS.",
+    "hint": "Que eventos saem do host?",
+    "pairs": [
+      {
+        "left": "Um reboot",
+        "right": "Os dois mantidos"
+      },
+      {
+        "left": "Uma parada e um início",
+        "right": "Instance store apagado, EBS mantido"
+      },
+      {
+        "left": "Um encerramento",
+        "right": "Instance store apagado, EBS pela opção dele"
+      },
+      {
+        "left": "Uma falha de host",
+        "right": "Instance store perdido, EBS mantido na zona"
+      }
+    ],
+    "right_distractors": [
+      "Os dois apagados"
+    ]
+  },
+  "ex-7hqhr7h0": {
+    "prompt": "Quantos mount targets um sistema de arquivos EFS pode ter numa Availability Zone?",
+    "hint": "O moto e a AWS concordam.",
+    "choices": [
+      {
+        "text": "Um",
+        "why": "Isso; um segundo dá MountTargetConflict."
+      },
+      {
+        "text": "Dois, um por tipo de sub-rede",
+        "why": "Um por zona, na sub-rede que você escolher."
+      },
+      {
+        "text": "Tantos quantas sub-redes a zona tiver",
+        "why": "O segundo na mesma zona é recusado."
+      },
+      {
+        "text": "Nenhum, já que o EFS é alcançado sem ele",
+        "why": "As instâncias só o alcançam por um target na zona delas."
+      }
+    ]
+  },
+  "ex-7n4vkbez": {
+    "prompt": "Um mount target é alcançado por NFS na porta TCP ___, que o security group dele precisa liberar.",
+    "hint": "A porta do NFS.",
+    "blanks": [
+      {
+        "accept": [
+          "2049"
+        ]
+      }
+    ]
+  },
+  "ex-0nr2w8rv": {
+    "prompt": "Um sistema de arquivos guarda 60 GB no EFS Standard, a 0,57 USD por GB-mês. Quanto custa por mês, em USD?",
+    "hint": "Guardado, não provisionado.",
+    "unit": "USD"
+  },
+  "ex-11dfddvt": {
+    "prompt": "Uma equipe quer pôr o diretório de dados de um PostgreSQL no EFS, para qualquer instância poder assumir. Por que isso serve mal?",
+    "hint": "Para onde vai cada operação?",
+    "choices": [
+      {
+        "text": "Toda operação atravessa a rede até um serviço regional, e um banco é construído em torno de E/S local rápida",
+        "why": "Isso. Ponha o banco no EBS, ou use um banco gerenciado."
+      },
+      {
+        "text": "O EFS não guarda arquivos maiores que 1 GB",
+        "why": "O tamanho do arquivo não é o problema; a latência é."
+      },
+      {
+        "text": "O EFS só é alcançável de uma zona",
+        "why": "Ele é alcançável de toda zona com um mount target."
+      },
+      {
+        "text": "O PostgreSQL se recusa a iniciar em armazenamento criptografado",
+        "why": "A criptografia é invisível para o banco."
+      }
+    ]
+  },
+  "ex-sxxjr6ja": {
+    "prompt": "Um sistema de arquivos foi criado sem criptografia. Como ele passa a ser criptografado em repouso?",
+    "hint": "É decidido uma vez.",
+    "choices": [
+      {
+        "text": "Ligar a criptografia com update-file-system",
+        "why": "A criptografia em repouso não pode ser ligada depois."
+      },
+      {
+        "text": "Montá-lo com a opção tls, que criptografa o que é escrito",
+        "why": "O tls criptografa o tráfego no caminho, não os arquivos guardados."
+      },
+      {
+        "text": "Outro, cifrado desde o início, e uma cópia",
+        "why": "Isso. A escolha é feita na criação."
+      },
+      {
+        "text": "Acrescentar uma chave KMS aos mount targets dele",
+        "why": "Mount targets são interfaces de rede; não guardam chave."
+      }
+    ]
+  },
+  "ex-b9smhvg4": {
+    "prompt": "Quais destes cabem no EFS? Marque todos os que se aplicam.",
+    "hint": "Arquivos que várias máquinas leem e escrevem.",
+    "choices": [
+      {
+        "text": "Uploads compartilhados por quatro servidores web em três zonas",
+        "why": "O caso para o qual o EFS existe."
+      },
+      {
+        "text": "Os diretórios pessoais dos usuários numa frota de máquinas",
+        "why": "Toda máquina vê os mesmos arquivos."
+      },
+      {
+        "text": "O diretório de dados de um MySQL movimentado",
+        "why": "Latência de rede em toda operação; o EBS serve."
+      },
+      {
+        "text": "Um conjunto de dados que muitos workers leem",
+        "why": "Uma cópia, lida de toda zona."
+      },
+      {
+        "text": "O volume raiz de uma instância",
+        "why": "Uma instância dá boot do EBS, não de um sistema de arquivos em rede."
+      }
+    ]
+  },
+  "ex-zdfm7h87": {
+    "prompt": "Quatro servidores web em três zonas precisam ver os mesmos arquivos enviados, que ninguém consegue recriar. Onde ficam os arquivos?",
+    "hint": "Compartilhados, entre zonas, e duráveis.",
+    "choices": [
+      {
+        "text": "Um volume gp3 grande anexado aos quatro",
+        "why": "Um volume se anexa a instâncias de uma zona, e não é um sistema de arquivos compartilhado."
+      },
+      {
+        "text": "EFS, com um mount target em cada uma das três zonas",
+        "why": "Isso. Cada servidor monta o target da própria zona."
+      },
+      {
+        "text": "O instance store do maior servidor",
+        "why": "Ele some com uma parada, e os outros três não o alcançam."
+      },
+      {
+        "text": "Um volume gp3 por servidor, sincronizado por um snapshot noturno",
+        "why": "Quatro cópias com um dia de diferença são quatro conjuntos de arquivos diferentes."
+      }
+    ]
+  },
+  "ex-rspsdxz3": {
+    "prompt": "Ordene estes do mais barato por GB-mês na tabela de preços ao mais caro.",
+    "hint": "0,086, 0,152, 0,238, 0,57.",
+    "items": [
+      "st1",
+      "gp3",
+      "io2",
+      "EFS Standard"
+    ],
+    "trap": "Por gigabyte não é por mês: o EFS cobra o que está guardado e um volume, o que foi provisionado."
+  },
+  "ex-1w3g6bqa": {
+    "prompt": "Um cluster Kafka mantém cada partição em três brokers, cada um uma i4i.large gravando no instance store. O host de um broker falha. O que acontece com os dados dele?",
+    "hint": "Perdidos naquele host, guardados em outro lugar.",
+    "choices": [
+      {
+        "text": "A AWS restaura do backup do instance store",
+        "why": "Não há backup de instance store."
+      },
+      {
+        "text": "Some de vez, e o cluster perde aquelas partições",
+        "why": "Dois outros brokers têm cada partição."
+      },
+      {
+        "text": "Um broker novo se refaz pelos outros dois",
+        "why": "Isso. A replicação é o que torna o instance store seguro aqui."
+      },
+      {
+        "text": "O disco vai com a instância para um host novo",
+        "why": "Um disco de instance store fica com o host a que pertence."
+      }
+    ]
+  }
+}

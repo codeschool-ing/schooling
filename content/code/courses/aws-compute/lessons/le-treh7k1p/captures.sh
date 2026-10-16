@@ -37,6 +37,8 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 
 if [ "${1:-}" = docker ]; then
   quiet 'docker rm -f web web2'
+  block docker-image
+  run 'docker image ls nginx:1.29-alpine --format "{{.Repository}}:{{.Tag}}  {{.Size}}"'
   block docker-run
   run 'docker run -d --name web -p 8080:80 -e SHOP_ENV=staging --cpu-shares 256 --memory 512m nginx:1.29-alpine | cut -c1-12'
   run 'docker ps --format "{{.Names}}  {{.Image}}  {{.Ports}}"'

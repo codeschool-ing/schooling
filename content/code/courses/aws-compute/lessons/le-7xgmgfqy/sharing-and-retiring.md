@@ -112,7 +112,7 @@ snap-ea6b97d76b42a5e1a	15	Created by CreateImage(i-52f3615249060ee52) for ami-a9
 
 **The snapshot is still there, and still billed.** Deregistering removes the record and leaves the
 blocks, because AWS cannot know whether you meant to keep them. An account where images were
-deregistered for a year and their snapshots never deleted pays for every one of them; at 0.068 USD
+deregistered for a year and their snapshots never deleted pays for every one of them. At 0.068 USD
 per GB-month on the price sheet of 16 October 2026, 365 nightly images of 15 GB each, if every
 snapshot were stored whole, would be 372.30 USD a month for nothing anybody can launch.
 

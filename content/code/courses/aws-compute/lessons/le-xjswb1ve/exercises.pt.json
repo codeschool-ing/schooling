@@ -1,0 +1,468 @@
+{
+  "ex-gcgad1z3": {
+    "prompt": "Como o preço de uma instância spot é definido hoje?",
+    "hint": "Não há lances desde 2017.",
+    "choices": [
+      {
+        "text": "Por leilão: os maiores lances levam a capacidade e definem o preço",
+        "why": "Esse era mais ou menos o modelo antes de 2017. Hoje ninguém dá lance."
+      },
+      {
+        "text": "Como 90% fixos de desconto sobre o preço sob demanda, iguais para todo tipo e zona",
+        "why": "Noventa por cento é o máximo que a AWS descreve, não uma taxa fixa; o desconto real varia por pool e semana."
+      },
+      {
+        "text": "Pelo preço máximo que cada cliente define no pedido",
+        "why": "O MaxPrice só acrescenta um motivo para ser interrompido; não define o que ninguém paga."
+      },
+      {
+        "text": "Pela AWS, por tipo e zona, a partir da oferta e da procura de longo prazo, mudando aos poucos",
+        "why": "Certo. O preço de cada pool muda ao longo de dias, não minutos, e você o paga seja qual for o máximo que definir."
+      }
+    ]
+  },
+  "ex-pbam3f6v": {
+    "prompt": "O histórico de preços spot do moto mostra 0,00001 USD por hora para m7i.large em todas as zonas, com data de 2006. Como ler isso?",
+    "hint": "Alguma parte disso pode ser uma medição?",
+    "choices": [
+      {
+        "text": "Como o piso que a AWS mantém para spot, que uma zona calma pode alcançar",
+        "why": "Esse piso não existe, e a data é três anos antes de o spot existir."
+      },
+      {
+        "text": "Como um preço real do catálogo do moto, desatualizado alguns anos",
+        "why": "O catálogo de tipos de instância do moto é o da AWS; os preços spot dele não são preços de lugar nenhum."
+      },
+      {
+        "text": "Como um valor de enchimento, porque nada do que o moto informa sobre dinheiro é real",
+        "why": "Certo. Na AWS a mesma chamada devolve mudanças reais de preço dos últimos 90 dias, por zona."
+      },
+      {
+        "text": "Como o que sobra do preço sob demanda depois de aplicar um desconto de 90%",
+        "why": "Um décimo de 0,16065 é 0,016065, não 0,00001; o número não deriva de nada."
+      }
+    ]
+  },
+  "ex-4s309c93": {
+    "prompt": "Suponha, só para a conta, um desconto spot de 70%. Quanto custam 5 instâncias m7i.large spot por 730 horas, sobre o preço sob demanda de 0,16065 USD por hora, em USD?",
+    "hint": "Você paga 30% do preço sob demanda.",
+    "unit": "USD"
+  },
+  "ex-hvjwz5jk": {
+    "prompt": "O que definir o MaxPrice bem abaixo do preço sob demanda faz com uma instância spot?",
+    "hint": "O que você paga, seja qual for o máximo?",
+    "choices": [
+      {
+        "text": "Baixa a conta para esse máximo",
+        "why": "Você paga o preço spot do pool, nunca o seu máximo."
+      },
+      {
+        "text": "Move a instância para uma zona mais barata",
+        "why": "O máximo não escolhe nada sobre colocação."
+      },
+      {
+        "text": "Protege a instância de interrupções enquanto o preço spot da zona fica abaixo do máximo",
+        "why": "A AWS recupera capacidade seja qual for o seu máximo; o máximo é um motivo a mais, nunca um escudo."
+      },
+      {
+        "text": "Acrescenta um segundo motivo para ser interrompida, sem baixar o que você paga",
+        "why": "Certo. Se o preço do pool passar do seu máximo, a instância sai; o preço que você paga enquanto isso é o mesmo."
+      }
+    ]
+  },
+  "ex-79r5hfk8": {
+    "prompt": "Ligue cada opção spot ao que ela significa numa interrupção.",
+    "hint": "Três comportamentos e o tipo de pedido de que dois deles precisam.",
+    "pairs": [
+      {
+        "left": "terminate",
+        "right": "A instância acaba, o padrão"
+      },
+      {
+        "left": "stop",
+        "right": "Volumes EBS mantidos, ligada de novo quando a capacidade volta"
+      },
+      {
+        "left": "hibernate",
+        "right": "Memória gravada no volume raiz antes, retomada depois"
+      },
+      {
+        "left": "persistent",
+        "right": "O pedido sobrevive à instância, o que stop e hibernate exigem"
+      }
+    ],
+    "right_distractors": [
+      "Um lance que mantém a instância contra outros clientes"
+    ]
+  },
+  "ex-2asb0f09": {
+    "prompt": "Com quanta antecedência a AWS avisa antes de tomar de volta uma instância spot?",
+    "hint": "O aviso de interrupção, não a recomendação.",
+    "choices": [
+      {
+        "text": "Nenhuma: a instância para sem aviso",
+        "why": "Há um aviso, no caminho de metadata e no EventBridge."
+      },
+      {
+        "text": "Dois minutos",
+        "why": "Certo. O aviso aparece dois minutos antes de a instância ser parada, hibernada ou terminada."
+      },
+      {
+        "text": "Quinze minutos, o bastante para terminar a maioria dos jobs",
+        "why": "Dois minutos é tudo, e é por isso que drenar é uma lista de coisas a parar."
+      },
+      {
+        "text": "O que o timeout do lifecycle hook disser",
+        "why": "Um hook pode segurar uma instância que o grupo está terminando; ele não alonga uma interrupção spot."
+      }
+    ]
+  },
+  "ex-72115xny": {
+    "prompt": "Na AWS, até uma interrupção ser marcada, o caminho de metadata spot/instance-action responde com o status HTTP ___.",
+    "hint": "Não encontrado.",
+    "blanks": [
+      {
+        "accept": [
+          "404"
+        ]
+      }
+    ]
+  },
+  "ex-4wre64ha": {
+    "prompt": "O spot-watch.sh, apontado para o moto, imprimiu no notice (500). Por que tratar toda resposta que não seja 200 como \"ainda não\" é o desenho certo?",
+    "hint": "O que um ouvinte que sai diante de surpresas perderia?",
+    "choices": [
+      {
+        "text": "Parar numa surpresa encerraria a escuta, e perderia o aviso quando ele chegasse",
+        "why": "Certo. A única resposta que deve mudar o comportamento dele é um aviso; todo o resto é motivo para olhar de novo em cinco segundos."
+      },
+      {
+        "text": "Porque a AWS responde 500 enquanto ainda não há aviso, exatamente como o moto fez aqui",
+        "why": "A AWS responde 404; o 500 foi o moto não implementando o caminho."
+      },
+      {
+        "text": "Porque um 500 significa que a interrupção foi cancelada",
+        "why": "Nada cancela um aviso; e nenhum 500 faz parte do comportamento documentado."
+      },
+      {
+        "text": "Para poder ser testado contra o moto",
+        "why": "Essa é uma conveniência que ele por acaso dá, não o motivo de o desenho estar certo na AWS."
+      }
+    ]
+  },
+  "ex-s52snmte": {
+    "prompt": "Um worker de fila em spot recebe o aviso de interrupção. Ponha a drenagem em ordem.",
+    "hint": "Parar primeiro, terminar depois, devolver por último.",
+    "items": [
+      "Parar de ler mensagens novas da fila",
+      "Terminar a mensagem em mãos, ou registrar o progresso dela",
+      "Deixar sem apagar as mensagens não terminadas, para voltarem a ficar visíveis",
+      "A AWS termina a instância no horário do aviso"
+    ],
+    "trap": "Ler mais uma mensagem depois do aviso começa um trabalho que os dois minutos não terminam."
+  },
+  "ex-5az3zaa7": {
+    "prompt": "Uma instância recebe uma recomendação de rebalanceamento. Com o que ela pode contar?",
+    "hint": "É uma dica, não uma promessa.",
+    "choices": [
+      {
+        "text": "Um aviso de interrupção nos próximos dois minutos",
+        "why": "Os dois podem chegar juntos, muito separados, ou o aviso pode nunca vir."
+      },
+      {
+        "text": "Que a AWS não vai interrompê-la antes de ela ser substituída",
+        "why": "Nada garante isso; o aviso pode vir a qualquer momento depois, ou antes, da recomendação."
+      },
+      {
+        "text": "Risco elevado, nada mais: segue rodando horas ou dias",
+        "why": "Certo. É por isso que um grupo a usa para lançar uma substituta cedo, e nada espera por ela."
+      },
+      {
+        "text": "Quinze minutos antes do aviso, como antecedência fixa",
+        "why": "Não há antecedência fixa; o momento varia, e às vezes não há recomendação nenhuma."
+      }
+    ]
+  },
+  "ex-5d5m7pqd": {
+    "prompt": "Um grupo misto tem OnDemandBaseCapacity 3 e OnDemandPercentageAboveBaseCapacity 20. Com capacidade desejada de 13, quantas instâncias dele são spot?",
+    "hint": "Tire a base primeiro, depois divida o resto.",
+    "unit": "instâncias"
+  },
+  "ex-d1azveev": {
+    "prompt": "Por que o grupo da lição permite quatro tipos de instância em vez de um?",
+    "hint": "A AWS interrompe por pool.",
+    "choices": [
+      {
+        "text": "Cada tipo em cada zona é um pool próprio de capacidade sobrando, e mais pools significam menos momentos sem onde lançar",
+        "why": "Certo. Quatro tipos em três zonas são doze pools; um tipo são três, e eles podem secar juntos."
+      },
+      {
+        "text": "Para o grupo poder escolher um tipo mais rápido quando a carga sobe",
+        "why": "Os tipos são escolhidos para serem intercambiáveis; nada escolhe por velocidade."
+      },
+      {
+        "text": "Porque uma mixed instances policy recusa menos de quatro",
+        "why": "Uma override é aceita; quatro é uma escolha sobre pools."
+      },
+      {
+        "text": "Para espalhar a base sob demanda por quatro preços",
+        "why": "A base é sobre quais instâncias não podem ser interrompidas, não sobre preços."
+      }
+    ]
+  },
+  "ex-z8ztp2tx": {
+    "prompt": "O moto lançou o grupo misto da lição como dez m7i.large, todas sob demanda. O que a AWS teria lançado?",
+    "hint": "Base dois, depois um quarto de oito.",
+    "choices": [
+      {
+        "text": "Também dez sob demanda, até uma política de escala pedir instâncias spot",
+        "why": "A distribuição vale desde o primeiro lançamento; nenhuma política é necessária."
+      },
+      {
+        "text": "Duas sob demanda e oito spot",
+        "why": "Isso deixa de fora os 25% das oito acima da base, que também são sob demanda."
+      },
+      {
+        "text": "Quatro sob demanda e seis spot, espalhadas pelos tipos e zonas",
+        "why": "Certo. Duas da base, duas dos 25% das outras oito, e seis instâncias spot escolhidas pela estratégia de alocação."
+      },
+      {
+        "text": "Dez instâncias spot, com duas guardadas como base de reserva",
+        "why": "A base são duas instâncias sob demanda rodando, não uma reserva de spot."
+      }
+    ]
+  },
+  "ex-6c7hkb4b": {
+    "prompt": "Alguém acrescenta m7g.large às overrides do grupo da lição e não muda mais nada. O que dá errado na AWS?",
+    "hint": "O que significa o g, e que imagem está no template?",
+    "choices": [
+      {
+        "text": "Nada: overrides mudam só o tipo de instância, e a imagem se adapta ao processador em que cair",
+        "why": "Uma imagem é feita para uma arquitetura; ela não se adapta."
+      },
+      {
+        "text": "A m7g.large tem menos memória, então o grupo rejeita a override",
+        "why": "Ela tem os mesmos 2 vCPUs e 8 GiB das outras; o tamanho não é o problema."
+      },
+      {
+        "text": "Tipos Arm não são oferecidos como spot",
+        "why": "São; o problema é a imagem, não o mercado."
+      },
+      {
+        "text": "A imagem x86_64 não sobe em Arm; a m7g.large precisa de uma override com imagem arm64",
+        "why": "Certo. Um grupo misto pode ter Arm e x86 juntos, mas cada arquitetura precisa da própria imagem."
+      }
+    ]
+  },
+  "ex-ta2n2r7y": {
+    "prompt": "Quais destas são verdadeiras sobre as estratégias de alocação spot? Marque todas as que se aplicam.",
+    "hint": "Risco primeiro, preço primeiro, ou os dois.",
+    "choices": [
+      {
+        "text": "price-capacity-optimized escolhe os pools de menor risco e o mais barato entre eles",
+        "why": "E é a recomendação da AWS para a maioria das cargas."
+      },
+      {
+        "text": "capacity-optimized escolhe pelo risco de interrupção, seja qual for o preço",
+        "why": "Ele ignora o preço dentro dos pools em que confia."
+      },
+      {
+        "text": "lowest-price é a mais segura, porque pools baratos são os calmos",
+        "why": "Pools baratos costumam ser os com mais chance de serem tomados de volta."
+      },
+      {
+        "text": "A estratégia também decide quantas instâncias são sob demanda",
+        "why": "Isso é a base e a porcentagem; a estratégia só escolhe pools para spot."
+      },
+      {
+        "text": "O moto 5.2.3 guardou a estratégia e não lançou nenhuma instância spot",
+        "why": "A descrição a manteve, e toda instância saiu sob demanda."
+      }
+    ]
+  },
+  "ex-n8d69a51": {
+    "prompt": "Quais destes são bons candidatos para spot? Marque todos os que se aplicam.",
+    "hint": "Uma instância qualquer pode sumir e o trabalho continuar?",
+    "choices": [
+      {
+        "text": "Workers lendo de uma fila",
+        "why": "Uma mensagem não terminada volta depois do visibility timeout."
+      },
+      {
+        "text": "O único servidor PostgreSQL da loja",
+        "why": "Uma instância guardando estado é exatamente o que uma interrupção destrói."
+      },
+      {
+        "text": "Agentes de build de CI",
+        "why": "Um build interrompido roda de novo, e builds são feitos para serem repetíveis."
+      },
+      {
+        "text": "Instâncias de API sem estado acima de uma base sob demanda",
+        "why": "As requisições são curtas e a base mantém o serviço no ar durante uma interrupção."
+      },
+      {
+        "text": "Um job de relatório de seis horas que não registra progresso",
+        "why": "Quanto mais longo o job, mais provável uma interrupção cair dentro dele e recomeçá-lo."
+      }
+    ]
+  },
+  "ex-e049ey28": {
+    "prompt": "Uma aplicação precisa de 20 minutos para aquecer os caches antes de atender bem, e as instâncias spot dela são interrompidas mais ou menos uma vez por hora. Qual é o veredito?",
+    "hint": "Compare a subida com a vida entre interrupções.",
+    "choices": [
+      {
+        "text": "Bom encaixe: o desconto paga o aquecimento",
+        "why": "Um terço da vida de cada instância vai em aquecer; o desconto compra capacidade que não atende."
+      },
+      {
+        "text": "Encaixe ruim a não ser que o aquecimento fique mais curto, porque um terço da hora de cada instância vai em subir",
+        "why": "Certo. Spot serve para trabalho cuja subida é curta comparada ao tempo entre interrupções."
+      },
+      {
+        "text": "Tudo bem, desde que o lifecycle hook dê mais tempo para drenar",
+        "why": "Drenar não é o problema; subir é, e um hook nem alonga uma interrupção spot."
+      },
+      {
+        "text": "Bom encaixe se o grupo usar capacity-optimized",
+        "why": "Uma estratégia pode baixar a taxa de interrupção; não pode tornar grátis um aquecimento de vinte minutos."
+      }
+    ]
+  },
+  "ex-xshtb67m": {
+    "prompt": "Um serviço precisa de três instâncias para responder, e normalmente roda dez. Como um grupo misto deve definir a base?",
+    "hint": "A base é a parte que uma interrupção não pode levar.",
+    "choices": [
+      {
+        "text": "OnDemandBaseCapacity de pelo menos 3",
+        "why": "Certo. O mínimo de que o serviço precisa fica sob demanda, e o resto pode ter desconto."
+      },
+      {
+        "text": "Base 0 e porcentagem sob demanda de 30, o que também dá três",
+        "why": "Três de dez só enquanto o grupo estiver em dez; numa contagem menor a porcentagem dá menos."
+      },
+      {
+        "text": "Base 10, para nada ficar em risco",
+        "why": "Então o grupo não tem spot nenhum e o desconto acaba."
+      },
+      {
+        "text": "Nenhuma base, com capacity rebalancing para cobrir a falta",
+        "why": "O rebalanceamento substitui instâncias em risco quando consegue; ele não mantém um piso que não pode ser levado."
+      }
+    ]
+  },
+  "ex-atrngf42": {
+    "prompt": "Qual pergunta decide se algo pertence ao spot?",
+    "hint": "Não o quanto é importante.",
+    "choices": [
+      {
+        "text": "Se é produção ou teste",
+        "why": "Uma API de produção pode rodar quase toda em spot e um banco de teste não deve."
+      },
+      {
+        "text": "Se o tipo de instância dela tem um desconto grande nesta semana",
+        "why": "Um desconto grande em algo que não pode ser interrompido é uma aposta que um dia perde."
+      },
+      {
+        "text": "Quantas instâncias ela roda",
+        "why": "Um grupo de cinquenta guardando estado é tão inseguro quanto um."
+      },
+      {
+        "text": "Quanto uma interrupção custaria",
+        "why": "Certo. Se qualquer instância pode sumir e o trabalho continua, spot é um desconto."
+      }
+    ]
+  },
+  "ex-88xjrt8y": {
+    "prompt": "Um grupo tem --capacity-rebalance. Uma das instâncias spot dele recebe uma recomendação de rebalanceamento. O que o grupo faz na AWS?",
+    "hint": "Lançar primeiro.",
+    "choices": [
+      {
+        "text": "A termina na hora, depois lança uma substituta",
+        "why": "Essa ordem deixaria um buraco; o rebalanceamento lança primeiro."
+      },
+      {
+        "text": "Lança uma substituta num pool de menor risco, depois termina a instância em risco",
+        "why": "Certo. A capacidade se mantém, e o lifecycle hook, se houver, ainda tem sua vez na instância que sai."
+      },
+      {
+        "text": "Espera o aviso de interrupção, depois a substitui",
+        "why": "A graça da configuração é agir antes do aviso, enquanto há tempo."
+      },
+      {
+        "text": "A passa para sob demanda",
+        "why": "Uma instância não muda de mercado; uma nova é lançada no lugar."
+      }
+    ]
+  },
+  "ex-5r36d4qd": {
+    "prompt": "Metade de um grupo roda em spot com 50% de desconto, o resto sob demanda, tudo de um tipo. Em quantos por cento a conta do grupo fica menor que toda sob demanda?",
+    "hint": "O desconto vezes a fração em spot.",
+    "unit": "por cento"
+  },
+  "ex-xknjnx7g": {
+    "prompt": "O lifecycle hook do moto voltou com uma fila em us-east-1 e um papel na conta 1234567890, embora nenhum dos dois tenha sido informado. O que a AWS mostraria?",
+    "hint": "O que estava na chamada?",
+    "choices": [
+      {
+        "text": "Nenhum alvo de notificação e nenhum papel",
+        "why": "Certo. Sem alvo, o próprio script de drenagem da instância completa a ação quando termina."
+      },
+      {
+        "text": "Os mesmos dois ARNs, que a AWS preenche como padrão",
+        "why": "A AWS não inventa alvo nenhum; esses ARNs são enchimento do moto."
+      },
+      {
+        "text": "Um erro, porque um hook precisa de um alvo de notificação",
+        "why": "Um hook sem alvo é válido; ele é completado com complete-lifecycle-action."
+      },
+      {
+        "text": "Uma fila e um papel criados para o hook na própria conta do grupo",
+        "why": "A AWS não cria nenhum dos dois por você para um hook."
+      }
+    ]
+  },
+  "ex-bmnhgq60": {
+    "prompt": "O hook de término de um grupo tem timeout de 120 segundos e padrão CONTINUE. Chega um aviso de interrupção spot para uma das instâncias. Quanto tempo a instância tem?",
+    "hint": "De quem é o relógio?",
+    "choices": [
+      {
+        "text": "Dois minutos mais os 120 segundos do hook",
+        "why": "O hook não soma ao resgate da AWS; a AWS toma a capacidade no horário do aviso."
+      },
+      {
+        "text": "O tempo que precisar, já que CONTINUE espera o script",
+        "why": "CONTINUE é o que acontece quando o timeout passa; nada espera para sempre."
+      },
+      {
+        "text": "Dois minutos, diga o hook o que disser",
+        "why": "Certo. Um hook segura uma instância que o grupo está terminando; ele não segura capacidade que a AWS está recuperando."
+      },
+      {
+        "text": "120 segundos contados de quando o hook é completado",
+        "why": "O relógio do hook não importa num resgate, e os dois minutos são da AWS."
+      }
+    ]
+  },
+  "ex-70n7qje4": {
+    "prompt": "Por que o script spot-watch.sh consulta a cada cinco segundos em vez de a cada minuto?",
+    "hint": "Qual é o orçamento inteiro?",
+    "choices": [
+      {
+        "text": "Porque o serviço de metadata recusa um token com mais de um minuto",
+        "why": "O token pede 300 segundos; o intervalo não tem a ver com o token."
+      },
+      {
+        "text": "Porque o aviso só fica no caminho por cinco segundos",
+        "why": "Ele fica até a instância sair."
+      },
+      {
+        "text": "Um minuto de atraso gastaria metade dos dois minutos antes de a drenagem começar",
+        "why": "Certo. Cinco segundos deixam quase o aviso inteiro para parar o trabalho."
+      },
+      {
+        "text": "Porque a AWS cobra chamadas de metadata por minuto, então consultar mais rápido não custa mais",
+        "why": "Chamadas de metadata não são cobradas."
+      }
+    ]
+  }
+}

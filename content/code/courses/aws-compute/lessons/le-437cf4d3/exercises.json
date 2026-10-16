@@ -1,0 +1,690 @@
+[
+  {
+    "id": "ex-g72bv86z",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Secret's `data` holds the key as `dGVzdA==`. What does that encoding protect the key from?",
+    "choices": [
+      {
+        "text": "Nothing: `base64 -d` turns it back into the key",
+        "correct": true,
+        "why": "Base64 is an encoding with no secret in it. The capture decoded it with one command, and anybody who can read the Secret does the same."
+      },
+      {
+        "text": "From anybody who lacks the cluster's encryption key",
+        "correct": false,
+        "why": "That describes encryption at rest, which protects the disks. The value in the Secret is readable by everybody Kubernetes lets read it."
+      },
+      {
+        "text": "From being read by pods in other namespaces of the cluster",
+        "correct": false,
+        "why": "Namespaces and RBAC decide who reads a Secret, and they do it whatever the value looks like. The encoding adds nothing to that."
+      },
+      {
+        "text": "From being used after the Secret is deleted",
+        "correct": false,
+        "why": "Deleting the Secret deletes one copy. The key stays valid in IAM, and every other copy of it keeps working."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k8z6cks",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To avoid a key, a team adds `s3:GetObject` to the EKS node role, so the resizer can read the bucket. What did they actually grant?",
+    "choices": [
+      {
+        "text": "Read access to the resizer pods, and to the kubelet that starts them",
+        "correct": false,
+        "why": "The kubelet does use the node role, but so does every other process on the machine that asks the metadata service."
+      },
+      {
+        "text": "Nothing, because a node role is limited to ECR and the CNI",
+        "correct": false,
+        "why": "A node role holds whatever policies are attached to it; there is no such limit, which is exactly the danger."
+      },
+      {
+        "text": "Read access to the pods whose service account names the node role",
+        "correct": false,
+        "why": "Service accounts name roles in IRSA, through an annotation. The node role reaches pods through the metadata service instead, with no annotation."
+      },
+      {
+        "text": "Read access for any pod on those nodes",
+        "correct": true,
+        "why": "The node role is handed out by instance metadata, so it is granted to the machine and to whatever runs on it, not to one workload."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q7jt90c",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, `get-session-token` answered with an `Expiration`. How many hours after the request does that temporary credential stop working?",
+    "hint": "Compare the time in `Expiration` with the time `create-access-key` printed a second earlier.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-ped4x735",
+    "version": 1,
+    "section": "the-static-key",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a key placed in `secret.yaml` end up? Choose every place the section names.",
+    "choices": [
+      {
+        "text": "In the repository, and in every clone of it, if the file was committed",
+        "correct": true,
+        "why": "Git keeps every committed version, so deleting the file later leaves the key in history and in every clone."
+      },
+      {
+        "text": "In every pod that mounts the Secret",
+        "correct": true,
+        "why": "Mounting is the purpose of the Secret: each such pod holds the key in its environment."
+      },
+      {
+        "text": "In a CI log that printed the environment",
+        "correct": true,
+        "why": "One of the accidental copies the section lists, and among the hardest to find afterwards."
+      },
+      {
+        "text": "In STS, which keeps a copy so it can expire the key",
+        "correct": false,
+        "why": "STS issues temporary credentials and keeps no copy of an IAM user's key; nothing expires the key at all."
+      },
+      {
+        "text": "In the node's instance metadata service",
+        "correct": false,
+        "why": "The metadata service hands out the node role's temporary credentials. It knows nothing of a key kept in a Secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-hja1y9yp",
+    "version": 1,
+    "section": "oidc-and-trust",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `aws iam create-open-id-connect-provider --url \"$ISSUER\" --client-id-list sts.amazonaws.com` add to the account?",
+    "choices": [
+      {
+        "text": "A role that every pod of the cluster is able to assume",
+        "correct": false,
+        "why": "A provider grants nothing by itself. Which tokens become which role is decided by a role's trust policy."
+      },
+      {
+        "text": "An IAM user for the cluster, with a key the pods share",
+        "correct": false,
+        "why": "IRSA creates no user and no key. The pod calls STS itself with its token."
+      },
+      {
+        "text": "The issuer's private key, so that IAM signs every token the pods present",
+        "correct": false,
+        "why": "Kubernetes signs the tokens and keeps the private key; IAM is told where to fetch the public keys that check them."
+      },
+      {
+        "text": "A record that tokens signed by this issuer and audience are trusted",
+        "correct": true,
+        "why": "That is the whole of it: IAM learns whose signatures to accept, and a trust policy can then name the provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-czkbjzdw",
+    "version": 1,
+    "section": "oidc-and-trust",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role's trust policy names the cluster's provider and the `aud` condition, but somebody deleted the `sub` line. Which pods are able to assume the role now?",
+    "choices": [
+      {
+        "text": "None of them, because the policy is now invalid and IAM rejects it",
+        "correct": false,
+        "why": "A statement with fewer conditions is still valid IAM. It is wider, not broken, which is why the mistake goes unnoticed."
+      },
+      {
+        "text": "Only the pods in the namespace whose service account created the role",
+        "correct": false,
+        "why": "Roles are not created from a namespace, and nothing in the policy names one any more."
+      },
+      {
+        "text": "Every pod in the cluster with a token for `sts.amazonaws.com`",
+        "correct": true,
+        "why": "Every pod's token comes from the same issuer, so without `sub` the policy no longer tells one service account from another."
+      },
+      {
+        "text": "Pods of other clusters in the same account",
+        "correct": false,
+        "why": "Another cluster has another issuer and another provider, and the `Federated` principal still names this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-escaevnj",
+    "version": 1,
+    "section": "oidc-and-trust",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the action an IRSA trust policy allows, the call that trades a Kubernetes token for credentials: `\"Action\": \"sts:___\"`",
+    "hint": "It names what the caller brings: an identity from the web.",
+    "blanks": [
+      {
+        "accept": [
+          "AssumeRoleWithWebIdentity"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w31v115z",
+    "version": 1,
+    "section": "oidc-and-trust",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save editing, a team writes the trust condition as `StringLike` with `system:serviceaccount:shop:*`. A year later a colleague adds a service account `shop:export` for an unrelated job. What follows?",
+    "choices": [
+      {
+        "text": "`shop:export` is refused until somebody adds it to the role",
+        "correct": false,
+        "why": "That is what `StringEquals` with one name would do. The wildcard was written precisely so nobody has to add anything."
+      },
+      {
+        "text": "The role stops working, since two service accounts now match",
+        "correct": false,
+        "why": "A condition matching several subjects is valid; each token is tested on its own."
+      },
+      {
+        "text": "Nothing changes unless `shop:export` runs on the same node",
+        "correct": false,
+        "why": "Nodes play no part in IRSA's trust decision. It is the token's subject that is tested."
+      },
+      {
+        "text": "`shop:export` is able to assume the role the day it is annotated with it",
+        "correct": true,
+        "why": "The wildcard matches every service account in the namespace, including ones that did not exist when the policy was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrrps93e",
+    "version": 1,
+    "section": "oidc-and-trust",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The role, the provider and the trust policy are right. The annotation was added to service account `photos` an hour ago, and the resizer pod, running since yesterday, still gets `AccessDenied` from S3. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "The OIDC provider needs a thumbprint before IAM will trust it",
+        "correct": false,
+        "why": "The API reference says the thumbprint is optional, and an EKS issuer's certificate is checked against AWS's trusted authorities."
+      },
+      {
+        "text": "The pod predates the annotation, so it never got the token",
+        "correct": true,
+        "why": "The role is wired into a pod when the pod is created. Restarting the deployment creates pods that have it."
+      },
+      {
+        "text": "IRSA takes a day to reach a new service account",
+        "correct": false,
+        "why": "There is no such delay in IRSA. The token is written as the pod starts."
+      },
+      {
+        "text": "S3 refuses temporary credentials that came from a web identity",
+        "correct": false,
+        "why": "S3 accepts them like any other signed request; they are ordinary STS credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqcx0q8c",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the IRSA exchange in the order it happens on AWS, from the pod's first AWS call.",
+    "items": [
+      "The SDK reads AWS_ROLE_ARN and the token file",
+      "The SDK sends the token to STS's AssumeRoleWithWebIdentity",
+      "STS fetches the issuer's public keys",
+      "STS checks the signature and the trust policy's conditions",
+      "STS returns credentials for one hour",
+      "The SDK signs the S3 call with them"
+    ],
+    "trap": "Checking the conditions before fetching the keys: STS cannot trust a single claim until the signature over all of them is verified."
+  },
+  {
+    "id": "ex-0nfvtxk2",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `AWS_ROLE_ARN` and `AWS_WEB_IDENTITY_TOKEN_FILE` exported but the test keys still set, `aws sts get-caller-identity` answers as moto's user. Why?",
+    "choices": [
+      {
+        "text": "moto refuses to do the exchange while the test keys are still present",
+        "correct": false,
+        "why": "moto never sees an exchange in that case: the command line does not attempt one."
+      },
+      {
+        "text": "The SDK looks for keys in the environment before it looks for a token",
+        "correct": true,
+        "why": "The credential chain stops at the first source that answers, and environment keys come first. A real pod has none."
+      },
+      {
+        "text": "The token file must be in `/var/run/secrets`",
+        "correct": false,
+        "why": "Any path works; the variable says where it is, and the capture used `~/aws/token`."
+      },
+      {
+        "text": "`AWS_ROLE_SESSION_NAME` was missing",
+        "correct": false,
+        "why": "It is optional. Without it the SDK invents a session name and still does the exchange."
+      }
+    ]
+  },
+  {
+    "id": "ex-33hc5efy",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto gave credentials for the token `not-a-token` and for a role that does not exist. What does the exchange run on the laptop actually establish?",
+    "choices": [
+      {
+        "text": "That the SDK side works: two variables make it do the exchange",
+        "correct": true,
+        "why": "That is the part moto really exercised, the same code path a pod runs. The verification is the part it skipped."
+      },
+      {
+        "text": "That the trust policy in `trust.json` is correct for the photos pod",
+        "correct": false,
+        "why": "moto never opened it. A wrong `sub` would have produced the same answer, which is why the policy has to be checked on AWS."
+      },
+      {
+        "text": "That STS accepts an unsigned token as long as it is short",
+        "correct": false,
+        "why": "STS refuses an unsigned token of any length with `InvalidIdentityToken`; moto reads none."
+      },
+      {
+        "text": "That roles are created on demand by STS",
+        "correct": false,
+        "why": "IAM creates roles. moto simply does not check that the ARN names one."
+      }
+    ]
+  },
+  {
+    "id": "ex-c745qyt2",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, match each token STS is handed with what STS answers.",
+    "pairs": [
+      {
+        "left": "A token whose signature does not check against the issuer's keys",
+        "right": "InvalidIdentityToken"
+      },
+      {
+        "left": "A correctly signed token past its exp",
+        "right": "ExpiredToken"
+      },
+      {
+        "left": "A correctly signed token for system:serviceaccount:shop:default",
+        "right": "AccessDenied"
+      },
+      {
+        "left": "A correctly signed token for system:serviceaccount:shop:photos",
+        "right": "credentials for photos-reader"
+      }
+    ],
+    "right_distractors": [
+      "NoSuchEntity",
+      "SignatureDoesNotMatch"
+    ]
+  },
+  {
+    "id": "ex-hqcx1k8r",
+    "version": 1,
+    "section": "the-exchange",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The denial ran with `INITIAL_NO_AUTH_ACTION_COUNT=5`: bucket, photo, role, permission, exchange. You want to repeat it with the IAM OIDC provider created too, inside the unchecked window, before the exchange. What count do you start moto with?",
+    "hint": "Count one per AWS request the command line sends. Writing a file sends none.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-8tkecm11",
+    "version": 1,
+    "section": "pod-identity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With EKS Pod Identity, what links the service account `shop:photos` to its role?",
+    "choices": [
+      {
+        "text": "An annotation on the service account",
+        "correct": false,
+        "why": "That is IRSA's link. Pod Identity has nothing to annotate in Kubernetes."
+      },
+      {
+        "text": "A `sub` condition in the role's trust policy",
+        "correct": false,
+        "why": "Pod Identity's trust policy names the service `pods.eks.amazonaws.com` and no service account at all."
+      },
+      {
+        "text": "An association in EKS",
+        "correct": true,
+        "why": "An association names the cluster, the namespace, the service account and the role, and replaces both the annotation and the provider."
+      },
+      {
+        "text": "An IAM OIDC provider per namespace",
+        "correct": false,
+        "why": "Pod Identity needs no OIDC provider at all, per namespace or per cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-8g8x3eaq",
+    "version": 1,
+    "section": "pod-identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster runs some workloads on managed node groups and others on a Fargate profile. Which can use EKS Pod Identity?",
+    "choices": [
+      {
+        "text": "Both, as long as the add-on is installed",
+        "correct": false,
+        "why": "The add-on is a DaemonSet, and a DaemonSet has no node to run on under Fargate."
+      },
+      {
+        "text": "The Fargate pods only, since AWS runs their agent",
+        "correct": false,
+        "why": "AWS runs no Pod Identity Agent for Fargate pods; that is why they are excluded."
+      },
+      {
+        "text": "Neither, until the cluster is recreated",
+        "correct": false,
+        "why": "Pod Identity is added to an existing cluster by installing the add-on and creating associations."
+      },
+      {
+        "text": "Only those on EC2 nodes; the rest keep IRSA",
+        "correct": true,
+        "why": "The agent runs on nodes you have, and Fargate gives you none, so lesson 12's Fargate pods use IRSA."
+      }
+    ]
+  },
+  {
+    "id": "ex-k32v2yes",
+    "version": 1,
+    "section": "pod-identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the laptop run, what did the command line send to the stand-in agent at `AWS_CONTAINER_CREDENTIALS_FULL_URI`?",
+    "choices": [
+      {
+        "text": "A GET with the token as `Authorization`",
+        "correct": true,
+        "why": "That is the container credentials protocol: the token from `AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE`, sent as a header, and JSON credentials back."
+      },
+      {
+        "text": "A signed `AssumeRole` request using the test keys",
+        "correct": false,
+        "why": "The keys had been unset; the command line had nothing to sign with, which is why it asked the agent."
+      },
+      {
+        "text": "The role ARN, so the agent knows which role to assume",
+        "correct": false,
+        "why": "The pod does not choose its role here. The association decides it, and the stand-in had the role written in."
+      },
+      {
+        "text": "A PUT for an IMDSv2 token, as on an EC2 instance",
+        "correct": false,
+        "why": "That is the metadata service's protocol from lesson 7. The agent is a different endpoint with a different protocol."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zk60t02",
+    "version": 1,
+    "section": "pod-identity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten teams share one cluster, a namespace each, and each must read only `s3://shop-data/<its namespace>/`. Which approach keeps it to one role?",
+    "choices": [
+      {
+        "text": "IRSA, with ten `sub` conditions in one trust policy",
+        "correct": false,
+        "why": "That lets ten service accounts assume the same role, and then each of them reads every prefix the role allows."
+      },
+      {
+        "text": "The node role, with one statement per prefix in its permission policy",
+        "correct": false,
+        "why": "The node role is shared by every pod on the node, so it cannot tell the teams apart at all."
+      },
+      {
+        "text": "Pod Identity, matching the prefix to the session's namespace tag",
+        "correct": true,
+        "why": "Every session carries its namespace as a tag, so one permission policy can say \"your own prefix\" for all ten."
+      },
+      {
+        "text": "One IAM user per namespace, its key in a Secret",
+        "correct": false,
+        "why": "Ten users, ten keys that never expire, and still no single role: the section's first wrong answer, ten times."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7n2kzht",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload with the way this course would give it AWS credentials.",
+    "pairs": [
+      {
+        "left": "A pod on an EKS Fargate profile",
+        "right": "IRSA"
+      },
+      {
+        "left": "A pod on EC2 nodes, in eight clusters that are replaced at every upgrade",
+        "right": "EKS Pod Identity"
+      },
+      {
+        "left": "A cron job on a plain EC2 instance",
+        "right": "an instance profile"
+      }
+    ],
+    "right_distractors": [
+      "an IAM user's key in a Secret",
+      "the EKS node role"
+    ]
+  },
+  {
+    "id": "ex-yghqbpfm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "IRSA and Pod Identity are both set up correctly, and an audit still finds a pod reading a bucket with the node role's credentials. What setting from lesson 7 closes that path?",
+    "choices": [
+      {
+        "text": "A shorter `DurationSeconds` on the pod's role",
+        "correct": false,
+        "why": "The pod's role is not the one being used; the node role is, through the metadata service."
+      },
+      {
+        "text": "A `sub` condition on the node role's trust policy",
+        "correct": false,
+        "why": "The node role trusts the EC2 service, and the metadata service hands it to any process that asks; `sub` belongs to web identity tokens."
+      },
+      {
+        "text": "IMDSv2 required, with a hop limit of 1",
+        "correct": true,
+        "why": "The token's answer cannot make the extra hop into the container, so the pod never reaches the node's credentials."
+      },
+      {
+        "text": "Deleting the pod's service account",
+        "correct": false,
+        "why": "The pod would lose its own role and keep the node's, which is the opposite of the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrttt3ea",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every CloudTrail event from the resizer shows the session name `botocore-session-1792166400`, and twenty replicas look identical. What would have made the events say which workload it was?",
+    "choices": [
+      {
+        "text": "Giving each replica its own IAM user and key",
+        "correct": false,
+        "why": "That brings back the static key and its whole cost, to solve a naming problem."
+      },
+      {
+        "text": "Setting `AWS_ROLE_SESSION_NAME` in the pod",
+        "correct": true,
+        "why": "Without it the SDK invents a timestamped name; with it the session says which workload, as `photos-pod` did in the capture."
+      },
+      {
+        "text": "Adding a thumbprint to the OIDC provider",
+        "correct": false,
+        "why": "A thumbprint concerns the TLS of the issuer's key endpoint and says nothing about sessions."
+      },
+      {
+        "text": "Raising the projected token's lifetime above a day",
+        "correct": false,
+        "why": "A longer token changes how often the kubelet rewrites it, not what the session is called."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxrhg3yb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the pod identity webhook add to a pod whose service account carries the IRSA annotation? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`AWS_ROLE_ARN`",
+        "correct": true,
+        "why": "The role from the annotation, which the SDK puts in its exchange."
+      },
+      {
+        "text": "`AWS_WEB_IDENTITY_TOKEN_FILE`",
+        "correct": true,
+        "why": "The path of the projected token, the other half of what switches the SDK to the exchange."
+      },
+      {
+        "text": "A projected volume holding a token for `sts.amazonaws.com`",
+        "correct": true,
+        "why": "The token itself, valid for a day and rewritten by the kubelet before it runs out."
+      },
+      {
+        "text": "`AWS_SECRET_ACCESS_KEY`",
+        "correct": false,
+        "why": "No key goes into the pod at all; avoiding exactly that is what IRSA is for."
+      },
+      {
+        "text": "`AWS_CONTAINER_CREDENTIALS_FULL_URI`",
+        "correct": false,
+        "why": "That variable is Pod Identity's, pointing the SDK at the agent; IRSA does not set it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ve0s6d8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws eks create-pod-identity-association` answered moto's `404 Not Found` page. What does that tell you about AWS?",
+    "choices": [
+      {
+        "text": "That the cluster `shop` was not found",
+        "correct": false,
+        "why": "A missing cluster is a JSON `ResourceNotFoundException` from EKS, not an HTML page."
+      },
+      {
+        "text": "That the role needs `sts:TagSession` first",
+        "correct": false,
+        "why": "The role already had it in `pod-trust.json`, and a policy problem is never answered with a 404 page."
+      },
+      {
+        "text": "Nothing: moto 5.2.3 has no route for the call, and on AWS it returns the association",
+        "correct": true,
+        "why": "The 404 is moto's web framework. The behaviour on AWS has to be read in AWS's documentation, as the section did."
+      },
+      {
+        "text": "That Pod Identity is not offered in sa-east-1",
+        "correct": false,
+        "why": "Nothing in the answer names a region; it is the emulator that lacks the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-47efkzz1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves the resizer from IRSA to Pod Identity. Which change does the resizer's own code need?",
+    "choices": [
+      {
+        "text": "A call to the EKS Auth API before the first S3 request",
+        "correct": false,
+        "why": "The agent makes that call. The application only sees the SDK find credentials."
+      },
+      {
+        "text": "Reading the token file and passing it to S3",
+        "correct": false,
+        "why": "S3 never sees a Kubernetes token in either mechanism; it sees requests signed with STS credentials."
+      },
+      {
+        "text": "None, given a recent enough SDK",
+        "correct": true,
+        "why": "Both mechanisms are found by the SDK's credential chain, so the code is the same; an old SDK is the one thing to check."
+      },
+      {
+        "text": "Replacing `AWS_ROLE_ARN` with the association's id",
+        "correct": false,
+        "why": "The association's id is never given to the pod; EKS sets the two container variables instead."
+      }
+    ]
+  }
+]

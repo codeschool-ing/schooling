@@ -1,0 +1,670 @@
+[
+  {
+    "id": "ex-71phxza8",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Fargate service must accept port 80 only from inside the VPC. Where is that rule written?",
+    "hint": "In awsvpc mode, what carries the network interface?",
+    "choices": [
+      {
+        "text": "On the security group of the instance the tasks run on",
+        "correct": false,
+        "why": "There is no instance of yours; the host is AWS's."
+      },
+      {
+        "text": "In the task definition's portMappings",
+        "correct": false,
+        "why": "portMappings opens the container's port; it says nothing about who may reach it."
+      },
+      {
+        "text": "On a security group the tasks carry",
+        "correct": true,
+        "why": "Each task has its own interface, and the group named in the network configuration is on it."
+      },
+      {
+        "text": "In the cluster's settings, for every task in it",
+        "correct": false,
+        "why": "Clusters carry no network rules; each service or task names its own groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-h87fddkk",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A /23 subnet has 512 addresses, and AWS reserves five in every subnet. With nothing else in it, how many Fargate tasks can it hold at most?",
+    "hint": "One private address per task.",
+    "value": 507,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-pwgm484b",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Fargate task in a private subnet, with assignPublicIp DISABLED, no NAT gateway and no VPC endpoints, stops with CannotPullContainerError. What fixes it?",
+    "hint": "The task has to reach the registry before it can start.",
+    "choices": [
+      {
+        "text": "A route to a NAT gateway, or endpoints for ECR, CloudWatch Logs and S3",
+        "correct": true,
+        "why": "Either gives the task a way to the registry and to the logs without a public address."
+      },
+      {
+        "text": "Opening port 443 inbound on the task's security group",
+        "correct": false,
+        "why": "The pull is outbound; an inbound rule does not create a route."
+      },
+      {
+        "text": "Giving the execution role ecr:BatchGetImage",
+        "correct": false,
+        "why": "A permission is no use without a network path to the registry, and the error is about reaching it."
+      },
+      {
+        "text": "Switching the task to bridge network mode",
+        "correct": false,
+        "why": "Fargate accepts awsvpc only."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cahskr2",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's run-task in awsvpc mode failed with a 500, and describe-network-interfaces then showed one interface described as moto ECS. What does that interface stand for?",
+    "hint": "Which part of a task's launch did moto get through before it failed?",
+    "choices": [
+      {
+        "text": "A leftover from the lab's VPC, unrelated to the task",
+        "correct": false,
+        "why": "It is in the task's subnet with the task's security group, created by the run-task call."
+      },
+      {
+        "text": "The task's own network interface, the piece of awsvpc that moto did create",
+        "correct": true,
+        "why": "On AWS the same interface is listed in the task's attachments and deleted when the task stops."
+      },
+      {
+        "text": "The NAT gateway the task would use to pull its image",
+        "correct": false,
+        "why": "A NAT gateway is a separate resource; nothing here created one."
+      },
+      {
+        "text": "An interface of the container instance hosting the task",
+        "correct": false,
+        "why": "There is no container instance on Fargate."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzmd5z17",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two Fargate tasks of the same service both listen on port 80, and AWS happens to start them on the same physical host. What happens?",
+    "hint": "In awsvpc, whose address is the port opened on?",
+    "choices": [
+      {
+        "text": "The second fails with RESOURCE:PORTS, as in lesson 8",
+        "correct": false,
+        "why": "That was a fixed hostPort on a shared instance address; here each task has its own address."
+      },
+      {
+        "text": "Both run, each on port 80 of its own address",
+        "correct": true,
+        "why": "Each task has its own interface, so their ports never meet."
+      },
+      {
+        "text": "Fargate moves the second to port 81",
+        "correct": false,
+        "why": "Nothing renumbers the port; it does not need to."
+      },
+      {
+        "text": "Docker's bridge shares port 80 between them",
+        "correct": false,
+        "why": "There is no bridge in awsvpc mode, and a port is never shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag9109kt",
+    "version": 1,
+    "section": "awsvpc",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The only network mode a Fargate task definition may use is ___.",
+    "hint": "Each task gets its own interface in the VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "awsvpc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kh5cbxmx",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Fargate task on x86 reserves 0.5 vCPU and 1 GB. At 0.0696 USD per vCPU-hour and 0.0076 per GB-hour, what does it cost for a month of 730 hours, in USD, to the cent?",
+    "hint": "vCPU times its meter, plus GB times its meter, then times 730.",
+    "value": 30.95,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-6gkvytz2",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cache needs 4 GB of memory and very little CPU. What is the smallest Fargate size that holds it?",
+    "hint": "Memory ranges rise with the CPU.",
+    "choices": [
+      {
+        "text": "0.25 vCPU with 4 GB",
+        "correct": false,
+        "why": "256 CPU units allow at most 2 GB; moto accepted it and AWS refuses it."
+      },
+      {
+        "text": "1 vCPU with 4 GB",
+        "correct": false,
+        "why": "It fits, and pays for twice the CPU of a smaller size that also fits."
+      },
+      {
+        "text": "2 vCPU with 4 GB, the lowest memory that size allows",
+        "correct": false,
+        "why": "Valid, and four times the CPU the cache needs."
+      },
+      {
+        "text": "0.5 vCPU with 4 GB",
+        "correct": true,
+        "why": "512 units allow 1 to 4 GB, so this is the first row that reaches 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc9n6ybd",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "fargate_cost.py put two tasks of 1 vCPU and 2 GB at 123.81 USD a month on x86 and 99.19 on Arm. How much a year does moving them to Arm save, in USD, to the cent?",
+    "hint": "The monthly difference, twelve times.",
+    "value": 295.44,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-kz3d0dx3",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task reserves 1 vCPU and uses a tenth of it all day. What does Fargate bill for its CPU?",
+    "hint": "Fargate meters the definition, not the load.",
+    "choices": [
+      {
+        "text": "A tenth of a vCPU-hour per hour",
+        "correct": false,
+        "why": "Fargate does not meter use; what is reserved is what is billed."
+      },
+      {
+        "text": "1 vCPU-hour per hour, the whole reservation",
+        "correct": true,
+        "why": "The bill follows cpu in the task definition, by the second, used or not."
+      },
+      {
+        "text": "Nothing until it passes 50% of its reservation",
+        "correct": false,
+        "why": "There is no such threshold; billing starts with the image download."
+      },
+      {
+        "text": "The instance it runs on, shared with other tasks",
+        "correct": false,
+        "why": "No instance appears on a Fargate bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3qcesk3",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these appear on a Fargate bill? Choose all that apply.",
+    "hint": "Two meters, and one more for disk past a threshold.",
+    "choices": [
+      {
+        "text": "vCPU-hours the task definitions reserve",
+        "correct": true,
+        "why": "One of the two meters."
+      },
+      {
+        "text": "GB-hours of memory the task definitions reserve",
+        "correct": true,
+        "why": "The other meter."
+      },
+      {
+        "text": "Ephemeral storage above the first 20 GB",
+        "correct": true,
+        "why": "0.000211 USD per GB-hour on the sheet."
+      },
+      {
+        "text": "A charge for ECS itself, per cluster",
+        "correct": false,
+        "why": "ECS has no charge of its own, on EC2 or on Fargate."
+      },
+      {
+        "text": "The hours of the hosts AWS runs the tasks on",
+        "correct": false,
+        "why": "Those hosts are AWS's; their cost is inside the two meters."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8pr3xn0",
+    "version": 1,
+    "section": "sizes-and-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An m7i.large container instance costs 117.27 USD a month; two Fargate tasks with the same 2 vCPUs cost 123.81. When is the instance the cheaper choice?",
+    "hint": "The instance is billed full or empty.",
+    "choices": [
+      {
+        "text": "Always, because it is cheaper per hour",
+        "correct": false,
+        "why": "Only while it is full; an instance a third empty costs the same."
+      },
+      {
+        "text": "Never, because Fargate has no instance to pay for",
+        "correct": false,
+        "why": "Fargate's meters include the host's cost; full, the instance wins."
+      },
+      {
+        "text": "When it stays nearly full all month, patching aside",
+        "correct": true,
+        "why": "Packed, it is cheaper and has twice the memory; the spare room a cluster keeps erodes that."
+      },
+      {
+        "text": "Only on Arm",
+        "correct": false,
+        "why": "The comparison here is x86 against x86; Arm lowers both sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-qq66crpj",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service's strategy is base=1 on FARGATE, weight 1 on FARGATE and weight 3 on FARGATE_SPOT. With 9 tasks, how many run on FARGATE?",
+    "hint": "The base first, then one in four of the rest.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-4phanrzs",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "AWS reclaims the capacity under a Fargate Spot task. What does the container's main process receive first?",
+    "hint": "The same thing any stopped task receives.",
+    "choices": [
+      {
+        "text": "SIGKILL, because the capacity is gone",
+        "correct": false,
+        "why": "SIGKILL comes only after stopTimeout, if the process is still running."
+      },
+      {
+        "text": "SIGTERM, with stopTimeout to finish before SIGKILL",
+        "correct": true,
+        "why": "That window, up to 120 seconds on Fargate, is the whole warning the code gets."
+      },
+      {
+        "text": "An HTTP request to a notice path",
+        "correct": false,
+        "why": "The EventBridge event goes outside the task; the process itself gets a signal."
+      },
+      {
+        "text": "Nothing; the task disappears",
+        "correct": false,
+        "why": "The task is stopped the ordinary way, signal first."
+      }
+    ]
+  },
+  {
+    "id": "ex-78y2vr50",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the longest stopTimeout a Fargate container definition may set?",
+    "hint": "It matches the length of Spot's warning.",
+    "choices": [
+      {
+        "text": "10 seconds, Docker's default",
+        "correct": false,
+        "why": "That is docker stop's default on a laptop; ECS's default is 30."
+      },
+      {
+        "text": "30 seconds",
+        "correct": false,
+        "why": "That is the default, not the ceiling."
+      },
+      {
+        "text": "120 seconds",
+        "correct": true,
+        "why": "Two minutes, the whole of the warning."
+      },
+      {
+        "text": "15 minutes",
+        "correct": false,
+        "why": "No container gets that long to stop on Fargate."
+      }
+    ]
+  },
+  {
+    "id": "ex-tes04w9p",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stopped Spot task's container reports exit code 137. What happened?",
+    "hint": "137 is 128 plus a signal number.",
+    "choices": [
+      {
+        "text": "The handler finished and exited cleanly",
+        "correct": false,
+        "why": "A clean exit is 0, as the first run showed."
+      },
+      {
+        "text": "The image could not be pulled",
+        "correct": false,
+        "why": "A task that never started has no container exit code."
+      },
+      {
+        "text": "It ran out of memory, which is exit 137 by definition",
+        "correct": false,
+        "why": "An OOM kill is also a SIGKILL; with Spot and a short timeout, the timeout is the likelier cause, and the stopped reason tells them apart."
+      },
+      {
+        "text": "It was killed with SIGKILL, signal 9, still running at stopTimeout",
+        "correct": true,
+        "why": "The process did not finish inside the timeout, as the five-second run showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf2d5weq",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to a well-written worker on Fargate Spot, when AWS reclaims its capacity, in order.",
+    "hint": "The signal comes before the kill, and the replacement last.",
+    "items": [
+      "AWS decides to take the capacity back",
+      "The container's main process receives SIGTERM",
+      "The handler saves its work and exits inside stopTimeout",
+      "The service starts a replacement task"
+    ],
+    "trap": "The replacement does not wait in advance: the service only starts one once the task is gone."
+  },
+  {
+    "id": "ex-fxczx645",
+    "version": 1,
+    "section": "fargate-spot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the SIGTERM runs pass --stop-signal SIGTERM to docker run?",
+    "hint": "Look at what docker image inspect printed.",
+    "choices": [
+      {
+        "text": "Docker sends SIGKILL unless told otherwise",
+        "correct": false,
+        "why": "Docker sends SIGTERM, or the image's own stop signal when it names one."
+      },
+      {
+        "text": "The nginx image names SIGQUIT as its stop signal",
+        "correct": true,
+        "why": "Without the flag the shell would have received SIGQUIT and its TERM handler would never have run."
+      },
+      {
+        "text": "Fargate requires it in the task definition",
+        "correct": false,
+        "why": "It is a docker run flag here, not a Fargate setting."
+      },
+      {
+        "text": "A shell ignores SIGTERM unless the flag is set",
+        "correct": false,
+        "why": "The trap is what makes the shell handle it; the flag only chooses which signal Docker sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngmgdpjk",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what Fargate offers for it.",
+    "hint": "Each answer replaces something the instance used to provide.",
+    "pairs": [
+      {
+        "left": "A shell to look inside a running task",
+        "right": "ECS Exec"
+      },
+      {
+        "left": "A log shipper beside every task",
+        "right": "A sidecar container in the task definition"
+      },
+      {
+        "left": "Files that outlive the task",
+        "right": "An EFS file system mounted into it"
+      },
+      {
+        "left": "150 GB of scratch disk",
+        "right": "Ephemeral storage raised past 20 GB"
+      }
+    ],
+    "right_distractors": [
+      "SSH to the host"
+    ]
+  },
+  {
+    "id": "ex-cf4dktx1",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto stored a Fargate definition that asked for bridge mode as awsvpc. Why is that worse than a refusal?",
+    "hint": "Compare what the author wrote with what reading it back says.",
+    "choices": [
+      {
+        "text": "Because awsvpc costs more than bridge",
+        "correct": false,
+        "why": "The network mode does not change the Fargate price."
+      },
+      {
+        "text": "Because the definition read back says something its author never wrote",
+        "correct": true,
+        "why": "A refusal points at the mistake; a silent rewrite hides it until AWS refuses the file."
+      },
+      {
+        "text": "Because AWS would also rewrite it, so the error is hidden twice",
+        "correct": false,
+        "why": "AWS refuses bridge for Fargate at registration."
+      },
+      {
+        "text": "Because bridge tasks cannot reach the internet",
+        "correct": false,
+        "why": "Bridge works on EC2; the point is what moto did to the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-0k5qf8rh",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Fargate task writes uploads to its own disk, and the task is replaced during a deployment. What happens to the files?",
+    "hint": "Where does the 20 GB live?",
+    "choices": [
+      {
+        "text": "They are copied to the replacement",
+        "correct": false,
+        "why": "Nothing copies ephemeral storage between tasks."
+      },
+      {
+        "text": "They are gone with the task",
+        "correct": true,
+        "why": "Ephemeral storage lives on capacity the task gives back, like lesson 3's instance store."
+      },
+      {
+        "text": "They move to S3 automatically",
+        "correct": false,
+        "why": "Fargate writes nothing to S3 for you; that is the application's job."
+      },
+      {
+        "text": "They stay on the host until the next task",
+        "correct": false,
+        "why": "The host is AWS's and is not handed to your next task."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vx35r4s",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these workloads cannot move from ECS on EC2 to Fargate as it stands?",
+    "hint": "Find the one that needs the host itself.",
+    "choices": [
+      {
+        "text": "A web API behind a load balancer",
+        "correct": false,
+        "why": "That is Fargate's most common use."
+      },
+      {
+        "text": "A nightly batch job of 20 minutes",
+        "correct": false,
+        "why": "A run-task on Fargate suits it."
+      },
+      {
+        "text": "A container that loads a kernel module, run privileged",
+        "correct": true,
+        "why": "privileged is refused on Fargate, because it would control a host that is not yours."
+      },
+      {
+        "text": "A queue worker that reads from SQS",
+        "correct": false,
+        "why": "It needs a task role and nothing from the host."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxgmem43",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker on Fargate Spot takes about five minutes per message and cannot resume halfway. What makes interruptions safe?",
+    "hint": "120 seconds is less than five minutes.",
+    "choices": [
+      {
+        "text": "On SIGTERM, stop taking messages and let the unfinished one become visible again",
+        "correct": true,
+        "why": "The message goes back to the queue and another worker does it whole; nothing is half done."
+      },
+      {
+        "text": "Raise stopTimeout to 300 seconds",
+        "correct": false,
+        "why": "Fargate allows at most 120."
+      },
+      {
+        "text": "Ignore SIGTERM so the work is not interrupted",
+        "correct": false,
+        "why": "SIGKILL arrives at stopTimeout anyway, mid-message."
+      },
+      {
+        "text": "Put base=0 so every task is on Spot",
+        "correct": false,
+        "why": "That makes interruptions more frequent, not safer."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pna32p9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A private subnet has interface endpoints for ECR and CloudWatch Logs and no NAT gateway, and Fargate tasks still fail to pull their image. What is the likeliest gap?",
+    "hint": "Where does ECR keep the image layers?",
+    "choices": [
+      {
+        "text": "The task needs a public IP to use endpoints",
+        "correct": false,
+        "why": "Endpoints exist precisely so that private tasks need none."
+      },
+      {
+        "text": "The execution role lacks logs:PutLogEvents",
+        "correct": false,
+        "why": "That would fail the logs, not the pull."
+      },
+      {
+        "text": "A gateway endpoint for S3",
+        "correct": true,
+        "why": "The layers come from S3, so without that endpoint the download has no path."
+      },
+      {
+        "text": "The cluster has no FARGATE capacity provider",
+        "correct": false,
+        "why": "That would stop the task being placed, not its image being pulled."
+      }
+    ]
+  }
+]

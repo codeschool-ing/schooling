@@ -125,8 +125,8 @@ starts. The trade, in short:
 | a security fix | a new image, then replace the machines | the next launch picks it up |
 
 The usual answer is both: **bake what is slow to install and changes rarely**, the runtime, the
-packages and the application at a version, and configure at boot what differs per machine or must
-not be written into an image, such as the environment it belongs to or a secret fetched at start.
+packages and the application at a version. Configure at boot what differs per machine or must not
+be written into an image, such as the environment it belongs to or a secret fetched at start.
 A secret baked into an image is in every snapshot of it and in every account the image is shared
 with, which is the next section.
 
