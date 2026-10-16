@@ -1,0 +1,1845 @@
+{
+ "ex-dr32yf04": {
+  "prompt": "Uma classe Reservation tem métodos get_ e set_ para todo campo, inclusive set_status e set_expires. A regra \"uma reserva já retirada não pode expirar\" é conferida por três de quem a chama. O que a lição 1 diz desse projeto?",
+  "choices": [
+   {
+    "text": "Está bem encapsulada, porque nenhum campo é tocado diretamente",
+    "why": "Métodos na frente de cada campo são a sintaxe do encapsulamento. A regra continua nos chamadores, e quem esquecer dela a quebra."
+   },
+   {
+    "text": "Tem a forma do encapsulamento sem a promessa: a regra pertence ao lado de dentro da classe",
+    "why": "Isso. Um método como expire() que recusa uma reserva retirada mantém a regra num só lugar, onde nenhum chamador consegue contorná-la."
+   },
+   {
+    "text": "Precisa de uma subclasse, CollectedReservation, cujo set_expires se recuse a mudar a data de expiração",
+    "why": "Uma reserva passa a retirada com o programa rodando, e um objeto não muda de classe. A regra é sobre estado, e fica junto do estado."
+   },
+   {
+    "text": "Fica correta quando os campos começarem com sublinhado",
+    "why": "O sublinhado marca o campo como privado por convenção. Com um setter ao lado, qualquer chamador ainda põe qualquer valor."
+   }
+  ]
+ },
+ "ex-4jf5x79q": {
+  "prompt": "items.py ganha class Periodical(Item) com corpo vazio, e class Magazine(Periodical) cujo corpo é só loan_days = 3. O que Magazine(\"Piauí\", \"P 05\").describe() devolve?",
+  "choices": [
+   {
+    "text": "Um AttributeError, já que Periodical não define describe",
+    "why": "O Python não para em Periodical. Ele percorre a ordem de resolução de métodos, Magazine, Periodical, Item, object, e acha describe em Item."
+   },
+   {
+    "text": "\"Piauí [P 05], 3 days\"",
+    "why": "Isso. Roda o describe de Item, e self.loan_days é buscado na revista, onde o 3 de Magazine aparece antes do 14 de Item."
+   },
+   {
+    "text": "\"Piauí [P 05], 14 days\", porque describe está escrito em Item",
+    "why": "Onde o método está escrito não decide onde self.loan_days é lido. self é a revista, e a busca começa em Magazine."
+   },
+   {
+    "text": "\"Piauí [P 05], reading room only\"",
+    "why": "Essa frase é de ReferenceBook, que não está na cadeia de pais de Magazine."
+   }
+  ]
+ },
+ "ex-vja93w0t": {
+  "prompt": "Uma Subscription guarda ends_on e também um campo days_left, que um job noturno recalcula. Certa manhã a tela mostra 5 dias restantes para uma assinatura que termina amanhã. Que ideia da lição 1 dá nome ao defeito?",
+  "choices": [
+   {
+    "text": "O job devia rodar de hora em hora em vez de toda noite",
+    "why": "Um job mais frequente estreita a janela e mantém a segunda cópia. Os dois valores ainda podem discordar entre uma execução e outra."
+   },
+   {
+    "text": "days_left precisa de uma property para não poder ser escrito",
+    "why": "Uma property só de leitura sobre um número guardado ainda devolve o número velho. O que resolve é uma property que o calcula."
+   },
+   {
+    "text": "Um valor guardado é uma segunda cópia de uma data; calcule a partir de ends_on",
+    "why": "Isso. Loan.fine é calculada toda vez por esse motivo: duas cópias de um fato discordam no dia em que alguém atualiza só uma."
+   },
+   {
+    "text": "Mostra que a herança acoplou o job à classe",
+    "why": "Nenhuma classe herda de outra aqui. O defeito é o estado duplicado, que é o que o encapsulamento existe para manter honesto."
+   }
+  ]
+ },
+ "ex-0cfhz4b1": {
+  "prompt": "due_date(item) contém if isinstance(item, Film): days = 7, elif isinstance(item, Book): days = 14. Chegam audiolivros, emprestados por 10 dias. O que o polimorfismo mudaria?",
+  "choices": [
+   {
+    "text": "Acrescentar um elif para Audiobook, que é como se escreve polimorfismo numa linguagem como o Python",
+    "why": "Mais um ramo é o oposto do polimorfismo: due_date continua citando classes, e todo tipo novo de item a edita de novo."
+   },
+   {
+    "text": "Cada classe diz seu próprio loan_days, e due_date deixa de perguntar qual classe tem",
+    "why": "Isso. due_date lê item.loan_days e não muda mais; um audiolivro é uma classe nova com o seu número."
+   },
+   {
+    "text": "Fazer Audiobook herdar de Film para o primeiro ramo pegá-lo",
+    "why": "Um audiolivro não é um filme, e o ramo o emprestaria por 7 dias. Herança escolhida para fugir de um if é um é-um falso."
+   },
+   {
+    "text": "Capturar o erro que due_date levanta para uma classe que não conhece",
+    "why": "Capturar a falha ainda deixa o audiolivro sem os seus 10 dias. A regra tem de estar em algum lugar, e o item é o lugar dela."
+   }
+  ]
+ },
+ "ex-6rsxbx52": {
+  "prompt": "Um cinema vende ingressos que variam em assento (comum, VIP, acessível), preço (inteira, meia) e entrega (e-mail, SMS, impresso). Escrito com uma subclasse por combinação, como a lição 1 contou para os sócios, quantas subclasses de ingresso existem?",
+  "unit": "subclasses"
+ },
+ "ex-4v6ydjq7": {
+  "prompt": "Em notices.py, a classe que dá nome ao método que um canal precisa ter, lida pelo verificador de tipos e ignorada em tempo de execução, herda de ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "Protocol",
+     "typing.Protocol"
+    ]
+   }
+  ]
+ },
+ "ex-ska97cqh": {
+  "prompt": "Em Go, Item tem os métodos Describe e Summary, e Summary chama Describe. Film embute Item e define o seu próprio Describe. Qual Describe roda quando o código chama film.Summary()?",
+  "choices": [
+   {
+    "text": "O de Film, como uma sobrescrita responderia em Python",
+    "why": "É justamente o que Go não faz. O Summary promovido tem o Item interno como receptor, e a chamada a Describe fica no Item."
+   },
+   {
+    "text": "O de Item: uma struct embutida nunca chama de volta a struct que a embute",
+    "why": "Isso. Por isso a lição 2 diz que Go não pode ter o problema da classe base frágil: a autochamada que quebrou CountingShelf não alcança o tipo de fora."
+   },
+   {
+    "text": "Nenhum: o programa não compila, porque os dois tipos definem Describe",
+    "why": "Um método de mesmo nome no tipo de fora é permitido e vence em film.Describe(). O erro de ambiguidade é para dois tipos embutidos na mesma profundidade."
+   },
+   {
+    "text": "Os dois, primeiro o de Film e depois o de Item",
+    "why": "Uma chamada roda um método só. Go não tem super nem cadeia de sobrescritas para percorrer."
+   }
+  ]
+ },
+ "ex-vbmea3r3": {
+  "prompt": "Uma classe Playlist publicada tem add(song) e add_many(songs), e add_many por acaso percorre self.add. A sua TimedPlaylist(Playlist) sobrescreve os dois para somar durações, e o total sai grande demais. Que projeto a lição 2 defende?",
+  "choices": [
+   {
+    "text": "Sobrescrever só add, já que add_many manda toda música por ele",
+    "why": "Essa é a correção que piora: certa hoje, e errada no dia em que o autor fizer add_many estender a lista de uma vez."
+   },
+   {
+    "text": "Guardar uma Playlist num campo e repassar cada chamada a ela",
+    "why": "Isso. O add_many interno chama o add interno, nunca o do invólucro, e a contagem se mantém seja o que for que Playlist faça por dentro."
+   },
+   {
+    "text": "Pedir aos autores de Playlist a promessa de nunca mudar add_many",
+    "why": "Um autouso documentado é uma saída real, mas é decisão do pai, para todos os filhos. Uma classe publicada tem filhos que os autores nunca veem."
+   },
+   {
+    "text": "Copiar o código de Playlist em TimedPlaylist",
+    "why": "A cópia para de receber as correções dos autores, e vira uma segunda Playlist para você manter. Guardar uma custa alguns métodos de repasse."
+   }
+  ]
+ },
+ "ex-cya70wy8": {
+  "prompt": "Os empréstimos variam por item (livro, filme, revista), por sócio (adulto, estudante) e por canal de lembrete (e-mail, SMS, aviso impresso). No projeto composto da lição 2, uma classe pequena por opção, quantas classes são necessárias?",
+  "unit": "classes"
+ },
+ "ex-a3qxyac7": {
+  "prompt": "Qual destes é um lugar em que a lição 2 escreveria class X(Y)?",
+  "choices": [
+   {
+    "text": "class CachedShelf(Shelf), em que Shelf vem de um pacote cujas autochamadas ninguém documentou",
+    "why": "Um pai que não foi escrito para extensão é a segunda pergunta da tabela: embrulhe, não herde."
+   },
+   {
+    "text": "class StudentSmsLoan(StudentLoan)",
+    "why": "Um segundo eixo, o canal, empurrado para dentro da árvore. É assim que a explosão de classes começa."
+   },
+   {
+    "text": "class RenewalHandler(BaseHandler), para um framework que documenta handle() como o gancho a preencher",
+    "why": "Isso. Um framework feito para milhares de filhos, com os ganchos documentados, é o terceiro caso que a lição cita, como unittest.TestCase."
+   },
+   {
+    "text": "class LoanDesk(Member, Email), para o balcão ganhar um nome e um canal",
+    "why": "Um balcão não é nem sócio nem e-mail. Dizer a frase em voz alta é o teste: no máximo, ele tem essas coisas."
+   }
+  ]
+ },
+ "ex-z7r624w4": {
+  "prompt": "class Poster(LabelMixin, JsonMixin, Item), em que os dois mixins e Item não têm pais além de object. O Python procura label() num pôster. Ponha as classes na ordem em que a busca as visita.",
+  "items": [
+   "Poster",
+   "LabelMixin",
+   "JsonMixin",
+   "Item",
+   "object"
+  ],
+  "trap": "Os pais são visitados da esquerda para a direita, como estão escritos, e um mixin listado antes de Item vence. Pôr Item primeiro por parecer o pai de verdade é o deslize."
+ },
+ "ex-d64v743b": {
+  "prompt": "Um TimestampMixin guarda a sua própria lista self._history e chama self.save(), que só algumas classes hospedeiras definem. O que a lição 2 sugere?",
+  "choices": [
+   {
+    "text": "Torná-lo um objeto que a classe guarda",
+    "why": "Isso. Ele tem estado e depende de um método não declarado do hospedeiro, os dois sinais de que um mixin quer ser uma parte. Uma parte guardada falha quando o objeto é criado, não no primeiro uso."
+   },
+   {
+    "text": "Listá-lo primeiro entre os pais para os seus métodos terem precedência",
+    "why": "A ordem decide qual de dois métodos de mesmo nome vence. Não faz nada pelo estado nem por um hospedeiro sem save()."
+   },
+   {
+    "text": "Nada; acrescentar uma capacidade a muitas classes é para isso que servem mixins",
+    "why": "O mixin seguro da lição não tem estado e declara o que precisa do hospedeiro. Este não faz nenhuma das duas coisas."
+   },
+   {
+    "text": "Dar a ele um __init__ que chame super().__init__() para a lista ser sempre criada",
+    "why": "Isso remenda um sintoma e acrescenta mais acoplamento escondido: todo hospedeiro precisa cooperar com um construtor que não escreveu, e save() ainda falta em alguns."
+   }
+  ]
+ },
+ "ex-yqs9ge46": {
+  "prompt": "Você escreve on_overdue(loan) e a decora com @every(\"day\") de um pacote de agendamento. Às 03:00 o laço do próprio agendador a chama. Nos termos da lição 5, o que é o agendador?",
+  "choices": [
+   {
+    "text": "Uma biblioteca, porque você a importou",
+    "why": "Importar não diz nada. O que decide é quem segura o laço, e aqui é o agendador."
+   },
+   {
+    "text": "Um framework: ele segura o laço e chama o seu código de volta",
+    "why": "Isso. A sua função se registra e espera, o princípio de Hollywood; quando e se ela roda é decisão do agendador."
+   },
+   {
+    "text": "Um contêiner de injeção de dependência, já que recebe uma função",
+    "why": "Passar uma função para ser chamada depois inverte o fluxo de controle. Injeção é sobre quem constrói os objetos de que uma classe precisa."
+   },
+   {
+    "text": "Um service locator, porque acha a sua função pelo nome",
+    "why": "Um locator é um registro que o seu código consulta para pegar colaboradores. Aqui ninguém pede nada ao agendador; ele chama você."
+   }
+  ]
+ },
+ "ex-hk9733s3": {
+  "prompt": "RenewalJob.__init__ não recebe argumentos e faz self.clock = SystemClock(). Um método set_clock() foi acrescentado para os testes poderem trocá-lo. Que mudança a lição 5 indica?",
+  "choices": [
+   {
+    "text": "Manter o setter, já que todo teste já consegue colocar no lugar um relógio fixo próprio, sem mexer em nada",
+    "why": "Funciona nos testes, e a classe ainda escolhe o seu relógio concreto. Um set_clock esquecido deixa o calendário real rodando em silêncio."
+   },
+   {
+    "text": "Fazer patch de SystemClock em cada teste em vez de manter um setter",
+    "why": "Um patch acopla o teste aos nomes de import do módulo. Na sua própria classe, precisar de um é um aviso de que algo lá dentro constrói um colaborador."
+   },
+   {
+    "text": "Receber o relógio como argumento do construtor, e deixar main.py passar SystemClock()",
+    "why": "Isso. O construtor passa a listar do que o job precisa, um relógio ausente falha na construção, e a única escolha concreta fica na raiz de composição."
+   },
+   {
+    "text": "Tornar o relógio uma global de módulo que os testes sobrescrevem",
+    "why": "Isso é um service locator com outro nome: a dependência some do construtor, e os testes passam a compartilhar estado."
+   }
+  ]
+ },
+ "ex-we6eqarf": {
+  "prompt": "Quais destes pertencem à raiz de composição, main.py, segundo a lição 5? Marque todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Ler LIBRARY_TODAY do ambiente",
+    "why": "Sim. Configuração é lida na raiz, e em nenhum lugar mais fundo."
+   },
+   {
+    "text": "Escolher entre SmsNotifier e EmailNotifier",
+    "why": "Sim. Citar a classe concreta de que outro objeto depende é tarefa da raiz, e só dela."
+   },
+   {
+    "text": "Construir OverdueNotices com o seu repositório, notificador e relógio",
+    "why": "Sim. Ligar objetos aos vizinhos é para isso que a raiz existe."
+   },
+   {
+    "text": "A regra de que um dia de atraso custa 50 centavos",
+    "why": "Uma regra na raiz não pode ser testada sem montar o programa inteiro. Mantenha a raiz sem graça: ela decide e liga."
+   },
+   {
+    "text": "Decidir se um empréstimo que vence hoje está atrasado",
+    "why": "Essa é a regra de OverdueNotices, testada em test_overdue.py com um relógio fixo. A raiz só entrega o relógio ao job."
+   }
+  ]
+ },
+ "ex-gsy8q2xg": {
+  "prompt": "Associe cada dependência à forma de injeção que a lição 5 diz que combina com ela.",
+  "pairs": [
+   {
+    "left": "um repositório sem o qual o serviço não funciona",
+    "right": "construtor"
+   },
+   {
+    "left": "um logger que não escreve em lugar nenhum até alguém definir um",
+    "right": "setter"
+   },
+   {
+    "left": "o terminal de pagamento, diferente a cada venda no caixa",
+    "right": "método"
+   },
+   {
+    "left": "a data de hoje, para uma função simples que calcula uma multa",
+    "right": "parâmetro de função"
+   }
+  ]
+ },
+ "ex-t79qdve1": {
+  "prompt": "Uma equipe passa o seu contêiner só para main.py, que pede a ele uma vez o objeto App e depois o executa. Um revisor chama isso de service locator. É?",
+  "choices": [
+   {
+    "text": "Não; consultado uma vez na raiz, é uma ferramenta de ligação",
+    "why": "Isso. O mesmo contêiner vira locator quando as classes o importam e o consultam de dentro dos seus métodos."
+   },
+   {
+    "text": "Sim: todo contêiner é um locator",
+    "why": "A lição separa os dois pela direção: entregar aos objetos os seus colaboradores, ou os objetos irem buscá-los. Um contêiner serve dos dois jeitos."
+   },
+   {
+    "text": "Sim, já que o objeto App é resolvido por tipo em vez de construído à mão",
+    "why": "O autowiring muda quem escreve a ligação, não para que lado as dependências correm. App ainda recebe tudo pelo construtor."
+   },
+   {
+    "text": "Não, contanto que os seus registros sejam todos compartilhados",
+    "why": "Tempo de vida é outra questão. Um locator com instâncias compartilhadas continua sendo locator."
+   }
+  ]
+ },
+ "ex-y7dm5559": {
+  "prompt": "A sua classe Checkout chama o cliente de um fornecedor de pagamentos, cujo código você não pode mudar. Como a lição 5 sugere testar Checkout?",
+  "choices": [
+   {
+    "text": "Fazer patch do caminho de import do módulo do fornecedor em todo teste",
+    "why": "Funciona até um import mudar de nome, e aí o patch não troca nada e o cliente real é chamado. Checkout é sua, então pode ser moldada para receber o cliente."
+   },
+   {
+    "text": "Passar o objeto do fornecedor de fora, e dar aos testes um falso",
+    "why": "Isso. O código do fornecedor fica intocado; a sua classe o recebe, e um fake acopla o teste só ao que Checkout precisa."
+   },
+   {
+    "text": "Rodar todo teste contra o sandbox do fornecedor",
+    "why": "Um serviço de rede deixa o teste lento e dependente da disponibilidade de outra empresa. A lição troca por fake o que está fora do processo."
+   },
+   {
+    "text": "Registrar o cliente num registro global que cada teste sobrescreve com um fake próprio antes de rodar",
+    "why": "Um registro global é o service locator, com testes que passam ou falham conforme a ordem."
+   }
+  ]
+ },
+ "ex-x1zfqmdy": {
+  "prompt": "Num código que você não escreveu, ReturnScreen chama self.view.show_total(\"R$ 3,00\") e self.view.flag_late(True), e nunca toca num widget. Que papel ReturnScreen desempenha?",
+  "choices": [
+   {
+    "text": "Um presenter, no MVP",
+    "why": "Isso. Uma classe que chama view.show_... com textos já formatados é um presenter, seja qual for o nome."
+   },
+   {
+    "text": "Uma view-model, no MVVM",
+    "why": "Uma view-model expõe propriedades e nunca ouviu falar da view. Esta classe chama a view pelo nome."
+   },
+   {
+    "text": "O modelo do MVC desktop, anunciando as suas mudanças aos assinantes",
+    "why": "Um modelo não aponta para ninguém e não formata nada. Transformar centavos em \"R$ 3,00\" é lógica de tela."
+   },
+   {
+    "text": "Um template, no MVC web",
+    "why": "Um template recebe valores e os renderiza; não chama métodos de outro objeto para mostrar coisas."
+   }
+  ]
+ },
+ "ex-fb7zeqx2": {
+  "prompt": "Uma segunda view, LoanCounter, assina o balcão em mvc.py depois de ShelfView, e imprime uma linha a cada mudança. O comando lend B2 caio dá certo. Em que ordem as três linhas aparecem?",
+  "choices": [
+   {
+    "text": "primeiro a data de devolução do controller, depois a estante e o contador",
+    "why": "O controller só fala depois que desk.lend retorna, e as duas views rodaram dentro dessa chamada."
+   },
+   {
+    "text": "a estante, depois o contador, depois a data do controller",
+    "why": "Isso. lend chama _changed, que roda os observadores na ordem em que assinaram; depois lend retorna e o controller diz quando B2 vence."
+   },
+   {
+    "text": "o contador, a estante, a data de devolução do controller",
+    "why": "_changed percorre a lista em ordem, e ShelfView assinou primeiro."
+   },
+   {
+    "text": "só a data de devolução do controller, já que ele nunca pede às views que redesenhem",
+    "why": "Ninguém precisa pedir. As views assinaram, e o modelo as chama a cada mudança."
+   }
+  ]
+ },
+ "ex-1427y7zh": {
+  "prompt": "Um colega quer que Desk.lend devolva o número 409 numa recusa, para o controller web repassá-lo direto ao navegador. O que a lição 7 diz?",
+  "choices": [
+   {
+    "text": "Bom: um código de status comum a todas as telas as mantém coerentes",
+    "why": "O balcão do terminal e os testes não têm uso para um status HTTP. Um modelo moldado para uma tela é o emaranhado voltando."
+   },
+   {
+    "text": "Bom, contanto que a view escape o número antes de mostrá-lo",
+    "why": "Escapar é uma tarefa real da view HTML, e está fora da questão: a pergunta é que camada decide sobre HTTP."
+   },
+   {
+    "text": "Não: o status é uma decisão sobre HTTP, então o controller a toma, e o modelo levanta a sua frase",
+    "why": "Isso. web.py transforma o ValueError em 409 Conflict em lend, e o mesmo modelo serve o terminal e os testes sem mudança."
+   },
+   {
+    "text": "Não: recusas deviam imprimir uma mensagem",
+    "why": "O modelo nunca imprime; ele não tem como saber se as suas palavras vão para um terminal, uma página ou lugar nenhum."
+   }
+  ]
+ },
+ "ex-7wheaadd": {
+  "prompt": "Em mvvm.py, a tela da Ana mostra \"B1 is out\" com Lend acinzentado. Em outro balcão, alguém devolve B1 ao mesmo objeto Desk; o sócio que a Ana digitou não tem outro empréstimo. O que acontece com o botão da Ana?",
+  "choices": [
+   {
+    "text": "Nada até a Ana digitar de novo, porque só as caixas de texto disparam o recálculo",
+    "why": "A view-model também assinou o próprio balcão, e uma mudança em qualquer ponto do balcão chega até ela."
+   },
+   {
+    "text": "Fica habilitado sozinho, sem nenhuma linha de código de tela pedindo",
+    "why": "Isso. O balcão avisa a view-model, _recompute põe can_lend em True, e o binding habilita o botão."
+   },
+   {
+    "text": "O presenter chama _refresh e o botão é redesenhado",
+    "why": "Não há presenter em mvvm.py. Lembrar de atualizar era o fardo do MVP, e os bindings o eliminam."
+   },
+   {
+    "text": "O código do outro balcão precisa chamar button.set_enabled(True) para a Ana",
+    "why": "Isso amarraria todo balcão a toda tela. Ninguém chama set_enabled a não ser o binding com can_lend."
+   }
+  ]
+ },
+ "ex-z979xan8": {
+  "prompt": "Uma nova tela de balcão é escrita no MVP da lição 7. Associe cada parte da lógica à classe que a guarda.",
+  "pairs": [
+   {
+    "left": "um sócio pode ter no máximo cinco empréstimos",
+    "right": "o modelo"
+   },
+   {
+    "left": "uma multa de 350 centavos aparece como R$ 3,50",
+    "right": "o presenter"
+   },
+   {
+    "left": "um alarme é desenhado em vermelho",
+    "right": "a view"
+   }
+  ]
+ },
+ "ex-ddh7jscc": {
+  "prompt": "O nome que Fowler dá ao movimento que todo padrão da lição 7 faz primeiro, tirar as regras para um modelo que não sabe nada de telas, é separated ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "presentation",
+     "apresentação",
+     "apresentacao"
+    ]
+   }
+  ]
+ },
+ "ex-mgdra2jm": {
+  "prompt": "Um serviço Java abre uma conexão JDBC e roda duas instruções: registrar o pagamento de uma multa, depois marcar a multa como paga. A segunda falha. Ninguém chamou setAutoCommit. O que está no banco?",
+  "choices": [
+   {
+    "text": "O pagamento, com a multa ainda em aberto",
+    "why": "Isso. O autocommit fica ligado até você desligá-lo, então a primeira instrução foi uma transação própria e já estava confirmada quando a segunda falhou."
+   },
+   {
+    "text": "Nada, porque o driver desfaz o par",
+    "why": "Não existia par. Duas instruções só andam juntas se alguém abrir uma transação em volta delas."
+   },
+   {
+    "text": "As duas mudanças, já que o erro veio depois de o trabalho ser enviado",
+    "why": "A segunda instrução falhou, então a mudança dela não está lá. Só a primeira, confirmada sozinha, sobreviveu."
+   },
+   {
+    "text": "O que o nível de isolamento permitir",
+    "why": "Isolamento é sobre transações rodando ao mesmo tempo. Aqui é uma conexão só, e a resposta é atomicidade, ou a falta dela."
+   }
+  ]
+ },
+ "ex-vzr5tzk6": {
+  "prompt": "Iracema tem available = 2. Quatro balcões rodam cada um UPDATE items SET available = available - 1 WHERE title = 'Iracema' AND available > 0, e registram um empréstimo só quando o rowcount do cursor é 1. Quantos empréstimos são registrados?",
+  "unit": "empréstimos"
+ },
+ "ex-qpzb0r6s": {
+  "prompt": "O lend de ler-e-depois-escrever de desks.py precisa rodar no PostgreSQL no nível padrão, read committed. Que mudança impede dois balcões de emprestarem um só exemplar?",
+  "choices": [
+   {
+    "text": "Envolver a leitura e a escrita em BEGIN e COMMIT",
+    "why": "Em read committed a transação do segundo balcão ainda lê 1 e escreve 0 por cima da primeira: a atualização se perde dentro de uma transação."
+   },
+   {
+    "text": "Ler a linha com SELECT ... FOR UPDATE",
+    "why": "Isso. A linha fica travada na leitura, então o segundo balcão espera e depois lê 0. O UPDATE condicional também resolveria, numa instrução só."
+   },
+   {
+    "text": "Acrescentar CHECK (available >= 0) à tabela items",
+    "why": "Os dois balcões escrevem 0, o que satisfaz a restrição. A tabela termina válida e errada: dois empréstimos para um exemplar."
+   },
+   {
+    "text": "Usar BEGIN IMMEDIATE, como a versão SQLite faz",
+    "why": "Essa é a sintaxe do SQLite para pegar o lock de escrita cedo. O PostgreSQL trava linhas, e FOR UPDATE é como uma leitura pede uma."
+   }
+  ]
+ },
+ "ex-d3s3zeh3": {
+  "prompt": "Bia renova um empréstimo e o primário roda em modo sync, como em latency.py. Ponha os acontecimentos em ordem.",
+  "items": [
+   "O primário grava a mudança no próprio disco",
+   "A mudança viaja até a réplica",
+   "A réplica confirma de volta ao primário",
+   "Bia fica sabendo que a renovação está feita"
+  ],
+  "trap": "Avisar a Bia logo depois da gravação local é o modo async. No modo sync ela espera a ida e volta, que são os 113 ms da transcrição."
+ },
+ "ex-xph0n20m": {
+  "prompt": "O link entre as filiais caiu. Três pedidos chegam à filial isolada do primário: uma sócia muda o endereço de e-mail, um selo de \"livros lidos este ano\" é atualizado, e uma multa é paga. Pelo raciocínio da lição 10, qual essa filial deve recusar?",
+  "choices": [
+   {
+    "text": "Só o pagamento: dinheiro erra de um jeito que uma pessoa precisa consertar",
+    "why": "Isso. Um pagamento dobrado ou perdido exige estorno e telefonema. O selo é uma contagem que pode errar um pouco, e o endereço é uma questão de última escrita que uma regra resolve."
+   },
+   {
+    "text": "O selo, porque a sócia o vê",
+    "why": "Ser visível não o torna caro. Uma contagem um pouco atrás não prejudica ninguém, que é a ponta fácil da tabela da lição."
+   },
+   {
+    "text": "Os três, já que recusar é sempre a escolha mais segura quando uma filial não tem como ter certeza",
+    "why": "Recusar tem o seu custo: sócios mandados embora e código para lidar com isso. A lição decide por operação, por quem paga se duas cópias discordarem."
+   },
+   {
+    "text": "Nenhum, porque partições são raras",
+    "why": "Raro é o motivo de a escolha ser feita antes, não de pulá-la. No dia em que o link cai, o pagamento ainda tem de estar certo."
+   }
+  ]
+ },
+ "ex-1w50t4xq": {
+  "prompt": "Todos os links estão bem. Uma equipe faz cada leitura do catálogo esperar o estoque mais recente confirmado, e aceita páginas mais lentas por isso. Que letras do PACELC descrevem essa escolha?",
+  "choices": [
+   {
+    "text": "PC: consistência durante uma partição",
+    "why": "Nada está particionado. A primeira metade do PACELC só fala enquanto a rede está quebrada."
+   },
+   {
+    "text": "EC",
+    "why": "Isso. Else, sem partição, escolheram consistência em vez de latência, e pagam em toda leitura num dia comum."
+   },
+   {
+    "text": "EL: else, latência",
+    "why": "EL é a escolha oposta: responder rápido, mesmo que o dado esteja um pouco atrás."
+   },
+   {
+    "text": "CA: sem partição, ficam com consistência e disponibilidade",
+    "why": "O CAP não tem essa escolha a fazer, e o PACELC existe porque o caso saudável ainda força uma: latência contra consistência."
+   }
+  ]
+ },
+ "ex-2w0gxffk": {
+  "prompt": "Você começa uma calculadora de frete escrevendo o teste antes. O primeiro teste diz que um pacote de 2 kg custa 1000 centavos, e você ainda não sabe como o preço cresce com o peso. O que a lição 13 manda escrever para chegar ao verde?",
+  "choices": [
+   {
+    "text": "return weight_kg * 500, a regra que o único exemplo sugere",
+    "why": "Um exemplo só não distingue 500 por quilo de um preço fixo ou de uma faixa. Esse palpite é o que a triangulação existe para testar."
+   },
+   {
+    "text": "return 1000",
+    "why": "Isso. Fingir: o teste é visto passando, a interface fica fixada, e o próximo exemplo força a regra geral."
+   },
+   {
+    "text": "Mais três testes primeiro, depois todo o código de uma vez",
+    "why": "Vários testes vermelhos de uma vez dão uma execução vermelha com várias causas. Um teste, depois o mínimo de código, é a volta."
+   },
+   {
+    "text": "A tabela completa de preços, sem rodar o teste, já que o passo é óbvio",
+    "why": "Você disse que não conhece a regra, então não é óbvia; e um teste que nunca rodou nunca mostrou que distingue certo de errado."
+   }
+  ]
+ },
+ "ex-bhcxn136": {
+  "prompt": "fines.py passa em três testes com max((returned - due).days, 0) * 50. Qual próximo teste é um passo de TDD, um que leva a código novo?",
+  "choices": [
+   {
+    "text": "Um livro devolvido na data de vencimento não custa nada",
+    "why": "Passa assim que é escrito, então não leva a código nenhum. Vale guardar como registro da fronteira, e não é um passo."
+   },
+   {
+    "text": "Dez dias de atraso custam 500 centavos",
+    "why": "A fórmula já responde 500. Um teste verde na primeira execução não mostrou que pode falhar."
+   },
+   {
+    "text": "Um estudante paga 25 centavos por dia, então três dias de atraso custam 75",
+    "why": "Isso. A função não tem como saber de estudantes, então o teste fica vermelho e força um parâmetro novo."
+   },
+   {
+    "text": "Devolvido um ano antes não custa nada",
+    "why": "max(..., 0) já cobre toda devolução antecipada. Passa de primeira, como o caso da data de vencimento."
+   }
+  ]
+ },
+ "ex-qmc9n058": {
+  "prompt": "Um sócio relata que foi cobrada multa de um livro devolvido na data de vencimento. Ponha em ordem o jeito TDD de corrigir.",
+  "items": [
+   "Escrever um teste que reproduz o relato",
+   "Rodá-lo e vê-lo falhar pelo motivo relatado",
+   "Mudar o código até a suíte passar",
+   "Refatorar com todos os testes verdes"
+  ],
+  "trap": "Corrigir o código primeiro e escrever o teste depois dá um teste que nunca foi visto falhando, e ninguém sabe se ele pegaria a volta do bug."
+ },
+ "ex-vfgq6bds": {
+  "prompt": "Código descartável escrito sem testes para aprender algo, depois apagado antes de recomeçar com o teste primeiro, é o que Beck chama de ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "spike"
+    ]
+   }
+  ]
+ },
+ "ex-ckqrph2h": {
+  "prompt": "Uma equipe escreve primeiro o teste mais externo, faz mock de um colaborador que ainda não existe, e deixa as expectativas do mock moldarem a interface dele. Que escola de TDD é essa?",
+  "choices": [
+   {
+    "text": "A escola clássica, também chamada de Detroit ou Chicago",
+    "why": "Os clássicos usam objetos reais sempre que são baratos e verificam resultados e estado."
+   },
+   {
+    "text": "A escola mockista, ou de Londres",
+    "why": "Isso. De fora para dentro, do livro de Freeman e Pryce: verificar as mensagens enviadas, e construir cada colaborador mockado no seu próprio ciclo."
+   },
+   {
+    "text": "Testes de caracterização de código legado",
+    "why": "Testes de caracterização fixam o que um código existente já faz. Aqui o código ainda nem existe."
+   }
+  ]
+ },
+ "ex-y4n5s2pg": {
+  "prompt": "Você está escrevendo o código que diagrama uma carteirinha de sócio impressa, e se ela está certa é julgado a olho. O que a lição 13 sugere em vez de um teste escrito antes?",
+  "choices": [
+   {
+    "text": "Um assertEqual sobre a saída exata, escrito antes do código",
+    "why": "Ninguém conhece o lado direito antes de ver a carteirinha, que é justamente por que o teste primeiro sofre aqui."
+   },
+   {
+    "text": "Uma saída que uma pessoa aprova uma vez, comparada em toda execução seguinte",
+    "why": "Isso. Um resultado gravado e aprovado a olho transforma \"parece certo\" em algo contra o qual a máquina pode conferir o código depois."
+   },
+   {
+    "text": "Um spike, entregue quando a carteirinha estiver certa",
+    "why": "Um spike serve para aprender e é apagado. Um que vai para produção vira código sem teste que ninguém projetou."
+   },
+   {
+    "text": "Nenhuma verificação, já que diagramação não pode ser testada",
+    "why": "Ela não pode ser prevista; pode ser conferida. A lição cita saídas aprovadas e revisão justamente para isso."
+   }
+  ]
+ },
+ "ex-a35tszx2": {
+  "prompt": "Com observable.py e operators.py, uma fonte empurra os dias de atraso 2, 0, 4, 1 e completa, passando por pipe(filter_(lambda d: d > 1), map_(lambda d: d * 50), scan(lambda t, c: t + c, 0)). Qual é o último valor que o assinante recebe?",
+  "unit": "centavos"
+ },
+ "ex-fr5zq8b3": {
+  "prompt": "Um produtor passado ao Observable de observable.py levanta uma exceção antes de mandar qualquer valor. O assinante passou só on_next. O que o código do assinante vê?",
+  "choices": [
+   {
+    "text": "Nada: um fluxo vazio que simplesmente termina",
+    "why": "Essa é a confusão que a classe foi escrita para evitar. Um fluxo que falhou não pode parecer um fluxo sem valores."
+   },
+   {
+    "text": "Uma chamada a on_complete, já que o produtor parou",
+    "why": "subscribe transforma a exceção em on_error, e um fim é um ou outro, nunca os dois."
+   },
+   {
+    "text": "A exceção, levantada de novo pela chamada a subscribe",
+    "why": "Isso. subscribe a captura e chama on_error, e o on_error padrão a levanta de novo."
+   },
+   {
+    "text": "Um valor None entregue a on_next",
+    "why": "Nada inventa um valor. O fluxo leva valores, depois no máximo um fim, e um erro é um fim."
+   }
+  ]
+ },
+ "ex-k5ppyabg": {
+  "prompt": "Leituras chegam a 4 por segundo durante 30 segundos, uma vez por hora, e nada chega no resto da hora. O catálogo trata 3 por segundo, por uma fila sem limite. O que acontece?",
+  "choices": [
+   {
+    "text": "A fila cresce o dia todo até a memória acabar",
+    "why": "Isso é o que uma taxa sustentada faz. Aqui as chegadas param, e a fila esvazia entre as rajadas."
+   },
+   {
+    "text": "A fila chega a 30 no pico e esvazia em uns dez segundos",
+    "why": "Isso. Uma leitura a mais por segundo durante 30 segundos dá 30 esperando; a 3 por segundo elas saem rápido. Uma fila absorve uma rajada; não absorve uma taxa."
+   },
+   {
+    "text": "Leituras se perdem assim que a fila passa de três",
+    "why": "Só uma fila limitada com estratégia de descarte perde valores. Esta não tem limite, então nada se perde."
+   },
+   {
+    "text": "O leitor é obrigado a esperar durante toda rajada",
+    "why": "Esperar exige um limite e um put que bloqueia. Sem limite, o produtor nunca espera."
+   }
+  ]
+ },
+ "ex-jsyg23dk": {
+  "prompt": "Uma equipe escolheu drop para eventos de analytics. Em dias cheios o painel mostra uns 12% menos visualizações, e ninguém distingue um dia calmo de uma fila transbordando. O que a lição 16 diz que faltou?",
+  "choices": [
+   {
+    "text": "Trocar para buffer, que não perde nada",
+    "why": "Buffer troca a perda por uma fila sem limite e dados velhos. Para visualizações, um descarte medido era uma escolha justa."
+   },
+   {
+    "text": "Uma contagem de todo valor descartado",
+    "why": "Isso. Um contador ou uma métrica transforma a perda em algo que uma pessoa vê; um relatório 12% abaixo que diz isso continua sendo relatório."
+   },
+   {
+    "text": "Latest em vez de drop, para guardar o evento mais novo",
+    "why": "Latest serve para um estado em que só o valor atual importa. Visualizações são uma contagem, e latest perderia ainda mais."
+   },
+   {
+    "text": "Um observable frio, para todo evento ser reproduzido de novo",
+    "why": "Visitas acontecem quer alguém escute ou não, o que torna a fonte quente. Chamá-la de fria não lhe dá memória."
+   }
+  ]
+ },
+ "ex-76h44k7r": {
+  "prompt": "Uma equipe Java transmite as linhas de uma consulta ao banco para um gravador lento com RxJava. Que tipo a lição 16 indica, e por quê?",
+  "choices": [
+   {
+    "text": "Flowable, porque uma consulta aceita ser segurada e Flowable respeita a demanda",
+    "why": "Isso. Um cursor pode parar de buscar, então request(n) deixa o gravador lento ditar o ritmo sem uma fila escrita por alguém."
+   },
+   {
+    "text": "Observable, já que é o mais simples dos dois",
+    "why": "A documentação do RxJava reserva Observable para fontes que não podem ser desaceleradas, como eventos de interface. Uma consulta pode."
+   },
+   {
+    "text": "Qualquer um, porque no RxJava um assinante não pode pedir a uma fonte que mande menos",
+    "why": "O RxJS é a biblioteca sem request(n). O RxJava separa dois tipos justamente por isso."
+   },
+   {
+    "text": "Um Subject, para o gravador receber as linhas conforme são empurradas",
+    "why": "Um subject é uma transmissão quente sem noção de demanda; uma consulta rápida atropelaria o gravador."
+   }
+  ]
+ },
+ "ex-157nsfkm": {
+  "prompt": "As multas do dia são calculadas por uma cadeia de observable em vez de duas list comprehensions sobre as devoluções. Quais destas coisas a cadeia faz e as comprehensions não? Marque todas as que se aplicam.",
+  "choices": [
+   {
+    "text": "Responde depois de cada valor, antes de a fonte terminar",
+    "why": "Sim. Uma lista precisa estar completa antes de a comprehension começar; a cadeia atualiza a cada devolução lida."
+   },
+   {
+    "text": "Leva cada valor por todas as etapas antes de o próximo entrar",
+    "why": "Sim. Duas comprehensions são duas passadas: todo valor pela primeira, depois todo valor pela segunda."
+   },
+   {
+    "text": "É movida pela ponta da fonte, por quem empurra",
+    "why": "Sim. Uma comprehension, como uma cadeia de geradores, é movida por quem percorre; um observable é movido pela fonte."
+   },
+   {
+    "text": "Roda cada operador numa thread própria",
+    "why": "Todo produtor da lição roda dentro de subscribe, na thread de quem chama. Empurrar não implica thread."
+   },
+   {
+    "text": "Guarda todo resultado intermediário numa lista para depois",
+    "why": "Isso é o que as comprehensions fazem. A cadeia passa cada valor adiante como uma chamada aninhada e não guarda lista."
+   }
+  ]
+ },
+ "ex-g5hzgb5b": {
+  "prompt": "Um balcão manda ao ator da estante uma mensagem com uma lista comum de títulos, e depois acrescenta mais um título a essa lista enquanto a mensagem ainda espera na caixa de correio. O que o balcão fez?",
+  "choices": [
+   {
+    "text": "Nada de errado, já que tell já retornou",
+    "why": "tell retornar só significa que a mensagem está na fila. O ator não a leu, e a lista que ele vai ler é a que o balcão está mudando."
+   },
+   {
+    "text": "Voltou a compartilhar estado com o ator, pela porta dos fundos",
+    "why": "Isso. Mensagens precisam ser valores: uma tupla ou uma dataclass congelada não pode mudar depois de enviada."
+   },
+   {
+    "text": "Mandou duas mensagens, uma por versão da lista",
+    "why": "Um put, uma mensagem. A fila guarda uma referência à mesma lista, não uma cópia dela."
+   },
+   {
+    "text": "Causou um erro, porque queue.Queue recusa listas",
+    "why": "Uma fila de threads aceita qualquer objeto. Recusar o que não pode ser copiado é o que uma fronteira de processo faz, como location.py mostrou com um lock."
+   }
+  ]
+ },
+ "ex-j8ryfj47": {
+  "prompt": "A thread principal manda à estante GiveBack(\"Iracema\") e depois, da mesma thread, pergunta Available(\"Iracema\"). A resposta com certeza conta o exemplar devolvido?",
+  "choices": [
+   {
+    "text": "Sim: de um mesmo remetente a caixa de correio é primeiro a entrar, primeiro a sair",
+    "why": "Isso. A pergunta entra atrás do tell da mesma thread, então é tratada depois dele. \"Tell e depois ask\" é seguro."
+   },
+   {
+    "text": "Não: o modelo de atores não promete ordem nenhuma",
+    "why": "O modelo não promete nada entre dois remetentes. De um mesmo remetente, a ordem é mantida."
+   },
+   {
+    "text": "Só se a pergunta tiver um timeout longo o bastante",
+    "why": "O timeout limita a espera; não decide o que a resposta conta. Quem decide é a ordem da fila."
+   },
+   {
+    "text": "Não, a menos que GiveBack também seja mandado com ask e a resposta dele seja esperada antes",
+    "why": "Esperar a primeira resposta também funcionaria, e custa uma thread bloqueada. Não é preciso aqui, porque as mensagens de um remetente ficam em ordem."
+   }
+  ]
+ },
+ "ex-3x46a6x8": {
+  "prompt": "Os dois filhos de um supervisor, um leitor de código de barras e um decodificador, compartilham uma sessão que só faz sentido quando os dois começam juntos. Quando um falha, que estratégia do OTP serve?",
+  "choices": [
+   {
+    "text": "One for one: reiniciar só o filho que falhou",
+    "why": "Reiniciar só o filho que falhou deixaria o outro com metade de uma sessão que já não existe."
+   },
+   {
+    "text": "One for all: reiniciar os dois juntos",
+    "why": "Isso. Filhos que não funcionam um sem o outro são reiniciados juntos quando qualquer um falha."
+   },
+   {
+    "text": "Nenhum reinício, para manter o estado ruim e depurar",
+    "why": "Deixar quebrar significa recomeçar de um estado bom conhecido. Manter o estado quebrado rodando é o que a supervisão existe para evitar."
+   },
+   {
+    "text": "Reiniciar para sempre até a sessão voltar",
+    "why": "Reinícios são contados numa janela e depois escalam; um supervisor que nunca para gira em cima de uma mensagem que derruba todo filho novo."
+   }
+  ]
+ },
+ "ex-we23vhap": {
+  "prompt": "Uma mensagem malformada chega a um ator supervisionado e o derruba. O supervisor o reinicia sem limite nenhum. O que acontece?",
+  "choices": [
+   {
+    "text": "O reinício limpa a mensagem e o trabalho segue",
+    "why": "Nada numa instância nova torna inofensiva a mesma entrada. Se a mensagem for oferecida de novo, derruba de novo."
+   },
+   {
+    "text": "O ator novo recupera o estado que o antigo tinha",
+    "why": "Estado novo é estado esquecido; um reinício parte do catálogo, ou do que foi gravado fora do ator."
+   },
+   {
+    "text": "Se ela continuar chegando, o ciclo de queda e volta nunca termina",
+    "why": "Isso. Por isso supervisores contam reinícios numa janela e, passado o limite, desistem e passam o problema para cima na árvore."
+   },
+   {
+    "text": "O ator captura o erro na próxima tentativa, depois de aprender com a queda",
+    "why": "Uma instância nova não sabe nada da anterior, inclusive de como ela falhou."
+   }
+  ]
+ },
+ "ex-53xxn2q2": {
+  "prompt": "Associe cada situação ao que a lição 17 diz para usar.",
+  "pairs": [
+   {
+    "left": "um handler web, que não é ator, precisa da contagem agora",
+    "right": "ask, com timeout"
+   },
+   {
+    "left": "um ator quer que outro empreste um livro e saber como foi",
+    "right": "tell, com um endereço de resposta na mensagem"
+   },
+   {
+    "left": "GiveBack chega duas vezes depois de uma nova tentativa pela rede",
+    "right": "um tratador idempotente"
+   },
+   {
+    "left": "estado que precisa sobreviver ao reinício do ator",
+    "right": "um banco de dados ou um log de eventos fora do ator"
+   }
+  ]
+ },
+ "ex-vffdssdt": {
+  "prompt": "Um servidor asyncio numa máquina de um núcleo tem 2.000 conexões em andamento, esperando nos seus sockets. Nas palavras da lição 18, ele é concorrente, paralelo, ou os dois?",
+  "choices": [
+   {
+    "text": "Concorrente, não paralelo",
+    "why": "Isso. Muitas tarefas estão em andamento ao mesmo tempo, e nenhuma dupla de instruções roda no mesmo instante numa thread e num núcleo."
+   },
+   {
+    "text": "Paralelo, porque 2.000 conexões são atendidas ao mesmo tempo",
+    "why": "\"Ao mesmo tempo\" aqui quer dizer em andamento juntas. Paralelismo exige duas instruções executando no mesmo instante, o que um núcleo não faz."
+   },
+   {
+    "text": "Os dois, já que asyncio conta como paralelo quando espera",
+    "why": "Sobrepor esperas é concorrência. As esperas se sobrepõem porque ninguém está calculando durante elas."
+   },
+   {
+    "text": "Nenhum dos dois, já que há uma só thread",
+    "why": "Uma só thread pode ser concorrente: é para isso que servem as trocas do asyncio a cada await."
+   }
+  ]
+ },
+ "ex-2njvtcj2": {
+  "prompt": "As regras de multa mudam de 50 centavos por dia sem carência para 100 centavos com 2 dias de carência, guardadas num dicionário mutável. Desta vez a carência é escrita primeiro. Um leitor chega entre as duas escritas, vê carência 2 e o preço antigo, e calcula a multa de 5 dias de atraso. Quantos centavos?",
+  "unit": "centavos"
+ },
+ "ex-nw1a8dhv": {
+  "prompt": "get_pool() cria um pool de conexões sob demanda, com verificar-e-criar, e oito threads de requisição a chamam na partida. O que a lição 18 chama de correção mais simples?",
+  "choices": [
+   {
+    "text": "Double-checked locking em volta da criação",
+    "why": "Funciona em Python, e a lição mostra. É uma afirmação sobre um modelo de memória, e não a mais simples das correções."
+   },
+   {
+    "text": "Criar o pool antes de existir qualquer thread",
+    "why": "Isso. No nível do módulo ou na raiz de composição, ele é construído uma vez, sob o lock de import ou antes de as threads começarem, e não há corrida a vencer."
+   },
+   {
+    "text": "Conferir _instance duas vezes, sem lock no meio",
+    "why": "Duas verificações sem lock são duas janelas. As oito threads ainda podem passar pelas duas antes de qualquer uma atribuir."
+   },
+   {
+    "text": "Usar um RLock em vez de um Lock",
+    "why": "Não havia lock nenhum. Um RLock só deixa uma thread pegá-lo duas vezes, e esse não é o problema aqui."
+   }
+  ]
+ },
+ "ex-3ta698n6": {
+  "prompt": "O publish de um subject segura um threading.Lock comum durante todo o laço sobre os ouvintes. Um ouvinte, quando chamado, inscreve outro ouvinte. O que acontece?",
+  "choices": [
+   {
+    "text": "O novo ouvinte recebe este mesmo evento, já que a lista cresceu no meio do percurso",
+    "why": "A lista nunca cresce: subscribe não consegue o lock para acrescentar."
+   },
+   {
+    "text": "O Python levanta RuntimeError: list changed size during iteration",
+    "why": "Uma lista não levanta esse erro, e de qualquer modo nenhum append acontece: subscribe fica preso esperando."
+   },
+   {
+    "text": "A thread trava contra si mesma",
+    "why": "Isso. subscribe pede o lock que a própria thread já segura dentro de publish. Copie sob o lock e chame fora dele."
+   },
+   {
+    "text": "A inscrição espera publish terminar, e então dá certo",
+    "why": "publish não termina: está esperando o ouvinte retornar, e o ouvinte espera o lock que publish segura."
+   }
+  ]
+ },
+ "ex-ab946jx6": {
+  "prompt": "As regras são um FineRules congelado, publicado trocando uma referência. Dois administradores, no mesmo instante, leem cada um as regras atuais, somam um dia de carência e publicam o resultado. Qual é o resultado?",
+  "choices": [
+   {
+    "text": "Dois dias a mais de carência, porque objetos congelados não sofrem corrida",
+    "why": "Os objetos são seguros; o ler-modificar-escrever em volta deles não é. Os dois leram as mesmas regras antigas."
+   },
+   {
+    "text": "Um dia a mais: uma atualização se perde, como em race.py",
+    "why": "Isso. Leitores não precisam de nada, e escritores ainda precisam se revezar ou ter um dono único."
+   },
+   {
+    "text": "Um FrozenInstanceError para o segundo escritor",
+    "why": "Nenhum escritor muda um campo. Cada um constrói um objeto novo e atribui uma referência, o que é permitido."
+   },
+   {
+    "text": "Uma leitura rasgada: carência de um, preço do outro",
+    "why": "Cada objeto publicado é inteiro, então nenhum leitor vê metade de cada. O que se perde é uma atualização inteira."
+   }
+  ]
+ },
+ "ex-zjzpcykr": {
+  "prompt": "A lição 18 diz que uma corrida precisa de três coisas juntas. Quais são? Marque todas as que se aplicam.",
+  "choices": [
+   {
+    "text": "Estado compartilhado entre threads",
+    "why": "Sim. Dados confinados a um dono não sofrem corrida."
+   },
+   {
+    "text": "Pelo menos uma thread que o escreve",
+    "why": "Sim. Qualquer número de leitores de um valor que não muda dispensa lock."
+   },
+   {
+    "text": "Uma operação que pode ser interrompida no meio",
+    "why": "Sim. Ler-modificar-escrever e verificar-e-agir são as formas comuns."
+   },
+   {
+    "text": "Mais de um núcleo de processador",
+    "why": "race.py perdeu três quartos das atualizações na versão comum, em que uma thread de cada vez roda bytecode. Intercalar já basta."
+   },
+   {
+    "text": "A versão free-threaded do Python",
+    "why": "O GIL nunca protegeu os seus dados, só os do próprio interpretador; corridas acontecem na versão comum também."
+   }
+  ]
+ },
+ "ex-z3rdtbpp": {
+  "prompt": "Em policies.py, chegam os leitores digitais. A multa deles segue a taxa diária da categoria do sócio, com teto de 2000 centavos. Qual é a menor mudança?",
+  "choices": [
+   {
+    "text": "Uma hierarquia de classes FineRule com uma subclasse EReaderRule",
+    "why": "Uma classe por regra compensa quando a regra precisa de estado ou configuração próprios. Esta é um cálculo."
+   },
+   {
+    "text": "Uma entrada nova \"ereader\" em DAILY_CENTS",
+    "why": "DAILY_CENTS é indexado pela categoria do sócio. Um leitor digital é um tipo de item, e o tipo decide a regra."
+   },
+   {
+    "text": "Só uma função e uma entrada em RULES",
+    "why": "Isso. Uma função com a mesma assinatura, devolvendo min(daily(...), 2000), e \"ereader\" apontando para ela. O registro diz exatamente isso: uma regra nova é uma função e uma entrada."
+   },
+   {
+    "text": "Um if dentro de daily para o caso do leitor digital",
+    "why": "daily nem recebe o tipo de item, e um if ali é a ramificação que o dicionário de funções substituiu."
+   }
+  ]
+ },
+ "ex-6f8vzpk2": {
+  "prompt": "ReturnDesk.check_in(code) chama a estante, depois o livro de multas, depois o mailer, nessa ordem, e não guarda nada da sua própria interface. Pela tabela da lição 19, o que ela provavelmente é?",
+  "choices": [
+   {
+    "text": "Um decorator",
+    "why": "Um decorator guarda um objeto da sua própria interface e repassa a ele. ReturnDesk guarda vários, de outras interfaces."
+   },
+   {
+    "text": "Um observer",
+    "why": "Um observer guarda uma lista de chamáveis e chama todos igualmente quando algo acontece. Aqui são três objetos diferentes chamados para trabalhos diferentes."
+   },
+   {
+    "text": "Uma facade",
+    "why": "Isso. Uma classe cujo método chama vários outros objetos em ordem, e quem chama faz uma chamada em vez de três."
+   },
+   {
+    "text": "Um adapter para o mailer",
+    "why": "Um adapter apresenta uma interface estrangeira como sua. ReturnDesk coordena três objetos e não traduz nenhum."
+   }
+  ]
+ },
+ "ex-kz7f72sv": {
+  "prompt": "Qual destes pertence ao registro de uma decisão de padrão, segundo a lição 19?",
+  "choices": [
+   {
+    "text": "Um passeio por cada classe e método que a decisão produziu",
+    "why": "O código já se descreve. O registro leva o que o código não consegue: a força, a resposta rejeitada e quando reabrir."
+   },
+   {
+    "text": "\"Reabrir se um segundo provedor de pagamento for contratado.\"",
+    "why": "Isso. A condição de reabertura é a parte mais esquecida, e diz à próxima pessoa o que observar."
+   },
+   {
+    "text": "A ata da reunião em que foi discutida",
+    "why": "A lição deixa a reunião de fora de propósito; um registro curto o bastante para ser lido é o objetivo."
+   },
+   {
+    "text": "Uma nota de que o registro será editado se a decisão mudar",
+    "why": "Um registro nunca é editado para mudar a decisão. Escreve-se um novo e o antigo passa a substituído."
+   }
+  ]
+ },
+ "ex-w639zr9q": {
+  "prompt": "Uma sócia contesta quando a multa dela foi perdoada e quem perdoou. Hoje a linha da multa só tem um indicador waived. Pelo raciocínio do caso 3 da lição 19, qual é a menor resposta sólida?",
+  "choices": [
+   {
+    "text": "Fazer event sourcing das multas, para o estado atual de cada multa ser reconstruído a partir da sua história",
+    "why": "Responde à contestação e acrescenta fold, snapshots e eventos versionados. Nada no pedido pede reconstruir estado a partir da história."
+   },
+   {
+    "text": "Acrescentar as colunas waived_by e waived_at à linha da multa",
+    "why": "Duas colunas respondem a esta contestação e perdem a primeira resposta no dia em que um perdão for corrigido."
+   },
+   {
+    "text": "Uma tabela só de acréscimo de eventos da multa, gravada na mesma transação da mudança",
+    "why": "Isso. Responde a toda pergunta de \"o que aconteceu, e quando\" e deixa o modelo da multa como está."
+   },
+   {
+    "text": "Um message broker que publica todo perdão",
+    "why": "Um broker atende ouvintes em outros processos. Aqui a força é auditoria, e um broker não guarda história para consultar."
+   }
+  ]
+ },
+ "ex-ta8zz2vt": {
+  "prompt": "Ponha as partes de um architecture decision record na ordem de Michael Nygard, como a lição 19 mostra.",
+  "items": [
+   "Título",
+   "Status",
+   "Contexto",
+   "Decisão",
+   "Consequências"
+  ],
+  "trap": "A decisão vem depois do contexto que a forçou, e as consequências, inclusive quando reabrir, fecham o registro."
+ },
+ "ex-t3ryda59": {
+  "prompt": "O código de uma padaria tem um auxiliar, round_cents(), usado pelo cálculo de imposto que pertence ao contador e pelo relatório de pesos que o depósito lê. O contador pede uma regra nova de arredondamento, e na semana seguinte o relatório do depósito sai errado. O que a lição 3 diz que aconteceu, e qual é o conserto?",
+  "choices": [
+   {
+    "text": "O auxiliar fazia duas coisas; divida-o numa função pequena por verbo",
+    "why": "\"Faça uma coisa só\" é conselho para funções, e divide por verbo. O auxiliar faz uma coisa só; o problema é que dois atores pedem mudanças nele."
+   },
+   {
+    "text": "Dois atores compartilhavam código; dê a cada um a sua função, mesmo que comecem idênticas",
+    "why": "Isso. Código que muda por motivos diferentes não é duplicata, por mais parecido que pareça, a lição de fine_days e calendar_days."
+   },
+   {
+    "text": "Nada estrutural: compartilhar estava certo, e um teste do relatório teria pegado",
+    "why": "Um teste teria percebido desta vez. O canal entre os dois departamentos continua aberto, e a próxima mudança de qualquer lado passa por ele de novo."
+   },
+   {
+    "text": "Aberto/fechado foi violado: o auxiliar devia estar fechado a edições",
+    "why": "Uma regra que muda é mudada onde ela mora; o princípio aberto/fechado não proíbe isso. O defeito é quem compartilha o auxiliar."
+   }
+  ]
+ },
+ "ex-5s8gw6zh": {
+  "prompt": "Notifier.send(member, text) é documentado como aceitando um texto de qualquer tamanho. SmsNotifier, um filho, levanta erro para qualquer texto acima de 160 caracteres. Nos termos de Liskov e Wing, o que SmsNotifier fez?",
+  "choices": [
+   {
+    "text": "Enfraqueceu uma pós-condição",
+    "why": "Uma pós-condição é o que o método garante na saída. Aqui o filho recusa o que entra, antes de devolver qualquer coisa."
+   },
+   {
+    "text": "Nada de errado, já que a assinatura é a mesma do pai",
+    "why": "Um filho pode bater perfeitamente com a assinatura e ainda quebrar todo chamador. O que os chamadores usam é comportamento, e o pai aceitava qualquer tamanho."
+   },
+   {
+    "text": "Quebrou a regra do histórico, já que enviar muda estado",
+    "why": "A regra do histórico trata de mudanças de estado que o pai proíbe. Nada aqui muda estado de um jeito que o pai vetou; o filho recusa a entrada."
+   },
+   {
+    "text": "Fortaleceu uma pré-condição",
+    "why": "Isso. É o formato de ReferenceBook: quem chama escrito contra Notifier, mandando um texto longo, quebra num filho de que nunca ouviu falar."
+   }
+  ]
+ },
+ "ex-ct2035xr": {
+  "prompt": "O teste de contrato da lição 3 agora percorre (Book, Film, ReferenceBook, Laptop, Magazine), em que Magazine(Item) só define loan_days = 0. O que o unittest relata?",
+  "choices": [
+   {
+    "text": "Duas falhas, pelos dois filhos do mesmo dia, e um erro, pelo filho que levanta exceção",
+    "why": "Isso. Magazine devolve o mesmo dia, uma pós-condição enfraquecida como a de Laptop, e assertGreater falha. ReferenceBook levanta exceção, que o unittest conta como erro."
+   },
+   {
+    "text": "Três falhas, porque toda promessa quebrada é relatada como falha",
+    "why": "O unittest separa os dois: uma asserção que não se sustenta é falha, e uma exceção do código testado é erro."
+   },
+   {
+    "text": "Uma falha e um erro: Magazine não sobrescreve nada, então passa",
+    "why": "Laptop também não sobrescrevia nada. Definir loan_days = 0 basta para lend devolver o próprio dia do empréstimo."
+   },
+   {
+    "text": "O primeiro problema, já que o teste para nele",
+    "why": "subTest roda o corpo uma vez por classe e relata cada problema separadamente, e é por isso que a lição o usou."
+   }
+  ]
+ },
+ "ex-nq8f1krv": {
+  "prompt": "Num programa de desenho, Rectangle é uma dataclass congelada com width, height e area(), e não há setters: um tamanho diferente significa um objeto novo. Square(Rectangle) deixa os dois lados iguais. Pela lição 3, Square é uma falha de substituição?",
+  "choices": [
+   {
+    "text": "Sim: em código um quadrado não é um retângulo",
+    "why": "O retângulo mutável era o problema, porque prometia que um lado se move sozinho. Tire os setters e a promessa vai junto."
+   },
+   {
+    "text": "Não: sem nada para alterar, não sobra promessa do pai para quebrar",
+    "why": "Isso. A lição diz com todas as letras: se Rectangle não tivesse setters, um quadrado não quebraria nada."
+   },
+   {
+    "text": "Sim, a mesma falha de shapes.py, só percebida mais tarde",
+    "why": "shapes.py falhou quando widen alterou a largura e a altura se mexeu. Uma classe congelada não tem largura a alterar, e essa chamada nem pode ser escrita."
+   },
+   {
+    "text": "Só se Square sobrescrever area()",
+    "why": "Uma sobrescrita que ainda devolve largura vezes altura mantém a promessa do pai. Sobrescrever não quebra a substituição; mudar o comportamento, sim."
+   }
+  ]
+ },
+ "ex-0qe401aa": {
+  "prompt": "Um colega de Java diz: \"ReceiptPrinter implementa Printer e o build está verde, então satisfaz Liskov.\" O que a lição 3 responde?",
+  "choices": [
+   {
+    "text": "Ele tem razão: ao contrário de Python, o compilador de Java confere no build que toda implementação pode substituir a sua interface",
+    "why": "O compilador de Java confere que os métodos têm as assinaturas certas. Não sabe nada do que eles aceitam ou prometem."
+   },
+   {
+    "text": "Ele tem razão desde que nenhum método lance exceção",
+    "why": "Laptop não lançava nada e ainda assim quebrava a promessa, em silêncio, devolvendo o mesmo dia. As violações silenciosas são as perigosas."
+   },
+   {
+    "text": "O build confere só assinaturas; o comportamento é conferido por pessoas e por testes como um teste de contrato",
+    "why": "Isso. Nas quatro linguagens a conferência cabe a pessoas e testes, e um teste de contrato rodado contra toda implementação é a ferramenta."
+   },
+   {
+    "text": "Liskov não se aplica: trata de subclasses, e Printer é uma interface",
+    "why": "O princípio trata de qualquer tipo pai contra o qual um chamador é escrito. Uma interface é exatamente esse tipo, como as de Go e TypeScript."
+   }
+  ]
+ },
+ "ex-axa96cmc": {
+  "prompt": "A classe Agenda de uma clínica tem book(), cancel() e export_month(). A tela da recepção chama book e cancel; o job do relatório mensal chama export_month. Todo cliente é tipado contra Agenda. O que a segregação de interfaces sugere?",
+  "choices": [
+   {
+    "text": "Dois protocolos, um para cada tipo de cliente",
+    "why": "Isso. Um papel é o conjunto de métodos que um tipo de cliente usa. Agenda pode continuar uma classe só e satisfazer os dois."
+   },
+   {
+    "text": "Três protocolos, um por método, já que menor é melhor",
+    "why": "Tamanho não é a medida. book e cancel são chamados pelo mesmo cliente e mudam juntos, e separá-los dá dois nomes a uma necessidade só."
+   },
+   {
+    "text": "Nada: uma interface de três métodos já é pequena o bastante",
+    "why": "Uma interface de dois métodos pode ser gorda quando metade dos clientes usa um e metade o outro. O job do relatório ainda depende do agendamento."
+   },
+   {
+    "text": "Dividir Agenda em duas classes, cada uma com parte dos dados",
+    "why": "A segregação de interfaces divide as declarações, não a classe. Se os dados devem se dividir é uma pergunta de responsabilidade única."
+   }
+  ]
+ },
+ "ex-rkp73cp3": {
+  "prompt": "Uma clínica envia lembretes de consulta. reminders.py guarda as regras; gateway.py conversa com uma empresa de mensagens. Qual arranjo tem a dependência invertida?",
+  "choices": [
+   {
+    "text": "reminders.py importa GatewayClient de gateway.py e recebe um no construtor",
+    "why": "Isso é injeção, e as regras ainda importam o detalhe. A lição 4 é explícita: dá para injetar uma classe concreta e não inverter nada."
+   },
+   {
+    "text": "reminders.py declara o protocolo de que precisa; gateway.py o importa de lá",
+    "why": "Isso. A abstração pertence às regras, e a seta do import vai do detalhe para a política, como o grep mostrou para adapters.py."
+   },
+   {
+    "text": "gateway.py declara uma interface IGateway ao lado da sua classe, e reminders.py importa essa interface",
+    "why": "Uma interface que mora com o detalhe e o espelha deixa as regras dependendo do pacote do gateway. Quem é dono dela decide."
+   },
+   {
+    "text": "Cada arquivo importa o outro, para qualquer lado poder mudar",
+    "why": "Duas setas nos dois sentidos é um ciclo: cada lado quebra quando o outro muda, o oposto do que o princípio compra."
+   }
+  ]
+ },
+ "ex-8dd9b9jr": {
+  "prompt": "Revisão de um projeto novo. Quais destes são sinais, pela lição 4, de que uma costura é especulativa? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Um IRoomRepository cuja única implementação é RoomRepositoryImpl, e nenhum dublê de teste o usa",
+    "why": "Sim. Uma implementação, nenhum dublê, e um nome terminado em Impl: a abstração não separa nada de nada."
+   },
+   {
+    "text": "Uma NotifierFactory cujo create() sempre devolve um EmailNotifier",
+    "why": "Sim. Uma fábrica que sempre constrói a mesma coisa está na lista da lição: é um salto sem decisão nenhuma."
+   },
+   {
+    "text": "Mudar a taxa diária exige edições em quatro arquivos",
+    "why": "Sim. Uma mudança que devia ser uma linha espalhada por quatro arquivos é o custo das costuras que ninguém usa, medido."
+   },
+   {
+    "text": "Um protocolo Notifier cujo dublê de gravação é usado pelos testes das regras",
+    "why": "Esta costura é usada: os testes rodam as regras sem nada por trás, que é a mudança para a qual dip-in-code a construiu."
+   },
+   {
+    "text": "Um protocolo de plug-in numa biblioteca publicada, para usuários que os autores nunca verão",
+    "why": "A lição cita esta exceção: uma biblioteca publicada não conhece os seus usuários, e um ponto de extensão ali responde a uma força real."
+   }
+  ]
+ },
+ "ex-c359ttae": {
+  "prompt": "A multa ainda é plain.py: uma constante e uma função. Pela lição 4, qual acontecimento justifica transformá-la num protocolo FinePolicy?",
+  "choices": [
+   {
+    "text": "A equipe adota SOLID como checklist de revisão de código",
+    "why": "Um princípio é uma pergunta a fazer quando a mudança dói, não uma lista para marcar. Um checklist produz overdone.py."
+   },
+   {
+    "text": "O arquivo passa de trinta linhas",
+    "why": "Tamanho não é uma força. Um arquivo mais longo com uma regra só ainda tem um único caso para um protocolo separar."
+   },
+   {
+    "text": "Um revisor teme que os 50 centavos mudem algum dia",
+    "why": "Uma taxa nova é a edição de uma constante. Uma costura \"para o caso de precisarmos depois\", sem caso à vista, está na lista das especulativas."
+   },
+   {
+    "text": "Estudantes ganham dias de carência e adultos não",
+    "why": "Isso. Agora existem duas regras, e a costura chega com a mudança que a justifica, com o nome dessa mudança."
+   }
+  ]
+ },
+ "ex-xbhs3yqk": {
+  "prompt": "O próprio módulo das regras declara ISmtpClient(Protocol) com send_mail(host, address, subject, body), e o adaptador SMTP o importa de lá. A biblioteca passa todo aviso para SMS. O que precisa mudar?",
+  "choices": [
+   {
+    "text": "O protocolo e toda regra que o chama, pois tem o nome de um detalhe",
+    "why": "Isso. Uma abstração com o nome do detalhe é o detalhe com um I na frente. Um Notifier com notify(member, text) é o que as regras querem."
+   },
+   {
+    "text": "Nada nas regras: o protocolo está no módulo delas, então a inversão está completa",
+    "why": "Ser dono do protocolo é metade. Um host, um assunto e um endereço de e-mail são palavras do e-mail, e um SMS não tem nenhuma delas."
+   },
+   {
+    "text": "Só main.py, como na seção dip-in-code",
+    "why": "Isso valia lá porque a porta dizia notify(member, text). Aqui uma classe de SMS não cabe em send_mail sem fingir."
+   },
+   {
+    "text": "As regras precisam importar o gateway de SMS, já que um protocolo não cobre duas tecnologias",
+    "why": "O Notifier da lição cobria e-mail e SMS com um método. Um protocolo nas palavras das regras serve para qualquer tecnologia."
+   }
+  ]
+ },
+ "ex-z43w3qsw": {
+  "prompt": "O relatório mensal recebe um objeto com os mesmos métodos do Ledger. As leituras dele vão direto ao ledger real, e o seu record() levanta PermissionError. Que padrão é esse?",
+  "choices": [
+   {
+    "text": "Um decorator, já que muda o que record() faz",
+    "why": "Estruturalmente são iguais; a intenção difere. Um decorator acrescenta comportamento no caminho, e este decide se uma chamada passa."
+   },
+   {
+    "text": "Um adapter, porque fica entre o relatório e o ledger",
+    "why": "Um adapter faz uma interface parecer outra. Este invólucro tem exatamente a interface do ledger; nada é traduzido."
+   },
+   {
+    "text": "Um proxy de proteção",
+    "why": "Isso. Mesma interface, guarda o objeto real, e confere a permissão antes de repassar: o ledger somente leitura que a lição descreve."
+   },
+   {
+    "text": "Uma facade sobre os métodos do ledger",
+    "why": "Uma facade põe uma interface mais simples na frente de vários objetos. Este embrulha um objeto só e mantém a interface inteira."
+   }
+  ]
+ },
+ "ex-qr6jzyme": {
+  "prompt": "Um Parcel guarda dois objetos atrás de interfaces. Quando parcel.deliver() roda, o objeto InTransit define parcel.stage = Delivered(). Uma tela de administração pode definir parcel.pricing = ExpressPricing() a qualquer momento. Que padrão é cada um?",
+  "choices": [
+   {
+    "text": "stage é strategy e pricing é state",
+    "why": "É o teste certo aplicado ao contrário. O objeto que se substitui pelas chamadas que atende é o state."
+   },
+   {
+    "text": "Os dois são strategies, já que os dois ficam atrás de uma interface e o pacote delega a cada um deles",
+    "why": "Os dois padrões são um contexto delegando a um objeto atrás de uma interface. O formato não os distingue; quem troca o objeto, sim."
+   },
+   {
+    "text": "stage é state, trocado pelas próprias chamadas; pricing é strategy, escolhido de fora",
+    "why": "Isso. Como Copy, o pacote nunca tem o estágio definido por quem chama; como WaitingList, o preço fica até alguém trocá-lo."
+   },
+   {
+    "text": "Os dois são states, já que os dois mudam em tempo de execução",
+    "why": "Uma strategy também pode mudar em tempo de execução, como waiting.ordering mudou. O que importa é que o admin troca pricing, não o próprio pricing."
+   }
+  ]
+ },
+ "ex-t7wnwg8w": {
+  "prompt": "Halved é um decorator cujo fine(days) devolve self._inner.fine(days) // 2. Com as classes de decorator.py, quanto Halved(Capped(DailyFine(50), cap=600)).fine(30) devolve, em centavos?",
+  "unit": "centavos"
+ },
+ "ex-86w7avtc": {
+  "prompt": "Uma tela de detalhe do empréstimo se inscreve no ReturnsDesk toda vez que abre e nunca cancela a inscrição. À noite o balcão demora mais em cada devolução e a memória não para de crescer. Que custo do observer é esse?",
+  "choices": [
+   {
+    "text": "Um ouvinte levantou exceção e interrompeu o laço",
+    "why": "Essa falha pula os ouvintes depois dele. Aqui todo ouvinte roda, e há mais deles a cada hora."
+   },
+   {
+    "text": "Código que depende da ordem de notificação",
+    "why": "A ordem é um risco real do observer, mas muda qual ouvinte roda primeiro. Não faz a lista crescer."
+   },
+   {
+    "text": "A cópia da lista que give_back faz antes do laço",
+    "why": "A cópia dura uma devolução e depois é descartada. Ela deixa um ouvinte cancelar a inscrição enquanto é avisado; não é o que se acumula."
+   },
+   {
+    "text": "O ouvinte esquecido: toda tela já aberta é mantida viva pelo balcão",
+    "why": "Isso. Um ouvinte que nunca cancela a inscrição vive tanto quanto o sujeito, e o balcão agora avisa toda tela que já foi aberta."
+   }
+  ]
+ },
+ "ex-1h6x65vv": {
+  "prompt": "Python tem funções de primeira classe, geradores e @. Quais destes ainda precisam de classes próprias, pela lição 6? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Um adapter em volta de um cliente de pagamento cujos nomes e dados diferem dos nossos",
+    "why": "Sim. Adapter trata de onde fica uma fronteira, não de um recurso que falta, e parece quase igual em toda linguagem."
+   },
+   {
+    "text": "Um decorator de um objeto de política de multa que tem fine() e describe()",
+    "why": "Sim. O @ embrulha uma função só. Um objeto com vários métodos a repassar precisa de uma classe que tenha todos."
+   },
+   {
+    "text": "As situações de um exemplar, cada uma com o seu lend, give_back e reserve",
+    "why": "Sim. State divide responsabilidades, e quando cada estado tem comportamento real próprio as classes ficam."
+   },
+   {
+    "text": "Uma strategy que é uma regra de ordenação sem configurações",
+    "why": "Uma strategy de um método é uma função vestida de classe. sorted com key já a recebe."
+   },
+   {
+    "text": "Os ouvintes avisados depois que um livro é devolvido",
+    "why": "Uma lista de chamáveis resolve: toda função com os argumentos certos é um ouvinte, como vanish.py mostrou."
+   }
+  ]
+ },
+ "ex-aez8rhst": {
+  "prompt": "Com o Desk de command.py, o balcão roda Lend(Torto Arado, Bia), Return(Torto Arado), Lend(Torto Arado, Caio) e Lend(Iracema, Duda). Depois undo_last é chamado quatro vezes. Ponha os comandos na ordem em que são desfeitos.",
+  "items": [
+   "emprestar Iracema a Duda",
+   "emprestar Torto Arado a Caio",
+   "devolver Torto Arado",
+   "emprestar Torto Arado a Bia"
+  ],
+  "trap": "history é uma lista usada como pilha: desfazer tira o último comando primeiro. Desfazer na ordem em que rodaram desfaria o empréstimo de Bia com o livro nas mãos de Caio, um estado em que a estante nunca esteve."
+ },
+ "ex-4mkr9pyk": {
+  "prompt": "Uma escola de idiomas é escolhida pelos alunos pelo jeito como os coloca em níveis, regras que os professores discutem e reajustam todo semestre. Ela também tem pagamentos com cartão, login e uma grade de salas. Qual subdomínio é o núcleo?",
+  "choices": [
+   {
+    "text": "Pagamentos com cartão, porque a escola vive do dinheiro",
+    "why": "Pagamentos são genéricos: toda organização os tem e especialistas fazem melhor. Genérico quer dizer o núcleo de outra pessoa."
+   },
+   {
+    "text": "A grade de salas, o maior módulo",
+    "why": "Tamanho não decide. Uma grade é necessária e ninguém vende a desta escola, o que a torna de suporte: construa de forma simples."
+   },
+   {
+    "text": "O nivelamento",
+    "why": "Isso. É onde a escola difere de todas as outras e onde o seu pessoal discute as regras. O núcleo é pequeno, e definido pela diferença."
+   },
+   {
+    "text": "O login, já que todo usuário passa por ele",
+    "why": "Todos passarem por ele o torna importante, não distintivo. Login é genérico, um serviço a usar com um pouco de cola."
+   }
+  ]
+ },
+ "ex-gqakp5t4": {
+  "prompt": "A equipe de eventos da biblioteca é dona do calendário que o empréstimo lê para mostrar os horários. Antes de cada mudança na forma de uma entrada do calendário, a equipe de eventos pergunta ao empréstimo o que a tela do balcão precisa. Que relação é essa no mapa de contextos?",
+  "choices": [
+   {
+    "text": "Cliente/fornecedor, com eventos no upstream",
+    "why": "Isso. O upstream planeja para as necessidades do downstream, como o catálogo faz para o empréstimo no mapa da biblioteca."
+   },
+   {
+    "text": "Conformista, porque o empréstimo depende do calendário",
+    "why": "Depender é o que todo downstream faz. Um conformista adota o modelo do upstream como ele é, sem voz, e aqui o empréstimo é consultado."
+   },
+   {
+    "text": "Um núcleo compartilhado pelas duas equipes",
+    "why": "Um núcleo compartilhado é um pedaço pequeno de modelo dos dois, mudado por acordo. O calendário pertence só a eventos."
+   },
+   {
+    "text": "Uma parceria, já que as duas equipes conversam antes de fazer mudanças",
+    "why": "Uma parceria são duas equipes que planejam as entregas juntas e têm sucesso ou fracassam juntas. Aqui um lado consulta o outro sobre o próprio modelo."
+   }
+  ]
+ },
+ "ex-61jyrjdz": {
+  "prompt": "Num mapa de contextos, o contexto do qual os outros dependem, cujas mudanças descem até eles, é chamado de ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "upstream",
+     "o upstream"
+    ]
+   }
+  ]
+ },
+ "ex-07qdn5f7": {
+  "prompt": "Uma clínica tem uma classe Patient só. O faturamento acrescentou insurance_plan, os médicos acrescentaram allergies, e a recepção acrescentou preferred_slot. Agora toda mudança que o faturamento pede precisa de revisão da equipe dos médicos. O que a lição 11 recomenda?",
+  "choices": [
+   {
+    "text": "Manter um Patient só e tornar todo campo opcional, para nenhuma equipe ficar bloqueada pela outra",
+    "why": "Campos opcionais são como o modelo corporativo único cresce: metade deles None em qualquer uso, e ninguém sabe ao certo o que é um Patient."
+   },
+   {
+    "text": "Um Patient por contexto, cada um só com o que o seu pessoal entende, ligados pelo id do paciente",
+    "why": "Isso. Como os três livros, cada contexto guarda o seu modelo e eles se referem uns aos outros por um identificador estável, nunca compartilhando o objeto."
+   },
+   {
+    "text": "Levar o Patient inteiro para um núcleo compartilhado, mudado só por acordo",
+    "why": "Um núcleo funciona enquanto continua pequeno. Um que guarda o Patient inteiro voltou a ser o modelo corporativo único, com um comitê na frente."
+   },
+   {
+    "text": "Três serviços com três bancos, já que um contexto precisa ser um deploy próprio",
+    "why": "Um contexto delimitado é uma fronteira de significado. Num programa só ele é um pacote em que os outros não mexem; a rede é opcional."
+   }
+  ]
+ },
+ "ex-ykt7ymaf": {
+  "prompt": "Numa sessão de event storming, um desenvolvedor escreve \"Processo de cálculo de multa\" num post-it laranja. O que a facilitadora pede?",
+  "choices": [
+   {
+    "text": "Mantê-lo: post-its laranja dão nome aos processos que o código terá",
+    "why": "Um nome de processo já é um projeto. Post-its laranja são fatos que aconteceram, que alguém na sala pode confirmar ou negar."
+   },
+   {
+    "text": "Passá-lo para um post-it azul, já que comandos têm nome de processo",
+    "why": "Post-its azuis são comandos que alguém pediu, como \"Renovar empréstimo\". Um processo não é pedido nem palavra de um ator."
+   },
+   {
+    "text": "Um fato no passado, como \"Multa cobrada\"",
+    "why": "Isso. O passado é a regra que faz o trabalho: \"Multa cobrada\" é um fato que qualquer um confere com o que aconteceu no balcão."
+   },
+   {
+    "text": "Torná-lo rosa, porque todo nome de processo marca um ponto quente",
+    "why": "Rosa marca uma pergunta ou uma discordância. Ninguém contestou nada aqui; o post-it só está escrito como projeto em vez de fato."
+   }
+  ]
+ },
+ "ex-dp72cs72": {
+  "prompt": "No contexto de empréstimo, qual destes deve ser um objeto de valor?",
+  "choices": [
+   {
+    "text": "O exemplar C-0107 de Vidas Secas",
+    "why": "No empréstimo, C-0107 está com Bia e C-0108 está na estante: não são intercambiáveis, então ali um exemplar é uma entidade."
+   },
+   {
+    "text": "A sócia m-014, cujo telefone acabou de mudar",
+    "why": "Todo campo de uma sócia pode mudar e ela continua a mesma sócia. É isso que uma entidade é."
+   },
+   {
+    "text": "A reserva de Bia para Torto Arado",
+    "why": "Uma reserva é feita, posta na estante, depois retirada ou vencida: é uma coisa só acompanhada por mudanças, e isso exige identidade."
+   },
+   {
+    "text": "Um prazo de retirada de 18 de maio de 2026",
+    "why": "Isso. Ninguém se importaria se fosse trocado por uma data igual; dois prazos de 18 de maio são o mesmo prazo, e uma data nova o substitui inteiro."
+   }
+  ]
+ },
+ "ex-rvwpcyph": {
+  "prompt": "Com member.py, Caio tem dois livros e um filme emprestados e não deve nada. Ele devolve o filme 21 dias atrasado, pede dois exemplares, paga 100 centavos, e depois pede mais quatro exemplares. Quantos desses seis pedidos são emprestados?",
+  "unit": "empréstimos"
+ },
+ "ex-a6jas1vy": {
+  "prompt": "O recibo de um empréstimo importa o bastante para o evento não poder se perder depois de salvar. Ponha os passos do outbox, como a lição 12 descreve, na ordem.",
+  "items": [
+   "Member.borrow registra um LoanStarted",
+   "Uma transação salva a sócia e grava o evento numa tabela de outbox",
+   "Um job separado lê os eventos ainda não enviados",
+   "O job publica cada evento e o marca como enviado"
+  ],
+  "trap": "O evento entra na mesma transação do agregado, antes de qualquer publicação. Publicar logo depois de salvar é o passo que o outbox substitui."
+ },
+ "ex-kymx6mth": {
+  "prompt": "Uma clínica é modelada com os padrões táticos da lição 12. Associe cada peça ao padrão que ela é.",
+  "pairs": [
+   {
+    "left": "Um paciente conhecido pelo número do prontuário, cujo endereço e nome podem mudar",
+    "right": "entidade"
+   },
+   {
+    "left": "Uma dose de 5 mg, igual a qualquer outra de 5 mg",
+    "right": "objeto de valor"
+   },
+   {
+    "left": "O dia de um médico, única porta para os seus horários, recusando a nona consulta",
+    "right": "raiz de agregado"
+   },
+   {
+    "left": "Uma regra que conta dias de espera contra o calendário de feriados da clínica",
+    "right": "serviço de domínio"
+   },
+   {
+    "left": "get(patient_id) e save(patient), em memória nos testes e SQLite em produção",
+    "right": "repositório"
+   }
+  ]
+ },
+ "ex-pzrhfytv": {
+  "prompt": "A contagem de exemplares disponíveis de um título no catálogo é um agregado próprio, atualizado por um handler de LoanStarted, e pode atrasar um minuto em relação ao empréstimo. Um desenvolvedor propõe mudar a contagem na mesma transação de todo Copy. O que a lição 12 diz?",
+  "choices": [
+   {
+    "text": "Faça: uma regra que envolve dois agregados precisa valer a cada instante, e uma transação tem de cobrir os dois",
+    "why": "Envolver duas coisas não torna uma regra instantânea. É preciso perguntar ao negócio, e aqui ninguém precisa que os dois concordem no mesmo milissegundo."
+   },
+   {
+    "text": "Manter o handler: é uma regra de \"logo\", e um atraso curto que um job repara serve",
+    "why": "Isso. A lição cita essa mesma contagem como regra de \"logo\". Um agregado por transação mantém cada trava curta, e o evento leva a mudança."
+   },
+   {
+    "text": "Pôr todo Copy dentro do agregado do título para a contagem estar sempre certa",
+    "why": "Isso faz um agregado grande travado a cada empréstimo de qualquer exemplar, e emprestar um exemplar exigiria achá-lo dentro do título."
+   },
+   {
+    "text": "Fazer Copy guardar o objeto do catálogo e atualizá-lo diretamente",
+    "why": "Agregados se referem uns aos outros por id. Guardar o objeto deixa o código mudá-lo fora da própria raiz e da própria transação, a segunda porta."
+   }
+  ]
+ },
+ "ex-5r0z51qg": {
+  "prompt": "Uma clínica divide o seu sistema de agendamento com CQRS. A tela de horários livres lê um índice de busca que um worker atualiza alguns segundos depois de cada agendamento. Para economizar código, o handler de BookSlot pergunta a esse mesmo índice se o horário está livre antes de agendar. O que a lição 8 diz disso?",
+  "choices": [
+   {
+    "text": "Está certo, já que o índice é reconstruído dos mesmos eventos e por isso concorda com o modelo de escrita",
+    "why": "Ele concorda no fim, não no momento em que o handler pergunta. Dois agendamentos com um segundo de diferença leem o horário como livre."
+   },
+   {
+    "text": "O atraso virou um bug de correção: a regra deve conferir o próprio modelo de escrita",
+    "why": "Isso. Uma tela desatualizada custa uma ida à toa; uma regra desatualizada agenda o mesmo horário duas vezes. A lição diz que nenhuma regra lê um modelo de leitura."
+   },
+   {
+    "text": "Só a tela é afetada; o handler vê os mesmos dados que o paciente vê",
+    "why": "Isso é o problema, não um consolo: o paciente pode ver uma resposta velha, e agora a regra que decide também vê."
+   },
+   {
+    "text": "Projetar de forma síncrona para todas as telas, e o atalho fica seguro",
+    "why": "Fecharia esta janela e amarraria todo agendamento ao modelo de leitura mais lento. O conserto é mais barato: o handler confere a regra no próprio modelo."
+   }
+  ]
+ },
+ "ex-638x618d": {
+  "prompt": "Quatro métodos de uma bilheteria. Qual deles quebra a separação entre comando e consulta do jeito que a lição 8 ainda proíbe, depois das suas exceções?",
+  "choices": [
+   {
+    "text": "issue_ticket(seat), que marca o assento como vendido e devolve o número do bilhete novo",
+    "why": "Devolver um id criado pelo comando é a dobra leve que a lição permite: quem chama não teria outro jeito de saber, sem uma segunda consulta que poderia disputar."
+   },
+   {
+    "text": "change_seat(ticket, seat), que devolve o mapa inteiro de assentos",
+    "why": "Isso. Um comando que devolve uma visão do mundo faz todo chamador que quer o mapa executar a mudança, a armadilha de Shelf.take."
+   },
+   {
+    "text": "claim(seat), que pega o assento se estiver livre e diz se pegou, numa chamada só",
+    "why": "Perguntar e pegar em duas chamadas deixa outra requisição pegar o assento no meio. É a exceção atômica, como o LoadOrStore de sync.Map."
+   },
+   {
+    "text": "next_in_line(), que tira a primeira pessoa da fila",
+    "why": "Tirar de uma fila está na tabela de exceções da lição: quem chama precisa do item removido, como em deque.popleft."
+   }
+  ]
+ },
+ "ex-tnkp40pg": {
+  "prompt": "O sistema de uma academia tem uma página de perfil do aluno, uma página de configurações cuja única regra é que o nome não pode ser vazio, e uma grade de aulas lida por uma tela de horários, um app do professor e uma tela de lista de espera, com leituras muito mais numerosas que as reservas. Onde a lição 8 aplicaria CQRS?",
+  "choices": [
+   {
+    "text": "Em tudo, para o sistema inteiro seguir uma arquitetura só",
+    "why": "Os próprios defensores alertam contra ela como arquitetura do todo: cada parte dividida paga eventos, projetores e atraso, precisando ou não."
+   },
+   {
+    "text": "A página de perfil, porque é a tela que os alunos mais abrem",
+    "why": "Uma página que lê os campos que escreve tem uma forma só para os dois trabalhos. Dividi-la dobra o código e não compra nada."
+   },
+   {
+    "text": "Só a grade de aulas",
+    "why": "Isso. Várias telas querem os mesmos fatos em formas diferentes e as leituras superam as escritas: os sinais que a lição aponta. O resto é CRUD."
+   },
+   {
+    "text": "A página de configurações, já que a sua regra é a mais fácil de isolar num modelo de escrita",
+    "why": "Com uma regra tão trivial não há nada para um modelo de escrita pequeno proteger, e nada está forçado."
+   }
+  ]
+ },
+ "ex-w4a08ggk": {
+  "prompt": "A biblioteca quer uma tela nova, \"sócios com empréstimo atrasado\", num sistema construído como o da lição 8. Quais destas são verdadeiras? Escolha todas as que se aplicam.",
+  "choices": [
+   {
+    "text": "Pode ser um projetor novo sobre os eventos, sem mexer nos handlers de Lending",
+    "why": "Sim. Como \"mais emprestados do ano\", um modelo de leitura novo escuta eventos que já existem; o modelo de escrita nem sabe que ele está lá."
+   },
+   {
+    "text": "As suas linhas podem levar o nome do sócio e o título, copiados do catálogo",
+    "why": "Sim. Um modelo de leitura é dado derivado, então duplicar é justamente a ideia; seria um erro de normalização só no modelo de escrita."
+   },
+   {
+    "text": "Se o projetor tiver um bug, consertar o código e reconstruí-lo a partir dos eventos não perde nada",
+    "why": "Sim. Tudo num modelo de leitura pode ser recalculado; o lado de escrita guarda o estado que não pode."
+   },
+   {
+    "text": "O handler de LendCopy deve lê-la para recusar sócios atrasados",
+    "why": "Uma regra que lê um modelo de leitura transforma o atraso dele numa decisão errada. A conferência de atraso fica no lado de escrita, contra o que as regras guardam."
+   },
+   {
+    "text": "Ela precisa morar no mesmo banco de Lending, senão não dá para mantê-la atualizada",
+    "why": "Modelos de leitura não precisam dividir tecnologia. O projetor é o único código que conhece os eventos e o armazenamento, seja qual for."
+   }
+  ]
+ },
+ "ex-nxbmsj76": {
+  "prompt": "Uma academia faz event sourcing das entradas num stream por aluno, e depois de dez anos o stream de um aluno antigo tem dezenas de milhares de eventos e todo comando faz o fold devagar. Qual desenho da lição 9 teria tornado um snapshot desnecessário desde o começo?",
+  "choices": [
+   {
+    "text": "Arquivar todo evento com mais de um ano depois que existir um snapshot do aluno",
+    "why": "Um snapshot nunca substitui a história: projeções leem da posição 0, e um evolve corrigido precisa dos eventos antigos para refazer o fold."
+   },
+   {
+    "text": "Streams que terminam, como um por período de matrícula, para nenhum stream crescer durante anos",
+    "why": "Isso. O exemplo da lição é um stream por empréstimo, que acaba quando o livro volta. Um stream curto faz o fold rápido enquanto o sistema existir."
+   },
+   {
+    "text": "Tirar a restrição UNIQUE (stream, version), que deixa todo append lento",
+    "why": "A parte lenta é ler e fazer o fold, não o append, e essa restrição é todo o controle de concorrência do store."
+   },
+   {
+    "text": "Guardar o estado atual de cada aluno numa tabela ao lado dos eventos, atualizada no lugar",
+    "why": "Isso é uma segunda fonte de verdade que pode discordar dos eventos, justamente o que o event sourcing abandona."
+   }
+  ]
+ },
+ "ex-wr76vr01": {
+  "prompt": "Os eventos OrderPlaced de versão 1 de uma loja não têm moeda. O upcaster novo a preenche consultando o país do cliente na tabela de clientes de hoje. O que a lição 9 diz que está errado?",
+  "choices": [
+   {
+    "text": "Nada; upcasters existem para preencher o que os eventos antigos deixaram de fora",
+    "why": "Existem, a partir de algo congelado. Aqui a resposta depende de uma tabela que muda sempre, e a mesma linha é lida de jeitos diferentes ao longo dos anos."
+   },
+   {
+    "text": "Quem se mudasse de país mudaria a moeda de todos os seus pedidos",
+    "why": "Isso. Upcasters precisam ser determinísticos no evento. Use uma tabela congelada de como era, ou diga None com honestidade."
+   },
+   {
+    "text": "Devia ser uma migração que grava a moeda nas linhas guardadas uma vez",
+    "why": "Reescrever eventos guardados quebra a única promessa do store, e o gatilho recusa. Ainda congelaria a consulta errada de hoje na história."
+   },
+   {
+    "text": "Só que o campo de versão devia estar no primeiro evento",
+    "why": "É um bom conselho, e get(\"v\", 1) já lida com a ausência dele. O defeito aqui é de onde vem o fato que falta."
+   }
+  ]
+ },
+ "ex-pe69bw5v": {
+  "prompt": "Um stream tem 1.237 eventos, e snapshots são salvos a cada 500, então o mais novo está na versão 1.000. Um bug no evolve é então corrigido. Seguindo a lição 9, quantos eventos a próxima reconstrução desse stream aplica?",
+  "unit": "eventos"
+ },
+ "ex-d7p7x13d": {
+  "prompt": "Dois atendentes servem Caio ao mesmo tempo com o store da lição 9, e os dois querem emprestar-lhe um livro. Ponha o que acontece na ordem.",
+  "items": [
+   "Os dois fazem o fold do stream dele na versão 4 e decidem que ele pode emprestar",
+   "O primeiro faz o append esperando a versão 4 e grava a versão 5",
+   "O segundo também tenta gravar a versão 5 e recebe ConcurrencyError",
+   "O segundo relê o stream, agora com o primeiro empréstimo, e roda as regras de novo"
+  ],
+  "trap": "Nada fica travado enquanto decidem, então as duas decisões vêm antes de qualquer gravação. O perdedor não repete a decisão velha: refaz o fold, porque o limite de empréstimos pode recusá-lo agora."
+ },
+ "ex-am6hzfs9": {
+  "prompt": "No meio de extrair uma função de uma impressora de faturas, o teste de saída aprovada falha: uma linha agora termina em \"R$ 3,5\". O desenvolvedor copia a saída nova para approved.txt, o teste fica verde, e o commit diz \"refactor\". O que a lição 14 diz?",
+  "choices": [
+   {
+    "text": "Desfazer o passo; a falha era a rede fazendo o seu trabalho",
+    "why": "Isso. Uma refatoração não pode mudar comportamento observável, então um teste aprovado vermelho quer dizer que o passo estava errado, como o :02d esquecido."
+   },
+   {
+    "text": "É aceitável, porque testes de caracterização registram o que o código faz e o código agora faz isto",
+    "why": "Eles registram o que ele fazia antes da mudança, para qualquer mudança aparecer. Reaprovar dentro de uma refatoração tira a única conferência que havia."
+   },
+   {
+    "text": "Manter, e perguntar aos bibliotecários se R$ 3,5 é o formato certo",
+    "why": "Uma mudança de comportamento pode estar certa, mas ganha o seu próprio teste, commit e revisão. Nunca vai de carona dentro de uma refatoração."
+   },
+   {
+    "text": "Tudo bem, desde que a mensagem do commit passe a dizer \"fix\"",
+    "why": "Renomear o commit não torna a mudança intencional: ninguém decidiu que o formato devia mudar, e a extração continua misturada com ela."
+   }
+  ]
+ },
+ "ex-mskkyg4g": {
+  "prompt": "Um serviço em Go guarda multas como centavos em int64, e uma vez um bug somou um número de dias a uma multa. Que mudança a lição 14 diz que dá a maior parte da proteção com quase nenhum código?",
+  "choices": [
+   {
+    "text": "Renomear toda variável para terminar em Cents, como fineCents",
+    "why": "Um nome ainda é um comentário que o compilador ignora: fineCents + days compila tão bem quanto antes."
+   },
+   {
+    "text": "Declarar um tipo novo, type Money int64, e pôr nele os métodos do dinheiro",
+    "why": "Isso. Um tipo nomeado novo não se mistura com um int64 comum sem conversão, e pode ter métodos."
+   },
+   {
+    "text": "Um comentário ao lado de cada campo dizendo que a unidade é centavos, como DAILY_FINE = 50 tinha",
+    "why": "O comentário dava a unidade a quem lia e não impedia nada. A lição transformou esse comentário num tipo exatamente por isso."
+   },
+   {
+    "text": "Passar para float64, para reais e centavos não precisarem de conversão",
+    "why": "Um float continua um número comum que se soma a dias, e ainda traz erros de arredondamento ao dinheiro."
+   }
+  ]
+ },
+ "ex-00rt7r9k": {
+  "prompt": "No passo de refatoração de um ciclo de TDD, enquanto renomeia, uma desenvolvedora nota um caso que ninguém trata e escreve um teste falhando para ele antes de terminar a renomeação. O que a imagem dos dois chapéus de Beck diz?",
+  "choices": [
+   {
+    "text": "Boa prática: um teste escrito assim que o caso é notado é um teste que não se esquece",
+    "why": "Anotar é bom; escrever agora é o problema. Com um teste vermelho na suíte, já não dá para mostrar que a renomeação não mudou nada."
+   },
+   {
+    "text": "A refatoração precisa esperar o caso ser tratado, porque uma lacuna conhecida torna todo passo inseguro",
+    "why": "Uma lacuna que a rede não alcança é um risco a anotar e aceitar conscientemente; não impede uma renomeação que os testes cobrem."
+   },
+   {
+    "text": "Ela está com os dois ao mesmo tempo: primeiro volte ao verde, depois troque e acrescente o caso",
+    "why": "Isso. Pode-se trocar de chapéu a cada poucos minutos e nunca usar os dois juntos, senão ninguém sabe qual mudança fez o quê."
+   },
+   {
+    "text": "Testes pertencem só ao passo verde, então o caso espera a refatoração do próximo ciclo",
+    "why": "Um teste novo pertence ao chapéu do comportamento, e esse chapéu entra assim que a renomeação acaba, não um ciclo depois."
+   }
+  ]
+ },
+ "ex-w96ppv7y": {
+  "prompt": "Código de uma transportadora. Associe cada trecho ao cheiro que a lição 14 apontaria.",
+  "pairs": [
+   {
+    "left": "quote(street, city, postcode) e label(street, city, postcode), e os três nunca são passados separados",
+    "right": "aglomerado de dados"
+   },
+   {
+    "left": "cost(order) lê order.weight, order.zone e order.express e nada de seu",
+    "right": "inveja de funcionalidade"
+   },
+   {
+    "left": "cadeias de if service == \"express\" em price(), em eta() e em label()",
+    "right": "switches repetidos"
+   },
+   {
+    "left": "weight: float que é quilos num módulo e libras em outro",
+    "right": "obsessão por primitivos"
+   }
+  ]
+ },
+ "ex-r8hs0gf0": {
+  "prompt": "Uma loja põe @functools.cache em price(item), que multiplica o preço base do item por um desconto em nível de módulo que a equipe de operações muda durante uma promoção. O que a lição 15 prevê?",
+  "choices": [
+   {
+    "text": "O cache percebe que a global mudou e se limpa sozinho",
+    "why": "O cache usa os argumentos como chave e nada mais. Não tem como saber que a função leu uma global."
+   },
+   {
+    "text": "Nada muda, porque cache nunca altera as respostas de uma função",
+    "why": "Isso vale só para uma função pura. Aqui a resposta depende de mais que os argumentos, então uma resposta lembrada pode ficar velha."
+   },
+   {
+    "text": "Uma disputa entre threads, já que duas chamadas podem dividir a entrada do cache",
+    "why": "Dividir um valor lembrado não é a falha. Mesmo com uma thread só, um item com preço calculado antes da promoção fica com o preço antigo."
+   },
+   {
+    "text": "Preço antigo fica; passe o desconto como argumento",
+    "why": "Isso. functools.cache numa função impura devolve respostas velhas. Com o desconto na assinatura a função é pura e o cache fica seguro."
+   }
+  ]
+ },
+ "ex-amwm0gr1": {
+  "prompt": "send_reminders(loans) percorre os empréstimos, chama date.today() para cada um e chama smtp.send quando um está atrasado. Reorganizado como um núcleo funcional numa casca imperativa, o que o núcleo vira?",
+  "choices": [
+   {
+    "text": "Uma função dos empréstimos e de uma data que devolve os lembretes como valores",
+    "why": "Isso. O núcleo decide e não envia nada; a casca lê o relógio uma vez, chama o núcleo e envia o que ele devolveu."
+   },
+   {
+    "text": "O mesmo laço, com date.today() e smtp.send substituídos em todo teste",
+    "why": "Isso testa os efeitos fingindo-os, e a lógica continua morando ao lado deles. Tirar os efeitos para fora é o que deixa os testes sem precisar de nada."
+   },
+   {
+    "text": "Uma classe que guarda a conexão SMTP, para o envio ficar num lugar só",
+    "why": "Juntar o efeito numa classe não torna puro o código que decide: ele ainda envia enquanto decide."
+   },
+   {
+    "text": "Uma função que lê o relógio sozinha mas recebe uma função send como argumento",
+    "why": "Injetar send é o desenho honesto da lição 13 para um núcleo que precisa agir no meio, mas o relógio ainda é lido dentro, e a resposta depende do dia em que roda."
+   }
+  ]
+ },
+ "ex-qztnmbw1": {
+  "prompt": "Com per_day, capped e pipeline de hof.py, quanto pipeline(capped(300), per_day(40)) devolve para um empréstimo 10 dias atrasado, em centavos?",
+  "unit": "centavos"
+ },
+ "ex-kand6zea": {
+  "prompt": "Uma chamada a uma função pura pode ser substituída pelo seu valor em qualquer ponto do programa sem mudar o que o programa faz. O termo para isso é ___ referencial.",
+  "blanks": [
+   {
+    "accept": [
+     "transparência",
+     "transparencia",
+     "transparency"
+    ]
+   }
+  ]
+ }
+}
