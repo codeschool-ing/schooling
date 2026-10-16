@@ -918,6 +918,39 @@ def l06_asof(lang):
     return f, t['cap']
 
 
+@figure('l07-four-inputs', 7)
+def l07_four_inputs(lang):
+    t = {'en': dict(
+            label='Four inputs feed one model version: code, kept by Git; data, kept by DVC; '
+                  'settings, written in files kept by Git; and the environment, pinned by the pip '
+                  'lines. The model version produces the model file, kept by DVC, and its scores, '
+                  'kept in Git and in MLflow.',
+            ins=[('code', 'Git'), ('data', 'DVC'), ('settings', 'Git'), ('environment', 'pinned versions')],
+            ver='one model version', outs=[('the model file', 'DVC, MLflow'), ('its scores', 'Git, MLflow')],
+            cap='Leave out any of the four and the version cannot be rebuilt. The model file and '
+                'its scores are outputs, and they are versioned as well.'),
+         'pt': dict(
+            label='Quatro entradas alimentam uma versão de modelo: código, guardado pelo Git; '
+                  'dados, guardados pelo DVC; ajustes, escritos em arquivos guardados pelo Git; e o '
+                  'ambiente, fixado pelas linhas do pip. A versão produz o arquivo do modelo, '
+                  'guardado pelo DVC, e as suas notas, guardadas no Git e no MLflow.',
+            ins=[('código', 'Git'), ('dados', 'DVC'), ('ajustes', 'Git'), ('ambiente', 'versões fixadas')],
+            ver='uma versão de modelo', outs=[('o arquivo do modelo', 'DVC, MLflow'), ('as notas', 'Git, MLflow')],
+            cap='Deixe de fora qualquer uma das quatro e a versão não pode ser refeita. O arquivo do '
+                'modelo e as notas são saídas, e também são versionados.')}[lang]
+    f = Fig('l07-four-inputs', 720, 280, t['label'])
+    for i, (name, tool) in enumerate(t['ins']):
+        y = 20 + i * 62
+        box(f, 20, y, 170, 48, name, tool, mono_sub=False)
+        f.line(190, y + 24, 288, 140, stroke='--phosphor', width=1.4, arrow=True)
+    box(f, 290, 110, 160, 60, t['ver'], stroke='--amber')
+    for i, (name, tool) in enumerate(t['outs']):
+        y = 70 + i * 90
+        box(f, 530, y, 170, 52, name, tool)
+        f.line(452, 140, 528, y + 26, stroke='--phosphor', width=1.4, arrow=True)
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
