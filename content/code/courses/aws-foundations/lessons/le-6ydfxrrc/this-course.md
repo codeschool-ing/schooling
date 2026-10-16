@@ -59,9 +59,9 @@ teach the wrong thing. Four differences matter here, and the lessons that meet t
 - **It does not judge permissions unless you ask it to.** Out of the box, every call succeeds, even
   one a policy should deny. Lesson 7 turns on moto's checking, and from then on a user without
   permission is refused. What moto checks is the user's own policies, a role's trust policy and an
-  explicit deny; it does **not** check permission boundaries, service control policies or a
-  bucket's own policy, so lessons 4 and 8 teach those from AWS's documentation and say which lines
-  were not run.
+  explicit deny; it does **not** check permission boundaries, service control policies, session
+  policies or a bucket's own policy, and it treats every condition in a policy as met. Lessons 4 and
+  8 teach those from AWS's documentation and say which lines were not run.
 - **It carries no traffic.** A VPC in moto is a record with an id and a CIDR range. A security group
   stores its rules and filters nothing, because nothing flows. Lessons 16 to 24 build the network
   for real, as configuration, and reason about the packets rather than send them.
