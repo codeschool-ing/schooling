@@ -1,0 +1,592 @@
+[
+  {
+    "id": "ex-z05dm371",
+    "version": 1,
+    "section": "why-mock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these can a stand-in give a test that the real payment provider cannot?",
+    "hint": "Think of the four reasons the section gives.",
+    "choices": [
+      {
+        "text": "Proof that the provider still answers the way it did last month",
+        "correct": false,
+        "why": "That is exactly what a stand-in cannot prove: it answers what somebody wrote."
+      },
+      {
+        "text": "A decline whenever the test asks for one",
+        "correct": true,
+        "why": "Right. Failures on demand are the main reason to replace a dependency."
+      },
+      {
+        "text": "Real charges, so the money flow is tested end to end",
+        "correct": false,
+        "why": "A stand-in moves no money; avoiding real charges is one of the reasons to use it."
+      },
+      {
+        "text": "A sandbox with test cards",
+        "correct": false,
+        "why": "Sandboxes are offered by real providers, on their servers and their terms."
+      }
+    ]
+  },
+  {
+    "id": "ex-e86wzw6c",
+    "version": 1,
+    "section": "why-mock",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of test double to what it does.",
+    "hint": "One of them works; one of them can fail the test on its own.",
+    "pairs": [
+      {
+        "left": "stub",
+        "right": "answers with what it was told to answer"
+      },
+      {
+        "left": "spy",
+        "right": "answers, and records what it received for the test to read"
+      },
+      {
+        "left": "mock",
+        "right": "holds expectations and fails the test if the calls do not arrive"
+      },
+      {
+        "left": "fake",
+        "right": "a simplified implementation that really works"
+      }
+    ],
+    "right_distractors": [
+      "a copy of the provider's production database"
+    ]
+  },
+  {
+    "id": "ex-pswq7cj9",
+    "version": 1,
+    "section": "why-mock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague tests boxoffice by replacing the payment provider and also the function in boxoffice that checks the provider's status code. What is wrong with that?",
+    "hint": "Where does the line go?",
+    "choices": [
+      {
+        "text": "Nothing; the more is replaced, the faster and steadier the test",
+        "correct": false,
+        "why": "Speed is not the point once the test no longer runs the code it claims to test."
+      },
+      {
+        "text": "The provider should be the real sandbox instead",
+        "correct": false,
+        "why": "Using the sandbox or a stand-in for the provider is a separate choice; the problem is inside boxoffice."
+      },
+      {
+        "text": "That part of boxoffice is no longer tested",
+        "correct": true,
+        "why": "Right. Replace what lies outside the boundary and nothing inside it."
+      },
+      {
+        "text": "A stand-in may only replace a server, never a function",
+        "correct": false,
+        "why": "Test doubles started as objects in unit tests; the rule is about the boundary, not the kind of thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tj2zkcjj",
+    "version": 1,
+    "section": "a-stub",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An order was placed without an Idempotency-Key header. Which idempotency key did boxoffice send to the stub?",
+    "hint": "Look at GET /__requests, or at `key || id` in boxoffice's code.",
+    "choices": [
+      {
+        "text": "None; the header was left out",
+        "correct": false,
+        "why": "boxoffice always sends one; without the client's key it uses its own value."
+      },
+      {
+        "text": "A random UUID made for the charge",
+        "correct": false,
+        "why": "Nothing in boxoffice makes a UUID; the value is predictable."
+      },
+      {
+        "text": "The token's client id, ci-tests",
+        "correct": false,
+        "why": "The client id scopes the remembered replies inside boxoffice; it is not sent to the provider."
+      },
+      {
+        "text": "The order's id, ord-1001",
+        "correct": true,
+        "why": "Right. `key || id` falls back to the order id, which is also the reference."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvwfmprz",
+    "version": 1,
+    "section": "a-stub",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the stub exit at start-up when MODE is \"declined\" instead of starting in approve mode?",
+    "hint": "What would a test that expects a decline see otherwise?",
+    "choices": [
+      {
+        "text": "A typo would approve every charge, so the decline test tests nothing",
+        "correct": true,
+        "why": "Right. A silent fallback turns a typo into a green test."
+      },
+      {
+        "text": "Node cannot read environment variables after the server starts listening",
+        "correct": false,
+        "why": "Node reads them at any time; the check is placed before listen on purpose."
+      },
+      {
+        "text": "Port 8090 is reserved for the approve mode",
+        "correct": false,
+        "why": "The port does not depend on the mode."
+      },
+      {
+        "text": "boxoffice refuses to talk to a stub in an unknown mode",
+        "correct": false,
+        "why": "boxoffice never learns the stub's mode; it only sees the answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-6thfm910",
+    "version": 1,
+    "section": "a-stub",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each stub mode to the status boxoffice answers the order with.",
+    "hint": "Two of them come from lesson 13's subject, the error path.",
+    "pairs": [
+      {
+        "left": "approve",
+        "right": "201"
+      },
+      {
+        "left": "decline",
+        "right": "402"
+      },
+      {
+        "left": "down",
+        "right": "502"
+      },
+      {
+        "left": "slow",
+        "right": "504"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  {
+    "id": "ex-537bggtw",
+    "version": 1,
+    "section": "wiremock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order of six seats of sh-101 (48000 cents) matches both mapping files. Why does WireMock answer with the decline?",
+    "hint": "Look at the field the two files set differently.",
+    "choices": [
+      {
+        "text": "The decline file comes first in alphabetical order",
+        "correct": false,
+        "why": "WireMock does not choose by file name; without priorities it prefers the most recently added."
+      },
+      {
+        "text": "Its priority is 1, and the lower number wins",
+        "correct": true,
+        "why": "Right. The approve file has priority 5."
+      },
+      {
+        "text": "The approve file requires a Content-Type that boxoffice does not send",
+        "correct": false,
+        "why": "boxoffice sends application/json, which the approve file accepts."
+      },
+      {
+        "text": "WireMock always picks the mapping with the most conditions",
+        "correct": false,
+        "why": "The near-miss report even picked the one with fewer conditions as closest; priority decides between matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-bf55nwrg",
+    "version": 1,
+    "section": "wiremock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test against WireMock fails because a charge got a 404. What should you read first?",
+    "hint": "WireMock explains its own 404.",
+    "choices": [
+      {
+        "text": "boxoffice's log, which shows the 404 line",
+        "correct": false,
+        "why": "boxoffice only logs its own answer; it does not know why WireMock refused."
+      },
+      {
+        "text": "The provider's documentation, to see what its 404 status means for a charge",
+        "correct": false,
+        "why": "The real provider was never asked; the 404 came from the stand-in."
+      },
+      {
+        "text": "The body of the 404: the closest mapping and the difference",
+        "correct": true,
+        "why": "Right. The line marked <<<<< usually names the one thing to fix."
+      },
+      {
+        "text": "WireMock's start-up lines, to check the port",
+        "correct": false,
+        "why": "A wrong port gives a refused connection, not a 404 from WireMock."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct47s17d",
+    "version": 1,
+    "section": "wiremock",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the journal was emptied and boxoffice placed its two orders, what count did /__admin/requests/count give for POST /charges?",
+    "hint": "One charge per order.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5yjk653s",
+    "version": 1,
+    "section": "wiremock",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a WireMock mapping, the field that picks between two mappings that both match is called ___.",
+    "hint": "The lower number wins.",
+    "blanks": [
+      {
+        "accept": [
+          "priority"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fzxzyxgr",
+    "version": 1,
+    "section": "prism",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Prism answers GET /v1/shows/sh-999 with a show. Why?",
+    "hint": "What does the contract say, and what does it not say?",
+    "choices": [
+      {
+        "text": "boxoffice's contract lists sh-999 among its examples",
+        "correct": false,
+        "why": "The only example id is sh-103, which is what Prism sent back."
+      },
+      {
+        "text": "The contract describes what a show looks like, not which shows exist",
+        "correct": true,
+        "why": "Right. Prism builds the answer from the schema and has no list to refuse with."
+      },
+      {
+        "text": "Prism forwards the request to boxoffice on port 8080",
+        "correct": false,
+        "why": "In mock mode Prism forwards nothing; that is the proxy mode of section 06."
+      },
+      {
+        "text": "A 404 is not declared for that path",
+        "correct": false,
+        "why": "The contract does declare a 404 there; Prism still had no way to know sh-999 is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8z5tdsp",
+    "version": 1,
+    "section": "prism",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the Prism mock refuse, where the real boxoffice answered without refusing?",
+    "hint": "Two requests, and lesson 2 found both.",
+    "choices": [
+      {
+        "text": "An order with an extra field, seat_class",
+        "correct": true,
+        "why": "Right. The contract's NewOrder forbids additional properties; boxoffice created the order."
+      },
+      {
+        "text": "The list of shows with date=tomorrow",
+        "correct": true,
+        "why": "Right. Prism answered 400; boxoffice answered 200 with an empty list."
+      },
+      {
+        "text": "An order of seven seats",
+        "correct": false,
+        "why": "Both refuse seven seats with 422; there they agree."
+      },
+      {
+        "text": "A token for a client called nobody",
+        "correct": false,
+        "why": "Prism gave nobody a token; it was boxoffice that would refuse it with 401."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3zjtdfa",
+    "version": 1,
+    "section": "prism",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who gains most from a Prism mock of boxoffice?",
+    "hint": "Who calls boxoffice?",
+    "choices": [
+      {
+        "text": "boxoffice's own tester, who can stop starting the server",
+        "correct": false,
+        "why": "Testing a mock of boxoffice tests the contract's examples, not boxoffice."
+      },
+      {
+        "text": "The payment provider, which can check boxoffice's charges",
+        "correct": false,
+        "why": "The provider is on the other side; Prism here stands in for boxoffice itself."
+      },
+      {
+        "text": "A team building a client, such as the Tickets app",
+        "correct": true,
+        "why": "Right. They can work before boxoffice exists and ask for any status with Prefer."
+      },
+      {
+        "text": "The theatre's staff reading the sales report",
+        "correct": false,
+        "why": "Staff need the real numbers; Prism invents zeros."
+      }
+    ]
+  },
+  {
+    "id": "ex-j26173ys",
+    "version": 1,
+    "section": "when-the-mock-lies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A WireMock mapping answers a charge with 200, and every order through boxoffice fails with 502. Which program is wrong?",
+    "hint": "Neither program can settle it.",
+    "choices": [
+      {
+        "text": "boxoffice, because 200 means the charge worked",
+        "correct": false,
+        "why": "200 is a success code, but what this provider answers is fixed by its contract, which says 201."
+      },
+      {
+        "text": "The mapping: the provider's contract says 201",
+        "correct": true,
+        "why": "Right. Who is right is decided by what the provider promises."
+      },
+      {
+        "text": "Neither: a 502 is the provider's outage",
+        "correct": false,
+        "why": "No provider was called; WireMock answered at once."
+      },
+      {
+        "text": "WireMock itself, which cannot send 200 to Node's fetch",
+        "correct": false,
+        "why": "WireMock sent 200 and boxoffice read it; the log says payments answered 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvy62ccv",
+    "version": 1,
+    "section": "when-the-mock-lies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Prism do in proxy mode with --errors?",
+    "hint": "It answers nothing itself.",
+    "choices": [
+      {
+        "text": "Answers from the contract's examples, like the mock",
+        "correct": false,
+        "why": "That is mock mode; a proxy forwards to a real server."
+      },
+      {
+        "text": "Records the real server's answers into mapping files",
+        "correct": false,
+        "why": "That is recording, a different tool's feature; Prism checks, it does not write mappings."
+      },
+      {
+        "text": "Forwards, checks both ways, and reports a violation as an error",
+        "correct": true,
+        "why": "Right. The 200 came back as a 500 with sl-violations."
+      },
+      {
+        "text": "Retries the request until the server answers as the contract says",
+        "correct": false,
+        "why": "It never retries; it reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pnzfrzs",
+    "version": 1,
+    "section": "when-the-mock-lies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your stand-in was written by reading your own client code and copying what it expects. Why does a referee check matter even more then?",
+    "hint": "What does a stand-in written from your code agree with?",
+    "choices": [
+      {
+        "text": "Copied stand-ins are slower, so timeouts appear",
+        "correct": false,
+        "why": "Speed has nothing to do with where the answers came from."
+      },
+      {
+        "text": "Prism cannot read stand-ins written by hand",
+        "correct": false,
+        "why": "Prism checks answers on the wire; it never reads the stand-in's code."
+      },
+      {
+        "text": "Client code is always right about the provider, so the check finds nothing",
+        "correct": false,
+        "why": "If the client were always right, the 200 example would never happen."
+      },
+      {
+        "text": "It agrees with your code by construction, so every test passes even when both are wrong",
+        "correct": true,
+        "why": "Right. Only the provider's contract is outside the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-62gyaztf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Tickets team built the app against the Prism mock of boxoffice, and every screen worked. In production, a user who picks a malformed date sees \"no shows that day\" instead of an error. What happened?",
+    "hint": "Compare what the mock and boxoffice answered for date=tomorrow.",
+    "choices": [
+      {
+        "text": "The mock lost the date on the way, so the app sent none",
+        "correct": false,
+        "why": "The mock answered 400 to the date it received; nothing was lost."
+      },
+      {
+        "text": "The mock followed the contract's 400; boxoffice answers 200 with an empty list",
+        "correct": true,
+        "why": "Right. The app's error screen was built for an answer boxoffice never gives."
+      },
+      {
+        "text": "The app cached the mock's list of one show",
+        "correct": false,
+        "why": "The symptom is an empty list from the server, not a cached one."
+      },
+      {
+        "text": "Prism was started without --errors, so it accepted the date",
+        "correct": false,
+        "why": "The mock refused the date with 400 without --errors; that flag belongs to the proxy section."
+      }
+    ]
+  },
+  {
+    "id": "ex-ws75gmpm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of section 06 in order, from writing the lie to catching it.",
+    "hint": "The referee needs the contract before it can judge anything.",
+    "items": [
+      "add a mapping answering 200 through WireMock's admin API",
+      "place an order and see boxoffice answer 502",
+      "save the provider's contract, payments.yaml",
+      "start Prism in proxy mode in front of WireMock",
+      "send a charge through the proxy and read sl-violations"
+    ]
+  },
+  {
+    "id": "ex-zggd440f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a test that checks boxoffice charges 48000 cents for six seats of sh-101. Which stand-in setup lets the test assert that?",
+    "hint": "The assertion is about what boxoffice sent, not what it got back.",
+    "choices": [
+      {
+        "text": "A Prism mock of boxoffice's own contract",
+        "correct": false,
+        "why": "That replaces boxoffice, the thing under test, and the order would be invented."
+      },
+      {
+        "text": "A stub that only answers 201 approved and records nothing",
+        "correct": false,
+        "why": "It would let the order through, but nothing would show the amount it received."
+      },
+      {
+        "text": "A spy, read after the order: WireMock's journal or /__requests",
+        "correct": true,
+        "why": "Right. A stand-in that records is what makes the amount observable."
+      },
+      {
+        "text": "The real provider's sandbox, whose receipts list the amount of every charge it took",
+        "correct": false,
+        "why": "The sandbox shows its own view on its own terms; the test cannot read it the way it reads a spy."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jzdqf65",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would a Prism proxy in front of the stub report as a violation of payments.yaml?",
+    "hint": "Read the three things the contract says, and that it lists no 500.",
+    "choices": [
+      {
+        "text": "The stub in down mode answering 500",
+        "correct": true,
+        "why": "Right. The contract lists only 201, so any other status is reported."
+      },
+      {
+        "text": "The stub in decline mode answering 201 declined",
+        "correct": false,
+        "why": "declined is one of the two allowed statuses; that answer follows the contract."
+      },
+      {
+        "text": "A charge sent without the idempotency-key header",
+        "correct": true,
+        "why": "Right. The proxy checks requests too, and the header is required."
+      },
+      {
+        "text": "boxoffice's charge for 16000 cents with reference ord-1001",
+        "correct": false,
+        "why": "Both required fields are there with the right types."
+      }
+    ]
+  }
+]

@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ex-3ycmbrgd",
+    "version": 1,
+    "section": "soap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a SOAP 1.1 request over HTTP, where is the operation named?",
+    "hint": "Every request goes to the same address with the same method.",
+    "choices": [
+      {
+        "text": "In the path, as /invoice/IssueInvoice",
+        "correct": false,
+        "why": "The service has one address, /invoice, for every operation."
+      },
+      {
+        "text": "In the HTTP method",
+        "correct": false,
+        "why": "The method is POST for every operation, so it cannot tell them apart."
+      },
+      {
+        "text": "In SOAPAction and the Body's first element",
+        "correct": true,
+        "why": "Right. The header names it for the server's routing, and the Body holds it with its arguments."
+      },
+      {
+        "text": "In the envelope's Header element",
+        "correct": false,
+        "why": "The Header carries signatures, tokens and trace ids, and is optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-phn3cze5",
+    "version": 1,
+    "section": "soap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A SOAP 1.1 service answers HTTP 500. What does the status alone tell a tester?",
+    "hint": "Look at the faultcode before deciding who failed.",
+    "choices": [
+      {
+        "text": "That the service crashed while handling the request",
+        "correct": false,
+        "why": "A crash is one cause; a client mistake gets the same 500 in SOAP 1.1."
+      },
+      {
+        "text": "That the request was malformed",
+        "correct": false,
+        "why": "That is one cause, and the status cannot say which; the faultcode does."
+      },
+      {
+        "text": "That a fault follows, and nothing about whose",
+        "correct": true,
+        "why": "Right. SOAP 1.1 answers every fault with 500; soap:Client or soap:Server carries the blame."
+      },
+      {
+        "text": "That the service speaks SOAP 1.2 and not 1.1",
+        "correct": false,
+        "why": "1.2 also uses 500 for receiver faults; the status says nothing about the version."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdk8bagt",
+    "version": 1,
+    "section": "soap",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a SOAP message to what it holds.",
+    "hint": "One is optional, one is compulsory, one only appears when something went wrong.",
+    "pairs": [
+      {
+        "left": "Envelope",
+        "right": "the outermost element, whose namespace gives the version"
+      },
+      {
+        "left": "Header",
+        "right": "optional: a signature, a token, a trace id"
+      },
+      {
+        "left": "Body",
+        "right": "compulsory: the operation or its answer"
+      },
+      {
+        "left": "Fault",
+        "right": "the error, with who is to blame"
+      }
+    ],
+    "right_distractors": [
+      "the address the message is sent to"
+    ]
+  },
+  {
+    "id": "ex-bqwj2xwt",
+    "version": 1,
+    "section": "where-it-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson give you a stand-in rather than sending you to the NF-e homologation environment?",
+    "hint": "What does homologation still ask for?",
+    "choices": [
+      {
+        "text": "Homologation issues real fiscal documents",
+        "correct": false,
+        "why": "It exists so that an invoice there has no fiscal value."
+      },
+      {
+        "text": "Even homologation needs a company's digital certificate",
+        "correct": true,
+        "why": "Right. A student's laptop has neither the registration nor the certificate."
+      },
+      {
+        "text": "The NF-e services moved to REST and JSON",
+        "correct": false,
+        "why": "The lesson describes them as SOAP with signed XML."
+      },
+      {
+        "text": "curl cannot send a SOAP envelope to a real service",
+        "correct": false,
+        "why": "Section 05 shows curl sends an envelope like any other body."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgjn7sp6",
+    "version": 1,
+    "section": "where-it-lives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bank's app talks JSON to its backend, and the backend calls a SOAP core system. Where is a tester of the app's API most likely to meet SOAP?",
+    "hint": "Who sends the envelopes?",
+    "choices": [
+      {
+        "text": "In the phone's traffic, as envelopes the app sends",
+        "correct": false,
+        "why": "The app sends JSON; the envelopes leave the backend."
+      },
+      {
+        "text": "Nowhere: the JSON layer hides it from every test",
+        "correct": false,
+        "why": "Its faults still decide whether the JSON call succeeds, so a test meets them."
+      },
+      {
+        "text": "Behind the API, as a dependency",
+        "correct": true,
+        "why": "Right. Its answers decide the JSON one, and what the backend does with a fault is a test."
+      },
+      {
+        "text": "In the app's screens, which draw the XML",
+        "correct": false,
+        "why": "Screens draw what the backend sent, and that is JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5j2cxnw",
+    "version": 1,
+    "section": "a-stand-in",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a WSDL 1.1 document in the order the lesson reads them, from the address to the exact shapes.",
+    "hint": "Bottom up.",
+    "items": [
+      "service",
+      "binding",
+      "portType",
+      "message",
+      "types"
+    ]
+  },
+  {
+    "id": "ex-jked3488",
+    "version": 1,
+    "section": "a-stand-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which request breaks the WSDL's own types, before any rule written in the service's code?",
+    "hint": "Read the types part, not the code.",
+    "choices": [
+      {
+        "text": "A buyerTaxId of three digits",
+        "correct": false,
+        "why": "The schema calls it a string and nothing more; the 11-digit rule is only in the code."
+      },
+      {
+        "text": "An amountCents of 0",
+        "correct": true,
+        "why": "Right. positiveInteger starts at 1, so 0 is invalid by the contract itself."
+      },
+      {
+        "text": "An orderId of ord-1001 with an extra Header element in the envelope",
+        "correct": false,
+        "why": "The Header is optional and outside the operation's types; this request is valid."
+      },
+      {
+        "text": "An amountCents of 19500 for three seats",
+        "correct": false,
+        "why": "19500 is a positive integer, which is what the type asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0decjqp",
+    "version": 1,
+    "section": "a-stand-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rule that buyerTaxId has 11 digits lives in the service's code and not in its WSDL. Why is that worth raising with whoever owns the contract?",
+    "hint": "Who builds requests from the WSDL, and what do they know?",
+    "choices": [
+      {
+        "text": "Because a rule in the code is never enforced",
+        "correct": false,
+        "why": "It is enforced: section 05 got a soap:Client fault for a short tax id."
+      },
+      {
+        "text": "Because XML Schema has no way to say that a string holds exactly eleven digits",
+        "correct": false,
+        "why": "It has: a pattern facet on the string would say it, so the gap is a choice."
+      },
+      {
+        "text": "Because clients built from the WSDL will send values the code refuses",
+        "correct": true,
+        "why": "Right. The contract promises a string, the code demands 11 digits, and only a run finds out."
+      },
+      {
+        "text": "Because SoapUI refuses to send any value the WSDL's schema does not describe",
+        "correct": false,
+        "why": "SoapUI sends what you type; its Schema Compliance assertion checks replies."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0c1jjxf",
+    "version": 1,
+    "section": "calling-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson send the envelope with --data-binary rather than -d?",
+    "hint": "What does -d do to a file's line breaks?",
+    "choices": [
+      {
+        "text": "-d cannot read its body from a file",
+        "correct": false,
+        "why": "-d reads a file with @ too; it strips the line breaks."
+      },
+      {
+        "text": "It sends the file byte for byte",
+        "correct": true,
+        "why": "Right. -d strips line breaks, which a signed document does not survive."
+      },
+      {
+        "text": "It sets the content-type to text/xml for you",
+        "correct": false,
+        "why": "The lesson sets content-type itself with -H; --data-binary does not."
+      },
+      {
+        "text": "-d would send the request as a GET to the service",
+        "correct": false,
+        "why": "-d sends a POST, as --data-binary does."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfprqzh8",
+    "version": 1,
+    "section": "calling-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP status did the stand-in give to the envelope labelled application/soap+xml?",
+    "hint": "It refused before reading the envelope.",
+    "value": 415,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3rmp9qry",
+    "version": 1,
+    "section": "calling-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are defects in the stand-in's answer to the envelope without amountCents?",
+    "hint": "Two of them; one thing that looks wrong is SOAP 1.1's rule.",
+    "choices": [
+      {
+        "text": "The faultcode is soap:Server for a client's mistake",
+        "correct": true,
+        "why": "Right. The request broke the contract, so soap:Client was due."
+      },
+      {
+        "text": "The HTTP status is 500",
+        "correct": false,
+        "why": "SOAP 1.1 answers every fault with 500; the short tax id got it too, correctly."
+      },
+      {
+        "text": "The faultstring repeats an internal JavaScript error",
+        "correct": true,
+        "why": "Right. It tells a stranger what the service is written in and nothing about the request."
+      },
+      {
+        "text": "The answer is an envelope, not plain text",
+        "correct": false,
+        "why": "A fault is meant to be an envelope with a Fault in its Body."
+      }
+    ]
+  },
+  {
+    "id": "ex-25mxsg3q",
+    "version": 1,
+    "section": "calling-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The short tax id got HTTP 500 and soap:Client. Is the 500 a defect?",
+    "hint": "Lesson 1's rule was about REST.",
+    "choices": [
+      {
+        "text": "Yes: a client's mistake must get a 4xx, as lesson 1 said",
+        "correct": false,
+        "why": "That holds for REST; SOAP 1.1 has its own rule for faults."
+      },
+      {
+        "text": "Yes: SOAP 1.1 wants 400 for Client faults",
+        "correct": false,
+        "why": "400 for a sender fault is SOAP 1.2's binding; 1.1 uses 500 for all."
+      },
+      {
+        "text": "No: 500 means it was accepted with a warning",
+        "correct": false,
+        "why": "500 means a fault follows; nothing was accepted."
+      },
+      {
+        "text": "No: every SOAP 1.1 fault is a 500, whoever is to blame",
+        "correct": true,
+        "why": "Right. soap:Client says the request was wrong, which is the correct answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-m0cpba4y",
+    "version": 1,
+    "section": "asserting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "xmllint --xpath '//invoiceNumber' prints \"XPath set is empty\" although the element is in the reply. Why?",
+    "hint": "Look at the xmlns on IssueInvoiceResponse.",
+    "choices": [
+      {
+        "text": "// searches only the children of the root",
+        "correct": false,
+        "why": "// searches the whole document at any depth."
+      },
+      {
+        "text": "The element is called InvoiceNumber, with a capital I, not invoiceNumber",
+        "correct": false,
+        "why": "The reply writes invoiceNumber; the name matches."
+      },
+      {
+        "text": "It is namespaced, and a bare name means no namespace",
+        "correct": true,
+        "why": "Right. The default xmlns puts every element inside it in urn:example:invoice:v1."
+      },
+      {
+        "text": "xmllint reads only the first line of what arrives on its input",
+        "correct": false,
+        "why": "It reads the whole document; the call printed the faultcode from deeper lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr849dpj",
+    "version": 1,
+    "section": "asserting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The XPath function ___() gives an element's tag without its prefix, so it matches the invoice number whatever namespace it is in.",
+    "hint": "The lesson wrote it inside square brackets.",
+    "blanks": [
+      {
+        "accept": [
+          "local-name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8c8yajrg",
+    "version": 1,
+    "section": "asserting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status did bash soap/check.sh give, the number a pipeline stops on?",
+    "hint": "echo $? printed it after the run.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a60q509j",
+    "version": 1,
+    "section": "asserting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does //faultcode find the fault's code when //invoiceNumber found nothing?",
+    "hint": "Which elements does SOAP 1.1 put in a namespace?",
+    "choices": [
+      {
+        "text": "Because its value, soap:Client, carries a prefix",
+        "correct": false,
+        "why": "The prefix in the value is text; XPath matches on the element's own name."
+      },
+      {
+        "text": "Because SOAP 1.1 leaves faultcode in no namespace",
+        "correct": true,
+        "why": "Right. A bare name means no namespace, and faultcode has none."
+      },
+      {
+        "text": "Because xmllint treats faults as a special case",
+        "correct": false,
+        "why": "xmllint knows nothing of SOAP; it reads XML."
+      },
+      {
+        "text": "Because faults are smaller documents, so XPath reaches every element in them",
+        "correct": false,
+        "why": "Size changes nothing; // reaches any depth in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtgb86bh",
+    "version": 1,
+    "section": "soapui",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which SoapUI assertion checks every element of a reply against the types in the WSDL?",
+    "hint": "The one with no line in soap/check.sh.",
+    "choices": [
+      {
+        "text": "XPath Match",
+        "correct": false,
+        "why": "It checks one expression against one value."
+      },
+      {
+        "text": "Not SOAP Fault",
+        "correct": false,
+        "why": "It checks only that the reply is not a fault."
+      },
+      {
+        "text": "Contains",
+        "correct": false,
+        "why": "It looks for a piece of text anywhere in the reply."
+      },
+      {
+        "text": "Schema Compliance",
+        "correct": true,
+        "why": "Right. It reads the WSDL's XML Schema and checks the whole reply against it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt7sqnhf",
+    "version": 1,
+    "section": "soapui",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each check in soap/check.sh to the SoapUI assertion that does the same job.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "the status is 200",
+        "right": "Valid HTTP Status Codes"
+      },
+      {
+        "left": "boolean of the Fault element is false",
+        "right": "Not SOAP Fault"
+      },
+      {
+        "left": "string(//faultcode) is soap:Client",
+        "right": "XPath Match"
+      },
+      {
+        "left": "the negative cases expect a fault",
+        "right": "SOAP Fault"
+      }
+    ],
+    "right_distractors": [
+      "Schema Compliance"
+    ]
+  },
+  {
+    "id": "ex-b9wmhtje",
+    "version": 1,
+    "section": "soapui",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a SoapUI project made from the WSDL, why does nobody type the SOAPAction header?",
+    "hint": "Which part of the WSDL holds the action?",
+    "choices": [
+      {
+        "text": "Because SoapUI speaks SOAP 1.2, which has no such header",
+        "correct": false,
+        "why": "SoapUI speaks the version the binding declares, and this one is 1.1."
+      },
+      {
+        "text": "It comes from the binding",
+        "correct": true,
+        "why": "Right. The soapAction of each operation is in the binding, and SoapUI reads it."
+      },
+      {
+        "text": "Because the stand-in ignores the header anyway",
+        "correct": false,
+        "why": "It requires it: a request without one got a soap:Client fault."
+      },
+      {
+        "text": "Because the MockService adds it",
+        "correct": false,
+        "why": "A MockService answers requests; it does not send them."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j6tqshj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice calls the invoice service after each payment, retries every soap:Server fault three times, and gives up at once on soap:Client. With the defect you found, what happens to a call sent without an amount?",
+    "hint": "Which faultcode does that request get?",
+    "choices": [
+      {
+        "text": "It fails at once, because a missing field is the client's mistake",
+        "correct": false,
+        "why": "That is what should happen; the defect makes the service answer soap:Server instead."
+      },
+      {
+        "text": "It succeeds on a retry, since server faults pass",
+        "correct": false,
+        "why": "The same envelope throws the same error every time; nothing changes between tries."
+      },
+      {
+        "text": "It is retried three times, failing each time",
+        "correct": true,
+        "why": "Right. The fault blames the service, so the caller retries a request that cannot succeed."
+      },
+      {
+        "text": "It is invoiced with an amount of 0",
+        "correct": false,
+        "why": "No invoice is issued; the service faults before it gets that far."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4a4f0xh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's SOAP tests assert only the HTTP status, 200 for valid requests and 500 for invalid ones. Which defect of this lesson would pass them?",
+    "hint": "Two faults with the same status and different blame.",
+    "choices": [
+      {
+        "text": "A valid order answered with a fault",
+        "correct": false,
+        "why": "A fault is a 500, so the test expecting 200 would fail and catch it."
+      },
+      {
+        "text": "A missing amount answered soap:Server",
+        "correct": true,
+        "why": "Right. Both faults are 500, so only the faultcode tells the defect apart."
+      },
+      {
+        "text": "A short tax id that was accepted with an invoice number",
+        "correct": false,
+        "why": "An accepted request is a 200, so the test expecting 500 would catch it."
+      },
+      {
+        "text": "None: with SOAP, the status code carries the whole verdict",
+        "correct": false,
+        "why": "In SOAP 1.1 every fault shares one status, so the status cannot carry the verdict."
+      }
+    ]
+  },
+  {
+    "id": "ex-aezp339g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another service answers an envelope missing a required field with HTTP 400 and the fault code env:Sender. What does a tester conclude?",
+    "hint": "Which version uses Sender, and what status does it give a sender fault?",
+    "choices": [
+      {
+        "text": "Correct: SOAP 1.2 sends sender faults as 400",
+        "correct": true,
+        "why": "Right. Sender and 400 are 1.2's answer to a request that was wrong."
+      },
+      {
+        "text": "A defect, because a SOAP fault must be 500",
+        "correct": false,
+        "why": "That is 1.1's rule; env:Sender says this service speaks 1.2."
+      },
+      {
+        "text": "A defect: the code should read soap:Client",
+        "correct": false,
+        "why": "Client is 1.1's name; 1.2 renamed it Sender."
+      },
+      {
+        "text": "The service is a REST API that happens to return XML",
+        "correct": false,
+        "why": "env:Sender inside a Fault is SOAP 1.2's vocabulary."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mmyk6ns",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are handed the address of a SOAP service you have never seen. Put the steps of a first test session in order.",
+    "hint": "Each step needs something the one before it found.",
+    "items": [
+      "fetch the WSDL with ?wsdl",
+      "read the binding for the version and each SOAPAction",
+      "read the types for each field and its type",
+      "send one valid envelope and assert the reply",
+      "send envelopes that break one rule each and assert the faultcode"
+    ]
+  }
+]

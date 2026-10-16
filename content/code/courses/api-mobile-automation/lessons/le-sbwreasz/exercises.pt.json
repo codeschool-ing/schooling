@@ -1,0 +1,408 @@
+{
+  "ex-z05dm371": {
+    "prompt": "Qual destas coisas um substituto dá a um teste e o provedor de pagamento de verdade não dá?",
+    "hint": "Pense nos quatro motivos que a seção dá.",
+    "choices": [
+      {
+        "text": "A prova de que o provedor ainda responde como no mês passado",
+        "why": "É exatamente o que um substituto não prova: ele responde o que alguém escreveu."
+      },
+      {
+        "text": "Uma recusa sempre que o teste pede",
+        "why": "Certo. Falhas sob encomenda são o principal motivo para substituir uma dependência."
+      },
+      {
+        "text": "Cobranças reais, para testar o fluxo do dinheiro de ponta a ponta",
+        "why": "Um substituto não move dinheiro; evitar cobranças reais é um dos motivos para usá-lo."
+      },
+      {
+        "text": "Um sandbox com cartões de teste",
+        "why": "Sandboxes são oferecidos pelos provedores de verdade, nos servidores e nas condições deles."
+      }
+    ]
+  },
+  "ex-e86wzw6c": {
+    "prompt": "Ligue cada tipo de dublê de teste ao que ele faz.",
+    "hint": "Um deles funciona de verdade; um deles reprova o teste sozinho.",
+    "pairs": [
+      {
+        "left": "stub",
+        "right": "responde o que mandaram responder"
+      },
+      {
+        "left": "spy",
+        "right": "responde, e registra o que recebeu para o teste ler"
+      },
+      {
+        "left": "mock",
+        "right": "guarda expectativas e reprova o teste se as chamadas não chegarem"
+      },
+      {
+        "left": "fake",
+        "right": "uma implementação simplificada que funciona de verdade"
+      }
+    ],
+    "right_distractors": [
+      "uma cópia do banco de dados de produção do provedor"
+    ]
+  },
+  "ex-pswq7cj9": {
+    "prompt": "Um colega testa o boxoffice substituindo o provedor de pagamento e também a função do boxoffice que confere o status do provedor. O que há de errado nisso?",
+    "hint": "Onde fica a linha?",
+    "choices": [
+      {
+        "text": "Nada; quanto mais se substitui, mais rápido e estável o teste",
+        "why": "Velocidade deixa de importar quando o teste não roda mais o código que diz testar."
+      },
+      {
+        "text": "O provedor deveria ser o sandbox de verdade",
+        "why": "Usar o sandbox ou um substituto para o provedor é outra escolha; o problema está dentro do boxoffice."
+      },
+      {
+        "text": "Essa parte do boxoffice fica sem teste",
+        "why": "Certo. Substitua o que fica fora da fronteira e nada do que fica dentro."
+      },
+      {
+        "text": "Um substituto só pode trocar um servidor, nunca uma função",
+        "why": "Dublês de teste começaram como objetos em testes de unidade; a regra é sobre a fronteira, não sobre o tipo de coisa."
+      }
+    ]
+  },
+  "ex-tj2zkcjj": {
+    "prompt": "Um pedido foi feito sem o cabeçalho Idempotency-Key. Que chave de idempotência o boxoffice mandou ao stub?",
+    "hint": "Olhe o GET /__requests, ou o `key || id` no código do boxoffice.",
+    "choices": [
+      {
+        "text": "Nenhuma; o cabeçalho ficou de fora",
+        "why": "O boxoffice sempre manda uma; sem a chave do cliente, ele usa um valor próprio."
+      },
+      {
+        "text": "Um UUID aleatório criado para a cobrança",
+        "why": "Nada no boxoffice cria um UUID; o valor é previsível."
+      },
+      {
+        "text": "O id do cliente do token, ci-tests",
+        "why": "O id do cliente separa as respostas guardadas dentro do boxoffice; ele não vai ao provedor."
+      },
+      {
+        "text": "O id do pedido, ord-1001",
+        "why": "Certo. `key || id` cai no id do pedido, que também é a referência."
+      }
+    ]
+  },
+  "ex-fvwfmprz": {
+    "prompt": "Por que o stub termina ao iniciar quando MODE é \"declined\", em vez de iniciar no modo approve?",
+    "hint": "O que veria, do contrário, um teste que espera uma recusa?",
+    "choices": [
+      {
+        "text": "Um erro de digitação aprovaria tudo; o teste não testaria nada",
+        "why": "Certo. Um padrão silencioso transforma um erro de digitação num teste verde."
+      },
+      {
+        "text": "O Node não lê variáveis de ambiente depois que o servidor começa a escutar",
+        "why": "O Node as lê a qualquer momento; a conferência fica antes do listen de propósito."
+      },
+      {
+        "text": "A porta 8090 é reservada para o modo approve",
+        "why": "A porta não depende do modo."
+      },
+      {
+        "text": "O boxoffice se recusa a falar com um stub num modo desconhecido",
+        "why": "O boxoffice nunca fica sabendo o modo do stub; ele só vê as respostas."
+      }
+    ]
+  },
+  "ex-6thfm910": {
+    "prompt": "Ligue cada modo do stub ao status com que o boxoffice responde o pedido.",
+    "hint": "Dois deles vêm do assunto da lição 13, o caminho do erro.",
+    "pairs": [
+      {
+        "left": "approve",
+        "right": "201"
+      },
+      {
+        "left": "decline",
+        "right": "402"
+      },
+      {
+        "left": "down",
+        "right": "502"
+      },
+      {
+        "left": "slow",
+        "right": "504"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  "ex-537bggtw": {
+    "prompt": "Um pedido de seis lugares do sh-101 (48000 centavos) casa com os dois arquivos de mapping. Por que o WireMock responde com a recusa?",
+    "hint": "Olhe o campo que os dois arquivos definem de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "O arquivo de recusa vem primeiro em ordem alfabética",
+        "why": "O WireMock não escolhe pelo nome do arquivo; sem prioridades, prefere o acrescentado mais recentemente."
+      },
+      {
+        "text": "A prioridade dele é 1, e o número menor vence",
+        "why": "Certo. O arquivo de aprovação tem prioridade 5."
+      },
+      {
+        "text": "O arquivo de aprovação exige um Content-Type que o boxoffice não manda",
+        "why": "O boxoffice manda application/json, que o arquivo de aprovação aceita."
+      },
+      {
+        "text": "O WireMock sempre escolhe o mapping com mais condições",
+        "why": "O relatório de quase acerto até escolheu o de menos condições como o mais próximo; quem decide entre os que casam é a prioridade."
+      }
+    ]
+  },
+  "ex-bf55nwrg": {
+    "prompt": "Um teste contra o WireMock falha porque uma cobrança recebeu 404. O que você deve ler primeiro?",
+    "hint": "O WireMock explica o próprio 404.",
+    "choices": [
+      {
+        "text": "O log do boxoffice, que mostra a linha do 404",
+        "why": "O boxoffice só registra a própria resposta; ele não sabe por que o WireMock recusou."
+      },
+      {
+        "text": "A documentação do provedor, para ver o que o status 404 quer dizer numa cobrança",
+        "why": "O provedor de verdade nem foi consultado; o 404 veio do substituto."
+      },
+      {
+        "text": "O corpo do 404: o mapping mais próximo e a diferença",
+        "why": "Certo. A linha marcada com <<<<< em geral indica a única coisa a corrigir."
+      },
+      {
+        "text": "As linhas de início do WireMock, para conferir a porta",
+        "why": "Uma porta errada dá conexão recusada, não um 404 do WireMock."
+      }
+    ]
+  },
+  "ex-ct47s17d": {
+    "prompt": "Depois que o journal foi esvaziado e o boxoffice fez os dois pedidos, que contagem o /__admin/requests/count deu para POST /charges?",
+    "hint": "Uma cobrança por pedido."
+  },
+  "ex-5yjk653s": {
+    "prompt": "Num mapping do WireMock, o campo que escolhe entre dois mappings que casam é o ___.",
+    "hint": "O número menor vence.",
+    "blanks": [
+      {
+        "accept": [
+          "priority"
+        ]
+      }
+    ]
+  },
+  "ex-fzxzyxgr": {
+    "prompt": "O Prism responde GET /v1/shows/sh-999 com um espetáculo. Por quê?",
+    "hint": "O que o contrato diz, e o que ele não diz?",
+    "choices": [
+      {
+        "text": "O contrato do boxoffice lista o sh-999 entre os exemplos",
+        "why": "O único id de exemplo é sh-103, que foi o que o Prism devolveu."
+      },
+      {
+        "text": "O contrato descreve como um espetáculo se parece, não quais existem",
+        "why": "Certo. O Prism monta a resposta a partir do schema e não tem lista com que recusar."
+      },
+      {
+        "text": "O Prism repassa a requisição ao boxoffice na porta 8080",
+        "why": "No modo mock o Prism não repassa nada; isso é o modo proxy da seção 06."
+      },
+      {
+        "text": "Um 404 não está declarado para esse caminho",
+        "why": "O contrato declara um 404 ali; mesmo assim o Prism não tinha como saber que o sh-999 não existe."
+      }
+    ]
+  },
+  "ex-v8z5tdsp": {
+    "prompt": "Quais destas o mock do Prism recusou, onde o boxoffice de verdade respondeu sem recusar?",
+    "hint": "Duas requisições, e a lição 2 achou as duas.",
+    "choices": [
+      {
+        "text": "Um pedido com um campo a mais, seat_class",
+        "why": "Certo. O NewOrder do contrato proíbe propriedades adicionais; o boxoffice criou o pedido."
+      },
+      {
+        "text": "A lista de espetáculos com date=tomorrow",
+        "why": "Certo. O Prism respondeu 400; o boxoffice respondeu 200 com uma lista vazia."
+      },
+      {
+        "text": "Um pedido de sete lugares",
+        "why": "Os dois recusam sete lugares com 422; ali eles concordam."
+      },
+      {
+        "text": "Um token para um cliente chamado nobody",
+        "why": "O Prism deu um token ao nobody; quem o recusaria com 401 é o boxoffice."
+      }
+    ]
+  },
+  "ex-h3zjtdfa": {
+    "prompt": "Quem mais ganha com um mock do boxoffice feito no Prism?",
+    "hint": "Quem chama o boxoffice?",
+    "choices": [
+      {
+        "text": "Quem testa o próprio boxoffice, que pode parar de iniciar o servidor",
+        "why": "Testar um mock do boxoffice testa os exemplos do contrato, não o boxoffice."
+      },
+      {
+        "text": "O provedor de pagamento, que pode conferir as cobranças do boxoffice",
+        "why": "O provedor está do outro lado; aqui o Prism substitui o próprio boxoffice."
+      },
+      {
+        "text": "Um time que constrói um cliente, como o app Tickets",
+        "why": "Certo. Eles podem trabalhar antes de o boxoffice existir e pedir qualquer status com Prefer."
+      },
+      {
+        "text": "A equipe do teatro que lê o relatório de vendas",
+        "why": "A equipe precisa dos números reais; o Prism inventa zeros."
+      }
+    ]
+  },
+  "ex-j26173ys": {
+    "prompt": "Um mapping do WireMock responde uma cobrança com 200, e todo pedido pelo boxoffice falha com 502. Qual programa está errado?",
+    "hint": "Nenhum dos dois programas resolve isso.",
+    "choices": [
+      {
+        "text": "O boxoffice, porque 200 quer dizer que a cobrança deu certo",
+        "why": "200 é um código de sucesso, mas o que este provedor responde é fixado pelo contrato dele, que diz 201."
+      },
+      {
+        "text": "O mapping: o contrato do provedor diz 201",
+        "why": "Certo. Quem está certo é decidido pelo que o provedor promete."
+      },
+      {
+        "text": "Nenhum: um 502 é a queda do provedor",
+        "why": "Nenhum provedor foi chamado; o WireMock respondeu na hora."
+      },
+      {
+        "text": "O próprio WireMock, que não consegue mandar 200 ao fetch do Node",
+        "why": "O WireMock mandou 200 e o boxoffice leu; o log diz payments answered 200."
+      }
+    ]
+  },
+  "ex-dvy62ccv": {
+    "prompt": "O que o Prism faz no modo proxy com --errors?",
+    "hint": "Ele não responde nada sozinho.",
+    "choices": [
+      {
+        "text": "Responde a partir dos exemplos do contrato, como o mock",
+        "why": "Isso é o modo mock; um proxy repassa a um servidor de verdade."
+      },
+      {
+        "text": "Grava as respostas do servidor de verdade em arquivos de mapping",
+        "why": "Isso é gravação, recurso de outra ferramenta; o Prism confere, não escreve mappings."
+      },
+      {
+        "text": "Repassa, confere os dois sentidos e devolve a violação como erro",
+        "why": "Certo. O 200 voltou como 500 com sl-violations."
+      },
+      {
+        "text": "Repete a requisição até o servidor responder como o contrato diz",
+        "why": "Ele nunca repete; ele relata."
+      }
+    ]
+  },
+  "ex-4pnzfrzs": {
+    "prompt": "O seu substituto foi escrito lendo o código do seu próprio cliente e copiando o que ele espera. Por que uma conferência pelo árbitro importa ainda mais nesse caso?",
+    "hint": "Com o que concorda um substituto escrito a partir do seu código?",
+    "choices": [
+      {
+        "text": "Substitutos copiados são mais lentos, então aparecem timeouts",
+        "why": "Velocidade não tem nada a ver com a origem das respostas."
+      },
+      {
+        "text": "O Prism não consegue ler substitutos escritos à mão",
+        "why": "O Prism confere respostas na rede; ele nunca lê o código do substituto."
+      },
+      {
+        "text": "O código do cliente sempre acerta sobre o provedor, então a conferência não acha nada",
+        "why": "Se o cliente sempre acertasse, o exemplo do 200 nunca aconteceria."
+      },
+      {
+        "text": "Ele concorda com o seu código por construção, então todo teste passa mesmo com os dois errados",
+        "why": "Certo. Só o contrato do provedor está fora dos dois."
+      }
+    ]
+  },
+  "ex-62gyaztf": {
+    "prompt": "O time do Tickets construiu o app contra o mock do Prism do boxoffice, e toda tela funcionou. Em produção, quem escolhe uma data malformada vê \"nenhum espetáculo nesse dia\" em vez de um erro. O que aconteceu?",
+    "hint": "Compare o que o mock e o boxoffice responderam para date=tomorrow.",
+    "choices": [
+      {
+        "text": "O mock perdeu a data no caminho, então o app não mandou nenhuma",
+        "why": "O mock respondeu 400 à data que recebeu; nada se perdeu."
+      },
+      {
+        "text": "O mock seguiu o 400 do contrato; o boxoffice responde 200 com lista vazia",
+        "why": "Certo. A tela de erro do app foi feita para uma resposta que o boxoffice nunca dá."
+      },
+      {
+        "text": "O app guardou em cache a lista de um espetáculo do mock",
+        "why": "O sintoma é uma lista vazia vinda do servidor, não uma em cache."
+      },
+      {
+        "text": "O Prism foi iniciado sem --errors, então aceitou a data",
+        "why": "O mock recusou a data com 400 sem --errors; essa opção pertence à seção do proxy."
+      }
+    ]
+  },
+  "ex-ws75gmpm": {
+    "prompt": "Ponha os passos da seção 06 em ordem, de escrever a mentira até pegá-la.",
+    "hint": "O árbitro precisa do contrato antes de julgar qualquer coisa.",
+    "items": [
+      "acrescentar um mapping que responde 200 pela API de administração do WireMock",
+      "fazer um pedido e ver o boxoffice responder 502",
+      "salvar o contrato do provedor, payments.yaml",
+      "iniciar o Prism em modo proxy na frente do WireMock",
+      "mandar uma cobrança pelo proxy e ler o sl-violations"
+    ]
+  },
+  "ex-zggd440f": {
+    "prompt": "Você precisa de um teste que confira que o boxoffice cobra 48000 centavos por seis lugares do sh-101. Que preparação de substituto deixa o teste afirmar isso?",
+    "hint": "A afirmação é sobre o que o boxoffice mandou, não sobre o que recebeu.",
+    "choices": [
+      {
+        "text": "Um mock do Prism do próprio contrato do boxoffice",
+        "why": "Isso substitui o boxoffice, a coisa sob teste, e o pedido seria inventado."
+      },
+      {
+        "text": "Um stub que só responde 201 approved e não registra nada",
+        "why": "Ele deixaria o pedido passar, mas nada mostraria o valor que recebeu."
+      },
+      {
+        "text": "Um spy lido depois do pedido: o journal do WireMock ou o /__requests",
+        "why": "Certo. Um substituto que registra é o que torna o valor observável."
+      },
+      {
+        "text": "O sandbox do provedor de verdade, cujos recibos listam o valor de toda cobrança",
+        "why": "O sandbox mostra a visão dele nas condições dele; o teste não o lê como lê um spy."
+      }
+    ]
+  },
+  "ex-1jzdqf65": {
+    "prompt": "Quais destas um proxy do Prism na frente do stub apontaria como violação do payments.yaml?",
+    "hint": "Leia as três coisas que o contrato diz, e que ele não lista nenhum 500.",
+    "choices": [
+      {
+        "text": "O stub no modo down respondendo 500",
+        "why": "Certo. O contrato só lista 201, então qualquer outro status é apontado."
+      },
+      {
+        "text": "O stub no modo decline respondendo 201 declined",
+        "why": "declined é um dos dois status permitidos; essa resposta segue o contrato."
+      },
+      {
+        "text": "Uma cobrança mandada sem o cabeçalho idempotency-key",
+        "why": "Certo. O proxy confere requisições também, e o cabeçalho é obrigatório."
+      },
+      {
+        "text": "A cobrança de 16000 centavos do boxoffice com referência ord-1001",
+        "why": "Os dois campos obrigatórios estão lá, com os tipos certos."
+      }
+    ]
+  }
+}

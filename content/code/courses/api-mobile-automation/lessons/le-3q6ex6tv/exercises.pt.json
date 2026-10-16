@@ -1,0 +1,430 @@
+{
+  "ex-fy3kvpvz": {
+    "prompt": "No show.json, por que price_cents tem o tipo integer e não number?",
+    "hint": "Dinheiro viaja em centavos.",
+    "choices": [
+      {
+        "text": "Porque number não é um tipo do JSON Schema",
+        "why": "number é um tipo do JSON Schema; ele aceita frações."
+      },
+      {
+        "text": "Para recusar 65.5, uma fração de centavo",
+        "why": "Certo. integer recusa frações que number aceitaria."
+      },
+      {
+        "text": "Porque integer também confere que o preço é positivo",
+        "why": "O sinal é trabalho do minimum; integer só recusa frações."
+      },
+      {
+        "text": "Para o Ajv guardar o preço em menos memória",
+        "why": "Um schema diz o que é válido, não como é guardado."
+      }
+    ]
+  },
+  "ex-402dz3k0": {
+    "prompt": "Por que additionalProperties: false está certo num schema que testa as respostas do próprio boxoffice?",
+    "hint": "Olhe o que o createOrder tira antes de responder.",
+    "choices": [
+      {
+        "text": "Deixa a validação mais rápida em respostas grandes",
+        "why": "Velocidade não é o motivo; vazamentos são."
+      },
+      {
+        "text": "Clientes quebram quando chega um campo que não conhecem",
+        "why": "Esse é o argumento contra ele no schema de um cliente, não a favor aqui."
+      },
+      {
+        "text": "Pega um campo que nunca deveria sair, como client",
+        "why": "Certo. O boxoffice tira client dos pedidos, e um schema rigoroso percebe se essa linha se perder."
+      },
+      {
+        "text": "O JSON Schema o exige sempre que properties é usado",
+        "why": "Ele é opcional, e o padrão permite campos extras."
+      }
+    ]
+  },
+  "ex-n0c2t4vg": {
+    "prompt": "Ligue cada palavra-chave ao que ela diz nos schemas desta lição.",
+    "hint": "Uma delas só vale quando outra parte casa.",
+    "pairs": [
+      {
+        "left": "required",
+        "right": "estes campos precisam estar presentes"
+      },
+      {
+        "left": "pattern",
+        "right": "a string precisa casar com uma expressão regular"
+      },
+      {
+        "left": "enum",
+        "right": "o valor precisa ser um de uma lista"
+      },
+      {
+        "left": "if / then",
+        "right": "um pedido confirmado precisa trazer um pagamento"
+      }
+    ],
+    "right_distractors": [
+      "o campo só é mandado para a equipe"
+    ]
+  },
+  "ex-7r91rh1x": {
+    "prompt": "O check.mjs cria o validador com Ajv2020 e não com a classe Ajv padrão. Por quê?",
+    "hint": "Olhe a linha $schema dos arquivos.",
+    "choices": [
+      {
+        "text": "O Ajv2020 é mais rápido em documentos grandes",
+        "why": "A escolha é sobre o draft, não sobre velocidade."
+      },
+      {
+        "text": "Os schemas estão escritos no draft 2020-12",
+        "why": "Certo. A classe padrão lê o draft-07."
+      },
+      {
+        "text": "Só o Ajv2020 confere a palavra-chave format",
+        "why": "Formatos vêm do ajv-formats, para qualquer das classes."
+      },
+      {
+        "text": "A classe padrão não lê da entrada padrão",
+        "why": "Ler a entrada é trabalho do script, não do Ajv."
+      }
+    ]
+  },
+  "ex-55d0k0eb": {
+    "prompt": "O pedido cancelado reprovou no check.mjs com /status must be equal to one of the allowed values. O que estava errado?",
+    "hint": "O que o openapi.yaml e o código do boxoffice dizem sobre cancelled?",
+    "choices": [
+      {
+        "text": "O boxoffice, que deveria apagar um pedido cancelado",
+        "why": "O contrato o mantém com status cancelled; o boxoffice faz o que promete."
+      },
+      {
+        "text": "O DELETE, que respondeu 204 em vez de 200",
+        "why": "204 é a resposta certa para um DELETE sem nada a mandar."
+      },
+      {
+        "text": "O Ajv, que não conhece a palavra cancelled",
+        "why": "O Ajv compara contra o enum que recebeu."
+      },
+      {
+        "text": "O schema: o enum dele esqueceu um status",
+        "why": "Certo. Ele foi escrito só a partir do caminho de criação."
+      }
+    ]
+  },
+  "ex-42bgx9xj": {
+    "prompt": "Quantas regras quebradas o check.mjs relatou para o espetáculo inventado?",
+    "hint": "Uma linha cada, graças ao allErrors."
+  },
+  "ex-js0g3p2p": {
+    "prompt": "Por que o check.mjs termina com código de saída 1 quando uma resposta quebra o schema?",
+    "hint": "Quem lê um código de saída?",
+    "choices": [
+      {
+        "text": "Para um pipeline falhar sem ler o texto",
+        "why": "Certo. O código de saída é o que um pipeline leva em conta."
+      },
+      {
+        "text": "Porque o Node sai com 1 depois de imprimir qualquer coisa",
+        "why": "O Node sai com 0 se não mandarem outra coisa; o caso válido imprimiu e saiu com 0."
+      },
+      {
+        "text": "Para o curl repetir a requisição",
+        "why": "O curl já tinha terminado; o código de saída é do próprio check.mjs."
+      },
+      {
+        "text": "Para avisar o Ajv que relate todo erro",
+        "why": "Quem faz isso é o allErrors; o código de saída vem depois."
+      }
+    ]
+  },
+  "ex-5g5xnmc4": {
+    "prompt": "O Newman reprovou o teste One show com no schema with key or ref ...2020-12/schema. O que isso quer dizer?",
+    "hint": "Que drafts o validador do Postman conhece?",
+    "choices": [
+      {
+        "text": "A resposta do boxoffice quebrou o schema",
+        "why": "A resposta nem foi comparada; o próprio schema foi recusado."
+      },
+      {
+        "text": "A variável de coleção showSchema estava vazia",
+        "why": "O validador leu o schema o bastante para ver a linha $schema."
+      },
+      {
+        "text": "O validador recusou o draft 2020-12",
+        "why": "Certo. Tirar a linha $schema fez os dois testes passarem."
+      },
+      {
+        "text": "O Newman não conseguiu baixar o draft de json-schema.org",
+        "why": "Validadores não baixam drafts; eles vêm com os que conhecem."
+      }
+    ]
+  },
+  "ex-dhpwzjwd": {
+    "prompt": "Por que o comportamento do REST Assured com o order.json é mais perigoso que o do Postman com o show.json?",
+    "hint": "Qual dos dois avisou?",
+    "choices": [
+      {
+        "text": "O REST Assured roda mais devagar, então as falhas chegam mais tarde",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "O REST Assured recusou o schema inteiro e nada foi conferido",
+        "why": "Ele conferiu as regras que conhecia; pulou o if/then sem dizer."
+      },
+      {
+        "text": "O erro do Postman estava na resposta, o do REST Assured no schema",
+        "why": "Os dois eram sobre o validador, não sobre a resposta."
+      },
+      {
+        "text": "Ele ignorou o if/then em silêncio, enquanto o Postman falhou alto",
+        "why": "Certo. Uma execução verde escondeu uma regra que nunca foi aplicada."
+      }
+    ]
+  },
+  "ex-nv0kb5s4": {
+    "prompt": "Por que a coleção do Postman leva o schema numa variável de coleção em vez de ler o schemas/show.json?",
+    "hint": "O que um script do Postman alcança?",
+    "choices": [
+      {
+        "text": "O Postman exige schemas numa forma compacta",
+        "why": "Compactar só deixa a variável numa linha; qualquer texto JSON serve."
+      },
+      {
+        "text": "Um script não lê arquivo do disco",
+        "why": "Certo. Nem no app nem no Newman."
+      },
+      {
+        "text": "Variáveis de coleção são conferidas mais rápido",
+        "why": "Onde o schema mora não muda a velocidade da validação."
+      },
+      {
+        "text": "O arquivo está escrito no draft 2020-12",
+        "why": "O draft é outro problema; o arquivo não poderia ser lido em draft nenhum."
+      }
+    ]
+  },
+  "ex-rtea4vrh": {
+    "prompt": "Para manter o terceiro teste Java à vista sem reprovar a execução, a lição o marca com a anotação do JUnit @___.",
+    "hint": "O Maven o relatou como pulado.",
+    "blanks": [
+      {
+        "accept": [
+          "Disabled"
+        ]
+      }
+    ]
+  },
+  "ex-6p9carka": {
+    "prompt": "O time do boxoffice quer renomear price_cents no espetáculo. O que um schema consegue dizer, e o que não consegue?",
+    "hint": "Um schema conhece o provedor, não os leitores dele.",
+    "choices": [
+      {
+        "text": "Ele consegue dizer que clientes leem o campo",
+        "why": "É isso que um schema não consegue dizer; contratos conseguem."
+      },
+      {
+        "text": "Que o schema antigo quebra, não se alguém nota",
+        "why": "Certo. Quem lê qual campo está fora do schema."
+      },
+      {
+        "text": "Nada, porque um schema não consegue descrever uma renomeação",
+        "why": "Ele descreve a forma nova sem problema; a lacuna é sobre os leitores."
+      },
+      {
+        "text": "Que a renomeação é segura, se o schema novo validar",
+        "why": "Um schema novo válido não diz nada sobre clientes que ainda leem o nome antigo."
+      }
+    ]
+  },
+  "ex-n35ksj5s": {
+    "prompt": "Onde os contratos guiados pelo consumidor servem melhor?",
+    "hint": "Alguém precisa escrever cada contrato.",
+    "choices": [
+      {
+        "text": "Uma API pública com milhares de clientes desconhecidos",
+        "why": "Desconhecidos não escrevem contratos para você; é onde servem pior."
+      },
+      {
+        "text": "Um provedor que ainda não tem consumidores",
+        "why": "Sem consumidores não há nada que guie o contrato."
+      },
+      {
+        "text": "Dentro de uma organização, entre times conhecidos",
+        "why": "Certo. Cada time pode escrever e manter o pact dele."
+      },
+      {
+        "text": "Só onde não há schema",
+        "why": "Contratos e schemas respondem perguntas diferentes e convivem."
+      }
+    ]
+  },
+  "ex-e90d2ap7": {
+    "prompt": "Olhando os dois pacts desta lição, que mudanças o boxoffice poderia fazer sem reprovar nenhuma verificação?",
+    "hint": "Que campos cada pact menciona?",
+    "choices": [
+      {
+        "text": "Renomear price_cents para price",
+        "why": "Certo. Nenhum pact o lê."
+      },
+      {
+        "text": "Trocar o id sh-103 por um código mais longo",
+        "why": "Certo. Nenhum pact lê o id no corpo."
+      },
+      {
+        "text": "Renomear seats_left para seats",
+        "why": "O pact do app Tickets lê seats_left."
+      },
+      {
+        "text": "Mandar starts_at como 08/11/2026 18:00",
+        "why": "A regex do app Tickets exige a forma ISO com fuso."
+      }
+    ]
+  },
+  "ex-2aqq3v3g": {
+    "prompt": "Por que o teste do consumidor usa like('O Pagador de Promessas') em vez do título exato?",
+    "hint": "Do que o app depende de verdade?",
+    "choices": [
+      {
+        "text": "Porque o Pact não compara strings exatamente",
+        "why": "O Pact compara exatamente quando nenhum matcher é usado, como no caminho."
+      },
+      {
+        "text": "O app precisa de um título que seja texto, não deste",
+        "why": "Certo. A peça pode ser renomeada sem quebrar o contrato."
+      },
+      {
+        "text": "Para o mock responder um título aleatório a cada vez que é chamado",
+        "why": "O mock responde o exemplo; o like só afrouxa a conferência do provedor."
+      },
+      {
+        "text": "Porque o título tem espaços",
+        "why": "Espaços são texto comum; esse não é o motivo."
+      }
+    ]
+  },
+  "ex-hw47r64g": {
+    "prompt": "O teste de consumidor do quiosque passou, e mesmo assim o boxoffice não tem campo venue. Por quê?",
+    "hint": "Quem respondeu a requisição do quiosque?",
+    "choices": [
+      {
+        "text": "O mock do Pact respondeu o que o pact dizia",
+        "why": "Certo. Só a verificação do provedor encontra o boxoffice de verdade."
+      },
+      {
+        "text": "O boxoffice acrescenta venue quando um quiosque pede",
+        "why": "O boxoffice nunca manda venue; a verificação mostrou que falta."
+      },
+      {
+        "text": "O matcher like aceita um campo ausente",
+        "why": "O like confere o tipo de um campo que precisa estar lá."
+      },
+      {
+        "text": "O PACT_DO_NOT_TRACK pulou a conferência",
+        "why": "Essa variável só desliga as estatísticas de uso."
+      }
+    ]
+  },
+  "ex-hy09p192": {
+    "prompt": "Ponha os passos de um contrato guiado pelo consumidor em ordem, como esta lição os rodou.",
+    "hint": "O arquivo é escrito antes de alguém verificá-lo.",
+    "items": [
+      "o teste do consumidor descreve a requisição e a resposta de que precisa",
+      "o código do app roda contra o mock do Pact",
+      "o Pact escreve o arquivo de pact",
+      "o teste do provedor repete o pact contra o boxoffice de verdade",
+      "uma diferença reprova o build do provedor"
+    ]
+  },
+  "ex-231ks6v8": {
+    "prompt": "Uma nova versão do boxoffice passa a mandar um campo chamado internal_notes em todo pedido. Que conferência desta lição percebe primeiro?",
+    "hint": "Que conferência recusa campos que ninguém listou?",
+    "choices": [
+      {
+        "text": "A verificação do pact do app Tickets",
+        "why": "O Pact só confere o que o consumidor lê; um campo a mais passa."
+      },
+      {
+        "text": "O check.mjs com o order.json",
+        "why": "Certo. O additionalProperties: false o recusa."
+      },
+      {
+        "text": "Nenhuma: campos a mais são sempre inofensivos",
+        "why": "Um campo que nunca deveria sair do servidor é um defeito, e o schema rigoroso o pega."
+      },
+      {
+        "text": "O enum de status do pedido",
+        "why": "O enum confere valores de status, não campos a mais."
+      }
+    ]
+  },
+  "ex-nat1fcxt": {
+    "prompt": "Seu time acrescenta uma conferência de schema numa suíte Java e toda execução fica verde no primeiro dia. O que você deve fazer antes de confiar nela?",
+    "hint": "Verde pode querer dizer \"não conferido\".",
+    "choices": [
+      {
+        "text": "Rodar de novo para ter certeza de que é estável",
+        "why": "Uma regra ignorada é ignorada em toda execução."
+      },
+      {
+        "text": "Acrescentar mais requisições ao vivo na suíte",
+        "why": "Mais respostas pelo mesmo validador continuam perdendo a regra que ele pula."
+      },
+      {
+        "text": "Passar todos os schemas para o draft 4 de uma vez",
+        "why": "Reescrever schemas para uma ferramenta perde regras em outros lugares; primeiro descubra o que é conferido."
+      },
+      {
+        "text": "Dar a ela uma resposta que precisa falhar, e ver se falha",
+        "why": "Certo. Foi assim que o if/then ignorado foi achado."
+      }
+    ]
+  },
+  "ex-fpzf7art": {
+    "prompt": "Ligue cada pergunta ao instrumento desta lição que a responde.",
+    "hint": "Cada instrumento enxerga uma parte diferente.",
+    "pairs": [
+      {
+        "left": "todo campo desta resposta tem a forma certa?",
+        "right": "um JSON Schema conferido com o Ajv"
+      },
+      {
+        "left": "o boxoffice ainda dá ao app Tickets o que ele lê?",
+        "right": "a verificação do provedor contra o pact dele"
+      },
+      {
+        "left": "este validador aplica toda regra do schema?",
+        "right": "uma resposta escrita para falhar"
+      },
+      {
+        "left": "que campos poderiam ser renomeados sem quebrar um cliente conhecido?",
+        "right": "os campos que nenhum pact menciona"
+      }
+    ],
+    "right_distractors": [
+      "o cabeçalho Date de cada resposta"
+    ]
+  },
+  "ex-eny8dvv2": {
+    "prompt": "O time do quiosque diz que o teste de pact deles passa, então o boxoffice deve suportar venue. Como você responde?",
+    "hint": "Que lado do Pact rodou?",
+    "choices": [
+      {
+        "text": "Concordar, porque um teste de pact que passa prova o provedor",
+        "why": "O lado do consumidor só prova que o quiosque funciona contra o mock."
+      },
+      {
+        "text": "O pact deles rodou contra um mock; a verificação falha",
+        "why": "Certo. A verificação é a conferência contra o boxoffice de verdade."
+      },
+      {
+        "text": "Pedir que tirem o like do pact deles",
+        "why": "O like não é o problema; o campo não existe."
+      },
+      {
+        "text": "Acrescentar venue ao show.json para o pact passar",
+        "why": "Mudar o schema não faz o boxoffice mandar o campo."
+      }
+    ]
+  }
+}

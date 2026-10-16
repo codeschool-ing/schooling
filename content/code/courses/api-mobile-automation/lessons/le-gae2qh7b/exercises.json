@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ex-qd5y3x85",
+    "version": 1,
+    "section": "inside-the-app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the code of an Espresso test run while it tests Tickets?",
+    "hint": "Lesson 14 called it an instrumented test.",
+    "choices": [
+      {
+        "text": "On your computer, sending commands through adb",
+        "correct": false,
+        "why": "That is closer to Appium; Espresso is packed into a test APK and runs on the device."
+      },
+      {
+        "text": "In the app's own process, on the device",
+        "correct": true,
+        "why": "Right. The test APK's instrumentation starts the app, and the two share a process and a main thread."
+      },
+      {
+        "text": "In a second app beside Tickets, talking to it over the screen",
+        "correct": false,
+        "why": "The test APK is installed beside it, but the tests run inside the app's process, not in one of their own."
+      },
+      {
+        "text": "On the computer's Java runtime, without Android",
+        "correct": false,
+        "why": "That is a local test, in src/test; Espresso needs a device."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bdryb5t",
+    "version": 1,
+    "section": "inside-the-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tickets starts a thread to fetch the shows. Why does Espresso not wait for it on its own?",
+    "hint": "What does Espresso watch before every step?",
+    "choices": [
+      {
+        "text": "Because Espresso never waits for anything",
+        "correct": false,
+        "why": "It waits for the main thread before every action and check; that is its main feature."
+      },
+      {
+        "text": "Because network calls are forbidden in tests",
+        "correct": false,
+        "why": "They are forbidden on the main thread, in apps and tests alike; the load is allowed on its own thread."
+      },
+      {
+        "text": "Its thread is not the main one",
+        "correct": true,
+        "why": "Right. A thread the app started itself is invisible to it."
+      },
+      {
+        "text": "Because the thread runs in boxoffice, not in the app",
+        "correct": false,
+        "why": "The thread runs in the app's process; boxoffice is the server it asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp8pq5qm",
+    "version": 1,
+    "section": "inside-the-app",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can an Espresso test do that an Appium test cannot?",
+    "hint": "Think of what being inside the process gives.",
+    "choices": [
+      {
+        "text": "Set Shows.baseUrl before the list loads",
+        "correct": true,
+        "why": "Right. It shares the app's memory, so the app's own objects are reachable."
+      },
+      {
+        "text": "Choose a list row by the Show object behind it",
+        "correct": true,
+        "why": "Right. onData reads the adapter's items, which only code inside the app can see."
+      },
+      {
+        "text": "Tap Allow on Android's notification permission dialog",
+        "correct": false,
+        "why": "The dialog belongs to Android, outside the app's windows; that needs a test from outside (lesson 21)."
+      },
+      {
+        "text": "Run the same test against the iOS version of Tickets",
+        "correct": false,
+        "why": "Espresso is Android only; neither tool runs one test on both without the apps agreeing on names."
+      }
+    ]
+  },
+  {
+    "id": "ex-npvmnxd0",
+    "version": 1,
+    "section": "the-test-files",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each folder of the Tickets project to what lives there.",
+    "hint": "The table of section 03.",
+    "pairs": [
+      {
+        "left": "app/src/main",
+        "right": "the app a user installs"
+      },
+      {
+        "left": "app/src/test",
+        "right": "local tests, on the computer's Java runtime"
+      },
+      {
+        "left": "app/src/androidTest",
+        "right": "instrumented tests, run on the device"
+      }
+    ],
+    "right_distractors": [
+      "the Appium tests of lesson 15"
+    ]
+  },
+  {
+    "id": "ex-bmwr2ff9",
+    "version": 1,
+    "section": "the-test-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does androidTestImplementation(libs.androidx.espresso.core) in the build file mean for the app a user downloads?",
+    "hint": "Which APK is it for?",
+    "choices": [
+      {
+        "text": "The app carries Espresso, switched off",
+        "correct": false,
+        "why": "It is not in the app at all; it goes only into the test APK."
+      },
+      {
+        "text": "Nothing: Espresso goes into the test APK only",
+        "correct": true,
+        "why": "Right. androidTestImplementation is for the instrumented tests and never reaches a user."
+      },
+      {
+        "text": "The app becomes larger by the size of Espresso",
+        "correct": false,
+        "why": "That would be implementation; the test configuration keeps the library out of the app."
+      },
+      {
+        "text": "The app can be tested only on an emulator",
+        "correct": false,
+        "why": "Instrumented tests run on any device adb lists, a phone included."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k2b2kea",
+    "version": 1,
+    "section": "the-test-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the test expect the text R$ 65,00 on the show screen of sh-103?",
+    "hint": "Look at the capture of the shows, and at price() in Shows.kt.",
+    "choices": [
+      {
+        "text": "Because that is the price of every show",
+        "correct": false,
+        "why": "sh-101 and sh-102 cost 8000 cents, so R$ 80,00."
+      },
+      {
+        "text": "Because the app rounds 6500 cents up",
+        "correct": false,
+        "why": "price() divides whole cents with no rounding: 6500 is exactly 65 reais."
+      },
+      {
+        "text": "Because the layout of the show screen writes it",
+        "correct": false,
+        "why": "The layout has no text in price; ShowActivity fills it from the intent."
+      },
+      {
+        "text": "boxoffice's 6500 cents, as price() writes them",
+        "correct": true,
+        "why": "Right. The expected value comes from the API's answer through the app's own formatting."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjgrakwa",
+    "version": 1,
+    "section": "matchers-actions-assertions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the test reach the row of sh-103 with onData instead of onView?",
+    "hint": "What does a ListView do with its rows when you scroll?",
+    "choices": [
+      {
+        "text": "A ListView reuses a few row views",
+        "correct": true,
+        "why": "Right. onData asks the adapter for the item and scrolls to it, so rows off screen are found too."
+      },
+      {
+        "text": "onView cannot find views that have an id",
+        "correct": false,
+        "why": "onView with withId is the commonest line in Espresso."
+      },
+      {
+        "text": "onData is faster because it skips the main thread",
+        "correct": false,
+        "why": "Both wait for the main thread; the reason is how a list keeps its rows."
+      },
+      {
+        "text": "Rows in a list carry no id",
+        "correct": false,
+        "why": "Each row has the ids title and detail, three times over, which is part of the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr65189y",
+    "version": 1,
+    "section": "matchers-actions-assertions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the list screen, before any tap, a test runs onView(withId(R.id.title)).check(matches(isDisplayed())). What happens?",
+    "hint": "How many views have the id title on that screen?",
+    "choices": [
+      {
+        "text": "It passes, checking the first row",
+        "correct": false,
+        "why": "Espresso does not pick one of several; it refuses."
+      },
+      {
+        "text": "It fails with NoMatchingViewException instead",
+        "correct": false,
+        "why": "That is for no match at all; here there are three."
+      },
+      {
+        "text": "It fails with AmbiguousViewMatcherException",
+        "correct": true,
+        "why": "Right. Every row has a title, so the matcher finds three views where it must find one."
+      },
+      {
+        "text": "It checks the show screen's title instead",
+        "correct": false,
+        "why": "The show screen is not open; nothing was tapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-44h52qb3",
+    "version": 1,
+    "section": "matchers-actions-assertions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The banner of Tickets is hidden with visibility gone. Which check passes on a fresh list?",
+    "hint": "Is the view there or not?",
+    "choices": [
+      {
+        "text": "check(doesNotExist())",
+        "correct": false,
+        "why": "The view exists in the layout on every start, so this fails."
+      },
+      {
+        "text": "check(matches(not(isDisplayed())))",
+        "correct": true,
+        "why": "Right. It exists and is not displayed."
+      },
+      {
+        "text": "check(matches(isDisplayed()))",
+        "correct": false,
+        "why": "It is hidden until the app is offline with a saved copy."
+      },
+      {
+        "text": "check(matches(withText(\"\")))",
+        "correct": false,
+        "why": "A text check says nothing about whether it is shown, which is the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz5nc03n",
+    "version": 1,
+    "section": "matchers-actions-assertions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In onData(showWithId(\"sh-103\")).inAdapterView(withId(R.id.shows)).perform(click()), the custom matcher extends Espresso's ___, which only looks at items of one class.",
+    "hint": "Bounded to Show.",
+    "blanks": [
+      {
+        "accept": [
+          "BoundedMatcher"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vfpff3fp",
+    "version": 1,
+    "section": "idling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the grep of MainActivity.kt, on which line is Shows.busy lowered?",
+    "hint": "The line with busy--.",
+    "value": 44,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z23405s9",
+    "version": 1,
+    "section": "idling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does MainActivity lower busy inside runOnUiThread, after display, and not at the end of the background thread?",
+    "hint": "When is the screen finished?",
+    "choices": [
+      {
+        "text": "Because a background thread cannot change a number",
+        "correct": false,
+        "why": "Any thread can; busy is even marked volatile for that."
+      },
+      {
+        "text": "So busy reaches zero only once the list is on screen",
+        "correct": true,
+        "why": "Right. Lowered earlier, Espresso would go on between the answer arriving and the list being drawn."
+      },
+      {
+        "text": "Because Espresso reads busy only on the background thread",
+        "correct": false,
+        "why": "The idling resource reads it on the main thread; the order matters, not the reader."
+      },
+      {
+        "text": "So that a failed load does not lower it",
+        "correct": false,
+        "why": "Every load lowers it, failed or not; display handles all three results."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ssk1m8r",
+    "version": 1,
+    "section": "idling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague fixes the flaky ListTest with Thread.sleep(3000) before onData. It has passed fifty times. What do you tell them?",
+    "hint": "What does the test wait for, and for how long?",
+    "choices": [
+      {
+        "text": "Fine, but 5000 would be safer on CI",
+        "correct": false,
+        "why": "A longer guess is still a guess, and costs more on every run."
+      },
+      {
+        "text": "Fine: fifty passes prove the race is gone",
+        "correct": false,
+        "why": "The race is still there; the sleep only makes losing it rarer, until a load takes longer than three seconds."
+      },
+      {
+        "text": "Use an idling resource on Shows.busy",
+        "correct": true,
+        "why": "Right. It waits exactly as long as the load, fails with a name, and says what the test waits for."
+      },
+      {
+        "text": "Move the sleep into the app's MainActivity",
+        "correct": false,
+        "why": "That slows down every user to fix a test."
+      }
+    ]
+  },
+  {
+    "id": "ex-asx16e54",
+    "version": 1,
+    "section": "idling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does ShowsIdlingResource post a new check every tenth of a second while busy is above zero?",
+    "hint": "Who tells the resource that busy dropped?",
+    "choices": [
+      {
+        "text": "Because Espresso requires every resource to poll",
+        "correct": false,
+        "why": "A resource the app notifies, like CountingIdlingResource, never polls."
+      },
+      {
+        "text": "The app never says when busy drops",
+        "correct": true,
+        "why": "Right. It asks again itself, and calls Espresso back the first time the answer is zero."
+      },
+      {
+        "text": "To make the load itself finish sooner",
+        "correct": false,
+        "why": "The checks only read busy; they cannot speed up a request to boxoffice."
+      },
+      {
+        "text": "Because isIdleNow may only run on the load thread",
+        "correct": false,
+        "why": "The checks are posted to the main thread, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdfrer4k",
+    "version": 1,
+    "section": "offline-in-a-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The offline test points Shows.baseUrl at http://10.0.2.2:9 rather than at an address nobody answers, like 10.255.255.1. Why?",
+    "hint": "Compare the two curl captures.",
+    "choices": [
+      {
+        "text": "Because 10.255.255.1 would reach the emulator itself",
+        "correct": false,
+        "why": "Only localhost is the emulator itself; 10.255.255.1 goes out to a network where nothing answers it."
+      },
+      {
+        "text": "A refused port fails at once, the other waits 5 s",
+        "correct": true,
+        "why": "Right. curl was refused after 0 ms and gave up after 5002 ms, and the app has the same 5000 ms limit."
+      },
+      {
+        "text": "Because port 9 makes boxoffice return an error",
+        "correct": false,
+        "why": "boxoffice listens on 8080; nothing at all answers on port 9."
+      },
+      {
+        "text": "Because the emulator cannot reach private addresses",
+        "correct": false,
+        "why": "10.0.2.2 is itself a private address the emulator reaches."
+      }
+    ]
+  },
+  {
+    "id": "ex-wch1dgv3",
+    "version": 1,
+    "section": "offline-in-a-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test clears the saved copy, sets Shows.baseUrl to the dead address and forgets to restore it. ListTest runs after it in the same run. What happens, and why?",
+    "hint": "How long does a Kotlin object live during an instrumented run?",
+    "choices": [
+      {
+        "text": "It fails: Shows outlives each test in one process",
+        "correct": true,
+        "why": "Right. The tests share a process, so the changed address leaks into every later test, depending on order."
+      },
+      {
+        "text": "Nothing: each test class gets a fresh copy of the app",
+        "correct": false,
+        "why": "The activity is fresh; the process and its objects are not."
+      },
+      {
+        "text": "ListTest passes, using a copy saved earlier",
+        "correct": false,
+        "why": "The forgetful test cleared the copy, so there is none to fall back on."
+      },
+      {
+        "text": "The rule of ListTest resets baseUrl before each test",
+        "correct": false,
+        "why": "ActivityScenarioRule opens an activity; it knows nothing of Shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cfwwh34",
+    "version": 1,
+    "section": "offline-in-a-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does OfflineTest open the activity with ActivityScenario.launch rather than with the rule ListTest uses?",
+    "hint": "When does the first load read baseUrl?",
+    "choices": [
+      {
+        "text": "Because the rule cannot open MainActivity",
+        "correct": false,
+        "why": "It opens it in ListTest; the problem is when."
+      },
+      {
+        "text": "Because launch skips the first load",
+        "correct": false,
+        "why": "launch opens the activity normally, and onCreate starts the load as always."
+      },
+      {
+        "text": "baseUrl must change before onCreate's first load",
+        "correct": true,
+        "why": "Right. The rule opens the activity before the test body runs, too early to change anything."
+      },
+      {
+        "text": "Because launch clears SharedPreferences on its own",
+        "correct": false,
+        "why": "The @Before does that, with clear().commit()."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ad3e51c",
+    "version": 1,
+    "section": "running",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Gradle task runs the instrumented tests on every device adb lists?",
+    "hint": "Connected, and the debug variant.",
+    "choices": [
+      {
+        "text": "./gradlew test",
+        "correct": false,
+        "why": "That runs the local tests in src/test, on the computer."
+      },
+      {
+        "text": "./gradlew assembleDebug",
+        "correct": false,
+        "why": "That builds the app's APK and runs nothing."
+      },
+      {
+        "text": "./gradlew connectedDebugAndroidTest",
+        "correct": true,
+        "why": "Right. It builds both APKs, installs them and runs the tests."
+      },
+      {
+        "text": "./gradlew installDebug",
+        "correct": false,
+        "why": "That installs the app only; no test runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-986ve36q",
+    "version": 1,
+    "section": "running",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson switch off the three animation scales on the emulator before running Espresso?",
+    "hint": "What does Espresso wait for, and how does an animation run?",
+    "choices": [
+      {
+        "text": "Espresso does not reliably wait them out",
+        "correct": true,
+        "why": "Right. It is Google's advice for every device that runs Espresso."
+      },
+      {
+        "text": "To make the emulator use less memory",
+        "correct": false,
+        "why": "The reason is synchronisation, not memory."
+      },
+      {
+        "text": "Because Tickets's animations hide the defects",
+        "correct": false,
+        "why": "Tickets has no animations of its own; the system's transitions are the issue."
+      },
+      {
+        "text": "Because adb refuses to install with animations on",
+        "correct": false,
+        "why": "Installation does not care about animations."
+      }
+    ]
+  },
+  {
+    "id": "ex-9508tycj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of noServerWithACopyShowsTheBanner in the order the test runs them.",
+    "hint": "A copy has to be saved before boxoffice disappears.",
+    "items": [
+      "clear the saved copy and register the idling resource",
+      "launch MainActivity, whose first load reaches boxoffice",
+      "check the list, so Espresso waits for that load",
+      "point Shows.baseUrl at the dead address and tap refresh",
+      "check the banner and its words",
+      "put the address back and unregister"
+    ]
+  },
+  {
+    "id": "ex-j92yscsx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In OfflineTest's second test, the line onView(withId(R.id.shows)).check(matches(isDisplayed())) is deleted. Sometimes the banner check now fails. Why?",
+    "hint": "What did that check make Espresso wait for?",
+    "choices": [
+      {
+        "text": "The list is no longer displayed without that check",
+        "correct": false,
+        "why": "A check observes; it does not make the list appear."
+      },
+      {
+        "text": "The idling resource stops working without an onView first",
+        "correct": false,
+        "why": "It works for any onView or onData; the problem is what happens before the next one."
+      },
+      {
+        "text": "The banner shows the wrong time",
+        "correct": false,
+        "why": "The check stops before the time, so the time cannot fail it."
+      },
+      {
+        "text": "No copy is saved before the address changes",
+        "correct": true,
+        "why": "Right. That check was the sync point; without it the address changes while the first load is out, that load fails too, and with no copy the app shows the error line."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvhza9m3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each need of a Tickets test to the tool of lessons 15 and 16 that meets it.",
+    "hint": "Inside the process or outside it?",
+    "pairs": [
+      {
+        "left": "make boxoffice unreachable by changing Shows.baseUrl",
+        "right": "Espresso, inside the app"
+      },
+      {
+        "left": "tap Allow on Android's permission dialog",
+        "right": "Appium, from outside"
+      },
+      {
+        "left": "wait for a load on the app's own thread",
+        "right": "an idling resource"
+      },
+      {
+        "left": "wait for a row to appear on the screen, from outside",
+        "right": "an explicit wait such as waitForDisplayed"
+      }
+    ],
+    "right_distractors": [
+      "Thread.sleep with a generous number"
+    ]
+  }
+]
