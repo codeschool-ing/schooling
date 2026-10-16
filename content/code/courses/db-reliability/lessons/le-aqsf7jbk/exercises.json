@@ -1,0 +1,536 @@
+[
+  {
+    "id": "ex-a1980n01",
+    "version": 1,
+    "section": "finding-the-primary",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each approach with what moves at a failover.",
+    "hint": "Nothing, a choice, an address, a record.",
+    "pairs": [
+      {
+        "left": "Several hosts in the connection string",
+        "right": "Nothing; the client tries each"
+      },
+      {
+        "left": "A proxy such as HAProxy",
+        "right": "The proxy's choice of backend"
+      },
+      {
+        "left": "A virtual IP",
+        "right": "The address itself, to another machine"
+      },
+      {
+        "left": "DNS",
+        "right": "A record that names the new primary"
+      }
+    ],
+    "right_distractors": [
+      "The data directory"
+    ]
+  },
+  {
+    "id": "ex-jv01e8ds",
+    "version": 1,
+    "section": "finding-the-primary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do all four approaches have in common at the moment of a failover?",
+    "hint": "Open connections.",
+    "choices": [
+      {
+        "text": "They need etcd",
+        "correct": false,
+        "why": "Only some read the leader from etcd."
+      },
+      {
+        "text": "They need a restart of the application",
+        "correct": false,
+        "why": "None needs that; the application reconnects."
+      },
+      {
+        "text": "Open connections break",
+        "correct": true,
+        "why": "Right: no address trick repairs a connection to a server that stopped being primary."
+      },
+      {
+        "text": "They add a network round trip to every query",
+        "correct": false,
+        "why": "Only a proxy adds a hop."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgc72pwd",
+    "version": 1,
+    "section": "in-the-connection-string",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which connection parameter made `psql` settle on the primary among three hosts?",
+    "hint": "A condition the kept server must meet.",
+    "choices": [
+      {
+        "text": "target_session_attrs=read-write",
+        "correct": true,
+        "why": "Right: it skips servers that refuse writes."
+      },
+      {
+        "text": "sslmode=require",
+        "correct": false,
+        "why": "That is about encryption."
+      },
+      {
+        "text": "application_name=primary",
+        "correct": false,
+        "why": "That only names the session."
+      },
+      {
+        "text": "load_balance_hosts=random",
+        "correct": false,
+        "why": "That shuffles the order; it does not pick the primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-86y138m7",
+    "version": 1,
+    "section": "in-the-connection-string",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `target_session_attrs=standby`, which port did the three-host string connect to?",
+    "hint": "It passed over the primary.",
+    "value": 5442,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1s0n50fx",
+    "version": 1,
+    "section": "in-the-connection-string",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which cost of client-side lists does the lesson name?",
+    "hint": "Who has to change when a server is added?",
+    "choices": [
+      {
+        "text": "libpq sends every query to all hosts",
+        "correct": false,
+        "why": "It keeps one connection."
+      },
+      {
+        "text": "It needs HAProxy anyway",
+        "correct": false,
+        "why": "It needs nothing in between."
+      },
+      {
+        "text": "It works only for read-only sessions",
+        "correct": false,
+        "why": "read-write found the primary."
+      },
+      {
+        "text": "Every config lists every server",
+        "correct": true,
+        "why": "Right: every application's configuration does, so adding one changes all of them, and a dead first host costs a connect timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-500sf9gr",
+    "version": 1,
+    "section": "haproxy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Patroni's REST endpoint `/primary` answer on a replica?",
+    "hint": "Two codes.",
+    "choices": [
+      {
+        "text": "200",
+        "correct": false,
+        "why": "Only the leader answers 200."
+      },
+      {
+        "text": "503",
+        "correct": true,
+        "why": "Right: and 200 on the leader, which is what HAProxy checks."
+      },
+      {
+        "text": "302, pointing at the leader",
+        "correct": false,
+        "why": "It does not redirect."
+      },
+      {
+        "text": "Nothing; replicas have no REST port",
+        "correct": false,
+        "why": "Every node has one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab36wf17",
+    "version": 1,
+    "section": "haproxy",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of `haproxy.cfg` with its job.",
+    "hint": "Mode, check, timing, cutting.",
+    "pairs": [
+      {
+        "left": "mode tcp",
+        "right": "Passes PostgreSQL's protocol through untouched"
+      },
+      {
+        "left": "option httpchk GET /primary",
+        "right": "Asks each node's Patroni whether it is the leader"
+      },
+      {
+        "left": "inter 2s fall 2 rise 2",
+        "right": "Check every two seconds; two answers to change state"
+      },
+      {
+        "left": "on-marked-down shutdown-sessions",
+        "right": "Closes connections to a server marked down"
+      }
+    ],
+    "right_distractors": [
+      "Copies the WAL to the standby"
+    ]
+  },
+  {
+    "id": "ex-vsz15kzq",
+    "version": 1,
+    "section": "haproxy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are `timeout client` and `timeout server` set to 30 minutes?",
+    "hint": "What does a database connection do most of the time?",
+    "choices": [
+      {
+        "text": "To give slow queries time to finish",
+        "correct": false,
+        "why": "Query time is the server's concern, not HAProxy's."
+      },
+      {
+        "text": "Idle connections would be cut",
+        "correct": true,
+        "why": "Right: a pooled database connection is idle most of its life."
+      },
+      {
+        "text": "HAProxy requires at least 30 minutes",
+        "correct": false,
+        "why": "There is no such minimum."
+      },
+      {
+        "text": "So the health checks have time",
+        "correct": false,
+        "why": "timeout check covers those."
+      }
+    ]
+  },
+  {
+    "id": "ex-khfknzxr",
+    "version": 1,
+    "section": "haproxy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two connections to port 5001 reached 5442, then 5443. Why?",
+    "hint": "listen replicas.",
+    "choices": [
+      {
+        "text": "pg1 refused the connection",
+        "correct": false,
+        "why": "pg1 is down on that side because it is the leader."
+      },
+      {
+        "text": "libpq chose them",
+        "correct": false,
+        "why": "HAProxy chose; psql had one address."
+      },
+      {
+        "text": "The second one failed over",
+        "correct": false,
+        "why": "Nothing failed."
+      },
+      {
+        "text": "balance roundrobin over the replicas",
+        "correct": true,
+        "why": "Right: /replica answers 200 on both, and connections alternate."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wn2k4ek",
+    "version": 1,
+    "section": "haproxy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say about running a single HAProxy?",
+    "hint": "It is one more thing that must be up.",
+    "choices": [
+      {
+        "text": "Run two, or one per application server",
+        "correct": true,
+        "why": "Right: otherwise the proxy is the new single point of failure."
+      },
+      {
+        "text": "It is enough; it never fails",
+        "correct": false,
+        "why": "It is one more component to lose."
+      },
+      {
+        "text": "Run it on the primary",
+        "correct": false,
+        "why": "Then it dies with the primary."
+      },
+      {
+        "text": "Replace it with PgBouncer",
+        "correct": false,
+        "why": "PgBouncer pools; it does not follow the leader by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nabmhjg",
+    "version": 1,
+    "section": "the-switch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders did `orders.sh` report as FAILED during the switchover?",
+    "hint": "Count the lines.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-th0qmsqt",
+    "version": 1,
+    "section": "the-switch",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The last order on 5441 was at 02:17:38 and the first on 5442 at 02:17:44. How many seconds took no order?",
+    "hint": "Subtract.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-jk3jk315",
+    "version": 1,
+    "section": "the-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happened to the connection that was in the middle of `pg_sleep(30)`?",
+    "hint": "held.log.",
+    "choices": [
+      {
+        "text": "HAProxy moved it to pg2",
+        "correct": false,
+        "why": "A connection cannot move between servers."
+      },
+      {
+        "text": "It finished its sleep, then failed",
+        "correct": false,
+        "why": "It was cut in the middle."
+      },
+      {
+        "text": "It was terminated",
+        "correct": true,
+        "why": "Right: terminating connection due to administrator command, when pg1 was stopped."
+      },
+      {
+        "text": "It waited until pg1 came back",
+        "correct": false,
+        "why": "pg1 came back as a replica; the session was gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2xvtp1a",
+    "version": 1,
+    "section": "the-switch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which two things made up the seconds without orders?",
+    "hint": "A switch, then a check.",
+    "choices": [
+      {
+        "text": "etcd's ttl and the DNS TTL",
+        "correct": false,
+        "why": "A switchover does not wait for the ttl, and there was no DNS."
+      },
+      {
+        "text": "pg_rewind and a base backup",
+        "correct": false,
+        "why": "Neither runs before the new primary takes writes."
+      },
+      {
+        "text": "orders.sh's sleep and psql's start-up",
+        "correct": false,
+        "why": "Those cost a second, not six."
+      },
+      {
+        "text": "Patroni's switch, then HAProxy's checks",
+        "correct": true,
+        "why": "Right: stopping pg1 and promoting pg2, then two good checks two seconds apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cj1j1zx",
+    "version": 1,
+    "section": "the-switch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order failed with \"connection lost\". Why is retrying it blindly risky?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The retry goes to the old primary",
+        "correct": false,
+        "why": "New connections went to the new one."
+      },
+      {
+        "text": "Retries are refused by PostgreSQL",
+        "correct": false,
+        "why": "A new connection accepts them."
+      },
+      {
+        "text": "Its commit is unknown",
+        "correct": true,
+        "why": "Right: it could already have committed; a key chosen by the application makes the retry safe."
+      },
+      {
+        "text": "HAProxy blocks retries for a minute",
+        "correct": false,
+        "why": "It does nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqsgpz5x",
+    "version": 1,
+    "section": "the-switch",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what an application should do when its connection breaks in order.",
+    "hint": "Wait, reconnect, check, retry.",
+    "items": [
+      "Wait a moment before reconnecting",
+      "Open a new connection",
+      "Check whether the transaction committed",
+      "Retry it if it did not"
+    ],
+    "trap": "Retrying before checking can duplicate an order that did commit."
+  },
+  {
+    "id": "ex-2j1eva5n",
+    "version": 1,
+    "section": "vip-and-dns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a virtual IP often not work in a cloud?",
+    "hint": "The network decides where an address may live.",
+    "choices": [
+      {
+        "text": "The address cannot move there",
+        "correct": true,
+        "why": "Right: clouds do not let an address move between machines; a cloud load balancer plays that role there."
+      },
+      {
+        "text": "Virtual IPs need IPv6",
+        "correct": false,
+        "why": "They work with IPv4."
+      },
+      {
+        "text": "Patroni cannot run in a cloud",
+        "correct": false,
+        "why": "It runs anywhere."
+      },
+      {
+        "text": "The address is too slow to move",
+        "correct": false,
+        "why": "Moving is fast where it is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3b61qcc",
+    "version": 1,
+    "section": "vip-and-dns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes DNS slow to take effect after a failover?",
+    "hint": "Somebody kept the old answer.",
+    "choices": [
+      {
+        "text": "DNS records can only change once an hour",
+        "correct": false,
+        "why": "They change when written."
+      },
+      {
+        "text": "Cached answers",
+        "correct": true,
+        "why": "Right: caches keep the old answer for the TTL at least: resolvers and runtimes, sometimes longer."
+      },
+      {
+        "text": "The new primary has no name",
+        "correct": false,
+        "why": "The record is changed to name it."
+      },
+      {
+        "text": "libpq does not use DNS",
+        "correct": false,
+        "why": "It does, for every host name."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjvvty2e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the lesson say to test whichever approach a system uses?",
+    "hint": "Not by reading the cluster manager.",
+    "choices": [
+      {
+        "text": "Check patronictl list after a switch",
+        "correct": false,
+        "why": "That shows the cluster, not the application."
+      },
+      {
+        "text": "Read HAProxy's status page",
+        "correct": false,
+        "why": "That shows the proxy, not the application."
+      },
+      {
+        "text": "Watch an application switch",
+        "correct": true,
+        "why": "Right: as orders.sh did."
+      },
+      {
+        "text": "Run pgbench against the primary's port",
+        "correct": false,
+        "why": "That bypasses the path the application uses."
+      }
+    ]
+  }
+]
