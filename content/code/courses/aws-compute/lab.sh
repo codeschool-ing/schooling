@@ -26,7 +26,7 @@
 #     127.0.0.1:4567 and always EMPTY when a capture starts. The student starts
 #     moto_server in a terminal of their own; here the lab starts it before the
 #     first command, from the same virtual environment, with the same flags.
-#   - Docker (lessons 9, 10, 14 and 17): this machine cannot reach Docker Hub,
+#   - Docker (lessons 8, 14, 15 and 17): this machine cannot reach Docker Hub,
 #     ghcr.io or public.ecr.aws for image layers, so `tools` pulls the two images
 #     those lessons use through mirror.gcr.io, Google's public cache of Docker
 #     Hub, and tags them with the names the lessons use. Lambda's base image is
@@ -35,6 +35,9 @@
 #     a capture on the machine's own network, because a port published by
 #     Docker is not reachable from inside a network namespace; those runs take
 #     a lock, so two of them never share moto.
+#   - Each run has a ~/aws of its own (an empty directory with the virtual
+#     environment bound into it), so what one capture writes there is gone when
+#     it ends and no other capture ever sees it.
 #
 #   bash lab.sh tools            # once: the student's environment, the images
 #   bash lab.sh run CMD...       # CMD in a fresh lab, as ana, in ~/aws
@@ -109,7 +112,10 @@ tools() {
 run() {
   [ -x "$HOMEDIR/aws/venv/bin/moto_server" ] || { echo "run 'bash lab.sh tools' first"; exit 1; }
   if [ -n "${LAB_HOSTS:-}" ]; then
-    exec flock "$LOCK" unshare --mount --propagation private -- bash "$COURSE/lab.sh" inside "$@"
+    # no mount namespace: the Docker daemon lives in the machine's own, and a
+    # path given to `docker run -v` has to be the one this run sees. The lock
+    # makes these mounts one run's at a time.
+    exec flock "$LOCK" bash "$COURSE/lab.sh" inside "$@"
   fi
   exec unshare --net --mount --propagation private -- bash "$COURSE/lab.sh" inside "$@"
 }
@@ -118,9 +124,12 @@ inside() {
   [ -n "${LAB_HOSTS:-}" ] || ip link set lo up
   mount --bind "$HOMEDIR" /home/ana
   local work; work=$(mktemp -d "$ROOT/run.XXXXXX")
-  # ~/aws holds the virtual environment and stays; what a run writes beside it
-  # is removed afterwards, so every capture starts from the same directory
-  local before; before=$(ls -A /home/ana/aws)
+  # Every run gets a ~/aws of its own, in its own mount namespace: an empty
+  # directory with the virtual environment bound back into it. What a run
+  # writes there vanishes with it, and two runs never see each other's files.
+  mkdir -p "$work/aws/venv"
+  mount --bind "$work/aws" /home/ana/aws
+  mount --bind "$HOMEDIR/aws/venv" /home/ana/aws/venv
   env ${LAB_MOTO_ENV:-} /home/ana/aws/venv/bin/moto_server -p 4567 >"$work/moto.log" 2>&1 </dev/null &
   local moto=$!
   for _ in $(seq 80); do curl -s -o /dev/null http://127.0.0.1:4567/ && break; sleep 0.25; done
@@ -132,13 +141,11 @@ EOF
   # then the lines the student types in every new terminal, out of the lesson
   sh_fence "$LESSON1/your-lab.md" 4 >> "$work/env"
   local status=0
+  [ -z "${LAB_HOSTS:-}" ] || trap 'umount /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null' EXIT
   env -i bash -c 'cd /home/ana; . "$1"; shift; "$@"' lab "$work/env" "$@" || status=$?
   kill "$moto" 2>/dev/null || true
   wait "$moto" 2>/dev/null || true
-  local f
-  for f in $(ls -A /home/ana/aws); do
-    grep -qxF "$f" <<<"$before" || rm -rf "/home/ana/aws/$f"
-  done
+  umount /home/ana/aws/venv /home/ana/aws /home/ana 2>/dev/null || true
   rm -rf "$work"
   return $status
 }
