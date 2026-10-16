@@ -1,0 +1,1410 @@
+[
+  {
+    "id": "ex-w11xxhb5",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which properties make an artefact worth the name, as the lesson lists them? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It is immutable",
+        "correct": true,
+        "why": "Right. The bytes behind a reference do not change."
+      },
+      {
+        "text": "It is rebuilt for each environment",
+        "correct": false,
+        "why": "The opposite: built once, fetched everywhere."
+      },
+      {
+        "text": "It is addressable",
+        "correct": true,
+        "why": "Right. A name means exactly these bytes."
+      },
+      {
+        "text": "It has provenance",
+        "correct": true,
+        "why": "Right. Somebody can say what produced it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh2a82d9",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a GitOps setup, what does each of Git and the registry hold?",
+    "choices": [
+      {
+        "text": "Git holds the images; the registry holds the manifests",
+        "correct": false,
+        "why": "Images are far too large for Git, and manifests are what Git is for."
+      },
+      {
+        "text": "Git says which artefact; the registry holds it",
+        "correct": true,
+        "why": "Right. If either lies, the cluster runs something nobody decided."
+      },
+      {
+        "text": "Both hold the same thing, for redundancy",
+        "correct": false,
+        "why": "They hold different things that point at each other."
+      },
+      {
+        "text": "The registry decides which tag each environment runs",
+        "correct": false,
+        "why": "Git decides; the registry only stores."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdqxadj7",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what a reference to bulletin:1.1 resolves through, from the top.",
+    "items": [
+      "The tag",
+      "The index",
+      "The image manifest for linux/amd64",
+      "The layers"
+    ],
+    "trap": "The tag points at the index, which lists manifests, which list layers."
+  },
+  {
+    "id": "ex-shrpx75t",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What was the second manifest in bulletin:1.1's index?",
+    "choices": [
+      {
+        "text": "A copy of the first manifest, for redundancy",
+        "correct": false,
+        "why": "Registries do not duplicate manifests."
+      },
+      {
+        "text": "The same image for arm64",
+        "correct": false,
+        "why": "Its platform was unknown; it is not an image at all."
+      },
+      {
+        "text": "An attestation Docker added at build time",
+        "correct": true,
+        "why": "Right. A record of how the image was built, which lesson 8 reads."
+      },
+      {
+        "text": "The Helm chart that deploys the image",
+        "correct": false,
+        "why": "The chart lives in a repository of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1trph1x",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One byte of index.cgi changes and the image is rebuilt. Which digests change?",
+    "choices": [
+      {
+        "text": "Only the tag's",
+        "correct": false,
+        "why": "A tag has no digest of its own; it points at one."
+      },
+      {
+        "text": "That layer's, the manifest's and the index's",
+        "correct": true,
+        "why": "Right. Each document lists the one below by digest, so the change climbs to the top."
+      },
+      {
+        "text": "Only the layer's",
+        "correct": false,
+        "why": "The manifest lists the layer's digest, so it changes too."
+      },
+      {
+        "text": "None, since the tag stays 1.1",
+        "correct": false,
+        "why": "The tag would now point at a new index."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn5kwhsc",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The registry returns the hash of what a tag points at in the header Docker-Content-___.",
+    "blanks": [
+      {
+        "accept": [
+          "Digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nq8n21ne",
+    "version": 1,
+    "section": "tags-move",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the second push of stable, what did the first image's digest still name?",
+    "choices": [
+      {
+        "text": "Nothing, because the push deleted it",
+        "correct": false,
+        "why": "Pushing a tag deletes nothing."
+      },
+      {
+        "text": "Both, merged",
+        "correct": false,
+        "why": "Images are never merged."
+      },
+      {
+        "text": "The 1.0 image",
+        "correct": true,
+        "why": "Right. A digest never moves; only the tag did."
+      },
+      {
+        "text": "The 1.1 image",
+        "correct": false,
+        "why": "That is what stable points at now."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnnhcm98",
+    "version": 1,
+    "section": "tags-move",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the defences against a moved version tag, from the weakest to the strongest.",
+    "items": [
+      "A team rule",
+      "Tag immutability in the registry",
+      "A digest in Git"
+    ],
+    "trap": "A rule needs people; immutability needs the registry's setting; a digest needs nothing."
+  },
+  {
+    "id": "ex-12z6e342",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What confirms that production runs exactly the bytes Git names?",
+    "choices": [
+      {
+        "text": "Flux reports READY True",
+        "correct": false,
+        "why": "Ready says the apply worked, not which bytes run."
+      },
+      {
+        "text": "The tag 1.1 still exists",
+        "correct": false,
+        "why": "The tag can move without affecting a digest reference."
+      },
+      {
+        "text": "The container's imageID equals the digest",
+        "correct": true,
+        "why": "Right. The node pulled by digest and reports the same one."
+      },
+      {
+        "text": "The pod is Running",
+        "correct": false,
+        "why": "A running pod says nothing about which bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yga26fkm",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rule does the lesson suggest for tags and digests?",
+    "choices": [
+      {
+        "text": "Tags in staging, digests in production",
+        "correct": true,
+        "why": "Right. Staging tries releases; production keeps them."
+      },
+      {
+        "text": "latest in staging, a version tag in production",
+        "correct": false,
+        "why": "latest moves by design, which is the problem."
+      },
+      {
+        "text": "Tags everywhere, with a team rule",
+        "correct": false,
+        "why": "A rule is the weakest of the defences."
+      },
+      {
+        "text": "Digests everywhere, tags nowhere",
+        "correct": false,
+        "why": "It works, at a cost in readability where releases are tried."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzj3vber",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the price of a digest in the manifest?",
+    "choices": [
+      {
+        "text": "Slower pulls",
+        "correct": false,
+        "why": "A digest pull is as fast as a tag pull."
+      },
+      {
+        "text": "A reviewer cannot read the release",
+        "correct": true,
+        "why": "Right. The pull request's title and body have to say which release it is."
+      },
+      {
+        "text": "Flux cannot apply it",
+        "correct": false,
+        "why": "Flux applies whatever the overlay builds."
+      },
+      {
+        "text": "Kubernetes refuses digests for Deployments",
+        "correct": false,
+        "why": "It accepts them everywhere it accepts an image."
+      }
+    ]
+  },
+  {
+    "id": "ex-03x4tk4w",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What changes when the preview's chart comes from an OCI registry instead of a path in fleet?",
+    "choices": [
+      {
+        "text": "The chart no longer needs templates",
+        "correct": false,
+        "why": "A packaged chart is the same templates in a tarball."
+      },
+      {
+        "text": "The chart is published once, with a version and a digest",
+        "correct": true,
+        "why": "Right. Changing it becomes publishing a version and changing a tag in Git."
+      },
+      {
+        "text": "Helm stops creating releases",
+        "correct": false,
+        "why": "Flux still installs a Helm release."
+      },
+      {
+        "text": "The values can no longer be overridden",
+        "correct": false,
+        "why": "The HelmRelease kept overriding the message."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5ja5cv5",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the OCIRepository name registry:5000 while helm push used localhost:5001?",
+    "choices": [
+      {
+        "text": "localhost:5001 refuses OCI artifacts",
+        "correct": false,
+        "why": "It accepted the chart from your terminal."
+      },
+      {
+        "text": "Flux only reads from port 5000",
+        "correct": false,
+        "why": "Flux reads any port it is given."
+      },
+      {
+        "text": "registry:5000 is a second registry",
+        "correct": false,
+        "why": "It is the same container, on its own port."
+      },
+      {
+        "text": "Inside the cluster, localhost is the pod itself",
+        "correct": true,
+        "why": "Right. The container's name is the address that works from there."
+      }
+    ]
+  },
+  {
+    "id": "ex-4m3ew8wk",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Nexus term to Artifactory's.",
+    "pairs": [
+      {
+        "left": "hosted",
+        "right": "local"
+      },
+      {
+        "left": "proxy",
+        "right": "remote"
+      },
+      {
+        "left": "group",
+        "right": "virtual"
+      }
+    ],
+    "right_distractors": [
+      "shared"
+    ]
+  },
+  {
+    "id": "ex-fse90rt5",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a proxy repository change how a company works?",
+    "choices": [
+      {
+        "text": "It replaces the need for a CI system",
+        "correct": false,
+        "why": "Builds still run; they fetch through the proxy."
+      },
+      {
+        "text": "It signs every package it caches",
+        "correct": false,
+        "why": "Caching is not signing."
+      },
+      {
+        "text": "It makes public packages free of licences",
+        "correct": false,
+        "why": "Licences travel with the package."
+      },
+      {
+        "text": "Builds stop depending on public registries",
+        "correct": true,
+        "why": "Right. The company keeps its own copy of every third-party artefact it uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-p51zxg5f",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does this course not run Nexus for its hands-on part?",
+    "choices": [
+      {
+        "text": "Its free edition needs the installer to accept a licence",
+        "correct": true,
+        "why": "Right. That acceptance is the student's to give, not a course's."
+      },
+      {
+        "text": "Nexus does not run in a container",
+        "correct": false,
+        "why": "It ran in one on the recording machine."
+      },
+      {
+        "text": "Nexus cannot store Docker images",
+        "correct": false,
+        "why": "It can, in a Docker-format repository."
+      },
+      {
+        "text": "Nexus has no API",
+        "correct": false,
+        "why": "Its REST API created a repository during the trial."
+      }
+    ]
+  },
+  {
+    "id": "ex-zm7kv02n",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Flux's image automation write the new tag in this course?",
+    "choices": [
+      {
+        "text": "Into the cluster, skipping Git",
+        "correct": false,
+        "why": "The automation writes to Git; Flux applies Git."
+      },
+      {
+        "text": "To the branch image-updates",
+        "correct": true,
+        "why": "Right. A pull request from it goes through the check and the review."
+      },
+      {
+        "text": "To the bulletin repository",
+        "correct": false,
+        "why": "It writes to fleet, where the tag is referenced."
+      },
+      {
+        "text": "Straight to main",
+        "correct": false,
+        "why": "Nobody pushes to main, the automation included."
+      }
+    ]
+  },
+  {
+    "id": "ex-07bwsk6a",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the automation get its own account and GitRepository instead of the flux one?",
+    "choices": [
+      {
+        "text": "Two GitRepositories make syncs faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "The image controllers cannot read Secrets",
+        "correct": false,
+        "why": "They read the one their GitRepository names."
+      },
+      {
+        "text": "So only the automation holds a credential that writes",
+        "correct": true,
+        "why": "Right. Flux's sync keeps its read-only token."
+      },
+      {
+        "text": "Gitea allows one token per account",
+        "correct": false,
+        "why": "An account may have many tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-he13fr2r",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The comment after newTag that tells the automation what to rewrite names the policy as {\"$___\": \"flux-system:bulletin:tag\"}.",
+    "blanks": [
+      {
+        "accept": [
+          "imagepolicy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h9f8e654",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the automation never propose a release to production?",
+    "choices": [
+      {
+        "text": "Production's overlay has no marker",
+        "correct": true,
+        "why": "Right. The automation rewrites only what is marked."
+      },
+      {
+        "text": "CODEOWNERS blocks the bot",
+        "correct": false,
+        "why": "Ownership routes reviews; it does not stop a push to a branch."
+      },
+      {
+        "text": "The policy excludes production's namespace",
+        "correct": false,
+        "why": "Policies pick tags; they know nothing of namespaces."
+      },
+      {
+        "text": "Production is pinned by tag",
+        "correct": false,
+        "why": "It is pinned by digest, and has no marker either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kxm1z5g",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rule does GitOps add to a registry's retention policy?",
+    "choices": [
+      {
+        "text": "Keep what Git still references",
+        "correct": true,
+        "why": "Right. Any commit that might be reverted to names an artefact that must still exist."
+      },
+      {
+        "text": "Never delete anything",
+        "correct": false,
+        "why": "That is a registry that grows for ever."
+      },
+      {
+        "text": "Delete every untagged manifest at once",
+        "correct": false,
+        "why": "Untagged manifests may be what a digest in Git names."
+      },
+      {
+        "text": "Keep only the newest tag",
+        "correct": false,
+        "why": "A revert would point at an older one."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx91fbfs",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The registry accepted a DELETE with 202. What did it check first?",
+    "choices": [
+      {
+        "text": "Nothing about who uses the image",
+        "correct": true,
+        "why": "Right. The same request on production's digest would pass."
+      },
+      {
+        "text": "That no tag still points at it",
+        "correct": false,
+        "why": "The tag went with the manifest."
+      },
+      {
+        "text": "That the garbage collector had run",
+        "correct": false,
+        "why": "The collector runs after deletes, not before."
+      },
+      {
+        "text": "That no cluster runs it",
+        "correct": false,
+        "why": "The registry knows nothing about clusters."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvj2tqmy",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The list built with kubectl kustomize missed one image in use. Which, and why?",
+    "choices": [
+      {
+        "text": "Staging's, because the automation rewrites it",
+        "correct": false,
+        "why": "Staging's tag is in the list."
+      },
+      {
+        "text": "The base's, because it has no tag",
+        "correct": false,
+        "why": "The base appears, untagged."
+      },
+      {
+        "text": "Production's, because it is pinned by digest",
+        "correct": false,
+        "why": "The digest reference is in the list."
+      },
+      {
+        "text": "The preview's, set in the chart's values",
+        "correct": true,
+        "why": "Right. Kustomize sees the HelmRelease, not what the chart renders."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq207392",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "helm push fails with a server that answered HTTP to an HTTPS client. What is the right fix for a registry on the network?",
+    "choices": [
+      {
+        "text": "A different chart version",
+        "correct": false,
+        "why": "The version has nothing to do with the transport."
+      },
+      {
+        "text": "Pushing with docker instead",
+        "correct": false,
+        "why": "The transport problem would be the same."
+      },
+      {
+        "text": "--plain-http on every client",
+        "correct": false,
+        "why": "That sends credentials and charts in clear over the network."
+      },
+      {
+        "text": "TLS on the registry",
+        "correct": true,
+        "why": "Right. --plain-http is only acceptable on localhost."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4919hqe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "CI pushed bulletin:1.3 and the automation opened nothing for a while. Which object would you read first?",
+    "choices": [
+      {
+        "text": "The Gitea branch protection",
+        "correct": false,
+        "why": "Protection does not stop a push to image-updates."
+      },
+      {
+        "text": "The ImagePolicy",
+        "correct": true,
+        "why": "Right. If it did not pick 1.3, nothing downstream would change."
+      },
+      {
+        "text": "The production overlay",
+        "correct": false,
+        "why": "Production has no marker and is not involved."
+      },
+      {
+        "text": "The HelmRelease in preview",
+        "correct": false,
+        "why": "The preview is not part of the image automation."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yw2z9m7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order how bulletin 1.2 reached staging.",
+    "items": [
+      "CI pushes the image 1.2",
+      "The ImageRepository lists the new tag",
+      "The ImagePolicy picks 1.2",
+      "The automation pushes a commit to image-updates",
+      "A pull request is checked, approved and merged",
+      "Flux applies staging"
+    ],
+    "trap": "The registry comes first, then the controllers that read it, then Git, then the cluster."
+  },
+  {
+    "id": "ex-d2dy0xft",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an image manifest list?",
+    "choices": [
+      {
+        "text": "The Dockerfile's commands",
+        "correct": false,
+        "why": "They are not in the manifest."
+      },
+      {
+        "text": "Every platform's image, one entry each",
+        "correct": false,
+        "why": "That is the index."
+      },
+      {
+        "text": "Its config and layers",
+        "correct": true,
+        "why": "Right. Nothing is named except by digest and size."
+      },
+      {
+        "text": "The tags pointing at it",
+        "correct": false,
+        "why": "Tags point at it; it does not list them."
+      }
+    ]
+  },
+  {
+    "id": "ex-pffn6tzm",
+    "version": 1,
+    "section": "tags-move",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Deployment names bulletin:stable. What can two of its pods, started an hour apart, run?",
+    "choices": [
+      {
+        "text": "Whichever tag was pushed to the registry most recently",
+        "correct": false,
+        "why": "They run whatever stable meant at pull time."
+      },
+      {
+        "text": "Nothing; tags are refused by Kubernetes",
+        "correct": false,
+        "why": "Kubernetes accepts tags."
+      },
+      {
+        "text": "Always the same image",
+        "correct": false,
+        "why": "Only if the tag did not move between pulls."
+      },
+      {
+        "text": "Different code under the same reference",
+        "correct": true,
+        "why": "Right. Each node resolves the tag when it pulls."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv7jq0tj",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does bulletin:1.1@sha256:... mean to Kubernetes?",
+    "choices": [
+      {
+        "text": "The digest decides; the tag is for people",
+        "correct": true,
+        "why": "Right. The tag is ignored for pulling."
+      },
+      {
+        "text": "It pulls by the tag and checks the digest later",
+        "correct": false,
+        "why": "The digest is what is pulled."
+      },
+      {
+        "text": "It is refused by the API server as ambiguous",
+        "correct": false,
+        "why": "Kubernetes accepts it."
+      },
+      {
+        "text": "It pulls both and keeps the newer",
+        "correct": false,
+        "why": "There is only one image to pull."
+      }
+    ]
+  },
+  {
+    "id": "ex-aakz5qyx",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is helm push --plain-http acceptable?",
+    "choices": [
+      {
+        "text": "In production, to save time",
+        "correct": false,
+        "why": "Never in production."
+      },
+      {
+        "text": "For charts but not images",
+        "correct": false,
+        "why": "The transport is the same for both."
+      },
+      {
+        "text": "Whenever the push fails with TLS",
+        "correct": false,
+        "why": "That is when to fix TLS."
+      },
+      {
+        "text": "On localhost only",
+        "correct": true,
+        "why": "Right. Anywhere else, the registry gets TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-3923st5x",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the preview's release go from revision 1 to 2 with the same values?",
+    "choices": [
+      {
+        "text": "The values were reapplied on every hourly reconciliation",
+        "correct": false,
+        "why": "The interval does not make revisions."
+      },
+      {
+        "text": "Somebody ran helm upgrade by hand",
+        "correct": false,
+        "why": "Nobody did; Flux upgraded it."
+      },
+      {
+        "text": "Its chart now comes from the registry",
+        "correct": true,
+        "why": "Right. A new chart artifact is a new revision."
+      },
+      {
+        "text": "The namespace was recreated",
+        "correct": false,
+        "why": "The namespace stayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwwnhw5v",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match Nexus's words to Artifactory's.",
+    "pairs": [
+      {
+        "left": "hosted",
+        "right": "local"
+      },
+      {
+        "left": "proxy",
+        "right": "remote"
+      },
+      {
+        "left": "group",
+        "right": "virtual"
+      }
+    ],
+    "right_distractors": [
+      "mirror"
+    ]
+  },
+  {
+    "id": "ex-2798rxsm",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the ImagePolicy use a filter with numerical order instead of a semver range?",
+    "choices": [
+      {
+        "text": "Flux's semver wants three numbers",
+        "correct": true,
+        "why": "Right. The range would match nothing."
+      },
+      {
+        "text": "Semver ranges are deprecated in Flux",
+        "correct": false,
+        "why": "They are supported."
+      },
+      {
+        "text": "Numerical order is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Semver policies cannot read registries on localhost",
+        "correct": false,
+        "why": "The address is irrelevant."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmtk52zc",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the image automation push its commit, and why?",
+    "choices": [
+      {
+        "text": "To main, to save a step",
+        "correct": false,
+        "why": "Nobody pushes to main."
+      },
+      {
+        "text": "To production's directory",
+        "correct": false,
+        "why": "Production has no marker."
+      },
+      {
+        "text": "To image-updates",
+        "correct": true,
+        "why": "Right. Only the merge changes staging."
+      },
+      {
+        "text": "Nowhere; it edits the cluster directly",
+        "correct": false,
+        "why": "It writes to Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp5g185j",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod names a digest the registry does not hold. What does it do?",
+    "choices": [
+      {
+        "text": "Pulls the closest digest",
+        "correct": false,
+        "why": "There is no such thing as close."
+      },
+      {
+        "text": "Starts with an empty image",
+        "correct": false,
+        "why": "Nothing starts."
+      },
+      {
+        "text": "Falls back to the tag",
+        "correct": false,
+        "why": "There is no tag in the reference."
+      },
+      {
+        "text": "Stays in ErrImagePull",
+        "correct": true,
+        "why": "Right. A digest matches content or it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-xse3k4x7",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a repository manager add that a bare OCI registry lacks?",
+    "choices": [
+      {
+        "text": "Digests",
+        "correct": false,
+        "why": "Digests are part of OCI itself."
+      },
+      {
+        "text": "The ability to store and serve container images",
+        "correct": false,
+        "why": "Any OCI registry stores images."
+      },
+      {
+        "text": "Helm chart support",
+        "correct": false,
+        "why": "OCI registries hold charts too."
+      },
+      {
+        "text": "Other formats, proxies and retention",
+        "correct": true,
+        "why": "Right. What a company needs around its artefacts."
+      }
+    ]
+  },
+  {
+    "id": "ex-5shjrvcq",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After an artefact is published, how is it obtained again?",
+    "choices": [
+      {
+        "text": "Copied from a running pod",
+        "correct": false,
+        "why": "Pods are not a source."
+      },
+      {
+        "text": "Rebuilt from the commit",
+        "correct": false,
+        "why": "That could produce different bytes."
+      },
+      {
+        "text": "Generated by Flux",
+        "correct": false,
+        "why": "Flux deploys; it does not build."
+      },
+      {
+        "text": "Fetched, never rebuilt",
+        "correct": true,
+        "why": "Right. The same bytes everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-cetxq2tb",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes a digest a name nobody can move?",
+    "choices": [
+      {
+        "text": "Git records it",
+        "correct": false,
+        "why": "Git can record anything."
+      },
+      {
+        "text": "It is signed",
+        "correct": false,
+        "why": "Signing is lesson 8."
+      },
+      {
+        "text": "It is the content's own hash",
+        "correct": true,
+        "why": "Right. Other bytes, other digest."
+      },
+      {
+        "text": "The registry locks it",
+        "correct": false,
+        "why": "Locking is for tags, and optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8xhhbew",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many layers does bulletin 1.1's image manifest list?",
+    "choices": [
+      {
+        "text": "None",
+        "correct": false,
+        "why": "Layers are the files."
+      },
+      {
+        "text": "Three",
+        "correct": false,
+        "why": "The config is not a layer."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "Right. BusyBox and index.cgi."
+      },
+      {
+        "text": "One",
+        "correct": false,
+        "why": "There are two tarballs."
+      }
+    ]
+  },
+  {
+    "id": "ex-vez289jc",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which digest covers every byte of bulletin 1.1, attestation included?",
+    "choices": [
+      {
+        "text": "The image manifest's",
+        "correct": false,
+        "why": "It does not cover the attestation."
+      },
+      {
+        "text": "The biggest layer's",
+        "correct": false,
+        "why": "It covers one tarball."
+      },
+      {
+        "text": "The config's",
+        "correct": false,
+        "why": "It covers the settings only."
+      },
+      {
+        "text": "The index's",
+        "correct": true,
+        "why": "Right. It lists every manifest below."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h3jx29w",
+    "version": 1,
+    "section": "tags-move",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When stable is pushed again, what does the registry keep of the old pointer?",
+    "choices": [
+      {
+        "text": "The old pointer, read-only",
+        "correct": false,
+        "why": "It is replaced."
+      },
+      {
+        "text": "A history of every target",
+        "correct": false,
+        "why": "The registry keeps no history of tags."
+      },
+      {
+        "text": "A backup tag",
+        "correct": false,
+        "why": "None is made."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The tag now names the new index."
+      }
+    ]
+  },
+  {
+    "id": "ex-04pqfb35",
+    "version": 1,
+    "section": "tags-move",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Can this course's reference registry refuse a second push of 1.1?",
+    "choices": [
+      {
+        "text": "Only for signed images",
+        "correct": false,
+        "why": "Signing does not lock tags."
+      },
+      {
+        "text": "Yes, with a flag in config.yml",
+        "correct": false,
+        "why": "The lesson says it cannot."
+      },
+      {
+        "text": "Yes, by default",
+        "correct": false,
+        "why": "It accepted the second stable."
+      },
+      {
+        "text": "No",
+        "correct": true,
+        "why": "Right. Harbor, cloud registries and repository managers can."
+      }
+    ]
+  },
+  {
+    "id": "ex-q23v6adm",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Production's Deployment names a digest. What does Kubernetes resolve?",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The node pulls by digest."
+      },
+      {
+        "text": "The newest digest",
+        "correct": false,
+        "why": "A digest is fixed."
+      },
+      {
+        "text": "The tag behind the digest",
+        "correct": false,
+        "why": "There is no tag in the reference."
+      },
+      {
+        "text": "The registry's latest",
+        "correct": false,
+        "why": "Nothing named latest."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcajey2h",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a digest in production, where does the reviewer learn which release it is?",
+    "choices": [
+      {
+        "text": "The pull request's title and body",
+        "correct": true,
+        "why": "Right. The digest says nothing to a person."
+      },
+      {
+        "text": "Flux's events",
+        "correct": false,
+        "why": "They come after the merge."
+      },
+      {
+        "text": "The digest itself",
+        "correct": false,
+        "why": "It is a hash."
+      },
+      {
+        "text": "The registry's tag list",
+        "correct": false,
+        "why": "It does not show which digest a file names."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjcz88n0",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Once the preview's chart is published, what does changing it require?",
+    "choices": [
+      {
+        "text": "A new chart version and one tag in Git",
+        "correct": true,
+        "why": "Right. The same shape as an image release."
+      },
+      {
+        "text": "A new OCIRepository",
+        "correct": false,
+        "why": "The same one, with a new tag."
+      },
+      {
+        "text": "Editing the chart directory in fleet",
+        "correct": false,
+        "why": "Flux reads the published chart now."
+      },
+      {
+        "text": "Restarting the helm controller",
+        "correct": false,
+        "why": "Nothing needs a restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5zch8ae",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the OCIRepository say registry:5000 rather than localhost:5001?",
+    "choices": [
+      {
+        "text": "Inside the cluster, localhost is the pod",
+        "correct": true,
+        "why": "Right. The registry is reached by its container name."
+      },
+      {
+        "text": "Flux requires port 5000",
+        "correct": false,
+        "why": "Any port works."
+      },
+      {
+        "text": "Port 5001 is for images only",
+        "correct": false,
+        "why": "Charts and images share the registry."
+      },
+      {
+        "text": "localhost needs TLS",
+        "correct": false,
+        "why": "TLS is a separate question."
+      }
+    ]
+  },
+  {
+    "id": "ex-np9dpvfc",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a Nexus group or an Artifactory virtual repository give developers?",
+    "choices": [
+      {
+        "text": "A copy of public packages",
+        "correct": false,
+        "why": "That is a proxy."
+      },
+      {
+        "text": "Write-once publishing",
+        "correct": false,
+        "why": "That is a policy."
+      },
+      {
+        "text": "One address for several repositories",
+        "correct": true,
+        "why": "Right. Own packages and proxied ones together."
+      },
+      {
+        "text": "Signed packages",
+        "correct": false,
+        "why": "Neither signs."
+      }
+    ]
+  },
+  {
+    "id": "ex-3913p8xk",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the image automation get its own Gitea account?",
+    "choices": [
+      {
+        "text": "Flux's token is read-only",
+        "correct": true,
+        "why": "Right. Pushing a branch needs write."
+      },
+      {
+        "text": "To read the registry",
+        "correct": false,
+        "why": "The registry needs no Gitea account."
+      },
+      {
+        "text": "Gitea needs one account per controller",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "To merge to main",
+        "correct": false,
+        "why": "It never merges."
+      }
+    ]
+  }
+]

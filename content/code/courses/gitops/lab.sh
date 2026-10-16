@@ -1,0 +1,886 @@
+#!/usr/bin/env bash
+# The laptop every transcript in gitops was recorded on: one kind cluster, a
+# registry and a Git server beside it, and the command-line tools the lessons
+# install one at a time.
+#
+#   sudo bash lab.sh tools     # once: the CLIs into /opt/gitops/bin, and every
+#                              # image a lesson runs into the image cache
+#   sudo bash lab.sh up        # a fresh lab: the registry, Gitea and a cluster
+#                              # called "gitops", as lesson 1 and 2 build them
+#   sudo bash lab.sh mirror    # copy the cached images into the registry
+#   sudo bash lab.sh down      # delete the cluster and the two containers
+#
+# EVERYTHING HERE IS WHAT A LESSON TELLS THE STUDENT TO BUILD, in the same
+# order, with the same versions; the lessons show every file of it whole. What
+# differs is where the software comes from, because the machine this was
+# recorded on reaches some places and not others:
+#
+#   - the CLIs (kind, kubectl, kubeconform, argocd, flux, kubeseal, sops, age,
+#     cosign, kustomize, vault) are the released binaries the lessons download, from
+#     the same URLs, checked against the same published checksums. Helm's
+#     binaries live on get.helm.sh, which this machine cannot reach, so helm is
+#     built from its released source with the Go toolchain at the tag below.
+#   - THE NODES PULL NOTHING FROM THE INTERNET. Every third-party image a lesson
+#     runs is pulled once onto the laptop from Docker Hub and pushed into the
+#     lab's own registry (the container lesson 1 starts as `registry`), and each
+#     node's containerd is told to use that registry as a mirror for docker.io,
+#     ghcr.io and public.ecr.aws. Flux publishes the same images on Docker Hub as
+#     on ghcr.io, and public.ecr.aws/docker/library is a copy of Docker Hub's
+#     official images, so the bytes a node runs are the bytes the name says.
+#   - ARGO CD AND DEX ARE THE EXCEPTION. Their images live on quay.io and
+#     ghcr.io and this machine can reach neither. The lab builds two images of
+#     its own, named localhost:5001/lab/argocd and localhost:5001/lab/dex so
+#     that nothing claims they came from upstream: argocd from the released
+#     argocd-linux-amd64 binary (the same multi-call program the upstream image
+#     carries, with git, gpg, ssh, helm and kustomize beside it) and dex from
+#     its tagged source. Lesson 3's kustomization names them in an `images:`
+#     block with a comment telling the student to delete it.
+#   - the External Secrets Operator's image lives on ghcr.io too, and is built
+#     the same way from its tagged source, as localhost:5001/lab/external-secrets.
+#
+# Two kind settings are for this machine and say so in the file lesson 1
+# shows: it has cgroup v1, which the kubelet refuses since 1.35 unless told
+# `failCgroupV1: false`, and it forbids lowering a process's OOM score
+# (`restrict_oom_score_adj`).
+#
+# Recorded on Ubuntu 24.04 with Docker 29.8.2, TZ=America/Sao_Paulo.
+
+set -euo pipefail
+export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+
+OPT=/opt/gitops
+LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+export PATH=$OPT/bin:$PATH
+
+KIND=v0.33.0
+KUBECTL=v1.37.1
+NODE=kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
+ARGOCD=v3.5.4
+DEX=v2.45.1
+FLUX=2.9.6
+KUBESEAL=0.40.0
+SOPS=v3.13.3
+AGE=v1.3.2
+COSIGN=v3.1.3
+KUSTOMIZE=v5.8.3
+HELM=v4.3.0
+VAULT=2.1.2
+ESO=v1.3.2
+ESO_CHART=1.3.2
+GITEA=gitea/gitea:28.1.0-rootless
+REGISTRY=registry:3.1.2
+
+# Images a node runs, as the manifests name them. Each is pulled from Docker
+# Hub (FROM) and pushed into the registry under its own name (TO, without the
+# registry), which is what the node's mirror asks for.
+MIRRORED="
+fluxcd/source-controller:v1.9.6
+fluxcd/kustomize-controller:v1.9.6
+fluxcd/helm-controller:v1.6.5
+fluxcd/notification-controller:v1.9.4
+fluxcd/image-reflector-controller:v1.2.5
+fluxcd/image-automation-controller:v1.2.5
+"
+
+die() { echo "lab.sh: $*" >&2; exit 1; }
+
+fetch() { # URL FILE: download into $OPT/dl once
+  local url=$1 out=$OPT/dl/$2
+  [ -s "$out" ] || curl -fsSL -o "$out" "$url"
+}
+
+check() { # FILE SUMSFILE: the file's line in a published checksum list
+  (cd "$OPT/dl" && grep -E "  \*?$1\$" "$2" | sed 's/\*//' | sha256sum --check --quiet) \
+    || die "$1 does not match $2"
+}
+
+tools() {
+  mkdir -p "$OPT/bin" "$OPT/dl" "$OPT/src"
+  local gh=https://github.com
+  # crane copies images between registries, for the cache below
+  fetch $gh/google/go-containerregistry/releases/download/v0.22.1/go-containerregistry_Linux_x86_64.tar.gz go-containerregistry_Linux_x86_64.tar.gz
+  fetch $gh/google/go-containerregistry/releases/download/v0.22.1/checksums.txt crane_checksums.txt
+  check go-containerregistry_Linux_x86_64.tar.gz crane_checksums.txt
+  tar -xzf "$OPT/dl/go-containerregistry_Linux_x86_64.tar.gz" -C "$OPT/bin" crane
+
+  fetch $gh/kubernetes-sigs/kind/releases/download/$KIND/kind-linux-amd64 kind-linux-amd64
+  fetch $gh/kubernetes-sigs/kind/releases/download/$KIND/kind-linux-amd64.sha256sum kind.sha256sum
+  check kind-linux-amd64 kind.sha256sum
+  install -m 0755 "$OPT/dl/kind-linux-amd64" "$OPT/bin/kind"
+
+  fetch https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/kubectl kubectl
+  echo "$(curl -fsSL https://dl.k8s.io/release/$KUBECTL/bin/linux/amd64/kubectl.sha256)  kubectl" > "$OPT/dl/kubectl.sha256"
+  check kubectl kubectl.sha256
+  install -m 0755 "$OPT/dl/kubectl" "$OPT/bin/kubectl"
+
+  fetch $gh/argoproj/argo-cd/releases/download/$ARGOCD/argocd-linux-amd64 argocd-linux-amd64
+  fetch $gh/argoproj/argo-cd/releases/download/$ARGOCD/cli_checksums.txt argocd_checksums.txt
+  local f; for f in hack/gpg-wrapper.sh hack/git-verify-wrapper.sh entrypoint.sh; do
+    fetch https://raw.githubusercontent.com/argoproj/argo-cd/$ARGOCD/$f argocd-$(basename $f); done
+  check argocd-linux-amd64 argocd_checksums.txt
+  install -m 0755 "$OPT/dl/argocd-linux-amd64" "$OPT/bin/argocd"
+
+  fetch $gh/fluxcd/flux2/releases/download/v$FLUX/flux_${FLUX}_linux_amd64.tar.gz flux_${FLUX}_linux_amd64.tar.gz
+  fetch $gh/fluxcd/flux2/releases/download/v$FLUX/flux_${FLUX}_checksums.txt flux_checksums.txt
+  check flux_${FLUX}_linux_amd64.tar.gz flux_checksums.txt
+  tar -xzf "$OPT/dl/flux_${FLUX}_linux_amd64.tar.gz" -C "$OPT/bin" flux
+
+  fetch $gh/bitnami-labs/sealed-secrets/releases/download/v$KUBESEAL/kubeseal-$KUBESEAL-linux-amd64.tar.gz kubeseal-$KUBESEAL-linux-amd64.tar.gz
+  fetch $gh/bitnami-labs/sealed-secrets/releases/download/v$KUBESEAL/sealed-secrets_${KUBESEAL}_checksums.txt kubeseal_checksums.txt
+  check kubeseal-$KUBESEAL-linux-amd64.tar.gz kubeseal_checksums.txt
+  tar -xzf "$OPT/dl/kubeseal-$KUBESEAL-linux-amd64.tar.gz" -C "$OPT/bin" kubeseal
+
+  fetch $gh/getsops/sops/releases/download/$SOPS/sops-$SOPS.linux.amd64 sops-$SOPS.linux.amd64
+  fetch $gh/getsops/sops/releases/download/$SOPS/sops-$SOPS.checksums.txt sops_checksums.txt
+  check sops-$SOPS.linux.amd64 sops_checksums.txt
+  install -m 0755 "$OPT/dl/sops-$SOPS.linux.amd64" "$OPT/bin/sops"
+
+  # age publishes no checksum file; its releases are built reproducibly and
+  # the tag's source is what the lesson points at.
+  fetch $gh/FiloSottile/age/releases/download/$AGE/age-$AGE-linux-amd64.tar.gz age-$AGE-linux-amd64.tar.gz
+  tar -xzf "$OPT/dl/age-$AGE-linux-amd64.tar.gz" -C "$OPT/bin" --strip-components=1 age/age age/age-keygen
+
+  fetch $gh/sigstore/cosign/releases/download/$COSIGN/cosign-linux-amd64 cosign-linux-amd64
+  fetch $gh/sigstore/cosign/releases/download/$COSIGN/cosign_checksums.txt cosign_checksums.txt
+  check cosign-linux-amd64 cosign_checksums.txt
+  install -m 0755 "$OPT/dl/cosign-linux-amd64" "$OPT/bin/cosign"
+
+  fetch "$gh/kubernetes-sigs/kustomize/releases/download/kustomize%2F$KUSTOMIZE/kustomize_${KUSTOMIZE}_linux_amd64.tar.gz" kustomize_${KUSTOMIZE}_linux_amd64.tar.gz
+  fetch "$gh/kubernetes-sigs/kustomize/releases/download/kustomize%2F$KUSTOMIZE/checksums.txt" kustomize_checksums.txt
+  check kustomize_${KUSTOMIZE}_linux_amd64.tar.gz kustomize_checksums.txt
+  tar -xzf "$OPT/dl/kustomize_${KUSTOMIZE}_linux_amd64.tar.gz" -C "$OPT/bin" kustomize
+
+  fetch $gh/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz kubeconform-linux-amd64.tar.gz
+  fetch $gh/yannh/kubeconform/releases/download/v0.8.0/CHECKSUMS kubeconform_CHECKSUMS
+  check kubeconform-linux-amd64.tar.gz kubeconform_CHECKSUMS
+  tar -xzf "$OPT/dl/kubeconform-linux-amd64.tar.gz" -C "$OPT/bin" kubeconform
+
+  fetch https://releases.hashicorp.com/vault/$VAULT/vault_${VAULT}_linux_amd64.zip vault_${VAULT}_linux_amd64.zip
+  fetch https://releases.hashicorp.com/vault/$VAULT/vault_${VAULT}_SHA256SUMS vault_SHA256SUMS
+  check vault_${VAULT}_linux_amd64.zip vault_SHA256SUMS
+  unzip -o -q "$OPT/dl/vault_${VAULT}_linux_amd64.zip" vault -d "$OPT/bin"
+
+  [ -x "$OPT/bin/helm" ] && "$OPT/bin/helm" version --short | grep -q "$HELM" \
+    || GOBIN=$OPT/bin go install -ldflags "-X helm.sh/helm/v4/internal/version.version=$HELM" helm.sh/helm/v4/cmd/helm@$HELM
+
+  images
+}
+
+# Third-party images a node runs, copied once from Docker Hub (through Google's
+# mirror of it, mirror.gcr.io) into a cache registry on 127.0.0.1:5002 that
+# outlives every cluster, and from there into a fresh `registry` by `up`.
+THIRD_PARTY="busybox:1.37 postgres:17-alpine hashicorp/vault:$VAULT hashicorp/vault-k8s:1.7.6
+bitnami/sealed-secrets-controller:$KUBESEAL $MIRRORED"
+CACHE=127.0.0.1:5002
+
+images() {
+  local i
+  for i in $NODE $GITEA $REGISTRY buildpack-deps:trixie-scm buildpack-deps:trixie-curl; do
+    docker image inspect "$i" >/dev/null 2>&1 || docker pull -q "$i" >/dev/null || die "cannot pull $i"
+  done
+  docker inspect cache >/dev/null 2>&1 || docker run -d --restart=always --name cache \
+    -p $CACHE:5000 -v "$OPT/cache:/var/lib/registry" $REGISTRY >/dev/null
+  sleep 1
+  for i in $THIRD_PARTY; do
+    crane manifest "$CACHE/$i" >/dev/null 2>&1 || crane copy --platform linux/amd64 "mirror.gcr.io/$i" "$CACHE/$i"
+  done
+  # public.ecr.aws/docker/library/redis is Docker Hub's official redis
+  crane manifest "$CACHE/docker/library/redis:8.2.3-alpine" >/dev/null 2>&1 \
+    || crane copy --platform linux/amd64 mirror.gcr.io/library/redis:8.2.3-alpine "$CACHE/docker/library/redis:8.2.3-alpine"
+  # Argo CD, from its released binary, laid out as the upstream image lays it out
+  crane manifest "$CACHE/lab/argocd:$ARGOCD" >/dev/null 2>&1 || {
+    rm -rf "$OPT/src/argocd" && mkdir -p "$OPT/src/argocd"
+    cp "$OPT/dl/argocd-linux-amd64" "$OPT/src/argocd/argocd"
+    cp "$OPT/bin/helm" "$OPT/bin/kustomize" "$OPT/src/argocd/"
+    for f in gpg-wrapper.sh git-verify-wrapper.sh entrypoint.sh; do cp "$OPT/dl/argocd-$f" "$OPT/src/argocd/$f"; done
+    cp "$LAB/lab/argocd.Dockerfile" "$OPT/src/argocd/Dockerfile"
+    docker build -q -t $CACHE/lab/argocd:$ARGOCD "$OPT/src/argocd" >/dev/null
+    docker push -q --platform linux/amd64 $CACHE/lab/argocd:$ARGOCD >/dev/null
+  }
+  crane manifest "$CACHE/lab/dex:$DEX" >/dev/null 2>&1 || {
+    rm -rf "$OPT/src/dex" && mkdir -p "$OPT/src/dex"
+    # dex's go.mod says github.com/dexidp/dex while its tags are v2.x, so
+    # `go install …@tag` refuses it; the tag is cloned and built instead.
+    git clone -q --depth 1 --branch $DEX https://github.com/dexidp/dex "$OPT/src/dex/src"
+    (cd "$OPT/src/dex/src" && CGO_ENABLED=0 go build -o "$OPT/src/dex/dex" ./cmd/dex)
+    cp "$LAB/lab/dex.Dockerfile" "$OPT/src/dex/Dockerfile"
+    docker build -q -t $CACHE/lab/dex:$DEX "$OPT/src/dex" >/dev/null
+    docker push -q --platform linux/amd64 $CACHE/lab/dex:$DEX >/dev/null
+  }
+  # The External Secrets Operator, from its tagged source, under the name the
+  # chart asks for, so that the nodes' mirror for ghcr.io finds it
+  crane manifest "$CACHE/external-secrets/external-secrets:$ESO" >/dev/null 2>&1 || {
+    rm -rf "$OPT/src/eso" && mkdir -p "$OPT/src/eso"
+    git clone -q --depth 1 --branch $ESO https://github.com/external-secrets/external-secrets "$OPT/src/eso/src"
+    # its go.mod asks for a newer Go than the one that builds the rest, and
+    # every provider is behind a build tag, which upstream's Makefile sets
+    (cd "$OPT/src/eso/src" && GOTOOLCHAIN=go1.26.9 CGO_ENABLED=0 go build -tags all_providers -o "$OPT/src/eso/external-secrets" .)
+    cp "$LAB/lab/external-secrets.Dockerfile" "$OPT/src/eso/Dockerfile"
+    docker build -q -t $CACHE/external-secrets/external-secrets:$ESO "$OPT/src/eso" >/dev/null
+    docker push -q --platform linux/amd64 $CACHE/external-secrets/external-secrets:$ESO >/dev/null
+  }
+}
+
+mirror() { # copy every cached image into the running registry
+  local i
+  for i in $(crane catalog $CACHE); do
+    for t in $(crane ls "$CACHE/$i"); do
+      crane copy "$CACHE/$i:$t" "localhost:5001/$i:$t" 2>/dev/null
+      # docker.io/busybox is docker.io/library/busybox to a mirror
+      case $i in */*) ;; *) crane copy "$CACHE/$i:$t" "localhost:5001/library/$i:$t" 2>/dev/null ;; esac
+    done
+  done
+}
+
+nodes_mirror() { # each node: localhost:5001 is the registry, and so are the mirrors
+  local n h
+  for n in $(kind get nodes --name gitops); do
+    for h in localhost:5001 docker.io ghcr.io public.ecr.aws; do
+      docker exec "$n" mkdir -p "/etc/containerd/certs.d/$h"
+      printf '[host."http://registry:5000"]\n' | docker exec -i "$n" tee "/etc/containerd/certs.d/$h/hosts.toml" >/dev/null
+    done
+  done
+}
+
+# The file a lesson shows under the line naming `NAME` and ending in a colon.
+shown() {
+  awk -v name="\`$2\`" '
+    f == 0 && index($0, name) && /:$/ { f = 1; next }
+    f == 1 && /^```/ { f = 2; next }
+    f == 2 && /^```$/ { exit }
+    f == 2 { print }' "$1"
+}
+
+up() { # lesson 1's registry and cluster
+  down
+  docker run -d --restart=always --name registry -p 127.0.0.1:5001:5000 $REGISTRY >/dev/null
+  sleep 1; mirror
+  mkdir -p /home/ana/setup
+  shown "$LAB/lessons/le-9qamvn14/the-cluster.md" '~/setup/cluster.yaml' > /home/ana/setup/cluster.yaml
+  ( unset HTTPS_PROXY https_proxy HTTP_PROXY http_proxy NO_PROXY no_proxy
+    kind create cluster --name gitops --image "$NODE" --config /home/ana/setup/cluster.yaml --quiet )
+  docker network connect kind registry
+  nodes_mirror
+  kubectl wait --for=condition=Ready node --all --timeout=180s >/dev/null
+}
+
+gitea() { # lesson 2's Gitea, started as lesson 2 starts it, and ready
+  docker run -d --restart=always --name gitea --network kind -p 127.0.0.1:3000:3000 \
+    -e GITEA__security__INSTALL_LOCK=true $GITEA >/dev/null
+  until curl -fs localhost:3000/api/v1/version >/dev/null; do sleep 1; done
+}
+
+L1=$LAB/lessons/le-9qamvn14
+L2=$LAB/lessons/le-7e998tdb
+commit_at() { GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit --quiet "${@:2}"; }
+
+# The state at the end of lesson 1, built from the files lesson 1 shows: the
+# bulletin image 1.0 in the registry, ~/bulletin, ~/fleet and its bare remote
+# with lesson 1's four commits at their dates (so their hashes are lesson 1's),
+# and staging applied.
+stage1() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  rm -rf /home/ana/bulletin /home/ana/fleet /home/ana/fleet.git /home/ana/.reconcile
+  mkdir -p /home/ana/bulletin /home/ana/fleet/staging
+  shown "$L1/the-application.md" '~/bulletin/index.cgi' > /home/ana/bulletin/index.cgi
+  shown "$L1/the-application.md" '~/bulletin/Dockerfile' > /home/ana/bulletin/Dockerfile
+  shown "$L1/a-reconciler.md" '~/setup/reconcile.sh' > /home/ana/setup/reconcile.sh
+  docker build --quiet --build-arg VERSION=1.0 -t localhost:5001/bulletin:1.0 /home/ana/bulletin >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.0 >/dev/null
+  cd /home/ana/fleet
+  shown "$L1/desired-state.md" '~/fleet/staging/bulletin.yaml' > staging/bulletin.yaml
+  git init --quiet --bare /home/ana/fleet.git
+  git init --quiet && git add staging/bulletin.yaml
+  commit_at 2026-10-08T09:00:00-03:00 -m "staging: bulletin 1.0"
+  git remote add origin /home/ana/fleet.git
+  sed -i 's/value: Staging is open for testing./value: Staging has the new banner./' staging/bulletin.yaml
+  commit_at 2026-10-08T09:20:00-03:00 -am "staging: new banner"
+  cp staging/bulletin.yaml /tmp/bulletin.yaml
+  python3 -c "import sys; p=sys.argv[1]; s=open(p).read(); open(p,'w').write(s[:s.rindex('---\n')])" staging/bulletin.yaml
+  commit_at 2026-10-08T09:40:00-03:00 -am "staging: no service"
+  GIT_AUTHOR_DATE=2026-10-08T09:45:00-03:00 GIT_COMMITTER_DATE=2026-10-08T09:45:00-03:00 \
+    git revert --quiet --no-edit HEAD >/dev/null
+  git push --quiet -u origin main
+  kubectl apply -f staging/ >/dev/null
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+# The state at the end of lesson 2, on top of stage1: Gitea with ana, bruno and
+# ci and their tokens in ~, git's credential file, fleet on the server and
+# protected (one approval, the validate check), kubeconform, validate.sh, and
+# the two changes lesson 2 kept: the "ready for review" banner and 3 replicas.
+# Each goes through `merge`, the flow lesson 2 shows.
+stage2() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  docker rm -fv gitea >/dev/null 2>&1 || true
+  gitea
+  local u
+  docker exec gitea gitea admin user create --admin --username ana --password change-me-now --email ana@example.org --must-change-password=false >/dev/null
+  for u in bruno ci; do
+    docker exec gitea gitea admin user create --username $u --password change-me-too --email $u@example.org --must-change-password=false >/dev/null
+  done
+  docker exec gitea gitea admin user generate-access-token --username ana --token-name terminal --scopes write:repository,write:user --raw > /home/ana/ana.token
+  docker exec gitea gitea admin user generate-access-token --username bruno --token-name terminal --scopes write:repository --raw > /home/ana/bruno.token
+  docker exec gitea gitea admin user generate-access-token --username ci --token-name checks --scopes write:repository --raw > /home/ana/ci.token
+  chmod 600 /home/ana/*.token
+  git config --global credential.helper store
+  printf 'http://ana:%s@localhost:3000\n' "$(cat /home/ana/ana.token)" > /home/ana/.git-credentials
+  chmod 600 /home/ana/.git-credentials
+  api POST /user/repos '{"name": "fleet", "private": true}' >/dev/null
+  cd /home/ana/fleet
+  git remote set-url origin http://localhost:3000/ana/fleet.git
+  git push --quiet -u origin main
+  for u in bruno ci; do api PUT /repos/ana/fleet/collaborators/$u '{"permission": "write"}' >/dev/null; done
+  api POST /repos/ana/fleet/branch_protections '{"rule_name": "main", "enable_push": false, "required_approvals": 1, "dismiss_stale_approvals": true, "enable_status_check": true, "status_check_contexts": ["validate"]}' >/dev/null
+  shown "$L2/checks.md" '~/setup/validate.sh' > /home/ana/setup/validate.sh
+  git switch --quiet -c banner-v2
+  sed -i 's/value: Staging has the new banner./value: Staging is ready for review./' staging/bulletin.yaml
+  commit_at 2026-10-09T10:00:00-03:00 -am "staging: ready for review"
+  merge banner-v2 "staging: ready for review"
+  git switch --quiet -c three-replicas
+  sed -i 's/  replicas: 2/  replicas: 3/' staging/bulletin.yaml
+  commit_at 2026-10-09T11:05:00-03:00 -am "staging: three replicas"
+  merge three-replicas "staging: three replicas"
+  kubectl apply -f staging/ >/dev/null
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+L3=$LAB/lessons/le-ep4mmbpj
+
+# The state at the end of lesson 3, on top of stage2: Argo CD installed from
+# lesson 3's kustomization, its read-only account and repository, and fleet's
+# argocd/ directory (the staging Application and the bulletin project) applied
+# through the root Application.
+stage3() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  mkdir -p /home/ana/setup/argocd
+  shown "$L3/installing.md" '~/setup/argocd/kustomization.yaml' > /home/ana/setup/argocd/kustomization.yaml
+  kubectl create namespace argocd >/dev/null
+  kubectl apply --server-side -k /home/ana/setup/argocd >/dev/null
+  kubectl -n argocd wait --for=condition=Available deployment --all --timeout=300s >/dev/null
+  docker exec gitea gitea admin user create --username argocd --password change-me-please --email argocd@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username argocd --token-name cluster --scopes read:repository --raw > /home/ana/argocd.token
+  chmod 600 /home/ana/argocd.token
+  api PUT /repos/ana/fleet/collaborators/argocd '{"permission": "read"}' >/dev/null
+  kubectl config set-context --current --namespace=argocd >/dev/null
+  argocd login --core >/dev/null
+  argocd repo add http://gitea:3000/ana/fleet.git --username argocd --password "$(cat /home/ana/argocd.token)" >/dev/null
+  shown "$L3/automation.md" '~/setup/bulletin-staging.yaml' > /home/ana/setup/bulletin-staging.yaml
+  shown "$L3/app-of-apps.md" '~/setup/root.yaml' > /home/ana/setup/root.yaml
+  cd /home/ana/fleet
+  git switch --quiet -c app-of-apps
+  mkdir -p argocd && cp /home/ana/setup/bulletin-staging.yaml argocd/
+  shown "$L3/projects.md" 'fleet/argocd/project-bulletin.yaml' > argocd/project-bulletin.yaml
+  sed -i 's/  project: default/  project: bulletin/' argocd/bulletin-staging.yaml
+  git add argocd
+  commit_at 2026-10-09T16:40:00-03:00 -m "argocd: the staging application and the bulletin project live in Git"
+  merge app-of-apps "argocd: the staging application and the bulletin project live in Git"
+  kubectl apply -f /home/ana/setup/root.yaml >/dev/null
+  local i
+  for i in $(seq 90); do
+    [ "$(argocd app get bulletin-staging -o json 2>/dev/null | jq -r .status.sync.status)" = Synced ] && break
+    sleep 2
+  done
+  kubectl config set-context --current --namespace=default >/dev/null
+  cd /home/ana
+}
+
+L4=$LAB/lessons/le-c0wcr3vg
+
+# The state at the end of lesson 4, on top of stage2 (Argo CD is skipped: lesson
+# 4 removes it, and nothing after lesson 4 depends on it having been there):
+# Flux bootstrapped through a pull request from the files lesson 4 shows, its
+# read-only account, the Gitea webhook and its Receiver, and the staging message
+# lesson 4 leaves.
+stage4() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  docker exec gitea gitea admin user create --username flux --password change-me-please --email flux@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username flux --token-name cluster --scopes read:repository --raw > /home/ana/flux.token
+  chmod 600 /home/ana/flux.token
+  api PUT /repos/ana/fleet/collaborators/flux '{"permission": "read"}' >/dev/null
+  cd /home/ana/fleet
+  git switch --quiet -c flux
+  mkdir -p clusters/lab/flux-system
+  flux install --export > clusters/lab/flux-system/gotk-components.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/flux-system/gotk-sync.yaml' > clusters/lab/flux-system/gotk-sync.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/flux-system/kustomization.yaml' > clusters/lab/flux-system/kustomization.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/staging.yaml' > clusters/lab/staging.yaml
+  git add clusters
+  commit_at 2026-10-09T17:00:00-03:00 -m "flux: bootstrap the lab cluster"
+  merge flux "flux: bootstrap the lab cluster"
+  kubectl apply --server-side -f clusters/lab/flux-system/gotk-components.yaml >/dev/null
+  kubectl -n flux-system wait --for=condition=Available deployment --all --timeout=180s >/dev/null
+  flux create secret git fleet-auth --url=http://gitea:3000/ana/fleet.git --username=flux --password="$(cat /home/ana/flux.token)" >/dev/null
+  kubectl apply -f clusters/lab/flux-system/gotk-sync.yaml >/dev/null
+  openssl rand -hex 20 > /home/ana/webhook.token && chmod 600 /home/ana/webhook.token
+  kubectl -n flux-system create secret generic webhook-token --from-literal=token="$(cat /home/ana/webhook.token)" >/dev/null
+  git switch --quiet -c webhook
+  shown "$L4/webhook.md" 'clusters/lab/webhook.yaml' > clusters/lab/webhook.yaml
+  git add clusters/lab/webhook.yaml
+  commit_at 2026-10-09T17:15:00-03:00 -m "flux: a receiver for the Gitea webhook"
+  merge webhook "flux: a receiver for the Gitea webhook"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  local i p
+  for i in $(seq 60); do
+    p=$(kubectl -n flux-system get receiver gitea -o jsonpath='{.status.webhookPath}' 2>/dev/null)
+    [ -n "$p" ] && break; sleep 2
+  done
+  docker exec gitea sed -i '/^\[security\]$/a ALLOWED_HOST_LIST = private' /etc/gitea/app.ini
+  docker restart gitea >/dev/null
+  until curl -fs localhost:3000/api/v1/version >/dev/null; do sleep 1; done
+  api POST /repos/ana/fleet/hooks "{\"type\": \"gitea\", \"events\": [\"push\"], \"active\": true, \"config\": {\"url\": \"http://gitops-control-plane:30082$p\", \"content_type\": \"json\", \"secret\": \"$(cat /home/ana/webhook.token)\"}}" >/dev/null
+  git switch --quiet -c webhook-banner
+  sed -i 's/value: Staging is ready for review./value: Staging is updated by a webhook./' staging/bulletin.yaml
+  commit_at 2026-10-09T17:18:00-03:00 -am "staging: updated by a webhook"
+  merge webhook-banner "staging: updated by a webhook"
+  flux reconcile kustomization staging --with-source >/dev/null 2>&1
+  for i in $(seq 90); do curl -s localhost:8080 | grep -q 'updated by a webhook' && break; sleep 2; done
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+L5=$LAB/lessons/le-7y364195
+
+# The state at the end of lesson 5, on top of stage4: the bulletin repository
+# with v1.0 and v1.1, the image bulletin:1.1, fleet laid out as apps/ and
+# clusters/, production, both environments on 1.1, CODEOWNERS, and production
+# at three replicas.
+stage5() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i
+  cd /home/ana/bulletin
+  git init --quiet && git add index.cgi Dockerfile
+  commit_at 2026-10-09T18:00:00-03:00 -m "bulletin 1.0"
+  api POST /user/repos '{"name": "bulletin", "private": true}' >/dev/null
+  git remote add origin http://localhost:3000/ana/bulletin.git
+  git push --quiet -u origin main && git tag v1.0 && git push --quiet origin v1.0
+  shown "$L5/promotion.md" '~/bulletin/index.cgi' > index.cgi
+  commit_at 2026-10-09T18:30:00-03:00 -am "Show the pod that answered"
+  git tag v1.1 && git push --quiet origin main v1.1
+  docker build --quiet --build-arg VERSION=1.1 -t localhost:5001/bulletin:1.1 . >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.1 >/dev/null
+  cd /home/ana/fleet
+  sed -i 's#"$work/staging"#"$work/apps"#' /home/ana/setup/validate.sh
+  git switch --quiet -c layout
+  mkdir -p apps/bulletin && git mv staging apps/bulletin/staging
+  sed -i 's#  path: ./staging#  path: ./apps/bulletin/staging#' clusters/lab/staging.yaml
+  commit_at 2026-10-09T18:10:00-03:00 -am "fleet: apps/bulletin/staging"
+  merge layout "fleet: apps/bulletin/staging"
+  git switch --quiet -c production
+  mkdir -p apps/bulletin/production
+  shown "$L5/production.md" 'apps/bulletin/production/bulletin.yaml' > apps/bulletin/production/bulletin.yaml
+  shown "$L5/production.md" 'clusters/lab/production.yaml' > clusters/lab/production.yaml
+  sed -i 's#localhost:5001/bulletin:1.0#localhost:5001/bulletin:1.1#; s/  replicas: 2/  replicas: 3/' apps/bulletin/production/bulletin.yaml
+  sed -i 's#localhost:5001/bulletin:1.0#localhost:5001/bulletin:1.1#' apps/bulletin/staging/bulletin.yaml
+  mkdir -p .gitea
+  shown "$L5/ownership.md" '.gitea/CODEOWNERS' > .gitea/CODEOWNERS
+  git add apps clusters .gitea
+  commit_at 2026-10-09T19:20:00-03:00 -m "fleet: production, 1.1 in both environments, owners"
+  merge production "fleet: production, 1.1 in both environments, owners"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do curl -s localhost:8081 | grep -q 'bulletin 1.1' && curl -s localhost:8080 | grep -q 'bulletin 1.1' && break; sleep 2; done
+  kubectl -n production rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+L6=$LAB/lessons/le-940fv7yy
+
+# The state at the end of lesson 6, on top of stage5: bulletin as a Kustomize
+# base and two overlays (staging's message "Staging is built by Kustomize."),
+# lesson 6's validate.sh, the chart in charts/bulletin and the preview
+# installed from it by Flux.
+stage6() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i f
+  cd /home/ana/fleet
+  git switch --quiet -c kustomize
+  mkdir -p apps/bulletin/base apps/bulletin/preview charts/bulletin/templates
+  for f in base/deployment.yaml base/service.yaml base/kustomization.yaml staging/kustomization.yaml staging/namespace.yaml; do
+    shown "$L6/base-and-overlays.md" "apps/bulletin/$f" > "apps/bulletin/$f"
+  done
+  shown "$L6/patches.md" 'apps/bulletin/production/kustomization.yaml' > apps/bulletin/production/kustomization.yaml
+  sed 's/staging/production/' apps/bulletin/staging/namespace.yaml > apps/bulletin/production/namespace.yaml
+  sed -i 's/  - MESSAGE=Staging is updated by a webhook./  - MESSAGE=Staging is built by Kustomize./' apps/bulletin/staging/kustomization.yaml
+  git rm --quiet apps/bulletin/staging/bulletin.yaml apps/bulletin/production/bulletin.yaml
+  shown "$L6/base-and-overlays.md" '~/setup/validate.sh' > /home/ana/setup/validate.sh
+  for f in Chart.yaml values.yaml templates/deployment.yaml templates/service.yaml; do
+    shown "$L6/helm-charts.md" "charts/bulletin/$f" > "charts/bulletin/$f"
+  done
+  shown "$L6/helm-release.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  shown "$L6/helm-release.md" 'apps/bulletin/preview/kustomization.yaml' > apps/bulletin/preview/kustomization.yaml
+  sed 's/staging/preview/' apps/bulletin/staging/namespace.yaml > apps/bulletin/preview/namespace.yaml
+  sed 's/staging/preview/g' clusters/lab/staging.yaml > clusters/lab/preview.yaml
+  git add apps charts clusters
+  commit_at 2026-10-09T20:20:00-03:00 -m "bulletin: overlays, a chart, and a preview"
+  merge kustomize "bulletin: overlays, a chart, and a preview"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 120); do
+    curl -s localhost:8080 | grep -q 'built by Kustomize' && flux get helmreleases -n preview 2>/dev/null | grep -q True && break
+    sleep 2
+  done
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  kubectl -n production rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+api() { # METHOD PATH [JSON]: Gitea's API as ana
+  curl -fs -X "$1" -H "Authorization: token $(cat /home/ana/ana.token)" \
+    -H 'Content-Type: application/json' ${3:+-d "$3"} "http://localhost:3000/api/v1$2"
+}
+
+L7=$LAB/lessons/le-ht1257q2
+
+# The state at the end of lesson 7, on top of stage6: production pinned by the
+# digest of bulletin:1.1, the chart published as localhost:5001/charts/bulletin
+# 0.1.0 and the preview installed from it, the image automation proposing
+# staging releases through image-updates, and staging on bulletin 1.2.
+stage7() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i digest
+  cd /home/ana/fleet
+  digest=$(curl -sI -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5001/v2/bulletin/manifests/1.1 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  docker tag localhost:5001/bulletin:1.1 localhost:5001/bulletin:stable && docker push --quiet localhost:5001/bulletin:stable >/dev/null
+  git switch --quiet -c artefacts
+  sed -i "s#  newTag: \"1.1\"#  digest: $digest#" apps/bulletin/production/kustomization.yaml
+  helm package charts/bulletin >/dev/null && helm push bulletin-0.1.0.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  rm -f bulletin-0.1.0.tgz
+  sed -i 's/-skip HelmRelease /-skip HelmRelease,OCIRepository /' /home/ana/setup/validate.sh
+  shown "$L7/charts-as-artefacts.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  docker exec gitea gitea admin user create --username image-bot --password change-me-please --email image-bot@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username image-bot --token-name automation --scopes write:repository --raw > /home/ana/image-bot.token
+  chmod 600 /home/ana/image-bot.token
+  api PUT /repos/ana/fleet/collaborators/image-bot '{"permission": "write"}' >/dev/null
+  flux create secret git fleet-writer-auth --url=http://gitea:3000/ana/fleet.git --username=image-bot --password="$(cat /home/ana/image-bot.token)" >/dev/null 2>&1
+  flux install --export --components-extra=image-reflector-controller,image-automation-controller > clusters/lab/flux-system/gotk-components.yaml
+  shown "$L7/new-tags-automatically.md" 'clusters/lab/image-automation.yaml' > clusters/lab/image-automation.yaml
+  sed -i 's/  newTag: "1.1"$/  newTag: "1.1" # {"$imagepolicy": "flux-system:bulletin:tag"}/' apps/bulletin/staging/kustomization.yaml
+  git add apps clusters
+  commit_at 2026-10-09T21:20:00-03:00 -m "artefacts: production by digest, the published chart, image automation"
+  merge artefacts "artefacts: production by digest, the published chart, image automation"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  cd /home/ana/bulletin
+  git tag v1.2 && git push --quiet origin v1.2
+  docker build --quiet --build-arg VERSION=1.2 -t localhost:5001/bulletin:1.2 . >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.2 >/dev/null
+  cd /home/ana/fleet
+  for i in $(seq 150); do git ls-remote origin image-updates | grep -q . && break; sleep 2; done
+  git fetch --quiet && git switch --quiet -c image-updates origin/image-updates
+  merge image-updates "staging: bulletin 1.2"
+  for i in $(seq 120); do curl -s localhost:8080 | grep -q 'bulletin 1.2' && curl -s localhost:8081 | grep -q 'bulletin 1.1' && break; sleep 2; done
+  cd /home/ana
+}
+
+L8=$LAB/lessons/le-wek3xhhr
+
+# The state at the end of lesson 8, on top of stage7: a cosign key pair in
+# ~/signing, bulletin 1.2 and the chart 0.1.0 signed with it, the preview's
+# OCIRepository refusing anything else, Git signing commits with an SSH key, and
+# the unsigned chart 0.1.1 refused before a signed commit took preview back.
+stage8() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local digest chart
+  rm -rf /home/ana/signing && mkdir -p /home/ana/signing && cd /home/ana/signing
+  openssl rand -base64 24 > /home/ana/cosign.password && chmod 600 /home/ana/cosign.password
+  export COSIGN_PASSWORD=$(cat /home/ana/cosign.password)
+  cosign generate-key-pair >/dev/null 2>&1
+  cosign signing-config create --out offline.json >/dev/null 2>&1
+  digest=$(curl -sI -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5001/v2/bulletin/manifests/1.2 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  chart=$(curl -sI -H 'Accept: application/vnd.oci.image.manifest.v1+json' localhost:5001/v2/charts/bulletin/manifests/0.1.0 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  cosign sign --key cosign.key --signing-config offline.json -y "localhost:5001/bulletin@$digest" >/dev/null 2>&1
+  cosign sign --key cosign.key --signing-config offline.json -y "localhost:5001/charts/bulletin@$chart" >/dev/null 2>&1
+  cd /home/ana/fleet
+  git switch --quiet -c preview-verify
+  cp /home/ana/signing/cosign.pub apps/bulletin/preview/
+  shown "$L8/flux-verifies.md" 'apps/bulletin/preview/kustomization.yaml' > apps/bulletin/preview/kustomization.yaml
+  shown "$L8/flux-verifies.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  git add apps
+  commit_at 2026-10-09T22:00:00-03:00 -m "preview: only a signed chart"
+  merge preview-verify "preview: only a signed chart"
+  rm -f /home/ana/.ssh/signing /home/ana/.ssh/signing.pub
+  mkdir -p /home/ana/.ssh && chmod 700 /home/ana/.ssh
+  ssh-keygen -q -t ed25519 -N "" -C ana@example.org -f /home/ana/.ssh/signing
+  git config --global gpg.format ssh
+  git config --global user.signingkey /home/ana/.ssh/signing.pub
+  echo "ana@example.org $(cat /home/ana/.ssh/signing.pub)" > /home/ana/.ssh/allowed_signers
+  git config --global gpg.ssh.allowedSignersFile /home/ana/.ssh/allowed_signers
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 60); do
+    kubectl -n preview get ocirepository bulletin-chart -o jsonpath='{.status.conditions[?(@.type=="SourceVerified")].status}' 2>/dev/null | grep -q True && break
+    sleep 2
+  done
+  # the chart 0.1.1 nobody signed, refused by Flux, and the signed commit that
+  # takes preview back to 0.1.0
+  sed -i 's/^version: 0.1.0$/version: 0.1.1/' charts/bulletin/Chart.yaml
+  helm package charts/bulletin >/dev/null && helm push bulletin-0.1.1.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  rm -f bulletin-0.1.1.tgz && git checkout --quiet charts/bulletin/Chart.yaml
+  git switch --quiet -c preview-0.1.1
+  sed -i 's/    tag: 0.1.0/    tag: 0.1.1/' apps/bulletin/preview/release.yaml
+  commit_at 2026-10-09T22:10:00-03:00 -am "preview: chart 0.1.1"
+  merge preview-0.1.1 "preview: chart 0.1.1"
+  git switch --quiet -c preview-0.1.0
+  sed -i 's/    tag: 0.1.1/    tag: 0.1.0/' apps/bulletin/preview/release.yaml
+  commit_at 2026-10-09T22:20:00-03:00 -S -am "preview: back to the signed chart"
+  merge preview-0.1.0 "preview: back to the signed chart"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  cd /home/ana
+}
+
+L9=$LAB/lessons/le-yt0584nj
+
+# The state at the end of lesson 9, on top of stage8: Sealed Secrets sealing
+# staging's token, SOPS and age encrypting production's, validate.sh dropping
+# the `sops` block, and Vault initialised, unsealed, holding both tokens and
+# trusting the cluster's ServiceAccounts through the Kubernetes auth method.
+stage9() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i token age
+  docker image inspect hashicorp/vault:$VAULT >/dev/null 2>&1 || {
+    docker pull -q "$CACHE/hashicorp/vault:$VAULT" >/dev/null && docker tag "$CACHE/hashicorp/vault:$VAULT" hashicorp/vault:$VAULT
+  }
+  cd /home/ana/fleet
+  git switch --quiet -c sealed-secrets
+  mkdir -p infrastructure/sealed-secrets
+  curl -fsSLo infrastructure/sealed-secrets/controller.yaml https://github.com/bitnami-labs/sealed-secrets/releases/download/v$KUBESEAL/controller.yaml
+  shown "$L9/sealed-secrets.md" 'clusters/lab/sealed-secrets.yaml' > clusters/lab/sealed-secrets.yaml
+  git add infrastructure clusters
+  commit_at 2026-10-10T01:00:00-03:00 -m "sealed-secrets: the controller, $KUBESEAL"
+  merge sealed-secrets "sealed-secrets: the controller, $KUBESEAL"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do kubectl -n kube-system get deployment sealed-secrets-controller >/dev/null 2>&1 && break; sleep 2; done
+  kubectl -n kube-system rollout status deployment sealed-secrets-controller --timeout=180s >/dev/null
+  kubeseal --fetch-cert > /home/ana/setup/sealed-secrets.pem
+  git switch --quiet -c staging-token
+  token=$(openssl rand -hex 16)
+  kubectl -n staging create secret generic bulletin-token --from-literal=token=$token --dry-run=client -o yaml \
+    | kubeseal --cert /home/ana/setup/sealed-secrets.pem -o yaml > apps/bulletin/staging/token.yaml
+  shown "$L9/sealed-secrets.md" 'apps/bulletin/base/deployment.yaml' > apps/bulletin/base/deployment.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- token.yaml#' apps/bulletin/staging/kustomization.yaml
+  sed -i 's/^spec:$/spec:\n  dependsOn:\n  - name: sealed-secrets/' clusters/lab/staging.yaml
+  sed -i 's/-skip HelmRelease,OCIRepository /-skip HelmRelease,OCIRepository,SealedSecret /' /home/ana/setup/validate.sh
+  git add apps clusters
+  commit_at 2026-10-10T01:10:00-03:00 -m "staging: a sealed token"
+  merge staging-token "staging: a sealed token"
+  rm -rf /home/ana/.config/sops && mkdir -p /home/ana/.config/sops/age
+  age-keygen -o /home/ana/.config/sops/age/keys.txt 2>/dev/null
+  age=$(age-keygen -y /home/ana/.config/sops/age/keys.txt)
+  git switch --quiet -c production-token
+  shown "$L9/sops.md" '.sops.yaml' | sed "s/AGE_PUBLIC_KEY/$age/" > .sops.yaml
+  kubectl -n production create secret generic bulletin-token --from-literal=token=$(openssl rand -hex 16) --dry-run=client -o yaml > apps/bulletin/production/token.sops.yaml
+  SOPS_AGE_KEY_FILE=/home/ana/.config/sops/age/keys.txt sops --encrypt --in-place apps/bulletin/production/token.sops.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- token.sops.yaml#' apps/bulletin/production/kustomization.yaml
+  python3 - <<'PY'
+p = '/home/ana/setup/validate.sh'
+s = open(p).read()
+old = [l for l in s.split('\n') if l.startswith('  elif ! kubeconform')][0]
+new = """  elif ! awk '/^sops:/ { s = 1; next } /^[^ ]/ { s = 0 } !s' "$work/out.yaml" |
+       kubeconform -strict -summary -skip HelmRelease,OCIRepository,SealedSecret -kubernetes-version 1.37.0; then"""
+open(p, 'w').write(s.replace(old, new))
+PY
+  kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/ana/.config/sops/age/keys.txt >/dev/null
+  sed -i 's/^spec:$/spec:\n  decryption:\n    provider: sops\n    secretRef:\n      name: sops-age/' clusters/lab/production.yaml
+  git add .sops.yaml apps clusters
+  commit_at 2026-10-10T01:20:00-03:00 -m "production: a token encrypted with SOPS"
+  merge production-token "production: a token encrypted with SOPS"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  docker rm -fv vault >/dev/null 2>&1; docker volume rm vault-data >/dev/null 2>&1 || true
+  mkdir -p /home/ana/vault
+  shown "$L9/vault.md" '~/vault/vault.hcl' > /home/ana/vault/vault.hcl
+  docker run -d --name vault --network kind -p 127.0.0.1:8200:8200 -v /home/ana/vault:/vault/config:ro -v vault-data:/vault/file hashicorp/vault:$VAULT server >/dev/null
+  export VAULT_ADDR=http://127.0.0.1:8200
+  # `vault status` exits 2 while sealed, which is the state being waited for
+  for i in $(seq 60); do rc=0; vault status >/dev/null 2>&1 || rc=$?; [ $rc = 2 ] && break; sleep 1; done
+  vault operator init -key-shares=1 -key-threshold=1 -format=json > /home/ana/vault-init.json && chmod 600 /home/ana/vault-init.json
+  vault operator unseal "$(jq -r '.unseal_keys_b64[0]' /home/ana/vault-init.json)" >/dev/null
+  export VAULT_TOKEN=$(jq -r .root_token /home/ana/vault-init.json)
+  vault secrets enable -path=secret kv-v2 >/dev/null
+  vault kv put secret/bulletin/staging token=$(openssl rand -hex 16) >/dev/null
+  vault kv put secret/bulletin/production token=$(openssl rand -hex 16) >/dev/null
+  git switch --quiet -c vault-auth
+  mkdir -p infrastructure/vault-auth
+  shown "$L9/vault-kubernetes.md" 'infrastructure/vault-auth/vault-auth.yaml' > infrastructure/vault-auth/vault-auth.yaml
+  shown "$L9/vault-kubernetes.md" 'apps/bulletin/production/serviceaccount.yaml' > apps/bulletin/production/serviceaccount.yaml
+  sed 's/sealed-secrets/vault-auth/g' clusters/lab/sealed-secrets.yaml > clusters/lab/vault-auth.yaml
+  sed -i 's#^- \.\./base$#- ../base\n- serviceaccount.yaml#' apps/bulletin/production/kustomization.yaml
+  git add infrastructure apps clusters
+  commit_at 2026-10-10T01:40:00-03:00 -m "vault: an identity to check tokens with, and one for production"
+  merge vault-auth "vault: an identity to check tokens with, and one for production"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do
+    kubectl -n vault-auth get secret vault-auth -o jsonpath='{.data.token}' 2>/dev/null | grep -q . && kubectl -n production get serviceaccount bulletin >/dev/null 2>&1 && break
+    sleep 2
+  done
+  vault auth enable kubernetes >/dev/null
+  kubectl config view --raw --minify -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' | base64 -d > /home/ana/vault/cluster-ca.crt
+  vault write auth/kubernetes/config kubernetes_host=https://gitops-control-plane:6443 kubernetes_ca_cert=@/home/ana/vault/cluster-ca.crt \
+    token_reviewer_jwt="$(kubectl -n vault-auth get secret vault-auth -o jsonpath='{.data.token}' | base64 -d)" >/dev/null
+  shown "$L9/vault-kubernetes.md" '~/vault/bulletin-production.hcl' > /home/ana/vault/bulletin-production.hcl
+  vault policy write bulletin-production /home/ana/vault/bulletin-production.hcl >/dev/null
+  vault write auth/kubernetes/role/bulletin-production bound_service_account_names=bulletin \
+    bound_service_account_namespaces=production policies=bulletin-production ttl=10m >/dev/null
+  for i in $(seq 300); do
+    n=0; for j in $(seq 12); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && n=$((n + 1)); done
+    [ "$n" = 12 ] && break; sleep 2
+  done
+  cd /home/ana
+}
+
+L10=$LAB/lessons/le-zc6mj40j
+
+# The state at the end of lesson 10, on top of stage9: the External Secrets
+# Operator installed from its chart in the lab's registry, and production's
+# token read from Vault by an ExternalSecret instead of the SOPS file.
+stage10() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local f i
+  cd /home/ana/setup
+  curl -fsSLO https://github.com/external-secrets/external-secrets/releases/download/helm-chart-$ESO_CHART/external-secrets-$ESO_CHART.tgz
+  helm push external-secrets-$ESO_CHART.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  cd /home/ana/fleet
+  git switch --quiet -c external-secrets
+  mkdir -p infrastructure/external-secrets
+  for f in namespace.yaml release.yaml kustomization.yaml; do
+    shown "$L10/installing.md" "infrastructure/external-secrets/$f" > "infrastructure/external-secrets/$f"
+  done
+  sed 's/sealed-secrets/external-secrets/g' clusters/lab/sealed-secrets.yaml > clusters/lab/external-secrets.yaml
+  git add infrastructure clusters
+  commit_at 2026-10-10T02:00:00-03:00 -m "external-secrets: the operator, $ESO_CHART"
+  merge external-secrets "external-secrets: the operator, $ESO_CHART"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 150); do flux get helmreleases -n external-secrets 2>/dev/null | grep -q True && break; sleep 2; done
+  kubectl -n external-secrets wait --for=condition=Available deployment --all --timeout=180s >/dev/null
+  git switch --quiet -c production-vault
+  shown "$L10/production-from-vault.md" 'apps/bulletin/production/vault.yaml' > apps/bulletin/production/vault.yaml
+  sed -i 's/-skip HelmRelease,OCIRepository,SealedSecret /-skip HelmRelease,OCIRepository,SealedSecret,SecretStore,ExternalSecret /' /home/ana/setup/validate.sh
+  sed -i 's/^- token.sops.yaml$/- vault.yaml/' apps/bulletin/production/kustomization.yaml
+  git rm --quiet apps/bulletin/production/token.sops.yaml
+  git add apps
+  commit_at 2026-10-10T02:10:00-03:00 -m "production: the token comes from Vault"
+  merge production-vault "production: the token comes from Vault"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 120); do
+    kubectl -n production get externalsecret bulletin-token -o jsonpath='{.status.conditions[0].reason}' 2>/dev/null | grep -q SecretSynced && break
+    sleep 2
+  done
+  cd /home/ana
+}
+
+L11=$LAB/lessons/le-3bf0n568
+
+# The state at the end of lesson 11, on top of stage10: PostgreSQL beside
+# Vault with the database secrets engine and a root password nobody knows,
+# image-bot's token rotated, and staging applied as staging-applier, after a
+# pull request that reached past staging was refused and reverted.
+stage11() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$(jq -r .root_token /home/ana/vault-init.json)
+  docker image inspect postgres:17-alpine >/dev/null 2>&1 || {
+    docker pull -q "$CACHE/postgres:17-alpine" >/dev/null && docker tag "$CACHE/postgres:17-alpine" postgres:17-alpine
+  }
+  docker rm -fv postgres >/dev/null 2>&1 || true
+  docker run -d --name postgres --network kind -e POSTGRES_PASSWORD=initial-password -e POSTGRES_DB=bulletin postgres:17-alpine >/dev/null
+  for i in $(seq 60); do docker exec postgres pg_isready -q 2>/dev/null && break; sleep 1; done
+  sleep 2
+  vault secrets enable database >/dev/null
+  vault write database/config/bulletin plugin_name=postgresql-database-plugin \
+    connection_url='postgresql://{{username}}:{{password}}@postgres:5432/bulletin?sslmode=disable' \
+    allowed_roles=bulletin-readonly username=postgres password=initial-password >/dev/null
+  shown "$L11/dynamic-credentials.md" '~/vault/readonly.sql' > /home/ana/vault/readonly.sql
+  vault write database/roles/bulletin-readonly db_name=bulletin creation_statements=@/home/ana/vault/readonly.sql default_ttl=1h max_ttl=24h >/dev/null
+  vault write -f database/rotate-root/bulletin >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username image-bot --token-name automation-2 --scopes write:repository --raw > /home/ana/image-bot-2.token
+  chmod 600 /home/ana/image-bot-2.token
+  flux create secret git fleet-writer-auth --url=http://gitea:3000/ana/fleet.git --username=image-bot --password="$(cat /home/ana/image-bot-2.token)" >/dev/null 2>&1
+  curl -fsS -o /dev/null -u image-bot:change-me-please -X DELETE http://localhost:3000/api/v1/users/image-bot/tokens/automation
+  mv /home/ana/image-bot-2.token /home/ana/image-bot.token
+  cd /home/ana/fleet
+  git switch --quiet -c staging-applier
+  shown "$L11/flux-impersonation.md" 'clusters/lab/staging-applier.yaml' > clusters/lab/staging-applier.yaml
+  sed -i 's/^spec:$/spec:\n  serviceAccountName: staging-applier/' clusters/lab/staging.yaml
+  git add clusters
+  commit_at 2026-10-10T02:20:00-03:00 -m "staging: applied as staging-applier"
+  merge staging-applier "staging: applied as staging-applier"
+  git switch --quiet -c staging-applier-extra
+  shown "$L11/flux-impersonation.md" 'clusters/lab/staging-applier-extra.yaml' > clusters/lab/staging-applier-extra.yaml
+  git add clusters
+  commit_at 2026-10-10T02:25:00-03:00 -m "staging-applier: its namespace and its sealed secrets"
+  merge staging-applier-extra "staging-applier: its namespace and its sealed secrets"
+  git switch --quiet -c staging-debug
+  shown "$L11/flux-impersonation.md" 'apps/bulletin/staging/debug.yaml' > apps/bulletin/staging/debug.yaml
+  sed -i 's/^resources:$/resources:\n- debug.yaml/' apps/bulletin/staging/kustomization.yaml
+  git add apps
+  commit_at 2026-10-10T02:30:00-03:00 -m "staging: a debugging account"
+  merge staging-debug "staging: a debugging account"
+  git switch --quiet -c revert-staging-debug
+  GIT_AUTHOR_DATE=2026-10-10T02:35:00-03:00 GIT_COMMITTER_DATE=2026-10-10T02:35:00-03:00 git revert --no-edit HEAD^2 >/dev/null
+  merge revert-staging-debug "staging: no debugging account"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  flux reconcile kustomization staging >/dev/null 2>&1
+  for i in $(seq 60); do
+    kubectl -n flux-system get kustomization staging -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' | grep -q True && break
+    sleep 2
+  done
+  cd /home/ana
+}
+
+# merge BRANCH TITLE: lesson 2's flow for the branch checked out in the current
+# repository: push it, open the pull request as Ana, run validate.sh on its
+# head as the CI, approve as Bruno, merge as Ana, and bring main up to date.
+merge() {
+  local repo n sha i
+  repo=$(git remote get-url origin | sed 's#.*localhost:3000/##; s#\.git$##')
+  sha=$(git rev-parse HEAD)
+  # Gitea answers a push to a new branch with a link to open a pull request,
+  # on stderr; it is kept, and shown only if the push fails.
+  git push --quiet -u origin "$1" 2>/tmp/lab-push.err || { cat /tmp/lab-push.err >&2; die "could not push $1 to $repo"; }
+  n=$(api POST /repos/$repo/pulls "{\"head\": \"$1\", \"base\": \"main\", \"title\": \"$2\"}" | jq .number) \
+    || die "could not open a pull request for $1 in $repo"
+  if [ "$repo" = ana/fleet ]; then
+    (cd /home/ana && sh /home/ana/setup/validate.sh "$sha" >/dev/null) || die "validate.sh failed on $sha"
+  else
+    curl -fsS -H "Authorization: token $(cat /home/ana/ci.token)" -H 'Content-Type: application/json' \
+      -d '{"state": "success", "context": "validate"}' "http://localhost:3000/api/v1/repos/$repo/statuses/$sha" >/dev/null \
+      || die "could not post a status on $sha"
+  fi
+  curl -fsS -H "Authorization: token $(cat /home/ana/bruno.token)" -H 'Content-Type: application/json' \
+    -d '{"event": "APPROVED", "body": "Approved."}' "http://localhost:3000/api/v1/repos/$repo/pulls/$n/reviews" >/dev/null \
+    || die "bruno could not approve pull request $n of $repo"
+  # Gitea checks a new pull request for conflicts in the background, and
+  # refuses a merge until it has; so the merge is retried for a while.
+  for i in $(seq 20); do
+    api POST /repos/$repo/pulls/$n/merge '{"Do": "merge"}' >/dev/null && break
+    [ "$i" = 20 ] && die "pull request $n of $repo did not merge"
+    sleep 1
+  done
+  git switch --quiet main || die "could not switch to main"
+  for i in $(seq 5); do
+    git pull --quiet && return 0
+    sleep 2
+  done
+  die "could not pull main of $repo after merging pull request $n"
+}
+
+down() {
+  kind delete cluster --name gitops >/dev/null 2>&1 || true
+  docker rm -fv registry gitea vault postgres >/dev/null 2>&1 || true
+  docker volume rm vault-data >/dev/null 2>&1 || true
+}
+
+case "${1:-}" in
+  merge) shift; merge "$@" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9|stage10|stage11) "$1" ;;
+  *) sed -n '2,12p' "$0"; exit 1 ;;
+esac
