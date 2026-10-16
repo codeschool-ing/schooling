@@ -1,0 +1,377 @@
+{
+  "ex-3aq33mgc": {
+    "prompt": "Ligue cada termo do Kinesis da lição 20 ao equivalente no Kafka.",
+    "hint": "Uma palavra do Kafka à direita não tem equivalente no Kinesis aqui.",
+    "pairs": [
+      {
+        "left": "stream",
+        "right": "tópico"
+      },
+      {
+        "left": "shard",
+        "right": "partição"
+      },
+      {
+        "left": "número de sequência",
+        "right": "offset"
+      },
+      {
+        "left": "checkpoint guardado pela Kinesis Client Library",
+        "right": "offset confirmado de um grupo de consumidores"
+      }
+    ],
+    "right_distractors": [
+      "compactação"
+    ]
+  },
+  "ex-hf7yjtew": {
+    "prompt": "Um tópico tem três partições e o grupo `fraud` tem dois membros rodando. Como as partições são lidas?",
+    "hint": "Dentro de um grupo, uma partição tem um leitor.",
+    "choices": [
+      {
+        "text": "Os dois membros leem as três partições, e cada registro é processado duas vezes",
+        "why": "Isso é o que dois grupos diferentes fazem; membros de um grupo dividem as partições."
+      },
+      {
+        "text": "Um membro lê duas partições e o outro lê uma",
+        "why": "Isso. Cada partição vai para exatamente um membro, e um rebalanceamento as move quando um membro entra ou sai."
+      },
+      {
+        "text": "Os membros pegam registros em rodízio de todas as partições",
+        "why": "Registros de uma partição nunca são divididos entre membros, ou a ordem deles se perderia."
+      },
+      {
+        "text": "Só um membro lê; o outro espera o primeiro falhar",
+        "why": "Com três partições e dois membros os dois têm trabalho; um membro parado só acontece quando há mais membros que partições."
+      }
+    ]
+  },
+  "ex-8ya1saer": {
+    "prompt": "A Quitanda sobe um tópico de 3 para 4 partições enquanto os produtores continuam escrevendo, e `c-17`, na partição 1 de 3, passa para a partição 3 de 4. O que acontece com a ordem dos registros dela?",
+    "hint": "A partição é murmur2(chave) módulo o número de partições.",
+    "choices": [
+      {
+        "text": "Nada: o Kafka guarda a linhagem, como o Kinesis faz depois de um reshard",
+        "why": "O Kinesis registra pais e filhos; o Kafka não guarda linhagem entre partições."
+      },
+      {
+        "text": "Os registros antigos e os novos ficam em duas partições, sem ordem entre elas",
+        "why": "Isso. O módulo mudou, e nada liga as duas partições, então um leitor pode ver os registros novos primeiro."
+      },
+      {
+        "text": "O Kafka move os registros antigos de `c-17` para a partição nova",
+        "why": "Registros existentes nunca mudam de partição."
+      },
+      {
+        "text": "O tópico recusa escrita até os consumidores lerem as partições antigas",
+        "why": "Acrescentar partições não pausa os produtores."
+      }
+    ]
+  },
+  "ex-9wefsdg9": {
+    "prompt": "O que um tópico com `cleanup.policy=compact` guarda?",
+    "hint": "Ele transforma um tópico em algo como uma tabela.",
+    "choices": [
+      {
+        "text": "Todo registro por sete dias, comprimido",
+        "why": "Compactação não é compressão; é sobre chaves."
+      },
+      {
+        "text": "Só os registros que nenhum grupo de consumidores leu ainda",
+        "why": "O Kafka nunca apaga pelo que foi lido."
+      },
+      {
+        "text": "Pelo menos o registro mais recente de cada chave",
+        "why": "Isso: o endereço atual de cada cliente, guardado enquanto o tópico existir."
+      }
+    ]
+  },
+  "ex-0y3xnms1": {
+    "prompt": "O `kafka-consumer-groups.sh --describe` mostra CURRENT-OFFSET 1 e LOG-END-OFFSET 2 numa partição. Qual é o lag, e o que ele quer dizer?",
+    "hint": "Subtraia.",
+    "choices": [
+      {
+        "text": "1: um registro que o grupo não leu",
+        "why": "Isso. No laboratório foi 1 em toda partição depois de mandados mais três eventos."
+      },
+      {
+        "text": "2: o grupo precisa ler mais dois registros até ficar em dia",
+        "why": "O offset confirmado é o próximo a ler; 2 − 1 é um registro."
+      },
+      {
+        "text": "3: a soma dos dois números",
+        "why": "Lag é a diferença entre o fim do log e o offset confirmado."
+      },
+      {
+        "text": "1: falta um consumidor no grupo para ler a partição",
+        "why": "Lag conta registros, não membros."
+      }
+    ]
+  },
+  "ex-qd5v20jq": {
+    "prompt": "O consumidor de console do grupo `fraud` saiu depois de ler quatro registros. Mais três foram mandados, e um consumidor novo no mesmo grupo foi ligado sem `--from-beginning`. O que ele leu?",
+    "hint": "Onde fica a posição do grupo?",
+    "choices": [
+      {
+        "text": "Os sete, porque um processo novo começa do início",
+        "why": "Os offsets confirmados do grupo ficam no broker; um membro novo continua a partir deles."
+      },
+      {
+        "text": "Nada, porque começa no fim do log",
+        "why": "Isso acontece com um grupo sem offsets confirmados; este tinha."
+      },
+      {
+        "text": "Exatamente os três registros novos",
+        "why": "Isso. Continuou dos offsets que o grupo tinha confirmado."
+      },
+      {
+        "text": "Os quatro antigos de novo, depois os três novos",
+        "why": "Reprocessar exige zerar os offsets do grupo, o que veio depois."
+      }
+    ]
+  },
+  "ex-kt5zn47n": {
+    "prompt": "Para fazer o grupo `fraud` ler o tópico de novo desde o começo, o laboratório rodou `kafka-consumer-groups.sh` com `--reset-offsets --to-___ --execute`.",
+    "hint": "O contrário de latest.",
+    "blanks": [
+      {
+        "accept": [
+          "earliest"
+        ]
+      }
+    ]
+  },
+  "ex-6kqtezyp": {
+    "prompt": "Um tópico tem `retention.ms` de sete dias. Por que uma partição ainda pode guardar um registro de oito dias?",
+    "hint": "O que a retenção apaga?",
+    "choices": [
+      {
+        "text": "A retenção conta a partir do momento em que o registro foi lido pela última vez",
+        "why": "Ler não muda nada no log do Kafka."
+      },
+      {
+        "text": "A retenção apaga segmentos inteiros, e o segmento dele também guarda registros mais novos",
+        "why": "Isso. Um segmento só sai quando ele inteiro passou do limite."
+      },
+      {
+        "text": "`retention.bytes` passa por cima de `retention.ms` quando os dois estão definidos",
+        "why": "Vale o que for atingido primeiro; nenhum guarda um registro por mais tempo."
+      },
+      {
+        "text": "Um grupo de consumidores com lag segura o registro contra a exclusão",
+        "why": "O Kafka apaga sem olhar o lag; um grupo que fica para trás perde registros."
+      }
+    ]
+  },
+  "ex-nexbqvp2": {
+    "prompt": "Criar um tópico com fator de replicação 3 no broker único falhou. Por quê?",
+    "hint": "Cada cópia mora num broker diferente.",
+    "choices": [
+      {
+        "text": "Cada cópia precisa do próprio broker, e havia um",
+        "why": "Isso; a mensagem disse \"only 1 broker(s) are registered\"."
+      },
+      {
+        "text": "O Kafka 4 abandonou a replicação em favor do KRaft, o novo modo de metadados",
+        "why": "O KRaft substituiu o ZooKeeper nos metadados; a replicação de partições não mudou."
+      },
+      {
+        "text": "O disco não tinha espaço para três cópias",
+        "why": "A recusa foi sobre brokers, não sobre espaço."
+      },
+      {
+        "text": "`min.insync.replicas` era 1",
+        "why": "Essa configuração decide quando escritas são recusadas, não quantas cópias podem existir."
+      }
+    ]
+  },
+  "ex-jr2965hj": {
+    "prompt": "Fator de replicação 3 em três zonas, `acks=all` e `min.insync.replicas` 2. Duas zonas caem. O que acontece com as escritas?",
+    "hint": "Quantas réplicas em sincronia sobram?",
+    "choices": [
+      {
+        "text": "Continuam na cópia que sobrou",
+        "why": "Isso aceitaria escritas numa cópia só, e a configuração 2 existe para recusar isso."
+      },
+      {
+        "text": "São recusadas até uma segunda réplica voltar a ficar em sincronia",
+        "why": "Isso. Com uma réplica em sincronia, abaixo do mínimo de 2, a partição para de aceitar escrita em vez de arriscar perdê-la."
+      },
+      {
+        "text": "O Kafka cria duas réplicas novas na zona que sobrou e continua",
+        "why": "O Kafka não refaz réplicas sozinho para restaurar o fator."
+      },
+      {
+        "text": "As escritas dão certo, e os registros se perdem quando as zonas voltam",
+        "why": "As escritas nem são aceitas."
+      }
+    ]
+  },
+  "ex-g6htyr6w": {
+    "prompt": "Quais destas valem para um cluster MSK? Marque todas as que se aplicam.",
+    "hint": "Separe o que a AWS administra do que fica com você, e o que é cobrado.",
+    "choices": [
+      {
+        "text": "O tráfego de replicação entre os brokers não é cobrado",
+        "why": "Isso; a AWS não o cobra."
+      },
+      {
+        "text": "Um produtor numa zona escrevendo para uma líder em outra paga o preço de travessia de zona",
+        "why": "Isso, em cada sentido."
+      },
+      {
+        "text": "O fator de replicação de cada tópico é escolhido pela AWS e não pode ser mudado",
+        "why": "É uma configuração do Kafka e continua sua; o MSK só define padrões."
+      },
+      {
+        "text": "O número de brokers é múltiplo do número de zonas",
+        "why": "Isso; o MSK os distribui por igual."
+      }
+    ]
+  },
+  "ex-8edht1sp": {
+    "prompt": "O moto respondeu `create-cluster` com `CREATING` e `describe-cluster` com um `ZookeeperConnectString` de `zookeeper.example.com:2181`. A que um programa pode se conectar?",
+    "hint": "O que o `get-bootstrap-brokers` devolveu?",
+    "choices": [
+      {
+        "text": "A `zookeeper.example.com:2181`, quando o estado chegar a `ACTIVE`",
+        "why": "Esse host é um enfeite que não existe, e o estado nunca muda no moto."
+      },
+      {
+        "text": "A nada: o moto não roda broker nenhum, e o `get-bootstrap-brokers` falhou com um 500",
+        "why": "Isso. A metade MSK da lição é o formato da API; o comportamento foi visto no broker local."
+      },
+      {
+        "text": "A `localhost:9092`, onde o moto liga um broker para cada cluster",
+        "why": "Essa porta era o Kafka de verdade da seção anterior, ligado à mão."
+      },
+      {
+        "text": "A qualquer uma das três sub-redes dadas",
+        "why": "Uma sub-rede não é um endereço para se conectar, e `subnet-a` nem é um id de sub-rede."
+      }
+    ]
+  },
+  "ex-8bhxzevx": {
+    "prompt": "A Quitanda quer um tópico guardado por seis meses num cluster MSK provisionado sem comprar discos grandes para os brokers. O que serve?",
+    "hint": "Segmentos mais antigos podem morar em outro lugar que não os brokers.",
+    "choices": [
+      {
+        "text": "O armazenamento em camadas, que tira dos brokers os segmentos antigos",
+        "why": "Isso, a um preço menor por GB. Os brokers ficam com a parte recente, e uma retenção longa deixa de precisar de discos grandes."
+      },
+      {
+        "text": "Diminuir o armazenamento dos brokers depois de criar o tópico, para baixar o custo",
+        "why": "O armazenamento dos brokers pode ser aumentado e nunca diminuído."
+      },
+      {
+        "text": "`cleanup.policy=compact`",
+        "why": "A compactação guarda o registro mais recente por chave e descarta o histórico que seis meses pedem."
+      },
+      {
+        "text": "O MSK Serverless, que guarda registros sem limite",
+        "why": "O Serverless documenta um teto para quanto tempo os registros ficam guardados."
+      }
+    ]
+  },
+  "ex-cmfbznkf": {
+    "prompt": "O que o MSK Connect roda?",
+    "hint": "Um framework de conectores prontos.",
+    "choices": [
+      {
+        "text": "Uma VPN entre o seu datacenter e o cluster, para clientes fora da AWS",
+        "why": "Isso é a Site-to-Site VPN, de `aws-foundations`; o Connect move dados, não pacotes."
+      },
+      {
+        "text": "O Kafka Connect: conectores que movem dados para dentro e fora do Kafka",
+        "why": "Isso: o log de mudanças de um banco para um tópico, ou um tópico para o S3."
+      },
+      {
+        "text": "Os controladores KRaft dos brokers, que guardam os metadados do cluster",
+        "why": "O MSK roda esses em todo cluster; o Connect é um serviço à parte."
+      }
+    ]
+  },
+  "ex-k1g8qx86": {
+    "prompt": "Para 20 GB por dia, o cluster MSK provisionado custou 850,41 por mês e o Kinesis 170,10. O que faz a diferença?",
+    "hint": "Que linha existe antes de um byte ser escrito?",
+    "choices": [
+      {
+        "text": "O MSK cobra três vezes cada registro por causa da replicação",
+        "why": "O tráfego de replicação não é cobrado; as três cópias custam disco, que é 114,00 do total."
+      },
+      {
+        "text": "O tráfego que atravessa zonas",
+        "why": "Essa linha deu 24,00."
+      },
+      {
+        "text": "Os brokers: 712,41 por mês, seja qual for o tráfego",
+        "why": "Isso. A 20 GB por dia eles carregam uma fração pequena do que poderiam."
+      },
+      {
+        "text": "A retenção do Kinesis é de graça por sete dias",
+        "why": "Sete dias custaram 87,60 do lado do Kinesis."
+      }
+    ]
+  },
+  "ex-6tcqqf7v": {
+    "prompt": "Suponha que o Kinesis custe 8,51 por GB por dia de tráfego e nada fixo, e o cluster MSK 712,41 fixos mais 6,90 por GB por dia. Com quantos GB por dia os dois custam o mesmo? Arredonde para o inteiro mais próximo.",
+    "hint": "Resolva 8,51 × v = 712,41 + 6,90 × v.",
+    "unit": "GB por dia"
+  },
+  "ex-h6897ncv": {
+    "prompt": "Que situação pede MSK mesmo no volume modesto da Quitanda?",
+    "hint": "Preço não é a única coluna da comparação.",
+    "choices": [
+      {
+        "text": "A equipe não quer servidor nenhum para cuidar",
+        "why": "Isso pede Kinesis, que não tem brokers."
+      },
+      {
+        "text": "Uma checagem de fraude precisa dos eventos de cada pedido em ordem",
+        "why": "Os dois ordenam por chave; o Kinesis faz isso por shard."
+      },
+      {
+        "text": "Os consumidores são funções Lambda e uma cópia do Firehose para o S3",
+        "why": "Essas são integrações da própria AWS, e ficam com o Kinesis."
+      },
+      {
+        "text": "Serviços já escritos para clientes Kafka e o Connect",
+        "why": "Isso. O próprio Kafka é o requisito, e reescrevê-los para o Kinesis custa mais que os brokers."
+      }
+    ]
+  },
+  "ex-4j2ggggc": {
+    "prompt": "Ponha em ordem os passos de rodar e ler o broker Kafka local desta lição.",
+    "hint": "Nada pode ser criado antes de o broker rodar, e ele não roda sem formatar.",
+    "items": [
+      "Extrair a versão em `~/aws`",
+      "Formatar o diretório de log com um id de cluster",
+      "Ligar o `kafka-server-start.sh` num terceiro terminal",
+      "Criar o tópico `orders` com três partições",
+      "Mandar registros com chave pelo produtor de console",
+      "Lê-los no grupo `fraud` e descrever o lag dele"
+    ]
+  },
+  "ex-wvpnxr5r": {
+    "prompt": "Que retenção o Kafka oferece que o Kinesis Data Streams não oferece?",
+    "hint": "O Kinesis expira registros por idade, até um ano.",
+    "choices": [
+      {
+        "text": "Uma retenção de sete dias",
+        "why": "O Kinesis guarda até 365 dias, sete incluídos."
+      },
+      {
+        "text": "O registro mais recente por chave, guardado enquanto o tópico existir",
+        "why": "Isso: a compactação, que o Kinesis não tem."
+      },
+      {
+        "text": "Uma retenção de 24 horas",
+        "why": "Esse é o padrão do Kinesis."
+      },
+      {
+        "text": "Uma retenção que espera todo grupo ler um registro",
+        "why": "Nenhum dos dois apaga pelo que foi lido."
+      }
+    ]
+  }
+}

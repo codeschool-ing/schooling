@@ -1,0 +1,369 @@
+{
+  "ex-72ptbr70": {
+    "prompt": "Qual destas classes responde a um GET em milissegundos, sem restauração antes?",
+    "hint": "Uma classe de arquivo tem \"instant\" no nome.",
+    "choices": [
+      {
+        "text": "Glacier Deep Archive",
+        "why": "O Deep Archive precisa ser restaurado antes, e uma restauração leva até 48 horas."
+      },
+      {
+        "text": "Glacier Flexible Retrieval, quando lido com o tier Expedited",
+        "why": "Expedited é uma restauração que leva de 1 a 5 minutos; o GET só funciona depois dela."
+      },
+      {
+        "text": "Glacier Instant Retrieval",
+        "why": "Isso. Tem preço de arquivo e é lida como o Standard, com uma taxa por GB lido."
+      },
+      {
+        "text": "Nenhuma das classes Glacier; só o Standard",
+        "why": "O Standard-IA e o Glacier Instant Retrieval são lidos em milissegundos também."
+      }
+    ]
+  },
+  "ex-c3w6ggzw": {
+    "prompt": "Um objeto de 100 GB é escrito no Glacier Deep Archive (0,00320 USD por GB-mês, mínimo de 180 dias) e apagado depois de 30 dias. Contando um mês como 30 dias, quantos USD de armazenamento ele paga no total?",
+    "hint": "Ele é cobrado pelo mínimo, não pelos dias que ficou."
+  },
+  "ex-afwntcs1": {
+    "prompt": "A Quitanda guarda a única cópia dos contratos assinados com fornecedores. Por que o One Zone-IA é a classe errada para eles, mesmo sendo raramente lidos?",
+    "hint": "Conte as zonas.",
+    "choices": [
+      {
+        "text": "Fica numa zona só, e se a zona for perdida os dados vão junto",
+        "why": "Isso. O One Zone-IA serve para dados que podem ser produzidos de novo, nunca para a única cópia."
+      },
+      {
+        "text": "É mais lento de ler que o Standard-IA",
+        "why": "Os dois são lidos em milissegundos; a diferença é onde ficam as cópias."
+      },
+      {
+        "text": "Recusa objetos menores que 128 KB",
+        "why": "Aceita, e cobra como 128 KB, como o Standard-IA."
+      },
+      {
+        "text": "Tem duração mínima de 180 dias, que um contrato guardado por anos passaria de qualquer jeito",
+        "why": "O mínimo dele é 30 dias; 180 é o do Deep Archive. E um mínimo longo não importaria para dados guardados por anos."
+      }
+    ]
+  },
+  "ex-zshrvjem": {
+    "prompt": "Ligue cada classe à sua duração mínima de armazenamento.",
+    "hint": "Três classes dividem o mínimo com outra.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "Sem mínimo"
+      },
+      {
+        "left": "Standard-IA",
+        "right": "30 dias"
+      },
+      {
+        "left": "Glacier Instant Retrieval",
+        "right": "90 dias"
+      },
+      {
+        "left": "Glacier Deep Archive",
+        "right": "180 dias"
+      }
+    ],
+    "right_distractors": [
+      "365 dias"
+    ]
+  },
+  "ex-f10zjnn3": {
+    "prompt": "Um programa lê o `StorageClass` do `head-object` e não encontra esse campo na resposta. Em que classe está o objeto?",
+    "hint": "Compare as duas respostas de `head-object` da seção.",
+    "choices": [
+      {
+        "text": "Nenhuma ainda: a classe é atribuída na primeira leitura do objeto",
+        "why": "Todo objeto tem classe desde o momento em que é escrito."
+      },
+      {
+        "text": "Standard",
+        "why": "Isso. O `head-object` omite o campo para o Standard, e um programa precisa ler a ausência assim."
+      },
+      {
+        "text": "A classe padrão do bucket, que o `get-bucket-location` informa",
+        "why": "Não há classe padrão por bucket; a classe é por objeto, e a chamada citada informa uma região."
+      },
+      {
+        "text": "Intelligent-Tiering, cuja camada muda e por isso não é impressa",
+        "why": "Um objeto em Intelligent-Tiering imprime `\"INTELLIGENT_TIERING\"`, como mostra a seção sobre ele."
+      }
+    ]
+  },
+  "ex-cpq6kjr5": {
+    "prompt": "Na API e no `--storage-class`, a classe de arquivo cuja restauração mais rápida leva de 1 a 5 minutos se escreve `___`.",
+    "hint": "Manteve o nome quando o produto foi renomeado.",
+    "blanks": [
+      {
+        "accept": [
+          "GLACIER"
+        ]
+      }
+    ]
+  },
+  "ex-q8d994yx": {
+    "prompt": "A Quitanda copia 2.000 objetos sobre si mesmos para passá-los de Standard-IA para Glacier Instant Retrieval, dez dias depois de escrevê-los. O que a cópia custa além do preço da classe nova?",
+    "hint": "Cada cópia é uma requisição, e os objetos antigos saem cedo.",
+    "choices": [
+      {
+        "text": "Nada: mudar de classe é de graça e mantém a idade do objeto antigo",
+        "why": "A cópia escreve um objeto novo; o `LastModified` andou na seção."
+      },
+      {
+        "text": "Uma taxa de restauração por objeto, já que as classes Glacier são escritas por restauração",
+        "why": "Uma restauração serve para ler um objeto arquivado, e o Instant Retrieval nem tem."
+      },
+      {
+        "text": "90 dias de Glacier Instant Retrieval, cobrados de uma vez",
+        "why": "O mínimo só é cobrado se o objeto sair cedo; nada é cobrado adiantado."
+      },
+      {
+        "text": "2.000 requisições COPY, e os 20 dias restantes de Standard-IA de cada objeto",
+        "why": "Isso. Uma cópia tem preço de PUT, e os objetos saíram do Standard-IA dentro do mínimo de 30 dias."
+      }
+    ]
+  },
+  "ex-hkh42dy8": {
+    "prompt": "No moto, o `head-object` logo depois de uma restauração Bulk do Deep Archive mostra `ongoing-request=\"false\"`. O que o S3 mostraria nesse momento?",
+    "hint": "Quanto demora uma restauração Bulk do Deep Archive?",
+    "choices": [
+      {
+        "text": "O mesmo, porque o S3 restaura objetos pequenos na hora",
+        "why": "Os tempos documentados não dependem do tamanho; a restauração é um trabalho numa fila."
+      },
+      {
+        "text": "Nenhum campo `Restore`, até a restauração ser aprovada pelo dono da conta",
+        "why": "Não há passo de aprovação; o campo aparece junto com o pedido."
+      },
+      {
+        "text": "`ongoing-request=\"true\"`, por até 48 horas",
+        "why": "Isso. Todo GET continuaria falhando com `InvalidObjectState` até ela terminar."
+      },
+      {
+        "text": "Um erro, porque não se pode pedir restauração Bulk ao Deep Archive",
+        "why": "Bulk é um dos dois tiers do Deep Archive; Expedited é o que ele não tem."
+      }
+    ]
+  },
+  "ex-afjfbf7a": {
+    "prompt": "Um trabalho de restauração testado só contra o moto pede o tier Expedited ao Deep Archive, e todo teste passa. O que acontece na AWS?",
+    "hint": "Veja os tiers que a documentação lista para o Deep Archive.",
+    "choices": [
+      {
+        "text": "O S3 recusa o pedido: o Deep Archive só tem Standard e Bulk",
+        "why": "Isso. O moto aceitou um tier que o S3 não oferece, que é o ponto da lição sobre um sucesso no moto."
+      },
+      {
+        "text": "Funciona e fica pronto em 1 a 5 minutos, ao preço Expedited",
+        "why": "Esses são os tempos Expedited do Glacier Flexible Retrieval, não do Deep Archive."
+      },
+      {
+        "text": "O S3 rebaixa o pedido para Bulk em silêncio",
+        "why": "O S3 não troca o tier por você; um inválido é erro."
+      },
+      {
+        "text": "Funciona, já que o moto e o S3 aceitam os mesmos tiers",
+        "why": "O moto confere menos que o S3; o aceite dele não é prova do aceite do S3."
+      }
+    ]
+  },
+  "ex-0c2q852c": {
+    "prompt": "Depois que uma restauração do Deep Archive termina, o que o `StorageClass` diz do objeto?",
+    "hint": "A restauração faz uma cópia temporária.",
+    "choices": [
+      {
+        "text": "`STANDARD`, até acabarem os dias pedidos",
+        "why": "O objeto fica na classe dele; a cópia legível é temporária e não tem classe própria aqui."
+      },
+      {
+        "text": "`DEEP_ARCHIVE`",
+        "why": "Isso. Para tirá-lo de lá de vez, restaure e depois copie sobre si mesmo em outra classe."
+      },
+      {
+        "text": "`GLACIER`, porque a linha de comando chama assim as duas classes de arquivo",
+        "why": "O aviso do `aws s3 cp` chama; a API informa a classe real, `DEEP_ARCHIVE`."
+      },
+      {
+        "text": "`RESTORED`",
+        "why": "Não existe essa classe; o estado de uma restauração fica no campo `Restore`."
+      }
+    ]
+  },
+  "ex-5pajn5dt": {
+    "prompt": "O que acontece com um objeto de 40 KB escrito com `--storage-class INTELLIGENT_TIERING`?",
+    "hint": "Há um tamanho abaixo do qual a classe não vigia.",
+    "choices": [
+      {
+        "text": "É recusado, por estar abaixo do mínimo de 128 KB",
+        "why": "É aceito; a linha dos 128 KB decide se ele é monitorado, não se é guardado."
+      },
+      {
+        "text": "É cobrado como 128 KB, como no Standard-IA",
+        "why": "Essa regra é das classes IA e do Glacier Instant Retrieval."
+      },
+      {
+        "text": "Fica na camada frequente ao preço do Standard e não paga taxa de monitoramento",
+        "why": "Isso. Nunca é movido, então a classe não lhe dá nada nem cobra nada a mais."
+      },
+      {
+        "text": "Passa para a camada infrequente depois de 30 dias sem leitura",
+        "why": "Só objetos monitorados se movem, e objetos abaixo de 128 KB não são monitorados."
+      }
+    ]
+  },
+  "ex-x4crgsdp": {
+    "prompt": "A Quitanda tem 4 milhões de objetos de 1 MB cada em Intelligent-Tiering. A 0,00250 USD por 1.000 objetos por mês, qual é a taxa de monitoramento de um mês, em USD?",
+    "hint": "A taxa é por objeto, qualquer que seja o tamanho."
+  },
+  "ex-a17qzcbk": {
+    "prompt": "No moto, o `put-bucket-intelligent-tiering-configuration` falhou com `IllegalLocationConstraintException`. Qual é a leitura certa?",
+    "hint": "Do que esse erro normalmente trata?",
+    "choices": [
+      {
+        "text": "O moto não implementa a chamada, e a requisição caiu no código que cria buckets",
+        "why": "Isso. Não diz nada sobre o Intelligent-Tiering na AWS, que esta parte da lição ensina pela documentação."
+      },
+      {
+        "text": "O bucket precisa estar em us-east-1 para usar as camadas de arquivo",
+        "why": "O erro cita uma localização, e isso é sintoma do roteamento; as camadas de arquivo existem em São Paulo."
+      },
+      {
+        "text": "A configuração tem um erro de sintaxe",
+        "why": "Um argumento malformado é recusado pela linha de comando com `ParamValidation` antes de enviar algo."
+      },
+      {
+        "text": "As camadas de arquivo exigem versionamento no bucket",
+        "why": "Não exigem, e o erro citaria versionamento se exigissem."
+      }
+    ]
+  },
+  "ex-k2gr2e0g": {
+    "prompt": "Pela tabela, a partir de quantas leituras completas por ano um terabyte em Glacier Instant Retrieval custa mais que o mesmo terabyte em Standard?",
+    "hint": "101,99 pelo ano, 30,72 por leitura completa, contra 497,66.",
+    "choices": [
+      {
+        "text": "4",
+        "why": "Com quatro leituras, as leituras custam mais que o próprio armazenamento, 122,88 contra 101,99, e o total ainda fica bem abaixo do Standard."
+      },
+      {
+        "text": "13",
+        "why": "Isso. 101,99 + 13 × 30,72 = 501,35, pouco acima de 497,66; com 12 dá 470,63."
+      },
+      {
+        "text": "22",
+        "why": "Esse é o ponto de equilíbrio do Standard-IA com o Standard, a 10,24 por leitura."
+      },
+      {
+        "text": "Nunca: uma classe de arquivo é sempre mais barata",
+        "why": "As leituras dela são as mais caras da tabela, então leituras suficientes passam o Standard."
+      }
+    ]
+  },
+  "ex-09p7ar8g": {
+    "prompt": "Por que o `year.py` imprime um traço, e não 0,00, para a leitura do One Zone-IA?",
+    "hint": "Veja a entrada dele em `PRICES`.",
+    "choices": [
+      {
+        "text": "O One Zone-IA não cobra nada para ler",
+        "why": "Aí imprimiria 0,00, como o Standard."
+      },
+      {
+        "text": "Objetos em One Zone-IA não podem ser lidos de volta",
+        "why": "São lidos em milissegundos, como o Standard-IA."
+      },
+      {
+        "text": "O Python não consegue multiplicar por um preço abaixo de 0,02",
+        "why": "Ele multiplica os 0,00320 do Deep Archive na linha seguinte."
+      },
+      {
+        "text": "A tabela não imprime preço de recuperação para ele, e um preço desconhecido não é zero",
+        "why": "Isso. `None` é um preço que a tabela não tem, e imprimi-lo como zero seria um chute vestido de número."
+      }
+    ]
+  },
+  "ex-g4pfd4nx": {
+    "prompt": "Um conjunto de dados de 1 TB é lido inteiro toda semana. Em que classe a conta da seção o põe?",
+    "hint": "Conte 52 leituras e compare com os pontos de equilíbrio.",
+    "choices": [
+      {
+        "text": "Standard-IA, a classe para dados que são lidos",
+        "why": "52 leituras a 10,24 somam 532,48 aos 271,56, bem acima dos 497,66 do Standard."
+      },
+      {
+        "text": "Glacier Instant Retrieval, porque é lido em milissegundos",
+        "why": "Lido em milissegundos, sim, a 30,72 por leitura: 52 delas dão 1.597,44."
+      },
+      {
+        "text": "Standard",
+        "why": "Isso. O Standard-IA empata com cerca de 22 leituras completas por ano, e 52 passa muito disso."
+      },
+      {
+        "text": "Deep Archive na velocidade bulk, o total mais barato da tabela",
+        "why": "O total da tabela é para uma leitura; uma leitura semanal não poderia esperar 48 horas."
+      }
+    ]
+  },
+  "ex-4qhbwmk2": {
+    "prompt": "Ligue cada tipo de dado da Quitanda à classe que combina com ele.",
+    "hint": "Pergunte com que frequência é lido e com que pressa é necessário.",
+    "pairs": [
+      {
+        "left": "Os pedidos de hoje, lidos por todo relatório",
+        "right": "Standard"
+      },
+      {
+        "left": "Fotos de pedidos lidas só quando um cliente contesta uma entrega, meses depois",
+        "right": "Glacier Instant Retrieval"
+      },
+      {
+        "left": "Exportações de auditoria guardadas por sete anos, pedidas com semanas de antecedência",
+        "right": "Glacier Deep Archive"
+      },
+      {
+        "left": "Miniaturas que podem ser feitas de novo a partir dos originais",
+        "right": "One Zone-IA"
+      }
+    ],
+    "right_distractors": [
+      "Reduced Redundancy"
+    ]
+  },
+  "ex-k6f13d29": {
+    "prompt": "Ordene as classes pelo preço de guardar um GB por mês, da mais barata para a mais cara.",
+    "hint": "O Deep Archive é o piso e o Standard é o teto.",
+    "items": [
+      "Glacier Deep Archive",
+      "Glacier Flexible Retrieval",
+      "Glacier Instant Retrieval",
+      "One Zone-IA",
+      "Standard-IA",
+      "Standard"
+    ]
+  },
+  "ex-gbm1j7bz": {
+    "prompt": "A Quitanda quer arquivar 50 milhões de eventos de clique de 2 KB cada, um objeto por evento. Quais destes são custos reais desse plano na AWS? Marque todos os que se aplicam.",
+    "hint": "Pense por objeto, não por gigabyte.",
+    "choices": [
+      {
+        "text": "No Glacier Instant Retrieval, cada evento é cobrado como 128 KB",
+        "why": "Sim: 64 vezes o tamanho dele."
+      },
+      {
+        "text": "No Deep Archive, cada evento carrega 40 KB além dos próprios bytes",
+        "why": "Sim: 32 KB ao preço do arquivo e 8 KB ao do Standard."
+      },
+      {
+        "text": "50 milhões de requisições PUT para escrevê-los",
+        "why": "Sim: uma requisição por objeto escrito, qualquer que seja a classe."
+      },
+      {
+        "text": "No Intelligent-Tiering, uma taxa de monitoramento em cada evento",
+        "why": "Objetos abaixo de 128 KB não são monitorados e não pagam taxa; ficam ao preço do Standard."
+      }
+    ]
+  }
+}

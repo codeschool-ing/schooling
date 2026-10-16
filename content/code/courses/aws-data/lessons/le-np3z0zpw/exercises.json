@@ -1,0 +1,574 @@
+[
+  {
+    "id": "ex-eaya7640",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An EMR on EC2 cluster is up for an hour. What is billed for each of its machines?",
+    "hint": "Whose machine is it, and whose software?",
+    "choices": [
+      {
+        "text": "The EMR fee alone, because the fee includes the machine",
+        "correct": false,
+        "why": "The fee is what EMR adds on top; the price sheet says so beside its line, and the machine is priced by EC2."
+      },
+      {
+        "text": "The EC2 hour and the EMR fee",
+        "correct": true,
+        "why": "Right: 0.32130 for an on-demand m7i.xlarge plus 0.05040 of fee, 0.37170 an hour."
+      },
+      {
+        "text": "A DPU-hour, as Glue bills it",
+        "correct": false,
+        "why": "DPUs are Glue's unit; EMR on EC2 bills machines."
+      },
+      {
+        "text": "Only the EC2 hour: the software on it is open source, so EMR adds nothing",
+        "correct": false,
+        "why": "Spark is open source, and EMR still charges for installing, configuring and running it on your machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtwvv50q",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Halfway through a job, AWS takes back one of the cluster's Spot task nodes. What happens to the job?",
+    "hint": "What does a task node store?",
+    "choices": [
+      {
+        "text": "It fails, because the blocks of HDFS on that node are gone",
+        "correct": false,
+        "why": "A task node runs no DataNode and holds no blocks; that loss belongs to a core node."
+      },
+      {
+        "text": "The cluster terminates with it",
+        "correct": false,
+        "why": "That is what losing the primary node does."
+      },
+      {
+        "text": "Its tasks run again on another machine; slower, nothing lost",
+        "correct": true,
+        "why": "Right. That is why task nodes are the ones put on Spot."
+      },
+      {
+        "text": "EMR pauses the job until Spot capacity of the same type returns",
+        "correct": false,
+        "why": "YARN does not pause; it gives the lost tasks to the machines it still has."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc2w2vxe",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save money, a team runs a six-hour nightly cluster with the primary, core and task nodes all on Spot. Which risk did they take that a Spot task group alone would not carry?",
+    "hint": "Order the roles by what losing one costs.",
+    "choices": [
+      {
+        "text": "Spot prices rising past the on-demand price for the night",
+        "correct": false,
+        "why": "With the maximum at the on-demand price, a group never pays more than on demand; when the market passes it, the machine is reclaimed instead."
+      },
+      {
+        "text": "One reclaimed machine ending the whole night's run",
+        "correct": true,
+        "why": "Right. A reclaimed primary ends the cluster, and a reclaimed core node can fail the job with its blocks."
+      },
+      {
+        "text": "HDFS refusing to start on Spot machines",
+        "correct": false,
+        "why": "HDFS runs on any machine; the problem is what happens when one goes."
+      },
+      {
+        "text": "EMR charging a higher fee per hour on Spot machines",
+        "correct": false,
+        "why": "The fee is the same however the machine is bought."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryzrv653",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a cluster that is created each night keep its data in S3 rather than in HDFS?",
+    "hint": "Where does HDFS live?",
+    "choices": [
+      {
+        "text": "EMR cannot write Parquet into HDFS",
+        "correct": false,
+        "why": "Spark writes Parquet to HDFS perfectly well; the problem is how long it stays."
+      },
+      {
+        "text": "Reading S3 from EMR is free and reading HDFS is not",
+        "correct": false,
+        "why": "Neither is the reason; HDFS is the cluster's own disks."
+      },
+      {
+        "text": "Ending the cluster deletes its HDFS",
+        "correct": true,
+        "why": "Right. HDFS lives on the core nodes' disks, and they go when the cluster goes."
+      },
+      {
+        "text": "HDFS is slower than S3 for every kind of read",
+        "correct": false,
+        "why": "Local disks are often faster; speed is not why a transient cluster avoids them."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0v8cnj0",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each node to what it runs.",
+    "hint": "Only one of them stores blocks of HDFS.",
+    "pairs": [
+      {
+        "left": "primary",
+        "right": "ResourceManager and NameNode"
+      },
+      {
+        "left": "core",
+        "right": "DataNode and NodeManager"
+      },
+      {
+        "left": "task",
+        "right": "NodeManager alone"
+      }
+    ],
+    "right_distractors": [
+      "The Glue Data Catalog"
+    ]
+  },
+  {
+    "id": "ex-438m60jb",
+    "version": 1,
+    "section": "groups-and-fleets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's nightly cluster asks for Spot task nodes, and some nights it waits because m7i.xlarge Spot is short in the zone. What change addresses that?",
+    "hint": "Spot is a set of pools, one per type and zone.",
+    "choices": [
+      {
+        "text": "Instance fleets offering three machine types for the task capacity",
+        "correct": true,
+        "why": "Right. A fleet that can take any of several types draws from several pools, and rarely waits. It means rebuilding the cluster, since groups and fleets do not mix."
+      },
+      {
+        "text": "A second instance group of m7i.xlarge Spot",
+        "correct": false,
+        "why": "Same type, same zone, same pool: the shortage is the same."
+      },
+      {
+        "text": "Moving the task nodes into the core group",
+        "correct": false,
+        "why": "That puts HDFS on the machines that may vanish and does nothing about the shortage."
+      },
+      {
+        "text": "A higher `BidPrice` on the same group",
+        "correct": false,
+        "why": "A pool with no spare machines has none at any price; Spot is reclaimed by capacity, not auctioned."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmfpr7pp",
+    "version": 1,
+    "section": "groups-and-fleets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, the cluster with fleets was created, and listing its fleets answered `500`. What is the right conclusion?",
+    "hint": "What does a success from moto mean?",
+    "choices": [
+      {
+        "text": "Fleets are not offered in sa-east-1",
+        "correct": false,
+        "why": "The region is not the issue; moto put the cluster in us-east-1 anyway."
+      },
+      {
+        "text": "The request was well formed, and moto does not model fleets",
+        "correct": true,
+        "why": "Right. `InstanceCollectionType` came back `null` too. How EMR fills a fleet was not run."
+      },
+      {
+        "text": "The flags were wrong, and the cluster has no task nodes",
+        "correct": false,
+        "why": "A malformed request is refused by the command line before it is sent; this one was accepted."
+      },
+      {
+        "text": "A cluster's fleets take some minutes to appear",
+        "correct": false,
+        "why": "moto waits for nothing; a 500 is an error inside moto, not a delay."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsgpw4z4",
+    "version": 1,
+    "section": "groups-and-fleets",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a nightly batch job whose failure is merely annoying, which groups are sound candidates for Spot? Choose all that apply.",
+    "hint": "Order the roles by what their loss costs.",
+    "choices": [
+      {
+        "text": "The task nodes",
+        "correct": true,
+        "why": "Yes: losing one costs time."
+      },
+      {
+        "text": "The core nodes, accepting that a reclaimed one can fail the run",
+        "correct": true,
+        "why": "Yes, for a job allowed to fail; the section says core nodes should not be Spot unless the job can survive failing."
+      },
+      {
+        "text": "The primary node, since it does none of the work",
+        "correct": false,
+        "why": "It does none of the work and coordinates all of it; losing it ends the cluster."
+      },
+      {
+        "text": "None of them: Spot is for stateless web servers",
+        "correct": false,
+        "why": "Batch work that can be retried is the textbook use of Spot."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h6yzmmn",
+    "version": 1,
+    "section": "steps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, a Spark step pointing at a program in a bucket that does not exist is still `RUNNING` minutes later. What would the same step do on AWS?",
+    "hint": "Who checks that the file exists?",
+    "choices": [
+      {
+        "text": "Stay `RUNNING` until the file is uploaded",
+        "correct": false,
+        "why": "Nothing waits for the file; `spark-submit` looks for it once."
+      },
+      {
+        "text": "Fail, with the reason in the logs under `--log-uri`",
+        "correct": true,
+        "why": "Right. moto runs nothing, so it never reaches the moment the step would fail."
+      },
+      {
+        "text": "Be refused by `add-steps` before it is queued",
+        "correct": false,
+        "why": "A step's arguments are not checked when it is added; they are passed to the command."
+      },
+      {
+        "text": "Report `COMPLETED`, because `spark-submit` itself started",
+        "correct": false,
+        "why": "A step completes when its command succeeds, and this one cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5j90pkb",
+    "version": 1,
+    "section": "steps",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A cluster created with `--no-auto-terminate` that has finished its steps sits in the state ___, billed by the second.",
+    "hint": "The describe-cluster output showed it.",
+    "blanks": [
+      {
+        "accept": [
+          "WAITING"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-509hc796",
+    "version": 1,
+    "section": "steps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Analysts query the curated data through Trino on weekdays from 9 to 18, and one nightly job runs at 3. Which arrangement fits both?",
+    "hint": "One of the two has something to schedule around; the other does not.",
+    "choices": [
+      {
+        "text": "A long-running cluster with an idle timeout for the analysts, and a transient one per night for the job",
+        "correct": true,
+        "why": "Right. Interactive work needs something running when people arrive; the job needs a cluster for an hour."
+      },
+      {
+        "text": "A transient cluster for every analyst query",
+        "correct": false,
+        "why": "Each query would wait for machines to boot and install; interactive work cannot be scheduled."
+      },
+      {
+        "text": "One cluster left on all week for both",
+        "correct": false,
+        "why": "It works, and it pays every night and weekend hour that nobody uses."
+      },
+      {
+        "text": "Glue for the queries and EMR for the job",
+        "correct": false,
+        "why": "Glue runs ETL jobs; it is not where analysts run interactive SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqr3hxfw",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An EMR Serverless application with no pre-initialised capacity has had no job for three days. What has it cost in compute?",
+    "hint": "Look at `autoStopConfiguration`.",
+    "choices": [
+      {
+        "text": "Its minimum of workers for 72 hours",
+        "correct": false,
+        "why": "With no pre-initialised capacity there is no minimum held."
+      },
+      {
+        "text": "The EMR fee for every hour it existed",
+        "correct": false,
+        "why": "Serverless has no per-hour fee for existing; it bills what jobs used."
+      },
+      {
+        "text": "One DPU-hour a day to stay registered",
+        "correct": false,
+        "why": "DPUs are Glue's unit, and nothing is billed for staying registered."
+      },
+      {
+        "text": "Nothing: it stopped after 15 idle minutes",
+        "correct": true,
+        "why": "Right. Serverless bills vCPU-hours and GB-hours that jobs used, and there were none."
+      }
+    ]
+  },
+  {
+    "id": "ex-epm2yp2k",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is EMR on EKS the right one of the three?",
+    "hint": "It does not create machines.",
+    "choices": [
+      {
+        "text": "When the team has no Kubernetes and wants the simplest start",
+        "correct": false,
+        "why": "Then it adds a Kubernetes cluster to operate just to run Spark."
+      },
+      {
+        "text": "When Kubernetes already runs everything else",
+        "correct": true,
+        "why": "Right. Spark then shares the nodes, the monitoring and the people the organisation already has."
+      },
+      {
+        "text": "When the job keeps its data in HDFS between runs",
+        "correct": false,
+        "why": "A virtual cluster has no HDFS of its own; that is EMR on EC2 with core nodes."
+      },
+      {
+        "text": "When the goal is to pay for nothing between jobs, with no nodes of your own kept anywhere",
+        "correct": false,
+        "why": "That is EMR Serverless; on EKS the nodes you keep cost what they cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmzb5a26",
+    "version": 1,
+    "section": "three-ways",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto really do in this lesson's lab? Choose all that apply.",
+    "hint": "Recording a request is not running it.",
+    "choices": [
+      {
+        "text": "Keep a step with its arguments, as `spark-submit` would receive them",
+        "correct": true,
+        "why": "Yes; `list-steps` showed them."
+      },
+      {
+        "text": "Keep the instance groups and the market each one pays in",
+        "correct": true,
+        "why": "Yes; the table showed `SPOT` for the task group."
+      },
+      {
+        "text": "Terminate the transient cluster after its step",
+        "correct": false,
+        "why": "It stayed `WAITING` with the step `RUNNING`."
+      },
+      {
+        "text": "Check that the EKS cluster behind the virtual cluster exists",
+        "correct": false,
+        "why": "`aws eks list-clusters` was empty and the registration succeeded."
+      },
+      {
+        "text": "Bill the Serverless job run for its vCPU-hours",
+        "correct": false,
+        "why": "It reported 0.0 of everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-krdmmgkv",
+    "version": 1,
+    "section": "emr-or-glue",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An m7i.xlarge on demand is 0.32130 USD an hour and the EMR fee is 0.05040. What do one primary and four core nodes cost for 3 hours, in USD, to two decimals?",
+    "hint": "Five machines, each the machine plus the fee, for three hours.",
+    "value": 5.58,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-6avw35aj",
+    "version": 1,
+    "section": "emr-or-glue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "EMR on EC2 costs 0.37170 a unit-hour against Glue's 0.69000, and yet \"EMR left on\" is the most expensive line of the program. Why?",
+    "hint": "Count the hours each line pays for.",
+    "choices": [
+      {
+        "text": "It pays all 730 hours of the month for 60 hours of work",
+        "correct": true,
+        "why": "Right: eleven machines × 730 hours, worked or not."
+      },
+      {
+        "text": "The EMR fee doubles on a cluster that runs longer than a day",
+        "correct": false,
+        "why": "The fee per hour is the same on the first hour and the seven hundredth."
+      },
+      {
+        "text": "It runs eleven machines where Glue runs ten",
+        "correct": false,
+        "why": "One extra machine is 10%; the line is more than seven times Glue's."
+      },
+      {
+        "text": "Spot machines are priced higher at night",
+        "correct": false,
+        "why": "The program prices on-demand machines only, and the night is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-e339ycs6",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The cluster left on costs 2984.75 USD a month. Glue with ten DPUs costs 207.00 a month for each hour of nightly work. How many hours a night make the two equal? One decimal.",
+    "hint": "Divide the flat line by the slope.",
+    "value": 14.4,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-8gwsx6b5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these by the price of one unit of 4 vCPU and 16 GB for an hour, cheapest first.",
+    "hint": "Machine plus fee, reserved and on demand, then the per-job products.",
+    "items": [
+      "EMR on EC2, reserved machine",
+      "EMR on EC2, on-demand machine",
+      "Glue Flex",
+      "EMR Serverless",
+      "Glue"
+    ]
+  },
+  {
+    "id": "ex-cpxrs21n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thirty more jobs would keep the same ten units busy sixteen hours a night. Which costs less a month: Glue with ten DPUs, or the cluster of eleven machines left on?",
+    "hint": "Where do the two lines in the chart cross?",
+    "choices": [
+      {
+        "text": "Glue, at 207.00 for each nightly hour",
+        "correct": false,
+        "why": "At sixteen hours that is 207.00 × 16 = 3312.00, above the flat line."
+      },
+      {
+        "text": "The cluster left on, at 2984.75",
+        "correct": true,
+        "why": "Right. Past 14.4 hours a night the flat line is below Glue's."
+      },
+      {
+        "text": "Neither: at sixteen hours they cost the same",
+        "correct": false,
+        "why": "They cost the same at 14.4 hours; at sixteen they have parted again."
+      },
+      {
+        "text": "Glue, because a cluster also pays the minutes its machines take to boot",
+        "correct": false,
+        "why": "A cluster left on boots once a month; those minutes are lost in 730 hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jnec3d1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Spark job runs once a month for forty minutes: ordinary ETL from catalogued tables, no special library. Which is the sensible home?",
+    "hint": "Count the hours a cluster would wait.",
+    "choices": [
+      {
+        "text": "A long-running EMR cluster on reserved machines",
+        "correct": false,
+        "why": "Reserved machines are paid all year for forty minutes a month of work."
+      },
+      {
+        "text": "Glue",
+        "correct": true,
+        "why": "Right: short, rare, ordinary and catalogued is the case Glue was built for."
+      },
+      {
+        "text": "EMR on EKS",
+        "correct": false,
+        "why": "Worth it where Kubernetes already exists, and nothing says it does here."
+      },
+      {
+        "text": "A transient EMR cluster with Spot core nodes",
+        "correct": false,
+        "why": "It works, and it costs a cluster definition and its upkeep to save cents on forty minutes."
+      }
+    ]
+  }
+]

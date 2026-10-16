@@ -1,0 +1,1905 @@
+{
+  "ex-try0sry4": {
+    "prompt": "Uma colega roda `aws s3 mb s3://quitanda-test` num terminal sem `AWS_ENDPOINT_URL` e com as chaves `test`. O que acontece?",
+    "hint": "Lição 1, sobre o endpoint.",
+    "choices": [
+      {
+        "text": "O moto cria o bucket, como faz com a variável definida",
+        "why": "Sem a variável a requisição nem chega ao moto."
+      },
+      {
+        "text": "A AWS de verdade recusa a chave, e nada é criado",
+        "why": "Isso: `InvalidAccessKeyId`."
+      },
+      {
+        "text": "A linha de comando se recusa a rodar sem endpoint",
+        "why": "Ela tem um endpoint padrão: o da Amazon."
+      },
+      {
+        "text": "Um bucket é criado numa conta real e cobrado",
+        "why": "Só se o terminal tivesse credenciais reais, e `test` não é uma."
+      }
+    ]
+  },
+  "ex-qfgfhmzm": {
+    "prompt": "Um job do Glue iniciado no moto termina em `SUCCEEDED`. O que se pode concluir sobre o mesmo job na AWS?",
+    "hint": "O que o moto faz com código que mandam rodar?",
+    "choices": [
+      {
+        "text": "Que vai dar certo, já que a requisição é idêntica",
+        "why": "O moto não roda Spark; o sucesso não diz nada sobre o script."
+      },
+      {
+        "text": "Que a requisição estava bem formada, e nada sobre o job em si",
+        "why": "Isso."
+      },
+      {
+        "text": "Que vai dar certo se a role do IAM existir",
+        "why": "Nem a role nem o script foram avaliados."
+      },
+      {
+        "text": "Que rodou mais rápido do que vai rodar na AWS",
+        "why": "Ele nem rodou."
+      }
+    ]
+  },
+  "ex-qct3d1tv": {
+    "prompt": "Um bucket guarda `raw/orders/a.csv` e `raw/payments/b.csv` e nada mais. Quantos objetos há nele?",
+    "hint": "Conte chaves, não pastas.",
+    "choices": [
+      {
+        "text": "Dois",
+        "why": "Isso; `raw/`, `raw/orders/` e `raw/payments/` são prefixos."
+      },
+      {
+        "text": "Cinco: dois arquivos e três pastas",
+        "why": "Pastas são desenhadas a partir dos prefixos e não são objetos."
+      },
+      {
+        "text": "Três: dois arquivos e a pasta `raw/`",
+        "why": "Nenhum objeto tem a chave `raw/`."
+      },
+      {
+        "text": "Quatro: cada arquivo e sua pasta-mãe",
+        "why": "Pastas-mães só existem nas listagens."
+      }
+    ]
+  },
+  "ex-46k8tkjk": {
+    "prompt": "Quais destes são maus nomes de bucket, pelas regras da AWS ou pelo esquema deste curso? Marque todos os que se aplicam.",
+    "hint": "Minúsculas, sem pontos, sem pessoas, empresa-camada-ambiente.",
+    "choices": [
+      {
+        "text": "`quitanda-curated-prod`",
+        "why": "Segue o esquema."
+      },
+      {
+        "text": "`Quitanda-Curated`",
+        "why": "Maiúsculas são recusadas."
+      },
+      {
+        "text": "`quitanda.logs.prod`",
+        "why": "Válido, e quebra o HTTPS no endereço de sempre."
+      },
+      {
+        "text": "`quitanda-ana-raw`",
+        "why": "Nome de uma pessoa; pessoas mudam e o bucket fica."
+      }
+    ]
+  },
+  "ex-kxa2c3fe": {
+    "prompt": "O S3 Standard em sa-east-1 custa 0,0405 USD por GB-mês. Quanto custam 2.000 GB por um mês, em USD inteiros?",
+    "hint": "Multiplique."
+  },
+  "ex-50bgmen4": {
+    "prompt": "A Quitanda põe 2.500 GB no Glacier Deep Archive (0,00320 USD por GB-mês, mínimo de 180 dias) e apaga tudo depois de 60 dias. Contando o mês como 30 dias, quanto custa o armazenamento no total, em USD inteiros?",
+    "hint": "Lição 2."
+  },
+  "ex-z09qtqnq": {
+    "prompt": "Um terabyte é lido por inteiro doze vezes por ano. Pela tabela anual da lição (Standard 497,66; Standard-IA 271,56 mais 10,24 por leitura; Glacier Instant Retrieval 101,99 mais 30,72 por leitura), qual classe sai mais barata?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "Standard, já que ler todo mês é acesso frequente",
+        "why": "O Standard custa 497,66; o Standard-IA com doze leituras dá 271,56 + 122,88 = 394,44."
+      },
+      {
+        "text": "Standard-IA",
+        "why": "Isso: 394,44, contra 470,63 do Instant Retrieval e 497,66 do Standard."
+      },
+      {
+        "text": "Glacier Instant Retrieval, cuja linha de armazenamento é a menor das três",
+        "why": "101,99 + 12 × 30,72 = 470,63: as leituras comem a economia."
+      },
+      {
+        "text": "Deep Archive, lido em bulk todo mês",
+        "why": "Barato em dinheiro, e cada leitura espera até 48 horas por um restore; um relatório mensal não espera."
+      }
+    ]
+  },
+  "ex-q1s717tr": {
+    "prompt": "Um job restaura um objeto do Glacier Flexible Retrieval com o tier Standard e o lê com `get-object` na linha seguinte. Contra o moto a leitura funciona. O que o mesmo job encontra na AWS?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "O mesmo sucesso, porque o pedido de restore foi aceito",
+        "why": "Aceito não é terminado. O moto termina um restore na hora; o S3 leva horas."
+      },
+      {
+        "text": "`InvalidObjectState` na leitura, por três a cinco horas",
+        "why": "Isso: até a cópia ficar pronta, `ongoing-request` é `\"true\"` e todo `GET` é recusado."
+      },
+      {
+        "text": "Uma recusa do próprio restore, pois o tier é reservado ao Deep Archive",
+        "why": "Standard é tier das duas classes de arquivo; o que falta ao Deep Archive é o Expedited."
+      },
+      {
+        "text": "Uma leitura lenta que vai entregando os bytes conforme o arquivo os acha",
+        "why": "Não existe leitura lenta de objeto arquivado, só nenhuma leitura até o restore acabar."
+      }
+    ]
+  },
+  "ex-2fjkyzh7": {
+    "prompt": "Ordene estes restores por quão cedo a AWS documenta que a cópia legível fica pronta, do mais cedo ao mais tarde.",
+    "hint": "Lição 2.",
+    "items": [
+      "Glacier Flexible Retrieval, Expedited",
+      "Glacier Flexible Retrieval, Standard",
+      "Deep Archive, Standard",
+      "Deep Archive, Bulk"
+    ]
+  },
+  "ex-3fxb29pd": {
+    "prompt": "Um usuário de pipeline pode `s3:DeleteObject` e tem `s3:DeleteObjectVersion` negado. Um bug o faz rodar `aws s3 rm --recursive` sobre `raw/` num bucket versionado. Como fica `raw/` depois, e qual o caminho de volta?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "Cada chave ganhou um delete marker por cima e mantém todas as versões embaixo; apagar os markers traz as chaves de volta",
+        "why": "Isso: um delete sem versão só acrescenta um marker, e o usuário não poderia ter destruído versão nenhuma."
+      },
+      {
+        "text": "Os objetos sumiram, e só um backup os restaura",
+        "why": "Isso é um bucket sem versionamento. Aqui nada foi removido."
+      },
+      {
+        "text": "O comando foi recusado, já que falta ao usuário o `DeleteObjectVersion`",
+        "why": "`aws s3 rm` não manda id de versão, então só precisa de `DeleteObject`, que o usuário tem."
+      },
+      {
+        "text": "As versões atuais foram destruídas e as antigas ficaram",
+        "why": "Destruir uma versão exige um delete que a nomeie, e esse usuário não pode mandar um."
+      }
+    ]
+  },
+  "ex-enbtv4x2": {
+    "prompt": "Uma tabela de 50 GB é reescrita toda noite num bucket versionado, e a única regra é `NoncurrentVersionExpiration` com `NoncurrentDays` 14. Depois que o bucket se estabiliza, quantos GB ele guarda para essa tabela, em GB inteiros?",
+    "hint": "Lição 3. Conte também a versão atual."
+  },
+  "ex-1c390wzq": {
+    "prompt": "Uma versão está travada em modo compliance até outubro de 2027. Qual destes pedidos o S3 aceita para ela antes dessa data?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "Mudar a data de retenção para depois, para 2028",
+        "why": "Isso: uma retenção compliance pode ser estendida e nunca encurtada."
+      },
+      {
+        "text": "Trocar o modo para governance, mantendo a data",
+        "why": "O modo de uma retenção compliance não muda; o moto deixou e o S3 não deixa."
+      },
+      {
+        "text": "Um delete que nomeia a versão, enviado pelo usuário root",
+        "why": "Nenhuma permissão, nem a do root, a apaga antes da data."
+      },
+      {
+        "text": "Um delete que nomeia a versão com `--bypass-governance-retention`",
+        "why": "O bypass é do modo governance; o compliance não tem nenhum."
+      }
+    ]
+  },
+  "ex-kpftj17a": {
+    "prompt": "O bucket de cliques da Quitanda guarda dezenas de milhões de objetos de 10 KB. Uma regra criada este ano os move para Standard-IA depois de 30 dias, e dois meses depois a conta de armazenamento não caiu. Qual o motivo mais provável?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "O Standard-IA custa o mesmo que o Standard por GB-mês",
+        "why": "Custa 0,02210 contra 0,04050; o preço não é o motivo."
+      },
+      {
+        "text": "Regras de ciclo de vida esperam um ano antes da primeira execução",
+        "why": "O S3 avalia as regras mais ou menos uma vez por dia."
+      },
+      {
+        "text": "A regra foi recusada, já que 30 dias está abaixo do mínimo",
+        "why": "30 dias é exatamente o mínimo que o S3 pede para ir ao Standard-IA."
+      },
+      {
+        "text": "Objetos com menos de 128 KB não são transicionados por padrão",
+        "why": "Isso: `all_storage_classes_128K` os deixa no Standard, onde um objeto de 10 KB não é cobrado como 128 KB."
+      }
+    ]
+  },
+  "ex-9f1j9t1e": {
+    "prompt": "Uma função Lambda, rodando com uma role cuja sessão dura uma hora, pré-assina a nota de um fornecedor com `--expires-in 604800`. O fornecedor abre o link no dia seguinte. O que o S3 responde?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "A nota, já que sete dias não se passaram",
+        "why": "Uma URL assinada com credenciais temporárias morre com elas, diga o que disser o `X-Amz-Expires`."
+      },
+      {
+        "text": "`403`, porque as credenciais que a assinaram expiraram",
+        "why": "Isso: a sessão acabou depois de uma hora, e a URL junto."
+      },
+      {
+        "text": "Nada: a linha de comando se recusa a assinar além da sessão",
+        "why": "Assinar não verifica nada; o limite é do S3, na hora do uso."
+      },
+      {
+        "text": "`404`, pois uma URL de role só fica guardada por uma hora",
+        "why": "Nenhuma URL fica guardada em lugar algum; o S3 recalcula a assinatura no uso."
+      }
+    ]
+  },
+  "ex-rvqvy1bp": {
+    "prompt": "O Block Public Access está ligado no nível da conta, as quatro chaves. Um desenvolvedor quer as imagens de produto da loja públicas e aplica uma política que permite `\"Principal\": \"*\"` em `s3:GetObject` só sobre `quitanda-site-prod/images/*`. O que a AWS faz?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Aceita, porque o recurso está restrito a um prefixo",
+        "why": "Uma concessão pública estreita continua pública, e as chaves recusam todas."
+      },
+      {
+        "text": "Aceita, e recusa as leituras anônimas sob ela",
+        "why": "Isso seria só o `RestrictPublicBuckets`; o `BlockPublicPolicy` barra a política antes de ser gravada."
+      },
+      {
+        "text": "Recusa a política com `AccessDenied`",
+        "why": "Isso: o `BlockPublicPolicy` no nível da conta recusa qualquer política que conceda acesso público, em todo bucket."
+      },
+      {
+        "text": "Aceita assim que as chaves do próprio bucket forem desligadas",
+        "why": "Vence o mais estrito dos dois níveis, e o da conta continua ligado."
+      }
+    ]
+  },
+  "ex-dcz5k1fy": {
+    "prompt": "O bucket de logs ganha uma política que nega `s3:*` a qualquer principal cujo `aws:PrincipalOrgID` não seja o da Quitanda. As pessoas leem como antes, e na manhã seguinte uma entrega de logs que escreve nele parou. O que a política esqueceu?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Uma exceção para serviços, via `aws:PrincipalIsAWSService`",
+        "why": "Isso: um serviço que age por você não é principal da sua organização."
+      },
+      {
+        "text": "Um `Allow` para a entrega de logs, que vence o `Deny`",
+        "why": "Um deny explícito vence todo allow; a correção tem de estar na condição do deny."
+      },
+      {
+        "text": "A condição `aws:SecureTransport`, já que serviços mandam HTTP simples",
+        "why": "Nada aqui é sobre TLS; a entrega foi recusada por não estar na organização."
+      },
+      {
+        "text": "O ARN do bucket sem `/*`, que a entrega usa",
+        "why": "Os recursos não são o problema: o principal é."
+      }
+    ]
+  },
+  "ex-b488j20b": {
+    "prompt": "A política de uma role de relatórios permite `s3:GetObject` e `s3:ListBucket`, ambos com `\"Resource\": \"arn:aws:s3:::quitanda-curated-prod/*\"`. Na AWS, o que a role consegue fazer?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Ler objetos e listar o bucket",
+        "why": "Listar é ação sobre o bucket, cujo ARN não tem `/*`."
+      },
+      {
+        "text": "Ler objetos, e não listar o bucket",
+        "why": "Isso: o recurso com `/*` nomeia objetos, então o `ListBucket` não casa com nada."
+      },
+      {
+        "text": "Nenhum dos dois, pois um recurso não serve a duas ações",
+        "why": "Uma declaração pode listar várias ações; cada uma é comparada com os recursos."
+      },
+      {
+        "text": "Listar o bucket e não ler nada até acrescentar `s3:*`",
+        "why": "É o contrário: os objetos casam e o bucket não."
+      }
+    ]
+  },
+  "ex-0s1p0101": {
+    "prompt": "Num mês a Quitanda manda 10.240 GB para a internet (0,15000 USD por GB nos primeiros 10.240) e copia 1.000 GB para us-east-1 (0,13800 USD por GB). Quanto dá a conta de transferência, em USD inteiros?",
+    "hint": "Lição 5."
+  },
+  "ex-54mkv8nd": {
+    "prompt": "Quais destes movimentos de bytes, em sa-east-1, põem uma cobrança por GB na conta da Quitanda? Marque todos os que se aplicam.",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Uma máquina numa zona lendo o bucket do lago na mesma região",
+        "why": "O S3 é regional: lê-lo de qualquer zona da região não custa transferência, só requisições."
+      },
+      {
+        "text": "Um banco replicando para o standby em outra zona",
+        "why": "Entre zonas, 0,01000 por GB, em cada sentido."
+      },
+      {
+        "text": "Uma sub-rede privada lendo o S3 por um NAT gateway",
+        "why": "O NAT gateway cobra por todo GB que processa, mesmo para o S3 ao lado."
+      },
+      {
+        "text": "O bucket mandando objetos ao CloudFront",
+        "why": "Do S3 ao CloudFront é 0,00000; o CloudFront depois cobra a própria entrega."
+      },
+      {
+        "text": "Um fornecedor subindo arquivos para o bucket raw pela internet",
+        "why": "Dados que entram são grátis; só as requisições `PUT` são cobradas."
+      }
+    ]
+  },
+  "ex-fnxm5j1v": {
+    "prompt": "A Quitanda liga o requester pays no bucket que um parceiro copia toda noite. O job do parceiro, sem mudança e ainda permitido pela política do bucket, agora falha com `403`. Qual a causa mais provável?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "As requisições dele não dizem que aceitam a cobrança",
+        "why": "Isso: sem `x-amz-request-payer: requester` (`--request-payer requester`), o S3 recusa."
+      },
+      {
+        "text": "O requester pays recusa toda conta que não a dona",
+        "why": "Ele existe para outras contas; só recusa requisições anônimas e as que não aceitam a cobrança."
+      },
+      {
+        "text": "A conta do parceiro antes precisa pagar também o armazenamento",
+        "why": "A dona continua pagando o armazenamento; quem pede paga requisições e transferência."
+      },
+      {
+        "text": "O bucket precisa ser público para outra conta pagar",
+        "why": "O contrário: um bucket requester pays recusa de cara requisições anônimas."
+      }
+    ]
+  },
+  "ex-3mbpdhk4": {
+    "prompt": "Um app grava um objeto de 2 KB por pedido, dez milhões por mês, e um relatório lê todos toda manhã. Qual mudança tira mais da conta do S3?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Mover os objetos para Standard-IA depois de 30 dias",
+        "why": "O armazenamento é o menor medidor aqui, um objeto de 2 KB vira 128 KB no IA, e o `GET` dele custa mais."
+      },
+      {
+        "text": "Poucos arquivos grandes, com muitos pedidos cada",
+        "why": "Isso: a conta é de requisições, cobradas por objeto; os mesmos bytes em arquivos grandes custam frações de centavo para ler."
+      },
+      {
+        "text": "Comprimir cada objeto para metade do tamanho",
+        "why": "Uma requisição custa o mesmo qualquer que seja o tamanho, e o número de objetos não muda."
+      },
+      {
+        "text": "Listar o prefixo antes, para ler só os objetos novos",
+        "why": "Um `LIST` é cobrado como `PUT`, e o relatório continua lendo todos os objetos."
+      }
+    ]
+  },
+  "ex-n4xdwf4e": {
+    "prompt": "Uma instância RDS PostgreSQL foi criada Single-AZ com 1.000 GiB de gp3 (0,219 USD por GB-mês), e o banco dentro dela ocupa 120 GiB. Quanto custa o armazenamento num mês, em USD inteiros?",
+    "hint": "Lição 6."
+  },
+  "ex-ckjv5p4d": {
+    "prompt": "A instância de pedidos está em 95% de CPU desde que um relatório novo entrou na segunda. Alguém propõe passá-la para uma classe quatro vezes maior. O que a lição pensa disso?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "É trabalho do RDS escalá-la, então o pedido vai ao suporte da AWS",
+        "why": "O RDS mostra a CPU; não decide a sua classe, e não lê as suas consultas."
+      },
+      {
+        "text": "É o jeito caro de esconder o que provavelmente é uma consulta ou um índice faltando",
+        "why": "Isso: consultas e índices continuam seus depois da mudança, e uma classe maior é um comando."
+      },
+      {
+        "text": "Está certo, já que engines gerenciadas ajustam as consultas sozinhas",
+        "why": "Nada dentro da engine passou para a AWS: a consulta lenta ainda é da Quitanda."
+      },
+      {
+        "text": "Não funciona, já que a classe é fixada quando a instância é criada",
+        "why": "Mudar de classe é um `modify-db-instance` e um restart."
+      }
+    ]
+  },
+  "ex-nvjqxzr4": {
+    "prompt": "No moto, uma instância criada com `--engine sqlserver-se` voltou com `LicenseModel` `general-public-license`. O que vale para a mesma instância na AWS?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Também não tem licença, já que o RDS traz engines abertas",
+        "why": "O SQL Server é da Microsoft e nunca é código aberto."
+      },
+      {
+        "text": "A licença está no preço por hora",
+        "why": "Isso: 1,087 por hora contra 0,221 para o mesmo tamanho de máquina; o moto preenche o campo sem raciocinar."
+      },
+      {
+        "text": "Precisa de uma licença própria da Microsoft, trazida para a AWS",
+        "why": "Isso é o Oracle Enterprise e o Db2; o SQL Server no RDS é licença incluída."
+      },
+      {
+        "text": "É recusada se `--license-model` não for informado",
+        "why": "O SQL Server tem um modelo só no RDS, e é o padrão."
+      }
+    ]
+  },
+  "ex-xndc6kpx": {
+    "prompt": "Num PostgreSQL de verdade, a coluna `context` de `pg_settings` mostra `___` para uma configuração como `max_connections`, lida só quando o servidor sobe.",
+    "hint": "Lição 6.",
+    "blanks": [
+      {
+        "accept": [
+          "postmaster"
+        ]
+      }
+    ]
+  },
+  "ex-v7wr5k89": {
+    "prompt": "Depois de um failover Multi-AZ que a AWS dá como terminado em menos de dois minutos, os workers em Python da Quitanda voltaram e o serviço em Java ainda dá timeout vinte minutos depois. Qual a causa mais provável?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "O standby perdeu as transações confirmadas logo antes da falha",
+        "why": "O standby é síncrono: tem toda transação confirmada. E perder dados não causaria timeouts."
+      },
+      {
+        "text": "O endpoint mudou, e o serviço Java ainda tem o nome antigo configurado",
+        "why": "O nome não muda num failover; o que está por trás dele muda."
+      },
+      {
+        "text": "O runtime Java guardou o endereço antigo do nome e continua batendo nele",
+        "why": "Isso: o cache de DNS padrão da JVM pode durar para sempre, e a AWS recomenda menos de um minuto."
+      },
+      {
+        "text": "O novo standby ainda está sendo construído, e o primário espera por ele",
+        "why": "O standby promovido atende enquanto o novo é construído na outra zona."
+      }
+    ]
+  },
+  "ex-n6mjw8wr": {
+    "prompt": "O banco de pedidos tem 3.000 GB e grava 1.000 GB de write-ahead log por mês. Uma réplica de leitura dele roda em us-east-1, e a transferência para us-east-1 custa 0,138 USD por GB. Quanto custa o tráfego de replicação num mês, em USD inteiros?",
+    "hint": "Lição 7."
+  },
+  "ex-kd2wdbwg": {
+    "prompt": "O banco financeiro em SQL Server da Quitanda precisa de um standby, e um engenheiro propõe um Multi-AZ DB cluster porque o failover é mais rápido. O que há de errado na proposta?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "O cluster só é oferecido para PostgreSQL e MySQL",
+        "why": "Isso: o standby do SQL Server é a Multi-AZ instance, de 60 a 120 segundos."
+      },
+      {
+        "text": "Um cluster faz failover mais devagar que uma instância",
+        "why": "É mais rápido, menos de 35 segundos pela documentação da AWS."
+      },
+      {
+        "text": "Os leitores dele não respondem consultas até haver um failover",
+        "why": "Isso descreve o standby da Multi-AZ instance; os leitores do cluster servem leituras."
+      },
+      {
+        "text": "Nada: o moto criou o cluster, então a AWS também cria",
+        "why": "O moto criou um cluster sem instância nenhuma; aceitar não prova nada."
+      }
+    ]
+  },
+  "ex-ffd718rj": {
+    "prompt": "O primário em São Paulo se perde sem standby, e a Quitanda promove sua réplica de leitura em us-east-1. O que o time deve esperar encontrar na instância promovida?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "Toda transação confirmada, já que a replicação é síncrona",
+        "why": "Uma réplica fica sabendo da escrita depois do commit; isso é do Multi-AZ, não de uma réplica."
+      },
+      {
+        "text": "O banco até o último snapshot diário",
+        "why": "Uma réplica reaplica o log continuamente; não é refeita a partir de snapshots."
+      },
+      {
+        "text": "Tudo menos os últimos instantes de lag da réplica",
+        "why": "Isso: a replicação é assíncrona, então promover aceita perder o que não tinha chegado."
+      },
+      {
+        "text": "Um banco vazio, já que a promoção corta o vínculo",
+        "why": "A promoção corta o vínculo e mantém os dados que a réplica tinha."
+      }
+    ]
+  },
+  "ex-v9bfjzt2": {
+    "prompt": "Um cluster Aurora tem uma `db.r7g.large` e um volume de 1.000 GB. O I/O-Optimized acrescenta 96,34 USD por mês na instância e 0,238 USD por GB-mês no armazenamento; o Standard cobra 0,28 USD por milhão de I/Os. Acima de quantos milhões de I/Os por mês o I/O-Optimized sai mais barato? Responda em milhões inteiros.",
+    "hint": "Lição 8."
+  },
+  "ex-tvfcrej8": {
+    "prompt": "Um cluster Aurora tem um writer, duas réplicas e um volume com 500 GB. Por quanto armazenamento a conta cobra?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "1.500 GB, uma cópia por instância",
+        "why": "Réplicas leem o mesmo volume e não guardam cópia dos dados."
+      },
+      {
+        "text": "3.000 GB, pelas seis cópias de cada segmento",
+        "why": "As seis cópias são custo da AWS e não uma linha da conta."
+      },
+      {
+        "text": "500 GB, uma vez",
+        "why": "Isso: um volume compartilhado, cobrado pelo que guarda, quantas instâncias o lerem."
+      },
+      {
+        "text": "O tamanho que foi alocado quando o cluster foi criado",
+        "why": "Um volume Aurora não tem tamanho a escolher; cresce com os dados."
+      }
+    ]
+  },
+  "ex-fz0br9t1": {
+    "prompt": "Um cluster tem um writer provisionado e um leitor Serverless v2 no promotion tier 5, que fica no mínimo quase o dia todo. O writer falha no pico da noite e o leitor é promovido. Qual o risco?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Nenhum, já que a promoção copia a capacidade do writer",
+        "why": "Só um leitor no tier 0 ou 1 é mantido na capacidade do writer."
+      },
+      {
+        "text": "Assume as escritas ainda pequeno, e fica lento até escalar",
+        "why": "Isso: nos tiers 2 a 15 um leitor serverless escala pela própria carga, então fica pequeno quando a carga foi baixa."
+      },
+      {
+        "text": "Faltam a ele as escritas que não reaplicou a tempo",
+        "why": "Uma réplica Aurora lê o mesmo volume; não falta dado nenhum."
+      },
+      {
+        "text": "Não pode ser promovido, já que uma instância serverless nunca escreve",
+        "why": "Uma instância serverless pode ser writer; o cluster de dev da lição tem uma."
+      }
+    ]
+  },
+  "ex-cfhtwdc2": {
+    "prompt": "Os relatórios pesados da manhã da Quitanda, mandados ao reader endpoint, deixam lentas as páginas da loja que leem das mesmas réplicas. Qual mudança combina com o que a lição descreve?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Apontar os relatórios para o cluster endpoint, para rodarem no writer",
+        "why": "Isso joga a carga na instância que recebe todo checkout."
+      },
+      {
+        "text": "Apontar os relatórios para o endpoint de instância de uma réplica",
+        "why": "Endpoint de instância é para diagnosticar uma máquina, e quebra quando ela muda de papel."
+      },
+      {
+        "text": "Somar uma réplica maior e nomeá-la sozinha num custom endpoint para os relatórios",
+        "why": "Isso: um custom endpoint separa um grupo de réplicas para um trabalho."
+      },
+      {
+        "text": "Passar o cluster para I/O-Optimized, para leituras pesadas saírem de graça",
+        "why": "Isso muda a conta, não quem disputa a mesma réplica."
+      }
+    ]
+  },
+  "ex-rqzzf9nx": {
+    "prompt": "Um colega propõe sort keys de pedido na forma `ORDER#o-10002#2026-10-05`, id antes da data, \"para os ids ficarem fáceis de achar\". Qual dos padrões de acesso da Quitanda isso quebra?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "O perfil do cliente, lido por `get-item`",
+        "why": "A chave do perfil é `PROFILE` e não muda."
+      },
+      {
+        "text": "Os pedidos de um cliente entre duas datas",
+        "why": "Isso: a coleção ordenaria por id, e um `BETWEEN` de datas precisa da data na frente."
+      },
+      {
+        "text": "Um pedido com suas linhas, lido pelo prefixo",
+        "why": "As linhas continuariam estendendo a chave do pedido e ordenando sob ela."
+      },
+      {
+        "text": "Nenhum, já que a sort key pode ser consultada por qualquer parte dela",
+        "why": "Uma condição de sort key é uma faixa contígua desde o começo da string, nunca um `contains`."
+      }
+    ]
+  },
+  "ex-x2573bxt": {
+    "prompt": "Duas telas do back office leem o mesmo perfil na `version` 3. Cada uma salva com a condição `version = :seen` (3) e a atualização `version = version + 1`. O que acontece com o segundo salvamento?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Sobrescreve o primeiro, já que a última escrita sempre vence",
+        "why": "Isso é o put simples; a condição existe para impedir isso."
+      },
+      {
+        "text": "Dá certo e põe `version` em 5",
+        "why": "O item está em 4 agora, então `version = 3` é falso."
+      },
+      {
+        "text": "Recusado com `ConditionalCheckFailedException`",
+        "why": "Isso: o primeiro salvamento mudou a versão, então a condição do segundo é falsa e nada é gravado."
+      },
+      {
+        "text": "É mesclado com o primeiro, atributo por atributo",
+        "why": "O DynamoDB nunca mescla duas escritas; uma escrita acontece inteira ou não acontece."
+      }
+    ]
+  },
+  "ex-4t62zqqf": {
+    "prompt": "Ordene estas sort keys de uma item collection como o DynamoDB as guarda, da primeira à última.",
+    "hint": "Lição 9.",
+    "items": [
+      "`ORDER#2026-10-05#o-10002`",
+      "`ORDER#2026-10-05#o-10002#LINE#1`",
+      "`ORDER#2026-10-12#o-10003`",
+      "`PROFILE`"
+    ]
+  },
+  "ex-ctwt99mq": {
+    "prompt": "O financeiro quer perguntas novas toda semana: receita por bairro, por produto, por hora, comparada ao ano passado. O que escrever os padrões de acesso deles diz sobre atendê-los pela tabela do DynamoDB?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Que basta um prefixo de sort key a mais por pergunta",
+        "why": "Uma chave é feita para um padrão conhecido de antemão; um novo por semana é reescrever itens toda semana."
+      },
+      {
+        "text": "Que um scan com filtro é barato o bastante para uso semanal",
+        "why": "Um filtro não economiza nada; todo scan lê a tabela inteira."
+      },
+      {
+        "text": "Que eles pertencem a um warehouse ou ao lago, alimentados pela tabela",
+        "why": "Isso: agregações ad hoc sobre tudo são o que um store lido por chave combate."
+      },
+      {
+        "text": "Que o DynamoDB vai planejar as agregações se a tabela for grande o bastante",
+        "why": "O DynamoDB não tem planejador de consultas em tamanho nenhum."
+      }
+    ]
+  },
+  "ex-ahrnfnrf": {
+    "prompt": "Um scan eventualmente consistente com filtro lê 40 MB de itens (40 × 1.048.576 bytes) e devolve 1 MB deles. Uma unidade de leitura cobre 4 KB (4.096 bytes), e uma leitura eventualmente consistente custa meia unidade por bloco. Quantas unidades de leitura a AWS cobra?",
+    "hint": "Lição 10."
+  },
+  "ex-q0m6p40a": {
+    "prompt": "O índice `pending` projeta `KEYS_ONLY`. A tela de despacho agora quer o `total_cents` de cada pedido aberto ao lado da chave. O que uma consulta ao índice devolve?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "As chaves e os totais, buscados na tabela no caminho",
+        "why": "Isso é o que um índice local consegue; um global só devolve o que foi projetado."
+      },
+      {
+        "text": "Um erro, porque `total_cents` não está no índice",
+        "why": "Pedir um atributo ausente não é erro; ele só não volta."
+      },
+      {
+        "text": "Só as chaves: os totais nunca foram projetados",
+        "why": "Isso: um índice global não volta à tabela, então a projeção se decide pelo que a pergunta precisa."
+      },
+      {
+        "text": "Itens inteiros, já que keys-only cobre todo atributo da chave",
+        "why": "`KEYS_ONLY` copia as chaves do índice e as da tabela, e nada mais."
+      }
+    ]
+  },
+  "ex-jbabgmna": {
+    "prompt": "Um app manda ao navegador do cliente o `LastEvaluatedKey` cru da lista de pedidos, e o recebe de volta como início da próxima página. Qual o risco que a lição aponta?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "A chave pode expirar depois de um minuto, e a próxima página falha",
+        "why": "Uma posição não expira; é só uma chave."
+      },
+      {
+        "text": "O cliente pode devolver a chave de outro cliente",
+        "why": "Isso: codifique-a ou guarde-a no servidor, e confira que o próximo pedido ainda é da partição daquele usuário."
+      },
+      {
+        "text": "O navegador não guarda uma chave maior que 1 MB",
+        "why": "A chave tem poucos bytes; 1 MB é o tamanho de uma página de dados."
+      },
+      {
+        "text": "Nada: um `LastEvaluatedKey` não carrega dado da tabela",
+        "why": "É a chave da tabela, e aqui a chave nomeia um cliente."
+      }
+    ]
+  },
+  "ex-16w71404": {
+    "prompt": "O moto mostrou um índice global novo `ACTIVE` na hora. Na AWS, enquanto faz o backfill a partir dos itens que já estão na tabela, ele mostra o status `___` e recusa consultas.",
+    "hint": "Lição 10.",
+    "blanks": [
+      {
+        "accept": [
+          "CREATING"
+        ]
+      }
+    ]
+  },
+  "ex-hzes78pr": {
+    "prompt": "Um `update-item` faz um item crescer de 3.000 bytes para 5.000 bytes. Uma unidade de escrita cobre 1 KB (1.024 bytes). Quantas unidades de escrita a AWS cobra pela atualização?",
+    "hint": "Lição 11. Uma atualização é cobrada por um dos dois tamanhos."
+  },
+  "ex-jx5x1a0m": {
+    "prompt": "Uma tabela provisionada com 10.000 unidades de escrita ganha um índice com chave `status`, e todo pedido novo é gravado com `status = PENDING`. A 2.000 pedidos novos por segundo, as escritas sofrem throttling enquanto as métricas da tabela a mostram quase ociosa. Por quê?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "A burst capacity acabou e só é reposta à meia-noite",
+        "why": "O burst são até cinco minutos de capacidade não usada, guardados continuamente, e a tabela tem de sobra."
+      },
+      {
+        "text": "Uma chave do índice leva toda escrita, além do limite da partição",
+        "why": "Isso: uma partição quente, que nenhuma configuração da tabela resolve; fazer shard da chave espalha a carga."
+      },
+      {
+        "text": "O índice precisa de 10.000 unidades próprias antes de aceitar escritas",
+        "why": "Mais capacidade no índice não levanta o teto de uma chave numa partição."
+      },
+      {
+        "text": "O throttling só começa depois que a adaptive capacity é desligada",
+        "why": "A adaptive capacity sempre existe, e não leva uma chave além do limite da partição."
+      }
+    ]
+  },
+  "ex-8q6r2mft": {
+    "prompt": "Uma tabela provisionada com autoscaling por target tracking sofre throttling nos primeiros minutos de toda promoção das 18:00, e depois se recupera. O horário da promoção se sabe com uma semana de antecedência. Qual mudança combina com a lição?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Baixar o alvo de 70% para 40%, para escalar antes",
+        "why": "Qualquer alvo ainda reage à carga que já chegou, minutos atrasado, e custa mais o dia todo."
+      },
+      {
+        "text": "Escala agendada, subindo pouco antes das 18:00",
+        "why": "Isso: um pico em hora conhecida se atende com escala agendada, antes de ele chegar."
+      },
+      {
+        "text": "Reduzir o `ScaleInCooldown` a zero",
+        "why": "O scale-in é a descida; o problema é subir tarde."
+      },
+      {
+        "text": "Nada: as escritas com throttling se perdem e as seguintes dão certo",
+        "why": "O SDK as tenta de novo, e o cliente espera; esse é o custo a eliminar."
+      }
+    ]
+  },
+  "ex-s3nzc1zh": {
+    "prompt": "Uma tabela on demand nunca viu mais que 2.000 escritas por segundo. Uma campanha manda 5.000 por segundo em poucos minutos. Pelo comportamento documentado da AWS, o que acontece?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Toda escrita é atendida, já que on demand não tem teto",
+        "why": "On demand aguenta até o dobro do pico anterior de imediato, não qualquer taxa."
+      },
+      {
+        "text": "Escritas além de umas 4.000 por segundo sofrem throttling",
+        "why": "Isso: tráfego que mais que dobra o pico anterior em cerca de meia hora sofre throttling enquanto a tabela cresce."
+      },
+      {
+        "text": "A tabela passa sozinha para provisionada para dar conta",
+        "why": "Troca de modo é sempre um `update-table` que alguém manda."
+      },
+      {
+        "text": "O teste de carga no moto mostrou 363 escritas por segundo, então aguenta",
+        "why": "O moto nunca faz throttling; um teste de carga ali mede o programa e o laptop."
+      }
+    ]
+  },
+  "ex-535zc5qb": {
+    "prompt": "O consumidor que alimenta a busca de produtos da Quitanda pelo DynamoDB stream da tabela ficou quebrado três dias antes de alguém notar. Agora está consertado. O que coloca o índice de busca de volta em dia?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "Reiniciá-lo de `TRIM_HORIZON`, que guarda toda mudança desde que parou",
+        "why": "`TRIM_HORIZON` é o registro mais antigo ainda guardado, e registros com mais de 24 horas já se foram."
+      },
+      {
+        "text": "Refazer tudo lendo a tabela inteira, e então retomar",
+        "why": "Isso: dois dias de mudanças saíram do stream para sempre, e só a tabela ainda tem o resultado delas."
+      },
+      {
+        "text": "Desligar e religar o stream, o que reaplica a tabela nele",
+        "why": "Um stream novo começa vazio; mudanças anteriores a ele não estão nele."
+      },
+      {
+        "text": "Nada: o DynamoDB guarda registros não lidos até um leitor pegá-los",
+        "why": "Um stream não é uma fila; um registro some um dia depois de escrito, lido ou não."
+      }
+    ]
+  },
+  "ex-4p1wpxbb": {
+    "prompt": "Uma função Lambda num stream recebe lotes de 100, e o registro 61 de um lote a faz falhar toda vez. Com as configurações padrão do mapping, o que acontece na AWS?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "O Lambda pula o registro 61 e continua no 62",
+        "why": "Por padrão nada é pulado: o lote inteiro é tentado de novo."
+      },
+      {
+        "text": "O lote é tentado inteiro de novo e o shard espera",
+        "why": "Isso: o próximo lote não pode passar à frente deste, então o shard fica travado; `--maximum-retry-attempts` e `--bisect-batch-on-function-error` limitam isso."
+      },
+      {
+        "text": "Os 60 registros já aplicados são desfeitos pelo Lambda",
+        "why": "O Lambda não desfaz nada; eles são entregues de novo, e uma função ingênua os aplica duas vezes."
+      },
+      {
+        "text": "O stream marca o registro como envenenado e o remove",
+        "why": "O stream nunca remove um registro antes das 24 horas."
+      }
+    ]
+  },
+  "ex-6y86vzg8": {
+    "prompt": "Um leitor seu consulta 5 shards de um DynamoDB stream uma vez por segundo cada, num mês de 30 dias. Ignorando a franquia grátis, a 0,30 USD por milhão de chamadas `GetRecords`, quanto custa, arredondado ao USD inteiro?",
+    "hint": "Lição 12."
+  },
+  "ex-e4sg59fq": {
+    "prompt": "Associe cada consumidor ao menor tipo de view do stream que o atende.",
+    "hint": "Lição 12.",
+    "pairs": [
+      {
+        "left": "um total corrente de `total_cents` por cliente",
+        "right": "`NEW_AND_OLD_IMAGES`"
+      },
+      {
+        "left": "um índice de busca que guarda cada produto como está agora",
+        "right": "`NEW_IMAGE`"
+      },
+      {
+        "left": "um arquivo do que cada item apagado continha",
+        "right": "`OLD_IMAGE`"
+      },
+      {
+        "left": "um job que só precisa saber quais chaves mudaram",
+        "right": "`KEYS_ONLY`"
+      }
+    ]
+  },
+  "ex-94pnms1t": {
+    "prompt": "Para poupar o banco, um desenvolvedor faz o checkout ler o estoque do cache, onde a página do produto já mostra \"restam 3\". O que a lição pensa disso?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Tudo bem, desde que toda chave tenha time to live",
+        "why": "Um TTL limita quão velha a cópia está; não torna seguro vender a partir de uma cópia velha."
+      },
+      {
+        "text": "Errado: o decremento da venda pertence ao banco",
+        "why": "Isso: nunca deixe uma cópia em cache decidir algo que custa dinheiro."
+      },
+      {
+        "text": "Tudo bem no Valkey, que replica escritas de forma síncrona",
+        "why": "A replicação é assíncrona, e o atraso é em relação ao banco, não às réplicas."
+      },
+      {
+        "text": "Errado só com `allkeys-lru`, que pode despejar a contagem",
+        "why": "O despejo é um problema; uma contagem certa porém antiga é o outro, em qualquer política."
+      }
+    ]
+  },
+  "ex-d84nctga": {
+    "prompt": "Às 03:00 um job aquece o cache com as 1.000 páginas de produto mais acessadas, cada uma gravada com `EX 300`. Toda noite às 03:05 o banco tem um pico. Que mudança a lição sugere?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Gravar as chaves sem time to live, para nunca expirarem juntas",
+        "why": "Chaves sem TTL enchem o cache de coisas que ninguém lê, e na política padrão as escritas começam a falhar."
+      },
+      {
+        "text": "Subir todo TTL para 3.600 segundos",
+        "why": "Elas ainda expirariam no mesmo segundo, uma hora depois."
+      },
+      {
+        "text": "Trocar a política de despejo para `noeviction`",
+        "why": "Despejo é sobre cache cheio; essas chaves estão expirando, não sendo despejadas."
+      },
+      {
+        "text": "Dar a cada chave 300 segundos mais alguns aleatórios",
+        "why": "Isso: espalhar as expirações evita que mil misses caiam no mesmo segundo."
+      }
+    ]
+  },
+  "ex-fj0003mc": {
+    "prompt": "A Quitanda passa o cache para um replication group com cluster mode ligado. Um comando que lê `cart:c-17` e `profile:c-17` juntos, que funcionava antes, agora falha. Por quê?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "As duas chaves estão em hash slots diferentes",
+        "why": "Isso: esse é o preço de dividir 16.384 slots entre shards."
+      },
+      {
+        "text": "O cluster mode guarda só strings, como o Memcached",
+        "why": "O cluster mode mantém todos os tipos de dado; muda onde as chaves ficam."
+      },
+      {
+        "text": "As leituras agora precisam ir ao reader endpoint",
+        "why": "O cliente calcula o shard dono; a falha é das duas chaves, não do endpoint."
+      },
+      {
+        "text": "A réplica ainda não recebeu o carrinho",
+        "why": "Atraso devolveria dados velhos, não recusaria o comando."
+      }
+    ]
+  },
+  "ex-7rrgeyp8": {
+    "prompt": "Associe cada política de despejo ao que um cache cheio faz sob ela.",
+    "hint": "Lição 13.",
+    "pairs": [
+      {
+        "left": "`noeviction`",
+        "right": "recusa toda escrita nova"
+      },
+      {
+        "left": "`volatile-lru`",
+        "right": "despeja só chaves que têm time to live"
+      },
+      {
+        "left": "`allkeys-lru`",
+        "right": "despeja qualquer chave, a menos usada recentemente primeiro"
+      }
+    ],
+    "right_distractors": [
+      "grava as chaves mais antigas em disco"
+    ]
+  },
+  "ex-fp0rhtyh": {
+    "prompt": "Um relatório noturno junta o warehouse com o histórico no lago pelo Redshift Spectrum, varrendo 0,6 TB de arquivos a cada execução. A 5,00 USD por TB varrido, quanto custa num mês de 30 dias, em USD inteiros?",
+    "hint": "Lição 14."
+  },
+  "ex-mb090m7h": {
+    "prompt": "Uma tabela `deliveries` recebe `COMPOUND SORTKEY (store_id, dt)`, e quase todo relatório nela pede uma semana em todas as quarenta lojas. Quão bem os zone maps atendem esses relatórios?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "Mal: a maioria dos blocos é lida",
+        "why": "Isso: uma chave composta serve à primeira coluna; a data deve vir antes quando os relatórios filtram por data."
+      },
+      {
+        "text": "Tão bem quanto `(dt, store_id)`, já que as duas colunas estão na chave",
+        "why": "Isso é o que uma chave interleaved buscaria; uma chave composta pesa as colunas em ordem."
+      },
+      {
+        "text": "Perfeitamente, porque os zone maps indexam cada coluna separadamente",
+        "why": "Toda coluna tem zone maps, e eles só pulam blocos quando as linhas estão ordenadas por aquela coluna."
+      },
+      {
+        "text": "De jeito nenhum, já que zone maps só valem para a chave de distribuição",
+        "why": "A distribuição decide a slice; os zone maps seguem a ordem de ordenação."
+      }
+    ]
+  },
+  "ex-87pk1mjn": {
+    "prompt": "A tela de suporte mostra um pedido pelo id, milhares de vezes por hora, e alguém propõe servi-la pelo warehouse no Redshift, que já guarda todos os pedidos. O que há de errado nisso?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "O Redshift não filtra por uma coluna que não seja a sort key",
+        "why": "Ele filtra por qualquer coluna; só que lê blocos para isso."
+      },
+      {
+        "text": "Uma linha pela chave é o que o Redshift faz pior",
+        "why": "Isso: o Redshift é feito para ler milhões de linhas e somá-las, não para responder por chave."
+      },
+      {
+        "text": "O warehouse só guarda pedidos depois de uma semana de atraso",
+        "why": "Nada na lição diz isso; a carga é noturna."
+      },
+      {
+        "text": "Nada, desde que o leader node tenha memória suficiente",
+        "why": "O leader planeja e junta; o formato da pergunta é que é o problema."
+      }
+    ]
+  },
+  "ex-2sqgbfnp": {
+    "prompt": "No Redshift Serverless, o time apaga o workgroup `quitanda-adhoc` e cria um novo com outra base capacity, ligado ao mesmo namespace. O que acontece com as tabelas?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "São apagadas com o workgroup, já que computação e armazenamento andam juntos",
+        "why": "Eles ficam separados justamente para um mudar sem o outro."
+      },
+      {
+        "text": "São copiadas para o novo workgroup, o que leva tanto quanto os dados forem grandes",
+        "why": "Nada é copiado: os dados nunca moraram no workgroup."
+      },
+      {
+        "text": "Intactas: os dados nunca foram do workgroup",
+        "why": "Isso: o workgroup é onde o warehouse roda, o namespace é o que ele é."
+      },
+      {
+        "text": "Ficam só leitura até a base capacity igualar a antiga",
+        "why": "A capacidade pode mudar à vontade; essa é uma razão da separação."
+      }
+    ]
+  },
+  "ex-tsxgahjp": {
+    "prompt": "O Athena cobra os bytes lidos arredondados para cima ao MB inteiro, com 10 MB como mínimo de qualquer consulta, e nada por uma consulta que falha. Três consultas leem 2 MB, 15,2 MB, e nada porque a terceira falhou. Quantos MB são cobrados no total?",
+    "hint": "Lição 15."
+  },
+  "ex-tmh3s0rj": {
+    "prompt": "`orders` usa partition projection com `storage.location.template` `s3://quitanda-curated-prod/orders/dt=${dt}/`. Um job de correção grava o arquivo corrigido de 15 de outubro em `orders/date=2026-10-15/`. O que as consultas daquele dia veem?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "O arquivo corrigido, já que a projeção não precisa de nada registrado",
+        "why": "A projeção calcula as chaves a partir do template, e esta chave não é uma delas."
+      },
+      {
+        "text": "Os dois arquivos, o antigo e o corrigido",
+        "why": "Só o prefixo que o template produz é listado."
+      },
+      {
+        "text": "O que estiver em `dt=2026-10-15/`; o arquivo novo é invisível",
+        "why": "Isso: o template é uma promessa sobre as chaves, e um arquivo sob outro nome não é lido."
+      },
+      {
+        "text": "Um erro, até o `MSCK REPAIR TABLE` acrescentar o prefixo novo",
+        "why": "Com a projeção ligada, a lista de partições do catálogo não é o que se lê."
+      }
+    ]
+  },
+  "ex-gg0s5tpz": {
+    "prompt": "A tabela CSV é particionada por `dt`, e cada arquivo também tem uma coluna `order_date` com a mesma data. Um dashboard pergunta `... WHERE order_date = '2026-10-15'` toda hora. O que cada consulta lê?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "O arquivo de um dia, porque as duas colunas têm os mesmos valores",
+        "why": "O engine não tem como saber que concordam; só a coluna da chave é resolvida antes de ler."
+      },
+      {
+        "text": "Só a coluna `order_date` de todo arquivo",
+        "why": "Um CSV não tem como dizer onde uma coluna começa; as linhas são lidas inteiras."
+      },
+      {
+        "text": "Nada, já que o filtro é aplicado antes da varredura",
+        "why": "Um filtro numa coluna dentro dos arquivos é aplicado ao que foi lido."
+      },
+      {
+        "text": "Todo arquivo de todo dia, inteiro; filtrar por `dt` abriria um só",
+        "why": "Isso: só a coluna de partição deixa dias serem pulados sem abrir."
+      }
+    ]
+  },
+  "ex-s603xang": {
+    "prompt": "Em `orders.sql`, `dt` não aparece em arquivo nenhum: o Athena lê o valor dela da ___ de cada objeto, o `dt=2026-10-01/` escrito em cada um deles.",
+    "hint": "Lição 15.",
+    "blanks": [
+      {
+        "accept": [
+          "chave",
+          "caminho",
+          "prefixo"
+        ]
+      }
+    ]
+  },
+  "ex-rqv5pgcv": {
+    "prompt": "Um crawler roda 200 vezes num mês, e cada execução termina em dois minutos com uma DPU. Crawls são cobrados a 0,69 USD por DPU-hora, por segundo, com mínimo de dez minutos por execução. Quanto custam os crawls no mês, em USD inteiros?",
+    "hint": "Lição 16."
+  },
+  "ex-b6mb2jm8": {
+    "prompt": "O export em Parquet renomeia `payment` para `payment_method` a partir de 1º de novembro, e a tabela é atualizada com o nome novo. Lido por nome, o que uma consulta de `payment_method` devolve para outubro?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Os pagamentos de outubro, já que a coluna está na mesma posição",
+        "why": "Parquet é lido por nome, então a posição não leva os valores junto."
+      },
+      {
+        "text": "Um erro citando a coluna antiga",
+        "why": "Uma coluna que falta num arquivo não é erro quando se lê por nome; ela vem vazia."
+      },
+      {
+        "text": "Nada para outubro: os arquivos não têm o nome novo",
+        "why": "Isso: uma coluna renomeada se perde para todo arquivo escrito antes da troca."
+      },
+      {
+        "text": "Os pagamentos de outubro, porque a versão do catálogo guarda o nome antigo",
+        "why": "As versões registram o que a tabela dizia; não fazem nada com os arquivos."
+      }
+    ]
+  },
+  "ex-s9xkndkc": {
+    "prompt": "Um job registra a partição de 1º de outubro com a localização `.../orders/dt=2026-10-1/`, um zero a menos, enquanto os arquivos estão em `dt=2026-10-01/`. O que uma consulta do Athena para aquele dia devolve?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Nenhuma linha, sem erro",
+        "why": "Isso: a linha nomeia um prefixo vazio, e nada liga a linha aos arquivos."
+      },
+      {
+        "text": "As linhas do dia, já que o S3 casa prefixos sem rigor",
+        "why": "Um prefixo é uma string exata; `dt=2026-10-1/` não é `dt=2026-10-01/`."
+      },
+      {
+        "text": "Um `EntityNotFoundException` para a partição",
+        "why": "A partição existe no catálogo; o prefixo dela é que está vazio."
+      },
+      {
+        "text": "Nada: o `batch-create-partition` recusa um prefixo que não existe",
+        "why": "O catálogo aceitou o dia de Natal sem nada embaixo; ele não confere prefixo."
+      }
+    ]
+  },
+  "ex-znh3tg78": {
+    "prompt": "Uma noite o export manda um arquivo em que `total_cents` traz texto, e na manhã seguinte toda consulta de dashboard em `orders` falha com `HIVE_PARTITION_SCHEMA_MISMATCH`. O crawler noturno ficou nas configurações padrão. O que aconteceu, e o que restaura a tabela?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "O arquivo corrompeu os outros 30 dias, que precisam ser reescritos",
+        "why": "Arquivos são gravados uma vez; os arquivos dos outros dias não mudaram."
+      },
+      {
+        "text": "O crawler mudou a tabela; restaure a versão anterior",
+        "why": "Isso: o padrão, `UPDATE_IN_DATABASE`, grava na tabela o esquema do arquivo que discorda."
+      },
+      {
+        "text": "O crawler apagou a tabela, já que o padrão dele apaga ao mudar",
+        "why": "O padrão de exclusão é marcar a tabela como obsoleta quando os arquivos somem; nada sumiu."
+      },
+      {
+        "text": "O Athena guardou o arquivo ruim em cache; esperar um dia resolve",
+        "why": "Nada se resolve esperando: a própria descrição da tabela mudou."
+      }
+    ]
+  },
+  "ex-ya4sjet6": {
+    "prompt": "Um job noturno do Glue roda em dez workers `G.1X` por doze minutos, em Flex a 0,45 USD por DPU-hora, por 30 noites. Quanto custa o mês, em USD inteiros?",
+    "hint": "Lição 17."
+  },
+  "ex-cjtvrje3": {
+    "prompt": "O script Glue da lição, cujo sink acrescenta arquivos, falha depois de gravar 10 dos 31 dias de outubro. O bookmark não andou, então a execução seguinte lê os 31 arquivos raw de novo e termina. O que esses 10 dias têm agora?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "Cada pedido uma vez, já que o `dropDuplicates` tira as repetições",
+        "why": "Ele tira repetições dentro do que esta execução leu, não linhas já gravadas pela execução que falhou."
+      },
+      {
+        "text": "Cada pedido uma vez, já que o bookmark desfaz as gravações de uma execução que falhou",
+        "why": "Um bookmark registra entrada; nunca remove saída."
+      },
+      {
+        "text": "Todo pedido duas vezes, os arquivos da execução que falhou ao lado dos novos",
+        "why": "Isso: uma reexecução só é segura se a gravação substituir seus dias, como faz um overwrite dinâmico de partições."
+      },
+      {
+        "text": "Nada: a segunda execução pula dias que já têm arquivos",
+        "why": "O script não confere a saída; o bookmark lhe deu as 31 entradas."
+      }
+    ]
+  },
+  "ex-rw5rtq5a": {
+    "prompt": "Na camada raw, `total_cents` é número na maioria dos arquivos e texto em alguns. Lida num DynamicFrame do Glue, o que acontece com a coluna?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "A leitura falha no primeiro arquivo que discorda",
+        "why": "Isso é o que um esquema fixo tem de fazer; um DynamicFrame não."
+      },
+      {
+        "text": "O tipo do primeiro arquivo é usado e os outros são convertidos em silêncio",
+        "why": "Esse foi o padrão do PyArrow na lição 16, não o de um DynamicFrame."
+      },
+      {
+        "text": "Os dois tipos ficam até o `resolveChoice` decidir",
+        "why": "Isso: cada registro carrega o próprio esquema, que é para isso que existem os DynamicFrames."
+      },
+      {
+        "text": "A coluna é descartada de todo registro",
+        "why": "Nada é descartado; a discordância fica guardada para o script decidir."
+      }
+    ]
+  },
+  "ex-283yypfj": {
+    "prompt": "Entre dois deploys, um desenvolvedor renomeia o `transformation_ctx` da leitura `from_catalog` do job, com bookmarks ligados. O que a próxima execução lê?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "Só os arquivos novos desde a última execução, como antes",
+        "why": "O estado está guardado sob o nome antigo, que esta leitura não usa mais."
+      },
+      {
+        "text": "Todo arquivo raw de novo, já que não há estado guardado sob o nome novo",
+        "why": "Isso: o nome é a chave sob a qual vive o estado do bookmark."
+      },
+      {
+        "text": "Nada, até o bookmark ser resetado",
+        "why": "Um estado ausente significa começar do início, não parar."
+      },
+      {
+        "text": "A execução é recusada por um contexto desconhecido",
+        "why": "Qualquer nome é aceito; ele só não tem histórico."
+      }
+    ]
+  },
+  "ex-sz3ht4wt": {
+    "prompt": "`orders` está todo sob o Lake Formation: `IAM_ALLOWED_PRINCIPALS` foi revogado, analistas têm `SELECT` em toda coluna menos `phone`, e o suporte tem uma concessão por tag em `internal` e `pii`. Quais destes, na AWS, conseguem ler telefones? Marque todos os que se aplicam.",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Um analista consultando pelo Athena",
+        "why": "O Athena pergunta ao Lake Formation e tira a coluna que a concessão não cobre."
+      },
+      {
+        "text": "A role de suporte consultando pelo Athena",
+        "why": "A expressão dela inclui `pii`, a tag da coluna de telefone."
+      },
+      {
+        "text": "Uma role cuja política IAM ainda permite `s3:GetObject` no prefixo curated, usando `aws s3 cp`",
+        "why": "O S3 nunca ouviu falar do Lake Formation; o arquivo tem todas as colunas."
+      },
+      {
+        "text": "Um analista consultando pelo Redshift Spectrum",
+        "why": "O Spectrum é um dos engines que perguntam ao Lake Formation, então vale a mesma concessão."
+      }
+    ]
+  },
+  "ex-7ezmw2x3": {
+    "prompt": "`orders` tem a tag `sensitivity=internal` e `phone` carrega `pii`. O pipeline acrescenta uma coluna `email` à tabela e não lhe dá tag. Um analista tem concessão por tag só em `internal`. Na AWS, o analista lê `email`?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Não: uma coluna sem tag própria não é legível por ninguém",
+        "why": "Uma coluna sem tag própria fica com a da tabela."
+      },
+      {
+        "text": "Sim: as tags descem da tabela",
+        "why": "Isso: tags descem, e por isso pôr tag em coluna nova é decidir quem a lê."
+      },
+      {
+        "text": "Só depois que uma nova concessão na tabela for escrita",
+        "why": "Isso é a concessão por tabela que as tags existem para evitar; a expressão existente já casa."
+      },
+      {
+        "text": "Não: ela pega `pii` da coluna ao lado",
+        "why": "Tags descem de banco a tabela a coluna, nunca de lado."
+      }
+    ]
+  },
+  "ex-nhfkhfmt": {
+    "prompt": "Uma suíte de testes roda contra o moto e verifica que a consulta do analista à coluna `phone` é recusada. O que ela consegue mostrar?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Que as concessões estão certas, se o teste passar",
+        "why": "O moto guarda concessões e nenhum engine pergunta a ele, então ele não recusa nada."
+      },
+      {
+        "text": "Nada sobre a aplicação: só que os pedidos de concessão estavam bem formados",
+        "why": "Isso: até uma concessão numa tabela que não existe é aceita lá."
+      },
+      {
+        "text": "Que a coluna está escondida, porque o moto confere concessões em toda leitura",
+        "why": "A chamada que os engines usam para receber credenciais responde 404 no moto."
+      },
+      {
+        "text": "Que o Lake Formation está desligado, já que o moto aplica os padrões",
+        "why": "O moto não aplicou concessão padrão nenhuma à tabela."
+      }
+    ]
+  },
+  "ex-44tcnr66": {
+    "prompt": "Enquanto não for revogada, uma concessão padrão `ALL` ao grupo `___` faz o Lake Formation deixar passar quem o IAM já permite, e uma concessão por coluna não esconde nada.",
+    "hint": "Lição 18.",
+    "blanks": [
+      {
+        "accept": [
+          "IAM_ALLOWED_PRINCIPALS",
+          "IAMAllowedPrincipals"
+        ]
+      }
+    ]
+  },
+  "ex-38zv0n7d": {
+    "prompt": "Uma consulta de dashboard no Athena é cobrada em 2.048 MB, e o dashboard a faz 4.096 vezes por mês. Contando 1 TB como 1.048.576 MB, a 9,00 USD por TB, quanto custa o mês, em USD inteiros?",
+    "hint": "Lição 19."
+  },
+  "ex-zcp08xer": {
+    "prompt": "Muitas perguntas citam um dia e algumas um bairro, então um colega propõe particionar os pedidos por `neighbourhood` e depois `dt`, 16 bairros por 31 dias. O que a lição pensa disso?",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "Uma boa troca, já que toda pergunta agora abre menos bytes",
+        "why": "Uma pergunta sobre um mês abre todos os arquivos pequenos, e paga por arquivo."
+      },
+      {
+        "text": "Só `dt` como chave, e a outra coluna ordenada nos arquivos",
+        "why": "Isso: uns 500 arquivos por mês de uns 25 KB cada é a falha dos arquivos pequenos; ordenar dá às estatísticas algo para pular."
+      },
+      {
+        "text": "Tudo bem, porque uma chave de partição pode ter quantos valores quiser",
+        "why": "Todo valor é pelo menos um arquivo, e um arquivo custa uma requisição e um footer por menor que seja."
+      },
+      {
+        "text": "Usar `customer_id`, já que um cliente então abre um prefixo só",
+        "why": "Isso dá 39.979 arquivos por mês, cada um menor que o próprio footer."
+      }
+    ]
+  },
+  "ex-4cz3vmqb": {
+    "prompt": "Quais destes reduzem os bytes lidos do S3 para `SELECT sum(total_cents) FROM orders WHERE hour >= 21` sobre o mês? Marque todos os que se aplicam.",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "Guardar os pedidos em Parquet em vez de CSV",
+        "why": "Só os blocos das duas colunas citadas são lidos."
+      },
+      {
+        "text": "Gravar cada arquivo ordenado por `hour`, em vários row groups",
+        "why": "As estatísticas pulam os grupos cuja maior hora é menor que 21."
+      },
+      {
+        "text": "Comprimir o CSV com gzip",
+        "why": "Toda linha ainda é lida, e os bytes lidos são os comprimidos, um quinto aqui."
+      },
+      {
+        "text": "Embaralhar as linhas para todo grupo ter toda hora",
+        "why": "Todo grupo passa a cobrir de 7 a 23 e nenhum é pulado; o layout embaralhado foi o que mais leu dos três."
+      },
+      {
+        "text": "Cortar cada dia em 96 arquivos",
+        "why": "Os arquivos pequenos leram mais do que o layout inteiro guarda."
+      }
+    ]
+  },
+  "ex-a5xptwhb": {
+    "prompt": "Pular um row group porque os menores e maiores valores no footer não podem casar com um filtro se chama predicate ___.",
+    "hint": "Lição 19.",
+    "blanks": [
+      {
+        "accept": [
+          "pushdown",
+          "push-down"
+        ]
+      }
+    ]
+  },
+  "ex-zqxps14h": {
+    "prompt": "No pico um stream recebe 4.500 registros por segundo de 0,5 KB cada. Um shard provisionado aceita 1 MB por segundo ou 1.000 registros por segundo, o que vier primeiro. Qual o menor número de shards que aguenta o pico, sem folga?",
+    "hint": "Lição 20."
+  },
+  "ex-n64k9t7g": {
+    "prompt": "Um time usa o dia, `2026-10-16`, como chave do stream de cliques, para \"os cliques de um dia ficarem juntos\", e o stream tem dez shards. As escritas sofrem throttling toda tarde. O que a lição diz sobre somar shards?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "Resolve, já que a capacidade do stream é a soma dos shards",
+        "why": "O limite é por shard, e uma chave cai num shard só, quantos houver."
+      },
+      {
+        "text": "Só ajuda se os shards novos vierem do quente",
+        "why": "Um split divide uma faixa, e o hash de uma chave só continua sendo um ponto numa das metades."
+      },
+      {
+        "text": "Não ajuda: uma chave cai num shard só",
+        "why": "Isso: escolha a chave como a menor coisa cujos eventos precisam ficar em ordem."
+      },
+      {
+        "text": "É desnecessário, porque o on demand dividiria a chave sozinho",
+        "why": "O on demand soma shards; nenhum modo divide uma chave entre shards."
+      }
+    ]
+  },
+  "ex-1apbpt99": {
+    "prompt": "Cinco consumidores comuns chamam `GetRecords` em todo shard duas vezes por segundo. Que limite do shard eles encontram, e o que a lição oferece para isso?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "O limite de escrita de 1.000 registros por segundo; mais shards",
+        "why": "Leitura não conta no limite de escrita."
+      },
+      {
+        "text": "O teto de chamadas de leitura, dividido; enhanced fan-out",
+        "why": "Isso: dez chamadas por segundo é o dobro do que um shard atende a consumidores comuns."
+      },
+      {
+        "text": "Nenhum, já que cada consumidor tem sua própria posição no shard",
+        "why": "Cada um tem sua posição; eles ainda dividem a capacidade de leitura do shard."
+      },
+      {
+        "text": "O período de retenção, que encurta a cada leitor",
+        "why": "A retenção não depende de quantos leem."
+      }
+    ]
+  },
+  "ex-epcyat1y": {
+    "prompt": "Um consumidor que guardou o número de sequência do último registro que terminou retoma logo depois dele com um shard iterator do tipo `___`.",
+    "hint": "Lição 20.",
+    "blanks": [
+      {
+        "accept": [
+          "AFTER_SEQUENCE_NUMBER"
+        ]
+      }
+    ]
+  },
+  "ex-6hvfftqz": {
+    "prompt": "Um produtor manda ao Firehose 10 milhões de registros por dia de 2 KB cada, um evento por registro, por 30 dias. Cada registro é cobrado arredondado para cima ao próximo múltiplo de 5 KB, a 0,05800 USD por GB (conte 1 GB como 1.000.000 KB). Quanto custa a ingestão no mês, em USD inteiros?",
+    "hint": "Lição 21."
+  },
+  "ex-h59q9rv0": {
+    "prompt": "O prefixo de um delivery stream é `raw/orders/dt=!{timestamp:yyyy-MM-dd}/`. Um pedido feito em São Paulo (UTC−3) às 22:30 de 15 de outubro de 2026 chega ao Firehose um segundo depois. Na AWS, sob qual `dt` ele cai?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "`dt=2026-10-15`, o dia em que o cliente fez o pedido",
+        "why": "A expressão não sabe nada da data do próprio pedido nem de São Paulo."
+      },
+      {
+        "text": "`dt=2026-10-16`, porque o timestamp é a hora de chegada em UTC",
+        "why": "Isso: 22:30 em São Paulo é 01:30 UTC do dia seguinte."
+      },
+      {
+        "text": "Sob a expressão como texto, `dt=!{timestamp:yyyy-MM-dd}`",
+        "why": "Isso é o que o moto gravou; a AWS avalia a expressão."
+      },
+      {
+        "text": "Sob o prefixo de erro, já que uma expressão de data precisa de um campo do registro",
+        "why": "Isso é o `partitionKeyFromQuery`; o `timestamp` vem do relógio."
+      }
+    ]
+  },
+  "ex-bper5rz9": {
+    "prompt": "Um delivery stream lê o Kinesis stream `orders` como origem. Um serviço novo, testado contra o moto, manda seus registros direto ao delivery stream com `PutRecordBatch`. O que acontece na AWS?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "São entregues junto com os registros do stream, como no moto",
+        "why": "O moto aceitou o envio direto e a AWS documenta o contrário."
+      },
+      {
+        "text": "Recusados: envio direto não é aceito ali",
+        "why": "Isso: o serviço deveria mandar seus registros ao `orders`."
+      },
+      {
+        "text": "Ficam esperando no Kinesis stream até um shard ter espaço",
+        "why": "Um envio ao delivery stream não volta para dentro do stream."
+      },
+      {
+        "text": "São gravados no prefixo de erro sob `processing-failed`",
+        "why": "O pedido é recusado na porta; nada é gravado em lugar nenhum."
+      }
+    ]
+  },
+  "ex-pb3j1jyv": {
+    "prompt": "Na AWS, quais destes registros acabam sob o `ErrorOutputPrefix` de um delivery stream? Marque todos os que se aplicam.",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "Um registro sem o campo `store`, num stream particionado por `partitionKeyFromQuery:store`",
+        "why": "Não há valor para pôr no prefixo."
+      },
+      {
+        "text": "Um registro que não casa com a tabela do Glue, num stream convertendo para Parquet",
+        "why": "Ele falha como `format-conversion-failed`."
+      },
+      {
+        "text": "Um registro que a Lambda de transformação devolveu como `ProcessingFailed`",
+        "why": "Ele vai para `processing-failed`."
+      },
+      {
+        "text": "Um registro de 1 KB que foi cobrado como 5 KB",
+        "why": "O arredondamento muda a conta, não a entrega."
+      },
+      {
+        "text": "Um registro gravado num buffer que o intervalo esvaziou pela metade",
+        "why": "Um buffer pela metade é entregue normalmente, só que pequeno."
+      }
+    ]
+  },
+  "ex-p2ex8c73": {
+    "prompt": "Um tópico no MSK tem replication factor 3 e `min.insync.replicas` 2, e um produtor está configurado com `acks=1`. O broker líder morre um instante depois de confirmar uma das escritas desse produtor. O que pode ter acontecido com a escrita?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Nada: `min.insync.replicas` 2 garante duas cópias de toda escrita",
+        "why": "Essa configuração vale para `acks=all`; com `acks=1` o líder responde sozinho."
+      },
+      {
+        "text": "Pode ter se perdido: só o líder a tinha",
+        "why": "Isso: uma escrita é tão segura quanto a configuração que a confirmou."
+      },
+      {
+        "text": "Pode ser recusada depois, e o produtor avisado para tentar de novo",
+        "why": "A confirmação já saiu; nada avisa o produtor depois."
+      },
+      {
+        "text": "Está segura, porque o MSK replica entre zonas de graça",
+        "why": "Replicação grátis é sobre a conta; os seguidores podem ainda não ter buscado a escrita."
+      }
+    ]
+  },
+  "ex-515zvs7t": {
+    "prompt": "`kafka-consumer-groups.sh --describe` mostra as três partições de um grupo com CURRENT-OFFSET 10, 25 e 7, e LOG-END-OFFSET 14, 25 e 12. Quantos registros o grupo está atrasado, no total?",
+    "hint": "Lição 22."
+  },
+  "ex-x0y6g81n": {
+    "prompt": "Um tópico tem três partições, e o time escala o consumer group `lake-copy` para cinco membros rodando, para ir mais rápido. O que acontece?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Cada partição é dividida entre os membros que a leem",
+        "why": "Dentro de um grupo, uma partição tem exatamente um leitor."
+      },
+      {
+        "text": "Todo membro lê toda partição, cinco vezes",
+        "why": "Isso seriam cinco grupos; um grupo reparte as partições."
+      },
+      {
+        "text": "O broker recusa o quarto e o quinto membros",
+        "why": "Eles entram, e esperam uma partição ser entregue a eles."
+      },
+      {
+        "text": "Três membros leem uma partição cada e dois ficam parados",
+        "why": "Isso: o paralelismo num grupo para no número de partições."
+      }
+    ]
+  },
+  "ex-42s639ex": {
+    "prompt": "Um colega pede ao MSK um cluster provisionado de quatro brokers espalhados por três Availability Zones. O que a lição diz desse pedido?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Está ok, e o quarto broker vai para a zona mais movimentada",
+        "why": "O MSK põe os brokers de forma igual; não há zona mais movimentada no pedido."
+      },
+      {
+        "text": "O número de brokers precisa ser múltiplo das zonas: três ou seis aqui",
+        "why": "Isso: os brokers são distribuídos por igual entre as zonas."
+      },
+      {
+        "text": "Está ok, desde que o replication factor seja 4",
+        "why": "O replication factor é por tópico; a regra de distribuição é sobre brokers e zonas."
+      },
+      {
+        "text": "O moto criou um cluster assim, então a AWS também cria",
+        "why": "O moto nem verificou se as sub-redes eram reais."
+      }
+    ]
+  },
+  "ex-30ehrd39": {
+    "prompt": "Um consumidor Kafka usa transações com `read_committed` e, para cada pedido, cobra o cartão do cliente pela API de um provedor de pagamento. O que faz a cobrança acontecer uma vez quando o consumidor cai e reprocessa?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "A transação, que cobre a cobrança além dos offsets",
+        "why": "Uma transação Kafka para na borda do Kafka; o provedor está fora dela."
+      },
+      {
+        "text": "O produtor idempotente, que descarta o registro repetido no broker",
+        "why": "Isso remove retentativas do produtor; um reprocessamento do consumidor lê o mesmo registro de novo."
+      },
+      {
+        "text": "Confirmar o offset antes de chamar o provedor",
+        "why": "Checkpoint antes é no máximo uma vez: uma queda entre os dois perde a cobrança."
+      },
+      {
+        "text": "Uma chave de idempotência conferida do lado de lá",
+        "why": "Isso: o efeito acontece no provedor, então a deduplicação também tem de estar lá."
+      }
+    ]
+  },
+  "ex-8yymrqb3": {
+    "prompt": "Um consumidor junta o que chega em dez segundos num lote e o grava no S3 em `<shard>/<primeira seq>-<última seq>.json`, com checkpoint depois da gravação. Ele cai depois de gravar e antes do checkpoint, e reprocessa. O que o lago passa a ter?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "Cada registro uma vez, já que a chave nomeia o conteúdo",
+        "why": "Isso só vale quando o reprocessamento corta os mesmos lotes, e uma janela de dez segundos não corta."
+      },
+      {
+        "text": "Talvez alguns registros duas vezes, sob duas chaves cujas faixas se sobrepõem",
+        "why": "Isso: o reprocessamento lê mais rápido e a janela acaba em outro ponto, então o objeto é outro."
+      },
+      {
+        "text": "Nada novo: o S3 recusa um segundo objeto com os mesmos registros",
+        "why": "O S3 compara chaves, nunca conteúdos."
+      },
+      {
+        "text": "Um buraco: os registros do lote que caiu se perdem",
+        "why": "Trabalho antes, checkpoint depois, não perde nada."
+      }
+    ]
+  },
+  "ex-tb28j5j8": {
+    "prompt": "A tabela de ids de pedido processados mantém cada item por um dia via time to live, e o stream guarda sete dias. Depois de um bug, um consumidor é apontado de volta para `TRIM_HORIZON`. O que acontece com pagamentos de três dias atrás?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "São pulados, já que o stream marca o que foi processado",
+        "why": "O stream não sabe nada do que um consumidor fez com um registro."
+      },
+      {
+        "text": "São contados de novo, porque os ids deles já expiraram da tabela",
+        "why": "Isso: a janela precisa ser pelo menos tão longa quanto o maior reprocessamento que alguém faria."
+      },
+      {
+        "text": "São recusados pelo DynamoDB por serem velhos demais",
+        "why": "O DynamoDB não tem noção da idade de um evento."
+      },
+      {
+        "text": "Já saíram do stream, então nada acontece",
+        "why": "Sete dias de retenção ainda os guardam."
+      }
+    ]
+  },
+  "ex-k5v87n4h": {
+    "prompt": "Um consumidor grava cada um de 1.000.000 pagamentos, todos itens com menos de 1 KB, como um `Put` condicional do id do pedido e um `Update` do total, os dois numa transação do DynamoDB. Uma escrita transacional custa o dobro de uma comum. Quantas unidades de escrita isso consome?",
+    "hint": "Lição 23."
+  },
+  "ex-hqvefb2q": {
+    "prompt": "Um job do Glue usa 10 DPUs por 3 horas por noite, 30 noites por mês, a 0,69 USD por DPU-hora. Quanto custa por mês, em USD inteiros?",
+    "hint": "Lição 24."
+  },
+  "ex-vdbm34nt": {
+    "prompt": "O cluster EMR de longa duração de um time guarda uma tabela de apoio no HDFS, carregada uma vez há meses, e todo step noturno a lê. Eles querem passar a um cluster transiente por noite. O que precisa mudar antes?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Nada: o HDFS sobrevive ao término nos discos dos core nodes",
+        "why": "Terminar o cluster apaga o HDFS junto."
+      },
+      {
+        "text": "Os core nodes precisam ser Spot, para a tabela sair barata",
+        "why": "Spot nos core nodes arrisca os blocos do HDFS; não os guarda."
+      },
+      {
+        "text": "Ela precisa ir para o S3, fora do que se desliga",
+        "why": "Isso: um cluster cuja única cópia de algo está no HDFS nunca pode ser desligado."
+      },
+      {
+        "text": "Os steps precisam usar `ActionOnFailure=CONTINUE`",
+        "why": "Isso decide o que vem depois de uma falha, não onde os dados moram."
+      }
+    ]
+  },
+  "ex-048eanvf": {
+    "prompt": "Uma aplicação EMR Serverless está configurada com capacidade pré-inicializada, dois drivers e dez workers, para os jobs começarem na hora. Nenhum job roda o fim de semana inteiro. Quanto o fim de semana custou em computação?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Nada, já que o Serverless só cobra os jobs que rodam",
+        "why": "Sem capacidade aquecida, sim; com ela, a capacidade é cobrada enquanto espera."
+      },
+      {
+        "text": "Tudo o que ficou aquecido, por cada hora de espera",
+        "why": "Isso: capacidade aquecida transforma o Serverless de volta em algo que custa parado, até o auto-stop liberá-la."
+      },
+      {
+        "text": "Uma taxa mensal fixa por aplicação, faça ela o que fizer",
+        "why": "Não há taxa por aplicação nos preços da lição."
+      },
+      {
+        "text": "Zero vCPU-horas, como mostrou o job run do moto",
+        "why": "O moto não cobrou nada por um job que nunca rodou; isso não diz nada da capacidade aquecida."
+      }
+    ]
+  },
+  "ex-7vaqs9fd": {
+    "prompt": "Um job Spark noturno de uma hora precisa de uma biblioteca geoespacial nativa instalada em toda máquina. Qual lugar combina com o que a lição pondera?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Glue, já que é o mais barato para trabalho curto e irregular",
+        "why": "O Glue é o lugar cômodo para jobs curtos, e no Glue uma biblioteca nativa muitas vezes nem entra."
+      },
+      {
+        "text": "Um cluster EMR de longa duração, para a biblioteca ser instalada uma vez só",
+        "why": "Vinte e três horas paradas por noite é a linha mais cara da lição."
+      },
+      {
+        "text": "Um cluster EMR transiente cuja bootstrap action a instala",
+        "why": "Isso: o job precisa da máquina, e um cluster transiente só paga as horas da noite."
+      },
+      {
+        "text": "EMR on EKS, que instala bibliotecas nativas automaticamente",
+        "why": "Nada a instala por você, e o EKS acrescenta um cluster Kubernetes para operar."
+      }
+    ]
+  },
+  "ex-1wky8me1": {
+    "prompt": "Em `nightly.json`, alguém tira o `.sync` de `LoadOrders`, deixando `arn:aws:states:::glue:startJobRun`. Na AWS, o que muda na execução da noite?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Nada: o Step Functions sempre espera o job que iniciou",
+        "why": "Esperar é o que o `.sync` pede; sem ele o estado acaba quando a chamada retorna."
+      },
+      {
+        "text": "O estado é recusado, já que o Glue só pode ser chamado com `.sync`",
+        "why": "Iniciar um job e seguir é uma integração válida, e esse é o perigo."
+      },
+      {
+        "text": "`BuildDaily` pode começar antes de os pedidos do dia terminarem de carregar",
+        "why": "Isso: o estado segue assim que o job é iniciado, não quando ele termina com sucesso."
+      },
+      {
+        "text": "As retentativas param de funcionar, mas a ordem dos jobs se mantém",
+        "why": "A ordem é o que quebra: o segundo job não espera mais o primeiro."
+      }
+    ]
+  },
+  "ex-rxkb6dz3": {
+    "prompt": "Uma expressão cron do EventBridge Scheduler como `cron(0 3 * * ? *)` tem ___ campos, o último para o ano, e por isso o `0 3 * * *` do DAG é recusado na AWS.",
+    "hint": "Lição 25.",
+    "blanks": [
+      {
+        "accept": [
+          "seis",
+          "6"
+        ]
+      }
+    ]
+  },
+  "ex-f3epraeb": {
+    "prompt": "Associe cada parte do DAG do Airflow ao que faz o papel dela no Step Functions com o EventBridge Scheduler.",
+    "hint": "Lição 25.",
+    "pairs": [
+      {
+        "left": "`load_orders >> build_daily`",
+        "right": "`\"Next\": \"BuildDaily\"`"
+      },
+      {
+        "left": "`retries=2`, com cinco minutos entre eles",
+        "right": "um `Retry` no estado"
+      },
+      {
+        "left": "o agendamento das 03:00",
+        "right": "um schedule com `cron(0 3 * * ? *)` e fuso horário"
+      },
+      {
+        "left": "`{{ ds }}`",
+        "right": "um timestamp no input da execução"
+      }
+    ]
+  },
+  "ex-jhz0fyfc": {
+    "prompt": "Vinte DAGs dividem um ambiente MWAA small, que custa 615,02 USD por um mês de 730 horas. Quanto custa cada DAG por mês, arredondado ao USD inteiro?",
+    "hint": "Lição 25."
+  },
+  "ex-6jsyr254": {
+    "prompt": "Uma migração mantém uma replication instance `dms.r6i.large` (0,56 USD por hora) por 25 dias, e depois ela é apagada. Quanto custou a instância, em USD inteiros?",
+    "hint": "Lição 26."
+  },
+  "ex-m5p5yw4t": {
+    "prompt": "Para poupar trabalho, um time roda uma task `full-load`, não `full-load-and-cdc`, contra o banco da loja em produção; a cópia leva seis horas e os pedidos continuam chegando. O que o alvo tem quando a task termina?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "O banco exatamente como está ao fim das seis horas",
+        "why": "Nada depois da leitura de uma tabela chega ao alvo sem CDC."
+      },
+      {
+        "text": "Cada tabela como estava quando foi lida, e nenhuma das mudanças feitas desde então",
+        "why": "Isso: uma carga completa é uma cópia de cada tabela no seu próprio momento, e por isso uma origem viva precisa de CDC."
+      },
+      {
+        "text": "O banco como estava no início, já que o DMS congela a origem",
+        "why": "O DMS nunca impede a origem de escrever."
+      },
+      {
+        "text": "Nada, já que uma carga completa recusa uma origem que está sendo escrita",
+        "why": "Ela roda; as tabelas só discordam no tempo."
+      }
+    ]
+  },
+  "ex-a82989p3": {
+    "prompt": "O PostgreSQL antigo define `max_slot_wal_keep_size`, e uma task do DMS fica parada tempo bastante para o slot dela ficar para trás além desse tamanho. O que acontece, pelo comportamento documentado do PostgreSQL?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "O disco enche, já que a configuração só avisa",
+        "why": "A configuração existe para impedir exatamente isso."
+      },
+      {
+        "text": "O servidor para de aceitar escritas até a task voltar",
+        "why": "A loja continua escrevendo; quem é abandonado é o slot."
+      },
+      {
+        "text": "O DMS lê o log que faltou do S3 quando volta",
+        "why": "Não há cópia do log para ele ler."
+      },
+      {
+        "text": "O servidor desiste do slot, e a task precisa recomeçar de uma nova carga completa",
+        "why": "Isso: o disco se salva ao preço da posição do leitor."
+      }
+    ]
+  },
+  "ex-npyec59y": {
+    "prompt": "A Quitanda quer limited LOB mode com `LobMaxSize` 64 para uma coluna `notes`, porque é rápido. O que a lição manda fazer antes?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "Medir o maior valor na origem",
+        "why": "Isso: `SELECT max(octet_length(notes)) FROM orders`, porque a falha é silenciosa."
+      },
+      {
+        "text": "Nada: um valor maior falha a task, que então tenta de novo no modo full",
+        "why": "Nada falha; o valor é truncado e o log leva um aviso."
+      },
+      {
+        "text": "Rodar no moto, que mostra os valores truncados",
+        "why": "O moto guarda as configurações como texto e não replica linha nenhuma."
+      },
+      {
+        "text": "Desligar a validação, já que ela não compara LOBs",
+        "why": "A validação é a única conferência de que a cópia está certa; desligá-la esconde problemas."
+      }
+    ]
+  },
+  "ex-ns86yghq": {
+    "prompt": "Uma tabela do DynamoDB guarda 105 GB. A tabela de preços cobra 0,375 USD por GB-mês pelo armazenamento além dos primeiros 25 GB. Quanto custa o armazenamento por mês, em USD inteiros?",
+    "hint": "Lição 27."
+  },
+  "ex-d7bahgdj": {
+    "prompt": "Um recurso novo guarda as notificações de cada cliente, lidas por cliente da mais nova à mais antiga, até 10.000 leituras por segundo no pico da noite, nunca combinadas com nada, e apagadas depois de 30 dias. Para qual store a primeira pergunta aponta?",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Redshift, que escala somando nós",
+        "why": "Um warehouse responde varreduras em segundos, não as linhas de um cliente em milissegundos."
+      },
+      {
+        "text": "ElastiCache, já que as leituras precisam ser rápidas",
+        "why": "Um cache é cópia e pode esquecer; as notificações precisam de um store de registro."
+      },
+      {
+        "text": "DynamoDB, com chave no cliente e ordenado por tempo, com time to live",
+        "why": "Isso: uma chave e uma faixa sob ela, em qualquer escala, e expiração sem job."
+      },
+      {
+        "text": "Athena sobre o lago, já que os dados expiram",
+        "why": "Toda leitura seria uma consulta de segundos, cobrada por pelo menos 10 MB."
+      }
+    ]
+  },
+  "ex-s10phmw7": {
+    "prompt": "Os pedidos da Quitanda poderiam ser gravados em vários destes serviços. Quais deles podem servir de store de registro de um pedido? Marque todos os que se aplicam.",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Aurora PostgreSQL",
+        "why": "Transações entre as tabelas do pedido, guardadas até alguém apagar."
+      },
+      {
+        "text": "DynamoDB",
+        "why": "Um item fica até algo apagá-lo, e ele pode levar o pedido sob suas chaves."
+      },
+      {
+        "text": "ElastiCache",
+        "why": "Ele guarda dados até um despejo ou um restart: cópia, nunca o registro."
+      },
+      {
+        "text": "Um Kinesis data stream",
+        "why": "Ele solta os registros depois do período de retenção; é por onde os eventos viajam."
+      },
+      {
+        "text": "Redshift, carregado a partir da loja",
+        "why": "As chaves dele são declaradas e não aplicadas, e ele responde conforme a última carga."
+      }
+    ]
+  },
+  "ex-211km52m": {
+    "prompt": "O financeiro quer um relatório por semana, sobre dois anos de pedidos que já estão no lago em Parquet. O time de três roda Aurora e S3 e nada mais. O que melhor atende às seis perguntas?",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Athena sobre o lago, pago por consulta e nada entre elas",
+        "why": "Isso: uma varredura ocasional, segundos bastam, e nada novo para operar."
+      },
+      {
+        "text": "Um cluster Redshift provisionado, já que os dados cobrem dois anos",
+        "why": "Cobrado toda hora por uma pergunta feita uma vez por semana, e mais um sistema para operar."
+      },
+      {
+        "text": "Dois anos de pedidos carregados no DynamoDB",
+        "why": "Uma agregação sobre tudo é um scan, o padrão em que o DynamoDB é pior."
+      },
+      {
+        "text": "A consulta no writer do Aurora, no pico da noite",
+        "why": "Ela disputa com os checkouts, e o histórico já está no lago."
+      }
+    ]
+  }
+}

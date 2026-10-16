@@ -1,0 +1,338 @@
+{
+  "ex-m8n2dwts": {
+    "prompt": "Quantas unidades de escrita custa um `put-item` de um item de 3.500 bytes?",
+    "hint": "1 KB por unidade, arredondado para cima."
+  },
+  "ex-m8xs4b4b": {
+    "prompt": "Quantas unidades de leitura custa um `get-item` fortemente consistente de um item de 9.025 bytes?",
+    "hint": "4 KB por unidade, arredondado para cima."
+  },
+  "ex-4290xawn": {
+    "prompt": "O mesmo item de 9.025 bytes é escrito dentro de uma transação. Quantas unidades de escrita?",
+    "hint": "Arredonde primeiro, depois aplique o multiplicador.",
+    "choices": [
+      {
+        "text": "18, o dobro das 9 de um put simples",
+        "why": "Isso: 9.025 bytes são 9 unidades, em dobro."
+      },
+      {
+        "text": "9, como em qualquer escrita dele",
+        "why": "Isso é um put simples. Uma transação dobra."
+      },
+      {
+        "text": "4,5, já que uma transação é eventualmente consistente",
+        "why": "A consistência divide leituras pela metade, nunca escritas, e transações são o tipo caro."
+      },
+      {
+        "text": "6, o preço da leitura transacional",
+        "why": "Seis é o custo de lê-lo numa transação: 3 unidades, em dobro."
+      }
+    ]
+  },
+  "ex-hnhmq6ed": {
+    "prompt": "O moto informou 1,0 unidade de capacidade para o put do item de 9.025 bytes. O que esse número diz sobre a AWS?",
+    "hint": "O que o moto respondeu para todas as outras escritas?",
+    "choices": [
+      {
+        "text": "Que a AWS também cobraria uma unidade",
+        "why": "A AWS cobraria 9. O número do moto é o mesmo para toda escrita."
+      },
+      {
+        "text": "Que o item foi comprimido para menos de 1 KB",
+        "why": "O DynamoDB cobra pelo tamanho do item como escrito; nada o comprime para a cobrança."
+      },
+      {
+        "text": "Nada: é uma constante",
+        "why": "Isso: o moto dá esse número a toda escrita. Unidades são contadas à mão ou por um programa, nunca lidas no moto."
+      }
+    ]
+  },
+  "ex-gk23ry8t": {
+    "prompt": "Sob demanda em sa-east-1, quantos dólares custam 10 milhões de escritas de itens de até 1 KB?",
+    "hint": "A tabela de preços dá o preço por milhão de unidades de requisição de escrita.",
+    "unit": "USD"
+  },
+  "ex-y4gwbhq8": {
+    "prompt": "Uma tabela nova entra no ar semana que vem e ninguém conhece a carga. Qual modo, e por quê?",
+    "hint": "O que cada modo faz quando o palpite está errado?",
+    "choices": [
+      {
+        "text": "Provisionada num número generoso, porque unidades provisionadas são mais baratas",
+        "why": "Mais baratas só quando ocupadas; um palpite generoso é capacidade ociosa cobrada toda hora."
+      },
+      {
+        "text": "Provisionada em 1 unidade, subindo no primeiro throttle",
+        "why": "O primeiro throttle é a requisição de um cliente que falhou."
+      },
+      {
+        "text": "Sob demanda: não fica subprovisionada e não custa nada parada",
+        "why": "Isso. Passe para provisionada depois de medir uma carga."
+      }
+    ]
+  },
+  "ex-t64k1bkq": {
+    "prompt": "O moto trocou a tabela products entre provisionada e sob demanda três vezes em um minuto. O que isso mostra sobre a AWS?",
+    "hint": "Que limites a seção disse que o moto não tem?",
+    "choices": [
+      {
+        "text": "Que a AWS também permite, já que a API é a mesma",
+        "why": "A mesma API com limites diferentes por trás; é exatamente aí que o moto para de imitar."
+      },
+      {
+        "text": "Nada: a AWS limita, e o moto não",
+        "why": "Isso. A AWS permite um número limitado de trocas para sob demanda em 24 horas; um sucesso do moto só diz que a requisição estava bem formada."
+      },
+      {
+        "text": "Que os limites só valem para tabelas com índices",
+        "why": "A tabela products não tem índice, e os limites valem por tabela de qualquer jeito."
+      },
+      {
+        "text": "Que uma troca só vale depois que a tabela fica ociosa",
+        "why": "Uma troca vale na hora; o limite é a frequência."
+      }
+    ]
+  },
+  "ex-jtpb4vss": {
+    "prompt": "Com qual utilização, em porcentagem com uma casa decimal, escritas provisionadas e sob demanda custam o mesmo em sa-east-1?",
+    "hint": "Uma WCU-hora contra o preço sob demanda das 3.600 escritas que ela carrega.",
+    "unit": "%"
+  },
+  "ex-q1aww4n6": {
+    "prompt": "Por que a provisionada sai por 41% do preço sob demanda na carga constante de 200 escritas por segundo?",
+    "hint": "Compare a utilização dela com o ponto de equilíbrio.",
+    "choices": [
+      {
+        "text": "Porque a capacidade provisionada tem desconto acima de 200 unidades",
+        "why": "Não há desconto por volume na tabela; as primeiras 25 unidades são grátis e o resto custa o mesmo."
+      },
+      {
+        "text": "Porque o sob demanda cobra o dobro por escritas à noite",
+        "why": "Os preços sob demanda não mudam com a hora."
+      },
+      {
+        "text": "Porque o autoscaling a baixou à noite",
+        "why": "Uma carga constante não tem o que acompanhar; acompanhá-la deu os mesmos 200,77."
+      },
+      {
+        "text": "As unidades ficam 70% ocupadas, bem acima de 28,9%",
+        "why": "Isso: 28,9% é onde os dois custam o mesmo, e capacidade ocupada é onde a provisionada ganha."
+      }
+    ]
+  },
+  "ex-x8vpfp0j": {
+    "prompt": "Na carga com pico, um autoscaling perfeito custaria 61,31 dólares e o sob demanda 147,83. Por que a seção ainda puxa para o sob demanda?",
+    "hint": "Quando o autoscaling age?",
+    "choices": [
+      {
+        "text": "Porque o autoscaling reage minutos depois da carga chegar, então um pico repentino é estrangulado primeiro",
+        "why": "Isso. Um pico com hora marcada pode ser atendido com scaling agendado; um inesperado é para isso que existe o sob demanda."
+      },
+      {
+        "text": "Porque 61,31 está abaixo da camada gratuita",
+        "why": "A franquia gratuita é de 25 unidades, que essa carga passa em toda hora."
+      },
+      {
+        "text": "Porque tabelas provisionadas não passam de 1.000 unidades",
+        "why": "O 1.000 é por partição, não por tabela."
+      }
+    ]
+  },
+  "ex-sgz9652b": {
+    "prompt": "Provisionada em 1.429 unidades o mês todo, a carga com pico custa 1.003,16 dólares. Para onde vai a maior parte desse dinheiro?",
+    "hint": "O que as unidades fazem a 20 escritas por segundo?",
+    "choices": [
+      {
+        "text": "Para unidades paradas 23 horas por dia",
+        "why": "Isso: a 20 escritas por segundo elas ficam 1,4% usadas."
+      },
+      {
+        "text": "Para as escritas da promoção da noite",
+        "why": "Uma hora de 24; as outras 23 também são pagas."
+      },
+      {
+        "text": "Para armazenamento, que tabelas provisionadas pagam por unidade",
+        "why": "Armazenamento é cobrado por GB nos dois modos, e o programa não conta nenhum."
+      },
+      {
+        "text": "Para as novas tentativas de escritas estranguladas",
+        "why": "Com capacidade para o pico o dia todo, nada é estrangulado."
+      }
+    ]
+  },
+  "ex-ms37mbxb": {
+    "prompt": "O que o autoscaling do DynamoDB muda?",
+    "hint": "Ele faz um `update-table` por você.",
+    "choices": [
+      {
+        "text": "O número de partições",
+        "why": "Partições são assunto do DynamoDB e ninguém as define."
+      },
+      {
+        "text": "O modo de cobrança, trocando para sob demanda nos picos",
+        "why": "Ele nunca troca o modo, e o modo tem limites próprios."
+      },
+      {
+        "text": "O preço por milhão de requisições de uma tabela sob demanda",
+        "why": "Sob demanda não tem o que escalar; o autoscaling só vale para tabelas provisionadas."
+      },
+      {
+        "text": "Unidades de capacidade, entre limites",
+        "why": "Isso: as de uma tabela provisionada, dentro do alvo escalável, aqui entre 5 e 500 unidades de escrita."
+      }
+    ]
+  },
+  "ex-a2y7x4v7": {
+    "prompt": "Quais destas são verdade sobre os quatro alarmes que o moto criou para a política de escrita? Escolha todas.",
+    "hint": "Compare os nomes das métricas e os limiares com a tabela.",
+    "choices": [
+      {
+        "text": "Eles nomeiam métricas de leitura para uma política de unidades de escrita",
+        "why": "Sim, `ConsumedReadCapacityUnits` em todos."
+      },
+      {
+        "text": "O alarme alto precisa de 2 períodos de um minuto, o baixo de 15",
+        "why": "Sim, que é a forma que a AWS usa: sobe rápido, desce devagar."
+      },
+      {
+        "text": "Os limiares foram calculados a partir das 5 unidades de escrita da tabela",
+        "why": "42 e 30 são 70% e 50% de 60 segundos de uma unidade."
+      },
+      {
+        "text": "Um deles vai disparar durante o `flood.py`",
+        "why": "O moto não publica métricas, então nenhum alarme dispara."
+      }
+    ]
+  },
+  "ex-2m57x0s4": {
+    "prompt": "Uma política que mantém as unidades consumidas perto de 70% das provisionadas é uma política de target ___.",
+    "hint": "Ela segue um alvo.",
+    "blanks": [
+      {
+        "accept": [
+          "tracking"
+        ]
+      }
+    ]
+  },
+  "ex-24x6v8jy": {
+    "prompt": "Uma tabela provisionada tem 10.000 unidades de escrita, e toda escrita usa a chave de partição `2026-10-16`. Mais ou menos quantas escritas por segundo ela aguenta?",
+    "hint": "Onde mora uma chave de partição?",
+    "choices": [
+      {
+        "text": "Cerca de 1.000, o limite de uma partição",
+        "why": "Isso, tenha a tabela o que tiver. É uma partição quente."
+      },
+      {
+        "text": "10.000, a capacidade da tabela",
+        "why": "A capacidade da tabela se espalha pelas partições, e uma chave usa uma."
+      },
+      {
+        "text": "20.000, com a capacidade adaptativa dobrando",
+        "why": "A capacidade adaptativa empresta capacidade sobrando a uma partição ocupada, mas não ergue o teto de uma chave."
+      },
+      {
+        "text": "3.000, o limite de leitura da partição",
+        "why": "Escritas têm limite próprio, um terço disso."
+      }
+    ]
+  },
+  "ex-wk82vppd": {
+    "prompt": "O índice `by-day` é dividido em `2026-10-16#0` a `#9`. No que vira o \"todos os pedidos de um dia\" do back office?",
+    "hint": "Quem paga por espalhar as escritas?",
+    "choices": [
+      {
+        "text": "Uma query em `2026-10-16`, que ainda acha as dez chaves",
+        "why": "Uma query recebe uma chave de partição exata; `2026-10-16` sozinho agora não é nenhuma delas."
+      },
+      {
+        "text": "Um scan do índice filtrado pelo dia",
+        "why": "Isso leria todo dia do índice para achar um."
+      },
+      {
+        "text": "Dez queries, uma por sufixo, cujas respostas quem lê junta numa lista só",
+        "why": "Isso. As escritas se espalham e a leitura paga por isso."
+      },
+      {
+        "text": "Nada muda, já que o DynamoDB tira o sufixo",
+        "why": "O DynamoDB não sabe nada da convenção; o sufixo faz parte da chave."
+      }
+    ]
+  },
+  "ex-g4gcgats": {
+    "prompt": "`flood.py` escreveu 5.000 itens numa tabela de 5 unidades de escrita sem nenhuma nova tentativa. O que dá para concluir sobre o projeto?",
+    "hint": "O que o moto fez com a capacidade?",
+    "choices": [
+      {
+        "text": "Que 5 unidades bastam para 5.000 escritas em poucos segundos",
+        "why": "Elas aguentariam cerca de 5 por segundo, mais o burst; o moto ignorou a capacidade."
+      },
+      {
+        "text": "Que a capacidade de burst cobriu a execução toda",
+        "why": "O burst é no máximo cinco minutos de capacidade não usada, 1.500 escritas aqui, e o moto não tem nenhum."
+      },
+      {
+        "text": "Nada sobre o DynamoDB: o moto nunca estrangula, então a execução mediu o programa e o laptop",
+        "why": "Isso. A capacidade se confere com a aritmética, e numa conta real."
+      }
+    ]
+  },
+  "ex-3h6bngbf": {
+    "prompt": "Ligue cada operação num item de 6 KB às suas unidades na AWS.",
+    "hint": "6 KB são 6 blocos de escrita e 2 de leitura.",
+    "pairs": [
+      {
+        "left": "uma leitura eventualmente consistente",
+        "right": "1 unidade de leitura"
+      },
+      {
+        "left": "uma leitura fortemente consistente",
+        "right": "2 unidades de leitura"
+      },
+      {
+        "left": "uma leitura numa transação",
+        "right": "4 unidades de leitura"
+      },
+      {
+        "left": "uma escrita",
+        "right": "6 unidades de escrita"
+      },
+      {
+        "left": "uma escrita numa transação",
+        "right": "12 unidades de escrita"
+      }
+    ]
+  },
+  "ex-gwj0abxa": {
+    "prompt": "Na AWS, ponha em ordem os eventos de um surto repentino numa tabela com autoscaling.",
+    "hint": "O alarme precisa de dois minutos de dados.",
+    "items": [
+      "As escritas saltam para três vezes a capacidade provisionada",
+      "A capacidade de burst absorve as primeiras",
+      "As requisições são estranguladas e o SDK as tenta de novo",
+      "O alarme alto dispara depois de dois minutos acima do alvo",
+      "O Application Auto Scaling aumenta a capacidade da tabela"
+    ]
+  },
+  "ex-7nfer9pw": {
+    "prompt": "A tabela de estoque da Quitanda recebe 300 escritas por segundo dos leitores do armazém, das 7 às 19 todo dia, e quase nada à noite. Qual é a escolha sensata mais barata?",
+    "hint": "Calcule a utilização de cada opção contra 28,9%.",
+    "choices": [
+      {
+        "text": "Provisionada para 300 por segundo o dia todo",
+        "why": "Ocupada no máximo 12 horas de 24, 70% disso: 35% na média, mal acima do equilíbrio, e as noites são desperdício."
+      },
+      {
+        "text": "Sob demanda, porque toda carga com noite calma tem pico",
+        "why": "A carga é previsível até a hora; é o caso para o qual existe capacidade agendada."
+      },
+      {
+        "text": "Provisionada, agendada para subir antes das 7 e descer depois das 19",
+        "why": "Isso, com autoscaling no meio. Um padrão conhecido deixa a capacidade provisionada ocupada enquanto é paga."
+      },
+      {
+        "text": "Provisionada em 1 unidade, deixando o burst carregar o dia",
+        "why": "O burst é cinco minutos de capacidade sobrando, não um dia inteiro."
+      }
+    ]
+  }
+}

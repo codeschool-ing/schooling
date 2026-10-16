@@ -1,0 +1,457 @@
+{
+  "ex-5qmkjp0x": {
+    "prompt": "No jeito padrão de pagar, pelo que uma consulta do Athena é cobrada?",
+    "hint": "Não há cluster para deixar ligado.",
+    "choices": [
+      {
+        "text": "Pelos segundos que a consulta levou para rodar",
+        "why": "Tempo é como se paga um cluster de warehouse; o preço por consulta do Athena não olha o relógio."
+      },
+      {
+        "text": "Pelos bytes que leu do S3",
+        "why": "Isso: 9 dólares por terabyte em São Paulo, arredondados para megabytes inteiros."
+      },
+      {
+        "text": "Pelo número de linhas da resposta",
+        "why": "Uma consulta que lê um bucket inteiro para devolver quatro linhas paga pelo bucket."
+      },
+      {
+        "text": "Pelas horas em que o workgroup ficou ativo",
+        "why": "Um workgroup é um conjunto de configurações e não custa nada enquanto espera."
+      }
+    ]
+  },
+  "ex-87ds5asm": {
+    "prompt": "O Athena arredonda os bytes que uma consulta leu para cima até o megabyte inteiro, e cobra pelo menos ___ MB por consulta.",
+    "hint": "É o número em que três das quatro contas desta lição bateram.",
+    "blanks": [
+      {
+        "accept": [
+          "10",
+          "dez"
+        ]
+      }
+    ]
+  },
+  "ex-2p455jxc": {
+    "prompt": "Hoje à noite um arquivo de 2026-10-16 chega sob o `LOCATION` da tabela, em `dt=2026-10-16/`. Amanhã uma consulta com `WHERE dt = '2026-10-16'` não devolve linhas. Qual é a causa mais provável?",
+    "hint": "Onde o Athena encontra a lista de partições?",
+    "choices": [
+      {
+        "text": "Um objeto novo no S3 leva um dia para ficar legível",
+        "why": "O S3 devolve um objeto novo na hora; o atraso não está no S3."
+      },
+      {
+        "text": "O arquivo precisa antes ser carregado no Athena com um `COPY`",
+        "why": "Esse é o jeito de um warehouse. O Athena lê os arquivos onde estão."
+      },
+      {
+        "text": "Ninguém adicionou a partição ao catálogo",
+        "why": "Isso. Até `MSCK REPAIR TABLE`, `ADD PARTITION`, um crawler ou uma projeção nomeá-la, o Athena não lê esse prefixo."
+      },
+      {
+        "text": "O Athena respondeu com o resultado guardado da consulta de ontem",
+        "why": "Reaproveitar resultados é uma opção desligada a não ser que seja ligada, e a consulta tinha outro filtro."
+      }
+    ]
+  },
+  "ex-1csp4rhc": {
+    "prompt": "Você roda `DROP TABLE quitanda.orders` na tabela externa do `orders.sql`. O que acontece com os objetos sob `s3://quitanda-curated-prod/orders/`?",
+    "hint": "De quem são os dados, segundo o `EXTERNAL`?",
+    "choices": [
+      {
+        "text": "São apagados com a tabela",
+        "why": "É o que apagar uma tabela gerenciada faz; uma externa só é dona da sua descrição."
+      },
+      {
+        "text": "Ficam onde estão",
+        "why": "Isso. Só a descrição no catálogo vai embora, e um `CREATE` novo lê os mesmos arquivos de novo."
+      },
+      {
+        "text": "Vão para o prefixo de resultados do workgroup",
+        "why": "O Athena grava respostas ali; não move nada seu."
+      },
+      {
+        "text": "Ficam guardados por 30 dias e depois expiram",
+        "why": "Expiração é uma regra de ciclo de vida do bucket, lição 3, e uma tabela não consegue criar uma."
+      }
+    ]
+  },
+  "ex-sra6n3dj": {
+    "prompt": "Quais destes não custam nada no preço por terabyte do Athena? Marque todos os que se aplicam.",
+    "hint": "O que um comando lê do S3?",
+    "choices": [
+      {
+        "text": "Um comando `CREATE EXTERNAL TABLE`",
+        "why": "Sim: um comando que só muda o catálogo é grátis."
+      },
+      {
+        "text": "Um `ALTER TABLE … ADD PARTITION`",
+        "why": "Sim, pelo mesmo motivo."
+      },
+      {
+        "text": "Uma consulta que falha numa coluna que não existe",
+        "why": "Sim: consultas que falham não são cobradas."
+      },
+      {
+        "text": "Uma consulta que você cancela depois de ler 2 GB",
+        "why": "Uma consulta cancelada custa o que tinha lido quando parou."
+      },
+      {
+        "text": "Uma consulta que lê 50 MB e não devolve linhas",
+        "why": "A leitura é a conta, seja o que for que saiu dela."
+      }
+    ]
+  },
+  "ex-p6z6xrgz": {
+    "prompt": "O moto responde `DDL` e `SUCCEEDED` para o `orders.sql`, e `aws glue get-databases` volta vazio. O que isso prova sobre o `orders.sql`?",
+    "hint": "O que o moto guardou?",
+    "choices": [
+      {
+        "text": "Que é DDL válido do Athena e criaria a tabela",
+        "why": "O Athena o teria recusado, já que o banco `quitanda` não existe."
+      },
+      {
+        "text": "Que o moto criou a tabela em outra região",
+        "why": "O moto não criou nada em lugar nenhum; marcou a requisição como feita."
+      },
+      {
+        "text": "Só que a requisição estava bem formada",
+        "why": "Isso. O moto não rodou DDL nenhum, e um sucesso dele é uma afirmação sobre a requisição."
+      },
+      {
+        "text": "Que o Athena guarda as tabelas fora do Glue Data Catalog",
+        "why": "As tabelas do Athena moram no Glue Data Catalog; foi o moto que não guardou tabela."
+      }
+    ]
+  },
+  "ex-pdcrj3t9": {
+    "prompt": "Por que o `lake.py` lê `AWS_ENDPOINT_URL` sozinho e entrega o endereço ao PyArrow?",
+    "hint": "Que programas leem essa variável sozinhos?",
+    "choices": [
+      {
+        "text": "O PyArrow não a lê, e sem ela iria para o S3 de verdade",
+        "why": "Isso. A variável é lida pela linha de comando da AWS e pelo boto3, e o PyArrow precisa de `endpoint_override`."
+      },
+      {
+        "text": "O moto recusa uma requisição cujo endereço não traz o número da porta",
+        "why": "A porta faz parte do endereço que a variável guarda; a questão é quem lê a variável."
+      },
+      {
+        "text": "Para manter as duas chaves `test` fora do código-fonte do próprio programa",
+        "why": "As chaves são outras variáveis, que o PyArrow lê sim."
+      },
+      {
+        "text": "Para que a região vire `sa-east-1`",
+        "why": "A região vem de `AWS_DEFAULT_REGION`, outra linha do programa."
+      }
+    ]
+  },
+  "ex-tgqmcp8z": {
+    "prompt": "Os mesmos 755.511 pedidos ocupam 40.641.097 bytes em CSV e 12.703.975 em Parquet. De onde vem a economia?",
+    "hint": "Nada se perdeu no caminho.",
+    "choices": [
+      {
+        "text": "O Parquet deixa de fora a coluna de partição `dt`",
+        "why": "Nenhum dos arquivos guarda `dt`: ela está na chave nas duas camadas."
+      },
+      {
+        "text": "O Parquet arredonda `total_cents` para reais inteiros",
+        "why": "Todo valor sobrevive; as duas camadas dão as mesmas somas até o centavo."
+      },
+      {
+        "text": "Colunas guardadas separadas, com seus tipos, e comprimidas com Snappy",
+        "why": "Isso. Uma coluna de números pequenos num lugar só comprime muito melhor que os mesmos números espalhados em linhas de texto."
+      },
+      {
+        "text": "O `lake.py` grava menos dias na camada curated",
+        "why": "Ele imprimiu 31 objetos para cada camada."
+      }
+    ]
+  },
+  "ex-5ygbpshx": {
+    "prompt": "Neste lago, qual é a diferença entre a camada raw e a camada curated?",
+    "hint": "Mesmas linhas, dois buckets.",
+    "choices": [
+      {
+        "text": "Raw é a cópia de desenvolvimento e curated é a cópia de produção",
+        "why": "As duas são `-prod`; o ambiente é a última palavra do nome."
+      },
+      {
+        "text": "Raw guarda uma amostra dos pedidos e curated guarda todos eles",
+        "why": "As duas guardam os 755.511 pedidos."
+      },
+      {
+        "text": "Raw é criptografada e curated não",
+        "why": "Nada nesta lição configura criptografia em nenhum dos buckets."
+      },
+      {
+        "text": "Raw é o que chega, em CSV; curated é o que se lê, em Parquet",
+        "why": "Isso. A lição 17 é o job que transforma uma na outra."
+      }
+    ]
+  },
+  "ex-vwyx7s2a": {
+    "prompt": "Como o `ask.py` sabe quantos bytes uma consulta leu?",
+    "hint": "Veja entre o que o `Counted` fica.",
+    "choices": [
+      {
+        "text": "Pergunta ao Athena do moto o `DataScannedInBytes`",
+        "why": "O moto responde 0 para toda consulta, e é por isso que o programa existe."
+      },
+      {
+        "text": "Toda leitura que o PyArrow faz do S3 passa por ele e é somada",
+        "why": "Isso. A contagem é feita onde os bytes passam, então uma coluna que ninguém leu não soma nada."
+      },
+      {
+        "text": "Estima o tamanho a partir das colunas que o SQL nomeia",
+        "why": "Nada é estimado; os bytes de rodapé que ele contou são a prova."
+      },
+      {
+        "text": "Soma os tamanhos de objeto que o `aws s3 ls` imprime para o prefixo inteiro",
+        "why": "Isso daria a tabela inteira toda vez, e as contagens mudam por pergunta."
+      }
+    ]
+  },
+  "ex-zvy7z8ae": {
+    "prompt": "A pergunta sobre pagamentos nomeia duas das sete colunas, e no CSV a leitura foi de todos os 40.641.097 bytes. Por quê?",
+    "hint": "Onde começa uma coluna numa linha de texto?",
+    "choices": [
+      {
+        "text": "O `ORDER BY` obrigou o motor a ler tudo",
+        "why": "A ordenação é sobre quatro linhas de resultado; a leitura do Parquet com o mesmo `ORDER BY` foi oito vezes menor."
+      },
+      {
+        "text": "Um CSV não dá jeito de achar uma coluna sem ler cada linha inteira",
+        "why": "Isso. Cada linha foi lida para tirar dois valores dela."
+      },
+      {
+        "text": "O `ask.py` lê todo objeto inteiro, seja qual for o formato",
+        "why": "No Parquet ele leu 5.102.048 bytes de 12.703.975."
+      },
+      {
+        "text": "A pergunta não tinha `WHERE`, e uma consulta sem ele lê toda coluna de uma tabela",
+        "why": "Um filtro decide quais linhas ou partições; quais colunas são lidas é questão do formato."
+      }
+    ]
+  },
+  "ex-n55b2wkx": {
+    "prompt": "Um dia gravado há um minuto aparece na resposta do `ask.py` e não na do Athena, para o mesmo SQL sobre os mesmos objetos. Por quê?",
+    "hint": "Cada um encontra as partições num lugar diferente.",
+    "choices": [
+      {
+        "text": "O S3 mostra um objeto recém-gravado a alguns leitores um tempo antes de mostrá-lo a outros",
+        "why": "O S3 devolve um objeto novo na hora para todo mundo."
+      },
+      {
+        "text": "O Athena responde a partir de uma cópia própria do lago, que ele atualiza toda noite",
+        "why": "O Athena não guarda cópia; lê os objetos na hora da consulta."
+      },
+      {
+        "text": "O `ask.py` lista o S3 a cada vez, e o catálogo decide quais dias o outro lê",
+        "why": "Isso. O dia novo está no S3 e ainda não está no catálogo."
+      },
+      {
+        "text": "O DuckDB lê arquivos Parquet que o motor do Athena não consegue ler",
+        "why": "Os dois leem o mesmo Parquet; a diferença é de quais arquivos cada um ficou sabendo."
+      }
+    ]
+  },
+  "ex-515gsr18": {
+    "prompt": "Com `WHERE dt = '2026-10-15'` o motor abriu um objeto de 31. O que permitiu pular os outros 30?",
+    "hint": "Onde `dt` está escrito?",
+    "choices": [
+      {
+        "text": "`dt` está na chave, então o filtro se resolve antes de qualquer leitura",
+        "why": "Isso, e funciona no CSV também, que também abriu um objeto."
+      },
+      {
+        "text": "O menor e o maior valor de cada rodapé Parquet",
+        "why": "Esses deixam um leitor pular blocos dentro de um arquivo que abriu; o CSV, que não tem rodapé, pulou os mesmos 30 dias."
+      },
+      {
+        "text": "O DuckDB guardou os outros dias de uma consulta anterior",
+        "why": "Cada execução do `ask.py` é um processo novo sem nada guardado."
+      },
+      {
+        "text": "Os dias estavam em ordem de data, então o motor parou no dia 15",
+        "why": "Um motor que parasse ali ainda teria aberto os catorze dias antes dele."
+      }
+    ]
+  },
+  "ex-rj8jyam5": {
+    "prompt": "A consulta em `hour` leu 2.039.661 bytes de 31 objetos, e o PyArrow leu cada rodapé como 65.536 bytes. Quantos bytes eram a própria coluna `hour`?",
+    "hint": "Tire 31 rodapés."
+  },
+  "ex-paq6z3e1": {
+    "prompt": "Por que a parte de uma leitura de Parquet gasta com rodapés cresce com o número de arquivos e não com o tamanho deles?",
+    "hint": "Quantos rodapés tem um arquivo?",
+    "choices": [
+      {
+        "text": "Um rodapé guarda uma cópia de todo valor do arquivo",
+        "why": "Ele guarda um mapa de onde fica cada bloco de coluna: 1.576 bytes para um dia de 23.781 linhas."
+      },
+      {
+        "text": "O PyArrow relê o rodapé antes de cada coluna que lê",
+        "why": "Uma leitura de rodapé por objeto: a consulta de horas fez 62 requisições a 31 objetos, duas por objeto."
+      },
+      {
+        "text": "Cada arquivo tem o próprio rodapé lido uma vez, seja qual for o tamanho",
+        "why": "Isso: 31 arquivos, 31 leituras de rodapé. Cem arquivos pequenos por dia seriam cem por dia."
+      },
+      {
+        "text": "Arquivos maiores comprimem melhor, então os rodapés deles ficam menores e menores",
+        "why": "O tamanho de um rodapé segue o número de colunas e blocos, não a compressão."
+      }
+    ]
+  },
+  "ex-jwyffvg6": {
+    "prompt": "Três das quatro perguntas foram cobradas pelos mesmos 10 MB, embora as leituras delas difiram por um fator de 31. Qual é a leitura certa disso?",
+    "hint": "Multiplique o lago por mil.",
+    "choices": [
+      {
+        "text": "Particionar não economiza nada no Athena, só no DuckDB",
+        "why": "Num lago mil vezes maior as leituras mantêm as razões e as contas as acompanham."
+      },
+      {
+        "text": "O lago é pequeno, então o mínimo esconde razões que um lago maior paga inteiras",
+        "why": "Isso. Com mil vezes este lago, o painel dava 1.485 dólares por mês contra 186."
+      },
+      {
+        "text": "Parquet custa o mesmo que CSV no Athena quando os dois tipos de arquivo são comprimidos",
+        "why": "O mês em CSV foi cobrado em 39 MB contra 10 do Parquet, nas mesmas linhas."
+      },
+      {
+        "text": "O `ask.py` arredonda as contagens para megabytes inteiros e perde a diferença",
+        "why": "Ele conta cada byte; só a conta é arredondada, pela regra do próprio Athena."
+      }
+    ]
+  },
+  "ex-z34q8apk": {
+    "prompt": "Na AWS, o que acontece com uma consulta no workgroup `analysts`, com o corte de 10 MB, que leria os 40.641.097 bytes do mês em CSV?",
+    "hint": "O moto registrou a configuração e não fez nada com ela.",
+    "choices": [
+      {
+        "text": "Roda até o fim e a conta para em 10 MB",
+        "why": "O corte encerra a consulta; não dá de presente o resto da leitura."
+      },
+      {
+        "text": "É recusada antes de ler, já que a tabela é maior que o corte",
+        "why": "O Athena não sabe de antemão quanto uma consulta vai ler; conta enquanto lê."
+      },
+      {
+        "text": "Dá certo, porque o corte só vale no console",
+        "why": "O corte pertence ao workgroup e vale para toda consulta que roda nele."
+      },
+      {
+        "text": "É cancelada assim que a leitura passa de 10 MB",
+        "why": "Isso, e quem a rodou recebe um erro que nomeia o limite."
+      }
+    ]
+  },
+  "ex-k686jwda": {
+    "prompt": "O que a projeção de partições muda no jeito como o Athena encontra as partições de uma tabela?",
+    "hint": "Veja o `storage.location.template`.",
+    "choices": [
+      {
+        "text": "Um crawler roda antes de cada consulta e registra os dias que chegaram desde a anterior",
+        "why": "Nenhum crawler entra: o catálogo fica de fora."
+      },
+      {
+        "text": "Calcula as chaves a partir das propriedades da tabela em vez de procurá-las",
+        "why": "Isso. O dia de hoje à noite fica legível sem nada registrado, desde que a chave caiba no modelo."
+      },
+      {
+        "text": "As partições são copiadas para o Athena para ele pular o S3",
+        "why": "O Athena não guarda dados; continua lendo os objetos no S3."
+      },
+      {
+        "text": "Junta as partições pequenas em partições maiores, numa agenda que ele mesmo escolhe",
+        "why": "A projeção muda como as chaves são encontradas, não os arquivos sob elas."
+      }
+    ]
+  },
+  "ex-84s3yseh": {
+    "prompt": "A Quitanda quer três anos de CSV diário transformados em Parquet particionado por `dt`, só com o Athena. Por que um único comando CTAS não resolve?",
+    "hint": "Conte as partições.",
+    "choices": [
+      {
+        "text": "O CTAS só grava CSV, então um segundo comando teria de convertê-lo para Parquet",
+        "why": "O CTAS grava o formato nomeado no `WITH`, Parquet incluído."
+      },
+      {
+        "text": "O CTAS não consegue particionar a saída",
+        "why": "`partitioned_by` é uma das propriedades dele."
+      },
+      {
+        "text": "Um CTAS é limitado a 10 MB, que é o mínimo cobrado por uma consulta no Athena",
+        "why": "O mínimo é o menor valor cobrado por consulta, não o máximo que ela lê."
+      },
+      {
+        "text": "Ele grava no máximo 100 partições, e três anos passam de mil dias",
+        "why": "Isso. A carga vira uma série de comandos `INSERT INTO` de cem dias cada."
+      }
+    ]
+  },
+  "ex-vxc8sjgm": {
+    "prompt": "Ligue cada parte do arranjo ao que ela decide.",
+    "hint": "Duas são sobre arquivos, duas sobre dinheiro.",
+    "pairs": [
+      {
+        "left": "O formato do arquivo",
+        "right": "Quanto de cada arquivo uma pergunta lê"
+      },
+      {
+        "left": "O particionamento",
+        "right": "Quantos arquivos uma pergunta abre"
+      },
+      {
+        "left": "O mínimo de 10 MB",
+        "right": "O menos que uma consulta pequena é cobrada"
+      },
+      {
+        "left": "O corte por consulta",
+        "right": "O máximo que uma consulta pode ler antes de ser cancelada"
+      }
+    ],
+    "right_distractors": [
+      "Quanto tempo as respostas ficam no prefixo de resultados"
+    ]
+  },
+  "ex-y9pwvjkc": {
+    "prompt": "Ponha em ordem o que acontece entre a exportação da loja e uma resposta do Athena sobre aquele dia.",
+    "hint": "O Athena lê o que o catálogo nomeia.",
+    "items": [
+      "O CSV do dia cai no bucket raw",
+      "Um job grava o dia em Parquet sob `dt=` no bucket curated",
+      "A partição é adicionada ao catálogo",
+      "Uma consulta filtrada naquele `dt` lê os blocos de coluna do dia"
+    ]
+  },
+  "ex-r8n1zgfj": {
+    "prompt": "Um painel roda `SELECT neighbourhood, count(*) FROM orders_csv WHERE dt BETWEEN '2026-10-01' AND '2026-10-07' GROUP BY neighbourhood` toda hora. Qual mudança sozinha corta mais o que ele lê?",
+    "hint": "Ele já lê só sete dias.",
+    "choices": [
+      {
+        "text": "Apontá-lo para a tabela Parquet `orders`",
+        "why": "Isso. Os dias já são podados; o formato então lê uma coluna de sete em vez de linhas inteiras."
+      },
+      {
+        "text": "Rodá-lo num workgroup com corte de 10 MB",
+        "why": "Um corte cancela uma consulta; não faz a mesma pergunta ler menos."
+      },
+      {
+        "text": "Rodar `MSCK REPAIR TABLE` antes de cada atualização",
+        "why": "Isso registra partições; os sete dias que ele lê continuam os mesmos."
+      },
+      {
+        "text": "Tirar o `WHERE` e filtrar os dias no painel",
+        "why": "Sem o filtro ele leria os 31 dias de CSV, quatro vezes mais."
+      }
+    ]
+  },
+  "ex-zd9fqvng": {
+    "prompt": "Uma consulta lê 25.165.825 bytes. Contando um megabyte como 1.048.576 bytes, por quantos megabytes o Athena a cobra?",
+    "hint": "Divida e aplique as duas regras."
+  }
+}

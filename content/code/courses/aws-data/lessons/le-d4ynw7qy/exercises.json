@@ -1,0 +1,555 @@
+[
+  {
+    "id": "ex-z0q4p0nd",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a versioned bucket, `aws s3 rm s3://bucket/key` runs with no version id. What is in the bucket afterwards?",
+    "hint": "A delete with no version adds something.",
+    "choices": [
+      {
+        "text": "Nothing under that key: the latest version was removed and the older ones with it",
+        "correct": false,
+        "why": "Nothing was removed; that is the point of versioning."
+      },
+      {
+        "text": "Every version it had, under a new delete marker",
+        "correct": true,
+        "why": "Right. The marker makes the key answer `NoSuchKey`, and deleting the marker brings it back."
+      },
+      {
+        "text": "The older versions, and the latest moved to a recycle prefix",
+        "correct": false,
+        "why": "S3 has no recycle prefix; the latest version stays where it was, under the marker."
+      },
+      {
+        "text": "Only the latest version, marked noncurrent",
+        "correct": false,
+        "why": "The older versions stay too; every version is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdp48d3q",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script deleted `customers/customers.csv` in a versioned bucket. What brings the file back with its last contents?",
+    "hint": "What did the script add?",
+    "choices": [
+      {
+        "text": "Uploading the file again from a backup",
+        "correct": false,
+        "why": "That works if a backup exists, and adds a third version; the bytes were never gone."
+      },
+      {
+        "text": "Deleting the delete marker",
+        "correct": true,
+        "why": "Right. Removing the marker makes the last real version the latest again."
+      },
+      {
+        "text": "`restore-object`, as for an archived object",
+        "correct": false,
+        "why": "A restore is for Glacier classes and is refused for anything else."
+      },
+      {
+        "text": "Suspending versioning, which undoes the last delete",
+        "correct": false,
+        "why": "Suspending changes how new writes are versioned and undoes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-b06jf7zc",
+    "version": 1,
+    "section": "versioning",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the versioning states of a bucket in the order a bucket can pass through them, from its creation.",
+    "hint": "There is no way back to the first.",
+    "items": [
+      "Unversioned",
+      "Enabled",
+      "Suspended"
+    ]
+  },
+  {
+    "id": "ex-j9cmx685",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, after suspending versioning and writing the key once more, an older version id answers `NoSuchVersion`. What does that tell you about S3?",
+    "hint": "Is moto the reference for what S3 keeps?",
+    "choices": [
+      {
+        "text": "That moto is wrong here: S3 keeps the old versions",
+        "correct": true,
+        "why": "Right. And it fails in the dangerous direction, making a cleanup look done that was not."
+      },
+      {
+        "text": "That suspending versioning is a cheap, safe way to get rid of every old version",
+        "correct": false,
+        "why": "On S3 they stay, listed and billed; removing them takes a delete per version or a rule."
+      },
+      {
+        "text": "That S3 keeps old versions only for 24 hours after a suspension",
+        "correct": false,
+        "why": "There is no such window; they stay until deleted."
+      },
+      {
+        "text": "That the `null` version is a copy of all the earlier ones",
+        "correct": false,
+        "why": "It holds one write, the latest."
+      }
+    ]
+  },
+  {
+    "id": "ex-11ts4w8m",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A versioned bucket holds one 50 GB table rewritten every night, and `aws s3 ls` shows 50 GB. Why is that the wrong number for the bill?",
+    "hint": "What does a listing show, and what is billed?",
+    "choices": [
+      {
+        "text": "`aws s3 ls` rounds sizes down to the nearest 50 GB",
+        "correct": false,
+        "why": "It prints bytes exactly; it just prints only the current versions."
+      },
+      {
+        "text": "Versions are billed at Standard-IA, so the listing overstates the bill",
+        "correct": false,
+        "why": "A noncurrent version is billed in its own class, the same as the current one here."
+      },
+      {
+        "text": "Only the current version is listed; old ones are billed too",
+        "correct": true,
+        "why": "Right. After 360 nights with no rule that is 18,000 GB billed for a 50 GB table."
+      },
+      {
+        "text": "Delete markers are billed as full copies",
+        "correct": false,
+        "why": "A marker has no bytes; the cost is in the versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-yz2ew4ds",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 20 GB table is rewritten every night in a versioned bucket, with a rule expiring noncurrent versions 7 days after they are replaced. Once the rule has settled, how many GB does the bucket hold for it?",
+    "hint": "The current version plus the ones replaced in the last seven days.",
+    "value": 160,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a1fcyqve",
+    "version": 1,
+    "section": "what-versions-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table is read once a month, at the month's close. How long should its noncurrent versions live, and why?",
+    "hint": "A version is useful while somebody would still notice the bad write.",
+    "choices": [
+      {
+        "text": "Seven days, the right number for any table",
+        "correct": false,
+        "why": "Seven fits a table read daily; a broken write here may go unseen for weeks."
+      },
+      {
+        "text": "A month and a few days",
+        "correct": true,
+        "why": "Right. A bad write is still recoverable when it is noticed at the close; the number is how long a mistake can go unnoticed."
+      },
+      {
+        "text": "Forever, since versions cost nothing",
+        "correct": false,
+        "why": "Each one is billed in full; a year with no rule was over twenty times the cost."
+      },
+      {
+        "text": "One day, to keep the bill lowest",
+        "correct": false,
+        "why": "Cheapest, and a bad write found at the month's close would have no way back."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yzy1yz8",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A rule moves objects under `now/` to Glacier after 0 days. In moto, `head-object` on a new object there still shows Standard. Why?",
+    "hint": "What in moto would apply the rule?",
+    "choices": [
+      {
+        "text": "The object is under 128 KB, so the rule skips it",
+        "correct": false,
+        "why": "It was 200,000 bytes, above that line."
+      },
+      {
+        "text": "Rules apply only to objects written before the rule existed",
+        "correct": false,
+        "why": "Rules apply to every object their filter matches."
+      },
+      {
+        "text": "moto stores rules and never applies them; nothing in it ages",
+        "correct": true,
+        "why": "Right. On AWS the next daily run would move it."
+      },
+      {
+        "text": "A transition needs at least 30 days",
+        "correct": false,
+        "why": "That minimum is for Standard-IA and One Zone-IA, not Glacier."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbet66p9",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the life-cycle action that solves it.",
+    "hint": "Two of them are about versions.",
+    "pairs": [
+      {
+        "left": "Exports older than a year are read only for audits",
+        "right": "`Transitions`"
+      },
+      {
+        "left": "Replaced versions of a nightly table pile up",
+        "right": "`NoncurrentVersionExpiration`"
+      },
+      {
+        "left": "Parts of uploads that died halfway are billed",
+        "right": "`AbortIncompleteMultipartUpload`"
+      },
+      {
+        "left": "Scratch files must be gone after a week",
+        "right": "`Expiration`"
+      }
+    ],
+    "right_distractors": [
+      "`ObjectLockConfiguration`"
+    ]
+  },
+  {
+    "id": "ex-6vn43bm6",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted a rule moving objects to Standard-IA after 10 days. What does S3 do with the same rule?",
+    "hint": "There is a minimum time in Standard before that class.",
+    "choices": [
+      {
+        "text": "Accepts it and waits 30 days anyway",
+        "correct": false,
+        "why": "S3 does not correct a rule; it refuses it."
+      },
+      {
+        "text": "Accepts it, since moto and S3 check rules the same way",
+        "correct": false,
+        "why": "moto checks less than S3, which is why the rule files are checked by you."
+      },
+      {
+        "text": "Accepts it and charges the remaining 20 days as early deletion",
+        "correct": false,
+        "why": "Early deletion is about leaving a class early; this rule never gets written."
+      },
+      {
+        "text": "Refuses it: the days must be at least 30",
+        "correct": true,
+        "why": "Right. moto only confirmed that the file parses."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6tqevcj",
+    "version": 1,
+    "section": "life-cycle",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By default since 2024, a life-cycle rule does not transition objects smaller than ___ KB.",
+    "hint": "`TransitionDefaultMinimumObjectSize` names it.",
+    "blanks": [
+      {
+        "accept": [
+          "128"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1smhvq8g",
+    "version": 1,
+    "section": "object-lock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An invoice version is locked in compliance mode. `delete-object` without a version id succeeds. Was the invoice destroyed?",
+    "hint": "A lock protects versions, not keys.",
+    "choices": [
+      {
+        "text": "Yes: moto let it through because it evaluates no policy",
+        "correct": false,
+        "why": "S3 would let it through as well; the delete only adds a marker."
+      },
+      {
+        "text": "No: a marker now hides it, and it survives underneath",
+        "correct": true,
+        "why": "Right. The key can be hidden; the version cannot be destroyed."
+      },
+      {
+        "text": "Yes, after the next life-cycle run",
+        "correct": false,
+        "why": "A rule cannot remove a locked version before its date either."
+      },
+      {
+        "text": "No, because a locked key refuses every delete",
+        "correct": false,
+        "why": "The delete without a version succeeded; it is the version that is locked."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjp8c0pq",
+    "version": 1,
+    "section": "object-lock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants a small break-glass role able to remove a locked version in an emergency, and nobody else. Which setup does that on AWS?",
+    "hint": "One mode has a bypass, and the bypass is a permission.",
+    "choices": [
+      {
+        "text": "Compliance mode, with root as the break-glass identity",
+        "correct": false,
+        "why": "Not even root can remove a compliance-locked version before its date."
+      },
+      {
+        "text": "A legal hold on every version, switched off by the role",
+        "correct": false,
+        "why": "Anyone allowed `s3:PutObjectLegalHold` can switch it off, and a hold is meant for an unknown end date, not as a permission scheme."
+      },
+      {
+        "text": "Governance mode, with `s3:BypassGovernanceRetention` allowed only to that role",
+        "correct": true,
+        "why": "Right. The bypass works only for an identity whose policy allows it."
+      },
+      {
+        "text": "Versioning with MFA delete",
+        "correct": false,
+        "why": "That ties deletes to the root user's device, not to a role."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0cgdffj",
+    "version": 1,
+    "section": "object-lock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A version has a governance retention that ended yesterday and a legal hold that is on. A delete is sent with `--bypass-governance-retention`. What happens?",
+    "hint": "The hold has no date and no bypass.",
+    "choices": [
+      {
+        "text": "It is refused: the hold blocks the delete until it is switched off",
+        "correct": true,
+        "why": "Right. Governance's bypass does not reach a legal hold."
+      },
+      {
+        "text": "It succeeds, since the retention has ended",
+        "correct": false,
+        "why": "The retention has ended, and the hold is a separate lock."
+      },
+      {
+        "text": "It succeeds, since the bypass overrides every kind of lock a version can carry",
+        "correct": false,
+        "why": "It overrides governance retention and nothing else."
+      },
+      {
+        "text": "It adds a delete marker and leaves the version",
+        "correct": false,
+        "why": "A delete naming a version adds no marker; this one is simply refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-wprwwsyx",
+    "version": 1,
+    "section": "object-lock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When can Object Lock be turned on for a bucket, according to the section?",
+    "hint": "Look at the command that made the archive bucket.",
+    "choices": [
+      {
+        "text": "At any time, with `put-object-lock-configuration` on the bucket",
+        "correct": false,
+        "why": "That call sets a default on a bucket that already has the lock; it is enabled at creation."
+      },
+      {
+        "text": "When the bucket is created, which turns versioning on too",
+        "correct": true,
+        "why": "Right. That is why it was `s3api create-bucket` with `--object-lock-enabled-for-bucket`."
+      },
+      {
+        "text": "After the first object is written, when the bucket has a version to lock",
+        "correct": false,
+        "why": "Writing objects has nothing to do with it."
+      },
+      {
+        "text": "With `aws s3 mb --lock`",
+        "correct": false,
+        "why": "`aws s3 mb` has no such option."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fzwz2er",
+    "version": 1,
+    "section": "where-moto-is-weaker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, a compliance retention was changed to governance and the version deleted. What can a test against moto prove about a lock?",
+    "hint": "Shape, or strength?",
+    "choices": [
+      {
+        "text": "That compliance mode can be undone by an administrator",
+        "correct": false,
+        "why": "On S3 it cannot, by anybody, the root user included."
+      },
+      {
+        "text": "Nothing at all, so moto is useless for locks",
+        "correct": false,
+        "why": "It shows the requests are well formed and the plain delete is refused."
+      },
+      {
+        "text": "That the requests are well formed, and no more",
+        "correct": true,
+        "why": "Right. Test the shape against moto and believe AWS's documentation for the strength."
+      },
+      {
+        "text": "That the lock holds, since moto refused the first delete",
+        "correct": false,
+        "why": "It refused that one and then allowed the retention to be shortened."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdvpzrk7",
+    "version": 1,
+    "section": "where-moto-is-weaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer governance mode with a bypass role over MFA delete?",
+    "hint": "Who holds the device, and what else stops working?",
+    "choices": [
+      {
+        "text": "MFA delete ties every permanent delete to the root user's device, and rules out life-cycle configuration",
+        "correct": true,
+        "why": "Right. One device in one person's hand, and no rule to expire noncurrent versions."
+      },
+      {
+        "text": "MFA delete costs extra per request",
+        "correct": false,
+        "why": "The lesson names no price for it; the objection is who holds the device."
+      },
+      {
+        "text": "MFA delete works only in us-east-1",
+        "correct": false,
+        "why": "Nothing in the lesson ties it to a region."
+      },
+      {
+        "text": "MFA delete can be turned on from the console by anyone",
+        "correct": false,
+        "why": "Only root can turn it on, and never from the console."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtewz0fv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's invoices must survive a person with stolen administrator keys for five years. Which of these are part of that on AWS? Choose all that apply.",
+    "hint": "Which protections can an administrator not undo?",
+    "choices": [
+      {
+        "text": "A bucket created with Object Lock",
+        "correct": true,
+        "why": "Yes: the lock can only be enabled at creation."
+      },
+      {
+        "text": "A default retention in compliance mode of five years",
+        "correct": true,
+        "why": "Yes: nobody can shorten or lift it."
+      },
+      {
+        "text": "Versioning alone",
+        "correct": false,
+        "why": "Whoever may delete a marker may delete the versions too."
+      },
+      {
+        "text": "Governance mode, with the bypass allowed to administrators",
+        "correct": false,
+        "why": "The stolen keys are an administrator's, so the bypass is theirs too."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5ga6d3a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of an export under Quitanda's `orders-age-out` rule.",
+    "hint": "Days 30, 365 and 2,555.",
+    "items": [
+      "Written in Standard",
+      "Moved to Standard-IA",
+      "Moved to Deep Archive",
+      "Expired"
+    ]
+  },
+  {
+    "id": "ex-yzg4ghy5",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 10 GB file is overwritten every night for 30 nights in a versioned bucket with no rule. On the 30th night, how many GB does the bucket hold for that key?",
+    "hint": "Every write is a version, and none expires.",
+    "value": 300,
+    "tolerance": 0
+  }
+]

@@ -1,0 +1,547 @@
+[
+  {
+    "id": "ex-y1jz22wj",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer writes its checkpoint and then does the work. It crashes between the two. What happens to that record?",
+    "hint": "Where does the restart begin?",
+    "choices": [
+      {
+        "text": "It is processed twice",
+        "correct": false,
+        "why": "That is the other order: work first, then checkpoint."
+      },
+      {
+        "text": "It is lost: the restart begins after it",
+        "correct": true,
+        "why": "Right: at most once. Nothing is done twice, and this record is never processed."
+      },
+      {
+        "text": "Kinesis notices the crash and redelivers it",
+        "correct": false,
+        "why": "Kinesis knows nothing of the consumer; it serves whatever iterator it is asked for."
+      },
+      {
+        "text": "It is processed exactly once",
+        "correct": false,
+        "why": "No ordering of the two steps gives that; the work never happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3na254c",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"exactly once\" not a third way of ordering the work and the checkpoint?",
+    "hint": "The two writes go to different systems.",
+    "choices": [
+      {
+        "text": "Because the checkpoint is always written first",
+        "correct": false,
+        "why": "It can be written in either order; that is what the two guarantees are."
+      },
+      {
+        "text": "Because it needs a faster network",
+        "correct": false,
+        "why": "Speed makes the window smaller and never closes it."
+      },
+      {
+        "text": "Because Kinesis forbids it in its terms of use",
+        "correct": false,
+        "why": "It is a matter of two separate writes, not of a rule."
+      },
+      {
+        "text": "No single write covers the two",
+        "correct": true,
+        "why": "Right: a crash between them either loses or repeats. Exactly once is built from atomic writes or idempotent work, end to end."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrw6p1s1",
+    "version": 1,
+    "section": "three-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is at-least-once the default of Kinesis, Firehose, Lambda and Kafka?",
+    "hint": "Which of the two can be repaired afterwards?",
+    "choices": [
+      {
+        "text": "It is the only one that loses nothing",
+        "correct": true,
+        "why": "Right: duplicates can be handled afterwards, lost records cannot. At most once fits only data that may be lost."
+      },
+      {
+        "text": "It is cheaper to run than at most once",
+        "correct": false,
+        "why": "Both cost the same to run; they differ in what a crash does."
+      },
+      {
+        "text": "It removes duplicates on its own",
+        "correct": false,
+        "why": "It creates them; removing them is the consumer's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqq2vgph",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A producer's retry put `o-301` into the shard twice, at sequence numbers 1 and 2. Why can the sequence number not identify the copy?",
+    "hint": "Who assigned each number?",
+    "choices": [
+      {
+        "text": "Sequence numbers are reused after a retry",
+        "correct": false,
+        "why": "They were 1 and 2: different, never reused."
+      },
+      {
+        "text": "Each copy got a number of its own",
+        "correct": true,
+        "why": "Right, so only a key in the data can show they are one payment: the order id, put there by the producer."
+      },
+      {
+        "text": "moto's sequence numbers are small integers",
+        "correct": false,
+        "why": "On AWS they are long strings, and the copy still gets a new one."
+      },
+      {
+        "text": "The sequence number is encrypted",
+        "correct": false,
+        "why": "It is a plain position in the shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-72fgp6wt",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team builds an idempotency key from customer id, amount and date. What goes wrong?",
+    "hint": "Can two real events share all three?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the date includes the time zone",
+        "correct": false,
+        "why": "The fault is not the date's precision; the key describes the event instead of naming it."
+      },
+      {
+        "text": "The key is too long for DynamoDB",
+        "correct": false,
+        "why": "A few dozen characters is well within a key's size."
+      },
+      {
+        "text": "Two real orders become one",
+        "correct": true,
+        "why": "Right: two orders of the same amount that day share the key, and a payment is lost. The key has to be an id assigned once when the event happens, like the order id."
+      },
+      {
+        "text": "A producer's retry is no longer caught",
+        "correct": false,
+        "why": "A retry has the same three values, so it would be caught; the error runs the other way."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc01y569",
+    "version": 1,
+    "section": "where-duplicates",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can put the same record into a consumer's hands twice? Choose all that apply.",
+    "hint": "Four places were named, and one thing that looks like a duplicate and is not.",
+    "choices": [
+      {
+        "text": "A producer that retries after a lost acknowledgement",
+        "correct": true,
+        "why": "Right; the shard holds both copies."
+      },
+      {
+        "text": "A consumer that crashes before its checkpoint",
+        "correct": true,
+        "why": "Right; the restart reads the batch again."
+      },
+      {
+        "text": "A worker losing its lease to another during a rebalance",
+        "correct": true,
+        "why": "Right; the new owner starts from the last checkpoint."
+      },
+      {
+        "text": "Two customers paying the same amount on the same day",
+        "correct": false,
+        "why": "Those are two real events, not a duplicate."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fzm8hns",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `plain` mode, after the crash and the restart, `c-17` showed 20,340 cents instead of 12,780. Why did the restart read the first four records again?",
+    "hint": "Look for `checkpoint.txt`.",
+    "choices": [
+      {
+        "text": "No checkpoint had been written, so it started at `TRIM_HORIZON`",
+        "correct": true,
+        "why": "Right. The checkpoint is written once, at the end, and the crash came first."
+      },
+      {
+        "text": "moto resent the records after the crash",
+        "correct": false,
+        "why": "moto served the iterator it was asked for; the consumer asked for the beginning."
+      },
+      {
+        "text": "DynamoDB rolled back the four updates",
+        "correct": false,
+        "why": "Nothing was rolled back; that is why the totals doubled."
+      },
+      {
+        "text": "`ADD` reads every record twice",
+        "correct": false,
+        "why": "`ADD` applies once per call; the calls were repeated."
+      }
+    ]
+  },
+  {
+    "id": "ex-taqqrf5z",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `totals.py` put the dedupe `Put` and the `ADD` in one transaction instead of two writes one after the other?",
+    "hint": "Imagine a crash between the two separate writes.",
+    "choices": [
+      {
+        "text": "A transaction is cheaper than two writes",
+        "correct": false,
+        "why": "It costs twice an ordinary write per item; it is paid for correctness."
+      },
+      {
+        "text": "DynamoDB accepts `attribute_not_exists` only inside a transaction",
+        "correct": false,
+        "why": "A plain `put-item` takes the condition too, as the lab's first test of it showed."
+      },
+      {
+        "text": "A transaction makes the writes run in parallel",
+        "correct": false,
+        "why": "The point is that they succeed or fail together, not their speed."
+      },
+      {
+        "text": "So that a crash cannot record an order without counting it",
+        "correct": true,
+        "why": "Right, nor count one without recording it. Either both writes happen or neither does."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdpcmteq",
+    "version": 1,
+    "section": "the-replay",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the dedupe on, the whole stream of seven records was replayed. How many items did `quitanda-processed` hold afterwards?",
+    "hint": "One per payment, not per record.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "items"
+  },
+  {
+    "id": "ex-w5j1rnj3",
+    "version": 1,
+    "section": "the-replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The table of processed order ids grows by one item per payment for ever. What bounds it, and at what price?",
+    "hint": "DynamoDB can delete items when they expire.",
+    "choices": [
+      {
+        "text": "A time to live past the longest replay",
+        "correct": true,
+        "why": "Right, and duplicates older than it are no longer caught. The window is chosen on purpose, from the stream's retention plus a margin."
+      },
+      {
+        "text": "Deleting the table every night; nothing is lost",
+        "correct": false,
+        "why": "A replay the next morning would then count every order again."
+      },
+      {
+        "text": "Nothing bounds it, and nothing needs to",
+        "correct": false,
+        "why": "It costs storage per item for ever; a TTL ends that."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwqf45kv",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer writes each batch to S3 under a key named after the time of writing. It crashes after the write and before the checkpoint, and replays. What is in the lake?",
+    "hint": "Compare the two listings of the section.",
+    "choices": [
+      {
+        "text": "One object, because S3 overwrites the old one",
+        "correct": false,
+        "why": "An overwrite needs the same key; the time made a new one."
+      },
+      {
+        "text": "Two objects with the same records, and every query counts both",
+        "correct": true,
+        "why": "Right. A key from the shard and sequence range would have landed on the same object."
+      },
+      {
+        "text": "No object, because S3 refuses identical bytes",
+        "correct": false,
+        "why": "S3 compares nothing; it stores what it is given under the key given."
+      },
+      {
+        "text": "Two objects, and S3 marks the second as a duplicate",
+        "correct": false,
+        "why": "S3 has no such mark."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w3ch2y0",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `ADD 500` twice made 1,000 and `put-item` of 500 twice left 500. When can a consumer use the second?",
+    "hint": "An upsert carries the whole state.",
+    "choices": [
+      {
+        "text": "Whenever the table has a sort key",
+        "correct": false,
+        "why": "The key schema has nothing to do with it."
+      },
+      {
+        "text": "When the records arrive in order",
+        "correct": false,
+        "why": "Order matters to which snapshot wins, not to whether the write repeats safely."
+      },
+      {
+        "text": "When each event carries the new state",
+        "correct": true,
+        "why": "Right: a balance, not an amount to add. A stream of changes, like payments, still needs the dedupe."
+      },
+      {
+        "text": "Never with DynamoDB, only with SQL's `MERGE`",
+        "correct": false,
+        "why": "`put-item` is exactly an upsert; the lab ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfxgqmwp",
+    "version": 1,
+    "section": "idempotent-sinks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A write is ___ when repeating it leaves the same result as doing it once.",
+    "hint": "The word the lesson's title ends on.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-17q9k6hh",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer stores the highest sequence number it has applied, per shard, and skips anything at or below it. Which duplicates does that catch?",
+    "hint": "What sequence number does a producer's retry get?",
+    "choices": [
+      {
+        "text": "Every duplicate, from any source",
+        "correct": false,
+        "why": "A producer's retry arrives with a higher number and passes the test."
+      },
+      {
+        "text": "Only the producer's retries",
+        "correct": false,
+        "why": "The opposite: those get new, higher numbers."
+      },
+      {
+        "text": "The consumer's replays",
+        "correct": true,
+        "why": "Right: they come back with the same numbers. It is the checkpoint moved into the sink, one number per shard."
+      },
+      {
+        "text": "None, because sequence numbers are not ordered",
+        "correct": false,
+        "why": "Within a shard they increase, which is what makes the watermark work."
+      }
+    ]
+  },
+  {
+    "id": "ex-16kynwnk",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Kafka's idempotent producer, on by default since Kafka 3.0, remove?",
+    "hint": "It works at the broker, per partition, within one producer session.",
+    "choices": [
+      {
+        "text": "Duplicates written by its own retries within one session",
+        "correct": true,
+        "why": "Right. The broker recognises a number it already wrote and does not write it again."
+      },
+      {
+        "text": "Duplicates a consumer creates by replaying",
+        "correct": false,
+        "why": "A replay is the consumer reading again; the producer is not involved."
+      },
+      {
+        "text": "Records with the same key",
+        "correct": false,
+        "why": "That is compaction, and it keeps the latest per key; idempotence is about retries."
+      },
+      {
+        "text": "Writes repeated into DynamoDB downstream",
+        "correct": false,
+        "why": "Nothing in Kafka reaches past Kafka."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwcksj3x",
+    "version": 1,
+    "section": "exactly-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Kafka consumer uses transactions and reads with `read_committed`, and writes each result to DynamoDB. Is the DynamoDB write exactly once?",
+    "hint": "Where does the transaction stop?",
+    "choices": [
+      {
+        "text": "Yes, transactions cover every write the consumer makes",
+        "correct": false,
+        "why": "They cover Kafka records and offsets; DynamoDB is outside."
+      },
+      {
+        "text": "Yes, because `read_committed` hides duplicates",
+        "correct": false,
+        "why": "It hides uncommitted transactions from readers, not repeated external writes."
+      },
+      {
+        "text": "No: it is outside the transaction",
+        "correct": true,
+        "why": "Right, so it has to be idempotent on its own. Exactly once is end to end, and this end is DynamoDB."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp6vebth",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source of duplicates to what catches it.",
+    "hint": "One remedy works only inside Kafka.",
+    "pairs": [
+      {
+        "left": "A Kinesis producer's retry",
+        "right": "An idempotency key in the data"
+      },
+      {
+        "left": "A Kafka producer's retry",
+        "right": "The idempotent producer, at the broker"
+      },
+      {
+        "left": "A consumer's replay of one shard",
+        "right": "A sequence-number watermark per shard"
+      },
+      {
+        "left": "A Firehose retry into S3",
+        "right": "A dedupe when the lake is compacted"
+      }
+    ],
+    "right_distractors": [
+      "A longer retention"
+    ]
+  },
+  {
+    "id": "ex-zjz43ks4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `totals.py` in `dedupe` mode does with one record.",
+    "hint": "The checkpoint is the last thing, and only once per run.",
+    "items": [
+      "Read the record from the shard",
+      "Parse its order id, customer and amount",
+      "Try the transaction: put the order id if absent, and add the amount",
+      "If the transaction is cancelled, report a duplicate and move on",
+      "At the end of the shard, write the checkpoint"
+    ]
+  },
+  {
+    "id": "ex-ycb08sz2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's app sends \"customer `c-17`'s loyalty points are now 340\" after every order. Which sink design is simplest and correct under at-least-once delivery?",
+    "hint": "Is the event a state or a change?",
+    "choices": [
+      {
+        "text": "A dedupe table of event ids in a transaction with an `ADD`",
+        "correct": false,
+        "why": "It works, and it pays for a memory the event does not need: the event is a state."
+      },
+      {
+        "text": "An `ADD` of 340 to the customer's points",
+        "correct": false,
+        "why": "That adds a state as if it were a change, and counts it again on every replay."
+      },
+      {
+        "text": "A `put-item` that sets the points to 340, with a version so an older event cannot overwrite a newer one",
+        "correct": true,
+        "why": "Right. The upsert absorbs duplicates, and the version handles the order."
+      },
+      {
+        "text": "Exactly-once delivery from Kinesis",
+        "correct": false,
+        "why": "Kinesis offers at least once; there is no setting for exactly once."
+      }
+    ]
+  }
+]

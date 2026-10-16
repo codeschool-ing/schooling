@@ -1,0 +1,56 @@
+---
+title: Once in the stream, more than once in the consumer
+version: 1
+---
+
+**Every change is in the stream exactly once, and a consumer can still see it twice.** DynamoDB
+Streams promises that each modification becomes one record, in order for its item, with no duplicates
+in the stream. How many times a record is *read* is the reader's business: anything that starts again
+from an earlier position reads the same records again. Run `totals.py` a second time, and then its
+careless twin:
+
+```
+ana@laptop:~/aws$ python3 totals.py
+1 shard(s): 0 changes applied, 11 already applied
+  CUSTOMER#c-17       275.69
+  CUSTOMER#c-18        72.27
+  CUSTOMER#c-19       321.59
+ana@laptop:~/aws$ python3 totals.py --naive
+1 shard(s): 11 changes applied, 0 already applied
+  CUSTOMER#c-17       551.38
+  CUSTOMER#c-18       144.54
+  CUSTOMER#c-19       643.18
+```
+
+**The second run applied nothing and the naive one doubled every total.** Both read the same eleven
+changes. The first found each record's marker, `EVENT#` and its `eventID`, already in the totals table:
+the transaction that would have added the change and written the marker was cancelled by the marker's
+condition, so the total was left alone. `--naive` sends the addition without the marker, and c-17 went
+from 275.69 to 551.38 reais. Nothing in the stream was duplicated; the duplicate was the reading.
+
+**The marker and the addition are one transaction, or the repair fails exactly when it is needed.** A
+consumer that added first and wrote the marker after could stop between the two, and the next run would
+add again; one that wrote the marker first could stop after it, and the change would never be added.
+`TransactWriteItems` applies both or neither, at twice the write units of lesson 11. The markers pile
+up, one per change, which is what the time to live of the next section is for.
+
+## Lambda retries the whole batch
+
+**A Lambda function attached to the stream is the usual consumer, and it is the one that duplicates.**
+Lambda reads a shard in batches and hands each batch to the function. If the function fails, by an
+error or a timeout, Lambda calls it again with the same batch, from the first record, and keeps the
+shard waiting while it does, because the next batch must not overtake this one. By default it keeps
+retrying until the function succeeds or the records are older than the stream keeps them.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"A batch of six records. In the first call the function applies records 1 to 3 and fails on record 4; 5 and 6 are not reached. Lambda calls it again with all six. A naive consumer applies 1 to 3 a second time and then 4 to 6. A consumer with markers finds a marker for 1 to 3, skips them, and applies 4 to 6 once.\" data-fig=\"l12-retry\"><defs><marker id=\"l12-retry-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,4 L0,8 z\" fill=\"var(--wire)\"/></marker></defs><text x=\"20\" y=\"46\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">first call</text><rect x=\"220\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"255\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">1</text><rect x=\"298\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"333\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">2</text><rect x=\"376\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"411\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">3</text><rect x=\"454\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"/><text x=\"489\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">4</text><rect x=\"532\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"567\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">5</text><rect x=\"610\" y=\"30\" width=\"70\" height=\"32\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"645\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">6</text><text x=\"220\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">applied</text><text x=\"454\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">failed</text><text x=\"532\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">not reached</text><text x=\"20\" y=\"112\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">retry, naive</text><rect x=\"220\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"/><text x=\"255\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">1</text><rect x=\"298\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"/><text x=\"333\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">2</text><rect x=\"376\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"/><text x=\"411\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">3</text><rect x=\"454\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"489\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">4</text><rect x=\"532\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"567\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">5</text><rect x=\"610\" y=\"96\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"645\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">6</text><text x=\"220\" y=\"142\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">applied twice</text><text x=\"454\" y=\"142\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">applied</text><text x=\"20\" y=\"178\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">retry, with markers</text><rect x=\"220\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"255\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1</text><rect x=\"298\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"333\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">2</text><rect x=\"376\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"411\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">3</text><rect x=\"454\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"489\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">4</text><rect x=\"532\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"567\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">5</text><rect x=\"610\" y=\"162\" width=\"70\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"/><text x=\"645\" y=\"178\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">6</text><text x=\"220\" y=\"208\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">marker found</text><text x=\"454\" y=\"208\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">applied</text></svg>", "caption": "Lambda retries the batch from its first record. What decides whether records 1 to 3 count once or twice is the consumer, not the stream."}
+```
+
+**So a function that applied sixty records of a batch of a hundred and then failed sees all hundred
+again**, and a naive one adds the first sixty twice. That is at-least-once delivery, and lesson 23 is
+about the idempotency it forces on every consumer; the marker above is one shape of it. Two settings
+limit the damage of a record that always fails. `--maximum-retry-attempts` stops retrying after a
+number of tries and moves on, which unblocks the shard and skips the record, so the skipped record must
+be sent somewhere a person will see it. `--bisect-batch-on-function-error` splits a failing batch in
+two and retries the halves, which isolates the bad record instead of failing a hundred good ones with
+it.

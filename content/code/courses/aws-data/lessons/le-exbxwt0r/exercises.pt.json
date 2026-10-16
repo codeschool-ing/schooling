@@ -1,0 +1,401 @@
+{
+  "ex-s6xcstkv": {
+    "prompt": "Qual das variáveis exportadas faz a linha de comando da AWS mandar as requisições para o moto em vez da Amazon?",
+    "hint": "Uma delas nomeia um endereço.",
+    "choices": [
+      {
+        "text": "`AWS_DEFAULT_REGION`",
+        "why": "A região decide qual endereço regional é usado, e o endereço continua sendo da Amazon."
+      },
+      {
+        "text": "`AWS_ENDPOINT_URL`",
+        "why": "Isso. Ela troca o endereço de todo serviço por `http://localhost:4567`."
+      },
+      {
+        "text": "`AWS_ACCESS_KEY_ID`, porque o moto só responde à chave `test`",
+        "why": "A chave assina a requisição; não diz para onde ela vai. O moto aceita qualquer chave, como mostra a seção sobre ele."
+      },
+      {
+        "text": "`AWS_PAGER`",
+        "why": "Essa só decide se uma resposta longa abre no `less`."
+      }
+    ]
+  },
+  "ex-dg2gh9ga": {
+    "prompt": "`aws sts get-caller-identity` responde com um número de conta que não é `123456789012`. O que isso diz?",
+    "hint": "O moto dá o mesmo número a toda conta que imita.",
+    "choices": [
+      {
+        "text": "O moto foi reiniciado e gerou uma conta nova",
+        "why": "O moto mantém o mesmo número de exemplo entre reinícios; só o conteúdo é esquecido."
+      },
+      {
+        "text": "A região não é São Paulo",
+        "why": "O número da conta é o mesmo em todas as regiões."
+      },
+      {
+        "text": "O terminal tem credenciais reais da AWS",
+        "why": "Isso. Pare e descubra de onde vieram as credenciais antes de rodar mais nada."
+      },
+      {
+        "text": "O ambiente virtual não está ativo",
+        "why": "Sem ele o `aws` ainda roda, porque mora em `~/.local/bin`; a conta continuaria sendo a do moto."
+      }
+    ]
+  },
+  "ex-7ag1a30y": {
+    "prompt": "Você para o moto com Ctrl+C no fim de uma sessão de estudo e o liga de novo no dia seguinte. O que há nele?",
+    "hint": "Onde o moto guarda o que recebe?",
+    "choices": [
+      {
+        "text": "Nada: ele guarda tudo na memória e começa vazio",
+        "why": "Isso. Cada lição reconstrói o que precisa a partir do primeiro comando."
+      },
+      {
+        "text": "Tudo do dia anterior, que o moto salvou em `~/aws` quando parou",
+        "why": "O moto não grava nada em disco neste laboratório; pará-lo esquece todo bucket."
+      },
+      {
+        "text": "Os buckets, sem os objetos",
+        "why": "Os buckets são esquecidos junto com o resto."
+      }
+    ]
+  },
+  "ex-mbanz5qg": {
+    "prompt": "Um comando responde `InvalidAccessKeyId: The AWS Access Key Id you provided does not exist in our records`. Qual linha da preparação falta naquele terminal?",
+    "hint": "Quem respondeu? O moto aceita qualquer chave.",
+    "choices": [
+      {
+        "text": "A que define `AWS_ENDPOINT_URL`",
+        "why": "Isso. Sem ela a requisição foi para a AWS de verdade, que recusou a chave `test`."
+      },
+      {
+        "text": "A que define as duas chaves como `test`",
+        "why": "Sem chave nenhuma a linha de comando para antes de enviar algo, com `Unable to locate credentials`."
+      },
+      {
+        "text": "A que põe `~/.local/bin` no caminho",
+        "why": "Sem ela o `aws` nem é encontrado e nada é enviado."
+      },
+      {
+        "text": "A que liga o `moto_server` no outro terminal",
+        "why": "Um moto parado dá `Could not connect to the endpoint URL`, com o endereço local."
+      }
+    ]
+  },
+  "ex-qqhvzz81": {
+    "prompt": "Ligue cada mensagem à sua causa.",
+    "hint": "Pense em qual programa poderia ter impresso cada uma.",
+    "pairs": [
+      {
+        "left": "`aws: command not found`",
+        "right": "`~/.local/bin` não está no caminho"
+      },
+      {
+        "left": "`Unable to locate credentials`",
+        "right": "Nenhuma chave definida neste terminal"
+      },
+      {
+        "left": "`Could not connect to the endpoint URL: \"http://localhost:4567/\"`",
+        "right": "O moto não está rodando"
+      },
+      {
+        "left": "`Address already in use`",
+        "right": "Um moto já está escutando na porta"
+      }
+    ],
+    "right_distractors": [
+      "O nome do bucket é inválido"
+    ]
+  },
+  "ex-2wk2qjzr": {
+    "prompt": "Neste laboratório, uma listagem assinada com uma chave que ninguém emitiu dá certo. O que isso mostra sobre o moto por padrão?",
+    "hint": "Compare com o `curl` anônimo, que levou 403.",
+    "choices": [
+      {
+        "text": "Ele verifica que a requisição está assinada, e não quem assinou",
+        "why": "Isso. E não avalia política nenhuma, então uma ação que uma política deveria negar dá certo."
+      },
+      {
+        "text": "Ele recusa toda requisição que não seja assinada com a chave `test`",
+        "why": "A listagem foi assinada com outra chave e deu certo."
+      },
+      {
+        "text": "Ele aceita qualquer requisição, assinada ou não",
+        "why": "O `curl` sem assinatura foi recusado com 403."
+      },
+      {
+        "text": "Ele encaminha chaves desconhecidas à AWS para conferência",
+        "why": "O moto nunca fala com a AWS; nas capturas o laboratório nem tem rede."
+      }
+    ]
+  },
+  "ex-f6t5dykc": {
+    "prompt": "Uma consulta do Athena no moto volta `SUCCEEDED`, com 0 bytes lidos e nenhuma linha, contra uma tabela que não existe. Qual é a conclusão certa?",
+    "hint": "O que o moto faz com SQL?",
+    "choices": [
+      {
+        "text": "A consulta está certa e a tabela está vazia",
+        "why": "Não há tabela; o Athena teria falhado dizendo o nome dela."
+      },
+      {
+        "text": "O Athena cria a tabela na primeira vez que ela é consultada",
+        "why": "Não cria; consultar uma tabela inexistente é erro."
+      },
+      {
+        "text": "Nada sobre o SQL: o moto registra a requisição e não roda consulta nenhuma",
+        "why": "Isso. Um sucesso do moto quer dizer que a requisição estava bem formada, e nada além."
+      },
+      {
+        "text": "A consulta veio de um cache de uma execução anterior",
+        "why": "A resposta diz `ReusedPreviousResult: false`, e não houve execução anterior."
+      }
+    ]
+  },
+  "ex-zwtdt4ay": {
+    "prompt": "Quais destas coisas o moto realmente faz, em vez de só registrar? Marque todas as que se aplicam.",
+    "hint": "Os serviços fiéis são aqueles cujo comportamento é uma estrutura de dados.",
+    "choices": [
+      {
+        "text": "Guardar os bytes de um objeto do S3 e listar chaves por prefixo",
+        "why": "Sim."
+      },
+      {
+        "text": "Avaliar uma escrita condicional do DynamoDB",
+        "why": "Sim; a escrita é recusada quando a condição falha."
+      },
+      {
+        "text": "Rodar o SQL de uma consulta do Athena",
+        "why": "Ele marca a consulta como concluída e não roda nada."
+      },
+      {
+        "text": "Rodar o código Spark de um job do Glue",
+        "why": "O job \"dá certo\" sem uma linha rodar."
+      },
+      {
+        "text": "Mandar uma conta pelo que foi usado",
+        "why": "O moto não tem preços; essa parte é da tabela de preços."
+      }
+    ]
+  },
+  "ex-2q6g2cwj": {
+    "prompt": "De onde vem todo preço que este curso cita?",
+    "hint": "O moto não informa nenhum.",
+    "choices": [
+      {
+        "text": "Da interface de cobrança do moto",
+        "why": "O moto não tem."
+      },
+      {
+        "text": "Da lista pública de preços da AWS, fixada por serviço",
+        "why": "Isso. Fixada, para que a tabela imprima os mesmos números no ano que vem."
+      },
+      {
+        "text": "Da API de preços da AWS, que exige uma conta",
+        "why": "A tabela lê arquivos públicos e não precisa de conta nem de chave."
+      },
+      {
+        "text": "Da fatura da conta em que o curso foi gravado",
+        "why": "Não há conta; o curso foi gravado contra o moto."
+      }
+    ]
+  },
+  "ex-jsz0v1h2": {
+    "prompt": "Na tabela, um GB-mês de S3 Standard custa 0,04050 USD e um de Glacier Deep Archive custa 0,00320. Quantas vezes mais caro é o Standard? Arredonde para o inteiro mais próximo.",
+    "hint": "Divida um pelo outro."
+  },
+  "ex-0c1bt5mp": {
+    "prompt": "Por que uma linha da tabela de preços não é a sua fatura?",
+    "hint": "O que mais entra numa fatura?",
+    "choices": [
+      {
+        "text": "A fatura é preço × uso, mais imposto, menos descontos",
+        "why": "Isso. A tabela é o primeiro fator dessa conta."
+      },
+      {
+        "text": "A tabela está em USD e a AWS cobra o Brasil em reais por uma taxa fixa",
+        "why": "A moeda é um detalhe do pagamento; não transforma preço em fatura."
+      },
+      {
+        "text": "A tabela imprime preços de us-east-1",
+        "why": "Ela lê sa-east-1, São Paulo."
+      }
+    ]
+  },
+  "ex-rwn4cwbr": {
+    "prompt": "`aws s3 ls s3://quitanda-raw-prod` mostra `PRE raw/`, e `head-object` na chave `raw/orders/` responde 404. Por quê?",
+    "hint": "O que é uma \"pasta\" numa listagem?",
+    "choices": [
+      {
+        "text": "A pasta foi apagada entre os dois comandos",
+        "why": "Nada foi apagado; nunca houve objeto com essa chave."
+      },
+      {
+        "text": "Nenhum objeto tem essa chave; `PRE` é um agrupamento",
+        "why": "Isso. Uma pasta é a resposta a uma pergunta, não algo que exista."
+      },
+      {
+        "text": "Pastas só podem ser lidas com `--recursive`",
+        "why": "`--recursive` lista as próprias chaves; não transforma pasta em objeto."
+      },
+      {
+        "text": "`head-object` recusa chaves terminadas em barra",
+        "why": "Uma chave terminada em barra é válida, e o \"Create folder\" do console cria exatamente uma."
+      }
+    ]
+  },
+  "ex-s82pjh2d": {
+    "prompt": "Você acrescenta uma linha a um arquivo local e o envia de novo para a mesma chave. O que acontece com o objeto num bucket comum, sem versionamento?",
+    "hint": "O S3 não tem edição.",
+    "choices": [
+      {
+        "text": "O S3 acrescenta os bytes novos ao fim do objeto guardado",
+        "why": "Não existe acréscimo; um objeto é escrito inteiro."
+      },
+      {
+        "text": "O envio falha porque a chave já existe",
+        "why": "Sobrescrever é silencioso; nada recusa."
+      },
+      {
+        "text": "Um objeto novo o substitui",
+        "why": "Isso: um ETag novo, e os bytes antigos somem. A lição 3 os guarda com versionamento."
+      },
+      {
+        "text": "O S3 guarda os dois sob a mesma chave e devolve o mais novo",
+        "why": "É o que o versionamento faz, e ele vem desligado."
+      }
+    ]
+  },
+  "ex-j6j5tfv9": {
+    "prompt": "Para um objeto enviado numa única requisição, o ETag que o S3 devolve é o ___ dos seus bytes.",
+    "hint": "O `md5sum` imprimiu os mesmos 32 caracteres.",
+    "blanks": [
+      {
+        "accept": [
+          "MD5",
+          "hash MD5"
+        ]
+      }
+    ]
+  },
+  "ex-zh3sr084": {
+    "prompt": "Quais destes a AWS recusaria como nome de um bucket de uso geral? Marque todos os que se aplicam.",
+    "hint": "Minúsculas, dígitos, hífens e pontos; de 3 a 63; não um endereço.",
+    "choices": [
+      {
+        "text": "`Quitanda_Raw`",
+        "why": "Uma maiúscula e um sublinhado, ambos recusados."
+      },
+      {
+        "text": "`192.168.5.4`",
+        "why": "Um nome com cara de endereço IP é recusado."
+      },
+      {
+        "text": "`qr`",
+        "why": "Dois caracteres; o mínimo é três."
+      },
+      {
+        "text": "`quitanda-raw-prod`",
+        "why": "Válido, se ninguém o tiver ainda."
+      },
+      {
+        "text": "`quitanda-logs-dev`",
+        "why": "Também válido."
+      }
+    ]
+  },
+  "ex-cjb3daat": {
+    "prompt": "`quitanda.raw.prod` é um nome de bucket válido. Por que este curso evita pontos mesmo assim?",
+    "hint": "Pense no endereço `bucket.s3.sa-east-1.amazonaws.com` e no seu certificado.",
+    "choices": [
+      {
+        "text": "O HTTPS no endereço de sempre falha na checagem do certificado",
+        "why": "Isso. O certificado curinga cobre um rótulo, e os pontos fazem três."
+      },
+      {
+        "text": "Pontos deixam o nome maior que os 63 caracteres permitidos a um bucket",
+        "why": "Um ponto é um caractere como um hífen."
+      },
+      {
+        "text": "O S3 lê cada ponto do nome de um bucket como mais um nível de pasta",
+        "why": "Pastas vêm das barras nas chaves, não do nome do bucket."
+      },
+      {
+        "text": "O moto recusa nomes com ponto",
+        "why": "Ele aceitou `quitanda.raw.prod` na captura."
+      }
+    ]
+  },
+  "ex-jrx3xp5c": {
+    "prompt": "Por que o layout de chaves escreve `dt=2026-10-01` em vez de `dt=01-10-2026`?",
+    "hint": "Em que ordem o S3 devolve as chaves?",
+    "choices": [
+      {
+        "text": "O S3 recusa datas com o dia primeiro",
+        "why": "Uma chave pode ter quase qualquer coisa; nada recusa."
+      },
+      {
+        "text": "Assim a ordem dos bytes é a do tempo",
+        "why": "Isso. O S3 lista as chaves em ordem de bytes, e o dia primeiro listaria todos os dias 1º juntos."
+      },
+      {
+        "text": "O Athena só lê partições escritas com o ano primeiro",
+        "why": "O Athena lê o valor da partição como texto, qualquer que seja o formato; a ordem é questão de listagem."
+      }
+    ]
+  },
+  "ex-nmjs1x7r": {
+    "prompt": "Qual destes cabe num nome de bucket, pelo esquema desta lição?",
+    "hint": "Empresa, camada, ambiente.",
+    "choices": [
+      {
+        "text": "O nome da engenheira que o criou",
+        "why": "Pessoas mudam de lugar e o bucket fica."
+      },
+      {
+        "text": "O ambiente a que ele serve, como `prod` ou `dev`",
+        "why": "Isso. Ele mantém dados de teste fora dos buckets de produção."
+      },
+      {
+        "text": "O nome do cliente cujos dados ele guarda",
+        "why": "Um nome de bucket viaja no DNS e em mensagens de erro; nada pessoal entra nele."
+      },
+      {
+        "text": "A data em que o bucket foi criado",
+        "why": "A data é uma propriedade dos dados, e vai nas chaves."
+      }
+    ]
+  },
+  "ex-cr2y8h6z": {
+    "prompt": "Ponha em ordem os passos de uma sessão de estudo deste curso.",
+    "hint": "O servidor vem primeiro, no terminal dele.",
+    "items": [
+      "Ligar `moto_server -p 4567` num terminal só dele",
+      "Abrir um segundo terminal e rodar as quatro linhas de \"Toda vez que abrir um terminal\"",
+      "Conferir com `aws sts get-caller-identity` que a conta é `123456789012`",
+      "Rodar os comandos da lição, que reconstroem o que ela precisa"
+    ]
+  },
+  "ex-e03fgnn8": {
+    "prompt": "A Quitanda quer \"renomear\" o prefixo `raw/orders/` para `raw/sales/` em 40.000 objetos. O que isso exige no S3?",
+    "hint": "Não há renomear nem diretório.",
+    "choices": [
+      {
+        "text": "Uma requisição que renomeia a pasta",
+        "why": "Não há pasta para renomear."
+      },
+      {
+        "text": "Uma cópia e uma exclusão por objeto: 80.000 requisições",
+        "why": "Isso, e todo leitor das chaves antigas quebra. É por isso que as chaves são escritas como se nunca pudessem ser renomeadas."
+      },
+      {
+        "text": "Mudar a configuração de prefixo do bucket",
+        "why": "Um bucket não tem essa configuração."
+      },
+      {
+        "text": "Uma cópia de cada objeto, depois da qual o S3 apaga os originais",
+        "why": "O S3 não apaga nada sozinho; as exclusões são mais 40.000 requisições."
+      }
+    ]
+  }
+}

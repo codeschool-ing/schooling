@@ -1,0 +1,416 @@
+{
+  "ex-fdg31w0k": {
+    "prompt": "Pelo que uma execução de job do Glue é cobrada?",
+    "hint": "Não há cluster entre as execuções.",
+    "choices": [
+      {
+        "text": "Pelas linhas que o script processou",
+        "why": "O Glue não conta linhas; uma execução sem entrada custa os mesmos segundos."
+      },
+      {
+        "text": "Pelas DPUs que recebeu vezes os segundos em que ficaram ligadas",
+        "why": "Isso, com um minuto como o mínimo de uma execução no Glue 2.0 em diante."
+      },
+      {
+        "text": "Pelos gigabytes que leu do S3",
+        "why": "É assim que o Athena é cobrado, lição 15; o Glue cobra as máquinas."
+      },
+      {
+        "text": "Pelas horas em que o cluster existe, entre as execuções também",
+        "why": "Não há cluster entre as execuções; esse é o ponto do Glue."
+      }
+    ]
+  },
+  "ex-ev8xghs6": {
+    "prompt": "Um job roda em cinco workers `G.2X`. Quantas DPUs cada execução usa?",
+    "hint": "Workers vezes as DPUs de cada um."
+  },
+  "ex-mw6ng2xw": {
+    "prompt": "A execução do job no moto diz `SUCCEEDED`, `123` segundos e Glue `0.9`, para um job definido como Glue 5.0. O que esses valores dizem sobre o `orders_etl.py`?",
+    "hint": "Toda execução de todo job no moto diz o mesmo.",
+    "choices": [
+      {
+        "text": "Que rodou em cerca de dois minutos, num Spark mais antigo",
+        "why": "Nada rodou: 123 é uma constante que o moto devolve para toda execução."
+      },
+      {
+        "text": "Que o moto rebaixou o job porque 5.0 não é suportado",
+        "why": "O job continua dizendo 5.0; a execução traz um padrão do próprio moto."
+      },
+      {
+        "text": "Nada: o script nunca foi aberto",
+        "why": "Isso. Os valores descrevem a resposta do moto, não uma execução."
+      },
+      {
+        "text": "Que falhou e o Glue o rodou de novo na versão 0.9",
+        "why": "Não há recuo nem falha; não há execução."
+      }
+    ]
+  },
+  "ex-72abv7xc": {
+    "prompt": "Do que um job abre mão em troca dos 0,45 dólar por DPU-hora do Flex?",
+    "hint": "Ele roda em capacidade que a AWS tem sobrando.",
+    "choices": [
+      {
+        "text": "Do bookmark, que execuções Flex não guardam",
+        "why": "O Flex muda de onde a execução tira a capacidade, não o que o job lembra."
+      },
+      {
+        "text": "De começar numa hora certa e durar o previsto",
+        "why": "Isso: pode começar mais tarde e demorar mais, o que um relatório lido de manhã aguenta."
+      },
+      {
+        "text": "De gravar no catálogo, que precisa de capacidade padrão",
+        "why": "O script é o mesmo script; nada do que ele chama muda."
+      },
+      {
+        "text": "Da cobrança por segundo, já que o Flex cobra horas inteiras",
+        "why": "A unidade é a mesma DPU-hora, cobrada do mesmo jeito, a uma tarifa menor."
+      }
+    ]
+  },
+  "ex-a1wewz3t": {
+    "prompt": "Ligue cada tipo de capacidade ao uso dela.",
+    "hint": "Um deles não é Spark.",
+    "pairs": [
+      {
+        "left": "`G.1X`",
+        "right": "Uma DPU por worker, o job em lote comum"
+      },
+      {
+        "left": "`G.2X`",
+        "right": "Duas DPUs por worker, para jobs com pouca memória"
+      },
+      {
+        "left": "`G.025X`",
+        "right": "Um quarto de DPU, para streaming"
+      },
+      {
+        "left": "`pythonshell`",
+        "right": "Python puro em um dezesseis avos de DPU, sem Spark"
+      }
+    ],
+    "right_distractors": [
+      "Um cluster mantido ligado entre as execuções noturnas"
+    ]
+  },
+  "ex-h669g5xe": {
+    "prompt": "Por que o Glue tem DynamicFrames se o Spark já tem DataFrames?",
+    "hint": "Pense nos arquivos da lição 16 que discordavam.",
+    "choices": [
+      {
+        "text": "Deixam os registros discordarem do tipo de uma coluna até o script decidir",
+        "why": "Isso: um tipo choice, resolvido pelo `resolveChoice`, para arquivos raw cujos tipos derivam."
+      },
+      {
+        "text": "São mais rápidos que DataFrames nos joins e janelas em que um job gasta o tempo",
+        "why": "Esses são do DataFrame, e é por isso que o script chama `toDF` antes do `dropDuplicates`."
+      },
+      {
+        "text": "O Spark não consegue gravar Parquet sem um",
+        "why": "O Spark grava Parquet a partir de um DataFrame sozinho."
+      },
+      {
+        "text": "Guardam os dados do job no catálogo entre uma execução e a seguinte, prontos para ler",
+        "why": "O catálogo não guarda dados; um DynamicFrame só vive durante uma execução."
+      }
+    ]
+  },
+  "ex-kte5x0b2": {
+    "prompt": "Para que serve o `transformation_ctx`, no `from_catalog` e no `getSink`?",
+    "hint": "O bookmark precisa de um nome sob o qual guardar o estado.",
+    "choices": [
+      {
+        "text": "Nomeia a etapa do Spark nos logs do job",
+        "why": "Não é para os logs; sem ele o bookmark não tem chave."
+      },
+      {
+        "text": "Define por qual coluna a saída é particionada",
+        "why": "Isso é o `partitionKeys`."
+      },
+      {
+        "text": "Nomeia a leitura ou gravação para a qual o bookmark guarda estado",
+        "why": "Isso. Uma leitura sem nome é lida inteira a cada execução."
+      },
+      {
+        "text": "Abre uma transação que o `job.commit` fecha no fim da execução do job",
+        "why": "As gravações no S3 não são transacionais; o `job.commit` grava o bookmark."
+      }
+    ]
+  },
+  "ex-yzspnp5h": {
+    "prompt": "Com bookmarks ligados, a loja reenvia a exportação de 15 de outubro na noite seguinte num segundo arquivo. O que o script do Glue desta lição faz com ele?",
+    "hint": "Que linhas o `dropDuplicates` vê?",
+    "choices": [
+      {
+        "text": "O `dropDuplicates` as remove, já que repetem ids de pedido que já foram gravados",
+        "why": "Ele só vê o arquivo novo, onde nada se repete."
+      },
+      {
+        "text": "O bookmark pula o arquivo, porque o dia dele já foi feito",
+        "why": "Um bookmark acompanha arquivos, e este é novo."
+      },
+      {
+        "text": "Acrescenta as linhas ao lado das do primeiro arquivo: o dia é contado em dobro",
+        "why": "Isso, e nada falha. A cura é reescrever o dia a partir de todos os arquivos dele."
+      },
+      {
+        "text": "O `writeFrame` substitui o dia só pelo arquivo reenviado",
+        "why": "O `writeFrame` acrescenta arquivos; não substitui o que está lá."
+      }
+    ]
+  },
+  "ex-zqmt09bp": {
+    "prompt": "Para substituir só as partições que uma gravação toca, o Spark sobrescreve com `partitionOverwriteMode` em ___.",
+    "hint": "O outro valor substitui a tabela inteira.",
+    "blanks": [
+      {
+        "accept": [
+          "dynamic"
+        ]
+      }
+    ]
+  },
+  "ex-qn1ws67t": {
+    "prompt": "O `etl.py` gravou 12.703.975 bytes de Parquet, exatamente o que o `lake.py` gravou na lição 15. Por que exatamente?",
+    "hint": "O que teria de mudar para os arquivos mudarem?",
+    "choices": [
+      {
+        "text": "O `etl.py` copia os arquivos Parquet que o `lake.py` gravou lá na lição 15",
+        "why": "O `lake.py --layer raw` não gravou Parquet nesta lição."
+      },
+      {
+        "text": "Arquivos Parquet com o mesmo número de linhas têm sempre o mesmo tamanho",
+        "why": "O tamanho segue os valores; o dia reenviado mostra linhas de outro tamanho."
+      },
+      {
+        "text": "Mesmas linhas, mesma ordem, mesmos tipos, mesma biblioteca: o mesmo arquivo",
+        "why": "Isso, o que faz do tamanho um teste barato de que o job fez o que um processo sabidamente certo fez."
+      },
+      {
+        "text": "O moto guarda uma cópia só de objetos idênticos",
+        "why": "O moto guarda o que recebe; nada é compartilhado entre chaves."
+      }
+    ]
+  },
+  "ex-g6zybj0t": {
+    "prompt": "Por que o `etl.py` lê o CSV com os tipos do esquema em vez de deixar o PyArrow adivinhá-los?",
+    "hint": "Lembre do 265,68 da lição 16.",
+    "choices": [
+      {
+        "text": "Um palpite demora mais que ler um tipo que foi declarado de antemão",
+        "why": "A velocidade não é o motivo; o lugar onde um valor ruim falha é."
+      },
+      {
+        "text": "Um valor que não cabe falha no job, não numa consulta depois",
+        "why": "Isso, e os arquivos curated ficam exatamente com os tipos da lição 15."
+      },
+      {
+        "text": "O Parquet só consegue guardar os tipos que um esquema nomeia, e nada mais",
+        "why": "O Parquet guardaria o que o PyArrow adivinhasse; o palpite é o risco."
+      },
+      {
+        "text": "Os palpites do PyArrow mudam de uma execução para outra",
+        "why": "São repetíveis; a questão é um arquivo cujos valores parecem de outro tipo."
+      }
+    ]
+  },
+  "ex-ymrvhn5y": {
+    "prompt": "Quais destas coisas rodar o `etl.py` contra o moto realmente consegue dizer? Marque todas as que se aplicam.",
+    "hint": "É a lógica, rodando pequena.",
+    "choices": [
+      {
+        "text": "Se as duplicatas de um dia são removidas",
+        "why": "Sim: 500 foram."
+      },
+      {
+        "text": "Se a saída bate com um resultado sabidamente certo",
+        "why": "Sim: as quatro linhas e a contagem de bytes bateram."
+      },
+      {
+        "text": "Quanto os workers do Glue demoram a ligar",
+        "why": "Isso é propriedade de uma execução real na AWS."
+      },
+      {
+        "text": "Como o trabalho se divide entre dez workers",
+        "why": "Aqui há um processo e nenhum Spark."
+      },
+      {
+        "text": "Quanto a execução seria cobrada no Glue",
+        "why": "Isso é aritmética da tabela com um tamanho suposto, não uma medida."
+      }
+    ]
+  },
+  "ex-h1djmkq9": {
+    "prompt": "Quando o bookmark de um job do Glue avança?",
+    "hint": "Veja a última linha do script.",
+    "choices": [
+      {
+        "text": "Depois de cada arquivo lido",
+        "why": "Uma execução pela metade perderia então arquivos que nunca gravou."
+      },
+      {
+        "text": "No `job.commit()`",
+        "why": "Isso. Uma execução que não chega lá deixa o bookmark onde estava."
+      },
+      {
+        "text": "Quando a execução começa",
+        "why": "No começo ele é lido, não avançado."
+      },
+      {
+        "text": "Uma vez por hora, enquanto o job roda",
+        "why": "Nada nele é periódico."
+      }
+    ]
+  },
+  "ex-ba2sdfsy": {
+    "prompt": "Uma execução grava metade dos dias e falha. O que a próxima execução faz, e o que isso exige do job?",
+    "hint": "O bookmark não avançou.",
+    "choices": [
+      {
+        "text": "Continua do dia em que falhou, então nada é exigido",
+        "why": "Nada registrou onde falhou; o bookmark é tudo ou nada por execução."
+      },
+      {
+        "text": "Pula os dias já gravados, então eles não podem ser reescritos",
+        "why": "Ela não sabe quais foram gravados."
+      },
+      {
+        "text": "Marca todo arquivo como feito, então o job precisa registrar o que se perdeu",
+        "why": "Uma execução que falha não faz commit; nada é marcado."
+      },
+      {
+        "text": "Lê os mesmos arquivos de novo, então fazê-los duas vezes não pode fazer mal",
+        "why": "Isso, e é por isso que o `etl.py` substitui um dia em vez de acrescentar a ele."
+      }
+    ]
+  },
+  "ex-knmt0gdg": {
+    "prompt": "A loja corrige 3 de outubro sobrescrevendo `dt=2026-10-03/orders.csv` sob a mesma chave. Qual bookmark percebe a correção?",
+    "hint": "Um lembra nomes; o outro lembra datas.",
+    "choices": [
+      {
+        "text": "Os dois, já que o objeto mudou",
+        "why": "O `etl.py` compara só nomes, e o nome não mudou."
+      },
+      {
+        "text": "O do Glue, que compara a data da última modificação",
+        "why": "Isso. O `etl.py` nunca mais o leria; lembrar o ETag corrigiria isso."
+      },
+      {
+        "text": "O do `etl.py`, que lista toda chave a cada execução",
+        "why": "Ele as lista e pula qualquer chave que já viu."
+      },
+      {
+        "text": "Nenhum: sobrescrever uma chave não pode ser visto por bookmark nenhum",
+        "why": "A data de modificação do objeto muda, e o Glue a lê."
+      }
+    ]
+  },
+  "ex-68xk4v13": {
+    "prompt": "15 de outubro tinha 23.781 pedidos, e o arquivo reenviado repetiu 500 deles. Se o job tivesse acrescentado as linhas do arquivo novo ao dia em vez de reescrevê-lo, quantas linhas o dia curated teria?",
+    "hint": "A camada raw tem a resposta."
+  },
+  "ex-yfnzj2kc": {
+    "prompt": "O job noturno são dez workers `G.1X` por seis minutos. No Flex, a 0,45 dólar por DPU-hora, quanto custam as 31 noites de outubro, em dólares?",
+    "hint": "Dez DPUs por um décimo de hora é uma DPU-hora."
+  },
+  "ex-rs26cjw3": {
+    "prompt": "Uma execução em dois workers termina o trabalho em vinte segundos. O que é cobrado?",
+    "hint": "Há um piso.",
+    "choices": [
+      {
+        "text": "Duas DPUs pelos vinte segundos que a execução realmente levou",
+        "why": "A cobrança por segundo tem mínimo de um minuto."
+      },
+      {
+        "text": "Duas DPUs por dez minutos",
+        "why": "Dez minutos era o mínimo antes do Glue 2.0."
+      },
+      {
+        "text": "Nada, já que uma execução de menos de um minuto sai de graça",
+        "why": "São cobradas como um minuto."
+      },
+      {
+        "text": "Duas DPUs por um minuto, 0,023 dólar",
+        "why": "Isso: três vezes os vinte segundos que usou."
+      }
+    ]
+  },
+  "ex-96b72yw0": {
+    "prompt": "A camada raw de outubro tem 40 MB por mês. Das três definições de job que o moto guardou, qual é a mais barata que ainda faz o trabalho?",
+    "hint": "Qual delas não é Spark?",
+    "choices": [
+      {
+        "text": "`orders-etl-flex`, dez workers `G.1X` no Flex",
+        "why": "Um terço mais barato que o padrão, e ainda dez DPUs para 40 MB."
+      },
+      {
+        "text": "`orders-etl-small`, Python shell em 0,0625 DPU",
+        "why": "Isso: uns quatro centavos em outubro, contra 21,39 dólares do job Spark."
+      },
+      {
+        "text": "`orders-etl`, que é padrão e por isso começa na hora",
+        "why": "Começar na hora vale o preço quando alguém está esperando; é o mais caro dos três."
+      },
+      {
+        "text": "Qualquer um, porque o moto cobrou os três igual",
+        "why": "O moto não cobrou nada; o preço é a tabela vezes as DPUs e o tempo."
+      }
+    ]
+  },
+  "ex-9jgappb4": {
+    "prompt": "Ponha em ordem o que o `etl.py` faz numa noite.",
+    "hint": "O bookmark é lido primeiro e gravado por último.",
+    "items": [
+      "Listar as chaves raw e compará-las com o bookmark",
+      "Reescrever cada dia que tem arquivo novo, a partir de todos os arquivos dele",
+      "Acrescentar esses dias ao catálogo",
+      "Gravar o bookmark com as chaves novas"
+    ]
+  },
+  "ex-67nvnmva": {
+    "prompt": "Por que o `etl.py` grava o bookmark depois dos dias e do catálogo, e não antes?",
+    "hint": "Imagine que ele falhe no meio.",
+    "choices": [
+      {
+        "text": "O S3 não mostra um objeto novo até a execução terminar",
+        "why": "O S3 mostra um objeto novo na hora; a ordem é sobre falha."
+      },
+      {
+        "text": "Gravar o bookmark antes custa uma requisição a mais",
+        "why": "Mesma requisição nos dois casos; o que muda é o que uma falha deixa."
+      },
+      {
+        "text": "Para uma execução que falha deixá-lo parado, e a próxima refazer os dias",
+        "why": "Isso. Gravado antes, uma falha marcaria como feitos dias nunca gravados."
+      },
+      {
+        "text": "O catálogo precisa ler o bookmark antes de poder acrescentar qualquer partição",
+        "why": "O catálogo não sabe nada do bookmark."
+      }
+    ]
+  },
+  "ex-d7s5jcpv": {
+    "prompt": "Numa versão do Glue anterior à 2.0, com mínimo de dez minutos, quanto é cobrada uma execução de dois minutos em 10 DPUs, a 0,69 dólar por DPU-hora?",
+    "hint": "O mínimo vale primeiro.",
+    "choices": [
+      {
+        "text": "0,23 dólar",
+        "why": "Isso são dois minutos, que o mínimo arredonda para cima."
+      },
+      {
+        "text": "1,15 dólar",
+        "why": "Isso: 10 × 10/60 × 0,69."
+      },
+      {
+        "text": "0,115 dólar",
+        "why": "Isso é uma DPU por dez minutos."
+      },
+      {
+        "text": "0,69 dólar",
+        "why": "Isso é uma DPU-hora; esta execução é um sexto de hora em dez."
+      }
+    ]
+  }
+}

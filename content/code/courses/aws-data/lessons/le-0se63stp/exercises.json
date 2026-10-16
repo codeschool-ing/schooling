@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-a9ppqvv7",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's cache would run Valkey on ElastiCache. Why does this lesson practise on the Redis server Ubuntu packages?",
+    "hint": "Think about what a client library sees.",
+    "choices": [
+      {
+        "text": "Valkey cannot be installed outside AWS",
+        "correct": false,
+        "why": "Valkey is an open-source project anyone can run; the reason is that the two answer the same commands."
+      },
+      {
+        "text": "Valkey speaks the Redis protocol and commands, so the same client and the same commands work on both",
+        "correct": true,
+        "why": "Right. Valkey is a fork of Redis 7.2.4, and `SET`, `EXPIRE` and eviction behave the same way."
+      },
+      {
+        "text": "moto contains a Redis server that the lesson reuses",
+        "correct": false,
+        "why": "moto records a cache cluster and runs no cache at all."
+      },
+      {
+        "text": "Redis is free, and Valkey is billed per node-hour",
+        "correct": false,
+        "why": "The node-hour is ElastiCache's price for the machine, whichever engine runs on it; both engines are free software."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp3aerkj",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the sheet, a `cache.r7g.large` costs 0.34880 USD an hour with Valkey and 0.43600 with Redis OSS. How many USD a month does Valkey save on one node, over 730 hours? Give two decimal places.",
+    "hint": "Subtract the two prices, then multiply by the hours.",
+    "value": 63.66,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-zy6v1qc0",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache holds 10 GB steadily all month and answers a modest number of small requests. Which is cheaper by the sheet, Serverless Valkey or two `cache.r7g.large` Valkey nodes?",
+    "hint": "Serverless charges for what it holds, every hour.",
+    "choices": [
+      {
+        "text": "Serverless, which charges for requests rather than for machines",
+        "correct": false,
+        "why": "It charges for requests and also for every GB-hour held: 10 × 0.133 × 730 is 970.90 USD for the data alone."
+      },
+      {
+        "text": "The two nodes",
+        "correct": true,
+        "why": "Right. Two nodes are 509.25 USD a month; Serverless holding 10 GB is 970.90 before a single request."
+      },
+      {
+        "text": "Serverless, because a million ECPUs cost less than a cent",
+        "correct": false,
+        "why": "The requests are the smallest line; the data held is the one that grows with this cache."
+      },
+      {
+        "text": "They cost the same, since both are billed by the hour",
+        "correct": false,
+        "why": "Nodes are billed per node-hour and Serverless per GB-hour; the units differ, and so do the totals."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwqqseqp",
+    "version": 1,
+    "section": "engines-and-prices",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each option to what sets it apart.",
+    "hint": "Two of the engines are nearly the same program.",
+    "pairs": [
+      {
+        "left": "Valkey",
+        "right": "A fork of Redis 7.2.4, and the lowest node price"
+      },
+      {
+        "left": "Redis OSS",
+        "right": "The same commands as Valkey, at 20% more per node"
+      },
+      {
+        "left": "Memcached",
+        "right": "Strings only, with no replication"
+      },
+      {
+        "left": "Serverless",
+        "right": "Billed by GB-hours held and by ECPUs"
+      }
+    ],
+    "right_distractors": [
+      "Billed by the terabyte its queries scan"
+    ]
+  },
+  {
+    "id": "ex-8hgx537d",
+    "version": 1,
+    "section": "replication-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a replication group with cluster mode enabled, how does the client know which shard holds `product:p-101`?",
+    "hint": "There are 16,384 of something.",
+    "choices": [
+      {
+        "text": "It sends every command to the primary endpoint, which passes it on to the right shard",
+        "correct": false,
+        "why": "That is the picture of cluster mode disabled, where one primary holds everything."
+      },
+      {
+        "text": "It hashes the key to a slot, and each slot belongs to one shard",
+        "correct": true,
+        "why": "Right. The client computes the slot and sends the command straight to the shard that owns it."
+      },
+      {
+        "text": "It tries the shards in turn until one has the key",
+        "correct": false,
+        "why": "A miss would then cost a request per shard; the slot makes it one request."
+      },
+      {
+        "text": "Shards are filled in turn, so it looks the key up in a directory",
+        "correct": false,
+        "why": "There is no directory of keys; the slot is computed from the key itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-s26pf7n4",
+    "version": 1,
+    "section": "replication-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A primary acknowledges a write and fails before sending it to its replica. Automatic failover promotes the replica. What became of the write?",
+    "hint": "How does the copy reach the replica?",
+    "choices": [
+      {
+        "text": "The new primary replays it from the old primary's disk",
+        "correct": false,
+        "why": "The replica has no access to the failed node; it has only what it had received."
+      },
+      {
+        "text": "ElastiCache waits to promote until the write is copied",
+        "correct": false,
+        "why": "The node that held the write has stopped answering; there is nothing to wait for."
+      },
+      {
+        "text": "It is lost, because replication is asynchronous",
+        "correct": true,
+        "why": "Right. For a cache that is acceptable, since the database still holds the truth."
+      },
+      {
+        "text": "ElastiCache retries it against the new primary",
+        "correct": false,
+        "why": "ElastiCache does not keep a client's writes; retrying is the client's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-g95zf6df",
+    "version": 1,
+    "section": "replication-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto answers `create-replication-group` with `available` on the same line, an engine version of `None` and zones in `us-east-1`. What does that tell you about the group you designed?",
+    "hint": "What did moto start behind the answer?",
+    "choices": [
+      {
+        "text": "That it would be ready within seconds on AWS",
+        "correct": false,
+        "why": "moto waits for nothing; on AWS the status is `creating` for minutes first."
+      },
+      {
+        "text": "That ElastiCache places São Paulo groups in Virginia's zones",
+        "correct": false,
+        "why": "The zones are a detail of the imitation, not of AWS."
+      },
+      {
+        "text": "That failover was tested as part of creating it",
+        "correct": false,
+        "why": "Nothing was tested; `test-failover` itself fails inside moto with a 500."
+      },
+      {
+        "text": "Only that the request was well formed",
+        "correct": true,
+        "why": "Right. moto records the group and runs no cache, and the details it fills in are its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-czpn2pna",
+    "version": 1,
+    "section": "replication-groups",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a Memcached cluster on ElastiCache? Choose all that apply.",
+    "hint": "Memcached has none of what a replication group adds.",
+    "choices": [
+      {
+        "text": "Each key lives on one node, chosen by the client's hash",
+        "correct": true,
+        "why": "Yes. The nodes are independent and the client spreads the keys."
+      },
+      {
+        "text": "A node that dies takes its keys with it",
+        "correct": true,
+        "why": "Yes. Nothing is replicated, so nothing fails over."
+      },
+      {
+        "text": "A replica in another zone is promoted when a node fails",
+        "correct": false,
+        "why": "That is a Valkey or Redis OSS replication group with automatic failover."
+      },
+      {
+        "text": "Its keys are split into 16,384 hash slots",
+        "correct": false,
+        "why": "Hash slots are cluster mode, in Valkey and Redis OSS."
+      }
+    ]
+  },
+  {
+    "id": "ex-khbv47f7",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`redis-cli TTL product:p-101` answers `(integer) -2`. What does that mean?",
+    "hint": "Compare it with the key `visits`, which answered `-1`.",
+    "choices": [
+      {
+        "text": "The key never expires",
+        "correct": false,
+        "why": "That is `-1`, which the key `visits` answered."
+      },
+      {
+        "text": "The key expires in two seconds",
+        "correct": false,
+        "why": "A time left is a positive number; negative numbers are the two special answers."
+      },
+      {
+        "text": "There is no such key, for example because it expired",
+        "correct": true,
+        "why": "Right. After `sleep 6` the key had gone, `GET` answered `(nil)` and `TTL` answered `-2`."
+      },
+      {
+        "text": "The key expired two seconds ago and is still readable",
+        "correct": false,
+        "why": "An expired key is gone for every reader; `GET` answered `(nil)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bhyc2nb",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`redis-cli SET product:p-101 '{...}' ___ 300` stores the value with a time to live of five minutes.",
+    "hint": "The option is two letters, and `ex=` is its name in the Python client.",
+    "blanks": [
+      {
+        "accept": [
+          "EX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g8rjf0s0",
+    "version": 1,
+    "section": "a-local-redis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run `sudo systemctl disable --now redis-server` straight after installing the package?",
+    "hint": "What did the package start on its own?",
+    "choices": [
+      {
+        "text": "The package started a Redis service of its own, which would also start at every boot",
+        "correct": true,
+        "why": "Right. Stopping it means nothing runs unless you start it, like moto."
+      },
+      {
+        "text": "The packaged service writes to disk, and a cache must keep nothing",
+        "correct": false,
+        "why": "Persistence is turned off by the flags you start Redis with; that is not why the service is stopped."
+      },
+      {
+        "text": "Otherwise `redis-cli` would connect to ElastiCache",
+        "correct": false,
+        "why": "`redis-cli` connects to `127.0.0.1:6379` unless told otherwise; it knows nothing of AWS."
+      },
+      {
+        "text": "The packaged service refuses connections from Python",
+        "correct": false,
+        "why": "Any client on the same machine can connect to it; the reason is that it runs when you did not start it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy4k1q9a",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the messages of a cache-aside read that misses in order.",
+    "hint": "The cache never talks to the database.",
+    "items": [
+      "The program sends `GET product:p-101` to the cache",
+      "The cache answers nil: the key is not there",
+      "The program runs the `SELECT` against the database",
+      "The program writes the answer with `SET ... EX 300`"
+    ]
+  },
+  {
+    "id": "ex-btfk44ew",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly import changed `p-101` to 1390 directly in the database, and the page still shows 1290. With no change to the import, what makes the page right?",
+    "hint": "The cache did not hear about the change.",
+    "choices": [
+      {
+        "text": "Restarting `catalog.py`, which holds the price in a variable",
+        "correct": false,
+        "why": "The program runs once per command and keeps nothing; the old price is in Redis."
+      },
+      {
+        "text": "Reading the page again, since a hit refreshes the key from the database",
+        "correct": false,
+        "why": "A hit returns what the cache holds and reads nothing from the database; that is what a hit is."
+      },
+      {
+        "text": "Nothing until the key's time to live runs out",
+        "correct": true,
+        "why": "Right. The TTL is the backstop: with 300 seconds, the page is wrong for at most five minutes."
+      },
+      {
+        "text": "Redis notices the `UPDATE` and drops the key",
+        "correct": false,
+        "why": "Redis and the database never talk to each other; nobody told the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v973qjj",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `set_price` delete the cached key rather than write 1390 into it?",
+    "hint": "Think of two writers changing the same price at almost the same moment.",
+    "choices": [
+      {
+        "text": "Writing the value would restart its time to live, so the copy would live too long",
+        "correct": false,
+        "why": "A fresh copy with a fresh TTL is harmless; the danger is the older value winning."
+      },
+      {
+        "text": "If two writers race to set it, the older value is left behind; a delete leaves nothing to be wrong",
+        "correct": true,
+        "why": "Right. After a delete, the next reader fetches whatever the database holds."
+      },
+      {
+        "text": "`DEL` is cheaper for Redis than `SET`",
+        "correct": false,
+        "why": "Both are tiny; the choice is about correctness, not speed."
+      },
+      {
+        "text": "Redis refuses `SET` on a key that already has a TTL",
+        "correct": false,
+        "why": "`SET` replaces a key whatever it had, as `catalog.py` does on every miss."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag1ngbq1",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cache holds `p-101` at 1290. Which of these reads still goes to the database?",
+    "hint": "Which one decides money?",
+    "choices": [
+      {
+        "text": "The photo and name on the product page",
+        "correct": false,
+        "why": "Harmless a few minutes old, which is what a cache is for."
+      },
+      {
+        "text": "The price charged at checkout",
+        "correct": true,
+        "why": "Right. Charging a stale price is a bug with a refund attached."
+      },
+      {
+        "text": "The price shown in a list of search results",
+        "correct": false,
+        "why": "A page of results is a display, and the lesson caches exactly that; the charge is where the database decides."
+      },
+      {
+        "text": "The list of categories in the menu",
+        "correct": false,
+        "why": "Read all day and changed rarely: a good thing to cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gs2332h",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis is at its `maxmemory` with the policy `noeviction`. What happens to a new `SET`?",
+    "hint": "Read the name of the policy literally.",
+    "choices": [
+      {
+        "text": "It is accepted, and the least recently used key is evicted",
+        "correct": false,
+        "why": "That is `allkeys-lru`."
+      },
+      {
+        "text": "It is refused with an OOM error, and every existing key stays",
+        "correct": true,
+        "why": "Right. `fill.py` counted 2,134 refusals, and `redis-cli` printed the error for a product's price."
+      },
+      {
+        "text": "It is accepted, and the oldest keys are written to disk to make room",
+        "correct": false,
+        "why": "Redis does not move keys to disk to make room; this server was even started with persistence off."
+      },
+      {
+        "text": "It is accepted, and Redis grows past the limit",
+        "correct": false,
+        "why": "The limit is enforced; that is what the 2 MB demonstration showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fxceabp",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program writes keys with no time to live into an ElastiCache cache on the default parameter group, until the cache is full. What happens next?",
+    "hint": "The default policy is `volatile-lru`, and the lesson ran it on filler keys.",
+    "choices": [
+      {
+        "text": "The least recently used keys are evicted, whatever their expiry",
+        "correct": false,
+        "why": "That is `allkeys-lru`; `volatile-lru` considers only keys that carry a TTL."
+      },
+      {
+        "text": "ElastiCache adds a node to make room",
+        "correct": false,
+        "why": "A node-based cache has the nodes you chose; adding one is your decision."
+      },
+      {
+        "text": "Writes are refused, because no key is eligible for eviction",
+        "correct": true,
+        "why": "Right. Locally, all 1,000 writes were refused under `volatile-lru`, exactly as under `noeviction`."
+      },
+      {
+        "text": "ElastiCache gives each key a default TTL and expires the oldest",
+        "correct": false,
+        "why": "No TTL is added for you; a key without one stays until it is deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah2cbhvw",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are login sessions a poor fit for a cache running `allkeys-lru`?",
+    "hint": "What does the database have of a session?",
+    "choices": [
+      {
+        "text": "Session values are too large for Redis",
+        "correct": false,
+        "why": "A session is a small value; size is not the problem."
+      },
+      {
+        "text": "`allkeys-lru` refuses keys that carry a TTL",
+        "correct": false,
+        "why": "It accepts any key and evicts any key; that is the trouble."
+      },
+      {
+        "text": "Sessions change too often for a cache to keep up with",
+        "correct": false,
+        "why": "Redis handles frequent writes well; what it does at its limit is the issue."
+      },
+      {
+        "text": "A session is the original, and the cache is allowed to evict it, logging the user out",
+        "correct": true,
+        "why": "Right. There is no copy to fall back on, unlike a product page."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncv28g64",
+    "version": 1,
+    "section": "eviction-and-herds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `herd.py`, why is the lock written with `ex=10` as well as `nx=True`?",
+    "hint": "Imagine the request holding the lock crashes.",
+    "choices": [
+      {
+        "text": "So that the page itself expires after ten seconds",
+        "correct": false,
+        "why": "The page is written with `ex=300`; `ex=10` belongs to the lock."
+      },
+      {
+        "text": "So that a request that dies holding it cannot block the others for ever",
+        "correct": true,
+        "why": "Right. After ten seconds the lock key is gone and another request can take it."
+      },
+      {
+        "text": "Because `nx=True` is refused without an expiry",
+        "correct": false,
+        "why": "`nx=True` works on its own; the expiry is a choice made for safety."
+      },
+      {
+        "text": "So that ten requests at a time can hold it",
+        "correct": false,
+        "why": "Exactly one request wins `nx=True`; the number is seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cp746ce",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "hint": "Each one was produced in this lesson or described by it.",
+    "pairs": [
+      {
+        "left": "The page shows yesterday's price",
+        "right": "A writer changed the database without deleting the key"
+      },
+      {
+        "left": "Writes fail with an OOM error",
+        "right": "The cache is full and its policy evicts nothing it holds"
+      },
+      {
+        "left": "Users are logged out at random",
+        "right": "Sessions live in a cache that evicts"
+      },
+      {
+        "left": "The database spikes when one key expires",
+        "right": "Every request that misses runs the same query"
+      }
+    ],
+    "right_distractors": [
+      "The replication group has cluster mode disabled"
+    ]
+  },
+  {
+    "id": "ex-0p5fvs3v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which set of choices fits a cache of product pages that can always be rebuilt from the database?",
+    "hint": "Everything in it is a copy.",
+    "choices": [
+      {
+        "text": "`noeviction`, no TTL, and writes going to the cache before the database",
+        "correct": false,
+        "why": "That makes the cache the original and lets it fill until it refuses."
+      },
+      {
+        "text": "`allkeys-lru`, a TTL on every key, and a delete on every write",
+        "correct": true,
+        "why": "Right. Forgetting is harmless, the TTL bounds staleness, and the delete keeps writers honest."
+      },
+      {
+        "text": "`volatile-lru`, no TTL, and the new value written into the cache on every change",
+        "correct": false,
+        "why": "With no TTL, `volatile-lru` has nothing to evict and refuses writes when full."
+      },
+      {
+        "text": "`allkeys-lru`, no TTL, and nothing done on writes",
+        "correct": false,
+        "why": "A changed price would then stay wrong until the key happened to be evicted."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb1rk4ar",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run, rather than take from AWS's documentation? Choose all that apply.",
+    "hint": "The real cache was the local Redis.",
+    "choices": [
+      {
+        "text": "Evictions under `allkeys-lru` at a 2 MB limit",
+        "correct": true,
+        "why": "Yes, 3,039 of them, on the local Redis."
+      },
+      {
+        "text": "Fifty simultaneous requests making one database read behind a lock",
+        "correct": true,
+        "why": "Yes, with `herd.py lock`."
+      },
+      {
+        "text": "A failover promoting a replica",
+        "correct": false,
+        "why": "`test-failover` fails inside moto; failover was described from the documentation."
+      },
+      {
+        "text": "ElastiCache's default `volatile-lru` parameter group",
+        "correct": false,
+        "why": "The policy was run locally; that ElastiCache defaults to it comes from AWS's documentation."
+      },
+      {
+        "text": "A Serverless cache growing on its own",
+        "correct": false,
+        "why": "moto cannot create one at all; it answered with a 500."
+      }
+    ]
+  }
+]
