@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-2fbp4sgb",
+    "version": 1,
+    "section": "pg-locks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_locks`, which column tells a lock somebody has from a lock somebody is waiting for?",
+    "hint": "A boolean.",
+    "choices": [
+      {
+        "text": "`mode`",
+        "correct": false,
+        "why": "mode says which lock, ShareLock or ExclusiveLock, not whether it was given."
+      },
+      {
+        "text": "`locktype`, which reads `waiting` for requests",
+        "correct": false,
+        "why": "locktype says what is locked: relation, transactionid, tuple, advisory."
+      },
+      {
+        "text": "`granted`",
+        "correct": true,
+        "why": "Right: t for held, f for requested and waiting; the f rows are the problem."
+      },
+      {
+        "text": "`pid`, which is null while the request waits",
+        "correct": false,
+        "why": "Every row has the pid of its session, waiting or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-967r87qd",
+    "version": 1,
+    "section": "pg-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Window B waits to update order 1, which window A changed. What does `pg_locks` show for window B's wait?",
+    "hint": "Row locks are not stored in pg_locks.",
+    "choices": [
+      {
+        "text": "A row lock on order 1, not granted",
+        "correct": false,
+        "why": "Row locks live in the row; pg_locks has no row for 'order 1 is locked'."
+      },
+      {
+        "text": "A ShareLock on window A's transaction id, not granted",
+        "correct": true,
+        "why": "Right: it waits for A's transaction to end, which shows up as a request for A's transactionid."
+      },
+      {
+        "text": "An AccessExclusiveLock on orders, not granted",
+        "correct": false,
+        "why": "Both hold RowExclusiveLock on orders, which never conflict."
+      },
+      {
+        "text": "Nothing: waits are only in pg_stat_activity",
+        "correct": false,
+        "why": "The ungranted ShareLock row is exactly the wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-wae4nxzb",
+    "version": 1,
+    "section": "pg-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each waiting session in the chain also hold an `ExclusiveLock` on a `tuple`?",
+    "hint": "Several sessions could wait for the same row.",
+    "choices": [
+      {
+        "text": "It keeps the waiters for one row in arrival order",
+        "correct": true,
+        "why": "Right: the tuple lock is the queue for that row, so waiters get it one at a time, first come first served."
+      },
+      {
+        "text": "It means the session has already changed that row",
+        "correct": false,
+        "why": "The waiter has not changed it; it is waiting to."
+      },
+      {
+        "text": "It is the lock the table takes for every UPDATE, row by row, whether anybody waits or not",
+        "correct": false,
+        "why": "Window A updated order 1 and holds no tuple lock; only waiters hold one."
+      },
+      {
+        "text": "It reserves space on the page for the new version",
+        "correct": false,
+        "why": "Locks reserve no space."
+      }
+    ]
+  },
+  {
+    "id": "ex-37wtnrjz",
+    "version": 1,
+    "section": "pg-locks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows of the lesson's `pg_locks` query had `granted` = `f`?",
+    "hint": "One per waiting session.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-ne3vt3a2",
+    "version": 1,
+    "section": "blocking-pids",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pg_blocking_pids(5796)` return in the lesson's chain?",
+    "hint": "Window C waits for window B.",
+    "choices": [
+      {
+        "text": "`{5794}`",
+        "correct": true,
+        "why": "Right: the pid of window B, the session window C waits for."
+      },
+      {
+        "text": "`{5792, 5794}`, every session ahead of it in the chain",
+        "correct": false,
+        "why": "It returns only the sessions waited for directly; 5792 appears in 5794's array."
+      },
+      {
+        "text": "`{}`, because 5796 is not in a transaction",
+        "correct": false,
+        "why": "Not being in an explicit transaction does not stop a statement waiting."
+      },
+      {
+        "text": "The number of seconds it has waited",
+        "correct": false,
+        "why": "It returns pids, as an integer array."
+      }
+    ]
+  },
+  {
+    "id": "ex-8g1k0q44",
+    "version": 1,
+    "section": "blocking-pids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`blocked.sql` shows the root as `idle in transaction` with `waiting_on` = `Client:ClientRead`. What does that mean?",
+    "hint": "Who is the server waiting for?",
+    "choices": [
+      {
+        "text": "The server is reading the row from disk",
+        "correct": false,
+        "why": "A disk read is an IO wait event, and an idle session runs nothing."
+      },
+      {
+        "text": "The session is waiting for a lock on the client table",
+        "correct": false,
+        "why": "Client here is the connection's client, not a table."
+      },
+      {
+        "text": "It has a transaction open and is waiting for the application",
+        "correct": true,
+        "why": "Right: the server is idle; the application stopped sending statements with the transaction open."
+      },
+      {
+        "text": "It is about to commit and is writing to the log",
+        "correct": false,
+        "why": "A commit in progress is an active statement, not idle."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqdkm3jn",
+    "version": 1,
+    "section": "blocking-pids",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard lists only `active` queries running over five seconds, and shows nothing during a lock incident. Why?",
+    "hint": "Where was the root in the lesson?",
+    "choices": [
+      {
+        "text": "Waiting queries are reported as idle",
+        "correct": false,
+        "why": "Waiting statements are active; windows B and C were."
+      },
+      {
+        "text": "The waiters were active but under five seconds old, and dashboards round down",
+        "correct": false,
+        "why": "In the lesson they had waited about 30 seconds; the waiters would show up after five."
+      },
+      {
+        "text": "pg_stat_activity hides sessions holding locks",
+        "correct": false,
+        "why": "Every connection has a row there."
+      },
+      {
+        "text": "The root is idle in transaction, so a filter on active hides it",
+        "correct": true,
+        "why": "Right: it shows the victims at best, never the cause, which runs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9de9dcf4",
+    "version": 1,
+    "section": "blocking-pids",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_stat_activity`, a session that ran `BEGIN` and an `UPDATE`, and is now running nothing, has the state `idle in ___`.",
+    "hint": "What BEGIN opens.",
+    "blanks": [
+      {
+        "accept": [
+          "transaction"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zcba2qcw",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a blocking graph, what makes a session the root?",
+    "hint": "The lock-tree query's first SELECT.",
+    "choices": [
+      {
+        "text": "It has waited longest",
+        "correct": false,
+        "why": "The root often waits for nothing at all; window A was idle."
+      },
+      {
+        "text": "It blocks somebody and waits for nobody",
+        "correct": true,
+        "why": "Right: an empty blocked_by, and its pid inside somebody else's."
+      },
+      {
+        "text": "It is running the slowest query in the database right now",
+        "correct": false,
+        "why": "The lesson's root ran no query at all."
+      },
+      {
+        "text": "It has the lowest pid",
+        "correct": false,
+        "why": "pids say when a connection started, nothing about blocking."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgrejm76",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does cancelling window C, the session a user is complaining about, not end the incident?",
+    "hint": "Who is window B waiting for?",
+    "choices": [
+      {
+        "text": "A cancel takes effect only after the deadlock_timeout",
+        "correct": false,
+        "why": "The cancel of window C took effect at once."
+      },
+      {
+        "text": "Window C reconnects and asks again on its own",
+        "correct": false,
+        "why": "A cancel does not reconnect anything, and psql does not retry statements."
+      },
+      {
+        "text": "Window B still waits for A, and the next request queues behind B",
+        "correct": true,
+        "why": "Right: only acting on the root moves the chain; the victims at the bottom are replaced by new ones."
+      },
+      {
+        "text": "Cancelling a session only works for superusers",
+        "correct": false,
+        "why": "pg_signal_backend members can do it too, and the cancel did work."
+      }
+    ]
+  },
+  {
+    "id": "ex-cg9jwn00",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `lock-tree.sql` return nothing for two sessions caught in a deadlock?",
+    "hint": "Where does the recursion start?",
+    "choices": [
+      {
+        "text": "Deadlocked sessions are hidden from pg_stat_activity",
+        "correct": false,
+        "why": "They are visible like any other."
+      },
+      {
+        "text": "pg_blocking_pids refuses to report cycles",
+        "correct": false,
+        "why": "Each one's array names the other; the problem is that neither array is empty."
+      },
+      {
+        "text": "No session in a cycle is a root",
+        "correct": true,
+        "why": "Right: each waits for somebody, so none starts the tree, and the server breaks the cycle within a second anyway."
+      },
+      {
+        "text": "The query only follows row locks",
+        "correct": false,
+        "why": "pg_blocking_pids covers every kind of lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmr47zwx",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A self-join of `pg_locks` on `transactionid` finds no blocker for a `SELECT` that has waited a minute behind an `ALTER TABLE` that is itself waiting. What does `pg_blocking_pids` report for the SELECT?",
+    "hint": "Lesson 12's lock queue.",
+    "choices": [
+      {
+        "text": "Nothing, since the SELECT conflicts with no held lock",
+        "correct": false,
+        "why": "It also reports sessions ahead in the queue whose request conflicts, which is the case here."
+      },
+      {
+        "text": "The ALTER's pid",
+        "correct": true,
+        "why": "Right: the SELECT waits behind the queued ACCESS EXCLUSIVE request, and the function knows the queue."
+      },
+      {
+        "text": "Every session connected to the database",
+        "correct": false,
+        "why": "Only sessions it actually waits for are listed."
+      },
+      {
+        "text": "An error, because the ALTER holds no lock yet",
+        "correct": false,
+        "why": "No error: a waiting request is enough to block those behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqea7847",
+    "version": 1,
+    "section": "cancel-or-terminate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `pg_cancel_backend` do to window A, idle in transaction at the root?",
+    "hint": "It returned t.",
+    "choices": [
+      {
+        "text": "Nothing visible: there was no statement to cancel",
+        "correct": true,
+        "why": "Right: the tree was unchanged; a cancel interrupts a running statement, and locks belong to the transaction."
+      },
+      {
+        "text": "It rolled back the transaction and released order 1",
+        "correct": false,
+        "why": "That is what terminate did; after the cancel, 5792 was still the root."
+      },
+      {
+        "text": "It closed the connection",
+        "correct": false,
+        "why": "Closing the connection is terminate's job."
+      },
+      {
+        "text": "It committed the transaction",
+        "correct": false,
+        "why": "Nothing outside the client commits its transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fxdr1j1",
+    "version": 1,
+    "section": "cancel-or-terminate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `pg_terminate_backend(5792)`, window B's update finished. What did the tree show next?",
+    "hint": "Window B's transaction was still open.",
+    "choices": [
+      {
+        "text": "No rows: the incident was over",
+        "correct": false,
+        "why": "Window C was still waiting, for window B now."
+      },
+      {
+        "text": "5794 as the root, idle in transaction, with 5796 under it",
+        "correct": true,
+        "why": "Right: terminating the root moved the chain up by one; window B held both orders until it ended its transaction."
+      },
+      {
+        "text": "5792 again, reconnected by psql",
+        "correct": false,
+        "why": "psql reconnected later, as a new session with no transaction."
+      },
+      {
+        "text": "5796 as root, since it had waited longest",
+        "correct": false,
+        "why": "5796 was waiting for 5794, so it cannot be a root."
+      }
+    ]
+  },
+  {
+    "id": "ex-tf6t23sp",
+    "version": 1,
+    "section": "cancel-or-terminate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session inside a long transaction has a statement stuck in a lock wait. You cancel it. Which locks does that session still hold?",
+    "hint": "What happens to a transaction when one of its statements fails?",
+    "choices": [
+      {
+        "text": "Every lock its transaction took before, until the client rolls back",
+        "correct": true,
+        "why": "Right: the transaction is failed, not ended; its locks stay until ROLLBACK, so you may need to terminate after all."
+      },
+      {
+        "text": "None: a cancel releases everything the session held",
+        "correct": false,
+        "why": "Only the statement stops; the transaction and its locks remain."
+      },
+      {
+        "text": "Only its table locks, since its row locks are released when the statement is cancelled",
+        "correct": false,
+        "why": "Row locks belong to the transaction as much as table locks."
+      },
+      {
+        "text": "Only the lock it was waiting for",
+        "correct": false,
+        "why": "The lock it was waiting for was never granted, so it is the one it does not hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-48x433dd",
+    "version": 1,
+    "section": "cancel-or-terminate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the action the lesson recommends.",
+    "hint": "Which one is running something?",
+    "pairs": [
+      {
+        "left": "a root idle in transaction for an hour",
+        "right": "pg_terminate_backend"
+      },
+      {
+        "left": "a report running for an hour, autocommit",
+        "right": "pg_cancel_backend"
+      },
+      {
+        "left": "a backend you want gone from the operating system",
+        "right": "never kill -9: use one of the two functions"
+      }
+    ],
+    "right_distractors": [
+      "raise deadlock_timeout"
+    ]
+  },
+  {
+    "id": "ex-tbq017j8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of handling the lesson's incident in order.",
+    "hint": "Find before you act.",
+    "items": [
+      "Run lock-tree.sql to find the root",
+      "Read the root's state and last_query",
+      "Terminate the idle-in-transaction root",
+      "Run lock-tree.sql again to see whether a new root took its place"
+    ],
+    "trap": "Terminating first and reading afterwards loses last_query: the session and its row are gone."
+  },
+  {
+    "id": "ex-artgp532",
+    "version": 1,
+    "section": "log-lock-waits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `log_lock_waits = on`, after how long does a waiting session write its first log line, on the lesson's server?",
+    "hint": "The threshold is another setting.",
+    "choices": [
+      {
+        "text": "Immediately, on every wait",
+        "correct": false,
+        "why": "Waits under the threshold are not logged at all."
+      },
+      {
+        "text": "After log_min_duration_statement",
+        "correct": false,
+        "why": "That setting is for slow statements, lesson 2; this one reuses deadlock_timeout."
+      },
+      {
+        "text": "After the wait ends, with its total duration only",
+        "correct": false,
+        "why": "It writes when the wait passes the threshold and again when it ends."
+      },
+      {
+        "text": "After deadlock_timeout, one second",
+        "correct": true,
+        "why": "Right: the line said after 1000.266 ms, at the deadlock check."
+      }
+    ]
+  },
+  {
+    "id": "ex-6stpx4wb",
+    "version": 1,
+    "section": "log-lock-waits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which facts does the `still waiting` log entry give you? Choose all that apply.",
+    "hint": "Read its four lines.",
+    "choices": [
+      {
+        "text": "The pid of the session holding the lock",
+        "correct": true,
+        "why": "Right: Process holding the lock: 5811."
+      },
+      {
+        "text": "The row being waited for",
+        "correct": true,
+        "why": "Right: tuple (0,3) in relation orders."
+      },
+      {
+        "text": "The waiting statement",
+        "correct": true,
+        "why": "Right: the STATEMENT line."
+      },
+      {
+        "text": "The statement the holder is running",
+        "correct": false,
+        "why": "The holder wrote nothing; its own statements are in the log only if another setting caught them."
+      },
+      {
+        "text": "The application that opened the holder's transaction",
+        "correct": false,
+        "why": "Nothing in the entry names an application."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkt1m09r",
+    "version": 1,
+    "section": "log-lock-waits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To catch shorter waits, a colleague proposes lowering `deadlock_timeout` to 50 ms on a busy server. What does the lesson say about it?",
+    "hint": "What else does that setting decide?",
+    "choices": [
+      {
+        "text": "It has no effect on log_lock_waits",
+        "correct": false,
+        "why": "It is the threshold log_lock_waits uses."
+      },
+      {
+        "text": "Every waiting session would run a deadlock check sooner",
+        "correct": true,
+        "why": "Right: the check is the cost, and a second is short for a transaction that is going to finish."
+      },
+      {
+        "text": "It needs a restart, so it is too risky",
+        "correct": false,
+        "why": "The restart is not the argument the lesson makes."
+      },
+      {
+        "text": "It would turn every wait into a deadlock error",
+        "correct": false,
+        "why": "Only real cycles become errors; it changes when the check runs."
+      }
+    ]
+  }
+]
