@@ -1,0 +1,173 @@
+{
+  "ex-02yb2c1b": {
+    "prompt": "O que é um standby, nos termos das lições anteriores?",
+    "hint": "A recuperação da lição 6, sem um alvo.",
+    "choices": [
+      { "text": "Um dump lógico recarregado toda noite", "why": "Um standby é físico: ele reaplica o log numa cópia dos arquivos." },
+      { "text": "Um segundo primário que aceita escritas", "why": "Um standby é somente leitura até ser promovido." },
+      { "text": "Um base backup que não para de se recuperar", "why": "Isso. Ele recebe o log à medida que é escrito e o reaplica continuamente." },
+      { "text": "Um snapshot tirado a cada poucos segundos", "why": "Snapshots são cópias de instantes; um standby reaplica cada mudança." }
+    ]
+  },
+  "ex-asp74y7m": {
+    "prompt": "Ponha em ordem o caminho de uma mudança, do primário até uma consulta no standby.",
+    "hint": "Quatro passos, quatro colunas em pg_stat_replication.",
+    "items": [
+      "O primário a escreve no próprio log e faz o commit",
+      "O WAL sender manda o log novo",
+      "O standby a escreve no seu pg_wal e faz o flush",
+      "O standby a reaplica nos seus arquivos de dados"
+    ],
+    "trap": "Nada fica visível para uma consulta no standby antes do último passo; cada passo pode ficar atrás do anterior."
+  },
+  "ex-2gmqfr8s": {
+    "prompt": "Um `DELETE` com o `WHERE` errado roda no primário. O que o standby tem um segundo depois?",
+    "hint": "A replicação copia as mudanças, todas elas.",
+    "choices": [
+      { "text": "As linhas perdidas, nos dois servidores", "why": "Isso. Replicação protege contra perder um servidor; backups protegem contra perder dados." },
+      { "text": "As linhas, porque standbys ignoram deletes", "why": "Um standby reaplica cada mudança que o primário registrou no log." },
+      { "text": "Um aviso e o replay em pausa", "why": "Nada na replicação julga se uma mudança foi um erro." },
+      { "text": "As linhas, até o próximo checkpoint", "why": "Checkpoints não atrasam o replay." }
+    ]
+  },
+  "ex-n0hbszsd": {
+    "prompt": "O que o papel criado com `LOGIN REPLICATION` pode fazer?",
+    "hint": "Ele recebeu exatamente um direito.",
+    "choices": [
+      { "text": "Ler todas as tabelas, para poder copiá-las", "why": "Um standby físico copia arquivos e log, e não precisa de direitos sobre tabelas." },
+      { "text": "Criar bancos no standby", "why": "Nada num standby é criado à mão; ele reaplica o primário." },
+      { "text": "Promover o standby", "why": "A promoção é um ato do administrador no standby, não um direito desse papel." },
+      { "text": "Receber o log, e mais nada além disso", "why": "Isso. Ele não consegue ler uma única tabela." }
+    ]
+  },
+  "ex-rq4d33rk": {
+    "prompt": "Por que a senha de replicação vai em `/var/lib/postgresql/.pgpass` e não em `primary_conninfo`?",
+    "hint": "O que um backup do diretório de dados copia?",
+    "choices": [
+      { "text": "Porque primary_conninfo não aceita senha", "why": "Aceita; é exatamente o que a lição evita." },
+      { "text": "Backups copiam aquele arquivo", "why": "Isso: uma senha ali ficaria num arquivo que todo backup copia. O postgresql.auto.conf fica no diretório de dados e vai junto em todo base backup." },
+      { "text": "Porque o .pgpass criptografa a senha", "why": "É texto puro, protegido só pelas permissões." },
+      { "text": "Porque o pg_hba.conf o lê", "why": "O pg_hba.conf decide quais conexões são permitidas; ele não lê arquivo de senha." }
+    ]
+  },
+  "ex-xbvrjr7p": {
+    "prompt": "Relacione cada opção do `pg_basebackup` com o que ela faz aqui.",
+    "hint": "Três fazem dele um standby, uma traz o log.",
+    "pairs": [
+      { "left": "-R", "right": "Escreve as configurações de replicação e o standby.signal" },
+      { "left": "-C", "right": "Cria o slot de replicação no primário" },
+      { "left": "-S standby1", "right": "Dá nome ao slot a criar e usar" },
+      { "left": "-X stream", "right": "Traz o log escrito durante a cópia" }
+    ],
+    "right_distractors": [
+      "Comprime a cópia no caminho"
+    ]
+  },
+  "ex-f2v2cvdj": {
+    "prompt": "Um arquivo vazio chamado `___.signal` no diretório de dados faz o PostgreSQL subir como uma cópia somente leitura que segue um primário.",
+    "hint": "O tipo de servidor que ele cria.",
+    "blanks": [
+      { "accept": ["standby"] }
+    ]
+  },
+  "ex-55rn99z4": {
+    "prompt": "Em `pg_stat_replication`, o que `sync_state: async` diz?",
+    "hint": "A lição 12 muda isso.",
+    "choices": [
+      { "text": "O standby está atrasado e alcançando", "why": "Isso apareceria nas colunas de LSN, não em sync_state." },
+      { "text": "Commits não esperam por este standby", "why": "Isso: o primário não espera este standby confirmar um commit. Os commits retornam assim que o primário os tem." },
+      { "text": "O standby não está conectado", "why": "Um standby desconectado nem tem linha na view." },
+      { "text": "O standby reaplica mais rápido do que o primário escreve", "why": "sync_state não diz nada sobre velocidade." }
+    ]
+  },
+  "ex-89yzsf5d": {
+    "prompt": "As quatro posições em `pg_stat_replication` mostram `0/4000000`. O que isso diz?",
+    "hint": "Enviado, escrito, com flush, reaplicado.",
+    "choices": [
+      { "text": "A replicação parou nessa posição", "why": "O state era streaming; nada novo tinha sido escrito." },
+      { "text": "O slot está cheio", "why": "Slots não enchem; as posições batem porque não havia nada para enviar." },
+      { "text": "O standby escreveu o log mas não o reaplicou", "why": "O replay_lsn é igual aos outros; ele já reaplicou." },
+      { "text": "Ele reaplicou o que o primário escreveu", "why": "Isso: o standby tem, reaplicado, tudo o que o primário escreveu. Quando elas diferem, as diferenças são o atraso de replicação." }
+    ]
+  },
+  "ex-2r2dc72q": {
+    "prompt": "O que o standby respondeu a um `INSERT`?",
+    "hint": "Ele aplica a história do primário e não cria nenhuma própria.",
+    "choices": [
+      { "text": "Erro de somente leitura", "why": "Isso: cannot execute INSERT in a read-only transaction. A lição 19 trata de como as aplicações acham o servidor que aceita escritas." },
+      { "text": "Encaminhou o INSERT para o primário", "why": "O PostgreSQL não encaminha escritas; a aplicação tem que mandá-las ao primário." },
+      { "text": "Aceitou e o replicou de volta", "why": "A replicação corre num sentido só, do primário para o standby." },
+      { "text": "Enfileirou até a próxima promoção", "why": "Nada fica na fila; o comando falha." }
+    ]
+  },
+  "ex-w3s9znts": {
+    "prompt": "Que problema um slot de replicação resolve?",
+    "hint": "Sem ele, o primário recicla no seu próprio ritmo.",
+    "choices": [
+      { "text": "Standbys lendo dados não commitados", "why": "Standbys reaplicam a história commitada; slots tratam de retenção." },
+      { "text": "Dois standbys reaplicando em ordens diferentes", "why": "Cada um reaplica o mesmo log na mesma ordem." },
+      { "text": "Um standby atrasado achar seu log já reciclado", "why": "Isso: sem ele, um standby que fica para trás encontra o seu log reciclado. O slot faz o primário guardar cada segmento de que o standby ainda precisa." },
+      { "text": "O primário mandando log rápido demais", "why": "Slots não limitam a vazão de nada." }
+    ]
+  },
+  "ex-33vcmtdr": {
+    "prompt": "Com o standby parado e três updates rodados, quantos MB de log o slot segurava?",
+    "hint": "A coluna held.",
+    "unit": "MB"
+  },
+  "ex-cw3v3c35": {
+    "prompt": "Um standby foi desativado na sexta, mas o slot dele ficou no primário. O que acontece até segunda?",
+    "hint": "O archive quebrado da lição 4, de novo.",
+    "choices": [
+      { "text": "Nada: um slot inativo é ignorado", "why": "Um slot inativo mantém a promessa sem ninguém para cobrá-la." },
+      { "text": "O slot expira depois de 24 horas", "why": "Por padrão, slots não expiram." },
+      { "text": "O primário promove o standby sozinho", "why": "Nada promove ninguém aqui." },
+      { "text": "O log retido enche o disco", "why": "Isso: o primário guarda o log do fim de semana, e o disco dele enche. Um disco cheio para o primário. Vigie slots inativos e remova-os." }
+    ]
+  },
+  "ex-0fg8w0ap": {
+    "prompt": "O que `max_slot_wal_keep_size = '32MB'` fez com o slot inativo que segurava 49 MB?",
+    "hint": "wal_status.",
+    "choices": [
+      { "text": "Apagou o slot", "why": "O slot continua existindo; ele está marcado como lost." },
+      { "text": "Moveu o log para o standby", "why": "O standby estava parado; nada se moveu." },
+      { "text": "Marcou-o como lost", "why": "Isso: marcado como lost, os segmentos dele podem ser reciclados. O primário escolheu o próprio disco em vez do standby, e essa é a escolha certa." },
+      { "text": "Arquivou o log que ele segurava", "why": "Um slot só retém o log; copiá-lo para outro lugar é trabalho do arquivamento, não do limite." }
+    ]
+  },
+  "ex-je1kan6c": {
+    "prompt": "Depois que o slot foi perdido, o standby foi iniciado de novo. O que ele disse, e qual é a solução?",
+    "hint": "requested WAL segment has already been removed.",
+    "choices": [
+      { "text": "Log removido; refazer de um base backup", "why": "Isso: o segmento dele foi removido, então ele é reconstruído a partir de um base backup novo, a menos que um arquivo forneça o log que falta." },
+      { "text": "Alcançou o primário depois de um tempo", "why": "O primário não tinha mais o segmento, então não havia de onde alcançar." },
+      { "text": "Promoveu a si mesmo, já que o primário o recusou", "why": "Um standby não promove a si mesmo." },
+      { "text": "Reiniciou o primário para recuperar o segmento", "why": "Um standby não tem controle sobre o primário." }
+    ]
+  },
+  "ex-8rjkatd0": {
+    "prompt": "Um standby precisa sobreviver a uma queda de rede de quatro horas. O primário escreve 5 GB de log por hora. Qual é o menor `max_slot_wal_keep_size`, em GB?",
+    "hint": "Horas vezes a taxa.",
+    "unit": "GB"
+  },
+  "ex-vgzd9ha0": {
+    "prompt": "Como um arquivo ao lado do slot muda o que acontece quando um slot é perdido?",
+    "hint": "De onde mais um standby pode tirar segmentos antigos?",
+    "choices": [
+      { "text": "Impede que slots sejam perdidos", "why": "O limite continua valendo; o arquivo torna sobrevivível perder o slot." },
+      { "text": "Busca os segmentos antigos no arquivo e volta ao streaming", "why": "Isso: o standby busca no arquivo os segmentos que faltam e depois volta ao streaming. O slot mantém o log recente por perto; o arquivo guarda o resto. A lição 13 monta isso." },
+      { "text": "Faz o primário guardar o log por mais tempo", "why": "O arquivo é uma cópia em outro lugar; o pg_wal do primário não muda." },
+      { "text": "Nada; standbys não conseguem ler arquivos", "why": "Um standby com restore_command lê o arquivo como qualquer recuperação." }
+    ]
+  },
+  "ex-ym090eg2": {
+    "prompt": "Uma equipe tem um standby, um slot sem limite e nenhum backup, porque \"o standby é o nosso backup\". A que duas falhas ela está exposta?",
+    "hint": "Uma de cada metade do curso.",
+    "choices": [
+      { "text": "Consultas lentas no standby, e um primário lento", "why": "Desempenho não é o que essa configuração arrisca." },
+      { "text": "Uma queda de rede e uma falta de luz", "why": "O standby ajuda com as duas; é para isso que ele serve." },
+      { "text": "Slot de standby morto, e DELETE replicado", "why": "Isso. Um slot sem limite transforma um standby morto numa indisponibilidade, e nada protege os dados de um comando ruim." },
+      { "text": "Nenhuma, se o standby estiver em outro prédio", "why": "Distância ajuda com incêndios, não com deletes nem com discos cheios." }
+    ]
+  }
+}
