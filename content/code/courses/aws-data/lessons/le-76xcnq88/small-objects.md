@@ -34,7 +34,7 @@ changed except how it was cut up.
 
 **Packing the events into 64 MB files takes the requests to 0.00**: 123 files, written once and read
 123 times a day, cost fractions of a cent. The bytes stored are the same 7.63 GB. This is one reason
-data lakes keep their files large, and lesson 19 comes back to it: a query engine reading a lake pays
+data lakes keep their files large, and lesson 19 comes back to it. A query engine reading a lake pays
 for every file it opens as well as for the bytes, and the request bill is the part of that a price
 sheet shows.
 

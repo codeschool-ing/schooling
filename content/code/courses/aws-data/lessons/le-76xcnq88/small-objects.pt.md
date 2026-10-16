@@ -34,7 +34,7 @@ de como foram cortados.
 
 **Empacotar os eventos em arquivos de 64 MB leva as requisições a 0,00**: 123 arquivos, escritos uma
 vez e lidos 123 vezes por dia, custam frações de centavo. Os bytes guardados são os mesmos 7,63 GB.
-Esse é um dos motivos de lagos de dados manterem arquivos grandes, e a lição 19 volta a isso: um motor
+Esse é um dos motivos de lagos de dados manterem arquivos grandes, e a lição 19 volta a isso. Um motor
 de consulta que lê um lago paga por cada arquivo que abre, além dos bytes, e a conta de requisições é a
 parte disso que uma tabela de preços mostra.
 
