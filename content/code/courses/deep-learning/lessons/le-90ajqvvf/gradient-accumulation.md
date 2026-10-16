@@ -1,7 +1,16 @@
 ---
-title: stub
+title: Gradient accumulation
 version: 1
 ---
+
+The memory section showed the activations growing with the batch, so the batch is the first thing a
+graphics card refuses. Lesson 6 showed that the batch size is not free to change either: the learning
+rate and the number of steps were tuned with it. **When a batch does not fit, the gradient of that batch
+can still be computed, a piece at a time.**
+
+The gradient of a mean loss over 128 examples is the mean of their gradients. Four batches of 32 hold the
+same 128 examples, and `backward` adds into `.grad` rather than replacing it, the behaviour lesson 9's
+missing `zero_grad` turned into a bug. Here it is the tool. Save as `~/dl/accumulate.py`:
 
 ```schooling-example
 {
@@ -27,3 +36,37 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING accumulate
+```
+
+**The two gradients are the same.** Out of 38,282 entries, the largest difference is 5.12e-09, against a
+largest gradient of 0.032093. That is the rounding of float32 adding the same numbers in a different
+order, and `allclose` accepts it. Without the division by 4 the gradient comes out 4.0000 times too
+large, which is a learning rate four times too high under another name.
+
+In a training loop, the step and `zero_grad` move out of the batch loop and run once every four batches:
+
+```python
+for i, (x, y) in enumerate(batches):
+    loss = F.cross_entropy(model(x), y) / 4
+    loss.backward()
+    if (i + 1) % 4 == 0:
+        opt.step()
+        opt.zero_grad()
+```
+
+These lines are the pattern, not a program to run; `accumulate.py` above is their run.
+
+## What it costs, and where it differs
+
+**Accumulation saves memory and nothing else.** The arithmetic is the same as for the batch of 128, and
+the time is four batches of 32, which is at least the time of one batch of 128 and usually more, because
+each small batch pays the fixed costs of a step on its own. What is saved is the activations: the
+backward pass of each piece needs only that piece's 32 examples.
+
+It is exact for `cnn.py`, because nothing in that network looks across the examples of a batch. Lesson
+8's batch normalisation does: it normalises with the mean and the variance of the batch it is given, so
+four pieces of 32 are normalised with four different statistics, and the gradient is no longer the
+gradient of a batch of 128. Layer normalisation, which works inside each example, has no such problem.

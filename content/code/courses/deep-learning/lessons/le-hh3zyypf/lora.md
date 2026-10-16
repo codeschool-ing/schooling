@@ -6,8 +6,8 @@ version: 1
 Fine-tuning a layer replaces its weight matrix `W` with `W + ΔW`, where `ΔW` is whatever training
 added. For the 512-to-64 layer of `base.pt`, `ΔW` has 32,768 numbers, as many as `W` itself. **LoRA,
 short for low-rank adaptation, bets that the change a new task needs is far simpler than the matrix
-it changes**, and writes it as the product of two thin matrices: `ΔW = B A`, with `A` of `r` rows
-by 512 and `B` of 64 rows by `r`. The rank `r` is small, so the two together hold `r × (512 + 64)`
+it changes.** It writes the change as the product of two thin matrices, `ΔW = B A`, with `A` of `r`
+rows by 512 and `B` of 64 rows by `r`. The rank `r` is small, so the two together hold `r × (512 + 64)`
 numbers: 2,304 at rank 4, against 32,768.
 
 ```schooling-figure

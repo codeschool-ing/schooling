@@ -31,11 +31,11 @@
     "hint": "A regra 6 × N × D supõe algo sobre quantas vezes um peso é usado.",
     "choices": [
       {
-        "text": "Nada, já que a regra 6 × N × D vale para toda rede",
+        "text": "Nada, já que a regra 6 × N × D vale para toda rede, sejam quais forem as camadas",
         "why": "Ela vale onde cada peso é usado uma vez por exemplo. A CNN desta aula fez 52,4 operações por parâmetro por passo, não 6."
       },
       {
-        "text": "A rede convolucional vai sair mais barata, porque as camadas são menores",
+        "text": "A rede convolucional vai sair mais barata, porque cada camada dela guarda menos pesos que as da densa",
         "why": "Camadas menores querem dizer menos parâmetros por camada, não menos aritmética: cada peso é reusado em toda posição."
       },
       {
@@ -53,7 +53,7 @@
     "hint": "O que um passo custa que não depende do tamanho das matrizes?",
     "choices": [
       {
-        "text": "O contador exagera o custo de uma convolução",
+        "text": "O contador exagera o custo de uma convolução, contando cada produto duas vezes",
         "why": "Os números do contador foram conferidos à mão nesta seção; a aritmética é real."
       },
       {
@@ -65,7 +65,7 @@
         "why": "Certo. Chamar camadas, conferir formas e alocar saídas custam o mesmo para um produto pequeno e para um grande."
       },
       {
-        "text": "A CNN foi cronometrada em lotes menores que os do MLP",
+        "text": "A CNN foi cronometrada em lotes menores que os do MLP, então cada passo tinha menos a fazer",
         "why": "As duas foram cronometradas no mesmo lote de 32 dígitos."
       }
     ]
@@ -189,11 +189,11 @@
         "why": "Aí os pesos não teriam se mexido; eles se mexeram, porque ficam em float32."
       },
       {
-        "text": "Toda passada para a frente usou as cópias de 16 bits dos pesos iniciais, guardadas pelo autocast",
+        "text": "Cada passada para a frente rodou em cópias guardadas dos pesos iniciais",
         "why": "Certo. O bloco em volta do laço inteiro nunca terminou, então o cache nunca foi renovado. Um autocast por lote resolve."
       },
       {
-        "text": "Uma taxa de 0,1 é alta demais para aritmética de 16 bits",
+        "text": "Uma taxa de 0,1 é alta demais para aritmética de 16 bits, e todo passo passou do ponto",
         "why": "O mixed.py treinou a 0,1 com autocast e chegou a 0,969."
       },
       {
@@ -235,7 +235,7 @@
         "why": "O cnn.py não tem camada que olhe através do lote; é por isso que os dois bateram ali."
       },
       {
-        "text": "Sim, desde que cada perda seja dividida por 4",
+        "text": "Sim, desde que cada uma das quatro perdas seja dividida por 4 antes do backward",
         "why": "A divisão acerta a escala. Não acerta estatísticas calculadas sobre 32 exemplos em vez de 128."
       },
       {
@@ -243,7 +243,7 @@
         "why": "Certo. Quatro conjuntos de estatísticas sobre 32 não são um conjunto sobre 128, então o gradiente muda. A normalização por camada não tem esse problema."
       },
       {
-        "text": "Não, porque o acúmulo muda a taxa de aprendizado",
+        "text": "Não, porque acumular quatro pedaços muda a taxa de aprendizado da rede",
         "why": "Com a divisão por 4 a escala está certa; a diferença está nas estatísticas."
       }
     ]
@@ -257,11 +257,11 @@
         "why": "Certo. O PyTorch dividiu os produtos entre quatro processadores, então os tempos somados passam o do relógio."
       },
       {
-        "text": "`user` inclui o tempo esperando outros programas",
+        "text": "`user` inclui o tempo que o programa passou esperando outros programas",
         "why": "Esperar entra no `real`, que corre no relógio; o `user` conta só o tempo calculando."
       },
       {
-        "text": "O relógio do shell é menos preciso que o do processador",
+        "text": "O relógio do shell é menos preciso que o relógio de dentro do processador",
         "why": "A diferença é bem maior que qualquer imprecisão; são os quatro processadores."
       },
       {
@@ -305,7 +305,7 @@
         "why": "128 é o dobro de 64, então as épocas novas são tantas quanto todas as antigas."
       },
       {
-        "text": "O mesmo que a duplicação de 4 para 8",
+        "text": "O mesmo que a duplicação de 4 épocas para 8 épocas",
         "why": "Aquela somou 4 épocas; esta somou 64."
       },
       {
@@ -323,11 +323,11 @@
     "hint": "A mesma quantidade de aritmética, gasta de dois jeitos.",
     "choices": [
       {
-        "text": "120 épocas são demais para qualquer rede",
+        "text": "120 épocas são demais para qualquer rede, sejam quais forem os dados",
         "why": "Sobre as 1.077 imagens, 128 épocas deram a melhor acurácia da tabela."
       },
       {
-        "text": "Exemplos novos valem mais que passar de novo pelos mesmos",
+        "text": "Exemplos novos valem mais que passadas repetidas",
         "why": "Certo. Um conjunto pequeno percorrido muitas vezes é aprendido como ele mesmo, não como dígitos, o sobreajuste da aula 7."
       },
       {

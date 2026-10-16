@@ -1,7 +1,17 @@
 ---
-title: stub
+title: Acúmulo de gradientes
 version: 1
 ---
+
+A seção de memória mostrou as ativações crescendo com o lote, então o lote é a primeira coisa que uma
+placa de vídeo recusa. A aula 6 mostrou que o tamanho do lote também não é livre para mudar: a taxa de
+aprendizado e o número de passos foram ajustados com ele. **Quando um lote não cabe, o gradiente desse
+lote ainda pode ser calculado, um pedaço por vez.**
+
+O gradiente de uma perda média sobre 128 exemplos é a média dos gradientes deles. Quatro lotes de 32
+guardam os mesmos 128 exemplos, e o `backward` soma em `.grad` em vez de substituir, o comportamento que
+o `zero_grad` esquecido da aula 9 transformou em bug. Aqui ele é a ferramenta. Salve como
+`~/dl/accumulate.py`:
 
 ```schooling-example
 {
@@ -27,3 +37,37 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING accumulate
+```
+
+**Os dois gradientes são o mesmo.** Entre 38.282 entradas, a maior diferença é 5.12e-09, contra um maior
+gradiente de 0.032093. Isso é o arredondamento do float32 somando os mesmos números em outra ordem, e o
+`allclose` aceita. Sem a divisão por 4 o gradiente sai 4.0000 vezes grande demais, o que é uma taxa de
+aprendizado quatro vezes alta demais com outro nome.
+
+Num laço de treino, o passo e o `zero_grad` saem do laço dos lotes e rodam uma vez a cada quatro lotes:
+
+```python
+for i, (x, y) in enumerate(batches):
+    loss = F.cross_entropy(model(x), y) / 4
+    loss.backward()
+    if (i + 1) % 4 == 0:
+        opt.step()
+        opt.zero_grad()
+```
+
+Estas linhas são o padrão, não um programa para rodar; o `accumulate.py` acima é a execução delas.
+
+## O que custa, e onde difere
+
+**O acúmulo economiza memória e mais nada.** A aritmética é a mesma do lote de 128, e o tempo é o de
+quatro lotes de 32, que é pelo menos o tempo de um lote de 128 e em geral mais, porque cada lote pequeno
+paga sozinho os custos fixos de um passo. O que se economiza são as ativações: a passada para trás de cada
+pedaço só precisa dos 32 exemplos daquele pedaço.
+
+Ele é exato para o `cnn.py`, porque nada nessa rede olha através dos exemplos de um lote. A normalização
+em lote da aula 8 olha: ela normaliza com a média e a variância do lote que recebe, então quatro pedaços
+de 32 são normalizados com quatro estatísticas diferentes, e o gradiente deixa de ser o de um lote de 128.
+A normalização por camada, que trabalha dentro de cada exemplo, não tem esse problema.

@@ -1,7 +1,14 @@
 ---
-title: stub
+title: Precisão mista
 version: 1
 ---
+
+Guardar um número em 16 bits em vez de 32 soa como cortar a exatidão pela metade, e cortar pela metade a
+exatidão de cada peso soa como uma rede pior. **Não é nada disso que acontece.** Um número de 16 bits
+perde algo específico, que depende do formato, e a precisão mista mantém em 32 bits exatamente os números
+que não podem pagar essa perda.
+
+Há dois formatos de 16 bits em uso, e eles perdem coisas diferentes. Salve como `~/dl/precision.py`:
 
 ```schooling-example
 {
@@ -19,6 +26,28 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING precision
+```
+
+**O bfloat16 mantém o alcance do float32 e abre mão da precisão.** O maior número dele é 3.39e+38, tão
+grande quanto o do float32, mas o passo de 1 até o próximo número que ele consegue guardar é 0.00781,
+então 1 + 0,001 volta como 1. Um peso de 1 que recebe uma atualização de 0,001 não se mexe nada. É por
+isso que os próprios pesos ficam em float32, e só a aritmética das passadas para a frente e para trás roda
+em 16 bits.
+
+**O float16 mantém mais precisão e abre mão do alcance.** Ele arredonda 1 + 0,001 para 1.00098, mas o
+maior número dele é 6.55e+04, então 70000 vira `inf`, e 1e-6 × 1e-3 vira 0. Gradientes no fundo de uma
+rede podem ser pequenos assim, e em float16 eles somem. O remédio é um scaler, mostrado no fim desta
+seção.
+
+## bfloat16 no processador
+
+O `torch.autocast` decide, operação por operação, o que roda em 16 bits: produtos de matrizes e
+convoluções rodam, e as operações que precisam do alcance ou da precisão, entre elas o softmax e o
+logaritmo dentro da perda, ficam em float32. O programa abaixo treina a CNN da aula 11 por dez épocas dos
+dois jeitos. Salve como `~/dl/mixed.py`:
 
 ```schooling-example
 {
@@ -40,6 +69,26 @@ version: 1
 }
 ```
 
+```
+PENDING mixed
+```
+
+**A acurácia é a mesma, 0,969 dos dois jeitos**, e a perda de validação mudou na terceira casa, de 0,1291
+para 0,1322. Os pesos ficaram em `torch.float32` nas duas execuções, enquanto as saídas da rede saíram em
+`torch.bfloat16` com o autocast. Os segundos foram medidos enquanto outros programas dividiam os
+processadores, então leia-os como uma ordem: TIMESENTENCE
+
+Numa placa de vídeo a resposta é outra, e é por causa dela que a precisão mista existe. As placas NVIDIA
+recentes têm unidades que multiplicam matrizes de 16 bits várias vezes mais rápido que as de 32, e cada
+número em 16 bits é metade dos bytes a mover entre a memória da placa e essas unidades. Um modelo grande
+treinado em float32 numa placa dessas deixa a maior parte dessa velocidade sem uso. Isso não foi executado
+neste curso.
+
+## A armadilha: autocast em volta do laço inteiro
+
+É tentador pôr um único `autocast` em volta do laço de treino que já existe, para que o `loop.py` não
+precise mudar. Salve como `~/dl/trap.py`:
+
 ```schooling-example
 {
   "language": "python",
@@ -56,3 +105,38 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING trap
+```
+
+**A perda de treino é 2,3230 nas três épocas, até a quarta casa**, e a acurácia fica em 0,039, enquanto
+a última linha mostra que os pesos se mexeram. A rede não aprendeu nada que a passada para a frente dela
+conseguisse ver. O autocast guarda a cópia de 16 bits que faz de cada peso enquanto o bloco dele durar,
+para que um peso usado duas vezes seja convertido uma só. Em volta do laço inteiro o bloco nunca termina,
+e toda passada para a frente, por três épocas, roda em cópias dos pesos iniciais. **O autocast vai em
+volta da passada para a frente e da perda de um lote**, como o `mixed.py` o põe, para que cada lote
+comece um bloco novo.
+
+## float16 numa placa de vídeo, com um scaler
+
+Nas placas NVIDIA o formato de 16 bits de costume tem sido o float16, que roda rápido em placas mais
+antigas que não têm bfloat16. O alcance pequeno dele é tratado por um `GradScaler`. Ele multiplica a
+perda por um fator grande antes do `backward`, para que gradientes pequenos fiquem acima do ponto em que
+o float16 os arredonda para 0, e divide os gradientes pelo mesmo fator antes do passo. Se um gradiente
+estourou para `inf`, ele pula aquele passo e baixa o fator. Isto precisa de uma placa NVIDIA e não foi
+executado neste curso:
+
+```python
+scaler = torch.amp.GradScaler("cuda")
+for x, y in batches:
+    x, y = x.to("cuda"), y.to("cuda")
+    with torch.autocast("cuda", dtype=torch.float16):
+        loss = F.cross_entropy(model(x), y)
+    opt.zero_grad()
+    scaler.scale(loss).backward()
+    scaler.step(opt)
+    scaler.update()
+```
+
+Com bfloat16 o scaler não é necessário, porque o alcance dele é o do float32.

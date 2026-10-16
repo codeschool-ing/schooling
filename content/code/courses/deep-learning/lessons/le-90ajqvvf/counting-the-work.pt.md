@@ -1,7 +1,17 @@
 ---
-title: stub
+title: Contando o trabalho
 version: 1
 ---
+
+Um modelo é descrito pelo número de parâmetros, então o número de parâmetros é o primeiro palpite comum
+sobre quanto custa treiná-lo. **A contagem de parâmetros mede memória, não trabalho.** O que ocupa o
+tempo de um processador é aritmética, e um parâmetro pode entrar numa multiplicação por exemplo ou em
+centenas delas.
+
+O PyTorch consegue contar a aritmética por você. O programa abaixo a conta para o MLP da aula 9 e para a
+CNN da aula 11, por exemplo, só para a passada para a frente e para um passo de treino inteiro, e depois
+cronometra um passo de treino de cada uma. Ele precisa, ao lado, do `digits.py` da aula 1, do
+`tdigits.py` e do `mlp.py` da aula 9 e do `cnn.py` da aula 11. Salve-o como `~/dl/work.py`:
 
 ```schooling-example
 {
@@ -23,3 +33,51 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING work
+```
+
+**O MLP faz 2,0 operações de ponto flutuante por parâmetro na passada para a frente.** Cada peso
+multiplica uma entrada, e o produto é somado a uma soma: uma multiplicação e uma adição, uma vez por
+exemplo. Os vieses são um punhado de adições, que o contador deixa de fora.
+
+**A CNN faz 17,6 por parâmetro**, porque um peso de convolução não é usado uma vez só. Um filtro desliza
+pelas 64 posições do mapa de 8 por 8, e o preenchimento mantém todo mapa em 8 por 8, então cada peso das
+duas convoluções multiplica 64 vezes por imagem. A aula 11 viu que a CNN tem quase dezesseis vezes os
+parâmetros do MLP. Em aritmética por passo de treino, ela faz 198 vezes mais.
+
+## A passada para a frente, e a para trás pelo dobro
+
+**Um passo de treino custa umas três passadas para a frente.** A passada para trás de uma camada
+calcula dois produtos, cada um mais ou menos do tamanho do produto da ida: o gradiente da perda em
+relação aos pesos da camada, e o gradiente em relação à entrada da camada, de que a camada de baixo
+precisa. O passo da CNN dá 2,97 vezes a passada para a frente dela. O do MLP dá 2,14 vezes, porque a
+primeira camada lê a imagem, e ninguém precisa de gradiente para a imagem, então o segundo produto dessa
+camada é pulado.
+
+Daí sai a regra usada para estimar quanto um modelo grande vai custar antes que alguém o treine. **O
+treino leva umas 6 × N × D operações**: 2 por parâmetro na ida e 4 na volta, para N parâmetros e D
+exemplos vistos. Num modelo de linguagem, D conta tokens, e cada peso é usado uma vez por token, que é o
+caso para o qual a regra foi feita. O MLP fica abaixo dela, com 4,2 por parâmetro, pelo motivo que acabou
+de ser dado. A CNN a quebra com 52,4 por parâmetro, porque uma convolução reusa os pesos de posição em
+posição. A regra vale para camadas densas, e um modelo feito de outra coisa precisa ter a aritmética
+contada.
+
+## O tempo não acompanha a aritmética, neste tamanho
+
+Os milissegundos são os da máquina do curso, medidos enquanto outros programas dividiam os quatro
+processadores dela. Os seus vão ser diferentes, então **compare as razões.** A CNN fez 198 vezes a
+aritmética do MLP e levou TIMERATIO vezes o tempo.
+
+O motivo é o que acontece em volta da aritmética. Todo passo paga custos fixos, seja qual for o tamanho
+das matrizes: o Python chama cada camada, o PyTorch confere formas, escolhe uma rotina e aloca as saídas.
+**No MLP, quase o passo inteiro é esse custo fixo**, e é por isso que as operações por segundo dele saem
+tão baixas perto das da CNN. A aritmética só prevê o tempo quando cada passo tem o bastante dela para
+manter o processador ocupado: camadas maiores, imagens maiores, lotes maiores.
+
+Uma placa de vídeo deixa isso mais nítido. A aritmética dela é muitas vezes mais rápida que a de um
+processador e o custo fixo por passo não é, então um modelo tão pequeno quanto estes deixa a placa
+esperando a maior parte do tempo. Isso não foi executado neste curso, que não tem placa de vídeo, mas é o
+motivo pelo qual um modelo pequeno numa placa cara é dinheiro gasto com espera. A aula 10 mediu o outro
+tipo de espera, a dos dados.

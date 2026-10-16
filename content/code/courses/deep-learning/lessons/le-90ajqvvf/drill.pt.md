@@ -1,4 +1,4 @@
 ---
-title: stub
+title: Juntando tudo
 version: 1
 ---

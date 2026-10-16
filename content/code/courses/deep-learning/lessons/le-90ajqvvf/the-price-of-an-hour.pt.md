@@ -1,7 +1,31 @@
 ---
-title: stub
+title: O preço de uma hora
 version: 1
 ---
+
+Quem aluga uma máquina para treinar paga por hora, não por operação. **A conta é o tempo que a execução
+levou vezes o preço de uma hora**, e o tempo é decidido por tudo o que esta aula mediu: a aritmética, o
+custo fixo em volta dela, a precisão, o lote.
+
+Comece por uma execução deste curso. O `compare.py` da aula 11 treina o MLP da aula 9, um MLP mais largo
+e a CNN, 30 épocas cada: a comparação inteira da aula 11 num comando só. Ponha `time` na frente do comando
+e o shell informa quanto ele levou:
+
+```
+PENDING compare
+```
+
+`real` é o tempo no relógio, do início ao fim. `user` é tempo de processador, somado em todos os
+processadores que o programa usou, e é por isso que ele pode sair maior que o `real`: o PyTorch divide um
+produto grande entre os quatro processadores da máquina. Estes são os números da máquina do curso,
+medidos enquanto outros programas rodavam ao lado. Os seus vão ser diferentes.
+
+## Um preço é uma variável
+
+O programa abaixo transforma um tempo numa conta. **O preço no topo dele é ilustrativo**: 2,50 por hora,
+sem moeda, escolhido em outubro de 2026 para deixar a conta fácil de acompanhar. Não é o que algum
+provedor cobra, e os preços da mesma máquina variam entre provedores e mudam de um mês para o outro.
+Ponha o preço que lhe passarem no dia. Salve como `~/dl/bill.py`:
 
 ```schooling-example
 {
@@ -19,3 +43,33 @@ version: 1
   ]
 }
 ```
+
+Rode-o com os segundos da linha `real` acima, arredondados:
+
+```
+PENDING bill
+```
+
+**A execução do curso custa PRICE a esse preço**, uma pequena fração de uma unidade, seja qual for a
+moeda. A segunda metade é a mesma conta para um modelo que precisa mesmo de orçamento, feita antes de
+treiná-lo, com a regra 6 × N × D da primeira seção. Um modelo de 7 bilhões de parâmetros treinado com 20
+tokens por parâmetro precisa de 5.88e+21 operações. Em placas que sustentam 40% de um pico de 1e15 por
+segundo, isso dá 4.083 horas de placa, ou 10.208 ao preço ilustrativo.
+
+**Mais placas compram tempo, não dinheiro.** Oito placas levam 21,3 dias e 256 levam 0,7 dia, e as horas
+de placa, portanto a conta, são as mesmas 4.083 nos dois casos. Na prática o grupo maior custa um pouco
+mais, porque as placas gastam parte de cada passo trocando gradientes, o que o `KEPT` teria de absorver.
+
+## A suposição que mais mexe na conta
+
+Cada linha abaixo do comentário no `bill.py` é uma suposição, e a conta acompanha cada uma delas, para
+cima ou para baixo. A que mais erra é o `KEPT`, a fração do pico da placa que o treino de fato sustenta.
+A primeira seção desta aula mediu um dos motivos pelos quais ela cai, o custo fixo em volta de matrizes
+pequenas, e a aula 10 outro, a espera pelos dados. Com 20% em vez de 40%, o mesmo modelo custa o dobro, e
+nada na ficha técnica avisa.
+
+Daí saem dois hábitos. **Meça antes de orçar**: treine algumas centenas de passos, cronometre-os e
+calcule a execução completa a partir disso, não de uma ficha técnica. E **salve pelo caminho**, os pesos e
+o estado do otimizador, com o `state_dict` da aula 9. As máquinas alugadas mais baratas são as que o
+provedor pode tomar de volta com pouco aviso, e uma execução que retoma do último salvamento perde minutos
+quando isso acontece, não dias.

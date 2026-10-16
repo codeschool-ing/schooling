@@ -4,9 +4,9 @@ version: 1
 ---
 
 Fine-tuning changes weights that were already doing a job. **If the old job still matters, the
-question is what is left of it afterwards**, and the cases where it matters are common: a model
-that gains new classes and must keep the old ones, a deployed model extended to a second task, a
-language model taught a narrow skill that should still answer everything else.
+question is what is left of it afterwards.** That case is common. A model gains new classes and
+must keep the old ones; a deployed model is extended to a second task; a language model is taught a
+narrow skill and should still answer everything else.
 
 `base.pt` makes the question easy to ask. Its own head, `Linear(64, 5)` for the digits 0 to 4, can
 be set aside before the new head replaces it and put back on the fine-tuned body at any moment.

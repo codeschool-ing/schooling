@@ -73,8 +73,9 @@ The other decisions carry over unchanged:
 
 This is the usual shape of QLoRA with Hugging Face's `transformers`, `bitsandbytes` and `peft`
 libraries, none of which this course installs. **Not run for this course**: the first call
-downloads the 12.6 GiB of 16-bit weights `sizes.py` counted, from `huggingface.co`, which this
-lab cannot reach and where the model's page asks you to accept its licence first, and `load_in_4bit` needs an NVIDIA graphics card.
+downloads the 12.6 GiB of 16-bit weights `sizes.py` counted from `huggingface.co`, which this lab
+cannot reach, and `load_in_4bit` needs an NVIDIA graphics card. The model's page there also asks
+you to accept its licence before the download.
 
 ```python
 import torch

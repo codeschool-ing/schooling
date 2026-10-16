@@ -1,7 +1,23 @@
 ---
-title: stub
+title: O que o treino guarda na memória
 version: 1
 ---
+
+Um modelo salvo é só os pesos dele: o `mlp.pt` da aula 9 guardava 2.410 números. Então é fácil achar que
+o treino precisa de mais ou menos tanta memória quanto o arquivo ocupa no disco. **O treino guarda
+quatro coisas, e os pesos são só uma delas.**
+
+- Os pesos, 4 bytes cada em float32.
+- Os gradientes, um por peso, do mesmo tamanho: o `backward` os preenche e o `step` os lê.
+- O estado do otimizador. O SGD simples não guarda nenhum. O SGD com momentum guarda um número por
+  peso, e o Adam guarda dois, as médias móveis do gradiente e do quadrado dele que a aula 5 construiu.
+- As ativações: o que a passada para a frente guarda para que a passada para trás calcule os produtos
+  dela. O backward da aula 3 precisava da entrada de cada camada, e o do PyTorch também precisa.
+
+As três primeiras crescem com o número de parâmetros, e com Adam em float32 somam 16 bytes por
+parâmetro. **As ativações crescem com o lote**, porque cada exemplo dele tem as suas. O programa abaixo
+conta as quatro à mão para a CNN da aula 11 e depois as mede nos tensores que o PyTorch de fato guarda.
+Salve como `~/dl/memory.py`:
 
 ```schooling-example
 {
@@ -27,3 +43,44 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING memory
+```
+
+**A conta à mão e a medição batem até o byte**: 153.128 bytes de pesos, outro tanto de gradientes, e
+306.256 dos buffers do Adam. As ativações dão 18.992 bytes por exemplo nos dois tamanhos de lote, que é
+exatamente a conta à mão.
+
+Num lote de 32, as ativações ocupam quase tanto quanto pesos, gradientes e buffers juntos. Num lote de
+1.077, ocupam 20.454.388 bytes, contra 153.128 dos pesos. **Numa rede tão pequena, a memória do treino é
+o lote**, e numa grande é tudo: a última linha aplica os 16 bytes por parâmetro a um modelo de 7 bilhões
+de parâmetros e chega a 112 GB antes de uma única ativação. Um modelo desse tamanho é treinado em várias
+placas ao mesmo tempo, com os pesos, os gradientes e o estado do otimizador divididos entre elas.
+
+## Fazendo caber
+
+Quatro remédios são de uso comum, e as duas próximas seções rodam dois deles.
+
+- Menos bytes por número. A próxima seção guarda as ativações da passada para a frente em 16 bits em vez
+  de 32.
+- Um lote menor que ainda se comporta como um grande, somando os gradientes de vários lotes pequenos
+  antes de um passo: a seção depois dela.
+- Recalcular em vez de guardar. `torch.utils.checkpoint` joga fora as ativações de dentro de um bloco de
+  camadas e roda esse bloco para a frente de novo durante a passada para trás. Troca aritmética extra por
+  memória. Não foi executado aqui, porque nada neste curso tem falta de memória.
+- Um otimizador mais leve. O SGD com momentum guarda metade do estado do Adam; a aula 5 comparou o que
+  cada um faz com o treino.
+
+Numa placa de vídeo a memória é a da própria placa, separada da do computador, e é o limite que decide o
+tamanho do lote. O PyTorch informa quanto usou no pico. Estas linhas precisam de uma placa NVIDIA e não
+foram executadas neste curso:
+
+```python
+torch.cuda.reset_peak_memory_stats()
+# ... one training step, with the model and the batch on "cuda" ...
+print(torch.cuda.max_memory_allocated() / 2**20, "MiB at the peak")
+```
+
+O `nvidia-smi`, rodado num terminal numa máquina dessas, mostra a mesma memória de fora do programa, para
+cada processo que usa a placa.

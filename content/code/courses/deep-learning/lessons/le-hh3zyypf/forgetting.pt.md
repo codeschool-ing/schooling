@@ -4,9 +4,9 @@ version: 1
 ---
 
 O fine-tuning muda pesos que já faziam um trabalho. **Se o trabalho antigo ainda importa, a pergunta
-é o que sobra dele depois**, e os casos em que importa são comuns: um modelo que ganha classes novas
-e precisa manter as antigas, um modelo em produção estendido para uma segunda tarefa, um modelo de
-linguagem ensinado numa habilidade estreita que ainda deveria responder a todo o resto.
+é o que sobra dele depois.** E esse caso é comum. Um modelo ganha classes novas e precisa manter as
+antigas; um modelo em produção é estendido para uma segunda tarefa; um modelo de linguagem aprende
+uma habilidade estreita e ainda deveria responder a todo o resto.
 
 O `base.pt` torna a pergunta fácil de fazer. A cabeça dele, `Linear(64, 5)` para os dígitos de 0 a
 4, pode ser guardada antes de a cabeça nova tomar o lugar dela e posta de volta sobre o corpo

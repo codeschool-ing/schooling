@@ -1,7 +1,31 @@
 ---
-title: stub
+title: The price of an hour
 version: 1
 ---
+
+Whoever rents a machine to train on is charged for hours, not for operations. **The bill is the time the
+run took times the price of an hour**, and the time is decided by everything this lesson has measured:
+the arithmetic, the overhead around it, the precision, the batch.
+
+Start with a run of this course. Lesson 11's `compare.py` trains lesson 9's MLP, a wider MLP and the CNN,
+30 epochs each: the whole of lesson 11's comparison in one command. Put `time` in front of the command and
+the shell reports how long it took:
+
+```
+PENDING compare
+```
+
+`real` is the time on the clock, from start to finish. `user` is processor time, added up over all the
+processors the program used, which is why it can come out larger than `real`: PyTorch splits a large
+product across the four processors of the machine. These are the course machine's figures, measured
+while other programs were running beside it. Yours will differ.
+
+## A price is a variable
+
+The program below turns a time into a bill. **The price at its top is illustrative**: 2.50 an hour, in
+no currency, chosen in October 2026 to make the arithmetic easy to follow. It is not what any provider
+charges, and prices for the same machine differ between providers and change from month to month. Put in
+the price you are quoted on the day. Save as `~/dl/bill.py`:
 
 ```schooling-example
 {
@@ -19,3 +43,33 @@ version: 1
   ]
 }
 ```
+
+Run it with the seconds of the `real` line above, rounded:
+
+```
+PENDING bill
+```
+
+**The course's run costs PRICE at that price**, a small fraction of one unit of whatever the currency is. The second half is the same
+arithmetic for a model that does need a budget, worked out before it is trained, with the 6 × N × D rule
+from the first section. A model of 7 billion parameters trained on 20 tokens per parameter needs 5.88e+21
+operations. On cards that sustain 40% of a peak of 1e15 per second, that is 4,083 card-hours, or 10,208
+at the illustrative price.
+
+**More cards buy time, not money.** Eight cards take 21.3 days and 256 take 0.7 days, and the card-hours,
+so the bill, are the same 4,083 either way. In practice the larger group costs somewhat more, because the
+cards spend part of each step exchanging gradients, which `KEPT` would have to absorb.
+
+## The assumption that moves the bill most
+
+Every line under the comment in `bill.py` is an assumption, and the bill scales with each of them, up
+or down. The one most often wrong is `KEPT`, the share of the card's peak that the job actually sustains.
+The first section of this lesson measured one reason it falls, the overhead around small matrices, and
+lesson 10 another, waiting for data. At 20% instead of 40% the same model costs twice as much, and
+nothing on the data sheet says so.
+
+Two habits follow. **Measure before you budget**: train for a few hundred steps, time them, and work out
+the full run from that rather than from a data sheet. And **save as you go**, the weights and the
+optimiser's state, with the `state_dict` of lesson 9. The cheapest rented machines are the ones the
+provider can take back at short notice, and a run
+that can resume from its last save loses minutes when that happens, not days.

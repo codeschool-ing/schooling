@@ -73,9 +73,9 @@ As outras decisões passam sem mudança:
 
 Este é o formato de costume do QLoRA com as bibliotecas `transformers`, `bitsandbytes` e `peft` do
 Hugging Face, e nenhuma delas é instalada neste curso. **Não executado neste curso**: a primeira
-chamada baixa os 12,6 GiB de pesos em 16 bits que o `sizes.py` contou, do `huggingface.co`, que este
-laboratório não alcança e onde a página do modelo pede que você aceite a licença dele antes, e o
-`load_in_4bit` precisa de uma placa de vídeo NVIDIA.
+chamada baixa os 12,6 GiB de pesos em 16 bits que o `sizes.py` contou do `huggingface.co`, que este
+laboratório não alcança, e o `load_in_4bit` precisa de uma placa de vídeo NVIDIA. A página do modelo
+lá também pede que você aceite a licença dele antes do download.
 
 ```python
 import torch

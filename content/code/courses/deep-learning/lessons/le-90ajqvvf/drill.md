@@ -1,4 +1,4 @@
 ---
-title: stub
+title: Putting it together
 version: 1
 ---

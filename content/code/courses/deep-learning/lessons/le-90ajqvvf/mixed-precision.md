@@ -1,7 +1,14 @@
 ---
-title: stub
+title: Mixed precision
 version: 1
 ---
+
+Storing a number in 16 bits instead of 32 sounds like halving its accuracy, and halving the accuracy of
+every weight sounds like a worse network. **Neither is how it works.** A 16-bit number loses something
+specific, which depends on the format, and mixed precision keeps in 32 bits exactly the numbers that
+cannot afford the loss.
+
+There are two 16-bit formats in use, and they lose different things. Save as `~/dl/precision.py`:
 
 ```schooling-example
 {
@@ -19,6 +26,26 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING precision
+```
+
+**bfloat16 keeps float32's range and gives up precision.** Its largest number is 3.39e+38, as large as
+float32's, but the step from 1 to the next number it can hold is 0.00781, so 1 + 0.001 comes back as 1.
+A weight of 1 that receives an update of 0.001 does not move at all. That is why the weights themselves
+stay in float32, and only the arithmetic of the forward and backward passes runs in 16 bits.
+
+**float16 keeps more precision and gives up range.** It rounds 1 + 0.001 to 1.00098, but its largest
+number is 6.55e+04, so 70000 becomes `inf`, and 1e-6 × 1e-3 becomes 0. Gradients deep in a network can be
+that small, and in float16 they vanish. The cure is a scaler, shown at the end of this section.
+
+## bfloat16 on the processor
+
+`torch.autocast` decides, operation by operation, which runs in 16 bits: matrix products and
+convolutions do, and operations that need the range or the precision, the softmax and the logarithm in
+the loss among them, stay in float32. The program below trains lesson 11's CNN for ten epochs both ways.
+Save as `~/dl/mixed.py`:
 
 ```schooling-example
 {
@@ -40,6 +67,25 @@ version: 1
 }
 ```
 
+```
+PENDING mixed
+```
+
+**The accuracy is the same, 0.969 both ways**, and the validation loss moved in the third decimal,
+from 0.1291 to 0.1322. The weights stayed `torch.float32` in both runs, while the network's outputs came
+out in `torch.bfloat16` under autocast. The seconds were measured while other programs shared the
+processors, so read them as an ordering: TIMESENTENCE
+
+On a graphics card the answer is different, and it is the reason mixed precision exists. Recent NVIDIA
+cards have units that multiply 16-bit matrices several times faster than 32-bit ones, and every number
+in 16 bits is half the bytes to move between the card's memory and those units. A large model trained in
+float32 on such a card leaves most of that speed unused. That was not run for this course.
+
+## The trap: autocast around the whole loop
+
+It is tempting to wrap one `autocast` around the existing training loop, so that `loop.py` does not
+have to change. Save as `~/dl/trap.py`:
+
 ```schooling-example
 {
   "language": "python",
@@ -56,3 +102,36 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING trap
+```
+
+**The training loss is 2.3230 in all three epochs, to the fourth decimal**, and the accuracy stays at
+0.039, while the last line shows the weights did move. The network learnt nothing that its forward pass
+could see. Autocast keeps the 16-bit copy it makes of each weight for as long as its block lasts, so that
+a weight used twice is converted once. Around the whole loop the block never ends, and every forward pass
+for three epochs runs on copies of the initial weights. **Autocast belongs around the forward pass and
+the loss of one batch**, as `mixed.py` puts it, so that each batch starts a fresh block.
+
+## float16 on a graphics card, with a scaler
+
+On an NVIDIA card the usual 16-bit format has been float16, which runs fast on older cards that lack
+bfloat16. Its small range is handled by a `GradScaler`. It multiplies the loss by a large factor before
+`backward`, so that small gradients stay above the point where float16 rounds them to 0, and divides the
+gradients by the same factor before the step. If a gradient has overflowed to `inf`, it skips that step
+and lowers the factor. This needs an NVIDIA card and was not run for this course:
+
+```python
+scaler = torch.amp.GradScaler("cuda")
+for x, y in batches:
+    x, y = x.to("cuda"), y.to("cuda")
+    with torch.autocast("cuda", dtype=torch.float16):
+        loss = F.cross_entropy(model(x), y)
+    opt.zero_grad()
+    scaler.scale(loss).backward()
+    scaler.step(opt)
+    scaler.update()
+```
+
+With bfloat16 the scaler is not needed, because its range is float32's.

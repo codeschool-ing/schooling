@@ -55,12 +55,12 @@
     "hint": "The 6 × N × D rule assumes something about how often a weight is used.",
     "choices": [
       {
-        "text": "Nothing, since the 6 × N × D rule holds for every network",
+        "text": "Nothing, since the 6 × N × D rule holds for every network whatever its layers",
         "correct": false,
         "why": "It holds where each weight is used once per example. The CNN of this lesson did 52.4 operations per parameter per step, not 6."
       },
       {
-        "text": "The convolutional network will be cheaper, because its layers are smaller",
+        "text": "The convolutional network will be cheaper, because each of its layers holds fewer weights",
         "correct": false,
         "why": "Smaller layers mean fewer parameters per layer, not less arithmetic: each weight is reused at every position."
       },
@@ -87,7 +87,7 @@
     "hint": "What does a step cost that does not depend on the size of the matrices?",
     "choices": [
       {
-        "text": "The counter overstates what a convolution costs",
+        "text": "The counter overstates what a convolution costs, counting each product twice",
         "correct": false,
         "why": "The counter's numbers were checked by hand in this section; the arithmetic is real."
       },
@@ -102,7 +102,7 @@
         "why": "Right. Calling layers, checking shapes and allocating outputs cost the same for a small product as for a large one."
       },
       {
-        "text": "The CNN was timed on smaller batches than the MLP",
+        "text": "The CNN was timed on smaller batches than the MLP, so each step had less to do",
         "correct": false,
         "why": "Both were timed on the same batch of 32 digits."
       }
@@ -284,12 +284,12 @@
         "why": "Then the weights would not have moved; they did, because they are kept in float32."
       },
       {
-        "text": "Every forward pass used autocast's cached 16-bit copies of the initial weights",
+        "text": "Each forward pass ran on cached copies of the initial weights",
         "correct": true,
         "why": "Right. The block around the whole loop never ended, so the cache was never refreshed. One autocast per batch fixes it."
       },
       {
-        "text": "A rate of 0.1 is too high for 16-bit arithmetic",
+        "text": "A rate of 0.1 is too high for 16-bit arithmetic, so every step overshot",
         "correct": false,
         "why": "mixed.py trained at 0.1 under autocast and reached 0.969."
       },
@@ -352,7 +352,7 @@
         "why": "cnn.py has no layer that looks across the batch; that is why the two agreed there."
       },
       {
-        "text": "Yes, provided each loss is divided by 4",
+        "text": "Yes, provided each of the four losses is divided by 4 before backward",
         "correct": false,
         "why": "The division fixes the scale. It cannot fix statistics computed over 32 examples instead of 128."
       },
@@ -362,7 +362,7 @@
         "why": "Right. Four sets of statistics over 32 are not one set over 128, so the gradient differs. Layer normalisation has no such problem."
       },
       {
-        "text": "No, because accumulation changes the learning rate",
+        "text": "No, because accumulating four pieces changes the learning rate",
         "correct": false,
         "why": "With the division by 4 the scale is right; the difference is in the statistics."
       }
@@ -384,12 +384,12 @@
         "why": "Right. PyTorch split the products across four processors, so their times add up past the clock's."
       },
       {
-        "text": "`user` includes the time spent waiting for other programs",
+        "text": "`user` includes the time the program spent waiting for other programs",
         "correct": false,
         "why": "Waiting is in `real`, which runs on the clock; `user` counts only time spent computing."
       },
       {
-        "text": "The shell's clock is less precise than the processor's",
+        "text": "The shell's clock is less precise than the one inside the processor",
         "correct": false,
         "why": "The difference is far larger than any imprecision; it is the four processors."
       },
@@ -460,7 +460,7 @@
         "why": "128 is twice 64, so the new epochs are as many as all the old ones."
       },
       {
-        "text": "The same as the doubling from 4 to 8",
+        "text": "The same as the doubling from 4 epochs to 8 epochs",
         "correct": false,
         "why": "That one added 4 epochs; this one added 64."
       },
@@ -487,12 +487,12 @@
     "hint": "Same amount of arithmetic, spent in two ways.",
     "choices": [
       {
-        "text": "120 epochs is too many for any network",
+        "text": "120 epochs is too many for any network, whatever the data",
         "correct": false,
         "why": "On all 1,077 images, 128 epochs gave the best accuracy of the table."
       },
       {
-        "text": "New examples are worth more than passing over the same ones again",
+        "text": "New examples are worth more than repeated passes",
         "correct": true,
         "why": "Right. A small set gone over many times is learnt as itself rather than as digits, the overfitting of lesson 7."
       },

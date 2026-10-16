@@ -6,8 +6,8 @@ version: 1
 Fazer fine-tuning de uma camada troca a matriz de pesos `W` por `W + ΔW`, em que `ΔW` é o que o
 treino somou. Na camada de 512 para 64 do `base.pt`, `ΔW` tem 32.768 números, tantos quanto o
 próprio `W`. **LoRA, sigla de low-rank adaptation, aposta que a mudança de que uma tarefa nova
-precisa é bem mais simples que a matriz que ela muda**, e a escreve como o produto de duas matrizes
-finas: `ΔW = B A`, com `A` de `r` linhas por 512 e `B` de 64 linhas por `r`. O rank `r` é pequeno,
+precisa é bem mais simples que a matriz que ela muda.** Ela escreve a mudança como o produto de duas
+matrizes finas, `ΔW = B A`, com `A` de `r` linhas por 512 e `B` de 64 linhas por `r`. O rank `r` é pequeno,
 então as duas juntas guardam `r × (512 + 64)` números: 2.304 com rank 4, contra 32.768.
 
 ```schooling-figure
