@@ -1,0 +1,579 @@
+[
+  {
+    "id": "ex-5gdx28qv",
+    "version": 1,
+    "section": "idempotent-writes",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these writes are idempotent? Choose all that apply.",
+    "choices": [
+      {
+        "text": "SET qty = 98",
+        "correct": true,
+        "why": "Yes: a second run sets the same value."
+      },
+      {
+        "text": "SET qty = qty - 2",
+        "correct": false,
+        "why": "Each run subtracts again."
+      },
+      {
+        "text": "INSERT the sale keyed by its id, ON CONFLICT DO NOTHING",
+        "correct": true,
+        "why": "Yes: the second copy has nowhere to go."
+      },
+      {
+        "text": "Append a line to a log file",
+        "correct": false,
+        "why": "Each run adds a line."
+      },
+      {
+        "text": "Write a file at a fixed name with the same content",
+        "correct": true,
+        "why": "Yes: the second write leaves the same file."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwmcaq4t",
+    "version": 1,
+    "section": "idempotent-writes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The table holds bk-04 with qty 0. `UPDATE sold SET qty = qty + 2` runs twice for the same sale. What is qty now?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-kd6s4tcs",
+    "version": 1,
+    "section": "idempotent-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a payment API not simply be made idempotent the way the sales table was?",
+    "choices": [
+      {
+        "text": "You do not control the shape of its write",
+        "correct": true,
+        "why": "Right. Then the consumer has to remember what it has done."
+      },
+      {
+        "text": "Payments are too fast to be stored in a table",
+        "correct": false,
+        "why": "Speed is not the issue; who controls the write is."
+      },
+      {
+        "text": "Kafka cannot carry payment events",
+        "correct": false,
+        "why": "It carries any bytes; the problem is downstream."
+      },
+      {
+        "text": "Payment APIs have primary keys that are too long for SQLite",
+        "correct": false,
+        "why": "The API is not a table at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b83k3cc",
+    "version": 1,
+    "section": "dedup-by-event-id",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sink writes the sale's id to `processed` in one transaction and updates the stock in a second one. What does a crash between them cause?",
+    "choices": [
+      {
+        "text": "The sale is applied twice on the next delivery",
+        "correct": false,
+        "why": "That is the other order; here the id is already recorded."
+      },
+      {
+        "text": "Nothing, because the id makes it safe",
+        "correct": false,
+        "why": "Only if both share a transaction."
+      },
+      {
+        "text": "A sale marked as applied that never was",
+        "correct": true,
+        "why": "Right. The next delivery skips it, and the stock never moves."
+      },
+      {
+        "text": "SQLite refuses the second transaction",
+        "correct": false,
+        "why": "Nothing refuses it; the process is simply gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp1eqxmt",
+    "version": 1,
+    "section": "dedup-by-event-id",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the Kafka offset not a good id to deduplicate sales by?",
+    "choices": [
+      {
+        "text": "Offsets change when a topic is compacted",
+        "correct": false,
+        "why": "Offsets never change; compaction leaves gaps."
+      },
+      {
+        "text": "One sale retried sits at two offsets",
+        "correct": true,
+        "why": "Right. The id has to come from the event."
+      },
+      {
+        "text": "Offsets are too large to store",
+        "correct": false,
+        "why": "They are one integer each."
+      },
+      {
+        "text": "Two partitions cannot have the same offset",
+        "correct": false,
+        "why": "They can and do; that is a separate problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9qfpghx",
+    "version": 1,
+    "section": "dedup-by-event-id",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Eight books start at 100 copies each. Forty sales take 71 copies, and the topic is replayed into a sink without ids. What is the total stock now?",
+    "value": 658,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-g5dna04b",
+    "version": 1,
+    "section": "dedup-by-event-id",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The deduplicating sink crashes after its 15th sale, between the database commit and Kafka's. The topic has 40 sales. On restart, how many sales does it skip as already seen?",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-m65rjape",
+    "version": 1,
+    "section": "offsets-in-the-sink",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "offset_sink.py keeps the next offset in the database. What does the consumer group's committed offset hold?",
+    "choices": [
+      {
+        "text": "The same offsets, copied by Kafka",
+        "correct": false,
+        "why": "Kafka copies nothing from SQLite."
+      },
+      {
+        "text": "Nothing: the program never commits to the group",
+        "correct": true,
+        "why": "Right. The database is the only record."
+      },
+      {
+        "text": "The offset of the crash",
+        "correct": false,
+        "why": "A crash writes nothing anywhere."
+      },
+      {
+        "text": "The end of each partition",
+        "correct": false,
+        "why": "That is the log-end offset, which is not a commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahr690j4",
+    "version": 1,
+    "section": "offsets-in-the-sink",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "offset_sink.py has applied the sale at offset 32 of partition 1, its last. What does the `offsets` row for partition 1 hold?",
+    "hint": "The next offset to read.",
+    "value": 33,
+    "tolerance": 0,
+    "unit": "offset"
+  },
+  {
+    "id": "ex-p8we1hda",
+    "version": 1,
+    "section": "offsets-in-the-sink",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is storing the offset in the database cheaper than a table of processed ids?",
+    "choices": [
+      {
+        "text": "One number per partition, not one per event",
+        "correct": true,
+        "why": "Right. And it needs no window, because it never grows."
+      },
+      {
+        "text": "SQLite stores and compares integers faster than it does text",
+        "correct": false,
+        "why": "A real difference, but not the one that matters."
+      },
+      {
+        "text": "It lets Kafka do the deduplication on the broker instead",
+        "correct": false,
+        "why": "Kafka is not involved; the database decides where to start."
+      },
+      {
+        "text": "It needs no transaction",
+        "correct": false,
+        "why": "It needs one: effect and offset together."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tw7mbg8",
+    "version": 1,
+    "section": "how-long-to-remember",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team deletes processed ids older than seven days. Which duplicate can still get through?",
+    "choices": [
+      {
+        "text": "A producer retry after a lost acknowledgement",
+        "correct": false,
+        "why": "That arrives within seconds."
+      },
+      {
+        "text": "A redelivery after a rebalance",
+        "correct": false,
+        "why": "Seconds again."
+      },
+      {
+        "text": "A crash that the consumer recovers from in an hour",
+        "correct": false,
+        "why": "An hour is well inside seven days."
+      },
+      {
+        "text": "A replay of the topic from a month ago",
+        "correct": true,
+        "why": "Right. Those ids were forgotten, so the sales are applied again."
+      }
+    ]
+  },
+  {
+    "id": "ex-rspv39r9",
+    "version": 1,
+    "section": "how-long-to-remember",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten thousand sale ids a day at fifty bytes each: about how many megabytes a year? (365 days; 1 MB = 1,000,000 bytes)",
+    "value": 182.5,
+    "tolerance": 1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-nfmas1n8",
+    "version": 1,
+    "section": "how-long-to-remember",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The honest argument is to keep processed ids for as long as the topic keeps the events, because anything older cannot be ___.",
+    "blanks": [
+      {
+        "accept": [
+          "replayed",
+          "reread",
+          "re-read",
+          "reprocessed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0v9pp5e1",
+    "version": 1,
+    "section": "versions-and-last-writer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Price updates for bk-01 arrive as version 1, version 3, version 2, and the sink writes whatever arrives last. What price is stored?",
+    "choices": [
+      {
+        "text": "Version 2's",
+        "correct": true,
+        "why": "Right. Last to arrive is not last to happen."
+      },
+      {
+        "text": "Version 3's",
+        "correct": false,
+        "why": "Only if the sink compares versions."
+      },
+      {
+        "text": "Version 1's, since it came first",
+        "correct": false,
+        "why": "It was overwritten twice."
+      },
+      {
+        "text": "None; SQLite refuses the conflict",
+        "correct": false,
+        "why": "An upsert resolves the conflict by updating."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtcye3ay",
+    "version": 1,
+    "section": "versions-and-last-writer",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the versioned upsert, versions 1 (3990), 3 (4490) and 2 (4290) arrive in that order. What price in cents is stored?",
+    "value": 4490,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-x1he8rmc",
+    "version": 1,
+    "section": "versions-and-last-writer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the event's timestamp a weak version?",
+    "choices": [
+      {
+        "text": "Timestamps take too much space",
+        "correct": false,
+        "why": "They are eight bytes."
+      },
+      {
+        "text": "SQLite cannot compare timestamps",
+        "correct": false,
+        "why": "It can; the problem is what they mean."
+      },
+      {
+        "text": "Kafka rewrites timestamps on every topic",
+        "correct": false,
+        "why": "Only LogAppendTime topics replace them."
+      },
+      {
+        "text": "Clocks tie and disagree",
+        "correct": true,
+        "why": "Right. Lesson 9's clocks disagree more than people expect."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcd0kmd8",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the outbox pattern write the event into a table of the same database?",
+    "choices": [
+      {
+        "text": "So the change and its event commit together or not at all",
+        "correct": true,
+        "why": "Right. One of the two systems leaves the moment that matters."
+      },
+      {
+        "text": "Because Kafka cannot be reached from the program",
+        "correct": false,
+        "why": "The relay reaches it; the point is atomicity."
+      },
+      {
+        "text": "To make the event smaller",
+        "correct": false,
+        "why": "The payload is the same."
+      },
+      {
+        "text": "So that the relay never sends an event twice",
+        "correct": false,
+        "why": "The relay delivers at least once; duplicates are handled by the id."
+      }
+    ]
+  },
+  {
+    "id": "ex-3awceh94",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the outbox steps in order for one restock.",
+    "items": [
+      "Update the stock and insert the event into outbox, in one transaction",
+      "The relay reads the unsent rows",
+      "The relay produces them to Kafka and waits for the acknowledgement",
+      "The relay marks the acknowledged rows as sent"
+    ]
+  },
+  {
+    "id": "ex-m48tcmw8",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The relay crashes after Kafka acknowledged two events and before marking them sent. What happens next?",
+    "choices": [
+      {
+        "text": "They are lost",
+        "correct": false,
+        "why": "They are still unsent in the table."
+      },
+      {
+        "text": "The database rolls back the restock",
+        "correct": false,
+        "why": "The restock committed long before."
+      },
+      {
+        "text": "They are sent again, with the same ids",
+        "correct": true,
+        "why": "Right. Consumers deduplicate by the id made at the change."
+      },
+      {
+        "text": "Kafka refuses them because idempotence is on",
+        "correct": false,
+        "why": "A new relay run is a new producer session."
+      }
+    ]
+  },
+  {
+    "id": "ex-0njstdav",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An outbox relay delivers each event at least ___, which is why every event carries an id.",
+    "blanks": [
+      {
+        "accept": [
+          "once"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1ss7qrqc",
+    "version": 1,
+    "section": "testing-for-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the duplicate test compare?",
+    "choices": [
+      {
+        "text": "The topic's size before and after",
+        "correct": false,
+        "why": "The topic does not change; the output might."
+      },
+      {
+        "text": "The consumer's output after one run and after a second run over the same input",
+        "correct": true,
+        "why": "Right. If the second run changes anything, the consumer is not idempotent."
+      },
+      {
+        "text": "The consumer group's lag",
+        "correct": false,
+        "why": "Lag says how far behind, not whether effects repeat."
+      },
+      {
+        "text": "The number of lines each run prints to the terminal, which should match from one run to the next",
+        "correct": false,
+        "why": "Both runs print a line; the output data is what matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6d5s376",
+    "version": 1,
+    "section": "testing-for-duplicates",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each failure to the test that catches it.",
+    "pairs": [
+      {
+        "left": "a sink that subtracts on every delivery",
+        "right": "run twice over the same input"
+      },
+      {
+        "left": "effect and commit in two transactions",
+        "right": "crash mid-batch, compare with a clean run"
+      },
+      {
+        "left": "last writer wins",
+        "right": "deliver an old version after a new one"
+      },
+      {
+        "left": "a retried producer write",
+        "right": "write the same event twice to the topic"
+      }
+    ],
+    "right_distractors": [
+      "check the consumer group's lag"
+    ]
+  },
+  {
+    "id": "ex-wyt7wn1x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sink keeps per-shop daily totals by adding each sale's cents. It must survive replays from any point in the topic's retention. Which design fits best?",
+    "choices": [
+      {
+        "text": "Keep processed ids for one day",
+        "correct": false,
+        "why": "A replay from last week gets through."
+      },
+      {
+        "text": "Switch the producer to idempotent",
+        "correct": false,
+        "why": "That does nothing for replays or the consumer's gap."
+      },
+      {
+        "text": "Store the sales keyed by id and compute totals from them",
+        "correct": true,
+        "why": "Right. An idempotent write needs no memory and no window."
+      },
+      {
+        "text": "Commit offsets after every single sale instead of after every batch",
+        "correct": false,
+        "why": "That shrinks crash duplicates, not replays."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kjecr0p",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deduplicating sink applies 40 sales, then the topic is replayed in full. How many sales does the replay apply?",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "sales"
+  }
+]

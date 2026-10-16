@@ -1,0 +1,694 @@
+[
+  {
+    "id": "ex-saztjwpv",
+    "version": 1,
+    "section": "three-engines",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each engine to how it acts on the stream.",
+    "pairs": [
+      {
+        "left": "Spark Structured Streaming",
+        "right": "a slice of new records at each trigger"
+      },
+      {
+        "left": "Flink",
+        "right": "each record as it arrives, in a cluster"
+      },
+      {
+        "left": "Kafka Streams",
+        "right": "each record as it arrives, inside your own program"
+      }
+    ],
+    "right_distractors": [
+      "each night, over the whole topic"
+    ]
+  },
+  {
+    "id": "ex-dhyv2tjb",
+    "version": 1,
+    "section": "three-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team wants to count sales that sit in a PostgreSQL table, with Kafka Streams and nothing else. What stops them?",
+    "choices": [
+      {
+        "text": "Kafka Streams cannot keep state",
+        "correct": false,
+        "why": "It keeps state in local stores backed by topics."
+      },
+      {
+        "text": "It reads and writes Kafka topics only",
+        "correct": true,
+        "why": "Right. Something has to bring the rows into Kafka first, lesson 14's subject."
+      },
+      {
+        "text": "It needs a Flink cluster to run on",
+        "correct": false,
+        "why": "It runs inside your own program, with no cluster."
+      },
+      {
+        "text": "It is limited to Python",
+        "correct": false,
+        "why": "It is a Java library."
+      }
+    ]
+  },
+  {
+    "id": "ex-rj68hs7b",
+    "version": 1,
+    "section": "three-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a Kafka Streams application run on three machines instead of one?",
+    "choices": [
+      {
+        "text": "You submit it to a cluster with a parallelism of three",
+        "correct": false,
+        "why": "There is no cluster to submit to; that is Flink's shape."
+      },
+      {
+        "text": "You start three copies of it",
+        "correct": true,
+        "why": "Right. The copies find each other through Kafka."
+      },
+      {
+        "text": "You raise the number of threads of the broker",
+        "correct": false,
+        "why": "The broker does not run your application's code."
+      },
+      {
+        "text": "It cannot; it runs on one machine only",
+        "correct": false,
+        "why": "Scaling is by starting more copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyjrprq9",
+    "version": 1,
+    "section": "kafka-streams",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Kafka Streams, a table kept up to date from a stream, one row per key, is a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "KTable",
+          "K-Table"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m8gvp72z",
+    "version": 1,
+    "section": "kafka-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `java -cp \"$HOME/kafka/libs/*:.\" SalesPerShop a` need the `:.` at the end of the classpath?",
+    "choices": [
+      {
+        "text": "It tells Java to run in the background",
+        "correct": false,
+        "why": "The classpath is where classes are found, not how the process runs."
+      },
+      {
+        "text": "It adds the directory of the .class",
+        "correct": true,
+        "why": "Right. The Kafka jars are the library; the compiled program is in `.`."
+      },
+      {
+        "text": "It names the state directory",
+        "correct": false,
+        "why": "The state directory comes from the argument `a`."
+      },
+      {
+        "text": "It expands the `*` before the shell sees it",
+        "correct": false,
+        "why": "The quotes stop the shell expanding it; Java expands it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmvj975y",
+    "version": 1,
+    "section": "kafka-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `sales-per-book` show each book about once, though its count changed many times?",
+    "choices": [
+      {
+        "text": "The topic is compacted on every write, keeping one record per key",
+        "correct": false,
+        "why": "Compaction is later and not on every write; the cache is what holds the changes back."
+      },
+      {
+        "text": "The library sends the latest value per key at each commit",
+        "correct": true,
+        "why": "Right. Changes wait in a cache and only the newest per key leaves, every second here."
+      },
+      {
+        "text": "The console consumer drops a key it has already printed once",
+        "correct": false,
+        "why": "The console consumer prints whatever is in the topic."
+      },
+      {
+        "text": "Each book was sold only once",
+        "correct": false,
+        "why": "The counts are in the twenties; each changed many times."
+      }
+    ]
+  },
+  {
+    "id": "ex-7nrv9rjp",
+    "version": 1,
+    "section": "kafka-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `SalesPerShop` print once its state becomes RUNNING?",
+    "choices": [
+      {
+        "text": "The counts per shop",
+        "correct": false,
+        "why": "The counts go to the output topics, not the screen."
+      },
+      {
+        "text": "The offsets it has committed",
+        "correct": false,
+        "why": "It does not print offsets."
+      },
+      {
+        "text": "The address of its web page",
+        "correct": false,
+        "why": "Kafka Streams has no web page of its own."
+      },
+      {
+        "text": "The tasks this copy was given",
+        "correct": true,
+        "why": "Right. One per input partition of each part of the topology."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4hj44xx",
+    "version": 1,
+    "section": "streams-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The count per book created a `…-repartition` topic and the count per shop did not. Why?",
+    "choices": [
+      {
+        "text": "Books outnumber shops, and big counts need their own topic",
+        "correct": false,
+        "why": "The number of keys is not it; the change of key is."
+      },
+      {
+        "text": "Its key changed from shop to book",
+        "correct": true,
+        "why": "Right. The sales are written back keyed by book so each book's sales meet in one partition."
+      },
+      {
+        "text": "Counts per shop are kept only in memory",
+        "correct": false,
+        "why": "They have a changelog too."
+      },
+      {
+        "text": "The repartition topic is the backup of the per-book store",
+        "correct": false,
+        "why": "That is the changelog; the repartition topic carries the sales re-keyed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gfgmgdn",
+    "version": 1,
+    "section": "streams-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A copy of the application starts on a new machine with an empty state directory. Where do its counts come from?",
+    "choices": [
+      {
+        "text": "From the changelog topics",
+        "correct": true,
+        "why": "Right. The changelog is the backup of every store."
+      },
+      {
+        "text": "From the output topics, which hold the latest counts",
+        "correct": false,
+        "why": "Output topics are for readers; restoring uses the changelog."
+      },
+      {
+        "text": "From the other copy, over the network, directly",
+        "correct": false,
+        "why": "Copies never talk to each other directly; Kafka is between them."
+      },
+      {
+        "text": "Nowhere: it counts from zero",
+        "correct": false,
+        "why": "Starting from zero would lose every count; the changelog prevents it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zapk4vfw",
+    "version": 1,
+    "section": "streams-state",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With two copies of `SalesPerShop` running, how many tasks does each copy hold?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-r838fsc7",
+    "version": 1,
+    "section": "streams-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happened to copy `a` when copy `b` started?",
+    "choices": [
+      {
+        "text": "It stopped, because two copies cannot share a group",
+        "correct": false,
+        "why": "Sharing a group is exactly how the copies divide the work."
+      },
+      {
+        "text": "It kept all six tasks and `b` waited",
+        "correct": false,
+        "why": "The group rebalanced and moved half of them."
+      },
+      {
+        "text": "It rebalanced and kept half the tasks",
+        "correct": true,
+        "why": "Right. Its own lines show the state going back to REBALANCING."
+      },
+      {
+        "text": "It copied its stores to `b` over the network",
+        "correct": false,
+        "why": "A moved task restores from the changelog, not from the other copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-whztacqz",
+    "version": 1,
+    "section": "installing-flink",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson change two sizes in Flink's `config.yaml`?",
+    "choices": [
+      {
+        "text": "Flink refuses to start with its defaults on Java 21",
+        "correct": false,
+        "why": "It starts; the defaults are simply too large for this machine."
+      },
+      {
+        "text": "The defaults take most of the VM's memory",
+        "correct": true,
+        "why": "Right. 1.6 GB and 1.7 GB before Kafka has anything; a gigabyte each is plenty."
+      },
+      {
+        "text": "To make the web page answer on localhost",
+        "correct": false,
+        "why": "That is the other change, `bind-address`, not the sizes."
+      },
+      {
+        "text": "To give the Kafka connector room to load",
+        "correct": false,
+        "why": "The connector is a jar in `lib`; the sizes are about the processes."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtt3nx21",
+    "version": 1,
+    "section": "installing-flink",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `2.2` in `flink-sql-connector-kafka-5.0.0-2.2.jar` say?",
+    "choices": [
+      {
+        "text": "The Scala version it was built with",
+        "correct": false,
+        "why": "Flink's Scala version is the `2.12` in the archive's name."
+      },
+      {
+        "text": "The Kafka version it talks to",
+        "correct": false,
+        "why": "The connector packs its own Kafka client; 2.2 is not a Kafka version here."
+      },
+      {
+        "text": "Its second patch release",
+        "correct": false,
+        "why": "The connector's own version is 5.0.0."
+      },
+      {
+        "text": "The Flink version it is built for",
+        "correct": true,
+        "why": "Right. Version 5.0.0 of the connector, for Flink 2.2."
+      }
+    ]
+  },
+  {
+    "id": "ex-jz0kpa6w",
+    "version": 1,
+    "section": "flink-sql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first Flink job ran for ten seconds and wrote no window, while Spark wrote six from the same sales. What was different?",
+    "choices": [
+      {
+        "text": "Flink's watermark waits for the slowest partition, and partition 2 had nothing",
+        "correct": true,
+        "why": "Right. An empty partition has no watermark, so none could close a window until it was declared idle."
+      },
+      {
+        "text": "Flink's windows are longer than Spark's by default, so the first one had not closed yet",
+        "correct": false,
+        "why": "Both were five minutes, written in the query."
+      },
+      {
+        "text": "Flink only writes a window when the job is stopped, which nobody had done yet",
+        "correct": false,
+        "why": "After the fix it wrote six while running."
+      },
+      {
+        "text": "The JSON format could not read `at`",
+        "correct": false,
+        "why": "After one more SET line the same table produced the counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g47267w",
+    "version": 1,
+    "section": "flink-sql",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Flink setting that lets a quiet partition stop holding back the watermark is `table.exec.source.___-timeout`.",
+    "blanks": [
+      {
+        "accept": [
+          "idle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k4ratjt0",
+    "version": 1,
+    "section": "flink-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `sales.sql`, what does the `CREATE TABLE sales` statement do to Kafka?",
+    "choices": [
+      {
+        "text": "It creates the topic `sales` with three partitions and the JSON format",
+        "correct": false,
+        "why": "The topic already existed; the statement only describes it to Flink."
+      },
+      {
+        "text": "Nothing; it tells Flink how to read the topic as a table",
+        "correct": true,
+        "why": "Right. Columns, watermark and connector settings, all on Flink's side."
+      },
+      {
+        "text": "It deletes and recreates the topic",
+        "correct": false,
+        "why": "Nothing in the topic was touched; the sales were still read."
+      },
+      {
+        "text": "It registers a schema in the registry",
+        "correct": false,
+        "why": "No registry is involved; the format is plain JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-5s3nqkfe",
+    "version": 1,
+    "section": "flink-sql",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of getting Flink's first windows in the order the lesson takes them.",
+    "items": [
+      "Submit sales.sql with the SQL client",
+      "Read the output topic and find nothing",
+      "Cancel the job",
+      "Add the idle-timeout SET line",
+      "Submit again and read six windows"
+    ]
+  },
+  {
+    "id": "ex-azqnp230",
+    "version": 1,
+    "section": "flink-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Flink send a barrier through the stream instead of letting each operator save its state on its own clock?",
+    "choices": [
+      {
+        "text": "So the snapshot is one consistent point",
+        "correct": true,
+        "why": "Right. Otherwise a restore would count some sales twice or not at all."
+      },
+      {
+        "text": "To stop the stream while the snapshot is taken",
+        "correct": false,
+        "why": "The records keep flowing; that is the point of the barrier."
+      },
+      {
+        "text": "To tell the sink to write its rows",
+        "correct": false,
+        "why": "Windows are written when the watermark closes them, not at barriers."
+      },
+      {
+        "text": "To measure lag",
+        "correct": false,
+        "why": "Barriers carry no measurement; they mark a point in the stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nhs8a76",
+    "version": 1,
+    "section": "flink-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about checkpoints and savepoints matches the section?",
+    "choices": [
+      {
+        "text": "Savepoints are taken by Flink every ten seconds and deleted when replaced",
+        "correct": false,
+        "why": "That describes checkpoints."
+      },
+      {
+        "text": "Checkpoints keep only offsets, savepoints keep state as well",
+        "correct": false,
+        "why": "Both are the same kind of snapshot, offsets and state."
+      },
+      {
+        "text": "A savepoint is taken when you ask, and kept until you delete it",
+        "correct": true,
+        "why": "Right. Checkpoints are Flink's, for crashes; savepoints are yours, for planned stops."
+      },
+      {
+        "text": "Only a savepoint can restore a job",
+        "correct": false,
+        "why": "A checkpoint is what restores a job after a crash."
+      }
+    ]
+  },
+  {
+    "id": "ex-f51vhgtc",
+    "version": 1,
+    "section": "flink-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the restore, the job wrote 09:30 with 24 sales and 09:35 with 14. Why does that prove the savepoint was used?",
+    "choices": [
+      {
+        "text": "Because the job id stayed the same",
+        "correct": false,
+        "why": "The restored job has a new id."
+      },
+      {
+        "text": "Because both numbers equal the topic's partition count",
+        "correct": false,
+        "why": "The topic has three partitions; that is unrelated."
+      },
+      {
+        "text": "Because Flink always writes the last two windows on start",
+        "correct": false,
+        "why": "No such rule; what was written depended on restored state."
+      },
+      {
+        "text": "Only 2 sales were read, but the counts include the 13 from before",
+        "correct": true,
+        "why": "Right. The earlier counts came back from the savepoint, and the source resumed from its offsets."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2afjzv3",
+    "version": 1,
+    "section": "flink-state",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Roughly how many gigabytes did the Kafka node and Flink's two processes hold together? (Answer to one decimal.)",
+    "value": 1.3,
+    "tolerance": 0.1,
+    "unit": "gigabytes"
+  },
+  {
+    "id": "ex-yqcj9mcb",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team already runs Spark for its nightly jobs and needs a dashboard that may lag by a few seconds. What does the section suggest?",
+    "choices": [
+      {
+        "text": "Install Flink, because it is the fastest of the three engines",
+        "correct": false,
+        "why": "Speed is looked at last, and a few seconds is within Spark's reach."
+      },
+      {
+        "text": "Structured Streaming on the Spark they already run",
+        "correct": true,
+        "why": "Right. Same cluster, same people, almost nothing new to operate."
+      },
+      {
+        "text": "Kafka Streams in a new Java service",
+        "correct": false,
+        "why": "Possible, but it adds a service and a language the team does not run."
+      },
+      {
+        "text": "A batch every second",
+        "correct": false,
+        "why": "That is the shrinking batch of lesson 1, not a stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-848thwsk",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final's stock count per book lives inside the service that answers the website. Why does the section read that as a Kafka Streams shape?",
+    "choices": [
+      {
+        "text": "Kafka Streams is the only engine that can count per key",
+        "correct": false,
+        "why": "All three count per key; the reason is where the state lives."
+      },
+      {
+        "text": "Only Kafka Streams has exactly-once",
+        "correct": false,
+        "why": "Each can reach it under conditions; that is not the argument."
+      },
+      {
+        "text": "The state is per key and kept by the app, with no engine to run beside it",
+        "correct": true,
+        "why": "Right. The service already reads Kafka; the library adds the table to it."
+      },
+      {
+        "text": "It is the cheapest per message",
+        "correct": false,
+        "why": "Cost per message is not the section's argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhny307q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Flink job reading a topic of twelve partitions writes no windows; eleven partitions receive sales and one has been empty since a shop closed. What fixes it without losing late sales from the other eleven?",
+    "choices": [
+      {
+        "text": "Lower the watermark bound to zero",
+        "correct": false,
+        "why": "The bound is not the problem; the empty partition has no watermark at all."
+      },
+      {
+        "text": "Restart the job from a savepoint",
+        "correct": false,
+        "why": "The empty partition would still hold the watermark back."
+      },
+      {
+        "text": "An idle timeout, so the empty partition stops counting",
+        "correct": true,
+        "why": "Right. The other eleven keep their own watermarks, late sales included."
+      },
+      {
+        "text": "Switch to processing time",
+        "correct": false,
+        "why": "That would put late sales in the wrong windows, lesson 9's warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxrt3dw0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would show up in `kafka-consumer-groups.sh --list` while it runs?",
+    "choices": [
+      {
+        "text": "Spark Structured Streaming",
+        "correct": false,
+        "why": "Lesson 12's list was empty: Spark assigns partitions itself and keeps offsets in its checkpoint."
+      },
+      {
+        "text": "Kafka Streams",
+        "correct": true,
+        "why": "Right. Its copies are members of a group named after the application id."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "Kafka Streams relies on a consumer group to divide its tasks."
+      },
+      {
+        "text": "The till, `tills.py`, that feeds all three",
+        "correct": false,
+        "why": "A producer writes; it joins no consumer group."
+      }
+    ]
+  }
+]

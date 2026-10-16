@@ -1,0 +1,647 @@
+[
+  {
+    "id": "ex-pas180hn",
+    "version": 1,
+    "section": "what-you-pay-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a stream's compute cost not fall on a quiet Tuesday night?",
+    "choices": [
+      {
+        "text": "Kafka processes old messages again while it is idle",
+        "correct": false,
+        "why": "An idle broker does almost nothing; the cost is that it is there."
+      },
+      {
+        "text": "They run all day, waiting",
+        "correct": true,
+        "why": "Right: sized for the peak, paid at the trough."
+      },
+      {
+        "text": "Compression costs more at night",
+        "correct": false,
+        "why": "Nothing about compression depends on the hour."
+      },
+      {
+        "text": "Retention is counted in hours of traffic",
+        "correct": false,
+        "why": "Retention is time on disk, whatever the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-264edthe",
+    "version": 1,
+    "section": "what-you-pay-for",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic is written at 2 MB/s, has three replicas, and five consumer groups read all of it. How many MB/s move in total: in, between brokers, and out?",
+    "hint": "In once, to every follower, out once per group.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "MB/s"
+  },
+  {
+    "id": "ex-4ak80hn3",
+    "version": 1,
+    "section": "what-you-pay-for",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster spans three availability zones for safety. Which traffic is most likely to show up on the network bill?",
+    "choices": [
+      {
+        "text": "Copies and reads crossing zones",
+        "correct": true,
+        "why": "Right: two of every three copies cross one, and so do remote reads."
+      },
+      {
+        "text": "Heartbeats between consumers and the coordinator",
+        "correct": false,
+        "why": "They exist, but they are tiny next to the data."
+      },
+      {
+        "text": "Writes from a producer to a leader in its own zone",
+        "correct": false,
+        "why": "Traffic inside a zone is the part not usually billed."
+      },
+      {
+        "text": "Reading the index files",
+        "correct": false,
+        "why": "Index reads stay on the broker's own disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr28xzf7",
+    "version": 1,
+    "section": "measuring-a-message",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The JSON of one sale is about 122 bytes, yet the topic holds about 135 bytes per sale. Where does the difference come from?",
+    "choices": [
+      {
+        "text": "The index files beside the log",
+        "correct": false,
+        "why": "`kafka-log-dirs.sh` counted the `.log` file alone."
+      },
+      {
+        "text": "Replication: the second copy",
+        "correct": false,
+        "why": "One node, one copy; replication multiplies it later."
+      },
+      {
+        "text": "The key, and the record's and batch's own fields",
+        "correct": true,
+        "why": "Right: offset, timestamp, framing, the batch header."
+      },
+      {
+        "text": "Kafka pads every message to a fixed size",
+        "correct": false,
+        "why": "Records are variable length; nothing is padded."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnw36tek",
+    "version": 1,
+    "section": "measuring-a-message",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `.index` file of a live segment is 10 485 760 bytes. Why is that not part of the bytes per sale?",
+    "choices": [
+      {
+        "text": "It is compressed differently from the log",
+        "correct": false,
+        "why": "It is not; it is preallocated."
+      },
+      {
+        "text": "It belongs to the consumer group, not the topic",
+        "correct": false,
+        "why": "It sits in the same partition directory."
+      },
+      {
+        "text": "It holds the consumer offsets",
+        "correct": false,
+        "why": "Those live in `__consumer_offsets`."
+      },
+      {
+        "text": "It is preallocated, then trimmed at close",
+        "correct": true,
+        "why": "Right: on a live segment its size says little."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cwnp3y6",
+    "version": 1,
+    "section": "measuring-a-message",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A till that sends one sale every few seconds writes to a topic. Compared with the 100 000 sales sent at full speed, what happens to the bytes per sale?",
+    "choices": [
+      {
+        "text": "They fall, since there is less traffic",
+        "correct": false,
+        "why": "Less traffic means smaller batches, which cost more per message."
+      },
+      {
+        "text": "They rise: each sale pays a batch header of its own",
+        "correct": true,
+        "why": "Right: the measurement depended on full batches."
+      },
+      {
+        "text": "They stay the same, because the message is the same",
+        "correct": false,
+        "why": "The message is the same; the batching around it is not."
+      },
+      {
+        "text": "They double, because of replication",
+        "correct": false,
+        "why": "Replication multiplies copies, not the size of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryhe5dd7",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do Ponto Final's JSON sales compress so well?",
+    "choices": [
+      {
+        "text": "Batches repeat the same names and values",
+        "correct": true,
+        "why": "Right: five shops, eight books, the same five keys."
+      },
+      {
+        "text": "JSON is already a binary format",
+        "correct": false,
+        "why": "It is text, which is why it compresses."
+      },
+      {
+        "text": "Kafka removes duplicate sales before storing them",
+        "correct": false,
+        "why": "Nothing is removed; repetition inside a batch is stored once."
+      },
+      {
+        "text": "Each message is compressed on its own, before batching",
+        "correct": false,
+        "why": "Kafka compresses a batch at a time, which is why repetition across sales helps."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0w814cp",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this lab, which codec gave the smallest topic for the 100 000 sales?",
+    "choices": [
+      {
+        "text": "`zstd`",
+        "correct": false,
+        "why": "Close, at 16.9 bytes a sale, but not the smallest here."
+      },
+      {
+        "text": "`lz4`",
+        "correct": false,
+        "why": "31.5 bytes a sale, about a quarter of uncompressed."
+      },
+      {
+        "text": "`uncompressed`",
+        "correct": false,
+        "why": "135.3 bytes a sale, the largest."
+      },
+      {
+        "text": "`gzip`",
+        "correct": true,
+        "why": "Right: 14.5 bytes a sale on these sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d1fe31n",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`gzip` was smallest in the lab. Why might a new pipeline still choose `zstd` on the producer?",
+    "choices": [
+      {
+        "text": "`gzip` is not allowed on a producer",
+        "correct": false,
+        "why": "Every codec is available on the producer."
+      },
+      {
+        "text": "A close ratio for far less processor time",
+        "correct": true,
+        "why": "Right: size is one half of the trade, CPU the other."
+      },
+      {
+        "text": "`zstd` needs no decompression by consumers",
+        "correct": false,
+        "why": "Every consumer group decompresses whatever the codec."
+      },
+      {
+        "text": "`gzip` corrupts JSON",
+        "correct": false,
+        "why": "Compression is lossless; the sales come back byte for byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzk2bzv8",
+    "version": 1,
+    "section": "compression",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a topic, the `compression.type` value that stores batches exactly as they arrived is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "producer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c4d6a6m6",
+    "version": 1,
+    "section": "retention-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic receives 1 000 000 messages a day of 50 bytes each on disk, kept 10 days with 3 copies. How many gigabytes (10^9 bytes) does it hold in all copies?",
+    "value": 1.5,
+    "tolerance": 0.01,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-ef2c6763",
+    "version": 1,
+    "section": "retention-arithmetic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `bill.py` say a week of Ponto Final's sales needs, in all three copies?",
+    "choices": [
+      {
+        "text": "About 7 MB",
+        "correct": true,
+        "why": "Right: 7.1 MB, a memory card's worth."
+      },
+      {
+        "text": "About 7 GB",
+        "correct": false,
+        "why": "A thousand times too much: check the units."
+      },
+      {
+        "text": "About 420 GB",
+        "correct": false,
+        "why": "That was the clickstream example."
+      },
+      {
+        "text": "About 372 MB",
+        "correct": false,
+        "why": "That was a year of retention."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7dgj7m7",
+    "version": 1,
+    "section": "retention-arithmetic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Retention is 7 days and segments are 1 GB, but a quiet partition holds 9 days of messages. Why?",
+    "choices": [
+      {
+        "text": "The broker ignores retention on quiet topics",
+        "correct": false,
+        "why": "Retention applies; it just applies to whole segments."
+      },
+      {
+        "text": "Retention is counted from the last consumer read",
+        "correct": false,
+        "why": "Reading has nothing to do with deletion."
+      },
+      {
+        "text": "Deletion waits for the whole segment",
+        "correct": true,
+        "why": "Right: deletion is per segment, so old messages wait for their segment."
+      },
+      {
+        "text": "Compaction keeps the extra days",
+        "correct": false,
+        "why": "This topic deletes; nothing compacts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-85epf8e9",
+    "version": 1,
+    "section": "retention-arithmetic",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lever to what pulling it costs.",
+    "pairs": [
+      {
+        "left": "fewer days kept",
+        "right": "replays cannot reach as far back"
+      },
+      {
+        "left": "stronger compression",
+        "right": "processor time on producers and consumers"
+      },
+      {
+        "left": "fewer copies",
+        "right": "one fewer failure survived"
+      },
+      {
+        "left": "smaller messages",
+        "right": "a schema change"
+      }
+    ],
+    "right_distractors": [
+      "a bigger consumer group"
+    ]
+  },
+  {
+    "id": "ex-hgka31r7",
+    "version": 1,
+    "section": "compaction-and-tiering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the sales topic not be compacted, when a stock-per-book topic can?",
+    "choices": [
+      {
+        "text": "Sales have no key",
+        "correct": false,
+        "why": "They do: the shop. The problem is what the key would mean."
+      },
+      {
+        "text": "Each sale is its own fact, not a state",
+        "correct": true,
+        "why": "Right: compaction suits state, not history."
+      },
+      {
+        "text": "Compaction only works on a topic with one partition",
+        "correct": false,
+        "why": "It works on any number of partitions."
+      },
+      {
+        "text": "Compacted topics cannot be read by consumers",
+        "correct": false,
+        "why": "They are read like any other topic."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9r2typ6",
+    "version": 1,
+    "section": "compaction-and-tiering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic keeps a year of events, and almost nobody reads anything older than a week. What does tiered storage change?",
+    "choices": [
+      {
+        "text": "Old segments go to object storage",
+        "correct": true,
+        "why": "Right: the largest line of the bill moves to the cheapest storage."
+      },
+      {
+        "text": "Old events are deleted after a week",
+        "correct": false,
+        "why": "They are kept, elsewhere; `retention.ms` still covers the year."
+      },
+      {
+        "text": "Old events are compacted to one per key",
+        "correct": false,
+        "why": "That is compaction, a different arrangement."
+      },
+      {
+        "text": "Every read becomes faster",
+        "correct": false,
+        "why": "Reads of the old part become slower, from the object store."
+      }
+    ]
+  },
+  {
+    "id": "ex-zve72844",
+    "version": 1,
+    "section": "compaction-and-tiering",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A message with a key and no value, which tells a compacted topic to forget that key, is called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b4kpprhn",
+    "version": 1,
+    "section": "managed-or-self",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A managed service bills throughput out per byte. What multiplies that line for one topic?",
+    "choices": [
+      {
+        "text": "How many groups read it",
+        "correct": true,
+        "why": "Right: every group reads the whole topic."
+      },
+      {
+        "text": "The number of partitions in the topic",
+        "correct": false,
+        "why": "Partitions split the bytes; they do not multiply them."
+      },
+      {
+        "text": "How long the retention is",
+        "correct": false,
+        "why": "Retention is the storage line."
+      },
+      {
+        "text": "Which compression codec it uses",
+        "correct": false,
+        "why": "Compression divides, it does not multiply."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fn5cspa",
+    "version": 1,
+    "section": "managed-or-self",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under a model that charges per partition hour, a team creates 100 partitions \"for later\" on a quiet topic. What is wrong with that?",
+    "choices": [
+      {
+        "text": "Kafka refuses more than 50 partitions on a topic",
+        "correct": false,
+        "why": "It allows far more; the issue is the bill."
+      },
+      {
+        "text": "Partitions can never be added later",
+        "correct": false,
+        "why": "They can; adding moves keys, as lesson 3 warns, but it is possible."
+      },
+      {
+        "text": "Idle partitions are billed hourly",
+        "correct": true,
+        "why": "Right: the price is paid before the need arrives."
+      },
+      {
+        "text": "Consumers read faster from many partitions",
+        "correct": false,
+        "why": "Only up to one consumer per partition, and the topic is quiet."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tdhbgmm",
+    "version": 1,
+    "section": "the-quiet-hours",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, how did the idle broker's memory behave over a minute with nothing written?",
+    "choices": [
+      {
+        "text": "It dropped to almost nothing",
+        "correct": false,
+        "why": "It stayed over half a gigabyte."
+      },
+      {
+        "text": "It stayed above half a gigabyte",
+        "correct": true,
+        "why": "Right: the heap is reserved while the node runs."
+      },
+      {
+        "text": "It grew to several gigabytes",
+        "correct": false,
+        "why": "It stayed near 540 MB."
+      },
+      {
+        "text": "It was released to the operating system",
+        "correct": false,
+        "why": "Nothing was returned; the node holds its heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-917jhnh7",
+    "version": 1,
+    "section": "the-quiet-hours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of Ponto Final's needs is the lesson's best case for a stream rather than a batch?",
+    "choices": [
+      {
+        "text": "The monthly sales report for the owner",
+        "correct": false,
+        "why": "Read later: a nightly batch serves it for twenty minutes."
+      },
+      {
+        "text": "Loading the warehouse each night",
+        "correct": false,
+        "why": "It can read the same log once a night."
+      },
+      {
+        "text": "Training a demand model on last year",
+        "correct": false,
+        "why": "The input is fixed; batch is cheaper."
+      },
+      {
+        "text": "The stock shown on the website",
+        "correct": true,
+        "why": "Right: a promise that depends on now."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kbb6bkn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stream's monthly bill is three times what messages × bytes × days × copies predicts. What does the lesson suggest looking for?",
+    "choices": [
+      {
+        "text": "A broker bug that writes everything three times",
+        "correct": false,
+        "why": "Replication is already in the arithmetic; look for what is not."
+      },
+      {
+        "text": "Something else growing that nobody chose",
+        "correct": true,
+        "why": "Right: the gap is a list of defaults nobody looked at."
+      },
+      {
+        "text": "Compression that is too strong for the data",
+        "correct": false,
+        "why": "Stronger compression lowers storage, it does not triple it."
+      },
+      {
+        "text": "Nothing; bills always run above the arithmetic",
+        "correct": false,
+        "why": "The point of the arithmetic is to make the gap visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-zm1djf9j",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of sizing a new topic's disk in order.",
+    "items": [
+      "Write a known number of real messages into an empty topic",
+      "Divide the size kafka-log-dirs.sh reports by that number",
+      "Multiply by messages a day, days kept and copies",
+      "Add room, and set retention.ms on the topic"
+    ]
+  },
+  {
+    "id": "ex-1ktz4kjh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Uncompressed, a sale took 135.3 bytes; with zstd, 16.9. About how many times smaller is the zstd topic? Answer to one decimal place.",
+    "value": 8.0,
+    "tolerance": 0.1,
+    "unit": "times"
+  }
+]

@@ -1,0 +1,460 @@
+{
+  "ex-saztjwpv": {
+    "prompt": "Ligue cada motor ao jeito como ele age sobre o stream.",
+    "pairs": [
+      {
+        "left": "Spark Structured Streaming",
+        "right": "uma fatia de registros novos a cada trigger"
+      },
+      {
+        "left": "Flink",
+        "right": "cada registro quando chega, num cluster"
+      },
+      {
+        "left": "Kafka Streams",
+        "right": "cada registro quando chega, dentro do seu próprio programa"
+      }
+    ],
+    "right_distractors": [
+      "toda noite, sobre o tópico inteiro"
+    ]
+  },
+  "ex-dhyv2tjb": {
+    "prompt": "Um time quer contar vendas que estão numa tabela do PostgreSQL, com Kafka Streams e mais nada. O que os impede?",
+    "choices": [
+      {
+        "text": "O Kafka Streams não consegue guardar estado",
+        "why": "Ele guarda estado em stores locais com cópia em tópicos."
+      },
+      {
+        "text": "Ele só lê e escreve tópicos do Kafka",
+        "why": "Isso. Algo precisa trazer as linhas para o Kafka antes, o assunto da lição 14."
+      },
+      {
+        "text": "Ele precisa de um cluster Flink para rodar",
+        "why": "Ele roda dentro do seu próprio programa, sem cluster."
+      },
+      {
+        "text": "Ele é limitado a Python",
+        "why": "Ele é uma biblioteca Java."
+      }
+    ]
+  },
+  "ex-rj68hs7b": {
+    "prompt": "Como uma aplicação Kafka Streams passa a rodar em três máquinas em vez de uma?",
+    "choices": [
+      {
+        "text": "Você a submete a um cluster com paralelismo três",
+        "why": "Não há cluster para submeter; essa é a forma do Flink."
+      },
+      {
+        "text": "Você inicia três cópias dela",
+        "why": "Isso. As cópias se encontram pelo Kafka."
+      },
+      {
+        "text": "Você aumenta o número de threads do broker",
+        "why": "O broker não roda o código da sua aplicação."
+      },
+      {
+        "text": "Não dá; ele roda numa máquina só",
+        "why": "Escalar é iniciar mais cópias."
+      }
+    ]
+  },
+  "ex-jyjrprq9": {
+    "prompt": "No Kafka Streams, uma tabela mantida em dia a partir de um stream, uma linha por chave, é uma ___.",
+    "blanks": [
+      {
+        "accept": [
+          "KTable",
+          "K-Table"
+        ]
+      }
+    ]
+  },
+  "ex-m8gvp72z": {
+    "prompt": "Por que `java -cp \"$HOME/kafka/libs/*:.\" SalesPerShop a` precisa do `:.` no fim do classpath?",
+    "choices": [
+      {
+        "text": "Diz ao Java para rodar em segundo plano",
+        "why": "O classpath é onde as classes são achadas, não como o processo roda."
+      },
+      {
+        "text": "Acrescenta o diretório do .class",
+        "why": "Isso. Os jars do Kafka são a biblioteca; o programa compilado está em `.`."
+      },
+      {
+        "text": "Ele dá nome ao diretório de estado",
+        "why": "O diretório de estado vem do argumento `a`."
+      },
+      {
+        "text": "Ele expande o `*` antes de o shell vê-lo",
+        "why": "As aspas impedem o shell de expandi-lo; quem expande é o Java."
+      }
+    ]
+  },
+  "ex-wmvj975y": {
+    "prompt": "Por que `sales-per-book` mostra cada livro mais ou menos uma vez, embora a contagem tenha mudado muitas vezes?",
+    "choices": [
+      {
+        "text": "O tópico é compactado a cada escrita, ficando com um registro por chave",
+        "why": "A compactação vem depois e não a cada escrita; quem segura as mudanças é o cache."
+      },
+      {
+        "text": "A biblioteca manda o último valor por chave a cada commit",
+        "why": "Isso. As mudanças esperam num cache e só a mais nova por chave sai, a cada segundo aqui."
+      },
+      {
+        "text": "O consumidor de console descarta uma chave que já imprimiu uma vez",
+        "why": "O consumidor de console imprime o que estiver no tópico."
+      },
+      {
+        "text": "Cada livro foi vendido uma vez só",
+        "why": "As contagens estão na casa dos vinte; cada uma mudou muitas vezes."
+      }
+    ]
+  },
+  "ex-7nrv9rjp": {
+    "prompt": "O que o `SalesPerShop` imprime quando o estado dele vira RUNNING?",
+    "choices": [
+      {
+        "text": "As contagens por loja",
+        "why": "As contagens vão para os tópicos de saída, não para a tela."
+      },
+      {
+        "text": "Os offsets de que fez commit",
+        "why": "Ele não imprime offsets."
+      },
+      {
+        "text": "O endereço da página web dele",
+        "why": "O Kafka Streams não tem página web própria."
+      },
+      {
+        "text": "As tarefas que esta cópia recebeu",
+        "why": "Isso. Uma por partição de entrada de cada parte da topologia."
+      }
+    ]
+  },
+  "ex-q4hj44xx": {
+    "prompt": "A contagem por livro criou um tópico `…-repartition` e a contagem por loja não. Por quê?",
+    "choices": [
+      {
+        "text": "Há mais livros que lojas, e contagens grandes precisam de tópico próprio",
+        "why": "O número de chaves não é o motivo; a troca de chave é."
+      },
+      {
+        "text": "A chave dela mudou de loja para livro",
+        "why": "Isso. As vendas são reescritas com o livro como chave para as de cada livro se encontrarem numa partição."
+      },
+      {
+        "text": "As contagens por loja ficam só na memória",
+        "why": "Elas também têm um changelog."
+      },
+      {
+        "text": "O tópico de repartição é a cópia do store por livro",
+        "why": "Esse é o changelog; o de repartição leva as vendas com a chave nova."
+      }
+    ]
+  },
+  "ex-1gfgmgdn": {
+    "prompt": "Uma cópia da aplicação começa numa máquina nova com o diretório de estado vazio. De onde vêm as contagens dela?",
+    "choices": [
+      {
+        "text": "Dos tópicos de changelog",
+        "why": "Isso. O changelog é a cópia de segurança de todo store."
+      },
+      {
+        "text": "Dos tópicos de saída, que têm as contagens mais recentes",
+        "why": "Os tópicos de saída são para leitores; a restauração usa o changelog."
+      },
+      {
+        "text": "Da outra cópia, pela rede, diretamente",
+        "why": "As cópias nunca conversam diretamente; o Kafka fica entre elas."
+      },
+      {
+        "text": "De lugar nenhum: ele conta do zero",
+        "why": "Começar do zero perderia todas as contagens; o changelog evita isso."
+      }
+    ]
+  },
+  "ex-zapk4vfw": {
+    "prompt": "Com duas cópias do `SalesPerShop` rodando, quantas tarefas cada cópia tem?",
+    "unit": "tarefas"
+  },
+  "ex-r838fsc7": {
+    "prompt": "O que aconteceu com a cópia `a` quando a cópia `b` começou?",
+    "choices": [
+      {
+        "text": "Ela parou, porque duas cópias não podem dividir um grupo",
+        "why": "Dividir um grupo é justamente como as cópias repartem o trabalho."
+      },
+      {
+        "text": "Ficou com as seis tarefas e a `b` esperou",
+        "why": "O grupo rebalanceou e moveu metade delas."
+      },
+      {
+        "text": "Rebalanceou e ficou com metade das tarefas",
+        "why": "Isso. As próprias linhas dela mostram o estado voltando a REBALANCING."
+      },
+      {
+        "text": "Copiou os stores para a `b` pela rede",
+        "why": "Uma tarefa que muda restaura pelo changelog, não pela outra cópia."
+      }
+    ]
+  },
+  "ex-whztacqz": {
+    "prompt": "Por que a lição muda dois tamanhos no `config.yaml` do Flink?",
+    "choices": [
+      {
+        "text": "O Flink se recusa a iniciar com os padrões no Java 21",
+        "why": "Ele inicia; os padrões só são grandes demais para esta máquina."
+      },
+      {
+        "text": "Os padrões ocupam quase toda a memória da VM",
+        "why": "Isso. 1,6 GB e 1,7 GB antes de o Kafka ter qualquer coisa; um gigabyte cada basta."
+      },
+      {
+        "text": "Para a página web responder em localhost",
+        "why": "Essa é a outra mudança, o `bind-address`, não os tamanhos."
+      },
+      {
+        "text": "Para dar espaço ao conector do Kafka carregar",
+        "why": "O conector é um jar em `lib`; os tamanhos são dos processos."
+      }
+    ]
+  },
+  "ex-xtt3nx21": {
+    "prompt": "O que diz o `2.2` em `flink-sql-connector-kafka-5.0.0-2.2.jar`?",
+    "choices": [
+      {
+        "text": "A versão do Scala com que foi compilado",
+        "why": "A versão do Scala do Flink é o `2.12` no nome do arquivo."
+      },
+      {
+        "text": "A versão do Kafka com que conversa",
+        "why": "O conector traz o próprio cliente Kafka; 2.2 não é versão do Kafka aqui."
+      },
+      {
+        "text": "A segunda correção dele",
+        "why": "A versão do próprio conector é 5.0.0."
+      },
+      {
+        "text": "A versão do Flink para a qual foi feito",
+        "why": "Isso. Versão 5.0.0 do conector, para o Flink 2.2."
+      }
+    ]
+  },
+  "ex-jz0kpa6w": {
+    "prompt": "O primeiro job do Flink rodou dez segundos e não escreveu janela nenhuma, enquanto o Spark escreveu seis a partir das mesmas vendas. O que era diferente?",
+    "choices": [
+      {
+        "text": "O watermark do Flink espera a partição mais lenta, e a partição 2 não tinha nada",
+        "why": "Isso. Uma partição vazia não tem watermark, então nenhuma janela fechava até ela ser declarada ociosa."
+      },
+      {
+        "text": "As janelas do Flink são mais longas que as do Spark por padrão, então a primeira ainda não tinha fechado",
+        "why": "As duas eram de cinco minutos, escritas na consulta."
+      },
+      {
+        "text": "O Flink só escreve uma janela quando o job é parado, o que ninguém tinha feito ainda",
+        "why": "Depois da correção ele escreveu seis rodando."
+      },
+      {
+        "text": "O formato JSON não conseguiu ler o `at`",
+        "why": "Com uma linha SET a mais a mesma tabela produziu as contagens."
+      }
+    ]
+  },
+  "ex-4g47267w": {
+    "prompt": "A configuração do Flink que deixa uma partição quieta de segurar o watermark é `table.exec.source.___-timeout`.",
+    "blanks": [
+      {
+        "accept": [
+          "idle"
+        ]
+      }
+    ]
+  },
+  "ex-k4ratjt0": {
+    "prompt": "No `sales.sql`, o que o comando `CREATE TABLE sales` faz no Kafka?",
+    "choices": [
+      {
+        "text": "Cria o tópico `sales` com três partições e o formato JSON",
+        "why": "O tópico já existia; o comando só o descreve ao Flink."
+      },
+      {
+        "text": "Nada; diz ao Flink como ler o tópico como tabela",
+        "why": "Isso. Colunas, watermark e configurações do conector, tudo do lado do Flink."
+      },
+      {
+        "text": "Apaga e recria o tópico",
+        "why": "Nada no tópico foi mexido; as vendas continuaram sendo lidas."
+      },
+      {
+        "text": "Registra um esquema no registry",
+        "why": "Nenhum registry está envolvido; o formato é JSON puro."
+      }
+    ]
+  },
+  "ex-5s3nqkfe": {
+    "prompt": "Ponha os passos até as primeiras janelas do Flink na ordem em que a lição os faz.",
+    "items": [
+      "Submeter o sales.sql com o cliente SQL",
+      "Ler o tópico de saída e não achar nada",
+      "Cancelar o job",
+      "Acrescentar a linha SET do idle-timeout",
+      "Submeter de novo e ler seis janelas"
+    ]
+  },
+  "ex-azqnp230": {
+    "prompt": "Por que o Flink manda uma barreira pelo stream em vez de deixar cada operador salvar o estado no seu próprio relógio?",
+    "choices": [
+      {
+        "text": "Para o snapshot ser um ponto consistente",
+        "why": "Isso. Senão uma restauração contaria vendas duas vezes ou nenhuma."
+      },
+      {
+        "text": "Para parar o stream enquanto o snapshot é tirado",
+        "why": "Os registros continuam passando; esse é o ponto da barreira."
+      },
+      {
+        "text": "Para avisar o sink que escreva as linhas",
+        "why": "Janelas são escritas quando o watermark as fecha, não nas barreiras."
+      },
+      {
+        "text": "Para medir o atraso",
+        "why": "Barreiras não levam medida nenhuma; marcam um ponto do stream."
+      }
+    ]
+  },
+  "ex-6nhs8a76": {
+    "prompt": "Qual afirmação sobre checkpoints e savepoints bate com a seção?",
+    "choices": [
+      {
+        "text": "Savepoints são tirados pelo Flink a cada dez segundos e apagados quando substituídos",
+        "why": "Isso descreve checkpoints."
+      },
+      {
+        "text": "Checkpoints guardam só offsets, savepoints guardam também o estado",
+        "why": "Os dois são o mesmo tipo de snapshot, offsets e estado."
+      },
+      {
+        "text": "Um savepoint é tirado quando você pede, e guardado até você apagar",
+        "why": "Isso. Checkpoints são do Flink, para quedas; savepoints são seus, para paradas planejadas."
+      },
+      {
+        "text": "Só um savepoint consegue restaurar um job",
+        "why": "É um checkpoint que restaura um job depois de uma queda."
+      }
+    ]
+  },
+  "ex-f51vhgtc": {
+    "prompt": "Depois da restauração, o job escreveu 09:30 com 24 vendas e 09:35 com 14. Por que isso prova que o savepoint foi usado?",
+    "choices": [
+      {
+        "text": "Porque o id do job continuou o mesmo",
+        "why": "O job restaurado tem um id novo."
+      },
+      {
+        "text": "Porque os dois números são iguais ao número de partições do tópico",
+        "why": "O tópico tem três partições; não tem relação."
+      },
+      {
+        "text": "Porque o Flink sempre escreve as duas últimas janelas ao iniciar",
+        "why": "Não existe essa regra; o que saiu dependeu do estado restaurado."
+      },
+      {
+        "text": "Só 2 vendas foram lidas, mas as contagens incluem as 13 de antes",
+        "why": "Isso. As contagens anteriores voltaram do savepoint, e a fonte retomou dos seus offsets."
+      }
+    ]
+  },
+  "ex-t2afjzv3": {
+    "prompt": "Quantos gigabytes, mais ou menos, o nó Kafka e os dois processos do Flink ocupavam juntos? (Responda com uma casa decimal.)",
+    "unit": "gigabytes"
+  },
+  "ex-yqcj9mcb": {
+    "prompt": "Um time já roda Spark para os jobs noturnos e precisa de um painel que pode atrasar alguns segundos. O que a seção sugere?",
+    "choices": [
+      {
+        "text": "Instalar o Flink, porque é o mais rápido dos três motores",
+        "why": "A velocidade é olhada por último, e alguns segundos estão ao alcance do Spark."
+      },
+      {
+        "text": "Structured Streaming no Spark que já rodam",
+        "why": "Isso. Mesmo cluster, mesmas pessoas, quase nada novo a operar."
+      },
+      {
+        "text": "Kafka Streams num serviço Java novo",
+        "why": "Possível, mas acrescenta um serviço e uma linguagem que o time não roda."
+      },
+      {
+        "text": "Um batch a cada segundo",
+        "why": "Esse é o batch encolhido da lição 1, não um stream."
+      }
+    ]
+  },
+  "ex-848thwsk": {
+    "prompt": "O estoque por livro da Ponto Final vive dentro do serviço que responde ao site. Por que a seção lê isso como uma forma de Kafka Streams?",
+    "choices": [
+      {
+        "text": "O Kafka Streams é o único motor que conta por chave",
+        "why": "Os três contam por chave; o motivo é onde o estado mora."
+      },
+      {
+        "text": "Só o Kafka Streams tem exactly-once",
+        "why": "Cada um chega lá sob condições; não é esse o argumento."
+      },
+      {
+        "text": "O estado é por chave e mantido pelo app, sem motor para rodar ao lado",
+        "why": "Isso. O serviço já lê o Kafka; a biblioteca acrescenta a tabela a ele."
+      },
+      {
+        "text": "É o mais barato por mensagem",
+        "why": "Custo por mensagem não é o argumento da seção."
+      }
+    ]
+  },
+  "ex-jhny307q": {
+    "prompt": "Um job do Flink que lê um tópico de doze partições não escreve janelas; onze partições recebem vendas e uma está vazia desde que uma loja fechou. O que resolve sem perder vendas atrasadas das outras onze?",
+    "choices": [
+      {
+        "text": "Baixar o limite do watermark para zero",
+        "why": "O limite não é o problema; a partição vazia não tem watermark nenhum."
+      },
+      {
+        "text": "Reiniciar o job a partir de um savepoint",
+        "why": "A partição vazia continuaria segurando o watermark."
+      },
+      {
+        "text": "Um tempo de ociosidade, para a partição vazia deixar de contar",
+        "why": "Isso. As outras onze mantêm os seus watermarks, vendas atrasadas incluídas."
+      },
+      {
+        "text": "Trocar para tempo de processamento",
+        "why": "Isso poria vendas atrasadas nas janelas erradas, o alerta da lição 9."
+      }
+    ]
+  },
+  "ex-nxrt3dw0": {
+    "prompt": "Qual dos três motores apareceria em `kafka-consumer-groups.sh --list` enquanto roda?",
+    "choices": [
+      {
+        "text": "Spark Structured Streaming",
+        "why": "A lista da lição 12 veio vazia: o Spark atribui as partições e guarda os offsets no checkpoint."
+      },
+      {
+        "text": "Kafka Streams",
+        "why": "Isso. As cópias são membros de um grupo com o nome do id da aplicação."
+      },
+      {
+        "text": "Nenhum deles",
+        "why": "O Kafka Streams depende de um grupo de consumidores para dividir as tarefas."
+      },
+      {
+        "text": "O caixa, `tills.py`, que alimenta os três",
+        "why": "Um produtor escreve; não entra em grupo de consumidores."
+      }
+    ]
+  }
+}
