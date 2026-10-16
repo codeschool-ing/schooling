@@ -27,8 +27,8 @@ Network
 
 **Both meters run on their own.** The hourly charge is paid for every hour the gateway exists,
 used or not: 0.093 × 730 = 67.89 USD a month in sa-east-1. A NAT gateway lives in one zone, and a
-function in two zones whose single gateway is in zone a loses the internet when zone a does, so
-the arrangement AWS recommends is one gateway per zone: two of them for this lesson's two subnets,
+function in two zones whose single gateway is in zone a loses the internet when zone a does.
+The arrangement AWS recommends is therefore one gateway per zone: two of them for this lesson's two subnets,
 135.78 USD a month before a single byte. The data charge is 0.093 USD for every gigabyte the
 gateway processes, in either direction. A function that downloads 200 GB a month from S3 through
 it adds 200 × 0.093 = 18.60 USD, for traffic that never needed to leave AWS at all.

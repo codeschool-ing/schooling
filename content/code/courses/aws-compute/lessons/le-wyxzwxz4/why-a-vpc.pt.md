@@ -56,7 +56,8 @@ uma subnet para um internet gateway não serve para uma interface sem um. A docu
 isso com todas as letras, e é a primeira coisa que uma equipe tenta.
 
 Então a decisão tem um preço de cada lado. Uma função que precisa de um banco privado e também chama
-uma API pública precisa de uma VPC e de um caminho de volta para fora, e o caminho é um NAT gateway,
+uma API pública precisa de uma VPC e de um caminho de volta para fora.
+O caminho é um NAT gateway,
 cobrado por hora e por gigabyte, ou um VPC endpoint por serviço da AWS. A última seção desta lição
 põe preço no primeiro e constrói o segundo.
 

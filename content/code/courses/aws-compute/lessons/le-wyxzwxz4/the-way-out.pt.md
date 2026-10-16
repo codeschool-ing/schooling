@@ -28,8 +28,8 @@ Network
 
 **Os dois medidores correm cada um por si.** A cobrança por hora é paga em toda hora em que o
 gateway existe, usado ou não: 0,093 × 730 = 67,89 USD por mês em sa-east-1. Um NAT gateway vive numa
-zona, e uma função em duas zonas cujo único gateway está na zona a perde a internet quando a zona a
-cai, então o arranjo que a AWS recomenda é um gateway por zona: dois deles para as duas subnets desta
+zona, e uma função em duas zonas cujo único gateway está na zona a perde a internet quando a zona a cai.
+O arranjo que a AWS recomenda é, portanto, um gateway por zona: dois deles para as duas subnets desta
 lição, 135,78 USD por mês antes de um único byte. A cobrança de dados é 0,093 USD por gigabyte que o
 gateway processa, nos dois sentidos. Uma função que baixa 200 GB por mês do S3 através dele soma
 200 × 0,093 = 18,60 USD, por um tráfego que nunca precisou sair da AWS.

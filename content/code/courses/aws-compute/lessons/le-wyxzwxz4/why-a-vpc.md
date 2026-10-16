@@ -56,7 +56,8 @@ and a subnet's route to an internet gateway is useless to an interface without o
 documentation says this outright, and it is the first thing a team tries.
 
 So the decision has a price on each side. A function that needs a private database and also calls
-a public API needs both a VPC and a way back out, and the way out is either a NAT gateway, billed
+a public API needs both a VPC and a way back out.
+The way out is either a NAT gateway, billed
 by the hour and by the gigabyte, or a VPC endpoint per AWS service. This lesson's last section
 prices the first and builds the second.
 
