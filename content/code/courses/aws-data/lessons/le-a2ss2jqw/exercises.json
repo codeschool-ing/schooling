@@ -1,0 +1,643 @@
+[
+  {
+    "id": "ex-0xqckge8",
+    "version": 1,
+    "section": "three-migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants last year's closed orders in the lake, once. Nobody writes to those rows any more. Which migration type fits?",
+    "hint": "Is there anything to keep up with after the copy?",
+    "choices": [
+      {
+        "text": "`full-load-and-cdc`, to be safe",
+        "correct": false,
+        "why": "CDC would run on after the copy waiting for changes that never come, on an instance billed by the hour."
+      },
+      {
+        "text": "`cdc`, starting from the beginning of last year",
+        "correct": false,
+        "why": "CDC reads changes from the log; it does not copy rows that were written long ago and never changed."
+      },
+      {
+        "text": "`full-load`",
+        "correct": true,
+        "why": "Right: a one-off copy of rows that no longer change."
+      },
+      {
+        "text": "A serverless replication config with no migration type",
+        "correct": false,
+        "why": "A config carries a replication type like any task; serverless changes where it runs, not what it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4bw7bvm",
+    "version": 1,
+    "section": "three-migrations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does change data capture read to learn what changed in a database?",
+    "hint": "Every serious database writes it before changing its tables.",
+    "choices": [
+      {
+        "text": "The tables, for rows with a recent `updated_at`",
+        "correct": false,
+        "why": "That misses deletes and any write that forgot the column, and it loads the source with queries."
+      },
+      {
+        "text": "The database's own log of its changes",
+        "correct": true,
+        "why": "Right: the WAL, the binary log, the redo log."
+      },
+      {
+        "text": "A nightly dump, compared with the previous night's",
+        "correct": false,
+        "why": "That is a diff of snapshots, a day late and blind to anything that changed twice."
+      },
+      {
+        "text": "An audit table filled by triggers DMS installs on every table",
+        "correct": false,
+        "why": "DMS reads the log; triggers on every table would slow every write of the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqtjfftg",
+    "version": 1,
+    "section": "three-migrations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a full-load-and-cdc task note the log position before it copies the first table, and not after it copies the last?",
+    "hint": "What happens to a change made while a table is being copied?",
+    "choices": [
+      {
+        "text": "So that a change made during the copy is still captured",
+        "correct": true,
+        "why": "Right. Noted afterwards, the changes made during the hours of copying would fall between copied and captured."
+      },
+      {
+        "text": "Because the source deletes its log once a copy begins",
+        "correct": false,
+        "why": "A copy changes nothing about the source's log."
+      },
+      {
+        "text": "Because noting it first makes the copy itself faster",
+        "correct": false,
+        "why": "It costs the copy nothing either way; the order is about correctness."
+      },
+      {
+        "text": "Because the target needs the position to create its tables",
+        "correct": false,
+        "why": "The target's tables come from the source's structure, not from a log position."
+      }
+    ]
+  },
+  {
+    "id": "ex-6k899842",
+    "version": 1,
+    "section": "three-migrations",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are logs that change data capture reads? Choose all that apply.",
+    "hint": "The log written before the tables change.",
+    "choices": [
+      {
+        "text": "PostgreSQL's write-ahead log",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "MySQL's binary log",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Oracle's redo log",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The database's slow query log",
+        "correct": false,
+        "why": "It records slow queries, not changes."
+      },
+      {
+        "text": "The web server's access log",
+        "correct": false,
+        "why": "It records requests to the shop, not rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-83jprz7b",
+    "version": 1,
+    "section": "endpoints-and-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's source endpoint name a Secrets Manager secret rather than pass `--password`?",
+    "hint": "Where does a typed command end up?",
+    "choices": [
+      {
+        "text": "DMS refuses passwords given on the command line",
+        "correct": false,
+        "why": "It accepts them; the problem is what the shell and the machine keep."
+      },
+      {
+        "text": "A typed password stays in the shell history and the process list",
+        "correct": true,
+        "why": "Right, and the secret also keeps the credential in one place that can be rotated."
+      },
+      {
+        "text": "Secrets Manager makes the connection to the source faster",
+        "correct": false,
+        "why": "It is read once to connect; speed is not the reason."
+      },
+      {
+        "text": "moto requires a secret for a PostgreSQL endpoint",
+        "correct": false,
+        "why": "moto would accept a plain password just as well; it checks neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwcrs476",
+    "version": 1,
+    "section": "endpoints-and-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `test-connection` against the source answered `testing`. What did that establish about the path to `198.51.100.20`?",
+    "hint": "Did moto try to connect?",
+    "choices": [
+      {
+        "text": "That the instance reached the source, and the test is running",
+        "correct": false,
+        "why": "moto opens no connection; there is no instance to open one."
+      },
+      {
+        "text": "That the credentials in the secret are right",
+        "correct": false,
+        "why": "moto did not look inside the secret."
+      },
+      {
+        "text": "Nothing: moto records the test and never connects",
+        "correct": true,
+        "why": "Right. On AWS the same call ends in `successful` or a failure with its reason."
+      },
+      {
+        "text": "That a VPN to the rack is in place",
+        "correct": false,
+        "why": "Nothing in the lab has a network path anywhere but to moto."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0q7wsbm",
+    "version": 1,
+    "section": "endpoints-and-tasks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Right after `create-replication-task`, before any start, moto reports `FullLoadProgressPercent` 100 and `TablesLoaded` 1. What is the right reading?",
+    "hint": "Does the target bucket exist?",
+    "choices": [
+      {
+        "text": "The load ran during creation because the table is small",
+        "correct": false,
+        "why": "A task loads nothing until it is started, and this one had no source to read."
+      },
+      {
+        "text": "The numbers are ones moto writes on every task",
+        "correct": true,
+        "why": "Right: the source does not exist and the bucket does not either."
+      },
+      {
+        "text": "One table is in `s3://quitanda-raw-prod/cdc/` already",
+        "correct": false,
+        "why": "Listing it answered `NoSuchBucket`."
+      },
+      {
+        "text": "The source was empty, so a full load finishes at once",
+        "correct": false,
+        "why": "There is no source at all behind `198.51.100.20` in the lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7e53vn7",
+    "version": 1,
+    "section": "mappings-and-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A mapping includes `public.%` and excludes `public.web_sessions`. What crosses?",
+    "hint": "One rule is wider than the other.",
+    "choices": [
+      {
+        "text": "Every table of `public`, `web_sessions` included, since `%` matches it",
+        "correct": false,
+        "why": "The exclusion takes it back out."
+      },
+      {
+        "text": "`web_sessions` alone",
+        "correct": false,
+        "why": "The exclusion removes that table; it does not select it."
+      },
+      {
+        "text": "Nothing, because the two rules contradict each other",
+        "correct": false,
+        "why": "They do not; one is general and one is the exception."
+      },
+      {
+        "text": "Every table of `public` but `web_sessions`",
+        "correct": true,
+        "why": "Right: the exclusion wins over the wildcard."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e0r5ey9",
+    "version": 1,
+    "section": "mappings-and-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Quitanda remove `tax_id` in the table mapping instead of deleting it from the lake afterwards?",
+    "hint": "What has to be deleted if it never arrives?",
+    "choices": [
+      {
+        "text": "It never reaches the target, so nothing has to be deleted there",
+        "correct": true,
+        "why": "Right. Personal data the lake never holds is data the lake never has to protect."
+      },
+      {
+        "text": "Files in S3 cannot have a column removed afterwards",
+        "correct": false,
+        "why": "They can be rewritten without it; that is the costly road."
+      },
+      {
+        "text": "Removing columns makes the full load copy faster",
+        "correct": false,
+        "why": "Slightly, perhaps; it is not the reason."
+      },
+      {
+        "text": "DMS cannot replicate a column of text",
+        "correct": false,
+        "why": "It replicates text columns; `tax_id` is removed for what it holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n7t46ph",
+    "version": 1,
+    "section": "mappings-and-settings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The task runs in limited LOB mode with `LobMaxSize` 64, and one order's `notes` holds 200 KB. What happens to that value on AWS?",
+    "hint": "Limited mode is fast because it decides the buffer in advance.",
+    "choices": [
+      {
+        "text": "The task fails and names the row",
+        "correct": false,
+        "why": "Nothing stops the task; that is why the failure is silent."
+      },
+      {
+        "text": "DMS switches that one value to full LOB mode",
+        "correct": false,
+        "why": "The mode is the task's; it does not change per value."
+      },
+      {
+        "text": "It arrives cut at 64 KB, with a warning in the task log",
+        "correct": true,
+        "why": "Right. Measure the longest value on the source before choosing the limit."
+      },
+      {
+        "text": "The row is skipped and counted as an error",
+        "correct": false,
+        "why": "The row crosses; its value is shorter than it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9vg8sbn",
+    "version": 1,
+    "section": "mappings-and-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does turning validation on tell you that a finished full load does not?",
+    "hint": "Ran versus right.",
+    "choices": [
+      {
+        "text": "That the task ran to the end without stopping",
+        "correct": false,
+        "why": "The task status says that much; validation says more."
+      },
+      {
+        "text": "That the copy is right, table by table, row by row",
+        "correct": true,
+        "why": "Right, at the price of extra reads on the source."
+      },
+      {
+        "text": "That the slot on the source has been dropped",
+        "correct": false,
+        "why": "Validation compares data; the slot is a separate matter."
+      },
+      {
+        "text": "That every LOB fitted inside `LobMaxSize`",
+        "correct": false,
+        "why": "Truncation is reported in the task log; validation is about rows matching."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1tq25ne",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `pg_logical_slot_peek_changes` and `pg_logical_slot_get_changes`?",
+    "hint": "Run each twice.",
+    "choices": [
+      {
+        "text": "`peek` reads only inserts; `get` reads everything",
+        "correct": false,
+        "why": "Both returned the insert, the update and the delete."
+      },
+      {
+        "text": "`get` needs `wal_level=logical`, and `peek` works on any level",
+        "correct": false,
+        "why": "Both read a logical slot, which needs logical WAL."
+      },
+      {
+        "text": "`peek` leaves the changes; `get` consumes them",
+        "correct": true,
+        "why": "Right: the second `get` returned nothing."
+      },
+      {
+        "text": "`get` returns the transactions that were rolled back as well",
+        "correct": false,
+        "why": "A rolled-back transaction appears in neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-nq9dq2y1",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the decoded changes, the `DELETE` line carries only `order_id`. Why is that enough for the target?",
+    "hint": "How does the target find the row to delete?",
+    "choices": [
+      {
+        "text": "The primary key finds the row on the target",
+        "correct": true,
+        "why": "Right; by default the key is all PostgreSQL logs about a deleted row."
+      },
+      {
+        "text": "The target keeps a copy of every row, so it can look the rest up in its history",
+        "correct": false,
+        "why": "A target applying changes needs no history to find a row by its key."
+      },
+      {
+        "text": "Deletes in DMS only mark rows, so values are not needed",
+        "correct": false,
+        "why": "Whatever the target does with a delete, it first has to find the row."
+      },
+      {
+        "text": "`test_decoding` shortens every line to its first column",
+        "correct": false,
+        "why": "The insert and the update lines carried every column."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmrwcthv",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make every update in the log carry the old row as well as the new one, the table's `REPLICA IDENTITY` is set to ___.",
+    "hint": "The decoded update then showed `old-key` and `new-tuple`.",
+    "blanks": [
+      {
+        "accept": [
+          "FULL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tax9aw78",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The DMS task is stopped on a Friday for the weekend, and its slot stays on the old server, which goes on taking orders. What happens there?",
+    "hint": "What does a slot make the server keep?",
+    "choices": [
+      {
+        "text": "Nothing changes, since a stopped task reads nothing",
+        "correct": false,
+        "why": "That is exactly the problem: nothing reads, and the slot keeps everything unread."
+      },
+      {
+        "text": "The server drops the slot after an hour without a reader",
+        "correct": false,
+        "why": "By default a slot is kept without limit; a cap has to be set with `max_slot_wal_keep_size`."
+      },
+      {
+        "text": "The server keeps every change since the slot's position, and the disk fills",
+        "correct": true,
+        "why": "Right: 3431 kB for twenty thousand rows in the lab, all weekend long on the shop."
+      },
+      {
+        "text": "New orders are refused until the task starts again",
+        "correct": false,
+        "why": "Writes go on; only the log they leave behind grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnevtn5b",
+    "version": 1,
+    "section": "cdc-for-real",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After 20,000 rows were inserted and nobody read the slot, it was holding 3431 kB of WAL. About how many bytes of WAL is that per row? Take a kB as 1024 bytes and round to the nearest whole number.",
+    "hint": "3431 × 1024 ÷ 20000.",
+    "value": 176,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-awdk6mwt",
+    "version": 1,
+    "section": "cutover",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the cutover in order.",
+    "hint": "Nothing may be written in two places, and nothing may be left behind.",
+    "items": [
+      "Run the task until validation is green and latency is seconds",
+      "Stop the writers on the source",
+      "Wait for latency zero and matching counts",
+      "Point the applications at the target and start them",
+      "Stop the task and keep the source read-only",
+      "Drop the replication slot on the source"
+    ]
+  },
+  {
+    "id": "ex-1amw8819",
+    "version": 1,
+    "section": "cutover",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A migration runs for 10 days on a `dms.t3.medium` at 0.15100 USD an hour. What does the instance cost, in USD to two decimals?",
+    "hint": "Ten days of 24 hours.",
+    "value": 36.24,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-wg8ge34p",
+    "version": 1,
+    "section": "cutover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A permanent feed into the lake has a steady load that somebody measured at about 2 DCUs. By the sheet, which costs less a month?",
+    "hint": "2 × 0.18471 × 730 against 0.31000 × 730.",
+    "choices": [
+      {
+        "text": "Serverless at 2 DCUs, because it scales",
+        "correct": false,
+        "why": "Scaling helps an uneven load; this one is steady, and 2 DCUs all month is 269.68."
+      },
+      {
+        "text": "A `dms.c5.large`, at 226.30",
+        "correct": true,
+        "why": "Right: a measured, steady load is the case for an instance."
+      },
+      {
+        "text": "They cost the same, since a DCU is priced to match",
+        "correct": false,
+        "why": "The two lines of the sheet give 269.68 and 226.30."
+      },
+      {
+        "text": "A `dms.r6i.large`, being the largest of the sheet",
+        "correct": false,
+        "why": "At 0.56000 an hour it is 408.80 a month, the dearest of the three."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnr0qn01",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The DMS task that fed the lake is deleted when the lake gets a new source, but the shop keeps running on the old PostgreSQL. Three weeks later its disk is full. What is the likeliest cause?",
+    "hint": "What did deleting the task leave behind on the source?",
+    "choices": [
+      {
+        "text": "DMS is still reading the source after the task was deleted",
+        "correct": false,
+        "why": "If something were reading, the slot would release the log; nothing is."
+      },
+      {
+        "text": "The slot `dms_orders` was left behind and kept every change since",
+        "correct": true,
+        "why": "Right: step 6 of the cutover, missed."
+      },
+      {
+        "text": "Validation filled the source with comparison tables",
+        "correct": false,
+        "why": "Validation reads the source; it stopped with the task."
+      },
+      {
+        "text": "Limited LOB mode wrote truncated copies of the notes",
+        "correct": false,
+        "why": "LOB settings shape what reaches the target; they write nothing on the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aqxxbps",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it is.",
+    "hint": "All four appeared in the PostgreSQL transcripts.",
+    "pairs": [
+      {
+        "left": "replication slot",
+        "right": "a bookmark in the log the server keeps for one reader"
+      },
+      {
+        "left": "output plugin",
+        "right": "turns the log into something a reader understands"
+      },
+      {
+        "left": "LSN",
+        "right": "a position in the WAL"
+      },
+      {
+        "left": "`REPLICA IDENTITY FULL`",
+        "right": "old values in every update and delete"
+      }
+    ],
+    "right_distractors": [
+      "copies each table once"
+    ]
+  },
+  {
+    "id": "ex-b6g4vq0d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A source table has no primary key. Its inserts replicate, and its updates and deletes do not. What is the first thing to fix on PostgreSQL?",
+    "hint": "What does a delete carry into the log by default?",
+    "choices": [
+      {
+        "text": "Raise `LobMaxSize` so the rows fit",
+        "correct": false,
+        "why": "LOB size has nothing to do with finding a row."
+      },
+      {
+        "text": "Switch the task to `full-load` and reload every night",
+        "correct": false,
+        "why": "That gives up on CDC rather than fixing it."
+      },
+      {
+        "text": "Use the `pglogical` plugin instead of `test_decoding`",
+        "correct": false,
+        "why": "Any plugin reads the same log, and the log lacks a way to identify the row."
+      },
+      {
+        "text": "Give the table a replica identity: a key, or `FULL`",
+        "correct": true,
+        "why": "Right. Without one, the log has nothing to find the changed row by."
+      }
+    ]
+  }
+]
