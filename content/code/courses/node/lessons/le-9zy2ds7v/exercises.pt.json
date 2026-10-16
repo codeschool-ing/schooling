@@ -1,0 +1,585 @@
+{
+  "ex-q011a7er": {
+    "prompt": "Em qual sistema de módulos este curso escreve código novo?",
+    "choices": [
+      {
+        "text": "ES modules",
+        "why": "Certo: o da própria linguagem, compartilhado com os navegadores."
+      },
+      {
+        "text": "CommonJS, porque a maior parte do npm o usa",
+        "why": "Você depende dele; não precisa escrevê-lo."
+      },
+      {
+        "text": "O que o autor de cada arquivo preferir",
+        "why": "Um projeto escolhe um com o `type`, e este curso escolhe modules."
+      },
+      {
+        "text": "Os dois, alternando por aula",
+        "why": "Só a aula 3 usa os dois, para compará-los."
+      }
+    ]
+  },
+  "ex-sxmwandg": {
+    "prompt": "Por que um `require` pode ficar dentro de um `if`, e uma declaração `import` não?",
+    "choices": [
+      {
+        "text": "O `require` é uma chamada feita durante a execução",
+        "why": "Certo."
+      },
+      {
+        "text": "O `import` é mais lento, então precisa ficar no topo",
+        "why": "A velocidade não é o motivo; o momento é."
+      },
+      {
+        "text": "Um `if` não pode conter declaração nenhuma",
+        "why": "Ele pode conter a maioria; as declarações `import` são a exceção."
+      },
+      {
+        "text": "O `require` só funciona no navegador",
+        "why": "Ele é do Node; os navegadores nunca o tiveram."
+      }
+    ]
+  },
+  "ex-eg6rjmy7": {
+    "prompt": "Um arquivo se chama `report.cjs`, numa pasta cujo `package.json` diz `\"type\": \"module\"`. O que ele é?",
+    "choices": [
+      {
+        "text": "CommonJS",
+        "why": "Certo. A extensão vence."
+      },
+      {
+        "text": "Um ES module, por causa do `type`",
+        "why": "O `type` só decide para arquivos `.js` comuns."
+      },
+      {
+        "text": "O que a sintaxe parecer",
+        "why": "A detecção é só para um `.js` sem package.json."
+      },
+      {
+        "text": "Nenhum: o Node se recusa a carregá-lo",
+        "why": "O `.cjs` é carregado onde quer que esteja."
+      }
+    ]
+  },
+  "ex-x57z8pcr": {
+    "prompt": "O `hello.js` usa `import` e está ao lado de `{ \"name\": \"typeless\" }`. Ele rodou e imprimiu um aviso. O que o aviso mandou fazer?",
+    "choices": [
+      {
+        "text": "Renomear o arquivo para `.cjs`",
+        "why": "Isso o tornaria CommonJS, e o `import` falharia."
+      },
+      {
+        "text": "Acrescentar `\"type\": \"module\"` ao package.json",
+        "why": "Certo: a última linha do aviso."
+      },
+      {
+        "text": "Apagar o `package.json`",
+        "why": "Isso traria de volta a detecção, sem consertar o projeto."
+      },
+      {
+        "text": "Rodá-lo com `--experimental-modules`",
+        "why": "Nenhuma flag é necessária para ES modules no Node 22."
+      }
+    ]
+  },
+  "ex-6t6jzfqs": {
+    "prompt": "Um projeto diz `\"type\": \"module\"`, e uma ferramenta insiste em carregar o arquivo de configuração dela com `require`. Qual é a correção menos disruptiva?",
+    "choices": [
+      {
+        "text": "Mudar o projeto inteiro para CommonJS",
+        "why": "Um arquivo precisa ser diferente, não todos."
+      },
+      {
+        "text": "Tirar o `type` e deixar o Node detectar cada arquivo",
+        "why": "A detecção reprocessa e avisa, e só funciona sem package.json."
+      },
+      {
+        "text": "Dar àquele arquivo a extensão `.cjs`",
+        "why": "Certo. É para isso que a extensão existe."
+      },
+      {
+        "text": "Copiar a configuração para o `index.js`",
+        "why": "A ferramenta ainda faria `require` do nome do arquivo dela."
+      }
+    ]
+  },
+  "ex-zt6qzq9r": {
+    "prompt": "`require(\"express\")`: onde o Node procura primeiro?",
+    "choices": [
+      {
+        "text": "Em `/node_modules`",
+        "why": "Esse é o último lugar."
+      },
+      {
+        "text": "Só nos módulos embutidos do Node",
+        "why": "O `express` não é embutido, então a busca segue para node_modules."
+      },
+      {
+        "text": "Em `node_modules` ao lado do arquivo que pede",
+        "why": "Certo, depois em cada pasta acima."
+      },
+      {
+        "text": "No registry do npm",
+        "why": "O Node nunca baixa nada; o npm baixa, antes."
+      }
+    ]
+  },
+  "ex-2vb80rgq": {
+    "prompt": "Um pacote que você nunca instalou num projeto é encontrado mesmo assim. Qual é a causa mais provável?",
+    "choices": [
+      {
+        "text": "O Node guarda em cache pacotes de projetos anteriores",
+        "why": "O cache de módulos só vive dentro de um processo."
+      },
+      {
+        "text": "Um `node_modules` numa pasta acima, como o seu home",
+        "why": "Certo. A busca sobe até `/`."
+      },
+      {
+        "text": "O npm o instalou globalmente por padrão",
+        "why": "O npm instala no projeto, a não ser com `-g`, e o `require` não procura na pasta global."
+      },
+      {
+        "text": "O pacote é embutido no Node",
+        "why": "Aí ele teria um nome `node:`."
+      }
+    ]
+  },
+  "ex-50ffs83k": {
+    "prompt": "`import x from \"./lib\"` falha com `ERR_UNSUPPORTED_DIR_IMPORT`, e `require(\"./lib\")` funcionou. O que você escreve no lugar?",
+    "choices": [
+      {
+        "text": "`import x from \"./lib/index.js\"`",
+        "why": "Certo: o caminho inteiro, como o erro sugeriu."
+      },
+      {
+        "text": "`import x from \"lib\"`",
+        "why": "Sem o `./` vira nome de pacote."
+      },
+      {
+        "text": "`import x from \"./lib/\"`",
+        "why": "Uma barra no fim ainda nomeia uma pasta."
+      },
+      {
+        "text": "`import x from \"./lib/index\"`",
+        "why": "Esse também falhou: sem extensão."
+      }
+    ]
+  },
+  "ex-qrk6k8zw": {
+    "prompt": "Ligue cada especificador ao jeito como o Node o lê.",
+    "pairs": [
+      {
+        "left": "`node:fs`",
+        "right": "um módulo embutido no Node"
+      },
+      {
+        "left": "`./store.js`",
+        "right": "um arquivo, pelo caminho"
+      },
+      {
+        "left": "`express`",
+        "right": "um pacote, procurado em node_modules"
+      },
+      {
+        "left": "`tidy/words`",
+        "right": "um subcaminho de um pacote"
+      }
+    ],
+    "right_distractors": [
+      "um pacote baixado no primeiro uso"
+    ]
+  },
+  "ex-nsjbwfjp": {
+    "prompt": "De onde vêm o `require` e o `__dirname` num arquivo CommonJS?",
+    "choices": [
+      {
+        "text": "São globais, como o `console`",
+        "why": "Eles não estão no `globalThis`."
+      },
+      {
+        "text": "Parâmetros do invólucro",
+        "why": "Certo. O `module.wrapper` mostra."
+      },
+      {
+        "text": "O npm os acrescenta ao instalar um pacote",
+        "why": "Eles existem em arquivos que o npm nunca tocou."
+      },
+      {
+        "text": "Do `package.json`",
+        "why": "O package.json não declara nada assim."
+      }
+    ]
+  },
+  "ex-vd4e1c8d": {
+    "prompt": "O `trap.js` contém `exports = { hello }` e mais nada. O que o `require(\"./trap.js\")` devolve?",
+    "choices": [
+      {
+        "text": "`{ hello }`",
+        "why": "Só o parâmetro passou a apontar para outro objeto."
+      },
+      {
+        "text": "`{}`",
+        "why": "Certo: o module.exports, intocado."
+      },
+      {
+        "text": "`undefined`",
+        "why": "O require devolve o module.exports, que começa como objeto."
+      },
+      {
+        "text": "Um TypeError",
+        "why": "Atribuir a um parâmetro é permitido; só não serve para nada."
+      }
+    ]
+  },
+  "ex-jgjbfcpz": {
+    "prompt": "Um servidor abre `\"./data.json\"` e funciona quando iniciado da própria pasta, mas falha sob um gerenciador de processos. De onde o caminho deve ser montado?",
+    "choices": [
+      {
+        "text": "`process.cwd()`",
+        "why": "Essa é a pasta de onde ele foi iniciado, que é o problema."
+      },
+      {
+        "text": "A variável `PATH`",
+        "why": "O PATH é onde comandos são encontrados, não arquivos."
+      },
+      {
+        "text": "`import.meta.dirname`",
+        "why": "Certo: a pasta onde o arquivo está."
+      },
+      {
+        "text": "A pasta home do usuário",
+        "why": "O serviço pode rodar como outro usuário, e o arquivo está ao lado do código."
+      }
+    ]
+  },
+  "ex-erpen6x1": {
+    "prompt": "Dois arquivos fazem `require(\"./counter\")`. Quantas vezes o `counter.js` roda?",
+    "choices": [
+      {
+        "text": "Duas, uma por arquivo",
+        "why": "Ele imprimiu `counter.js runs` uma vez."
+      },
+      {
+        "text": "Uma por chamada de `next()`",
+        "why": "O next() roda uma função dele, não o arquivo."
+      },
+      {
+        "text": "Uma",
+        "why": "Certo. O segundo recebe as exportações do cache."
+      },
+      {
+        "text": "Nunca, até o `next()` ser chamado",
+        "why": "Ele rodou no primeiro require."
+      }
+    ]
+  },
+  "ex-1mjg0svf": {
+    "prompt": "Um objeto de configuração exportado pelo `config.js` parece se reiniciar numa parte da aplicação. Qual é a causa mais provável?",
+    "choices": [
+      {
+        "text": "O cache expira depois de um minuto",
+        "why": "Ele não expira enquanto o processo roda."
+      },
+      {
+        "text": "O módulo foi carregado de dois caminhos diferentes",
+        "why": "Certo. O cache é indexado pelo caminho."
+      },
+      {
+        "text": "ES modules nunca vão para o cache",
+        "why": "Vão, num cache separado."
+      },
+      {
+        "text": "Objetos não podem ser compartilhados entre arquivos",
+        "why": "Podem; é isso que um módulo singleton faz."
+      }
+    ]
+  },
+  "ex-zjt47p8a": {
+    "prompt": "No ciclo, por que o `b.js` viu `a.ready` como `false`?",
+    "choices": [
+      {
+        "text": "O `a.js` falhou ao carregar",
+        "why": "Nada falhou; os dois imprimiram."
+      },
+      {
+        "text": "Booleanos são copiados, e cópias nunca mudam",
+        "why": "Ele leu a propriedade de um objeto compartilhado, cedo demais."
+      },
+      {
+        "text": "O `b.js` rodou antes de o `a.js` começar",
+        "why": "O a.js começou primeiro e pediu o b.js na segunda linha."
+      },
+      {
+        "text": "Ele recebeu o `a.js` pela metade, do cache",
+        "why": "Certo. Um ciclo entrega um módulo inacabado."
+      }
+    ]
+  },
+  "ex-fb7fnfkb": {
+    "prompt": "O `start.mjs` imprime uma linha e depois importa um arquivo que não existe. O que aparece?",
+    "choices": [
+      {
+        "text": "A linha, depois o erro",
+        "why": "O import é resolvido antes de qualquer código rodar."
+      },
+      {
+        "text": "A linha, e um valor undefined",
+        "why": "Um módulo ausente é erro, não valor ausente."
+      },
+      {
+        "text": "Nada",
+        "why": "O Node imprimiu ERR_MODULE_NOT_FOUND."
+      },
+      {
+        "text": "Só o erro",
+        "why": "Certo. O `starting the server` nunca apareceu."
+      }
+    ]
+  },
+  "ex-w2mckwdf": {
+    "prompt": "O que um `await` no topo do `prices.mjs` faz com os módulos que o importam?",
+    "choices": [
+      {
+        "text": "Eles rodam em paralelo com ele",
+        "why": "Nada roda em paralelo; eles esperam."
+      },
+      {
+        "text": "Eles recebem uma promise em vez de `prices`",
+        "why": "Eles recebem o valor pronto."
+      },
+      {
+        "text": "Eles falham com SyntaxError",
+        "why": "Await no topo é permitido em ES modules."
+      },
+      {
+        "text": "Eles esperam até ele terminar",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-b0wa0087": {
+    "prompt": "Um ES module importa um arquivo de dados acrescentando `with { type: \"___\" }` depois do nome.",
+    "blanks": [
+      {
+        "accept": [
+          "json"
+        ]
+      }
+    ]
+  },
+  "ex-s54ysvnm": {
+    "prompt": "Um ES module faz `import pkg from \"./slug.cjs\"`. O que é `pkg`?",
+    "choices": [
+      {
+        "text": "Só a primeira função do arquivo",
+        "why": "É tudo o que o module.exports tinha."
+      },
+      {
+        "text": "Uma promise do módulo",
+        "why": "Só o `import()`, a função, devolve uma promise."
+      },
+      {
+        "text": "O `module.exports` inteiro",
+        "why": "Certo."
+      },
+      {
+        "text": "`undefined`, já que CommonJS não tem export default",
+        "why": "O import default de CommonJS é o module.exports."
+      }
+    ]
+  },
+  "ex-8tqpqnnj": {
+    "prompt": "`require(\"./later.mjs\")` falhou com `ERR_REQUIRE_ASYNC_MODULE`. O que ainda funciona a partir de CommonJS?",
+    "choices": [
+      {
+        "text": "Renomear `later.mjs` para `later.js`",
+        "why": "O await continua lá, seja qual for o nome."
+      },
+      {
+        "text": "`await import(\"./later.mjs\")`",
+        "why": "Certo. O import() funciona nos dois sistemas."
+      },
+      {
+        "text": "Nada; CommonJS não consegue carregá-lo",
+        "why": "Uma forma consegue."
+      },
+      {
+        "text": "`require` com `{ async: true }`",
+        "why": "O require não aceita opções."
+      }
+    ]
+  },
+  "ex-20f5tv70": {
+    "prompt": "`import { format } from \"old-lib\"` diz que não existe export chamado `format`, mas a documentação da biblioteca chama `lib.format()`. O que você tenta?",
+    "choices": [
+      {
+        "text": "Instalar um Node mais novo",
+        "why": "A varredura é a mesma ideia em toda versão."
+      },
+      {
+        "text": "Editar o próprio arquivo da biblioteca dentro de node_modules",
+        "why": "A próxima instalação desfaz isso."
+      },
+      {
+        "text": "Pegar o import default e chamar o método nele",
+        "why": "Certo. Imports nomeados de CommonJS são um palpite a partir do texto."
+      },
+      {
+        "text": "Usar `require` no ES module",
+        "why": "O require não está definido no escopo de ES module."
+      }
+    ]
+  },
+  "ex-ae2be3bh": {
+    "prompt": "`require(\"tidy/src/internal.js\")` falhou com `ERR_PACKAGE_PATH_NOT_EXPORTED`, embora o arquivo exista. Por quê?",
+    "choices": [
+      {
+        "text": "O arquivo é CommonJS",
+        "why": "O build CommonJS foi carregado normalmente pelo nome."
+      },
+      {
+        "text": "O `exports` do pacote não o lista",
+        "why": "Certo."
+      },
+      {
+        "text": "Arquivos em `src` nunca podem ser carregados",
+        "why": "O nome da pasta não significa nada para o Node."
+      },
+      {
+        "text": "O npm o marcou como privado ao instalar",
+        "why": "O npm não instalou este pacote; você o fez."
+      }
+    ]
+  },
+  "ex-q9x0rvnp": {
+    "prompt": "Por que o `require(\"tidy\")` e o `import ... from \"tidy\"` carregaram arquivos diferentes?",
+    "choices": [
+      {
+        "text": "O Node escolhe um arquivo ao acaso",
+        "why": "É decidido pelas condições, toda vez."
+      },
+      {
+        "text": "Cada condição aponta para um arquivo",
+        "why": "Certo."
+      },
+      {
+        "text": "O segundo veio do cache do primeiro",
+        "why": "Eram dois processos separados."
+      },
+      {
+        "text": "O `main` aponta para os dois arquivos",
+        "why": "Não há `main` neste package.json."
+      }
+    ]
+  },
+  "ex-8msnvras": {
+    "prompt": "No campo `imports` de um projeto, todo nome tem de começar com o caractere ___.",
+    "blanks": [
+      {
+        "accept": [
+          "#"
+        ]
+      }
+    ]
+  },
+  "ex-cyzpw6qd": {
+    "prompt": "Por que escrever `node:fs` em vez de `fs`?",
+    "choices": [
+      {
+        "text": "O `fs` sem prefixo foi removido no Node 22",
+        "why": "Ele ainda funciona; o prefixo é questão de certeza."
+      },
+      {
+        "text": "Para que nenhum pacote tome o lugar dele",
+        "why": "Certo, e diz de cara que o módulo é do Node."
+      },
+      {
+        "text": "Carrega mais rápido",
+        "why": "A velocidade não é o motivo."
+      },
+      {
+        "text": "É obrigatório em CommonJS",
+        "why": "É opcional para a maioria dos módulos nos dois sistemas."
+      }
+    ]
+  },
+  "ex-6wy23fvv": {
+    "prompt": "Quantos nomes o `builtinModules` listou no Node 22.22.0?",
+    "unit": "módulos"
+  },
+  "ex-00cfzckq": {
+    "prompt": "`require(\"test\")` falhou com `Cannot find module 'test'`, e `require(\"node:test\")` funcionou. Por quê?",
+    "choices": [
+      {
+        "text": "O test runner só funciona em ES modules",
+        "why": "Ele carregou em CommonJS com o prefixo."
+      },
+      {
+        "text": "Ele precisa ser instalado com npm antes",
+        "why": "Ele é embutido; o prefixo é o que o nomeia."
+      },
+      {
+        "text": "O `-e` não carrega módulos embutidos",
+        "why": "Ele carregou o node:test normalmente."
+      },
+      {
+        "text": "O `node:test` só existe com o prefixo",
+        "why": "Certo. Sem ele, `test` é nome de pacote."
+      }
+    ]
+  },
+  "ex-hsja9fq2": {
+    "prompt": "Por que o projeto links mantém `app.js` e `server.js` separados?",
+    "choices": [
+      {
+        "text": "O Express exige dois arquivos",
+        "why": "O Express fica feliz com um."
+      },
+      {
+        "text": "Para carregar mais rápido",
+        "why": "Um ou dois arquivos não muda a velocidade aqui."
+      },
+      {
+        "text": "Porque um é CommonJS e o outro ES module",
+        "why": "Os dois são ES modules."
+      },
+      {
+        "text": "Testes sem porta aberta",
+        "why": "Certo. Um teste importa a aplicação e não abre porta; a aula 6 faz exatamente isso."
+      }
+    ]
+  },
+  "ex-65jzzftv": {
+    "prompt": "A aula 8 tira os links de um array e os põe num arquivo. Quais arquivos precisam mudar, se o layout for seguido?",
+    "choices": [
+      {
+        "text": "O `store.js`, e mais nada",
+        "why": "Certo. É por isso que ele existe."
+      },
+      {
+        "text": "Toda rota que lê ou escreve um link",
+        "why": "As rotas chamam o store, e nunca sabem onde os dados ficam."
+      },
+      {
+        "text": "`app.js` e `server.js`",
+        "why": "Nenhum dos dois mexe nos dados."
+      },
+      {
+        "text": "O `package.json`, para declarar o arquivo",
+        "why": "O package.json não lista arquivos de dados."
+      }
+    ]
+  },
+  "ex-kae673gv": {
+    "prompt": "Um arquivo CommonJS chama `require(\"tidy\")`. Ponha os passos do Node em ordem.",
+    "items": [
+      "Ver que `tidy` não é embutido nem é caminho",
+      "Procurar em `node_modules` ao lado do arquivo, depois em cada pasta acima",
+      "Ler o `exports` do pacote, na condição `require`",
+      "Rodar esse arquivo, a não ser que já esteja no cache",
+      "Devolver o `module.exports` dele"
+    ]
+  }
+}

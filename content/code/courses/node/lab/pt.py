@@ -28,6 +28,8 @@ def repl(m):
     if label == "example":
         notes = [x.get("note") for x in parse("file: x\n" + body)["parts"]]
         body = json.dumps({"parts": [{"note": n} if n else {} for n in notes]}); label = "schooling-example"
+    if label == "localised" and elabel == "localised":
+        return m.group(0)
     if label == "schooling-figure":
         if elabel != label: sys.exit(f"{pt}: fence {i} is a figure and the English is {elabel}")
         return m.group(0)
