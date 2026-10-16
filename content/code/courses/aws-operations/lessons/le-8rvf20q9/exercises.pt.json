@@ -1,0 +1,289 @@
+{
+  "ex-mz5pwfkt": {
+    "prompt": "Pela regra desta lição, onde fica uma senha de banco que deve mudar a cada trinta dias?",
+    "hint": "Qual dos dois rotaciona?",
+    "choices": [
+      {
+        "text": "Secrets Manager",
+        "why": "Certo. A rotação vem pronta."
+      },
+      {
+        "text": "Parameter Store, como String",
+        "why": "Uma String nem é criptografada."
+      },
+      {
+        "text": "Uma variável de ambiente na imagem",
+        "why": "Aí ela está em toda cópia da imagem."
+      },
+      {
+        "text": "Um arquivo no repositório, criptografado",
+        "why": "Mudá-la vira um release, e a chave também precisa morar em algum lugar."
+      }
+    ]
+  },
+  "ex-9t13s3nv": {
+    "prompt": "A 0,40 USD por segredo por mês, quanto custam 15 segredos num mês, sem contar as chamadas?",
+    "hint": "15 × 0,40",
+    "unit": "USD"
+  },
+  "ex-q0xp362k": {
+    "prompt": "Por que o price.py não imprime linha para um parâmetro standard?",
+    "hint": "Qual é o preço dele?",
+    "choices": [
+      {
+        "text": "A versão fixada da lista é velha demais",
+        "why": "A versão é recente; a linha não existe."
+      },
+      {
+        "text": "São cobrados no Secrets Manager",
+        "why": "São um recurso do Systems Manager."
+      },
+      {
+        "text": "São Paulo não os oferece",
+        "why": "O laboratório os guardou em sa-east-1 como todo o resto."
+      },
+      {
+        "text": "Parâmetros standard são grátis",
+        "why": "Certo. Só o nível advanced e a vazão maior têm preço."
+      }
+    ]
+  },
+  "ex-4zycg6g2": {
+    "prompt": "Sem --with-decryption, o moto devolveu 'kms:alias/aws/ssm:first-pass' para uma SecureString. O que a AWS devolve?",
+    "hint": "O laboratório chamou isso de ideia do moto sobre criptografia.",
+    "choices": [
+      {
+        "text": "O mesmo, com o texto puro depois do nome da chave",
+        "why": "Aí qualquer um leria; isso é só do moto."
+      },
+      {
+        "text": "Uma string vazia",
+        "why": "Devolve o valor criptografado."
+      },
+      {
+        "text": "Texto cifrado do KMS, ilegível sem a chave",
+        "why": "Certo. Decifrar exige permissão na chave também."
+      },
+      {
+        "text": "Um erro de acesso negado",
+        "why": "Ler o valor criptografado é permitido por ssm:GetParameter."
+      }
+    ]
+  },
+  "ex-y8ktmqzn": {
+    "prompt": "Para trocar o valor de um parâmetro existente, put-parameter precisa da opção --____. (uma palavra)",
+    "hint": "A mensagem de erro disse.",
+    "blanks": [
+      {
+        "accept": [
+          "overwrite"
+        ]
+      }
+    ]
+  },
+  "ex-c5x5wfvf": {
+    "prompt": "Qual o maior valor, em KB, que um parâmetro standard pode guardar na AWS?",
+    "hint": "O moto deixou passar 5.000 caracteres.",
+    "unit": "KB"
+  },
+  "ex-4rm77e18": {
+    "prompt": "Uma política nomeia arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/prod/db exatamente, sem curinga. O que dá errado na AWS?",
+    "hint": "Olhe o fim do ARN real do segredo.",
+    "choices": [
+      {
+        "text": "Nada; o Secrets Manager ignora o sufixo",
+        "why": "O ARN tem o sufixo e a política precisa casar com ele."
+      },
+      {
+        "text": "Um sufixo de seis letras",
+        "why": "Certo. O ARN real termina com seis caracteres aleatórios, daí secret:shop/prod/db-*."
+      },
+      {
+        "text": "Casa com todo segredo sob shop/prod",
+        "why": "Sem curinga casa exatamente com uma string."
+      },
+      {
+        "text": "É recusada quando a política é salva",
+        "why": "A política é válida; só não nomeia nada que exista."
+      }
+    ]
+  },
+  "ex-118a1t2d": {
+    "prompt": "Ligue cada rótulo de estágio ao que ele marca.",
+    "hint": "Atual, antes, durante uma rotação.",
+    "pairs": [
+      {
+        "left": "AWSCURRENT",
+        "right": "O que uma leitura sem estágio devolve"
+      },
+      {
+        "left": "AWSPREVIOUS",
+        "right": "A versão anterior à atual"
+      },
+      {
+        "left": "AWSPENDING",
+        "right": "Um valor novo que uma rotação não terminou"
+      }
+    ]
+  },
+  "ex-zqzbs4aa": {
+    "prompt": "Ponha os quatro passos de uma função de rotação em ordem.",
+    "hint": "O estágio muda por último.",
+    "items": [
+      "createSecret",
+      "setSecret",
+      "testSecret",
+      "finishSecret"
+    ]
+  },
+  "ex-32kbkm44": {
+    "prompt": "O moto rotacionou um segredo sem função e a leitura seguinte falhou. Com que bug real isso se parece?",
+    "hint": "Que passo nunca pode rodar sem os outros?",
+    "choices": [
+      {
+        "text": "Mudar o estágio cedo demais",
+        "why": "Certo. AWSCURRENT mudou antes de haver valor: o único bug que uma função de rotação não pode ter."
+      },
+      {
+        "text": "Uma função que roda todo dia em vez de todo mês",
+        "why": "Rotação frequente é segura se cada uma termina."
+      },
+      {
+        "text": "Uma função que testa a senha nova",
+        "why": "Testar é o passo três, e a salvaguarda."
+      },
+      {
+        "text": "Um segredo replicado em outra região",
+        "why": "Replicação não tem relação com o estágio."
+      }
+    ]
+  },
+  "ex-8vcb0axj": {
+    "prompt": "Quantos dias um segredo apagado espera, por padrão, antes de sumir?",
+    "hint": "A DeletionDate estava a um mês.",
+    "unit": "dias"
+  },
+  "ex-d9wtedwg": {
+    "prompt": "No cache-demo.py, por que a leitura logo depois da mudança devolveu a senha antiga?",
+    "hint": "Conte as chamadas.",
+    "choices": [
+      {
+        "text": "O Secrets Manager leva um minuto para guardar uma versão",
+        "why": "A versão nova estava lá; o programa não perguntou."
+      },
+      {
+        "text": "put_secret_value deixou a versão nova como AWSPENDING",
+        "why": "Ela virou AWSCURRENT na hora."
+      },
+      {
+        "text": "A impressão digital esconde a mudança",
+        "why": "A impressão digital mudou três segundos depois."
+      },
+      {
+        "text": "O cache ainda valia; não houve chamada",
+        "why": "Certo. Três leituras, duas chamadas."
+      }
+    ]
+  },
+  "ex-emeb4hnj": {
+    "prompt": "10 contêineres leem cada um um segredo a cada 5 minutos num mês de 30 dias. Quantas chamadas dá?",
+    "hint": "10 × 12 × 24 × 30"
+  },
+  "ex-gfvcc6z7": {
+    "prompt": "O que uma linha de log sobre um segredo deve levar, segundo esta lição?",
+    "hint": "O demo imprimiu uma.",
+    "choices": [
+      {
+        "text": "O valor do segredo, mascarado depois dos primeiros caracteres",
+        "why": "Os primeiros caracteres de uma senha são parte da senha."
+      },
+      {
+        "text": "Nada sobre o segredo",
+        "why": "Uma impressão digital é útil e segura."
+      },
+      {
+        "text": "Uma impressão digital, o começo do SHA-256",
+        "why": "Certo. Mostra uma mudança sem mostrar o valor."
+      },
+      {
+        "text": "O valor, em base64",
+        "why": "Base64 é codificação, não proteção."
+      }
+    ]
+  },
+  "ex-cyemrqw8": {
+    "prompt": "O que INITIAL_NO_AUTH_ACTION_COUNT=9 diz ao moto para fazer?",
+    "hint": "Preparação primeiro, verificação depois.",
+    "choices": [
+      {
+        "text": "Recusar as nove primeiras requisições",
+        "why": "É o contrário."
+      },
+      {
+        "text": "Permitir nove usuários",
+        "why": "Conta requisições, não usuários."
+      },
+      {
+        "text": "Repetir cada requisição que falhou nove vezes",
+        "why": "Não tem relação com novas tentativas."
+      },
+      {
+        "text": "Deixar nove passarem, depois checar políticas",
+        "why": "Certo. Toda requisição conta, inclusive uma digitada errado."
+      }
+    ]
+  },
+  "ex-x0p36ftw": {
+    "prompt": "No moto, a política certa e estreita de shop-app foi recusada no próprio segredo. Por quê?",
+    "hint": "Ação, ou recurso?",
+    "choices": [
+      {
+        "text": "A política precisava também de secretsmanager:DescribeSecret",
+        "why": "GetSecretValue não precisa dela."
+      },
+      {
+        "text": "O moto casa toda requisição com *, nunca com um ARN",
+        "why": "Certo. Na AWS a mesma política permite a leitura."
+      },
+      {
+        "text": "O curinga do sufixo é inválido",
+        "why": "É a forma documentada."
+      },
+      {
+        "text": "Chaves de acesso levam um minuto para funcionar",
+        "why": "get-caller-identity funcionou na hora."
+      }
+    ]
+  },
+  "ex-fywfvnf2": {
+    "prompt": "Quais requisições a AWS permite? Escolha todas que se aplicam.",
+    "hint": "Use a tabela no fim da seção sobre acesso.",
+    "choices": [
+      {
+        "text": "shop-app lê shop/prod/db",
+        "why": "Sim; o moto recusou, a AWS permite."
+      },
+      {
+        "text": "shop-wide lê shop/prod/payments",
+        "why": "Sim; é o que a política ampla diz."
+      },
+      {
+        "text": "shop-app lê /shop/prod/db/host",
+        "why": "Nenhuma ação ssm é concedida."
+      },
+      {
+        "text": "shop-wide grava shop/prod/db",
+        "why": "Nenhuma instrução permite PutSecretValue."
+      },
+      {
+        "text": "shop-app lê shop/prod/payments",
+        "why": "A política dele nomeia só o segredo do banco."
+      }
+    ]
+  },
+  "ex-5q0bt897": {
+    "prompt": "Ler um segredo em cada uma de 50 milhões de requisições por mês, a 0,05 USD por 10.000 chamadas, custa quantos USD?",
+    "hint": "50.000.000 / 10.000 × 0,05",
+    "unit": "USD"
+  }
+}
