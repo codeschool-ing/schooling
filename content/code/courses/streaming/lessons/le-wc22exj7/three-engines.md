@@ -3,9 +3,8 @@ title: Three engines, three shapes
 version: 1
 ---
 
-Lesson 12 counted sales per window with Spark. **Flink and Kafka Streams can run the same count,
-and the difference between the three is less in what they compute than in where they run and how
-often they act.** Choosing between them is choosing a shape for the program, and the shape decides
+Lesson 12 counted sales per window with Spark. **Flink and Kafka Streams can run the same count.
+The three differ in where they run and how often they act.** Choosing between them is choosing a shape for the program, and the shape decides
 who operates it.
 
 The wrong picture to drop first is that they are three products competing for one job, with a
@@ -30,21 +29,21 @@ it arrives**: it goes through the whole program, updating whatever state it touc
 that becomes ready, such as a window the watermark has just closed, is sent on at once. There is no
 batch interval to wait for, so the latency is what the computation costs, typically milliseconds.
 
-That is not free. An engine that acts per record has to save its progress without stopping to do
-it, and the two solve that differently: Flink takes **consistent snapshots** of every operator's
-state while records keep flowing (section 07 of this lesson), and Kafka Streams writes every change
-to its state into a Kafka topic as it happens (section 04).
+That has a cost. An engine that acts per record has to save its progress without stopping to do
+it, and the two solve that differently. Flink takes **consistent snapshots** of every operator's
+state while records keep flowing (section 07 of this lesson). Kafka Streams writes every change to
+its state into a Kafka topic as it happens (section 04).
 
 ## An engine or a library
 
 Spark and Flink are **clusters**. You install them, keep them running, give them memory, and
 submit work to them; the work runs inside their processes, and somebody operates those processes.
 Kafka Streams turns that around. **It is a library, a set of jars you put on your program's
-classpath**, and the program it runs in is yours: you start it the way you start any Java
+classpath**, and the program it runs in is yours. You start it the way you start any Java
 application, and to run on more machines you start more copies. The copies find each other through
 Kafka itself, with the consumer-group machinery of lesson 4, and divide the work between them.
 
-That is its strength and its fence. With nothing to install, a team that already runs Kafka can add
+That shape brings one strength and one limit. With nothing to install, a team that already runs Kafka can add
 stream processing to a service it already deploys. But everything it reads and writes is a Kafka
 topic: to count sales from a database, something else has to put them in Kafka first, which is
 lesson 14's subject.

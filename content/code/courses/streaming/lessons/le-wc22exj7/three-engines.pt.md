@@ -3,9 +3,8 @@ title: Três motores, três formas
 version: 1
 ---
 
-A lição 12 contou vendas por janela com o Spark. **O Flink e o Kafka Streams fazem a mesma
-contagem, e a diferença entre os três está menos no que calculam do que em onde rodam e em quantas
-vezes agem.** Escolher entre eles é escolher uma forma para o programa, e a forma decide quem o
+A lição 12 contou vendas por janela com o Spark. **O Flink e o Kafka Streams fazem a mesma contagem.
+Os três diferem em onde rodam e em quantas vezes agem.** Escolher entre eles é escolher uma forma para o programa, e a forma decide quem o
 opera.
 
 A imagem errada a largar primeiro é a de três produtos disputando um trabalho só, com um vencedor.
@@ -25,27 +24,26 @@ Eles se sobrepõem, e cada um é construído em volta de uma decisão diferente:
 
 ## Um registro de cada vez
 
-O Spark espera um trigger e processa uma fatia. **O Flink e o Kafka Streams tratam cada registro
-quando ele chega**: o registro passa pelo programa inteiro, atualizando o estado que tocar, e
-qualquer coisa que fique pronta, como uma janela que o watermark acabou de fechar, segue adiante na
-hora. Não há intervalo de batch para esperar, então a latência é o que a computação custa,
+O Spark espera um trigger e processa uma fatia. **O Flink e o Kafka Streams tratam cada registro quando ele chega**: o registro passa pelo
+programa inteiro e atualiza o estado que tocar. Qualquer coisa que fique pronta, como uma janela
+que o watermark acabou de fechar, segue adiante na hora. Não há intervalo de batch para esperar, então a latência é o que a computação custa,
 tipicamente milissegundos.
 
-Isso não sai de graça. Um motor que age por registro precisa salvar o progresso sem parar para
-isso, e os dois resolvem de jeitos diferentes: o Flink tira **snapshots consistentes** do estado de
-cada operador enquanto os registros continuam passando (seção 07 desta lição), e o Kafka Streams
-escreve cada mudança do seu estado num tópico do Kafka no momento em que ela acontece (seção 04).
+Isso tem um custo. Um motor que age por registro precisa salvar o progresso sem parar para isso,
+e os dois resolvem de jeitos diferentes. O Flink tira **snapshots consistentes** do estado de cada
+operador enquanto os registros continuam passando (seção 07 desta lição). O Kafka Streams escreve
+cada mudança do seu estado num tópico do Kafka no momento em que ela acontece (seção 04).
 
 ## Um motor ou uma biblioteca
 
 Spark e Flink são **clusters**. Você os instala, os mantém rodando, dá memória a eles e submete
 trabalho; o trabalho roda dentro dos processos deles, e alguém opera esses processos. O Kafka
-Streams inverte isso. **Ele é uma biblioteca, um conjunto de jars que você põe no classpath do seu
-programa**, e o programa em que ele roda é seu: você o inicia como inicia qualquer aplicação Java,
-e para rodar em mais máquinas inicia mais cópias. As cópias se encontram pelo próprio Kafka, com o
+Streams inverte isso. **Ele é uma biblioteca, um conjunto de jars que você põe no
+classpath do seu programa**, e o programa em que ele roda é seu. Você o inicia como inicia qualquer
+aplicação Java, e para rodar em mais máquinas inicia mais cópias. As cópias se encontram pelo próprio Kafka, com o
 mecanismo de grupos de consumidores da lição 4, e dividem o trabalho entre si.
 
-Essa é a força e a cerca dele. Sem nada a instalar, um time que já roda Kafka pode acrescentar
+Essa forma traz uma força e um limite. Sem nada a instalar, um time que já roda Kafka pode acrescentar
 processamento de streams a um serviço que já implanta. Mas tudo o que ele lê e escreve é um tópico
 do Kafka: para contar vendas vindas de um banco de dados, alguma outra coisa precisa colocá-las no
 Kafka antes, que é o assunto da lição 14.

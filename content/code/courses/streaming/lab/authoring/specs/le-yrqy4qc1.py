@@ -71,7 +71,7 @@ Q(S4,"hard",("kafka-dump-log.sh shows a batch line with count: 761 before the me
 Q(S5,"easy",("What does retention delete?","O que a retenção apaga?"),[
  ("Messages that every consumer group has read","Mensagens que todo consumer group já leu",False,"Retention ignores readers entirely.","A retenção ignora os leitores por completo."),
  ("Single messages older than retention.ms","Mensagens avulsas mais velhas que retention.ms",False,"It never deletes one message; it deletes the segment once all of it is past the limit.","Ela nunca apaga uma mensagem; apaga o segmento quando ele inteiro passou do limite."),
- ("Whole closed segments, oldest first","Segmentos fechados inteiros, os mais antigos primeiro",True,"Right. And never the active segment.","Isso. E nunca o segmento ativo."),
+ ("Whole closed segments, oldest first","Segmentos fechados inteiros, os mais antigos primeiro",True,"Right. A segment still being written is closed first, if it has to go.","Isso. Um segmento ainda em escrita é fechado antes, se precisar sair."),
  ("The oldest value of each key","O valor mais antigo de cada chave",False,"That is closer to compaction, the next section.","Isso está mais perto da compactação, a próxima seção."),
 ])
 N(S5,"medium",("old-sales had segments starting at offsets 0, 7081 and 14354. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?","O old-sales tinha segmentos começando nos offsets 0, 7081 e 14354. A retenção apagou o primeiro segmento. Que offset o kafka-get-offsets.sh --time earliest imprimiu?"),7081,0,("offset","offset"))

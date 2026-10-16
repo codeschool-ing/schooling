@@ -21,8 +21,11 @@ falta é o hardware separado, e a lição 5 diz quanto isso custa.
 
 Os tamanhos têm folga, e a folga foi medida. Um nó de Kafka usa entre uns 360 e 550 MB de
 memória, conforme o que está fazendo; três deles, como na lição 5, cerca de 1,1 GB. As lições
-mais pesadas são a 12 e a 13, em que Spark ou Flink rodam ao lado de um broker, e elas ficam abaixo de 3 GB. Em disco, o Kafka são 135 MB de
-download, e até a lição 14 o curso inteiro instalou menos de 3 GB. O disco padrão do Multipass, de 5
+mais pesadas são a 12 e a 13, em que Spark ou Flink rodam ao lado de um broker: cerca de 1,05 GB
+com o Spark e 1,3 GB com o Flink. Em disco, o Kafka são 135 MB de download, e Spark e Flink são os
+maiores a chegar. Na lição 13 o diretório home guarda cerca de 3,6 GB, e 1,7 GB disso são o cache
+de downloads do Python e os arquivos que você baixou, que podem ser apagados depois de
+descompactados. O disco padrão do Multipass, de 5
 GB, fica pequeno quando Spark e Flink chegam.
 
 **A máquina virtual é o caminho recomendado.** O curso instala um banco de dados, um broker de
