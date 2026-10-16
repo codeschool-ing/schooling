@@ -1,0 +1,392 @@
+{
+  "ex-efz86ctq": {
+    "prompt": "Uma contagem de um dia de novembro em `events_by_month` mostrou uma leitura, em `events_2025_11`. O que o planejador fez?",
+    "hint": "Ele comparou duas coisas que tinha.",
+    "choices": [
+      {
+        "text": "Leu os outros meses e não achou nada",
+        "why": "Eles nem estavam no plano, então nunca foram abertos."
+      },
+      {
+        "text": "Comparou os limites e ficou com novembro",
+        "why": "Isso: é a poda em tempo de planejamento, a partir dos valores escritos na consulta."
+      },
+      {
+        "text": "Usou um índice em `at`",
+        "why": "Não há índice em at; dentro de novembro foi uma leitura sequencial."
+      },
+      {
+        "text": "Perguntou às estatísticas qual mês é o mais movimentado",
+        "why": "Estatísticas estimam linhas; a poda usa os limites."
+      }
+    ]
+  },
+  "ex-s2qncvc3": {
+    "prompt": "Contar um dia levou 216,7 ms em `events` e quantos milissegundos em `events_by_month`?",
+    "hint": "O segundo EXPLAIN ANALYZE da seção.",
+    "unit": "ms"
+  },
+  "ex-f2rr0d69": {
+    "prompt": "`WHERE at >= '2025-12-20'` manteve duas partições. Quais, e por que duas?",
+    "hint": "Quais intervalos podem ter um instante depois de 20 de dezembro?",
+    "choices": [
+      {
+        "text": "Novembro e dezembro, os dois mais próximos",
+        "why": "Novembro termina antes de 20 de dezembro, então nada nele pode bater."
+      },
+      {
+        "text": "Dezembro e janeiro",
+        "why": "Isso: os dois intervalos se sobrepõem a 'do dia 20 de dezembro em diante'."
+      },
+      {
+        "text": "Só dezembro, mais uma cópia do plano",
+        "why": "O intervalo de janeiro também se sobrepõe à condição, vazio ou não."
+      },
+      {
+        "text": "Outubro e dezembro, os que têm mais linhas",
+        "why": "Contagens de linhas não entram; só os limites."
+      }
+    ]
+  },
+  "ex-v0afze4z": {
+    "prompt": "Um painel sempre pede os últimos 90 dias, e a tabela guarda exatamente 90 dias particionados por mês. Quanto a poda vai economizar?",
+    "hint": "Ela paga na proporção do que pula.",
+    "choices": [
+      {
+        "text": "Uns dois terços, como na consulta de um dia",
+        "why": "A consulta de um dia pulou dois meses; esta precisa de todos."
+      },
+      {
+        "text": "Toda a leitura, porque a poda substitui a leitura",
+        "why": "A poda escolhe partições; as que sobram ainda são lidas."
+      },
+      {
+        "text": "Quase nada",
+        "why": "Isso: toda partição se sobrepõe aos 90 dias, e ainda paga o custo que a aula 17 mediu."
+      },
+      {
+        "text": "Metade, porque o planejador poda um mês sim, um não",
+        "why": "O planejador mantém toda partição cujo intervalo se sobrepõe; não há alternância."
+      }
+    ]
+  },
+  "ex-mf3f9d9r": {
+    "prompt": "O que `Subplans Removed: 3` sob um `Append` diz?",
+    "hint": "Ele nunca aparece com a poda em tempo de planejamento.",
+    "choices": [
+      {
+        "text": "Três partições foram descartadas quando a execução começou",
+        "why": "Isso: o plano foi montado para as quatro e podado em tempo de execução."
+      },
+      {
+        "text": "Três partições foram apagadas da tabela",
+        "why": "Nada é apagado; elas ficaram fora desta execução."
+      },
+      {
+        "text": "O planejador removeu três joins inúteis",
+        "why": "Não há join aqui; os subplanos são leituras de partição."
+      },
+      {
+        "text": "Três workers não começaram",
+        "why": "O Workers Launched disse 2, como planejado."
+      }
+    ]
+  },
+  "ex-e3495ht9": {
+    "prompt": "Por que um prepared statement com plano genérico precisa de poda em tempo de execução?",
+    "hint": "O que o planejador vê em vez de uma data?",
+    "choices": [
+      {
+        "text": "Prepared statements desligam a poda no planejamento para economizar memória",
+        "why": "Nada é desligado; só não há ainda valor para comparar."
+      },
+      {
+        "text": "O planejador vê `$1`, não uma data",
+        "why": "Isso: o plano precisa servir para qualquer valor, então os limites são comparados quando o $1 chega."
+      },
+      {
+        "text": "Planos genéricos são sempre mais lentos e precisam de ajuda",
+        "why": "O plano genérico podado leu um mês, o mesmo trabalho do específico."
+      },
+      {
+        "text": "O driver manda a data depois que a consulta terminou",
+        "why": "O valor chega com o EXECUTE, antes de a execução começar."
+      }
+    ]
+  },
+  "ex-nevzsb74": {
+    "prompt": "No plano da subconsulta, outubro e novembro dizem `(never executed)` e janeiro mostra um tempo real. Por que a diferença?",
+    "hint": "Compare cada intervalo com o dia do último pedido.",
+    "choices": [
+      {
+        "text": "Janeiro está vazio, então sempre é executado",
+        "why": "Estar vazio não decide; o intervalo dele decide."
+      },
+      {
+        "text": "Outubro e novembro foram podados no planejamento",
+        "why": "Eles estão no plano; a poda no planejamento os teria deixado totalmente de fora."
+      },
+      {
+        "text": "O intervalo de janeiro ainda podia ter linhas depois do corte",
+        "why": "Isso: só as partições inteiramente antes do $1 foram puladas."
+      },
+      {
+        "text": "Os workers acabaram antes de chegar a outubro",
+        "why": "Partições puladas são uma decisão sobre limites, não sobre workers."
+      }
+    ]
+  },
+  "ex-gczkf78x": {
+    "prompt": "Configurar `plan_cache_mode = ___` faz um prepared statement usar um só plano para todos os valores desde a primeira execução.",
+    "hint": "O valor que a aula usou.",
+    "blanks": [
+      {
+        "accept": [
+          "force_generic_plan"
+        ]
+      }
+    ]
+  },
+  "ex-bjne452s": {
+    "prompt": "Por que `WHERE date(at) = '2025-11-10'` leu as quatro partições?",
+    "hint": "Do que são feitos os limites?",
+    "choices": [
+      {
+        "text": "Porque `date()` é lento",
+        "why": "A velocidade dele não é a questão; ele esconde a faixa do planejador."
+      },
+      {
+        "text": "Ela não vira uma faixa de `at`",
+        "why": "Isso: os limites são valores de at, e uma função de at não é at."
+      },
+      {
+        "text": "Porque a partição de novembro estava travada",
+        "why": "Nada segurava trava; o plano simplesmente continha as quatro."
+      },
+      {
+        "text": "Porque as estatísticas de `at` estavam velhas",
+        "why": "Estatísticas não decidem quais partições estão no plano."
+      }
+    ]
+  },
+  "ex-3c1tw8xe": {
+    "prompt": "Qual reescrita de `WHERE at::date = '2025-11-10'` deixa o planejador podar?",
+    "hint": "Deixe a coluna sozinha de um lado.",
+    "choices": [
+      {
+        "text": "`WHERE date(at) = '2025-11-10'`",
+        "why": "Ainda é uma função de at; leu as quatro partições."
+      },
+      {
+        "text": "`WHERE at >= '2025-11-10' AND at < '2025-11-11'`",
+        "why": "Isso: uma faixa sobre a própria coluna, que a seção 02 podou para novembro."
+      },
+      {
+        "text": "`WHERE extract(day FROM at) = 10`",
+        "why": "De novo uma função de at, e ainda bate com o dia 10 de todo mês."
+      },
+      {
+        "text": "`WHERE to_char(at, 'YYYY-MM-DD') = '2025-11-10'`",
+        "why": "Um texto feito a partir de at não é mais podável que date(at)."
+      }
+    ]
+  },
+  "ex-ftdxmjrk": {
+    "prompt": "Os eventos do cliente 42 em `events_by_month` deram um `Append` com uma leitura de índice por mês. O que a mesma consulta daria numa tabela com doze partições mensais?",
+    "hint": "A condição diz qual mês?",
+    "choices": [
+      {
+        "text": "Uma leitura, porque o planejador aprende em que mês está o cliente",
+        "why": "O planejador não aprende com execuções anteriores; customer_id não diz nada sobre meses."
+      },
+      {
+        "text": "Doze sondagens",
+        "why": "Isso: uma condição em outra coluna visita todas as partições."
+      },
+      {
+        "text": "Um erro, já que a chave falta na consulta",
+        "why": "Consultas sem a chave rodam normalmente; só não conseguem podar."
+      },
+      {
+        "text": "Quatro, porque só quatro meses têm linhas",
+        "why": "Partições vazias continuam no plano; janeiro foi lido embora vazio."
+      }
+    ]
+  },
+  "ex-55gmf9y9": {
+    "prompt": "Quais destas condições em `events_by_month` podem ser podadas? Marque todas as que se aplicam.",
+    "hint": "A chave, sozinha, contra valores.",
+    "choices": [
+      {
+        "text": "`at >= '2025-12-20'`",
+        "why": "Certo: manteve dezembro e janeiro."
+      },
+      {
+        "text": "`at >= $1 AND at < $1 + interval '1 day'` num prepared statement",
+        "why": "Certo: em tempo de execução, com Subplans Removed."
+      },
+      {
+        "text": "`at >= (SELECT max(placed_at) FROM orders) - interval '1 day'`",
+        "why": "Certo: durante a execução, os meses pulados marcados como never executed."
+      },
+      {
+        "text": "`extract(month FROM at) = 11`",
+        "why": "Uma função de at; as quatro partições foram lidas."
+      },
+      {
+        "text": "`customer_id = 42`",
+        "why": "Não é a chave; toda partição foi sondada."
+      }
+    ]
+  },
+  "ex-1pn07abc": {
+    "prompt": "Planejar a consulta do cliente 42 levou cerca de 1 ms em `events_by_month`. Quanto em `events_by_day`?",
+    "hint": "Planning Time no grep.",
+    "choices": [
+      {
+        "text": "Mais ou menos o mesmo, já que os dados são os mesmos",
+        "why": "O tempo vai para o plano, que tem 365 filhos em vez de quatro."
+      },
+      {
+        "text": "Uns 30 ms",
+        "why": "Isso: 30,3 e 32,5 ms, umas trinta vezes mais."
+      },
+      {
+        "text": "Menos de 1 ms, porque as partições são menores",
+        "why": "Partições menores não barateiam o planejamento; mais delas o encarecem."
+      },
+      {
+        "text": "Vários segundos",
+        "why": "Foram dezenas de milissegundos, não segundos."
+      }
+    ]
+  },
+  "ex-cc97tty5": {
+    "prompt": "A consulta de um dia em `events_by_day` leu uma partição, e ainda assim o planejamento levou 3,2 ms contra 0,6 na tabela mensal. Por quê?",
+    "hint": "A própria poda é trabalho.",
+    "choices": [
+      {
+        "text": "A partição do dia não tinha estatísticas",
+        "why": "O arquivo rodou VACUUM ANALYZE em toda partição."
+      },
+      {
+        "text": "Ela podou em tempo de execução",
+        "why": "O plano citava uma partição; ela foi podada no planejamento."
+      },
+      {
+        "text": "A poda ainda olha os limites de toda partição",
+        "why": "Isso: achar as sobreviventes exige olhar 365 pares de limites."
+      },
+      {
+        "text": "Partições diárias são planejadas num laço pelo bloco DO",
+        "why": "O bloco DO só criou as tabelas; não participa do planejamento."
+      }
+    ]
+  },
+  "ex-pwtfvfdt": {
+    "prompt": "Uma consulta que gasta 30 ms planejando roda 1.000 vezes por segundo. Quantos segundos de processador por segundo só o planejamento precisa?",
+    "hint": "Milissegundos vezes execuções, em segundos.",
+    "unit": "segundos"
+  },
+  "ex-zmdy8c18": {
+    "prompt": "Ponha na ordem as três perguntas que a aula faz antes de escolher a quantidade de partições.",
+    "hint": "Comece pelo motivo de a tabela ser particionada.",
+    "items": [
+      "Qual é a fatia que envelhece?",
+      "Quanto custam as consultas que não podam?",
+      "Quanto ganham as consultas que podam?"
+    ],
+    "trap": "A fatia vem primeiro porque descartar dados antigos é o trabalho; as outras duas pesam o preço de cada partição a mais contra o ganho dela."
+  },
+  "ex-j5kd7yap": {
+    "prompt": "O `enable_partitionwise_join` produziu quatro joins por mês para `events_by_month` com ela mesma, mas um único join para `events_by_month` com `events_by_day`. Por quê?",
+    "hint": "O que precisa bater entre as duas tabelas?",
+    "choices": [
+      {
+        "text": "A tabela diária tem mais linhas",
+        "why": "As duas guardam os mesmos cinco milhões de linhas."
+      },
+      {
+        "text": "A configuração só funciona numa tabela juntada com ela mesma",
+        "why": "Ela funciona para quaisquer duas tabelas particionadas do mesmo jeito."
+      },
+      {
+        "text": "Meses contra dias não deixam pares de limites iguais",
+        "why": "Isso: joins partição a partição precisam da mesma chave e dos mesmos limites."
+      },
+      {
+        "text": "events_by_day não tem chave primária",
+        "why": "O arquivo acrescentou uma, em (id, at)."
+      }
+    ]
+  },
+  "ex-fqyz7f5n": {
+    "prompt": "Ligue cada detalhe de plano ao que ele mostra.",
+    "hint": "Quatro jeitos de um plano mostrar partições.",
+    "pairs": [
+      {
+        "left": "uma partição sob o `Append` para uma data literal",
+        "right": "poda no planejamento"
+      },
+      {
+        "left": "`Subplans Removed: 3`",
+        "right": "poda quando a execução começa"
+      },
+      {
+        "left": "`(never executed)` numa partição",
+        "right": "poda durante a execução"
+      },
+      {
+        "left": "um `Partial HashAggregate` por partição",
+        "right": "agregação por partição"
+      }
+    ],
+    "right_distractors": [
+      "uma partição removida da tabela"
+    ]
+  },
+  "ex-vekps37m": {
+    "prompt": "Um relatório filtra `WHERE created_at::date BETWEEN '2026-01-01' AND '2026-01-31'` numa tabela particionada por mês em `created_at`, e lê as 36 partições. Qual a correção?",
+    "hint": "A seção 04.",
+    "choices": [
+      {
+        "text": "Criar um índice em `created_at::date`",
+        "why": "Um índice ajuda dentro de cada partição; não deixa o planejador pular nenhuma."
+      },
+      {
+        "text": "Particionar por dia",
+        "why": "A condição continuaria sendo uma função da chave, e o plano teria mais partições."
+      },
+      {
+        "text": "Ligar o enable_partitionwise_aggregate",
+        "why": "Isso muda como as partições lidas são agregadas, não quais são lidas."
+      },
+      {
+        "text": "Uma faixa no próprio `created_at`",
+        "why": "Isso: `created_at >= '2026-01-01' AND created_at < '2026-02-01'` poda para um mês."
+      }
+    ]
+  },
+  "ex-h5g6t03p": {
+    "prompt": "A consulta de uma aplicação é podada para um mês quando digitada no `psql` com uma data literal. Pelo driver da aplicação, que prepara os comandos, o que você espera ver no `EXPLAIN (ANALYZE) EXECUTE`?",
+    "hint": "Depois de cinco execuções.",
+    "choices": [
+      {
+        "text": "Todas as partições lidas, já que prepared statements não podam",
+        "why": "Eles podam em tempo de execução; o EXECUTE da aula leu um mês."
+      },
+      {
+        "text": "Um plano genérico com `Subplans Removed`",
+        "why": "Isso: o mesmo mês lido, podado quando a execução começa."
+      },
+      {
+        "text": "Um erro sobre a data que falta",
+        "why": "A data chega com o EXECUTE; nada falta."
+      },
+      {
+        "text": "Exatamente o plano do psql, com a data escrita",
+        "why": "Um plano genérico mostra $1, não a data."
+      }
+    ]
+  }
+}
