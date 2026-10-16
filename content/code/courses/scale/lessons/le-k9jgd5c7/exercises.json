@@ -1,0 +1,863 @@
+[
+  {
+    "id": "ex-920e54v7",
+    "version": 1,
+    "section": "the-claim",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is 'pick two of consistency, availability and partition tolerance' a misleading summary of CAP?",
+    "choices": [
+      {
+        "text": "It applies to databases only",
+        "correct": false,
+        "why": "Any replicated state faces it, a cache or a queue included."
+      },
+      {
+        "text": "Partitions happen whether you choose them or not",
+        "correct": true,
+        "why": "Right. The real choice is what to do during one."
+      },
+      {
+        "text": "Consistency and availability cannot coexist",
+        "correct": false,
+        "why": "Without a partition they do, most of the time."
+      },
+      {
+        "text": "A system can in fact have all three if its replicas are close enough to each other",
+        "correct": false,
+        "why": "Closeness shortens partitions; it does not remove the choice during one."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyqjvcs2",
+    "version": 1,
+    "section": "the-claim",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does consistency mean in CAP?",
+    "choices": [
+      {
+        "text": "Reads are fast and predictable",
+        "correct": false,
+        "why": "Speed is PACELC's latency, not CAP's consistency."
+      },
+      {
+        "text": "Every read sees the most recent completed write",
+        "correct": true,
+        "why": "Right: linearizability, as if there were one copy."
+      },
+      {
+        "text": "A transaction keeps the database's rules and constraints",
+        "correct": false,
+        "why": "That is ACID's C, a different and weaker idea."
+      },
+      {
+        "text": "Every replica runs the same version of the software",
+        "correct": false,
+        "why": "Versions are irrelevant to the definition."
+      }
+    ]
+  },
+  {
+    "id": "ex-4t19a4kv",
+    "version": 1,
+    "section": "the-claim",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a partition, a copy receives a read it cannot verify with the other side. Which pair are its only options?",
+    "choices": [
+      {
+        "text": "Answer with what it has, or ask the client to try another copy on the far side",
+        "correct": false,
+        "why": "Redirecting is a refusal from this copy; the far side may be unreachable to the client too."
+      },
+      {
+        "text": "Promote itself, or shut down",
+        "correct": false,
+        "why": "Neither answers this request."
+      },
+      {
+        "text": "Wait for the partition to end, or guess",
+        "correct": false,
+        "why": "Waiting is refusing for a while; 'guessing' is answering with what it has."
+      },
+      {
+        "text": "Answer with what it has, or refuse",
+        "correct": true,
+        "why": "Right. The information it would need is on the other side."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkc00any",
+    "version": 1,
+    "section": "sync-replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Making the replica synchronous raised pgbench's average latency from 2.008 ms to 2.778 ms on one machine. What did each commit start waiting for?",
+    "choices": [
+      {
+        "text": "pgbench to reconnect",
+        "correct": false,
+        "why": "Connections stayed open; initial connection time is reported apart."
+      },
+      {
+        "text": "The replica to answer the client",
+        "correct": false,
+        "why": "The primary answers the client."
+      },
+      {
+        "text": "A lock on the replica's copy of the row, held until the primary's transaction ends",
+        "correct": false,
+        "why": "Replicas take no locks for the primary's transactions."
+      },
+      {
+        "text": "The replica to write the change to its log",
+        "correct": true,
+        "why": "Right. A round trip and a disk write on the replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-580m3av5",
+    "version": 1,
+    "section": "sync-replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do synchronous replicas usually sit close to the primary, and far ones stay asynchronous?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses synchronous replicas in other regions",
+        "correct": false,
+        "why": "It has no notion of regions."
+      },
+      {
+        "text": "A synchronous replica adds its round trip to every commit",
+        "correct": true,
+        "why": "Right. Across a continent that is over a hundred milliseconds per commit."
+      },
+      {
+        "text": "Far replicas cannot receive the WAL",
+        "correct": false,
+        "why": "They receive it; they just should not be waited for."
+      },
+      {
+        "text": "Synchronous replication works only on a local network",
+        "correct": false,
+        "why": "It works anywhere; the cost is what changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngzwh5m9",
+    "version": 1,
+    "section": "sync-replication",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order the settings of synchronous_commit from the one that returns soonest to the one that waits longest.",
+    "items": [
+      "off",
+      "local",
+      "on",
+      "remote_apply"
+    ]
+  },
+  {
+    "id": "ex-5yqcj66w",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the replica synchronous and cut off, curl gave up on a sale after 5 seconds. Ten seconds after the network returned, what was true?",
+    "choices": [
+      {
+        "text": "The sale had been rolled back when curl disconnected",
+        "correct": false,
+        "why": "The transaction was already waiting at COMMIT; the capture shows sold = 1."
+      },
+      {
+        "text": "The ticket had been sold",
+        "correct": true,
+        "why": "Right. The commit was waiting, not cancelled; a timeout is not a failure."
+      },
+      {
+        "text": "The sale was still waiting for the buyer to retry it",
+        "correct": false,
+        "why": "It completed by itself once the replica heard it."
+      },
+      {
+        "text": "The primary had sold the seat twice",
+        "correct": false,
+        "why": "One request, one sale: sold went from 0 to 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdgxzm2y",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During the synchronous partition, a query on the primary itself showed sold = 0. Why?",
+    "choices": [
+      {
+        "text": "The waiting commit is not visible until the replica confirms",
+        "correct": true,
+        "why": "Right. Nobody, the primary included, sees a sale that is not on both machines."
+      },
+      {
+        "text": "The sale never reached the primary",
+        "correct": false,
+        "why": "pg_stat_activity showed it waiting at COMMIT there."
+      },
+      {
+        "text": "The UPDATE failed silently",
+        "correct": false,
+        "why": "It later showed sold = 1."
+      },
+      {
+        "text": "The query was sent to the replica by mistake",
+        "correct": false,
+        "why": "It ran with docker compose exec db."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn6vqs08",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With an asynchronous replica cut off, what did the box office show for show 1 while the partition lasted?",
+    "choices": [
+      {
+        "text": "999 999, read from the primary",
+        "correct": false,
+        "why": "Pages read the replica."
+      },
+      {
+        "text": "An error, because the replica could not reach the primary to check the number",
+        "correct": false,
+        "why": "An asynchronous replica answers without checking; that is the available choice."
+      },
+      {
+        "text": "Nothing; the request timed out",
+        "correct": false,
+        "why": "The capture shows an answer at once."
+      },
+      {
+        "text": "A million seats left, though one was sold",
+        "correct": true,
+        "why": "Right. The replica kept answering with what it last knew."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hmv5y5t",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson give replication a network of its own?",
+    "choices": [
+      {
+        "text": "To make replication faster",
+        "correct": false,
+        "why": "Both networks are the same kind of bridge."
+      },
+      {
+        "text": "Docker allows one database per network",
+        "correct": false,
+        "why": "It allows any number."
+      },
+      {
+        "text": "Replication traffic must be encrypted on a separate network",
+        "correct": false,
+        "why": "Nothing in the lab encrypts it; the split is for the experiment."
+      },
+      {
+        "text": "To cut the databases apart while clients still reach both",
+        "correct": true,
+        "why": "Right. That is the definition of a partition the theorem is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-0brrvm4x",
+    "version": 1,
+    "section": "pacelc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the 'else' half of PACELC choose between?",
+    "choices": [
+      {
+        "text": "Reads and writes",
+        "correct": false,
+        "why": "Both are made under either choice."
+      },
+      {
+        "text": "Latency and consistency",
+        "correct": true,
+        "why": "Right. The everyday trade, with no partition."
+      },
+      {
+        "text": "Availability and consistency",
+        "correct": false,
+        "why": "That is the partition half."
+      },
+      {
+        "text": "Partitions and replicas",
+        "correct": false,
+        "why": "Neither is a choice in that sense."
+      }
+    ]
+  },
+  {
+    "id": "ex-de16jdnp",
+    "version": 1,
+    "section": "pacelc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database answers every read from the nearest copy and never waits for others, partition or not. How does PACELC classify it?",
+    "choices": [
+      {
+        "text": "PC/EL",
+        "correct": false,
+        "why": "It answers during a partition, so it is not PC."
+      },
+      {
+        "text": "PA/EC",
+        "correct": false,
+        "why": "It never waits, so it does not choose consistency in the else case."
+      },
+      {
+        "text": "PA/EL",
+        "correct": true,
+        "why": "Right. Available during a partition, low latency otherwise."
+      },
+      {
+        "text": "PC/EC",
+        "correct": false,
+        "why": "That one waits for agreement in both cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5q5q1y8",
+    "version": 1,
+    "section": "pacelc",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From the captures, by how many milliseconds did a synchronous replica slow each pgbench transaction on average? Answer to two decimal places.",
+    "hint": "2.778 − 2.008",
+    "value": 0.77,
+    "tolerance": 0.005,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-486b8rs6",
+    "version": 1,
+    "section": "quorums",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With N = 5 replicas, which pair of W and R guarantees that a read sees every completed write?",
+    "choices": [
+      {
+        "text": "W = 2, R = 3",
+        "correct": false,
+        "why": "5 is not more than 5."
+      },
+      {
+        "text": "W = 1, R = 1",
+        "correct": false,
+        "why": "The fastest, and it promises nothing."
+      },
+      {
+        "text": "W = 3, R = 3",
+        "correct": true,
+        "why": "Right. 3 + 3 = 6 > 5."
+      },
+      {
+        "text": "W = 2, R = 2",
+        "correct": false,
+        "why": "4 is not more than 5; the two can miss each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-j65yjg91",
+    "version": 1,
+    "section": "quorums",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With N = 3, W = 3, R = 1 and one replica down, what happens?",
+    "choices": [
+      {
+        "text": "Writes fail and reads still work",
+        "correct": true,
+        "why": "Right. Three confirmations are needed and only two replicas are up."
+      },
+      {
+        "text": "Both fail",
+        "correct": false,
+        "why": "One replica is enough for R = 1."
+      },
+      {
+        "text": "Reads fail and writes still work",
+        "correct": false,
+        "why": "That is W = 1, R = 3."
+      },
+      {
+        "text": "Both work, because 3 + 1 > 3",
+        "correct": false,
+        "why": "The overlap rule says nothing about availability."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkj9t25y",
+    "version": 1,
+    "section": "quorums",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is W + R > N necessary but not sufficient for correct reads?",
+    "choices": [
+      {
+        "text": "Two concurrent writes can reach different majorities, leaving which is newest undecided",
+        "correct": true,
+        "why": "Right. The quorum finds the versions; something still has to order them."
+      },
+      {
+        "text": "N must also be odd",
+        "correct": false,
+        "why": "Odd N helps majorities; it does not order concurrent writes."
+      },
+      {
+        "text": "Reads are slower than writes",
+        "correct": false,
+        "why": "Speed is unrelated to correctness here."
+      },
+      {
+        "text": "Replicas can lie about their version",
+        "correct": false,
+        "why": "The model assumes honest replicas; the problem exists anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bwf28me",
+    "version": 1,
+    "section": "quorums",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With N = 3, the setting W = 2, R = 2 is called a ___ quorum.",
+    "blanks": [
+      {
+        "accept": [
+          "majority"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4ycgxhbq",
+    "version": 1,
+    "section": "eventual",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does eventual consistency promise?",
+    "choices": [
+      {
+        "text": "Reads never return an older value than the client saw before",
+        "correct": false,
+        "why": "That is monotonic reads, a separate guarantee."
+      },
+      {
+        "text": "Every copy agrees within one second, under any load and through any partition",
+        "correct": false,
+        "why": "No bound on time is part of the promise."
+      },
+      {
+        "text": "If writes stop, every copy ends with the same value",
+        "correct": true,
+        "why": "Right, and nothing about how long or what reads see meanwhile."
+      },
+      {
+        "text": "Conflicts are resolved by last write wins",
+        "correct": false,
+        "why": "It says nothing about how copies reconcile."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcjt4drx",
+    "version": 1,
+    "section": "eventual",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user refreshes a show's page twice and the seat count goes up by one. Which guarantee was broken?",
+    "choices": [
+      {
+        "text": "Linearizability of the sale itself",
+        "correct": false,
+        "why": "The sale was fine; the reads disagreed."
+      },
+      {
+        "text": "Read-your-writes",
+        "correct": false,
+        "why": "The user wrote nothing; somebody else bought."
+      },
+      {
+        "text": "Monotonic reads",
+        "correct": true,
+        "why": "Right. The second read came from a copy further behind."
+      },
+      {
+        "text": "Monotonic writes",
+        "correct": false,
+        "why": "That is about the order of one client's own writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgkrtzgd",
+    "version": 1,
+    "section": "eventual",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each guarantee to the symptom of breaking it.",
+    "pairs": [
+      {
+        "left": "read-your-writes",
+        "right": "my ticket is not on my page"
+      },
+      {
+        "left": "monotonic reads",
+        "right": "a count that goes back between refreshes"
+      },
+      {
+        "left": "monotonic writes",
+        "right": "a rename applied before the create"
+      },
+      {
+        "left": "consistent prefix",
+        "right": "a reply shown before its message"
+      }
+    ]
+  },
+  {
+    "id": "ex-24eg1ebc",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In merge.py, the poster was written 10 ms after the record, yet the record won under last write wins. Why?",
+    "choices": [
+      {
+        "text": "The record was added first, so it wins",
+        "correct": false,
+        "why": "First-write-wins would be a different rule; this one picked the larger timestamp."
+      },
+      {
+        "text": "Union was used by mistake",
+        "correct": false,
+        "why": "The union is the second line, with both items."
+      },
+      {
+        "text": "Last write wins prefers the first replica alphabetically",
+        "correct": false,
+        "why": "It compares timestamps, nothing else."
+      },
+      {
+        "text": "B's clock ran 40 ms slow, so its later write had an earlier timestamp",
+        "correct": true,
+        "why": "Right. LWW trusts clocks, and clocks disagree."
+      }
+    ]
+  },
+  {
+    "id": "ex-926n0mtt",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A counter at 100 is incremented by 3 on one side of a partition and by 2 on the other, and kept as one number. What can last write wins report afterwards?",
+    "choices": [
+      {
+        "text": "100",
+        "correct": false,
+        "why": "Each side kept its own increments."
+      },
+      {
+        "text": "105",
+        "correct": false,
+        "why": "That needs the per-replica counter."
+      },
+      {
+        "text": "103 or 102",
+        "correct": true,
+        "why": "Right. One side's sales are forgotten either way."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "LWW never errors; it discards."
+      }
+    ]
+  },
+  {
+    "id": "ex-g21e3xwr",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For which value is last write wins a reasonable merge?",
+    "choices": [
+      {
+        "text": "The items in a cart, added on two devices during an outage",
+        "correct": false,
+        "why": "Additions on both sides should both survive."
+      },
+      {
+        "text": "A bank balance",
+        "correct": false,
+        "why": "Losing a deposit is not acceptable."
+      },
+      {
+        "text": "A user's display name",
+        "correct": true,
+        "why": "Right. It is replaced whole and only the last version matters."
+      },
+      {
+        "text": "The number of tickets sold for a show",
+        "correct": false,
+        "why": "Concurrent increments would be lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-4c50sp7m",
+    "version": 1,
+    "section": "merging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which property of a CRDT's merge makes a message delivered twice harmless?",
+    "choices": [
+      {
+        "text": "Commutativity",
+        "correct": false,
+        "why": "That makes the order of merges irrelevant."
+      },
+      {
+        "text": "Linearizability",
+        "correct": false,
+        "why": "That is a consistency model, not a property of a merge."
+      },
+      {
+        "text": "Idempotence",
+        "correct": true,
+        "why": "Right. Merging the same state again changes nothing."
+      },
+      {
+        "text": "Associativity",
+        "correct": false,
+        "why": "That makes the grouping of merges irrelevant."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb0zqf7p",
+    "version": 1,
+    "section": "merging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two sides each sell the last seat of a show, and the sold count is a G-counter. What is the merged result?",
+    "choices": [
+      {
+        "text": "Capacity, because the G-counter caps at the largest entry",
+        "correct": false,
+        "why": "It sums the entries; nothing caps it."
+      },
+      {
+        "text": "One of the two sales is discarded",
+        "correct": false,
+        "why": "Nothing is discarded; both increments survive."
+      },
+      {
+        "text": "A conflict the merge reports for a person to resolve",
+        "correct": false,
+        "why": "CRDTs never report conflicts; that is their point and their limit."
+      },
+      {
+        "text": "Capacity plus one: converged and wrong",
+        "correct": true,
+        "why": "Right. A CRDT converges; it cannot keep a 'never more than' rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-v89p3wfq",
+    "version": 1,
+    "section": "merging",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A G-counter has entries a: 7, b: 4 on one replica and a: 5, b: 9 on another. What total does the merge give?",
+    "hint": "Take the larger of each entry, then add.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-hwy4ye15",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which operation of the box office needs coordination at the moment of the write?",
+    "choices": [
+      {
+        "text": "Selling a seat",
+        "correct": true,
+        "why": "Right. 'At most capacity' is an invariant."
+      },
+      {
+        "text": "Adding an item to a cart, which merges by union when both sides wrote during a partition",
+        "correct": false,
+        "why": "A union merges without coordination."
+      },
+      {
+        "text": "Counting page views",
+        "correct": false,
+        "why": "A slightly low count harms nobody."
+      },
+      {
+        "text": "Showing the list of shows",
+        "correct": false,
+        "why": "A stale list is harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp77qskt",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson say to start when choosing consistency or availability for an operation?",
+    "choices": [
+      {
+        "text": "From the default of the database in use",
+        "correct": false,
+        "why": "The defaults describe the database, not your operation."
+      },
+      {
+        "text": "From the fastest option, adding consistency only when a bug appears in production",
+        "correct": false,
+        "why": "Stale-read bugs log nothing; waiting for one to appear is waiting forever."
+      },
+      {
+        "text": "From what a stale answer costs a person",
+        "correct": true,
+        "why": "Right. Then look for invariants."
+      },
+      {
+        "text": "From the theorem's proof",
+        "correct": false,
+        "why": "The proof says a choice exists, not which one."
+      }
+    ]
+  },
+  {
+    "id": "ex-w427dpxk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A system has one primary with a synchronous replica, and serves pages from a second, asynchronous replica. During a partition between the primary and both replicas, what happens?",
+    "choices": [
+      {
+        "text": "Sales succeed on the asynchronous replica",
+        "correct": false,
+        "why": "Replicas refuse writes."
+      },
+      {
+        "text": "Sales succeed, and pages show the new numbers at once",
+        "correct": false,
+        "why": "The synchronous replica cannot confirm, so sales wait."
+      },
+      {
+        "text": "Everything stops until the partition ends, pages included",
+        "correct": false,
+        "why": "The asynchronous replica still answers reads."
+      },
+      {
+        "text": "Sales wait, and pages keep loading with old numbers",
+        "correct": true,
+        "why": "Right. Consistent for writes, available for reads, as the lesson's box office did."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xpzte85",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is retrying a sale after a timeout dangerous, by this lesson?",
+    "choices": [
+      {
+        "text": "The second attempt always times out too",
+        "correct": false,
+        "why": "After the partition it would succeed, and sell a second ticket."
+      },
+      {
+        "text": "Timeouts corrupt the database",
+        "correct": false,
+        "why": "Nothing was corrupted; the sale completed cleanly."
+      },
+      {
+        "text": "curl cannot send the same request twice",
+        "correct": false,
+        "why": "It can, which is the problem."
+      },
+      {
+        "text": "The first attempt was still in progress and finished after the client gave up",
+        "correct": true,
+        "why": "Right. Lesson 10 makes the retry safe."
+      }
+    ]
+  }
+]

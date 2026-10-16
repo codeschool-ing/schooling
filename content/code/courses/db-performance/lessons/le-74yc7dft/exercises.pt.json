@@ -1,0 +1,390 @@
+{
+  "ex-8dz1cx55": {
+    "prompt": "No cache-aside, o que a aplicação faz numa falta?",
+    "hint": "A função `dashboard()`.",
+    "choices": [
+      {
+        "text": "Pergunta ao banco, guarda a resposta com o TTL e a devolve",
+        "why": "Isso: o cache só é preenchido com respostas que alguém pediu."
+      },
+      {
+        "text": "Devolve um painel vazio",
+        "why": "Nada no cache-aside preenche chaves em segundo plano; quem lê faz isso."
+      },
+      {
+        "text": "Espera o Redis buscar as linhas no PostgreSQL",
+        "why": "O Redis nunca fala com o PostgreSQL; a aplicação fala com os dois."
+      },
+      {
+        "text": "Levanta um erro",
+        "why": "Uma falta é o caminho normal, 200 vezes na medição."
+      }
+    ]
+  },
+  "ex-my99f64n": {
+    "prompt": "Dos 5000 pedidos de painel pelo cache, quantos chegaram ao banco?",
+    "hint": "As faltas.",
+    "unit": "pedidos"
+  },
+  "ex-05xt8gpz": {
+    "prompt": "Por que o `dashboard.py` faz cast da soma com `::bigint`?",
+    "hint": "Que tipo o PostgreSQL dá a uma soma de inteiros, e o JSON consegue guardá-lo no Python?",
+    "choices": [
+      {
+        "text": "Para a consulta usar o índice em `seller_id`",
+        "why": "Um cast na lista do select não muda o índice usado."
+      },
+      {
+        "text": "Porque a soma estouraria um inteiro de 32 bits para vendedores grandes",
+        "why": "A soma de inteiros já é segura como numeric; o problema é o tipo no Python."
+      },
+      {
+        "text": "Para a soma chegar como um int, e não como um Decimal",
+        "why": "Isso: a soma de inteiros é numeric, que o psycopg devolve como Decimal."
+      },
+      {
+        "text": "O Redis só aceita números de 64 bits",
+        "why": "O valor é guardado como texto JSON; o Redis não olha dentro."
+      }
+    ]
+  },
+  "ex-rkgybsp3": {
+    "prompt": "Uma página de busca guarda cada resultado sob o texto exato digitado, `search:<texto>`. A taxa de acerto fica perto de 3%. O que a lista da aula diz que está errado?",
+    "hint": "Quem faz a mesma pergunta duas vezes?",
+    "choices": [
+      {
+        "text": "O TTL está longo demais",
+        "why": "Um TTL mais longo aumentaria a taxa de acerto, não diminuiria."
+      },
+      {
+        "text": "O Redis está sem memória e despejando chaves",
+        "why": "Possível em princípio, mas o ponto da aula é que as perguntas quase não se repetem."
+      },
+      {
+        "text": "As buscas deveriam usar uma visão materializada no lugar, atualizada toda noite",
+        "why": "Uma visão por texto de busca qualquer tem o mesmo problema, e pior."
+      },
+      {
+        "text": "Pouca gente digita o mesmo texto, e quase nenhuma chave é lida de novo",
+        "why": "Isso: um cache só compensa para a mesma pergunta feita por muitos."
+      }
+    ]
+  },
+  "ex-0btsgfce": {
+    "prompt": "Depois que o pedido do vendedor 7 foi confirmado, `python3 dashboard.py 7` ainda dizia 91 pedidos. Por quê?",
+    "hint": "De onde veio a resposta?",
+    "choices": [
+      {
+        "text": "O INSERT ainda não tinha sido confirmado",
+        "why": "O psql -c confirma; o banco já dizia 92."
+      },
+      {
+        "text": "Veio do cache, guardado antes do pedido",
+        "why": "Isso: o cache-aside serve a resposta guardada até o TTL acabar."
+      },
+      {
+        "text": "O painel só conta pedidos entregues, não os pendentes",
+        "why": "A consulta conta todos os status; depois do TTL disse 92."
+      },
+      {
+        "text": "O Redis arredonda contagens para baixo para economizar memória",
+        "why": "O Redis guarda exatamente o JSON que recebeu."
+      }
+    ]
+  },
+  "ex-89k8ajc2": {
+    "prompt": "Com TTL de 60 segundos e sem invalidação, por quanto tempo uma mudança fica invisível em média, pelo raciocínio da seção?",
+    "hint": "No pior caso o TTL inteiro, no melhor nada.",
+    "choices": [
+      {
+        "text": "Sessenta segundos, sempre",
+        "why": "Só uma mudança logo depois de guardar espera o TTL inteiro."
+      },
+      {
+        "text": "Nunca, já que o Redis percebe a mudança",
+        "why": "O Redis nunca vê o banco; nada percebe."
+      },
+      {
+        "text": "Cerca de trinta segundos",
+        "why": "Isso: metade do TTL em média, ele inteiro no pior caso."
+      },
+      {
+        "text": "Dois minutos, porque o TTL recomeça a cada leitura",
+        "why": "O `cache.get` não reinicia um TTL; só o `set` reinicia."
+      }
+    ]
+  },
+  "ex-42bd8yf8": {
+    "prompt": "Por que a aula mantém um TTL mesmo quando toda escrita invalida as suas chaves?",
+    "hint": "O que acontece se um delete se perde?",
+    "choices": [
+      {
+        "text": "O Redis se recusa a guardar uma chave sem TTL quando a memória está cheia",
+        "why": "O Redis aceita chaves sem expiração nenhuma."
+      },
+      {
+        "text": "Limita quanto tempo um valor sobrevive quando uma invalidação se perde",
+        "why": "Isso: uma queda entre o commit e o delete, ou uma chave esquecida, fica errada por um minuto, não para sempre."
+      },
+      {
+        "text": "Sem TTL a taxa de acerto cai a zero",
+        "why": "Sem TTL a taxa de acerto sobe; o problema é ficar velho."
+      },
+      {
+        "text": "Um TTL deixa a consulta do painel mais barata, já que guarda menos linhas",
+        "why": "A consulta custa o mesmo; o TTL só decide quando ela roda de novo."
+      }
+    ]
+  },
+  "ex-vkfpw1e7": {
+    "prompt": "Ligue cada valor em cache ao TTL que a tabela da seção dá a ele.",
+    "hint": "Quão velha cada tela pode estar?",
+    "pairs": [
+      {
+        "left": "a descrição de um produto",
+        "right": "uma hora, com invalidação na edição"
+      },
+      {
+        "left": "o painel de um vendedor",
+        "right": "30 a 60 segundos"
+      },
+      {
+        "left": "a contagem da tela de operações",
+        "right": "alguns segundos, ou nenhum cache"
+      }
+    ],
+    "right_distractors": [
+      "um dia, renovado à meia-noite"
+    ]
+  },
+  "ex-45fzbcbh": {
+    "prompt": "Ponha em ordem os passos da corrida do `race.py` que deixa um valor velho no cache.",
+    "hint": "O delete acontece antes de guardar o valor velho.",
+    "items": [
+      "A não acha a chave e lê o banco",
+      "B confirma um pedido",
+      "B apaga a chave",
+      "A guarda o que leu"
+    ],
+    "trap": "Se A guarda antes de B apagar, o delete remove o valor velho e nada dá errado."
+  },
+  "ex-76zhn98h": {
+    "prompt": "Na rodada sem proteção, o que o leitor C viu?",
+    "hint": "A última linha da primeira rodada.",
+    "choices": [
+      {
+        "text": "O cache vazio, porque B apagou a chave",
+        "why": "A guardou o valor depois do delete, então a chave estava lá de novo."
+      },
+      {
+        "text": "Um erro do Redis",
+        "why": "Nada falhou; é isso que torna a corrida perigosa."
+      },
+      {
+        "text": "93 no cache e 93 no banco",
+        "why": "O cache guardava a leitura mais antiga de A."
+      },
+      {
+        "text": "92 no cache, com 93 no banco",
+        "why": "Isso: o valor lido antes da escrita foi guardado depois do delete."
+      }
+    ]
+  },
+  "ex-0t8653kc": {
+    "prompt": "Na rodada protegida, o que fez o leitor A não guardar o seu valor?",
+    "hint": "Quem escreve muda mais uma chave.",
+    "choices": [
+      {
+        "text": "A versão anotada tinha mudado na hora de guardar",
+        "why": "Isso: WATCH e MULTI/EXEC deixam a gravação condicionada a essa versão."
+      },
+      {
+        "text": "O TTL já tinha expirado na hora em que ele foi guardar o valor",
+        "why": "Nada tinha sido guardado ainda, então nenhum TTL corria."
+      },
+      {
+        "text": "O PostgreSQL travou a linha do pedido até quem escreve confirmar",
+        "why": "A proteção está toda no Redis."
+      },
+      {
+        "text": "B segurava uma trava no Redis",
+        "why": "Não há trava aqui; a proteção é uma versão comparada na hora de guardar."
+      }
+    ]
+  },
+  "ex-0aw1r28q": {
+    "prompt": "Uma equipe acrescenta uma importação noturna que atualiza milhares de pedidos direto em SQL. Os painéis usam cache-aside com delete na escrita no código web e TTL de 24 horas. O que a seção prevê?",
+    "hint": "Quem precisa invalidar?",
+    "choices": [
+      {
+        "text": "As mudanças da importação aparecem em um minuto, quando o TTL vira",
+        "why": "Só se algo apagar as chaves; o TTL aqui é um dia."
+      },
+      {
+        "text": "O Redis percebe o UPDATE e descarta as chaves",
+        "why": "O Redis nunca vê o banco."
+      },
+      {
+        "text": "As telas mantêm os números antigos por até um dia",
+        "why": "Isso: a importação é um caminho que escreve e não apaga nada, e o TTL é a única rede."
+      },
+      {
+        "text": "A importação falha porque as chaves existem",
+        "why": "O banco não sabe nada do cache; a importação dá certo."
+      }
+    ]
+  },
+  "ex-2xkm2pk3": {
+    "prompt": "Na rodada pura, quantas vezes cinquenta pedidos simultâneos por uma chave ausente rodaram a contagem?",
+    "hint": "O programa e o pg_stat_statements concordam.",
+    "unit": "consultas"
+  },
+  "ex-tj7hg19s": {
+    "prompt": "Por que cada uma das cinquenta contagens levou em média cerca de 1,3 s, quando uma contagem sozinha levou 55 ms?",
+    "hint": "Quatro processadores.",
+    "choices": [
+      {
+        "text": "O Redis ficou lento com cinquenta conexões",
+        "why": "O tempo está na execução do próprio banco, que o pg_stat_statements mediu."
+      },
+      {
+        "text": "A contagem pegou travas que fizeram as outras esperar a vez",
+        "why": "Uma contagem não pega trava que bloqueie outra contagem."
+      },
+      {
+        "text": "Cinquenta varreduras em quatro processadores",
+        "why": "Isso: cada uma rodou bem mais devagar por causa das outras quarenta e nove."
+      },
+      {
+        "text": "A primeira consulta tirou a tabela da memória",
+        "why": "Nada a tirou; o custo é disputa, não falta no cache."
+      }
+    ]
+  },
+  "ex-ndjddb9p": {
+    "prompt": "Dentro da `single_flight`, por que quem segura a trava olha no cache de novo antes de consultar?",
+    "hint": "Uma versão anterior fez duas consultas.",
+    "choices": [
+      {
+        "text": "Para renovar a expiração de dez segundos da trava, para durar mais que a consulta",
+        "why": "Um get não toca na trava."
+      },
+      {
+        "text": "Caso o dono anterior tenha guardado o valor enquanto ele esperava",
+        "why": "Isso: uma trava solta deixa entrar o próximo, então ele precisa conferir se o trabalho ainda é necessário."
+      },
+      {
+        "text": "Porque o Redis exige uma leitura antes de toda escrita dentro de uma trava",
+        "why": "Não exige nada disso."
+      },
+      {
+        "text": "Para contar o acerto em `seen`",
+        "why": "`seen` está no dashboard.py, não no stampede.py."
+      }
+    ]
+  },
+  "ex-3tm3de3x": {
+    "prompt": "Na `single_flight`, `cache.set(LOCK, 1, nx=True, ex=10)` só dá certo para um chamador porque `nx` quer dizer: grave só se a chave ___ existir.",
+    "hint": "Duas letras, uma delas N.",
+    "blanks": [
+      {
+        "accept": [
+          "não",
+          "nao"
+        ]
+      }
+    ]
+  },
+  "ex-dc0q447y": {
+    "prompt": "Quais destes reduzem a debandada numa chave quente? Marque todos os que se aplicam.",
+    "hint": "A seção lista três jeitos além do voo único.",
+    "choices": [
+      {
+        "text": "Um job que renova a chave antes de ela expirar",
+        "why": "Certo: os leitores nunca encontram uma falta."
+      },
+      {
+        "text": "Servir o valor velho enquanto um pedido o renova",
+        "why": "Certo: ninguém espera, e só uma renovação roda."
+      },
+      {
+        "text": "Uma trava de voo único no Redis",
+        "why": "Certo: a rodada foi de cinquenta consultas para uma."
+      },
+      {
+        "text": "Um `max_connections` maior no PostgreSQL",
+        "why": "Mais conexões deixam ainda mais cópias da consulta rodarem juntas."
+      },
+      {
+        "text": "Reiniciar o Redis para limpar chaves velhas",
+        "why": "Um reinício esvazia todas as chaves de uma vez: a maior debandada que existe."
+      }
+    ]
+  },
+  "ex-hc8s0rf9": {
+    "prompt": "O que o `REFRESH MATERIALIZED VIEW CONCURRENTLY seller_days` respondeu antes de o índice existir?",
+    "hint": "Ele precisa casar linhas antigas com novas.",
+    "choices": [
+      {
+        "text": "Atualizou, mas bloqueou os leitores",
+        "why": "Não atualizou nada; recusou."
+      },
+      {
+        "text": "Que a visão precisa ser apagada e recriada antes de qualquer atualização",
+        "why": "Uma atualização simples funciona sem o índice; só a concorrente recusa."
+      },
+      {
+        "text": "Que precisa de um índice único sem cláusula WHERE",
+        "why": "Isso: o erro e a dica dele, e `(seller_id, day)` é esse índice."
+      },
+      {
+        "text": "Que a visão está desatualizada",
+        "why": "Não disse nada sobre estar atualizada."
+      }
+    ]
+  },
+  "ex-18d45yfs": {
+    "prompt": "A atualização concorrente levou 318 ms e a simples 113 ms. Por que a aula ainda prefere a concorrente para um painel lido o dia todo?",
+    "hint": "O que cada uma faz com os leitores?",
+    "choices": [
+      {
+        "text": "Os leitores continuam recebendo respostas durante ela",
+        "why": "Isso: a atualização simples segura uma trava que bloqueia toda leitura da visão."
+      },
+      {
+        "text": "Recalcula só as linhas que mudaram nas tabelas",
+        "why": "Toda atualização roda a consulta inteira; ela aplica só as diferenças."
+      },
+      {
+        "text": "Atualiza sozinha depois de cada escrita",
+        "why": "Nenhuma atualização é automática; você a agenda."
+      },
+      {
+        "text": "Não precisa de índice na visão",
+        "why": "É ela que precisa de um índice único."
+      }
+    ]
+  },
+  "ex-e9w0kpap": {
+    "prompt": "A contagem de pedidos pendentes de uma loja nunca pode ter mais de cinco segundos, e é lida trezentas vezes por segundo. Que desenho cabe melhor na aula?",
+    "hint": "Limite de idade, e uma chave quente.",
+    "choices": [
+      {
+        "text": "Uma visão materializada atualizada uma vez por hora",
+        "why": "Uma hora quebra o limite de cinco segundos."
+      },
+      {
+        "text": "Cache-aside com TTL de um dia e delete na escrita",
+        "why": "Todo pedido apagaria a chave; um delete perdido a deixa errada por um dia."
+      },
+      {
+        "text": "Nenhum cache, e trezentas contagens por segundo",
+        "why": "Possível, e exatamente a carga que um cache existe para evitar."
+      },
+      {
+        "text": "Um TTL curto com voo único",
+        "why": "Isso: o TTL limita a idade, e o voo único mantém cada expiração numa consulta só."
+      }
+    ]
+  }
+}

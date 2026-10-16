@@ -1,0 +1,20 @@
+# dvc.yaml: the pipeline of lesson 5, as stages DVC can run, skip and compare.
+stages:
+  dataset:
+    cmd: >-
+      python build_dataset.py 2025-08-31 data/train.csv &&
+      python build_dataset.py 2025-11-30 data/test.csv &&
+      python validate.py data/train.csv &&
+      python validate.py data/test.csv
+    deps: [build_dataset.py, validate.py, features.py, project.py, shop.db]
+    outs: [data/train.csv, data/test.csv]
+  train:
+    cmd: python train.py data/train.csv models/lapse.joblib
+    deps: [train.py, model.py, data/train.csv]
+    outs: [models/lapse.joblib, models/lapse.json]
+  evaluate:
+    cmd: python evaluate.py models/lapse.joblib data/test.csv
+    deps: [evaluate.py, models/lapse.joblib, data/test.csv]
+    metrics:
+      - models/lapse.scores.json:
+          cache: false

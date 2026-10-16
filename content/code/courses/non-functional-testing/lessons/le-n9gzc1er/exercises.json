@@ -1,0 +1,538 @@
+[
+ {
+  "id": "ex-43p3mk6y",
+  "version": 1,
+  "section": "five-tests",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A team holds 50 requests a second for ten minutes and compares the 95th percentile with the 200 ms in its requirement. Which test is that?",
+  "hint": "Which load, and which question?",
+  "choices": [
+   {
+    "text": "A stress test",
+    "correct": false,
+    "why": "A stress test keeps climbing past the expected load; this one holds it."
+   },
+   {
+    "text": "A soak test, since it lasts ten minutes",
+    "correct": false,
+    "why": "A soak holds the load for hours, and asks what drifts rather than whether a threshold holds."
+   },
+   {
+    "text": "A load test",
+    "correct": true,
+    "why": "Right. The expected load, held, judged against thresholds written down first."
+   },
+   {
+    "text": "A spike test at a fixed rate",
+    "correct": false,
+    "why": "A spike is a sudden jump and back; a constant rate has no jump in it."
+   }
+  ]
+ },
+ {
+  "id": "ex-wmkc65g5",
+  "version": 1,
+  "section": "five-tests",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Past 300 requests a second, a stress test sees the server answer the excess at once with 503 and recover as soon as the load drops. How should the result be read?",
+  "hint": "A stress test is read for where and how.",
+  "choices": [
+   {
+    "text": "It failed well, with a breaking point near 300 a second",
+    "correct": true,
+    "why": "Right. A quick refusal and a recovery on its own are the good manner; 300 is the capacity it found."
+   },
+   {
+    "text": "It failed, because there were errors during the run",
+    "correct": false,
+    "why": "Errors are expected past the breaking point. What would fail it is a bad manner: corruption, or no recovery."
+   },
+   {
+    "text": "It passed, so the server has no limit",
+    "correct": false,
+    "why": "It found the limit: 300 a second. Every system has one."
+   },
+   {
+    "text": "It needs a soak test first",
+    "correct": false,
+    "why": "A soak asks a different question, about drift over hours, and does not change how this one is read."
+   }
+  ]
+ },
+ {
+  "id": "ex-bcdjh3bc",
+  "version": 1,
+  "section": "five-tests",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each test to the question it answers.",
+  "hint": "The table at the end of \"Five tests, five questions\".",
+  "pairs": [
+   {
+    "left": "load",
+    "right": "does it meet the requirement at the expected load?"
+   },
+   {
+    "left": "stress",
+    "right": "where and how does it break?"
+   },
+   {
+    "left": "spike",
+    "right": "does it survive a sudden crowd and recover?"
+   },
+   {
+    "left": "soak",
+    "right": "does anything drift over hours?"
+   },
+   {
+    "left": "scalability",
+    "right": "do more resources add capacity?"
+   }
+  ],
+  "right_distractors": [
+   "does it do what the specification says?"
+  ]
+ },
+ {
+  "id": "ex-0qxh9cnc",
+  "version": 1,
+  "section": "five-tests",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "At the expected load, a soak test reads a 95th percentile of 80 ms in its first hour and 190 ms in its eighth. The threshold is 200 ms. What do you report?",
+  "hint": "A soak test is read as a trend.",
+  "choices": [
+   {
+    "text": "A pass, because each hour stayed under 200 ms",
+    "correct": false,
+    "why": "Each hour did, and the trend says the ninth or tenth will not. A soak test exists to see exactly this."
+   },
+   {
+    "text": "A finding: something accumulates",
+    "correct": true,
+    "why": "Right. The last hour does not look like the first, so something grows with time, and it will cross the threshold."
+   },
+   {
+    "text": "A stress result, since the times went up",
+    "correct": false,
+    "why": "The load never rose; the time did. Rising times at a flat load are what a soak looks for."
+   },
+   {
+    "text": "Nothing yet, because no request failed",
+    "correct": false,
+    "why": "A soak is judged on drift, and 80 ms becoming 190 ms is drift."
+   }
+  ]
+ },
+ {
+  "id": "ex-cme33ckw",
+  "version": 1,
+  "section": "five-tests",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does a spike test check that a look at the peak alone misses?",
+  "hint": "The load is normal again. Are the times?",
+  "choices": [
+   {
+    "text": "Whether the peak was high enough to be a spike",
+    "correct": false,
+    "why": "The height is chosen in advance, from the expected crowd. It is the input, not the finding."
+   },
+   {
+    "text": "The highest throughput the system sustains",
+    "correct": false,
+    "why": "That is a capacity, found by a stress staircase."
+   },
+   {
+    "text": "Whether memory grows over the night",
+    "correct": false,
+    "why": "Drift over hours is a soak test."
+   },
+   {
+    "text": "How soon the times are normal after it",
+    "correct": true,
+    "why": "Right. A queue left by the spike delays the people who arrive at an ordinary moment afterwards."
+   }
+  ]
+ },
+ {
+  "id": "ex-3ffe2xsr",
+  "version": 1,
+  "section": "a-load-generator",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does hammer.py start each request in a thread of its own, instead of sending the next one when the last answer arrives?",
+  "hint": "What would happen to the arrivals when the server slowed down?",
+  "choices": [
+   {
+    "text": "Threads make each request faster",
+    "correct": false,
+    "why": "Each request takes as long as the server makes it; the threads change when requests are sent, not how long they take."
+   },
+   {
+    "text": "urllib refuses a second request on one thread",
+    "correct": false,
+    "why": "One thread can send as many requests as it likes, one after another."
+   },
+   {
+    "text": "So arrivals keep to the schedule when the server slows",
+    "correct": true,
+    "why": "Right. A generator that waited for answers would slow down with the server and report a pleasant number."
+   },
+   {
+    "text": "To open one connection and reuse it",
+    "correct": false,
+    "why": "Each request opens its own connection here."
+   }
+  ]
+ },
+ {
+  "id": "ex-8h8a80df",
+  "version": 1,
+  "section": "a-load-generator",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a line of hammer.py's output, what does the done column count?",
+  "hint": "The notes beside the last part of the program.",
+  "choices": [
+   {
+    "text": "The answers that arrived during that second",
+    "correct": true,
+    "why": "Right. That is the throughput the server managed in that second, whichever second the requests were sent in."
+   },
+   {
+    "text": "The requests sent in that second that succeeded",
+    "correct": false,
+    "why": "sent and errors describe the requests sent in that second; done counts arrivals, from any second."
+   },
+   {
+    "text": "The answers since the run began",
+    "correct": false,
+    "why": "It is per second, not a running total."
+   },
+   {
+    "text": "The requests the server refused",
+    "correct": false,
+    "why": "Refusals are counted under errors."
+   }
+  ]
+ },
+ {
+  "id": "ex-3bw3eqxx",
+  "version": 1,
+  "section": "a-load-generator",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "hammer.py counts a request as an error when it gets a 4xx or 5xx status, when the connection is refused, or when ___ seconds pass with no answer.",
+  "hint": "The timeout passed to urlopen.",
+  "blanks": [
+   {
+    "accept": [
+     "10",
+     "ten"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-m085y9cr",
+  "version": 1,
+  "section": "three-shapes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the spike run, seconds 5 to 7 were back at ten requests a second, and the medians were still 923, 439 and 227 ms. Why?",
+  "hint": "Look at the done column in those seconds.",
+  "choices": [
+   {
+    "text": "The generator was slowed by its own threads",
+    "correct": false,
+    "why": "It sent ten a second on schedule; the time was spent waiting for answers."
+   },
+   {
+    "text": "The server was still working off the queue",
+    "correct": true,
+    "why": "Right. done was 93, 83 and 81 in those seconds: the server was answering requests left over from the spike."
+   },
+   {
+    "text": "Show 990 had sold out during the spike",
+    "correct": false,
+    "why": "GET requests book nothing; the show page is the same before and after."
+   },
+   {
+    "text": "The database had grown during the spike",
+    "correct": false,
+    "why": "Nothing was written: every request was a read."
+   }
+  ]
+ },
+ {
+  "id": "ex-thgdf571",
+  "version": 1,
+  "section": "three-shapes",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what the stress run showed in the order it happened.",
+  "hint": "Second 3, second 5, second 7, and after the schedule.",
+  "items": [
+   "done stops following sent",
+   "the first errors appear",
+   "the median passes two seconds",
+   "the last answer arrives"
+  ]
+ },
+ {
+  "id": "ex-x1sj2639",
+  "version": 1,
+  "section": "three-shapes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the manner of its failure under stress, which describes the box office?",
+  "hint": "Did anything turn the excess away quickly?",
+  "choices": [
+   {
+    "text": "It answered the excess with a quick 503",
+    "correct": false,
+    "why": "Nothing in app.py refuses a request; every one is taken and served in turn."
+   },
+   {
+    "text": "It crashed and stopped answering",
+    "correct": false,
+    "why": "It kept answering, between 69 and 139 a second, to the end."
+   },
+   {
+    "text": "It served old copies of the page to save time",
+    "correct": false,
+    "why": "There is no cache in app.py; every request counts the bookings again."
+   },
+   {
+    "text": "Every request queued, and times grew to seconds",
+    "correct": true,
+    "why": "Right. That is the bad manner: nobody is told to come back later, and everybody waits."
+   }
+  ]
+ },
+ {
+  "id": "ex-ywa1tpaq",
+  "version": 1,
+  "section": "three-shapes",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What would a soak test of the box office watch that hammer.py's output does not show?",
+  "hint": "Measurements of the server, not of the responses.",
+  "choices": [
+   {
+    "text": "The median response time of the requests in each second",
+    "correct": false,
+    "why": "hammer.py prints that already."
+   },
+   {
+    "text": "How many requests the generator sent in each second",
+    "correct": false,
+    "why": "That is the sent column."
+   },
+   {
+    "text": "Its memory, its open files and the database size",
+    "correct": true,
+    "why": "Right. What accumulates lives in the server, and lesson 22 collects it."
+   },
+   {
+    "text": "How many errors came back in each second of the run",
+    "correct": false,
+    "why": "That is the errors column."
+   }
+  ]
+ },
+ {
+  "id": "ex-cqj8amay",
+  "version": 1,
+  "section": "adding-processors",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does taskset -c 0,1 python3 app.py do?",
+  "hint": "Processors are numbered from 0.",
+  "choices": [
+   {
+    "text": "Starts two copies of the box office",
+    "correct": false,
+    "why": "One process; what changes is where it may run."
+   },
+   {
+    "text": "Runs the box office on processors 0 and 1 alone",
+    "correct": true,
+    "why": "Right. The process may use those two and no others."
+   },
+   {
+    "text": "Gives the box office a scheduling priority of 0 and then 1",
+    "correct": false,
+    "why": "Priority is nice; taskset sets which processors."
+   },
+   {
+    "text": "Starts it with one thread per processor",
+    "correct": false,
+    "why": "The threads are the server's own; taskset limits the processors they run on."
+   }
+  ]
+ },
+ {
+  "id": "ex-e9kdrgcm",
+  "version": 1,
+  "section": "adding-processors",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why was hammer.py started with taskset -c 2,3 in both scalability runs?",
+  "hint": "Four processors, one machine.",
+  "choices": [
+   {
+    "text": "So it did not compete with the server for processors",
+    "correct": true,
+    "why": "Right. Kept apart, the server's processors measure the server and not the generator as well."
+   },
+   {
+    "text": "So it would send twice as many requests",
+    "correct": false,
+    "why": "The schedule sets the rate; the processors do not."
+   },
+   {
+    "text": "Because Python needs two processors to run its threads",
+    "correct": false,
+    "why": "Python threads run on one processor or several."
+   },
+   {
+    "text": "To make it a second, separate machine",
+    "correct": false,
+    "why": "It is the same machine, with the work divided between its processors."
+   }
+  ]
+ },
+ {
+  "id": "ex-w4ydxxwz",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A service carries 50 requests a second at most on one processor and 90 on two. By what factor did its capacity grow? Give a plain number, such as 1.5.",
+  "hint": "The second capacity divided by the first.",
+  "value": 1.8,
+  "tolerance": 0.01
+ },
+ {
+  "id": "ex-67bfghg1",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A booking endpoint carries 25 bookings a second on two processors and 25 on eight. What does that say about it?",
+  "hint": "What would have to be true for more processors to add nothing?",
+  "choices": [
+   {
+    "text": "It scales, because nothing failed on either run",
+    "correct": false,
+    "why": "Scaling is about the ratio between capacities, and 25 to 25 is a ratio of one."
+   },
+   {
+    "text": "The eight-processor run was too short to count",
+    "correct": false,
+    "why": "A capacity that does not move at all is not a sampling problem."
+   },
+   {
+    "text": "Something in it runs one request at a time",
+    "correct": true,
+    "why": "Right. A lock held during each booking, like the box office's booking_lock, makes every processor wait in turn."
+   },
+   {
+    "text": "Eight processors are too many for one server",
+    "correct": false,
+    "why": "More processors do not make a server slower; they just go unused here."
+   }
+  ]
+ },
+ {
+  "id": "ex-sv27r4e2",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these results are failures of the test that produced them? Choose every one that is.",
+  "hint": "Each test has its own meaning of fail.",
+  "choices": [
+   {
+    "text": "Load test: the 95th percentile is 210 ms against 200 during the hold",
+    "correct": true,
+    "why": "A fail: the threshold was crossed at the expected load."
+   },
+   {
+    "text": "Stress test: errors begin at 300 requests a second",
+    "correct": false,
+    "why": "Not a fail: the breaking point is what a stress test is run to find."
+   },
+   {
+    "text": "Spike test: three minutes to normal times, where 30 s was agreed",
+    "correct": true,
+    "why": "A fail: recovery is half of what a spike test checks, and it took six times too long."
+   },
+   {
+    "text": "Soak test: memory flat across eight hours",
+    "correct": false,
+    "why": "A pass: the last hour looks like the first."
+   },
+   {
+    "text": "Stress test: one seat sold twice at 400 a second",
+    "correct": true,
+    "why": "A fail: a wrong result under pressure is a defect whatever the breaking point was."
+   }
+  ]
+ },
+ {
+  "id": "ex-qyry2h1v",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A stress staircase finds the show page breaks near 80 requests a second, and the requirement asks for 50. Which test says whether the 10:00 sale of a popular show will be survived?",
+  "hint": "How does the crowd arrive at 10:00?",
+  "choices": [
+   {
+    "text": "A soak test at 50 a second",
+    "correct": false,
+    "why": "A soak asks about drift over hours, and the sale lasts minutes."
+   },
+   {
+    "text": "A longer load test at 50 a second",
+    "correct": false,
+    "why": "That checks the steady requirement again, which is already met; the sale is not steady."
+   },
+   {
+    "text": "A scalability test on two machines",
+    "correct": false,
+    "why": "That asks whether resources add capacity, before anybody knows whether more is needed."
+   },
+   {
+    "text": "A spike from normal to the sale's peak",
+    "correct": true,
+    "why": "Right. A crowd arriving in one minute gives the server no time to adapt, which a slow staircase did."
+   }
+  ]
+ }
+]

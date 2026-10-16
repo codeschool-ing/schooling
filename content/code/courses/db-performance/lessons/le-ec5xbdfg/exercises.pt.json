@@ -1,0 +1,385 @@
+{
+  "ex-bwfxakr3": {
+    "prompt": "O que a opção `-R` do `pg_basebackup` acrescenta à cópia?",
+    "hint": "É o que transforma uma cópia numa réplica.",
+    "choices": [
+      {
+        "text": "`standby.signal` e `primary_conninfo`",
+        "why": "Isso: o servidor sobe em recuperação, fica nela e sabe quem é o primário."
+      },
+      {
+        "text": "O WAL que foi escrito enquanto o backup rodava",
+        "why": "Isso é o `-X stream`."
+      },
+      {
+        "text": "Um checkpoint imediato no primário antes de copiar",
+        "why": "Isso é o `-c fast`."
+      },
+      {
+        "text": "Permissões só de leitura em todas as tabelas da cópia",
+        "why": "Um standby é só leitura por estar em recuperação, não por permissões."
+      }
+    ]
+  },
+  "ex-822941kc": {
+    "prompt": "Na réplica, `UPDATE orders SET status = 'cancelled' WHERE id = 1` respondeu com um erro. Qual?",
+    "hint": "Toda transação num standby tem uma propriedade.",
+    "choices": [
+      {
+        "text": "`ERROR: permission denied for table orders on standby server`",
+        "why": "O papel é o mesmo do primário; permissões não são o motivo."
+      },
+      {
+        "text": "`cannot execute UPDATE in a read-only transaction`",
+        "why": "Isso: toda transação num standby é somente leitura."
+      },
+      {
+        "text": "`relation \"orders\" does not exist`",
+        "why": "A réplica tem todas as tabelas; a contagem de dois milhões funcionou."
+      },
+      {
+        "text": "`cannot execute UPDATE: the primary server is not reachable`",
+        "why": "Uma réplica não repassa escritas ao primário de jeito nenhum."
+      }
+    ]
+  },
+  "ex-ar0pe2dk": {
+    "prompt": "A réplica da aula copiou `market_base` e `postgres` além do `market`. Por que não podia copiar só o `market`?",
+    "hint": "O que o WAL descreve?",
+    "choices": [
+      {
+        "text": "Porque o `pg_basebackup` não tem opção para citar um banco, então copia todos",
+        "why": "É verdade até onde vai, mas o motivo é o que o WAL é."
+      },
+      {
+        "text": "Porque os outros bancos estavam em uso",
+        "why": "Uso não tem nada a ver; um banco parado também é copiado."
+      },
+      {
+        "text": "A replicação física reaplica o WAL de um cluster, que cobre todos os bancos",
+        "why": "Isso: uma réplica física copia um cluster inteiro, nunca um banco; a replicação lógica da aula 14 de db-reliability é seletiva."
+      },
+      {
+        "text": "Porque o `market` depende do `market_base` como modelo",
+        "why": "Um modelo só é lido quando um banco é criado."
+      }
+    ]
+  },
+  "ex-tw4867cn": {
+    "prompt": "Por que uma réplica assíncrona não deixa mais lentos os commits do primário?",
+    "hint": "Quando o cliente fica sabendo que o commit deu certo?",
+    "choices": [
+      {
+        "text": "A réplica só lê o WAL novo uma vez por hora, durante a noite",
+        "why": "Ela faz streaming contínuo; o atraso ficou abaixo de um milissegundo."
+      },
+      {
+        "text": "A replicação passa por um disco separado, com fila própria",
+        "why": "Não são os discos que decidem; é a espera."
+      },
+      {
+        "text": "A réplica escreve o próprio WAL em paralelo",
+        "why": "Ela reaplica o do primário; o cliente não espera por isso de nenhum jeito."
+      },
+      {
+        "text": "Ninguém espera pela cópia antes de ouvir que deu certo",
+        "why": "Isso: é também por isso que a réplica pode estar atrasada."
+      }
+    ]
+  },
+  "ex-q169xpz0": {
+    "prompt": "Ponha em ordem os passos que montaram a réplica da aula.",
+    "hint": "Primeiro um cluster vazio, depois os dados dele trocados.",
+    "items": [
+      "`sudo pg_createcluster 16 replica --port 5433`",
+      "esvaziar `/var/lib/postgresql/16/replica`",
+      "`pg_basebackup -D … -R -X stream -c fast`",
+      "`sudo systemctl start postgresql@16-replica`"
+    ],
+    "trap": "Ligar o cluster antes da cópia sobe um primário vazio na porta 5433, não uma réplica."
+  },
+  "ex-9ypffka5": {
+    "prompt": "Ligue cada atraso que se separou dos outros ao que ele aponta.",
+    "hint": "A seção os lê na ordem dos passos.",
+    "pairs": [
+      {
+        "left": "um `write_lag` grande",
+        "right": "a rede"
+      },
+      {
+        "left": "`flush_lag` bem acima do `write_lag`",
+        "right": "o disco da réplica"
+      },
+      {
+        "left": "`replay_lag` bem acima do `flush_lag`",
+        "right": "o processo único de reaplicação"
+      }
+    ],
+    "right_distractors": [
+      "os commits do primário"
+    ]
+  },
+  "ex-qg36ph8p": {
+    "prompt": "Sem nada sendo escrito, `now() - pg_last_xact_replay_timestamp()` foi de 1,2 para 11,9 segundos. O que aconteceu?",
+    "hint": "Há algo para reaplicar?",
+    "choices": [
+      {
+        "text": "Nada: simplesmente não havia nada novo para reaplicar",
+        "why": "Isso: num primário parado essa leitura cresce sozinha."
+      },
+      {
+        "text": "A réplica ficou dez segundos atrás enquanto estava parada",
+        "why": "Não havia o que reaplicar; os bytes de atraso marcariam zero."
+      },
+      {
+        "text": "A rede entre os dois clusters ficou fora por alguns segundos",
+        "why": "Os dois estão numa máquina só; nada caiu."
+      },
+      {
+        "text": "O relógio da própria réplica está dez segundos atrasado",
+        "why": "Os dois clusters dividem um relógio aqui."
+      }
+    ]
+  },
+  "ex-9kmpd0hy": {
+    "prompt": "Por que a diferença em bytes entre `sent_lsn` e `replay_lsn` é um alarme melhor que o horário de reaplicação numa loja quieta à noite?",
+    "hint": "O que cada leitura faz quando nada é escrito?",
+    "choices": [
+      {
+        "text": "Bytes são mais baratos de calcular que um horário num primário ocupado, e escalam",
+        "why": "Custo não é o problema; alarmes falsos são."
+      },
+      {
+        "text": "O horário só existe no primário",
+        "why": "É uma função da própria réplica."
+      },
+      {
+        "text": "Bytes ficam em zero num servidor parado, e o horário continua crescendo",
+        "why": "Isso: um monitor no horário acorda alguém toda noite quieta."
+      },
+      {
+        "text": "O horário inclui o `recovery_min_apply_delay` e os bytes não",
+        "why": "Os dois refletem uma reaplicação atrasada; a diferença é a ociosidade."
+      }
+    ]
+  },
+  "ex-kpd35rwx": {
+    "prompt": "Com `recovery_min_apply_delay` em 10 s, quantos bytes de WAL a réplica tinha recebido e não aplicado quando o primário foi consultado?",
+    "hint": "A coluna `bytes_behind`.",
+    "unit": "bytes"
+  },
+  "ex-nydmsb6j": {
+    "prompt": "O `write_lag` e o `flush_lag` de uma réplica são 2 ms, e o `replay_lag` sobe para 40 s toda noite enquanto o primário reconstrói um índice grande. Onde está o gargalo?",
+    "hint": "Onde os três se separam?",
+    "choices": [
+      {
+        "text": "A rede entre os dois servidores",
+        "why": "O write_lag seria grande; é 2 ms."
+      },
+      {
+        "text": "O disco da réplica, que não consegue salvar o WAL que chega rápido o bastante à noite",
+        "why": "O flush_lag seria grande; também é 2 ms."
+      },
+      {
+        "text": "Os commits do primário, que esperam a réplica confirmar cada uma das escritas",
+        "why": "Uma réplica assíncrona não faz ninguém esperar."
+      },
+      {
+        "text": "A reaplicação, um processo único atrás de uma rajada de WAL da reconstrução",
+        "why": "Isso: o WAL chega e é salvo na hora, e aplicá-lo é o que fica para trás."
+      }
+    ]
+  },
+  "ex-503tnw8h": {
+    "prompt": "Qual é a propriedade que um cliente espera quando cancela um pedido e a página recarrega?",
+    "hint": "A seção dá o nome.",
+    "choices": [
+      {
+        "text": "Isolamento serializável",
+        "why": "Isolamento trata de transações concorrentes num servidor, aula 14."
+      },
+      {
+        "text": "Durabilidade",
+        "why": "A escrita era durável no primário; a réplica só estava atrás."
+      },
+      {
+        "text": "Ler a própria escrita",
+        "why": "Isso: e uma réplica atrasada não a oferece."
+      },
+      {
+        "text": "Replicação síncrona para todas as réplicas",
+        "why": "Isso é um mecanismo, e nem ele garante a reaplicação antes da leitura."
+      }
+    ]
+  },
+  "ex-c0f289yv": {
+    "prompt": "O `read-your-write.sh` guarda o resultado de `pg_current_wal_lsn()` depois do `UPDATE`. Com que ele compara essa posição, e onde?",
+    "hint": "A réplica precisa ter aplicado a escrita, não só recebido.",
+    "choices": [
+      {
+        "text": "Com `pg_last_wal_receive_lsn()` na réplica",
+        "why": "Recebido não é reaplicado; com o atraso, a leitura ainda seria velha."
+      },
+      {
+        "text": "Com `replay_lsn` no `pg_stat_replication` do primário",
+        "why": "Isso também funcionaria em princípio, mas o script pergunta à própria réplica."
+      },
+      {
+        "text": "Com `pg_last_wal_replay_lsn()` na réplica, até estar nela ou além",
+        "why": "Isso: quando a reaplicação passou da posição da escrita, a leitura é segura."
+      },
+      {
+        "text": "Com o horário de commit do pedido, como registrado no relógio do próprio primário",
+        "why": "O script compara posições do WAL, que não dependem de relógios."
+      }
+    ]
+  },
+  "ex-4g1q72g4": {
+    "prompt": "Com a réplica 10 segundos atrás, quantas verificações, a 0,2 s uma da outra, o `read-your-write.sh` fez antes de a réplica alcançar?",
+    "hint": "A segunda linha que ele imprimiu.",
+    "unit": "verificações"
+  },
+  "ex-1hpqmyzv": {
+    "prompt": "Uma aplicação lê do primário por cinco segundos depois de cada escrita de um usuário. Qual é a fraqueza que a seção cita?",
+    "hint": "Cinco segundos é um número que alguém escolheu.",
+    "choices": [
+      {
+        "text": "Usuários que nunca escrevem não ficam cobertos",
+        "why": "Eles não têm nada próprio para ler de volta; ficam bem na réplica."
+      },
+      {
+        "text": "A janela é um palpite, e um atraso maior que ela traz a leitura velha de volta",
+        "why": "Isso: e ainda manda para o primário as leituras dos usuários mais ativos."
+      },
+      {
+        "text": "O primário não consegue responder leituras",
+        "why": "O primário responde leituras e escritas; só a réplica recusa escritas."
+      },
+      {
+        "text": "Precisa de commit em duas fases",
+        "why": "Nada aqui confirma em dois servidores."
+      }
+    ]
+  },
+  "ex-ke71m800": {
+    "prompt": "Quais destas leituras pertencem ao primário, pela regra da seção? Marque todas as que se aplicam.",
+    "hint": "Uma leitura que decide algo antes de uma escrita.",
+    "choices": [
+      {
+        "text": "Conferir que um cupom não foi usado antes de resgatá-lo",
+        "why": "Certo: lê e depois age, então uma resposta velha o resgata duas vezes."
+      },
+      {
+        "text": "Conferir que um nome de usuário está livre antes de criar a conta",
+        "why": "Certo: duas pessoas poderiam ganhar o mesmo nome de uma réplica atrasada."
+      },
+      {
+        "text": "O relatório mensal de vendas de um vendedor",
+        "why": "Um relatório que perde o último segundo é inofensivo; cabe numa réplica."
+      },
+      {
+        "text": "Navegar produtos por etiqueta",
+        "why": "Navegação comum é exatamente para o que serve uma réplica."
+      }
+    ]
+  },
+  "ex-6g7fea1q": {
+    "prompt": "O que o `max_standby_streaming_delay` decide?",
+    "hint": "A reaplicação e uma consulta querem coisas opostas.",
+    "choices": [
+      {
+        "text": "Quanto o primário espera pela réplica antes de confirmar um commit",
+        "why": "Um primário assíncrono não espera; esta é uma configuração da réplica."
+      },
+      {
+        "text": "Quanto a reaplicação espera por uma consulta antes de cancelá-la",
+        "why": "Isso: 30 segundos por padrão, 5 na aula."
+      },
+      {
+        "text": "Quanto a réplica pode se atrasar antes de se desconectar do primário",
+        "why": "Ela não se desconecta; pausa a reaplicação ou cancela uma consulta."
+      },
+      {
+        "text": "Quanto o `VACUUM` espera antes de remover linhas mortas no primário",
+        "why": "O VACUUM no primário não espera réplica nenhuma sem feedback."
+      }
+    ]
+  },
+  "ex-wqe9dy9x": {
+    "prompt": "Sem feedback, a consulta da réplica falhou com `canceling statement due to conflict with ___`.",
+    "hint": "O estado em que uma réplica está para sempre.",
+    "blanks": [
+      {
+        "accept": [
+          "recovery"
+        ]
+      }
+    ]
+  },
+  "ex-v94a9esd": {
+    "prompt": "Com o `hot_standby_feedback` ligado, a transação de 15 segundos da réplica terminou. O que o `VACUUM (VERBOSE)` no primário relatou?",
+    "hint": "As linhas ainda são necessárias em algum lugar.",
+    "choices": [
+      {
+        "text": "55395 tuplas removidas",
+        "why": "0 removidas: o snapshot da réplica ainda precisava delas."
+      },
+      {
+        "text": "Um erro, porque uma réplica segurava uma trava",
+        "why": "O VACUUM terminou normalmente; só deixou as linhas."
+      },
+      {
+        "text": "55395 are dead but not yet removable",
+        "why": "Isso: o custo de manter a consulta da réplica foi para o primário."
+      },
+      {
+        "text": "Que a tabela tinha sido truncada",
+        "why": "Nada a truncou; restam 4944521 linhas."
+      }
+    ]
+  },
+  "ex-x9xkafbp": {
+    "prompt": "Uma equipe liga o `hot_standby_feedback` para que uma exportação noturna de seis horas na réplica pare de falhar. Uma semana depois as tabelas mais usadas do primário dobraram de tamanho. O que liga as duas coisas?",
+    "hint": "A transação longa da aula 15, em outro lugar.",
+    "choices": [
+      {
+        "text": "A exportação grava a saída nas tabelas do primário",
+        "why": "Uma réplica não consegue gravar nada."
+      },
+      {
+        "text": "O feedback dobra o WAL que o primário escreve, e as tabelas crescem junto",
+        "why": "O feedback é uma mensagem pequena da réplica; não acrescenta WAL."
+      },
+      {
+        "text": "A réplica copia as próprias linhas mortas de volta ao primário toda noite",
+        "why": "A replicação vai num sentido só, do primário para a réplica."
+      },
+      {
+        "text": "Cada exportação segura o VACUUM no primário por seis horas",
+        "why": "Isso: o conflito saiu da réplica e foi para o primário, como inchaço."
+      }
+    ]
+  },
+  "ex-6dqxyp7w": {
+    "prompt": "Uma loja tem uma réplica, usada para failover e para o relatório de duas horas da contabilidade. Para que mudança a tabela da aula aponta?",
+    "hint": "As duas configurações têm um custo para um dos dois trabalhos.",
+    "choices": [
+      {
+        "text": "Subir o `max_standby_streaming_delay` para três horas",
+        "why": "Aí a candidata a failover pode estar horas atrás, o pior momento para promovê-la."
+      },
+      {
+        "text": "Ligar o `hot_standby_feedback` e não mudar mais nada",
+        "why": "Aí o relatório incha o primário por duas horas todo dia."
+      },
+      {
+        "text": "Mais um standby, usado só pela contabilidade",
+        "why": "Isso: mais um servidor compra os dois trabalhos sem o custo de nenhuma configuração."
+      },
+      {
+        "text": "Rodar o relatório no primário durante o dia",
+        "why": "Isso devolve ao primário a carga que a réplica existia para absorver."
+      }
+    ]
+  }
+}

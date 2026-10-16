@@ -1,0 +1,349 @@
+{
+ "ex-8jjb8yg9": {
+  "prompt": "Por que um teste de carga roda com jmeter -n e não pela GUI?",
+  "hint": "O que mais está usando o processador enquanto a GUI está aberta?",
+  "choices": [
+   {
+    "text": "A GUI não consegue enviar requisições HTTP",
+    "why": "Consegue; a GUI roda os mesmos samplers, e é assim que um plano é depurado."
+   },
+   {
+    "text": "O modo não gráfico envia por um protocolo mais rápido",
+    "why": "Os dois modos enviam o mesmo HTTP; a diferença é o que mais o processo está fazendo."
+   },
+   {
+    "text": "Desenhar as amostras tira recursos das threads",
+    "why": "Certo. A janela disputa com os usuários virtuais, e o resultado mede em parte a janela."
+   },
+   {
+    "text": "A GUI ignora os timers do plano",
+    "why": "Os timers rodam nos dois modos."
+   }
+  ]
+ },
+ "ex-x0n3q2wt": {
+  "prompt": "Para que a GUI do JMeter é a ferramenta certa?",
+  "hint": "Um ou dois usuários, e cada resposta visível.",
+  "choices": [
+   {
+    "text": "Montar e depurar um plano com um ou dois usuários",
+    "why": "Certo. Os listeners dela mostram cada requisição e resposta, que é o que a depuração precisa."
+   },
+   {
+    "text": "Rodar o teste de carga final com os gráficos ao vivo",
+    "why": "Gráficos ao vivo numa rodada de carga tiram recursos das threads que estão sendo medidas."
+   },
+   {
+    "text": "Iniciar os workers de um teste distribuído",
+    "why": "Os workers rodam o jmeter-server, que não tem janela."
+   },
+   {
+    "text": "Medir o sistema sob teste de dentro da VM",
+    "why": "A VM não tem desktop, então a GUI roda no seu próprio computador."
+   }
+  ]
+ },
+ "ex-cb4xpq46": {
+  "prompt": "Ligue cada família de elemento do JMeter ao que ela faz.",
+  "hint": "A tabela no alto de \"Um plano de teste, elemento por elemento\".",
+  "pairs": [
+   {
+    "left": "thread group",
+    "right": "os usuários virtuais: quantos, com que rapidez, por quanto tempo"
+   },
+   {
+    "left": "sampler",
+    "right": "envia uma requisição e registra uma amostra"
+   },
+   {
+    "left": "elemento de configuração",
+    "right": "prepara padrões, variáveis ou dados para os samplers"
+   },
+   {
+    "left": "asserção",
+    "right": "marca uma amostra como falha quando a resposta está errada"
+   },
+   {
+    "left": "timer",
+    "right": "espera antes de um sampler rodar"
+   }
+  ],
+  "right_distractors": [
+   "envia o plano para os workers remotos"
+  ]
+ },
+ "ex-10540jaa": {
+  "prompt": "O timer de pensamento fica no nível do thread group e roda antes dos dois samplers. Onde você o colocaria para só o GET /shows/{id} esperar?",
+  "hint": "O escopo é a árvore.",
+  "choices": [
+   {
+    "text": "Sob o plano de teste, acima do thread group",
+    "why": "Mais alto na árvore alarga o escopo: valeria para todo sampler de todo thread group."
+   },
+   {
+    "text": "Depois do segundo sampler, no mesmo nível",
+    "why": "A posição entre irmãos não estreita o escopo; nesse nível ele continua valendo para os dois."
+   },
+   {
+    "text": "Dentro do HTTP Request Defaults",
+    "why": "Um elemento de configuração não é pai dos samplers, então nada sob ele os alcança."
+   },
+   {
+    "text": "Dentro daquele sampler, ao lado da asserção",
+    "why": "Certo. Um elemento dentro de um sampler vale só para aquele sampler."
+   }
+  ]
+ },
+ "ex-ectp0kjv": {
+  "prompt": "O que o CSV Data Set Config deste plano faz cada vez que uma thread precisa de um espetáculo?",
+  "hint": "shareMode.all e recycle.",
+  "choices": [
+   {
+    "text": "Dá a cada thread a sua própria cópia do arquivo para ler do topo",
+    "why": "Esse é um modo de compartilhamento por thread; shareMode.all faz as threads se revezarem num arquivo só."
+   },
+   {
+    "text": "Lê a próxima linha de um arquivo compartilhado para show",
+    "why": "Certo. As threads se revezam, e no fim do arquivo ele recomeça do topo."
+   },
+   {
+    "text": "Escolhe uma linha aleatória do arquivo",
+    "why": "Ele lê em ordem; um id aleatório precisaria de uma função como __Random."
+   },
+   {
+    "text": "Lê o arquivo inteiro para uma variável",
+    "why": "Uma linha por uso, para a variável nomeada em variableNames."
+   }
+  ]
+ },
+ "ex-y02m34gq": {
+  "prompt": "O thread group lê o seu tamanho com __P, então acrescentar -J___=40 ao comando roda quarenta threads.",
+  "hint": "O primeiro argumento dentro de __P(…,20).",
+  "blanks": [
+   {
+    "accept": [
+     "users"
+    ]
+   }
+  ]
+ },
+ "ex-tsd2zyfn": {
+  "prompt": "Dez threads têm um Constant Throughput Timer de 600 amostras por minuto, e o servidor fica lento até cada amostra levar 3 segundos. Qual taxa o teste envia?",
+  "hint": "O timer só sabe esperar.",
+  "choices": [
+   {
+    "text": "600 por minuto, porque o timer segura a taxa",
+    "why": "O timer consegue atrasar uma thread, nunca acelerá-la; dez threads a 3 s cada não chegam a dez por segundo."
+   },
+   {
+    "text": "Umas 200 por minuto, tudo o que dez laços de 3 s permitem",
+    "why": "Certo. 10 / 3 s dá umas 3,3 por segundo. Por baixo o teste continua fechado."
+   },
+   {
+    "text": "Nenhuma, porque o timer para as threads que se atrasam",
+    "why": "Ele não para threads; só não tem mais espera para tirar."
+   },
+   {
+    "text": "1.200 por minuto, já que o timer recupera o tempo perdido",
+    "why": "Não há recuperação num modelo fechado: uma thread só envia de novo depois da última resposta."
+   }
+  ]
+ },
+ "ex-k3f1h5hv": {
+  "prompt": "Qual é a diferença entre uma linha summary + e uma linha summary =?",
+  "hint": "Uma é um período, a outra é um total.",
+  "choices": [
+   {
+    "text": "+ é para os sucessos e = para o todo incluindo erros",
+    "why": "As duas linhas contam erros, na coluna Err."
+   },
+   {
+    "text": "+ é o controlador e = os workers",
+    "why": "As duas aparecem numa rodada numa máquina só, sem worker nenhum."
+   },
+   {
+    "text": "+ é impressa pela GUI e = pelo modo não gráfico",
+    "why": "As duas são impressas pelo summariser no modo não gráfico."
+   },
+   {
+    "text": "+ cobre o último período, = a rodada até ali",
+    "why": "Certo. A última linha = é a rodada inteira."
+   }
+  ]
+ },
+ "ex-x4mv5bng": {
+  "prompt": "Vinte threads pensam um tempo aleatório uniforme de 1 a 2 segundos antes de cada requisição, e as respostas levam poucos milissegundos. Mais ou menos quantas requisições por segundo elas deveriam enviar?",
+  "hint": "Aula 3: X = N / (R + Z), com Z a média do timer.",
+  "unit": "requisições/s"
+ },
+ "ex-4x93q7ka": {
+  "prompt": "Por que um plano feito para rodadas de carga não carrega listeners?",
+  "hint": "O que o View Results Tree guarda?",
+  "choices": [
+   {
+    "text": "-l grava cada amostra em disco, sem guardá-las na memória",
+    "why": "Certo. O .jtl é o listener de uma rodada de carga, e todo o resto é montado a partir dele depois."
+   },
+   {
+    "text": "Listeners só são permitidos dentro de um sampler",
+    "why": "Listeners podem ficar em qualquer nível; o escopo decide quais amostras eles ouvem."
+   },
+   {
+    "text": "Listeners deixam o servidor sob teste mais lento",
+    "why": "Eles rodam no gerador, e é o gerador que eles deixam lento."
+   },
+   {
+    "text": "O modo não gráfico se recusa a carregar um plano que tenha um",
+    "why": "Ele carrega; eles custam memória e processador durante a rodada."
+   }
+  ]
+ },
+ "ex-vp9xqvdw": {
+  "prompt": "O JMeter já marca um 404 como amostra com falha. O que a Response Assertion acrescenta?",
+  "hint": "Um servidor pode responder 200 e ainda assim estar errado.",
+  "choices": [
+   {
+    "text": "Faz as amostras com falha serem registradas mais depressa",
+    "why": "Asserções acrescentam trabalho de conferência; não aceleram o registro."
+   },
+   {
+    "text": "Repete a requisição quando o status está errado",
+    "why": "Asserções conferem; nada nelas envia uma requisição de novo."
+   },
+   {
+    "text": "Pega um 200 com o corpo errado",
+    "why": "Certo. Uma lista vazia ou uma página de erro servida como sucesso passa no status e falha na asserção."
+   },
+   {
+    "text": "Conta os 404 separados dos outros erros",
+    "why": "Todas as amostras com falha contam juntas como erro; a mensagem diz qual conferência falhou."
+   }
+  ]
+ },
+ "ex-88k5tz8c": {
+  "prompt": "Numa linha do .jtl, o que a coluna Latency mede?",
+  "hint": "Compare com elapsed.",
+  "choices": [
+   {
+    "text": "O tempo gasto abrindo a conexão",
+    "why": "Essa é a coluna Connect."
+   },
+   {
+    "text": "O tempo até o primeiro byte da resposta",
+    "why": "Certo. O elapsed vai até o último byte."
+   },
+   {
+    "text": "O tempo que o servidor informou no Server-Timing",
+    "why": "O JMeter não lê esse cabeçalho; ele mede do lado do cliente."
+   },
+   {
+    "text": "A espera que o timer acrescentou antes da requisição",
+    "why": "As esperas dos timers não fazem parte do tempo de uma amostra."
+   }
+  ]
+ },
+ "ex-6skryxfg": {
+  "prompt": "Uma rodada distribuída usa -Jusers=10 no controlador, e os workers iniciam vinte threads cada. Por quê?",
+  "hint": "Em que máquina o -J define uma propriedade?",
+  "choices": [
+   {
+    "text": "Os workers ignoram propriedades de qualquer tipo",
+    "why": "Eles leem as propriedades enviadas com -G, e o seu próprio -J ao iniciar."
+   },
+   {
+    "text": "O modo distribuído dobra os usuários de propósito",
+    "why": "Cada worker roda exatamente o que as suas propriedades dizem; nada dobra."
+   },
+   {
+    "text": "A rampa sobrepõe o número de usuários",
+    "why": "A rampa espalha a partida das threads; não define quantas são."
+   },
+   {
+    "text": "O -J ficou no controlador, então rodou o padrão de 20",
+    "why": "Certo. O -G envia uma propriedade aos workers; o -J a define só onde é digitado."
+   }
+  ]
+ },
+ "ex-htv1p5x2": {
+  "prompt": "Um worker foi iniciado num diretório sem shows.csv. O que acontece quando o controlador inicia o teste?",
+  "hint": "O que viaja a partir do controlador, e o que não viaja?",
+  "choices": [
+   {
+    "text": "Não acha o arquivo e não registra amostras",
+    "why": "Certo. O plano viaja; o arquivo de dados é lido do disco do próprio worker, e lá não havia nenhum."
+   },
+   {
+    "text": "O controlador envia a sua própria cópia do arquivo",
+    "why": "Só o plano e as propriedades -G são enviados; os arquivos ficam onde estão."
+   },
+   {
+    "text": "O worker baixa o arquivo da bilheteria",
+    "why": "Nada no JMeter busca um arquivo de dados por HTTP."
+   },
+   {
+    "text": "A cópia do outro worker é compartilhada por RMI",
+    "why": "Os workers não conversam entre si, só com o controlador."
+   }
+  ]
+ },
+ "ex-xyfbw1ms": {
+  "prompt": "O jmeter-server se recusa a iniciar com \"Cannot start. nft is a loopback address.\" O que resolve?",
+  "hint": "Que endereço o worker informa ao controlador?",
+  "choices": [
+   {
+    "text": "Desligar a criptografia do RMI com server.rmi.ssl.disable",
+    "why": "A criptografia é outra configuração; a mensagem é sobre o endereço."
+   },
+   {
+    "text": "Iniciar o worker como root com sudo",
+    "why": "Privilégio não muda o endereço para o qual o hostname resolve."
+   },
+   {
+    "text": "Definir java.rmi.server.hostname como 127.0.0.1 ou um IP real",
+    "why": "Certo. O hostname resolvia para 127.0.1.1, e isto diz ao RMI qual endereço distribuir em vez dele."
+   },
+   {
+    "text": "Escolher uma server_port acima de 1099",
+    "why": "Qualquer porta dá o mesmo erro; o que é recusado é o endereço."
+   }
+  ]
+ },
+ "ex-9pm1we9f": {
+  "prompt": "O controlador roda o plano desta aula com -R nomeando três workers e -Gusers=40. Quantos usuários virtuais chegam à bilheteria?",
+  "hint": "Cada worker roda o plano inteiro.",
+  "unit": "usuários"
+ },
+ "ex-f0gsjpyt": {
+  "prompt": "Ponha em ordem os passos de uma rodada distribuída do JMeter.",
+  "hint": "Os dados primeiro, o relatório por último.",
+  "items": [
+   "dar a cada worker a sua própria cópia do arquivo de dados",
+   "iniciar o jmeter-server em cada worker",
+   "rodar jmeter -n com -R e -G no controlador",
+   "os workers mandam as amostras de volta para um .jtl",
+   "montar o relatório HTML a partir do .jtl"
+  ]
+ },
+ "ex-t2zq9m42": {
+  "prompt": "Rodado pela GUI com o View Results Tree aberto, 500 usuários dão um percentil 95 de 900 ms. O mesmo plano em modo não gráfico com -l dá 120 ms. Qual descreve a bilheteria?",
+  "hint": "Qual rodada também estava medindo o JMeter?",
+  "choices": [
+   {
+    "text": "A rodada da GUI, porque ela olhou cada resposta",
+    "why": "Olhar cada resposta é o custo: a janela e a árvore deixaram o gerador lento, e os tempos incluem isso."
+   },
+   {
+    "text": "A rodada não gráfica",
+    "why": "Certo. Sem nada guardado na memória e nada desenhado, o gerador ficou fora da medida."
+   },
+   {
+    "text": "Nenhuma, já que percentis não comparam duas rodadas",
+    "why": "Duas rodadas do mesmo plano podem ser comparadas por percentil; aqui uma delas mediu a ferramenta."
+   },
+   {
+    "text": "A média das duas, uns 510 ms",
+    "why": "Tirar a média de uma medida boa com uma contaminada dá um número que não descreve nenhuma."
+   }
+  ]
+ }
+}

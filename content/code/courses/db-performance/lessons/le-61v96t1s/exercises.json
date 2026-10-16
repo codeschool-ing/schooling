@@ -1,0 +1,577 @@
+[
+  {
+    "id": "ex-wdc8j8zm",
+    "version": 1,
+    "section": "read-committed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `READ COMMITTED`, when is the view of the data that a statement sees taken?",
+    "hint": "The level's one sentence.",
+    "choices": [
+      {
+        "text": "When the transaction begins",
+        "correct": false,
+        "why": "That is REPEATABLE READ, more exactly its first statement."
+      },
+      {
+        "text": "When each statement starts",
+        "correct": true,
+        "why": "Right: two SELECTs in one transaction can see different values if someone committed between them."
+      },
+      {
+        "text": "When the row is first locked by the transaction, and never again after that",
+        "correct": false,
+        "why": "Plain reads take no row locks; the view is per statement."
+      },
+      {
+        "text": "At COMMIT",
+        "correct": false,
+        "why": "A view taken at commit would be too late to read anything with."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3y25yhh",
+    "version": 1,
+    "section": "read-committed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Window B waited 5881 ms for window A's row lock and then still overwrote A's raise. Why did the wait not help?",
+    "hint": "Where did 9390 come from?",
+    "choices": [
+      {
+        "text": "Window A had not committed yet when B wrote",
+        "correct": false,
+        "why": "B's write went through only after A committed."
+      },
+      {
+        "text": "READ COMMITTED does not take row locks",
+        "correct": false,
+        "why": "It does; that is what B waited for."
+      },
+      {
+        "text": "The value was a literal computed from a read made before the wait",
+        "correct": true,
+        "why": "Right: B wrote 9390 from its own SELECT of 9290; re-reading the row after the wait cannot change a constant."
+      },
+      {
+        "text": "psql cached the earlier result",
+        "correct": false,
+        "why": "psql caches nothing; the application logic did."
+      }
+    ]
+  },
+  {
+    "id": "ex-17ahjqkf",
+    "version": 1,
+    "section": "read-committed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these `UPDATE`s is safe against the lost update in `READ COMMITTED`, with no other change?",
+    "hint": "Where is the new value computed?",
+    "choices": [
+      {
+        "text": "`UPDATE products SET price_cents = 9390 WHERE id = 1` after reading 9290",
+        "correct": false,
+        "why": "That is the lesson's lost update: the value comes from a stale read."
+      },
+      {
+        "text": "`SET price_cents = price_cents + 100`",
+        "correct": true,
+        "why": "Right: the arithmetic is done on the row the UPDATE finds after any wait, so both raises were kept, 9590."
+      },
+      {
+        "text": "`SET price_cents = 9390` inside `BEGIN … COMMIT`",
+        "correct": false,
+        "why": "The lesson's lost update was inside BEGIN … COMMIT; a transaction alone protects nothing it read."
+      },
+      {
+        "text": "Any UPDATE that names the row by primary key",
+        "correct": false,
+        "why": "All the lesson's updates used id = 1, including the lost one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehgh6b4f",
+    "version": 1,
+    "section": "read-committed",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the pgbench run under `READ COMMITTED`, how many of the price raises were lost?",
+    "hint": "Transactions committed minus cents added.",
+    "value": 17981,
+    "tolerance": 0,
+    "unit": "raises"
+  },
+  {
+    "id": "ex-y3dsf551",
+    "version": 1,
+    "section": "read-committed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An inventory service reads `stock`, checks that it is above zero in application code, and writes `stock - 1` as a number it computed. Under `READ COMMITTED`, what is the smallest change that makes it safe?",
+    "hint": "The check needs the value, so it must be read.",
+    "choices": [
+      {
+        "text": "Raising the isolation level of the whole database to SERIALIZABLE",
+        "correct": false,
+        "why": "It would catch it, but every transaction would then need retries; it is not the smallest change."
+      },
+      {
+        "text": "Reading the stock with `SELECT … FOR UPDATE`",
+        "correct": true,
+        "why": "Right: the second reader waits before reading and then sees the first one's change, like windows A and B with 9690."
+      },
+      {
+        "text": "Running the read twice and comparing",
+        "correct": false,
+        "why": "Both reads can happen before the other writer commits."
+      },
+      {
+        "text": "Adding an index on stock",
+        "correct": false,
+        "why": "An index changes how rows are found, not who sees whose changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3sa2fd1",
+    "version": 1,
+    "section": "repeatable-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What error does a `REPEATABLE READ` transaction get when it updates a row someone else changed after its snapshot?",
+    "hint": "SQLSTATE 40001.",
+    "choices": [
+      {
+        "text": "`deadlock detected`",
+        "correct": false,
+        "why": "That is 40P01, two transactions waiting for each other."
+      },
+      {
+        "text": "`could not obtain lock on row`",
+        "correct": false,
+        "why": "That comes from NOWAIT, lesson 12."
+      },
+      {
+        "text": "`could not serialize access due to concurrent update`",
+        "correct": true,
+        "why": "Right: the transaction is refused rather than allowed to overwrite a change it never saw."
+      },
+      {
+        "text": "`canceling statement due to lock timeout`",
+        "correct": false,
+        "why": "That needs lock_timeout and is about waiting, not snapshots."
+      }
+    ]
+  },
+  {
+    "id": "ex-y98vj0ck",
+    "version": 1,
+    "section": "repeatable-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Window A's `REPEATABLE READ` transaction read 22090 twice, although window B had raised the price to 22190 in between. Why?",
+    "hint": "When was A's snapshot taken?",
+    "choices": [
+      {
+        "text": "Window B had not committed",
+        "correct": false,
+        "why": "B's update ran outside a transaction and committed at once."
+      },
+      {
+        "text": "A read from a cached copy in psql",
+        "correct": false,
+        "why": "Each SELECT went to the server; the server answered from A's snapshot."
+      },
+      {
+        "text": "B's change was rolled back",
+        "correct": false,
+        "why": "It stayed: A's own UPDATE then failed because of it."
+      },
+      {
+        "text": "Its snapshot was taken at its first query",
+        "correct": true,
+        "why": "Right: every statement in the transaction reads from that one snapshot."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e6x1s9a",
+    "version": 1,
+    "section": "repeatable-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `REPEATABLE READ`, 28,848 pgbench transactions failed and the cents added equalled the committed count, 49,741. What does that show?",
+    "hint": "Compare with read committed.",
+    "choices": [
+      {
+        "text": "No raise was lost; the losers were refused instead",
+        "correct": true,
+        "why": "Right: a silent wrong answer became a loud failure, which a retry can then fix."
+      },
+      {
+        "text": "The failed transactions were retried automatically by the server, so nothing was lost",
+        "correct": false,
+        "why": "The server never retries; pgbench ran with one try each."
+      },
+      {
+        "text": "REPEATABLE READ is slower than READ COMMITTED",
+        "correct": false,
+        "why": "Speed is not what the two counts show, and rates moved a lot between runs."
+      },
+      {
+        "text": "A third of the prices were not changed",
+        "correct": false,
+        "why": "All ten prices changed; a third of the attempts were refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx37e29s",
+    "version": 1,
+    "section": "repeatable-read",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading the same row twice in one transaction and getting two different values is called a non-___ read.",
+    "hint": "The name of the level that prevents it.",
+    "blanks": [
+      {
+        "accept": [
+          "repeatable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hb2q0a27",
+    "version": 1,
+    "section": "serializable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `SERIALIZABLE` promise about transactions that run at the same time?",
+    "hint": "Compare with running them one at a time.",
+    "choices": [
+      {
+        "text": "That they never run concurrently",
+        "correct": false,
+        "why": "They do run concurrently; that is what makes the level useful."
+      },
+      {
+        "text": "A result some one-at-a-time order could produce",
+        "correct": true,
+        "why": "Right: and when it cannot keep that promise, it fails one of them with 40001."
+      },
+      {
+        "text": "That each sees every change the others commit as soon as they commit it",
+        "correct": false,
+        "why": "That is closer to READ COMMITTED; SERIALIZABLE reads from a snapshot."
+      },
+      {
+        "text": "That they wait for each other's row locks instead of failing",
+        "correct": false,
+        "why": "It fails rather than waits its way out, as the 40001 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8j4gv4t",
+    "version": 1,
+    "section": "serializable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `REPEATABLE READ` let both of customer 7's pending orders in?",
+    "hint": "Did either transaction write a row the other wrote?",
+    "choices": [
+      {
+        "text": "The count query did not use an index",
+        "correct": false,
+        "why": "Indexes change speed, not what a snapshot shows."
+      },
+      {
+        "text": "Window B committed before window A",
+        "correct": false,
+        "why": "A committed first, and the order did not matter."
+      },
+      {
+        "text": "Each inserted a new row, so nothing was overwritten",
+        "correct": true,
+        "why": "Right: REPEATABLE READ refuses to overwrite a changed row; write skew writes different rows."
+      },
+      {
+        "text": "Pending orders are not covered by isolation, because status is a text column",
+        "correct": false,
+        "why": "Isolation applies to every column of every table."
+      }
+    ]
+  },
+  {
+    "id": "ex-68r8vex4",
+    "version": 1,
+    "section": "serializable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hospital requires at least one doctor on call. Two doctors, each in a `REPEATABLE READ` transaction, count the doctors on call, see two, and each sets their own row to off call. What happens, and what would have stopped it?",
+    "hint": "Each updates a different row.",
+    "choices": [
+      {
+        "text": "One gets 40001 under REPEATABLE READ, so the rule holds",
+        "correct": false,
+        "why": "They update different rows, so REPEATABLE READ has nothing to refuse."
+      },
+      {
+        "text": "They deadlock, and the server cancels one",
+        "correct": false,
+        "why": "Neither waits for the other: no row is wanted by both."
+      },
+      {
+        "text": "Both commit and nobody is on call; SERIALIZABLE would refuse one",
+        "correct": true,
+        "why": "Right: it is the lesson's write skew with updates instead of inserts."
+      },
+      {
+        "text": "Nothing goes wrong, since both read the same count",
+        "correct": false,
+        "why": "Reading the same stale count is exactly the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsz5b7rs",
+    "version": 1,
+    "section": "serializable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the one-pending-order rule, what does the lesson suggest instead of relying on `SERIALIZABLE`?",
+    "hint": "Make the schema enforce it.",
+    "choices": [
+      {
+        "text": "A partial unique index on `customer_id` where `status = 'pending'`",
+        "correct": true,
+        "why": "Right: the second insert fails with a unique violation at any isolation level."
+      },
+      {
+        "text": "A table lock on orders in every checkout",
+        "correct": false,
+        "why": "It would work by stopping every other order in the shop while one is placed."
+      },
+      {
+        "text": "A longer deadlock_timeout",
+        "correct": false,
+        "why": "There is no deadlock here to time."
+      },
+      {
+        "text": "An advisory lock per customer",
+        "correct": false,
+        "why": "It can work if every code path remembers it; the index cannot be forgotten."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd98k54b",
+    "version": 1,
+    "section": "serializable",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each level to how it behaves when two transactions race over the same price.",
+    "hint": "Section 05's table.",
+    "pairs": [
+      {
+        "left": "READ COMMITTED",
+        "right": "both commit and one raise is lost"
+      },
+      {
+        "left": "REPEATABLE READ, one try",
+        "right": "the loser fails with 40001"
+      },
+      {
+        "left": "SERIALIZABLE, ten tries",
+        "right": "the loser runs again and both raises are kept"
+      }
+    ],
+    "right_distractors": [
+      "both wait forever"
+    ]
+  },
+  {
+    "id": "ex-x67w28hj",
+    "version": 1,
+    "section": "retrying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which SQLSTATE codes does the lesson say are worth retrying?",
+    "hint": "Two of them.",
+    "choices": [
+      {
+        "text": "40001 and 40P01",
+        "correct": true,
+        "why": "Right: a serialisation failure and a deadlock both mean the transaction lost a race and was rolled back whole."
+      },
+      {
+        "text": "Every error the server returns",
+        "correct": false,
+        "why": "A syntax error or a constraint violation fails the same way every time."
+      },
+      {
+        "text": "23505, the unique violation",
+        "correct": false,
+        "why": "Retrying a duplicate key gets the same duplicate key."
+      },
+      {
+        "text": "Only errors raised at COMMIT, not ones raised earlier in the transaction",
+        "correct": false,
+        "why": "40001 arrived at UPDATE under REPEATABLE READ and at COMMIT under SERIALIZABLE; both are retried."
+      }
+    ]
+  },
+  {
+    "id": "ex-tadn3r5n",
+    "version": 1,
+    "section": "retrying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `bump.py` put the `SELECT` of the price inside the function the loop calls again, rather than reading once before the loop?",
+    "hint": "What would a retry write?",
+    "choices": [
+      {
+        "text": "psycopg requires every statement to be inside a function",
+        "correct": false,
+        "why": "psycopg has no such rule."
+      },
+      {
+        "text": "So that a retry starts from the new price",
+        "correct": true,
+        "why": "Right: retrying only the write with the old price would be the lost update again."
+      },
+      {
+        "text": "Reading inside a transaction is faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "SERIALIZABLE forbids reads outside transactions, so the read had to move inside",
+        "correct": false,
+        "why": "A read outside would simply be its own one-statement transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm92sm6c",
+    "version": 1,
+    "section": "retrying",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two copies of `bump.py` made 500 raises each. By how many cents did product 1's price rise?",
+    "hint": "23303 minus 22303.",
+    "value": 1000,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-j0fvx3y0",
+    "version": 1,
+    "section": "retrying",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A checkout function charges the customer's card, then inserts the order, all inside one transaction wrapped in a retry loop. What goes wrong when the insert gets 40001?",
+    "hint": "What does a retry repeat?",
+    "choices": [
+      {
+        "text": "The retry fails again, since the error is permanent",
+        "correct": false,
+        "why": "40001 is the retryable kind; the order would very likely go in."
+      },
+      {
+        "text": "The database rolls back the card charge",
+        "correct": false,
+        "why": "The card charge happened outside the database, which cannot undo it."
+      },
+      {
+        "text": "Nothing: the loop handles it",
+        "correct": false,
+        "why": "The loop repeats everything inside it, including the side effect."
+      },
+      {
+        "text": "The card is charged twice",
+        "correct": true,
+        "why": "Right: side effects outside the database belong after the commit, never inside a retried transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xdm0gc2",
+    "version": 1,
+    "section": "retrying",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of one retry loop iteration in order, as `bump.py` does them.",
+    "hint": "The read is inside the transaction.",
+    "items": [
+      "BEGIN",
+      "SELECT the current price",
+      "UPDATE to the price plus one",
+      "COMMIT, or catch 40001 and roll back",
+      "Wait a random, doubling time and start again"
+    ],
+    "trap": "The wait comes after the rollback: a transaction left open while sleeping would hold its locks the whole time."
+  },
+  {
+    "id": "ex-j89m5y5t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about the three levels are true, according to this lesson's measurements? Choose all that apply.",
+    "hint": "Look at the cents added, not the rates.",
+    "choices": [
+      {
+        "text": "READ COMMITTED reported no failures and still lost raises",
+        "correct": true,
+        "why": "Right: 0 failed, 17,981 lost."
+      },
+      {
+        "text": "Under REPEATABLE READ every committed raise was kept",
+        "correct": true,
+        "why": "Right: 49,741 committed, 49,741 cents."
+      },
+      {
+        "text": "SERIALIZABLE with retries committed almost every transaction it attempted",
+        "correct": true,
+        "why": "Right: only 17 gave up after ten tries."
+      },
+      {
+        "text": "SERIALIZABLE prevents conflicts from happening",
+        "correct": false,
+        "why": "It detects them and fails a transaction; 20,781 retries were needed."
+      },
+      {
+        "text": "The transaction rate is the reliable number for comparing the levels",
+        "correct": false,
+        "why": "The lesson says the rates moved a lot between runs; the counts did not."
+      }
+    ]
+  }
+]

@@ -1,0 +1,512 @@
+[
+  {
+    "id": "ex-9fzjxy1h",
+    "version": 1,
+    "section": "index-only-scan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With only `orders_placed_at_idx`, why was `count(*)` an index-only scan and `sum(total_cents)` not?",
+    "hint": "Which columns does each query touch?",
+    "choices": [
+      {
+        "text": "sum() is not allowed in an index-only scan",
+        "correct": false,
+        "why": "Any aggregate is; the issue is that total_cents is not in the index."
+      },
+      {
+        "text": "total_cents is not in the index",
+        "correct": true,
+        "why": "Right: count(*) needed no column, sum needed one the index lacks."
+      },
+      {
+        "text": "The second query ran on a cold cache",
+        "correct": false,
+        "why": "It found all its pages in memory; the plan type was different."
+      },
+      {
+        "text": "count(*) is answered from pg_class.reltuples without reading the index",
+        "correct": false,
+        "why": "It read 299 index pages; reltuples is only an estimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzv2cjpz",
+    "version": 1,
+    "section": "index-only-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan says `Index Only Scan` with `Heap Fetches: 87062` out of 107,780 rows. How should you read it?",
+    "hint": "The name promises; the number reports.",
+    "choices": [
+      {
+        "text": "As an index-only scan working normally",
+        "correct": false,
+        "why": "Most rows went to the table, which is what the name says it avoids."
+      },
+      {
+        "text": "As an error: the index is corrupt",
+        "correct": false,
+        "why": "Nothing is corrupt; the visibility map was cleared by an update."
+      },
+      {
+        "text": "As mostly an ordinary index scan",
+        "correct": true,
+        "why": "Right: 87,265 page accesses against 299 when the map was clean."
+      },
+      {
+        "text": "As a sign the planner should have chosen a sequential scan",
+        "correct": false,
+        "why": "Maybe, but the first reading is that the visibility map is stale; a VACUUM brought it to 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkq8mh3t",
+    "version": 1,
+    "section": "index-only-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can an index-only scan not simply trust every index entry?",
+    "hint": "What is written in the row's header, not in the index?",
+    "choices": [
+      {
+        "text": "Index entries hold only part of each value",
+        "correct": false,
+        "why": "A B-tree entry holds the whole key; the issue is visibility."
+      },
+      {
+        "text": "The index cannot say if the row is visible to you",
+        "correct": true,
+        "why": "Right: an entry may point at a deleted or uncommitted row."
+      },
+      {
+        "text": "Index entries are only updated when VACUUM runs",
+        "correct": false,
+        "why": "Inserts and non-HOT updates add entries immediately."
+      },
+      {
+        "text": "The index is sorted, so it may return rows in the wrong order",
+        "correct": false,
+        "why": "Order is what an index gets right; visibility is what it cannot know."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x2e1tk7",
+    "version": 1,
+    "section": "visibility-map",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What sets a page's bit in the visibility map, and what clears it?",
+    "hint": "Two rules.",
+    "choices": [
+      {
+        "text": "VACUUM sets it; a row change clears it",
+        "correct": true,
+        "why": "Right: and that is why one UPDATE cost 87,062 heap fetches."
+      },
+      {
+        "text": "ANALYZE sets it; VACUUM clears it",
+        "correct": false,
+        "why": "VACUUM is what sets it; ANALYZE only samples."
+      },
+      {
+        "text": "Index builds set it; SELECTs clear it",
+        "correct": false,
+        "why": "Reading never clears it, and building an index does not set it."
+      },
+      {
+        "text": "A checkpoint sets it; a restart clears it",
+        "correct": false,
+        "why": "The map survives restarts; writes to rows clear it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pbsv504",
+    "version": 1,
+    "section": "visibility-map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after the UPDATE of 43,422 rows, `relallvisible` still showed 16,667 of 16,667. Why?",
+    "hint": "When is pg_class updated?",
+    "choices": [
+      {
+        "text": "Updates of status never touch the visibility map",
+        "correct": false,
+        "why": "The next scan showed 87,062 heap fetches: the map had changed."
+      },
+      {
+        "text": "The UPDATE was not committed yet",
+        "correct": false,
+        "why": "psql runs it in autocommit; it was committed."
+      },
+      {
+        "text": "pg_class holds the count from the last VACUUM",
+        "correct": true,
+        "why": "Right: after VACUUM it read 17,029 of 17,029."
+      },
+      {
+        "text": "The map only covers pages written by market.sql",
+        "correct": false,
+        "why": "It covers every page; VACUUM marked the new ones too."
+      }
+    ]
+  },
+  {
+    "id": "ex-zysympjz",
+    "version": 1,
+    "section": "visibility-map",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The UPDATE changed 43,422 rows and the next index-only scan made 87,062 heap fetches. Roughly how many index entries per updated row does that point to?",
+    "hint": "One per version.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "entries"
+  },
+  {
+    "id": "ex-ftaetzk7",
+    "version": 1,
+    "section": "visibility-map",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard's index-only scan over today's events is fast at 6 a.m. and slow by noon, with `Heap Fetches` climbing all morning. What is the likely cause and remedy?",
+    "hint": "Which pages are being written?",
+    "choices": [
+      {
+        "text": "The index is bloated; REINDEX it every hour",
+        "correct": false,
+        "why": "Heap Fetches count table visits, which a rebuilt index does not avoid."
+      },
+      {
+        "text": "Today's pages lose their bits; vacuum them sooner",
+        "correct": true,
+        "why": "Right: the query asks about exactly the pages being written, so autovacuum must keep up there."
+      },
+      {
+        "text": "Statistics are stale; run ANALYZE",
+        "correct": false,
+        "why": "ANALYZE does not set visibility bits."
+      },
+      {
+        "text": "The cache went cold; add memory",
+        "correct": false,
+        "why": "Heap Fetches count visits whether the page is in memory or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-az5xfp7r",
+    "version": 1,
+    "section": "include",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `CREATE INDEX … ON orders (customer_id, placed_at) INCLUDE (id, status, total_cents)`, what can the INCLUDE columns do?",
+    "hint": "They live only in the leaf entries.",
+    "choices": [
+      {
+        "text": "Be searched with = like the key",
+        "correct": false,
+        "why": "Only key columns can be searched."
+      },
+      {
+        "text": "Sort the results when no key is given",
+        "correct": false,
+        "why": "The tree is ordered by its key alone."
+      },
+      {
+        "text": "Be read, so the query needs no table",
+        "correct": true,
+        "why": "Right: they are there to be returned."
+      },
+      {
+        "text": "Enforce uniqueness together with the key",
+        "correct": false,
+        "why": "They never take part in uniqueness, which is one of their uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dmrhpgf",
+    "version": 1,
+    "section": "include",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first index, `(customer_id, placed_at) INCLUDE (status, total_cents)`, removed the Sort but still read the table. What was missing?",
+    "hint": "Read the SELECT list again.",
+    "choices": [
+      {
+        "text": "A VACUUM after building the index",
+        "correct": false,
+        "why": "The map was clean; the plan was not even an index-only scan."
+      },
+      {
+        "text": "placed_at DESC in the key",
+        "correct": false,
+        "why": "The scan ran backward and gave the order without it."
+      },
+      {
+        "text": "The id column",
+        "correct": true,
+        "why": "Right: the query returns id, and one missing column sends every row to the heap."
+      },
+      {
+        "text": "An ANALYZE so the planner trusted it",
+        "correct": false,
+        "why": "The planner used it; it just could not answer from it alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-2et86k95",
+    "version": 1,
+    "section": "include",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `placed_at` be a key column rather than in `INCLUDE` for the customer-orders query?",
+    "hint": "The query has ORDER BY placed_at DESC LIMIT 10.",
+    "choices": [
+      {
+        "text": "INCLUDE cannot hold timestamps",
+        "correct": false,
+        "why": "INCLUDE holds any type."
+      },
+      {
+        "text": "Only key columns put rows in order",
+        "correct": true,
+        "why": "Right: in INCLUDE the rows would come in no order and need a sort."
+      },
+      {
+        "text": "Key columns are cheaper to store",
+        "correct": false,
+        "why": "They are copied into upper levels too, so if anything they cost more."
+      },
+      {
+        "text": "placed_at is in the WHERE",
+        "correct": false,
+        "why": "It is in the ORDER BY; the WHERE is on customer_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-gz5v1a2h",
+    "version": 1,
+    "section": "include",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need `email` unique in `customers` and want `SELECT name FROM customers WHERE email = …` to be index-only. Which index fits?",
+    "hint": "Uniqueness of what?",
+    "choices": [
+      {
+        "text": "UNIQUE (email, name)",
+        "correct": false,
+        "why": "Only the pair would be unique, so two rows could share an email."
+      },
+      {
+        "text": "UNIQUE (email) INCLUDE (name)",
+        "correct": true,
+        "why": "Right: email stays unique and name is carried to be read."
+      },
+      {
+        "text": "A hash index on email with INCLUDE (name)",
+        "correct": false,
+        "why": "Hash indexes support neither UNIQUE nor INCLUDE."
+      },
+      {
+        "text": "Two indexes: UNIQUE (email) and one on name",
+        "correct": false,
+        "why": "An index on name does not help a lookup by email."
+      }
+    ]
+  },
+  {
+    "id": "ex-njgzxc6s",
+    "version": 1,
+    "section": "include",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Columns that a query only returns, and never searches or sorts on, go after the key in an ___ clause.",
+    "hint": "The keyword that comes after the parentheses.",
+    "blanks": [
+      {
+        "accept": [
+          "INCLUDE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j5364829",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the covering index, HOT updates of `orders` went from 49,051 of 49,119 to 0 of 51,946. Why?",
+    "hint": "What does place-order.sql update?",
+    "choices": [
+      {
+        "text": "The covering index made the pages fuller",
+        "correct": false,
+        "why": "An index lives in its own file; the table's pages did not change."
+      },
+      {
+        "text": "total_cents became an indexed column",
+        "correct": true,
+        "why": "Right: an update that changes an indexed value cannot be HOT."
+      },
+      {
+        "text": "pgbench ran with more clients the second time",
+        "correct": false,
+        "why": "Both runs used -c 8 -j 4 -T 15."
+      },
+      {
+        "text": "The statistics counters were not reset",
+        "correct": false,
+        "why": "They were reset before each run with pg_stat_reset_single_table_counters."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7nsn5td",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Throughput was 3275 transactions a second without the covering index and 3461 with it. What does the lesson conclude?",
+    "hint": "Compare a timing with a counter.",
+    "choices": [
+      {
+        "text": "That the covering index speeds up writes",
+        "correct": false,
+        "why": "Nothing in it can make a write cheaper; the gap is noise."
+      },
+      {
+        "text": "That indexes have no write cost on this machine",
+        "correct": false,
+        "why": "The HOT counter shows every update now writes five index entries."
+      },
+      {
+        "text": "That the run should be repeated until the numbers agree",
+        "correct": false,
+        "why": "Repeating helps a timing; the lesson relies on the counter instead."
+      },
+      {
+        "text": "That 15 s hides the cost, and the HOT counter shows it",
+        "correct": true,
+        "why": "Right: the timing is within noise; 0 HOT updates is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9sngbzx",
+    "version": 1,
+    "section": "the-price",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The covering index was 112 MB and `orders_customer_id_idx` 18 MB. About how many times larger is the covering index?",
+    "hint": "Divide.",
+    "value": 6,
+    "tolerance": 0.5,
+    "unit": "times"
+  },
+  {
+    "id": "ex-pe674kqm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the page counts of the December count query as this lesson met them.",
+    "hint": "Clean, dirty, vacuumed.",
+    "items": [
+      "299 pages, Heap Fetches 0",
+      "UPDATE of 43,422 shipped orders",
+      "87,265 page accesses, Heap Fetches 87062",
+      "VACUUM orders",
+      "419 pages, Heap Fetches 0"
+    ],
+    "trap": "The update comes between the clean scan and the dirty one."
+  },
+  {
+    "id": "ex-d8wj2hvr",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each plan line to what it tells you.",
+    "hint": "Lines from this lesson's plans.",
+    "pairs": [
+      {
+        "left": "`Index Only Scan`",
+        "right": "every column the query uses is in the index"
+      },
+      {
+        "left": "`Heap Fetches: 0`",
+        "right": "the visibility map vouched for every page"
+      },
+      {
+        "left": "`Index Scan Backward`",
+        "right": "rows come newest first, but the table is still read"
+      },
+      {
+        "left": "`Sort Key: placed_at DESC`",
+        "right": "the index did not deliver the order"
+      }
+    ],
+    "right_distractors": [
+      "the statistics are stale"
+    ]
+  },
+  {
+    "id": "ex-9kyejhmk",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which changes would you expect to make a covering index more expensive to keep? Choose all that apply.",
+    "hint": "Think of HOT and of size.",
+    "choices": [
+      {
+        "text": "Including a column the application updates after every insert",
+        "correct": true,
+        "why": "Right: that is total_cents, and it ended HOT updates."
+      },
+      {
+        "text": "Adding a wide text column to INCLUDE",
+        "correct": true,
+        "why": "Right: every included byte is copied into the index for every row."
+      },
+      {
+        "text": "Moving a rarely updated column from the key to INCLUDE",
+        "correct": false,
+        "why": "That shrinks the upper levels and changes nothing about HOT."
+      },
+      {
+        "text": "Running VACUUM more often",
+        "correct": false,
+        "why": "VACUUM keeps the map fresh; it does not add upkeep to the index."
+      }
+    ]
+  }
+]

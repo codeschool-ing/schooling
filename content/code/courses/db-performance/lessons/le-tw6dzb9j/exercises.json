@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-nthr3wtt",
+    "version": 1,
+    "section": "seq-scan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counting orders above 400 reais read all 16667 pages of `orders` and removed 1580119 rows to keep 419881. Why is that sequential scan the right plan?",
+    "hint": "Where are the matching rows?",
+    "choices": [
+      {
+        "text": "There is no index on `total_cents` at all, and that alone decides it",
+        "correct": false,
+        "why": "Even with one, nearly every page holds a match, so the table would still be read whole."
+      },
+      {
+        "text": "Nearly every page holds a match, so no smaller set of pages exists",
+        "correct": true,
+        "why": "Right: one order in five, about 120 to a page, prices at random."
+      },
+      {
+        "text": "Rows removed by a filter cost nothing",
+        "correct": false,
+        "why": "Each was read and checked; here that cost is simply unavoidable."
+      },
+      {
+        "text": "A sequential scan beats an index scan whatever the query",
+        "correct": false,
+        "why": "For id = 42 the index scan cost 8.45 against 36667."
+      }
+    ]
+  },
+  {
+    "id": "ex-442mnzv2",
+    "version": 1,
+    "section": "seq-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With parallel plans allowed, the same count ran in 93 ms instead of 238 ms, with two workers. Why not a third of 238?",
+    "hint": "What does Gather do, and what do the three share?",
+    "choices": [
+      {
+        "text": "Each of the three processes read the whole table",
+        "correct": false,
+        "why": "They split the pages; the three between them read each page once."
+      },
+      {
+        "text": "Only one worker was launched",
+        "correct": false,
+        "why": "`Workers Launched: 2`."
+      },
+      {
+        "text": "Workers cost to start and share one disk",
+        "correct": true,
+        "why": "Right: Gather starts them and collects their rows, and the three compete for disk and memory. The planner priced it at 27083, not a third of 41667."
+      },
+      {
+        "text": "Parallel scans bypass the ring of buffers and evict pages",
+        "correct": false,
+        "why": "Nothing in the plan suggests that, and it would not explain the ratio."
+      }
+    ]
+  },
+  {
+    "id": "ex-fh03ba99",
+    "version": 1,
+    "section": "seq-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the scan of `products` stay a single process, whatever the query?",
+    "hint": "Compare its size with one setting.",
+    "choices": [
+      {
+        "text": "Its 5 MB is under the 8 MB minimum",
+        "correct": true,
+        "why": "Right: `min_parallel_table_scan_size` is 8MB and the table is 5192 kB."
+      },
+      {
+        "text": "`max_parallel_workers_per_gather` is 0 by default on Ubuntu",
+        "correct": false,
+        "why": "It is 2; the orders scan launched two workers."
+      },
+      {
+        "text": "Its array column cannot be split between workers",
+        "correct": false,
+        "why": "Column types do not decide this; the table's size does."
+      },
+      {
+        "text": "It has a primary key",
+        "correct": false,
+        "why": "So does orders, which is scanned in parallel."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6zfzanp",
+    "version": 1,
+    "section": "index-scan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `correlation = 1` for `orders.placed_at` say?",
+    "hint": "Two orders: the values' and the rows' on disk.",
+    "choices": [
+      {
+        "text": "Every value of placed_at is distinct",
+        "correct": false,
+        "why": "That is n_distinct; correlation is about order."
+      },
+      {
+        "text": "placed_at is indexed",
+        "correct": false,
+        "why": "Correlation is collected for columns with or without an index."
+      },
+      {
+        "text": "The values are in the same order as the rows on disk",
+        "correct": true,
+        "why": "Right: market.sql wrote orders in the order they were placed."
+      },
+      {
+        "text": "placed_at is correlated with customer_id",
+        "correct": false,
+        "why": "It is a property of one column against the table's physical order."
+      }
+    ]
+  },
+  {
+    "id": "ex-aa61ssg7",
+    "version": 1,
+    "section": "index-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A day of orders (2801 rows) took 35 pages through the index on `placed_at`; a hundred customers' orders (991 rows), forced through the index on `customer_id`, took 994. What explains it?",
+    "hint": "Where do the rows of each sit?",
+    "choices": [
+      {
+        "text": "The customer_id index is larger and deeper than the other",
+        "correct": false,
+        "why": "The index pages were a handful in both; the difference is table pages."
+      },
+      {
+        "text": "The day's rows share pages; the customers' do not",
+        "correct": true,
+        "why": "Right: correlation 1 against 0.006."
+      },
+      {
+        "text": "The second query was run cold",
+        "correct": false,
+        "why": "Cold or warm changes hits into reads, not the number of pages touched."
+      },
+      {
+        "text": "Bitmap scans were off, which doubles the pages a scan touches",
+        "correct": false,
+        "why": "The bitmap scan of the same rows touched 971 pages, nearly the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-40cx8rz9",
+    "version": 1,
+    "section": "index-scan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `logins` table gets one row per sign-in, appended as they happen, and has indexes on `at` and on `user_id`. Which query is the index scan's natural case?",
+    "hint": "Which column follows the order rows were written in?",
+    "choices": [
+      {
+        "text": "The last hour's logins, by `at`",
+        "correct": true,
+        "why": "Right: rows appended in time order give `at` a correlation near 1, so an hour's rows sit on a few pages."
+      },
+      {
+        "text": "Every login of 5000 users chosen at random, by `user_id`",
+        "correct": false,
+        "why": "Those rows are spread over the whole table; a bitmap or a sequential scan suits it."
+      },
+      {
+        "text": "A count of all logins ever, using the `at` index",
+        "correct": false,
+        "why": "Every row is wanted, so the whole table is read in order."
+      },
+      {
+        "text": "Last year's logins, about 60% of the table",
+        "correct": false,
+        "why": "Even correlated, more than half the table went to a sequential scan for orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxct7acw",
+    "version": 1,
+    "section": "bitmap-scan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `Bitmap Index Scan` node hand to the `Bitmap Heap Scan` above it?",
+    "hint": "Its width is 0.",
+    "choices": [
+      {
+        "text": "The rows, sorted by the index key",
+        "correct": false,
+        "why": "It hands up no rows; that is why its width is 0."
+      },
+      {
+        "text": "A map of the table pages to visit",
+        "correct": true,
+        "why": "Right: a mark per page, and which rows on it while memory allows."
+      },
+      {
+        "text": "The index pages, so the heap scan can reread them in order",
+        "correct": false,
+        "why": "The heap scan reads the table, not the index."
+      },
+      {
+        "text": "A count of the matching rows",
+        "correct": false,
+        "why": "A count is a number; the heap scan needs to know where."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn2v3mtp",
+    "version": 1,
+    "section": "bitmap-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the hundred customers, the bitmap scan touched 971 pages and the forced index scan 994, yet the planner priced them 3450.95 against 4237.98. Where does the bitmap's advantage come from?",
+    "hint": "Not from the count.",
+    "choices": [
+      {
+        "text": "It skips the index entirely",
+        "correct": false,
+        "why": "Its first node reads the index."
+      },
+      {
+        "text": "It caches the pages it read",
+        "correct": false,
+        "why": "Both scans read through the same shared buffers."
+      },
+      {
+        "text": "Reading pages in ascending order, each once",
+        "correct": true,
+        "why": "Right: pages read front to back are charged closer to sequential reads."
+      },
+      {
+        "text": "It returns rows in index order, which the Aggregate needs",
+        "correct": false,
+        "why": "It returns them in table order, and a sum needs no order."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbkzw5ny",
+    "version": 1,
+    "section": "bitmap-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bitmap heap scan shows `Heap Blocks: exact=635 lossy=16032` and `Rows Removed by Index Recheck: 1729287`. What happened?",
+    "hint": "Which memory budget does a bitmap draw on?",
+    "choices": [
+      {
+        "text": "The index is corrupt and the rows had to be checked again",
+        "correct": false,
+        "why": "Recheck is normal behaviour for lossy pages, not a sign of damage."
+      },
+      {
+        "text": "The statistics were stale, so the estimate missed",
+        "correct": false,
+        "why": "The estimate, 203777, was close to the 200378 found."
+      },
+      {
+        "text": "The bitmap outgrew `work_mem`",
+        "correct": true,
+        "why": "Right: with 64kB, 16032 pages kept one bit each, and every row on them was checked again."
+      },
+      {
+        "text": "Other sessions changed the rows during the scan",
+        "correct": false,
+        "why": "Nothing else ran; the recheck comes from the lossy pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-pce7wqek",
+    "version": 1,
+    "section": "bitmap-scan",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the bitmap does not fit in `work_mem`, `Heap Blocks` shows pages that are ___ as well as exact.",
+    "hint": "The word on the plan line.",
+    "blanks": [
+      {
+        "accept": [
+          "lossy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jnq1w9k0",
+    "version": 1,
+    "section": "bitmap-scan",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each plan line to what it tells you.",
+    "hint": "All four appeared in this lesson.",
+    "pairs": [
+      {
+        "left": "`Heap Blocks: exact=16667`",
+        "right": "the bitmap scan visited every page of the table"
+      },
+      {
+        "left": "`Rows Removed by Index Recheck`",
+        "right": "rows on lossy pages that failed the condition"
+      },
+      {
+        "left": "`Workers Launched: 2`",
+        "right": "two helper processes shared the scan"
+      },
+      {
+        "left": "`cost=10000000000.00..`",
+        "right": "the path is switched off and was chosen anyway"
+      }
+    ],
+    "right_distractors": [
+      "the index is larger than the table"
+    ]
+  },
+  {
+    "id": "ex-qndjxr4h",
+    "version": 1,
+    "section": "selectivity",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these `orders` queries by the plan the planner chose for them, from the most index-driven to the full table: index scan first, sequential scan last.",
+    "hint": "Day, customers, year.",
+    "items": [
+      "`id = 42`",
+      "a hundred values of `customer_id` (bitmap)",
+      "twenty thousand values of `customer_id` (parallel bitmap)",
+      "one year of `placed_at` (parallel sequential)"
+    ],
+    "trap": "Ordering by share of rows alone would put a month of placed_at, 4.5%, after the customers, yet it is an index scan."
+  },
+  {
+    "id": "ex-f8ec9ky4",
+    "version": 1,
+    "section": "selectivity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A month of `placed_at` (4.5% of `orders`) gets an index scan, and a hundred customers (0.05%) get a bitmap scan. Why?",
+    "hint": "It is not the share.",
+    "choices": [
+      {
+        "text": "There is a fixed threshold, and only customer_id crosses it",
+        "correct": false,
+        "why": "No fixed threshold exists; the smaller share got the less index-driven plan."
+      },
+      {
+        "text": "Correlation: the month's rows share pages",
+        "correct": true,
+        "why": "Right: about 750 consecutive pages for the month, a page per row for the customers."
+      },
+      {
+        "text": "The customer_id index is newer",
+        "correct": false,
+        "why": "Both were built by market.sql at the same moment."
+      },
+      {
+        "text": "Dates are always cheaper to compare than integers",
+        "correct": false,
+        "why": "Comparison costs are one operator each; the pages decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss8pwtct",
+    "version": 1,
+    "section": "selectivity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server moves from spinning disks to fast solid-state storage, and the team lowers `random_page_cost` from 4 to 1.1 in the configuration after measuring. What happens to the crossing points of this lesson?",
+    "hint": "Which plan pays random_page_cost?",
+    "choices": [
+      {
+        "text": "Nothing: the setting only affects bitmap scans",
+        "correct": false,
+        "why": "It prices every page fetched out of order, which is mostly index scans."
+      },
+      {
+        "text": "They move towards sequential scans, which become cheaper",
+        "correct": false,
+        "why": "Sequential reads keep seq_page_cost 1; only the random ones got cheaper."
+      },
+      {
+        "text": "They move towards the index",
+        "correct": true,
+        "why": "Right: random reads now cost nearly as much as sequential ones in the planner's eyes."
+      },
+      {
+        "text": "They vanish: every query uses an index",
+        "correct": false,
+        "why": "A query wanting most of a table still reads it whole most cheaply."
+      }
+    ]
+  },
+  {
+    "id": "ex-87bfz6dx",
+    "version": 1,
+    "section": "selectivity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner estimated 90336 rows for a month of `placed_at` out of 2000000. What share of the table is that, in percent, to one decimal?",
+    "hint": "Divide, then multiply by 100.",
+    "value": 4.5,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-axb1a07n",
+    "version": 1,
+    "section": "forcing-to-compare",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `SET enable_seqscan = off` really do?",
+    "hint": "Look at the cost on products.",
+    "choices": [
+      {
+        "text": "Adds a large penalty to their cost",
+        "correct": true,
+        "why": "Right: 10000000000.00, and a sequential scan is still chosen when nothing else can run the query."
+      },
+      {
+        "text": "Forbids sequential scans: a query that needs one fails",
+        "correct": false,
+        "why": "The LIKE '%lamp%' query got a sequential scan anyway."
+      },
+      {
+        "text": "Turns sequential scans off for the whole server",
+        "correct": false,
+        "why": "SET changes one session; the server's configuration is ALTER SYSTEM."
+      },
+      {
+        "text": "Makes the planner rebuild the statistics",
+        "correct": false,
+        "why": "Statistics come from ANALYZE; this changes prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-q47jjc3p",
+    "version": 1,
+    "section": "forcing-to-compare",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With sequential scans off, the year's sum used a parallel index scan touching 14932 pages in 145 ms; the chosen sequential scan touched 16667 in 112 ms. What do you conclude?",
+    "hint": "Fewer pages, more time.",
+    "choices": [
+      {
+        "text": "The index plan is better because it reads fewer pages",
+        "correct": false,
+        "why": "It took longer; following a million entries one by one costs more than reading in order."
+      },
+      {
+        "text": "The planner chose right, and you now know by how much",
+        "correct": true,
+        "why": "Right: 112 against 145, both warm, and its costs said the same."
+      },
+      {
+        "text": "Set it off in the configuration so the index is used",
+        "correct": false,
+        "why": "That would make this query slower and every other big scan too."
+      },
+      {
+        "text": "The first run was cold, so nothing can be concluded",
+        "correct": false,
+        "why": "Both printed runs were second runs, warm."
+      }
+    ]
+  },
+  {
+    "id": "ex-08xrh7yz",
+    "version": 1,
+    "section": "forcing-to-compare",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague puts `SET enable_seqscan = off` into the application's connection setup because one report got faster. Which consequences follow? Choose all that apply.",
+    "hint": "The setting does not know which query you meant.",
+    "choices": [
+      {
+        "text": "Every query on those connections loses its sequential scans, including the right ones",
+        "correct": true,
+        "why": "Right: it applies to everything."
+      },
+      {
+        "text": "The wrong input that misled the planner stays in place",
+        "correct": true,
+        "why": "Right: it hides the reason."
+      },
+      {
+        "text": "As the data changes, the forced plan can become the slow one",
+        "correct": true,
+        "why": "Right: it does not stay true."
+      },
+      {
+        "text": "Queries that need a sequential scan start failing with an error",
+        "correct": false,
+        "why": "A penalty, not a ban: they still run, with a cost in the billions."
+      },
+      {
+        "text": "The server's other databases are affected too",
+        "correct": false,
+        "why": "A SET reaches only the session that ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr9zf1p8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan shows `Bitmap Heap Scan … rows=15` estimated, `actual … rows=190000`, `Heap Blocks: exact=16667`, on a table of 16667 pages. What is the most useful next step?",
+    "hint": "Which input was wrong?",
+    "choices": [
+      {
+        "text": "Raise work_mem",
+        "correct": false,
+        "why": "No page went lossy; memory was not the problem."
+      },
+      {
+        "text": "Add another index on the same column",
+        "correct": false,
+        "why": "An index existed and was used; more of them changes nothing."
+      },
+      {
+        "text": "Turn bitmap scans off in the server's configuration",
+        "correct": false,
+        "why": "That forces a plan everywhere and leaves the wrong estimate in place."
+      },
+      {
+        "text": "Find why it expected 15 rows",
+        "correct": true,
+        "why": "Right: the access path was chosen for 15 rows and got 190000; the estimate is the fault, which lesson 6 takes up."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce5jxv3k",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For twenty thousand customers, the bitmap scan took 104 ms and the sequential scan the planner fell back to took 161 ms. How many times slower was the runner-up, to one decimal?",
+    "hint": "161 divided by 104.",
+    "value": 1.5,
+    "tolerance": 0.1,
+    "unit": "times"
+  }
+]

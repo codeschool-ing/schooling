@@ -1,0 +1,390 @@
+{
+  "ex-wdc8j8zm": {
+    "prompt": "Em `READ COMMITTED`, quando é tirada a visão dos dados que uma consulta enxerga?",
+    "hint": "A frase única do nível.",
+    "choices": [
+      {
+        "text": "Quando a transação começa",
+        "why": "Isso é o REPEATABLE READ, mais exatamente o primeiro comando dele."
+      },
+      {
+        "text": "Quando cada comando começa",
+        "why": "Isso: dois SELECT numa transação podem ver valores diferentes se alguém confirmou entre eles."
+      },
+      {
+        "text": "Quando a linha é travada pela primeira vez pela transação, e nunca mais depois",
+        "why": "Leituras simples não pegam travas de linha; a visão é por comando."
+      },
+      {
+        "text": "No COMMIT",
+        "why": "Uma visão tirada no commit seria tarde demais para ler algo com ela."
+      }
+    ]
+  },
+  "ex-c3y25yhh": {
+    "prompt": "A janela B esperou 5881 ms pela trava de linha da janela A e ainda assim sobrescreveu o aumento de A. Por que a espera não ajudou?",
+    "hint": "De onde veio o 9390?",
+    "choices": [
+      {
+        "text": "A janela A ainda não tinha confirmado quando B escreveu",
+        "why": "A escrita de B só passou depois que A confirmou."
+      },
+      {
+        "text": "READ COMMITTED não pega travas de linha",
+        "why": "Pega; foi por isso que B esperou."
+      },
+      {
+        "text": "O valor era um literal calculado de uma leitura feita antes da espera",
+        "why": "Isso: B escreveu 9390 a partir do próprio SELECT de 9290; reler a linha depois da espera não muda uma constante."
+      },
+      {
+        "text": "O psql guardou em cache o resultado anterior",
+        "why": "O psql não guarda nada em cache; a lógica da aplicação fez isso."
+      }
+    ]
+  },
+  "ex-17ahjqkf": {
+    "prompt": "Qual destes `UPDATE` é seguro contra a atualização perdida em `READ COMMITTED`, sem nenhuma outra mudança?",
+    "hint": "Onde o novo valor é calculado?",
+    "choices": [
+      {
+        "text": "`UPDATE products SET price_cents = 9390 WHERE id = 1` depois de ler 9290",
+        "why": "Essa é a atualização perdida da aula: o valor vem de uma leitura velha."
+      },
+      {
+        "text": "`SET price_cents = price_cents + 100`",
+        "why": "Isso: a conta é feita na linha que o UPDATE encontra depois de qualquer espera, então os dois aumentos ficaram, 9590."
+      },
+      {
+        "text": "`SET price_cents = 9390` dentro de `BEGIN … COMMIT`",
+        "why": "A atualização perdida da aula estava dentro de BEGIN … COMMIT; uma transação sozinha não protege nada que leu."
+      },
+      {
+        "text": "Qualquer UPDATE que cite a linha pela chave primária",
+        "why": "Todos os updates da aula usaram id = 1, inclusive o perdido."
+      }
+    ]
+  },
+  "ex-ehgh6b4f": {
+    "prompt": "Na execução do pgbench em `READ COMMITTED`, quantos aumentos de preço se perderam?",
+    "hint": "Transações confirmadas menos centavos somados.",
+    "unit": "aumentos"
+  },
+  "ex-y3dsf551": {
+    "prompt": "Um serviço de estoque lê `stock`, confere no código da aplicação que é maior que zero e escreve `stock - 1` como número calculado. Em `READ COMMITTED`, qual é a menor mudança que o torna seguro?",
+    "hint": "A checagem precisa do valor, então ele tem de ser lido.",
+    "choices": [
+      {
+        "text": "Subir o nível de isolamento do banco inteiro para SERIALIZABLE",
+        "why": "Pegaria, mas toda transação passaria a precisar de novas tentativas; não é a menor mudança."
+      },
+      {
+        "text": "Ler o estoque com `SELECT … FOR UPDATE`",
+        "why": "Isso: o segundo leitor espera antes de ler e então vê a mudança do primeiro, como as janelas A e B com 9690."
+      },
+      {
+        "text": "Rodar a leitura duas vezes e comparar",
+        "why": "As duas leituras podem acontecer antes do outro escritor confirmar."
+      },
+      {
+        "text": "Criar um índice em stock",
+        "why": "Um índice muda como as linhas são achadas, não quem vê as mudanças de quem."
+      }
+    ]
+  },
+  "ex-r3sa2fd1": {
+    "prompt": "Que erro uma transação `REPEATABLE READ` recebe quando atualiza uma linha que outra pessoa mudou depois do snapshot dela?",
+    "hint": "SQLSTATE 40001.",
+    "choices": [
+      {
+        "text": "`deadlock detected`",
+        "why": "Isso é o 40P01, duas transações esperando uma pela outra."
+      },
+      {
+        "text": "`could not obtain lock on row`",
+        "why": "Esse vem do NOWAIT, aula 12."
+      },
+      {
+        "text": "`could not serialize access due to concurrent update`",
+        "why": "Isso: a transação é recusada em vez de sobrescrever uma mudança que nunca viu."
+      },
+      {
+        "text": "`canceling statement due to lock timeout`",
+        "why": "Esse precisa de lock_timeout e é sobre espera, não snapshots."
+      }
+    ]
+  },
+  "ex-y98vj0ck": {
+    "prompt": "A transação `REPEATABLE READ` da janela A leu 22090 duas vezes, embora a janela B tivesse subido o preço para 22190 no meio. Por quê?",
+    "hint": "Quando o snapshot de A foi tirado?",
+    "choices": [
+      {
+        "text": "A janela B não tinha confirmado",
+        "why": "O update de B rodou fora de transação e confirmou na hora."
+      },
+      {
+        "text": "A leu de uma cópia em cache no psql",
+        "why": "Cada SELECT foi ao servidor; o servidor respondeu a partir do snapshot de A."
+      },
+      {
+        "text": "A mudança de B foi desfeita",
+        "why": "Ela ficou: o UPDATE da própria A falhou por causa dela."
+      },
+      {
+        "text": "O snapshot dela foi tirado na primeira consulta",
+        "why": "Isso: todo comando da transação lê desse único snapshot."
+      }
+    ]
+  },
+  "ex-8e6x1s9a": {
+    "prompt": "Em `REPEATABLE READ`, 28.848 transações do pgbench falharam e os centavos somados igualaram as confirmadas, 49.741. O que isso mostra?",
+    "hint": "Compare com read committed.",
+    "choices": [
+      {
+        "text": "Nenhum aumento se perdeu; os perdedores foram recusados",
+        "why": "Isso: uma resposta errada silenciosa virou uma falha barulhenta, que uma nova tentativa pode consertar."
+      },
+      {
+        "text": "As transações com falha foram repetidas automaticamente pelo servidor, então nada se perdeu",
+        "why": "O servidor nunca repete; o pgbench rodou com uma tentativa cada."
+      },
+      {
+        "text": "REPEATABLE READ é mais lento que READ COMMITTED",
+        "why": "Velocidade não é o que as duas contagens mostram, e as taxas variaram muito entre execuções."
+      },
+      {
+        "text": "Um terço dos preços não mudou",
+        "why": "Os dez preços mudaram; um terço das tentativas foi recusado."
+      }
+    ]
+  },
+  "ex-xx37e29s": {
+    "prompt": "Ler a mesma linha duas vezes numa transação e receber dois valores diferentes se chama, em inglês, non-___ read.",
+    "hint": "O nome do nível que a impede, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "repeatable"
+        ]
+      }
+    ]
+  },
+  "ex-hb2q0a27": {
+    "prompt": "O que o `SERIALIZABLE` promete sobre transações que rodam ao mesmo tempo?",
+    "hint": "Compare com rodá-las uma por vez.",
+    "choices": [
+      {
+        "text": "Que elas nunca rodam ao mesmo tempo",
+        "why": "Elas rodam ao mesmo tempo; é isso que torna o nível útil."
+      },
+      {
+        "text": "Um resultado que alguma ordem, uma por vez, produziria",
+        "why": "Isso: e quando não consegue cumprir a promessa, faz uma delas falhar com 40001."
+      },
+      {
+        "text": "Que cada uma vê toda mudança que as outras confirmam assim que confirmam",
+        "why": "Isso está mais perto do READ COMMITTED; o SERIALIZABLE lê de um snapshot."
+      },
+      {
+        "text": "Que esperam as travas de linha umas das outras em vez de falhar",
+        "why": "Ele falha em vez de sair esperando, como o 40001 mostrou."
+      }
+    ]
+  },
+  "ex-z8j4gv4t": {
+    "prompt": "Por que o `REPEATABLE READ` deixou entrar os dois pedidos pendentes do cliente 7?",
+    "hint": "Alguma transação escreveu uma linha que a outra escreveu?",
+    "choices": [
+      {
+        "text": "A consulta de contagem não usou índice",
+        "why": "Índices mudam velocidade, não o que um snapshot mostra."
+      },
+      {
+        "text": "A janela B confirmou antes da janela A",
+        "why": "A confirmou primeiro, e a ordem não importou."
+      },
+      {
+        "text": "Cada uma inseriu uma linha nova, então nada foi sobrescrito",
+        "why": "Isso: o REPEATABLE READ se recusa a sobrescrever uma linha alterada; o write skew escreve linhas diferentes."
+      },
+      {
+        "text": "Pedidos pendentes não são cobertos pelo isolamento, porque status é uma coluna de texto",
+        "why": "O isolamento vale para toda coluna de toda tabela."
+      }
+    ]
+  },
+  "ex-68r8vex4": {
+    "prompt": "Um hospital exige pelo menos um médico de plantão. Dois médicos, cada um numa transação `REPEATABLE READ`, contam os médicos de plantão, veem dois, e cada um põe a própria linha como fora de plantão. O que acontece, e o que teria impedido?",
+    "hint": "Cada um atualiza uma linha diferente.",
+    "choices": [
+      {
+        "text": "Um recebe 40001 em REPEATABLE READ, então a regra se mantém",
+        "why": "Eles atualizam linhas diferentes, então o REPEATABLE READ não tem o que recusar."
+      },
+      {
+        "text": "Entram em deadlock, e o servidor cancela um",
+        "why": "Nenhum espera pelo outro: nenhuma linha é desejada pelos dois."
+      },
+      {
+        "text": "Os dois confirmam e ninguém fica de plantão; SERIALIZABLE recusaria um",
+        "why": "Isso: é o write skew da aula com updates em vez de inserts."
+      },
+      {
+        "text": "Nada dá errado, já que os dois leram a mesma contagem",
+        "why": "Ler a mesma contagem velha é exatamente o problema."
+      }
+    ]
+  },
+  "ex-vsz5b7rs": {
+    "prompt": "Para a regra de um pedido pendente, o que a aula sugere em vez de depender do `SERIALIZABLE`?",
+    "hint": "Faça o esquema impor a regra.",
+    "choices": [
+      {
+        "text": "Um índice único parcial em `customer_id` onde `status = 'pending'`",
+        "why": "Isso: o segundo insert falha com violação de unicidade em qualquer nível de isolamento."
+      },
+      {
+        "text": "Uma trava de tabela em orders a cada checkout",
+        "why": "Funcionaria parando todos os outros pedidos da loja enquanto um é feito."
+      },
+      {
+        "text": "Um deadlock_timeout maior",
+        "why": "Não há deadlock aqui para cronometrar."
+      },
+      {
+        "text": "Uma trava consultiva por cliente",
+        "why": "Pode funcionar se todo caminho do código lembrar dela; o índice não pode ser esquecido."
+      }
+    ]
+  },
+  "ex-bd98k54b": {
+    "prompt": "Ligue cada nível ao comportamento dele quando duas transações disputam o mesmo preço.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "READ COMMITTED",
+        "right": "as duas confirmam e um aumento se perde"
+      },
+      {
+        "left": "REPEATABLE READ, uma tentativa",
+        "right": "o perdedor falha com 40001"
+      },
+      {
+        "left": "SERIALIZABLE, dez tentativas",
+        "right": "o perdedor roda de novo e os dois aumentos ficam"
+      }
+    ],
+    "right_distractors": [
+      "as duas esperam para sempre"
+    ]
+  },
+  "ex-x67w28hj": {
+    "prompt": "Que códigos SQLSTATE a aula diz que vale repetir?",
+    "hint": "Dois.",
+    "choices": [
+      {
+        "text": "40001 e 40P01",
+        "why": "Isso: uma falha de serialização e um deadlock querem dizer que a transação perdeu uma corrida e foi desfeita inteira."
+      },
+      {
+        "text": "Todo erro que o servidor devolve",
+        "why": "Um erro de sintaxe ou de constraint falha igual toda vez."
+      },
+      {
+        "text": "23505, a violação de unicidade",
+        "why": "Repetir uma chave duplicada dá a mesma chave duplicada."
+      },
+      {
+        "text": "Só erros levantados no COMMIT, não os levantados antes na transação",
+        "why": "O 40001 chegou no UPDATE em REPEATABLE READ e no COMMIT em SERIALIZABLE; os dois se repetem."
+      }
+    ]
+  },
+  "ex-tadn3r5n": {
+    "prompt": "Por que o `bump.py` põe o `SELECT` do preço dentro da função que o laço chama de novo, em vez de ler uma vez antes do laço?",
+    "hint": "O que uma nova tentativa escreveria?",
+    "choices": [
+      {
+        "text": "O psycopg exige que todo comando esteja numa função",
+        "why": "O psycopg não tem essa regra."
+      },
+      {
+        "text": "Para que uma nova tentativa parta do preço novo",
+        "why": "Isso: repetir só a escrita com o preço velho seria a atualização perdida de novo."
+      },
+      {
+        "text": "Ler dentro de uma transação é mais rápido",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "O SERIALIZABLE proíbe leituras fora de transações, então a leitura teve de ir para dentro",
+        "why": "Uma leitura fora seria só uma transação de um comando."
+      }
+    ]
+  },
+  "ex-gm92sm6c": {
+    "prompt": "Duas cópias do `bump.py` fizeram 500 aumentos cada. Quantos centavos o preço do produto 1 subiu?",
+    "hint": "23303 menos 22303.",
+    "unit": "centavos"
+  },
+  "ex-j0fvx3y0": {
+    "prompt": "Uma função de checkout cobra o cartão do cliente e depois insere o pedido, tudo numa transação envolta num laço de novas tentativas. O que dá errado quando o insert recebe 40001?",
+    "hint": "O que uma nova tentativa repete?",
+    "choices": [
+      {
+        "text": "A nova tentativa falha de novo, já que o erro é permanente",
+        "why": "O 40001 é do tipo que se repete; o pedido muito provavelmente entraria."
+      },
+      {
+        "text": "O banco desfaz a cobrança do cartão",
+        "why": "A cobrança aconteceu fora do banco, que não pode desfazê-la."
+      },
+      {
+        "text": "Nada: o laço cuida disso",
+        "why": "O laço repete tudo o que está dentro dele, inclusive o efeito externo."
+      },
+      {
+        "text": "O cartão é cobrado duas vezes",
+        "why": "Isso: efeitos fora do banco ficam depois do commit, nunca dentro de uma transação repetida."
+      }
+    ]
+  },
+  "ex-7xdm0gc2": {
+    "prompt": "Ponha em ordem os passos de uma iteração do laço, como o `bump.py` os faz.",
+    "hint": "A leitura está dentro da transação.",
+    "items": [
+      "BEGIN",
+      "SELECT do preço atual",
+      "UPDATE para o preço mais um",
+      "COMMIT, ou pegar o 40001 e desfazer",
+      "Esperar um tempo aleatório que dobra e recomeçar"
+    ],
+    "trap": "A espera vem depois do rollback: uma transação deixada aberta durante a espera seguraria as travas o tempo todo."
+  },
+  "ex-j89m5y5t": {
+    "prompt": "Quais afirmações sobre os três níveis são verdadeiras, segundo as medições desta aula? Marque todas as que se aplicam.",
+    "hint": "Olhe os centavos somados, não as taxas.",
+    "choices": [
+      {
+        "text": "READ COMMITTED não relatou falhas e ainda assim perdeu aumentos",
+        "why": "Certo: 0 com falha, 17.981 perdidos."
+      },
+      {
+        "text": "Em REPEATABLE READ todo aumento confirmado foi mantido",
+        "why": "Certo: 49.741 confirmadas, 49.741 centavos."
+      },
+      {
+        "text": "SERIALIZABLE com novas tentativas confirmou quase toda transação que tentou",
+        "why": "Certo: só 17 desistiram depois de dez tentativas."
+      },
+      {
+        "text": "SERIALIZABLE impede que conflitos aconteçam",
+        "why": "Ele os detecta e faz uma transação falhar; foram precisas 20.781 novas tentativas."
+      },
+      {
+        "text": "A taxa de transações é o número confiável para comparar os níveis",
+        "why": "A aula diz que as taxas variaram muito entre execuções; as contagens não."
+      }
+    ]
+  }
+}

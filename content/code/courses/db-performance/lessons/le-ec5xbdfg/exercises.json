@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-bwfxakr3",
+    "version": 1,
+    "section": "a-replica",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `-R` option of `pg_basebackup` add to the copy?",
+    "hint": "It is what turns a copy into a replica.",
+    "choices": [
+      {
+        "text": "`standby.signal` and `primary_conninfo`",
+        "correct": true,
+        "why": "Right: the server starts in recovery, stays there, and knows its primary."
+      },
+      {
+        "text": "The WAL that was written while the backup was running",
+        "correct": false,
+        "why": "That is `-X stream`."
+      },
+      {
+        "text": "An immediate checkpoint on the primary before copying",
+        "correct": false,
+        "why": "That is `-c fast`."
+      },
+      {
+        "text": "Read-only permissions on every table in the copy",
+        "correct": false,
+        "why": "A standby is read-only because it is in recovery, not because of permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-822941kc",
+    "version": 1,
+    "section": "a-replica",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the replica, `UPDATE orders SET status = 'cancelled' WHERE id = 1` answered with an error. Which?",
+    "hint": "Every transaction on a standby has one property.",
+    "choices": [
+      {
+        "text": "`ERROR: permission denied for table orders on standby server`",
+        "correct": false,
+        "why": "The role is the same as on the primary; permissions are not the reason."
+      },
+      {
+        "text": "`cannot execute UPDATE in a read-only transaction`",
+        "correct": true,
+        "why": "Right: every transaction on a standby is read-only."
+      },
+      {
+        "text": "`relation \"orders\" does not exist`",
+        "correct": false,
+        "why": "The replica has every table; the count of two million worked."
+      },
+      {
+        "text": "`cannot execute UPDATE: the primary server is not reachable`",
+        "correct": false,
+        "why": "A replica does not forward writes to the primary at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ar0pe2dk",
+    "version": 1,
+    "section": "a-replica",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lesson's replica copied `market_base` and `postgres` as well as `market`. Why could it not copy `market` alone?",
+    "hint": "What does the WAL describe?",
+    "choices": [
+      {
+        "text": "Because `pg_basebackup` has no option to name one database, so it copies them all",
+        "correct": false,
+        "why": "True as far as it goes, but the reason is what the WAL is."
+      },
+      {
+        "text": "Because the other databases were in use",
+        "correct": false,
+        "why": "Use has nothing to do with it; an idle database is copied too."
+      },
+      {
+        "text": "Physical replication replays one cluster's WAL, which covers all its databases",
+        "correct": true,
+        "why": "Right: a physical replica copies a whole cluster, never one database; db-reliability lesson 14's logical replication is selective."
+      },
+      {
+        "text": "Because `market` depends on `market_base` as its template",
+        "correct": false,
+        "why": "A template is only read when a database is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-tw4867cn",
+    "version": 1,
+    "section": "a-replica",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an asynchronous replica not slow down the primary's commits?",
+    "hint": "When does the client hear that its commit succeeded?",
+    "choices": [
+      {
+        "text": "The replica only reads the new WAL once an hour, during the night",
+        "correct": false,
+        "why": "It streams continuously; lag was under a millisecond."
+      },
+      {
+        "text": "Replication goes through a separate disk with its own queue",
+        "correct": false,
+        "why": "Disks are not what decides it; waiting is."
+      },
+      {
+        "text": "The replica writes its own WAL in parallel",
+        "correct": false,
+        "why": "It replays the primary's; the client does not wait for it either way."
+      },
+      {
+        "text": "Nobody waits for the copy before being told it worked",
+        "correct": true,
+        "why": "Right: that is also why the replica can be behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-q169xpz0",
+    "version": 1,
+    "section": "a-replica",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps that built the lesson's replica in order.",
+    "hint": "An empty cluster first, then its data replaced.",
+    "items": [
+      "`sudo pg_createcluster 16 replica --port 5433`",
+      "empty `/var/lib/postgresql/16/replica`",
+      "`pg_basebackup -D … -R -X stream -c fast`",
+      "`sudo systemctl start postgresql@16-replica`"
+    ],
+    "trap": "Starting the cluster before the copy starts an empty primary on port 5433, not a replica."
+  },
+  {
+    "id": "ex-9ypffka5",
+    "version": 1,
+    "section": "lag",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lag that has come apart from the others with what it points at.",
+    "hint": "The section reads them in order of the steps.",
+    "pairs": [
+      {
+        "left": "a large `write_lag`",
+        "right": "the network"
+      },
+      {
+        "left": "`flush_lag` well above `write_lag`",
+        "right": "the replica's disk"
+      },
+      {
+        "left": "`replay_lag` well above `flush_lag`",
+        "right": "the single replay process"
+      }
+    ],
+    "right_distractors": [
+      "the primary's commits"
+    ]
+  },
+  {
+    "id": "ex-qg36ph8p",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With nothing being written, `now() - pg_last_xact_replay_timestamp()` went from 1.2 to 11.9 seconds. What happened?",
+    "hint": "Is there anything to replay?",
+    "choices": [
+      {
+        "text": "There was simply no new change to replay",
+        "correct": true,
+        "why": "Right: on an idle primary this reading grows by itself."
+      },
+      {
+        "text": "The replica fell behind by ten seconds while it was idle",
+        "correct": false,
+        "why": "There was nothing to replay; bytes behind would have read zero."
+      },
+      {
+        "text": "The network between the two clusters broke for a while",
+        "correct": false,
+        "why": "Both are on one machine; nothing broke."
+      },
+      {
+        "text": "The replica's own clock is running ten seconds slow",
+        "correct": false,
+        "why": "Both clusters share one clock here."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kmpd0hy",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the byte difference between `sent_lsn` and `replay_lsn` a better alarm than the replay timestamp on a shop that is quiet at night?",
+    "hint": "What does each reading do when nothing is written?",
+    "choices": [
+      {
+        "text": "Bytes are cheaper to compute than a timestamp on a busy primary, so they scale",
+        "correct": false,
+        "why": "Cost is not the issue; false alarms are."
+      },
+      {
+        "text": "The timestamp is only on the primary",
+        "correct": false,
+        "why": "It is the replica's own function."
+      },
+      {
+        "text": "Bytes stay at zero on an idle server, while the timestamp keeps growing",
+        "correct": true,
+        "why": "Right: a monitor on the timestamp pages somebody every quiet night."
+      },
+      {
+        "text": "The timestamp includes `recovery_min_apply_delay` and bytes do not",
+        "correct": false,
+        "why": "Both reflect a delayed replay; the difference is idleness."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpd35rwx",
+    "version": 1,
+    "section": "lag",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `recovery_min_apply_delay` at 10 s, how many bytes of WAL had the replica received and not applied when the primary was asked?",
+    "hint": "The `bytes_behind` column.",
+    "value": 8637096,
+    "tolerance": 1000,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-nydmsb6j",
+    "version": 1,
+    "section": "lag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A replica's `write_lag` and `flush_lag` are 2 ms, and `replay_lag` climbs to 40 s every night while the primary rebuilds a large index. Where is the bottleneck?",
+    "hint": "Where do the three come apart?",
+    "choices": [
+      {
+        "text": "The network between the two servers",
+        "correct": false,
+        "why": "write_lag would be large; it is 2 ms."
+      },
+      {
+        "text": "The replica's disk, which cannot save the incoming WAL fast enough at night",
+        "correct": false,
+        "why": "flush_lag would be large; it is 2 ms too."
+      },
+      {
+        "text": "The primary's commits, which wait for the replica to confirm every write",
+        "correct": false,
+        "why": "An asynchronous replica makes nobody wait."
+      },
+      {
+        "text": "Replay, a single process behind a burst of WAL from the rebuild",
+        "correct": true,
+        "why": "Right: the WAL arrives and is saved at once, and applying it is what trails."
+      }
+    ]
+  },
+  {
+    "id": "ex-503tnw8h",
+    "version": 1,
+    "section": "your-own-write",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the property a customer expects when they cancel an order and the page reloads?",
+    "hint": "The section names it.",
+    "choices": [
+      {
+        "text": "Serialisable isolation",
+        "correct": false,
+        "why": "Isolation is about concurrent transactions on one server, lesson 14."
+      },
+      {
+        "text": "Durability",
+        "correct": false,
+        "why": "The write was durable on the primary; the replica was simply behind."
+      },
+      {
+        "text": "Reading their own writes",
+        "correct": true,
+        "why": "Right: and a replica that is behind does not give it."
+      },
+      {
+        "text": "Synchronous replication to every replica",
+        "correct": false,
+        "why": "That is a mechanism, and even it does not guarantee replay before the read."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0f289yv",
+    "version": 1,
+    "section": "your-own-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`read-your-write.sh` keeps the result of `pg_current_wal_lsn()` after the `UPDATE`. What does it compare that position with, and where?",
+    "hint": "The replica has to have applied the write, not only received it.",
+    "choices": [
+      {
+        "text": "With `pg_last_wal_receive_lsn()` on the replica",
+        "correct": false,
+        "why": "Received is not replayed; with the delay, a read would still be stale."
+      },
+      {
+        "text": "With `replay_lsn` in the primary's `pg_stat_replication`",
+        "correct": false,
+        "why": "That would also work in principle, but the script asks the replica itself."
+      },
+      {
+        "text": "With `pg_last_wal_replay_lsn()` on the replica, until it is at or past it",
+        "correct": true,
+        "why": "Right: once replay has passed the write's position, the read is safe."
+      },
+      {
+        "text": "With the commit timestamp of the order, as recorded in the primary's own clock",
+        "correct": false,
+        "why": "The script compares WAL positions, which do not depend on clocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g1q72g4",
+    "version": 1,
+    "section": "your-own-write",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the replica 10 seconds behind, how many checks, 0.2 s apart, did `read-your-write.sh` make before the replica caught up?",
+    "hint": "The second line it printed.",
+    "value": 42,
+    "tolerance": 0,
+    "unit": "checks"
+  },
+  {
+    "id": "ex-1hpqmyzv",
+    "version": 1,
+    "section": "your-own-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application reads from the primary for five seconds after each user's write. What is the weakness the section names?",
+    "hint": "Five seconds is a number somebody chose.",
+    "choices": [
+      {
+        "text": "Users who never write are not covered",
+        "correct": false,
+        "why": "They have nothing of their own to read back; they are fine on the replica."
+      },
+      {
+        "text": "The window is a guess, and a lag longer than it brings the stale read back",
+        "correct": true,
+        "why": "Right: and it also sends the most active users' reads to the primary."
+      },
+      {
+        "text": "The primary cannot answer reads",
+        "correct": false,
+        "why": "The primary answers reads and writes; only the replica refuses writes."
+      },
+      {
+        "text": "It needs two-phase commit",
+        "correct": false,
+        "why": "Nothing here commits on two servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke71m800",
+    "version": 1,
+    "section": "your-own-write",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these reads belong on the primary, by the section's rule? Choose all that apply.",
+    "hint": "A read that decides something before a write.",
+    "choices": [
+      {
+        "text": "Checking a voucher has not been used before redeeming it",
+        "correct": true,
+        "why": "Right: it reads and then acts, so a stale answer redeems it twice."
+      },
+      {
+        "text": "Checking a username is free before creating the account",
+        "correct": true,
+        "why": "Right: two people could get the same name from a replica that is behind."
+      },
+      {
+        "text": "A seller's monthly sales report",
+        "correct": false,
+        "why": "A report that misses the last second is harmless; it suits a replica."
+      },
+      {
+        "text": "Browsing products by tag",
+        "correct": false,
+        "why": "Ordinary browsing is exactly what a replica is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-6g7fea1q",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `max_standby_streaming_delay` decide?",
+    "hint": "Replay and a query want opposite things.",
+    "choices": [
+      {
+        "text": "How long the primary waits for the replica before a commit",
+        "correct": false,
+        "why": "An asynchronous primary does not wait; this is a setting on the replica."
+      },
+      {
+        "text": "How long replay waits for a query before cancelling it",
+        "correct": true,
+        "why": "Right: 30 seconds by default, 5 in the lesson."
+      },
+      {
+        "text": "How far behind the replica may fall before it disconnects",
+        "correct": false,
+        "why": "It does not disconnect; it pauses replay or cancels a query."
+      },
+      {
+        "text": "How long `VACUUM` waits before it removes dead rows on the primary",
+        "correct": false,
+        "why": "VACUUM on the primary does not wait for replicas at all without feedback."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqe9dy9x",
+    "version": 1,
+    "section": "conflicts",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without feedback, the replica's query failed with `canceling statement due to conflict with ___`.",
+    "hint": "The state a replica is permanently in.",
+    "blanks": [
+      {
+        "accept": [
+          "recovery"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v94a9esd",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `hot_standby_feedback` on, the replica's 15-second transaction finished. What did `VACUUM (VERBOSE)` on the primary report?",
+    "hint": "The rows are still needed somewhere.",
+    "choices": [
+      {
+        "text": "55395 tuples removed",
+        "correct": false,
+        "why": "0 removed: the replica's snapshot still needed them."
+      },
+      {
+        "text": "An error, because a replica held a lock",
+        "correct": false,
+        "why": "VACUUM finished normally; it only left the rows."
+      },
+      {
+        "text": "55395 are dead but not yet removable",
+        "correct": true,
+        "why": "Right: the cost of keeping the replica's query moved to the primary."
+      },
+      {
+        "text": "That the table had been truncated",
+        "correct": false,
+        "why": "Nothing truncated it; 4944521 rows remain."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9xkafbp",
+    "version": 1,
+    "section": "conflicts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team turns on `hot_standby_feedback` so a nightly six-hour export on the replica stops failing. A week later the primary's busiest tables have doubled in size. What connects the two?",
+    "hint": "Lesson 15's long transaction, in another place.",
+    "choices": [
+      {
+        "text": "The export writes its output into the primary's tables",
+        "correct": false,
+        "why": "A replica cannot write anything."
+      },
+      {
+        "text": "Feedback doubles the WAL the primary writes, and the tables grow with it",
+        "correct": false,
+        "why": "Feedback is a small message from the replica; it adds no WAL."
+      },
+      {
+        "text": "The replica copies its own dead rows back to the primary every night",
+        "correct": false,
+        "why": "Replication flows one way, from primary to replica."
+      },
+      {
+        "text": "Each export holds back VACUUM on the primary for six hours",
+        "correct": true,
+        "why": "Right: the conflict moved from the replica to the primary, as bloat."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dqxyp7w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop has one replica, used for failover and for the accountants' two-hour report. Which change does the lesson's table point to?",
+    "hint": "Both settings have a cost for one of the two jobs.",
+    "choices": [
+      {
+        "text": "Raise `max_standby_streaming_delay` to three hours",
+        "correct": false,
+        "why": "Then the failover candidate can be hours behind, the worst moment to promote it."
+      },
+      {
+        "text": "Turn on `hot_standby_feedback` and change nothing else",
+        "correct": false,
+        "why": "Then the report bloats the primary for two hours every day."
+      },
+      {
+        "text": "One more standby, used only by the accountants",
+        "correct": true,
+        "why": "Right: one more server buys both jobs without either setting's cost."
+      },
+      {
+        "text": "Run the report on the primary during the day",
+        "correct": false,
+        "why": "That takes the load the replica existed to absorb back to the primary."
+      }
+    ]
+  }
+]

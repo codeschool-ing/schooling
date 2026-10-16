@@ -1,0 +1,639 @@
+[
+  {
+    "id": "ex-1ftpez4m",
+    "version": 1,
+    "section": "pg-stats",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the planner get the numbers behind a `rows=` estimate?",
+    "hint": "It does not look at the rows themselves.",
+    "choices": [
+      {
+        "text": "From a summary ANALYZE made from a sample",
+        "correct": true,
+        "why": "Right: pg_stats shows that summary, made from 30,000 rows at the default target."
+      },
+      {
+        "text": "From a quick count of the matching rows at planning time",
+        "correct": false,
+        "why": "Counting would cost as much as the query; the planner never counts."
+      },
+      {
+        "text": "From the times the last runs took, in pg_stat_statements",
+        "correct": false,
+        "why": "The planner does not read the tally; it is a separate extension."
+      },
+      {
+        "text": "From the index, which stores how many rows hold each value",
+        "correct": false,
+        "why": "A B-tree stores entries, not a count per value, and many columns have no index at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ms311x6",
+    "version": 1,
+    "section": "pg-stats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_stats` shows `n_distinct = -1` for `orders.placed_at`. What does the planner take that to mean?",
+    "hint": "A negative number is not a count.",
+    "choices": [
+      {
+        "text": "The column has no statistics yet, because ANALYZE has not reached it",
+        "correct": false,
+        "why": "Missing statistics mean no row in pg_stats at all, not a negative value."
+      },
+      {
+        "text": "Every row has a value of its own, at any table size",
+        "correct": true,
+        "why": "Right: a negative n_distinct is a fraction of the rows, and -1 is all of them."
+      },
+      {
+        "text": "The column has exactly one value, the same one repeated in every single row",
+        "correct": false,
+        "why": "That would be n_distinct = 1, a positive count."
+      },
+      {
+        "text": "The values are in descending order on disk",
+        "correct": false,
+        "why": "Order on disk is the correlation column, and placed_at's is 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdt778yd",
+    "version": 1,
+    "section": "pg-stats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pg_stats` hide the rows of columns the user cannot select?",
+    "hint": "Think about what most_common_vals holds.",
+    "choices": [
+      {
+        "text": "Because reading statistics is slow and it saves time to skip them",
+        "correct": false,
+        "why": "The view is tiny; the filter is about who may see it."
+      },
+      {
+        "text": "Because only the planner is allowed to read statistics",
+        "correct": false,
+        "why": "Anyone may read pg_stats for columns they can select, as this lesson does."
+      },
+      {
+        "text": "Because the summary holds real values copied out of the table",
+        "correct": true,
+        "why": "Right: the common values and the histogram bounds are data, and would leak it."
+      },
+      {
+        "text": "Because pg_statistic is stored encrypted for every role but the owner",
+        "correct": false,
+        "why": "Nothing is encrypted; superusers read pg_statistic directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rvvscz9",
+    "version": 1,
+    "section": "pg-stats",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `default_statistics_target` at 100, how many rows does ANALYZE sample from each table?",
+    "hint": "300 rows per unit of the target.",
+    "value": 30000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-znqt7e4a",
+    "version": 1,
+    "section": "common-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Seller 42 is not on the list of common values. How does the planner estimate its orders?",
+    "hint": "What is left after the listed values?",
+    "choices": [
+      {
+        "text": "It splits what the list leaves evenly",
+        "correct": true,
+        "why": "Right: 0.7382 shared by 990 sellers, times two million, is 1491."
+      },
+      {
+        "text": "It uses the frequency of the least common value on the list",
+        "correct": false,
+        "why": "That would give about 2333; the plan said 1491."
+      },
+      {
+        "text": "It reads the histogram bounds of seller_id",
+        "correct": false,
+        "why": "For an equality on a value off the list, the leftover share is what is used."
+      },
+      {
+        "text": "It counts seller 42's rows in the index",
+        "correct": false,
+        "why": "The planner never counts; the estimate is arithmetic on the summary."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfr07yn1",
+    "version": 1,
+    "section": "common-values",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Seller 553 was second on the list at 0.0013666666 and got an estimate of 2733, but has 1590 orders. What would most likely bring its estimate closer?",
+    "hint": "Why was it on the list at all?",
+    "choices": [
+      {
+        "text": "Raising the column's statistics target, so a bigger sample tells chance from frequency",
+        "correct": true,
+        "why": "Right: it was listed by the luck of a 30,000-row sample; a bigger one shrinks that noise."
+      },
+      {
+        "text": "Creating an index on seller_id",
+        "correct": false,
+        "why": "The index already exists and plays no part in the estimate."
+      },
+      {
+        "text": "Setting n_distinct to 1000",
+        "correct": false,
+        "why": "It already is 1000; listed values ignore n_distinct anyway."
+      },
+      {
+        "text": "Running VACUUM FULL on orders",
+        "correct": false,
+        "why": "Rewriting the table changes no statistics."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9x7jfes",
+    "version": 1,
+    "section": "common-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Seller 1 is estimated at 501,600 orders and seller 42 at 1491, and both get a bitmap scan. Where does the difference in their estimates still matter?",
+    "hint": "Look at the costs, and think of a bigger query.",
+    "choices": [
+      {
+        "text": "Nowhere, since both got the same plan and a plan is all that runs",
+        "correct": false,
+        "why": "The costs differ, 28,585 against 4,497, and costs drive every choice above the scan."
+      },
+      {
+        "text": "Only in the time EXPLAIN takes to print",
+        "correct": false,
+        "why": "EXPLAIN took under a millisecond for both."
+      },
+      {
+        "text": "In the cost, which decides the joins built on top",
+        "correct": true,
+        "why": "Right: inside a bigger query, the row count drives everything built on top."
+      },
+      {
+        "text": "In the size of the index the bitmap scan has to read from disk",
+        "correct": false,
+        "why": "The index is the same for both; only how much of it is read differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbjamasa",
+    "version": 1,
+    "section": "common-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`status` has four values and all four are on its list of common values. How is `status = 'pending'` estimated?",
+    "hint": "Nothing is left over for an average.",
+    "choices": [
+      {
+        "text": "One quarter of the rows, since there are four values",
+        "correct": false,
+        "why": "That ignores the list, which says pending is 0.0033."
+      },
+      {
+        "text": "From the histogram of status",
+        "correct": false,
+        "why": "A column whose values all fit the list has no histogram left."
+      },
+      {
+        "text": "By counting the pending rows during planning",
+        "correct": false,
+        "why": "The planner never counts rows to plan."
+      },
+      {
+        "text": "Its frequency on the list times the table's two million rows: 6600",
+        "correct": true,
+        "why": "Right: 0.0033 × 2,000,000, against 7319 real."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzapjctc",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the histogram PostgreSQL keeps for `placed_at` differ from one you would draw by hand?",
+    "hint": "Compare the first bucket with the last.",
+    "choices": [
+      {
+        "text": "It has one bucket per month",
+        "correct": false,
+        "why": "Months would be equal widths; these buckets go from 101 days to 5.6."
+      },
+      {
+        "text": "Its buckets hold equal rows, not equal time",
+        "correct": true,
+        "why": "Right: a hundred buckets of 1% each, narrow where orders are dense."
+      },
+      {
+        "text": "It stores a count of the rows for every distinct timestamp it saw",
+        "correct": false,
+        "why": "It stores only 101 bounds."
+      },
+      {
+        "text": "It covers only the most recent hundred days",
+        "correct": false,
+        "why": "Its bounds run from January 2023 to December 2025."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6a3e1t2",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query asks for orders between 10:00 and 11:00 on one day. The day sits inside a bucket about six days wide. What does the estimate assume?",
+    "hint": "The section's one assumption about a bucket.",
+    "choices": [
+      {
+        "text": "That the hour holds one per cent of the table, one bucket",
+        "correct": false,
+        "why": "A whole bucket spans six days; the hour is a small slice of it."
+      },
+      {
+        "text": "That the rows are uniform over those six days, so one hour gets one hundred and forty-fourth of them",
+        "correct": true,
+        "why": "Right: about 1/144 of the bucket's 20,000 rows, whatever the hour's real traffic."
+      },
+      {
+        "text": "That the hour holds the bucket's average of a whole day",
+        "correct": false,
+        "why": "The interpolation is by time, so an hour gets a twenty-fourth of a day's share."
+      },
+      {
+        "text": "That nothing happens at night, so daytime hours get more",
+        "correct": false,
+        "why": "The histogram knows nothing about hours of the day inside a bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-btdrv8ps",
+    "version": 1,
+    "section": "histograms",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`placed_at` has 101 histogram bounds and 2,000,000 rows. About how many rows does one bucket hold?",
+    "hint": "101 bounds make how many buckets?",
+    "value": 20000,
+    "tolerance": 500,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-2z1wjam8",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "About 106,000 orders by `placed_at` got a plain index scan costed at 3,913; about 103,000 by `customer_id` got a bitmap scan costed at 19,228. Which statistic explains the gap?",
+    "hint": "Not how many rows, but where they are.",
+    "choices": [
+      {
+        "text": "n_distinct",
+        "correct": false,
+        "why": "Both columns return about the same number of rows; distinctness is not what differs."
+      },
+      {
+        "text": "null_frac",
+        "correct": false,
+        "why": "Neither column has nulls."
+      },
+      {
+        "text": "most_common_freqs",
+        "correct": false,
+        "why": "Neither condition is on a listed value; both are ranges."
+      },
+      {
+        "text": "correlation",
+        "correct": true,
+        "why": "Right: 1 for placed_at, whose rows sit together on disk, and 0.0064 for customer_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8sqkyys",
+    "version": 1,
+    "section": "distinct-counts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did ANALYZE estimate about 1.44 million distinct orders in `order_lines` when there are 2 million?",
+    "hint": "How often does a sample of 30,000 rows catch a second line of the same order?",
+    "choices": [
+      {
+        "text": "Some orders have no lines and were left out",
+        "correct": false,
+        "why": "Every order has lines; count(DISTINCT) gave exactly two million."
+      },
+      {
+        "text": "The sample saw most orders once, and guessed low",
+        "correct": true,
+        "why": "Right: the guess from a sample errs towards too few for a column of small repeated groups."
+      },
+      {
+        "text": "Statistics were stale after the load",
+        "correct": false,
+        "why": "market.sql ends with VACUUM ANALYZE; the table has not changed since."
+      },
+      {
+        "text": "n_distinct is rounded to two significant figures",
+        "correct": false,
+        "why": "It printed -0.28848767, with eight."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv75gsq0",
+    "version": 1,
+    "section": "distinct-counts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A column's estimate is wrong because of a ratio your schema guarantees, say three rows per parent forever. Which fix is the lesson's recommendation, and why?",
+    "hint": "One fix samples more; the other states the answer.",
+    "choices": [
+      {
+        "text": "SET STATISTICS 10000, because a sample big enough always finds the true count",
+        "correct": false,
+        "why": "At 1000 it was still 16% short; a bigger sample improves distinct counts slowly."
+      },
+      {
+        "text": "SET (n_distinct = -0.3333): a fixed fraction stays right as rows are added",
+        "correct": true,
+        "why": "Right: and write down why, since nothing checks it if the ratio ever changes."
+      },
+      {
+        "text": "An index on the column, so the planner can count it",
+        "correct": false,
+        "why": "The planner does not count through indexes when it plans."
+      },
+      {
+        "text": "Running ANALYZE more often",
+        "correct": false,
+        "why": "Each run takes another sample of the same size and makes the same kind of guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w2733vv",
+    "version": 1,
+    "section": "distinct-counts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make ANALYZE keep more common values and more histogram buckets for one column, write `ALTER TABLE t ALTER COLUMN c SET ___ 1000;`.",
+    "hint": "The same word as the server-wide default's name, without the prefix.",
+    "blanks": [
+      {
+        "accept": [
+          "STATISTICS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7a29h233",
+    "version": 1,
+    "section": "correlated-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Curitiba is 0.0685 of the customers and PR is 0.0685. Why did the planner expect 938 for both together?",
+    "hint": "What does it do with two selectivities?",
+    "choices": [
+      {
+        "text": "It multiplied the two fractions",
+        "correct": true,
+        "why": "Right: 0.0685 × 0.0685 × 200,000 is 938, against 13,578 real."
+      },
+      {
+        "text": "Its statistics for city were out of date after the load",
+        "correct": false,
+        "why": "Each fraction was right; the error is in combining them."
+      },
+      {
+        "text": "It used the smaller of the two fractions, to be safe",
+        "correct": false,
+        "why": "That would have given 13,700, close to the truth."
+      },
+      {
+        "text": "PR is not on the state column's list",
+        "correct": false,
+        "why": "It is, fourth, at 0.0685."
+      }
+    ]
+  },
+  {
+    "id": "ex-93msr00p",
+    "version": 1,
+    "section": "correlated-columns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `CREATE STATISTICS ... (dependencies, mcv) ON city, state`, a report still gets a bad estimate for `GROUP BY city, state`. What is missing?",
+    "hint": "Groups are a count of combinations.",
+    "choices": [
+      {
+        "text": "An ANALYZE of the whole database, since one table is not enough",
+        "correct": false,
+        "why": "The object belongs to customers; analysing that table was enough for the WHERE estimate."
+      },
+      {
+        "text": "An index on (city, state)",
+        "correct": false,
+        "why": "An index does not tell the planner how many groups there are."
+      },
+      {
+        "text": "The ndistinct kind, which counts the distinct combinations",
+        "correct": true,
+        "why": "Right: with it the estimate went from 108 to 12."
+      },
+      {
+        "text": "A higher statistics target on both columns",
+        "correct": false,
+        "why": "Each column alone is already exact; the problem is their product, 12 × 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1dhr48p",
+    "version": 1,
+    "section": "correlated-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_stats_ext` shows `\"4 => 5\": 1.000000` and `\"5 => 4\": 0.421733`. What do they say?",
+    "hint": "4 and 5 are column positions.",
+    "choices": [
+      {
+        "text": "City fixes state; state rarely fixes city",
+        "correct": true,
+        "why": "Right: SP and RJ each have several cities."
+      },
+      {
+        "text": "City and state are equal in 100% and 42% of the rows",
+        "correct": false,
+        "why": "The values are never equal; a dependency is about one predicting the other."
+      },
+      {
+        "text": "The object covers columns 4 to 5 with 42% of the table sampled",
+        "correct": false,
+        "why": "The sample is 30,000 rows; the numbers are degrees of dependency."
+      },
+      {
+        "text": "A city has 1 state on average and a state 0.42 cities",
+        "correct": false,
+        "why": "These are not averages; a state cannot have under one city."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbwjsr8d",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of `pg_stats` to what it fed in this lesson.",
+    "hint": "One estimate per field.",
+    "pairs": [
+      {
+        "left": "`most_common_freqs`",
+        "right": "seller 1's 501,600"
+      },
+      {
+        "left": "`histogram_bounds`",
+        "right": "orders before 2024"
+      },
+      {
+        "left": "`n_distinct`",
+        "right": "the groups of a GROUP BY"
+      },
+      {
+        "left": "`correlation`",
+        "right": "the cost of reading by index in order"
+      }
+    ],
+    "right_distractors": [
+      "the fraction of NULLs"
+    ]
+  },
+  {
+    "id": "ex-t63jpa9c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the planner's arithmetic for seller 42 in order.",
+    "hint": "From the list to the plan.",
+    "items": [
+      "Add up the frequencies on the common-values list: 0.2618",
+      "Subtract from 1 to get what is left: 0.7382",
+      "Divide by the 990 unlisted values",
+      "Multiply by the table's 2,000,000 rows: 1491"
+    ],
+    "trap": "Multiplying by the rows comes last; the fraction is built first."
+  },
+  {
+    "id": "ex-28shyqh1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would `CREATE STATISTICS` on the right pair of columns help? Choose all that apply.",
+    "hint": "It fixes the combining step, not a single column.",
+    "choices": [
+      {
+        "text": "WHERE postcode = ... AND city = ..., estimated far too low",
+        "correct": true,
+        "why": "Right: a postcode predicts its city, and the multiplication undercounts."
+      },
+      {
+        "text": "GROUP BY product_id, category with too many groups expected",
+        "correct": true,
+        "why": "Right: the ndistinct kind counts the real combinations."
+      },
+      {
+        "text": "WHERE seller_id = 553 estimated 72% high",
+        "correct": false,
+        "why": "One column, a sampling accident: that is SET STATISTICS's job."
+      },
+      {
+        "text": "An estimate that is wrong because ANALYZE has not run since a big load",
+        "correct": false,
+        "why": "Stale statistics are fixed by ANALYZE, lesson 6's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-rghhc0km",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of sensor readings has `sensor_id` and `site_id`, and every sensor belongs to one site. `WHERE site_id = 7 AND sensor_id = 70` is estimated at 3 rows and returns 900. What do you do first?",
+    "hint": "Is either column alone wrong?",
+    "choices": [
+      {
+        "text": "Raise default_statistics_target for the whole server",
+        "correct": false,
+        "why": "A bigger sample keeps each fraction right and still multiplies them."
+      },
+      {
+        "text": "Create extended statistics on the pair of columns, then ANALYZE",
+        "correct": true,
+        "why": "Right: the sensor fixes the site, the same shape as city and state."
+      },
+      {
+        "text": "Set n_distinct on sensor_id",
+        "correct": false,
+        "why": "The problem is the combination, not how many sensors there are."
+      },
+      {
+        "text": "Drop the condition on site_id from the query",
+        "correct": false,
+        "why": "It would fix this estimate by changing the question; the planner's blind spot stays for every other query."
+      }
+    ]
+  }
+]

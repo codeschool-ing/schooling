@@ -1,0 +1,374 @@
+{
+ "ex-a0pcsxdk": {
+  "prompt": "Uma métrica diz que 3% das reservas falharam nos últimos cinco minutos. O que essa métrica não consegue dizer?",
+  "hint": "Ela foi agregada antes de ser guardada.",
+  "choices": [
+   {
+    "text": "Quais reservas eram",
+    "why": "Certo. Uma contagem de um milhão custa o mesmo que uma de dez porque os eventos individuais se foram; o log os guarda."
+   },
+   {
+    "text": "Se a fração de falhas está subindo ou descendo",
+    "why": "Consegue: compare o mesmo número ao longo do tempo, que é para isso que serve uma série temporal."
+   },
+   {
+    "text": "Quantas reservas foram tentadas nesse tempo",
+    "why": "Consegue: essa é a taxa, o R do RED."
+   },
+   {
+    "text": "Quanto as reservas levaram, como percentil",
+    "why": "Um histograma de duração responde isso, dentro da largura de um balde."
+   }
+  ]
+ },
+ "ex-s8qvab14": {
+  "prompt": "Ligue cada letra do RED e do USE ao que ela mede.",
+  "hint": "O RED olha um serviço do lado de quem chama; o USE olha um recurso.",
+  "pairs": [
+   {
+    "left": "Rate (taxa)",
+    "right": "requisições respondidas por segundo"
+   },
+   {
+    "left": "Duration (duração)",
+    "right": "quanto cada requisição levou"
+   },
+   {
+    "left": "Utilisation (utilização)",
+    "right": "quão ocupado o recurso está"
+   },
+   {
+    "left": "Saturation (saturação)",
+    "right": "quanto trabalho está na fila esperando por ele"
+   }
+  ],
+  "right_distractors": [
+   "quanto cada requisição custou para a empresa"
+  ]
+ },
+ "ex-gssep2hj": {
+  "prompt": "A máquina da boxoffice está em 40% de CPU enquanto as reservas fazem fila atrás do booking_lock. O que relata uma verificação USE que olha só o hardware?",
+  "hint": "O lock é um recurso?",
+  "choices": [
+   {
+    "text": "Um processador saturado, pela fila de reservas",
+    "why": "A fila está no lock, não nos processadores; a 40% os processadores não estão saturados."
+   },
+   {
+    "text": "Uma máquina saudável, com capacidade sobrando",
+    "why": "Certo, e está errado. O lock também é um recurso, saturado enquanto os processadores folgam; o USE tem de ser aplicado a ele."
+   },
+   {
+    "text": "Uma taxa de erro alta na rota de reservas",
+    "why": "Erros no RED são requisições que falharam; reservas na fila ainda dão certo, devagar."
+   },
+   {
+    "text": "Nada, já que o USE se aplica só a discos e redes",
+    "why": "O USE se aplica a processadores e memória também, e a qualquer coisa pela qual o trabalho espera."
+   }
+  ]
+ },
+ "ex-3k420yz6": {
+  "prompt": "Por que o observed.py devolve o id da requisição ao cliente num cabeçalho, e não só o escreve no log?",
+  "hint": "Quem precisa citá-lo depois?",
+  "choices": [
+   {
+    "text": "O Prometheus lê o cabeçalho para contar requisições",
+    "why": "O Prometheus lê o /metrics e nunca vê uma resposta a um cliente."
+   },
+   {
+    "text": "O navegador precisa dele para manter a sessão aberta",
+    "why": "Sessão é trabalho de um cookie; o id identifica uma requisição, não um usuário."
+   },
+   {
+    "text": "Para quem chamou poder citá-lo e a linha certa do log ser achada",
+    "why": "Certo. Uma reclamação, um chamado ou uma verificação sintética que falhou e carrega o id leva direto à sua linha entre milhões."
+   },
+   {
+    "text": "O HTTP/1.1 exige um id em toda resposta",
+    "why": "Nenhuma versão do HTTP exige; X-Request-Id é uma convenção."
+   }
+  ]
+ },
+ "ex-3v3djqj0": {
+  "prompt": "Uma finalização de compra atravessa vinte serviços e está lenta. Qual sinal mostra que o tempo foi gasto no quarto deles?",
+  "hint": "Os spans se aninham.",
+  "choices": [
+   {
+    "text": "O contador de requisições do primeiro serviço",
+    "why": "Uma contagem diz quantas, e nada sobre para onde foi o tempo."
+   },
+   {
+    "text": "A utilização de processador de cada host",
+    "why": "Um serviço lento pode estar esperando algo com o processador ocioso."
+   },
+   {
+    "text": "O log do último serviço da cadeia",
+    "why": "Ele conhece o próprio tempo; sem um id compartilhado não consegue se situar entre os outros dezenove."
+   },
+   {
+    "text": "Um trace",
+    "why": "Certo. Cada serviço acrescenta um span com a sua duração, e o longo se destaca."
+   }
+  ]
+ },
+ "ex-7krhk90t": {
+  "prompt": "Ligue cada produto ao trabalho com que começou.",
+  "hint": "A tabela no início da seção.",
+  "pairs": [
+   {
+    "left": "New Relic",
+    "right": "um agente dentro da aplicação cronometrando cada transação"
+   },
+   {
+    "left": "Grafana",
+    "right": "gráficos desenhados sobre dados guardados em outro lugar"
+   },
+   {
+    "left": "Kibana",
+    "right": "buscar linhas de log indexadas no Elasticsearch"
+   },
+   {
+    "left": "Sentry",
+    "right": "exceções agrupadas com os seus stack traces"
+   },
+   {
+    "left": "Datadog",
+    "right": "métricas de um agente em cada host"
+   }
+  ],
+  "right_distractors": [
+   "gerar carga contra um servidor de homologação"
+  ]
+ },
+ "ex-wf4d1eve": {
+  "prompt": "Um colega diz \"nossas métricas estão no Grafana\". Qual é a afirmação mais exata?",
+  "hint": "O que o Grafana guarda sozinho?",
+  "choices": [
+   {
+    "text": "O Grafana as desenha a partir de uma fonte como o Prometheus",
+    "why": "Certo. Prometheus, Loki, um banco SQL: os dados moram lá, e o Grafana desenha as respostas."
+   },
+   {
+    "text": "Estão no banco de séries temporais do próprio Grafana",
+    "why": "O Grafana guarda painéis, não as séries; ele consulta uma fonte de dados."
+   },
+   {
+    "text": "Estão nos resultados do k6, que a Grafana Labs possui e guarda",
+    "why": "A Grafana Labs é dona do k6, mas o k6 é um gerador de carga, não onde moram as métricas de produção."
+   },
+   {
+    "text": "Estão no arquivo de log da própria aplicação",
+    "why": "Um log é outro sinal; um painel de métricas não lê linhas de log cruas."
+   }
+  ]
+ },
+ "ex-zwm5a8xb": {
+  "prompt": "Uma equipe muda de um fornecedor para outro e os seus serviços já emitem OpenTelemetry. O que ainda precisa ser reescrito?",
+  "hint": "O OpenTelemetry padroniza como os dados são produzidos e enviados.",
+  "choices": [
+   {
+    "text": "A instrumentação que está dentro de cada um dos serviços",
+    "why": "É isso que o OpenTelemetry poupa; muda o destino do coletor."
+   },
+   {
+    "text": "Os painéis e alertas na linguagem de consulta antiga",
+    "why": "Certo. Um alerta escrito na linguagem de consulta de um fornecedor não se muda para a de outro."
+   },
+   {
+    "text": "O protocolo que o coletor usa para mandar os dados adiante",
+    "why": "O OTLP é a parte padronizada; os cinco produtos publicam maneiras de recebê-lo."
+   },
+   {
+    "text": "Os endpoints HTTP das aplicações",
+    "why": "O monitoramento não muda o que a aplicação serve aos usuários."
+   }
+  ]
+ },
+ "ex-sj58tgw8": {
+  "prompt": "Por que o observed.py rotula as requisições com a rota /shows/{id} em vez do caminho /shows/990?",
+  "hint": "Cada conjunto distinto de rótulos é uma série que o Prometheus guarda.",
+  "choices": [
+   {
+    "text": "O Prometheus recusa rótulos que contêm dígitos",
+    "why": "Valores de rótulo podem ter qualquer texto; o problema é quantos distintos existem."
+   },
+   {
+    "text": "O id do espetáculo é dado pessoal e tem de ficar fora das métricas",
+    "why": "Um id de espetáculo identifica uma peça, não uma pessoa; o motivo é o número de séries."
+   },
+   {
+    "text": "Para um endpoint ser uma série, não uma por espetáculo",
+    "why": "Certo. Mil espetáculos fariam mil séries de um endpoint, e um estranho digitando ids poderia criar mais."
+   },
+   {
+    "text": "Para o caminho poder ser lido de volta no log",
+    "why": "O log guarda o caminho completo de qualquer jeito, num campo próprio."
+   }
+  ]
+ },
+ "ex-cqw2aa3d": {
+  "prompt": "Sem o guarded, o que uma requisição que levanta uma exceção dentro do app.py deixaria nas métricas e no log?",
+  "hint": "Onde a contagem e a linha de log são escritas?",
+  "choices": [
+   {
+    "text": "Um 500 nos dois, escrito pelo próprio servidor HTTP",
+    "why": "O servidor da biblioteca padrão fecha a conexão; ele não responde 500 em nome do handler."
+   },
+   {
+    "text": "Uma contagem com status 0, e uma linha sem status",
+    "why": "Não há caminho no código que registre status 0; nada é registrado."
+   },
+   {
+    "text": "Uma linha no log, mas nenhuma contagem nas métricas",
+    "why": "Os dois são escritos no mesmo método, depois da resposta, então falham juntos."
+   },
+   {
+    "text": "Nada em nenhum dos dois, já que o send nunca foi chamado",
+    "why": "Certo. A contagem e a linha de log são escritas no send, então a falha que um operador mais precisa ver ficaria invisível."
+   }
+  ]
+ },
+ "ex-7tgfwbgp": {
+  "prompt": "Num histograma do Prometheus, o balde que conta toda requisição, não importa quanto ela tenha levado, tem o rótulo le=\"___\".",
+  "hint": "É o último balde, e o maior limite que existe.",
+  "blanks": [
+   {
+    "accept": [
+     "+Inf",
+     "Inf",
+     "+infinity"
+    ]
+   }
+  ]
+ },
+ "ex-gm2nn1qs": {
+  "prompt": "A consulta da razão de erro não imprimiu nada. O que isso quer dizer aqui?",
+  "hint": "O PromQL divide séries, não números.",
+  "choices": [
+   {
+    "text": "Nenhum 5xx aconteceu, então não há série para dividir",
+    "why": "Certo. Sem série no numerador não há resultado; o or vector(0) escreve o zero."
+   },
+   {
+    "text": "O Prometheus não conseguiu alcançar a boxoffice",
+    "why": "O up disse 1 para a boxoffice; uma coleta que falhou aparece ali, não como uma divisão vazia."
+   },
+   {
+    "text": "A razão de erro era exatamente zero",
+    "why": "Um zero aparece como 0, como mostra a segunda consulta; esta não imprimiu série nenhuma."
+   },
+   {
+    "text": "A consulta tinha um erro de sintaxe, que o curl escondeu",
+    "why": "Um erro de sintaxe volta como um objeto de erro, e a mesma expressão funcionou com or vector(0)."
+   }
+  ]
+ },
+ "ex-h12402e8": {
+  "prompt": "O k6 relatou http_req_failed de 3,00% enquanto o Prometheus não contou nenhum 5xx. Por que discordam?",
+  "hint": "Veja o que eram as 67 falhas.",
+  "choices": [
+   {
+    "text": "O Prometheus perde as requisições que chegam entre duas das suas coletas",
+    "why": "Contadores só crescem; uma coleta lê o total, então nada entre coletas se perde."
+   },
+   {
+    "text": "O k6 conta todo 4xx como falha, inclusive as recusas 409",
+    "why": "Certo. Recusar um assento já vendido é comportamento correto; quais status contam como erro é uma decisão."
+   },
+   {
+    "text": "O k6 abandonou as requisições mais lentas depois de 40 ms ou mais",
+    "why": "O tempo limite padrão do k6 é muito maior, e o log mostra 67 respostas 409."
+   },
+   {
+    "text": "Os erros do node exporter foram somados",
+    "why": "A consulta lê só boxoffice_requests_total; as séries do exporter são separadas."
+   }
+  ]
+ },
+ "ex-cqp3ma1m": {
+  "prompt": "Foram contadas 963 requisições a /shows/{id}. Contando da mais rápida, qual requisição é o percentil 95, arredondando para cima?",
+  "hint": "95% de 963."
+ },
+ "ex-jdtbf84v": {
+  "prompt": "O Prometheus pôs o p95 de /shows/{id} em 58 ms e o k6 pôs o p95 de todas as requisições em 140 ms. Um colega diz que o Prometheus está errado. Qual é a melhor resposta?",
+  "hint": "Quem cronometrou o quê, e onde?",
+  "choices": [
+   {
+    "text": "O Prometheus está certo e os números do k6 incluem o próprio custo dele, então podem ser ignorados",
+    "why": "O que o cliente esperou é o que o usuário sente; não é custo para ignorar."
+   },
+   {
+    "text": "O k6 está certo, porque a estimativa de um histograma sempre fica baixa",
+    "why": "A estimativa pode cair para qualquer lado dentro do balde; isso não explica um fator de dois."
+   },
+   {
+    "text": "Os dois estão certos: uma rota medida no servidor, contra todas as rotas medidas no cliente",
+    "why": "Certo. Operações diferentes, medidas em lugares diferentes, incluindo uns 40 ms gastos fora da aplicação."
+   },
+   {
+    "text": "Nenhum: percentis de duas ferramentas não podem ser comparados",
+    "why": "Podem, desde que os dois meçam a mesma operação no mesmo lugar."
+   }
+  ]
+ },
+ "ex-38n6fjt3": {
+  "prompt": "Ponha em ordem o caminho de uma reserva, de acontecer até virar um número no seu terminal.",
+  "hint": "O Prometheus pergunta; a aplicação só responde.",
+  "items": [
+   "o observed.py soma um a um contador",
+   "o /metrics mostra o novo total",
+   "o Prometheus coleta e guarda um ponto",
+   "o rate() transforma os pontos em requisições por segundo",
+   "o promql.sh imprime a resposta com o jq"
+  ]
+ },
+ "ex-79tbz1yr": {
+  "prompt": "Alguém acrescenta um rótulo customer a boxoffice_requests_total para contar as requisições de cada cliente. O que dá errado?",
+  "hint": "Pense em cardinalidade, e em para que uma métrica é guardada.",
+  "choices": [
+   {
+    "text": "Nada, desde que o Prometheus tenha bastante disco sobrando",
+    "why": "O custo é memória e tempo de consulta por série, e o problema de privacidade não diminui com disco."
+   },
+   {
+    "text": "O rate() deixa de funcionar em contadores que têm mais de um rótulo",
+    "why": "O rate() funciona em qualquer contador; cada rótulo só cria mais séries para ele calcular."
+   },
+   {
+    "text": "O contador vira um histograma",
+    "why": "Um rótulo não muda o tipo de uma métrica."
+   },
+   {
+    "text": "Uma série por cliente, e dado pessoal guardado por meses",
+    "why": "Certo. Cinquenta mil clientes são cinquenta mil séries, e um identificador fica num armazenamento que ninguém limpa. Uma pergunta por cliente é do log."
+   }
+  ]
+ },
+ "ex-56j5ca68": {
+  "prompt": "Quais destes cabem na linha de log estruturada de uma reserva? Escolha todos os que cabem.",
+  "hint": "Do que uma investigação precisaria, e o que um log vazado exporia?",
+  "choices": [
+   {
+    "text": "o id da requisição",
+    "why": "Sim: ele liga a linha à reclamação e ao trace."
+   },
+   {
+    "text": "o status e a duração em milissegundos",
+    "why": "Sim: são o que o RED conta, guardados por evento."
+   },
+   {
+    "text": "o número do cartão do cliente, para rastrear pagamentos",
+    "why": "Nunca: logs são copiados e guardados por mais tempo que o banco. O cartão fica com o provedor de pagamento."
+   },
+   {
+    "text": "a rota, como um modelo tipo /shows/{id}",
+    "why": "Sim: permite agrupar a linha com as outras do mesmo endpoint."
+   },
+   {
+    "text": "o token de sessão, para repetir a requisição",
+    "why": "Não: quem lesse o log poderia agir como aquele cliente."
+   }
+  ]
+ }
+}

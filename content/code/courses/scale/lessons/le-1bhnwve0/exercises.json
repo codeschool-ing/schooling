@@ -1,0 +1,944 @@
+[
+  {
+    "id": "ex-2mnn2588",
+    "version": 1,
+    "section": "what-scaling-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the course's definition, when does a system scale?",
+    "choices": [
+      {
+        "text": "When the next unit of load costs about what the last one did",
+        "correct": true,
+        "why": "Right. Scaling is a claim about the cost of more load, not about speed."
+      },
+      {
+        "text": "When it runs on more than one machine, so that the load is divided between them",
+        "correct": false,
+        "why": "Several machines that all wait for one row scale no better than one."
+      },
+      {
+        "text": "When it is built on a database known for scaling",
+        "correct": false,
+        "why": "The same database runs systems that scale and systems that do not; the design decides."
+      },
+      {
+        "text": "When each request is answered in under a millisecond, however many users are sending them at once",
+        "correct": false,
+        "why": "That is speed. A fast program can still fall over at the first thousand users."
+      }
+    ]
+  },
+  {
+    "id": "ex-vb0ja8my",
+    "version": 1,
+    "section": "what-scaling-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten cashiers each take one minute per customer. An eleventh is hired. What happens to the time each customer spends being served?",
+    "choices": [
+      {
+        "text": "It stays at one minute; throughput is what rises",
+        "correct": true,
+        "why": "Right. Capacity raises how many are served per hour, not how long one takes."
+      },
+      {
+        "text": "It falls to about 55 seconds",
+        "correct": false,
+        "why": "Each cashier still takes a minute; the extra one serves other customers in parallel."
+      },
+      {
+        "text": "It falls by a tenth, because the work is divided further",
+        "correct": false,
+        "why": "One customer's service is not divided between cashiers."
+      },
+      {
+        "text": "It rises, because coordinating eleven cashiers costs time",
+        "correct": false,
+        "why": "Only if they shared something. Independent cashiers do not coordinate."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xy3qvgw",
+    "version": 1,
+    "section": "what-scaling-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team makes the part of its system that is not the bottleneck twice as fast. What changes in the measured throughput?",
+    "choices": [
+      {
+        "text": "It doubles, because half the path is now twice as fast",
+        "correct": false,
+        "why": "Throughput is set by the bottleneck, not by the average of the path."
+      },
+      {
+        "text": "It falls, because the bottleneck now receives work faster than before",
+        "correct": false,
+        "why": "A longer queue in front of the bottleneck raises latency; the rate it serves at stays the same."
+      },
+      {
+        "text": "It rises by a quarter, the share that part had of the total time",
+        "correct": false,
+        "why": "That reasoning is about one request's latency, and even there only if that part was on its path."
+      },
+      {
+        "text": "Nothing measurable",
+        "correct": true,
+        "why": "Right. The work still waits at the narrowest point, which did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-7r2dq8ff",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course recommend a virtual machine over Docker installed on the computer you use every day?",
+    "choices": [
+      {
+        "text": "Its processors are yours alone, so you measure the lab",
+        "correct": true,
+        "why": "Right. The course measures throughput, and anything else running on the processors becomes part of the number."
+      },
+      {
+        "text": "Docker does not run outside a virtual machine",
+        "correct": false,
+        "why": "Docker Engine runs directly on Linux; the installed path works."
+      },
+      {
+        "text": "A virtual machine is faster than the computer it runs on",
+        "correct": false,
+        "why": "It cannot be; it uses a share of that computer."
+      },
+      {
+        "text": "The platform provides the virtual machine image",
+        "correct": false,
+        "why": "The platform provides no machine; you build the lab from an Ubuntu image."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b9t858e",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is joining the docker group a reason to prefer a virtual machine for the lab?",
+    "choices": [
+      {
+        "text": "The group only exists inside virtual machines",
+        "correct": false,
+        "why": "Installing Docker creates it on any Linux."
+      },
+      {
+        "text": "Membership of that group is as good as root on that machine",
+        "correct": true,
+        "why": "Right. Whoever can talk to Docker's socket can start a container that mounts the whole disk."
+      },
+      {
+        "text": "Joining it needs a reinstall of the system",
+        "correct": false,
+        "why": "It needs a new login session, nothing more."
+      },
+      {
+        "text": "It turns off the computer's firewall so that containers can publish their ports",
+        "correct": false,
+        "why": "The group grants access to Docker's socket; it does nothing to a firewall."
+      }
+    ]
+  },
+  {
+    "id": "ex-w68cmnx9",
+    "version": 1,
+    "section": "the-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You edit schema.sql and run docker compose up -d while the db container from before is still there. Why are the old tables still what you see?",
+    "choices": [
+      {
+        "text": "PostgreSQL caches the schema for a day",
+        "correct": false,
+        "why": "There is no such cache; the file is simply not read again."
+      },
+      {
+        "text": "The file must be named init.sql",
+        "correct": false,
+        "why": "Any .sql file in that directory runs, under the empty-directory condition."
+      },
+      {
+        "text": "The image runs files in /docker-entrypoint-initdb.d only when the data directory is empty",
+        "correct": true,
+        "why": "Right. A docker compose down removes the container and its data, and the next up runs the file again."
+      },
+      {
+        "text": "Compose never mounts a file into a container that is already running, so the new version is not seen",
+        "correct": false,
+        "why": "The file is mounted; it is the entrypoint that ignores it once data exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec5x8wek",
+    "version": 1,
+    "section": "the-project",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the host field in every answer of the box office for?",
+    "choices": [
+      {
+        "text": "To sign the ticket",
+        "correct": false,
+        "why": "The code is computed from the show and the seat only."
+      },
+      {
+        "text": "To identify the database server",
+        "correct": false,
+        "why": "It is the app container's own name, from socket.gethostname()."
+      },
+      {
+        "text": "To tell the client which address to use next time",
+        "correct": false,
+        "why": "Clients always go through nginx; nothing reads the field to choose an address."
+      },
+      {
+        "text": "To show which copy of the program answered",
+        "correct": true,
+        "why": "Right. With several copies behind nginx, it is how you see the requests being divided."
+      }
+    ]
+  },
+  {
+    "id": "ex-wyj8s065",
+    "version": 1,
+    "section": "the-project",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In compose.yaml, the line that caps each copy of the box office at one processor's worth of time is ___: 1.",
+    "blanks": [
+      {
+        "accept": [
+          "cpus"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v8ev8r4j",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after sudo usermod -aG docker $USER, docker compose up -d still says permission denied. What fixes it?",
+    "choices": [
+      {
+        "text": "Logging out and in again",
+        "correct": true,
+        "why": "Right. A session reads its groups when it starts."
+      },
+      {
+        "text": "Running chmod 777 on Docker's socket",
+        "correct": false,
+        "why": "That would give every user on the machine root through Docker, and the group already solves it."
+      },
+      {
+        "text": "Reinstalling Docker with the group already in place",
+        "correct": false,
+        "why": "The account is already in the group; only the session does not know."
+      },
+      {
+        "text": "Restarting the Docker daemon",
+        "correct": false,
+        "why": "The daemon is fine; the user's session lacks the group."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqb0fhjd",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "curl to the box office returns nginx's 502 Bad Gateway, and it does not go away. Where do you look first?",
+    "choices": [
+      {
+        "text": "At docker compose logs app",
+        "correct": true,
+        "why": "Right. 502 means the thing behind nginx did not answer, so its log says why."
+      },
+      {
+        "text": "At the port published in compose.yaml",
+        "correct": false,
+        "why": "The request reached nginx, so the port works."
+      },
+      {
+        "text": "At the load generator's settings",
+        "correct": false,
+        "why": "curl alone produced it; load.py is not involved."
+      },
+      {
+        "text": "At nginx.conf, since nginx produced the error page",
+        "correct": false,
+        "why": "nginx is only reporting; the failure is behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzg5f6p6",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compose reports a YAML error 'at L3.C3-L20.C4: did not find expected key'. How should you read the location?",
+    "choices": [
+      {
+        "text": "The file has errors on lines 3 and 20, and the columns say which character to delete on each",
+        "correct": false,
+        "why": "One misplaced space produced it."
+      },
+      {
+        "text": "Line 3 is wrong",
+        "correct": false,
+        "why": "Line 3 is where the block starts; in the capture the line with three spaces was further down."
+      },
+      {
+        "text": "Line 20 is wrong, because that is where the parser stopped reading",
+        "correct": false,
+        "why": "Line 20 is where the parser stopped, past the cause."
+      },
+      {
+        "text": "As a block that failed to parse; the bad line is inside it",
+        "correct": true,
+        "why": "Right. The parser names the mapping it gave up on, not the guilty line."
+      }
+    ]
+  },
+  {
+    "id": "ex-bf91t53p",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a p95 of 196 ms say?",
+    "choices": [
+      {
+        "text": "Requests took 196 ms at 95% load",
+        "correct": false,
+        "why": "The 95 is a share of requests, not of load."
+      },
+      {
+        "text": "5% of the requests failed",
+        "correct": false,
+        "why": "Failures are in the status line; latency percentiles describe answered requests."
+      },
+      {
+        "text": "95 out of every 100 requests finished in 196 ms or less",
+        "correct": true,
+        "why": "Right. The other 5 took longer."
+      },
+      {
+        "text": "The average request took 196 ms",
+        "correct": false,
+        "why": "A percentile is not an average; load.py prints no average on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry4ndxky",
+    "version": 1,
+    "section": "measuring",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A hundred requests take 10 ms each and one takes 2000 ms. What is the average latency, in milliseconds, rounded to the nearest whole number?",
+    "hint": "Add all 101 times and divide by 101.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-3zqqcyxh",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Past the knee of the curve, doubling the workers doubled the median latency and left throughput where it was. What did the extra workers add?",
+    "choices": [
+      {
+        "text": "Errors, which the latency hides",
+        "correct": false,
+        "why": "The status line showed only 201s."
+      },
+      {
+        "text": "Length to the queue in front of the processor",
+        "correct": true,
+        "why": "Right. The box office did no more work; requests waited longer for it."
+      },
+      {
+        "text": "Work for the box office, slowed down by the network",
+        "correct": false,
+        "why": "Throughput did not rise, so no extra work was done."
+      },
+      {
+        "text": "Load on the database, which became the bottleneck",
+        "correct": false,
+        "why": "docker stats showed the app at a whole processor and the database at a tenth of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnb79jy8",
+    "version": 1,
+    "section": "measuring",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A closed-loop test keeps 32 requests in flight and the system answers 160 a second. About how many milliseconds does each request spend inside it?",
+    "hint": "Requests inside divided by the rate they leave at.",
+    "value": 200,
+    "tolerance": 5,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-14kq7z20",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a test, docker stats shows the app at 100.12% and the database at 10.74%. What does that establish?",
+    "choices": [
+      {
+        "text": "The app is using slightly more than it may, which is an error",
+        "correct": false,
+        "why": "The extra hundredths are measurement, not a breach of the cap."
+      },
+      {
+        "text": "The app's one processor is the bottleneck",
+        "correct": true,
+        "why": "Right. It is using all that cpus: 1 allows, while the database has room."
+      },
+      {
+        "text": "nginx is the bottleneck, as it is not listed as busy",
+        "correct": false,
+        "why": "A bottleneck is the busy resource, not the quiet one."
+      },
+      {
+        "text": "The database is idle and can be removed",
+        "correct": false,
+        "why": "It holds every ticket; a tenth of a processor is work, not idleness."
+      }
+    ]
+  },
+  {
+    "id": "ex-er18w6nh",
+    "version": 1,
+    "section": "vertical",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Going from cpus 1 to cpus 2, sales went from 143 to 314 a second, a little more than double. What explains the extra?",
+    "choices": [
+      {
+        "text": "Measurement error; it was exactly double",
+        "correct": false,
+        "why": "The capture says 314, which is not 286."
+      },
+      {
+        "text": "Two processors share a cache, which makes each faster",
+        "correct": false,
+        "why": "Nothing in the lesson measured a cache effect; the cap's behaviour explains it."
+      },
+      {
+        "text": "The one-processor cap pauses a busy container in bursts, and two pauses it less",
+        "correct": true,
+        "why": "Right. The first number was depressed by the cap itself."
+      },
+      {
+        "text": "The database got faster when the app had more processors",
+        "correct": false,
+        "why": "The database was not the bottleneck at either size."
+      }
+    ]
+  },
+  {
+    "id": "ex-44ar8rvz",
+    "version": 1,
+    "section": "vertical",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did four processors give 433 sales a second rather than about 628?",
+    "choices": [
+      {
+        "text": "PostgreSQL limits each client to two processors",
+        "correct": false,
+        "why": "PostgreSQL has no such limit on its clients."
+      },
+      {
+        "text": "Python cannot use more than two processors",
+        "correct": false,
+        "why": "sign() lets other threads run, and the step from one to two already used both."
+      },
+      {
+        "text": "The machine has four, and the load generator, nginx and the database need some too",
+        "correct": true,
+        "why": "Right. nproc printed 4; the box office was competing for them."
+      },
+      {
+        "text": "docker update applies only half of the processors it is asked for, to protect the rest of the machine",
+        "correct": false,
+        "why": "It applied the cap; the machine could not supply it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsk2cmjb",
+    "version": 1,
+    "section": "vertical",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are limits of vertical scaling named in the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Price that grows faster than size near the top",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The program must be made stateless first",
+        "correct": false,
+        "why": "That is horizontal scaling's requirement; vertical asks nothing of the program."
+      },
+      {
+        "text": "The largest machine anybody sells",
+        "correct": true,
+        "why": "Right. Past it there is nothing to buy."
+      },
+      {
+        "text": "One machine is one failure",
+        "correct": true,
+        "why": "Right. A bigger one is a bigger thing to lose."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4rzy8t8",
+    "version": 1,
+    "section": "horizontal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After docker compose up -d --scale app=3, why does the lesson restart lb?",
+    "choices": [
+      {
+        "text": "Because scaling stops every container",
+        "correct": false,
+        "why": "The capture shows the others Running throughout."
+      },
+      {
+        "text": "nginx resolves the name app when it starts, and would keep sending to the one address it found",
+        "correct": true,
+        "why": "Right. The restart makes it look the name up again and see three."
+      },
+      {
+        "text": "To clear its cache of responses",
+        "correct": false,
+        "why": "This nginx caches nothing."
+      },
+      {
+        "text": "To publish port 8080 again",
+        "correct": false,
+        "why": "The port was never unpublished."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3xf3kr8",
+    "version": 1,
+    "section": "horizontal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change would stop the box office from scaling horizontally the way it did?",
+    "choices": [
+      {
+        "text": "Adding an index to the tickets table",
+        "correct": false,
+        "why": "The index lives in the database, which every copy shares."
+      },
+      {
+        "text": "Keeping each user's cart in a Python dictionary inside app.py",
+        "correct": true,
+        "why": "Right. The next request may reach a copy that has never seen that cart."
+      },
+      {
+        "text": "Running nginx with two worker processes",
+        "correct": false,
+        "why": "That changes nginx, not whether copies of the app are interchangeable."
+      },
+      {
+        "text": "Raising the signing cost to 20,000 rounds, which doubles the processor time of every sale",
+        "correct": false,
+        "why": "Each sale gets slower, and copies still divide the sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v61qkyy",
+    "version": 1,
+    "section": "horizontal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps sessions in memory and turns on sticky sessions so each user always reaches the same copy. One copy crashes. What do its users see?",
+    "choices": [
+      {
+        "text": "Slower answers until the copy restarts with their sessions",
+        "correct": false,
+        "why": "Memory does not survive a crash; the sessions are gone."
+      },
+      {
+        "text": "A 502 on every request from then on",
+        "correct": false,
+        "why": "The balancer sends them to another copy, which answers, without their session."
+      },
+      {
+        "text": "They are logged out, because their sessions died with the copy",
+        "correct": true,
+        "why": "Right. Sticky sessions hide the state; they do not share it."
+      },
+      {
+        "text": "Nothing; the load balancer moves their sessions",
+        "correct": false,
+        "why": "The balancer routes requests; it never had the sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fc99srw",
+    "version": 1,
+    "section": "horizontal",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of state to the place it has to live for the copies to stay interchangeable.",
+    "pairs": [
+      {
+        "left": "a login session",
+        "right": "the database or a shared cache"
+      },
+      {
+        "left": "an uploaded picture",
+        "right": "storage every copy reads"
+      },
+      {
+        "left": "seats left in a show",
+        "right": "the events table"
+      },
+      {
+        "left": "the database connection",
+        "right": "each copy's own memory"
+      }
+    ]
+  },
+  {
+    "id": "ex-0t492w4c",
+    "version": 1,
+    "section": "the-hot-row",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Selling only show 1, three copies sold 138 a second and one copy sold 137. Why did the copies not help?",
+    "choices": [
+      {
+        "text": "Every sale waits for the lock on show 1's row, held during sign()",
+        "correct": true,
+        "why": "Right. pg_stat_activity showed fifteen connections waiting on a Lock."
+      },
+      {
+        "text": "Three copies use up the machine's processors",
+        "correct": false,
+        "why": "The same three copies sold 470 across a hundred shows."
+      },
+      {
+        "text": "nginx sends every request for one show to the same copy",
+        "correct": false,
+        "why": "It uses round robin, which ignores the path."
+      },
+      {
+        "text": "Show 1 was nearly sold out",
+        "correct": false,
+        "why": "It has a million seats; every answer was a 201."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn45zqnp",
+    "version": 1,
+    "section": "the-hot-row",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If each sale of one show holds that show's row for 5 ms, what is the most sales of that show per second, whatever the number of copies?",
+    "hint": "One at a time, 5 ms each.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-x21ysct3",
+    "version": 1,
+    "section": "the-hot-row",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Would a machine with twice as many processors raise the sales of the single hot show much?",
+    "choices": [
+      {
+        "text": "Yes, because PostgreSQL would take and release its locks faster on processors that are less busy",
+        "correct": false,
+        "why": "Taking the lock is not the cost; holding it is."
+      },
+      {
+        "text": "Yes, it would double them, as vertical scaling did before",
+        "correct": false,
+        "why": "Earlier the processor was the bottleneck; here the row is."
+      },
+      {
+        "text": "No; the work is waiting for its turn on the row, not for a processor",
+        "correct": true,
+        "why": "Right. Only a faster sign() would shorten the hold, and only a little."
+      },
+      {
+        "text": "No, because PostgreSQL can only use one processor",
+        "correct": false,
+        "why": "PostgreSQL runs a process per connection and uses many processors."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvjm66wh",
+    "version": 1,
+    "section": "the-hot-row",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A show's one counter is replaced by ten counters, each owning a tenth of the seats. What gets harder?",
+    "choices": [
+      {
+        "text": "Saying how many seats are left, which is now a sum",
+        "correct": true,
+        "why": "Right, and the last seats end up scattered across counters."
+      },
+      {
+        "text": "Preventing the same seat from being sold twice when two sales reach two different counters",
+        "correct": false,
+        "why": "Each counter still locks its own row; each seat belongs to one counter."
+      },
+      {
+        "text": "Running more than one copy of the box office",
+        "correct": false,
+        "why": "The copies are as interchangeable as before."
+      },
+      {
+        "text": "Selling two tickets at the same moment",
+        "correct": false,
+        "why": "That gets easier: two sales can lock two different rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3v1xj8x",
+    "version": 1,
+    "section": "the-hot-row",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In pg_stat_activity, the hot-row test showed fifteen connections with a wait_event_type of ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Lock"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4xfkxngj",
+    "version": 1,
+    "section": "the-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By Amdahl's law, what is the highest speed-up a request that is 90% parallel can ever reach, on any number of processors?",
+    "hint": "1 / (1 − p).",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-jatkp1f7",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the Universal Scalability Law add to Amdahl's law?",
+    "choices": [
+      {
+        "text": "The serial fraction, which Amdahl's law leaves out",
+        "correct": false,
+        "why": "The serial fraction is Amdahl's law."
+      },
+      {
+        "text": "A cost of coordination that grows with the pairs of copies, so throughput peaks and then falls",
+        "correct": true,
+        "why": "Right. Amdahl only flattens; the second term bends the curve down."
+      },
+      {
+        "text": "A correction for faster processors",
+        "correct": false,
+        "why": "Both laws are about the number of processors or copies, not their speed."
+      },
+      {
+        "text": "A guarantee that adding copies never makes things slower",
+        "correct": false,
+        "why": "It says the opposite: past a peak, adding copies makes things slower."
+      }
+    ]
+  },
+  {
+    "id": "ex-ck5r8v3z",
+    "version": 1,
+    "section": "the-limits",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a growing system to the direction it usually scales in first.",
+    "pairs": [
+      {
+        "left": "stateless web servers",
+        "right": "out, early and cheaply"
+      },
+      {
+        "left": "the main database",
+        "right": "up, for a long time"
+      },
+      {
+        "left": "one hot row",
+        "right": "neither; it must be split or held less"
+      }
+    ]
+  },
+  {
+    "id": "ex-5nxr2rfh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of investigating a system that stopped keeping up in the order the lesson followed.",
+    "items": [
+      "Measure throughput and latency at increasing load",
+      "Find the knee, where throughput stops rising",
+      "Name the bottleneck with a tool that shows what is busy",
+      "Give that resource more capacity and measure again"
+    ],
+    "trap": "Adding capacity before naming the bottleneck is the guess the lesson warns against."
+  },
+  {
+    "id": "ex-jva4tdqh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service's throughput stays flat as copies are added, and its database shows most connections waiting on a Lock. What is the next thing to try?",
+    "choices": [
+      {
+        "text": "Find what the transactions hold the lock for, and hold it for less time",
+        "correct": true,
+        "why": "Right. The lock is the queue; shortening the hold widens it."
+      },
+      {
+        "text": "Raise the database's connection limit so that the waiting transactions get connections of their own",
+        "correct": false,
+        "why": "The waiting connections already exist; more would only wait too."
+      },
+      {
+        "text": "Give the database a bigger machine, with twice the processors and memory it has today",
+        "correct": false,
+        "why": "Waiting for a lock is not waiting for a processor."
+      },
+      {
+        "text": "Add more copies until throughput moves",
+        "correct": false,
+        "why": "More copies are more waiters for the same lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tsr4afd",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request is 75% parallel. By Amdahl's law, what speed-up do 3 copies give? Answer to one decimal place.",
+    "hint": "1 / (0.25 + 0.75 / 3).",
+    "value": 2.0,
+    "tolerance": 0.05,
+    "unit": "times"
+  },
+  {
+    "id": "ex-zpqgwfdz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which property did the box office have from its first line that let it scale out with no change?",
+    "choices": [
+      {
+        "text": "It kept nothing between requests",
+        "correct": true,
+        "why": "Right. Every fact lived in the database."
+      },
+      {
+        "text": "It was written in Python",
+        "correct": false,
+        "why": "The language did not matter; where the state lived did."
+      },
+      {
+        "text": "It ran behind nginx from the start",
+        "correct": false,
+        "why": "nginx divides the work; it cannot make stateful copies interchangeable."
+      },
+      {
+        "text": "It used HTTP/1.1 with connections kept open",
+        "correct": false,
+        "why": "That made each request cheaper, not the copies interchangeable."
+      }
+    ]
+  }
+]

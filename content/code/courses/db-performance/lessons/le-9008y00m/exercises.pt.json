@@ -1,0 +1,433 @@
+{
+  "ex-1ftpez4m": {
+    "prompt": "De onde o planejador tira os números por trás de uma estimativa `rows=`?",
+    "hint": "Ele não olha as próprias linhas.",
+    "choices": [
+      {
+        "text": "De um resumo que o ANALYZE fez de uma amostra",
+        "why": "Isso: o pg_stats mostra esse resumo, feito de 30.000 linhas no alvo padrão."
+      },
+      {
+        "text": "De uma contagem rápida das linhas que batem, na hora de planejar",
+        "why": "Contar custaria tanto quanto a consulta; o planejador nunca conta."
+      },
+      {
+        "text": "Dos tempos das últimas execuções, no pg_stat_statements",
+        "why": "O planejador não lê o placar; ele é uma extensão à parte."
+      },
+      {
+        "text": "Do índice, que guarda quantas linhas têm cada valor",
+        "why": "Uma B-tree guarda entradas, não uma contagem por valor, e muitas colunas nem têm índice."
+      }
+    ]
+  },
+  "ex-4ms311x6": {
+    "prompt": "O `pg_stats` mostra `n_distinct = -1` para `orders.placed_at`. O que o planejador entende com isso?",
+    "hint": "Um número negativo não é uma contagem.",
+    "choices": [
+      {
+        "text": "A coluna ainda não tem estatísticas, porque o ANALYZE não chegou nela",
+        "why": "Estatísticas faltando significam nenhuma linha no pg_stats, não um valor negativo."
+      },
+      {
+        "text": "Cada linha tem um valor só seu, em qualquer tamanho",
+        "why": "Isso: um n_distinct negativo é uma fração das linhas, e -1 é todas elas."
+      },
+      {
+        "text": "A coluna tem exatamente um valor, o mesmo repetido em cada uma das linhas",
+        "why": "Isso seria n_distinct = 1, uma contagem positiva."
+      },
+      {
+        "text": "Os valores estão em ordem decrescente no disco",
+        "why": "A ordem no disco é a coluna correlation, e a de placed_at é 1."
+      }
+    ]
+  },
+  "ex-gdt778yd": {
+    "prompt": "Por que o `pg_stats` esconde as linhas das colunas que o usuário não pode consultar?",
+    "hint": "Pense no que o most_common_vals guarda.",
+    "choices": [
+      {
+        "text": "Porque ler estatísticas é lento e pular economiza tempo",
+        "why": "A view é minúscula; o filtro é sobre quem pode vê-la."
+      },
+      {
+        "text": "Porque só o planejador tem permissão de ler estatísticas",
+        "why": "Qualquer um lê o pg_stats das colunas que pode consultar, como esta aula faz."
+      },
+      {
+        "text": "Porque o resumo guarda valores reais copiados da tabela",
+        "why": "Isso: os valores comuns e os limites do histograma são dados, e os vazariam."
+      },
+      {
+        "text": "Porque o pg_statistic fica cifrado para todo papel que não seja o dono",
+        "why": "Nada é cifrado; superusuários leem o pg_statistic diretamente."
+      }
+    ]
+  },
+  "ex-8rvvscz9": {
+    "prompt": "Com `default_statistics_target` em 100, quantas linhas o ANALYZE amostra de cada tabela?",
+    "hint": "300 linhas por unidade do alvo.",
+    "unit": "linhas"
+  },
+  "ex-znqt7e4a": {
+    "prompt": "O vendedor 42 não está na lista de valores comuns. Como o planejador estima os pedidos dele?",
+    "hint": "O que sobra depois dos valores listados?",
+    "choices": [
+      {
+        "text": "Divide por igual o que a lista deixa",
+        "why": "Isso: 0,7382 dividido por 990 vendedores, vezes dois milhões, dá 1491."
+      },
+      {
+        "text": "Usa a frequência do valor menos comum da lista",
+        "why": "Isso daria uns 2333; o plano disse 1491."
+      },
+      {
+        "text": "Lê os limites de histograma de seller_id",
+        "why": "Para uma igualdade com um valor fora da lista, usa-se a fatia que sobra."
+      },
+      {
+        "text": "Conta as linhas do vendedor 42 no índice",
+        "why": "O planejador nunca conta; a estimativa é aritmética sobre o resumo."
+      }
+    ]
+  },
+  "ex-vfr07yn1": {
+    "prompt": "O vendedor 553 era o segundo da lista com 0.0013666666 e recebeu estimativa de 2733, mas tem 1590 pedidos. O que mais provavelmente aproximaria a estimativa?",
+    "hint": "Por que ele estava na lista?",
+    "choices": [
+      {
+        "text": "Subir o alvo de estatísticas da coluna, para uma amostra maior separar acaso de frequência",
+        "why": "Isso: ele entrou na lista pela sorte de uma amostra de 30.000 linhas; uma maior encolhe esse ruído."
+      },
+      {
+        "text": "Criar um índice em seller_id",
+        "why": "O índice já existe e não tem papel na estimativa."
+      },
+      {
+        "text": "Definir n_distinct como 1000",
+        "why": "Já é 1000; valores listados nem usam n_distinct."
+      },
+      {
+        "text": "Rodar VACUUM FULL em orders",
+        "why": "Reescrever a tabela não muda estatística nenhuma."
+      }
+    ]
+  },
+  "ex-t9x7jfes": {
+    "prompt": "O vendedor 1 é estimado em 501.600 pedidos e o 42 em 1491, e os dois recebem bitmap scan. Onde a diferença das estimativas ainda importa?",
+    "hint": "Olhe os custos, e pense numa consulta maior.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum, já que os dois receberam o mesmo plano e só o plano roda",
+        "why": "Os custos diferem, 28.585 contra 4.497, e os custos guiam toda escolha acima do scan."
+      },
+      {
+        "text": "Só no tempo que o EXPLAIN leva para imprimir",
+        "why": "O EXPLAIN levou menos de um milissegundo nos dois."
+      },
+      {
+        "text": "No custo, que decide os joins construídos por cima",
+        "why": "Isso: dentro de uma consulta maior, a contagem de linhas guia tudo o que vem por cima."
+      },
+      {
+        "text": "No tamanho do índice que o bitmap scan precisa ler do disco",
+        "why": "O índice é o mesmo para os dois; só muda quanto dele se lê."
+      }
+    ]
+  },
+  "ex-kbjamasa": {
+    "prompt": "`status` tem quatro valores e os quatro estão na lista de valores comuns. Como `status = 'pending'` é estimado?",
+    "hint": "Não sobra nada para uma média.",
+    "choices": [
+      {
+        "text": "Um quarto das linhas, já que há quatro valores",
+        "why": "Isso ignora a lista, que diz que pending é 0.0033."
+      },
+      {
+        "text": "Pelo histograma de status",
+        "why": "Uma coluna cujos valores cabem todos na lista não tem histograma sobrando."
+      },
+      {
+        "text": "Contando as linhas pendentes durante o planejamento",
+        "why": "O planejador nunca conta linhas para planejar."
+      },
+      {
+        "text": "A frequência dele na lista vezes as dois milhões de linhas da tabela: 6600",
+        "why": "Isso: 0,0033 × 2.000.000, contra 7319 reais."
+      }
+    ]
+  },
+  "ex-fzapjctc": {
+    "prompt": "Como o histograma que o PostgreSQL guarda para `placed_at` difere de um que você desenharia à mão?",
+    "hint": "Compare o primeiro balde com o último.",
+    "choices": [
+      {
+        "text": "Tem um balde por mês",
+        "why": "Meses seriam larguras iguais; estes baldes vão de 101 dias a 5,6."
+      },
+      {
+        "text": "Os baldes têm linhas iguais, não tempo igual",
+        "why": "Isso: cem baldes de 1% cada, estreitos onde os pedidos são densos."
+      },
+      {
+        "text": "Guarda uma contagem de linhas para cada horário distinto que viu",
+        "why": "Guarda só 101 limites."
+      },
+      {
+        "text": "Cobre só os cem dias mais recentes",
+        "why": "Os limites vão de janeiro de 2023 a dezembro de 2025."
+      }
+    ]
+  },
+  "ex-b6a3e1t2": {
+    "prompt": "Uma consulta pede os pedidos entre 10h e 11h de um dia. O dia fica dentro de um balde de uns seis dias. O que a estimativa supõe?",
+    "hint": "A única suposição da seção sobre um balde.",
+    "choices": [
+      {
+        "text": "Que a hora tem um por cento da tabela, um balde",
+        "why": "Um balde inteiro cobre seis dias; a hora é uma fatia pequena dele."
+      },
+      {
+        "text": "Que as linhas são uniformes nesses seis dias, então uma hora fica com um cento e quarenta e quatro avos delas",
+        "why": "Isso: cerca de 1/144 das 20.000 linhas do balde, seja qual for o movimento real da hora."
+      },
+      {
+        "text": "Que a hora tem a média de um dia inteiro do balde",
+        "why": "A interpolação é por tempo, então uma hora recebe um vinte e quatro avos da fatia de um dia."
+      },
+      {
+        "text": "Que nada acontece de noite, então horas do dia recebem mais",
+        "why": "O histograma não sabe nada sobre horas do dia dentro de um balde."
+      }
+    ]
+  },
+  "ex-btdrv8ps": {
+    "prompt": "`placed_at` tem 101 limites de histograma e 2.000.000 de linhas. Cerca de quantas linhas um balde guarda?",
+    "hint": "101 limites formam quantos baldes?",
+    "unit": "linhas"
+  },
+  "ex-2z1wjam8": {
+    "prompt": "Uns 106.000 pedidos por `placed_at` receberam um index scan simples de custo 3.913; uns 103.000 por `customer_id` receberam um bitmap scan de custo 19.228. Que estatística explica a diferença?",
+    "hint": "Não quantas linhas, mas onde elas estão.",
+    "choices": [
+      {
+        "text": "n_distinct",
+        "why": "As duas colunas devolvem quase o mesmo número de linhas; não é a distinção que difere."
+      },
+      {
+        "text": "null_frac",
+        "why": "Nenhuma das colunas tem nulos."
+      },
+      {
+        "text": "most_common_freqs",
+        "why": "Nenhuma condição é sobre um valor listado; as duas são faixas."
+      },
+      {
+        "text": "correlation",
+        "why": "Isso: 1 para placed_at, cujas linhas ficam juntas no disco, e 0.0064 para customer_id."
+      }
+    ]
+  },
+  "ex-t8sqkyys": {
+    "prompt": "Por que o ANALYZE estimou cerca de 1,44 milhão de pedidos distintos em `order_lines` quando há 2 milhões?",
+    "hint": "Com que frequência uma amostra de 30.000 linhas pega uma segunda linha do mesmo pedido?",
+    "choices": [
+      {
+        "text": "Alguns pedidos não têm linhas e ficaram de fora",
+        "why": "Todo pedido tem linhas; o count(DISTINCT) deu exatamente dois milhões."
+      },
+      {
+        "text": "A amostra viu quase todo pedido uma vez, e chutou baixo",
+        "why": "Isso: o palpite de uma amostra erra para menos numa coluna de pequenos grupos repetidos."
+      },
+      {
+        "text": "As estatísticas estavam velhas depois da carga",
+        "why": "O market.sql termina com VACUUM ANALYZE; a tabela não mudou desde então."
+      },
+      {
+        "text": "n_distinct é arredondado para dois algarismos significativos",
+        "why": "Ele imprimiu -0.28848767, com oito."
+      }
+    ]
+  },
+  "ex-fv75gsq0": {
+    "prompt": "A estimativa de uma coluna está errada por causa de uma proporção que o seu esquema garante, digamos três linhas por pai para sempre. Que conserto a aula recomenda, e por quê?",
+    "hint": "Um conserto amostra mais; o outro declara a resposta.",
+    "choices": [
+      {
+        "text": "SET STATISTICS 10000, porque uma amostra grande o bastante sempre acha a contagem certa",
+        "why": "Em 1000 ainda faltavam 16%; uma amostra maior melhora contagens de distintos devagar."
+      },
+      {
+        "text": "SET (n_distinct = -0.3333): uma fração fixa continua certa quando entram linhas",
+        "why": "Isso: e anote o porquê, já que nada confere o valor se a proporção mudar."
+      },
+      {
+        "text": "Um índice na coluna, para o planejador poder contá-la",
+        "why": "O planejador não conta por índices quando planeja."
+      },
+      {
+        "text": "Rodar ANALYZE com mais frequência",
+        "why": "Cada execução tira outra amostra do mesmo tamanho e faz o mesmo tipo de palpite."
+      }
+    ]
+  },
+  "ex-4w2733vv": {
+    "prompt": "Para o ANALYZE guardar mais valores comuns e mais baldes de histograma de uma coluna, escreva `ALTER TABLE t ALTER COLUMN c SET ___ 1000;`.",
+    "hint": "A mesma palavra do nome do padrão do servidor, sem o prefixo.",
+    "blanks": [
+      {
+        "accept": [
+          "STATISTICS"
+        ]
+      }
+    ]
+  },
+  "ex-7a29h233": {
+    "prompt": "Curitiba é 0.0685 dos clientes e PR é 0.0685. Por que o planejador esperou 938 para os dois juntos?",
+    "hint": "O que ele faz com duas seletividades?",
+    "choices": [
+      {
+        "text": "Multiplicou as duas frações",
+        "why": "Isso: 0,0685 × 0,0685 × 200.000 dá 938, contra 13.578 reais."
+      },
+      {
+        "text": "As estatísticas de city estavam velhas depois da carga",
+        "why": "Cada fração estava certa; o erro está em combiná-las."
+      },
+      {
+        "text": "Usou a menor das duas frações, por segurança",
+        "why": "Isso teria dado 13.700, perto da verdade."
+      },
+      {
+        "text": "PR não está na lista da coluna state",
+        "why": "Está, em quarto, com 0.0685."
+      }
+    ]
+  },
+  "ex-93msr00p": {
+    "prompt": "Depois de `CREATE STATISTICS ... (dependencies, mcv) ON city, state`, um relatório ainda recebe uma estimativa ruim para `GROUP BY city, state`. O que falta?",
+    "hint": "Grupos são uma contagem de combinações.",
+    "choices": [
+      {
+        "text": "Um ANALYZE do banco inteiro, já que uma tabela não basta",
+        "why": "O objeto pertence a customers; analisar essa tabela bastou para a estimativa do WHERE."
+      },
+      {
+        "text": "Um índice em (city, state)",
+        "why": "Um índice não diz ao planejador quantos grupos há."
+      },
+      {
+        "text": "O tipo ndistinct, que conta as combinações distintas",
+        "why": "Isso: com ele a estimativa foi de 108 para 12."
+      },
+      {
+        "text": "Um alvo de estatísticas maior nas duas colunas",
+        "why": "Cada coluna sozinha já está exata; o problema é o produto, 12 × 9."
+      }
+    ]
+  },
+  "ex-z1dhr48p": {
+    "prompt": "O `pg_stats_ext` mostra `\"4 => 5\": 1.000000` e `\"5 => 4\": 0.421733`. O que eles dizem?",
+    "hint": "4 e 5 são posições de colunas.",
+    "choices": [
+      {
+        "text": "A cidade fixa o estado; o estado raramente fixa a cidade",
+        "why": "Isso: SP e RJ têm várias cidades cada."
+      },
+      {
+        "text": "Cidade e estado são iguais em 100% e 42% das linhas",
+        "why": "Os valores nunca são iguais; uma dependência é sobre um prever o outro."
+      },
+      {
+        "text": "O objeto cobre as colunas 4 a 5 com 42% da tabela amostrada",
+        "why": "A amostra é de 30.000 linhas; os números são graus de dependência."
+      },
+      {
+        "text": "Uma cidade tem 1 estado em média e um estado 0,42 cidade",
+        "why": "Não são médias; um estado não pode ter menos de uma cidade."
+      }
+    ]
+  },
+  "ex-wbwjsr8d": {
+    "prompt": "Ligue cada campo do `pg_stats` ao que ele alimentou nesta aula.",
+    "hint": "Uma estimativa por campo.",
+    "pairs": [
+      {
+        "left": "`most_common_freqs`",
+        "right": "os 501.600 do vendedor 1"
+      },
+      {
+        "left": "`histogram_bounds`",
+        "right": "pedidos antes de 2024"
+      },
+      {
+        "left": "`n_distinct`",
+        "right": "os grupos de um GROUP BY"
+      },
+      {
+        "left": "`correlation`",
+        "right": "o custo de ler pelo índice em ordem"
+      }
+    ],
+    "right_distractors": [
+      "a fração de NULLs"
+    ]
+  },
+  "ex-t63jpa9c": {
+    "prompt": "Ponha em ordem a aritmética do planejador para o vendedor 42.",
+    "hint": "Da lista ao plano.",
+    "items": [
+      "Somar as frequências da lista de valores comuns: 0,2618",
+      "Subtrair de 1 para achar o que sobra: 0,7382",
+      "Dividir pelos 990 valores não listados",
+      "Multiplicar pelas 2.000.000 de linhas da tabela: 1491"
+    ],
+    "trap": "Multiplicar pelas linhas vem por último; a fração é montada antes."
+  },
+  "ex-28shyqh1": {
+    "prompt": "Em quais destes casos um `CREATE STATISTICS` no par certo de colunas ajudaria? Marque todos os que se aplicam.",
+    "hint": "Ele conserta o passo da combinação, não uma coluna sozinha.",
+    "choices": [
+      {
+        "text": "WHERE cep = ... AND cidade = ..., estimado muito abaixo",
+        "why": "Certo: um CEP prevê a cidade, e a multiplicação conta de menos."
+      },
+      {
+        "text": "GROUP BY product_id, categoria com grupos demais esperados",
+        "why": "Certo: o tipo ndistinct conta as combinações reais."
+      },
+      {
+        "text": "WHERE seller_id = 553 estimado 72% acima",
+        "why": "Uma coluna, um acidente de amostra: isso é tarefa do SET STATISTICS."
+      },
+      {
+        "text": "Uma estimativa errada porque o ANALYZE não rodou desde uma carga grande",
+        "why": "Estatísticas velhas se consertam com ANALYZE, o assunto da aula 6."
+      }
+    ]
+  },
+  "ex-rghhc0km": {
+    "prompt": "Uma tabela de leituras de sensores tem `sensor_id` e `site_id`, e todo sensor pertence a um local. `WHERE site_id = 7 AND sensor_id = 70` é estimado em 3 linhas e devolve 900. O que você faz primeiro?",
+    "hint": "Alguma coluna sozinha está errada?",
+    "choices": [
+      {
+        "text": "Subir o default_statistics_target do servidor inteiro",
+        "why": "Uma amostra maior mantém cada fração certa e continua multiplicando."
+      },
+      {
+        "text": "Criar estatísticas estendidas no par de colunas, e depois rodar ANALYZE",
+        "why": "Isso: o sensor fixa o local, a mesma forma de cidade e estado."
+      },
+      {
+        "text": "Definir n_distinct em sensor_id",
+        "why": "O problema é a combinação, não quantos sensores há."
+      },
+      {
+        "text": "Tirar a condição sobre site_id da consulta",
+        "why": "Consertaria esta estimativa mudando a pergunta; o ponto cego do planejador fica para toda outra consulta."
+      }
+    ]
+  }
+}

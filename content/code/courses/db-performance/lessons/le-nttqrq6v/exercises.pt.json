@@ -1,0 +1,384 @@
+{
+  "ex-9mcsgn3g": {
+    "prompt": "O que torna um índice parcial?",
+    "hint": "Veja o fim do CREATE INDEX dele.",
+    "choices": [
+      {
+        "text": "Um WHERE na definição dele",
+        "why": "Isso: linhas que não estão pendentes não ganharam entrada no orders_pending_idx."
+      },
+      {
+        "text": "Indexar só algumas das colunas",
+        "why": "Todo índice cobre algumas colunas; isso não o torna parcial."
+      },
+      {
+        "text": "Construí-lo sobre uma amostra",
+        "why": "Índices são exatos; amostras são do ANALYZE."
+      },
+      {
+        "text": "Deixá-lo incompleto com CREATE INDEX CONCURRENTLY",
+        "why": "CONCURRENTLY muda como ele é construído, não o que ele guarda."
+      }
+    ]
+  },
+  "ex-18n54fpm": {
+    "prompt": "O índice completo em `status` tinha 13 MB e o parcial 176 kB. Quantas vezes menor, mais ou menos, é o parcial?",
+    "hint": "13 MB são uns 13.300 kB.",
+    "unit": "vezes"
+  },
+  "ex-ahvs9z5n": {
+    "prompt": "Por que o índice parcial indexou `placed_at` em vez de `status`?",
+    "hint": "O que status guardaria dentro dele?",
+    "choices": [
+      {
+        "text": "Porque um índice parcial não pode conter a coluna que o seu WHERE testa",
+        "why": "Pode; só repetiria uma palavra."
+      },
+      {
+        "text": "Ali dentro toda linha diz pending",
+        "why": "Isso: e a consulta com ORDER BY placed_at LIMIT 20 o usou para as duas coisas."
+      },
+      {
+        "text": "Porque count(*) só funciona com índice de timestamp",
+        "why": "count(*) funciona com qualquer índice; o índice completo em status também atendeu."
+      },
+      {
+        "text": "Porque placed_at ocupa menos disco que uma coluna de texto",
+        "why": "Uma palavra curta como pending não é maior; o motivo é para que a coluna serve."
+      }
+    ]
+  },
+  "ex-h2xdbpzc": {
+    "prompt": "Uma aplicação roda `SELECT count(*) FROM orders WHERE status = $1` por um driver que prepara instruções, e o índice parcial deixou de ser usado depois de algumas chamadas. Por quê?",
+    "hint": "Um plano feito para qualquer valor de $1.",
+    "choices": [
+      {
+        "text": "O pg_stat_statements reescreveu a constante como $1",
+        "why": "Ele só normaliza o que registra; nunca muda o que roda."
+      },
+      {
+        "text": "O índice foi invalidado pelos inserts",
+        "why": "Inserts mantêm o índice; não o invalidam."
+      },
+      {
+        "text": "Um plano para qualquer valor não pode usá-lo",
+        "why": "Isso: só um literal, ou um valor visto ao planejar, prova que as linhas estão dentro dele."
+      },
+      {
+        "text": "Instruções preparadas não podem usar index-only scans",
+        "why": "Podem; o problema é o predicado que o planejador não consegue provar."
+      }
+    ]
+  },
+  "ex-2kzvb102": {
+    "prompt": "Com o `orders_pending_idx` criado, o que faz `SELECT count(*) FROM orders WHERE status = 'shipped'`?",
+    "hint": "Quais linhas têm entradas?",
+    "choices": [
+      {
+        "text": "Usa o índice parcial e devolve 0",
+        "why": "O planejador nunca usa um índice que deixaria linhas de fora; não devolveria uma contagem errada."
+      },
+      {
+        "text": "Usa o índice parcial e depois confere a tabela",
+        "why": "Pedidos enviados nem estão nele, então nenhuma conferência os acharia."
+      },
+      {
+        "text": "Falha com um erro",
+        "why": "Roda; só não consegue usar o índice."
+      },
+      {
+        "text": "Um scan sequencial, como se o índice não existisse",
+        "why": "Isso: o plano foi um Parallel Seq Scan."
+      }
+    ]
+  },
+  "ex-dpe9hkcw": {
+    "prompt": "O que `CREATE UNIQUE INDEX carts_one_open_idx ON carts (customer_id) WHERE status = 'open'` permite?",
+    "hint": "Único, mas só entre algumas linhas.",
+    "choices": [
+      {
+        "text": "Um carrinho por cliente, para sempre",
+        "why": "Isso é um UNIQUE (customer_id) comum."
+      },
+      {
+        "text": "Fechados à vontade, um aberto por cliente",
+        "why": "Isso: o cliente 42 terminou com um encomendado e um aberto."
+      },
+      {
+        "text": "Um carrinho aberto na tabela inteira",
+        "why": "A chave é customer_id, então a regra é por cliente."
+      },
+      {
+        "text": "Quantos carrinhos abertos quiser, com ids únicos",
+        "why": "Um segundo carrinho aberto para o 42 foi recusado."
+      }
+    ]
+  },
+  "ex-k4qwd933": {
+    "prompt": "Por que `ON CONFLICT (customer_id) WHERE status = 'open' DO NOTHING` precisou do `WHERE`?",
+    "hint": "O PostgreSQL precisa achar o índice de que trata o conflito.",
+    "choices": [
+      {
+        "text": "Para apontar o índice parcial como árbitro",
+        "why": "Isso: sem ele não há índice único só em customer_id para combinar."
+      },
+      {
+        "text": "Para o insert pular carrinhos fechados",
+        "why": "A linha nova é sempre aberta; o WHERE nomeia o índice, não linhas a pular."
+      },
+      {
+        "text": "Porque DO NOTHING não pode ser usado sem WHERE",
+        "why": "Com uma restrição única comum, ON CONFLICT (col) DO NOTHING não precisa."
+      },
+      {
+        "text": "Para travar os outros carrinhos do cliente",
+        "why": "Não trava nada a mais; identifica o índice árbitro."
+      }
+    ]
+  },
+  "ex-9p99zser": {
+    "prompt": "Duas requisições do cliente 42 chegam com um milissegundo de diferença. Cada uma faz `SELECT` procurando carrinho aberto, não acha nenhum, e insere. O que o índice único parcial muda?",
+    "hint": "O índice confere linhas confirmadas e em andamento.",
+    "choices": [
+      {
+        "text": "Nada, porque os SELECTs rodaram antes dos dois inserts",
+        "why": "O índice confere na hora do insert, seja o que for que os SELECTs viram."
+      },
+      {
+        "text": "Os dois inserts dão certo, e o VACUUM depois remove um",
+        "why": "O VACUUM remove linhas mortas, nunca uma duplicata viva."
+      },
+      {
+        "text": "O segundo insert espera o primeiro, e então falha",
+        "why": "Isso: a regra vale seja qual for a ordem das requisições."
+      },
+      {
+        "text": "Os SELECTs passam a ver as linhas não confirmadas um do outro",
+        "why": "Nenhum nível de isolamento mostra linhas não confirmadas no PostgreSQL."
+      }
+    ]
+  },
+  "ex-skmqs0qn": {
+    "prompt": "Os carrinhos ganharam os ids 1 e 4. O que aconteceu com o 2 e o 3?",
+    "hint": "Uma sequência nunca devolve um número.",
+    "choices": [
+      {
+        "text": "O insert recusado e o pulado tiraram um cada",
+        "why": "Isso: um buraco pode ser um insert que nunca aconteceu."
+      },
+      {
+        "text": "Foram apagados quando o carrinho foi encomendado",
+        "why": "O UPDATE mudou o status da linha 1; nada foi apagado."
+      },
+      {
+        "text": "Colunas identity pulam números de propósito para deixar espaço a updates",
+        "why": "Updates mantêm o id; nada reserva números."
+      },
+      {
+        "text": "O UPDATE deu novos ids ao carrinho encomendado duas vezes",
+        "why": "O carrinho encomendado continua com id 1."
+      }
+    ]
+  },
+  "ex-aga7z9j4": {
+    "prompt": "Por que o índice único em `email` não atendeu `WHERE lower(email) = 'user42@example.com'`?",
+    "hint": "Que valores ele guarda?",
+    "choices": [
+      {
+        "text": "Ele guarda email, não lower(email)",
+        "why": "Isso: o índice responde nos termos em que foi escrito."
+      },
+      {
+        "text": "Índices únicos não servem para igualdade",
+        "why": "Servem para igualdade o tempo todo; a coluna aqui está embrulhada numa função."
+      },
+      {
+        "text": "lower() é volátil, então nenhum índice atende a uma consulta que a chama no WHERE",
+        "why": "lower() é imutável; o índice de expressão sobre ela funcionou."
+      },
+      {
+        "text": "A tabela não tinha sido analisada",
+        "why": "Estatísticas mudam estimativas, não que índice combina com uma expressão."
+      }
+    ]
+  },
+  "ex-6rfywn6q": {
+    "prompt": "Com um índice em `lower(email)`, qual consulta pode usá-lo?",
+    "hint": "A expressão precisa bater exatamente.",
+    "choices": [
+      {
+        "text": "`WHERE email ILIKE 'user42@example.com'`",
+        "why": "Outra expressão; o planejador não a vê como lower(email)."
+      },
+      {
+        "text": "`WHERE lower(trim(email)) = 'user42@example.com'`",
+        "why": "O trim dentro muda a expressão, e o índice fica invisível para ela."
+      },
+      {
+        "text": "`WHERE lower(email) = 'user42@example.com'`",
+        "why": "Isso: a mesma expressão, escrita do mesmo jeito."
+      },
+      {
+        "text": "`WHERE upper(email) = 'USER42@EXAMPLE.COM'`",
+        "why": "upper não é lower, mesmo que a resposta fosse a mesma linha."
+      }
+    ]
+  },
+  "ex-szf8fs4e": {
+    "prompt": "Logo depois de criar o índice de expressão, o plano ainda dizia `rows=1000`; depois do `ANALYZE customers`, `rows=1`. Por quê?",
+    "hint": "Onde o pg_stats ganhou uma linha nova?",
+    "choices": [
+      {
+        "text": "O ANALYZE reconstruiu o índice de forma mais compacta",
+        "why": "O ANALYZE nunca reconstrói um índice."
+      },
+      {
+        "text": "O ANALYZE mediu a expressão",
+        "why": "Isso: o pg_stats passou a ter uma linha do índice com n_distinct -1."
+      },
+      {
+        "text": "O primeiro plano estava em cache",
+        "why": "Cada EXPLAIN planeja de novo."
+      },
+      {
+        "text": "O índice não era utilizável até o ANALYZE rodar",
+        "why": "Ele foi usado antes do ANALYZE, num bitmap scan."
+      }
+    ]
+  },
+  "ex-ndgqnhmc": {
+    "prompt": "Por que o PostgreSQL recusa `CREATE INDEX ON orders (date(placed_at))`?",
+    "hint": "Compare os dois SELECTs com TimeZone diferentes.",
+    "choices": [
+      {
+        "text": "date() de um timestamptz depende do TimeZone da sessão",
+        "why": "Isso: ela é stable, não imutável, e o mesmo instante deu 1º e 2 de junho."
+      },
+      {
+        "text": "Índices não guardam valores date",
+        "why": "A versão com AT TIME ZONE indexou datas sem problema."
+      },
+      {
+        "text": "A tabela orders é grande demais para um índice de expressão",
+        "why": "A mesma tabela aceitou o índice com AT TIME ZONE."
+      },
+      {
+        "text": "placed_at já tem um índice",
+        "why": "Uma coluna pode ter vários índices; o erro é sobre IMMUTABLE."
+      }
+    ]
+  },
+  "ex-4kk7dgqx": {
+    "prompt": "Toda função numa expressão de índice precisa estar marcada como ___, uma promessa de que o resultado depende dos argumentos e de mais nada.",
+    "hint": "A palavra da mensagem de erro.",
+    "blanks": [
+      {
+        "accept": [
+          "IMMUTABLE"
+        ]
+      }
+    ]
+  },
+  "ex-c7d9cxtw": {
+    "prompt": "Uma equipe em Lisboa e outra em São Paulo dividem um banco, e as duas tiram relatórios pelo dia em que o pedido foi feito. O que esta aula diz que o índice de expressão as obriga a decidir?",
+    "hint": "O índice precisa de um fuso com nome.",
+    "choices": [
+      {
+        "text": "Que TimeZone cada sessão deve configurar",
+        "why": "A expressão imutável ignora a configuração da sessão; é para isso que ela serve."
+      },
+      {
+        "text": "Se vão usar date() ou um cast, já que os dois são iguais",
+        "why": "Não são iguais: date(timestamptz) depende da sessão, o cast com AT TIME ZONE não."
+      },
+      {
+        "text": "Em que fuso se conta o dia de negócio da empresa",
+        "why": "Isso: um índice guarda os dias de um fuso, e essa escolha é sobre o negócio."
+      },
+      {
+        "text": "Nada: um índice de expressão se adapta a cada sessão",
+        "why": "Um índice guarda valores uma vez; não se adapta, e por isso IMMUTABLE é exigido."
+      }
+    ]
+  },
+  "ex-vjz3wewr": {
+    "prompt": "Para os pedidos de um dia, a reescrita como faixa da aula 1 levou 1,3 ms e o índice de expressão 0,76 ms. Por que a aula ainda prefere a reescrita quando dá para mudar a consulta?",
+    "hint": "O que o segundo índice custa?",
+    "choices": [
+      {
+        "text": "Porque o índice de expressão dá respostas erradas em outros fusos",
+        "why": "A expressão dele nomeia o fuso, então as respostas não dependem da sessão."
+      },
+      {
+        "text": "Porque a reescrita não precisa de um índice extra de 14 MB para manter",
+        "why": "Isso: o índice existente em placed_at a atende, e é necessário de qualquer jeito."
+      },
+      {
+        "text": "Porque 0,76 ms e 1,3 ms são iguais dentro do ruído",
+        "why": "O argumento é o custo do índice, não o tempo."
+      },
+      {
+        "text": "Porque índices de expressão não servem a count(*)",
+        "why": "A contagem o usou."
+      }
+    ]
+  },
+  "ex-vp8f1drg": {
+    "prompt": "Ligue cada necessidade ao índice desta aula que a atende.",
+    "hint": "Parcial, único parcial ou de expressão.",
+    "pairs": [
+      {
+        "left": "contar rápido os pedidos pendentes",
+        "right": "ON orders (placed_at) WHERE status = 'pending'"
+      },
+      {
+        "left": "no máximo um carrinho aberto por cliente",
+        "right": "UNIQUE ON carts (customer_id) WHERE status = 'open'"
+      },
+      {
+        "left": "entrar seja qual for a caixa do endereço digitado",
+        "right": "ON customers (lower(email))"
+      },
+      {
+        "left": "pedidos de um dia contados no horário de São Paulo",
+        "right": "ON orders (((placed_at AT TIME ZONE 'America/Sao_Paulo')::date))"
+      }
+    ],
+    "right_distractors": [
+      "ON orders (date(placed_at))"
+    ]
+  },
+  "ex-pfqsz1pg": {
+    "prompt": "Ponha em ordem os passos do índice de expressão sobre a data do pedido desta aula.",
+    "hint": "Do erro à medição.",
+    "items": [
+      "CREATE INDEX em date(placed_at) falha: não é IMMUTABLE",
+      "Mostrar que date() muda com o TimeZone",
+      "Indexar a expressão com AT TIME ZONE",
+      "ANALYZE, para a estimativa vir das estatísticas"
+    ],
+    "trap": "A estimativa só melhora depois que o índice existe e o ANALYZE o mediu."
+  },
+  "ex-gedkw89k": {
+    "prompt": "A quais destes casos um índice parcial serviria? Marque todos os que se aplicam.",
+    "hint": "Uma fatia pequena sobre a qual toda consulta pergunta, nomeada no texto.",
+    "choices": [
+      {
+        "text": "Uma tela de fila que sempre pede jobs WHERE done = false, algumas centenas entre milhões",
+        "why": "Certo: uma fatia pequena nomeada literalmente em toda consulta."
+      },
+      {
+        "text": "Uma assinatura ativa por conta",
+        "why": "Certo: um índice único parcial, o formato dos carrinhos."
+      },
+      {
+        "text": "Um relatório que filtra por um status escolhido num menu com os doze",
+        "why": "Todo status é pedido; a fatia é a tabela inteira."
+      },
+      {
+        "text": "Uma busca por email em qualquer caixa",
+        "why": "Isso é um índice de expressão em lower(email)."
+      }
+    ]
+  }
+}

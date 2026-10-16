@@ -1,0 +1,360 @@
+{
+ "ex-3v785446": {
+  "prompt": "Na primeira fase, `arrivalRate: 1` e `rampTo: 3` em `duration: 5`. O que acontece?",
+  "hint": "Chegadas, não usuários lá dentro.",
+  "choices": [
+   {
+    "text": "Visitantes novos chegam a uma taxa de 1 a 3 por segundo em 5 segundos",
+    "why": "Certo. Cada visitante roda o fluxo uma vez e vai embora."
+   },
+   {
+    "text": "Três visitantes repetem o fluxo por 5 segundos, cada um recomeçando quando termina",
+    "why": "Isso seria um modelo fechado; as fases do Artillery contam chegadas."
+   },
+   {
+    "text": "Uma requisição por segundo, depois três",
+    "why": "A taxa é de visitantes, e cada um manda duas requisições."
+   },
+   {
+    "text": "O teste espera 5 segundos de aquecimento antes de o primeiro visitante chegar",
+    "why": "A fase já é carga desde o primeiro segundo."
+   }
+  ]
+ },
+ "ex-qqs8c4cq": {
+  "prompt": "O que o `capture` debaixo do primeiro `get` faz pela reserva que vem depois?",
+  "hint": "`$.id` é um caminho dentro da resposta.",
+  "choices": [
+   {
+    "text": "Grava a resposta inteira num arquivo para o relatório",
+    "why": "Nada vai para arquivo; o valor vai para uma variável."
+   },
+   {
+    "text": "Põe o `id` da resposta em `show`",
+    "why": "Certo. O `{{ show }}` do POST é esse valor capturado."
+   },
+   {
+    "text": "Confere se a resposta foi um 200",
+    "why": "Capturar lê um valor; não afirma nada sobre o status."
+   },
+   {
+    "text": "Registra o tempo de resposta com o nome `show`",
+    "why": "Os tempos são registrados para toda requisição de qualquer jeito; o `capture` lê o corpo."
+   }
+  ]
+ },
+ "ex-t2em6dxq": {
+  "prompt": "Num cenário do Artillery, o limite do percentil 95 e o `maxErrorRate` ficam debaixo da chave ___ dentro de `config`.",
+  "hint": "O plugin citado logo acima.",
+  "blanks": [
+   {
+    "accept": [
+     "ensure"
+    ]
+   }
+  ]
+ },
+ "ex-sf267sxs": {
+  "prompt": "Uma jornada precisa de um corpo de reserva calculado a partir de uma lista de assentos que o teste lê ao começar. Onde fica essa lógica no Artillery?",
+  "hint": "O YAML descreve; o que calcula?",
+  "choices": [
+   {
+    "text": "No YAML, como um laço debaixo de `flow`",
+    "why": "O YAML não tem como calcular um corpo; é aí que ele acaba."
+   },
+   {
+    "text": "Um arquivo JavaScript citado em `config.processor`",
+    "why": "Certo. O teste vira então dois arquivos em duas linguagens."
+   },
+   {
+    "text": "Num segundo arquivo YAML debaixo de `phases`",
+    "why": "As fases decidem chegadas, não corpos de requisição."
+   },
+   {
+    "text": "Fora do Artillery, que manda os corpos exatamente como escritos",
+    "why": "Manda, por uma função do processor."
+   }
+  ]
+ },
+ "ex-x8fq029f": {
+  "prompt": "Toda reserva começa a responder 500, e o cenário não muda. O que diz o bloco `Checks` da execução do Artillery?",
+  "hint": "O que o Artillery chama de erro?",
+  "choices": [
+   {
+    "text": "`fail: maxErrorRate < 1`, porque metade das requisições falhou",
+    "why": "Um 500 é uma resposta, e os erros do Artillery são requisições sem resposta."
+   },
+   {
+    "text": "As duas regras `ok`, com os 500 visíveis só em `http.codes.500`",
+    "why": "Certo. Uma regra sobre códigos de status precisa ser escrita no `ensure` à parte."
+   },
+   {
+    "text": "`fail` no percentil 95, porque um 500 é lento",
+    "why": "Um 500 costuma ser rápido; nada o liga à regra de tempo."
+   },
+   {
+    "text": "Nenhum bloco `Checks`",
+    "why": "O bloco aparece sempre que o `ensure` está no arquivo."
+   }
+  ]
+ },
+ "ex-82xcahfd": {
+  "prompt": "O resumo diz `http.requests: 112`, e o fluxo de cada visitante manda um GET e um POST. Quantos visitantes completaram a jornada?",
+  "hint": "`vusers.completed`."
+ },
+ "ex-3fk9xm31": {
+  "prompt": "O que o `--overrides` faz em `artillery run boxoffice.yml --overrides '{…}'`?",
+  "hint": "O arquivo não foi editado.",
+  "choices": [
+   {
+    "text": "Troca parte do `config` nesta execução, com JSON da linha de comando",
+    "why": "Certo. A regra do p95 virou 5 ms sem mexer no YAML."
+   },
+   {
+    "text": "Roda o cenário duas vezes e fica com o segundo resultado",
+    "why": "Ele muda a configuração, e a execução acontece uma vez."
+   },
+   {
+    "text": "Escreve o relatório num arquivo JSON",
+    "why": "Isso é o `--output`."
+   },
+   {
+    "text": "Pula os checks do `ensure`",
+    "why": "Os checks rodaram, e um deles reprovou."
+   }
+  ]
+ },
+ "ex-rvat0qdy": {
+  "prompt": "Ligue cada linha do resumo do Artillery ao que ela conta.",
+  "hint": "A tabela debaixo do resumo.",
+  "pairs": [
+   {
+    "left": "http.codes.409",
+    "right": "respostas dizendo que o assento já estava ocupado"
+   },
+   {
+    "left": "vusers.created",
+    "right": "visitantes que chegaram durante as fases"
+   },
+   {
+    "left": "vusers.failed",
+    "right": "visitantes cuja jornada parou numa requisição sem resposta"
+   },
+   {
+    "left": "vusers.session_length",
+    "right": "quanto durou uma jornada inteira"
+   }
+  ],
+  "right_distractors": [
+   "visitantes ainda esperando na fila quando o teste acabou"
+  ]
+ },
+ "ex-h9tvkssj": {
+  "prompt": "O que o `tee results.bin` acrescenta a `vegeta attack … | vegeta report`?",
+  "hint": "Olhe o próximo comando da aula.",
+  "choices": [
+   {
+    "text": "Deixa o ataque mais rápido",
+    "why": "Ele copia o fluxo; o ataque roda igual."
+   },
+   {
+    "text": "Transforma os resultados binários em texto",
+    "why": "O arquivo guarda os mesmos resultados binários que o `report` lê."
+   },
+   {
+    "text": "Uma cópia para relatar de novo, em qualquer forma, sem mandar nada",
+    "why": "Certo. O histograma saiu desse arquivo."
+   },
+   {
+    "text": "Manda as requisições para um segundo servidor",
+    "why": "Ele escreve num arquivo; nada é mandado a lugar nenhum."
+   }
+  ]
+ },
+ "ex-9gxe4vq2": {
+  "prompt": "A `-rate=300` o relatório diz `rate 300.16` e `throughput 135.39`. O que a diferença quer dizer?",
+  "hint": "Mandadas contra respondidas.",
+  "choices": [
+   {
+    "text": "O Vegeta não conseguiu mandar mais rápido que 135 por segundo",
+    "why": "Ele mandou a 300.16; a coluna da taxa diz isso."
+   },
+   {
+    "text": "A bilheteria respondeu menos que o mandado; o resto esperou ou estourou o tempo",
+    "why": "Certo. Um gerador aberto continua mandando, então a fila aparece nos tempos."
+   },
+   {
+    "text": "Metade das requisições veio de cache",
+    "why": "Nada aqui faz cache; toda resposta veio da bilheteria."
+   },
+   {
+    "text": "O Vegeta descarta as requisições que não consegue mandar a tempo e as tira da taxa",
+    "why": "Ele começa mais workers para manter a taxa; nada foi descartado."
+   }
+  ]
+ },
+ "ex-k2pgjpy5": {
+  "prompt": "Ponha os passos do pipeline do Vegeta da aula na ordem em que os dados passam.",
+  "hint": "Do que mandar até o que voltou.",
+  "items": [
+   "o echo escreve o alvo",
+   "o vegeta attack manda na taxa",
+   "o tee guarda uma cópia dos resultados",
+   "o vegeta report os imprime"
+  ]
+ },
+ "ex-8w60jj3n": {
+  "prompt": "A linha `Latencies` do Vegeta diz `[min, mean, 50, 90, 95, 99, max]`. Qual valor traz o requisito da aula 1?",
+  "hint": "Conte os colchetes.",
+  "choices": [
+   {
+    "text": "O segundo, a média",
+    "why": "O requisito nomeia um percentil, não a média."
+   },
+   {
+    "text": "O quinto, o percentil 95",
+    "why": "Certo. 60.875 ms na execução a 50 por segundo."
+   },
+   {
+    "text": "O último, o máximo",
+    "why": "O máximo é uma requisição; o requisito fala de 95 em cada 100."
+   },
+   {
+    "text": "O terceiro, a mediana",
+    "why": "A mediana é o percentil 50; o requisito pede o 95."
+   }
+  ]
+ },
+ "ex-afkx2dmj": {
+  "prompt": "Quais destes valem para o Vegeta como a aula o roda? Escolha todos os que se aplicam.",
+  "hint": "Um ataque é uma taxa e uma duração.",
+  "choices": [
+   {
+    "text": "Continua mandando na taxa mesmo quando as respostas estão lentas",
+    "why": "Certo. Ele começa mais workers para manter a taxa."
+   },
+   {
+    "text": "Não tem tempo de reflexão nem noção de usuário",
+    "why": "Certo. Há alvos, uma taxa e uma duração."
+   },
+   {
+    "text": "Os usuários dele esperam cada resposta antes da próxima requisição",
+    "why": "Isso é um modelo fechado, e o Vegeta não tem usuários."
+   },
+   {
+    "text": "Um limite ultrapassado faz o `vegeta attack` sair com código diferente de zero",
+    "why": "O Vegeta não tem limites; um script em volta do relatório precisa decidir."
+   }
+  ]
+ },
+ "ex-pz50vn2t": {
+  "prompt": "Qual das seis ferramentas não tem um jeito embutido de transformar um limite de percentil numa execução reprovada?",
+  "hint": "Olhe a última coluna da tabela.",
+  "choices": [
+   {
+    "text": "k6",
+    "why": "O k6 tem `thresholds` e sai com 99."
+   },
+   {
+    "text": "Artillery",
+    "why": "O Artillery tem `ensure` e sai com 1."
+   },
+   {
+    "text": "Gatling",
+    "why": "O Gatling tem `assertions`, e o build reprova."
+   },
+   {
+    "text": "Vegeta",
+    "why": "Certo. O relatório dele é lido, ou interpretado por um script que decide."
+   }
+  ]
+ },
+ "ex-50bn6kjn": {
+  "prompt": "Um requisito diz \"200 pessoas com a página de reserva aberta, cada uma agindo a cada poucos segundos\". Qual par de ferramentas escreve essa carga mais diretamente?",
+  "hint": "Pessoas dentro ao mesmo tempo, não chegadas por segundo.",
+  "choices": [
+   {
+    "text": "Vegeta e Artillery",
+    "why": "Os dois escrevem chegadas por segundo: um modelo aberto."
+   },
+   {
+    "text": "O `injectOpen` do Gatling e a taxa de chegada do k6",
+    "why": "Os dois contam chegadas, não pessoas lá dentro."
+   },
+   {
+    "text": "Locust e JMeter",
+    "why": "Certo. Os dois modelam usuários que repetem com uma espera: um modelo fechado."
+   },
+   {
+    "text": "Vegeta e o `injectOpen` do Gatling",
+    "why": "Os dois mantêm uma taxa, faça o servidor o que fizer."
+   }
+  ]
+ },
+ "ex-1nfxsn6f": {
+  "prompt": "Um time escreve Python e quer duas coisas no pipeline: a jornada de reserva sob carga, e uma verificação de que `GET /shows/{id}` aguenta 50 requisições por segundo. Qual par segue o conselho da aula?",
+  "hint": "Duas ferramentas, escolhidas por quem as lê e pelo modelo que cada pergunta nomeia.",
+  "choices": [
+   {
+    "text": "JMeter para as duas, editado na janela dele",
+    "why": "Um plano que ninguém num time de Python revisa, e um modelo fechado para uma pergunta sobre taxa."
+   },
+   {
+    "text": "Locust para a jornada, e Vegeta com um script que lê o relatório para a taxa",
+    "why": "Certo. Python que o time lê, e uma ferramenta aberta para uma pergunta feita como taxa."
+   },
+   {
+    "text": "Vegeta para as duas",
+    "why": "O Vegeta não tem jornadas: nem fluxo, nem captura, nem tempo de reflexão."
+   },
+   {
+    "text": "Gatling para a jornada e Locust para a taxa",
+    "why": "Um teste em Java num time de Python, e uma ferramenta fechada para uma pergunta aberta."
+   }
+  ]
+ },
+ "ex-1wteh96s": {
+  "prompt": "Contra a mesma bilheteria, o Vegeta a 300 por segundo informa uma mediana de 2.413 s, enquanto uma ferramenta fechada com 10 usuários em laço informa uma mediana perto de 60 ms. Qual número descreve visitantes que chegam a 300 por segundo?",
+  "hint": "Quem continuou chegando enquanto a bilheteria estava atrasada?",
+  "choices": [
+   {
+    "text": "O da ferramenta fechada, porque os seus dez usuários mediram cada resposta com cuidado",
+    "why": "Ela mediu o que os seus dez usuários encontraram, e eles ficaram lentos junto com o servidor."
+   },
+   {
+    "text": "Nenhum, já que os dois discordam",
+    "why": "Eles respondem a perguntas diferentes; uma delas é esta."
+   },
+   {
+    "text": "A média dos dois",
+    "why": "Fazer a média de uma pergunta sobre taxa com uma sobre usuários não descreve carga nenhuma."
+   },
+   {
+    "text": "O do Vegeta, porque ele continuou mandando na taxa e cronometrou a espera",
+    "why": "Certo. Visitantes que chegam de qualquer jeito esperam na fila, e só a execução aberta contou isso."
+   }
+  ]
+ },
+ "ex-eep7mbyh": {
+  "prompt": "Um colega põe o Vegeta no pipeline como `echo … | vegeta attack -rate=50 -duration=60s | vegeta report`, e o job fica verde num dia em que o percentil 95 chegou a 900 ms. Por quê?",
+  "hint": "O que decide a cor de um job?",
+  "choices": [
+   {
+    "text": "Nenhum passo compara os números com um limite, então o código de saída fica 0",
+    "why": "Certo. Um passo precisa ler o relatório, por exemplo com `-type=json` e `jq`, e sair com código diferente de zero."
+   },
+   {
+    "text": "Sessenta segundos é uma execução curta demais para o Vegeta juntar um percentil 95",
+    "why": "O tempo foi medido; ninguém o julgou."
+   },
+   {
+    "text": "O Vegeta tira do relatório as requisições lentas",
+    "why": "Respostas lentas estão nos percentis; timeouts estão no conjunto de erros."
+   },
+   {
+    "text": "O pipeline lê só a última linha",
+    "why": "O pipeline lê o código de saída, e ele foi 0."
+   }
+  ]
+ }
+}

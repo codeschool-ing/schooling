@@ -1,0 +1,406 @@
+{
+  "ex-2fbp4sgb": {
+    "prompt": "No `pg_locks`, que coluna separa uma trava que alguém tem de uma trava pela qual alguém espera?",
+    "hint": "Um booleano.",
+    "choices": [
+      {
+        "text": "`mode`",
+        "why": "mode diz qual trava, ShareLock ou ExclusiveLock, não se foi concedida."
+      },
+      {
+        "text": "`locktype`, que mostra `waiting` para pedidos",
+        "why": "locktype diz o que está travado: relation, transactionid, tuple, advisory."
+      },
+      {
+        "text": "`granted`",
+        "why": "Isso: t para segura, f para pedida e esperando; as linhas com f são o problema."
+      },
+      {
+        "text": "`pid`, que fica nulo enquanto o pedido espera",
+        "why": "Toda linha tem o pid da sessão, esperando ou não."
+      }
+    ]
+  },
+  "ex-967r87qd": {
+    "prompt": "A janela B espera para atualizar o pedido 1, que a janela A mudou. O que o `pg_locks` mostra para a espera da janela B?",
+    "hint": "Travas de linha não ficam no pg_locks.",
+    "choices": [
+      {
+        "text": "Uma trava de linha no pedido 1, não concedida",
+        "why": "Travas de linha moram na linha; o pg_locks não tem linha para 'pedido 1 travado'."
+      },
+      {
+        "text": "Um ShareLock no id de transação da janela A, não concedido",
+        "why": "Isso: ela espera a transação de A terminar, o que aparece como pedido sobre o transactionid de A."
+      },
+      {
+        "text": "Um AccessExclusiveLock em orders, não concedido",
+        "why": "As duas seguram RowExclusiveLock em orders, que nunca conflitam."
+      },
+      {
+        "text": "Nada: esperas só aparecem no pg_stat_activity",
+        "why": "A linha de ShareLock não concedida é justamente a espera."
+      }
+    ]
+  },
+  "ex-wae4nxzb": {
+    "prompt": "Por que cada sessão que espera na cadeia também segura um `ExclusiveLock` numa `tuple`?",
+    "hint": "Várias sessões poderiam esperar a mesma linha.",
+    "choices": [
+      {
+        "text": "Ele mantém quem espera por uma linha na ordem de chegada",
+        "why": "Isso: a trava de tupla é a fila daquela linha, então quem espera a recebe um por vez, na ordem de chegada."
+      },
+      {
+        "text": "Quer dizer que a sessão já mudou aquela linha",
+        "why": "Quem espera não a mudou; está esperando para mudar."
+      },
+      {
+        "text": "É a trava que a tabela pega a cada UPDATE, linha por linha, haja espera ou não",
+        "why": "A janela A atualizou o pedido 1 e não segura trava de tupla; só quem espera segura."
+      },
+      {
+        "text": "Reserva espaço na página para a nova versão",
+        "why": "Travas não reservam espaço."
+      }
+    ]
+  },
+  "ex-37wtnrjz": {
+    "prompt": "Quantas linhas da consulta ao `pg_locks` da aula tinham `granted` = `f`?",
+    "hint": "Uma por sessão que espera.",
+    "unit": "linhas"
+  },
+  "ex-ne3vt3a2": {
+    "prompt": "O que o `pg_blocking_pids(5796)` devolve na cadeia da aula?",
+    "hint": "A janela C espera a janela B.",
+    "choices": [
+      {
+        "text": "`{5794}`",
+        "why": "Isso: o pid da janela B, a sessão pela qual a janela C espera."
+      },
+      {
+        "text": "`{5792, 5794}`, toda sessão à frente dela na cadeia",
+        "why": "Ela só devolve as sessões esperadas diretamente; 5792 aparece no array de 5794."
+      },
+      {
+        "text": "`{}`, porque 5796 não está numa transação",
+        "why": "Não estar numa transação explícita não impede um comando de esperar."
+      },
+      {
+        "text": "Quantos segundos ela esperou",
+        "why": "Ela devolve pids, num array de inteiros."
+      }
+    ]
+  },
+  "ex-8g1k0q44": {
+    "prompt": "O `blocked.sql` mostra a raiz como `idle in transaction` com `waiting_on` = `Client:ClientRead`. O que isso quer dizer?",
+    "hint": "Por quem o servidor está esperando?",
+    "choices": [
+      {
+        "text": "O servidor está lendo a linha do disco",
+        "why": "Uma leitura de disco é um evento de espera IO, e uma sessão ociosa não roda nada."
+      },
+      {
+        "text": "A sessão espera uma trava na tabela de clientes",
+        "why": "Client aqui é o cliente da conexão, não uma tabela."
+      },
+      {
+        "text": "Tem uma transação aberta e espera a aplicação",
+        "why": "Isso: o servidor está ocioso; a aplicação parou de mandar comandos com a transação aberta."
+      },
+      {
+        "text": "Está prestes a confirmar e escreve no log",
+        "why": "Um commit em andamento é um comando ativo, não ocioso."
+      }
+    ]
+  },
+  "ex-tqdkm3jn": {
+    "prompt": "Um painel lista só consultas `active` rodando há mais de cinco segundos, e não mostra nada durante um incidente de trava. Por quê?",
+    "hint": "Onde estava a raiz na aula?",
+    "choices": [
+      {
+        "text": "Consultas esperando aparecem como ociosas",
+        "why": "Comandos esperando são active; as janelas B e C eram."
+      },
+      {
+        "text": "As que esperavam estavam active mas tinham menos de cinco segundos, e painéis arredondam para baixo",
+        "why": "Na aula elas tinham esperado uns 30 segundos; quem espera apareceria depois de cinco."
+      },
+      {
+        "text": "O pg_stat_activity esconde sessões que seguram travas",
+        "why": "Toda conexão tem uma linha lá."
+      },
+      {
+        "text": "A raiz está idle in transaction, então um filtro em active a esconde",
+        "why": "Isso: mostra as vítimas, no máximo, nunca a causa, que não roda nada."
+      }
+    ]
+  },
+  "ex-9de9dcf4": {
+    "prompt": "No `pg_stat_activity`, uma sessão que rodou `BEGIN` e um `UPDATE`, e agora não roda nada, tem o state `idle in ___`.",
+    "hint": "O que o BEGIN abre.",
+    "blanks": [
+      {
+        "accept": [
+          "transaction"
+        ]
+      }
+    ]
+  },
+  "ex-zcba2qcw": {
+    "prompt": "Num grafo de bloqueio, o que faz de uma sessão a raiz?",
+    "hint": "O primeiro SELECT da consulta lock-tree.",
+    "choices": [
+      {
+        "text": "É a que espera há mais tempo",
+        "why": "A raiz muitas vezes não espera nada; a janela A estava ociosa."
+      },
+      {
+        "text": "Bloqueia alguém e não espera ninguém",
+        "why": "Isso: blocked_by vazio, e o pid dela no de outra sessão."
+      },
+      {
+        "text": "É a que roda a consulta mais lenta do banco agora",
+        "why": "A raiz da aula não rodava consulta nenhuma."
+      },
+      {
+        "text": "Tem o menor pid",
+        "why": "pids dizem quando a conexão começou, nada sobre bloqueio."
+      }
+    ]
+  },
+  "ex-pgrejm76": {
+    "prompt": "Por que cancelar a janela C, a sessão da qual um usuário reclama, não termina o incidente?",
+    "hint": "Por quem a janela B espera?",
+    "choices": [
+      {
+        "text": "Um cancelamento só vale depois do deadlock_timeout",
+        "why": "O cancelamento da janela C valeu na hora."
+      },
+      {
+        "text": "A janela C se reconecta e pede de novo sozinha",
+        "why": "Um cancelamento não reconecta nada, e o psql não repete comandos."
+      },
+      {
+        "text": "A janela B ainda espera A, e o próximo pedido entra na fila atrás de B",
+        "why": "Isso: só agir na raiz mexe a cadeia; as vítimas do fundo são trocadas por novas."
+      },
+      {
+        "text": "Cancelar uma sessão só funciona para superusuários",
+        "why": "Membros de pg_signal_backend também podem, e o cancelamento funcionou."
+      }
+    ]
+  },
+  "ex-cg9jwn00": {
+    "prompt": "Por que o `lock-tree.sql` não devolve nada para duas sessões presas num deadlock?",
+    "hint": "Onde a recursão começa?",
+    "choices": [
+      {
+        "text": "Sessões em deadlock ficam escondidas do pg_stat_activity",
+        "why": "Ficam visíveis como qualquer outra."
+      },
+      {
+        "text": "O pg_blocking_pids se recusa a relatar ciclos",
+        "why": "O array de cada uma cita a outra; o problema é que nenhum array é vazio."
+      },
+      {
+        "text": "Nenhuma sessão de um ciclo é raiz",
+        "why": "Isso: cada uma espera alguém, então nenhuma começa a árvore, e o servidor quebra o ciclo em um segundo de todo modo."
+      },
+      {
+        "text": "A consulta só segue travas de linha",
+        "why": "O pg_blocking_pids cobre todo tipo de trava."
+      }
+    ]
+  },
+  "ex-hmr47zwx": {
+    "prompt": "Um auto-join do `pg_locks` por `transactionid` não acha bloqueador para um `SELECT` que espera há um minuto atrás de um `ALTER TABLE` que também espera. O que o `pg_blocking_pids` relata para o SELECT?",
+    "hint": "A fila de travas da aula 12.",
+    "choices": [
+      {
+        "text": "Nada, já que o SELECT não conflita com nenhuma trava segura",
+        "why": "Ele também relata sessões à frente na fila cujo pedido conflita, que é este caso."
+      },
+      {
+        "text": "O pid do ALTER",
+        "why": "Isso: o SELECT espera atrás do pedido ACCESS EXCLUSIVE na fila, e a função conhece a fila."
+      },
+      {
+        "text": "Toda sessão conectada ao banco",
+        "why": "Só as sessões pelas quais ela de fato espera são listadas."
+      },
+      {
+        "text": "Um erro, porque o ALTER ainda não segura trava",
+        "why": "Nenhum erro: um pedido em espera basta para bloquear quem vem atrás."
+      }
+    ]
+  },
+  "ex-pqea7847": {
+    "prompt": "O que o `pg_cancel_backend` fez com a janela A, idle in transaction na raiz?",
+    "hint": "Ele devolveu t.",
+    "choices": [
+      {
+        "text": "Nada visível: não havia comando para cancelar",
+        "why": "Isso: a árvore não mudou; um cancelamento interrompe um comando em andamento, e as travas pertencem à transação."
+      },
+      {
+        "text": "Desfez a transação e liberou o pedido 1",
+        "why": "Isso foi o que o terminate fez; depois do cancelamento, 5792 continuava sendo a raiz."
+      },
+      {
+        "text": "Fechou a conexão",
+        "why": "Fechar a conexão é trabalho do terminate."
+      },
+      {
+        "text": "Confirmou a transação",
+        "why": "Nada fora do cliente confirma a transação dele."
+      }
+    ]
+  },
+  "ex-6fxdr1j1": {
+    "prompt": "Depois do `pg_terminate_backend(5792)`, o update da janela B terminou. O que a árvore mostrou em seguida?",
+    "hint": "A transação da janela B continuava aberta.",
+    "choices": [
+      {
+        "text": "Nenhuma linha: o incidente acabou",
+        "why": "A janela C continuava esperando, agora a janela B."
+      },
+      {
+        "text": "5794 como raiz, idle in transaction, com 5796 debaixo",
+        "why": "Isso: encerrar a raiz subiu a cadeia um nível; a janela B segurou os dois pedidos até terminar a transação."
+      },
+      {
+        "text": "5792 de novo, reconectada pelo psql",
+        "why": "O psql reconectou depois, como sessão nova sem transação."
+      },
+      {
+        "text": "5796 como raiz, já que esperou mais",
+        "why": "5796 esperava 5794, então não pode ser raiz."
+      }
+    ]
+  },
+  "ex-tf6t23sp": {
+    "prompt": "Uma sessão dentro de uma transação longa tem um comando preso numa espera por trava. Você o cancela. Que travas essa sessão ainda segura?",
+    "hint": "O que acontece com uma transação quando um comando dela falha?",
+    "choices": [
+      {
+        "text": "Toda trava que a transação pegou antes, até o cliente desfazer",
+        "why": "Isso: a transação falhou, não terminou; as travas ficam até o ROLLBACK, e talvez seja preciso encerrar afinal."
+      },
+      {
+        "text": "Nenhuma: um cancelamento libera tudo o que a sessão segurava",
+        "why": "Só o comando para; a transação e as travas ficam."
+      },
+      {
+        "text": "Só as travas de tabela, já que as de linha são liberadas quando o comando é cancelado",
+        "why": "Travas de linha pertencem à transação tanto quanto as de tabela."
+      },
+      {
+        "text": "Só a trava pela qual esperava",
+        "why": "A trava pela qual esperava nunca foi concedida, então é justamente a que ela não segura."
+      }
+    ]
+  },
+  "ex-48x433dd": {
+    "prompt": "Ligue cada situação à ação que a aula recomenda.",
+    "hint": "Qual delas está rodando alguma coisa?",
+    "pairs": [
+      {
+        "left": "uma raiz idle in transaction há uma hora",
+        "right": "pg_terminate_backend"
+      },
+      {
+        "left": "um relatório rodando há uma hora, em autocommit",
+        "right": "pg_cancel_backend"
+      },
+      {
+        "left": "um backend que você quer eliminar pelo sistema operacional",
+        "right": "nunca kill -9: use uma das duas funções"
+      }
+    ],
+    "right_distractors": [
+      "subir o deadlock_timeout"
+    ]
+  },
+  "ex-tbq017j8": {
+    "prompt": "Ponha em ordem os passos para tratar o incidente da aula.",
+    "hint": "Ache antes de agir.",
+    "items": [
+      "Rodar o lock-tree.sql para achar a raiz",
+      "Ler o state e o last_query da raiz",
+      "Encerrar a raiz idle in transaction",
+      "Rodar o lock-tree.sql de novo para ver se uma nova raiz tomou o lugar"
+    ],
+    "trap": "Encerrar primeiro e ler depois perde o last_query: a sessão e a linha dela somem."
+  },
+  "ex-artgp532": {
+    "prompt": "Com `log_lock_waits = on`, depois de quanto tempo uma sessão que espera escreve a primeira linha de log, no servidor da aula?",
+    "hint": "O limite é outra configuração.",
+    "choices": [
+      {
+        "text": "Imediatamente, a cada espera",
+        "why": "Esperas abaixo do limite não são registradas."
+      },
+      {
+        "text": "Depois do log_min_duration_statement",
+        "why": "Essa configuração é de comandos lentos, aula 2; esta reaproveita o deadlock_timeout."
+      },
+      {
+        "text": "Depois que a espera termina, só com a duração total",
+        "why": "Ele escreve quando a espera passa do limite e de novo quando termina."
+      },
+      {
+        "text": "Depois do deadlock_timeout, um segundo",
+        "why": "Isso: a linha disse after 1000.266 ms, na checagem de deadlock."
+      }
+    ]
+  },
+  "ex-6stpx4wb": {
+    "prompt": "Que fatos a entrada de log `still waiting` dá? Marque todos os que se aplicam.",
+    "hint": "Leia as quatro linhas dela.",
+    "choices": [
+      {
+        "text": "O pid da sessão que segura a trava",
+        "why": "Certo: Process holding the lock: 5811."
+      },
+      {
+        "text": "A linha pela qual se espera",
+        "why": "Certo: tuple (0,3) in relation orders."
+      },
+      {
+        "text": "O comando que espera",
+        "why": "Certo: a linha STATEMENT."
+      },
+      {
+        "text": "O comando que quem segura está rodando",
+        "why": "Quem segura não escreveu nada; os comandos dele só estão no log se outra configuração os pegou."
+      },
+      {
+        "text": "A aplicação que abriu a transação de quem segura",
+        "why": "Nada na entrada cita uma aplicação."
+      }
+    ]
+  },
+  "ex-xkt1m09r": {
+    "prompt": "Para pegar esperas menores, um colega propõe baixar o `deadlock_timeout` para 50 ms num servidor movimentado. O que a aula diz disso?",
+    "hint": "O que mais essa configuração decide?",
+    "choices": [
+      {
+        "text": "Não tem efeito no log_lock_waits",
+        "why": "É o limite que o log_lock_waits usa."
+      },
+      {
+        "text": "Toda sessão que espera faria a checagem de deadlock mais cedo",
+        "why": "Isso: a checagem é o custo, e um segundo é pouco para uma transação que vai terminar."
+      },
+      {
+        "text": "Precisa de reinício, então é arriscado demais",
+        "why": "O reinício não é o argumento que a aula faz."
+      },
+      {
+        "text": "Transformaria toda espera num erro de deadlock",
+        "why": "Só ciclos de verdade viram erro; ele muda quando a checagem roda."
+      }
+    ]
+  }
+}

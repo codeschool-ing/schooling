@@ -1,0 +1,576 @@
+[
+  {
+    "id": "ex-8dz1cx55",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In cache-aside, what does the application do on a miss?",
+    "hint": "The `dashboard()` function.",
+    "choices": [
+      {
+        "text": "Asks the database, stores the answer with a TTL, returns it",
+        "correct": true,
+        "why": "Right: the cache is filled only with answers somebody asked for."
+      },
+      {
+        "text": "Returns an empty dashboard",
+        "correct": false,
+        "why": "Nothing in cache-aside fills keys in the background; the reader does it."
+      },
+      {
+        "text": "Waits for Redis to fetch the rows from PostgreSQL",
+        "correct": false,
+        "why": "Redis never talks to PostgreSQL; the application talks to both."
+      },
+      {
+        "text": "Raises an error",
+        "correct": false,
+        "why": "A miss is the normal path, 200 times in the benchmark."
+      }
+    ]
+  },
+  {
+    "id": "ex-my99f64n",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the 5000 dashboard requests through the cache, how many reached the database?",
+    "hint": "The misses.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-05xt8gpz",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `dashboard.py` cast the sum with `::bigint`?",
+    "hint": "What type does PostgreSQL give a sum of integers, and can JSON hold it in Python?",
+    "choices": [
+      {
+        "text": "To make the query use the index on `seller_id`",
+        "correct": false,
+        "why": "A cast in the select list does not change which index is used."
+      },
+      {
+        "text": "Because the sum would overflow a 32-bit integer for big sellers",
+        "correct": false,
+        "why": "sum of integers is already bigint-safe as numeric; the issue is the Python type."
+      },
+      {
+        "text": "So the sum arrives as an int, not a Decimal",
+        "correct": true,
+        "why": "Right: sum of integers is numeric, which psycopg returns as Decimal."
+      },
+      {
+        "text": "Redis only accepts 64-bit numbers",
+        "correct": false,
+        "why": "The value is stored as a JSON string; Redis does not look inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkgybsp3",
+    "version": 1,
+    "section": "cache-aside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A search page caches each result under the exact text typed, `search:<text>`. The hit rate stays near 3%. What does the lesson's list say is wrong?",
+    "hint": "Who asks the same question twice?",
+    "choices": [
+      {
+        "text": "The TTL is too long",
+        "correct": false,
+        "why": "A longer TTL would raise the hit rate, not lower it."
+      },
+      {
+        "text": "Redis is out of memory and evicting keys",
+        "correct": false,
+        "why": "Possible in principle, but the lesson's point is that the questions rarely repeat."
+      },
+      {
+        "text": "The searches should use a materialized view instead, refreshed every night",
+        "correct": false,
+        "why": "A view per arbitrary search text has the same problem and worse."
+      },
+      {
+        "text": "Few people type the same text, so most keys are never read again",
+        "correct": true,
+        "why": "Right: a cache pays only for the same question asked by many."
+      }
+    ]
+  },
+  {
+    "id": "ex-0btsgfce",
+    "version": 1,
+    "section": "ttl",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the order for seller 7 committed, `python3 dashboard.py 7` still said 91 orders. Why?",
+    "hint": "Where did the answer come from?",
+    "choices": [
+      {
+        "text": "The INSERT had not committed yet",
+        "correct": false,
+        "why": "psql -c commits; the database already said 92."
+      },
+      {
+        "text": "It came from the cache, stored before the order",
+        "correct": true,
+        "why": "Right: cache-aside serves the stored answer until the TTL ends."
+      },
+      {
+        "text": "The dashboard only counts delivered orders, not pending ones",
+        "correct": false,
+        "why": "The query counts every status; after the TTL it said 92."
+      },
+      {
+        "text": "Redis rounds counts down to save memory",
+        "correct": false,
+        "why": "Redis stores exactly the JSON it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-89k8ajc2",
+    "version": 1,
+    "section": "ttl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a 60-second TTL and no invalidation, for how long is a change invisible on average, by the section's reasoning?",
+    "hint": "Worst case the whole TTL, best case nothing.",
+    "choices": [
+      {
+        "text": "Sixty seconds, every time",
+        "correct": false,
+        "why": "Only a change right after a store waits the whole TTL."
+      },
+      {
+        "text": "Never, since Redis notices the change",
+        "correct": false,
+        "why": "Redis never sees the database; nothing notices."
+      },
+      {
+        "text": "About thirty seconds",
+        "correct": true,
+        "why": "Right: half the TTL on average, the whole of it at worst."
+      },
+      {
+        "text": "Two minutes, because the TTL restarts on every read",
+        "correct": false,
+        "why": "`cache.get` does not reset a TTL; only `set` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-42bd8yf8",
+    "version": 1,
+    "section": "ttl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep a TTL even when every write invalidates its keys?",
+    "hint": "What happens if a delete is lost?",
+    "choices": [
+      {
+        "text": "Redis refuses to store a key that has no TTL once its memory is full",
+        "correct": false,
+        "why": "Redis accepts keys with no expiry at all."
+      },
+      {
+        "text": "It bounds how long a value survives when an invalidation is lost",
+        "correct": true,
+        "why": "Right: a crash between commit and delete, or a forgotten key, is then wrong for a minute rather than for good."
+      },
+      {
+        "text": "Without a TTL the hit rate drops to zero",
+        "correct": false,
+        "why": "Without a TTL the hit rate rises; staleness is the problem."
+      },
+      {
+        "text": "A TTL makes the dashboard query cheaper, since fewer rows are cached",
+        "correct": false,
+        "why": "The query costs the same; the TTL only decides when it runs again."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkfpw1e7",
+    "version": 1,
+    "section": "ttl",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each cached value with the TTL the section's table gives it.",
+    "hint": "How stale can each screen be?",
+    "pairs": [
+      {
+        "left": "a product's description",
+        "right": "an hour, with invalidation on edit"
+      },
+      {
+        "left": "a seller's dashboard",
+        "right": "30 to 60 seconds"
+      },
+      {
+        "left": "the operations screen's count",
+        "right": "a few seconds, or no cache"
+      }
+    ],
+    "right_distractors": [
+      "a day, refreshed at midnight"
+    ]
+  },
+  {
+    "id": "ex-45fzbcbh",
+    "version": 1,
+    "section": "invalidation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the race in `race.py` in the order that leaves a stale value in the cache.",
+    "hint": "The delete happens before the stale store.",
+    "items": [
+      "A misses the cache and reads the database",
+      "B commits an order",
+      "B deletes the key",
+      "A stores what it read"
+    ],
+    "trap": "If A stores before B deletes, the delete removes the stale value and nothing goes wrong."
+  },
+  {
+    "id": "ex-76zhn98h",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the unguarded run, what did reader C see?",
+    "hint": "The last line of the first run.",
+    "choices": [
+      {
+        "text": "The cache empty, because B deleted the key",
+        "correct": false,
+        "why": "A stored its value after the delete, so the key was there again."
+      },
+      {
+        "text": "An error from Redis",
+        "correct": false,
+        "why": "Nothing failed; that is what makes the race dangerous."
+      },
+      {
+        "text": "93 in the cache and 93 in the database",
+        "correct": false,
+        "why": "The cache held A's older read."
+      },
+      {
+        "text": "92 cached, 93 in the database",
+        "correct": true,
+        "why": "Right: the value read before the write was stored after the delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t8653kc",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the guarded run, what made reader A not store its value?",
+    "hint": "The writer changes one more key.",
+    "choices": [
+      {
+        "text": "The version it noted had changed by store time",
+        "correct": true,
+        "why": "Right: WATCH and MULTI/EXEC make the store conditional on that version."
+      },
+      {
+        "text": "The TTL had already expired by the time it came to store",
+        "correct": false,
+        "why": "Nothing was stored yet, so no TTL was running."
+      },
+      {
+        "text": "PostgreSQL locked the order row until the writer committed",
+        "correct": false,
+        "why": "The guard is entirely in Redis."
+      },
+      {
+        "text": "B held a lock in Redis",
+        "correct": false,
+        "why": "There is no lock here; the guard is a version compared at store time."
+      }
+    ]
+  },
+  {
+    "id": "ex-0aw1r28q",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds a nightly bulk import that updates thousands of orders directly in SQL. Their dashboards use cache-aside with delete-on-write in the web code and a 24-hour TTL. What does the section predict?",
+    "hint": "Who has to invalidate?",
+    "choices": [
+      {
+        "text": "The import's changes appear within a minute, as the TTL rolls over",
+        "correct": false,
+        "why": "Only if something deletes the keys; the TTL here is a day."
+      },
+      {
+        "text": "Redis notices the UPDATE and drops the keys",
+        "correct": false,
+        "why": "Redis never sees the database."
+      },
+      {
+        "text": "Screens keep the old figures for up to a day",
+        "correct": true,
+        "why": "Right: the import is a code path that writes and deletes nothing, and the TTL is the only net."
+      },
+      {
+        "text": "The import fails because the keys exist",
+        "correct": false,
+        "why": "The database knows nothing about the cache; the import succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xkm2pk3",
+    "version": 1,
+    "section": "stampede",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the plain run, how many times did fifty simultaneous requests for one missing key run the count?",
+    "hint": "The program and pg_stat_statements agree.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-tj7hg19s",
+    "version": 1,
+    "section": "stampede",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did each of the fifty counts take about 1.3 s on average, when a single count took 55 ms?",
+    "hint": "Four processors.",
+    "choices": [
+      {
+        "text": "Redis slowed down under fifty connections",
+        "correct": false,
+        "why": "The time is in the database's own execution, which pg_stat_statements measured."
+      },
+      {
+        "text": "The count took locks that made the others wait in turn",
+        "correct": false,
+        "why": "A count takes no lock that blocks another count."
+      },
+      {
+        "text": "Fifty scans shared four processors",
+        "correct": true,
+        "why": "Right: each ran far slower because of the other forty-nine."
+      },
+      {
+        "text": "The first query evicted the table from memory",
+        "correct": false,
+        "why": "Nothing evicted it; the cost is contention, not cache misses."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndjddb9p",
+    "version": 1,
+    "section": "stampede",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `single_flight`, why does the lock holder look in the cache again before querying?",
+    "hint": "An earlier version made two queries.",
+    "choices": [
+      {
+        "text": "To renew the lock's ten-second expiry so it outlives the long query",
+        "correct": false,
+        "why": "A get does not touch the lock."
+      },
+      {
+        "text": "In case the previous holder stored the value while it waited",
+        "correct": true,
+        "why": "Right: a released lock lets the next caller in, so it must check the work is still needed."
+      },
+      {
+        "text": "Because Redis requires a read before every write inside a lock",
+        "correct": false,
+        "why": "It requires nothing of the kind."
+      },
+      {
+        "text": "To count the hit in `seen`",
+        "correct": false,
+        "why": "`seen` is in dashboard.py, not in stampede.py."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tm3de3x",
+    "version": 1,
+    "section": "stampede",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `single_flight`, `cache.set(LOCK, 1, nx=True, ex=10)` succeeds for only one caller because `nx` means: set only if the key does ___ exist.",
+    "hint": "Two letters, one of them N.",
+    "blanks": [
+      {
+        "accept": [
+          "not"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dc0q447y",
+    "version": 1,
+    "section": "stampede",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these reduce the stampede on a hot key? Choose all that apply.",
+    "hint": "The section lists three ways besides single flight.",
+    "choices": [
+      {
+        "text": "A job that refreshes the key before it expires",
+        "correct": true,
+        "why": "Right: readers never meet a miss."
+      },
+      {
+        "text": "Serving the old value while one request refreshes it",
+        "correct": true,
+        "why": "Right: nobody waits, and only one refresh runs."
+      },
+      {
+        "text": "A single-flight lock in Redis",
+        "correct": true,
+        "why": "Right: the run went from fifty queries to one."
+      },
+      {
+        "text": "A longer `max_connections` on PostgreSQL",
+        "correct": false,
+        "why": "More connections let even more copies of the query run at once."
+      },
+      {
+        "text": "Restarting Redis to clear old keys",
+        "correct": false,
+        "why": "A restart empties every key at once: the largest stampede there is."
+      }
+    ]
+  },
+  {
+    "id": "ex-hc8s0rf9",
+    "version": 1,
+    "section": "in-the-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `REFRESH MATERIALIZED VIEW CONCURRENTLY seller_days` answer before the index existed?",
+    "hint": "It needs to match old rows with new.",
+    "choices": [
+      {
+        "text": "It refreshed, but blocked readers",
+        "correct": false,
+        "why": "It did not refresh at all; it refused."
+      },
+      {
+        "text": "That the view must be dropped and recreated before any refresh",
+        "correct": false,
+        "why": "A plain refresh works without the index; only the concurrent one refuses."
+      },
+      {
+        "text": "That it needs a unique index with no WHERE clause",
+        "correct": true,
+        "why": "Right: the error and its hint, and `(seller_id, day)` is that index."
+      },
+      {
+        "text": "That the view is out of date",
+        "correct": false,
+        "why": "It said nothing about freshness."
+      }
+    ]
+  },
+  {
+    "id": "ex-18d45yfs",
+    "version": 1,
+    "section": "in-the-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The concurrent refresh took 318 ms and the plain one 113 ms. Why does the lesson still prefer the concurrent one for a dashboard read all day?",
+    "hint": "What does each one do to readers?",
+    "choices": [
+      {
+        "text": "Readers keep getting answers during it",
+        "correct": true,
+        "why": "Right: the plain refresh holds a lock that blocks every read of the view."
+      },
+      {
+        "text": "It recomputes only the rows that changed in the tables",
+        "correct": false,
+        "why": "Every refresh runs the whole query; it applies only the differences."
+      },
+      {
+        "text": "It refreshes automatically after each write",
+        "correct": false,
+        "why": "No refresh is automatic; you schedule it."
+      },
+      {
+        "text": "It does not need an index on the view",
+        "correct": false,
+        "why": "It is the one that needs a unique index."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9w0kpap",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's pending-orders count must never be more than five seconds old, and is read three hundred times a second. Which design fits the lesson best?",
+    "hint": "Freshness bound, and a hot key.",
+    "choices": [
+      {
+        "text": "A materialized view refreshed once an hour",
+        "correct": false,
+        "why": "An hour breaks the five-second bound."
+      },
+      {
+        "text": "Cache-aside with a one-day TTL and delete-on-write",
+        "correct": false,
+        "why": "Every order would delete the key; a lost delete leaves it wrong for a day."
+      },
+      {
+        "text": "No cache, and three hundred counts a second",
+        "correct": false,
+        "why": "Possible, and exactly the load a cache exists to avoid."
+      },
+      {
+        "text": "A short TTL with single flight",
+        "correct": true,
+        "why": "Right: the TTL bounds the age, and single flight keeps each expiry to one query."
+      }
+    ]
+  }
+]
