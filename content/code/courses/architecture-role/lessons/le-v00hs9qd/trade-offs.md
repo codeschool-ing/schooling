@@ -70,7 +70,7 @@ The six parts, with the Payments example:
 satisfied by one retry a day. With it, a design can be checked on paper now and in a test
 environment later, and an argument between two designs has something to be settled against.
 
-The form is not only for availability. Here is a modifiability scenario for Pricing, written the same way. A **developer** on Pricing
+The same form works for every quality attribute. Here is a modifiability scenario for Pricing, written the same way. A **developer** on Pricing
 (source) receives a **new ANTT floor table** (stimulus) during **normal development** (environment),
 for the **floor stage of the quote** (artefact). The table is loaded, tested and deployed
 (response), and it is **in production within two working days, with no code changed outside the

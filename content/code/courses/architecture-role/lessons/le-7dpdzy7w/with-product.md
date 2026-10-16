@@ -68,7 +68,7 @@ Three habits made this work at Carreto:
 
 ## The architect brings ideas too
 
-Working with product is not only pricing other people's requests. The architect knows what the
+Working with product also runs the other way. The architect knows what the
 structure makes cheap, and some of that is valuable to customers nobody has asked yet.
 
 Tracking already emits a position event for every truck every thirty seconds. Turning those into an
