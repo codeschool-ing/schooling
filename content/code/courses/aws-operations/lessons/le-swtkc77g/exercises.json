@@ -1,0 +1,445 @@
+[
+  {
+    "id": "ex-brhvvwqq",
+    "version": 1,
+    "section": "idle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a stopped EC2 instance still cost?",
+    "hint": "Compute stops; something else does not.",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Its disks keep their price."
+      },
+      {
+        "text": "Half its hourly price, to keep the slot",
+        "correct": false,
+        "why": "No such charge exists."
+      },
+      {
+        "text": "Its EBS volumes",
+        "correct": true,
+        "why": "Right. Stopped is cheaper, not free."
+      },
+      {
+        "text": "The full hourly price until terminated",
+        "correct": false,
+        "why": "Compute is not billed while stopped."
+      }
+    ]
+  },
+  {
+    "id": "ex-y42k0w3g",
+    "version": 1,
+    "section": "idle",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 76,
+    "tolerance": 0.01,
+    "prompt": "A 500 GB gp3 volume attached to nothing, at 0.152 USD per GB-month. What does it cost a month, in USD?",
+    "hint": "500 × 0.152",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-bsk5j8av",
+    "version": 1,
+    "section": "idle",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 36.5,
+    "tolerance": 0.01,
+    "prompt": "An idle public IPv4 address costs 0.005 USD an hour. What do 10 of them cost in a 730-hour month, in USD?",
+    "hint": "10 × 0.005 × 730",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-x8ekne74",
+    "version": 1,
+    "section": "idle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does idle.py check each snapshot's OwnerId even after asking for the account's own?",
+    "hint": "moto answered with something AWS would not.",
+    "choices": [
+      {
+        "text": "moto includes its sample images' snapshots",
+        "correct": true,
+        "why": "Right. A thousand-odd that belong to another account."
+      },
+      {
+        "text": "AWS returns other accounts' snapshots under self",
+        "correct": false,
+        "why": "AWS does not; moto did."
+      },
+      {
+        "text": "Snapshots change owner when copied",
+        "correct": false,
+        "why": "Not the reason here."
+      },
+      {
+        "text": "OwnerId decides the snapshot's price",
+        "correct": false,
+        "why": "Price depends on stored blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6xe5nxn",
+    "version": 1,
+    "section": "idle",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for removing an unattached volume in the lesson's order.",
+    "hint": "Mark, ask, keep a copy, wait, delete.",
+    "items": [
+      "Tag it with the date it was found",
+      "Tell the team",
+      "Snapshot it if anybody hesitates",
+      "Delete it after a week of silence"
+    ]
+  },
+  {
+    "id": "ex-r4x41hq6",
+    "version": 1,
+    "section": "rightsizing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does rightsize.py read the 95th percentile of CPU rather than the average?",
+    "hint": "Nights and weekends.",
+    "choices": [
+      {
+        "text": "CloudWatch does not report averages",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "p95 is always lower than the average",
+        "correct": false,
+        "why": "It is higher here."
+      },
+      {
+        "text": "Compute Optimizer forbids averages",
+        "correct": false,
+        "why": "It is a choice about workloads, not a rule."
+      },
+      {
+        "text": "The average would size for nights and fail on busy days",
+        "correct": true,
+        "why": "Right. The API's average is under 15%."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk1ph1j1",
+    "version": 1,
+    "section": "rightsizing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the rule use the maximum of memory rather than a percentile?",
+    "hint": "What happens when memory runs out?",
+    "choices": [
+      {
+        "text": "Memory changes too slowly for percentiles",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "A process out of memory is killed",
+        "correct": true,
+        "why": "Right. It does not slow down; it stops."
+      },
+      {
+        "text": "The maximum is cheaper to compute",
+        "correct": false,
+        "why": "Cost of computing is irrelevant."
+      },
+      {
+        "text": "EC2 reports memory only as a maximum",
+        "correct": false,
+        "why": "EC2 does not report memory at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2k57ch9j",
+    "version": 1,
+    "section": "rightsizing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 70,
+    "tolerance": 0,
+    "prompt": "An instance runs at a p95 of 35% CPU. What would its p95 be, in percent, on a size with half the vCPUs?",
+    "hint": "Half the size doubles the percentage.",
+    "unit": "%"
+  },
+  {
+    "id": "ex-egq69eeq",
+    "version": 1,
+    "section": "rightsizing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "reports uses 12.6% CPU at p95 and 78% memory at most. What is its real answer, by the lesson?",
+    "hint": "More memory per vCPU.",
+    "choices": [
+      {
+        "text": "Down to m7g.large",
+        "correct": false,
+        "why": "Memory would double to 156%."
+      },
+      {
+        "text": "Keep it exactly as it is",
+        "correct": false,
+        "why": "It wastes CPU; another family fits better."
+      },
+      {
+        "text": "A memory-optimised family, r7g",
+        "correct": true,
+        "why": "Right. Twice the memory per vCPU."
+      },
+      {
+        "text": "Up to m7g.2xlarge",
+        "correct": false,
+        "why": "CPU is mostly idle; doubling everything wastes more."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4sgxbky",
+    "version": 1,
+    "section": "rightsizing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "EC2 reports no memory metric; CloudWatch has one only if the CloudWatch ____ publishes it from the instance. (one word)",
+    "hint": "Installed on the instance.",
+    "blanks": [
+      {
+        "accept": [
+          "agent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m0kfe0v0",
+    "version": 1,
+    "section": "compute-optimizer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column of a Compute Optimizer recommendation does the lesson say to read first?",
+    "hint": "Saving is tempting.",
+    "choices": [
+      {
+        "text": "The estimated monthly saving",
+        "correct": false,
+        "why": "A saving at high risk is a test, not a change."
+      },
+      {
+        "text": "The performance risk",
+        "correct": true,
+        "why": "Right. Then the saving."
+      },
+      {
+        "text": "The instance family",
+        "correct": false,
+        "why": "Useful, but not first."
+      },
+      {
+        "text": "The number of vCPUs",
+        "correct": false,
+        "why": "A detail of the option."
+      }
+    ]
+  },
+  {
+    "id": "ex-945za78t",
+    "version": 1,
+    "section": "compute-optimizer",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 30,
+    "tolerance": 0,
+    "prompt": "How many hours of metrics does Compute Optimizer need before it recommends anything for an EC2 instance?",
+    "hint": "A little more than a day.",
+    "unit": "hours"
+  },
+  {
+    "id": "ex-be13k64x",
+    "version": 1,
+    "section": "compute-optimizer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When are enhanced infrastructure metrics worth paying for?",
+    "hint": "Fourteen days, or three months.",
+    "choices": [
+      {
+        "text": "When the workload has a monthly peak",
+        "correct": true,
+        "why": "Right. Fourteen days would miss month-end."
+      },
+      {
+        "text": "Always, since they add memory",
+        "correct": false,
+        "why": "Memory comes from the agent, not this option."
+      },
+      {
+        "text": "Never; they are only for RDS",
+        "correct": false,
+        "why": "They apply to EC2 among others."
+      },
+      {
+        "text": "When the account has under 30 hours of data",
+        "correct": false,
+        "why": "They extend history; they cannot invent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ew5j0q7s",
+    "version": 1,
+    "section": "acting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order does the lesson make the three kinds of change?",
+    "hint": "Cheapest and safest first.",
+    "choices": [
+      {
+        "text": "Resize, then delete, then schedule",
+        "correct": false,
+        "why": "Resizing is the riskiest; it comes last."
+      },
+      {
+        "text": "Schedule, then resize, then delete",
+        "correct": false,
+        "why": "Deleting the idle comes first."
+      },
+      {
+        "text": "All three at once, to save sooner",
+        "correct": false,
+        "why": "Together, a slowdown has three suspects."
+      },
+      {
+        "text": "Delete, then schedule, then resize",
+        "correct": true,
+        "why": "Right. Resizing can make something slower."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m0g7jp3",
+    "version": 1,
+    "section": "acting",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 64,
+    "tolerance": 0.5,
+    "prompt": "An environment runs 60 of the week's 168 hours. What percentage of its compute cost does that save, against always on? Round to the nearest whole number.",
+    "hint": "1 − 60 / 168",
+    "unit": "%"
+  },
+  {
+    "id": "ex-76wt8tzq",
+    "version": 1,
+    "section": "acting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson say to clean and resize before buying the commitments of lesson 22?",
+    "hint": "What is a commitment sized to?",
+    "choices": [
+      {
+        "text": "Commitments are cheaper after a cleanup",
+        "correct": false,
+        "why": "Rates do not change."
+      },
+      {
+        "text": "Waste raises the floor the commitment is sized to",
+        "correct": true,
+        "why": "Right. Commit to the smaller, truer floor."
+      },
+      {
+        "text": "AWS requires rightsizing first",
+        "correct": false,
+        "why": "No such requirement."
+      },
+      {
+        "text": "Savings Plans cannot cover stopped instances",
+        "correct": false,
+        "why": "True, and not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ypt3czt",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did idle.py report as paid for and doing nothing? Choose all that apply.",
+    "hint": "Four kinds.",
+    "choices": [
+      {
+        "text": "A volume attached to nothing",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "An idle public IPv4 address",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A stopped instance's disks",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A snapshot of a deleted volume",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The running instance's compute",
+        "correct": false,
+        "why": "It runs; it is not idle."
+      },
+      {
+        "text": "The default VPC",
+        "correct": false,
+        "why": "A VPC itself costs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2pms1hm",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 189.8,
+    "tolerance": 0.01,
+    "prompt": "Two instances move from m7g.xlarge (0.2601 USD an hour) to m7g.large (0.1301). What do they save in a 730-hour month, in USD?",
+    "hint": "2 × 0.13 × 730",
+    "unit": "USD"
+  }
+]
