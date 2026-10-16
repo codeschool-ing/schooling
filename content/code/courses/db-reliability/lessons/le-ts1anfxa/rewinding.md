@@ -74,7 +74,7 @@ t
 The first lines are a crash recovery: the old primary had been killed, and `pg_rewind` first brings it
 to a consistent, cleanly stopped state, in single-user mode. Then it finds where the two histories
 **diverged**, `0/6006978` on timeline 3, and copies back from the new primary whatever changed after
-the last checkpoint they shared. `Done!`: it copied what changed since the divergence, not the whole directory, which on a large
+the last checkpoint they shared. `Done!`: it copied the blocks changed since that checkpoint, not the whole directory, which on a large
 database is the difference between minutes and hours, and the reason to have turned `wal_log_hints`
 on.
 

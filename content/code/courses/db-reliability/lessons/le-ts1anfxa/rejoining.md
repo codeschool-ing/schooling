@@ -17,9 +17,9 @@ pg_rewind: error: target server needs to use either data checksums or "wal_log_h
 It refuses. To find the changed blocks, `pg_rewind` reads the old primary's log, and the log names a
 block every time it changes, with one exception: setting the bits PostgreSQL keeps on a row to
 remember whether the transaction that wrote it committed, the **hint bits**, writes no log by default. Either `wal_log_hints` or
-data checksums makes those changes logged too, and Ubuntu creates clusters with neither. Both have to
-be in place **before** the failure, and turning them on needs a restart; neither can help after the
-fact.
+data checksums makes those changes logged too, and Ubuntu creates clusters with neither. One of them has
+to be in place **before** the failure: `wal_log_hints` needs a restart, checksums need the server
+stopped and `pg_checksums` run over it, and neither helps after the fact.
 
 So this time the old primary is rebuilt from scratch, as a standby of the new one, the way lesson 11
 built the first: a base backup with its own name and its own slot on 5434.
