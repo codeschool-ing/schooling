@@ -53,7 +53,7 @@ name: pg3
 
 Patroni runs in the foreground and logs to its terminal. A packaged installation runs it as a
 service; here, start each in the background with its log in a file, the first one alone, so that it
-is the one that creates the cluster:
+is the one that creates the cluster. Give it twenty seconds before starting the other two:
 
 ```
 ana@vm:~$ patroni ~/patroni/pg1.yml > ~/patroni/pg1.log 2>&1 &

@@ -33,8 +33,9 @@ ana@vm:~$ patronictl -c ~/patroni/pg1.yml list
 next lines are the surprise: **the primary demoted itself.** `pg1` could not renew the leader key,
 and the rule says that a leader that cannot renew must assume somebody else holds it. Every
 PostgreSQL in the cluster is now read-only, and the shop cannot take an order, although all three
-database servers are healthy. When etcd came back (`systemctl start etcd`), `pg1` took the key again,
-on timeline 4.
+database servers are healthy. The last `list` above was taken after etcd was
+started again (`sudo systemctl start etcd` on your machine; the same process, started by hand, on
+this one): `pg1` took the key again, on timeline 4.
 
 This is the trade the design makes, and it is the right one by default: a whole cluster that refuses
 writes for a while is an outage; two primaries is lost data. It also means **etcd is part of the
