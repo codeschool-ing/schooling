@@ -1,0 +1,418 @@
+[
+  {
+    "id": "ex-pycm66y4",
+    "version": 1,
+    "section": "traces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each team's dashboard is green, and checkout is still slow. What can show where the time goes?",
+    "hint": "Something that follows one request across services.",
+    "choices": [
+      {
+        "text": "A higher-resolution metric on the API",
+        "correct": false,
+        "why": "Finer API metrics still describe only the API."
+      },
+      {
+        "text": "A trace, following one request through all three",
+        "correct": true,
+        "why": "Right. It follows one request across every service it touches."
+      },
+      {
+        "text": "Longer log retention in each service",
+        "correct": false,
+        "why": "Keeping logs longer does not connect one service's lines to another's."
+      },
+      {
+        "text": "A composite alarm over the three services",
+        "correct": false,
+        "why": "It can say something is wrong, not where the time went."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyyy8j5h",
+    "version": 1,
+    "section": "traces",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tracing term to what it is.",
+    "hint": "From the whole journey down to one piece of it.",
+    "pairs": [
+      {
+        "left": "Trace",
+        "right": "One request's whole journey"
+      },
+      {
+        "left": "Segment",
+        "right": "The part one service handled"
+      },
+      {
+        "left": "Subsegment",
+        "right": "A timed piece inside a segment"
+      },
+      {
+        "left": "Parent id",
+        "right": "The caller's subsegment a segment hangs from"
+      }
+    ],
+    "right_distractors": [
+      "The service's average latency"
+    ]
+  },
+  {
+    "id": "ex-wfz48qc2",
+    "version": 1,
+    "section": "traces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service in the middle of the checkout calls the next one without passing on `X-Amzn-Trace-Id`. What happens to the trace?",
+    "hint": "The next service cannot know it is part of one.",
+    "choices": [
+      {
+        "text": "X-Ray joins the parts by timestamp",
+        "correct": false,
+        "why": "Joining is by id; with no id there is nothing to join on."
+      },
+      {
+        "text": "The whole request fails with a missing header error",
+        "correct": false,
+        "why": "Tracing never fails a request; the trace is just incomplete."
+      },
+      {
+        "text": "The load balancer adds the original id back",
+        "correct": false,
+        "why": "A load balancer adds a header when missing, but a new one, not the lost one."
+      },
+      {
+        "text": "It splits into two unrelated traces",
+        "correct": true,
+        "why": "Right. The next service starts a new trace of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-769ts7mx",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's waterfall, which part took most of the 512 ms checkout?",
+    "hint": "Read it from the bottom.",
+    "choices": [
+      {
+        "text": "The card network",
+        "correct": true,
+        "why": "Right. 420 of the 512 ms, two services away."
+      },
+      {
+        "text": "orders-db",
+        "correct": false,
+        "why": "The database answered in 27 ms."
+      },
+      {
+        "text": "The API's own code",
+        "correct": false,
+        "why": "The API spent most of its time waiting on the payments call."
+      },
+      {
+        "text": "Sending the segments to X-Ray",
+        "correct": false,
+        "why": "Sending happens after the request and is not in its timing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kx2k0kw",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto reported a duration of 0.0 for a trace whose segment ran 512 ms. What should you trust?",
+    "hint": "Separate what was stored from what was computed.",
+    "choices": [
+      {
+        "text": "The 0.0, since X-Ray computed it",
+        "correct": false,
+        "why": "moto invented it; it computes no summary."
+      },
+      {
+        "text": "The stored segment documents",
+        "correct": true,
+        "why": "Right. They were stored and returned as sent; the summary was invented."
+      },
+      {
+        "text": "Neither, since both came from moto",
+        "correct": false,
+        "why": "The documents are the ones the program sent, returned unchanged."
+      },
+      {
+        "text": "The response time of 1.0 seconds",
+        "correct": false,
+        "why": "Also invented by moto."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6zd9b24",
+    "version": 1,
+    "section": "segments",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service's segment points at the caller's subsegment through its `___` field.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "parent_id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-atrxf337",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does an X-Ray trace id carry the request's start time in it?",
+    "hint": "Think of finding a trace among billions.",
+    "choices": [
+      {
+        "text": "So the trace expires exactly 30 days after it starts",
+        "correct": false,
+        "why": "Retention does not need the id to carry the time."
+      },
+      {
+        "text": "So two services agree on a clock",
+        "correct": false,
+        "why": "Each segment carries its own start and end times."
+      },
+      {
+        "text": "So X-Ray finds it by time, with no index",
+        "correct": true,
+        "why": "Right. The id itself says when to look."
+      },
+      {
+        "text": "To make the id human-readable",
+        "correct": false,
+        "why": "Eight hex digits of seconds are hardly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxcwwmzz",
+    "version": 1,
+    "section": "sampling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 10.95,
+    "tolerance": 0.01,
+    "prompt": "With a reservoir of 1 per second and a rate of 5%, how many traces per second does a service at 200 requests a second record?",
+    "hint": "One, plus 5% of the rest."
+  },
+  {
+    "id": "ex-2arqnprc",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the sampling decision made once, at the first service, and passed on?",
+    "hint": "Think of a trace with holes.",
+    "choices": [
+      {
+        "text": "To save the other services the CPU",
+        "correct": false,
+        "why": "The decision is cheap; completeness is the reason."
+      },
+      {
+        "text": "Because only the first service may call X-Ray",
+        "correct": false,
+        "why": "Every service sends its own segment."
+      },
+      {
+        "text": "So each trace costs the same",
+        "correct": false,
+        "why": "Cost is per trace whatever its length; that is not the reason."
+      },
+      {
+        "text": "So a trace that is recorded comes back complete",
+        "correct": true,
+        "why": "Right. Separate decisions would record the API and drop the payments service."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc672n1f",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At a 5% rate, a rare checkout error happens 20 times in an hour. About how many of them leave a trace?",
+    "hint": "Sampling does not know which requests will fail.",
+    "choices": [
+      {
+        "text": "About one",
+        "correct": true,
+        "why": "Right. 5% of 20; errors are found by metrics and logs first."
+      },
+      {
+        "text": "All 20, because errors are always traced",
+        "correct": false,
+        "why": "The decision is made before the error happens."
+      },
+      {
+        "text": "None, because errors are never sampled",
+        "correct": false,
+        "why": "They are sampled like any request, at the same rate."
+      },
+      {
+        "text": "About ten, half of them",
+        "correct": false,
+        "why": "That would be a 50% rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpsc4djz",
+    "version": 1,
+    "section": "sampling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 10,
+    "tolerance": 0.01,
+    "prompt": "X-Ray stores traces at 5 USD per million after 100,000 free ones. What does a month of 2,100,000 traces cost?",
+    "hint": "Subtract the free ones first.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-0esgzkfb",
+    "version": 1,
+    "section": "opentelemetry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an OpenTelemetry collector do between a service and X-Ray?",
+    "hint": "Receivers, processors, exporters.",
+    "choices": [
+      {
+        "text": "Decides which requests to sample",
+        "correct": false,
+        "why": "Sampling is decided at the first service, in the SDK."
+      },
+      {
+        "text": "Replaces the trace header between services",
+        "correct": false,
+        "why": "Propagation happens in the services' requests; the collector sees spans after."
+      },
+      {
+        "text": "Batches spans and exports them to X-Ray",
+        "correct": true,
+        "why": "Right. Received over OTLP, batched, exported to X-Ray."
+      },
+      {
+        "text": "Stores the traces for 30 days",
+        "correct": false,
+        "why": "It forwards them; storage is the backend's."
+      }
+    ]
+  },
+  {
+    "id": "ex-scq7r90q",
+    "version": 1,
+    "section": "opentelemetry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which header carries trace context in the W3C standard OpenTelemetry uses?",
+    "hint": "Not the AWS one.",
+    "choices": [
+      {
+        "text": "X-Amzn-Trace-Id",
+        "correct": false,
+        "why": "That is X-Ray's own header."
+      },
+      {
+        "text": "X-Request-Id",
+        "correct": false,
+        "why": "A common correlation header, but not the trace standard."
+      },
+      {
+        "text": "Authorization",
+        "correct": false,
+        "why": "That carries credentials, never trace context."
+      },
+      {
+        "text": "traceparent",
+        "correct": true,
+        "why": "Right. W3C Trace Context's header."
+      }
+    ]
+  },
+  {
+    "id": "ex-veep7bm4",
+    "version": 1,
+    "section": "opentelemetry",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does instrumenting with OpenTelemetry rather than the X-Ray SDKs give a team? Choose all that apply.",
+    "hint": "One standard, many backends.",
+    "choices": [
+      {
+        "text": "Changing tracing backend without touching every service",
+        "correct": true,
+        "why": "Yes. It is a collector change."
+      },
+      {
+        "text": "Traces that continue across languages and clouds",
+        "correct": true,
+        "why": "Yes. One header everybody reads."
+      },
+      {
+        "text": "Free storage of traces in X-Ray",
+        "correct": false,
+        "why": "No. X-Ray bills stored traces the same way."
+      },
+      {
+        "text": "No process to run beside the service",
+        "correct": false,
+        "why": "No. The collector is one more process."
+      },
+      {
+        "text": "Metrics and logs carrying the trace id",
+        "correct": true,
+        "why": "Yes. The same SDK attaches it to all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg7ach92",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the questions of a slow-checkout incident in the order the three signals answer them.",
+    "hint": "Metrics, traces, logs.",
+    "items": [
+      "Is something wrong, and since when? (metrics)",
+      "Where in the chain is the time? (traces)",
+      "What exactly happened there? (logs)"
+    ],
+    "trap": "Logs first is the slip: without knowing where, there is no log group to read."
+  }
+]

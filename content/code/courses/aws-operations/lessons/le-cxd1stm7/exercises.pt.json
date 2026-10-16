@@ -1,0 +1,281 @@
+{
+  "ex-pycm66y4": {
+    "prompt": "O painel de cada equipe está verde, e o checkout continua lento. O que mostra para onde vai o tempo?",
+    "hint": "Algo que segue uma requisição pelos serviços.",
+    "choices": [
+      {
+        "text": "Uma métrica de resolução maior na API",
+        "why": "Métricas mais finas da API ainda só descrevem a API."
+      },
+      {
+        "text": "Um trace, seguindo uma requisição pelos três",
+        "why": "Certo. Ele segue uma requisição por cada serviço que ela toca."
+      },
+      {
+        "text": "Retenção de logs maior em cada serviço",
+        "why": "Guardar logs por mais tempo não liga as linhas de um serviço às de outro."
+      },
+      {
+        "text": "Um alarme composto sobre os três serviços",
+        "why": "Ele pode dizer que algo está errado, não para onde foi o tempo."
+      }
+    ]
+  },
+  "ex-cyyy8j5h": {
+    "prompt": "Ligue cada termo de tracing ao que ele é.",
+    "hint": "Da jornada inteira até um pedaço dela.",
+    "pairs": [
+      {
+        "left": "Trace",
+        "right": "A jornada inteira de uma requisição"
+      },
+      {
+        "left": "Segmento",
+        "right": "A parte que um serviço tratou"
+      },
+      {
+        "left": "Subsegmento",
+        "right": "Um pedaço cronometrado dentro de um segmento"
+      },
+      {
+        "left": "Parent id",
+        "right": "O subsegmento do chamador de que um segmento depende"
+      }
+    ],
+    "right_distractors": [
+      "A latência média do serviço"
+    ]
+  },
+  "ex-wfz48qc2": {
+    "prompt": "Um serviço no meio do checkout chama o próximo sem repassar o `X-Amzn-Trace-Id`. O que acontece com o trace?",
+    "hint": "O próximo serviço não tem como saber que faz parte de um.",
+    "choices": [
+      {
+        "text": "O X-Ray junta as partes pelo horário",
+        "why": "A junção é por id; sem id não há o que juntar."
+      },
+      {
+        "text": "A requisição inteira falha com erro de cabeçalho ausente",
+        "why": "O tracing nunca faz uma requisição falhar; o trace só fica incompleto."
+      },
+      {
+        "text": "O balanceador acrescenta o id original de volta",
+        "why": "Um balanceador acrescenta um cabeçalho quando falta, mas um novo, não o perdido."
+      },
+      {
+        "text": "Ele se parte em dois traces sem relação",
+        "why": "Certo. O próximo serviço começa um trace novo, só dele."
+      }
+    ]
+  },
+  "ex-769ts7mx": {
+    "prompt": "Na cascata do laboratório, que parte levou a maior parte do checkout de 512 ms?",
+    "hint": "Leia de baixo para cima.",
+    "choices": [
+      {
+        "text": "A rede de cartões",
+        "why": "Certo. 420 dos 512 ms, dois serviços adiante."
+      },
+      {
+        "text": "orders-db",
+        "why": "O banco respondeu em 27 ms."
+      },
+      {
+        "text": "O próprio código da API",
+        "why": "A API passou a maior parte do tempo esperando a chamada de pagamentos."
+      },
+      {
+        "text": "O envio dos segmentos ao X-Ray",
+        "why": "O envio acontece depois da requisição e não entra no tempo dela."
+      }
+    ]
+  },
+  "ex-9kx2k0kw": {
+    "prompt": "O moto informou duração 0.0 para um trace cujo segmento levou 512 ms. Em que confiar?",
+    "hint": "Separe o que foi guardado do que foi calculado.",
+    "choices": [
+      {
+        "text": "O 0.0, já que o X-Ray o calculou",
+        "why": "O moto o inventou; ele não calcula resumo nenhum."
+      },
+      {
+        "text": "Os documentos de segmento guardados",
+        "why": "Certo. Eles foram guardados e devolvidos como enviados; o resumo foi inventado."
+      },
+      {
+        "text": "Nenhum, já que ambos vieram do moto",
+        "why": "Os documentos são os que o programa mandou, devolvidos sem mudança."
+      },
+      {
+        "text": "O tempo de resposta de 1,0 segundo",
+        "why": "Também inventado pelo moto."
+      }
+    ]
+  },
+  "ex-w6zd9b24": {
+    "prompt": "O segmento de um serviço aponta para o subsegmento do chamador pelo campo `___`.",
+    "hint": "Duas palavras unidas por sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "parent_id"
+        ]
+      }
+    ]
+  },
+  "ex-atrxf337": {
+    "prompt": "Por que um id de trace do X-Ray traz o horário de início da requisição?",
+    "hint": "Pense em achar um trace entre bilhões.",
+    "choices": [
+      {
+        "text": "Para o trace expirar exatamente 30 dias depois de começar",
+        "why": "A retenção não precisa que o id carregue o horário."
+      },
+      {
+        "text": "Para dois serviços concordarem num relógio",
+        "why": "Cada segmento traz os próprios horários de início e fim."
+      },
+      {
+        "text": "Para o X-Ray achá-lo por tempo, sem índice",
+        "why": "Certo. O próprio id diz quando procurar."
+      },
+      {
+        "text": "Para o id ser legível por gente",
+        "why": "Oito dígitos hexadecimais de segundos não são isso."
+      }
+    ]
+  },
+  "ex-dxcwwmzz": {
+    "prompt": "Com reservatório de 1 por segundo e taxa de 5%, quantos traces por segundo um serviço a 200 requisições por segundo registra?",
+    "hint": "Um, mais 5% do resto."
+  },
+  "ex-2arqnprc": {
+    "prompt": "Por que a decisão de amostragem é tomada uma vez, no primeiro serviço, e repassada?",
+    "hint": "Pense num trace com buracos.",
+    "choices": [
+      {
+        "text": "Para poupar CPU dos outros serviços",
+        "why": "A decisão é barata; a completude é o motivo."
+      },
+      {
+        "text": "Porque só o primeiro serviço pode chamar o X-Ray",
+        "why": "Cada serviço manda o próprio segmento."
+      },
+      {
+        "text": "Para cada trace custar o mesmo",
+        "why": "O custo é por trace, qualquer que seja o tamanho; não é o motivo."
+      },
+      {
+        "text": "Para um trace registrado voltar completo, sem buracos",
+        "why": "Certo. Decisões separadas registrariam a API e perderiam o serviço de pagamentos."
+      }
+    ]
+  },
+  "ex-kc672n1f": {
+    "prompt": "Com taxa de 5%, um erro raro de checkout acontece 20 vezes numa hora. Cerca de quantos deixam um trace?",
+    "hint": "A amostragem não sabe quais requisições vão falhar.",
+    "choices": [
+      {
+        "text": "Cerca de um",
+        "why": "Certo. 5% de 20; erros são achados primeiro por métricas e logs."
+      },
+      {
+        "text": "Os 20, porque erros sempre são registrados",
+        "why": "A decisão é tomada antes de o erro acontecer."
+      },
+      {
+        "text": "Nenhum, porque erros nunca são amostrados",
+        "why": "São amostrados como qualquer requisição, na mesma taxa."
+      },
+      {
+        "text": "Uns dez, metade deles",
+        "why": "Isso seria uma taxa de 50%."
+      }
+    ]
+  },
+  "ex-dpsc4djz": {
+    "prompt": "O X-Ray guarda traces a 5 USD por milhão depois de 100.000 gratuitos. Quanto custa um mês de 2.100.000 traces?",
+    "hint": "Tire os gratuitos primeiro.",
+    "unit": "USD"
+  },
+  "ex-0esgzkfb": {
+    "prompt": "O que um coletor do OpenTelemetry faz entre um serviço e o X-Ray?",
+    "hint": "Receivers, processors, exporters.",
+    "choices": [
+      {
+        "text": "Decide quais requisições amostrar",
+        "why": "A amostragem é decidida no primeiro serviço, no SDK."
+      },
+      {
+        "text": "Substitui o cabeçalho de trace entre serviços",
+        "why": "A propagação acontece nas requisições dos serviços; o coletor vê os spans depois."
+      },
+      {
+        "text": "Agrupa os spans e os exporta ao X-Ray",
+        "why": "Certo. Recebidos por OTLP, agrupados, exportados para o X-Ray."
+      },
+      {
+        "text": "Guarda os traces por 30 dias",
+        "why": "Ele os encaminha; guardar é papel do backend."
+      }
+    ]
+  },
+  "ex-scq7r90q": {
+    "prompt": "Que cabeçalho leva o contexto de trace no padrão W3C que o OpenTelemetry usa?",
+    "hint": "Não o da AWS.",
+    "choices": [
+      {
+        "text": "X-Amzn-Trace-Id",
+        "why": "Esse é o cabeçalho do próprio X-Ray."
+      },
+      {
+        "text": "X-Request-Id",
+        "why": "Um cabeçalho comum de correlação, mas não o padrão de trace."
+      },
+      {
+        "text": "Authorization",
+        "why": "Esse leva credenciais, nunca contexto de trace."
+      },
+      {
+        "text": "traceparent",
+        "why": "Certo. O cabeçalho do W3C Trace Context."
+      }
+    ]
+  },
+  "ex-veep7bm4": {
+    "prompt": "O que instrumentar com OpenTelemetry em vez dos SDKs do X-Ray dá a uma equipe? Marque todas as que se aplicam.",
+    "hint": "Um padrão, vários backends.",
+    "choices": [
+      {
+        "text": "Trocar de backend de tracing sem mexer em cada serviço",
+        "why": "Sim. É uma mudança no coletor."
+      },
+      {
+        "text": "Traces que continuam entre linguagens e nuvens",
+        "why": "Sim. Um cabeçalho que todos leem."
+      },
+      {
+        "text": "Armazenamento gratuito de traces no X-Ray",
+        "why": "Não. O X-Ray cobra traces guardados do mesmo jeito."
+      },
+      {
+        "text": "Nenhum processo para rodar ao lado do serviço",
+        "why": "Não. O coletor é mais um processo."
+      },
+      {
+        "text": "Métricas e logs com o id do trace",
+        "why": "Sim. O mesmo SDK o anexa aos três."
+      }
+    ]
+  },
+  "ex-eg7ach92": {
+    "prompt": "Ponha as perguntas de um incidente de checkout lento na ordem em que os três sinais as respondem.",
+    "hint": "Métricas, traces, logs.",
+    "trap": "Logs primeiro é o deslize: sem saber onde, não há grupo de logs para ler.",
+    "items": [
+      "Há algo errado, e desde quando? (métricas)",
+      "Onde na cadeia está o tempo? (traces)",
+      "O que exatamente aconteceu lá? (logs)"
+    ]
+  }
+}
