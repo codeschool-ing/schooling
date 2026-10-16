@@ -14,8 +14,8 @@ ana@vm:~/lab/gateway$ for i in $(seq 20); do curl -s -o /dev/null -w "%{http_cod
 ```
 
 Six got through, the burst of five and one more token that dripped in while `curl` was running, and
-fourteen were refused by the gateway with `429`, without any stock instance being asked. That is the point of putting the limit at the door: a client that misbehaves costs
-the gateway a few microseconds per refused request, and costs the services nothing.
+fourteen were refused by the gateway with `429`, without any stock instance being asked. **That is the point of putting the limit at the door**: a client that
+misbehaves costs the gateway a few microseconds per refused request, and costs the services nothing.
 
 Two details matter in production. The gateway identifies "a client" by something, here the caller's
 address, which is wrong behind a proxy that makes every customer look like one address; a real

@@ -21,10 +21,10 @@ They also mix well. A common shape is an orchestrator for the checkout, the proc
 about and support asks about, which publishes `OrderCompleted` when it is done; and choreography for
 everything that merely reacts to that, such as loyalty points, recommendations and the e-mail.
 
-Whichever runs it, the saga needs what earlier lessons built: idempotent steps from lesson 7, so a
-retried step does nothing twice; timeouts, retries and breakers from lesson 11, so a slow service does
-not leave sagas waiting for ever; and an outbox, so that a step's change and the event announcing it are
-written together.
+Whichever runs it, the saga needs what earlier lessons built. Idempotent steps from lesson 7, so a
+retried step does nothing twice. Timeouts, retries and breakers from lesson 11, so a slow service does
+not leave sagas waiting for ever. And an outbox, so that a step's change and the event announcing it
+are written together.
 
 When you are done, stop the lab:
 

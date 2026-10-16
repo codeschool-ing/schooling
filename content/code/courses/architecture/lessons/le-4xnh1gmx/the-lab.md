@@ -3,8 +3,8 @@ title: The lab: Quitanda's decision log
 version: 1
 ---
 
-This lab needs no containers: a directory, some Markdown files, two small shell scripts and one file of
-application code. The records are decisions this course made, written the way the team would have
+**This lab needs no containers**: a directory, some Markdown files, two small shell scripts and one file
+of application code. The records are decisions this course made, written the way the team would have
 written them at the time. It lives in `~/lab/adr`:
 
 ```sh

@@ -14,7 +14,7 @@ ana@vm:~/lab/gateway$ for i in $(seq 20); do curl -s -o /dev/null -w "%{http_cod
 ```
 
 Seis passaram, a rajada de cinco e mais uma ficha que pingou enquanto o `curl` rodava, e catorze foram
-recusadas pelo gateway com `429`, sem nenhuma instância de estoque ser consultada. Esse é o sentido de pôr o limite na porta: um cliente que se comporta mal custa ao
+recusadas pelo gateway com `429`, sem nenhuma instância de estoque ser consultada. **Esse é o sentido de pôr o limite na porta**: um cliente que se comporta mal custa ao
 gateway alguns microssegundos por requisição recusada, e não custa nada aos serviços.
 
 Dois detalhes importam em produção. O gateway identifica "um cliente" por alguma coisa, aqui o endereço de

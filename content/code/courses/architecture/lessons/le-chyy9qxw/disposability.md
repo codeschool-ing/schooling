@@ -69,10 +69,10 @@ not acted on at all, so SIGTERM was ignored and Docker waited out the grace peri
 A web server that ignores SIGTERM in the same way loses every request in progress at the end of those
 ten seconds, on every deploy.
 
-There are three ways out, and any one is enough: handle SIGTERM in the program, as the catalogue
-does; run the program under a small init process that forwards signals, which `docker run --init`
-adds; or make sure the program the image starts is the one that handles signals, rather than a shell
-script that started it and swallows them.
+There are three ways out, and any one is enough. Handle SIGTERM in the program, as the catalogue does.
+Run the program under a small init process that forwards signals, which `docker run --init` adds. Or
+make sure the program the image starts is the one that handles signals, rather than a shell script
+that started it and swallows them.
 
 ## Starting fast
 

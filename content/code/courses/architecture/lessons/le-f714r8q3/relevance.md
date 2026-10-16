@@ -17,10 +17,10 @@ categories: café (4), mercearia (1)
 ```
 
 Five products, in order, each with a **score**, and a count by category beside them. The score is
-**BM25**, the ranking function every engine in this lesson uses by default. Three things raise it: the
-term appears in the field (more often counts, with diminishing returns), the term is **rare** in that field across
-the catalogue (among names, `torr` is in one and `caf` in four, so `torr` is worth more), and the field is
-**short** (a match in a five-word name says more than one in a long description). `name^3` in
+**BM25**, the ranking function every engine in this lesson uses by default. Three things raise it. The term appears in the field, and more often counts, with diminishing
+returns. The term is **rare** in that field across the catalogue: among names, `torr` is in one and
+`caf` in four, so `torr` is worth more. And the field is **short**: a match in a five-word name says
+more than one in a long description. `name^3` in
 `search.py` adds a fourth: a match in the name counts three times as much as one in the description.
 That is why `Café torrado em grãos` is first, with both words in its name, the other coffees follow on
 `café`, and `Farinha de mandioca` comes last, matched only by `torrada` in its description.

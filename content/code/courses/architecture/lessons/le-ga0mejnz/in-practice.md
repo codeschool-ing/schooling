@@ -20,9 +20,9 @@ configured by a different person. **Know where your retries are.**
 ## The deadline that travels
 
 The storm wasted most of its capacity on callers who had left. gRPC's answer is to **send the deadline
-with the call**, as the lab's `X-Deadline` header did, and to have every service check it: a request
-whose deadline has passed is dropped before any work is done, and a service that calls another passes on
-whatever time is left. The lab's service only counted those requests; a service that refused them would
+with the call**, as the lab's `X-Deadline` header did, and to have every service check it. A request
+whose deadline has passed is dropped before any work is done, and a service that calls another passes
+on whatever time is left. The lab's service only counted those requests; a service that refused them would
 have spent its capacity on callers still waiting.
 
 ## A sensible default

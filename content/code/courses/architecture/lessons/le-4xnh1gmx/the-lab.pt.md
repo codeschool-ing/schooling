@@ -3,7 +3,7 @@ title: O laboratório: o log de decisões da Quitanda
 version: 1
 ---
 
-Este laboratório não precisa de contêineres: um diretório, alguns arquivos Markdown, dois scripts de shell
+**Este laboratório não precisa de contêineres**: um diretório, alguns arquivos Markdown, dois scripts de shell
 pequenos e um arquivo de código da aplicação. Os registros são decisões que este curso tomou, escritas como
 a equipe as teria escrito na época. Ele fica em `~/lab/adr`:
 
