@@ -604,6 +604,24 @@ const RULES = {
       begin commit rollback transaction grant revoke and or count sum avg min max`,
   }),
 
+  /* DAX, the formula language of Power Pivot and Power BI. A single quote
+     names a TABLE there ('Sales'[Bags]), so only the double quote is a string,
+     and `--` is a comment as well as `//`. */
+  dax: language({
+    line: ['//', '--'],
+    quotes: ['"'],
+    keywords: `var return define evaluate measure column table order by asc desc true false
+      not in`,
+  }),
+
+  /* Power Query's M. `#"Changed Type"` is a quoted NAME, and it is coloured
+     as the string it is spelt with. */
+  powerquery: language({
+    quotes: ['"'],
+    keywords: `let in each if then else try otherwise type meta and or not true false null as
+      is section shared error`,
+  }),
+
   r: language({
     line: ['#'],
     block: null,
@@ -747,6 +765,7 @@ const ALIAS = {
   toml: 'ini', conf: 'ini', cfg: 'ini', properties: 'ini',
   vimrc: 'vim',
   tf: 'hcl', terraform: 'hcl',
+  m: 'powerquery', pq: 'powerquery',
   bash: 'sh', zsh: 'sh', shell: 'sh', console: 'sh', terminal: 'sh',
 };
 
