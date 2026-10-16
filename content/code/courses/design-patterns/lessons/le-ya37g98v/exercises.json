@@ -1,0 +1,567 @@
+[
+ {
+  "id": "ex-pfqt4sbg",
+  "version": 1,
+  "section": "state-versus-history",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In an event-sourced system, what is the event log?",
+  "choices": [
+   {
+    "text": "An audit trail kept beside the real tables, in case somebody asks",
+    "correct": false,
+    "why": "That is the picture the section replaces: here there are no other tables to sit beside."
+   },
+   {
+    "text": "A cache of recent changes, cleared once they are applied",
+    "correct": false,
+    "why": "Nothing is cleared; deleting an event would silently change a balance."
+   },
+   {
+    "text": "The data itself",
+    "correct": true,
+    "why": "Right. Any state on a screen was computed from it and can be computed again."
+   }
+  ]
+ },
+ {
+  "id": "ex-rsnex083",
+  "version": 1,
+  "section": "state-versus-history",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the history of state_only.py, how many cents did Bia owe at the end of 24 March?",
+  "value": 300,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-my4mpp6f",
+  "version": 1,
+  "section": "state-versus-history",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The library asks how much members paid in fines in March. Which version of state_only.py can answer?",
+  "choices": [
+   {
+    "text": "The history, by summing March's FinePaid events",
+    "correct": true,
+    "why": "Right. The payments were recorded as facts; the balance only kept their net effect."
+   },
+   {
+    "text": "Both, by subtracting the balances",
+    "correct": false,
+    "why": "A balance mixes fines, payments and corrections; a payment cannot be told from a correction in a single number."
+   },
+   {
+    "text": "Neither, because payments were never recorded at all",
+    "correct": false,
+    "why": "The history has a FinePaid of 100 on 24 March."
+   }
+  ]
+ },
+ {
+  "id": "ex-gymtv6fg",
+  "version": 1,
+  "section": "the-event-store",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Two clerks both read Bia's stream at version 2 and both append a loan. What does store.py do?",
+  "choices": [
+   {
+    "text": "Keeps both, since appending can never conflict",
+    "correct": false,
+    "why": "Both would write version 3, and UNIQUE (stream, version) allows one."
+   },
+   {
+    "text": "Locks the stream while the first clerk decides",
+    "correct": false,
+    "why": "Nothing is locked; the conflict is found at the insert."
+   },
+   {
+    "text": "Writes the first; the second gets ConcurrencyError and must re-read",
+    "correct": true,
+    "why": "Right. Optimistic concurrency: the unique index refuses the second version 3."
+   },
+   {
+    "text": "Merges the two loans into a single event, version 3, holding both copies",
+    "correct": false,
+    "why": "A store never edits or merges events; the loser runs the rules again."
+   }
+  ]
+ },
+ {
+  "id": "ex-7z1d5tq4",
+  "version": 1,
+  "section": "the-event-store",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What stops an UPDATE on the events table in store.py?",
+  "choices": [
+   {
+    "text": "A trigger that raises \"events are append-only\"",
+    "correct": true,
+    "why": "Right. The promise lives in the database, so it holds for any code that connects."
+   },
+   {
+    "text": "The EventStore class has no update method",
+    "correct": false,
+    "why": "True but not enough: the demo sends the UPDATE through store.db directly, and only the trigger stops it."
+   },
+   {
+    "text": "SQLite refuses updates to tables with an AUTOINCREMENT key",
+    "correct": false,
+    "why": "SQLite allows them; the refusal is the one the table was given."
+   }
+  ]
+ },
+ {
+  "id": "ex-3ahek720",
+  "version": 1,
+  "section": "the-event-store",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Appending with an expected version, and letting the loser re-read, is called ___ concurrency.",
+  "blanks": [
+   {
+    "accept": [
+     "optimistic"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-sts01fea",
+  "version": 1,
+  "section": "folding",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why must evolve never raise an exception for an event it dislikes?",
+  "choices": [
+   {
+    "text": "Exceptions are slow inside reduce",
+    "correct": false,
+    "why": "Speed is beside the point; a raised exception would make the stream unreadable."
+   },
+   {
+    "text": "Python forbids raising inside a match statement",
+    "correct": false,
+    "why": "It allows it; the reason is about stored history, not syntax."
+   },
+   {
+    "text": "A frozen dataclass cannot be returned after an exception",
+    "correct": false,
+    "why": "Freezing concerns mutation, not exceptions; nothing about it stops a raise."
+   },
+   {
+    "text": "The event is stored, so every later fold would fail on it",
+    "correct": true,
+    "why": "Right. Events are facts; the rules belong in the command, before the event exists."
+   }
+  ]
+ },
+ {
+  "id": "ex-7h95ngmm",
+  "version": 1,
+  "section": "folding",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of lend() in fold.py in order.",
+  "items": [
+   "Read the member's events",
+   "Fold them with evolve into a Member and a version",
+   "Check the rules against that state",
+   "Append CopyLent, expecting that version"
+  ],
+  "trap": "The state is computed before the rules and thrown away after; only the event is stored."
+ },
+ {
+  "id": "ex-83ssngyy",
+  "version": 1,
+  "section": "folding",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An auditor asks what Bia held on the day of her second event. With fold.py, how do you answer?",
+  "choices": [
+   {
+    "text": "Restore last month's database backup and look",
+    "correct": false,
+    "why": "A backup shows one past moment at best; the events give every moment."
+   },
+   {
+    "text": "Fold only the first two events",
+    "correct": true,
+    "why": "Right. Stopping the fold early is the whole of time travel here."
+   },
+   {
+    "text": "Read the Member row as it was stored at version 2",
+    "correct": false,
+    "why": "No Member is stored at any version; the state is always worked out."
+   }
+  ]
+ },
+ {
+  "id": "ex-80zhapf4",
+  "version": 1,
+  "section": "projections",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "MostBorrowed was created after every loan had happened. How did it count them?",
+  "choices": [
+   {
+    "text": "It asked FinesOwed, which had seen them",
+    "correct": false,
+    "why": "Projections do not read each other; FinesOwed ignores loans anyway."
+   },
+   {
+    "text": "Lending kept a counter in case a screen ever wanted it",
+    "correct": false,
+    "why": "No such counter exists, and with events kept none is needed."
+   },
+   {
+    "text": "catch_up read the whole store from position 0",
+    "correct": true,
+    "why": "Right. A new projection starts with a checkpoint of 0 and reads the whole history."
+   }
+  ]
+ },
+ {
+  "id": "ex-1dn9cp66",
+  "version": 1,
+  "section": "projections",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A projection computes \"days overdue\" with date.today(). What goes wrong?",
+  "choices": [
+   {
+    "text": "Each rebuild gives a different answer from the same events",
+    "correct": true,
+    "why": "Right. A projection must be deterministic in the events; the date belongs in the event."
+   },
+   {
+    "text": "date.today() is not allowed in threads",
+    "correct": false,
+    "why": "It is; the problem is that the answer depends on when the rebuild runs."
+   },
+   {
+    "text": "The checkpoint stops advancing",
+    "correct": false,
+    "why": "The checkpoint moves as usual; the numbers it stands beside are what drift."
+   },
+   {
+    "text": "Nothing, as long as the server clock is correct",
+    "correct": false,
+    "why": "A correct clock still reads a different day tomorrow, so a rebuild tomorrow disagrees with today's."
+   }
+  ]
+ },
+ {
+  "id": "ex-sbfxyf1j",
+  "version": 1,
+  "section": "projections",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each projection rule to what breaking it would cause.",
+  "pairs": [
+   {
+    "left": "It never appends events",
+    "right": "reading history would change history"
+   },
+   {
+    "left": "It never calls the write side for facts",
+    "right": "the coupling the split removed comes back"
+   },
+   {
+    "left": "It keeps its own checkpoint",
+    "right": "a restart would not know where to resume"
+   }
+  ]
+ },
+ {
+  "id": "ex-akgjrhnr",
+  "version": 1,
+  "section": "snapshots",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In snapshot.py, how many events did the rebuild apply when it started from the snapshot?",
+  "value": 1,
+  "tolerance": 0,
+  "unit": "events"
+ },
+ {
+  "id": "ex-r4kra478",
+  "version": 1,
+  "section": "snapshots",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Once a snapshot exists at version 10,002, may the events before it be archived away?",
+  "choices": [
+   {
+    "text": "No: a snapshot is a cache, and the events are still the record",
+    "correct": true,
+    "why": "Right. Deleting a snapshot loses nothing; deleting events loses history."
+   },
+   {
+    "text": "Yes, the snapshot holds everything those earlier events said",
+    "correct": false,
+    "why": "It holds one fold of them; projections, audits and a fixed evolve all need the events."
+   },
+   {
+    "text": "Yes, if the snapshot is less than a year old",
+    "correct": false,
+    "why": "Age is not the question; a snapshot is derived and the events are not."
+   }
+  ]
+ },
+ {
+  "id": "ex-p117ddwy",
+  "version": 1,
+  "section": "snapshots",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A bug in evolve is fixed. Snapshots were taken while it lived. What should happen to them?",
+  "choices": [
+   {
+    "text": "Keep them: the next rebuild corrects them automatically",
+    "correct": false,
+    "why": "The rebuild starts from the snapshot and folds only later events, so the wrong state survives."
+   },
+   {
+    "text": "Edit them by hand to the right values",
+    "correct": false,
+    "why": "Hand edits are guesses; folding from version 1 under the fixed code is exact."
+   },
+   {
+    "text": "Delete them all and fold again under the fixed code",
+    "correct": true,
+    "why": "Right. Snapshots are disposable by design; that is what makes the fix safe."
+   },
+   {
+    "text": "Append correction events to every affected stream",
+    "correct": false,
+    "why": "The events were right; only the cached fold was wrong."
+   }
+  ]
+ },
+ {
+  "id": "ex-3gbw3y6t",
+  "version": 1,
+  "section": "eventual-consistency",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In lag.py, why was the projection empty when read straight after Dani's return?",
+  "choices": [
+   {
+    "text": "The store had not committed the events yet",
+    "correct": false,
+    "why": "append commits before it returns; the store was at position 2."
+   },
+   {
+    "text": "FinesOwed ignores CopyReturned until a payment arrives",
+    "correct": false,
+    "why": "It adds the fine on CopyReturned, as the next line shows."
+   },
+   {
+    "text": "The worker had not applied them yet",
+    "correct": true,
+    "why": "Right. The projection was at 0 while the store was at 2."
+   }
+  ]
+ },
+ {
+  "id": "ex-e0enchf1",
+  "version": 1,
+  "section": "eventual-consistency",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A worker applies event 41, then crashes before saving its checkpoint of 40. What happens on restart, and what must the projection tolerate?",
+  "choices": [
+   {
+    "text": "Event 41 is lost, so the projection must tolerate gaps",
+    "correct": false,
+    "why": "It is still in the store; reading after 40 delivers it again."
+   },
+   {
+    "text": "41 is applied twice; repeats must be safe",
+    "correct": true,
+    "why": "Right. Delivery is at least once, so save the checkpoint with the result or make apply idempotent."
+   },
+   {
+    "text": "The store refuses to deliver event 41 twice",
+    "correct": false,
+    "why": "The store does not know who read what; the checkpoint is the projection's business."
+   }
+  ]
+ },
+ {
+  "id": "ex-a1gmfw1z",
+  "version": 1,
+  "section": "eventual-consistency",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each number to what it says about a projection.",
+  "pairs": [
+   {
+    "left": "the store's head position",
+    "right": "the last event written"
+   },
+   {
+    "left": "the projection's checkpoint",
+    "right": "the last event it applied"
+   },
+   {
+    "left": "head minus checkpoint",
+    "right": "how many events it is behind"
+   }
+  ]
+ },
+ {
+  "id": "ex-ss023qat",
+  "version": 1,
+  "section": "versioning-events",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Old CopyLent events have no title. Why not run a migration that adds one to each stored row?",
+  "choices": [
+   {
+    "text": "Editing stored history breaks the store's one promise",
+    "correct": true,
+    "why": "Right. An upcaster changes the reading and leaves the row as written; the trigger would refuse the edit anyway."
+   },
+   {
+    "text": "SQLite cannot add keys to JSON text",
+    "correct": false,
+    "why": "It can, with json_set; the reason is about history, not capability."
+   },
+   {
+    "text": "The migration would be too slow on ten thousand rows",
+    "correct": false,
+    "why": "Ten thousand rows update in moments; speed is not what forbids it."
+   }
+  ]
+ },
+ {
+  "id": "ex-b0aj1yae",
+  "version": 1,
+  "section": "versioning-events",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The library starts charging fines in reais. What should happen to the fine field of CopyReturned?",
+  "choices": [
+   {
+    "text": "New events store reais in fine; readers divide old ones by 100",
+    "correct": false,
+    "why": "Readers cannot tell old from new by the field, so sums mix cents and reais quietly."
+   },
+   {
+    "text": "An upcaster that multiplies old fines by 100 on reading",
+    "correct": false,
+    "why": "That turns correct old cents into wrong numbers; nothing about the old events changed."
+   },
+   {
+    "text": "Rewrite the stored events in reais",
+    "correct": false,
+    "why": "Stored events are never rewritten, and the trigger refuses it."
+   },
+   {
+    "text": "A new field or type; fine keeps meaning cents",
+    "correct": true,
+    "why": "Right. An event's meaning is fixed when written; only its shape may be adapted."
+   }
+  ]
+ },
+ {
+  "id": "ex-s5hpgfjs",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these must be deterministic in the events they read? Choose all that apply.",
+  "choices": [
+   {
+    "text": "evolve",
+    "correct": true,
+    "why": "Right. Every fold of the same stream must give the same state."
+   },
+   {
+    "text": "A projection such as FinesOwed",
+    "correct": true,
+    "why": "Right. A rebuild from 0 must reproduce the same read model."
+   },
+   {
+    "text": "An upcaster such as lent_v1_to_v2",
+    "correct": true,
+    "why": "Right. The same stored row must be read the same way forever, hence the frozen TITLE_OF."
+   },
+   {
+    "text": "The lend command, deciding whether Bia may borrow",
+    "correct": false,
+    "why": "A command may read the clock or other inputs; what it decides is recorded as an event, and the event is what later code reads."
+   }
+  ]
+ },
+ {
+  "id": "ex-e4am5aed",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Order these from cheapest to discard to most dangerous to discard.",
+  "items": [
+   "A snapshot",
+   "A projection, rebuilt from position 0",
+   "An event in the store"
+  ],
+  "trap": "A projection costs a rebuild over the whole store, a snapshot only a longer fold; an event cannot be recovered at all."
+ },
+ {
+  "id": "ex-3sf8edvm",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A screen reads FinesOwed to decide whether to offer Bia the Lend button, and lend() refuses her anyway. Which is right?",
+  "choices": [
+   {
+    "text": "The screen, because the projection is newer than the command",
+    "correct": false,
+    "why": "A projection is never newer than the store; at best it has caught up."
+   },
+   {
+    "text": "lend(), because it folds her stream, which is the truth",
+    "correct": true,
+    "why": "Right. The screen may be behind; the decision reads the events themselves."
+   },
+   {
+    "text": "Neither until a snapshot is taken",
+    "correct": false,
+    "why": "Snapshots only speed the fold up; the answer is the same without one."
+   }
+  ]
+ }
+]

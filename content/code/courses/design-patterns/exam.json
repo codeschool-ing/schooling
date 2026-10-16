@@ -1,0 +1,2670 @@
+[
+ {
+  "id": "ex-dr32yf04",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A Reservation class has get_ and set_ methods for every field, including set_status and set_expires. The rule \"a reservation already collected cannot expire\" is checked by three of its callers. What does lesson 1 say about this design?",
+  "choices": [
+   {
+    "text": "It is well encapsulated, because no field is touched directly",
+    "correct": false,
+    "why": "Methods in front of every field are the syntax of encapsulation. The rule still lives in the callers, so any caller that forgets it breaks it."
+   },
+   {
+    "text": "It has the form of encapsulation without the promise: the rule belongs inside the class",
+    "correct": true,
+    "why": "Right. A method such as expire() that refuses a collected reservation keeps the rule in one place, where no caller can get round it."
+   },
+   {
+    "text": "It needs a subclass, CollectedReservation, whose set_expires refuses to change the expiry date",
+    "correct": false,
+    "why": "A reservation becomes collected while the program runs, and an object cannot change class. The rule is about state, and belongs with the state."
+   },
+   {
+    "text": "It is fine once the fields start with an underscore",
+    "correct": false,
+    "why": "The underscore marks a field as private by convention. With a setter beside it, every caller can still set any value."
+   }
+  ]
+ },
+ {
+  "id": "ex-4jf5x79q",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "items.py gains class Periodical(Item) with an empty body, and class Magazine(Periodical) whose body is only loan_days = 3. What does Magazine(\"Piauí\", \"P 05\").describe() return?",
+  "choices": [
+   {
+    "text": "An AttributeError, since Periodical defines no describe",
+    "correct": false,
+    "why": "Python does not stop at Periodical. It walks the method resolution order, Magazine, Periodical, Item, object, and finds describe in Item."
+   },
+   {
+    "text": "\"Piauí [P 05], 3 days\"",
+    "correct": true,
+    "why": "Right. Item's describe runs, and self.loan_days is looked up on the magazine, where Magazine's 3 is found before Item's 14."
+   },
+   {
+    "text": "\"Piauí [P 05], 14 days\", because describe is written in Item",
+    "correct": false,
+    "why": "Where the method is written does not decide where self.loan_days is read. self is the magazine, and the lookup starts at Magazine."
+   },
+   {
+    "text": "\"Piauí [P 05], reading room only\"",
+    "correct": false,
+    "why": "That sentence belongs to ReferenceBook, which is not in Magazine's chain of parents."
+   }
+  ]
+ },
+ {
+  "id": "ex-vja93w0t",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A Subscription stores ends_on and also a field days_left, which a nightly job recalculates. One morning the screen says 5 days left for a subscription that ends tomorrow. Which idea from lesson 1 names the defect?",
+  "choices": [
+   {
+    "text": "The job should run every hour instead of every night",
+    "correct": false,
+    "why": "A job run more often narrows the window and keeps the second copy. The two values can still disagree between runs."
+   },
+   {
+    "text": "days_left needs a property so it cannot be written",
+    "correct": false,
+    "why": "A read-only property over a stored number still returns the stale number. What helps is a property that computes it."
+   },
+   {
+    "text": "A stored value is a second copy of a date; compute it from ends_on",
+    "correct": true,
+    "why": "Right. Loan.fine is computed every time for this reason: two copies of one fact disagree the day somebody updates only one."
+   },
+   {
+    "text": "It shows that inheritance coupled the job to the class",
+    "correct": false,
+    "why": "No class inherits from another here. The defect is the duplicated state, which is what encapsulation is meant to keep honest."
+   }
+  ]
+ },
+ {
+  "id": "ex-0cfhz4b1",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "due_date(item) contains if isinstance(item, Film): days = 7, elif isinstance(item, Book): days = 14. Audiobooks arrive, lent for 10 days. What would polymorphism change?",
+  "choices": [
+   {
+    "text": "Add an elif for Audiobook, which is how polymorphism is written in a language like Python",
+    "correct": false,
+    "why": "Another branch is the opposite of polymorphism: due_date keeps naming classes, and every new kind of item edits it again."
+   },
+   {
+    "text": "Each class says its own loan_days, so due_date stops asking which class it has",
+    "correct": true,
+    "why": "Right. due_date reads item.loan_days and never changes again; an audiobook is one new class with its own number."
+   },
+   {
+    "text": "Make Audiobook inherit from Film so the first branch catches it",
+    "correct": false,
+    "why": "An audiobook is not a film, and the branch would lend it for 7 days. Inheritance chosen to dodge an if is a false is-a."
+   },
+   {
+    "text": "Catch the error due_date raises for a class it does not know",
+    "correct": false,
+    "why": "Catching the failure still leaves the audiobook without its 10 days. The rule has to be somewhere, and the item is where it belongs."
+   }
+  ]
+ },
+ {
+  "id": "ex-6rsxbx52",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A cinema sells tickets that differ in seat (standard, VIP, accessible), price (full, half) and delivery (e-mail, SMS, printed). Written with one subclass per combination, as lesson 1 counted for members, how many ticket subclasses are there?",
+  "value": 18,
+  "tolerance": 0,
+  "unit": "subclasses"
+ },
+ {
+  "id": "ex-4v6ydjq7",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "In notices.py, the class that names the method a channel must have, read by a type checker and ignored at run time, inherits from ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "Protocol",
+     "typing.Protocol"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ska97cqh",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "In Go, Item has methods Describe and Summary, and Summary calls Describe. Film embeds Item and defines its own Describe. Which Describe runs when code calls film.Summary()?",
+  "choices": [
+   {
+    "text": "Film's, the way an override would answer in Python",
+    "correct": false,
+    "why": "That is exactly what Go does not do. The promoted Summary has the inner Item as its receiver, so its call to Describe stays on Item."
+   },
+   {
+    "text": "Item's: an embedded struct never calls back into the struct that embeds it",
+    "correct": true,
+    "why": "Right. That is why lesson 2 says Go cannot have the fragile base class problem: the self-call that broke CountingShelf cannot reach the outer type."
+   },
+   {
+    "text": "Neither: the program does not compile, as both types define Describe",
+    "correct": false,
+    "why": "An outer method of the same name is allowed and simply wins for film.Describe(). The ambiguity error is for two embedded types at the same depth."
+   },
+   {
+    "text": "Both, Film's first and then Item's",
+    "correct": false,
+    "why": "A call runs one method. Go has no super and no chain of overrides to walk."
+   }
+  ]
+ },
+ {
+  "id": "ex-vbmea3r3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A published Playlist class has add(song) and add_many(songs), and add_many happens to loop over self.add. Your TimedPlaylist(Playlist) overrides both to add up durations, and the total comes out too large. Which design does lesson 2 argue for?",
+  "choices": [
+   {
+    "text": "Override only add, since add_many sends every song through it",
+    "correct": false,
+    "why": "That is the fix that makes it worse: correct today, and wrong the day the author makes add_many extend a list in one go."
+   },
+   {
+    "text": "Hold a Playlist in a field and forward each call to it",
+    "correct": true,
+    "why": "Right. The inner add_many calls the inner add, never the wrapper's, so the count holds whatever Playlist does inside."
+   },
+   {
+    "text": "Ask the Playlist authors to promise never to change add_many",
+    "correct": false,
+    "why": "A documented self-use is a real way out, but it is the parent's decision to make for every child. A published class has children its authors never see."
+   },
+   {
+    "text": "Copy Playlist's source into TimedPlaylist",
+    "correct": false,
+    "why": "The copy stops getting the authors' fixes, and it is a second Playlist you now maintain. Holding one costs a few forwarding methods."
+   }
+  ]
+ },
+ {
+  "id": "ex-cya70wy8",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Loans vary by item (book, film, magazine), by member (adult, student) and by reminder channel (e-mail, SMS, printed slip). In the composed design of lesson 2, one small class per option, how many classes are needed?",
+  "value": 8,
+  "tolerance": 0,
+  "unit": "classes"
+ },
+ {
+  "id": "ex-a3qxyac7",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Which of these is a place where lesson 2 would write class X(Y)?",
+  "choices": [
+   {
+    "text": "class CachedShelf(Shelf), where Shelf comes from a package whose self-calls nobody wrote down",
+    "correct": false,
+    "why": "A parent not written for extension is the second question of the table: wrap it, do not subclass it."
+   },
+   {
+    "text": "class StudentSmsLoan(StudentLoan)",
+    "correct": false,
+    "why": "A second axis, the channel, pushed into the tree. That is how the class explosion starts."
+   },
+   {
+    "text": "class RenewalHandler(BaseHandler), for a framework that documents handle() as the hook to fill in",
+    "correct": true,
+    "why": "Right. A framework designed for thousands of children, with its hooks documented, is the third case the lesson names, like unittest.TestCase."
+   },
+   {
+    "text": "class LoanDesk(Member, Email), so the desk gets a name and a channel",
+    "correct": false,
+    "why": "A desk is neither a member nor an e-mail. Saying the sentence out loud is the test: it has those things, if anything."
+   }
+  ]
+ },
+ {
+  "id": "ex-z7r624w4",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "class Poster(LabelMixin, JsonMixin, Item), where the two mixins and Item have no parents but object. Python looks for label() on a poster. Put the classes in the order the lookup visits them.",
+  "items": [
+   "Poster",
+   "LabelMixin",
+   "JsonMixin",
+   "Item",
+   "object"
+  ],
+  "trap": "The parents are visited left to right as written, so a mixin listed before Item wins over it. Putting Item first because it feels like the real parent is the slip."
+ },
+ {
+  "id": "ex-d64v743b",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A TimestampMixin keeps its own list self._history and calls self.save(), which only some host classes define. What does lesson 2 suggest?",
+  "choices": [
+   {
+    "text": "Make it an object the class holds",
+    "correct": true,
+    "why": "Right. It has state and relies on an unstated method of its host, the two signs that a mixin wants to be a part. A held part fails when the object is made, not on first use."
+   },
+   {
+    "text": "List it first among the parents so its methods take precedence",
+    "correct": false,
+    "why": "Order decides which of two same-named methods wins. It does nothing about the state or about a host without save()."
+   },
+   {
+    "text": "Nothing; adding one capability to many classes is what mixins are for",
+    "correct": false,
+    "why": "The safe mixin of the lesson is stateless and states what it needs from its host. This one does neither."
+   },
+   {
+    "text": "Give it an __init__ that calls super().__init__() so the list is always created",
+    "correct": false,
+    "why": "That patches one symptom and adds more hidden coupling: every host must now cooperate with a constructor it did not write, and save() is still missing on some."
+   }
+  ]
+ },
+ {
+  "id": "ex-yqs9ge46",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "You write on_overdue(loan) and decorate it with @every(\"day\") from a scheduler package. At 03:00 the scheduler's own loop calls it. In the terms of lesson 5, what is the scheduler?",
+  "choices": [
+   {
+    "text": "A library, because you imported it",
+    "correct": false,
+    "why": "Importing it says nothing. What decides is who holds the loop, and here it is the scheduler."
+   },
+   {
+    "text": "A framework: it holds the loop and calls your code back",
+    "correct": true,
+    "why": "Right. Your function registers and waits, the Hollywood principle; when and whether it runs is the scheduler's decision."
+   },
+   {
+    "text": "A dependency injection container, since it is handed a function",
+    "correct": false,
+    "why": "Passing a function to be called later inverts control flow. Injection is about who builds the objects a class needs."
+   },
+   {
+    "text": "A service locator, as it finds your function by name",
+    "correct": false,
+    "why": "A locator is a registry that your code asks for its collaborators. Here nobody asks the scheduler for anything; it calls you."
+   }
+  ]
+ },
+ {
+  "id": "ex-hk9733s3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "RenewalJob.__init__ takes no arguments and sets self.clock = SystemClock(). A set_clock() method was added so tests can swap it. Which change does lesson 5 point to?",
+  "choices": [
+   {
+    "text": "Keep the setter, since every test is already able to swap in a fixed clock of its own",
+    "correct": false,
+    "why": "It works in the tests, and the class still picks its own concrete clock. A forgotten set_clock leaves the real calendar running quietly."
+   },
+   {
+    "text": "Patch SystemClock in each test instead of keeping a setter",
+    "correct": false,
+    "why": "A patch couples the test to the module's import names. For your own class, needing one is a message that something inside builds a collaborator."
+   },
+   {
+    "text": "Take the clock as a constructor argument, and let main.py pass SystemClock()",
+    "correct": true,
+    "why": "Right. The constructor then lists what the job needs, a missing clock fails at construction, and the one concrete choice lives in the composition root."
+   },
+   {
+    "text": "Make the clock a module-level global that tests overwrite",
+    "correct": false,
+    "why": "That is a service locator by another name: the dependency disappears from the constructor, and tests start sharing state."
+   }
+  ]
+ },
+ {
+  "id": "ex-we6eqarf",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Which of these belong in the composition root, main.py, by lesson 5? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Reading LIBRARY_TODAY from the environment",
+    "correct": true,
+    "why": "Yes. Configuration is read in the root, and nowhere deeper."
+   },
+   {
+    "text": "Choosing SmsNotifier or EmailNotifier",
+    "correct": true,
+    "why": "Yes. Naming the concrete class another object depends on is the root's job and only the root's."
+   },
+   {
+    "text": "Building OverdueNotices with its store, notifier and clock",
+    "correct": true,
+    "why": "Yes. Wiring objects to their neighbours is what the root is for."
+   },
+   {
+    "text": "The rule that a late day costs 50 cents",
+    "correct": false,
+    "why": "A rule in the root cannot be tested without building the whole program. Keep the root dull: it decides and connects."
+   },
+   {
+    "text": "Deciding whether a loan due today is late",
+    "correct": false,
+    "why": "That is OverdueNotices' rule, tested in test_overdue.py with a fixed clock. The root only hands the job its clock."
+   }
+  ]
+ },
+ {
+  "id": "ex-gsy8q2xg",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "Match each dependency to the form of injection lesson 5 says fits it.",
+  "pairs": [
+   {
+    "left": "a repository the service cannot work without",
+    "right": "constructor"
+   },
+   {
+    "left": "a logger that writes nowhere until somebody sets one",
+    "right": "setter"
+   },
+   {
+    "left": "the payment terminal, different for each sale at the till",
+    "right": "method"
+   },
+   {
+    "left": "today's date, for a plain function that computes a fine",
+    "right": "function parameter"
+   }
+  ]
+ },
+ {
+  "id": "ex-t79qdve1",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A team passes its container only to main.py, which asks it once for the App object and then runs it. A reviewer calls this a service locator. Is it?",
+  "choices": [
+   {
+    "text": "No; asked once at the root it is a wiring tool",
+    "correct": true,
+    "why": "Right. The same container becomes a locator when classes import it and ask it from inside their methods."
+   },
+   {
+    "text": "Yes: every container is a locator",
+    "correct": false,
+    "why": "The lesson separates the two by direction: handing objects their collaborators, or objects fetching them. A container can be used either way."
+   },
+   {
+    "text": "Yes, since the App object is resolved by type rather than built by hand",
+    "correct": false,
+    "why": "Autowiring changes who writes the wiring, not which way the dependencies flow. App still receives everything through its constructor."
+   },
+   {
+    "text": "No, provided its registrations are all marked shared",
+    "correct": false,
+    "why": "Lifetime is a separate question. A locator with shared instances is still a locator."
+   }
+  ]
+ },
+ {
+  "id": "ex-y7dm5559",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Your Checkout class calls a payment vendor's client, whose code you cannot change. How does lesson 5 suggest testing Checkout?",
+  "choices": [
+   {
+    "text": "Patch the vendor module's import path in every test",
+    "correct": false,
+    "why": "It works until an import is renamed, and then the patch replaces nothing and the real client is called. Checkout is yours, so it can be shaped to receive the client."
+   },
+   {
+    "text": "Pass the vendor object in from outside, and give the tests a fake one",
+    "correct": true,
+    "why": "Right. The vendor's code stays untouched; your class receives it, so a fake couples the test only to what Checkout needs."
+   },
+   {
+    "text": "Run every test against the vendor's sandbox",
+    "correct": false,
+    "why": "A network service makes the test slow and dependent on somebody else's uptime. The lesson fakes what is outside the process."
+   },
+   {
+    "text": "Register the client in a global registry that each test overwrites with a fake of its own before it runs",
+    "correct": false,
+    "why": "A global registry is the service locator, with tests that pass or fail depending on their order."
+   }
+  ]
+ },
+ {
+  "id": "ex-x1zfqmdy",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "In code you did not write, ReturnScreen calls self.view.show_total(\"R$ 3,00\") and self.view.flag_late(True), and never touches a widget itself. Which role does ReturnScreen play?",
+  "choices": [
+   {
+    "text": "A presenter, in MVP",
+    "correct": true,
+    "why": "Right. A class that calls view.show_... with strings already formatted is a presenter, whatever it is called."
+   },
+   {
+    "text": "A view-model, in MVVM",
+    "correct": false,
+    "why": "A view-model exposes properties and has never heard of the view. This class calls the view by name."
+   },
+   {
+    "text": "The model of desktop MVC, announcing its changes to subscribers",
+    "correct": false,
+    "why": "A model points at nobody and formats nothing. Turning cents into \"R$ 3,00\" is screen logic."
+   },
+   {
+    "text": "A template, in web MVC",
+    "correct": false,
+    "why": "A template receives values and renders them; it does not call another object's methods to show things."
+   }
+  ]
+ },
+ {
+  "id": "ex-fb7zeqx2",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A second view, LoanCounter, subscribes to the desk in mvc.py after ShelfView, and prints one line on every change. The command lend B2 caio succeeds. In which order do the three lines appear?",
+  "choices": [
+   {
+    "text": "the controller's due date first, then the shelf and the counter",
+    "correct": false,
+    "why": "The controller only speaks after desk.lend returns, and both views were run inside that call."
+   },
+   {
+    "text": "the shelf, then the counter, then the controller's due date",
+    "correct": true,
+    "why": "Right. lend calls _changed, which runs the watchers in the order they subscribed; then lend returns and the controller says when B2 is due."
+   },
+   {
+    "text": "the counter, the shelf, the controller's due date",
+    "correct": false,
+    "why": "_changed walks the list in order, and ShelfView subscribed first."
+   },
+   {
+    "text": "the controller's due date only, since it never asks the views to redraw",
+    "correct": false,
+    "why": "Nobody has to ask. The views subscribed, so the model calls them on every change."
+   }
+  ]
+ },
+ {
+  "id": "ex-1427y7zh",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A teammate wants Desk.lend to return the number 409 on a refusal, so the web controller can pass it straight to the browser. What does lesson 7 say?",
+  "choices": [
+   {
+    "text": "Good: one status code shared by every screen keeps them consistent",
+    "correct": false,
+    "why": "The terminal desk and the tests have no use for an HTTP status. A model shaped for one screen is the tangle coming back."
+   },
+   {
+    "text": "Good, provided the view escapes the number before showing it",
+    "correct": false,
+    "why": "Escaping is a real job of the HTML view, and it is beside the point: the question is which layer decides about HTTP."
+   },
+   {
+    "text": "No: the status is a decision about HTTP, so the controller makes it, and the model raises its sentence",
+    "correct": true,
+    "why": "Right. web.py turns the ValueError into 409 Conflict in lend, and the same model serves the terminal and the tests unchanged."
+   },
+   {
+    "text": "No: refusals should print a message instead",
+    "correct": false,
+    "why": "The model never prints; it cannot know whether its words will reach a terminal, a page or nowhere."
+   }
+  ]
+ },
+ {
+  "id": "ex-7wheaadd",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "In mvvm.py, Ana's screen shows \"B1 is out\" with Lend greyed out. At another desk, somebody returns B1 to the same Desk object; the member Ana typed holds no other loan. What happens to Ana's button?",
+  "choices": [
+   {
+    "text": "Nothing until Ana types again, because only the text boxes trigger a recompute",
+    "correct": false,
+    "why": "The view-model also subscribed to the desk itself, so a change anywhere on the desk reaches it."
+   },
+   {
+    "text": "It turns enabled on its own, with no line of screen code asking",
+    "correct": true,
+    "why": "Right. The desk notifies the view-model, _recompute sets can_lend to True, and the binding enables the button."
+   },
+   {
+    "text": "The presenter calls _refresh and the button is redrawn",
+    "correct": false,
+    "why": "There is no presenter in mvvm.py. Remembering to refresh was MVP's burden, and the bindings remove it."
+   },
+   {
+    "text": "The other desk's code has to call button.set_enabled(True) for Ana",
+    "correct": false,
+    "why": "That would tie every desk to every screen. Nobody calls set_enabled except the binding to can_lend."
+   }
+  ]
+ },
+ {
+  "id": "ex-z979xan8",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A new desk screen is written in the MVP of lesson 7. Match each piece of logic to the class that holds it.",
+  "pairs": [
+   {
+    "left": "a member may hold at most five loans",
+    "right": "the model"
+   },
+   {
+    "left": "a fine of 350 cents is shown as R$ 3,50",
+    "right": "the presenter"
+   },
+   {
+    "left": "an alarm is drawn in red",
+    "right": "the view"
+   }
+  ]
+ },
+ {
+  "id": "ex-ddh7jscc",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Fowler's name for the move every pattern of lesson 7 makes first, taking the rules out into a model that knows nothing of screens, is separated ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "presentation"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-mgdra2jm",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A Java service opens a JDBC connection and runs two statements: record the payment of a fine, then mark the fine paid. The second throws. Nobody called setAutoCommit. What is in the database?",
+  "choices": [
+   {
+    "text": "The payment, with the fine still unpaid",
+    "correct": true,
+    "why": "Right. Autocommit is on until you turn it off, so the first statement was a transaction of its own and was committed before the second failed."
+   },
+   {
+    "text": "Nothing, because the driver rolls back the pair",
+    "correct": false,
+    "why": "No pair existed. Two statements belong together only if somebody opens a transaction around them."
+   },
+   {
+    "text": "Both changes, since the error came after the work was sent",
+    "correct": false,
+    "why": "The second statement failed, so its change is not there. Only the first one, committed on its own, survived."
+   },
+   {
+    "text": "Whatever the isolation level allows",
+    "correct": false,
+    "why": "Isolation is about transactions running at the same time. This is one connection, and the answer is atomicity, or its absence."
+   }
+  ]
+ },
+ {
+  "id": "ex-vzr5tzk6",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Iracema has available = 2. Four desks each run UPDATE items SET available = available - 1 WHERE title = 'Iracema' AND available > 0, and record a loan only when the cursor's rowcount is 1. How many loans are recorded?",
+  "value": 2,
+  "tolerance": 0,
+  "unit": "loans"
+ },
+ {
+  "id": "ex-qpzb0r6s",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The read-then-write lend of desks.py has to run on PostgreSQL at its default level, read committed. Which change stops two desks lending one copy?",
+  "choices": [
+   {
+    "text": "Wrap the read and the write in BEGIN and COMMIT",
+    "correct": false,
+    "why": "At read committed the second desk's transaction still reads 1 and writes 0 over the first: the update is lost inside a transaction."
+   },
+   {
+    "text": "Read the row with SELECT ... FOR UPDATE",
+    "correct": true,
+    "why": "Right. The row is locked when it is read, so the second desk waits and then reads 0. The conditional UPDATE would also do it, in one statement."
+   },
+   {
+    "text": "Add CHECK (available >= 0) to the items table",
+    "correct": false,
+    "why": "Both desks write 0, which satisfies the constraint. The table ends valid and wrong: two loans for one copy."
+   },
+   {
+    "text": "Use BEGIN IMMEDIATE, as the SQLite version does",
+    "correct": false,
+    "why": "That is SQLite's syntax for taking the write lock early. PostgreSQL locks rows, and FOR UPDATE is how a read asks for one."
+   }
+  ]
+ },
+ {
+  "id": "ex-d3s3zeh3",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "Bia renews a loan and the primary runs in sync mode, as in latency.py. Put the events in order.",
+  "items": [
+   "The primary writes the change to its own disk",
+   "The change travels to the replica",
+   "The replica confirms back to the primary",
+   "Bia is told the renewal is done"
+  ],
+  "trap": "Telling Bia right after the local write is async mode. In sync mode she waits for the round trip, which is the 113 ms of the transcript."
+ },
+ {
+  "id": "ex-xph0n20m",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The link between branches is down. Three requests arrive at the branch cut off from the primary: a member changes her e-mail address, a \"books read this year\" badge is updated, and a fine is paid. By the reasoning of lesson 10, which should that branch refuse?",
+  "choices": [
+   {
+    "text": "Only the payment: money is wrong in a way a person has to repair",
+    "correct": true,
+    "why": "Right. A doubled or lost payment means a refund and a phone call. The badge is a count that can be a little off, and the address is a last-write question a rule can settle."
+   },
+   {
+    "text": "The badge, because the member sees it",
+    "correct": false,
+    "why": "Being visible does not make it costly. A count a few behind harms nobody, which is the easy end of the lesson's table."
+   },
+   {
+    "text": "All three, since refusing is always the safer choice when a branch cannot be sure",
+    "correct": false,
+    "why": "Refusing has its own cost: members turned away and code to handle it. The lesson decides per operation, by who pays if two copies disagree."
+   },
+   {
+    "text": "None of them, because partitions are rare",
+    "correct": false,
+    "why": "Rare is why the choice is made in advance, not a reason to skip it. On the day the link is down, the payment still has to be right."
+   }
+  ]
+ },
+ {
+  "id": "ex-1w50t4xq",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Every link is healthy. A team makes each catalogue read wait for the latest committed stock, and accepts slower pages for it. Which letters of PACELC describe that choice?",
+  "choices": [
+   {
+    "text": "PC: consistency during a partition",
+    "correct": false,
+    "why": "Nothing is partitioned. The first half of PACELC only speaks while the network is broken."
+   },
+   {
+    "text": "EC",
+    "correct": true,
+    "why": "Right. Else, with no partition, they chose consistency over latency, paying on every read on an ordinary day."
+   },
+   {
+    "text": "EL: else, latency",
+    "correct": false,
+    "why": "EL is the opposite choice: answer fast, even if the data may be a little behind."
+   },
+   {
+    "text": "CA: with no partition, they keep both consistency and availability",
+    "correct": false,
+    "why": "CAP has no such choice to make, and PACELC exists because the healthy case still forces one: latency against consistency."
+   }
+  ]
+ },
+ {
+  "id": "ex-2w0gxffk",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "You start a shipping-cost calculator test-first. The first test says a 2 kg parcel costs 1000 cents, and you do not yet know how the price grows with weight. What does lesson 13 have you write to get to green?",
+  "choices": [
+   {
+    "text": "return weight_kg * 500, the rule the one example suggests",
+    "correct": false,
+    "why": "One example cannot tell 500 per kilo from a flat price or a band. That guess is what triangulation exists to test."
+   },
+   {
+    "text": "return 1000",
+    "correct": true,
+    "why": "Right. Fake it: the test is seen to pass, the interface is fixed, and the next example forces the general rule."
+   },
+   {
+    "text": "Three more tests first, then all the code at once",
+    "correct": false,
+    "why": "Several red tests at once make a red run with several causes. One test, then the least code, is the turn."
+   },
+   {
+    "text": "The full price table, without running the test, since the step is obvious",
+    "correct": false,
+    "why": "You said you do not know the rule, so it is not obvious; and a test never run has never been seen to tell right from wrong."
+   }
+  ]
+ },
+ {
+  "id": "ex-bhcxn136",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "fines.py passes three tests with max((returned - due).days, 0) * 50. Which next test is a TDD step, one that drives new code?",
+  "choices": [
+   {
+    "text": "A book returned on its due date costs nothing",
+    "correct": false,
+    "why": "It passes the moment it is written, so it drives no code. Worth keeping as a record of the boundary, and not a step."
+   },
+   {
+    "text": "Ten days late costs 500 cents",
+    "correct": false,
+    "why": "The formula already answers 500. A test that is green on its first run has not shown it can fail."
+   },
+   {
+    "text": "A student pays 25 cents a day, so three days late costs 75",
+    "correct": true,
+    "why": "Right. The function has no way to know about students, so the test goes red and forces a new parameter."
+   },
+   {
+    "text": "Returned a year early costs nothing",
+    "correct": false,
+    "why": "max(..., 0) already covers every early return. It passes at once, like the due-date case."
+   }
+  ]
+ },
+ {
+  "id": "ex-qmc9n058",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A member reports that a fine was charged for a book returned on its due date. Put the TDD way of fixing it in order.",
+  "items": [
+   "Write a test that reproduces the report",
+   "Run it and see it fail for the reported reason",
+   "Change the code until the suite passes",
+   "Refactor with every test green"
+  ],
+  "trap": "Fixing the code first and writing the test afterwards gives a test that has never been seen to fail, so nobody knows it would catch the bug coming back."
+ },
+ {
+  "id": "ex-vfgq6bds",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Throwaway code written without tests to learn something, then deleted before starting again test-first, is what Beck calls a ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "spike"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ckqrph2h",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "A team writes the outermost test first, mocks a collaborator that does not exist yet, and lets the mock's expectations shape that collaborator's interface. Which school of TDD is this?",
+  "choices": [
+   {
+    "text": "The classicist school, also called Detroit or Chicago",
+    "correct": false,
+    "why": "The classicists use real objects wherever they are cheap and assert on results and state."
+   },
+   {
+    "text": "The mockist, or London, school",
+    "correct": true,
+    "why": "Right. Outside in, from Freeman and Pryce's book: assert on the messages sent, and build each mocked collaborator in its own cycle."
+   },
+   {
+    "text": "Characterisation testing of legacy code",
+    "correct": false,
+    "why": "Characterisation tests pin what existing code already does. Here the code does not exist yet."
+   }
+  ]
+ },
+ {
+  "id": "ex-y4n5s2pg",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "You are writing the code that lays out a printed membership card, and whether it looks right is judged by eye. What does lesson 13 suggest instead of a test written first?",
+  "choices": [
+   {
+    "text": "An assertEqual on the exact output, written before the code",
+    "correct": false,
+    "why": "Nobody knows the right-hand side before seeing the card, which is exactly why test-first struggles here."
+   },
+   {
+    "text": "An output a person approves once, compared on every later run",
+    "correct": true,
+    "why": "Right. A recorded result approved by eye turns \"looks right\" into something a machine can hold the code to afterwards."
+   },
+   {
+    "text": "A spike, shipped once the card looks right",
+    "correct": false,
+    "why": "A spike is for learning and is deleted. One that ships becomes untested code nobody designed."
+   },
+   {
+    "text": "No checks at all, since layout cannot be tested",
+    "correct": false,
+    "why": "It cannot be predicted; it can be checked. The lesson names approved outputs and review for exactly this."
+   }
+  ]
+ },
+ {
+  "id": "ex-a35tszx2",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "With observable.py and operators.py, a source pushes days late 2, 0, 4, 1 and completes, through pipe(filter_(lambda d: d > 1), map_(lambda d: d * 50), scan(lambda t, c: t + c, 0)). What is the last value the subscriber receives?",
+  "value": 300,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-fr5zq8b3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A producer passed to the Observable of observable.py raises an exception before sending any value. The subscriber passed only on_next. What does the subscriber's code see?",
+  "choices": [
+   {
+    "text": "Nothing: an empty stream that simply ends",
+    "correct": false,
+    "why": "That is the confusion the class is written to prevent. A stream that failed must not look like a stream with no values."
+   },
+   {
+    "text": "A call to on_complete, since the producer stopped",
+    "correct": false,
+    "why": "subscribe turns the exception into on_error, and an ending is one or the other, never both."
+   },
+   {
+    "text": "The exception, raised again from the call to subscribe",
+    "correct": true,
+    "why": "Right. subscribe catches it and calls on_error, and the default on_error raises it again."
+   },
+   {
+    "text": "A None value delivered to on_next",
+    "correct": false,
+    "why": "Nothing invents a value. The stream carries values, then at most one ending, and an error is an ending."
+   }
+  ]
+ },
+ {
+  "id": "ex-k5ppyabg",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "Scans arrive at 4 a second for 30 seconds, once an hour, and nothing arrives the rest of the hour. The catalogue handles 3 a second, through an unbounded queue. What happens?",
+  "choices": [
+   {
+    "text": "The backlog grows all day until memory runs out",
+    "correct": false,
+    "why": "That is what a sustained rate does. Here the arrivals stop, and the queue drains between bursts."
+   },
+   {
+    "text": "The backlog peaks at 30 and drains in about ten seconds",
+    "correct": true,
+    "why": "Right. One extra scan a second for 30 seconds is 30 waiting; at 3 a second they clear quickly. A queue absorbs a burst; it does not absorb a rate."
+   },
+   {
+    "text": "Scans are lost as soon as the queue holds more than three",
+    "correct": false,
+    "why": "Only a bounded queue with a drop strategy loses values. This one is unbounded, so nothing is lost."
+   },
+   {
+    "text": "The scanner is made to wait during every burst",
+    "correct": false,
+    "why": "Waiting needs a bound and a blocking put. With no bound, the producer never waits."
+   }
+  ]
+ },
+ {
+  "id": "ex-jsyg23dk",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A team chose drop for analytics events. On busy days the dashboard shows about 12% fewer page views, and nobody can tell a quiet day from an overflowing queue. What does lesson 16 say was missing?",
+  "choices": [
+   {
+    "text": "A switch to buffer, which loses nothing",
+    "correct": false,
+    "why": "Buffer trades the loss for an unbounded backlog and stale data. For page views, a drop that is measured was a fair choice."
+   },
+   {
+    "text": "A count of every value dropped",
+    "correct": true,
+    "why": "Right. A counter or a metric turns the loss into something a person can see; a report that is 12% low and says so is still a report."
+   },
+   {
+    "text": "Latest instead of drop, so the newest event is kept",
+    "correct": false,
+    "why": "Latest suits a state where only the present value matters. Page views are a count, and latest would lose even more of them."
+   },
+   {
+    "text": "A cold observable, so every event is replayed",
+    "correct": false,
+    "why": "Visits happen whether anybody listens, which makes the source hot. Calling it cold does not give it a memory."
+   }
+  ]
+ },
+ {
+  "id": "ex-76h44k7r",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A Java team streams the rows of a database query to a slow writer with RxJava. Which type does lesson 16 point them to, and why?",
+  "choices": [
+   {
+    "text": "Flowable, because a query can be held back and Flowable honours demand",
+    "correct": true,
+    "why": "Right. A cursor can stop fetching, so request(n) lets the slow writer set the pace without a queue anybody writes."
+   },
+   {
+    "text": "Observable, since it is the simpler of the two",
+    "correct": false,
+    "why": "RxJava's documentation keeps Observable for sources that cannot be slowed, like UI events. A query can be."
+   },
+   {
+    "text": "Either one, because RxJava has no way in which a subscriber can ask a source for less",
+    "correct": false,
+    "why": "RxJS is the library with no request(n). RxJava keeps two types apart for exactly this reason."
+   },
+   {
+    "text": "A Subject, so the writer receives rows as they are pushed",
+    "correct": false,
+    "why": "A subject is a hot broadcast with no notion of demand; a fast query would overrun the writer."
+   }
+  ]
+ },
+ {
+  "id": "ex-157nsfkm",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The day's fines are computed by an observable chain instead of two list comprehensions over the returns. Which of these does the chain do that the comprehensions do not? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Answers after each value, before the source has ended",
+    "correct": true,
+    "why": "Yes. A list has to be complete before a comprehension starts; the chain updates when each return is scanned."
+   },
+   {
+    "text": "Takes each value through every step before the next enters",
+    "correct": true,
+    "why": "Yes. Two comprehensions are two passes: every value through the first, then every value through the second."
+   },
+   {
+    "text": "Is driven from the source end, by whatever pushes",
+    "correct": true,
+    "why": "Yes. A comprehension, like a generator chain, is driven by whoever loops; an observable is driven by the source."
+   },
+   {
+    "text": "Runs each operator on a thread of its own",
+    "correct": false,
+    "why": "Every producer in the lesson runs inside subscribe, on the caller's thread. Push does not imply a thread."
+   },
+   {
+    "text": "Stores every intermediate result in a list for later",
+    "correct": false,
+    "why": "That is what the comprehensions do. The chain passes each value on as one nested call and keeps no list."
+   }
+  ]
+ },
+ {
+  "id": "ex-g5hzgb5b",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A desk tells the shelf actor a message carrying a plain list of titles, then appends another title to that list while the message is still waiting in the mailbox. What has the desk done?",
+  "choices": [
+   {
+    "text": "Nothing wrong, since tell has already returned",
+    "correct": false,
+    "why": "tell returning only means the message is queued. The actor has not read it, and the list it will read is the one the desk is changing."
+   },
+   {
+    "text": "Shared state with the actor again, by the side door",
+    "correct": true,
+    "why": "Right. Messages must be values: a tuple or a frozen dataclass cannot be changed after it is sent."
+   },
+   {
+    "text": "Sent two messages, one per version of the list",
+    "correct": false,
+    "why": "One put, one message. The queue holds a reference to the same list, not a copy of it."
+   },
+   {
+    "text": "Caused an error, because queue.Queue refuses lists",
+    "correct": false,
+    "why": "A thread queue accepts any object. Refusing what cannot be copied is what a process boundary does, as location.py showed with a lock."
+   }
+  ]
+ },
+ {
+  "id": "ex-j8ryfj47",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The main thread tells the shelf GiveBack(\"Iracema\") and then, from the same thread, asks Available(\"Iracema\"). Is the answer certain to count the returned copy?",
+  "choices": [
+   {
+    "text": "Yes: from one sender the mailbox is first in, first out",
+    "correct": true,
+    "why": "Right. The ask goes in behind the tell from the same thread, so it is handled after it. \"Tell, then ask\" is safe to rely on."
+   },
+   {
+    "text": "No: the actor model promises no order at all",
+    "correct": false,
+    "why": "The model promises nothing between two senders. From one sender, the order is kept."
+   },
+   {
+    "text": "Only if the ask is given a long enough timeout",
+    "correct": false,
+    "why": "The timeout bounds the wait; it does not decide what the answer counts. The queue's order does."
+   },
+   {
+    "text": "No, unless GiveBack is sent with ask as well and its reply is awaited first",
+    "correct": false,
+    "why": "Waiting for the first reply would also work and costs a blocked thread. It is not needed here, because one sender's messages stay in order."
+   }
+  ]
+ },
+ {
+  "id": "ex-3x46a6x8",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A supervisor's two children, a barcode reader and a decoder, share a session that only makes sense when both start together. When either fails, which OTP strategy fits?",
+  "choices": [
+   {
+    "text": "One for one: restart only the child that failed",
+    "correct": false,
+    "why": "Restarting only the failed child would leave the other holding half of a session that no longer exists."
+   },
+   {
+    "text": "One for all: restart both together",
+    "correct": true,
+    "why": "Right. Children that cannot work without each other are restarted together when either one fails."
+   },
+   {
+    "text": "No restart, so the bad state is kept for debugging",
+    "correct": false,
+    "why": "Let it crash means a fresh start from a known good state. Keeping the broken state running is what supervision exists to avoid."
+   },
+   {
+    "text": "Restart forever until the session comes back",
+    "correct": false,
+    "why": "Restarts are counted within a window and then escalate; a supervisor that never stops spins on a message that crashes every fresh child."
+   }
+  ]
+ },
+ {
+  "id": "ex-we23vhap",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A malformed message reaches a supervised actor and crashes it. Its supervisor restarts it with no limit at all. What happens?",
+  "choices": [
+   {
+    "text": "The restart clears the message and work carries on",
+    "correct": false,
+    "why": "Nothing about a fresh instance makes the same input harmless. If the message is offered again, it crashes again."
+   },
+   {
+    "text": "The fresh actor recovers the state the old one had",
+    "correct": false,
+    "why": "Fresh state means forgotten state; a restart starts from the catalogue, or from whatever was written outside the actor."
+   },
+   {
+    "text": "If it keeps arriving, the loop of crash and revival never ends",
+    "correct": true,
+    "why": "Right. That is why supervisors count restarts within a window and, past the limit, give up and pass the problem up the tree."
+   },
+   {
+    "text": "The actor catches the error on the next attempt, having learnt from the crash",
+    "correct": false,
+    "why": "A fresh instance knows nothing of the last one, including how it failed."
+   }
+  ]
+ },
+ {
+  "id": "ex-53xxn2q2",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "Match each situation to what lesson 17 says to use.",
+  "pairs": [
+   {
+    "left": "a web handler, not an actor, needs the count now",
+    "right": "ask, with a timeout"
+   },
+   {
+    "left": "one actor wants another to lend a book and learn how it went",
+    "right": "tell, with a reply address in the message"
+   },
+   {
+    "left": "GiveBack arrives twice after a retry over the network",
+    "right": "an idempotent handler"
+   },
+   {
+    "left": "state that must survive the actor being restarted",
+    "right": "a database or an event log outside the actor"
+   }
+  ]
+ },
+ {
+  "id": "ex-vffdssdt",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "An asyncio server on a single-core machine has 2,000 connections in progress, waiting on their sockets. In the words of lesson 18, is it concurrent, parallel, or both?",
+  "choices": [
+   {
+    "text": "Concurrent, not parallel",
+    "correct": true,
+    "why": "Right. Many tasks are in progress at once, and no two instructions run at the same moment on one thread and one core."
+   },
+   {
+    "text": "Parallel, because 2,000 connections are handled at once",
+    "correct": false,
+    "why": "\"At once\" here means in progress together. Parallelism needs two instructions executing at the same moment, which one core cannot do."
+   },
+   {
+    "text": "Both, since asyncio counts as parallel when it waits",
+    "correct": false,
+    "why": "Overlapping waits is concurrency. The waits overlap because nobody is computing during them."
+   },
+   {
+    "text": "Neither, as there is a single thread",
+    "correct": false,
+    "why": "A single thread can be concurrent: that is what asyncio's switches at each await are for."
+   }
+  ]
+ },
+ {
+  "id": "ex-2njvtcj2",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "The fine rules change from 50 cents a day with no grace to 100 cents with 2 days' grace, kept in a mutable dictionary. This time the grace is written first. A reader arrives between the two writes, sees grace 2 and the old price, and computes a fine for 5 days late. How many cents?",
+  "value": 150,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-nw1a8dhv",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "get_pool() creates a connection pool lazily, with check-then-create, and eight request threads call it at start-up. What does lesson 18 call the simplest fix?",
+  "choices": [
+   {
+    "text": "Double-checked locking around the creation",
+    "correct": false,
+    "why": "It works in Python, and the lesson shows it. It is a claim about a memory model, and not the simplest of the fixes."
+   },
+   {
+    "text": "Create the pool before any thread exists",
+    "correct": true,
+    "why": "Right. At module level or in the composition root, it is built once, under the import lock or before the threads start, and there is no race to win."
+   },
+   {
+    "text": "Check _instance twice, with no lock in between",
+    "correct": false,
+    "why": "Two unlocked checks are two windows. All eight threads can still pass both before any of them assigns."
+   },
+   {
+    "text": "Use an RLock instead of a Lock",
+    "correct": false,
+    "why": "There was no lock at all. An RLock only lets one thread take it twice, which is not the problem here."
+   }
+  ]
+ },
+ {
+  "id": "ex-3ta698n6",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A subject's publish holds a plain threading.Lock for the whole loop over its listeners. One listener, when called, subscribes another listener. What happens?",
+  "choices": [
+   {
+    "text": "The new listener receives this same event, since the list grew mid-walk",
+    "correct": false,
+    "why": "The list never grows: subscribe cannot get the lock to append."
+   },
+   {
+    "text": "Python raises RuntimeError: list changed size during iteration",
+    "correct": false,
+    "why": "A list raises no such error, and in any case no append happens: subscribe is stuck waiting."
+   },
+   {
+    "text": "The thread deadlocks against itself",
+    "correct": true,
+    "why": "Right. subscribe asks for the lock that its own thread already holds inside publish. Copy under the lock and call outside it."
+   },
+   {
+    "text": "The subscription waits until publish finishes, then succeeds",
+    "correct": false,
+    "why": "publish cannot finish: it is waiting for the listener to return, and the listener is waiting for the lock publish holds."
+   }
+  ]
+ },
+ {
+  "id": "ex-ab946jx6",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The rules are a frozen FineRules, published by swapping one reference. Two administrators, at the same moment, each read the current rules, add one day of grace and publish the result. What is the outcome?",
+  "choices": [
+   {
+    "text": "Two extra days of grace, because frozen objects cannot race",
+    "correct": false,
+    "why": "The objects are safe; the read-modify-write around them is not. Both read the same old rules."
+   },
+   {
+    "text": "One extra day: one update is lost, as in race.py",
+    "correct": true,
+    "why": "Right. Readers need nothing, and writers still need to take turns or a single owner."
+   },
+   {
+    "text": "A FrozenInstanceError for the second writer",
+    "correct": false,
+    "why": "Neither writer changes a field. Each builds a new object and assigns a reference, which is allowed."
+   },
+   {
+    "text": "A torn read: grace from one, price from the other",
+    "correct": false,
+    "why": "Each published object is whole, so no reader sees half of each. The loss is of a whole update."
+   }
+  ]
+ },
+ {
+  "id": "ex-zjzpcykr",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Lesson 18 says a race needs three things together. Which are they? Choose all that apply.",
+  "choices": [
+   {
+    "text": "State shared between threads",
+    "correct": true,
+    "why": "Yes. Data confined to one owner cannot be raced on."
+   },
+   {
+    "text": "At least one thread that writes it",
+    "correct": true,
+    "why": "Yes. Any number of readers of an unchanging value need no lock."
+   },
+   {
+    "text": "An operation that can be interrupted halfway",
+    "correct": true,
+    "why": "Yes. Read-modify-write and check-then-act are the common shapes."
+   },
+   {
+    "text": "More than one processor core",
+    "correct": false,
+    "why": "race.py lost three quarters of its updates on the ordinary build, where one thread at a time runs bytecode. Interleaving is enough."
+   },
+   {
+    "text": "The free-threaded build of Python",
+    "correct": false,
+    "why": "The GIL never protected your data, only the interpreter's own; races happen on the ordinary build too."
+   }
+  ]
+ },
+ {
+  "id": "ex-z3rdtbpp",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "In policies.py, e-readers arrive. They are fined at the daily rate of the member's category, capped at 2000 cents. What is the smallest change?",
+  "choices": [
+   {
+    "text": "A FineRule class hierarchy with an EReaderRule subclass",
+    "correct": false,
+    "why": "A class per rule pays when a rule needs its own state or configuration. This one is a calculation."
+   },
+   {
+    "text": "A new \"ereader\" entry in DAILY_CENTS",
+    "correct": false,
+    "why": "DAILY_CENTS is keyed by member category. An e-reader is a kind of item, and the kind decides the rule."
+   },
+   {
+    "text": "Only a function and an entry in RULES",
+    "correct": true,
+    "why": "Right. A function with the same signature, returning min(daily(...), 2000), and \"ereader\" mapped to it. The record says exactly that: a new rule is one function and one entry."
+   },
+   {
+    "text": "An if inside daily for the e-reader case",
+    "correct": false,
+    "why": "daily does not even receive the kind of item, and an if there is the branching the dictionary of functions replaced."
+   }
+  ]
+ },
+ {
+  "id": "ex-6f8vzpk2",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "ReturnDesk.check_in(code) calls the shelf, then the fines ledger, then the mailer, in that order, and holds nothing of its own interface. By the table in lesson 19, what is it most likely?",
+  "choices": [
+   {
+    "text": "A decorator",
+    "correct": false,
+    "why": "A decorator holds one object of its own interface and forwards to it. ReturnDesk holds several, of other interfaces."
+   },
+   {
+    "text": "An observer",
+    "correct": false,
+    "why": "An observer holds a list of callables and calls all of them alike when something happens. These are three different objects called for different work."
+   },
+   {
+    "text": "A facade",
+    "correct": true,
+    "why": "Right. A class whose method calls several other objects in order, so the caller makes one call instead of three."
+   },
+   {
+    "text": "An adapter for the mailer",
+    "correct": false,
+    "why": "An adapter presents one foreign interface as yours. ReturnDesk coordinates three objects and translates none of them."
+   }
+  ]
+ },
+ {
+  "id": "ex-kz7f72sv",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Which of these belongs in the record of a pattern decision, by lesson 19?",
+  "choices": [
+   {
+    "text": "A walk-through of each class and method the decision produced",
+    "correct": false,
+    "why": "The code already describes itself. The record carries what the code cannot: the force, the rejected answer and when to reopen."
+   },
+   {
+    "text": "\"Reopen if a second payment provider is signed.\"",
+    "correct": true,
+    "why": "Right. The reopening condition is the part most often skipped, and it tells the next person what to watch for."
+   },
+   {
+    "text": "The minutes of the meeting where it was argued",
+    "correct": false,
+    "why": "The lesson leaves the meeting out on purpose; a record short enough to read is the point."
+   },
+   {
+    "text": "A note that the record will be edited if the decision changes",
+    "correct": false,
+    "why": "A record is never edited to change its decision. A new one is written and the old one becomes superseded."
+   }
+  ]
+ },
+ {
+  "id": "ex-w639zr9q",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A member disputes when her fine was waived and who waived it. Today the fine row only has a waived flag. By the reasoning of case 3 in lesson 19, what is the smallest sound answer?",
+  "choices": [
+   {
+    "text": "Event-source the fines, so the current state of every fine is rebuilt from its own history",
+    "correct": false,
+    "why": "It answers the dispute and adds folding, snapshots and versioned events. Nothing in the request asks to rebuild state from history."
+   },
+   {
+    "text": "Add waived_by and waived_at columns to the fine row",
+    "correct": false,
+    "why": "Two columns answer this dispute and lose the first answer the day a waiver is corrected."
+   },
+   {
+    "text": "An append-only table of fine events, written in the same transaction as the change",
+    "correct": true,
+    "why": "Right. It answers every \"what happened, and when\" question and leaves the fine model as it is."
+   },
+   {
+    "text": "A message broker that publishes every waiver",
+    "correct": false,
+    "why": "A broker answers listeners in other processes. Here the force is audit, and a broker keeps no history to ask."
+   }
+  ]
+ },
+ {
+  "id": "ex-ta8zz2vt",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "Put the parts of an architecture decision record in Michael Nygard's order, as lesson 19 shows it.",
+  "items": [
+   "Title",
+   "Status",
+   "Context",
+   "Decision",
+   "Consequences"
+  ],
+  "trap": "The decision comes after the context that forced it, and the consequences, including when to reopen, close the record."
+ },
+ {
+  "id": "ex-t3ryda59",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A bakery's code has one helper, round_cents(), used by the tax calculation the accountant owns and by the weight report the warehouse reads. The accountant asks for a new rounding rule, and next week the warehouse's report is off. What does lesson 3 say happened, and what is the repair?",
+  "choices": [
+   {
+    "text": "The helper did two things; split it into one small function per verb",
+    "correct": false,
+    "why": "\"Do one thing\" is advice for functions, and it splits by verb. The helper does one thing; the trouble is that two actors ask for it to change."
+   },
+   {
+    "text": "Two actors shared code; give each one its own function, even if they start identical",
+    "correct": true,
+    "why": "Right. Code that changes for different reasons is not a duplicate however alike it looks, the lesson of fine_days and calendar_days."
+   },
+   {
+    "text": "Nothing structural: sharing was right, and a test of the report would have caught it in time",
+    "correct": false,
+    "why": "A test would have noticed this time. The channel between the two departments stays open, and the next change from either side travels through it again."
+   },
+   {
+    "text": "Open/closed was broken: the helper should have been closed to edits",
+    "correct": false,
+    "why": "A rule that changes is changed where it lives; the open/closed principle does not forbid that. The fault is who shares the helper."
+   }
+  ]
+ },
+ {
+  "id": "ex-5s8gw6zh",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Notifier.send(member, text) is documented to accept a text of any length. SmsNotifier, a child, raises an error for any text over 160 characters. In Liskov and Wing's terms, what has SmsNotifier done?",
+  "choices": [
+   {
+    "text": "Weakened a postcondition",
+    "correct": false,
+    "why": "A postcondition is what the method guarantees on the way out. Here the child refuses what comes in, before it returns anything."
+   },
+   {
+    "text": "Nothing wrong, since the signature is the same as the parent's",
+    "correct": false,
+    "why": "A child can match the signature perfectly and still break every caller. What callers rely on is behaviour, and the parent accepted any length."
+   },
+   {
+    "text": "Broken the history rule, since sending changes state",
+    "correct": false,
+    "why": "The history rule is about state changes the parent forbids. Nothing here changes state in a way the parent ruled out; the child turns input away."
+   },
+   {
+    "text": "Strengthened a precondition",
+    "correct": true,
+    "why": "Right. It is ReferenceBook's shape: a caller written against Notifier, sending a long text, breaks on a child it has never heard of."
+   }
+  ]
+ },
+ {
+  "id": "ex-ct2035xr",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The contract test of lesson 3 now loops over (Book, Film, ReferenceBook, Laptop, Magazine), where Magazine(Item) only sets loan_days = 0. What does unittest report?",
+  "choices": [
+   {
+    "text": "Two failures, for the two same-day children, and one error, for the child that raises",
+    "correct": true,
+    "why": "Right. Magazine returns the same day, a weakened postcondition like Laptop's, so assertGreater fails. ReferenceBook raises, which unittest counts as an error."
+   },
+   {
+    "text": "Three failures, because every broken promise is reported as a failure",
+    "correct": false,
+    "why": "unittest separates the two: an assertion that does not hold is a failure, and an exception from the code under test is an error."
+   },
+   {
+    "text": "One failure and one error: Magazine overrides nothing, so it passes",
+    "correct": false,
+    "why": "Laptop overrode nothing either. Setting loan_days = 0 is enough to make lend return the day of lending."
+   },
+   {
+    "text": "The first problem alone, since the test stops there",
+    "correct": false,
+    "why": "subTest runs the body once per class and reports each problem separately, which is why the lesson used it."
+   }
+  ]
+ },
+ {
+  "id": "ex-nq8f1krv",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "In a drawing program, Rectangle is a frozen dataclass with width, height and area(), and there are no setters: a different size means a new object. Square(Rectangle) makes both sides equal. By lesson 3, is Square a substitution failure?",
+  "choices": [
+   {
+    "text": "Yes: in code a square is not a rectangle",
+    "correct": false,
+    "why": "The mutable rectangle was the problem, because it promised that one side moves alone. Remove the setters and the promise goes with them."
+   },
+   {
+    "text": "No: with nothing to set, no promise of the parent is left to break",
+    "correct": true,
+    "why": "Right. The lesson says it in so many words: if Rectangle had no setters, a square would break nothing."
+   },
+   {
+    "text": "Yes, the same failure as shapes.py, only noticed later",
+    "correct": false,
+    "why": "shapes.py failed when widen set the width and the height moved. A frozen class has no width to set, so that call cannot be written."
+   },
+   {
+    "text": "Only if Square overrides area()",
+    "correct": false,
+    "why": "An override that still returns width times height keeps the parent's promise. Overriding is not what breaks substitution; changing the behaviour is."
+   }
+  ]
+ },
+ {
+  "id": "ex-0qe401aa",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A Java colleague says: \"ReceiptPrinter implements Printer and the build is green, so it satisfies Liskov.\" What does lesson 3 answer?",
+  "choices": [
+   {
+    "text": "He is right: unlike Python, Java's compiler checks at build time that every implementation can stand in for its interface",
+    "correct": false,
+    "why": "Java's compiler checks that the methods have the right signatures. It knows nothing about what they accept or promise."
+   },
+   {
+    "text": "He is right as long as no method throws an exception",
+    "correct": false,
+    "why": "Laptop threw nothing and still broke the promise, quietly, by returning the same day. The quiet violations are the dangerous ones."
+   },
+   {
+    "text": "The build checks only signatures; behaviour is checked by people and by tests such as a contract test",
+    "correct": true,
+    "why": "Right. In all four languages the check falls to people and tests, and a contract test run against every implementation is the tool."
+   },
+   {
+    "text": "Liskov does not apply: it is about subclasses, and Printer is an interface",
+    "correct": false,
+    "why": "The principle is about any parent type a caller is written against. An interface is exactly such a type, as Go's and TypeScript's are."
+   }
+  ]
+ },
+ {
+  "id": "ex-axa96cmc",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A clinic's Agenda class has book(), cancel() and export_month(). The reception screen calls book and cancel; the monthly report job calls export_month. Every client is typed against Agenda. What does interface segregation suggest?",
+  "choices": [
+   {
+    "text": "Two protocols, one for each kind of client",
+    "correct": true,
+    "why": "Right. A role is the set of methods one kind of client uses. Agenda can stay one class and satisfy both."
+   },
+   {
+    "text": "Three protocols, one per method, since smaller is better",
+    "correct": false,
+    "why": "Size is not the measure. book and cancel are called by the same client and change together, so splitting them gives two names to one need."
+   },
+   {
+    "text": "Nothing: an interface of three methods is already small enough",
+    "correct": false,
+    "why": "An interface with two methods can be fat when half the clients use one and half the other. The report job still depends on booking."
+   },
+   {
+    "text": "Split Agenda into two classes, each with part of the data",
+    "correct": false,
+    "why": "Interface segregation splits the declarations, not the class. Whether the data should split is a single responsibility question."
+   }
+  ]
+ },
+ {
+  "id": "ex-rkp73cp3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A clinic sends appointment reminders. reminders.py holds the rules; gateway.py talks to a messaging company. Which arrangement has the dependency inverted?",
+  "choices": [
+   {
+    "text": "reminders.py imports GatewayClient from gateway.py and receives one in its constructor",
+    "correct": false,
+    "why": "That is injection, and the rules still import the detail. Lesson 4 is explicit that you can inject a concrete class and invert nothing."
+   },
+   {
+    "text": "reminders.py declares the protocol it needs; gateway.py imports it from there",
+    "correct": true,
+    "why": "Right. The abstraction belongs to the rules, and the import arrow runs from the detail to the policy, as grep showed for adapters.py."
+   },
+   {
+    "text": "gateway.py declares an IGateway interface beside its class, and reminders.py imports that",
+    "correct": false,
+    "why": "An interface that lives with the detail and mirrors it leaves the rules depending on the gateway's package. Who owns it decides."
+   },
+   {
+    "text": "Each file imports the other, so either side can change",
+    "correct": false,
+    "why": "Two arrows both ways is a cycle: each side now breaks when the other changes, which is the opposite of what the principle buys."
+   }
+  ]
+ },
+ {
+  "id": "ex-8dd9b9jr",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A new project review. Which of these are signs, by lesson 4, that a seam is speculative? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "An IRoomRepository whose one implementation is RoomRepositoryImpl, and no test double uses it",
+    "correct": true,
+    "why": "Yes. One implementation, no double, and a name ending in Impl: the abstraction separates nothing from anything."
+   },
+   {
+    "text": "A NotifierFactory whose create() always returns an EmailNotifier",
+    "correct": true,
+    "why": "Yes. A factory that always builds the same thing is on the lesson's list: it is a hop with no decision in it."
+   },
+   {
+    "text": "Changing the daily rate takes edits in four files",
+    "correct": true,
+    "why": "Yes. A change that should be one line spread over four files is the cost of seams nobody uses, measured."
+   },
+   {
+    "text": "A Notifier protocol whose recording double is used by the rules' tests",
+    "correct": false,
+    "why": "This seam is used: the tests run the rules with nothing behind them, which is the change dip-in-code built it for."
+   },
+   {
+    "text": "A plug-in protocol in a published library, for users its authors will never see",
+    "correct": false,
+    "why": "The lesson names this exception: a published library cannot know its users, so an extension point there answers a real force."
+   }
+  ]
+ },
+ {
+  "id": "ex-c359ttae",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "The fine is still plain.py: a constant and one function. By lesson 4, which event is the one that justifies turning it into a FinePolicy protocol?",
+  "choices": [
+   {
+    "text": "The team adopts SOLID as a checklist for code review",
+    "correct": false,
+    "why": "A principle is a question to ask when change hurts, not a list to tick. A checklist produces overdone.py."
+   },
+   {
+    "text": "The file grows past thirty lines",
+    "correct": false,
+    "why": "Length is not a force. A longer file with one rule in it still has only one case for a protocol to separate."
+   },
+   {
+    "text": "A reviewer worries that the 50 cents might change one day",
+    "correct": false,
+    "why": "A new rate is an edit to one constant. A seam \"in case we need it later\", with no case in sight, is on the list of speculative ones."
+   },
+   {
+    "text": "Students get grace days and adults do not",
+    "correct": true,
+    "why": "Right. Two rules now exist, and the seam arrives with the change that justifies it, named after that change."
+   }
+  ]
+ },
+ {
+  "id": "ex-xbhs3yqk",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The rules' own module declares ISmtpClient(Protocol) with send_mail(host, address, subject, body), and the SMTP adapter imports it from there. The library moves every notice to SMS. What has to change?",
+  "choices": [
+   {
+    "text": "The protocol and every rule that calls it, as it is named after one detail",
+    "correct": true,
+    "why": "Right. An abstraction named after the detail is the detail with an I in front. A Notifier with notify(member, text) is what the rules want."
+   },
+   {
+    "text": "Nothing in the rules: the protocol is in their module, so the inversion is complete",
+    "correct": false,
+    "why": "Owning the protocol is half of it. A host, a subject and a mail address are words of e-mail, and an SMS has none of them."
+   },
+   {
+    "text": "Only main.py, as in the dip-in-code section",
+    "correct": false,
+    "why": "That was true there because the port said notify(member, text). Here an SMS class cannot fit send_mail without pretending."
+   },
+   {
+    "text": "The rules must import the SMS gateway, since one protocol cannot cover two technologies",
+    "correct": false,
+    "why": "The Notifier of the lesson covered e-mail and SMS with one method. A protocol in the rules' words fits any technology."
+   }
+  ]
+ },
+ {
+  "id": "ex-z43w3qsw",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "The monthly report is handed an object with the same methods as the Ledger. Its reads go straight through to the real ledger, and its record() raises PermissionError. Which pattern is it?",
+  "choices": [
+   {
+    "text": "A decorator, since it changes what record() does",
+    "correct": false,
+    "why": "Structurally they are the same; the intent differs. A decorator adds behaviour on the way through, and this one decides whether a call gets through."
+   },
+   {
+    "text": "An adapter, because it stands between the report and the ledger",
+    "correct": false,
+    "why": "An adapter makes one interface look like a different one. This wrapper has exactly the ledger's interface; nothing is translated."
+   },
+   {
+    "text": "A protection proxy",
+    "correct": true,
+    "why": "Right. Same interface, holds the real object, and checks permission before forwarding: the read-only ledger the lesson describes."
+   },
+   {
+    "text": "A facade over the ledger's methods",
+    "correct": false,
+    "why": "A facade puts one simpler interface in front of several objects. This wraps one object and keeps its interface whole."
+   }
+  ]
+ },
+ {
+  "id": "ex-qr6jzyme",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A Parcel holds two objects behind interfaces. When parcel.deliver() runs, the InTransit object sets parcel.stage = Delivered(). An admin screen can set parcel.pricing = ExpressPricing() at any time. Which pattern is each?",
+  "choices": [
+   {
+    "text": "stage is a strategy and pricing is a state",
+    "correct": false,
+    "why": "That is the right test applied backwards. The object that replaces itself through the calls it handles is the state."
+   },
+   {
+    "text": "Both are strategies, since both sit behind an interface and the parcel delegates to each of them",
+    "correct": false,
+    "why": "Both patterns are a context delegating to an object behind an interface. The shape cannot tell them apart; who changes the object can."
+   },
+   {
+    "text": "stage is a state, replaced by its own calls; pricing is a strategy, chosen from outside",
+    "correct": true,
+    "why": "Right. Like Copy, the parcel never has its stage set by a caller; like WaitingList, its pricing stays until somebody swaps it."
+   },
+   {
+    "text": "Both are states, since both change at run time",
+    "correct": false,
+    "why": "A strategy can change at run time too, as waiting.ordering did. What matters is that the admin swaps pricing, not pricing itself."
+   }
+  ]
+ },
+ {
+  "id": "ex-t7wnwg8w",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Halved is a decorator whose fine(days) returns self._inner.fine(days) // 2. Using decorator.py's classes, what does Halved(Capped(DailyFine(50), cap=600)).fine(30) return, in cents?",
+  "value": 300,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-86w7avtc",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A loan-detail screen subscribes itself to the ReturnsDesk every time it opens and never unsubscribes. By evening the desk takes longer on each return and memory keeps growing. Which cost of observer is this?",
+  "choices": [
+   {
+    "text": "A listener raised an exception and stopped the loop",
+    "correct": false,
+    "why": "That failure skips the listeners after it. Here every listener runs, and there are more of them every hour."
+   },
+   {
+    "text": "Code depending on the order of notification",
+    "correct": false,
+    "why": "Order is a real hazard of observer, but it changes which listener runs first. It does not make the list grow."
+   },
+   {
+    "text": "The copy of the list that give_back makes before its loop",
+    "correct": false,
+    "why": "The copy lasts one return and is then thrown away. It lets a listener unsubscribe while being told; it is not what accumulates."
+   },
+   {
+    "text": "The lapsed listener: every screen ever opened is kept alive by the desk",
+    "correct": true,
+    "why": "Right. A listener never unsubscribed lives as long as the subject does, and the desk now notifies every screen ever opened."
+   }
+  ]
+ },
+ {
+  "id": "ex-1h6x65vv",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "Python has first-class functions, generators and @. Which of these still need classes of their own, by lesson 6? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "An adapter around a payment client whose names and data differ from ours",
+    "correct": true,
+    "why": "Yes. Adapter is about where a boundary goes, not about a missing feature, and it looks much the same in every language."
+   },
+   {
+    "text": "A decorator of a fine policy object that has both fine() and describe()",
+    "correct": true,
+    "why": "Yes. @ wraps a single function. An object with several methods to forward needs a class that has them all."
+   },
+   {
+    "text": "The situations of a copy, each with its own lend, give_back and reserve",
+    "correct": true,
+    "why": "Yes. State divides responsibilities, and when each state has real behaviour of its own the classes stay."
+   },
+   {
+    "text": "A strategy that is one sorting rule with no settings",
+    "correct": false,
+    "why": "A strategy with one method is a function wearing a class. sorted with a key already takes it."
+   },
+   {
+    "text": "The listeners told after a book is returned",
+    "correct": false,
+    "why": "A list of callables does the job: any function with the right arguments is a listener, as vanish.py showed."
+   }
+  ]
+ },
+ {
+  "id": "ex-aez8rhst",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "With command.py's Desk, the desk runs Lend(Torto Arado, Bia), Return(Torto Arado), Lend(Torto Arado, Caio) and Lend(Iracema, Duda). Then undo_last is called four times. Put the commands in the order they are undone.",
+  "items": [
+   "lend Iracema to Duda",
+   "lend Torto Arado to Caio",
+   "return Torto Arado",
+   "lend Torto Arado to Bia"
+  ],
+  "trap": "history is a list used as a stack: undo pops the last command first. Undoing in the order they ran would reverse Bia's loan while Caio holds the book, a state the shelf was never in."
+ },
+ {
+  "id": "ex-4mkr9pyk",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A language school is chosen by students for the way it places them in levels, rules its teachers argue about and retune every term. It also has card payments, sign-in and a timetable of rooms. Which subdomain is core?",
+  "choices": [
+   {
+    "text": "Card payments, because the school lives on the money",
+    "correct": false,
+    "why": "Payments are generic: every organisation has them and specialists do them better. Generic means somebody else's core."
+   },
+   {
+    "text": "The timetable of rooms, the largest module",
+    "correct": false,
+    "why": "Size does not decide it. A timetable is needed and nobody sells this school's, which makes it supporting: build it simply."
+   },
+   {
+    "text": "Placement in levels",
+    "correct": true,
+    "why": "Right. It is where the school differs from everybody else and where its people argue about the rules. The core is small, and defined by difference."
+   },
+   {
+    "text": "Sign-in, since every user goes through it",
+    "correct": false,
+    "why": "Everybody touching it makes it important, not distinctive. Sign-in is generic, a service to use with a little glue."
+   }
+  ]
+ },
+ {
+  "id": "ex-gqakp5t4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "The library's events team owns the calendar that lending reads to show opening hours. Before each change to what a calendar entry looks like, the events team asks lending what the desk screen needs. Which relationship is this on the context map?",
+  "choices": [
+   {
+    "text": "Customer/supplier, with events upstream",
+    "correct": true,
+    "why": "Right. The upstream plans for the downstream's needs, as the catalogue does for lending on the library's map."
+   },
+   {
+    "text": "Conformist, because lending depends on the calendar",
+    "correct": false,
+    "why": "Depending is what every downstream does. A conformist takes the upstream's model as it is, with no say, and here lending is asked."
+   },
+   {
+    "text": "A shared kernel owned by both teams",
+    "correct": false,
+    "why": "A shared kernel is one small piece of model owned by both and changed by agreement. The calendar belongs to events alone."
+   },
+   {
+    "text": "A partnership, since the two teams talk to each other before changes are made",
+    "correct": false,
+    "why": "A partnership is two teams that plan their releases jointly and succeed or fail as one. Here one side consults the other about its own model."
+   }
+  ]
+ },
+ {
+  "id": "ex-61jyrjdz",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "On a context map, the context that others depend on, whose changes flow down to them, is called ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "upstream",
+     "the upstream"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-07qdn5f7",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A clinic has one Patient class. Billing added insurance_plan, the doctors added allergies, and reception added preferred_slot. Now every change billing asks for needs a review from the doctors' team. What does lesson 11 recommend?",
+  "choices": [
+   {
+    "text": "Keep one Patient and make every field optional, so no team is blocked",
+    "correct": false,
+    "why": "Optional fields are how the one enterprise model grows: half of them None for any use, and nobody sure what a Patient is."
+   },
+   {
+    "text": "A Patient per context, each with only what its people mean, joined by the patient's id",
+    "correct": true,
+    "why": "Right. Like the three books, each context keeps its own model and they refer to each other by a stable identifier, never by sharing the object."
+   },
+   {
+    "text": "Move the whole Patient into a shared kernel changed only by agreement",
+    "correct": false,
+    "why": "A kernel works while it stays small. One that holds the whole Patient has become the one enterprise model again, with a committee in front of it."
+   },
+   {
+    "text": "Three services with three databases, since a context must be a deployment of its own",
+    "correct": false,
+    "why": "A bounded context is a boundary of meaning. In one program it is a package the others do not reach into; a network is optional."
+   }
+  ]
+ },
+ {
+  "id": "ex-ykt7ymaf",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "In an event-storming session, a developer writes \"Fine calculation process\" on an orange note. What does the facilitator ask for?",
+  "choices": [
+   {
+    "text": "Keep it: orange notes name the processes the code will have",
+    "correct": false,
+    "why": "A process name is already a design. Orange notes are facts that happened, which somebody in the room can confirm or deny."
+   },
+   {
+    "text": "Move it to a blue note, since commands are named after processes",
+    "correct": false,
+    "why": "Blue notes are commands somebody asked for, such as \"Renew loan\". A process is neither a request nor an actor's words."
+   },
+   {
+    "text": "A fact in the past tense, such as \"Fine charged\"",
+    "correct": true,
+    "why": "Right. Past tense is the rule that does the work: \"Fine charged\" is a fact anyone can check against what happened at the desk."
+   },
+   {
+    "text": "Turn it pink, as every process name marks a hotspot",
+    "correct": false,
+    "why": "Pink marks a question or a disagreement. Nobody disputed anything here; the note is simply written as a design instead of a fact."
+   }
+  ]
+ },
+ {
+  "id": "ex-dp72cs72",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "In the lending context, which of these should be a value object?",
+  "choices": [
+   {
+    "text": "Copy C-0107 of Vidas Secas",
+    "correct": false,
+    "why": "In lending, C-0107 is out to Bia and C-0108 is on the shelf: they are not interchangeable, so a copy is an entity there."
+   },
+   {
+    "text": "Member m-014, whose phone just changed",
+    "correct": false,
+    "why": "Every field of a member can change and she is still the same member. That is what an entity is."
+   },
+   {
+    "text": "Bia's hold on Torto Arado",
+    "correct": false,
+    "why": "A hold is placed, shelved, then collected or lapsed: it is one thing followed through changes, which needs identity."
+   },
+   {
+    "text": "A pickup deadline of 2026-05-18",
+    "correct": true,
+    "why": "Right. Nobody would care if it were swapped for an equal date; two deadlines of 18 May are the same deadline, and a new date replaces it whole."
+   }
+  ]
+ },
+ {
+  "id": "ex-rvwpcyph",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "With member.py, Caio holds two books and one film and owes nothing. He returns the film 21 days late, asks for two copies, pays 100 cents, then asks for four more copies. How many of those six requests are lent?",
+  "value": 3,
+  "tolerance": 0,
+  "unit": "loans"
+ },
+ {
+  "id": "ex-a6jas1vy",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A loan's receipt matters enough that the event must not be lost after a save. Put the steps of the outbox, as lesson 12 describes it, in order.",
+  "items": [
+   "Member.borrow records a LoanStarted",
+   "One transaction saves the member and writes the event to an outbox table",
+   "A separate job reads the events not yet sent",
+   "The job publishes each event and marks it sent"
+  ],
+  "trap": "The event goes into the same transaction as the aggregate, before anything is published. Publishing straight after the save is the step the outbox replaces."
+ },
+ {
+  "id": "ex-kymx6mth",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A clinic is modelled with lesson 12's tactical patterns. Match each piece to the pattern it is.",
+  "pairs": [
+   {
+    "left": "A patient known by record number, whose address and name may change",
+    "right": "entity"
+   },
+   {
+    "left": "A dose of 5 mg, equal to any other 5 mg",
+    "right": "value object"
+   },
+   {
+    "left": "A doctor's day, the only door to its slots, refusing a ninth appointment",
+    "right": "aggregate root"
+   },
+   {
+    "left": "A rule that counts waiting days against the clinic's calendar of holidays",
+    "right": "domain service"
+   },
+   {
+    "left": "get(patient_id) and save(patient), backed by memory in tests and SQLite in production",
+    "right": "repository"
+   }
+  ]
+ },
+ {
+  "id": "ex-pzrhfytv",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The catalogue's count of available copies of a title is its own aggregate, updated by a handler of LoanStarted, so it can lag a loan by a minute. A developer proposes changing the count in the same transaction as every Copy. What does lesson 12 say?",
+  "choices": [
+   {
+    "text": "Do it: a rule that involves two aggregates must hold at every instant, so one transaction has to cover both",
+    "correct": false,
+    "why": "Involving two things does not make a rule instant. It has to be asked of the business, and here nobody needs the two to agree within a millisecond."
+   },
+   {
+    "text": "Keep the handler: it is a \"soon\" rule, and a short lag that a job repairs is fine",
+    "correct": true,
+    "why": "Right. The lesson names this very count as a \"soon\" rule. One aggregate per transaction keeps each lock brief, and the event carries the change."
+   },
+   {
+    "text": "Put every Copy inside the title's aggregate so the count is always right",
+    "correct": false,
+    "why": "That makes one large aggregate locked on every loan of any copy, and lending a copy would have to find it inside its title."
+   },
+   {
+    "text": "Have Copy hold the catalogue's object and update it directly",
+    "correct": false,
+    "why": "Aggregates refer to each other by id. Holding the object lets code change it outside its own root and its own transaction, the second door."
+   }
+  ]
+ },
+ {
+  "id": "ex-5r0z51qg",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A clinic splits its booking system with CQRS. The free-slots screen reads a search index that a worker updates a few seconds after each booking. To save code, the BookSlot handler asks that same index whether the slot is free before booking it. What does lesson 8 say about this?",
+  "choices": [
+   {
+    "text": "It is fine, since the index is rebuilt from the same events and so agrees with the write model",
+    "correct": false,
+    "why": "It agrees eventually, not at the moment the handler asks. Two bookings a second apart both read the slot as free."
+   },
+   {
+    "text": "The lag is now a correctness bug: the rule has to check the write model itself",
+    "correct": true,
+    "why": "Right. A stale screen costs a wasted trip; a stale rule books the same slot twice. The lesson says no rule ever reads a read model."
+   },
+   {
+    "text": "Only the screen is affected; the handler sees the same data the patient sees",
+    "correct": false,
+    "why": "That is the problem rather than a comfort: the patient may see an old answer, and now so does the rule that decides."
+   },
+   {
+    "text": "Project synchronously for every screen, and the shortcut becomes safe",
+    "correct": false,
+    "why": "It would close this window and tie every booking to the slowest read model. The fix is cheaper: the handler checks the rule against its own model."
+   }
+  ]
+ },
+ {
+  "id": "ex-638x618d",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "Four methods from a ticket office. Which one breaks command-query separation in the way lesson 8 still forbids, after its exceptions?",
+  "choices": [
+   {
+    "text": "issue_ticket(seat), which marks the seat sold and returns the new ticket's number",
+    "correct": false,
+    "why": "Returning an id the command created is the soft bend the lesson allows: the caller cannot learn it any other way without a second query that might race."
+   },
+   {
+    "text": "change_seat(ticket, seat), which returns the whole seating plan",
+    "correct": true,
+    "why": "Right. A command returning a view of the world means every caller who wants the plan runs the change, the trap of Shelf.take."
+   },
+   {
+    "text": "claim(seat), which takes the seat if it is free and says whether it did, in one call",
+    "correct": false,
+    "why": "Asking and taking in two calls lets another request take the seat in between. This is the atomic exception, like sync.Map's LoadOrStore."
+   },
+   {
+    "text": "next_in_line(), which pops the first person from the queue",
+    "correct": false,
+    "why": "Taking from a queue is in the lesson's table of exceptions: the caller needs the item that was removed, as with deque.popleft."
+   }
+  ]
+ },
+ {
+  "id": "ex-tnkp40pg",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A gym's system has a member profile page, a settings page whose one rule is that a name must not be empty, and a class schedule read by a timetable screen, a coach's app and a waiting-list screen, with reads far outnumbering bookings. Where would lesson 8 apply CQRS?",
+  "choices": [
+   {
+    "text": "Everywhere, so that the whole system follows one architecture",
+    "correct": false,
+    "why": "Its own advocates warn against it as an architecture for the whole: every part split pays for events, projectors and lag whether it needed them or not."
+   },
+   {
+    "text": "The profile page, because it is the screen members open most",
+    "correct": false,
+    "why": "A page that reads the fields it writes has one shape for both jobs. Splitting it doubles the code and buys nothing."
+   },
+   {
+    "text": "The schedule only",
+    "correct": true,
+    "why": "Right. Several screens want the same facts in different shapes and reads outnumber writes: the signs the lesson names. The rest is CRUD."
+   },
+   {
+    "text": "The settings page, since its rule is the easiest to isolate in a write model",
+    "correct": false,
+    "why": "With a rule that trivial there is nothing for a small write model to protect, and nothing is strained."
+   }
+  ]
+ },
+ {
+  "id": "ex-w4a08ggk",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "The library wants a new screen, \"members with a loan overdue\", in a system built like lesson 8's. Which of these are true? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "It can be a new projector over the events, leaving Lending's handlers alone",
+    "correct": true,
+    "why": "Yes. Like \"most borrowed this year\", a new read model listens to events that already exist; the write model does not know it is there."
+   },
+   {
+    "text": "Its rows may carry the member's name and the title, copied from the catalogue",
+    "correct": true,
+    "why": "Yes. A read model is derived data, so duplication is the point there; it would be a normalisation error only in the write model."
+   },
+   {
+    "text": "If its projector has a bug, fixing the code and rebuilding it from the events loses nothing",
+    "correct": true,
+    "why": "Yes. Everything in a read model can be recomputed; the write side holds the state that cannot."
+   },
+   {
+    "text": "The LendCopy handler should read it to refuse members who are overdue",
+    "correct": false,
+    "why": "A rule that reads a read model turns its lag into a wrong decision. The overdue check belongs on the write side, against what the rules hold."
+   },
+   {
+    "text": "It must live in the same database as Lending, or it cannot be kept current",
+    "correct": false,
+    "why": "Read models need not share a technology. The projector is the only code that knows both the events and the store, whichever store it is."
+   }
+  ]
+ },
+ {
+  "id": "ex-nxbmsj76",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A gym event-sources its check-ins in one stream per member, and after ten years a long-standing member's stream holds tens of thousands of events and every command folds slowly. Which design from lesson 9 would have made a snapshot unnecessary in the first place?",
+  "choices": [
+   {
+    "text": "Archiving every event older than a year once a snapshot of the member exists",
+    "correct": false,
+    "why": "A snapshot never replaces history: projections read from position 0, and a fixed evolve needs the old events to fold again."
+   },
+   {
+    "text": "Streams that end, such as one per membership term, so that no single stream grows for years",
+    "correct": true,
+    "why": "Right. The lesson's example is a stream per loan, which ends when the book comes back. A short stream folds fast for as long as the system lives."
+   },
+   {
+    "text": "Dropping the UNIQUE (stream, version) constraint, which slows every append",
+    "correct": false,
+    "why": "The slow part is reading and folding, not appending, and that constraint is the whole of the store's concurrency control."
+   },
+   {
+    "text": "Storing each member's current state in a table beside the events, updated in place",
+    "correct": false,
+    "why": "That is a second source of truth that can disagree with the events, which is the very thing event sourcing gives up."
+   }
+  ]
+ },
+ {
+  "id": "ex-wr76vr01",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A shop's OrderPlaced events of version 1 have no currency. The new upcaster fills it in by looking up the customer's country in today's customer table. What does lesson 9 say is wrong?",
+  "choices": [
+   {
+    "text": "Nothing; upcasters exist to fill in what old events left out",
+    "correct": false,
+    "why": "They do, from something frozen. Here the answer depends on a table that keeps changing, so the same row reads differently over the years."
+   },
+   {
+    "text": "Someone who moves abroad would rewrite the money of all their past purchases",
+    "correct": true,
+    "why": "Right. Upcasters must be deterministic in the event. Use a frozen table of how things were, or say None honestly."
+   },
+   {
+    "text": "It should be a migration that writes the currency into the stored rows once",
+    "correct": false,
+    "why": "Rewriting stored events breaks the store's one promise, and the trigger refuses it. It would also freeze today's wrong lookup into history."
+   },
+   {
+    "text": "Only that the version field should have been in the first event",
+    "correct": false,
+    "why": "That is good advice, and get(\"v\", 1) already copes with its absence. The fault here is where the missing fact comes from."
+   }
+  ]
+ },
+ {
+  "id": "ex-pe69bw5v",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "A stream holds 1,237 events, and snapshots are saved every 500, so the newest is at version 1,000. A bug in evolve is then fixed. Following lesson 9, how many events does the next rebuild of that stream apply?",
+  "value": 1237,
+  "tolerance": 0,
+  "unit": "events"
+ },
+ {
+  "id": "ex-d7p7x13d",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Two desk clerks serve Caio at once with lesson 9's store, and both want to lend him a book. Put what happens in order.",
+  "items": [
+   "Both fold his stream at version 4 and decide he may borrow",
+   "The first appends expecting version 4 and writes version 5",
+   "The second also tries to write version 5 and gets ConcurrencyError",
+   "The second re-reads the stream, now with the first loan, and runs the rules again"
+  ],
+  "trap": "Nothing is locked while they decide, so both decisions come before either write. The loser does not retry its old decision: it folds again, because the loan limit may now refuse it."
+ },
+ {
+  "id": "ex-am6hzfs9",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Halfway through extracting a function from an invoice printer, the approved-output test fails: one line now ends in \"R$ 3,5\". The developer copies the new output into approved.txt, the test goes green, and the commit says \"refactor\". What does lesson 14 say?",
+  "choices": [
+   {
+    "text": "Undo the move; the failure was the net doing its job",
+    "correct": true,
+    "why": "Right. A refactoring must not change observable behaviour, so a red approved test means the move was wrong, as the dropped :02d was."
+   },
+   {
+    "text": "It is acceptable, because characterisation tests record what the code does and the code now does this",
+    "correct": false,
+    "why": "They record what it did before the change, so that any change shows up. Re-approving inside a refactoring removes the only check there was."
+   },
+   {
+    "text": "Keep it, and ask the librarians whether R$ 3,5 is the right format",
+    "correct": false,
+    "why": "A behaviour change can be right, but it gets its own test, commit and review. It never rides along inside a refactoring."
+   },
+   {
+    "text": "Fine, as long as the commit message is changed to say \"fix\"",
+    "correct": false,
+    "why": "Renaming the commit does not make the change intended: nobody decided the format should change, and the extraction is still mixed in with it."
+   }
+  ]
+ },
+ {
+  "id": "ex-mskkyg4g",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A Go service keeps fines as int64 cents, and once a bug added a number of days to a fine. Which change does lesson 14 say gives most of the protection for almost no code?",
+  "choices": [
+   {
+    "text": "Renaming every variable to end in Cents, such as fineCents",
+    "correct": false,
+    "why": "A name is still a comment the compiler ignores: fineCents + days compiles as happily as before."
+   },
+   {
+    "text": "Declaring a new type, type Money int64, and putting the money methods on it",
+    "correct": true,
+    "why": "Right. A new named type will not mix with a plain int64 without a conversion, and it can carry methods."
+   },
+   {
+    "text": "A comment beside each field saying the unit is cents, as DAILY_FINE = 50 had",
+    "correct": false,
+    "why": "The comment gave a reader the unit and stopped nothing. The lesson turned that comment into a type for exactly this reason."
+   },
+   {
+    "text": "Moving to float64, so that reais and cents need no conversion",
+    "correct": false,
+    "why": "A float is still a plain number that adds to days, and it brings rounding errors to money on top."
+   }
+  ]
+ },
+ {
+  "id": "ex-00rt7r9k",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "In the refactor step of a TDD cycle, while renaming, a developer spots a case nobody handles and writes a failing test for it before finishing the rename. What does Beck's image of the two hats say?",
+  "choices": [
+   {
+    "text": "Good practice: a test written as soon as a case is noticed is a test that is not forgotten",
+    "correct": false,
+    "why": "Writing it down is good; writing it now is the problem. With a red test in the suite, the rename can no longer be shown to have changed nothing."
+   },
+   {
+    "text": "Refactoring must wait until the case is handled, because a known gap makes every move unsafe",
+    "correct": false,
+    "why": "A gap the net does not reach is a risk to note and accept knowingly; it does not stop a rename the tests do cover."
+   },
+   {
+    "text": "She is wearing both at once: finish the rename green, then swap hats and add the test",
+    "correct": true,
+    "why": "Right. You may swap hats every few minutes and never wear both at once, or nobody can tell which change did what."
+   },
+   {
+    "text": "Tests belong to the green step only, so the case waits for the next cycle's refactor",
+    "correct": false,
+    "why": "A new test belongs to the behaviour hat, and that hat goes on as soon as the rename is done, not a cycle later."
+   }
+  ]
+ },
+ {
+  "id": "ex-w96ppv7y",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "Code from a shipping company. Match each fragment to the smell lesson 14 would name.",
+  "pairs": [
+   {
+    "left": "quote(street, city, postcode) and label(street, city, postcode), and the three are never passed apart",
+    "right": "data clump"
+   },
+   {
+    "left": "cost(order) reads order.weight, order.zone and order.express and nothing of its own",
+    "right": "feature envy"
+   },
+   {
+    "left": "if service == \"express\" chains in price(), in eta() and in label()",
+    "right": "repeated switches"
+   },
+   {
+    "left": "weight: float that is kilograms in one module and pounds in another",
+    "right": "primitive obsession"
+   }
+  ]
+ },
+ {
+  "id": "ex-r8hs0gf0",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": false,
+  "prompt": "A shop puts @functools.cache on price(item), which multiplies the item's base price by a module-level discount that the operations team changes during a sale. What does lesson 15 predict?",
+  "choices": [
+   {
+    "text": "The cache notices that the global changed and clears itself",
+    "correct": false,
+    "why": "The cache keys on the arguments and nothing else. It has no way to know the function read a global."
+   },
+   {
+    "text": "Nothing changes, because caching never alters a function's answers",
+    "correct": false,
+    "why": "That holds for a pure function only. Here the answer depends on more than the arguments, so a remembered answer can go out of date."
+   },
+   {
+    "text": "A race between threads, since two calls may share the cached entry",
+    "correct": false,
+    "why": "Sharing a remembered value is not the failure. Even with one thread, an item priced before the sale keeps its old price."
+   },
+   {
+    "text": "Items priced before the change keep their old price; pass the discount as an argument",
+    "correct": true,
+    "why": "Right. functools.cache on an impure function returns stale answers. With the discount in the signature the function is pure and caching is safe."
+   }
+  ]
+ },
+ {
+  "id": "ex-amwm0gr1",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "send_reminders(loans) loops over the loans, calls date.today() for each and calls smtp.send when one is late. Rearranged as a functional core in an imperative shell, what does the core become?",
+  "choices": [
+   {
+    "text": "A function of the loans and a date that returns the reminders as values",
+    "correct": true,
+    "why": "Right. The core decides and sends nothing; the shell reads the clock once, calls it, and sends what it returned."
+   },
+   {
+    "text": "The same loop with date.today() and smtp.send patched in every test",
+    "correct": false,
+    "why": "That tests the effects by faking them, and the logic still lives beside them. Moving the effects out is what lets the tests need nothing."
+   },
+   {
+    "text": "A class holding the SMTP connection, so the sending is in one place",
+    "correct": false,
+    "why": "Gathering the effect in a class does not make the deciding code pure: it still sends while it decides."
+   },
+   {
+    "text": "A function that reads the clock itself but takes a send function as an argument",
+    "correct": false,
+    "why": "Injecting send is lesson 13's honest design for a core that must act midway, but the clock is still read inside, so the answer depends on the day it runs."
+   }
+  ]
+ },
+ {
+  "id": "ex-qztnmbw1",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": false,
+  "prompt": "With hof.py's per_day, capped and pipeline, what does pipeline(capped(300), per_day(40)) return for a loan 10 days late, in cents?",
+  "value": 400,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-kand6zea",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": false,
+  "prompt": "A call to a pure function can be replaced by its value anywhere in the program without changing what the program does. The term for this is referential ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "transparency"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]
