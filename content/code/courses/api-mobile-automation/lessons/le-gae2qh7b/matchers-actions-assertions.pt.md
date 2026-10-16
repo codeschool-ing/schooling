@@ -4,8 +4,7 @@ version: 1
 ---
 
 **Toda linha de Espresso tem as mesmas três partes: achar uma view, fazer algo com ela, conferir
-algo nela.** `onView(matcher)` acha, `perform(action)` faz, `check(assertion)` confere, e uma linha
-pode ter a primeira e uma das outras ou as duas. Lido em voz alta, o segundo teste da seção 03 é
+algo nela.** `onView(matcher)` acha, `perform(action)` faz, `check(assertion)` confere. Uma linha pode ter a primeira e uma das outras ou as duas. Lido em voz alta, o segundo teste da seção 03 é
 *na linha que guarda o `sh-103`, faça um clique; na view com id `title`, confira que ela corresponde
 ao texto "O Pagador de Promessas"*.
 
@@ -41,15 +40,15 @@ ao texto "O Pagador de Promessas"*.
 ## Por que uma lista precisa de `onData`
 
 Uma `ListView` não cria uma view para cada item. Ela cria linhas suficientes para encher a tela e
-**as reaproveita ao rolar**, pondo o texto do próximo item numa linha que acabou de sair pelo alto.
+**as reaproveita ao rolar**. O texto do próximo item vai para uma linha que acabou de sair pelo
+alto.
 Então a linha de um item mais abaixo na lista não existe até que se role até ele, e o `onView` só
-acha views que existem. O `onData` pede o item ao adapter da lista, rola até a linha dele ser
-desenhada, e então age sobre essa linha. O Tickets tem três espetáculos e eles cabem em qualquer
-tela, mas um teste escrito com `onView` quebraria no dia em que o boxoffice vendesse um quarto.
+acha views que existem. O `onData` pede o item ao adapter da lista. Ele rola até a linha do item ser desenhada, e então age
+sobre essa linha. O Tickets tem três espetáculos e eles cabem em qualquer tela. Mas um teste escrito com `onView` quebraria no dia em que o boxoffice vendesse um quarto.
 
 **A linha é escolhida pelo que guarda, não por onde está.** `onData(…).atPosition(2)` também acharia
 a terceira linha, e acharia outro espetáculo no dia em que o boxoffice os listasse em outra ordem.
-`showWithId("sh-103")` continua achando o certo, e é a caixa cinza da seção 02 no seu momento mais
+`showWithId("sh-103")` continua achando o certo. É a caixa cinza da seção 02 no seu momento mais
 útil: o objeto `Show` é do próprio app, e nenhum leitor de tela poderia ter oferecido o id.
 
 ## As partes que você mais vai usar
@@ -69,11 +68,11 @@ a terceira linha, e acharia outro espetáculo no dia em que o boxoffice os lista
 | asserção | `doesNotExist()` | nenhuma view corresponde |
 
 **`not(isDisplayed())` e `doesNotExist()` são verificações diferentes.** A faixa do Tickets está no
-layout em todo início, escondida com `visibility="gone"`, então ela existe e não está visível:
+layout em todo início, escondida com `visibility="gone"`. Então ela existe e não está visível:
 `matches(not(isDisplayed()))` passa e `doesNotExist()` falha. Uma view que nunca foi inflada, como o
 `remind` na tela de lista, é o contrário. A seção 06 confere a faixa, e precisa da primeira.
 
-Quando um matcher não acha nada, o Espresso falha com `NoMatchingViewException` e imprime a hierarquia
-inteira de views em que procurou, parecido com o page source do Appium na lição 15. Quando acha mais
-de uma, falha com `AmbiguousViewMatcherException`, que é o que `withId(R.id.title)` faria na tela de
-lista, onde toda linha tem um `title`.
+Quando um matcher não acha nada, o Espresso falha com `NoMatchingViewException`. Ele imprime a
+hierarquia inteira de views em que procurou, parecido com o page source do Appium na lição 15. Quando
+um matcher acha mais de uma, falha com `AmbiguousViewMatcherException`. É o que `withId(R.id.title)`
+faria na tela de lista, onde toda linha tem um `title`.

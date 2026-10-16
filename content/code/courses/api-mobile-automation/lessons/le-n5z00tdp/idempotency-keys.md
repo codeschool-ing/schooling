@@ -4,16 +4,16 @@ version: 1
 ---
 
 **A `POST` sent twice does the thing twice, and the client cannot always tell whether the first one
-arrived.** Lesson 1 said that `POST` is neither safe nor idempotent. On a phone that loses its
-signal halfway through *Buy*, the app sees no answer and has two bad choices: send again and maybe buy
-two tickets, or give up and maybe buy none while telling the user it failed. An idempotency key
+arrived.** Lesson 1 said that `POST` is neither safe nor idempotent. Picture a phone that loses its
+signal halfway through *Buy*. The app sees no answer and has two bad choices: send again and maybe
+buy two tickets, or give up and maybe buy none while telling the user it failed. An idempotency key
 removes the dilemma. The client makes up a key for one intention, "buy these two seats", and sends it
-with every attempt at that intention; the server does the work the first time and, for the same key,
+with every attempt at that intention. The server does the work the first time. For the same key, it
 answers every later attempt with a copy of the first answer.
 
-boxoffice supports it through the `Idempotency-Key` header, the name an IETF draft standardises and
-Stripe, among other payment providers, uses. The key is the client's to choose; a random UUID is the
-usual choice, and any string nobody else will use works.
+boxoffice supports it through the `Idempotency-Key` header. That is the name an IETF draft
+standardises, and the one Stripe, among other payment providers, uses. The key is the client's to
+choose; a random UUID is the usual choice, and any string nobody else will use works.
 
 ## A replay
 
@@ -48,8 +48,8 @@ Transfer-Encoding: chunked
 {"id":"ord-1001","show_id":"sh-101","seats":2,"total_cents":16000,"status":"confirmed","payment":"ch-1"}
 ```
 
-**The same order, `ord-1001`, both times**, and in the second answer one header more than an ordinary
-`201` carries: `idempotent-replayed: true`, which says this answer is a copy. No second order was
+**The same order, `ord-1001`, both times.** The second answer carries one header more than an
+ordinary `201`: `idempotent-replayed: true`, which says this answer is a copy. No second order was
 created. A key stands for one intention, so boxoffice also checks that a replay really is the same
 request:
 
@@ -58,7 +58,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders -H "authorization: Bear
 {"type":"about:blank","title":"Unprocessable Entity","status":422,"detail":"this Idempotency-Key was used with a different body"}
 ```
 
-`422`: a key reused for a different order is a client defect, and silently replaying the old answer
+`422`: a key reused for a different order is a client defect. Silently replaying the old answer
 would tell the client it bought three seats when it bought two. The stub shows the other half of the
 promise, **one charge for the key**:
 
@@ -122,9 +122,8 @@ ok 2 - the same key with a different body is refused
 # todo 0
 ```
 
-What a tester checks about an idempotency key, beyond these two tests: that the replay carries the
-same status and headers, not only the same body; that keys belong to one client, so another client
-sending the same key gets an order of its own and never yours (boxoffice keys them by the token's
-`sub`); and how long keys are
-remembered. boxoffice remembers them until it restarts, and a real service documents a period, often
-a day, after which the same key makes a new order.
+A tester checks three more things about an idempotency key. The replay carries the same status and
+headers, not only the same body. Keys belong to one client, so another client sending the same key
+gets an order of its own and never yours; boxoffice keys them by the token's `sub`. And keys are
+remembered for a known time. boxoffice remembers them until it restarts. A real service documents a
+period, often a day, after which the same key makes a new order.

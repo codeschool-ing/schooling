@@ -4,8 +4,8 @@ version: 1
 ---
 
 **The project Android Studio made in lesson 14 is already set up for Espresso.** The template put
-two test folders beside `src/main`, wrote the libraries they need into the build files, and left an
-example test in each. You add files; you change no build file.
+two test folders beside `src/main` and wrote the libraries they need into the build files. It left
+an example test in each. You add files; you change no build file.
 
 | folder | what runs there | runs on |
 |---|---|---|
@@ -13,8 +13,8 @@ example test in each. You add files; you change no build file.
 | `app/src/androidTest/` | instrumented tests: Espresso | the device, inside the app |
 | `app/src/main/` | the app itself | the device |
 
-Inside `androidTest`, the template made the folders of the package, `java/example/tickets/`, and a
-file in it called `ExampleInstrumentedTest.kt`, which checks the app's package name. It can stay or
+Inside `androidTest`, the template made the folders of the package, `java/example/tickets/`. In
+them is a file called `ExampleInstrumentedTest.kt`, which checks the app's package name. It can stay or
 go; the tests of this lesson go beside it.
 
 ## What the template already declares
@@ -35,8 +35,8 @@ androidTestImplementation(libs.androidx.espresso.core)
 ```
 
 `testImplementation` is for the local tests and `androidTestImplementation` for the instrumented
-ones; neither goes into the app a user installs. The names after `libs.` point into
-`tickets/gradle/libs.versions.toml`, where the template wrote which versions; leave them as it chose.
+ones. Neither goes into the app a user installs. The names after `libs.` point into
+`tickets/gradle/libs.versions.toml`, where the template wrote which versions. Leave them as it chose.
 
 | name in the build file | the library | what it gives a test |
 |---|---|---|
@@ -50,7 +50,7 @@ The second and third bring the rest of AndroidX Test with them, including `Activ
 ## A first test class
 
 Two tests: the refresh button is on the screen, and tapping the show `sh-103` opens it with its
-title and price. Make the file in `androidTest/java/example/tickets/`: in the *Project* view,
+title and price. Make the file in `androidTest/java/example/tickets/`. In the *Project* view,
 right-click the package and choose *New › Kotlin Class/File*.
 Save it as `tickets/app/src/androidTest/java/example/tickets/ListTest.kt`:
 
@@ -117,6 +117,6 @@ Section 04 reads the class piece by piece. One warning before that: **this versi
 section 05 says why and fixes it.
 
 **None of the test code in this lesson was compiled or run for this course.** It needs AndroidX
-Test, which comes from Google's own repository, and the recording machine can reach neither that
-repository nor an emulator. It is written against the parts of Espresso that have not changed in
-years, and section 07 says how to run it.
+Test, which comes from Google's own repository. The recording machine can reach neither that
+repository nor an emulator. The code is written against the parts of Espresso that have not changed
+in years, and section 07 says how to run it.

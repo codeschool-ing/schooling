@@ -4,12 +4,12 @@ version: 1
 ---
 
 **A maioria dos testes confere que as coisas funcionam, e a maior parte do dinheiro se perde onde elas
-não funcionam.** Os caminhos em que o pagamento é recusado, o provedor está fora do ar ou o provedor
-demora rodam raramente no desenvolvimento e todo dia em produção, e ninguém os vê até um cliente ver.
+não funcionam.** Pense nos caminhos em que o pagamento é recusado, o provedor está fora do ar ou o provedor demora.
+Eles rodam raramente no desenvolvimento e todo dia em produção, e ninguém os vê até um cliente ver.
 Eles também são os mais fáceis de testar quando um substituto falha sob encomenda, que é para o que
 serve o stub da lição 11.
 
-O que conferir em cada caminho de erro são sempre três coisas: a resposta que o cliente recebe, o
+Cada caminho de erro pede as mesmas três conferências: a resposta que o cliente recebe, o
 status e o corpo; o estado que fica para trás, aqui os lugares; e o que o outro serviço viu.
 
 ## Uma recusa, e um provedor fora do ar
@@ -38,8 +38,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-103 | jq .seats_left
 ```
 
 `502`, *the payment provider failed*, no mesmo formato de problema de todo outro erro, e de novo
-quatro lugares. As duas respostas estão certas para um cliente: o `402` diz para pedir outro cartão ao
-usuário, o `502` diz que a culpa é do lado do servidor e que repetir pode ajudar.
+quatro lugares. As duas respostas estão certas para um cliente. O `402` diz para pedir outro cartão ao usuário; o
+`502` diz que a culpa é do lado do servidor e que repetir pode ajudar.
 
 ## O que um pedido que falhou deixa para trás
 
@@ -53,13 +53,11 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/orders/ord-1003 -H "authorizat
 
 **Um pedido com status `failed`, do qual o cliente nunca ficou sabendo**: o `502` não trazia id
 nenhum. Isso é uma constatação que vale registrar, mais do que um defeito com resposta pronta. O
-registro é útil para o teatro, que consegue ver vendas que falharam; mas um cliente que quer
-conciliar, ou alguém do suporte respondendo "fui cobrado?", não tem como ligá-lo à requisição que o
-criou. Quem testa levanta isso como pergunta: o id de um pedido que falhou deveria estar no erro, ou o
+registro é útil para o teatro, que consegue ver vendas que falharam. Mas um cliente que quer conciliar não tem como ligá-lo à
+requisição que o criou, e nem alguém do suporte respondendo "fui cobrado?". Quem testa levanta isso como pergunta: o id de um pedido que falhou deveria estar no erro, ou o
 pedido não deveria existir?
 
-O fim do terminal do boxoffice mostra tudo pelo lado dele. A recusa é um `402` comum; o provedor fora
-do ar deixou uma linha a mais, a que o boxoffice imprime quando captura uma cobrança que falhou:
+O fim do terminal do boxoffice mostra tudo pelo lado dele. A recusa é um `402` comum. O provedor fora do ar deixou uma linha a mais, a que o boxoffice imprime quando captura uma cobrança que falhou:
 
 ```
 POST /v1/orders 402
@@ -73,7 +71,7 @@ GET /v1/orders/ord-1003 200
 ## Como testes
 
 Um arquivo, com o próprio boxoffice e o próprio stub. Os dois caminhos de erro dividem um corpo de
-teste num laço, porque só diferem no modo, no status e no detalhe; o último teste prova que, depois
+teste num laço, porque só diferem no modo, no status e no detalhe. O último teste prova que, depois
 das duas falhas, os quatro lugares ainda podem ser vendidos. Salve como `tests/errors.test.mjs`:
 
 ```js
@@ -132,5 +130,5 @@ ok 3 - after the failures, all four seats can still be sold
 
 **As conferências de lugares são o que pega uma classe real de defeito**: um caminho de erro que
 esquece de liberar o que reservou. O boxoffice segura os lugares enquanto cobra e precisa devolvê-los
-em toda falha. Se um caminho esquecesse disso, o status dele continuaria certo, e só a contagem de
+em toda falha. Se um caminho esquecesse disso, o status dele continuaria certo. Só a contagem de
 lugares, ou a venda do último teste, mostraria um espetáculo perdendo lugares que nunca vendeu.

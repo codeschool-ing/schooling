@@ -3,9 +3,9 @@ title: Um gesto é um dedo que se move
 version: 1
 ---
 
-**Para um teste, um swipe não é um comando; é um dedo que encosta num ponto, vai até outro em
+**Para um teste, um swipe não é um comando. É um dedo que encosta num ponto, vai até outro em
 alguns milissegundos e sai da tela.** O protocolo W3C da lição 15 tem uma única requisição para
-todo gesto que existe, `POST /session/{id}/actions`, e o corpo dela descreve o dedo: uma *fonte de
+todo gesto que existe, `POST /session/{id}/actions`. O corpo dela descreve o dedo: uma *fonte de
 entrada* do tipo `pointer` com `pointerType` `touch`, e a lista do que ele faz, na ordem. Cinco
 tipos de passo bastam para todo gesto num celular:
 
@@ -16,16 +16,16 @@ tipos de passo bastam para todo gesto num celular:
 | `pause` | fica onde está por uma `duration` |
 | `pointerUp` | sai da tela |
 
-Então um **toque** é encostar e soltar num ponto, um **toque longo** é encostar, esperar um segundo
-ou coisa assim, e soltar, e um **swipe** é encostar, mover com uma duração e soltar. Uma **pinça**
+Então um *toque* é encostar e soltar num ponto. Um *toque longo* é encostar, esperar um segundo
+ou coisa assim, e soltar. Um *swipe* é encostar, mover com uma duração e soltar. Uma *pinça*
 precisa de dois dedos, ou seja, duas fontes de ponteiro na mesma requisição, cada uma com os seus
 passos, executadas juntas.
 
 ## Vendo um
 
-Num aparelho, um gesto é invisível do lado do teste: a requisição sai, a tela se mexe, e a resposta
-é `null`. O driver fake do Appium da lição 15 é o jeito de ver um, porque ele guarda um registro das
-ações que recebe, coisa que só ele faz. Com o servidor da lição 15 rodando e o driver fake instalado,
+Num aparelho, um gesto é invisível do lado do teste. A requisição sai, a tela se mexe, e a resposta
+é `null`. O driver fake do Appium da lição 15 é o jeito de ver um. Ele guarda um registro das ações
+que recebe, coisa que nenhum outro driver faz. Com o servidor da lição 15 rodando e o driver fake instalado,
 salve como `appium/fake-gestures.mjs`:
 
 ```js
@@ -98,7 +98,8 @@ try {
 ```
 
 `logLevel: 'silent'` e `connectionRetryCount: 0` impedem o WebdriverIO de imprimir os próprios
-avisos e de repetir o comando que deve falhar no fim; o script imprime esse erro ele mesmo. A partir
+avisos. Também o impedem de repetir o comando que deve falhar no fim. O script imprime esse erro ele
+mesmo. A partir
 de `~/boxoffice`:
 
 ```
@@ -130,10 +131,10 @@ mobile: swipeGesture failed: WebDriverError: Unsupported execute method 'mobile:
 ```
 
 **Leia primeiro o swipe feito à mão.** O dedo vai até `540,2100`, perto da base de uma tela de 2400
-pixels de altura, encosta, espera 100 ms, viaja até `540,700` em 400 ms e sai. O conteúdo embaixo
-dele sobe junto com o dedo, e é isso que *swipe para cima* quer dizer: **a direção é a do dedo, não
+pixels de altura, e encosta. Espera 100 ms, viaja até `540,700` em 400 ms e sai. O conteúdo embaixo
+dele sobe junto com o dedo, e é isso que *swipe para cima* quer dizer. **A direção é a do dedo, não
 a da lista**, e um swipe para cima traz à vista as linhas que estão mais abaixo na lista. Confundir
-as duas é o defeito de gesto mais comum num teste, e ele falha calado: a lista anda para o lado
+as duas é o defeito de gesto mais comum num teste, e ele falha calado. A lista anda para o lado
 errado, nada é encontrado, e o relatório põe a culpa no localizador.
 
 ```schooling-figure
@@ -142,12 +143,12 @@ errado, nada é encontrado, e o relatório põe a culpa no localizador.
 
 **O toque longo não diz coordenada nenhuma.** A `origin` dele é o botão de atualizar, como uma
 referência de elemento do W3C, e `x: 0, y: 0` é um deslocamento a partir do centro do elemento. É a
-versão para gestos do conselho da lição 14 sobre localizadores: um ponto calculado a partir de um
+versão para gestos do conselho da lição 14 sobre localizadores. Um ponto calculado a partir de um
 elemento sobrevive a um layout novo, e um ponto digitado em pixels não.
 
 **Os atalhos do WebdriverIO mandam os mesmos cinco passos.** O `driver.swipe()` pediu à lista o
-retângulo dela (ela começa em `y: 306` e tem 2052 pixels de altura), pegou a metade do meio por causa
-do `percent: 0.5`, e fez o swipe de `y: 1845` até `y: 819` em 1500 ms, o padrão dele. O
+retângulo dela, que começa em `y: 306` e tem 2052 pixels de altura. Ele pegou a metade do meio por
+causa do `percent: 0.5`, e fez o swipe de `y: 1845` até `y: 819` em 1500 ms, o padrão dele. O
 `longPress()` é o toque longo com 800 ms na pausa. O próprio log do servidor mostra o que passou pelo
 HTTP:
 
@@ -162,17 +163,16 @@ HTTP:
 [5f76d6dd][HTTP] --> DELETE /session/5f76d6dd-8e9f-42b3-a7c9-7215833eb22e/actions
 ```
 
-Um `POST …/actions` por gesto, cada um seguido de um `DELETE …/actions`, que o WebdriverIO manda
-para soltar o que o dedo ainda estivesse segurando. Toda biblioteca de gestos para o Appium termina
-nessas requisições, então quando um gesto se comporta mal num aparelho, o corpo desse `POST` no log
-do servidor é a primeira coisa a ler.
+Um `POST …/actions` por gesto, cada um seguido de um `DELETE …/actions`. O WebdriverIO manda essa segunda requisição para soltar o que o dedo ainda estivesse segurando. Toda biblioteca de gestos para o Appium
+termina nessas requisições. Quando um gesto se comporta mal num aparelho, leia primeiro o corpo desse
+`POST` no log do servidor.
 
 ## Os gestos do próprio driver
 
 A última linha da execução é o driver fake recusando `mobile: swipeGesture`. **Comandos que começam
-com `mobile:` não são do protocolo; pertencem a um driver**, e viajam pela requisição padrão de
+com `mobile:` não são do protocolo; pertencem a um driver.** Eles viajam pela requisição padrão de
 `execute` com o nome do comando no lugar de um script. O driver UiAutomator2 tem um conjunto deles
-que entregam o gesto ao UiAutomator do Android, que o executa no aparelho a partir de um elemento e
+que entregam o gesto ao UiAutomator do Android. O UiAutomator o executa no aparelho a partir de um elemento e
 de uma porcentagem, sem coordenada nenhuma calculada no teste:
 
 | gesto | o comando do UiAutomator2 | os principais argumentos |
@@ -186,10 +186,10 @@ de uma porcentagem, sem coordenada nenhuma calculada no teste:
 
 No WebdriverIO eles são chamados com `driver.execute('mobile: swipeGesture', { elementId, direction:
 'up', percent: 0.75 })`. **A escolha entre os dois tipos é portabilidade contra confiabilidade.** As
-ações do W3C funcionam em todo driver, Android e iOS, e deixam as coordenadas com você; os gestos
+ações do W3C funcionam em todo driver, Android e iOS, e deixam as coordenadas com você. Os gestos
 `mobile:` costumam ser mais estáveis no Android, porque o UiAutomator conhece a tela, e prendem o
-teste a um driver. Uma suíte que roda numa plataforma pode ficar com os `mobile:`; uma suíte para as
-duas fica nas ações, ou nos atalhos do WebdriverIO, que por baixo são ações.
+teste a um driver. Uma suíte que roda numa plataforma pode ficar com os `mobile:`. Uma suíte para
+as duas fica nas ações, ou nos atalhos do WebdriverIO, que por baixo são ações.
 
 ## Rolando até alguma coisa
 
@@ -204,26 +204,24 @@ await driver.$('android=new UiScrollable(new UiSelector().scrollable(true))' +
 ```
 
 Ele rola a primeira view rolável da tela até aparecer uma linha com esse título, e devolve essa
-linha. O Tickets tem três espetáculos e eles cabem em qualquer celular, então nenhum dos dois é
+linha. O Tickets tem três espetáculos e eles cabem em qualquer celular. Então nenhum dos dois é
 necessário para a lista como o boxoffice a serve; eles importam no dia em que forem trinta.
 
 ## Gestos no Espresso
 
-O Espresso tem os mesmos gestos como **view actions**, executadas numa view que ele encontrou, e
-como todo passo do Espresso elas esperam a thread principal antes:
+O Espresso tem os mesmos gestos como **view actions**, executadas numa view que ele encontrou. Como
+todo passo do Espresso, elas esperam a thread principal antes:
 
 ```kotlin
 onView(withId(R.id.shows)).perform(swipeUp())
 onData(showWithId("sh-103")).inAdapterView(withId(R.id.shows)).perform(longClick())
 ```
 
-`swipeUp()`, `swipeDown()`, `swipeLeft()` e `swipeRight()` fazem o swipe atravessando a view que
-recebem; `longClick()` e `doubleClick()` a pressionam. **O `onData` já rola uma `ListView` até a
-linha que encontra**, e é por isso que os testes da lição 16 nunca precisaram de um swipe; o
-`scrollTo()` faz o mesmo com uma view dentro de uma `ScrollView`. Os gestos do Espresso são eventos
-de toque injetados na própria janela do app, então só alcançam as views do app, e esse é o limite
-que a próxima seção encontra.
+`swipeUp()`, `swipeDown()`, `swipeLeft()` e `swipeRight()` fazem o swipe atravessando a view que recebem. `longClick()` e `doubleClick()` a pressionam. **O `onData` já rola uma `ListView` até a
+linha que encontra**, e é por isso que os testes da lição 16 nunca precisaram de um swipe. O `scrollTo()` faz o mesmo com uma view dentro de uma `ScrollView`. Os gestos do Espresso são eventos
+de toque injetados na própria janela do app. Eles só alcançam as views do app, e a próxima seção
+esbarra nesse limite.
 
-**Nenhum gesto desta seção foi feito num aparelho para este curso**, já que nenhum emulador consegue
-iniciar na máquina de gravação (lição 14). A execução acima é o protocolo, real, pelo servidor real;
-o que um swipe faz com a lista do Tickets fica para o seu emulador mostrar.
+**Nenhum gesto desta seção foi feito num aparelho para este curso.** Como a lição 14 mostrou,
+nenhum emulador consegue iniciar na máquina de gravação. A execução acima é o protocolo, real, pelo
+servidor real. O que um swipe faz com a lista do Tickets fica para o seu emulador mostrar.

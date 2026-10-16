@@ -4,10 +4,10 @@ version: 1
 ---
 
 **On a phone, what an app may do is decided by the person holding it, one permission at a time, at
-the moment the app first needs it.** Since Android 6 the permissions that touch somebody's private
-life, such as the camera, the location and the contacts, are asked for at runtime with a dialog,
-and the person can say no. Android 13 added notifications to that list, as `POST_NOTIFICATIONS`.
-So a feature behind a permission has at least two paths, and the one where the person says no is
+the moment the app first needs it.** Since Android 6, the permissions that touch somebody's private
+life, such as the camera, the location and the contacts, are asked for at runtime with a dialog. The
+person can say no. Android 13 added notifications to that list, as `POST_NOTIFICATIONS`.
+So a feature behind a permission has at least two paths. The one where the person says no is
 the one nobody tries by hand twice.
 
 The belief to drop first is that the dialog is part of the app. **It is drawn by Android**, by a
@@ -31,9 +31,9 @@ ana@laptop:~/boxoffice$ grep -n 'SDK_INT\|POST_NOTIFICATIONS\|granted' tickets/a
 42:        denied.visibility = if (granted) View.GONE else View.VISIBLE
 ```
 
-Read in order: below Android 13 (`SDK_INT < 33`) there is nothing to ask, and the switch simply
-stays on; if the permission is already granted, the same; otherwise the app asks, and when the
-answer comes back, line 41 sets the switch to the answer and line 42 shows the line
+Read it in order. Below Android 13, `SDK_INT < 33`, there is nothing to ask, and the switch simply
+stays on. If the permission is already granted, the same happens. Otherwise the app asks. When the
+answer comes back, line 41 sets the switch to the answer, and line 42 shows the line
 `remind_denied` if it was no. That is three outcomes from one tap, and the version of Android
 decides which are possible:
 
@@ -48,7 +48,7 @@ decides which are possible:
 The last row is Android's rule since version 11: **after a person refuses the same permission
 twice, the dialog stops appearing** and every later request is refused at once. An app that offers
 no way to the settings at that point leaves the person with a switch that turns itself off and no
-idea why; Tickets at least says why, and a test should hold it to that.
+idea why. Tickets at least says why, and a test should hold it to that.
 
 ## Setting the state before a test
 
@@ -63,14 +63,14 @@ adb install -r -g tickets/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 `grant` and `revoke` set one permission of one app. `reset-permissions` puts every app on the
-device back to its defaults, which is heavy on a phone you use. `install -r -g` reinstalls the app with everything
-its manifest asks for granted. **The only state that is certainly *never asked* is a fresh
+device back to its defaults, which is heavy on a phone you use. `install -r -g` reinstalls the app
+with everything its manifest asks for granted. **The only state that is certainly *never asked* is a fresh
 install**, with no memory of earlier refusals, so the tests below remove and reinstall the app
 before each one. That costs a few seconds a test, and it buys a starting point nobody has to
 reason about.
 
 Appium has the same switches. The capability `appium:autoGrantPermissions: true` installs the app
-with every permission granted, which is right for a suite that is not about permissions and wrong
+with every permission granted. That is right for a suite that is not about permissions, and wrong
 for this one, since it removes the dialog under test. `driver.execute('mobile: changePermissions',
 { permissions: 'android.permission.POST_NOTIFICATIONS', appPackage: 'example.tickets', action:
 'revoke' })` changes one, and `mobile: getPermissions` with `type: 'granted'` lists them.
@@ -78,8 +78,8 @@ for this one, since it removes the dialog under test. `driver.execute('mobile: c
 ## Which tool can press *Don't allow*
 
 **Appium can, because it sees the whole screen.** UiAutomator, underneath the UiAutomator2 driver,
-reads every window on the display, the permission controller's included, so its buttons are
-elements like any other; they simply carry that app's package in their ids. The dialog gets a
+reads every window on the display, the permission controller's included. So the dialog's buttons
+are elements like any other; they simply carry that app's package in their ids. The dialog gets a
 screen object of its own; save it as `appium/screens/permission.mjs`:
 
 ```js
@@ -108,10 +108,10 @@ export class PermissionDialog {
 }
 ```
 
-**Espresso cannot.** Its test runs inside Tickets's process and acts on Tickets's windows, and the
+**Espresso cannot.** Its test runs inside Tickets's process and acts on Tickets's windows. The
 dialog is a window of another app, so no `onView` can find its buttons. An instrumented test has two
 ways round it. It can grant the permission before the test starts, through Android's own
-`UiAutomation`, which `GrantPermissionRule` in `androidx.test:rules` wraps; then no dialog appears,
+`UiAutomation`, which `GrantPermissionRule` in `androidx.test:rules` wraps. Then no dialog appears,
 and no refusal can be tested either. Or it can drive the dialog with Google's **UI Automator**
 library, a dependency the template of lesson 14 does not declare. So in this course the dialog's
 paths belong to Appium, and section 05 has Espresso check what happens after a grant.
@@ -158,8 +158,8 @@ export class ShowScreen {
 }
 ```
 
-`getAttribute('checked')` reads the attribute of the same name in the page source, which
-UiAutomator2 reports as the string `true` or `false`, so the method compares it with a string.
+`getAttribute('checked')` reads the attribute of the same name in the page source. UiAutomator2
+reports it as the string `true` or `false`, so the method compares it with a string.
 Then the two paths through the dialog. Save it as `appium/reminder.test.mjs`:
 
 ```js
@@ -241,8 +241,8 @@ test("Don't allow turns it off and says why", async () => {
 }
 ```
 
-Run it like lesson 15's test, with the emulator of lesson 14, which runs Android 15, and the server
-running: `node --test --test-reporter=tap appium/reminder.test.mjs`. On an emulator running Android
-12 or older there is no dialog, and both tests fail at the wait for it, which is the table above
-telling you which device the test was written for. **These tests were not run for this course**,
-for the reason lesson 15 gives: no device and no app on the recording machine.
+Run it like lesson 15's test, with the server running and the emulator of lesson 14, which runs
+Android 15: `node --test --test-reporter=tap appium/reminder.test.mjs`. On an emulator running
+Android 12 or older there is no dialog, and both tests fail at the wait for it. That is the table
+above telling you which device the test was written for. **These tests were not run for this
+course**, for the reason lesson 15 gives: no device and no app on the recording machine.

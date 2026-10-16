@@ -3,9 +3,9 @@ title: Instalando o Appium no projeto
 version: 1
 ---
 
-**O Appium é um pacote npm, e ele entra no projeto boxoffice como o Newman entrou na lição 6**,
-para que a versão fique escrita no `package.json` e o `npm ci` de um colega instale a mesma. A
-maioria dos guias o instala globalmente com `npm install -g appium`; funciona, e deixa a versão num
+**O Appium é um pacote npm, e ele entra no projeto boxoffice como o Newman entrou na lição 6.**
+A versão fica então escrita no `package.json`, e o `npm ci` de um colega instala a mesma. A
+maioria dos guias o instala globalmente com `npm install -g appium`. Funciona, e deixa a versão num
 comando que alguém digitou uma vez, que é o hábito de que a lição 6 tirou você. A biblioteca
 cliente, o WebdriverIO, entra ao lado. Em `~/boxoffice`:
 
@@ -38,8 +38,8 @@ Run `npm audit` for details.
 
 O `--save-exact` fixa os dois, como fixou o Newman: Appium 3.8.0 e WebdriverIO 9.32.0. **As 35
 vulnerabilidades são a auditoria do npm sobre a árvore inteira**, incluindo as 19 do Newman da
-lição 6, e o raciocínio da lição 6 vale para as novas: são ferramentas que rodam na sua máquina
-contra servidores que você iniciou, nunca código que chega a um usuário, então as versões continuam
+lição 6. O raciocínio da lição 6 vale para as novas. São ferramentas que rodam na sua máquina
+contra servidores que você iniciou, nunca código que chega a um usuário. Por isso as versões continuam
 fixadas e o relatório é lido de novo quando sair uma versão nova. O `npx` acha o programa dentro do
 projeto:
 
@@ -50,9 +50,9 @@ ana@laptop:~/boxoffice$ npx appium --version
 
 ## O driver de Android
 
-O Appium chega sem driver nenhum. **Cada driver é um pacote próprio, instalado pelo Appium**, que o
-registra no mesmo `package.json` porque percebeu que está instalado num projeto e não globalmente.
-O comando imprime uma linha para cada passo enquanto trabalha; as três últimas são o resultado,
+O Appium chega sem driver nenhum. **Cada driver é um pacote próprio, instalado pelo Appium.** O Appium o
+registra no mesmo `package.json`, porque percebeu que está instalado num projeto e não globalmente.
+O comando imprime uma linha para cada passo enquanto trabalha. As três últimas são o resultado,
 então fique com elas:
 
 ```
@@ -69,8 +69,8 @@ Elas dizem a que o driver responde: sessões que pedem `automationName` `UiAutom
 
 Cada driver traz um **doctor**, uma lista de verificações do que ele precisa no computador. Rode-o
 antes de qualquer outra coisa, porque o que ele encontra chegaria de outro modo como uma sessão
-falhada muito mais tarde. Ele imprime uma linha por verificação, com um visto ou um xis na frente,
-depois um resumo, e por último uma linha de conselho; o `grep` fica aqui com o resumo e o conselho:
+falhada muito mais tarde. Ele imprime uma linha por verificação, com um visto ou um xis na frente. Depois vêm um resumo e uma
+linha de conselho, e o `grep` fica aqui com esses dois:
 
 ```
 ana@laptop:~/boxoffice$ npx appium driver doctor uiautomator2 2>&1 | grep -E 'fixes needed|Bye'
@@ -105,8 +105,8 @@ export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 ```
 
 Se você pulou a lição 7, o Android Studio traz um JDK próprio, numa pasta chamada `jbr` dentro do
-lugar onde está instalado: `/Applications/Android Studio.app/Contents/jbr/Contents/Home` num Mac, e
-`C:\Program Files\Android\Android Studio\jbr` no Windows, onde ele vai numa variável de usuário
+lugar onde está instalado. Num Mac é `/Applications/Android Studio.app/Contents/jbr/Contents/Home`.
+No Windows é `C:\Program Files\Android\Android Studio\jbr`, e ele vai numa variável de usuário
 chamada `JAVA_HOME`. Depois, o doctor de novo:
 
 ```
@@ -117,10 +117,10 @@ info Doctor Bye! All issues have been fixed!
 
 A saída completa agora tem `JAVA_HOME is set to: /usr/lib/jvm/java-21-openjdk-amd64` como aprovada,
 e uma segunda verificação de que `bin/java` existe dentro dele. **Restam dois avisos, e os dois são
-opcionais**: o bundletool, para apps distribuídos como Android App Bundle em vez de APK, e o
-GStreamer, para transmitir a tela do aparelho ao computador. O Tickets é um APK e nada neste curso
+opcionais.** Um é o bundletool, para apps distribuídos como Android App Bundle em vez de APK. O outro é
+o GStreamer, para transmitir a tela do aparelho ao computador. O Tickets é um APK e nada neste curso
 transmite tela, então deixe-os. O `ffmpeg` foi encontrado porque a máquina de gravação por acaso o
-tem; na sua essa linha pode ser um terceiro aviso opcional, para gravar a tela em vídeo, e a mesma
+tem. Na sua essa linha pode ser um terceiro aviso opcional, para gravar a tela em vídeo, e a mesma
 resposta vale.
 
 ## O servidor
@@ -136,11 +136,11 @@ ana@laptop:~/boxoffice$ npx appium
 
 **`0.0.0.0` quer dizer todas as interfaces de rede do computador**, e o segundo endereço da lista é
 o endereço da própria máquina de gravação na rede dela. Qualquer pessoa que alcance esse endereço
-na porta 4723, no mesmo Wi-Fi do escritório ou do café, pode abrir uma sessão no seu servidor:
-instalar um app no celular conectado, ler a tela dele, tirar uma captura de tela. Um servidor que
-comanda aparelhos merece pelo menos o cuidado de um que vende ingressos, então pare-o com Ctrl-C e
-**inicie-o só no endereço de loopback**, num terminal só para ele, em `~/boxoffice`, e deixe-o
-rodando enquanto trabalha:
+na porta 4723, no mesmo Wi-Fi do escritório ou do café, pode abrir uma sessão no seu servidor.
+Ela consegue instalar um app no celular conectado, ler a tela dele, tirar uma captura de tela. Um
+servidor que comanda aparelhos merece pelo menos o cuidado de um que vende ingressos. Pare-o com
+Ctrl-C e **inicie-o só no endereço de loopback**, num terminal só para ele, em `~/boxoffice`.
+Deixe-o rodando enquanto trabalha:
 
 ```
 ana@laptop:~/boxoffice$ npx appium --address 127.0.0.1
@@ -159,8 +159,8 @@ dbug Appium Creating hash file directory: /home/ana/boxoffice/node_modules/.cach
 ```
 
 `Non-default server args` repete a única escolha que você fez. O resto diz onde o Appium guarda os
-drivers (o projeto, que ele detectou), quais drivers carregou, e que agora escuta em `127.0.0.1`,
-que só programas do seu próprio computador alcançam. A linha `dbug` é contabilidade do Appium: ele
+drivers, no projeto que ele detectou, e quais drivers carregou. Agora ele escuta em `127.0.0.1`,
+que só programas do seu próprio computador alcançam. A linha `dbug` é contabilidade do Appium. Ele
 guarda uma impressão digital do `package.json` numa pasta de cache, para perceber quando a lista de
 drivers muda, e a maioria dos comandos do Appium imprime uma. Faça a ele, de outro terminal, a
 pergunta que todo teste faz primeiro:
@@ -179,5 +179,5 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/status | jq
 ```
 
 `ready: true` e a versão: o servidor está de pé e disposto a iniciar uma sessão. Ele não diz que há
-um aparelho conectado, e nem poderia: o servidor só fica sabendo para qual aparelho é uma sessão
+um aparelho conectado, e nem poderia. O servidor só fica sabendo para qual aparelho é uma sessão
 quando a sessão pede.

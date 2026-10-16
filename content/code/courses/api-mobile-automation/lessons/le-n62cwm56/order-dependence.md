@@ -50,8 +50,8 @@ test('sh-103 sells out at four seats', async () => {
 });
 ```
 
-Both use the boxoffice on `BASE`, the one running in your other terminal, and both are correct about
-a boxoffice that has just started. Restart boxoffice with Ctrl-C and the same command, so it holds a
+Both use the boxoffice on `BASE`, the one running in your other terminal. Both are correct about a
+boxoffice that has just started. Restart boxoffice with Ctrl-C and the same command, so it holds a
 fresh sh-103, and run the second one:
 
 ```
@@ -111,7 +111,7 @@ not ok 1 - two seats of sh-103 leave two
 # duration_ms 201.28103
 ```
 
-`0 !== 2`: the first run sold two seats, the second sold the other two, and the test expected two to
+`0 !== 2`: the first run sold two seats and the second sold the other two. The test expected two to
 be left, because it was written as if it were the only thing that had ever happened to sh-103.
 Restart boxoffice once more and run both, one file at a time with `--test-concurrency=1`:
 
@@ -137,10 +137,10 @@ not ok 2 - sh-103 sells out at four seats
 ```
 
 **node sorts the files it is given**, so `seats` runs before `sellout` either way. That is useful to
-know and no help: the order is still an accident of the names, and renaming a file would move the
-failure. Without `--test-concurrency=1`, Node runs files in parallel, one process each, and which
-request reaches sh-103 first becomes a race between processes. The same two files can then pass on
-your machine and fail on a slower one.
+know and no help. The order is still an accident of the names, and renaming a file would move the
+failure. Without `--test-concurrency=1`, Node runs files in parallel, one process each. Which request
+reaches sh-103 first then becomes a race between processes, and the same two files can pass on your
+machine and fail on a slower one.
 
 ## The fix: state that belongs to the test
 
@@ -179,9 +179,9 @@ export function start(file, env = {}) {
 }
 ```
 
-**It rejects if the program exits before it listens**, so a server that could not start, because the
-port was taken, say, fails the test file in `before` with the reason, instead of letting every test
-time out against nothing. Now the fixed first test; save it as `tests/seats.test.mjs`:
+**It rejects if the program exits before it listens.** A server that could not start, because the
+port was taken, say, fails the test file in `before` with the reason, instead of every test timing
+out against nothing. Now the fixed first test; save it as `tests/seats.test.mjs`:
 
 ```js
 // tests/seats.test.mjs: buying seats takes them off the show.
@@ -253,5 +253,5 @@ ok 2 - sh-103 sells out at four seats
 ```
 
 **Same answer in any order, any number of times**, because neither test can see what the other did.
-The cost is one server started per file, a fraction of a second here, which is cheap next to an
+The cost is one server started per file, a fraction of a second here. That is cheap next to an
 afternoon spent on a test that fails one run in five.

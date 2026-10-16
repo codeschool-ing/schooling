@@ -3,10 +3,10 @@ title: Installing Appium into the project
 version: 1
 ---
 
-**Appium is an npm package, and it goes into the boxoffice project like Newman did in lesson 6**,
-so that the version is written in `package.json` and a teammate's `npm ci` gets the same one.
-Most guides install it globally with `npm install -g appium`; that works, and leaves the version in
-a command somebody typed once, which is the habit lesson 6 talked you out of. The client library,
+**Appium is an npm package, and it goes into the boxoffice project like Newman did in lesson 6.**
+The version is then written in `package.json`, and a teammate's `npm ci` gets the same one. Most
+guides install it globally with `npm install -g appium`. That works, and leaves the version in a
+command somebody typed once, which is the habit lesson 6 talked you out of. The client library,
 WebdriverIO, goes in beside it. In `~/boxoffice`:
 
 ```
@@ -37,9 +37,9 @@ Run `npm audit` for details.
 ```
 
 `--save-exact` pins both, as it pinned Newman: Appium 3.8.0 and WebdriverIO 9.32.0. **The 35
-vulnerabilities are npm's audit of the whole tree**, Newman's 19 of lesson 6 included, and lesson 6's
-reasoning holds for the new ones: these are tools that run on your machine against servers you
-started, never code that reaches a user, so the versions stay pinned and the report is read again
+vulnerabilities are npm's audit of the whole tree**, Newman's 19 of lesson 6 included. Lesson 6's
+reasoning holds for the new ones. These are tools that run on your machine against servers you
+started, never code that reaches a user. So the versions stay pinned, and the report is read again
 when a new release comes out. `npx` finds the program inside the project:
 
 ```
@@ -50,8 +50,8 @@ ana@laptop:~/boxoffice$ npx appium --version
 ## The Android driver
 
 Appium arrives with no drivers at all. **Each driver is a package of its own, installed through
-Appium**, which records it in the same `package.json` because Appium noticed it is installed in a
-project rather than globally. The command prints a line for every step as it goes; the last three
+Appium.** Appium records it in the same `package.json`, because it noticed it is installed in a
+project rather than globally. The command prints a line for every step as it goes. The last three
 are the result, so keep those:
 
 ```
@@ -68,8 +68,8 @@ They say what the driver answers to: sessions that ask for `automationName` `UiA
 
 Each driver carries a **doctor**, a list of checks for what it needs on the computer. Run it before
 anything else, because what it finds would otherwise arrive as a failed session much later. It
-prints one line per check, with a tick or a cross in front, then a summary, and last a line of
-advice; `grep` keeps the summary and the advice here:
+prints one line per check, with a tick or a cross in front. Then come a summary and a line of
+advice, and `grep` keeps those two here:
 
 ```
 ana@laptop:~/boxoffice$ npx appium driver doctor uiautomator2 2>&1 | grep -E 'fixes needed|Bye'
@@ -104,9 +104,9 @@ export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 ```
 
 If you skipped lesson 7, Android Studio carries a JDK of its own, in a folder called `jbr` inside
-the place it is installed: `/Applications/Android Studio.app/Contents/jbr/Contents/Home` on a Mac,
-and `C:\Program Files\Android\Android Studio\jbr` on Windows, where it goes in a user variable
-named `JAVA_HOME`. Then the doctor again:
+the place it is installed. On a Mac that is `/Applications/Android Studio.app/Contents/jbr/Contents/Home`.
+On Windows it is `C:\Program Files\Android\Android Studio\jbr`, and it goes in a user variable named
+`JAVA_HOME`. Then the doctor again:
 
 ```
 ana@laptop:~/boxoffice$ npx appium driver doctor uiautomator2 2>&1 | grep -E 'fixes needed|Bye'
@@ -115,11 +115,11 @@ info Doctor Bye! All issues have been fixed!
 ```
 
 The full output now has `JAVA_HOME is set to: /usr/lib/jvm/java-21-openjdk-amd64` passed, and a
-second check that `bin/java` exists under it. **Two warnings remain, and both are optional**:
-bundletool, for apps shipped as Android App Bundles rather than an APK, and GStreamer, for
+second check that `bin/java` exists under it. **Two warnings remain, and both are optional.** One is
+bundletool, for apps shipped as Android App Bundles rather than an APK. The other is GStreamer, for
 streaming the device's screen to the computer. Tickets is an APK and nothing in this course
 streams a screen, so leave them. `ffmpeg` was found because the recording machine happens to have
-it; on yours that line may be a third optional warning, for recording the screen as a video, and
+it. On yours that line may be a third optional warning, for recording the screen as a video, and
 the same answer applies.
 
 ## The server
@@ -135,10 +135,10 @@ ana@laptop:~/boxoffice$ npx appium
 
 **`0.0.0.0` means every network interface of the computer**, and the second address it lists is
 the recording machine's own address on its network. Anybody who can reach that address on port
-4723, on the same office or café Wi-Fi, can open a session on your server: install an app on the
-attached phone, read its screen, take a screenshot. A server that drives devices deserves at least
-the care of one that sells tickets, so stop it with Ctrl-C and **start it on the loopback address
-only**, in a terminal of its own, in `~/boxoffice`, and leave it running while you work:
+4723, on the same office or café Wi-Fi, can open a session on your server. They can install an app
+on the attached phone, read its screen, take a screenshot. A server that drives devices deserves at
+least the care of one that sells tickets. Stop it with Ctrl-C and **start it on the loopback address
+only**, in a terminal of its own, in `~/boxoffice`. Leave it running while you work:
 
 ```
 ana@laptop:~/boxoffice$ npx appium --address 127.0.0.1
@@ -157,10 +157,10 @@ dbug Appium Creating hash file directory: /home/ana/boxoffice/node_modules/.cach
 ```
 
 `Non-default server args` repeats the one choice you made. The rest says where Appium keeps its
-drivers (the project, which it detected), which drivers it loaded, and that it listens on
-`127.0.0.1` now, which only programs on your own computer can reach. The `dbug` line is Appium's
-bookkeeping: it keeps a fingerprint of `package.json` in a cache folder, to notice when the list of
-drivers changes, and most Appium commands print one. Ask it, from another terminal,
+drivers, in the project it detected, and which drivers it loaded. It listens on `127.0.0.1` now,
+which only programs on your own computer can reach. The `dbug` line is Appium's bookkeeping. It
+keeps a fingerprint of `package.json` in a cache folder, to notice when the list of drivers changes,
+and most Appium commands print one. Ask it, from another terminal,
 the question every test asks first:
 
 ```
@@ -176,6 +176,5 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/status | jq
 }
 ```
 
-`ready: true` and the version: the server is up and willing to start a session. It does not say a
-device is attached, and it could not: the server learns which device a session is for when the
-session asks.
+`ready: true` and the version: the server is up and willing to start a session. It does not say a device is attached, and it could not. The server learns which device a session
+is for when the session asks.

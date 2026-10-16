@@ -3,7 +3,7 @@ title: Que defeito aparece onde
 version: 1
 ---
 
-**Antes de escolher onde testar, nomeie o defeito que você teme; a tabela diz então onde ele pode
+**Antes de escolher onde testar, nomeie o defeito que você teme. A tabela diz então onde ele pode
 ser visto.** Quem pergunta "funciona num aparelho real?" pergunta largo demais para receber uma
 resposta útil. "O lembrete sobrevive à economia de bateria de um Xiaomi?" tem uma, e ela é um
 celular específico.
@@ -31,15 +31,15 @@ a imitação. *Esconde* quer dizer que ele não vai aparecer ali de jeito nenhum
 
 Leia a última coluna de cima a baixo e ela diz *mostra* em toda parte, que é o argumento a favor dos
 aparelhos reais. Leia as seis primeiras linhas de lado e o emulador e o simulador também dizem
-*mostra*, que é o argumento para fazer a maior parte do trabalho neles: **essas linhas são a maioria
-dos defeitos que uma equipe encontra**, e são encontradas mais rápido onde um aparelho volta ao
+*mostra*. Esse é o argumento para fazer a maior parte do trabalho neles: **essas linhas são a maioria
+dos defeitos que uma equipe encontra**. Elas são encontradas mais rápido onde um aparelho volta ao
 estado inicial num segundo.
 
 ## Relatando um defeito de um aparelho
 
 Quando um defeito só aparece num celular real, o relatório precisa dizer qual celular, porque a
 próxima pessoa vai tentar em outro e não ver nada. `manual-testing` ensinou o formato de um
-relatório de defeito; para um aparelho ele leva o fabricante, o modelo, a versão do Android e o build
+relatório de defeito. Para um aparelho ele leva o fabricante, o modelo, a versão do Android e o build
 do app. No Android tudo isso está em *Configurações › Sobre o telefone*, e o adb lê de um celular
 conectado sem ninguém digitar:
 
@@ -51,6 +51,6 @@ adb shell getprop ro.build.fingerprint
 ```
 
 A última nomeia o build exato do Android do fabricante, que é o que decide se o próximo celular do
-mesmo modelo se comporta igual. Esses comandos precisam de um aparelho, e a máquina de gravação não
+mesmo modelo se comporta igual. Esses comandos precisam de um aparelho. A máquina de gravação não
 tinha nenhum, então as respostas deles não aparecem. Num iPhone os mesmos dados estão em *Ajustes ›
 Geral › Sobre*.

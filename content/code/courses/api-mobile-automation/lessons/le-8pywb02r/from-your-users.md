@@ -3,16 +3,16 @@ title: Choosing from your own users
 version: 1
 ---
 
-**Your analytics already know which phones your users have; the matrix starts there.** Every
+**Your analytics already know which phones your users have, and the matrix starts there.** Every
 analytics tool an app carries records the device model, its maker and its Android version with each
-session, and Google Play Console shows the same for every install. Exported, it is a table of
+session. Google Play Console shows the same for every install. Exported, it is a table of
 devices and how much they were used. What you want from it is the shortest list of values that
-covers most of the use, and a short script answers that for any column.
+covers most of the use. A short script answers that for any column.
 
 ## The export
 
 Real exports have more columns and many more rows. This one is small enough to read, and **its
-numbers are invented for this lesson**: they have the shape of a Brazilian app's audience, many
+numbers are invented for this lesson.** They have the shape of a Brazilian app's audience, many
 Samsung, Motorola and Xiaomi phones in the middle of the price range, and nothing more. Make a
 folder `matrix` in your boxoffice project and save it as `matrix/sessions.csv`:
 
@@ -38,8 +38,8 @@ LG,K62,11,600
 
 ## The script
 
-It reads the export, adds up the sessions for each value of the column you name, sorts them from
-the most used, and prints the running share until a target you choose, 90% unless you say
+It reads the export and adds up the sessions for each value of the column you name. It sorts them
+from the most used, and prints the running share until a target you choose, 90% unless you say
 otherwise. Save it as `matrix/coverage.mjs`:
 
 ```js
@@ -94,8 +94,8 @@ android         sessions    share  running
 ```
 
 **Three versions out of five cover 92.1% of the sessions**, which is past the 90% asked for. Android
-14 alone is 65.2%. The 3.2% on Android 11 is two old models; they do not go away, they go to the long tail, tested less often and
-in a device cloud.
+14 alone is 65.2%. The 3.2% on Android 11 is two old models. They do not go away: they go to the long tail, tested
+less often and in a device cloud.
 
 ## Makers
 
@@ -112,7 +112,7 @@ LG                   600     0.7%   100.0%
 ```
 
 Three makers cover 96.4%. A matrix with Samsung, Motorola and Xiaomi in it reaches nearly everyone
-this app has; Google's own Pixel, the phone the emulator imitates most closely, is 1.1% here.
+this app has. Google's own Pixel, the phone the emulator imitates most closely, is 1.1% here.
 
 ## Models
 
@@ -139,15 +139,15 @@ K62                  600     0.7%   100.0%
 ```
 
 **Models are where the tail is long.** Eleven of the sixteen are needed to reach 90%, and a real
-export would have hundreds, each a fraction of a percent. No team owns eleven phones for one app,
-which is why lesson 19's shelf holds two or three chosen ones, and why the models section 05 rents
+export would have hundreds, each a fraction of a percent. No team owns eleven phones for one app.
+That is why lesson 19's shelf holds two or three chosen ones, and why the models section 05 rents
 are picked from this list, from the top down.
 
 ## Reading it as a tester
 
-- **Pick a target before you look**, 90% or 95%, and write it in the test plan. A target chosen
+- Pick a target before you look, 90% or 95%, and write it in the test plan. A target chosen
   after seeing the numbers tends to land wherever the list was convenient to stop.
-- **Run it again every few months.** Phones are replaced; the version that was 65% this year is the
+- Run it again every few months. Phones are replaced, and the version that was 65% this year is the
   long tail in three.
-- **Check the oldest version separately.** The minimum SDK the app declares is a promise to those
-  users too, however few, and a crash there is a defect whatever its share.
+- Check the oldest version separately. The minimum SDK the app declares is a promise to those
+  users too, however few. A crash there is a defect whatever its share.

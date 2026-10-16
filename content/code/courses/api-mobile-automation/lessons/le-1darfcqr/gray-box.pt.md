@@ -5,13 +5,13 @@ version: 1
 
 **A única ideia do Detox é que um teste nunca deveria precisar esperar por conta própria.** Antes de
 cada ação e de cada expectativa, o Detox espera até o app estar ocioso, e só então toca ou olha. A
-lição 15 esperava explicitamente, elemento por elemento, de fora; a lição 16 deixou o Espresso esperar
+lição 15 esperava explicitamente, elemento por elemento, de fora. A lição 16 deixou o Espresso esperar
 a thread principal e depois precisou ensiná-lo sobre a carga. O Detox vai além dos dois, porque um app
 React Native tem mais lugares onde o trabalho se esconde, e o Detox os observa por você.
 
 A imagem errada é a do Detox como um Appium para React Native: um driver de fora, mais rápido de
 configurar. Ele está mais perto do Espresso, e no Android é construído sobre o Espresso. O Detox põe
-uma pequena biblioteca dentro do app, que fala com o teste por um WebSocket, e a biblioteca consegue
+uma pequena biblioteca dentro do app, que fala com o teste por um WebSocket. A biblioteca consegue
 ver o que o app está fazendo.
 
 ## O que "ocioso" quer dizer para o Detox
@@ -28,8 +28,8 @@ qualquer uma destas coisas for verdade:
 | a thread de JavaScript está ocupada, ou o React Native ainda está passando trabalho entre o JavaScript e o lado nativo | a atualização de estado depois que a resposta chega |
 
 A segunda linha é aquela para a qual a lição 16 precisou de um idling resource. **O Detox sabe da rede
-sozinho**: a requisição ao boxoffice mantém o app ocupado até a resposta chegar e a lista ser
-desenhada, e a spec da seção 05 não tem espera nenhuma.
+sozinho.** A requisição ao boxoffice mantém o app ocupado até a resposta chegar e a lista ser
+desenhada. A spec da seção 05 não tem espera nenhuma.
 
 ## Três jeitos de esperar, comparados
 
@@ -45,5 +45,5 @@ consegue rodar contra um app que nunca fica ocioso, por mais correta que a tela 
 assunto da seção 06.
 
 **A caixa cinza tem aqui o mesmo preço que na lição 16.** O Detox conhece o app o bastante para
-esperá-lo, e um teste pode desligar esse conhecimento, o que a seção 06 precisa fazer. Desligue-o para
+esperá-lo. Um teste pode desligar esse conhecimento, o que a seção 06 precisa fazer. Desligue-o para
 a parte do app que nunca se acalma, e nunca para uma suíte inteira porque um teste estava lento.

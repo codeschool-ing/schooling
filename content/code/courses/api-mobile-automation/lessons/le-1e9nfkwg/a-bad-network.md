@@ -4,19 +4,20 @@ version: 1
 ---
 
 **To test on a poor connection, you need one that is poor on demand, in the same way every time.**
-Real bad networks are neither: the tunnel is not there when the test runs, and when it is, it is
+Real bad networks are neither. The tunnel is not there when the test runs, and when it is, it is
 bad differently on each pass. So you build one. A **proxy** is a program that sits between a client
-and a server, receives the client's request, sends it on, and passes the answer back. A proxy that
-holds answers, sends them slowly or throws some away is a bad network you can start with one
-command, in front of boxoffice, of the payment stub, or of anything else that speaks HTTP.
+and a server. It receives the client's request, sends it on, and passes the answer back. A proxy
+that holds answers, sends them slowly or throws some away is a bad network you can start with one
+command. It can sit in front of boxoffice, of the payment stub, or of anything else that speaks
+HTTP.
 
 ## The proxy
 
 About eighty lines of Node with no dependencies, like boxoffice. It forwards every request
-untouched and spoils only the answer, which is a choice worth understanding before using it: **the
+untouched and spoils only the answer. That choice is worth understanding before using it: **the
 request always arrives**, so whatever the server does, it has done. What the client loses is the
-news. That is the half of a failure a client cannot tell apart from a request that never left, and
-so the half it must plan for. Save it as `slow-proxy.mjs`:
+news. A client cannot tell that half of a failure apart from a request that never left, so it is
+the half the client must plan for. Save it as `slow-proxy.mjs`:
 
 ```js
 // slow-proxy.mjs: a bad network between a client and a server, on purpose.
@@ -136,7 +137,7 @@ http.createServer(async (req, res) => {
 ```
 
 It needs boxoffice running on 8080, as always. Start the proxy in a terminal of its own, in
-`~/boxoffice`; with nothing set it changes nothing:
+`~/boxoffice`. With nothing set, it changes nothing:
 
 ```
 ana@laptop:~/boxoffice$ node slow-proxy.mjs
@@ -156,7 +157,7 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{time_total}\n' l
 200 0.023955
 ```
 
-Both under three hundredths of a second: the extra hop costs next to nothing. Stop the proxy with
+Both are under three hundredths of a second: the extra hop costs next to nothing. Stop the proxy with
 Ctrl-C and start it holding every answer for 800 ms:
 
 ```
@@ -184,9 +185,9 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{size_download} b
 ```
 
 The first byte arrives at once and the last after nearly two seconds, for 379 bytes. Two hundred
-bytes a second is far slower than even the slowest profile of the emulator in section 05, chosen
-so the effect is easy to see; at that rate a picture of 200 kilobytes would take about seventeen
-minutes. **Bandwidth punishes size**, and a test of it belongs on the screens that load the most.
+bytes a second is far slower than even the slowest profile of the emulator in section 05. It was
+chosen so the effect is easy to see. At that rate a picture of 200 kilobytes would take about
+seventeen minutes. **Bandwidth punishes size**, and a test of it belongs on the screens that load the most.
 
 ## Loss
 
@@ -219,15 +220,15 @@ slow proxy listening on http://localhost:8070, forwarding to http://localhost:80
 10 GET /v1/shows 200, answer sent
 ```
 
-**Two lost, not three.** A share is a chance per request, and ten requests are few, which is why
-the seed matters: with `SEED` unchanged, the same two are lost on every run, and a test that failed
+**Two lost, not three.** A share is a chance per request, and ten requests are few. That is why
+the seed matters. With `SEED` unchanged, the same two are lost on every run, and a test that failed
 because of the second request fails again for the same reason. Change the seed to see a different
 bad day.
 
 ## Slower than the client will wait
 
 The last case is the one section 02 ended on: an answer slower than the client's timeout. Tickets
-waits five seconds; curl's `--max-time 5` waits the same. With the proxy holding answers for six:
+waits five seconds, and curl's `--max-time 5` waits the same. With the proxy holding answers for six:
 
 ```
 ana@laptop:~/boxoffice$ DELAY=6000 node slow-proxy.mjs
@@ -238,6 +239,5 @@ curl: (28) Operation timed out after 5002 milliseconds with 0 bytes received
 exit 28
 ```
 
-`curl: (28)` is curl's code for a timeout, after 5002 ms and no bytes at all. **Six seconds is a
-working network** that boxoffice answered through in a few milliseconds, and to the client it is
-indistinguishable from no network. Section 05 shows what Tickets tells its user when it happens.
+`curl: (28)` is curl's code for a timeout, after 5002 ms and no bytes at all. **Six seconds is a working network**, one that boxoffice answered through in a few milliseconds.
+To the client it is indistinguishable from no network. Section 05 shows what Tickets tells its user when it happens.

@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Há dois jeitos de dar ao app uma rede ruim: tirar a rede do celular, ou pôr o proxy lento entre o
-app e o boxoffice.** O primeiro é o que uma pessoa num elevador tem; o segundo é o que uma pessoa num
+app e o boxoffice.** O primeiro é o que uma pessoa num elevador tem. O segundo é o que uma pessoa num
 trem tem, e só o segundo é igual em toda execução. Um plano de testes precisa dos dois.
 
 ## O que o Tickets faz, lido do código dele
@@ -21,26 +21,27 @@ ana@laptop:~/boxoffice$ grep -n 'Timeout\|catch\|return Loaded\|Loaded\.\(Fresh\
 64:            Loaded.Offline(parse(body), saved.getString("at", "") ?: "")
 ```
 
-Leia com os dois limites da seção 02 em mente: cinco segundos para conectar (linha 55), cinco
-segundos de silêncio durante a leitura (linha 56). Dentro deles, uma lista nova (linha 61). Além de
-qualquer um, ou em qualquer outro erro, o `catch` da linha 62: a cópia salva com o horário dela, se
-houver uma (linha 64), e se não houver, `Failed`, que a tela de lista mostra como a linha de erro
-(linha 63). Três coisas decorrem disso sem que nenhuma linha as diga, e cada uma é uma pergunta para
+Leia com os dois limites da seção 02 em mente. A linha 55 dá cinco segundos para conectar, e a
+linha 56 cinco segundos de silêncio durante a leitura. Dentro deles, a linha 61 devolve uma lista
+nova. Além de qualquer um, ou em qualquer outro erro, entra o `catch` da linha 62. A linha 64 devolve
+a cópia salva com o horário dela, se houver uma. Se não houver, a linha 63 devolve `Failed`, que a
+tela de lista mostra como a linha de erro. Três coisas decorrem disso sem que nenhuma linha as diga, e cada uma é uma pergunta para
 um teste:
 
-- **Nada aparece enquanto uma carga roda.** A lista mantém as linhas antigas, ou nenhuma, até o
-  `display` ser chamado; não há indicador, então uma atualização que espera cinco segundos parece uma
+- Nada aparece enquanto uma carga roda. A lista mantém as linhas antigas, ou nenhuma, até o
+  `display` ser chamado. Não há indicador, então uma atualização que espera cinco segundos parece uma
   atualização que não fez nada.
-- **"Offline" quer dizer "não deu certo".** Uma resposta de seis segundos, por uma rede que funciona,
-  termina na faixa *Offline: showing the list from…*: verdade sobre a lista, mentira sobre o celular.
-- **O limite de leitura é para silêncio, não para a resposta inteira.** O `readTimeout` do Java
-  dispara quando nenhum dado chega por esse tempo, então uma resposta que pinga alguns bytes de cada
+- "Offline" quer dizer "não deu certo". Uma resposta de seis segundos, por uma rede que funciona,
+  termina na faixa *Offline: showing the list from…*. Isso é verdade sobre a lista e mentira sobre o
+  celular.
+- O limite de leitura é para silêncio, não para a resposta inteira. O `readTimeout` do Java
+  dispara quando nenhum dado chega por esse tempo. Uma resposta que pinga alguns bytes de cada
   vez pode levar um minuto e nunca dispará-lo.
 
 ## Tirando a rede
 
 No emulador, num terminal. Como tudo do lado do aparelho nesta lição, estes não foram rodados para
-este curso, por falta de emulador (lição 14):
+este curso, por falta de emulador, como a lição 14 explicou:
 
 ```sh
 adb shell svc wifi disable
@@ -52,18 +53,18 @@ adb shell svc data enable
 ```
 
 O `svc` liga e desliga Wi-Fi e dados móveis separadamente, que é como você testa um celular que cai de
-um para o outro; o modo avião desliga todos os rádios de uma vez. Depois de cada um, abra o Tickets e
+um para o outro. O modo avião desliga todos os rádios de uma vez. Depois de cada um, abra o Tickets e
 aperte Atualizar, e compare a tela com os três resultados acima. Antes de confiar num teste construído
-sobre uma dessas chaves, confira à mão que a requisição falha de verdade no seu emulador: o link dele
+sobre uma dessas chaves, confira à mão que a requisição falha de verdade no seu emulador. O link dele
 com o seu computador não é um rádio de verdade, e este curso não pôde conferir o que cada chave corta.
 
-Pelo Appium, o driver UiAutomator2 tem as mesmas chaves: `mobile: setConnectivity`, com `{ wifi:
-false, data: false }` ou `{ airplaneMode: true }`, e `mobile: getConnectivity` para lê-las de volta.
+Pelo Appium, o driver UiAutomator2 tem as mesmas chaves. O `mobile: setConnectivity` recebe `{ wifi:
+false, data: false }` ou `{ airplaneMode: true }`, e o `mobile: getConnectivity` as lê de volta.
 
 ## Uma rede lenta no emulador
 
 O emulador consegue deixar a própria rede lenta. Ele pode iniciar assim, com `-netspeed` e
-`-netdelay`, e o texto de ajuda dele, que não precisa de emulador rodando, lista os perfis:
+`-netdelay`. O texto de ajuda dele, que não precisa de emulador rodando, lista os perfis:
 
 ```
 ana@laptop:~/boxoffice$ emulator -help-netspeed
@@ -111,22 +112,21 @@ ana@laptop:~/boxoffice$ emulator -help-netspeed
 
 Então `emulator -avd Pixel_8_API_35 -netspeed edge -netdelay gprs` inicia o aparelho da lição 14 num
 link EDGE com o atraso do GPRS. Um emulador já rodando aceita os mesmos perfis pelo console dele:
-`adb emu network speed edge` e `adb emu network delay gprs`, e o `mobile: networkSpeed` do Appium,
+`adb emu network speed edge` e `adb emu network delay gprs`. O `mobile: networkSpeed` do Appium,
 `{ speed: 'edge' }`, faz o mesmo. O cabeçalho desse texto de ajuda diz que os números são kbits/s e a
-tabela escreve KiB/s; leia os nomes dos perfis, que são o que você digita, e meça o efeito em vez de
+tabela escreve KiB/s. Leia os nomes dos perfis, que são o que você digita, e meça o efeito em vez de
 confiar em qualquer uma das unidades.
 
 **O estrangulamento do emulador é amplo**: ele deixa lento tudo o que o aparelho faz, o sistema
-inclusive. O proxy lento deixa lentas as respostas de um servidor, exatamente na medida que você
-define, e consegue perdê-las, o que as configurações do emulador não conseguem. Para um teste que
+inclusive. O proxy lento deixa lentas as respostas de um servidor, exatamente na medida que você define. Ele também consegue perdê-las, o que as configurações do emulador não conseguem. Para um teste que
 precisa terminar do mesmo jeito toda vez, o proxy é o melhor instrumento.
 
 ## O proxy num teste de Espresso
 
-O emulador alcança o seu computador em `10.0.2.2` (lição 14), então alcança o proxy em
-`http://10.0.2.2:8070`, e o arquivo de segurança de rede da lição 14 já permite HTTP puro para esse
+O emulador alcança o seu computador em `10.0.2.2`, como a lição 14 mostrou, então alcança o proxy em
+`http://10.0.2.2:8070`. O arquivo de segurança de rede da lição 14 já permite HTTP puro para esse
 endereço em qualquer porta. O `OfflineTest` da lição 16 apontou o `Shows.baseUrl` para uma porta onde
-nada responde; este teste o aponta para proxies que respondem, tarde demais e bem a tempo. Inicie dois
+nada responde. Este teste o aponta para proxies que respondem, tarde demais e bem a tempo. Inicie dois
 em dois terminais, ambos na frente do boxoffice:
 
 ```sh
@@ -204,15 +204,15 @@ class SlowNetworkTest {
 }
 ```
 
-Os dois testes deixam a primeira carga chegar direto ao boxoffice, para uma cópia ser salva, depois
+Os dois testes deixam a primeira carga chegar direto ao boxoffice, para uma cópia ser salva. Depois
 põem o `baseUrl` atrás de um proxy e apertam Atualizar. O idling resource da lição 16 mantém o
 Espresso esperando enquanto o `Shows.busy` é maior que zero, durante todo o atraso, então nenhum dos
 testes precisa de uma espera própria. O primeiro espera a faixa, depois de cinco segundos de
-silêncio; o segundo espera nenhuma faixa e a lista, depois de três. **Juntos eles prendem o timeout
-pelos dois lados**: se alguém o aumentar para dez segundos, o primeiro falha; se alguém o baixar para
+silêncio. O segundo espera nenhuma faixa e a lista, depois de três. **Juntos eles prendem o timeout
+pelos dois lados.** Se alguém o aumentar para dez segundos, o primeiro falha. Se alguém o baixar para
 dois, falha o segundo. Um teste de um lado só deixaria o limite andar para o outro lado sem ninguém
 notar.
 
 **Esta classe não foi compilada nem rodada para este curso**, pelos motivos que a lição 16 dá. No seu
-computador ela roda com os outros testes instrumentados, `./gradlew connectedDebugAndroidTest`, com o
-boxoffice e os dois proxies rodando.
+computador ela roda com os outros testes instrumentados, `./gradlew connectedDebugAndroidTest`, enquanto
+o boxoffice e os dois proxies estão rodando.

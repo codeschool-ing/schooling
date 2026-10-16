@@ -6,7 +6,7 @@ version: 1
 **O emulador roda o Android com fidelidade e o celular sem ela.** Um defeito na lógica do app, nas
 telas, nos layouts em outro idioma ou tamanho, nas permissões ou no tratamento de uma requisição que
 falhou aparece no emulador exatamente como num celular. Um defeito que mora no hardware, nas mudanças
-de um fabricante ou no mundo em volta do celular não aparece, e são esses que os usuários relatam
+de um fabricante ou no mundo em volta do celular não aparece. São esses que os usuários relatam
 com as palavras *só acontece no meu celular*.
 
 A crença comum é que um teste no emulador com a versão do Android e o tamanho de tela certos é um
@@ -17,10 +17,10 @@ muito regular. Estes são os lugares em que ele se separa de um celular no bolso
 
 O emulador empresta o processador do seu computador, e o processador de um notebook costuma ser mais
 rápido que o de um celular barato, com mais memória atrás. **Uma lista que rola macia no emulador
-pode engasgar num celular de três anos que custa um décimo do notebook**, e um app que o Android
-fecharia por usar memória demais num celular com pouca continua rodando num aparelho virtual com
-sobra. O emulador deixa você dar menos memória e menos núcleos a um aparelho quando o cria, o que
-traz parte disso de volta, e nada disso deixa o processador mais lento.
+pode engasgar num celular de três anos que custa um décimo do notebook.** Num celular com pouca
+memória, o Android fecharia um app que usa memória demais. Num aparelho virtual com sobra, o mesmo
+app continua rodando. O emulador deixa você dar menos memória e menos núcleos a um aparelho quando o
+cria, o que traz parte disso de volta. Nada disso deixa o processador mais lento.
 
 ## O desenho da tela
 
@@ -48,7 +48,7 @@ ana@laptop:~$ emulator -help-gpu | head -16
 ```
 
 `host` é o driver gráfico do seu próprio computador, e `swiftshader_indirect` é o SwiftShader, um
-renderizador que roda no processador. Nenhum dos dois é o chip do celular, então uma falha que vem
+renderizador que roda no processador. Nenhum dos dois é o chip do celular. Uma falha que vem
 de uma família de GPUs de celular, uma tela preta ou uma animação piscando, não vai aparecer aqui.
 
 ## O Android do fabricante
@@ -56,15 +56,15 @@ de uma família de GPUs de celular, uma tela preta ou uma animação piscando, n
 O emulador roda o Android do Google. A maioria dos celulares no Brasil roda uma versão do fabricante,
 com launcher próprio, ajustes próprios e, acima de tudo, **regras próprias sobre o que um app pode
 fazer em segundo plano**. Vários fabricantes param o trabalho em segundo plano com muito mais
-agressividade que o Android do Google, para poupar bateria. Então uma tarefa agendada de um app, como
-um lembrete no dia de um espetáculo, do tipo que a chave do Tickets oferece, pode disparar sempre no
-emulador e nunca numa marca específica de celular. Quem desenvolve documenta essas diferenças marca
+agressividade que o Android do Google, para poupar bateria. Pense numa tarefa agendada de um app, como
+um lembrete no dia de um espetáculo, do tipo que a chave do Tickets oferece. Ela pode disparar sempre
+no emulador e nunca numa marca específica de celular. Quem desenvolve documenta essas diferenças marca
 por marca, e só o celular daquela marca as mostra.
 
 ## Sensores, localização e a câmera
 
 Todo sensor é uma propriedade que você liga e alimenta. O GPS informa exatamente a posição digitada
-em *Extended controls*, sem nada da deriva de um celular dentro de casa; o acelerômetro gira quando
+em *Extended controls*, sem nada da deriva de um celular dentro de casa. O acelerômetro gira quando
 você gira o celular virtual, nunca porque alguém está andando. A câmera é o caso mais claro:
 
 ```
@@ -82,20 +82,20 @@ ana@laptop:~$ emulator -help-camera-back
 
 `emulated` é uma imagem desenhada em software, `webcam0` é a câmera do seu próprio computador, e
 `virtualscene` é uma sala desenhada pela qual você pode andar. **Nenhuma delas é a lente do
-celular**, então um app que lê o QR code de um ingresso pode ser testado no fluxo aqui e na leitura
-só num celular.
+celular.** Um app que lê o QR code de um ingresso pode ser testado no fluxo aqui, e na leitura só
+num celular.
 
 ## Os serviços do Google
 
 Um app que usa o Google Play services, para mapas, login com Google ou mensagens push pelo Firebase,
-precisa deles no aparelho. Todo celular certificado vendido com a loja do Google os tem; um emulador
+precisa deles no aparelho. Todo celular certificado vendido com a loja do Google os tem. Um emulador
 só os tem se a imagem de sistema disser *Google APIs* ou *Google Play*, e é por isso que a lição 14
 escolheu uma imagem *Google APIs*. Numa imagem simples esses recursos falham, e a falha é da imagem.
 
 ## A rede e os dedos
 
-A rede do emulador é a do seu computador: um cabo ou um bom Wi-Fi, estável, sem elevador, sem túnel e
-sem passagem do Wi-Fi para a rede móvel no meio de uma requisição. Ela pode ser deixada lenta de
+A rede do emulador é a do seu computador: um cabo ou um bom Wi-Fi, estável. Ela não tem
+elevador, túnel nem passagem do Wi-Fi para a rede móvel no meio de uma requisição. Ela pode ser deixada lenta de
 propósito, e a lição 22 faz isso. E um clique de mouse cai no pixel exato que você mirou, o que um
-polegar num ônibus nunca faz: um botão pequeno demais para acertar com segurança passa em todo teste
+polegar num ônibus nunca faz. Um botão pequeno demais para acertar com segurança passa em todo teste
 no emulador.

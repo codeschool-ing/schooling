@@ -5,9 +5,9 @@ version: 1
 
 **An integration test checks that two programs agree, so it has to look at both of them.** A test of
 an order that reads only boxoffice's answer proves that boxoffice said `201`. It does not prove that
-the charge was made, made once, or made for the right amount, and each of those is a way the two
-programs can disagree while boxoffice's answer looks perfect. The payments stub of lesson 11 records
-every charge it receives, so a test can read the other side as well.
+the charge was made, made once, or made for the right amount. Each of those is a way the two programs
+can disagree while boxoffice's answer looks perfect. The payments stub of lesson 11 records every
+charge it receives, so a test can read the other side as well.
 
 ## The test file
 
@@ -48,8 +48,7 @@ test('a declined charge is a 402, and the order is refused', async () => {
 });
 ```
 
-Three hooks keep its tests apart, and each is there for a reason the tests would otherwise show by
-failing:
+Three hooks keep its tests apart. Without any one of them, the tests would show why by failing:
 
 | hook | runs | why |
 |---|---|---|
@@ -58,9 +57,9 @@ failing:
 | `after` | once, after the last test | the stub is left approving for whoever uses it next |
 
 The first test is the one a screen could never run: **one charge, of 8000 cents, whose reference is
-the order's id.** The second sets the stub to decline and checks boxoffice's side of it. A test that
-switched the stub's mode and did not put it back would leave the next test, in this file or another,
-running against a provider that declines everything.
+the order's id.** The second sets the stub to decline and checks boxoffice's side of it. Suppose a
+test switched the stub's mode and did not put it back. The next test, in this file or another, would
+run against a provider that declines everything.
 
 ## Running it
 
@@ -101,7 +100,6 @@ POST /charges 201 (decline)
 PUT /__mode 200 (approve)
 ```
 
-Read it against the hooks: the `DELETE` and the `PUT` before each test, the charge, the read of the
-record by the first test, and the `PUT` back to `approve` at the end. When an integration test fails
-and its own message is not enough, **the logs of both services, side by side**, are where the answer
-is.
+Read it against the hooks: the `DELETE` and the `PUT` before each test, the charge, the first test
+reading the record, and the `PUT` back to `approve` at the end. When an integration test fails and
+its own message is not enough, the answer is in **the logs of both services, side by side**.

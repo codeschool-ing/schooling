@@ -10,7 +10,7 @@ the answer from boxoffice has already arrived and the list is filled, the test p
 not, the list has no data yet, and the test fails, having found no show to tap.
 
 On an emulator talking to boxoffice on the same computer, the answer is likely to win. On a slower
-machine, a busy CI runner or a phone on Wi-Fi, it sometimes loses, and the test fails now and then
+machine, a busy CI runner or a phone on Wi-Fi, it sometimes loses. The test then fails now and then,
 with nothing in the report that points at the cause:
 
 ```schooling-figure
@@ -19,7 +19,7 @@ with nothing in the report that points at the cause:
 
 ## Where the app counts its loads
 
-Lesson 14 wrote Tickets with this test in mind. `Shows.busy` counts the loads in flight, and the
+Lesson 14 wrote Tickets with this test in mind. `Shows.busy` counts the loads in flight. The
 list screen raises it before starting a load and lowers it after the result is on the screen:
 
 ```
@@ -29,16 +29,16 @@ tickets/app/src/main/java/example/tickets/MainActivity.kt:44:                Sho
 tickets/app/src/main/java/example/tickets/Shows.kt:39:    var busy = 0
 ```
 
-Line 39 of `MainActivity.kt` raises it on the main thread, before the thread starts; line 44 lowers
+Line 39 of `MainActivity.kt` raises it on the main thread, before the thread starts. Line 44 lowers
 it on the main thread too, inside `runOnUiThread`, after `display` has filled the list. So **while
 `busy` is above zero, the screen is not finished**, and when it is back to zero, it is.
 
 ## An idling resource
 
-Espresso's way of being told about work it cannot see is an **idling resource**: an object with a
-name that answers one question, *are you idle now?*, and that calls Espresso back when the answer
-turns to yes. Espresso asks every registered resource before every step, and waits while any of
-them says no. Save it as `tickets/app/src/androidTest/java/example/tickets/ShowsIdlingResource.kt`:
+Espresso learns about work it cannot see through an **idling resource**. That is an object with a
+name that answers one question, *are you idle now?*, and calls Espresso back when the answer turns
+to yes. Espresso asks every registered resource before every step, and waits while any of them says
+no. Save it as `tickets/app/src/androidTest/java/example/tickets/ShowsIdlingResource.kt`:
 
 ```kotlin
 // tickets/app/src/androidTest/java/example/tickets/ShowsIdlingResource.kt
@@ -71,9 +71,9 @@ class ShowsIdlingResource : IdlingResource {
 }
 ```
 
-`isIdleNow` answers from `Shows.busy`. Nothing in the app tells the resource when `busy` drops, so
-while it is busy the resource asks itself again a tenth of a second later, on the main thread, and
-calls Espresso back the first time the answer is zero. The name is what Espresso prints if it ever
+`isIdleNow` answers from `Shows.busy`. Nothing in the app tells the resource when `busy` drops. So while it is
+busy, the resource asks itself again a tenth of a second later, on the main thread. It calls Espresso
+back the first time the answer is zero. The name is what Espresso prints if it ever
 gives up waiting.
 
 The test class registers the resource before each test and removes it after. Replace the file;
@@ -143,22 +143,21 @@ class ListTest {
 }
 ```
 
-`IdlingRegistry` is Espresso's list of resources. **Unregistering matters as much as registering**:
-a resource left behind keeps answering, through every test class that runs after it, for a test
-that has finished.
+`IdlingRegistry` is Espresso's list of resources. **Unregistering matters as much as registering.**
+A resource left behind keeps answering for a test that has finished, through every test class that
+runs after it.
 
 ## Why not `Thread.sleep`
 
-`Thread.sleep(2000)` before the first `onData` fixes the race on the day it is written, and it
-is the same mistake as lesson 15's fixed pause. It makes every run two seconds
-slower whether the load took fifty milliseconds or none; it still fails the day a load takes two
-and a half; and it hides from the reader *what* the test waits for. The idling resource waits
-exactly as long as the load takes, fails with a name when it never ends, and says in the code what
-the app is doing.
+`Thread.sleep(2000)` before the first `onData` fixes the race on the day it is written. It is the
+same mistake as lesson 15's fixed pause. It makes every run two seconds slower whether the load took
+fifty milliseconds or none. It still fails the day a load takes two and a half. And it hides from
+the reader *what* the test waits for. The idling resource waits exactly as long as the load takes.
+It fails with a name when the load never ends, and says in the code what the app is doing.
 
 **If the app's developers can change the app, there is a tidier way.** Espresso publishes a small
-library, `espresso-idling-resource`, with a `CountingIdlingResource` the app itself raises and
-lowers around its work, which calls Espresso back the moment it reaches zero. Tickets uses only
-Android's own classes, so this course keeps the counter in the app and the resource in the tests;
-in a team, asking the developers for the counting resource is a fair request, and the same
-argument as lesson 14's about ids: the app helps its tests, on purpose.
+library, `espresso-idling-resource`, with a `CountingIdlingResource`. The app itself raises and
+lowers it around its work, and it calls Espresso back the moment it reaches zero. Tickets uses only
+Android's own classes, so this course keeps the counter in the app and the resource in the tests. In
+a team, asking the developers for the counting resource is a fair request. It is the same argument
+as lesson 14's about ids: the app helps its tests, on purpose.

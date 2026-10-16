@@ -3,10 +3,10 @@ title: The states, as tests
 version: 1
 ---
 
-**Section 04 predicted what Tickets keeps; this section writes the tests that check the
+**Section 04 predicted what Tickets keeps, and this section writes the tests that check the
 prediction**, from inside with Espresso and from outside with Appium. They split the work the way
 the tools allow. Espresso can recreate an activity and move it through its lifecycle, inside one
-process. Appium can kill the process and answer the permission dialog, and only it can test the row
+process. Appium can kill the process and answer the permission dialog. Only Appium can test the row
 of the table that said *lost*.
 
 ## From inside: `ActivityScenario`
@@ -14,15 +14,15 @@ of the table that said *lost*.
 Lesson 16 opened activities with `ActivityScenario.launch`. The scenario it returns can also drive
 the activity's life:
 
-- **`recreate()`** destroys the activity and creates a new one with the state the old one saved:
-  exactly what a rotation does, without rotating anything;
-- **`moveToState(Lifecycle.State.CREATED)`** stops it, as Home does, and
-  **`moveToState(Lifecycle.State.RESUMED)`** brings it back.
+- `recreate()` destroys the activity and creates a new one with the state the old one saved.
+  That is exactly what a rotation does, without rotating anything;
+- `moveToState(Lifecycle.State.CREATED)` stops it, as Home does, and
+  `moveToState(Lifecycle.State.RESUMED)` brings it back.
 
 Three tests: the list survives a rotation, the list is still there after the background, and the
-reminder switch stays on after a rotation. The third needs the permission granted first, because a
-dialog Espresso cannot answer would otherwise appear (section 03). Android's own
-`UiAutomation`, which every instrumented test can reach without a new library, grants it.
+reminder switch stays on after a rotation. The third needs the permission granted first. Otherwise a dialog Espresso cannot answer would
+appear, as section 03 showed. Android's own `UiAutomation`, which every instrumented test can reach
+without a new library, grants it.
 Save it as `tickets/app/src/androidTest/java/example/tickets/StatesTest.kt`:
 
 ```kotlin
@@ -134,13 +134,13 @@ class StatesTest {
 ```
 
 **`recreate()` is not a process death**, and it is easy to believe it is. The new activity is built
-in the same process, so `Shows`, its `baseUrl` and its `busy` counter are exactly as they were,
-while after a real process death they start again. An instrumented test cannot kill its own
+in the same process, so `Shows`, its `baseUrl` and its `busy` counter are exactly as they were.
+After a real process death they start again. An instrumented test cannot kill its own
 process and go on running, so the process half belongs to the outside.
 
 ## From outside: Appium
 
-Two tests in one file: the show's screen comes back after Android kills the app in the background,
+Two tests in one file. The show's screen comes back after Android kills the app in the background,
 and the sentence about refused notifications is still there after a rotation. The first needs the
 server started with `--allow-insecure uiautomator2:adb_shell`, as section 04 showed.
 Save it as `appium/states.test.mjs`:
@@ -213,21 +213,21 @@ test('a refusal is still explained after a rotation', {
 });
 ```
 
-The process death is the four `execute` calls in the middle: Home with no return, `am kill`
-through the shell, `queryAppState` answering `1`, *not running*, which proves the kill happened
-rather than assuming it, and `activateApp` to come back. The test then waits for the show's screen
-and checks its title, which the new process can only know from the saved intent.
+The process death is the four `execute` calls in the middle. First come Home with no return and
+`am kill` through the shell. Then `queryAppState` answers `1`, *not running*, which proves the kill
+happened rather than assuming it. Last, `activateApp` comes back. The test then waits for the show's
+screen and checks its title, which the new process can only know from the saved intent.
 
-**The second test is marked `todo`**, an option of `node:test`: it runs and its result is printed,
-with `# TODO` and the reason beside it, but it does not fail the suite. That is the honest way to
+**The second test is marked `todo`**, an option of `node:test`. It runs and its result is
+printed, with `# TODO` and the reason beside it, but it does not fail the suite. That is the honest way to
 keep a test for a defect that is known and not yet fixed. The day the fix lands, the test passes and
-the report says so, and the mark comes off. Without the mark, the suite is red until the fix,
-everybody learns to ignore it, and the next real failure arrives in a suite nobody reads.
+the report says so, and the mark comes off. Without the mark, the suite is red until the fix and everybody learns to ignore it. The next real
+failure then arrives in a suite nobody reads.
 
 **Neither file was run for this course**: no device, as before. The defect the second test is
-written for comes from reading the code in section 04, and the first thing to do on your emulator
-is to see it with your own eyes: refuse the permission, turn the emulator with its rotate button,
-and look under the switch.
+written for comes from reading the code in section 04. The first thing to do on your emulator is to
+see it with your own eyes. Refuse the permission, turn the emulator with its rotate button, and look
+under the switch.
 
 ## The defect, written up
 
@@ -253,5 +253,5 @@ The report `manual-testing` taught, with what a developer needs to reproduce it 
 > **Test.** `appium/states.test.mjs`, *a refusal is still explained after a rotation*, marked todo.
 
 A report says whether its *Actual* was seen or worked out, because a developer reads the two
-differently; on your emulator you can replace the prediction with a sighting, and the heading with
+differently. On your emulator you can replace the prediction with a sighting, and the heading with
 plain *Actual*.

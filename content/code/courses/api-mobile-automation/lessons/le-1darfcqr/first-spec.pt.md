@@ -10,7 +10,7 @@ elemento, agir sobre ele, esperar algo dele. `element(by.id(…))` acha, `.tap()
 ## O componente sob teste
 
 O `App.tsx` do modelo mostra a tela de boas-vindas do React Native. Substitua-o pela lista desta
-lição. Todo elemento que uma spec toca tem um `testID`, e o de cada linha é montado a partir do id do
+lição. Todo elemento que uma spec toca tem um `testID`. O de cada linha é montado a partir do id do
 espetáculo, `show-sh-103`, para uma spec escolher uma linha pelo que ela guarda, como o `showWithId`
 fazia na lição 16. Salve como `tickets-rn/App.tsx`:
 
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 ```
 
 Ao contrário do app, o código pôde ser conferido na máquina de gravação. O modelo vem com
-TypeScript, que lê o projeto inteiro e aponta todo tipo que não encaixa; silêncio e código de saída
+TypeScript, que lê o projeto inteiro e aponta todo tipo que não encaixa. Silêncio e código de saída
 0 querem dizer que ele não achou nenhum:
 
 ```
@@ -156,10 +156,10 @@ npx detox test -c android.emu.debug
 
 O primeiro serve o JavaScript do app ao build de debug e fica rodando. O segundo compila o app e o
 APK de teste, o passo lento, refeito só quando o código nativo muda. O terceiro inicia o AVD se ele
-não estiver rodando, instala os dois APKs e roda as specs pelo Jest, que imprime cada teste com o
+não estiver rodando e instala os dois APKs. Depois roda as specs pelo Jest, que imprime cada teste com o
 resultado.
 
-**Essa execução não foi gravada para este curso**: os APKs nunca foram compilados, pelo motivo que a
+**Essa execução não foi gravada para este curso.** Os APKs nunca foram compilados, pelo motivo que a
 seção 04 deu. O que foi gravado é o terceiro comando na máquina de gravação, que não tem AVD nenhum:
 
 ```
@@ -186,8 +186,8 @@ Ran all test suites.
 jest --config e2e/jest.config.js
 ```
 
-O Detox leu a configuração, pediu ao SDK do Android um emulador chamado `Pixel_8_API_35`, e recusou
-antes de o Jest rodar um único teste, com uma lista vazia onde estariam os emuladores disponíveis: a
-mesma resposta vazia que o `emulator -list-avds` deu na lição 14. No seu computador essa lista nomeia
-os AVDs que você tem, e **um nome no `.detoxrc.js` que não corresponde a nenhum deles falha
+O Detox leu a configuração e pediu ao SDK do Android um emulador chamado `Pixel_8_API_35`. Ele
+recusou antes de o Jest rodar um único teste, com uma lista vazia onde estariam os emuladores
+disponíveis. É a mesma resposta vazia que o `emulator -list-avds` deu na lição 14. No seu computador
+essa lista nomeia os AVDs que você tem. **Um nome no `.detoxrc.js` que não corresponde a nenhum deles falha
 exatamente assim**, o que faz dele a primeira coisa a conferir quando o Detox não inicia.

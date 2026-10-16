@@ -3,16 +3,16 @@ title: Escolhendo a partir dos seus próprios usuários
 version: 1
 ---
 
-**Os seus dados de uso já sabem que celulares os seus usuários têm; a matriz começa ali.** Toda
+**Os seus dados de uso já sabem que celulares os seus usuários têm, e a matriz começa ali.** Toda
 ferramenta de analytics que um app carrega registra o modelo do aparelho, o fabricante e a versão do
-Android a cada sessão, e o Google Play Console mostra o mesmo para cada instalação. Exportado, é uma
+Android a cada sessão. O Google Play Console mostra o mesmo para cada instalação. Exportado, é uma
 tabela de aparelhos e de quanto foram usados. O que você quer dela é a lista mais curta de valores
-que cobre a maior parte do uso, e um script curto responde isso para qualquer coluna.
+que cobre a maior parte do uso. Um script curto responde isso para qualquer coluna.
 
 ## A exportação
 
 Exportações reais têm mais colunas e muito mais linhas. Esta é pequena o bastante para ler, e **os
-números dela foram inventados para esta lição**: têm o formato do público de um app brasileiro,
+números dela foram inventados para esta lição.** Eles têm o formato do público de um app brasileiro,
 muitos celulares Samsung, Motorola e Xiaomi no meio da faixa de preço, e nada além disso. Crie uma
 pasta `matrix` no seu projeto boxoffice e salve como `matrix/sessions.csv`:
 
@@ -38,8 +38,8 @@ LG,K62,11,600
 
 ## O script
 
-Ele lê a exportação, soma as sessões de cada valor da coluna que você nomear, ordena do mais usado
-para o menos, e imprime a fatia acumulada até uma meta que você escolhe, 90% se você não disser
+Ele lê a exportação e soma as sessões de cada valor da coluna que você nomear. Ordena do mais usado
+para o menos e imprime a fatia acumulada até uma meta que você escolhe, 90% se você não disser
 outra. Salve como `matrix/coverage.mjs`:
 
 ```js
@@ -94,7 +94,7 @@ android         sessions    share  running
 ```
 
 **Três versões de cinco cobrem 92.1% das sessões**, o que passa dos 90% pedidos. O Android 14
-sozinho é 65.2%. Os 3.2% no Android 11 são dois modelos antigos; eles não somem, vão para a cauda
+sozinho é 65.2%. Os 3.2% no Android 11 são dois modelos antigos. Eles não somem: vão para a cauda
 longa, testados com menos frequência e numa nuvem de aparelhos.
 
 ## Fabricantes
@@ -112,7 +112,7 @@ LG                   600     0.7%   100.0%
 ```
 
 Três fabricantes cobrem 96.4%. Uma matriz com Samsung, Motorola e Xiaomi alcança quase todo mundo
-que este app tem; o próprio Pixel do Google, o celular que o emulador imita mais de perto, é 1.1%
+que este app tem. O próprio Pixel do Google, o celular que o emulador imita mais de perto, é 1.1%
 aqui.
 
 ## Modelos
@@ -141,14 +141,14 @@ K62                  600     0.7%   100.0%
 
 **Modelos são onde a cauda é longa.** São precisos onze dos dezesseis para chegar a 90%, e uma
 exportação real teria centenas, cada um uma fração de um por cento. Nenhuma equipe tem onze celulares
-para um app, e é por isso que a prateleira da lição 19 guarda dois ou três escolhidos, e por isso que
+para um app. É por isso que a prateleira da lição 19 guarda dois ou três escolhidos, e por isso que
 os modelos que a seção 05 aluga são tirados desta lista, de cima para baixo.
 
 ## Lendo como quem testa
 
-- **Escolha uma meta antes de olhar**, 90% ou 95%, e escreva no plano de testes. Uma meta escolhida
+- Escolha uma meta antes de olhar, 90% ou 95%, e escreva no plano de testes. Uma meta escolhida
   depois de ver os números tende a cair onde a lista era conveniente de parar.
-- **Rode de novo a cada poucos meses.** Celulares são trocados; a versão que era 65% este ano é a
+- Rode de novo a cada poucos meses. Celulares são trocados, e a versão que era 65% este ano é a
   cauda longa daqui a três.
-- **Confira a versão mais antiga em separado.** O SDK mínimo que o app declara é uma promessa para
-  esses usuários também, por poucos que sejam, e uma falha ali é defeito qualquer que seja a fatia.
+- Confira a versão mais antiga em separado. O SDK mínimo que o app declara é uma promessa para
+  esses usuários também, por poucos que sejam. Uma falha ali é defeito qualquer que seja a fatia.

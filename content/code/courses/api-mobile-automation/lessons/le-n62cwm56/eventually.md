@@ -5,14 +5,14 @@ version: 1
 
 **Some answers are right only after a while, and a test has to wait for them without guessing how
 long.** boxoffice's sales report is one. It is rebuilt in the background, `REPORT_DELAY` milliseconds
-after an order changes, 500 unless the variable says otherwise, which is how many real systems
-behave: a search index, a cache, a dashboard fed by a queue. The name for it is *eventual
-consistency*: the report will agree with the orders, just not at the instant they change.
+after an order changes, 500 unless the variable says otherwise. Many real systems behave that way: a
+search index, a cache, a dashboard fed by a queue. The name for it is *eventual consistency*: the
+report will agree with the orders, just not at the instant they change.
 
 ## Seeing the lag
 
-Restart boxoffice so the report starts from zero, get a token, then place an order and ask for the
-report on the same line, so the second request follows the first at once:
+Restart boxoffice so the report starts from zero, and get a token. Then place an order and ask for
+the report on the same line, so the second request follows the first at once:
 
 ```
 ana@laptop:~/boxoffice$ TOKEN=$(curl -s localhost:8080/oauth/token -d grant_type=client_credentials -d client_id=ci-tests -d client_secret=ci-secret | jq -r .access_token)
@@ -34,16 +34,17 @@ boxoffice; it is the test that misread the promise.
 
 The first one everybody writes is a sleep: wait a second, then read. It fails twice over. It is slow
 on every run, a full second where half of one would do, multiplied by every test that does it. And it
-still fails on the day the machine is busy and the rebuild takes longer than the second, so the suite
-goes red at random on a loaded CI runner, which is the worst kind of red.
+still fails on the day the machine is busy and the rebuild takes longer than the second. The suite
+then goes red at random on a loaded CI runner, which is the worst kind of red.
 
 The second is to stop checking: drop the assertion about the report because it "flakes". That turns
 a real promise of boxoffice's into something no test holds.
 
 ## Asking again, until a deadline
 
-The right shape is to ask, and if the answer is not yet right, wait a little and ask again, up to a
-deadline; then fail with what was still wrong. Write that as a helper, and save it as `tests/eventually.mjs`:
+The right shape is to ask, and if the answer is not yet right, wait a little and ask again. Stop at a
+deadline, and fail with what was still wrong. Write that as a helper, and save it as
+`tests/eventually.mjs`:
 
 ```js
 // tests/eventually.mjs: wait for something that becomes true later.
@@ -70,7 +71,7 @@ only costs time when something is broken. And **it throws the last real error**,
 failure says which field was wrong and what it held.
 
 The test uses it around the assertion that needs time. It starts its own boxoffice, as section 04
-taught, so no other test's orders reach its report. Save it as `tests/report.test.mjs`:
+did, so no other test's orders reach its report. Save it as `tests/report.test.mjs`:
 
 ```js
 // tests/report.test.mjs: the sales report catches up with the orders.
@@ -148,6 +149,6 @@ not ok 1 - an order shows up in the sales report
     seats: 0
 ```
 
-**The failure is the one you want to read**: exit code 1, the report still held zeros when three
-seconds ran out, and the diff shows the fields that were expected. A test that slept would have said the same thing
-with no deadline to blame, and a test that waited forever would have said nothing at all.
+**The failure is the one you want to read**: exit code 1, and the report still held zeros when three
+seconds ran out. The diff shows the fields that were expected. A test that slept would have said the
+same thing with no deadline to blame. A test that waited forever would have said nothing at all.

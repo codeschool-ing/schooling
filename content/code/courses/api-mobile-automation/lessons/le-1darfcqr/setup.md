@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Detox is three things to install, and only one of them is an npm package.** The package goes into
-the React Native project's `package.json`; the configuration file says which app and which device;
-and the Android app itself has to carry Detox's library, which is a change to its Gradle files.
+the React Native project's `package.json`. The configuration file says which app and which device.
+And the Android app itself has to carry Detox's library, which is a change to its Gradle files.
 The first two ran on the recording machine and are shown as they ran. The third could not be
 built there, and is described from Detox's own setup guide.
 
@@ -17,12 +17,12 @@ React Native's own command line creates a project from its template. In `~/boxof
 npx --yes @react-native-community/cli@20.2.0 init TicketsRN --version 0.86.3 --directory tickets-rn --pm npm --skip-git-init
 ```
 
-`TicketsRN` is the app's name, which React Native wants without dashes; `--directory` puts it in
-`tickets-rn` beside the Kotlin Tickets; `--version` pins React Native, for the reason lesson 6 pins
-everything; and `--skip-git-init` leaves out a Git repository of its own, since the project lives
-inside boxoffice's. The command downloads the template, installs its packages, several hundred of
-them, and ends with instructions for running the app on Android. Its progress lines are drawn with
-symbols this page cannot show, so its output is not reproduced; this is what it left:
+`TicketsRN` is the app's name, which React Native wants without dashes. `--directory` puts it in
+`tickets-rn` beside the Kotlin Tickets. `--version` pins React Native, for the reason lesson 6 pins
+everything. `--skip-git-init` leaves out a Git repository of its own, since the project lives
+inside boxoffice's. The command downloads the template and installs its packages, several hundred of
+them. It ends with instructions for running the app on Android. Its progress lines are drawn with
+symbols this page cannot show, so its output is not reproduced. This is what it left:
 
 ```
 ana@laptop:~/boxoffice$ ls tickets-rn
@@ -33,14 +33,14 @@ ana@laptop:~/boxoffice$ ls tickets-rn/android/app/src/main/java/com/ticketsrn
 MainActivity.kt  MainApplication.kt
 ```
 
-`App.tsx` is the app, in TypeScript; `android` and `ios` are two native projects that wrap it, the
-Android one with a `MainActivity.kt` like Tickets's; `__tests__` and `jest.config.js` are the
-template's own unit test, which uses Jest, the test runner Detox runs on too.
+`App.tsx` is the app, in TypeScript. `android` and `ios` are two native projects that wrap it, the
+Android one with a `MainActivity.kt` like Tickets's. `__tests__` and `jest.config.js` are the
+template's own unit test. It uses Jest, the test runner Detox runs on too.
 
 ## Detox
 
 Into the React Native project, not boxoffice's, because Detox belongs to that app. Change into
-`tickets-rn` first (`cd tickets-rn`); every command from here on runs there:
+`tickets-rn` first with `cd tickets-rn`. Every command from here on runs there:
 
 ```
 ana@laptop:~/boxoffice/tickets-rn$ npm install --save-dev --save-exact detox@20.51.4
@@ -78,9 +78,9 @@ Created a file at path: e2e/jest.config.js
 Created a file at path: e2e/starter.test.js
 ```
 
-`e2e/jest.config.js` tells Jest where the specs are and to run them through Detox: one at a time,
-with two minutes each, because a spec waits for an emulator to boot and an app to install.
-`e2e/starter.test.js` is an example for an app this is not; delete it, since section 05 writes the
+`e2e/jest.config.js` tells Jest where the specs are and to run them through Detox. They run one at
+a time, with two minutes each, because a spec waits for an emulator to boot and an app to install.
+`e2e/starter.test.js` is an example for an app this is not. Delete it, since section 05 writes the
 real spec:
 
 ```
@@ -143,7 +143,7 @@ module.exports = {
 | `devices.emulator` | the AVD to boot, by name: `Pixel_8_API_35`, from lesson 14 |
 | `configurations` | the pair a run asks for with `-c android.emu.debug` |
 
-**A debug build loads its JavaScript from Metro on your computer**, so `npx react-native start` has
+**A debug build loads its JavaScript from Metro on your computer.** `npx react-native start` has
 to be running in another terminal while debug tests run. A release build carries its JavaScript
 inside the APK and needs no Metro, which is one reason pipelines often test release builds.
 
@@ -158,7 +158,7 @@ com
 
 Detox's setup guide lists the changes the Android project needs so that the app carries that
 library and can be driven by it. None of them could be built on the recording machine, so they are
-named here and not shown; follow the guide for the version you installed, because these files are
+named here and not shown. Follow the guide for the version you installed, because these files are
 where React Native's template changes most between releases:
 
 1. in `android/build.gradle`, the folder above as a Maven repository, so Gradle can find the
@@ -168,7 +168,7 @@ where React Native's template changes most between releases:
 3. a small test class under `android/app/src/androidTest`, given in the guide, that starts Detox
    inside the instrumentation, the same mechanism Espresso used in lesson 16;
 4. a network security configuration allowing plain HTTP to `10.0.2.2` and `localhost`, like the one
-   Tickets has (lesson 14), because the app talks to Metro and to boxoffice over plain HTTP.
+   Tickets has from lesson 14. The app talks to Metro and to boxoffice over plain HTTP.
 
 Then `npx detox build -c android.emu.debug` runs the `build` command of the configuration, and
 writes both APKs where `binaryPath` says.

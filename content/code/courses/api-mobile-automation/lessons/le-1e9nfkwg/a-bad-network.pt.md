@@ -4,20 +4,19 @@ version: 1
 ---
 
 **Para testar numa conexão ruim, você precisa de uma que seja ruim quando pedir, do mesmo jeito toda
-vez.** As redes ruins de verdade não são nenhuma das duas coisas: o túnel não está lá quando o teste
+vez.** As redes ruins de verdade não são nenhuma das duas coisas. O túnel não está lá quando o teste
 roda, e quando está, é ruim de um jeito diferente a cada passada. Então você constrói uma. Um
-**proxy** é um programa que fica entre um cliente e um servidor, recebe a requisição do cliente,
+**proxy** é um programa que fica entre um cliente e um servidor. Ele recebe a requisição do cliente,
 repassa, e devolve a resposta. Um proxy que segura respostas, as manda devagar ou joga algumas fora é
-uma rede ruim que você liga com um comando, na frente do boxoffice, do stub de pagamento, ou de
-qualquer outra coisa que fale HTTP.
+uma rede ruim que você liga com um comando. Ele pode ficar na frente do boxoffice, do stub de
+pagamento, ou de qualquer outra coisa que fale HTTP.
 
 ## O proxy
 
 Umas oitenta linhas de Node sem dependências, como o boxoffice. Ele repassa toda requisição intacta e
-estraga só a resposta, uma escolha que vale entender antes de usá-lo: **a requisição sempre chega**,
-então o que o servidor fizer, está feito. O que o cliente perde é a notícia. Essa é a metade de uma
-falha que um cliente não consegue distinguir de uma requisição que nunca saiu, e por isso a metade
-para a qual ele precisa se preparar. Salve como `slow-proxy.mjs`:
+estraga só a resposta. Essa escolha vale ser entendida antes de usá-lo: **a requisição sempre chega**,
+então o que o servidor fizer, está feito. O que o cliente perde é a notícia. Um cliente não consegue distinguir essa metade de uma falha
+de uma requisição que nunca saiu, então é para ela que ele precisa se preparar. Salve como `slow-proxy.mjs`:
 
 ```js
 // slow-proxy.mjs: a bad network between a client and a server, on purpose.
@@ -137,7 +136,7 @@ http.createServer(async (req, res) => {
 ```
 
 Ele precisa do boxoffice rodando na 8080, como sempre. Inicie o proxy num terminal próprio, em
-`~/boxoffice`; sem nada definido, ele não muda nada:
+`~/boxoffice`. Sem nada definido, ele não muda nada:
 
 ```
 ana@laptop:~/boxoffice$ node slow-proxy.mjs
@@ -157,7 +156,7 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{time_total}\n' l
 200 0.023955
 ```
 
-Os dois abaixo de três centésimos de segundo: o salto extra quase não custa nada. Pare o proxy com
+Os dois ficam abaixo de três centésimos de segundo: o salto extra quase não custa nada. Pare o proxy com
 Ctrl-C e inicie-o segurando cada resposta por 800 ms:
 
 ```
@@ -185,8 +184,7 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{size_download} b
 ```
 
 O primeiro byte chega na hora e o último depois de quase dois segundos, para 379 bytes. Duzentos bytes
-por segundo é muito mais lento que até o perfil mais lento do emulador na seção 05, escolhido para o
-efeito ficar fácil de ver; nesse ritmo, uma imagem de 200 kilobytes levaria uns dezessete minutos.
+por segundo é muito mais lento que até o perfil mais lento do emulador na seção 05. Foi escolhido para o efeito ficar fácil de ver. Nesse ritmo, uma imagem de 200 kilobytes levaria uns dezessete minutos.
 **Banda castiga tamanho**, e um teste dela pertence às telas que carregam mais.
 
 ## Perda
@@ -220,15 +218,15 @@ slow proxy listening on http://localhost:8070, forwarding to http://localhost:80
 10 GET /v1/shows 200, answer sent
 ```
 
-**Duas perdidas, não três.** Uma fração é uma chance por requisição, e dez requisições são poucas, e é
-por isso que a semente importa: com a `SEED` igual, as mesmas duas se perdem em toda execução, e um
+**Duas perdidas, não três.** Uma fração é uma chance por requisição, e dez requisições são poucas. É
+por isso que a semente importa. Com a `SEED` igual, as mesmas duas se perdem em toda execução, e um
 teste que falhou por causa da segunda requisição falha de novo pelo mesmo motivo. Mude a semente para
 ver um dia ruim diferente.
 
 ## Mais lento do que o cliente espera
 
 O último caso é aquele com que a seção 02 terminou: uma resposta mais lenta que o timeout do cliente.
-O Tickets espera cinco segundos; o `--max-time 5` do curl espera o mesmo. Com o proxy segurando as
+O Tickets espera cinco segundos, e o `--max-time 5` do curl espera o mesmo. Com o proxy segurando as
 respostas por seis:
 
 ```
@@ -241,5 +239,5 @@ exit 28
 ```
 
 `curl: (28)` é o código do curl para timeout, depois de 5002 ms e nenhum byte. **Seis segundos é uma
-rede funcionando**, pela qual o boxoffice respondeu em poucos milissegundos, e para o cliente ela não
+rede funcionando**, pela qual o boxoffice respondeu em poucos milissegundos. Para o cliente ela não
 se distingue de rede nenhuma. A seção 05 mostra o que o Tickets diz ao usuário quando isso acontece.

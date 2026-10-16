@@ -4,14 +4,14 @@ version: 1
 ---
 
 **Um teste é a sessão da seção 04 escrita em código, com verificações entre os passos.** O
-WebdriverIO manda as mesmas requisições que o curl mandou; o que ele acrescenta é a espera, as
-mensagens de erro e um pouco de sintaxe. O executor de testes é o que o Node já traz, o
-`node:test`, que a lição 12 usa na metade da API: um teste é uma função, `before` e `after` rodam
+WebdriverIO manda as mesmas requisições que o curl mandou, e acrescenta a espera, as mensagens de
+erro e um pouco de sintaxe. O executor de testes é o que o Node já traz, o `node:test`, que a lição
+12 usa na metade da API. Um teste é uma função, `before` e `after` rodam
 em volta, e o `assert` confere um valor.
 
 O teste abre o Tickets no emulador, espera a lista, toca no terceiro espetáculo e confere que a tela
 do espetáculo diz quantos lugares restam. Esse número não está escrito no teste. **Ele pergunta ao
-boxoffice**, porque os lugares do `sh-103` dependem do que testes anteriores compraram, e um teste
+boxoffice**, porque os lugares do `sh-103` dependem do que testes anteriores compraram. Um teste
 que esperasse `4` passaria depois de um reinício e falharia depois de um pedido. A tela e a API
 precisam concordar, seja qual for o número, e essa concordância é a razão de ser do teste.
 
@@ -21,7 +21,7 @@ precisam concordar, seja qual for o número, e essa concordância é a razão de
 - o emulador rodando, sem nada mais conectado, ou o `appium:udid` acrescentado para dizer qual
   aparelho;
 - o Tickets compilado. Um Run da lição 14 o compila, e também o `./gradlew assembleDebug` digitado
-  na pasta `tickets` (`.\gradlew.bat assembleDebug` no PowerShell); os dois gravam o APK de debug em
+  na pasta `tickets`, ou o `.\gradlew.bat assembleDebug` no PowerShell. Os dois gravam o APK de debug em
   `tickets/app/build/outputs/apk/debug/app-debug.apk`, que é para onde as capabilities apontam. O
   Appium o instala no aparelho quando a sessão começa;
 - o servidor do Appium da seção 03, rodando.
@@ -110,17 +110,17 @@ test('the third show opens with the seats boxoffice reports', async () => {
 ```
 
 Rode com o executor de testes do Node, a partir de `~/boxoffice`. O `--test-reporter=tap` pede o
-relatório TAP em texto puro, que é o que as transcrições deste curso imprimem; sem ele o Node
+relatório TAP em texto puro, que é o que as transcrições deste curso imprimem. Sem ele o Node
 desenha um relatório próprio com símbolos, e diz as mesmas coisas:
 
 ```sh
 node --test --test-reporter=tap appium/tickets.test.mjs
 ```
 
-No seu computador, com o emulador aberto, o app aparece nele, a lista carrega, a terceira linha é
-tocada e a tela do espetáculo abre, e o executor relata um teste aprovado. **Essa execução não foi
-gravada para este curso**: o app nunca foi compilado na máquina de gravação e nenhum emulador
-consegue iniciar lá (lição 14). O que foi gravado é o mesmo comando naquela máquina, onde o Appium
+No seu computador, com o emulador aberto, o app aparece nele e a lista carrega. A terceira
+linha é tocada, a tela do espetáculo abre e o executor relata um teste aprovado. **Essa execução não
+foi gravada para este curso.** O app nunca foi compilado na máquina de gravação, e a lição 14 mostrou
+que nenhum emulador consegue iniciar lá. O que foi gravado é o mesmo comando naquela máquina, onde o Appium
 não tinha onde instalar o app:
 
 ```
@@ -168,12 +168,12 @@ not ok 1 - the third show opens with the seats boxoffice reports
 
 **A falha é da sessão, não do teste**, e o relatório diz isso: `failureType: 'hookFailed'`, o hook
 `before` que chama o `remote`. O driver UiAutomator2 pediu um aparelho ao adb e não achou nenhum em
-20 segundos. O WebdriverIO repete uma sessão que não consegue iniciar, e tentou mais três vezes:
-são as quatro primeiras linhas, com uns vinte segundos entre elas, e o motivo de a execução ter
+20 segundos. O WebdriverIO repete uma sessão que não consegue iniciar, e tentou mais três vezes.
+São as quatro primeiras linhas, com uns vinte segundos entre elas, e o motivo de a execução ter
 levado 85 segundos para falhar. Num pipeline, onde ninguém vai ligar o emulador no meio do caminho,
 `connectionRetryCount: 0` ao lado do `logLevel` faz o teste falhar na primeira resposta.
 
-**Este também é o primeiro erro que a maioria das pessoas encontra com um aparelho de verdade**, e a
+**Este também é o primeiro erro que a maioria das pessoas encontra com um aparelho de verdade.** A
 causa quase sempre é que o emulador não estava rodando quando o teste começou, ou que o
 `adb devices` não lista nada mesmo com ele aberto. A seção de falhas da lição 14 tem a correção para
 os dois casos.

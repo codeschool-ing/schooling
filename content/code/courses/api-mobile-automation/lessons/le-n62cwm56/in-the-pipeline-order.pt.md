@@ -4,15 +4,14 @@ version: 1
 ---
 
 **Na sua máquina você inicia os serviços à mão, em terminais, e vê quando cada um está pronto. Um
-pipeline não tem olhos.** Ele roda comandos um depois do outro o mais rápido que consegue, então um
-script que inicia o boxoffice e roda os testes na linha seguinte manda a primeira requisição antes de
-o Node terminar de carregar o boxoffice, e o teste falha com uma conexão recusada que não tem nada a
-ver com o código. A correção é a mesma em qualquer escala, de dois programas Node a uma dúzia de
-contêineres: inicie cada serviço depois do que ele precisa, e espere até ele responder antes de
-seguir.
+pipeline não tem olhos.** Ele roda comandos um depois do outro o mais rápido que consegue. Um script
+que inicia o boxoffice e roda os testes na linha seguinte manda a primeira requisição antes de o Node
+terminar de carregar o boxoffice. O teste falha com uma conexão recusada que não tem nada a ver com o
+código. A correção é a mesma em qualquer escala, de dois programas Node a uma dúzia de contêineres:
+inicie cada serviço depois do que ele precisa, e espere até ele responder antes de seguir.
 
 A corrida é fácil de mostrar. Pare o boxoffice e o stub com Ctrl-C nos terminais deles. Esta linha
-inicia o boxoffice em segundo plano com `&` e pede `/health` na mesma hora; `$!` é o processo que
+inicia o boxoffice em segundo plano com `&` e pede `/health` na mesma hora. `$!` é o processo que
 acabou de iniciar, então `kill $!` o para de novo:
 
 ```
@@ -28,9 +27,9 @@ Código de saída 7, *failed to connect*: o curl foi mais rápido que o Node.
 
 ## O script
 
-Ele inicia o stub, espera o stub responder, inicia o boxoffice apontado para ele, espera o `/health`
-responder, roda todos os testes e para os dois servidores aconteça o que acontecer. Em
-`~/boxoffice`, salve como `run-integration.sh`:
+Ele inicia o stub e espera o stub responder. Inicia o boxoffice apontado para o stub e espera o
+`/health` responder. Depois roda todos os testes e para os dois servidores, aconteça o que acontecer.
+Em `~/boxoffice`, salve como `run-integration.sh`:
 
 ```sh
 #!/usr/bin/env bash
@@ -85,7 +84,7 @@ As partes, na ordem em que rodam:
 | `status` | guarda o código de saída do `node --test` e termina o script com ele | um pipeline que fica verde porque o último comando, o `grep`, deu certo |
 
 **A conferência das portas é a que as pessoas deixam de fora.** Sem ela, um boxoffice esquecido num
-terminal responde o `/health`, o boxoffice do próprio script termina com `EADDRINUSE` num log que
+terminal responde o `/health`. O boxoffice do próprio script termina com `EADDRINUSE` num log que
 ninguém lê, e os testes rodam contra um servidor de história desconhecida. Inicie o boxoffice e o stub
 de novo nos terminais deles, do jeito que um par esquecido desde a tarde estaria, e rode o script:
 
@@ -111,7 +110,7 @@ ana@laptop:~/boxoffice$ echo $?
 
 Todo arquivo de teste em `tests/` rodou: os que usam os servidores compartilhados e os que iniciam os
 próprios. O teste de HEAD é o único `not ok`, marcado `# TODO`, e o código de saída é 0. O relatório
-completo está em `test-results.tap`, que é o que um pipeline guarda como artefato, ao lado dos logs
+completo está em `test-results.tap`. Um pipeline guarda esse arquivo como artefato, ao lado dos logs
 dos dois servidores. Depois do script, nada mais está escutando:
 
 ```
@@ -123,14 +122,14 @@ boxoffice.log  shows.tap  slow.tap  stub.log  test-results.tap
 
 ## Num pipeline de verdade
 
-Um job de CI roda exatamente isto: faz o checkout do código, configura o Node 22 como o workflow da
-lição 6 fez, depois um passo, `bash run-integration.sh`, e um upload do `test-results.tap` e dos logs,
-guardados mesmo quando o passo falha, porque é aí que eles são necessários. O script não foi rodado
-num serviço de CI para este curso; foi rodado aqui, como mostrado, e um runner executa os mesmos
-comandos.
+Um job de CI roda exatamente isto. Ele faz o checkout do código e configura o Node 22 como o workflow
+da lição 6 fez. Depois vem um passo, `bash run-integration.sh`, e um upload do `test-results.tap` e
+dos logs. O upload roda mesmo quando o passo falha, porque é aí que os arquivos são necessários. O
+script não foi rodado num serviço de CI para este curso. Foi rodado aqui, como mostrado, e um runner
+executa os mesmos comandos.
 
 Quando os serviços são contêineres, as mesmas ideias têm outros nomes. O `depends_on` do Docker
-Compose com `condition: service_healthy` espera um health check, e não só que um processo exista, que
-é o `wait_for`; o bloco `services:` de um job no GitHub Actions inicia bancos de dados e stubs ao lado
-do job, com health checks próprios. Nenhum dos dois muda a regra: **inicie na ordem da necessidade,
-espere uma resposta, nunca um número de segundos.**
+Compose com `condition: service_healthy` espera um health check, e não só que um processo exista;
+isso é o `wait_for`. No GitHub Actions, o bloco `services:` de um job inicia bancos de dados e stubs
+ao lado do job, com health checks próprios. Nenhum dos dois muda a regra: **inicie na ordem da
+necessidade, espere uma resposta, nunca um número de segundos.**

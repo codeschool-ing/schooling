@@ -4,18 +4,18 @@ version: 1
 ---
 
 **O Tickets tem dois jeitos de falhar e um de se virar, e cada um é uma tela que um teste deve
-conferir.** A lição 14 os escreveu: quando o boxoffice não pode ser alcançado e o app tem uma cópia
-salva da lista, ele mostra essa cópia com a faixa *Offline: showing the list from HH:mm*; quando não
-tem cópia, mostra a linha de erro. Os dois dependem de uma coisa que uma pessoa com o celular na mão
-não consegue arranjar quando quer, o boxoffice ter sumido, e de uma segunda que ela não consegue ver,
-se uma cópia foi salva.
+conferir.** A lição 14 os escreveu. Quando o boxoffice não pode ser alcançado e o app tem uma cópia
+salva da lista, ele mostra essa cópia com a faixa *Offline: showing the list from HH:mm*. Quando não
+tem cópia, mostra a linha de erro. Os dois dependem de o boxoffice ter sumido, o que uma pessoa com o
+celular na mão não consegue arranjar quando quer. Também dependem de uma cópia ter sido salva, o que
+essa pessoa não consegue ver.
 
 Um teste consegue arranjar as duas, por dentro, e é aí que a caixa cinza da seção 02 se paga:
 
-- **boxoffice sumido**: o `Shows.baseUrl` é uma `var`, então o teste o aponta para um endereço onde
+- para o boxoffice sumido, o `Shows.baseUrl` é uma `var`, então o teste o aponta para um endereço onde
   nada responde, antes da carga que deve falhar;
-- **sem cópia salva**: a cópia mora no arquivo de `SharedPreferences` do app chamado `shows`, que o
-  teste limpa antes de começar.
+- para não haver cópia salva, o teste limpa o arquivo de `SharedPreferences` do app chamado
+  `shows`, onde a cópia mora, antes de começar.
 
 ## Qual endereço ninguém responde
 
@@ -36,10 +36,10 @@ exit 28
 
 **Uma porta em que nada escuta é recusada na hora**: o computador responde imediatamente que não há
 ninguém lá, depois de 0 ms. **Um endereço que ninguém responde espera o tempo limite**, 5002 ms aqui,
-porque nada nunca diz não; `10.255.255.1` é um endereço privado que nenhuma máquina da rede da
+porque nada nunca diz não. `10.255.255.1` é um endereço privado que nenhuma máquina da rede da
 máquina de gravação tem. O app se comportaria do mesmo jeito, já que o `Shows.load` dá 5000 ms à
-conexão. Então o teste usa o primeiro tipo. De dentro do emulador, `10.0.2.2` é o seu computador
-(lição 14), e na maioria dos computadores a porta 9 é uma em que nada escuta, o que faz de
+conexão. Então o teste usa o primeiro tipo. De dentro do emulador, `10.0.2.2` é o seu computador, como a
+lição 14 mostrou. Na maioria dos computadores nada escuta na porta 9, o que faz de
 `http://10.0.2.2:9` um boxoffice que está fora do ar e diz isso na hora. Se o seu computador roda
 algo na porta 9, escolha qualquer outra porta sem nada atrás.
 
@@ -152,7 +152,7 @@ class OfflineTest {
 }
 ```
 
-O segundo teste precisa do boxoffice rodando, como o `ListTest`; o primeiro não precisa de nada, e é
+O segundo teste precisa do boxoffice rodando, como o `ListTest`. O primeiro não precisa de nada, e é
 justamente esse o ponto dele.
 
 **O que estes testes não cobrem** é uma rede lenta em vez de ausente, ou uma que cai no meio de uma

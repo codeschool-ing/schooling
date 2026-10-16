@@ -6,8 +6,7 @@ version: 1
 **Um timeout não é uma falha. É a ausência de uma resposta, e a requisição pode muito bem ter dado
 certo.** O boxoffice espera dois segundos pelo provedor, como a função `charge` dele diz com
 `AbortSignal.timeout(2000)`, e então desiste e responde `504`. Desistir é o certo para um servidor,
-porque um cliente esperando para sempre é pior que um cliente que ouve "não deu tempo". O que desistir
-não faz é desfazer qualquer coisa do outro lado.
+porque um cliente esperando para sempre é pior que um cliente que ouve "não deu tempo". Mas desistir não desfaz nada do outro lado.
 
 ## Um provedor que responde tarde demais
 
@@ -53,10 +52,9 @@ POST /charges the caller hung up first (slow)
 GET /__requests 200 (slow)
 ```
 
-`the caller hung up first`: o stub registrou a cobrança quando ela chegou e a aprovou um segundo
+`the caller hung up first`: o stub registrou a cobrança quando ela chegou. Ele a aprovou um segundo
 depois de o boxoffice parar de escutar. Com um provedor de verdade, isso é um cliente cobrado por um
-pedido que o app relatou como falho. **Esta é a falha mais cara da lição, e nenhum status a revela**,
-porque a única parte que sabia o resultado já tinha sido deixada falando sozinha.
+pedido que o app relatou como falho. **Esta é a falha mais cara da lição, e nenhum status a revela.** A única parte que sabia o resultado já tinha sido deixada falando sozinha.
 
 ## O que um teste deve afirmar
 
@@ -119,12 +117,11 @@ ajustada, o que o `Date.now()` não pode prometer.
 
 ## O que um cliente deve fazer com um 504
 
-**Tratá-lo como "desconhecido", nunca como "falhou".** Os movimentos seguros vêm do resto da lição:
+**Tratá-lo como "desconhecido", nunca como "falhou".** Os movimentos seguros vêm do resto da lição. Um é
 repetir a mesma requisição com a mesma chave de idempotência, para que, se a primeira tentativa tiver
-passado, a repetição a encontre; ou perguntar ao servidor o estado do pedido antes de dizer qualquer
-coisa ao usuário. Os dois dependem de o servidor cumprir a promessa. O boxoffice só lembra uma chave
-depois que uma cobrança dá certo, então uma repetição depois do `504` dele faz um pedido novo, e ele
-repassa a chave do cliente ao provedor, que é o único lugar capaz de reconhecer a repetição. O stub
-daqui não reconhece; um provedor de verdade que respeita chaves de idempotência responderia a segunda
+passado, a repetição a encontre. O outro é perguntar ao servidor o estado do pedido antes de dizer
+qualquer coisa ao usuário. Os dois dependem de o servidor cumprir a promessa. O boxoffice só lembra uma chave
+depois que uma cobrança dá certo, então uma repetição depois do `504` dele faz um pedido novo. Ele repassa, sim, a chave do cliente ao
+provedor, o único lugar capaz de reconhecer a repetição. O stub daqui não reconhece. Um provedor de verdade que respeita chaves de idempotência responderia a segunda
 cobrança com a primeira. Essa corrente, da chave do cliente ao servidor e ao provedor, é o que quem
 testa segue de ponta a ponta quando a palavra *timeout* aparece num relatório.

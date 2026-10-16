@@ -4,14 +4,14 @@ version: 1
 ---
 
 **O Swift Testing é o framework da Apple para testar código, e ele não toca em tela nenhuma.** Um
-teste é uma função marcada com `@Test`; uma verificação dentro dele é `#expect`, que registra a
+teste é uma função marcada com `@Test`. Uma verificação dentro dele é `#expect`, que registra a
 falha e deixa o teste seguir, ou `#require`, que para o teste ali mesmo. A Apple o lançou em 2024,
 com o Swift 6 e o Xcode 16, ao lado do XCTest, o framework que os testes de iOS usavam desde 2013. Ele
 é o equivalente iOS dos *testes locais* da lição 14: rápidos, numerosos e cegos para tudo o que o
 app desenha.
 
 A imagem a trocar é a do Swift Testing como o novo XCTest, que um dia vai testar tudo. No momento em
-que este curso foi escrito, ele **não roda testes de interface de jeito nenhum**: o próprio diálogo
+que este curso foi escrito, ele **não roda testes de interface de jeito nenhum**. O próprio diálogo
 de projeto novo do Xcode oferece "Swift Testing with XCTest UI Tests", e a segunda metade dessa
 frase é a seção 04. Então um projeto iOS de hoje carrega os dois: Swift Testing para a lógica,
 XCTest para as telas.
@@ -20,8 +20,8 @@ XCTest para as telas.
 
 Um Tickets para iOS precisaria das mesmas regras do Android: ler a lista do boxoffice, escrever um
 preço a partir de centavos inteiros, escrever uma data como o teatro a anuncia. Postas num **pacote
-Swift** próprio, essas regras podem ser testadas sem o app, sem simulador e, já que o Swift 6 roda
-lá também, sem Mac. O pacote fica numa pasta `ios/TicketsCore` do seu projeto boxoffice.
+Swift** próprio, essas regras podem ser testadas sem o app e sem simulador. Já que o Swift 6 roda em outros lugares
+também, podem ser testadas até sem Mac. O pacote fica numa pasta `ios/TicketsCore` do seu projeto boxoffice.
 
 O manifesto nomeia uma biblioteca e os testes dela. Salve como `ios/TicketsCore/Package.swift`:
 
@@ -86,7 +86,7 @@ public enum ShowList {
 }
 ```
 
-`CodingKeys` liga o `starts_at` do boxoffice ao `startsAt` do Swift, e o preço é montado a partir de
+`CodingKeys` liga o `starts_at` do boxoffice ao `startsAt` do Swift. O preço é montado a partir de
 dois números inteiros, pelo motivo que a lição 14 deu: `6500 / 100.0` passa por um número de ponto
 flutuante, e um centavo pode se perder no caminho.
 
@@ -167,13 +167,13 @@ func price(cents: Int, shown: String) {
 
 `#expect` e `#require` são as duas metades do que o JUnit chama de asserção, e vale guardar essa
 divisão para todo framework deste curso. Uma verificação que falha e deixa o teste continuar informa
-**todos** os campos errados de um espetáculo numa execução só; uma verificação que para só está
+**todos** os campos errados de um espetáculo numa execução só. Uma verificação que para só está
 certa onde continuar informaria bobagem, como os campos de um espetáculo que não existe.
 
 ## Rodando
 
 Da pasta do pacote, `ios/TicketsCore`, o comando é `swift test`, num Mac ou em qualquer computador
-com Swift 6; no Xcode, abrir o `Package.swift` mostra os testes no *Test navigator* com um botão ao
-lado de cada um. A seção 05 diz mais. **Estes testes não foram rodados para este curso**: a máquina
+com Swift 6. No Xcode, abrir o `Package.swift` mostra os testes no *Test navigator* com um botão ao
+lado de cada um. A seção 05 diz mais. **Estes testes não foram rodados para este curso.** A máquina
 de gravação não conseguiu baixar o toolchain do Swift, e a seção 02 diz o que isso significa para
 tudo nesta lição.

@@ -4,14 +4,14 @@ version: 1
 ---
 
 **Um teste XCUITest não roda dentro do app; ele roda num programa próprio e conduz o app por
-fora.** O Xcode compila os testes de interface num app *executor* separado, instala-o no simulador
-ao lado do seu, e o executor abre o seu app e age sobre ele pela camada de acessibilidade do iOS:
+fora.** O Xcode compila os testes de interface num app *executor* separado e o instala no simulador
+ao lado do seu. O executor abre o seu app e age sobre ele pela camada de acessibilidade do iOS. Ele
 encontra o que está na tela, toca e lê, do jeito que uma pessoa com leitor de tela faria. O
 XCUITest é a metade de teste de interface do XCTest, da própria Apple desde 2015.
 
 É tentador pensar nele como o Espresso da Apple, já que os dois são a ferramenta nativa de quem é
-dono da plataforma. No que mais importa, ele é o contrário: o Espresso divide o processo com o app e
-alcança os objetos dele (lição 16), enquanto **um teste XCUITest só vê a tela**. Nisso ele fica mais
+dono da plataforma. No que mais importa, ele é o contrário. O Espresso divide o processo com o app e
+alcança os objetos dele, como a lição 16 mostrou, enquanto **um teste XCUITest só vê a tela**. Nisso ele fica mais
 perto do Appium, da lição 15, e de fato o driver iOS do Appium é construído sobre ele.
 
 ```schooling-figure
@@ -22,22 +22,22 @@ perto do Appium, da lição 15, e de fato o driver iOS do Appium é construído 
 
 Estando de fora, o teste não consegue mudar uma variável do app como a lição 16 mudou o
 `Shows.baseUrl`. O que ele pode é abrir o app com **argumentos de inicialização** e **variáveis de
-ambiente**, que o app lê ao iniciar. O teste abaixo define `BOXOFFICE_URL`, e quem desenvolve o app
+ambiente**, que o app lê ao iniciar. O teste abaixo define `BOXOFFICE_URL`. Quem desenvolve o app
 o lê numa linha própria e o usa no lugar do endereço com que o app é distribuído. Essa linha é uma
 promessa entre quem constrói o app e quem o testa, como os ids da lição 14.
 
 O endereço é `localhost`, e no iOS isso está certo. **O simulador é um programa no Mac e divide a
-rede do Mac**, então `localhost:8080` dentro dele é o boxoffice no Mac, onde um emulador Android
-precisava de `10.0.2.2` (lição 14). A lição 19 diz por que os dois diferem. O app ainda precisa da
-permissão da Apple para falar HTTP puro: o iOS o recusa por padrão, por uma regra chamada *App
-Transport Security*, e uma exceção para endereços locais vai nas configurações do app, o equivalente
+rede do Mac**, então `localhost:8080` dentro dele é o boxoffice no Mac. Um emulador Android
+precisava de `10.0.2.2` na lição 14, e a lição 19 diz por que os dois diferem. O app ainda precisa
+da permissão da Apple para falar HTTP puro. O iOS o recusa por padrão, por uma regra chamada *App
+Transport Security*. Uma exceção para endereços locais vai nas configurações do app, o equivalente
 do arquivo de segurança de rede da lição 14.
 
 ## Como o app dá nome aos elementos
 
 **O XCUITest encontra um elemento pelo identificador de acessibilidade** (accessibility
-identifier), que quem desenvolve define no código do app; é o equivalente iOS do resource id do
-Android. O Tickets para iOS não é construído neste curso, então aqui está só a parte que quem testa
+identifier), que quem desenvolve define no código do app. É o equivalente iOS do resource id do
+Android. O Tickets para iOS não é construído neste curso. Então aqui está só a parte que quem testa
 precisa ver, das views SwiftUI do app, e não um arquivo para salvar:
 
 ```swift
@@ -63,13 +63,13 @@ VStack(alignment: .leading) {
 
 Duas diferenças em relação ao app Android merecem atenção. Cada linha da lista leva o nome do seu
 espetáculo, `show-sh-103`, então um teste pode abrir *O Pagador de Promessas* pelo nome em vez de
-como a terceira linha. Isso é melhor que a posição da lição 15, e é também o caso contra o qual a
-lição 15 alertou: **dois apps que dão nomes diferentes às coisas**, então um mesmo teste Appium não
+como a terceira linha. Isso é melhor que a posição da lição 15. É também o caso contra o qual a
+lição 15 alertou: **dois apps que dão nomes diferentes às coisas**. Um mesmo teste Appium não
 conduz os dois sem uma tabela que traduza um nome no outro.
 
 O colchete numa consulta, `app.buttons["show-sh-103"]`, é comparado com o identificador e também com
 o rótulo (label) do elemento, o texto que ele mostra. Então `app.buttons["Refresh"]` também encontra
-o botão, e é a armadilha da lição 14 de novo: falha no dia em que a palavra muda, ou em que o
+o botão. É a armadilha da lição 14 de novo: falha no dia em que a palavra muda, ou em que o
 celular está em português.
 
 ## O teste
@@ -146,6 +146,6 @@ final class TicketsUITests: XCTestCase {
 }
 ```
 
-**Este teste não foi compilado nem rodado para este curso**, que não tem Mac; a seção 02 diz isso
+**Este teste não foi compilado nem rodado para este curso**, que não tem Mac. A seção 02 diz isso
 para a lição inteira. Ele foi escrito pela API documentada do XCTest, e o app iOS que ele testa só
 existe como o fragmento acima.

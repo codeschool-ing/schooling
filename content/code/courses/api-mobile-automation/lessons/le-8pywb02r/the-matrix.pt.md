@@ -6,15 +6,15 @@ version: 1
 **Uma matriz de compatibilidade é a lista das configurações de aparelho em que um app promete
 funcionar, e o subconjunto delas que você de fato testa.** As linhas são combinações: uma versão do
 Android, um tamanho de tela, um fabricante, um idioma, e tudo o mais que muda o comportamento do
-app. A lição 19 disse por que as combinações importam, as regras de segundo plano de um fabricante
-ou uma tela pequena escondem cada uma os seus defeitos; esta lição trata de quais testar, porque são
+app. A lição 19 disse por que as combinações importam: as regras de segundo plano de um fabricante
+ou uma tela pequena escondem cada uma os seus defeitos. Esta lição trata de quais testar, porque são
 muitas demais para testar todas.
 
 A primeira resposta de costume é pegar uma lista dos celulares mais vendidos do mundo, ou os dez
 primeiros de um relatório de mercado, e testar esses. **Os celulares que importam são os dos seus
 usuários**, e eles não são os do mundo. Um app de um teatro em São Paulo é aberto sobretudo nos
 celulares Android intermediários e baratos vendidos no Brasil, por pessoas que ficam anos com o
-mesmo aparelho, e uma lista de topos de linha de outro mercado não testa quase nenhum deles.
+mesmo aparelho. Uma lista de topos de linha de outro mercado não testa quase nenhum deles.
 
 ## As dimensões
 
@@ -27,20 +27,20 @@ mesmo aparelho, e uma lista de topos de linha de outro mercado não testa quase 
 | **tudo de que o app depende** | Google Play services, uma câmera, um leitor de digital | o que os recursos do próprio app exigem |
 
 Cada dimensão multiplica as outras. **Quatro versões do Android, três tamanhos de tela, três
-fabricantes e dois idiomas já são 72 combinações**, e o script da seção 04 as conta; acrescente uma
+fabricantes e dois idiomas já são 72 combinações**, e o script da seção 04 as conta. Acrescente uma
 quinta versão ou um quarto fabricante e o número cresce um quarto ou um terço de uma vez. Ninguém
-roda uma suíte em 72 configurações antes de cada versão, e ninguém deveria: a maioria dessas linhas
+roda uma suíte em 72 configurações antes de cada versão, e ninguém deveria. A maioria dessas linhas
 testa a mesma coisa que as vizinhas.
 
 ## Três jeitos de reduzir
 
 O resto desta lição usa os três, nesta ordem:
 
-1. **Cobertura**: manter os valores que a maioria dos seus usuários tem, até somarem uma fatia que
-   você escolhe, e deixar os raros para uma verificação mais leve. Seção 03.
-2. **Pairwise**: entre os valores mantidos, escolher combinações de modo que todo par de valores seja
-   testado junto pelo menos uma vez, o que é uma fração pequena do produto completo. Seção 04.
-3. **Aluguel**: rodar as combinações que você não consegue ter em celulares reais numa nuvem de
+1. A cobertura mantém os valores que a maioria dos seus usuários tem, até somarem uma fatia que
+   você escolhe. Os raros ficam para uma verificação mais leve. Seção 03.
+2. O pairwise escolhe combinações entre os valores mantidos, de modo que todo par de valores seja
+   testado junto pelo menos uma vez. Isso é uma fração pequena do produto completo. Seção 04.
+3. O aluguel roda as combinações que você não consegue ter em celulares reais numa nuvem de
    aparelhos. Seções 05 e 06.
 
 Quando o app é novo e ainda não tem usuários, comece por números públicos do país onde ele é vendido,

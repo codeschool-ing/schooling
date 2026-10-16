@@ -5,7 +5,7 @@ version: 1
 
 **Uma rede ruim faz o estrago de verdade nas requisições que mudam alguma coisa.** Uma resposta
 perdida a um `GET` custa uma nova tentativa. Uma resposta perdida a um `POST` que comprou um ingresso
-deixa o cliente sem saber se comprou, e as ferramentas da lição 13 para isso, chaves de idempotência
+deixa o cliente sem saber se comprou. As ferramentas da lição 13 para isso, chaves de idempotência
 e novas tentativas, foram testadas lá contra falhas que o stub produzia quando pedido. Aqui a falha é
 da rede, em dois lugares: do lado do cliente do boxoffice e do lado do próprio boxoffice, rumo ao
 provedor de pagamento.
@@ -19,8 +19,8 @@ ana@laptop:~/boxoffice$ TOKEN=$(curl -s localhost:8080/oauth/token -d grant_type
 ```
 
 Reinicie o proxy perdendo metade das respostas, a partir da semente 7, cujos dois primeiros sorteios
-perdem. Depois o laço que todo cliente impaciente é: tentar comprar um lugar do `sh-103`, e tentar de
-novo enquanto nenhuma resposta vem, três vezes:
+perdem. Depois o laço que todo cliente impaciente é. Ele tenta comprar um lugar do `sh-103`, e
+tenta de novo enquanto nenhuma resposta vem, três vezes:
 
 ```
 ana@laptop:~/boxoffice$ DROP=0.5 SEED=7 node slow-proxy.mjs
@@ -39,7 +39,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-103 | jq .seats_left
 
 O código 52 do curl, *resposta vazia*, duas vezes, depois um pedido confirmado. O cliente viu uma
 compra. **O espetáculo tinha quatro lugares e tem um**: cada resposta perdida foi um pedido que o
-boxoffice fez e de que o cliente nunca soube. Nada na saída do cliente diz isso; só o estado do
+boxoffice fez e de que o cliente nunca soube. Nada na saída do cliente diz isso. Só o estado do
 servidor diz, e é por isso que um teste disso precisa lê-lo.
 
 ## O mesmo, com chave
@@ -64,7 +64,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-102 | jq .seats_left
 119
 ```
 
-Duas respostas vazias de novo, depois um `201` marcado `idempotent-replayed: true`: o pedido que o
+Duas respostas vazias de novo, depois um `201` marcado `idempotent-replayed: true`. O pedido que o
 cliente recebe é o que a primeira tentativa fez, e o `sh-102` perdeu um lugar dos 120. O log do proxy
 mostra que toda tentativa chegou ao boxoffice e foi respondida com `201`:
 
@@ -137,16 +137,16 @@ ok 1 - with a key, answers lost on the way back cost one order
 ```
 
 As asserções são os três fatos da execução acima: a compra deu certo, a resposta que chegou era um
-replay, e exatamente um lugar sumiu. **A última é a asserção que importa**, e ela é feita contra o
-próprio boxoffice, `BASE`, não pelo proxy, porque uma verificação que também pudesse se perder às
+replay, e exatamente um lugar sumiu. **A última é a asserção que importa.** Ela é feita contra o
+próprio boxoffice, `BASE`, não pelo proxy. Uma verificação que também pudesse se perder às
 vezes falharia pelo motivo errado.
 
 ## O boxoffice num link lento
 
 A outra direção: o boxoffice cobrando o stub de pagamento da lição 11 por um proxy lento. Pare o
-boxoffice e o proxy, e inicie três programas em três terminais: o stub, um segundo proxy na porta 8071
-que repassa ao stub e segura as respostas dele por 1,5 segundo, e o boxoffice instruído a cobrar por
-esse proxy:
+boxoffice e o proxy, e inicie três programas em três terminais. O primeiro é o stub. O segundo é
+um proxy na porta 8071 que repassa ao stub e segura as respostas dele por 1,5 segundo. O terceiro é
+o boxoffice, instruído a cobrar por esse proxy:
 
 ```
 ana@laptop:~/boxoffice$ node payments-stub.mjs
@@ -165,8 +165,8 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{time_total}\n' l
 201 1.565003
 ```
 
-Um `201` depois de um segundo e meio, o atraso do proxy: o boxoffice espera até dois segundos pelo
-provedor (lição 13), e 1,5 está dentro disso. Reinicie o segundo proxy com 2,5 segundos, além do
+Um `201` depois de um segundo e meio, o atraso do proxy. O boxoffice espera até dois segundos pelo
+provedor, como a lição 13 mostrou, e 1,5 está dentro disso. Reinicie o segundo proxy com 2,5 segundos, além do
 limite, e peça de novo:
 
 ```
@@ -187,7 +187,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-103 | jq .seats_left
 2
 ```
 
-**O stub recebeu as duas cobranças e aprovou as duas**, enquanto o boxoffice reprovou o segundo
+**O stub recebeu as duas cobranças e aprovou as duas.** Enquanto isso, o boxoffice reprovou o segundo
 pedido e devolveu os dois lugares dele: o `sh-103` tem dois sobrando, só do primeiro pedido. Os logs
 dizem como terminou:
 
@@ -204,7 +204,7 @@ GET /__requests 200 (approve)
 ```
 
 O stub respondeu na hora, e o proxy segurou essa resposta até o boxoffice parar de escutar. É o
-provedor lento da lição 13 de novo, um cliente cobrado por um pedido que o app chamou de falho, com
-uma diferença que importa num relato: **aqui o provedor foi rápido e a rede foi lenta**, e nada de
+provedor lento da lição 13 de novo: um cliente cobrado por um pedido que o app chamou de falho. Uma
+diferença importa num relato. **Aqui o provedor foi rápido e a rede foi lenta**, e nada de
 nenhum dos lados conseguia dizer qual. Olhar os tempos de resposta do próprio provedor o livraria da
 culpa, com razão, e o defeito continuaria lá.

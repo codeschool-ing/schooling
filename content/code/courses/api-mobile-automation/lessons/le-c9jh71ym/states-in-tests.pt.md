@@ -3,25 +3,25 @@ title: Os estados, como testes
 version: 1
 ---
 
-**A seção 04 previu o que o Tickets guarda; esta seção escreve os testes que conferem a
+**A seção 04 previu o que o Tickets guarda, e esta seção escreve os testes que conferem a
 previsão**, por dentro com o Espresso e por fora com o Appium. Eles dividem o trabalho do jeito que
 as ferramentas permitem. O Espresso consegue recriar uma activity e levá-la pelo ciclo de vida,
-dentro de um processo. O Appium consegue matar o processo e responder ao diálogo de permissão, e só
-ele consegue testar a linha da tabela que dizia *perdida*.
+dentro de um processo. O Appium consegue matar o processo e responder ao diálogo de permissão. Só o
+Appium consegue testar a linha da tabela que dizia *perdida*.
 
 ## Por dentro: `ActivityScenario`
 
 A lição 16 abriu activities com `ActivityScenario.launch`. O scenario que ele devolve também conduz
 a vida da activity:
 
-- **`recreate()`** destrói a activity e cria uma nova com o estado que a antiga salvou: exatamente o
-  que uma rotação faz, sem girar nada;
-- **`moveToState(Lifecycle.State.CREATED)`** a para, como o Home faz, e
-  **`moveToState(Lifecycle.State.RESUMED)`** a traz de volta.
+- `recreate()` destrói a activity e cria uma nova com o estado que a antiga salvou. É exatamente
+  o que uma rotação faz, sem girar nada;
+- `moveToState(Lifecycle.State.CREATED)` a para, como o Home faz, e
+  `moveToState(Lifecycle.State.RESUMED)` a traz de volta.
 
 Três testes: a lista sobrevive a uma rotação, a lista continua lá depois do segundo plano, e a chave
-de lembrete continua ligada depois de uma rotação. O terceiro precisa da permissão concedida antes,
-porque senão apareceria um diálogo que o Espresso não consegue responder (seção 03). O `UiAutomation`
+de lembrete continua ligada depois de uma rotação. O terceiro precisa da permissão concedida antes.
+Senão apareceria um diálogo que o Espresso não consegue responder, como a seção 03 mostrou. O `UiAutomation`
 do próprio Android, que todo teste instrumentado alcança sem biblioteca nova, a concede.
 Salve como `tickets/app/src/androidTest/java/example/tickets/StatesTest.kt`:
 
@@ -135,13 +135,13 @@ class StatesTest {
 
 **`recreate()` não é uma morte de processo**, e é fácil acreditar que seja. A activity nova é
 construída no mesmo processo, então o `Shows`, o `baseUrl` dele e o contador `busy` estão exatamente
-como estavam, enquanto depois de uma morte de processo de verdade eles começam de novo. Um teste
+como estavam. Depois de uma morte de processo de verdade eles começam de novo. Um teste
 instrumentado não consegue matar o próprio processo e continuar rodando, então a metade do processo
 fica com o lado de fora.
 
 ## Por fora: o Appium
 
-Dois testes num arquivo: a tela do espetáculo volta depois que o Android mata o app em segundo plano,
+Dois testes num arquivo. A tela do espetáculo volta depois que o Android mata o app em segundo plano,
 e a frase sobre as notificações recusadas continua lá depois de uma rotação. O primeiro precisa do
 servidor iniciado com `--allow-insecure uiautomator2:adb_shell`, como a seção 04 mostrou.
 Salve como `appium/states.test.mjs`:
@@ -214,20 +214,19 @@ test('a refusal is still explained after a rotation', {
 });
 ```
 
-A morte de processo são as quatro chamadas a `execute` no meio: Home sem volta, `am kill` pelo
-shell, `queryAppState` respondendo `1`, *não rodando*, o que prova que o kill aconteceu em vez de
-supor que aconteceu, e `activateApp` para voltar. O teste então espera a tela do espetáculo e confere
+A morte de processo são as quatro chamadas a `execute` no meio. Primeiro vêm o Home sem volta e o
+`am kill` pelo shell. Depois o `queryAppState` responde `1`, *não rodando*, o que prova que o kill
+aconteceu em vez de supor que aconteceu. Por último, o `activateApp` volta. O teste então espera a tela do espetáculo e confere
 o título, que o processo novo só consegue saber pelo intent salvo.
 
-**O segundo teste está marcado como `todo`**, uma opção do `node:test`: ele roda e o resultado é
+**O segundo teste está marcado como `todo`**, uma opção do `node:test`. Ele roda e o resultado é
 impresso, com `# TODO` e o motivo ao lado, mas não reprova a suíte. É o jeito honesto de manter um
 teste para um defeito conhecido e ainda não corrigido. No dia em que a correção chega, o teste passa e
-o relatório diz isso, e a marca sai. Sem a marca, a suíte fica vermelha até a correção, todo mundo
-aprende a ignorá-la, e a próxima falha de verdade chega numa suíte que ninguém lê.
+o relatório diz isso, e a marca sai. Sem a marca, a suíte fica vermelha até a correção e todo mundo aprende a ignorá-la. A próxima falha de verdade chega numa suíte que ninguém lê.
 
 **Nenhum dos arquivos foi rodado para este curso**: sem aparelho, como antes. O defeito para o qual o
-segundo teste foi escrito vem da leitura do código na seção 04, e a primeira coisa a fazer no seu
-emulador é vê-lo com os próprios olhos: recuse a permissão, gire o emulador com o botão de rotação
+segundo teste foi escrito vem da leitura do código na seção 04. A primeira coisa a fazer no seu
+emulador é vê-lo com os próprios olhos. Recuse a permissão, gire o emulador com o botão de rotação
 dele, e olhe embaixo da chave.
 
 ## O defeito, por escrito
@@ -255,5 +254,5 @@ mais:
 > todo.
 
 Um relato diz se o *Obtido* foi visto ou deduzido, porque um desenvolvedor lê os dois de jeitos
-diferentes; no seu emulador você pode trocar a previsão por uma observação, e o título por um simples
+diferentes. No seu emulador você pode trocar a previsão por uma observação, e o título por um simples
 *Obtido*.

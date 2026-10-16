@@ -9,14 +9,14 @@ thing being checked. With one test that is fine. With thirty, the id `example.ti
 written thirty times, and the day a developer renames it, thirty tests fail for one reason and
 somebody edits thirty files.
 
-The pattern that fixes it is called the **page object** on the web, and `web-automation` will have
-shown it there if you took it; on a phone it is a **screen object**. Each screen of the app gets
+The pattern that fixes it is called the *page object* on the web, and `web-automation` will have
+shown it there if you took it. On a phone it is a **screen object**. Each screen of the app gets
 one class. The class knows the screen's ids and waits, and offers the test what a person can do
 there. When the app changes, one class changes.
 
 ## Two screens
 
-The list. `open` taps a row and returns the screen it leads to, already waited for, so a test
+The list. `open` taps a row and returns the screen it leads to, already waited for. A test
 cannot forget the wait. Save it as `appium/screens/list.mjs`:
 
 ```js
@@ -52,7 +52,7 @@ export class ListScreen {
 }
 ```
 
-The show. It answers questions and does nothing else, because nothing on it is tapped yet; the
+The show. It answers questions and does nothing else, because nothing on it is tapped yet. The
 reminder switch arrives in lesson 21. Save it as `appium/screens/show.mjs`:
 
 ```js
@@ -134,12 +134,12 @@ WebdriverIO calls that file used, and the command to run it is the same.
 
 ## What does not belong in a screen object
 
-- **Assertions.** The screen answers `seats()`; the test decides what the answer should be. A
+- Assertions. The screen answers `seats()`; the test decides what the answer should be. A
   screen that asserted would carry one test's expectations into every test that used it.
-- **Sleeps**, for the reasons of section 06. A screen is the natural home for waits, and the
+- Sleeps, for the reasons of section 06. A screen is the natural home for waits, and the
   explicit ones belong there.
-- **Data.** Which show to open is the test's business, given as an argument.
+- Data. Which show to open is the test's business, given as an argument.
 
 Two habits keep screen objects honest. Return the next screen from an action that leads to one,
-as `open` does, so the test follows the app's own path. And keep them small: a screen object with
+as `open` does, so the test follows the app's own path. And keep them small. A screen object with
 forty methods is usually three screens, or one screen and somebody's whole suite.

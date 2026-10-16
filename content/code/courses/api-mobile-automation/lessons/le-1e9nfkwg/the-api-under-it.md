@@ -5,9 +5,9 @@ version: 1
 
 **A bad network does its real damage to requests that change something.** A lost answer to a `GET`
 costs a retry. A lost answer to a `POST` that bought a ticket leaves the client not knowing whether
-it bought one, and lesson 13's tools for that, idempotency keys and retries, were tested there
-against failures the stub produced on demand. Here the failure is the network's, in two places: on
-the client's side of boxoffice and on boxoffice's own side, towards the payment provider.
+it bought one. Lesson 13's tools for that, idempotency keys and retries, were tested there against
+failures the stub produced on demand. Here the failure is the network's, in two places: on the
+client's side of boxoffice, and on boxoffice's own side, towards the payment provider.
 
 ## A lost answer, without a key
 
@@ -17,9 +17,8 @@ A token first, as in lesson 3:
 ana@laptop:~/boxoffice$ TOKEN=$(curl -s localhost:8080/oauth/token -d grant_type=client_credentials -d client_id=ci-tests -d client_secret=ci-secret | jq -r .access_token)
 ```
 
-Restart the proxy losing half the answers, from seed 7, whose first two draws both lose. Then the
-loop every impatient client is: try to buy one seat of `sh-103`, and try again while no answer
-comes, three times:
+Restart the proxy losing half the answers, from seed 7, whose first two draws both lose. Then the loop every impatient client is. It tries to buy one seat of `sh-103`, and
+tries again while no answer comes, three times:
 
 ```
 ana@laptop:~/boxoffice$ DROP=0.5 SEED=7 node slow-proxy.mjs
@@ -38,7 +37,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-103 | jq .seats_left
 
 curl's code 52, *empty reply*, twice, then a confirmed order. The client saw one purchase. **The
 show had four seats and has one**: every lost answer was an order boxoffice made and the client
-never heard of. Nothing in the client's output says so; only the server's state does, which is why
+never heard of. Nothing in the client's output says so. Only the server's state does, which is why
 a test of this has to read it.
 
 ## The same, with a key
@@ -63,7 +62,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-102 | jq .seats_left
 119
 ```
 
-Two empty replies again, then a `201` marked `idempotent-replayed: true`: the order the client
+Two empty replies again, then a `201` marked `idempotent-replayed: true`. The order the client
 receives is the one the first try made, and `sh-102` lost one seat of its 120. The proxy's log
 shows that every try reached boxoffice and was answered `201`:
 
@@ -135,16 +134,16 @@ ok 1 - with a key, answers lost on the way back cost one order
 ```
 
 The assertions are the three facts of the run above: the purchase succeeded, the answer that
-arrived was a replay, and exactly one seat is gone. **The last one is the assertion that matters**,
-and it is made against boxoffice itself, `BASE`, not through the proxy, because a check that could
-itself be lost would sometimes fail for the wrong reason.
+arrived was a replay, and exactly one seat is gone. **The last one is the assertion that matters.** It
+is made against boxoffice itself, `BASE`, not through the proxy. A check that could itself be lost
+would sometimes fail for the wrong reason.
 
 ## boxoffice on a slow link
 
 The other direction: boxoffice charging the payment stub of lesson 11 through a slow proxy. Stop
-boxoffice and the proxy, and start three programs in three terminals: the stub, a second proxy on
-port 8071 that forwards to the stub and holds its answers for 1.5 seconds, and boxoffice told to
-charge through that proxy:
+boxoffice and the proxy, and start three programs in three terminals. The first is the stub. The
+second is a proxy on port 8071 that forwards to the stub and holds its answers for 1.5 seconds. The
+third is boxoffice, told to charge through that proxy:
 
 ```
 ana@laptop:~/boxoffice$ node payments-stub.mjs
@@ -163,8 +162,8 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code} %{time_total}\n' l
 201 1.565003
 ```
 
-A `201` after a second and a half, the proxy's delay: boxoffice waits up to two seconds for the
-provider (lesson 13), and 1.5 is inside that. Restart the second proxy with 2.5 seconds, past the
+A `201` after a second and a half, the proxy's delay. boxoffice waits up to two seconds for the
+provider, as lesson 13 showed, and 1.5 is inside that. Restart the second proxy with 2.5 seconds, past the
 limit, and order again:
 
 ```
@@ -185,8 +184,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:8080/v1/shows/sh-103 | jq .seats_left
 2
 ```
 
-**The stub received both charges and approved both**, while boxoffice failed the second order and
-put its two seats back: `sh-103` has two left, from the first order alone. The logs say how it
+**The stub received both charges and approved both.** Meanwhile boxoffice failed the second order
+and put its two seats back: `sh-103` has two left, from the first order alone. The logs say how it
 ended:
 
 ```
@@ -202,7 +201,7 @@ GET /__requests 200 (approve)
 ```
 
 The stub answered at once, and the proxy held that answer until boxoffice had stopped listening.
-It is lesson 13's slow provider again, a customer charged for an order the app called failed, with
-one difference that matters in a report: **here the provider was fast and the network was slow**,
-and nothing on either side could tell which. Looking at the provider's own response times would
-clear it of blame, correctly, and the defect would still be there.
+It is lesson 13's slow provider again: a customer charged for an order the app called failed. One
+difference matters in a report. **Here the provider was fast and the network was slow**, and
+nothing on either side could tell which. Looking at the provider's own response times would clear
+it of blame, correctly, and the defect would still be there.

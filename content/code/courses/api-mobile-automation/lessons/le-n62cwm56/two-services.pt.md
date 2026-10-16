@@ -5,9 +5,9 @@ version: 1
 
 **Um teste de integração confere que dois programas concordam, então precisa olhar para os dois.** Um
 teste de pedido que lê só a resposta do boxoffice prova que o boxoffice disse `201`. Ele não prova que
-a cobrança foi feita, feita uma vez só, ou feita no valor certo, e cada uma dessas é um jeito de os
-dois programas discordarem enquanto a resposta do boxoffice parece perfeita. O stub de pagamentos da
-lição 11 registra toda cobrança que recebe, então um teste consegue ler o outro lado também.
+a cobrança foi feita, feita uma vez só, ou feita no valor certo. Cada uma dessas é um jeito de os dois
+programas discordarem enquanto a resposta do boxoffice parece perfeita. O stub de pagamentos da lição
+11 registra toda cobrança que recebe, então um teste consegue ler o outro lado também.
 
 ## O arquivo de teste
 
@@ -48,8 +48,7 @@ test('a declined charge is a 402, and the order is refused', async () => {
 });
 ```
 
-Três hooks mantêm os testes separados, e cada um está ali por um motivo que os testes mostrariam
-falhando:
+Três hooks mantêm os testes separados. Sem qualquer um deles, os testes mostrariam o motivo falhando:
 
 | hook | roda | por quê |
 |---|---|---|
@@ -58,9 +57,9 @@ falhando:
 | `after` | uma vez, depois do último teste | o stub fica aprovando para quem o usar em seguida |
 
 O primeiro teste é o que uma tela nunca conseguiria rodar: **uma cobrança, de 8000 centavos, cuja
-referência é o id do pedido.** O segundo põe o stub para recusar e confere o lado do boxoffice. Um
-teste que trocasse o modo do stub e não o devolvesse deixaria o teste seguinte, neste arquivo ou em
-outro, rodando contra um provedor que recusa tudo.
+referência é o id do pedido.** O segundo põe o stub para recusar e confere o lado do boxoffice.
+Imagine um teste que trocasse o modo do stub e não o devolvesse. O teste seguinte, neste arquivo ou em
+outro, rodaria contra um provedor que recusa tudo.
 
 ## Rodando
 
@@ -103,4 +102,4 @@ PUT /__mode 200 (approve)
 
 Leia contra os hooks: o `DELETE` e o `PUT` antes de cada teste, a cobrança, a leitura do registro pelo
 primeiro teste, e o `PUT` de volta para `approve` no final. Quando um teste de integração falha e a
-própria mensagem não basta, **os logs dos dois serviços, lado a lado**, são onde a resposta está.
+própria mensagem não basta, a resposta está **nos logs dos dois serviços, lado a lado**.

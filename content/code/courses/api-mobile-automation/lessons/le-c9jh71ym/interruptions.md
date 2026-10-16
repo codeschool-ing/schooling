@@ -7,7 +7,7 @@ version: 1
 state changes of section 04 wearing a different coat.** A call takes the screen and gives it back.
 The notification shade slides over the app. The keyboard rises and covers half of it. A person
 switches the phone to the dark theme at nine in the evening. Testing each one as its own case
-multiplies the suite; testing each by the state it causes keeps it small.
+multiplies the suite. Testing each by the state it causes keeps it small.
 
 ## The common ones, and how to cause them
 
@@ -21,7 +21,7 @@ multiplies the suite; testing each by the state it causes keeps it small.
 | **the back button** | the screen in front is finished; from the list, the app leaves | `adb shell input keyevent KEYCODE_BACK` | `driver.back()` |
 | **the keyboard** | half the screen covered while a field has the focus | tap a text field | `mobile: isKeyboardShown`, `mobile: hideKeyboard` |
 
-`adb emu` sends a command to the emulator's own console, so the call exists only on an emulator: a
+`adb emu` sends a command to the emulator's own console, so the call exists only on an emulator. A
 real phone needs a real call. **None of these was run for this course**, for the reason the rest of
 the lesson gives.
 
@@ -29,24 +29,23 @@ the lesson gives.
 
 Tickets answers the table in three ways, and that is the useful way to read it:
 
-- **Everything that recreates the activity is one case.** Rotation, dark theme, font size and
-  language reach the same code, so the defect of section 05 appears under all four, and one test
-  with `recreate()` or a rotation covers the class. Write that test once per screen.
-- **Everything that sends the app away is the background and, sometimes, a process death.** A
-  call, a lock and the Home button differ to a person and not to Tickets. The two tests of section
+- Everything that recreates the activity is one case. Rotation, dark theme, font size and
+  language reach the same code, so the defect of section 05 appears under all four. One test with
+  `recreate()` or a rotation covers the class. Write that test once per screen.
+- Everything that sends the app away is the background and, sometimes, a process death. A call, a lock and the Home button differ to a person and not to Tickets. The two tests of section
   05 cover them.
-- **What stays on screen is a check of layout, not of state.** The shade and the keyboard cover the
+- What stays on screen is a check of layout, not of state. The shade and the keyboard cover the
   app without changing it. The keyboard matters where there is a field, and Tickets has none, so
-  there is nothing to test today; in an app with a form, the case is the submit button hidden under
-  the keyboard on the smallest screen of lesson 20's matrix, and Espresso's `closeSoftKeyboard()`
-  or Appium's `hideKeyboard` belongs in the test before the tap.
+  there is nothing to test today. In an app with a form, the case is the submit button hidden under
+  the keyboard on the smallest screen of lesson 20's matrix. Espresso's `closeSoftKeyboard()` or
+  Appium's `hideKeyboard` belongs in the test before the tap.
 
 **The back button deserves its own line in a test plan**, because it is the interruption a person
-causes on purpose. From the show's screen it should return to the list as it was, rows and banner,
-without a new load; from the list it leaves the app, and that is a finished activity, which
-Android does not restore, so the next start is a cold one. Espresso's `pressBack()` and Appium's
+causes on purpose. From the show's screen it should return to the list as it was, rows and banner, without a new load.
+From the list it leaves the app. That is a finished activity, which Android does not restore, so
+the next start is a cold one. Espresso's `pressBack()` and Appium's
 `driver.back()` press it.
 
-**And a call is still worth one manual pass per release**: an incoming call over a screen that is
-halfway through a payment is the interruption a person remembers, and it is cheaper to try on an
+**And a call is still worth one manual pass per release.** An incoming call over a screen that is
+halfway through a payment is the interruption a person remembers. It is cheaper to try on an
 emulator for a minute than to automate a telephone.

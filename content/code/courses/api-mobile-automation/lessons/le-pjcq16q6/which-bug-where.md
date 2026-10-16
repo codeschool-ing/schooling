@@ -3,7 +3,7 @@ title: Which defect shows up where
 version: 1
 ---
 
-**Before choosing where to test, name the defect you are afraid of; the table then says where it
+**Before choosing where to test, name the defect you are afraid of. The table then says where it
 can be seen.** A tester who asks "does it work on a real device?" asks too broadly to get a useful
 answer. "Does the reminder survive a Xiaomi's battery saver?" has one, and it is a particular phone.
 
@@ -29,15 +29,15 @@ all.
 | an app that will not install, signed wrong | not this platform | hides | shows |
 
 Read down the last column and it says *shows* everywhere, which is the argument for real devices.
-Read across the first six rows and the emulator and the simulator say *shows* too, which is the
-argument for doing most of the work on them: **those rows are most of the defects a team finds**,
-and they are found faster where a device resets in a second.
+Read across the first six rows and the emulator and the simulator say *shows* too. That is the
+argument for doing most of the work on them: **those rows are most of the defects a team finds**.
+They are found faster where a device resets in a second.
 
 ## Reporting a defect from a device
 
 When a defect appears only on a real phone, the report has to say which phone, because the next
 person will try on another one and see nothing. `manual-testing` taught the shape of a defect
-report; for a device it carries the maker, the model, the Android version and the build of the app.
+report. For a device it carries the maker, the model, the Android version and the build of the app.
 On Android all of them are in *Settings › About phone*, and adb reads them off a connected phone
 without anyone typing them:
 
@@ -49,6 +49,6 @@ adb shell getprop ro.build.fingerprint
 ```
 
 The last one names the exact build of the maker's Android, which is what decides whether the next
-phone of the same model behaves the same. These commands need a device, and the recording machine
-had none, so their answers are not shown. On an iPhone the same facts are in *Settings › General ›
+phone of the same model behaves the same. These commands need a device. The recording machine had
+none, so their answers are not shown. On an iPhone the same facts are in *Settings › General ›
 About*.

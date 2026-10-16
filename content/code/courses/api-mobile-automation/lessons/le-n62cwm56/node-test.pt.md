@@ -4,12 +4,12 @@ version: 1
 ---
 
 **O Node 22 traz o próprio executor de testes e as próprias asserções, então um teste de API não
-precisa de nada instalado.** O `node:test` encontra os arquivos de teste, roda e relata; o
-`node:assert` compara o que voltou com o que era esperado; o `fetch`, embutido no Node desde a versão
-18, manda as requisições. Jest, Mocha e Vitest são frameworks populares, e acrescentam coisas como
-modo de observação, mocks de módulos e arquivos de snapshot. Um teste que conversa com um servidor por
-HTTP não usa nada disso, então esta lição e a próxima usam o que o Node já tem, e toda linha dos
-testes aparece na lição.
+precisa de nada instalado.** O `node:test` encontra os arquivos de teste, roda e relata. O
+`node:assert` compara o que voltou com o que era esperado. O `fetch`, embutido no Node desde a versão
+18, manda as requisições. Jest, Mocha e Vitest são frameworks populares, e acrescentam modo de
+observação, mocks de módulos e arquivos de snapshot. Um teste que conversa com um servidor por HTTP
+não usa nada disso. Por isso esta lição e a próxima usam o que o Node já tem, e toda linha dos testes
+aparece na lição.
 
 ## Auxiliares compartilhados
 
@@ -48,11 +48,11 @@ export async function get(url) {
 }
 ```
 
-`BASE` e `STUB` são onde estão os servidores, e uma variável de ambiente pode mudá-los, para os mesmos
+`BASE` e `STUB` dizem onde estão os servidores. Uma variável de ambiente pode mudá-los, para os mesmos
 testes rodarem contra outra máquina. `token`, `order` e `get` escondem cada um uma requisição e
 devolvem aquilo sobre o que um teste afirma: um status, um corpo, às vezes cabeçalhos. **`token`
-lança um erro quando não recebe token**, porque um teste que seguisse com `undefined` como bearer
-falharia três linhas depois, com um 401 que aponta para o lugar errado.
+lança um erro quando não recebe token.** Um teste que seguisse com `undefined` como bearer falharia
+três linhas depois, com um 401 que aponta para o lugar errado.
 
 ## Um primeiro arquivo de teste
 
@@ -103,10 +103,10 @@ boxoffice listening on http://localhost:8080
 ```
 
 O `node --test` roda os arquivos que você indica, cada um num processo próprio. **Num terminal, o
-relatório padrão dele desenha um visto ou um xis ao lado de cada teste**; este curso pede o reporter
-`tap` no lugar, que escreve os mesmos resultados em texto puro no Test Anything Protocol, um formato
-que ferramentas de teste escrevem desde que o Perl o inventou nos anos 1980, e que os sistemas de CI
-leem:
+relatório padrão dele desenha um visto ou um xis ao lado de cada teste.** Este curso pede o reporter
+`tap` no lugar. Ele escreve os mesmos resultados em texto puro no Test Anything Protocol, um formato
+que o Perl inventou nos anos 1980 e que ferramentas de teste escrevem desde então. Os sistemas de CI
+o leem:
 
 ```
 ana@laptop:~/boxoffice$ node --test --test-reporter=tap tests/shows.test.mjs
@@ -167,15 +167,15 @@ ana@laptop:~/boxoffice$ echo $?
 
 Leia de baixo para cima. O resumo diz quatro testes, três passaram, um falhou. **O código de saída é
 1**, e é isso que um pipeline lê para ficar vermelho. Acima, cada teste tem uma linha, `ok` ou `not
-ok`, e a falha traz o que um relatório de defeito precisa: a comparação que falhou (`405 !== 200`), os
-valores `expected` e `actual`, e a `location` do teste, arquivo, linha e coluna. O stack trace abaixo
-é do próprio Node; a primeira linha dele é a do teste.
+ok`. A falha traz o que um relatório de defeito precisa: a comparação que falhou (`405 !== 200`), os
+valores `expected` e `actual`, e a `location` do teste como arquivo, linha e coluna. O stack trace
+abaixo é do próprio Node; a primeira linha dele é a do teste.
 
 ## Um defeito conhecido, à vista
 
 O teste de HEAD falha porque o boxoffice está errado, e vai continuar falhando até alguém corrigir o
 boxoffice. Deixá-lo vermelho acostuma todo mundo a ignorar uma execução vermelha; apagá-lo perde o
-defeito. A resposta do Node é a opção `todo`: o teste continua rodando e o resultado continua no
+defeito. A resposta do Node é a opção `todo`. O teste continua rodando e o resultado continua no
 relatório, mas um todo que falha não reprova a execução. Troque a primeira linha do teste de HEAD por
 esta:
 
@@ -201,5 +201,5 @@ not ok 4 - HEAD answers like GET, without a body # TODO boxoffice answers HEAD w
 ```
 
 **Código de saída 0, e o defeito continua no relatório**, marcado `# TODO` com o motivo escrito ao
-lado. No dia em que o HEAD for corrigido, essa linha vira `ok … # TODO`, e esse é o sinal para tirar a
+lado. No dia em que o HEAD for corrigido, essa linha vira `ok … # TODO`. Esse é o sinal para tirar a
 opção.

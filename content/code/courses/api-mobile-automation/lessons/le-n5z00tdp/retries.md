@@ -6,9 +6,9 @@ version: 1
 **A retry is a bet that the same request will get a different answer, and for most failures that bet
 is lost before it is placed.** The common belief is that a client should retry whatever failed. A
 `422` for seven seats will be a `422` for seven seats on the hundredth try; a `401` stays a `401`
-until the token changes. Retrying them wastes time and, against a server that counts failures,
-can get the client locked out. The status code from lesson 1 already says which side should act, and
-that is the whole rule:
+until the token changes. Retrying them wastes time. Against a server that counts failures, it can get
+the client locked out. The status code from lesson 1 already says which side should act, and that is
+the whole rule:
 
 | failure | retry? | why |
 |---|---|---|
@@ -20,8 +20,8 @@ that is the whole rule:
 | `500` | it depends | a bug answers `500` every time; a crash under load may not. Most clients do not retry it |
 
 **Retrying is only safe where repeating is safe.** A `GET` can be sent again freely. A `POST` that
-creates an order can be retried only with an idempotency key, the same one each time, or a `504`
-followed by a retry is how a customer buys two tickets.
+creates an order can be retried only with an idempotency key, the same one each time. Without one, a
+`504` followed by a retry is how a customer buys two tickets.
 
 ## Waiting between tries
 
@@ -65,9 +65,9 @@ export async function withRetry(send, {
 }
 ```
 
-`sleep` and `random` are parameters with real defaults, and that is the design decision that makes it
-testable: a test passes a `sleep` that only records the wait, and a `random` that always answers 1, so
-the waits are the ceilings themselves and the test takes no time at all.
+`sleep` and `random` are parameters with real defaults, and that design decision makes it testable.
+A test passes a `sleep` that only records the wait, and a `random` that always answers 1. The waits
+are then the ceilings themselves, and the test takes no time at all.
 
 ## Testing it without a server
 
@@ -139,6 +139,7 @@ ok 5 - the waits double and stop at the cap
 # duration_ms 71.693718
 ```
 
-Five tests in under a tenth of a second, process start included. Each one pins a rule from the table above, and **the one about 422
-matters most**: it is the rule people break by accident, when a helper retries on "anything that is
-not 2xx". The last test shows the shape of the backoff: 100, 200, 400, then the cap of 500 twice.
+Five tests in under a tenth of a second, process start included. Each one pins a rule from the table
+above. **The one about 422 matters most**: people break that rule by accident, when a helper retries
+on "anything that is not 2xx". The last test shows the shape of the backoff: 100, 200, 400, then the
+cap of 500 twice.

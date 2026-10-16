@@ -5,14 +5,13 @@ version: 1
 
 **"Offline" é o caso fácil. Os difíceis são as conexões que estão lá e não funcionam.** Um celular
 sem sinal nenhum falha na hora, e todo app tem uma frase para isso. Um celular num trem tem um sinal
-lento, depois fino, depois ausente por vinte segundos, depois de volta com outro endereço, e cada uma
-dessas coisas faz algo diferente com uma requisição que estava no meio do caminho.
+lento, depois fino, depois ausente por vinte segundos, depois de volta com outro endereço. Cada uma dessas coisas faz algo diferente com uma requisição que estava no meio do caminho.
 
 A crença comum é a de que a rede está no ar ou fora, e que o sistema operacional sabe qual dos dois.
 Um celular no Wi-Fi de um café mostra todas as barras e não passa nada até alguém aceitar os termos do
-café num navegador; um celular no limite da cobertura informa uma conexão que entrega algumas
+café num navegador. Um celular no limite da cobertura informa uma conexão que entrega algumas
 centenas de bytes por segundo. **O Android dizer "conectado" significa que existe um link, não que as
-respostas chegam**, e um app que espera o Android dizer "offline" para reagir vai esperar enquanto a
+respostas chegam.** Um app que espera o Android dizer "offline" para reagir vai esperar enquanto a
 pessoa olha para uma tela vazia.
 
 ## Quatro propriedades, e o que cada uma faz com uma requisição
@@ -33,15 +32,16 @@ pessoa olha para uma tela vazia.
 Nenhuma dessas propriedades reprova uma requisição sozinha. **Os timeouts do cliente decidem quando
 lento vira falha**, e um cliente HTTP costuma ter dois deles:
 
-- um **timeout de conexão**, quanto esperar até o outro lado aceitar a conexão;
-- um **timeout de leitura**, quanto esperar em silêncio por dados depois de conectado.
+- um *timeout de conexão*, quanto esperar até o outro lado aceitar a conexão;
+- um *timeout de leitura*, quanto esperar em silêncio por dados depois de conectado.
 
-Então a mesma rede ruim produz um sucesso lento com uma configuração e uma falha com outra, e essa é
+Então a mesma rede ruim produz um sucesso lento com uma configuração e uma falha com outra. Essa é
 a primeira coisa a descobrir sobre um app antes de testá-lo numa conexão ruim. O Tickets põe os dois
 em cinco segundos, e a seção 05 lê onde. **O trabalho de quem testa aqui é menos quebrar a conexão do
-que pôr uma requisição de cada lado desses limites** e ver o que a pessoa que segura o celular vê: a
+que pôr uma requisição de cada lado desses limites.** Depois você vê o que a pessoa que segura o
+celular vê: a
 requisição que leva quatro segundos, e a que leva seis.
 
-A primeira metade do curso já encontrou o lado do servidor da mesma pergunta: o limite de dois
-segundos do próprio boxoffice para o provedor de pagamento, na lição 13. Esta lição constrói uma
+A primeira metade do curso já encontrou o lado do servidor da mesma pergunta, na lição 13: o
+limite de dois segundos do próprio boxoffice para o provedor de pagamento. Esta lição constrói uma
 rede ruim o bastante para alcançar os dois, de propósito e de forma repetível.

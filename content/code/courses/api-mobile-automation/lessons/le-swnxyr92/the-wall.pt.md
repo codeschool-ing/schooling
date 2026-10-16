@@ -7,13 +7,13 @@ version: 1
 nada.** O Xcode, o ambiente de desenvolvimento da Apple, só é publicado para Mac. O iOS Simulator
 faz parte do Xcode. Os dois frameworks desta lição, Swift Testing e XCUITest, são rodados pelo Xcode
 ou pelo seu gêmeo de linha de comando, o `xcodebuild`. E o próprio macOS só pode ser instalado em
-computadores da Apple, pela licença que a Apple publica com ele, então um Mac virtual num notebook
+computadores da Apple, pela licença que a Apple publica com ele. Um Mac virtual num notebook
 Windows não é um caminho que este curso possa recomendar.
 
 A crença que isso corrige é esperançosa: a de que alguma ferramenta, talvez o Appium, abra o iOS
 para um computador Windows ou Linux. Não abre. O teste da lição 15 pede `platformName: iOS` de
-qualquer computador, mas o servidor Appium com que ele fala precisa rodar num Mac com Xcode, porque
-o driver XCUITest compila e roda ali o WebDriverAgent, um executor de testes feito com o XCUITest da
+qualquer computador. Mas o servidor Appium com que ele fala precisa rodar num Mac com Xcode. O
+driver XCUITest compila e roda ali o WebDriverAgent, um executor de testes feito com o XCUITest da
 Apple. **O cliente pode estar em qualquer lugar; a máquina que toca o iPhone é sempre um Mac.**
 
 ```schooling-figure
@@ -22,31 +22,32 @@ Apple. **O cliente pode estar em qualquer lugar; a máquina que toca o iPhone é
 
 ## O que cada nível exige
 
-- **Código sem tela.** As regras por trás das telas, como o jeito de escrever um preço ou de ler a
-  resposta do boxoffice, podem ser testadas com Swift Testing onde quer que o Swift 6 rode: macOS,
+- Código sem tela. As regras por trás das telas, como o jeito de escrever um preço ou de ler a
+  resposta do boxoffice, podem ser testadas com Swift Testing onde quer que o Swift 6 rode. Isso é
+  macOS,
   Linux e Windows, com o toolchain do swift.org. A seção 03 escreve esses testes.
-- **O app num simulador.** Um Mac com o Xcode instalado pela Mac App Store, de graça. O simulador
+- O app num simulador. Um Mac com o Xcode instalado pela Mac App Store, de graça. O simulador
   roda o app, e o XCUITest o conduz. A lição 19 diz o que é um simulador e o que ele esconde.
-- **O app num iPhone de verdade.** O Mac, mais uma Apple Account conectada ao Xcode, mais o celular
-  ligado ao computador e com o *Modo de Desenvolvedor* (Developer Mode) ativado nos ajustes, que o
-  iOS exige desde o iOS 16. Todo app que roda num iPhone é **assinado**, e o Xcode assina o seu build
+- O app num iPhone de verdade. O Mac, mais uma Apple Account conectada ao Xcode, mais o celular
+  ligado ao computador e com o *Modo de Desenvolvedor* (Developer Mode) ativado nos ajustes. O iOS
+  exige isso desde o iOS 16. Todo app que roda num iPhone é **assinado**, e o Xcode assina o seu build
   para o seu próprio celular. No momento em que este curso foi escrito, uma Apple Account gratuita
   faz isso para um aparelho seu, com limites de quanto tempo a assinatura dura. Entregar o app a
   testadores pelo TestFlight, ou publicá-lo, exige a assinatura paga do Apple Developer Program, em
   termos que a Apple define e muda.
 
 **Um Mac não precisa estar na sua mesa.** Serviços de CI hospedados alugam máquinas macOS por
-minuto, as nuvens de dispositivos da lição 20 oferecem iPhones reais pela rede, e algumas empresas
+minuto. As nuvens de dispositivos da lição 20 oferecem iPhones reais pela rede. Algumas empresas
 alugam Macs inteiros num data center. Todos rodam em hardware da Apple, que é o que a licença pede.
 
 ## O que esta lição faz, e o que não faz
 
-**Nada nesta lição foi rodado.** O curso foi gravado numa máquina Linux sem nenhum Mac ao alcance, e
-o toolchain do Swift também não pôde ser baixado ali, então nem os testes Swift Testing da seção 03
-foram compilados. Todo arquivo Swift desta lição foi escrito contra as APIs que a Apple documenta, é
-curto de propósito para que cada linha possa ser lida, e nenhuma saída, relatório ou captura de
+**Nada nesta lição foi rodado.** O curso foi gravado numa máquina Linux sem nenhum Mac ao alcance. O
+toolchain do Swift também não pôde ser baixado ali, então nem os testes Swift Testing da seção 03
+foram compilados. Todo arquivo Swift desta lição foi escrito contra as APIs que a Apple documenta, e é
+curto de propósito para que cada linha possa ser lida. Nenhuma saída, relatório ou captura de
 tela dele aparece, porque nenhum foi feito.
 
-O que você consegue fazer com a lição sem um Mac é ler uma suíte iOS, revisar uma, escrever os casos
-que ela deveria ter e conversar sobre ela com quem desenvolve e roda. Se você tem um Mac, todo
+Sem um Mac, esta lição permite ler uma suíte iOS e revisar uma. Você pode escrever os casos que ela
+deveria ter e conversar sobre ela com quem desenvolve e roda. Se você tem um Mac, todo
 arquivo daqui foi feito para ser digitado e rodado, e a seção 05 diz como.

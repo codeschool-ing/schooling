@@ -4,14 +4,14 @@ version: 1
 ---
 
 **O Detox espera um app ocioso, então um app que nunca fica ocioso faz cada passo esperar até o tempo
-limite do próprio teste.** Nada na tela está errado; a lista está lá, a linha está lá, e a spec nunca
+limite do próprio teste.** Nada na tela está errado. A lista está lá, a linha está lá, e a spec nunca
 chega a ela. Esta é a falha que pertence à sincronização de caixa cinza, e toda suíte de Detox a
 encontra mais cedo ou mais tarde.
 
 ## Como um app continua ocupado
 
 Suponha que uma desenvolvedora faça a lista manter os lugares atualizados perguntando de novo ao
-boxoffice a cada segundo, um pedido comum para uma bilheteria durante uma venda. No `App.tsx` são três
+boxoffice a cada segundo. É um pedido comum para uma bilheteria durante uma venda. No `App.tsx` são três
 linhas, no lugar do `useEffect` que carrega uma vez:
 
 ```tsx
@@ -23,9 +23,9 @@ useEffect(() => {
 ```
 
 Agora olhe a tabela da seção 03. Há sempre um timer para disparar, e uma requisição ao boxoffice em
-andamento durante parte de cada segundo. **O app está correto e nunca fica ocioso**, então o primeiro
+andamento durante parte de cada segundo. **O app está correto e nunca fica ocioso.** O primeiro
 `expect` da spec espera, e espera, até os dois minutos do Jest em `e2e/jest.config.js` acabarem e o
-teste falhar. O Detox pode imprimir, enquanto espera, a lista do que está mantendo o app ocupado, e o
+teste falhar. Enquanto espera, o Detox pode imprimir a lista do que está mantendo o app ocupado. O
 timer e a requisição de rede estariam os dois nela. Essa mensagem é o lugar por onde começar: ela
 nomeia a causa, e não o elemento.
 
@@ -44,9 +44,9 @@ Outras causas comuns, cada uma mantendo uma linha daquela tabela verdadeira para
 ## Três saídas, a melhor primeiro
 
 **Deixar o app quieto no build de teste.** Se a consulta periódica é um recurso, os desenvolvedores
-podem desligá-la, ou espaçá-la, quando o app é compilado para testes, e a spec continua exatamente
+podem desligá-la, ou espaçá-la, quando o app é compilado para testes. A spec continua exatamente
 como está. É de novo o argumento da lição 16 a favor do `CountingIdlingResource`: o app ajuda os
-testes dele, de propósito, e os testes mantêm a sincronização completa em todo o resto.
+testes dele, de propósito. Os testes mantêm a sincronização completa em todo o resto.
 
 **Dizer ao Detox que ignore um endereço.** O `device.setURLBlacklist` recebe uma lista de padrões, e
 requisições a uma URL que corresponde deixam de contar como trabalho em andamento. O resto da
@@ -56,7 +56,7 @@ sincronização continua ligado:
 await device.setURLBlacklist(['.*/v1/shows.*']);
 ```
 
-Ele resolve a requisição, e não o timer, que sozinho ainda pode manter o Detox esperando; é por isso
+Ele resolve a requisição e não o timer, que sozinho ainda pode manter o Detox esperando. É por isso
 que o primeiro jeito é melhor quando é possível.
 
 **Desligar a sincronização na parte que nunca se acalma, e esperar explicitamente ali.** É o estilo
@@ -76,11 +76,11 @@ it('opens a show while the list keeps polling', async () => {
 ```
 
 O `waitFor(…).withTimeout(…)` pergunta de novo até a condição valer ou o prazo passar, como o
-`waitForDisplayed` do WebdriverIO; sem sincronização, um `expect` simples olharia uma vez, na hora, e
-falharia numa lista ainda não desenhada. **O `finally` importa**: uma spec que falha com a
-sincronização desligada e nunca a religa deixa toda spec seguinte do arquivo sem ela, passando ou
+`waitForDisplayed` do WebdriverIO. Sem sincronização, um `expect` simples olharia uma vez, na hora, e
+falharia numa lista ainda não desenhada. **O `finally` importa.** Imagine uma spec que falha com a
+sincronização desligada e nunca a religa. Toda spec seguinte do arquivo roda então sem ela, passando ou
 falhando por motivos que não têm nada a ver com elas.
 
-Nada disso foi executado para este curso, pelo motivo que a seção 04 deu; foi escrito a partir da API
+Nada disso foi executado para este curso, pelo motivo que a seção 04 deu. Foi escrito a partir da API
 documentada do Detox, e cada um é um punhado de linhas que um teste pode carregar até os
 desenvolvedores deixarem o app quieto.

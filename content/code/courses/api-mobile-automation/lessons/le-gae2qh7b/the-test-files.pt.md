@@ -4,8 +4,8 @@ version: 1
 ---
 
 **O projeto que o Android Studio criou na lição 14 já está preparado para o Espresso.** O modelo pôs
-duas pastas de teste ao lado de `src/main`, escreveu nos arquivos de build as bibliotecas de que elas
-precisam, e deixou um teste de exemplo em cada uma. Você acrescenta arquivos; não muda nenhum
+duas pastas de teste ao lado de `src/main`, e escreveu nos arquivos de build as bibliotecas de que elas
+precisam. Deixou um teste de exemplo em cada uma. Você acrescenta arquivos; não muda nenhum
 arquivo de build.
 
 | pasta | o que roda lá | roda em |
@@ -14,7 +14,7 @@ arquivo de build.
 | `app/src/androidTest/` | testes instrumentados: Espresso | o aparelho, dentro do app |
 | `app/src/main/` | o próprio app | o aparelho |
 
-Dentro de `androidTest`, o modelo criou as pastas do pacote, `java/example/tickets/`, e nelas um
+Dentro de `androidTest`, o modelo criou as pastas do pacote, `java/example/tickets/`. Nelas há um
 arquivo chamado `ExampleInstrumentedTest.kt`, que confere o nome do pacote do app. Ele pode ficar ou
 sair; os testes desta lição vão ao lado dele.
 
@@ -35,9 +35,9 @@ androidTestImplementation(libs.androidx.junit)
 androidTestImplementation(libs.androidx.espresso.core)
 ```
 
-`testImplementation` é para os testes locais e `androidTestImplementation` para os instrumentados;
-nenhum dos dois vai para o app que um usuário instala. Os nomes depois de `libs.` apontam para
-`tickets/gradle/libs.versions.toml`, onde o modelo escreveu quais versões; deixe-as como ele
+`testImplementation` é para os testes locais e `androidTestImplementation` para os instrumentados.
+Nenhum dos dois vai para o app que um usuário instala. Os nomes depois de `libs.` apontam para
+`tickets/gradle/libs.versions.toml`, onde o modelo escreveu quais versões. Deixe-as como ele
 escolheu.
 
 | nome no arquivo de build | a biblioteca | o que ela dá a um teste |
@@ -52,7 +52,7 @@ A segunda e a terceira trazem o resto do AndroidX Test junto, incluindo `Activit
 ## Uma primeira classe de teste
 
 Dois testes: o botão de atualizar está na tela, e tocar no espetáculo `sh-103` o abre com título e
-preço. Crie o arquivo em `androidTest/java/example/tickets/`: na visão *Project*, clique com o botão
+preço. Crie o arquivo em `androidTest/java/example/tickets/`. Na visão *Project*, clique com o botão
 direito no pacote e escolha *New › Kotlin Class/File*.
 Salve como `tickets/app/src/androidTest/java/example/tickets/ListTest.kt`:
 
@@ -119,6 +119,6 @@ A seção 04 lê a classe parte por parte. Um aviso antes disso: **esta versão 
 05 diz por quê e a corrige.
 
 **Nenhum código de teste desta lição foi compilado ou executado para este curso.** Ele precisa do
-AndroidX Test, que vem do repositório do próprio Google, e a máquina de gravação não alcança nem esse
-repositório nem um emulador. Ele foi escrito contra as partes do Espresso que não mudam há anos, e a
+AndroidX Test, que vem do repositório do próprio Google. A máquina de gravação não alcança nem esse
+repositório nem um emulador. O código foi escrito contra as partes do Espresso que não mudam há anos, e a
 seção 07 diz como rodá-lo.

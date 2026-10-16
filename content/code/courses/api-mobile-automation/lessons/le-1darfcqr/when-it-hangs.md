@@ -4,14 +4,14 @@ version: 1
 ---
 
 **Detox waits for an idle app, so an app that is never idle makes every step wait until the test's
-own timeout.** Nothing on the screen is wrong; the list is there, the row is there, and the spec
+own timeout.** Nothing on the screen is wrong. The list is there, the row is there, and the spec
 never reaches it. This is the failure that belongs to gray-box synchronisation, and every Detox
 suite meets it sooner or later.
 
 ## How an app stays busy
 
 Suppose a developer makes the list keep its seats up to date by asking boxoffice again every
-second, a common request for a box office during a sale. In `App.tsx` it is three lines, in place of
+second. That is a common request for a box office during a sale. In `App.tsx` it is three lines, in place of
 the `useEffect` that loads once:
 
 ```tsx
@@ -23,10 +23,10 @@ useEffect(() => {
 ```
 
 Now look at the table of section 03. There is always a timer about to fire, and a request to
-boxoffice in flight for part of every second. **The app is correct and never idle**, so the first
+boxoffice in flight for part of every second. **The app is correct and never idle.** The first
 `expect` of the spec waits, and waits, until Jest's two minutes in `e2e/jest.config.js` run out and
-the test fails. Detox can print, while it waits, the list of what is keeping the app busy, and the
-timer and the network request would both be on it. That message is the place to start: it names
+the test fails. While it waits, Detox can print the list of what is keeping the app busy. The timer
+and the network request would both be on it. That message is the place to start: it names
 the cause rather than the element.
 
 ```schooling-figure
@@ -43,9 +43,9 @@ Other common causes, each of which keeps one row of that table true for ever:
 ## Three ways out, best first
 
 **Make the app quiet in the test build.** If the polling is a feature, the developers can switch it
-off, or slow it down, when the app is built for tests, and the spec stays exactly as it is. This is
-lesson 16's argument for `CountingIdlingResource` again: the app helps its tests, on purpose, and
-the tests keep the full synchronisation everywhere else.
+off, or slow it down, when the app is built for tests. The spec stays exactly as it is. This is
+lesson 16's argument for `CountingIdlingResource` again: the app helps its tests, on purpose. The
+tests keep the full synchronisation everywhere else.
 
 **Tell Detox to ignore one address.** `device.setURLBlacklist` takes a list of patterns, and requests
 to a matching URL no longer count as work in flight. The rest of the synchronisation stays on:
@@ -54,8 +54,8 @@ to a matching URL no longer count as work in flight. The rest of the synchronisa
 await device.setURLBlacklist(['.*/v1/shows.*']);
 ```
 
-It deals with the request, and not with the timer, which on its own may still keep Detox waiting;
-that is why the first way is better when it is possible.
+It deals with the request and not with the timer, which on its own may still keep Detox waiting.
+That is why the first way is better when it is possible.
 
 **Switch synchronisation off for the part that never settles, and wait explicitly there.** This is
 lesson 15's style, inside Detox:
@@ -74,11 +74,11 @@ it('opens a show while the list keeps polling', async () => {
 ```
 
 `waitFor(…).withTimeout(…)` asks again until the condition holds or the deadline passes, like
-WebdriverIO's `waitForDisplayed`; without synchronisation, a plain `expect` would look once, at
-once, and fail on a list not yet drawn. **The `finally` matters**: a spec that fails with
-synchronisation off and never switches it back leaves every later spec in the file without it,
+WebdriverIO's `waitForDisplayed`. Without synchronisation, a plain `expect` would look once, at
+once, and fail on a list not yet drawn. **The `finally` matters.** Suppose a spec fails with
+synchronisation off and never switches it back. Every later spec in the file then runs without it,
 passing or failing for reasons that have nothing to do with them.
 
-None of these was run for this course, for the reason section 04 gave; they are written from
+None of these was run for this course, for the reason section 04 gave. They are written from
 Detox's documented API, and each is a few lines a test can carry until the developers make the
 app quiet.

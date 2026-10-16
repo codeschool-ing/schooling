@@ -4,14 +4,14 @@ version: 1
 ---
 
 **A test is the session of section 04 written in code, with checks between the steps.** WebdriverIO
-sends the same requests curl sent; what it adds is waiting, error messages and a little syntax.
-The test runner is the one Node already carries, `node:test`, which lesson 12 uses for the API
-half: a test is a function, `before` and `after` run around them, and `assert` checks a value.
+sends the same requests curl sent, and adds waiting, error messages and a little syntax. The test
+runner is the one Node already carries, `node:test`, which lesson 12 uses for the API half. A test is
+a function, `before` and `after` run around them, and `assert` checks a value.
 
 The test opens Tickets on the emulator, waits for the list, taps the third show and checks that the
 show's screen says how many seats are left. That number is not written into the test. **It asks
-boxoffice**, because the seats of `sh-103` depend on what earlier tests bought, and a test that
-expected `4` would pass after a restart and fail after an order. The screen and the API must agree,
+boxoffice**, because the seats of `sh-103` depend on what earlier tests bought. A test that expected
+`4` would pass after a restart and fail after an order. The screen and the API must agree,
 whatever the number is, and that agreement is what the test is for.
 
 ## What it needs
@@ -19,7 +19,7 @@ whatever the number is, and that agreement is what the test is for.
 - boxoffice running, as in every lesson of this half;
 - the emulator running, with nothing else attached, or `appium:udid` added to say which device;
 - Tickets built. A Run from lesson 14 builds it, and so does `./gradlew assembleDebug` typed in the
-  `tickets` folder (`.\gradlew.bat assembleDebug` in PowerShell); either writes the debug APK to
+  `tickets` folder, or `.\gradlew.bat assembleDebug` in PowerShell. Either writes the debug APK to
   `tickets/app/build/outputs/apk/debug/app-debug.apk`, which is where the capabilities point.
   Appium installs it on the device when the session starts;
 - the Appium server of section 03, running.
@@ -108,17 +108,17 @@ test('the third show opens with the seats boxoffice reports', async () => {
 ```
 
 Run it with Node's test runner, from `~/boxoffice`. `--test-reporter=tap` asks for the plain TAP
-report, which is what the transcripts of this course print; without it Node draws its own report
+report, which is what the transcripts of this course print. Without it Node draws its own report
 with symbols, and says the same things:
 
 ```sh
 node --test --test-reporter=tap appium/tickets.test.mjs
 ```
 
-On your computer, with the emulator open, the app appears on it, the list loads, the third row is
-tapped and the show's screen opens, and the runner reports one test passed. **That run was not
-recorded for this course**: the app was never built on the recording machine and no emulator can
-start there (lesson 14). What was recorded is the same command on that machine, where Appium had
+On your computer, with the emulator open, the app appears on it and the list loads. The third row is
+tapped, the show's screen opens, and the runner reports one test passed. **That run was not
+recorded for this course.** The app was never built on the recording machine, and lesson 14 showed
+that no emulator can start there. What was recorded is the same command on that machine, where Appium had
 nowhere to install the app:
 
 ```
@@ -166,12 +166,12 @@ not ok 1 - the third show opens with the seats boxoffice reports
 
 **The failure is the session, not the test**, and the report says so: `failureType: 'hookFailed'`,
 the `before` hook that calls `remote`. The UiAutomator2 driver asked adb for a device and found
-none in 20 seconds. WebdriverIO retries a session that fails to start, and tried three more times:
-those are the first four lines, about twenty seconds apart, and the reason the run took 85 seconds
+none in 20 seconds. WebdriverIO retries a session that fails to start, and tried three more times.
+Those are the first four lines, about twenty seconds apart, and the reason the run took 85 seconds
 to fail. In a pipeline, where nobody is going to start the emulator halfway through,
 `connectionRetryCount: 0` beside `logLevel` makes it fail on the first answer.
 
-**This is the first error most people meet with a real device as well**, and its cause is nearly
+**This is the first error most people meet with a real device as well.** Its cause is nearly
 always that the emulator was not running when the test started, or that `adb devices` lists
 nothing although it is. Lesson 14's section on failures has the fix for both.
 

@@ -5,13 +5,13 @@ version: 1
 
 **Detox's one idea is that a test should never have to wait on its own.** Before every action and
 every expectation, Detox waits until the app is idle, and only then taps or looks. Lesson 15 waited
-explicitly, element by element, from outside; lesson 16 let Espresso wait for the main thread and
+explicitly, element by element, from outside. Lesson 16 let Espresso wait for the main thread and
 then had to teach it about the load. Detox goes further than either, because a React Native app
 has more places for work to hide, and Detox watches them for you.
 
 The wrong picture is of Detox as Appium for React Native: a driver from outside, faster to set up.
 It is closer to Espresso, and on Android it is built on Espresso. Detox puts a small library into
-the app, which talks to the test over a WebSocket, and the library can see what the app is doing.
+the app, which talks to the test over a WebSocket. The library can see what the app is doing.
 
 ## What "idle" means to Detox
 
@@ -27,8 +27,8 @@ these is true:
 | the JavaScript thread is busy, or React Native is still passing work between JavaScript and the native side | the state update after the answer arrives |
 
 The second row is the one that lesson 16 needed an idling resource for. **Detox knows about the
-network on its own**: the request to boxoffice keeps the app busy until its answer is in and the
-list is drawn, and the spec of section 05 has no wait in it at all.
+network on its own.** The request to boxoffice keeps the app busy until its answer is in and the
+list is drawn. The spec of section 05 has no wait in it at all.
 
 ## Three ways to wait, compared
 
@@ -44,5 +44,5 @@ app cannot run against an app that is never idle, however correct the screen is.
 subject of section 06.
 
 **Gray box has the same price here as in lesson 16.** Detox knows the app well enough to wait for
-it, and a test can switch that knowledge off, which section 06 has to do. Switch it off for the
+it. A test can switch that knowledge off, which section 06 has to do. Switch it off for the
 part of the app that never settles, and never for a whole suite because one test was slow.

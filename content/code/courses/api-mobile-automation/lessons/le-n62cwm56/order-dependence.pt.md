@@ -50,7 +50,7 @@ test('sh-103 sells out at four seats', async () => {
 });
 ```
 
-Os dois usam o boxoffice em `BASE`, o que está rodando no seu outro terminal, e os dois estão certos
+Os dois usam o boxoffice em `BASE`, o que está rodando no seu outro terminal. Os dois estão certos
 sobre um boxoffice que acabou de iniciar. Reinicie o boxoffice com Ctrl-C e o mesmo comando, para ele
 ter um sh-103 novo, e rode o segundo:
 
@@ -111,7 +111,7 @@ not ok 1 - two seats of sh-103 leave two
 # duration_ms 201.28103
 ```
 
-`0 !== 2`: a primeira execução vendeu dois lugares, a segunda vendeu os outros dois, e o teste esperava
+`0 !== 2`: a primeira execução vendeu dois lugares e a segunda vendeu os outros dois. O teste esperava
 que sobrassem dois, porque foi escrito como se fosse a única coisa que já tivesse acontecido ao
 sh-103. Reinicie o boxoffice mais uma vez e rode os dois, um arquivo por vez com
 `--test-concurrency=1`:
@@ -138,10 +138,10 @@ not ok 2 - sh-103 sells out at four seats
 ```
 
 **O node ordena os arquivos que recebe**, então `seats` roda antes de `sellout` de qualquer jeito. É
-bom saber e não ajuda: a ordem continua sendo um acaso dos nomes, e renomear um arquivo mudaria a
-falha de lugar. Sem `--test-concurrency=1`, o Node roda os arquivos em paralelo, um processo cada, e
-qual requisição chega primeiro ao sh-103 vira uma corrida entre processos. Os mesmos dois arquivos
-podem então passar na sua máquina e falhar numa mais lenta.
+bom saber e não ajuda. A ordem continua sendo um acaso dos nomes, e renomear um arquivo mudaria a
+falha de lugar. Sem `--test-concurrency=1`, o Node roda os arquivos em paralelo, um processo cada.
+Qual requisição chega primeiro ao sh-103 vira então uma corrida entre processos, e os mesmos dois
+arquivos podem passar na sua máquina e falhar numa mais lenta.
 
 ## A correção: estado que pertence ao teste
 
@@ -180,9 +180,9 @@ export function start(file, env = {}) {
 }
 ```
 
-**Ele rejeita se o programa termina antes de escutar**, então um servidor que não conseguiu iniciar,
-porque a porta estava ocupada, por exemplo, reprova o arquivo de teste no `before` com o motivo, em
-vez de deixar todo teste esgotar o tempo contra o nada. Agora o primeiro teste corrigido; salve como
+**Ele rejeita se o programa termina antes de escutar.** Um servidor que não conseguiu iniciar, porque
+a porta estava ocupada, por exemplo, reprova o arquivo de teste no `before` com o motivo, em vez de
+todo teste esgotar o tempo contra o nada. Agora o primeiro teste corrigido; salve como
 `tests/seats.test.mjs`:
 
 ```js
@@ -255,5 +255,5 @@ ok 2 - sh-103 sells out at four seats
 ```
 
 **A mesma resposta em qualquer ordem, quantas vezes for**, porque nenhum teste enxerga o que o outro
-fez. O custo é um servidor iniciado por arquivo, uma fração de segundo aqui, o que sai barato perto de
-uma tarde gasta num teste que falha uma vez a cada cinco.
+fez. O custo é um servidor iniciado por arquivo, uma fração de segundo aqui. Sai barato perto de uma
+tarde gasta num teste que falha uma vez a cada cinco.

@@ -6,8 +6,7 @@ version: 1
 **Repetir é apostar que a mesma requisição vai receber uma resposta diferente, e para a maioria das
 falhas essa aposta está perdida antes de ser feita.** A crença de costume é que um cliente deve
 repetir tudo o que falhou. Um `422` para sete lugares vai ser um `422` para sete lugares na centésima
-tentativa; um `401` continua `401` até o token mudar. Repeti-los gasta tempo e, contra um servidor que
-conta falhas, pode deixar o cliente bloqueado. O status da lição 1 já diz que lado deve agir, e essa é
+tentativa; um `401` continua `401` até o token mudar. Repeti-los gasta tempo. Contra um servidor que conta falhas, pode deixar o cliente bloqueado. O status da lição 1 já diz que lado deve agir, e essa é
 a regra inteira:
 
 | falha | repetir? | por quê |
@@ -20,8 +19,8 @@ a regra inteira:
 | `500` | depende | um bug responde `500` toda vez; uma queda sob carga talvez não. A maioria dos clientes não repete |
 
 **Repetir só é seguro onde refazer é seguro.** Um `GET` pode ser mandado de novo à vontade. Um `POST`
-que cria um pedido só pode ser repetido com uma chave de idempotência, a mesma a cada vez, ou um
-`504` seguido de uma repetição é como um cliente compra dois ingressos.
+que cria um pedido só pode ser repetido com uma chave de idempotência, a mesma a cada vez. Sem ela, um `504` seguido de uma repetição é como um cliente compra dois
+ingressos.
 
 ## Esperando entre tentativas
 
@@ -64,9 +63,9 @@ export async function withRetry(send, {
 }
 ```
 
-`sleep` e `random` são parâmetros com padrões de verdade, e essa é a decisão de projeto que o torna
-testável: um teste passa um `sleep` que só registra a espera e um `random` que sempre responde 1,
-então as esperas são os próprios tetos e o teste não leva tempo nenhum.
+`sleep` e `random` são parâmetros com padrões de verdade, e essa decisão de projeto o torna testável.
+Um teste passa um `sleep` que só registra a espera e um `random` que sempre responde 1. As esperas
+são então os próprios tetos, e o teste não leva tempo nenhum.
 
 ## Testando sem servidor
 
@@ -140,6 +139,6 @@ ok 5 - the waits double and stop at the cap
 ```
 
 Cinco testes em menos de um décimo de segundo, contando a partida do processo. Cada um fixa uma regra
-da tabela acima, e **o do 422 é o que mais importa**: é a regra que as pessoas quebram sem querer,
+da tabela acima. **O do 422 é o que mais importa**: as pessoas quebram essa regra sem querer,
 quando um auxiliar repete "tudo o que não é 2xx". O último teste mostra a forma do backoff: 100, 200,
 400, e então o limite de 500 duas vezes.

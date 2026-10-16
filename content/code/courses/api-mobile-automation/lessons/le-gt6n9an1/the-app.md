@@ -6,16 +6,16 @@ version: 1
 **The app every lesson of the second half tests is called Tickets.** It asks boxoffice for the
 shows, lists them with their dates and the seats left, and opens a show when you tap it. On the
 show's screen a switch offers a reminder on the day, which needs Android's permission to send
-notifications. When boxoffice cannot be reached, it shows the list it saw last with a banner saying
-so, and when it has never seen one, it says it could not reach the box office.
+notifications. When boxoffice cannot be reached, it shows the list it saw last with a banner saying so. When it
+has never seen one, it says it could not reach the box office.
 
 That is little, on purpose: each feature is there because a later lesson tests it. The list is
-for Espresso in lesson 16 and Appium in lesson 15, the switch and its permission for lesson 21, and
-the saved list and its banner for lesson 22.
+for Appium in lesson 15 and Espresso in lesson 16. The switch and its permission are for lesson 21,
+and the saved list and its banner for lesson 22.
 
-**It is written in Kotlin with nothing but Android's own classes**, no libraries, so that every
-line is shown here and nothing is downloaded but what Android Studio brings. Kotlin is Android's
-main language; you do not need to write it for this course, only to read what a test is pointed at.
+**It is written in Kotlin with nothing but Android's own classes**, no libraries. Every line is
+shown here, and nothing is downloaded but what Android Studio brings. Kotlin is Android's main
+language. You do not need to write it for this course, only to read what a test is pointed at.
 
 ## The project
 
@@ -26,7 +26,7 @@ main language; you do not need to write it for this course, only to read what a 
 3. Press *Finish* and wait for the first build to end. Android Studio downloads Gradle and the
    libraries the template asks for, which takes a few minutes the first time.
 
-The template already has a `MainActivity` and a layout; the files below replace them and add the
+The template already has a `MainActivity` and a layout. The files below replace them and add the
 rest. In the *Project* panel, switch the view from *Android* to *Project* to see the folders as
 they are on disk. Copy each file with the button on its block.
 
@@ -63,7 +63,7 @@ save it as `tickets/app/src/main/AndroidManifest.xml`:
 </manifest>
 ```
 
-Android refuses plain HTTP unless the app names the addresses it may use it with, and boxoffice is
+Android refuses plain HTTP unless the app names the addresses it may use it with. boxoffice is
 plain HTTP. This file names the emulator's address for your computer and nothing else. Make the
 folder `xml` under `res` and save it as `tickets/app/src/main/res/xml/network_security_config.xml`:
 
@@ -292,12 +292,12 @@ object Shows {
 }
 ```
 
-`baseUrl` is the one line to change for a phone on a cable: `"http://localhost:8080"`, after the
-`adb reverse` of the last section. `busy` counts the loads in flight, and lesson 16 is the reason it
+`baseUrl` is the one line to change for a phone on a cable. It becomes `"http://localhost:8080"`,
+after the `adb reverse` of section 04. `busy` counts the loads in flight, and lesson 16 is the reason it
 exists.
 
 The list screen. It loads the shows on a background thread, because Android forbids network calls
-on the thread that draws the screen, and draws the result back on it. 
+on the thread that draws the screen. Then it draws the result back on that thread. 
 Save it as `tickets/app/src/main/java/example/tickets/MainActivity.kt`:
 
 ```kotlin
@@ -438,11 +438,11 @@ class ShowActivity : Activity() {
 ## Running it
 
 With boxoffice running and the emulator started, press **Run** (the green triangle) in Android
-Studio. It builds the APK, installs it on the emulator and opens it: three shows, the third with 4
+Studio. It builds the APK, installs it on the emulator and opens it. You see three shows, the third with 4
 seats left. Tap one, then use the back button to return.
 
 **This app was not built or run for this course.** The machine the course was recorded on cannot
-run Android Studio's build, which downloads from a server that machine cannot reach, and has no
-emulator to run it on. What was checked there is that every file above compiles: the resources were
-linked by Android's own resource compiler and the Kotlin was compiled against Android 15. A screen
+run Android Studio's build, which downloads from a server that machine cannot reach. It has no
+emulator to run it on either. What was checked there is that every file above compiles. Android's
+own resource compiler linked the resources, and the Kotlin was compiled against Android 15. A screen
 described in this half of the course is described from the code, not from a screenshot.

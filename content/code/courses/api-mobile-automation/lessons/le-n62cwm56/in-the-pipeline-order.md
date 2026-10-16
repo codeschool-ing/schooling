@@ -4,14 +4,14 @@ version: 1
 ---
 
 **On your machine you start the services by hand, in terminals, and you can see when each is ready.
-A pipeline has no eyes.** It runs commands one after another as fast as it can, so a script that
-starts boxoffice and runs the tests on the next line sends its first request before Node has finished
-loading boxoffice, and the test fails with a refused connection that has nothing to do with the code.
+A pipeline has no eyes.** It runs commands one after another as fast as it can. A script that starts
+boxoffice and runs the tests on the next line sends its first request before Node has finished
+loading boxoffice. The test fails with a refused connection that has nothing to do with the code.
 The fix is the same at every scale, from two Node programs to a dozen containers: start each service
 after what it needs, and wait until it answers before going on.
 
 The race is easy to show. Stop boxoffice and the stub with Ctrl-C in their terminals. This line
-starts boxoffice in the background with `&` and asks for `/health` straight away; `$!` is the process
+starts boxoffice in the background with `&` and asks for `/health` straight away. `$!` is the process
 just started, so `kill $!` stops it again:
 
 ```
@@ -27,9 +27,9 @@ Exit code 7, *failed to connect*: curl was faster than Node.
 
 ## The script
 
-It starts the stub, waits until the stub answers, starts boxoffice pointed at it, waits until
-`/health` answers, runs every test, and stops both servers whatever happened. In `~/boxoffice`,
-save it as `run-integration.sh`:
+It starts the stub and waits until the stub answers. It starts boxoffice pointed at the stub and
+waits until `/health` answers. Then it runs every test, and stops both servers whatever happened. In
+`~/boxoffice`, save it as `run-integration.sh`:
 
 ```sh
 #!/usr/bin/env bash
@@ -84,7 +84,7 @@ The parts, in the order they run:
 | `status` | keeps the exit code of `node --test` and ends the script with it | a pipeline that goes green because the last command, `grep`, succeeded |
 
 **The port check is the one people leave out.** Without it, a boxoffice left running in a terminal
-answers `/health`, the script's own boxoffice exits on `EADDRINUSE` into a log nobody reads, and the
+answers `/health`. The script's own boxoffice exits on `EADDRINUSE` into a log nobody reads, and the
 tests run against a server with an unknown history. Start boxoffice and the stub again in their
 terminals, the way a pair left over from the afternoon would be, and run the script:
 
@@ -110,7 +110,7 @@ ana@laptop:~/boxoffice$ echo $?
 
 Every test file in `tests/` ran: the ones that use the shared servers and the ones that start their
 own. The HEAD test is the one `not ok`, marked `# TODO`, and the exit code is 0. The full report is
-in `test-results.tap`, which is what a pipeline keeps as an artefact, beside the two servers' logs.
+in `test-results.tap`. A pipeline keeps that file as an artefact, beside the two servers' logs.
 After the script, nothing is listening any more:
 
 ```
@@ -122,13 +122,14 @@ boxoffice.log  shows.tap  slow.tap  stub.log  test-results.tap
 
 ## In a real pipeline
 
-A CI job runs exactly this: check out the code, set up Node 22 as lesson 6's workflow did, then one
-step, `bash run-integration.sh`, and an upload of `test-results.tap` and the logs, kept even when the
-step fails, because that is when they are needed. The script was not run on a CI service for this
-course; it was run here, as shown, and a runner executes the same commands.
+A CI job runs exactly this. It checks out the code and sets up Node 22 as lesson 6's workflow did.
+Then comes one step, `bash run-integration.sh`, and an upload of `test-results.tap` and the logs. The
+upload runs even when the step fails, because that is when the files are needed. The script was not
+run on a CI service for this course. It was run here, as shown, and a runner executes the same
+commands.
 
 When the services are containers, the same ideas carry other names. Docker Compose's `depends_on`
-with `condition: service_healthy` waits for a health check rather than for a process to exist, which
-is `wait_for`; a job's `services:` block in GitHub Actions starts databases and stubs beside the job
-with health checks of their own. Neither changes the rule: **start in order of need, wait for an
+with `condition: service_healthy` waits for a health check rather than for a process to exist; that
+is `wait_for`. In GitHub Actions, a job's `services:` block starts databases and stubs beside the
+job, with health checks of their own. Neither changes the rule: **start in order of need, wait for an
 answer, never for a number of seconds.**

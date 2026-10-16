@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Every Espresso line has the same three parts: find a view, do something to it, check something
-about it.** `onView(matcher)` finds, `perform(action)` does, `check(assertion)` checks, and a line
+about it.** `onView(matcher)` finds, `perform(action)` does, `check(assertion)` checks. A line
 may have the first and either or both of the others. Read aloud, the second test of section 03 is
 *on the row holding `sh-103`, perform a click; on the view with id `title`, check that it matches
 the text "O Pagador de Promessas"*.
@@ -40,16 +40,16 @@ the text "O Pagador de Promessas"*.
 
 ## Why a list needs `onData`
 
-A `ListView` does not make a view for every item. It makes enough rows to fill the screen and
-**reuses them as you scroll**, putting the next item's text into a row that has just gone off the
-top. So a row for an item further down the list does not exist until it is scrolled to, and
-`onView` can only find views that exist. `onData` asks the list's adapter for the item instead,
-scrolls until its row is drawn, and then acts on that row. Tickets has three shows and they fit
-on any screen, but a test written with `onView` would break the day boxoffice sells a fourth.
+A `ListView` does not make a view for every item. It makes enough rows to fill the screen and **reuses them as you scroll**. The next item's
+text goes into a row that has just gone off the top. So a row for an item further down the list
+does not exist until it is scrolled to, and `onView` can only find views that exist. `onData` asks
+the list's adapter for the item instead. It scrolls until the item's row is drawn, then acts on that
+row. Tickets has three shows and they fit on any screen. But a test written with `onView` would
+break the day boxoffice sells a fourth.
 
 **The row is chosen by what it holds, not where it is.** `onData(…).atPosition(2)` would also find
 the third row, and it would find a different show the day boxoffice lists them in another order.
-`showWithId("sh-103")` keeps finding the right one, and it is the gray box of section 02 at its most
+`showWithId("sh-103")` keeps finding the right one. It is the gray box of section 02 at its most
 useful: the `Show` object is the app's own, and no screen reader could have offered the id.
 
 ## The parts you will use most
@@ -69,12 +69,12 @@ useful: the `Show` object is the app's own, and no screen reader could have offe
 | assertion | `doesNotExist()` | no view matches at all |
 
 **`not(isDisplayed())` and `doesNotExist()` are different checks.** Tickets's banner is in the
-layout on every start, hidden with `visibility="gone"`, so it exists and is not displayed:
+layout on every start, hidden with `visibility="gone"`. So it exists and is not displayed:
 `matches(not(isDisplayed()))` passes and `doesNotExist()` fails. A view that was never inflated,
 like `remind` on the list screen, is the other way round. Section 06 checks the banner, and needs
 the first.
 
-When a matcher finds nothing, Espresso fails with `NoMatchingViewException` and prints the whole
-view hierarchy it searched, much like Appium's page source in lesson 15. When it finds more than
-one, it fails with `AmbiguousViewMatcherException`, which is what `withId(R.id.title)` would do on
-the list screen, where every row has a `title`.
+When a matcher finds nothing, Espresso fails with `NoMatchingViewException`. It prints the whole
+view hierarchy it searched, much like Appium's page source in lesson 15. When a matcher finds more
+than one, it fails with `AmbiguousViewMatcherException`. `withId(R.id.title)` would do that on the
+list screen, where every row has a `title`.

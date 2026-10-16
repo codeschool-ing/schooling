@@ -6,13 +6,13 @@ version: 1
 **"Offline" is the easy case. The hard ones are the connections that are there and do not work.**
 A phone with no signal at all fails at once and every app has a sentence for it. A phone on a train
 has a signal that is slow, then thin, then gone for twenty seconds, then back with a different
-address, and each of those does something different to a request that was halfway through.
+address. Each of those does something different to a request that was halfway through.
 
 The common belief is that the network is either up or down, and that the operating system knows
 which. A phone on a café's Wi-Fi shows full bars and passes nothing until somebody accepts the
-café's terms in a browser; a phone at the edge of coverage reports a connection that delivers a
+café's terms in a browser. A phone at the edge of coverage reports a connection that delivers a
 few hundred bytes a second. **Android saying "connected" means a link exists, not that answers
-arrive**, and an app that waits for Android to say "offline" before it copes will wait while the
+arrive.** An app that waits for Android to say "offline" before it copes will wait while the
 person stares at an empty screen.
 
 ## Four properties, and what each does to a request
@@ -33,15 +33,15 @@ person stares at an empty screen.
 None of those properties fails a request by itself. **The client's timeouts decide when slow
 becomes failed**, and an HTTP client usually has two of them:
 
-- a **connect timeout**, how long to wait for the other side to accept the connection at all;
-- a **read timeout**, how long to wait in silence for data once it has.
+- a *connect timeout*, how long to wait for the other side to accept the connection at all;
+- a *read timeout*, how long to wait in silence for data once it has.
 
-So the same bad network produces a slow success under one setting and a failure under another,
-and that is the first thing to find out about an app before testing it on a poor connection.
+So the same bad network produces a slow success under one setting and a failure under another.
+That is the first thing to find out about an app before testing it on a poor connection.
 Tickets sets both to five seconds, and section 05 reads where. **A tester's job here is less to
-break the connection than to put a request on each side of those limits** and see what the person
-holding the phone is shown: the request that takes four seconds, and the one that takes six.
+break the connection than to put a request on each side of those limits.** Then you see what the
+person holding the phone is shown: the request that takes four seconds, and the one that takes six.
 
-The first half of this course already met the server's side of the same question: boxoffice's own
-two-second limit on the payment provider, in lesson 13. This lesson builds a network bad enough to
+The first half of this course already met the server's side of the same question, in lesson 13:
+boxoffice's own two-second limit on the payment provider. This lesson builds a network bad enough to
 reach both, on purpose and repeatably.

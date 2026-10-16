@@ -3,10 +3,10 @@ title: A gesture is a finger, moved
 version: 1
 ---
 
-**To a test, a swipe is not a command; it is a finger put down at one point, moved to another
+**To a test, a swipe is not a command. It is a finger put down at one point, moved to another
 over some milliseconds, and lifted.** The W3C protocol of lesson 15 has a single request for every
-gesture there is, `POST /session/{id}/actions`, and its body describes the finger: an *input
-source* of type `pointer` with `pointerType` `touch`, and the list of things it does, in order.
+gesture there is, `POST /session/{id}/actions`. Its body describes the finger: an *input source* of
+type `pointer` with `pointerType` `touch`, and the list of things it does, in order.
 Five kinds of step are enough for every gesture on a phone:
 
 | step | what the finger does |
@@ -16,15 +16,15 @@ Five kinds of step are enough for every gesture on a phone:
 | `pause` | stays where it is for a `duration` |
 | `pointerUp` | leaves the screen |
 
-So a **tap** is down and up at one point, a **long press** is down, a pause of a second or so, and
-up, and a **swipe** is down, a move with a duration, and up. A **pinch** needs two fingers, which is
-two pointer sources in one request, each with its own steps, played together.
+So a *tap* is down and up at one point. A *long press* is down, a pause of a second or so, and
+up. A *swipe* is down, a move with a duration, and up. A *pinch* needs two fingers, which is two
+pointer sources in one request, each with its own steps, played together.
 
 ## Seeing one
 
-A gesture on a device is invisible from the test's side: the request goes out, the screen moves,
-and the answer is `null`. Appium's fake driver from lesson 15 is the way to look at one, because
-it keeps a log of the actions it receives, which only it does. With the server of lesson 15
+A gesture on a device is invisible from the test's side. The request goes out, the screen moves,
+and the answer is `null`. Appium's fake driver from lesson 15 is the way to look at one. It keeps a
+log of the actions it receives, which no other driver does. With the server of lesson 15
 running and the fake driver installed, save it as `appium/fake-gestures.mjs`:
 
 ```js
@@ -97,8 +97,8 @@ try {
 ```
 
 `logLevel: 'silent'` and `connectionRetryCount: 0` keep WebdriverIO from printing its own
-warnings and from retrying the command that is meant to fail at the end; the script prints that
-error itself. From `~/boxoffice`:
+warnings. They also stop it retrying the command that is meant to fail at the end. The script
+prints that error itself. From `~/boxoffice`:
 
 ```
 ana@laptop:~/boxoffice$ node appium/fake-gestures.mjs
@@ -129,10 +129,10 @@ mobile: swipeGesture failed: WebDriverError: Unsupported execute method 'mobile:
 ```
 
 **Read the swipe by hand first.** The finger goes to `540,2100`, near the bottom of a screen 2400
-pixels tall, touches, waits 100 ms, travels to `540,700` in 400 ms and lifts. The content under it
-moves up with the finger, which is what *swipe up* means: **the direction is the finger's, not the
-list's**, and a swipe up brings the rows further down the list into view. Mixing the two is the
-commonest gesture bug in a test, and it fails quietly: the list moves the wrong way, nothing is
+pixels tall, and touches. It waits 100 ms, travels to `540,700` in 400 ms and lifts. The content
+under it moves up with the finger, which is what *swipe up* means. **The direction is the finger's,
+not the list's**, and a swipe up brings the rows further down the list into view. Mixing the two is
+the commonest gesture bug in a test, and it fails quietly. The list moves the wrong way, nothing is
 found, and the report blames the locator.
 
 ```schooling-figure
@@ -140,13 +140,12 @@ found, and the report blames the locator.
 ```
 
 **The long press names no coordinates at all.** Its `origin` is the refresh button, as a W3C
-element reference, and `x: 0, y: 0` is an offset from the element's centre. That is the gesture's
-version of lesson 14's advice about locators: a point worked out from an element survives a new
-layout, and a point typed in as pixels does not.
+element reference, and `x: 0, y: 0` is an offset from the element's centre. That is the gesture's version of lesson 14's advice about locators. A point worked out from an
+element survives a new layout, and a point typed in as pixels does not.
 
-**WebdriverIO's helpers send the same five steps.** `driver.swipe()` asked the list for its rectangle
-(it starts at `y: 306` and is 2052 pixels tall), took the middle half of it because of
-`percent: 0.5`, and swiped from `y: 1845` to `y: 819` in 1500 ms, its default. `longPress()` is the
+**WebdriverIO's helpers send the same five steps.** `driver.swipe()` asked the list for its
+rectangle, which starts at `y: 306` and is 2052 pixels tall. It took the middle half of it because
+of `percent: 0.5`, and swiped from `y: 1845` to `y: 819` in 1500 ms, its default. `longPress()` is the
 long press with 800 ms in the pause. The server's own log shows what went over HTTP:
 
 ```
@@ -160,18 +159,17 @@ long press with 800 ms in the pause. The server's own log shows what went over H
 [5f76d6dd][HTTP] --> DELETE /session/5f76d6dd-8e9f-42b3-a7c9-7215833eb22e/actions
 ```
 
-One `POST …/actions` per gesture, each followed by a `DELETE …/actions`, which WebdriverIO sends to
-release whatever the finger might still be holding. Every gesture library for Appium ends in these
-requests, so when a gesture misbehaves on a device, the body of that `POST` in the server's log is
-what to read first.
+One `POST …/actions` per gesture, each followed by a `DELETE …/actions`. WebdriverIO sends that second request to release whatever the finger might still be holding. Every gesture library for Appium
+ends in these requests. When a gesture misbehaves on a device, read the body of that `POST` in the
+server's log first.
 
 ## The driver's own gestures
 
 The last line of the run is the fake driver refusing `mobile: swipeGesture`. **Commands that start
-with `mobile:` are not the protocol's; they belong to one driver**, and travel through the standard
-`execute` request with the command's name in place of a script. The UiAutomator2 driver has a set
-of them that hand the gesture to Android's UiAutomator, which performs it on the device from an
-element and a percentage, with no coordinates worked out in the test:
+with `mobile:` are not the protocol's; they belong to one driver.** They travel through the
+standard `execute` request with the command's name in place of a script. The UiAutomator2 driver has
+a set of them that hand the gesture to Android's UiAutomator. UiAutomator performs it on the device
+from an element and a percentage, with no coordinates worked out in the test:
 
 | gesture | UiAutomator2's command | its main arguments |
 |---|---|---|
@@ -184,9 +182,9 @@ element and a percentage, with no coordinates worked out in the test:
 
 In WebdriverIO they are called with `driver.execute('mobile: swipeGesture', { elementId, direction:
 'up', percent: 0.75 })`. **The choice between the two kinds is portability against reliability.**
-W3C actions work on every driver, Android and iOS alike, and leave the coordinates to you; the
+W3C actions work on every driver, Android and iOS alike, and leave the coordinates to you. The
 `mobile:` gestures are often steadier on Android, because UiAutomator knows the screen, and they tie
-the test to one driver. A suite that runs on one platform can take the `mobile:` ones; a suite for
+the test to one driver. A suite that runs on one platform can take the `mobile:` ones. A suite for
 both keeps to actions, or to WebdriverIO's helpers, which are actions underneath.
 
 ## Scrolling to something
@@ -202,25 +200,25 @@ await driver.$('android=new UiScrollable(new UiSelector().scrollable(true))' +
 ```
 
 It scrolls the first scrollable view on screen until a row with that title appears, and returns
-that row. Tickets has three shows and they fit on any phone, so neither is needed for the list as
+that row. Tickets has three shows and they fit on any phone. So neither is needed for the list as
 boxoffice serves it; they matter the day there are thirty.
 
 ## Gestures in Espresso
 
-Espresso has the same gestures as **view actions**, performed on a view it found, and like every
-Espresso step they wait for the main thread first:
+Espresso has the same gestures as **view actions**, performed on a view it found. Like every
+Espresso step, they wait for the main thread first:
 
 ```kotlin
 onView(withId(R.id.shows)).perform(swipeUp())
 onData(showWithId("sh-103")).inAdapterView(withId(R.id.shows)).perform(longClick())
 ```
 
-`swipeUp()`, `swipeDown()`, `swipeLeft()` and `swipeRight()` swipe across the view they are given;
+`swipeUp()`, `swipeDown()`, `swipeLeft()` and `swipeRight()` swipe across the view they are given.
 `longClick()` and `doubleClick()` press it. **`onData` already scrolls a `ListView` to the row it
-finds**, which is why lesson 16's tests never needed a swipe; `scrollTo()` does the same for a view
-inside a `ScrollView`. Espresso's gestures are touch events injected into the app's own window, so
-they can only reach the app's views, which is the limit the next section runs into.
+finds**, which is why lesson 16's tests never needed a swipe. `scrollTo()` does the same for a view
+inside a `ScrollView`. Espresso's gestures are touch events injected into the app's own window. They
+can only reach the app's views, and the next section runs into that limit.
 
-**No gesture in this section was performed on a device for this course**, since no emulator can
-start on the recording machine (lesson 14). The run above is the protocol, real, through the real
-server; what a swipe does to Tickets's list is for your emulator to show.
+**No gesture in this section was performed on a device for this course.** As lesson 14 showed, no
+emulator can start on the recording machine. The run above is the protocol, real, through the real
+server. What a swipe does to Tickets's list is for your emulator to show.

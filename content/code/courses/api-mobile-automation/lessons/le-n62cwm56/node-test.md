@@ -4,11 +4,11 @@ version: 1
 ---
 
 **Node 22 carries its own test runner and its own assertions, so an API test needs nothing
-installed.** `node:test` finds test files, runs them and reports; `node:assert` compares what came
-back with what was expected; `fetch`, built into Node since version 18, sends the requests. Jest,
-Mocha and Vitest are popular frameworks, and they add things like watch modes, mocking of modules
-and snapshot files. A test that talks to a server over HTTP uses none of those, so this lesson and
-the next use what Node already has, and every line of the tests is visible in the lesson.
+installed.** `node:test` finds test files, runs them and reports. `node:assert` compares what came
+back with what was expected. `fetch`, built into Node since version 18, sends the requests. Jest,
+Mocha and Vitest are popular frameworks, and they add watch modes, module mocks and snapshot files.
+A test that talks to a server over HTTP uses none of those. So this lesson and the next use what
+Node already has, and every line of the tests is visible in the lesson.
 
 ## Shared helpers
 
@@ -47,11 +47,11 @@ export async function get(url) {
 }
 ```
 
-`BASE` and `STUB` are where the servers are, and an environment variable can move them, so the same
+`BASE` and `STUB` say where the servers are. An environment variable can move them, so the same
 tests can run against another machine. `token`, `order` and `get` each hide one request and hand back
 what a test asserts on: a status, a body, sometimes headers. **`token` throws when it gets no
-token**, because a test that went on with `undefined` as its bearer would fail three lines later,
-with a 401 that points at the wrong place.
+token.** A test that went on with `undefined` as its bearer would fail three lines later, with a 401
+that points at the wrong place.
 
 ## A first test file
 
@@ -102,9 +102,9 @@ boxoffice listening on http://localhost:8080
 ```
 
 `node --test` runs the files you name, each in a process of its own. **On a terminal its default
-report draws a tick or a cross beside each test**; this course asks for the `tap` reporter instead,
-which writes the same results as plain text in the Test Anything Protocol, a format test tools have
-written since Perl made it up in the 1980s, and which CI systems read:
+report draws a tick or a cross beside each test.** This course asks for the `tap` reporter instead.
+It writes the same results as plain text in the Test Anything Protocol, a format Perl made up in the
+1980s and test tools have written ever since. CI systems read it:
 
 ```
 ana@laptop:~/boxoffice$ node --test --test-reporter=tap tests/shows.test.mjs
@@ -163,17 +163,18 @@ ana@laptop:~/boxoffice$ echo $?
 1
 ```
 
-Read it from the bottom. The summary says four tests, three passed, one failed. **The exit code is 1**, and that is what a pipeline reads to go red. Above it, each test
-has a line, `ok` or `not ok`, and the failure carries what a defect report needs: the comparison that
-failed (`405 !== 200`), the `expected` and `actual` values, and the `location` of the test, file,
-line and column. The stack trace below it is Node's own; its first line is the test's.
+Read it from the bottom. The summary says four tests, three passed, one failed. **The exit code is
+1**, and that is what a pipeline reads to go red. Above it, each test has a line, `ok` or `not ok`.
+The failure carries what a defect report needs: the comparison that failed (`405 !== 200`), the
+`expected` and `actual` values, and the `location` of the test as file, line and column. The stack
+trace below it is Node's own; its first line is the test's.
 
 ## A known defect, kept in sight
 
 The HEAD test fails because boxoffice is wrong, and it will keep failing until somebody fixes
 boxoffice. Leaving it red trains everybody to ignore a red run; deleting it loses the defect. Node's
-answer is the `todo` option: the test still runs and its result is still reported, but a failing todo
-does not fail the run. Change the HEAD test's first line to this:
+answer is the `todo` option. The test still runs and its result is still reported, but a failing
+todo does not fail the run. Change the HEAD test's first line to this:
 
 ```js
 test('HEAD answers like GET, without a body', { todo: 'boxoffice answers HEAD with 405, lesson 1' }, async () => {
@@ -196,5 +197,5 @@ not ok 4 - HEAD answers like GET, without a body # TODO boxoffice answers HEAD w
 ```
 
 **Exit code 0, and the defect is still in the report**, marked `# TODO` with the reason written
-beside it. The day HEAD is fixed, that line turns to `ok … # TODO`, which is the signal to take the
+beside it. The day HEAD is fixed, that line turns to `ok … # TODO`. That is the signal to take the
 option away.

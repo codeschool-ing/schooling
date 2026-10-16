@@ -6,8 +6,8 @@ version: 1
 **Num celular, o que um app pode fazer é decidido por quem o segura, uma permissão de cada vez, no
 momento em que o app precisa dela pela primeira vez.** Desde o Android 6, as permissões que tocam a
 vida privada de alguém, como a câmera, a localização e os contatos, são pedidas em tempo de execução
-com um diálogo, e a pessoa pode dizer não. O Android 13 pôs as notificações nessa lista, como
-`POST_NOTIFICATIONS`. Então um recurso atrás de uma permissão tem pelo menos dois caminhos, e o
+com um diálogo. A pessoa pode dizer não. O Android 13 pôs as notificações nessa lista, como
+`POST_NOTIFICATIONS`. Então um recurso atrás de uma permissão tem pelo menos dois caminhos. O
 caminho em que a pessoa diz não é aquele que ninguém testa à mão duas vezes.
 
 A crença a abandonar primeiro é a de que o diálogo faz parte do app. **Quem o desenha é o Android**,
@@ -31,9 +31,9 @@ ana@laptop:~/boxoffice$ grep -n 'SDK_INT\|POST_NOTIFICATIONS\|granted' tickets/a
 42:        denied.visibility = if (granted) View.GONE else View.VISIBLE
 ```
 
-Lendo na ordem: abaixo do Android 13 (`SDK_INT < 33`) não há nada a pedir, e a chave simplesmente
-fica ligada; se a permissão já foi concedida, o mesmo; senão o app pede, e quando a resposta volta, a
-linha 41 põe a chave na posição da resposta e a linha 42 mostra a linha `remind_denied` se ela foi
+Leia na ordem. Abaixo do Android 13, `SDK_INT < 33`, não há nada a pedir, e a chave simplesmente
+fica ligada. Se a permissão já foi concedida, acontece o mesmo. Senão o app pede. Quando a resposta
+volta, a linha 41 põe a chave na posição da resposta e a linha 42 mostra a linha `remind_denied` se ela foi
 não. São três resultados de um toque, e a versão do Android decide quais são possíveis:
 
 | Android | antes do toque | a pessoa | o que o Tickets deve mostrar |
@@ -47,7 +47,7 @@ não. São três resultados de um toque, e a versão do Android decide quais sã
 A última linha é a regra do Android desde a versão 11: **depois que uma pessoa recusa a mesma
 permissão duas vezes, o diálogo para de aparecer** e todo pedido seguinte é recusado na hora. Um app
 que não oferece caminho para as configurações nesse ponto deixa a pessoa com uma chave que se desliga
-sozinha e nenhuma ideia do porquê; o Tickets ao menos diz o porquê, e um teste deve cobrar isso dele.
+sozinha e nenhuma ideia do porquê. O Tickets ao menos diz o porquê, e um teste deve cobrar isso dele.
 
 ## Preparando o estado antes de um teste
 
@@ -70,7 +70,7 @@ app antes de cada um. Isso custa alguns segundos por teste, e compra um ponto de
 ninguém precisa raciocinar.
 
 O Appium tem as mesmas chaves. A capability `appium:autoGrantPermissions: true` instala o app com
-todas as permissões concedidas, o que é certo para uma suíte que não trata de permissões e errado
+todas as permissões concedidas. Isso é certo para uma suíte que não trata de permissões e errado
 para esta, já que tira de cena o diálogo em teste. `driver.execute('mobile: changePermissions',
 { permissions: 'android.permission.POST_NOTIFICATIONS', appPackage: 'example.tickets', action:
 'revoke' })` muda uma, e `mobile: getPermissions` com `type: 'granted'` as lista.
@@ -78,7 +78,7 @@ para esta, já que tira de cena o diálogo em teste. `driver.execute('mobile: ch
 ## Que ferramenta consegue apertar *Não permitir*
 
 **O Appium consegue, porque vê a tela inteira.** O UiAutomator, por baixo do driver UiAutomator2,
-lê todas as janelas da tela, a do controlador de permissões inclusive, então os botões dele são
+lê todas as janelas da tela, a do controlador de permissões inclusive. Então os botões do diálogo são
 elementos como quaisquer outros; só levam o pacote daquele app nos ids. O diálogo ganha um screen
 object próprio; salve como `appium/screens/permission.mjs`:
 
@@ -109,10 +109,9 @@ export class PermissionDialog {
 ```
 
 **O Espresso não consegue.** O teste dele roda dentro do processo do Tickets e age nas janelas do
-Tickets, e o diálogo é uma janela de outro app, então nenhum `onView` acha os botões dele. Um teste
+Tickets. O diálogo é uma janela de outro app, então nenhum `onView` acha os botões dele. Um teste
 instrumentado tem duas saídas. Pode conceder a permissão antes de o teste começar, pelo
-`UiAutomation` do próprio Android, que a `GrantPermissionRule` do `androidx.test:rules` embrulha;
-aí nenhum diálogo aparece, e nenhuma recusa pode ser testada também. Ou pode guiar o diálogo com a
+`UiAutomation` do próprio Android, que a `GrantPermissionRule` do `androidx.test:rules` embrulha. Aí nenhum diálogo aparece, e nenhuma recusa pode ser testada também. Ou pode guiar o diálogo com a
 biblioteca **UI Automator** do Google, uma dependência que o modelo da lição 14 não declara. Por isso
 neste curso os caminhos do diálogo ficam com o Appium, e a seção 05 põe o Espresso para conferir o que
 acontece depois de uma concessão.
@@ -159,8 +158,8 @@ export class ShowScreen {
 }
 ```
 
-`getAttribute('checked')` lê o atributo de mesmo nome no page source, que o UiAutomator2 informa como
-a string `true` ou `false`, por isso o método o compara com uma string. Depois, os dois caminhos pelo
+`getAttribute('checked')` lê o atributo de mesmo nome no page source. O UiAutomator2 o
+informa como a string `true` ou `false`, por isso o método o compara com uma string. Depois, os dois caminhos pelo
 diálogo. Salve como `appium/reminder.test.mjs`:
 
 ```js
@@ -242,8 +241,8 @@ test("Don't allow turns it off and says why", async () => {
 }
 ```
 
-Rode como o teste da lição 15, com o emulador da lição 14, que roda o Android 15, e o servidor
-rodando: `node --test --test-reporter=tap appium/reminder.test.mjs`. Num emulador com Android 12 ou
-anterior não há diálogo, e os dois testes falham na espera por ele, que é a tabela acima dizendo para
+Rode como o teste da lição 15, com o servidor rodando e o emulador da lição 14, que roda o
+Android 15: `node --test --test-reporter=tap appium/reminder.test.mjs`. Num emulador com Android 12 ou
+anterior não há diálogo, e os dois testes falham na espera por ele. É a tabela acima dizendo para
 qual aparelho o teste foi escrito. **Estes testes não foram rodados para este curso**, pelo motivo que
 a lição 15 dá: nem aparelho nem app na máquina de gravação.

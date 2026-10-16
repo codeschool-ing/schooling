@@ -4,7 +4,7 @@ version: 1
 ---
 
 **O Android Studio é instalado a partir de developer.android.com, e todo o resto vem por ele.** É um
-programa de desktop com janelas e assistentes, e não pôde rodar na máquina onde este curso foi
+programa de desktop com janelas e assistentes. Ele não pôde rodar na máquina onde este curso foi
 gravado, então os passos abaixo são descritos, não mostrados. As ferramentas de linha de comando que
 ele instala puderam rodar ali, e as transcrições delas são reais.
 
@@ -13,7 +13,7 @@ ele instala puderam rodar ali, e as transcrições delas são reais.
 1. Baixe o Android Studio de developer.android.com/studio para o seu sistema e instale: um
    instalador no Windows e no macOS, um arquivo compactado no Linux cujo `bin/studio.sh` o inicia.
 2. A primeira abertura roda um assistente. Escolha a instalação *Standard*. Ela baixa o SDK, o
-   emulador e uma plataforma Android recente, alguns gigabytes, numa pasta que ela nomeia no fim:
+   emulador e uma plataforma Android recente, alguns gigabytes. A pasta que ela nomeia no fim guarda tudo:
    `~/Android/Sdk` no Linux, `~/Library/Android/sdk` num Mac e `AppData\Local\Android\Sdk` na sua
    pasta de usuário no Windows.
 3. Abra *Settings*, depois *Languages & Frameworks › Android SDK*. Em *SDK Platforms*, marque
@@ -21,9 +21,9 @@ ele instala puderam rodar ali, e as transcrições delas são reais.
    confira que *Android SDK Platform-Tools* e *Android Emulator* estão marcados.
 
 As ferramentas de linha de comando do SDK são o que este curso digita, então diga ao seu terminal
-onde elas ficam. No Linux, acrescente estas linhas ao `~/.bashrc` e abra um terminal novo (num Mac,
-as mesmas linhas com o caminho do Mac, no `~/.zshrc`; no Windows, a página *SDK Manager* do Android
-Studio mostra o caminho a acrescentar à variável `Path` do usuário):
+onde elas ficam. No Linux, acrescente estas linhas ao `~/.bashrc` e abra um terminal novo. Num Mac, as
+mesmas linhas com o caminho do Mac vão no `~/.zshrc`. No Windows, a página *SDK Manager* do Android
+Studio mostra o caminho a acrescentar à variável `Path` do usuário:
 
 ```sh
 export ANDROID_HOME=$HOME/Android/Sdk
@@ -31,7 +31,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
 ```
 
 Duas ferramentas respondem dali. O **adb**, Android Debug Bridge, é como o seu computador conversa
-com qualquer aparelho, emulador ou celular: instala apps, roda comandos de shell no aparelho,
+com qualquer aparelho, emulador ou celular. Ele instala apps, roda comandos de shell no aparelho,
 encaminha portas e coleta logs. O **emulator** inicia aparelhos virtuais:
 
 ```
@@ -75,7 +75,7 @@ ana@laptop:~$ emulator -list-avds
 ## Como o emulador chega ao boxoffice
 
 Dentro do emulador, `localhost` é o próprio emulador, não o seu computador. **O emulador dá ao seu
-computador um endereço fixo, `10.0.2.2`**, e uma requisição do app a `http://10.0.2.2:8080` chega ao
+computador um endereço fixo, `10.0.2.2`.** Uma requisição do app a `http://10.0.2.2:8080` chega ao
 boxoffice na porta 8080 do seu computador:
 
 ```schooling-figure
@@ -83,6 +83,6 @@ boxoffice na porta 8080 do seu computador:
 ```
 
 Um celular no cabo não tem esse endereço. `adb reverse tcp:8080 tcp:8080` faz a porta 8080 do próprio
-celular levar à do seu computador, e o app passa a usar `http://localhost:8080`; a seção 05 diz que
+celular levar à do seu computador, e o app passa a usar `http://localhost:8080`. A seção 05 diz que
 linha mudar. Esse comando não foi executado para este curso, por não haver celular contra o qual
 executá-lo.

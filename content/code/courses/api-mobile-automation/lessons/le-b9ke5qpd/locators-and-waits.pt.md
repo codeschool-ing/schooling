@@ -22,20 +22,20 @@ oferece para elas, com o jeito como o WebdriverIO escreve cada uma:
 | **class name** | `$('android.widget.Button')` | todo elemento daquela classe | o tipo do XCUITest, como `XCUIElementTypeButton` |
 | **XPath** | `$('//android.widget.ListView/android.widget.LinearLayout[3]')` | um caminho pelo page source da seção 04 | o mesmo, sobre a árvore do iOS |
 
-**Accessibility id é a estratégia em que as suítes multiplataforma se apoiam**, porque lê um atributo
-que as duas plataformas mantêm para acessibilidade, então um app feito para as duas pode dar a um
-elemento o mesmo nome em cada uma e um só localizador o encontra em qualquer delas. O Tickets não tem
-nenhuma, porque a lição 14 não escreveu, e esse é o defeito de acessibilidade que a lição 14 mandou
-você registrar: um botão com texto e sem content description é lido por um leitor de tela como o
-texto dele e nada mais.
+**Accessibility id é a estratégia em que as suítes multiplataforma se apoiam.** Ela lê um atributo
+que as duas plataformas mantêm para acessibilidade. Um app feito para as duas pode dar a um elemento
+o mesmo nome em cada uma, e um só localizador o encontra em qualquer delas. O Tickets não tem
+nenhuma, porque a lição 14 não escreveu. Esse é o defeito de acessibilidade que a lição 14 mandou
+você registrar: um leitor de tela lê um botão com texto e sem content description como o texto dele
+e nada mais.
 
 **O XPath fica por último, por dois motivos.** Ele descreve posições, que mudam. E o UiAutomator não
-tem XPath próprio: para responder a um, o app do driver no aparelho escreve a tela inteira em XML, o
-page source da seção 04, e busca nele, o que numa tela comprida é a busca mais lenta que existe.
+tem XPath próprio. Para responder a um, o app do driver no aparelho escreve a tela inteira em XML, o
+page source da seção 04, e busca nele. Numa tela comprida, é a busca mais lenta que existe.
 
 ## Experimentando no modelo
 
-O driver fake responde a `id`, `accessibility id`, `class name` e `xpath`, entre outras, o que basta
+O driver fake responde a `id`, `accessibility id`, `class name` e `xpath`, entre outras. Isso basta
 para ver cada uma funcionar contra o modelo da seção 04 pelo WebdriverIO. Com o servidor rodando e o
 driver fake instalado, salve como `appium/fake-session.mjs`:
 
@@ -88,20 +88,20 @@ banner displayed now: false
 wait failed: element ("id=example.tickets:id/banner") still not displayed after 3000ms
 ```
 
-O id encontrou o botão e as três linhas; o accessibility id não encontrou nada, porque o modelo,
-como o Tickets, não tem descrições; o XPath encontrou a terceira linha contando. Depois a faixa, que
+O id encontrou o botão e as três linhas. O accessibility id não encontrou nada, porque o modelo,
+como o Tickets, não tem descrições. O XPath encontrou a terceira linha contando. Depois a faixa, que
 o modelo esconde como o Tickets a esconde quando a lista é nova.
 
 ## Esperando
 
 **A crença errada é que um teste deve esperar um tempo fixo pelo app.** `await driver.pause(3000)` é
-como isso se escreve, e está errado nos dois sentidos ao mesmo tempo: num emulador rápido desperdiça
-três segundos em cada passo, e num celular lento, ou numa lista que levou quatro segundos para
-carregar, não é suficiente e o teste falha num elemento que teria aparecido um instante depois. Uma
+como isso se escreve, e está errado nos dois sentidos ao mesmo tempo. Num emulador rápido desperdiça
+três segundos em cada passo. Num celular lento, ou numa lista que levou quatro segundos para
+carregar, não é suficiente, e o teste falha num elemento que teria aparecido um instante depois. Uma
 suíte de duzentos passos assim fica dez minutos mais lenta do que precisa e continua instável.
 
 **Uma espera explícita pede uma condição e um prazo em vez disso.** `waitForDisplayed({ timeout:
-3000 })` pergunta ao servidor de novo e de novo se o elemento está visível, e retorna no instante em
+3000 })` pergunta ao servidor de novo e de novo se o elemento está visível. Ele retorna no instante em
 que estiver, ou falha no prazo com uma mensagem que nomeia o elemento. A faixa nunca aparece, então a
 última linha da execução acima é essa falha. O terminal do servidor mostra o que a espera ficou
 fazendo nesses três segundos, a mesma requisição repetida:
@@ -115,8 +115,8 @@ fazendo nesses três segundos, a mesma requisição repetida:
 [1a7caf83][HTTP] <-- GET /session/1a7caf83-b179-4d8b-8b7b-3464377d2a3e/element/6/displayed 200 1 ms - 15
 ```
 
-O prazo não é quanto o teste costuma esperar; é quanto ele **pode** esperar antes de o app ser
-declarado quebrado. Defina-o pelo que uma pessoa aguentaria: quinze segundos para a lista carregar
+O prazo não é quanto o teste costuma esperar. É quanto ele **pode** esperar antes de o app ser
+declarado quebrado. Defina-o pelo que uma pessoa aguentaria. Quinze segundos para a lista carregar
 numa rede ruim é generoso, e um teste que precisa de mais encontrou algo que interessa à lição 22.
 
 As esperas que o WebdriverIO oferece:
@@ -131,6 +131,6 @@ As esperas que o WebdriverIO oferece:
 
 O WebdriverIO também espera um pouco por conta própria antes de agir sobre um elemento que ainda não
 está lá, e o Appium tem uma configuração de *implicit wait* que faz toda busca se repetir no
-servidor. **Escolha um lugar para esperar, e que seja a espera explícita no teste**: duas camadas de
+servidor. **Escolha um lugar para esperar, e que seja a espera explícita no teste.** Duas camadas de
 espera se multiplicam, e um teste cujo implicit wait é de dez segundos leva dez segundos para provar
 que algo não está lá.

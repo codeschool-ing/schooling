@@ -3,10 +3,10 @@ title: Emulador, simulador e aparelho são três coisas diferentes
 version: 1
 ---
 
-**Um emulador imita o hardware de um celular e roda nele o sistema operacional de verdade; um
-simulador imita o sistema operacional e roda no hardware do próprio computador; um aparelho não
+**Um emulador imita o hardware de um celular e roda nele o sistema operacional de verdade. Um
+simulador imita o sistema operacional e roda no hardware do próprio computador. Um aparelho não
 imita nada e só é verdade para si mesmo.** As palavras são usadas sem cuidado, muitas vezes como se
-fossem a mesma, e esse hábito esconde justamente o assunto desta lição: cada um dos três erra num
+fossem a mesma. Esse hábito esconde justamente o assunto desta lição. Cada um dos três erra num
 lugar diferente, então um defeito que um deles não consegue mostrar é um defeito que outro pode
 mostrar muito bem.
 
@@ -17,9 +17,9 @@ mostrar muito bem.
 ## O emulador Android
 
 O emulador da lição 14 é uma máquina virtual. Ele **inicia o Android**, uma imagem de sistema real
-montada pelo Google, com kernel próprio, num hardware que o emulador inventa: processador, memória,
+montada pelo Google, com kernel próprio. O hardware em que ele inicia é inventado pelo emulador: processador, memória,
 tela, bateria, GPS, câmeras e sensores. O processador é real, emprestado do seu computador pela
-virtualização que a lição 14 pediu para ligar, e é por isso que a imagem precisa combinar com ele,
+virtualização que a lição 14 pediu para ligar. É por isso que a imagem precisa combinar com ele,
 x86_64 num PC e arm64 num Mac com Apple silicon. Todo o resto é imitado, e a imitação é declarada,
 propriedade por propriedade, numa lista que vem com o emulador. Três delas, lidas do SDK da máquina
 de gravação:
@@ -45,26 +45,26 @@ abstract    = Accelerometer
 description = Whether there is an accelerometer in the device.
 ```
 
-**Uma bateria é um sim ou não**: o celular virtual tem uma ou não tem, e a carga dela é um número que
+**Uma bateria é um sim ou não**: o celular virtual tem uma ou não tem. A carga dela é um número que
 você define na janela *Extended controls* do emulador. O GPS também, e a posição dele é o que você
 digitar ali. O APK é o mesmo arquivo que um celular recebe, e o Android o roda com o mesmo código que
-um celular rodaria; o que difere é tudo o que fica abaixo do Android.
+um celular rodaria. O que difere é tudo o que fica abaixo do Android.
 
 ## O simulador do iOS
 
 O iOS Simulator da lição 18 não é uma máquina virtual e não inicia nada. **O app é compilado para o
 processador do próprio Mac e roda como um processo no macOS**, ligado a versões dos frameworks da
 Apple feitas para o simulador. Ele parece um iPhone porque desenha um. Não há hardware de celular
-nenhum por baixo: memória, processador, disco e rede são do Mac, e é por isso que `localhost` lá
+nenhum por baixo: memória, processador, disco e rede são do Mac. É por isso que `localhost` lá
 dentro alcançou o boxoffice na lição 18 sem o `10.0.2.2` de que um emulador precisa.
 
-Isso o deixa rápido para iniciar e ágil para rodar, e significa que o binário que você testa não é
-o binário que um iPhone roda: o do celular é compilado de novo, para o processador do celular, e
+Isso o deixa rápido para iniciar e ágil para rodar. Também significa que o binário que você testa
+não é o binário que um iPhone roda. O do celular é compilado de novo, para o processador do celular, e
 assinado.
 
 ## Um aparelho real
 
-Um celular na sua mão roda o build do fabricante para o sistema operacional, no hardware dele, com
+Um celular na sua mão roda o build do fabricante para o sistema operacional, no hardware dele. Ele tem
 os ajustes do dono, os outros apps do dono e a rede que houver na sala. **Nada é imitado, e nada se
-generaliza**: um teste que passa num Samsung com Android 14 não diz nada certo sobre um Motorola com
+generaliza.** Um teste que passa num Samsung com Android 14 não diz nada certo sobre um Motorola com
 Android 12. A lição 20 trata de escolher em quais poucos aparelhos confiar, e de alugar o resto.

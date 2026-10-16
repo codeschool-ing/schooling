@@ -6,16 +6,15 @@ version: 1
 **O app que toda lição da segunda metade testa se chama Tickets.** Ele pede os espetáculos ao
 boxoffice, lista-os com as datas e os lugares que sobram, e abre um espetáculo quando você toca nele.
 Na tela do espetáculo, uma chave oferece um lembrete no dia, o que exige a permissão do Android para
-mandar notificações. Quando o boxoffice não responde, ele mostra a última lista que viu com uma faixa
-dizendo isso, e quando nunca viu nenhuma, diz que não conseguiu falar com a bilheteria.
+mandar notificações. Quando o boxoffice não responde, ele mostra a última lista que viu com uma faixa dizendo isso. Quando nunca viu nenhuma, diz que não conseguiu falar com a bilheteria.
 
 É pouco, de propósito: cada recurso está lá porque uma lição seguinte o testa. A lista é para o
-Espresso da lição 16 e o Appium da lição 15, a chave e a permissão dela para a lição 21, e a lista
-guardada com a faixa para a lição 22.
+Appium da lição 15 e o Espresso da lição 16. A chave e a permissão dela são para a lição 21, e a
+lista guardada com a faixa para a lição 22.
 
-**Ele é escrito em Kotlin só com as classes do próprio Android**, sem bibliotecas, para que cada linha
-apareça aqui e nada seja baixado além do que o Android Studio traz. Kotlin é a linguagem principal do
-Android; você não precisa escrevê-la neste curso, só ler aquilo para onde um teste aponta.
+**Ele é escrito em Kotlin só com as classes do próprio Android**, sem bibliotecas. Cada linha
+aparece aqui, e nada é baixado além do que o Android Studio traz. Kotlin é a linguagem principal do
+Android. Você não precisa escrevê-la neste curso, só ler aquilo para onde um teste aponta.
 
 ## O projeto
 
@@ -26,7 +25,7 @@ Android; você não precisa escrevê-la neste curso, só ler aquilo para onde um
 3. Aperte *Finish* e espere o primeiro build terminar. O Android Studio baixa o Gradle e as
    bibliotecas que o modelo pede, o que leva alguns minutos da primeira vez.
 
-O modelo já tem uma `MainActivity` e um layout; os arquivos abaixo os substituem e acrescentam o
+O modelo já tem uma `MainActivity` e um layout. Os arquivos abaixo os substituem e acrescentam o
 resto. No painel *Project*, troque a visão de *Android* para *Project* para ver as pastas como estão
 no disco. Copie cada arquivo com o botão do bloco.
 
@@ -63,7 +62,7 @@ salve como `tickets/app/src/main/AndroidManifest.xml`:
 </manifest>
 ```
 
-O Android recusa HTTP puro a menos que o app nomeie os endereços com que pode usá-lo, e o boxoffice é
+O Android recusa HTTP puro a menos que o app nomeie os endereços com que pode usá-lo. O boxoffice é
 HTTP puro. Este arquivo nomeia o endereço do emulador para o seu computador e nada mais. Crie a pasta
 `xml` dentro de `res` e salve como `tickets/app/src/main/res/xml/network_security_config.xml`:
 
@@ -293,12 +292,12 @@ object Shows {
 }
 ```
 
-`baseUrl` é a única linha a mudar para um celular no cabo: `"http://localhost:8080"`, depois do
-`adb reverse` da seção anterior. `busy` conta as cargas em andamento, e a lição 16 é o motivo de ele
+`baseUrl` é a única linha a mudar para um celular no cabo. Ela vira `"http://localhost:8080"`,
+depois do `adb reverse` da seção 04. `busy` conta as cargas em andamento, e a lição 16 é o motivo de ele
 existir.
 
 A tela da lista. Ela carrega os espetáculos numa thread de fundo, porque o Android proíbe chamadas de
-rede na thread que desenha a tela, e desenha o resultado de volta nela. Salve como
+rede na thread que desenha a tela. Depois desenha o resultado de volta nessa thread. Salve como
 `tickets/app/src/main/java/example/tickets/MainActivity.kt`:
 
 ```kotlin
@@ -439,12 +438,12 @@ class ShowActivity : Activity() {
 ## Rodando
 
 Com o boxoffice rodando e o emulador iniciado, aperte **Run** (o triângulo verde) no Android Studio.
-Ele compila o APK, instala no emulador e o abre: três espetáculos, o terceiro com 4 lugares
+Ele compila o APK, instala no emulador e o abre. Você vê três espetáculos, o terceiro com 4 lugares
 sobrando. Toque num deles, depois use o botão voltar para retornar.
 
 **Este app não foi compilado nem executado para este curso.** A máquina onde o curso foi gravado não
-consegue rodar o build do Android Studio, que baixa de um servidor que essa máquina não alcança, e
-não tem emulador onde rodá-lo. O que foi conferido ali é que todo arquivo acima compila: os recursos
-foram ligados pelo próprio compilador de recursos do Android e o Kotlin foi compilado contra o
+consegue rodar o build do Android Studio, que baixa de um servidor que essa máquina não alcança.
+Ela também não tem emulador onde rodá-lo. O que foi conferido ali é que todo arquivo acima compila.
+O próprio compilador de recursos do Android ligou os recursos, e o Kotlin foi compilado contra o
 Android 15. Uma tela descrita nesta metade do curso é descrita a partir do código, não de uma
 captura de tela.

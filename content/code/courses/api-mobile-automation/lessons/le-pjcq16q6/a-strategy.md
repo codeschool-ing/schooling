@@ -4,13 +4,13 @@ version: 1
 ---
 
 **Run almost everything on emulators and simulators, keep a few real phones chosen on purpose, and
-rent the rest.** Each of the three places answers the rows of section 05's table it is good at, and
-each costs something different: an emulator costs your computer's time, a phone on a shelf costs
-money and care, and a phone in a device cloud costs money by the minute.
+rent the rest.** Each of the three places answers the rows of section 05's table it is good at,
+and each costs something different. An emulator costs your computer's time. A phone on a shelf costs
+money and care. A phone in a device cloud costs money by the minute.
 
-The common mistake is to treat real devices as the serious tests and emulators as practice, and to
-answer every escaped defect by buying another phone. A drawer of twenty phones bought over the years
-is twenty phones nobody charges, updates or remembers the passcode of, and it is still not the
+The common mistake is to treat real devices as the serious tests and emulators as practice. Every
+escaped defect is then answered by buying another phone. A drawer of twenty phones bought over the
+years is twenty phones nobody charges, updates or remembers the passcode of. And it is still not the
 model the next user complains from. **Three phones chosen from your own users beat twenty chosen by
 accident**, and lesson 20 is about choosing them.
 
@@ -20,24 +20,24 @@ accident**, and lesson 20 is about choosing them.
 
 ## On every change: emulators and simulators
 
-The automated suites of lessons 15 to 18 run here, in the pipeline and on your computer, on several
-Android versions and screen sizes at once if the pipeline allows it. This is where the first rows of
-section 05's table are caught, minutes after somebody causes them, and it is the only place cheap
-enough to run every test on every change.
+The automated suites of lessons 15 to 18 run here, in the pipeline and on your computer. If the
+pipeline allows it, they run on several Android versions and screen sizes at once. This is where
+the first rows of section 05's table are caught, minutes after somebody causes them. It is the only
+place cheap enough to run every test on every change.
 
 ## Before a release: the shelf
 
 A small set of real phones, each there for a reason you can state:
 
-- **the oldest Android version you support, on a cheap phone of your users' commonest brand**: it
+- the oldest Android version you support, on a cheap phone of your users' commonest brand. It
   finds the slow screens, the memory limits and that brand's background rules;
-- **a recent phone of another common brand**, so that one maker's habits are not mistaken for
+- a recent phone of another common brand, so that one maker's habits are not mistaken for
   Android's;
-- **an iPhone on the oldest iOS version you support**, if there is an iOS app.
+- an iPhone on the oldest iOS version you support, if there is an iOS app.
 
 A person uses them, before each release, for the journeys that matter and for the device-only rows
 of the table: scroll the long list, leave the app for an hour and come back, scan the code, take the
-lift. Keep them as test phones and nobody's personal one: a work phone full of someone's messages
+lift. Keep them as test phones and nobody's personal one. A work phone full of someone's messages
 interrupts the test with notifications, and mixes their data with the test's.
 
 ## Every night, or before a release: the cloud
@@ -52,7 +52,7 @@ happens on my phone* is answered when the phone is not on your shelf.
    them if they are missing, as section 05 described.
 2. Try an emulator set up like it: that version, that screen size, that language. Most reports
    reproduce here, and then they are cheap to fix and to test again.
-3. If it does not reproduce, the defect is probably in a row the emulator hides; find that model in
+3. If it does not reproduce, the defect is probably in a row the emulator hides. Find that model in
    a device cloud, or the nearest one of the same brand.
 4. Write down where it reproduced and where it did not. That line saves the next person the same
    afternoon.

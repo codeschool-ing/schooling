@@ -5,15 +5,15 @@ version: 1
 
 **Algumas respostas só ficam certas depois de um tempo, e um teste precisa esperar por elas sem
 adivinhar quanto.** O relatório de vendas do boxoffice é uma delas. Ele é refeito em segundo plano,
-`REPORT_DELAY` milissegundos depois que um pedido muda, 500 se a variável não disser outra coisa, que
-é como muitos sistemas de verdade se comportam: um índice de busca, um cache, um painel alimentado por
+`REPORT_DELAY` milissegundos depois que um pedido muda, 500 se a variável não disser outra coisa.
+Muitos sistemas de verdade se comportam assim: um índice de busca, um cache, um painel alimentado por
 uma fila. O nome disso é *consistência eventual*: o relatório vai concordar com os pedidos, só não no
 instante em que eles mudam.
 
 ## Vendo o atraso
 
-Reinicie o boxoffice para o relatório começar do zero, pegue um token, depois faça um pedido e peça o
-relatório na mesma linha, para a segunda requisição vir logo depois da primeira:
+Reinicie o boxoffice para o relatório começar do zero, e pegue um token. Depois faça um pedido e peça
+o relatório na mesma linha, para a segunda requisição vir logo depois da primeira:
 
 ```
 ana@laptop:~/boxoffice$ TOKEN=$(curl -s localhost:8080/oauth/token -d grant_type=client_credentials -d client_id=ci-tests -d client_secret=ci-secret | jq -r .access_token)
@@ -35,8 +35,8 @@ boxoffice; quem leu mal a promessa foi o teste.
 
 A primeira que todo mundo escreve é um sleep: esperar um segundo e então ler. Ela falha duas vezes.
 É lenta em toda execução, um segundo inteiro onde meio bastaria, multiplicado por todo teste que faz
-isso. E ainda falha no dia em que a máquina está ocupada e a reconstrução leva mais que o segundo,
-então a suíte fica vermelha ao acaso num runner de CI carregado, que é o pior tipo de vermelho.
+isso. E ainda falha no dia em que a máquina está ocupada e a reconstrução leva mais que o segundo. A
+suíte então fica vermelha ao acaso num runner de CI carregado, que é o pior tipo de vermelho.
 
 A segunda é parar de conferir: tirar a asserção sobre o relatório porque ela "falha às vezes". Isso
 transforma uma promessa real do boxoffice em algo que nenhum teste segura.
@@ -44,7 +44,7 @@ transforma uma promessa real do boxoffice em algo que nenhum teste segura.
 ## Perguntando de novo, até um prazo
 
 A forma certa é perguntar e, se a resposta ainda não estiver certa, esperar um pouco e perguntar de
-novo, até um prazo; então falhar com o que ainda estava errado. Escreva isso como um auxiliar, e salve
+novo. Pare num prazo, e falhe com o que ainda estava errado. Escreva isso como um auxiliar, e salve
 como `tests/eventually.mjs`:
 
 ```js
@@ -72,7 +72,7 @@ só custa tempo quando algo está quebrado. E **ele lança o último erro de ver
 esgotado", então uma falha diz que campo estava errado e o que ele tinha.
 
 O teste o usa em volta da asserção que precisa de tempo. Ele inicia o próprio boxoffice, como a seção
-04 ensinou, para os pedidos de nenhum outro teste chegarem ao relatório dele. Salve como
+04 fez, para os pedidos de nenhum outro teste chegarem ao relatório dele. Salve como
 `tests/report.test.mjs`:
 
 ```js
@@ -151,6 +151,6 @@ not ok 1 - an order shows up in the sales report
     seats: 0
 ```
 
-**A falha é a que você quer ler**: código de saída 1, o relatório ainda tinha zeros quando os três
-segundos acabaram, e o diff mostra os campos que eram esperados. Um teste que dormisse diria a mesma
-coisa sem prazo nenhum a culpar, e um teste que esperasse para sempre não diria nada.
+**A falha é a que você quer ler**: código de saída 1, e o relatório ainda tinha zeros quando os três
+segundos acabaram. O diff mostra os campos que eram esperados. Um teste que dormisse diria a mesma
+coisa sem prazo nenhum a culpar. Um teste que esperasse para sempre não diria nada.

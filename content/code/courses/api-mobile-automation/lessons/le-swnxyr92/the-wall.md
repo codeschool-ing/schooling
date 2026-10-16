@@ -7,13 +7,13 @@ version: 1
 else.** Xcode, Apple's development environment, is published for the Mac only. The iOS Simulator
 is part of Xcode. The two frameworks this lesson is about, Swift Testing and XCUITest, are run by
 Xcode or by its command-line twin, `xcodebuild`. And macOS itself may only be installed on Apple's
-own computers, under the licence Apple publishes with it, so a virtual Mac on a Windows laptop is
-not a route this course can recommend.
+own computers, under the licence Apple publishes with it. A virtual Mac on a Windows laptop is not a
+route this course can recommend.
 
 The belief this corrects is a hopeful one: that some tool, Appium perhaps, opens iOS to a Windows
-or Linux computer. It does not. Lesson 15's test names `platformName: iOS` from any computer, but
-the Appium server it talks to must run on a Mac with Xcode, because its XCUITest driver builds and
-runs WebDriverAgent there, a test runner made with Apple's XCUITest. **The client can be anywhere; the machine that touches the
+or Linux computer. It does not. Lesson 15's test names `platformName: iOS` from any computer. But
+the Appium server it talks to must run on a Mac with Xcode. Its XCUITest driver builds and runs
+WebDriverAgent there, a test runner made with Apple's XCUITest. **The client can be anywhere; the machine that touches the
 iPhone is always a Mac.**
 
 ```schooling-figure
@@ -22,30 +22,30 @@ iPhone is always a Mac.**
 
 ## What each level needs
 
-- **Code without a screen.** The rules behind the screens, such as how a price is written or how
-  boxoffice's answer is read, can be tested with Swift Testing wherever Swift 6 runs: macOS, Linux
-  and Windows, with the toolchain from swift.org. Section 03 writes those tests.
-- **The app on a simulator.** A Mac with Xcode installed from the Mac App Store, free. The simulator
+- Code without a screen. The rules behind the screens, such as how a price is written or how
+  boxoffice's answer is read, can be tested with Swift Testing wherever Swift 6 runs. That is macOS,
+  Linux and Windows, with the toolchain from swift.org. Section 03 writes those tests.
+- The app on a simulator. A Mac with Xcode installed from the Mac App Store, free. The simulator
   runs the app, and XCUITest drives it. Lesson 19 says what a simulator is and what it hides.
-- **The app on a real iPhone.** The Mac, plus an Apple Account signed in to Xcode, plus the phone
-  connected and switched to *Developer Mode* in its settings, which iOS has asked for since iOS
+- The app on a real iPhone. The Mac, plus an Apple Account signed in to Xcode, plus the phone
+  connected and switched to *Developer Mode* in its settings. iOS has asked for that since iOS
   16. Every app that runs on an iPhone is **signed**, and Xcode signs your build for your own phone.
   At the time of writing, a free Apple Account can do that for a device of your own, with limits on
   how long the signature lasts. Handing the app to testers through TestFlight, or publishing it,
   needs a paid membership of the Apple Developer Program, on terms Apple sets and changes.
 
-**A Mac does not have to be on your desk.** Hosted CI services rent macOS machines by the minute,
-lesson 20's device clouds offer real iPhones over the network, and some companies rent whole Macs
-in a data centre. All of them run on Apple hardware, which is what the licence asks.
+**A Mac does not have to be on your desk.** Hosted CI services rent macOS machines by the minute.
+Lesson 20's device clouds offer real iPhones over the network. Some companies rent whole Macs in a
+data centre. All of them run on Apple hardware, which is what the licence asks.
 
 ## What this lesson does, and does not
 
 **Nothing in this lesson was run.** The course was recorded on a Linux machine with no Mac within
-reach, and the Swift toolchain could not be downloaded there either, so not even the Swift Testing
+reach. The Swift toolchain could not be downloaded there either, so not even the Swift Testing
 tests of section 03 were compiled. Every Swift file in this lesson is written against the APIs
-Apple documents, it is short on purpose so that each line can be read, and no output, report or
+Apple documents, and is short on purpose so that each line can be read. No output, report or
 screenshot of it is shown, because none was made.
 
-What you can do with the lesson without a Mac is read an iOS suite, review one, write the cases it
+Without a Mac, this lesson lets you read an iOS suite and review one. You can write the cases it
 should contain and talk about it with the developers who run it. If you have a Mac, every file here
 is meant to be typed in and run, and section 05 says how.

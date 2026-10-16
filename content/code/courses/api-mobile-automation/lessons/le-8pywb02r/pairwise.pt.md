@@ -5,23 +5,23 @@ version: 1
 
 **Teste pairwise (todos os pares) escolhe combinações de modo que todo valor de toda dimensão se
 encontre com todo valor de cada outra dimensão pelo menos uma vez.** Ele se apoia numa observação
-sobre defeitos reais: a maioria é disparada por um ajuste sozinho, como uma tela pequena, ou por dois
-juntos, como uma tela pequena em português, e bem menos precisam de três ou mais valores específicos
+sobre defeitos reais. A maioria é disparada por um ajuste sozinho, como uma tela pequena, ou por dois
+juntos, como uma tela pequena em português. Bem menos precisam de três ou mais valores específicos
 ao mesmo tempo. Estudos de relatos de falha feitos pelo NIST, entre outros, encontraram esse padrão
 em muitos tipos de software. Testar todo par pega os dois primeiros tipos com uma fração das linhas.
 
-A crença errada é que menos combinações significam menos cobertura na mesma proporção: 12 linhas de
-72 não podem testar um sexto do que as 72 testam. Elas testam todo par de valores junto, que é tudo o
-que a maioria dos defeitos precisa. **O que elas abrem mão tem nome**: um defeito que só aparece com
-Android 12 num tablet da Xiaomi em inglês, três valores específicos ao mesmo tempo, só é pego se essa
+A crença errada é que menos combinações significam menos cobertura na mesma proporção, e que 12 linhas de
+72 testariam um sexto do que as 72 testam. Elas testam todo par de valores junto, que é tudo o
+que a maioria dos defeitos precisa. **O que elas abrem mão tem nome.** Pense num defeito que só aparece com
+Android 12 num tablet da Xiaomi em inglês, três valores específicos ao mesmo tempo. Ele só é pego se essa
 linha calhar de ser escolhida.
 
 ## Um conjunto pairwise, montado por um script
 
-A matriz da seção 02: quatro versões do Android, as três que cobrem 90% das sessões da seção 03 mais
-a 12, a mais antiga que ainda vale uma linha; três classes de tela; os três fabricantes que cobrem
-96.4%; e dois idiomas. O script monta o produto completo, lista todo par de valores que precisa se
-encontrar e então, de forma gulosa, vai pegando a combinação que cobre mais pares ainda não cobertos,
+A matriz da seção 02 tem quatro versões do Android: as três que cobrem 90% das sessões da seção 03,
+mais a 12, a mais antiga que ainda vale uma linha. Tem três classes de tela, os três fabricantes que
+cobrem 96.4% e dois idiomas. O script monta o produto completo e lista todo par de valores que
+precisa se encontrar. Então, de forma gulosa, vai pegando a combinação que cobre mais pares ainda não cobertos,
 até não sobrar nenhum. Salve como `matrix/pairwise.mjs`:
 
 ```js
@@ -90,7 +90,7 @@ android      screen       maker        language
 **12 linhas cobrem todos os 53 pares que as 72 linhas contêm.** Leia duas colunas quaisquer e todo
 pareamento aparece em algum lugar: Android 12 com tablet na linha 9, Xiaomi com inglês na linha 3, um
 celular pequeno em português nas linhas 1, 7 e 11. Doze é também o mínimo que qualquer conjunto
-conseguiria aqui, porque as quatro versões do Android e as três telas sozinhas formam doze pares, e
+conseguiria aqui. As quatro versões do Android e as três telas sozinhas formam doze pares, e
 cada linha só carrega um deles.
 
 ```schooling-figure
@@ -102,14 +102,14 @@ cada linha só carrega um deles.
 Um script guloso como este basta para ver a ideia e montar uma matriz pequena. Ferramentas de
 verdade, o PICT da Microsoft entre elas, acrescentam o que uma matriz real precisa:
 
-- **restrições**: algumas combinações não existem, um tablet Motorola com Android 15 pode não ser
-  vendido, e o conjunto precisa ser montado em volta delas em vez de conter uma linha que ninguém
-  consegue rodar;
-- **uma força maior onde se quer**: todo trio de valores para as duas ou três dimensões que você
+- restrições, porque algumas combinações não existem. Um tablet Motorola com Android 15 pode não
+  ser vendido, e o conjunto precisa ser montado em volta disso em vez de conter uma linha que
+  ninguém consegue rodar;
+- uma força maior onde se quer: todo trio de valores para as duas ou três dimensões que você
   mais teme, pares para o resto;
-- **sementes**: linhas que você precisa ter, como o seu celular mais vendido na versão atual,
-  mantidas dentro e com o resto montado em volta.
+- sementes, para linhas que você precisa ter, como o seu celular mais vendido na versão atual.
+  Elas ficam dentro, e o resto é montado em volta.
 
 Seja o que for que o monte, **um conjunto pairwise é uma lista de configurações, não de testes**.
-Cada linha é um aparelho onde rodar a mesma suíte, os testes Appium ou Espresso das lições 15 e 16,
+Cada linha é um aparelho onde rodar a mesma suíte: os testes Appium ou Espresso das lições 15 e 16,
 que a seção 06 aponta para uma nuvem.

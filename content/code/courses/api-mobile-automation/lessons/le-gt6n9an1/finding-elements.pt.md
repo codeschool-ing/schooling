@@ -4,8 +4,7 @@ version: 1
 ---
 
 **Um teste mobile não consegue olhar a tela; ele pergunta ao Android o que há nela.** Todo elemento
-que um app desenha é um nó numa árvore que o Android mantém para os serviços de acessibilidade, os
-leitores de tela e controles por chave que as pessoas usam para operar um celular sem vê-lo ou
+que um app desenha é um nó numa árvore que o Android mantém para os serviços de acessibilidade. São os leitores de tela e controles por chave que as pessoas usam para operar um celular sem vê-lo ou
 tocá-lo. O Appium lê essa árvore por fora; o Espresso percorre as próprias views do app por dentro.
 Em qualquer caso, um teste é tão confiável quanto a alça que ele usa para tirar um nó da árvore.
 
@@ -18,7 +17,7 @@ Em ordem de preferência, as alças que um teste pode usar no Android:
 | **texto** | `android:text="@string/refresh"` | Espresso `withText("Refresh")`; Appium por texto | o texto muda, ou o celular está em português |
 | **posição na árvore** | nada escrito | um XPath como `//android.widget.Button[1]` | qualquer coisa se mexe, em qualquer layout, a qualquer momento |
 
-**O resource id é a primeira escolha**, e é por isso que todo elemento das duas telas do Tickets que
+**O resource id é a primeira escolha.** É por isso que todo elemento das duas telas do Tickets que
 um teste toca tem um: `banner`, `refresh`, `error` e `shows` na lista, `title`, `time`, `price`,
 `seats`, `remind` e `remind_denied` num espetáculo. Um id é uma promessa entre quem constrói o app e
 quem o testa, e ele não muda quando uma palavra muda.
@@ -29,17 +28,16 @@ português e o botão diz *Atualizar*. O texto pertence a uma asserção (*a fai
 alça que encontra a faixa.
 
 **A posição é o último recurso**, e `web-automation` terá dito o mesmo sobre XPath na web. Um XPath
-que conta botões descreve o layout de hoje; um designer que acrescenta um ícone quebra todo teste que
+que conta botões descreve o layout de hoje. Um designer que acrescenta um ícone quebra todo teste que
 contou.
 
 ## Como é a árvore
 
 O Appium pede essa árvore ao Android em XML e busca nela, e a lição 15 mostra como pedi-la. Cada nó é
-um elemento com a classe, o resource id, o texto, a content description e os limites na tela em
-pixels, então um teste que diz "o elemento cujo resource id é `example.tickets:id/refresh`" está
-pedindo exatamente um nó dela. O resource id leva o nome do pacote na frente, `example.tickets:id/`,
-porque dois apps numa tela, como o Tickets e o diálogo de permissão que o Android desenha por cima
-dele, podem ter cada um um elemento chamado `refresh`.
+um elemento com a classe, o resource id, o texto, a content description e os limites na tela em pixels. Um teste que diz "o elemento cujo resource id é `example.tickets:id/refresh`" está
+pedindo exatamente um nó dela. O resource id leva o nome do pacote na frente, `example.tickets:id/`.
+Dois apps numa tela podem ter cada um um elemento chamado `refresh`: o Tickets, por exemplo, e o
+diálogo de permissão que o Android desenha por cima dele.
 
 ## Testabilidade é acessibilidade
 
@@ -47,4 +45,4 @@ Um elemento sem id, sem descrição e sem texto é invisível para um teste e pa
 mesmo jeito, pelo mesmo motivo: a árvore não tem nada a dizer sobre ele. Um botão só com ícone e sem
 content description é o caso mais comum, e a correção é a mesma linha para os dois. **Quando um teste
 é difícil de escrever porque um elemento não pode ser encontrado, registre isso como defeito de
-acessibilidade**, porque é um, e esse é o argumento com mais chance de fazê-lo ser corrigido.
+acessibilidade.** É um, e esse é o argumento com mais chance de fazê-lo ser corrigido.

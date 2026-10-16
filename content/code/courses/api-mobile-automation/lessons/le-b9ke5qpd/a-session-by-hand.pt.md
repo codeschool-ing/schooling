@@ -5,22 +5,22 @@ version: 1
 
 **Antes de qualquer biblioteca de teste, conduza uma sessão você mesmo**: inicie, encontre um
 elemento, toque nele, leia a tela, encerre, um comando curl para cada passo. Um teste não faz nada
-além disso, e quando um falha, a requisição que ele estava fazendo é a primeira coisa a procurar no
-log do servidor.
+além disso. Quando um falha, a primeira coisa a procurar no log do servidor é a requisição que ele
+estava fazendo.
 
 Isso precisa de um aparelho, e esta lição tem um jeito de contornar que você também pode usar: **o
 driver fake do Appium**. Os próprios desenvolvedores do Appium testam o servidor com ele. Ele
-responde o protocolo WebDriver de verdade, pelo servidor de verdade, mas o "app" dele é um arquivo
+responde o protocolo WebDriver de verdade, pelo servidor de verdade. Mas o "app" dele é um arquivo
 XML que descreve uma tela, e o "aparelho" é esse arquivo na memória. Nada é desenhado e nada é
 instalado, então ele roda em qualquer computador, com emulador ou sem. **Ele é um substituto, e esta
-seção diz isso sempre que importa**: o que você aprende com ele é o protocolo, nunca como o Tickets
+seção diz isso sempre que importa.** O que você aprende com ele é o protocolo, nunca como o Tickets
 se comporta.
 
 ## O driver fake e o app dele
 
 Instale-o como o driver de Android. Ele é publicado no npm com o nome do próprio Appium em vez de
 estar na lista de drivers do Appium, então é chamado pelo nome do pacote. A lista que vem depois
-pergunta quais drivers o projeto tem agora, e o `grep` fica com as linhas que nomeiam um:
+pergunta quais drivers o projeto tem agora. O `grep` fica com as linhas que nomeiam um:
 
 ```
 ana@laptop:~/boxoffice$ npx appium driver install --source=npm @appium/fake-driver@6.2.4 2>&1 | tail -3
@@ -46,7 +46,7 @@ ana@laptop:~/boxoffice$ npx appium --address 127.0.0.1
 
 O app do driver fake é um modelo de tela. Este copia a tela de lista do Tickets da lição 14: as
 mesmas classes e os mesmos resource ids, a faixa e a linha de erro escondidas como o app as
-esconde, três linhas. Um driver de verdade monta essa árvore a partir do aparelho; aqui ela é
+esconde, três linhas. Um driver de verdade monta essa árvore a partir do aparelho. Aqui ela é
 escrita à mão, e o texto ficou de fora porque o driver fake não consegue ler texto de um modelo de
 qualquer forma. Salve como `appium/tickets-model.xml`:
 
@@ -90,8 +90,8 @@ app é relativo à pasta em que o servidor foi iniciado. Salve como `appium/fake
 
 ## Iniciando a sessão
 
-`POST /session` com as capabilities. Antes da requisição certa, a errada, porque é um erro que quase
-todo mundo encontra cedo: capabilities sem o prefixo `appium:` da seção 02.
+`POST /session` com as capabilities. Antes da requisição certa, a errada,
+porque quase todo mundo encontra esse erro cedo: capabilities sem o prefixo `appium:` da seção 02.
 
 ```
 ana@laptop:~/boxoffice$ curl -s localhost:4723/session -H 'content-type: application/json' -d '{"capabilities":{"alwaysMatch":{"platformName":"Fake","automationName":"Fake"}}}' | jq '.value | {error, message}'
@@ -118,7 +118,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/session -H 'content-type: applica
 ```
 
 A resposta repete as capabilities que a sessão recebeu, sem os prefixos, e dá a ela um id. **Toda
-requisição seguinte nomeia a sessão no caminho**, então copie o id para uma variável, como você
+requisição seguinte nomeia a sessão no caminho.** Copie o id para uma variável, como você
 copiou um token na lição 3. O seu será outro:
 
 ```
@@ -127,8 +127,8 @@ ana@laptop:~/boxoffice$ SESSION=d7a40f7d-27ad-4e1e-b316-b3fd4dd6e58e
 
 ## Encontrando um elemento e tocando nele
 
-Uma busca nomeia uma **estratégia** e um valor: aqui a estratégia `id`, que no Android significa o
-resource id, e o valor que a lição 14 deu ao botão.
+Uma busca nomeia uma **estratégia** e um valor. Aqui a estratégia é `id`, que no Android significa o
+resource id, e o valor é o que a lição 14 deu ao botão.
 
 ```
 ana@laptop:~/boxoffice$ curl -s localhost:4723/session/$SESSION/element -H 'content-type: application/json' -d '{"using":"id","value":"example.tickets:id/refresh"}' | jq
@@ -140,7 +140,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/session/$SESSION/element -H 'cont
 }
 ```
 
-A resposta é uma referência ao elemento, sob uma chave comprida que o W3C escolheu para que nunca
+A resposta é uma referência ao elemento. A chave é comprida porque o W3C escolheu uma que nunca
 pudesse colidir com o nome de um campo de verdade. O valor dela, `1`, é o id do elemento **dentro
 desta sessão**, e as próximas requisições o usam no caminho. Um toque é um clique no vocabulário do
 WebDriver:
@@ -153,7 +153,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/session/$SESSION/element/1/attrib
 ```
 
 `null` é o jeito do protocolo de dizer *feito, e nada a relatar*. A segunda requisição lê um
-atributo chamado `clicks`, que só o driver fake mantém: ele conta os toques para que os testes dele
+atributo chamado `clicks`, que só o driver fake mantém. Ele conta os toques para que os testes dele
 próprio possam provar que um chegou. Um app de verdade responde a um toque mudando a tela, e um
 teste de verdade confere a tela.
 
@@ -173,7 +173,7 @@ ana@laptop:~/boxoffice$ curl -s -o /dev/null -w '%{http_code}\n' localhost:4723/
 
 `no such element`, com o status **404**. É o erro que um teste mais encontra, e ele quer dizer
 exatamente uma coisa: no momento em que o servidor olhou, nada na tela correspondia. Ele não diz se o
-elemento falta para sempre ou se simplesmente ainda não foi desenhado, e a seção 06 trata de
+elemento falta para sempre ou se simplesmente ainda não foi desenhado. A seção 06 trata de
 distinguir as duas coisas.
 
 ## A tela inteira
@@ -205,8 +205,7 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/session/$SESSION/source | jq -r .
 ```
 
 O driver fake devolve o modelo com um invólucro, `AppiumAUT`, em volta. **Num aparelho de verdade
-esta é a requisição mais útil do Appium**: o UiAutomator2 responde com a árvore viva, cada nó com a
-classe, o `resource-id`, o `text`, o `content-desc` e os `bounds`, os atributos que a lição 14
+esta é a requisição mais útil do Appium**: o UiAutomator2 responde com a árvore viva. Cada nó traz a classe, o `resource-id`, o `text`, o `content-desc` e os `bounds`, os atributos que a lição 14
 nomeou. Quando um localizador não encontra nada, leia o source e procure o elemento do jeito que o
 driver o vê.
 
@@ -222,8 +221,8 @@ ana@laptop:~/boxoffice$ curl -s localhost:4723/session/$SESSION/source | jq '.va
 }
 ```
 
-O `DELETE` encerra a sessão e libera o aparelho para a próxima, e qualquer requisição ao id antigo
+O `DELETE` encerra a sessão e libera o aparelho para a próxima. Qualquer requisição ao id antigo
 depois disso é `invalid session id`. **Um teste que morre sem o `DELETE` deixa a sessão aberta** até
-que o tempo limite do servidor para sessões ociosas a feche, e com um aparelho de verdade isso pode
-significar o próximo teste esperando por um aparelho que ainda está ocupado. O código de teste
+que o tempo limite do servidor para sessões ociosas a feche. Com um aparelho de verdade, o próximo teste pode então esperar
+por um aparelho que ainda está ocupado. O código de teste
 encerra a sessão num bloco que roda tenha o teste passado ou não, o que a seção 05 faz.

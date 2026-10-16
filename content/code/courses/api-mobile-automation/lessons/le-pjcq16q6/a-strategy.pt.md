@@ -5,13 +5,13 @@ version: 1
 
 **Rode quase tudo em emuladores e simuladores, mantenha alguns celulares reais escolhidos de
 propósito, e alugue o resto.** Cada um dos três lugares responde às linhas da tabela da seção 05 em
-que é bom, e cada um custa algo diferente: um emulador custa tempo do seu computador, um celular
-numa prateleira custa dinheiro e cuidado, e um celular numa nuvem de aparelhos custa dinheiro por
+que é bom, e cada um custa algo diferente. Um emulador custa tempo do seu computador. Um celular
+numa prateleira custa dinheiro e cuidado. Um celular numa nuvem de aparelhos custa dinheiro por
 minuto.
 
-O erro comum é tratar aparelhos reais como os testes sérios e emuladores como treino, e responder a
-cada defeito que escapou comprando mais um celular. Uma gaveta com vinte celulares comprados ao longo
-dos anos são vinte celulares que ninguém carrega, atualiza ou lembra a senha, e ainda não é o modelo
+O erro comum é tratar aparelhos reais como os testes sérios e emuladores como treino. Cada
+defeito que escapou é então respondido com a compra de mais um celular. Uma gaveta com vinte celulares comprados ao longo
+dos anos são vinte celulares que ninguém carrega, atualiza ou lembra a senha. E ainda não é o modelo
 de onde o próximo usuário vai reclamar. **Três celulares escolhidos a partir dos seus próprios
 usuários valem mais que vinte escolhidos por acaso**, e a lição 20 trata de escolhê-los.
 
@@ -21,25 +21,25 @@ usuários valem mais que vinte escolhidos por acaso**, e a lição 20 trata de e
 
 ## A cada mudança: emuladores e simuladores
 
-As suítes automatizadas das lições 15 a 18 rodam aqui, na esteira e no seu computador, em várias
-versões do Android e tamanhos de tela ao mesmo tempo se a esteira permitir. É aqui que as primeiras
-linhas da tabela da seção 05 são pegas, minutos depois de alguém causá-las, e é o único lugar barato
+As suítes automatizadas das lições 15 a 18 rodam aqui, na esteira e no seu computador. Se a esteira
+permitir, rodam em várias versões do Android e tamanhos de tela ao mesmo tempo. É aqui que as
+primeiras linhas da tabela da seção 05 são pegas, minutos depois de alguém causá-las. É o único lugar barato
 o bastante para rodar todo teste a cada mudança.
 
 ## Antes de uma versão: a prateleira
 
 Um conjunto pequeno de celulares reais, cada um ali por um motivo que você sabe dizer:
 
-- **a versão mais antiga do Android que você suporta, num celular barato da marca mais comum entre
-  os seus usuários**: ele encontra as telas lentas, os limites de memória e as regras de segundo
+- a versão mais antiga do Android que você suporta, num celular barato da marca mais comum entre
+  os seus usuários. Ele encontra as telas lentas, os limites de memória e as regras de segundo
   plano daquela marca;
-- **um celular recente de outra marca comum**, para que os hábitos de um fabricante não sejam
+- um celular recente de outra marca comum, para que os hábitos de um fabricante não sejam
   confundidos com os do Android;
-- **um iPhone com a versão mais antiga do iOS que você suporta**, se houver um app iOS.
+- um iPhone com a versão mais antiga do iOS que você suporta, se houver um app iOS.
 
 Uma pessoa os usa, antes de cada versão, nas jornadas que importam e nas linhas da tabela que só um
 aparelho mostra: rolar a lista longa, sair do app por uma hora e voltar, ler o código, pegar o
-elevador. Mantenha-os como celulares de teste e de ninguém em particular: um celular de trabalho
+elevador. Mantenha-os como celulares de teste e de ninguém em particular. Um celular de trabalho
 cheio das mensagens de alguém interrompe o teste com notificações, e mistura os dados da pessoa com
 os do teste.
 
@@ -55,6 +55,6 @@ acontece no meu celular* é respondido quando o celular não está na sua pratel
    como a seção 05 descreveu.
 2. Tente um emulador configurado igual: aquela versão, aquele tamanho de tela, aquele idioma. A
    maioria dos relatos se reproduz aqui, e aí é barato corrigir e testar de novo.
-3. Se não reproduzir, o defeito provavelmente está numa linha que o emulador esconde; encontre
+3. Se não reproduzir, o defeito provavelmente está numa linha que o emulador esconde. Encontre
    aquele modelo numa nuvem de aparelhos, ou o mais próximo da mesma marca.
 4. Anote onde ele se reproduziu e onde não. Essa linha poupa a próxima pessoa da mesma tarde.

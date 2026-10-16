@@ -10,7 +10,7 @@ act on it, expect something of it. `element(by.id(…))` finds, `.tap()` acts, a
 ## The component under test
 
 The template's `App.tsx` shows React Native's welcome screen. Replace it with the list of this
-lesson. Every element a spec touches has a `testID`, and each row's is built from the show's id,
+lesson. Every element a spec touches has a `testID`. Each row's is built from the show's id,
 `show-sh-103`, so a spec picks a row by what it holds, as `showWithId` did in lesson 16.
 Save it as `tickets-rn/App.tsx`:
 
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 ```
 
 Unlike the app, the code could be checked on the recording machine. The template comes with
-TypeScript, which reads the whole project and reports every type that does not fit; silence and
+TypeScript, which reads the whole project and reports every type that does not fit. Silence and
 exit code 0 mean it found none:
 
 ```
@@ -156,10 +156,10 @@ npx detox test -c android.emu.debug
 
 The first serves the app's JavaScript to the debug build and stays running. The second builds the
 app and the test APK, the slow step, done again only when native code changes. The third boots the
-AVD if it is not running, installs both APKs, and runs the specs through Jest, which prints each
-test with its result.
+AVD if it is not running and installs both APKs. Then it runs the specs through Jest, which prints
+each test with its result.
 
-**That run was not recorded for this course**: the APKs were never built, for the reason section
+**That run was not recorded for this course.** The APKs were never built, for the reason section
 04 gave. What was recorded is the third command on the recording machine, which has no AVD at all:
 
 ```
@@ -186,8 +186,8 @@ Ran all test suites.
 jest --config e2e/jest.config.js
 ```
 
-Detox read the configuration, asked the Android SDK for an emulator called `Pixel_8_API_35`, and
-refused before Jest ran a single test, with an empty list where the available emulators would be:
-the same empty answer `emulator -list-avds` gave in lesson 14. On your computer that list names the
-AVDs you have, and **a name in `.detoxrc.js` that matches none of them fails exactly like this**,
-which makes it the first thing to check when Detox will not start.
+Detox read the configuration and asked the Android SDK for an emulator called `Pixel_8_API_35`. It
+refused before Jest ran a single test, with an empty list where the available emulators would be.
+That is the same empty answer `emulator -list-avds` gave in lesson 14. On your computer that list
+names the AVDs you have. **A name in `.detoxrc.js` that matches none of them fails exactly like
+this**, which makes it the first thing to check when Detox will not start.

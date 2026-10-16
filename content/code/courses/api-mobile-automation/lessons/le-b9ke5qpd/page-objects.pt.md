@@ -9,14 +9,14 @@ a coisa sendo conferida. Com um teste, tudo bem. Com trinta, o id `example.ticke
 escrito trinta vezes, e no dia em que um desenvolvedor o renomeia, trinta testes falham por um único
 motivo e alguém edita trinta arquivos.
 
-O padrão que resolve isso se chama **page object** na web, e `web-automation` terá mostrado esse
-padrão lá se você fez o curso; num celular ele é um **objeto de tela**. Cada tela do app ganha uma
+O padrão que resolve isso se chama *page object* na web, e `web-automation` terá mostrado esse
+padrão lá se você fez o curso. Num celular ele é um **objeto de tela**. Cada tela do app ganha uma
 classe. A classe conhece os ids e as esperas da tela, e oferece ao teste o que uma pessoa pode fazer
 ali. Quando o app muda, uma classe muda.
 
 ## Duas telas
 
-A lista. O `open` toca numa linha e devolve a tela a que ela leva, já esperada, então um teste não
+A lista. O `open` toca numa linha e devolve a tela a que ela leva, já esperada. Um teste não
 tem como esquecer a espera. Salve como `appium/screens/list.mjs`:
 
 ```js
@@ -52,7 +52,7 @@ export class ListScreen {
 }
 ```
 
-O espetáculo. Ele responde perguntas e não faz mais nada, porque nada nele é tocado ainda; a chave
+O espetáculo. Ele responde perguntas e não faz mais nada, porque nada nele é tocado ainda. A chave
 de lembrete chega na lição 21. Salve como `appium/screens/show.mjs`:
 
 ```js
@@ -134,12 +134,11 @@ as chamadas do WebdriverIO que aquele arquivo usava, e o comando para rodar é o
 
 ## O que não pertence a um objeto de tela
 
-- **Asserções.** A tela responde `seats()`; o teste decide qual deve ser a resposta. Uma tela que
+- Asserções. A tela responde `seats()`; o teste decide qual deve ser a resposta. Uma tela que
   fizesse asserções levaria as expectativas de um teste para todo teste que a usasse.
-- **Pausas**, pelos motivos da seção 06. A tela é o lugar natural das esperas, e as explícitas
+- Pausas, pelos motivos da seção 06. A tela é o lugar natural das esperas, e as explícitas
   pertencem a ela.
-- **Dados.** Qual espetáculo abrir é assunto do teste, passado como argumento.
+- Dados. Qual espetáculo abrir é assunto do teste, passado como argumento.
 
 Dois hábitos mantêm os objetos de tela honestos. Devolva a próxima tela a partir de uma ação que leva
-a uma, como o `open` faz, para que o teste siga o caminho do próprio app. E mantenha-os pequenos: um
-objeto de tela com quarenta métodos costuma ser três telas, ou uma tela e a suíte inteira de alguém.
+a uma, como o `open` faz, para que o teste siga o caminho do próprio app. E mantenha-os pequenos. Um objeto de tela com quarenta métodos costuma ser três telas, ou uma tela e a suíte inteira de alguém.

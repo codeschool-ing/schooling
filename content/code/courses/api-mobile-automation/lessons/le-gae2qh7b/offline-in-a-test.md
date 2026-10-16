@@ -4,17 +4,17 @@ version: 1
 ---
 
 **Tickets has two ways to fail and one way to cope, and each is a screen a test should check.**
-Lesson 14 wrote them: when boxoffice cannot be reached and the app has a saved copy of the list, it
-shows that copy with the banner *Offline: showing the list from HH:mm*; when it has no copy, it
-shows the error line instead. Both depend on one thing a person holding the phone cannot arrange on
-demand, boxoffice being gone, and on a second thing they cannot see, whether a copy was saved.
+Lesson 14 wrote them. When boxoffice cannot be reached and the app has a saved copy of the list, it
+shows that copy with the banner *Offline: showing the list from HH:mm*. When it has no copy, it
+shows the error line instead. Both depend on boxoffice being gone, which a person holding the phone
+cannot arrange on demand. They also depend on whether a copy was saved, which that person cannot see.
 
 A test can arrange both, from inside, and that is the gray box of section 02 earning its keep:
 
-- **boxoffice gone**: `Shows.baseUrl` is a `var`, so the test points it at an address where
+- for boxoffice gone, `Shows.baseUrl` is a `var`, so the test points it at an address where
   nothing answers, before the load that should fail;
-- **no saved copy**: the copy lives in the app's `SharedPreferences` file called `shows`, which the
-  test clears before it starts.
+- for no saved copy, the test clears the app's `SharedPreferences` file called `shows`, where the
+  copy lives, before it starts.
 
 ## Which address nobody answers
 
@@ -35,10 +35,10 @@ exit 28
 
 **A port nothing listens on is refused at once**: the computer answers immediately that there is
 nobody there, after 0 ms. **An address nobody answers at all waits for the timeout**, 5002 ms here,
-because nothing ever says no; `10.255.255.1` is a private address that no machine on the recording
+because nothing ever says no. `10.255.255.1` is a private address that no machine on the recording
 machine's network has. The app would behave the same way, since `Shows.load` gives its connection
-5000 ms. So the test uses the first kind. From inside the emulator, `10.0.2.2` is your computer
-(lesson 14), and on most computers port 9 is one nothing listens on, which makes `http://10.0.2.2:9` a
+5000 ms. So the test uses the first kind. From inside the emulator, `10.0.2.2` is your computer, as
+lesson 14 showed. On most computers nothing listens on port 9, which makes `http://10.0.2.2:9` a
 boxoffice that is down and says so at once. If your computer does run something on port 9, pick any
 other port with nothing behind it.
 
@@ -151,7 +151,7 @@ class OfflineTest {
 }
 ```
 
-The second test needs boxoffice running, like `ListTest`; the first needs nothing at all, which
+The second test needs boxoffice running, like `ListTest`. The first needs nothing at all, which
 is the point of it.
 
 **What these tests do not cover** is a network that is slow rather than gone, or one that drops

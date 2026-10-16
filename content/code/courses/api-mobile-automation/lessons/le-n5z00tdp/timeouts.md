@@ -6,8 +6,8 @@ version: 1
 **A timeout is not a failure. It is the absence of an answer, and the request may well have
 succeeded.** boxoffice waits two seconds for the provider, as its `charge` function says with
 `AbortSignal.timeout(2000)`, and then gives up and answers `504`. Giving up is the right thing for a
-server to do, because a client kept waiting forever is worse than a client told "not in time". What
-giving up does not do is undo anything on the other side.
+server to do, because a client kept waiting forever is worse than a client told "not in time". But
+giving up undoes nothing on the other side.
 
 ## A provider that answers too late
 
@@ -54,10 +54,10 @@ POST /charges the caller hung up first (slow)
 GET /__requests 200 (slow)
 ```
 
-`the caller hung up first`: the stub had recorded the charge when it arrived and approved it a
-second after boxoffice stopped listening. With a real provider, that is a customer who was charged
-for an order the app reported as failed. **This is the most expensive failure in the lesson, and no status code reveals it**, because
-the only party that knew the outcome had already been hung up on.
+`the caller hung up first`: the stub had recorded the charge when it arrived. It approved it a second
+after boxoffice stopped listening. With a real provider, that is a customer who was charged for an
+order the app reported as failed. **This is the most expensive failure in the lesson, and no status
+code reveals it.** The only party that knew the outcome had already been hung up on.
 
 ## What a test should assert
 
@@ -119,11 +119,12 @@ adjusted, which `Date.now()` cannot promise.
 
 ## What a client should do with a 504
 
-**Treat it as "unknown", never as "failed".** The safe moves follow from the rest of the lesson: retry
-the same request with the same idempotency key, so that if the first attempt went through, the retry
-finds it; or ask the server for the order's state before telling the user anything. Both depend on the
-server keeping its promise. boxoffice remembers a key only after a charge succeeds, so a retry after
-its `504` places a new order, and it passes the client's key on to the provider, which is the one
-place that can recognise the repeat. The stub here does not; a real provider that honours
-idempotency keys would answer the second charge with the first. That chain, client key to server to
-provider, is what a tester follows end to end when the word *timeout* appears in a report.
+**Treat it as "unknown", never as "failed".** The safe moves follow from the rest of the lesson. One
+is to retry the same request with the same idempotency key, so that if the first attempt went
+through, the retry finds it. The other is to ask the server for the order's state before telling the
+user anything. Both depend on the server keeping its promise. boxoffice remembers a key only after a
+charge succeeds, so a retry after its `504` places a new order. It does pass the client's key on to
+the provider, the one place that can recognise the repeat. The stub here does not. A real provider
+that honours idempotency keys would answer the second charge with the first. That chain, client key
+to server to provider, is what a tester follows end to end when the word *timeout* appears in a
+report.
