@@ -33,11 +33,74 @@ picture of a basket another test filled is a different picture. It waits for the
 the same reason: a picture of the list before it filled would be a baseline of nothing.
 
 ```
-%%CAP visual-first%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (660ms)
+
+
+  1) evidence/visual.spec.js:5:1 › the shop looks as it did ────────────────────────────────────────
+
+    Error: A snapshot doesn't exist at /home/ana/quitanda/evidence/visual.spec.js-snapshots/shop-linux.png, writing actual.
+
+       7 |   await page.goto('/');
+       8 |   await expect(page.locator('#products li')).toHaveCount(8);
+    >  9 |   await expect(page).toHaveScreenshot('shop.png');
+         |   ^
+      10 | });
+      11 |
+        at /home/ana/quitanda/evidence/visual.spec.js:9:3
+
+    attachment #1: shop (image/png) ────────────────────────────────────────────────────────────────
+    Expected: evidence/visual.spec.js-snapshots/shop-linux.png
+    Received: test-results/visual-the-shop-looks-as-it-did/shop-actual.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-the-shop-looks-as-it-did/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/visual-the-shop-looks-as-it-did/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    evidence/visual.spec.js:5:1 › the shop looks as it did ─────────────────────────────────────────
+
+To open last HTML report run:
+
+  npx playwright show-report
 ```
 
 ```
-%%CAP visual-second%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (470ms)
+
+  1 passed (1.8s)
+
+To open last HTML report run:
+
+  npx playwright show-report
+
+ana@laptop:~/quitanda$ ls -la evidence/visual.spec.js-snapshots/
+total 60
+drwxrwxr-x 2 ana ana  4096 Oct 15 22:11 .
+drwxr-xr-x 3 ana ana  4096 Oct 15 22:11 ..
+-rw-rw-r-- 1 ana ana 50966 Oct 15 22:11 shop-linux.png
 ```
 
 The baseline went beside the test, in `evidence/visual.spec.js-snapshots/`, under the name
@@ -52,7 +115,88 @@ Now one colour in `app/public/style.css` changes: the border of each card, from 
 shop's dark green, `#2f6f4e`. Nothing a `toHaveText` reads has moved. The same test:
 
 ```
-%%CAP visual-changed%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (966ms)
+
+
+  1) evidence/visual.spec.js:5:1 › the shop looks as it did ────────────────────────────────────────
+
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      4794 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: shop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(shop.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 4794 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 4794 pixels (ratio 0.01 of all image pixels) are different.
+
+
+       7 |   await page.goto('/');
+       8 |   await expect(page.locator('#products li')).toHaveCount(8);
+    >  9 |   await expect(page).toHaveScreenshot('shop.png');
+         |                      ^
+      10 | });
+      11 |
+        at /home/ana/quitanda/evidence/visual.spec.js:9:22
+
+    attachment #1: shop (image/png) ────────────────────────────────────────────────────────────────
+    Expected: evidence/visual.spec.js-snapshots/shop-linux.png
+    Received: test-results/visual-the-shop-looks-as-it-did/shop-actual.png
+    Diff:     test-results/visual-the-shop-looks-as-it-did/shop-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-the-shop-looks-as-it-did/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-the-shop-looks-as-it-did/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/visual-the-shop-looks-as-it-did/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    evidence/visual.spec.js:5:1 › the shop looks as it did ─────────────────────────────────────────
+
+To open last HTML report run:
+
+  npx playwright show-report
+
+ana@laptop:~/quitanda$ ls -la test-results/visual-*/
+total 612
+drwxrwxr-x 2 ana ana   4096 Oct 15 22:11 .
+drwxrwxr-x 3 ana ana   4096 Oct 15 22:11 ..
+-rw-rw-r-- 1 ana ana   1946 Oct 15 22:11 error-context.md
+-rw-rw-r-- 1 ana ana  51000 Oct 15 22:11 shop-actual.png
+-rw-rw-r-- 1 ana ana  57023 Oct 15 22:11 shop-diff.png
+-rw-rw-r-- 1 ana ana  50966 Oct 15 22:11 shop-expected.png
+-rw-rw-r-- 1 ana ana  51000 Oct 15 22:11 test-failed-1.png
+-rw-rw-r-- 1 ana ana 343243 Oct 15 22:11 trace.zip
+-rw-rw-r-- 1 ana ana  50155 Oct 15 22:11 video.webm
 ```
 
 **4794 pixels differ**: the borders of eight cards. That is about half a percent of the 921,600

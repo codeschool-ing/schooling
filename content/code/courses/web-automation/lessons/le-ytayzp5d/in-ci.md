@@ -28,7 +28,21 @@ because without a retry it never records. Here it is with one retry, on the clic
 early:
 
 ```
-%%CAP retry%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/ssr.spec.js --retries 1 --trace on-first-retry
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/ssr.spec.js:10:1 › a click on /ssr, at once (5.7s)
+  ✘  2 evidence/ssr.spec.js:10:1 › a click on /ssr, at once (retry #1) (5.8s)
+ana@laptop:~/quitanda$ find test-results -type f | sort
+test-results/.last-run.json
+test-results/ssr-a-click-on-ssr-at-once-retry1/error-context.md
+test-results/ssr-a-click-on-ssr-at-once-retry1/test-failed-1.png
+test-results/ssr-a-click-on-ssr-at-once-retry1/trace.zip
+test-results/ssr-a-click-on-ssr-at-once-retry1/video.webm
+test-results/ssr-a-click-on-ssr-at-once/error-context.md
+test-results/ssr-a-click-on-ssr-at-once/test-failed-1.png
+test-results/ssr-a-click-on-ssr-at-once/video.webm
 ```
 
 The first attempt failed and kept its screenshot and its video, as the configuration asks, and
@@ -43,19 +57,26 @@ The disk cost is easy to measure. Three files of lesson 1 to 3, six tests, witho
 trace for every test:
 
 ```
-%%CAP trace-off%%
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js
+  6 passed (7.8s)
+ana@laptop:~/quitanda$ du -sh test-results
+16K	test-results
 ```
 
 ```
-%%CAP trace-on%%
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js --trace on
+  6 passed (7.9s)
+ana@laptop:~/quitanda$ du -sh test-results; find test-results -name trace.zip | wc -l
+344K	test-results
+6
 ```
 
 Without traces the six tests left 16 KB, little more than the folders themselves. With a trace
-for every test they left 396 KB, about 63 KB a test, and this shop's pages are tiny. A trace grows with what the page loads and with every action, and
-the failing click's folder, video and screenshot included, came to 300 KB on its own. Multiply
+for every test they left 344 KB, about 55 KB a test, and this shop's pages are tiny. A trace grows with what the page loads and with every action, and
+the failing click's folder, video and screenshot included, came to about 270 KB on its own. Multiply
 by a suite and by every run of every branch, and `'on'` stops being a setting anybody leaves on.
 
-The other cost is time. The six tests took 7.8 s without traces and 8.0 s with them, one run of
+The other cost is time. The six tests took 7.8 s without traces and 7.9 s with them, one run of
 each, which is too few to say more than *small, here*. Video was not measured on its own. A suite of a few hundred tests
 pays whatever it costs a few hundred times, on a build server that is usually a smaller machine
 than a laptop.

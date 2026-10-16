@@ -63,7 +63,19 @@ para falhar que falha fez exatamente isso, então o Playwright o conta como apro
 fora. O próprio arquivo da aula 3 mostra isso, rodado com a opção de rastro na linha de comando:
 
 ```
-%%CAP quarantined%%
+ana@laptop:~/quitanda$ npx playwright test tests/search.spec.js --trace retain-on-failure
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/search.spec.js:7:1 › one request: filling the box finds papaya (205ms)
+  ✘  2 tests/search.spec.js:13:1 › typed key by key, the list settles on papaya (6.1s)
+
+  2 passed (7.6s)
+ana@laptop:~/quitanda$ find test-results
+test-results
+test-results/.last-run.json
+test-results/search-typed-key-by-key-the-list-settles-on-papaya
+test-results/search-typed-key-by-key-the-list-settles-on-papaya/error-context.md
 ```
 
 O segundo teste falhou, como diz o `✘`, e o resumo o conta entre os aprovados. A pasta dele em
@@ -95,7 +107,61 @@ test('a click on /ssr, at once', async ({ page }) => {
 ```
 
 ```
-%%CAP ssr-evidence%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/ssr.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/ssr.spec.js:10:1 › a click on /ssr, at once (5.7s)
+
+
+  1) evidence/ssr.spec.js:10:1 › a click on /ssr, at once ──────────────────────────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('basket-count')
+    Expected: "1"
+    Received: "0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByTestId('basket-count')
+        9 × locator resolved to <span data-testid="basket-count">0</span>
+          - unexpected value "0"
+
+
+      11 |   await page.goto('/ssr');
+      12 |   await page.getByTestId('product-banana').getByRole('button', { name: 'Add to basket' }).click();
+    > 13 |   await expect(page.getByTestId('basket-count')).toHaveText('1');
+         |                                                  ^
+      14 | });
+      15 |
+        at /home/ana/quitanda/evidence/ssr.spec.js:13:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/ssr-a-click-on-ssr-at-once/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/ssr-a-click-on-ssr-at-once/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/ssr-a-click-on-ssr-at-once/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/ssr-a-click-on-ssr-at-once/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/ssr-a-click-on-ssr-at-once/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    evidence/ssr.spec.js:10:1 › a click on /ssr, at once ───────────────────────────────────────────
+
+To open last HTML report run:
+
+  npx playwright show-report
 ```
 
 **A metade de cima é a falha da aula 6, e a de baixo é nova.** Quatro coisas foram anexadas: uma

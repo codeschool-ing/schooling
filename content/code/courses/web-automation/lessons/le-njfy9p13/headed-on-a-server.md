@@ -31,31 +31,59 @@ The machine these lessons were recorded on already had Ubuntu's package, so the 
 not shown:
 
 ```
-%%CAP xvfb-version%%
+ana@laptop:~/quitanda$ dpkg -s xvfb | grep ^Version
+Version: 2:21.1.12-1ubuntu1.8
 ```
 
 Without it, a headed test fails before its first line. The test runner shows the same box
 `modes.mjs` did:
 
 ```
-%%CAP headed-no-display%%
+ana@laptop:~/quitanda$ npx playwright test --headed tests/smoke.spec.js 2>&1 | head -14
+
+Running 1 test using 1 worker
+
+  ✘  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (5ms)
+
+
+  1) tests/smoke.spec.js:3:1 › the shop opens and lists its fruit ──────────────────────────────────
+
+    Error: browserType.launch: Target page, context or browser has been closed
+    Browser logs:
+
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like you launched a headed browser without having a XServer running.                     ║
+    ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
 ```
 
 With `xvfb-run` in front of the same command, the browser has its display and the test passes:
 
 ```
-%%CAP headed-xvfb%%
+ana@laptop:~/quitanda$ xvfb-run npx playwright test --headed tests/smoke.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (603ms)
+
+  1 passed (2.2s)
 ```
 
 **Nothing in the test or the configuration changed**; only the environment the browser started
-in. That is the whole of running headed on a server.
+in.
 
 ## The size of a screen nobody sees
 
 Run `modes.mjs headed` through it and the window Chromium opens is sized to a screen again:
 
 ```
-%%CAP modes-headed%%
+ana@laptop:~/quitanda$ xvfb-run node modes.mjs headed
+headed 141.0.7390.37 {
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+  webdriver: true,
+  ownWindow: '1050x917',
+  viewport: '1280x720',
+  deals: 'Weekly deals, in a table.'
+}
 ```
 
 The user agent has lost the word `HeadlessChrome`: this is plain `Chrome/141.0.0.0`, the browser
@@ -64,14 +92,26 @@ otherwise, and Chromium sizes its first window from the screen it finds. A diffe
 a different window:
 
 ```
-%%CAP modes-big%%
+ana@laptop:~/quitanda$ xvfb-run -s "-screen 0 1920x1080x24" node modes.mjs headed
+headed 141.0.7390.37 {
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+  webdriver: true,
+  ownWindow: '945x973',
+  viewport: '1280x720',
+  deals: 'Weekly deals, in a table.'
+}
 ```
 
 **The viewport did not move**: 1280 by 720 in both, because Playwright sets it on the page whatever
 the window is. Selenium sets nothing, so its page is the window, and the window follows the screen:
 
 ```
-%%CAP selenium-headed%%
+ana@laptop:~/quitanda$ xvfb-run node selenium/headless.mjs
+[
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+  '1050x865',
+  'Weekly deals, in a table.'
+]
 ```
 
 Two practical notes from `xvfb-run`'s own help. It uses display number 99 unless told otherwise,

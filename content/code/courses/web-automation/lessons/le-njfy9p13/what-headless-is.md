@@ -50,7 +50,14 @@ Start the shop with `npm start` in one terminal and run the script in another. W
 or with `shell`, it starts Chromium the way Playwright's tests do:
 
 ```
-%%CAP modes-shell%%
+ana@laptop:~/quitanda$ node modes.mjs shell
+shell 141.0.7390.37 {
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/141.0.7390.37 Safari/537.36',
+  webdriver: true,
+  ownWindow: '800x600',
+  viewport: '1280x720',
+  deals: 'Weekly deals, in a table.'
+}
 ```
 
 **The browser says what it is, twice.** `HeadlessChrome` in the user agent is the name a site
@@ -63,7 +70,19 @@ read `Mobile` nowhere in the user agent and sent the desktop paragraph.
 Now ask for a window on a machine that has no screen:
 
 ```
-%%CAP no-display%%
+ana@laptop:~/quitanda$ node modes.mjs headed 2>&1 | head -12
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
 ```
 
 **The full Chromium tried to open a window, found no display and gave up**, and Playwright's own

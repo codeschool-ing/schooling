@@ -11,7 +11,8 @@ real browser with its window switched off, and took the old one out. Ask Chrome 
 mode and it says so itself:
 
 ```
-%%CAP chrome-old%%
+ana@laptop:~/quitanda$ google-chrome --headless=old --dump-dom http://localhost:3000/deals
+Old Headless mode has been removed from the Chrome binary. Please use the new Headless mode (https://developer.chrome.com/docs/chromium/new-headless) or the chrome-headless-shell which is a standalone implementation of the old Headless mode (https://developer.chrome.com/blog/chrome-headless-shell).
 ```
 
 The **new headless** mode is the whole browser without a window. The **headless shell** is the
@@ -25,7 +26,10 @@ Playwright prints the command it launches when the `DEBUG` variable names `pw:br
 is several hundred characters long; `grep -o` keeps the program's path:
 
 ```
-%%CAP launching%%
+ana@laptop:~/quitanda$ DEBUG=pw:browser node modes.mjs shell 2>&1 | grep -o "<launching> [^ ]*"
+<launching> /home/ana/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell
+ana@laptop:~/quitanda$ DEBUG=pw:browser node modes.mjs new 2>&1 | grep -o "<launching> [^ ]*"
+<launching> /home/ana/.cache/ms-playwright/chromium-1194/chrome-linux/chrome
 ```
 
 **Headless with no channel starts the shell; `channel: 'chromium'` starts the full browser in new
@@ -34,13 +38,28 @@ the only one of the two that can run with `--headed`. Both are in Playwright's c
 shell is about half the size:
 
 ```
-%%CAP du%%
+ana@laptop:~/quitanda$ du -sh ~/.cache/ms-playwright/*
+597M	/home/ana/.cache/ms-playwright/chromium-1194
+323M	/home/ana/.cache/ms-playwright/chromium_headless_shell-1194
+4.9M	/home/ana/.cache/ms-playwright/ffmpeg-1011
 ```
 
 `npx playwright install chromium` downloads both. Two options choose one of them:
 
 ```
-%%CAP install-help%%
+ana@laptop:~/quitanda$ npx playwright install --help | head -12
+Usage: npx playwright install [options] [browser...]
+
+ensure browsers necessary for this version of Playwright are installed
+
+Options:
+  --with-deps   install system dependencies for browsers
+  --dry-run     do not execute installation, only print information
+  --list        prints list of browsers from all playwright installations
+  --force       force reinstall of stable browser channels
+  --only-shell  only install headless shell when installing chromium
+  --no-shell    do not install chromium headless shell
+  -h, --help    display help for command
 ```
 
 A build server that only ever runs headless with the default settings can take `--only-shell`
@@ -52,7 +71,14 @@ full browser, which is what `--no-shell` keeps.
 Run `modes.mjs` with `new`, the full browser in new headless:
 
 ```
-%%CAP modes-new%%
+ana@laptop:~/quitanda$ node modes.mjs new
+new 141.0.7390.37 {
+  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/141.0.0.0 Safari/537.36',
+  webdriver: true,
+  ownWindow: '780x493',
+  viewport: '1280x720',
+  deals: 'Weekly deals, in a table.'
+}
 ```
 
 The same build, `141.0.7390.37`, and three answers that differ from the shell's:
@@ -111,7 +137,18 @@ try {
 ```
 
 ```
-%%CAP selenium-new%%
+ana@laptop:~/quitanda$ node selenium/headless.mjs --headless=new
+[
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/141.0.0.0 Safari/537.36',
+  '780x441',
+  'Weekly deals, in a table.'
+]
+ana@laptop:~/quitanda$ node selenium/headless.mjs --headless
+[
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/141.0.0.0 Safari/537.36',
+  '780x441',
+  'Weekly deals, in a table.'
+]
 ```
 
 **Plain `--headless` and `--headless=new` are the same mode now**, the full browser, because the
@@ -121,7 +158,8 @@ Selenium suites set a window size themselves. Older guides still say `--headless
 what that costs today:
 
 ```
-%%CAP selenium-old%%
+ana@laptop:~/quitanda$ node selenium/headless.mjs --headless=old 2>&1 | grep Error:
+SessionNotCreatedError: session not created: probably user data directory is already in use, please specify a unique value for --user-data-dir argument, or don't use --user-data-dir
 ```
 
 **The message blames a user data directory, and the cause is something else.** Chrome refused the

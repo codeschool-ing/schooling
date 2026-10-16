@@ -17,7 +17,7 @@ every error the page's scripts threw and nobody caught. Collecting them takes tw
 `beforeEach`.
 
 Putting them in the report is `testInfo.attach`. Every test and hook receives a `testInfo` object
-as the argument after the fixtures, and `attach` adds a named item to that test's result: a `body`
+as the argument after the fixtures. Its `attach` adds a named item to that test's result: a `body`
 built in memory, or a `path` to a file already on disk, with a `contentType` saying what it is. The
 `list` reporter prints a text attachment in the terminal, and the HTML report shows it on the
 test's page, beside the screenshot and the trace.
@@ -58,7 +58,66 @@ test('the shop lists eight products', async ({ page }) => {
 ```
 
 ```
-%%CAP errors-run%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/errors.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/errors.spec.js:22:1 › the shop lists eight products (5.6s)
+
+
+  1) evidence/errors.spec.js:22:1 › the shop lists eight products ──────────────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#products li')
+    Expected: 8
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#products li')
+        9 × locator resolved to 0 elements
+          - unexpected value "0"
+
+
+      23 |   await page.route('**/api/products', (route) => route.fulfill({ status: 404, body: 'not found' }));
+      24 |   await page.goto('/');
+    > 25 |   await expect(page.locator('#products li')).toHaveCount(8);
+         |                                              ^
+      26 | });
+      27 |
+        at /home/ana/quitanda/evidence/errors.spec.js:25:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: browser messages (text/plain) ───────────────────────────────────────────────────
+    console.error: Failed to load resource: the server responded with a status of 404 (Not Found)
+    pageerror: Unexpected token 'o', "not found" is not valid JSON
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/errors-the-shop-lists-eight-products/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/errors-the-shop-lists-eight-products/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    evidence/errors.spec.js:22:1 › the shop lists eight products ───────────────────────────────────
+
+To open last HTML report run:
+
+  npx playwright show-report
 ```
 
 **Attachment #2 is the one this file added**, and it holds the diagnosis in two lines: the server
@@ -83,7 +142,9 @@ messages into the next.
 The trace recorded the same two events, with their times, whether or not anybody attached them:
 
 ```
-%%CAP errors-trace%%
+ana@laptop:~/quitanda$ unzip -p test-results/errors-*/trace.zip 0-trace.trace | grep -o '"type":"console".\{0,150\}\|"method":"pageError".\{0,150\}'
+"type":"console","messageType":"error","text":"Failed to load resource: the server responded with a status of 404 (Not Found)","args":[],"location":{"url":"http://loc
+"method":"pageError","params":{"error":{"error":{"message":"Unexpected token 'o', \"not found\" is not valid JSON","stack":"","name":"Uncaught (in promise) SyntaxError"}}
 ```
 
 So the attachment adds no evidence. It moves the same evidence to where somebody reads first, and

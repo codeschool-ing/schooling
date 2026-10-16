@@ -8,20 +8,29 @@ files in it. **Each answers a different question**, and the cheapest one to open
 that settles the matter:
 
 ```
-%%CAP evidence-ls%%
+ana@laptop:~/quitanda$ ls -la test-results/ssr-a-click-on-ssr-at-once/
+total 288
+drwxrwxr-x 2 ana ana   4096 Oct 15 22:10 .
+drwxrwxr-x 3 ana ana   4096 Oct 15 22:10 ..
+-rw-rw-r-- 1 ana ana   1510 Oct 15 22:10 error-context.md
+-rw-rw-r-- 1 ana ana  43452 Oct 15 22:10 test-failed-1.png
+-rw-rw-r-- 1 ana ana 124596 Oct 15 22:10 trace.zip
+-rw-rw-r-- 1 ana ana 106675 Oct 15 22:10 video.webm
 ```
 
 | file | the question it answers | size here |
 |---|---|---|
 | `test-failed-1.png` | what was on the screen when the test failed | 43 KB |
 | `error-context.md` | what the page contained at that moment, as text | 1.5 KB |
-| `video.webm` | how the screen got there | 115 KB |
-| `trace.zip` | what happened, in what order, and when | 149 KB |
+| `video.webm` | how the screen got there | 107 KB |
+| `trace.zip` | what happened, in what order, and when | 125 KB |
 
 ## The screenshot: the end, as a person would see it
 
 ```
-%%CAP evidence-file%%
+ana@laptop:~/quitanda$ file test-results/ssr-a-click-on-ssr-at-once/test-failed-1.png test-results/ssr-a-click-on-ssr-at-once/video.webm
+test-results/ssr-a-click-on-ssr-at-once/test-failed-1.png: PNG image data, 1280 x 720, 8-bit/color RGB, non-interlaced
+test-results/ssr-a-click-on-ssr-at-once/video.webm:        WebM
 ```
 
 A picture of the whole window, 1280 by 720, taken after the assertion gave up. It shows the eight
@@ -40,7 +49,45 @@ Markdown with the tree inside a `yaml` block, and the two lines that open and cl
 left out here by `grep -v`:
 
 ```
-%%CAP error-context%%
+ana@laptop:~/quitanda$ grep -v '^```' test-results/ssr-a-click-on-ssr-at-once/error-context.md
+# Page snapshot
+
+- main [ref=e2]:
+  - heading "Fruit of the season" [level=1] [ref=e3]
+  - paragraph [ref=e4]: "Basket: 0 items"
+  - list [ref=e5]:
+    - listitem [ref=e6]:
+      - heading "Banana" [level=2] [ref=e7]
+      - paragraph [ref=e8]: R$ 5,90
+      - button "Add to basket" [active] [ref=e9] [cursor=pointer]
+    - listitem [ref=e10]:
+      - heading "Mango" [level=2] [ref=e11]
+      - paragraph [ref=e12]: R$ 4,50
+      - button "Add to basket" [ref=e13] [cursor=pointer]
+    - listitem [ref=e14]:
+      - heading "Papaya" [level=2] [ref=e15]
+      - paragraph [ref=e16]: R$ 7,90
+      - button "Add to basket" [ref=e17] [cursor=pointer]
+    - listitem [ref=e18]:
+      - heading "Guava" [level=2] [ref=e19]
+      - paragraph [ref=e20]: R$ 12,90
+      - button "Add to basket" [ref=e21] [cursor=pointer]
+    - listitem [ref=e22]:
+      - heading "Cashew fruit" [level=2] [ref=e23]
+      - paragraph [ref=e24]: R$ 15,90
+      - button "Add to basket" [ref=e25] [cursor=pointer]
+    - listitem [ref=e26]:
+      - heading "Passion fruit" [level=2] [ref=e27]
+      - paragraph [ref=e28]: R$ 9,90
+      - button "Add to basket" [ref=e29] [cursor=pointer]
+    - listitem [ref=e30]:
+      - heading "Acerola" [level=2] [ref=e31]
+      - paragraph [ref=e32]: R$ 18,90
+      - button "Add to basket" [ref=e33] [cursor=pointer]
+    - listitem [ref=e34]:
+      - heading "Pineapple" [level=2] [ref=e35]
+      - paragraph [ref=e36]: R$ 6,90
+      - button "Add to basket" [ref=e37] [cursor=pointer]
 ```
 
 Read it for one word. The Banana card's button carries **`[active]`**, which marks the element
@@ -73,9 +120,11 @@ The HTML reporter in `evidence.config.js` wrote `playwright-report/` as well, a 
 each test with all its attachments in one place:
 
 ```
-%%CAP report-du%%
+ana@laptop:~/quitanda$ du -sh test-results playwright-report
+292K	test-results
+2.1M	playwright-report
 ```
 
-The report is the bigger of the two, 2.2 MB against the 320 KB it was built from, so copying both
+The report is the bigger of the two, 2.1 MB against the 292 KB it was built from, so copying both
 off a build server is a decision about disk as well as about convenience; the section on build
 servers comes back to it.

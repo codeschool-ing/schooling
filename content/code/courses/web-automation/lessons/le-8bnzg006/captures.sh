@@ -94,3 +94,5 @@ run 'npx playwright test --workers 1 --reporter=json > report.json; echo "exit c
 run 'node slowest.mjs report.json'
 block suite-5
 run "for i in 1 2 3 4 5; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done" | nocolor
+block suite-why
+run "npx playwright test | grep -E 'using [0-9]+ workers|^  [0-9]+\) |Expected:|Received:'" | nocolor

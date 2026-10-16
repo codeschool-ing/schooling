@@ -17,7 +17,7 @@ o `pageerror` dispara para cada erro que os scripts da página lançaram e ningu
 Coletá-los custa duas linhas num `beforeEach`.
 
 Pô-los no relatório é o `testInfo.attach`. Todo teste e todo hook recebem um objeto `testInfo` como
-argumento depois das fixtures, e o `attach` acrescenta um item com nome ao resultado daquele teste:
+argumento depois das fixtures. O `attach` dele acrescenta um item com nome ao resultado do teste:
 um `body` montado em memória, ou um `path` para um arquivo que já está no disco, com um
 `contentType` dizendo o que ele é. O reporter `list` imprime um anexo de texto no terminal, e o
 relatório HTML o mostra na página do teste, ao lado da captura de tela e do rastro.
@@ -57,7 +57,66 @@ test('the shop lists eight products', async ({ page }) => {
 ```
 
 ```
-%%CAP errors-run%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/errors.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/errors.spec.js:22:1 › the shop lists eight products (5.6s)
+
+
+  1) evidence/errors.spec.js:22:1 › the shop lists eight products ──────────────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#products li')
+    Expected: 8
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#products li')
+        9 × locator resolved to 0 elements
+          - unexpected value "0"
+
+
+      23 |   await page.route('**/api/products', (route) => route.fulfill({ status: 404, body: 'not found' }));
+      24 |   await page.goto('/');
+    > 25 |   await expect(page.locator('#products li')).toHaveCount(8);
+         |                                              ^
+      26 | });
+      27 |
+        at /home/ana/quitanda/evidence/errors.spec.js:25:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: browser messages (text/plain) ───────────────────────────────────────────────────
+    console.error: Failed to load resource: the server responded with a status of 404 (Not Found)
+    pageerror: Unexpected token 'o', "not found" is not valid JSON
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/errors-the-shop-lists-eight-products/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/errors-the-shop-lists-eight-products/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/errors-the-shop-lists-eight-products/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    evidence/errors.spec.js:22:1 › the shop lists eight products ───────────────────────────────────
+
+To open last HTML report run:
+
+  npx playwright show-report
 ```
 
 **O anexo #2 é o que este arquivo acrescentou**, e ele traz o diagnóstico em duas linhas: o
@@ -81,7 +140,9 @@ um teste para o seguinte.
 O rastro gravou os mesmos dois eventos, com seus horários, alguém os tendo anexado ou não:
 
 ```
-%%CAP errors-trace%%
+ana@laptop:~/quitanda$ unzip -p test-results/errors-*/trace.zip 0-trace.trace | grep -o '"type":"console".\{0,150\}\|"method":"pageError".\{0,150\}'
+"type":"console","messageType":"error","text":"Failed to load resource: the server responded with a status of 404 (Not Found)","args":[],"location":{"url":"http://loc
+"method":"pageError","params":{"error":{"error":{"message":"Unexpected token 'o', \"not found\" is not valid JSON","stack":"","name":"Uncaught (in promise) SyntaxError"}}
 ```
 
 Então o anexo não acrescenta evidência. Ele leva a mesma evidência para onde alguém lê primeiro, e

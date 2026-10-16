@@ -28,7 +28,21 @@ porque sem uma nova tentativa ele nunca grava. Aqui está ele com uma nova tenta
 vem cedo demais:
 
 ```
-%%CAP retry%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/ssr.spec.js --retries 1 --trace on-first-retry
+
+Running 1 test using 1 worker
+
+  ✘  1 evidence/ssr.spec.js:10:1 › a click on /ssr, at once (5.7s)
+  ✘  2 evidence/ssr.spec.js:10:1 › a click on /ssr, at once (retry #1) (5.8s)
+ana@laptop:~/quitanda$ find test-results -type f | sort
+test-results/.last-run.json
+test-results/ssr-a-click-on-ssr-at-once-retry1/error-context.md
+test-results/ssr-a-click-on-ssr-at-once-retry1/test-failed-1.png
+test-results/ssr-a-click-on-ssr-at-once-retry1/trace.zip
+test-results/ssr-a-click-on-ssr-at-once-retry1/video.webm
+test-results/ssr-a-click-on-ssr-at-once/error-context.md
+test-results/ssr-a-click-on-ssr-at-once/test-failed-1.png
+test-results/ssr-a-click-on-ssr-at-once/video.webm
 ```
 
 A primeira tentativa falhou e guardou a captura de tela e o vídeo, como a configuração pede, e
@@ -44,20 +58,27 @@ O custo em disco é fácil de medir. Três arquivos das aulas 1 a 3, seis testes
 rastro para cada teste:
 
 ```
-%%CAP trace-off%%
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js
+  6 passed (7.8s)
+ana@laptop:~/quitanda$ du -sh test-results
+16K	test-results
 ```
 
 ```
-%%CAP trace-on%%
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js --trace on
+  6 passed (7.9s)
+ana@laptop:~/quitanda$ du -sh test-results; find test-results -name trace.zip | wc -l
+344K	test-results
+6
 ```
 
 Sem rastros, os seis testes deixaram 16 KB, pouco mais que as próprias pastas. Com um rastro para
-cada teste, deixaram 396 KB, cerca de 63 KB por teste, e as páginas desta loja são minúsculas. Um
+cada teste, deixaram 344 KB, cerca de 55 KB por teste, e as páginas desta loja são minúsculas. Um
 rastro cresce com o que a página carrega e com cada ação, e a pasta do clique que falhou, com vídeo
-e captura de tela, chegou sozinha a 300 KB. Multiplique por uma suíte e por cada execução de cada
+e captura de tela, chegou sozinha a uns 270 KB. Multiplique por uma suíte e por cada execução de cada
 branch, e `'on'` deixa de ser uma opção que alguém deixa ligada.
 
-O outro custo é tempo. Os seis testes levaram 7.8 s sem rastros e 8.0 s com eles, uma execução de
+O outro custo é tempo. Os seis testes levaram 7.8 s sem rastros e 7.9 s com eles, uma execução de
 cada, o que é pouco demais para dizer mais que *pequeno, aqui*. O vídeo não foi medido à parte. Uma
 suíte de algumas centenas de testes paga o que ele custar algumas centenas de vezes, num servidor
 de build que costuma ser uma máquina menor que um notebook.

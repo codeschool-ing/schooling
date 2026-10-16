@@ -50,10 +50,12 @@ const driver = await new Builder().forBrowser('firefox').setFirefoxOptions(optio
 **Note the single hyphen**: `-headless` is how Firefox spells its arguments, where Chrome writes
 `--headless=new`. Selenium does not translate one into the other. Building the options needs no
 browser, so this much can be checked here: the argument goes into the `moz:firefoxOptions`
-capability, which is what geckodriver reads when it starts Firefox.
+capability, beside a preference Selenium sets on its own, and that capability is what geckodriver
+reads when it starts Firefox.
 
 ```
-%%CAP firefox-options%%
+ana@laptop:~/quitanda$ node -e "import('selenium-webdriver/firefox.js').then(({ default: firefox }) => console.log(new firefox.Options().addArguments('-headless').get('moz:firefoxOptions')))"
+{ prefs: { 'remote.active-protocols': 1 }, args: [ '-headless' ] }
 ```
 
 Starting the session needs geckodriver and Firefox, and neither was available, so the test that

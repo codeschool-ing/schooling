@@ -16,7 +16,22 @@ browser starts once and the tests run one after another. One run in full, so you
 being timed:
 
 ```
-%%CAP speed-one%%
+ana@laptop:~/quitanda$ npx playwright test --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js
+
+Running 10 tests using 1 worker
+
+  ✓   1 tests/locators.spec.js:7:1 › banana, by its test id (208ms)
+  ✓   2 tests/locators.spec.js:12:1 › add a mango, by role and name (210ms)
+  ✓   3 tests/locators.spec.js:18:1 › a price, and the space nobody can see (156ms)
+  ✓   4 tests/search.spec.js:7:1 › one request: filling the box finds papaya (159ms)
+  ✘   5 tests/search.spec.js:13:1 › typed key by key, the list settles on papaya (6.0s)
+  ✓   6 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (167ms)
+  ✓   7 tests/spa.spec.js:3:1 › Basket opens the basket without loading a page (317ms)
+  ✓   8 tests/spa.spec.js:18:1 › Basket opens the basket on a slow network (1.1s)
+  ✘   9 tests/spa.spec.js:30:1 › the basket opens from its own address (110ms)
+  ✓  10 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+
+  10 passed (12.2s)
 ```
 
 ## Three modes, three times each
@@ -25,19 +40,43 @@ The same command, in the shell, in new headless through `headless.config.js`, an
 Xvfb, repeated three times. `tail -1` keeps the summary line, which carries the run's total:
 
 ```
-%%CAP speed%%
+ana@laptop:~/quitanda$ npx playwright test --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (12.1s)
+ana@laptop:~/quitanda$ npx playwright test --config headless.config.js --project=new-headless --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (14.2s)
+ana@laptop:~/quitanda$ xvfb-run npx playwright test --headed --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (15.4s)
+ana@laptop:~/quitanda$ npx playwright test --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (12.5s)
+ana@laptop:~/quitanda$ npx playwright test --config headless.config.js --project=new-headless --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (14.7s)
+ana@laptop:~/quitanda$ xvfb-run npx playwright test --headed --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (15.1s)
+ana@laptop:~/quitanda$ npx playwright test --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (13.5s)
+ana@laptop:~/quitanda$ npx playwright test --config headless.config.js --project=new-headless --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (17.5s)
+ana@laptop:~/quitanda$ xvfb-run npx playwright test --headed --workers 1 tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js tests/ssr.spec.js tests/spa.spec.js | tail -1
+  10 passed (18.0s)
 ```
 
-@@SPEED_READING@@
+**In every round the shell was fastest and the headed run slowest**, with new headless between
+them: 12.1, 14.2 and 15.4 seconds in the first round, 12.5, 14.7 and 15.1 in the second. The third
+round was slower in every mode, 13.5, 17.5 and 18.0, with nothing in the suite changed, which is why
+a measurement is run more than once and read as a pattern rather than a figure.
+
+**Most of the gap is between the two programs, not between a window and none.** New headless is the
+same full browser as the headed run, and its times sit close to the headed ones: 1.2, 0.4 and 0.5
+seconds apart. The shell, the smaller program, is two to four seconds ahead of both.
 
 ## What the number is made of
 
 **Most of these seconds belong to the shop, not to the browser.** The search test waits for slow
 answers on purpose (lesson 3), the server-rendered page holds its script back for a second and a
 half (lesson 6), and the expected failure in `tests/search.spec.js` spends its whole timeout before
-it counts as a pass. None of that gets faster without a window. A suite of a thousand short tests
-that each open a page and click once would spend a larger share of its time in the browser, and
-there the difference would be larger; a suite like this one, dominated by waits it means to have,
+it counts as a pass. None of that gets faster without a window. A suite of a thousand short tests,
+each opening a page and clicking once, spends a larger share of its time in the browser, and there
+the difference would be larger. A suite like this one, made mostly of waits it means to have,
 barely notices.
 
 Two more things decide the time far more than the mode. Workers: lesson 19 runs these files in
