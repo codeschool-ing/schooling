@@ -489,7 +489,7 @@
         "why": "`_spark_metadata` lists the files of each finished batch. It merges nothing."
       },
       {
-        "text": "Running `OPTIMIZE` on the table on a schedule, apart from the stream",
+        "text": "Running `OPTIMIZE` on a schedule of its own, apart from the writes",
         "correct": true,
         "why": "Right."
       }
@@ -715,7 +715,7 @@
         "why": "The member still receives them in offset order; the order is lost afterwards, between the threads."
       },
       {
-        "text": "Two sales of one shop can be handled by two threads at once and finish in either order.",
+        "text": "Two sales of one shop go to two threads at once and finish in either order.",
         "correct": true,
         "why": "Right."
       }
@@ -939,7 +939,7 @@
         "why": "The watermark is shared, so one source jumping forward makes every other source's sales look late."
       },
       {
-        "text": "The sales are stored, the watermark jumps fifty minutes ahead, and the other shops' honest sales arrive behind it.",
+        "text": "The sales are stored, time jumps fifty minutes forward, and the other shops' honest sales now look late.",
         "correct": true,
         "why": "Right."
       },
@@ -1301,7 +1301,7 @@
         "why": "The `if` ran because every quote passes through it, and no quote went over 30 kg. A line that ran is not a line that was checked."
       },
       {
-        "text": "None of the new behaviour was tested; the price of a heavy parcel could be anything.",
+        "text": "None of the new behaviour was tested; nobody has checked what a heavy parcel costs.",
         "correct": true,
         "why": "Right."
       },
@@ -1371,7 +1371,7 @@
         "why": "A release is started by a tag starting with `v`, which then calls the same checks."
       },
       {
-        "text": "Two changes that each passed on their own can conflict once combined.",
+        "text": "Each change passed alone; combined, the two are code nobody has tested yet.",
         "correct": true,
         "why": "Right."
       },
@@ -1472,7 +1472,7 @@
         "why": "The check answered at once and said `ok`. Waiting longer for the same question gets the same answer."
       },
       {
-        "text": "One real read through the main path, such as a quote for a known CEP.",
+        "text": "One real read through the route customers depend on, such as a quote for a known CEP.",
         "correct": true,
         "why": "Right."
       },
@@ -1598,7 +1598,7 @@
     "hint": "Automated Testing and CI/CD, lesson 10; Machine Learning and MLOps, lesson 8.",
     "choices": [
       {
-        "text": "Nothing; the canary must compare what the two versions say, such as the mean probability.",
+        "text": "Nothing; what each side says has to be set side by side instead, such as the average per group.",
         "correct": true,
         "why": "Right."
       },
@@ -1796,7 +1796,7 @@
         "why": "Orders' `POST /orders` span does carry the method; lesson 3 listed its keys, `http.method` among them."
       },
       {
-        "text": "Orders' instrumentation libraries still write the older name, `http.method`.",
+        "text": "The automatic instrumentation there still writes the older name, `http.method`.",
         "correct": true,
         "why": "Right."
       },
@@ -1817,7 +1817,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A team moves the order confirmations from RabbitMQ to a Kafka topic and wants the mailer's spans to stay in the checkout's trace. Where does the context travel, and what does the consumer do with it?",
+    "prompt": "A team moves the order confirmations from RabbitMQ to a Kafka topic and wants the mailer's spans to stay in the checkout's trace. Kafka records carry headers, as the streaming course's dead-letter topic showed. Where does the context travel, and what does the consumer do with it?",
     "hint": "Observability and Operations, lesson 4; Streaming and Event Processing, lesson 16.",
     "choices": [
       {
@@ -1826,7 +1826,7 @@
         "why": "An offset is a position in a partition; it knows nothing about the trace of whoever produced the record."
       },
       {
-        "text": "In the record's headers: the producer injects it, and the consumer extracts it and starts its span under it.",
+        "text": "In the record's headers: the producer injects it, and the receiving side extracts it and starts its span under it.",
         "correct": true,
         "why": "Right."
       },
@@ -2033,7 +2033,7 @@
     "hint": "Observability and Operations, lesson 10; Data Security, Governance and Privacy, lesson 10.",
     "choices": [
       {
-        "text": "Three policies: a week for routine lines, longer for errors, and the audit trail in its own store with its own period, often five years.",
+        "text": "Three policies: a week for routine lines, longer for errors, and the audit trail in its own store with its own period, five years for administrative records.",
         "correct": true,
         "why": "Right."
       },
@@ -2429,7 +2429,7 @@
         "why": "A symptom pages when people are hurt now or before morning; nobody acts on these scores until a person has looked."
       },
       {
-        "text": "No, a ticket: nothing has to be done before the morning.",
+        "text": "No, a ticket: nothing has to happen until working hours.",
         "correct": true,
         "why": "Right."
       },
@@ -2464,7 +2464,7 @@
         "why": "For those seven days anybody who reads the logs can log in as the website, and the copies outside Loki keep their own time."
       },
       {
-        "text": "Set a new password with psql's `\\password`, which sends only the stored form, and treat the old one as read by anybody who can read the log or a copy of it.",
+        "text": "Set a new password with psql's `\\password`, which sends only the stored form, and treat the old one as read by anybody with access to the log or a copy of it.",
         "correct": true,
         "why": "Right."
       },
@@ -2539,7 +2539,7 @@
         "why": "The pattern would match. The trouble is the places the key lands that are not log lines at all."
       },
       {
-        "text": "The key travels inside every statement, so it also sits in `pg_stat_activity`, `pg_stat_statements`, the server's own log file and its memory, and none of those pass through the Collector. The key has to leave the query.",
+        "text": "The key travels inside every statement, so it also sits in `pg_stat_activity`, `pg_stat_statements`, the database's own log file and its memory, and none of those pass that pipeline. The key has to leave the query.",
         "correct": true,
         "why": "Right."
       },
@@ -2660,7 +2660,7 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "Ipê's nightly loader fails on a malformed ticket and writes `failed row:` followed by the whole row of `support.tickets` into its log, which goes to Loki and is kept for seven days. What should change?",
+    "prompt": "Ipê's nightly loader fails on a malformed ticket and writes `failed row:` followed by the whole row of `support.tickets` into its log, which goes to Loki and is kept for seven days. What needs to change?",
     "hint": "Data Security, Governance and Privacy, lesson 6; Observability and Operations, lesson 10.",
     "choices": [
       {
@@ -2763,7 +2763,7 @@
         "why": "A different payload is sent as a PUT. Only a contact missing from the model gets a DELETE."
       },
       {
-        "text": "It stays, updated at most. The row is kept because orders point at it, so the model still selects it, and only a contact that leaves the model is deleted; the model has to drop erased customers.",
+        "text": "It stays, updated at most. Orders point at that row, so it is kept and the model keeps picking it up, and the sync removes only what is gone from the model; erased people have to be filtered out.",
         "correct": true,
         "why": "Right."
       },
@@ -3382,7 +3382,7 @@
         "why": "Consent is recorded per purpose. Withdrawing the marketing one stops marketing; the orders and the CRM record serve other purposes, on other bases."
       },
       {
-        "text": "The audience filters on current consent for that purpose, so the customer leaves the model and the next run takes them off the list.",
+        "text": "The list is built from the latest choice the customer made, so they drop out of the model and the next run takes them off.",
         "correct": true,
         "why": "Right."
       },
@@ -3538,7 +3538,7 @@
         "why": "That is the weak defence the lesson names. It only rules out the columns somebody thought to try."
       },
       {
-        "text": "Give the coupon to home customers picked at random before the offer, and compare them with the rest.",
+        "text": "Pick at random, before the offer, which home buyers get it, and compare them with the others.",
         "correct": true,
         "why": "Right."
       }
@@ -3582,7 +3582,7 @@
     "hint": "Machine Learning and MLOps, lesson 2.",
     "choices": [
       {
-        "text": "Whether group 6 is still the crime readers, because a retrained k-means numbers its groups afresh.",
+        "text": "Whether that number still names the same group, since k-means numbers its groups afresh on each new fit.",
         "correct": true,
         "why": "Right."
       },
