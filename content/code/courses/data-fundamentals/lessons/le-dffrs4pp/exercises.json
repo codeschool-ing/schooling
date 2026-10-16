@@ -1,0 +1,1241 @@
+[
+  {
+    "id": "ex-3wd3qfev",
+    "version": 1,
+    "section": "bounded-and-unbounded",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What separates batch processing from stream processing, according to this lesson?",
+    "hint": "Look at the input, not the clock.",
+    "choices": [
+      {
+        "text": "How fast each one can produce a result",
+        "correct": false,
+        "why": "Speed follows from the difference; a five-minute batch job is still batch."
+      },
+      {
+        "text": "Which programming language and which product is used to write each one",
+        "correct": false,
+        "why": "Both shapes are written in Python in this lesson."
+      },
+      {
+        "text": "How many machines the processing is spread over",
+        "correct": false,
+        "why": "One machine runs both here; distribution is lesson 9’s subject."
+      },
+      {
+        "text": "Whether the data it reads has an end",
+        "correct": true,
+        "why": "Right: bounded data can be waited for, unbounded data cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-eca32jh2",
+    "version": 1,
+    "section": "bounded-and-unbounded",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job runs every five minutes and counts the rides that started in the previous five minutes. What is it?",
+    "hint": "It waits for a piece to close, then reads all of it.",
+    "choices": [
+      {
+        "text": "A stream processor, because five minutes is close to real time",
+        "correct": false,
+        "why": "Frequency does not make a stream; it still processes closed pieces."
+      },
+      {
+        "text": "Neither, since a window that short is not a batch",
+        "correct": false,
+        "why": "A batch can be any length, from a day to a few seconds."
+      },
+      {
+        "text": "A batch job, run over short windows each of which has closed",
+        "correct": true,
+        "why": "Right: bounded pieces, each processed once it is closed."
+      },
+      {
+        "text": "A stream processor that has been configured to wait five minutes",
+        "correct": false,
+        "why": "It reads nothing between runs; it is started on a schedule."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1ffdvfw",
+    "version": 1,
+    "section": "bounded-and-unbounded",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is unbounded data?",
+    "hint": "Ask whether you could ever wait for all of it.",
+    "choices": [
+      {
+        "text": "The September rides export",
+        "correct": false,
+        "why": "September ended; the export has a last row."
+      },
+      {
+        "text": "A file uploaded by the maintenance team yesterday",
+        "correct": false,
+        "why": "A file that has been uploaded is finished."
+      },
+      {
+        "text": "The readings the dock sensors keep sending, day after day",
+        "correct": true,
+        "why": "Right: they go on for as long as the company exists."
+      },
+      {
+        "text": "The `docks.jsonl` file written by `sensors.py`",
+        "correct": false,
+        "why": "The program stopped writing, so the file is bounded; the lesson reads it as if it were not."
+      }
+    ]
+  },
+  {
+    "id": "ex-1evtasfr",
+    "version": 1,
+    "section": "bounded-and-unbounded",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Data that has an end, so that you can wait for all of it, is called ___ data.",
+    "hint": "Batch processing works on it.",
+    "blanks": [
+      {
+        "accept": [
+          "bounded"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8asyeb6f",
+    "version": 1,
+    "section": "batch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rides did the job run \"as of\" 01:00 on Tuesday count for Monday?",
+    "hint": "The first run, before the backfill.",
+    "value": 118,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-n3e6epfz",
+    "version": 1,
+    "section": "batch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the 01:00 job miss two of Monday’s rides?",
+    "hint": "Compare when they happened with when they arrived.",
+    "choices": [
+      {
+        "text": "They had not reached the server when the job ran at 01:00",
+        "correct": true,
+        "why": "Right: Passeio Público sent them at 07:02 on Tuesday."
+      },
+      {
+        "text": "The job filtered on `arrived` instead of on `event_time` by mistake",
+        "correct": false,
+        "why": "It filters the day on `event_time`; `asof` only limits what had arrived."
+      },
+      {
+        "text": "The two rides started after midnight and belong to Tuesday instead",
+        "correct": false,
+        "why": "They started on Monday morning, at 09:21 and 09:36."
+      },
+      {
+        "text": "The CSV was appended to, not replaced",
+        "correct": false,
+        "why": "Appending would add rides, not lose them; and it is replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qccfg6y",
+    "version": 1,
+    "section": "batch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a backfill?",
+    "hint": "It is about the past.",
+    "choices": [
+      {
+        "text": "Running a batch job again for windows already processed",
+        "correct": true,
+        "why": "Right, for late data, a fixed bug or a new column."
+      },
+      {
+        "text": "Filling the gaps in a table with values guessed from the rows around them",
+        "correct": false,
+        "why": "That is imputation, a cleaning technique, and it invents data."
+      },
+      {
+        "text": "Copying a database to a second machine so it has a backup",
+        "correct": false,
+        "why": "That is a backup or a replica; nothing is recomputed."
+      },
+      {
+        "text": "Sending a stream’s late events to a separate file",
+        "correct": false,
+        "why": "That is one way of handling late data in a stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdg2qt9g",
+    "version": 1,
+    "section": "batch",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made the backfill safe to run? Choose all that apply.",
+    "hint": "Two things, both from lesson 3.",
+    "choices": [
+      {
+        "text": "The job replaces each day’s file instead of appending",
+        "correct": true,
+        "why": "Yes: running it twice leaves one answer."
+      },
+      {
+        "text": "The raw events were kept after the first run",
+        "correct": true,
+        "why": "Yes: a backfill reads the past again."
+      },
+      {
+        "text": "The job ran in under a second",
+        "correct": false,
+        "why": "Speed makes it quick, not safe."
+      },
+      {
+        "text": "The job was started by an orchestrator",
+        "correct": false,
+        "why": "Here it was started by hand, and it was still safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-4b81t0qx",
+    "version": 1,
+    "section": "batch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Monday’s count is first published at 01:00 on Tuesday. What is the shortest honest description of that delay?",
+    "hint": "Would a faster machine shorten it?",
+    "choices": [
+      {
+        "text": "It is caused by the job being slow, and a bigger machine would remove most of it",
+        "correct": false,
+        "why": "The job takes moments; the wait is for the window to close."
+      },
+      {
+        "text": "It is a mistake in the schedule that an orchestrator would correct",
+        "correct": false,
+        "why": "The schedule is right: the job has to run after the day ends."
+      },
+      {
+        "text": "It is caused by the late events from Passeio Público",
+        "correct": false,
+        "why": "The delay exists on every night, outage or not."
+      },
+      {
+        "text": "It is part of the design: the window has to close before it is counted",
+        "correct": true,
+        "why": "Right: a day-long window ends at midnight, and the answer comes after."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq9mjfn0",
+    "version": 1,
+    "section": "stream",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After two runs of `consumer.py 300`, what number did `offset.txt` hold?",
+    "hint": "The position of the next event to read.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-x8q7he9v",
+    "version": 1,
+    "section": "stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A committed offset of 600 means what?",
+    "hint": "Offsets start at 0.",
+    "choices": [
+      {
+        "text": "Event 600 was the last one processed",
+        "correct": false,
+        "why": "The last one read was 599; 600 is where to start."
+      },
+      {
+        "text": "The next event to read is at position 600",
+        "correct": true,
+        "why": "Right: the offset written is where the next run starts."
+      },
+      {
+        "text": "Events 0 to 599 were deleted",
+        "correct": false,
+        "why": "Reading removes nothing from a log."
+      },
+      {
+        "text": "600 events are left to read",
+        "correct": false,
+        "why": "There were 120 left: the log held 720."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3847qhg",
+    "version": 1,
+    "section": "stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How is reading a log different from taking messages off a queue?",
+    "hint": "What happens to an event after it is read?",
+    "choices": [
+      {
+        "text": "The event stays, so another reader can read it too",
+        "correct": true,
+        "why": "Right: each reader keeps its own offset."
+      },
+      {
+        "text": "One consumer at a time can read a log",
+        "correct": false,
+        "why": "The dock map and the van alert read the same log."
+      },
+      {
+        "text": "Events in a log can be edited after reading",
+        "correct": false,
+        "why": "A log is append-only: events are never changed."
+      },
+      {
+        "text": "A log keeps events sorted by when they happened, a queue does not",
+        "correct": false,
+        "why": "A log keeps the order of arrival, which this lesson shows is different."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cv1jdyz",
+    "version": 1,
+    "section": "stream",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The position a consumer has read up to, saved so a restart can continue, is its ___.",
+    "hint": "A word Kafka uses too.",
+    "blanks": [
+      {
+        "accept": [
+          "offset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d1hk3ydj",
+    "version": 1,
+    "section": "stream",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bug in the consumer’s counting is fixed. How is a log-based consumer made to recount everything?",
+    "hint": "Where does reading start?",
+    "choices": [
+      {
+        "text": "Ask the sensors to send every event again from the beginning",
+        "correct": false,
+        "why": "The log already holds them; nobody has to send anything."
+      },
+      {
+        "text": "Delete the log and let it fill up again with new events",
+        "correct": false,
+        "why": "That throws away the past the recount needs."
+      },
+      {
+        "text": "There is no way: a stream looks forward, not back",
+        "correct": false,
+        "why": "Replaying from an old offset is what a log is good at."
+      },
+      {
+        "text": "Set its offset back to 0 and let it read everything again",
+        "correct": true,
+        "why": "Right: every event is read again by the fixed code."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9tt6d2b",
+    "version": 1,
+    "section": "event-time-and-processing-time",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each question to the clock it needs.",
+    "hint": "Is it about the world or about the system?",
+    "pairs": [
+      {
+        "left": "rides that started between 08:15 and 08:30",
+        "right": "event time"
+      },
+      {
+        "left": "how far behind the consumer is",
+        "right": "processing time"
+      },
+      {
+        "left": "when the last bicycle left Rua XV",
+        "right": "the sensor’s timestamp"
+      },
+      {
+        "left": "how many events reached the server last minute",
+        "right": "the server’s clock"
+      }
+    ]
+  },
+  {
+    "id": "ex-spz185yn",
+    "version": 1,
+    "section": "event-time-and-processing-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lateness.py` found events that arrived after a later one but less than five seconds late. What explains them?",
+    "hint": "Out of order is not the same as late.",
+    "choices": [
+      {
+        "text": "The Parque Barigui outage",
+        "correct": false,
+        "why": "Those are more than a minute late."
+      },
+      {
+        "text": "Two sensors whose readings crossed on the way",
+        "correct": true,
+        "why": "Right: one to four seconds of delay is enough to swap two events."
+      },
+      {
+        "text": "A bug in how `sensors.py` sorted the file",
+        "correct": false,
+        "why": "The file is sorted by arrival on purpose, which is what a server sees."
+      },
+      {
+        "text": "Sensors whose clocks drifted",
+        "correct": false,
+        "why": "The generator gives every sensor a correct clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6aesavd",
+    "version": 1,
+    "section": "event-time-and-processing-time",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many events did `lateness.py` find more than a minute late?",
+    "hint": "Both outages together.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "events"
+  },
+  {
+    "id": "ex-5pcgjg2b",
+    "version": 1,
+    "section": "event-time-and-processing-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What cost does event time bring that processing time does not?",
+    "hint": "An event from 08:20 can still be on its way.",
+    "choices": [
+      {
+        "text": "Waiting",
+        "correct": true,
+        "why": "Right: the processor cannot know it has seen everything from 08:20."
+      },
+      {
+        "text": "Every event has to be stored twice, once for each of the two clocks",
+        "correct": false,
+        "why": "One event carries both fields in one line."
+      },
+      {
+        "text": "It has to be converted to UTC before it can be compared",
+        "correct": false,
+        "why": "Both clocks here are Curitiba’s and compare fine."
+      },
+      {
+        "text": "A sensor cannot write a timestamp of its own",
+        "correct": false,
+        "why": "It does: that is where event time comes from."
+      }
+    ]
+  },
+  {
+    "id": "ex-278fdwh3",
+    "version": 1,
+    "section": "event-time-and-processing-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dock sensor’s clock runs four minutes fast. What happens to its events downstream?",
+    "hint": "Event time is only as good as the clock that wrote it.",
+    "choices": [
+      {
+        "text": "The watermark detects the drift and corrects each timestamp",
+        "correct": false,
+        "why": "A watermark estimates progress; it does not know any clock is wrong."
+      },
+      {
+        "text": "They are counted by processing time instead, automatically",
+        "correct": false,
+        "why": "Nothing switches clocks for you."
+      },
+      {
+        "text": "They land in the wrong windows, and nothing says so",
+        "correct": true,
+        "why": "Right: a wrong stamp is used with complete confidence."
+      },
+      {
+        "text": "They are dropped as late data by every window",
+        "correct": false,
+        "why": "Running fast makes them look early, not late."
+      }
+    ]
+  },
+  {
+    "id": "ex-1g8db43p",
+    "version": 1,
+    "section": "windows",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each window to what it is.",
+    "hint": "Overlap, no overlap, or no fixed length.",
+    "pairs": [
+      {
+        "left": "tumbling",
+        "right": "fixed length, back to back"
+      },
+      {
+        "left": "sliding",
+        "right": "fixed length, overlapping"
+      },
+      {
+        "left": "session",
+        "right": "closed by a gap with no events"
+      }
+    ]
+  },
+  {
+    "id": "ex-f4p3stnt",
+    "version": 1,
+    "section": "windows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counted by arrival time, how many more rides did the 08:45 window hold than counted by event time?",
+    "hint": "Compare the two columns of `windows.py`.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-c45kwva3",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both columns of `windows.py` total 64. Why is the arrival-time column still wrong?",
+    "hint": "Where are the rides filed?",
+    "choices": [
+      {
+        "text": "It puts rides in the wrong quarter of an hour",
+        "correct": true,
+        "why": "Right: the error is in which window, not in how many."
+      },
+      {
+        "text": "It counts some rides twice and leaves out others, which balances by chance",
+        "correct": false,
+        "why": "Each ride is counted once in each column."
+      },
+      {
+        "text": "It is not wrong: when the totals agree, the columns agree",
+        "correct": false,
+        "why": "08:30 and 08:45 differ between the columns."
+      },
+      {
+        "text": "It counts docks as well as undocks",
+        "correct": false,
+        "why": "Both columns skip everything but undocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq1vd8f9",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rides are counted in 30-minute windows that start every 15 minutes. Why do the counts not add up to the day’s total?",
+    "hint": "In how many windows is one ride?",
+    "choices": [
+      {
+        "text": "Sliding windows drop the events that fall on a boundary",
+        "correct": false,
+        "why": "Nothing is dropped; events are shared."
+      },
+      {
+        "text": "The windows are sessions, so they vary in length",
+        "correct": false,
+        "why": "These have a fixed length and a fixed step."
+      },
+      {
+        "text": "Each ride falls inside two of the overlapping windows",
+        "correct": true,
+        "why": "Right: overlapping windows count each event once per window."
+      },
+      {
+        "text": "Late rides are left out of the sliding windows",
+        "correct": false,
+        "why": "Lateness is a separate question from the window’s shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjvw9vb6",
+    "version": 1,
+    "section": "windows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marta wants to know how long customers keep the app open in one go. Which window fits?",
+    "hint": "The length is what is being measured.",
+    "choices": [
+      {
+        "text": "Tumbling windows of ten minutes, one after another",
+        "correct": false,
+        "why": "A fixed length cuts one use of the app into pieces."
+      },
+      {
+        "text": "A session window, one per customer visit",
+        "correct": true,
+        "why": "Right: it follows the customer’s activity and ends after a quiet gap."
+      },
+      {
+        "text": "A sliding window of an hour, updated every five minutes",
+        "correct": false,
+        "why": "It counts recent activity, not one use from start to end."
+      },
+      {
+        "text": "A single window covering the whole day",
+        "correct": false,
+        "why": "That merges every visit of the day into one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qn67yyg",
+    "version": 1,
+    "section": "late-data-and-watermarks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With an allowed lateness of two minutes, how many rides did `watermark.py` drop?",
+    "hint": "Count the ids in the last line.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-wj6gc9cp",
+    "version": 1,
+    "section": "late-data-and-watermarks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a watermark say?",
+    "hint": "It is the processor’s estimate.",
+    "choices": [
+      {
+        "text": "That every event was delivered exactly once",
+        "correct": false,
+        "why": "That is a delivery guarantee, a different question."
+      },
+      {
+        "text": "That a window’s answer is final",
+        "correct": false,
+        "why": "It is a bet; a late event can still prove it wrong."
+      },
+      {
+        "text": "The arrival time of the latest event",
+        "correct": false,
+        "why": "It is built from event time, not arrival."
+      },
+      {
+        "text": "That no events older than it are expected any more",
+        "correct": true,
+        "why": "Right: windows ending before it are sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-9x0b6c7r",
+    "version": 1,
+    "section": "late-data-and-watermarks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Raising the allowed lateness from two to twenty-five minutes stopped the drops. What did it cost?",
+    "hint": "Look at the times the windows were sent.",
+    "choices": [
+      {
+        "text": "Some rides were counted twice in the 08:15 window",
+        "correct": false,
+        "why": "The counts match the event-time column exactly."
+      },
+      {
+        "text": "More memory, because every event of the morning had to be held",
+        "correct": false,
+        "why": "It holds four counters either way."
+      },
+      {
+        "text": "Only the mornings with an outage were slower",
+        "correct": false,
+        "why": "Every window waits, outage or not."
+      },
+      {
+        "text": "Each count was sent well after its window had closed",
+        "correct": true,
+        "why": "Right: the 08:00 window went out at 08:40 instead of 08:17."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8ny3hxj",
+    "version": 1,
+    "section": "late-data-and-watermarks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which allowed lateness would have caught Passeio Público’s rides in a stream?",
+    "hint": "They arrived the next morning.",
+    "choices": [
+      {
+        "text": "Two minutes, if the processor had restarted",
+        "correct": false,
+        "why": "A restart changes nothing about how late they were."
+      },
+      {
+        "text": "Twenty-five minutes, as in the second run of `watermark.py`",
+        "correct": false,
+        "why": "That caught Parque Barigui’s, which were half an hour late at most."
+      },
+      {
+        "text": "A day or more: they came back the next morning",
+        "correct": true,
+        "why": "Right: they were over twenty-one hours late."
+      },
+      {
+        "text": "An hour, which is what streaming systems use by default",
+        "correct": false,
+        "why": "There is no such default, and an hour is too short."
+      }
+    ]
+  },
+  {
+    "id": "ex-50vr1amm",
+    "version": 1,
+    "section": "late-data-and-watermarks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are ways to handle an event that arrives for a window already sent? Choose all that apply.",
+    "hint": "Three were listed.",
+    "choices": [
+      {
+        "text": "Send a corrected count for the window",
+        "correct": true,
+        "why": "Yes, when the reader can take a correction."
+      },
+      {
+        "text": "Write it somewhere of its own",
+        "correct": true,
+        "why": "Yes: then somebody can see how many there were."
+      },
+      {
+        "text": "Let the nightly batch job count it",
+        "correct": true,
+        "why": "Yes: the batch reads a closed day from raw events."
+      },
+      {
+        "text": "Change its event time to the current window",
+        "correct": false,
+        "why": "That files a ride under a time it did not happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qp3xe70",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each order of the two steps to what a crash between them causes.",
+    "hint": "The step done first is the one that survives.",
+    "pairs": [
+      {
+        "left": "commit the offset, then do the work",
+        "right": "events lost"
+      },
+      {
+        "left": "do the work, then commit the offset",
+        "right": "events repeated"
+      },
+      {
+        "left": "write the work and the offset together",
+        "right": "neither"
+      }
+    ]
+  },
+  {
+    "id": "ex-y85qvcgj",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the crash, `consumer.py` ended with 515 rides on mornings that had 360. How many rides were counted twice?",
+    "hint": "The batch from offset 300 to 599.",
+    "value": 155,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-qvdq1fqy",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`consumer.py` writes its result and then commits its offset. Which guarantee does it give?",
+    "hint": "What does a crash between the two cause?",
+    "choices": [
+      {
+        "text": "At most once, because the offset is committed in the end",
+        "correct": false,
+        "why": "At most once commits first; this commits last."
+      },
+      {
+        "text": "Exactly once, since the program never loses an event",
+        "correct": false,
+        "why": "Never losing one is half; it repeats them."
+      },
+      {
+        "text": "At least once, because a crash between the two repeats a batch",
+        "correct": true,
+        "why": "Right: nothing is lost, and some events are counted twice."
+      },
+      {
+        "text": "Effectively once, since the work is written first",
+        "correct": false,
+        "why": "Its count went to 515: the repeat was not harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w1qcj0k",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the same crash leave `keyed.py` at the right count?",
+    "hint": "What is written for each ride?",
+    "choices": [
+      {
+        "text": "It commits its offset before writing its result, unlike `consumer.py`",
+        "correct": false,
+        "why": "The order is the same; the batch was still delivered twice."
+      },
+      {
+        "text": "A ride delivered twice is written to the same key twice",
+        "correct": true,
+        "why": "Right: the write is idempotent."
+      },
+      {
+        "text": "Its `--crash` flag stops the program at a different point",
+        "correct": false,
+        "why": "It stops between the same two writes."
+      },
+      {
+        "text": "It reads the log in smaller batches of events",
+        "correct": false,
+        "why": "Both read 300 at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt4vb64t",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can no network promise exactly-once delivery?",
+    "hint": "Think of a sender that hears nothing back.",
+    "choices": [
+      {
+        "text": "Networks are too slow for the receiver to confirm each message in time",
+        "correct": false,
+        "why": "Speed is not the problem; silence is."
+      },
+      {
+        "text": "Every protocol duplicates its messages on purpose, as a safety measure",
+        "correct": false,
+        "why": "Duplicates come from resending after silence, not from design."
+      },
+      {
+        "text": "Messages arrive out of order on the way",
+        "correct": false,
+        "why": "Order is a separate question from how many times."
+      },
+      {
+        "text": "A lost message and a lost reply look the same",
+        "correct": true,
+        "why": "Right: so the sender must resend or risk a loss."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex0hbcb1",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the crash in `consumer.py` in order.",
+    "hint": "The offset is the last thing written.",
+    "items": [
+      "read offsets 300 to 599",
+      "write the count, now 311",
+      "crash before the offset is committed",
+      "restart at offset 300",
+      "count offsets 300 to 599 a second time"
+    ],
+    "trap": "The count was written before the crash and the offset was not."
+  },
+  {
+    "id": "ex-7ymds2nj",
+    "version": 1,
+    "section": "lambda-and-kappa",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the main cost of the Lambda architecture?",
+    "hint": "Count the paths.",
+    "choices": [
+      {
+        "text": "The same logic is written, run and kept up twice",
+        "correct": true,
+        "why": "Right, and the two can disagree."
+      },
+      {
+        "text": "The log must keep every event for years",
+        "correct": false,
+        "why": "That is Kappa’s cost."
+      },
+      {
+        "text": "It cannot produce an answer until the nightly batch job has run",
+        "correct": false,
+        "why": "The speed layer answers during the day."
+      },
+      {
+        "text": "Late events are lost for good",
+        "correct": false,
+        "why": "The batch layer recomputes with them included."
+      }
+    ]
+  },
+  {
+    "id": "ex-trnj91xf",
+    "version": 1,
+    "section": "lambda-and-kappa",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Kappa architecture, how is a change to the logic applied to past data?",
+    "hint": "There is no batch path.",
+    "choices": [
+      {
+        "text": "A nightly batch job recomputes the history",
+        "correct": false,
+        "why": "That is Lambda’s batch layer."
+      },
+      {
+        "text": "The new version replays the log from offset 0",
+        "correct": true,
+        "why": "Right, into a new output that readers then switch to."
+      },
+      {
+        "text": "It is not: Kappa only processes new events",
+        "correct": false,
+        "why": "Replaying the past is the whole idea."
+      },
+      {
+        "text": "The speed and serving layers are rebuilt",
+        "correct": false,
+        "why": "Kappa has no layers of that kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkfssqwj",
+    "version": 1,
+    "section": "lambda-and-kappa",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Roda Livre’s log keeps events for seven days. Which architecture does that rule out for a change affecting last year?",
+    "hint": "Which one depends on replaying the log?",
+    "choices": [
+      {
+        "text": "Lambda, since its speed layer reads the same log",
+        "correct": false,
+        "why": "Lambda reprocesses from the batch layer’s raw copy."
+      },
+      {
+        "text": "Neither, because a log can always be replayed",
+        "correct": false,
+        "why": "Only what it still holds can be replayed."
+      },
+      {
+        "text": "Both of them, because both depend on a log",
+        "correct": false,
+        "why": "Lambda’s batch layer keeps all raw events."
+      },
+      {
+        "text": "Kappa",
+        "correct": true,
+        "why": "Right: last year is no longer in the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5vrzrpr",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Roda Livre question earns a stream?",
+    "hint": "What is done with the answer, and how soon?",
+    "choices": [
+      {
+        "text": "Rides per station last week, for planning next week’s van routes",
+        "correct": false,
+        "why": "A day-old answer is fine for next week’s plan."
+      },
+      {
+        "text": "Revenue per month, for the finance report",
+        "correct": false,
+        "why": "Nobody acts on it within minutes."
+      },
+      {
+        "text": "Which stations will be empty in the next half hour, for the van",
+        "correct": true,
+        "why": "Right: the van has to move before it happens."
+      },
+      {
+        "text": "Today’s rides so far, shown on the office screen",
+        "correct": false,
+        "why": "Looked at, not acted on: hourly batch is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-98b8r960",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A manager asks for the office dashboard \"in real time\". What does the section suggest asking first?",
+    "hint": "The test is about action.",
+    "choices": [
+      {
+        "text": "Which streaming product the company already pays for",
+        "correct": false,
+        "why": "The tool comes after the need."
+      },
+      {
+        "text": "What decision it feeds, and how long that waits",
+        "correct": true,
+        "why": "Right: \"fresher than now\" fits an hourly job."
+      },
+      {
+        "text": "How many events a second the data source can produce",
+        "correct": false,
+        "why": "Volume matters later; the need comes first."
+      },
+      {
+        "text": "Whether the team prefers Lambda or Kappa",
+        "correct": false,
+        "why": "That assumes a stream is needed at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd705kbq",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a stream make a team pay for that an hourly batch job does not? Choose all that apply.",
+    "hint": "Everything this lesson showed.",
+    "choices": [
+      {
+        "text": "A process that never stops and must be watched",
+        "correct": true,
+        "why": "Yes: somebody is woken when it stops."
+      },
+      {
+        "text": "A watermark somebody has to choose",
+        "correct": true,
+        "why": "Yes: and a decision about late data."
+      },
+      {
+        "text": "State that must survive a crash",
+        "correct": true,
+        "why": "Yes: plus duplicates to make harmless."
+      },
+      {
+        "text": "Storing the raw events",
+        "correct": false,
+        "why": "Batch needs them kept too, for backfills."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3gqxksx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a stream window’s life in order.",
+    "hint": "The watermark moves before the window is sent.",
+    "items": [
+      "an event arrives with its event time",
+      "it is added to the window it belongs to",
+      "the watermark moves past the window’s end",
+      "the window’s count is sent",
+      "a late event for it is dropped"
+    ],
+    "trap": "Late means after the window was sent."
+  },
+  {
+    "id": "ex-rdsy0rdz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment provider retries a webhook when it hears nothing back, and Roda Livre adds each payment to the day’s revenue. What is the first fix?",
+    "hint": "The delivery is at least once.",
+    "choices": [
+      {
+        "text": "Record each payment under its own id, so a retry overwrites it",
+        "correct": true,
+        "why": "Right: a retry writes the same key and changes nothing."
+      },
+      {
+        "text": "Ask the provider to stop retrying",
+        "correct": false,
+        "why": "Then a lost webhook is a payment nobody records."
+      },
+      {
+        "text": "Add a watermark of one hour to the revenue",
+        "correct": false,
+        "why": "Lateness is about time, not about repeats."
+      },
+      {
+        "text": "Move the revenue report to a nightly batch job",
+        "correct": false,
+        "why": "A batch would add the duplicates too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtex1tge",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team counts rides per quarter of an hour by arrival time, and the chart shows a surge at 08:45 on Monday. What should they check first?",
+    "hint": "Which clock files the rides?",
+    "choices": [
+      {
+        "text": "Whether more bicycles were put into service that morning",
+        "correct": false,
+        "why": "That is the story the chart tells, and it may be false."
+      },
+      {
+        "text": "Whether the daily total for Monday is lower than usual",
+        "correct": false,
+        "why": "The total is the same by either clock."
+      },
+      {
+        "text": "Whether a burst of old events arrived around 08:45",
+        "correct": true,
+        "why": "Right: a burst of old events lands in the window it arrives in."
+      },
+      {
+        "text": "Whether the consumer committed its offset correctly",
+        "correct": false,
+        "why": "A repeat would raise many windows, not move rides between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-my5zz63e",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A write that leaves the same result whether it is done once or twice is ___.",
+    "hint": "It is what made `keyed.py` survive the crash.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

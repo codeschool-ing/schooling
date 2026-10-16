@@ -1,0 +1,1298 @@
+[
+  {
+    "id": "ex-nc0bk9eb",
+    "version": 1,
+    "section": "a-map-of-sources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is wrong with picturing a source as a shelf where finished data waits to be collected?",
+    "hint": "Ask what the system was built to do.",
+    "choices": [
+      {
+        "text": "Shelves are for files, and most sources are databases",
+        "correct": false,
+        "why": "The kind of source is not the problem; every kind belongs to a busy system."
+      },
+      {
+        "text": "It belongs to a system busy with another job, whose owners change it",
+        "correct": true,
+        "why": "Right: you read it as a guest, and it changes when its owners decide."
+      },
+      {
+        "text": "The data on a shelf is already cleaned, which a source never is",
+        "correct": false,
+        "why": "Cleanliness is a later question; the picture fails on ownership first."
+      },
+      {
+        "text": "A shelf holds one copy, while a source keeps a backup of everything",
+        "correct": false,
+        "why": "Backups have nothing to do with it; the source is doing another job."
+      }
+    ]
+  },
+  {
+    "id": "ex-jk3xqzze",
+    "version": 1,
+    "section": "a-map-of-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these sources sends its data rather than waiting to be asked?",
+    "hint": "Who decides when the data moves?",
+    "choices": [
+      {
+        "text": "The payments provider’s API, which answers each page you request",
+        "correct": false,
+        "why": "An API answers when asked: that is pull."
+      },
+      {
+        "text": "The contractor’s nightly CSV in a directory",
+        "correct": false,
+        "why": "The file waits in its directory until Davi’s side reads it."
+      },
+      {
+        "text": "The dock sensors, which report every minute on their own",
+        "correct": true,
+        "why": "Right: the docks decide when to speak, and Roda Livre has to be listening."
+      },
+      {
+        "text": "A read replica of the app’s database",
+        "correct": false,
+        "why": "A replica is queried, so it is pulled from."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gj2ez8d",
+    "version": 1,
+    "section": "a-map-of-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a failed push harder to notice than a failed pull?",
+    "hint": "In a pull, whose request fails?",
+    "choices": [
+      {
+        "text": "Push sources send data in binary formats that hide errors",
+        "correct": false,
+        "why": "The format is not the reason; the absence of a request is."
+      },
+      {
+        "text": "Push failures are logged on the sender, which the data team cannot read",
+        "correct": false,
+        "why": "Even with the sender’s log, the receiving side sees nothing happen."
+      },
+      {
+        "text": "Push sources retry forever, so a failure never ends",
+        "correct": false,
+        "why": "Retries are not the issue; silence on the receiving side is."
+      },
+      {
+        "text": "No request of yours failed, so nothing on your side errors",
+        "correct": true,
+        "why": "Right: the data just never comes, and only knowing what should have come shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sapjqw3",
+    "version": 1,
+    "section": "a-map-of-sources",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of source to how Davi reads it.",
+    "hint": "The table’s fourth column.",
+    "pairs": [
+      {
+        "left": "the app’s database",
+        "right": "a query, a copy or its change log"
+      },
+      {
+        "left": "the payments API",
+        "right": "HTTP requests, page by page"
+      },
+      {
+        "left": "the contractor’s export",
+        "right": "waiting for it in a directory or a bucket"
+      },
+      {
+        "left": "the API server’s access log",
+        "right": "parsing lines of text"
+      }
+    ]
+  },
+  {
+    "id": "ex-w8t3s9pj",
+    "version": 1,
+    "section": "databases",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the data team at Roda Livre never run analytical queries on the primary database?",
+    "hint": "Who else is using that machine?",
+    "choices": [
+      {
+        "text": "The primary does not allow SELECT statements from other teams",
+        "correct": false,
+        "why": "It accepts them; that is exactly the danger."
+      },
+      {
+        "text": "Reading every row takes disk, memory and processor the app needs",
+        "correct": true,
+        "why": "Right: the scan takes disk, memory and processor the app was using."
+      },
+      {
+        "text": "The primary holds only today’s rides, so history is elsewhere",
+        "correct": false,
+        "why": "It holds the current state of everything; speed is the reason, not scope."
+      },
+      {
+        "text": "Analytical queries change rows by accident",
+        "correct": false,
+        "why": "A read changes nothing, and still hurts the app."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p59y9ke",
+    "version": 1,
+    "section": "databases",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the second incremental copy, how many rides did `copy.db` hold?",
+    "hint": "The last line of the capture.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-4cy9zhhs",
+    "version": 1,
+    "section": "databases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the incremental copy keep ride `R000104` after the app deleted it?",
+    "hint": "What does the copy ask the source for?",
+    "choices": [
+      {
+        "text": "The copy ran before the delete was committed",
+        "correct": false,
+        "why": "The second copy ran after `later.py` had committed everything."
+      },
+      {
+        "text": "`INSERT OR REPLACE` refuses to remove rows it has written",
+        "correct": false,
+        "why": "It replaces rows it is given; nobody gave it the deleted one."
+      },
+      {
+        "text": "A deleted row has no newer `updated_at` to find",
+        "correct": true,
+        "why": "Right: it is simply not there to be selected."
+      },
+      {
+        "text": "The watermark was set to the wrong time zone",
+        "correct": false,
+        "why": "The watermark worked: it found both changed rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcytk708",
+    "version": 1,
+    "section": "databases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new screen in the app lets staff move a ride to another station, but the code forgets to update `updated_at`. What does the incremental copy do?",
+    "hint": "The copy trusts one column.",
+    "choices": [
+      {
+        "text": "Raises an error the next time it compares the two databases",
+        "correct": false,
+        "why": "The copy prints counts; it does not compare contents, and the counts still agree."
+      },
+      {
+        "text": "Keeps the old station, and says nothing about it",
+        "correct": true,
+        "why": "Right: a change with no newer `updated_at` is invisible to it."
+      },
+      {
+        "text": "Copies the ride twice, once per station",
+        "correct": false,
+        "why": "It never sees the change, so it copies nothing new."
+      },
+      {
+        "text": "Picks up the change on the next run, because the row is newer",
+        "correct": false,
+        "why": "The row is only newer if `updated_at` says so, and here it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-k32rhfak",
+    "version": 1,
+    "section": "databases",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would let the data team’s copy find out that ride `R000104` was cancelled? Choose all that apply.",
+    "hint": "Three were named in the section.",
+    "choices": [
+      {
+        "text": "The app marks cancelled rides with `deleted_at` instead of deleting them",
+        "correct": true,
+        "why": "Yes: a soft delete is an update the copy sees."
+      },
+      {
+        "text": "A weekly full copy, compared with the incremental one",
+        "correct": true,
+        "why": "Yes: the full copy holds what the source holds."
+      },
+      {
+        "text": "Reading the database’s log of changes",
+        "correct": true,
+        "why": "Yes: a delete is a change, and the log has it."
+      },
+      {
+        "text": "Running the incremental copy every five minutes instead of every hour",
+        "correct": false,
+        "why": "More often is still blind: the deleted row is never there to select."
+      }
+    ]
+  },
+  {
+    "id": "ex-cr9v329y",
+    "version": 1,
+    "section": "databases",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A database built to serve an application’s many small, fast reads and writes is called an ___ database.",
+    "hint": "Online transaction processing.",
+    "blanks": [
+      {
+        "accept": [
+          "OLTP"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8cr5vt1v",
+    "version": 1,
+    "section": "change-data-capture",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a change data capture reader read?",
+    "hint": "Not the table.",
+    "choices": [
+      {
+        "text": "The tables, every few seconds, looking for new rows",
+        "correct": false,
+        "why": "That is a fast incremental copy, with the same blind spot."
+      },
+      {
+        "text": "The log the database writes of every change",
+        "correct": true,
+        "why": "Right: the record of every change, deletes included."
+      },
+      {
+        "text": "The app’s source code, to see which queries it runs",
+        "correct": false,
+        "why": "CDC reads what the database recorded, not the app’s code."
+      },
+      {
+        "text": "A nightly backup of the whole database",
+        "correct": false,
+        "why": "A backup is a full copy of state, not a stream of changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-se5mgttt",
+    "version": 1,
+    "section": "change-data-capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does trigger-based CDC cost the app more than reading the database’s log?",
+    "hint": "Where does a trigger run?",
+    "choices": [
+      {
+        "text": "Triggers only work on tables with fewer than a million rows",
+        "correct": false,
+        "why": "There is no such limit; the cost is per change, not per table size."
+      },
+      {
+        "text": "Triggers send every change over the network to the data team",
+        "correct": false,
+        "why": "The trigger writes to a table in the same database; the reader comes later."
+      },
+      {
+        "text": "Each trigger adds a write of its own inside the app’s transaction, on every ride",
+        "correct": true,
+        "why": "Right: the log is written anyway, the trigger’s row is not."
+      },
+      {
+        "text": "Triggers lock the table until the data team has read the change",
+        "correct": false,
+        "why": "They do not wait for any reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yft1yfa",
+    "version": 1,
+    "section": "change-data-capture",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A CDC reader on Roda Livre’s PostgreSQL stops on Friday night and nobody notices until Monday. What is the risk to the app?",
+    "hint": "The database keeps something until the reader takes it.",
+    "choices": [
+      {
+        "text": "The app’s tables are locked until the reader returns",
+        "correct": false,
+        "why": "Writes go on; it is what they leave behind that piles up."
+      },
+      {
+        "text": "The weekend’s rides are lost from the database",
+        "correct": false,
+        "why": "The rides are safe in the tables; the log is what grows."
+      },
+      {
+        "text": "The log piles up on the primary’s disk until it fills",
+        "correct": true,
+        "why": "Right: the database keeps the log until the reader comes back."
+      },
+      {
+        "text": "The replicas stop receiving changes along with the reader",
+        "correct": false,
+        "why": "Replicas follow the log on their own; they are not waiting for the CDC reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-met3ynwe",
+    "version": 1,
+    "section": "change-data-capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CDC pipeline is switched on today. How does it get the rides that already existed last year?",
+    "hint": "What does the log hold?",
+    "choices": [
+      {
+        "text": "It reads the log back to the day the database was created",
+        "correct": false,
+        "why": "The log holds recent changes, not the history of every row."
+      },
+      {
+        "text": "It starts from one full copy, then follows the log",
+        "correct": true,
+        "why": "Right, and follows the log from the moment that copy was taken."
+      },
+      {
+        "text": "It asks the app to update every old row so they appear as changes",
+        "correct": false,
+        "why": "That would touch every row of the app’s tables for the data team’s sake."
+      },
+      {
+        "text": "It does not need them, because CDC is for new data",
+        "correct": false,
+        "why": "A copy without the old rows answers no question about last year."
+      }
+    ]
+  },
+  {
+    "id": "ex-83b0xkww",
+    "version": 1,
+    "section": "change-data-capture",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to the cancellation of ride `R000104`, from the app to the data team.",
+    "hint": "The log is written before the table changes.",
+    "items": [
+      "the app sends a DELETE",
+      "the database writes the change to its log",
+      "the row leaves the rides table",
+      "the CDC reader takes the log entry"
+    ],
+    "trap": "The reader comes last, and it still sees the delete, because the log keeps it after the row is gone."
+  },
+  {
+    "id": "ex-a5zbbw8j",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an answer with status `429` ask the client to do?",
+    "hint": "Too Many Requests.",
+    "choices": [
+      {
+        "text": "Wait before asking again",
+        "correct": true,
+        "why": "Right: often for the seconds `Retry-After` names."
+      },
+      {
+        "text": "Send a new token",
+        "correct": false,
+        "why": "A wrong token is `401`."
+      },
+      {
+        "text": "Skip that page",
+        "correct": false,
+        "why": "Skipping would lose its rows without a word."
+      },
+      {
+        "text": "Ask for a bigger page",
+        "correct": false,
+        "why": "A bigger page is a heavier request, not a slower one."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w9dk7ry",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `walk.py`, why does the `continue` after a `429` leave `page` unchanged?",
+    "hint": "Which page was refused?",
+    "choices": [
+      {
+        "text": "So the server can reset its request counter",
+        "correct": false,
+        "why": "The server counts on its own; the client is not managing it."
+      },
+      {
+        "text": "Because `page` is read-only inside a `try` block",
+        "correct": false,
+        "why": "Variables are not read-only in a `try`; this is a choice."
+      },
+      {
+        "text": "So the page the server refused is asked for again rather than skipped",
+        "correct": true,
+        "why": "Right: moving on would skip its rides and report six."
+      },
+      {
+        "text": "To avoid asking for a page past the last one",
+        "correct": false,
+        "why": "`next` being empty is what stops the loop at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-ea9b5gpx",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `walk.py` take its API token from, and why?",
+    "hint": "Code is copied and committed.",
+    "choices": [
+      {
+        "text": "A constant at the top of the file, so it is easy to change",
+        "correct": false,
+        "why": "A token in code travels with every copy and commit of it."
+      },
+      {
+        "text": "The environment, so that it stays out of the code itself",
+        "correct": true,
+        "why": "Right: in production, a secret store does the same job."
+      },
+      {
+        "text": "A file in the git repository, beside the program",
+        "correct": false,
+        "why": "In the repository is exactly where a token is readable by anyone who has it."
+      },
+      {
+        "text": "The server sends it on the first request",
+        "correct": false,
+        "why": "The client proves who it is; the server does not hand out its own key."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9gnbfgx",
+    "version": 1,
+    "section": "apis",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests did `walk.py` send to collect the three pages?",
+    "hint": "Count the lines that start with `page`.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-vppns6x8",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API lists charges newest first, numbered by page. While a client walks the pages, two new charges are made. What happens to the client’s copy?",
+    "hint": "Every older charge moves two places down the list.",
+    "choices": [
+      {
+        "text": "Two charges appear twice",
+        "correct": true,
+        "why": "Right: the end of one page slides onto the start of the next. A cursor would not."
+      },
+      {
+        "text": "The API refuses the walk with an error until it is restarted",
+        "correct": false,
+        "why": "Nothing errors; the pages just shift."
+      },
+      {
+        "text": "The two new charges are added at the end of the last page",
+        "correct": false,
+        "why": "Newest first puts them on page 1, which the client has already read."
+      },
+      {
+        "text": "Nothing changes, because page numbers are fixed when the walk begins",
+        "correct": false,
+        "why": "A page number is recomputed on every request; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gberdzt",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the export write `manifest.json` last?",
+    "hint": "What does its presence tell the reader?",
+    "choices": [
+      {
+        "text": "JSON files have to be written after CSV files on Linux",
+        "correct": false,
+        "why": "There is no such rule; the order is an agreement between writer and reader."
+      },
+      {
+        "text": "So its checksum includes its own bytes",
+        "correct": false,
+        "why": "The checksum is of `rides.csv`, not of the manifest."
+      },
+      {
+        "text": "Because the manifest is the smallest file and the quickest to write",
+        "correct": false,
+        "why": "Size is irrelevant; order is the signal."
+      },
+      {
+        "text": "Its presence says the data before it is complete",
+        "correct": true,
+        "why": "Right: a reader touches nothing until it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c91ns9m",
+    "version": 1,
+    "section": "files",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows did the plain `load.py` take from the interrupted export?",
+    "hint": "The line after `python load.py`.",
+    "value": 718,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-xgg4kqkq",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the plain load of the half-written file print no error?",
+    "hint": "Look at the last row it printed.",
+    "choices": [
+      {
+        "text": "Python catches CSV errors and hides them by default",
+        "correct": false,
+        "why": "There was no error to hide; the reader accepted the line."
+      },
+      {
+        "text": "`csv.DictReader` filled the short row with `None`",
+        "correct": true,
+        "why": "Right: a half row became a plausible-looking record."
+      },
+      {
+        "text": "The export wrote a complete last row before it stopped",
+        "correct": false,
+        "why": "The last row has station `ST`: it was cut in the middle."
+      },
+      {
+        "text": "The manifest said 718 rows, and the load matched it",
+        "correct": false,
+        "why": "There was no manifest; that is why the careful load refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzm1fxfk",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reader polls a bucket and loads any file that has not grown for ten minutes, on the grounds that its writer must have finished. What is wrong with that rule?",
+    "hint": "What else stops a file from growing?",
+    "choices": [
+      {
+        "text": "Ten minutes is too short; an hour would make it safe",
+        "correct": false,
+        "why": "No wait tells a finished writer from a dead one."
+      },
+      {
+        "text": "Buckets do not report when a file last changed",
+        "correct": false,
+        "why": "They do; the trouble is what the time means."
+      },
+      {
+        "text": "A dead writer’s file stops growing too",
+        "correct": true,
+        "why": "Right: only a marker written last says the writer finished."
+      },
+      {
+        "text": "Polling a bucket costs more than reading a manifest",
+        "correct": false,
+        "why": "Cost is beside the point; the rule loads half files."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6m98kqf",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is every field `parse_log.py` prints a string, even the status code?",
+    "hint": "What does a regular expression return?",
+    "choices": [
+      {
+        "text": "The log stores numbers as text to save space",
+        "correct": false,
+        "why": "Text is not smaller; a regular expression simply finds text."
+      },
+      {
+        "text": "A regular expression finds text, and turning it into numbers is a later step",
+        "correct": true,
+        "why": "Right: converting the types is a separate, later step."
+      },
+      {
+        "text": "`groupdict` converts numbers back to strings for printing",
+        "correct": false,
+        "why": "It never had numbers to convert."
+      },
+      {
+        "text": "Status codes like `404` are not really numbers in HTTP",
+        "correct": false,
+        "why": "They are numbers; the parser just has not converted them."
+      }
+    ]
+  },
+  {
+    "id": "ex-djzvhc7k",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `parse_log.py` list the line numbers it could not parse instead of skipping them?",
+    "hint": "Think of the day the log format changes.",
+    "choices": [
+      {
+        "text": "To delete them from the log afterwards",
+        "correct": false,
+        "why": "The source is not edited; the reader reports."
+      },
+      {
+        "text": "Because Python’s `re` module requires it",
+        "correct": false,
+        "why": "It requires nothing of the kind; this is a choice."
+      },
+      {
+        "text": "So that a broken format is noticed soon",
+        "correct": true,
+        "why": "Right: a skipping parser would drop every line just as quietly."
+      },
+      {
+        "text": "To count the broken lines as failed requests",
+        "correct": false,
+        "why": "A cut-off line is not a failed request; its status is unknown."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpmdn3b5",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log has a `500` and then a `200` for `/v1/rides/R000301/end`, two seconds apart. What happened to the customer?",
+    "hint": "Read the two lines together.",
+    "choices": [
+      {
+        "text": "Two rides were ended, one with an error",
+        "correct": false,
+        "why": "Both lines name the same ride, `R000301`."
+      },
+      {
+        "text": "One ride, which ended when the app retried",
+        "correct": true,
+        "why": "Right: one ride, ended two seconds late."
+      },
+      {
+        "text": "The ride is still open, because a `500` cancels the request",
+        "correct": false,
+        "why": "The `200` after it says the second attempt worked."
+      },
+      {
+        "text": "Two different customers tried to end the same ride",
+        "correct": false,
+        "why": "Both requests came from one address and one app."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qrma6q4",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a web server’s access log count as personal data under the LGPD, though it holds no names?",
+    "hint": "Look at the first field of every line.",
+    "choices": [
+      {
+        "text": "It records every customer’s password in each request",
+        "correct": false,
+        "why": "The combined format holds no passwords."
+      },
+      {
+        "text": "The LGPD covers every file a company stores",
+        "correct": false,
+        "why": "It covers information that relates to a person, not files as such."
+      },
+      {
+        "text": "Its first field is an address that identifies people",
+        "correct": true,
+        "why": "Right: information that identifies a person is personal data, named or not."
+      },
+      {
+        "text": "The user agent names the customer’s phone owner",
+        "correct": false,
+        "why": "It names the app and the system, not the person."
+      }
+    ]
+  },
+  {
+    "id": "ex-az6pg51e",
+    "version": 1,
+    "section": "logs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Writing each line of a log as a JSON object, so the fields arrive already named, is called ___ logging.",
+    "hint": "The opposite of a sentence for a person.",
+    "blanks": [
+      {
+        "accept": [
+          "structured"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j5dsdrar",
+    "version": 1,
+    "section": "application-events",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do application events record that the app’s database does not?",
+    "hint": "A customer looked at a station and closed the app.",
+    "choices": [
+      {
+        "text": "The current state of every ride and bicycle",
+        "correct": false,
+        "why": "That is what the database keeps."
+      },
+      {
+        "text": "The passwords customers sign in with",
+        "correct": false,
+        "why": "Events are about actions in the app, not credentials."
+      },
+      {
+        "text": "Actions that change no row",
+        "correct": true,
+        "why": "Right: opening the map, looking, giving up."
+      },
+      {
+        "text": "The charges the payments provider has made",
+        "correct": false,
+        "why": "Those are at the provider, read through its API."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntwt988a",
+    "version": 1,
+    "section": "application-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does at-least-once delivery write some events twice?",
+    "hint": "What can the phone not tell apart?",
+    "choices": [
+      {
+        "text": "The collector copies each event to two servers",
+        "correct": false,
+        "why": "Copies for safety are not duplicates in the data."
+      },
+      {
+        "text": "To the phone, a lost reply looks like a lost event",
+        "correct": true,
+        "why": "Right: so the phone resends, and the collector already had it."
+      },
+      {
+        "text": "The app sends each event twice on purpose, as a check",
+        "correct": false,
+        "why": "It sends once and resends only when it hears nothing back."
+      },
+      {
+        "text": "Two versions of the app are installed on each phone",
+        "correct": false,
+        "why": "One app per phone; the duplicate comes from the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm45k04y",
+    "version": 1,
+    "section": "application-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two `ride_started` events from one customer arrive a second apart, with the same `event_id`. What are they?",
+    "hint": "The phone gave the id when it created the event.",
+    "choices": [
+      {
+        "text": "Two rides, started a second apart",
+        "correct": false,
+        "why": "Two rides would carry two ids."
+      },
+      {
+        "text": "A customer who tapped the button twice",
+        "correct": false,
+        "why": "Each tap creates an event with its own id."
+      },
+      {
+        "text": "A bug in the collector, to be reported to its vendor",
+        "correct": false,
+        "why": "It is the normal price of at-least-once delivery."
+      },
+      {
+        "text": "One event that the phone sent twice, having heard no answer the first time",
+        "correct": true,
+        "why": "Right: one id is one event, and the copy is removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-g88yvmvk",
+    "version": 1,
+    "section": "application-events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without a tracking plan, app 3.3 sends `rideStarted` and app 3.4 sends `ride_started`. A dashboard counts `ride_started`. What does it show over the month after 3.4 ships?",
+    "hint": "Customers do not all update on the same day.",
+    "choices": [
+      {
+        "text": "A count that is right from the day 3.4 is released",
+        "correct": false,
+        "why": "Phones still on 3.3 send the other name."
+      },
+      {
+        "text": "Rides rising as phones update",
+        "correct": true,
+        "why": "Right: the growth is in the app version, not in the rides."
+      },
+      {
+        "text": "Every ride counted twice, once under each name",
+        "correct": false,
+        "why": "Each phone sends one name, and only one is counted."
+      },
+      {
+        "text": "An error, because the dashboard refuses unknown event names",
+        "correct": false,
+        "why": "Unknown names are ignored, not refused; that is the trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0v4syg4",
+    "version": 1,
+    "section": "application-events",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of an event to what it is for.",
+    "hint": "One of them is the only defence against duplicates.",
+    "pairs": [
+      {
+        "left": "`event_id`",
+        "right": "telling a resend from a new event"
+      },
+      {
+        "left": "`occurred_at`",
+        "right": "the phone’s clock, which the customer controls"
+      },
+      {
+        "left": "the collector’s time",
+        "right": "when it arrived, by a clock you trust"
+      },
+      {
+        "left": "`app_version`",
+        "right": "which build of the app sent it"
+      }
+    ]
+  },
+  {
+    "id": "ex-a5cakwek",
+    "version": 1,
+    "section": "iot",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many readings arrived twice in the hour `docks.py` made?",
+    "hint": "The third line of output.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "readings"
+  },
+  {
+    "id": "ex-dmd1j6tv",
+    "version": 1,
+    "section": "iot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "185 readings arrived where 180 were due. Why is that not a sign that the hour is complete?",
+    "hint": "Remove the ones that came twice.",
+    "choices": [
+      {
+        "text": "The sensors send extra readings when a bicycle is docked",
+        "correct": false,
+        "why": "They send one a minute; the extra ones are resends."
+      },
+      {
+        "text": "Eleven came twice, which hides six readings that never came at all",
+        "correct": true,
+        "why": "Right: 185 minus 11 is 174, six short of 180."
+      },
+      {
+        "text": "The server counts each reading once per sensor and once per station",
+        "correct": false,
+        "why": "There is one count; it includes resends."
+      },
+      {
+        "text": "Five readings came from a fourth dock that was not in the list",
+        "correct": false,
+        "why": "There are three docks; the surplus is duplicates."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhv1ymqm",
+    "version": 1,
+    "section": "iot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a sequence number on each reading make possible?",
+    "hint": "It goes up by one every reading.",
+    "choices": [
+      {
+        "text": "Correcting the sensor’s clock",
+        "correct": false,
+        "why": "Clocks are corrected with NTP; the number says nothing about time."
+      },
+      {
+        "text": "Counting the gaps and the duplicates",
+        "correct": true,
+        "why": "Right: a missing number is a gap, a number seen twice a duplicate."
+      },
+      {
+        "text": "Sending readings without a network",
+        "correct": false,
+        "why": "It is a label on the reading, not a way to send it."
+      },
+      {
+        "text": "Encrypting the readings on the way",
+        "correct": false,
+        "why": "Numbering is not encryption."
+      }
+    ]
+  },
+  {
+    "id": "ex-amv82q77",
+    "version": 1,
+    "section": "iot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program keeps, for each dock, whichever reading reached the server most recently, and calls it the dock’s current state. What goes wrong?",
+    "hint": "Six readings arrived after a later one.",
+    "choices": [
+      {
+        "text": "Nothing, because readings arrive in the order they were taken",
+        "correct": false,
+        "why": "Six of them did not, in one hour of three docks."
+      },
+      {
+        "text": "It counts each duplicate as a second bicycle",
+        "correct": false,
+        "why": "Keeping one reading per dock counts no bicycles twice."
+      },
+      {
+        "text": "It crashes when two readings arrive in the same second",
+        "correct": false,
+        "why": "A tie in arrival time is not an error."
+      },
+      {
+        "text": "An old reading that was delayed replaces a newer one",
+        "correct": true,
+        "why": "Right: order by sequence number, not by arrival."
+      }
+    ]
+  },
+  {
+    "id": "ex-fakq83e3",
+    "version": 1,
+    "section": "iot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "57 readings from `ST02-D02` are stamped later than the moment they reached the server. What does that say?",
+    "hint": "No reading arrives before it is taken.",
+    "choices": [
+      {
+        "text": "The network delivered them faster than light allows",
+        "correct": false,
+        "why": "The network was ordinary; the stamp is wrong."
+      },
+      {
+        "text": "That sensor’s clock runs ahead of the real time",
+        "correct": true,
+        "why": "Right: by 47 seconds, which moves every empty spell it reports."
+      },
+      {
+        "text": "The server’s clock is in UTC and the sensor’s is in São Paulo time",
+        "correct": false,
+        "why": "That would be three hours, not 47 seconds, and on every dock."
+      },
+      {
+        "text": "Those readings are duplicates and should be removed",
+        "correct": false,
+        "why": "Duplicates share a sequence number; these do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf2agn24",
+    "version": 1,
+    "section": "asking-the-owner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What turns a written list of a source owner’s answers into a data contract?",
+    "hint": "Look at the `key` and `expected` lines.",
+    "choices": [
+      {
+        "text": "A signature from the company’s legal team",
+        "correct": false,
+        "why": "It is not a legal document."
+      },
+      {
+        "text": "Writing it in a standard format such as JSON",
+        "correct": false,
+        "why": "There is no single standard format; YAML or a wiki page also serve."
+      },
+      {
+        "text": "Both sides agree to it, and a program checks it",
+        "correct": true,
+        "why": "Right: the checks are what make the promise hold."
+      },
+      {
+        "text": "The data team writes it without the owner, so it stays neutral",
+        "correct": false,
+        "why": "It is the producer’s promise; without the owner it promises nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qpn4n2j",
+    "version": 1,
+    "section": "asking-the-owner",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sensor vendor refuses to number its readings. What belongs in the dock readings’ contract?",
+    "hint": "A contract also records what was not promised.",
+    "choices": [
+      {
+        "text": "The vendor’s refusal, written down as a known gap",
+        "correct": true,
+        "why": "Right: next year’s engineer finds it written down."
+      },
+      {
+        "text": "A sequence number the data team adds on arrival",
+        "correct": false,
+        "why": "Numbering on arrival counts what arrived, so it shows no gaps."
+      },
+      {
+        "text": "Nothing about numbering, since the vendor would not agree to it",
+        "correct": false,
+        "why": "Leaving it out is how the next person rediscovers the problem."
+      },
+      {
+        "text": "A clause that ends the vendor’s contract if a reading goes missing",
+        "correct": false,
+        "why": "A data contract records behaviour; it is not a commercial agreement."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0yyt6sh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the careful loader’s steps in order.",
+    "hint": "Nothing is parsed until it is known to be whole.",
+    "items": [
+      "see that `manifest.json` exists",
+      "read the bytes of `rides.csv`",
+      "compare their SHA-256 with the manifest",
+      "parse the rows"
+    ],
+    "trap": "The checksum can only be compared once the bytes are read, and parsing comes after both checks."
+  },
+  {
+    "id": "ex-m93cnhsf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each quiet failure to what prevents it.",
+    "hint": "One remedy per section of the lesson.",
+    "pairs": [
+      {
+        "left": "a cancelled ride stays in the copy",
+        "right": "reading the change log"
+      },
+      {
+        "left": "half a file is loaded",
+        "right": "a manifest written last"
+      },
+      {
+        "left": "a resent event is counted twice",
+        "right": "removing duplicates by `event_id`"
+      },
+      {
+        "left": "a refused page is skipped",
+        "right": "waiting and asking for it again"
+      }
+    ]
+  },
+  {
+    "id": "ex-3bkse1wq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marta asks how many rides were cancelled in September. The data team has only the incremental copy of the rides table. What does the copy say?",
+    "hint": "The app deletes cancelled rides.",
+    "choices": [
+      {
+        "text": "The right number, since each cancellation updates `updated_at`",
+        "correct": false,
+        "why": "A cancellation here is a delete, and a deleted row updates nothing."
+      },
+      {
+        "text": "Zero, and the cancelled rides look open",
+        "correct": true,
+        "why": "Right: the copy cannot answer, and does not know it cannot."
+      },
+      {
+        "text": "An error, because the cancelled rows are missing",
+        "correct": false,
+        "why": "Missing rows raise nothing; that is the trouble."
+      },
+      {
+        "text": "Twice the real number, once for the ride and once for the delete",
+        "correct": false,
+        "why": "The copy never receives the delete, so it cannot count it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8yeyx43",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner sends payment records with at-least-once delivery and no identifier on each record. Two identical records arrive. What can nobody tell?",
+    "hint": "Compare with `event_id`.",
+    "choices": [
+      {
+        "text": "Whether either record is a payment at all",
+        "correct": false,
+        "why": "The records say what they are; the question is how many."
+      },
+      {
+        "text": "Which time zone the records were written in",
+        "correct": false,
+        "why": "Time zone is a separate question for the owner."
+      },
+      {
+        "text": "Whether the partner’s API has a rate limit",
+        "correct": false,
+        "why": "Rate limits do not create identical records."
+      },
+      {
+        "text": "Whether it is one payment resent or two payments",
+        "correct": true,
+        "why": "Right: without an id they look the same, so ask for one first."
+      }
+    ]
+  }
+]

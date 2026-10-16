@@ -1,0 +1,1237 @@
+[
+  {
+    "id": "ex-bchakmm1",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What mostly separates one file format from another, as far as speed goes?",
+    "hint": "Think of the disk, not the syntax.",
+    "choices": [
+      {
+        "text": "The punctuation it uses to separate values, commas or braces",
+        "correct": false,
+        "why": "Spelling is the visible difference and the least important one."
+      },
+      {
+        "text": "Which values sit next to each other on the disk, and so what a reader must pass over",
+        "correct": true,
+        "why": "Right: the layout decides what a reader has to pass over."
+      },
+      {
+        "text": "The file extension, which tells the operating system how to open it",
+        "correct": false,
+        "why": "An extension is a label; renaming a file changes nothing inside it."
+      },
+      {
+        "text": "Whether the format was published as an open standard",
+        "correct": false,
+        "why": "All five here are open; that says nothing about layout."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh7cx4c8",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The app writes one ride the moment a bicycle is docked. Which layout makes that write cheap?",
+    "hint": "Where does the new ride go in each layout?",
+    "choices": [
+      {
+        "text": "Column-oriented, because each value lands in the run for its own column",
+        "correct": false,
+        "why": "That is seven places to write for one ride."
+      },
+      {
+        "text": "Either, because a write costs the same in any layout",
+        "correct": false,
+        "why": "The table in the section shows the two differ exactly here."
+      },
+      {
+        "text": "Row-oriented, where the whole ride is one write at the end",
+        "correct": true,
+        "why": "Right: one write at the end of the file."
+      },
+      {
+        "text": "Column-oriented, once the values are compressed",
+        "correct": false,
+        "why": "Compression makes the file smaller, not the single append cheaper."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6gf8zv4",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a column of `start_station` values compress so well in a columnar file?",
+    "hint": "Look at the second half of the run of `rides.py`.",
+    "choices": [
+      {
+        "text": "Station codes are short strings",
+        "correct": false,
+        "why": "Short helps a little; repetition is what helps a lot."
+      },
+      {
+        "text": "Its neighbours repeat twelve values",
+        "correct": true,
+        "why": "Right: alike values side by side are what a compressor feeds on."
+      },
+      {
+        "text": "Columnar files sort every column alphabetically",
+        "correct": false,
+        "why": "Nothing is sorted; the rows keep the order they were written in."
+      },
+      {
+        "text": "The column is stored apart from the timestamps",
+        "correct": false,
+        "why": "Being apart matters only because what is left together is alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sjc0c4r",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each format to its layout.",
+    "hint": "Two of the five store columns.",
+    "pairs": [
+      {
+        "left": "CSV",
+        "right": "rows, as text with one header"
+      },
+      {
+        "left": "JSON Lines",
+        "right": "rows, as text with names on each"
+      },
+      {
+        "left": "Avro",
+        "right": "rows, as binary in blocks"
+      },
+      {
+        "left": "Parquet",
+        "right": "columns, in row groups"
+      },
+      {
+        "left": "ORC",
+        "right": "columns, in stripes"
+      }
+    ]
+  },
+  {
+    "id": "ex-515h7mk0",
+    "version": 1,
+    "section": "csv",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run of `comma.py`, how many fields did splitting on commas find in the line of ride R000101?",
+    "hint": "Its note has a comma inside.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "fields"
+  },
+  {
+    "id": "ex-7984g9z2",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does RFC 4180 write a field that contains a comma?",
+    "hint": "Look at `notes.csv`.",
+    "choices": [
+      {
+        "text": "It escapes the comma with a backslash before it",
+        "correct": false,
+        "why": "That is a habit from other formats; RFC 4180 has no backslash rule."
+      },
+      {
+        "text": "It replaces the comma with a semicolon in that field",
+        "correct": false,
+        "why": "That would change the data; the comma survives as it is."
+      },
+      {
+        "text": "It wraps the whole field in a pair of double quotes",
+        "correct": true,
+        "why": "Right, and a quote inside such a field is written twice."
+      },
+      {
+        "text": "It is not allowed; such a field must be cleaned first",
+        "correct": false,
+        "why": "It is allowed, and the `csv` module wrote one."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwpsnbk8",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program reads `minutes` from a CSV and adds 5 to it, and Python raises `TypeError`. Why?",
+    "hint": "What did `repr(rows[1][2])` print?",
+    "choices": [
+      {
+        "text": "The value came back as the string `'12'`, and adding an int to a string raises it",
+        "correct": true,
+        "why": "Right: CSV carries text, and the reader has to convert it."
+      },
+      {
+        "text": "The `csv` module stores numbers as floats, which cannot be added to integers",
+        "correct": false,
+        "why": "A float and an int add perfectly well; and nothing was a float."
+      },
+      {
+        "text": "The file was written with the wrong encoding",
+        "correct": false,
+        "why": "An encoding problem garbles letters; it does not change a type."
+      },
+      {
+        "text": "The column was quoted, which marks it as text",
+        "correct": false,
+        "why": "`12` was not quoted, and quotes in CSV are about commas, not types."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ka2bf1c",
+    "version": 1,
+    "section": "csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reader opens a UTF-8 export as Latin-1. What happens to \"Praça Tiradentes\"?",
+    "hint": "The run showed it.",
+    "choices": [
+      {
+        "text": "Python raises a `UnicodeDecodeError` and stops",
+        "correct": false,
+        "why": "Latin-1 can decode any byte, so nothing stops: that is the danger."
+      },
+      {
+        "text": "The `ç` is dropped and the rest reads fine",
+        "correct": false,
+        "why": "Nothing is dropped; one character becomes two."
+      },
+      {
+        "text": "It becomes `PraÃ§a`, with no error",
+        "correct": true,
+        "why": "Right: two bytes read as two characters, silently."
+      },
+      {
+        "text": "The line is split in two at the cedilla",
+        "correct": false,
+        "why": "The cedilla is not a line break in either encoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-43sta9nv",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these has no type of its own in JSON?",
+    "hint": "Count the six.",
+    "choices": [
+      {
+        "text": "A missing value, written as `null`",
+        "correct": false,
+        "why": "`null` is one of the six."
+      },
+      {
+        "text": "A date, which has to be spelt as a string or a number",
+        "correct": true,
+        "why": "Right: it has to be spelt as a string or a number."
+      },
+      {
+        "text": "A list of values, written between brackets",
+        "correct": false,
+        "why": "An array is one of the six."
+      },
+      {
+        "text": "A true-or-false value",
+        "correct": false,
+        "why": "`true` and `false` are one of the six."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsmkhtas",
+    "version": 1,
+    "section": "json",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the 162 bytes of the ride printed by `as_json.py`, how many were field names in quotes?",
+    "hint": "The last line of the run.",
+    "value": 75,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-3pq6vfdy",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly job writes a file of 2 million events. Why would you choose JSON Lines over one JSON array?",
+    "hint": "Think about a reader, and about a file cut off halfway.",
+    "choices": [
+      {
+        "text": "JSON Lines carries more types than an array of the same objects",
+        "correct": false,
+        "why": "Both use the same six types."
+      },
+      {
+        "text": "A JSON array cannot hold more than a million elements",
+        "correct": false,
+        "why": "There is no such limit in JSON."
+      },
+      {
+        "text": "JSON Lines drops the field names, so the file is smaller",
+        "correct": false,
+        "why": "Every line still carries every name."
+      },
+      {
+        "text": "It is read one line at a time, and splits at any line break",
+        "correct": true,
+        "why": "Right, and a damaged line costs one record, not the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjc2t5ye",
+    "version": 1,
+    "section": "json",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In JSON Lines, every record sits on its own ___.",
+    "hint": "The name says it.",
+    "blanks": [
+      {
+        "accept": [
+          "line"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fy7qj243",
+    "version": 1,
+    "section": "parquet",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a Parquet reader does to average `minutes` for rides after 25 September.",
+    "hint": "It starts at the end of the file.",
+    "items": [
+      "read the last bytes to learn the footer’s length",
+      "read the footer",
+      "rule out row groups whose statistics end too early",
+      "read the needed column chunks of the groups left"
+    ],
+    "trap": "Nothing about the rows is known before the footer has been read."
+  },
+  {
+    "id": "ex-ygn6x665",
+    "version": 1,
+    "section": "parquet",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Into how many row groups did `as_parquet.py` cut the 50,000 rides?",
+    "hint": "Groups of 20,000.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "row groups"
+  },
+  {
+    "id": "ex-e8c71d1j",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `as_parquet.py` know the first and last time in each row group without reading any ride?",
+    "hint": "`metadata` is one part of the file.",
+    "choices": [
+      {
+        "text": "From the min and max of `started_at` that the footer keeps for each row group",
+        "correct": true,
+        "why": "Right: statistics per column chunk, kept in the footer."
+      },
+      {
+        "text": "It worked them out from the row-group size and the seed in `rides.py`",
+        "correct": false,
+        "why": "It never looked at `rides.py`; it read the file it wrote."
+      },
+      {
+        "text": "Parquet sorts each group, so the first and last rows give the answer",
+        "correct": false,
+        "why": "Parquet sorts nothing, and reading those rows would be reading rides."
+      },
+      {
+        "text": "pyarrow scans the `started_at` pages, which are small",
+        "correct": false,
+        "why": "Scanning pages is reading rides; it read the footer only."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1wnm9d6",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Davi writes the month of rides to Parquet sorted by `bike_id` instead of by time. What happens to a question about rides after 25 September?",
+    "hint": "What would each group’s min and max of `started_at` be?",
+    "choices": [
+      {
+        "text": "It fails, because the statistics no longer match the data",
+        "correct": false,
+        "why": "The statistics are still true; they just stop being useful."
+      },
+      {
+        "text": "Nothing changes, because pyarrow re-sorts by time when it writes",
+        "correct": false,
+        "why": "The writer keeps the order it is given."
+      },
+      {
+        "text": "Hardly any row group is skipped, because each spans the month",
+        "correct": true,
+        "why": "Right: each group spans the whole month, so none can be ruled out by date."
+      },
+      {
+        "text": "It is answered from the footer without reading any column",
+        "correct": false,
+        "why": "The footer rules groups out; it does not hold the minutes to average."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggh41enb",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`start_station` took 10,170 bytes encoded and compressed, and 160,049 with neither. What did most of the work?",
+    "hint": "Twelve values, 20,000 rows.",
+    "choices": [
+      {
+        "text": "Snappy compression, which shrinks any text by about this much",
+        "correct": false,
+        "why": "The dictionary had already shrunk it; Snappy found little left."
+      },
+      {
+        "text": "The dictionary: twelve codes stored once, a small number per row",
+        "correct": true,
+        "why": "Right: Snappy then had little left to do."
+      },
+      {
+        "text": "The footer statistics, which replace repeated values with a min and a max",
+        "correct": false,
+        "why": "Statistics describe a chunk; they do not replace its values."
+      },
+      {
+        "text": "Removing the four-byte lengths in front of each code",
+        "correct": false,
+        "why": "That alone would halve it, not divide it by fifteen."
+      }
+    ]
+  },
+  {
+    "id": "ex-bztk5wh3",
+    "version": 1,
+    "section": "parquet",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Skipping row groups by reading their statistics is called predicate ___.",
+    "hint": "The filter is pushed down to the file.",
+    "blanks": [
+      {
+        "accept": [
+          "pushdown",
+          "push-down",
+          "push down"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g3cd625p",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does an Avro file keep the names of its fields?",
+    "hint": "Look at the first hundred bytes.",
+    "choices": [
+      {
+        "text": "Before each value, as in JSON",
+        "correct": false,
+        "why": "Avro records carry no names; that is why they are small."
+      },
+      {
+        "text": "In a separate `.avsc` file that has to travel with it",
+        "correct": false,
+        "why": "A schema can be kept in such a file, but the container carries its own."
+      },
+      {
+        "text": "In the footer, after the last block",
+        "correct": false,
+        "why": "That is Parquet’s and ORC’s place; Avro’s is the other end."
+      },
+      {
+        "text": "In the header, as JSON",
+        "correct": true,
+        "why": "Right: the schema as JSON, under `avro.schema`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdfe2qgb",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ride written at 06:01:23 in Curitiba came back from the Avro file as 09:01:23+00:00. What does that mean?",
+    "hint": "`timestamp-millis` holds one number.",
+    "choices": [
+      {
+        "text": "The same instant, printed in UTC, because the value holds no time zone of its own",
+        "correct": true,
+        "why": "Right: milliseconds since 1970 in UTC, and nothing else."
+      },
+      {
+        "text": "fastavro added three hours by mistake, which is a bug in the library",
+        "correct": false,
+        "why": "06:01 at UTC−3 and 09:01 at UTC are the same moment."
+      },
+      {
+        "text": "The ride is now recorded as starting three hours later",
+        "correct": false,
+        "why": "The instant did not move; only how it is printed did."
+      },
+      {
+        "text": "Avro cannot store times, so it stored the text of the time in UTC",
+        "correct": false,
+        "why": "It stored a number, through a logical type."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5sjmdr7",
+    "version": 1,
+    "section": "avro",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every Avro block end with the same sync marker?",
+    "hint": "Imagine starting to read in the middle of a large file.",
+    "choices": [
+      {
+        "text": "To check that no block was written twice",
+        "correct": false,
+        "why": "A repeated block would carry the same marker too."
+      },
+      {
+        "text": "So a reader finds where a block starts",
+        "correct": true,
+        "why": "Right: which is what makes the file splittable."
+      },
+      {
+        "text": "To separate the field values inside each record",
+        "correct": false,
+        "why": "Records have no separators; the schema says where each value ends."
+      },
+      {
+        "text": "To mark where the compression codec changes in the file",
+        "correct": false,
+        "why": "One codec is named in the header for the whole file."
+      }
+    ]
+  },
+  {
+    "id": "ex-471f9m8n",
+    "version": 1,
+    "section": "avro",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make Avro a good fit for messages on a stream? Choose all that apply.",
+    "hint": "Think of one event, sent alone.",
+    "choices": [
+      {
+        "text": "A record is small, with no names in it",
+        "correct": true,
+        "why": "Yes: a few dozen bytes for a ride."
+      },
+      {
+        "text": "It is row-oriented, so one record is written whole",
+        "correct": true,
+        "why": "Yes: one event, one write."
+      },
+      {
+        "text": "Old data can be read with a new schema, by rules",
+        "correct": true,
+        "why": "Yes: readers and writers change at different times."
+      },
+      {
+        "text": "A reader can fetch one column without the others",
+        "correct": false,
+        "why": "No: that is the columnar formats’ strength, not Avro’s."
+      }
+    ]
+  },
+  {
+    "id": "ex-69a757gp",
+    "version": 1,
+    "section": "orc",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ORC term to its nearest Parquet counterpart.",
+    "hint": "The section’s table.",
+    "pairs": [
+      {
+        "left": "stripe",
+        "right": "row group"
+      },
+      {
+        "left": "row index",
+        "right": "page statistics"
+      },
+      {
+        "left": "file footer",
+        "right": "footer"
+      },
+      {
+        "left": "postscript",
+        "right": "the footer length and PAR1"
+      }
+    ]
+  },
+  {
+    "id": "ex-v6gpqe73",
+    "version": 1,
+    "section": "orc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`as_orc.py` asked for stripes of 64 KiB and got 33,792 rows and 16,208 rows. Why are they not round numbers?",
+    "hint": "What was the limit expressed in?",
+    "choices": [
+      {
+        "text": "A stripe is cut when it reaches a size, not a row count",
+        "correct": true,
+        "why": "Right: the writer closes a stripe when its estimate reaches the limit."
+      },
+      {
+        "text": "ORC drops rows that do not fit evenly into a stripe",
+        "correct": false,
+        "why": "Both stripes add up to 50,000; nothing was dropped."
+      },
+      {
+        "text": "zstd compression removed the duplicated rides first",
+        "correct": false,
+        "why": "There were no duplicates, and compression removes no rows."
+      },
+      {
+        "text": "The row index needs a multiple of 10,000 and rounds the rest",
+        "correct": false,
+        "why": "Neither number is a multiple of 10,000, and nothing was rounded."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yxnpvb6",
+    "version": 1,
+    "section": "orc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs a large Hive installation whose tables take updates and deletes. Which format do those tables need?",
+    "hint": "Hive’s transactional tables.",
+    "choices": [
+      {
+        "text": "Parquet, because it is the default of most new platforms",
+        "correct": false,
+        "why": "Most new platforms are not this one; Hive’s transactional tables say otherwise."
+      },
+      {
+        "text": "Avro, because a format for updates has to be row-oriented",
+        "correct": false,
+        "why": "Hive’s transactional tables are columnar; layout is not the deciding fact here."
+      },
+      {
+        "text": "ORC, because Hive’s transactional mode accepts nothing else",
+        "correct": true,
+        "why": "Right: Hive’s transactional tables require it."
+      },
+      {
+        "text": "Any of the three binary formats, chosen per table",
+        "correct": false,
+        "why": "Transactional tables in Hive accept one format."
+      }
+    ]
+  },
+  {
+    "id": "ex-jj8qcqez",
+    "version": 1,
+    "section": "the-same-data-five-ways",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the five files `five.py` wrote from the largest to the smallest.",
+    "hint": "Names on every record cost the most.",
+    "items": [
+      "rides.jsonl",
+      "rides.csv",
+      "rides.avro",
+      "rides.parquet",
+      "rides.orc"
+    ],
+    "trap": "ORC and Parquet were close; on other data they can swap."
+  },
+  {
+    "id": "ex-3wyvz4hp",
+    "version": 1,
+    "section": "the-same-data-five-ways",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes did the Parquet reader go through for the `minutes` column in `one_column.py`?",
+    "hint": "The first line of the run.",
+    "value": 38312,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-jxw7w6d3",
+    "version": 1,
+    "section": "the-same-data-five-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `five.py` pass `compression=\"none\"` to the Parquet writer only?",
+    "hint": "What do the other writers do by default?",
+    "choices": [
+      {
+        "text": "Parquet cannot be read back by pyarrow when it is compressed",
+        "correct": false,
+        "why": "`as_parquet.py` read back a Snappy file without trouble."
+      },
+      {
+        "text": "Of the five, only its writer compresses when nobody asks",
+        "correct": true,
+        "why": "Right: so all five are compared on layout alone."
+      },
+      {
+        "text": "To make Parquet look smaller than ORC in the comparison",
+        "correct": false,
+        "why": "It came out larger than ORC; the aim was a fair comparison."
+      },
+      {
+        "text": "The other four formats have no compression to switch off",
+        "correct": false,
+        "why": "Avro and ORC both have codecs; their writers just leave them off."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv91b3x2",
+    "version": 1,
+    "section": "the-same-data-five-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson compare bytes rather than seconds?",
+    "hint": "Which of the two would be the same on your machine?",
+    "choices": [
+      {
+        "text": "Seconds are too small to measure on 50,000 rows",
+        "correct": false,
+        "why": "They are measurable; they are just not repeatable elsewhere."
+      },
+      {
+        "text": "Reading time does not depend on the format",
+        "correct": false,
+        "why": "It does; bytes read are a large part of it."
+      },
+      {
+        "text": "Bytes are the same on every machine",
+        "correct": true,
+        "why": "Right, and they are what disks read and bills charge."
+      },
+      {
+        "text": "pyarrow does not report how long a read took",
+        "correct": false,
+        "why": "Any program can time itself; the problem is what the number means elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fajydw0",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The gzipped CSV, 570,459 bytes, was smaller than every Parquet file. Why is it still the worse choice for analysis?",
+    "hint": "Size is one of four things.",
+    "choices": [
+      {
+        "text": "gzip loses data that Parquet’s codecs keep",
+        "correct": false,
+        "why": "gzip is lossless; the CSV comes back byte for byte."
+      },
+      {
+        "text": "It must be read whole, from the start",
+        "correct": true,
+        "why": "Right: no columns to skip to, and no place to split it."
+      },
+      {
+        "text": "Spreadsheets cannot open a gzipped file",
+        "correct": false,
+        "why": "Analysis here is done by programs, and that is not the reason."
+      },
+      {
+        "text": "A gzipped file is larger again once it is in memory",
+        "correct": false,
+        "why": "So is Parquet; every compressed file grows when decompressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxzqkqj1",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can ten workers share one large Parquet file but not one large `.csv.gz`?",
+    "hint": "Where can each one start?",
+    "choices": [
+      {
+        "text": "Parquet files are smaller, so each worker is given less to read",
+        "correct": false,
+        "why": "Here the gzipped CSV was smaller; size is not what splits."
+      },
+      {
+        "text": "Parquet compresses each page apart, and the footer says where",
+        "correct": true,
+        "why": "Right: a worker can start at any row group."
+      },
+      {
+        "text": "gzip uses a password that only one process at a time can hold",
+        "correct": false,
+        "why": "gzip has no password; the stream has to be read from its start."
+      },
+      {
+        "text": "A CSV has no header to tell workers the column names",
+        "correct": false,
+        "why": "This one has a header; the problem is the gzip stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk2vcn77",
+    "version": 1,
+    "section": "compression",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `squeeze.py`, which codec shrank the Parquet file least?",
+    "hint": "It was designed for speed.",
+    "choices": [
+      {
+        "text": "gzip, the oldest of the three",
+        "correct": false,
+        "why": "It took the file to 638,037, about half."
+      },
+      {
+        "text": "zstd, which was released by Facebook",
+        "correct": false,
+        "why": "It was the smallest Parquet, 633,691."
+      },
+      {
+        "text": "Snappy",
+        "correct": true,
+        "why": "Right: 907,079 bytes, the trade for speed."
+      },
+      {
+        "text": "They all came out within a few bytes",
+        "correct": false,
+        "why": "Snappy was 270,000 bytes behind the other two."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m7t1syy",
+    "version": 1,
+    "section": "compression",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these files can be split between workers without reading them from the start? Choose all that apply.",
+    "hint": "Look for markers, footers or a codec that splits.",
+    "choices": [
+      {
+        "text": "An Avro file compressed with a codec",
+        "correct": true,
+        "why": "Yes: each block is compressed alone and ends with the sync marker."
+      },
+      {
+        "text": "A Parquet file compressed with zstd",
+        "correct": true,
+        "why": "Yes: pages are compressed inside row groups the footer locates."
+      },
+      {
+        "text": "A CSV compressed with gzip",
+        "correct": false,
+        "why": "No: one stream, from the first byte."
+      },
+      {
+        "text": "A JSON Lines file compressed with gzip",
+        "correct": false,
+        "why": "No: the lines are splittable, the gzip stream around them is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8076yv4a",
+    "version": 1,
+    "section": "schema-evolution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "September’s Avro file has no `kind`. October’s reader schema adds `kind` with the default \"classic\". What does the reader get?",
+    "hint": "The first line of the run of `evolve.py`.",
+    "choices": [
+      {
+        "text": "An error naming the field that is missing from the file",
+        "correct": false,
+        "why": "That is what happens without a default."
+      },
+      {
+        "text": "The old rides, without a `kind` key",
+        "correct": false,
+        "why": "The reader’s schema has `kind`, so every record gets one."
+      },
+      {
+        "text": "The old rides, with `kind` set to null",
+        "correct": false,
+        "why": "Avro uses the reader’s default, not null."
+      },
+      {
+        "text": "Each old ride, with `kind` filled in as classic",
+        "correct": true,
+        "why": "Right: filled from the reader’s default."
+      }
+    ]
+  },
+  {
+    "id": "ex-d71yb9sc",
+    "version": 1,
+    "section": "schema-evolution",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `shifted.py` print as October’s average ride length?",
+    "hint": "It was not the minutes.",
+    "value": 72.5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-pgg6r97t",
+    "version": 1,
+    "section": "schema-evolution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Rewritten with `csv.DictReader` and `row[\"minutes\"]`, which change to October’s export would `shifted.py` still get wrong?",
+    "hint": "Reading by name survives some changes and not others.",
+    "choices": [
+      {
+        "text": "A new column inserted before `minutes`",
+        "correct": false,
+        "why": "That is exactly the change reading by name survives."
+      },
+      {
+        "text": "`minutes` recorded in seconds under the same name",
+        "correct": true,
+        "why": "Right: the name still matches, so nothing fails and the average is wrong."
+      },
+      {
+        "text": "`minutes` renamed to `duration`",
+        "correct": false,
+        "why": "That fails loudly with a `KeyError`, which is not getting it wrong quietly."
+      },
+      {
+        "text": "The columns reordered alphabetically",
+        "correct": false,
+        "why": "Order is what reading by name no longer depends on."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfr66vcg",
+    "version": 1,
+    "section": "schema-evolution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section call both outcomes of `evolve.py` good ones?",
+    "hint": "Compare them with `shifted.py`.",
+    "choices": [
+      {
+        "text": "Both read every old ride back successfully",
+        "correct": false,
+        "why": "The second read nothing back: it refused."
+      },
+      {
+        "text": "Neither of the two ends in a wrong number",
+        "correct": true,
+        "why": "Right: one is correct and the other is loud."
+      },
+      {
+        "text": "Avro errors are caught by the schema registry before anyone sees them",
+        "correct": false,
+        "why": "There was no registry in this run; the error reached the program."
+      },
+      {
+        "text": "A default value is always correct for old data",
+        "correct": false,
+        "why": "\"classic\" happened to be true; a default can be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-vacad3vq",
+    "version": 1,
+    "section": "choosing-a-format",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The city asks Roda Livre for a monthly file it will open in a spreadsheet. Which format?",
+    "hint": "The first of the four questions.",
+    "choices": [
+      {
+        "text": "Parquet, because it is the smallest and keeps its types",
+        "correct": false,
+        "why": "Its reader is a spreadsheet; who opens it decides first."
+      },
+      {
+        "text": "Avro, so that the schema travels with the file",
+        "correct": false,
+        "why": "A spreadsheet user cannot open Avro."
+      },
+      {
+        "text": "CSV in UTF-8, with a header and its delimiter and date format written down",
+        "correct": true,
+        "why": "Right: who opens it decides first, and a spreadsheet opens CSV."
+      },
+      {
+        "text": "JSON Lines, because a person can read it in an editor",
+        "correct": false,
+        "why": "Readable is not the same as opening in a spreadsheet."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1dperqk",
+    "version": 1,
+    "section": "choosing-a-format",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Roda Livre need to the format the section chose for it.",
+    "hint": "Who writes, who reads, and how.",
+    "pairs": [
+      {
+        "left": "dock events on the stream",
+        "right": "Avro"
+      },
+      {
+        "left": "rides kept for Marta’s questions",
+        "right": "Parquet"
+      },
+      {
+        "left": "the report for the city",
+        "right": "CSV"
+      },
+      {
+        "left": "an existing Hive estate",
+        "right": "ORC"
+      }
+    ]
+  },
+  {
+    "id": "ex-ah9jhjza",
+    "version": 1,
+    "section": "choosing-a-format",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Payment events arrive one at a time, programs read them, and the payments team changes the event every few months. What fits best on the way in?",
+    "hint": "Row-shaped, and a schema that changes under readers.",
+    "choices": [
+      {
+        "text": "Parquet, written one event per file",
+        "correct": false,
+        "why": "A columnar file per event pays a footer for every row."
+      },
+      {
+        "text": "Avro, written one record at a time",
+        "correct": true,
+        "why": "Right: one record at a time, with rules for schema change."
+      },
+      {
+        "text": "CSV, with a column added at the end each time the event changes",
+        "correct": false,
+        "why": "Nothing would tell a reader which columns a line has."
+      },
+      {
+        "text": "JSON array files, one per day",
+        "correct": false,
+        "why": "An array is unreadable until its last bracket, and carries no schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcy2qh8g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marta needs the average ride length over two years of rides. Which property of the stored file matters most?",
+    "hint": "One column out of seven.",
+    "choices": [
+      {
+        "text": "That a person can open it in an editor to check",
+        "correct": false,
+        "why": "Nobody checks two years of rides by eye."
+      },
+      {
+        "text": "That a new ride can be appended cheaply",
+        "correct": false,
+        "why": "That is the writer’s concern; Marta is reading."
+      },
+      {
+        "text": "That each record carries its field names",
+        "correct": false,
+        "why": "Names on every record are the cost, not the benefit."
+      },
+      {
+        "text": "That one column can be read without the others",
+        "correct": true,
+        "why": "Right: that is the columnar layout."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw1g5caw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Parquet reader opens the file at the end, because that is where the ___ is.",
+    "hint": "It holds the schema and the statistics.",
+    "blanks": [
+      {
+        "accept": [
+          "footer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j0qvemb6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each format to where its schema lives.",
+    "hint": "Header, footer, or neither.",
+    "pairs": [
+      {
+        "left": "CSV",
+        "right": "in a document beside the file"
+      },
+      {
+        "left": "Avro",
+        "right": "in the header, as JSON"
+      },
+      {
+        "left": "Parquet",
+        "right": "in the footer, ending in PAR1"
+      },
+      {
+        "left": "ORC",
+        "right": "in the file footer, before the postscript"
+      }
+    ]
+  },
+  {
+    "id": "ex-npxmfg4z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ana converts the app’s daily CSV export to Parquet. Which problem of the CSV does the conversion not solve by itself?",
+    "hint": "Somebody still reads the CSV once.",
+    "choices": [
+      {
+        "text": "Reading one column means reading every byte of the file",
+        "correct": false,
+        "why": "The Parquet copy can be read one column at a time."
+      },
+      {
+        "text": "A type guessed wrongly on reading",
+        "correct": true,
+        "why": "Right: Parquet stores faithfully whatever type the conversion chose."
+      },
+      {
+        "text": "The file cannot be split between several workers",
+        "correct": false,
+        "why": "The Parquet copy splits at its row groups."
+      },
+      {
+        "text": "Every value is stored as text, even the numbers",
+        "correct": false,
+        "why": "The Parquet copy stores numbers as numbers, if the conversion made them so."
+      }
+    ]
+  }
+]

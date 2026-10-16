@@ -1,0 +1,70 @@
+---
+title: Achatando eventos aninhados em linhas
+version: 1
+---
+
+**A maior parte das ferramentas que respondem perguntas quer linhas e colunas, então o dado
+semiestruturado costuma ser achatado primeiro: objetos aninhados viram colunas com nomes mais longos,
+e arrays viram linhas de uma tabela própria.** São duas operações diferentes, e confundi-las é
+como uma contagem dá errado.
+
+Os objetos são a metade fácil. `bike` guarda `id` e `battery`, então a linha plana ganha duas colunas,
+`bike.id` e `bike.battery`. Um evento continua gerando uma linha; os nomes só ficam mais longos.
+
+Os arrays são a outra metade. Uma viagem tem de uma a três cobranças, e uma linha tem espaço para um
+valor por coluna. Escrevê-las como `charges.0`, `charges.1` e `charges.2` dá uma tabela com uma coluna
+para cada posição que alguém já alcançou, quase toda vazia, e uma pergunta como "quanto as taxas de
+desbloqueio renderam" passa a ter de olhar em todas elas. Por isso um array é **explodido**: ele vira
+uma segunda tabela com uma linha por item, e cada linha leva o id da viagem de onde veio.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"À esquerda, o evento da viagem R000103 com os objetos aninhados bike, start e end e um array charges de dois itens. Uma seta chamada achatar leva a uma tabela rides com uma linha e nomes de coluna com pontos. Uma seta chamada explodir leva a uma tabela charges com duas linhas, unlock 100 e minutes 475, ambas com ride_id R000103.\" data-fig=\"flatten\"><defs><marker id=\"flatten-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"14\" y=\"14\" width=\"206\" height=\"272\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"117\" y=\"32\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">um evento</text><text x=\"30.0\" y=\"54\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">ride_id: R000103</text><text x=\"30.0\" y=\"71\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">bike:</text><text x=\"42.6\" y=\"88\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">id: B028</text><text x=\"42.6\" y=\"105\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">battery: 21</text><text x=\"30.0\" y=\"122\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">start:</text><text x=\"42.6\" y=\"139\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">station: ST07</text><text x=\"30.0\" y=\"156\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">end:</text><text x=\"42.6\" y=\"173\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">station: ST07</text><text x=\"42.6\" y=\"190\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">minutes: 19</text><text x=\"30.0\" y=\"207\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">charges: [</text><text x=\"42.6\" y=\"224\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">unlock 100,</text><text x=\"42.6\" y=\"241\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">minutes 475</text><text x=\"30.0\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">]</text><text x=\"470\" y=\"32\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">rides: uma linha por viagem</text><rect x=\"286\" y=\"46\" width=\"420\" height=\"52\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"328\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">ride_id</text><text x=\"328\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"412\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">bike.id</text><text x=\"412\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">B028</text><text x=\"496\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">bike.battery</text><text x=\"496\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">21</text><text x=\"580\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">start.station</text><text x=\"580\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ST07</text><text x=\"664\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">end.station</text><text x=\"664\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ST07</text><line x1=\"286\" y1=\"72\" x2=\"706\" y2=\"72\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><text x=\"470\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">… e as outras colunas com pontos</text><line x1=\"220\" y1=\"72\" x2=\"284\" y2=\"72\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#flatten-ah)\"></line><text x=\"252\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">achatar</text><text x=\"470\" y=\"168\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--amber)\" font-weight=\"600\">charges: uma linha por item</text><rect x=\"346\" y=\"182\" width=\"300\" height=\"76\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"396\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">ride_id</text><text x=\"496\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">kind</text><text x=\"596\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">cents</text><line x1=\"346\" y1=\"208\" x2=\"646\" y2=\"208\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><text x=\"396\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"496\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">unlock</text><text x=\"596\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">100</text><text x=\"396\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"496\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">minutes</text><text x=\"596\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">475</text><line x1=\"220\" y1=\"230\" x2=\"344\" y2=\"230\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#flatten-ah)\"></line><text x=\"282\" y=\"220\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">explodir</text><text x=\"496\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">duas linhas, uma viagem</text></svg>", "caption": "Achatando e explodindo a viagem R000103. Os objetos aninhados viram colunas de uma linha; o array vira uma tabela própria, uma linha por cobrança, cada uma levando o id da viagem."}
+```
+
+## As duas coisas, num programa
+
+Salve isto como `flatten.py`. Ele lê o arquivo de eventos indicado na linha de comando:
+
+```schooling-example
+{"language": "python", "file": "shapes/flatten.py", "parts": [{"code": "# shapes/flatten.py\nimport json\nimport sys\n\n\ndef flat(obj, prefix=''):\n    row = {}\n    for key, value in obj.items():\n        if isinstance(value, dict):\n            row.update(flat(value, prefix + key + '.'))\n        elif not isinstance(value, list):\n            row[prefix + key] = value\n    return row\n\n\n", "note": "`flat` percorre um evento. Um objeto aninhado é percorrido de novo com o próprio nome como prefixo, então `bike` vira `bike.id` e `bike.battery`. Uma lista é pulada aqui: ela não tem um valor único para pôr numa coluna."}, {"code": "events = [json.loads(line) for line in open(sys.argv[1])]\nrides = [flat(e) for e in events]\ncolumns = sorted({name for row in rides for name in row})\nprint(len(rides), 'rides,', len(columns), 'columns:', ' '.join(columns))\nfor row in rides:\n    print(row['ride_id'], row['start.station'], row.get('end.station'), row.get('coupon'))\n\n", "note": "Uma linha plana por evento. As colunas não estão declaradas em lugar nenhum: são a união de todos os nomes vistos no arquivo. O laço imprime quatro delas, e o `.get` responde `None` para um campo que o evento não tem."}, {"code": "charges = [{'ride_id': e['ride_id'], **c} for e in events for c in e['charges']]\nprint(len(charges), 'charge rows')\nfor row in charges[:4]:\n    print(row)\nprint('distinct rides among them:', len({c['ride_id'] for c in charges}))\nprint('sum of cents:', sum(c['cents'] for c in charges))\n", "note": "A explosão: uma linha por item de `charges`, cada uma levando o `ride_id` da viagem de onde veio, que é o que permite juntar as duas tabelas de novo. Depois, os dois números que vale conferir: de quantas viagens vieram as linhas, e o total."}]}
+```
+
+```
+ana@lab:~/roda/shapes$ python flatten.py rides-2025-09-15.jsonl
+6 rides, 9 columns: app bike.battery bike.id coupon end.minutes end.station ride_id start.at start.station
+R000101 ST10 ST08 None
+R000102 ST04 ST08 None
+R000103 ST07 ST07 PRIMEIRA
+R000104 ST07 None None
+R000105 ST03 ST03 None
+R000106 ST05 ST03 None
+12 charge rows
+{'ride_id': 'R000101', 'kind': 'unlock', 'cents': 100}
+{'ride_id': 'R000101', 'kind': 'minutes', 'cents': 650}
+{'ride_id': 'R000102', 'kind': 'unlock', 'cents': 100}
+{'ride_id': 'R000102', 'kind': 'minutes', 'cents': 350}
+distinct rides among them: 6
+sum of cents: 3425
+```
+
+Seis eventos deram seis linhas, e as colunas foram descobertas no dado em vez de declaradas: nove,
+de `app` a `start.station`, recolhidas de todos os eventos do arquivo. É o esquema na leitura de novo,
+feito por um programa. A `R000104` tem `None` onde estaria a estação final, porque o leitor perguntou
+com `.get` e decidiu que um campo ausente quer dizer um valor vazio. `coupon` está vazio em cinco das
+seis linhas.
+
+**A tabela explodida tem doze linhas, para seis viagens.** Essa é a armadilha. Quem conta as linhas
+dela, ou a junta de volta às viagens e depois conta, chega a doze, e quem soma um número da viagem
+como `end.minutes` nela conta a maioria das viagens duas ou três vezes. A linha
+`distinct rides among them: 6` é a conferência que vale guardar. A soma das cobranças, 3425 centavos,
+está certa, porque os centavos pertencem à cobrança e cada cobrança está na tabela uma vez.
+
+**Depois de uma explosão, saiba o que é uma linha.** Em `rides` uma linha
+é uma viagem; em `charges` uma linha é uma cobrança. Um número calculado na tabela errada parece tão
+confiável quanto um calculado na certa, a mesma falha silenciosa que o `first.py` mostrou na aula 1
+quando uma viagem foi contada duas vezes.
+
+Ferramentas de verdade fazem os mesmos dois movimentos com nomes próprios. O Spark chama o segundo de
+`explode`, bancos SQL como o PostgreSQL o chamam de `unnest`, e o pyarrow consegue achatar uma coluna
+aninhada em colunas com pontos. Escrever essas linhas você mesmo, uma vez, é como os nomes deixam de
+ser mágica; usá-los é assunto de `pipelines-etl` e `sql-databases`.
