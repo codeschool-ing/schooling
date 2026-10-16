@@ -76,8 +76,6 @@ that says how many workers ran and the summary at the end:
 %%CAP w4%%
 ```
 
-%%CAP fig-timings%%
-
 The time falls with every worker added, from @@T1@@ to @@T4@@. **And the run goes red.** With one
 worker every test passed; with two and four, some of the tests that put fruit in the basket
 failed, and lesson 15 already met the reason. Two workers is also what a plain

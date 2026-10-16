@@ -1,0 +1,541 @@
+[
+ {
+  "id": "ex-4m9j1ekv",
+  "version": 1,
+  "section": "three-layers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does `total.test.js` live in `unit/` rather than in `tests/`?",
+  "choices": [
+   {
+    "text": "Node refuses to run a file inside a folder called `tests`",
+    "correct": false,
+    "why": "Node runs it from anywhere; the trouble is the other runner."
+   },
+   {
+    "text": "Playwright would pick it up as one of its own",
+    "correct": true,
+    "why": "Right. Playwright runs every `.test.js` and `.spec.js` in `tests/`, and a Node test is not a Playwright test."
+   },
+   {
+    "text": "Unit tests have to sit beside the code they import",
+    "correct": false,
+    "why": "It imports `../app/store.js` from its own folder; nothing requires it to sit beside the file."
+   },
+   {
+    "text": "To keep it out of the shop's `webServer`",
+    "correct": false,
+    "why": "`webServer` starts the shop for Playwright; it does not read test folders."
+   }
+  ]
+ },
+ {
+  "id": "ex-0w2bndje",
+  "version": 1,
+  "section": "three-layers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With `PLAYWRIGHT_BROWSERS_PATH` pointing at an empty folder, the API test passed and the browser test failed in 2 ms. What does that show?",
+  "choices": [
+   {
+    "text": "The API test is flaky and happened to pass",
+    "correct": false,
+    "why": "It passed in every run of the lesson; the folder removed something it never used."
+   },
+   {
+    "text": "Playwright skipped the API test",
+    "correct": false,
+    "why": "It ran and passed, with a time beside it, in 55 ms."
+   },
+   {
+    "text": "The browser test has a bug in the locator it uses for the banana card",
+    "correct": false,
+    "why": "It failed launching the browser, before any locator ran."
+   },
+   {
+    "text": "A test that asks only for `request` never starts a browser",
+    "correct": true,
+    "why": "Right. The browser is started only for a test that asks for a page."
+   }
+  ]
+ },
+ {
+  "id": "ex-ken3h9er",
+  "version": 1,
+  "section": "three-layers",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A Playwright test that sends HTTP calls without opening any page asks only for the ___ fixture.",
+  "blanks": [
+   {
+    "accept": [
+     "request"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-bm947561",
+  "version": 1,
+  "section": "what-each-sees",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With `/ 100` removed from the page's `showBasket`, which of the three tests failed?",
+  "choices": [
+   {
+    "text": "The unit test, because the total was wrong",
+    "correct": false,
+    "why": "`total()` still returned 590 cents, which is right."
+   },
+   {
+    "text": "The API test, because the JSON changed",
+    "correct": false,
+    "why": "The server still answered `total: 590`; the change was in the page."
+   },
+   {
+    "text": "Only the browser test, which read R$ 590,00",
+    "correct": true,
+    "why": "Right. Only the test that reads what the page draws runs the page's code."
+   },
+   {
+    "text": "All three, since they check the same fact",
+    "correct": false,
+    "why": "They check the same fact through different parts of the shop, and two of those parts were fine."
+   }
+  ]
+ },
+ {
+  "id": "ex-v3w7czgn",
+  "version": 1,
+  "section": "what-each-sees",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`total()` stopped multiplying by the quantity, and the browser test stayed green. Why?",
+  "choices": [
+   {
+    "text": "It bought just one banana",
+    "correct": true,
+    "why": "Right. With a quantity of one the defect has no effect; catching it there takes several clicks, and the unit case took one line."
+   },
+   {
+    "text": "The browser cached the old version of `app/store.js`",
+    "correct": false,
+    "why": "`store.js` runs in the server; the browser never downloads it."
+   },
+   {
+    "text": "`toHaveText` ignores numbers",
+    "correct": false,
+    "why": "It compares the text, digits included; it caught R$ 590,00 in the other defect."
+   },
+   {
+    "text": "The server was not restarted after the edit",
+    "correct": false,
+    "why": "Playwright's `webServer` started a fresh shop for the run, and the unit test also read the changed file."
+   }
+  ]
+ },
+ {
+  "id": "ex-pnhnb2qe",
+  "version": 1,
+  "section": "what-each-sees",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A change makes `POST /api/basket` ignore the `id` it is sent and always add a banana. Which of this lesson's three tests would fail?",
+  "choices": [
+   {
+    "text": "The unit test, since the basket is wrong",
+    "correct": false,
+    "why": "The unit test calls `total()` with lines it builds itself; it never goes through the route."
+   },
+   {
+    "text": "The browser test, since it runs everything",
+    "correct": false,
+    "why": "It runs the route, but it asks for a banana, and a banana is what it gets."
+   },
+   {
+    "text": "The API test, since it checks the route's answer",
+    "correct": false,
+    "why": "It checks the answer to a banana, which is still right."
+   },
+   {
+    "text": "None of the three: each one adds a banana",
+    "correct": true,
+    "why": "Right. Running a layer is not the same as checking it; a test of a mango at either upper layer would catch it."
+   }
+  ]
+ },
+ {
+  "id": "ex-e2s9cgqw",
+  "version": 1,
+  "section": "cost",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "At the 281 ms the browser test took, how many seconds would 200 such tests take on one worker?",
+  "hint": "Multiply the count by the time in seconds.",
+  "value": 56.2,
+  "tolerance": 0.05,
+  "unit": "seconds"
+ },
+ {
+  "id": "ex-77kgam4x",
+  "version": 1,
+  "section": "cost",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Twenty repetitions of the API test took 17.531 s, though one run of the test took 51 ms. Where did the rest go?",
+  "choices": [
+   {
+    "text": "Into the dot reporter, which is slower than list",
+    "correct": false,
+    "why": "A reporter prints one character per test; that is not seconds of work."
+   },
+   {
+    "text": "Into a fresh worker process for every repetition",
+    "correct": true,
+    "why": "Right. The JSON report showed worker 0, 1 and 2 for three repetitions."
+   },
+   {
+    "text": "Into restarting the shop between repetitions",
+    "correct": false,
+    "why": "`webServer` starts the shop once per run of the command, not per test."
+   },
+   {
+    "text": "Into the browser, which the API test also opened and closed each time",
+    "correct": false,
+    "why": "The API test ran with no browser on the machine at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-t3c2mc1q",
+  "version": 1,
+  "section": "cost",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A browser test passed 20 runs out of 20. A colleague concludes it is not flaky. What does the lesson's arithmetic say?",
+  "choices": [
+   {
+    "text": "He is right: 20 is the usual threshold for flakiness",
+    "correct": false,
+    "why": "There is no such threshold; the question is what a clean twenty rules out."
+   },
+   {
+    "text": "Only a run of 1,000 can show anything",
+    "correct": false,
+    "why": "Twenty runs do show something: they rule out a test that fails often. They cannot rule out a rare one."
+   },
+   {
+    "text": "A clean twenty is weak evidence",
+    "correct": true,
+    "why": "Right. A test failing 1 run in 100 passes 20 in a row with probability 0.99 to the power 20, about 0.82."
+   },
+   {
+    "text": "Flakiness belongs to the API layer, not to the browser",
+    "correct": false,
+    "why": "The browser layer has the most sources of it: a browser, scripts, events and waits."
+   }
+  ]
+ },
+ {
+  "id": "ex-6bpftnp9",
+  "version": 1,
+  "section": "cost",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The button's text changed from \"Add to basket\" to \"Add to cart\". What happened to the tests, and why does it count as a cost?",
+  "choices": [
+   {
+    "text": "Both Playwright tests failed, so the change was a defect",
+    "correct": false,
+    "why": "The API test passed; it does not know what the button says."
+   },
+   {
+    "text": "Nothing failed, because locators find buttons by role",
+    "correct": false,
+    "why": "The locator names the role and the text, and the text changed."
+   },
+   {
+    "text": "The browser test failed after 30 s on a shop that works",
+    "correct": true,
+    "why": "Right. A change of words is work for every browser test that names them, with no defect behind it."
+   },
+   {
+    "text": "The unit test failed, because `total()` reads the label",
+    "correct": false,
+    "why": "`total()` knows only ids, prices and quantities."
+   }
+  ]
+ },
+ {
+  "id": "ex-ve0mvt0g",
+  "version": 1,
+  "section": "shapes",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does the test pyramid say about the browser layer?",
+  "choices": [
+   {
+    "text": "That it should hold 10 per cent of the tests",
+    "correct": false,
+    "why": "That split came from a blog post as a starting point; the drawing itself fixes no ratio."
+   },
+   {
+    "text": "That it should be narrow, because each test there costs the most",
+    "correct": true,
+    "why": "Right. The claim is about cost per test; how narrow is left to you."
+   },
+   {
+    "text": "That it can be skipped once the unit tests are thorough",
+    "correct": false,
+    "why": "The top is narrow, not empty: unit tests cannot see the seam between page and server."
+   },
+   {
+    "text": "That it should run only before a release",
+    "correct": false,
+    "why": "The pyramid is about how many tests sit at each layer, not when they run."
+   }
+  ]
+ },
+ {
+  "id": "ex-4wpv4whc",
+  "version": 1,
+  "section": "shapes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Where do the pyramid and the testing trophy disagree?",
+  "choices": [
+   {
+    "text": "At the top: the trophy wants many more end-to-end tests than the pyramid",
+    "correct": false,
+    "why": "The trophy's end-to-end cup is small too; the two agree about the top."
+   },
+   {
+    "text": "On whether tests should be automated",
+    "correct": false,
+    "why": "Both are drawings of automated suites; the cone's manual scoop is the odd one."
+   },
+   {
+    "text": "In the middle: the trophy widens the integration band",
+    "correct": true,
+    "why": "Right. It bets that a front end's defects live where pieces fit together."
+   },
+   {
+    "text": "At the base: the trophy has no unit tests",
+    "correct": false,
+    "why": "It keeps a small unit layer, above a base of static checks."
+   }
+  ]
+ },
+ {
+  "id": "ex-7n3cfv94",
+  "version": 1,
+  "section": "shapes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team's product is a front end that mostly calls other services and holds almost no rules of its own. Going by this lesson, which shape fits its evidence best?",
+  "choices": [
+   {
+    "text": "A wide base of unit tests, since the base is always cheapest",
+    "correct": false,
+    "why": "Cheap, but its defects live in seams that unit tests do not cross."
+   },
+   {
+    "text": "A wide middle, with a small top",
+    "correct": true,
+    "why": "Right. Defects in the fit between pieces want the band that tests pieces together; the top stays small in every shape."
+   },
+   {
+    "text": "The ice-cream cone, since the browser sees the integration",
+    "correct": false,
+    "why": "It does, at the highest price per test, for checks a cheaper middle layer could make."
+   },
+   {
+    "text": "No automation at all, as there are no rules to check",
+    "correct": false,
+    "why": "No rules does not mean no defects: the seams still break."
+   }
+  ]
+ },
+ {
+  "id": "ex-nmj4cqms",
+  "version": 1,
+  "section": "the-browser-layer",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each check on quitanda to the cheapest layer that can see it.",
+  "pairs": [
+   {
+    "left": "Three bananas and two guavas cost 4350 cents",
+    "right": "a unit test of `total()`"
+   },
+   {
+    "left": "A taken name gets 409",
+    "right": "an API test"
+   },
+   {
+    "left": "The basket fits a 360-pixel window",
+    "right": "a browser test"
+   },
+   {
+    "left": "The HTML of `/ssr` names every product",
+    "right": "an HTTP request for the page"
+   }
+  ]
+ },
+ {
+  "id": "ex-v9g7b2gc",
+  "version": 1,
+  "section": "the-browser-layer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Lesson 6's request test of `/ssr` passed while the page's buttons did nothing. What does that case teach about moving a check down a layer?",
+  "choices": [
+   {
+    "text": "That request tests are unreliable and should be avoided",
+    "correct": false,
+    "why": "It was right about what it checked, the HTML; it just could not see the seam."
+   },
+   {
+    "text": "Nothing: it was a flaky run",
+    "correct": false,
+    "why": "It passed every time; the defect was outside what it could see, not random."
+   },
+   {
+    "text": "That the check should have been moved further down, to a unit test",
+    "correct": false,
+    "why": "Lower still sees less of the seam, not more."
+   },
+   {
+    "text": "A lower check keeps its subject and loses the seam",
+    "correct": true,
+    "why": "Right. If the seam was the subject, at least one browser test has to stay over it."
+   }
+  ]
+ },
+ {
+  "id": "ex-1dsy7g8a",
+  "version": 1,
+  "section": "the-browser-layer",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A product owner asks for a browser test of every product with every quantity from 0 to 3. What does the lesson suggest instead?",
+  "choices": [
+   {
+    "text": "Run them all in the browser, but in parallel on more workers",
+    "correct": false,
+    "why": "Parallel runs divide the hours by the workers; they do not make the browser the right layer for arithmetic."
+   },
+   {
+    "text": "The combinations as unit cases, and one browser journey",
+    "correct": true,
+    "why": "Right. The arithmetic goes where it is cheap, and one test keeps the seam covered."
+   },
+   {
+    "text": "A random sample of twenty baskets in the browser, a new one each run",
+    "correct": false,
+    "why": "A random sample tests a different basket each run, which makes a failure hard to reproduce; the rule still belongs below."
+   },
+   {
+    "text": "No test, because the rule is too simple to fail",
+    "correct": false,
+    "why": "This lesson broke it with one deleted multiplication."
+   }
+  ]
+ },
+ {
+  "id": "ex-8h269dft",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put these measured runs in order, quickest first.",
+  "items": [
+   "One run of `node --test` on `unit/total.test.js`",
+   "One run of the API test file",
+   "One run of the browser test file",
+   "Twenty repetitions of the browser test file"
+  ],
+  "trap": "A single run of the two Playwright files differs by about a tenth of a second; the per-test gap only shows across many runs."
+ },
+ {
+  "id": "ex-ht9chxyd",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The shop adds a rule: every third pineapple in a basket is free. Where do this lesson's arguments put its tests?",
+  "choices": [
+   {
+    "text": "A browser test per quantity, since customers see the price",
+    "correct": false,
+    "why": "Each quantity is a case of arithmetic; at the top each costs a browser and several clicks."
+   },
+   {
+    "text": "Unit cases for the rule, and the journey checks one free pineapple",
+    "correct": true,
+    "why": "Right. The rule goes where cases are cheap; one browser test shows the discount reaches the screen."
+   },
+   {
+    "text": "Only API tests, since the server computes the total",
+    "correct": false,
+    "why": "The API layer can check it, but the page still has to draw the new total, which only a browser sees."
+   },
+   {
+    "text": "No tests until a customer reports a wrong price",
+    "correct": false,
+    "why": "The arithmetic of `total()` broke in this lesson with one deleted multiplication."
+   }
+  ]
+ },
+ {
+  "id": "ex-qg5ewwf4",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which question does the lesson ask of a check before it is written as a browser test?",
+  "choices": [
+   {
+    "text": "Is it what a customer would do?",
+    "correct": false,
+    "why": "Customers do arithmetic too, through the page; that alone does not earn the browser."
+   },
+   {
+    "text": "Could a cheaper layer see this?",
+    "correct": true,
+    "why": "Right. If yes it goes down; if no, the browser has earned it."
+   },
+   {
+    "text": "Will it run in under a second on one worker?",
+    "correct": false,
+    "why": "Speed is a cost, not the test of where a check belongs."
+   },
+   {
+    "text": "Has the page object for this screen been written yet?",
+    "correct": false,
+    "why": "A page object lowers the cost of a browser test; it does not decide whether one is needed."
+   }
+  ]
+ }
+]

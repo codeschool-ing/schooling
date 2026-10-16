@@ -1,0 +1,363 @@
+{
+ "ex-4m9j1ekv": {
+  "prompt": "Por que o `total.test.js` fica em `unit/` e não em `tests/`?",
+  "choices": [
+   {
+    "text": "O Node se recusa a rodar um arquivo numa pasta chamada `tests`",
+    "why": "O Node roda de qualquer lugar; o problema é o outro executor."
+   },
+   {
+    "text": "O Playwright o pegaria como um dos seus",
+    "why": "Certo. O Playwright roda todo `.test.js` e `.spec.js` de `tests/`, e um teste do Node não é um teste do Playwright."
+   },
+   {
+    "text": "Testes de unidade precisam ficar ao lado do código que importam",
+    "why": "Ele importa `../app/store.js` da própria pasta; nada exige que fique ao lado do arquivo."
+   },
+   {
+    "text": "Para mantê-lo fora do `webServer` da loja",
+    "why": "O `webServer` sobe a loja para o Playwright; ele não lê pastas de teste."
+   }
+  ]
+ },
+ "ex-0w2bndje": {
+  "prompt": "Com o `PLAYWRIGHT_BROWSERS_PATH` apontando para uma pasta vazia, o teste de API passou e o de navegador falhou em 2 ms. O que isso mostra?",
+  "choices": [
+   {
+    "text": "O teste de API é instável e passou por acaso",
+    "why": "Passou em toda execução da aula; a pasta tirou algo que ele nunca usou."
+   },
+   {
+    "text": "O Playwright pulou o teste de API",
+    "why": "Ele rodou e passou, com um tempo ao lado, em 55 ms."
+   },
+   {
+    "text": "O teste de navegador tem um defeito no localizador que usa para o cartão da banana",
+    "why": "Ele falhou ao abrir o navegador, antes de qualquer localizador rodar."
+   },
+   {
+    "text": "Um teste que só pede `request` nunca abre um navegador",
+    "why": "Certo. O navegador só é aberto para um teste que pede uma página."
+   }
+  ]
+ },
+ "ex-ken3h9er": {
+  "prompt": "Um teste do Playwright que faz chamadas HTTP sem abrir página nenhuma pede só a fixture ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "request"
+    ]
+   }
+  ]
+ },
+ "ex-bm947561": {
+  "prompt": "Com o `/ 100` tirado do `showBasket` da página, qual dos três testes falhou?",
+  "choices": [
+   {
+    "text": "O de unidade, porque o total estava errado",
+    "why": "`total()` continuou devolvendo 590 centavos, o que está certo."
+   },
+   {
+    "text": "O de API, porque o JSON mudou",
+    "why": "O servidor continuou respondendo `total: 590`; a mudança foi na página."
+   },
+   {
+    "text": "Só o de navegador, que leu R$ 590,00",
+    "why": "Certo. Só o teste que lê o que a página desenha roda o código da página."
+   },
+   {
+    "text": "Os três, já que verificam o mesmo fato",
+    "why": "Verificam o mesmo fato por partes diferentes da loja, e duas dessas partes estavam bem."
+   }
+  ]
+ },
+ "ex-v3w7czgn": {
+  "prompt": "`total()` parou de multiplicar pela quantidade, e o teste de navegador ficou verde. Por quê?",
+  "choices": [
+   {
+    "text": "Comprou só uma banana",
+    "why": "Certo. Com quantidade um o defeito não tem efeito; pegá-lo ali pede vários cliques, e o caso de unidade pediu uma linha."
+   },
+   {
+    "text": "O navegador guardou em cache a versão antiga de `app/store.js`",
+    "why": "O `store.js` roda no servidor; o navegador nunca o baixa."
+   },
+   {
+    "text": "O `toHaveText` ignora números",
+    "why": "Ele compara o texto, dígitos incluídos; pegou R$ 590,00 no outro defeito."
+   },
+   {
+    "text": "O servidor não foi reiniciado depois da edição",
+    "why": "O `webServer` do Playwright subiu uma loja nova para a execução, e o teste de unidade também leu o arquivo mudado."
+   }
+  ]
+ },
+ "ex-pnhnb2qe": {
+  "prompt": "Uma mudança faz o `POST /api/basket` ignorar o `id` que recebe e sempre pôr uma banana. Qual dos três testes desta aula falharia?",
+  "choices": [
+   {
+    "text": "O de unidade, já que a cesta está errada",
+    "why": "O teste de unidade chama `total()` com linhas que ele mesmo monta; nunca passa pela rota."
+   },
+   {
+    "text": "O de navegador, já que roda tudo",
+    "why": "Ele roda a rota, mas pede uma banana, e banana é o que recebe."
+   },
+   {
+    "text": "O de API, já que verifica a resposta da rota",
+    "why": "Ele verifica a resposta para uma banana, que continua certa."
+   },
+   {
+    "text": "Nenhum dos três: todos põem uma banana",
+    "why": "Certo. Rodar uma camada não é o mesmo que verificá-la; um teste com manga em qualquer das camadas de cima o pegaria."
+   }
+  ]
+ },
+ "ex-e2s9cgqw": {
+  "prompt": "Aos 281 ms que o teste de navegador levou, quantos segundos 200 testes assim levariam num worker?",
+  "hint": "Multiplique a quantidade pelo tempo em segundos.",
+  "unit": "segundos"
+ },
+ "ex-77kgam4x": {
+  "prompt": "Vinte repetições do teste de API levaram 17,531 s, embora uma execução do teste leve 51 ms. Para onde foi o resto?",
+  "choices": [
+   {
+    "text": "Para o relatório dot, que é mais lento que o list",
+    "why": "Um relatório imprime um caractere por teste; isso não são segundos de trabalho."
+   },
+   {
+    "text": "Para um processo de worker novo a cada repetição",
+    "why": "Certo. O relatório JSON mostrou os workers 0, 1 e 2 para três repetições."
+   },
+   {
+    "text": "Para reiniciar a loja entre as repetições",
+    "why": "O `webServer` sobe a loja uma vez por comando, não por teste."
+   },
+   {
+    "text": "Para o navegador, que o teste de API também abriu e fechou a cada vez",
+    "why": "O teste de API rodou sem navegador nenhum na máquina."
+   }
+  ]
+ },
+ "ex-t3c2mc1q": {
+  "prompt": "Um teste de navegador passou em 20 de 20 execuções. Um colega conclui que ele não é instável. O que a aritmética da aula diz?",
+  "choices": [
+   {
+    "text": "Ele está certo: 20 é o limite habitual de instabilidade",
+    "why": "Não existe esse limite; a questão é o que vinte limpas descartam."
+   },
+   {
+    "text": "Só uma série de 1.000 consegue mostrar alguma coisa",
+    "why": "Vinte execuções mostram algo: descartam um teste que falha muito. Não descartam um que falha raramente."
+   },
+   {
+    "text": "Vinte limpas são evidência fraca",
+    "why": "Certo. Um teste que falha 1 vez em 100 passa 20 seguidas com probabilidade 0,99 elevado a 20, cerca de 0,82."
+   },
+   {
+    "text": "Instabilidade é da camada de API, não do navegador",
+    "why": "A camada do navegador é a que tem mais fontes dela: navegador, scripts, eventos e esperas."
+   }
+  ]
+ },
+ "ex-6bpftnp9": {
+  "prompt": "O texto do botão mudou de \"Add to basket\" para \"Add to cart\". O que aconteceu com os testes, e por que isso conta como custo?",
+  "choices": [
+   {
+    "text": "Os dois testes do Playwright falharam, então a mudança era um defeito",
+    "why": "O teste de API passou; ele não sabe o que o botão diz."
+   },
+   {
+    "text": "Nada falhou, porque localizadores acham botões pelo papel",
+    "why": "O localizador nomeia o papel e o texto, e o texto mudou."
+   },
+   {
+    "text": "O teste de navegador falhou depois de 30 s numa loja que funciona",
+    "why": "Certo. Uma mudança de palavras é trabalho para todo teste de navegador que as nomeia, sem defeito nenhum por trás."
+   },
+   {
+    "text": "O teste de unidade falhou, porque `total()` lê o rótulo",
+    "why": "`total()` só conhece ids, preços e quantidades."
+   }
+  ]
+ },
+ "ex-ve0mvt0g": {
+  "prompt": "O que a pirâmide de testes diz sobre a camada do navegador?",
+  "choices": [
+   {
+    "text": "Que ela deve ter 10 por cento dos testes",
+    "why": "Essa divisão veio de um post como ponto de partida; o desenho em si não fixa proporção nenhuma."
+   },
+   {
+    "text": "Que ela deve ser estreita, porque cada teste ali custa mais",
+    "why": "Certo. A afirmação é sobre custo por teste; o quanto estreita fica com você."
+   },
+   {
+    "text": "Que ela pode ser pulada quando os testes de unidade são completos",
+    "why": "O topo é estreito, não vazio: testes de unidade não veem a costura entre página e servidor."
+   },
+   {
+    "text": "Que ela deve rodar só antes de uma versão",
+    "why": "A pirâmide fala de quantos testes ficam em cada camada, não de quando rodam."
+   }
+  ]
+ },
+ "ex-4wpv4whc": {
+  "prompt": "Onde a pirâmide e o troféu de testes discordam?",
+  "choices": [
+   {
+    "text": "No topo: o troféu quer muito mais testes de ponta a ponta que a pirâmide",
+    "why": "O copo de ponta a ponta do troféu também é pequeno; os dois concordam sobre o topo."
+   },
+   {
+    "text": "Sobre se os testes devem ser automatizados",
+    "why": "Os dois desenham suítes automatizadas; a bola manual do cone é que destoa."
+   },
+   {
+    "text": "No meio: o troféu alarga a faixa de integração",
+    "why": "Certo. Ele aposta que os defeitos de um front-end moram onde as peças se encaixam."
+   },
+   {
+    "text": "Na base: o troféu não tem testes de unidade",
+    "why": "Ele mantém uma camada pequena de unidade, acima de uma base de verificações estáticas."
+   }
+  ]
+ },
+ "ex-7n3cfv94": {
+  "prompt": "O produto de uma equipe é um front-end que quase só chama outros serviços e não tem quase nenhuma regra própria. Pelo que esta aula diz, que forma combina melhor com a evidência dela?",
+  "choices": [
+   {
+    "text": "Uma base larga de unidade, já que a base é sempre a mais barata",
+    "why": "Barata, mas os defeitos dele moram em costuras que testes de unidade não atravessam."
+   },
+   {
+    "text": "Um meio largo, com um topo pequeno",
+    "why": "Certo. Defeitos no encaixe entre peças pedem a faixa que testa peças juntas; o topo continua pequeno em toda forma."
+   },
+   {
+    "text": "O cone de sorvete, já que o navegador vê a integração",
+    "why": "Vê, ao maior preço por teste, para verificações que uma camada do meio mais barata faria."
+   },
+   {
+    "text": "Nenhuma automação, já que não há regras para verificar",
+    "why": "Não ter regras não quer dizer não ter defeitos: as costuras ainda quebram."
+   }
+  ]
+ },
+ "ex-nmj4cqms": {
+  "prompt": "Ligue cada verificação na quitanda à camada mais barata que consegue vê-la.",
+  "pairs": [
+   {
+    "left": "Três bananas e duas goiabas custam 4350 centavos",
+    "right": "um teste de unidade de `total()`"
+   },
+   {
+    "left": "Um nome já usado recebe 409",
+    "right": "um teste de API"
+   },
+   {
+    "left": "A cesta cabe numa janela de 360 pixels",
+    "right": "um teste de navegador"
+   },
+   {
+    "left": "O HTML de `/ssr` nomeia todo produto",
+    "right": "uma requisição HTTP da página"
+   }
+  ]
+ },
+ "ex-v9g7b2gc": {
+  "prompt": "O teste por requisição de `/ssr` da aula 6 passou enquanto os botões da página não faziam nada. O que esse caso ensina sobre descer uma verificação de camada?",
+  "choices": [
+   {
+    "text": "Que testes por requisição não são confiáveis e devem ser evitados",
+    "why": "Ele acertou sobre o que verificou, o HTML; só não conseguia ver a costura."
+   },
+   {
+    "text": "Nada: foi uma execução instável",
+    "why": "Passou toda vez; o defeito estava fora do que ele via, não era aleatório."
+   },
+   {
+    "text": "Que a verificação devia ter descido ainda mais, para um teste de unidade",
+    "why": "Mais abaixo se vê ainda menos da costura, não mais."
+   },
+   {
+    "text": "Uma verificação mais baixa mantém o assunto e perde a costura",
+    "why": "Certo. Se a costura era o assunto, ao menos um teste de navegador precisa ficar sobre ela."
+   }
+  ]
+ },
+ "ex-1dsy7g8a": {
+  "prompt": "Uma dona de produto pede um teste de navegador de todo produto com toda quantidade de 0 a 3. O que a aula sugere no lugar?",
+  "choices": [
+   {
+    "text": "Rodar todos no navegador, mas em paralelo com mais workers",
+    "why": "Rodar em paralelo divide as horas pelos workers; não faz do navegador a camada certa para aritmética."
+   },
+   {
+    "text": "As combinações como casos de unidade, e uma jornada no navegador",
+    "why": "Certo. A aritmética vai para onde é barata, e um teste mantém a costura coberta."
+   },
+   {
+    "text": "Uma amostra aleatória de vinte cestas no navegador, nova a cada execução",
+    "why": "Uma amostra aleatória testa uma cesta diferente a cada execução, o que dificulta reproduzir uma falha; a regra continua sendo de baixo."
+   },
+   {
+    "text": "Nenhum teste, porque a regra é simples demais para falhar",
+    "why": "Esta aula a quebrou apagando uma multiplicação."
+   }
+  ]
+ },
+ "ex-8h269dft": {
+  "prompt": "Ponha estas execuções medidas em ordem, da mais rápida para a mais lenta.",
+  "items": [
+   "Uma execução de `node --test` em `unit/total.test.js`",
+   "Uma execução do arquivo de teste de API",
+   "Uma execução do arquivo de teste de navegador",
+   "Vinte repetições do arquivo de teste de navegador"
+  ],
+  "trap": "Uma execução avulsa dos dois arquivos do Playwright difere por cerca de um décimo de segundo; a diferença por teste só aparece em muitas execuções."
+ },
+ "ex-ht9chxyd": {
+  "prompt": "A loja ganha uma regra: todo terceiro abacaxi da cesta sai de graça. Onde os argumentos desta aula põem os testes dela?",
+  "choices": [
+   {
+    "text": "Um teste de navegador por quantidade, já que o cliente vê o preço",
+    "why": "Cada quantidade é um caso de aritmética; no topo cada um custa um navegador e vários cliques."
+   },
+   {
+    "text": "Casos de unidade para a regra, e a jornada verifica um abacaxi grátis",
+    "why": "Certo. A regra vai para onde casos são baratos; um teste de navegador mostra que o desconto chega à tela."
+   },
+   {
+    "text": "Só testes de API, já que o servidor calcula o total",
+    "why": "A camada de API consegue verificar, mas a página ainda precisa desenhar o novo total, o que só um navegador vê."
+   },
+   {
+    "text": "Nenhum teste até um cliente relatar um preço errado",
+    "why": "A aritmética de `total()` quebrou nesta aula com uma multiplicação apagada."
+   }
+  ]
+ },
+ "ex-qg5ewwf4": {
+  "prompt": "Que pergunta a aula faz a uma verificação antes de ela ser escrita como teste de navegador?",
+  "choices": [
+   {
+    "text": "É o que um cliente faria?",
+    "why": "Clientes também fazem aritmética, pela página; isso sozinho não justifica o navegador."
+   },
+   {
+    "text": "Uma camada mais barata veria isto?",
+    "why": "Certo. Se sim, desce; se não, o navegador a mereceu."
+   },
+   {
+    "text": "Vai rodar em menos de um segundo num worker?",
+    "why": "Velocidade é custo, não o critério de onde uma verificação mora."
+   },
+   {
+    "text": "O page object desta tela já foi escrito?",
+    "why": "Um page object baixa o custo de um teste de navegador; não decide se ele é necessário."
+   }
+  ]
+ }
+}

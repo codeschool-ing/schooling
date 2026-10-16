@@ -54,8 +54,10 @@ that.
 
 ## The curve
 
-The suite under `turns.config.js`, so that every run is green and only the worker count changes,
-from one worker to eight on this four-processor laptop:
+The full suite is the wrong thing to measure for this, because the one-at-a-time phase of the last
+section sets a floor that no worker count moves. The `parallel` project alone, every test its own
+group with `--fully-parallel`, and each test run four times with `--repeat-each 4` so that there is
+enough work to share, from one worker to eight on this four-processor laptop:
 
 ```
 %%CAP cost%%
@@ -67,25 +69,21 @@ from one worker to eight on this four-processor laptop:
 
 ## Why past the processors it gets worse
 
-@@PROCESSOR@@ A test here is mostly waiting: for the shop to answer, for a page to draw, for an
-assertion to see what it expects. **While a worker waits, another worker can use the
-processor**, which is why going from one worker to two cut the time almost in half without the
-processor time moving much.
+A test here is mostly waiting: for the shop to answer, for a page to draw, for an assertion to see
+what it expects. **While one worker waits, another can use the processor**, which is why the
+second worker took so much off the wall time.
 
 Past the number of processors that stops. Four browsers drawing at the same moment already fill
-four processors, and a fifth has to wait for a turn, while still holding its memory. The
-operating system spends time switching between them, which shows up as processor time going up
-for the same work. And every worker also costs a start-up, a browser launched and closed, that
-buys nothing when the worker then waits in line. The eight-worker run shows all three:
+four processors, and a fifth worker has to wait for a turn while still holding its memory. Every
+worker also costs a start-up, a Node process and a browser launched and closed, that buys
+nothing when the worker then waits in line, and the operating system spends time switching
+between them. @@CPUREAD@@
 
-```
-%%CAP w8%%
-```
-
-@@W8READ@@ This is why Playwright's default is half the processors and not all of them. Its documentation
+This is why Playwright's default is half the processors and not all of them. Its documentation
 goes further for CI and recommends one worker there, for stable and repeatable runs, on machines
 that often have fewer processors than a laptop and share them with other jobs.
 
 **Measure, then choose.** The right number is the lowest count after which the wall time stops
 falling, on the machine the suite actually runs on, written into the configuration or the CI
-command so that every run uses it.
+command so that every run uses it. Every run here was headless, Playwright's default; lesson 17
+timed what a window adds.

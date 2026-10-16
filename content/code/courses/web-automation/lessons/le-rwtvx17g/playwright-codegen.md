@@ -12,7 +12,63 @@ most of what matters: its options, and the function it calls to name an element.
 ## Its options
 
 ```
-%%CAP help%%
+ana@laptop:~/quitanda$ npx playwright codegen --help
+Usage: npx playwright codegen [options] [url]
+
+open page and generate code for user actions
+
+Options:
+  -o, --output <file name>             saves the generated script to a file
+  --target <language>                  language to generate, one of javascript,
+                                       playwright-test, python, python-async,
+                                       python-pytest, csharp, csharp-mstest,
+                                       csharp-nunit, java, java-junit (default:
+                                       "playwright-test")
+  --test-id-attribute <attributeName>  use the specified attribute to generate
+                                       data test ID selectors
+  -b, --browser <browserType>          browser to use, one of cr, chromium, ff,
+                                       firefox, wk, webkit (default: "chromium")
+  --block-service-workers              block service workers
+  --channel <channel>                  Chromium distribution channel, "chrome",
+                                       "chrome-beta", "msedge-dev", etc
+  --color-scheme <scheme>              emulate preferred color scheme, "light"
+                                       or "dark"
+  --device <deviceName>                emulate device, for example  "iPhone 11"
+  --geolocation <coordinates>          specify geolocation coordinates, for
+                                       example "37.819722,-122.478611"
+  --ignore-https-errors                ignore https errors
+  --load-storage <filename>            load context storage state from the file,
+                                       previously saved with --save-storage
+  --lang <language>                    specify language / locale, for example
+                                       "en-GB"
+  --proxy-server <proxy>               specify proxy server, for example
+                                       "http://myproxy:3128" or
+                                       "socks5://myproxy:8080"
+  --proxy-bypass <bypass>              comma-separated domains to bypass proxy,
+                                       for example
+                                       ".com,chromium.org,.domain.com"
+  --save-har <filename>                save HAR file with all network activity
+                                       at the end
+  --save-har-glob <glob pattern>       filter entries in the HAR by matching url
+                                       against this glob pattern
+  --save-storage <filename>            save context storage state at the end,
+                                       for later use with --load-storage
+  --timezone <time zone>               time zone to emulate, for example
+                                       "Europe/Rome"
+  --timeout <timeout>                  timeout for Playwright actions in
+                                       milliseconds, no timeout by default
+  --user-agent <ua string>             specify user agent string
+  --user-data-dir <directory>          use the specified user data directory
+                                       instead of a new context
+  --viewport-size <size>               specify browser viewport size in pixels,
+                                       for example "1280, 720"
+  -h, --help                           display help for command
+
+Examples:
+
+  $ codegen
+  $ codegen --target=python
+  $ codegen -b webkit https://example.com
 ```
 
 Three options in that list matter more than the rest. `--target` chooses the language of the code,
@@ -65,7 +121,32 @@ Start the shop with `npm start` in one terminal, then run it twice in another. O
 PowerShell, set the variable first with `$env:PWDEBUG = 'console'` and run `node pick.mjs`.
 
 ```
-%%CAP pick%%
+ana@laptop:~/quitanda$ PWDEBUG=console node pick.mjs
+[data-testid=product-banana] button    getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-mango] button     getByTestId('product-mango').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-papaya] button    getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-guava] button     getByTestId('product-guava').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-cashew] button    getByTestId('product-cashew').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-passion] button   getByTestId('product-passion').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-acerola] button   locator('#card-3585 > button')
+[data-testid=product-pineapple] button locator('#card-3215 > button')
+[data-testid=product-banana] h2        getByRole('heading', { name: 'Banana' })
+[data-testid=basket-count]             getByTestId('basket-count')
+.basket-total                          getByText('R$ 0,00')
+.toast                                 getByRole('status')
+ana@laptop:~/quitanda$ PWDEBUG=console node pick.mjs
+[data-testid=product-banana] button    getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-mango] button     getByTestId('product-mango').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-papaya] button    getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-guava] button     getByTestId('product-guava').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-cashew] button    getByTestId('product-cashew').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-passion] button   getByTestId('product-passion').getByRole('button', { name: 'Add to basket' })
+[data-testid=product-acerola] button   locator('#card-8452 > button')
+[data-testid=product-pineapple] button locator('#card-5129 > button')
+[data-testid=product-banana] h2        getByRole('heading', { name: 'Banana' })
+[data-testid=basket-count]             getByTestId('basket-count')
+.basket-total                          getByText('R$ 0,00')
+.toast                                 getByRole('status')
 ```
 
 **Most of the answers are the ones lesson 2 recommended.** The heading is named by its role and its

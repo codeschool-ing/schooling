@@ -1,0 +1,568 @@
+[
+ {
+  "id": "ex-kgnrah4s",
+  "version": 1,
+  "section": "what-a-recorder-does",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put in order what happens between your click and the line a recorder saves, and then the replay.",
+  "items": [
+   "The recorder's script in the page hears the click",
+   "The locator builder picks the first name that finds that element alone",
+   "A step is saved: command, target, value",
+   "On replay, the target is looked up again and the command repeated"
+  ],
+  "trap": "The name is chosen while you record, not while the test replays; that is why it can be wrong on the next load."
+ },
+ {
+  "id": "ex-myx25kt2",
+  "version": 1,
+  "section": "what-a-recorder-does",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "You record: open the shop, add a banana, add a mango, assert the count says 2. Which of these is missing from the saved recording?",
+  "choices": [
+   {
+    "text": "The target of each click",
+    "correct": false,
+    "why": "Every click is saved with the target the builder chose; that is the middle move."
+   },
+   {
+    "text": "That the basket must start empty",
+    "correct": true,
+    "why": "Right. The shop happened to be empty when you recorded; emptying it was never a click, so nothing records it."
+   },
+   {
+    "text": "The value 2 the assertion compares with",
+    "correct": false,
+    "why": "You asked for the assertion from a menu, and its value is saved with it."
+   },
+   {
+    "text": "The address the recording started at",
+    "correct": false,
+    "why": "A `.side` file keeps it in `url`, and codegen writes it into `goto`."
+   }
+  ]
+ },
+ {
+  "id": "ex-ydr9v15w",
+  "version": 1,
+  "section": "what-a-recorder-does",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A recording passed on the afternoon it was made. The next morning it fails on its first click, and the page looks exactly the same. What is the likeliest reason?",
+  "choices": [
+   {
+    "text": "The replay is too fast for the button to appear",
+    "correct": false,
+    "why": "Both replays shown in this lesson wait for the target before clicking; a missing wait would fail on a fresh page too, not only the next day."
+   },
+   {
+    "text": "The browser kept yesterday's page in its cache",
+    "correct": false,
+    "why": "A replay opens a fresh browser profile; and a cached page would still draw the same button."
+   },
+   {
+    "text": "The saved name relies on a value the page draws anew each load",
+    "correct": true,
+    "why": "Right. A name such as `#card-4821` was true while recording and is another number on every load since."
+   },
+   {
+    "text": "The recorder lost some of the events overnight",
+    "correct": false,
+    "why": "A saved recording is a file; nothing in it changes by itself."
+   }
+  ]
+ },
+ {
+  "id": "ex-bjewk9m4",
+  "version": 1,
+  "section": "selenium-ide",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is a Selenium IDE `.side` file?",
+  "choices": [
+   {
+    "text": "A video of the browser while you recorded",
+    "correct": false,
+    "why": "Nothing visual is kept; the file is text."
+   },
+   {
+    "text": "A Java program the IDE compiled from your clicks",
+    "correct": false,
+    "why": "Code is something the export packages produce on request; the recording itself is data."
+   },
+   {
+    "text": "JSON: a project's tests, each a list of commands with targets",
+    "correct": true,
+    "why": "Right. `side-model` declares it: project, tests, commands with `command`, `target`, `targets` and `value`, and suites that name tests by id."
+   },
+   {
+    "text": "The settings of a grid",
+    "correct": false,
+    "why": "Grids belong to lesson 8; a `.side` file holds recordings."
+   }
+  ]
+ },
+ {
+  "id": "ex-8zcvqzef",
+  "version": 1,
+  "section": "selenium-ide",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each of the IDE's locator builders to the target it gives on the shop.",
+  "pairs": [
+   {
+    "left": "`css:data-attr`, on the count",
+    "right": "`css=[data-testid=\"basket-count\"]`"
+   },
+   {
+    "left": "`css:finder`, on the banana's button",
+    "right": "`css=#card-4821 > button`"
+   },
+   {
+    "left": "`xpath:position`, on the mango's button",
+    "right": "`xpath=//li[2]/button`"
+   },
+   {
+    "left": "`xpath:innerText`, on the banana's button",
+    "right": "`xpath=//button[contains(.,'Add to basket')]`"
+   }
+  ]
+ },
+ {
+  "id": "ex-j0y23e36",
+  "version": 1,
+  "section": "selenium-ide",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Without the `pause`, the IDE's replay of the recording fails on `assertText` although the shop works. Why, by the playback code?",
+  "choices": [
+   {
+    "text": "It reads the text once, maybe before the count changed",
+    "correct": true,
+    "why": "Right. It waits for the element to exist, reads once and compares; a `0` at that instant is a failure."
+   },
+   {
+    "text": "It tried a fallback target and found another span",
+    "correct": false,
+    "why": "The loop that would try `targets` is commented out; only `target` is used."
+   },
+   {
+    "text": "Its clicks do not wait for their button at all",
+    "correct": false,
+    "why": "A click polls for up to the implicit wait, five seconds by default."
+   },
+   {
+    "text": "It compares `2` with the total instead of the count",
+    "correct": false,
+    "why": "The target names the count by its `data-testid`; the element is right, the moment is wrong."
+   }
+  ]
+ },
+ {
+  "id": "ex-hse48yk6",
+  "version": 1,
+  "section": "selenium-ide",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The same recording named the count well and the banana's button badly. What made the difference?",
+  "choices": [
+   {
+    "text": "The count lives in the header, which never changes",
+    "correct": false,
+    "why": "The builders do not ask where an element lives; they ask what it carries."
+   },
+   {
+    "text": "The IDE looks for `data-testid` first and the button lacks it",
+    "correct": false,
+    "why": "The first builder looks for `data-test-id` and `data-test`; `data-testid` is taken by the third."
+   },
+   {
+    "text": "The count has a `data-*` attribute; the button needs a parent's id",
+    "correct": true,
+    "why": "Right. `css:data-attr` names the count; the button has none of its own, so `css:finder` climbs to the card's random id."
+   },
+   {
+    "text": "XPath is used for buttons, CSS for text",
+    "correct": false,
+    "why": "The order is the same for every element; CSS came first for both."
+   }
+  ]
+ },
+ {
+  "id": "ex-fjvpxgg5",
+  "version": 1,
+  "section": "bugbug-and-ghost-inspector",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A BugBug suite with automatic retries has been green all week. What should a tester look at before trusting it?",
+  "choices": [
+   {
+    "text": "The schedule, to check it ran every five minutes",
+    "correct": false,
+    "why": "A run that happened tells you nothing about whether it passed first time."
+   },
+   {
+    "text": "The history, for attempts marked auto-retried",
+    "correct": true,
+    "why": "Right. A pass on a retry turns the suite green and hides a flaky test, which is lesson 14's warning."
+   },
+   {
+    "text": "The price of the plan",
+    "correct": false,
+    "why": "The plan decides what you may run, not whether the runs mean anything."
+   },
+   {
+    "text": "The extension's incognito setting",
+    "correct": false,
+    "why": "That matters while recording; the question is about runs in the service."
+   }
+  ]
+ },
+ {
+  "id": "ex-sdhymfwq",
+  "version": 1,
+  "section": "bugbug-and-ghost-inspector",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these is a risk of keeping tests in a hosted service, and not in your repository?",
+  "choices": [
+   {
+    "text": "A change to a test is not reviewed with the change to the app",
+    "correct": true,
+    "why": "Right. The two travel separately, so nobody reads them side by side in one pull request."
+   },
+   {
+    "text": "The service cannot take a screenshot of a failure",
+    "correct": false,
+    "why": "Ghost Inspector's documentation describes screenshot comparison; pictures are what these services do well."
+   },
+   {
+    "text": "Its tests are slower than tests on your laptop",
+    "correct": false,
+    "why": "Nothing in this lesson measured that, and speed is not what the model gives up."
+   },
+   {
+    "text": "Its recordings never run on a schedule",
+    "correct": false,
+    "why": "Schedules are the headline feature of both services."
+   }
+  ]
+ },
+ {
+  "id": "ex-3jtv8gsg",
+  "version": 1,
+  "section": "playwright-codegen",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `PWDEBUG=console` add to the pages Playwright opens?",
+  "choices": [
+   {
+    "text": "A window called the Inspector, beside the browser",
+    "correct": false,
+    "why": "That is codegen, and it needs a screen; the console mode ran headless here."
+   },
+   {
+    "text": "An object called `playwright`, with `generateLocator`",
+    "correct": true,
+    "why": "Right. `pick.mjs` called it on twelve elements to see the names codegen would write."
+   },
+   {
+    "text": "A log of every request the page makes",
+    "correct": false,
+    "why": "That is the shop's `QUITANDA_LOG=1`, on the server's side."
+   },
+   {
+    "text": "A slower page, so every action is visible",
+    "correct": false,
+    "why": "Slowing actions down is `slowMo`, a launch option, not this variable."
+   }
+  ]
+ },
+ {
+  "id": "ex-m3jc3rsq",
+  "version": 1,
+  "section": "playwright-codegen",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The generator named the shop's total `getByText('R$ 0,00')`. What goes wrong in a test that uses that name?",
+  "choices": [
+   {
+    "text": "The space after R$ is not a normal space, so it never matches",
+    "correct": false,
+    "why": "Locators by text treat any run of whitespace as one space, as lesson 2 showed; the name matched while the total was zero."
+   },
+   {
+    "text": "It matches all eight prices",
+    "correct": false,
+    "why": "No product costs R$ 0,00; the name was unique, which is why the generator chose it."
+   },
+   {
+    "text": "It finds nothing once anything is in the basket",
+    "correct": true,
+    "why": "Right. The element was named by the value it had, and its job is to change; after a banana it says R$ 5,90."
+   },
+   {
+    "text": "`getByText` cannot be used inside a test file",
+    "correct": false,
+    "why": "It is one of the locators lesson 2 listed; the problem is the text chosen."
+   }
+  ]
+ },
+ {
+  "id": "ex-w5ayhfsw",
+  "version": 1,
+  "section": "playwright-codegen",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To make codegen write Python with pytest, you run `npx playwright codegen --___ python-pytest`.",
+  "hint": "The option that chooses the language, from the `--help` output.",
+  "blanks": [
+   {
+    "accept": [
+     "target"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-3m9vwvkz",
+  "version": 1,
+  "section": "playwright-codegen",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague's codegen recording clicks the Pineapple with `locator('#card-4126 > button')`. It passed when recorded. What do you do with that line?",
+  "choices": [
+   {
+    "text": "Record the session again until a better name comes out",
+    "correct": false,
+    "why": "The generator gave the same kind of name on both runs of `pick.mjs`; recording again draws only a new number."
+   },
+   {
+    "text": "Keep it, because it passed when it was made",
+    "correct": false,
+    "why": "It passed on the one load whose number it copied; `acerola` in `codegen.spec.js` failed the same way."
+   },
+   {
+    "text": "Add `waitForTimeout(2000)` before the click",
+    "correct": false,
+    "why": "Waiting longer for an element that has another id never finds it."
+   },
+   {
+    "text": "Use the card's test id and the button's role instead",
+    "correct": true,
+    "why": "Right. That is the name the generator gave the other six buttons, and it does not depend on the load."
+   }
+  ]
+ },
+ {
+  "id": "ex-0mvsv728",
+  "version": 1,
+  "section": "the-recording-runs",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`recorded/side.spec.js` stopped on its first click. For how many milliseconds did that click wait, by the timeout in the message?",
+  "hint": "The same as the IDE's implicit wait by default.",
+  "value": 5000,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-4yxx43rc",
+  "version": 1,
+  "section": "the-recording-runs",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `recorded/codegen.spec.js`, `two fruit` passed, and afterwards the basket held two bananas and a mango. How did its check pass?",
+  "choices": [
+   {
+    "text": "The mango's click was lost, so the count stopped at 2",
+    "correct": false,
+    "why": "The basket shows the mango arrived; the count went on to 3."
+   },
+   {
+    "text": "`toContainText('2')` saw the 2 on the way from 1 to 3",
+    "correct": true,
+    "why": "Right. The first test's banana was left over; the assertion keeps asking, and a passing moment of `2` was enough."
+   },
+   {
+    "text": "The fixture emptied the basket before the test",
+    "correct": false,
+    "why": "A recording uses the plain `page`; there is no fixture and no reset in it."
+   },
+   {
+    "text": "Two workers shared out the clicks between them",
+    "correct": false,
+    "why": "The recordings ran one after another in one worker, which is exactly how the banana stayed."
+   }
+  ]
+ },
+ {
+  "id": "ex-p5amb425",
+  "version": 1,
+  "section": "the-recording-runs",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why does this lesson keep the recordings in `recorded/` with their own configuration, rather than marking them `test.fail()` in `tests/`?",
+  "choices": [
+   {
+    "text": "Because `test.fail()` cannot be used in a file Playwright generated",
+    "correct": false,
+    "why": "A recording is an ordinary test file once saved; anything can be added to it."
+   },
+   {
+    "text": "Because the separate folder makes the recordings run faster",
+    "correct": false,
+    "why": "Speed has nothing to do with it; the folder decides what a plain run reads."
+   },
+   {
+    "text": "Because one of them passes, and there is no shop defect to document",
+    "correct": true,
+    "why": "Right. `test.fail()` would turn the banana test's pass red, and it exists to document a defect in the app, not in the test."
+   },
+   {
+    "text": "Because lesson 14 forbids tests that fail",
+    "correct": false,
+    "why": "Lesson 14 keeps flaky tests apart; it does not forbid keeping a failure to study."
+   }
+  ]
+ },
+ {
+  "id": "ex-9tfrcq74",
+  "version": 1,
+  "section": "why-code-wins",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "After the button's words changed, how many lines of `recorded/codegen.spec.js` named the old words and had to be edited?",
+  "value": 3,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-7edc2adw",
+  "version": 1,
+  "section": "why-code-wins",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Both the recording and the page-object tests failed after *Add to basket* became *Add to cart*. Why is that no argument against locating by role and name?",
+  "choices": [
+   {
+    "text": "Because the failure was caused by the shared basket",
+    "correct": false,
+    "why": "The run used one worker and the fixture resets; every failure waited for the button by its old name."
+   },
+   {
+    "text": "Because a locator by position would have failed too",
+    "correct": false,
+    "why": "It would not have: the order did not change. That is lesson 2's other way to be wrong, passing on the wrong thing."
+   },
+   {
+    "text": "Because what a customer reads changed, so the test should look again",
+    "correct": true,
+    "why": "Right. The difference between the two sides is the cost of the fix, one line against three."
+   },
+   {
+    "text": "Because role locators ignore the text of a button",
+    "correct": false,
+    "why": "The name of a button is its text; that is why the change reached them."
+   }
+  ]
+ },
+ {
+  "id": "ex-0f4n8whc",
+  "version": 1,
+  "section": "why-code-wins",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these is a use of a recorder this lesson calls fine?",
+  "choices": [
+   {
+    "text": "The regression suite the team keeps for years",
+    "correct": false,
+    "why": "A test that has to live is where every cost counted here keeps being paid."
+   },
+   {
+    "text": "The tests that gate a merge in CI",
+    "correct": false,
+    "why": "A gate has to be trusted, and a recording starts from whatever state it finds."
+   },
+   {
+    "text": "A reproduction attached to a defect report, deleted with it",
+    "correct": true,
+    "why": "Right. Nobody maintains it, so its weaknesses cost nothing."
+   },
+   {
+    "text": "The checks of a page whose words change every week",
+    "correct": false,
+    "why": "That is where the count of edits grows fastest."
+   }
+  ]
+ },
+ {
+  "id": "ex-n746sqq2",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order what happened when `recorded/side.spec.js` ran.",
+  "items": [
+   "The shop opened and the window was resized",
+   "The first click looked for `#card-4821 > button`",
+   "Five seconds passed with no such element",
+   "The test failed before the pause and the check ran"
+  ]
+ },
+ {
+  "id": "ex-m8yds2pt",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team has 200 recorded flows in a hosted service, and a designer renames the *Checkout* button to *Pay now*. What should the team expect?",
+  "choices": [
+   {
+    "text": "Nothing, because the service stores a screenshot of each button",
+    "correct": false,
+    "why": "A screenshot comparison would add failures, not prevent them; the steps still name the button."
+   },
+   {
+    "text": "Every flow that names it by its words fails, each edited by hand",
+    "correct": true,
+    "why": "Right. A recording repeats a name once per click that used it; there is no single place to change it."
+   },
+   {
+    "text": "One failure, since the service deduplicates identical steps",
+    "correct": false,
+    "why": "Nothing in either service's documentation describes merging steps across tests."
+   },
+   {
+    "text": "Only the flows on the schedule fail",
+    "correct": false,
+    "why": "A schedule decides when a test runs, not whether its locator still matches."
+   }
+  ]
+ }
+]

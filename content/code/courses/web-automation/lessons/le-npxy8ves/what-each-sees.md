@@ -181,7 +181,7 @@ because a quantity of one hides the defect. The API and browser tests both passe
 banana, and with one of each thing the defect has no effect. To catch it there, the test would have
 to press the button three times on one card, twice on another, and read the total, which is more
 steps, more waiting and more ways to fail for reasons that are not the arithmetic. The API test is
-in the same position with three requests. The unit test reached it by writing one more line with
+in the same position: it would need three requests. The unit test reached it by writing one more line with
 other numbers in it. Put it back:
 
 ```sh
@@ -192,7 +192,7 @@ sed -i 's|return sum + product.price;|return sum + product.price * line.qty;|' a
 
 | | unit `total()` | API `/api/basket` | browser, one click |
 |---|---|---|---|
-| reais drawn as cents in the header | green, cannot see it | green, cannot see it | **red**, and the message names both texts |
+| cents drawn as reais in the header | green, cannot see it | green, cannot see it | **red**, and the message names both texts |
 | quantity left out of `total()` | **red**, `1880 !== 4350` | green, one banana | green, one banana |
 | where the failure points | the function and the numbers | the route's answer | a locator, a text, a page |
 

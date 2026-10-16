@@ -23,6 +23,10 @@
 #     through sed, which deletes exactly ESC[...m and nothing else;
 #   - the JSON reports are copied to /tmp/lab/L19-run1.json, -run2.json and
 #     -run8.json; the lesson's timeline figure was drawn from the first;
+#   - turns.config.js. `taking-turns` shows it twice at the same path, and the
+#     project is built with the second; for "turns4-v1", "turns8-v1" and
+#     "overlap8-v1" the first is written back with ../../lab.sh fence, and the
+#     second restored after;
 #   - the shards. The three run one after the other on this one machine,
 #     standing in for three CI machines, and the zip each writes is moved into
 #     all-blob-reports/ the way a CI job would upload it.
@@ -78,11 +82,20 @@ block overlap2
 run 'node overlap.mjs run2.json'
 cp run2.json /tmp/lab/L19-run2.json
 
-block turns4
+# turns.config.js as taking-turns first shows it, before the fix.
+cp turns.config.js /tmp/l19-turns-v2.js
+bash "$HERE/../../lab.sh" fence "$HERE/taking-turns.md" turns.config.js > turns.config.js
+block turns4-v1
 pw "for i in 1 2 3; do npx playwright test --config turns.config.js --workers 4 | $SUMMARY; done"
+block turns8-v1
+pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run8.json npx playwright test --config turns.config.js --workers 8 --reporter=list,json | $SUMMARY"
+block overlap8-v1
+run 'node overlap.mjs run8.json'
+cp run8.json /tmp/lab/L19-run8.json
+cp /tmp/l19-turns-v2.js turns.config.js; chown ana:ana turns.config.js
 
-block turns-w
-for w in 1 2 8; do
+block turns-v2
+for w in 1 2 4 4 8 8; do
   pw "npx playwright test --config turns.config.js --workers $w | $SUMMARY"
 done
 
@@ -105,9 +118,4 @@ block cost
 for w in 1 2 3 4 6 8; do
   run "bash measure.sh npx playwright test --config turns.config.js --project parallel --fully-parallel --repeat-each 4 --workers $w"
 done
-block w8
-pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run8.json npx playwright test --config turns.config.js --workers 8 --reporter=list,json | $SUMMARY"
-block overlap8
-run 'node overlap.mjs run8.json'
-cp run8.json /tmp/lab/L19-run8.json
 block load-end; cat /proc/loadavg
