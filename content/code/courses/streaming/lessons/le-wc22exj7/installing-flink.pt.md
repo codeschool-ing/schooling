@@ -53,7 +53,7 @@ As configurações do Flink ficam em `~/flink/conf/config.yaml`. De fábrica ela
 1,6 GB de memória e ao TaskManager 1,7 GB, o que é quase toda a máquina virtual antes de o Kafka
 ocupar qualquer coisa. **Um gigabyte para cada um basta para esta lição.** E a página web que o
 Flink serve na porta 8081 escuta em todos os endereços da máquina, a não ser que alguém diga outra
-coisa; diga `localhost`, como todo o resto deste curso:
+coisa. Diga `localhost`, como todo o resto deste curso:
 
 ```sh
 cd ~/flink/conf

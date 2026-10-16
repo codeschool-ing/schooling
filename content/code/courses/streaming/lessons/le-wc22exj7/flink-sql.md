@@ -3,7 +3,7 @@ title: The same count in Flink SQL
 version: 1
 ---
 
-Flink has a Java API, a Python API and a SQL one, and **the SQL is the shortest way to the same
+Flink has a Java API, a Python API and a SQL one. **The SQL is the shortest way to the same
 count**: a table over the topic, a table over the output, and one `INSERT` that runs for as long as
 the cluster does. The watermark, which lesson 12 declared with `withWatermark`, is part of the
 table's definition here, beside its columns.
@@ -133,5 +133,5 @@ ends at 09:35. Flink writes a window once, when it closes, like Spark's append m
 topic can be read by anything that adds records up.
 
 The two engines agree because the definition is the same: event time from `at`, five-minute windows,
-a two-minute bound. What differed was a rule about partitions, and that rule is the kind of thing a
-choice of engine brings with it.
+a two-minute bound. What differed was a rule about partitions, and a rule
+like that comes with the engine you choose.

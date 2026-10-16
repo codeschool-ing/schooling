@@ -3,7 +3,7 @@ title: A mesma contagem em Flink SQL
 version: 1
 ---
 
-O Flink tem uma API em Java, uma em Python e uma em SQL, e **o SQL é o caminho mais curto para a
+O Flink tem uma API em Java, uma em Python e uma em SQL. **O SQL é o caminho mais curto para a
 mesma contagem**: uma tabela sobre o tópico, uma tabela sobre a saída, e um `INSERT` que roda
 enquanto o cluster rodar. O watermark, que a lição 12 declarou com `withWatermark`, aqui faz parte
 da definição da tabela, ao lado das colunas.
@@ -52,9 +52,9 @@ GROUP BY window_start, window_end;
 
 Leia de baixo para cima. O `INSERT` é a consulta: uma **janela fixa** de cinco minutos sobre `ts`,
 que a lição 10 desenhou, agrupada e contada. Os dois `CREATE TABLE` não criam nada no Kafka; eles
-dizem ao Flink como ler um tópico como tabela e como escrever em outro. O `at` é lido como texto, e
-`ts` é uma **coluna calculada** a partir dos primeiros dezenove caracteres dele, a hora do relógio da
-loja; o `-03:00` do fim é descartado, o que é seguro porque as cinco lojas estão no mesmo fuso. A
+dizem ao Flink como ler um tópico como tabela e como escrever em outro. O `at` é lido como texto, e `ts` é uma **coluna calculada** a partir dos primeiros
+dezenove caracteres dele, a hora do relógio da loja. O `-03:00` do fim é descartado, o que é seguro
+porque as cinco lojas estão no mesmo fuso. A
 linha `WATERMARK` diz que `ts` é o tempo do evento e que uma venda pode chegar até dois minutos
 atrasada, o mesmo limite da lição 12. As duas linhas `SET` do topo são assunto da seção 07.
 
@@ -133,5 +133,5 @@ modo append do Spark, então este tópico de saída pode ser lido por qualquer c
 registros.
 
 Os dois motores concordam porque a definição é a mesma: tempo do evento a partir de `at`, janelas
-de cinco minutos, um limite de dois minutos. O que mudou foi uma regra sobre partições, e esse tipo
-de regra vem junto com a escolha do motor.
+de cinco minutos, um limite de dois minutos. O que mudou foi uma regra sobre partições, e uma regra
+assim vem junto com o motor que você escolhe.

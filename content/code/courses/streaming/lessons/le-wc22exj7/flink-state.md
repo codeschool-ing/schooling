@@ -12,7 +12,7 @@ The wrong picture is that each operator saves its state when it likes. If the so
 Kafka offsets at one moment and the window operator saved its counts a little later, a restore would
 count some sales twice or not at all. **Flink makes the snapshot consistent by sending a marker,
 a barrier, through the stream with the records.** When the source takes a snapshot it saves its
-offsets and passes the barrier on; each operator saves its state when the barrier reaches it, so
+offsets and passes the barrier on. Each operator saves its state when the barrier reaches it, so
 every saved count includes exactly the sales before the barrier and none after it. A restore puts
 the counts back and makes the source read again from the saved offsets.
 
@@ -36,10 +36,9 @@ ubuntu@stream:~/work$ ls ~/flink-checkpoints
 
 ## A savepoint: stopping on purpose
 
-A checkpoint is Flink's, taken for recovery from a crash and deleted when newer ones replace it. A
-**savepoint** is yours: the same kind of snapshot, taken when you ask, kept until you delete it, and
-used to stop a job and start it again later, after an upgrade of Flink, a change to the job, or a
-move to another cluster. `flink stop` takes one and then stops the job:
+A checkpoint is Flink's, taken for recovery from a crash and deleted when newer ones replace it. A **savepoint** is yours: the same kind of snapshot, taken when you ask and kept until you delete
+it. You use one to stop a job and start it again after an upgrade of Flink, a change to the job, or
+a move to another cluster. `flink stop` takes one and then stops the job:
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/flink stop --savepointPath file:///home/ubuntu/flink-savepoints 1b14e9a9a838ec156cb32b72b8c46fd7
@@ -103,10 +102,9 @@ ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -4
 27940  4332 ps
 ```
 
-The TaskManager, which runs the job, holds about 480 MB, the JobManager, which coordinates it,
-about 430 MB, and the Kafka node about 410 MB: **about 1.3 GB for a broker and a small Flink
-cluster**,
-inside the virtual machine's 4 GB with room for the operating system. Stop the job and the cluster
+The TaskManager, which runs the job, holds about 480 MB, and the JobManager, which coordinates it,
+about 430 MB. With the Kafka node's 410 MB that is **about 1.3 GB for a broker and a small Flink
+cluster**, inside the virtual machine's 4 GB with room for the operating system. Stop the job and the cluster
 when you are done:
 
 ```

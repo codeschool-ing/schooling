@@ -109,8 +109,8 @@ O `2>/dev/null` esconde duas linhas da saída de erro: o aviso sobre o novo prot
 da lição 1, e a reclamação que o consumidor faz quando o `--timeout-ms` o encerra. Oito livros, e
 as contagens somam as duzentas vendas. **O tópico de saída é o changelog da KTable visto de fora**:
 cada registro é a nova contagem de uma chave, e a biblioteca não manda toda mudança. Ela guarda as
-mudanças num cache e manda a mais recente de cada chave a cada commit, a cada segundo aqui, então
-uma chave que mudou quarenta vezes num segundo aparece uma vez. As contagens por loja estão em
+mudanças num cache e manda a mais recente de cada chave a cada commit, a cada segundo aqui, então o
+`bk-08`, cuja contagem mudou 29 vezes, aparece uma vez. As contagens por loja estão em
 `sales-per-shop`, lidas do mesmo jeito, e uma loja pode aparecer lá mais de uma vez, sendo a última
 linha de cada loja o seu total.
 

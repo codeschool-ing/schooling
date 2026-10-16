@@ -111,7 +111,7 @@ lesson 1, and the complaint the consumer makes when `--timeout-ms` ends it. Eigh
 counts add up to the two hundred sales. **The output topic is the KTable's changelog as seen from
 outside**: each record is the new count of one key, and the library does not send every change. It
 keeps changes in a cache and sends the latest per key each time it commits, every second here, so
-a key that changed forty times in a second appears once. The counts per shop are in
+`bk-08`, whose count changed 29 times, appears once. The counts per shop are in
 `sales-per-shop`, read the same way, and a shop may appear there more than once, with the last line
 for each shop its total.
 

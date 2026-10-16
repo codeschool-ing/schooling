@@ -12,9 +12,9 @@ A imagem errada é a de que cada operador salva o seu estado quando bem entende.
 os offsets do Kafka num momento e o operador de janela salvasse as contagens um pouco depois, uma
 restauração contaria algumas vendas duas vezes ou nenhuma. **O Flink torna o snapshot consistente
 mandando uma marca, uma barreira, pelo stream junto com os registros.** Quando a fonte tira um
-snapshot, ela salva os offsets e passa a barreira adiante; cada operador salva o seu estado quando a
-barreira chega até ele, então toda contagem salva inclui exatamente as vendas anteriores à barreira e
-nenhuma depois dela. Uma restauração devolve as contagens e faz a fonte ler de novo a partir dos
+snapshot, ela salva os offsets e passa a barreira adiante. Cada operador salva o seu estado quando
+a barreira chega até ele, então toda contagem salva inclui exatamente as vendas anteriores à
+barreira e nenhuma depois dela. Uma restauração devolve as contagens e faz a fonte ler de novo a partir dos
 offsets salvos.
 
 ```schooling-figure
@@ -39,9 +39,9 @@ ubuntu@stream:~/work$ ls ~/flink-checkpoints
 ## Um savepoint: parar de propósito
 
 Um checkpoint é do Flink, tirado para se recuperar de uma queda e apagado quando outros mais novos
-o substituem. Um **savepoint** é seu: o mesmo tipo de snapshot, tirado quando você pede, guardado
-até você apagar, e usado para parar um job e iniciá-lo de novo depois, após uma atualização do
-Flink, uma mudança no job ou uma mudança de cluster. O `flink stop` tira um e então para o job:
+o substituem. Um **savepoint** é seu: o mesmo tipo de snapshot, tirado quando você pede e guardado até você
+apagar. Ele serve para parar um job e iniciá-lo de novo depois de uma atualização do Flink, de uma
+mudança no job ou de uma mudança de cluster. O `flink stop` tira um e então para o job:
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/flink stop --savepointPath file:///home/ubuntu/flink-savepoints 1b14e9a9a838ec156cb32b72b8c46fd7
@@ -105,8 +105,8 @@ ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -4
 27940  4332 ps
 ```
 
-O TaskManager, que roda o job, ocupa cerca de 480 MB, o JobManager, que o coordena, cerca de 430 MB,
-e o nó Kafka cerca de 410 MB: **cerca de 1,3 GB para um broker e um pequeno cluster Flink**, dentro
+O TaskManager, que roda o job, ocupa cerca de 480 MB, e o JobManager, que o coordena, cerca de 430
+MB. Com os 410 MB do nó Kafka, são **cerca de 1,3 GB para um broker e um pequeno cluster Flink**, dentro
 dos 4 GB da máquina virtual com espaço para o sistema operacional. Pare o job e o cluster quando
 terminar:
 
