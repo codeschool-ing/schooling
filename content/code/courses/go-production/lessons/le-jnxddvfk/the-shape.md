@@ -182,8 +182,7 @@ require github.com/urfave/cli/v3 v3.14.0
 whole footprint in the build: it depends on nothing outside the standard library. `tidy` still
 downloaded two more modules, `testify` and `yaml`, because those are what urfave/cli's own tests
 import and `tidy` checks the tests of what you depend on. Section 05 shows that neither of them is
-compiled into `hits`. `go-concurrency` lesson 25 covers testing; the module proxy that served the
-download is the one `go` lesson 3 set up.
+compiled into `hits`.
 
 ## The same answers
 

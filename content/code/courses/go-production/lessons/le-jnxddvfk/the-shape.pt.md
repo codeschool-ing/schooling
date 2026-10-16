@@ -182,8 +182,7 @@ require github.com/urfave/cli/v3 v3.14.0
 que a biblioteca deixa no build: ela não depende de nada fora da biblioteca padrão. O `tidy` ainda
 baixou mais dois módulos, `testify` e `yaml`, porque é isso que os testes da própria urfave/cli
 importam, e o `tidy` confere os testes daquilo de que você depende. A seção 05 mostra que nenhum dos
-dois é compilado no `hits`. A lição 25 do `go-concurrency` trata de testes; o proxy de módulos que
-serviu o download é o que a lição 3 do `go` configurou.
+dois é compilado no `hits`.
 
 ## As mesmas respostas
 
