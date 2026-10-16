@@ -1072,6 +1072,93 @@ def l09_latency(lang):
     return f, t['cap']
 
 
+@figure('l10-drift', 10)
+def l10_drift(lang):
+    import math
+    t = {'en': dict(
+            label='Two panels. Left, data drift: the distribution of an input in the training months '
+                  'and the same input now, the second hump moved to the right. Right, concept drift: '
+                  'the input distribution is the same, but the line from input to the chance of '
+                  'lapsing has risen.',
+            dtitle='data drift', ctitle='concept drift', then='when it learned', now='now',
+            dx='an input, such as online_share', cx='the same input', dy='members', cy='chance of lapsing',
+            cap='Data drift moves the members; concept drift moves what their inputs mean. The first is '
+                'visible in the inputs, the second only in the outcomes.'),
+         'pt': dict(
+            label='Dois painéis. À esquerda, deriva de dados: a distribuição de uma entrada nos meses do '
+                  'treino e a mesma entrada agora, com a segunda corcova deslocada para a direita. À '
+                  'direita, deriva de conceito: a distribuição da entrada é a mesma, mas a linha da '
+                  'entrada até a chance de se afastar subiu.',
+            dtitle='deriva de dados', ctitle='deriva de conceito', then='quando aprendeu', now='agora',
+            dx='uma entrada, como online_share', cx='a mesma entrada', dy='membros', cy='chance de se afastar',
+            cap='A deriva de dados move os membros; a de conceito move o que as entradas deles querem '
+                'dizer. A primeira aparece nas entradas, a segunda só nos desfechos.')}[lang]
+    f = Fig('l10-drift', 720, 300, t['label'])
+    a = Plot(f, 40, 50, 330, 230, 0, 1, 0, 1)
+    b = Plot(f, 400, 50, 690, 230, 0, 1, 0, 1)
+    for p_, title, xl, yl in ((a, t['dtitle'], t['dx'], t['dy']), (b, t['ctitle'], t['cx'], t['cy'])):
+        f.line(p_.x0, p_.y1, p_.x1, p_.y1, stroke='--paper-dim', width=1.2)
+        f.line(p_.x0, p_.y0, p_.x0, p_.y1, stroke='--paper-dim', width=1.2)
+        f.text((p_.x0 + p_.x1) / 2, 22, title, size=12.5, weight='700', fill='--amber')
+        f.text((p_.x0 + p_.x1) / 2, p_.y1 + 18, xl, size=10, fill='--paper-dim')
+        f.text(p_.x0 + 6, p_.y0 - 8, yl, size=10, anchor='start', fill='--paper-dim')
+    hump = lambda m: (lambda x: 0.85 * math.exp(-((x - m) ** 2) / 0.02))
+    a.curve(hump(0.3), 0, 1, stroke='--phosphor', width=2)
+    a.curve(hump(0.62), 0, 1, stroke='--amber', width=2, dash='5 3')
+    f.text(a.sx(0.16), a.sy(0.9), t['then'], size=10, fill='--phosphor')
+    f.text(a.sx(0.8), a.sy(0.9), t['now'], size=10, fill='--amber')
+    b.curve(lambda x: 0.1 + 0.55 * x, 0, 1, stroke='--phosphor', width=2)
+    b.curve(lambda x: 0.32 + 0.6 * x, 0, 0.98, stroke='--amber', width=2, dash='5 3')
+    f.text(b.sx(0.78), b.sy(0.42), t['then'], size=10, fill='--phosphor')
+    f.text(b.sx(0.2), b.sy(0.62), t['now'], size=10, fill='--amber')
+    return f, t['cap']
+
+
+@figure('l10-label-delay', 10)
+def l10_label_delay(lang):
+    t = {'en': dict(
+            label='A calendar from December 2025 to June 2026. The training night, 28 December, has '
+                  'labels that close on 28 March. The test night, 29 March, has labels that close on '
+                  '27 June. The rival opens on 1 April, after the training labels closed, and the '
+                  'data ends on 30 June.',
+            months=['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            train='training night', test='test night', labels='its 90 days of labels',
+            rival='the rival opens', today='the data ends',
+            cap='The newest training night the rule allows has labels that closed before anything '
+                'changed. The change is in the test night\'s outcomes and in no training label.'),
+         'pt': dict(
+            label='Um calendário de dezembro de 2025 a junho de 2026. A noite de treino, 28 de '
+                  'dezembro, tem rótulos que fecham em 28 de março. A noite de teste, 29 de março, tem '
+                  'rótulos que fecham em 27 de junho. O rival abre em 1º de abril, depois de os '
+                  'rótulos do treino fecharem, e os dados terminam em 30 de junho.',
+            months=['dez', 'jan', 'fev', 'mar', 'abr', 'mai', 'jun'],
+            train='noite de treino', test='noite de teste', labels='os 90 dias de rótulos',
+            rival='o rival abre', today='os dados terminam',
+            cap='A noite de treino mais nova que a regra permite tem rótulos que fecharam antes de '
+                'qualquer mudança. A mudança está nos desfechos da noite de teste e em nenhum rótulo '
+                'de treino.')}[lang]
+    import datetime as dt
+    d0, d1 = dt.date(2025, 12, 1), dt.date(2026, 7, 1)
+    X = lambda d: 30 + (d - d0).days / (d1 - d0).days * 660
+    f = Fig('l10-label-delay', 720, 230, t['label'])
+    f.line(30, 190, 690, 190, stroke='--paper-dim', width=1.2)
+    for i, m in enumerate(t['months']):
+        start = dt.date(2025 + (i > 0), 12 if i == 0 else i, 1)
+        f.line(X(start), 186, X(start), 194, stroke='--paper-dim', width=1)
+        f.text(X(start) + 26, 206, m, size=10, fill='--paper-dim', mono=True)
+    for y, a_, b_, name, colour in ((70, dt.date(2025, 12, 28), dt.date(2026, 3, 28), t['train'], '--phosphor'),
+                                    (120, dt.date(2026, 3, 29), dt.date(2026, 6, 27), t['test'], '--phosphor')):
+        f.circle(X(a_), y, 5, fill=colour)
+        f.text(X(a_) - 8, y, name, size=10.5, anchor='end', weight='600')
+        f.rect(X(a_) + 6, y - 7, X(b_) - X(a_) - 6, 14, stroke=colour, fill='--scan', rx=3)
+        f.text((X(a_) + X(b_)) / 2 + 3, y, t['labels'], size=9.5, fill='--paper-dim')
+    for d, name, y in ((dt.date(2026, 4, 1), t['rival'], 30), (dt.date(2026, 6, 30), t['today'], 30)):
+        bottom = 104 if d.month == 4 else 186   # the rival's line stops above the test night's labels
+        f.line(X(d), y + 10, X(d), bottom, stroke='--amber', width=1.4, dash='4 3')
+        f.text(X(d), y, name, size=10, fill='--amber', anchor='end' if d.month == 6 else 'middle')
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
