@@ -2,6 +2,7 @@
 
 The spec is Python calling Q(...), M(...), O(...), C(...), N(...), P(...).
 An id written as "new" is replaced by a fresh one in the spec file itself.
+With --exam, section is the lesson number: the question gets no section and a hint naming the lesson.
 
 Q(id, section, diff, prompt_en, prompt_pt, [(en, pt, correct, why_en, why_pt), ...], pos=None)
    quiz; the correct option is placed at position `pos` (0-3), or rotated if None
@@ -40,8 +41,12 @@ rot = [0]
 
 
 def base(id, section, diff, typ, pen, ppt, hint):
-    e = {"id": id, "version": 1, "section": section, "type": typ, "difficulty": diff,
-         "drillable": not EXAM, "prompt": pen}
+    if EXAM:   # an exam belongs to no section; its "section" is the lesson number, given as a hint
+        hint = hint or (f"Lesson {section}.", f"Lição {section}.")
+        e = {"id": id, "version": 1, "type": typ, "difficulty": diff, "drillable": False, "prompt": pen}
+    else:
+        e = {"id": id, "version": 1, "section": section, "type": typ, "difficulty": diff,
+             "drillable": True, "prompt": pen}
     p = {"prompt": ppt}
     if hint:
         e["hint"], p["hint"] = hint
@@ -143,6 +148,6 @@ if "-v" in sys.argv:
             k = [i for i, c in enumerate(e["choices"]) if c["correct"]][0]
             lens = [len(t) for t in texts]
             out.append("%s=%d/%s" % (lang, sorted(lens, reverse=True).index(lens[k]), lens))
-        print(e["id"], e["section"], *out)
+        print(e["id"], e.get("section", e.get("hint")), *out)
 print("types", dict(collections.Counter(e["type"] for e in EN)), "total", len(EN))
 print("positions", dict(collections.Counter([i for e in EN if e["type"] == "quiz" for i, c in enumerate(e["choices"]) if c["correct"]])))
