@@ -1,0 +1,406 @@
+{
+  "ex-ahqm9gsr": {
+    "prompt": "O mesmo pedido foi mandado duas vezes com o mesmo Idempotency-Key. O que a segunda resposta tinha que a primeira não tinha?",
+    "hint": "Olhe os cabeçalhos da segunda resposta.",
+    "choices": [
+      {
+        "text": "Um id de pedido novo, ord-1002",
+        "why": "As duas respostas traziam ord-1001; nenhum segundo pedido foi criado."
+      },
+      {
+        "text": "idempotent-replayed: true",
+        "why": "Certo. Ele marca a resposta como cópia da primeira."
+      },
+      {
+        "text": "Status 200 em vez de 201",
+        "why": "A repetição repete o primeiro status, 201."
+      },
+      {
+        "text": "Uma segunda cobrança do stub, ch-2",
+        "why": "O stub viu uma cobrança para a chave; o pagamento continuou ch-1."
+      }
+    ]
+  },
+  "ex-8ytbc8xy": {
+    "prompt": "Um cliente reaproveita a chave de um pedido de dois lugares para um pedido de três. Por que o boxoffice responde 422 em vez de repetir a primeira resposta?",
+    "hint": "O que a repetição diria ao cliente?",
+    "choices": [
+      {
+        "text": "Porque três lugares do sh-101 não estão disponíveis",
+        "why": "O sh-101 tinha lugares de sobra; a recusa é sobre a chave."
+      },
+      {
+        "text": "Porque as chaves só podem ser usadas uma vez e depois são apagadas",
+        "why": "A chave é mantida e repete a mesma requisição; só um corpo diferente é recusado."
+      },
+      {
+        "text": "Ela diria três lugares comprados, não dois",
+        "why": "Certo. Uma chave reaproveitada para outra intenção é defeito do cliente, e dizer isso é mais seguro."
+      },
+      {
+        "text": "Porque 422 é o status de qualquer requisição repetida",
+        "why": "A repetição idêntica recebeu 201 com idempotent-replayed."
+      }
+    ]
+  },
+  "ex-9mynbah2": {
+    "prompt": "Depois do pedido, da repetição dele e do pedido de três lugares recusado, quantas cobranças com a chave buy-7f3a o stub tinha?",
+    "hint": "Conte as linhas que o /__requests imprimiu."
+  },
+  "ex-1pk4y5jy": {
+    "prompt": "Ligue cada resposta ao que um cliente deve fazer com ela.",
+    "hint": "O primeiro dígito diz quem deve agir.",
+    "pairs": [
+      {
+        "left": "422",
+        "right": "corrigir a requisição; nunca repeti-la como está"
+      },
+      {
+        "left": "503",
+        "right": "repetir depois de um backoff"
+      },
+      {
+        "left": "429",
+        "right": "ir mais devagar, respeitando o Retry-After quando vier"
+      },
+      {
+        "left": "402",
+        "right": "perguntar ao usuário, que pode escolher outro cartão"
+      }
+    ],
+    "right_distractors": [
+      "repetir na hora, o mais rápido possível"
+    ]
+  },
+  "ex-wf4bn2b3": {
+    "prompt": "Por que o backoff espera um tempo aleatório até o teto em vez de exatamente o teto?",
+    "hint": "Pense em muitos clientes que falharam no mesmo momento.",
+    "choices": [
+      {
+        "text": "Para clientes que falharam juntos não voltarem juntos",
+        "why": "Certo. Isso é jitter: a segunda onda se espalha em vez de acertar o servidor de uma vez."
+      },
+      {
+        "text": "Para um teste conseguir prever as esperas exatamente",
+        "why": "A aleatoriedade torna as esperas mais difíceis de prever; o teste passa random: () => 1 por isso."
+      },
+      {
+        "text": "Porque o setTimeout não consegue esperar um número exato de milissegundos",
+        "why": "O setTimeout recebe um número; precisão não é o motivo do jitter."
+      },
+      {
+        "text": "Para a espera total nunca passar do primeiro teto",
+        "why": "O teto continua dobrando a cada tentativa, até o limite."
+      }
+    ]
+  },
+  "ex-bvhs4vjy": {
+    "prompt": "Por que os testes do withRetry rodam em milissegundos, sem servidor?",
+    "hint": "Olhe os parâmetros dele.",
+    "choices": [
+      {
+        "text": "O Node pula o setTimeout dentro do node:test",
+        "why": "O node:test roda timers como sempre; os testes trocam o sleep."
+      },
+      {
+        "text": "As esperas são curtas demais para notar",
+        "why": "Esperas reais de 100 a 500 ms somariam segundos."
+      },
+      {
+        "text": "O fetch nunca é chamado porque o auxiliar guarda respostas em cache",
+        "why": "O auxiliar não guarda nada; os testes passam um send falso."
+      },
+      {
+        "text": "send, sleep e random são parâmetros que os testes trocam",
+        "why": "Certo. Um send falso dá status, um sleep falso registra em vez de esperar."
+      }
+    ]
+  },
+  "ex-mveqdb5t": {
+    "prompt": "Um tempo de espera cujo teto dobra a cada tentativa se chama ___ exponencial.",
+    "hint": "O contrário de voltar correndo.",
+    "blanks": [
+      {
+        "accept": [
+          "backoff",
+          "back-off"
+        ]
+      }
+    ]
+  },
+  "ex-3qn560s3": {
+    "prompt": "Quais destas os testes do caminho do erro conferiram depois de uma cobrança recusada?",
+    "hint": "Três coisas: a resposta, o estado, a venda seguinte.",
+    "choices": [
+      {
+        "text": "O status, 402, e o corpo de problema",
+        "why": "Certo. A resposta que o cliente recebe."
+      },
+      {
+        "text": "Que o sh-103 ainda tinha os mesmos lugares",
+        "why": "Certo. O estado que fica para trás."
+      },
+      {
+        "text": "Que o pedido recusado foi apagado",
+        "why": "Ele foi mantido, com status declined; o teste não perguntou."
+      },
+      {
+        "text": "Que os quatro lugares podiam ser vendidos depois",
+        "why": "Certo. O último teste prova que nada ficou reservado."
+      }
+    ]
+  },
+  "ex-s0wrnabz": {
+    "prompt": "O GET /v1/orders/ord-1003 mostrou um pedido com status failed. Por que a seção chama isso de constatação e não só de detalhe?",
+    "hint": "O que o 502 disse ao cliente?",
+    "choices": [
+      {
+        "text": "Um pedido que falhou deveria ter segurado os lugares",
+        "why": "Liberá-los está certo; os lugares estavam livres."
+      },
+      {
+        "text": "O id dele nunca chegou ao cliente",
+        "why": "Certo. O 502 não trazia id, o que torna a conciliação impossível."
+      },
+      {
+        "text": "O boxoffice deveria responder 404 para qualquer pedido que falhou",
+        "why": "Esconder o registro também não ajudaria o cliente; a questão é o id que falta."
+      },
+      {
+        "text": "O pedido mostra que o cliente foi cobrado",
+        "why": "O provedor estava fora do ar; nada foi cobrado nesse caso."
+      }
+    ]
+  },
+  "ex-jsn2ddbj": {
+    "prompt": "Uma nova versão do boxoffice esquece de liberar os lugares quando o provedor responde 500, mas continua respondendo 502. Que teste do errors.test.mjs falha primeiro?",
+    "hint": "Que asserção olha os lugares logo depois do 502?",
+    "choices": [
+      {
+        "text": "O decline, porque roda primeiro",
+        "why": "O caminho da recusa ainda libera os lugares; as conferências dele valem."
+      },
+      {
+        "text": "Nenhum: o status continua certo, então todo teste passa",
+        "why": "Cada teste de erro também compara os lugares antes e depois."
+      },
+      {
+        "text": "Só o último, quando quatro lugares não podem ser vendidos",
+        "why": "Ele também falharia, mas o teste down falha antes, na conferência de lugares."
+      },
+      {
+        "text": "O down, na asserção de lugares restantes",
+        "why": "Certo. O status passa e a contagem de lugares não."
+      }
+    ]
+  },
+  "ex-5hesp2zt": {
+    "prompt": "Por que o teste de repetição da seção 02 passou, embora o boxoffice tenha a corrida?",
+    "hint": "Quando a segunda requisição dele começou?",
+    "choices": [
+      {
+        "text": "A segunda requisição começou depois de a primeira terminar",
+        "why": "Certo. A essa altura a chave estava lembrada; a corrida precisa das duas em andamento."
+      },
+      {
+        "text": "O stub dele era rápido demais para a corrida aparecer",
+        "why": "A velocidade do stub só define a janela; requisições sequenciais nunca entram nela."
+      },
+      {
+        "text": "Ele usava outro espetáculo que o teste da corrida",
+        "why": "O espetáculo não importa; a chave importa."
+      },
+      {
+        "text": "Ele tinha a opção todo, que esconde falhas",
+        "why": "Ele não tem todo; passou de verdade."
+      }
+    ]
+  },
+  "ex-bj6dkgsq": {
+    "prompt": "Por que a corrida fica pior em produção do que contra o stub local?",
+    "hint": "Qual é o tamanho da janela?",
+    "choices": [
+      {
+        "text": "A produção roda mais cópias do Node, cada uma com o próprio relógio",
+        "why": "Relógios não têm nada a ver; a janela é o tempo que a cobrança leva."
+      },
+      {
+        "text": "Um provedor de verdade demora mais, então a janela é maior",
+        "why": "Certo. A chave só é lembrada depois que a cobrança volta."
+      },
+      {
+        "text": "Celulares de verdade mandam três requisições num toque duplo",
+        "why": "Um toque duplo são duas requisições; a contagem não é o problema."
+      },
+      {
+        "text": "As chaves de idempotência expiram mais rápido em produção",
+        "why": "A expiração é sobre repetições posteriores, não sobre requisições no mesmo momento."
+      }
+    ]
+  },
+  "ex-7ryghqcw": {
+    "prompt": "Que correção a seção propõe para a corrida?",
+    "hint": "Quando a chave deveria ser registrada?",
+    "choices": [
+      {
+        "text": "Pedir aos clientes que esperem dois segundos antes de tocar de novo",
+        "why": "Isso joga o defeito em todo app e ainda perde para uma repetição."
+      },
+      {
+        "text": "Lembrar a chave depois da cobrança, só que mais rápido",
+        "why": "Qualquer intervalo entre conferir e lembrar é a janela."
+      },
+      {
+        "text": "Reservar a chave como em andamento quando ela é conferida",
+        "why": "Certo. Uma segunda requisição a encontra ocupada e espera ou recebe 409."
+      },
+      {
+        "text": "Abandonar o cabeçalho Idempotency-Key e confiar no provedor",
+        "why": "O provedor não sabe de pedidos nem de lugares; o boxoffice precisa cumprir a promessa."
+      }
+    ]
+  },
+  "ex-sa7nf8d3": {
+    "prompt": "O boxoffice respondeu 504 depois de uns dois segundos. O que isso diz sobre o pagamento?",
+    "hint": "Olhe o registro do stub depois.",
+    "choices": [
+      {
+        "text": "Falhou, então nada foi cobrado",
+        "why": "O stub tinha a cobrança e a aprovou um segundo depois."
+      },
+      {
+        "text": "Deu certo, já que o provedor sempre termina",
+        "why": "Um provedor também pode falhar depois de um timeout; o 504 não diz qual."
+      },
+      {
+        "text": "Nada: o resultado é desconhecido",
+        "why": "Certo. Um timeout é a ausência de uma resposta."
+      },
+      {
+        "text": "Que o provedor está fora do ar e respondeu 500",
+        "why": "Esse caso deu 502; este provedor estava lento, não fora do ar."
+      }
+    ]
+  },
+  "ex-k8ps2y5k": {
+    "prompt": "Por que o timeout.test.mjs confere que a requisição levou pelo menos 1,9 segundo?",
+    "hint": "O que significaria um 504 depois de 50 ms?",
+    "choices": [
+      {
+        "text": "Um 504 cedo demais revela um prazo falso",
+        "why": "Certo. O limite de baixo pega um prazo que dispara cedo."
+      },
+      {
+        "text": "Porque o node:test não consegue medir nada mais curto",
+        "why": "O performance.now() mede frações de milissegundo."
+      },
+      {
+        "text": "Para dar tempo ao stub de aprovar a cobrança",
+        "why": "A asserção mede, não espera; o stub leva três segundos de qualquer jeito."
+      },
+      {
+        "text": "Porque o timeout do próprio teste é 1,9 segundo",
+        "why": "O timeout do teste é cinco segundos."
+      }
+    ]
+  },
+  "ex-4sx6cvx5": {
+    "prompt": "Por que o teste de timeout leva a opção { timeout: 5000 }?",
+    "hint": "E se o boxoffice nunca respondesse?",
+    "choices": [
+      {
+        "text": "Para o boxoffice desistir depois de cinco segundos",
+        "why": "A opção pertence ao teste; o prazo do boxoffice são os dois segundos dele."
+      },
+      {
+        "text": "Para uma requisição pendurada reprovar o teste em vez de travar a suíte",
+        "why": "Certo. Um teste sem limite fica pendurado junto com o servidor."
+      },
+      {
+        "text": "Porque o node:test recusa testes de mais de dois segundos",
+        "why": "O Node não tem esse limite por padrão."
+      },
+      {
+        "text": "Para deixar o stub em cinco segundos",
+        "why": "O MODE=slow define o atraso do stub, três segundos."
+      }
+    ]
+  },
+  "ex-yjynw65c": {
+    "prompt": "Um app recebe 504 do boxoffice numa compra e mostra \"Pagamento falhou, tente de novo\". O que ele deveria fazer?",
+    "hint": "Um 504 não é uma falha.",
+    "choices": [
+      {
+        "text": "Repetir na hora com uma chave de idempotência nova, para não ser recusado",
+        "why": "Uma chave nova faz da repetição uma compra nova, que é como as pessoas pagam duas vezes."
+      },
+      {
+        "text": "Tratar como desconhecido: mesma chave, ou perguntar",
+        "why": "Certo. A cobrança pode ter passado."
+      },
+      {
+        "text": "Mostrar sucesso, porque a maioria das cobranças lentas é aprovada",
+        "why": "Adivinhar o resultado, para qualquer lado, engana o usuário."
+      },
+      {
+        "text": "Nunca repetir nada que tenha levado mais de dois segundos",
+        "why": "O 504 é uma das respostas que vale repetir, com segurança, com a mesma chave."
+      }
+    ]
+  },
+  "ex-dbzjvwb8": {
+    "prompt": "Ponha os eventos do caso do provedor lento na ordem em que aconteceram.",
+    "hint": "O boxoffice desiste antes de o stub terminar.",
+    "items": [
+      "o boxoffice segura os lugares e manda a cobrança",
+      "o stub registra a cobrança",
+      "depois de dois segundos o boxoffice desiste e marca o pedido como falho",
+      "o cliente recebe 504",
+      "o stub aprova a cobrança, sem ninguém escutando"
+    ]
+  },
+  "ex-wcpprnkp": {
+    "prompt": "Quais destas o withRetry pode envolver com segurança?",
+    "hint": "Repetir só é seguro onde refazer é seguro.",
+    "choices": [
+      {
+        "text": "GET /v1/shows/sh-103",
+        "why": "Certo. Um método seguro pode ser mandado de novo à vontade."
+      },
+      {
+        "text": "POST /v1/orders com o mesmo Idempotency-Key em toda tentativa",
+        "why": "Certo, fora a corrida: uma repetição só começa depois de a resposta anterior chegar."
+      },
+      {
+        "text": "POST /v1/orders sem Idempotency-Key",
+        "why": "Cada repetição depois de um 504 poderia criar outro pedido e outra cobrança."
+      },
+      {
+        "text": "POST /v1/orders com uma chave aleatória nova a cada tentativa",
+        "why": "Uma chave nova é uma intenção nova, então é o mesmo que não ter nenhuma."
+      }
+    ]
+  },
+  "ex-e2aeyc1m": {
+    "prompt": "O provedor fica mais lento, levando muitas vezes 1,5 segundo por cobrança. Que defeito desta lição fica mais frequente, e que teste o mostra?",
+    "hint": "Que janela depende da duração da cobrança?",
+    "choices": [
+      {
+        "text": "Repetições de 422, mostradas pelo retry.test.mjs",
+        "why": "Repetir 422 depende do código do cliente, não da velocidade do provedor."
+      },
+      {
+        "text": "Lugares segurados depois de uma recusa, mostrados pelo errors.test.mjs",
+        "why": "O caminho da recusa libera os lugares em qualquer velocidade."
+      },
+      {
+        "text": "Corpos de repetição errados, mostrados pelo idempotency.test.mjs",
+        "why": "Repetições sequenciais continuam certas qualquer que seja a velocidade do provedor."
+      },
+      {
+        "text": "A cobrança dupla, mostrada pelo race.test.mjs",
+        "why": "Certo. A janela entre conferir e lembrar a chave é a duração da cobrança."
+      }
+    ]
+  }
+}

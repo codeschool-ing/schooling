@@ -1,0 +1,405 @@
+{
+  "ex-0p0xvbnd": {
+    "prompt": "No relatório TAP da primeira execução, que linha diz a um pipeline para ficar vermelho?",
+    "hint": "Um pipeline nem lê o relatório.",
+    "choices": [
+      {
+        "text": "not ok 4",
+        "why": "Essa linha é para pessoas; um pipeline não a interpreta para decidir."
+      },
+      {
+        "text": "# fail 1",
+        "why": "O resumo diz o mesmo em palavras, e mesmo assim um pipeline não o lê."
+      },
+      {
+        "text": "Nenhuma: ele lê o código de saída, 1",
+        "why": "Certo. O echo $? imprimiu 1, e é isso que um passo de CI confere."
+      },
+      {
+        "text": "TAP version 13",
+        "why": "Isso só dá nome ao formato."
+      }
+    ]
+  },
+  "ex-tbm93wbk": {
+    "prompt": "Por que o teste de HEAD ganha a opção todo em vez de ser apagado?",
+    "hint": "O que acontece com o defeito, e com a execução?",
+    "choices": [
+      {
+        "text": "Um teste todo é pulado, então não custa nada",
+        "why": "Um teste todo continua rodando; o resultado é relatado e só a falha dele não conta."
+      },
+      {
+        "text": "A execução fica verde e o defeito fica no relatório",
+        "why": "Certo. Apagá-lo perderia o defeito; deixá-lo vermelho ensina a ignorar o vermelho."
+      },
+      {
+        "text": "O Node se recusa a rodar um teste que falhou duas vezes seguidas",
+        "why": "O Node não guarda histórico de execuções anteriores."
+      },
+      {
+        "text": "O boxoffice se corrige sozinho quando o defeito aparece no TAP",
+        "why": "Nada leva o arquivo TAP de volta ao boxoffice; uma pessoa precisa corrigir o código."
+      }
+    ]
+  },
+  "ex-ht3hjfvh": {
+    "prompt": "Um teste compara price_cents com o assert.equal de node:assert/strict, e o boxoffice manda \"6500\" como string. O que acontece?",
+    "hint": "Que comparação a variante estrita usa?",
+    "choices": [
+      {
+        "text": "Passa, porque os dois aparecem iguais",
+        "why": "Parecer igual é a comparação frouxa; a estrita usa ===."
+      },
+      {
+        "text": "Passa, porque o JSON só tem um tipo de número",
+        "why": "\"6500\" em JSON é uma string, não um número."
+      },
+      {
+        "text": "Lança um erro antes da comparação, ao ler o corpo",
+        "why": "O corpo é JSON válido; a leitura funciona."
+      },
+      {
+        "text": "Falha: '6500' não é 6500 com ===",
+        "why": "Certo. É por isso que a lição usa a variante estrita."
+      }
+    ]
+  },
+  "ex-v9v76gqp": {
+    "prompt": "Por que o payments.test.mjs lê o /__requests do stub depois de fazer um pedido?",
+    "hint": "O que o 201 do boxoffice não prova?",
+    "choices": [
+      {
+        "text": "Para pegar o id do pedido, que o boxoffice não devolve",
+        "why": "O boxoffice devolve o id no corpo; o teste o lê ali."
+      },
+      {
+        "text": "Para conferir o outro lado: uma cobrança, no valor certo",
+        "why": "Certo. Um 201 perfeito pode esconder uma cobrança faltando ou dobrada."
+      },
+      {
+        "text": "Para fazer o stub aprovar a próxima cobrança",
+        "why": "Ler o registro não muda nada; quem define o modo é o PUT /__mode."
+      },
+      {
+        "text": "Porque o boxoffice não consegue responder até o stub ser lido",
+        "why": "O boxoffice respondeu antes de o teste ler qualquer coisa."
+      }
+    ]
+  },
+  "ex-0q1mp4d2": {
+    "prompt": "Ligue cada hook do payments.test.mjs ao que ele faz.",
+    "hint": "Um roda antes de cada teste.",
+    "pairs": [
+      {
+        "left": "before",
+        "right": "pega um token para o arquivo inteiro"
+      },
+      {
+        "left": "beforeEach",
+        "right": "esvazia o registro do stub e o põe para aprovar"
+      },
+      {
+        "left": "after",
+        "right": "deixa o stub aprovando para quem vier depois"
+      }
+    ],
+    "right_distractors": [
+      "reinicia o boxoffice para o sh-102 encher de novo"
+    ]
+  },
+  "ex-k81t8jmh": {
+    "prompt": "Alguém remove o hook after do payments.test.mjs. Que falha passa a ser possível?",
+    "hint": "Em que modo o stub está quando o último teste termina?",
+    "choices": [
+      {
+        "text": "O segundo teste deste arquivo falha, porque o token expirou",
+        "why": "O token vive quinze minutos e o after não mexe nele."
+      },
+      {
+        "text": "O boxoffice guarda o pedido recusado e fica sem lugares",
+        "why": "Um pedido recusado não segura lugares."
+      },
+      {
+        "text": "O teste de outro arquivo encontra o stub ainda no modo decline",
+        "why": "Certo. O último teste põe decline, e só o after devolve approve."
+      },
+      {
+        "text": "Nenhuma, porque o beforeEach também roda depois do último teste",
+        "why": "O beforeEach roda antes de cada teste deste arquivo e nunca depois do último."
+      }
+    ]
+  },
+  "ex-j8f6d2s2": {
+    "prompt": "A primeira versão do seats.test.mjs passou, depois falhou numa segunda execução contra o mesmo boxoffice. Por quê?",
+    "hint": "Leia a falha, 0 !== 2.",
+    "choices": [
+      {
+        "text": "A primeira execução já tinha vendido dois dos quatro lugares",
+        "why": "Certo. O teste supôs ser a primeira coisa a acontecer ao sh-103."
+      },
+      {
+        "text": "O Node guarda resultados em cache e relata o guardado",
+        "why": "O Node roda todo teste de novo; o 0 veio do boxoffice."
+      },
+      {
+        "text": "O token da primeira execução tinha sido revogado",
+        "why": "A falha é sobre seats_left, não um 401."
+      },
+      {
+        "text": "Ele é instável, e uma terceira execução passaria se você tentasse de novo",
+        "why": "Uma terceira execução falharia do mesmo jeito, com 409 desta vez; nada nisso é aleatório."
+      }
+    ]
+  },
+  "ex-svecgsjb": {
+    "prompt": "Trocar os dois nomes de arquivo na linha de comando não mudou que teste falhou. Por que não?",
+    "hint": "Olhe a ordem de ok e not ok nas duas execuções.",
+    "choices": [
+      {
+        "text": "O --test-concurrency=1 roda os arquivos ao mesmo tempo",
+        "why": "Ele os roda um por vez, e é por isso que a ordem é fixa."
+      },
+      {
+        "text": "O boxoffice não foi reiniciado entre as execuções",
+        "why": "Ele foi reiniciado, e o mesmo teste falhou de novo."
+      },
+      {
+        "text": "O node ordena os arquivos, então seats roda primeiro de qualquer jeito",
+        "why": "Certo. A ordem é um acaso dos nomes."
+      },
+      {
+        "text": "O teste de esgotamento sempre falha, sozinho ou não",
+        "why": "Ele passou sozinho contra um boxoffice novo."
+      }
+    ]
+  },
+  "ex-6ms407zj": {
+    "prompt": "Por que a lição corrige os dois testes com um servidor por arquivo em vez de dados únicos por teste?",
+    "hint": "O que dados únicos significariam aqui?",
+    "choices": [
+      {
+        "text": "Dados únicos são mais lentos que iniciar um servidor",
+        "why": "Velocidade não é o motivo; o remédio simplesmente não está disponível."
+      },
+      {
+        "text": "O boxoffice não consegue criar um espetáculo do próprio teste",
+        "why": "Certo. Três espetáculos fixos não deixam nada único para criar."
+      },
+      {
+        "text": "Dados únicos precisariam de um banco de dados, e o boxoffice não tem",
+        "why": "Dados únicos precisam de um jeito de criar coisas; memória serviria se o boxoffice oferecesse."
+      },
+      {
+        "text": "O Node não consegue rodar dois testes que usam espetáculos diferentes",
+        "why": "O Node roda quantos testes forem sobre qualquer coisa."
+      }
+    ]
+  },
+  "ex-jft78ebe": {
+    "prompt": "Para rodar os arquivos de teste um por vez em vez de em paralelo, o node --test recebe a opção --test-___=1.",
+    "hint": "Ela conta quantos rodam ao mesmo tempo.",
+    "blanks": [
+      {
+        "accept": [
+          "concurrency"
+        ]
+      }
+    ]
+  },
+  "ex-g6ak9ptq": {
+    "prompt": "Por que um sleep fixo de um segundo antes de ler o relatório é uma correção ruim?",
+    "hint": "Dois problemas, nas duas pontas.",
+    "choices": [
+      {
+        "text": "O Node não tem como dormir dentro de um teste",
+        "why": "O setTimeout funciona num teste; o eventually o usa."
+      },
+      {
+        "text": "O relatório nunca se atualiza enquanto um teste dorme",
+        "why": "Ele se atualiza pelo próprio timer do boxoffice, com teste ou sem."
+      },
+      {
+        "text": "Lento em toda execução, e ainda curto numa máquina ocupada",
+        "why": "Certo. Um prazo com repetição evita os dois."
+      },
+      {
+        "text": "Um sleep faz o teste passar mesmo com o relatório errado",
+        "why": "A asserção depois do sleep continua conferindo os valores."
+      }
+    ]
+  },
+  "ex-a77xy5kw": {
+    "prompt": "Quando o eventually fica sem tempo, ele lança o último erro de asserção em vez de uma mensagem de \"tempo esgotado\". O que isso dá a quem lê?",
+    "hint": "Olhe a falha com REPORT_DELAY=5000.",
+    "choices": [
+      {
+        "text": "Que campos estavam errados, e o que tinham",
+        "why": "Certo. O diff mostrou zeros contra 1, 3 e 24000."
+      },
+      {
+        "text": "Uma falha mais rápida, já que o prazo é pulado",
+        "why": "O prazo é mantido; a duração passou de três segundos."
+      },
+      {
+        "text": "Uma aprovação, já que conta a última tentativa",
+        "why": "A última tentativa falhou, então o teste falhou."
+      },
+      {
+        "text": "O valor de REPORT_DELAY que o boxoffice usou",
+        "why": "Nada no erro cita o atraso; quem lê precisa saber."
+      }
+    ]
+  },
+  "ex-xz51hnzc": {
+    "prompt": "Logo depois do pedido de três lugares, quantos pedidos o relatório de vendas mostrou?",
+    "hint": "O relatório fica para trás."
+  },
+  "ex-m780ss52": {
+    "prompt": "Por que o run-integration.sh se recusa a começar quando algo já responde na porta 8080?",
+    "hint": "Quem responderia o health check?",
+    "choices": [
+      {
+        "text": "Dois servidores na mesma porta dividiriam as requisições entre eles",
+        "why": "Só um processo escuta numa porta; o segundo termina com EADDRINUSE."
+      },
+      {
+        "text": "Um servidor velho responderia enquanto o novo morria",
+        "why": "Certo. Os testes rodariam contra um servidor de história desconhecida."
+      },
+      {
+        "text": "O curl não alcança uma porta que outro programa abriu",
+        "why": "O curl alcançou; foi assim que a conferência a achou."
+      },
+      {
+        "text": "O trap mataria o servidor velho e perderia os dados dele",
+        "why": "O trap só mata os pids que o script iniciou."
+      }
+    ]
+  },
+  "ex-gah4kwx9": {
+    "prompt": "Ponha em ordem o que o run-integration.sh faz.",
+    "hint": "Dependências primeiro, e nada segue antes de uma resposta.",
+    "items": [
+      "conferir que as portas 8080 e 8090 estão livres",
+      "iniciar o stub de pagamentos",
+      "esperar o /__requests responder",
+      "iniciar o boxoffice com PAYMENTS_URL",
+      "esperar o /health responder",
+      "rodar o node --test em tests/*.test.mjs"
+    ]
+  },
+  "ex-bhdwcssk": {
+    "prompt": "Por que o script indica 'tests/*.test.mjs' em vez de rodar o node --test sem arquivo nenhum?",
+    "hint": "A lição 8 deixou um arquivo no projeto.",
+    "choices": [
+      {
+        "text": "Sem arquivo, o node --test se recusa a começar",
+        "why": "Sem arquivo, ele procura no diretório com os padrões dele."
+      },
+      {
+        "text": "O glob faz os arquivos rodarem um por vez",
+        "why": "Concorrência é outra opção; o glob só escolhe arquivos."
+      },
+      {
+        "text": "A busca padrão do Node pula o diretório tests",
+        "why": "Ela acharia tests/*.test.mjs; o problema é o que mais ela acha."
+      },
+      {
+        "text": "A busca padrão também pega o karate-config.js em src/test",
+        "why": "Certo. Qualquer .js debaixo de um diretório chamado test conta como teste."
+      }
+    ]
+  },
+  "ex-zy68wjc0": {
+    "prompt": "A suíte de um colega passa no notebook dele e falha no CI uma vez a cada quatro, sempre num teste que lê o seats_left do sh-103 no boxoffice compartilhado. O que você suspeita primeiro?",
+    "hint": "O que muda entre um notebook e um runner de CI, e quem mais mexe no sh-103?",
+    "choices": [
+      {
+        "text": "Um problema de rede no runner de CI, que vale repetir o job",
+        "why": "Um problema de rede atingiria todo teste, não um que lê lugares compartilhados."
+      },
+      {
+        "text": "Outro arquivo comprando lugares do sh-103 em paralelo",
+        "why": "Certo. Estado compartilhado mais arquivos em paralelo dão um resultado que depende do tempo."
+      },
+      {
+        "text": "Uma versão diferente do Node no CI, que conta lugares de outro jeito",
+        "why": "Quem conta os lugares é o boxoffice, o mesmo código nas duas máquinas."
+      },
+      {
+        "text": "O atraso do relatório, REPORT_DELAY",
+        "why": "O seats_left é calculado na hora a partir dos pedidos; só o relatório de vendas atrasa."
+      }
+    ]
+  },
+  "ex-c8bwres1": {
+    "prompt": "Quais destas fariam o report.test.mjs passar por sorte, ou falhar ao acaso, em vez de pelo que o boxoffice faz?",
+    "hint": "Pense de onde o relatório dele poderia receber pedidos, e em esperas fixas.",
+    "choices": [
+      {
+        "text": "Usar o boxoffice compartilhado na 8080 em vez do próprio na 8183",
+        "why": "Certo. Os pedidos de outros arquivos chegariam ao mesmo relatório e mudariam os totais."
+      },
+      {
+        "text": "Trocar o eventually por um sleep de 600 ms",
+        "why": "Certo. Num runner ocupado a reconstrução pode demorar mais, e o teste falha ao acaso."
+      },
+      {
+        "text": "Afirmar os três campos com deepEqual",
+        "why": "Valores exatos estão certos aqui, porque o teste é dono dos únicos pedidos."
+      },
+      {
+        "text": "Parar o boxoffice dele no after",
+        "why": "Pará-lo é o que mantém limpa a próxima execução."
+      }
+    ]
+  },
+  "ex-317h44a9": {
+    "prompt": "Ligue cada sintoma à causa que esta lição mostrou para ele.",
+    "hint": "Quatro seções, quatro causas.",
+    "pairs": [
+      {
+        "left": "um teste passa sozinho e falha na suíte",
+        "right": "dois testes dividem os lugares do sh-103"
+      },
+      {
+        "left": "o relatório mostra zeros logo depois de um pedido",
+        "right": "o relatório é refeito REPORT_DELAY depois"
+      },
+      {
+        "left": "curl: 7 na primeira requisição de um script",
+        "right": "o servidor ainda não estava escutando"
+      },
+      {
+        "left": "um teste de recusa é seguido de 402 inesperados em outro lugar",
+        "right": "o stub ficou no modo decline"
+      }
+    ],
+    "right_distractors": [
+      "o token expirou entre dois testes"
+    ]
+  },
+  "ex-ddhk06bd": {
+    "prompt": "O relatório de vendas vira um serviço separado alimentado por uma fila, e pode levar até dez segundos para alcançar. O que deve mudar no report.test.mjs?",
+    "hint": "A forma do teste está certa; um número não está.",
+    "choices": [
+      {
+        "text": "Trocar o eventually por um sleep de dez segundos",
+        "why": "Toda execução pagaria dez segundos, e um dia mais lento ainda falharia."
+      },
+      {
+        "text": "Tirar a asserção sobre o relatório, já que uma fila não é testável",
+        "why": "Isso transforma uma promessa real em algo que nenhum teste segura."
+      },
+      {
+        "text": "Aumentar o timeout do eventually para mais de dez segundos",
+        "why": "Certo. Ele continua retornando assim que o relatório concorda, então uma execução rápida continua rápida."
+      },
+      {
+        "text": "Baixar o intervalo de repetição para um milissegundo",
+        "why": "Perguntar mais vezes não faz o relatório chegar antes; o que está curto é o prazo."
+      }
+    ]
+  }
+}

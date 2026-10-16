@@ -1,0 +1,589 @@
+[
+  {
+    "id": "ex-0p0xvbnd",
+    "version": 1,
+    "section": "node-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the TAP report of the first run, which line tells a pipeline to go red?",
+    "hint": "A pipeline does not read the report at all.",
+    "choices": [
+      {
+        "text": "not ok 4",
+        "correct": false,
+        "why": "That line is for people; a pipeline does not parse it to decide."
+      },
+      {
+        "text": "# fail 1",
+        "correct": false,
+        "why": "The summary says the same thing in words, and a pipeline still does not read it."
+      },
+      {
+        "text": "None: it reads the exit code, 1",
+        "correct": true,
+        "why": "Right. echo $? printed 1, and that is what a CI step checks."
+      },
+      {
+        "text": "TAP version 13",
+        "correct": false,
+        "why": "That only names the format."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbm93wbk",
+    "version": 1,
+    "section": "node-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the HEAD test get the todo option instead of being deleted?",
+    "hint": "What happens to the defect, and to the run?",
+    "choices": [
+      {
+        "text": "A todo test is skipped, so it costs nothing",
+        "correct": false,
+        "why": "A todo test still runs; its result is reported and only its failure does not count."
+      },
+      {
+        "text": "The run stays green and the defect stays in the report",
+        "correct": true,
+        "why": "Right. Deleting it would lose the defect; leaving it red teaches people to ignore red."
+      },
+      {
+        "text": "Node refuses to run a test that has failed twice in a row",
+        "correct": false,
+        "why": "Node keeps no history of earlier runs."
+      },
+      {
+        "text": "boxoffice will fix itself once the defect is reported in TAP",
+        "correct": false,
+        "why": "Nothing reads the TAP file back into boxoffice; a person has to fix the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht3hjfvh",
+    "version": 1,
+    "section": "node-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test compares price_cents with assert.equal from node:assert/strict, and boxoffice sends \"6500\" as a string. What happens?",
+    "hint": "Which comparison does the strict variant use?",
+    "choices": [
+      {
+        "text": "It passes, because the two print the same",
+        "correct": false,
+        "why": "Looking the same is the loose comparison; strict uses ===."
+      },
+      {
+        "text": "It passes, because JSON has only one kind of number",
+        "correct": false,
+        "why": "\"6500\" in JSON is a string, not a number."
+      },
+      {
+        "text": "It throws before the comparison, while reading the body",
+        "correct": false,
+        "why": "The body is valid JSON; reading it works."
+      },
+      {
+        "text": "It fails: '6500' is not 6500 under ===",
+        "correct": true,
+        "why": "Right. That is why the lesson uses the strict variant."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9v76gqp",
+    "version": 1,
+    "section": "two-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does payments.test.mjs read the stub's /__requests after placing an order?",
+    "hint": "What does boxoffice's 201 not prove?",
+    "choices": [
+      {
+        "text": "To get the order's id, which boxoffice does not return",
+        "correct": false,
+        "why": "boxoffice returns the id in the body; the test reads it there."
+      },
+      {
+        "text": "To check the other side: one charge, for the right amount",
+        "correct": true,
+        "why": "Right. A perfect 201 can hide a missing or doubled charge."
+      },
+      {
+        "text": "To make the stub approve the next charge",
+        "correct": false,
+        "why": "Reading the record changes nothing; PUT /__mode sets the mode."
+      },
+      {
+        "text": "Because boxoffice cannot answer until the stub is read",
+        "correct": false,
+        "why": "boxoffice answered before the test read anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q1mp4d2",
+    "version": 1,
+    "section": "two-services",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each hook in payments.test.mjs to what it does.",
+    "hint": "One runs before every test.",
+    "pairs": [
+      {
+        "left": "before",
+        "right": "gets one token for the whole file"
+      },
+      {
+        "left": "beforeEach",
+        "right": "empties the stub's record and sets it to approve"
+      },
+      {
+        "left": "after",
+        "right": "leaves the stub approving for whoever comes next"
+      }
+    ],
+    "right_distractors": [
+      "restarts boxoffice so sh-102 is full again"
+    ]
+  },
+  {
+    "id": "ex-k81t8jmh",
+    "version": 1,
+    "section": "two-services",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone removes the after hook from payments.test.mjs. Which failure becomes possible?",
+    "hint": "What mode is the stub in when the last test finishes?",
+    "choices": [
+      {
+        "text": "The second test of this file fails, because the token expired",
+        "correct": false,
+        "why": "The token lives fifteen minutes and is not touched by after."
+      },
+      {
+        "text": "boxoffice keeps the declined order and runs out of seats",
+        "correct": false,
+        "why": "A declined order holds no seats."
+      },
+      {
+        "text": "Another file's test meets a stub still in decline mode",
+        "correct": true,
+        "why": "Right. The last test sets decline, and only after puts approve back."
+      },
+      {
+        "text": "None, because beforeEach runs after the last test as well",
+        "correct": false,
+        "why": "beforeEach runs before each test of this file and never after the last."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8f6d2s2",
+    "version": 1,
+    "section": "order-dependence",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first version of seats.test.mjs passed, then failed on a second run against the same boxoffice. Why?",
+    "hint": "Read the failure, 0 !== 2.",
+    "choices": [
+      {
+        "text": "The first run had already sold two of the four seats",
+        "correct": true,
+        "why": "Right. The test assumed it was the first thing to happen to sh-103."
+      },
+      {
+        "text": "Node caches results and reports the cached one",
+        "correct": false,
+        "why": "Node reruns every test; the 0 came from boxoffice."
+      },
+      {
+        "text": "The token from the first run had been revoked",
+        "correct": false,
+        "why": "The failure is about seats_left, not a 401."
+      },
+      {
+        "text": "It is flaky, and a third run would pass if you simply tried again",
+        "correct": false,
+        "why": "A third run would fail the same way, with 409 this time; nothing about it is random."
+      }
+    ]
+  },
+  {
+    "id": "ex-svecgsjb",
+    "version": 1,
+    "section": "order-dependence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Swapping the two file names on the command line did not change which test failed. Why not?",
+    "hint": "Look at the order of ok and not ok in both runs.",
+    "choices": [
+      {
+        "text": "--test-concurrency=1 runs the files at the same time",
+        "correct": false,
+        "why": "It runs them one at a time, which is why the order is fixed."
+      },
+      {
+        "text": "boxoffice was not restarted between the runs",
+        "correct": false,
+        "why": "It was restarted, and the same test still failed."
+      },
+      {
+        "text": "node sorts the files, so seats runs first either way",
+        "correct": true,
+        "why": "Right. The order is an accident of the names."
+      },
+      {
+        "text": "The sellout test always fails, alone or not",
+        "correct": false,
+        "why": "It passed alone against a fresh boxoffice."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ms407zj",
+    "version": 1,
+    "section": "order-dependence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson fix the two tests with a server per file instead of unique data per test?",
+    "hint": "What would unique data mean here?",
+    "choices": [
+      {
+        "text": "Unique data is slower than starting a server",
+        "correct": false,
+        "why": "Speed is not the reason; the remedy is simply not available."
+      },
+      {
+        "text": "boxoffice cannot create a show of the test's own",
+        "correct": true,
+        "why": "Right. Three fixed shows leave nothing unique to create."
+      },
+      {
+        "text": "Unique data would need a database, and boxoffice has none",
+        "correct": false,
+        "why": "Unique data needs a way to create things; memory would do if boxoffice offered it."
+      },
+      {
+        "text": "Node cannot run two tests that use different shows",
+        "correct": false,
+        "why": "Node runs any number of tests on anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-jft78ebe",
+    "version": 1,
+    "section": "order-dependence",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To run test files one at a time instead of in parallel, node --test takes the option --test-___=1.",
+    "hint": "It counts how many run at once.",
+    "blanks": [
+      {
+        "accept": [
+          "concurrency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g6ak9ptq",
+    "version": 1,
+    "section": "eventually",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a fixed one-second sleep before reading the report a poor fix?",
+    "hint": "Two problems, at both ends.",
+    "choices": [
+      {
+        "text": "Node has no way to sleep inside a test",
+        "correct": false,
+        "why": "setTimeout works in a test; eventually uses it."
+      },
+      {
+        "text": "The report never updates while a test is sleeping",
+        "correct": false,
+        "why": "It updates on boxoffice's own timer, test or no test."
+      },
+      {
+        "text": "Slow on every run, and still too short on a busy machine",
+        "correct": true,
+        "why": "Right. A deadline with polling avoids both."
+      },
+      {
+        "text": "A sleep makes the test pass even when the report is wrong",
+        "correct": false,
+        "why": "The assertion after the sleep still checks the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-a77xy5kw",
+    "version": 1,
+    "section": "eventually",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When eventually runs out of time, it throws the last assertion error rather than a \"timed out\" message. What does that give the reader?",
+    "hint": "Look at the failure with REPORT_DELAY=5000.",
+    "choices": [
+      {
+        "text": "Which fields were wrong, and what they held",
+        "correct": true,
+        "why": "Right. The diff showed zeros against 1, 3 and 24000."
+      },
+      {
+        "text": "A faster failure, since the deadline is skipped",
+        "correct": false,
+        "why": "The deadline is kept; the duration was over three seconds."
+      },
+      {
+        "text": "A pass, since the last attempt is the one counted",
+        "correct": false,
+        "why": "The last attempt failed, so the test failed."
+      },
+      {
+        "text": "The value of REPORT_DELAY that boxoffice used",
+        "correct": false,
+        "why": "Nothing in the error names the delay; the reader has to know it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xz51hnzc",
+    "version": 1,
+    "section": "eventually",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after the order of three seats, how many orders did the sales report show?",
+    "hint": "The report lags behind.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m780ss52",
+    "version": 1,
+    "section": "in-the-pipeline-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does run-integration.sh refuse to start when something already answers on port 8080?",
+    "hint": "Who would answer the health check?",
+    "choices": [
+      {
+        "text": "Two servers on one port would split the requests between them",
+        "correct": false,
+        "why": "Only one process can listen on a port; the second exits with EADDRINUSE."
+      },
+      {
+        "text": "An old server would answer while the new one died",
+        "correct": true,
+        "why": "Right. The tests would then run against a server with an unknown history."
+      },
+      {
+        "text": "curl cannot reach a port another program opened",
+        "correct": false,
+        "why": "curl reached it; that is how the check found it."
+      },
+      {
+        "text": "The trap would kill the old server and lose its data",
+        "correct": false,
+        "why": "trap kills only the pids the script started."
+      }
+    ]
+  },
+  {
+    "id": "ex-gah4kwx9",
+    "version": 1,
+    "section": "in-the-pipeline-order",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what run-integration.sh does in order.",
+    "hint": "Dependencies first, and nothing goes on before an answer.",
+    "items": [
+      "check that ports 8080 and 8090 are free",
+      "start the payments stub",
+      "wait until /__requests answers",
+      "start boxoffice with PAYMENTS_URL",
+      "wait until /health answers",
+      "run node --test on tests/*.test.mjs"
+    ]
+  },
+  {
+    "id": "ex-bhdwcssk",
+    "version": 1,
+    "section": "in-the-pipeline-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the script name 'tests/*.test.mjs' instead of running node --test with no file at all?",
+    "hint": "Lesson 8 left a file in the project.",
+    "choices": [
+      {
+        "text": "Without a file, node --test refuses to start",
+        "correct": false,
+        "why": "With no file it searches the directory with its default patterns."
+      },
+      {
+        "text": "The glob makes the files run one at a time",
+        "correct": false,
+        "why": "Concurrency is a separate option; the glob only chooses files."
+      },
+      {
+        "text": "Node's default search skips the tests directory",
+        "correct": false,
+        "why": "It would find tests/*.test.mjs; the trouble is what else it finds."
+      },
+      {
+        "text": "The default search also takes karate-config.js under src/test",
+        "correct": true,
+        "why": "Right. Any .js under a directory named test counts as a test file."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy68wjc0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's suite passes on their laptop and fails on CI one run in four, always in a test that reads seats_left of sh-103 from the shared boxoffice. What do you suspect first?",
+    "hint": "What differs between a laptop and a CI runner, and who else touches sh-103?",
+    "choices": [
+      {
+        "text": "A network problem on the CI runner, worth retrying the job",
+        "correct": false,
+        "why": "A network problem would hit every test, not one that reads shared seats."
+      },
+      {
+        "text": "Another file buying sh-103 seats in parallel",
+        "correct": true,
+        "why": "Right. Shared state plus parallel files gives a result that depends on timing."
+      },
+      {
+        "text": "A different Node version on CI that counts seats differently",
+        "correct": false,
+        "why": "Seats are counted by boxoffice, the same code on both machines."
+      },
+      {
+        "text": "The report lag of REPORT_DELAY",
+        "correct": false,
+        "why": "seats_left is computed at once from the orders; only the sales report lags."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8bwres1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would make report.test.mjs pass by luck, or fail at random, rather than by what boxoffice does?",
+    "hint": "Think of where its report could get orders from, and of fixed waits.",
+    "choices": [
+      {
+        "text": "Using the shared boxoffice on 8080 instead of its own on 8183",
+        "correct": true,
+        "why": "Right. Other files' orders would reach the same report and change the totals."
+      },
+      {
+        "text": "Replacing eventually with a sleep of 600 ms",
+        "correct": true,
+        "why": "Right. On a busy runner the rebuild can take longer, and the test fails at random."
+      },
+      {
+        "text": "Asserting all three fields with deepEqual",
+        "correct": false,
+        "why": "Exact values are right here, because the test owns the only orders."
+      },
+      {
+        "text": "Stopping its boxoffice in after",
+        "correct": false,
+        "why": "Stopping it is what keeps the next run clean."
+      }
+    ]
+  },
+  {
+    "id": "ex-317h44a9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to the cause this lesson showed for it.",
+    "hint": "Four sections, four causes.",
+    "pairs": [
+      {
+        "left": "a test passes alone and fails in the suite",
+        "right": "two tests share sh-103's seats"
+      },
+      {
+        "left": "the report shows zeros right after an order",
+        "right": "the report is rebuilt REPORT_DELAY later"
+      },
+      {
+        "left": "curl: 7 on the first request of a script",
+        "right": "the server was not listening yet"
+      },
+      {
+        "left": "a decline test is followed by unexpected 402s elsewhere",
+        "right": "the stub was left in decline mode"
+      }
+    ],
+    "right_distractors": [
+      "the token expired between two tests"
+    ]
+  },
+  {
+    "id": "ex-ddhk06bd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sales report becomes a separate service fed by a queue, and it may take up to ten seconds to catch up. What should change in report.test.mjs?",
+    "hint": "The shape of the test is right; one number is not.",
+    "choices": [
+      {
+        "text": "Replace eventually with a sleep of ten seconds",
+        "correct": false,
+        "why": "Every run would pay ten seconds, and a slower day would still fail."
+      },
+      {
+        "text": "Drop the assertion on the report, since a queue is not testable",
+        "correct": false,
+        "why": "That turns a real promise into something no test holds."
+      },
+      {
+        "text": "Raise eventually's timeout above ten seconds",
+        "correct": true,
+        "why": "Right. It still returns as soon as the report agrees, so a fast run stays fast."
+      },
+      {
+        "text": "Lower the polling interval to one millisecond",
+        "correct": false,
+        "why": "Asking more often does not make the report arrive sooner; the deadline is what is too short."
+      }
+    ]
+  }
+]
