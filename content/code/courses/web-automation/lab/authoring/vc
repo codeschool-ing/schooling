@@ -2,6 +2,8 @@
 # validate-content with course.json's lessons cut to those already written
 cd /home/user/schooling
 exec 8>/tmp/lab/vc.lock; flock 8
+# and the lab lock: stage reads course.json, which this cuts while it runs
+exec 9>/tmp/web-automation-lab.lock; flock 9
 C=content/code/courses/web-automation/course.json
 cp $C /tmp/lab/course.json.bak
 python3 - "$C" <<'PY'
