@@ -1,0 +1,420 @@
+{
+  "ex-kre14ykp": {
+    "prompt": "Por que a lição instala o openjdk-21-jdk-headless em vez de um pacote só com o ambiente de execução do Java?",
+    "hint": "O que precisa acontecer com um teste antes de ele rodar?",
+    "choices": [
+      {
+        "text": "Só o ambiente de execução não abre as conexões de rede que um teste faz",
+        "why": "Um ambiente de execução abre conexões como qualquer programa; os clientes do boxoffice fazem isso o tempo todo."
+      },
+      {
+        "text": "Só o JDK tem o compilador de que os testes precisam",
+        "why": "Certo. O ambiente de execução só roda programas prontos; o Maven precisa do javac para montar os testes."
+      },
+      {
+        "text": "headless faz os testes rodarem mais rápido",
+        "why": "headless só deixa de fora as bibliotecas de janelas; não muda nada na velocidade."
+      },
+      {
+        "text": "O Maven se recusa a instalar sem ele",
+        "why": "O apt instala o Maven com qualquer Java; a questão é do que os testes precisam."
+      }
+    ]
+  },
+  "ex-we3kchsv": {
+    "prompt": "Ligue cada peça do Maven ao que ela faz.",
+    "hint": "A seção 02 lista três trabalhos.",
+    "pairs": [
+      {
+        "left": "Maven Central",
+        "right": "o repositório público de onde as bibliotecas são baixadas"
+      },
+      {
+        "left": "~/.m2/repository",
+        "right": "onde as bibliotecas baixadas ficam guardadas para o próximo projeto"
+      },
+      {
+        "left": "o plugin Surefire",
+        "right": "roda os testes compilados"
+      },
+      {
+        "left": "src/test/java",
+        "right": "onde o código de teste é esperado"
+      }
+    ],
+    "right_distractors": [
+      "manda as requisições ao boxoffice"
+    ]
+  },
+  "ex-8b71nwtd": {
+    "prompt": "Um colega salva o primeiro teste como uma classe chamada HealthCheck, no diretório certo. O mvn test imprime BUILD SUCCESS. O que aconteceu com o teste dele?",
+    "hint": "Que classes o Surefire procura?",
+    "choices": [
+      {
+        "text": "Rodou e passou, como o HealthTest",
+        "why": "O Surefire escolhe classes pelo nome, e HealthCheck não casa com nenhum dos padrões."
+      },
+      {
+        "text": "Não compilou, e o Maven escondeu o erro",
+        "why": "Compila normalmente; o Maven mostra erros de compilação, como na seção 07."
+      },
+      {
+        "text": "Compilou e nunca rodou",
+        "why": "Certo. O nome não termina em Test, então o Surefire nunca olhou para ele, e não disse nada."
+      },
+      {
+        "text": "Rodou com outro nome escolhido pelo JUnit",
+        "why": "O JUnit roda o que o Surefire lhe entrega; nada renomeia uma classe."
+      }
+    ]
+  },
+  "ex-y9ft0h61": {
+    "prompt": "O que diz o <scope>test</scope> nas duas dependências?",
+    "hint": "Quem usa o REST Assured e o JUnit?",
+    "choices": [
+      {
+        "text": "Elas são baixadas de novo a cada execução",
+        "why": "Elas são baixadas uma vez e guardadas em ~/.m2; o escopo trata de quem as usa."
+      },
+      {
+        "text": "Elas existem só para os testes",
+        "why": "Certo, e neste projeto os testes são tudo o que há."
+      },
+      {
+        "text": "As versões delas podem mudar de uma execução para outra",
+        "why": "As versões estão escritas por inteiro justamente para não mudarem."
+      },
+      {
+        "text": "São versões de avaliação que um teste pode usar de graça",
+        "why": "As duas são bibliotecas livres; o escopo não diz nada sobre licenças."
+      }
+    ]
+  },
+  "ex-gwkvdjyg": {
+    "prompt": "O primeiro mvn test numa máquina nova enche a tela de linhas \"Downloading from central\"; as bibliotecas ficam depois guardadas em ~/.___/repository.",
+    "hint": "Um diretório oculto na sua pasta pessoal, com nome do Maven.",
+    "blanks": [
+      {
+        "accept": [
+          "m2"
+        ]
+      }
+    ]
+  },
+  "ex-esh2r4m5": {
+    "prompt": "Ligue cada parte de um teste do REST Assured ao que ela contém.",
+    "hint": "A figura da seção 04.",
+    "pairs": [
+      {
+        "left": "given()",
+        "right": "o endereço, os parâmetros, os cabeçalhos e o corpo"
+      },
+      {
+        "left": "when()",
+        "right": "o método e o caminho, e o envio"
+      },
+      {
+        "left": "then()",
+        "right": "as verificações sobre a resposta"
+      }
+    ],
+    "right_distractors": [
+      "a requisição de token, rodada uma vez por classe"
+    ]
+  },
+  "ex-kx3rke0f": {
+    "prompt": "Um filtro de data devolve por engano o sh-101 junto com o sh-103. Que verificação pega isso?",
+    "hint": "Uma das duas só pede \"pelo menos\".",
+    "choices": [
+      {
+        "text": "body(\"shows.id\", hasItems(\"sh-103\"))",
+        "why": "hasItems aceita qualquer lista que tenha sh-103, então o espetáculo a mais passa."
+      },
+      {
+        "text": "body(\"shows.id\", contains(\"sh-103\"))",
+        "why": "Certo. contains quer dizer exatamente esta lista, em ordem, e mais nada."
+      },
+      {
+        "text": "statusCode(200)",
+        "why": "A lista errada também vem com um 200."
+      },
+      {
+        "text": "body(\"shows.price_cents\", everyItem(greaterThan(0)))",
+        "why": "O sh-101 custa 8000 centavos, então todo preço continua acima de zero."
+      }
+    ]
+  },
+  "ex-8egcbmgf": {
+    "prompt": "Por que o ShowsTest nunca confere o seats_left do sh-101?",
+    "hint": "O que mais no projeto mexe nesse espetáculo?",
+    "choices": [
+      {
+        "text": "Porque o boxoffice não manda seats_left na lista",
+        "why": "Manda; a lista da lição 1 mostra seats_left para todo espetáculo."
+      },
+      {
+        "text": "Porque o GPath não consegue ler um número dentro de uma lista",
+        "why": "O GPath lê shows.price_cents na mesma classe."
+      },
+      {
+        "text": "Porque 120 é um número grande demais para um int",
+        "why": "Um int guarda números na casa dos bilhões."
+      },
+      {
+        "text": "Porque outros testes compram os lugares dele",
+        "why": "Certo. Afirmar o que outro teste muda amarra o resultado à ordem."
+      }
+    ]
+  },
+  "ex-xcx5qr1z": {
+    "prompt": "Depois de trocar hasSize(3) por hasSize(4), para que linha do ShowsTest.java a falha apontou?",
+    "hint": "Procure ShowsTest.theListHasThreeShows seguido de dois-pontos."
+  },
+  "ex-8e4z77wt": {
+    "prompt": "No askForAToken, o statusCode(200) vem antes do extract(). O que daria errado se ele fosse omitido e o segredo do cliente estivesse digitado errado?",
+    "hint": "O que é access_token numa resposta 401?",
+    "choices": [
+      {
+        "text": "Nada: o próprio extract() falha com qualquer status diferente de 200",
+        "why": "O extract() pega o que estiver lá; não confere nada."
+      },
+      {
+        "text": "token seria null e todo teste falharia com uma mensagem sobre pedidos",
+        "why": "Certo. A falha apontaria para longe da causa; a verificação faz a falha dizer a causa."
+      },
+      {
+        "text": "Os testes passariam, porque o boxoffice aceita um token null",
+        "why": "O boxoffice responde 401 a uma requisição sem um bearer token válido."
+      },
+      {
+        "text": "O Maven se recusaria a compilar a classe",
+        "why": "O compilador não sabe nada de códigos de status; compilaria."
+      }
+    ]
+  },
+  "ex-x0xwnzew": {
+    "prompt": "Ponha as requisições do fluxo do OrdersTest na ordem em que uma execução as manda para o anOrderCanBeReadBack.",
+    "hint": "O token é pedido antes de qualquer teste da classe.",
+    "items": [
+      "POST /oauth/token com os campos de formulário do cliente",
+      "extrair access_token da resposta",
+      "POST /v1/orders com o token e um corpo JSON",
+      "extrair o cabeçalho location do 201",
+      "GET naquele location com o token"
+    ]
+  },
+  "ex-asyajrsw": {
+    "prompt": "O sh-101 começa com 120 lugares e cada execução do OrdersTest compra 2. Quantas execuções seguidas dão certo antes de o pedido ser recusado com 409, sem reiniciar o boxoffice?",
+    "hint": "A seção diz qual é a primeira execução recusada."
+  },
+  "ex-1bymddcj": {
+    "prompt": "O que o -Dboxoffice.url=http://localhost:8081 muda quando os testes de pedido rodam?",
+    "hint": "De onde o BASE é lido?",
+    "choices": [
+      {
+        "text": "Inicia um segundo boxoffice na porta 8081",
+        "why": "O Maven não inicia servidor nenhum; o segundo boxoffice foi iniciado à mão num terceiro terminal."
+      },
+      {
+        "text": "Reescreve o Api.java com o endereço novo",
+        "why": "Nenhum arquivo muda; o valor chega como propriedade de sistema enquanto os testes rodam."
+      },
+      {
+        "text": "O endereço nas especificações, lido pelo System.getProperty",
+        "why": "Certo. Sem ele, vale o padrão http://localhost:8080."
+      },
+      {
+        "text": "Toda classe de teste do projeto, o ShowsTest inclusive, vai para a 8081",
+        "why": "O ShowsTest e o HealthTest ainda escrevem o próprio endereço e ignoram a propriedade."
+      }
+    ]
+  },
+  "ex-b6f9yzf3": {
+    "prompt": "Quais destes a especificação devolvida por Api.as(\"ci-tests\", \"ci-secret\") carrega?",
+    "hint": "Leia o RequestSpecBuilder no fim do método.",
+    "choices": [
+      {
+        "text": "O endereço do boxoffice",
+        "why": "Certo, por meio do addRequestSpecification(ANYONE)."
+      },
+      {
+        "text": "Um bearer token do ci-tests",
+        "why": "Certo: setAuth(oauth2(token))."
+      },
+      {
+        "text": "O tipo de conteúdo JSON",
+        "why": "Certo: setContentType(ContentType.JSON)."
+      },
+      {
+        "text": "O código de status esperado 201",
+        "why": "Uma especificação de requisição descreve requisições; verificações de resposta são o que o PROBLEM, uma especificação de resposta, guarda."
+      }
+    ]
+  },
+  "ex-0r88crd9": {
+    "prompt": "O noTokenIs401AndSaysWhy não manda mais corpo e ainda recebe 401. O que isso mostra sobre o boxoffice?",
+    "hint": "Que pergunta o boxoffice faz primeiro?",
+    "choices": [
+      {
+        "text": "Que ele ignora o corpo de todo POST, seja qual for o token",
+        "why": "Ele lê o corpo quando o token é válido; um show_id ausente dá 422."
+      },
+      {
+        "text": "Que ele confere quem pergunta antes de ler o que foi mandado",
+        "why": "Certo. Um servidor que lesse primeiro um corpo anônimo trabalharia, e poderia vazar detalhes, para ninguém."
+      },
+      {
+        "text": "Que um corpo ausente conta como token ausente",
+        "why": "O cabeçalho www-authenticate diz \"no bearer token\", que trata do cabeçalho."
+      },
+      {
+        "text": "Que a especificação de resposta PROBLEM acrescentou o 401 sozinha",
+        "why": "Uma especificação de resposta só confere; o 401 é o que o boxoffice mandou."
+      }
+    ]
+  },
+  "ex-6fggt2nx": {
+    "prompt": "Sem o bloco do Surefire, o mvn test imprimiu Tests run: 0 e BUILD SUCCESS, com o HeadTest ainda no projeto. Por que ele não falhou?",
+    "hint": "Qual Surefire rodou?",
+    "choices": [
+      {
+        "text": "O Surefire padrão do Maven é anterior ao JUnit Jupiter e não achou teste para rodar",
+        "why": "Certo. Zero testes rodaram, então zero falharam, e o build ficou verde."
+      },
+      {
+        "text": "O boxoffice estava parado, então os testes foram pulados",
+        "why": "O boxoffice estava rodando; um servidor parado dá errors, não testes pulados."
+      },
+      {
+        "text": "O -q esconde falhas",
+        "why": "O -q esconde o progresso; uma falha é impressa inteira, como a seção 07 mostra."
+      },
+      {
+        "text": "O compilador pulou as classes de teste",
+        "why": "Os testes compilaram; a falha de compilação só veio quando o bloco do compilador também saiu."
+      }
+    ]
+  },
+  "ex-9aa2tajr": {
+    "prompt": "O pipeline tem de barrar um merge quando o HeadTest falha. O que ele lê do mvn test?",
+    "hint": "O último comando da primeira execução da seção 07.",
+    "choices": [
+      {
+        "text": "A palavra FAILURE na saída",
+        "why": "Texto muda com versões e idiomas; um pipeline lê algo mais estável."
+      },
+      {
+        "text": "A cor da saída",
+        "why": "A cor some quando a saída não é um terminal, e um log de CI pode não ter nenhuma."
+      },
+      {
+        "text": "O código de saída, 1",
+        "why": "Certo, como com o Newman na lição 6."
+      },
+      {
+        "text": "O relatório .txt de cada classe",
+        "why": "Esses são para pessoas; a lista de testes de um servidor de CI vem do XML, e o bloqueio vem do código de saída."
+      }
+    ]
+  },
+  "ex-6as1qcwd": {
+    "prompt": "Ligue cada coisa da execução que falhou ao que ela diz.",
+    "hint": "A seção 07 a lê em quatro blocos.",
+    "pairs": [
+      {
+        "left": "Request method: HEAD",
+        "right": "o que foi mandado, registrado porque uma verificação falhou"
+      },
+      {
+        "left": "Expected status code <200> but was <405>",
+        "right": "qual verificação falhou e o que voltou"
+      },
+      {
+        "left": "HeadTest.java:19",
+        "right": "a linha do seu próprio código para abrir"
+      },
+      {
+        "left": "Tests run: 11, Failures: 1",
+        "right": "quantos testes rodaram, e quantos falharam"
+      }
+    ],
+    "right_distractors": [
+      "quanto tempo o boxoffice levou para iniciar"
+    ]
+  },
+  "ex-egf56eh2": {
+    "prompt": "Um pipeline roda mvn -q test -Dboxoffice.url=https://staging.example contra um servidor de homologação. O ShowsTest passa ali embora a lista da homologação esteja quebrada. Qual o motivo mais provável?",
+    "hint": "Que classes leem a propriedade?",
+    "choices": [
+      {
+        "text": "O -q escondeu as falhas do ShowsTest",
+        "why": "O -q nunca esconde uma falha; esconde o progresso."
+      },
+      {
+        "text": "O ShowsTest ainda consulta o localhost:8080",
+        "why": "Certo. Só as classes montadas sobre o Api.BASE seguem a propriedade; o ShowsTest testou o que respondia na máquina do build."
+      },
+      {
+        "text": "A homologação responde em HTTPS, que o REST Assured não confere",
+        "why": "O REST Assured fala HTTPS; o problema é para onde as requisições foram."
+      },
+      {
+        "text": "O Surefire rodou o ShowsTest antes de a propriedade ser lida",
+        "why": "A propriedade está lá desde o início da JVM de testes; a ordem não é o problema."
+      }
+    ]
+  },
+  "ex-m772e87j": {
+    "prompt": "Você quer um teste de que um pedido cancelado não pode ser lido como confirmado. Que fluxo está certo?",
+    "hint": "O teste precisa criar o que confere.",
+    "choices": [
+      {
+        "text": "GET /v1/orders/ord-1001 e esperar status cancelled",
+        "why": "O ord-1001 pode não existir, pode ser de outra execução, e nada o cancelou."
+      },
+      {
+        "text": "DELETE no location que o anOrderCanBeReadBack criou, a partir de outro teste",
+        "why": "Isso amarra o teste novo ao estado e à ordem de outro teste, que o JUnit não promete."
+      },
+      {
+        "text": "POST num pedido, DELETE no location (204), depois GET: cancelled",
+        "why": "Certo. O teste faz o próprio pedido, então não depende de mais nada."
+      },
+      {
+        "text": "DELETE em /v1/orders e esperar todos os pedidos cancelados",
+        "why": "O boxoffice só aceita POST em /v1/orders; DELETE ali é 405."
+      }
+    ]
+  },
+  "ex-mk2q380a": {
+    "prompt": "Um colega muda o HeadTest para esperar 405 \"para o build ficar verde\". O que há de errado nisso?",
+    "hint": "Para que serve um teste?",
+    "choices": [
+      {
+        "text": "Nada, desde que o comentário no topo seja atualizado",
+        "why": "O comentário passaria a descrever o defeito como o comportamento esperado."
+      },
+      {
+        "text": "405 não é um status que o REST Assured consegue conferir",
+        "why": "O statusCode aceita qualquer número; 405 é verificável."
+      },
+      {
+        "text": "O teste então falharia ao rodar com -q",
+        "why": "O -q muda a impressão, não o veredito."
+      },
+      {
+        "text": "O teste afirmaria o defeito, e falharia no dia em que o servidor fosse corrigido",
+        "why": "Certo. Um teste vermelho que cita um defeito conhecido é informação; deixá-lo verde esperando o defeito o esconde."
+      }
+    ]
+  },
+  "ex-5bmneg7z": {
+    "prompt": "Ordene estes do build em que você menos pode confiar ao que mais pode.",
+    "hint": "Qual não diz nada, e qual diz algo falso?",
+    "items": [
+      "BUILD SUCCESS com Tests run 0, de um Surefire sem versão fixa",
+      "BUILD FAILURE na compilação, de um compilador sem versão fixa",
+      "BUILD FAILURE com Tests run 11, Failures 1, dos plugins fixados"
+    ]
+  }
+}

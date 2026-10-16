@@ -1,0 +1,435 @@
+{
+  "ex-fvmtsc3t": {
+    "prompt": "Na primeira execução contra o ambiente da lição 4, Create order respondeu 401 embora o script de pré-requisição tivesse buscado um token. Por quê?",
+    "hint": "Qual escopo é mais estreito?",
+    "choices": [
+      {
+        "text": "O script de pré-requisição buscou o token tarde demais, depois de a requisição sair",
+        "why": "Scripts de pré-requisição terminam antes de as variáveis serem resolvidas e a requisição sair."
+      },
+      {
+        "text": "O token vazio do ambiente escondeu o da coleção",
+        "why": "Certo. O ambiente é mais estreito, e um valor vazio também vence."
+      },
+      {
+        "text": "O boxoffice recusa um token buscado por script",
+        "why": "O boxoffice não sabe como um token foi buscado; ele confere a assinatura e a expiração."
+      },
+      {
+        "text": "O token expirou entre as duas requisições",
+        "why": "Elas ficaram a milissegundos de distância, e um token vive 15 minutos."
+      }
+    ]
+  },
+  "ex-jacesbhh": {
+    "prompt": "Uma execução mostra dez falhas. A primeira é um 401 em Create order; as outras falam de 8080null. Por onde você deve começar?",
+    "hint": "Quais falhas são eco?",
+    "choices": [
+      {
+        "text": "Pelo RangeError, porque é a mensagem mais estranha",
+        "why": "Estranho não é primeiro; o RangeError vem de um orderUrl que o 401 deixou vazio."
+      },
+      {
+        "text": "Pela última falha, que resume as outras",
+        "why": "O Newman lista as falhas na ordem em que aconteceram; a última não resume nada."
+      },
+      {
+        "text": "Pelo 401, que é a primeira falha da lista",
+        "why": "Certo. As outras vêm dele: sem location, sem orderUrl."
+      },
+      {
+        "text": "Pela configuração de porta do Newman, que deve estar errada",
+        "why": "A porta está certa; o endereço é que foi montado a partir de null."
+      }
+    ]
+  },
+  "ex-5tapbkaf": {
+    "prompt": "Na execução inteira com o ambiente corrigido, quantas asserções passaram?",
+    "hint": "Executadas menos falhas, na linha assertions."
+  },
+  "ex-47prea73": {
+    "prompt": "O que faz um pm.test falhar?",
+    "hint": "Um teste é um nome e uma função.",
+    "choices": [
+      {
+        "text": "A função dele lança um erro",
+        "why": "Certo. Uma asserção que falha lança um erro, e qualquer outro erro lá dentro também."
+      },
+      {
+        "text": "A função dele retorna false",
+        "why": "O valor de retorno é ignorado; só um erro lançado o faz falhar."
+      },
+      {
+        "text": "O status da resposta é 400 ou mais",
+        "why": "Um teste de um 404 pode passar; o status só importa se um teste o conferir."
+      },
+      {
+        "text": "O nome dele não bate com o nome da requisição",
+        "why": "O nome é um rótulo para o relatório."
+      }
+    ]
+  },
+  "ex-60h033ke": {
+    "prompt": "Que asserção passa quando o corpo da resposta é {\"seats\":1,\"status\":\"confirmed\"}?",
+    "hint": "Mesmo valor ou mesmo conteúdo?",
+    "choices": [
+      {
+        "text": "pm.expect(pm.response.json()).to.equal({seats: 1, status: 'confirmed'})",
+        "why": "equal pergunta se são o mesmo objeto, e dois objetos parecidos não são."
+      },
+      {
+        "text": "pm.expect(pm.response.json()).to.eql({seats: 1, status: 'confirmed'})",
+        "why": "Certo. eql compara o conteúdo, campo a campo."
+      },
+      {
+        "text": "pm.expect(pm.response.json().seats).to.equal('1')",
+        "why": "O corpo traz o número 1, não a string '1'."
+      },
+      {
+        "text": "pm.expect(pm.response.json()).to.have.lengthOf(2)",
+        "why": "Um objeto não tem comprimento; lengthOf é para arrays e strings."
+      }
+    ]
+  },
+  "ex-zegdvb0g": {
+    "prompt": "Por que pm.expect(pm.response.code === 200).to.be.true é uma asserção ruim?",
+    "hint": "Leia o que ela diz quando falha.",
+    "choices": [
+      {
+        "text": "Ela nunca falha, porque === sempre retorna true",
+        "why": "Ela falha com qualquer outro código; o problema é o que diz nessa hora."
+      },
+      {
+        "text": "pm.response.code não existe no Postman",
+        "why": "Existe: é o status como número."
+      },
+      {
+        "text": "O Chai não consegue comparar booleanos",
+        "why": "Consegue; to.be.true é uma asserção do Chai."
+      },
+      {
+        "text": "A falha dela diz expected false to be true e nada sobre o status",
+        "why": "Certo. Afirmar sobre o valor deixa o Chai dizer que status voltou."
+      }
+    ]
+  },
+  "ex-r9v7a9b5": {
+    "prompt": "Ligue cada objeto ao que ele é.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "pm.response",
+        "right": "a resposta desta requisição"
+      },
+      {
+        "left": "pm.response.to",
+        "right": "as asserções do Postman sobre a resposta"
+      },
+      {
+        "left": "pm.expect(value)",
+        "right": "as asserções do Chai sobre qualquer valor"
+      },
+      {
+        "left": "pm.test(name, fn)",
+        "right": "uma conferência com nome que falha quando fn lança erro"
+      }
+    ],
+    "right_distractors": [
+      "a requisição prestes a ser mandada"
+    ]
+  },
+  "ex-99d389ke": {
+    "prompt": "Por que Read order e Cancel order usam {{baseUrl}}{{orderUrl}} em vez de um id de pedido fixo?",
+    "hint": "Sobre qual pedido elas devem agir?",
+    "choices": [
+      {
+        "text": "O boxoffice recusa uma requisição que escreve o id do pedido",
+        "why": "O boxoffice responde /v1/orders/ord-1001 como qualquer caminho; o caminho é o mesmo dos dois jeitos."
+      },
+      {
+        "text": "Para alcançarem o pedido desta execução",
+        "why": "Certo. O location diz onde mora o pedido que esta execução criou, qualquer que seja o número."
+      },
+      {
+        "text": "Porque o location é mais rápido de ler que o corpo",
+        "why": "Velocidade não é o motivo; a identidade do pedido é."
+      },
+      {
+        "text": "Porque variáveis da coleção não guardam um id",
+        "why": "Elas guardam qualquer string, inclusive um id."
+      }
+    ]
+  },
+  "ex-k96jsd72": {
+    "prompt": "Um colega muda o script de Get token para guardar o token com pm.environment.set. Num time que compartilha o ambiente, qual é o problema?",
+    "hint": "Quem mais lê o ambiente?",
+    "choices": [
+      {
+        "text": "O Postman proíbe scripts de escreverem num ambiente",
+        "why": "pm.environment.set existe e funciona."
+      },
+      {
+        "text": "O token seria mandado duas vezes em cada requisição",
+        "why": "Uma variável resolve para um valor; é mandada uma vez."
+      },
+      {
+        "text": "Nenhum, já que ambiente e coleção são o mesmo escopo",
+        "why": "São dois escopos, e o ambiente é o mais estreito."
+      },
+      {
+        "text": "Uma execução escreve em configuração compartilhada, e os valores dos outros mudam",
+        "why": "Certo. O token pertence a uma execução, que é assunto da coleção."
+      }
+    ]
+  },
+  "ex-0e1hj4r9": {
+    "prompt": "Create order guarda o endereço do pedido novo a partir do cabeçalho de resposta chamado ___.",
+    "hint": "Um 201 o traz.",
+    "blanks": [
+      {
+        "accept": [
+          "location"
+        ]
+      }
+    ]
+  },
+  "ex-xda9xmz2": {
+    "prompt": "Por que a coleção gera uma Idempotency-Key nova antes de cada pedido em vez de escrever uma chave fixa no cabeçalho?",
+    "hint": "O que o boxoffice faz com uma chave que já viu?",
+    "choices": [
+      {
+        "text": "O boxoffice recusa toda requisição sem uma chave aleatória nova",
+        "why": "A chave é opcional; o boxoffice aceita pedidos sem ela."
+      },
+      {
+        "text": "Uma chave repetida devolve o pedido da primeira vez",
+        "why": "Certo. O pedido da primeira execução volta, e todo teste passaria sem nenhum pedido novo criado."
+      },
+      {
+        "text": "Uma chave fixa revelaria o segredo do cliente",
+        "why": "A chave é um identificador aleatório e não leva credencial nenhuma."
+      },
+      {
+        "text": "O Postman não consegue mandar o mesmo valor de cabeçalho duas vezes",
+        "why": "Ele manda o que o cabeçalho diz, quantas vezes for pedido."
+      }
+    ]
+  },
+  "ex-avnxp6e8": {
+    "prompt": "Ponha em ordem o que acontece para a requisição Create order.",
+    "hint": "As variáveis são resolvidas depois de todo script de pré-requisição.",
+    "items": [
+      "roda o script de pré-requisição da coleção",
+      "o script de pré-requisição da requisição define idempotencyKey",
+      "as variáveis da requisição são resolvidas",
+      "a requisição é mandada",
+      "roda o script de teste da requisição"
+    ]
+  },
+  "ex-vfdq12en": {
+    "prompt": "Por que trinta segundos são tirados de expires_in quando tokenExpires é guardado?",
+    "hint": "Uma requisição leva tempo para viajar.",
+    "choices": [
+      {
+        "text": "O relógio do boxoffice adianta trinta segundos",
+        "why": "Nada diz isso; a folga é para requisições a caminho."
+      },
+      {
+        "text": "expires_in conta em unidades de trinta segundos",
+        "why": "expires_in está em segundos; 900 são quinze minutos."
+      },
+      {
+        "text": "Porque um token que expira no caminho acaba recusado",
+        "why": "Certo. A folga custa uma requisição de token a mais de vez em quando."
+      },
+      {
+        "text": "O Postman precisa de trinta segundos para guardar uma variável",
+        "why": "Guardar uma variável é imediato."
+      }
+    ]
+  },
+  "ex-b4638n65": {
+    "prompt": "A pasta seat rules também roda numa execução da coleção inteira sem arquivo de dados. Que valores Order seats usa então?",
+    "hint": "Quem mais define seats e expected?",
+    "choices": [
+      {
+        "text": "Nenhum: a requisição é pulada sem arquivo de dados",
+        "why": "Ela rodou: a execução da seção 02 termina com Order seats."
+      },
+      {
+        "text": "Os valores do último arquivo de dados usado",
+        "why": "O Newman não guarda nada de uma execução para outra."
+      },
+      {
+        "text": "O texto literal {{seats}}, então a requisição falha com 400",
+        "why": "seats está definida na coleção, então é resolvida."
+      },
+      {
+        "text": "Os padrões da coleção, 1 e 201",
+        "why": "Certo. Com um arquivo, o escopo de dados é mais estreito e vence."
+      }
+    ]
+  },
+  "ex-d22zg6k7": {
+    "prompt": "A execução com dados fez uma requisição a mais do que teve iterações. Quantas requisições ela fez?",
+    "hint": "A linha requests da tabela."
+  },
+  "ex-80jfwsbq": {
+    "prompt": "Um colega propõe acrescentar linhas para 2, 3, 4 e 5 lugares no seats.csv. O que a seção diz sobre isso?",
+    "hint": "Cada linha é uma afirmação.",
+    "choices": [
+      {
+        "text": "Mais linhas sempre deixam a execução mais completa",
+        "why": "Linhas dentro de uma mesma classe acrescentam execuções, não informação."
+      },
+      {
+        "text": "Ficam entre os limites que já estão ali e não testam nada novo",
+        "why": "Certo. 1 e 6 já representam a classe válida."
+      },
+      {
+        "text": "O Newman aceita no máximo seis linhas por arquivo",
+        "why": "Não há esse limite; a questão é o que as linhas testam."
+      },
+      {
+        "text": "Elas esgotariam o sh-101 e falhariam",
+        "why": "O sh-101 tem 120 lugares; mais quatro pedidos não o esvaziariam."
+      }
+    ]
+  },
+  "ex-ba2h7qdm": {
+    "prompt": "A coleção brittle passou na primeira execução e falhou na segunda. O que mudou no meio?",
+    "hint": "Leia a falha da segunda execução.",
+    "choices": [
+      {
+        "text": "O boxoffice passou a responder pedidos com outro status",
+        "why": "As duas execuções receberam 201 Created."
+      },
+      {
+        "text": "O token da primeira execução expirou",
+        "why": "Cada execução buscou o próprio token, e os dois pedidos foram criados."
+      },
+      {
+        "text": "Só o número do pedido, ord-1002",
+        "why": "Certo. A API não errou nada; o teste afirmou um id que nunca foi prometido."
+      },
+      {
+        "text": "O arquivo de dados sumiu",
+        "why": "A coleção brittle não usa arquivo de dados."
+      }
+    ]
+  },
+  "ex-5aajx9yh": {
+    "prompt": "Quais destas um teste de Create order pode afirmar com segurança?",
+    "hint": "O que a API prometeu?",
+    "choices": [
+      {
+        "text": "O status é 201",
+        "why": "Certo: o código faz parte do contrato."
+      },
+      {
+        "text": "O id casa com /^ord-\\d+$/",
+        "why": "Certo: o formato, não o número."
+      },
+      {
+        "text": "O id é ord-1001",
+        "why": "Isso depende do que rodou antes."
+      },
+      {
+        "text": "O cabeçalho Date contém a data de hoje escrita no teste",
+        "why": "Isso depende do relógio."
+      },
+      {
+        "text": "seats é o número que foi mandado",
+        "why": "Certo: é o que a requisição pediu."
+      }
+    ]
+  },
+  "ex-a5gwzhyh": {
+    "prompt": "Por que afirmar o corpo inteiro de um pedido com eql é um teste ruim mesmo num boxoffice recém-iniciado?",
+    "hint": "Pense no dia em que o boxoffice muda de um jeito inofensivo.",
+    "choices": [
+      {
+        "text": "Ele falha quando um campo inofensivo é acrescentado",
+        "why": "Certo. Afirme os campos de que o teste trata."
+      },
+      {
+        "text": "eql não consegue comparar objetos aninhados",
+        "why": "eql compara objetos aninhados campo a campo."
+      },
+      {
+        "text": "Comparar um corpo inteiro é lento demais para um teste",
+        "why": "Leva microssegundos; velocidade não é o problema."
+      },
+      {
+        "text": "Ele passa mesmo quando o pedido está errado",
+        "why": "Ele falha com qualquer diferença, e esse é o problema."
+      }
+    ]
+  },
+  "ex-7sk5nsjf": {
+    "prompt": "No Postman você roda só a pasta orders às 14:00, depois de Get token ter rodado às 13:30. Que parte da coleção impede Create order de responder 401?",
+    "hint": "O token vive 15 minutos.",
+    "choices": [
+      {
+        "text": "A configuração bearer da coleção",
+        "why": "Ela manda o {{token}} como estiver, expirado ou não."
+      },
+      {
+        "text": "O script de teste de Get token",
+        "why": "Get token está na pasta auth, que esta execução deixa de fora."
+      },
+      {
+        "text": "O script de pré-requisição da coleção",
+        "why": "Certo. Ele vê que tokenExpires passou e busca um token novo."
+      },
+      {
+        "text": "O cabeçalho Idempotency-Key",
+        "why": "A chave evita pedido duplicado; não é credencial."
+      }
+    ]
+  },
+  "ex-gbf12hsw": {
+    "prompt": "Você acrescenta a Read order um teste afirmando que pm.response.json().id é igual a 'ord-1001'. A coleção inteira passa na sua máquina e falha na execução de um colega. Que explicação serve?",
+    "hint": "O boxoffice do colega já tinha pedidos?",
+    "choices": [
+      {
+        "text": "O Newman do colega é de outra versão",
+        "why": "Os dois rodaram a 6.2.3, a versão que o npx foi mandado buscar."
+      },
+      {
+        "text": "O boxoffice dele já tinha pedidos",
+        "why": "Certo. Então o pedido desta execução recebeu um número maior. O id depende do que rodou antes; compare-o com o orderUrl no lugar."
+      },
+      {
+        "text": "O orderUrl é compartilhado entre as duas máquinas",
+        "why": "Variáveis da coleção vivem em cada execução; nada é compartilhado."
+      },
+      {
+        "text": "O ambiente dele define token vazio",
+        "why": "Aí Create order responderia 401 e Read order nunca seria montado a partir de um orderUrl válido."
+      }
+    ]
+  },
+  "ex-65sfrbk1": {
+    "prompt": "O boxoffice foi corrigido e o HEAD agora responde 200. O que acontece com a execução da coleção, e o que você deve fazer com o teste de HEAD?",
+    "hint": "Um teste falhando era o relato do defeito.",
+    "choices": [
+      {
+        "text": "A execução continua falhando, porque HEAD não traz corpo para interpretar",
+        "why": "O teste de HEAD só confere o status."
+      },
+      {
+        "text": "A execução passa, e o teste de HEAD deve ser apagado por estar cumprido",
+        "why": "Apagá-lo tira a proteção contra a volta do defeito."
+      },
+      {
+        "text": "A execução passa; mantenha o teste, que agora protege contra regressão",
+        "why": "Certo. Ele ficou verde sem ninguém precisar lembrar de conferir."
+      },
+      {
+        "text": "A execução só passa depois de o teste mudar para esperar 405",
+        "why": "405 era o defeito; 200 é o que o teste sempre esperou."
+      }
+    ]
+  }
+}
