@@ -1,0 +1,3476 @@
+[
+  {
+    "id": "ex-0spszj8e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A churn report must list every customer with their orders from 2026, and customers with none must appear too. It reads `FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.ordered_on >= '2026-01-01'`, and returns fewer customers than the table holds. Why, by lesson 5?",
+    "hint": "Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "The date literal is compared as text, so orders placed early in January fall before `'2026-01-01'`.",
+        "correct": false,
+        "why": "The comparison works for the customers who ordered; the ones lost have no 2026 order at all."
+      },
+      {
+        "text": "A customer without a 2026 order gets a row of nulls, `NULL >= '2026-01-01'` is unknown, and `WHERE` drops the row.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Customers who ordered several times in 2026 are collapsed into one row by the join.",
+        "correct": false,
+        "why": "A join repeats such a customer once per order; it never collapses them."
+      },
+      {
+        "text": "The date condition belongs in `HAVING`, because it has to run after the join.",
+        "correct": false,
+        "why": "`HAVING` filters groups after a `GROUP BY`; the fix is to move the condition into the `ON` of the `LEFT JOIN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxksppja",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`sales_with_shipping` copies each order's shipping fee onto every one of its lines, and its shipping total is too high. A colleague proposes `sum(DISTINCT shipping_cents)` over it instead. What does that return?",
+    "hint": "Relational Databases and SQL, lesson 6; Data Modelling and the Data Warehouse, lesson 4.",
+    "choices": [
+      {
+        "text": "The shop's real shipping total, because each order's fee is now counted once instead of once per line.",
+        "correct": false,
+        "why": "`DISTINCT` works on values, not on orders: every order charged R$ 14.90 collapses into a single 1490."
+      },
+      {
+        "text": "An error, since `DISTINCT` is allowed only inside `count`.",
+        "correct": false,
+        "why": "It is legal and runs; that is why the number gets quietly smaller instead of failing."
+      },
+      {
+        "text": "The same too-high total, because `DISTINCT` is applied after the sum is taken.",
+        "correct": false,
+        "why": "`sum(DISTINCT …)` drops repeated values before adding, so the number shrinks rather than staying put."
+      },
+      {
+        "text": "A number far below the real total: each distinct fee amount once, however many orders paid it.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm6tkvkx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A course's `reviews` table has 12 rows. Four students have not rated yet, so their `rating` is null, and the eight ratings given add up to 30. What does `SELECT avg(rating) FROM reviews` return?",
+    "hint": "Relational Databases and SQL, lesson 6.",
+    "value": 3.75,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-d21dpabj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana looks for loyalty customers who never bought. `WHERE customer_id NOT IN (SELECT customer_id FROM staging.orders)` returns no rows at all, while the same shape over `fact_sales`, comparing `customer_key`, returns a list. Why the difference?",
+    "hint": "Relational Databases and SQL, lesson 5; Data Modelling and the Data Warehouse, lesson 4.",
+    "choices": [
+      {
+        "text": "Staging holds a null `customer_id` for walk-in orders, which makes `NOT IN` never true; the warehouse gives them key 0.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`NOT IN` compares the values as text, and staging keeps `customer_id` as text while `customer_key` is an integer.",
+        "correct": false,
+        "why": "No type mismatch empties a `NOT IN`; a null inside its list does."
+      },
+      {
+        "text": "The subquery over staging runs once per customer and times out, which the client shows as an empty result.",
+        "correct": false,
+        "why": "This subquery is not correlated, and a slow query answers late rather than empty."
+      },
+      {
+        "text": "Every loyalty customer has bought at least once, and only the warehouse still holds the ones who left the programme.",
+        "correct": false,
+        "why": "An empty answer for every customer is not a finding; the same customers give a list against the warehouse."
+      }
+    ]
+  },
+  {
+    "id": "ex-1asj4bm8",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A PostgreSQL dashboard needs the share of orders that were paid. Which of these expressions return it? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "`avg(CASE WHEN status = 'paid' THEN 1.0 ELSE 0 END)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`avg(CASE WHEN status = 'paid' THEN 1.0 END)`",
+        "correct": false,
+        "why": "With no `ELSE` the other rows are null and `avg` skips them: 1.0 for any table with one paid order."
+      },
+      {
+        "text": "`count(*) FILTER (WHERE status = 'paid') * 1.0 / count(*)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`count(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) * 1.0 / count(*)`",
+        "correct": false,
+        "why": "`0` is not null, so `count` counts every row and this is always 1."
+      },
+      {
+        "text": "`avg((status = 'paid')::int)`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgpj14wk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A table holds one row per shop per month-end, with the copies counted that day in `on_hand`. To chart each shop's stock, a query adds `sum(on_hand) OVER (PARTITION BY shop_key ORDER BY date_key)`. The line climbs every month, even when shelves emptied. What went wrong?",
+    "hint": "Relational Databases and SQL, lesson 6; Data Modelling and the Data Warehouse, lesson 2.",
+    "choices": [
+      {
+        "text": "Window functions cannot partition by a dimension key, so `PARTITION BY shop_key` should have been a `GROUP BY`.",
+        "correct": false,
+        "why": "Partitioning by shop is fine; what turns the level into a running sum is the frame the `ORDER BY` brought."
+      },
+      {
+        "text": "The sum should be `avg(on_hand)` over the same window, which gives each month's level.",
+        "correct": false,
+        "why": "With that frame it is the average of the months so far, still not the count at that month-end."
+      },
+      {
+        "text": "`ORDER BY` inside `OVER` makes the frame every row up to the current one, and a stock level does not add up over time.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The default frame is `RANGE`, which counts tied months twice; with `ROWS` each point would be that month's stock.",
+        "correct": false,
+        "why": "Each shop has one row per month, so `ROWS` and `RANGE` agree here, and both still accumulate."
+      }
+    ]
+  },
+  {
+    "id": "ex-nya0y0m3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "In lesson 5's shop, Ana has three orders, Bruno one and Célia none. Put these queries in order of the number they return, smallest first.",
+    "hint": "Relational Databases and SQL, lesson 5.",
+    "items": [
+      "`SELECT count(DISTINCT c.id) FROM customers c JOIN orders o ON o.customer_id = c.id`",
+      "`SELECT count(*) FROM customers`",
+      "`SELECT count(*) FROM customers c JOIN orders o ON o.customer_id = c.id`",
+      "`SELECT count(*) FROM customers c LEFT JOIN orders o ON o.customer_id = c.id`"
+    ],
+    "trap": "A join counts pairs, not customers, so Ana is in three rows. The `LEFT JOIN` adds Célia's row of nulls, and `count(*)` counts it like any other."
+  },
+  {
+    "id": "ex-bq45w0rw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A tile meant to show the three best-selling titles numbers them with `rank() OVER (ORDER BY sold DESC)` and keeps those `<= 3`. One week it shows four. Why, and what does lesson 6 suggest?",
+    "hint": "Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "Two titles tied and got the same number; for exactly three rows, number them with `row_number()`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The window's default frame stops at the current row; adding `ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING` fixes it.",
+        "correct": false,
+        "why": "The ranking functions ignore the frame, so a frame clause changes nothing for them."
+      },
+      {
+        "text": "`rank()` starts at 0, so `<= 3` keeps four places; the filter should be `< 3`.",
+        "correct": false,
+        "why": "All three numbering functions start at 1."
+      },
+      {
+        "text": "`rank()` skips a number after a tie, and `dense_rank()` is the one that keeps exactly three.",
+        "correct": false,
+        "why": "`dense_rank()` also gives tied rows one number and does not skip, so it can return even more rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-see1c7kq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`SELECT c.name, count(*) FROM customers c LEFT JOIN orders o ON o.customer_id = c.id GROUP BY c.id, c.name` shows 1 for Celia, who never ordered. For it to show 0, `count(*)` becomes `count(___)`, a right-hand column that is never null in a matched row.",
+    "hint": "Relational Databases and SQL, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "o.id",
+          "o.customer_id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n7fydyda",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Reviewing the warehouse, a colleague says that pointing each sale at the customer version true on its day stores the tier twice, and proposes one row per customer, overwritten when the tier changes. By lesson 2's test for a snapshot, what is wrong with that?",
+    "hint": "Relational Databases and SQL, lesson 2; Data Modelling and the Data Warehouse, lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: the tier on a sale copies the customer's current tier, and a copy that can be left behind is an anomaly.",
+        "correct": false,
+        "why": "Ask whether a past sale's tier should change when the customer is promoted. It should not, so it is not a copy."
+      },
+      {
+        "text": "Overwriting keeps history intact but breaks the surrogate keys, which must be one per natural key.",
+        "correct": false,
+        "why": "Type 2 rests on several surrogate keys per customer; the damage of overwriting falls on history, which then moves with every load."
+      },
+      {
+        "text": "Its only cost is space, since one row per customer takes more room than one per version.",
+        "correct": false,
+        "why": "One row per customer is the smaller table; the cost is that a question about 2024 answers differently after each load."
+      },
+      {
+        "text": "The tier on a sale is a snapshot that must not change on promotion; overwriting rewrites past years.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3q315sda",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Walk-in sales have no customer. Instead of the unknown member, a colleague wants to leave their `customer_key` null and have every report use `LEFT JOIN dim_customer`. What does key 0 give that this does not?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 4; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "A null key would match the null key of every other walk-in sale, so the walk-ins would multiply.",
+        "correct": false,
+        "why": "A null matches nothing, not even another null; that is why an inner join drops these sales."
+      },
+      {
+        "text": "A `LEFT JOIN` is far slower than an inner join on a large fact table, and key 0 avoids paying that.",
+        "correct": false,
+        "why": "Lesson 4's argument is correctness, not speed: with nulls, an inner join silently loses a quarter of revenue."
+      },
+      {
+        "text": "Every inner join, the usual kind, still keeps each sale, and a report by tier shows a `none` line.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the two give the same rows and the same totals in every query.",
+        "correct": false,
+        "why": "They agree only in queries that remember the `LEFT JOIN`; an inner join on the null version lost 228,770 lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rn5ksqy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "One shop sold R$ 10,000 gross and gave R$ 300 in discounts; another sold R$ 40,000 gross and gave R$ 100. By lesson 2's rule for ratios, what is the discount rate of the two shops together, in per cent?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 2.",
+    "value": 0.8,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-ywkb2yaz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "An airline's warehouse stores these measures. Match each to how lesson 2 would let a report add it up.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 2.",
+    "pairs": [
+      {
+        "left": "Tickets sold, one row per booking",
+        "right": "Across every dimension, time included"
+      },
+      {
+        "left": "Seats left on each flight, one row per daily check",
+        "right": "Across flights, never across days"
+      },
+      {
+        "left": "Share of seats sold, stored per flight",
+        "right": "Never directly: sum its parts and divide last"
+      }
+    ],
+    "right_distractors": [
+      "Across days, never across flights"
+    ]
+  },
+  {
+    "id": "ex-0b6qzpbm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To group 2025 revenue by the tier customers have today, an analyst joins `dim_customer now ON now.customer_id = d.customer_id` and forgets `AND now.is_current`. Revenue comes out above the year's real total. Why?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 5; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "Without `is_current` the join picks the version true at the sale, so it shows tier at the time rather than today.",
+        "correct": false,
+        "why": "That would change the labels, not inflate the total; a join on `customer_id` matches every version."
+      },
+      {
+        "text": "Each sale meets every version of its customer, so three versions count each sale three times.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The unknown member has no `customer_id`, so walk-in sales are copied onto every customer.",
+        "correct": false,
+        "why": "A null `customer_id` matches nothing, and `customer_key > 0` already leaves walk-ins out."
+      },
+      {
+        "text": "Versions overlap in time, so a sale matches two rows, which lesson 5's checks were meant to catch.",
+        "correct": false,
+        "why": "The checks returned three zeros; the extra rows come from this join, not from overlapping periods."
+      }
+    ]
+  },
+  {
+    "id": "ex-42g06gw9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In 2025 the shop redraws its sales regions. While people get used to it, managers want every report, for every year, to show sales under the old and the new arrangement side by side. What does lesson 5 point to for the shop's region?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 5.",
+    "choices": [
+      {
+        "text": "Type 2 alone: a new version of the shop starting on the day of the change.",
+        "correct": false,
+        "why": "Each sale then sees only the region of its own day; nothing shows both arrangements for the same year."
+      },
+      {
+        "text": "Type 0: freeze the region the shop had when it opened.",
+        "correct": false,
+        "why": "That keeps a moment, like the date a customer joined; it shows neither arrangement after the change."
+      },
+      {
+        "text": "Type 1: overwrite the region, so every year is shown under the new arrangement.",
+        "correct": false,
+        "why": "It loses the old arrangement, which is half of what was asked."
+      },
+      {
+        "text": "Type 3: a `region` and a `previous_region` column on `dim_shop`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-28ea33ew",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For months of stock per shop, an analyst joins `fact_sales` to `fact_inventory` on `shop_key` and divides `sum(i.on_hand)` by `sum(f.quantity)`. Both sums come out absurdly large. What is the fix?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 3; Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "Join through `dim_shop` rather than directly, so the conformed dimension keeps the two tables apart.",
+        "correct": false,
+        "why": "Going through the dimension still pairs every sale with every stock line of the same shop."
+      },
+      {
+        "text": "Filter both tables to December 2025 in `WHERE`, since the absurd sums come from mixing months.",
+        "correct": false,
+        "why": "Within one month every sale still meets every stock line of its shop; the pairing multiplies whatever the filter."
+      },
+      {
+        "text": "Sum each fact table to one row per shop first, then join the two results on `shop_key`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Apply `count(DISTINCT …)` on both sides to undo the repeats before dividing.",
+        "correct": false,
+        "why": "`DISTINCT` rescues counts, never sums: two lines of equal quantity would collapse into one."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnb8qkhd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A dashboard runs `SELECT * FROM fact_sales WHERE date_key >= 20250101 LIMIT 100` on BigQuery's on-demand price, and the table has no partition or clustering column. Which change lowers the bytes billed?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 9; Relational Databases and SQL, lesson 4.",
+    "choices": [
+      {
+        "text": "Name the three columns the tile uses instead of `*`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Move the date filter into a CTE that runs before the outer `SELECT`.",
+        "correct": false,
+        "why": "Rearranging how a query is written does not change what it asks, and with no partition column the filter reduces nothing."
+      },
+      {
+        "text": "Lower the `LIMIT` to `10`, so fewer rows are read.",
+        "correct": false,
+        "why": "`LIMIT` takes a slice at the very end; every column named is billed whole."
+      },
+      {
+        "text": "Add `ORDER BY date_key`, so the scan can stop at the end of the range.",
+        "correct": false,
+        "why": "Sorting the answer is more work; what is billed is every column named, over every row."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj8zy04k",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The shop wants to move the till's own database onto a column store, because the reports got so much faster there. Which of the till's jobs does lesson 8 say a column store does badly? Choose all that apply.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 8.",
+    "choices": [
+      {
+        "text": "Writing each sale as its own `INSERT`, one at a time.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Summing one column over every row of the table.",
+        "correct": false,
+        "why": "That is its strength: it reads that column's bytes and nothing else."
+      },
+      {
+        "text": "Correcting many single rows with small `UPDATE`s.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Skipping the row groups whose minimum and maximum rule out a date range, in a file sorted by date.",
+        "correct": false,
+        "why": "That is a zone map doing its job; sorted by date, only the matching row groups are read."
+      },
+      {
+        "text": "Fetching one order's lines by a column the table is not sorted on.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8ttj23z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A dashboard sums `f.net_cents` through `bridge_book_author`, grouped by author, and finance totals the column to compare with the shop's revenue. The total is about R$ 16 million too high. What should the dashboard do?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 4; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "Group by `book_key` as well as the author, so each sale lands on one row.",
+        "correct": false,
+        "why": "Each sale still appears once per author of its book, and the grand total does not move."
+      },
+      {
+        "text": "Weight the sum by `ba.weight` where it must add up, and label the unweighted column as impact.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add `DISTINCT` inside the sum, so that a sale of a co-authored book is counted only once.",
+        "correct": false,
+        "why": "`DISTINCT` removes repeated values, not repeated rows; different sales of equal amounts would merge."
+      },
+      {
+        "text": "Replace the inner join with a `LEFT JOIN`, so that books with no author on record stay in the sum.",
+        "correct": false,
+        "why": "Lost books would make the total lower, not higher; the excess is co-authored sales counted once per author."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5d3f2ra",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A table at the grain of the whole order could not say which book was sold, and no later query can put that detail back. Kimball calls the finest grain the source allows ___, and recommends starting there.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "atomic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4w52msnj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your nightly extraction of a shop's `payments` reads every row whose `updated_at` is above the watermark. A card machine can hold a transaction open for ten minutes, so a payment written at 23:55 may commit after the extraction has read up to 23:59. What does lesson 4 do so that payment is not lost?",
+    "hint": "Data Pipelines and ETL, lesson 4.",
+    "choices": [
+      {
+        "text": "Save the new watermark first and load the rows after it, so that a crash halfway through can never make the same window run twice.",
+        "correct": false,
+        "why": "A watermark that runs ahead of the data loses the window for good when the load fails; the lesson commits the two together."
+      },
+      {
+        "text": "Run the extraction every hour instead of every night.",
+        "correct": false,
+        "why": "The gap moves with the schedule: a row written below a watermark and committed after it is never asked for, at any frequency."
+      },
+      {
+        "text": "Look back past the watermark by longer than a transaction there can stay open, and collapse what is read twice.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Set the watermark to the moment the job started, rather than to the newest `updated_at` it read, so the next window begins where the clock says.",
+        "correct": false,
+        "why": "That claims rows the extraction could not yet see, and the slow payment is exactly such a row."
+      }
+    ]
+  },
+  {
+    "id": "ex-axdrrd7x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A customer asks to be erased, and the DPO's transaction deletes their row from the shop's `customers` table. The warehouse copies `customers` every night by `updated_at` above a watermark, into a raw table nothing ever updates. What does the warehouse hold about them the next morning?",
+    "hint": "Data Pipelines and ETL, lesson 4; Data Security, Governance and Privacy, lesson 7.",
+    "choices": [
+      {
+        "text": "Their row, lawfully, as a copy that counts as a backup.",
+        "correct": false,
+        "why": "A backup is kept out of normal use; a warehouse is read every day, and lesson 7 counts such copies among the places a full answer covers."
+      },
+      {
+        "text": "Their name, e-mail and city, until the table is reloaded whole or its keys compared.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the deletion is newer than the watermark, so that night's run carries it into the warehouse.",
+        "correct": false,
+        "why": "A deleted row has no `updated_at`, because it has no row; an incremental extraction never asks about it."
+      },
+      {
+        "text": "Their row with the name and e-mail blanked, because the back office set their orders' `customer_id` to `NULL`.",
+        "correct": false,
+        "why": "That update reaches the orders extraction and nothing else; the customers copy is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qhzhqpf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The nightly load left 448 lines in `marts.fact_sales` for 16 March. Then lesson 15's naive `fact_sales_append.sql` runs twice, once from a retry and once from a backfill; then `fact_sales.sql` runs once; then the naive insert runs one more time. How many lines does 16 March hold now?",
+    "hint": "Data Pipelines and ETL, lesson 15.",
+    "value": 896,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-41wfh5yt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`shop_nightly` runs daily at 02:00 and loads the day before its logical date. To load 1 to 7 April, a colleague runs `airflow backfill create --dag-id shop_nightly --from-date 2026-04-02 --to-date 2026-04-08`. Which day is still not loaded afterwards, by lesson 9?",
+    "hint": "Data Pipelines and ETL, lesson 9.",
+    "choices": [
+      {
+        "text": "7 April.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "1 April, because the range starts on the 2nd.",
+        "correct": false,
+        "why": "The run at 02:00 on the 2nd is inside the range, and it loads the 1st."
+      },
+      {
+        "text": "2 April, since a backfill skips the first logical date it is given.",
+        "correct": false,
+        "why": "Nothing is skipped at the start; the 2nd is loaded by the run at 02:00 on the 3rd."
+      },
+      {
+        "text": "None of the seven: the range reaches the 8th, one day past the last day wanted.",
+        "correct": false,
+        "why": "`--to-date 2026-04-08` is midnight on the 8th, and the run that loads the 7th starts at 02:00."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ra731dc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Every run of `shop_nightly` drops and rebuilds the same `raw` and `staging` tables, and a backfill of five days left four runs failed, some with `duplicate key value violates unique constraint`. By lesson 9, the DAG and the backfill each get `max_active_runs=___`.",
+    "hint": "Data Pipelines and ETL, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "one"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fzc1tdm4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For an erasure request, the DPO asks which places hold a customer's orders. You run `dbt ls -s source:raw.orders+ --resource-type model --resource-type exposure` and send what it prints. What does that answer leave out?",
+    "hint": "Data Pipelines and ETL, lesson 12; Data Security, Governance and Privacy, lesson 9.",
+    "choices": [
+      {
+        "text": "The views among the models, which PostgreSQL records in `pg_depend` and dbt never sees.",
+        "correct": false,
+        "why": "dbt builds those views itself and they are nodes in its graph; `pg_depend` is a second record of edges inside the database."
+      },
+      {
+        "text": "Nothing, since the exposure carries the graph on to every person who reads the data downstream of it.",
+        "correct": false,
+        "why": "An exposure names the one report somebody declared; dbt's lineage still begins at the sources and ends at the exposures."
+      },
+      {
+        "text": "The staging models, which `--resource-type model` drops in favour of the marts.",
+        "correct": false,
+        "why": "`stg_orders` and `int_sales` are models, and lesson 12's output lists them beside the marts."
+      },
+      {
+        "text": "What lies outside the project, such as the loader before the source and an analyst's extract.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn65trdz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`daily_sales` has an enforced dbt contract listing its columns and their types, and the morning report reads it. Which of these changes would stop the build? Choose all that apply.",
+    "hint": "Data Pipelines and ETL, lesson 16; Data Security, Governance and Privacy, lesson 11.",
+    "choices": [
+      {
+        "text": "`books` counted as order lines rather than units, still an integer",
+        "correct": false,
+        "why": "Same name, same type: a changed meaning is caught by a rule on the values or by a reviewer who reads the semantics, never by the shape."
+      },
+      {
+        "text": "`revenue_cents` computed as `sum(s.line_cents) / 100.0`",
+        "correct": true,
+        "why": "It produces a decimal where the contract promised `bigint`."
+      },
+      {
+        "text": "A day loaded with a fifth of its usual rows",
+        "correct": false,
+        "why": "Every row still has the promised shape; how many there are is an expectation's question."
+      },
+      {
+        "text": "An extra column added at the end of the `select`",
+        "correct": true,
+        "why": "The contract compares the number of columns as well as their names and types."
+      },
+      {
+        "text": "`shop_id` renamed to `store_id` in the model",
+        "correct": true,
+        "why": "A promised column the model no longer produces is a mismatch."
+      }
+    ]
+  },
+  {
+    "id": "ex-xedp8t41",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each load with the shape lesson 15 gives it.",
+    "hint": "Data Pipelines and ETL, lesson 15.",
+    "pairs": [
+      {
+        "left": "One day of `marts.fact_sales`, a slice the run owns whole",
+        "right": "Delete the slice, then insert it"
+      },
+      {
+        "left": "`marts.dim_book`, one row per `book_id`",
+        "right": "Upsert by the row's key"
+      },
+      {
+        "left": "A small summary table, rebuilt in full each night",
+        "right": "Build it beside the old one, then swap"
+      },
+      {
+        "left": "`marts.load_log`, one row per run",
+        "right": "A plain insert, every time"
+      }
+    ],
+    "right_distractors": [
+      "Insert, then drop the duplicates in the report"
+    ]
+  },
+  {
+    "id": "ex-vsjm9h55",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new pipeline copies the shop's `customers` table whole into `raw`, `email` included, though no model above `raw` ever reads that column. Which change do the two lessons point to?",
+    "hint": "Data Pipelines and ETL, lesson 2; Data Security, Governance and Privacy, lesson 6.",
+    "choices": [
+      {
+        "text": "Load it, and revoke `SELECT` on that column from the analysts' role.",
+        "correct": false,
+        "why": "Five thousand addresses would still sit in a second place, and every access request and erasure has to reach them."
+      },
+      {
+        "text": "Leave `email` out at extraction: a column never loaded is never protected, exported or erased.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Load it, and show it masked to everybody but the platform team.",
+        "correct": false,
+        "why": "Masking hides a value that is still underneath; necessity asks whether it is held at all."
+      },
+      {
+        "text": "Keep loading it, because ELT keeps raw rows unchanged so tomorrow's question can still be answered.",
+        "correct": false,
+        "why": "Keeping raw rows is the default; data that must not land is the reason the lesson names for doing otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-bp7x9w22",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A DBA enables row-level security on `sales.customers` and writes one policy, for `support_agent`. That night the pipeline's export of customers, which connects as `pipeline`, succeeds and writes an empty file. What happened, and what would have caught it?",
+    "hint": "Data Security, Governance and Privacy, lesson 2; Data Pipelines and ETL, lesson 16.",
+    "choices": [
+      {
+        "text": "`pipeline` lost its `SELECT` grant; the next night's run will fail with `permission denied` and raise the alert.",
+        "correct": false,
+        "why": "A missing grant does fail loudly; here the grant is intact and no policy allows a single row."
+      },
+      {
+        "text": "Row security fails open for roles it does not name, so the export itself must have a bug.",
+        "correct": false,
+        "why": "It fails closed: with the mode on, a row that no policy allows is invisible."
+      },
+      {
+        "text": "No policy names `pipeline`, so every row is hidden without error; a check on the day's volume would have failed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The table's owner now sees no rows, and the export reads through a view the owner made.",
+        "correct": false,
+        "why": "The owner is exempt from policies unless the table is in `FORCE ROW LEVEL SECURITY` mode."
+      }
+    ]
+  },
+  {
+    "id": "ex-8j9xq6c5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Taking lesson 2's advice to hash `email` on the way in, your staging model writes `md5(email)` so analysts can count returning customers without reading an address. A teammate calls the column anonymous. What does lesson 5 say about it?",
+    "hint": "Data Security, Governance and Privacy, lesson 5; Data Pipelines and ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "A guessed address hashes to the same value; a keyed HMAC fixes that, and the column stays personal data.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is anonymous: MD5 cannot be run backwards, so article 12 of the LGPD takes the column out of the law.",
+        "correct": false,
+        "why": "Nobody runs it backwards: hashing candidate addresses and comparing finds the person."
+      },
+      {
+        "text": "Its only flaw is MD5 itself; the same column hashed with SHA-256 would be anonymous.",
+        "correct": false,
+        "why": "A stronger hash with no key is just as easy to recompute from a guess; what is missing is a key the analysts do not hold."
+      },
+      {
+        "text": "It is pseudonymised, and stops being personal data once the plain addresses are deleted from `raw`.",
+        "correct": false,
+        "why": "Pseudonymised data is personal data; only anonymisation leaves the law, and this is not that."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnvk2a47",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A regional report publishes any count below 10 as `<10`. It shows São Paulo 22, Recife 16, Curitiba 20, Santos 25 and Niterói 14, shows `<10` for Natal, and prints a national total of 106. By lesson 5, how many customers does it give away for Natal?",
+    "hint": "Data Security, Governance and Privacy, lesson 5.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jbjw0naw",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ipê classes every column as `none`, `personal`, `identifying` or `sensitive`. Which of these does lesson 6 put in `sensitive`? Choose all that apply.",
+    "hint": "Data Security, Governance and Privacy, lesson 6.",
+    "choices": [
+      {
+        "text": "`customers.email`",
+        "correct": false,
+        "why": "It picks one person out on its own, which is `identifying`."
+      },
+      {
+        "text": "`order_items.product_id`, in a pharmacy",
+        "correct": true,
+        "why": "What a customer bought reveals their health; 1,606 bought a pregnancy test."
+      },
+      {
+        "text": "`customers.cep`",
+        "correct": false,
+        "why": "A quasi-identifier, `personal`: it identifies only with other data."
+      },
+      {
+        "text": "`support.tickets.body`, a free-text field meant for delivery complaints",
+        "correct": true,
+        "why": "Free text takes the class of the most sensitive thing anybody typed, and 26 tickets name a medicine."
+      }
+    ]
+  },
+  {
+    "id": "ex-68dk6rsw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 17's `make_fixture.sh` cuts one real day out of the shop and replaces every name and e-mail. A teammate wants to publish the fixture in the company's public repository, since nothing personal is left. By lesson 6, what is wrong with that?",
+    "hint": "Data Security, Governance and Privacy, lesson 6; Data Pipelines and ETL, lesson 17.",
+    "choices": [
+      {
+        "text": "It should cut a larger slice first, because one day holds few enough customers that somebody could recognise them.",
+        "correct": false,
+        "why": "More real days add more real people; the size of the cut does not change what the rows are."
+      },
+      {
+        "text": "Only `customers.csv` is a problem; the order files carry no names and can go.",
+        "correct": false,
+        "why": "An order row with a `customer_id` is personal data, and so is everything that joins to it."
+      },
+      {
+        "text": "Nothing: with names and e-mails replaced, no column left can pick out a person on its own.",
+        "correct": false,
+        "why": "Personal data only needs to be identifiable; picking somebody out on its own is the narrower class, `identifying`."
+      },
+      {
+        "text": "Its rows are what real people did, tied to a city by `customer_id`; public data has to be generated.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5my6sp9j",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the work inside lesson 10's nightly purge of expired orders in the order the lesson does it.",
+    "hint": "Data Security, Governance and Privacy, lesson 10.",
+    "items": [
+      "Find the expired orders, skipping every customer under an open legal hold",
+      "Write monthly totals by category that name nobody",
+      "Delete the prescriptions, then the orders' items, payments, deliveries and returns",
+      "Delete the orders",
+      "Record the counts in `gov.purge_log`"
+    ],
+    "trap": "Totals written after the orders go have nothing left to count, and orders deleted before their dependents leave foreign keys pointing at nothing."
+  },
+  {
+    "id": "ex-x3wn0s9q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Support agents read `sales.customers` under a row policy that limits each of them to their own states. The pipeline, whose policy is `USING (true)`, copies the table every night into the warehouse's `raw`, and the agents are then granted `SELECT` on that copy. What do they see there?",
+    "hint": "Data Security, Governance and Privacy, lesson 2; Data Pipelines and ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "Every customer in every state, as the pipeline saw them.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An error, because the warehouse checks the source's policies before it serves a copied row.",
+        "correct": false,
+        "why": "Nothing links the copy to the source's policies; a nightly copy carries what its owner could read."
+      },
+      {
+        "text": "Their own states, because the policy travels with the rows into any table they are copied to.",
+        "correct": false,
+        "why": "A policy belongs to one table; the copy has none, and holds whatever its writer could see."
+      },
+      {
+        "text": "No rows at all, since a new table fails closed until somebody writes it a policy.",
+        "correct": false,
+        "why": "Failing closed starts when row security is enabled on a table, and nobody enabled it on the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tt6ya9y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The nightly Airflow pipeline and a reporting tool both connect as `etl_loader`, and its password is written in the DAG file in git. Which change do the two lessons agree on?",
+    "hint": "Data Security, Governance and Privacy, lesson 1; Data Pipelines and ETL, lesson 18.",
+    "choices": [
+      {
+        "text": "Keep it in a `~/.pgpass` the whole team shares, with its mode set to 0600.",
+        "correct": false,
+        "why": "A password file holds one person's passwords, never a team's, and the two programs still share one name in every log."
+      },
+      {
+        "text": "Move the password to a private branch that only the team checks out, out of the main history.",
+        "correct": false,
+        "why": "A password in the code is in every copy, branch and tag of it, for ever."
+      },
+      {
+        "text": "Keep one account and add `VALID UNTIL` to it, so its password expires every quarter.",
+        "correct": false,
+        "why": "An end date suits a person's contract; it does not tell two programs apart, and the password stays in git."
+      },
+      {
+        "text": "One service account per program, each password long, random and kept in the environment.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s9x7xz2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your `Orders` sheet holds order numbers as numbers, like 1001, and the courier's export holds the same numbers pasted in as text. Every `XLOOKUP` from one to the other answers `#N/A`, though the values look identical. What is wrong, and which way should the repair go?",
+    "hint": "Excel for Data Analysis, lesson 4; Data Cleaning and Preparation, lesson 7.",
+    "choices": [
+      {
+        "text": "Convert both sides with `VALUE`: digits are safest stored as numbers, even in a column that nobody adds up.",
+        "correct": false,
+        "why": "Read as a number, an identifier loses its leading zeros; a code is kept as text and joined in one form."
+      },
+      {
+        "text": "Text never equals a number, and an order number is an identifier, so hold it as text, in one form, on both sides.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`XLOOKUP` cannot search a range pasted from another file until it has been made into a table.",
+        "correct": false,
+        "why": "A lookup searches any range. The failure is that a number and a text are never equal."
+      },
+      {
+        "text": "Each value carries a space at the end; wrap the lookup value in `TRIM` and the matches come back.",
+        "correct": false,
+        "why": "A trailing space is one look-alike key, but `TRIM` turns neither a number into text nor text into a number, which is the mismatch here."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjawr9sr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In Power Query you merge 400 order lines with a supplier's product list on `Code`, Left Outer, to bring in each product's category. The dialog says 400 of 400 rows matched, yet the merged query has 412 rows and its revenue went up. What happened, and what is the repair?",
+    "hint": "Excel for Data Analysis, lesson 14; Data Cleaning and Preparation, lesson 11.",
+    "choices": [
+      {
+        "text": "Change the join to Inner, which keeps only rows that match on both sides, and the extra rows go.",
+        "correct": false,
+        "why": "Every line matched, so Inner returns the same 412 rows; the copies come from keys that repeat on the right."
+      },
+      {
+        "text": "Twelve lines found no product, and a Left Outer merge adds an empty row for each of them.",
+        "correct": false,
+        "why": "Left Outer keeps an unmatched row once, with empty columns; it never adds one, and the dialog said every line matched."
+      },
+      {
+        "text": "Some codes repeat in the product list, so their lines were copied; make it one row per code, once the copies agree.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The merge ignored capitals, so codes like `dec250` and `DEC250` were both matched to the same order lines, twice each.",
+        "correct": false,
+        "why": "A merge compares text exactly, capitals included. That difference loses matches; it does not add them."
+      }
+    ]
+  },
+  {
+    "id": "ex-87nfzqeh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You bring each sale's city from `Customers` with `=XLOOKUP(C4,Customers!$A$2:$A$12,Customers!$D$2:$D$12)`. Customer `C00` has no city on purpose, and a pivot table by city now shows a city called 0 at the top. What happened, by lesson 4?",
+    "hint": "Excel for Data Analysis, lesson 4.",
+    "choices": [
+      {
+        "text": "The pivot table writes 0 for every blank it finds while grouping a text column.",
+        "correct": false,
+        "why": "The 0 is already in the cells; the pivot table only groups what the lookup wrote."
+      },
+      {
+        "text": "`C00` is missing from `Customers`, and with no fourth argument `XLOOKUP` shows 0 where the key is absent.",
+        "correct": false,
+        "why": "`C00` is in `Customers`. A key that is absent gives `#N/A`, the loud failure."
+      },
+      {
+        "text": "The key was found and its cell is empty, and a lookup that lands on an empty cell returns the number 0.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`C00` is stored as a number in `Sales` and as text in `Customers`.",
+        "correct": false,
+        "why": "A number against text never matches, and that shows as `#N/A`, not as 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp4mryk7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Cell B2 holds the date of sale S1001, 2 January 2025. What does `=DAY(EOMONTH(B2, 1))` answer?",
+    "hint": "Excel for Data Analysis, lesson 6.",
+    "value": 28,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-j7tn5862",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop in Brazil sends its sales with dates written day first, like `03/12/2024`, and a colleague pastes the column into an Excel set to US English. Some of the dates sit on the right of their cells and some on the left. What should be done with the column?",
+    "hint": "Excel for Data Analysis, lesson 6; Data Cleaning and Preparation, lesson 7.",
+    "choices": [
+      {
+        "text": "Only the left-aligned cells are wrong; convert them with `DATEVALUE` and keep the rest.",
+        "correct": false,
+        "why": "The right-aligned ones are the worse half: days 1 to 12 were read month first and became valid wrong dates, and `DATEVALUE` reads by the same US setting."
+      },
+      {
+        "text": "Distrust every row: take the source text and build each date with `DATE` from its pieces, day from the left.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Count the values whose first number passes 12; unless those are the majority of the column, the source is month first.",
+        "correct": false,
+        "why": "One witness with no counter-witness settles it: a first number above 12 can only be a day, so a source with some of those and none the other way writes day first."
+      },
+      {
+        "text": "Change the cells' number format to a day-first date, since only the display follows the US setting.",
+        "correct": false,
+        "why": "A format changes how a number is shown. The pasted cells already hold wrong day numbers, or text."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw2f41s7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "An old system wrote order numbers with five digits, like `00841`, and Excel read them as numbers and shows `841`. The formula `=TEXT(A2, \"___\")` gives the five digits back, as text.",
+    "hint": "Excel for Data Analysis, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "00000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a26y6z8s",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "You have `WebOrders` and the courier's `Freight` invoice, keyed by `Order` in both. Match each question to the join kind of a merge, with `WebOrders` as the first table, that answers it.",
+    "hint": "Excel for Data Analysis, lesson 14; Data Cleaning and Preparation, lesson 11.",
+    "pairs": [
+      {
+        "left": "Which paid orders have no freight row?",
+        "right": "Left Anti"
+      },
+      {
+        "left": "Which invoice lines are orphans, for orders the web shop has no record of?",
+        "right": "Right Anti"
+      },
+      {
+        "left": "Every order, with its freight where there is any",
+        "right": "Left Outer"
+      },
+      {
+        "left": "Only the orders that were both sold and invoiced",
+        "right": "Inner"
+      }
+    ],
+    "right_distractors": [
+      "Full Outer"
+    ]
+  },
+  {
+    "id": "ex-f183dfak",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Next year's plan multiplies an expected 250 bags of `CER1K` by an average price. `=AVERAGEIFS(F2:F109, D2:D109, \"CER1K\")` answers about 110.11, and revenue divided by bags gives 106.78. Which belongs in the plan, by lesson 5?",
+    "hint": "Excel for Data Analysis, lesson 5.",
+    "choices": [
+      {
+        "text": "106.78, because an average that will be multiplied by bags has to be weighted by bags.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Either one: they differ only because `AVERAGEIFS` rounds the prices it reads.",
+        "correct": false,
+        "why": "Nothing is rounded. One divides by sales and the other by bags."
+      },
+      {
+        "text": "The mean of the two, about 108.44, since each one leans its own way.",
+        "correct": false,
+        "why": "Neither leans; they answer different questions, and averaging two averages is the other mistake lesson 5 warns about."
+      },
+      {
+        "text": "110.11, because it counts every sale once and is not pulled down by a few large orders.",
+        "correct": false,
+        "why": "Counting each sale once is the problem: 110.11 times the 200 bags sold is not the revenue that happened, so times 250 it will not be a forecast either."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyn1r9pw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To keep errors out of the `Bags` column, a colleague writes `=IFERROR(VALUE(SUBSTITUTE(E2,\" un\",\"\")),0)`, fills it down and reports the total. A few rows held values like `5 bags`. What is wrong with the column?",
+    "hint": "Data Cleaning and Preparation, lesson 10; Excel for Data Analysis, lesson 3.",
+    "choices": [
+      {
+        "text": "`SUBSTITUTE` turns every row into text, so the rows that were already plain numbers stop counting in the total.",
+        "correct": false,
+        "why": "It returns the text `12` for the number 12, and `VALUE` turns it back. Those rows are fine."
+      },
+      {
+        "text": "`VALUE` reads `5 bags` as 5, so the total is right and only the unit was dropped.",
+        "correct": false,
+        "why": "`VALUE` cannot read the letters; the row becomes `#VALUE!`, which the wrapper turns into 0."
+      },
+      {
+        "text": "Nothing: `IFERROR` replaces only errors, and an error was never a quantity anyway.",
+        "correct": false,
+        "why": "The error was the row saying it could not be read. Replacing it with 0 records zero bags, a measurement nobody made."
+      },
+      {
+        "text": "Unreadable values became 0 with no sign; compare the count of numbers with the rows, or let the error show.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p80w095",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A left join takes 1,000 order lines to a catalogue on the product code. 40 of the lines are for a code the catalogue lists twice, and 25 for a code it lists three times; every other code appears once. How many rows does the join return?",
+    "hint": "Data Cleaning and Preparation, lesson 11.",
+    "value": 1090,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-khknj2dq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You are about to join a year of orders to a customer file nobody has checked. Put the steps in the order lesson 11 takes them.",
+    "hint": "Data Cleaning and Preparation, lesson 11.",
+    "items": [
+      "Drop the rows that repeat another in every column",
+      "Test that each customer id names exactly one row",
+      "Left join, stating the cardinality you expect",
+      "Compare rows in with rows out, and count the rows with no partner",
+      "Find out who the unmatched rows are and when they first appear"
+    ],
+    "trap": "Testing the key before the exact copies are gone reports a broken key that is only repeated rows."
+  },
+  {
+    "id": "ex-jvkfg60f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The 2027 budget arrives with one row per channel, a column per month and a last column, `Total`. In Power Query you select `Channel` and use Unpivot Other Columns. What happens to `Total`, and what should be done about it?",
+    "hint": "Data Cleaning and Preparation, lesson 13; Excel for Data Analysis, lesson 14.",
+    "choices": [
+      {
+        "text": "It turns into a thirteenth month and doubles every sum; check each total against its months, then remove it first.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Power Query leaves it out, because a column that sums the others is not unpivoted.",
+        "correct": false,
+        "why": "Other Columns takes every column except the one kept; it has no idea what a column holds."
+      },
+      {
+        "text": "Delete it at once: it repeats the months, so comparing it with them adds nothing.",
+        "correct": false,
+        "why": "A total is a second record of the same fact. Compared with the months it can catch a mistyped month, and deleting it unseen throws that away."
+      },
+      {
+        "text": "Select the twelve month columns and use Unpivot Only Selected Columns instead, so the step names them and skips `Total`.",
+        "correct": false,
+        "why": "That works this year and writes twelve month names into the step, so next year's file leaves its months untouched; the total is still never checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-gczfg0ma",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The customer list spells a name `Café do Largo`, and you look names up with `=MATCH(TRIM(C2), Customers!B2:B12, 0)`. Which of these values in C2 still give `#N/A`? Choose all that apply.",
+    "hint": "Data Cleaning and Preparation, lesson 6; Excel for Data Analysis, lesson 6.",
+    "choices": [
+      {
+        "text": "`café do largo`",
+        "correct": false,
+        "why": "Lookups ignore case, so this one is found."
+      },
+      {
+        "text": "`CAFE DO LARGO`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Café do Largo` with spaces before and after it",
+        "correct": false,
+        "why": "`TRIM` removes the spaces at both ends, and the trimmed name is found."
+      },
+      {
+        "text": "`Café do Largo` copied from a web page, with a non-breaking space before `do`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Café  do Largo`, typed with two ordinary spaces between the first and second words",
+        "correct": false,
+        "why": "`TRIM` turns a run of spaces into one, so this is found."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yxr7ze1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Every month you clean the shop's export in Excel before the report. Which of these habits keep the work checkable and repeatable, as lesson 17 asks of a pipeline? Choose all that apply.",
+    "hint": "Data Cleaning and Preparation, lesson 17; Excel for Data Analysis, lesson 14.",
+    "choices": [
+      {
+        "text": "Do the cleaning as Power Query steps that read the export and run again on every refresh.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Correct the typos directly in the exported file, so next month's refresh starts from clean data.",
+        "correct": false,
+        "why": "That edits the only evidence of what arrived. The export stays as it came, and the fix is a step."
+      },
+      {
+        "text": "Rename each step for what it decides, like `Kept paid orders`, not `Filtered Rows`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Split the codes with Flash Fill each month, checking a few rows by eye.",
+        "correct": false,
+        "why": "Flash Fill leaves values and a guess that has to be made and checked again on every export; a step repeats itself."
+      },
+      {
+        "text": "Keep last month's cleaned table and paste the new rows under it, so nothing has to run twice.",
+        "correct": false,
+        "why": "Then the result depends on an earlier run. Lesson 17 starts from the raw files every time, so deleting the output loses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-85v4rmpz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You look for customers who signed up twice by blocking on the surname and scoring the name similarity of each pair inside a block. You lower the threshold from 85 to 60. Which real duplicates will the rule still never find?",
+    "hint": "Data Cleaning and Preparation, lesson 5.",
+    "choices": [
+      {
+        "text": "Pairs that share an e-mail address but whose names, once in their plain form, are only about 70 alike.",
+        "correct": false,
+        "why": "At 60 those pass. A lower threshold reaches them, at the price of merging more strangers."
+      },
+      {
+        "text": "Pairs where one record's surname was mistyped: they land in different blocks and are never compared.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pairs whose CEP lost its hyphen in one of the two records.",
+        "correct": false,
+        "why": "The block is the surname, which they share, and the CEP is brought to eight bare digits before it is compared."
+      },
+      {
+        "text": "Pairs with identical names, because blocking skips a pair whose keys are equal.",
+        "correct": false,
+        "why": "Identical names share a surname and so a block; they are compared, homonyms included."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyhqvx3m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The website stamps an order `2025-03-08T01:30:00Z`. What date and time did the customer in São Paulo see on the screen?",
+    "hint": "Data Cleaning and Preparation, lesson 7.",
+    "choices": [
+      {
+        "text": "8 March, 01:30",
+        "correct": false,
+        "why": "That is the UTC clock, which the `Z` names; São Paulo is three hours behind it."
+      },
+      {
+        "text": "8 March, 04:30",
+        "correct": false,
+        "why": "That adds the three hours. São Paulo is behind UTC, so they come off."
+      },
+      {
+        "text": "7 March, 22:30",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "8 March, 02:30, because of daylight saving",
+        "correct": false,
+        "why": "Brazil abolished daylight saving in 2019; São Paulo is three hours behind UTC all year."
+      }
+    ]
+  },
+  {
+    "id": "ex-66hc6a1f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your slide's title is \"Dairy brings in nearly half again as much as Pantry\", and under it sits Horta's six-category revenue pie from lesson 2. What should replace the pie?",
+    "hint": "Data Visualisation, lesson 2; Communication and Storytelling with Data, lesson 5.",
+    "choices": [
+      {
+        "text": "A 3D pie with the Dairy and Pantry slices pulled out from the centre to catch the eye.",
+        "correct": false,
+        "why": "The tilt enlarges whatever is at the front, and pulling slices apart removes the shared edge the eye could use."
+      },
+      {
+        "text": "A donut with the total revenue in its hole.",
+        "correct": false,
+        "why": "An arc is judged no better than an angle, and the total is not what the title claims."
+      },
+      {
+        "text": "The same pie with the percentage printed on every slice, so nobody has to judge the angles.",
+        "correct": false,
+        "why": "Then the reader reads the numbers and not the chart: a pie that needs them is a table drawn in a circle."
+      },
+      {
+        "text": "Bars on one axis from zero, Dairy and Pantry in colour, the other four in grey.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-05c8dqe1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "North took 7,384 orders in 2024 and 11,852 in 2025. A sales deck draws the two years as bars on an axis that starts at 5,000. By lesson 16's method, what is the chart's lie factor? Answer to one decimal place.",
+    "hint": "Data Visualisation, lesson 16.",
+    "value": 3.1,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-w0hmcxsb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The head of sales, whose bonus is paid on growth, opens the quarterly review with Horta's monthly orders from January to June 2025 under the title \"Orders are climbing month after month\". Every point is correct. What do you check first?",
+    "hint": "Data Visualisation, lesson 16; Communication and Storytelling with Data, lesson 12.",
+    "choices": [
+      {
+        "text": "Whether the vertical axis starts at zero, since a line drawn from anywhere else exaggerates growth.",
+        "correct": false,
+        "why": "A line is read by position and may start where the data is; what misleads here is the dates, not the axis."
+      },
+      {
+        "text": "Whether six months are too few points for a line, and bars would be more honest.",
+        "correct": false,
+        "why": "Months are continuous and ordered, so a line is right; the misleading choice is where the six months begin."
+      },
+      {
+        "text": "Whether the figures were altered, since the bonus gives a reason to alter them.",
+        "correct": false,
+        "why": "An incentive says where to look first, not that anybody cheated, and every point here is correct."
+      },
+      {
+        "text": "Where the window starts: January is the dip after December, so set it against the same months of 2024.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w606c70z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A report shows the value of Horta's orders in the bands the finance team uses, R$ 0–50, 50–100, 100–200 and 200–1,000, as a histogram whose bar heights are the counts. The last bar is the biggest shape on the page. What does lesson 5 say to change?",
+    "hint": "Data Visualisation, lesson 5.",
+    "choices": [
+      {
+        "text": "Start the first band at R$ 5 instead of zero, to see whether the shape survives.",
+        "correct": false,
+        "why": "Moving the start tests equal bins for artefacts; this bar looks big because it is wide."
+      },
+      {
+        "text": "Keep the counts and give the vertical axis a logarithmic scale.",
+        "correct": false,
+        "why": "A log axis squeezes the heights, but the eye still reads area, and the widest band still has the most of it."
+      },
+      {
+        "text": "Plot each band's count divided by its width, with the axis labelled as orders per real.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Let the software choose equal bins with Sturges's rule, which was made to suggest a sensible number of them.",
+        "correct": false,
+        "why": "Sturges assumes a bell shape and gives equal bins; the readers here think in these bands, and the bands can stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mhr8x21",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Horta's analyst has four maps of the states to colour. Match each map to the palette lesson 12 gives it.",
+    "hint": "Data Visualisation, lesson 12.",
+    "pairs": [
+      {
+        "left": "The carrier that delivered most orders in each state",
+        "right": "categorical: distinct hues at similar lightness"
+      },
+      {
+        "left": "Orders per state in 2025",
+        "right": "sequential: lightness changing in one direction"
+      },
+      {
+        "left": "Customers gained or lost per state over the year",
+        "right": "diverging, with its light middle at zero"
+      },
+      {
+        "left": "Each state's on-time rate against the company's target",
+        "right": "diverging, with its light middle on the target"
+      }
+    ],
+    "right_distractors": [
+      "a rainbow such as `jet`, brightest in the middle of the range"
+    ]
+  },
+  {
+    "id": "ex-mpx29qgx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A dashboard tile shows the first-delivery on-time rate, 84.1%, in green, by a threshold somebody set long ago. The target is 95%, and the director has red-green colour blindness. Which change fixes the tile on both counts?",
+    "hint": "Data Visualisation, lesson 14; Communication and Storytelling with Data, lesson 7.",
+    "choices": [
+      {
+        "text": "Colour it by the comparison with 95%, and write \"below target\" or an arrow beside the number.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Move the threshold to 95%, so the tile turns red.",
+        "correct": false,
+        "why": "The colour is now honest, but it is still the only cue, and to this director the red looks like the green."
+      },
+      {
+        "text": "Show it as a gauge whose arc runs from red to green, with the needle at 84.1%.",
+        "correct": false,
+        "why": "A gauge spends a large circle on one number with no comparison, and its arc uses the pair the director cannot separate."
+      },
+      {
+        "text": "Swap the green for blue, a hue that survives red-green deficiency, and keep the old threshold as it is.",
+        "correct": false,
+        "why": "Blue reaches the director, but the colour still judges 84.1% against a forgotten threshold instead of the 95% target."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4v7jgzv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On a proportional symbol map, one city's circle has 8 times the area of another's. By Stevens's power law, with lesson 2's exponent for area of 0.7, how many times larger will a typical reader judge it? Answer to one decimal place.",
+    "hint": "Data Visualisation, lesson 2.",
+    "value": 4.3,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-8awkxbyz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Two warehouses' delivery times give boxplots that match in every line: the same quartiles, median, whiskers and points beyond the fences. By lesson 9, what can still differ between the two sets of deliveries? Choose all that apply.",
+    "hint": "Data Visualisation, lesson 9.",
+    "choices": [
+      {
+        "text": "How many deliveries each box summarises.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The time that half the deliveries came in under.",
+        "correct": false,
+        "why": "That is the median, and both boxes draw it in the same place."
+      },
+      {
+        "text": "Whether the middle half is one cluster or two, with an empty gap between them.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The share of deliveries above the top of the box.",
+        "correct": false,
+        "why": "The top of the box is Q3, so a quarter of the deliveries sits above it in both."
+      },
+      {
+        "text": "Whether the times were recorded to the second or rounded to quarter hours.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj26jatw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your chart compares the average delivery time on rainy days with dry days, and it will be pasted into a chat without your notes. Which title should it carry?",
+    "hint": "Communication and Storytelling with Data, lesson 5; Data Visualisation, lesson 15.",
+    "choices": [
+      {
+        "text": "Rain makes deliveries slower, so we need more riders on wet days",
+        "correct": false,
+        "why": "It claims a cause the chart cannot show and adds a second message, a request."
+      },
+      {
+        "text": "Deliveries on rainy days took longer on average",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Delivery time and weather",
+        "correct": false,
+        "why": "A topic with no verb: the reader still has to find the point alone."
+      },
+      {
+        "text": "Analysis of delivery times on rainy days and on dry days",
+        "correct": false,
+        "why": "It names the method and leaves the finding to the reader, who in a chat has nothing else to go on."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma82qex7",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Marina has one slot in Paulo's meeting to present the first-delivery finding. Put the moves of her presentation in the order lesson 3 gives them, first move first.",
+    "hint": "Communication and Storytelling with Data, lesson 3.",
+    "items": [
+      "The answer and the request, in one sentence",
+      "Context: deliveries are on time 94.5% of the time",
+      "Conflict: first deliveries are on time only 82.7%",
+      "Evidence: the gap, the check by region, the size",
+      "Recommendation: the pilot in full, with who, how much and when"
+    ],
+    "trap": "Leading with the answer does not move the recommendation up: the first sentence promises the request and the last move makes it in full. The context still comes before the conflict it sets up."
+  },
+  {
+    "id": "ex-tkvwgdt0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Faro wants fewer customers cancelling within ninety days of joining, and you are laying out the director's dashboard. What belongs in its top-left corner?",
+    "hint": "Communication and Storytelling with Data, lesson 7; Data Visualisation, lesson 18.",
+    "choices": [
+      {
+        "text": "Orders today, in large type, since it is the number that changes fastest.",
+        "correct": false,
+        "why": "A sharp move in it would change nothing anybody does; it is there because it is easy to get."
+      },
+      {
+        "text": "A gauge of the overall on-time rate, 94.5%, in green.",
+        "correct": false,
+        "why": "The overall rate hides first deliveries, and a gauge carries no comparison worth the space it takes."
+      },
+      {
+        "text": "The ninety-day cancellation rate on its own, because it is the outcome the company is trying to move.",
+        "correct": false,
+        "why": "It is a lagging measure: it shows today what happened to customers who joined three months ago."
+      },
+      {
+        "text": "This week's first-delivery on-time rate against its target, with the ninety-day cancellation rate beside it.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxtpzq9r",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A recommendation reads: \"Remove the manual check for addresses the postcode lookup confirms, in the interior, from 1 September for eight weeks, aiming at 8% late first deliveries or less, as the weekly first-delivery rate on the dashboard will show.\" Of lesson 9's five parts, the one it leaves out is the ___.",
+    "hint": "Communication and Storytelling with Data, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "owner",
+          "the owner"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6jxpcgv2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A slide's title is \"The first-delivery rate has not improved all year\", and the weekly rate has stayed between 80.4% and 85.0%. Which chart shows that sentence?",
+    "hint": "Communication and Storytelling with Data, lesson 5; Data Visualisation, lesson 4.",
+    "choices": [
+      {
+        "text": "A bar for each week on an axis starting at 80%, so the small differences show.",
+        "correct": false,
+        "why": "Bars are read by their length from the base, and cut at 80% they exaggerate every week's difference."
+      },
+      {
+        "text": "One line on an axis from 0% to 100%, because a rate has to be shown against its whole scale.",
+        "correct": false,
+        "why": "A line is read by position, not by length from zero; from zero, a range of under five points flattens into a band."
+      },
+      {
+        "text": "One line of the weekly rate on a fitted axis, the target drawn across it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A line per region, so the room sees where the rate is worst.",
+        "correct": false,
+        "why": "That answers \"where?\", a different comparison from the title's single number over time."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbnw3m5b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A slide titled \"The gap holds in every product line\" shows four small panels, one per product line, each with the same two bars: the cancellation rate after a late first box and after an on-time one. A reviewer says it breaks \"one message per slide\". Which statements are right? Choose all that apply.",
+    "hint": "Communication and Storytelling with Data, lesson 5; Data Visualisation, lesson 10.",
+    "choices": [
+      {
+        "text": "Four charts are four pieces of evidence, so the slide should become four slides.",
+        "correct": false,
+        "why": "The sign is two different charts; the same chart repeated for several groups, side by side, is one comparison."
+      },
+      {
+        "text": "The panels are one chart repeated for four groups to be compared, so the slide still carries one message.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each panel needs its own legend for the two colours.",
+        "correct": false,
+        "why": "The same colours repeat in every panel, so one key for the whole grid, or labels on the bars, is enough."
+      },
+      {
+        "text": "If each panel gets its own vertical scale, the slide has to say so in words and print every panel's axis values.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4772v23",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague studies only the customers still subscribed after a year. Among them, those whose first box arrived late renew as often as the rest, and the colleague concludes that late first deliveries barely matter. What is wrong with that?",
+    "hint": "Communication and Storytelling with Data, lesson 12.",
+    "choices": [
+      {
+        "text": "The customers a late box drove away left before the year was out, so they are not in the data.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Customers who are still there after a year are too small a sample for the result to mean anything.",
+        "correct": false,
+        "why": "Size is not the issue; all of them together would still leave out exactly the customers the question is about."
+      },
+      {
+        "text": "Renewal is a lagging measure, and a leading one should have been used.",
+        "correct": false,
+        "why": "The measure is not the problem: the group was chosen after lateness had already done its damage."
+      },
+      {
+        "text": "The colleague wanted that answer, so confirmation bias explains it.",
+        "correct": false,
+        "why": "Bias may be there too, but the flaw is in who was counted, and it would mislead an analyst who wanted nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k3mtkhj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lívia's card puts Caio's on-time KPI at 76.9% for the week of 2 February; the warehouse team's sheet says 83.3% from the same fourteen rows. Walking from one figure to the other the way lesson 2 bridges two revenues, what is the single step?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 2; BI for the Business: KPIs and Applications, lesson 10.",
+    "choices": [
+      {
+        "text": "A measure: the warehouse counts deliveries made within two days, the card deliveries made by the promised day.",
+        "correct": false,
+        "why": "That is Renata's two-day figure, 50%; both the warehouse and the card count deliveries by the promised day."
+      },
+      {
+        "text": "A filter: the card's denominator adds order 5111, cancelled after its promised day had passed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The time part: the warehouse counts days on UTC and the card on São Paulo's clock.",
+        "correct": false,
+        "why": "Both count whole days from order to delivery; the numerators are the same ten orders, and only the denominator moves, 12 to 13."
+      },
+      {
+        "text": "A filter: the card adds order 5107, cancelled the day after it was ordered.",
+        "correct": false,
+        "why": "The card excludes 5107, since nothing had gone wrong yet; counting it is Otávio's 71.4%."
+      }
+    ]
+  },
+  {
+    "id": "ex-nahbt5jn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To filter by product, a marketing analyst builds \"Discounts, Q1 2026\" in Metabase by joining `orders` to `order_lines`, and gets R$ 46,481.30. Finance's bridge says R$ 23,768.58. What happened, by lesson 3?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 3.",
+    "choices": [
+      {
+        "text": "`order_lines` still holds the test account, whose discounts the layer drops.",
+        "correct": false,
+        "why": "The layer's `order_lines` excludes customer 1 too, and the test account placed no order that quarter."
+      },
+      {
+        "text": "Each order's discount was summed once for every one of the order's lines.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Her session ran on UTC, so orders near midnight moved into another quarter.",
+        "correct": false,
+        "why": "The layer's `order_date` is fixed to São Paulo whatever the session says, and the clock moved the quarter by R$ 214.60, not by double."
+      },
+      {
+        "text": "The join kept refunded orders, whose discounts finance's figure leaves out.",
+        "correct": false,
+        "why": "Both figures carry refunded orders' discounts: the layer's `discount` is filled for every order, as the bridge's second step is."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtzpsbxp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lantern's website conversion went from 7.37% in 2025 to 6.77% in 2026. Lesson 10 wants \"conversion fell 8.1%\" said beside the difference between the two rates, in that difference's own unit: conversion fell 0.60 ___.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "percentage points",
+          "points",
+          "percentage point",
+          "pp",
+          "p.p."
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tqtrvyt5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "In February Contagem delivered furniture on time 75% of the time and parcels 95%; Savassi's deliveries were 20% furniture and 80% parcels, and its total was 86%. Holding the mix still as lesson 10 does, what would Contagem's on-time rate have been on Savassi's mix, in per cent?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 10; BI for the Business: KPIs and Applications, lesson 12.",
+    "value": 91,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-r0tw9xae",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of one run of lesson 7's `sync.sh` in the order its core loop takes them.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 7.",
+    "items": [
+      "Compute the model `activation.crm_contacts` afresh",
+      "Compare each row with the payload `last_sent` holds for that contact",
+      "Send only the rows that differ, by `PUT` on the external id",
+      "Write what the CRM accepted into `last_sent`"
+    ],
+    "trap": "Remembering comes last, and only for what was accepted: a row written to `last_sent` before the CRM said yes would never be sent again after a `400`."
+  },
+  {
+    "id": "ex-7s1f754f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ipê wants its call-centre agents to see each card customer's value in the CRM, refreshed by a nightly reverse ETL sync. Which field should the sync send?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 7; BI for the Business: KPIs and Applications, lesson 17.",
+    "choices": [
+      {
+        "text": "Lifetime margin net of credit losses, which agents may correct when they know the customer better.",
+        "correct": false,
+        "why": "A field the sync and people both write is undone at the next run; every synced field needs one owner."
+      },
+      {
+        "text": "Lifetime revenue, read-only for agents, since revenue is what the card processor records.",
+        "correct": false,
+        "why": "Revenue that a customer costs as much to serve is worth nothing; lesson 17's value is margin, with credit losses taken out."
+      },
+      {
+        "text": "Lifetime revenue, editable by agents, so the sync and the call centre keep it current together.",
+        "correct": false,
+        "why": "Two mistakes: revenue instead of margin, and a field with two writers that nobody can rely on."
+      },
+      {
+        "text": "Lifetime margin net of credit losses, a field the sync owns and agents only read.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-k06wtazk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 9's mobile funnel keeps 41.9% of visits at the product view, 30.3% of those at the cart, 52.1% of those at checkout and 63.5% of those at purchase. What share of mobile visits end in a purchase, in per cent, to one decimal place?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 9.",
+    "value": 4.2,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6h5s3k5b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Fernanda's risk report puts Ipê's whole loan book at 2.31% in default, under the board's 4% appetite, with the 2025 Q3 and Q4 vintages counted at 0. By the rule lesson 9 sets for a cohort grid, what is wrong with that?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 9; BI for the Business: KPIs and Applications, lesson 17.",
+    "choices": [
+      {
+        "text": "Those vintages are too young to be 90 days overdue: unknown, not zero, yet in the denominator.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The rate should weigh each vintage by its number of loans rather than by the amount of money lent.",
+        "correct": false,
+        "why": "Any weighting still counts loans too young to default as loans that did not."
+      },
+      {
+        "text": "The zeros should be the average six-month rate of the older vintages, 2.2%.",
+        "correct": false,
+        "why": "Averaging a column over the cohorts that reached it hides exactly whether the new ones are worse, and 2025's run at 3.2."
+      },
+      {
+        "text": "Nothing: a loan with no instalment 90 days overdue is, by Ipê's own definition, not in default.",
+        "correct": false,
+        "why": "True of each loan, and still the rate reads youth as quality: R$ 185 million of the 394 has had no time to default."
+      }
+    ]
+  },
+  {
+    "id": "ex-r7zm3asc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Caio's delivery records refresh every hour, and he changes a carrier or adds a van to a route once a week. What frequency does lesson 10 write on his KPI's card?",
+    "hint": "BI for the Business: KPIs and Applications, lesson 10.",
+    "choices": [
+      {
+        "text": "Hourly, so that the card is as fresh as its source.",
+        "correct": false,
+        "why": "The frequency follows the decision, not the data; read more often than anybody can act, it produces anxiety."
+      },
+      {
+        "text": "Daily, as a middle ground between the refresh and the review.",
+        "correct": false,
+        "why": "Nobody acts on it daily; splitting the difference is not the rule."
+      },
+      {
+        "text": "Weekly, as often as the decisions it feeds are made.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Monthly, like sales against plan, so that the four KPIs line up.",
+        "correct": false,
+        "why": "Each card follows its own owner's decisions, and Caio's are weekly."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfpc36mq",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "After the morning it froze at 09:20, Lívia rebuilds Marcos's delivery board. By bi-business lesson 14 and analytics-bi lesson 6, which belong on it? Choose all that apply.",
+    "hint": "BI for the Business: KPIs and Applications, lesson 14; Analytics, BI and Reverse ETL, lesson 6.",
+    "choices": [
+      {
+        "text": "A header giving the age of the data, taken from the newest record that arrived",
+        "correct": true,
+        "why": "The time the data describes, never the time the page was opened."
+      },
+      {
+        "text": "Twelve months of the on-time rate, so Marcos can see whether today is unusual",
+        "correct": false,
+        "why": "That baseline answers a tactical question; it belongs to the monthly review and changes nothing he does before lunch."
+      },
+      {
+        "text": "A rule that hides the numbers when no copy has arrived for 20 minutes",
+        "correct": true,
+        "why": "A frozen board looks calm; twice the copy interval separates a hiccup from a failure."
+      },
+      {
+        "text": "Tiles counting late and at-risk orders, outlined in red and labelled in words",
+        "correct": true,
+        "why": "He acts on orders, and a colour never stands alone."
+      },
+      {
+        "text": "An alert when the fourteen routes' average delay passes 15 minutes",
+        "correct": false,
+        "why": "It fired at 19.3 without saying where, and would stay silent at 5.3 with route 11 at 74."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gtr0q0v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Renata's weekly conversion tile averages the online shop's seven daily conversion rates. Lesson 10's tree multiplies visits by conversion by average ticket to rebuild a week's sales. Why does the tile's figure not rebuild them?",
+    "hint": "BI for the Business: KPIs and Applications, lesson 10; Analytics, BI and Reverse ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "It averages ratios, so a quiet Sunday weighs as much as a busy Monday.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Seven days are too few cases for a rate to be trusted, so the tile ought to show a count.",
+        "correct": false,
+        "why": "Each day carries thousands of visits; the size of the base is not what breaks the product."
+      },
+      {
+        "text": "Conversion is a leading indicator, and a tree like this one multiplies only lagging indicators.",
+        "correct": false,
+        "why": "The tree joins leading branches to a lagging result; the identity holds whatever kind each branch is."
+      },
+      {
+        "text": "The tree takes conversion as a fraction and the tile shows a percentage.",
+        "correct": false,
+        "why": "The sheet divides by 100 for that; units do not change the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmhe6xg9",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each number from lesson 12's reports with what the lesson puts back beside it.",
+    "hint": "BI for the Business: KPIs and Applications, lesson 12.",
+    "pairs": [
+      {
+        "left": "An average ticket of R$ 2,607 on the new garden pages",
+        "right": "The median"
+      },
+      {
+        "left": "Registered customers up 12.8% over the year",
+        "right": "Customers who bought in the last twelve months"
+      },
+      {
+        "left": "Complaints up 40% on the November before",
+        "right": "The orders and customers they came from"
+      },
+      {
+        "left": "Savassi 86% on time against Contagem's 79%",
+        "right": "Each store's rate for each kind of delivery"
+      },
+      {
+        "left": "Complaints about the solar lamps up 200%",
+        "right": "The units sold"
+      }
+    ],
+    "right_distractors": [
+      "The same month a year earlier"
+    ]
+  },
+  {
+    "id": "ex-v3t9n8a5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Rule B blocks half as many good card payments as rule A and has the better precision, 5.7% against 3.6%. At lesson 17's prices, R$ 1,100 per fraud let through and R$ 15 per good payment blocked, which costs Ipê less in a month?",
+    "hint": "BI for the Business: KPIs and Applications, lesson 17.",
+    "choices": [
+      {
+        "text": "Rule B, because better precision means fewer of its alerts are wasted.",
+        "correct": false,
+        "why": "Precision does not price the frauds a rule lets through: B misses 160 against A's 100."
+      },
+      {
+        "text": "Rule A: B saves R$ 59,940 in blocks and loses R$ 66,000 more to fraud.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rule B: blocking 3,996 fewer good customers outweighs 60 more frauds.",
+        "correct": false,
+        "why": "60 frauds at R$ 1,100 is R$ 66,000; 3,996 blocks at R$ 15 is R$ 59,940."
+      },
+      {
+        "text": "Neither; each rule's two mistakes cost the same in total.",
+        "correct": false,
+        "why": "A costs R$ 229,880 and B R$ 235,940."
+      }
+    ]
+  },
+  {
+    "id": "ex-24stvq7s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "One night the sync from analytics-bi lesson 7 ends with `failed 284`, every refusal reading `health must be one of active, at risk, lapsed`. By bi-business lesson 14's rule for alerts, which message should the run send?",
+    "hint": "BI for the Business: KPIs and Applications, lesson 14; Analytics, BI and Reverse ETL, lesson 7.",
+    "choices": [
+      {
+        "text": "To the sync's owner, every night, the run's totals: sent, removed and failed.",
+        "correct": false,
+        "why": "A message every night, `failed 0` included, is a notification; it gets ignored before the night it matters."
+      },
+      {
+        "text": "None: refused rows stay out of `last_sent`, so the next run retries them by itself, with nobody's help.",
+        "correct": false,
+        "why": "A `400` fails identically every time; the retry succeeds only once somebody changes the picklist."
+      },
+      {
+        "text": "To each salesperson whose contacts failed, a list of their customers whose health in the CRM is now out of date.",
+        "correct": false,
+        "why": "They can only watch: nothing they do adds a value to the CRM's picklist."
+      },
+      {
+        "text": "To the sync's owner: 284 refused, the CRM's picklist lacks `new`; add it and the next run sends them.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbk97stq",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Over the twelve weeks before February, Caio's KPI ran between 74.1% and 84.0% on the card's definition, around 80 in a normal week. Which statements about his target hold, by lesson 10? Choose all that apply.",
+    "hint": "BI for the Business: KPIs and Applications, lesson 10.",
+    "choices": [
+      {
+        "text": "The 76.9% of the week of 2 February is an ordinary week, not a crisis.",
+        "correct": true,
+        "why": "It sits inside the range the number wanders with nothing changed."
+      },
+      {
+        "text": "An action threshold of 79%, any single week below it, catches trouble early.",
+        "correct": false,
+        "why": "Four of the twelve weeks were below 79: a threshold inside the normal range rings every month."
+      },
+      {
+        "text": "A goal of 85% needs something to change, such as a carrier or a route.",
+        "correct": true,
+        "why": "It is above the best week in the history, so no lucky week reaches it."
+      },
+      {
+        "text": "A competitor's 92% on time puts Caio's warehouse 15 points behind.",
+        "correct": false,
+        "why": "Theirs was computed with a definition nobody here has seen; without cancellations it compares with 83.3, not 76.9."
+      },
+      {
+        "text": "A target of 81% would have been met by luck in five of the twelve weeks.",
+        "correct": true,
+        "why": "Weeks 2, 4, 8, 10 and 12 reached it with nothing changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qxc4jcm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Renata lays online advertising spend beside sales, and November and December top both. Lesson 7 names the confounder behind that. Which comparison does analytics-bi lesson 10 call the strong defence against it?",
+    "hint": "BI for the Business: KPIs and Applications, lesson 7; Analytics, BI and Reverse ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "Split the months by every other column available until no difference is left unexplained.",
+        "correct": false,
+        "why": "Lesson 10 calls that the weak defence: there is always one more column."
+      },
+      {
+        "text": "Compare December, the month with the highest spend, against March, the month with the lowest.",
+        "correct": false,
+        "why": "Those months differ by season, the very thing that raises both the budget and the sales."
+      },
+      {
+        "text": "Withhold the ads from part of the audience, picked at random beforehand, and compare.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Require the correlation between spend and sales to stay above 0.8 in every quarter of the year.",
+        "correct": false,
+        "why": "A strong correlation is what the season produces; its strength says nothing about cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-84cr89v7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The `cents` column of four orders holds `1500`, `NaN`, `2500` and `3500`, and `c.mean()` printed `2500.0`. The team decides that an order with no amount was unpaid and counts as zero. By lesson 21, what does `c.fillna(0).mean()` print?",
+    "hint": "Python, lesson 21.",
+    "value": 1875,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-4cn4s8rf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An orders table has 10 rows. `cents` is missing in 2 of them and `paid_at` in 3, and one row is missing both; every other column is complete. You only need `cents` for the average, but you write `df = df.dropna()`. By lesson 21, how many rows are left?",
+    "hint": "Python, lesson 21.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-z20nf3t6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`customers.csv` has a `cep` column with values such as `01310100`, and an `orders` column of whole numbers with a few blank cells. Which `read_csv` call keeps both columns honest?",
+    "hint": "Data Cleaning and Preparation, lesson 10; Python, lesson 21.",
+    "choices": [
+      {
+        "text": "`pd.read_csv(\"customers.csv\", dtype={\"cep\": str, \"orders\": \"int64\"})`",
+        "correct": false,
+        "why": "Lower-case `int64` has no way to hold a gap; the nullable type is `Int64` with a capital I."
+      },
+      {
+        "text": "`pd.read_csv(\"customers.csv\", dtype={\"cep\": str})`, then `df[\"orders\"].fillna(0).astype(int)`",
+        "correct": false,
+        "why": "The zero is a claim that those customers ordered nothing; a blank means nobody knows, and `Int64` keeps it as `<NA>`."
+      },
+      {
+        "text": "`pd.read_csv(\"customers.csv\", dtype={\"cep\": \"Int64\", \"orders\": \"Int64\"})`",
+        "correct": false,
+        "why": "A CEP is an identifier, not a quantity: read as a number it loses its leading zero, and adding two of them means nothing."
+      },
+      {
+        "text": "`pd.read_csv(\"customers.csv\", dtype={\"cep\": str, \"orders\": \"Int64\"})`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kwr2wrz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A weekly report prints its figures with f-strings. Match each expression to the text it produces, by lesson 2.",
+    "hint": "Python, lesson 2.",
+    "pairs": [
+      {
+        "left": "`f\"{0.0834:.1%}\"`",
+        "right": "`8.3%`"
+      },
+      {
+        "left": "`f\"{1250000:,}\"`",
+        "right": "`1,250,000`"
+      },
+      {
+        "left": "`f\"{19.5:.2f}\"`",
+        "right": "`19.50`"
+      },
+      {
+        "left": "`f\"{7:03}\"`",
+        "right": "`007`"
+      }
+    ],
+    "right_distractors": [
+      "`0.1%`"
+    ]
+  },
+  {
+    "id": "ex-9d5r3cyt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A helper in an analysis script reads:\n\n```python\ndef mean(values):\n    total = sum(values)\n    n = sum(1 for _ in values)\n    return total / n\n```\n\n`mean([4, 8, 6])` returns `6.0`. By lesson 11, what happens when somebody calls `mean(x for x in [4, 8, 6])`?",
+    "hint": "Python, lesson 11.",
+    "choices": [
+      {
+        "text": "It raises `TypeError`, because a generator has no length.",
+        "correct": false,
+        "why": "Nothing here calls `len`; counting with `sum(1 for _ in values)` works on any iterable."
+      },
+      {
+        "text": "It returns `0.0`: both sums see an empty generator.",
+        "correct": false,
+        "why": "The first `sum` gets all three values and `total` is 18; only the second pass finds it empty."
+      },
+      {
+        "text": "It raises `ZeroDivisionError`, because `n` is 0.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It returns `6.0`, the same as for the list.",
+        "correct": false,
+        "why": "A generator produces its values once; the second `sum` asks an exhausted iterator and gets nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jfrq9dk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A sales file exported from a Windows spreadsheet fails at `open(\"sales.csv\", encoding=\"utf-8\")` with `UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe7 in position 14: invalid continuation byte`. What should the script do?",
+    "hint": "Python, lesson 9; Data Cleaning and Preparation, lesson 6.",
+    "choices": [
+      {
+        "text": "Read it with `encoding=\"latin-1\"`, where `0xe7` is `ç`, and convert the file to UTF-8 once.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Read it as UTF-8 and repair each value with `.encode(\"latin-1\").decode(\"utf-8\")`.",
+        "correct": false,
+        "why": "That repair is for mojibake already saved as valid UTF-8; here no text was produced at all, because the read failed."
+      },
+      {
+        "text": "Switch to `encoding=\"utf-8-sig\"`, the setting meant for files a person exported from Excel or another spreadsheet.",
+        "correct": false,
+        "why": "It only removes the three bytes of a BOM at the start; a `0xe7` in the middle of the file still fails as UTF-8."
+      },
+      {
+        "text": "Add `errors=\"replace\"`: the read then finishes, and only the few bytes that are not valid UTF-8 are touched.",
+        "correct": false,
+        "why": "It stops the raise by losing the data; a customer's name comes out with a hole in it and nothing says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnathgwb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A script opens a file with the header `name,city,score` and the line `Ada,\"Porto, Portugal\",91` using `open(path, newline=\"\", encoding=\"utf-8\")`, then reads it with `csv.DictReader`. Which statements hold, by lesson 9? Choose all that apply.",
+    "hint": "Python, lesson 9.",
+    "choices": [
+      {
+        "text": "`row[\"score\"]` is `\"91\"`, a string, until the script converts it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An empty cell comes back as `None`, which `if row[\"score\"] is None` can test for.",
+        "correct": false,
+        "why": "An empty cell arrives as `\"\"`; there is no type information in a CSV file, so nothing turns it into `None`."
+      },
+      {
+        "text": "Passing `fieldnames=[\"name\", \"city\", \"score\"]` as well would make the header line come back as a data row.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Porto` and `Portugal` end up in two columns, and `score` holds `Portugal\"`.",
+        "correct": false,
+        "why": "That is what `split(\",\")` does; the reader knows a comma inside quotes is not a separator."
+      },
+      {
+        "text": "Each row is a dictionary, so a column inserted in the middle of the file later does not change `row[\"score\"]`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bhvywts",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A script writes `summary.json` with `json.dump(data, f)` and the result is committed every day. In review, `git diff` shows the whole file as one line removed and one line added, so nobody can see which figure moved. What fixes that?",
+    "hint": "Python, lesson 9; Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "Pass `ensure_ascii=False`, so the file stops being escaped and becomes readable.",
+        "correct": false,
+        "why": "That keeps accents as accents; the file is still one line, and a diff still shows it removed and added whole."
+      },
+      {
+        "text": "Write it with `indent=2` and `sort_keys=True`, one value per line in a fixed order.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Write the summary as CSV with `\",\".join(...)`, because Git diffs CSV files cell by cell.",
+        "correct": false,
+        "why": "Git diffs any text line by line, and a CSV built by hand breaks on the first value with a comma in it."
+      },
+      {
+        "text": "Read the commit with `git diff --stat` instead, which summarises each change per file and names the figure that moved.",
+        "correct": false,
+        "why": "`--stat` counts lines per file; for a one-line file it says one insertion and one deletion, nothing about which value."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnjeycef",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly report wraps forty lines in `try:` and ends with `except: threshold = 100`. Somebody typed `\"1o0\"` into the configuration a month ago, and every report since has used 100 without a word. Which rewrite does lesson 8 argue for?",
+    "hint": "Python, lesson 8.",
+    "choices": [
+      {
+        "text": "`except Exception:` in place of the bare `except:`, keeping the same block and the same fallback.",
+        "correct": false,
+        "why": "`Ctrl-C` works again, but your own `AttributeError` two lines down is still reported as a configuration problem, and the fallback is still silent."
+      },
+      {
+        "text": "Keep the bare `except:` but log a warning before setting 100, so that every time the fallback is used there is a record of it.",
+        "correct": false,
+        "why": "A bare clause also catches `KeyboardInterrupt` and every bug in forty lines, and a warning in a log nobody reads leaves the report on 100."
+      },
+      {
+        "text": "A `try` around the `int()` call alone, whose `except ValueError` raises a message naming file, key and value.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`except ValueError:` around the same forty lines, still falling back to 100.",
+        "correct": false,
+        "why": "The type is narrow and the block is not, and the report still runs on a number nobody chose."
+      }
+    ]
+  },
+  {
+    "id": "ex-wca5860d",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A test of a function that totals prices fails on `assert total([0.1, 0.2]) == 0.3`, because the sum is `0.30000000000000004`. By lesson 16, the line that passes is `assert total([0.1, 0.2]) == pytest.___(0.3)`.",
+    "hint": "Python, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "approx",
+          "approx()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zjjyg1wa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Three weeks ago an analyst committed and pushed `.venv/`, a few hundred megabytes. Today the folder goes into `.gitignore`, is removed from the index with `git rm --cached`, and that commit is pushed. Does a colleague who clones tomorrow still download those megabytes?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "Yes, but only until the shared copy cleans up the files that no current commit uses.",
+        "correct": false,
+        "why": "The old commits are still on the branch and still point at those files; deleting later does not help, as with a photo or a secret."
+      },
+      {
+        "text": "No: `.gitignore` now names `.venv/`, so Git leaves those files out of the old commits as well.",
+        "correct": false,
+        "why": "An ignore rule only tells Git what to stop seeing in the working tree; it rewrites nothing that was already committed."
+      },
+      {
+        "text": "No: the latest commit no longer has the folder, and a clone brings what the latest commit holds.",
+        "correct": false,
+        "why": "A clone brings the whole history, and the commit that added the folder is still in it."
+      },
+      {
+        "text": "Yes: the commit that added it is still in the history, and a clone brings all of it.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dchv7q1w",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Merging a colleague's branch into yours stops with conflicts in `pyproject.toml` and `uv.lock`: each of you added a different library. Put the steps that finish the merge in order.",
+    "hint": "Python, lesson 19; Git and Teamwork: Version Control, Review and Process, lesson 6.",
+    "items": [
+      "Make `pyproject.toml` say what it should, with both libraries in it",
+      "Run `uv lock` to generate `uv.lock` again from that file",
+      "`git add pyproject.toml uv.lock`",
+      "`git commit` to conclude the merge"
+    ],
+    "trap": "Editing the markers out of `uv.lock` by hand is the one thing that breaks its hashes. The lock is regenerated from the resolved `pyproject.toml`, and `git add` comes after, because adding a file is what tells Git its conflict is settled."
+  },
+  {
+    "id": "ex-rh9b0rmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A notebook with the line `API_TOKEN = \"...\"` was committed and pushed to the team's repository; the next commit replaced it with `os.environ[\"API_TOKEN\"]`. What has to happen first?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Python, lesson 21.",
+    "choices": [
+      {
+        "text": "Nothing more: the latest version reads the token from the environment, so the repository is clean.",
+        "correct": false,
+        "why": "`git show` on the earlier commit still prints the token; deleting it later does not change the commit that added it."
+      },
+      {
+        "text": "Revoke the token and issue a new one: it has been public since the push, whatever the history does next.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git revert` the commit that added the token, so the history records it as undone.",
+        "correct": false,
+        "why": "A revert is a new commit on top; the old one, token and all, stays in every clone."
+      },
+      {
+        "text": "Untrack the notebook with `git rm --cached` and list it in `.gitignore`.",
+        "correct": false,
+        "why": "That stops future edits from being tracked; the token is already in a pushed commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdr4fv22",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The team ran `black` over the whole analysis repository in one commit. Now `git blame clean.py` names that commit on almost every line, and nobody can find who changed a filter or why. What does lesson 17 have you do?",
+    "hint": "Python, lesson 17; Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "List that commit's hash in `.git-blame-ignore-revs` and point `blame.ignoreRevsFile` at that file.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git revert` the formatting commit, so that blame goes back to naming the people who actually wrote each line.",
+        "correct": false,
+        "why": "That undoes the formatting itself, and blame would then name the revert on the same lines."
+      },
+      {
+        "text": "Narrow it with `git blame -L`, so only the lines in question are shown.",
+        "correct": false,
+        "why": "`-L` limits the range of lines; each of them still names the formatting commit as the last change."
+      },
+      {
+        "text": "Run `black --check` from now on, which leaves the history alone.",
+        "correct": false,
+        "why": "`--check` decides what happens to future commits; the commit already made still owns every line."
+      }
+    ]
+  },
+  {
+    "id": "ex-811ev7tz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "An analyst needs to undo four different things in the repository of a cleaning script. Match each situation to the command lesson 4 uses for it.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "pairs": [
+      {
+        "left": "A commit on `main` that changed a threshold, already pulled by two colleagues",
+        "right": "`git revert`"
+      },
+      {
+        "left": "A typo in the message of the commit just made, not yet pushed",
+        "right": "`git commit --amend`"
+      },
+      {
+        "left": "Take back the last local commit and keep its changes staged, to commit them again",
+        "right": "`git reset --soft HEAD~1`"
+      },
+      {
+        "left": "Throw away every uncommitted change, staged or not, in the whole tree",
+        "right": "`git reset --hard`"
+      }
+    ],
+    "right_distractors": [
+      "`git reset HEAD~1`"
+    ]
+  },
+  {
+    "id": "ex-xrtvz067",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Last month `clean.py` had the line `df = df[df[\"country\"] != \"XX\"]`, and today it is not there. Which command lists the commit that took it out?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "`git log --grep=XX --oneline -- clean.py`",
+        "correct": false,
+        "why": "`--grep` searches commit messages, and the message may never have mentioned the code."
+      },
+      {
+        "text": "`git blame clean.py`",
+        "correct": false,
+        "why": "Blame only sees lines that exist now; a line that is gone has nothing to point at."
+      },
+      {
+        "text": "`git show HEAD:clean.py`",
+        "correct": false,
+        "why": "It prints the file as it is in the last commit, which is exactly where the line is missing."
+      },
+      {
+        "text": "`git log -S \"XX\" --oneline -- clean.py`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-spy8dpxg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The team wants `sales.parquet`, about 40 MB and replaced by a fresh extract every week, kept in the analysis repository with every weekly version. What does lesson 10 recommend?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "Commit each extract, and delete the previous week's file in the same commit to keep the size down.",
+        "correct": false,
+        "why": "Deleting a file does not change the commits that added it; every old version stays in the history."
+      },
+      {
+        "text": "Keep it in a repository of its own and add that one as a submodule.",
+        "correct": false,
+        "why": "A submodule pins a commit of another repository; that repository's history still grows by 40 MB a week."
+      },
+      {
+        "text": "Track it with Git LFS, accepting that everybody on the team needs LFS installed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Commit it as usual: 40 MB is under the 50 MB at which GitHub starts to warn.",
+        "correct": false,
+        "why": "Every week adds a whole new 40 MB to a history that each clone downloads forever; the warning is about one file, not the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw1h6h7h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The workbook behind your weekly sales dashboard lives only in a OneDrive folder synced to your laptop, and a colleague says it is safe because it is in the cloud. Ransomware encrypts the laptop's files. By lesson 8, what happens to the copy on OneDrive?",
+    "hint": "Essential Computing, lesson 8.",
+    "choices": [
+      {
+        "text": "It stays as it was, because the server keeps the version that was uploaded before the laptop was infected.",
+        "correct": false,
+        "why": "Sync keeps the two places identical, so the encrypted file replaces the server's copy too; keeping old states is version history, which is a different feature."
+      },
+      {
+        "text": "It is encrypted too, within seconds; the old state is only in the service's version history.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sync pauses when every file changes at once, so the cloud keeps the last good state.",
+        "correct": false,
+        "why": "A change is copied whatever caused it; that is what keeping two places identical means."
+      },
+      {
+        "text": "It survives, because the laptop and the cloud count as two kinds of media under three, two, one.",
+        "correct": false,
+        "why": "A sync service is two locations and one state. The rule counts copies that do not change when the original does."
+      }
+    ]
+  },
+  {
+    "id": "ex-zen8my6v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The `notes` sheet of your `pipeline.xlsx` had the warehouse database password typed into it. This morning you shared the file with a consultant through an `Anyone with the link` link, and pasted its sheets into an AI assistant to ask about a formula. What do lessons 11 and 3 have you do now?",
+    "hint": "Essential Computing, lesson 11; AI in Development, lesson 3.",
+    "choices": [
+      {
+        "text": "Change the database password, because neither the consultant's download nor the request to the provider can be called back.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Move the file to another folder in your Drive, so the link no longer points at it.",
+        "correct": false,
+        "why": "A link points at an identifier, not a path; moving the file within your Drive keeps the link working."
+      },
+      {
+        "text": "Turn the link off and delete the conversation in the assistant: between them, those two steps remove every copy that left your machine.",
+        "correct": false,
+        "why": "Revoking a file link stops new downloads and does not reach copies already on other disks, and the request already sits in a log at the provider."
+      },
+      {
+        "text": "Nothing, since an assistant's secret check refuses any file holding something shaped like a password.",
+        "correct": false,
+        "why": "A pattern check is a net with holes: a value whose name is not on its list goes through, as `PAYMENTS_KEY` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g42g986",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An assistant writes the Python that totals June's revenue from the order export and, when asked, a test file for it. Every test passes. Before the figure goes to the finance meeting, which check do lessons 12 and 4 say actually tests it?",
+    "hint": "Essential Computing, lesson 12; AI in Development, lesson 4.",
+    "choices": [
+      {
+        "text": "Ask the assistant for more tests, covering the edge cases, until every branch of the code is exercised.",
+        "correct": false,
+        "why": "Tests written by reading the code describe the code, bugs included; more of them only confirm that it does what it does."
+      },
+      {
+        "text": "Recompute the total a second way inside the same script, and check that the difference between the two is zero.",
+        "correct": false,
+        "why": "That shows the script agrees with itself, and a total built on a wrong assumption agrees with itself too."
+      },
+      {
+        "text": "Compare the total with a figure from outside the code, such as June's payment statement.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Run the generated tests again on a fresh copy of the export, to rule out a fluke.",
+        "correct": false,
+        "why": "A rerun repeats the same expected values, and those came from the code; nothing in it reaches outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-15sn6brq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A lookup brings each product's unit price from the price list, and 40 of 900 order lines find no price. A colleague wraps the lookup in IFERROR with a zero, and the revenue total stops showing an error. By lesson 12, the function to use instead, with a visible value such as \"not found\", is ___.",
+    "hint": "Essential Computing, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "IFNA",
+          "IFNA()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w8bd11y2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The billing system exports 1,200,000 order lines as a CSV. A colleague double-clicks it, clicks past a message, and builds the month's pivot from the sheet; no cell shows an error. Which check from lesson 12 would have caught the problem, and why, by lesson 18?",
+    "hint": "Essential Computing, lesson 12; Excel for Data Analysis, lesson 18.",
+    "choices": [
+      {
+        "text": "Error checking's green triangles, which mark the last row as inconsistent with the file.",
+        "correct": false,
+        "why": "Excel warns once, when it opens the file, and never again; the sheet looks complete, with no gap and no error."
+      },
+      {
+        "text": "The row count before and after: the sheet stops at 1,048,576 rows, so the other 151,424 lines of the file never arrived.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The sum of the whole column against the sum of the visible rows, since the rest is hidden by a filter.",
+        "correct": false,
+        "why": "Nothing was filtered. The lines past the last row are not in the sheet at all, hidden or otherwise."
+      },
+      {
+        "text": "A count of numbers beside a count of non-empty cells, since the lines that did not fit arrive as text.",
+        "correct": false,
+        "why": "The lines that did not fit are not loaded as anything; they are left behind, and every cell that arrived is an ordinary number."
+      }
+    ]
+  },
+  {
+    "id": "ex-scmgeayz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A supplier's system sends `stock.xlsx`, and Excel refuses to open it. In Notepad it shows readable lines of values separated by commas. By lesson 7, what is the file, and what would renaming it to `stock.csv` do?",
+    "hint": "Essential Computing, lesson 7.",
+    "choices": [
+      {
+        "text": "A damaged workbook, and the rename makes Excel convert its sheets into text.",
+        "correct": false,
+        "why": "Renaming moves no bytes. It converts nothing, in either direction."
+      },
+      {
+        "text": "A program disguised as a spreadsheet, since a name that does not match what is inside the file is exactly how that attack works.",
+        "correct": false,
+        "why": "That trick hides `.exe` behind a document's name, and a program's bytes are not readable lines of values."
+      },
+      {
+        "text": "A real workbook, because an `.xlsx` is text full of XML that any editor can read.",
+        "correct": false,
+        "why": "An `.xlsx` is a zip archive of XML, so an editor shows gibberish; readable lines separated by commas are a CSV."
+      },
+      {
+        "text": "Plain text with the wrong label: the rename converts nothing and changes which program opens it, which is all it needs.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-drktvar4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Your team opens an account with a model provider for a script that classifies survey comments: a console people sign in to, and an API key the script uses. Which of these do lessons 16 and 10 support? Choose all that apply.",
+    "hint": "Essential Computing, lesson 16; AI in Development, lesson 10.",
+    "choices": [
+      {
+        "text": "A long random password for the console, from the password manager, used for nothing else.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The key in `.env`, with `.env` added to `.gitignore` once the first commit shows the script works.",
+        "correct": false,
+        "why": "The rule goes in first: a `.env` committed once stays in the history, and the only fix is to revoke the key."
+      },
+      {
+        "text": "A key for this script alone, with a spending limit, apart from the one the dashboard prototype uses.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Keeping a key that was pasted into the team chat until the usage page shows somebody else spending it.",
+        "correct": false,
+        "why": "Revoke on suspicion, not on proof: a new key costs a deploy, and an old one in the wrong hands costs whatever its limit allows."
+      },
+      {
+        "text": "Codes from an authenticator app on the console, rather than by SMS.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-25gw1az1",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "The tool that backs up your team's report folder offers four arrangements on its settings screen. Match each to what lesson 8 says about it.",
+    "hint": "Essential Computing, lesson 8.",
+    "pairs": [
+      {
+        "left": "A mirror",
+        "right": "Made identical on each run, so it replaces a good copy with a bad one"
+      },
+      {
+        "left": "A full backup",
+        "right": "Copies everything; slow, large and self-contained"
+      },
+      {
+        "left": "An incremental backup",
+        "right": "Copies what changed since the last backup of any kind; a restore needs the full and every one since"
+      },
+      {
+        "left": "A differential backup",
+        "right": "Copies what changed since the last full; a restore needs two pieces"
+      }
+    ],
+    "right_distractors": [
+      "Copies only the files opened since the last run; a restore needs nothing else"
+    ]
+  },
+  {
+    "id": "ex-1sgtx986",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your script asks a model which customer wrote each complaint, then puts the name it returns into the SQL with an f-string, `where name = '{name}'`. It fails on a complaint signed `Dara O'Brien`. What does lesson 11 of each course have you change?",
+    "hint": "AI in Development, lesson 11; Relational Databases and SQL, lesson 11.",
+    "choices": [
+      {
+        "text": "Send the name as a parameter, never as part of the statement's text.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Make the column name a parameter as well, so the whole condition travels apart from the SQL.",
+        "correct": false,
+        "why": "A placeholder stands for a value. A column name cannot be one, and one that comes from outside goes through an allow-list."
+      },
+      {
+        "text": "Double every apostrophe in the model's reply before formatting the string, which is the quoting SQL expects inside a literal.",
+        "correct": false,
+        "why": "That mends this name and leaves the value in the text; a reply shaped differently can still change what the query does, and the rule has no exception for a value you trust."
+      },
+      {
+        "text": "Tell the model in the prompt to reply with letters and spaces and nothing else.",
+        "correct": false,
+        "why": "Whether a model obeys an instruction is a matter of probability, not of rule; the reply is untrusted input whatever the prompt asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvv8890h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At lesson 2's prices for Claude Haiku 4.5, $1 per million input tokens and $5 per million output tokens, a script classifies 4,000 survey comments a day, each request 1,200 tokens in and 50 out. By the lesson's cost function, what does a 30-day month cost, in dollars?",
+    "hint": "AI in Development, lesson 2.",
+    "value": 174,
+    "tolerance": 0,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-4vd72d6h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You paste a long table of store results into a model running in Ollama with its default window: a note at the top says the sales column is in thousands, and the question is at the bottom. The reply ends with `end_turn` and reads the column as units. By lesson 2, what is the likely explanation?",
+    "hint": "AI in Development, lesson 2.",
+    "choices": [
+      {
+        "text": "The prompt overflowed the 4,096-token window, and Ollama dropped its beginning, note included, without a word.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ollama kept the start of the prompt and cut its end, so the model answered a shortened question.",
+        "correct": false,
+        "why": "In the lesson's run Ollama kept the end and dropped the beginning: the question at the bottom survived and the top did not."
+      },
+      {
+        "text": "A prompt that did not fit would have been refused with a `400`, so the model simply ignored the note.",
+        "correct": false,
+        "why": "That is Anthropic's API. Ollama cuts the input instead, and the request succeeds with less than you sent."
+      },
+      {
+        "text": "Llama 3.2 was trained for 128,000 tokens, so the table fit, and the note was lost in the middle of a long context.",
+        "correct": false,
+        "why": "Ollama runs it with a window of 4,096 unless told otherwise, and the note was at the top, not in the middle."
+      }
+    ]
+  },
+  {
+    "id": "ex-eanpv0hh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You let an agent tidy the CSV exports in your team's synced reports folder, with a tool that can write any file there. It overwrote twelve originals with truncated versions, and the sync carried them to everyone's laptop. By lessons 7 and 8, what should change before it runs again?",
+    "hint": "AI in Development, lesson 7; Essential Computing, lesson 8.",
+    "choices": [
+      {
+        "text": "A nightly mirror of the folder to an external drive, so the next mistake has a copy to come back to.",
+        "correct": false,
+        "why": "A mirror replaces the good copy with the bad one on its next run. A backup has to add versions rather than replace them."
+      },
+      {
+        "text": "Read-only access to the originals, one tool that writes only to a separate folder, and a versioned backup behind both.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing in the tools, since the synced folder keeps the originals on the server and they can simply be fetched back from there.",
+        "correct": false,
+        "why": "Sync keeps every place identical, so the overwrite is on the server too; the old state survives only in version history, if that is on."
+      },
+      {
+        "text": "A sentence in the system prompt forbidding it to overwrite an original file.",
+        "correct": false,
+        "why": "Whether the model obeys a sentence is a matter of probability; every limit is enforced below the model, in the host or in the tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-yy8czgm0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You build lesson 6's kind of assistant over your team's document of KPI definitions. Put its steps in the order the lesson's program runs them, from the document to the checked answer.",
+    "hint": "AI in Development, lesson 6.",
+    "items": [
+      "Cut the document into passages, each with an id that says where it is",
+      "Embed every passage and save the vectors as an index",
+      "Embed the question and take the closest passages",
+      "Put those passages, with their ids, into the prompt",
+      "Check that every sentence of the answer cites a passage that was retrieved"
+    ],
+    "trap": "Embedding happens twice: once for the passages, when the index is built, and once for the question, at search time. The citations are checked last, because a model writes a likely-looking id the way it writes any other text."
+  },
+  {
+    "id": "ex-c9ty95fw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The company's KPI definitions are revised every quarter, and an assistant has to answer questions about them. By lesson 6, why give it retrieval rather than fine-tune a model on the definitions?",
+    "hint": "AI in Development, lesson 6.",
+    "choices": [
+      {
+        "text": "Retrieval sends fewer tokens with each question than a fine-tuned model has to read.",
+        "correct": false,
+        "why": "Retrieval adds passages to every request. It is chosen for facts that change, not to send less."
+      },
+      {
+        "text": "Fine-tuning would teach the definitions more reliably, but a training run takes longer than a quarter.",
+        "correct": false,
+        "why": "Fine-tuning is for how a model writes, its format or its tone. What it learns has no address to cite, and stays old until somebody trains again."
+      },
+      {
+        "text": "Retrieval lets the model learn the new definitions from the questions people ask it during the quarter.",
+        "correct": false,
+        "why": "Nothing a model is asked changes its parameters; retrieval works by putting the passages into each request."
+      },
+      {
+        "text": "A revised definition is an edit to one document, and the answer can cite the passage it came from.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1s2nk9v",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Before sending 2,000 support tickets to a provider to classify them, your script runs lesson 11's `redact()` on each. Which statements about what leaves are true? Choose all that apply.",
+    "hint": "AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "A CPF typed as eleven digits with no punctuation leaves as it was written.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A ticket the model refuses to classify never reached the provider.",
+        "correct": false,
+        "why": "A refusal is a reply. It comes back after the request has already gone, with everything in it."
+      },
+      {
+        "text": "A 15-digit parcel tracking number leaves as `[CARD]`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "With the values replaced, the model cannot tell that a card was mentioned at all.",
+        "correct": false,
+        "why": "The labels stay in the text, so the model still knows a card was mentioned; only the number is gone."
+      },
+      {
+        "text": "Replies can still reach the customers, because the script keeps the real addresses on its own side.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c68g0ht4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A reviewer hiring a junior BI analyst opens your portfolio project and looks at the dashboard first. By lesson 3, what do they look for next?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "What happens when the pipeline runs a second time, and where its data-quality checks sit in the flow.",
+        "correct": false,
+        "why": "That is what a data engineering reviewer opens; for BI the next thing is the definitions."
+      },
+      {
+        "text": "The SQL behind every visual, read line by line.",
+        "correct": false,
+        "why": "Lesson 3's BI reviewer goes from the dashboard to the definitions, not to the code."
+      },
+      {
+        "text": "The written definitions: what each metric counts, its source, and the decision it serves.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "How many pages the dashboard has, since a dozen pages show how much of the tool you have learned.",
+        "correct": false,
+        "why": "Lesson 3 asks a BI project for one page, not twelve; more pages are not what the reviewer is after."
+      }
+    ]
+  },
+  {
+    "id": "ex-smz9zabe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You want a screenshot of your sales dashboard in LinkedIn's Featured row, as first-job lesson 6 suggests. The dashboard runs on an export from your last employer's CRM, with every customer name swapped for an invented one. What does portfolio lesson 17 say?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 17; From Study to Hired: CV, Interviews and the First 90 Days, lesson 6.",
+    "choices": [
+      {
+        "text": "Blur the customer column in the picture and add a caption saying the figures are real but have been anonymised.",
+        "correct": false,
+        "why": "Blurring hides one column of data that should not be there at all; the rule is invented data."
+      },
+      {
+        "text": "It is fine now: with every name replaced, no customer can be recognised in the picture, and the totals belong to nobody.",
+        "correct": false,
+        "why": "Lesson 17 names this exact case, a real spreadsheet with the names changed, as one demo data must never be."
+      },
+      {
+        "text": "Keep the data, but publish only the screenshot and never the export itself.",
+        "correct": false,
+        "why": "The screenshot shows the data too; demo data is invented, always, wherever it appears."
+      },
+      {
+        "text": "Swap the whole dataset for invented data: a real export with the names changed is still somebody else's data.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-551q389j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio analysis computes monthly churn from a customer table, draws a line chart and exports a CSV. You have time for two or three tests. By lesson 12, where do they go?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "On the chart's colours, axis labels and legend, since that is the part a reviewer sees first and judges the project by.",
+        "correct": false,
+        "why": "A broken chart is visible and somebody notices; lesson 12 spends test time where a failure would be wrong, not merely visible."
+      },
+      {
+        "text": "On the churn rule, with a test on each side of its edge, such as a cancellation on a month's last day.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Spread evenly over every function, so the README can show full coverage.",
+        "correct": false,
+        "why": "Lesson 12 spends a small project's tests on the rules, the bug just fixed and the edges; coverage is not on its list."
+      },
+      {
+        "text": "On the function that reads the CSV, because that is where most of the lines are.",
+        "correct": false,
+        "why": "Reading a file moves values from one place to another; lesson 12 calls that plumbing, and the library has its own tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7mymcr9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "An interviewer asks why your portfolio dashboard reads from a spreadsheet and not a database. Put the sentences of your answer in lesson 20's order.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 20.",
+    "items": [
+      "I kept the data in one shared spreadsheet.",
+      "The other option was a small PostgreSQL database.",
+      "The shop records about two hundred sales a month, and the owner already edits that sheet.",
+      "If several shops started writing to it at once, the database is the first thing I would move to."
+    ],
+    "trap": "Most answers stop at the reason. The last step, the condition that would change the choice, is what turns the next question from an attack into a conversation."
+  },
+  {
+    "id": "ex-p5wxa0hw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "In a screening call the recruiter asks about your project, and you tell it in lesson 19's shape. Match each sentence to its part.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 19; From Study to Hired: CV, Interviews and the First 90 Days, lesson 11.",
+    "pairs": [
+      {
+        "left": "A clinic's receptionists rebooked missed appointments by hand, and nobody knew how many were lost each week.",
+        "right": "The problem"
+      },
+      {
+        "left": "I wrote down what counts as a no-show, because the clinic's two systems treated a late arrival differently.",
+        "right": "The decision"
+      },
+      {
+        "left": "The page refreshes once a night, so today's no-shows only appear tomorrow.",
+        "right": "The trade-off"
+      },
+      {
+        "left": "It is published at a public link, with the page of definitions beside it.",
+        "right": "The result"
+      }
+    ],
+    "right_distractors": [
+      "The stack"
+    ]
+  },
+  {
+    "id": "ex-t1x679by",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After your two minutes, the interviewer asks: \"What would happen to your dashboard with a hundred million rows?\" You never tried more than the fifty thousand in your dataset. Which answer do the two lessons support?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 20; From Study to Hired: CV, Interviews and the First 90 Days, lesson 14.",
+    "choices": [
+      {
+        "text": "\"Volume is a problem for seniors; at junior level nobody expects me to have thought about how a dashboard grows.\"",
+        "correct": false,
+        "why": "Lesson 14 says a junior is asked where a system breaks first; what is expected is knowing where your knowledge ends."
+      },
+      {
+        "text": "\"It would be fine: the tool is designed for large volumes, so a hundred million rows load the same way fifty thousand do.\"",
+        "correct": false,
+        "why": "A confident answer you never measured costs the most; the interviewer learns you would guess in production too."
+      },
+      {
+        "text": "\"I haven't measured beyond fifty thousand rows. I'd load a larger copy and time the refresh to find out.\"",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "\"That is outside the scope I set for the project in its brief, so it does not really apply to what I built.\"",
+        "correct": false,
+        "why": "Ducking the question shows nothing; both lessons say to name the edge and say how you would find out."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2xqcdz7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A take-home asks you to analyse a year of sales and hand in a short note. Which line belongs in the note's \"what I chose and why\" part, by first-job lesson 13 and portfolio lesson 16?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "Returned orders are left out of revenue, since the brief asks what customers kept; so the total sits below the finance report's.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "I added three charts the brief did not ask for, a forecast among them, to show the range of what I can do with the same data.",
+        "correct": false,
+        "why": "That is an extra, not a decision: it says nothing about how the data was treated, why, or what it cost."
+      },
+      {
+        "text": "I used Python, pandas and Matplotlib, the usual tools for an analysis of this kind.",
+        "correct": false,
+        "why": "That lists tools; a decision says what was chosen, why in this data's terms, and what it gives up."
+      },
+      {
+        "text": "Returned orders are left out of revenue, which is the correct way to measure sales.",
+        "correct": false,
+        "why": "A choice with no cost reads as a preference; each of lesson 16's decisions says what it gives up."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1tmdg7z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 5 wrote an estimate beside each of the seven tasks for loanbook's two rules. By lesson 21's evidence from the tags and the log, how many working days longer than the sum of those estimates did the rules milestone take?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 21.",
+    "value": 1.5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-2ynanxmy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which CV line for your BI portfolio project follows first-job lesson 4's pattern, with the evidence portfolio lesson 3 says a BI reviewer looks for?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "Developed an interactive dashboard using Power BI, DAX, SQL and Python.",
+        "correct": false,
+        "why": "It lists tools; lesson 4 wants what you did, what is true now and how anybody could check."
+      },
+      {
+        "text": "Helped a distributor become data-driven, cutting late deliveries by 30%.",
+        "correct": false,
+        "why": "*Helped* hides what you did, and a percentage you cannot say how you measured costs more than no number."
+      },
+      {
+        "text": "Participated in the end-to-end development of dashboards and reports for the logistics area, from data extraction and modelling to visualisation.",
+        "correct": false,
+        "why": "*Participated* is one of the openings lesson 4 says to avoid, and the line never says what is true now or how to check it."
+      },
+      {
+        "text": "Built a late-deliveries dashboard for a small distributor, so the owner sees which routes slip; public link and definitions in the README.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7rgnvtk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your tracker after two months: screening calls go well, but five processes have ended in a no straight after the live SQL exercise. By lesson 19, what do you change?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "choices": [
+      {
+        "text": "Practise live exercises out loud with a person watching: the same no at the same stage is a signal.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Send more applications a week, since a wider top will bring an offer through in the end.",
+        "correct": false,
+        "why": "Volume feeds the top; the leak is at the technical stage, and more of the same reaches the same no."
+      },
+      {
+        "text": "Nothing yet: each no belongs to one process, and reading a pattern into five is reading too much.",
+        "correct": false,
+        "why": "One no is noise; the same no at the same stage five times is a signal, by lesson 19."
+      },
+      {
+        "text": "Rewrite the CV, since a run of rejections means the top of the funnel is leaking.",
+        "correct": false,
+        "why": "The CV is getting you calls; a leak at the CV shows as many applications and no answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9jqz3rv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A CLT offer for a junior data analyst pays R$ 5,000 a month. With lesson 17's arithmetic, before tax and benefits, what monthly PJ invoice, billed for 12 months, matches the CLT year, in reais?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 6000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-e4q5d8wc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A CLT offer for a BI analyst role arrives in writing. Which of its clauses does lesson 18 say are worth questioning before you sign? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 18.",
+    "choices": [
+      {
+        "text": "Everything you create, in your own time and on your own equipment as well, belongs to the employer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "What you create at work belongs to the employer.",
+        "correct": false,
+        "why": "That is normal; the clause to check is one that also reaches what you build in your own time."
+      },
+      {
+        "text": "A non-compete for two years after you leave, covering any data role, with no pay during it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A *contrato de experiência* of 90 days, split into 45 and 45.",
+        "correct": false,
+        "why": "Lesson 18 says the law allows up to 90 days, which may be split in two; this one is within it."
+      },
+      {
+        "text": "Up to 6% of the base salary deducted for *vale-transporte*.",
+        "correct": false,
+        "why": "The law lets the employer deduct up to 6% for it; it is not a clause to question."
+      }
+    ]
+  },
+  {
+    "id": "ex-05z2mbhj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your first task on the data team is a one-line fix to how a dashboard's SQL counts active customers. By first-job lesson 20 and portfolio lesson 10, what makes it finished properly before you ask for review?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "choices": [
+      {
+        "text": "Folding in the three other queries you noticed could be tidier, so the reviewer sees more of your work in one go.",
+        "correct": false,
+        "why": "A pull request that fixes several unrelated things is harder to review; by lesson 10 the others get a card of their own."
+      },
+      {
+        "text": "Reading your diff against main as a stranger would, and writing in the description how you checked the counts.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Merging it quietly so nobody on the team is interrupted, and mentioning it later only if somebody happens to ask.",
+        "correct": false,
+        "why": "The first thing shipped should be visible: say it is done where the team says such things."
+      },
+      {
+        "text": "Holding it back until there is something bigger to show, since a single line will not make much of an impression.",
+        "correct": false,
+        "why": "Lesson 20 wants the first thing small, finished properly and visible; a first task that drags is the worst start."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz7t1d6m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Three weeks into the job, you notice that yesterday you pushed a notebook to the team's repository with the warehouse password in its connection string. What comes first, by the two lessons?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "choices": [
+      {
+        "text": "Delete the notebook in a new commit, which takes the password out of the repository.",
+        "correct": false,
+        "why": "Deleting removes it from the next version, not from the history that was pushed."
+      },
+      {
+        "text": "Rewrite the history with `git filter-repo` and force-push it before anybody on the team notices the commit.",
+        "correct": false,
+        "why": "Cleaning the history comes last and cannot recall the copies; and a team forgives a mistake more easily than finding out later that you knew."
+      },
+      {
+        "text": "Tell your lead now and get the password revoked; cleaning the history, if at all, comes last.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sort it out alone first, and bring it up at your next one-to-one once it is no longer a problem for anybody.",
+        "correct": false,
+        "why": "Lesson 20 says say it early to the person who needs to know; silence while you fix it alone turns a small mistake into an incident."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6mvdfx3",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In your first week on the data team you ask your manager what good looks like at the end of the 90-day contrato de experiência, and write the answer down. By lesson 21, you go over that list together at around day ___.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 21.",
+    "blanks": [
+      {
+        "accept": [
+          "45",
+          "day 45",
+          "forty-five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
