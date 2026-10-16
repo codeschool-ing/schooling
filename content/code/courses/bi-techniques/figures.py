@@ -1296,6 +1296,56 @@ def l15_grid(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 16
+
+@figure('l16-overfit', 16)
+def l16_overfit(lang):
+    from sklearn.model_selection import train_test_split
+    from sklearn.tree import DecisionTreeClassifier
+    c = csv('customers.csv', parse_dates=['signup'])
+    o = csv('orders.csv', parse_dates=['date'])
+    cut = pd.Timestamp('2025-06-30')
+    past = o[o['date'] <= cut]
+    fut = o[(o['date'] > cut) & (o['date'] <= cut + pd.Timedelta(days=90))]
+    tb = pd.DataFrame({'recency': (cut - past.groupby('customer')['date'].max()).dt.days,
+                       'orders': past.groupby('customer').size(),
+                       'tenure': (cut - c.set_index('customer')['signup']).dt.days}).dropna()
+    tb['stays'] = tb.index.isin(fut['customer']).astype(int)
+    Xtr, Xte, ytr, yte = train_test_split(tb[['recency', 'orders', 'tenure']], tb['stays'],
+                                          test_size=0.3, random_state=0)
+    depths = list(range(1, 21))
+    tr, te = [], []
+    for d in depths:
+        m = DecisionTreeClassifier(max_depth=d, random_state=0).fit(Xtr, ytr)
+        tr.append(m.score(Xtr, ytr) * 100)
+        te.append(m.score(Xte, yte) * 100)
+    t = {'en': dict(
+        label='Accuracy of decision trees of depth 1 to 20 on the customers they learnt from and on '
+              'customers kept aside. Training accuracy climbs from about 94 to 99 per cent; test '
+              'accuracy is highest at the smallest depths and falls to about 91.',
+        x='tree depth', y='predicted correctly, per cent', tr='customers it learnt from',
+        te='customers it never saw',
+        cap='A model that keeps asking questions ends up memorising its examples. Only the '
+            'customers kept aside show when learning turned into memorising.'),
+        'pt': dict(
+        label='Acerto de árvores de decisão de profundidade 1 a 20 nos clientes com que aprenderam e '
+              'em clientes guardados à parte. O acerto no treino sobe de cerca de 94 para 99 por '
+              'cento; o acerto no teste é maior nas menores profundidades e cai para cerca de 91.',
+        x='profundidade da árvore', y='previstos corretamente, por cento',
+        tr='clientes com que aprendeu', te='clientes que nunca viu',
+        cap='Um modelo que continua fazendo perguntas acaba decorando os exemplos. Só os clientes '
+            'guardados à parte mostram quando aprender virou decorar.')}[lang]
+    f = Fig('l16-overfit', 600, 290, t['label'])
+    p = Plot(f, 70, 40, 440, 240, 1, 20, 88, 100)
+    p.yaxis(range(88, 101, 4), label=t['y'])
+    p.xaxis([1, 5, 10, 15, 20], label=t['x'])
+    series(p, depths, tr, stroke='--amber', width=2)
+    series(p, depths, te, stroke='--phosphor', width=2)
+    f.text(p.sx(20) + 8, p.sy(tr[-1]), t['tr'], size=10, anchor='start', fill='--amber', weight='600')
+    f.text(p.sx(20) + 8, p.sy(te[-1]), t['te'], size=10, anchor='start', fill='--phosphor', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
