@@ -1,0 +1,565 @@
+[
+  {
+    "id": "ex-e92cvyhj",
+    "version": 1,
+    "section": "two-numbers",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term with what it measures.",
+    "hint": "Backwards from the incident, or forwards from it?",
+    "pairs": [
+      {
+        "left": "RPO",
+        "right": "How far back the last recoverable moment may be"
+      },
+      {
+        "left": "RTO",
+        "right": "How long until the system is usable again"
+      },
+      {
+        "left": "archive_timeout",
+        "right": "The longest a change waits on a quiet server before archiving"
+      }
+    ],
+    "right_distractors": [
+      "How many backups are kept in the repository"
+    ]
+  },
+  {
+    "id": "ex-f29rsg7q",
+    "version": 1,
+    "section": "two-numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson say that \"none and none\" is not a requirement?",
+    "hint": "What happens to a target nobody can meet?",
+    "choices": [
+      {
+        "text": "Because zero loss is forbidden by PostgreSQL",
+        "correct": false,
+        "why": "Zero loss for a lost server is possible, with synchronous replication; it has a price."
+      },
+      {
+        "text": "Because RPO and RTO are set by the backup tool",
+        "correct": false,
+        "why": "They are business decisions; the tool decides what is achieved."
+      },
+      {
+        "text": "It was said before anybody saw the price",
+        "correct": true,
+        "why": "Right. A target nobody can meet gets ignored, which is the same as having none."
+      },
+      {
+        "text": "Because only RTO matters for a database",
+        "correct": false,
+        "why": "Both matter, and for different failures."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yw7rs35",
+    "version": 1,
+    "section": "two-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an RPO stated as time (\"five minutes of orders\") rather than as bytes of log?",
+    "hint": "Who has to understand it?",
+    "choices": [
+      {
+        "text": "Time is what the business weighs",
+        "correct": true,
+        "why": "Right. Five minutes of orders is a number of sales; 300 MB of log is nothing to them."
+      },
+      {
+        "text": "Because log size cannot be measured",
+        "correct": false,
+        "why": "It can; lesson 4 measured it with LSNs."
+      },
+      {
+        "text": "Because PostgreSQL archives on a timer, never by size",
+        "correct": false,
+        "why": "Segments are finished when full, and archive_timeout adds a timer."
+      },
+      {
+        "text": "Because time is always smaller than bytes",
+        "correct": false,
+        "why": "They are different units and cannot be compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch2t61h3",
+    "version": 1,
+    "section": "two-numbers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team has a replica a second behind the primary and says their RPO is one second. For which failure is that wrong?",
+    "hint": "What does a replica do with a mistaken DELETE?",
+    "choices": [
+      {
+        "text": "The primary's disk failing",
+        "correct": false,
+        "why": "For that, the replica has everything up to a second ago."
+      },
+      {
+        "text": "The primary's server losing power",
+        "correct": false,
+        "why": "Again the replica has nearly everything."
+      },
+      {
+        "text": "A network cut between users and the primary",
+        "correct": false,
+        "why": "Data is not lost; the users cannot reach it, which is an RTO matter."
+      },
+      {
+        "text": "A mistaken DELETE",
+        "correct": true,
+        "why": "Right. The replica copies the DELETE within a second; for that failure the replica gives no recovery point at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzds1q47",
+    "version": 1,
+    "section": "measuring-rpo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `rpo.sql` cut `last_archived_wal` to its first 24 characters?",
+    "hint": "What does a backup archive besides segments?",
+    "choices": [
+      {
+        "text": "Because segment names longer than 24 characters are corrupt",
+        "correct": false,
+        "why": "They are not corrupt; they are a different kind of file."
+      },
+      {
+        "text": "A backup history file came last",
+        "correct": true,
+        "why": "Right: just after a backup, the last file archived is a backup history file whose name has a suffix. pg_split_walfile_name refuses that name, which is how the first version of the query failed."
+      },
+      {
+        "text": "To drop the timeline from the name",
+        "correct": false,
+        "why": "The timeline is the first eight characters, and they are kept."
+      },
+      {
+        "text": "To make the query faster",
+        "correct": false,
+        "why": "Speed is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fja67w9",
+    "version": 1,
+    "section": "measuring-rpo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a quiet server with no `archive_timeout`, `since_last_archive` reads 40 minutes and `not_yet_archived` a few kilobytes. What would a disk failure now cost?",
+    "hint": "Those kilobytes are on this server only.",
+    "choices": [
+      {
+        "text": "Nothing, because a few kilobytes is negligible",
+        "correct": false,
+        "why": "A few kilobytes can be several orders; their size says nothing about their value."
+      },
+      {
+        "text": "The changes of the last 40 minutes",
+        "correct": true,
+        "why": "Right. Everything written since the last archived segment exists only here."
+      },
+      {
+        "text": "Exactly one segment of 16 MB",
+        "correct": false,
+        "why": "The loss is what was written, a few kilobytes, spread over 40 minutes."
+      },
+      {
+        "text": "Everything since the last full backup",
+        "correct": false,
+        "why": "The archive covers everything up to 40 minutes ago."
+      }
+    ]
+  },
+  {
+    "id": "ex-t42sjtvm",
+    "version": 1,
+    "section": "measuring-rpo",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `archive_timeout = '60s'`, what RPO does a quiet server achieve for a lost disk?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "It makes the loss zero",
+        "correct": false,
+        "why": "A change can still wait up to the timeout."
+      },
+      {
+        "text": "Nothing, because quiet servers never lose data",
+        "correct": false,
+        "why": "A quiet server can hold an order for hours without archiving it."
+      },
+      {
+        "text": "It doubles the retention",
+        "correct": false,
+        "why": "Retention is a different setting."
+      },
+      {
+        "text": "About a minute, plus the push",
+        "correct": true,
+        "why": "Right: the loss is bounded to about a minute plus the time to push. A segment with any change in it is closed and archived within the minute."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgd30rrn",
+    "version": 1,
+    "section": "measuring-rto",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a recovery's downtime in the order they happen.",
+    "hint": "You cannot restore what nobody has noticed.",
+    "items": [
+      "Notice that something is wrong",
+      "Decide to restore, and to what",
+      "Copy the files back",
+      "Replay the log",
+      "Check the copy and reconnect the application"
+    ],
+    "trap": "Detection and the decision come first and are often the longest; copying and replay are what the drill measures; nobody works until the copy is checked and the application points at it."
+  },
+  {
+    "id": "ex-5fntj5a3",
+    "version": 1,
+    "section": "when-the-promise-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A restore spends most of its time replaying a week of log. Which lever shortens that most directly?",
+    "hint": "A restore starts from the newest backup of any kind.",
+    "choices": [
+      {
+        "text": "More frequent backups, such as a daily differential",
+        "correct": true,
+        "why": "Right. A restore then replays one day of log at most, not seven."
+      },
+      {
+        "text": "A faster network between repository and server",
+        "correct": false,
+        "why": "That speeds the copy; the replay is limited by applying the log."
+      },
+      {
+        "text": "A longer archive_timeout",
+        "correct": false,
+        "why": "That changes the RPO on a quiet server, not the replay."
+      },
+      {
+        "text": "Keeping more full backups",
+        "correct": false,
+        "why": "More old backups do not shorten replay from the newest."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g46ajk0",
+    "version": 1,
+    "section": "when-the-promise-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The business needs zero data loss if the primary server is destroyed. What is the only lever that delivers it?",
+    "hint": "Every other one leaves a gap.",
+    "choices": [
+      {
+        "text": "archive_timeout of one second",
+        "correct": false,
+        "why": "A second is small and still not zero, and it fills the archive with empty segments."
+      },
+      {
+        "text": "A streaming receiver with --synchronous",
+        "correct": false,
+        "why": "The server does not wait for it unless told to, so a commit can still be lost."
+      },
+      {
+        "text": "Synchronous replication",
+        "correct": true,
+        "why": "Right. Every commit waits for a second server; that is the price."
+      },
+      {
+        "text": "Hourly full backups",
+        "correct": false,
+        "why": "Backups bound the loss to an interval; they never make it zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc40y2bq",
+    "version": 1,
+    "section": "when-the-promise-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of the RPO levers in the lesson protects against a mistaken DELETE?",
+    "hint": "Which ones copy every change as fast as they can?",
+    "choices": [
+      {
+        "text": "A replica, because it is a second copy",
+        "correct": false,
+        "why": "It copies the DELETE too, within a second."
+      },
+      {
+        "text": "Synchronous replication",
+        "correct": false,
+        "why": "It copies the DELETE even more faithfully."
+      },
+      {
+        "text": "A streaming receiver",
+        "correct": false,
+        "why": "It receives the DELETE like everything else, which is fine: replay can stop before it, but the receiver alone does nothing."
+      },
+      {
+        "text": "None of them: point-in-time recovery does",
+        "correct": true,
+        "why": "Right. A mistake needs a copy you can stop before the mistake, and that is PITR from base backups and the archive."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0ddsar8",
+    "version": 1,
+    "section": "when-the-promise-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In real incidents, which part of the downtime is often longer than the restore itself?",
+    "hint": "The part before the first command.",
+    "choices": [
+      {
+        "text": "Copying the files back",
+        "correct": false,
+        "why": "The drill measures that, and it is usually the shorter part."
+      },
+      {
+        "text": "Replaying the log",
+        "correct": false,
+        "why": "Long on a busy database, and measurable; the human part is the one that surprises."
+      },
+      {
+        "text": "Noticing, deciding and finding the right person",
+        "correct": true,
+        "why": "Right. Alerting, a runbook and rehearsal are the levers for those minutes."
+      },
+      {
+        "text": "Compressing the backup",
+        "correct": false,
+        "why": "Compression happens at backup time, not during the incident."
+      }
+    ]
+  },
+  {
+    "id": "ex-yggyy6fe",
+    "version": 1,
+    "section": "the-signed-number",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the agreement have a column for the person who agreed to each number?",
+    "hint": "Who decides on the day?",
+    "choices": [
+      {
+        "text": "They choose on the day",
+        "correct": true,
+        "why": "Right: they decide between a quick restore and a careful repair. Somebody has to accept the loss, knowing the price of doing better."
+      },
+      {
+        "text": "For the audit trail only",
+        "correct": false,
+        "why": "The audit trail is useful; the column exists because that person decides during the incident."
+      },
+      {
+        "text": "Because a team cannot sign anything",
+        "correct": false,
+        "why": "Teams can agree; what matters is one person with the authority to accept the loss."
+      },
+      {
+        "text": "So the DBA is not blamed",
+        "correct": false,
+        "why": "Blame is not the point; authority is."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj492jv6",
+    "version": 1,
+    "section": "the-signed-number",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the agreement record when each number was last measured?",
+    "hint": "What happens to an RTO as the data grows?",
+    "choices": [
+      {
+        "text": "Because the law requires a date on every document",
+        "correct": false,
+        "why": "The date is there for the engineering reason."
+      },
+      {
+        "text": "Because the RTO grows with the data",
+        "correct": true,
+        "why": "Right. The date says how much to trust the figure."
+      },
+      {
+        "text": "Because the RPO changes every night",
+        "correct": false,
+        "why": "The RPO is set by the setup; the RTO decays with growth."
+      },
+      {
+        "text": "To know when to delete old backups",
+        "correct": false,
+        "why": "Retention has its own setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qmz6xs3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each target with the cheapest setup in the lesson that meets it.",
+    "hint": "The cost curve.",
+    "pairs": [
+      {
+        "left": "RPO of a day",
+        "right": "A nightly dump"
+      },
+      {
+        "left": "RPO of a minute",
+        "right": "Archiving with archive_timeout"
+      },
+      {
+        "left": "RPO of zero for a lost server",
+        "right": "Synchronous replication"
+      },
+      {
+        "left": "RTO of a few minutes",
+        "right": "A standby ready to promote"
+      }
+    ],
+    "right_distractors": [
+      "A weekly full backup with no archive"
+    ]
+  },
+  {
+    "id": "ex-356ph8mh",
+    "version": 1,
+    "section": "measuring-rpo",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Forty seconds and three orders after the backup, how many kB of log existed only on the server?",
+    "hint": "not_yet_archived.",
+    "value": 1716,
+    "tolerance": 0,
+    "unit": "kB"
+  },
+  {
+    "id": "ex-pjdbjsdv",
+    "version": 1,
+    "section": "measuring-rto",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The drill replayed about 2411 MB of log in 55.3 seconds. Roughly how many MB per second is that?",
+    "hint": "Divide, and round.",
+    "value": 44,
+    "tolerance": 2,
+    "unit": "MB/s"
+  },
+  {
+    "id": "ex-ta1k720j",
+    "version": 1,
+    "section": "measuring-rto",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database writes 20 GB of log a day and takes only a weekly full backup. At 44 MB/s of replay, about how many minutes does replaying six days of log take? (1 GB = 1024 MB.)",
+    "hint": "6 × 20 × 1024 MB, divided by 44, then by 60.",
+    "value": 47,
+    "tolerance": 3,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-k66qj0je",
+    "version": 1,
+    "section": "measuring-rto",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the replay rate be measured on the hardware that will do the restore?",
+    "hint": "Who replays the log on the day?",
+    "choices": [
+      {
+        "text": "Because the live server cannot replay its own log",
+        "correct": false,
+        "why": "It does so after every crash; the point is which machine restores."
+      },
+      {
+        "text": "Because the archive is only readable from the restore server",
+        "correct": false,
+        "why": "Any configured server can read it."
+      },
+      {
+        "text": "The machine sets the replay rate",
+        "correct": true,
+        "why": "Right: the rate depends on the machine that applies the log. A smaller restore server replays more slowly, and the promise is about that server."
+      },
+      {
+        "text": "Because replay is faster on a quiet day",
+        "correct": false,
+        "why": "The day matters too, but that is the other caution."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9rfbevx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The agreed RTO for the orders database is one hour. The last drill took 40 minutes from restore to proof, and it was run on a quiet Sunday. What is the honest conclusion?",
+    "hint": "What does the drill leave out, and on what day was it measured?",
+    "choices": [
+      {
+        "text": "Not yet shown: measure a busy day, and add the human minutes",
+        "correct": true,
+        "why": "Right. Forty minutes of machine time on a quiet day says little about an hour on the worst one."
+      },
+      {
+        "text": "The promise is met with twenty minutes to spare",
+        "correct": false,
+        "why": "The drill leaves out noticing, deciding and reconnecting, and a busy day replays more log."
+      },
+      {
+        "text": "The promise is broken, because 40 is close to 60",
+        "correct": false,
+        "why": "Close is not broken; what is missing is the evidence for the worst day."
+      },
+      {
+        "text": "The RTO should be raised to two hours just in case",
+        "correct": false,
+        "why": "Changing the promise is legitimate, but only after measuring what the setup really does."
+      }
+    ]
+  }
+]

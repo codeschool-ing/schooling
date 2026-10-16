@@ -1,0 +1,694 @@
+[
+  {
+    "id": "ex-hvahz0h9",
+    "version": 1,
+    "section": "api-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an API key tell the server?",
+    "hint": "Who else might hold the same string?",
+    "choices": [
+      {
+        "text": "Which person is making the request",
+        "correct": false,
+        "why": "Everyone who holds the string looks the same to the server; a key cannot tell people apart."
+      },
+      {
+        "text": "Which program is calling",
+        "correct": true,
+        "why": "Right. Any person or script holding it is the same caller."
+      },
+      {
+        "text": "How long the caller may keep using the API",
+        "correct": false,
+        "why": "A key has no expiry of its own; that is what a token adds."
+      },
+      {
+        "text": "Which orders the caller placed",
+        "correct": false,
+        "why": "boxoffice's key opens a sales report and knows nothing of orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2q4n9tk",
+    "version": 1,
+    "section": "api-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sales report, asked with no key, answered 401 with a problem body. Why does the lesson still call it a defect?",
+    "hint": "Compare its headers with the orders' 401.",
+    "choices": [
+      {
+        "text": "A missing key should be 400, since the request is incomplete",
+        "correct": false,
+        "why": "Missing credentials are exactly what 401 is for."
+      },
+      {
+        "text": "It should be 403, because the caller is not staff",
+        "correct": false,
+        "why": "403 is for a caller the server knows; with no key, it knows nobody."
+      },
+      {
+        "text": "It leaves out the www-authenticate header every 401 needs",
+        "correct": true,
+        "why": "Right. RFC 9110 requires one on every 401, and the orders send theirs."
+      },
+      {
+        "text": "Its body tells a stranger the name of the header to send",
+        "correct": false,
+        "why": "Naming the header is fine; the key itself is the secret, not where it goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6x7e0b3j",
+    "version": 1,
+    "section": "api-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should an API refuse its key in the query string, even when the key is correct?",
+    "hint": "Look at what boxoffice's own log printed.",
+    "choices": [
+      {
+        "text": "Headers travel encrypted and addresses do not",
+        "correct": false,
+        "why": "Over HTTPS both are encrypted on the wire; the leak happens after arrival."
+      },
+      {
+        "text": "Addresses get logged by default; headers do not",
+        "correct": true,
+        "why": "Right. boxoffice's log printed the key in plain text."
+      },
+      {
+        "text": "A URL cannot carry the characters a key is made of",
+        "correct": false,
+        "why": "Any key can be written in a URL; possibility is not the issue."
+      },
+      {
+        "text": "A query string is read only by the browser, never by the server",
+        "correct": false,
+        "why": "The server reads it; boxoffice's filter by date is a query parameter."
+      }
+    ]
+  },
+  {
+    "id": "ex-09swdtyr",
+    "version": 1,
+    "section": "tokens",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of the token response to what it says.",
+    "hint": "The table in section 03.",
+    "pairs": [
+      {
+        "left": "access_token",
+        "right": "the credential itself"
+      },
+      {
+        "left": "token_type",
+        "right": "how to send it"
+      },
+      {
+        "left": "expires_in",
+        "right": "how many seconds it lives"
+      },
+      {
+        "left": "scope",
+        "right": "what it may do"
+      }
+    ],
+    "right_distractors": [
+      "the client secret, for the next request"
+    ]
+  },
+  {
+    "id": "ex-rds3vp69",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a token response carry `cache-control: no-store`?",
+    "hint": "Who else sits between the program and the server?",
+    "choices": [
+      {
+        "text": "So that the token expires sooner",
+        "correct": false,
+        "why": "Expiry is set by exp inside the token; caching does not change it."
+      },
+      {
+        "text": "So that the client forgets the token after one request",
+        "correct": false,
+        "why": "The header speaks to caches; the client keeps and reuses its token on purpose."
+      },
+      {
+        "text": "So that every request fetches a new token",
+        "correct": false,
+        "why": "A client fetches a token when the old one nears expiry, not on every request."
+      },
+      {
+        "text": "So no cache keeps a live token and serves it to somebody else",
+        "correct": true,
+        "why": "Right. OAuth requires it on the token endpoint, RFC 6749 §5.1."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2jka7jj",
+    "version": 1,
+    "section": "tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The token response said \"expires_in\":900. How many minutes does a boxoffice token live?",
+    "hint": "The field is in seconds.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-yekt8wm5",
+    "version": 1,
+    "section": "jwt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which statement about a JWT like boxoffice's is true?",
+    "hint": "One line of Node decoded it.",
+    "choices": [
+      {
+        "text": "Its payload is encrypted with the server's secret",
+        "correct": false,
+        "why": "It is signed, not encrypted; the secret only makes the signature."
+      },
+      {
+        "text": "Anyone holding it can read its claims",
+        "correct": true,
+        "why": "Right. The header and payload are base64url, readable by anybody."
+      },
+      {
+        "text": "Only the token endpoint can decode its header",
+        "correct": false,
+        "why": "The header decoded on your own machine with no secret at all."
+      },
+      {
+        "text": "Its signature keeps the scope hidden from the client",
+        "correct": false,
+        "why": "The scope is in the payload in plain sight; the signature protects it from change, not from reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-frk5312p",
+    "version": 1,
+    "section": "jwt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The auditor's token, with its scope rewritten to include orders:write and its signature left alone, is sent as an order. What comes back, and why?",
+    "hint": "Which does boxoffice check first, the signature or the claims?",
+    "choices": [
+      {
+        "text": "403, because the auditor client is not allowed to write",
+        "correct": false,
+        "why": "That would need the claims to be trusted first; the signature check comes before."
+      },
+      {
+        "text": "201, because the scope now says it may write",
+        "correct": false,
+        "why": "That is the failure the test exists to catch, and boxoffice does not have it."
+      },
+      {
+        "text": "401 bad signature: it no longer matches",
+        "correct": true,
+        "why": "Right. The edited token is refused before its claims are read."
+      },
+      {
+        "text": "401 token expired, because editing a token resets its exp",
+        "correct": false,
+        "why": "exp was untouched; only scope changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-szv5fgrm",
+    "version": 1,
+    "section": "jwt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A token fetched before boxoffice restarted still created an order afterwards. What does that tell you about withdrawing a token?",
+    "hint": "How does boxoffice decide that a token is valid?",
+    "choices": [
+      {
+        "text": "It stays good until its exp, so tokens should be short-lived",
+        "correct": true,
+        "why": "Right. Validity is recomputed from the secret and the clock; nothing lists tokens to remove."
+      },
+      {
+        "text": "Restarting the server is the way to withdraw every token",
+        "correct": false,
+        "why": "The capture showed the opposite: the old token worked after the restart."
+      },
+      {
+        "text": "boxoffice saved its tokens to disk and reloaded them",
+        "correct": false,
+        "why": "boxoffice keeps nothing on disk; orders vanished in the same restart."
+      },
+      {
+        "text": "Tokens are checked against the token endpoint's list of issued tokens",
+        "correct": false,
+        "why": "There is no list; the signature is recomputed with the secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-h69wkmr5",
+    "version": 1,
+    "section": "jwt",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the expiry test in order.",
+    "hint": "The lifetime is shortened before the token exists.",
+    "items": [
+      "start boxoffice with TOKEN_TTL=5",
+      "fetch a token",
+      "use it at once and expect 201",
+      "wait six seconds",
+      "use it again and expect 401 token expired"
+    ]
+  },
+  {
+    "id": "ex-f0rq95sq",
+    "version": 1,
+    "section": "401-and-403",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The auditor's valid token tries to create an order. What does boxoffice answer?",
+    "hint": "The server knows who is asking.",
+    "choices": [
+      {
+        "text": "401, because the auditor is not allowed to create",
+        "correct": false,
+        "why": "401 is for a caller the server does not know; this token is valid."
+      },
+      {
+        "text": "403 insufficient_scope",
+        "correct": true,
+        "why": "Right. Known caller, act refused, and the header says which scope was missing."
+      },
+      {
+        "text": "404, because the auditor cannot see orders",
+        "correct": false,
+        "why": "404 came from reading another client's order, not from creating one."
+      },
+      {
+        "text": "422, because the body is not valid for an auditor",
+        "correct": false,
+        "why": "The body is the same one ci-tests sent successfully; scope is checked before the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-826ww67j",
+    "version": 1,
+    "section": "401-and-403",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The auditor, with scope orders:read, gets 404 for ord-1001, which ci-tests created. What should the report say?",
+    "hint": "Is the code wrong, or is the requirement unclear?",
+    "choices": [
+      {
+        "text": "That it is a defect, because the answer must be 403",
+        "correct": false,
+        "why": "403 would confirm the order exists; 404 is a deliberate way of giving nothing away."
+      },
+      {
+        "text": "Nothing, because ord-1001 had already been cancelled",
+        "correct": false,
+        "why": "It was cancelled only at the end of the section, after these requests."
+      },
+      {
+        "text": "Ask whether that is what was intended",
+        "correct": true,
+        "why": "Right. The code is consistent; whether it matches the intent is the owners' question."
+      },
+      {
+        "text": "That the auditor's token had expired",
+        "correct": false,
+        "why": "An expired token gets 401, not 404."
+      }
+    ]
+  },
+  {
+    "id": "ex-177whpec",
+    "version": 1,
+    "section": "401-and-403",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "boxoffice answers `Authorization: bearer <a valid token>` with 401 no bearer token. What is your verdict?",
+    "hint": "RFC 9110, §11.1.",
+    "choices": [
+      {
+        "text": "Correct: header values are case-sensitive",
+        "correct": false,
+        "why": "The token is; the scheme name before it is not."
+      },
+      {
+        "text": "Correct: the client should have spelt the token in capitals",
+        "correct": false,
+        "why": "The token was exactly the one that worked; only the scheme word changed."
+      },
+      {
+        "text": "A defect: the scheme name is case-insensitive",
+        "correct": true,
+        "why": "Right. bearer and Bearer are the same scheme, and the fix is one toLowerCase()."
+      },
+      {
+        "text": "A defect: a malformed header should be answered with 400",
+        "correct": false,
+        "why": "The header is well formed; the server simply misread it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gkbyjkv",
+    "version": 1,
+    "section": "401-and-403",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these requests did boxoffice answer with 401?",
+    "hint": "401 means the credential was missing or not the kind this door takes.",
+    "choices": [
+      {
+        "text": "the staff key on an order",
+        "correct": true,
+        "why": "Right. The orders want a bearer token, so the key counts as nothing."
+      },
+      {
+        "text": "the ci-tests token on the sales report",
+        "correct": true,
+        "why": "Right. The report wants its key, and a token is not one."
+      },
+      {
+        "text": "the auditor creating an order",
+        "correct": false,
+        "why": "That was 403: the caller is known and the act refused."
+      },
+      {
+        "text": "the auditor reading ord-1001",
+        "correct": false,
+        "why": "That was 404: the order is not the auditor's."
+      },
+      {
+        "text": "a request with no token reading an order",
+        "correct": true,
+        "why": "Right. No credential at all is the plainest 401."
+      }
+    ]
+  },
+  {
+    "id": "ex-05met9sr",
+    "version": 1,
+    "section": "oauth-in-apps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an app on a phone sign people in without a client secret?",
+    "hint": "What is an Android package?",
+    "choices": [
+      {
+        "text": "OAuth forbids client secrets in every kind of client",
+        "correct": false,
+        "why": "Servers keep secrets legitimately, as ci-tests does; only public clients go without."
+      },
+      {
+        "text": "Every user holds a copy of the app's contents",
+        "correct": true,
+        "why": "Right. A secret every user has a copy of is not a secret."
+      },
+      {
+        "text": "The secret would expire whenever the app is updated",
+        "correct": false,
+        "why": "Secrets do not expire with app versions; extraction is the problem."
+      },
+      {
+        "text": "Phones cannot send a secret over HTTPS",
+        "correct": false,
+        "why": "They can; the trouble is keeping it, not sending it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6bt8hpe",
+    "version": 1,
+    "section": "oauth-in-apps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another app on the phone intercepts the authorization code in step 4. Why can it not get a token with it?",
+    "hint": "What does step 5 send that never passed through the browser?",
+    "choices": [
+      {
+        "text": "The code is encrypted so that only the right app can read it",
+        "correct": false,
+        "why": "The code is not encrypted for anyone; what protects it is a second value."
+      },
+      {
+        "text": "The code works only from the phone's own network address",
+        "correct": false,
+        "why": "Nothing in the flow ties a code to an address; the verifier ties it to the app."
+      },
+      {
+        "text": "It lacks the verifier whose SHA-256 is the challenge",
+        "correct": true,
+        "why": "Right. The challenge travelled through the browser; the verifier never left the app."
+      },
+      {
+        "text": "Codes expire before another app has time to use them",
+        "correct": false,
+        "why": "Codes are short-lived, but minutes are plenty for another app; PKCE is what stops it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytjk9nvd",
+    "version": 1,
+    "section": "oauth-in-apps",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each check of an authorization server to the answer it expects.",
+    "hint": "The table at the end of section 06.",
+    "pairs": [
+      {
+        "left": "the same code exchanged twice",
+        "right": "the second exchange refused"
+      },
+      {
+        "left": "a code exchanged with another verifier",
+        "right": "refused, invalid_grant"
+      },
+      {
+        "left": "a redirect_uri one character different",
+        "right": "refused, and no redirect to it"
+      },
+      {
+        "left": "a state the app never sent",
+        "right": "the app ignores the response"
+      }
+    ],
+    "right_distractors": [
+      "a token, with a warning in the log"
+    ]
+  },
+  {
+    "id": "ex-1ktbe2yc",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After boxoffice was started with --env-file=.env, the TOKEN fetched earlier got 401 bad signature. Why?",
+    "hint": "Section 04 showed that a restart alone did not do this.",
+    "choices": [
+      {
+        "text": "Every restart invalidates the tokens issued before it",
+        "correct": false,
+        "why": "Section 04's token worked after a plain restart; the secret is what changed here."
+      },
+      {
+        "text": "The token had expired while .env was being written",
+        "correct": false,
+        "why": "Expiry gives token expired, and this said bad signature."
+      },
+      {
+        "text": "The server now checks signatures with another secret",
+        "correct": true,
+        "why": "Right. The recomputed signature differs, so the token is refused."
+      },
+      {
+        "text": "Node could not read .env, so it refuses every token",
+        "correct": false,
+        "why": "A fresh token from the same server would be accepted; only the old one fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hjb434p",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague committed .env with the signing secret, noticed an hour later and removed the commit. What else has to happen?",
+    "hint": "Who might have copied the repository in that hour?",
+    "choices": [
+      {
+        "text": "Nothing; once the commit is gone the secret is safe again",
+        "correct": false,
+        "why": "Every clone made in that hour still holds it."
+      },
+      {
+        "text": "Add .env to .gitignore, which removes it from the history",
+        "correct": false,
+        "why": ".gitignore stops a file being added; it does nothing to what was already committed."
+      },
+      {
+        "text": "Change the secret, everywhere it is used",
+        "correct": true,
+        "why": "Right. Treat it as leaked; a new secret makes every copy of the old one useless."
+      },
+      {
+        "text": "Make the repository private for a week",
+        "correct": false,
+        "why": "Copies made while it was readable are not affected by its visibility now."
+      }
+    ]
+  },
+  {
+    "id": "ex-esj89tqz",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline fetches a token with curl and runs its steps under `bash -x`. The client secret is registered with the CI system as a secret. What will the log show?",
+    "hint": "Which value was registered, and which was produced during the run?",
+    "choices": [
+      {
+        "text": "Nothing sensitive, because the CI hides every Authorization header",
+        "correct": false,
+        "why": "It hides registered values, wherever they appear; it does not parse headers."
+      },
+      {
+        "text": "The token readable, and the other value starred out",
+        "correct": true,
+        "why": "Right. The token was fetched during the run, so nothing hides it unless the step masks it."
+      },
+      {
+        "text": "Both in the clear, since bash -x bypasses all masking",
+        "correct": false,
+        "why": "Masking is applied to the log output, including what bash -x prints."
+      },
+      {
+        "text": "The token, but it is harmless once the run finishes",
+        "correct": false,
+        "why": "It stays valid until exp, fifteen minutes for boxoffice, and the log is kept far longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmfm741t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The theatre adds GET /v1/reports/daily, protected by the same X-Api-Key. Which set of tests follows from this lesson?",
+    "hint": "Section 02 had three requests and two more checks.",
+    "choices": [
+      {
+        "text": "The right key returns 200 and a report",
+        "correct": false,
+        "why": "One test of the happy path tells you nothing about who else gets in."
+      },
+      {
+        "text": "A wrong key expecting 403, and the right key expecting 200",
+        "correct": false,
+        "why": "A wrong key leaves the caller unknown, which is 401; and the missing-key case is absent."
+      },
+      {
+        "text": "None, wrong and right key; the key in the query refused; www-authenticate on the 401",
+        "correct": true,
+        "why": "Right. The three requests, the leak check and the header the report endpoint forgot."
+      },
+      {
+        "text": "A ci-tests token and an auditor token, each expecting 200",
+        "correct": false,
+        "why": "Tokens are not the key; both should get 401 on a key-protected address."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwra3t82",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client library fetches a fresh token and retries whenever it gets a 403. What is wrong with that?",
+    "hint": "What would the fresh token's scope be?",
+    "choices": [
+      {
+        "text": "A 403 refuses the client, and a fresh token with the same scope is refused again",
+        "correct": true,
+        "why": "Right. Refetching suits a 401; a 403 needs more scope or a different client."
+      },
+      {
+        "text": "Nothing, since a 403 means the token has expired",
+        "correct": false,
+        "why": "Expiry is a 401 with token expired; a 403 comes with a valid token."
+      },
+      {
+        "text": "It should retry on 404 instead, which is what scope errors return",
+        "correct": false,
+        "why": "boxoffice's scope error is 403 insufficient_scope; its 404 hides other clients' orders."
+      },
+      {
+        "text": "Only the timing: it should wait a few seconds first",
+        "correct": false,
+        "why": "Waiting does not change the token's scope; the retry fails however long it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgnystz1",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Because boxoffice cannot withdraw a JWT before its exp, the safe choice is to give tokens a ___ lifetime.",
+    "hint": "Fifteen minutes rather than a month.",
+    "blanks": [
+      {
+        "accept": [
+          "short"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

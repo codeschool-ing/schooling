@@ -1,0 +1,394 @@
+{
+  "ex-3gv3yxnf": {
+    "prompt": "No `chain.py`, como dL/dw é obtido a partir das três derivadas locais?",
+    "hint": "A linha que imprime `chain:`.",
+    "choices": [
+      {
+        "text": "Somando-as",
+        "why": "Somar daria -0,6636 + 0,2217 + 1,5, longe do -0,220701 que a cutucada mediu."
+      },
+      {
+        "text": "Multiplicando-as",
+        "why": "Certo: essa é a regra da cadeia, e o produto concordou com a cutucada em seis casas."
+      },
+      {
+        "text": "Pegando a maior delas",
+        "why": "Cada fator importa; deixar de fora o 0,2217 da sigmoid deixaria o resultado umas quatro vezes grande demais."
+      },
+      {
+        "text": "Tirando a média delas sobre o lote",
+        "why": "O `chain.py` tem uma única entrada, então não há lote, e não é com média que derivadas se compõem."
+      }
+    ]
+  },
+  "ex-4y93k7ff": {
+    "prompt": "As três derivadas locais de uma unidade são dL/da = 0,5, da/dz = 0,2 e dz/dw = 3. Quanto vale dL/dw?",
+    "hint": "A regra da cadeia."
+  },
+  "ex-ge4n23fj": {
+    "prompt": "Por que o forward pass guarda os valores intermediários em vez de descartá-los?",
+    "hint": "O que `da_dz = a * (1 - a)` lê?",
+    "choices": [
+      {
+        "text": "Para que a perda possa ser calculada uma segunda vez",
+        "why": "A perda é calculada uma vez por passo; os valores guardados alimentam o backward pass."
+      },
+      {
+        "text": "Para compará-los com as diferenças finitas",
+        "why": "A diferença finita compara gradientes, não valores intermediários, e só roda como teste."
+      },
+      {
+        "text": "As derivadas locais são calculadas neles",
+        "why": "Certo: a inclinação da sigmoid é lida de `a`, a da soma é `x`. Sem eles o backward pass não tem onde calcular."
+      },
+      {
+        "text": "Porque o NumPy não consegue liberar memória durante uma passada",
+        "why": "O NumPy libera um array assim que nada o referencia; guardá-los é uma escolha, e um custo."
+      }
+    ]
+  },
+  "ex-jreyxgjx": {
+    "prompt": "Num nó de produto `w · h`, que gradiente o `w` recebe?",
+    "hint": "Cada fator recebe algo que envolve o outro.",
+    "choices": [
+      {
+        "text": "O gradiente que chegou vezes `w`",
+        "why": "Isso é o que o `h` recebe: cada fator recebe o outro fator, não a si mesmo."
+      },
+      {
+        "text": "O gradiente que chegou, sem mudança",
+        "why": "Essa é a regra do nó de soma, em que cada parcela move a saída uma para uma."
+      },
+      {
+        "text": "O gradiente que chegou vezes `h`, o outro fator",
+        "why": "Certo. No grafo, o peso 1,5 que sai de `h1` recebeu 1,5 vezes o valor 1,0 de `h1`."
+      },
+      {
+        "text": "O gradiente que chegou dividido por `h`, como inverso",
+        "why": "Nada no backpropagation divide por um valor; a derivada de `w · h` em relação a `w` é `h`."
+      }
+    ]
+  },
+  "ex-vjsgjypk": {
+    "prompt": "A saída de uma camada oculta vai para a próxima camada e também por um atalho direto até a saída. Que gradiente volta para essa camada oculta?",
+    "hint": "Um valor, usado duas vezes.",
+    "choices": [
+      {
+        "text": "Só o gradiente do caminho mais longo",
+        "why": "Os dois usos mudam a perda, então os dois contam; descartar um é a regra da bifurcação esquecida."
+      },
+      {
+        "text": "A soma dos gradientes dos dois caminhos",
+        "why": "Certo: uma bifurcação soma o que volta. Esse atalho é a conexão residual da aula 12."
+      },
+      {
+        "text": "A média dos gradientes dos dois caminhos",
+        "why": "A média corta a inclinação real pela metade; mexer no valor mexe na perda pelos dois caminhos inteiros."
+      },
+      {
+        "text": "O maior dos dois gradientes",
+        "why": "O caminho menor também muda a perda, e a regra da cadeia não deixa nada de fora."
+      }
+    ]
+  },
+  "ex-1xtx882c": {
+    "prompt": "Ligue cada nó ao que ele manda de volta durante o backward pass.",
+    "hint": "A tabela abaixo da figura.",
+    "pairs": [
+      {
+        "left": "uma soma",
+        "right": "o gradiente que chegou, sem mudança, para cada parcela"
+      },
+      {
+        "left": "um produto",
+        "right": "o gradiente que chegou vezes o outro fator"
+      },
+      {
+        "left": "um ReLU",
+        "right": "o gradiente que chegou onde a entrada era positiva, senão 0"
+      },
+      {
+        "left": "uma bifurcação",
+        "right": "a soma dos gradientes que voltam pelas arestas"
+      }
+    ],
+    "right_distractors": [
+      "o gradiente que chegou vezes 0,25"
+    ]
+  },
+  "ex-p736pxy6": {
+    "prompt": "No `byhand.py`, por que o gradiente de todo peso que entra na unidade oculta 2 é zero?",
+    "hint": "Olhe o `z` e o `dz`.",
+    "choices": [
+      {
+        "text": "Os pesos dela começaram em zero",
+        "why": "Eles valem -0,5 e 0,25; não é o valor do peso que decide o gradiente aqui."
+      },
+      {
+        "text": "A soma dela foi -1, então o ReLU não mandou nada de volta",
+        "why": "Certo: o `dh` tinha 1,5 para essa unidade e o `dz` tinha 0. Uma unidade que não participou da resposta não leva culpa nenhuma."
+      },
+      {
+        "text": "O peso de saída dela era negativo",
+        "why": "Era 1,0, e o `dh` dessa unidade era 1,5, não zero: o gradiente chegou e o ReLU o barrou."
+      },
+      {
+        "text": "A perda já estava no mínimo para esta entrada",
+        "why": "A perda era 0,5625 e os gradientes da camada de saída não eram zero."
+      }
+    ]
+  },
+  "ex-fqty3p77": {
+    "prompt": "Suponha que o `byhand.py` tivesse `x = [1.0, 0.0]`, com os mesmos pesos. Qual seria a segunda linha do `dW1`?",
+    "hint": "`dW1 = np.outer(x, dz)`.",
+    "choices": [
+      {
+        "text": "Igual à primeira linha",
+        "why": "As linhas diferem pela entrada: a linha 2 é `x2` vezes `dz`."
+      },
+      {
+        "text": "O dobro da primeira linha, como na execução",
+        "why": "Era o dobro porque `x2` valia 2; com `x2` em 0, esse fator é 0."
+      },
+      {
+        "text": "Zeros, já que cada elemento é `x2` vezes um gradiente",
+        "why": "Certo. Um peso cuja entrada é 0 não teve efeito nesta saída, então não recebe gradiente dela."
+      },
+      {
+        "text": "Depende só de `b1`",
+        "why": "O `b1` afeta o `dz`, que multiplica as duas linhas; é a entrada que define cada linha."
+      }
+    ]
+  },
+  "ex-p5qf5hev": {
+    "prompt": "O `Net.backward` percorre as camadas em ordem ___, da perda até a entrada.",
+    "hint": "A palavra no laço dele.",
+    "blanks": [
+      {
+        "accept": [
+          "inversa",
+          "reversa",
+          "contrária",
+          "invertida"
+        ]
+      }
+    ]
+  },
+  "ex-zpw9ck13": {
+    "prompt": "O que o `Linear.backward` devolve, e quem usa isso?",
+    "hint": "Para onde vai o gradiente dos pesos, então?",
+    "choices": [
+      {
+        "text": "O gradiente da sua entrada, para a camada de baixo",
+        "why": "Certo: `grad @ self.W.T`, que o `Net.backward` passa para a camada anterior."
+      },
+      {
+        "text": "O gradiente dos pesos, para o otimizador ler",
+        "why": "Esse é escrito no lugar em `self.dW`, e o `params()` o entrega; ele não é devolvido."
+      },
+      {
+        "text": "Os pesos atualizados, para o próximo forward pass",
+        "why": "O `backward` não muda nenhum peso; quem muda é o passo do laço de treino."
+      },
+      {
+        "text": "A perda da própria camada, para o laço de treino",
+        "why": "Uma camada não tem perda própria; existe uma perda, no fim."
+      }
+    ]
+  },
+  "ex-byj2rhge": {
+    "prompt": "Você escreve uma camada para o `tinynet` cujo forward devolve `x * x`. O que o forward precisa guardar para o backward?",
+    "hint": "Qual a derivada de x², e dá para recuperá-la a partir de x²?",
+    "choices": [
+      {
+        "text": "Nada, já que a camada não tem parâmetros",
+        "why": "O `ReLU` também não tem parâmetros e guarda a máscara; a derivada local precisa de um valor."
+      },
+      {
+        "text": "A saída dele, que é o que o backward lê",
+        "why": "Isso funciona para a sigmoid, cuja inclinação é função da saída. O x² perde o sinal de x, então 2x não dá para ser reconstruído a partir dele."
+      },
+      {
+        "text": "A entrada `x`, já que a derivada local é 2x",
+        "why": "Certo, a mesma escolha que o `Linear` faz: guardar o ponto onde o backward pass vai calcular."
+      },
+      {
+        "text": "O gradiente do lote anterior",
+        "why": "O backward de cada lote usa os valores daquele lote; nada passa de um para o outro."
+      }
+    ]
+  },
+  "ex-vwxrh2e5": {
+    "prompt": "No `tinynet` correto, a conferência em float32 apontou 663 de 1.210 pesos acima de 1e-4. Por quê?",
+    "hint": "Qual parte da comparação é a fraca?",
+    "choices": [
+      {
+        "text": "O backward do `tinynet` tem um bug que aparece em float32",
+        "why": "O mesmo código passou em float64 com pior erro de 1.8e-08; o backward está certo."
+      },
+      {
+        "text": "A cutucada muda a perda abaixo da precisão do float32",
+        "why": "Certo: a mudança fica no sétimo ou oitavo dígito, e o float32 guarda uns sete, então a diferença finita é arredondamento."
+      },
+      {
+        "text": "A fórmula do erro relativo quebra com gradientes pequenos",
+        "why": "Ela divide pelo tamanho dos dois números, e é isso que a mantém justa com gradientes pequenos."
+      },
+      {
+        "text": "Oito imagens são poucas para uma conferência em float32",
+        "why": "As mesmas oito imagens deram 0 falhas em float64; a quantidade de imagens não é o problema."
+      }
+    ]
+  },
+  "ex-80vp3xs0": {
+    "prompt": "Uma conferência de gradientes mexe cada peso de uma rede de 500 pesos para cima e depois para baixo. Quantos forward passes extras ela roda?",
+    "hint": "A rede 64-16-10 tinha 1.210 pesos.",
+    "unit": "forward passes"
+  },
+  "ex-spen1fcf": {
+    "prompt": "Uma conferência de gradientes de uma camada que você escreveu, em float64, aponta pior erro relativo de 2e-2 e 300 de 1.210 elementos acima de 1e-4. O que você conclui?",
+    "hint": "Quantos elementos uma quina do ReLU explica?",
+    "choices": [
+      {
+        "text": "Há um bug no backward pass, que precisa ser corrigido",
+        "why": "Certo. Em float64 um backward correto fica perto de 1e-8; centenas de falhas são código, não arredondamento."
+      },
+      {
+        "text": "A conferência deveria rodar de novo em float32 para confirmar",
+        "why": "Float32 é onde a conferência deixa de distinguir certo de errado."
+      },
+      {
+        "text": "Uma quina do ReLU, já que algumas somas ficam perto de zero",
+        "why": "Uma quina explica um elemento isolado, não 300."
+      },
+      {
+        "text": "A cutucada de 0,00001 é pequena demais para float64",
+        "why": "A mesma cutucada deu 1.8e-08 no `tinynet` em float64."
+      }
+    ]
+  },
+  "ex-1nazmfbx": {
+    "prompt": "Ponha em ordem o trabalho que o `train.py` faz para um lote.",
+    "hint": "O backward pass precisa do que o forward pass guardou.",
+    "items": [
+      "Passar o lote pelo `net.forward`",
+      "Calcular a perda e o gradiente dela com `softmax_cross_entropy`",
+      "Chamar o `net.backward` com esse gradiente",
+      "Subtrair `lr` vezes cada gradiente do seu valor"
+    ]
+  },
+  "ex-pd99dtka": {
+    "prompt": "No `train.py`, você move o `net.backward(grad)` para logo depois do laço que atualiza os pesos. O que acontece?",
+    "hint": "O que há no `dW` quando a atualização roda?",
+    "choices": [
+      {
+        "text": "O Python dá erro, porque o `dW` ainda não existe",
+        "why": "O `Linear.__init__` cria o `dW` cheio de zeros, então nada falha."
+      },
+      {
+        "text": "Cada atualização usa o gradiente do lote anterior",
+        "why": "Certo: os arrays ainda guardam o resultado do último backward. Nada reclama, e é por isso que a ordem importa."
+      },
+      {
+        "text": "Nada muda, já que os mesmos gradientes são aplicados",
+        "why": "Não são os mesmos: pertencem ao lote anterior, e a primeira atualização aplica zeros."
+      },
+      {
+        "text": "Os pesos nunca mudam, já que todo gradiente fica em zero",
+        "why": "Só a primeira atualização aplica zeros; a partir do segundo lote o `dW` tem gradientes de verdade, um lote atrasados."
+      }
+    ]
+  },
+  "ex-vx0w351r": {
+    "prompt": "Por que o gradiente encolhe a cada camada sigmoid que atravessa?",
+    "hint": "Qual a maior inclinação da sigmoid?",
+    "choices": [
+      {
+        "text": "Porque as saídas da sigmoid são sempre positivas",
+        "why": "O sinal das saídas não é o que multiplica o gradiente; a inclinação é."
+      },
+      {
+        "text": "Camadas sigmoid têm menos pesos que as ReLU",
+        "why": "As duas redes tinham camadas `Linear` idênticas; só a função entre elas mudava."
+      },
+      {
+        "text": "Cada camada o multiplica por uma inclinação de no máximo 0,25",
+        "why": "Certo: um fator desses por camada, e dez deles multiplicados dão quase nada."
+      },
+      {
+        "text": "A perda de uma rede sigmoid começa menor",
+        "why": "O tamanho da perda não explica um gradiente que encolhe camada a camada."
+      }
+    ]
+  },
+  "ex-xsds2fsg": {
+    "prompt": "Depois de dez épocas, a rede sigmoid de dez camadas marcou 0,106 na validação. O que esse número diz?",
+    "hint": "Quantas classes existem?",
+    "choices": [
+      {
+        "text": "Ela não aprendeu nada: 0,1 é o acaso para dez classes",
+        "why": "Certo. As primeiras camadas receberam gradientes por volta de 1e-5 e quase não se mexeram."
+      },
+      {
+        "text": "Ela sofreu overfitting no conjunto de treino",
+        "why": "Overfitting exige o treino aprendido primeiro; esta rede não aprendeu nenhum dos conjuntos."
+      },
+      {
+        "text": "O conjunto de validação é pequeno demais para medir uma rede profunda",
+        "why": "As mesmas 360 imagens mediram a rede ReLU em 0,850."
+      },
+      {
+        "text": "Ela precisava de uma taxa de aprendizado menor que a da rede ReLU",
+        "why": "Os gradientes dela já eram minúsculos; uma taxa menor mexeria ainda menos as primeiras camadas."
+      }
+    ]
+  },
+  "ex-hems4cpr": {
+    "prompt": "A tanh tem inclinação 1 no zero e menos em todo o resto. Com tanh no lugar da sigmoid no `vanish.py`, o que você esperaria?",
+    "hint": "Compare o maior fator por camada com o 0,25 da sigmoid e o 1 do ReLU.",
+    "choices": [
+      {
+        "text": "Exatamente o resultado do ReLU, já que a maior inclinação também é 1",
+        "why": "A inclinação do ReLU é 1 onde a unidade está ligada; a da tanh é 1 só no zero, e menor para qualquer outra soma."
+      },
+      {
+        "text": "Encolhimento entre os dois: menos que a sigmoid, mais que o ReLU",
+        "why": "Certo: fatores perto de 1 para somas perto de zero, menores onde as unidades saturam. Entre as duas execuções que você viu."
+      },
+      {
+        "text": "Mais encolhimento que a sigmoid, porque as saídas da tanh podem ser negativas",
+        "why": "Uma saída negativa troca um sinal; é o tamanho da inclinação que encolhe o gradiente, e o da tanh chega a quatro vezes o da sigmoid."
+      },
+      {
+        "text": "Nada muda, já que as ativações não entram no gradiente",
+        "why": "Cada ativação contribui com a sua derivada local para o produto; é esse o efeito inteiro."
+      }
+    ]
+  },
+  "ex-9qgd9g59": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "A regra da cadeia e a cutucada concordaram em seis casas",
+        "why": "Sim: -0,220701 nas duas vezes."
+      },
+      {
+        "text": "A conferência em float32 confirmou o backward do `tinynet`",
+        "why": "Não: em float32 ela apontou 663 pesos em código correto. Quem confirmou foi o float64."
+      },
+      {
+        "text": "O `tinynet` deu os mesmos gradientes que o `byhand.py`",
+        "why": "Sim: 2,25, 0, 4,5, 0 para os pesos da primeira camada, nos dois."
+      },
+      {
+        "text": "Duas camadas chegaram a 0,953 de acurácia de validação em 20 épocas",
+        "why": "Sim, a partir de 0,714 depois da primeira época."
+      },
+      {
+        "text": "A rede ReLU de dez camadas venceu a de duas",
+        "why": "Não: 0,850 depois de dez épocas, contra 0,939 da rede de duas camadas na época 10."
+      }
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "ex-tn39n2r1": {
+    "prompt": "Que parte de um script de backup feito em casa a lição aponta como a que as pessoas erram?",
+    "hint": "Ela aparece meses depois, como uma recuperação que para.",
+    "choices": [
+      { "text": "Comprimir os arquivos antes de copiá-los", "why": "Compressão é fácil de acrescentar e fácil de ver funcionando; a falta dela custa espaço, não dados." },
+      { "text": "Rodar o pg_basebackup com as opções certas toda noite", "why": "Essa parte é um comando só, e falha de forma barulhenta quando falha." },
+      { "text": "Apagar log de que backups mantidos ainda precisam", "why": "Isso. A retenção precisa saber de quais segmentos cada backup mantido depende; apagar por idade deixa uma lacuna que ninguém vê." },
+      { "text": "Escolher um nome para o diretório em que os backups ficam guardados", "why": "Nada depende do nome." }
+    ]
+  },
+  "ex-x9ar1r24": {
+    "prompt": "Com o pgBackRest fazendo e verificando os backups, o que continua valendo?",
+    "hint": "Lição 1.",
+    "choices": [
+      { "text": "Um backup é uma afirmação até ser restaurado", "why": "Isso. A ferramenta faz cópias melhores; só uma restauração diz que elas funcionam." },
+      { "text": "Restaurar deixa de ser necessário, porque cada arquivo tem checksum e é conferido", "why": "Um checksum prova que os bytes não mudaram, não que um servidor sobe em cima deles nem que os dados estão certos." },
+      { "text": "A retenção tem que ser feita à mão, com find e rm", "why": "O expire do pgBackRest faz a retenção, com as dependências." },
+      { "text": "O archive_command da lição 4 tem que ficar como estava", "why": "O pgBackRest o substitui pelo archive-push." }
+    ]
+  },
+  "ex-z40h5s3j": {
+    "prompt": "Ligue cada termo do pgBackRest ao que ele significa.",
+    "hint": "Um é um lugar, outro é o conjunto de backups de um servidor dentro dele.",
+    "pairs": [
+      { "left": "repository", "right": "Onde ficam os backups e o log arquivado" },
+      { "left": "stanza", "right": "Os backups de um servidor, com um nome que você escolhe" },
+      { "left": "archive-push", "right": "O comando que o archive_command roda para cada segmento" },
+      { "left": "check", "right": "Prova que um segmento vai do servidor até o repositório" }
+    ],
+    "right_distractors": [
+      "A cópia do diretório de dados de onde uma restauração parte"
+    ]
+  },
+  "ex-jsdv3xwq": {
+    "prompt": "Por que todo comando do pgBackRest na lição começa com `sudo -u postgres`?",
+    "hint": "Quem é o dono do diretório de dados?",
+    "choices": [
+      { "text": "O pgBackRest se recusa a rodar para quem tem senha", "why": "Essa regra não existe." },
+      { "text": "O repositório está em outra máquina, que conhece só o postgres", "why": "Aqui o repositório é um diretório local." },
+      { "text": "A ana não tem permissão para se conectar ao banco", "why": "A ana é superusuária; a restrição é sobre arquivos, não sobre conexões." },
+      { "text": "Ele precisa ler o diretório de dados, que é do postgres", "why": "Isso. O pgBackRest roda como o usuário a quem os arquivos do servidor pertencem." }
+    ]
+  },
+  "ex-egqbvqd7": {
+    "prompt": "O que o `pgbackrest check` prova que o `stanza-create` não prova?",
+    "hint": "Ele espera algo chegar.",
+    "choices": [
+      { "text": "Que o arquivo de configuração não tem erros de digitação", "why": "Um erro de digitação em geral faria o stanza-create falhar também; o check prova mais do que a leitura do arquivo." },
+      { "text": "Que o arquivamento funciona de ponta a ponta", "why": "Isso: um segmento trocado no servidor chega ao repositório pelo archive_command." },
+      { "text": "Que cada backup do repositório pode ser restaurado", "why": "O check não faz backup nem restaura nada." },
+      { "text": "Que o servidor tem checksums de dados ativados", "why": "Ele não testa isso." }
+    ]
+  },
+  "ex-chndscas": {
+    "prompt": "O que um incremental copia que um diferencial não copia?",
+    "hint": "Desde quando?",
+    "choices": [
+      { "text": "Tudo, como um full", "why": "Isso é um backup full." },
+      { "text": "O que mudou desde o último backup", "why": "Isso. Um diferencial copia tudo o que mudou desde o último full." },
+      { "text": "Só o write-ahead log", "why": "Os dois copiam arquivos de dados; o log é arquivado continuamente de qualquer forma." },
+      { "text": "Linhas inseridas, mas não as alteradas", "why": "O pgBackRest trabalha com arquivos; ele não sabe nada de linhas." }
+    ]
+  },
+  "ex-6nyzpj1x": {
+    "prompt": "Um único pedido novo fez o backup incremental copiar 4,5 MB. Por que tanto para uma linha?",
+    "hint": "Por padrão, qual é a unidade que o pgBackRest compara?",
+    "choices": [
+      { "text": "Todo incremental copia pelo menos um segmento inteiro de log", "why": "Os segmentos são arquivados à parte; os 4,5 MB são arquivos de dados." },
+      { "text": "A compressão foi desligada para o incremental", "why": "O tamanho no repositório foi de 817,9 KB; houve compressão." },
+      { "text": "O incremental copiou de novo os arquivos do diferencial", "why": "Ele se refere a eles; não os copia de novo." },
+      { "text": "Um arquivo alterado é copiado inteiro", "why": "Isso. A linha foi para o arquivo de orders, e sem repo-block a unidade é o arquivo, então uma linha alterada copia a tabela de 3 MB e os índices dela." }
+    ]
+  },
+  "ex-tq8r9ac5": {
+    "prompt": "Para restaurar um incremental feito na quinta-feira, o que precisa estar intacto?",
+    "hint": "Leia a backup reference list dele.",
+    "choices": [
+      { "text": "O full, cada backup no meio, e o incremental", "why": "Isso. Cada elo da cadeia é mais uma coisa que precisa estar intacta." },
+      { "text": "O incremental sozinho", "why": "Um incremental guarda só o que mudou; o resto vem dos backups a que ele se refere." },
+      { "text": "O incremental e o último full", "why": "Isso basta para um diferencial. Um incremental também precisa do que veio antes dele." },
+      { "text": "Cada backup do repositório", "why": "Só a cadeia a que ele se refere; os outros fulls não fazem diferença para ele." }
+    ]
+  },
+  "ex-b5f3m429": {
+    "prompt": "Ordene os três tipos de backup do que mais copia para o que menos copia, num banco que muda um pouco todo dia e tem backup diário.",
+    "hint": "Cada um copia o que mudou desde um ponto diferente.",
+    "items": [
+      "full",
+      "diferencial, no fim da semana",
+      "incremental"
+    ],
+    "trap": "Um full copia tudo; um diferencial, tudo desde o full, o que cresce ao longo da semana; um incremental, só o que mudou desde o backup de ontem."
+  },
+  "ex-wnnp76qg": {
+    "prompt": "Com `repo1-retention-full=2`, um terceiro backup full terminou. O que o `expire` removeu?",
+    "hint": "Ele trabalha com conjuntos.",
+    "choices": [
+      { "text": "Só os arquivos do full mais antigo", "why": "O diferencial e o incremental dependiam dele e foram junto." },
+      { "text": "Segmentos arquivados com mais de uma semana", "why": "O pgBackRest decide por dependência, não por idade." },
+      { "text": "O conjunto inteiro daquele full, e o log dele", "why": "Isso: o full mais antigo, os backups que dependiam dele, e depois os segmentos de que nenhum backup restante precisa." },
+      { "text": "Nada, porque três está dentro de dois fulls mais uma margem", "why": "Não existe margem: dois quer dizer dois." }
+    ]
+  },
+  "ex-d37k17ay": {
+    "prompt": "O script de uma equipe apaga os segmentos arquivados com mais de sete dias e mantém dois backups full semanais. O que quebra?",
+    "hint": "Quantos dias tem o full mais antigo no sábado?",
+    "choices": [
+      { "text": "Sem problema: sete dias de log cobrem um backup semanal", "why": "O full mais antigo tem até catorze dias, e precisa de cada segmento desde o seu início." },
+      { "text": "O full mais novo não tem como ser restaurado", "why": "O log do full mais novo é recente e é mantido." },
+      { "text": "O repositório fica sem espaço", "why": "Ele apaga mais, não menos." },
+      { "text": "Uma recuperação que para numa lacuna silenciosa", "why": "Isso. A recuperação a partir do full mais antigo para na lacuna, e nada avisa: o backup é mantido e o log dele não, que é a falha que a retenção por dependência evita." }
+    ]
+  },
+  "ex-3epp87mf": {
+    "prompt": "Os fulls são feitos todo domingo e dois são mantidos. No sábado à noite, há mais ou menos quantos dias está o momento mais antigo que dá para restaurar?",
+    "hint": "O full do último domingo e o anterior.",
+    "unit": "dias"
+  },
+  "ex-twfg9x8a": {
+    "prompt": "No pgBackRest 2.50, que status de saída o `verify` dá quando encontra um arquivo danificado?",
+    "hint": "A transcrição rodou echo $? depois dele.",
+    "choices": [
+      { "text": "1, como qualquer comando que falha", "why": "É o que se esperaria, e não é o que ele faz." },
+      { "text": "2, que quer dizer aviso", "why": "Ele imprimiu 0." },
+      { "text": "0", "why": "Isso. Ele sai com 0 seja o que for que encontre; só o relatório diz o que aconteceu." },
+      { "text": "Ele não termina enquanto o dano não for consertado", "why": "Ele terminou em menos de um segundo." }
+    ]
+  },
+  "ex-ty0cz2b2": {
+    "prompt": "Uma rotina roda `pgbackrest verify --output=text` e trata saída vazia como sucesso. Por que isso está errado?",
+    "hint": "Veja o que o verify simples imprimiu num repositório saudável e num danificado.",
+    "choices": [
+      { "text": "Faz do silêncio a aprovação, e uma aprovação tem que ser algo dito", "why": "Isso. A rotina aceita só a linha status: ok do relatório completo; qualquer outra coisa, silêncio incluído, é falha." },
+      { "text": "Saída vazia quer dizer que o verify não rodou", "why": "Ele rodou; só não imprime nada sem --verbose quando está tudo bem." },
+      { "text": "Uma rotina nunca deve ler a saída de um comando", "why": "Ler o relatório é justamente a correção." },
+      { "text": "--output=text não é uma opção válida", "why": "É válida; só não basta sem --verbose." }
+    ]
+  },
+  "ex-ent8gdge": {
+    "prompt": "Quantos arquivos o `verify` conferiu em cada backup full?",
+    "hint": "total files checked.",
+    "unit": "arquivos"
+  },
+  "ex-feh9y0s5": {
+    "prompt": "Um backup falha na verificação. O que a lição faz com ele?",
+    "hint": "Dá para consertar um checksum que não bate?",
+    "choices": [
+      { "text": "Conserta o arquivo a partir do servidor de produção", "why": "O arquivo é o estado do servidor na hora do backup; o do servidor de produção é outro momento." },
+      { "text": "Remove-o com expire --set e faz um novo full", "why": "Isso. Um backup que falha não tem conserto, só substituição." },
+      { "text": "Deixa-o lá, porque o outro full continua válido", "why": "Um backup sabidamente ruim no repositório é um de que alguém pode restaurar." },
+      { "text": "Roda o verify de novo até ele passar", "why": "O dano não vai embora porque se perguntou de novo." }
+    ]
+  },
+  "ex-9q5v3a85": {
+    "prompt": "Um teste de restauração é feito sem `--archive-mode=off`, num servidor cujo `archive_command` empurra para a mesma stanza. O que dá errado?",
+    "hint": "A cópia carrega as configurações do original.",
+    "choices": [
+      { "text": "A restauração se recusa a subir", "why": "Ela sobe; esse é o problema." },
+      { "text": "O servidor de produção para de arquivar", "why": "Ele continua, e o arquivo dele agora está misturado com o da cópia." },
+      { "text": "Duas histórias acabam num só arquivo", "why": "Isso. A cópia empurra o próprio log para a stanza do servidor de produção, a partir de outra história: o log de dois servidores sob um mesmo nome, e a próxima recuperação corre o risco de reaplicar o errado." },
+      { "text": "Nada, porque a cópia está em outra porta", "why": "A stanza é escolhida pelo archive_command, não pela porta." }
+    ]
+  },
+  "ex-k670rb01": {
+    "prompt": "O que faz o `restore_command` que o pgBackRest escreve na cópia restaurada?",
+    "hint": "É o inverso do archive_command.",
+    "choices": [
+      { "text": "Busca segmentos arquivados no repositório quando a recuperação pede", "why": "Isso. É o que deixa a cópia reaplicar log além do fim do backup." },
+      { "text": "Restaura a cópia de novo cada vez que o servidor sobe", "why": "Ele roda só durante a recuperação, um segmento de cada vez." },
+      { "text": "Empurra os segmentos da cópia de volta para o repositório", "why": "Isso seria o archive_command, e ele foi desligado." },
+      { "text": "Compara a cópia com o servidor de produção", "why": "Nada na recuperação compara com o servidor de produção; foi o relatório que fez isso." }
+    ]
+  },
+  "ex-rtrrhgmd": {
+    "prompt": "A rotina noturna está no crontab do postgres e sai com 1 quando o verify falha. O que ainda falta?",
+    "hint": "E se a rotina parar de rodar de vez?",
+    "choices": [
+      { "text": "Uma segunda linha no crontab para rodá-la duas vezes", "why": "Rodar duas vezes não avisa ninguém de que falhou." },
+      { "text": "set -x, para imprimir cada comando", "why": "Imprimir comandos ajuda a depurar, não a perceber." },
+      { "text": "Um --type=full em cada execução", "why": "Isso muda o custo, não se alguém percebe as falhas." },
+      { "text": "Algo que alerte numa falha, e numa noite sem execução", "why": "Isso. Numa máquina sem e-mail configurado, a saída do cron não vai para lugar nenhum." }
+    ]
+  },
+  "ex-6fexbvg2": {
+    "prompt": "O script noturno conta o verify como aprovado só se o relatório tiver a linha exata `status: ___`.",
+    "hint": "Duas letras.",
+    "blanks": [
+      { "accept": ["ok"] }
+    ]
+  },
+  "ex-phq8k14t": {
+    "prompt": "O backup full mais novo tem um arquivo danificado, e dois incrementais foram feitos depois dele. O que o relatório completo do verify diz sobre eles?",
+    "hint": "O que um incremental pega do seu full?",
+    "choices": [
+      { "text": "Que são válidos, porque os próprios arquivos estão intactos", "why": "Eles se referem ao arquivo danificado do full; uma restauração a partir deles o usaria." },
+      { "text": "Que também são inválidos", "why": "Isso. O relatório da rotina listou o full e os dois incrementais como inválidos: um arquivo danificado, três backups inutilizáveis." },
+      { "text": "Que não foram conferidos, porque o verify só lê fulls", "why": "Ele conferiu todos." },
+      { "text": "Que foram apagados automaticamente pelo expire", "why": "Nada é apagado até alguém decidir." }
+    ]
+  },
+  "ex-4yaq3wkw": {
+    "prompt": "Um banco muda muito o dia inteiro. Que ritmo faz as restaurações dependerem de poucos backups e ainda mantém pequenas as cópias noturnas?",
+    "hint": "Conte do que uma restauração na sexta precisa em cada caso.",
+    "choices": [
+      { "text": "Um full por mês e um incremental por noite", "why": "Uma restauração no fim do mês precisa do full e de até trinta incrementais, todos intactos." },
+      { "text": "Um full por semana e um diferencial por noite", "why": "Isso. A restauração de qualquer noite precisa de exatamente dois backups." },
+      { "text": "Só incrementais, depois de um único full inicial", "why": "A cadeia cresce para sempre, e junto com ela aquilo de que uma restauração depende." },
+      { "text": "Um full toda noite e mais nada", "why": "Isso mantém as restaurações simples e deixa cada cópia noturna do tamanho do banco." }
+    ]
+  }
+}

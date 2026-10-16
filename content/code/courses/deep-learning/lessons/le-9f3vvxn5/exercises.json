@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-3gv3yxnf",
+    "version": 1,
+    "section": "the-chain-rule",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `chain.py`, how is dL/dw obtained from the three local derivatives?",
+    "hint": "The line that prints `chain:`.",
+    "choices": [
+      {
+        "text": "By adding them",
+        "correct": false,
+        "why": "Adding would give -0.6636 + 0.2217 + 1.5, nowhere near the -0.220701 the nudge measured."
+      },
+      {
+        "text": "By multiplying them",
+        "correct": true,
+        "why": "Right: that is the chain rule, and the product agreed with the nudge to six decimals."
+      },
+      {
+        "text": "By taking the largest of them",
+        "correct": false,
+        "why": "Each factor matters; dropping the sigmoid's 0.2217 would make the result four times too large."
+      },
+      {
+        "text": "By averaging them over the batch",
+        "correct": false,
+        "why": "`chain.py` has a single input, so there is no batch, and averaging is not how derivatives compose."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y93k7ff",
+    "version": 1,
+    "section": "the-chain-rule",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A unit's three local derivatives are dL/da = 0.5, da/dz = 0.2 and dz/dw = 3. What is dL/dw?",
+    "hint": "The chain rule.",
+    "value": 0.3,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-ge4n23fj",
+    "version": 1,
+    "section": "the-chain-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the forward pass keep its intermediate values instead of discarding them?",
+    "hint": "What does `da_dz = a * (1 - a)` read?",
+    "choices": [
+      {
+        "text": "So that the loss can be computed a second time",
+        "correct": false,
+        "why": "The loss is computed once per step; the stored values feed the backward pass."
+      },
+      {
+        "text": "To compare them with the finite differences",
+        "correct": false,
+        "why": "The finite difference compares gradients, not intermediate values, and it runs only as a test."
+      },
+      {
+        "text": "The local derivatives are evaluated at them",
+        "correct": true,
+        "why": "Right: the sigmoid's slope is read off `a`, the sum's is `x`. Without them the backward pass has nothing to evaluate."
+      },
+      {
+        "text": "Because NumPy cannot free memory during a pass",
+        "correct": false,
+        "why": "NumPy frees an array as soon as nothing refers to it; keeping them is a choice, and a cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-jreyxgjx",
+    "version": 1,
+    "section": "a-computation-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At a product node `w · h`, what gradient does `w` receive?",
+    "hint": "Each factor gets something involving the other one.",
+    "choices": [
+      {
+        "text": "The arriving gradient times `w`",
+        "correct": false,
+        "why": "That is what `h` receives: each factor gets the other factor, not itself."
+      },
+      {
+        "text": "The arriving gradient, unchanged",
+        "correct": false,
+        "why": "That is the rule for a sum node, where each term moves the output one for one."
+      },
+      {
+        "text": "The arriving gradient times `h`, the other factor",
+        "correct": true,
+        "why": "Right. In the graph, the weight 1.5 from `h1` got 1.5 times `h1`'s value of 1.0."
+      },
+      {
+        "text": "The arriving gradient divided by `h`, as an inverse",
+        "correct": false,
+        "why": "Nothing in backpropagation divides by a value; the derivative of `w · h` in `w` is `h`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjsgjypk",
+    "version": 1,
+    "section": "a-computation-graph",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hidden layer's output goes both into the next layer and along a shortcut straight to the output. What gradient comes back to that hidden layer?",
+    "hint": "One value, used twice.",
+    "choices": [
+      {
+        "text": "Only the gradient from the longer path",
+        "correct": false,
+        "why": "Both uses change the loss, so both count; dropping one is the forgotten fork rule."
+      },
+      {
+        "text": "The sum of the gradients from both paths",
+        "correct": true,
+        "why": "Right: a fork adds what comes back. This shortcut is lesson 12's residual connection."
+      },
+      {
+        "text": "The average of the gradients from the two paths",
+        "correct": false,
+        "why": "Averaging halves the true slope; moving the value moves the loss through both paths in full."
+      },
+      {
+        "text": "The larger of the two gradients",
+        "correct": false,
+        "why": "The smaller path changes the loss too, and the chain rule leaves nothing out."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xtx882c",
+    "version": 1,
+    "section": "a-computation-graph",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each node to what it sends back during the backward pass.",
+    "hint": "The table under the figure.",
+    "pairs": [
+      {
+        "left": "a sum",
+        "right": "the arriving gradient, unchanged, to every term"
+      },
+      {
+        "left": "a product",
+        "right": "the arriving gradient times the other factor"
+      },
+      {
+        "left": "a ReLU",
+        "right": "the arriving gradient where its input was positive, else 0"
+      },
+      {
+        "left": "a fork",
+        "right": "the sum of the gradients coming back along its edges"
+      }
+    ],
+    "right_distractors": [
+      "the arriving gradient times 0.25"
+    ]
+  },
+  {
+    "id": "ex-p736pxy6",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `byhand.py`, why is the gradient of every weight into hidden unit 2 zero?",
+    "hint": "Look at `z` and at `dz`.",
+    "choices": [
+      {
+        "text": "Its weights started at zero",
+        "correct": false,
+        "why": "They are -0.5 and 0.25; the value of a weight is not what decides its gradient here."
+      },
+      {
+        "text": "Its sum was -1, so ReLU sent nothing back",
+        "correct": true,
+        "why": "Right: `dh` held 1.5 for that unit and `dz` held 0. A unit that took no part in the answer gets none of the blame."
+      },
+      {
+        "text": "Its output weight was negative",
+        "correct": false,
+        "why": "It was 1.0, and `dh` for that unit was 1.5, not zero: the gradient arrived and ReLU stopped it."
+      },
+      {
+        "text": "The loss was already at its minimum for this input",
+        "correct": false,
+        "why": "The loss was 0.5625 and the output layer's gradients were not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqty3p77",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose `byhand.py` had `x = [1.0, 0.0]` instead, with the same weights. What would the second row of `dW1` be?",
+    "hint": "`dW1 = np.outer(x, dz)`.",
+    "choices": [
+      {
+        "text": "The same as the first row",
+        "correct": false,
+        "why": "The rows differ by their input: row 2 is `x2` times `dz`."
+      },
+      {
+        "text": "Twice the first row, as in the run",
+        "correct": false,
+        "why": "It was twice because `x2` was 2; with `x2` at 0 that factor is 0."
+      },
+      {
+        "text": "Zeros, since each entry is `x2` times a gradient",
+        "correct": true,
+        "why": "Right. A weight whose input is 0 had no effect on this output, so it gets no gradient from it."
+      },
+      {
+        "text": "It depends on `b1` alone",
+        "correct": false,
+        "why": "`b1` affects `dz`, which multiplies both rows; the input sets each row."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5qf5hev",
+    "version": 1,
+    "section": "tinynet",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Net.backward` walks the layers in ___ order, from the loss towards the input.",
+    "hint": "The word on its loop.",
+    "blanks": [
+      {
+        "accept": [
+          "reverse",
+          "reversed",
+          "opposite"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zpw9ck13",
+    "version": 1,
+    "section": "tinynet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Linear.backward` return, and what uses it?",
+    "hint": "Where does the weight gradient go instead?",
+    "choices": [
+      {
+        "text": "The gradient of its input, for the layer below",
+        "correct": true,
+        "why": "Right: `grad @ self.W.T`, which `Net.backward` hands to the previous layer."
+      },
+      {
+        "text": "The gradient of its weights, for the optimiser to read",
+        "correct": false,
+        "why": "That is written into `self.dW` in place, and `params()` hands it over; it is not returned."
+      },
+      {
+        "text": "The updated weights, for the next forward pass",
+        "correct": false,
+        "why": "`backward` changes no weight; the training loop's step does."
+      },
+      {
+        "text": "The layer's own loss, for the training loop",
+        "correct": false,
+        "why": "A layer has no loss of its own; there is one loss, at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-byj2rhge",
+    "version": 1,
+    "section": "tinynet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write a layer for `tinynet` whose forward returns `x * x`. What does its forward need to keep for its backward?",
+    "hint": "What is the derivative of x², and can it be recovered from x²?",
+    "choices": [
+      {
+        "text": "Nothing, since the layer has no parameters",
+        "correct": false,
+        "why": "`ReLU` has no parameters either and keeps its mask; the local derivative needs a value."
+      },
+      {
+        "text": "Its output, which is what the backward reads",
+        "correct": false,
+        "why": "That works for the sigmoid, whose slope is a function of its output. x² loses the sign of x, so 2x cannot be rebuilt from it."
+      },
+      {
+        "text": "Its input `x`, since the local derivative is 2x",
+        "correct": true,
+        "why": "Right, the same choice `Linear` makes: keep what the backward pass will evaluate at."
+      },
+      {
+        "text": "The gradient from the previous batch",
+        "correct": false,
+        "why": "Each batch's backward pass uses that batch's values; nothing carries over."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwxrh2e5",
+    "version": 1,
+    "section": "checking-the-gradients",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the correct `tinynet`, the float32 check reported 663 of 1,210 weights above 1e-4. Why?",
+    "hint": "Which part of the comparison is the weak one?",
+    "choices": [
+      {
+        "text": "`tinynet`'s backward pass has a bug that appears in float32",
+        "correct": false,
+        "why": "The same code passed in float64 with a worst error of 1.8e-08; the backward pass is right."
+      },
+      {
+        "text": "The nudge changes the loss below float32's precision",
+        "correct": true,
+        "why": "Right: the change sits in the seventh or eighth digit, and float32 keeps about seven, so the finite difference is rounding."
+      },
+      {
+        "text": "The relative error formula breaks for small gradients",
+        "correct": false,
+        "why": "It divides by the size of the two numbers, which is what keeps it fair on small gradients."
+      },
+      {
+        "text": "Eight images are too few for a check in float32",
+        "correct": false,
+        "why": "The same eight images gave 0 failures in float64; the count of images is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-80vp3xs0",
+    "version": 1,
+    "section": "checking-the-gradients",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A gradient check moves every weight of a 500-weight network up and then down. How many extra forward passes does it run?",
+    "hint": "The 64-16-10 network had 1,210 weights.",
+    "value": 1000,
+    "tolerance": 0,
+    "unit": "forward passes"
+  },
+  {
+    "id": "ex-spen1fcf",
+    "version": 1,
+    "section": "checking-the-gradients",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A gradient check of a layer you wrote, in float64, reports a worst relative error of 2e-2 and 300 of 1,210 entries above 1e-4. What do you conclude?",
+    "hint": "How many entries does a ReLU kink account for?",
+    "choices": [
+      {
+        "text": "The backward pass of the layer has a bug",
+        "correct": true,
+        "why": "Right. In float64 a correct backward lands around 1e-8; hundreds of failures are code, not rounding."
+      },
+      {
+        "text": "The check should be run again in float32 to confirm it",
+        "correct": false,
+        "why": "float32 is where the check stops being able to tell right from wrong."
+      },
+      {
+        "text": "A ReLU kink, since some sums sit near zero",
+        "correct": false,
+        "why": "A kink explains an isolated entry, not 300 of them."
+      },
+      {
+        "text": "The nudge of 0.00001 is too small for float64",
+        "correct": false,
+        "why": "The same nudge gave 1.8e-08 on `tinynet` in float64."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nazmfbx",
+    "version": 1,
+    "section": "the-first-training",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the work `train.py` does for one batch in order.",
+    "hint": "The backward pass needs what the forward pass kept.",
+    "items": [
+      "Run the batch through `net.forward`",
+      "Compute the loss and its gradient with `softmax_cross_entropy`",
+      "Call `net.backward` with that gradient",
+      "Subtract `lr` times each gradient from its value"
+    ]
+  },
+  {
+    "id": "ex-pd99dtka",
+    "version": 1,
+    "section": "the-first-training",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `train.py`, you move `net.backward(grad)` to just after the loop that updates the weights. What happens?",
+    "hint": "What is in `dW` when the update runs?",
+    "choices": [
+      {
+        "text": "Python raises an error, because `dW` does not exist yet",
+        "correct": false,
+        "why": "`Linear.__init__` creates `dW` filled with zeros, so nothing fails."
+      },
+      {
+        "text": "Each update uses the gradient of the batch before",
+        "correct": true,
+        "why": "Right: the arrays still hold the last backward pass's result. Nothing complains, which is why the order matters."
+      },
+      {
+        "text": "Nothing changes, since the same gradients are applied",
+        "correct": false,
+        "why": "They are not the same: they belong to the previous batch, and the first update applies zeros."
+      },
+      {
+        "text": "The weights never change, as every gradient stays at zero",
+        "correct": false,
+        "why": "Only the first update applies zeros; from the second batch on, `dW` holds real gradients, one batch late."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx0w351r",
+    "version": 1,
+    "section": "vanishing-gradients",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the gradient shrink at every sigmoid layer it passes through?",
+    "hint": "What is the sigmoid's largest slope?",
+    "choices": [
+      {
+        "text": "Because sigmoid outputs are always positive",
+        "correct": false,
+        "why": "The sign of the outputs is not what multiplies the gradient; the slope is."
+      },
+      {
+        "text": "Sigmoid layers have fewer weights than ReLU ones",
+        "correct": false,
+        "why": "The two networks had identical `Linear` layers; only the function between them differed."
+      },
+      {
+        "text": "Each layer multiplies it by a slope of at most 0.25",
+        "correct": true,
+        "why": "Right: one such factor per layer, and ten of them multiply to almost nothing."
+      },
+      {
+        "text": "The loss of a sigmoid network starts out smaller",
+        "correct": false,
+        "why": "The size of the loss does not explain a gradient that shrinks layer by layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsds2fsg",
+    "version": 1,
+    "section": "vanishing-gradients",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After ten epochs, the ten-layer sigmoid network scored 0.106 on validation. What does that number say?",
+    "hint": "How many classes are there?",
+    "choices": [
+      {
+        "text": "It learnt nothing: 0.1 is chance for ten classes",
+        "correct": true,
+        "why": "Right. Its first layers got gradients around 1e-5 and barely moved."
+      },
+      {
+        "text": "It overfitted the training set",
+        "correct": false,
+        "why": "Overfitting needs the training set learnt first; this network learnt neither set."
+      },
+      {
+        "text": "The validation set is too small to measure a deep network",
+        "correct": false,
+        "why": "The same 360 images measured the ReLU network at 0.850."
+      },
+      {
+        "text": "It needed a lower learning rate than the ReLU network",
+        "correct": false,
+        "why": "Its gradients were already tiny; a lower rate would move its first layers even less."
+      }
+    ]
+  },
+  {
+    "id": "ex-hems4cpr",
+    "version": 1,
+    "section": "vanishing-gradients",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "tanh has a slope of 1 at zero and less everywhere else. With tanh in place of the sigmoid in `vanish.py`, what would you expect?",
+    "hint": "Compare the largest factor per layer with the sigmoid's 0.25 and ReLU's 1.",
+    "choices": [
+      {
+        "text": "Exactly ReLU's result, since its largest slope is also 1",
+        "correct": false,
+        "why": "ReLU's slope is 1 wherever a unit is on; tanh's is 1 only at zero, and smaller for every other sum."
+      },
+      {
+        "text": "Shrinking between the two: less than sigmoid, more than ReLU",
+        "correct": true,
+        "why": "Right: factors near 1 for sums near zero, smaller where units saturate. Between the two runs you saw."
+      },
+      {
+        "text": "More shrinking than sigmoid, because tanh outputs can be negative",
+        "correct": false,
+        "why": "A negative output flips a sign; it is the slope's size that shrinks a gradient, and tanh's is up to four times the sigmoid's."
+      },
+      {
+        "text": "No change, since activations do not enter the gradient",
+        "correct": false,
+        "why": "Each activation contributes its local derivative to the product; that is the whole effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qgd9g59",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each one against a transcript.",
+    "choices": [
+      {
+        "text": "The chain rule and the nudge agreed to six decimals",
+        "correct": true,
+        "why": "Yes: -0.220701 both times."
+      },
+      {
+        "text": "The float32 gradient check confirmed `tinynet`'s backward pass",
+        "correct": false,
+        "why": "No: in float32 it flagged 663 weights on correct code. float64 confirmed it."
+      },
+      {
+        "text": "`tinynet` gave the same gradients as `byhand.py`",
+        "correct": true,
+        "why": "Yes: 2.25, 0, 4.5, 0 for the first layer's weights, in both."
+      },
+      {
+        "text": "Two layers reached 0.953 validation accuracy in 20 epochs",
+        "correct": true,
+        "why": "Yes, from 0.714 after the first epoch."
+      },
+      {
+        "text": "The ten-layer ReLU network beat the two-layer one",
+        "correct": false,
+        "why": "No: 0.850 after ten epochs, against the two-layer network's 0.939 at epoch 10."
+      }
+    ]
+  }
+]

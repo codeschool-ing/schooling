@@ -1,0 +1,655 @@
+[
+  {
+    "id": "ex-34sebkv9",
+    "version": 1,
+    "section": "three-two-one",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The rule asks for ___ copies of the data, on two kinds of storage, with one of them somewhere else.",
+    "hint": "Counting the live one.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4m02zfs6",
+    "version": 1,
+    "section": "three-two-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team copies its backups to a second region of the same cloud account. Which event still takes both copies?",
+    "hint": "What do the two regions share?",
+    "choices": [
+      {
+        "text": "A disk failing in the first region",
+        "correct": false,
+        "why": "The second region's copy is on other disks entirely."
+      },
+      {
+        "text": "A fire in the first region's data centre",
+        "correct": false,
+        "why": "That is what a second region survives."
+      },
+      {
+        "text": "The account being compromised or closed",
+        "correct": true,
+        "why": "Right. Both regions answer to the same account and the same credentials."
+      },
+      {
+        "text": "A network outage between users and the first region",
+        "correct": false,
+        "why": "The data is not destroyed; and the second region is reachable separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e5k6fy3",
+    "version": 1,
+    "section": "three-two-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a repository on the same server as the database protect against?",
+    "hint": "Which failures leave the server's disk intact?",
+    "choices": [
+      {
+        "text": "Small mistakes, like a dropped table",
+        "correct": true,
+        "why": "Right. It is a convenience for fast restores, not a copy that survives the server."
+      },
+      {
+        "text": "A fire in the building",
+        "correct": false,
+        "why": "The fire takes the server and the repository together."
+      },
+      {
+        "text": "A stolen administrator password",
+        "correct": false,
+        "why": "Whoever holds it can delete the local repository first."
+      },
+      {
+        "text": "The server's disk failing",
+        "correct": false,
+        "why": "The repository is on that disk, or at least in that machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0gjdyq4",
+    "version": 1,
+    "section": "a-second-repository",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With two repositories configured, where does a plain `pgbackrest --stanza=main backup` go?",
+    "hint": "Archiving and backups behave differently.",
+    "choices": [
+      {
+        "text": "To both repositories",
+        "correct": false,
+        "why": "Archived segments go to both; a backup goes to one."
+      },
+      {
+        "text": "To whichever repository has more space",
+        "correct": false,
+        "why": "pgBackRest does not choose by space."
+      },
+      {
+        "text": "To repo2, because it is encrypted",
+        "correct": false,
+        "why": "Encryption does not change the default."
+      },
+      {
+        "text": "To repo1, unless --repo names another",
+        "correct": true,
+        "why": "Right. The nightly job needs a second backup command for repo2."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zmc0t1s",
+    "version": 1,
+    "section": "a-second-repository",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plain `backup` in this lesson made an incremental in repo1 of a few hundred bytes. Why so small?",
+    "hint": "What was already in repo1?",
+    "choices": [
+      {
+        "text": "Because repo2 had already taken the full",
+        "correct": false,
+        "why": "Each repository has its own chain; repo2's full does not count for repo1."
+      },
+      {
+        "text": "Because nothing had changed since lesson 5's full in repo1",
+        "correct": true,
+        "why": "Right. An incremental copies only what changed, and almost nothing had."
+      },
+      {
+        "text": "Because the encryption compresses it",
+        "correct": false,
+        "why": "repo1 is not encrypted, and encryption does not shrink data."
+      },
+      {
+        "text": "Because incrementals skip the data files",
+        "correct": false,
+        "why": "They copy changed data files; there were none."
+      }
+    ]
+  },
+  {
+    "id": "ex-hr4dj5ny",
+    "version": 1,
+    "section": "a-second-repository",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `/etc/pgbackrest.conf` changed to owner root, group postgres, mode 640 in this lesson?",
+    "hint": "What does it hold now?",
+    "choices": [
+      {
+        "text": "pgBackRest refuses to read a file that others can write",
+        "correct": false,
+        "why": "The reason is what the file holds, not a rule of the tool."
+      },
+      {
+        "text": "It now holds a secret",
+        "correct": true,
+        "why": "Right: the repository's passphrase. postgres has to read it; nobody else should."
+      },
+      {
+        "text": "So that root can run backups without sudo",
+        "correct": false,
+        "why": "Backups run as postgres."
+      },
+      {
+        "text": "Because repo2 is on another machine",
+        "correct": false,
+        "why": "The location of repo2 does not change who may read the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2cjyk1w",
+    "version": 1,
+    "section": "a-second-repository",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `file` report for the copy of `PG_VERSION.zst` in repo2?",
+    "hint": "repo2 is encrypted.",
+    "choices": [
+      {
+        "text": "Zstandard compressed data",
+        "correct": false,
+        "why": "That was the copy in repo1."
+      },
+      {
+        "text": "ASCII text",
+        "correct": false,
+        "why": "Not even the plain copy is text; it is compressed."
+      },
+      {
+        "text": "empty",
+        "correct": false,
+        "why": "The file is not empty; it is encrypted."
+      },
+      {
+        "text": "openssl enc'd data with salted password",
+        "correct": true,
+        "why": "Right. Without the passphrase it is noise."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdsx1gmq",
+    "version": 1,
+    "section": "losing-the-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After repo1 was deleted, what did `info` say about the two repositories?",
+    "hint": "status: mixed.",
+    "choices": [
+      {
+        "text": "repo1 missing stanza path, repo2 ok",
+        "correct": true,
+        "why": "Right. The surviving repository still lists its backup."
+      },
+      {
+        "text": "Both in error",
+        "correct": false,
+        "why": "repo2 was untouched and reported ok."
+      },
+      {
+        "text": "Nothing, because info only reads repo1",
+        "correct": false,
+        "why": "info reports every configured repository."
+      },
+      {
+        "text": "repo1 ok, because the archive was still there",
+        "correct": false,
+        "why": "Both its archive and backup directories were removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtj3eeyb",
+    "version": 1,
+    "section": "losing-the-first",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With repo1 gone, how many failed archive attempts did `pg_stat_archiver` count for the next segment?",
+    "hint": "failed_count.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "attempts"
+  },
+  {
+    "id": "ex-1ykn0179",
+    "version": 1,
+    "section": "losing-the-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is it right that the push counts as failed while one repository still received the segment?",
+    "hint": "Who needs to find out?",
+    "choices": [
+      {
+        "text": "Because a segment in one repository is useless",
+        "correct": false,
+        "why": "It is useful; repo2 can restore with it."
+      },
+      {
+        "text": "Because PostgreSQL cannot archive twice",
+        "correct": false,
+        "why": "It archives once per segment; pgBackRest sends it to each repository."
+      },
+      {
+        "text": "So that somebody is told",
+        "correct": true,
+        "why": "Right: the server retries and the alerts fire while a copy is missing. Reporting success would hide the loss of a whole repository."
+      },
+      {
+        "text": "So that repo2 is marked as broken too",
+        "correct": false,
+        "why": "repo2 stayed healthy."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6gq0zg8",
+    "version": 1,
+    "section": "losing-the-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did restoring from repo2 change in the restore command, compared with lesson 5?",
+    "hint": "One option.",
+    "choices": [
+      {
+        "text": "A different tool, because repo2 is encrypted",
+        "correct": false,
+        "why": "The same pgbackrest restore; it decrypts on the way."
+      },
+      {
+        "text": "A manual decryption step first",
+        "correct": false,
+        "why": "pgBackRest decrypts with the passphrase in its configuration."
+      },
+      {
+        "text": "Restoring the archive separately",
+        "correct": false,
+        "why": "The restore fetches segments through restore_command as before."
+      },
+      {
+        "text": "--repo=2",
+        "correct": true,
+        "why": "Right. A second repository that needs a different procedure is a second thing to get wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-6n6jhy1z",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the passphrase wrong by one character, what could pgBackRest do with repo2?",
+    "hint": "It could not even read one file.",
+    "choices": [
+      {
+        "text": "Restore the files and fail on the archive",
+        "correct": false,
+        "why": "It could not read backup.info, the list of backups."
+      },
+      {
+        "text": "Restore, slowly, by trying keys",
+        "correct": false,
+        "why": "AES with a long random passphrase is not broken by trying."
+      },
+      {
+        "text": "Nothing: not even list the backups",
+        "correct": true,
+        "why": "Right. Every byte is there and none of it is usable."
+      },
+      {
+        "text": "Read the unencrypted parts",
+        "correct": false,
+        "why": "Everything in repo2 is encrypted, its info files included."
+      }
+    ]
+  },
+  {
+    "id": "ex-w04751g7",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should the passphrase of an encrypted offsite repository be kept?",
+    "hint": "It has to survive the loss of the database server.",
+    "choices": [
+      {
+        "text": "In a trusted vault, reachable by more than one person",
+        "correct": true,
+        "why": "Right, and tested by a drill that restores using the stored copy."
+      },
+      {
+        "text": "In pgbackrest.conf on the database server, and only there",
+        "correct": false,
+        "why": "Then losing the server loses the key, and the backups with it."
+      },
+      {
+        "text": "In the repository, next to the backups",
+        "correct": false,
+        "why": "Then whoever holds the backups holds the key."
+      },
+      {
+        "text": "Memorised by the administrator",
+        "correct": false,
+        "why": "One person's memory is the failure lesson 24 is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0wdaxyj",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does a drill prove that the passphrase written down in the vault is the right one?",
+    "hint": "Where does the drill machine get its configuration?",
+    "choices": [
+      {
+        "text": "By comparing the passphrase with the one in pgbackrest.conf",
+        "correct": false,
+        "why": "That compares two strings, and is the step people skip."
+      },
+      {
+        "text": "By restoring on a machine configured from the vault copy",
+        "correct": true,
+        "why": "Right. A drill run with a copy of the old configuration proves nothing about the vault."
+      },
+      {
+        "text": "By running pgbackrest verify",
+        "correct": false,
+        "why": "verify uses whatever passphrase the configuration has."
+      },
+      {
+        "text": "By decrypting one file by hand",
+        "correct": false,
+        "why": "Better than nothing, and still not a restore."
+      }
+    ]
+  },
+  {
+    "id": "ex-jeycw5nq",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the offsite full marked `chattr +i`, what did `pgbackrest expire --set` do?",
+    "hint": "It deletes through the file system like anybody else.",
+    "choices": [
+      {
+        "text": "Removed the backup, because pgBackRest runs as postgres",
+        "correct": false,
+        "why": "The flag refuses postgres and root alike."
+      },
+      {
+        "text": "Removed the flag and then the backup",
+        "correct": false,
+        "why": "Only root can change the flag, and pgBackRest does not try."
+      },
+      {
+        "text": "Failed on the first file it could not remove",
+        "correct": true,
+        "why": "Right. Retention, a buggy script and an attacker as postgres are all stopped the same way."
+      },
+      {
+        "text": "Moved the backup to repo1",
+        "correct": false,
+        "why": "expire never moves backups."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2a2kn9n",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `chattr +i` on the same machine fail to protect against?",
+    "hint": "Who removed the flag in the lesson?",
+    "choices": [
+      {
+        "text": "An attacker who has root on that machine",
+        "correct": true,
+        "why": "Right. Root removes the flag in one command."
+      },
+      {
+        "text": "A cleanup script with the wrong path",
+        "correct": false,
+        "why": "That is what it does protect against."
+      },
+      {
+        "text": "pgBackRest's own expire",
+        "correct": false,
+        "why": "It stopped expire, as the lesson showed."
+      },
+      {
+        "text": "A typing mistake by an administrator",
+        "correct": false,
+        "why": "That is the case it handles best."
+      }
+    ]
+  },
+  {
+    "id": "ex-nky7cpwn",
+    "version": 1,
+    "section": "immutable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Backups in repo2 are made immutable for 90 days, and `repo2-retention-full` keeps 4 weekly fulls. What happens?",
+    "hint": "Four weekly fulls is about four weeks.",
+    "choices": [
+      {
+        "text": "Nothing: immutability and retention are independent",
+        "correct": false,
+        "why": "Retention deletes through the file system, which the flag refuses."
+      },
+      {
+        "text": "Backups are kept 90 days and then expired cleanly",
+        "correct": false,
+        "why": "expire tries much earlier, and fails each time until then."
+      },
+      {
+        "text": "pgBackRest raises retention to 90 days by itself",
+        "correct": false,
+        "why": "It does not read the file system's flags."
+      },
+      {
+        "text": "expire fails every night for about two months",
+        "correct": true,
+        "why": "Right. A nightly job that always fails is one nobody reads; the two periods have to agree."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ngcrxhj",
+    "version": 1,
+    "section": "immutable",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of protection with what it stops.",
+    "hint": "Who holds the power to undo it?",
+    "pairs": [
+      {
+        "left": "chattr +i on the backup server's own disk",
+        "right": "Mistakes, not root on that machine"
+      },
+      {
+        "left": "Object lock in compliance mode",
+        "right": "Deletion by any credential before the date"
+      },
+      {
+        "left": "A tape on a shelf",
+        "right": "Any attack over the network"
+      }
+    ],
+    "right_distractors": [
+      "Somebody reading the data"
+    ]
+  },
+  {
+    "id": "ex-4yjhbm7b",
+    "version": 1,
+    "section": "another-credential",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a backup server that pulls from the database server change?",
+    "hint": "Which direction do the credentials point?",
+    "choices": [
+      {
+        "text": "Backups become faster",
+        "correct": false,
+        "why": "Speed is not the point of pulling."
+      },
+      {
+        "text": "Intruders there cannot reach copies",
+        "correct": true,
+        "why": "Right: the database server holds no way in to the backups. A compromised database server can damage the database and nothing else."
+      },
+      {
+        "text": "The database needs no archive_command",
+        "correct": false,
+        "why": "The log still has to be collected; the direction of access is what changes."
+      },
+      {
+        "text": "Encryption is no longer needed",
+        "correct": false,
+        "why": "The backup server's storage still deserves encryption."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh26p4r4",
+    "version": 1,
+    "section": "another-credential",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The database server's credential for the offsite bucket can write new objects and nothing else. How does old data ever get deleted?",
+    "hint": "Somebody else does it.",
+    "choices": [
+      {
+        "text": "It never does; the bucket grows for ever",
+        "correct": false,
+        "why": "That would be a cost problem, and the lesson names who deletes."
+      },
+      {
+        "text": "Through someone else's credential",
+        "correct": true,
+        "why": "Right: a lifecycle rule on the bucket, or a separate job with its own credential. Deletion is moved away from the machine an attacker would reach first."
+      },
+      {
+        "text": "By the database server, with sudo",
+        "correct": false,
+        "why": "sudo on the server does not add permissions in the bucket."
+      },
+      {
+        "text": "By pgbackrest expire, using the same credential",
+        "correct": false,
+        "why": "That credential cannot delete, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-n554vwbv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a typical ransomware attack on a database in the order this lesson warns about.",
+    "hint": "What does the attacker remove before showing themselves?",
+    "items": [
+      "Get a credential on the database server",
+      "Delete every backup that credential can reach",
+      "Encrypt or destroy the database",
+      "Ask for payment"
+    ],
+    "trap": "The backups go first, because a victim with a restorable backup does not pay; which is why the copy that matters is the one that credential cannot reach."
+  },
+  {
+    "id": "ex-5va3cddj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are asked whether the shop has an offsite backup. repo2 is on another provider, encrypted, and written by pgBackRest on the database server with a key that can delete. What is the honest answer?",
+    "hint": "Ask the lesson's second question.",
+    "choices": [
+      {
+        "text": "Yes: it is in another place, with other storage",
+        "correct": false,
+        "why": "It survives the server failing, not the person who takes it over."
+      },
+      {
+        "text": "No, because it is encrypted",
+        "correct": false,
+        "why": "Encryption is good and does not decide where a copy is."
+      },
+      {
+        "text": "Yes, as long as the passphrase is in a vault",
+        "correct": false,
+        "why": "The passphrase protects reading, not deleting."
+      },
+      {
+        "text": "Only half: an intruder on that host erases it",
+        "correct": true,
+        "why": "Right: offsite, yes; beyond the server's credentials, no. Anybody with that server can delete it before touching the database."
+      }
+    ]
+  }
+]

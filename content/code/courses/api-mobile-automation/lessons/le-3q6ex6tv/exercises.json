@@ -1,0 +1,624 @@
+[
+  {
+    "id": "ex-fy3kvpvz",
+    "version": 1,
+    "section": "json-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In show.json, why is price_cents typed as integer and not number?",
+    "hint": "Money travels in cents.",
+    "choices": [
+      {
+        "text": "Because number is not a JSON Schema type",
+        "correct": false,
+        "why": "number is a JSON Schema type; it accepts fractions."
+      },
+      {
+        "text": "So that 65.5, a fraction of a cent, is refused",
+        "correct": true,
+        "why": "Right. integer refuses fractions that number would accept."
+      },
+      {
+        "text": "Because integer also checks that the price is positive",
+        "correct": false,
+        "why": "The sign is minimum's job; integer only refuses fractions."
+      },
+      {
+        "text": "So that Ajv can store the price in less memory",
+        "correct": false,
+        "why": "A schema says what is valid, not how it is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-402dz3k0",
+    "version": 1,
+    "section": "json-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is additionalProperties: false right in a schema that tests boxoffice's own answers?",
+    "hint": "Look at what createOrder removes before answering.",
+    "choices": [
+      {
+        "text": "It makes validation faster for large answers",
+        "correct": false,
+        "why": "Speed is not the reason; leaks are."
+      },
+      {
+        "text": "Clients break when a field they do not know arrives",
+        "correct": false,
+        "why": "That is the argument against it in a client's schema, not for it here."
+      },
+      {
+        "text": "It catches a field that should never leave, such as client",
+        "correct": true,
+        "why": "Right. boxoffice strips client from orders, and a strict schema notices if that line is lost."
+      },
+      {
+        "text": "JSON Schema requires it whenever properties is used",
+        "correct": false,
+        "why": "It is optional, and the default allows extra fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0c2t4vg",
+    "version": 1,
+    "section": "json-schema",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each keyword to what it says in this lesson's schemas.",
+    "hint": "One of them only applies when another part matches.",
+    "pairs": [
+      {
+        "left": "required",
+        "right": "these fields must be present"
+      },
+      {
+        "left": "pattern",
+        "right": "the string must match a regular expression"
+      },
+      {
+        "left": "enum",
+        "right": "the value must be one of a list"
+      },
+      {
+        "left": "if / then",
+        "right": "a confirmed order must carry a payment"
+      }
+    ],
+    "right_distractors": [
+      "the field is sent only to staff"
+    ]
+  },
+  {
+    "id": "ex-7r91rh1x",
+    "version": 1,
+    "section": "validating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "check.mjs builds its validator with Ajv2020 and not the default Ajv class. Why?",
+    "hint": "Look at the $schema line of the files.",
+    "choices": [
+      {
+        "text": "Ajv2020 is faster on large documents",
+        "correct": false,
+        "why": "The choice is about the draft, not speed."
+      },
+      {
+        "text": "The schemas are written in draft 2020-12",
+        "correct": true,
+        "why": "Right. The default class reads draft-07."
+      },
+      {
+        "text": "Only Ajv2020 can check the format keyword",
+        "correct": false,
+        "why": "Formats come from ajv-formats, for either class."
+      },
+      {
+        "text": "The default class cannot read from standard input",
+        "correct": false,
+        "why": "Reading input is the script's job, not Ajv's."
+      }
+    ]
+  },
+  {
+    "id": "ex-55d0k0eb",
+    "version": 1,
+    "section": "validating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cancelled order failed check.mjs with /status must be equal to one of the allowed values. What was wrong?",
+    "hint": "What do openapi.yaml and boxoffice's code say about cancelled?",
+    "choices": [
+      {
+        "text": "boxoffice, which should delete a cancelled order",
+        "correct": false,
+        "why": "The contract keeps it with status cancelled; boxoffice does what it promises."
+      },
+      {
+        "text": "The DELETE, which answered 204 instead of 200",
+        "correct": false,
+        "why": "204 is the right answer for a DELETE with nothing to send."
+      },
+      {
+        "text": "Ajv, which does not know the word cancelled",
+        "correct": false,
+        "why": "Ajv compares against the enum it was given."
+      },
+      {
+        "text": "The schema: its enum missed one status",
+        "correct": true,
+        "why": "Right. It was written from the create path only."
+      }
+    ]
+  },
+  {
+    "id": "ex-42bgx9xj",
+    "version": 1,
+    "section": "validating",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many broken rules did check.mjs report for the made-up show?",
+    "hint": "One line each, thanks to allErrors.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-js0g3p2p",
+    "version": 1,
+    "section": "validating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does check.mjs end with exit code 1 when an answer breaks the schema?",
+    "hint": "Who reads an exit code?",
+    "choices": [
+      {
+        "text": "So a pipeline fails without reading text",
+        "correct": true,
+        "why": "Right. The exit code is what a pipeline acts on."
+      },
+      {
+        "text": "Because Node exits with 1 after printing anything",
+        "correct": false,
+        "why": "Node exits with 0 unless told otherwise; the valid case printed and exited 0."
+      },
+      {
+        "text": "So curl retries the request",
+        "correct": false,
+        "why": "curl had already finished; the exit code is check.mjs's own."
+      },
+      {
+        "text": "To tell Ajv to report every error",
+        "correct": false,
+        "why": "allErrors does that; the exit code comes after."
+      }
+    ]
+  },
+  {
+    "id": "ex-5g5xnmc4",
+    "version": 1,
+    "section": "in-the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Newman failed the One show test with no schema with key or ref ...2020-12/schema. What does that mean?",
+    "hint": "Which drafts does Postman's validator know?",
+    "choices": [
+      {
+        "text": "boxoffice's answer broke the schema",
+        "correct": false,
+        "why": "The answer was never compared; the schema itself was refused."
+      },
+      {
+        "text": "The collection variable showSchema was empty",
+        "correct": false,
+        "why": "The validator read the schema far enough to see its $schema line."
+      },
+      {
+        "text": "The validator refused the 2020-12 draft",
+        "correct": true,
+        "why": "Right. Removing the $schema line made both tests pass."
+      },
+      {
+        "text": "Newman could not download the draft from json-schema.org",
+        "correct": false,
+        "why": "Validators do not download drafts; they ship with the ones they know."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhpwzjwd",
+    "version": 1,
+    "section": "in-the-tools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is REST Assured's behaviour with order.json more dangerous than Postman's with show.json?",
+    "hint": "Which one told you?",
+    "choices": [
+      {
+        "text": "REST Assured runs slower, so failures arrive later",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "REST Assured refused the whole schema and nothing was checked",
+        "correct": false,
+        "why": "It checked the rules it knew; it skipped if/then without saying so."
+      },
+      {
+        "text": "Postman's error was in the answer, REST Assured's in the schema",
+        "correct": false,
+        "why": "Both were about the validator, not the answer."
+      },
+      {
+        "text": "It ignored if/then silently, while Postman failed loudly",
+        "correct": true,
+        "why": "Right. A green run hid a rule that was never enforced."
+      }
+    ]
+  },
+  {
+    "id": "ex-nv0kb5s4",
+    "version": 1,
+    "section": "in-the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the Postman collection carry the schema in a collection variable instead of reading schemas/show.json?",
+    "hint": "What can a Postman script reach?",
+    "choices": [
+      {
+        "text": "Postman requires schemas in a minified form",
+        "correct": false,
+        "why": "The minifying only keeps the variable on one line; any JSON text works."
+      },
+      {
+        "text": "A script cannot read a file from disk",
+        "correct": true,
+        "why": "Right. Neither in the app nor in Newman."
+      },
+      {
+        "text": "Collection variables are checked faster",
+        "correct": false,
+        "why": "Where the schema lives does not change validation speed."
+      },
+      {
+        "text": "The file is written in draft 2020-12",
+        "correct": false,
+        "why": "The draft is a separate problem; the file could not be read in any draft."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtea4vrh",
+    "version": 1,
+    "section": "in-the-tools",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To keep the third Java test visible but not failing the run, the lesson marks it with the JUnit annotation @___.",
+    "hint": "Maven reported it as skipped.",
+    "blanks": [
+      {
+        "accept": [
+          "Disabled"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6p9carka",
+    "version": 1,
+    "section": "consumer-driven",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The boxoffice team wants to rename price_cents in the show. What can a schema tell them, and what can it not?",
+    "hint": "A schema knows the provider, not its readers.",
+    "choices": [
+      {
+        "text": "It can tell them which clients read the field",
+        "correct": false,
+        "why": "That is what a schema cannot say; contracts can."
+      },
+      {
+        "text": "That the old schema breaks, not whether anybody notices",
+        "correct": true,
+        "why": "Right. Who reads which field is outside the schema."
+      },
+      {
+        "text": "Nothing, because a schema cannot describe a rename",
+        "correct": false,
+        "why": "It describes the new shape fine; the gap is about readers."
+      },
+      {
+        "text": "That the rename is safe, if the new schema validates",
+        "correct": false,
+        "why": "A valid new schema says nothing about clients still reading the old name."
+      }
+    ]
+  },
+  {
+    "id": "ex-n35ksj5s",
+    "version": 1,
+    "section": "consumer-driven",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do consumer-driven contracts fit best?",
+    "hint": "Somebody has to write each contract.",
+    "choices": [
+      {
+        "text": "A public API with thousands of unknown clients",
+        "correct": false,
+        "why": "Strangers do not write contracts for you; that is where they fit worst."
+      },
+      {
+        "text": "A provider with no consumers yet",
+        "correct": false,
+        "why": "With no consumers there is nothing to drive the contract."
+      },
+      {
+        "text": "Inside an organisation, among known teams",
+        "correct": true,
+        "why": "Right. Each team can write and maintain its pact."
+      },
+      {
+        "text": "Only where there is no schema",
+        "correct": false,
+        "why": "Contracts and schemas answer different questions and live together."
+      }
+    ]
+  },
+  {
+    "id": "ex-e90d2ap7",
+    "version": 1,
+    "section": "consumer-driven",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Looking at the two pacts of this lesson, which changes could boxoffice make without failing any verification?",
+    "hint": "Which fields does each pact mention?",
+    "choices": [
+      {
+        "text": "Rename price_cents to price",
+        "correct": true,
+        "why": "Right. Neither pact reads it."
+      },
+      {
+        "text": "Change id from sh-103 to a longer code",
+        "correct": true,
+        "why": "Right. No pact reads id in the body."
+      },
+      {
+        "text": "Rename seats_left to seats",
+        "correct": false,
+        "why": "The Tickets app's pact reads seats_left."
+      },
+      {
+        "text": "Send starts_at as 08/11/2026 18:00",
+        "correct": false,
+        "why": "The Tickets app's regex demands the ISO form with an offset."
+      }
+    ]
+  },
+  {
+    "id": "ex-2aqq3v3g",
+    "version": 1,
+    "section": "pact",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the consumer test use like('O Pagador de Promessas') instead of the exact title?",
+    "hint": "What does the app really depend on?",
+    "choices": [
+      {
+        "text": "Because Pact cannot compare strings exactly",
+        "correct": false,
+        "why": "Pact compares exactly when no matcher is used, as for the path."
+      },
+      {
+        "text": "The app needs a title that is text, not this one",
+        "correct": true,
+        "why": "Right. The play may be renamed without breaking the contract."
+      },
+      {
+        "text": "So the mock answers with a random title each time it is asked",
+        "correct": false,
+        "why": "The mock answers the example; like only loosens the provider's check."
+      },
+      {
+        "text": "Because the title contains spaces",
+        "correct": false,
+        "why": "Spaces are ordinary text; that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw47r64g",
+    "version": 1,
+    "section": "pact",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The kiosk's consumer test passed, yet boxoffice has no venue field. Why?",
+    "hint": "Who answered the kiosk's request?",
+    "choices": [
+      {
+        "text": "Pact's mock answered what the pact said",
+        "correct": true,
+        "why": "Right. Only the provider verification meets the real boxoffice."
+      },
+      {
+        "text": "boxoffice adds venue when a kiosk asks",
+        "correct": false,
+        "why": "boxoffice never sends venue; the verification showed it missing."
+      },
+      {
+        "text": "The like matcher accepts a missing field",
+        "correct": false,
+        "why": "like checks the type of a field that must be there."
+      },
+      {
+        "text": "PACT_DO_NOT_TRACK skipped the check",
+        "correct": false,
+        "why": "That variable only stops usage statistics."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy09p192",
+    "version": 1,
+    "section": "pact",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a consumer-driven contract in order, as this lesson ran them.",
+    "hint": "The file is written before anybody verifies it.",
+    "items": [
+      "the consumer's test describes the request and the answer it needs",
+      "the app's code runs against Pact's mock",
+      "Pact writes the pact file",
+      "the provider's test replays the pact against the real boxoffice",
+      "a mismatch fails the provider's build"
+    ]
+  },
+  {
+    "id": "ex-231ks6v8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new boxoffice release starts sending a field called internal_notes in every order. Which check of this lesson notices first?",
+    "hint": "Which check refuses fields nobody listed?",
+    "choices": [
+      {
+        "text": "The Tickets app's pact verification",
+        "correct": false,
+        "why": "Pact checks only what the consumer reads; an extra field passes."
+      },
+      {
+        "text": "check.mjs with order.json",
+        "correct": true,
+        "why": "Right. additionalProperties: false refuses it."
+      },
+      {
+        "text": "None: extra fields are always harmless",
+        "correct": false,
+        "why": "A field that should never leave the server is a defect, and the strict schema catches it."
+      },
+      {
+        "text": "The order status enum",
+        "correct": false,
+        "why": "The enum checks status values, not extra fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-nat1fcxt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your team adds a schema check to a Java suite and every run is green on the first day. What should you do before trusting it?",
+    "hint": "Green can mean \"not checked\".",
+    "choices": [
+      {
+        "text": "Run it again to make sure it is stable",
+        "correct": false,
+        "why": "A rule that is ignored is ignored on every run."
+      },
+      {
+        "text": "Add more live requests to the suite",
+        "correct": false,
+        "why": "More answers through the same validator still miss the rule it skips."
+      },
+      {
+        "text": "Switch every schema to draft 4 at once",
+        "correct": false,
+        "why": "Rewriting schemas for one tool loses rules elsewhere; first find out what is checked."
+      },
+      {
+        "text": "Feed it an answer that must fail, and see that it does",
+        "correct": true,
+        "why": "Right. That is how the ignored if/then was found."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpzf7art",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each question to the instrument of this lesson that answers it.",
+    "hint": "Each instrument sees a different part.",
+    "pairs": [
+      {
+        "left": "does every field of this answer have the right shape?",
+        "right": "a JSON Schema checked with Ajv"
+      },
+      {
+        "left": "does boxoffice still give the Tickets app what it reads?",
+        "right": "the provider verification of its pact"
+      },
+      {
+        "left": "does this validator enforce every rule of the schema?",
+        "right": "an answer written to fail"
+      },
+      {
+        "left": "which fields could be renamed without breaking a known client?",
+        "right": "the fields no pact mentions"
+      }
+    ],
+    "right_distractors": [
+      "the Date header of each answer"
+    ]
+  },
+  {
+    "id": "ex-eny8dvv2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The kiosk team says their pact test passes, so boxoffice must support venue. How do you answer?",
+    "hint": "Which side of Pact ran?",
+    "choices": [
+      {
+        "text": "Agree, because a passing pact test proves the provider",
+        "correct": false,
+        "why": "The consumer side only proves the kiosk works against the mock."
+      },
+      {
+        "text": "Their pact ran against a mock; verification fails",
+        "correct": true,
+        "why": "Right. The verification is the check against the real boxoffice."
+      },
+      {
+        "text": "Ask them to remove like from their pact",
+        "correct": false,
+        "why": "like is not the problem; the field does not exist."
+      },
+      {
+        "text": "Add venue to show.json so the pact passes",
+        "correct": false,
+        "why": "Changing the schema does not make boxoffice send the field."
+      }
+    ]
+  }
+]

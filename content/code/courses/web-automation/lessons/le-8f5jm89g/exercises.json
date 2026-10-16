@@ -1,0 +1,574 @@
+[
+ {
+  "id": "ex-t83xe5vk",
+  "version": 1,
+  "section": "what-flaky-means",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What makes a test flaky, in the sense this lesson uses?",
+  "choices": [
+   {
+    "text": "It fails on every run until somebody fixes the page",
+    "correct": false,
+    "why": "That is lesson 3's search defect at a robot's speed: a defect, and a test doing its job."
+   },
+   {
+    "text": "Its verdict varies on the same code",
+    "correct": true,
+    "why": "Right. Same shop, same test, same machine, and one run green while the next is red."
+   },
+   {
+    "text": "It is slow",
+    "correct": false,
+    "why": "A slow test that always gives the same verdict is slow, not flaky; the failing gate runs were slower because a check waited out its time."
+   },
+   {
+    "text": "It was written without web-first assertions",
+    "correct": false,
+    "why": "Those help with one cause, timing; the shared basket breaks tests that use them throughout."
+   }
+  ]
+ },
+ {
+  "id": "ex-h6mtfr4n",
+  "version": 1,
+  "section": "what-flaky-means",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the lesson call a test that fails five runs in ten worse than one that fails every run?",
+  "choices": [
+   {
+    "text": "It hides more defects in the page",
+    "correct": false,
+    "why": "The page is the same in both cases; what differs is what the red teaches the people who see it."
+   },
+   {
+    "text": "Every failing run costs more machine time than a passing one",
+    "correct": false,
+    "why": "The failing runs were slower, but the lesson's argument is about people, not seconds."
+   },
+   {
+    "text": "People learn to re-run it, even a real red",
+    "correct": true,
+    "why": "Right. A red that goes away on a second run means *try again*, and the day it is real it is read the same way."
+   },
+   {
+    "text": "Playwright refuses to report it",
+    "correct": false,
+    "why": "Playwright reports every failure; with retries it even names the flaky ones."
+   }
+  ]
+ },
+ {
+  "id": "ex-fwktxaw6",
+  "version": 1,
+  "section": "causes",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each case from the platform's history to its cause.",
+  "pairs": [
+   {
+    "left": "A course card read before the screen was redrawn",
+    "right": "Timing"
+   },
+   {
+    "left": "Two test packages inserting the school `code` at once",
+    "right": "Shared state"
+   },
+   {
+    "left": "`vim` returning to the line held in an earlier screenshot",
+    "right": "Order"
+   },
+   {
+    "left": "Fonts that one machine could fetch and the other could not",
+    "right": "Environment"
+   }
+  ]
+ },
+ {
+  "id": "ex-84k1z6e2",
+  "version": 1,
+  "section": "causes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`ssr.spec.js` and `waiting.spec.js`, ten times each, give 20 passed with `--workers 1` and 3 failed with `--workers 2`, each receiving a count of 2. Which cause is that?",
+  "choices": [
+   {
+    "text": "Order: one ran before the other",
+    "correct": false,
+    "why": "With one worker they also ran one after another, twenty times, and every run passed; both reset first."
+   },
+   {
+    "text": "Timing: the page was slower with two workers",
+    "correct": false,
+    "why": "A slow page would make the count late, not 2; the 2 is a mango the ssr test never added."
+   },
+   {
+    "text": "Shared state: one basket, two tests at the same moment",
+    "correct": true,
+    "why": "Right. Passing alone and failing together, with a value that is another test's work, is its signature."
+   },
+   {
+    "text": "Environment: the second worker had a different browser",
+    "correct": false,
+    "why": "Both workers start the same Chromium 141 from the same configuration."
+   }
+  ]
+ },
+ {
+  "id": "ex-msf1sby2",
+  "version": 1,
+  "section": "causes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The platform keeps a test that fails roughly once in a million runs, when the code `000000` happens to be right. Why does the lesson treat that differently from the gate's flaky pair?",
+  "choices": [
+   {
+    "text": "Its rate was worked out and written beside it",
+    "correct": true,
+    "why": "Right. A known, stated rate of one in a million is a decision; five in ten that nobody measured is a problem."
+   },
+   {
+    "text": "Go tests are not allowed to be flaky, so it cannot count",
+    "correct": false,
+    "why": "Nothing makes a Go test immune; the comment beside it admits the flake and gives its odds."
+   },
+   {
+    "text": "It only fails on the build machine",
+    "correct": false,
+    "why": "The odds are the same on every machine; it is not an environment case."
+   },
+   {
+    "text": "Because a second-factor test is retried automatically",
+    "correct": false,
+    "why": "No retry is involved; a retry would hide the rate instead of stating it."
+   }
+  ]
+ },
+ {
+  "id": "ex-70ynen68",
+  "version": 1,
+  "section": "causes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A screen shows a defect only when its content is shuffled one particular way, about one run in three. A colleague adds retries so the suite stops failing. What has happened?",
+  "choices": [
+   {
+    "text": "The flake is gone, because the shuffle now settles",
+    "correct": false,
+    "why": "A retry changes nothing about the shuffle; it gives the test two more draws to miss the defect."
+   },
+   {
+    "text": "A real defect now passes nearly every run",
+    "correct": true,
+    "why": "Right. Here the flake was the defect showing; the platform fixed its own case by asking for each outcome by name."
+   },
+   {
+    "text": "The test now checks both outcomes",
+    "correct": false,
+    "why": "It checks whichever outcome each attempt happens to draw, and passes on the first good draw."
+   },
+   {
+    "text": "Nothing, retries only affect the order of tests",
+    "correct": false,
+    "why": "Retries rerun a failed test; they change the verdict the suite reports."
+   }
+  ]
+ },
+ {
+  "id": "ex-k450s303",
+  "version": 1,
+  "section": "diagnosis",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the diagnosis of a flaky test in order.",
+  "items": [
+   "Run it many times with `--repeat-each` and count the failures",
+   "Change one condition, such as `--workers`, and count again",
+   "Read the trace kept from a failing attempt",
+   "Fix the cause, then count again where it failed most"
+  ],
+  "trap": "Reading one red run closely before counting turns a sample of one into a story."
+ },
+ {
+  "id": "ex-yqb501zd",
+  "version": 1,
+  "section": "diagnosis",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The typing test failed 5 of 20 with two workers and 6 of 20 with one. The ssr and waiting pair failed 0 times with one worker and 3 with two. What does that contrast tell you?",
+  "choices": [
+   {
+    "text": "Both are shared state, since both were run with `--workers`",
+    "correct": false,
+    "why": "Running with the flag proves nothing; what matters is whether the rate moved, and for the typing test it barely did."
+   },
+   {
+    "text": "The pair shares data; the typing test's cause is inside it",
+    "correct": true,
+    "why": "Right. A rate that jumps with workers says sharing, and the count of 2 names what was shared; a rate that stays put points at the test and its page."
+   },
+   {
+    "text": "Nothing: twenty runs are too few to compare anything",
+    "correct": false,
+    "why": "Twenty is few for proving a rare failure gone, but 0 against 3 beside 5 against 6 is a pattern worth reading."
+   },
+   {
+    "text": "Two workers make the machine too slow for both",
+    "correct": false,
+    "why": "Then the typing test would have moved too; it failed slightly more with one worker, not with two."
+   }
+  ]
+ },
+ {
+  "id": "ex-t92pjtyc",
+  "version": 1,
+  "section": "diagnosis",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the two `race.mjs` runs at 145 ms a key, what decided whether the list ended on one fruit or three?",
+  "choices": [
+   {
+    "text": "How long the test waited before reading",
+    "correct": false,
+    "why": "Both runs waited for `aria-busy=\"false\"`; the list was already final when it was read."
+   },
+   {
+    "text": "Which answer landed last",
+    "correct": true,
+    "why": "Right. In one run the answer to `pap` was drawn last; in the other, the answer to `pa`, at 815 ms."
+   },
+   {
+    "text": "How fast the keys were typed",
+    "correct": false,
+    "why": "Both runs typed at 145 ms a key, and the questions left about 150 ms apart in both."
+   },
+   {
+    "text": "Whether the server answered `p` at all",
+    "correct": false,
+    "why": "It answered all six questions in both runs; only the order of arrival differed."
+   }
+  ]
+ },
+ {
+  "id": "ex-qgner2px",
+  "version": 1,
+  "section": "retries",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With `--retries 2`, a test fails its first attempt and passes the second. How does Playwright count it?",
+  "choices": [
+   {
+    "text": "Passed",
+    "correct": false,
+    "why": "It is not counted with the tests that passed first time; that is what the third verdict is for."
+   },
+   {
+    "text": "Failed",
+    "correct": false,
+    "why": "The run counts it as having come through; a failure is a test that failed every attempt."
+   },
+   {
+    "text": "Flaky",
+    "correct": true,
+    "why": "Right. The summary prints the count, as in *7 flaky* on the quarantined test."
+   },
+   {
+    "text": "Skipped, because the retry replaced it",
+    "correct": false,
+    "why": "It ran every attempt; skipped is for a test that did not run at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-zbvtr71z",
+  "version": 1,
+  "section": "retries",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shared-basket pair, with `--retries 2`, prints *5 flaky, 15 passed* and exits with code 0. What did the retries hide?",
+  "choices": [
+   {
+    "text": "Nothing: the failures were noise",
+    "correct": false,
+    "why": "They were two tests seeing each other's fruit, a defect in how the suite shares data."
+   },
+   {
+    "text": "That the page shows a wrong count",
+    "correct": false,
+    "why": "The page counted correctly what was in the basket; the defect is in the tests sharing it."
+   },
+   {
+    "text": "A server that was slow to answer under load",
+    "correct": false,
+    "why": "The failures received 2 instead of 1, which no amount of waiting explains."
+   },
+   {
+    "text": "A defect in the suite, behind an open gate",
+    "correct": true,
+    "why": "Right. Exit code 0 opens the gate, and the only trace of the shared basket is one line nobody reads on a green build."
+   }
+  ]
+ },
+ {
+  "id": "ex-eexw8yeb",
+  "version": 1,
+  "section": "retries",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Complete the command so that retries still run but any test that needed one makes the run exit with an error: `npx playwright test --retries 2 --___`",
+  "hint": "It names the third verdict.",
+  "blanks": [
+   {
+    "accept": [
+     "fail-on-flaky-tests"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-k1dn12vv",
+  "version": 1,
+  "section": "quarantine",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "This project puts its quarantined test in a folder the default configuration does not read, rather than relying only on a tag and `--grep-invert`. Why?",
+  "choices": [
+   {
+    "text": "Tags do not work with the list reporter",
+    "correct": false,
+    "why": "Tags work with every reporter; the test carries one as well."
+   },
+   {
+    "text": "The plain command is the gate",
+    "correct": true,
+    "why": "Right. A tag keeps a test out only of the runs that remember `--grep-invert`; a folder cannot be forgotten."
+   },
+   {
+    "text": "A folder makes the test pass",
+    "correct": false,
+    "why": "The quarantine job above still failed eight attempts in twenty; the folder only changes which run decides."
+   },
+   {
+    "text": "Playwright forbids two test folders in one configuration",
+    "correct": false,
+    "why": "The point is the opposite: each configuration reads its own folder on purpose."
+   }
+  ]
+ },
+ {
+  "id": "ex-89nqpch4",
+  "version": 1,
+  "section": "quarantine",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each way of handling a known problem to what it says.",
+  "pairs": [
+   {
+    "left": "`test.skip()`",
+    "right": "Does not apply here; not run"
+   },
+   {
+    "left": "`test.fixme()`",
+    "right": "Broken, to be fixed; not run"
+   },
+   {
+    "left": "`test.fail()`",
+    "right": "Fails every time; a pass is an error"
+   },
+   {
+    "left": "A quarantine",
+    "right": "Fails some of the time; runs apart from the gate"
+   }
+  ]
+ },
+ {
+  "id": "ex-t2pcq0b8",
+  "version": 1,
+  "section": "quarantine",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`test.fail()` is added to the 145 ms typing test and it runs twenty times. The search defect shows on 7 of the attempts. What does the summary say?",
+  "choices": [
+   {
+    "text": "20 passed, because the annotation covers the test",
+    "correct": false,
+    "why": "The annotation expects a failure, and every attempt where the page behaved is a pass under it, which is an error."
+   },
+   {
+    "text": "7 failed, 13 passed",
+    "correct": false,
+    "why": "That reads the attempts as if there were no annotation; under `test.fail()` the seven that met the defect are the ones that pass."
+   },
+   {
+    "text": "13 failed, 7 passed",
+    "correct": true,
+    "why": "Right. Each of the thirteen says *Expected to fail, but passed*: an annotation for *always fails* cannot describe a test that fails some of the time."
+   },
+   {
+    "text": "7 flaky, 13 passed",
+    "correct": false,
+    "why": "Flaky needs retries and an attempt that failed first; there were no retries."
+   }
+  ]
+ },
+ {
+  "id": "ex-1a23m9tt",
+  "version": 1,
+  "section": "quarantine",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these should a quarantined test carry?",
+  "choices": [
+   {
+    "text": "An owner",
+    "correct": true,
+    "why": "Right. Somebody is responsible for bringing it back."
+   },
+   {
+    "text": "A date to look at it again",
+    "correct": true,
+    "why": "Right. Without one, a quarantine is a deletion done slowly."
+   },
+   {
+    "text": "The reason, and what must be true for it to return",
+    "correct": true,
+    "why": "Right. The comment above the test says what the defect is and when it goes back into `tests/`."
+   },
+   {
+    "text": "A higher number of retries",
+    "correct": false,
+    "why": "Retries keep a test in the gate and hide it; a quarantine takes it out and counts it."
+   },
+   {
+    "text": "A `test.skip()` so it stops failing",
+    "correct": false,
+    "why": "A skipped test stops looking; the quarantine job exists so it keeps running."
+   }
+  ]
+ },
+ {
+  "id": "ex-5hev33fp",
+  "version": 1,
+  "section": "fixing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why would raising the timeout of the typing test's last check not fix it?",
+  "choices": [
+   {
+    "text": "The timeout is ignored with `--repeat-each`",
+    "correct": false,
+    "why": "Each attempt has its timeout; the failing attempt took 6.1 s because it waited out five seconds."
+   },
+   {
+    "text": "The final list is wrong, and more waiting changes nothing about it",
+    "correct": true,
+    "why": "Right. A limit of thirty seconds would make the failure take thirty seconds and fail the same way."
+   },
+   {
+    "text": "The server answers too fast for a longer wait to matter",
+    "correct": false,
+    "why": "Speed is not the issue; the answers arrive, in an order that leaves the wrong list."
+   },
+   {
+    "text": "Playwright caps a check's timeout at five seconds",
+    "correct": false,
+    "why": "Five seconds is the default, and it can be raised; raising it is the wrong fix, not an impossible one."
+   }
+  ]
+ },
+ {
+  "id": "ex-wzxvhg01",
+  "version": 1,
+  "section": "fixing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "After the search fix, the quarantine job passes 20 of 20. Before it, the test failed 5, 6 and 8 attempts in twenty. How strong is that evidence?",
+  "choices": [
+   {
+    "text": "Weak: twenty passes prove nothing about a flaky test",
+    "correct": false,
+    "why": "That holds for a rare failure; at one in four, twenty passes by luck are about 3 in 1,000."
+   },
+   {
+    "text": "Strong: by luck that streak would happen about 3 times in 1,000",
+    "correct": true,
+    "why": "Right. 0.75 raised to the power 20 is about 0.003, and the fix can also be explained from the code."
+   },
+   {
+    "text": "Complete: the defect cannot come back",
+    "correct": false,
+    "why": "No count proves a future; a later change to `search.js` can bring the race back, which is why the test stays."
+   },
+   {
+    "text": "Unknown until the run is repeated with `--retries 2`",
+    "correct": false,
+    "why": "Retries can only turn failures into flaky passes; they make a green streak weaker evidence, not stronger."
+   }
+  ]
+ },
+ {
+  "id": "ex-kt1nnq6q",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test truly fails one attempt in twenty. In what percentage of runs of twenty attempts would all twenty pass anyway? Round to a whole number.",
+  "hint": "Each attempt passes with probability 0.95, and the twenty are independent.",
+  "value": 36,
+  "tolerance": 1,
+  "unit": "%"
+ },
+ {
+  "id": "ex-ehj3vhhe",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test that checks a date printed on the order page fails on CI, which runs in UTC, from 21:00 to midnight São Paulo time, and passes on every laptop in the team. Which cause fits, and what is the fix?",
+  "choices": [
+   {
+    "text": "Timing; wait for the date to appear",
+    "correct": false,
+    "why": "The date appears; it is a different day in UTC for those three hours, and waiting will not change the day."
+   },
+   {
+    "text": "Shared state; reset the shop before the test",
+    "correct": false,
+    "why": "Nothing another test writes explains a failure tied to the clock and the machine's time zone."
+   },
+   {
+    "text": "The application; quarantine the test until the page is fixed",
+    "correct": false,
+    "why": "The page may be right for the zone it was asked in; first find whether the test or the machine assumed a zone."
+   },
+   {
+    "text": "Environment; fix zone and clock",
+    "correct": true,
+    "why": "Right. Remove the difference between machines: the test sets the zone and the time it means, as Playwright's `timezoneId` and a fixed clock allow."
+   }
+  ]
+ }
+]

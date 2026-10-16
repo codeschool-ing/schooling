@@ -1,0 +1,394 @@
+{
+  "ex-srjh4p6e": {
+    "prompt": "Por que o `bench.py` prende todo modelo a um processador?",
+    "hint": "Pense no que o relógio deveria comparar.",
+    "choices": [
+      {
+        "text": "Porque os modelos do scikit-learn travam com mais de uma thread",
+        "why": "Eles rodam com quatro; o programa os limita por escolha, não para evitar uma falha."
+      },
+      {
+        "text": "Porque senão as cinco dobras rodariam em paralelo e misturariam as notas",
+        "why": "As dobras rodam uma depois da outra num `for` simples, qualquer que seja o número de threads."
+      },
+      {
+        "text": "Porque uma rede treina mais rápido com um processador do que com quatro",
+        "why": "Velocidade não foi a razão dada; a justiça da comparação foi."
+      },
+      {
+        "text": "Para o relógio medir o trabalho, não o uso de threads",
+        "why": "Certo. Com quatro processadores, cada biblioteca divide o trabalho do seu jeito, e numa máquina ocupada essa divisão custa mais que o trabalho."
+      }
+    ]
+  },
+  "ex-gz18b3fw": {
+    "prompt": "Na tabela de câncer de mama os três modelos marcaram 0,979, 0,970 e 0,967, com uns 114 tumores em cada dobra. Qual é a leitura justa?",
+    "hint": "Quantos tumores vale um ponto?",
+    "choices": [
+      {
+        "text": "A regressão logística é o modelo melhor, por 1,2 ponto",
+        "why": "1,2 ponto é um ou dois tumores por dobra, pouco demais para decidir com uma execução de cada (aula 18)."
+      },
+      {
+        "text": "A rede perdeu porque 569 linhas são poucas para treinar qualquer modelo",
+        "why": "Os três treinaram bem acima dos 63% da classe majoritária, então as linhas bastaram."
+      },
+      {
+        "text": "Diferem em um ou dois tumores por dobra, e a rede não comprou nada",
+        "why": "Certo. Nenhum modelo venceu claramente na acurácia, e a rede foi a mais lenta."
+      },
+      {
+        "text": "O boosting falhou, porque 0,970 fica abaixo do que a classe majoritária marca",
+        "why": "A classe majoritária marca 0,63 aqui, muito abaixo dos três."
+      }
+    ]
+  },
+  "ex-kzete8hd": {
+    "prompt": "Uma tabela de 50.000 pedidos de empréstimo tem 40 colunas escolhidas por analistas. Depois de uma semana de ajuste, uma rede marca 0,912; o boosting com os padrões marcou 0,915 nas mesmas dobras. O que esta aula recomenda?",
+    "hint": "Qual modelo é mais barato de treinar, de rodar de novo e de explicar?",
+    "choices": [
+      {
+        "text": "Ficar com o boosting",
+        "why": "Certo. A rede não superou a linha de base, e custa mais em cada etapa."
+      },
+      {
+        "text": "Ficar com a rede, que está perto e vai melhorar com mais ajuste",
+        "why": "Mais ajuste são mais semanas, e o boosting chegou à nota sem nenhum."
+      },
+      {
+        "text": "Tirar a média das notas dos dois e relatar 0,9135",
+        "why": "Uma média de duas notas não é um modelo que alguém consiga pôr em produção."
+      },
+      {
+        "text": "Trocar para regressão logística, que venceu na tabela de câncer",
+        "why": "Vencer numa tabela não diz nada sobre esta; ela teria de ser rodada aqui."
+      }
+    ]
+  },
+  "ex-ratwx5r8": {
+    "prompt": "No `table.py`, um cliente mensal com menos de 24 meses de casa sai. Por que uma árvore captura essa regra mais facilmente que uma rede?",
+    "hint": "Pense no formato da regra: um degrau.",
+    "choices": [
+      {
+        "text": "Árvores veem mais linhas de treino que as redes",
+        "why": "Os dois viram as mesmas 2.400 linhas de cada dobra."
+      },
+      {
+        "text": "Árvores padronizam as colunas antes",
+        "why": "É a rede que precisa de padronização; um corte numa coluna não liga para a escala dela."
+      },
+      {
+        "text": "A rede não teve acesso à coluna de tempo de casa",
+        "why": "As dez colunas foram para os três modelos."
+      },
+      {
+        "text": "Um corte cai exatamente em 24; uma rede monta o degrau com pedaços suaves de ReLU",
+        "why": "Certo. Limiares nítidos e o `and` entre eles são o material das árvores, e o que as redes aproximam devagar."
+      }
+    ]
+  },
+  "ex-nwcxvf3v": {
+    "prompt": "Na rede do `bench.py`, cada uma das cinco colunas de ruído do `table.py` tem um peso para cada uma das 64 unidades da primeira camada. Quantos pesos isso dá no total?",
+    "hint": "Colunas vezes unidades.",
+    "unit": "pesos"
+  },
+  "ex-y4k6r0eq": {
+    "prompt": "Você acrescenta mais 20 colunas de puro ruído ao `table.py` e roda a bancada de novo. Entre o boosting e a rede, qual o argumento desta aula espera que perca mais acurácia?",
+    "hint": "Quem precisa aprender a ignorar uma coluna, e com quantos números?",
+    "choices": [
+      {
+        "text": "O boosting, porque tem mais colunas em que tentar cortes",
+        "why": "Tentar um corte numa coluna inútil custa tempo, e o corte simplesmente não é escolhido."
+      },
+      {
+        "text": "A rede, que tem 1.280 pesos novos a calar com as mesmas linhas",
+        "why": "Certo: 20 colunas vezes 64 unidades, aprendidas com 2.400 linhas, com espaço para ajustar ruído."
+      },
+      {
+        "text": "Nenhum, já que colunas de ruído se anulam na média",
+        "why": "A média delas é perto de zero, mas os valores de cada linha não, e um modelo consegue ajustá-los."
+      },
+      {
+        "text": "Os dois igualmente, já que os dois veem exatamente as mesmas linhas",
+        "why": "As mesmas linhas encontram dois jeitos bem diferentes de usar uma coluna."
+      }
+    ]
+  },
+  "ex-1zrvtfs7": {
+    "prompt": "Com 2 imagens de cada dígito para treinar, qual modelo se saiu melhor nas 360 imagens de validação?",
+    "hint": "Olhe a primeira linha da saída do `small.py`.",
+    "choices": [
+      {
+        "text": "A CNN da aula 11",
+        "why": "Ela ficou em último, com 0,717."
+      },
+      {
+        "text": "A MLP da aula 9",
+        "why": "Perto, com 0,761, mas ainda atrás."
+      },
+      {
+        "text": "Os três empataram, em 0,764",
+        "why": "Só a regressão logística chegou a 0,764; os outros ficaram abaixo."
+      },
+      {
+        "text": "A regressão logística",
+        "why": "Certo, com 0,764, e 650 pesos contra 38.282 da CNN."
+      }
+    ]
+  },
+  "ex-3xfmywb4": {
+    "prompt": "Por que o `small.py` dá a todo tamanho de conjunto de treino os mesmos 1.020 passos do otimizador?",
+    "hint": "O que 30 épocas significariam para 20 imagens?",
+    "choices": [
+      {
+        "text": "Porque 1.020 é perto do número de imagens de treino",
+        "why": "O número vem de 34 lotes vezes 30 épocas, a receita da aula 9."
+      },
+      {
+        "text": "Para fazer os conjuntos pequenos sobreajustarem de propósito",
+        "why": "O sobreajuste é um risco da configuração, não o objetivo dela."
+      },
+      {
+        "text": "Para nenhuma rede perder por ter sido parada cedo",
+        "why": "Certo. Trinta épocas de 20 imagens seriam 30 passos, e a rede perderia por falta de treino, e não de dados."
+      },
+      {
+        "text": "Porque SGD a 0,1 precisa de exatamente 1.020 passos para convergir",
+        "why": "Nenhuma taxa converge num número fixo de passos; 1.020 vem emprestado da aula 9."
+      }
+    ]
+  },
+  "ex-3cxg0rd2": {
+    "prompt": "A resposta do próprio deep learning para poucos dados é partir de um modelo ___ e treinar uma cabeça nova com os poucos exemplos.",
+    "hint": "Aulas 13 e 17.",
+    "blanks": [
+      {
+        "accept": [
+          "pré-treinado",
+          "pre-treinado",
+          "pretreinado"
+        ]
+      }
+    ]
+  },
+  "ex-8rqyszde": {
+    "prompt": "Ponha a receita da aula para uma tabela nova na ordem em que é rodada.",
+    "hint": "Do piso para cima.",
+    "items": [
+      "A classe majoritária",
+      "Um modelo linear sobre colunas padronizadas",
+      "Gradient boosting com os padrões, na tabela do jeito que veio",
+      "Uma rede, que precisa superar o boosting por mais que a dispersão"
+    ]
+  },
+  "ex-7jkv3xm7": {
+    "prompt": "No `baseline.py`, por que o pipeline de regressão logística simples recusou a tabela enquanto o boosting rodou?",
+    "hint": "Leia a recusa.",
+    "choices": [
+      {
+        "text": "O `StandardScaler` falhou numa coluna de dinheiro",
+        "why": "A mensagem veio do `LogisticRegression`, não do escalonador."
+      },
+      {
+        "text": "Um quinto das contas era `NaN`, que ele não aceita",
+        "why": "Certo. O boosting aprende para que lado de cada corte vão os buracos; a regressão logística precisa deles preenchidos antes."
+      },
+      {
+        "text": "A regressão logística trata duas classes e esta tabela tem três",
+        "why": "O rótulo é sai ou fica, duas classes."
+      },
+      {
+        "text": "O `cross_val_score` recusa um modelo sem `random_state`",
+        "why": "O pipeline com imputação também não tinha e rodou, com 0,797."
+      }
+    ]
+  },
+  "ex-qs345zjp": {
+    "prompt": "Uma tabela nova tem uma coluna `country` com 80 valores e buracos em um terço da coluna `income`. Que primeiro modelo rodado segue a receita da aula depois da classe majoritária e de um modelo linear?",
+    "hint": "O passo 3 diz: do jeito que veio.",
+    "choices": [
+      {
+        "text": "Imputar, fazer one-hot e escalar tudo, depois treinar uma MLP para achar o teto",
+        "why": "Isso é uma rede antes de a linha de base existir, o hábito que a receita existe para impedir."
+      },
+      {
+        "text": "Descartar toda linha com buraco, para todos os modelos verem dados completos",
+        "why": "Isso joga fora um terço das linhas, e o boosting não precisava descartar nenhuma."
+      },
+      {
+        "text": "Boosting nos dados como estão, avisado de qual campo é categoria",
+        "why": "Certo. Ele aceita os buracos de forma nativa, e as categorias só precisam ser nomeadas."
+      },
+      {
+        "text": "O XGBoost, porque o boosting do scikit-learn recusa categorias",
+        "why": "O `HistGradientBoostingClassifier` aceita colunas categóricas depois de saber quais são."
+      }
+    ]
+  },
+  "ex-r3w7jy7h": {
+    "prompt": "No `moved.py`, qual modelo manteve mais acurácia quando os dígitos de validação andaram um pixel para a direita?",
+    "hint": "Compare a linha `moved +1`.",
+    "choices": [
+      {
+        "text": "O gradient boosting, com 0,425",
+        "why": "O boosting caiu de 0,978 para 0,425."
+      },
+      {
+        "text": "Nenhum, os três ficaram acima de 0,95",
+        "why": "Os três caíram; só a CNN ficou acima de 0,7."
+      },
+      {
+        "text": "A regressão logística, com 0,381",
+        "why": "Ela foi a mais baixa dos três."
+      },
+      {
+        "text": "A CNN, com 0,706",
+        "why": "Certo. Os filtros dela são os mesmos pesos em todo lugar, então um traço deslocado ainda é achado."
+      }
+    ]
+  },
+  "ex-763743ca": {
+    "prompt": "Por que o boosting caiu de 0,978 para 0,425 em dígitos deslocados um pixel?",
+    "hint": "Para o que os cortes dele olhavam?",
+    "choices": [
+      {
+        "text": "Os cortes testam posições fixas de pixel, então um dígito deslocado é outra tabela",
+        "why": "Certo. Nada do que ele aprendeu sobre o pixel 27 passa para o pixel 28."
+      },
+      {
+        "text": "Ele sobreajustou os 1.077 dígitos de treino muito mais que a CNN",
+        "why": "Nos dígitos no lugar ele marcou 0,978, igual à CNN, então generalizou tão bem quanto ali."
+      },
+      {
+        "text": "A coluna em branco que entrou confundiu o tratamento de valores faltantes",
+        "why": "Branco é tinta 0, não `NaN`; nada estava faltando."
+      },
+      {
+        "text": "O boosting precisa de pelo menos 1.000 linhas por classe",
+        "why": "Ele treinou nas mesmas 1.077 imagens que a CNN e empatou com ela antes do deslocamento."
+      }
+    ]
+  },
+  "ex-khz8sbk7": {
+    "prompt": "Ligue cada tipo de entrada ao modelo que esta aula tentaria primeiro.",
+    "hint": "De onde vêm os atributos em cada caso?",
+    "pairs": [
+      {
+        "left": "Uma tabela de medidas escolhidas por analistas",
+        "right": "Gradient boosting com os padrões"
+      },
+      {
+        "left": "Fotografias, 30 rotuladas por classe",
+        "right": "Uma rede pré-treinada com uma cabeça nova"
+      },
+      {
+        "left": "Uma tabela com uma coluna de texto livre",
+        "right": "Texto virado embedding, entregue ao boosting"
+      },
+      {
+        "left": "Dez mil clipes de som rotulados, sem modelo pré-treinado",
+        "right": "Uma rede treinada do zero"
+      }
+    ],
+    "right_distractors": [
+      "Regressão logística sobre as amostras cruas"
+    ]
+  },
+  "ex-rbztvpwt": {
+    "prompt": "Uma rede supera o boosting por 0,4 ponto, e cinco sementes da mesma rede se espalham por 1 ponto. O que a lista de verificação diz?",
+    "hint": "A linha da aula 18.",
+    "choices": [
+      {
+        "text": "Ela não venceu; fique com o modelo mais barato",
+        "why": "Certo. A diferença é menor do que uma troca de semente move."
+      },
+      {
+        "text": "A rede venceu, por 0,4 ponto",
+        "why": "Uma vantagem dentro da dispersão não é uma vantagem que alguém mediu."
+      },
+      {
+        "text": "Treinar a rede por mais épocas até a vantagem passar de 1 ponto",
+        "why": "Treinar até um número ficar bonito é escolher com base em ruído."
+      },
+      {
+        "text": "Relatar a melhor semente, já que é o que a rede alcança",
+        "why": "A melhor de cinco é um sorteio de sorte, não o que a próxima execução vai dar."
+      }
+    ]
+  },
+  "ex-7z0hbdqm": {
+    "prompt": "Uma clínica tem 30 imagens de raio X rotuladas por classe e quer um classificador. Qual plano segue a lista de verificação?",
+    "hint": "Duas linhas se aplicam: entrada crua e poucos dados.",
+    "choices": [
+      {
+        "text": "Boosting sobre os pixels crus, porque há poucos dados",
+        "why": "Pixels não são colunas em que uma árvore corte bem; o `moved.py` mostrou quão frágil isso é."
+      },
+      {
+        "text": "Uma CNN treinada do zero por muitas épocas",
+        "why": "Com 30 por classe, a CNN do `small.py` ficou em último; mais épocas só decoram."
+      },
+      {
+        "text": "Uma rede pré-treinada em muitas imagens, com uma cabeça nova treinada nas 30",
+        "why": "Certo. A entrada pede atributos aprendidos e os dados são poucos para aprendê-los, então eles vêm de outro lugar."
+      },
+      {
+        "text": "Regressão logística sobre os pixels crus, que venceu com 20 dígitos",
+        "why": "Ela venceu redes treinadas do nada; uma pré-treinada não estava naquela corrida."
+      }
+    ]
+  },
+  "ex-vyr1zq67": {
+    "prompt": "O `table.py` gera 3.000 linhas e o `bench.py` usa cinco dobras. Em quantas linhas cada modelo treina numa dobra?",
+    "hint": "Quatro das cinco dobras.",
+    "unit": "linhas"
+  },
+  "ex-maxkg81f": {
+    "prompt": "Nos dígitos no lugar, o boosting e a CNN marcaram 0,978. O que esse empate diz?",
+    "hint": "Quantos números tem uma imagem 8 por 8?",
+    "choices": [
+      {
+        "text": "A convolução não traz nada a imagens",
+        "why": "Um pixel de deslocamento mostrou o que ela traz: 0,706 contra 0,425."
+      },
+      {
+        "text": "Com 64 pixels, uma imagem é pequena o bastante para ser tratada como tabela",
+        "why": "Certo. O argumento a favor de uma rede cresce com a entrada, e uma fotografia são 150.528 números."
+      },
+      {
+        "text": "O boosting aprendeu a achar traços em qualquer lugar da imagem",
+        "why": "Deslocado um pixel ele caiu para 0,425, então tinha aprendido posições fixas."
+      },
+      {
+        "text": "O conjunto de validação é fácil demais para separar dois modelos",
+        "why": "O mesmo conjunto separou a regressão logística, com 0,967, dos dois."
+      }
+    ]
+  },
+  "ex-2e4vzz92": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "Na tabela de clientes, o boosting superou a rede por mais de 8 pontos",
+        "why": "Sim: 0,883 contra 0,799."
+      },
+      {
+        "text": "Na tabela de câncer, a rede foi o modelo mais preciso",
+        "why": "Não: ela ficou em último, com 0,967."
+      },
+      {
+        "text": "Com 20 imagens de treino, a regressão logística superou a CNN",
+        "why": "Sim: 0,764 contra 0,717."
+      },
+      {
+        "text": "O boosting recusou a tabela com contas faltando",
+        "why": "Não: ele marcou 0,867 nela; quem recusou foi a regressão logística."
+      },
+      {
+        "text": "Com as 1.077 imagens, a CNN superou a regressão logística",
+        "why": "Sim: 0,978 contra 0,967."
+      }
+    ]
+  }
+}

@@ -1,0 +1,527 @@
+{
+  "ex-ng9bmwfh": {
+    "prompt": "O site confirma um `UPDATE` em `stock` e cai antes de enviar o evento ao Kafka. Em que estado o sistema fica?",
+    "choices": [
+      {
+        "text": "A tabela e o tópico discordam, e nada vai consertar isso",
+        "why": "Isso. Nada lembra que havia um envio pendente, então nada tenta de novo."
+      },
+      {
+        "text": "O PostgreSQL desfaz o update porque o Kafka nunca confirmou",
+        "why": "O Kafka não faz parte da transação do PostgreSQL; o commit vale."
+      },
+      {
+        "text": "O producer envia o evento quando o programa reinicia",
+        "why": "O evento nunca foi entregue ao cliente, então não há nada para reenviar."
+      },
+      {
+        "text": "O Kafka segura o evento num estado pendente até o banco confirmar",
+        "why": "O evento nem chegou ao Kafka."
+      }
+    ]
+  },
+  "ex-em8abwwp": {
+    "prompt": "Um colega move a chamada de `produce` para dentro da transação do banco, logo antes do `COMMIT`. Por que a escrita dupla continua falhando?",
+    "choices": [
+      {
+        "text": "O Kafka recusa mensagens enviadas de dentro de uma transação",
+        "why": "O Kafka nem sabe que há uma transação aberta no banco."
+      },
+      {
+        "text": "O envio dá certo, e depois o commit falha",
+        "why": "Isso. O Kafka não participa da transação do PostgreSQL, então é a falha do Kafka primeiro de novo."
+      },
+      {
+        "text": "Manter a transação aberta durante o envio faz o evento chegar fora de ordem em relação a outros eventos da mesma linha",
+        "why": "Ordem não é o problema que a seção aponta; o problema são duas escritas sem transação comum."
+      },
+      {
+        "text": "Uma transação do Kafka em volta do envio resolveria",
+        "why": "Transações do Kafka cobrem tópicos, e um banco não é um tópico."
+      }
+    ]
+  },
+  "ex-zfbcn0fd": {
+    "prompt": "Ligue cada abordagem ao que faz a segunda escrita.",
+    "pairs": [
+      {
+        "left": "a outbox",
+        "right": "um relay que lê uma tabela de eventos gravada na mesma transação"
+      },
+      {
+        "left": "captura de mudanças (CDC)",
+        "right": "um leitor do write-ahead log do banco"
+      },
+      {
+        "left": "a escrita dupla",
+        "right": "o mesmo programa, logo depois da escrita no banco"
+      }
+    ],
+    "right_distractors": [
+      "o broker, a partir de uma transação que ele compartilha com o PostgreSQL"
+    ]
+  },
+  "ex-6eewarme": {
+    "prompt": "O financeiro da Ponto Final quer que cada mudança de estoque diga qual cliente reservou o livro. Por que a CDC só sobre `stock` pode não dar isso?",
+    "choices": [
+      {
+        "text": "O Debezium remove dados pessoais de todo evento antes de gravá-lo",
+        "why": "O Debezium copia a linha como ela é; ele não filtra colunas sozinho."
+      },
+      {
+        "text": "Eventos de mudança só carregam a chave primária da linha, nunca as outras colunas dela",
+        "why": "O `after` carrega a linha nova inteira."
+      },
+      {
+        "text": "A tabela nunca guardou o cliente, então as mudanças de linha dela não podem carregá-lo",
+        "why": "Isso. Eventos de CDC são mudanças de linha, não fatos de negócio; uma linha de outbox pode carregar o fato."
+      },
+      {
+        "text": "Updates não são capturados, só inserts",
+        "why": "Updates são capturados, com `op` `u`."
+      }
+    ]
+  },
+  "ex-5jgsvtw7": {
+    "prompt": "O que é um slot de replicação?",
+    "choices": [
+      {
+        "text": "Uma cópia do banco mantida num segundo servidor",
+        "why": "Isso é uma réplica; o slot é só uma posição."
+      },
+      {
+        "text": "Uma posição no WAL guardada para um leitor",
+        "why": "Isso. É a versão do banco de um offset confirmado."
+      },
+      {
+        "text": "A lista de tabelas cujas mudanças são enviadas",
+        "why": "Essa é a publicação."
+      },
+      {
+        "text": "O plugin que transforma registros do WAL em linhas",
+        "why": "Esse é o plugin de saída, aqui o `pgoutput`."
+      }
+    ]
+  },
+  "ex-91wmkspa": {
+    "prompt": "Ligue cada peça da decodificação lógica ao nome dela nesta lição.",
+    "pairs": [
+      {
+        "left": "o plugin de saída",
+        "right": "pgoutput"
+      },
+      {
+        "left": "a publicação",
+        "right": "ponto_final"
+      },
+      {
+        "left": "o slot de replicação",
+        "right": "debezium_stock"
+      },
+      {
+        "left": "a configuração do servidor",
+        "right": "wal_level = logical"
+      }
+    ],
+    "right_distractors": [
+      "test_decoding"
+    ]
+  },
+  "ex-38gbqf3q": {
+    "prompt": "Kafka e PostgreSQL guardam a posição de um leitor. Em que eles se comportam de jeitos opostos?",
+    "choices": [
+      {
+        "text": "O Kafka apaga dados antigos pela retenção, lidos ou não; o PostgreSQL guarda o WAL até o slot confirmar",
+        "why": "Isso. É por isso que um slot parado pode encher o disco do banco."
+      },
+      {
+        "text": "O Kafka guarda posições em memória, o PostgreSQL em disco",
+        "why": "Offsets confirmados são guardados de forma durável, no `__consumer_offsets`."
+      },
+      {
+        "text": "O PostgreSQL deixa vários leitores dividirem um slot",
+        "why": "Um slot atende um leitor; é isso que o `active` diz."
+      },
+      {
+        "text": "Posições no Kafka são bytes, as do PostgreSQL são números de mensagem",
+        "why": "O contrário: um offset conta mensagens, um LSN é uma posição em bytes."
+      }
+    ]
+  },
+  "ex-y54bn729": {
+    "prompt": "Uma posição no WAL do PostgreSQL, escrita como `0/1A2B3C8`, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "LSN",
+          "log sequence number"
+        ]
+      }
+    ]
+  },
+  "ex-t2jt79g5": {
+    "prompt": "Por que a lição cria a publicação à mão em vez de deixar o Debezium criar uma para todas as tabelas?",
+    "choices": [
+      {
+        "text": "O Debezium não consegue criar publicações quando o plugin é pgoutput em vez de test_decoding",
+        "why": "Consegue; o `publication.autocreate.mode` controla isso."
+      },
+      {
+        "text": "Uma publicação para todas as tabelas deixaria mais lenta toda escrita do banco",
+        "why": "O argumento da seção é sobre o que sai do banco, não velocidade."
+      },
+      {
+        "text": "Para o usuário de CDC ler só as duas tabelas que saem",
+        "why": "Isso. Nomear as tabelas decide o que vai para o broker."
+      },
+      {
+        "text": "O Kafka Connect se recusa a subir sem publicação",
+        "why": "O Debezium criaria uma; a escolha é sobre privilégio."
+      }
+    ]
+  },
+  "ex-0mfmg1mt": {
+    "prompt": "Por que a lição reinicia o PostgreSQL depois de gravar `wal_level = logical`?",
+    "choices": [
+      {
+        "text": "Ele só é lido na inicialização",
+        "why": "Isso. Diferente de muitas configurações, ela não pode ser recarregada."
+      },
+      {
+        "text": "Instalar o Debezium exige o PostgreSQL parado",
+        "why": "O Debezium é um plugin do Connect; instalá-lo só mexe em arquivos."
+      },
+      {
+        "text": "Para limpar o WAL que o servidor gravou antes",
+        "why": "Reiniciar não descarta WAL."
+      },
+      {
+        "text": "O diretório `conf.d` é lido uma vez por dia",
+        "why": "Ele é lido na inicialização e no reload, como o arquivo principal."
+      }
+    ]
+  },
+  "ex-we9r2t0x": {
+    "prompt": "Para que serve o `plugin.path` na configuração do Connect?",
+    "choices": [
+      {
+        "text": "É onde o Connect grava os offsets de cada conector",
+        "why": "Isso é o `offset.storage.file.filename`."
+      },
+      {
+        "text": "Diz ao PostgreSQL qual plugin de saída carregar",
+        "why": "Isso é o `plugin.name` do conector, e o PostgreSQL já traz o pgoutput."
+      },
+      {
+        "text": "Lista os tópicos em que o conector pode escrever",
+        "why": "Os nomes de tópico vêm do `topic.prefix` e das tabelas."
+      },
+      {
+        "text": "Os diretórios de onde o Connect carrega plugins",
+        "why": "Isso. Cada plugin ganha o seu próprio class loader."
+      }
+    ]
+  },
+  "ex-q5q4k264": {
+    "prompt": "O Debezium chama o tópico da tabela `stock` de `pf.public.stock`. De onde vem cada parte?",
+    "choices": [
+      {
+        "text": "Publicação, banco, tabela",
+        "why": "A publicação é `ponto_final`; ela não aparece no nome."
+      },
+      {
+        "text": "Slot, schema, tabela",
+        "why": "O slot é `debezium_stock`; ele não aparece no nome."
+      },
+      {
+        "text": "Prefixo, schema, tabela",
+        "why": "Isso: `topic.prefix`, depois o schema, depois a tabela."
+      },
+      {
+        "text": "Nome do conector, schema, tabela",
+        "why": "O conector se chama `stock`, não `pf`."
+      }
+    ]
+  },
+  "ex-850bb5k8": {
+    "prompt": "Uma tabela sem chave primária é acrescentada à publicação. O que o Debezium perde para ela, segundo a seção?",
+    "choices": [
+      {
+        "text": "O snapshot, que precisa de uma chave primária para ler as linhas de uma tabela uma a uma, em ordem",
+        "why": "Um snapshot lê linhas com um SELECT comum."
+      },
+      {
+        "text": "Uma chave de mensagem que mantém todas as mudanças de uma linha numa partição, em ordem",
+        "why": "Isso. A chave primária vira a chave no Kafka."
+      },
+      {
+        "text": "A capacidade de gravar JSON",
+        "why": "O conversor não depende da chave."
+      },
+      {
+        "text": "O tópico dela, que nunca é criado",
+        "why": "O nome do tópico vem da tabela, com chave ou sem."
+      }
+    ]
+  },
+  "ex-kz2xpsk2": {
+    "prompt": "O `stock.sql` põe todo livro em toda loja. Quantas linhas a `stock` tem antes de qualquer mudança?",
+    "unit": "linhas"
+  },
+  "ex-q8brwxrr": {
+    "prompt": "`curl localhost:8083/connectors/stock/status` mostra `FAILED`. Onde a seção manda olhar primeiro?",
+    "choices": [
+      {
+        "text": "Em `pg_replication_slots`",
+        "why": "Um conector que falhou pode nem ter criado o slot."
+      },
+      {
+        "text": "No campo `trace` dele",
+        "why": "Isso. Ele traz a exceção Java."
+      },
+      {
+        "text": "No arquivo `connect.offsets`",
+        "why": "Ele só guarda posições."
+      },
+      {
+        "text": "No `kafka-topics.sh --list`",
+        "why": "Tópicos faltando são sintoma, não motivo."
+      }
+    ]
+  },
+  "ex-p7fge4ag": {
+    "prompt": "As primeiras mensagens de `pf.public.stock` têm `op` igual a `r`. O que elas são?",
+    "choices": [
+      {
+        "text": "Linhas que uma transação desfez antes de confirmar",
+        "why": "Uma mudança desfeita nunca chega ao tópico."
+      },
+      {
+        "text": "Repetições de mensagens que o conector já tinha enviado uma vez",
+        "why": "Nada tinha sido enviado antes do snapshot."
+      },
+      {
+        "text": "Leituras de snapshot das linhas existentes",
+        "why": "Isso. `r` é uma leitura do snapshot."
+      },
+      {
+        "text": "Leituras feitas por um consumidor",
+        "why": "Consumidores não escrevem no tópico."
+      }
+    ]
+  },
+  "ex-cyhhbvrv": {
+    "prompt": "Ligue cada valor de `op` ao que aconteceu.",
+    "pairs": [
+      {
+        "left": "r",
+        "right": "uma linha lida pelo snapshot"
+      },
+      {
+        "left": "c",
+        "right": "um insert"
+      },
+      {
+        "left": "u",
+        "right": "um update"
+      },
+      {
+        "left": "d",
+        "right": "um delete"
+      }
+    ],
+    "right_distractors": [
+      "um rollback"
+    ]
+  },
+  "ex-9y0v7y6r": {
+    "prompt": "O `source.ts_ms` de um evento e o `ts_ms` de cima estão a três minutos de distância. O que isso diz?",
+    "choices": [
+      {
+        "text": "O relógio do banco está três minutos errado",
+        "why": "Possível em teoria, mas os dois campos medem dois momentos diferentes."
+      },
+      {
+        "text": "O Debezium processou a mudança três minutos depois de o banco fazê-la",
+        "why": "Isso. Tempo do evento contra tempo de processamento: o conector está atrasado."
+      },
+      {
+        "text": "A mensagem levou três minutos para ir do broker até o consumidor que a leu",
+        "why": "Nenhum dos campos é escrito pelo consumidor."
+      },
+      {
+        "text": "A transação ficou aberta por três minutos",
+        "why": "Nenhum dos campos registra quando a transação começou."
+      }
+    ]
+  },
+  "ex-256j18j4": {
+    "prompt": "Uma coluna de preço `numeric` chega ao tópico como uma string curta de letras estranhas. Qual a causa provável?",
+    "choices": [
+      {
+        "text": "O conversor JSON está com `schemas.enable=false` no worker",
+        "why": "Isso tira o schema, não a codificação de decimais."
+      },
+      {
+        "text": "A coluna está corrompida no PostgreSQL",
+        "why": "O `psql` mostraria o preço normalmente."
+      },
+      {
+        "text": "A codificação exata de decimais do Debezium",
+        "why": "Isso. O `decimal.handling.mode` muda isso; centavos inteiros evitam."
+      },
+      {
+        "text": "A publicação exclui a coluna de preço do evento",
+        "why": "Uma coluna excluída sumiria, não viria embaralhada."
+      }
+    ]
+  },
+  "ex-1nemd4cr": {
+    "prompt": "Com a replica identity padrão, o evento de update do `bk-02` do Recife veio com `before: null`. Por quê?",
+    "choices": [
+      {
+        "text": "O WAL só guardou a linha nova",
+        "why": "Isso. O DEFAULT só registra a chave quando ela muda, ou num delete."
+      },
+      {
+        "text": "O Debezium descarta o `before` para economizar espaço no Kafka",
+        "why": "Com FULL, o mesmo conector preenche o `before`."
+      },
+      {
+        "text": "O conversor JSON não consegue gravar duas cópias de uma linha",
+        "why": "O `before` do evento de delete mostra que consegue."
+      },
+      {
+        "text": "O `before` só é preenchido em inserts",
+        "why": "Um insert não tem before nenhum."
+      }
+    ]
+  },
+  "ex-cfsbgt3g": {
+    "prompt": "Um consumidor soma `before.qty` dos eventos de delete para contar exemplares tirados das lojas. Com `REPLICA IDENTITY DEFAULT`, o que ele obtém?",
+    "choices": [
+      {
+        "text": "O total certo, porque um delete sempre grava antes a linha antiga inteira no WAL",
+        "why": "Só a chave é registrada; `qty` é um valor de preenchimento."
+      },
+      {
+        "text": "Um erro, porque `before` é `null` nos deletes",
+        "why": "O `before` existe no delete, com a chave."
+      },
+      {
+        "text": "Zero, em silêncio: o WAL guardou só a chave e `qty` é um preenchimento",
+        "why": "Isso. O delete de Natal mostrou `qty` 0 numa linha que tinha 3."
+      },
+      {
+        "text": "O dobro do total certo, por causa do tombstone",
+        "why": "O valor do tombstone é `null`; ele não tem `before`."
+      }
+    ]
+  },
+  "ex-9w78tz17": {
+    "prompt": "Uma mensagem com chave e valor `null`, que diz à compactação para descartar a chave, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone",
+          "lápide"
+        ]
+      }
+    ]
+  },
+  "ex-zbefd13g": {
+    "prompt": "O Connect está parado e o banco continua trabalhando. O que acontece com o WAL a partir da posição do slot?",
+    "choices": [
+      {
+        "text": "O PostgreSQL guarda tudo até o slot confirmar",
+        "why": "Isso. É a promessa do slot, e o perigo dele."
+      },
+      {
+        "text": "É apagado depois de um checkpoint, como sempre",
+        "why": "Um slot impede justamente essa remoção."
+      },
+      {
+        "text": "Só o WAL de `books` e `stock` é guardado, e o resto é reciclado",
+        "why": "O WAL é um fluxo só para o servidor inteiro; os bytes da tabela notes também ficaram."
+      },
+      {
+        "text": "É enviado direto ao Kafka pelo PostgreSQL, sem o Debezium no meio",
+        "why": "Nada lê o slot enquanto o Connect está parado."
+      }
+    ]
+  },
+  "ex-np909c1n": {
+    "prompt": "Você define `max_slot_wal_keep_size` como 50GB e o conector fica parado uma semana. Qual troca você fez?",
+    "choices": [
+      {
+        "text": "Nenhuma: o conector se recupera depois a partir da cópia das mudanças que o Kafka guarda",
+        "why": "As mudanças que ele perdeu nunca estiveram no Kafka."
+      },
+      {
+        "text": "O disco do banco fica protegido, e o conector precisa de um novo snapshot",
+        "why": "Isso. O slot é marcado como perdido depois do limite."
+      },
+      {
+        "text": "O banco para de aceitar escritas assim que o WAL chega a 50GB no disco",
+        "why": "Ele para de guardar WAL para o slot, não de aceitar escritas."
+      },
+      {
+        "text": "A retenção do Kafka é reduzida para combinar",
+        "why": "A configuração é só do PostgreSQL."
+      }
+    ]
+  },
+  "ex-v8m6fd1w": {
+    "prompt": "As tabelas publicadas mudam uma vez por dia, outras tabelas escrevem a noite toda, e o Connect está rodando. Por que o WAL retido ainda pode crescer?",
+    "choices": [
+      {
+        "text": "O Connect só lê o slot uma vez por dia, quando as tabelas publicadas mudam",
+        "why": "Ele lê continuamente; só não há nada para confirmar."
+      },
+      {
+        "text": "As outras tabelas também são capturadas",
+        "why": "Elas não estão na publicação."
+      },
+      {
+        "text": "O slot só anda quando uma mudança nas tabelas dele é confirmada",
+        "why": "Isso. O `heartbeat.interval.ms` faz o Debezium confirmar por tempo."
+      },
+      {
+        "text": "O pgoutput guarda uma cópia de toda tabela",
+        "why": "O pgoutput decodifica; ele não guarda nada."
+      }
+    ]
+  },
+  "ex-e0g5kj8w": {
+    "prompt": "Ponha em ordem os passos da montagem de CDC desta lição.",
+    "items": [
+      "Definir `wal_level = logical` e reiniciar o PostgreSQL",
+      "Descompactar o plugin do Debezium em ~/connect-plugins",
+      "Criar os papéis, o banco e as tabelas",
+      "Criar a publicação para books e stock",
+      "Subir o connect-standalone.sh com os dois arquivos de propriedades",
+      "Ler os eventos do snapshot no tópico"
+    ]
+  },
+  "ex-2fhqqcn6": {
+    "prompt": "Um conector foi aposentado no mês passado e o slot dele ficou para trás. O alerta de disco do banco dispara. Qual a correção certa?",
+    "choices": [
+      {
+        "text": "Reiniciar o PostgreSQL para ele esquecer o slot",
+        "why": "Um slot sobrevive a um restart; é para isso que ele existe."
+      },
+      {
+        "text": "Reduzir a retenção do Kafka nos tópicos de CDC",
+        "why": "O WAL está no disco do banco, não no do broker."
+      },
+      {
+        "text": "Apagar o slot com `pg_drop_replication_slot`",
+        "why": "Isso. Um slot que ninguém vai ler de novo é sobra."
+      },
+      {
+        "text": "Definir REPLICA IDENTITY FULL em toda tabela",
+        "why": "Isso gera mais WAL, não menos."
+      }
+    ]
+  }
+}

@@ -1,0 +1,614 @@
+[
+  {
+    "id": "ex-yevj2w31",
+    "version": 1,
+    "section": "what-a-dump-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `pg_dump` get the data it writes?",
+    "hint": "Compare it with copying the data directory.",
+    "choices": [
+      {
+        "text": "It reads the data directory's files from disk",
+        "correct": false,
+        "why": "That is a physical backup, lesson 3. pg_dump never opens a data file."
+      },
+      {
+        "text": "It connects as a client and queries the server",
+        "correct": true,
+        "why": "Right. It asks the server, like psql does, and writes the answers as instructions to rebuild them."
+      },
+      {
+        "text": "It reads the write-ahead log and replays it into a file",
+        "correct": false,
+        "why": "The write-ahead log is lesson 4's subject. A dump does not look at it."
+      },
+      {
+        "text": "It asks the operating system for a snapshot of the disk",
+        "correct": false,
+        "why": "A snapshot is a file-level copy; pg_dump works above the files, through SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x25d43f",
+    "version": 1,
+    "section": "what-a-dump-is",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what a plain dump does, from the top of the file, in order.",
+    "hint": "Checking keys is cheaper once all the rows are in.",
+    "items": [
+      "Create the tables",
+      "Load the rows with COPY",
+      "Build the indexes and add the keys",
+      "Grant the privileges"
+    ],
+    "trap": "Keys and indexes come after the data because building them once over all the rows is far cheaper than maintaining them row by row as the rows arrive."
+  },
+  {
+    "id": "ex-k3t4zcc6",
+    "version": 1,
+    "section": "what-a-dump-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dump of the shop starts at 14:00:00 and finishes at 14:00:40. An order is inserted at 14:00:10. Is it in the dump?",
+    "hint": "pg_dump reads everything through one snapshot.",
+    "choices": [
+      {
+        "text": "Yes, if the orders table had not been dumped yet at 14:00:10",
+        "correct": false,
+        "why": "That would make each table describe a different moment. The snapshot exists so that this cannot happen."
+      },
+      {
+        "text": "No: the dump holds the database as it was at 14:00:00",
+        "correct": true,
+        "why": "Right. Every table in the file reflects the instant the snapshot was taken, whatever happens during the dump."
+      },
+      {
+        "text": "Yes: a dump includes everything committed before it finishes",
+        "correct": false,
+        "why": "That is the picture a file copy suggests. A dump reads one snapshot, taken when it began."
+      },
+      {
+        "text": "It depends on whether the insert committed before the dump ended",
+        "correct": false,
+        "why": "Commit time after the snapshot does not matter: nothing that commits after 14:00:00 is visible to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pvspjst",
+    "version": 1,
+    "section": "what-a-dump-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A forty-minute nightly dump starts at 02:00. At 02:10 a migration runs `ALTER TABLE orders ADD COLUMN note text`. What do the application's queries on `orders` see from 02:10?",
+    "hint": "The ALTER needs a lock the dump's lock refuses, and it queues.",
+    "choices": [
+      {
+        "text": "Nothing unusual: the ALTER waits and everything else carries on",
+        "correct": false,
+        "why": "The ALTER waits, and every query that arrives after it queues behind it, because it is first in line for the table."
+      },
+      {
+        "text": "The new column appears in the dump at 02:40",
+        "correct": false,
+        "why": "The dump reads its snapshot from 02:00; and the column cannot even be added until the dump releases the table."
+      },
+      {
+        "text": "They wait behind the ALTER until the dump finishes, about half an hour",
+        "correct": true,
+        "why": "Right. The ALTER waits for the dump's lock, and the queries queue behind the ALTER: a thirty-minute outage nobody reports as an error."
+      },
+      {
+        "text": "The dump fails with a lock conflict and the ALTER runs",
+        "correct": false,
+        "why": "pg_dump holds its lock to the end; it is the ALTER that waits, not the dump that yields."
+      }
+    ]
+  },
+  {
+    "id": "ex-k358ejs2",
+    "version": 1,
+    "section": "formats",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each format with what describes it.",
+    "hint": "Only one of them is a script.",
+    "pairs": [
+      {
+        "left": "`-Fp`, plain",
+        "right": "A SQL script, restored by running it with psql"
+      },
+      {
+        "left": "`-Fc`, custom",
+        "right": "One compressed archive with a table of contents"
+      },
+      {
+        "left": "`-Fd`, directory",
+        "right": "One file per table, and the format pg_dump can write in parallel"
+      },
+      {
+        "left": "`-Ft`, tar",
+        "right": "The directory format packed into one uncompressed file"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the data directory, restored by starting the server"
+    ]
+  },
+  {
+    "id": "ex-sfe88x7p",
+    "version": 1,
+    "section": "formats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 40 GB database is backed up nightly as plain SQL. Somebody needs one table back. What does the format make hard?",
+    "hint": "How is a plain dump restored?",
+    "choices": [
+      {
+        "text": "Nothing: psql has a flag to run one table from a script",
+        "correct": false,
+        "why": "psql runs a script top to bottom. Picking one table out means editing the file."
+      },
+      {
+        "text": "Finding the table, since a plain dump has no table names",
+        "correct": false,
+        "why": "The names are there in CREATE TABLE lines; the difficulty is in restoring part of it, not in finding it."
+      },
+      {
+        "text": "Picking that table out of a 40 GB script by hand",
+        "correct": true,
+        "why": "Right. A custom or directory dump would let pg_restore -t or -L take only that table."
+      },
+      {
+        "text": "Reading it, because plain SQL is compressed",
+        "correct": false,
+        "why": "Plain SQL is uncompressed text, the one format a person can read."
+      }
+    ]
+  },
+  {
+    "id": "ex-tncy9qes",
+    "version": 1,
+    "section": "formats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `pg_restore -l shop.dump` print?",
+    "hint": "-l for list.",
+    "choices": [
+      {
+        "text": "The rows of every table, as text",
+        "correct": false,
+        "why": "That would be the data itself. -l lists what the archive contains, one entry per line."
+      },
+      {
+        "text": "One line per thing the restore would do",
+        "correct": true,
+        "why": "Right. Edited and passed back with -L, it restores exactly the entries left in it."
+      },
+      {
+        "text": "The SQL a restore would run, in order, statement by statement",
+        "correct": false,
+        "why": "That is what pg_restore -f file writes: the full script. -l is a much shorter list."
+      },
+      {
+        "text": "The differences between the archive and the live database",
+        "correct": false,
+        "why": "pg_restore does not compare anything with a live database."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfcp6qbz",
+    "version": 1,
+    "section": "formats",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The plain dump of the shop was 1937458 bytes and the custom one 539121. Roughly how many times smaller is the custom dump? Answer to one decimal place.",
+    "hint": "Divide.",
+    "value": 3.6,
+    "tolerance": 0.1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-pgnmtye4",
+    "version": 1,
+    "section": "globals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a server made a minute ago with `pg_createcluster`, `psql -p 5433 -d postgres` answers `role \"ana\" does not exist`. Why?",
+    "hint": "Where do roles live?",
+    "choices": [
+      {
+        "text": "Port 5433 only accepts the postgres role",
+        "correct": false,
+        "why": "Any role may connect to any port; the new server simply has no role called ana yet."
+      },
+      {
+        "text": "Nothing has created ana there yet",
+        "correct": true,
+        "why": "Right. Roles belong to the server, and your role is a global of the old one; nothing put it on the new one."
+      },
+      {
+        "text": "The shop dump has not been restored there yet",
+        "correct": false,
+        "why": "Restoring a dump would not create it either: roles are never in a database's dump."
+      },
+      {
+        "text": "The new server's data directory is owned by a different user",
+        "correct": false,
+        "why": "The directory is owned by postgres on both servers. Which roles exist is a different matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6vdjvp4",
+    "version": 1,
+    "section": "globals",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many errors did `pg_restore` ignore when it restored the shop into the new server before the globals were there?",
+    "hint": "It said so in its last line.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "errors"
+  },
+  {
+    "id": "ex-2adxtyp6",
+    "version": 1,
+    "section": "globals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_restore` printed four errors about missing roles and exited with status 1. The rows are all there. What is the state of the restored shop?",
+    "hint": "Who owns the tables, and what can shop_app do?",
+    "choices": [
+      {
+        "text": "Ready: the rows are what matters, and they are all there",
+        "correct": false,
+        "why": "The application logs in as shop_app, which does not exist there, so it is refused at its first query."
+      },
+      {
+        "text": "Empty, because pg_restore rolls everything back on error",
+        "correct": false,
+        "why": "pg_restore carries on past each error by default; nothing was rolled back."
+      },
+      {
+        "text": "Complete in its data, wrong in who owns it and who uses it",
+        "correct": true,
+        "why": "Right. The tables belong to you, and shop_app has neither a role nor its grants."
+      },
+      {
+        "text": "Corrupt, and it has to be dropped before anything else",
+        "correct": false,
+        "why": "Nothing is corrupt. The data is intact; the missing roles are a separate, fixable problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e1gf4xv",
+    "version": 1,
+    "section": "globals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The globals file holds `shop_app`'s password as a SCRAM hash. What does that mean for the file?",
+    "hint": "A hash can be attacked at leisure by whoever holds it.",
+    "choices": [
+      {
+        "text": "Nothing: a hash is not the password, so the file is safe to share",
+        "correct": false,
+        "why": "Anyone holding the hash can try passwords against it offline, as long as they like."
+      },
+      {
+        "text": "The password has to be reset after every restore",
+        "correct": false,
+        "why": "The restored server accepts the old password, because it compares against the same hash."
+      },
+      {
+        "text": "It is a secret, to be kept as carefully as the dumps",
+        "correct": true,
+        "why": "Right. The restored server accepts the password without anybody knowing it, and an attacker can work on the hash offline."
+      },
+      {
+        "text": "Only a superuser can restore it",
+        "correct": false,
+        "why": "Creating roles does need the right privileges, but that says nothing about how to keep the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4076j1b",
+    "version": 1,
+    "section": "globals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pair of commands produces a complete backup of a PostgreSQL server holding one database, `shop`, in a form that can be restored selectively?",
+    "hint": "One command per scope.",
+    "choices": [
+      {
+        "text": "`pg_dumpall --globals-only` and `pg_dump -Fc shop`",
+        "correct": true,
+        "why": "Right. The globals as SQL, and the database as a custom archive that pg_restore can filter."
+      },
+      {
+        "text": "`pg_dump -Fc shop` and `pg_dump -Fd shop`",
+        "correct": false,
+        "why": "Two copies of the same database in two formats, and still no roles."
+      },
+      {
+        "text": "`pg_dumpall` alone",
+        "correct": false,
+        "why": "It is complete, but it is one plain SQL file: no table of contents, no selective restore, no parallelism."
+      },
+      {
+        "text": "`pg_dump -Fc shop` alone, which includes the owners",
+        "correct": false,
+        "why": "It names the owners in ALTER statements and does not create them."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ypcdvd6",
+    "version": 1,
+    "section": "selective-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_restore -d scratch -t orders shop.dump` restored the `orders` table. What did it leave out?",
+    "hint": "\\d orders in scratch showed it.",
+    "choices": [
+      {
+        "text": "The rows: -t restores the definition only",
+        "correct": false,
+        "why": "The rows came with it; the copy-back took 12500 of them out of scratch."
+      },
+      {
+        "text": "Its keys, its index and its identity default",
+        "correct": true,
+        "why": "Right. Those are separate entries in the table of contents, and -t takes only the table and its data."
+      },
+      {
+        "text": "The CHECK constraint on total_cents",
+        "correct": false,
+        "why": "The CHECK survived: it is part of the table's own definition."
+      },
+      {
+        "text": "Nothing; the table is identical to the one in shop",
+        "correct": false,
+        "why": "\\d showed no indexes, no keys and no default on id."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj4nx60t",
+    "version": 1,
+    "section": "selective-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why restore the missing orders into a separate database rather than restoring the whole dump over the shop?",
+    "hint": "What else happened in the shop since the dump?",
+    "choices": [
+      {
+        "text": "It would also undo everything written since the dump",
+        "correct": true,
+        "why": "Right. Side by side, the old rows and the current ones can be compared and only what is missing copied across."
+      },
+      {
+        "text": "pg_restore refuses to restore into a database that has tables",
+        "correct": false,
+        "why": "It does not refuse; it fails on the clashing objects or, with --clean, drops them first. Either way the live data is at risk."
+      },
+      {
+        "text": "The dump holds only the orders table",
+        "correct": false,
+        "why": "The dump holds the whole shop. The choice to take two tables was ours."
+      },
+      {
+        "text": "A separate database restores faster than the same one",
+        "correct": false,
+        "why": "Speed is not the reason; the point is not to touch the live data."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fzx703n",
+    "version": 1,
+    "section": "selective-restore",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders did the `DELETE` for Curitiba remove?",
+    "hint": "The command reported it.",
+    "value": 12500,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-jsvptegg",
+    "version": 1,
+    "section": "selective-restore",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The dump is from 02:00. At 16:00 somebody deletes the Curitiba orders. Between 02:00 and 16:00, forty Curitiba orders had their totals corrected. What does the copy-back from the dump do to them?",
+    "hint": "Which version of each row is in the dump?",
+    "choices": [
+      {
+        "text": "Restores them with their corrected totals",
+        "correct": false,
+        "why": "The corrections happened after the dump; the dump has never seen them."
+      },
+      {
+        "text": "Leaves them out, since they changed after the dump",
+        "correct": false,
+        "why": "Every row that existed at 02:00 is in the dump and is copied back, changed or not."
+      },
+      {
+        "text": "Fails on them, because their ids already exist",
+        "correct": false,
+        "why": "Their ids are free: the DELETE removed the rows. The copy succeeds."
+      },
+      {
+        "text": "Restores them with the totals they had at 02:00",
+        "correct": true,
+        "why": "Right. The corrections are lost, and the repair needs a query somebody checks, or lesson 6's restore to 15:59."
+      }
+    ]
+  },
+  {
+    "id": "ex-36qnjfx7",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 268 MB bigshop took 7.3 seconds to restore. At the same rate, about how many seconds would a 2680 MB database take?",
+    "hint": "Ten times the size.",
+    "value": 73,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-z1hv2c6f",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pg_dump -Fd -j 2` was barely faster than one process on bigshop, while `pg_restore -j 2` gained more than a second. Why the difference?",
+    "hint": "What is the unit of work a parallel dump hands out?",
+    "choices": [
+      {
+        "text": "Parallel dumps need the custom format to work",
+        "correct": false,
+        "why": "It is the reverse: only the directory format can be dumped in parallel."
+      },
+      {
+        "text": "Two processors are too few to help a dump",
+        "correct": false,
+        "why": "Two help when there are two big tables; the problem is that there is one."
+      },
+      {
+        "text": "The dump splits work by table, and almost all the data is in one",
+        "correct": true,
+        "why": "Right. One worker dumped orders while the other had nearly nothing; the restore had indexes and keys to build side by side."
+      },
+      {
+        "text": "The restore wrote to the second server, which is faster",
+        "correct": false,
+        "why": "Both servers are on the same machine and the same disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n9cxern",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A shop is dumped every night at 02:00 and its disk fails at 18:00. How much data is lost, at best?",
+    "hint": "What does the dump contain?",
+    "choices": [
+      {
+        "text": "Nothing, if the dump is restored carefully",
+        "correct": false,
+        "why": "Care in the restore cannot bring back rows that were never in the file."
+      },
+      {
+        "text": "The sixteen hours since the dump",
+        "correct": true,
+        "why": "Right. A dump is one moment, and everything after it is outside the backup. Lesson 4 closes that gap."
+      },
+      {
+        "text": "Only what was being written at 18:00",
+        "correct": false,
+        "why": "That is the loss with continuous archiving, lesson 4. A nightly dump loses the whole day."
+      },
+      {
+        "text": "Two hours, the time the dump took",
+        "correct": false,
+        "why": "How long the dump took does not decide what it contains."
+      }
+    ]
+  },
+  {
+    "id": "ex-draphzqy",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons to keep logical dumps even beside physical backups? Choose all that apply.",
+    "hint": "Think about versions, single tables and damaged pages.",
+    "choices": [
+      {
+        "text": "Restoring into a newer major version of PostgreSQL",
+        "correct": true,
+        "why": "Right. A dump is SQL; a physical copy only restores into the same major version."
+      },
+      {
+        "text": "Restoring a terabyte as fast as possible",
+        "correct": false,
+        "why": "That is where dumps are weakest: they rebuild every index and check every key."
+      },
+      {
+        "text": "Getting one table back without restoring a server",
+        "correct": true,
+        "why": "Right. pg_restore -t, as the selective restore did."
+      },
+      {
+        "text": "Noticing a damaged data page, because the dump has to read every row",
+        "correct": true,
+        "why": "Right. A file copy faithfully copies the damage; a dump fails on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs8r8s01",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 30 GB database has to be moved from PostgreSQL 15 on an Intel server to PostgreSQL 16 on an ARM one, with as little downtime as possible. Which is the right first plan?",
+    "hint": "Only one kind of copy crosses versions and processors.",
+    "choices": [
+      {
+        "text": "A directory-format dump with -j, restored with -j, globals first",
+        "correct": true,
+        "why": "Right. A logical copy crosses both; the directory format makes both halves parallel."
+      },
+      {
+        "text": "A copy of the data directory, started on the new server",
+        "correct": false,
+        "why": "A physical copy only starts on the same major version and the same kind of processor."
+      },
+      {
+        "text": "A plain SQL dump piped straight into psql on the new server, in one go",
+        "correct": false,
+        "why": "It would work, slowly and in one process, and with no way to restart halfway."
+      },
+      {
+        "text": "A custom dump restored without the globals",
+        "correct": false,
+        "why": "The globals have to come first, or the owners and grants fail as they did in this lesson."
+      }
+    ]
+  }
+]

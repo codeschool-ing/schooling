@@ -1,0 +1,560 @@
+[
+ {
+  "id": "ex-3y6aeaw8",
+  "version": 1,
+  "section": "what-async-means",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "By default, what does `page.goto()` wait for before it returns?",
+  "choices": [
+   {
+    "text": "Every request the page will make, including the ones its scripts send",
+    "correct": false,
+    "why": "Requests a script makes after the page is ready are not part of what `goto` waits for; that is the whole gap this lesson is about."
+   },
+   {
+    "text": "The browser's `load` event",
+    "correct": true,
+    "why": "Right. The document and the files it names have arrived; data a script fetches afterwards may not have."
+   },
+   {
+    "text": "The first element with text to be drawn",
+    "correct": false,
+    "why": "`goto` does not look at the content at all; it waits for a browser event."
+   },
+   {
+    "text": "A fixed half second after the address answers",
+    "correct": false,
+    "why": "There is no fixed delay in `goto`; it waits for an event, however long that takes."
+   }
+  ]
+ },
+ {
+  "id": "ex-d2stpx7s",
+  "version": 1,
+  "section": "what-async-means",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`at-load.mjs` holds the products back for 500 ms, and `goto` returns to a list with 0 products. What changed in the page?",
+  "choices": [
+   {
+    "text": "The script now runs before the HTML has arrived",
+    "correct": false,
+    "why": "The order of document and script is the same in both runs; only the answer for products is later."
+   },
+   {
+    "text": "The `load` event no longer fires",
+    "correct": false,
+    "why": "It fires in both runs, and in the second it fires long before the products arrive."
+   },
+   {
+    "text": "Nothing; only one answer arrived later",
+    "correct": true,
+    "why": "Right. The page is the same, the race between `load` and the products had a different winner."
+   },
+   {
+    "text": "The list was cleared by the routing",
+    "correct": false,
+    "why": "The routing only delays the answer; the list was empty because nothing had filled it yet."
+   }
+  ]
+ },
+ {
+  "id": "ex-j5mm71wx",
+  "version": 1,
+  "section": "what-async-means",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A page that asks the server for data without leaving the page, and without the browser waiting for that answer before calling the page ready, is loading it ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "asynchronously",
+     "async"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-f6x82sz5",
+  "version": 1,
+  "section": "the-search-page",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The search route waits `max(0, 900 - 150 * length)` milliseconds. How long does it wait before answering `pap`?",
+  "value": 450,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-80wfysmr",
+  "version": 1,
+  "section": "the-search-page",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "On the search page, what does `aria-busy=\"true\"` on the list tell a test?",
+  "choices": [
+   {
+    "text": "That the list is empty",
+    "correct": false,
+    "why": "The list can hold an earlier answer and still be busy; at a robot's speed it shows Papaya while busy."
+   },
+   {
+    "text": "That an answer is due",
+    "correct": true,
+    "why": "Right. The script sets it when a question leaves and clears it when none is outstanding."
+   },
+   {
+    "text": "That the server is overloaded",
+    "correct": false,
+    "why": "The page cannot see the server's load; it only knows its own requests have not been answered."
+   },
+   {
+    "text": "That the page shows the right result",
+    "correct": false,
+    "why": "It says nothing about right or wrong, only about whether more answers are coming."
+   }
+  ]
+ },
+ {
+  "id": "ex-9kmjvst5",
+  "version": 1,
+  "section": "the-race",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`papaya` is typed with no pause between keys. Put these answers in the order they reach the page.",
+  "items": [
+   "the answer to `papaya`",
+   "the answer to `papa`",
+   "the answer to `pa`",
+   "the answer to `p`"
+  ],
+  "trap": "The order of the questions is the opposite: the server holds a short question back longer."
+ },
+ {
+  "id": "ex-ssan6521",
+  "version": 1,
+  "section": "the-race",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After `papaya` is typed at a robot's speed, the list settles on three fruit. Why those three?",
+  "choices": [
+   {
+    "text": "They are the fruit whose names contain `p`, the last answer to arrive",
+    "correct": true,
+    "why": "Right. The answer to `p` is held back longest, lands last and replaces the list."
+   },
+   {
+    "text": "The server ignores every letter after the first one it receives in a query",
+    "correct": false,
+    "why": "The answer to `papaya` held only Papaya; the server searched the whole word."
+   },
+   {
+    "text": "The page adds every answer to the list",
+    "correct": false,
+    "why": "`replaceChildren` replaces the list each time; nothing accumulates."
+   },
+   {
+    "text": "They are the first answers to arrive",
+    "correct": false,
+    "why": "The first to arrive is the answer to `papaya`, with one fruit in it."
+   }
+  ]
+ },
+ {
+  "id": "ex-vx7f844v",
+  "version": 1,
+  "section": "the-race",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Somebody types `papaya` with 300 ms between keys. Using the server's rule, what does the list end on?",
+  "choices": [
+   {
+    "text": "Three fruit, as with no pause",
+    "correct": false,
+    "why": "Above 150 ms a key, each answer lands after the one before it, so the last answer is the one to `papaya`."
+   },
+   {
+    "text": "Two fruit, from the answer to `pa`",
+    "correct": false,
+    "why": "`pa` leaves 300 ms after `p` and waits 150 ms less, so it is answered later than `p` and earlier than the rest."
+   },
+   {
+    "text": "Papaya alone, the right answer",
+    "correct": true,
+    "why": "Right. Each question leaves 300 ms after the last and is held only 150 ms less, so the answers land in order."
+   },
+   {
+    "text": "Nothing, because the requests time out",
+    "correct": false,
+    "why": "No request waits more than 750 ms, and nothing in the page gives up on one."
+   }
+  ]
+ },
+ {
+  "id": "ex-tzpjh054",
+  "version": 1,
+  "section": "a-naive-test",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the test that uses `fill` pass on a page that shows three fruit to a fast typist?",
+  "choices": [
+   {
+    "text": "`fill` waits for the network to go quiet",
+    "correct": false,
+    "why": "`fill` does not wait for the network; the test passes because there was only one request."
+   },
+   {
+    "text": "`fill` cancels the earlier requests",
+    "correct": false,
+    "why": "There are no earlier requests to cancel: `fill` changes the value once."
+   },
+   {
+    "text": "One change, so one request",
+    "correct": true,
+    "why": "Right. One `input` event, one answer, and the defect never gets a chance."
+   },
+   {
+    "text": "`fill` types slower than a person",
+    "correct": false,
+    "why": "It does not type key by key at all; that is `pressSequentially`."
+   }
+  ]
+ },
+ {
+  "id": "ex-ns372s9e",
+  "version": 1,
+  "section": "a-naive-test",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The test that sleeps 500 ms passed. What does that pass tell you about the page?",
+  "choices": [
+   {
+    "text": "That the search is correct",
+    "correct": false,
+    "why": "The page went on to show three fruit; the test looked before that and stopped."
+   },
+   {
+    "text": "Only that at 500 ms the list held one fruit",
+    "correct": true,
+    "why": "Right. A sleep measures a moment, and this moment fell before the late answers."
+   },
+   {
+    "text": "That the server answered every request",
+    "correct": false,
+    "why": "At 500 ms the answers to `pa` and `p` had not arrived yet."
+   },
+   {
+    "text": "That 500 ms is the right length for this page",
+    "correct": false,
+    "why": "No length is right: one second gave the opposite verdict on the same page."
+   }
+  ]
+ },
+ {
+  "id": "ex-1t9cyxpr",
+  "version": 1,
+  "section": "a-naive-test",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these tests of the search page give a verdict that depends on timing rather than on the page? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Type key by key, read `count()` at once",
+    "correct": true,
+    "why": "Right. It reads before any answer, so it fails whatever the page would have shown."
+   },
+   {
+    "text": "Type key by key, sleep 500 ms, read `count()`",
+    "correct": true,
+    "why": "Right. Its verdict is decided by where 500 ms falls among the answers."
+   },
+   {
+    "text": "Type key by key, wait for `aria-busy=\"false\"`, then check the list",
+    "correct": false,
+    "why": "It waits for the page to say it is finished, so it reads the final state at any speed."
+   },
+   {
+    "text": "Type key by key, sleep a second, read `count()`",
+    "correct": true,
+    "why": "Right. It failed on this machine, and on a slower server it could land before the last answer and pass."
+   }
+  ]
+ },
+ {
+  "id": "ex-kwezp65p",
+  "version": 1,
+  "section": "waiting-for-the-right-thing",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each way of waiting to what it waits for.",
+  "pairs": [
+   {
+    "left": "`page.waitForTimeout(500)`",
+    "right": "A length of time, whatever the page does"
+   },
+   {
+    "left": "`expect(list).toHaveCount(1)`",
+    "right": "The list holding one item, at any moment"
+   },
+   {
+    "left": "`page.waitForResponse(...)`",
+    "right": "The server answering one request"
+   },
+   {
+    "left": "`toHaveAttribute('aria-busy', 'false')`",
+    "right": "The page saying no answer is outstanding"
+   }
+  ]
+ },
+ {
+  "id": "ex-rffpe0r6",
+  "version": 1,
+  "section": "waiting-for-the-right-thing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the difference between `expect(await list.count()).toBe(1)` and `await expect(list).toHaveCount(1)`?",
+  "choices": [
+   {
+    "text": "None at all; the second is only a shorter way to write the first",
+    "correct": false,
+    "why": "The first counts once; the second asks again and again until it is true or time runs out."
+   },
+   {
+    "text": "The first retries until it is true and the second counts once",
+    "correct": false,
+    "why": "It is the other way round: `toHaveCount` on a locator is the web-first one."
+   },
+   {
+    "text": "The second retries until the count is 1 or time runs out",
+    "correct": true,
+    "why": "Right. A web-first assertion keeps asking the page, so a slow answer does not fail it."
+   },
+   {
+    "text": "The second also waits for the network to go idle",
+    "correct": false,
+    "why": "It watches the locator, not the network; on this page it passed while four answers were still coming."
+   }
+  ]
+ },
+ {
+  "id": "ex-3bjne74t",
+  "version": 1,
+  "section": "waiting-for-the-right-thing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test waits for `aria-busy=\"false\"` BEFORE typing, then types and checks the list at once. On the search page, what happens?",
+  "choices": [
+   {
+    "text": "It works, since the wait is the right condition",
+    "correct": false,
+    "why": "The condition is right only if it is false until the page is finished, and before typing it is already true."
+   },
+   {
+    "text": "The wait passes at once and the check reads the list too early",
+    "correct": true,
+    "why": "Right. The HTML starts with `aria-busy=\"false\"`, so the wait is met before anything is asked."
+   },
+   {
+    "text": "The wait never ends, because the attribute starts as `true`",
+    "correct": false,
+    "why": "On the search page it starts as `false`; the home page's list is the one that starts as `true`."
+   },
+   {
+    "text": "Playwright refuses to let a test wait for anything before an action",
+    "correct": false,
+    "why": "Nothing stops it; that is why choosing the condition is the author's job."
+   }
+  ]
+ },
+ {
+  "id": "ex-x55hzjvb",
+  "version": 1,
+  "section": "the-defect",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test is marked with `test.fail()` and the defect it describes gets fixed. What does Playwright report the next run?",
+  "choices": [
+   {
+    "text": "A pass, the same as on every run before the fix",
+    "correct": false,
+    "why": "It reported a pass while the test failed; now the test passes, which is the opposite of what was declared."
+   },
+   {
+    "text": "A failure: expected to fail, but passed",
+    "correct": true,
+    "why": "Right. The annotation is now wrong, and deleting it is the fix."
+   },
+   {
+    "text": "A skipped test",
+    "correct": false,
+    "why": "That is `test.skip()`, which does not run the test at all."
+   },
+   {
+    "text": "Nothing, since tests carrying an annotation are not run",
+    "correct": false,
+    "why": "`test.fail()` runs the test every time, which is the reason to prefer it here."
+   }
+  ]
+ },
+ {
+  "id": "ex-zc3rtbbv",
+  "version": 1,
+  "section": "the-defect",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why is the search test's failure a defect in the shop rather than a flaky test?",
+  "choices": [
+   {
+    "text": "Because it fails on every run, the same way, for a reason in the page",
+    "correct": true,
+    "why": "Right. Flaky means sometimes, for a reason outside what is being tested; this is always, and the page is wrong."
+   },
+   {
+    "text": "Because it uses `pressSequentially`",
+    "correct": false,
+    "why": "The method is how the test reaches the defect, not what makes it one."
+   },
+   {
+    "text": "Because a person typing slowly cannot see it",
+    "correct": false,
+    "why": "That explains why it was missed by hand, not why it is the page's fault."
+   },
+   {
+    "text": "Because it takes more than five seconds",
+    "correct": false,
+    "why": "The time comes from the assertion retrying before it gives up; it is not the reason."
+   }
+  ]
+ },
+ {
+  "id": "ex-11f5vwan",
+  "version": 1,
+  "section": "the-defect",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The search page stops loading altogether. What does the test marked with `test.fail()` report?",
+  "choices": [
+   {
+    "text": "A failure, because the page is broken",
+    "correct": false,
+    "why": "It fails, as declared, so it is counted as a pass: the annotation accepts any failure."
+   },
+   {
+    "text": "A pass: it failed, as declared",
+    "correct": true,
+    "why": "Right. That is the weakness of the annotation: it cannot tell the known defect from a new one."
+   },
+   {
+    "text": "A skipped test",
+    "correct": false,
+    "why": "Nothing skips it; it runs and fails at its first step."
+   },
+   {
+    "text": "An error that names the annotation as wrong",
+    "correct": false,
+    "why": "Playwright only objects to the annotation when the test passes."
+   }
+  ]
+ },
+ {
+  "id": "ex-ga91c0ze",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A filter page reloads a table each time a checkbox is ticked, and sets `aria-busy` on the table while it waits. A test ticks three boxes quickly. What should it wait for before checking the rows?",
+  "choices": [
+   {
+    "text": "The response to the third request",
+    "correct": false,
+    "why": "The first two answers may still arrive after it and replace the table, as `p` did."
+   },
+   {
+    "text": "Two seconds, to be safe",
+    "correct": false,
+    "why": "A guess at the speed of the server; it fails the day the server is slower than the guess."
+   },
+   {
+    "text": "The table's `aria-busy` going back to `false`",
+    "correct": true,
+    "why": "Right. It is false only when no answer is outstanding, so the rows are final."
+   },
+   {
+    "text": "The table to have at least one row",
+    "correct": false,
+    "why": "A row from an early answer satisfies it, and the table can still change."
+   }
+  ]
+ },
+ {
+  "id": "ex-0tk7jp9r",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The Playwright method that types one key at a time, so the page sees one `input` event per key, is ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "pressSequentially",
+     "pressSequentially()"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-2n4q0sxm",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A developer answers your report with \"works for me\". Which piece of evidence answers that best?",
+  "choices": [
+   {
+    "text": "A screenshot of the list with three fruit",
+    "correct": false,
+    "why": "It shows the result but not how to reach it; the developer will type slowly and see Papaya."
+   },
+   {
+    "text": "The output of `race.mjs` and the failing test",
+    "correct": true,
+    "why": "Right. Both reproduce it at a robot's speed every time, and the log shows the answers arriving in reverse."
+   },
+   {
+    "text": "A note asking them to type faster",
+    "correct": false,
+    "why": "It points the right way and proves nothing; a person cannot type at a robot's speed on demand."
+   },
+   {
+    "text": "A second run of the `fill` test",
+    "correct": false,
+    "why": "That test passes: one request, no race, nothing to show."
+   }
+  ]
+ }
+]

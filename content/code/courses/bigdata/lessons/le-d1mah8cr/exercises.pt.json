@@ -1,0 +1,364 @@
+{
+  "ex-2cg9m0gc": {
+    "prompt": "O que guardar uma tabela coluna a coluna barateia? Escolha todos que se aplicam.",
+    "hint": "Pense numa consulta que cita 3 colunas de 40.",
+    "choices": [
+      {
+        "text": "Ler uma linha inteira",
+        "why": "Isso passa pelo trecho de cada coluna."
+      },
+      {
+        "text": "Ler poucas colunas de uma tabela larga",
+        "why": "Sim. As outras colunas não são tocadas."
+      },
+      {
+        "text": "Acrescentar uma linha por vez",
+        "why": "Isso significa reescrever o arquivo."
+      },
+      {
+        "text": "Comprimir os dados",
+        "why": "Sim. Valores de uma coluna se parecem."
+      }
+    ]
+  },
+  "ex-nz261bn3": {
+    "prompt": "Ordene as partes de um arquivo Parquet da maior para a menor.",
+    "hint": "Uma página é a unidade que é comprimida.",
+    "items": [
+      "Arquivo",
+      "Row group",
+      "Column chunk",
+      "Página"
+    ]
+  },
+  "ex-nggt66n6": {
+    "prompt": "Por que um leitor de Parquet abre o rodapé antes de qualquer outra coisa?",
+    "hint": "O que o rodapé registra para cada column chunk?",
+    "choices": [
+      {
+        "text": "O rodapé guarda os dados do primeiro row group",
+        "why": "Ele só guarda metadados."
+      },
+      {
+        "text": "Ele contém a chave de decriptação",
+        "why": "Nada aqui é criptografado."
+      },
+      {
+        "text": "O arquivo é comprimido de trás para a frente",
+        "why": "As páginas são comprimidas uma a uma."
+      },
+      {
+        "text": "Ele diz onde está cada chunk e que valores guarda",
+        "why": "Isso. A partir dele o leitor decide o que ler."
+      }
+    ]
+  },
+  "ex-mwdwtf6b": {
+    "prompt": "No arquivo da camada silver, por que `kind` ocupou 16 KiB e `ts` 532?",
+    "hint": "Quantos valores diferentes cada um tem?",
+    "choices": [
+      {
+        "text": "Textos são guardados de forma mais compacta que timestamps em todo formato",
+        "why": "`visitor_id` é texto e ocupou 157 KiB."
+      },
+      {
+        "text": "`ts` é comprimido com um codec mais fraco que `kind`",
+        "why": "Os dois eram Snappy."
+      },
+      {
+        "text": "`kind` tem quatro valores; `ts` muda em toda linha",
+        "why": "Isso. Um dicionário encolhe o primeiro e não ajuda o segundo."
+      },
+      {
+        "text": "`ts` é guardado duas vezes, uma por row group",
+        "why": "Aquele arquivo tinha um row group."
+      }
+    ]
+  },
+  "ex-8wcxhh2c": {
+    "prompt": "Quais mudanças levaram janeiro de 33,0 MiB para 7,2? Escolha todas que se aplicam.",
+    "hint": "Três mudanças, todas feitas na escrita.",
+    "choices": [
+      {
+        "text": "Páginas da versão 2",
+        "why": "Sim: de 14,4 para 7,2."
+      },
+      {
+        "text": "Ordenar as linhas por livro",
+        "why": "Isso deixou os arquivos maiores."
+      },
+      {
+        "text": "zstd em vez de Snappy",
+        "why": "Sim: de 33,0 para 19,6."
+      },
+      {
+        "text": "Timestamps como `TIMESTAMP_MICROS`",
+        "why": "Sim: de 19,6 para 14,4."
+      }
+    ]
+  },
+  "ex-719wkazb": {
+    "prompt": "Por que o CSV com gzip era menor que o Parquet padrão do Spark?",
+    "hint": "Compare os codecs, não os formatos.",
+    "choices": [
+      {
+        "text": "O Parquet guarda cada valor duas vezes, uma no rodapé",
+        "why": "O rodapé guarda tamanhos e intervalos, não valores."
+      },
+      {
+        "text": "O Snappy troca tamanho por velocidade; o gzip é mais forte",
+        "why": "Isso. O Parquet com gzip ficou perto do CSV."
+      },
+      {
+        "text": "Um arquivo colunar não pode ser comprimido",
+        "why": "Ele é comprimido página a página."
+      },
+      {
+        "text": "Arquivos CSV não têm linha de cabeçalho",
+        "why": "Estes têm uma, e é minúscula."
+      }
+    ]
+  },
+  "ex-kskv09gx": {
+    "prompt": "Por que os timestamps só encolheram quando gravados como `TIMESTAMP_MICROS` e com páginas da versão 2?",
+    "hint": "Que tipos o delta binary packing aceita?",
+    "choices": [
+      {
+        "text": "O zstd só comprime inteiros",
+        "why": "Um codec só vê bytes."
+      },
+      {
+        "text": "Páginas da versão 1 não guardam timestamps",
+        "why": "As páginas v1 da camada silver os guardavam."
+      },
+      {
+        "text": "Timestamps `INT96` perdem o fuso horário",
+        "why": "O problema era o tamanho, não a correção."
+      },
+      {
+        "text": "A codificação delta precisa de inteiros, e vem com a v2",
+        "why": "Isso. `INT96` não é um tipo inteiro que ela aceita."
+      }
+    ]
+  },
+  "ex-f45151rw": {
+    "prompt": "Ligue cada codificação ao que ela guarda.",
+    "hint": "Uma delas guarda diferenças.",
+    "pairs": [
+      {
+        "left": "`DELTA_BINARY_PACKED`",
+        "right": "O primeiro valor, depois cada diferença para o anterior"
+      },
+      {
+        "left": "`RLE_DICTIONARY`",
+        "right": "Cada valor distinto uma vez, e um número pequeno por linha"
+      },
+      {
+        "left": "`PLAIN`",
+        "right": "Os valores um depois do outro"
+      }
+    ],
+    "right_distractors": [
+      "Os valores ordenados, com os números das linhas"
+    ]
+  },
+  "ex-0v6j89b7": {
+    "prompt": "Uma coluna de 65.754 timestamps ocupa 164,3 KiB depois da codificação delta e antes da compressão. Cerca de quantos bits por linha? (1 KiB = 8.192 bits)",
+    "hint": "164,3 × 8.192 ÷ 65.754."
+  },
+  "ex-77n8rq8c": {
+    "prompt": "Por que a camada silver não conseguiu pular nenhum row group para `book_id >= 2900`?",
+    "hint": "Que intervalo o rodapé de cada dia dá para `book_id`?",
+    "choices": [
+      {
+        "text": "O Parquet não consegue pular row groups numa coluna inteira",
+        "why": "A cópia ordenada os pulou na mesma coluna."
+      },
+      {
+        "text": "O filtro foi aplicado por uma função Python",
+        "why": "Era uma comparação simples de coluna."
+      },
+      {
+        "text": "Todo row group ia do livro 1 ao 3000",
+        "why": "Isso. Nenhum intervalo descartava o filtro."
+      },
+      {
+        "text": "Os arquivos eram comprimidos com Snappy",
+        "why": "As estatísticas não dependem do codec."
+      }
+    ]
+  },
+  "ex-npm9pwjd": {
+    "prompt": "Com a cópia ordenada, quantos milhões de linhas a leitura repassou para os livros raros? Arredonde para um inteiro.",
+    "hint": "Contra 24 da camada silver."
+  },
+  "ex-yb13v1q1": {
+    "prompt": "As linhas lidas caíram 24 vezes, mas o tempo só de 5,4 para 5,1 segundos. Por quê?",
+    "hint": "O que as duas leituras ainda tiveram de fazer para cada arquivo?",
+    "choices": [
+      {
+        "text": "As duas ainda abriram 365 arquivos e leram os rodapés",
+        "why": "Isso. A ordenação não mexe nesse custo."
+      },
+      {
+        "text": "Row groups pulados são lidos mesmo assim e descartados",
+        "why": "Pulado quer dizer não lido."
+      },
+      {
+        "text": "O cluster guardou a camada silver em cache no meio",
+        "why": "Nada foi guardado em cache."
+      },
+      {
+        "text": "A cópia ordenada foi lida sem as estatísticas",
+        "why": "Ela as usou para pular row groups."
+      }
+    ]
+  },
+  "ex-ktvrbm35": {
+    "prompt": "Na cópia ordenada com quinze row groups, por que `visitor_id` quase triplicou?",
+    "hint": "Onde fica um dicionário?",
+    "choices": [
+      {
+        "text": "Ordenar por livro duplicou os visitantes",
+        "why": "As linhas são as mesmas."
+      },
+      {
+        "text": "Os ids de visitante perderam a codificação por dicionário de vez",
+        "why": "O rodapé ainda lista um dicionário."
+      },
+      {
+        "text": "O codec foi trocado para aquela coluna",
+        "why": "Toda coluna era Snappy."
+      },
+      {
+        "text": "Cada row group guarda o seu próprio dicionário",
+        "why": "Isso. Um visitante em dez row groups é escrito dez vezes."
+      }
+    ]
+  },
+  "ex-q4c46qjr": {
+    "prompt": "Por qual coluna uma tabela costuma ser ordenada dentro das partições?",
+    "hint": "Quais perguntas devem ficar rápidas?",
+    "choices": [
+      {
+        "text": "A maior coluna em disco",
+        "why": "Ordenar por ela pode encolhê-la, e não ajudar consulta nenhuma."
+      },
+      {
+        "text": "A que a maioria das consultas filtra",
+        "why": "Isso, a menos que já seja a coluna de partição."
+      },
+      {
+        "text": "A primeira coluna do esquema",
+        "why": "A posição não significa nada para um leitor."
+      },
+      {
+        "text": "A que tem a maior quantidade de valores distintos",
+        "why": "Isso fala dos dados, não das perguntas."
+      }
+    ]
+  },
+  "ex-6tr1bgck": {
+    "prompt": "Onde o Parquet tem row groups, o ORC tem ___.",
+    "hint": "Como as faixas de uma bandeira, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "stripes",
+          "stripe"
+        ]
+      }
+    ]
+  },
+  "ex-ssf9qng1": {
+    "prompt": "O lake de uma equipe é lido pelo Spark, pelo DuckDB e por um warehouse na nuvem, pelos formatos de tabela da aula 11. Qual formato de arquivo serve?",
+    "hint": "Qual é o padrão dessas ferramentas?",
+    "choices": [
+      {
+        "text": "Avro",
+        "why": "O Avro guarda linhas, não colunas."
+      },
+      {
+        "text": "ORC, porque saiu menor aqui",
+        "why": "Os bytes raramente decidem; o resto do sistema decide."
+      },
+      {
+        "text": "Parquet",
+        "why": "Isso. É o padrão delas e dos formatos de tabela."
+      },
+      {
+        "text": "CSV com gzip",
+        "why": "CSV é para chegar, não para ficar."
+      }
+    ]
+  },
+  "ex-eg1j68zb": {
+    "prompt": "Quando um bloom filter numa coluna compensa?",
+    "hint": "O que ele responde que mínimo e máximo não respondem?",
+    "choices": [
+      {
+        "text": "Em filtros de intervalo numa coluna ordenada",
+        "why": "Mínimo e máximo já servem para esses."
+      },
+      {
+        "text": "Em filtros de igualdade numa coluna cujos intervalos não dizem nada",
+        "why": "Isso, como um id de visitante."
+      },
+      {
+        "text": "Em colunas com quatro valores distintos",
+        "why": "Todo row group teria todos."
+      },
+      {
+        "text": "Em toda coluna, sem custo",
+        "why": "Ele custa espaço em todo arquivo."
+      }
+    ]
+  },
+  "ex-vrhd90nt": {
+    "prompt": "Ligue cada problema à mudança no jeito de gravar os dados.",
+    "hint": "Cada um veio de uma seção desta aula.",
+    "pairs": [
+      {
+        "left": "Arquivos com o dobro do tamanho do CSV com gzip",
+        "right": "Um codec mais forte que o Snappy"
+      },
+      {
+        "left": "Uma coluna de timestamp que não encolhe",
+        "right": "`TIMESTAMP_MICROS` e páginas da versão 2"
+      },
+      {
+        "left": "Toda consulta filtra por uma coluna e não pula nada",
+        "right": "Ordenar por essa coluna dentro das partições"
+      },
+      {
+        "left": "Buscas por igualdade num id aleatório leem todo row group",
+        "right": "Um bloom filter nessa coluna"
+      }
+    ],
+    "right_distractors": [
+      "Mais partições de shuffle"
+    ]
+  },
+  "ex-emk7j5cv": {
+    "prompt": "Uma tabela é gravada uma vez por noite e lida por cinquenta relatórios por dia. Onde deve ir o esforço?",
+    "hint": "Qual lado acontece mais?",
+    "choices": [
+      {
+        "text": "Em lugar nenhum, porque o codec decide tudo",
+        "why": "Codec, tipos, formato de página e ordenação, tudo importou."
+      },
+      {
+        "text": "Em cada relatório, filtrando depois de ler tudo",
+        "why": "Cinquenta vezes o trabalho que a escrita poderia ter economizado."
+      },
+      {
+        "text": "Em guardar o CSV cru em cache na memória",
+        "why": "Aula 9: isso economiza só uma leitura."
+      },
+      {
+        "text": "Na escrita, para baratear cada leitura",
+        "why": "Isso. Paga-se uma vez e economiza-se cinquenta."
+      }
+    ]
+  }
+}

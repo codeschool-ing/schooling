@@ -1,0 +1,945 @@
+{
+  "ex-7n2w4tkn": {
+    "prompt": "Qual é o risco de escrever as mesmas linhas nos arquivos de dois ambientes?",
+    "choices": [
+      {
+        "text": "Os arquivos ficam grandes demais para o Git comparar",
+        "why": "O Git compara arquivos muito maiores sem problema."
+      },
+      {
+        "text": "O Flux aplica as linhas comuns duas vezes",
+        "why": "Cada arquivo é aplicado pela sua Kustomization, uma vez."
+      },
+      {
+        "text": "O Kubernetes recusa objetos idênticos em dois namespaces",
+        "why": "Objetos idênticos em namespaces diferentes são normais."
+      },
+      {
+        "text": "Uma cópia muda e a outra não",
+        "why": "Isso. Toda linha escrita duas vezes é uma linha que um dia vai ser mudada uma vez só."
+      }
+    ]
+  },
+  "ex-2v99gfr4": {
+    "prompt": "Quais destes são do Helm, e não do Kustomize? Marque todas que se aplicam.",
+    "choices": [
+      {
+        "text": "Todo arquivo é YAML válido sozinho",
+        "why": "A promessa do Kustomize; um template só é válido depois de gerado."
+      },
+      {
+        "text": "Um chart preenchido com valores",
+        "why": "Isso. Templates com buracos, preenchidos a cada instalação."
+      },
+      {
+        "text": "Um release com histórico",
+        "why": "Isso. O Helm acompanha cada instalação e pode desfazê-la."
+      },
+      {
+        "text": "Uma base e seus overlays",
+        "why": "Esse é o vocabulário do Kustomize."
+      }
+    ]
+  },
+  "ex-4yv6zhqp": {
+    "prompt": "O que a base diz sobre o staging ou a produção?",
+    "choices": [
+      {
+        "text": "Os valores da produção, que o staging sobrescreve",
+        "why": "A base não pertence a nenhum dos dois."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Nem namespace, nem tag, nem mensagem: é o que todo ambiente compartilha."
+      },
+      {
+        "text": "Os namespaces deles, para os overlays os acharem",
+        "why": "Cada overlay define o próprio namespace."
+      },
+      {
+        "text": "Qual dos dois é promovido primeiro",
+        "why": "A ordem de promoção é assunto de pull requests, não da base."
+      }
+    ]
+  },
+  "ex-xx5byy2c": {
+    "prompt": "Por que rodar kubectl diff -k antes do merge da conversão para o Kustomize?",
+    "choices": [
+      {
+        "text": "O diff do PR esconde o efeito",
+        "why": "Isso. O diff gerado mostra o que vai mudar no cluster: um ConfigMap e um rollout."
+      },
+      {
+        "text": "O kubectl diff instala o overlay como ensaio",
+        "why": "Ele não muda nada no cluster."
+      },
+      {
+        "text": "O Flux recusa overlays que nunca passaram por diff",
+        "why": "O Flux aplica o que o Git diz; não guarda registro de diffs."
+      },
+      {
+        "text": "O Gitea exige isso para arquivos em apps/",
+        "why": "O Gitea exige o status validate, mais nada."
+      }
+    ]
+  },
+  "ex-5ktx15kd": {
+    "prompt": "Por que o novo validate.sh grava a montagem num arquivo em vez de mandá-la ao kubeconform por um pipe?",
+    "choices": [
+      {
+        "text": "O kubectl kustomize só escreve em arquivos",
+        "why": "Ele escreve na saída padrão por padrão."
+      },
+      {
+        "text": "Para uma montagem que falha fazer a checagem falhar",
+        "why": "Isso. Um pipe entregaria nada ao kubeconform, e nada é válido."
+      },
+      {
+        "text": "O kubeconform não lê de um pipe",
+        "why": "Ele lê a entrada padrão; o problema é uma entrada vazia."
+      },
+      {
+        "text": "O arquivo é guardado como registro para a auditoria",
+        "why": "Ele é apagado com a pasta de trabalho."
+      }
+    ]
+  },
+  "ex-r0njjz6g": {
+    "prompt": "O validate.sh passa -skip ___ ao kubeconform, porque o schema desse tipo é do Flux e não do Kubernetes.",
+    "blanks": [
+      {
+        "accept": [
+          "HelmRelease"
+        ]
+      }
+    ]
+  },
+  "ex-wzk3gcg9": {
+    "prompt": "Um overlay precisa de outro número de réplicas. O que ele deve usar?",
+    "choices": [
+      {
+        "text": "Um JSON patch em /spec/replicas",
+        "why": "Funciona, e diz a mecânica no lugar da intenção."
+      },
+      {
+        "text": "Uma segunda base com três réplicas",
+        "why": "Uma segunda base é a duplicação que o Kustomize existe para tirar."
+      },
+      {
+        "text": "Um strategic merge patch com o Deployment inteiro",
+        "why": "Isso copia a base de volta para o overlay."
+      },
+      {
+        "text": "O campo replicas",
+        "why": "Isso. Um campo que o Kustomize conhece diz a intenção numa linha."
+      }
+    ]
+  },
+  "ex-t642n11j": {
+    "prompt": "Por que /spec/ports/0/nodePort é frágil?",
+    "choices": [
+      {
+        "text": "Ele casa por uma posição numa lista",
+        "why": "Isso. Uma porta acrescentada no começo levaria o patch para a porta errada, sem erro."
+      },
+      {
+        "text": "JSON patches não acrescentam campos",
+        "why": "add é uma das operações que ele usa."
+      },
+      {
+        "text": "nodePort não é permitido numa base",
+        "why": "A base o deixa de fora; o overlay o acrescenta."
+      },
+      {
+        "text": "O Kustomize aplica JSON patches antes da base",
+        "why": "Os patches se aplicam à base montada."
+      }
+    ]
+  },
+  "ex-dpqhq7rg": {
+    "prompt": "Como o strategic merge patch da produção põe os recursos no container certo?",
+    "choices": [
+      {
+        "text": "Por um seletor target no patch",
+        "why": "Este patch não tem target; ele cita o próprio objeto."
+      },
+      {
+        "text": "Pelo nome da imagem",
+        "why": "Containers se mesclam pelo nome, não pela imagem."
+      },
+      {
+        "text": "Pela posição do container na lista",
+        "why": "Assim funciona um JSON patch, não um strategic merge."
+      },
+      {
+        "text": "Os containers casam pelo nome",
+        "why": "Isso. Os recursos caem no bulletin e nada mais se mexe."
+      }
+    ]
+  },
+  "ex-667fzmre": {
+    "prompt": "Por que mudar um literal de um ConfigMap gerado troca os pods?",
+    "choices": [
+      {
+        "text": "Um hash novo o renomeia, e isso muda o template do pod",
+        "why": "Isso. Ninguém precisa lembrar de reiniciar nada."
+      },
+      {
+        "text": "O Kubernetes reinicia pods quando qualquer ConfigMap muda",
+        "why": "Não reinicia, e essa é a armadilha que o gerador fecha."
+      },
+      {
+        "text": "O Flux reinicia todo pod a cada apply",
+        "why": "O Flux aplica; o Kubernetes só troca um template mudado."
+      },
+      {
+        "text": "O kubelet observa variáveis de ambiente",
+        "why": "Variáveis de ambiente são lidas uma vez, ao iniciar."
+      }
+    ]
+  },
+  "ex-s4e0800v": {
+    "prompt": "O que aconteceu com o ConfigMap antigo do staging depois do merge da mensagem nova?",
+    "choices": [
+      {
+        "text": "Foi mantido, para um rollback",
+        "why": "O Git guarda o literal antigo; o cluster não mantém o objeto."
+      },
+      {
+        "text": "Ficou órfão para alguém apagar",
+        "why": "A poda do Flux o tira na mesma passada."
+      },
+      {
+        "text": "Foi renomeado para o hash novo",
+        "why": "Um objeto novo foi criado com o nome novo."
+      },
+      {
+        "text": "Foi podado",
+        "why": "Isso. Nenhum arquivo o descreve mais."
+      }
+    ]
+  },
+  "ex-1ebvnxjv": {
+    "prompt": "Por que a aula alerta contra literais de secretGenerator?",
+    "choices": [
+      {
+        "text": "O Flux se recusa a aplicar Secrets",
+        "why": "O Flux aplica Secrets como qualquer objeto."
+      },
+      {
+        "text": "Secrets não podem ter sufixo de hash",
+        "why": "Ganham um exatamente como os ConfigMaps."
+      },
+      {
+        "text": "Ficariam no Git em texto puro",
+        "why": "Isso. As aulas 9 e 10 trazem segredos por outros caminhos."
+      },
+      {
+        "text": "O secretGenerator só funciona no Helm",
+        "why": "É um gerador do Kustomize."
+      }
+    ]
+  },
+  "ex-wwan1zer": {
+    "prompt": "O que o helm template faz?",
+    "choices": [
+      {
+        "text": "Cria o esqueleto de um chart novo",
+        "why": "Isso é o helm create."
+      },
+      {
+        "text": "Instala o chart como um release",
+        "why": "Isso é o helm install, ou o helm controller do Flux."
+      },
+      {
+        "text": "Gera o chart, offline, sem tocar no cluster",
+        "why": "Isso. É o que quem revisa lê e o que uma checagem valida."
+      },
+      {
+        "text": "Envia o chart para um registry",
+        "why": "Isso é o helm push, assunto da aula 7."
+      }
+    ]
+  },
+  "ex-q9ypb0ww": {
+    "prompt": "Por que o kubeconform não consegue conferir charts/bulletin/templates diretamente?",
+    "choices": [
+      {
+        "text": "O kubeconform só lê JSON",
+        "why": "Ele lê YAML; os templates é que ainda não são YAML válido."
+      },
+      {
+        "text": "Os templates usam uma versão do Kubernetes que o kubeconform não tem",
+        "why": "A versão não é o obstáculo."
+      },
+      {
+        "text": "Templates não são YAML válido até serem gerados",
+        "why": "Isso. Gere com helm template, e valide a saída."
+      },
+      {
+        "text": "Charts trazem schemas próprios que substituem os do Kubernetes",
+        "why": "Um chart pode trazer um schema de valores, que é outra coisa."
+      }
+    ]
+  },
+  "ex-px2wwkk4": {
+    "prompt": "Dentro de um template, .Release.___ é o nome que a instalação recebeu.",
+    "blanks": [
+      {
+        "accept": [
+          "Name"
+        ]
+      }
+    ]
+  },
+  "ex-xkjyneg7": {
+    "prompt": "Por que o helm list -n preview mostra o release que o Flux instalou?",
+    "choices": [
+      {
+        "text": "O Argo CD o registrou no Helm",
+        "why": "O Argo CD não está mais neste cluster, e não cria releases."
+      },
+      {
+        "text": "O helm list lê os objetos HelmRelease do Flux",
+        "why": "Ele lê os Secrets de release do Helm."
+      },
+      {
+        "text": "O Flux copia o estado dele para o Helm a cada sincronização",
+        "why": "Não há o que copiar: ele usa o código e o armazenamento do próprio Helm."
+      },
+      {
+        "text": "O Flux o instala como um release comum do Helm",
+        "why": "Isso. Histórico e rollback funcionam como em qualquer release."
+      }
+    ]
+  },
+  "ex-arzk6r0w": {
+    "prompt": "Onde o Helm guarda o registro de um release?",
+    "choices": [
+      {
+        "text": "No artefato do source controller do Flux",
+        "why": "O artefato guarda os arquivos do chart, não releases."
+      },
+      {
+        "text": "Num Secret no namespace do release",
+        "why": "Isso. É o que o helm list e o helm history leem."
+      },
+      {
+        "text": "Num arquivo na sua máquina",
+        "why": "Nada local é preciso; qualquer máquina com acesso o vê."
+      },
+      {
+        "text": "Na pasta do chart no fleet",
+        "why": "O chart é a fonte; o release é estado no cluster."
+      }
+    ]
+  },
+  "ex-sj7e9cee": {
+    "prompt": "Num incidente num chart gerenciado pelo Argo CD, por que o helm rollback pode falhar?",
+    "choices": [
+      {
+        "text": "Charts instalados pelo Argo CD são só de leitura",
+        "why": "São objetos comuns; só não há release."
+      },
+      {
+        "text": "O Argo CD gera charts e não faz release do Helm",
+        "why": "Isso. Não há release para o helm voltar."
+      },
+      {
+        "text": "O helm rollback precisa do Flux instalado",
+        "why": "O Helm não precisa do Flux."
+      },
+      {
+        "text": "O Argo CD cifra os Secrets de release",
+        "why": "Não há Secrets de release."
+      }
+    ]
+  },
+  "ex-ydsm70vp": {
+    "prompt": "Ligue cada caso à ferramenta que a aula sugere.",
+    "pairs": [
+      {
+        "left": "O serviço do seu time, dois ambientes",
+        "right": "Kustomize"
+      },
+      {
+        "left": "Um banco de dados que outra pessoa empacotou",
+        "right": "Helm"
+      },
+      {
+        "left": "Uma mudança para a qual um chart de terceiros não oferece valor",
+        "right": "Kustomize depois do Helm"
+      }
+    ],
+    "right_distractors": [
+      "Nenhuma: copiar os manifestos"
+    ]
+  },
+  "ex-g73tazvg": {
+    "prompt": "Um time gera os manifestos no CI e commita a saída para o agente aplicar. O que ganha e o que paga?",
+    "choices": [
+      {
+        "text": "Dispensa quem revisa; mais armazenamento",
+        "why": "O ponto é facilitar a revisão, não dispensá-la."
+      },
+      {
+        "text": "Segredos cifrados; um pipeline mais longo",
+        "why": "Gerar não tem nada a ver com segredos."
+      },
+      {
+        "text": "Quem revisa lê os manifestos finais, e uma segunda cópia sai de sincronia",
+        "why": "Isso. Essa é a troca, e o padrão continua sendo gerar no agente."
+      },
+      {
+        "text": "Sincronizações mais rápidas; nenhum release do Helm",
+        "why": "Velocidade não é o ganho, e releases são outro assunto."
+      }
+    ]
+  },
+  "ex-w6amfpsa": {
+    "prompt": "O helm template rodou com --set message=\"Rendered, not installed.\" e a mensagem saiu Rendered. Por quê?",
+    "choices": [
+      {
+        "text": "As aspas estavam erradas",
+        "why": "O shell passou a string inteira; o Helm é que a dividiu."
+      },
+      {
+        "text": "O --set lê uma vírgula como começo da próxima chave",
+        "why": "Isso. Escape-a como \\, ou use um arquivo de valores."
+      },
+      {
+        "text": "O chart corta toda mensagem depois da primeira palavra",
+        "why": "O chart imprime o valor que receber."
+      },
+      {
+        "text": "O helm template descarta pontuação",
+        "why": "Nada no Helm descarta pontuação."
+      }
+    ]
+  },
+  "ex-3n1gnfkk": {
+    "prompt": "O alvo de um patch nomeia, por erro de digitação, um Service que não existe. O que o kubectl kustomize faz?",
+    "choices": [
+      {
+        "text": "Recusa a montagem inteira",
+        "why": "Seria mais seguro, e não foi o que aconteceu."
+      },
+      {
+        "text": "Monta mesmo assim, com o patch aplicado a nada",
+        "why": "Isso. O Service saiu sem o nodePort, e nada reclamou."
+      },
+      {
+        "text": "Cria o Service que falta",
+        "why": "Patches mudam objetos; nunca criam o alvo."
+      },
+      {
+        "text": "Aplica o patch ao primeiro Service que achar no lugar",
+        "why": "Ele casa por tipo e nome, e não achou nenhum."
+      }
+    ]
+  },
+  "ex-e5zj42hz": {
+    "prompt": "Que checagem teria pegado o patch que não casou com nada?",
+    "choices": [
+      {
+        "text": "kubeconform -strict",
+        "why": "A saída era um Service válido; passou."
+      },
+      {
+        "text": "A aprovação exigida no Gitea antes do merge",
+        "why": "Quem revisa poderia ver, mas nada garante que veria."
+      },
+      {
+        "text": "Uma afirmação sobre a saída montada",
+        "why": "Isso. Só uma checagem que sabe o que o staging deve conter consegue ver."
+      },
+      {
+        "text": "O kubectl kustomize devolvendo erro",
+        "why": "Ele não devolveu nenhum."
+      }
+    ]
+  },
+  "ex-zs0b8htc": {
+    "prompt": "O que o required num template de chart garante?",
+    "choices": [
+      {
+        "text": "Um valor padrão quando ninguém dá um",
+        "why": "O required não tem padrão; ele recusa."
+      },
+      {
+        "text": "Um erro cedo e legível",
+        "why": "Isso. Sem ele a imagem sairia como localhost:5001/bulletin: e falharia no cluster."
+      },
+      {
+        "text": "Um helm install mais rápido",
+        "why": "Não muda nada na velocidade."
+      },
+      {
+        "text": "Validação contra os schemas do Kubernetes",
+        "why": "Ele confere que um valor existe, não o schema."
+      }
+    ]
+  },
+  "ex-qhvbemh0": {
+    "prompt": "Ordene o que aconteceu com a mudança de mensagem do staging nesta aula.",
+    "items": [
+      "Um literal muda no overlay",
+      "O validate.sh monta todo overlay",
+      "O pull request entra",
+      "O Flux aplica um ConfigMap com hash novo",
+      "Os pods são trocados e o ConfigMap antigo é podado"
+    ],
+    "trap": "A montagem é conferida antes do merge, e o rollout segue o nome novo."
+  },
+  "ex-f1tqeer0": {
+    "prompt": "Um terceiro ambiente, qa, deve rodar o que o staging roda com uma réplica. Qual é a menor mudança correta?",
+    "choices": [
+      {
+        "text": "Copiar o overlay do staging e mudar só o namespace",
+        "why": "Isso deixa o qa com três réplicas, e copia o resto."
+      },
+      {
+        "text": "Um overlay novo sobre a mesma base, e um arquivo em clusters/lab/",
+        "why": "Isso. O overlay guarda as diferenças do qa e nada mais."
+      },
+      {
+        "text": "Acrescentar o qa como segundo namespace no overlay do staging",
+        "why": "Um overlay tem um namespace."
+      },
+      {
+        "text": "Uma base nova para o qa",
+        "why": "A base é o que todos os ambientes compartilham; o qa é mais um overlay."
+      }
+    ]
+  },
+  "ex-qfw5w65v": {
+    "prompt": "Qual arquivo de um overlay lista a base como recurso?",
+    "choices": [
+      {
+        "text": "namespace.yaml, ao lado dele",
+        "why": "Ele só nomeia o namespace."
+      },
+      {
+        "text": "kustomization.yaml",
+        "why": "Isso. O resources nomeia ../base."
+      },
+      {
+        "text": "deployment.yaml",
+        "why": "O Deployment mora na base."
+      },
+      {
+        "text": "Chart.yaml",
+        "why": "Esse é de um chart do Helm."
+      }
+    ]
+  },
+  "ex-y2ensw8r": {
+    "prompt": "Por que o kubectl diff usa --field-manager=kustomize-controller?",
+    "choices": [
+      {
+        "text": "Para deixar o kubectl escrever no cluster",
+        "why": "O diff nunca escreve."
+      },
+      {
+        "text": "Para comparar como o Flux aplica",
+        "why": "Isso. Senão o seu apply não mudaria nada que o Flux possui."
+      },
+      {
+        "text": "Porque o kustomize-controller precisa aprovar o diff",
+        "why": "Nada aprova um diff."
+      },
+      {
+        "text": "Para o diff rodar mais rápido",
+        "why": "Muda o dono, não a velocidade."
+      }
+    ]
+  },
+  "ex-v07and18": {
+    "prompt": "Por que /spec/ports/0/nodePort é um caminho frágil para um patch?",
+    "choices": [
+      {
+        "text": "nodePort é só leitura",
+        "why": "Ele pode ser definido."
+      },
+      {
+        "text": "Uma porta acrescentada na frente levaria o patch para ela",
+        "why": "Isso. Posição é uma ligação fraca."
+      },
+      {
+        "text": "JSON patches estão obsoletos",
+        "why": "Têm suporte completo."
+      },
+      {
+        "text": "Portas de um Service só mudam quando o Service inteiro é recriado",
+        "why": "Podem receber patch, como os overlays fazem."
+      }
+    ]
+  },
+  "ex-zmrjdf1g": {
+    "prompt": "Por que um ConfigMap lido na subida precisa do configMapGenerator para valer?",
+    "choices": [
+      {
+        "text": "O nome novo muda o template do pod",
+        "why": "Isso. Senão os pods ficam com os valores antigos."
+      },
+      {
+        "text": "O kubelet só monta nomes com hash",
+        "why": "Ele monta qualquer ConfigMap."
+      },
+      {
+        "text": "O Kubernetes apaga ConfigMaps comuns quando mudam",
+        "why": "Ele os atualiza no lugar."
+      },
+      {
+        "text": "O Flux ignora ConfigMaps sem hash",
+        "why": "Ele os aplica como qualquer coisa."
+      }
+    ]
+  },
+  "ex-814n8k6f": {
+    "prompt": "Que comando confere a estrutura de um chart sem cluster?",
+    "choices": [
+      {
+        "text": "helm history",
+        "why": "Ele mostra as revisões de um release."
+      },
+      {
+        "text": "helm list",
+        "why": "Ele lista releases num cluster."
+      },
+      {
+        "text": "helm install",
+        "why": "Ele instala num cluster."
+      },
+      {
+        "text": "helm lint",
+        "why": "Isso. A checagem para pôr no CI de um chart."
+      }
+    ]
+  },
+  "ex-9k8fkfxn": {
+    "prompt": "Num template, o que é o .Values?",
+    "choices": [
+      {
+        "text": "O values.yaml mais as sobrescritas",
+        "why": "Isso. As respostas da instalação vencem."
+      },
+      {
+        "text": "Só o values.yaml do chart",
+        "why": "As sobrescritas entram na junção."
+      },
+      {
+        "text": "Os metadados do Chart.yaml",
+        "why": "Isso é o .Chart."
+      },
+      {
+        "text": "Os campos do objeto vivo",
+        "why": "Templates nunca leem o cluster."
+      }
+    ]
+  },
+  "ex-ybab5es9": {
+    "prompt": "Por que saber qual ferramenta instalou um chart antes de digitar helm rollback num incidente?",
+    "choices": [
+      {
+        "text": "O helm rollback apaga o namespace",
+        "why": "Ele volta a uma revisão anterior."
+      },
+      {
+        "text": "O helm rollback precisa de aprovação do Gitea",
+        "why": "O Helm não sabe nada do Gitea."
+      },
+      {
+        "text": "Só o Argo CD guarda histórico de releases",
+        "why": "Os releases do Flux guardam o histórico do Helm."
+      },
+      {
+        "text": "Só o Flux faz releases de Helm reais",
+        "why": "Isso. O helm list não mostra nada dos do Argo CD."
+      }
+    ]
+  },
+  "ex-vy3w8ftg": {
+    "prompt": "Onde o Helm guarda um release que o Flux instalou?",
+    "choices": [
+      {
+        "text": "No repositório fleet",
+        "why": "O Git guarda o HelmRelease, não o registro do Helm."
+      },
+      {
+        "text": "No artefato que o source controller guarda do chart",
+        "why": "Ali está o chart, não o release."
+      },
+      {
+        "text": "Num arquivo do seu laptop",
+        "why": "Nada dele fica no seu laptop."
+      },
+      {
+        "text": "Num Secret no namespace do release",
+        "why": "Isso. Onde o helm list o acha."
+      }
+    ]
+  },
+  "ex-w6n52xfj": {
+    "prompt": "Um chart de terceiros não tem valor para uma mudança de que você precisa. O que a aula sugere?",
+    "choices": [
+      {
+        "text": "Fazer patch na saída do Helm com o Kustomize, depois de gerar",
+        "why": "Isso. Os postRenderers do Flux e o Argo CD suportam."
+      },
+      {
+        "text": "Gerar uma vez e parar de usar o Helm",
+        "why": "Isso joga fora o que o chart dá."
+      },
+      {
+        "text": "Fazer fork do chart e manter uma cópia sua para sempre",
+        "why": "É um custo alto para uma mudança."
+      },
+      {
+        "text": "Editar os objetos vivos à mão",
+        "why": "O agente desfaria."
+      }
+    ]
+  },
+  "ex-ggq3zgm4": {
+    "prompt": "O que uma montagem que dá certo prova?",
+    "choices": [
+      {
+        "text": "Que o cluster vai aceitar todos os objetos",
+        "why": "Admissão e cotas decidem isso depois."
+      },
+      {
+        "text": "Que todo patch casou",
+        "why": "Um patch pode casar com nada em silêncio."
+      },
+      {
+        "text": "Que os pods vão ficar prontos",
+        "why": "Prontidão se decide no cluster."
+      },
+      {
+        "text": "Que os arquivos estão bem formados",
+        "why": "Isso. Não que dizem o que você quis."
+      }
+    ]
+  },
+  "ex-ejc5mgjf": {
+    "prompt": "Os arquivos do staging e da produção tinham 46 linhas cada. Quantas diferiam?",
+    "choices": [
+      {
+        "text": "5",
+        "why": "Isso. As outras 41 estavam escritas duas vezes."
+      },
+      {
+        "text": "41",
+        "why": "Essas eram as iguais."
+      },
+      {
+        "text": "46",
+        "why": "A maior parte era compartilhada."
+      },
+      {
+        "text": "92",
+        "why": "Esse é o total dos dois arquivos."
+      }
+    ]
+  },
+  "ex-jgk182em": {
+    "prompt": "O que o Helm acompanha e o Kustomize não?",
+    "choices": [
+      {
+        "text": "Os patches",
+        "why": "Patches são do Kustomize."
+      },
+      {
+        "text": "A tag da imagem",
+        "why": "Os dois conseguem defini-la."
+      },
+      {
+        "text": "Os arquivos da base",
+        "why": "A base é do Kustomize."
+      },
+      {
+        "text": "Cada instalação, como um release com histórico",
+        "why": "Isso. O Kustomize só gera YAML."
+      }
+    ]
+  },
+  "ex-68kf131w": {
+    "prompt": "O que a base diz sobre algum ambiente?",
+    "choices": [
+      {
+        "text": "A mensagem dele",
+        "why": "Cada overlay a gera."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Nem namespace, nem tag, nem mensagem."
+      },
+      {
+        "text": "O namespace dele",
+        "why": "Cada overlay o define."
+      },
+      {
+        "text": "A tag de imagem dele",
+        "why": "Cada overlay a define."
+      }
+    ]
+  },
+  "ex-69pgrkd3": {
+    "prompt": "O kubectl diff mostra os labels kustomize.toolkit.fluxcd.io do Flux como removidos. Por que isso é inofensivo?",
+    "choices": [
+      {
+        "text": "Labels nunca são aplicados",
+        "why": "São."
+      },
+      {
+        "text": "O Flux os põe de volta ao aplicar",
+        "why": "Isso. São a contabilidade dele."
+      },
+      {
+        "text": "A base os apaga",
+        "why": "A base nunca os teve."
+      },
+      {
+        "text": "O kubectl diff ignora labels",
+        "why": "Ele os mostrou."
+      }
+    ]
+  },
+  "ex-7sb21yh7": {
+    "prompt": "Levar a mensagem de env para envFrom muda o template do pod. O que acontece?",
+    "choices": [
+      {
+        "text": "O namespace é recriado",
+        "why": "Nada mexe nele."
+      },
+      {
+        "text": "A imagem é reconstruída",
+        "why": "A imagem é a mesma."
+      },
+      {
+        "text": "Nada até um restart",
+        "why": "A mudança no template é o restart."
+      },
+      {
+        "text": "Os pods são trocados uma vez",
+        "why": "Isso. Template novo, pods novos."
+      }
+    ]
+  },
+  "ex-ba62d1v0": {
+    "prompt": "Por que o validate.sh grava o build num arquivo em vez de passá-lo por pipe ao kubeconform?",
+    "choices": [
+      {
+        "text": "O kubeconform não lê pipe",
+        "why": "Lê."
+      },
+      {
+        "text": "Para guardar a saída para o Gitea",
+        "why": "O status leva uma descrição, não o arquivo."
+      },
+      {
+        "text": "Para um build que falha falhar a checagem",
+        "why": "Isso. Um pipe entregaria nada ao kubeconform."
+      },
+      {
+        "text": "Pipes são mais lentos",
+        "why": "A velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-ys6gqvw6": {
+    "prompt": "O nodePort é ajustado em /spec/ports/0/nodePort. O que o quebraria sem aviso?",
+    "choices": [
+      {
+        "text": "Uma segunda porta acrescentada na frente",
+        "why": "Isso. A posição 0 seria outra porta."
+      },
+      {
+        "text": "Um novo número de réplicas",
+        "why": "Réplicas ficam em outro lugar."
+      },
+      {
+        "text": "Uma nova tag de imagem",
+        "why": "Tags ficam em outro lugar."
+      },
+      {
+        "text": "Renomear o namespace",
+        "why": "O caminho não o menciona."
+      }
+    ]
+  },
+  "ex-xya1ssgq": {
+    "prompt": "Os limites de recursos da produção entram com que tipo de patch?",
+    "choices": [
+      {
+        "text": "Um JSON patch",
+        "why": "Esse é o da porta."
+      },
+      {
+        "text": "O campo images",
+        "why": "Esse define uma tag."
+      },
+      {
+        "text": "O campo replicas",
+        "why": "Esse define uma contagem."
+      },
+      {
+        "text": "Um strategic merge patch",
+        "why": "Isso. Os contêineres são casados pelo nome."
+      }
+    ]
+  },
+  "ex-sk134w7g": {
+    "prompt": "Depois do merge da mensagem nova, o que aconteceu com o ConfigMap antigo?",
+    "choices": [
+      {
+        "text": "Foi renomeado",
+        "why": "Um novo foi criado."
+      },
+      {
+        "text": "Fica até alguém apagar",
+        "why": "prune: true o remove."
+      },
+      {
+        "text": "Foi atualizado no lugar",
+        "why": "O conteúdo novo tem nome novo."
+      },
+      {
+        "text": "O Flux o removeu",
+        "why": "Isso. Nenhum arquivo o descreve mais."
+      }
+    ]
+  },
+  "ex-kzbm6ms2": {
+    "prompt": "Depois da troca de mensagem, o ConfigMap do staging se chamava bulletin-____.",
+    "blanks": [
+      {
+        "accept": [
+          "bgc7c2mm85"
+        ]
+      }
+    ]
+  },
+  "ex-hjq6m0fn": {
+    "prompt": "Por que a maior parte do software de terceiros chega como chart do Helm?",
+    "choices": [
+      {
+        "text": "Charts não podem ser alterados",
+        "why": "Os values os alteram."
+      },
+      {
+        "text": "O Kustomize não consegue instalá-lo",
+        "why": "O Kustomize aplica qualquer YAML."
+      },
+      {
+        "text": "O autor expõe opções como values",
+        "why": "Isso. Ninguém edita o YAML dele."
+      },
+      {
+        "text": "O Kubernetes exige charts",
+        "why": "Não exige."
+      }
+    ]
+  }
+}

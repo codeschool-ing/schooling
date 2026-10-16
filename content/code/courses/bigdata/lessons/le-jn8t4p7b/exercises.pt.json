@@ -1,0 +1,299 @@
+{
+  "ex-7xqmxgfy": {
+    "prompt": "Ligue cada erro do relatório ao que ele custou.",
+    "hint": "Cada um vem de uma aula anterior.",
+    "pairs": [
+      {
+        "left": "Ler CSV com gzip",
+        "right": "Interpretar cada linha de texto e cada coluna"
+      },
+      {
+        "left": "Uma função Python para o mês",
+        "right": "Uma ida a um worker Python para cada linha"
+      },
+      {
+        "left": "2.000 partições de shuffle fixas",
+        "right": "Milhares de tarefas lendo quase nada"
+      }
+    ],
+    "right_distractors": [
+      "Despejar cada linha em disco"
+    ]
+  },
+  "ex-v2mw017d": {
+    "prompt": "De onde o `history.py` tirou os estágios de um job cujo driver já tinha saído?",
+    "hint": "O servidor da aula 7.",
+    "choices": [
+      {
+        "text": "A página do master na porta 8080",
+        "why": "O master lista aplicações, não estágios."
+      },
+      {
+        "text": "Os executores, que guardam os seus estágios",
+        "why": "Eles não guardam registro."
+      },
+      {
+        "text": "O history server, pelo log de eventos",
+        "why": "Isso. O log foi gravado enquanto o job rodava."
+      },
+      {
+        "text": "Os rodapés do Parquet",
+        "why": "Rodapés descrevem arquivos, não jobs."
+      }
+    ]
+  },
+  "ex-zgyvycps": {
+    "prompt": "Um estágio levou 10 segundos de relógio e 30 segundos de tarefa. Em média, quantas tarefas rodaram ao mesmo tempo?",
+    "hint": "Divida o tempo de tarefa pelo de relógio."
+  },
+  "ex-0ywph2xr": {
+    "prompt": "Um estágio tem muito tempo de tarefa, pouca entrada, nenhum shuffle e nenhum spill. O que ele mais provavelmente está fazendo?",
+    "hint": "Nada nas colunas de bytes chama atenção.",
+    "choices": [
+      {
+        "text": "Esperando uma partição desbalanceada num join",
+        "why": "O desbalanceamento aparece num estágio que lê shuffle."
+      },
+      {
+        "text": "Ficando sem memória",
+        "why": "Isso apareceria como spill ou falha."
+      },
+      {
+        "text": "Gravando uma tabela de broadcast",
+        "why": "Um broadcast é pequeno e rápido."
+      },
+      {
+        "text": "Trabalho lento por linha, como uma função Python",
+        "why": "Isso. O tempo está nas linhas, não nos bytes."
+      }
+    ]
+  },
+  "ex-g54t4s9x": {
+    "prompt": "Qual correção sozinha economizou mais tempo neste laboratório?",
+    "hint": "Olhe a última coluna da tabela.",
+    "choices": [
+      {
+        "text": "Execução adaptativa em vez de 2.000 partições",
+        "why": "Isso: 57,4 segundos."
+      },
+      {
+        "text": "Uma função embutida em vez de Python",
+        "why": "30,3 segundos."
+      },
+      {
+        "text": "Parquet em vez de CSV",
+        "why": "25,4 segundos."
+      },
+      {
+        "text": "Permitir o broadcast",
+        "why": "2,1 segundos."
+      }
+    ]
+  },
+  "ex-hmv9pzar": {
+    "prompt": "Por que mudar uma coisa por execução ao ajustar?",
+    "hint": "O que quatro mudanças de uma vez diriam?",
+    "choices": [
+      {
+        "text": "Para impedir a resposta de mudar",
+        "why": "Nenhuma correção muda a resposta."
+      },
+      {
+        "text": "Para saber qual mudança importou",
+        "why": "Isso. O broadcast aqui economizou dois segundos."
+      },
+      {
+        "text": "Cada mudança precisa do próprio cluster",
+        "why": "O mesmo cluster rodou as cinco."
+      },
+      {
+        "text": "O Spark rejeita mais de uma configuração nova por execução",
+        "why": "Ele aceita qualquer número."
+      }
+    ]
+  },
+  "ex-r0gz8zeh": {
+    "prompt": "Por que o DuckDB foi cerca de vinte vezes mais rápido que o Spark ajustado neste laboratório? Escolha todos que se aplicam.",
+    "hint": "O que o Spark faz que um processo só não precisa?",
+    "choices": [
+      {
+        "text": "Nenhuma JVM e nenhum executor para iniciar",
+        "why": "Sim."
+      },
+      {
+        "text": "Nenhum shuffle entre processos",
+        "why": "Sim."
+      },
+      {
+        "text": "Ele leu arquivos diferentes, menores",
+        "why": "Ele leu os mesmos arquivos silver."
+      },
+      {
+        "text": "Ele pulou o filtro de compras",
+        "why": "Os totais bateram exatamente com os do Spark."
+      }
+    ]
+  },
+  "ex-3t1pj0s0": {
+    "prompt": "Por que o `report_duckdb.py` lê os timestamps por `timezone('UTC', ts)` antes de cortá-los em meses?",
+    "hint": "O que está guardado nos arquivos?",
+    "choices": [
+      {
+        "text": "O DuckDB arredonda timestamps para a hora",
+        "why": "Ele os mantém até o microssegundo."
+      },
+      {
+        "text": "O Parquet guarda datas como texto",
+        "why": "Aula 10: são inteiros."
+      },
+      {
+        "text": "O DuckDB conta meses a partir de zero",
+        "why": "Ele os conta como todo mundo."
+      },
+      {
+        "text": "São instantes em UTC, não locais",
+        "why": "Isso, e os meses de São Paulo começam três horas depois dos de UTC."
+      }
+    ]
+  },
+  "ex-jgef34r0": {
+    "prompt": "Um cluster de 10 máquinas roda um job de 30 minutos uma vez por dia durante 30 dias, e só existe enquanto o job roda. Quantas horas de máquina são?",
+    "hint": "10 × 0,5 × 30."
+  },
+  "ex-j92p2d30": {
+    "prompt": "O que torna possível apagar um cluster depois de cada job sem perder dados?",
+    "hint": "Onde estão os dados?",
+    "choices": [
+      {
+        "text": "O Spark guarda as tabelas em cache entre jobs",
+        "why": "Um cache morre com a aplicação."
+      },
+      {
+        "text": "O HDFS replica cada bloco três vezes",
+        "why": "O HDFS fica nos discos do próprio cluster."
+      },
+      {
+        "text": "Os dados moram num object store",
+        "why": "Isso. Nada estava no cluster."
+      },
+      {
+        "text": "Checkpoints são gravados no driver",
+        "why": "E o driver vai junto com o cluster."
+      }
+    ]
+  },
+  "ex-3qvzv77r": {
+    "prompt": "Um notebook segura 4 executores por 8 horas e calcula durante 2 delas. A US$0,05 por hora de executor, quantos dólares são gastos com executores ociosos nesse dia?",
+    "hint": "4 × 6 horas ociosas × 0,05."
+  },
+  "ex-1ja0v3rb": {
+    "prompt": "Reduzir à metade os cores de cada executor dobra a memória por tarefa. O que isso faz com o custo de rodar 40 tarefas ao mesmo tempo?",
+    "hint": "Quantas máquinas isso exige?",
+    "choices": [
+      {
+        "text": "Dobra, porque são precisas o dobro de máquinas",
+        "why": "Isso. Um tipo otimizado para memória costuma ser mais barato."
+      },
+      {
+        "text": "Não dá para saber sem rodar",
+        "why": "É aritmética: máquinas vezes preço."
+      },
+      {
+        "text": "Fica igual, porque a memória vem de graça com a nuvem",
+        "why": "A memória vem com a máquina que você paga."
+      },
+      {
+        "text": "Cai à metade, porque cada máquina faz menos",
+        "why": "O trabalho é o mesmo; as máquinas são mais."
+      }
+    ]
+  },
+  "ex-q2sdstnh": {
+    "prompt": "Ponha as correções da aula 7 para spill na ordem de tentar, a mais barata primeiro.",
+    "hint": "Mais partições não custam nada.",
+    "items": [
+      "Mais partições",
+      "Menos colunas antes do passo largo",
+      "Mais memória por tarefa"
+    ]
+  },
+  "ex-jjyff4x4": {
+    "prompt": "Uma tarefa em duzentas despeja em disco. O que isso pede?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Outro formato de arquivo",
+        "why": "O formato não é o que despejou."
+      },
+      {
+        "text": "O dobro de memória em todo executor",
+        "why": "Isso paga 200 vezes por uma tarefa."
+      },
+      {
+        "text": "Uma correção de desbalanceamento",
+        "why": "Isso. Memória para toda tarefa pagaria por uma."
+      },
+      {
+        "text": "Desligar o spill",
+        "why": "Aí a tarefa falharia."
+      }
+    ]
+  },
+  "ex-pz3fnw5k": {
+    "prompt": "Quando um cluster paga a sua sobrecarga? Escolha todos que se aplicam.",
+    "hint": "Além do que uma máquina dá conta no tempo que há.",
+    "choices": [
+      {
+        "text": "Um join de duas tabelas grandes demais para uma máquina",
+        "why": "Sim."
+      },
+      {
+        "text": "Um relatório de 120 linhas de uma tabela pequena",
+        "why": "O tamanho da saída não diz nada; o da entrada diz."
+      },
+      {
+        "text": "Terabytes para ler toda noite",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma tabela de 400 MB lida uma vez por dia",
+        "why": "O DuckDB fez isso em um segundo."
+      }
+    ]
+  },
+  "ex-1ctnby1q": {
+    "prompt": "Ponha em ordem os passos de ajustar um job lento.",
+    "hint": "Meça antes e depois.",
+    "items": [
+      "Ler os estágios dele no history server",
+      "Escolher o estágio com mais tempo de tarefa",
+      "Mudar uma coisa nele",
+      "Rodar de novo e comparar"
+    ]
+  },
+  "ex-142ktgy0": {
+    "prompt": "Ligue cada desperdício ao que o remove.",
+    "hint": "Quatro aulas, quatro respostas.",
+    "pairs": [
+      {
+        "left": "Um cluster ligado o mês inteiro para um job por dia",
+        "right": "Um cluster por job, dados num object store"
+      },
+      {
+        "left": "Executores segurados por horas ociosas",
+        "right": "Alocação dinâmica"
+      },
+      {
+        "left": "Um job oito vezes mais lento que o necessário",
+        "right": "Ajuste, uma correção por vez"
+      },
+      {
+        "left": "400 MB de dados num cluster",
+        "right": "Uma máquina e o DuckDB"
+      }
+    ],
+    "right_distractors": [
+      "Mais partições de shuffle"
+    ]
+  }
+}

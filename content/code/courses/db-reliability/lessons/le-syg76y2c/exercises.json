@@ -1,0 +1,534 @@
+[
+  {
+    "id": "ex-xxx7mted",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What serves each connection to PostgreSQL on the server?",
+    "hint": "One of these per client.",
+    "choices": [
+      {
+        "text": "A thread in one shared server process",
+        "correct": false,
+        "why": "PostgreSQL uses processes, not threads."
+      },
+      {
+        "text": "A slot in the shared buffer pool",
+        "correct": false,
+        "why": "Buffers hold pages, not connections."
+      },
+      {
+        "text": "A process of its own",
+        "correct": true,
+        "why": "Right: started at connect, gone at disconnect, with its own memory."
+      },
+      {
+        "text": "The WAL sender",
+        "correct": false,
+        "why": "That serves replication connections only."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbkwz7a2",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `max_connections = 100`, `pgbench -c 120` failed creating client number what (as pgbench counts, from zero)?",
+    "hint": "could not create connection for client …",
+    "value": 100,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1qc1fw1z",
+    "version": 1,
+    "section": "a-process-each",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is raising `max_connections` to 1000 not the fix?",
+    "hint": "Four cores.",
+    "choices": [
+      {
+        "text": "Processes would compete",
+        "correct": true,
+        "why": "Right: a thousand of them compete instead of working; the wall moves; the cost of each connection stays."
+      },
+      {
+        "text": "It needs a restart",
+        "correct": false,
+        "why": "True, and not the reason."
+      },
+      {
+        "text": "PostgreSQL cannot go above 100",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "Clients would get each other's data",
+        "correct": false,
+        "why": "Processes are isolated."
+      }
+    ]
+  },
+  {
+    "id": "ex-70xjmewv",
+    "version": 1,
+    "section": "the-pooler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `userlist.txt` hold for `shop_app`?",
+    "hint": "PgBouncer checks passwords before it has a server connection.",
+    "choices": [
+      {
+        "text": "The password in plain text",
+        "correct": false,
+        "why": "With SCRAM it holds the secret, never the password."
+      },
+      {
+        "text": "A hash PgBouncer computes at start-up",
+        "correct": false,
+        "why": "It reads it from the file you wrote."
+      },
+      {
+        "text": "Nothing; PgBouncer asks the server each time",
+        "correct": false,
+        "why": "That is auth_query, not what this lesson configured."
+      },
+      {
+        "text": "The SCRAM secret copied from pg_authid",
+        "correct": true,
+        "why": "Right: the same secret the server keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkpa1654",
+    "version": 1,
+    "section": "the-pooler",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `pgbouncer.ini` setting with what it does.",
+    "hint": "Where, who, how, how many.",
+    "pairs": [
+      {
+        "left": "listen_port = 6433",
+        "right": "The port clients connect to"
+      },
+      {
+        "left": "admin_users = shop_app",
+        "right": "May use the pgbouncer admin console"
+      },
+      {
+        "left": "pool_mode = transaction",
+        "right": "Gives the connection back after each transaction"
+      },
+      {
+        "left": "default_pool_size = 20",
+        "right": "Server connections per database and user"
+      }
+    ],
+    "right_distractors": [
+      "Where the WAL archive lives"
+    ]
+  },
+  {
+    "id": "ex-sybncvkw",
+    "version": 1,
+    "section": "the-pooler",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run PgBouncer on 6433 instead of the package's 6432?",
+    "hint": "Who owns each one?",
+    "choices": [
+      {
+        "text": "6432 is reserved for replication",
+        "correct": false,
+        "why": "It is the package service's default port."
+      },
+      {
+        "text": "To run its own copy as you",
+        "correct": true,
+        "why": "Right: changed and restarted without sudo, next to the package's."
+      },
+      {
+        "text": "PgBouncer 1.22 requires it",
+        "correct": false,
+        "why": "Any free port works."
+      },
+      {
+        "text": "Because PostgreSQL uses 6432",
+        "correct": false,
+        "why": "PostgreSQL is on 5432."
+      }
+    ]
+  },
+  {
+    "id": "ex-48p6e062",
+    "version": 1,
+    "section": "pooling-at-work",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During the run, `SHOW POOLS` showed `cl_active` 20 and `cl_waiting` 100. What were the 100 doing?",
+    "hint": "Queued.",
+    "choices": [
+      {
+        "text": "Failing with too many clients",
+        "correct": false,
+        "why": "pgbench reported no failed transaction."
+      },
+      {
+        "text": "Waiting in PgBouncer for a connection",
+        "correct": true,
+        "why": "Right: each gets one for a transaction, then gives it back."
+      },
+      {
+        "text": "Connected straight to the server",
+        "correct": false,
+        "why": "The server had 21 shop_app processes."
+      },
+      {
+        "text": "Reading from the standby",
+        "correct": false,
+        "why": "There was no standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xfc3nvh",
+    "version": 1,
+    "section": "pooling-at-work",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many `shop_app` processes did the server have while 120 clients ran through PgBouncer?",
+    "hint": "20 for bench, and shop's pool.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": "processes"
+  },
+  {
+    "id": "ex-3vtxr2nf",
+    "version": 1,
+    "section": "pooling-at-work",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Average latency rose to about 73 ms through the pool. Where was most of that time spent?",
+    "hint": "120 clients, 20 connections.",
+    "choices": [
+      {
+        "text": "In PgBouncer's SCRAM checks on every query",
+        "correct": false,
+        "why": "Authentication happens at connect, not per query."
+      },
+      {
+        "text": "Writing the WAL twice",
+        "correct": false,
+        "why": "The pool does not change the WAL."
+      },
+      {
+        "text": "Copying rows through PgBouncer",
+        "correct": false,
+        "why": "Results pass through cheaply."
+      },
+      {
+        "text": "Waiting in PgBouncer's queue",
+        "correct": true,
+        "why": "Right: where it should be spent, instead of in an overloaded server."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjjphwtk",
+    "version": 1,
+    "section": "the-leaking-setting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One client ran `SET statement_timeout = '1ms'` and left. Why was the next client's count cancelled?",
+    "hint": "Where does a session setting live?",
+    "choices": [
+      {
+        "text": "It stayed on the connection",
+        "correct": true,
+        "why": "Right: the setting stayed on the pooled server connection; in transaction mode a session's state belongs to the server connection."
+      },
+      {
+        "text": "PgBouncer copies settings between clients",
+        "correct": false,
+        "why": "It copies nothing; the setting stayed on the server connection."
+      },
+      {
+        "text": "statement_timeout is a server-wide setting",
+        "correct": false,
+        "why": "SET changes it for one session."
+      },
+      {
+        "text": "The orders table was locked",
+        "correct": false,
+        "why": "The error names the timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-h95cw8v7",
+    "version": 1,
+    "section": "the-leaking-setting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of session state with what it is.",
+    "hint": "All of them leak in transaction mode.",
+    "pairs": [
+      {
+        "left": "SET search_path",
+        "right": "A setting outside a transaction"
+      },
+      {
+        "left": "PREPARE q AS …",
+        "right": "A prepared statement made in SQL"
+      },
+      {
+        "left": "CREATE TEMP TABLE",
+        "right": "A table that belongs to the session"
+      },
+      {
+        "left": "LISTEN orders",
+        "right": "A subscription to notifications"
+      }
+    ],
+    "right_distractors": [
+      "SET LOCAL inside BEGIN"
+    ]
+  },
+  {
+    "id": "ex-zzyprbpj",
+    "version": 1,
+    "section": "the-leaking-setting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SET ___ statement_timeout = '1ms'` inside a transaction lasts only until the transaction ends.",
+    "hint": "Opposite of global.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL",
+          "local"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0fxk6yg5",
+    "version": 1,
+    "section": "the-leaking-setting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Besides `SET LOCAL`, how can an application behind a transaction pool get a setting on every connection?",
+    "hint": "Picked up when a server connection starts.",
+    "choices": [
+      {
+        "text": "A SET at the start of each session",
+        "correct": false,
+        "why": "That is session state, and it leaks."
+      },
+      {
+        "text": "A larger default_pool_size",
+        "correct": false,
+        "why": "Pool size has nothing to do with settings."
+      },
+      {
+        "text": "ALTER ROLE … SET",
+        "correct": true,
+        "why": "Right: every new connection for that role starts with it."
+      },
+      {
+        "text": "statement mode",
+        "correct": false,
+        "why": "Statement mode breaks multi-statement transactions."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgsxpa0f",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the setting not leak in session mode?",
+    "hint": "Between two clients.",
+    "choices": [
+      {
+        "text": "Session mode forbids SET",
+        "correct": false,
+        "why": "SET worked."
+      },
+      {
+        "text": "The server restarted after the HUP",
+        "correct": false,
+        "why": "SIGHUP rereads PgBouncer's file; nothing restarted."
+      },
+      {
+        "text": "The setting was LOCAL",
+        "correct": false,
+        "why": "It was a plain SET."
+      },
+      {
+        "text": "PgBouncer runs DISCARD ALL before reuse",
+        "correct": true,
+        "why": "Right: and a session belongs to one client for its whole life."
+      }
+    ]
+  },
+  {
+    "id": "ex-kn7qhc0r",
+    "version": 1,
+    "section": "modes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The extra `SELECT 1` took 0.143 s in transaction mode. How many seconds did it take in session mode, as `time` reported?",
+    "hint": "real.",
+    "value": 1.982,
+    "tolerance": 0.005,
+    "unit": "s"
+  },
+  {
+    "id": "ex-wss8yfwe",
+    "version": 1,
+    "section": "modes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pool mode with when the connection returns.",
+    "hint": "Disconnect, commit, statement.",
+    "pairs": [
+      {
+        "left": "session",
+        "right": "When the client disconnects"
+      },
+      {
+        "left": "transaction",
+        "right": "When each transaction ends"
+      },
+      {
+        "left": "statement",
+        "right": "When each statement ends"
+      }
+    ],
+    "right_distractors": [
+      "When the server restarts"
+    ]
+  },
+  {
+    "id": "ex-2pfncekh",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `statement` mode break?",
+    "hint": "Each statement may land on another connection.",
+    "choices": [
+      {
+        "text": "Every SELECT",
+        "correct": false,
+        "why": "Single statements work."
+      },
+      {
+        "text": "Prepared statements made by drivers",
+        "correct": false,
+        "why": "That is a transaction-mode concern too, and not the defining one."
+      },
+      {
+        "text": "Multi-statement transactions",
+        "correct": true,
+        "why": "Right: BEGIN and the next statement could be on different connections, so it refuses them."
+      },
+      {
+        "text": "Connections from psql",
+        "correct": false,
+        "why": "psql connects like any client."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5x7z8yc",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How was PgBouncer told to reread its file without dropping clients?",
+    "hint": "A signal.",
+    "choices": [
+      {
+        "text": "kill -HUP",
+        "correct": true,
+        "why": "Right: sent to the process whose ID is in pgbouncer.pid."
+      },
+      {
+        "text": "pg_ctl reload",
+        "correct": false,
+        "why": "pg_ctl manages PostgreSQL, not PgBouncer."
+      },
+      {
+        "text": "Restarting it with -d",
+        "correct": false,
+        "why": "That would drop clients."
+      },
+      {
+        "text": "SELECT pg_reload_conf()",
+        "correct": false,
+        "why": "That reloads PostgreSQL's configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3ypy2p0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application sets `search_path` once when it connects and uses temp tables in long reports. 300 web workers share one server. Which setup fits without changing the application?",
+    "hint": "Session state, many clients.",
+    "choices": [
+      {
+        "text": "Transaction mode, pool of 20",
+        "correct": false,
+        "why": "search_path and temp tables would leak between clients."
+      },
+      {
+        "text": "Session mode",
+        "correct": true,
+        "why": "Right: with enough server connections for its sessions; safe for session state; pooling still saves connection start-up."
+      },
+      {
+        "text": "Statement mode",
+        "correct": false,
+        "why": "Reports with several statements in a transaction would be refused."
+      },
+      {
+        "text": "No pooler, max_connections = 300",
+        "correct": false,
+        "why": "Three hundred processes on one server is the problem the lesson started with."
+      }
+    ]
+  }
+]

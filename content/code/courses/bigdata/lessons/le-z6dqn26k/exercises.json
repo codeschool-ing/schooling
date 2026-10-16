@@ -1,0 +1,801 @@
+[
+  {
+    "id": "ex-2g6xsgy5",
+    "version": 1,
+    "section": "why-a-planner",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the plans Catalyst produces, first to last.",
+    "hint": "Names are checked before anything is rewritten.",
+    "items": [
+      "Parsed logical plan",
+      "Analysed logical plan",
+      "Optimised logical plan",
+      "Physical plan"
+    ]
+  },
+  {
+    "id": "ex-xv7jw9wj",
+    "version": 1,
+    "section": "why-a-planner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query names a column `kinde` that does not exist. When does it fail?",
+    "hint": "Which step looks names up in the schema?",
+    "choices": [
+      {
+        "text": "At analysis, before any data is read",
+        "correct": true,
+        "why": "Right. Names are checked against the schema there."
+      },
+      {
+        "text": "At the optimisation step",
+        "correct": false,
+        "why": "Optimisation only rewrites a plan that is already valid."
+      },
+      {
+        "text": "Never; the column is filled with nulls",
+        "correct": false,
+        "why": "A missing column is an error, not nulls."
+      },
+      {
+        "text": "When the first task reaches a row without that column",
+        "correct": false,
+        "why": "It never gets that far; analysis refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke5erq1h",
+    "version": 1,
+    "section": "why-a-planner",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Catalyst do nothing for an RDD `filter(lambda ...)`?",
+    "hint": "What can it see of a lambda?",
+    "choices": [
+      {
+        "text": "Catalyst only runs on SQL strings",
+        "correct": false,
+        "why": "DataFrames go through it too."
+      },
+      {
+        "text": "RDDs are planned by a different optimiser that is off by default",
+        "correct": false,
+        "why": "There is no optimiser for RDDs at all."
+      },
+      {
+        "text": "RDDs only exist on the driver",
+        "correct": false,
+        "why": "They are distributed, like DataFrames."
+      },
+      {
+        "text": "Spark sees a function it must run as it is",
+        "correct": true,
+        "why": "Right. Catalyst works on expressions it can read."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k6np467",
+    "version": 1,
+    "section": "four-plans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the optimised plan, where did the filter on `kind` go, and why?",
+    "hint": "Compare it with the parsed plan.",
+    "choices": [
+      {
+        "text": "Nowhere; plans never change the program's order",
+        "correct": false,
+        "why": "Changing it is what the optimiser is for."
+      },
+      {
+        "text": "Above the sort, so the sort runs first",
+        "correct": false,
+        "why": "It moved towards the data, not away."
+      },
+      {
+        "text": "Into the books' side of the join",
+        "correct": false,
+        "why": "`kind` is a column of the clicks."
+      },
+      {
+        "text": "Below the join, onto the clicks",
+        "correct": true,
+        "why": "Right. Filtering before joining shrinks the join's input."
+      }
+    ]
+  },
+  {
+    "id": "ex-ep86raz4",
+    "version": 1,
+    "section": "four-plans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the number after `#` in `book_id#4` tell Catalyst?",
+    "hint": "There are two `book_id`s.",
+    "choices": [
+      {
+        "text": "Which `book_id` it is",
+        "correct": true,
+        "why": "Right. `book_id#4` and `book_id#7` are the two sides of the join."
+      },
+      {
+        "text": "How many rows have that value",
+        "correct": false,
+        "why": "No data has been read when plans are made."
+      },
+      {
+        "text": "The column's position in the file",
+        "correct": false,
+        "why": "It is an id given by Catalyst, not a position."
+      },
+      {
+        "text": "The partition it lives in",
+        "correct": false,
+        "why": "Partitions are about rows, not columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bfahjzp",
+    "version": 1,
+    "section": "four-plans",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The physical plan joined the clicks to the books with a ___HashJoin, copying the books to every task.",
+    "hint": "The map-side join of lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "Broadcast"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z0sq6ad2",
+    "version": 1,
+    "section": "reading-a-physical-plan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is every `Exchange` node in a physical plan?",
+    "hint": "Lesson 4's word.",
+    "choices": [
+      {
+        "text": "A shuffle",
+        "correct": true,
+        "why": "Right, and the boundary of a stage."
+      },
+      {
+        "text": "A file being read",
+        "correct": false,
+        "why": "That is a `Scan`."
+      },
+      {
+        "text": "A write to HDFS",
+        "correct": false,
+        "why": "Shuffle files go to local disk."
+      },
+      {
+        "text": "A join",
+        "correct": false,
+        "why": "Joins have their own nodes; an exchange may feed one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1c53gxkd",
+    "version": 1,
+    "section": "reading-a-physical-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are there two `HashAggregate` nodes around the first `Exchange`?",
+    "hint": "Lesson 4's combiner.",
+    "choices": [
+      {
+        "text": "One counts purchases, the other counts books",
+        "correct": false,
+        "why": "Both count the same thing, in two halves."
+      },
+      {
+        "text": "The second one checks the first",
+        "correct": false,
+        "why": "It adds the partial counts, it does not check them."
+      },
+      {
+        "text": "Counting in two halves, around a shuffle",
+        "correct": true,
+        "why": "Right. Each task sends a few counts instead of every row."
+      },
+      {
+        "text": "AQE added a duplicate",
+        "correct": false,
+        "why": "Both are in the initial plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pdn4gd3",
+    "version": 1,
+    "section": "reading-a-physical-plan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sort's `Exchange` uses `rangepartitioning`, not `hashpartitioning`. Why?",
+    "hint": "Lesson 4: what does a globally sorted output need?",
+    "choices": [
+      {
+        "text": "There are only ten categories",
+        "correct": false,
+        "why": "The count of keys does not decide the partitioner."
+      },
+      {
+        "text": "Range partitioning is always faster",
+        "correct": false,
+        "why": "It costs a sampling pass; it is chosen for order."
+      },
+      {
+        "text": "The counts are numbers and cannot be hashed",
+        "correct": false,
+        "why": "Numbers hash fine."
+      },
+      {
+        "text": "Each task must hold a range of values",
+        "correct": true,
+        "why": "Right. Hashing would scatter neighbours across tasks."
+      }
+    ]
+  },
+  {
+    "id": "ex-kca33q4d",
+    "version": 1,
+    "section": "reading-a-physical-plan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The formatted plan has two `Exchange` nodes and one `BroadcastExchange`. How many shuffles does the query do?",
+    "hint": "A broadcast is not a shuffle.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jzrp6p6p",
+    "version": 1,
+    "section": "measuring-a-scan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`size of files read` was 388.8 MiB for both the every-column and the one-column query. Why is it no help in seeing column pruning?",
+    "hint": "What does it actually add up?",
+    "choices": [
+      {
+        "text": "Column pruning did not happen",
+        "correct": false,
+        "why": "`ReadSchema` shows two columns, and the timings differ by half."
+      },
+      {
+        "text": "It counts files opened, not bytes read",
+        "correct": true,
+        "why": "Right. The time showed the difference the metric could not."
+      },
+      {
+        "text": "Both queries read the same rows",
+        "correct": false,
+        "why": "Rows are not the issue; columns are."
+      },
+      {
+        "text": "The metric is only filled for CSV",
+        "correct": false,
+        "why": "It was filled; it measures something else."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cep29tp",
+    "version": 1,
+    "section": "measuring-a-scan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `pruning.py` build each query afresh before timing it, instead of running the same DataFrame twice?",
+    "hint": "What would the second run reuse?",
+    "choices": [
+      {
+        "text": "A DataFrame can only run once",
+        "correct": false,
+        "why": "It can run any number of times."
+      },
+      {
+        "text": "The first run's shuffle would be reused",
+        "correct": true,
+        "why": "Right. The second run would time almost nothing."
+      },
+      {
+        "text": "Python caches the answer",
+        "correct": false,
+        "why": "Python keeps nothing; Spark's shuffle files are the reuse."
+      },
+      {
+        "text": "The files change between runs",
+        "correct": false,
+        "why": "They do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-53tnvvpr",
+    "version": 1,
+    "section": "column-pruning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ReadSchema: struct<kind:string,book_id:int>` on a scan mean?",
+    "hint": "Read, not stored.",
+    "choices": [
+      {
+        "text": "Those two columns are cached",
+        "correct": false,
+        "why": "Nothing is cached here."
+      },
+      {
+        "text": "The result will have those two columns",
+        "correct": false,
+        "why": "The result is a single count."
+      },
+      {
+        "text": "The files only contain those two columns",
+        "correct": false,
+        "why": "They contain seven; the query needs two."
+      },
+      {
+        "text": "Only those two columns will be read",
+        "correct": true,
+        "why": "Right. The other five are skipped in the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d7vhxyg",
+    "version": 1,
+    "section": "column-pruning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does column pruning save little on a CSV file?",
+    "hint": "How do you find the third field of a line?",
+    "choices": [
+      {
+        "text": "A line must be read whole to find any field in it",
+        "correct": true,
+        "why": "Right. It saves parsing, not reading."
+      },
+      {
+        "text": "Spark does not prune columns for CSV at all",
+        "correct": false,
+        "why": "It prunes what it parses; the bytes still pass."
+      },
+      {
+        "text": "CSV files are always compressed",
+        "correct": false,
+        "why": "Not always, and compression is not the reason."
+      },
+      {
+        "text": "CSV columns have no names",
+        "correct": false,
+        "why": "The header gives names; the layout is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-eptyphm1",
+    "version": 1,
+    "section": "partition-pruning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the filter `day = '2025-03-14'`, how many files did the scan open?",
+    "hint": "One directory per day.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ajgqs9ac",
+    "version": 1,
+    "section": "partition-pruning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query filters `ts` between two times on 14 March, with no filter on `day`. How many directories does it open?",
+    "hint": "Does the planner know `ts` implies `day`?",
+    "choices": [
+      {
+        "text": "None; it fails without a `day` filter",
+        "correct": false,
+        "why": "It runs, reading everything."
+      },
+      {
+        "text": "One, because the times fall on one day",
+        "correct": false,
+        "why": "True of the data, unknown to the planner."
+      },
+      {
+        "text": "Two, the day and the next",
+        "correct": false,
+        "why": "Without a partition filter there is no pruning at all."
+      },
+      {
+        "text": "All 365",
+        "correct": true,
+        "why": "Right. Filter on `day` as well to prune."
+      }
+    ]
+  },
+  {
+    "id": "ex-yw94cw4y",
+    "version": 1,
+    "section": "partition-pruning",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of a scan to what it decides.",
+    "hint": "Directories, files' insides, columns.",
+    "pairs": [
+      {
+        "left": "PartitionFilters",
+        "right": "Which directories are opened"
+      },
+      {
+        "left": "PushedFilters",
+        "right": "What the reader may skip inside a file"
+      },
+      {
+        "left": "ReadSchema",
+        "right": "Which columns are read"
+      }
+    ],
+    "right_distractors": [
+      "How many executors run the scan"
+    ]
+  },
+  {
+    "id": "ex-7npkrj5x",
+    "version": 1,
+    "section": "predicate-pushdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Choosing the day through a Python UDF gave the same answer. What did it cost?",
+    "hint": "Look for `PartitionFilters` in its plan.",
+    "choices": [
+      {
+        "text": "Nothing; the UDF was pruned like a built-in",
+        "correct": false,
+        "why": "Its plan has no `PartitionFilters` line."
+      },
+      {
+        "text": "All 365 files were opened, for one day's answer",
+        "correct": true,
+        "why": "Right. The planner could not turn the UDF into a directory."
+      },
+      {
+        "text": "The answer was approximate",
+        "correct": false,
+        "why": "It was exactly 1,304, the same."
+      },
+      {
+        "text": "It failed on the days that were not 14 March",
+        "correct": false,
+        "why": "It returned false for them, after reading them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xzmaxbk",
+    "version": 1,
+    "section": "predicate-pushdown",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can `F.date_format(\"day\", \"MM-dd\") == \"03-14\"` prune partitions when the Python UDF cannot?",
+    "hint": "Where can each be evaluated?",
+    "choices": [
+      {
+        "text": "It is cheaper to compute",
+        "correct": false,
+        "why": "Cost is not the reason; where it can run is."
+      },
+      {
+        "text": "Java evaluates it on each directory's value",
+        "correct": true,
+        "why": "Right. A Python function would need Python there."
+      },
+      {
+        "text": "It returns a string",
+        "correct": false,
+        "why": "The return type does not matter."
+      },
+      {
+        "text": "UDFs are banned from filters",
+        "correct": false,
+        "why": "The UDF filter worked, slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mygzk2a",
+    "version": 1,
+    "section": "predicate-pushdown",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`kind = 'purchase'` was pushed to the reader, yet the one-day scan handed on all 65,753 rows. Why?",
+    "hint": "What does the reader use to skip?",
+    "choices": [
+      {
+        "text": "The filter was applied twice by mistake",
+        "correct": false,
+        "why": "Applying it again above the scan is by design."
+      },
+      {
+        "text": "No row group could be ruled out",
+        "correct": true,
+        "why": "Right. Skipping needs grouped values; lesson 10 sorts them."
+      },
+      {
+        "text": "Pushdown only works on numbers",
+        "correct": false,
+        "why": "Strings have min and max too."
+      },
+      {
+        "text": "The UDF disabled pushdown",
+        "correct": false,
+        "why": "This query had no UDF."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssjcgz28",
+    "version": 1,
+    "section": "adaptive-execution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `AdaptiveSparkPlan isFinalPlan=false` at the top of a plan mean?",
+    "hint": "Final according to whom, and when?",
+    "choices": [
+      {
+        "text": "Adaptive execution is turned off",
+        "correct": false,
+        "why": "The node is only there when it is on."
+      },
+      {
+        "text": "The plan is revised as stages finish",
+        "correct": true,
+        "why": "Right. After the run it reads `true`."
+      },
+      {
+        "text": "The query has not been optimised yet",
+        "correct": false,
+        "why": "The logical optimisation is done; AQE adds run-time changes."
+      },
+      {
+        "text": "The plan has an error",
+        "correct": false,
+        "why": "It is the normal state before running."
+      }
+    ]
+  },
+  {
+    "id": "ex-my65xrqe",
+    "version": 1,
+    "section": "adaptive-execution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did AQE put `AQEShuffleRead coalesced` above the grouping's shuffle?",
+    "hint": "Ten categories, 200 partitions.",
+    "choices": [
+      {
+        "text": "A partition was too large and had to be split",
+        "correct": false,
+        "why": "That is skew handling, lesson 8; here they were tiny."
+      },
+      {
+        "text": "The join had to become a broadcast",
+        "correct": false,
+        "why": "It was a broadcast from the start."
+      },
+      {
+        "text": "The executors ran out of memory",
+        "correct": false,
+        "why": "Nothing failed."
+      },
+      {
+        "text": "Most of the 200 partitions were empty",
+        "correct": true,
+        "why": "Right. It merged them into a few of sensible size."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b2entbb",
+    "version": 1,
+    "section": "adaptive-execution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can adaptive execution not change?",
+    "hint": "It replans after a shuffle.",
+    "choices": [
+      {
+        "text": "Splitting a partition far larger than the rest",
+        "correct": false,
+        "why": "It can; lesson 8."
+      },
+      {
+        "text": "The number of partitions after a shuffle",
+        "correct": false,
+        "why": "It coalesces them, as section 10 showed."
+      },
+      {
+        "text": "Which files the first stage reads",
+        "correct": true,
+        "why": "Right. That is decided before any shuffle has happened."
+      },
+      {
+        "text": "A shuffle join turning into a broadcast join",
+        "correct": false,
+        "why": "It can, when a side turns out small."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhd6nyfx",
+    "version": 1,
+    "section": "choosing-a-join",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`spark.sql.autoBroadcastJoinThreshold` printed `10485760b`. How many MiB is that?",
+    "hint": "Divide by 1,048,576.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-zh28nhpw",
+    "version": 1,
+    "section": "choosing-a-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the threshold at -1, what replaced the broadcast join?",
+    "hint": "Both sides shuffled, then sorted.",
+    "choices": [
+      {
+        "text": "No join; the query failed",
+        "correct": false,
+        "why": "It planned fine, the other way."
+      },
+      {
+        "text": "A `BroadcastNestedLoopJoin`",
+        "correct": false,
+        "why": "That is for joins with no equality condition."
+      },
+      {
+        "text": "A broadcast of the clicks instead of the books",
+        "correct": false,
+        "why": "-1 turns broadcasting off for both sides."
+      },
+      {
+        "text": "A `SortMergeJoin`",
+        "correct": true,
+        "why": "Right. The reduce-side join of lesson 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrr4cjx1",
+    "version": 1,
+    "section": "choosing-a-join",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The join was estimated at 783.6 GiB. Why was the broadcast choice still right?",
+    "hint": "Which estimate does a broadcast depend on?",
+    "choices": [
+      {
+        "text": "Only the small side's estimate mattered",
+        "correct": true,
+        "why": "Right. 15.5 KiB for the books was close."
+      },
+      {
+        "text": "AQE corrected the estimate before choosing",
+        "correct": false,
+        "why": "The choice was made before running, from the estimate."
+      },
+      {
+        "text": "The join really produced 783.6 GiB",
+        "correct": false,
+        "why": "It produced about 22 million rows of a few bytes each."
+      },
+      {
+        "text": "Estimates are ignored for joins",
+        "correct": false,
+        "why": "They decide the strategy."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5a9vtff",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report reads `data/silver/clicks`, keeps rows where `udf_month(ts) == 12`, and is slow. Which rewrite saves most?",
+    "hint": "Which column is the partition?",
+    "choices": [
+      {
+        "text": "Keep the UDF on `ts` and add executors",
+        "correct": false,
+        "why": "Still every file and every row through Python."
+      },
+      {
+        "text": "Filter `day` on December with built-ins",
+        "correct": true,
+        "why": "Right. 31 directories opened instead of 365, and no trip to Python."
+      },
+      {
+        "text": "Replace the UDF with `F.month(\"ts\") == 12`",
+        "correct": false,
+        "why": "Better, but `ts` is not the partition column; every directory is still opened."
+      },
+      {
+        "text": "Read the raw CSV instead",
+        "correct": false,
+        "why": "Slower in every way."
+      }
+    ]
+  },
+  {
+    "id": "ex-dky45tkb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each thing seen in a plan to what it shows.",
+    "hint": "Read the node names.",
+    "pairs": [
+      {
+        "left": "`PartitionFilters: [...]`",
+        "right": "Directories skipped by name"
+      },
+      {
+        "left": "`partial_count(1)`",
+        "right": "Counting before the shuffle"
+      },
+      {
+        "left": "`AQEShuffleRead coalesced`",
+        "right": "Partitions merged at run time"
+      },
+      {
+        "left": "`BroadcastExchange`",
+        "right": "A small side copied to every task"
+      }
+    ]
+  }
+]

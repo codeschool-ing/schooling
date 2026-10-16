@@ -1,0 +1,2547 @@
+[
+  {
+    "id": "ex-e2yysjdn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On a freshly started boxoffice, an order for 4 seats of sh-101 is accepted. What total_cents should its body carry?",
+    "hint": "Lesson 1. Look up the price of sh-101.",
+    "value": 32000,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-h94er5p7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A server answers 200 with `content-type: text/plain`, and the body is JSON with every field right. What does a tester conclude?",
+    "hint": "Lesson 1. What does a client read before the body?",
+    "choices": [
+      {
+        "text": "No defect: the fields are right, and those are what a test checks",
+        "correct": false,
+        "why": "The label decides how the body is read; a right body under a wrong label is unusable."
+      },
+      {
+        "text": "Fine, since the status code says it worked",
+        "correct": false,
+        "why": "The status code comes first, and the label is the next thing checked."
+      },
+      {
+        "text": "A defect in curl, which picked the label when it received the answer",
+        "correct": false,
+        "why": "curl prints the label the server sent; it does not choose one."
+      },
+      {
+        "text": "A defect: a client that trusts the label will not parse it",
+        "correct": true,
+        "why": "Right. The headers that describe the body come before the body in what a tester reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-md41gqne",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague's test looks for a response header spelt exactly `Content-Type` and fails against boxoffice, which sends `content-type`. Where is the defect?",
+    "hint": "Lesson 1, the section on headers.",
+    "choices": [
+      {
+        "text": "In boxoffice: header names should be capitalised the way curl writes them",
+        "correct": false,
+        "why": "curl's capitals are a habit, not a rule; HTTP/2 even requires lower case."
+      },
+      {
+        "text": "In neither: HTTP/1.1 and HTTP/2 disagree, so the check should be dropped",
+        "correct": false,
+        "why": "They agree that names are case-insensitive; the check is worth keeping, written correctly."
+      },
+      {
+        "text": "In the test: header names are not case-sensitive",
+        "correct": true,
+        "why": "Right. Content-Type and content-type are one header, and a test comparing them letter for letter has a defect of its own."
+      },
+      {
+        "text": "In boxoffice: it should copy the request's case",
+        "correct": false,
+        "why": "Nothing ties the case of a response to the case of a request; neither carries meaning."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4evnvzv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A method that changes nothing on the server, so that a client, a cache or a test may send it as often as it likes, is called ___.",
+    "hint": "Lesson 1. GET and HEAD are; POST is not.",
+    "blanks": [
+      {
+        "accept": [
+          "safe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pfmt5tt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Another API answers `DELETE /v1/shows/sh-101`, a show that exists and cannot be deleted, with 404. What should the report ask for?",
+    "hint": "Lesson 1. What does 404 claim about the address?",
+    "choices": [
+      {
+        "text": "Nothing: any 4xx tells the client not to send it again",
+        "correct": false,
+        "why": "The class is right and the code is not; 404 claims the show is absent, which is false."
+      },
+      {
+        "text": "A 400, because a DELETE to a show is a malformed request",
+        "correct": false,
+        "why": "The request is well formed; it asks for something the address does not offer."
+      },
+      {
+        "text": "A 403, since nobody may delete a show",
+        "correct": false,
+        "why": "403 is about who is asking; here the verb is refused for every caller, which is 405."
+      },
+      {
+        "text": "A 405 with an allow header listing what the address accepts",
+        "correct": true,
+        "why": "Right. The address exists and the method is not accepted there, which is what 405 says."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzxdaxb7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a freshly started boxoffice, a valid token orders 5 seats of sh-103. What comes back?",
+    "hint": "Lesson 2. Which rule does 5 break, the contract's or the show's?",
+    "choices": [
+      {
+        "text": "422, because 5 seats is outside the rule for an order",
+        "correct": false,
+        "why": "The rule is 1 to 6, and 5 is inside it."
+      },
+      {
+        "text": "201 for 4 seats, the most the show still has",
+        "correct": false,
+        "why": "boxoffice never changes the quantity it was asked for; it refuses or accepts the order as sent."
+      },
+      {
+        "text": "409, only 4 seats left",
+        "correct": true,
+        "why": "Right. The body is valid; the state of the server forbids it, which is what 409 says."
+      },
+      {
+        "text": "400, because the body cannot be read as an order",
+        "correct": false,
+        "why": "The body is valid JSON and a valid order; 400 is for a body that cannot be read."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4vbsh8h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An app wants to tell the user apart \"sold out\" and \"choose between 1 and 6 seats\" when an order to boxoffice is refused. What should its code decide on?",
+    "hint": "Lesson 2, problem details. boxoffice's type is about:blank everywhere.",
+    "choices": [
+      {
+        "text": "The wording of detail, which differs between the two refusals",
+        "correct": false,
+        "why": "detail is written for people, and somebody will one day reword it."
+      },
+      {
+        "text": "The status code, 409 against 422",
+        "correct": true,
+        "why": "Right. With type always about:blank, the status code is what a program has to branch on."
+      },
+      {
+        "text": "The type field, which names each kind of problem",
+        "correct": false,
+        "why": "In boxoffice it is about:blank for every error, so it tells the two apart in no case."
+      },
+      {
+        "text": "The content-type header",
+        "correct": false,
+        "why": "Both errors are application/problem+json."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5hny1va",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these answers to `POST /v1/orders` would break the contract in openapi.yaml, whatever their body said?",
+    "hint": "Lesson 2. The contract lists the codes the operation may give.",
+    "choices": [
+      {
+        "text": "500",
+        "correct": true,
+        "why": "Right. It is not in the list, so the client was told it would never see one."
+      },
+      {
+        "text": "402",
+        "correct": false,
+        "why": "Listed: a declined payment."
+      },
+      {
+        "text": "503",
+        "correct": true,
+        "why": "Right. The operation lists 502 and 504, not 503."
+      },
+      {
+        "text": "504",
+        "correct": false,
+        "why": "Listed: the payment provider did not answer in time."
+      },
+      {
+        "text": "404",
+        "correct": true,
+        "why": "Right. An unknown show is a 422 here; 404 is not among the operation's codes."
+      }
+    ]
+  },
+  {
+    "id": "ex-29vzsa5w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A report adds prices in reais as JavaScript numbers. A test buys three tickets at R$ 80,10 and checks `total === 240.3`. What happens?",
+    "hint": "Lesson 2, money.",
+    "choices": [
+      {
+        "text": "It passes, because 80.10 has two decimal places and so does the total",
+        "correct": false,
+        "why": "Two decimals in the text are not two decimals in binary floating point."
+      },
+      {
+        "text": "It fails, because the sum comes out as 240.29999999999998",
+        "correct": true,
+        "why": "Right. Node printed exactly that; the same sum in cents is exactly 24030."
+      },
+      {
+        "text": "It fails, because JSON has no way to carry a number with decimals",
+        "correct": false,
+        "why": "JSON carries 80.10 perfectly well; the error comes from adding it as binary floating point."
+      },
+      {
+        "text": "It passes: JavaScript rounds to the cent",
+        "correct": false,
+        "why": "JavaScript does no such rounding; the screen does, which is why the error hides there."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xbpmkmh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In openapi.yaml a path does not repeat the shape of an order; it points at `NewOrder` in components with the keyword ___.",
+    "hint": "Lesson 2. It starts with a dollar sign.",
+    "blanks": [
+      {
+        "accept": [
+          "$ref",
+          "ref"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-emk15gzm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new staff API answers a request with no key with \"key missing\" and a request with a wrong key with \"key not recognised\", both as 401. What do you report?",
+    "hint": "Lesson 3, the staff key.",
+    "choices": [
+      {
+        "text": "Nothing: the two messages help the client's author find the mistake",
+        "correct": false,
+        "why": "They help a stranger too, by saying which requests came close to being right."
+      },
+      {
+        "text": "That the wrong key should get 403, because the server knows a key was sent",
+        "correct": false,
+        "why": "A key the server does not hold identifies nobody, so 401 is the right code; the messages are the issue."
+      },
+      {
+        "text": "That both refusals should read the same, word for word",
+        "correct": true,
+        "why": "Right. boxoffice answers both alike, and that sameness is what keeps a stranger's guesses blind."
+      },
+      {
+        "text": "That the key should travel in the query string so the server logs which one failed",
+        "correct": false,
+        "why": "An address is logged by default, so that would put the key in the log; the lesson tests that it is refused there."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8wc2c3w",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each claim in a boxoffice token's payload to what it holds.",
+    "hint": "Lesson 3, inside a JWT.",
+    "pairs": [
+      {
+        "left": "sub",
+        "right": "the client the token is about"
+      },
+      {
+        "left": "scope",
+        "right": "what the token may do, separated by spaces"
+      },
+      {
+        "left": "iat",
+        "right": "when it was issued, in seconds since 1970"
+      },
+      {
+        "left": "exp",
+        "right": "when it stops working, in the same seconds"
+      }
+    ],
+    "right_distractors": [
+      "the secret it was signed with"
+    ]
+  },
+  {
+    "id": "ex-76pcyf0e",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "boxoffice runs with `TOKEN_TTL=5`, and a token's payload says `\"iat\":1791661400`. What number does its exp claim hold?",
+    "hint": "Lesson 3. exp is iat plus the lifetime in seconds.",
+    "value": 1791661405,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-93qfbza3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Testing another API, you send a token whose header says `\"alg\":\"none\"` and whose signature is empty, and it creates an order with 201. What is your verdict?",
+    "hint": "Lesson 3. Who can make such a token?",
+    "choices": [
+      {
+        "text": "Acceptable, since the claims inside the token were valid",
+        "correct": false,
+        "why": "Without a checked signature the claims are whatever the sender typed."
+      },
+      {
+        "text": "A serious defect: any client could grant itself any scope",
+        "correct": true,
+        "why": "Right. A server that skips the signature accepts tokens nobody signed, which is the edited-token test failing."
+      },
+      {
+        "text": "A minor defect: it should have answered 403 rather than 201",
+        "correct": false,
+        "why": "The problem is not which refusal; the token should not have been accepted as anybody at all, which is a 401."
+      },
+      {
+        "text": "Expected, because a JWT is encrypted and alg just names the cipher",
+        "correct": false,
+        "why": "A JWT is signed, not encrypted; alg names how it was signed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvh73r09",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of the authorization code flow with PKCE in order.",
+    "hint": "Lesson 3. The verifier travels last.",
+    "items": [
+      "the app makes a verifier and computes its challenge",
+      "the app opens the browser with its client id, state and challenge",
+      "the person signs in on the authorization server's page",
+      "the browser returns to the app with a code and the same state",
+      "the app sends the code and the verifier to the token endpoint",
+      "the server hashes the verifier, compares, and answers with a token"
+    ]
+  },
+  {
+    "id": "ex-2pjj8f97",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A team keeps one boxoffice collection and two environments, lab and staging. Which of these belong in the environments rather than in the collection?",
+    "hint": "Lesson 4. What changes from one server to another?",
+    "choices": [
+      {
+        "text": "baseUrl",
+        "correct": true,
+        "why": "Right. The address is the first thing that differs between servers."
+      },
+      {
+        "text": "clientSecret",
+        "correct": true,
+        "why": "Right. Credentials differ per server, and the shared file should leave the real one empty."
+      },
+      {
+        "text": "showId, the show the requests order from",
+        "correct": false,
+        "why": "It belongs to this API's requests, which is what collection variables are for."
+      },
+      {
+        "text": "the bearer authorization the folders inherit",
+        "correct": false,
+        "why": "Authorization is set on the collection and its folders; only the token's value is a variable."
+      },
+      {
+        "text": "clientId",
+        "correct": true,
+        "why": "Right. Another server may have its own client for the tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-cr2w4sca",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You import an environment a teammate exported. In their Postman clientSecret shows a value, and in yours it is empty. What explains it?",
+    "hint": "Lesson 4. Postman keeps two values for each variable.",
+    "choices": [
+      {
+        "text": "The import failed on a missing comma and dropped that value",
+        "correct": false,
+        "why": "A broken file fails to import at all; jq would name the line."
+      },
+      {
+        "text": "The secret type encrypts the value inside the exported file",
+        "correct": false,
+        "why": "secret only hides a value on the screen; a file that carries it carries it in plain text."
+      },
+      {
+        "text": "Their value was the local one, which stays on their computer",
+        "correct": true,
+        "why": "Right. An exported file carries only the shared value, and theirs was kept local."
+      },
+      {
+        "text": "A global variable called clientSecret in your workspace is hiding it",
+        "correct": false,
+        "why": "A global is the widest scope; the environment would win over it, not the other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rzagrd5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You add a folder called reports to lesson 4's collection, with no auth entry, and in it a GET to /v1/reports/sales with no other header. What does boxoffice answer?",
+    "hint": "Lesson 4 for what the folder inherits, lesson 3 for what the report wants.",
+    "choices": [
+      {
+        "text": "200, because the folder inherits the collection's credentials",
+        "correct": false,
+        "why": "It inherits the bearer token, and the report does not accept a token."
+      },
+      {
+        "text": "403, because ci-tests has no scope for reports",
+        "correct": false,
+        "why": "The report never reads a token's scope; it refuses anything without the key, as a 401."
+      },
+      {
+        "text": "Postman refuses to send it until the folder names an auth type",
+        "correct": false,
+        "why": "No auth entry means inherit; nothing stops the request."
+      },
+      {
+        "text": "401: the bearer token is sent and the staff key is not",
+        "correct": true,
+        "why": "Right. A folder that says nothing inherits bearer, and the report wants X-Api-Key."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnn9wgtq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the requests of lesson 4's collection in the order a run of the whole collection sends them.",
+    "hint": "Lesson 4. Folder by folder, top to bottom.",
+    "items": [
+      "List shows",
+      "One show",
+      "Get token",
+      "Create order",
+      "Read order",
+      "Cancel order"
+    ]
+  },
+  {
+    "id": "ex-cfhge9d3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A teammate moves the save into the test: `pm.test('status is 201', () => { pm.response.to.have.status(201); pm.collectionVariables.set('orderUrl', pm.response.headers.get('location')); })`. One run, Create order gets 409. What happens to orderUrl?",
+    "hint": "Lesson 5. Where does a failing assertion stop?",
+    "choices": [
+      {
+        "text": "It keeps what it held before, so later requests act on an older order",
+        "correct": true,
+        "why": "Right. The failed assertion stopped the function, and the save after it was skipped exactly when the answer was unusual."
+      },
+      {
+        "text": "It is set to null, since a 409 carries no location",
+        "correct": false,
+        "why": "The set line never runs: the assertion above it threw first."
+      },
+      {
+        "text": "It is set as usual, because pm.test runs every line before judging",
+        "correct": false,
+        "why": "pm.test runs the function and fails it at the first throw; nothing after the throw runs."
+      },
+      {
+        "text": "Newman stops the whole run at the failed test",
+        "correct": false,
+        "why": "Only --bail stops a run; without it Newman goes on to the next request."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcmhymty",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In postman/seats.csv, a row whose seats field must reach the JSON body as the string \"2\", quotes included, writes that field as ___.",
+    "hint": "Lesson 5. In CSV a quote inside a quoted field is written twice.",
+    "blanks": [
+      {
+        "accept": [
+          "\"\"\"2\"\"\""
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vjmds7qk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "seats.csv grows to nine data rows. Newman runs only the seat rules folder with it, and the token fetched before the first iteration stays valid. How many requests does the table count?",
+    "hint": "Lesson 5. Six rows made seven requests.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n48rh83w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test asserts that the shows list has exactly three entries. It passes today. When does it fail with nothing broken?",
+    "hint": "Lesson 5, what not to assert.",
+    "choices": [
+      {
+        "text": "When the theatre adds a show",
+        "correct": true,
+        "why": "Right. Three is true of boxoffice today and was never promised; assert that there are shows and what each holds."
+      },
+      {
+        "text": "When the run is repeated against the same server without a restart",
+        "correct": false,
+        "why": "Orders change seats_left, not how many shows there are."
+      },
+      {
+        "text": "On the day after the transcripts were recorded, because of the Date header",
+        "correct": false,
+        "why": "That was the brittle collection's Date test; this one does not read the date."
+      },
+      {
+        "text": "When a token expires during the run",
+        "correct": false,
+        "why": "The shows need no token, and the pre-request script renews one anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs3fkfma",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pipeline step is written `run: node boxoffice.mjs > boxoffice.log 2>&1`, without the `&`. What happens to the job?",
+    "hint": "Lesson 6. Does boxoffice ever exit on its own?",
+    "choices": [
+      {
+        "text": "Newman runs before the server is ready and the requests are refused",
+        "correct": false,
+        "why": "Newman never gets to run: the step before it does not end."
+      },
+      {
+        "text": "Nothing changes, because GitHub starts each step in the background",
+        "correct": false,
+        "why": "A step runs in the foreground until its command exits; that is what the & is for."
+      },
+      {
+        "text": "It stops on that step, waiting, until GitHub kills the job",
+        "correct": true,
+        "why": "Right. The step waits for a server that never exits, and the collection never runs."
+      },
+      {
+        "text": "boxoffice exits at once because its output goes to a file",
+        "correct": false,
+        "why": "Sending output to a file does not stop a server; it keeps listening."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvh8g3tn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 6's table counted 11 prerequest-scripts. Somebody removes the pre-request script of Order seats and changes nothing else. How many does the next whole-collection run count?",
+    "hint": "Lesson 6. The collection's script runs before each of the 9 requests in the file, plus the requests' own.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jxwxgf34",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Newman run prints a table whose requests row says 10 executed and 10 failed, and every assertion failed too. What is the first thing to suspect?",
+    "hint": "Lesson 6. What does the failed column of requests count?",
+    "choices": [
+      {
+        "text": "boxoffice answered 4xx to every request",
+        "correct": false,
+        "why": "An error status is an answer; requests that got answers are not counted as failed."
+      },
+      {
+        "text": "The token expired halfway through the run",
+        "correct": false,
+        "why": "An expired token is answered with 401, which still counts as a request that worked."
+      },
+      {
+        "text": "The tests were written for another version of Newman",
+        "correct": false,
+        "why": "A test-script problem shows in test-scripts or assertions, not in requests."
+      },
+      {
+        "text": "boxoffice is not running, or the address is wrong",
+        "correct": true,
+        "why": "Right. That row counts requests that could not be sent at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2eptp0f4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "npm hands a script the arguments of `npm run test:api` that come after a marker of two characters, which is ___.",
+    "hint": "Lesson 6. Two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "--"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qx345ek6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A REST Assured test checks `.body(\"price_cents\", equalTo(\"6500\"))` against sh-103. What happens?",
+    "hint": "Lesson 7, the matchers.",
+    "choices": [
+      {
+        "text": "It passes: Hamcrest turns both sides into text before comparing",
+        "correct": false,
+        "why": "equalTo compares value and type, and does no such conversion."
+      },
+      {
+        "text": "It passes, because JSON has a single kind of number",
+        "correct": false,
+        "why": "One kind of number, yes, but \"6500\" in the test is a string, not a number."
+      },
+      {
+        "text": "It fails: the body holds the number 6500, not text",
+        "correct": true,
+        "why": "Right. equalTo is exact, of that type, and a string is not the number."
+      },
+      {
+        "text": "It does not compile, since Java refuses a string there",
+        "correct": false,
+        "why": "equalTo takes any type, so it compiles and fails at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8864y5t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "mvn test ends with `Tests run: 11, Failures: 0, Errors: 11`. Where do you look first?",
+    "hint": "Lesson 7. A failure and an error point at different places.",
+    "choices": [
+      {
+        "text": "At boxoffice's answers, since eleven checks did not hold",
+        "correct": false,
+        "why": "A check that did not hold is a failure, and there are none."
+      },
+      {
+        "text": "Nowhere: errors are warnings and the build is green",
+        "correct": false,
+        "why": "Errors turn the build red just as failures do."
+      },
+      {
+        "text": "At the pom.xml, since Surefire found no tests",
+        "correct": false,
+        "why": "It found and ran eleven; a missing Surefire pin shows as Tests run: 0."
+      },
+      {
+        "text": "At the lab: whether boxoffice is running where the tests send",
+        "correct": true,
+        "why": "Right. An error is a test that could not finish, such as a request that threw because nobody answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-bf857atm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 7's suite reported Tests run 11. You add ReportTest.java with two @Test methods and ReportCheck.java with three, both in src/test/java/boxoffice. What does mvn test report now?",
+    "hint": "Lesson 7. Which class names does Surefire run?",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-f2gsm4xe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The REST Assured tests compile in one terminal and fail to compile in another, on the same laptop. What does the lesson point at?",
+    "hint": "Lesson 7. Read the Java version line of mvn -version.",
+    "choices": [
+      {
+        "text": "A cache in ~/.m2 that one of the terminals does not see",
+        "correct": false,
+        "why": "~/.m2 belongs to the user, and both terminals read the same one."
+      },
+      {
+        "text": "JAVA_HOME pointing at a different JDK in each",
+        "correct": true,
+        "why": "Right. Maven compiles with the JDK JAVA_HOME names, which need not be the one java -version shows."
+      },
+      {
+        "text": "boxoffice running in only one of them",
+        "correct": false,
+        "why": "A server that is not running gives errors when the tests run, not a compilation failure."
+      },
+      {
+        "text": "An IDE that compiles behind the terminal's back",
+        "correct": false,
+        "why": "The lesson needs no IDE; the difference is which JDK Maven uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-02yya565",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To run one method of a class, -Dtest takes the class name, then the character ___, then the method name.",
+    "hint": "Lesson 7, the reports.",
+    "blanks": [
+      {
+        "accept": [
+          "#"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6562qf7m",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way Karate compares to when it passes.",
+    "hint": "Lesson 8, match.",
+    "pairs": [
+      {
+        "left": "match a == b",
+        "right": "the same keys and values, and nothing extra"
+      },
+      {
+        "left": "match a contains b",
+        "right": "a holds b among other things"
+      },
+      {
+        "left": "match each a == b",
+        "right": "every item of the list a passes b"
+      }
+    ],
+    "right_distractors": [
+      "a and b differ only in the order of their keys",
+      "b is absent from a"
+    ]
+  },
+  {
+    "id": "ex-bfc27hh2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A feature's Background says `* header Authorization = 'Bearer ' + ci.token`, and its scenario posts an order and then reads it back with a GET. What happens?",
+    "hint": "Lesson 8. header against configure headers.",
+    "choices": [
+      {
+        "text": "The POST carries the token and the GET goes without it, so it gets 401",
+        "correct": true,
+        "why": "Right. header adds to the next request only; configure headers is what lasts."
+      },
+      {
+        "text": "Both requests carry the token, since the Background runs before the scenario",
+        "correct": false,
+        "why": "It runs before the scenario, but header applies only to the next request."
+      },
+      {
+        "text": "Neither carries it: header is ignored inside a Background",
+        "correct": false,
+        "why": "It is not ignored; the first request after it gets the header."
+      },
+      {
+        "text": "Karate refuses the feature, because header needs a Given",
+        "correct": false,
+        "why": "Given, When, Then and * are interchangeable; Karate refuses nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yrpt9hr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The full Karate run reported 16 tests. Three more rows are added to the Examples of seats.feature, and head.feature is deleted. How many tests does the next full run report?",
+    "hint": "Lesson 8. Each row of an Outline is a test, and so is each scenario.",
+    "value": 18,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7nnhvsyj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague copies a pom.xml from an older article that names `com.intuit.karate:karate-junit6:2.1.2`. What happens on mvn test?",
+    "hint": "Lesson 8, the project.",
+    "choices": [
+      {
+        "text": "It works, because Maven Central redirects the old group to the new one",
+        "correct": false,
+        "why": "Nothing redirects; a group and an artifact name one entry or nothing."
+      },
+      {
+        "text": "It runs no tests and prints BUILD SUCCESS, as an unpinned Surefire does",
+        "correct": false,
+        "why": "That is lesson 7's trap; here the dependency itself cannot be found."
+      },
+      {
+        "text": "Maven cannot resolve it: Karate 2 is published under io.karatelabs",
+        "correct": true,
+        "why": "Right. com.intuit.karate is the group Karate had before it moved, and Karate 2 exists only under the new one."
+      },
+      {
+        "text": "It downloads an older Karate whose feature syntax differs",
+        "correct": false,
+        "why": "No Karate 2.1.2 exists under the old group to download."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqatgnds",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each thing you may see in a SOAP exchange to what it tells a tester.",
+    "hint": "Lesson 9, the two versions.",
+    "pairs": [
+      {
+        "left": "content-type: text/xml",
+        "right": "the message speaks SOAP 1.1"
+      },
+      {
+        "left": "content-type: application/soap+xml",
+        "right": "the message speaks SOAP 1.2"
+      },
+      {
+        "left": "faultcode soap:Client",
+        "right": "SOAP 1.1 blames the request"
+      },
+      {
+        "left": "env:Sender",
+        "right": "SOAP 1.2 blames the request"
+      }
+    ],
+    "right_distractors": [
+      "the address of the WSDL"
+    ]
+  },
+  {
+    "id": "ex-y3pabhng",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new version of the invoice WSDL adds `<xs:element name=\"discountCents\" type=\"xs:positiveInteger\" minOccurs=\"0\"/>`. Which request breaks this contract?",
+    "hint": "Lesson 9, the types part. What does minOccurs=\"0\" change?",
+    "choices": [
+      {
+        "text": "One that leaves discountCents out",
+        "correct": false,
+        "why": "minOccurs=\"0\" makes the element optional; without it, an element must appear exactly once."
+      },
+      {
+        "text": "One that sends a discountCents of 0",
+        "correct": true,
+        "why": "Right. Optional is not untyped: when it is there, it must be a positive integer, and 0 is not."
+      },
+      {
+        "text": "One with a discountCents of 500",
+        "correct": false,
+        "why": "500 is a positive integer, which is what the type asks for."
+      },
+      {
+        "text": "Any request that still omits buyerTaxId's 11-digit rule",
+        "correct": false,
+        "why": "That rule lives in the code, not in the WSDL; the schema calls buyerTaxId a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak48088a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a SoapUI test case, the invoiceNumber from one reply must go into the next request. Which test step does that?",
+    "hint": "Lesson 9, SoapUI described from the outside.",
+    "choices": [
+      {
+        "text": "A Delay step",
+        "correct": false,
+        "why": "Delay only waits; it moves no value."
+      },
+      {
+        "text": "A Schema Compliance assertion",
+        "correct": false,
+        "why": "That is an assertion on one reply, checking it against the WSDL's types; it passes nothing on."
+      },
+      {
+        "text": "A Property Transfer step",
+        "correct": true,
+        "why": "Right. It copies a value out of one reply into the next request, by XPath."
+      },
+      {
+        "text": "A MockService answering the next request",
+        "correct": false,
+        "why": "A MockService pretends to be the service; it does not carry values between steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rsbgytw",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the elements of the invoice request in order from the outermost to the innermost.",
+    "hint": "Lesson 9, soap/issue.xml.",
+    "items": [
+      "soap:Envelope",
+      "soap:Body",
+      "inv:IssueInvoice",
+      "inv:amountCents"
+    ]
+  },
+  {
+    "id": "ex-mayyr60t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Another tool's validator leaves format checking off unless it is asked. It checks a show whose starts_at is \"8/11 18h\" against schemas/show.json. What does it say?",
+    "hint": "Lesson 10. What is format on its own?",
+    "choices": [
+      {
+        "text": "Valid: it is a string, and format is no more than a note there",
+        "correct": true,
+        "why": "Right. The standard leaves format checking optional, so the date passes unless the validator is told to check it."
+      },
+      {
+        "text": "Invalid, because a date is not a string in JSON",
+        "correct": false,
+        "why": "JSON has no date type; a date travels as a string, and this one is a string."
+      },
+      {
+        "text": "Invalid, because starts_at has to match date-time",
+        "correct": false,
+        "why": "That is what Ajv said with ajv-formats added; with format checking off, nothing reads the keyword."
+      },
+      {
+        "text": "It refuses the schema, because format is a 2020-12 keyword",
+        "correct": false,
+        "why": "format is old and widely known; the trouble is only whether the validator checks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0bx95a8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "check.mjs, with the fixed schemas/order.json, is given `{\"id\":\"ord-7\",\"show_id\":\"sh-101\",\"seats\":0,\"total_cents\":-100,\"status\":\"cancelled\",\"venue\":\"x\"}`. How many lines of broken rules does it print?",
+    "hint": "Lesson 10. allErrors reports every rule, and a cancelled order needs no payment.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bbbmztc6",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these changes to boxoffice's show answer would fail the verification of the Tickets app's pact?",
+    "hint": "Lesson 10. Read the matchingRules, and which fields the pact names.",
+    "choices": [
+      {
+        "text": "seats_left sent as the string \"4\"",
+        "correct": true,
+        "why": "Right. The pact's rule for seats_left is integer."
+      },
+      {
+        "text": "starts_at sent as 2026-11-08T21:00:00Z",
+        "correct": true,
+        "why": "Right. The regex ends with an offset such as -03:00, and Z does not match it."
+      },
+      {
+        "text": "The play renamed, so title holds another string",
+        "correct": false,
+        "why": "The title's rule is type: any string will do."
+      },
+      {
+        "text": "price_cents removed from the show",
+        "correct": false,
+        "why": "The pact never mentions price_cents, because the show screen does not read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxzk7jxv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A consumer writes a pact with `given('order ord-1001 exists')`, and boxoffice's provider test registers that state with a handler that does nothing. Verification against a freshly started boxoffice fails with a 404. Where is the fix?",
+    "hint": "Lesson 10. What is a state handler for?",
+    "choices": [
+      {
+        "text": "In the consumer's test, which should stop naming a state",
+        "correct": false,
+        "why": "The state is what makes the interaction meaningful; the provider has to be put in it."
+      },
+      {
+        "text": "In the Pact Broker, which should store the order with the pact",
+        "correct": false,
+        "why": "A broker stores pacts and results; it holds no data for the provider."
+      },
+      {
+        "text": "In boxoffice, which should answer 200 for an order nobody placed",
+        "correct": false,
+        "why": "A 404 for an order that does not exist is right; the verification ran in the wrong state."
+      },
+      {
+        "text": "In the handler, which should place that order before the interaction",
+        "correct": true,
+        "why": "Right. A handler readies the provider for its given; sh-103 needed nothing, an order does."
+      }
+    ]
+  },
+  {
+    "id": "ex-82cr6kt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A teammate testing against the Prism mock of boxoffice gets a show whose title is \"string\" and files a defect against boxoffice. What do you tell them?",
+    "hint": "Lesson 11. Where does Prism get its answers?",
+    "choices": [
+      {
+        "text": "That Prism built it from the schema, which has no example title",
+        "correct": true,
+        "why": "Right. The shape is right and the content is invented; boxoffice was never asked."
+      },
+      {
+        "text": "That the title field is missing from openapi.yaml",
+        "correct": false,
+        "why": "It is there, typed as a string; that is exactly why Prism wrote the word string."
+      },
+      {
+        "text": "That boxoffice lost the title when it was restarted",
+        "correct": false,
+        "why": "Prism never asked boxoffice anything; in mock mode it answers alone."
+      },
+      {
+        "text": "That Prism replays the last answer boxoffice gave it",
+        "correct": false,
+        "why": "In mock mode Prism forwards nothing and records nothing from boxoffice."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv3538wj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The approving mapping matches with `\"url\": \"/charges\"`. A new boxoffice release posts its charges to /charges?attempt=1. What does WireMock answer?",
+    "hint": "Lesson 11. url against urlPath.",
+    "choices": [
+      {
+        "text": "404, with a report of the closest mapping",
+        "correct": true,
+        "why": "Right. url matches the path and query exactly; urlPath would ignore the query string."
+      },
+      {
+        "text": "201 approved, since the path is still /charges",
+        "correct": false,
+        "why": "That would be true of urlPath; url compares the query string too."
+      },
+      {
+        "text": "201 declined, from the mapping with priority 1",
+        "correct": false,
+        "why": "The declining mapping uses url as well, so it does not match either."
+      },
+      {
+        "text": "A 500, the way a provider in trouble answers",
+        "correct": false,
+        "why": "That is the hand-written stub's down mode, not what WireMock does with an unmatched request."
+      }
+    ]
+  },
+  {
+    "id": "ex-13bc7w3v",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With lesson 11's two mapping files loaded, what is the smallest whole amount_cents that WireMock answers as declined?",
+    "hint": "Lesson 11. Read the filter of charge-declined.json.",
+    "value": 40001,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sr7bqp41",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A stand-in that answers as it was told and also records what it received, for the test to read afterwards, is called a ___.",
+    "hint": "Lesson 11, the vocabulary of stand-ins.",
+    "blanks": [
+      {
+        "accept": [
+          "spy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fqvravy3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A fresh boxoffice takes an order for 2 seats of sh-103 and one for 1 seat of sh-101. Once the sales report has caught up, what is its revenue_cents?",
+    "hint": "Lesson 12. The report sums confirmed orders.",
+    "value": 21000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-eys10a4x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two test files both call `start('boxoffice.mjs', { PORT: '8181' })` in before, and node runs them in parallel. What does the second one see?",
+    "hint": "Lesson 12, tests/start.mjs.",
+    "choices": [
+      {
+        "text": "Its tests pass against the first file's server, which answers on 8181",
+        "correct": false,
+        "why": "start waits for its own child to print listening; that child never does."
+      },
+      {
+        "text": "Its tests time out one by one against a dead server",
+        "correct": false,
+        "why": "That is the failure start.mjs exists to prevent: it rejects when the program exits first."
+      },
+      {
+        "text": "That file fails at once, because its server exits on EADDRINUSE",
+        "correct": true,
+        "why": "Right. The port is taken, the child exits on EADDRINUSE, and the file fails with that reason."
+      },
+      {
+        "text": "node notices the clash and moves the second server to 8182",
+        "correct": false,
+        "why": "Nothing moves a port on its own; the second server simply cannot start."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sz6cxzg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "One morning the report reads `ok 4 - HEAD answers like GET, without a body # TODO boxoffice answers HEAD with 405, lesson 1`. What should you do?",
+    "hint": "Lesson 12, a known defect kept in sight.",
+    "choices": [
+      {
+        "text": "Take the todo option away, since HEAD is fixed",
+        "correct": true,
+        "why": "Right. ok with # TODO is the signal the lesson named; without the option, the test guards the fix."
+      },
+      {
+        "text": "Nothing, since the run was already green",
+        "correct": false,
+        "why": "It was green before too; the ok line says the reason for the todo is gone."
+      },
+      {
+        "text": "Delete the test, since the defect is fixed",
+        "correct": false,
+        "why": "Deleting it would let the defect come back unseen."
+      },
+      {
+        "text": "Change the test to expect 405 again",
+        "correct": false,
+        "why": "That would assert the defect, and fail now that the server is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-77acb83n",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put what happens during a run of tests/payments.test.mjs in order.",
+    "hint": "Lesson 12. Read the stub's log against the hooks.",
+    "items": [
+      "a token is fetched once",
+      "the stub's record is emptied and it is set to approve",
+      "an order is placed and the stub's record is read",
+      "the record is emptied and the stub is set to approve again",
+      "the stub is set to decline and an order is placed",
+      "the stub is put back to approve"
+    ]
+  },
+  {
+    "id": "ex-qceyzb24",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A copy of run-integration.sh ends with the grep line and leaves out `exit $status`. One test fails. What does the pipeline show?",
+    "hint": "Lesson 12. Which command's exit code ends the script then?",
+    "choices": [
+      {
+        "text": "Red, because node --test exited with 1",
+        "correct": false,
+        "why": "A script ends with its last command's code, and node --test is not the last."
+      },
+      {
+        "text": "Red, because trap reports the failure when the script ends",
+        "correct": false,
+        "why": "The trap only kills the servers; it does not change the exit code."
+      },
+      {
+        "text": "Nothing: the script hangs on the servers it started",
+        "correct": false,
+        "why": "The trap stops both servers whatever happened."
+      },
+      {
+        "text": "Green, because grep found the not ok line",
+        "correct": true,
+        "why": "Right. grep succeeded, so the script exits 0 and the failure is hidden."
+      }
+    ]
+  },
+  {
+    "id": "ex-04aqx76d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "withRetry runs with its defaults (attempts 4, base 100, cap 2000), a random that always answers 1, and a send that answers 503 every time. How many milliseconds does it wait in all before returning?",
+    "hint": "Lesson 13. There is no wait after the last attempt.",
+    "value": 700,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-c7mtaxtp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Another client allowed to write orders sends the key buy-7f3a, which ci-tests already used for its two-seat order, with the same body. What does it get?",
+    "hint": "Lesson 13. Whose keys are they?",
+    "choices": [
+      {
+        "text": "A replay of ci-tests's order, ord-1001",
+        "correct": false,
+        "why": "That would hand one client another's order; boxoffice keys replies by the token's sub."
+      },
+      {
+        "text": "A new order of its own, with its own id",
+        "correct": true,
+        "why": "Right. Keys belong to one client, so the same key from another client is a new intention."
+      },
+      {
+        "text": "422, because the key has already been used",
+        "correct": false,
+        "why": "422 is for the same client reusing a key with another body."
+      },
+      {
+        "text": "409, while ci-tests's order is in progress",
+        "correct": false,
+        "why": "That is the fix the lesson proposes for the race, and boxoffice does not have it."
+      }
+    ]
+  },
+  {
+    "id": "ex-69r79me6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "withRetry wraps an order and the first answer is `409 only 1 seat left`. How many times is the order sent?",
+    "hint": "Lesson 13. Which statuses does RETRYABLE hold?",
+    "choices": [
+      {
+        "text": "Just once",
+        "correct": true,
+        "why": "Right. 409 says the state forbids it, so the same request would fail the same way, and RETRYABLE holds only 429, 502, 503 and 504."
+      },
+      {
+        "text": "Four times, the default number of attempts",
+        "correct": false,
+        "why": "Attempts cap the retries of a retryable answer; a 409 is returned at once."
+      },
+      {
+        "text": "Twice",
+        "correct": false,
+        "why": "There is no second try, with or without a wait, for a status outside RETRYABLE."
+      },
+      {
+        "text": "Until the seat is free, up to the cap of 2000 ms",
+        "correct": false,
+        "why": "The cap limits one wait, not the whole loop, and a 409 is not waited on."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tne5g0r",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Choosing each wait uniformly between zero and the doubling ceiling, so that clients which failed together spread out, is called full ___.",
+    "hint": "Lesson 13, waiting between tries.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-54te17t1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An app gets 504 from boxoffice for an order and retries it with the same Idempotency-Key. What happens on boxoffice's side?",
+    "hint": "Lesson 13. When does boxoffice remember a key?",
+    "choices": [
+      {
+        "text": "It replays the 504, since the key was already seen",
+        "correct": false,
+        "why": "boxoffice remembers a key only after a charge succeeds, and this one never did."
+      },
+      {
+        "text": "It places a new order and passes the key to the provider",
+        "correct": true,
+        "why": "Right. Only a provider that honours idempotency keys can recognise the repeat charge."
+      },
+      {
+        "text": "It answers 422, because the key was used once already",
+        "correct": false,
+        "why": "422 is for a key reused with a different body after a remembered reply."
+      },
+      {
+        "text": "It returns the first order, which the timeout had confirmed",
+        "correct": false,
+        "why": "The first order was marked failed when boxoffice gave up; it confirmed nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr5ztv3f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In Tickets, what does price() write for a Show whose priceCents is 6505?",
+    "hint": "Lesson 14, Shows.kt. The format is \"R$ %d,%02d\".",
+    "choices": [
+      {
+        "text": "R$ 65,5",
+        "correct": false,
+        "why": "%02d pads the cents to two digits, so 5 is written 05."
+      },
+      {
+        "text": "R$ 65,05",
+        "correct": true,
+        "why": "Right. 6505 / 100 is 65, 6505 % 100 is 5, written with two digits."
+      },
+      {
+        "text": "R$ 65,50",
+        "correct": false,
+        "why": "The remainder is 5 cents, not 50; padding goes on the left."
+      },
+      {
+        "text": "R$ 6505,00",
+        "correct": false,
+        "why": "The integer division by 100 turns cents into reais first."
+      }
+    ]
+  },
+  {
+    "id": "ex-va34bn7j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does Appium name Tickets's button `example.tickets:id/refresh` rather than just `refresh`?",
+    "hint": "Lesson 14, what the tree looks like.",
+    "choices": [
+      {
+        "text": "Because Appium adds the package so that XPath can find it faster",
+        "correct": false,
+        "why": "XPath has nothing to do with it, and the prefix is Android's, not Appium's."
+      },
+      {
+        "text": "Because two apps on one screen each have their own refresh",
+        "correct": true,
+        "why": "Right. Tickets and the permission dialog drawn over it are different apps, and the package keeps their ids apart."
+      },
+      {
+        "text": "Because the layout file declares the id with the package written in it",
+        "correct": false,
+        "why": "The layout says @+id/refresh; the package is added by Android when it reports the node."
+      },
+      {
+        "text": "Because a content description must carry a package",
+        "correct": false,
+        "why": "This is the resource id, not the content description, which has no such prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a3re7qr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tickets was installed and opened once while boxoffice ran. Then boxoffice is stopped, and the user presses Refresh. What does the list screen show?",
+    "hint": "Lesson 14, Shows.load and display.",
+    "choices": [
+      {
+        "text": "The error line and an empty list",
+        "correct": false,
+        "why": "That is Loaded.Failed, for when nothing was ever saved; the first load saved a copy."
+      },
+      {
+        "text": "The list as it was, with nothing to say it is old",
+        "correct": false,
+        "why": "display shows the banner whenever the load is Offline."
+      },
+      {
+        "text": "The banner and the error line together",
+        "correct": false,
+        "why": "display hides both first and shows only one of them per result."
+      },
+      {
+        "text": "The saved list, under the banner Offline: showing the list from HH:mm",
+        "correct": true,
+        "why": "Right. The request fails, the saved body is parsed, and the banner names the time it was saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ynsrb3b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these could a local test, running on the computer's own Java runtime without Android, check in Tickets?",
+    "hint": "Lesson 14, three places a test can live.",
+    "choices": [
+      {
+        "text": "That price() writes 6500 cents as R$ 65,00",
+        "correct": true,
+        "why": "Right. Formatting needs no screen, which is what a local test is for."
+      },
+      {
+        "text": "That time() turns the start into 08/11 18:00",
+        "correct": true,
+        "why": "Right. It is string work, with no Android in it."
+      },
+      {
+        "text": "That tapping a row opens the show's screen",
+        "correct": false,
+        "why": "That needs the app's views on a device: an instrumented or end-to-end test."
+      },
+      {
+        "text": "That the notification dialog appears when the switch is turned on",
+        "correct": false,
+        "why": "The dialog belongs to Android; only an end-to-end test sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbp1gxnv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tickets's list screen has no remind switch. Appium's implicit wait is set to 10 seconds, and a test asks whether the switch exists there. What does that cost?",
+    "hint": "Lesson 15, waiting. Where does an implicit wait act?",
+    "choices": [
+      {
+        "text": "Nothing: asking about existence is instant",
+        "correct": false,
+        "why": "With an implicit wait set, every find retries on the server before it answers, this one included."
+      },
+      {
+        "text": "Ten seconds, to prove that something is absent",
+        "correct": true,
+        "why": "Right. The find retries until the implicit wait runs out, so choose one place to wait: the explicit wait in the test."
+      },
+      {
+        "text": "A failed session, because a find with no match ends it",
+        "correct": false,
+        "why": "A find with no match answers no such element; the session goes on."
+      },
+      {
+        "text": "Twenty seconds, the time the driver gives adb to find a device",
+        "correct": false,
+        "why": "That twenty-second wait is for starting a session, not for a find."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwz8qker",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each WebdriverIO wait to when it succeeds.",
+    "hint": "Lesson 15, the waits WebdriverIO offers.",
+    "pairs": [
+      {
+        "left": "waitForExist()",
+        "right": "the element is in the tree, drawn or not"
+      },
+      {
+        "left": "waitForDisplayed()",
+        "right": "it is in the tree and visible"
+      },
+      {
+        "left": "waitForEnabled()",
+        "right": "it can be acted on"
+      },
+      {
+        "left": "waitForDisplayed({ reverse: true })",
+        "right": "it has gone, such as a progress indicator"
+      }
+    ],
+    "right_distractors": [
+      "the session has been deleted"
+    ]
+  },
+  {
+    "id": "ex-5qrj2bar",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team wants one Appium locator that finds the Buy button in both the Android and the iOS build of their app. What has to be true of the two builds?",
+    "hint": "Lesson 15, strategies in order of preference.",
+    "choices": [
+      {
+        "text": "Both give the button the same resource id, found with the id strategy",
+        "correct": false,
+        "why": "A resource id is Android's; iOS has no resource ids for the same name to match."
+      },
+      {
+        "text": "Both draw the button at the same place, found by XPath",
+        "correct": false,
+        "why": "XPath describes positions, and the two platforms build different trees."
+      },
+      {
+        "text": "The same accessibility name in both, found by accessibility id",
+        "correct": true,
+        "why": "Right. It reads the content description on Android and the accessibility identifier on iOS."
+      },
+      {
+        "text": "Nothing: the UiAutomator strategy works on both platforms",
+        "correct": false,
+        "why": "UiAutomator exists only on Android."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gszssrp",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`curl localhost:4723/status` answers `\"ready\": true`. Which of these does that NOT tell you?",
+    "hint": "Lesson 15, the server.",
+    "choices": [
+      {
+        "text": "That a device is attached",
+        "correct": true,
+        "why": "Right. The server learns which device a session is for only when the session asks."
+      },
+      {
+        "text": "That the server is up and accepts sessions",
+        "correct": false,
+        "why": "That is exactly what ready true says."
+      },
+      {
+        "text": "That Tickets is installed on the emulator",
+        "correct": true,
+        "why": "Right. The app is installed when a session starts, from appium:app."
+      },
+      {
+        "text": "Which version of Appium is answering",
+        "correct": false,
+        "why": "The answer carries build.version, 3.8.0."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4g7rfde",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the pieces a tap goes through, from the test's command to the screen, in order.",
+    "hint": "Lesson 15, four programs between a test and a tap.",
+    "items": [
+      "the client library in the test",
+      "the Appium server on port 4723",
+      "the UiAutomator2 driver",
+      "the driver's own app on the device"
+    ]
+  },
+  {
+    "id": "ex-tz8pws0z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the list screen, a test runs `onView(withId(R.id.remind)).check(matches(not(isDisplayed())))`. What happens?",
+    "hint": "Lesson 16. Is remind ever inflated on the list screen?",
+    "choices": [
+      {
+        "text": "It fails: no view matches, so NoMatchingViewException",
+        "correct": true,
+        "why": "Right. remind belongs to the show's screen and was never inflated here, unlike the banner, which exists hidden."
+      },
+      {
+        "text": "It passes, because there is no remind switch to be displayed",
+        "correct": false,
+        "why": "matches needs a view to judge; with none found, the check never gets that far."
+      },
+      {
+        "text": "It fails with AmbiguousViewMatcherException",
+        "correct": false,
+        "why": "That is for a matcher that finds more than one view, such as title on the list."
+      },
+      {
+        "text": "It waits until the show's screen opens",
+        "correct": false,
+        "why": "Espresso waits for the main thread, not for a view to appear."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4mghddz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague writes `onData(anything()).inAdapterView(withId(R.id.shows)).atPosition(2).perform(click())` to open sh-103. When does it start opening the wrong show?",
+    "hint": "Lesson 16, why a list needs onData.",
+    "choices": [
+      {
+        "text": "When the list has been scrolled down before the tap",
+        "correct": false,
+        "why": "onData scrolls to the item itself; the position is a place in the data, not on the screen."
+      },
+      {
+        "text": "When the emulator is rotated",
+        "correct": false,
+        "why": "Rotation redraws the screen; the third item of the data is still the third."
+      },
+      {
+        "text": "When boxoffice lists the shows in another order",
+        "correct": true,
+        "why": "Right. Position finds whatever is third; showWithId(\"sh-103\") finds the show by what the row holds."
+      },
+      {
+        "text": "When sh-103 sells out",
+        "correct": false,
+        "why": "A sold-out show is still in the list, in the same place."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r9y8m8m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test class registers ShowsIdlingResource in @Before and has no @After. What can that do to the test classes that run after it?",
+    "hint": "Lesson 16, an idling resource.",
+    "choices": [
+      {
+        "text": "Nothing: Espresso drops every resource when a class ends",
+        "correct": false,
+        "why": "IdlingRegistry keeps what it was given until it is told to unregister it."
+      },
+      {
+        "text": "It answers on in their runs, for a finished test",
+        "correct": true,
+        "why": "Right. Unregistering matters as much as registering, because the registry outlives the class."
+      },
+      {
+        "text": "They stop waiting for the main thread",
+        "correct": false,
+        "why": "A registered resource adds to what Espresso waits for; it takes nothing away."
+      },
+      {
+        "text": "The app's Shows.busy stays above zero for good",
+        "correct": false,
+        "why": "The resource only reads busy; it never changes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-80wg19b9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of a Gradle run of the instrumented tests in order.",
+    "hint": "Lesson 16, what Gradle does on the device.",
+    "items": [
+      "Gradle builds the app's APK and the test APK",
+      "both APKs are installed on the device",
+      "adb asks Android to start the test APK's instrumentation",
+      "the tests run inside the app's own process",
+      "the HTML and JUnit XML reports are written"
+    ]
+  },
+  {
+    "id": "ex-gjhrb51w",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these does Espresso wait for before each step without being told?",
+    "hint": "Lesson 16, what Espresso waits for, and what it does not.",
+    "choices": [
+      {
+        "text": "A new screen being drawn after a tap",
+        "correct": true,
+        "why": "Right. That is work on the main thread, which Espresso always waits out."
+      },
+      {
+        "text": "The thread Tickets starts to ask boxoffice for the shows",
+        "correct": false,
+        "why": "A thread the app started itself is invisible to Espresso; that is why the idling resource exists."
+      },
+      {
+        "text": "The pool of background workers that AsyncTask used",
+        "correct": true,
+        "why": "Right. Espresso watches that pool too, though new code no longer touches it."
+      },
+      {
+        "text": "A list the main thread is still filling",
+        "correct": true,
+        "why": "Right. Filling the list is main-thread work."
+      },
+      {
+        "text": "A request in flight from another app on the phone",
+        "correct": false,
+        "why": "Espresso sees only this app's process."
+      }
+    ]
+  },
+  {
+    "id": "ex-srwxm0zh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An Appium test of the React Native list looks for `id=com.ticketsrn:id/refresh` on Android and finds nothing, though the button has testID=\"refresh\". Why?",
+    "hint": "Lesson 17, testID.",
+    "choices": [
+      {
+        "text": "Because a testID becomes a content description, so ~refresh is the locator",
+        "correct": false,
+        "why": "On Android it becomes the resource id; the content description is another attribute."
+      },
+      {
+        "text": "Because a testID becomes the resource id refresh, with no package in front",
+        "correct": true,
+        "why": "Right. The tree reports refresh as it is, unlike Tickets's example.tickets:id/ ids."
+      },
+      {
+        "text": "Because Appium does not see React Native apps, which run in a web view",
+        "correct": false,
+        "why": "There is no browser and no HTML; React Native draws native widgets Appium sees."
+      },
+      {
+        "text": "Because testID reaches the iOS build and not Android",
+        "correct": false,
+        "why": "It reaches both: the resource id on Android, the accessibility identifier on iOS."
+      }
+    ]
+  },
+  {
+    "id": "ex-75dnftjt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pipeline runs the Detox specs against a release build of the React Native app, and nobody starts npx react-native start. What happens?",
+    "hint": "Lesson 17, the configuration.",
+    "choices": [
+      {
+        "text": "The app shows an error about the development server",
+        "correct": false,
+        "why": "That happens to a debug build, which loads its JavaScript from Metro."
+      },
+      {
+        "text": "Detox refuses to boot the emulator without Metro",
+        "correct": false,
+        "why": "Booting the AVD has nothing to do with Metro; a wrong AVD name is what stops it."
+      },
+      {
+        "text": "Nothing goes wrong: a release build carries its JavaScript in the APK",
+        "correct": true,
+        "why": "Right. That is one reason pipelines often test release builds."
+      },
+      {
+        "text": "Every spec hangs, because the app waits for port 8081",
+        "correct": false,
+        "why": "Only a debug build asks Metro on 8081."
+      }
+    ]
+  },
+  {
+    "id": "ex-haejfbkk",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of the lesson's spec for a list that keeps polling in order.",
+    "hint": "Lesson 17, the third way out.",
+    "items": [
+      "device.disableSynchronization()",
+      "waitFor the show-sh-103 row to be visible, within 10 seconds",
+      "tap the show-sh-103 row",
+      "waitFor the chosen line to be visible, within 5 seconds",
+      "device.enableSynchronization(), in finally"
+    ]
+  },
+  {
+    "id": "ex-f3vnceq4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A React Native app is never idle for Detox, and the only cause is a long-lived connection it keeps open to one prices address. The developers cannot change the app this sprint. Which way out keeps the most synchronisation?",
+    "hint": "Lesson 17, three ways out. What did the blacklist not deal with in the lesson's case?",
+    "choices": [
+      {
+        "text": "device.disableSynchronization() in beforeAll, for every spec",
+        "correct": false,
+        "why": "That switches it off for the whole suite, the cost the lesson warns about."
+      },
+      {
+        "text": "A longer Jest timeout, so the wait ends eventually",
+        "correct": false,
+        "why": "An app that is never idle waits until any timeout; a longer one only fails later."
+      },
+      {
+        "text": "device.setURLBlacklist with that address's pattern",
+        "correct": true,
+        "why": "Right. Here no timer is involved, so ignoring the one address leaves the rest of the synchronisation on."
+      },
+      {
+        "text": "Thread.sleep before each expect, as Espresso tests do",
+        "correct": false,
+        "why": "Sleeping does not make the app idle, and the lessons rule it out everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-certj9ej",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the Swift package of lesson 18, what does `price` write for a Show whose priceCents is 1050?",
+    "hint": "Lesson 18, Show.swift. A \"0\" is added only when the cents are below 10.",
+    "choices": [
+      {
+        "text": "R$ 10,050",
+        "correct": false,
+        "why": "The 0 goes in only for cents under 10; here they are 50."
+      },
+      {
+        "text": "R$ 10,50",
+        "correct": true,
+        "why": "Right. 1050 / 100 is 10, 1050 % 100 is 50, and 50 needs no padding."
+      },
+      {
+        "text": "R$ 10,5",
+        "correct": false,
+        "why": "That is what a floating-point 10.5 would print; the code joins two whole numbers."
+      },
+      {
+        "text": "R$ 1050,00",
+        "correct": false,
+        "why": "The integer division by 100 turns cents into reais before anything is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-znba54cb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team wants to write the new tests of its iOS screens in Swift Testing alone, and drop XCTest. What does lesson 18 say about that, at the time of writing?",
+    "hint": "Lesson 18, Swift Testing.",
+    "choices": [
+      {
+        "text": "It works, because Swift Testing replaced XCTest in 2024",
+        "correct": false,
+        "why": "It arrived beside XCTest, not instead of it."
+      },
+      {
+        "text": "UI tests still need the older framework; the new one drives none",
+        "correct": true,
+        "why": "Right. Xcode's own dialog offers Swift Testing with XCTest UI Tests, so a project carries both."
+      },
+      {
+        "text": "It works on a Mac, and fails on the Linux machines",
+        "correct": false,
+        "why": "Where it runs is not the issue: Swift Testing does not drive screens anywhere."
+      },
+      {
+        "text": "It works once the app sets accessibility identifiers",
+        "correct": false,
+        "why": "Identifiers are what XCUITest finds elements by; they do not give Swift Testing a screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5wq25rd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An XCUITest test has `continueAfterFailure = false`, and its first assertion fails. What happens to the taps written after it?",
+    "hint": "Lesson 18, the test.",
+    "choices": [
+      {
+        "text": "They run, and each failure is listed at the end",
+        "correct": false,
+        "why": "That is what Swift Testing's #expect does; this setting stops a UI test."
+      },
+      {
+        "text": "They run after the app is launched again",
+        "correct": false,
+        "why": "Nothing relaunches the app; launch() is called once, at the start of each test."
+      },
+      {
+        "text": "None of them runs: the test stops at its first failure",
+        "correct": true,
+        "why": "Right. Every tap after it would act on a screen that is not the one the test expects."
+      },
+      {
+        "text": "They are skipped, and the test is reported as passed",
+        "correct": false,
+        "why": "A failed assertion fails the test; stopping early does not hide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3afe16ff",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these have to run on a Mac?",
+    "hint": "Lesson 18, why every iOS test needs a Mac.",
+    "choices": [
+      {
+        "text": "The Appium server that drives an iOS simulator",
+        "correct": true,
+        "why": "Right. Its XCUITest driver builds and runs WebDriverAgent there."
+      },
+      {
+        "text": "The Appium client script of that test",
+        "correct": false,
+        "why": "The client can be anywhere; only the machine that touches the iPhone must be a Mac."
+      },
+      {
+        "text": "xcodebuild test against a simulator",
+        "correct": true,
+        "why": "Right. xcodebuild is Xcode's command-line twin, and Xcode is published for the Mac alone."
+      },
+      {
+        "text": "swift test in ios/TicketsCore",
+        "correct": false,
+        "why": "It runs anywhere Swift 6 runs, Linux and Windows included."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pc33vrd",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "For an iOS app, put the kinds of test in order from the one a team should have most of to the one it should have fewest of.",
+    "hint": "Lesson 18, in a pipeline. The cost of a macOS minute steepens the pyramid.",
+    "items": [
+      "Swift Testing tests of the logic",
+      "XCUITest tests of the screens",
+      "runs on real iPhones"
+    ]
+  },
+  {
+    "id": "ex-s66zjykg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A feature tells users how far they are from the theatre. Every emulator test passes, and users indoors report a distance that keeps changing. Why did the emulator never show it?",
+    "hint": "Lesson 19, sensors, location and the camera.",
+    "choices": [
+      {
+        "text": "Because the emulator has no GPS at all",
+        "correct": false,
+        "why": "hw.gps defaults to yes; the emulator has one, fed by hand."
+      },
+      {
+        "text": "Its GPS reports exactly what was typed in, with no drift",
+        "correct": true,
+        "why": "Right. A position that drifts indoors is a row the emulator hides; only a phone shows it."
+      },
+      {
+        "text": "Because location needs a Google Play image",
+        "correct": false,
+        "why": "The emulator's GPS is a hardware property, not one of Google's services."
+      },
+      {
+        "text": "Because its network is the computer's, steady and fast",
+        "correct": false,
+        "why": "The network is a different blind spot; this one is the sensor."
+      }
+    ]
+  },
+  {
+    "id": "ex-8knvk2ke",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The emulator is started with `-camera-back webcam0`, and the app reads a printed ticket's QR code through it every time. What has that tested?",
+    "hint": "Lesson 19. Whose camera is webcam0?",
+    "choices": [
+      {
+        "text": "Reading through the phone's lens, since the picture is a real one",
+        "correct": false,
+        "why": "A real picture through the computer's camera is still not the phone's lens."
+      },
+      {
+        "text": "Nothing, because the emulator refuses a webcam",
+        "correct": false,
+        "why": "webcam<N> is one of the modes the emulator lists."
+      },
+      {
+        "text": "The flow around the scan, with the computer's own camera reading",
+        "correct": true,
+        "why": "Right. None of the camera modes is the phone's lens, so how well a phone reads is for a phone."
+      },
+      {
+        "text": "How the code reads on a phone of the users' commonest brand",
+        "correct": false,
+        "why": "The brand's camera and its software are exactly what is missing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-adgjvgv6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Buy button is too small for a thumb to hit reliably, and every emulator test that taps it passes. Why?",
+    "hint": "Lesson 19, the network and the fingers.",
+    "choices": [
+      {
+        "text": "A test's tap lands on the exact pixel it aimed at",
+        "correct": true,
+        "why": "Right. A mouse or a test never misses, which a thumb on a bus does."
+      },
+      {
+        "text": "The emulator's screen is larger than a phone's",
+        "correct": false,
+        "why": "The AVD has the phone's screen; size is not the reason."
+      },
+      {
+        "text": "Tests find the button by id, so its size is ignored",
+        "correct": false,
+        "why": "Finding it by id is right; the tap still lands on one point, and always on the right one."
+      },
+      {
+        "text": "The emulator draws with the computer's GPU",
+        "correct": false,
+        "why": "Drawing hides glitches of a phone's GPU, not misses of a finger."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8sc37kc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these defects does lesson 19's table say the iOS simulator hides?",
+    "hint": "Lesson 19, which defect shows up where.",
+    "choices": [
+      {
+        "text": "A crash when memory runs short",
+        "correct": true,
+        "why": "Right. The simulator has the Mac's memory."
+      },
+      {
+        "text": "Text cut off in Portuguese",
+        "correct": false,
+        "why": "Text and layout are the app's own behaviour, which the simulator shows."
+      },
+      {
+        "text": "An app that will not install because it was signed wrong",
+        "correct": true,
+        "why": "Right. The simulator asks for none of the provisioning a phone checks."
+      },
+      {
+        "text": "The denied path of a permission prompt",
+        "correct": false,
+        "why": "Permission prompts and their denied paths show in the simulator."
+      },
+      {
+        "text": "Slow scrolling on a cheap phone",
+        "correct": true,
+        "why": "Right. Everything is faster on the Mac."
+      }
+    ]
+  },
+  {
+    "id": "ex-9n063dcv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the capture of the emulator's GPU help, the software renderer that runs on the processor, for systems without a usable GPU, is the mode called ___.",
+    "hint": "Lesson 19, the screen's drawing. It is named after SwiftShader.",
+    "blanks": [
+      {
+        "accept": [
+          "swiftshader_indirect"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z0cw69b7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 20's matrix (4 Android versions, 3 screens, 3 makers, 2 languages) has 53 pairs to cover. A third language is added. How many pairs does a pairwise set have to cover now?",
+    "hint": "Lesson 20. A pair is a value of one dimension beside a value of another; add up each pair of dimensions.",
+    "value": 63,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6b6b631w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team runs Firebase Test Lab with `--type robo` on thirty phones and every run passes. What has it learnt?",
+    "hint": "Lesson 20, Espresso on Firebase Test Lab.",
+    "choices": [
+      {
+        "text": "That its Espresso suite passes on all thirty",
+        "correct": false,
+        "why": "Robo runs no suite; it is a crawler that needs no test written."
+      },
+      {
+        "text": "Little beyond the app not crashing as a crawler taps through it",
+        "correct": true,
+        "why": "Right. It is a cheap first look at many phones and no replacement for a suite."
+      },
+      {
+        "text": "That every pair of the matrix has been covered",
+        "correct": false,
+        "why": "Pairs are about which devices; robo says nothing about the matrix it ran on."
+      },
+      {
+        "text": "That the app reaches boxoffice from every phone",
+        "correct": false,
+        "why": "A crawler that finds no crash says nothing about whether the list ever loaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4957641",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each name from lesson 20 to what it is.",
+    "hint": "Lesson 20, device clouds and running remotely.",
+    "pairs": [
+      {
+        "left": "bstack:options",
+        "right": "BrowserStack's own capabilities, under its prefix"
+      },
+      {
+        "left": "Sauce Connect",
+        "right": "Sauce Labs's tunnel back to your computer"
+      },
+      {
+        "left": "--type robo",
+        "right": "Test Lab's crawler, with no test written"
+      },
+      {
+        "left": "appium:app on a cloud",
+        "right": "the id the upload returned"
+      }
+    ],
+    "right_distractors": [
+      "a path to the APK on your disk"
+    ]
+  },
+  {
+    "id": "ex-jwacw3m4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In the export of lesson 20, Google's Pixel is 1.1% of the sessions. What does that say about a suite that runs only on emulator images of Google's Android?",
+    "hint": "Lesson 20, makers; lesson 19, the maker's Android.",
+    "choices": [
+      {
+        "text": "That it covers 1.1% of the users and should be dropped",
+        "correct": false,
+        "why": "The emulator still catches the rows of lesson 19's table it shows, for every user."
+      },
+      {
+        "text": "That makers' own rules, for 98.9% of sessions, are never met there",
+        "correct": true,
+        "why": "Right. Samsung, Motorola and Xiaomi reach 96.4%, and their background rules show only on their phones."
+      },
+      {
+        "text": "That the emulator should switch to a Samsung system image",
+        "correct": false,
+        "why": "The emulator runs Google's Android; a maker's build is what a cloud or a shelf is for."
+      },
+      {
+        "text": "Nothing: Android versions matter and makers do not",
+        "correct": false,
+        "why": "Lesson 19 lists the maker's Android among the emulator's blind spots."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5xm6t29",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Besides money, what does renting a phone in a device cloud cost, according to lesson 20?",
+    "hint": "Lesson 20, what it costs.",
+    "choices": [
+      {
+        "text": "Time: uploading, installing, every command crossing the internet",
+        "correct": true,
+        "why": "Right. A cloud phone is slower to reach than an emulator on your desk."
+      },
+      {
+        "text": "Rewriting the tests for the cloud's own framework",
+        "correct": false,
+        "why": "The tests stay as lessons 15 and 16 wrote them; only where they connect changes."
+      },
+      {
+        "text": "Certainty: a failure has more possible causes",
+        "correct": true,
+        "why": "Right. The app, the phone, the network or the cloud, which is why the video is watched first."
+      },
+      {
+        "text": "Waiting when a popular model is busy",
+        "correct": true,
+        "why": "Right. The phone you ask for may be in somebody else's session."
+      },
+      {
+        "text": "Losing the recordings, which stay on the phone",
+        "correct": false,
+        "why": "The videos and screenshots are kept on the vendor's servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-55wt9x50",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Tickets is open and in front on the emulator. What number does `mobile: queryAppState` answer for it?",
+    "hint": "Lesson 21, the same from Appium.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wvtqxsgg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a test phone where the person has already refused Tickets's notifications twice, a test taps the reminder switch without reinstalling the app first. What does the screen show?",
+    "hint": "Lesson 21, Android's rule since version 11.",
+    "choices": [
+      {
+        "text": "The dialog again, as on every first tap of a session",
+        "correct": false,
+        "why": "After two refusals the dialog stops appearing."
+      },
+      {
+        "text": "The switch on, since Android stops asking",
+        "correct": false,
+        "why": "Stopping asking means answering no, not yes."
+      },
+      {
+        "text": "Nothing: the app crashes on a refusal it never asked for",
+        "correct": false,
+        "why": "onRequestPermissionsResult still runs, with the answer no."
+      },
+      {
+        "text": "It turns itself off at once and the line saying why appears, with no dialog",
+        "correct": true,
+        "why": "Right. Android answers no at once, and Tickets explains it, which a test should hold it to."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tfwht1t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Somebody adds `'appium:autoGrantPermissions': true` to the capabilities of reminder.test.mjs. What happens to its Don't allow test?",
+    "hint": "Lesson 21, setting the state before a test.",
+    "choices": [
+      {
+        "text": "It passes faster, since the grant is done before the session",
+        "correct": false,
+        "why": "With the permission granted there is no dialog to deny, so the test cannot reach its own path."
+      },
+      {
+        "text": "The dialog under test never appears, so it cannot press deny",
+        "correct": true,
+        "why": "Right. The capability is for suites not about permissions; this one removes what it tests."
+      },
+      {
+        "text": "It fails at once: UiAutomator2 refuses that capability",
+        "correct": false,
+        "why": "The driver accepts it; lesson 21 names it as the right choice for suites that are not about permissions."
+      },
+      {
+        "text": "Espresso has to take over the dialog instead",
+        "correct": false,
+        "why": "Espresso cannot press a dialog drawn by another app."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mjqwgmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A person presses Back on Tickets's list screen, then opens Tickets again from its icon. What does it start with?",
+    "hint": "Lesson 21, interruptions. Back from the list finishes the activity.",
+    "choices": [
+      {
+        "text": "The show's screen that was open before, rebuilt",
+        "correct": false,
+        "why": "Back finished the list; a finished activity is not restored."
+      },
+      {
+        "text": "A cold start on the list, loading the shows again",
+        "correct": true,
+        "why": "Right. Leaving with Back finishes the activity, and Android has nothing to restore."
+      },
+      {
+        "text": "The list exactly as it was, without a new load",
+        "correct": false,
+        "why": "That is Back from the show's screen to the list, not a new start."
+      },
+      {
+        "text": "The permission dialog, because the app was finished",
+        "correct": false,
+        "why": "Finishing the app does not reset its permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6j824qp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Commands such as swipeGesture or backgroundApp belong to one driver rather than to the W3C protocol, and their names start with ___.",
+    "hint": "Lesson 21, the driver's own gestures. A word and a colon.",
+    "blanks": [
+      {
+        "accept": [
+          "mobile:",
+          "mobile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r84y5j9s",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Through slow-proxy.mjs with RATE=200, the body of an answer goes out at 200 bytes a second. Leaving out the rest of the trip, about how many seconds does a 2000-byte body take to arrive?",
+    "hint": "Lesson 22. 379 bytes took a little under two seconds.",
+    "value": 10,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ae8yf4m0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tickets loads the list, 379 bytes, through the proxy with RATE=50, so a few bytes arrive every tenth of a second for about eight seconds. Its readTimeout is 5000. What does the person see?",
+    "hint": "Lesson 22. What does Java's readTimeout measure?",
+    "choices": [
+      {
+        "text": "The Offline banner after five seconds",
+        "correct": false,
+        "why": "readTimeout fires on five seconds of silence, and this answer is never silent that long."
+      },
+      {
+        "text": "The error line, because the load took longer than the limit",
+        "correct": false,
+        "why": "The limit is for silence, not for the whole answer."
+      },
+      {
+        "text": "The old screen unchanged for about eight seconds, then the fresh list",
+        "correct": true,
+        "why": "Right. Nothing is shown while a load runs, and a trickle never trips the read limit."
+      },
+      {
+        "text": "A progress indicator, then the fresh list",
+        "correct": false,
+        "why": "Tickets has no indicator; that is one of lesson 22's findings."
+      }
+    ]
+  },
+  {
+    "id": "ex-eegfz0kt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test of a request through `DELAY=800` asserts that it took exactly 800 ms. What is wrong with it?",
+    "hint": "Lesson 22, what not to assert.",
+    "choices": [
+      {
+        "text": "Nothing: the proxy holds every answer for exactly the delay",
+        "correct": false,
+        "why": "It holds it for the delay, and the trip adds a few milliseconds: 0.818 seconds in the capture."
+      },
+      {
+        "text": "It took a little more; assert a window instead",
+        "correct": true,
+        "why": "Right. At least the delay, and well under the next limit, as lesson 13 did for the payment timeout."
+      },
+      {
+        "text": "Durations belong to the emulator's throttling, not to a proxy",
+        "correct": false,
+        "why": "The proxy is the more exact instrument of the two; the trouble is asserting an exact number."
+      },
+      {
+        "text": "It should assert 6000 ms, Tickets's limit",
+        "correct": false,
+        "why": "Tickets's limits are five seconds each; 800 ms is far inside them."
+      }
+    ]
+  },
+  {
+    "id": "ex-k81ghpg4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these can the slow proxy do that the emulator's own network throttling cannot?",
+    "hint": "Lesson 22, a slow network on the emulator.",
+    "choices": [
+      {
+        "text": "Lose answers, a share of them",
+        "correct": true,
+        "why": "Right. DROP throws answers away, which the emulator's settings cannot."
+      },
+      {
+        "text": "Slow one server's answers and nothing else",
+        "correct": true,
+        "why": "Right. The emulator slows everything the device does, the system included."
+      },
+      {
+        "text": "Slow the system's own traffic as well",
+        "correct": false,
+        "why": "That is the emulator's broad throttling; the proxy reaches only what passes through it."
+      },
+      {
+        "text": "Repeat the same losses on every run",
+        "correct": true,
+        "why": "Right. With SEED unchanged, the same answers are lost each time."
+      },
+      {
+        "text": "Switch the emulator's Wi-Fi off",
+        "correct": false,
+        "why": "That is adb shell svc wifi disable, on the device."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kshfeq8",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of the recovery test in the order lesson 22 writes them.",
+    "hint": "Lesson 22, when the network comes back.",
+    "items": [
+      "point Shows.baseUrl at the proxy slower than the timeout",
+      "press Refresh",
+      "check that the banner is displayed",
+      "point Shows.baseUrl back at boxoffice",
+      "press Refresh again",
+      "check that the banner is no longer displayed"
+    ]
+  }
+]

@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-vbcwaccz",
+    "version": 1,
+    "section": "characters-words-subwords",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a language model receive in place of a sentence?",
+    "hint": "Think about what the tokenizer hands over.",
+    "choices": [
+      {
+        "text": "The Unicode code of each character, in order",
+        "correct": false,
+        "why": "That is how the text is stored, not what the model reads: the tokenizer cuts pieces bigger than a character."
+      },
+      {
+        "text": "A list of integers, one per piece of text",
+        "correct": true,
+        "why": "Right. The tokenizer cuts the text into tokens and replaces each by its id."
+      },
+      {
+        "text": "The words as strings, which the first layer compares",
+        "correct": false,
+        "why": "A network computes with numbers; strings never reach it."
+      },
+      {
+        "text": "One vector for the whole sentence, made by the tokenizer",
+        "correct": false,
+        "why": "The tokenizer produces one id per piece; vectors come from the embedding table, one per token."
+      }
+    ]
+  },
+  {
+    "id": "ex-4h0g193h",
+    "version": 1,
+    "section": "characters-words-subwords",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many different characters did `split.py` find in the corpus?",
+    "hint": "The first line it printed.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-c9186sfj",
+    "version": 1,
+    "section": "characters-words-subwords",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team built a word vocabulary from its customers' e-mails in 2024. In 2026 the e-mails mention a product launched in 2025. What does the model receive for its name?",
+    "hint": "What did `split.py` do with `weaver`?",
+    "choices": [
+      {
+        "text": "Its letters, one token each",
+        "correct": false,
+        "why": "That is a character vocabulary, or the bottom of a subword one; a word vocabulary has no letters to fall back on."
+      },
+      {
+        "text": "A new entry, added the first time the name is seen",
+        "correct": false,
+        "why": "The vocabulary is fixed when it is built, and the model's table has no row for an entry added later."
+      },
+      {
+        "text": "`<unk>`, the same as any other unseen word",
+        "correct": true,
+        "why": "Right. Whatever the name said is lost before the first layer."
+      },
+      {
+        "text": "An error, and the e-mail is skipped",
+        "correct": false,
+        "why": "Unknown words are replaced, not refused: `split.py` printed `<unk>` and carried on."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0d5hngb",
+    "version": 1,
+    "section": "bpe-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a` + `k` and `k` + `e` were both seen 20 times. Why was `a` + `k` merged first?",
+    "hint": "Look at what `most_common` does with equal counts.",
+    "choices": [
+      {
+        "text": "Pairs that start a word are merged before the others",
+        "correct": false,
+        "why": "Neither pair starts a word; position plays no part in the count."
+      },
+      {
+        "text": "It was counted first, and a tie goes to the first",
+        "correct": true,
+        "why": "Right. A different tie rule would give a different, equally valid, merge list."
+      },
+      {
+        "text": "`a` + `k` was seen more often once `bakers` is counted twice",
+        "correct": false,
+        "why": "Each word counts as often as it was seen, once per pair; both totals are 20."
+      },
+      {
+        "text": "Vowels are merged into the pair before consonants",
+        "correct": false,
+        "why": "BPE knows nothing about letters; it counts pairs."
+      }
+    ]
+  },
+  {
+    "id": "ex-y54stdxv",
+    "version": 1,
+    "section": "bpe-by-hand",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a trained BPE tokenizer does to a word it has never seen.",
+    "hint": "Encoding replays training.",
+    "items": [
+      "Split the word into its letters (or bytes)",
+      "Apply the first merge learnt, wherever its pair occurs",
+      "Apply each later merge, in the order it was learnt",
+      "Replace each resulting piece by its id"
+    ]
+  },
+  {
+    "id": "ex-fh566fqz",
+    "version": 1,
+    "section": "bpe-by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the six merges `bpe.py` learnt, how is the new word `remake` encoded?",
+    "hint": "Replay the merges in order on r, e, m, a, k, e.",
+    "choices": [
+      {
+        "text": "`re` and `make`, two pieces",
+        "correct": false,
+        "why": "No merge ever made `re`; `r` + `e` was never the commonest pair."
+      },
+      {
+        "text": "`r`, `e` and `make`",
+        "correct": true,
+        "why": "Right: merges 1 and 2 give `ake`, merge 5 gives `make`, and nothing joins `r` or `e`."
+      },
+      {
+        "text": "`r`, `e`, `m` and `ake`",
+        "correct": false,
+        "why": "That stops after merge 2; merge 5 then glues `m` to `ake`."
+      },
+      {
+        "text": "`<unk>`, since the word is not among the five",
+        "correct": false,
+        "why": "BPE falls back to letters, so a new word is pieces, never a hole."
+      }
+    ]
+  },
+  {
+    "id": "ex-d43hhkhh",
+    "version": 1,
+    "section": "training-a-tokenizer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a byte-level tokenizer never produce an unknown token?",
+    "hint": "What is in its vocabulary before the first merge?",
+    "choices": [
+      {
+        "text": "It is trained on text in every language",
+        "correct": false,
+        "why": "`tok.json` was trained on forty-five lines of English and still encoded Portuguese with no unknowns."
+      },
+      {
+        "text": "It adds a new entry for each word it has not seen",
+        "correct": false,
+        "why": "The vocabulary is fixed after training; `weaver` came out in four existing pieces."
+      },
+      {
+        "text": "Its starting vocabulary holds all 256 byte values",
+        "correct": true,
+        "why": "Right. Any text is bytes, and every byte has an entry."
+      },
+      {
+        "text": "It drops the characters it cannot encode",
+        "correct": false,
+        "why": "Nothing is dropped: `ã` became two tokens, one per byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpsh3gpf",
+    "version": 1,
+    "section": "training-a-tokenizer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked for 1,000 entries, the trainer stopped at 700. Why?",
+    "hint": "What had every word of the corpus become by then?",
+    "choices": [
+      {
+        "text": "Every word was already one token",
+        "correct": true,
+        "why": "Right. Merges never cross the pre-tokenizer's cuts, so with no pair left inside a word there was nothing to merge."
+      },
+      {
+        "text": "The library caps the vocabulary for a small file",
+        "correct": false,
+        "why": "There is no such cap; the corpus simply ran out of pairs."
+      },
+      {
+        "text": "Pairs seen only once are not merged",
+        "correct": false,
+        "why": "`Sunday`, seen once, would have merged at a larger size; the stop came from the cuts."
+      },
+      {
+        "text": "Training stops early so as not to overfit the corpus",
+        "correct": false,
+        "why": "BPE has no validation set and no notion of overfitting; it counts pairs until none remain."
+      }
+    ]
+  },
+  {
+    "id": "ex-avh9v0kw",
+    "version": 1,
+    "section": "training-a-tokenizer",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the token ` Monday`, the leading ___ belongs to the token, which is how decoding rebuilds the text without guessing.",
+    "hint": "Look at the first character of ` Monday`.",
+    "blanks": [
+      {
+        "accept": [
+          "space",
+          "blank"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-53ak4rk6",
+    "version": 1,
+    "section": "an-embedding-is-a-lookup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the id 288 not given to the network as the number 288?",
+    "hint": "What would 258 and 307 be, next to it?",
+    "choices": [
+      {
+        "text": "Numbers that large overflow a `float32`",
+        "correct": false,
+        "why": "A `float32` holds 288 exactly; the problem is meaning, not range."
+      },
+      {
+        "text": "The network wants inputs between 0 and 1",
+        "correct": false,
+        "why": "Dividing by 500 would fix the scale and keep the false order."
+      },
+      {
+        "text": "Its order and distances would mean nothing",
+        "correct": true,
+        "why": "Right. Ids are names, numbered by the order of training."
+      },
+      {
+        "text": "PyTorch refuses integer inputs to a linear layer",
+        "correct": false,
+        "why": "A conversion would make it run, and it would still be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-aa1kn4v1",
+    "version": 1,
+    "section": "an-embedding-is-a-lookup",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A vocabulary of 2,000 tokens gets embeddings of 16 numbers each. How many parameters does the table hold?",
+    "hint": "One row per token.",
+    "value": 32000,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-thp8zh58",
+    "version": 1,
+    "section": "an-embedding-is-a-lookup",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A batch uses 140 different tokens of a 30,000-token vocabulary. How many rows of the embedding table does its backward pass change?",
+    "hint": "`lookup.py`'s last line.",
+    "choices": [
+      {
+        "text": "All 30,000, since every row is part of the product",
+        "correct": false,
+        "why": "In the one-hot product a zero input gives a zero gradient, so unread rows get none."
+      },
+      {
+        "text": "The 140 that were looked up",
+        "correct": true,
+        "why": "Right, as in `rows with a gradient: 7 of 500`."
+      },
+      {
+        "text": "One per sentence in the batch",
+        "correct": false,
+        "why": "Rows belong to tokens, not to sentences."
+      },
+      {
+        "text": "None until the epoch ends",
+        "correct": false,
+        "why": "The optimiser steps after each batch; an epoch boundary changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-daqe7nn6",
+    "version": 1,
+    "section": "embeddings-that-learnt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `near.py` print the neighbours before training as well as after?",
+    "hint": "` baker` and ` rains` at 0.89.",
+    "choices": [
+      {
+        "text": "To check the tokenizer loaded correctly",
+        "correct": false,
+        "why": "Loading the tokenizer is checked by the ids it gives, not by cosines of random rows."
+      },
+      {
+        "text": "To see how close random vectors come by chance alone, as a baseline",
+        "correct": true,
+        "why": "Right. In eight dimensions chance gives cosines above 0.8, so a trained one means something only against that."
+      },
+      {
+        "text": "Because Adam needs a first similarity to start from",
+        "correct": false,
+        "why": "Adam reads gradients of the loss; the neighbours are only printed."
+      },
+      {
+        "text": "To show the table starts with the categories already sorted",
+        "correct": false,
+        "why": "The untrained neighbours, `rains` for `baker`, show the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z9mkq6g",
+    "version": 1,
+    "section": "embeddings-that-learnt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What put ` Monday` next to ` Saturday` and ` Friday` after training?",
+    "hint": "The model's task was to guess a token from its neighbours.",
+    "choices": [
+      {
+        "text": "The tokenizer gave the days neighbouring ids",
+        "correct": false,
+        "why": "Ids are in the order of the merges and carry no meaning."
+      },
+      {
+        "text": "The shared ending `day` in their spelling",
+        "correct": false,
+        "why": "Each is one whole token, so the model never sees their letters."
+      },
+      {
+        "text": "A list of weekdays the program gave the model",
+        "correct": false,
+        "why": "The program gives no categories; the only input is the corpus."
+      },
+      {
+        "text": "They fill the same slots in the corpus's sentences",
+        "correct": true,
+        "why": "Right: `On ___ the`. Similar company, similar guesses, similar rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqnbv9wf",
+    "version": 1,
+    "section": "embeddings-that-learnt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You train `near.py`'s model on another corpus, where `violet` appears twice. Its nearest neighbour comes out at 0.85. What does that tell you?",
+    "hint": "Compare with `red`, and with the untrained block.",
+    "choices": [
+      {
+        "text": "That the two words mean nearly the same",
+        "correct": false,
+        "why": "0.85 is within what chance gave untrained rows in eight dimensions."
+      },
+      {
+        "text": "Little: two examples, and chance reaches 0.85 anyway",
+        "correct": true,
+        "why": "Right. `red`, seen three times, had neighbours at 0.86 that meant nothing."
+      },
+      {
+        "text": "That the model needs more dimensions to separate them",
+        "correct": false,
+        "why": "The problem is evidence, not room: two examples are too few at any size."
+      },
+      {
+        "text": "That the training diverged",
+        "correct": false,
+        "why": "A diverging run shows in the loss, not in one word's neighbour."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkbrxqfc",
+    "version": 1,
+    "section": "tokens-are-the-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the Portuguese sentences cost 86 tokens where the English cost 41?",
+    "hint": "What was `tok.json` trained on?",
+    "choices": [
+      {
+        "text": "Portuguese sentences are twice as long in characters",
+        "correct": false,
+        "why": "They are about the same length: 37 against 32, 39 against 43."
+      },
+      {
+        "text": "Its merges were learnt from English alone",
+        "correct": true,
+        "why": "Right. No merge covers Portuguese, so its words fall back to small pieces."
+      },
+      {
+        "text": "Accents are replaced by unknown tokens",
+        "correct": false,
+        "why": "A byte-level tokenizer has no unknown token; `ã` became two byte tokens."
+      },
+      {
+        "text": "Portuguese has more words per sentence",
+        "correct": false,
+        "why": "The pairs have similar word counts; the difference is pieces per word."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhdkq9vh",
+    "version": 1,
+    "section": "tokens-are-the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `' pão'` take four tokens?",
+    "hint": "Compare the chars and bytes columns.",
+    "choices": [
+      {
+        "text": "Each letter of a Portuguese word is its own token",
+        "correct": false,
+        "why": "`p` came with its space as one token, so it is not one per letter."
+      },
+      {
+        "text": "The tilde is a separate character",
+        "correct": false,
+        "why": "`ã` is one character here; it is two bytes, not two characters."
+      },
+      {
+        "text": "` p`, then each of the two bytes of `ã` alone, then `o`",
+        "correct": true,
+        "why": "Right. UTF-8 spends two bytes on `ã`, and no merge joins them."
+      },
+      {
+        "text": "The space before it counts as two tokens",
+        "correct": false,
+        "why": "The space is part of the first token, ` p`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0ctdstx",
+    "version": 1,
+    "section": "tokens-are-the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company moves its support chatbot from English to Portuguese, keeping a model whose tokenizer was trained mostly on English. What should it expect?",
+    "hint": "Context and price are both counted in tokens.",
+    "choices": [
+      {
+        "text": "The same bill, since a provider charges per character",
+        "correct": false,
+        "why": "Providers charge per token, and Portuguese needs more of them here."
+      },
+      {
+        "text": "Unknown tokens wherever an accent appears",
+        "correct": false,
+        "why": "A byte-level tokenizer encodes every accent, as extra tokens."
+      },
+      {
+        "text": "Fewer turns fit in the context, and each costs more",
+        "correct": true,
+        "why": "Right. Both scale with the token count, and the same meaning costs more tokens."
+      },
+      {
+        "text": "The model refuses text outside its training language",
+        "correct": false,
+        "why": "Any text encodes; it is read in more, smaller pieces."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvn9z9zc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each choice to what it does.",
+    "hint": "Think of `weaver` under each.",
+    "pairs": [
+      {
+        "left": "A vocabulary of characters",
+        "right": "Nothing unknown, and the longest sequences"
+      },
+      {
+        "left": "A vocabulary of words",
+        "right": "Short sequences, and unseen words become <unk>"
+      },
+      {
+        "left": "Byte-level BPE",
+        "right": "Common words whole, rare words in pieces"
+      },
+      {
+        "left": "An embedding table",
+        "right": "One row of numbers per token"
+      }
+    ],
+    "right_distractors": [
+      "One id per sentence"
+    ]
+  },
+  {
+    "id": "ex-ckc2m6yw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "At 500 entries the corpus became 1,002 tokens",
+        "correct": true,
+        "why": "Yes: `asked  500  learnt  500  tokens  1002`."
+      },
+      {
+        "text": "The trained tokenizer turned `weaver` into `<unk>`",
+        "correct": false,
+        "why": "No: that was the word vocabulary of `split.py`. The tokenizer gave four pieces."
+      },
+      {
+        "text": "A lookup equalled the one-hot product exactly",
+        "correct": true,
+        "why": "Yes: `equal: True`."
+      },
+      {
+        "text": "After training, the nearest neighbour of `red` was `green`",
+        "correct": false,
+        "why": "No: it was `all`, at 0.86. `red` was the failure."
+      },
+      {
+        "text": "The Portuguese sentences cost more than twice the English tokens",
+        "correct": true,
+        "why": "Yes: 86 against 41, a ratio of 2.10."
+      }
+    ]
+  }
+]

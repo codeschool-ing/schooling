@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-ksrsa40k",
+    "version": 1,
+    "section": "frozen-and-thawed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does setting `requires_grad = False` on a parameter tensor change during training?",
+    "hint": "Look at the list of tensors that had a gradient after backward.",
+    "choices": [
+      {
+        "text": "The layer is skipped in the forward pass",
+        "correct": false,
+        "why": "It still runs; the convolutions computed their outputs and the gradient flowed through them."
+      },
+      {
+        "text": "Backward stores no gradient for it, so the step leaves it alone",
+        "correct": true,
+        "why": "Right. Backward left `.grad` empty for the four convolution tensors, and the step did not change them."
+      },
+      {
+        "text": "The layer switches to evaluation mode, as `model.eval()` does",
+        "correct": false,
+        "why": "The two are unrelated: eval mode changes dropout and batch normalisation, and says nothing about gradients."
+      },
+      {
+        "text": "The optimiser deletes it from its parameter groups",
+        "correct": false,
+        "why": "The optimiser holds whatever list it was given; a tensor with no gradient is simply skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-08vn28f5",
+    "version": 1,
+    "section": "frozen-and-thawed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague calls `model.eval()` on a pretrained body to freeze it, then trains with an optimiser holding every parameter. What happens to the body?",
+    "hint": "`freeze.py` ran backward in evaluation mode.",
+    "choices": [
+      {
+        "text": "It stays fixed, because eval mode turns gradients off",
+        "correct": false,
+        "why": "That is the belief the section tests; the gradients arrived in eval mode regardless."
+      },
+      {
+        "text": "Training stops with an error on the first batch",
+        "correct": false,
+        "why": "Nothing refuses it; backward and the step run as usual."
+      },
+      {
+        "text": "It keeps learning; its tensors still get gradients",
+        "correct": true,
+        "why": "Right. Freezing is `requires_grad = False`, or leaving the tensors out of the optimiser."
+      },
+      {
+        "text": "Only its batch normalisation layers keep learning",
+        "correct": false,
+        "why": "Eval mode stops batch normalisation updating its running statistics; it does not stop any gradient."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1b3pavg",
+    "version": 1,
+    "section": "frozen-and-thawed",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `freeze.py`, the network has 37,957 parameters and learns 33,157. How many parameters do the two frozen convolutions hold?",
+    "hint": "Add the four `requires_grad=False` rows, or subtract.",
+    "value": 4800,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-m7nyxzfe",
+    "version": 1,
+    "section": "three-depths",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every pretrained start in `depths.py` get a new head instead of keeping `base.pt`'s?",
+    "hint": "What does each output of the old head stand for?",
+    "choices": [
+      {
+        "text": "The old head's weights are not saved in `base.pt`",
+        "correct": false,
+        "why": "They are, as `8.weight` and `8.bias`; `forget.py` puts them back later."
+      },
+      {
+        "text": "Its five outputs mean 0 to 4, not the new digits",
+        "correct": true,
+        "why": "Right. A head is tied to the labels of one task, so a new task gets a new one."
+      },
+      {
+        "text": "A new head trains faster than a loaded one",
+        "correct": false,
+        "why": "It trains the same way, 325 parameters either way; what differs is what its outputs mean."
+      },
+      {
+        "text": "PyTorch refuses to train a layer loaded from a file",
+        "correct": false,
+        "why": "The last block and everything train loaded layers in the same run."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzfd1g89",
+    "version": 1,
+    "section": "three-depths",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 10 images per class, how did fine-tuning everything compare with training from scratch?",
+    "hint": "The `scratch` and `everything` rows of the middle block.",
+    "choices": [
+      {
+        "text": "Clearly ahead, near 0.98 on each seed",
+        "correct": false,
+        "why": "No run with 10 per class reached that; 0.98 belongs to scratch with 50."
+      },
+      {
+        "text": "Level with the head-alone start",
+        "correct": false,
+        "why": "The head alone stayed at 0.672 to 0.689, far below."
+      },
+      {
+        "text": "It did not train and stayed near chance",
+        "correct": false,
+        "why": "Chance among five digits is 0.2, and it scored above 0.9."
+      },
+      {
+        "text": "A little behind: 0.917 to 0.933 against 0.933 to 0.944",
+        "correct": true,
+        "why": "Right. Close, and still not ahead, because this donor has little to give."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh9wa3c4",
+    "version": 1,
+    "section": "three-depths",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lesson's recipe for choosing how much of a pretrained network to fine-tune in order.",
+    "hint": "The cheapest comparison comes first, and the baseline before all of them.",
+    "items": [
+      "Train the same network from scratch as the baseline",
+      "Train only a new head on the frozen body",
+      "Unfreeze the last block as well",
+      "Unfreeze everything",
+      "Keep the depth the validation score says earned its parameters"
+    ]
+  },
+  {
+    "id": "ex-kqezajvw",
+    "version": 1,
+    "section": "three-depths",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You have a body pretrained on millions of plant photographs and 30 new photographs of a leaf disease that look much like the donor's. Which start does the lesson suggest trying hardest?",
+    "hint": "Few images to fit, and features that are probably still general.",
+    "choices": [
+      {
+        "text": "A frozen depth, starting with the head only",
+        "correct": true,
+        "why": "Right. Every parameter that learns is fitted to 30 images, and a large, similar donor's features are worth keeping."
+      },
+      {
+        "text": "Everything at a high rate, which did best in `rates.py`",
+        "correct": false,
+        "why": "It did best there because `base.pt` had little to give; here the donor has a lot."
+      },
+      {
+        "text": "Scratch alone, since scratch won in this lesson",
+        "correct": false,
+        "why": "It won against a 528-image donor; a network trained from scratch on 30 photographs is poor."
+      },
+      {
+        "text": "Everything with the head left frozen",
+        "correct": false,
+        "why": "The new head starts random and is the one part that must learn."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsraa2wv",
+    "version": 1,
+    "section": "learning-rates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Giving the layers near the input a lower rate than the layers near the head is called ___ fine-tuning.",
+    "hint": "The word is in the last part of the section.",
+    "blanks": [
+      {
+        "accept": [
+          "discriminative"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-etdyx7kk",
+    "version": 1,
+    "section": "learning-rates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `rates.py`, what did the number in brackets do as the rate went from 1e-4 to 1e-2?",
+    "hint": "It compares the first layer with `base.pt`.",
+    "choices": [
+      {
+        "text": "It fell, as the old digits were forgotten",
+        "correct": false,
+        "why": "The old digits are measured in `forget.py`; this number is a distance between weights."
+      },
+      {
+        "text": "It grew, from about 0.04 to about 0.4 of its size",
+        "correct": true,
+        "why": "Right. The higher the rate, the further the first layer travelled from what `base.pt` gave it."
+      },
+      {
+        "text": "It stayed at zero, since the first layer was frozen",
+        "correct": false,
+        "why": "Every layer learnt in `rates.py`; the slowest setup still moved it 0.04."
+      },
+      {
+        "text": "It tracked the final loss",
+        "correct": false,
+        "why": "The loss is not printed; `moved()` compares two weight tensors."
+      }
+    ]
+  },
+  {
+    "id": "ex-3403w2s8",
+    "version": 1,
+    "section": "learning-rates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a body pretrained on far more data than you have, why do the layers near the input usually get the smallest rate?",
+    "hint": "What do those layers hold, and what did it cost to learn?",
+    "choices": [
+      {
+        "text": "They hold the most parameters, so each step must be smaller",
+        "correct": false,
+        "why": "Here the two convolutions hold 4,800 of 37,957; the rate follows what a layer knows, not its size."
+      },
+      {
+        "text": "Their gradients are the largest in the network",
+        "correct": false,
+        "why": "Lesson 3 saw gradients shrink towards the input in a deep sigmoid network, not grow."
+      },
+      {
+        "text": "Their general features took more data than you have",
+        "correct": true,
+        "why": "Right. Each step away from them throws away something your data could not teach again."
+      },
+      {
+        "text": "A lower rate makes each epoch run faster",
+        "correct": false,
+        "why": "The rate changes the size of a step, not what a step costs to compute."
+      }
+    ]
+  },
+  {
+    "id": "ex-wz4x0n4w",
+    "version": 1,
+    "section": "forgetting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `forget.py` measure what the fine-tuned body still knows about the digits 0 to 4?",
+    "hint": "Look at `old_task`.",
+    "choices": [
+      {
+        "text": "It trains a fresh head on 0 to 4 after fine-tuning",
+        "correct": false,
+        "why": "A fresh head could relearn a lot from a changed body and hide the damage; the old one cannot."
+      },
+      {
+        "text": "It measures how far the weights moved from `base.pt`",
+        "correct": false,
+        "why": "That is `rates.py`'s `moved()`; a distance does not say what still works."
+      },
+      {
+        "text": "It puts `base.pt`'s own head back and scores 0 to 4",
+        "correct": true,
+        "why": "Right. If the body still computes what that head expects, the old digits are still recognised."
+      },
+      {
+        "text": "It counts the units that stay silent on 0 to 4",
+        "correct": false,
+        "why": "Counting silent units was lesson 13's check, on the new digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-gn238hkq",
+    "version": 1,
+    "section": "forgetting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `forget.py`, which setup scored best on the new digits, and what did that cost?",
+    "hint": "Compare the last column with the column for epoch 100.",
+    "choices": [
+      {
+        "text": "Everything at 1e-2, which lost 0 to 4",
+        "correct": true,
+        "why": "Right: 0.922 on 5 to 9, while 0 to 4 fell to 0.294. The setup that moved the body furthest learnt the new task best and lost the old one."
+      },
+      {
+        "text": "Head alone, which also kept 0 to 4 at 0.989",
+        "correct": false,
+        "why": "It kept the old task and scored lowest on the new one, 0.667."
+      },
+      {
+        "text": "Body 1e-4, head 1e-3, at no cost to 0 to 4",
+        "correct": false,
+        "why": "It kept 0 to 4, and paid with 0.822 on the new digits."
+      },
+      {
+        "text": "The last block, with no loss",
+        "correct": false,
+        "why": "It reached 0.900, and 0 to 4 eroded to 0.944."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcq31c83",
+    "version": 1,
+    "section": "forgetting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's model recognises 40 products. You fine-tune all its layers at a high rate on photographs of 5 new products only, keeping the old head aside. What does the lesson predict for the 40 old products?",
+    "hint": "What in the loss asks the body to keep them?",
+    "choices": [
+      {
+        "text": "They stay as they were, since their head was not trained",
+        "correct": false,
+        "why": "The head is untouched, but it reads a body that was rewritten; that is what `forget.py` measured."
+      },
+      {
+        "text": "They improve, from seeing more photos",
+        "correct": false,
+        "why": "The new photographs pull the body towards the new products, not the old."
+      },
+      {
+        "text": "Nothing, until the new products' accuracy is known",
+        "correct": false,
+        "why": "The old task can be measured on its own, as `forget.py` does every few epochs."
+      },
+      {
+        "text": "Their accuracy falls sharply, as 0 to 4 did at 1e-2",
+        "correct": true,
+        "why": "Right. Nothing in the training asks the body to keep the old job, so a high rate rewrites it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2haw53h",
+    "version": 1,
+    "section": "lora",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the `LoRA` class start `B` at zero?",
+    "hint": "What is `B A` when `B` is zero?",
+    "choices": [
+      {
+        "text": "So the adapter has nothing to train at the start",
+        "correct": false,
+        "why": "`A` and `B` both train from the first step; zero is only where `B` begins."
+      },
+      {
+        "text": "So it starts as the pretrained network",
+        "correct": true,
+        "why": "Right. `B A` is zero, so the layer computes what `W` did, with no random jolt."
+      },
+      {
+        "text": "Because a low-rank matrix has to start at zero",
+        "correct": false,
+        "why": "`A` is low-rank too and starts random."
+      },
+      {
+        "text": "To cancel the frozen weight `W` in the output",
+        "correct": false,
+        "why": "`W` stays in the output; `base(x)` is added to the adapter's term."
+      }
+    ]
+  },
+  {
+    "id": "ex-b154kfjw",
+    "version": 1,
+    "section": "lora",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each matrix of the rank-4 adapter on the 512-to-64 layer to its shape and role.",
+    "hint": "64 outputs, 512 inputs, rank 4.",
+    "pairs": [
+      {
+        "left": "W",
+        "right": "64 × 512, frozen, from base.pt"
+      },
+      {
+        "left": "A",
+        "right": "4 × 512, learns, starts random"
+      },
+      {
+        "left": "B",
+        "right": "64 × 4, learns, starts at zero"
+      }
+    ],
+    "right_distractors": [
+      "512 × 64, learns, starts at zero"
+    ]
+  },
+  {
+    "id": "ex-3bgbwpqj",
+    "version": 1,
+    "section": "lora",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `adapt.py`, you need the original network back for the digits 0 to 4. What does the run show is enough?",
+    "hint": "The last two lines of the output.",
+    "choices": [
+      {
+        "text": "Retraining the old head on 0 to 4 with the adapter on",
+        "correct": false,
+        "why": "No retraining was needed; with the adapter on the old task scored 0.950 and it was not retrained."
+      },
+      {
+        "text": "Putting the frozen layer back in place of the adapter",
+        "correct": true,
+        "why": "Right. 0 to 4 scored 0.989 again, because `W` was never overwritten."
+      },
+      {
+        "text": "Merging the adapter, which restores the original weights",
+        "correct": false,
+        "why": "Merging adds `B A` into `W`; it gives the adapted layer, not the original."
+      },
+      {
+        "text": "It is lost; fine-tuning overwrote the layer",
+        "correct": false,
+        "why": "That is what full fine-tuning does; LoRA left the layer frozen underneath."
+      }
+    ]
+  },
+  {
+    "id": "ex-36c9sj8b",
+    "version": 1,
+    "section": "language-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does QLoRA change compared with plain LoRA?",
+    "hint": "Which of the two parts is stored in 4 bits?",
+    "choices": [
+      {
+        "text": "The adapter is in 4 bits",
+        "correct": false,
+        "why": "The other way round: the adapter stays in 16 bits so it can learn finely."
+      },
+      {
+        "text": "The frozen base is kept in 4 bits",
+        "correct": true,
+        "why": "Right: 3.1 GiB instead of 12.6 in `sizes.py`, and the adapter still trains in 16 bits."
+      },
+      {
+        "text": "Every weight is trained, but each is kept in 4 bits",
+        "correct": false,
+        "why": "The base stays frozen in QLoRA, as in LoRA; only the adapter learns."
+      },
+      {
+        "text": "The base model is deleted and only the adapter is kept",
+        "correct": false,
+        "why": "The adapter only works beside the base it was trained on."
+      }
+    ]
+  },
+  {
+    "id": "ex-247eg8tr",
+    "version": 1,
+    "section": "language-models",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You fine-tune a chat model on your company's support tickets, and afterwards it answers general questions worse. Which change addresses that most directly?",
+    "hint": "The same defences as `forget.py`'s digits.",
+    "choices": [
+      {
+        "text": "Raise the learning rate so training finishes sooner",
+        "correct": false,
+        "why": "A higher rate moved `base.pt` furthest and forgot the most."
+      },
+      {
+        "text": "Train more epochs on the tickets alone",
+        "correct": false,
+        "why": "More steps aimed only at the tickets pull further from the general task."
+      },
+      {
+        "text": "Unfreeze every layer so it can relearn the general answers",
+        "correct": false,
+        "why": "Nothing in the ticket data teaches general answers; unfreezing more only moves more."
+      },
+      {
+        "text": "A lower rate on a LoRA adapter, with some general text mixed in",
+        "correct": true,
+        "why": "Right. Each part limits how far the base moves or asks the loss to keep the old task."
+      }
+    ]
+  },
+  {
+    "id": "ex-08fbsbkz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Fine-tuning everything at 1e-2 left 0 to 4 at 0.294",
+        "correct": true,
+        "why": "Yes, from 0.989 before the first epoch."
+      },
+      {
+        "text": "Fine-tuning everything beat scratch with 50 images per class",
+        "correct": false,
+        "why": "No: 0.967 to 0.972 against 0.972 to 0.983."
+      },
+      {
+        "text": "A rank-4 adapter matched the last block, training 2,629 parameters",
+        "correct": true,
+        "why": "Yes, against 33,157 for the last block."
+      },
+      {
+        "text": "`model.eval()` stopped the body receiving gradients",
+        "correct": false,
+        "why": "No: four tensors got gradients in evaluation mode."
+      },
+      {
+        "text": "The rows repeated from lesson 13 gave lesson 13's numbers",
+        "correct": true,
+        "why": "Yes, to the last digit, with the same images and seeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef7ake7f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `adapt.py` at rank 4, which parameters does the optimiser receive?",
+    "hint": "Everything in `base.pt` was frozen before the adapter and the head were added.",
+    "choices": [
+      {
+        "text": "All 37,957 of `base.pt`, plus the adapter",
+        "correct": false,
+        "why": "The loop over `model.parameters()` froze every one of those first."
+      },
+      {
+        "text": "Only `A` and `B`; the new head stays frozen",
+        "correct": false,
+        "why": "A new `nn.Linear` starts with `requires_grad=True`, so the head learns."
+      },
+      {
+        "text": "`A`, `B` and the new head: 2,629 in all",
+        "correct": true,
+        "why": "Right: 2,048 plus 256 plus 325."
+      },
+      {
+        "text": "The 512-to-64 weight and the new head",
+        "correct": false,
+        "why": "That is the last block of `depths.py`; here the weight stays frozen inside the adapter."
+      }
+    ]
+  }
+]

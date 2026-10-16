@@ -1,0 +1,343 @@
+{
+ "ex-yydj1vvy": {
+  "prompt": "Na primeira execução do `spa-look.mjs`, o que o clique em **Basket** pediu ao servidor?",
+  "choices": [
+   {
+    "text": "Um documento novo para `/spa/basket`, e depois o script dele",
+    "why": "Isso é navegação de várias páginas; a transcrição não mostra documento nenhum depois do clique."
+   },
+   {
+    "text": "Só os dados da cesta, num fetch",
+    "why": "Certo. Uma linha depois do clique, `fetch /api/basket`; o script desenhou a tela sozinho."
+   },
+   {
+    "text": "Nada: a cesta já estava na página",
+    "why": "A tela precisa do conteúdo atual da cesta, e o script o busca."
+   },
+   {
+    "text": "A folha de estilos de novo, porque a tela mudou e precisava de estilos novos",
+    "why": "A folha de estilos carregou uma vez com o documento e serve para todas as telas."
+   }
+  ]
+ },
+ "ex-kc5krnpm": {
+  "prompt": "A versão de rede lenta do primeiro teste falha com `Received: \"Fruit\"`. Por quê?",
+  "choices": [
+   {
+    "text": "O `page.route` bloqueou a requisição da cesta",
+    "why": "Ele a segurou por meio segundo e depois a deixou passar com `route.continue()`."
+   },
+   {
+    "text": "O `waitForURL` retornou no `pushState`, antes de a cesta chegar",
+    "why": "Certo. O endereço muda primeiro; o teste leu o título com a tela velha ainda ali."
+   },
+   {
+    "text": "A resposta da tela de frutas chegou depois da da cesta e a sobrescreveu",
+    "why": "Duas telas em corrida podem fazer isso, mas aqui a cesta foi segurada e o título foi lido antes de ela chegar."
+   },
+   {
+    "text": "O app não tem título chamado Basket",
+    "why": "A versão corrigida o encontra; o `spa.js` desenha `<h1>Basket</h1>`."
+   }
+  ]
+ },
+ "ex-gbpnzejx": {
+  "prompt": "No tratador de clique do app, `history.___` põe o novo endereço na barra sem carregar uma página.",
+  "hint": "É um método da History API.",
+  "blanks": [
+   {
+    "accept": [
+     "pushState"
+    ]
+   }
+  ]
+ },
+ "ex-8n1g4agn": {
+  "prompt": "A página de busca de uma SPA reescreve o endereço para `?q=mango` a cada tecla e depois busca os resultados. Que espera diz a um teste que os resultados de mango estão na tela?",
+  "choices": [
+   {
+    "text": "`page.waitForURL('**q=mango')`",
+    "why": "O endereço muda antes do fetch, exatamente como o `pushState` no teste da cesta."
+   },
+   {
+    "text": "`page.waitForLoadState('load')` depois de digitar",
+    "why": "Nenhuma página carrega numa SPA; o evento `load` disparou uma vez, bem antes."
+   },
+   {
+    "text": "Uma asserção web-first sobre a lista de resultados",
+    "why": "Certo. O sinal de que a página está pronta está na página, e a asserção tenta de novo até valer."
+   },
+   {
+    "text": "Esperar até ver uma requisição do tipo `document`",
+    "why": "Numa SPA nenhuma vem depois do primeiro carregamento; a espera estouraria o tempo."
+   }
+  ]
+ },
+ "ex-h09wrb9p": {
+  "prompt": "Por que clicar em **Basket** funciona, enquanto recarregar `/spa/basket` dá 404?",
+  "choices": [
+   {
+    "text": "O service worker apaga a tela quando a página recarrega",
+    "why": "O 404 vem do servidor, e acontece sem worker instalado nenhum."
+   },
+   {
+    "text": "Recarregar pergunta ao servidor, e o servidor não tem esse arquivo",
+    "why": "Certo. O endereço só existe dentro do `spa.js`; um clique nunca chega ao servidor."
+   },
+   {
+    "text": "O `pushState` funciona uma vez por página",
+    "why": "Funciona a cada clique; o botão voltar depende disso."
+   },
+   {
+    "text": "A cesta está vazia, então o servidor se recusa a mostrá-la",
+    "why": "Uma cesta vazia mostra `R$ 0,00` quando se chega por clique."
+   }
+  ]
+ },
+ "ex-ac1vhgfc": {
+  "prompt": "O teste de link direto está marcado com `test.fail()`. Um desenvolvedor acrescenta o fallback ao servidor. O que a próxima execução relata para esse teste?",
+  "choices": [
+   {
+    "text": "Uma aprovação, então a marca pode ficar onde está",
+    "why": "Um teste marcado que passa é relatado como falha, e é isso que faz a marca sair."
+   },
+   {
+    "text": "Uma falha: expected to fail, but passed",
+    "why": "Certo. A execução da seção mostra isso, com `1 failed` no fim."
+   },
+   {
+    "text": "Um teste pulado",
+    "why": "O `test.fail()` nunca pula; `test.skip()` é outra marca."
+   },
+   {
+    "text": "Uma falha dizendo que o status foi 404",
+    "why": "Com o fallback o status é 200; a falha é sobre a marca."
+   }
+  ]
+ },
+ "ex-jkmjgn7q": {
+  "prompt": "Quais destes pedem `/spa/basket` ao servidor como documento?",
+  "choices": [
+   {
+    "text": "Recarregar estando na cesta",
+    "why": "Certo. Recarregar pede ao servidor o endereço da barra."
+   },
+   {
+    "text": "Abrir um favorito da cesta",
+    "why": "Certo. Um favorito é um endereço digitado por você."
+   },
+   {
+    "text": "Clicar em Basket no cabeçalho do app",
+    "why": "O tratador de clique cancela essa navegação e chama `pushState`."
+   },
+   {
+    "text": "Colar o endereço numa aba nova",
+    "why": "Certo. Uma aba nova não tem app carregado para interceptar nada."
+   }
+  ]
+ },
+ "ex-k00bjybj": {
+  "prompt": "Na segunda execução do `spa-look.mjs`, qual destes ainda veio do servidor?",
+  "choices": [
+   {
+    "text": "`/spa/`, o próprio documento",
+    "why": "O documento veio do service worker na segunda execução."
+   },
+   {
+    "text": "`/spa/spa.js`, porque scripts nunca ficam em cache",
+    "why": "Está na lista do worker, e a transcrição diz que veio dele."
+   },
+   {
+    "text": "`/api/products`",
+    "why": "Certo. O worker deixa tudo sob `/api/` para a rede."
+   },
+   {
+    "text": "`/style.css`, que fica fora de `/spa/`",
+    "why": "A página está no escopo do worker, então as requisições dela passam por ele aonde quer que apontem."
+   }
+  ]
+ },
+ "ex-4cbdzp61": {
+  "prompt": "Com a linha `navigator.serviceWorker.ready` apagada, o teste sem rede falha com `ERR_INTERNET_DISCONNECTED`. Por quê?",
+  "choices": [
+   {
+    "text": "O `setOffline` também desliga o service worker",
+    "why": "O teste completo fica sem rede do mesmo jeito e o worker responde ao recarregamento."
+   },
+   {
+    "text": "O recarregamento veio antes de o worker estar instalado",
+    "why": "Certo. Ele se instala em segundo plano depois que a página carrega, e a espera é o que sabe quando."
+   },
+   {
+    "text": "O Playwright bloqueia service workers a não ser que um teste os permita",
+    "why": "O padrão é `'allow'`; `'block'` é o que o segundo teste escolhe."
+   },
+   {
+    "text": "O cache só se enche numa segunda visita",
+    "why": "O worker o enche ao se instalar, durante a primeira visita."
+   }
+  ]
+ },
+ "ex-rxz7zv0x": {
+  "prompt": "Ponha em ordem os passos do teste sem rede.",
+  "items": [
+   "Abrir `/spa/` uma vez",
+   "Esperar `navigator.serviceWorker.ready`",
+   "Chamar `context.setOffline(true)`",
+   "Recarregar e verificar que o worker respondeu"
+  ],
+  "trap": "Ficar sem rede antes de o worker estar pronto não deixa ninguém para responder ao recarregamento."
+ },
+ "ex-xqqvqc38": {
+  "prompt": "O servidor tinha `Fresh fruit` no `spa.js`, e a terceira execução ainda mostrou `Fruit`. O que explica isso?",
+  "choices": [
+   {
+    "text": "O cabeçalho `no-cache` mandou o navegador manter a cópia",
+    "why": "`no-cache` quer dizer conferir antes, e o navegador nem perguntou: o worker respondeu."
+   },
+   {
+    "text": "O worker respondeu com a cópia que guarda no Cache Storage",
+    "why": "Certo. O log do servidor não mostra requisição nenhuma de `spa.js`."
+   },
+   {
+    "text": "O cache HTTP guardou o `spa.js` por dez minutos",
+    "why": "Isso é a oferta da aula 4, com `max-age=600`; os arquivos estáticos aqui dizem `no-cache`."
+   },
+   {
+    "text": "O `curl` e o navegador chegaram a servidores diferentes",
+    "why": "Um servidor, na porta 3000; o log dele mostra as duas requisições de API do navegador."
+   }
+  ]
+ },
+ "ex-26qptv19": {
+  "prompt": "Uma suíte passa depois de todo deploy, e ainda assim usuários relatam a página de ontem. Por que as duas coisas podem ser verdade?",
+  "choices": [
+   {
+    "text": "O Chromium headless não tem Cache Storage",
+    "why": "As execuções headless desta aula o usaram: o `spa-look.mjs` é headless."
+   },
+   {
+    "text": "Testes ignoram respostas vindas de um cache",
+    "why": "Um teste vê o que a página mostra, venha de cache ou não."
+   },
+   {
+    "text": "O Playwright bloqueia service workers sem ordem",
+    "why": "O padrão é `'allow'`; o teste sem rede depende disso."
+   },
+   {
+    "text": "Todo teste é uma primeira visita, num contexto novo",
+    "why": "Certo. Uma primeira visita sempre recebe a versão nova; o shell velho mora no visitante que volta."
+   }
+  ]
+ },
+ "ex-krcp95a0": {
+  "prompt": "Quantas requisições o log do servidor mostra na terceira execução do `spa-look.mjs`?",
+  "hint": "Conte as linhas que começam com `GET`.",
+  "unit": "requisições"
+ },
+ "ex-nq9rfsyy": {
+  "prompt": "Uma suíte roda contra o servidor de desenvolvimento e nunca encontra o 404 do link direto. O que a aula sugere?",
+  "choices": [
+   {
+    "text": "Apontá-la para os arquivos gerados, servidos como são",
+    "why": "Certo. Os usuários recebem a pasta gerada; o servidor de desenvolvimento é mais gentil que a produção."
+   },
+   {
+    "text": "Marcar todo teste de link direto com `test.fail()`",
+    "why": "Os testes passam ali; marcá-los não esconderia nem acharia nada."
+   },
+   {
+    "text": "Tirar o teste, já que ele passa",
+    "why": "Ele passa num servidor que os usuários nunca encontram."
+   },
+   {
+    "text": "Pôr o mesmo fallback na produção à mão depois de cada versão",
+    "why": "O fallback é mudança do desenvolvedor; o trabalho do testador é descobrir se ele está lá."
+   }
+  ]
+ },
+ "ex-maqbe4v3": {
+  "prompt": "Um teste compara um preço da API com o preço numa página gerada ontem, e eles diferem. Qual é a primeira coisa de que suspeitar?",
+  "choices": [
+   {
+    "text": "A CDN arredondou o preço",
+    "why": "Uma CDN guarda cópias de arquivos; não muda o que há neles."
+   },
+   {
+    "text": "A página tem a idade do build que a gerou",
+    "why": "Certo. Um preço mudado hoje de manhã é o preço de ontem na página de ontem."
+   },
+   {
+    "text": "A API manda centavos e a página mostra reais",
+    "why": "Isso é formatação, e diferiria em toda página, não só nas antigas."
+   },
+   {
+    "text": "Um service worker respondeu à requisição da API com a cópia dele",
+    "why": "Nada no cenário tem worker, e o preço da página está no HTML, não vem de um fetch."
+   }
+  ]
+ },
+ "ex-crq479d4": {
+  "prompt": "Ligue cada peça ao que ela faz.",
+  "pairs": [
+   {
+    "left": "`history.pushState`",
+    "right": "Muda o endereço sem requisição"
+   },
+   {
+    "left": "Service worker",
+    "right": "Responde requisições com a própria cópia"
+   },
+   {
+    "left": "Manifesto",
+    "right": "Dá nome ao app instalado e onde ele começa"
+   },
+   {
+    "left": "Fallback",
+    "right": "Manda a página do app para endereços desconhecidos do app"
+   }
+  ]
+ },
+ "ex-t7nv4hws": {
+  "prompt": "O app ganha uma tela em `/spa/orders`. Que teste pega a falta de fallback no servidor para ela no primeiro dia?",
+  "choices": [
+   {
+    "text": "Clicar de `/spa/` até Orders e verificar o título",
+    "why": "O clique nunca chega ao servidor, então passa sem fallback."
+   },
+   {
+    "text": "Verificar que o clique em Orders não manda pedido de documento",
+    "why": "Isso verifica a navegação da SPA, que funciona com ou sem fallback."
+   },
+   {
+    "text": "Abrir `/spa/orders` direto e esperar 200",
+    "why": "Certo. Só abrir direto pede o endereço ao servidor."
+   },
+   {
+    "text": "Rodar o teste sem rede contra a tela de pedidos",
+    "why": "Sem rede, responde o worker ou ninguém; a regra do servidor nunca é consultada."
+   }
+  ]
+ },
+ "ex-69rq0x9z": {
+  "prompt": "Um teste finge uma cesta vazia com `page.route('**/api/basket', …)`, mas num app cujo worker guarda `/api/` em cache às vezes vê a cesta real. O que mudar primeiro?",
+  "choices": [
+   {
+    "text": "Um tempo limite maior na rota",
+    "why": "A rota não é lenta; ela nem é consultada quando o worker responde."
+   },
+   {
+    "text": "`serviceWorkers: 'block'` nesse teste",
+    "why": "Certo. A documentação do Playwright recomenda isso ao interceptar: a rota não vê o que um worker responde."
+   },
+   {
+    "text": "`context.setOffline(true)` antes da rota",
+    "why": "Sem rede, o worker ainda responde com a cópia, que é o problema."
+   },
+   {
+    "text": "`page.waitForURL` antes de ler a cesta",
+    "why": "O endereço não é a questão; quem respondeu à requisição é."
+   }
+  ]
+ }
+}

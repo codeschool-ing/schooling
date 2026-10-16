@@ -1,0 +1,786 @@
+[
+  {
+    "id": "ex-qfv2dk35",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In MapReduce, which part does the programmer write?",
+    "hint": "Two functions.",
+    "choices": [
+      {
+        "text": "The partitioner, the sort and the recovery from failed tasks",
+        "correct": false,
+        "why": "Those are exactly what the framework does for you."
+      },
+      {
+        "text": "The placement of tasks on the machines holding each block",
+        "correct": false,
+        "why": "The framework places tasks near their data."
+      },
+      {
+        "text": "Everything, in Java",
+        "correct": false,
+        "why": "The point of the model is how little you write."
+      },
+      {
+        "text": "The map and reduce functions",
+        "correct": true,
+        "why": "Right. Splitting, partitioning, sorting and rerunning are the framework's."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcx98jep",
+    "version": 1,
+    "section": "the-model",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the steps of a MapReduce job.",
+    "hint": "The sort comes just before the reduce.",
+    "items": [
+      "Split the input, one map task per block",
+      "Run map on every record",
+      "Partition the pairs by key",
+      "Sort each reducer’s input by key",
+      "Run reduce on each key"
+    ]
+  },
+  {
+    "id": "ex-rmdd2zgm",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why may a mapper not keep state that depends on records other map tasks saw?",
+    "hint": "What does the framework need to be free to do with copies of it?",
+    "choices": [
+      {
+        "text": "Python cannot share variables between processes",
+        "correct": false,
+        "why": "That is true and beside the point: the rule holds in every language."
+      },
+      {
+        "text": "The reducer would refuse it",
+        "correct": false,
+        "why": "Nothing would refuse it; the answer would just be wrong."
+      },
+      {
+        "text": "State would use too much memory",
+        "correct": false,
+        "why": "The issue is correctness under reruns, not size."
+      },
+      {
+        "text": "Copies must agree",
+        "correct": true,
+        "why": "Right. Each restriction is a promise the framework needs to scale."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbrqpxaq",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the pipe, what would happen to `reducer.py`'s output if `sort` were removed?",
+    "hint": "It only notices where a run of equal keys ends.",
+    "choices": [
+      {
+        "text": "The totals would be right but in a different order",
+        "correct": false,
+        "why": "The totals themselves would be split into pieces."
+      },
+      {
+        "text": "It would crash",
+        "correct": false,
+        "why": "It runs fine and prints a wrong answer, which is worse."
+      },
+      {
+        "text": "Nothing; the reducer sorts its own input",
+        "correct": false,
+        "why": "It does not; it relies on the input already being sorted."
+      },
+      {
+        "text": "Each kind would print many times",
+        "correct": true,
+        "why": "Right. Unsorted input breaks equal keys into many short runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-895a9heb",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets Hadoop run `mapper.py` and `reducer.py` unchanged?",
+    "hint": "What do they read and write?",
+    "choices": [
+      {
+        "text": "They only use standard input and output",
+        "correct": true,
+        "why": "Right. That contract is all Hadoop Streaming needs."
+      },
+      {
+        "text": "Python programs are compiled to Java first",
+        "correct": false,
+        "why": "Hadoop starts `python3` as a separate process."
+      },
+      {
+        "text": "They import a Hadoop library for Python",
+        "correct": false,
+        "why": "They import nothing but `sys`."
+      },
+      {
+        "text": "They read the HDFS paths directly",
+        "correct": false,
+        "why": "They never see a path."
+      }
+    ]
+  },
+  {
+    "id": "ex-47jkbnxn",
+    "version": 1,
+    "section": "streaming-on-hadoop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no `mapreduce.framework.name` set, how did Hadoop run the job?",
+    "hint": "Lesson 12 changes this.",
+    "choices": [
+      {
+        "text": "On the Spark cluster's three workers",
+        "correct": false,
+        "why": "MapReduce does not use Spark's master or workers."
+      },
+      {
+        "text": "Inside the namenode, which has spare memory",
+        "correct": false,
+        "why": "The namenode stores metadata and runs no jobs."
+      },
+      {
+        "text": "On YARN, across the datanodes",
+        "correct": false,
+        "why": "YARN is not running yet; lesson 12 starts it."
+      },
+      {
+        "text": "In one local Java process",
+        "correct": true,
+        "why": "Right. The local runner; HDFS was still the input and output."
+      }
+    ]
+  },
+  {
+    "id": "ex-v67aw8nf",
+    "version": 1,
+    "section": "streaming-on-hadoop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many map tasks did the job over `/raw/clicks-2025.csv` run?",
+    "hint": "One per block.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rq846b9x",
+    "version": 1,
+    "section": "streaming-on-hadoop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must the output directory not exist before the job starts?",
+    "hint": "What would a half-overwritten directory hold?",
+    "choices": [
+      {
+        "text": "HDFS cannot overwrite files",
+        "correct": false,
+        "why": "It can delete and write again; the rule is about safety."
+      },
+      {
+        "text": "The reducer creates it with a special flag",
+        "correct": false,
+        "why": "The framework creates it, through the committer."
+      },
+      {
+        "text": "To save space",
+        "correct": false,
+        "why": "Space has nothing to do with it."
+      },
+      {
+        "text": "So two jobs' outputs never mix",
+        "correct": true,
+        "why": "Right. A fresh directory holds exactly one job's result."
+      }
+    ]
+  },
+  {
+    "id": "ex-49kb23fr",
+    "version": 1,
+    "section": "reading-the-counters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Reduce shuffle bytes` was 223,679,952. What does that number measure?",
+    "hint": "On a cluster it would be network traffic.",
+    "choices": [
+      {
+        "text": "The size of the input file",
+        "correct": false,
+        "why": "The input is 1.29 GB; this is the map output."
+      },
+      {
+        "text": "The size of the answer",
+        "correct": false,
+        "why": "The answer is 58 bytes."
+      },
+      {
+        "text": "What the reducers fetched from the map tasks",
+        "correct": true,
+        "why": "Right. Every pair travelled to the one reducer."
+      },
+      {
+        "text": "Memory used by the reducer",
+        "correct": false,
+        "why": "It is bytes moved, not held."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxfczb4s",
+    "version": 1,
+    "section": "reading-the-counters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Spilled Records` was 48,000,000 for 24,000,000 map outputs. What does it say?",
+    "hint": "Spilled means written to disk because it did not fit.",
+    "choices": [
+      {
+        "text": "The job read the input twice",
+        "correct": false,
+        "why": "Map input records was 24 million, once."
+      },
+      {
+        "text": "Half the records were lost and written again",
+        "correct": false,
+        "why": "Nothing was lost; spilling is normal."
+      },
+      {
+        "text": "Each record was replicated to two datanodes",
+        "correct": false,
+        "why": "Spills go to local disk, not HDFS."
+      },
+      {
+        "text": "Every pair hit the disk twice",
+        "correct": true,
+        "why": "Right. Memory could not hold them at either end."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8rakxgb",
+    "version": 1,
+    "section": "reading-the-counters",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many reduce input groups did the job count, one per distinct key?",
+    "hint": "How many kinds of event are there?",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fchybnz4",
+    "version": 1,
+    "section": "combiners",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `reducer.py` as the combiner, shuffle bytes fell from about 224 MB to 684 bytes. Why so far?",
+    "hint": "How many distinct keys did each map task have?",
+    "choices": [
+      {
+        "text": "The combiner skipped most of the input",
+        "correct": false,
+        "why": "Combine input records was 24 million: it read everything."
+      },
+      {
+        "text": "The reducer ran on the map side instead",
+        "correct": false,
+        "why": "The reducer still ran; the combiner ran as well."
+      },
+      {
+        "text": "The combiner compresses the pairs with gzip",
+        "correct": false,
+        "why": "It adds them up; nothing is compressed."
+      },
+      {
+        "text": "Each task had only four keys",
+        "correct": true,
+        "why": "Right. Ten tasks times four pairs is forty."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bc5xh5v",
+    "version": 1,
+    "section": "combiners",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For which of these can the reducer also be used, unchanged, as a combiner? Choose all that apply.",
+    "hint": "The combiner may run zero, one or several times.",
+    "choices": [
+      {
+        "text": "The largest price seen",
+        "correct": true,
+        "why": "Yes. The maximum of maxima is the maximum."
+      },
+      {
+        "text": "The number of distinct visitors",
+        "correct": false,
+        "why": "Partial distinct counts do not add up across tasks."
+      },
+      {
+        "text": "The average price",
+        "correct": false,
+        "why": "An average of averages is wrong when the pieces differ in size; carry sum and count."
+      },
+      {
+        "text": "A sum of sales",
+        "correct": true,
+        "why": "Yes. A sum of partial sums is the sum."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hmxd0sc",
+    "version": 1,
+    "section": "combiners",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A reducer that runs on the map side, before the shuffle, is called a ___.",
+    "hint": "It combines.",
+    "blanks": [
+      {
+        "accept": [
+          "combiner"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cfm8wcb6",
+    "version": 1,
+    "section": "partition-and-sort",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With two reduce tasks, what guarantees that all `view` pairs reach the same one?",
+    "hint": "The same function as `buckets.py`'s.",
+    "choices": [
+      {
+        "text": "Alphabetical ranges of the key",
+        "correct": false,
+        "why": "That is a range partitioner, not Hadoop's default."
+      },
+      {
+        "text": "The namenode assigns keys to reducers",
+        "correct": false,
+        "why": "The namenode knows nothing about keys."
+      },
+      {
+        "text": "A hash of the key, modulo the number of reducers",
+        "correct": true,
+        "why": "Right. The same key always lands in the same place."
+      },
+      {
+        "text": "The order in which map tasks finish",
+        "correct": false,
+        "why": "Order would scatter a key across reducers."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j2b73p2",
+    "version": 1,
+    "section": "partition-and-sort",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each of the two output files is sorted. Why is the pair of them, read one after the other, not?",
+    "hint": "How were keys split between the reducers?",
+    "choices": [
+      {
+        "text": "HDFS reorders files when listing them",
+        "correct": false,
+        "why": "The listing is by name; the keys inside are what matter."
+      },
+      {
+        "text": "Keys were split by hash, not range",
+        "correct": true,
+        "why": "Right. A global order needs a partitioner that splits by ranges."
+      },
+      {
+        "text": "The second reducer forgot to sort",
+        "correct": false,
+        "why": "Both sorted their own input."
+      },
+      {
+        "text": "Combiners scramble the order",
+        "correct": false,
+        "why": "The sort happens after any combining."
+      }
+    ]
+  },
+  {
+    "id": "ex-xek63fg5",
+    "version": 1,
+    "section": "partition-and-sort",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a job keyed by visitor, why would one reduce task take far longer than the rest?",
+    "hint": "Lesson 1's crawler.",
+    "choices": [
+      {
+        "text": "It writes to HDFS and the others do not",
+        "correct": false,
+        "why": "Every reducer writes its own file."
+      },
+      {
+        "text": "It starts last",
+        "correct": false,
+        "why": "Reducers start together; one simply has much more to do."
+      },
+      {
+        "text": "It receives all 960,905 of the crawler's events",
+        "correct": true,
+        "why": "Right. A key goes whole to one reducer."
+      },
+      {
+        "text": "Its machine is slower",
+        "correct": false,
+        "why": "The machine is not the cause; the data is."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tkdx8te",
+    "version": 1,
+    "section": "joins",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each join to what it moves or needs.",
+    "hint": "One shuffles both sides; one copies the small side everywhere.",
+    "pairs": [
+      {
+        "left": "Reduce-side join",
+        "right": "Both inputs cross the network in full"
+      },
+      {
+        "left": "Map-side join",
+        "right": "The whole small table in every task’s memory"
+      },
+      {
+        "left": "Tagging records with their source",
+        "right": "How a reducer tells books from purchases"
+      }
+    ],
+    "right_distractors": [
+      "A sort of the output by price"
+    ]
+  },
+  {
+    "id": "ex-e00ykqjn",
+    "version": 1,
+    "section": "joins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When does a map-side join stop being an option?",
+    "hint": "Every task holds a copy.",
+    "choices": [
+      {
+        "text": "When the larger input has more than ten blocks",
+        "correct": false,
+        "why": "The large side is streamed; its size does not matter here."
+      },
+      {
+        "text": "When the key is a string",
+        "correct": false,
+        "why": "Any key type can be looked up."
+      },
+      {
+        "text": "When the small side outgrows a task's memory",
+        "correct": true,
+        "why": "Right. Then only the reduce-side join is left."
+      },
+      {
+        "text": "Never; it always works",
+        "correct": false,
+        "why": "A small side that is not small breaks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fds8h4c",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the histogram need two MapReduce jobs?",
+    "hint": "How many shuffles does one job have?",
+    "choices": [
+      {
+        "text": "A job has one shuffle",
+        "correct": true,
+        "why": "Right. Each grouping needs its own shuffle."
+      },
+      {
+        "text": "Python mappers can emit only one key",
+        "correct": false,
+        "why": "They emit whatever they print."
+      },
+      {
+        "text": "To use the combiner in the first one",
+        "correct": false,
+        "why": "A combiner fits in any job; it is not why there are two."
+      },
+      {
+        "text": "The data is too large for one job",
+        "correct": false,
+        "why": "Job 1 read all of it alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-zb5wb07g",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Job 1's output was 19.3 MB. With replication three, about how many MB did it occupy on disk?",
+    "hint": "Multiply.",
+    "value": 57.9,
+    "tolerance": 0.5,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-vpzye23g",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Spark took about as long as the two MapReduce jobs on the lab. Where does the lesson say Spark's advantage grows?",
+    "hint": "Count the round trips through HDFS.",
+    "choices": [
+      {
+        "text": "Single passes over very large files",
+        "correct": false,
+        "why": "That is what MapReduce was built for, and does well."
+      },
+      {
+        "text": "Jobs written in Java",
+        "correct": false,
+        "why": "The language is not where the gap grows."
+      },
+      {
+        "text": "Iterative, many-step jobs",
+        "correct": true,
+        "why": "Right. Each step is a job, a read and a replicated write in MapReduce."
+      },
+      {
+        "text": "Jobs on a single machine",
+        "correct": false,
+        "why": "The lab is a single machine, and the gap was small."
+      }
+    ]
+  },
+  {
+    "id": "ex-41esvp5w",
+    "version": 1,
+    "section": "limitations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each limit of MapReduce to what it costs.",
+    "hint": "Think of what each forces you to do.",
+    "pairs": [
+      {
+        "left": "One shuffle per job",
+        "right": "Multi-step questions become chains of jobs"
+      },
+      {
+        "left": "Output always written to HDFS",
+        "right": "Iterative algorithms pay a replicated write per step"
+      },
+      {
+        "left": "Minutes of startup on a cluster",
+        "right": "No interactive questions"
+      },
+      {
+        "left": "Only map and reduce",
+        "right": "Joins and filters written by hand in those shapes"
+      }
+    ]
+  },
+  {
+    "id": "ex-936q9cdh",
+    "version": 1,
+    "section": "limitations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did Hive and Pig fix, and what did they keep?",
+    "hint": "They compiled into something.",
+    "choices": [
+      {
+        "text": "They replaced HDFS",
+        "correct": false,
+        "why": "Both read and wrote HDFS."
+      },
+      {
+        "text": "They fixed how jobs are written and kept MapReduce's cost",
+        "correct": true,
+        "why": "Right. They compiled into chains of MapReduce jobs."
+      },
+      {
+        "text": "They fixed iteration by keeping data in memory",
+        "correct": false,
+        "why": "That was Spark's contribution."
+      },
+      {
+        "text": "They fixed the cost and kept the Java",
+        "correct": false,
+        "why": "The cost stayed; the language changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wb85f6k",
+    "version": 1,
+    "section": "what-survived",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of MapReduce's ideas live on in Spark? Choose all that apply.",
+    "hint": "Lessons 2 and 3 already met some of them.",
+    "choices": [
+      {
+        "text": "Recovery by rerunning a task from its input",
+        "correct": true,
+        "why": "Yes. Lesson 2 watched it."
+      },
+      {
+        "text": "A separate job for every grouping",
+        "correct": false,
+        "why": "Spark runs many groupings in one application."
+      },
+      {
+        "text": "Sending tasks to where their data is",
+        "correct": true,
+        "why": "Yes. The locality levels of lesson 3."
+      },
+      {
+        "text": "The shuffle by key",
+        "correct": true,
+        "why": "Yes. Every grouping and join ends in one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1z7vpswd",
+    "version": 1,
+    "section": "what-survived",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "MapReduce forced tasks to be functions of their input with no side ___; Spark only asks for it.",
+    "hint": "Like sending an e-mail.",
+    "blanks": [
+      {
+        "accept": [
+          "effects",
+          "effect"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kzhqf9kn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana needs revenue per category: purchases from 24 million events, prices and categories from 3,000 books. In MapReduce, which design?",
+    "hint": "How big is the book table?",
+    "choices": [
+      {
+        "text": "A combiner alone, with no join",
+        "correct": false,
+        "why": "The price and category are not in the events."
+      },
+      {
+        "text": "One job keyed by visitor",
+        "correct": false,
+        "why": "The visitor has nothing to do with revenue per category."
+      },
+      {
+        "text": "A map-side join, then a sum per category",
+        "correct": true,
+        "why": "Right. 3,000 books fit anywhere, and only the sums are shuffled."
+      },
+      {
+        "text": "A reduce-side join of both inputs, then a second job summing by category",
+        "correct": false,
+        "why": "Correct, but it shuffles every purchase to meet a tiny table."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv129xr5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each counter to the question it answers.",
+    "hint": "Follow the data from input to output.",
+    "pairs": [
+      {
+        "left": "Map input records",
+        "right": "How much was read?"
+      },
+      {
+        "left": "Reduce shuffle bytes",
+        "right": "How much crossed to the reducers?"
+      },
+      {
+        "left": "Spilled Records",
+        "right": "How much did not fit in memory?"
+      },
+      {
+        "left": "Reduce input groups",
+        "right": "How many distinct keys?"
+      }
+    ]
+  }
+]

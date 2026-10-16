@@ -1,0 +1,584 @@
+[
+  {
+    "id": "ex-rn1qzc1m",
+    "version": 1,
+    "section": "dataset",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dataset of a million photographs keeps only the file names in `__init__`, and its `__getitem__` opens and decodes one file. When is a photograph decoded?",
+    "hint": "Which of the two methods does the loader call per item?",
+    "choices": [
+      {
+        "text": "All of them when the dataset object is created",
+        "correct": false,
+        "why": "`__init__` only stored names; nothing in it opens a file."
+      },
+      {
+        "text": "All of them when the `DataLoader` is built",
+        "correct": false,
+        "why": "Building a loader reads no item; it only records how to ask for them."
+      },
+      {
+        "text": "Each one when its index is asked for, at every read",
+        "correct": true,
+        "why": "Right. `__getitem__` runs per item, so the work happens one image at a time, and again in every epoch."
+      },
+      {
+        "text": "Once per epoch, the whole set at the start of it",
+        "correct": false,
+        "why": "Nothing reads ahead by the whole set; items are asked for as batches are built."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2ehnkyz",
+    "version": 1,
+    "section": "dataset",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Write the two methods a map-style PyTorch dataset defines: ___ for the number of items, and ___ for item number i.",
+    "hint": "Both have two underscores on each side.",
+    "blanks": [
+      {
+        "accept": [
+          "__len__",
+          "len"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "__getitem__",
+          "getitem"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2t120pm2",
+    "version": 1,
+    "section": "dataloader",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A training set has 1,000 images, and the loader uses `batch_size=64` with `drop_last=False`. How many batches does one epoch have?",
+    "hint": "Fifteen full batches hold 960 images.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "batches"
+  },
+  {
+    "id": "ex-65gx2bm4",
+    "version": 1,
+    "section": "dataloader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `shuffle=True` and `drop_last=True`, 21 of the 1,077 training images are left out of every epoch. Which ones?",
+    "hint": "When is the order decided, and how often?",
+    "choices": [
+      {
+        "text": "The last 21 of the dataset, by index",
+        "correct": false,
+        "why": "That would be true with `shuffle=False`; shuffled, the last batch holds whatever the permutation put last."
+      },
+      {
+        "text": "A different 21 every epoch, chosen by that epoch's shuffle",
+        "correct": true,
+        "why": "Right. Each epoch draws a new order, and the short batch at its end is whatever landed there, so over many epochs every image is used."
+      },
+      {
+        "text": "The same 21 in every epoch, the ones picked at the first shuffle",
+        "correct": false,
+        "why": "`batches.py` showed epoch 2 starting differently from epoch 1: the shuffle is redone each time."
+      },
+      {
+        "text": "None, because they move to the front of the next epoch",
+        "correct": false,
+        "why": "The loader keeps nothing from one epoch to the next; the leftovers are dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-71r3teg4",
+    "version": 1,
+    "section": "dataloader",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dataset of photographs returns images of different sizes, and the loader fails inside `default_collate` saying the tensors must be equal size. What fixes it and keeps batches of 32?",
+    "hint": "Which step puts 32 items into one tensor?",
+    "choices": [
+      {
+        "text": "`drop_last=True`",
+        "correct": false,
+        "why": "It removes the short last batch; the full batches still mix sizes."
+      },
+      {
+        "text": "`shuffle=False`, so that similar photographs are read together",
+        "correct": false,
+        "why": "Order does not make two sizes stackable; neighbours in the files can differ just as much."
+      },
+      {
+        "text": "`num_workers=0`, so one process builds every batch",
+        "correct": false,
+        "why": "The workers call the same `default_collate`; the error is the same in the main process."
+      },
+      {
+        "text": "A `collate_fn` that pads or crops each batch to one size",
+        "correct": true,
+        "why": "Right. Collating is the step that stacks items, so a collate function that makes them one size first is where the fix belongs; a transform that resizes every image is the other place."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ma3rb0w",
+    "version": 1,
+    "section": "dataloader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ltrain.py` uses lesson 9's seeds, network, rate and batch size, yet ends at a validation accuracy of 0.956 where lesson 9 ended at 0.950. Why?",
+    "hint": "What decides which images go into each batch?",
+    "choices": [
+      {
+        "text": "The loader converts the images to `float64`",
+        "correct": false,
+        "why": "Collating keeps the dtype; the batches are `float32` like the tensors in `tdigits.py`."
+      },
+      {
+        "text": "Its shuffles differ, so the batches differ",
+        "correct": true,
+        "why": "Right. The loader draws from its generator in its own way, so the same seed gives other batches, and the run lands near lesson 9's rather than on it."
+      },
+      {
+        "text": "The loader drops the last short batch unless told not to",
+        "correct": false,
+        "why": "`drop_last` is `False` by default, and `batches.py` counted 34 batches with a last one of 21."
+      },
+      {
+        "text": "`loop.evaluate` measures differently on data that came through a loader",
+        "correct": false,
+        "why": "The validation set does not go through the loader at all; it is the same tensors as in lesson 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjh1b7zw",
+    "version": 1,
+    "section": "a-slow-transform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`warped[0]` read twice gave two different images. What does that mean for a training run of 30 epochs?",
+    "hint": "When does the transform run?",
+    "choices": [
+      {
+        "text": "A new variant of every digit in every epoch",
+        "correct": true,
+        "why": "Right. The transform runs at each read, so each epoch draws fresh fields, which is what augmentation is for."
+      },
+      {
+        "text": "The labels change with the image, so they must be recomputed",
+        "correct": false,
+        "why": "The label comes from `self.y[i]` untouched; only the image goes through the transform."
+      },
+      {
+        "text": "The dataset grows to 30 stored copies of each image",
+        "correct": false,
+        "why": "Nothing is stored; each variant exists only until its batch has been used."
+      },
+      {
+        "text": "Validation accuracy can be compared only between runs with equal fields",
+        "correct": false,
+        "why": "The validation set is read without the transform, so its images are the same in every run."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yxyzcqd",
+    "version": 1,
+    "section": "a-slow-transform",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save time, someone runs `Warp` once over the training set in `__init__` and stores the 1,077 results. What does the training lose?",
+    "hint": "How many different versions of a digit does each approach show the network?",
+    "choices": [
+      {
+        "text": "Nothing, as the network sees warped digits either way",
+        "correct": false,
+        "why": "It sees one fixed warp of each digit, every epoch, instead of a new one each time."
+      },
+      {
+        "text": "Its labels, which `__init__` cannot reach",
+        "correct": false,
+        "why": "`__init__` holds the labels already; they are untouched by the transform."
+      },
+      {
+        "text": "Variety: every epoch repeats the same images",
+        "correct": true,
+        "why": "Right. Precomputing turns a random transform into a fixed one, which is cheaper and no longer augments; only a part with no randomness in it, like a fixed resize, can be cached without loss."
+      },
+      {
+        "text": "The noise, which `torch.randn` refuses to draw in `__init__`",
+        "correct": false,
+        "why": "`torch.randn` works anywhere; the noise would be drawn once and frozen, like the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kxpk7p3",
+    "version": 1,
+    "section": "workers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`workers.py` has no model in it at all. What does its time per epoch tell you about a training run with the same loader?",
+    "hint": "Can a training epoch take less time than reading its batches?",
+    "choices": [
+      {
+        "text": "Nothing, because a model changes how fast the loader reads its items",
+        "correct": false,
+        "why": "The model shares the processors and can slow the loader down, but it cannot make reading faster."
+      },
+      {
+        "text": "The least time that training epoch will take, whatever the model costs",
+        "correct": true,
+        "why": "Right. Every batch has to be built before it is used, so the loader's own epoch is a floor that a faster model or a graphics card cannot go below."
+      },
+      {
+        "text": "How long the model's forward pass takes per batch",
+        "correct": false,
+        "why": "There is no forward pass in it; each batch is taken and thrown away."
+      },
+      {
+        "text": "The time training takes, since the model's share of it is negligible",
+        "correct": false,
+        "why": "That holds only when computing is small; `waiting.py` shows the two parts measured apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3dmvdy4",
+    "version": 1,
+    "section": "workers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Four transforms each add random noise and run in a loader with four workers. Which one gives the same noise in every worker?",
+    "hint": "PyTorch seeds some generators in each worker as it starts. Which generator was made before the workers existed?",
+    "choices": [
+      {
+        "text": "One calling `torch.randn` on every read",
+        "correct": false,
+        "why": "Each worker's torch generator is seeded differently, which is why `Warp` needed no fixing."
+      },
+      {
+        "text": "One calling Python's `random.gauss`",
+        "correct": false,
+        "why": "PyTorch also seeds Python's `random` module in each worker."
+      },
+      {
+        "text": "One calling the global `np.random.normal` on every read",
+        "correct": false,
+        "why": "NumPy's global generator is seeded per worker by PyTorch; only a generator object of your own is copied unchanged."
+      },
+      {
+        "text": "One drawing from `np.random.default_rng(0)` stored by `__init__`",
+        "correct": true,
+        "why": "Right. That generator object is copied into each worker as it was, so they all draw the same numbers, as `twins.py` showed; a `worker_init_fn` has to replace it."
+      }
+    ]
+  },
+  {
+    "id": "ex-px5nc7en",
+    "version": 1,
+    "section": "workers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `DataLoader` argument to what it does.",
+    "hint": "One description belongs to no argument here.",
+    "pairs": [
+      {
+        "left": "`num_workers`",
+        "right": "how many extra processes build batches"
+      },
+      {
+        "left": "`persistent_workers`",
+        "right": "keeps those processes alive between epochs"
+      },
+      {
+        "left": "`pin_memory`",
+        "right": "puts batches in page-locked memory for copies to a card"
+      },
+      {
+        "left": "`drop_last`",
+        "right": "throws away the short batch at the end"
+      }
+    ],
+    "right_distractors": [
+      "how many images go into one batch"
+    ]
+  },
+  {
+    "id": "ex-1jmk1r47",
+    "version": 1,
+    "section": "where-the-time-goes",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A transform costs 2 ms per image, batches hold 64 images, there are no workers, and a graphics card does each training step in 5 ms. For what percentage of the epoch does the card sit idle?",
+    "hint": "Building one batch takes 64 × 2 ms, and nothing else happens meanwhile.",
+    "value": 96,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-e247qtfb",
+    "version": 1,
+    "section": "where-the-time-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nvidia-smi` shows the card at 35% utilisation during training. What is the first thing to measure?",
+    "hint": "Before changing anything, find out what the other 65% is.",
+    "choices": [
+      {
+        "text": "Waiting time against computing time, per batch",
+        "correct": true,
+        "why": "Right. Low utilisation says the card is often idle, not why; splitting the time as `waiting.py` does says whether the loader is the cause."
+      },
+      {
+        "text": "Whether a larger model would keep the card busier",
+        "correct": false,
+        "why": "A larger model raises the percentage by making each step longer, and the run gets slower, not faster."
+      },
+      {
+        "text": "The card's temperature under that load",
+        "correct": false,
+        "why": "A hot card slows its own computing; it does not leave it idle two thirds of the time."
+      },
+      {
+        "text": "The learning rate's effect on the loss",
+        "correct": false,
+        "why": "The rate decides what a step does to the weights, not how long the card waits for one."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1217btd",
+    "version": 1,
+    "section": "where-the-time-goes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two workers brought the wait per batch down on this machine. The same loader then feeds a card that computes 30 times faster. What happens to the wait per batch?",
+    "hint": "While the step ran, the workers were building the next batch. How long is the step now?",
+    "choices": [
+      {
+        "text": "It stays the same, as the workers have not changed",
+        "correct": false,
+        "why": "The wait depends on how much of the building happens behind the step, and the step got shorter."
+      },
+      {
+        "text": "It grows: a shorter step hides less of the building",
+        "correct": true,
+        "why": "Right. The workers need about as long as before to build a batch; with less computing to overlap, more of that time shows up as waiting."
+      },
+      {
+        "text": "It falls to zero, because the card copies the data itself",
+        "correct": false,
+        "why": "The card copies batches that exist; building them is still the processor's work."
+      },
+      {
+        "text": "It falls by 30 times, like the computing does",
+        "correct": false,
+        "why": "Computing and loading run on different hardware; speeding one up does nothing to the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8vnqyxg",
+    "version": 1,
+    "section": "to-the-device",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a training loop, `xb.to(device)` sits on a line of its own, with nothing assigned. What happens to `xb` on a machine with a card?",
+    "hint": "Compare the tensor and the module in `todevice.py`.",
+    "choices": [
+      {
+        "text": "It moves to the card, as a module does",
+        "correct": false,
+        "why": "A module changes itself; a tensor's `.to` returns a new tensor and leaves the old one where it was."
+      },
+      {
+        "text": "It stays where it was; the copy is lost",
+        "correct": true,
+        "why": "Right. The next line then feeds a processor tensor to a model on the card, and PyTorch stops with a device error."
+      },
+      {
+        "text": "It is moved later, at the moment the model first reads it",
+        "correct": false,
+        "why": "PyTorch moves nothing on its own; a mismatch is an error, not a silent copy."
+      },
+      {
+        "text": "It is moved and pinned, since the loader pinned it",
+        "correct": false,
+        "why": "Pinning prepares a copy; it does not make an unassigned `.to` take effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygczpkrh",
+    "version": 1,
+    "section": "to-the-device",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `pin_memory=True` do on the lab machine, which has no graphics card?",
+    "hint": "Look at the line the one-line program printed after the warning.",
+    "choices": [
+      {
+        "text": "It made every batch faster to read from memory",
+        "correct": false,
+        "why": "Pinned memory speeds up copies to a card, and there is no card here to copy to."
+      },
+      {
+        "text": "It stopped the program with an error",
+        "correct": false,
+        "why": "The program ran on and printed its line; the complaint was a warning."
+      },
+      {
+        "text": "It pinned the batch in the processor's memory for later",
+        "correct": false,
+        "why": "`is_pinned()` answered `False`: nothing was pinned."
+      },
+      {
+        "text": "Nothing, after a warning",
+        "correct": true,
+        "why": "Right. With no accelerator, PyTorch warns and skips pinning, which is why `todevice.py` asks for it only when the device is `cuda`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr4769x2",
+    "version": 1,
+    "section": "to-the-device",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop copies a batch with `xb.to('cuda', non_blocking=True)` and calls `model(xb)` on the next line. Can the model read a half-copied batch?",
+    "hint": "Who is it that does not wait: the processor or the card?",
+    "choices": [
+      {
+        "text": "No: the card runs the copy and then the model, in order",
+        "correct": true,
+        "why": "Right. The processor goes on without waiting, but the card queues the copy before the model's operations, so they read a complete batch."
+      },
+      {
+        "text": "Yes, and the loss comes out wrong for that batch",
+        "correct": false,
+        "why": "Work on one stream of the card runs in the order it was queued, so the copy finishes first."
+      },
+      {
+        "text": "No, because `non_blocking` is ignored for model inputs",
+        "correct": false,
+        "why": "It is not ignored; it lets the processor go on while the copy runs."
+      },
+      {
+        "text": "Yes, unless `torch.cuda.synchronize()` is called first",
+        "correct": false,
+        "why": "Synchronising makes the processor wait for the card; the card was already keeping its own order."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjn39f1z",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An epoch spends 80% of its time waiting for data. Which changes shorten it? Choose every one that does.",
+    "hint": "Which side of the time does each change act on?",
+    "choices": [
+      {
+        "text": "More workers, while processors are free",
+        "correct": true,
+        "why": "Right: batches are built in parallel and behind the step."
+      },
+      {
+        "text": "Caching the part of the transform with no randomness",
+        "correct": true,
+        "why": "Right: work done once is not repeated at every read."
+      },
+      {
+        "text": "A graphics card twice as fast",
+        "correct": false,
+        "why": "It shortens the 20% spent computing and leaves the 80% as it was."
+      },
+      {
+        "text": "`non_blocking=True` on a machine without a card",
+        "correct": false,
+        "why": "On the processor there is no copy to overlap, so nothing changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn5cbvt8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens for one batch of a loader with no workers, up to the forward pass.",
+    "hint": "Indices come before items.",
+    "items": [
+      "The sampler picks 32 indices from the shuffled order",
+      "`__getitem__` runs once for each index, transform included",
+      "The collate function stacks the 32 items into one batch",
+      "The batch is moved to the device",
+      "The model runs its forward pass on the batch"
+    ]
+  },
+  {
+    "id": "ex-4zcpewb0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a laptop with four processors, a loader with `num_workers=8` and a CPU-trained model is slower than with `num_workers=3`. What explains it?",
+    "hint": "What else needs those four processors?",
+    "choices": [
+      {
+        "text": "Each worker reads the whole dataset, so eight read it eight times",
+        "correct": false,
+        "why": "The workers split the batches between them; each item of an epoch is read once."
+      },
+      {
+        "text": "Too many processes for four processors",
+        "correct": true,
+        "why": "Right. Past the number of free processors, extra workers only take turns, and they take turns with the model's own computing too."
+      },
+      {
+        "text": "`num_workers` above the batch size wastes workers",
+        "correct": false,
+        "why": "Workers build whole batches, one each; the batch size does not cap them."
+      },
+      {
+        "text": "Eight workers turn shuffling off",
+        "correct": false,
+        "why": "Shuffling is decided by the sampler in the main process, whatever the number of workers."
+      }
+    ]
+  }
+]

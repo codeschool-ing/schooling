@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-8scfwzf7",
+    "version": 1,
+    "section": "what-leakage-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which definition of leakage does the lesson use?",
+    "hint": "It is about the moment the model is used.",
+    "choices": [
+      {
+        "text": "Any column with missing values",
+        "correct": false,
+        "why": "Gaps are a nuisance, not a leak; `rating_90d` has gaps and is legitimate."
+      },
+      {
+        "text": "Training information absent at prediction time",
+        "correct": true,
+        "why": "Yes. The test is the moment of prediction."
+      },
+      {
+        "text": "Personal data that reached people who should not see it",
+        "correct": false,
+        "why": "That is a data breach, a different and serious problem."
+      },
+      {
+        "text": "A model that is overfitted to its own training rows",
+        "correct": false,
+        "why": "Overfitting is caught by validation; leakage passes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-236eq105",
+    "version": 1,
+    "section": "what-leakage-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an honest-looking validation score not catch a leaking column?",
+    "hint": "Where do the training and validation rows come from?",
+    "choices": [
+      {
+        "text": "Validation only measures accuracy, never value",
+        "correct": false,
+        "why": "Validation can use any score, and every one of them is fooled the same way."
+      },
+      {
+        "text": "Validation rows are always too few to show it",
+        "correct": false,
+        "why": "Even thousands of validation rows carry the same leak."
+      },
+      {
+        "text": "The model hides the column from the validation rows",
+        "correct": false,
+        "why": "Models hide nothing; they use whatever they are given."
+      },
+      {
+        "text": "Both sides of the split carry it equally",
+        "correct": true,
+        "why": "Yes. A leak is a difference between the data and the world, not between the two halves."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jdjc76k",
+    "version": 1,
+    "section": "what-leakage-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way in to its example in this course.",
+    "hint": "One of them has no column at all.",
+    "pairs": [
+      {
+        "left": "The target in disguise",
+        "right": "`cancel_reason`"
+      },
+      {
+        "left": "The future",
+        "right": "`days_since_last_order`"
+      },
+      {
+        "left": "The preparation",
+        "right": "Choosing columns with every row"
+      },
+      {
+        "left": "The split",
+        "right": "A subscriber's rows on both sides"
+      }
+    ],
+    "right_distractors": [
+      "`rating_90d`"
+    ]
+  },
+  {
+    "id": "ex-hffhtg1t",
+    "version": 1,
+    "section": "the-obvious-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the first of the month, when the credit is sent, what does `cancel_reason` hold for each subscriber?",
+    "hint": "When is it written?",
+    "choices": [
+      {
+        "text": "Last month's reason",
+        "correct": false,
+        "why": "Nobody gives a reason without cancelling."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Yes. It is filled in when they cancel, after the snapshot."
+      },
+      {
+        "text": "The reason each subscriber is most likely to give",
+        "correct": false,
+        "why": "It is not a prediction; it is what a leaver wrote on the form."
+      },
+      {
+        "text": "`price` for everybody",
+        "correct": false,
+        "why": "Empty for everybody who has not cancelled."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jkb5wce",
+    "version": 1,
+    "section": "the-obvious-one",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which columns are the target in disguise? Choose all that apply.",
+    "hint": "Is the column written because of the outcome?",
+    "choices": [
+      {
+        "text": "*Age*, in the churn model",
+        "correct": false,
+        "why": "Known at the snapshot and not caused by the outcome."
+      },
+      {
+        "text": "*Skips in the last 90 days*, in the churn model",
+        "correct": false,
+        "why": "Counted before the snapshot, from the history; legitimate."
+      },
+      {
+        "text": "*Number of follow-up calls*, in a model of which leads will close",
+        "correct": true,
+        "why": "Yes. Promising leads get more calls because they are promising."
+      },
+      {
+        "text": "*Sent to collections*, in a model of who will default",
+        "correct": true,
+        "why": "Yes. Collections react to the default."
+      },
+      {
+        "text": "*Refund issued*, in a model of who will complain",
+        "correct": true,
+        "why": "Yes. The refund follows the complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz55wzd6",
+    "version": 1,
+    "section": "the-obvious-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should Ana do with `cancel_reason` once she knows it leaks?",
+    "hint": "It is in the wrong question, not the wrong file.",
+    "choices": [
+      {
+        "text": "Delete it from every copy of the data, so nobody uses it by mistake again",
+        "correct": false,
+        "why": "It answers why people left, which is worth knowing."
+      },
+      {
+        "text": "Keep it in the model, but only on a split by time",
+        "correct": false,
+        "why": "It is perfect on any split and empty in use."
+      },
+      {
+        "text": "Keep it out of the model and use it to study why people left",
+        "correct": true,
+        "why": "Yes. A leaking column is a column in the wrong question."
+      },
+      {
+        "text": "Fill its gaps with the most common reason",
+        "correct": false,
+        "why": "That still marks every leaver differently from everybody else."
+      }
+    ]
+  },
+  {
+    "id": "ex-yev101vd",
+    "version": 1,
+    "section": "the-subtle-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes `days_since_last_order` leak?",
+    "hint": "Ask when it was computed.",
+    "choices": [
+      {
+        "text": "It counts from the export date, not the snapshot",
+        "correct": true,
+        "why": "Yes. For an old leaver, it measures days after they left."
+      },
+      {
+        "text": "It has too many distinct values",
+        "correct": false,
+        "why": "Many distinct values is not a leak."
+      },
+      {
+        "text": "Long gaps between orders never predict cancelling",
+        "correct": false,
+        "why": "Computed as of the snapshot, it would be a fair and useful feature."
+      },
+      {
+        "text": "It is a number, and only categories can leak into a model",
+        "correct": false,
+        "why": "Any type of column can carry the future."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydz3r84f",
+    "version": 1,
+    "section": "the-subtle-one",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `subtle.py`, the median for leavers falls from 493 days in 2024Q3 to 40 in 2025Q4. By how many days does it fall?",
+    "hint": "Subtract.",
+    "value": 453,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-25ptegkf",
+    "version": 1,
+    "section": "the-subtle-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the leaking column, the model scores AUC 0.958 on a random split and 0.500 by time. Why did the time split expose it here?",
+    "hint": "Look at how the leavers' values change across the quarters.",
+    "choices": [
+      {
+        "text": "The leavers' values shrink towards the export date, so the pattern learned from old months fails on recent ones",
+        "correct": true,
+        "why": "Yes. A leak that did not drift with the date would have passed."
+      },
+      {
+        "text": "Time splits catch every leak",
+        "correct": false,
+        "why": "Only leaks whose distortion changes with the date; that was luck here."
+      },
+      {
+        "text": "The time split has fewer leavers",
+        "correct": false,
+        "why": "It has a similar share; the values are what changed."
+      },
+      {
+        "text": "AUC cannot be computed on time splits",
+        "correct": false,
+        "why": "It can, and 0.500 is that computation."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpp4y9m2",
+    "version": 1,
+    "section": "preparation-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "2,000 columns of random numbers give 68.8% accuracy when the 20 best are chosen before the split. Where does the skill come from?",
+    "hint": "Which rows were used to pick the columns?",
+    "choices": [
+      {
+        "text": "400 rows is enough to learn anything",
+        "correct": false,
+        "why": "There is nothing to learn in random numbers, however many rows."
+      },
+      {
+        "text": "Logistic regression always beats a coin",
+        "correct": false,
+        "why": "On noise it cannot, as the honest run shows."
+      },
+      {
+        "text": "Random numbers carry a little signal",
+        "correct": false,
+        "why": "Done inside each fold, the same columns give 44.5%: no signal."
+      },
+      {
+        "text": "The validation rows helped pick them",
+        "correct": true,
+        "why": "Yes. They line up with the target there by chance, and the model is rewarded for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk44zcgr",
+    "version": 1,
+    "section": "preparation-leak",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the columns picked inside each fold, what accuracy did `noise.py` report, as a percentage with one decimal place?",
+    "hint": "The second line of results.",
+    "value": 44.5,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-bs595m2z",
+    "version": 1,
+    "section": "preparation-leak",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The general cure is to put every step that learns anything inside the ___, so cross-validation fits it on the training folds only.",
+    "hint": "`make_pipeline` builds one.",
+    "blanks": [
+      {
+        "accept": [
+          "pipeline"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ymcsp2ne",
+    "version": 1,
+    "section": "the-split-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call lesson 3's random-split numbers leaks?",
+    "hint": "Use the definition.",
+    "choices": [
+      {
+        "text": "A random split always produces a worse model",
+        "correct": false,
+        "why": "It produces a better-looking score, which is the problem."
+      },
+      {
+        "text": "They were measured on too few rows to be trusted",
+        "correct": false,
+        "why": "Tens of thousands of rows; the size was not the issue."
+      },
+      {
+        "text": "They used the wrong library",
+        "correct": false,
+        "why": "The library was the same; the split was the issue."
+      },
+      {
+        "text": "They feed training what use will lack",
+        "correct": true,
+        "why": "Yes. Through the split rather than through a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbhvhj69",
+    "version": 1,
+    "section": "the-split-again",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A random split approves a new column and a split by time refuses it. Which do you believe, and why?",
+    "hint": "Which one resembles the day the model is used?",
+    "choices": [
+      {
+        "text": "Neither; average the two",
+        "correct": false,
+        "why": "Averaging an honest score with a leaking one gives a leaking one."
+      },
+      {
+        "text": "The random split, because it uses more of the data",
+        "correct": false,
+        "why": "Using more data is no help if the data includes the future."
+      },
+      {
+        "text": "The split by time",
+        "correct": true,
+        "why": "Yes. It is the situation the model will be in; in section 04 it was right."
+      },
+      {
+        "text": "The random split, because random means unbiased",
+        "correct": false,
+        "why": "Random rows from a world that includes the future are an unbiased sample of the wrong world."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cekh8q7",
+    "version": 1,
+    "section": "how-it-looks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are symptoms worth stopping for? Choose all that apply.",
+    "hint": "None of them is proof.",
+    "choices": [
+      {
+        "text": "An AUC of 0.99 for predicting who cancels a vegetable box",
+        "correct": true,
+        "why": "Yes. Behaviour is noisier than that."
+      },
+      {
+        "text": "A column whose relation to the target shifts steadily with the snapshot date",
+        "correct": true,
+        "why": "Yes. It is often measured from a fixed date, like the export."
+      },
+      {
+        "text": "A cross-validation score close to the score on the test months",
+        "correct": false,
+        "why": "Agreement is reassuring, not suspicious."
+      },
+      {
+        "text": "Dropping one column moves the score far more than dropping any other",
+        "correct": true,
+        "why": "Yes. That column deserves an interview."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4hg47jh",
+    "version": 1,
+    "section": "how-it-looks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `suspects.py` the leak tops the list by one point, just ahead of `rating_90d`. What does that show?",
+    "hint": "Could the numbers alone tell the two apart?",
+    "choices": [
+      {
+        "text": "`rating_90d` leaks as well",
+        "correct": false,
+        "why": "It is averaged from reviews before the snapshot: legitimate."
+      },
+      {
+        "text": "The check is broken",
+        "correct": false,
+        "why": "It works; it finds blatant leaks and cannot find subtle ones."
+      },
+      {
+        "text": "A subtle leak looks like a good feature, so only asking where it comes from tells them apart",
+        "correct": true,
+        "why": "Yes. The audit of section 08 is the proof, not the ranking."
+      },
+      {
+        "text": "The leak is too small to matter",
+        "correct": false,
+        "why": "It more than doubled the model's apparent value."
+      }
+    ]
+  },
+  {
+    "id": "ex-y19p4h2y",
+    "version": 1,
+    "section": "an-audit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `segment` column says *loyal* for every row of a customer, from 2024 to 2026, though they cancelled twice. Which audit question finds it?",
+    "hint": "The value never changes across years.",
+    "choices": [
+      {
+        "text": "Who writes it, and in response to what?",
+        "correct": false,
+        "why": "Useful, but the tell here is that the value never moves."
+      },
+      {
+        "text": "Will it be there in real time?",
+        "correct": false,
+        "why": "Availability is a different question from whether its history is true."
+      },
+      {
+        "text": "If it is a summary, over what window?",
+        "correct": false,
+        "why": "It is a label, not a summary over a window."
+      },
+      {
+        "text": "Does it change after it is first written?",
+        "correct": true,
+        "why": "Yes. An updated-in-place field holds today's value in every historical row."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrr26rws",
+    "version": 1,
+    "section": "an-audit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the *as of the snapshot?* column of the audit table not be filled in from the data alone?",
+    "hint": "`days_since_last_order` looked like a good feature.",
+    "choices": [
+      {
+        "text": "It is a fact about the systems",
+        "correct": true,
+        "why": "Yes. It takes asking the owners or reading the code that builds the file."
+      },
+      {
+        "text": "Because pandas cannot read dates",
+        "correct": false,
+        "why": "It reads them, and dates do not answer this question anyway."
+      },
+      {
+        "text": "Because the table is only for categorical columns",
+        "correct": false,
+        "why": "Every column gets a line."
+      },
+      {
+        "text": "Because the data has too many rows to inspect by hand",
+        "correct": false,
+        "why": "Size is not the obstacle; the information is not in the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw8pzt6v",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the anti-leak procedure in order.",
+    "hint": "The split comes before anything learns.",
+    "items": [
+      "Split the data",
+      "Fill in the audit table for every column",
+      "Fit every learned step inside a pipeline",
+      "Treat any too-good score as a bug",
+      "Test once on later data"
+    ]
+  },
+  {
+    "id": "ex-jydmmcv8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hospital model predicts sepsis at admission. Its strongest column is *antibiotics prescribed in the first 24 hours*. What do you conclude?",
+    "hint": "Is it known at admission, and why is it written?",
+    "choices": [
+      {
+        "text": "It should be kept, but scaled before the split so that nothing it learns can reach the validation rows",
+        "correct": false,
+        "why": "Scaling has nothing to do with it; the column must go."
+      },
+      {
+        "text": "It leaks only if the split is random",
+        "correct": false,
+        "why": "It leaks on any split; at admission it does not exist."
+      },
+      {
+        "text": "It is a strong, legitimate predictor",
+        "correct": false,
+        "why": "It is written later than admission, by doctors reacting to suspected sepsis."
+      },
+      {
+        "text": "It leaks twice, from the future and as the target",
+        "correct": true,
+        "why": "Yes: from the future, and as the target in disguise."
+      }
+    ]
+  }
+]

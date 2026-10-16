@@ -1,0 +1,548 @@
+[
+  {
+    "id": "ex-vtczf5ma",
+    "version": 1,
+    "section": "sgd-and-its-noise",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`noise.py` ends by checking that the batch gradients, weighted by size, average to the whole set's gradient. Why does that matter for SGD?",
+    "hint": "Think about many steps rather than one.",
+    "choices": [
+      {
+        "text": "It proves each batch gradient points exactly downhill",
+        "correct": false,
+        "why": "No batch did: the cosines ran from 0.354 to 0.868, never 1."
+      },
+      {
+        "text": "It means the batch size can be anything without effect",
+        "correct": false,
+        "why": "The average says nothing about how noisy each step is, and batch size changes that; lesson 6 measures it."
+      },
+      {
+        "text": "The errors of single steps cancel over many steps",
+        "correct": true,
+        "why": "Right. The estimate is unbiased, so what is left after many noisy steps is the descent lesson 2 did."
+      },
+      {
+        "text": "It shows the network has finished learning",
+        "correct": false,
+        "why": "No step was taken in `noise.py`; the weights were the starting ones throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0jbfb55",
+    "version": 1,
+    "section": "sgd-and-its-noise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Batch 3's gradient had a cosine of 0.354 with the whole set's. What does a small step against it do to the loss of the whole training set?",
+    "hint": "What sign does the cosine have?",
+    "choices": [
+      {
+        "text": "It raises it, because 0.354 is a poor estimate",
+        "correct": false,
+        "why": "Poor is not uphill. Only a negative cosine would point uphill for the whole set."
+      },
+      {
+        "text": "It lowers it, by less than a step along the exact gradient would",
+        "correct": true,
+        "why": "Right. A positive cosine means the direction still goes downhill for the whole set, just not by the steepest way."
+      },
+      {
+        "text": "Nothing, since the loss depends on the batch alone",
+        "correct": false,
+        "why": "The weights are shared by every image, so a step for one batch moves the loss of all of them."
+      },
+      {
+        "text": "It cannot be known without computing the whole gradient",
+        "correct": false,
+        "why": "The cosine was computed against the whole gradient, and its sign already answers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdxhqk10",
+    "version": 1,
+    "section": "sgd-and-its-noise",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`fit` cuts the 1,077 training images into batches of 32. How many steps does it take in one epoch?",
+    "hint": "The last batch is smaller than the rest, and it still counts.",
+    "value": 34,
+    "tolerance": 0,
+    "unit": "steps"
+  },
+  {
+    "id": "ex-6qq7y3m2",
+    "version": 1,
+    "section": "momentum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `bowl.py`, why can plain gradient descent not escape its crawl along `x` by using a rate of 0.03?",
+    "hint": "Multiply `y` by 1 − 100 × rate.",
+    "choices": [
+      {
+        "text": "A larger rate would make the crawl along `x` slower",
+        "correct": false,
+        "why": "Along `x` the factor is 1 − rate, so a larger rate makes it faster there."
+      },
+      {
+        "text": "The rate is fixed by the gradient and cannot be changed",
+        "correct": false,
+        "why": "The rate is a setting the program chooses; `descend` takes it as an argument."
+      },
+      {
+        "text": "Across the valley `y` would be multiplied by −2 each step and grow",
+        "correct": true,
+        "why": "Right. Above 0.02 the steep direction diverges, so the steep direction caps the rate for every direction."
+      },
+      {
+        "text": "Momentum is needed before any rate above 0.019 is allowed",
+        "correct": false,
+        "why": "The limit is 0.02, set by the steep wall, and momentum does not remove it for plain descent."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qcs4wcs",
+    "version": 1,
+    "section": "momentum",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A valley has the loss 0.5 × (x² + 400 y²). What is the largest learning rate at which plain gradient descent does not grow across the valley, along `y`?",
+    "hint": "Each step multiplies `y` by 1 − 400 × rate. When does that factor reach −1?",
+    "value": 0.005,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bt2wnk96",
+    "version": 1,
+    "section": "momentum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compared with plain descent at the same rate, what did momentum fail to improve in `bowl.py`?",
+    "hint": "Compare the two `y` columns at step 40.",
+    "choices": [
+      {
+        "text": "The swing across the valley, which it left larger",
+        "correct": true,
+        "why": "Right: 0.122 against 0.015 at step 40. Its whole gain was along the floor."
+      },
+      {
+        "text": "The distance from the lowest point after 40 steps",
+        "correct": false,
+        "why": "That improved most of all: 0.316 against 4.643."
+      },
+      {
+        "text": "The progress along `x` in the first 14 steps",
+        "correct": false,
+        "why": "By step 14 momentum was at -0.229 and plain descent at -7.645."
+      },
+      {
+        "text": "The highest rate the steep direction allows",
+        "correct": false,
+        "why": "Both ran at the same 0.019, so the rate was not what was compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-xm2mgwga",
+    "version": 1,
+    "section": "adam",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Adam at a rate of 0.001 meets one parameter with a steady gradient of 100 and another with a steady gradient of 0.01. How far does each move per step?",
+    "hint": "Look at the Adam column of `adam_steps.py`.",
+    "choices": [
+      {
+        "text": "0.1 and 0.00001",
+        "correct": false,
+        "why": "That is plain SGD at the same rate, the first line the program printed."
+      },
+      {
+        "text": "0.001 each",
+        "correct": true,
+        "why": "Right. With a steady gradient, `m_hat` over the square root of `v_hat` is 1, so the step is the rate."
+      },
+      {
+        "text": "0.003162 each, then growing",
+        "correct": false,
+        "why": "That is the uncorrected column, the steps Adam would take without its bias correction."
+      },
+      {
+        "text": "0.1 and 0.001",
+        "correct": false,
+        "why": "Neither parameter keeps a step proportional to its gradient under Adam."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcfmndrj",
+    "version": 1,
+    "section": "adam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would Adam's first steps look like without the division by `1 - beta ** t`?",
+    "hint": "After one step, `m` holds a tenth of the gradient and `v` a thousandth of its square.",
+    "choices": [
+      {
+        "text": "Too small, because both running averages start at zero and fill slowly",
+        "correct": false,
+        "why": "Both are too small, but `v` more so, and it sits under a square root in the denominator."
+      },
+      {
+        "text": "The same, since the correction cancels in the ratio",
+        "correct": false,
+        "why": "It would cancel only if `beta1` and `beta2` were equal; with 0.9 and 0.999 they are not."
+      },
+      {
+        "text": "Several times the rate, from 0.003162 up to 0.005797 by step 5",
+        "correct": true,
+        "why": "Right. The square average lags further behind, so the uncorrected ratio comes out too large."
+      },
+      {
+        "text": "Zero, until `t` passes 1,000",
+        "correct": false,
+        "why": "`m` is non-zero after the first gradient, so the step is too."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwznjbmc",
+    "version": 1,
+    "section": "adam",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under Adam, weight A always gets a gradient of 0.000001, while weight B's gradient averages 5 in size but changes sign at random. Which one tends to move more per step?",
+    "hint": "What does `m` do with signs, and what does `v` do with sizes?",
+    "choices": [
+      {
+        "text": "B, because its gradient is five million times larger",
+        "correct": false,
+        "why": "Size is divided away by the square root of `v`; that is the point of Adam."
+      },
+      {
+        "text": "A, because its gradient keeps its sign",
+        "correct": true,
+        "why": "Right. A's ratio stays near 1 and it steps about the rate; B's `m` cancels towards zero while `v` stays large."
+      },
+      {
+        "text": "Both move by the rate, since Adam ignores the gradient",
+        "correct": false,
+        "why": "Adam ignores the gradient's scale, not its sign: the third parameter of `adam_steps.py` stepped a fraction of the rate."
+      },
+      {
+        "text": "Neither: a gradient under `eps` is treated as zero",
+        "correct": false,
+        "why": "`eps` is 1e-8, far below 0.000001, and it only guards a division."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bdahgdp",
+    "version": 1,
+    "section": "optim-and-fit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the optimisers in `optim.py` write `p -= self.lr * g` instead of `p = p - self.lr * g`?",
+    "hint": "Where do the arrays in `self.params` come from?",
+    "choices": [
+      {
+        "text": "It is faster, and the results are the same either way",
+        "correct": false,
+        "why": "The results differ: the second form would leave the network's weights as they were."
+      },
+      {
+        "text": "To change the network's own arrays rather than a new copy",
+        "correct": true,
+        "why": "Right. `p` is the layer's own `W` or `b`, and only an in-place change reaches it."
+      },
+      {
+        "text": "Because NumPy refuses to subtract arrays of different shapes",
+        "correct": false,
+        "why": "`p` and `g` have the same shape, so both forms compute."
+      },
+      {
+        "text": "To clear the gradient before the next backward pass",
+        "correct": false,
+        "why": "Nothing here clears a gradient: `Linear.backward` overwrites it."
+      }
+    ]
+  },
+  {
+    "id": "ex-94a5nh44",
+    "version": 1,
+    "section": "optim-and-fit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first epoch of `train.py` the training loss is 1.2015 and the validation loss 0.3860. What explains the gap?",
+    "hint": "When during the epoch is each one measured?",
+    "choices": [
+      {
+        "text": "The validation images happen to be easier digits than the training images",
+        "correct": false,
+        "why": "The split is a random shuffle of the same data; nothing makes one set easier."
+      },
+      {
+        "text": "The network is already overfitting the training images after a single epoch",
+        "correct": false,
+        "why": "Overfitting shows the other way round: training loss below validation loss."
+      },
+      {
+        "text": "Training loss averages batches taken while the weights were still poor",
+        "correct": true,
+        "why": "Right. Validation is measured once, at the end of the epoch, with the weights it finished with."
+      },
+      {
+        "text": "Momentum adds its velocity to the training loss",
+        "correct": false,
+        "why": "The velocity changes the weights; the loss is computed by `softmax_cross_entropy` alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf1khx2t",
+    "version": 1,
+    "section": "optim-and-fit",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every class in `optim.py` offers one method, which `fit` calls once per batch after the backward pass. Its name is ___.",
+    "hint": "It is the same name PyTorch's optimisers use.",
+    "blanks": [
+      {
+        "accept": [
+          "step",
+          "step()",
+          "opt.step()",
+          "opt.step"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zmj4nt5r",
+    "version": 1,
+    "section": "the-learning-rate-above-all",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `sweep.py`, which choice moved the final validation accuracy more?",
+    "hint": "Compare the spread along a row with the spread between the rows' best cells.",
+    "choices": [
+      {
+        "text": "The optimiser: Adam beat SGD at every rate",
+        "correct": false,
+        "why": "SGD beat Adam from 0.1 upwards, and SGD's best, 0.981, was above Adam's 0.969."
+      },
+      {
+        "text": "The rate, by about 87 points against about one",
+        "correct": true,
+        "why": "Right. Along a row the rate went from chance to the top; the three rows' best cells were 0.981, 0.978 and 0.969."
+      },
+      {
+        "text": "Neither: every run ended within a point of the others",
+        "correct": false,
+        "why": "Several runs ended at chance, near 0.1."
+      },
+      {
+        "text": "The number of epochs, which differed between rows",
+        "correct": false,
+        "why": "Every run had 20 epochs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tedfsy9x",
+    "version": 1,
+    "section": "the-learning-rate-above-all",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague trained a network well with plain SGD at 0.5, switched to Adam keeping 0.5, and the accuracy fell to chance. What should they do first?",
+    "hint": "What does Adam's rate measure?",
+    "choices": [
+      {
+        "text": "Go back to SGD, since Adam does not suit this network",
+        "correct": false,
+        "why": "Nothing has tested Adam yet, only one rate that belongs to another optimiser."
+      },
+      {
+        "text": "Add a cosine schedule to it and keep 0.5 as the top rate of the schedule",
+        "correct": false,
+        "why": "A schedule spends most epochs near its top rate; it does not replace finding the rate."
+      },
+      {
+        "text": "Sweep Adam's rate, a factor of about three apart, well below 0.5",
+        "correct": true,
+        "why": "Right. Adam's rate is roughly a step size, and its peak in the sweep was at 0.03."
+      },
+      {
+        "text": "Keep the rate at 0.5 and train for many more epochs until it recovers",
+        "correct": false,
+        "why": "Too high fails abruptly; more epochs at a rate that broke the network will not mend it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8xe7vm2",
+    "version": 1,
+    "section": "the-learning-rate-above-all",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three optimisers in order of the learning rate at which each one peaked in `sweep.py`, smallest rate first.",
+    "hint": "Momentum's peak is a tenth of plain SGD's.",
+    "items": [
+      "Adam",
+      "Momentum",
+      "SGD"
+    ]
+  },
+  {
+    "id": "ex-v9rxgaq3",
+    "version": 1,
+    "section": "schedules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did step decay beat the other schedules for Adam at a top rate of 0.1?",
+    "hint": "Compare its rates with the sweep's good rates for Adam.",
+    "choices": [
+      {
+        "text": "Because a sudden drop in the rate always trains better than a smooth one",
+        "correct": false,
+        "why": "Nothing here shows that in general; one seed of one network cannot."
+      },
+      {
+        "text": "Its later epochs ran at 0.01 and 0.001, which the sweep found good",
+        "correct": true,
+        "why": "Right. The cosine stayed above 0.01 until epoch 17, so most of its run was too high."
+      },
+      {
+        "text": "Because it started with a warm-up",
+        "correct": false,
+        "why": "Step decay started at 0.1 from epoch 1; only `warmup_cosine` warms up."
+      },
+      {
+        "text": "Because it used a different shuffle from the other three",
+        "correct": false,
+        "why": "All four runs used `seed=epoch`, so they saw the same batches in the same order."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyc11x5r",
+    "version": 1,
+    "section": "schedules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each schedule in `schedules.py` with what it does to the rate.",
+    "hint": "Read the table it printed, column by column.",
+    "pairs": [
+      {
+        "left": "`step_decay`",
+        "right": "divides it by ten at fixed epochs"
+      },
+      {
+        "left": "`cosine`",
+        "right": "slides it down along half a wave towards zero"
+      },
+      {
+        "left": "`warmup_cosine`",
+        "right": "climbs to the top for three epochs, then slides down"
+      },
+      {
+        "left": "`constant`",
+        "right": "keeps it at the top"
+      }
+    ],
+    "right_distractors": [
+      "lowers it when the validation loss stops improving"
+    ]
+  },
+  {
+    "id": "ex-3j2ma1bd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose every one that applies.",
+    "hint": "Each true one has a capture behind it.",
+    "choices": [
+      {
+        "text": "A batch gradient pointed downhill for the whole set while disagreeing with its direction",
+        "correct": true,
+        "why": "Right: every cosine was positive, from 0.354 to 0.868."
+      },
+      {
+        "text": "The same Adam configuration gave 0.894 and 0.950 with different shuffles",
+        "correct": true,
+        "why": "Right: the sweep and the constant schedule differ only in the order of the batches."
+      },
+      {
+        "text": "Momentum damped the zigzag across the valley",
+        "correct": false,
+        "why": "It swung longer: 0.122 at step 40 against plain descent's 0.015."
+      },
+      {
+        "text": "Adam's default rate of 0.001 was its best in the sweep",
+        "correct": false,
+        "why": "It gave 0.933; 0.03 gave 0.969."
+      },
+      {
+        "text": "Plain SGD's best rate was more than ten times Adam's",
+        "correct": true,
+        "why": "Right: 1 against 0.03, and the two rates measure different things."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbyh14va",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run with a constant rate has reached a good accuracy, but its validation loss keeps jumping up and down by the same amount for the last ten epochs. Which change does this lesson point to first?",
+    "hint": "Which kind of noise does not shrink near the bottom?",
+    "choices": [
+      {
+        "text": "Switch the optimiser from momentum to Adam",
+        "correct": false,
+        "why": "The optimiser moved results by about a point in the sweep, and Adam's steps jitter too at a fixed rate."
+      },
+      {
+        "text": "Raise the rate so the weights leave the jitter behind",
+        "correct": false,
+        "why": "A larger step makes the jitter around the minimum larger, not smaller."
+      },
+      {
+        "text": "Add momentum with a `beta` of 0.99 to smooth it",
+        "correct": false,
+        "why": "A heavier ball overshoots and swings longer, as `bowl.py` showed at 0.9."
+      },
+      {
+        "text": "Lower the rate for the later epochs with a schedule",
+        "correct": true,
+        "why": "Right. Batch noise stays as the gradient shrinks, so smaller late steps let the weights settle."
+      }
+    ]
+  }
+]

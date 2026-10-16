@@ -1,0 +1,461 @@
+{
+  "ex-z2zd2xc6": {
+    "prompt": "Depois que o caixa novo mandou cinco vendas com `amount` em vez de `cents`, o que o `totals.py` informou?",
+    "choices": [
+      {
+        "text": "Um erro na primeira venda sem `cents`",
+        "why": "`.get` com valor padrão nunca levanta erro; o problema é esse."
+      },
+      {
+        "text": "Vinte e cinco vendas e os mesmos totais de antes",
+        "why": "Isso. A contagem mudou e o dinheiro não, e nada reclamou."
+      },
+      {
+        "text": "Vinte vendas, porque as novas foram puladas",
+        "why": "Elas foram contadas: 25 vendas. Só o dinheiro delas faltou."
+      },
+      {
+        "text": "O total do Recife cinco vezes alto demais",
+        "why": "Nada foi somado pelas vendas novas, então ficou em 531.30."
+      }
+    ]
+  },
+  "ex-7zc1vkva": {
+    "prompt": "O JSON leva o nome de cada campo em cada mensagem. Por que isso não protege um leitor de um campo renomeado?",
+    "choices": [
+      {
+        "text": "O Kafka tira os nomes antes de guardar a mensagem",
+        "why": "O broker guarda os bytes que recebeu, nomes e tudo."
+      },
+      {
+        "text": "Os nomes vão junto, mas nenhum acordo sobre eles",
+        "why": "Isso. Um leitor que não acha um nome recebe nada e segue em frente."
+      },
+      {
+        "text": "Leitores de JSON em Python não leem objetos aninhados",
+        "why": "Aninhamento não tem nada a ver; o campo está no nível de cima."
+      },
+      {
+        "text": "Uma renomeação muda o tamanho de cada mensagem, que o consumidor rejeita",
+        "why": "Nada foi rejeitado; o leitor leu cada venda."
+      }
+    ]
+  },
+  "ex-rxxx7g86": {
+    "prompt": "Um colega propõe fazer o `totals.py` tentar `cents`, depois `amount`, depois `price`. O que há de errado nesse conserto, segundo a seção?",
+    "choices": [
+      {
+        "text": "É mais lento, porque cada venda é procurada três vezes",
+        "why": "Velocidade não é a objeção; o palpite é."
+      },
+      {
+        "text": "Dicionários Python não aguentam três chaves opcionais",
+        "why": "Aguentam; o problema não está no dicionário."
+      },
+      {
+        "text": "Espalha o palpite sobre o formato da venda por mais lugares",
+        "why": "Isso. A próxima renomeação quebra de novo; o que falta é um acordo escrito."
+      },
+      {
+        "text": "O Kafka entregaria duas vezes as vendas com os dois campos",
+        "why": "A entrega não tem nada a ver com o campo que o leitor procura."
+      }
+    ]
+  },
+  "ex-eh051z9m": {
+    "prompt": "O que um corpo Avro contém, além dos valores?",
+    "choices": [
+      {
+        "text": "Os nomes dos campos, antes de cada valor",
+        "why": "Isso é JSON. O Avro não escreve nome nenhum."
+      },
+      {
+        "text": "Nada: os valores na ordem do esquema",
+        "why": "Isso. Só o esquema diz qual valor é qual."
+      },
+      {
+        "text": "Uma cópia do esquema, comprimida",
+        "why": "Uma mensagem do Kafka leva um id, não o esquema; o corpo é só valores."
+      },
+      {
+        "text": "Os nomes e os tipos dos campos, num cabeçalho",
+        "why": "Não há esse cabeçalho no corpo; é para isso que serve o esquema."
+      }
+    ]
+  },
+  "ex-3mbtpt6y": {
+    "prompt": "No `avro_demo.py`, quantos bytes a venda ocupou em Avro?",
+    "unit": "bytes"
+  },
+  "ex-yccx18wh": {
+    "prompt": "Uma venda escrita com a v1 é lida com um esquema de leitor que acrescenta `till` sem valor padrão. O que acontece?",
+    "choices": [
+      {
+        "text": "`till` volta como string vazia",
+        "why": "O Avro não inventa valor; sem padrão não há o que usar."
+      },
+      {
+        "text": "`till` fica fora do resultado",
+        "why": "O leitor pediu o campo, então ele não pode ser simplesmente omitido."
+      },
+      {
+        "text": "A leitura falha",
+        "why": "Isso. A v3 levantou SchemaResolutionError: nenhum valor padrão para till."
+      },
+      {
+        "text": "`till` é preenchido pela configuração do produtor",
+        "why": "O produtor não o escreveu; só um padrão no esquema do leitor poderia preenchê-lo."
+      }
+    ]
+  },
+  "ex-b6wan5vg": {
+    "prompt": "A v2 renomeia `cents` para `amount` com `aliases: [\"cents\"]`. Um consumidor ainda na v1 recebe uma mensagem escrita com a v2. O que acontece?",
+    "choices": [
+      {
+        "text": "Lê `amount` como `cents`, graças ao alias",
+        "why": "O alias está no esquema de leitor da v2; um leitor na v1 não o tem."
+      },
+      {
+        "text": "Falha, porque procura `cents` e quem escreveu tinha `amount`",
+        "why": "Isso. Um alias é o conhecimento do leitor sobre o passado, então só ajuda um leitor atualizado."
+      },
+      {
+        "text": "Lê a venda com `cents` igual a zero",
+        "why": "Zero exigiria um padrão para `cents` na v1, que não existe."
+      },
+      {
+        "text": "O broker se recusa a entregá-la",
+        "why": "O broker nunca olha dentro das mensagens."
+      }
+    ]
+  },
+  "ex-mhxcdswj": {
+    "prompt": "Onde o registro iniciado nesta lição guarda os esquemas, e o que decorre disso?",
+    "choices": [
+      {
+        "text": "Num tópico do Kafka, então sobrevivem a um reinício",
+        "why": "Isso é uma configuração de produção; sem configuração ele usa memória."
+      },
+      {
+        "text": "Em memória, então pará-lo os esquece",
+        "why": "Isso. Bom para laboratório; em outro lugar torna mensagens antigas ilegíveis."
+      },
+      {
+        "text": "Em `~/apicurio/registry.log`",
+        "why": "Esse arquivo guarda o que o registro diz sobre si, não os esquemas."
+      },
+      {
+        "text": "No log `__cluster_metadata` do broker",
+        "why": "O Kafka não sabe que o registro existe."
+      }
+    ]
+  },
+  "ex-gwejne3t": {
+    "prompt": "Todo cliente desta lição recebe `http://localhost:8080/apis/ccompat/v7`. Por que esse caminho?",
+    "choices": [
+      {
+        "text": "É onde o Kafka serve a sua própria API de esquemas",
+        "why": "O Kafka não tem API de esquemas; o registro é um serviço à parte."
+      },
+      {
+        "text": "A versão 7 do Avro exige isso no endereço",
+        "why": "O v7 é a versão da API da Confluent, não do Avro."
+      },
+      {
+        "text": "O Apicurio responde a API da Confluent nele, então o cliente da Confluent funciona sem mudanças",
+        "why": "Isso. O registro da própria Confluent estaria na porta 8081 sem prefixo."
+      },
+      {
+        "text": "Ele liga a checagem de compatibilidade",
+        "why": "A compatibilidade é definida por subject com `/config`; o caminho é só onde a API mora."
+      }
+    ]
+  },
+  "ex-6hds5mhh": {
+    "prompt": "Ligue cada palavra ao que ela nomeia num registro de esquemas.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "o nome sob o qual uma série de versões é guardada"
+      },
+      {
+        "left": "versão",
+        "right": "a posição de um esquema dentro do seu subject"
+      },
+      {
+        "left": "id",
+        "right": "o número escrito em cada mensagem"
+      }
+    ],
+    "right_distractors": [
+      "o byte que é sempre zero"
+    ]
+  },
+  "ex-77413q7x": {
+    "prompt": "Por convenção, o subject dos valores do tópico `sales-avro` é `sales-avro-___`.",
+    "blanks": [
+      {
+        "accept": [
+          "value"
+        ]
+      }
+    ]
+  },
+  "ex-bxtxg9h8": {
+    "prompt": "O `register.sh` ofereceu `sale.avsc` uma segunda vez. O que voltou?",
+    "choices": [
+      {
+        "text": "Um 409, porque o esquema já existia",
+        "why": "Um esquema repetido não é conflito; ele é reconhecido."
+      },
+      {
+        "text": "O id 1 de novo, e nenhuma versão nova",
+        "why": "Isso. É o que permite a todo produtor oferecer o esquema ao iniciar."
+      },
+      {
+        "text": "A versão 2 do subject, com o mesmo id",
+        "why": "A lista de versões ficou em [1] até chegar um esquema diferente."
+      },
+      {
+        "text": "Um id novo, 2, para o mesmo esquema",
+        "why": "O id pertence ao esquema, então o mesmo esquema mantém o id 1."
+      }
+    ]
+  },
+  "ex-ms9bcngk": {
+    "prompt": "Ponha em ordem os bytes do valor de uma mensagem escrita pelo serializador Avro.",
+    "items": [
+      "o byte mágico, 00",
+      "quatro bytes de id do esquema",
+      "o comprimento da primeira string",
+      "os caracteres do id da venda",
+      "o `cents` codificado"
+    ]
+  },
+  "ex-c1k46xpq": {
+    "prompt": "Quantos bytes ocupou a primeira mensagem da partição 0 de `sales-avro`, segundo o `od` (sem contar a quebra de linha que o consumidor de console acrescenta)?",
+    "unit": "bytes"
+  },
+  "ex-0vk1yf62": {
+    "prompt": "Por que o `avro_tills.py` define `auto.register.schemas` como `False`?",
+    "choices": [
+      {
+        "text": "Para que um produtor não mude o esquema do tópico só por iniciar",
+        "why": "Isso. Registrar vira um passo deliberado, conferido contra o modo de compatibilidade."
+      },
+      {
+        "text": "Porque o Apicurio não aceita registros vindos de Python",
+        "why": "O `register.sh` registrou pelo shell, e o Python também poderia."
+      },
+      {
+        "text": "Para deixar cada mensagem menor",
+        "why": "A mensagem leva o mesmo cabeçalho de cinco bytes de qualquer jeito."
+      },
+      {
+        "text": "Porque senão o serializador consultaria o registro a cada mensagem, pagando uma ida e volta HTTP inteira toda vez",
+        "why": "O cliente guarda o que o registro diz de qualquer jeito; a configuração é sobre quem pode registrar."
+      }
+    ]
+  },
+  "ex-a3wkprtf": {
+    "prompt": "O `avro_tills.py` monta toda venda com um campo `till`, e o `sale.avsc` não tem esse campo. O que o serializador faz com ele quando recebe o `sale.avsc`?",
+    "choices": [
+      {
+        "text": "Recusa a venda por não casar com o esquema",
+        "why": "Dez vendas foram enviadas com o `sale.avsc`, cada uma levando `till`."
+      },
+      {
+        "text": "Registra uma versão nova que o inclui",
+        "why": "O registro automático está desligado, e o subject ficou na versão 1."
+      },
+      {
+        "text": "Escreve depois dos outros campos, sem nome",
+        "why": "Um campo fora do esquema não tem posição onde ser escrito."
+      },
+      {
+        "text": "Ignora",
+        "why": "Isso. Ele escreve os campos que o esquema nomeia, o que deixa um programa escrever qualquer versão."
+      }
+    ]
+  },
+  "ex-yv6n603j": {
+    "prompt": "Que modo de compatibilidade a API compatível com a Confluent do Apicurio informou antes de qualquer configuração?",
+    "hint": "O primeiro curl da seção imprimiu isso.",
+    "choices": [
+      {
+        "text": "`BACKWARD`",
+        "why": "Esse é o padrão da Confluent, não do Apicurio."
+      },
+      {
+        "text": "`FULL_TRANSITIVE`",
+        "why": "Nada no registro da lição era tão estrito por padrão."
+      },
+      {
+        "text": "`NONE`",
+        "why": "Isso. Aceita qualquer mudança até um modo ser definido."
+      },
+      {
+        "text": "`FORWARD`",
+        "why": "A chamada `/config` respondeu com outro nível."
+      }
+    ]
+  },
+  "ex-geg1m217": {
+    "prompt": "Sob `BACKWARD`, quais destas mudanças na versão 1 da venda o registro aceitaria? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "Acrescentar `till` com valor padrão",
+        "why": "Sim: virou a versão 2 com id 2."
+      },
+      {
+        "text": "Remover o campo `at`",
+        "why": "Sim: um leitor novo só pula o que os dados antigos têm e ele não."
+      },
+      {
+        "text": "Renomear `cents` para `amount`",
+        "why": "Recusada com 409: acrescenta `amount` sem valor padrão."
+      },
+      {
+        "text": "Acrescentar `till` sem valor padrão",
+        "why": "Um leitor novo não conseguiria preenchê-lo a partir de uma venda antiga."
+      }
+    ]
+  },
+  "ex-grtz5tc9": {
+    "prompt": "Uma equipe usa `BACKWARD`. A versão 2 remove um campo e a versão 3 o devolve com outro tipo; cada uma foi aceita. Por que a versão 3 ainda pode não conseguir ler dados da versão 1?",
+    "choices": [
+      {
+        "text": "A checagem só compara um esquema novo com o anterior a ele",
+        "why": "Isso. `BACKWARD_TRANSITIVE` confere contra todas as anteriores e teria recusado."
+      },
+      {
+        "text": "O registro esqueceu a versão 1 quando a 3 chegou",
+        "why": "O registro só acrescenta; a versão 1 continua lá."
+      },
+      {
+        "text": "Tipos nunca podem mudar no Avro",
+        "why": "Alguns podem, como `int` para `long`; a questão é quais versões foram comparadas."
+      },
+      {
+        "text": "Os dados da versão 1 foram apagados pela retenção",
+        "why": "Mesmo que ainda estivessem lá, o problema é o que a checagem comparou."
+      }
+    ]
+  },
+  "ex-26f0yt87": {
+    "prompt": "Sob `BACKWARD`, qual lado deve ser implantado primeiro?",
+    "choices": [
+      {
+        "text": "Os produtores, para que os dados novos existam antes de os leitores procurarem",
+        "why": "Essa é a ordem do `FORWARD`; sob `BACKWARD` leitores antigos podem falhar com dados novos."
+      },
+      {
+        "text": "Os consumidores",
+        "why": "Isso. Um leitor novo lê dados antigos, então os leitores andam primeiro."
+      },
+      {
+        "text": "Nenhum: o registro implanta os dois juntos",
+        "why": "O registro confere esquemas; ele não implanta nada."
+      },
+      {
+        "text": "Os dois no mesmo instante, ou mensagens se perdem",
+        "why": "Nenhum modo exige isso; cada um diz qual lado pode ir primeiro."
+      }
+    ]
+  },
+  "ex-68fxst7s": {
+    "prompt": "Depois de cinco vendas escritas com a versão 2, o `avro_read.py` leu o tópico com `sale.avsc`. O que ele mostrou?",
+    "choices": [
+      {
+        "text": "Dez vendas, porque o leitor pula versões que não conhece",
+        "why": "Ele leu as quinze; os ids de esquema foram {1: 10, 2: 5}."
+      },
+      {
+        "text": "Quinze vendas, cada uma com `till`",
+        "why": "`till` só apareceu quando ele leu com `sale-v2.avsc`."
+      },
+      {
+        "text": "Quinze vendas, e nenhum `till` em nenhuma",
+        "why": "Isso. Um leitor antigo em dados novos recebe os campos que pediu."
+      },
+      {
+        "text": "Um erro na primeira venda da versão 2",
+        "why": "Acrescentar um campo com padrão é seguro nas duas direções."
+      }
+    ]
+  },
+  "ex-ty3h0v0a": {
+    "prompt": "O que acontece com as mensagens já num tópico quando o esquema dele ganha uma versão nova?",
+    "choices": [
+      {
+        "text": "Continuam escritas com a versão com que foram escritas",
+        "why": "Isso. Um tópico não é migrado; os leitores precisam lidar com todas as versões ainda nele."
+      },
+      {
+        "text": "O registro as reescreve na versão nova",
+        "why": "O registro nunca toca no tópico."
+      },
+      {
+        "text": "São apagadas na próxima troca de segmento",
+        "why": "A exclusão segue a retenção, não mudanças de esquema."
+      },
+      {
+        "text": "O Kafka as marca como desatualizadas, e os consumidores as pulam",
+        "why": "O Kafka não sabe nada de esquemas."
+      }
+    ]
+  },
+  "ex-r9rrep25": {
+    "prompt": "Ligue cada modo de compatibilidade a quem pode atualizar primeiro.",
+    "pairs": [
+      {
+        "left": "BACKWARD",
+        "right": "os consumidores"
+      },
+      {
+        "left": "FORWARD",
+        "right": "os produtores"
+      },
+      {
+        "left": "FULL",
+        "right": "qualquer um dos lados"
+      }
+    ],
+    "right_distractors": [
+      "o registro"
+    ]
+  },
+  "ex-y69sm5fz": {
+    "prompt": "A Ponto Final quer renomear `cents` para `amount` sem quebrar nenhum leitor. Qual plano segue a lição?",
+    "choices": [
+      {
+        "text": "Pôr o subject em `NONE`, registrar a renomeação e implantar tudo à noite",
+        "why": "`NONE` só impede o registro de avisar; leitores antigos continuam quebrando."
+      },
+      {
+        "text": "Acrescentar `amount` ao lado de `cents`, passar os leitores para ele, depois remover `cents`",
+        "why": "Isso. Mais lento, e nunca quebra ninguém."
+      },
+      {
+        "text": "Renomear no produtor e contar com o JSON para levar o nome novo",
+        "why": "Essa é a segunda-feira do começo da lição."
+      },
+      {
+        "text": "Apagar o tópico e recomeçar com o esquema novo",
+        "why": "Isso joga fora o histórico de que todo leitor depende."
+      }
+    ]
+  },
+  "ex-cvj01hb4": {
+    "prompt": "Um campo pode ser acrescentado com segurança a um esquema Avro quando tem um valor ___.",
+    "blanks": [
+      {
+        "accept": [
+          "padrão",
+          "padrao",
+          "default"
+        ]
+      }
+    ]
+  }
+}

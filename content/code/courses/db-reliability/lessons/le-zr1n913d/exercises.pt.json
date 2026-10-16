@@ -1,0 +1,214 @@
+{
+  "ex-82646sjj": {
+    "prompt": "Por que dois servidores PostgreSQL não conseguem decidir com segurança, entre si, qual deles é o primário?",
+    "hint": "O que cada um vê quando o link entre eles cai?",
+    "choices": [
+      { "text": "O PostgreSQL não tem comando de promote", "why": "Tem; a lição 15 o usou." },
+      { "text": "Precisam da mesma versão major para conversar", "why": "A versão não é o problema; o empate é." },
+      { "text": "Cada um vê o outro como morto", "why": "Isso. Nenhum dos dois distingue um parceiro morto de um caminho quebrado, e nada desempata." },
+      { "text": "Os slots deles entrariam em conflito", "why": "Não são os slots que decidem um primário." }
+    ]
+  },
+  "ex-q31kwgrw": {
+    "prompt": "Associe cada parte do cluster à sua tarefa.",
+    "hint": "Um processo, um armazenamento, uma chave.",
+    "pairs": [
+      { "left": "Patroni", "right": "Inicia, para, promove e rebaixa o seu PostgreSQL" },
+      { "left": "etcd", "right": "Chega a um acordo sobre valores entre máquinas, ou se recusa a responder" },
+      { "left": "A chave de líder", "right": "Nomeia o único nó que pode ser o primário" }
+    ],
+    "right_distractors": [
+      "Copia o log para o arquivo"
+    ]
+  },
+  "ex-fkbjf4qf": {
+    "prompt": "O que um líder do Patroni faz quando não consegue renovar a chave de líder?",
+    "hint": "Outro nó já pode estar com ela.",
+    "choices": [
+      { "text": "Rebaixa a si mesmo", "why": "Isso. Ele tem que supor que outro nó já está com a chave." },
+      { "text": "Continua rodando e tenta de novo para sempre", "why": "Isso permitiria dois primários." },
+      { "text": "Promove ele mesmo uma réplica", "why": "Quem promove é o nó que pega a chave." },
+      { "text": "Reinicia o etcd", "why": "O Patroni não gerencia o etcd." }
+    ]
+  },
+  "ex-0kz187p2": {
+    "prompt": "A chave de líder expira se não for renovada; neste curso o tempo de vida dela, a configuração `___`, é de 30 segundos.",
+    "hint": "Três letras.",
+    "blanks": [
+      { "accept": ["ttl"] }
+    ]
+  },
+  "ex-ymzbrvbc": {
+    "prompt": "O que o `etcdctl endpoint health` verifica?",
+    "hint": "Um membro, uma resposta.",
+    "choices": [
+      { "text": "Que o Patroni está rodando", "why": "O etcd não sabe nada dos processos do Patroni." },
+      { "text": "Que os três servidores PostgreSQL estão no ar", "why": "Isso é o patronictl list." },
+      { "text": "Que a chave de líder existe", "why": "Isso é o etcdctl get." },
+      { "text": "Que o etcd responde e faz commit de uma escrita", "why": "Isso. Ele informa uma proposta confirmada e quanto tempo ela levou." }
+    ]
+  },
+  "ex-jtfw1trg": {
+    "prompt": "Por que a lição diz que um etcd basta para aprender e não basta para operar?",
+    "hint": "A última seção.",
+    "choices": [
+      { "text": "O etcd precisa de três membros até para iniciar", "why": "Um membro iniciou e respondeu." },
+      { "text": "Sem etcd, sem escritas", "why": "Isso. Perdê-lo para todas as escritas do cluster; com o único etcd fora do ar, o primário se rebaixa." },
+      { "text": "Um etcd não guarda mais de uma chave", "why": "Ele guardou sete." },
+      { "text": "O Patroni recusa um etcd único", "why": "Ele rodou com um." }
+    ]
+  },
+  "ex-yf621j02": {
+    "prompt": "Associe cada configuração do `pg1.yml` ao que ela faz.",
+    "hint": "Nome, interface, armazenamento, checksums.",
+    "pairs": [
+      { "left": "scope: shop", "right": "Faz dos nós um cluster" },
+      { "left": "restapi", "right": "A interface HTTP do Patroni para os outros nós e as ferramentas" },
+      { "left": "etcd3", "right": "Onde o estado compartilhado fica guardado" },
+      { "left": "initdb: data-checksums", "right": "Deixa o pg_rewind funcionar desde o começo" }
+    ],
+    "right_distractors": [
+      "Define o comando de arquivamento"
+    ]
+  },
+  "ex-0580s8bc": {
+    "prompt": "Como a lição criou o `pg2.yml` e o `pg3.yml`?",
+    "hint": "Três coisas diferem entre os nós.",
+    "choices": [
+      { "text": "Rodando patroni --init", "why": "Nenhum passo assim foi usado." },
+      { "text": "Com sed, a partir do pg1.yml", "why": "Isso. Trocando o nome, as duas portas e o diretório; o resto é igual." },
+      { "text": "Copiados pelo Patroni do etcd", "why": "Cada nó precisa do próprio arquivo antes de iniciar." },
+      { "text": "Digitados à mão", "why": "A lição evita isso de propósito." }
+    ]
+  },
+  "ex-6p163hq6": {
+    "prompt": "Por que o `pg1` é iniciado sozinho, antes dos outros dois?",
+    "hint": "Quem roda o initdb?",
+    "choices": [
+      { "text": "O Patroni roda um nó por minuto, no máximo", "why": "Não existe esse limite." },
+      { "text": "Para dar tempo de o etcd iniciar", "why": "O etcd já estava saudável." },
+      { "text": "O pg2 e o pg3 precisam do pg1.yml dele", "why": "Eles têm os próprios arquivos." },
+      { "text": "Para que ele crie o cluster", "why": "Isso. Os outros acham um líder e o copiam com um base backup." }
+    ]
+  },
+  "ex-p7s3s3vt": {
+    "prompt": "Qual é o valor de `/service/shop/leader` no etcd?",
+    "hint": "Uma string.",
+    "choices": [
+      { "text": "O nome do nó líder", "why": "Isso. O pg1, naquele momento." },
+      { "text": "O endereço IP e a porta do líder", "why": "Esses ficam na entrada dele em members/." },
+      { "text": "A timeline atual", "why": "Isso fica no estado dos membros." },
+      { "text": "Um timestamp da última renovação", "why": "A expiração é o lease do etcd, não o valor." }
+    ]
+  },
+  "ex-3ycjtrps": {
+    "prompt": "O shop foi carregado no `pg1`. Por que o `pg3` tinha 50.000 pedidos?",
+    "hint": "O que o pg3 virou quando iniciou?",
+    "choices": [
+      { "text": "O Patroni copia os bancos ao iniciar", "why": "Ele só faz o bootstrap das réplicas uma vez." },
+      { "text": "O shop.sql rodou nos três", "why": "Ele rodou uma vez, no pg1." },
+      { "text": "O pg3 faz streaming do líder", "why": "Isso. Ele é réplica do nó que a chave nomear." },
+      { "text": "O etcd guarda as linhas", "why": "O etcd guarda algumas chaves, nunca dados." }
+    ]
+  },
+  "ex-a0vedemd": {
+    "prompt": "Logo depois de o `pg1` ser morto, o `patronictl list` ainda o mostrava como `Leader`, `running`. Por quê?",
+    "hint": "O que o list lê?",
+    "choices": [
+      { "text": "O Patroni o tinha reiniciado", "why": "O Patroni dele também foi morto." },
+      { "text": "O kill tinha falhado", "why": "Os dois processos tinham sumido." },
+      { "text": "O list lê o PostgreSQL direto", "why": "Ele lê o etcd." },
+      { "text": "A chave ainda não tinha expirado", "why": "Isso. O etcd ainda tinha a chave e o último relato do pg1." }
+    ]
+  },
+  "ex-0cbpjgc5": {
+    "prompt": "O kill foi às 01:39:37 e o `pg3` se promoveu às 01:40:05. Quantos segundos o failover levou?",
+    "hint": "Subtraia.",
+    "unit": "segundos"
+  },
+  "ex-2r5yjekq": {
+    "prompt": "O que um `ttl` mais curto traz, e quanto custa?",
+    "hint": "Mais cedo, mas enganado pelo quê?",
+    "choices": [
+      { "text": "Menos disco no etcd; mas failover mais lento", "why": "O ttl não afeta o disco." },
+      { "text": "Menos réplicas; mas mais atraso", "why": "O ttl não tem relação com o número de réplicas nem com o atraso." },
+      { "text": "Mais cedo; um primário lento parece morto", "why": "Isso. Um primário que perde renovações por estar lento perde a chave." },
+      { "text": "Nada; o ttl afeta o log e mais nada", "why": "Ele decide por quanto tempo um líder morto bloqueia as escritas." }
+    ]
+  },
+  "ex-41rz7yfc": {
+    "prompt": "As duas réplicas estavam em dia. Por que o `pg3` virou líder, e não o `pg2`?",
+    "hint": "O etcd dá a chave a um.",
+    "choices": [
+      { "text": "Venceu quem pediu ao etcd primeiro", "why": "Isso, e não é algo de que se possa depender." },
+      { "text": "O pg3 tem o número mais alto", "why": "Os nomes não contam." },
+      { "text": "O pg3 estava mais adiantado", "why": "Os dois estavam com 0 MB de atraso." },
+      { "text": "O pg2 estava configurado para ser réplica", "why": "Os dois tinham configurações idênticas." }
+    ]
+  },
+  "ex-d30ngwh4": {
+    "prompt": "Quando o Patroni do `pg1` iniciou de novo, o que ele fez antes de iniciar o PostgreSQL?",
+    "hint": "Ele leu uma chave.",
+    "choices": [
+      { "text": "Promoveu o pg1 de volta", "why": "A chave nomeava o pg3, então o pg1 não podia ser primário." },
+      { "text": "Rodou o pg_rewind e virou réplica", "why": "Isso. Ele viu outro líder e voltou os dados para segui-lo." },
+      { "text": "Apagou os dados e tirou um base backup", "why": "O pg_rewind bastou, com exit code 0." },
+      { "text": "Esperou por um operador", "why": "O Patroni fez isso por conta própria." }
+    ]
+  },
+  "ex-qc2ae6v7": {
+    "prompt": "Qual subcomando do `patronictl` passou a liderança do `pg3` para o `pg1` de propósito?",
+    "hint": "Planejado, não forçado por uma falha.",
+    "choices": [
+      { "text": "failover", "why": "O failover é para um líder com problema; este estava saudável." },
+      { "text": "restart", "why": "O restart reinicia o PostgreSQL de um nó sem mover o líder." },
+      { "text": "switchover", "why": "Isso. --leader pg3 --candidate pg1, uma parada limpa do pg3 e depois o pg1 promovido." },
+      { "text": "reinit", "why": "O reinit reconstrói uma réplica a partir do líder." }
+    ]
+  },
+  "ex-xskrmcc4": {
+    "prompt": "Por que um switchover é a primeira coisa a testar num cluster novo?",
+    "hint": "O que tem que funcionar para ele dar certo?",
+    "choices": [
+      { "text": "Ele testa cada peça do conjunto", "why": "Isso, antes que uma falha o faça: réplicas em dia, nós alcançáveis e a aplicação seguindo o líder." },
+      { "text": "Ele volta a timeline para 1", "why": "Ele avançou a timeline para 3." },
+      { "text": "É exigido antes de o Patroni aceitar escritas", "why": "As escritas funcionaram antes de qualquer switchover." },
+      { "text": "Ele compacta o etcd", "why": "Ele não tem nada a ver com o armazenamento do etcd." }
+    ]
+  },
+  "ex-zfhv2nax": {
+    "prompt": "O etcd parou. O que fez o primário saudável, o `pg1`?",
+    "hint": "demoting self because DCS is not accessible.",
+    "choices": [
+      { "text": "Continuou aceitando escritas", "why": "Sem o failsafe mode, ele não tem como ter certeza de que ainda é o líder." },
+      { "text": "Desligou", "why": "Ele continuou rodando, somente leitura." },
+      { "text": "Promoveu o pg2 para dividir a carga", "why": "Sem o etcd, nada é promovido." },
+      { "text": "Rebaixou-se; o cluster ficou somente leitura", "why": "Isso. Todos os servidores saudáveis, e nenhum pedido podia ser recebido." }
+    ]
+  },
+  "ex-vba5b1zw": {
+    "prompt": "Um etcd de produção deveria sobreviver à perda de um membro e ainda ter maioria. Qual é o menor número de membros que consegue isso?",
+    "hint": "Uma maioria dos que sobram.",
+    "unit": "membros"
+  },
+  "ex-aqvq2bzb": {
+    "prompt": "Com o `failsafe_mode` ligado, o que deixa o líder continuar rodando quando o etcd some?",
+    "hint": "Ele pergunta diretamente a outros.",
+    "choices": [
+      { "text": "Um ttl mais longo", "why": "O ttl não mudou." },
+      { "text": "Todos os membros respondendo", "why": "Isso, pelas interfaces REST deles; se ele enxerga todos, nenhum pode ter sido promovido." },
+      { "text": "A maioria dos membros respondendo", "why": "Ele precisa de todos." },
+      { "text": "Uma cópia em cache da chave de líder", "why": "Uma chave em cache não prova que mais ninguém a pegou." }
+    ]
+  },
+  "ex-qr560hqa": {
+    "prompt": "Uma equipe roda o Patroni com três nós PostgreSQL e um etcd na mesma máquina do `pg1`. Qual falha isolada para todas as escritas?",
+    "hint": "Qual máquina tem duas coisas?",
+    "choices": [
+      { "text": "Perder a máquina do pg2", "why": "O pg1 continua líder; o pg3 segue como réplica." },
+      { "text": "Perder a máquina do pg1, e o etcd junto", "why": "Isso. Sem etcd não há chave, e os sobreviventes não conseguem eleger um líder." },
+      { "text": "Perder a máquina do pg3", "why": "Idem: uma réplica a menos." },
+      { "text": "Uma rede lenta entre o pg2 e o pg3", "why": "As réplicas não precisam se alcançar." }
+    ]
+  }
+}

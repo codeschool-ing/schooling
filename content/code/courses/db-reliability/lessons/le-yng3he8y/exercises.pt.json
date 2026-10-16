@@ -1,0 +1,365 @@
+{
+  "ex-cn7mpmet": {
+    "prompt": "Ponha as etapas de um ataque de ransomware típico na ordem em que quem defende as vê nos relatos.",
+    "hint": "A parte visível vem tarde.",
+    "items": [
+      "Uma entrada",
+      "Semanas lá dentro, em silêncio",
+      "Os backups destruídos",
+      "O dano",
+      "A exigência"
+    ],
+    "trap": "Os backups vêm antes do dano, porque uma vítima que consegue restaurar não paga; e o longo trecho silencioso é o motivo de o ponto limpo ser difícil de achar."
+  },
+  "ex-vgn75rhm": {
+    "prompt": "Por que os atacantes destroem os backups antes de causar um dano visível?",
+    "hint": "O que faz uma vítima que tem um bom backup?",
+    "choices": [
+      {
+        "text": "Porque os backups deixam a criptografia mais lenta",
+        "why": "A velocidade não tem nada a ver com isso."
+      },
+      {
+        "text": "Porque os backups contêm as senhas de que eles precisam",
+        "why": "Alguns até contêm, mas o motivo de destruí-los é a recuperação."
+      },
+      {
+        "text": "Para a vítima não se recuperar sem pagar",
+        "why": "Isso. É por isso que importa a cópia atrás de outra credencial da lição 9."
+      },
+      {
+        "text": "Porque os backups são mais fáceis de achar que os bancos",
+        "why": "A facilidade não é o motivo."
+      }
+    ]
+  },
+  "ex-nghk33g4": {
+    "prompt": "O que é o dwell time, e por que ele importa para a recuperação?",
+    "hint": "Quanto tempo o intruso fica lá dentro antes que alguém perceba?",
+    "choices": [
+      {
+        "text": "Semanas lá dentro; a restauração traz o que ele fez",
+        "why": "Isso: as semanas lá dentro antes do dano. Uma cópia de logo antes do dano carrega os preparativos do intruso."
+      },
+      {
+        "text": "O tempo que uma restauração leva; ele define o RTO",
+        "why": "Isso é o próprio RTO, não o dwell time."
+      },
+      {
+        "text": "O atraso entre backup e arquivamento; ele define o RPO",
+        "why": "Esse é o assunto do archive_timeout, lição 4."
+      },
+      {
+        "text": "O tempo que um pedido de resgate fica na tela",
+        "why": "Não é um termo que quem defende usa."
+      }
+    ]
+  },
+  "ex-42c8tfrk": {
+    "prompt": "Uma restauração perfeita traz todas as linhas de volta. Que parte de um incidente de ransomware ela deixa sem solução?",
+    "hint": "O que mais pode ter acontecido durante as semanas lá dentro?",
+    "choices": [
+      {
+        "text": "O tempo fora do ar da aplicação",
+        "why": "Uma restauração encerra o tempo fora do ar; é para isso que ela serve."
+      },
+      {
+        "text": "As linhas danificadas",
+        "why": "São elas que a restauração traz de volta."
+      },
+      {
+        "text": "Os backups que sumiram",
+        "why": "Se uma restauração funcionou, um backup sobreviveu."
+      },
+      {
+        "text": "Dados copiados para fora antes do dano",
+        "why": "Isso. O que foi levado está fora do seu controle, seja qual for a restauração."
+      }
+    ]
+  },
+  "ex-ex73d6rd": {
+    "prompt": "O que o `walwatch.sh` mede para perceber o dano?",
+    "hint": "A aritmética de LSN da lição 4.",
+    "choices": [
+      {
+        "text": "O número de linhas de cada tabela, a cada poucos segundos",
+        "why": "Ele não lê nenhuma tabela; contar linhas já seria caro por si só."
+      },
+      {
+        "text": "O log escrito por intervalo, a partir do LSN",
+        "why": "Isso. Reescrever todas as linhas escreve log num ritmo que o tráfego comum nunca alcança."
+      },
+      {
+        "text": "Logins que falharam, no log do servidor",
+        "why": "Útil em outro lugar, e não é o que este script lê."
+      },
+      {
+        "text": "O tamanho do diretório de dados no disco",
+        "why": "O tamanho em disco muda devagar e tarde; o ritmo do log muda na hora."
+      }
+    ]
+  },
+  "ex-pj3dqz1a": {
+    "prompt": "Quantos MB de log o vigia relatou no intervalo com os dois UPDATEs?",
+    "hint": "A linha com ALERT.",
+    "unit": "MB"
+  },
+  "ex-p18rqnbm": {
+    "prompt": "Como deve ser definido o limite de alerta do `walwatch.sh` num banco de verdade?",
+    "hint": "O que ele pegaria toda noite se ficasse baixo demais?",
+    "choices": [
+      {
+        "text": "Em 10 MB por 5 s, como no laboratório",
+        "why": "O shop do laboratório está quase parado; os momentos normais de um banco de verdade podem ficar muito acima disso."
+      },
+      {
+        "text": "Acima dos picos normais",
+        "why": "Isso: acima do momento normal mais movimentado, medido antes. Senão o batch noturno aciona alguém toda noite, e o alerta deixa de ser lido."
+      },
+      {
+        "text": "O mais baixo possível, para pegar tudo",
+        "why": "Um alerta que dispara toda noite é ignorado, inclusive na noite em que importa."
+      },
+      {
+        "text": "No valor que o pgBackRest recomendar",
+        "why": "O pgBackRest não sabe nada do seu tráfego."
+      }
+    ]
+  },
+  "ex-g3m975z9": {
+    "prompt": "A linha de alerta diz `21:54:22 19 MB ALERT`, com intervalo de 5 segundos. Qual é o alvo de recuperação seguro mais tardio?",
+    "hint": "O dano aconteceu dentro do intervalo que terminou às 21:54:22.",
+    "choices": [
+      {
+        "text": "21:54:22",
+        "why": "Esse é o fim do intervalo que contém o dano."
+      },
+      {
+        "text": "21:54:27, depois da rajada",
+        "why": "Isso reaplica o dano."
+      },
+      {
+        "text": "O horário do último backup full",
+        "why": "Seguro, e perde tudo desde então, sem motivo."
+      },
+      {
+        "text": "21:54:17, o início desse intervalo, ou antes",
+        "why": "Isso. A lição recuou mais um intervalo, até 21:54:12, para ter certeza."
+      }
+    ]
+  },
+  "ex-m6g6hv2j": {
+    "prompt": "O que a comparação com o inventário do dia bom encontrou na cópia restaurada?",
+    "hint": "Uma linha.",
+    "choices": [
+      {
+        "text": "maint_svc, superusuário com login",
+        "why": "Isso. Criado antes do alvo, então restaurado junto com o resto."
+      },
+      {
+        "text": "Todas as linhas estavam danificadas",
+        "why": "Os dados estavam intactos; a auditoria era sobre acesso."
+      },
+      {
+        "text": "Um papel faltando, o postgres",
+        "why": "O postgres estava lá nos dois."
+      },
+      {
+        "text": "Uma função adicionada pelo intruso",
+        "why": "O intruso deste laboratório adicionou um papel, não uma função."
+      }
+    ]
+  },
+  "ex-61ran0ad": {
+    "prompt": "Quantos pedidos a cópia restaurada tinha?",
+    "hint": "Cinquenta mil e os que vieram depois que o papel foi criado.",
+    "unit": "pedidos"
+  },
+  "ex-dt7z69z0": {
+    "prompt": "Por que o inventário é tirado num dia bom e guardado, em vez de produzido durante o incidente?",
+    "hint": "O que mostraria um inventário tirado da cópia restaurada?",
+    "choices": [
+      {
+        "text": "Porque tirá-lo é lento num banco grande",
+        "why": "É uma consulta rápida; o tempo não é o motivo."
+      },
+      {
+        "text": "Porque o PostgreSQL proíbe consultar papéis durante a recuperação",
+        "why": "Ele permite; a auditoria acima rodou na cópia em pausa."
+      },
+      {
+        "text": "Só uma cópia mais antiga mostra o que mudou",
+        "why": "Isso. Um inventário da cópia restaurada lista o papel do intruso como se ele pertencesse ali."
+      },
+      {
+        "text": "Porque o arquivo de globais o substitui",
+        "why": "O arquivo de globais é um registro de papéis; a questão é ter um de antes."
+      }
+    ]
+  },
+  "ex-83hyrh5j": {
+    "prompt": "A intrusão começou numa data que ninguém conhece. Que recuperação a lição recomenda?",
+    "hint": "Restaurar tarde, e depois tornar seguro.",
+    "choices": [
+      {
+        "text": "Restaurar até antes do dano e reconectar na hora",
+        "why": "Isso devolve ao intruso a conta dele."
+      },
+      {
+        "text": "Restaurar o backup mais antigo guardado, por segurança",
+        "why": "Ele ainda pode ser posterior à intrusão, e é o que mais perde."
+      },
+      {
+        "text": "Recusar-se a restaurar até a data ser conhecida",
+        "why": "A data pode nunca ser conhecida; o negócio não espera por nada."
+      },
+      {
+        "text": "Restaurar até antes do dano, auditar o acesso, trocar as credenciais",
+        "why": "Isso. Voltar para antes de uma data desconhecida não é possível, então a cópia é que é limpa."
+      }
+    ]
+  },
+  "ex-m9z4w4cg": {
+    "prompt": "Depois da restauração e da auditoria, que credenciais têm que mudar?",
+    "hint": "O que o intruso pode ter lido?",
+    "choices": [
+      {
+        "text": "Só as do maint_svc",
+        "why": "Ele é removido; as outras também podem ter sido lidas."
+      },
+      {
+        "text": "Só as encontradas na auditoria",
+        "why": "Uma auditoria acha o que foi adicionado, não o que foi copiado."
+      },
+      {
+        "text": "Todas elas",
+        "why": "Isso: papéis, chaves do repositório, a passphrase, contas do sistema. Qualquer coisa guardada onde o intruso tinha acesso deve ser tratada como conhecida por ele."
+      },
+      {
+        "text": "Nenhuma, se os backups eram imutáveis",
+        "why": "A imutabilidade protege os backups, não as senhas."
+      }
+    ]
+  },
+  "ex-x2h523cy": {
+    "prompt": "Ponha em ordem os primeiros passos de uma recuperação de ransomware.",
+    "hint": "Evidência antes da limpeza; um lugar limpo antes de uma restauração.",
+    "items": [
+      "Isolar as máquinas afetadas",
+      "Preservar o que está lá como evidência",
+      "Construir servidores limpos com credenciais novas",
+      "Restaurar uma cópia conferida e auditá-la",
+      "Trocar todas as credenciais, e então reconectar"
+    ],
+    "trap": "Isolar impede o espalhamento; preservar guarda a evidência; restaurar nas máquinas antigas é restaurar sobre o ponto de apoio do intruso; e reconectar vem por último."
+  },
+  "ex-15czgefb": {
+    "prompt": "Por que a lição diz para não desligar as máquinas afetadas, a não ser que quem lidera a resposta mande?",
+    "hint": "O que se perde num reboot?",
+    "choices": [
+      {
+        "text": "Um reboot destrói evidências",
+        "why": "Isso: a memória e o estado em execução guardam evidências que um reboot destrói. Isole as máquinas da rede em vez disso."
+      },
+      {
+        "text": "Porque o PostgreSQL corrompe seus arquivos ao desligar",
+        "why": "Não corrompe; um desligamento limpo é seguro."
+      },
+      {
+        "text": "Porque o atacante é avisado",
+        "why": "Esse não é o motivo dado."
+      },
+      {
+        "text": "Porque os backups precisam do servidor ligado",
+        "why": "Os backups são restaurados em outro lugar."
+      }
+    ]
+  },
+  "ex-2c8j1cwf": {
+    "prompt": "Que decisão num incidente de ransomware cabe ao administrador de banco de dados?",
+    "hint": "Fatos, não política.",
+    "choices": [
+      {
+        "text": "Se vale pagar",
+        "why": "Isso cabe à liderança da organização, com advogados e especialistas em resposta."
+      },
+      {
+        "text": "Os fatos sobre as cópias",
+        "why": "Isso: que cópias estão limpas, e quanto tempo leva uma restauração. Esses fatos, medidos antes, são a base da decisão dos outros."
+      },
+      {
+        "text": "Se os clientes devem ser avisados",
+        "why": "A divulgação é decidida pela liderança, com orientação jurídica."
+      },
+      {
+        "text": "Se a polícia deve ser chamada",
+        "why": "Também é uma decisão da liderança e do jurídico."
+      }
+    ]
+  },
+  "ex-0z3kcng7": {
+    "prompt": "O que um exercício de mesa encontra que um ensaio de restauração roteirizado não encontra?",
+    "hint": "Ninguém toca em nenhum sistema.",
+    "choices": [
+      {
+        "text": "Arquivos de backup danificados",
+        "why": "O ensaio roteirizado encontra esses."
+      },
+      {
+        "text": "Restaurações lentas",
+        "why": "Os tempos do ensaio encontram essas."
+      },
+      {
+        "text": "Telefones, logins e passphrases que faltam",
+        "why": "Isso. As lacunas entre as pessoas, que nenhum script exercita."
+      },
+      {
+        "text": "Índices corrompidos",
+        "why": "Não é algo que pessoas em volta de uma mesa consigam ver."
+      }
+    ]
+  },
+  "ex-ddmmdn66": {
+    "prompt": "Ligue cada sinal à etapa de um ataque que ele pode revelar.",
+    "hint": "Que etapa deixa que rastro?",
+    "pairs": [
+      {
+        "left": "Um superusuário novo no inventário diário",
+        "right": "Semanas lá dentro, preparando"
+      },
+      {
+        "left": "Menos backups num repositório do que ontem",
+        "right": "Os backups sendo destruídos"
+      },
+      {
+        "left": "Uma rajada repentina de log em poucos segundos",
+        "right": "O próprio dano"
+      }
+    ],
+    "right_distractors": [
+      "A exigência sendo enviada"
+    ]
+  },
+  "ex-wx2ygcwe": {
+    "prompt": "O alerta disparou às 03:10. O backup imutável mais recente é de domingo; o repositório local foi esvaziado às 02:00. O arquivamento no bucket imutável vai até 03:09. Qual é o plano?",
+    "hint": "O que o bucket imutável guarda, e até quando?",
+    "choices": [
+      {
+        "text": "O backup de domingo, depois replay, auditoria, troca",
+        "why": "Isso: o backup de domingo, com replay do arquivamento do bucket até antes de 03:10, e depois a auditoria e credenciais novas."
+      },
+      {
+        "text": "Restaurar o backup de domingo e aceitar perder a semana",
+        "why": "O arquivamento no bucket faz replay a partir de domingo; não há por que parar ali."
+      },
+      {
+        "text": "Restaurar a partir do repositório local",
+        "why": "Ele foi esvaziado às 02:00."
+      },
+      {
+        "text": "Esperar a chave do atacante",
+        "why": "Não é um plano que este curso possa ensinar, nem um que garanta alguma coisa."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1400 @@
+[
+  {
+    "id": "ex-zpdg5rn6",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does base64 do to the value in a Secret's data?",
+    "choices": [
+      {
+        "text": "Compresses it to save space",
+        "correct": false,
+        "why": "It makes it larger, not smaller."
+      },
+      {
+        "text": "Encrypts it with the cluster's key",
+        "correct": false,
+        "why": "There is no key involved."
+      },
+      {
+        "text": "Hashes it so it cannot be read back",
+        "correct": false,
+        "why": "base64 -d reads it back."
+      },
+      {
+        "text": "Encodes it, with no key",
+        "correct": true,
+        "why": "Right. Anybody can decode it with one command."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5qk9yeq",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plain Secret was committed and then deleted in the next commit. What is true?",
+    "choices": [
+      {
+        "text": "Git encrypts deleted files",
+        "correct": false,
+        "why": "Git does nothing of the kind."
+      },
+      {
+        "text": "Deleting it removed it from every clone",
+        "correct": false,
+        "why": "Clones keep their history."
+      },
+      {
+        "text": "The token is still in the history",
+        "correct": true,
+        "why": "Right. The commit that added it is still there."
+      },
+      {
+        "text": "Only the server's copy still has it",
+        "correct": false,
+        "why": "Every clone made in between has it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4fpba8n",
+    "version": 1,
+    "section": "three-answers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each approach to who turns the stored form into a usable value.",
+    "pairs": [
+      {
+        "left": "Sealed Secrets",
+        "right": "A controller in the cluster"
+      },
+      {
+        "left": "SOPS with Flux",
+        "right": "Flux, with an age key"
+      },
+      {
+        "left": "Vault",
+        "right": "Vault, for a caller it recognises"
+      }
+    ],
+    "right_distractors": [
+      "The Git server"
+    ]
+  },
+  {
+    "id": "ex-xrpavarm",
+    "version": 1,
+    "section": "three-answers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the price of keeping encrypted secrets in Git?",
+    "choices": [
+      {
+        "text": "A service that must be running to start anything",
+        "correct": false,
+        "why": "That is the price of a secret store."
+      },
+      {
+        "text": "Flux can no longer prune",
+        "correct": false,
+        "why": "Pruning is unaffected."
+      },
+      {
+        "text": "Pull requests can no longer be reviewed",
+        "correct": false,
+        "why": "They can; the values are just unreadable."
+      },
+      {
+        "text": "Whoever holds the key reads every old commit",
+        "correct": true,
+        "why": "Right. The history is permanent, and so is the key's reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbyfhsgf",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson make the Secret with --dry-run=client and pipe it to kubeseal?",
+    "choices": [
+      {
+        "text": "So no plaintext is written",
+        "correct": true,
+        "why": "Right. Only the sealed form is written."
+      },
+      {
+        "text": "Because kubeseal cannot read files",
+        "correct": false,
+        "why": "It reads files too."
+      },
+      {
+        "text": "To make the seal valid in every namespace",
+        "correct": false,
+        "why": "Scope is a separate decision."
+      },
+      {
+        "text": "Because the controller rejects real Secrets",
+        "correct": false,
+        "why": "The controller creates the real Secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rd183ja",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the token volume in the base marked optional?",
+    "choices": [
+      {
+        "text": "Kubernetes requires it for Secrets",
+        "correct": false,
+        "why": "Secret volumes are required by default."
+      },
+      {
+        "text": "So the token can change without a rollout",
+        "correct": false,
+        "why": "That is unrelated to optional."
+      },
+      {
+        "text": "Optional volumes are encrypted",
+        "correct": false,
+        "why": "optional says nothing about encryption."
+      },
+      {
+        "text": "Token-less pods still start",
+        "correct": true,
+        "why": "Right. Production has no Secret from Sealed Secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-58nrf3a0",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does dependsOn: sealed-secrets in staging's Kustomization prevent?",
+    "choices": [
+      {
+        "text": "A failure on a fresh cluster",
+        "correct": true,
+        "why": "Right. It waits for the controller's Kustomization."
+      },
+      {
+        "text": "The controller pruning staging",
+        "correct": false,
+        "why": "The controller prunes nothing."
+      },
+      {
+        "text": "Flux applying staging twice",
+        "correct": false,
+        "why": "Flux applies once per reconciliation anyway."
+      },
+      {
+        "text": "Staging reading production's seal",
+        "correct": false,
+        "why": "Scope prevents that."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1twxvgj",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a seal made for staging fail in production?",
+    "choices": [
+      {
+        "text": "The certificate expired",
+        "correct": false,
+        "why": "The certificate is valid for years."
+      },
+      {
+        "text": "The seal binds name and namespace",
+        "correct": true,
+        "why": "Right. Otherwise anyone could copy a seal and get its secret."
+      },
+      {
+        "text": "kubeseal only works in staging",
+        "correct": false,
+        "why": "It seals for any namespace you name."
+      },
+      {
+        "text": "Production runs a different controller",
+        "correct": false,
+        "why": "It is the same controller."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dy0n61e",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The cluster is lost and rebuilt from Git. What must have been kept to open the old seals?",
+    "choices": [
+      {
+        "text": "The SealedSecret files",
+        "correct": false,
+        "why": "They are in Git already, and useless without the keys."
+      },
+      {
+        "text": "Nothing; the new controller can open them",
+        "correct": false,
+        "why": "It starts with new keys."
+      },
+      {
+        "text": "The certificate from kubeseal --fetch-cert",
+        "correct": false,
+        "why": "The certificate only seals; it cannot open."
+      },
+      {
+        "text": "The controller's keys",
+        "correct": true,
+        "why": "Right. Apply them and restart the controller."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqbr221p",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a SOPS-encrypted Secret, what stays readable?",
+    "choices": [
+      {
+        "text": "Nothing; the whole file is ciphertext",
+        "correct": false,
+        "why": "SOPS encrypts values only."
+      },
+      {
+        "text": "The values, but not the keys",
+        "correct": false,
+        "why": "The opposite."
+      },
+      {
+        "text": "Only the namespace",
+        "correct": false,
+        "why": "Everything outside the encrypted fields stays readable."
+      },
+      {
+        "text": "The keys and the structure",
+        "correct": true,
+        "why": "Right. A diff shows which key changed, not its value."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6y4yv01",
+    "version": 1,
+    "section": "sops",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SOPS reads its creation rules from a file named ___ at the top of the repository.",
+    "blanks": [
+      {
+        "accept": [
+          ".sops.yaml"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1kphy2d7",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should validate.sh never be given the age key?",
+    "choices": [
+      {
+        "text": "Gitea refuses keys in statuses",
+        "correct": false,
+        "why": "The key would never go in a status."
+      },
+      {
+        "text": "kubeconform cannot read decrypted files",
+        "correct": false,
+        "why": "It reads them fine."
+      },
+      {
+        "text": "The key opens everything",
+        "correct": true,
+        "why": "Right. Every holder of the key is one more reader."
+      },
+      {
+        "text": "age keys expire in CI",
+        "correct": false,
+        "why": "age keys do not expire."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v2ztetf",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the sops-age Secret go into the cluster by hand?",
+    "choices": [
+      {
+        "text": "It opens the rest",
+        "correct": true,
+        "why": "Right. One secret has to arrive another way."
+      },
+      {
+        "text": "Flux cannot create Secrets",
+        "correct": false,
+        "why": "Flux creates Secrets all the time."
+      },
+      {
+        "text": "SOPS cannot encrypt age keys",
+        "correct": false,
+        "why": "It could; that would need another key."
+      },
+      {
+        "text": "kubectl is faster than a pull request",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a6dksh7",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Vault's dev mode skip that the lab's server keeps?",
+    "choices": [
+      {
+        "text": "Storage and the seal",
+        "correct": true,
+        "why": "Right. Dev mode keeps everything in memory, unsealed."
+      },
+      {
+        "text": "Policies",
+        "correct": false,
+        "why": "Dev mode has policies too."
+      },
+      {
+        "text": "The key-value engine",
+        "correct": false,
+        "why": "Dev mode has it enabled."
+      },
+      {
+        "text": "The command-line client",
+        "correct": false,
+        "why": "The client is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6r1m271",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vault was restarted and every read fails. What is the state, and the fix?",
+    "choices": [
+      {
+        "text": "The storage was wiped; restore a backup",
+        "correct": false,
+        "why": "The raft volume survived."
+      },
+      {
+        "text": "The root token expired; make a new one",
+        "correct": false,
+        "why": "Token expiry gives a different error."
+      },
+      {
+        "text": "Sealed; unseal it",
+        "correct": true,
+        "why": "Right. Or let a cloud key service unseal it automatically."
+      },
+      {
+        "text": "Uninitialised; run operator init again",
+        "correct": false,
+        "why": "Init runs once; running it again is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-9f2xte2a",
+    "version": 1,
+    "section": "vault",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vault's usual production setup splits the root key into five unseal keys. How many are needed to unseal it?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6j3daxf8",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order a Kubernetes login to Vault.",
+    "items": [
+      "The pod presents its ServiceAccount token",
+      "Vault asks the API server whether the token is genuine",
+      "Vault finds the role naming that ServiceAccount",
+      "Vault returns a short-lived token with the role's policy"
+    ],
+    "trap": "Vault cannot map a token to a role before it knows whose token it is."
+  },
+  {
+    "id": "ex-emq12rfv",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the vault-auth ServiceAccount's system:auth-delegator binding allow?",
+    "choices": [
+      {
+        "text": "Unsealing Vault",
+        "correct": false,
+        "why": "Unsealing happens in Vault, with unseal keys."
+      },
+      {
+        "text": "Creating pods in production",
+        "correct": false,
+        "why": "It grants nothing of the kind."
+      },
+      {
+        "text": "Reading every Secret in the cluster",
+        "correct": false,
+        "why": "auth-delegator grants no access to Secrets."
+      },
+      {
+        "text": "Token reviews",
+        "correct": true,
+        "why": "Right. That is how Vault checks a login."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmspr0kv",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For version 2 of the key-value engine, a policy names secret/bulletin/production as secret/___/bulletin/production.",
+    "blanks": [
+      {
+        "accept": [
+          "data"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cwnrjnmn",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A login from staging is refused by the production role. What is the right response?",
+    "choices": [
+      {
+        "text": "Disable Kubernetes auth",
+        "correct": false,
+        "why": "That stops every login, not just this one."
+      },
+      {
+        "text": "Bind the role to every namespace",
+        "correct": false,
+        "why": "That lets every namespace read production's token."
+      },
+      {
+        "text": "Use the root token in staging",
+        "correct": false,
+        "why": "The root token can do anything; never hand it to a workload."
+      },
+      {
+        "text": "Leave it as it is",
+        "correct": true,
+        "why": "Right. Or make a role for staging; the refusal is the policy working."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct02zs79",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each secret to where its plaintext can be read.",
+    "pairs": [
+      {
+        "left": "Staging's token",
+        "right": "The Secret the controller made"
+      },
+      {
+        "left": "Production's token in Git",
+        "right": "Nowhere, without the age key"
+      },
+      {
+        "left": "The age private key",
+        "right": "Your machine and the sops-age Secret"
+      }
+    ],
+    "right_distractors": [
+      "The Gitea server"
+    ]
+  },
+  {
+    "id": "ex-vd40995b",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep the controller's certificate in a file?",
+    "choices": [
+      {
+        "text": "Because kubeseal cannot fetch it",
+        "correct": false,
+        "why": "It fetches it on request."
+      },
+      {
+        "text": "To decrypt seals locally",
+        "correct": false,
+        "why": "The certificate only encrypts."
+      },
+      {
+        "text": "So Flux can read it",
+        "correct": false,
+        "why": "Flux never needs it."
+      },
+      {
+        "text": "To seal without reaching the cluster",
+        "correct": true,
+        "why": "Right. And to know which key you used."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t9d0fyh",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every how many days does the Sealed Secrets controller add a new key?",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-4x2wgd55",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does controller.yaml go into fleet as a file rather than being applied from its URL?",
+    "choices": [
+      {
+        "text": "To edit the controller's code",
+        "correct": false,
+        "why": "Nobody edits it."
+      },
+      {
+        "text": "The URL changes every day",
+        "correct": false,
+        "why": "A release URL names one version."
+      },
+      {
+        "text": "The version becomes a reviewed commit",
+        "correct": true,
+        "why": "Right. Upgrading is a pull request."
+      },
+      {
+        "text": "Flux cannot apply URLs",
+        "correct": false,
+        "why": "It could fetch from other sources; the point is review."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgw3j2jw",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the controller say why it refused the copied seal?",
+    "choices": [
+      {
+        "text": "Nowhere",
+        "correct": false,
+        "why": "It said so in an event."
+      },
+      {
+        "text": "In the pod's log",
+        "correct": false,
+        "why": "No pod was involved."
+      },
+      {
+        "text": "In an event on the SealedSecret",
+        "correct": true,
+        "why": "Right. ErrUnsealFailed, with the reason."
+      },
+      {
+        "text": "In Git",
+        "correct": false,
+        "why": "Nothing writes back to Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fgeay6p",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the MAC in a SOPS file's sops block for?",
+    "choices": [
+      {
+        "text": "Recording who encrypted it",
+        "correct": false,
+        "why": "It records no identity."
+      },
+      {
+        "text": "Choosing which age key to use",
+        "correct": false,
+        "why": "The recipients list does that."
+      },
+      {
+        "text": "Detecting an edit made without SOPS",
+        "correct": true,
+        "why": "Right. A tampered file is refused, not decrypted."
+      },
+      {
+        "text": "Compressing the values",
+        "correct": false,
+        "why": "Nothing is compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4j0dy40",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does validate.sh check a SOPS file without the key?",
+    "choices": [
+      {
+        "text": "It trusts the author",
+        "correct": false,
+        "why": "Nothing is trusted on faith."
+      },
+      {
+        "text": "It decrypts with a CI copy of the key",
+        "correct": false,
+        "why": "The check never holds the key."
+      },
+      {
+        "text": "It drops the sops block, then validates",
+        "correct": true,
+        "why": "Right. Flux removes it too when it decrypts."
+      },
+      {
+        "text": "It skips every Secret",
+        "correct": false,
+        "why": "Secrets are still validated."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks89s52y",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field tells Flux to decrypt a Kustomization's SOPS files?",
+    "choices": [
+      {
+        "text": "spec.decryption",
+        "correct": true,
+        "why": "Right. provider sops, and the secretRef."
+      },
+      {
+        "text": "spec.postBuild",
+        "correct": false,
+        "why": "That substitutes variables."
+      },
+      {
+        "text": "spec.dependsOn",
+        "correct": false,
+        "why": "That orders Kustomizations."
+      },
+      {
+        "text": "spec.verify",
+        "correct": false,
+        "why": "That checks signatures on sources."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn67nn69",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the root token for, once Vault is in use?",
+    "choices": [
+      {
+        "text": "Nothing; it is revoked",
+        "correct": true,
+        "why": "Right. People and programs get narrow tokens."
+      },
+      {
+        "text": "Every application's reads",
+        "correct": false,
+        "why": "Applications get their own tokens and policies."
+      },
+      {
+        "text": "Flux's access to Vault",
+        "correct": false,
+        "why": "Flux never talks to Vault here."
+      },
+      {
+        "text": "Unsealing",
+        "correct": false,
+        "why": "Unsealing uses unseal keys, not tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwx6t6r3",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new value is written to secret/bulletin/production. What happens to the old one?",
+    "choices": [
+      {
+        "text": "It stays as an earlier version",
+        "correct": true,
+        "why": "Right. Until somebody destroys it."
+      },
+      {
+        "text": "It is sealed",
+        "correct": false,
+        "why": "Sealing is about the whole server."
+      },
+      {
+        "text": "It is overwritten for good",
+        "correct": false,
+        "why": "Version 2 of the engine keeps versions."
+      },
+      {
+        "text": "It moves to staging",
+        "correct": false,
+        "why": "Paths do not move."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtdtrmkw",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How long does the token from the bulletin-production login live?",
+    "choices": [
+      {
+        "text": "Ten minutes",
+        "correct": true,
+        "why": "Right. The role sets ttl=10m."
+      },
+      {
+        "text": "A day",
+        "correct": false,
+        "why": "Nothing here sets a day."
+      },
+      {
+        "text": "One hour",
+        "correct": false,
+        "why": "That is the ServiceAccount token's life."
+      },
+      {
+        "text": "Until revoked",
+        "correct": false,
+        "why": "Kubernetes logins give short-lived tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-brqk07j7",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can Vault reach the API server at gitops-control-plane:6443?",
+    "choices": [
+      {
+        "text": "The API server dials Vault",
+        "correct": false,
+        "why": "Vault calls the API server."
+      },
+      {
+        "text": "kind publishes 6443 to the internet",
+        "correct": false,
+        "why": "It publishes to localhost only."
+      },
+      {
+        "text": "Through Flux",
+        "correct": false,
+        "why": "Flux is not involved."
+      },
+      {
+        "text": "It shares the kind Docker network",
+        "correct": true,
+        "why": "Right. Container names resolve there."
+      }
+    ]
+  },
+  {
+    "id": "ex-v79a0k7e",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A teammate without the age key runs sops --decrypt. What do they get?",
+    "choices": [
+      {
+        "text": "The keys of the file only",
+        "correct": false,
+        "why": "The command fails as a whole."
+      },
+      {
+        "text": "A refusal",
+        "correct": true,
+        "why": "Right. No key opens the data key."
+      },
+      {
+        "text": "A prompt for a password",
+        "correct": false,
+        "why": "age keys have no password here."
+      },
+      {
+        "text": "The values, unencrypted",
+        "correct": false,
+        "why": "Only a key holder gets those."
+      }
+    ]
+  },
+  {
+    "id": "ex-5e58xkrh",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does bulletin print about its token?",
+    "choices": [
+      {
+        "text": "The token itself",
+        "correct": false,
+        "why": "It never prints the value."
+      },
+      {
+        "text": "Only whether a token exists",
+        "correct": false,
+        "why": "It prints a fingerprint."
+      },
+      {
+        "text": "The start of its SHA-256",
+        "correct": true,
+        "why": "Right. It proves which token without showing it."
+      },
+      {
+        "text": "The token in base64",
+        "correct": false,
+        "why": "That would print the value, encoded."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdnb9skk",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The API server encrypts Secrets in etcd. Why does that not make a Secret's YAML safe in Git?",
+    "choices": [
+      {
+        "text": "Encryption in etcd is optional",
+        "correct": false,
+        "why": "Even when on, Git is untouched."
+      },
+      {
+        "text": "Flux decrypts it on the way",
+        "correct": false,
+        "why": "Flux applies what Git holds."
+      },
+      {
+        "text": "Git holds the YAML, not etcd's copy",
+        "correct": true,
+        "why": "Right. Whoever reads the repository reads the token."
+      },
+      {
+        "text": "etcd stores base64",
+        "correct": false,
+        "why": "It is about where the YAML is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5nfvh4s",
+    "version": 1,
+    "section": "three-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With Vault and an operator, what does Git hold for a secret?",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The reference is in Git."
+      },
+      {
+        "text": "The key that opens it",
+        "correct": false,
+        "why": "No key goes into Git."
+      },
+      {
+        "text": "The secret, encrypted",
+        "correct": false,
+        "why": "That is the other family."
+      },
+      {
+        "text": "A reference to it",
+        "correct": true,
+        "why": "Right. Which secret, not what."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ee1rjev",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who can open a SealedSecret committed to fleet?",
+    "choices": [
+      {
+        "text": "Anybody with the certificate",
+        "correct": false,
+        "why": "The certificate is the public half."
+      },
+      {
+        "text": "Anybody with kubeseal",
+        "correct": false,
+        "why": "kubeseal only seals."
+      },
+      {
+        "text": "Flux",
+        "correct": false,
+        "why": "Flux applies it; the controller opens it."
+      },
+      {
+        "text": "The controller in that cluster",
+        "correct": true,
+        "why": "Right. Anybody can read the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ekyds68",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep a copy of the controller's certificate in a file?",
+    "choices": [
+      {
+        "text": "To decrypt seals on a laptop",
+        "correct": false,
+        "why": "It is the public half."
+      },
+      {
+        "text": "Because the controller forgets it",
+        "correct": false,
+        "why": "The controller keeps its keys."
+      },
+      {
+        "text": "Flux needs it",
+        "correct": false,
+        "why": "Flux never reads it."
+      },
+      {
+        "text": "To seal without reaching the cluster",
+        "correct": true,
+        "why": "Right. And to make plain which key is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rx4fctn",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would happen without the name and namespace in the seal?",
+    "choices": [
+      {
+        "text": "Nothing different",
+        "correct": false,
+        "why": "The binding is the protection."
+      },
+      {
+        "text": "A copy elsewhere would hand out the token",
+        "correct": true,
+        "why": "Right. Copy the SealedSecret and let the controller open it."
+      },
+      {
+        "text": "Seals would be larger",
+        "correct": false,
+        "why": "Size is not the point."
+      },
+      {
+        "text": "kubeseal would refuse",
+        "correct": false,
+        "why": "It is about who can open it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dt3m4y0",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cluster is lost and its keys were never backed up. What becomes of the SealedSecrets in fleet?",
+    "choices": [
+      {
+        "text": "No key opens them any more",
+        "correct": true,
+        "why": "Right. A new controller has new keys."
+      },
+      {
+        "text": "The new controller opens them",
+        "correct": false,
+        "why": "It has different keys."
+      },
+      {
+        "text": "Flux re-seals them",
+        "correct": false,
+        "why": "Flux never sees plaintext."
+      },
+      {
+        "text": "Git decrypts them",
+        "correct": false,
+        "why": "Git stores text."
+      }
+    ]
+  },
+  {
+    "id": "ex-egg05vy1",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A SOPS-encrypted file changes in a pull request. What can the reviewer see?",
+    "choices": [
+      {
+        "text": "Which key changed",
+        "correct": true,
+        "why": "Right. Values are encrypted, keys readable."
+      },
+      {
+        "text": "The new value",
+        "correct": false,
+        "why": "Values are encrypted."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Keys stay readable."
+      },
+      {
+        "text": "The age private key",
+        "correct": false,
+        "why": "It never goes into Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssx4q3vt",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which files does this lesson's .sops.yaml encrypt?",
+    "choices": [
+      {
+        "text": "Every YAML file",
+        "correct": false,
+        "why": "Only those matching the rule."
+      },
+      {
+        "text": "Every Secret",
+        "correct": false,
+        "why": "It matches paths, not kinds."
+      },
+      {
+        "text": "Files ending in .sops.yaml under a production directory",
+        "correct": true,
+        "why": "Right. Its path_regex says so."
+      },
+      {
+        "text": "Staging's token",
+        "correct": false,
+        "why": "Staging uses Sealed Secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-82mfc2dy",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a restart, what must happen before Vault can read a secret?",
+    "choices": [
+      {
+        "text": "The kv engine is enabled again",
+        "correct": false,
+        "why": "It stays enabled."
+      },
+      {
+        "text": "The data is restored",
+        "correct": false,
+        "why": "The data is on disk, encrypted."
+      },
+      {
+        "text": "Somebody unseals it",
+        "correct": true,
+        "why": "Right. Or a cloud key service does it automatically."
+      },
+      {
+        "text": "The root token is renewed",
+        "correct": false,
+        "why": "The token is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg308awf",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Production's Vault token asks for staging's secret. What does Vault answer?",
+    "choices": [
+      {
+        "text": "503 sealed",
+        "correct": false,
+        "why": "Vault is unsealed."
+      },
+      {
+        "text": "The secret",
+        "correct": false,
+        "why": "The policy does not allow it."
+      },
+      {
+        "text": "403 permission denied",
+        "correct": true,
+        "why": "Right. The policy names one path."
+      },
+      {
+        "text": "404 not found",
+        "correct": false,
+        "why": "It refuses before looking."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pw8j98s",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does an age public key begin?",
+    "choices": [
+      {
+        "text": "ssh-ed25519",
+        "correct": false,
+        "why": "That is an SSH key."
+      },
+      {
+        "text": "age1",
+        "correct": true,
+        "why": "Right. As age-keygen printed."
+      },
+      {
+        "text": "-----BEGIN",
+        "correct": false,
+        "why": "That is PEM."
+      },
+      {
+        "text": "AGE-SECRET-KEY",
+        "correct": false,
+        "why": "That begins the private key."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgyd46kc",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who can read ~/.config/sops/age/keys.txt after age-keygen made it?",
+    "choices": [
+      {
+        "text": "Only its owner",
+        "correct": true,
+        "why": "Right. -rw-------, as stat showed."
+      },
+      {
+        "text": "Everybody on the machine",
+        "correct": false,
+        "why": "stat showed owner only."
+      },
+      {
+        "text": "Flux",
+        "correct": false,
+        "why": "Flux gets its own copy in a Secret."
+      },
+      {
+        "text": "Gitea",
+        "correct": false,
+        "why": "It never leaves the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0vtae8y",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does SealedSecret join validate.sh's skip list?",
+    "choices": [
+      {
+        "text": "It is encrypted",
+        "correct": false,
+        "why": "Encryption is not why."
+      },
+      {
+        "text": "Flux ignores it",
+        "correct": false,
+        "why": "Flux applies it."
+      },
+      {
+        "text": "It is generated",
+        "correct": false,
+        "why": "It is a file in Git."
+      },
+      {
+        "text": "Its schema is not Kubernetes'",
+        "correct": true,
+        "why": "Right. kubeconform has none for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-eysbx1x4",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without dependsOn, what happens to staging when the cluster is rebuilt from Git?",
+    "choices": [
+      {
+        "text": "It fails once, then recovers",
+        "correct": true,
+        "why": "Right. The SealedSecret kind is not there yet."
+      },
+      {
+        "text": "It never recovers",
+        "correct": false,
+        "why": "It recovers on its next attempt."
+      },
+      {
+        "text": "Nothing different",
+        "correct": false,
+        "why": "The kind would be missing."
+      },
+      {
+        "text": "Flux skips the SealedSecret",
+        "correct": false,
+        "why": "It fails the apply."
+      }
+    ]
+  }
+]

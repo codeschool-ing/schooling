@@ -1,0 +1,449 @@
+{
+  "ex-qd5y3x85": {
+    "prompt": "Onde roda o código de um teste de Espresso enquanto ele testa o Tickets?",
+    "hint": "A lição 14 o chamou de teste instrumentado.",
+    "choices": [
+      {
+        "text": "No seu computador, mandando comandos pelo adb",
+        "why": "Isso está mais perto do Appium; o Espresso é empacotado num APK de teste e roda no aparelho."
+      },
+      {
+        "text": "No próprio processo do app, no aparelho",
+        "why": "Certo. A instrumentação do APK de teste inicia o app, e os dois dividem um processo e uma thread principal."
+      },
+      {
+        "text": "Num segundo app ao lado do Tickets, falando com ele pela tela",
+        "why": "O APK de teste é instalado ao lado, mas os testes rodam dentro do processo do app, não num próprio."
+      },
+      {
+        "text": "Na JVM do computador, sem Android",
+        "why": "Isso é um teste local, em src/test; o Espresso precisa de um aparelho."
+      }
+    ]
+  },
+  "ex-5bdryb5t": {
+    "prompt": "O Tickets inicia uma thread para buscar os espetáculos. Por que o Espresso não a espera sozinho?",
+    "hint": "O que o Espresso observa antes de cada passo?",
+    "choices": [
+      {
+        "text": "Porque o Espresso nunca espera nada",
+        "why": "Ele espera a thread principal antes de cada ação e verificação; esse é o recurso principal dele."
+      },
+      {
+        "text": "Porque chamadas de rede são proibidas em testes",
+        "why": "Elas são proibidas na thread principal, em apps e testes igualmente; a carga é permitida na thread dela."
+      },
+      {
+        "text": "A thread dela não é a principal",
+        "why": "Certo. Uma thread que o próprio app iniciou é invisível para ele."
+      },
+      {
+        "text": "Porque a thread roda no boxoffice, não no app",
+        "why": "A thread roda no processo do app; o boxoffice é o servidor a quem ela pergunta."
+      }
+    ]
+  },
+  "ex-kp8pq5qm": {
+    "prompt": "Quais destas coisas um teste de Espresso consegue fazer e um de Appium não?",
+    "hint": "Pense no que estar dentro do processo dá.",
+    "choices": [
+      {
+        "text": "Definir o Shows.baseUrl antes de a lista carregar",
+        "why": "Certo. Ele divide a memória do app, então os objetos do próprio app estão ao alcance."
+      },
+      {
+        "text": "Escolher uma linha da lista pelo objeto Show por trás dela",
+        "why": "Certo. O onData lê os itens do adapter, que só código dentro do app vê."
+      },
+      {
+        "text": "Tocar em Permitir no diálogo de permissão de notificação do Android",
+        "why": "O diálogo é do Android, fora das janelas do app; isso precisa de um teste por fora (lição 21)."
+      },
+      {
+        "text": "Rodar o mesmo teste contra a versão iOS do Tickets",
+        "why": "O Espresso é só Android; nenhuma das ferramentas roda um teste nos dois sem os apps concordarem nos nomes."
+      }
+    ]
+  },
+  "ex-npvmnxd0": {
+    "prompt": "Ligue cada pasta do projeto Tickets ao que mora nela.",
+    "hint": "A tabela da seção 03.",
+    "pairs": [
+      {
+        "left": "app/src/main",
+        "right": "o app que um usuário instala"
+      },
+      {
+        "left": "app/src/test",
+        "right": "testes locais, na JVM do computador"
+      },
+      {
+        "left": "app/src/androidTest",
+        "right": "testes instrumentados, rodados no aparelho"
+      }
+    ],
+    "right_distractors": [
+      "os testes de Appium da lição 15"
+    ]
+  },
+  "ex-bmwr2ff9": {
+    "prompt": "O que androidTestImplementation(libs.androidx.espresso.core) no arquivo de build significa para o app que um usuário baixa?",
+    "hint": "É para qual APK?",
+    "choices": [
+      {
+        "text": "O app leva o Espresso, desligado",
+        "why": "Ele nem está no app; vai só para o APK de teste."
+      },
+      {
+        "text": "Nada: só vai no APK de teste",
+        "why": "Certo. O androidTestImplementation é para os testes instrumentados e nunca chega a um usuário."
+      },
+      {
+        "text": "O app fica maior pelo tamanho do Espresso",
+        "why": "Isso seria implementation; a configuração de teste mantém a biblioteca fora do app."
+      },
+      {
+        "text": "O app só pode ser testado num emulador",
+        "why": "Testes instrumentados rodam em qualquer aparelho que o adb lista, um celular inclusive."
+      }
+    ]
+  },
+  "ex-8k2b2kea": {
+    "prompt": "Por que o teste espera o texto R$ 65,00 na tela do espetáculo sh-103?",
+    "hint": "Olhe a captura dos espetáculos, e o price() no Shows.kt.",
+    "choices": [
+      {
+        "text": "Porque esse é o preço de todo espetáculo",
+        "why": "O sh-101 e o sh-102 custam 8000 centavos, então R$ 80,00."
+      },
+      {
+        "text": "Porque o app arredonda 6500 centavos para cima",
+        "why": "O price() divide centavos inteiros sem arredondar: 6500 é exatamente 65 reais."
+      },
+      {
+        "text": "Porque o layout da tela do espetáculo escreve isso",
+        "why": "O layout não tem texto em price; a ShowActivity o preenche a partir do intent."
+      },
+      {
+        "text": "Os 6500 centavos do boxoffice, via price()",
+        "why": "Certo. O valor esperado vem da resposta da API pela formatação do próprio app."
+      }
+    ]
+  },
+  "ex-yjgrakwa": {
+    "prompt": "Por que o teste chega à linha do sh-103 com onData em vez de onView?",
+    "hint": "O que uma ListView faz com as linhas quando você rola?",
+    "choices": [
+      {
+        "text": "A ListView reaproveita poucas views",
+        "why": "Certo. O onData pede o item ao adapter e rola até ele, então linhas fora da tela também são achadas."
+      },
+      {
+        "text": "O onView não acha views que têm id",
+        "why": "O onView com withId é a linha mais comum do Espresso."
+      },
+      {
+        "text": "O onData é mais rápido porque pula a thread principal",
+        "why": "Os dois esperam a thread principal; o motivo é como uma lista guarda as linhas."
+      },
+      {
+        "text": "Linhas de uma lista não têm id",
+        "why": "Cada linha tem os ids title e detail, três vezes, o que é parte do problema."
+      }
+    ]
+  },
+  "ex-tr65189y": {
+    "prompt": "Na tela de lista, antes de qualquer toque, um teste roda onView(withId(R.id.title)).check(matches(isDisplayed())). O que acontece?",
+    "hint": "Quantas views têm o id title nessa tela?",
+    "choices": [
+      {
+        "text": "Passa, conferindo a primeira linha",
+        "why": "O Espresso não escolhe um entre vários; ele recusa."
+      },
+      {
+        "text": "Falha com NoMatchingViewException no lugar",
+        "why": "Essa é para nenhuma correspondência; aqui há três."
+      },
+      {
+        "text": "Falha com AmbiguousViewMatcherException",
+        "why": "Certo. Toda linha tem um title, então o matcher acha três views onde precisa achar uma."
+      },
+      {
+        "text": "Confere o título da tela do espetáculo no lugar",
+        "why": "A tela do espetáculo não está aberta; nada foi tocado."
+      }
+    ]
+  },
+  "ex-44h52qb3": {
+    "prompt": "A faixa do Tickets está escondida com visibility gone. Qual verificação passa numa lista nova?",
+    "hint": "A view está lá ou não?",
+    "choices": [
+      {
+        "text": "check(doesNotExist())",
+        "why": "A view existe no layout em todo início, então esta falha."
+      },
+      {
+        "text": "check(matches(not(isDisplayed())))",
+        "why": "Certo. Ela existe e não está visível."
+      },
+      {
+        "text": "check(matches(isDisplayed()))",
+        "why": "Ela fica escondida até o app estar offline com uma cópia salva."
+      },
+      {
+        "text": "check(matches(withText(\"\")))",
+        "why": "Uma verificação de texto não diz nada sobre estar visível, que é a pergunta."
+      }
+    ]
+  },
+  "ex-rz5nc03n": {
+    "prompt": "Em onData(showWithId(\"sh-103\")).inAdapterView(withId(R.id.shows)).perform(click()), o matcher próprio estende o ___ do Espresso, que só olha itens de uma classe.",
+    "hint": "Limitado ao Show.",
+    "blanks": [
+      {
+        "accept": [
+          "BoundedMatcher"
+        ]
+      }
+    ]
+  },
+  "ex-vfpff3fp": {
+    "prompt": "No grep de MainActivity.kt, em que linha o Shows.busy diminui?",
+    "hint": "A linha com busy--."
+  },
+  "ex-z23405s9": {
+    "prompt": "Por que a MainActivity diminui o busy dentro do runOnUiThread, depois do display, e não no fim da thread de fundo?",
+    "hint": "Quando a tela está pronta?",
+    "choices": [
+      {
+        "text": "Porque uma thread de fundo não pode mudar um número",
+        "why": "Qualquer thread pode; o busy é até marcado como volatile para isso."
+      },
+      {
+        "text": "Para o busy só zerar com a lista já na tela",
+        "why": "Certo. Diminuído antes, o Espresso seguiria entre a resposta chegar e a lista ser desenhada."
+      },
+      {
+        "text": "Porque o Espresso só lê o busy na thread de fundo",
+        "why": "O idling resource o lê na thread principal; o que importa é a ordem, não quem lê."
+      },
+      {
+        "text": "Para uma carga que falhou não diminuí-lo",
+        "why": "Toda carga o diminui, falhando ou não; o display trata os três resultados."
+      }
+    ]
+  },
+  "ex-7ssk1m8r": {
+    "prompt": "Um colega corrige o ListTest instável com Thread.sleep(3000) antes do onData. Ele passou cinquenta vezes. O que você diz?",
+    "hint": "Pelo que o teste espera, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "Tudo bem, mas 5000 seria mais seguro no CI",
+        "why": "Um palpite mais longo continua sendo palpite, e custa mais em cada execução."
+      },
+      {
+        "text": "Tudo bem: cinquenta aprovações provam que a corrida sumiu",
+        "why": "A corrida continua lá; a pausa só torna perdê-la mais raro, até uma carga levar mais de três segundos."
+      },
+      {
+        "text": "Use um idling resource no Shows.busy",
+        "why": "Certo. Ele espera exatamente o tempo da carga, falha com um nome, e diz pelo que o teste espera."
+      },
+      {
+        "text": "Mover a pausa para a MainActivity do app",
+        "why": "Isso deixa todo usuário mais lento para consertar um teste."
+      }
+    ]
+  },
+  "ex-asx16e54": {
+    "prompt": "Por que o ShowsIdlingResource agenda uma nova verificação a cada décimo de segundo enquanto o busy está acima de zero?",
+    "hint": "Quem avisa o recurso que o busy caiu?",
+    "choices": [
+      {
+        "text": "Porque o Espresso exige que todo recurso consulte periodicamente",
+        "why": "Um recurso que o app avisa, como o CountingIdlingResource, nunca consulta periodicamente."
+      },
+      {
+        "text": "O app nunca avisa quando o busy cai",
+        "why": "Certo. Ele mesmo pergunta de novo, e chama o Espresso de volta na primeira vez que a resposta é zero."
+      },
+      {
+        "text": "Para fazer a própria carga terminar antes",
+        "why": "As verificações só leem o busy; não conseguem acelerar uma requisição ao boxoffice."
+      },
+      {
+        "text": "Porque o isIdleNow só pode rodar na thread da carga",
+        "why": "As verificações são agendadas na thread principal, de propósito."
+      }
+    ]
+  },
+  "ex-pdfrer4k": {
+    "prompt": "O teste offline aponta o Shows.baseUrl para http://10.0.2.2:9 em vez de um endereço que ninguém responde, como 10.255.255.1. Por quê?",
+    "hint": "Compare as duas capturas do curl.",
+    "choices": [
+      {
+        "text": "Porque o 10.255.255.1 alcançaria o próprio emulador",
+        "why": "Só o localhost é o próprio emulador; o 10.255.255.1 sai para uma rede onde nada o responde."
+      },
+      {
+        "text": "A porta recusada falha já; a outra espera 5 s",
+        "why": "Certo. O curl foi recusado depois de 0 ms e desistiu depois de 5002 ms, e o app tem o mesmo limite de 5000 ms."
+      },
+      {
+        "text": "Porque a porta 9 faz o boxoffice devolver um erro",
+        "why": "O boxoffice escuta na 8080; nada responde na porta 9."
+      },
+      {
+        "text": "Porque o emulador não alcança endereços privados",
+        "why": "O próprio 10.0.2.2 é um endereço privado que o emulador alcança."
+      }
+    ]
+  },
+  "ex-wch1dgv3": {
+    "prompt": "Um teste limpa a cópia salva, define o Shows.baseUrl com o endereço morto e esquece de restaurá-lo. O ListTest roda depois dele na mesma execução. O que acontece, e por quê?",
+    "hint": "Quanto vive um object do Kotlin durante uma execução instrumentada?",
+    "choices": [
+      {
+        "text": "Falha: o Shows sobrevive a cada teste, num só processo",
+        "why": "Certo. Os testes dividem um processo, então o endereço mudado vaza para todo teste seguinte, conforme a ordem."
+      },
+      {
+        "text": "Nada: cada classe de teste ganha uma cópia nova do app",
+        "why": "A activity é nova; o processo e os objetos dele não."
+      },
+      {
+        "text": "O ListTest passa, usando uma cópia salva antes",
+        "why": "O teste esquecido limpou a cópia, então não há nenhuma em que se apoiar."
+      },
+      {
+        "text": "A regra do ListTest redefine o baseUrl antes de cada teste",
+        "why": "O ActivityScenarioRule abre uma activity; ele não sabe nada do Shows."
+      }
+    ]
+  },
+  "ex-2cfwwh34": {
+    "prompt": "Por que o OfflineTest abre a activity com ActivityScenario.launch em vez da regra que o ListTest usa?",
+    "hint": "Quando a primeira carga lê o baseUrl?",
+    "choices": [
+      {
+        "text": "Porque a regra não consegue abrir a MainActivity",
+        "why": "Ela a abre no ListTest; o problema é quando."
+      },
+      {
+        "text": "Porque o launch pula a primeira carga",
+        "why": "O launch abre a activity normalmente, e o onCreate inicia a carga como sempre."
+      },
+      {
+        "text": "O baseUrl precisa mudar antes da primeira carga",
+        "why": "Certo. A regra abre a activity antes de o corpo do teste rodar, cedo demais para mudar algo."
+      },
+      {
+        "text": "Porque o launch limpa o SharedPreferences sozinho",
+        "why": "O @Before faz isso, com clear().commit()."
+      }
+    ]
+  },
+  "ex-3ad3e51c": {
+    "prompt": "Que tarefa do Gradle roda os testes instrumentados em todo aparelho que o adb lista?",
+    "hint": "Connected, e a variante debug.",
+    "choices": [
+      {
+        "text": "./gradlew test",
+        "why": "Essa roda os testes locais de src/test, no computador."
+      },
+      {
+        "text": "./gradlew assembleDebug",
+        "why": "Essa compila o APK do app e não roda nada."
+      },
+      {
+        "text": "./gradlew connectedDebugAndroidTest",
+        "why": "Certo. Ela compila os dois APKs, instala e roda os testes."
+      },
+      {
+        "text": "./gradlew installDebug",
+        "why": "Essa só instala o app; nenhum teste roda."
+      }
+    ]
+  },
+  "ex-986ve36q": {
+    "prompt": "Por que a lição desliga as três escalas de animação do emulador antes de rodar o Espresso?",
+    "hint": "O que o Espresso espera, e como uma animação roda?",
+    "choices": [
+      {
+        "text": "O Espresso não espera as animações terminarem de forma confiável",
+        "why": "Certo. É o conselho do Google para todo aparelho que roda Espresso."
+      },
+      {
+        "text": "Para o emulador usar menos memória",
+        "why": "O motivo é a sincronização, não a memória."
+      },
+      {
+        "text": "Porque as animações do Tickets escondem os defeitos",
+        "why": "O Tickets não tem animações próprias; as transições do sistema é que são o problema."
+      },
+      {
+        "text": "Porque o adb se recusa a instalar com animações ligadas",
+        "why": "A instalação não liga para animações."
+      }
+    ]
+  },
+  "ex-9508tycj": {
+    "prompt": "Ponha os passos do noServerWithACopyShowsTheBanner na ordem em que o teste os roda.",
+    "hint": "Uma cópia precisa ser salva antes de o boxoffice sumir.",
+    "items": [
+      "limpar a cópia salva e registrar o idling resource",
+      "abrir a MainActivity, cuja primeira carga alcança o boxoffice",
+      "conferir a lista, para o Espresso esperar essa carga",
+      "apontar o Shows.baseUrl para o endereço morto e tocar em atualizar",
+      "conferir a faixa e as palavras dela",
+      "devolver o endereço e remover o registro"
+    ]
+  },
+  "ex-j92yscsx": {
+    "prompt": "No segundo teste do OfflineTest, a linha onView(withId(R.id.shows)).check(matches(isDisplayed())) é apagada. Às vezes a verificação da faixa passa a falhar. Por quê?",
+    "hint": "Pelo que essa verificação fazia o Espresso esperar?",
+    "choices": [
+      {
+        "text": "A lista deixa de aparecer sem essa verificação",
+        "why": "Uma verificação observa; ela não faz a lista aparecer."
+      },
+      {
+        "text": "O idling resource para de funcionar sem um onView antes",
+        "why": "Ele funciona para qualquer onView ou onData; o problema é o que acontece antes do próximo."
+      },
+      {
+        "text": "A faixa mostra a hora errada",
+        "why": "A verificação para antes da hora, então a hora não a faz falhar."
+      },
+      {
+        "text": "Nenhuma cópia foi salva antes da troca de endereço",
+        "why": "Certo. Aquela verificação era o ponto de sincronia; sem ela o endereço muda com a primeira carga ainda fora, essa carga também falha, e sem cópia o app mostra a linha de erro."
+      }
+    ]
+  },
+  "ex-qvhza9m3": {
+    "prompt": "Ligue cada necessidade de um teste do Tickets à ferramenta das lições 15 e 16 que a atende.",
+    "hint": "Dentro do processo ou fora dele?",
+    "pairs": [
+      {
+        "left": "deixar o boxoffice inalcançável mudando o Shows.baseUrl",
+        "right": "Espresso, dentro do app"
+      },
+      {
+        "left": "tocar em Permitir no diálogo de permissão do Android",
+        "right": "Appium, de fora"
+      },
+      {
+        "left": "esperar uma carga numa thread do próprio app",
+        "right": "um idling resource"
+      },
+      {
+        "left": "esperar uma linha aparecer na tela, de fora",
+        "right": "uma espera explícita como waitForDisplayed"
+      }
+    ],
+    "right_distractors": [
+      "Thread.sleep com um número generoso"
+    ]
+  }
+}

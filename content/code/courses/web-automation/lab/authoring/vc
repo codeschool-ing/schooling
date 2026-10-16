@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# validate-content with course.json's lessons cut to those already written
+cd /home/user/schooling
+exec 8>/tmp/lab/vc.lock; flock 8
+# and the lab lock: stage reads course.json, which this cuts while it runs
+exec 9>/tmp/web-automation-lab.lock; flock 9
+C=content/code/courses/web-automation/course.json
+cp $C /tmp/lab/course.json.bak
+python3 - "$C" <<'PY'
+import json,sys,os
+p=sys.argv[1];d=json.load(open(p));base=os.path.dirname(p)
+d['lessons']=[l for l in d['lessons'] if os.path.exists(f'{base}/lessons/{l}/lesson.json')]
+open(p,'w').write(json.dumps(d,indent=2,ensure_ascii=False)+'\n')
+PY
+export GOTOOLCHAIN=local PATH=/usr/local/go1.25.1/bin:$PATH
+go run ./tools/validate-content 2>&1 | grep -iE "web-automation|kqqqxb7w" 
+cp /tmp/lab/course.json.bak $C

@@ -1,0 +1,161 @@
+{
+  "ex-2b97fk36": {
+    "prompt": "Por que o standby em outra região costuma ser assíncrono?",
+    "hint": "A conta da lição 12.",
+    "choices": [
+      { "text": "Standbys assíncronos usam menos disco", "why": "Eles guardam o mesmo log." },
+      { "text": "O Patroni proíbe standbys síncronos distantes", "why": "Ele permite; é a latência que proíbe." },
+      { "text": "Cada commit esperaria uma ida e volta longa", "why": "Isso: um décimo de segundo ou mais por commit entre continentes." },
+      { "text": "A cascata só funciona de forma assíncrona", "why": "O motivo é a distância, não a cascata." }
+    ]
+  },
+  "ex-rnsmx9c7": {
+    "prompt": "A primeira região é perdida. O que o standby assíncrono distante perde?",
+    "hint": "Lição 13.",
+    "choices": [
+      { "text": "O que ele ainda não tinha recebido", "why": "Isso: o atraso dele naquele momento é o RPO da região." },
+      { "text": "Nada, já que é uma cópia completa", "why": "É uma cópia até onde ele tinha recebido." },
+      { "text": "O slot dele", "why": "O slot ficava no lado perdido; os dados do standby estão intactos." },
+      { "text": "Cada transação da última hora", "why": "Só o quanto ele estava atrás." }
+    ]
+  },
+  "ex-941sbg3j": {
+    "prompt": "Quem decide levar o negócio para a outra região, no formato que a lição descreve?",
+    "hint": "Não do outro lado de um oceano.",
+    "choices": [
+      { "text": "O Patroni, depois do seu ttl", "why": "O Patroni gerencia os nós de uma região." },
+      { "text": "O provedor de DNS", "why": "O DNS muda uma resposta; ele não decide." },
+      { "text": "O próprio standby distante", "why": "Um standby nunca se promove sozinho." },
+      { "text": "Pessoas, no incidente", "why": "Isso: a decisão da lição 22, não a de um gerenciador de cluster." }
+    ]
+  },
+  "ex-sbfq3khq": {
+    "prompt": "O que é replicação em cascata?",
+    "hint": "Quem alimenta quem.",
+    "choices": [
+      { "text": "Um primário com dois standbys síncronos", "why": "Isso é um quórum, lição 12." },
+      { "text": "Um standby que recebe o log de outro standby", "why": "Isso: o standby2 faz streaming a partir do standby1." },
+      { "text": "Replicação lógica entre versões", "why": "Isso é a lição 14." },
+      { "text": "Uma réplica que aplica o log mais tarde", "why": "Isso é uma réplica atrasada." }
+    ]
+  },
+  "ex-nfv9r4r1": {
+    "prompt": "Qual `sender_port` o WAL receiver do `standby2` informou?",
+    "hint": "Ele faz streaming a partir do standby1.",
+    "unit": ""
+  },
+  "ex-wg3rj96q": {
+    "prompt": "Quanto custa a corrente se o `standby1` parar?",
+    "hint": "Quem alimenta o standby2?",
+    "choices": [
+      { "text": "O primário para", "why": "O primário não é afetado." },
+      { "text": "O standby2 para de receber", "why": "Isso: até ser apontado para outra origem." },
+      { "text": "O standby2 se promove sozinho", "why": "Standbys nunca se promovem sozinhos." },
+      { "text": "Os dados do standby2 são apagados", "why": "Ele mantém o que tem." }
+    ]
+  },
+  "ex-gnvvz9jq": {
+    "prompt": "Por que o relatório no `standby2` foi cancelado?",
+    "hint": "VACUUM no primário.",
+    "choices": [
+      { "text": "O standby ficou sem memória", "why": "O erro fala em recovery." },
+      { "text": "O relatório demorou mais que o statement_timeout", "why": "Nenhum statement_timeout estava configurado." },
+      { "text": "O standby1 reiniciou", "why": "Nada reiniciou." },
+      { "text": "O replay precisava que as linhas sumissem", "why": "Isso: o replay tinha de remover versões de linha que o snapshot dele usava; depois de max_standby_streaming_delay, o replay ganha." }
+    ]
+  },
+  "ex-bx9vgrve": {
+    "prompt": "Quantos segundos o `max_standby_streaming_delay` espera por padrão antes de cancelar uma consulta em conflito?",
+    "hint": "O padrão citado na lição.",
+    "unit": "segundos"
+  },
+  "ex-946ebk8v": {
+    "prompt": "`hot_standby____ = on` faz um standby dizer ao seu upstream quais versões de linha as consultas dele ainda precisam.",
+    "hint": "O standby manda um retorno.",
+    "blanks": [
+      { "accept": ["feedback", "_feedback"] }
+    ]
+  },
+  "ex-s756zhy2": {
+    "prompt": "Com o feedback ligado, onde o primário registrou o que as consultas dos standbys ainda precisavam?",
+    "hint": "O standby conecta com um slot.",
+    "choices": [
+      { "text": "No xmin do slot standby1", "why": "Isso: 739 ali, e o VACUUM manteve as linhas." },
+      { "text": "No backend_xmin do pg_stat_replication", "why": "Com um slot, vai para o slot." },
+      { "text": "Numa tabela no standby", "why": "Quem guarda é o primário." },
+      { "text": "No etcd", "why": "Nenhum gerenciador de cluster estava envolvido." }
+    ]
+  },
+  "ex-aea5xb3q": {
+    "prompt": "Depois do segundo `UPDATE` e `VACUUM`, quantas versões mortas de linha o primário manteve para o relatório?",
+    "hint": "n_dead_tup.",
+    "unit": "linhas"
+  },
+  "ex-t74sa37m": {
+    "prompt": "Quanto custa o `hot_standby_feedback`?",
+    "hint": "Onde as linhas mortas ficam esperando?",
+    "choices": [
+      { "text": "As consultas no standby ficam mais lentas", "why": "Elas rodam igual; só não são canceladas." },
+      { "text": "A replicação fica síncrona", "why": "Não tem relação com o synchronous_commit." },
+      { "text": "Bloat no primário", "why": "Isso: uma consulta longa no standby segura o VACUUM lá; horas de relatório, horas de linhas mortas se acumulando." },
+      { "text": "Nada", "why": "O primário paga em bloat." }
+    ]
+  },
+  "ex-cpktj6gp": {
+    "prompt": "O que `recovery_min_apply_delay = '2min'` faz?",
+    "hint": "Receber e aplicar são coisas separadas.",
+    "choices": [
+      { "text": "Conecta ao primário só a cada dois minutos", "why": "Ele faz streaming sem parar." },
+      { "text": "Tira um base backup a cada dois minutos", "why": "É um standby, não uma rotina de backup." },
+      { "text": "Atrasa os commits do primário", "why": "O primário não espera por ele." },
+      { "text": "Recebe na hora e aplica dois minutos depois", "why": "Isso: o log está no disco dele; as transações esperam." }
+    ]
+  },
+  "ex-q48rzjse": {
+    "prompt": "Quantos pedidos do cliente 7 foram copiados da réplica atrasada e de volta para o primário?",
+    "hint": "COPY.",
+    "unit": "pedidos"
+  },
+  "ex-3rhcjvq8": {
+    "prompt": "Por que o `standby2` já tinha perdido os pedidos do cliente 7?",
+    "hint": "O que uma cascata repassa?",
+    "choices": [
+      { "text": "O standby2 é alimentado pelo primário", "why": "Ele é alimentado pelo standby1." },
+      { "text": "A configuração do atraso não foi recarregada", "why": "O standby1 manteve as linhas, então a configuração estava valendo." },
+      { "text": "O standby1 repassa o log conforme ele chega", "why": "Isso: o standby2 não tem atraso próprio." },
+      { "text": "O standby2 roda num hardware mais rápido", "why": "É a mesma máquina." }
+    ]
+  },
+  "ex-6ah0eh3d": {
+    "prompt": "Ponha em ordem o resgate a partir de uma réplica atrasada.",
+    "hint": "Pare o relógio primeiro.",
+    "items": [
+      "Pausar o replay na réplica atrasada",
+      "Copiar as linhas para fora dela",
+      "Copiá-las para o primário",
+      "Retomar o replay"
+    ],
+    "trap": "Copiar antes de pausar é correr contra o atraso; retomar antes da cópia perde as linhas também na réplica."
+  },
+  "ex-1jtestmd": {
+    "prompt": "Por que uma réplica atrasada é inútil para failover?",
+    "hint": "Quanto atrás ela está?",
+    "choices": [
+      { "text": "Está atrás demais", "why": "Isso: promovê-la significa esperar o atraso passar, ou abrir mão da parte atrasada do log; uma hora de atraso é uma hora de escritas perdidas ou de espera." },
+      { "text": "Ela não pode ser promovida", "why": "Pode, como qualquer standby." },
+      { "text": "Ela não tem slot", "why": "Ela tem um." },
+      { "text": "Ela não tem o banco shop", "why": "É uma cópia completa." }
+    ]
+  },
+  "ex-wynmp2ck": {
+    "prompt": "Associe cada problema à ferramenta deste curso que o resolve.",
+    "hint": "Região, erro, relatório, limpeza.",
+    "pairs": [
+      { "left": "Uma região inteira perdida", "right": "Um standby assíncrono em outra região" },
+      { "left": "Um DELETE percebido dentro da hora", "right": "Uma réplica atrasada" },
+      { "left": "Um DELETE percebido amanhã", "right": "Recuperação para um ponto no tempo a partir do arquivo" },
+      { "left": "Relatórios cancelados num standby", "right": "hot_standby_feedback, ou um atraso maior" }
+    ],
+    "right_distractors": ["Um standby síncrono no mesmo rack"]
+  }
+}

@@ -1,0 +1,390 @@
+{
+  "ex-3b2m76xt": {
+    "prompt": "Na passada para a frente o MLP faz 2,0 operações de ponto flutuante por parâmetro e a CNN, 17,6. Por que a diferença?",
+    "hint": "Conte quantas vezes um peso é usado para uma imagem.",
+    "choices": [
+      {
+        "text": "A CNN calcula em float64",
+        "why": "As duas rodam em float32; o contador conta operações, não bytes."
+      },
+      {
+        "text": "Um peso de convolução é usado nas 64 posições do mapa",
+        "why": "Certo. O filtro desliza pelo mapa de 8 por 8, então cada peso dele multiplica 64 vezes por imagem, onde um peso denso multiplica uma vez."
+      },
+      {
+        "text": "A camada de pooling tem pesos próprios que são contados",
+        "why": "O max pooling não tem parâmetros; ele escolhe o maior de quatro valores."
+      },
+      {
+        "text": "O contador inclui os ReLUs como multiplicações",
+        "why": "O contador soma produtos de matrizes e convoluções; o MLP também tem ReLU e mesmo assim dá 2,0."
+      }
+    ]
+  },
+  "ex-hhjg8f01": {
+    "prompt": "Uma rede densa de 1.000.000 de parâmetros treina uma época em 50.000 exemplos. Quantos GFLOPs (bilhões de operações) a regra 6 × N × D prevê?",
+    "hint": "Seis, vezes os parâmetros, vezes os exemplos vistos; depois divida por um bilhão.",
+    "unit": "GFLOPs"
+  },
+  "ex-dw5sg8vz": {
+    "prompt": "Um colega troca uma rede densa de 2 milhões de parâmetros por uma convolucional de 2 milhões, para imagens de 64 por 64, e mantém o mesmo orçamento de treino porque a contagem de parâmetros é igual. O que há de errado com o orçamento?",
+    "hint": "A regra 6 × N × D supõe algo sobre quantas vezes um peso é usado.",
+    "choices": [
+      {
+        "text": "Nada, já que a regra 6 × N × D vale para toda rede, sejam quais forem as camadas",
+        "why": "Ela vale onde cada peso é usado uma vez por exemplo. A CNN desta aula fez 52,4 operações por parâmetro por passo, não 6."
+      },
+      {
+        "text": "A rede convolucional vai sair mais barata, porque cada camada dela guarda menos pesos que as da densa",
+        "why": "Camadas menores querem dizer menos parâmetros por camada, não menos aritmética: cada peso é reusado em toda posição."
+      },
+      {
+        "text": "Os pesos são reusados em cada posição, então a aritmética por imagem é muito maior",
+        "why": "Certo. Num mapa de 64 por 64, os pesos de um filtro trabalham milhares de vezes por imagem, e o orçamento tem que ser contado pela aritmética."
+      },
+      {
+        "text": "Convoluções só rodam em placas de vídeo",
+        "why": "A CNN da aula 11 treinou no processador deste curso; uma placa é mais rápida, não obrigatória."
+      }
+    ]
+  },
+  "ex-cdd19qa1": {
+    "prompt": "A CNN fez 198 vezes a aritmética do MLP por passo de treino, mas levou muito menos vezes esse tempo. O que explica a diferença?",
+    "hint": "O que um passo custa que não depende do tamanho das matrizes?",
+    "choices": [
+      {
+        "text": "O contador exagera o custo de uma convolução, contando cada produto duas vezes",
+        "why": "Os números do contador foram conferidos à mão nesta seção; a aritmética é real."
+      },
+      {
+        "text": "O PyTorch pula as multiplicações por zero depois de um ReLU",
+        "why": "As rotinas densas multiplicam toda entrada, zeros inclusive."
+      },
+      {
+        "text": "Custo fixo por passo, que é quase todo o passo pequeno do MLP",
+        "why": "Certo. Chamar camadas, conferir formas e alocar saídas custam o mesmo para um produto pequeno e para um grande."
+      },
+      {
+        "text": "A CNN foi cronometrada em lotes menores que os do MLP, então cada passo tinha menos a fazer",
+        "why": "As duas foram cronometradas no mesmo lote de 32 dígitos."
+      }
+    ]
+  },
+  "ex-q1sx0vdm": {
+    "prompt": "Treinando em float32 com Adam, quantos bytes por parâmetro ocupam juntos os pesos, os gradientes e o estado do otimizador?",
+    "hint": "Quatro bytes por número, e conte os números guardados por parâmetro.",
+    "choices": [
+      {
+        "text": "4, só o peso",
+        "why": "Isso é o que o arquivo salvo guarda; o treino mantém mais três números por parâmetro."
+      },
+      {
+        "text": "8: o peso e o seu gradiente",
+        "why": "Basta para o SGD simples, que não guarda estado. O Adam guarda duas médias a mais."
+      },
+      {
+        "text": "12, com um buffer para o Adam",
+        "why": "Um buffer é o SGD com momentum. O Adam guarda a média do gradiente e a do quadrado dele."
+      },
+      {
+        "text": "16",
+        "why": "Certo: peso, gradiente e os dois buffers do Adam, 4 bytes cada. O memory.py mediu 153.128 + 153.128 + 306.256 para 38.282 parâmetros."
+      }
+    ]
+  },
+  "ex-1fcw5095": {
+    "prompt": "Você dobra o tamanho do lote de um treino e não muda mais nada. Que parte da memória dobra?",
+    "hint": "De qual das quatro cada exemplo do lote tem a própria cópia?",
+    "choices": [
+      {
+        "text": "Os gradientes, já que o dobro de exemplos contribui",
+        "why": "O gradiente é a média do lote, um número por parâmetro; o tamanho dele não muda."
+      },
+      {
+        "text": "As ativações guardadas para a passada para trás",
+        "why": "Certo: 18.992 bytes por exemplo para a CNN, tanto num lote de 32 quanto num de 1.077."
+      },
+      {
+        "text": "Os buffers do Adam",
+        "why": "Eles guardam dois números por parâmetro, seja qual for o lote."
+      },
+      {
+        "text": "Os pesos, que são copiados por exemplo",
+        "why": "Um único conjunto de pesos serve o lote inteiro; é isso que um produto de matrizes faz."
+      }
+    ]
+  },
+  "ex-p72c3ar9": {
+    "prompt": "Uma rede de 3 milhões de parâmetros, treinada com Adam em float32 em imagens de 256 por 256, fica sem memória num lote de 128. Que mudança libera mais memória?",
+    "hint": "Compare 16 bytes por parâmetro com o que cada imagem grande guarda para a passada para trás.",
+    "choices": [
+      {
+        "text": "Trocar o Adam por SGD simples",
+        "why": "Libera 8 bytes por parâmetro, 24 MB aqui, enquanto as ativações de 128 imagens grandes chegam a gigabytes."
+      },
+      {
+        "text": "Lotes de 32, acumulados de quatro em quatro",
+        "why": "Certo. As ativações crescem com o lote e dominam nesse tamanho de imagem; o acúmulo mantém o lote efetivo de 128."
+      },
+      {
+        "text": "Guardar os gradientes em bfloat16 em vez de float32",
+        "why": "Isso corta pela metade 12 MB de gradientes e deixa as ativações, a parte grande, intactas."
+      },
+      {
+        "text": "Tirar um décimo dos parâmetros das últimas camadas",
+        "why": "Um décimo de 48 MB de memória de parâmetros é pouco perto do que o lote guarda."
+      }
+    ]
+  },
+  "ex-zy82w16a": {
+    "prompt": "Na precisão mista com bfloat16, por que os próprios pesos ficam em float32?",
+    "hint": "Veja o que o precision.py imprimiu para 1 + 0,001.",
+    "choices": [
+      {
+        "text": "O bfloat16 não guarda números tão grandes quanto os pesos",
+        "why": "O maior número dele é 3,39e+38, o mesmo alcance do float32."
+      },
+      {
+        "text": "Uma atualização pequena num peso sumiria no arredondamento do bfloat16",
+        "why": "Certo. 1 + 0,001 volta como 1 em bfloat16, então um peso guardado ali pararia de se mexer."
+      },
+      {
+        "text": "Os otimizadores do PyTorch recusam tensores bfloat16",
+        "why": "Eles aceitam; o motivo é a aritmética da atualização, não uma recusa."
+      },
+      {
+        "text": "Para que o arquivo salvo continue compatível com a aula 9",
+        "why": "Um state_dict guarda qualquer tipo; o arquivo não tem nada a ver com isso."
+      }
+    ]
+  },
+  "ex-5t2p5ebz": {
+    "prompt": "Do que um GradScaler protege um treino em float16?",
+    "hint": "O terceiro teste do precision.py, 1e-6 × 1e-3.",
+    "choices": [
+      {
+        "text": "Pesos passando de 65.504 e virando inf",
+        "why": "Os pesos ficam em float32 na precisão mista; o scaler age sobre os gradientes."
+      },
+      {
+        "text": "Duas execuções com a mesma semente dando números diferentes",
+        "why": "Isso é determinismo, assunto da aula 18; o scaler não mexe nisso."
+      },
+      {
+        "text": "Gradientes pequenos arredondados para 0",
+        "why": "Certo. Ele multiplica a perda antes do backward para que continuem representáveis, e os divide de volta antes do passo."
+      },
+      {
+        "text": "O passo depois do 1 ser grosso demais para atualizações pequenas",
+        "why": "Essa é a fraqueza do bfloat16, e manter os pesos em float32 é o que a resolve."
+      }
+    ]
+  },
+  "ex-4r35wbq8": {
+    "prompt": "No trap.py a perda de treino foi 2,3230 em todas as épocas, e mesmo assim os pesos da primeira camada se mexeram até 0,2466. O que aconteceu?",
+    "hint": "O que o autocast guarda enquanto o bloco dele dura?",
+    "choices": [
+      {
+        "text": "O bfloat16 arredondou toda atualização para zero",
+        "why": "Aí os pesos não teriam se mexido; eles se mexeram, porque ficam em float32."
+      },
+      {
+        "text": "Cada passada para a frente rodou em cópias guardadas dos pesos iniciais",
+        "why": "Certo. O bloco em volta do laço inteiro nunca terminou, então o cache nunca foi renovado. Um autocast por lote resolve."
+      },
+      {
+        "text": "Uma taxa de 0,1 é alta demais para aritmética de 16 bits, e todo passo passou do ponto",
+        "why": "O mixed.py treinou a 0,1 com autocast e chegou a 0,972."
+      },
+      {
+        "text": "O zero_grad não faz nada dentro de um bloco de autocast",
+        "why": "Gradientes acumulados fariam a perda pular, não ficar parada até a quarta casa."
+      }
+    ]
+  },
+  "ex-83kqn71h": {
+    "prompt": "O bfloat16 tem o mesmo maior número que o float32 e um passo grosso depois do 1; o float16 é o contrário. Em uma palavra, o que o float16 perde e o bfloat16 mantém? ___",
+    "hint": "O maior número dele é 6,55e+04.",
+    "blanks": [
+      {
+        "accept": [
+          "alcance",
+          "faixa",
+          "intervalo"
+        ]
+      }
+    ]
+  },
+  "ex-da5q45ak": {
+    "prompt": "Ponha em ordem as linhas de um passo acumulado, sobre quatro pedaços de 32.",
+    "hint": "O step lê o .grad, e o backward soma nele.",
+    "items": [
+      "Calcular a perda de um pedaço de 32",
+      "Dividir essa perda por 4",
+      "Chamar o backward, que soma no .grad",
+      "Depois do quarto pedaço, chamar opt.step()",
+      "Chamar opt.zero_grad() antes dos próximos quatro"
+    ]
+  },
+  "ex-jwvrv1v6": {
+    "prompt": "Uma rede com normalização em lote acumula quatro pedaços de 32. O gradiente dela é o gradiente de um lote de 128?",
+    "hint": "O que a normalização em lote calcula a partir do lote que recebe?",
+    "choices": [
+      {
+        "text": "Sim, como o accumulate.py mostrou para o cnn.py",
+        "why": "O cnn.py não tem camada que olhe através do lote; é por isso que os dois bateram ali."
+      },
+      {
+        "text": "Sim, desde que cada uma das quatro perdas seja dividida por 4 antes do backward",
+        "why": "A divisão acerta a escala. Não acerta estatísticas calculadas sobre 32 exemplos em vez de 128."
+      },
+      {
+        "text": "Não: cada pedaço é normalizado com a própria média e variância",
+        "why": "Certo. Quatro conjuntos de estatísticas sobre 32 não são um conjunto sobre 128, então o gradiente muda. A normalização por camada não tem esse problema."
+      },
+      {
+        "text": "Não, porque acumular quatro pedaços muda a taxa de aprendizado da rede",
+        "why": "Com a divisão por 4 a escala está certa; a diferença está nas estatísticas."
+      }
+    ]
+  },
+  "ex-8jwb123z": {
+    "prompt": "`time python compare.py` imprimiu um tempo `user` maior que o `real`. Como um programa usa mais tempo do que levou?",
+    "hint": "Quantos processadores a máquina tem?",
+    "choices": [
+      {
+        "text": "`user` soma o tempo de cada processador que o programa usou",
+        "why": "Certo. O PyTorch dividiu os produtos entre quatro processadores, então os tempos somados passam o do relógio."
+      },
+      {
+        "text": "`user` inclui o tempo que o programa passou esperando outros programas",
+        "why": "Esperar entra no `real`, que corre no relógio; o `user` conta só o tempo calculando."
+      },
+      {
+        "text": "O relógio do shell é menos preciso que o relógio de dentro do processador",
+        "why": "A diferença é bem maior que qualquer imprecisão; são os quatro processadores."
+      },
+      {
+        "text": "`real` deixa de fora o tempo carregando o PyTorch",
+        "why": "`real` vai do início ao fim, imports inclusive."
+      }
+    ]
+  },
+  "ex-pmzm5m8x": {
+    "prompt": "Um treino é estimado em 4.083 horas de placa. Você aluga 16 placas em vez de 8. O que acontece com a conta?",
+    "hint": "A conta é horas de placa vezes o preço.",
+    "choices": [
+      {
+        "text": "Cai pela metade, porque o treino leva metade do tempo",
+        "why": "Metade dos dias com o dobro de placas dá o mesmo número de horas de placa."
+      },
+      {
+        "text": "Mais ou menos a mesma, ou um pouco mais",
+        "why": "Certo. As horas de placa não mudam, e trocar gradientes entre mais placas baixa a fração do pico mantida."
+      },
+      {
+        "text": "Dobra, porque o dobro de placas é alugado",
+        "why": "Elas são alugadas pela metade do tempo, então as horas de placa ficam onde estavam."
+      },
+      {
+        "text": "Cai, porque o preço por placa baixa com o volume",
+        "why": "Nada na conta da aula, nem na variável de preço, diz isso."
+      }
+    ]
+  },
+  "ex-0054ccdv": {
+    "prompt": "No bill.py, KEPT cai de 0,40 para 0,20 e nada mais muda. Por quanto as horas de placa se multiplicam?",
+    "hint": "KEPT divide as horas de placa."
+  },
+  "ex-y8z2nyag": {
+    "prompt": "Ir de 64 para 128 épocas subiu a acurácia de validação em 0,6 ponto. Quanta aritmética essa duplicação custou?",
+    "hint": "Cada linha da tabela tem o dobro da aritmética da linha de cima.",
+    "choices": [
+      {
+        "text": "Um décimo do treino até ali",
+        "why": "128 é o dobro de 64, então as épocas novas são tantas quanto todas as antigas."
+      },
+      {
+        "text": "O mesmo que a duplicação de 4 épocas para 8 épocas",
+        "why": "Aquela somou 4 épocas; esta somou 64."
+      },
+      {
+        "text": "Tanto quanto todas as épocas anteriores juntas",
+        "why": "Certo: 64 épocas a mais, por 0,6 ponto, onde a duplicação de 4 para 8 comprou 7,5 com 4 épocas."
+      },
+      {
+        "text": "Nada, já que as imagens já estavam na memória",
+        "why": "Memória não é aritmética: toda época roda de novo as passadas para a frente e para trás."
+      }
+    ]
+  },
+  "ex-835trhp2": {
+    "prompt": "Com a aritmética de 1.077 imagens por 30 épocas, 270 imagens por 120 épocas chegaram a 0,942 contra 0,950 da execução completa. O que isso sustenta?",
+    "hint": "A mesma quantidade de aritmética, gasta de dois jeitos.",
+    "choices": [
+      {
+        "text": "120 épocas são demais para qualquer rede, sejam quais forem os dados",
+        "why": "Sobre as 1.077 imagens, 128 épocas deram a melhor acurácia da tabela."
+      },
+      {
+        "text": "Exemplos novos valem mais que passadas repetidas",
+        "why": "Certo. Um conjunto pequeno percorrido muitas vezes é aprendido como ele mesmo, não como dígitos, o sobreajuste da aula 7."
+      },
+      {
+        "text": "A aritmética não era de fato igual",
+        "why": "270 × 120 dá 32.400 exemplos vistos e 1.077 × 30 dá 32.310: iguais a menos de um lote."
+      },
+      {
+        "text": "Conjuntos menores precisam de taxa de aprendizado maior",
+        "why": "A taxa foi a mesma nas duas, e nada na execução aponta para ela."
+      }
+    ]
+  },
+  "ex-0h2fjvm0": {
+    "prompt": "Quais destes ficam do mesmo tamanho quando o lote cresce? Escolha todos que ficam.",
+    "hint": "Um número por parâmetro, ou um conjunto por exemplo?",
+    "choices": [
+      {
+        "text": "Os pesos",
+        "why": "Um conjunto serve o lote inteiro."
+      },
+      {
+        "text": "Os gradientes",
+        "why": "Um por parâmetro, a média do lote."
+      },
+      {
+        "text": "Os dois buffers do Adam",
+        "why": "Dois números por parâmetro, seja qual for o lote."
+      },
+      {
+        "text": "As ativações guardadas para o backward",
+        "why": "Cada exemplo guarda as suas: 18.992 bytes cada para a CNN."
+      }
+    ]
+  },
+  "ex-kwwns7v6": {
+    "prompt": "Ligue cada remédio ao que ele economiza.",
+    "hint": "A lista da seção de memória.",
+    "pairs": [
+      {
+        "left": "autocast em bfloat16",
+        "right": "bytes das ativações e da aritmética"
+      },
+      {
+        "left": "acúmulo de gradientes",
+        "right": "as ativações de um lote grande"
+      },
+      {
+        "left": "torch.utils.checkpoint",
+        "right": "ativações, pagas com aritmética extra"
+      },
+      {
+        "left": "SGD com momentum em vez do Adam",
+        "right": "metade do estado do otimizador"
+      }
+    ],
+    "right_distractors": [
+      "as operações da passada para a frente"
+    ]
+  }
+}

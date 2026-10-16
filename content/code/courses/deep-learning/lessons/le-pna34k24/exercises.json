@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ex-nyw5v3fe",
+    "version": 1,
+    "section": "query-key-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `qkv.py` the hard lookup returned 20 and the soft lookup 24.04. Why is the soft result higher?",
+    "hint": "Look at the weights the softmax gave the four keys.",
+    "choices": [
+      {
+        "text": "The softmax rounded the weights up",
+        "correct": false,
+        "why": "The weights printed sum to 1.0; nothing was rounded in either direction."
+      },
+      {
+        "text": "Every value contributed, weighted by how well its key matched",
+        "correct": true,
+        "why": "Right. Weights of 0.232 on 30 and 0.172 on 40 pull harder than 0.172 on 10, so the result lands above 20."
+      },
+      {
+        "text": "The query matched the third key best",
+        "correct": false,
+        "why": "It scored 0.9 against the second key and 0.3 against the third; the second won."
+      },
+      {
+        "text": "The soft lookup adds a bias of its own to every result it returns",
+        "correct": false,
+        "why": "There is no bias in it: the result is the weights times the values, and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-exnf4twf",
+    "version": 1,
+    "section": "query-key-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does attention mix all the values with a softmax instead of returning the value of the best-matching key?",
+    "hint": "Think about what training needs from every step of the computation.",
+    "choices": [
+      {
+        "text": "Picking the best key is slower than a softmax on a processor",
+        "correct": false,
+        "why": "`argmax` is cheap. Speed is not what rules it out."
+      },
+      {
+        "text": "A softmax makes the output a probability distribution over the four keys",
+        "correct": false,
+        "why": "The weights sum to 1, but the output is a mixture of value vectors, not a distribution."
+      },
+      {
+        "text": "Choosing one key has no gradient, so where to look cannot be learnt",
+        "correct": true,
+        "why": "Right. The soft lookup gave a gradient for the query; `argmax` changes nothing until the winner jumps."
+      },
+      {
+        "text": "Several keys could tie for the best match, and a tie has no winner to return",
+        "correct": false,
+        "why": "Ties are rare with real numbers, and a rule to break them would be easy. The gradient is the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-zynv5mcj",
+    "version": 1,
+    "section": "scaled-dot-product",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query and a key each have 256 random features with a spread of 1. About what spread do their dot products have, before any scaling?",
+    "hint": "`attention.py` measured 2.01, 7.95 and 22.59 at widths 4, 64 and 512.",
+    "value": 16,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-hm7qdfwn",
+    "version": 1,
+    "section": "scaled-dot-product",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `attention.py`, row 2 of the weights is nearly flat: 0.258, 0.265, 0.171, 0.307. What does that say about the second token's output?",
+    "hint": "Each output row is the weights of its row times the values.",
+    "choices": [
+      {
+        "text": "It is zero, because no key matched",
+        "correct": false,
+        "why": "Weights that sum to 1 never give zero by themselves: the output is a mix of the values."
+      },
+      {
+        "text": "It is close to the plain average of the four values",
+        "correct": true,
+        "why": "Right. With nearly equal weights, the mix is nearly an average."
+      },
+      {
+        "text": "Mostly the fourth value, as 0.307 is largest",
+        "correct": false,
+        "why": "0.307 is less than a third. Compare row 1, where 0.741 on one key does make the output mostly that value."
+      },
+      {
+        "text": "It equals the second token's own value",
+        "correct": false,
+        "why": "Its weight on itself is 0.265; a token only returns its own value when that weight is 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fgrca1e",
+    "version": 1,
+    "section": "scaled-dot-product",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague removes the division by √d from a model whose heads are 1,024 wide. What happens at the start of training?",
+    "hint": "Work out the spread of the scores at that width, then think about the softmax.",
+    "choices": [
+      {
+        "text": "Nothing changes, since Adam rescales every parameter's gradient to a similar size anyway",
+        "correct": false,
+        "why": "Adam rescales per parameter, but it cannot restore a slope the softmax has already flattened towards zero."
+      },
+      {
+        "text": "The scores shrink and every weight becomes nearly equal",
+        "correct": false,
+        "why": "The opposite: without the division the scores grow, with a spread of about 32 here."
+      },
+      {
+        "text": "Each softmax puts nearly all its weight on one key, and passes back little gradient",
+        "correct": true,
+        "why": "Right. At width 512 the largest weight already took 0.948; at 1,024 the scores spread wider still."
+      },
+      {
+        "text": "The model trains better, because its attention is already sharp at the very first step",
+        "correct": false,
+        "why": "Sharp before training means sharp at random, on keys nothing has chosen yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-fz6awga6",
+    "version": 1,
+    "section": "the-causal-mask",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the masked scores set to minus infinity rather than to 0?",
+    "hint": "What does the softmax do with a score of 0?",
+    "choices": [
+      {
+        "text": "exp(−∞) is 0, so those weights vanish; a score of 0 still gets weight",
+        "correct": true,
+        "why": "Right. The exponential of 0 is 1, so a zeroed score would still take a share of the row."
+      },
+      {
+        "text": "A score of 0 would make the row add up to more than 1 after the softmax",
+        "correct": false,
+        "why": "The softmax always divides by the row's total, so every row sums to 1 whatever the scores."
+      },
+      {
+        "text": "Minus infinity makes the gradient larger for the earlier tokens",
+        "correct": false,
+        "why": "The masked weights are exactly 0 and pass back nothing; the earlier tokens' gradients come from their own weights."
+      },
+      {
+        "text": "0 is reserved for padding tokens in PyTorch",
+        "correct": false,
+        "why": "PyTorch reserves no score value for anything; padding is masked the same way, with minus infinity."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw5jv570",
+    "version": 1,
+    "section": "the-causal-mask",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model reads a whole product review and then says whether it is positive. Should its attention use a causal mask?",
+    "hint": "The mask exists for one situation. Is this it?",
+    "choices": [
+      {
+        "text": "Yes, or each token copies the label from the next one",
+        "correct": false,
+        "why": "There is one label for the whole review, not one per token, so there is nothing ahead to copy."
+      },
+      {
+        "text": "Yes, since every transformer block needs the mask",
+        "correct": false,
+        "why": "BERT and this lesson's recall model use none. The mask belongs to a task, not to the block."
+      },
+      {
+        "text": "No: the whole text is there before the answer",
+        "correct": true,
+        "why": "Right. The mask is for predicting what has not been seen yet, which is not this task."
+      },
+      {
+        "text": "No, because a mask only works with a single head",
+        "correct": false,
+        "why": "A mask applies to every head alike; the reason to skip it here is the task."
+      }
+    ]
+  },
+  {
+    "id": "ex-68b8k5mk",
+    "version": 1,
+    "section": "multi-head",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many parameters does `nn.MultiheadAttention(64, 8)` have, biases included?",
+    "hint": "Four matrices of d by d and four bias vectors of d. The number of heads does not enter.",
+    "value": 16640,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-6cwsdc8b",
+    "version": 1,
+    "section": "multi-head",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A layer 16 wide goes from 1 head to 4. What changes?",
+    "hint": "`heads.py` counted both.",
+    "choices": [
+      {
+        "text": "It has four times as many parameters, one set for each head",
+        "correct": false,
+        "why": "Both counted 1,088. The projections are the same size, only cut differently."
+      },
+      {
+        "text": "Each head attends with 4 of the 16 features and its own softmax",
+        "correct": true,
+        "why": "Right: four independent sets of weights from the same projections, for the same parameters."
+      },
+      {
+        "text": "Each head sees a different quarter of the tokens, and only those",
+        "correct": false,
+        "why": "Every head sees every token; what is divided is the features."
+      },
+      {
+        "text": "The scores are divided by √16 instead of √4",
+        "correct": false,
+        "why": "The other way round: with 4 heads each head is 4 wide and divides by √4."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdw3tcjh",
+    "version": 1,
+    "section": "positions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Attention with no positions added receives five tokens, then the same five in another order. How do the two outputs compare?",
+    "hint": "The first line `positions.py` printed.",
+    "choices": [
+      {
+        "text": "They are unrelated, since every score changes",
+        "correct": false,
+        "why": "Every pair of tokens meets with the same score as before, wherever the two sit."
+      },
+      {
+        "text": "They are identical, row for row, in the original order",
+        "correct": false,
+        "why": "Each token keeps its own output, so the rows move with the tokens."
+      },
+      {
+        "text": "The same rows, shuffled the same way as the input",
+        "correct": true,
+        "why": "Right, and `allclose` printed `True`. To attention, a sequence without positions is a set."
+      },
+      {
+        "text": "The same rows, in reverse order",
+        "correct": false,
+        "why": "They follow the shuffle exactly, whatever it was; reversing is just one shuffle among many."
+      }
+    ]
+  },
+  {
+    "id": "ex-zevg880p",
+    "version": 1,
+    "section": "positions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model with a learnt table of 50 positions is given a sequence of 60 tokens. What happens?",
+    "hint": "Where would the vector for position 55 come from?",
+    "choices": [
+      {
+        "text": "It extrapolates from the pattern of the last rows",
+        "correct": false,
+        "why": "A learnt table is a list of rows with no formula behind it, so there is nothing to extrapolate."
+      },
+      {
+        "text": "The lookup fails with `IndexError`: there is no row for those positions",
+        "correct": true,
+        "why": "Right, as `positions.py` showed. A sinusoidal encoding would compute them, though the model has still never seen them."
+      },
+      {
+        "text": "PyTorch reads the first 50 tokens and drops the rest without a word",
+        "correct": false,
+        "why": "`nn.Embedding` checks its indices and raised an error; nothing was dropped."
+      },
+      {
+        "text": "Positions 51 to 60 reuse rows 1 to 10",
+        "correct": false,
+        "why": "Nothing wraps around; asking for row 55 of a table of 50 is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g205apk",
+    "version": 1,
+    "section": "positions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the sinusoidal encoding, the dot product of two positions depends only on their ___.",
+    "hint": "Positions 0 and 3, 10 and 13, and 27 and 30 all gave 5.543.",
+    "blanks": [
+      {
+        "accept": [
+          "distance",
+          "offset",
+          "difference",
+          "separation",
+          "gap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-46bwa6z7",
+    "version": 1,
+    "section": "the-block",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of one pre-norm transformer block in order, from its input to its output.",
+    "hint": "Two halves, and each one ends by adding back what entered it.",
+    "items": [
+      "The first layer norm",
+      "Attention across all the tokens",
+      "Add the block's input back",
+      "The second layer norm",
+      "The MLP, on each token alone",
+      "Add the second half's input back"
+    ]
+  },
+  {
+    "id": "ex-2ann9f0q",
+    "version": 1,
+    "section": "the-block",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the block of `block.py`, 32 wide with an MLP of 128, which part holds most of the parameters?",
+    "hint": "Two matrices of 32 by 128 against four of 32 by 32.",
+    "choices": [
+      {
+        "text": "Attention, with its four projections",
+        "correct": false,
+        "why": "4,224 of 12,704: about a third."
+      },
+      {
+        "text": "The MLP",
+        "correct": true,
+        "why": "Right: 8,352 of 12,704, two thirds, at any width with an MLP four times wider."
+      },
+      {
+        "text": "The two layer norms, which have weights for every token",
+        "correct": false,
+        "why": "They have a gamma and a beta per feature, not per token: 128 in all."
+      },
+      {
+        "text": "They hold about the same, since attention and MLP are both 32 wide",
+        "correct": false,
+        "why": "The MLP is 128 wide inside, and that is where its weights are."
+      }
+    ]
+  },
+  {
+    "id": "ex-57bp4ycv",
+    "version": 1,
+    "section": "the-recall-task-again",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With lesson 14's budget, the transformer reached 1.000 at length 50 and the LSTM 0.144. What explains the difference?",
+    "hint": "What did `where.py` find the last position doing?",
+    "choices": [
+      {
+        "text": "The transformer had more parameters",
+        "correct": false,
+        "why": "It had 10,728 against the LSTM model's 21,640, half as many."
+      },
+      {
+        "text": "The transformer was trained for more steps",
+        "correct": false,
+        "why": "Same 3,000 steps, same batches, same seeds; only the extra measurement at 250 was new."
+      },
+      {
+        "text": "Position 1 is one step from the last, at any length",
+        "correct": true,
+        "why": "Right. Its heads put up to 0.999 on position 1; the LSTM had to carry it through 49 rewrites."
+      },
+      {
+        "text": "Its causal mask kept it from being distracted by later symbols",
+        "correct": false,
+        "why": "It had no mask: only the last position is read, and nothing comes after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvra0tp0",
+    "version": 1,
+    "section": "the-recall-task-again",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without positions the same model reached 0.171 at length 50. Why is that above the 0.125 of guessing?",
+    "hint": "What can a model learn from a set of symbols with no order?",
+    "choices": [
+      {
+        "text": "Some position information still leaks through the embedding",
+        "correct": false,
+        "why": "The symbol embedding is the same at every position; shuffling showed attention adds none."
+      },
+      {
+        "text": "It is noise, within the spread of guessing",
+        "correct": false,
+        "why": "All four measurements sat above 0.125, from 0.162 to 0.182: a steady gap, not a wobble."
+      },
+      {
+        "text": "The answer is among the symbols present, and it sees which occur",
+        "correct": true,
+        "why": "Right. A set of symbols narrows the guess a little; without order it cannot say which came first."
+      },
+      {
+        "text": "Some test sequences also appeared in training",
+        "correct": false,
+        "why": "The test set comes from its own generator; and the same model with positions shows memorising is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3ndfp8e",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the attention built in this lesson? Choose every one that is.",
+    "hint": "Each was printed by one of the lesson's programs.",
+    "choices": [
+      {
+        "text": "Each row of attention weights sums to 1",
+        "correct": true,
+        "why": "Right: the softmax runs along each row."
+      },
+      {
+        "text": "Four heads have as many parameters as one, at the same width",
+        "correct": true,
+        "why": "Right: 1,088 both, in `heads.py`."
+      },
+      {
+        "text": "Without positions, attention still tells the first token from the last",
+        "correct": false,
+        "why": "Shuffling the input only shuffled the output; nothing tells first from last."
+      },
+      {
+        "text": "The transformer needed more parameters than the LSTM model to solve length 50",
+        "correct": false,
+        "why": "It had 10,728 against the LSTM model's 21,640, about half."
+      },
+      {
+        "text": "Under the causal mask, changing the last token leaves the earlier outputs unchanged",
+        "correct": true,
+        "why": "Right: they moved by 0.000 and the last by 0.535."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpdg84m5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of attention to what it does.",
+    "hint": "The dictionary picture of the first section.",
+    "pairs": [
+      {
+        "left": "query",
+        "right": "what a token is looking for"
+      },
+      {
+        "left": "key",
+        "right": "what a token offers to be found by"
+      },
+      {
+        "left": "value",
+        "right": "what a token hands over when it is found"
+      },
+      {
+        "left": "causal mask",
+        "right": "hides every token that comes later"
+      }
+    ],
+    "right_distractors": [
+      "normalises each token over its own features"
+    ]
+  },
+  {
+    "id": "ex-7e86v050",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A text grows from 500 tokens to 2,000. By how much does the number of attention weights in one head grow?",
+    "hint": "The weights are a table with a row per query and a column per key.",
+    "choices": [
+      {
+        "text": "Four times, like the text",
+        "correct": false,
+        "why": "That would be one weight per token. The table has a row and a column per token."
+      },
+      {
+        "text": "Sixteen times",
+        "correct": true,
+        "why": "Right: 500 by 500 becomes 2,000 by 2,000, four times in each direction."
+      },
+      {
+        "text": "Not at all; the number of weights depends on the width d",
+        "correct": false,
+        "why": "The projection matrices depend on d. The attention weights depend on the length."
+      },
+      {
+        "text": "Twice, since only half of them survive the causal mask",
+        "correct": false,
+        "why": "The mask zeroes about half of them, but the table is still computed at its full size, and grows sixteenfold."
+      }
+    ]
+  }
+]

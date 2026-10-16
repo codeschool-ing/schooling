@@ -1,0 +1,705 @@
+[
+  {
+    "id": "ex-tc614a8p",
+    "version": 1,
+    "section": "a-producer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What has happened to a message when produce() returns?",
+    "choices": [
+      {
+        "text": "It is stored on the broker, in its partition",
+        "correct": false,
+        "why": "That is only known from the delivery report, later."
+      },
+      {
+        "text": "It has been read by at least one consumer",
+        "correct": false,
+        "why": "Producing knows nothing of consumers."
+      },
+      {
+        "text": "It is in the client's buffer, waiting to join a batch",
+        "correct": true,
+        "why": "Right. A thread in the client sends it later."
+      },
+      {
+        "text": "It has been written to the topic's active segment on the client's own disk",
+        "correct": false,
+        "why": "Segments live on brokers; the client keeps messages in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-92xavrhc",
+    "version": 1,
+    "section": "a-producer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two hundred sales at two hundred a second went in 197 batches with linger.ms=0 and in 11 with linger.ms=100. What did the second setting trade?",
+    "choices": [
+      {
+        "text": "Up to 100 ms more wait per message, for far fewer requests",
+        "correct": true,
+        "why": "Right. About eighteen messages shared each trip."
+      },
+      {
+        "text": "Safety for speed: messages in a lingering batch are lost if the broker restarts",
+        "correct": false,
+        "why": "A waiting batch is still retried until message.timeout.ms; linger is about latency."
+      },
+      {
+        "text": "Order: lingering batches arrive in a different order",
+        "correct": false,
+        "why": "Batches of one partition keep their order."
+      },
+      {
+        "text": "Disk space on the broker for memory on the client",
+        "correct": false,
+        "why": "The same 200 messages are stored either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7k9q28h",
+    "version": 1,
+    "section": "a-producer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the cluster stopped, producer.py printed failed: 5 x Local: Message timed out. What does Local mean?",
+    "choices": [
+      {
+        "text": "The broker refused the messages because the topic was not ready yet",
+        "correct": false,
+        "why": "There was no broker to refuse anything."
+      },
+      {
+        "text": "The client raised it, having given up",
+        "correct": true,
+        "why": "Right. After message.timeout.ms, five seconds here."
+      },
+      {
+        "text": "The messages were written to a local file instead",
+        "correct": false,
+        "why": "Nothing writes them anywhere; the program would have to."
+      },
+      {
+        "text": "The topic exists only on the local machine",
+        "correct": false,
+        "why": "It is about who raised the error, not where the topic is."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvy292nb",
+    "version": 1,
+    "section": "a-producer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A till program calls produce() for each sale and never calls poll() or flush(), and never sets a delivery callback. What does it not know?",
+    "choices": [
+      {
+        "text": "Which partition each sale should go to",
+        "correct": false,
+        "why": "The partitioner decides that inside produce, report or not."
+      },
+      {
+        "text": "The offsets of the consumer groups that will read",
+        "correct": false,
+        "why": "No producer knows that, and none needs to."
+      },
+      {
+        "text": "Whether any sale was stored, or was dropped when the program exited",
+        "correct": true,
+        "why": "Right. Without a report or a flush, a failure is silent."
+      },
+      {
+        "text": "Its own client id",
+        "correct": false,
+        "why": "That is configuration, known from the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-jskghrrg",
+    "version": 1,
+    "section": "a-consumer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a Kafka consumer get messages?",
+    "choices": [
+      {
+        "text": "The broker pushes each message to it as soon as it is written",
+        "correct": false,
+        "why": "Kafka is pull-based; nothing arrives unless the consumer asks."
+      },
+      {
+        "text": "It calls poll() in a loop and gets the next one each time",
+        "correct": true,
+        "why": "Right. And group membership happens inside those calls."
+      },
+      {
+        "text": "It reads the segment files from the broker's disk",
+        "correct": false,
+        "why": "It asks the broker over the network; it never opens the files."
+      },
+      {
+        "text": "The producer sends a copy to each consumer",
+        "correct": false,
+        "why": "Producers do not know who consumes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zf3890r",
+    "version": 1,
+    "section": "a-consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "c1 printed partition 2's sales first, although oli-000001 had been produced first. Why is that not a bug?",
+    "choices": [
+      {
+        "text": "Kafka keeps order only within a partition, and oli-000001 is in partition 0",
+        "correct": true,
+        "why": "Right. Each partition came out in offset order."
+      },
+      {
+        "text": "Recife's sales have priority",
+        "correct": false,
+        "why": "Kafka has no priorities between keys."
+      },
+      {
+        "text": "The consumer sorts by key",
+        "correct": false,
+        "why": "Nothing sorts; partitions are fetched side by side."
+      },
+      {
+        "text": "auto.offset.reset=earliest reads the newest partition first",
+        "correct": false,
+        "why": "It says where a new group starts in each partition, not which partition comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd2j0r25",
+    "version": 1,
+    "section": "a-consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new group subscribes to a topic that already holds a week of sales, with auto.offset.reset left at its default. What does it read first?",
+    "choices": [
+      {
+        "text": "The oldest sale still stored",
+        "correct": false,
+        "why": "That is earliest; the default is latest."
+      },
+      {
+        "text": "A sale produced after it joined",
+        "correct": true,
+        "why": "Right. latest starts at the end of each partition."
+      },
+      {
+        "text": "The sales the previous group left unread",
+        "correct": false,
+        "why": "Groups do not share positions."
+      },
+      {
+        "text": "Nothing: it fails until a position is set",
+        "correct": false,
+        "why": "It fails only with auto.offset.reset=none."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy85g2zm",
+    "version": 1,
+    "section": "a-consumer",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A partition has LOG-END-OFFSET 120 and the group's CURRENT-OFFSET is 95. What is the LAG?",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-e0nqd8y7",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Four copies of a program run with the same group.id on a topic of four partitions. Who reads partition 2?",
+    "choices": [
+      {
+        "text": "All four copies, each a share of its messages",
+        "correct": false,
+        "why": "A partition is never split between members."
+      },
+      {
+        "text": "Exactly one of the copies",
+        "correct": true,
+        "why": "Right. One reader per partition within a group."
+      },
+      {
+        "text": "Whichever copy calls poll first for each message",
+        "correct": false,
+        "why": "Assignment is per partition, decided at the rebalance."
+      },
+      {
+        "text": "Nobody until a copy asks for it by number",
+        "correct": false,
+        "why": "subscribe hands partitions out; nobody asks by number."
+      }
+    ]
+  },
+  {
+    "id": "ex-s95jxcw9",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loyalty scheme starts a new consumer group on sales while the stock group is running. What happens to the stock group?",
+    "choices": [
+      {
+        "text": "It loses half of its partitions to the new group",
+        "correct": false,
+        "why": "Partitions are shared within a group, not between groups."
+      },
+      {
+        "text": "It rebalances, because the topic has a new reader",
+        "correct": false,
+        "why": "A rebalance is about one group's membership; other groups do not count."
+      },
+      {
+        "text": "Its offsets are reset to the new group's",
+        "correct": false,
+        "why": "Each group keeps its own offsets."
+      },
+      {
+        "text": "Nothing: it keeps its partitions and offsets",
+        "correct": true,
+        "why": "Right. Every group reads every message at its own place."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyh5jrg3",
+    "version": 1,
+    "section": "consumer-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In group shelf, b held partition 1 when ten new sales arrived. Who else in shelf read partition 1's new sales?",
+    "choices": [
+      {
+        "text": "a, which had read the whole topic before",
+        "correct": false,
+        "why": "a then held partition 2 only."
+      },
+      {
+        "text": "Nobody",
+        "correct": true,
+        "why": "Right. Within a group each message is read by one member."
+      },
+      {
+        "text": "d, as a standby copy",
+        "correct": false,
+        "why": "A standby holds nothing and reads nothing."
+      },
+      {
+        "text": "c, which shares partitions 0 and 1 with b",
+        "correct": false,
+        "why": "Partitions are not shared inside a group; c had partition 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-876hwe9q",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a consumer group rebalance?",
+    "choices": [
+      {
+        "text": "Every five seconds, to spread the load",
+        "correct": false,
+        "why": "Five seconds is the auto commit interval, a different thing."
+      },
+      {
+        "text": "Whenever a producer writes to a new partition",
+        "correct": false,
+        "why": "Producers do not trigger rebalances."
+      },
+      {
+        "text": "Only when an administrator asks",
+        "correct": false,
+        "why": "It happens by itself whenever the membership changes."
+      },
+      {
+        "text": "When a member joins or leaves",
+        "correct": true,
+        "why": "Right. Including a crash or a member too slow to poll."
+      }
+    ]
+  },
+  {
+    "id": "ex-pffb5tyj",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the eager range strategy, b joined a group in which a held partitions 0, 1 and 2, and a ended with 0 and 1. What happened to partitions 0 and 1 in between?",
+    "choices": [
+      {
+        "text": "Nothing: they stayed with a and kept being read",
+        "correct": false,
+        "why": "That is incremental behaviour; eager revokes everything."
+      },
+      {
+        "text": "a gave them back and got them again, and nobody read them meanwhile",
+        "correct": true,
+        "why": "Right. Every partition stops in an eager rebalance."
+      },
+      {
+        "text": "b read them while a waited",
+        "correct": false,
+        "why": "b only ever got partition 2."
+      },
+      {
+        "text": "Their offsets went back to 0",
+        "correct": false,
+        "why": "Committed offsets stay; only the owner changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk4hwpq4",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each protocol or strategy with how it rebalances.",
+    "pairs": [
+      {
+        "left": "classic, range",
+        "right": "every member gives back every partition"
+      },
+      {
+        "left": "classic, cooperative-sticky",
+        "right": "members negotiate; only partitions that move stop"
+      },
+      {
+        "left": "consumer (KIP-848)",
+        "right": "the broker computes each member's changes"
+      }
+    ],
+    "right_distractors": [
+      "partitions are assigned once and never move"
+    ]
+  },
+  {
+    "id": "ex-49d0hv49",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To use Kafka 4's new rebalance protocol from the Python client, set group.protocol=___ .",
+    "blanks": [
+      {
+        "accept": [
+          "consumer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8v675mx9",
+    "version": 1,
+    "section": "more-consumers-than-partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A topic has three partitions and a group runs five copies. How many copies read nothing?",
+    "choices": [
+      {
+        "text": "None: the five share each partition's messages",
+        "correct": false,
+        "why": "A partition has one reader in a group."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "Right. Three partitions, three readers."
+      },
+      {
+        "text": "Three",
+        "correct": false,
+        "why": "Three copies read, one partition each."
+      },
+      {
+        "text": "All five until one of them leaves",
+        "correct": false,
+        "why": "Three are assigned at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-es67yg3x",
+    "version": 1,
+    "section": "more-consumers-than-partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer of a three-partition topic is too slow, and someone proposes handing each message to a pool of eight threads inside it. What has to be added to keep the order lesson 2 relies on?",
+    "choices": [
+      {
+        "text": "Nothing: the partition already keeps order",
+        "correct": false,
+        "why": "The partition delivers in order; parallel threads can finish out of order."
+      },
+      {
+        "text": "Eight partitions, one per thread",
+        "correct": false,
+        "why": "That changes the topic and moves keys; the threads are inside one member."
+      },
+      {
+        "text": "Send each key always to the same thread",
+        "correct": true,
+        "why": "Right. Then one key's messages are handled one after another."
+      },
+      {
+        "text": "Commit after each thread finishes",
+        "correct": false,
+        "why": "Commits decide what a crash repeats, not the order of work."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxgdkgt3",
+    "version": 1,
+    "section": "committing-offsets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a group's committed offset of 8 on a partition mean?",
+    "choices": [
+      {
+        "text": "The group has read offset 8",
+        "correct": false,
+        "why": "It is the next to read; 0 to 7 are done."
+      },
+      {
+        "text": "The partition holds 8 messages",
+        "correct": false,
+        "why": "That is the log-end offset, a property of the partition."
+      },
+      {
+        "text": "The group will read offset 8 next",
+        "correct": true,
+        "why": "Right. Everything before it counts as done."
+      },
+      {
+        "text": "Eight members have read the partition",
+        "correct": false,
+        "why": "Commits are per group, not per member."
+      }
+    ]
+  },
+  {
+    "id": "ex-15ezfbqx",
+    "version": 1,
+    "section": "committing-offsets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "x read all twenty sales and was killed about four seconds after it started, with automatic commits on. What did the group auto have committed?",
+    "choices": [
+      {
+        "text": "Nothing for any partition",
+        "correct": true,
+        "why": "Right. The first automatic commit comes after five seconds."
+      },
+      {
+        "text": "8, 8 and 4, everything it printed",
+        "correct": false,
+        "why": "That was the manual group, which committed each message."
+      },
+      {
+        "text": "Half of what it read",
+        "correct": false,
+        "why": "Automatic commits are not proportional; there was none yet."
+      },
+      {
+        "text": "The last offset of each partition, committed on exit",
+        "correct": false,
+        "why": "kill -9 gives no chance to commit on exit."
+      }
+    ]
+  },
+  {
+    "id": "ex-xy7g3fc0",
+    "version": 1,
+    "section": "committing-offsets",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer commits after processing. Put a crash that causes a duplicate in order.",
+    "items": [
+      "poll returns the message at offset 7",
+      "the consumer adds the sale to a total",
+      "the process dies before committing 8",
+      "a new member resumes at the committed 7 and adds it again"
+    ]
+  },
+  {
+    "id": "ex-0fcydefm",
+    "version": 1,
+    "section": "committing-offsets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Kafka keep a group's committed offsets?",
+    "choices": [
+      {
+        "text": "In a file in the consumer's working directory",
+        "correct": false,
+        "why": "That was minilog.py; Kafka keeps them on the brokers."
+      },
+      {
+        "text": "Inside each message, in a header the broker updates as groups read",
+        "correct": false,
+        "why": "Messages are never edited after they are written."
+      },
+      {
+        "text": "In the controller's metadata log, beside the topics and the nodes",
+        "correct": false,
+        "why": "The metadata log holds topics and nodes, not group positions."
+      },
+      {
+        "text": "In __consumer_offsets, a compacted topic",
+        "correct": true,
+        "why": "Right. Fifty partitions, cleanup.policy=compact."
+      }
+    ]
+  },
+  {
+    "id": "ex-msq5tdq9",
+    "version": 1,
+    "section": "reading-from-a-point",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "kafka-consumer-groups.sh --reset-offsets refuses while the group has running members. Why does it make sense?",
+    "choices": [
+      {
+        "text": "Resetting deletes messages, which running members are reading",
+        "correct": false,
+        "why": "A reset deletes nothing; the log supplies the messages again."
+      },
+      {
+        "text": "The broker locks the topic while a group reads it",
+        "correct": false,
+        "why": "Topics are not locked by readers."
+      },
+      {
+        "text": "Only the group's leader member is allowed to change offsets",
+        "correct": false,
+        "why": "The tool changes them from outside, once nobody is running."
+      },
+      {
+        "text": "Members would commit over the new ones",
+        "correct": true,
+        "why": "Right. Stop the group, move its place, start it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc4gjsd4",
+    "version": 1,
+    "section": "reading-from-a-point",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "rewind.py uses assign() instead of subscribe(). What follows?",
+    "choices": [
+      {
+        "text": "It joins the group rewind and takes partitions from its members",
+        "correct": false,
+        "why": "An assigned consumer is in no group and causes no rebalance."
+      },
+      {
+        "text": "It reads only partition 0, the first one the broker lists",
+        "correct": false,
+        "why": "It assigns every partition the broker returned."
+      },
+      {
+        "text": "It reads where it says, in no group",
+        "correct": true,
+        "why": "Right. A tool for looking, not for sharing work."
+      },
+      {
+        "text": "It commits the new offsets for every group",
+        "correct": false,
+        "why": "It commits nothing; auto commit is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-xy96wasj",
+    "version": 1,
+    "section": "reading-from-a-point",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Group stock had committed 4 on partition 1, and partition 1's log-end offset was 8. It was reset to offset 3 on partition 1. How many messages from partition 1 did c1 then read?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-mdd95rqr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's stock consumer must not count a sale twice, runs as three copies on a topic of three partitions, and a fourth copy is started for safety. Which statement is true?",
+    "choices": [
+      {
+        "text": "The fourth copy reads a quarter of every partition",
+        "correct": false,
+        "why": "Partitions are not split; it holds none."
+      },
+      {
+        "text": "The fourth copy is a standby, and committing after processing still risks a duplicate after a crash",
+        "correct": true,
+        "why": "Right. Membership and commits are separate problems; lesson 8 handles the second."
+      },
+      {
+        "text": "Adding the fourth copy guarantees no sale is counted twice",
+        "correct": false,
+        "why": "Copies do not change what a crash between work and commit does."
+      },
+      {
+        "text": "With four copies, automatic commits are turned off",
+        "correct": false,
+        "why": "The number of members has nothing to do with commit settings."
+      }
+    ]
+  }
+]

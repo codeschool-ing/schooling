@@ -1,0 +1,394 @@
+{
+  "ex-vbcwaccz": {
+    "prompt": "O que um modelo de linguagem recebe no lugar de uma frase?",
+    "hint": "Pense no que o tokenizador entrega.",
+    "choices": [
+      {
+        "text": "O código Unicode de cada caractere, em ordem",
+        "why": "É assim que o texto é guardado, não o que o modelo lê: o tokenizador corta pedaços maiores que um caractere."
+      },
+      {
+        "text": "Uma lista de inteiros, um por pedaço",
+        "why": "Certo. O tokenizador corta o texto em tokens e troca cada um pelo seu id."
+      },
+      {
+        "text": "As palavras como strings, que a primeira camada compara",
+        "why": "Uma rede calcula com números; strings não chegam até ela."
+      },
+      {
+        "text": "Um vetor para a frase inteira, feito pelo tokenizador",
+        "why": "O tokenizador produz um id por pedaço; os vetores vêm da tabela de embeddings, um por token."
+      }
+    ]
+  },
+  "ex-4h0g193h": {
+    "prompt": "Quantos caracteres diferentes o `split.py` achou no corpus?",
+    "hint": "A primeira linha que ele imprimiu.",
+    "unit": "caracteres"
+  },
+  "ex-c9186sfj": {
+    "prompt": "Uma equipe montou um vocabulário de palavras com os e-mails dos clientes em 2024. Em 2026 os e-mails citam um produto lançado em 2025. O que o modelo recebe no lugar do nome dele?",
+    "hint": "O que o `split.py` fez com `weaver`?",
+    "choices": [
+      {
+        "text": "As letras dele, um token cada",
+        "why": "Isso é um vocabulário de caracteres, ou o fundo de um de subpalavras; um vocabulário de palavras não tem letras para onde recuar."
+      },
+      {
+        "text": "Uma entrada nova, acrescentada na primeira vez que o nome aparece",
+        "why": "O vocabulário é fixado quando é montado, e a tabela do modelo não tem linha para uma entrada acrescentada depois."
+      },
+      {
+        "text": "`<unk>`, o mesmo que qualquer outra palavra não vista",
+        "why": "Certo. O que o nome dizia se perde antes da primeira camada."
+      },
+      {
+        "text": "Um erro, e o e-mail é pulado",
+        "why": "Palavras desconhecidas são trocadas, não recusadas: o `split.py` imprimiu `<unk>` e seguiu."
+      }
+    ]
+  },
+  "ex-w0d5hngb": {
+    "prompt": "`a` + `k` e `k` + `e` foram vistos 20 vezes cada. Por que `a` + `k` foi fundido primeiro?",
+    "hint": "Veja o que o `most_common` faz com contagens iguais.",
+    "choices": [
+      {
+        "text": "Pares que começam uma palavra são fundidos antes dos outros",
+        "why": "Nenhum dos dois começa uma palavra; a posição não entra na contagem."
+      },
+      {
+        "text": "Foi contado primeiro, e um empate fica com o primeiro",
+        "why": "Certo. Outra regra de empate daria outra lista de fusões, igualmente válida."
+      },
+      {
+        "text": "`a` + `k` foi visto mais vezes quando `bakers` conta em dobro",
+        "why": "Cada palavra conta tantas vezes quanto foi vista, uma por par; os dois totais são 20."
+      },
+      {
+        "text": "Vogais são fundidas no par antes das consoantes",
+        "why": "O BPE não sabe nada sobre letras; ele conta pares."
+      }
+    ]
+  },
+  "ex-y54stdxv": {
+    "prompt": "Ponha em ordem o que um tokenizador BPE treinado faz com uma palavra que nunca viu.",
+    "hint": "Codificar repete o treino.",
+    "items": [
+      "Separar a palavra em letras (ou bytes)",
+      "Aplicar a primeira fusão aprendida, onde quer que o par apareça",
+      "Aplicar cada fusão seguinte, na ordem em que foi aprendida",
+      "Trocar cada pedaço resultante pelo seu id"
+    ]
+  },
+  "ex-fh566fqz": {
+    "prompt": "Com as seis fusões que o `bpe.py` aprendeu, como a palavra nova `remake` é codificada?",
+    "hint": "Repita as fusões em ordem sobre r, e, m, a, k, e.",
+    "choices": [
+      {
+        "text": "`re` e `make`, dois pedaços",
+        "why": "Nenhuma fusão fez `re`; `r` + `e` nunca foi o par mais comum."
+      },
+      {
+        "text": "`r`, `e` e `make`",
+        "why": "Certo: as fusões 1 e 2 dão `ake`, a 5 dá `make`, e nada junta `r` ou `e`."
+      },
+      {
+        "text": "`r`, `e`, `m` e `ake`",
+        "why": "Isso para na fusão 2; a fusão 5 depois cola `m` em `ake`."
+      },
+      {
+        "text": "`<unk>`, já que a palavra não está entre as cinco",
+        "why": "O BPE recua para as letras, então uma palavra nova vira pedaços, nunca um buraco."
+      }
+    ]
+  },
+  "ex-d43hhkhh": {
+    "prompt": "Por que um tokenizador em nível de byte nunca produz um token desconhecido?",
+    "hint": "O que está no vocabulário dele antes da primeira fusão?",
+    "choices": [
+      {
+        "text": "Ele é treinado em texto de todas as línguas",
+        "why": "O `tok.json` foi treinado em quarenta e cinco linhas de inglês e mesmo assim codificou português sem desconhecidos."
+      },
+      {
+        "text": "Ele acrescenta uma entrada nova para cada palavra que não viu",
+        "why": "O vocabulário fica fixo depois do treino; `weaver` saiu em quatro pedaços existentes."
+      },
+      {
+        "text": "O vocabulário inicial tem todos os 256 valores de byte",
+        "why": "Certo. Qualquer texto é bytes, e todo byte tem uma entrada."
+      },
+      {
+        "text": "Ele descarta os caracteres que não consegue codificar",
+        "why": "Nada é descartado: o `ã` virou dois tokens, um por byte."
+      }
+    ]
+  },
+  "ex-gpsh3gpf": {
+    "prompt": "Pedido a 1.000 entradas, o treinador parou em 700. Por quê?",
+    "hint": "No que toda palavra do corpus tinha se transformado até ali?",
+    "choices": [
+      {
+        "text": "Toda palavra já era um token",
+        "why": "Certo. As fusões nunca atravessam os cortes do pré-tokenizador, então, sem nenhum par dentro de uma palavra, não havia o que fundir."
+      },
+      {
+        "text": "A biblioteca limita o vocabulário para um arquivo pequeno",
+        "why": "Não existe esse limite; o corpus simplesmente ficou sem pares."
+      },
+      {
+        "text": "Pares vistos uma só vez não são fundidos",
+        "why": "`Sunday`, visto uma vez, teria sido fundido num tamanho maior; a parada veio dos cortes."
+      },
+      {
+        "text": "O treino para cedo para não sobreajustar o corpus",
+        "why": "O BPE não tem conjunto de validação nem noção de sobreajuste; ele conta pares até não sobrar nenhum."
+      }
+    ]
+  },
+  "ex-avh9v0kw": {
+    "prompt": "No token ` Monday`, o ___ da frente pertence ao token, e é assim que a decodificação refaz o texto sem adivinhar.",
+    "hint": "Olhe o primeiro caractere de ` Monday`.",
+    "blanks": [
+      {
+        "accept": [
+          "espaço",
+          "espaco",
+          "branco"
+        ]
+      }
+    ]
+  },
+  "ex-53ak4rk6": {
+    "prompt": "Por que o id 288 não é dado à rede como o número 288?",
+    "hint": "O que 258 e 307 seriam, ao lado dele?",
+    "choices": [
+      {
+        "text": "Números tão grandes estouram um `float32`",
+        "why": "Um `float32` guarda 288 exatamente; o problema é o sentido, não a faixa."
+      },
+      {
+        "text": "A rede quer entradas entre 0 e 1",
+        "why": "Dividir por 500 consertaria a escala e manteria a ordem falsa."
+      },
+      {
+        "text": "A ordem e as distâncias não diriam nada",
+        "why": "Certo. Ids são nomes, numerados pela ordem do treino."
+      },
+      {
+        "text": "O PyTorch recusa entradas inteiras numa camada linear",
+        "why": "Uma conversão faria rodar, e continuaria errado."
+      }
+    ]
+  },
+  "ex-aa1kn4v1": {
+    "prompt": "Um vocabulário de 2.000 tokens recebe embeddings de 16 números cada. Quantos parâmetros a tabela tem?",
+    "hint": "Uma linha por token.",
+    "unit": "parâmetros"
+  },
+  "ex-thp8zh58": {
+    "prompt": "Um lote usa 140 tokens diferentes de um vocabulário de 30.000. Quantas linhas da tabela de embeddings o backward dele muda?",
+    "hint": "A última linha do `lookup.py`.",
+    "choices": [
+      {
+        "text": "As 30.000, já que toda linha faz parte do produto",
+        "why": "No produto one-hot uma entrada zero dá gradiente zero, então as linhas não lidas não recebem nada."
+      },
+      {
+        "text": "As 140 que foram consultadas",
+        "why": "Certo, como em `rows with a gradient: 7 of 500`."
+      },
+      {
+        "text": "Uma por frase do lote",
+        "why": "As linhas pertencem a tokens, não a frases."
+      },
+      {
+        "text": "Nenhuma até a época acabar",
+        "why": "O otimizador dá o passo depois de cada lote; o fim da época não muda nada."
+      }
+    ]
+  },
+  "ex-daqe7nn6": {
+    "prompt": "Por que o `near.py` imprime os vizinhos antes do treino, além de depois?",
+    "hint": "` baker` e ` rains` a 0,89.",
+    "choices": [
+      {
+        "text": "Para conferir se o tokenizador carregou certo",
+        "why": "O tokenizador carregado se confere pelos ids que dá, não por cossenos de linhas aleatórias."
+      },
+      {
+        "text": "Para ver o quanto vetores aleatórios chegam perto só por acaso, como referência",
+        "why": "Certo. Em oito dimensões o acaso dá cossenos acima de 0,8, então um treinado só quer dizer algo contra isso."
+      },
+      {
+        "text": "Porque o Adam precisa de uma primeira similaridade para começar",
+        "why": "O Adam lê gradientes da perda; os vizinhos são só impressos."
+      },
+      {
+        "text": "Para mostrar que a tabela já começa com as categorias organizadas",
+        "why": "Os vizinhos sem treino, `rains` para `baker`, mostram o contrário."
+      }
+    ]
+  },
+  "ex-9z9mkq6g": {
+    "prompt": "O que pôs ` Monday` ao lado de ` Saturday` e ` Friday` depois do treino?",
+    "hint": "A tarefa do modelo era adivinhar um token pelos vizinhos dele.",
+    "choices": [
+      {
+        "text": "O tokenizador deu ids vizinhos aos dias",
+        "why": "Os ids seguem a ordem das fusões e não carregam sentido."
+      },
+      {
+        "text": "O final `day` em comum na grafia",
+        "why": "Cada um é um token inteiro, então o modelo nunca vê as letras."
+      },
+      {
+        "text": "Uma lista de dias da semana que o programa deu ao modelo",
+        "why": "O programa não dá categoria nenhuma; a única entrada é o corpus."
+      },
+      {
+        "text": "Eles ocupam as mesmas vagas nas frases do corpus",
+        "why": "Certo: `On ___ the`. Companhia parecida, palpites parecidos, linhas parecidas."
+      }
+    ]
+  },
+  "ex-hqnbv9wf": {
+    "prompt": "Você treina o modelo do `near.py` em outro corpus, em que `violet` aparece duas vezes. O vizinho mais próximo sai a 0,85. O que isso diz?",
+    "hint": "Compare com `red`, e com o bloco sem treino.",
+    "choices": [
+      {
+        "text": "Que as duas palavras querem dizer quase o mesmo",
+        "why": "0,85 está dentro do que o acaso deu a linhas sem treino em oito dimensões."
+      },
+      {
+        "text": "Pouco: são dois exemplos, e o acaso chega a 0,85",
+        "why": "Certo. `red`, visto três vezes, teve vizinhos a 0,86 que não queriam dizer nada."
+      },
+      {
+        "text": "Que o modelo precisa de mais dimensões para separá-las",
+        "why": "O problema é evidência, não espaço: dois exemplos são poucos em qualquer tamanho."
+      },
+      {
+        "text": "Que o treino divergiu",
+        "why": "Um treino que diverge aparece na perda, não no vizinho de uma palavra."
+      }
+    ]
+  },
+  "ex-pkbrxqfc": {
+    "prompt": "Por que as frases em português custaram 86 tokens onde as em inglês custaram 41?",
+    "hint": "Em que o `tok.json` foi treinado?",
+    "choices": [
+      {
+        "text": "Frases em português têm o dobro de caracteres",
+        "why": "Têm mais ou menos o mesmo comprimento: 37 contra 32, 39 contra 43."
+      },
+      {
+        "text": "As fusões dele vieram só do inglês",
+        "why": "Certo. Nenhuma fusão cobre o português, então as palavras dele caem em pedaços pequenos."
+      },
+      {
+        "text": "Acentos são trocados por tokens desconhecidos",
+        "why": "Um tokenizador de bytes não tem token desconhecido; o `ã` virou dois tokens de byte."
+      },
+      {
+        "text": "O português tem mais palavras por frase",
+        "why": "Os pares têm contagens de palavras parecidas; a diferença é de pedaços por palavra."
+      }
+    ]
+  },
+  "ex-yhdkq9vh": {
+    "prompt": "Por que `' pão'` ocupou quatro tokens?",
+    "hint": "Compare as colunas chars e bytes.",
+    "choices": [
+      {
+        "text": "Cada letra de uma palavra portuguesa é um token próprio",
+        "why": "O `p` veio com o espaço como um token, então não é um por letra."
+      },
+      {
+        "text": "O til é um caractere à parte",
+        "why": "O `ã` é um caractere aqui; são dois bytes, não dois caracteres."
+      },
+      {
+        "text": "` p`, depois cada um dos dois bytes do `ã` sozinho, depois `o`",
+        "why": "Certo. O UTF-8 gasta dois bytes no `ã`, e nenhuma fusão os junta."
+      },
+      {
+        "text": "O espaço antes dele conta como dois tokens",
+        "why": "O espaço faz parte do primeiro token, ` p`."
+      }
+    ]
+  },
+  "ex-e0ctdstx": {
+    "prompt": "Uma empresa passa o chatbot de suporte do inglês para o português, mantendo um modelo cujo tokenizador foi treinado quase só em inglês. O que ela deve esperar?",
+    "hint": "Contexto e preço são contados em tokens.",
+    "choices": [
+      {
+        "text": "A mesma conta, já que o fornecedor cobra por caractere",
+        "why": "Fornecedores cobram por token, e o português precisa de mais deles aqui."
+      },
+      {
+        "text": "Tokens desconhecidos onde aparecer um acento",
+        "why": "Um tokenizador de bytes codifica todo acento, como tokens a mais."
+      },
+      {
+        "text": "Cabem menos turnos no contexto, e cada turno custa mais",
+        "why": "Certo. Os dois crescem com a contagem de tokens, e o mesmo sentido custa mais tokens."
+      },
+      {
+        "text": "O modelo recusa texto fora da língua do treino",
+        "why": "Qualquer texto é codificado; ele é lido em mais pedaços, menores."
+      }
+    ]
+  },
+  "ex-wvn9z9zc": {
+    "prompt": "Ligue cada escolha ao que ela faz.",
+    "hint": "Pense em `weaver` em cada uma.",
+    "pairs": [
+      {
+        "left": "Um vocabulário de caracteres",
+        "right": "Nada desconhecido, e as sequências mais longas"
+      },
+      {
+        "left": "Um vocabulário de palavras",
+        "right": "Sequências curtas, e palavras não vistas viram <unk>"
+      },
+      {
+        "left": "BPE em nível de byte",
+        "right": "Palavras comuns inteiras, raras em pedaços"
+      },
+      {
+        "left": "Uma tabela de embeddings",
+        "right": "Uma linha de números por token"
+      }
+    ],
+    "right_distractors": [
+      "Um id por frase"
+    ]
+  },
+  "ex-ckc2m6yw": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "Com 500 entradas o corpus virou 1.002 tokens",
+        "why": "Sim: `asked  500  learnt  500  tokens  1002`."
+      },
+      {
+        "text": "O tokenizador treinado transformou `weaver` em `<unk>`",
+        "why": "Não: isso foi o vocabulário de palavras do `split.py`. O tokenizador deu quatro pedaços."
+      },
+      {
+        "text": "Uma consulta deu exatamente o produto one-hot",
+        "why": "Sim: `equal: True`."
+      },
+      {
+        "text": "Depois do treino, o vizinho mais próximo de `red` era `green`",
+        "why": "Não: era `all`, a 0,86. `red` foi a falha."
+      },
+      {
+        "text": "As frases em português custaram mais que o dobro dos tokens do inglês",
+        "why": "Sim: 86 contra 41, uma razão de 2,10."
+      }
+    ]
+  }
+}

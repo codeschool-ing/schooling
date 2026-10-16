@@ -1,0 +1,642 @@
+[
+  {
+    "id": "ex-fvmtsc3t",
+    "version": 1,
+    "section": "the-collection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first run against lesson 4's environment, Create order answered 401 although the pre-request script had fetched a token. Why?",
+    "hint": "Which scope is narrower?",
+    "choices": [
+      {
+        "text": "The pre-request script fetched the token too late, after the request had left",
+        "correct": false,
+        "why": "Pre-request scripts finish before the variables are resolved and the request is sent."
+      },
+      {
+        "text": "The environment's empty token hid the collection's",
+        "correct": true,
+        "why": "Right. The environment is narrower, and an empty value still wins."
+      },
+      {
+        "text": "boxoffice refuses a token fetched by a script",
+        "correct": false,
+        "why": "boxoffice cannot tell how a token was fetched; it checks the signature and the expiry."
+      },
+      {
+        "text": "The token had expired between the two requests",
+        "correct": false,
+        "why": "They were milliseconds apart, and a token lives 15 minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-jacesbhh",
+    "version": 1,
+    "section": "the-collection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run shows ten failures. The first is a 401 on Create order; the rest mention 8080null. Where should you start?",
+    "hint": "Which failures are echoes?",
+    "choices": [
+      {
+        "text": "With the RangeError, because it is the strangest message",
+        "correct": false,
+        "why": "Strange is not first; the RangeError comes from an orderUrl that the 401 left empty."
+      },
+      {
+        "text": "With the last failure, which sums up the others",
+        "correct": false,
+        "why": "Newman lists failures in the order they happened; the last one sums nothing up."
+      },
+      {
+        "text": "With the 401",
+        "correct": true,
+        "why": "Right. The others follow from it: no location, so no orderUrl."
+      },
+      {
+        "text": "With Newman's port setting, which must be wrong",
+        "correct": false,
+        "why": "The port is fine; the address was built from null."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tapbkaf",
+    "version": 1,
+    "section": "the-collection",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the whole run with the fixed environment, how many assertions passed?",
+    "hint": "Executed minus failed, in the assertions row.",
+    "value": 17,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-47prea73",
+    "version": 1,
+    "section": "pm-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a pm.test fail?",
+    "hint": "A test is a name and a function.",
+    "choices": [
+      {
+        "text": "Its function throws an error",
+        "correct": true,
+        "why": "Right. A failed assertion throws, and so does any other error inside it."
+      },
+      {
+        "text": "Its function returns false",
+        "correct": false,
+        "why": "A return value is ignored; only a thrown error fails it."
+      },
+      {
+        "text": "The response status is 400 or above",
+        "correct": false,
+        "why": "A test of a 404 can pass; the status matters only if a test checks it."
+      },
+      {
+        "text": "Its name does not match the request's name",
+        "correct": false,
+        "why": "The name is a label for the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-60h033ke",
+    "version": 1,
+    "section": "pm-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which assertion passes when the response body is {\"seats\":1,\"status\":\"confirmed\"}?",
+    "hint": "Same value or same contents?",
+    "choices": [
+      {
+        "text": "pm.expect(pm.response.json()).to.equal({seats: 1, status: 'confirmed'})",
+        "correct": false,
+        "why": "equal asks whether they are the same object, and two objects that look alike are not."
+      },
+      {
+        "text": "pm.expect(pm.response.json()).to.eql({seats: 1, status: 'confirmed'})",
+        "correct": true,
+        "why": "Right. eql compares contents, field by field."
+      },
+      {
+        "text": "pm.expect(pm.response.json().seats).to.equal('1')",
+        "correct": false,
+        "why": "The body holds the number 1, not the string '1'."
+      },
+      {
+        "text": "pm.expect(pm.response.json()).to.have.lengthOf(2)",
+        "correct": false,
+        "why": "An object has no length; lengthOf is for arrays and strings."
+      }
+    ]
+  },
+  {
+    "id": "ex-zegdvb0g",
+    "version": 1,
+    "section": "pm-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is pm.expect(pm.response.code === 200).to.be.true a poor assertion?",
+    "hint": "Read what it says when it fails.",
+    "choices": [
+      {
+        "text": "It never fails, because === always returns true",
+        "correct": false,
+        "why": "It fails on any other code; the trouble is what it says then."
+      },
+      {
+        "text": "pm.response.code does not exist in Postman",
+        "correct": false,
+        "why": "It exists: it is the status as a number."
+      },
+      {
+        "text": "Chai cannot compare booleans",
+        "correct": false,
+        "why": "It can; to.be.true is a Chai assertion."
+      },
+      {
+        "text": "Its failure says expected false to be true and nothing about the status",
+        "correct": true,
+        "why": "Right. Asserting on the value lets Chai say which status came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9v7a9b5",
+    "version": 1,
+    "section": "pm-test",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each object to what it is.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "pm.response",
+        "right": "the answer to this request"
+      },
+      {
+        "left": "pm.response.to",
+        "right": "Postman's assertions about the answer"
+      },
+      {
+        "left": "pm.expect(value)",
+        "right": "Chai's assertions about any value"
+      },
+      {
+        "left": "pm.test(name, fn)",
+        "right": "a named check that fails when fn throws"
+      }
+    ],
+    "right_distractors": [
+      "the request about to be sent"
+    ]
+  },
+  {
+    "id": "ex-99d389ke",
+    "version": 1,
+    "section": "chaining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do Read order and Cancel order use {{baseUrl}}{{orderUrl}} instead of a fixed order id?",
+    "hint": "Which order should they act on?",
+    "choices": [
+      {
+        "text": "boxoffice refuses a request that spells out the order id",
+        "correct": false,
+        "why": "boxoffice answers /v1/orders/ord-1001 like any other path; the path is the same either way."
+      },
+      {
+        "text": "So they reach this run's order",
+        "correct": true,
+        "why": "Right. location says where the order this run created lives, whatever its number."
+      },
+      {
+        "text": "Because location is faster to read than the body",
+        "correct": false,
+        "why": "Speed is not the reason; the order's identity is."
+      },
+      {
+        "text": "Because collection variables cannot hold an id",
+        "correct": false,
+        "why": "They hold any string, an id included."
+      }
+    ]
+  },
+  {
+    "id": "ex-k96jsd72",
+    "version": 1,
+    "section": "chaining",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate changes the Get token script to save the token with pm.environment.set instead. In a team that shares the environment, what is the trouble?",
+    "hint": "Who else reads the environment?",
+    "choices": [
+      {
+        "text": "Postman forbids scripts from writing to an environment",
+        "correct": false,
+        "why": "pm.environment.set exists and works."
+      },
+      {
+        "text": "The token would be sent twice in every request",
+        "correct": false,
+        "why": "A variable resolves to one value; it is sent once."
+      },
+      {
+        "text": "None at all, since environment and collection are the same scope",
+        "correct": false,
+        "why": "They are two scopes, and the environment is the narrower."
+      },
+      {
+        "text": "A run writes into shared configuration, so other people's values change",
+        "correct": true,
+        "why": "Right. The token belongs to one run, which is the collection's business."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e1hj4r9",
+    "version": 1,
+    "section": "chaining",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Create order saves the new order's address from the response header called ___.",
+    "hint": "A 201 carries it.",
+    "blanks": [
+      {
+        "accept": [
+          "location"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xda9xmz2",
+    "version": 1,
+    "section": "pre-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the collection make a new Idempotency-Key before each order instead of writing one fixed key in the header?",
+    "hint": "What does boxoffice do with a key it has seen?",
+    "choices": [
+      {
+        "text": "boxoffice refuses any request without a new random key",
+        "correct": false,
+        "why": "The key is optional; boxoffice takes orders without one."
+      },
+      {
+        "text": "A reused key replays the first order",
+        "correct": true,
+        "why": "Right. The first run's order comes back, and every test would pass with no new order made."
+      },
+      {
+        "text": "A fixed key would reveal the client secret",
+        "correct": false,
+        "why": "The key is a random identifier and carries no credentials."
+      },
+      {
+        "text": "Postman cannot send the same header value twice",
+        "correct": false,
+        "why": "It sends whatever the header says, as often as asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-avnxp6e8",
+    "version": 1,
+    "section": "pre-request",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens for the Create order request in order.",
+    "hint": "Variables are resolved after every pre-request script.",
+    "items": [
+      "the collection's pre-request script runs",
+      "the request's pre-request script sets idempotencyKey",
+      "the variables in the request are resolved",
+      "the request is sent",
+      "the request's test script runs"
+    ]
+  },
+  {
+    "id": "ex-vfdq12en",
+    "version": 1,
+    "section": "pre-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is thirty seconds taken off expires_in when tokenExpires is saved?",
+    "hint": "A request takes time to travel.",
+    "choices": [
+      {
+        "text": "boxoffice's clock runs thirty seconds fast",
+        "correct": false,
+        "why": "Nothing says so; the margin is about requests in flight."
+      },
+      {
+        "text": "expires_in counts in units of thirty seconds",
+        "correct": false,
+        "why": "expires_in is in seconds; 900 is fifteen minutes."
+      },
+      {
+        "text": "A token that expires on its way is refused",
+        "correct": true,
+        "why": "Right. The margin costs one extra token request now and then."
+      },
+      {
+        "text": "Postman needs thirty seconds to save a variable",
+        "correct": false,
+        "why": "Saving a variable is immediate."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4638n65",
+    "version": 1,
+    "section": "data-driven",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seat rules folder also runs in a whole-collection run with no data file. Which values does Order seats use then?",
+    "hint": "Who else defines seats and expected?",
+    "choices": [
+      {
+        "text": "None: the request is skipped without a data file",
+        "correct": false,
+        "why": "It ran: section 02's run ends with Order seats."
+      },
+      {
+        "text": "The values of the last data file used",
+        "correct": false,
+        "why": "Newman keeps nothing from one run to the next."
+      },
+      {
+        "text": "The literal text {{seats}}, so the request fails with 400",
+        "correct": false,
+        "why": "seats is defined in the collection, so it resolves."
+      },
+      {
+        "text": "The collection's defaults, 1 and 201",
+        "correct": true,
+        "why": "Right. With a file, the data scope is narrower and wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-d22zg6k7",
+    "version": 1,
+    "section": "data-driven",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The data run made one more request than it had iterations. How many requests did it make?",
+    "hint": "The requests row of the table.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-80jfwsbq",
+    "version": 1,
+    "section": "data-driven",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes adding rows for 2, 3, 4 and 5 seats to seats.csv. What does the section say about that?",
+    "hint": "Every row is a claim.",
+    "choices": [
+      {
+        "text": "More rows always make the run more thorough",
+        "correct": false,
+        "why": "Rows inside one class add runs, not information."
+      },
+      {
+        "text": "They sit between the boundaries already there and test nothing new",
+        "correct": true,
+        "why": "Right. 1 and 6 already stand for the valid class."
+      },
+      {
+        "text": "Newman accepts at most six rows per file",
+        "correct": false,
+        "why": "There is no such limit; the point is what the rows test."
+      },
+      {
+        "text": "They would sell out sh-101 and fail",
+        "correct": false,
+        "why": "sh-101 has 120 seats; four more orders would not empty it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba2h7qdm",
+    "version": 1,
+    "section": "what-not-to-assert",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The brittle collection passed on its first run and failed on its second. What changed in between?",
+    "hint": "Read the second run's failure.",
+    "choices": [
+      {
+        "text": "boxoffice started answering orders with a different status",
+        "correct": false,
+        "why": "Both runs got 201 Created."
+      },
+      {
+        "text": "The token from the first run expired",
+        "correct": false,
+        "why": "Each run fetched its own token, and both orders were created."
+      },
+      {
+        "text": "Only the order's number, ord-1002",
+        "correct": true,
+        "why": "Right. The API did nothing wrong; the test asserted an id it was never promised."
+      },
+      {
+        "text": "The data file was missing",
+        "correct": false,
+        "why": "The brittle collection uses no data file."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aajx9yh",
+    "version": 1,
+    "section": "what-not-to-assert",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are safe for a test of Create order to assert?",
+    "hint": "What did the API promise?",
+    "choices": [
+      {
+        "text": "The status is 201",
+        "correct": true,
+        "why": "Right: the code is part of the contract."
+      },
+      {
+        "text": "The id matches /^ord-\\d+$/",
+        "correct": true,
+        "why": "Right: the shape, not the number."
+      },
+      {
+        "text": "The id is ord-1001",
+        "correct": false,
+        "why": "That depends on what ran before."
+      },
+      {
+        "text": "The Date header contains today's date as written in the test",
+        "correct": false,
+        "why": "That depends on the clock."
+      },
+      {
+        "text": "seats is the number that was sent",
+        "correct": true,
+        "why": "Right: it is what the request asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5gwzhyh",
+    "version": 1,
+    "section": "what-not-to-assert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is asserting the whole body of an order with eql a poor test even on a freshly started boxoffice?",
+    "hint": "Think of the day boxoffice changes harmlessly.",
+    "choices": [
+      {
+        "text": "It fails when a harmless field is added",
+        "correct": true,
+        "why": "Right. Assert the fields the test is about."
+      },
+      {
+        "text": "eql cannot compare nested objects",
+        "correct": false,
+        "why": "eql compares nested objects field by field."
+      },
+      {
+        "text": "Comparing a whole body is too slow for a test",
+        "correct": false,
+        "why": "It takes microseconds; speed is not the trouble."
+      },
+      {
+        "text": "It passes even when the order is wrong",
+        "correct": false,
+        "why": "It fails on any difference, which is the trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sk5nsjf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In Postman you run only the orders folder at 14:00, after Get token ran at 13:30. Which part of the collection keeps Create order from answering 401?",
+    "hint": "The token lives 15 minutes.",
+    "choices": [
+      {
+        "text": "The bearer setting on the collection",
+        "correct": false,
+        "why": "It sends {{token}} as it is, expired or not."
+      },
+      {
+        "text": "Get token's test script",
+        "correct": false,
+        "why": "Get token is in the auth folder, which this run leaves out."
+      },
+      {
+        "text": "The collection's pre-request script",
+        "correct": true,
+        "why": "Right. It sees tokenExpires has passed and fetches a new token."
+      },
+      {
+        "text": "The Idempotency-Key header",
+        "correct": false,
+        "why": "The key prevents a double order; it is not a credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbf12hsw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add a test to Read order asserting pm.response.json().id equals 'ord-1001'. The whole collection passes on your machine and fails in a colleague's run. Which explanation fits?",
+    "hint": "Did the colleague's boxoffice have orders already?",
+    "choices": [
+      {
+        "text": "The colleague's Newman is a different version",
+        "correct": false,
+        "why": "Both ran 6.2.3, the version npx was told to fetch."
+      },
+      {
+        "text": "Their boxoffice already had orders",
+        "correct": true,
+        "why": "Right. So this run's order got a later number. The id depends on what ran before; compare it with orderUrl instead."
+      },
+      {
+        "text": "orderUrl is shared between the two machines",
+        "correct": false,
+        "why": "Collection variables live in each run; nothing is shared."
+      },
+      {
+        "text": "Their environment defines token as empty",
+        "correct": false,
+        "why": "Then Create order would answer 401 and Read order would never be built from a valid orderUrl."
+      }
+    ]
+  },
+  {
+    "id": "ex-65sfrbk1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice is fixed and HEAD now answers 200. What happens to the collection's run, and what should you do with the HEAD test?",
+    "hint": "A failing test was the defect report.",
+    "choices": [
+      {
+        "text": "The run still fails, because HEAD carries no body to parse",
+        "correct": false,
+        "why": "The HEAD test checks only the status."
+      },
+      {
+        "text": "The run passes, and the HEAD test should be deleted as done",
+        "correct": false,
+        "why": "Deleting it removes the guard against the defect coming back."
+      },
+      {
+        "text": "The run passes; keep the test, which now guards against a regression",
+        "correct": true,
+        "why": "Right. It turned green without anybody remembering to check."
+      },
+      {
+        "text": "The run passes only after the test is changed to expect 405",
+        "correct": false,
+        "why": "405 was the defect; 200 is what the test always expected."
+      }
+    ]
+  }
+]

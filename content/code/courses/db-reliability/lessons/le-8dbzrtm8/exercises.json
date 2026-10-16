@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-pehrh0zx",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does logical replication send to the receiving server?",
+    "hint": "Decoded from the log.",
+    "choices": [
+      {
+        "text": "The write-ahead log, byte for byte",
+        "correct": false,
+        "why": "That is physical replication."
+      },
+      {
+        "text": "A fresh pg_dump of the database each minute",
+        "correct": false,
+        "why": "Nothing is dumped after the first copy of the rows."
+      },
+      {
+        "text": "Row changes for the published tables",
+        "correct": true,
+        "why": "Right: inserts, updates and deletes, decoded from the write-ahead log."
+      },
+      {
+        "text": "Copies of the changed data files",
+        "correct": false,
+        "why": "Files are physical; logical replication sends rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbtdgn9g",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property with the kind of replication it describes.",
+    "hint": "One of each pair belongs to each kind.",
+    "pairs": [
+      {
+        "left": "Copies the whole cluster as files",
+        "right": "Physical"
+      },
+      {
+        "left": "Lets the copy run another major version",
+        "right": "Logical"
+      },
+      {
+        "left": "Copies table definitions as they change",
+        "right": "Physical, as part of the files"
+      },
+      {
+        "left": "Leaves the copy writable",
+        "right": "Logical, an ordinary server"
+      }
+    ],
+    "right_distractors": [
+      "Neither, ever"
+    ]
+  },
+  {
+    "id": "ex-ysbpyzvm",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a physical standby run the same major version as its primary?",
+    "hint": "What exactly does it receive?",
+    "choices": [
+      {
+        "text": "The log is in that version's format",
+        "correct": true,
+        "why": "Right: it replays files and log written by that version, and a different version reads a different format."
+      },
+      {
+        "text": "The replication protocol checks a licence",
+        "correct": false,
+        "why": "There is no licence check."
+      },
+      {
+        "text": "Slots exist only in the newest version",
+        "correct": false,
+        "why": "Slots have existed since version 9.4."
+      },
+      {
+        "text": "Because standbys cannot run queries otherwise",
+        "correct": false,
+        "why": "Query support has nothing to do with the version match."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy3dswxw",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The server that offers tables is the publisher; the server that receives them through a subscription is the ___.",
+    "hint": "The noun from subscription.",
+    "blanks": [
+      {
+        "accept": [
+          "subscriber"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fm9c0mmq",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the publisher need before logical decoding could work?",
+    "hint": "A setting, and a restart.",
+    "choices": [
+      {
+        "text": "A replication slot created by hand",
+        "correct": false,
+        "why": "The subscription created its slot by itself."
+      },
+      {
+        "text": "archive_mode = on",
+        "correct": false,
+        "why": "Logical replication streams; it does not need the archive."
+      },
+      {
+        "text": "A second data directory",
+        "correct": false,
+        "why": "The publisher is the same server."
+      },
+      {
+        "text": "wal_level = logical",
+        "correct": true,
+        "why": "Right: the default, replica, does not carry enough to rebuild rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bsw08sy",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `replicator` given `SELECT` on the two tables?",
+    "hint": "How does a subscription start?",
+    "choices": [
+      {
+        "text": "Logical replication runs as a superuser otherwise",
+        "correct": false,
+        "why": "It runs as the role in the connection string."
+      },
+      {
+        "text": "For the first copy of their rows",
+        "correct": true,
+        "why": "Right: a subscription begins with a plain copy of each table, which needs read access."
+      },
+      {
+        "text": "SELECT includes the REPLICATION right",
+        "correct": false,
+        "why": "Those are separate rights."
+      },
+      {
+        "text": "The publication cannot be created without it",
+        "correct": false,
+        "why": "The publication was created before the grant."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xr98nan",
+    "version": 1,
+    "section": "a-second-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What must exist on the subscriber before `CREATE SUBSCRIPTION`?",
+    "hint": "A subscription never creates one.",
+    "choices": [
+      {
+        "text": "The publisher's roles",
+        "correct": false,
+        "why": "The schema was loaded without owners, so no roles were needed."
+      },
+      {
+        "text": "The tables, with their columns",
+        "correct": true,
+        "why": "Right: the schema is copied first; rows go into tables that already exist."
+      },
+      {
+        "text": "A physical standby of the publisher",
+        "correct": false,
+        "why": "The subscriber is an independent server."
+      },
+      {
+        "text": "A slot on the subscriber",
+        "correct": false,
+        "why": "The slot is created on the publisher."
+      }
+    ]
+  },
+  {
+    "id": "ex-05qnyd21",
+    "version": 1,
+    "section": "a-second-version",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `pg_dump` option used for the schema copy to what it leaves out.",
+    "hint": "Three things that belong to the publisher.",
+    "pairs": [
+      {
+        "left": "--schema-only",
+        "right": "The rows"
+      },
+      {
+        "left": "--no-owner",
+        "right": "Owners naming roles 17 does not have"
+      },
+      {
+        "left": "--no-privileges",
+        "right": "Grants to those roles"
+      },
+      {
+        "left": "--no-publications",
+        "right": "The publication itself"
+      }
+    ],
+    "right_distractors": [
+      "The indexes"
+    ]
+  },
+  {
+    "id": "ex-zcc62gwa",
+    "version": 1,
+    "section": "a-second-version",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run `chmod 600 ~/.pgpass`?",
+    "hint": "Who else can read it?",
+    "choices": [
+      {
+        "text": "Docker cannot read files with other permissions",
+        "correct": false,
+        "why": "Docker never reads it; psql does."
+      },
+      {
+        "text": "PostgreSQL 17 requires it",
+        "correct": false,
+        "why": "It is the client that checks."
+      },
+      {
+        "text": "To encrypt the passwords in it",
+        "correct": false,
+        "why": "chmod changes permissions; the file stays plain text."
+      },
+      {
+        "text": "psql ignores a file readable by others",
+        "correct": true,
+        "why": "Right: it refuses to use a file with looser permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6k3zbyb",
+    "version": 1,
+    "section": "a-second-version",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The subscription created a slot on the publisher. What does that mean if the subscriber stops for a week?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The publisher keeps every byte of log for it",
+        "correct": true,
+        "why": "Right: like a physical slot, it holds the log until the subscriber consumes it, unless capped."
+      },
+      {
+        "text": "The slot is dropped after an hour",
+        "correct": false,
+        "why": "Slots are never dropped by themselves."
+      },
+      {
+        "text": "The subscriber catches up from the archive",
+        "correct": false,
+        "why": "A logical subscription reads from the slot, not from the archive."
+      },
+      {
+        "text": "Nothing; logical slots hold no log",
+        "correct": false,
+        "why": "They hold it exactly as physical slots do."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx4xam3q",
+    "version": 1,
+    "section": "what-is-not-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ALTER TABLE orders ADD COLUMN note` ran on the publisher, then an insert used it. What happened on the 17?",
+    "hint": "The docker log.",
+    "choices": [
+      {
+        "text": "The column was added automatically",
+        "correct": false,
+        "why": "DDL is not replicated."
+      },
+      {
+        "text": "The row arrived without its note",
+        "correct": false,
+        "why": "The subscriber refused the row; nothing arrived."
+      },
+      {
+        "text": "The apply failed: missing replicated column",
+        "correct": true,
+        "why": "Right: the subscription stopped and retried, and nothing more arrived."
+      },
+      {
+        "text": "The publisher refused the ALTER",
+        "correct": false,
+        "why": "The publisher has no idea what its subscribers hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ycz3reb",
+    "version": 1,
+    "section": "what-is-not-copied",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A release adds a column to a replicated table. Put the steps in the order that never stops the subscription.",
+    "hint": "Who must be ready to receive it?",
+    "items": [
+      "Add the column on the subscriber",
+      "Add the column on the publisher",
+      "Deploy the application that writes it"
+    ],
+    "trap": "Adding on the publisher first is what stopped the subscription in the lesson."
+  },
+  {
+    "id": "ex-9xkzpfjj",
+    "version": 1,
+    "section": "what-is-not-copied",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While the subscription was failing on the missing column, what was the slot on the publisher doing?",
+    "hint": "active: f.",
+    "choices": [
+      {
+        "text": "Discarding the log it could not deliver",
+        "correct": false,
+        "why": "A slot never discards what its consumer has not confirmed."
+      },
+      {
+        "text": "Sending the rows to the archive instead",
+        "correct": false,
+        "why": "Slots do not archive."
+      },
+      {
+        "text": "Nothing; a failed subscription drops its slot",
+        "correct": false,
+        "why": "The slot stays until somebody drops it."
+      },
+      {
+        "text": "Holding all log from the failed change on",
+        "correct": true,
+        "why": "Right: 336 bytes there, a full disk on a busy server."
+      }
+    ]
+  },
+  {
+    "id": "ex-me2dbr3b",
+    "version": 1,
+    "section": "what-is-not-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 17 has all 50,002 orders, yet its first insert failed with `Key (id)=(1) already exists`. Why?",
+    "hint": "Is a sequence's value a row?",
+    "choices": [
+      {
+        "text": "The ids were replicated as text",
+        "correct": false,
+        "why": "They are bigint on both servers."
+      },
+      {
+        "text": "The primary key was not copied",
+        "correct": false,
+        "why": "It was, by the schema dump, and it is what raised the error."
+      },
+      {
+        "text": "Sequences are not replicated",
+        "correct": true,
+        "why": "Right: rows arrived with their ids set, and the sequence itself never moved from 1."
+      },
+      {
+        "text": "Version 17 restarts all sequences",
+        "correct": false,
+        "why": "Nothing restarted; it was never advanced."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxajmy3g",
+    "version": 1,
+    "section": "selective",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop has 1000 customers spread evenly over four cities. How many rows did the subscription to `recife_pub` receive?",
+    "hint": "A quarter.",
+    "value": 250,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-z4grtf04",
+    "version": 1,
+    "section": "selective",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which feature limits a publication to the customers of one city?",
+    "hint": "Since PostgreSQL 15.",
+    "choices": [
+      {
+        "text": "A row filter in the publication",
+        "correct": true,
+        "why": "Right: a WHERE clause on the table, FOR TABLE customers WHERE (city = 'Recife')."
+      },
+      {
+        "text": "A view on the subscriber",
+        "correct": false,
+        "why": "The subscriber would still receive every row."
+      },
+      {
+        "text": "A separate database per city on the publisher",
+        "correct": false,
+        "why": "Possible, and much more work than a filter."
+      },
+      {
+        "text": "Row-level security",
+        "correct": false,
+        "why": "That restricts queries, not what is published."
+      }
+    ]
+  },
+  {
+    "id": "ex-scmxfdf9",
+    "version": 1,
+    "section": "selective",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a logical subscription appear for lesson 13's `lagcheck.sh`?",
+    "hint": "It is a WAL sender on the publisher too.",
+    "choices": [
+      {
+        "text": "Nowhere; it needs a different check",
+        "correct": false,
+        "why": "It appears in the same view."
+      },
+      {
+        "text": "In pg_stat_replication, by its name",
+        "correct": true,
+        "why": "Right: application_name is the subscription's name."
+      },
+      {
+        "text": "Only in pg_stat_subscription on the subscriber",
+        "correct": false,
+        "why": "That is the subscriber's view; the publisher has its own row."
+      },
+      {
+        "text": "In pg_replication_slots only",
+        "correct": false,
+        "why": "The slot is there, and so is a row in pg_stat_replication."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v1z2ea4",
+    "version": 1,
+    "section": "upgrading",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the upgrade's switch in order.",
+    "hint": "Writes stop first; the application moves last.",
+    "items": [
+      "Stop the writes to the 16",
+      "Wait until the slot is 0 bytes behind",
+      "Move every sequence on the 17 past the 16's highest value",
+      "Disable the subscription",
+      "Point the application at the 17"
+    ],
+    "trap": "Moving the sequences before writes stop leaves room for an id the 16 hands out afterwards."
+  },
+  {
+    "id": "ex-3vy7h0d5",
+    "version": 1,
+    "section": "upgrading",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The highest order id on the 16 was 50002 and the sequence was set to that plus 1000. What id did the first order on the 17 get?",
+    "hint": "setval sets the last value used.",
+    "value": 51003,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jac8rrez",
+    "version": 1,
+    "section": "upgrading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why move the sequence to the highest id plus a thousand, rather than to the highest id?",
+    "hint": "What can happen between reading the maximum and moving?",
+    "choices": [
+      {
+        "text": "Sequences only accept round numbers",
+        "correct": false,
+        "why": "Any value works."
+      },
+      {
+        "text": "PostgreSQL 17 reserves a thousand ids",
+        "correct": false,
+        "why": "It reserves nothing."
+      },
+      {
+        "text": "A cheap margin for an insert that sneaked in",
+        "correct": true,
+        "why": "Right: gaps in ids cost nothing; a collision stops the application."
+      },
+      {
+        "text": "To make the ids from the 17 recognisable",
+        "correct": false,
+        "why": "That is a side effect, not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-17wcx11m",
+    "version": 1,
+    "section": "upgrading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the switch, what does the lesson say to do with the 16?",
+    "hint": "The way back.",
+    "choices": [
+      {
+        "text": "Keep it, untouched, for now",
+        "correct": true,
+        "why": "Right: until the 17 is trusted, it is the way back."
+      },
+      {
+        "text": "Drop it at once to free the disk",
+        "correct": false,
+        "why": "Then a problem with the 17 has no way back."
+      },
+      {
+        "text": "Turn it into a standby of the 17",
+        "correct": false,
+        "why": "A physical standby must run the same version."
+      },
+      {
+        "text": "Subscribe it to the 17 at once",
+        "correct": false,
+        "why": "Possible as a later step, not what the lesson says."
+      }
+    ]
+  },
+  {
+    "id": "ex-e20cjd8x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which job needs logical replication rather than a physical standby?",
+    "hint": "Version, part of the data, or writable.",
+    "choices": [
+      {
+        "text": "Failing over within seconds if the primary dies",
+        "correct": false,
+        "why": "That is exactly what a physical standby is for."
+      },
+      {
+        "text": "Keeping a byte-for-byte copy of every database",
+        "correct": false,
+        "why": "That is physical."
+      },
+      {
+        "text": "Reading reports from a read-only copy",
+        "correct": false,
+        "why": "A physical standby serves reads."
+      },
+      {
+        "text": "Moving the shop from version 16 to 17 in minutes",
+        "correct": true,
+        "why": "Right: only logical replication crosses major versions."
+      }
+    ]
+  }
+]

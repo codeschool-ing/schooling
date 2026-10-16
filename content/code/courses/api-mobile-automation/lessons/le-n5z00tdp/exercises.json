@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-ahqm9gsr",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The same order was sent twice with the same Idempotency-Key. What did the second answer have that the first did not?",
+    "hint": "Look at the headers of the second answer.",
+    "choices": [
+      {
+        "text": "A new order id, ord-1002",
+        "correct": false,
+        "why": "Both answers carried ord-1001; no second order was created."
+      },
+      {
+        "text": "idempotent-replayed: true",
+        "correct": true,
+        "why": "Right. It marks the answer as a copy of the first."
+      },
+      {
+        "text": "Status 200 instead of 201",
+        "correct": false,
+        "why": "The replay repeats the first status, 201."
+      },
+      {
+        "text": "A second charge from the stub, ch-2",
+        "correct": false,
+        "why": "The stub saw one charge for the key; the payment stayed ch-1."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ytbc8xy",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client reuses a key from a two-seat order for a three-seat order. Why does boxoffice answer 422 instead of replaying the first answer?",
+    "hint": "What would the replay tell the client?",
+    "choices": [
+      {
+        "text": "Because three seats of sh-101 are not available",
+        "correct": false,
+        "why": "sh-101 had plenty of seats; the refusal is about the key."
+      },
+      {
+        "text": "Because keys can be used once and are then deleted",
+        "correct": false,
+        "why": "The key is kept and replays the same request; only a different body is refused."
+      },
+      {
+        "text": "It would report three seats bought, not two",
+        "correct": true,
+        "why": "Right. A key reused for another intention is a client defect, and saying so is safer."
+      },
+      {
+        "text": "Because 422 is the status for any repeated request",
+        "correct": false,
+        "why": "The identical repeat got 201 with idempotent-replayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mynbah2",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the order, its replay and the refused three-seat order, how many charges with the key buy-7f3a did the stub hold?",
+    "hint": "Count the lines /__requests printed.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1pk4y5jy",
+    "version": 1,
+    "section": "retries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each answer to what a client should do with it.",
+    "hint": "The first digit says who should act.",
+    "pairs": [
+      {
+        "left": "422",
+        "right": "fix the request; never retry it as it is"
+      },
+      {
+        "left": "503",
+        "right": "retry after a backoff"
+      },
+      {
+        "left": "429",
+        "right": "slow down, honouring Retry-After when it is sent"
+      },
+      {
+        "left": "402",
+        "right": "ask the user, who may choose another card"
+      }
+    ],
+    "right_distractors": [
+      "retry at once, as fast as possible"
+    ]
+  },
+  {
+    "id": "ex-wf4bn2b3",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the backoff wait a random time up to the ceiling instead of exactly the ceiling?",
+    "hint": "Think of many clients that failed at the same moment.",
+    "choices": [
+      {
+        "text": "So clients that failed together do not return together",
+        "correct": true,
+        "why": "Right. That is jitter: the second wave spreads out instead of hitting the server at once."
+      },
+      {
+        "text": "So a test can predict the waits exactly",
+        "correct": false,
+        "why": "Randomness makes waits harder to predict; the test passes random: () => 1 for that reason."
+      },
+      {
+        "text": "Because setTimeout cannot wait an exact number of milliseconds",
+        "correct": false,
+        "why": "setTimeout takes a number; precision is not the reason for jitter."
+      },
+      {
+        "text": "So the total wait never grows past the first ceiling",
+        "correct": false,
+        "why": "The ceiling still doubles each try, up to the cap."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvhs4vjy",
+    "version": 1,
+    "section": "retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can withRetry's tests run in milliseconds, with no server?",
+    "hint": "Look at its parameters.",
+    "choices": [
+      {
+        "text": "Node skips setTimeout inside node:test",
+        "correct": false,
+        "why": "node:test runs timers as usual; the tests replace sleep instead."
+      },
+      {
+        "text": "The waits are too short to notice",
+        "correct": false,
+        "why": "Real waits of 100 to 500 ms would add up to seconds."
+      },
+      {
+        "text": "fetch is never called because the helper caches answers",
+        "correct": false,
+        "why": "The helper caches nothing; the tests pass a fake send."
+      },
+      {
+        "text": "send, sleep and random are parameters the tests replace",
+        "correct": true,
+        "why": "Right. A fake send gives statuses, a fake sleep records instead of waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-mveqdb5t",
+    "version": 1,
+    "section": "retries",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A waiting time whose ceiling doubles with each try is called exponential ___.",
+    "hint": "The opposite of rushing back.",
+    "blanks": [
+      {
+        "accept": [
+          "backoff",
+          "back-off"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3qn560s3",
+    "version": 1,
+    "section": "the-error-path",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the error-path tests check after a declined charge?",
+    "hint": "Three things: the answer, the state, the next sale.",
+    "choices": [
+      {
+        "text": "The status, 402, and the problem body",
+        "correct": true,
+        "why": "Right. The answer the client gets."
+      },
+      {
+        "text": "That sh-103 still had the same seats left",
+        "correct": true,
+        "why": "Right. The state left behind."
+      },
+      {
+        "text": "That the declined order was deleted",
+        "correct": false,
+        "why": "It was kept, with status declined; the test did not ask."
+      },
+      {
+        "text": "That all four seats could be sold afterwards",
+        "correct": true,
+        "why": "Right. The last test proves nothing was left reserved."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0wrnabz",
+    "version": 1,
+    "section": "the-error-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "GET /v1/orders/ord-1003 showed an order with status failed. Why does the section call that a finding rather than only a detail?",
+    "hint": "What did the 502 tell the client?",
+    "choices": [
+      {
+        "text": "A failed order should have held the seats",
+        "correct": false,
+        "why": "Releasing them is right; the seats were free."
+      },
+      {
+        "text": "Its id never reached the client",
+        "correct": true,
+        "why": "Right. The 502 carried no id, which leaves reconciliation impossible."
+      },
+      {
+        "text": "boxoffice should answer 404 for any failed order",
+        "correct": false,
+        "why": "Hiding the record would not help the client either; the question is the missing id."
+      },
+      {
+        "text": "The order shows the client was charged",
+        "correct": false,
+        "why": "The provider was down; nothing was charged in that case."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsn2ddbj",
+    "version": 1,
+    "section": "the-error-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new version of boxoffice forgets to release the seats when the provider answers 500, but still answers 502. Which test in errors.test.mjs fails first?",
+    "hint": "Which assertion looks at the seats right after the 502?",
+    "choices": [
+      {
+        "text": "decline, because it runs first",
+        "correct": false,
+        "why": "The decline path still releases the seats; its checks hold."
+      },
+      {
+        "text": "None: the status is still right, so every test passes",
+        "correct": false,
+        "why": "Each error test also compares seats before and after."
+      },
+      {
+        "text": "Only the last one, when four seats cannot be sold",
+        "correct": false,
+        "why": "It would fail too, but the down test fails first, on its seat check."
+      },
+      {
+        "text": "down, on its seats-left assertion",
+        "correct": true,
+        "why": "Right. The status passes and the seat count does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hesp2zt",
+    "version": 1,
+    "section": "the-race",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did section 02's replay test pass, although boxoffice has the race?",
+    "hint": "When did its second request start?",
+    "choices": [
+      {
+        "text": "Its second request started after the first had finished",
+        "correct": true,
+        "why": "Right. By then the key was remembered; the race needs both in flight."
+      },
+      {
+        "text": "Its stub was too fast for the race to show",
+        "correct": false,
+        "why": "The stub's speed only sets the window; sequential requests never enter it."
+      },
+      {
+        "text": "It used a different show from the race test",
+        "correct": false,
+        "why": "The show plays no part; the key does."
+      },
+      {
+        "text": "It had the todo option, which hides failures",
+        "correct": false,
+        "why": "It has no todo; it passed for real."
+      }
+    ]
+  },
+  {
+    "id": "ex-bj6dkgsq",
+    "version": 1,
+    "section": "the-race",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the race get worse in production than against the local stub?",
+    "hint": "How long is the window?",
+    "choices": [
+      {
+        "text": "Production runs more copies of Node, each with its own clock",
+        "correct": false,
+        "why": "Clocks have nothing to do with it; the window is the time the charge takes."
+      },
+      {
+        "text": "A real provider takes longer, so the window is wider",
+        "correct": true,
+        "why": "Right. The key is only remembered after the charge returns."
+      },
+      {
+        "text": "Real phones send three requests on a double tap",
+        "correct": false,
+        "why": "A double tap is two requests; the count is not the problem."
+      },
+      {
+        "text": "Idempotency keys expire faster in production",
+        "correct": false,
+        "why": "Expiry is about later replays, not requests at the same moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ryghqcw",
+    "version": 1,
+    "section": "the-race",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What fix does the section propose for the race?",
+    "hint": "When should the key be recorded?",
+    "choices": [
+      {
+        "text": "Ask clients to wait two seconds before tapping again",
+        "correct": false,
+        "why": "That moves the defect onto every app and still loses to a retry."
+      },
+      {
+        "text": "Remember the key after the charge, but faster",
+        "correct": false,
+        "why": "Any gap between checking and remembering is the window."
+      },
+      {
+        "text": "Claim the key as in progress when it is checked",
+        "correct": true,
+        "why": "Right. A second request finds it taken and waits or gets 409."
+      },
+      {
+        "text": "Drop the Idempotency-Key header and rely on the provider",
+        "correct": false,
+        "why": "The provider does not know about orders or seats; boxoffice must keep its promise."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa7nf8d3",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "boxoffice answered 504 after about two seconds. What does that tell you about the payment?",
+    "hint": "Look at the stub's record afterwards.",
+    "choices": [
+      {
+        "text": "It failed, so nothing was charged",
+        "correct": false,
+        "why": "The stub had the charge and approved it a second later."
+      },
+      {
+        "text": "It succeeded, since the provider always finishes",
+        "correct": false,
+        "why": "A provider can fail after a timeout too; the 504 does not say which."
+      },
+      {
+        "text": "Nothing: its outcome is unknown",
+        "correct": true,
+        "why": "Right. A timeout is the absence of an answer."
+      },
+      {
+        "text": "That the provider is down and answered 500",
+        "correct": false,
+        "why": "That case gave 502; this provider was slow, not down."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8ps2y5k",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does timeout.test.mjs check that the request took at least 1.9 seconds?",
+    "hint": "What would a 504 after 50 ms mean?",
+    "choices": [
+      {
+        "text": "An early 504 means a false deadline",
+        "correct": true,
+        "why": "Right. The lower bound catches a deadline that fires early."
+      },
+      {
+        "text": "Because node:test cannot measure anything shorter",
+        "correct": false,
+        "why": "performance.now() measures fractions of a millisecond."
+      },
+      {
+        "text": "To give the stub time to approve the charge",
+        "correct": false,
+        "why": "The assertion measures, it does not wait; the stub takes three seconds anyway."
+      },
+      {
+        "text": "Because the test's own timeout is 1.9 seconds",
+        "correct": false,
+        "why": "The test's timeout is five seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sx6cvx5",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the timeout test carry the option { timeout: 5000 }?",
+    "hint": "What if boxoffice never answered?",
+    "choices": [
+      {
+        "text": "To make boxoffice give up after five seconds",
+        "correct": false,
+        "why": "The option belongs to the test; boxoffice's deadline is its own two seconds."
+      },
+      {
+        "text": "So a hung request fails the test instead of blocking the suite",
+        "correct": true,
+        "why": "Right. A test with no limit hangs with the server."
+      },
+      {
+        "text": "Because node:test refuses tests longer than two seconds",
+        "correct": false,
+        "why": "Node has no such limit by default."
+      },
+      {
+        "text": "To slow the stub down to five seconds",
+        "correct": false,
+        "why": "MODE=slow sets the stub's delay, three seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjynw65c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An app gets 504 from boxoffice for a purchase and shows \"Payment failed, try again\". What should it do instead?",
+    "hint": "A 504 is not a failure.",
+    "choices": [
+      {
+        "text": "Retry at once with a new idempotency key, so it is not refused",
+        "correct": false,
+        "why": "A new key makes the retry a new purchase, which is how people pay twice."
+      },
+      {
+        "text": "Treat it as unknown: same key, or ask first",
+        "correct": true,
+        "why": "Right. The charge may have gone through."
+      },
+      {
+        "text": "Show success, because most slow charges are approved",
+        "correct": false,
+        "why": "Guessing the outcome either way misleads the user."
+      },
+      {
+        "text": "Never retry anything that took longer than two seconds",
+        "correct": false,
+        "why": "504 is one of the answers worth retrying, safely, with the same key."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbzjvwb8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the events of the slow-provider case in the order they happened.",
+    "hint": "boxoffice gives up before the stub finishes.",
+    "items": [
+      "boxoffice holds the seats and sends the charge",
+      "the stub records the charge",
+      "after two seconds boxoffice gives up and marks the order failed",
+      "the client receives 504",
+      "the stub approves the charge, with nobody listening"
+    ]
+  },
+  {
+    "id": "ex-wcpprnkp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are safe for withRetry to wrap?",
+    "hint": "Retrying is safe only where repeating is safe.",
+    "choices": [
+      {
+        "text": "GET /v1/shows/sh-103",
+        "correct": true,
+        "why": "Right. A safe method can be sent again freely."
+      },
+      {
+        "text": "POST /v1/orders with the same Idempotency-Key on every try",
+        "correct": true,
+        "why": "Right, apart from the race: a retry only starts after the previous answer arrived."
+      },
+      {
+        "text": "POST /v1/orders with no Idempotency-Key",
+        "correct": false,
+        "why": "Each retry after a 504 could create another order and another charge."
+      },
+      {
+        "text": "POST /v1/orders with a new random key on each try",
+        "correct": false,
+        "why": "A new key is a new intention, so it is the same as having none."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2aeyc1m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The provider becomes slower, often taking 1.5 seconds per charge. Which defect of this lesson becomes more frequent, and which test shows it?",
+    "hint": "Which window depends on the charge's duration?",
+    "choices": [
+      {
+        "text": "Retries of 422, shown by retry.test.mjs",
+        "correct": false,
+        "why": "Retrying 422 depends on the client's code, not on the provider's speed."
+      },
+      {
+        "text": "Seats held after a decline, shown by errors.test.mjs",
+        "correct": false,
+        "why": "The decline path releases seats at any speed."
+      },
+      {
+        "text": "Wrong replay bodies, shown by idempotency.test.mjs",
+        "correct": false,
+        "why": "Sequential replays stay correct whatever the provider's speed."
+      },
+      {
+        "text": "The double charge, shown by race.test.mjs",
+        "correct": true,
+        "why": "Right. The window between checking and remembering the key is the charge's duration."
+      }
+    ]
+  }
+]
