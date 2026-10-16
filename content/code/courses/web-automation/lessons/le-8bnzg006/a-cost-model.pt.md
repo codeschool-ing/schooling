@@ -46,7 +46,7 @@ aula 16. A primeira execução do teste de captura escreve a referência:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (673ms)
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.1s)
     Error: A snapshot doesn't exist at /home/ana/quitanda/evidence/visual.spec.js-snapshots/shop-linux.png, writing actual.
   1 failed
 ```
@@ -55,12 +55,12 @@ Depois a loja como está, com o defeito da aula 7 dentro:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (439ms)
-  1 passed (1.6s)
+  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (470ms)
+  1 passed (1.8s)
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
-  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (211ms)
-  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (149ms)
-  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (138ms)
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (177ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (164ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (142ms)
   3 passed (1.9s)
 ```
 
@@ -70,13 +70,13 @@ borda fica mais escura, em `app/public/style.css`:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (960ms)
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.0s)
       4794 pixels (ratio 0.01 of all image pixels) are different.
   1 failed
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
-  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (163ms)
-  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (132ms)
-  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (158ms)
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (181ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (156ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (131ms)
   3 passed (1.8s)
 ```
 
@@ -84,14 +84,14 @@ A banana passa a custar R$ 6,20 em vez de R$ 5,90, em `app/store.js`:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.1s)
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.0s)
       25 pixels (ratio 0.01 of all image pixels) are different.
   1 failed
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
-  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (180ms)
-  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (148ms)
-  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (136ms)
-  3 passed (1.8s)
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (208ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (161ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (163ms)
+  3 passed (2.0s)
 ```
 
 Alguém escreve `color: #fff` em `.price`, e todo preço fica branco sobre um cartão branco. A página
@@ -99,33 +99,33 @@ continua com os preços, e o teste de fumaça da aula 1 roda também:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.0s)
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.2s)
       1383 pixels (ratio 0.01 of all image pixels) are different.
   1 failed
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
-  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (165ms)
-  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (142ms)
-  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (129ms)
-  3 passed (1.7s)
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (201ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (148ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (165ms)
+  3 passed (1.8s)
 ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js | grep -E '✓|✘|^  [0-9]+ (passed|failed)'
-  ✓  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (175ms)
-  1 passed (1.4s)
+  ✓  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (183ms)
+  1 passed (1.5s)
 ```
 
 E a correção: `white-space: nowrap; min-width: 24rem;` apagados de `.basket`:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
-  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (451ms)
-  1 passed (1.7s)
+  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (491ms)
+  1 passed (1.8s)
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
-  ✓  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (158ms)
-  ✓  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (152ms)
-  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (161ms)
+  ✓  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (190ms)
+  ✓  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (204ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (177ms)
     Expected to fail, but passed.
     Expected to fail, but passed.
   2 failed
-  1 passed (3.6s)
+  1 passed (3.9s)
 ```
 
 | a edição | era defeito? | captura de tela | rolagem lateral |
@@ -148,13 +148,13 @@ Os números abaixo são **suposições, ditas para você poder mudá-las**: uma 
 por dia útil em 250 dias, 5.000 execuções por ano. Uma pessoa leva dez minutos para abrir uma execução
 vermelha, olhar uma diferença e decidir. O visual da loja muda uma vez por semana, 50 vezes por
 ano. Um defeito achado por um teste na revisão custa 15 minutos, e um achado por um cliente custa
-um dia de trabalho, 480. Os tempos de execução vêm das execuções acima: 211, 149 e 138 ms para as três larguras, e 439 ms para a captura de tela, na loja como está.
+um dia de trabalho, 480. Os tempos de execução vêm das execuções acima: 177, 164 e 142 ms para as três larguras, e 470 ms para a captura de tela, na loja como está.
 
 | | rolagem lateral (aula 7) | captura de tela (aula 16) |
 |---|---|---|
 | escrita | 15 min | 10 min |
 | mudanças de visual que a quebram | 0 das 2 acima: 0 min | 2 de 2, então as 50: **50 × 10 = 500 min** |
-| execuções, tempo de máquina | 0,50 s por execução: 2.490 s, 41 min | 0,44 s por execução: 2.195 s, 37 min |
+| execuções, tempo de máquina | 0,48 s por execução: 2.415 s, 40 min | 0,47 s por execução: 2.350 s, 39 min |
 | defeitos pegos por ano | suponha 1: 465 min | suponha 1: 465 min |
 | **custo em pessoa : valor** | **15 : 465** | **510 : 465** |
 

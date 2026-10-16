@@ -79,15 +79,15 @@ project folder:
 ana@laptop:~/quitanda$ npx playwright test --workers 1 --reporter=json > report.json; echo "exit code $?"
 exit code 0
 ana@laptop:~/quitanda$ node slowest.mjs report.json
-64 tests, 38.1 s from start to end
+64 tests, 38.9 s from start to end
 as declared 64, not as declared 0, flaky 0, skipped 0
 the five slowest files:
-    6.1 s  search.spec.js
+    6.3 s  search.spec.js
     5.5 s  cache.spec.js
-    3.1 s  waiting.spec.js
-    3.1 s  toast.spec.js
-    2.9 s  conditions.spec.js
-declared to fail: 7 tests, 12.4 s
+    3.2 s  waiting.spec.js
+    3.2 s  toast.spec.js
+    3.0 s  conditions.spec.js
+declared to fail: 7 tests, 12.5 s
   cache.spec.js:13 › a returning customer sees the new offer
       Error: expect(locator).toContainText(expected) failed
   cache.spec.js:22 › the offer is checked with the server before it is reused
@@ -104,12 +104,12 @@ declared to fail: 7 tests, 12.4 s
       Error: expect(received).toBe(expected) // Object.is equality
 ```
 
-Every one of the 64 tests did what it was declared to do, in 38.1 seconds, and four facts in
+Every one of the 64 tests did what it was declared to do, in 38.9 seconds, and four facts in
 that output are worth a sentence each.
 
-- **The slowest file is `search.spec.js`**, with 6.1 seconds, and most of that is one test:
+- **The slowest file is `search.spec.js`**, with 6.3 seconds, and most of that is one test:
   the declared failure that waits its whole five seconds for a list that never settles.
-- **The seven declared failures cost 12.4 seconds**, about a third of the run. Each waits for its
+- **The seven declared failures cost 12.5 seconds**, about a third of the run. Each waits for its
   expectation's timeout, because a check that is going to fail cannot know it early. Documenting a
   defect has a price in run time, and it is paid on every run until the defect is fixed.
 - **Each declared failure prints its own error**, and each still names the defect its comment
@@ -125,30 +125,25 @@ Playwright's default number of workers:
 
 ```
 ana@laptop:~/quitanda$ for i in 1 2 3 4 5; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done
-  3 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/conditions.spec.js:30:1 › expect.poll: the server has the banana from /ssr ───────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  60 passed (28.2s)
-  4 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  59 passed (31.8s)
-  3 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  60 passed (28.4s)
   1 failed
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  63 passed (22.7s)
+  63 passed (23.2s)
+  3 failed
+    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
+    tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
+    tests/signup.spec.js:27:1 › a name that is taken is refused ────────────────────────────────────
+  60 passed (29.0s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  63 passed (23.1s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  63 passed (23.3s)
   4 failed
     tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
     tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+    tests/signup.spec.js:27:1 › a name that is taken is refused ────────────────────────────────────
+    tests/two-fruit.spec.js:3:1 › a banana and a mango make two items ──────────────────────────────
   59 passed (31.9s)
 ```
 
@@ -161,16 +156,13 @@ Running 64 tests using 2 workers
   1) tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ───────────────────────────────────────
     Expected: "1"
     Received: "2"
-  2) tests/page-object.spec.js:8:1 › two fruit make two items ──────────────────────────────────────
-    Expected: "1"
-    Received: "2"
+  2) tests/conditions.spec.js:30:1 › expect.poll: the server has the banana from /ssr ──────────────
   3) tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ─────────────
     Expected: "1"
     Received: "2"
 ```
 
-**Two workers, and the same broken expectation three times: a count that should be 1 and read
-2.** Each of those tests puts something in the basket and then counts it, and with two workers
+**Two workers, and the same broken expectation twice: a count that should be 1 and read 2.** Each of those tests puts something in the basket and then counts it, and with two workers
 another test is putting things into the same basket at the same moment. It is the shop's one
 basket, shared by everybody, which lessons 15 and 19 are about. In each, the cause sits outside the
 test that failed: in the other worker, and in a basket neither test owns.
@@ -188,7 +180,7 @@ one of them came from a command in this section:
 
 | tests | run time, one worker | declared failures | their share of the time | red runs in five, default workers |
 |---|---|---|---|---|
-| 64 | 38.1 s | 7 | 12.4 s | 5 |
+| 64 | 38.9 s | 7 | 12.5 s | 5 |
 
 Kept somewhere a team looks, week after week, they say whether the suite is getting better or
 worse before anybody has to complain about it.

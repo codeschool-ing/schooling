@@ -26,15 +26,15 @@ verificação vale o que custa.
 | 10 | Playwright | navegadores, contextos e um rastro |
 | 11 | As outras ferramentas | Puppeteer, WebdriverIO, Nightwatch, Jest, Jasmine, Robot e QA Wolf, cada um no seu lugar |
 | 12 | O padrão Page Object | um lugar para cada localizador, e quando a abstração passa do ponto |
-| 13 | Esperas explícitas e implícitas | uma condição sua, escrita para ser esperada |
+| 13 | Esperas explícitas e implícitas | uma pausa fixa medida, as duas esperas comparadas, e uma condição sua |
 | 14 | Testes intermitentes | uma causa encontrada em vez de escondida por novas tentativas, e uma quarentena |
 | 15 | Dados de teste | um teste dono dos próprios dados, que limpa o que fez |
 | 16 | Captura de tela, vídeo e rastro | a evidência que um teste que falha deixa para trás |
-| 17 | Execução headless | o navegador sem janela, e o que muda sem ela |
-| 18 | Zombie.js e HtmlUnit | navegadores que não são navegadores, e o que eles não veem |
-| 19 | Execução em paralelo | uma suíte dividida entre workers, e o que eles compartilham |
-| 20 | Gravadores | um teste gravado ao lado de um escrito |
-| 21 | A pirâmide de testes | a camada a que cada verificação pertence |
+| 17 | Execução headless | dois Chromiums headless, as diferenças que mordem, e se headless é mais rápido |
+| 18 | Zombie.js e HtmlUnit | navegadores simulados, o jsdom rodado contra a loja, e o que uma página sem layout não diz |
+| 19 | Execução em paralelo | workers e shards, e um worker só para os testes que dividem a loja |
+| 20 | Gravadores | o Selenium IDE e o gravador do Playwright, e uma mudança contada contra uma gravação |
+| 21 | A pirâmide de testes | um comportamento em três camadas, cronometrado, e o que merece lugar no navegador |
 | 22 | O que não automatizar | o custo de um teste, posto contra o valor dele |
 
 ## O que vem depois

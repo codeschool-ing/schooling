@@ -81,15 +81,15 @@ da pasta do projeto:
 ana@laptop:~/quitanda$ npx playwright test --workers 1 --reporter=json > report.json; echo "exit code $?"
 exit code 0
 ana@laptop:~/quitanda$ node slowest.mjs report.json
-64 tests, 38.1 s from start to end
+64 tests, 38.9 s from start to end
 as declared 64, not as declared 0, flaky 0, skipped 0
 the five slowest files:
-    6.1 s  search.spec.js
+    6.3 s  search.spec.js
     5.5 s  cache.spec.js
-    3.1 s  waiting.spec.js
-    3.1 s  toast.spec.js
-    2.9 s  conditions.spec.js
-declared to fail: 7 tests, 12.4 s
+    3.2 s  waiting.spec.js
+    3.2 s  toast.spec.js
+    3.0 s  conditions.spec.js
+declared to fail: 7 tests, 12.5 s
   cache.spec.js:13 › a returning customer sees the new offer
       Error: expect(locator).toContainText(expected) failed
   cache.spec.js:22 › the offer is checked with the server before it is reused
@@ -106,13 +106,13 @@ declared to fail: 7 tests, 12.4 s
       Error: expect(received).toBe(expected) // Object.is equality
 ```
 
-Todos os 64 testes fizeram o que estavam declarados para fazer, em 38,1 segundos, e quatro
+Todos os 64 testes fizeram o que estavam declarados para fazer, em 38,9 segundos, e quatro
 fatos dessa saída valem uma frase cada.
 
-- **O arquivo mais lento é o `search.spec.js`**, com 6,1 segundos, e a maior parte vem de um
+- **O arquivo mais lento é o `search.spec.js`**, com 6,3 segundos, e a maior parte vem de um
   teste: a falha declarada que espera os seus cinco segundos inteiros por uma lista que nunca
   assenta.
-- **As sete falhas declaradas custam 12,4 segundos**, cerca de um terço da execução. Cada uma
+- **As sete falhas declaradas custam 12,5 segundos**, cerca de um terço da execução. Cada uma
   espera o tempo limite da sua expectativa, porque uma verificação que vai falhar não tem como
   saber antes. Documentar um defeito tem um preço em tempo de execução, e ele é pago em toda
   execução até o defeito ser corrigido.
@@ -129,30 +129,25 @@ metade delas. Rode a suíte cinco vezes como está, com o número padrão de wor
 
 ```
 ana@laptop:~/quitanda$ for i in 1 2 3 4 5; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done
-  3 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/conditions.spec.js:30:1 › expect.poll: the server has the banana from /ssr ───────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  60 passed (28.2s)
-  4 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  59 passed (31.8s)
-  3 failed
-    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  60 passed (28.4s)
   1 failed
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  63 passed (22.7s)
+  63 passed (23.2s)
+  3 failed
+    tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
+    tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
+    tests/signup.spec.js:27:1 › a name that is taken is refused ────────────────────────────────────
+  60 passed (29.0s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  63 passed (23.1s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  63 passed (23.3s)
   4 failed
     tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ────────────────────────────────────────
     tests/conditions.spec.js:40:1 › toPass: the count and the total change together ────────────────
-    tests/page-object.spec.js:8:1 › two fruit make two items ───────────────────────────────────────
-    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+    tests/signup.spec.js:27:1 › a name that is taken is refused ────────────────────────────────────
+    tests/two-fruit.spec.js:3:1 › a banana and a mango make two items ──────────────────────────────
   59 passed (31.9s)
 ```
 
@@ -165,15 +160,13 @@ Running 64 tests using 2 workers
   1) tests/basket-data.spec.js:14:1 › a banana costs R$ 5,90 ───────────────────────────────────────
     Expected: "1"
     Received: "2"
-  2) tests/page-object.spec.js:8:1 › two fruit make two items ──────────────────────────────────────
-    Expected: "1"
-    Received: "2"
+  2) tests/conditions.spec.js:30:1 › expect.poll: the server has the banana from /ssr ──────────────
   3) tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ─────────────
     Expected: "1"
     Received: "2"
 ```
 
-**Dois workers, e a mesma expectativa quebrada três vezes: uma contagem que devia ser 1 e deu
+**Dois workers, e a mesma expectativa quebrada duas vezes: uma contagem que devia ser 1 e deu
 2.** Cada um desses testes põe algo na cesta e depois conta, e com dois workers outro teste está
 pondo coisas na mesma cesta no mesmo instante. É a única cesta da loja, compartilhada por todo
 mundo, o assunto das aulas 15 e 19. Em cada uma, a causa está fora do teste que
@@ -193,7 +186,7 @@ um comando desta seção:
 
 | testes | tempo, um worker | falhas declaradas | a parte delas no tempo | execuções vermelhas em cinco, workers padrão |
 |---|---|---|---|---|
-| 64 | 38,1 s | 7 | 12,4 s | 5 |
+| 64 | 38,9 s | 7 | 12,5 s | 5 |
 
 Guardados num lugar onde a equipe olha, semana após semana, eles dizem se a suíte está melhorando
 ou piorando antes de alguém precisar reclamar.

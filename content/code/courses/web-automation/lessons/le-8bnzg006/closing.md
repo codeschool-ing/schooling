@@ -25,15 +25,15 @@ the test waits, and whether a check is worth its cost.
 | 10 | Playwright | browsers, contexts and a trace |
 | 11 | The other tools | Puppeteer, WebdriverIO, Nightwatch, Jest, Jasmine, Robot and QA Wolf, placed |
 | 12 | The Page Object pattern | one place for each locator, and when abstraction goes too far |
-| 13 | Explicit and implicit waits | a condition of your own, written to be waited for |
+| 13 | Explicit and implicit waits | a fixed sleep measured, the two waits compared, and a condition of your own |
 | 14 | Flaky tests | a cause found rather than retried away, and a quarantine |
 | 15 | Test data | a test that owns its data and cleans up after itself |
 | 16 | Screenshots, video and traces | the evidence a failing test leaves behind |
-| 17 | Headless execution | the browser with no window, and what changes without one |
-| 18 | Zombie.js and HtmlUnit | browsers that are not browsers, and what they cannot see |
-| 19 | Parallel execution | a suite split across workers, and what they share |
-| 20 | Recorders | a recorded test beside a written one |
-| 21 | The testing pyramid | which layer each check belongs to |
+| 17 | Headless execution | two headless Chromiums, the differences that bite, and whether headless is faster |
+| 18 | Zombie.js and HtmlUnit | simulated browsers, jsdom run against the shop, and what a page without layout cannot tell you |
+| 19 | Parallel execution | workers and shards, and one worker for the tests that share the shop |
+| 20 | Recorders | Selenium IDE and Playwright's recorder, and one change counted against a recording |
+| 21 | The testing pyramid | one behaviour at three layers, timed, and what earns a place in the browser |
 | 22 | What not to automate | the cost of a test, set against its value |
 
 ## What comes next
