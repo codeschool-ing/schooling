@@ -1,0 +1,612 @@
+[
+  {
+    "id": "ex-qjj14qa0",
+    "version": 1,
+    "section": "pgbench",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pgbench -c 8 -j 4 -T 30 bench` reports 3980 tps, and lesson 2's workload on the same machine runs at about a third of that. Which is the server's real speed?",
+    "hint": "A benchmark measures a server running something.",
+    "choices": [
+      {
+        "text": "3980, since the built-in test is the standard",
+        "correct": false,
+        "why": "It is a standard workload, not yours; its number says nothing about the marketplace."
+      },
+      {
+        "text": "Both, each for its own workload",
+        "correct": true,
+        "why": "Right: a benchmark measures a server running a workload, never a server alone."
+      },
+      {
+        "text": "The lower one, because it is the slowest case",
+        "correct": false,
+        "why": "Neither is a worst case; they answer different questions."
+      },
+      {
+        "text": "Their average, about 2600",
+        "correct": false,
+        "why": "Averaging two workloads describes neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jh2p7h9",
+    "version": 1,
+    "section": "pgbench",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the built-in test at `-s 10` partly measure lock waits rather than the server's speed?",
+    "hint": "Count the rows in pgbench_branches.",
+    "choices": [
+      {
+        "text": "Every transaction hits one of ten rows",
+        "correct": true,
+        "why": "Right: ten branch rows for eight clients; the scale sets how many, and the contention with it."
+      },
+      {
+        "text": "pgbench takes a table lock before each run",
+        "correct": false,
+        "why": "It runs ordinary statements; the waits come from row locks on hot rows."
+      },
+      {
+        "text": "`-i` leaves the tables without primary keys",
+        "correct": false,
+        "why": "The init output ends with `creating primary keys...`."
+      },
+      {
+        "text": "It runs VACUUM on the tables during the test",
+        "correct": false,
+        "why": "It vacuums once before starting, not during."
+      }
+    ]
+  },
+  {
+    "id": "ex-kveasjsj",
+    "version": 1,
+    "section": "pgbench",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds an index on `orders(status)` and reruns `pgbench -c 8 -T 30 bench` to see if the shop got faster. What will the number tell them?",
+    "hint": "Which tables does the built-in test touch?",
+    "choices": [
+      {
+        "text": "Whether the pending count got faster",
+        "correct": false,
+        "why": "The built-in test never queries orders."
+      },
+      {
+        "text": "How much the index slows the writes down",
+        "correct": false,
+        "why": "Its writes go to pgbench_ tables, which the index is not on."
+      },
+      {
+        "text": "Whether the index was built correctly",
+        "correct": false,
+        "why": "A benchmark cannot check an index it never uses."
+      },
+      {
+        "text": "Nothing: it runs on its own tables",
+        "correct": true,
+        "why": "Right: it runs in bench, on pgbench_ tables; only the shop's workload can show the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxyyr0gf",
+    "version": 1,
+    "section": "your-workload",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where should a benchmark's script weights come from?",
+    "hint": "Something the server already counts.",
+    "choices": [
+      {
+        "text": "From the call counts of pg_stat_statements at a busy hour",
+        "correct": true,
+        "why": "Right: each script's share of the calls is its weight."
+      },
+      {
+        "text": "Equal weights, to be fair to every script",
+        "correct": false,
+        "why": "Fairness is not the goal; the real mix is."
+      },
+      {
+        "text": "From total_exec_time, so that slow statements count for more",
+        "correct": false,
+        "why": "Time is the result to measure, not the mix to reproduce."
+      },
+      {
+        "text": "From what the developers expect",
+        "correct": false,
+        "why": "Lesson 2's weights were that kind of guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejmyawwe",
+    "version": 1,
+    "section": "your-workload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `weights.sql` count `place-order.sql` through its first `INSERT` only?",
+    "hint": "How many statements does one purchase send?",
+    "choices": [
+      {
+        "text": "The UPDATE is not recorded by pg_stat_statements",
+        "correct": false,
+        "why": "It is recorded; lesson 2's tally listed it."
+      },
+      {
+        "text": "INSERTs are the slowest statement in the script",
+        "correct": false,
+        "why": "The COMMIT took most of the time; speed is not the reason."
+      },
+      {
+        "text": "One purchase would count several times",
+        "correct": true,
+        "why": "Right: one statement per script, so each transaction counts once."
+      },
+      {
+        "text": "BEGIN and COMMIT belong to another script",
+        "correct": false,
+        "why": "They belong to the same purchase."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxts0zsb",
+    "version": 1,
+    "section": "your-workload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seller dashboard ran at 887 tps with `random(2, 1000)` and at 525 tps with `random_zipfian(1, 1000, 1.07)`. What changed?",
+    "hint": "The SQL is identical.",
+    "choices": [
+      {
+        "text": "Zipfian sampling costs more processor time in pgbench",
+        "correct": false,
+        "why": "The \\set lines cost a thousandth of a millisecond."
+      },
+      {
+        "text": "Which sellers were asked about",
+        "correct": true,
+        "why": "Right: the big seller, now asked often, has far more December rows to count."
+      },
+      {
+        "text": "The second run was cold",
+        "correct": false,
+        "why": "Both ran back to back on a warm server."
+      },
+      {
+        "text": "An index stopped being used",
+        "correct": false,
+        "why": "Same statement, same indexes; the rows differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-exqv7bfw",
+    "version": 1,
+    "section": "your-workload",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a tally of one busy hour, a script's identifying statement has 6728 calls out of 66875 counted for all six scripts. What weight, in percent to one decimal, does it get?",
+    "hint": "Its share of the calls.",
+    "value": 10.1,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-s15hph3e",
+    "version": 1,
+    "section": "reading-results",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which line of a pgbench report should you check before trusting any of its other numbers?",
+    "hint": "A run where transactions failed measured something else.",
+    "choices": [
+      {
+        "text": "`tps`",
+        "correct": false,
+        "why": "Throughput of a run with failures counts work that was not your workload."
+      },
+      {
+        "text": "`initial connection time`",
+        "correct": false,
+        "why": "It is left out of tps and rarely matters."
+      },
+      {
+        "text": "`number of failed transactions`",
+        "correct": true,
+        "why": "Right: zero failures first, then read the rest."
+      },
+      {
+        "text": "`scaling factor`",
+        "correct": false,
+        "why": "For custom scripts it is just 1 and means nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p3873aa",
+    "version": 1,
+    "section": "reading-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run reports `latency average = 6.465 ms` and `latency stddev = 22.826 ms`. What does that say?",
+    "hint": "Latency cannot go below zero.",
+    "choices": [
+      {
+        "text": "The measurement failed and should be thrown away",
+        "correct": false,
+        "why": "It is a normal mixed workload; the numbers are right."
+      },
+      {
+        "text": "A few slow ones pull the mean up",
+        "correct": true,
+        "why": "Right: most are fast; the per-script blocks show 1 ms reads and a 198 ms count."
+      },
+      {
+        "text": "Typical transactions take between 0 and 29 ms",
+        "correct": false,
+        "why": "A symmetrical reading of the stddev does not fit a skewed spread."
+      },
+      {
+        "text": "The server alternated between fast and slow seconds",
+        "correct": false,
+        "why": "The progress lines moved by about 10%, not by a factor of three."
+      }
+    ]
+  },
+  {
+    "id": "ex-cexq6dmy",
+    "version": 1,
+    "section": "reading-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-r`, the purchase script shows `COMMIT` at 6.939 ms of its 9.368. Where does that time go?",
+    "hint": "What must be true when COMMIT returns?",
+    "choices": [
+      {
+        "text": "Waiting for the record to reach disk",
+        "correct": true,
+        "why": "Right: a commit waits for the write to be durable, and no index changes that."
+      },
+      {
+        "text": "Into checking every foreign key again",
+        "correct": false,
+        "why": "Foreign keys are checked by the INSERTs themselves here."
+      },
+      {
+        "text": "Into pgbench's \\set lines",
+        "correct": false,
+        "why": "Those cost a thousandth of a millisecond each."
+      },
+      {
+        "text": "Into rebuilding all the indexes on orders",
+        "correct": false,
+        "why": "Indexes are updated during the INSERT, not rebuilt at commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-wf6vhrap",
+    "version": 1,
+    "section": "reading-results",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `pgbench` option that prints a line of throughput and latency every few seconds while the run is going is `-___`.",
+    "hint": "Progress.",
+    "blanks": [
+      {
+        "accept": [
+          "P"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1bptzx9m",
+    "version": 1,
+    "section": "the-traps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a ten-second benchmark report a number that misleads?",
+    "hint": "Compare with the progress lines.",
+    "choices": [
+      {
+        "text": "pgbench needs a minute to start all of its threads and clients",
+        "correct": false,
+        "why": "Connections took 8.7 ms."
+      },
+      {
+        "text": "Ten seconds is one progress interval, and those varied by 10%",
+        "correct": true,
+        "why": "Right: it reports whichever interval it landed on, and misses the occasional checkpoint."
+      },
+      {
+        "text": "Short runs are refused by the server",
+        "correct": false,
+        "why": "Nothing refuses them; that is the trap."
+      },
+      {
+        "text": "tps cannot be computed under thirty seconds",
+        "correct": false,
+        "why": "It can; it is just less reliable."
+      }
+    ]
+  },
+  {
+    "id": "ex-smrbkj1h",
+    "version": 1,
+    "section": "the-traps",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time pgbench … -T 30` on four processors printed `user 0m0.711s` and `sys 0m0.384s`. What percentage of the processor time available during the run did pgbench use, to one decimal?",
+    "hint": "Available: 4 × 30 seconds.",
+    "value": 0.9,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-s3wzpm9p",
+    "version": 1,
+    "section": "the-traps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do this course's benchmarks hardly ever touch the disk after the first minute?",
+    "hint": "Compare two numbers from the sizes block.",
+    "choices": [
+      {
+        "text": "pgbench reads from a copy in its own memory",
+        "correct": false,
+        "why": "pgbench sends SQL; the server reads the data."
+      },
+      {
+        "text": "shared_buffers holds the whole database",
+        "correct": false,
+        "why": "They are 128 MB; the OS cache does the holding."
+      },
+      {
+        "text": "The data fits in free memory",
+        "correct": true,
+        "why": "Right: 1352 MB against 14 GB; everything fits in the OS cache, which production larger than memory cannot do."
+      },
+      {
+        "text": "The workload is read-only, so nothing is written",
+        "correct": false,
+        "why": "place-order.sql writes every time it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tdmz4dm",
+    "version": 1,
+    "section": "the-traps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A closed-loop run reports 6.5 ms average latency at 1234 tps. The same workload at `-R 900` reports 17.1 ms with 13.0 ms of schedule lag. Which latency should a report about users quote, and why?",
+    "hint": "Who waits when the server is busy?",
+    "choices": [
+      {
+        "text": "6.5 ms, measured at the higher throughput",
+        "correct": false,
+        "why": "The closed loop never sent the transactions that would have queued."
+      },
+      {
+        "text": "17.1 minus 13.0, the time actually spent in the server",
+        "correct": false,
+        "why": "Users feel the wait for their turn too."
+      },
+      {
+        "text": "Neither: only tps matters to users",
+        "correct": false,
+        "why": "Users feel latency, not throughput."
+      },
+      {
+        "text": "17.1 ms: the wait counts for users",
+        "correct": true,
+        "why": "Right: users arrive regardless, and a fixed rate counts the queue the closed loop hides."
+      }
+    ]
+  },
+  {
+    "id": "ex-smkj4xgr",
+    "version": 1,
+    "section": "the-traps",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each trap to the sign of it in a run.",
+    "hint": "One sign each.",
+    "pairs": [
+      {
+        "left": "too short",
+        "right": "progress intervals that differ by as much as the change you are measuring"
+      },
+      {
+        "left": "cold",
+        "right": "the first run of a series is the lowest"
+      },
+      {
+        "left": "client on the same machine",
+        "right": "pgbench's own user and sys time"
+      },
+      {
+        "left": "closed loop",
+        "right": "latency that falls when you offer more load"
+      }
+    ],
+    "right_distractors": [
+      "Heap Blocks: lossy"
+    ]
+  },
+  {
+    "id": "ex-9bf8f86n",
+    "version": 1,
+    "section": "repeat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three runs after a fresh copy gave 1157, 1434 and 1311 tps. Why is the 1157 thrown away?",
+    "hint": "What had not happened yet before it?",
+    "choices": [
+      {
+        "text": "It is the lowest, and low results are pessimistic",
+        "correct": false,
+        "why": "Discarding by value is choosing; it is discarded by position."
+      },
+      {
+        "text": "It paid for warming a just-copied database",
+        "correct": true,
+        "why": "Right: the first run of a series is a warm-up, whatever its number."
+      },
+      {
+        "text": "pgbench's first run always includes the vacuum",
+        "correct": false,
+        "why": "These runs used -n, no vacuum."
+      },
+      {
+        "text": "The reset script was still running",
+        "correct": false,
+        "why": "It had finished; its output was printed before the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7a2x92r",
+    "version": 1,
+    "section": "repeat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the warm-up, two runs gave 1311 and 1434 tps. A change then moves the number by 5%. What has been shown?",
+    "hint": "Compare the change with the spread.",
+    "choices": [
+      {
+        "text": "A 5% improvement",
+        "correct": false,
+        "why": "The same database moved by 9% between two runs."
+      },
+      {
+        "text": "A 5% regression",
+        "correct": false,
+        "why": "The direction is as unshown as the size."
+      },
+      {
+        "text": "Nothing yet: 5% is inside a 9% noise",
+        "correct": true,
+        "why": "Right: more or longer runs, or a bigger effect, are needed; lesson 24 decides."
+      },
+      {
+        "text": "That the benchmark is broken",
+        "correct": false,
+        "why": "Noise is normal; a benchmark without it would be suspicious."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0m7a9xa",
+    "version": 1,
+    "section": "repeat",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a benchmark series in order.",
+    "hint": "State first, numbers last.",
+    "items": [
+      "Restore the data to a known state",
+      "Run once and discard it",
+      "Run the same command at least three times",
+      "Report the median and the range, with the command"
+    ],
+    "trap": "Reporting before the warm-up is discarded averages a cold run into the result."
+  },
+  {
+    "id": "ex-t8ky2e9w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a benchmark more like production? Choose all that apply.",
+    "hint": "Four lines a workload reproduces, and the traps.",
+    "choices": [
+      {
+        "text": "Weights from pg_stat_statements call counts",
+        "correct": true,
+        "why": "Right: the real mix."
+      },
+      {
+        "text": "Parameters drawn with the skew the data has",
+        "correct": true,
+        "why": "Right: the dashboard dropped from 887 to 525 tps with it."
+      },
+      {
+        "text": "A copy of the data the size of production",
+        "correct": true,
+        "why": "Right: otherwise it measures a cached database."
+      },
+      {
+        "text": "The built-in TPC-B-like test at a bigger scale",
+        "correct": false,
+        "why": "A bigger bank is still a bank."
+      },
+      {
+        "text": "The shortest run that gives a number",
+        "correct": false,
+        "why": "Short runs report whichever interval they land on."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxdp1cvd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team benchmarks a new server with lesson 2's workload: 10 seconds, one run, client on the server, a 2 GB copy of a 400 GB database. It reports 30% more tps than the old server. What is the strongest objection?",
+    "hint": "Which trap changes what is being measured, not just how well?",
+    "choices": [
+      {
+        "text": "A 2 GB copy fits in memory; 400 GB does not",
+        "correct": true,
+        "why": "Right: the disk that 400 GB needs was never measured. The others add noise; this one measures a different system."
+      },
+      {
+        "text": "One run is noisy",
+        "correct": false,
+        "why": "True, and a 30% gap might survive it; the copy's size cannot be repeated away."
+      },
+      {
+        "text": "pgbench running on the server steals processor time",
+        "correct": false,
+        "why": "Under one percent for this workload."
+      },
+      {
+        "text": "Ten seconds misses checkpoints",
+        "correct": false,
+        "why": "A real flaw, but smaller than measuring a cached database."
+      }
+    ]
+  }
+]
