@@ -98,7 +98,7 @@ the application:
 - **Treat a broken connection as expected**, during a failover or a switchover, and reconnect rather
   than crash or show an error page.
 - **Retry the transaction, not the statement**, and only if it is safe to: an order that failed with
-  "connection lost" may or may not have been committed, which is lesson 12's lesson again. An order
+  "connection lost" may or may not have been committed, as lesson 12 showed. An order
   table with a unique key supplied by the application (an order number generated before the insert)
   makes a retry that duplicates nothing.
 - **Wait a little between retries**, because the first seconds after a switch are when the new primary
