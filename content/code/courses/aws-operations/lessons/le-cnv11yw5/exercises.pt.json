@@ -1,0 +1,334 @@
+{
+  "ex-98ha8r4r": {
+    "prompt": "Uma requisição casa com uma regra cuja ação é Count. O que acontece em seguida?",
+    "hint": "Count não termina a avaliação.",
+    "choices": [
+      {
+        "text": "É recusada na hora com um 403 Forbidden",
+        "why": "Isso é Block."
+      },
+      {
+        "text": "A avaliação segue para a regra seguinte da lista",
+        "why": "Certo. Count registra o casamento e passa a requisição adiante."
+      },
+      {
+        "text": "Vai direto para a aplicação",
+        "why": "Isso é Allow, que pula as regras seguintes."
+      },
+      {
+        "text": "O navegador precisa resolver um quebra-cabeça antes",
+        "why": "Isso é CAPTCHA."
+      }
+    ]
+  },
+  "ex-m25mtxqp": {
+    "prompt": "Uma regra Allow para os endereços do escritório fica na prioridade 0, acima das regras gerenciadas. O que isso faz com uma requisição do escritório?",
+    "hint": "Allow termina a avaliação.",
+    "choices": [
+      {
+        "text": "Pula toda regra abaixo dela, as gerenciadas inclusive",
+        "why": "Certo. E não deixa rastro das regras que pulou."
+      },
+      {
+        "text": "Nada, já que as regras gerenciadas sempre rodam",
+        "why": "Um Allow terminal para a avaliação; as regras gerenciadas nunca a veem."
+      },
+      {
+        "text": "É conferida duas vezes, uma por regra",
+        "why": "O primeiro casamento terminal decide; não há segunda conferência."
+      },
+      {
+        "text": "É bloqueada, já que regras Allow são recusadas acima de grupos gerenciados",
+        "why": "O WAF aceita a regra; a ordem é decisão da equipe."
+      }
+    ]
+  },
+  "ex-kr5w8apt": {
+    "prompt": "O que um web ACL faz com uma requisição que nenhuma regra Block ou Allow casou?",
+    "hint": "Ele tem uma ação própria.",
+    "choices": [
+      {
+        "text": "Bloqueia, porque o WAF nega por padrão",
+        "why": "A ação padrão é configurada, e sites públicos usam Allow."
+      },
+      {
+        "text": "Manda para um CAPTCHA",
+        "why": "Só se uma regra disser."
+      },
+      {
+        "text": "Registra e depois derruba a conexão sem resposta",
+        "why": "Não existe essa ação."
+      },
+      {
+        "text": "Aplica a ação padrão do web ACL",
+        "why": "Certo. Para a loja, é Allow."
+      }
+    ]
+  },
+  "ex-wy1fq0f8": {
+    "prompt": "Quantos WCU o preço base por requisição de um web ACL inclui antes de cada requisição custar mais?",
+    "hint": "O primeiro nível.",
+    "unit": "WCU"
+  },
+  "ex-enj28azj": {
+    "prompt": "O primeiro create-web-acl falhou com 'Invalid base64: \"/login\"'. Que parte do sistema recusou?",
+    "hint": "Nada foi enviado ainda.",
+    "choices": [
+      {
+        "text": "O WAF, porque /login não é um caminho válido",
+        "why": "A requisição nunca saiu do computador."
+      },
+      {
+        "text": "O moto, que não aceita regras por taxa",
+        "why": "O moto aceitou o mesmo arquivo logo depois."
+      },
+      {
+        "text": "A linha de comando, lendo um campo binário do JSON",
+        "why": "Certo. Esperava base64 até ser avisada de que o arquivo é texto puro."
+      },
+      {
+        "text": "O balanceador, antes da associação",
+        "why": "O web ACL ainda não existia."
+      }
+    ]
+  },
+  "ex-897qdx71": {
+    "prompt": "Para a linha de comando ler os campos binários de um arquivo JSON como texto puro, adicione --cli-binary-format ____. (um valor)",
+    "hint": "raw, in, base64, out",
+    "blanks": [
+      {
+        "accept": [
+          "raw-in-base64-out"
+        ]
+      }
+    ]
+  },
+  "ex-rnf4gmrj": {
+    "prompt": "O moto informou o web ACL da loja com 3 unidades de capacidade. O que a AWS informaria?",
+    "hint": "Só o conjunto comum de regras dá 700.",
+    "choices": [
+      {
+        "text": "3, igual ao moto",
+        "why": "O moto cobra uma unidade por regra; a AWS cobra pelo trabalho."
+      },
+      {
+        "text": "Cerca de 705",
+        "why": "Certo. 700 do conjunto comum, e alguns do conjunto de IPs e da regra por taxa."
+      },
+      {
+        "text": "1.500, a capacidade incluída",
+        "why": "Esse é o limite do nível, não o tamanho deste web ACL."
+      },
+      {
+        "text": "5.000, o máximo",
+        "why": "Esse é o teto que um web ACL pode atingir."
+      }
+    ]
+  },
+  "ex-bgsz60k2": {
+    "prompt": "Por que a loja muda SizeRestrictions_BODY para Count em vez de tirar o conjunto comum de regras?",
+    "hint": "Uma regra erra; as outras são úteis.",
+    "choices": [
+      {
+        "text": "Sobrescrever é mais barato que tirar um grupo",
+        "why": "O preço é o mesmo de qualquer jeito."
+      },
+      {
+        "text": "Um grupo gerenciado não pode ser tirado depois de anexado",
+        "why": "Pode; é uma regra."
+      },
+      {
+        "text": "Count deixa os envios mais rápidos",
+        "why": "Count muda a ação, não a velocidade."
+      },
+      {
+        "text": "Envios passam de 8 KB; as outras regras seguem bloqueando",
+        "why": "Certo. Corrige o falso positivo e mantém a proteção."
+      }
+    ]
+  },
+  "ex-356c6jn8": {
+    "prompt": "Um endereço acima do limite de login-rate desacelera abaixo dele. O que acontece com suas requisições?",
+    "hint": "Ninguém precisa agir.",
+    "choices": [
+      {
+        "text": "Voltam a passar, sem ninguém agir",
+        "why": "Certo. A regra só bloqueia enquanto a taxa está acima do limite."
+      },
+      {
+        "text": "Continuam bloqueadas até alguém tirar o bloqueio",
+        "why": "Uma regra por taxa tira o próprio bloqueio."
+      },
+      {
+        "text": "O endereço vai para o conjunto de IPs",
+        "why": "O WAF não edita conjuntos de IPs."
+      },
+      {
+        "text": "Vão para um CAPTCHA por um dia",
+        "why": "A ação da regra é Block, sem memória além da janela."
+      }
+    ]
+  },
+  "ex-d9scjn20": {
+    "prompt": "Um programa tenta senhas a 4 requisições por segundo contra /login, com limite de 100 em 300 segundos. Depois de quantos segundos ele enviou a centésima requisição?",
+    "hint": "100 / 4",
+    "unit": "segundos"
+  },
+  "ex-yg5hqjtg": {
+    "prompt": "Atrás de uma operadora móvel, 40 clientes compartilham um endereço e o app tenta de novo um login falho 5 vezes. Que risco um limite de 100 por 5 minutos traz?",
+    "hint": "40 × 5",
+    "choices": [
+      {
+        "text": "Deixar o atacante passar",
+        "why": "Esse risco é mil endereços cada um abaixo do limite, outro caso."
+      },
+      {
+        "text": "Subir muito a conta do WAF",
+        "why": "Requisições custam o mesmo bloqueadas ou não."
+      },
+      {
+        "text": "Bloquear clientes reais em silêncio",
+        "why": "Certo. 200 requisições em cinco minutos ruins, de pessoas que não fizeram nada errado."
+      },
+      {
+        "text": "Nada, já que o limite é por cliente",
+        "why": "A chave é IP, então os quarenta dividem uma contagem."
+      }
+    ]
+  },
+  "ex-n8yb1ad6": {
+    "prompt": "Ligue cada chave de agregação ao que ela conta.",
+    "hint": "Endereço, cabeçalho, tudo, combinação.",
+    "pairs": [
+      {
+        "left": "IP",
+        "right": "O endereço de origem da requisição"
+      },
+      {
+        "left": "FORWARDED_IP",
+        "right": "Um endereço num cabeçalho como X-Forwarded-For"
+      },
+      {
+        "left": "CONSTANT",
+        "right": "Toda requisição que casa, junta"
+      },
+      {
+        "left": "CUSTOM_KEYS",
+        "right": "Até cinco chaves, como um cabeçalho e um cookie"
+      }
+    ]
+  },
+  "ex-dgfjnfjh": {
+    "prompt": "Segundo esta lição, como começa uma regra nova na frente de um site no ar?",
+    "hint": "Teste-a nos logs.",
+    "choices": [
+      {
+        "text": "Block, para parar ataques na hora",
+        "why": "Isso testa nos clientes."
+      },
+      {
+        "text": "Allow, até a equipe confiar nela",
+        "why": "Allow termina e pula as regras seguintes."
+      },
+      {
+        "text": "Count",
+        "why": "Certo. Uma semana contando diz o que teria bloqueado."
+      },
+      {
+        "text": "CAPTCHA, como meio-termo",
+        "why": "Ainda afeta clientes, e custa por tentativa."
+      }
+    ]
+  },
+  "ex-bh0q5b9a": {
+    "prompt": "O segundo update-web-acl, com o token de antes do primeiro, foi recusado. Por quê?",
+    "hint": "Bloqueio otimista.",
+    "choices": [
+      {
+        "text": "Uma regra não pode ir para Count duas vezes",
+        "why": "A mesma mudança seria aceita com um token novo."
+      },
+      {
+        "text": "O web ACL mudou depois da leitura do token",
+        "why": "Certo. Leia de novo e reaplique."
+      },
+      {
+        "text": "O moto permite uma única atualização por web ACL por minuto",
+        "why": "A AWS recusa do mesmo jeito."
+      },
+      {
+        "text": "Tokens expiram depois de um segundo",
+        "why": "Um token é substituído por uma mudança, não pelo tempo."
+      }
+    ]
+  },
+  "ex-ay2xxmr2": {
+    "prompt": "Um grupo do CloudWatch Logs que recebe logs do WAF precisa ter nome começando com ____. (prefixo, com o hífen final)",
+    "hint": "O moto não confere; a AWS confere.",
+    "blanks": [
+      {
+        "accept": [
+          "aws-waf-logs-"
+        ]
+      }
+    ]
+  },
+  "ex-hbyqxvmd": {
+    "prompt": "Ligue cada campo de um registro de log do WAF ao que ele guarda.",
+    "hint": "Decidiu, testou, a requisição, o resultado.",
+    "pairs": [
+      {
+        "left": "terminatingRuleId",
+        "right": "O que decidiu a requisição"
+      },
+      {
+        "left": "nonTerminatingMatchingRules",
+        "right": "Regras que casaram sem decidir"
+      },
+      {
+        "left": "httpRequest",
+        "right": "O endereço, o método e o caminho"
+      },
+      {
+        "left": "action",
+        "right": "O resultado, ALLOW ou BLOCK"
+      }
+    ]
+  },
+  "ex-43zqq6cy": {
+    "prompt": "Um web ACL com 4 regras, dentro de 1.500 WCU, inspeciona 20 milhões de requisições num mês. Qual o custo do WAF no mês, em USD?",
+    "hint": "5 + 4 × 1 + 20 × 0,60",
+    "unit": "USD"
+  },
+  "ex-a16m90mg": {
+    "prompt": "Quais destas coisas o moto faz com o web ACL da loja? Escolha todas que se aplicam.",
+    "hint": "Ele guarda, não inspeciona.",
+    "choices": [
+      {
+        "text": "Guarda as regras e a ordem",
+        "why": "Sim."
+      },
+      {
+        "text": "Recusa um token de bloqueio velho",
+        "why": "Sim."
+      },
+      {
+        "text": "Associa ao balanceador",
+        "why": "Sim."
+      },
+      {
+        "text": "Bloqueia requisições do conjunto de IPs",
+        "why": "O moto não inspeciona tráfego."
+      },
+      {
+        "text": "Informa as unidades de capacidade reais da AWS",
+        "why": "Informou 3, uma por regra."
+      }
+    ]
+  },
+  "ex-db0taae7": {
+    "prompt": "Os 50 milhões de requisições mensais da loja passam do nível base para o nível de 2.000 WCU. Em quantos USD por mês a linha de requisições cresce?",
+    "hint": "0,80 − 0,60, vezes 50",
+    "unit": "USD"
+  }
+}

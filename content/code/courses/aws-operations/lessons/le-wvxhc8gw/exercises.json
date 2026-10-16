@@ -1,0 +1,396 @@
+[
+  {
+    "id": "ex-9w5m39gp",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which three things together identify a CloudWatch metric?",
+    "hint": "The name is a third of it.",
+    "choices": [
+      {
+        "text": "Name, period and statistic",
+        "correct": false,
+        "why": "Period and statistic are chosen when reading, not part of the metric."
+      },
+      {
+        "text": "Name, unit and the timestamp of each point",
+        "correct": false,
+        "why": "Unit and timestamp belong to each data point, not to the metric's identity."
+      },
+      {
+        "text": "Namespace, region and account only",
+        "correct": false,
+        "why": "Region and account scope the metric, but name and dimensions still identify it."
+      },
+      {
+        "text": "Namespace, name and dimensions",
+        "correct": true,
+        "why": "Right. Change any one and it is another metric."
+      }
+    ]
+  },
+  {
+    "id": "ex-5e2h3e2e",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Orders were published with `Service=api,Stage=prod`. A dashboard queries `Orders` with only `Service=api`. What does it show on AWS?",
+    "hint": "A metric with fewer dimensions is a different metric.",
+    "choices": [
+      {
+        "text": "The sum of every stage",
+        "correct": false,
+        "why": "That is what moto answered; CloudWatch does not add metrics up unless asked."
+      },
+      {
+        "text": "No data at all",
+        "correct": true,
+        "why": "Right. Nobody published a metric with only that dimension, so the query names one that does not exist, and the graph is empty."
+      },
+      {
+        "text": "An error naming the missing dimension",
+        "correct": false,
+        "why": "No error: an empty answer is what makes this mistake easy to miss."
+      },
+      {
+        "text": "Production's orders, the first stage published",
+        "correct": false,
+        "why": "Order of publication plays no part in which metric a query names."
+      }
+    ]
+  },
+  {
+    "id": "ex-y60wh6tt",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A question arrives about a five-minute spike that happened four months ago. What is the smallest period CloudWatch can still show?",
+    "hint": "Detail ages out in steps.",
+    "choices": [
+      {
+        "text": "One hour",
+        "correct": true,
+        "why": "Right. Between 63 days and 15 months, only hourly points remain."
+      },
+      {
+        "text": "One minute",
+        "correct": false,
+        "why": "One-minute points are kept for 15 days."
+      },
+      {
+        "text": "Five minutes",
+        "correct": false,
+        "why": "Five-minute points are kept for 63 days."
+      },
+      {
+        "text": "None: the data is gone after three months",
+        "correct": false,
+        "why": "Hourly data is kept for 15 months."
+      }
+    ]
+  },
+  {
+    "id": "ex-v88d7dg5",
+    "version": 1,
+    "section": "statistics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ninety-five requests take about 40 ms and five take 900 ms. Which statistic shows that one customer in twenty waits almost a second?",
+    "hint": "The average describes no request.",
+    "choices": [
+      {
+        "text": "The average, 84 ms",
+        "correct": false,
+        "why": "84 ms is the latency of no request at all."
+      },
+      {
+        "text": "p50",
+        "correct": false,
+        "why": "The median is 40 ms; it hides the slow five."
+      },
+      {
+        "text": "A high percentile, such as p99",
+        "correct": true,
+        "why": "Right. p99 is 900 ms here, the slow tail made visible."
+      },
+      {
+        "text": "SampleCount",
+        "correct": false,
+        "why": "It says how many requests, not how slow any of them was."
+      }
+    ]
+  },
+  {
+    "id": "ex-199jwpfa",
+    "version": 1,
+    "section": "statistics",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 95,
+    "tolerance": 0,
+    "prompt": "Using the nearest-rank method on 100 sorted samples, which rank (position counted from 1) gives p95?",
+    "hint": "p% of the samples at or below it."
+  },
+  {
+    "id": "ex-1e7j6gh9",
+    "version": 1,
+    "section": "statistics",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "value": 18,
+    "tolerance": 0.5,
+    "prompt": "A page makes 20 requests, each with a 1% chance of hitting the slow tail. What is the probability, in percent, that at least one is slow? Answer to the nearest whole percent.",
+    "hint": "One minus the chance all twenty avoid it.",
+    "unit": "%"
+  },
+  {
+    "id": "ex-fa2ebwvw",
+    "version": 1,
+    "section": "statistics",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each metric to the statistic that answers the usual question about it.",
+    "hint": "Count, latency, level.",
+    "pairs": [
+      {
+        "left": "Errors per minute",
+        "right": "Sum"
+      },
+      {
+        "left": "Response time",
+        "right": "p99"
+      },
+      {
+        "left": "Free memory",
+        "right": "Minimum"
+      }
+    ],
+    "right_distractors": [
+      "SampleCount"
+    ]
+  },
+  {
+    "id": "ex-c15d2k69",
+    "version": 1,
+    "section": "custom-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a customer's id never a dimension?",
+    "hint": "Each distinct value makes a metric.",
+    "choices": [
+      {
+        "text": "CloudWatch refuses dimensions with numbers",
+        "correct": false,
+        "why": "Numbers are accepted; the cost is what makes it wrong."
+      },
+      {
+        "text": "Dimensions are visible to every AWS customer",
+        "correct": false,
+        "why": "Metrics are private to the account."
+      },
+      {
+        "text": "Dimensions cannot be longer than eight characters",
+        "correct": false,
+        "why": "No such limit exists; the problem is how many values, not how long."
+      },
+      {
+        "text": "Each id becomes a billed metric, multiplying the others",
+        "correct": true,
+        "why": "Right. Twenty thousand customers turned 240 metrics into 4.8 million."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms2pgan3",
+    "version": 1,
+    "section": "custom-metrics",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 72,
+    "tolerance": 0.01,
+    "prompt": "At 0.30 USD per metric-month for the first 10,000, what do 240 custom metrics cost a month?",
+    "hint": "Metrics times price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-ax6crt9s",
+    "version": 1,
+    "section": "custom-metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the Embedded Metric Format, where does a customer's id written in the same log line end up?",
+    "hint": "Only what the _aws block declares becomes a metric.",
+    "choices": [
+      {
+        "text": "As a dimension of the latency metric",
+        "correct": false,
+        "why": "Only the dimensions listed in the _aws block are dimensions."
+      },
+      {
+        "text": "A log field, searchable, never a metric",
+        "correct": true,
+        "why": "Right. One line is the metric and the detail behind it."
+      },
+      {
+        "text": "Nowhere: CloudWatch strips unknown fields",
+        "correct": false,
+        "why": "The whole line is kept in the log group."
+      },
+      {
+        "text": "In a separate metric per customer",
+        "correct": false,
+        "why": "No metric is made from a field the block does not declare."
+      }
+    ]
+  },
+  {
+    "id": "ex-nn0c2q8h",
+    "version": 1,
+    "section": "dashboards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the dashboard JSON, what does `\"...\"` at the start of a metric row mean?",
+    "hint": "It saves writing the same metric twice.",
+    "choices": [
+      {
+        "text": "All metrics in the namespace",
+        "correct": false,
+        "why": "That would be a SEARCH expression; ... copies the previous row."
+      },
+      {
+        "text": "Copy the row above, then change it",
+        "correct": true,
+        "why": "Right. The p99 line is the latency metric again with another statistic."
+      },
+      {
+        "text": "A placeholder to fill in later",
+        "correct": false,
+        "why": "CloudWatch reads it, and the widget draws the line."
+      },
+      {
+        "text": "Any dimension value",
+        "correct": false,
+        "why": "Dimensions are matched exactly; there is no wildcard here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx3hgw4n",
+    "version": 1,
+    "section": "dashboards",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four signals of a service dashboard in the order this lesson places them, first to last.",
+    "hint": "What customers feel first comes first.",
+    "items": [
+      "Latency, p50 and p99",
+      "Traffic per minute",
+      "Errors as a rate",
+      "Saturation of the scarcest resource"
+    ],
+    "trap": "Errors before traffic is the slip: a rate needs the traffic it is a share of."
+  },
+  {
+    "id": "ex-hgrztywh",
+    "version": 1,
+    "section": "dashboards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the text widget at the top of the shop's dashboard for?",
+    "hint": "Think of the person paged at three.",
+    "choices": [
+      {
+        "text": "To make the page look finished",
+        "correct": false,
+        "why": "Decoration is not the point; the words are for someone in a hurry."
+      },
+      {
+        "text": "To hold the alarm thresholds",
+        "correct": false,
+        "why": "Thresholds live in the alarms; text there would drift from them."
+      },
+      {
+        "text": "It is required for the dashboard to save",
+        "correct": false,
+        "why": "A dashboard saves with metric widgets alone."
+      },
+      {
+        "text": "Who owns it, where to look",
+        "correct": true,
+        "why": "Right. The person paged at night needs exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p01z3gv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good dimensions for the shop's latency metric? Choose all that apply.",
+    "hint": "Few and fixed values.",
+    "choices": [
+      {
+        "text": "Service",
+        "correct": true,
+        "why": "Yes. Three services, a fixed list."
+      },
+      {
+        "text": "Endpoint",
+        "correct": true,
+        "why": "Yes. About forty, changing with releases, not with traffic."
+      },
+      {
+        "text": "Order id",
+        "correct": false,
+        "why": "No. A new value per order, a new metric per order."
+      },
+      {
+        "text": "Customer email",
+        "correct": false,
+        "why": "No. Unbounded, and personal data in a metric name."
+      },
+      {
+        "text": "Availability zone",
+        "correct": true,
+        "why": "Yes. Three values, and the question it answers is real."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnwgk7k7",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To ask CloudWatch for the 99th percentile with get-metric-statistics, you pass `--extended-statistics ___`.",
+    "hint": "A letter and two digits.",
+    "blanks": [
+      {
+        "accept": [
+          "p99"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

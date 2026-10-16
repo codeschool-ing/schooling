@@ -1,0 +1,435 @@
+[
+  {
+    "id": "ex-5xjwhf4z",
+    "version": 1,
+    "section": "app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the CDK hand to AWS in the end?",
+    "hint": "The program runs on your machine.",
+    "choices": [
+      {
+        "text": "The JavaScript program, which AWS runs to create resources",
+        "correct": false,
+        "why": "AWS never runs your program; it receives what the program printed."
+      },
+      {
+        "text": "A Terraform plan converted to JSON",
+        "correct": false,
+        "why": "The CDK for AWS targets CloudFormation, not Terraform."
+      },
+      {
+        "text": "A list of API calls the CLI then makes one by one",
+        "correct": false,
+        "why": "The calls are made by CloudFormation from the template, not by the CLI."
+      },
+      {
+        "text": "A CloudFormation template",
+        "correct": true,
+        "why": "Right. Synthesis writes a template, and CloudFormation deploys it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhj42qd3",
+    "version": 1,
+    "section": "app",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each level of CDK construct to what it is.",
+    "hint": "From one resource with nothing added, to several services in one call.",
+    "pairs": [
+      {
+        "left": "Level 1, such as CfnBucket",
+        "right": "A template resource one to one, nothing added"
+      },
+      {
+        "left": "Level 2, such as s3.Bucket",
+        "right": "One kind of resource with defaults and named options"
+      },
+      {
+        "left": "Level 3, a pattern",
+        "right": "An arrangement of several services from one call"
+      }
+    ],
+    "right_distractors": [
+      "A stack deployed in another account"
+    ]
+  },
+  {
+    "id": "ex-81pxkktz",
+    "version": 1,
+    "section": "app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could the CDK version of the log group not repeat the 15-day mistake cfn-lint caught in lesson 4?",
+    "hint": "Look at how retention is written in app.js.",
+    "choices": [
+      {
+        "text": "The CDK runs cfn-lint during synthesis",
+        "correct": false,
+        "why": "It does not; the protection is in the type, before any linter."
+      },
+      {
+        "text": "moto would refuse 15 days at deployment",
+        "correct": false,
+        "why": "moto refuses very little, and nothing reached it here."
+      },
+      {
+        "text": "Retention is an enumeration",
+        "correct": true,
+        "why": "Right. logs.RetentionDays has a member per valid period, and 15 is not one."
+      },
+      {
+        "text": "JavaScript does not allow odd numbers in that field",
+        "correct": false,
+        "why": "Seven days is odd and valid; the list of periods is what matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9ethmkv",
+    "version": 1,
+    "section": "synth",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The app asked for four resources and the template holds a bucket policy as well. Where did it come from?",
+    "hint": "One option of the bucket.",
+    "choices": [
+      {
+        "text": "From cdk bootstrap",
+        "correct": false,
+        "why": "Bootstrapping makes the toolkit stack, not this stack's resources."
+      },
+      {
+        "text": "From enforceSSL: true",
+        "correct": true,
+        "why": "Right. That one option expands into a full bucket policy."
+      },
+      {
+        "text": "From the alarm's SNS action",
+        "correct": false,
+        "why": "An alarm action writes AlarmActions, not a bucket policy."
+      },
+      {
+        "text": "From blockPublicAccess",
+        "correct": false,
+        "why": "That becomes a property of the bucket itself, PublicAccessBlockConfiguration."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn3j4hae",
+    "version": 1,
+    "section": "synth",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A refactoring moves the `Uploads` construct into a new construct called `Storage`. What will the next change set show for the bucket?",
+    "hint": "How is the logical id derived?",
+    "choices": [
+      {
+        "text": "An Add for a new logical id and a Remove for the old one",
+        "correct": true,
+        "why": "Right. The path, and so the hash, changed; to CloudFormation it is a new bucket."
+      },
+      {
+        "text": "Nothing: the bucket keeps its name, so nothing changes",
+        "correct": false,
+        "why": "The logical id comes from the path, and the path changed."
+      },
+      {
+        "text": "A Modify with no replacement",
+        "correct": false,
+        "why": "CloudFormation sees a different logical id, which is a different resource."
+      },
+      {
+        "text": "An error, because the CDK refuses to move constructs",
+        "correct": false,
+        "why": "The CDK moves them without complaint, which is why the change set must be read."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m4nywfz",
+    "version": 1,
+    "section": "synth",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The CDK command that runs the program and writes the template, without contacting AWS, is `cdk ___`.",
+    "hint": "Short for synthesize.",
+    "blanks": [
+      {
+        "accept": [
+          "synth"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-42xzde44",
+    "version": 1,
+    "section": "synth",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 47,
+    "tolerance": 0,
+    "prompt": "`app.js` had 37 lines and `template.yaml` 84. How many lines did synthesis add beyond the program's own?",
+    "hint": "A subtraction."
+  },
+  {
+    "id": "ex-gvkt29am",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `cdk bootstrap` create in an account?",
+    "hint": "What does a deployment need before the template?",
+    "choices": [
+      {
+        "text": "The application's own stack, created early and ready to update later",
+        "correct": false,
+        "why": "The application's stack comes from cdk deploy; bootstrap prepares the account."
+      },
+      {
+        "text": "A CDKToolkit stack, with assets storage and roles",
+        "correct": true,
+        "why": "Right. Deployments upload assets there and assume those roles, and a parameter records the version."
+      },
+      {
+        "text": "A copy of node_modules in S3",
+        "correct": false,
+        "why": "The library stays on your machine; only the template and assets are uploaded."
+      },
+      {
+        "text": "An IAM user with access keys for the CLI",
+        "correct": false,
+        "why": "Bootstrap creates roles for deployments, never a user with static keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbmsdyy6",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto reported `CREATE_COMPLETE` for the CDK stack, but three resources came back as `None`. What is the right conclusion?",
+    "hint": "Separate what the template says from what a service did.",
+    "choices": [
+      {
+        "text": "The template is wrong and the policy should be rewritten by hand",
+        "correct": false,
+        "why": "The template is right; moto skipped resources it does not create."
+      },
+      {
+        "text": "The stack will be complete on AWS too, so nothing needs checking",
+        "correct": false,
+        "why": "moto's answer says nothing about AWS's; that is the point of the section."
+      },
+      {
+        "text": "The CDK skipped them because the account was not bootstrapped",
+        "correct": false,
+        "why": "The CDK wrote them into the template; moto did not create them."
+      },
+      {
+        "text": "A status says little: test the template itself",
+        "correct": true,
+        "why": "Right. moto reported success over what it did not do, so the decisions are tested in the template."
+      }
+    ]
+  },
+  {
+    "id": "ex-82bybn7y",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before `cdk deploy` executes a change, what does it show and ask about by default?",
+    "hint": "Changes that widen access.",
+    "choices": [
+      {
+        "text": "New IAM statements and security group rules",
+        "correct": true,
+        "why": "Right. Broadening of access is confirmed before the change set runs."
+      },
+      {
+        "text": "Every property of every resource",
+        "correct": false,
+        "why": "That would be cdk diff in full; deploy asks about the security-relevant part."
+      },
+      {
+        "text": "The monthly cost of the new resources",
+        "correct": false,
+        "why": "The CDK knows no prices; a cost estimate is a separate tool."
+      },
+      {
+        "text": "Nothing; it executes at once",
+        "correct": false,
+        "why": "By default it stops on security-relevant changes and asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn037rqs",
+    "version": 1,
+    "section": "tests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Template.fromStack` need in order to run?",
+    "hint": "It synthesizes in memory.",
+    "choices": [
+      {
+        "text": "A bootstrapped account",
+        "correct": false,
+        "why": "Nothing is deployed; no account is involved."
+      },
+      {
+        "text": "Only Node.js and the library",
+        "correct": true,
+        "why": "Right. It builds the template in memory and checks it there."
+      },
+      {
+        "text": "moto running on port 4567",
+        "correct": false,
+        "why": "The test calls no API at all."
+      },
+      {
+        "text": "Network access to download the template",
+        "correct": false,
+        "why": "The template is produced locally from the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w3fczvt",
+    "version": 1,
+    "section": "tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hasResourceProperties` is given only `PolicyDocument.Statement` with one matching statement. The real policy has a second statement too. Does the test pass?",
+    "hint": "arrayWith and objectLike allow more.",
+    "choices": [
+      {
+        "text": "No, because the arrays differ in length",
+        "correct": false,
+        "why": "Match.arrayWith only requires the given items to be present."
+      },
+      {
+        "text": "Only if the second statement is a Deny as well",
+        "correct": false,
+        "why": "The extra statement's content is not checked at all."
+      },
+      {
+        "text": "It depends on the order of the statements",
+        "correct": false,
+        "why": "arrayWith finds the items wherever they are."
+      },
+      {
+        "text": "Yes: extra statements and properties are allowed",
+        "correct": true,
+        "why": "Right. The test pins the decision, not the whole policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-hndsr3rg",
+    "version": 1,
+    "section": "tests",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are worth a fine-grained test in the shop's stack? Choose all that apply.",
+    "hint": "Decisions that are easy to undo and expensive to miss.",
+    "choices": [
+      {
+        "text": "The bucket refuses plain HTTP",
+        "correct": true,
+        "why": "Yes. One line removes it, and nothing else would notice."
+      },
+      {
+        "text": "The bucket is kept when the stack is deleted",
+        "correct": true,
+        "why": "Yes. Losing it loses customers' uploads."
+      },
+      {
+        "text": "The exact hash in the bucket's logical id",
+        "correct": false,
+        "why": "No. That is what a snapshot pins, and it changes with harmless refactorings."
+      },
+      {
+        "text": "The alarm notifies the topic",
+        "correct": true,
+        "why": "Yes. An alarm that tells nobody is no alarm."
+      },
+      {
+        "text": "The order of the keys in the template",
+        "correct": false,
+        "why": "No. The order means nothing to CloudFormation."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bmxmj8f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps from a CDK change to AWS in the order a careful pipeline runs them.",
+    "hint": "Test what you wrote before anybody sees what it changes.",
+    "items": [
+      "Run the tests on the synthesized template",
+      "Synthesize the template in the build",
+      "Create a change set from the template",
+      "A person approves the change set",
+      "Execute the change set"
+    ],
+    "trap": "Testing after deploying is the slip: the test exists to stop the deployment."
+  },
+  {
+    "id": "ex-a53br1a4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library upgrade changes what `enforceSSL` writes. Which practice notices before production does?",
+    "hint": "The template is where the change shows.",
+    "choices": [
+      {
+        "text": "Pinning the library forever so it never changes",
+        "correct": false,
+        "why": "A library frozen for ever misses fixes; the change has to be seen, not avoided."
+      },
+      {
+        "text": "Reading the new template and its change set",
+        "correct": true,
+        "why": "Right. Plus the fine-grained test, which fails if the decision is lost."
+      },
+      {
+        "text": "Deploying to moto and checking the stack status",
+        "correct": false,
+        "why": "moto reported complete while skipping the very policy in question."
+      },
+      {
+        "text": "Running cdk bootstrap again",
+        "correct": false,
+        "why": "Bootstrap prepares the account; it reads nothing of the app's template."
+      }
+    ]
+  }
+]

@@ -1,0 +1,450 @@
+[
+  {
+    "id": "ex-mz5pwfkt",
+    "version": 1,
+    "section": "two-stores",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By this lesson's rule, where does a database password that should change every thirty days go?",
+    "hint": "Which store rotates?",
+    "choices": [
+      {
+        "text": "Secrets Manager",
+        "correct": true,
+        "why": "Right. Rotation is built in."
+      },
+      {
+        "text": "Parameter Store, as a String",
+        "correct": false,
+        "why": "A String is not even encrypted."
+      },
+      {
+        "text": "An environment variable in the image",
+        "correct": false,
+        "why": "Then it is in every copy of the image."
+      },
+      {
+        "text": "A file in the repository, encrypted",
+        "correct": false,
+        "why": "Changing it is a release, and the key has to live somewhere too."
+      }
+    ]
+  },
+  {
+    "id": "ex-9t13s3nv",
+    "version": 1,
+    "section": "two-stores",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 6,
+    "tolerance": 0.01,
+    "prompt": "At 0.40 USD per secret per month, what do 15 secrets cost in a month, before calls?",
+    "hint": "15 × 0.40",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-q0xp362k",
+    "version": 1,
+    "section": "two-stores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does price.py print no line for a standard parameter?",
+    "hint": "What is its price?",
+    "choices": [
+      {
+        "text": "The pinned version of the list is too old",
+        "correct": false,
+        "why": "The version is recent; the line does not exist."
+      },
+      {
+        "text": "They are billed under Secrets Manager",
+        "correct": false,
+        "why": "They are a Systems Manager feature."
+      },
+      {
+        "text": "São Paulo does not offer them",
+        "correct": false,
+        "why": "The lab stored them in sa-east-1 like everything else."
+      },
+      {
+        "text": "Standard parameters are free",
+        "correct": true,
+        "why": "Right. Only the advanced tier and higher throughput have prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zycg6g2",
+    "version": 1,
+    "section": "parameter-store",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without --with-decryption, moto returned 'kms:alias/aws/ssm:first-pass' for a SecureString. What does AWS return?",
+    "hint": "The lab called it moto's idea of encryption.",
+    "choices": [
+      {
+        "text": "The same, with the plaintext after the key name",
+        "correct": false,
+        "why": "Then anybody could read it; that is moto only."
+      },
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "It returns the encrypted value."
+      },
+      {
+        "text": "KMS ciphertext, unreadable without the key",
+        "correct": true,
+        "why": "Right. Decrypting needs permission on the key as well."
+      },
+      {
+        "text": "An access-denied error",
+        "correct": false,
+        "why": "Reading the encrypted value is allowed by ssm:GetParameter."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8ktmqzn",
+    "version": 1,
+    "section": "parameter-store",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To replace the value of an existing parameter, put-parameter needs the flag --____. (one word)",
+    "hint": "The error message said so.",
+    "blanks": [
+      {
+        "accept": [
+          "overwrite"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c5x5wfvf",
+    "version": 1,
+    "section": "parameter-store",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 4,
+    "tolerance": 0,
+    "prompt": "What is the largest value, in KB, a standard parameter may hold on AWS?",
+    "hint": "moto let 5,000 characters through.",
+    "unit": "KB"
+  },
+  {
+    "id": "ex-4rm77e18",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A policy names arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/prod/db exactly, with no wildcard. What goes wrong on AWS?",
+    "hint": "Look at the end of the secret's real ARN.",
+    "choices": [
+      {
+        "text": "Nothing; Secrets Manager ignores the suffix",
+        "correct": false,
+        "why": "The ARN carries the suffix and the policy must match it."
+      },
+      {
+        "text": "A six-character suffix",
+        "correct": true,
+        "why": "Right. The real ARN ends with six random characters, hence secret:shop/prod/db-*."
+      },
+      {
+        "text": "It matches every secret under shop/prod",
+        "correct": false,
+        "why": "Without a wildcard it matches one string exactly."
+      },
+      {
+        "text": "It is refused when the policy is saved",
+        "correct": false,
+        "why": "The policy is valid; it just names nothing that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-118a1t2d",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each staging label to what it marks.",
+    "hint": "Current, before, during a rotation.",
+    "pairs": [
+      {
+        "left": "AWSCURRENT",
+        "right": "What a read without a stage returns"
+      },
+      {
+        "left": "AWSPREVIOUS",
+        "right": "The version before the current one"
+      },
+      {
+        "left": "AWSPENDING",
+        "right": "A new value a rotation has not finished"
+      }
+    ]
+  },
+  {
+    "id": "ex-zqzbs4aa",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four steps of a rotation function in order.",
+    "hint": "The stage moves last.",
+    "items": [
+      "createSecret",
+      "setSecret",
+      "testSecret",
+      "finishSecret"
+    ]
+  },
+  {
+    "id": "ex-32kbkm44",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto rotated a secret with no function and the next read failed. Which real bug does that resemble?",
+    "hint": "Which step must never run without the others?",
+    "choices": [
+      {
+        "text": "Moving the stage too early",
+        "correct": true,
+        "why": "Right. AWSCURRENT moved before a value was set: the one bug a rotation function must not have."
+      },
+      {
+        "text": "A function that runs every day instead of monthly",
+        "correct": false,
+        "why": "Frequent rotation is safe if each one completes."
+      },
+      {
+        "text": "A function that tests the new password",
+        "correct": false,
+        "why": "Testing is step three, and the safeguard."
+      },
+      {
+        "text": "A secret replicated to another region",
+        "correct": false,
+        "why": "Replication is unrelated to the stage."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vcb0axj",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 30,
+    "tolerance": 0,
+    "prompt": "How many days does a deleted secret wait by default before it is gone?",
+    "hint": "The DeletionDate was a month away.",
+    "unit": "days"
+  },
+  {
+    "id": "ex-d9wtedwg",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In cache-demo.py, why did the read just after the change return the old password?",
+    "hint": "Count the calls.",
+    "choices": [
+      {
+        "text": "Secrets Manager takes a minute to store a new version",
+        "correct": false,
+        "why": "The new version was there; the program did not ask."
+      },
+      {
+        "text": "put_secret_value made the new version AWSPENDING",
+        "correct": false,
+        "why": "It became AWSCURRENT at once."
+      },
+      {
+        "text": "The fingerprint hides the change",
+        "correct": false,
+        "why": "The fingerprint changed three seconds later."
+      },
+      {
+        "text": "The cache was still fresh; no call was made",
+        "correct": true,
+        "why": "Right. Three reads, two calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-emeb4hnj",
+    "version": 1,
+    "section": "reading",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 86400,
+    "tolerance": 0,
+    "prompt": "10 containers each read a secret every 5 minutes for a 30-day month. How many calls is that?",
+    "hint": "10 × 12 × 24 × 30"
+  },
+  {
+    "id": "ex-gfvcc6z7",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should a log line about a secret carry, by this lesson?",
+    "hint": "The demo printed one.",
+    "choices": [
+      {
+        "text": "The secret's value, masked after the first characters",
+        "correct": false,
+        "why": "The first characters of a password are part of the password."
+      },
+      {
+        "text": "Nothing at all about the secret",
+        "correct": false,
+        "why": "A fingerprint is useful and safe."
+      },
+      {
+        "text": "A fingerprint, the start of its SHA-256",
+        "correct": true,
+        "why": "Right. It shows a change without showing the value."
+      },
+      {
+        "text": "The value, base64-encoded",
+        "correct": false,
+        "why": "Base64 is an encoding, not a protection."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyemrqw8",
+    "version": 1,
+    "section": "access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does INITIAL_NO_AUTH_ACTION_COUNT=9 tell moto to do?",
+    "hint": "Setup first, checks after.",
+    "choices": [
+      {
+        "text": "Refuse the first nine requests",
+        "correct": false,
+        "why": "It is the opposite."
+      },
+      {
+        "text": "Allow nine users",
+        "correct": false,
+        "why": "It counts requests, not users."
+      },
+      {
+        "text": "Retry each failed request nine times",
+        "correct": false,
+        "why": "It has nothing to do with retries."
+      },
+      {
+        "text": "Let nine requests through, then check policies",
+        "correct": true,
+        "why": "Right. Every request counts, a mistyped one included."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0p36ftw",
+    "version": 1,
+    "section": "access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under moto, shop-app's correct, narrow policy was refused on its own secret. Why?",
+    "hint": "Action, or resource?",
+    "choices": [
+      {
+        "text": "The policy also needed secretsmanager:DescribeSecret to read",
+        "correct": false,
+        "why": "GetSecretValue does not need it."
+      },
+      {
+        "text": "moto matches every request against *, never an ARN",
+        "correct": true,
+        "why": "Right. On AWS the same policy allows the read."
+      },
+      {
+        "text": "The suffix wildcard is invalid",
+        "correct": false,
+        "why": "It is the documented form."
+      },
+      {
+        "text": "Access keys take a minute to work",
+        "correct": false,
+        "why": "get-caller-identity worked at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-fywfvnf2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which requests does AWS allow? Choose all that apply.",
+    "hint": "Use the table at the end of the section on access.",
+    "choices": [
+      {
+        "text": "shop-app reads shop/prod/db",
+        "correct": true,
+        "why": "Yes; moto refused it, AWS allows it."
+      },
+      {
+        "text": "shop-wide reads shop/prod/payments",
+        "correct": true,
+        "why": "Yes; that is what the wide policy says."
+      },
+      {
+        "text": "shop-app reads /shop/prod/db/host",
+        "correct": false,
+        "why": "No ssm action is granted."
+      },
+      {
+        "text": "shop-wide writes shop/prod/db",
+        "correct": false,
+        "why": "No statement allows PutSecretValue."
+      },
+      {
+        "text": "shop-app reads shop/prod/payments",
+        "correct": false,
+        "why": "Its policy names only the db secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q0bt897",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 250,
+    "tolerance": 0.01,
+    "prompt": "Reading a secret on each of 50 million requests a month, at 0.05 USD per 10,000 calls, costs how many USD?",
+    "hint": "50,000,000 / 10,000 × 0.05",
+    "unit": "USD"
+  }
+]

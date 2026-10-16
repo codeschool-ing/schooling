@@ -1,0 +1,441 @@
+[
+  {
+    "id": "ex-hkrdvd1p",
+    "version": 1,
+    "section": "strategies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a blue/green deployment that has just failed, how is the traffic returned to the old version?",
+    "hint": "Is the old version still running?",
+    "choices": [
+      {
+        "text": "The old image is rebuilt and deployed again, task by task",
+        "correct": false,
+        "why": "That is how a rolling deployment rolls back; blue/green keeps the old tasks alive."
+      },
+      {
+        "text": "ECS restores the service from its last snapshot",
+        "correct": false,
+        "why": "ECS keeps no snapshot of a service; the old task set is simply still running."
+      },
+      {
+        "text": "The listener moves back to the blue target group",
+        "correct": true,
+        "why": "Right. Blue never stopped, so returning is a listener change."
+      },
+      {
+        "text": "DNS is pointed at the old load balancer",
+        "correct": false,
+        "why": "One load balancer serves both; only its listener changes target group."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsv426e5",
+    "version": 1,
+    "section": "strategies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does blue/green cost that a rolling deployment does not?",
+    "hint": "Count the tasks running at the busiest moment.",
+    "choices": [
+      {
+        "text": "A second load balancer for green",
+        "correct": false,
+        "why": "Both target groups sit behind the same load balancer."
+      },
+      {
+        "text": "Double capacity while blue is kept",
+        "correct": true,
+        "why": "Right. A full green set runs beside blue until blue is terminated."
+      },
+      {
+        "text": "A longer outage while the listener switches",
+        "correct": false,
+        "why": "The switch is a listener change, with no outage; that is the point of it."
+      },
+      {
+        "text": "A database copy for the green tasks",
+        "correct": false,
+        "why": "Both versions share the database, which is why the rollback section matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj2dgtt3",
+    "version": 1,
+    "section": "strategies",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each CodeDeploy configuration to what it does with the traffic.",
+    "hint": "Read the name: percentage, then time.",
+    "pairs": [
+      {
+        "left": "CodeDeployDefault.ECSAllAtOnce",
+        "right": "Everything to green in one move"
+      },
+      {
+        "left": "CodeDeployDefault.ECSCanary10Percent5Minutes",
+        "right": "10% first, the rest after five minutes"
+      },
+      {
+        "left": "CodeDeployDefault.ECSLinear10PercentEvery1Minutes",
+        "right": "10% more each minute"
+      }
+    ],
+    "right_distractors": [
+      "Tasks replaced a few at a time, with no green set"
+    ]
+  },
+  {
+    "id": "ex-c05n9gr1",
+    "version": 1,
+    "section": "deployment-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the test listener on 8443 for, in the shop's deployment group?",
+    "hint": "Who reaches green before customers do?",
+    "choices": [
+      {
+        "text": "A smoke test reaches green before any customer",
+        "correct": true,
+        "why": "Right. The AfterAllowTestTraffic hook runs against it."
+      },
+      {
+        "text": "It carries the canary's 10% of customer traffic",
+        "correct": false,
+        "why": "The canary's share goes through the production listener; the test one carries no customers."
+      },
+      {
+        "text": "It lets an administrator reach blue during the switch",
+        "correct": false,
+        "why": "It routes to green, not blue: the new version, before release."
+      },
+      {
+        "text": "It is the port the load balancer's health checks use",
+        "correct": false,
+        "why": "Health checks go to the targets directly, not through a listener."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv22r64d",
+    "version": 1,
+    "section": "deployment-group",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto returned the deployment group with an empty `alarmConfiguration`. On AWS, what mistake has the same effect?",
+    "hint": "An alarm that is accepted and never fires.",
+    "choices": [
+      {
+        "text": "Listing more than two alarms",
+        "correct": false,
+        "why": "A group can list several alarms; the number is not the problem."
+      },
+      {
+        "text": "Turning on DEPLOYMENT_STOP_ON_ALARM",
+        "correct": false,
+        "why": "That is what makes an alarm roll back; it does not remove one."
+      },
+      {
+        "text": "Using CodeDeployDefault.ECSAllAtOnce",
+        "correct": false,
+        "why": "The strategy does not change whether the alarms exist."
+      },
+      {
+        "text": "Naming an alarm with a typo, or one that lives in another region",
+        "correct": true,
+        "why": "Right. The group accepts the name and watches an alarm that never goes into ALARM."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9ngj2te",
+    "version": 1,
+    "section": "deployment-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terminationWaitTimeInMinutes` is 60. A problem is found 90 minutes after a successful deployment. How quick is the rollback?",
+    "hint": "What exists at minute 90?",
+    "choices": [
+      {
+        "text": "Seconds: the listener moves back to blue",
+        "correct": false,
+        "why": "Blue was terminated at minute 60; there is nothing to move back to."
+      },
+      {
+        "text": "It is a new deployment of the old version",
+        "correct": true,
+        "why": "Right. After the wait, a rollback is a full deployment like any other."
+      },
+      {
+        "text": "Impossible: CodeDeploy refuses to deploy an older task definition",
+        "correct": false,
+        "why": "Any task definition can be deployed; older is not refused."
+      },
+      {
+        "text": "Instant, because CodeDeploy keeps blue until the next release",
+        "correct": false,
+        "why": "Blue is kept for the wait time and no longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6r2zb5v",
+    "version": 1,
+    "section": "what-a-canary-catches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the model, a 10% canary watched by an alarm on the whole service failed 500 requests, more than all at once. Why?",
+    "hint": "Divide the canary's errors by all the traffic.",
+    "choices": [
+      {
+        "text": "The canary sends 10% of traffic to a version that is 10% slower",
+        "correct": false,
+        "why": "The model has no latency at all; it counts failures."
+      },
+      {
+        "text": "Diluted to 2%, the errors never crossed the threshold until everything shifted",
+        "correct": true,
+        "why": "Right. 10% of 20% is 2%, not above 2%, so the alarm waited for the full shift."
+      },
+      {
+        "text": "Canaries always fail more requests than an all-at-once release",
+        "correct": false,
+        "why": "With the alarm on the new version, the same canary failed 40."
+      },
+      {
+        "text": "CodeDeploy pauses alarms during the canary window",
+        "correct": false,
+        "why": "Nothing is paused; the alarm saw a rate at the threshold, not above it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e8z62mj",
+    "version": 1,
+    "section": "what-a-canary-catches",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 0.8,
+    "tolerance": 0.01,
+    "prompt": "A release fails 8% of its requests. During a 10% canary, what error rate, in percent, does an alarm on the whole service see?",
+    "hint": "Share times failure rate.",
+    "unit": "%"
+  },
+  {
+    "id": "ex-pakp2y06",
+    "version": 1,
+    "section": "what-a-canary-catches",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which metric lets an alarm watch only the green task set on ECS behind an Application Load Balancer?",
+    "hint": "Blue and green each have their own target group.",
+    "choices": [
+      {
+        "text": "HTTPCode_ELB_5XX_Count for the load balancer",
+        "correct": false,
+        "why": "That counts errors the load balancer itself produced, for every target group at once."
+      },
+      {
+        "text": "CPUUtilization of the ECS cluster",
+        "correct": false,
+        "why": "CPU says nothing about failed requests, and covers both versions."
+      },
+      {
+        "text": "HTTPCode_Target_5XX_Count with the green target group as dimension",
+        "correct": true,
+        "why": "Right. Per target group, it counts the new version's errors alone."
+      },
+      {
+        "text": "RequestCount for the whole load balancer",
+        "correct": false,
+        "why": "A request count is not an error count, and this one mixes both versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffqvba9d",
+    "version": 1,
+    "section": "what-a-canary-catches",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `canary.py` in this lesson?",
+    "hint": "Read its first line.",
+    "choices": [
+      {
+        "text": "A copy of the algorithm CodeDeploy uses to shift traffic",
+        "correct": false,
+        "why": "It is nobody's algorithm; it plays a simple bad release through four assumptions."
+      },
+      {
+        "text": "A Lambda hook that runs after test traffic is allowed",
+        "correct": false,
+        "why": "The hook in the AppSpec is a separate function; canary.py runs on your laptop."
+      },
+      {
+        "text": "A script that reads CodeDeploy's metrics from moto",
+        "correct": false,
+        "why": "It calls nothing at all; every number in it is an input you can change."
+      },
+      {
+        "text": "A model with stated assumptions, not CodeDeploy",
+        "correct": true,
+        "why": "Right. moto runs no deployment, so the lesson counts with a model and says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj0yz6p4",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Release 1.4.1 renamed a column and started using the new name. The canary alarm fires and traffic returns to 1.4.0. What happens next?",
+    "hint": "Does a rollback touch the database?",
+    "choices": [
+      {
+        "text": "1.4.0 fails, asking for a column that no longer exists",
+        "correct": true,
+        "why": "Right. The rollback worked and the service is down in both versions."
+      },
+      {
+        "text": "1.4.0 serves normally, because the rollback restored the schema",
+        "correct": false,
+        "why": "A rollback moves traffic; the renamed column stays renamed."
+      },
+      {
+        "text": "CodeDeploy refuses the rollback because the schema changed",
+        "correct": false,
+        "why": "CodeDeploy knows nothing of databases and does not check."
+      },
+      {
+        "text": "Nothing, as long as terminationWaitTimeInMinutes has not passed",
+        "correct": false,
+        "why": "The wait keeps blue's tasks, not the old schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqkxeewg",
+    "version": 1,
+    "section": "rollback",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three releases of a safe column rename in order.",
+    "hint": "Add before you remove.",
+    "items": [
+      "Add the new column and write to both",
+      "Copy the old values and switch reads to the new column",
+      "Drop the old column once nothing reads it"
+    ],
+    "trap": "Switching reads before the copy is the slip: rows written earlier would read as empty."
+  },
+  {
+    "id": "ex-m14h5zfj",
+    "version": 1,
+    "section": "rollback",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The three-release way to change a schema so every step can be rolled back is called expand and ___.",
+    "hint": "The opposite of expand.",
+    "blanks": [
+      {
+        "accept": [
+          "contract"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b23mvebq",
+    "version": 1,
+    "section": "rollback",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a blue/green rollback restore? Choose all that apply.",
+    "hint": "It restores what the old task set was running.",
+    "choices": [
+      {
+        "text": "The image the old task definition names",
+        "correct": true,
+        "why": "Yes. The old tasks still run it."
+      },
+      {
+        "text": "A parameter changed in Parameter Store with the release",
+        "correct": false,
+        "why": "No. A value outside the task definition stays as it was set."
+      },
+      {
+        "text": "The environment variables in the old task definition",
+        "correct": true,
+        "why": "Yes. They are part of the task definition the old tasks run."
+      },
+      {
+        "text": "Rows the new version wrote to the database",
+        "correct": false,
+        "why": "No. Data written stays written; that is the rollback's limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbe4wdtw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A release can fail by being slow rather than by returning errors. What should the deployment group carry to catch that?",
+    "hint": "A second symptom needs a second alarm.",
+    "choices": [
+      {
+        "text": "A longer canary window, so slowness has time to become errors",
+        "correct": false,
+        "why": "Slowness may never become errors, and customers suffer it meanwhile."
+      },
+      {
+        "text": "A smaller canary share, 1% instead of 10%",
+        "correct": false,
+        "why": "A smaller share reduces exposure and evidence; it does not detect slowness."
+      },
+      {
+        "text": "A latency alarm on the green target group",
+        "correct": true,
+        "why": "Right. That is why the shop's group names api-green-p99 beside api-green-5xx."
+      },
+      {
+        "text": "The ECSAllAtOnce configuration, so the problem is obvious at once",
+        "correct": false,
+        "why": "Obvious to every customer at once is the outcome a canary exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmwpejc3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 180,
+    "tolerance": 0,
+    "prompt": "At 2,000 requests a minute, a release fails 30% of its requests. A canary sends it 10% for 3 minutes before the alarm rolls it back. How many requests failed?",
+    "hint": "Requests times share times failure rate times minutes."
+  }
+]

@@ -1,0 +1,276 @@
+{
+  "ex-2rh8b8hj": {
+    "prompt": "Um job do Terraform roda no CodeBuild. De onde o provider da AWS deve tirar as credenciais?",
+    "hint": "A máquina tem uma identidade própria.",
+    "choices": [
+      {
+        "text": "De uma chave de acesso no bloco do provider",
+        "why": "Uma chave no bloco é uma chave no repositório, enquanto durar o histórico."
+      },
+      {
+        "text": "De um perfil de desenvolvedor copiado na imagem de build",
+        "why": "Isso faz cada build agir como uma pessoa, com uma credencial embutida numa imagem."
+      },
+      {
+        "text": "Da chave test do moto",
+        "why": "A AWS recusa essa chave; ela só funciona contra o moto."
+      },
+      {
+        "text": "Do papel do projeto de build",
+        "why": "Certo. O provider encontra sozinho as credenciais temporárias do papel."
+      }
+    ]
+  },
+  "ex-r6784tmj": {
+    "prompt": "O que `default_tags` no bloco do provider faz?",
+    "hint": "O tópico ganhou tags que ninguém escreveu nele.",
+    "choices": [
+      {
+        "text": "Marca os recursos que não têm bloco de tags",
+        "why": "Recursos com tags próprias recebem as duas, mescladas."
+      },
+      {
+        "text": "Marca cada recurso marcável que o provider cria",
+        "why": "Certo. Escrito uma vez, aplicado a cada recurso que aceita tags."
+      },
+      {
+        "text": "Acrescenta as tags ao arquivo de estado, não à AWS",
+        "why": "O laboratório as leu de volta no próprio tópico."
+      },
+      {
+        "text": "Ativa as tags para alocação de custos na fatura",
+        "why": "A ativação é um passo separado na fatura, assunto da lição 24."
+      }
+    ]
+  },
+  "ex-da6zmthq": {
+    "prompt": "Ponha os lugares onde o provider da AWS procura credenciais na ordem em que ele tenta.",
+    "hint": "O mais explícito primeiro.",
+    "trap": "O papel da máquina primeiro é o deslize: uma variável definida à mão seria ignorada numa instância EC2.",
+    "items": [
+      "Variáveis de ambiente",
+      "Um perfil em ~/.aws",
+      "O papel da própria máquina"
+    ]
+  },
+  "ex-83ypdc87": {
+    "prompt": "Por que o bucket de estado não pode ser criado pela configuração cujo estado ele guarda?",
+    "hint": "Do que o init precisa?",
+    "choices": [
+      {
+        "text": "O Terraform proíbe criar buckets S3 numa configuração com backend",
+        "why": "Ele cria buckets à vontade; o problema é a ordem."
+      },
+      {
+        "text": "Ela precisa do bucket existindo antes do primeiro init",
+        "why": "Certo. Daí uma configuração separada pequena, ou uma stack do CloudFormation, que o cria antes."
+      },
+      {
+        "text": "Buckets só podem ser criados pelo console",
+        "why": "Qualquer cliente da API cria um; o laboratório fez com o Terraform."
+      },
+      {
+        "text": "O bucket seria apagado em todo destroy",
+        "why": "O prevent_destroy cuida disso; o problema real é o primeiro init."
+      }
+    ]
+  },
+  "ex-cw408yny": {
+    "prompt": "Quais configurações do bucket de estado protegem contra qual risco? Marque todas as corretas.",
+    "hint": "Uma garantia por recurso.",
+    "choices": [
+      {
+        "text": "O versionamento permite recuperar um estado anterior",
+        "why": "Sim. Cada gravação mantém a versão anterior."
+      },
+      {
+        "text": "O bloqueio de acesso público cifra o estado",
+        "why": "Não. Ele impede uma política ou ACL pública; a criptografia é outra configuração."
+      },
+      {
+        "text": "prevent_destroy recusa um plano que apague o bucket",
+        "why": "Sim. Mesmo um terraform destroy no diretório errado."
+      },
+      {
+        "text": "A criptografia com KMS acrescenta uma segunda permissão para lê-lo",
+        "why": "Sim. Ler exige a chave além do bucket."
+      },
+      {
+        "text": "O versionamento impede dois applies gravando ao mesmo tempo",
+        "why": "Não. Isso é trabalho da trava; o versionamento guarda o histórico."
+      }
+    ]
+  },
+  "ex-sghkk7mm": {
+    "prompt": "Um desenvolvedor consegue ler o bucket de estado mas não tem permissão no banco de dados. Ele consegue descobrir a senha do banco?",
+    "hint": "O que o estado guarda?",
+    "choices": [
+      {
+        "text": "Bem possivelmente, se o estado a guardou, em texto puro",
+        "why": "Certo. Acesso de leitura ao bucket de estado é acesso de leitura aos segredos que o estado guarda."
+      },
+      {
+        "text": "Não: o estado só guarda ids de recursos",
+        "why": "Ele guarda cada atributo que o Terraform leu, incluindo segredos que um recurso devolveu."
+      },
+      {
+        "text": "Não: o Terraform mascara valores sensíveis no arquivo",
+        "why": "sensitive esconde valores na saída, não no arquivo de estado."
+      },
+      {
+        "text": "Rodando terraform apply antes",
+        "why": "Ler o objeto basta; nada precisa rodar."
+      }
+    ]
+  },
+  "ex-1jyg36f8": {
+    "prompt": "O `terraform init` avisa que `dynamodb_table` está depreciado. A trava ainda funciona?",
+    "hint": "Depreciado não é removido.",
+    "choices": [
+      {
+        "text": "Não: a trava é ignorada até use_lockfile ser definido",
+        "why": "O laboratório segurou uma trava na tabela depois desse aviso."
+      },
+      {
+        "text": "Para applies, mas não para plans",
+        "why": "Plans também pegam a trava, e foi assim que o segundo foi recusado."
+      },
+      {
+        "text": "Sim; o aviso diz que ele vai sair",
+        "why": "Certo. Um segundo plan foi recusado pela trava da tabela."
+      },
+      {
+        "text": "Se a tabela estiver em us-east-1",
+        "why": "A tabela fica na região do backend, aqui São Paulo."
+      }
+    ]
+  },
+  "ex-s90n6dj6": {
+    "prompt": "O que faz a trava do DynamoDB ser uma trava, e não só um registro?",
+    "hint": "Leia o erro que o segundo plan recebeu.",
+    "choices": [
+      {
+        "text": "O item tem prazo de validade",
+        "why": "Não há prazo, e por isso uma trava pode ficar para trás."
+      },
+      {
+        "text": "A tabela só permite um item por vez",
+        "why": "Ela teve dois itens no laboratório, a trava e o digest -md5."
+      },
+      {
+        "text": "Gravar só com a chave livre",
+        "why": "Certo. ConditionalCheckFailedException é a recusa."
+      },
+      {
+        "text": "O Terraform lê a tabela a cada segundo enquanto roda",
+        "why": "Ele grava uma vez, com condição, e apaga no fim."
+      }
+    ]
+  },
+  "ex-8tdx09my": {
+    "prompt": "Por que a migração define `use_lockfile` e `dynamodb_table` juntos por um tempo, em vez de trocar de uma vez?",
+    "hint": "Dois colegas, duas versões da configuração.",
+    "choices": [
+      {
+        "text": "Para as duas versões da configuração se excluírem",
+        "why": "Certo. Com os dois, cada execução pega a trava que o outro lado confere."
+      },
+      {
+        "text": "Porque o arquivo de trava precisa que a tabela exista",
+        "why": "O arquivo de trava funciona sozinho, como o último passo mostrou."
+      },
+      {
+        "text": "Para copiar os itens de trava da tabela para o bucket",
+        "why": "Nada é copiado; travas duram pouco e são refeitas a cada execução."
+      },
+      {
+        "text": "Porque o Terraform recusa use_lockfile num bucket que já tem estado",
+        "why": "Ele aceitou neste, que tinha estado."
+      }
+    ]
+  },
+  "ex-ccvxe49j": {
+    "prompt": "Um notebook morreu no meio de um apply e todo plan agora é recusado por uma trava. O que é seguro fazer?",
+    "hint": "Garanta que o outro apply sumiu mesmo.",
+    "choices": [
+      {
+        "text": "Rodar todo plan e apply com -lock=false daqui em diante",
+        "why": "Isso remove a proteção para todo mundo, para sempre."
+      },
+      {
+        "text": "Perguntar a Who, depois force-unlock no ID",
+        "why": "Certo. A recusa imprime o ID, e o dono confirma que nada está rodando."
+      },
+      {
+        "text": "Apagar o objeto de estado e aplicar de novo",
+        "why": "Esse é o acidente da lição 7, causado de propósito."
+      },
+      {
+        "text": "Esperar uma hora para a trava expirar sozinha",
+        "why": "Travas não expiram; ficaria esperando para sempre."
+      }
+    ]
+  },
+  "ex-k0msrvft": {
+    "prompt": "Com `use_lockfile = true`, a trava é um objeto ao lado do estado cujo nome termina em `.___`.",
+    "hint": "A listagem do bucket mostrou.",
+    "blanks": [
+      {
+        "accept": [
+          "tflock"
+        ]
+      }
+    ]
+  },
+  "ex-cehpkjza": {
+    "prompt": "Ligue cada peça da montagem do backend ao que ela serve.",
+    "hint": "Um propósito para cada.",
+    "pairs": [
+      {
+        "left": "A configuração de bootstrap",
+        "right": "Criar o bucket antes de qualquer coisa usá-lo"
+      },
+      {
+        "left": "O versionamento do bucket",
+        "right": "Recuperar um estado anterior"
+      },
+      {
+        "left": "use_lockfile",
+        "right": "Impedir dois escritores ao mesmo tempo"
+      },
+      {
+        "left": "force-unlock",
+        "right": "Limpar uma trava que o dono abandonou"
+      }
+    ],
+    "right_distractors": [
+      "Cifrar a saída do plan"
+    ]
+  },
+  "ex-m35jvrjj": {
+    "prompt": "Um colega propõe guardar o estado do próprio bucket de estado nesse mesmo bucket, para ter um lugar só para tudo. O que dá errado?",
+    "hint": "Pense em recuperar depois de o bucket ser danificado.",
+    "choices": [
+      {
+        "text": "Nada: o S3 é durável o bastante para isso",
+        "why": "Durabilidade não ajuda quando o que está quebrado é a configuração que gerencia o bucket."
+      },
+      {
+        "text": "O Terraform recusa dois estados num bucket",
+        "why": "Um bucket guarda muitos estados com chaves diferentes."
+      },
+      {
+        "text": "A trava se bloquearia para sempre",
+        "why": "Cada estado tem a própria trava; elas não colidem."
+      },
+      {
+        "text": "Gerenciar o bucket exigiria o bucket já funcionando",
+        "why": "Certo. Consertar o bucket exige um estado que mora dentro da coisa que está sendo consertada."
+      }
+    ]
+  },
+  "ex-ztycgs86": {
+    "prompt": "Um objeto de estado é gravado 40 vezes por dia e o versionamento guarda cada versão por 90 dias. Quantas versões dele o bucket tem no fim do 90º dia?",
+    "hint": "Gravações por dia vezes dias."
+  }
+}

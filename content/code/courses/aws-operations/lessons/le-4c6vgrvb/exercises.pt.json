@@ -1,0 +1,288 @@
+{
+  "ex-2q13j0pc": {
+    "prompt": "Ligue cada tipo de chave KMS a quem decide a política dela.",
+    "hint": "Da AWS, gerenciada pela AWS, gerenciada pelo cliente.",
+    "pairs": [
+      {
+        "left": "Da AWS",
+        "right": "A AWS, e ela não está na conta"
+      },
+      {
+        "left": "Gerenciada pela AWS, como aws/ssm",
+        "right": "A AWS; a conta pode lê-la"
+      },
+      {
+        "left": "Gerenciada pelo cliente",
+        "right": "A equipe, na política da chave"
+      }
+    ],
+    "right_distractors": [
+      "Quem usou a chave por último"
+    ]
+  },
+  "ex-g7najya1": {
+    "prompt": "Por que pagar por uma chave gerenciada pelo cliente se aws/ssm não tem mensalidade?",
+    "hint": "O que a equipe pode mudar?",
+    "choices": [
+      {
+        "text": "Chaves do cliente cifram com mais força",
+        "why": "As duas são AES de 256 bits no mesmo hardware."
+      },
+      {
+        "text": "Chaves gerenciadas pela AWS expiram em um ano",
+        "why": "Elas não expiram."
+      },
+      {
+        "text": "Controle de quem usa a chave, na política dela",
+        "why": "Certo. Uma política escrita pela equipe, e o poder de desativar ou apagar."
+      },
+      {
+        "text": "Só chaves do cliente ficam registradas no CloudTrail",
+        "why": "Toda requisição ao KMS é registrada."
+      }
+    ]
+  },
+  "ex-9996xtvg": {
+    "prompt": "A política de uma chave é editada para tirar a instrução que dá kms:* ao principal root da conta. O que acontece com políticas IAM que permitem kms:Decrypt nessa chave?",
+    "hint": "Qual política é a raiz do acesso?",
+    "choices": [
+      {
+        "text": "Deixam de importar",
+        "why": "Certo. Aquela instrução é o que passa a decisão para o IAM."
+      },
+      {
+        "text": "Continuam funcionando, já que o IAM é checado primeiro",
+        "why": "A política da chave é a raiz; o IAM só conta se ela delegar."
+      },
+      {
+        "text": "A chave fica desativada até a instrução voltar",
+        "why": "A chave segue ativa; o acesso muda."
+      },
+      {
+        "text": "O usuário root perde acesso mas os administradores mantêm",
+        "why": "As permissões IAM dos administradores também deixam de importar."
+      }
+    ]
+  },
+  "ex-b441szaa": {
+    "prompt": "Por que o decrypt não precisou do id da chave?",
+    "hint": "Veja o que o decrypt respondeu.",
+    "choices": [
+      {
+        "text": "O moto adivinha a única chave que existe",
+        "why": "A AWS se comporta igual com muitas chaves."
+      },
+      {
+        "text": "O alias fica guardado no perfil",
+        "why": "Nada foi configurado."
+      },
+      {
+        "text": "O decrypt usa a chave padrão da conta",
+        "why": "Não existe esse padrão para decrypt."
+      },
+      {
+        "text": "O texto cifrado nomeia a sua chave",
+        "why": "Certo. O KMS a lê do texto cifrado."
+      }
+    ]
+  },
+  "ex-35ms1ebh": {
+    "prompt": "Um texto cifrado foi feito com --encryption-context order=1001. O que decifrá-lo sem contexto faz?",
+    "hint": "O moto acerta isso.",
+    "choices": [
+      {
+        "text": "Dá certo, já que o contexto não é secreto",
+        "why": "Não é secreto, e mesmo assim é obrigatório."
+      },
+      {
+        "text": "Falha com InvalidCiphertextException",
+        "why": "Certo. O contexto é obrigatório, mesmo não sendo secreto."
+      },
+      {
+        "text": "Dá certo e devolve o contexto também",
+        "why": "O contexto não fica guardado no texto cifrado."
+      },
+      {
+        "text": "Pede o id da chave no lugar",
+        "why": "A chave está no texto cifrado; o contexto não."
+      }
+    ]
+  },
+  "ex-k5g3833t": {
+    "prompt": "O máximo que o Encrypt do KMS aceita numa requisição é ____ bytes.",
+    "hint": "4 KB.",
+    "blanks": [
+      {
+        "accept": [
+          "4096",
+          "4.096"
+        ]
+      }
+    ]
+  },
+  "ex-9rt9gs4y": {
+    "prompt": "Na criptografia de envelope, o que a chave KMS cifra?",
+    "hint": "Veja a figura.",
+    "choices": [
+      {
+        "text": "Só a chave de dados",
+        "why": "Certo. Os dados são cifrados localmente com a chave de dados."
+      },
+      {
+        "text": "O arquivo, em pedaços de 4 KB",
+        "why": "Seria uma requisição por pedaço; o envelope evita isso."
+      },
+      {
+        "text": "O nome e o tamanho do arquivo",
+        "why": "Nenhum dos dois é cifrado pelo KMS."
+      },
+      {
+        "text": "O arquivo e a chave de dados",
+        "why": "O arquivo nunca vai ao KMS."
+      }
+    ]
+  },
+  "ex-385q3e1m": {
+    "prompt": "Quantas requisições ao KMS o envelope.py faz para selar um arquivo de 5 MB?",
+    "hint": "O tamanho não importa."
+  },
+  "ex-54yfn0v6": {
+    "prompt": "Onde o envelope.py guarda a chave de dados pura depois de selar?",
+    "hint": "Leia as chaves do arquivo selado.",
+    "choices": [
+      {
+        "text": "No orders.csv.sealed, em base64",
+        "why": "O arquivo guarda a chave cifrada, não a pura."
+      },
+      {
+        "text": "Em ~/.aws, ao lado das credenciais",
+        "why": "Nada é gravado lá."
+      },
+      {
+        "text": "Em lugar nenhum",
+        "why": "Certo. Some quando a função retorna."
+      },
+      {
+        "text": "No KMS, sob o alias",
+        "why": "O KMS não guarda chaves de dados."
+      }
+    ]
+  },
+  "ex-3tdybyh3": {
+    "prompt": "Ponha os passos de selar um arquivo em ordem.",
+    "hint": "Pedir, cifrar, guardar, esquecer.",
+    "items": [
+      "Pedir uma chave de dados ao KMS",
+      "Cifrar o arquivo localmente com a chave pura",
+      "Gravar os dados e a chave cifrada juntos",
+      "Descartar a chave de dados pura"
+    ]
+  },
+  "ex-v9dbbg3r": {
+    "prompt": "Depois que uma chave KMS é rotacionada, o que acontece com dados cifrados antes da rotação?",
+    "hint": "O material antigo é guardado.",
+    "choices": [
+      {
+        "text": "Precisa ser cifrado de novo em 30 dias",
+        "why": "Nada é cifrado de novo."
+      },
+      {
+        "text": "Fica ilegível",
+        "why": "Isso é apagar, não rotacionar."
+      },
+      {
+        "text": "Só decifra com o id antigo da chave",
+        "why": "O id não muda na rotação."
+      },
+      {
+        "text": "Continua decifrando, com o material antigo",
+        "why": "Certo. O KMS guarda o material antigo pela vida da chave."
+      }
+    ]
+  },
+  "ex-kvnz02nb": {
+    "prompt": "O moto decifrou com uma chave em PendingDeletion. O que a AWS faz, e por que importa?",
+    "hint": "O período de espera tem um propósito.",
+    "choices": [
+      {
+        "text": "Recusa, para o que ainda precisa da chave quebrar dentro da janela",
+        "why": "Certo. KMSInvalidStateException, dentro da janela."
+      },
+      {
+        "text": "Também decifra; a chave funciona até a data de exclusão",
+        "why": "Uma chave pendente não pode ser usada de jeito nenhum na AWS."
+      },
+      {
+        "text": "Decifra e manda um e-mail ao dono da conta",
+        "why": "Não existe esse e-mail; esse alarme é a equipe que constrói."
+      },
+      {
+        "text": "Cifra os dados de novo sob uma chave nova",
+        "why": "O KMS nunca encosta nos dados."
+      }
+    ]
+  },
+  "ex-gf98ngda": {
+    "prompt": "Uma exclusão é cancelada. Em que estado fica a chave?",
+    "hint": "Alguém precisa agir de novo.",
+    "choices": [
+      {
+        "text": "Enabled",
+        "why": "Cancelar não põe a chave de volta em uso."
+      },
+      {
+        "text": "Disabled",
+        "why": "Certo. Precisa ser ativada de propósito."
+      },
+      {
+        "text": "PendingImport",
+        "why": "Esse é de material de chave importado."
+      },
+      {
+        "text": "PendingDeletion, com nova data",
+        "why": "A exclusão foi cancelada."
+      }
+    ]
+  },
+  "ex-vhchkh6c": {
+    "prompt": "Qual é o menor período de espera, em dias, que schedule-key-deletion aceita?",
+    "hint": "Entre 7 e 30.",
+    "unit": "dias"
+  },
+  "ex-gw791qtz": {
+    "prompt": "Um bucket S3 recebe 4 milhões de objetos por mês com SSE-KMS e sem Bucket Key. A 0,03 USD por 10.000 requisições, quanto custam as gravações em requisições ao KMS, em USD?",
+    "hint": "4.000.000 / 10.000 × 0,03",
+    "unit": "USD"
+  },
+  "ex-c1yp0cng": {
+    "prompt": "Uma chave gerenciada pelo cliente é rotacionada uma vez por ano. Pela documentação da AWS, qual é a mensalidade dela em USD depois da terceira rotação?",
+    "hint": "As duas primeiras rotações somam uma taxa; as seguintes não.",
+    "unit": "USD"
+  },
+  "ex-bafq3d62": {
+    "prompt": "Em quais destas o KMS se comporta igual no moto e na AWS? Escolha todas que se aplicam.",
+    "hint": "Uma delas é erro do moto.",
+    "choices": [
+      {
+        "text": "Recusar um decrypt sem o contexto de criptografia",
+        "why": "Sim."
+      },
+      {
+        "text": "Recusar cifrar mais de 4.096 bytes",
+        "why": "Sim."
+      },
+      {
+        "text": "Deixar a chave Disabled depois de cancelar a exclusão",
+        "why": "Sim."
+      },
+      {
+        "text": "Decifrar com uma chave pendente de exclusão",
+        "why": "O moto decifra; a AWS recusa."
+      },
+      {
+        "text": "Informar o período de rotação",
+        "why": "O moto informa só se a rotação está ligada."
+      }
+    ]
+  }
+}
