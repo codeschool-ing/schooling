@@ -67,7 +67,7 @@
     ]
   },
   "ex-71r3teg4": {
-    "prompt": "Um dataset de fotos devolve imagens de tamanhos diferentes, e o carregador falha dentro do `default_collate` dizendo que os tensores precisam ter o mesmo tamanho. O que resolve e mantém lotes de 32?",
+    "prompt": "Um dataset de fotos devolve imagens de dimensões diferentes, e o carregador falha dentro do `default_collate` com uma mensagem sobre empilhar tensores desiguais. O que resolve e mantém 32 imagens por vez?",
     "hint": "Qual passo põe 32 itens num tensor só?",
     "choices": [
       {
@@ -163,7 +163,7 @@
         "why": "O modelo divide os processadores e pode atrasar o carregador, mas não pode tornar a leitura mais rápida."
       },
       {
-        "text": "O mínimo que a época de treino pode durar, custe o modelo o que custar",
+        "text": "O mínimo que a época de treino vai durar, custe o modelo o que custar",
         "why": "Certo. Todo lote precisa ser montado antes de ser usado, então a época do próprio carregador é um piso que um modelo mais rápido ou uma placa de vídeo não conseguem furar."
       },
       {
@@ -237,7 +237,7 @@
         "why": "Certo. Utilização baixa diz que a placa fica parada muitas vezes, não por quê; dividir o tempo como o `waiting.py` faz diz se a causa é o carregador."
       },
       {
-        "text": "Se um modelo maior deixaria a placa mais ocupada",
+        "text": "Se um modelo maior deixaria a placa bem mais ocupada",
         "why": "Um modelo maior aumenta a porcentagem por deixar cada passo mais longo, e o treino fica mais lento, não mais rápido."
       },
       {
@@ -263,7 +263,7 @@
         "why": "Certo. Os workers precisam de mais ou menos o mesmo tempo para montar um lote; com menos cálculo para sobrepor, mais desse tempo aparece como espera."
       },
       {
-        "text": "Cai a zero, porque a placa copia os dados sozinha",
+        "text": "Cai a zero, porque a própria placa passa a copiar os dados sozinha",
         "why": "A placa copia lotes que já existem; montá-los continua sendo trabalho do processador."
       },
       {
@@ -380,7 +380,7 @@
         "why": "Os workers dividem os lotes entre si; cada item de uma época é lido uma vez."
       },
       {
-        "text": "Processos demais para quatro processadores",
+        "text": "Mais processos ocupados do que núcleos livres",
         "why": "Certo. Passado o número de processadores livres, workers extras só se revezam, e se revezam também com o cálculo do próprio modelo."
       },
       {
