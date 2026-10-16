@@ -1,0 +1,461 @@
+[
+  {
+    "id": "ex-4f28vmy4",
+    "version": 1,
+    "section": "mutex",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `mu.Lock()` do when another goroutine already holds `mu`?",
+    "hint": "Only one goroutine at a time is inside the critical section.",
+    "choices": [
+      {
+        "text": "It returns an error the caller has to check",
+        "correct": false,
+        "why": "`Lock` returns nothing. It does not fail; it waits."
+      },
+      {
+        "text": "It waits until the mutex is unlocked",
+        "correct": true,
+        "why": "Right, and then it takes the lock itself."
+      },
+      {
+        "text": "It panics, because a mutex cannot be shared",
+        "correct": false,
+        "why": "Sharing among goroutines is what a mutex is for; copying it is the mistake."
+      },
+      {
+        "text": "It lets both goroutines in, one reading and one writing",
+        "correct": false,
+        "why": "That is closer to an `RWMutex`, and even there a writer is alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxhh2001",
+    "version": 1,
+    "section": "mutex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`copied.go` called `Inc` 400,000 times and printed `total: 0`, and the race detector would say nothing. Why?",
+    "hint": "Look at the receiver of `Inc`.",
+    "choices": [
+      {
+        "text": "The mutex blocked every call, so none ran",
+        "correct": false,
+        "why": "The calls ran; the program finished. They changed copies."
+      },
+      {
+        "text": "Each call worked on a copy of the struct",
+        "correct": true,
+        "why": "Right. A value receiver copies `Counter`, mutex and all, and the copy is thrown away."
+      },
+      {
+        "text": "`defer` ran `Unlock` before the increment",
+        "correct": false,
+        "why": "A deferred call runs when the function returns, after `c.n++`."
+      },
+      {
+        "text": "Four goroutines cannot share one `Counter`",
+        "correct": false,
+        "why": "With a pointer receiver they can, and that is the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa6hffyn",
+    "version": 1,
+    "section": "mutex",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The tool that reported `Inc passes lock by value` is `go ___`.",
+    "hint": "It was introduced in lesson 4 of `go`, beside `go fmt`.",
+    "blanks": [
+      {
+        "accept": [
+          "vet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5wtvdjy8",
+    "version": 1,
+    "section": "mutex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section recommend `defer mu.Unlock()` right after `mu.Lock()`?",
+    "hint": "What happens to a mutex left locked?",
+    "choices": [
+      {
+        "text": "Deferring makes the critical section shorter",
+        "correct": false,
+        "why": "It makes it last until the function returns, which is if anything longer."
+      },
+      {
+        "text": "`Unlock` is only allowed in a deferred call",
+        "correct": false,
+        "why": "`count.go` calls `mu.Unlock()` directly, and that is fine for a one-line section."
+      },
+      {
+        "text": "A `return` or panic in between would leave it locked for good",
+        "correct": true,
+        "why": "Right. Every goroutine that comes after would wait forever."
+      },
+      {
+        "text": "The race detector requires it",
+        "correct": false,
+        "why": "The race detector accepts either form; `count.go` passed it with a direct `Unlock`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxvs7wyg",
+    "version": 1,
+    "section": "rwmutex",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these may be held by several goroutines at the same time?",
+    "hint": "Readers cannot spoil anything for each other.",
+    "choices": [
+      {
+        "text": "An `RWMutex`'s read lock",
+        "correct": true,
+        "why": "Right: any number of readers hold `RLock` together."
+      },
+      {
+        "text": "A `Mutex`",
+        "correct": false,
+        "why": "A `Mutex` has one holder at a time."
+      },
+      {
+        "text": "An `RWMutex`'s write lock",
+        "correct": false,
+        "why": "The writer is alone, readers included."
+      },
+      {
+        "text": "A `Mutex` inside a struct with a value receiver",
+        "correct": false,
+        "why": "That only seems to work because every call has its own copy, which is the bug of `copied.go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6m43herc",
+    "version": 1,
+    "section": "rwmutex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cache.go` with no work under the lock took 79 ms with an `RWMutex` and 65 ms with a `Mutex`. Why was the read lock slower there?",
+    "hint": "What does an `RWMutex` keep track of that a `Mutex` does not?",
+    "choices": [
+      {
+        "text": "Readers cannot overlap when the work is zero",
+        "correct": false,
+        "why": "They can overlap; there is just almost nothing for them to overlap."
+      },
+      {
+        "text": "Counting readers costs more than the tiny section it guards",
+        "correct": true,
+        "why": "Right. Its bookkeeping becomes most of the cost when the section is one map lookup."
+      },
+      {
+        "text": "A waiting writer kept stopping the readers",
+        "correct": false,
+        "why": "There is no writer in `cache.go` at all."
+      },
+      {
+        "text": "Map reads are not safe under a read lock",
+        "correct": false,
+        "why": "Concurrent reads of a map are safe; it is a write alongside them that is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-kasrjm5f",
+    "version": 1,
+    "section": "rwmutex",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function holds `rw.RLock()`, finds that an entry is missing, and calls `rw.Lock()` to add it before releasing the read lock. What happens?",
+    "hint": "`Lock` waits for every reader to leave.",
+    "choices": [
+      {
+        "text": "The read lock is upgraded to a write lock",
+        "correct": false,
+        "why": "The documentation says an `RLock` cannot be upgraded into a `Lock`."
+      },
+      {
+        "text": "`Lock` panics with a message about recursion",
+        "correct": false,
+        "why": "There is no panic and no message; that is what makes it hard to find."
+      },
+      {
+        "text": "It waits for itself to leave, and waits forever",
+        "correct": true,
+        "why": "Right. Release the read lock, take the write lock, and check the entry again."
+      },
+      {
+        "text": "The entry is added and both locks are released at the end",
+        "correct": false,
+        "why": "The code never gets past `Lock`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0se0stzq",
+    "version": 1,
+    "section": "rwmutex",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 200 steps of work under the lock, `cache.go` took 641 ms with a `Mutex` and 200 ms with an `RWMutex`. How many times faster was the read lock? Round to a whole number.",
+    "hint": "641 divided by 200.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-jrk5d8p3",
+    "version": 1,
+    "section": "channel-or-mutex",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tool does the section recommend when the whole shared state is one counter?",
+    "hint": "It was the fastest in `three.go`.",
+    "choices": [
+      {
+        "text": "A channel to a goroutine that owns the counter",
+        "correct": false,
+        "why": "It works and was the slowest and longest of the three."
+      },
+      {
+        "text": "An `RWMutex`",
+        "correct": false,
+        "why": "An increment is a write, so readers sharing a lock does not help."
+      },
+      {
+        "text": "`sync/atomic`, such as `atomic.Int64`",
+        "correct": true,
+        "why": "Right: one value, one indivisible operation."
+      },
+      {
+        "text": "A plain `int` read after `wg.Wait`",
+        "correct": false,
+        "why": "Reading after `Wait` is safe; the increments before it, from four goroutines, are the race."
+      }
+    ]
+  },
+  {
+    "id": "ex-57vek8d3",
+    "version": 1,
+    "section": "channel-or-mutex",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service keeps `requests` and `bytes` as two `atomic.Int64` values, updated one after the other. A report reads both and divides. What can go wrong?",
+    "hint": "Each atomic is indivisible on its own.",
+    "choices": [
+      {
+        "text": "Nothing, because each update is atomic",
+        "correct": false,
+        "why": "Each one is, but the pair is not: the report can land between the two updates."
+      },
+      {
+        "text": "It reads one already updated and the other not yet",
+        "correct": true,
+        "why": "Right. Keeping two values consistent with each other is a mutex's job."
+      },
+      {
+        "text": "The race detector reports both variables",
+        "correct": false,
+        "why": "Atomic operations are synchronised, so there is no data race to report; the bug is in the logic."
+      },
+      {
+        "text": "`atomic.Int64` cannot be read from another goroutine",
+        "correct": false,
+        "why": "`Load` is exactly that, and it is safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-qt034gsr",
+    "version": 1,
+    "section": "channel-or-mutex",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job with the tool the section's table gives it.",
+    "hint": "Ownership moves through channels; state stays put under a lock.",
+    "pairs": [
+      {
+        "left": "handing a value to another goroutine that then owns it",
+        "right": "a channel"
+      },
+      {
+        "left": "a cache that goroutines read and change in place",
+        "right": "a mutex"
+      },
+      {
+        "left": "a flag that says the service is shutting down",
+        "right": "`sync/atomic`"
+      }
+    ],
+    "right_distractors": [
+      "`time.Sleep`"
+    ]
+  },
+  {
+    "id": "ex-wgdampqd",
+    "version": 1,
+    "section": "channel-or-mutex",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `three.go`, why does `withChannel` need no lock around `total`?",
+    "hint": "How many goroutines ever touch `total` there?",
+    "choices": [
+      {
+        "text": "Channels make every variable safe",
+        "correct": false,
+        "why": "Only the variables a single goroutine owns; four goroutines writing one variable would still race."
+      },
+      {
+        "text": "The increments are atomic on this processor",
+        "correct": false,
+        "why": "`total += n` is an ordinary read, add and write."
+      },
+      {
+        "text": "Only the goroutine that owns it reads or writes it",
+        "correct": true,
+        "why": "Right: the others send increments; they never touch the number."
+      },
+      {
+        "text": "`wg.Wait` runs before every increment",
+        "correct": false,
+        "why": "`wg.Wait` runs once, after all the sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-d320137c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three ways of `three.go` from fastest to slowest, as both runs printed them.",
+    "hint": "One of them was more than ten times slower than another.",
+    "items": [
+      "atomic",
+      "mutex",
+      "channel"
+    ]
+  },
+  {
+    "id": "ex-jy7zkzvy",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these copy a `sync.Mutex` and so break it after first use? Choose all that apply.",
+    "hint": "A copy is made whenever a struct value is passed or assigned.",
+    "choices": [
+      {
+        "text": "A method with a value receiver on the struct holding it",
+        "correct": true,
+        "why": "Yes: `copied.go`."
+      },
+      {
+        "text": "`d := c`, where `c` is that struct",
+        "correct": true,
+        "why": "Yes, an assignment copies every field."
+      },
+      {
+        "text": "A method with a pointer receiver",
+        "correct": false,
+        "why": "A pointer receiver shares the one struct; that is the fix."
+      },
+      {
+        "text": "Passing `&c` to a function",
+        "correct": false,
+        "why": "That passes a pointer, and the struct stays where it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9d9r0cc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A map of user sessions is read on every request and written when somebody signs in, about once a minute. Reads hold the lock only for the lookup. What does the lesson suggest?",
+    "hint": "Remember the `work 0` runs of `cache.go`.",
+    "choices": [
+      {
+        "text": "An `RWMutex`, because reads are the majority",
+        "correct": false,
+        "why": "Many readers is half the condition; the other half is holding the lock long enough to overlap."
+      },
+      {
+        "text": "A channel to a goroutine that owns the map",
+        "correct": false,
+        "why": "That is the mutex in disguise the section warns about, and the slowest of the options."
+      },
+      {
+        "text": "A `Mutex`, then measure an `RWMutex`",
+        "correct": true,
+        "why": "Right. With a single lookup under the lock, the `RWMutex` was the slower of the two in `cache.go`."
+      },
+      {
+        "text": "No lock, since writes are rare",
+        "correct": false,
+        "why": "One write a minute alongside reads is still a data race, and Go may stop the program for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1w23xrq",
+    "version": 1,
+    "section": "rwmutex",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every `RLock` on an `RWMutex` is released by exactly one call to `___`.",
+    "hint": "The read-side twin of `Unlock`.",
+    "blanks": [
+      {
+        "accept": [
+          "RUnlock",
+          "RUnlock()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-201pexsm",
+    "version": 1,
+    "section": "channel-or-mutex",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first run of `three.go`, the mutex took 26 ms and the channel 80 ms. About how many times longer did the channel take? Give a whole number.",
+    "hint": "80 divided by 26.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "times"
+  }
+]
