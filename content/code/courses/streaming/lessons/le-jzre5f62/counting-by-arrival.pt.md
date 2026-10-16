@@ -62,8 +62,7 @@ ubuntu@stream:~/work$ python per_minute.py --size 60
 
 Leia as duas colunas de cima para baixo. Até as dez elas quase concordam; a diferença de uma venda é
 uma venda do fim da hora das nove que chegou na hora das dez. Das 10:00 às 13:00 a coluna de chegada
-fica abaixo em todas as horas, por 5, 11, 13 e 9, e então a hora das 14:00 tem 93 onde aconteceram
-54. **As duas colunas somam 360.** Nenhuma venda se perdeu e nenhuma foi contada duas vezes; a
+fica abaixo em todas as horas, por 5, 11, 13 e 9, e então a hora das 14:00 tem 93 onde aconteceram 54. **As duas colunas somam 360.** Nenhuma venda se perdeu e nenhuma foi contada duas vezes; a
 coluna de chegada moveu 38 delas, todas de Natal, para a hora em que o caixa voltou, e mais três
 pela borda de uma hora, cada uma por menos de dois minutos.
 
@@ -93,8 +92,7 @@ um jeito que ninguém conseguiria ver.
 ## O preço da coluna certa
 
 A coluna do que aconteceu é o que o gerente quer dizer com "vendas entre as dez e as onze", e é ela
-que se publica. Mas veja quanto ela custou: às 11:00, a hora das 10:00 pelo tempo do evento não era
-62. Era 62 menos cada venda de Natal ainda presa no caixa. **Um resultado pelo tempo do evento só
+que se publica. Mas veja quanto ela custou: às 11:00, a hora das 10:00 pelo tempo do evento não era 62. Era 62 menos cada venda de Natal ainda presa no caixa. **Um resultado pelo tempo do evento só
 está correto quando todos os eventos que pertencem a ele chegaram, e o processador não tem como
 saber quando isso acontece.** Ou ele espera, ou publica e corrige depois, ou decide que alguns
 eventos estão atrasados demais para contar. A lição 10 dá a esses baldes o nome certo, janelas, e a

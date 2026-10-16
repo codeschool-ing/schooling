@@ -1,5 +1,5 @@
 ---
-title: acks, e quantas cópias vale um "sim"
+title: acks, e quantas cópias vale um sim
 version: 1
 ---
 

@@ -31,8 +31,7 @@ ubuntu@stream:~/work$ python watermark.py --bound 6
 still open: 09:20:00 (2)
 ```
 
-Nada é emitido até a venda 6, e então só a janela das 09:00; a janela das 09:05 espera até a venda
-10. Mas quando é emitida ela tem **três vendas e 21.380 centavos**, venda 8 incluída, e nada é
+Nada é emitido até a venda 6, e então só a janela das 09:00; a janela das 09:05 espera até a venda 10. Mas quando é emitida ela tem **três vendas e 21.380 centavos**, venda 8 incluída, e nada é
 descartado além da venda 11, que nenhum limite razoável teria pegado. **Esperar mais comprou uma
 venda e custou quatro chegadas de atraso.** Num painel, é a diferença entre um número que aparece
 quatro vendas depois e está certo, e um que aparece antes e fica errado.

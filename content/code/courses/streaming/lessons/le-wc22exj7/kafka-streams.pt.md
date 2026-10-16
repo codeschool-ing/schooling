@@ -5,8 +5,7 @@ version: 1
 
 Uma aplicação Kafka Streams é um programa Java comum, com um método `main`. **Não há servidor para
 instalar nem a quem submeter um job**: o programa lê os seus tópicos, guarda o seu estado e escreve
-os seus resultados sozinho, usando os jars da biblioteca, que estão em `~/kafka/libs` desde a lição
-1. Esta seção escreve um que conta vendas por loja e por livro, compila com o `javac` do JDK e o
+os seus resultados sozinho, usando os jars da biblioteca, que estão em `~/kafka/libs` desde a lição 1. Esta seção escreve um programa que conta vendas por loja e por livro, compila com o `javac` do JDK e o
 roda.
 
 A descrição do trabalho é uma **topologia**: de onde vêm os registros, o que acontece com eles e

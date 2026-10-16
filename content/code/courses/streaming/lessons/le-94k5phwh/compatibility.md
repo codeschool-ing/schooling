@@ -56,8 +56,7 @@ ubuntu@stream:~/work$ ./register.sh sales-avro-value sale-v2.avsc
 
 The producer would not send with version 2 yet: with `auto.register.schemas` off, a schema the
 registry does not have is a 404, and the sale is never written. Registering it is a separate,
-deliberate step, and the registry checked it against version 1 under `BACKWARD` before giving it id
-2. A new field with a default passes, because a reader on version 2 can fill `till` with `unknown`
+deliberate step, and the registry checked it against version 1 under `BACKWARD` before giving it id 2. A new field with a default passes, because a reader on version 2 can fill `till` with `unknown`
 for every sale written before it existed.
 
 ## A change it refuses
