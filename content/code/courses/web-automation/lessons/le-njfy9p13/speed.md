@@ -34,6 +34,9 @@ Running 10 tests using 1 worker
   10 passed (12.2s)
 ```
 
+The two `✘` lines are the tests lessons 3 and 5 keep with `test.fail()`, counted among the passes.
+The total on the last line is what the next runs compare.
+
 ## Three modes, three times each
 
 The same command, in the shell, in new headless through `headless.config.js`, and headed under

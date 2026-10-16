@@ -34,6 +34,9 @@ Running 10 tests using 1 worker
   10 passed (12.2s)
 ```
 
+As duas linhas com `✘` são os testes que as aulas 3 e 5 mantêm com `test.fail()`, contados entre
+os aprovados. O total da última linha é o que as próximas execuções comparam.
+
 ## Três modos, três vezes cada
 
 O mesmo comando, no shell, no novo headless pelo `headless.config.js` e com janela sob o Xvfb,
