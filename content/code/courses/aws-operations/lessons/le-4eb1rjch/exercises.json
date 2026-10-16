@@ -1,0 +1,431 @@
+[
+  {
+    "id": "ex-ex4ta2m6",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An alarm is set to 3 of 5 with a 60-second period. What has to happen for it to fire?",
+    "hint": "M of N.",
+    "choices": [
+      {
+        "text": "Five breaching minutes in a row",
+        "correct": false,
+        "why": "That is 5 of 5, which misses an outage that flickers."
+      },
+      {
+        "text": "Three breaching minutes in a row",
+        "correct": false,
+        "why": "The three can be anywhere in the window of five."
+      },
+      {
+        "text": "Any three of the last five minutes",
+        "correct": true,
+        "why": "Right. They need not be in a row."
+      },
+      {
+        "text": "One breaching minute, held for three",
+        "correct": false,
+        "why": "Each minute is its own data point; nothing is held."
+      }
+    ]
+  },
+  {
+    "id": "ex-fczxv2zj",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An alarm stays in `ALARM` for an hour. How many notifications does its topic receive, counting its return to `OK`?",
+    "hint": "Alarms notify on a change of state.",
+    "choices": [
+      {
+        "text": "Sixty, one per period",
+        "correct": false,
+        "why": "Periods in the same state notify nothing."
+      },
+      {
+        "text": "Two, in and out",
+        "correct": true,
+        "why": "Right. One message entering ALARM and one returning to OK: one per change of state."
+      },
+      {
+        "text": "One, when it enters ALARM",
+        "correct": false,
+        "why": "The OK action also fires when it returns, if configured, as here."
+      },
+      {
+        "text": "None until someone acknowledges it",
+        "correct": false,
+        "why": "CloudWatch has no acknowledgement; that belongs to a paging service."
+      }
+    ]
+  },
+  {
+    "id": "ex-0js827a6",
+    "version": 1,
+    "section": "anatomy",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Besides OK and ALARM, the third state of an alarm, when the data it needs is not there, is ___.",
+    "hint": "Two words joined by an underscore, in capitals.",
+    "blanks": [
+      {
+        "accept": [
+          "INSUFFICIENT_DATA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k8gg5tnz",
+    "version": 1,
+    "section": "evaluate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the model, the API stopped publishing and the `notBreaching` alarm returned to `OK` two minutes later. Why?",
+    "hint": "What did the empty minutes count as?",
+    "choices": [
+      {
+        "text": "Its empty minutes counted as good minutes",
+        "correct": true,
+        "why": "Right. notBreaching turned the silence into good minutes, leaving two bad ones in the window."
+      },
+      {
+        "text": "The errors stopped, so the service recovered",
+        "correct": false,
+        "why": "No data arrived at all; nothing recovered."
+      },
+      {
+        "text": "CloudWatch resets alarms after five minutes",
+        "correct": false,
+        "why": "No reset exists; the window simply moved over empty minutes."
+      },
+      {
+        "text": "The threshold was raised automatically",
+        "correct": false,
+        "why": "Thresholds never move by themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-afbkgcec",
+    "version": 1,
+    "section": "evaluate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Errors are published by the application itself. Which missing-data treatment keeps the alarm on when the application crashes?",
+    "hint": "A crashed application publishes nothing.",
+    "choices": [
+      {
+        "text": "notBreaching",
+        "correct": false,
+        "why": "It counts the silence as good, as the model showed."
+      },
+      {
+        "text": "missing",
+        "correct": false,
+        "why": "It leaves the silent minutes out, and the remaining two do not reach three."
+      },
+      {
+        "text": "Any of them, as long as M is 1",
+        "correct": false,
+        "why": "M of 1 pages on every blip and still loses the crash under notBreaching."
+      },
+      {
+        "text": "breaching",
+        "correct": true,
+        "why": "Right. Silence counts as bad, so the alarm stays in ALARM."
+      }
+    ]
+  },
+  {
+    "id": "ex-gszr3hjb",
+    "version": 1,
+    "section": "evaluate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `alarm.py` in this lesson?",
+    "hint": "Read the section's own description of it.",
+    "choices": [
+      {
+        "text": "CloudWatch's evaluation code, copied from AWS",
+        "correct": false,
+        "why": "AWS does not publish it; this follows the documented rules."
+      },
+      {
+        "text": "A model of what AWS documents",
+        "correct": true,
+        "why": "Right. Its decisions were computed, not observed."
+      },
+      {
+        "text": "A Lambda function CloudWatch calls every minute",
+        "correct": false,
+        "why": "It runs on the laptop, by hand."
+      },
+      {
+        "text": "moto's own alarm engine",
+        "correct": false,
+        "why": "moto has none; that is why the program exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p40p2jm",
+    "version": 1,
+    "section": "evaluate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each missing-data treatment to what a minute with no data counts as.",
+    "hint": "Good, bad, left out, or no change.",
+    "pairs": [
+      {
+        "left": "notBreaching",
+        "right": "A good minute"
+      },
+      {
+        "left": "breaching",
+        "right": "A bad minute"
+      },
+      {
+        "left": "missing",
+        "right": "Left out of the count"
+      },
+      {
+        "left": "ignore",
+        "right": "Keep the current state"
+      }
+    ]
+  },
+  {
+    "id": "ex-2m0fg10p",
+    "version": 1,
+    "section": "notify",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why should alarms name a topic rather than a person's email?",
+    "hint": "The rotation changes every week.",
+    "choices": [
+      {
+        "text": "Emails cannot receive alarm messages",
+        "correct": false,
+        "why": "A topic delivers to email; that is not the reason."
+      },
+      {
+        "text": "A topic is cheaper than an email",
+        "correct": false,
+        "why": "Cost is not the point; changing who is paged is."
+      },
+      {
+        "text": "CloudWatch refuses email addresses",
+        "correct": false,
+        "why": "Alarm actions take ARNs; the topic is how email is reached."
+      },
+      {
+        "text": "Rotations then change no alarm",
+        "correct": true,
+        "why": "Right. The subscriptions change; forty alarms do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-kfw7a6g3",
+    "version": 1,
+    "section": "notify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, what is `set-alarm-state` useful for?",
+    "hint": "It changes the state until the next evaluation.",
+    "choices": [
+      {
+        "text": "Silencing an alarm during a deployment",
+        "correct": false,
+        "why": "The next evaluation sets the real state again within a period."
+      },
+      {
+        "text": "Changing the threshold without a new alarm",
+        "correct": false,
+        "why": "The threshold is changed with put-metric-alarm."
+      },
+      {
+        "text": "Testing that a page reaches the right phone",
+        "correct": true,
+        "why": "Right. It runs the actions without breaking anything."
+      },
+      {
+        "text": "Making moto evaluate the alarm",
+        "correct": false,
+        "why": "moto changed the state and ran no action at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jm0d1ac",
+    "version": 1,
+    "section": "notify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field of an alarm's message tells the person paged why it fired?",
+    "hint": "CloudWatch's own sentence about the data points.",
+    "choices": [
+      {
+        "text": "NewStateReason",
+        "correct": true,
+        "why": "Right. Here: 3 out of the last 5 datapoints were greater than 10."
+      },
+      {
+        "text": "AlarmName",
+        "correct": false,
+        "why": "It says which alarm, not why."
+      },
+      {
+        "text": "Region",
+        "correct": false,
+        "why": "It says where, not why."
+      },
+      {
+        "text": "OldStateValue",
+        "correct": false,
+        "why": "It says the state before, not the reason for the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxevzp2f",
+    "version": 1,
+    "section": "composite",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop has alarms on errors, latency, queue depth and database CPU. Which should page a person directly?",
+    "hint": "Customers feel symptoms.",
+    "choices": [
+      {
+        "text": "All four, so nothing is missed",
+        "correct": false,
+        "why": "Four pages for one problem, and no way to tell cause from consequence."
+      },
+      {
+        "text": "Queue depth and CPU, because they come first",
+        "correct": false,
+        "why": "They may come first and matter only if customers feel them."
+      },
+      {
+        "text": "None: composite alarms replace paging",
+        "correct": false,
+        "why": "A composite pages too; it decides when."
+      },
+      {
+        "text": "The two symptoms customers feel",
+        "correct": true,
+        "why": "Right. Errors and latency page; causes go on the dashboard and in the message."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh560dvm",
+    "version": 1,
+    "section": "composite",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which composite rule pages on errors at once, and on latency only outside deployments?",
+    "hint": "NOT applies to the deployment alarm.",
+    "choices": [
+      {
+        "text": "ALARM(\"api-errors\") OR (ALARM(\"api-latency\") AND NOT ALARM(\"api-deploying\"))",
+        "correct": true,
+        "why": "Right. Errors alone page; latency pages unless a deploy is running."
+      },
+      {
+        "text": "ALARM(\"api-errors\") AND ALARM(\"api-latency\")",
+        "correct": false,
+        "why": "This needs both at once, so errors alone never page."
+      },
+      {
+        "text": "NOT ALARM(\"api-deploying\")",
+        "correct": false,
+        "why": "That fires whenever no deployment runs, which is nearly always."
+      },
+      {
+        "text": "ALARM(\"api-errors\") OR ALARM(\"api-latency\")",
+        "correct": false,
+        "why": "Latency would page during every canary."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2n73a8j",
+    "version": 1,
+    "section": "composite",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 5.4,
+    "tolerance": 0.01,
+    "prompt": "Standard alarms cost 0.135 USD a month each. What do 40 of them cost a month?",
+    "hint": "Alarms times price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-tqd55bd4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of a page in the order it happens on AWS.",
+    "hint": "From the data point to the phone.",
+    "items": [
+      "Data points arrive for the metric",
+      "CloudWatch evaluates M of N and changes the state",
+      "The alarm action publishes to the topic",
+      "The topic delivers to the paging service"
+    ],
+    "trap": "The topic before the state change is the slip: nothing is published until the state changes."
+  },
+  {
+    "id": "ex-mxmhnbfw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly batch job publishes `JobSucceeded=1` when it finishes. Which settings make an alarm catch a night when it never ran? Choose all that apply.",
+    "hint": "A job that never ran publishes nothing.",
+    "choices": [
+      {
+        "text": "Treat missing data as breaching",
+        "correct": true,
+        "why": "Yes. The silence is the failure."
+      },
+      {
+        "text": "An alarm when the value is less than 1",
+        "correct": true,
+        "why": "Yes. With missing as breaching, both a 0 and silence fire it."
+      },
+      {
+        "text": "Treat missing data as notBreaching",
+        "correct": false,
+        "why": "No. A job that never ran would read as a good night."
+      },
+      {
+        "text": "A period of one minute",
+        "correct": false,
+        "why": "No. One data point a day needs a period that covers the day."
+      }
+    ]
+  }
+]

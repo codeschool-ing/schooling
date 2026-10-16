@@ -26,8 +26,9 @@ export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 HOME=/home/ana
 unset AWS_PROFILE AWS_REGION AWS_SESSION_TOKEN
 # the recording machine's own agent variables, which some tools (the CDK) notice
 for v in $(compgen -e | grep -E '^(CLAUDE|AI_AGENT|CCR_)'); do unset "$v"; done
-export PATH="$HOME/.local/bin:$HOME/aws/venv/bin:$PATH"
 [ -n "${PYTHON3_DIR:-}" ] && export PATH="$PYTHON3_DIR:$PATH"
+# as after `source venv/bin/activate`: the environment's python3 comes first
+export PATH="$HOME/.local/bin:$HOME/aws/venv/bin:$PATH"
 [ -f /opt/awsops/terraformrc ] && export TF_CLI_CONFIG_FILE=/opt/awsops/terraformrc
 
 MOTO_PID=
