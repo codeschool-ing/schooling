@@ -1,0 +1,516 @@
+[
+  {
+    "id": "ex-m8n2dwts",
+    "version": 1,
+    "section": "units",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many write units does a `put-item` of a 3,500-byte item cost?",
+    "hint": "1 KB per unit, rounded up.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m8xs4b4b",
+    "version": 1,
+    "section": "units",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many read units does a strongly consistent `get-item` of a 9,025-byte item cost?",
+    "hint": "4 KB per unit, rounded up.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4290xawn",
+    "version": 1,
+    "section": "units",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 9,025-byte item is written inside a transaction. How many write units?",
+    "hint": "Round first, then apply the multiplier.",
+    "choices": [
+      {
+        "text": "18, twice the 9 units of a plain write",
+        "correct": true,
+        "why": "Right: 9,025 bytes is 9 units, doubled."
+      },
+      {
+        "text": "9, as for any write of it",
+        "correct": false,
+        "why": "That is a plain put. A transaction doubles it."
+      },
+      {
+        "text": "4.5, since a transaction is eventually consistent",
+        "correct": false,
+        "why": "Consistency halves reads, never writes, and transactions are the expensive kind."
+      },
+      {
+        "text": "6, the transactional read price",
+        "correct": false,
+        "why": "Six is what reading it in a transaction costs: 3 units, doubled."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnhmq6ed",
+    "version": 1,
+    "section": "units",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto reported 1.0 capacity unit for the put of the 9,025-byte item. What does that number tell you about AWS?",
+    "hint": "What did moto answer for every other write?",
+    "choices": [
+      {
+        "text": "That AWS would charge one unit too",
+        "correct": false,
+        "why": "AWS would charge 9. moto's number is the same for every write."
+      },
+      {
+        "text": "That the item was compressed to under 1 KB",
+        "correct": false,
+        "why": "DynamoDB charges on the item's size as written; nothing compresses it for billing."
+      },
+      {
+        "text": "Nothing: it is a constant",
+        "correct": true,
+        "why": "Right: moto gives every write that number. Units are counted by hand or by a program, never read off moto."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk23ry8t",
+    "version": 1,
+    "section": "two-modes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On demand in sa-east-1, how many dollars do 10 million writes of items up to 1 KB cost?",
+    "hint": "The price sheet gives the price per million write request units.",
+    "value": 9.375,
+    "tolerance": 0.001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-y4gwbhq8",
+    "version": 1,
+    "section": "two-modes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new table goes live next week and nobody knows its load. Which mode, and why?",
+    "hint": "What does each mode do when the guess is wrong?",
+    "choices": [
+      {
+        "text": "Provisioned at a generous number, because provisioned units are cheaper",
+        "correct": false,
+        "why": "Cheaper only when busy; a generous guess is idle capacity billed every hour."
+      },
+      {
+        "text": "Provisioned at 1 unit, raised when the first throttle appears",
+        "correct": false,
+        "why": "The first throttle is a customer's failed request."
+      },
+      {
+        "text": "On demand: it cannot be under-provisioned and costs nothing while idle",
+        "correct": true,
+        "why": "Right. Move to provisioned once a load has been measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-t64k1bkq",
+    "version": 1,
+    "section": "two-modes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto switched the products table between provisioned and on demand three times in a minute. What does that show about AWS?",
+    "hint": "Which limits did the section say moto does not have?",
+    "choices": [
+      {
+        "text": "That AWS allows it too, since the API is the same",
+        "correct": false,
+        "why": "The same API with different limits behind it; this is exactly where moto stops imitating."
+      },
+      {
+        "text": "Nothing: AWS limits it, and moto does not",
+        "correct": true,
+        "why": "Right. AWS allows a limited number of switches to on demand in 24 hours; a success from moto says only that the request was well formed."
+      },
+      {
+        "text": "That the limits apply only to tables with indexes",
+        "correct": false,
+        "why": "The products table has no index, and the limits are per table regardless."
+      },
+      {
+        "text": "That a switch takes effect only after the table is idle",
+        "correct": false,
+        "why": "A switch takes effect at once; how often is the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtpb4vss",
+    "version": 1,
+    "section": "break-even",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At what utilisation, in percent to one decimal place, do provisioned and on-demand writes cost the same in sa-east-1?",
+    "hint": "A WCU-hour against the on-demand price of the 3,600 writes it can carry.",
+    "value": 28.9,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-q1aww4n6",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is provisioned 41% of the on-demand price for the steady load of 200 writes a second?",
+    "hint": "Compare its utilisation with the break-even.",
+    "choices": [
+      {
+        "text": "Because provisioned capacity has a discount above 200 units",
+        "correct": false,
+        "why": "There is no volume discount in the sheet; the first 25 units are free and the rest cost the same."
+      },
+      {
+        "text": "Because on demand charges twice for writes at night",
+        "correct": false,
+        "why": "On-demand prices do not change with the hour."
+      },
+      {
+        "text": "Because autoscaling lowered it at night",
+        "correct": false,
+        "why": "A steady load has nothing to follow; following it gave the same 200.77."
+      },
+      {
+        "text": "Its units are 70% busy, well above 28.9%",
+        "correct": true,
+        "why": "Right: 28.9% is where the two cost the same, and busy capacity is where provisioned wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8vpfp0j",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For the spiky load, perfect autoscaling would cost 61.31 dollars and on demand 147.83. Why does the section still lean towards on demand?",
+    "hint": "When does autoscaling act?",
+    "choices": [
+      {
+        "text": "Because autoscaling reacts minutes after load arrives, so a sudden spike is throttled first",
+        "correct": true,
+        "why": "Right. A spike at a known time can be met with scheduled scaling; an unexpected one is what on demand is for."
+      },
+      {
+        "text": "Because 61.31 is below the free tier",
+        "correct": false,
+        "why": "The free allowance is 25 units, which this load passes in every hour."
+      },
+      {
+        "text": "Because provisioned tables cannot exceed 1,000 units",
+        "correct": false,
+        "why": "The 1,000 is per partition, not per table."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgz9652b",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Provisioned at 1,429 units all month, the spiky load costs 1,003.16 dollars. Where does most of that money go?",
+    "hint": "What do the units do at 20 writes a second?",
+    "choices": [
+      {
+        "text": "Into units that sit idle for 23 hours a day",
+        "correct": true,
+        "why": "Right: at 20 writes a second they are 1.4% used."
+      },
+      {
+        "text": "Into the writes of the evening promotion",
+        "correct": false,
+        "why": "One hour of 24; the other 23 are paid for too."
+      },
+      {
+        "text": "Into storage, which provisioned tables pay for by the unit",
+        "correct": false,
+        "why": "Storage is billed per GB in both modes, and the program counts none."
+      },
+      {
+        "text": "Into the retries of throttled writes",
+        "correct": false,
+        "why": "With capacity for the peak all day, nothing is throttled."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms37mbxb",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does DynamoDB autoscaling change?",
+    "hint": "It drives an `update-table` on your behalf.",
+    "choices": [
+      {
+        "text": "The number of partitions",
+        "correct": false,
+        "why": "Partitions are DynamoDB's business and are never set by anybody."
+      },
+      {
+        "text": "The billing mode, switching to on demand at peaks",
+        "correct": false,
+        "why": "It never changes the mode, and the mode has its own limits."
+      },
+      {
+        "text": "An on-demand table's price per million requests",
+        "correct": false,
+        "why": "On demand has nothing to scale; autoscaling applies to provisioned tables only."
+      },
+      {
+        "text": "Capacity units, within set bounds",
+        "correct": true,
+        "why": "Right: a provisioned table's, within its scalable target, here between 5 and 500 write units."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2y7x4v7",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the four alarms moto created for the write policy? Choose every one.",
+    "hint": "Compare their metric names and thresholds with the table.",
+    "choices": [
+      {
+        "text": "They name read metrics for a policy on write units",
+        "correct": true,
+        "why": "Yes, `ConsumedReadCapacityUnits` on every one."
+      },
+      {
+        "text": "The high alarm needs 2 one-minute periods, the low one 15",
+        "correct": true,
+        "why": "Yes, which is the shape AWS uses: out quickly, in slowly."
+      },
+      {
+        "text": "Their thresholds were computed from the table's 5 write units",
+        "correct": false,
+        "why": "42 and 30 are 70% and 50% of 60 seconds of one unit."
+      },
+      {
+        "text": "One of them will fire during `flood.py`",
+        "correct": false,
+        "why": "moto publishes no metrics, so no alarm ever fires."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m57x0s4",
+    "version": 1,
+    "section": "autoscaling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A policy that keeps consumed units near 70% of the provisioned ones is a target ___ policy.",
+    "hint": "It follows a target.",
+    "blanks": [
+      {
+        "accept": [
+          "tracking"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-24x6v8jy",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A provisioned table has 10,000 write units, and every write uses the partition key `2026-10-16`. Roughly how many writes a second can it take?",
+    "hint": "Where does one partition key live?",
+    "choices": [
+      {
+        "text": "About 1,000, one partition's limit",
+        "correct": true,
+        "why": "Right, whatever the table has. That is a hot partition."
+      },
+      {
+        "text": "10,000, the table's capacity",
+        "correct": false,
+        "why": "The table's capacity is spread over partitions, and one key uses one."
+      },
+      {
+        "text": "20,000, with adaptive capacity doubling it",
+        "correct": false,
+        "why": "Adaptive capacity lends unused capacity to a busy partition but does not lift the ceiling on one key."
+      },
+      {
+        "text": "3,000, the partition's read limit",
+        "correct": false,
+        "why": "Writes have their own limit, a third of that."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk82vppd",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The index `by-day` is sharded into `2026-10-16#0` to `#9`. What does the back office's \"every order of a day\" become?",
+    "hint": "Who pays for spreading the writes?",
+    "choices": [
+      {
+        "text": "One query on `2026-10-16`, which still finds all ten keys",
+        "correct": false,
+        "why": "A query takes one exact partition key; `2026-10-16` alone is now none of them."
+      },
+      {
+        "text": "A scan of the index filtered on the day",
+        "correct": false,
+        "why": "That would read every day in the index to find one."
+      },
+      {
+        "text": "Ten queries, one per suffix, whose answers the reader merges into one list",
+        "correct": true,
+        "why": "Right. The writes are spread and the read pays for it."
+      },
+      {
+        "text": "Nothing changes, since DynamoDB strips the suffix",
+        "correct": false,
+        "why": "DynamoDB knows nothing of the convention; the suffix is part of the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4gcgats",
+    "version": 1,
+    "section": "throttling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`flood.py` wrote 5,000 items to a table of 5 write units with 0 retries. What can be concluded about the design?",
+    "hint": "What did moto do with the capacity?",
+    "choices": [
+      {
+        "text": "That 5 units are enough for 5,000 writes in a few seconds",
+        "correct": false,
+        "why": "They would carry about 5 a second, plus burst; moto ignored the capacity."
+      },
+      {
+        "text": "That burst capacity covered the whole run",
+        "correct": false,
+        "why": "Burst is at most five minutes of unused capacity, 1,500 writes here, and moto has none."
+      },
+      {
+        "text": "Nothing about DynamoDB: moto never throttles, so the run measured the program and the laptop",
+        "correct": true,
+        "why": "Right. Capacity is checked with the arithmetic, and on a real account."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h6bngbf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operation on a 6 KB item with its units on AWS.",
+    "hint": "6 KB is 6 write blocks and 2 read blocks.",
+    "pairs": [
+      {
+        "left": "an eventually consistent read",
+        "right": "1 read unit"
+      },
+      {
+        "left": "a strongly consistent read",
+        "right": "2 read units"
+      },
+      {
+        "left": "a read in a transaction",
+        "right": "4 read units"
+      },
+      {
+        "left": "a write",
+        "right": "6 write units"
+      },
+      {
+        "left": "a write in a transaction",
+        "right": "12 write units"
+      }
+    ]
+  },
+  {
+    "id": "ex-gwj0abxa",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On AWS, put the events of a sudden surge on an autoscaled table in order.",
+    "hint": "The alarm needs two minutes of data.",
+    "items": [
+      "Writes jump to three times the provisioned capacity",
+      "Burst capacity absorbs the first of them",
+      "Requests are throttled and the SDK retries them",
+      "The high alarm fires after two minutes above the target",
+      "Application Auto Scaling raises the table's capacity"
+    ]
+  },
+  {
+    "id": "ex-7nfer9pw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's stock table takes 300 writes a second from the warehouse scanners, 7 to 19 every day, and almost nothing at night. Which is the cheapest sound choice?",
+    "hint": "Work out the utilisation of each option against 28.9%.",
+    "choices": [
+      {
+        "text": "Provisioned for 300 a second around the clock",
+        "correct": false,
+        "why": "Busy 12 hours of 24 at most, 70% of that: 35% averaged, barely above break-even, and the nights are waste."
+      },
+      {
+        "text": "On demand, because any load with a quiet night is spiky",
+        "correct": false,
+        "why": "The load is predictable to the hour; that is the case scheduled capacity is for."
+      },
+      {
+        "text": "Provisioned, scheduled up before 7 and down after 19",
+        "correct": true,
+        "why": "Right, with autoscaling in between. A known pattern lets provisioned capacity be busy while it is paid for."
+      },
+      {
+        "text": "Provisioned at 1 unit, letting burst capacity carry the day",
+        "correct": false,
+        "why": "Burst is five minutes of unused capacity, not a day of it."
+      }
+    ]
+  }
+]
