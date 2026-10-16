@@ -22,7 +22,7 @@ ana@laptop:~/aws/metrics$ aws cloudwatch get-metric-statistics --namespace Shop 
 **Uma média de 84,35 milissegundos, que é a latência de requisição nenhuma.** Noventa e cinco clientes
 tiveram uns 40, cinco tiveram 900, e a média não descreve nenhum dos dois grupos. Leia o máximo e você
 vê os cinco, mas não quantos foram. O que conta a história é o **percentil**: o p95 é a latência que
-95% das requisições atingiram ou superaram para menos, o p99 a que 99% atingiram.
+95% das requisições não ultrapassaram, o p99 a que 99% não ultrapassaram.
 
 ## O percentil que o moto não calcula
 
