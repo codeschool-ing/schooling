@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-9hqn5jg5",
+    "version": 1,
+    "section": "the-server-cannot-speak-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a plain HTTP server not tell a page that an order has shipped?",
+    "hint": "Who starts every exchange?",
+    "choices": [
+      {
+        "text": "HTTP responses cannot carry JSON",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Only the client starts an exchange",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Browsers block messages from servers",
+        "correct": false,
+        "why": "They accept responses."
+      },
+      {
+        "text": "TLS forbids it",
+        "correct": false,
+        "why": "TLS has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjx03zy6",
+    "version": 1,
+    "section": "the-server-cannot-speak-first",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique to how the browser learns of an event.",
+    "hint": "Ask, wait, stream, channel.",
+    "pairs": [
+      {
+        "left": "polling",
+        "right": "asks every few seconds"
+      },
+      {
+        "left": "long polling",
+        "right": "asks, and the answer is held until there is news"
+      },
+      {
+        "left": "Server-Sent Events",
+        "right": "one response that never ends"
+      },
+      {
+        "left": "WebSocket",
+        "right": "an upgraded channel both sides send on"
+      }
+    ]
+  },
+  {
+    "id": "ex-7xs8dvyx",
+    "version": 1,
+    "section": "the-server-cannot-speak-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a payment gateway usually tell the shop that a payment settled?",
+    "hint": "Server to server.",
+    "choices": [
+      {
+        "text": "A WebSocket from the shop's browser",
+        "correct": false,
+        "why": "Neither side is a browser."
+      },
+      {
+        "text": "Server-Sent Events to the customer",
+        "correct": false,
+        "why": "The customer is not involved."
+      },
+      {
+        "text": "A webhook to the shop's URL",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Long polling by the gateway",
+        "correct": false,
+        "why": "The gateway does not poll the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj2g98y7",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lab run two instances of the service?",
+    "hint": "The last section.",
+    "choices": [
+      {
+        "text": "To make each request faster",
+        "correct": false,
+        "why": "One instance is fast enough."
+      },
+      {
+        "text": "To show the multi-instance problem",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because aiohttp needs two processes",
+        "correct": false,
+        "why": "It runs in one."
+      },
+      {
+        "text": "One for HTTP, one for WebSockets",
+        "correct": false,
+        "why": "Both serve everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwa8watw",
+    "version": 1,
+    "section": "polling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page polls every 2 seconds for an hour, and the order changes 3 times. How many requests were wasted?",
+    "hint": "1,800 minus the useful ones.",
+    "choices": [
+      {
+        "text": "3",
+        "correct": false,
+        "why": "Those are the useful ones."
+      },
+      {
+        "text": "600",
+        "correct": false,
+        "why": "3,600 ÷ 2 is 1,800."
+      },
+      {
+        "text": "1,797",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "1,800",
+        "correct": false,
+        "why": "Three were useful."
+      }
+    ]
+  },
+  {
+    "id": "ex-26088p9x",
+    "version": 1,
+    "section": "polling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, about how many seconds after it was sent was the long poll answered?",
+    "hint": "`real`.",
+    "value": 2,
+    "tolerance": 0.2,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-hsjy6ph4",
+    "version": 1,
+    "section": "polling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is plain polling still a good answer?",
+    "hint": "Few viewers, slow changes.",
+    "choices": [
+      {
+        "text": "A chat with thousands of users",
+        "correct": false,
+        "why": "The waste multiplies."
+      },
+      {
+        "text": "A live auction",
+        "correct": false,
+        "why": "Bids need to arrive at once."
+      },
+      {
+        "text": "A dashboard refreshed every minute",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An order-status page on every phone",
+        "correct": false,
+        "why": "That is many watchers."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zwyp0vt",
+    "version": 1,
+    "section": "server-sent-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Last-Event-ID` let an SSE stream do after a dropped connection?",
+    "hint": "Resume.",
+    "choices": [
+      {
+        "text": "Send every event again from the first",
+        "correct": false,
+        "why": "It starts after the last one seen."
+      },
+      {
+        "text": "Start after the last event received",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Skip events that arrived while disconnected",
+        "correct": false,
+        "why": "Those are the ones it sends."
+      },
+      {
+        "text": "Switch to a WebSocket",
+        "correct": false,
+        "why": "It stays SSE."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qzpkfsz",
+    "version": 1,
+    "section": "server-sent-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a limit of Server-Sent Events?",
+    "hint": "Direction.",
+    "choices": [
+      {
+        "text": "It cannot pass through HTTP proxies",
+        "correct": false,
+        "why": "It is plain HTTP."
+      },
+      {
+        "text": "The browser does not reconnect",
+        "correct": false,
+        "why": "`EventSource` reconnects."
+      },
+      {
+        "text": "It needs a special port",
+        "correct": false,
+        "why": "It uses the site's port."
+      },
+      {
+        "text": "It carries text from the server only",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7787cb7g",
+    "version": 1,
+    "section": "server-sent-events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can several tabs with SSE streams run out of connections on HTTP/1.1, and not on HTTP/2?",
+    "hint": "Six per host.",
+    "choices": [
+      {
+        "text": "HTTP/2 compresses events",
+        "correct": false,
+        "why": "Compression is not the reason."
+      },
+      {
+        "text": "One connection, many streams",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "HTTP/1.1 closes streams after a minute",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "HTTP/2 does not support SSE",
+        "correct": false,
+        "why": "It does."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv2a4zb8",
+    "version": 1,
+    "section": "websockets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a WebSocket give that SSE does not?",
+    "hint": "Direction.",
+    "choices": [
+      {
+        "text": "Automatic reconnection",
+        "correct": false,
+        "why": "SSE has it; WebSocket does not."
+      },
+      {
+        "text": "Passing through every proxy",
+        "correct": false,
+        "why": "The upgrade is sometimes blocked."
+      },
+      {
+        "text": "Messages from the client too",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "HTTP caching",
+        "correct": false,
+        "why": "It leaves HTTP behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k1vgqtg",
+    "version": 1,
+    "section": "websockets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab's server send pings every 20 seconds?",
+    "hint": "Quiet connections.",
+    "choices": [
+      {
+        "text": "To measure bandwidth",
+        "correct": false,
+        "why": "Not the purpose."
+      },
+      {
+        "text": "Because the protocol requires one per message",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Keep idle connections alive",
+        "correct": true,
+        "why": "Right, and notice dead peers."
+      },
+      {
+        "text": "To ask the client for new events",
+        "correct": false,
+        "why": "The server sends events."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys0gwgvt",
+    "version": 1,
+    "section": "websockets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What answers the upgrade request when a server accepts a WebSocket?",
+    "hint": "Three digits.",
+    "choices": [
+      {
+        "text": "`200 OK`",
+        "correct": false,
+        "why": "A different status."
+      },
+      {
+        "text": "`101 Switching Protocols`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`202 Accepted`",
+        "correct": false,
+        "why": "Not this one."
+      },
+      {
+        "text": "`426 Upgrade Required`",
+        "correct": false,
+        "why": "That asks the client to upgrade."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g4dp5z2",
+    "version": 1,
+    "section": "more-than-one-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without a backplane, why did the client on instance b miss the event?",
+    "hint": "Where was it published?",
+    "choices": [
+      {
+        "text": "b was down",
+        "correct": false,
+        "why": "It answered hello."
+      },
+      {
+        "text": "The WebSocket closed",
+        "correct": false,
+        "why": "It stayed open for three seconds."
+      },
+      {
+        "text": "Only a heard it",
+        "correct": true,
+        "why": "Right: a told only its own clients."
+      },
+      {
+        "text": "Redis lost it",
+        "correct": false,
+        "why": "There was no Redis in the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6j3g3s0",
+    "version": 1,
+    "section": "more-than-one-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the backplane on, what does an instance do with an event it receives by `POST`?",
+    "hint": "Read `publish`.",
+    "choices": [
+      {
+        "text": "Adds it and forwards it to the other instance",
+        "correct": false,
+        "why": "It does not add it directly."
+      },
+      {
+        "text": "Publishes it to Redis, which delivers it to all",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Stores it in Redis for clients to poll",
+        "correct": false,
+        "why": "Clients do not read Redis."
+      },
+      {
+        "text": "Drops it if no client is connected",
+        "correct": false,
+        "why": "It is still delivered."
+      }
+    ]
+  },
+  {
+    "id": "ex-8r1dt7x7",
+    "version": 1,
+    "section": "more-than-one-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a deploy of a WebSocket service turn into a retry storm?",
+    "hint": "Every connection ends at once.",
+    "choices": [
+      {
+        "text": "WebSockets refuse new versions",
+        "correct": false,
+        "why": "Not a thing."
+      },
+      {
+        "text": "The backplane resends every event",
+        "correct": false,
+        "why": "Not the cause."
+      },
+      {
+        "text": "All clients reconnect at once",
+        "correct": true,
+        "why": "Right: drain instead."
+      },
+      {
+        "text": "Load balancers forget sticky sessions",
+        "correct": false,
+        "why": "Not the main cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-h97bhgph",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which technique does the lesson choose for Quitanda's order-status page?",
+    "hint": "The page only listens.",
+    "choices": [
+      {
+        "text": "WebSocket",
+        "correct": false,
+        "why": "More than a listening page needs."
+      },
+      {
+        "text": "Polling every second",
+        "correct": false,
+        "why": "Wasteful with many phones."
+      },
+      {
+        "text": "Server-Sent Events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A webhook",
+        "correct": false,
+        "why": "The browser cannot receive one."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk6z5zrh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the backplane's journey of one event in order.",
+    "hint": "POST, Redis, instances, client.",
+    "items": [
+      "The warehouse posts the event to instance a",
+      "a publishes it to Redis",
+      "Redis delivers it to a and b",
+      "b pushes it to its WebSocket client"
+    ]
+  },
+  {
+    "id": "ex-v28dfwvh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After moving from one instance to three, some customers say their order page stopped updating, and no errors are logged. What is the likely cause?",
+    "hint": "Where are the events, and where are the connections?",
+    "choices": [
+      {
+        "text": "The browsers reached the limit of six connections",
+        "correct": false,
+        "why": "That would affect one instance too."
+      },
+      {
+        "text": "No backplane between the instances",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SSE does not work behind load balancers",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "The new instances run an older version",
+        "correct": false,
+        "why": "Nothing points there."
+      }
+    ]
+  }
+]
