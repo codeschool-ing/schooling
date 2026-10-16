@@ -1,0 +1,494 @@
+{
+  "ex-trb6xyyw": {
+    "prompt": "A Ana implantou o `prod`, depois acrescentou `POST` a `/orders` e não fez mais nada. Na AWS, um parceiro chama `POST /orders` no `prod`. O que volta?",
+    "hint": "O stage serve uma cópia tirada num momento.",
+    "choices": [
+      {
+        "text": "`429 Too Many Requests`, do usage plan",
+        "why": "O plano limita chamadas que ele consegue rotear; este método nem está na implantação."
+      },
+      {
+        "text": "`403` com `Missing Authentication Token`",
+        "why": "Isso. A implantação é anterior ao `POST`, e uma REST API responde a um método que não tem com essa mensagem enganosa."
+      },
+      {
+        "text": "`200` com o corpo do MOCK, já que o recurso existe",
+        "why": "O MOCK pertence ao `GET`. O `POST` não tem integração e não foi implantado."
+      },
+      {
+        "text": "`404 Not Found`, como para qualquer caminho desconhecido",
+        "why": "Uma REST API não responde `404` aqui; ela responde `403`, e é por isso que a mensagem confunde."
+      }
+    ]
+  },
+  "ex-s9kq1jny": {
+    "prompt": "O que uma implantação de uma REST API guarda?",
+    "hint": "O `get-stage` citou uma pelo id.",
+    "choices": [
+      {
+        "text": "As requisições que o stage serviu desde que foi tirada",
+        "why": "Isso é o que logs e métricas registram. Uma implantação é configuração."
+      },
+      {
+        "text": "Só os métodos alterados desde a implantação anterior",
+        "why": "É uma cópia inteira, e é por isso que apontar o stage para um id antigo desfaz tudo."
+      },
+      {
+        "text": "Os recursos e os métodos tais como estavam naquele momento",
+        "why": "Isso. É uma cópia congelada da árvore, e um stage aponta para uma."
+      },
+      {
+        "text": "As chaves de API autorizadas a chamar o stage",
+        "why": "Chaves pertencem a usage plans, que citam stages; a implantação não sabe nada delas."
+      }
+    ]
+  },
+  "ex-4990dqtx": {
+    "prompt": "Ponha em ordem o que é preciso para `GET /orders` numa REST API nova responder num stage.",
+    "hint": "Um filho precisa do pai, um verbo precisa do caminho, e nada responde antes da cópia.",
+    "items": [
+      "`create-rest-api`",
+      "`create-resource` com `--path-part orders`",
+      "`put-method` para `GET`",
+      "`put-integration` para esse método",
+      "`create-deployment` com `--stage-name prod`"
+    ],
+    "trap": "Implantar antes de o método existir é recusado, e implantar antes da integração deixa um método sem para onde mandar a requisição."
+  },
+  "ex-vc8kzsc2": {
+    "prompt": "A chave de API de um parceiro aparece num log público. Só com a chave, o que um estranho consegue fazer?",
+    "hint": "Para que serve a chave, segundo a AWS?",
+    "choices": [
+      {
+        "text": "Chamar a API como aquele parceiro, gastando a cota dele",
+        "why": "Isso. Uma chave identifica um cliente para medição; quem a tem é aquele cliente para o API Gateway."
+      },
+      {
+        "text": "Nada, sem as credenciais IAM do parceiro também",
+        "why": "O método exigia chave e nenhum autorizador; nada mais é pedido."
+      },
+      {
+        "text": "Alterar o usage plan do parceiro",
+        "why": "Planos são alterados pela API da AWS com as credenciais da conta, não com uma chave."
+      },
+      {
+        "text": "Ler os dados do parceiro em todas as outras APIs da conta",
+        "why": "Uma chave funciona onde um plano a liga a um stage, e um método a pede."
+      }
+    ]
+  },
+  "ex-hbd1bxpw": {
+    "prompt": "Uma REST API não responde a nenhuma requisição até que uma ___ dela seja posta num stage.",
+    "hint": "É o que `create-` seguido desta palavra (em inglês) cria.",
+    "blanks": [
+      {
+        "accept": [
+          "implantação",
+          "implantacao",
+          "deployment"
+        ]
+      }
+    ]
+  },
+  "ex-c4emvjjm": {
+    "prompt": "No laboratório, a Ana manda 50 requisições por segundo para o stage `prod`, cujo plano permite 10. O que acontece?",
+    "hint": "Pense no que o moto serve no endereço de um stage.",
+    "choices": [
+      {
+        "text": "O moto responde `429` depois da vigésima, como a AWS faria",
+        "why": "O moto guarda o limite e não aplica nada dele."
+      },
+      {
+        "text": "O moto responde às 50, porque não limita",
+        "why": "Ele não limita, mas também não responde: não há endereço de stage no moto para chamar."
+      },
+      {
+        "text": "Nada chega: o moto não serve endereço de stage",
+        "why": "Isso. O moto guarda as definições e responde só ao plano de controle."
+      },
+      {
+        "text": "O moto recusa o plano quando ele é criado",
+        "why": "Ele aceitou o plano e o imprimiu de volta."
+      }
+    ]
+  },
+  "ex-rhmcxxfk": {
+    "prompt": "Pelos preços da primeira faixa na tabela de 16 de outubro de 2026, quanto uma HTTP API custa a menos que uma REST API num mês de 30 milhões de requisições?",
+    "hint": "4,25 e 1,59 por milhão.",
+    "unit": "USD"
+  },
+  "ex-d82ts698": {
+    "prompt": "Um handler lê `event[\"httpMethod\"]` e funciona atrás da integração proxy Lambda de uma REST API. Ele é posto atrás de uma integração de HTTP API com formato de payload `2.0`. O que acontece?",
+    "hint": "Veja onde o `get-order.json` guarda o método.",
+    "choices": [
+      {
+        "text": "Funciona: os dois formatos trazem os mesmos campos",
+        "why": "Eles diferem, e o método é um dos campos que mudaram de lugar."
+      },
+      {
+        "text": "O API Gateway responde `405 Method Not Allowed`",
+        "why": "A rota casou; a falha é dentro da função."
+      },
+      {
+        "text": "Levanta `KeyError`; o método mudou de lugar",
+        "why": "Isso. O formato 1.0 tem `httpMethod` no topo; o 2.0 tem `requestContext.http.method`."
+      },
+      {
+        "text": "O API Gateway reescreve o evento no formato 1.0 para ele",
+        "why": "A integração diz qual formato quer e recebe exatamente esse."
+      }
+    ]
+  },
+  "ex-0tkagw3p": {
+    "prompt": "Na AWS, uma requisição chega a `GET /orders/{id}` com um token cujo `exp` passou há uma hora. O que acontece?",
+    "hint": "O autorizador fica antes da integração.",
+    "choices": [
+      {
+        "text": "A função roda e precisa verificar o `exp` ela mesma",
+        "why": "O autorizador JWT verifica o `exp` por você; a função só vê tokens que passaram."
+      },
+      {
+        "text": "O API Gateway responde `401` e a função não roda",
+        "why": "Isso. Um token que falha numa verificação para na porta."
+      },
+      {
+        "text": "`403` com `Missing Authentication Token`",
+        "why": "Essa é a resposta de uma REST API para um caminho ou método que ela não tem."
+      },
+      {
+        "text": "A função roda com `authorizer` nulo no evento",
+        "why": "Uma rota com autorizador JWT nunca deixa passar uma requisição não verificada."
+      }
+    ]
+  },
+  "ex-xfz419g8": {
+    "prompt": "Quais destas coisas o laboratório desta seção realmente rodou ou mostrou? Escolha todas as que se aplicam.",
+    "hint": "O moto não serve nada no endereço de uma API; o emulador roda um handler.",
+    "choices": [
+      {
+        "text": "O handler respondendo ao evento no runtime real do Python 3.12",
+        "why": "Sim: a imagem base do Lambda rodou e imprimiu o dicionário."
+      },
+      {
+        "text": "O moto guardando a rota com o autorizador JWT",
+        "why": "Sim: o `create-route` imprimiu `AuthorizationType: JWT`."
+      },
+      {
+        "text": "Um token verificado contra as chaves públicas do emissor",
+        "why": "Nenhum token foi enviado; essa parte é o comportamento documentado da AWS."
+      },
+      {
+        "text": "O API Gateway transformando `statusCode` num status HTTP",
+        "why": "O API Gateway não estava na frente do emulador; o texto diz isso."
+      },
+      {
+        "text": "A condição na declaração de permissão da função",
+        "why": "Sim: o `add-permission` a devolveu, com o id da API no ARN de origem."
+      }
+    ]
+  },
+  "ex-xdc5v4a9": {
+    "prompt": "Por que a seção roda `aws lambda add-permission` depois de criar a rota?",
+    "hint": "A política de quem ela muda?",
+    "choices": [
+      {
+        "text": "Chamadas falham com `500`; a função nunca roda",
+        "why": "Isso. Ela deixa o API Gateway invocar a função, só a partir desta API."
+      },
+      {
+        "text": "Sem ela o `create-route` seria recusado",
+        "why": "A rota foi criada antes; a permissão importa na hora da chamada."
+      },
+      {
+        "text": "Ela deixa a função chamar o API Gateway",
+        "why": "Ao contrário: o principal é `apigateway.amazonaws.com`."
+      },
+      {
+        "text": "REST APIs precisam dela; HTTP APIs reaproveitam a role da função",
+        "why": "Os dois tipos invocam pela política de recurso da função."
+      }
+    ]
+  },
+  "ex-6hrz71s5": {
+    "prompt": "Uma HTTP API mede requisições em passos de 512 KB. Como quantas requisições um upload de 1.300 KB é cobrado?",
+    "hint": "Arredonde para cima, não para o mais próximo.",
+    "unit": "requisições"
+  },
+  "ex-y0yn29bp": {
+    "prompt": "A API `chat` tem as rotas `$connect`, `$disconnect`, `$default` e `send`. Um cliente manda `{\"action\": \"refund\", \"order\": 42}`. Qual rota roda?",
+    "hint": "A expressão de seleção lê `action`.",
+    "choices": [
+      {
+        "text": "`send`, a única rota para mensagens",
+        "why": "`send` roda só para `\"action\": \"send\"`."
+      },
+      {
+        "text": "Nenhuma: o API Gateway fecha a conexão",
+        "why": "Com `$default` definida, uma mensagem sem rota ainda chega a uma função."
+      },
+      {
+        "text": "`$connect`, que verifica cada mensagem",
+        "why": "`$connect` roda uma vez, quando a conexão abre."
+      },
+      {
+        "text": "`$default`",
+        "why": "Isso. Nenhuma rota se chama `refund`, então a mensagem cai em `$default`."
+      }
+    ]
+  },
+  "ex-94b0ddak": {
+    "prompt": "500 clientes ficam conectados 6 horas por dia durante 20 dias. A 0,388 USD por milhão de minutos de conexão, quanto custam os minutos?",
+    "hint": "Clientes × horas × 60 × dias.",
+    "unit": "USD"
+  },
+  "ex-x9jw7ne9": {
+    "prompt": "Na AWS, o backend envia para um id de conexão guardado cujo cliente fechou a aba há um segundo. O que ele recebe, e o que deve fazer?",
+    "hint": "O moto respondeu a este caso de um jeito diferente da AWS.",
+    "choices": [
+      {
+        "text": "Sucesso, e a mensagem espera o cliente reconectar",
+        "why": "O API Gateway não guarda caixa de correio; uma conexão nova recebe um id novo."
+      },
+      {
+        "text": "`GoneException` (410); apagar o id guardado e seguir",
+        "why": "Isso. É assim que quem envia descobre o fechamento antes de o `$disconnect` ser processado."
+      },
+      {
+        "text": "Status de saída 0, como o laboratório mostrou",
+        "why": "Aquilo foi o moto, que aceita qualquer id; a AWS recusa um id sem conexão."
+      },
+      {
+        "text": "Um `429`, porque a conexão está sendo fechada",
+        "why": "429 é limitação; uma conexão que não existe é 410."
+      }
+    ]
+  },
+  "ex-jrke96ys": {
+    "prompt": "Ligue cada rota da API `chat` a quando ela roda.",
+    "hint": "Duas rodam uma vez por conexão, duas uma vez por mensagem.",
+    "pairs": [
+      {
+        "left": "`$connect`",
+        "right": "uma vez, quando um cliente abre a conexão"
+      },
+      {
+        "left": "`$disconnect`",
+        "right": "depois de a conexão fechar, em melhor esforço"
+      },
+      {
+        "left": "`send`",
+        "right": "para uma mensagem cujo `action` é `send`"
+      },
+      {
+        "left": "`$default`",
+        "right": "para uma mensagem que nenhuma outra rota casa"
+      }
+    ],
+    "right_distractors": [
+      "a cada dez minutos, para manter a conexão viva"
+    ]
+  },
+  "ex-72dbp214": {
+    "prompt": "Uma tela do depósito precisa mostrar pedidos novos durante um turno de 8 horas por uma WebSocket API. O que o cliente dela precisa fazer?",
+    "hint": "Dois limites da documentação da AWS.",
+    "choices": [
+      {
+        "text": "Falar antes de dez minutos e reconectar depois de duas horas",
+        "why": "Isso, e o backend guarda o id de conexão novo a cada vez."
+      },
+      {
+        "text": "Pedir à AWS conexões de 8 horas por um aumento de cota no stage",
+        "why": "O máximo de duas horas é um limite fixo, não uma cota ajustável."
+      },
+      {
+        "text": "Nada: uma conexão fica aberta enquanto o stage existir",
+        "why": "Conexões fecham em duas horas, e depois de dez minutos em silêncio."
+      },
+      {
+        "text": "Mandar toda mensagem para `$default` para o relógio zerar",
+        "why": "Qualquer mensagem zera o relógio de ociosidade; a rota é irrelevante, e o limite de duas horas continua."
+      }
+    ]
+  },
+  "ex-zva61ja9": {
+    "prompt": "Uma conexão WebSocket fica aberta uma hora e ninguém manda nada. Qual medidor cresce?",
+    "hint": "Um medidor conta, o outro cronometra.",
+    "choices": [
+      {
+        "text": "Mensagens, contadas em passos de 32 KB",
+        "why": "Nenhuma mensagem foi mandada, então não há o que contar."
+      },
+      {
+        "text": "Os dois, em partes iguais",
+        "why": "Só um deles depende apenas do tempo."
+      },
+      {
+        "text": "Nenhum, até a primeira mensagem",
+        "why": "Os minutos começam quando a conexão abre."
+      },
+      {
+        "text": "Minutos de conexão",
+        "why": "Isso. Eles correm enquanto a conexão estiver aberta."
+      }
+    ]
+  },
+  "ex-2mdzhmyz": {
+    "prompt": "Quais destas uma REST API oferece e uma HTTP API não? Escolha todas as que se aplicam.",
+    "hint": "Quatro linhas da tabela.",
+    "choices": [
+      {
+        "text": "Usage plans com cota por cliente",
+        "why": "Sim; HTTP APIs não têm chaves de API."
+      },
+      {
+        "text": "Um cache de respostas no stage",
+        "why": "Sim; só um stage REST faz cache."
+      },
+      {
+        "text": "Um autorizador JWT sem código seu",
+        "why": "Esse é da HTTP API."
+      },
+      {
+        "text": "AWS WAF na frente da API",
+        "why": "Sim; o WAF se liga a stages REST."
+      },
+      {
+        "text": "Um autorizador Lambda",
+        "why": "Os dois tipos têm."
+      },
+      {
+        "text": "Um endpoint privado acessível só de uma VPC",
+        "why": "Sim; HTTP APIs são públicas."
+      }
+    ]
+  },
+  "ex-zbpjfy9b": {
+    "prompt": "Atrás de uma HTTP API, uma função leva três minutos para montar um relatório. O que o cliente vê, e qual é a correção?",
+    "hint": "Uma HTTP API espera no máximo 30 segundos.",
+    "choices": [
+      {
+        "text": "O relatório, já que uma função Lambda pode rodar por 15 minutos",
+        "why": "O limite da função não é o da API; o cliente desiste em 30 segundos."
+      },
+      {
+        "text": "Um `504`; responder `202` com um id e rodar o trabalho fora",
+        "why": "Isso. As aulas 20 e 21 constroem o outro lugar."
+      },
+      {
+        "text": "Um `504`; aumentar o timeout da HTTP API por aumento de cota",
+        "why": "A espera maior que a AWS criou em 2024 é para REST APIs regionais e privadas."
+      },
+      {
+        "text": "Um `429`, porque a função está ocupada",
+        "why": "Ocupada não é limitação; a integração simplesmente não respondeu a tempo."
+      }
+    ]
+  },
+  "ex-gafjvydr": {
+    "prompt": "Durante um teste de carga da API `staging`, a API `prod` da mesma conta em São Paulo começa a responder `429`. Os logs da função de `prod` não mostram limitação. O que explica?",
+    "hint": "O limite de quem é compartilhado por toda API de uma região?",
+    "choices": [
+      {
+        "text": "O limite do stage de staging vale para todo stage",
+        "why": "O ajuste de um stage é só dele."
+      },
+      {
+        "text": "O limite de concorrência do Lambda, compartilhado com a função de staging",
+        "why": "Isso apareceria como limitação na função, e os logs dizem que não houve."
+      },
+      {
+        "text": "O limite da conta no API Gateway",
+        "why": "Isso. Toda API da conta e da região divide 10.000 requisições por segundo."
+      },
+      {
+        "text": "O cache REST encheu e começou a recusar requisições",
+        "why": "Um cache cheio descarta entradas; ele não responde 429."
+      }
+    ]
+  },
+  "ex-ej1hj7h2": {
+    "prompt": "O moto mostrou o cache de 0,5 GB do stage da Ana como `AVAILABLE` na hora. O que a AWS documenta?",
+    "hint": "Um cache é um cluster que a AWS cria para o stage.",
+    "choices": [
+      {
+        "text": "O mesmo: um cache fica pronto assim que o ajuste do stage é salvo",
+        "why": "O moto pula a espera; a AWS tem uma."
+      },
+      {
+        "text": "Uns quatro minutos em `CREATE_IN_PROGRESS` até ficar pronto",
+        "why": "Isso, e ele é cobrado por hora daí em diante, com acerto ou não."
+      },
+      {
+        "text": "Ele é criado pela primeira requisição que erra, segundos depois",
+        "why": "Ele é criado quando o ajuste do stage muda, não pelo tráfego."
+      },
+      {
+        "text": "0,5 GB está abaixo do menor tamanho",
+        "why": "0,5 GB é o menor tamanho; o maior é 237 GB."
+      }
+    ]
+  },
+  "ex-7y5yhapn": {
+    "prompt": "Uma loja vende a API de catálogo a parceiros, cada um com uma cota mensal, e também atende o app, cujos usuários fazem login e levam um JWT. Qual desenho se encaixa melhor?",
+    "hint": "Cada público precisa de um recurso que um tipo de API tem.",
+    "choices": [
+      {
+        "text": "Uma HTTP API para os dois, com a cota de cada parceiro contada na função",
+        "why": "Possível, mas reconstrói usage plans à mão e ainda deixa chamadas acima da cota rodarem a função."
+      },
+      {
+        "text": "REST com usage plans para parceiros; HTTP com JWT para o app",
+        "why": "Isso. Cada público recebe a API cujo recurso ele precisa, e o app paga o preço menor."
+      },
+      {
+        "text": "Uma WebSocket API, para os dois públicos saberem de produtos novos",
+        "why": "Nada no pedido precisa que o servidor fale primeiro."
+      },
+      {
+        "text": "Uma REST API, com uma chave de API para cada usuário do app",
+        "why": "Uma chave identifica, não autentica, e uma chave por usuário é uma senha que ninguém consegue trocar com segurança."
+      }
+    ]
+  },
+  "ex-9j4ga1qm": {
+    "prompt": "1.000 páginas consultam uma HTTP API a cada 10 segundos, 8 horas por dia, durante 22 dias. A 1,59 USD por milhão, quanto custa a consulta do mês?",
+    "hint": "8 horas são 28.800 segundos.",
+    "unit": "USD"
+  },
+  "ex-7wrxs0z4": {
+    "prompt": "Numa HTTP API, o stage chamado `$___`, com implantação automática, não põe nome de stage no endereço.",
+    "hint": "A mesma palavra nomeia a rota WebSocket para mensagens sem rota.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ]
+      }
+    ]
+  },
+  "ex-wn6xbstx": {
+    "prompt": "Ligue cada tipo de integração REST ao que ela faz com a requisição.",
+    "hint": "Uma delas nunca sai do API Gateway.",
+    "pairs": [
+      {
+        "left": "`MOCK`",
+        "right": "responde do próprio API Gateway"
+      },
+      {
+        "left": "`HTTP_PROXY`",
+        "right": "passa a requisição a um servidor web como chegou"
+      },
+      {
+        "left": "`AWS_PROXY`",
+        "right": "entrega a requisição inteira a uma função Lambda"
+      },
+      {
+        "left": "`AWS`",
+        "right": "chama outro serviço da AWS por um mapping template"
+      }
+    ],
+    "right_distractors": [
+      "roda a requisição num contêiner do API Gateway"
+    ]
+  }
+}

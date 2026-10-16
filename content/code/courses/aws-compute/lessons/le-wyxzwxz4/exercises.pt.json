@@ -1,0 +1,432 @@
+{
+  "ex-epf0nbz7": {
+    "prompt": "Qual é o motivo para pôr uma função Lambda numa VPC?",
+    "hint": "Pense no que a função não alcança de fora.",
+    "choices": [
+      {
+        "text": "Protegê-la de conexões vindas da internet",
+        "why": "Nada conseguia se conectar a ela antes: as requisições chegam pelo serviço do Lambda."
+      },
+      {
+        "text": "Tornar privadas e autorizadas as chamadas dela ao DynamoDB e ao S3",
+        "why": "Essas chamadas já são autorizadas pelo IAM, e uma VPC só soma um problema de rede a elas."
+      },
+      {
+        "text": "Alcançar algo que só tem endereço privado",
+        "why": "Isso. Um banco numa subnet privada é o caso mais comum."
+      },
+      {
+        "text": "Encurtar o cold start, já que a rede fica mais perto",
+        "why": "A VPC não acrescenta velocidade; desde 2019 ela também não tira mais nada."
+      }
+    ]
+  },
+  "ex-mqhx2q8z": {
+    "prompt": "Quais destes exigem que a função esteja na sua VPC? Marque todos os que se aplicam.",
+    "hint": "Endereço privado, ou API pública com IAM?",
+    "choices": [
+      {
+        "text": "Um banco PostgreSQL numa subnet privada",
+        "why": "Isso. Ele só tem endereço privado."
+      },
+      {
+        "text": "Uma tabela do DynamoDB",
+        "why": "O DynamoDB é uma API pública autorizada pelo IAM."
+      },
+      {
+        "text": "Um cluster do ElastiCache para Redis",
+        "why": "Isso. Ele só é alcançável dentro da própria VPC."
+      },
+      {
+        "text": "Uma fila do SQS",
+        "why": "O SQS é chamado com uma requisição assinada a um endpoint público."
+      },
+      {
+        "text": "Um load balancer interno na frente de serviços privados",
+        "why": "Isso. Um load balancer interno só tem endereços privados."
+      }
+    ]
+  },
+  "ex-szbwm1p4": {
+    "prompt": "Uma função numa VPC não alcança a internet, então uma equipe a muda para uma subnet pública com rota para um internet gateway. O que acontece?",
+    "hint": "Do que uma interface precisa para usar um internet gateway?",
+    "choices": [
+      {
+        "text": "Nada muda: as interfaces do Lambda nunca recebem endereço público",
+        "why": "Isso. A rota está ali e as interfaces não conseguem usá-la; a saída é um NAT gateway ou endpoints."
+      },
+      {
+        "text": "A função alcança a internet pelo internet gateway",
+        "why": "Isso funciona para uma instância com endereço público, e o Lambda nunca dá um às interfaces dele."
+      },
+      {
+        "text": "A função passa a ser alcançável da internet também",
+        "why": "Nada se conecta a uma função pela rede, em subnet nenhuma."
+      },
+      {
+        "text": "A AWS recusa subnets públicas para uma função numa VPC",
+        "why": "A AWS as aceita; elas só não dão a internet à função."
+      }
+    ]
+  },
+  "ex-mh6tr7te": {
+    "prompt": "Uma função sem configuração de VPC roda numa rede que a AWS possui, e de lá alcança a ___ e todo endpoint público da AWS.",
+    "hint": "O que uma subnet privada tira.",
+    "blanks": [
+      {
+        "accept": [
+          "internet"
+        ]
+      }
+    ]
+  },
+  "ex-p3abp96a": {
+    "prompt": "Uma função lê um banco RDS privado e também manda e-mail pela API HTTPS de um provedor público. Do que ela precisa?",
+    "hint": "Dois destinos, um privado e um público.",
+    "choices": [
+      {
+        "text": "Nenhuma VPC, porque a API de e-mail é pública",
+        "why": "Sem a VPC ela não alcança o banco, que só tem endereço privado."
+      },
+      {
+        "text": "A VPC e um interface endpoint para o provedor de e-mail",
+        "why": "Endpoints alcançam serviços da AWS; a API pública de terceiros precisa da internet."
+      },
+      {
+        "text": "A VPC, e uma rota de saída por um NAT gateway",
+        "why": "Isso. A VPC para o banco, um NAT gateway para a API pública."
+      },
+      {
+        "text": "A VPC, com a função posta numa subnet pública",
+        "why": "Uma subnet pública não dá internet a uma função Lambda, porque as interfaces dela não recebem endereço público."
+      }
+    ]
+  },
+  "ex-dswd06kw": {
+    "prompt": "Quais duas listas a configuração de VPC de uma função nomeia?",
+    "hint": "SubnetIds e mais uma.",
+    "choices": [
+      {
+        "text": "A VPC e as tabelas de rotas dela",
+        "why": "A VPC é deduzida das subnets; as tabelas de rotas são das próprias subnets."
+      },
+      {
+        "text": "As subnets e as zonas de disponibilidade a usar nelas",
+        "why": "Cada subnet já pertence a uma zona, então nomear as subnets nomeia as zonas."
+      },
+      {
+        "text": "As interfaces de rede e os endereços privados delas",
+        "why": "O Lambda cria as interfaces e é dono delas; você diz onde elas ficam."
+      },
+      {
+        "text": "As subnets, e os security groups",
+        "why": "Isso. Onde as interfaces ficam, e o que elas carregam."
+      }
+    ]
+  },
+  "ex-kgaszfcm": {
+    "prompt": "O security group do banco deve admitir a função. Qual regra é a certa?",
+    "hint": "Os endereços da função não são seus para saber.",
+    "choices": [
+      {
+        "text": "Porta 5432 a partir de 0.0.0.0/0, porque a subnet é privada",
+        "why": "Isso admite tudo o que alcança a subnet, e privada é um fato de roteamento, não uma permissão."
+      },
+      {
+        "text": "Porta 5432 a partir do grupo de segurança anexado à Lambda, referido pelo id dele",
+        "why": "Isso. A regra continua valendo quaisquer que sejam os endereços das interfaces da função."
+      },
+      {
+        "text": "Porta 5432 a partir do endereço de cada ambiente, acrescentado quando ele inicia",
+        "why": "Os ambientes não têm endereços próprios; eles compartilham as interfaces do Lambda."
+      },
+      {
+        "text": "Uma regra de entrada no grupo da função, para o banco poder responder",
+        "why": "Nada se conecta a uma função pela rede; o grupo dela não precisa de regra de entrada."
+      }
+    ]
+  },
+  "ex-6zmb0p0k": {
+    "prompt": "O moto criou uma função cuja configuração de VPC nomeava subnet-0000000000000000a, que não existe. O que a AWS faria?",
+    "hint": "A AWS procura as coisas antes de agir.",
+    "choices": [
+      {
+        "text": "Criaria a função, e a deixaria Pending até a subnet existir",
+        "why": "A AWS procura a subnet primeiro e recusa a chamada quando ela não existe."
+      },
+      {
+        "text": "Recusaria: ela procura as subnets e os grupos antes",
+        "why": "Isso. O moto guarda os ids sem conferir, então o sucesso dele só prova a sintaxe."
+      },
+      {
+        "text": "Criaria a função fora de qualquer VPC, sem avisar ninguém",
+        "why": "A AWS não descarta em silêncio uma configuração que recebeu."
+      },
+      {
+        "text": "Criaria a subnet para você",
+        "why": "O Lambda nunca cria recursos de rede além das próprias interfaces."
+      }
+    ]
+  },
+  "ex-yvft2v2a": {
+    "prompt": "Ponha os passos da função numa VPC desta lição na ordem em que precisam acontecer.",
+    "hint": "Cada um nomeia o que o anterior criou.",
+    "items": [
+      "Criar a VPC",
+      "Criar duas subnets privadas em duas zonas",
+      "Criar o security group da função",
+      "Admitir 5432 no grupo do banco a partir do grupo da função",
+      "Criar a função com --vpc-config"
+    ],
+    "trap": "A regra do banco nomeia o grupo da função, então esse grupo precisa existir antes."
+  },
+  "ex-kmdgfx8a": {
+    "prompt": "Na AWS, o create-function com configuração de VPC falha com uma InvalidParameterValueException sobre CreateNetworkInterface. O que falta?",
+    "hint": "Com a autoridade de quem o Lambda cria as interfaces?",
+    "choices": [
+      {
+        "text": "A permissão do seu próprio usuário para criar interfaces",
+        "why": "O Lambda as cria com a role de execução da função, e não com o seu usuário."
+      },
+      {
+        "text": "Um endereço livre em cada uma das subnets citadas na configuração",
+        "why": "Esse seria outro erro; este cita uma permissão."
+      },
+      {
+        "text": "Permissões de interface de rede do EC2 na role de execução",
+        "why": "Isso. A gerenciada AWSLambdaVPCAccessExecutionRole, ou uma política como a vpc-access.json."
+      },
+      {
+        "text": "Uma regra de entrada no security group da função",
+        "why": "O grupo da função não precisa de regra de entrada, e o erro é sobre IAM."
+      }
+    ]
+  },
+  "ex-ccyfvn28": {
+    "prompt": "Desde 2019, quando é criada a interface de rede que uma função numa VPC usa?",
+    "hint": "Ela saiu da requisição e foi para o deploy.",
+    "choices": [
+      {
+        "text": "Durante cada cold start, uma por ambiente",
+        "why": "Esse era o arranjo antes de 2019, e o motivo do conselho antigo."
+      },
+      {
+        "text": "Quando ela é criada ou a VPC dela muda",
+        "why": "Isso. Uma interface Hyperplane por subnet e security group, compartilhada por todos os ambientes."
+      },
+      {
+        "text": "Na primeira invocação de cada dia",
+        "why": "Nada nela segue o calendário; ela é feita uma vez e mantida enquanto é usada."
+      },
+      {
+        "text": "Quando você a cria com ec2 create-network-interface",
+        "why": "O Lambda a cria e é dono dela; você nem consegue apagá-la por conta própria."
+      }
+    ]
+  },
+  "ex-wjx7f28p": {
+    "prompt": "Antes de 2019, uma função escalava para 300 ambientes numa subnet /24. A AWS reserva 5 dos 256 endereços de toda subnet. Quantos ambientes ficavam sem endereço?",
+    "hint": "Primeiro os endereços utilizáveis, e nada mais na subnet.",
+    "unit": "ambientes"
+  },
+  "ex-2ms8bbyv": {
+    "prompt": "As subnets de uma função foram mudadas há pouco, e o pipeline a invoca logo em seguida. Na AWS a invocação falha. Por quê?",
+    "hint": "Em que estado a função está enquanto as interfaces dela são feitas?",
+    "choices": [
+      {
+        "text": "O cold start espera uma interface e a requisição estoura o timeout",
+        "why": "Isso era antes de 2019. Hoje as interfaces são feitas na configuração, não no cold start."
+      },
+      {
+        "text": "As subnets novas não têm rota para a internet",
+        "why": "Invocar uma função não usa as subnets da função de jeito nenhum."
+      },
+      {
+        "text": "O Lambda recusa invocações por uma hora depois de uma mudança de configuração",
+        "why": "Não existe espera fixa; ele espera as interfaces, e então fica Active."
+      },
+      {
+        "text": "Ela está Pending enquanto as interfaces são criadas",
+        "why": "Isso. O pipeline deve esperar Active antes de invocar."
+      }
+    ]
+  },
+  "ex-2yb245v2": {
+    "prompt": "Um relatório mensal roda como função Lambda numa VPC, invocada uma vez por mês. Todo mês a primeira invocação falha, e as seguintes funcionam. Qual é a causa mais provável?",
+    "hint": "O que o Lambda faz com interfaces que ninguém usa por semanas?",
+    "choices": [
+      {
+        "text": "O Lambda recolheu as interfaces paradas, então ela ficou Inactive até elas voltarem",
+        "why": "Isso. Uma função parada numa VPC é marcada Inactive, e a primeira chamada depois disso falha enquanto as interfaces voltam."
+      },
+      {
+        "text": "O cold start dela leva segundos porque cada ambiente ganha a própria interface",
+        "why": "Isso valia antes de 2019, e deixava as chamadas lentas, não falhas."
+      },
+      {
+        "text": "A concorrência reservada dela volta a 0 todo mês",
+        "why": "Nada zera uma reserva sozinho."
+      },
+      {
+        "text": "O NAT gateway dorme quando não tem tráfego",
+        "why": "Um NAT gateway é cobrado e fica disponível em toda hora em que existe."
+      }
+    ]
+  },
+  "ex-f7z5t5a8": {
+    "prompt": "Ligue cada problema das interfaces de antes de 2019 ao que ele era.",
+    "hint": "Uma interface por ambiente, feita no cold start.",
+    "pairs": [
+      {
+        "left": "O cold start",
+        "right": "Segundos gastos criando e conectando uma interface"
+      },
+      {
+        "left": "A subnet",
+        "right": "Um endereço gasto por ambiente, até acabar"
+      },
+      {
+        "left": "A cota da conta",
+        "right": "Interfaces compartilhadas com toda instância EC2 da região"
+      }
+    ],
+    "right_distractors": [
+      "Um endereço público atribuído a cada ambiente"
+    ]
+  },
+  "ex-t4e7qzpd": {
+    "prompt": "Um NAT gateway custa 0,093 USD por hora em sa-east-1. Quanto custa um num mês de 730 horas, antes de qualquer dado, em USD até o centavo?",
+    "hint": "Preço por hora vezes 730.",
+    "unit": "USD"
+  },
+  "ex-9w2n0jne": {
+    "prompt": "Dois NAT gateways, um por zona, a 0,093 USD por hora e 0,093 USD por GB, carregam 500 GB num mês de 730 horas. Qual é a conta do mês deles, em USD até o centavo?",
+    "hint": "As horas dos dois gateways, mais os dados uma vez.",
+    "unit": "USD"
+  },
+  "ex-s7rf30m9": {
+    "prompt": "Uma função em subnets privadas lê e grava muito no S3 e não chama mais nada lá fora. Qual é a saída mais barata?",
+    "hint": "Um tipo de endpoint é gratuito.",
+    "choices": [
+      {
+        "text": "Um NAT gateway por zona",
+        "why": "Isso paga por hora e por gigabyte por um tráfego que tem caminho gratuito."
+      },
+      {
+        "text": "Um interface endpoint para o S3 em cada subnet",
+        "why": "Funciona, e é cobrado por hora por zona e por gigabyte; o tipo gateway não."
+      },
+      {
+        "text": "Um gateway endpoint para o S3",
+        "why": "Isso. Sem cobrança por hora nem por gigabyte."
+      },
+      {
+        "text": "Mudar a função para uma subnet pública",
+        "why": "As interfaces do Lambda não recebem endereço público, então isso não dá nada."
+      }
+    ]
+  },
+  "ex-qwxgpe6f": {
+    "prompt": "Depois de criar um gateway endpoint para o S3 e um interface endpoint para o Secrets Manager, o que o moto mostrou?",
+    "hint": "Olhe a tabela de rotas e as interfaces de rede.",
+    "choices": [
+      {
+        "text": "Uma rota para a prefix list, e quatro interfaces, duas do endpoint e duas da função",
+        "why": "A função não tinha nenhuma: o moto não cria interfaces para uma função numa VPC."
+      },
+      {
+        "text": "Uma rota para uma prefix list pl-, e duas interfaces, ambas do endpoint",
+        "why": "Isso. O interface endpoint fez uma por subnet, e elas eram as únicas da conta."
+      },
+      {
+        "text": "Rota nenhuma, porque o moto não modela gateway endpoints",
+        "why": "A rota para a prefix list estava na tabela."
+      },
+      {
+        "text": "Uma rota para 0.0.0.0/0 pelo endpoint",
+        "why": "Um gateway endpoint roteia a prefix list do serviço, nunca a internet inteira."
+      }
+    ]
+  },
+  "ex-1ep46wka": {
+    "prompt": "Uma função numa VPC chama um provedor de pagamento na internet e também baixa 300 GB por mês do S3. Qual arranjo sai mais barato?",
+    "hint": "Um dos dois destinos tem caminho gratuito.",
+    "choices": [
+      {
+        "text": "Um NAT gateway para os dois, já que ele é necessário",
+        "why": "O gateway é necessário para o provedor, e os 300 GB do S3 pagariam 0,093 cada por ele."
+      },
+      {
+        "text": "Interface endpoints para o S3 e para o provedor de pagamento",
+        "why": "Um terceiro na internet não tem endpoint da AWS; ele precisa do NAT gateway."
+      },
+      {
+        "text": "Um gateway endpoint para o S3 e mais nada",
+        "why": "Isso leva o S3, e deixa o provedor de pagamento inalcançável."
+      },
+      {
+        "text": "Um NAT gateway para o provedor, e um gateway endpoint para o S3",
+        "why": "Isso. Os 300 GB do S3 deixam de pagar a cobrança de dados do NAT gateway."
+      }
+    ]
+  },
+  "ex-jck4xjr7": {
+    "prompt": "Ponha estas funções em ordem do custo da saída delas, a mais barata primeiro.",
+    "hint": "Nada, gratuito, cobrado por serviço, cobrado por hora para tudo.",
+    "items": [
+      "Só fala com o banco de dados",
+      "Também lê e grava no S3",
+      "Também lê o Secrets Manager e manda para o SQS",
+      "Também chama um webhook na internet"
+    ],
+    "trap": "A função que só fala com o banco não precisa de saída nenhuma, o que não custa nada."
+  },
+  "ex-158yswb2": {
+    "prompt": "Ligue cada saída ao que ela abre.",
+    "hint": "Tudo, dois serviços, ou um cada.",
+    "pairs": [
+      {
+        "left": "NAT gateway",
+        "right": "A internet inteira, por hora e por gigabyte"
+      },
+      {
+        "left": "Gateway endpoint",
+        "right": "O S3 e o DynamoDB, sem custo"
+      },
+      {
+        "left": "Interface endpoint",
+        "right": "Um serviço da AWS, por uma interface em cada subnet"
+      }
+    ],
+    "right_distractors": [
+      "Um endereço público para as interfaces da função"
+    ]
+  },
+  "ex-5yvf0a0g": {
+    "prompt": "O que o moto fez com o VpcConfig da função orders?",
+    "hint": "Olhe o VpcId e as interfaces de rede.",
+    "choices": [
+      {
+        "text": "Criou duas interfaces e devolveu a VPC das subnets",
+        "why": "Ele não criou nenhuma, e devolveu um vpc-123abc fixo."
+      },
+      {
+        "text": "Guardou, respondeu vpc-123abc, sem criar interface",
+        "why": "Isso. A configuração é um registro no moto e nada mais."
+      },
+      {
+        "text": "Conferiu as subnets, e recusou as que não existiam",
+        "why": "Ele aceitou uma subnet que não existia."
+      },
+      {
+        "text": "Deixou a função Pending até as interfaces ficarem prontas",
+        "why": "A função ficou Active na hora; o Pending é comportamento da AWS."
+      }
+    ]
+  },
+  "ex-p0dj8bve": {
+    "prompt": "Uma função baixa 300 GB por mês do S3 por um NAT gateway a 0,093 USD por GB. Quanto por mês um gateway endpoint para o S3 economiza, em USD até o centavo?",
+    "hint": "O gateway endpoint não cobra nada pelos dados.",
+    "unit": "USD"
+  }
+}

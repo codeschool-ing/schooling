@@ -1,0 +1,423 @@
+{
+  "ex-vydrzdvg": {
+    "prompt": "No `app.py`, a linha `LOADED = time.time()` fica fora do handler. Quando ela roda?",
+    "choices": [
+      {
+        "text": "Uma vez por ambiente de execução, na importação",
+        "why": "O runtime importa o arquivo uma vez, na fase INIT, e todo evento seguinte naquele ambiente reaproveita o que ela definiu."
+      },
+      {
+        "text": "Antes de cada evento, logo antes do handler",
+        "why": "Então `warm_for_s` ficaria perto de zero em toda chamada; na captura ele cresceu entre as duas primeiras."
+      },
+      {
+        "text": "Uma vez quando a função é criada com `create-function`",
+        "why": "Criar uma função guarda um pacote; nenhum código roda até um ambiente importá-lo."
+      },
+      {
+        "text": "Depois que o handler retorna, com o ambiente congelado",
+        "why": "Um ambiente congelado não roda nada; a linha rodou antes do primeiro evento."
+      }
+    ]
+  },
+  "ex-kjjncn1g": {
+    "prompt": "A configuração de uma função diz `--handler greet.handler`, e o zip dela só tem `app.py` com `def handler`. O que acontece na primeira invocação?",
+    "choices": [
+      {
+        "text": "O Lambda acha a única função chamada `handler` e a executa",
+        "why": "O nome do handler é um caminho, arquivo e depois função. Nada procura no pacote uma função pelo nome."
+      },
+      {
+        "text": "O `create-function` já deveria ter recusado",
+        "why": "Nem o moto nem a AWS importam o código na criação; o desencontro só aparece quando um ambiente inicia."
+      },
+      {
+        "text": "Um `Runtime.ImportModuleError`: não existe módulo `greet`",
+        "why": "O runtime tenta importar `greet` de `/var/task` e falha antes de tratar qualquer evento, como `shop` falhou sem a sua layer."
+      },
+      {
+        "text": "O evento é passado ao `app.py` como script",
+        "why": "O Lambda nunca roda um arquivo como script; ele importa um módulo e chama uma função dele."
+      }
+    ]
+  },
+  "ex-h1g5n5x9": {
+    "prompt": "Uma linha `REPORT` diz `Duration: 37.20 ms`. Pela regra que o log do emulador mostrou, que `Billed Duration` o Lambda cobra, em milissegundos?",
+    "hint": "Na captura, 1.05 ms foi cobrado como 2 ms.",
+    "unit": "ms"
+  },
+  "ex-pyckxttp": {
+    "prompt": "Todo `REPORT` do emulador terminou em `Memory Size: 3008 MB Max Memory Used: 3008 MB`. O que você deve concluir sobre a memória da sua função na AWS?",
+    "choices": [
+      {
+        "text": "Ela precisa de 3008 MB, então configure isso",
+        "why": "Ela não usou nada parecido: o emulador repete o tamanho que recebeu em vez de medir."
+      },
+      {
+        "text": "Nada; os dois números são padrões do emulador",
+        "why": "O emulador dá 3008 MB a toda função e informa o mesmo número como usado. O Lambda mede `Max Memory Used`, e na AWS essa linha significa algo."
+      },
+      {
+        "text": "Ela vaza memória, já que usou toda",
+        "why": "Uma função que usasse toda a memória no Lambda seria parada com erro de falta de memória; esta retornou normalmente."
+      },
+      {
+        "text": "O Lambda vai lhe dar 3008 MB, o padrão dele",
+        "why": "O padrão do Lambda é 128 MB, como o `create-function` mostrou no moto; 3008 MB é do emulador."
+      }
+    ]
+  },
+  "ex-az1gwfcr": {
+    "prompt": "O Lambda desempacota o pacote da própria função no diretório `/var/___`, que é onde o emulador tinha o código montado.",
+    "blanks": [
+      {
+        "accept": [
+          "task"
+        ]
+      }
+    ]
+  },
+  "ex-gartbhd4": {
+    "prompt": "O primeiro `create-function` falhou com `The role defined for the function cannot be assumed by Lambda.` O que faltava?",
+    "choices": [
+      {
+        "text": "Uma política de permissão permitindo `lambda:CreateFunction`",
+        "why": "Por padrão o moto não avalia políticas do IAM, então não foram as permissões de quem chamou que falharam."
+      },
+      {
+        "text": "Um runtime que suporte roles",
+        "why": "Todo runtime roda com um role de execução; isso não é recurso de alguns deles."
+      },
+      {
+        "text": "Um zip cujo `app.py` fica numa pasta com o nome do role",
+        "why": "O role não tem nada a ver com a organização do zip, e o `app.py` fica na raiz."
+      },
+      {
+        "text": "O próprio role, confiando em `lambda.amazonaws.com`",
+        "why": "`greet-role` ainda não existia. Depois de criado com uma política de confiança nomeando o serviço Lambda, a mesma chamada funcionou."
+      }
+    ]
+  },
+  "ex-2wn9h9bp": {
+    "prompt": "Uma função criada com os padrões do Lambda tem timeout de 3 segundos; o `remaining_ms` do emulador começou perto de 300.000. Quantas vezes maior é o timeout do emulador?",
+    "unit": "vezes"
+  },
+  "ex-kpxt7dxw": {
+    "prompt": "`aws lambda invoke` contra o moto respondeu `\"StatusCode\": 200` e `\"FunctionError\": \"Handled\"`, e o `out.json` começava com `error running docker`. O que falhou?",
+    "choices": [
+      {
+        "text": "O handler levantou `ValueError`",
+        "why": "Isso exigiria o handler rodar. Aqui nenhum runtime iniciou, porque o moto não conseguiu buscar uma imagem onde iniciá-lo."
+      },
+      {
+        "text": "Nada: status 200 quer dizer que a chamada deu certo",
+        "why": "O Lambda responde 200 para uma função que falhou e diz isso em `FunctionError`; ler só o status esconde todo erro."
+      },
+      {
+        "text": "O role não tinha permissão para escrever logs",
+        "why": "A falta de permissão de log não impede um handler de rodar nem de retornar; o texto do erro fala do Docker."
+      },
+      {
+        "text": "A tentativa do moto de baixar uma imagem de runtime do Docker Hub",
+        "why": "O moto roda um handler numa imagem comunitária que ele baixa, e esta máquina não conseguiu baixá-la. A imagem da própria AWS, no emulador, é como o curso executa código."
+      }
+    ]
+  },
+  "ex-p2t58y3c": {
+    "prompt": "Na AWS, `create-function --zip-file fileb://big.zip` com um zip de 60 MB é recusado. O código descompactado tem 140 MB. Qual é o jeito de implantá-lo como zip?",
+    "choices": [
+      {
+        "text": "Enviá-lo ao S3 e passar `--code S3Bucket=…,S3Key=…`",
+        "why": "O limite de 50 MB vale para um zip enviado no pedido. Pelo S3 o zip pode ser maior, e 140 MB descompactados ficam abaixo do limite de 250 MB."
+      },
+      {
+        "text": "Dividi-lo em duas funções de 30 MB cada",
+        "why": "Isso muda a aplicação para caber num limite de transporte que tem um jeito mais simples de contornar."
+      },
+      {
+        "text": "Comprimir mais, já que só o tamanho descompactado conta",
+        "why": "O envio direto é limitado pelo tamanho do próprio zip, e conteúdo com cara de aleatório não comprime."
+      },
+      {
+        "text": "Nada funciona abaixo de 250 MB compactados; use uma imagem",
+        "why": "Uma imagem é uma opção, mas não a única: abaixo de 250 MB descompactados, um zip pelo S3 é aceito."
+      }
+    ]
+  },
+  "ex-5b7ny19q": {
+    "prompt": "Ponha em ordem os passos que levam uma edição do `app.py` a uma versão da função que nunca mais vai mudar.",
+    "items": [
+      "Editar o app.py no laptop",
+      "Compactar de novo, com o app.py na raiz",
+      "aws lambda update-function-code",
+      "aws lambda publish-version"
+    ],
+    "trap": "Publicar uma versão antes de atualizar o código congela o pacote antigo: uma versão copia o que estiver em $LATEST naquele momento."
+  },
+  "ex-4br1tsf9": {
+    "prompt": "Um colega constrói a layer com `zip ../shopfmt.zip shopfmt.py`, o módulo na raiz do zip. A função então falha com `No module named 'shopfmt'`. Por quê?",
+    "choices": [
+      {
+        "text": "Layers precisam ser publicadas para arm64",
+        "why": "A arquitetura de um módulo Python puro não faz diferença; o que importa é onde o arquivo foi parar."
+      },
+      {
+        "text": "A função nomeia `shopfmt:1` em vez de `shopfmt:$LATEST`",
+        "why": "Layers não têm `$LATEST`; uma função sempre nomeia uma versão numerada."
+      },
+      {
+        "text": "Os módulos de uma layer só são importados depois que o handler começa",
+        "why": "As importações acontecem no INIT, de `/var/task` e depois dos diretórios da layer; não há uma passada posterior."
+      },
+      {
+        "text": "Ele vai parar em `/opt/shopfmt.py`, e o runtime importa de `/opt/python`",
+        "why": "O Lambda desempacota o zip em `/opt` como ele está, e o runtime Python só acrescenta `/opt/python` ao caminho."
+      }
+    ]
+  },
+  "ex-t4f44gr4": {
+    "prompt": "Quais destes pertencem a uma layer, e não ao pacote da própria função? Escolha todos os que a seção defende.",
+    "choices": [
+      {
+        "text": "`shopfmt`, usado por várias funções",
+        "why": "Uma biblioteca compartilhada é para o que uma layer serve: uma cópia para publicar e atualizar."
+      },
+      {
+        "text": "Uma dependência grande que muda pouco",
+        "why": "Ela mantém pequeno o zip da própria função, então todo envio do código é rápido."
+      },
+      {
+        "text": "Uma extensão de monitoramento para `/opt/extensions`",
+        "why": "Extensões são entregues como layers, no diretório onde o runtime procura."
+      },
+      {
+        "text": "O próprio arquivo do handler",
+        "why": "O handler muda a cada commit e pertence a uma função; ele vai no pacote dessa função."
+      },
+      {
+        "text": "Uma dependência que só uma função usa",
+        "why": "Compartilhá-la com ninguém não ganha nada, e custa uma segunda coisa para versionar."
+      }
+    ]
+  },
+  "ex-z4kb4bg2": {
+    "prompt": "`shopfmt:2` é publicada com um bug. Doze funções usam `shopfmt`, e duas delas foram mudadas para a versão 2 hoje de manhã. Quais funções quebram?",
+    "choices": [
+      {
+        "text": "As duas que nomeiam a versão 2",
+        "why": "Versões de layer são imutáveis e cada função fica com a que nomeia, então as outras dez continuam com `shopfmt:1`."
+      },
+      {
+        "text": "As doze, assim que a versão 2 existe",
+        "why": "Uma função nomeia uma versão de layer; publicar uma nova não muda a configuração de função nenhuma."
+      },
+      {
+        "text": "As dez ainda na versão 1, que a AWS aposenta",
+        "why": "Publicar uma versão não aposenta nada; a versão 1 fica até alguém apagá-la."
+      },
+      {
+        "text": "Nenhuma até o `$LATEST` de cada função ser publicado de novo",
+        "why": "As duas funções mudadas rodam a layer nova na hora; a configuração delas mudou quando foram mudadas."
+      }
+    ]
+  },
+  "ex-2xmafyg2": {
+    "prompt": "O pacote próprio de uma função descompactado tem 180 MB. Para ficar abaixo do limite, um colega passa 90 MB dele para uma layer. O que a AWS faz?",
+    "choices": [
+      {
+        "text": "Aceita: 90 MB de pacote e 90 MB de layer",
+        "why": "O limite não é por peça. A função e as suas layers são contadas juntas."
+      },
+      {
+        "text": "Aceita, já que layers ficam em `/opt`",
+        "why": "Onde os arquivos vão parar não importa para a cota; `/var/task` e `/opt` dividem os 250 MB."
+      },
+      {
+        "text": "Nada muda: continua 180 MB, continua permitido",
+        "why": "Mover bytes para uma layer não acrescenta nem tira nada, e 180 MB fica abaixo de 250 MB, então a mudança nunca foi necessária."
+      },
+      {
+        "text": "Recusa, porque uma layer pode ter no máximo 50 MB",
+        "why": "50 MB é o limite de um zip enviado diretamente, de função ou de layer, não do que uma layer pode ter descompactada."
+      }
+    ]
+  },
+  "ex-wj02ks9n": {
+    "prompt": "O pacote de uma função descompactado tem 140 MB, e ela nomeia duas layers de 60 MB e 35 MB, descompactadas. Quantos MB sobram abaixo do limite do Lambda para mais uma layer?",
+    "hint": "A função e todas as layers contam juntas.",
+    "unit": "MB"
+  },
+  "ex-hfhtpf38": {
+    "prompt": "Com os preços da tabela de 16 de outubro de 2026, quanto custa um mês em Arm para seis milhões de invocações de uma função de 512 MB que roda 200 ms cada, pedidos incluídos e cota gratuita de fora? Responda em USD.",
+    "hint": "Gigabytes-segundo são invocações × segundos × GB; pedidos custam 0,2 USD por milhão.",
+    "unit": "USD"
+  },
+  "ex-0jhsyccc": {
+    "prompt": "O moto criou uma função com `--runtime python3.99`. O que a AWS teria feito com a mesma chamada?",
+    "choices": [
+      {
+        "text": "Criado a função no Python mais novo disponível",
+        "why": "A AWS não arredonda um nome de runtime para o mais próximo; um nome fora da lista dela é erro."
+      },
+      {
+        "text": "Criado, e falhado na primeira invocação",
+        "why": "O nome é conferido quando a função é criada, não quando ela roda pela primeira vez."
+      },
+      {
+        "text": "Recusado com `InvalidParameterValueException`",
+        "why": "`python3.99` nunca existiu, e a AWS responde com o erro e os nomes que aceita."
+      },
+      {
+        "text": "Criado como runtime descontinuado e sem correções",
+        "why": "A descontinuação vale para runtimes que existiram; um nome que nunca existiu não pode ser descontinuado."
+      }
+    ]
+  },
+  "ex-qkbb2xdn": {
+    "prompt": "Uma função está num runtime desde antes da data de descontinuação, e ninguém mexeu nela. Qual é o estado dela depois dessa data?",
+    "choices": [
+      {
+        "text": "Continua rodando, sem correções de segurança",
+        "why": "A descontinuação para as correções e, mais tarde, a criação e as atualizações; as invocações seguem."
+      },
+      {
+        "text": "A AWS a passa automaticamente para a próxima versão do runtime",
+        "why": "As atualizações automáticas ficam dentro do mesmo runtime; passar para uma nova versão da linguagem é uma mudança que o dono faz."
+      },
+      {
+        "text": "Para de responder na data de descontinuação",
+        "why": "Nada nos três passos da AWS para uma função em funcionamento; é por isso que uma função sem dono num runtime velho é um risco, e não uma queda."
+      },
+      {
+        "text": "É convertida numa imagem de contêiner do mesmo runtime",
+        "why": "Essa conversão não existe; uma imagem é algo que o dono constrói e implanta."
+      }
+    ]
+  },
+  "ex-nw18w2k2": {
+    "prompt": "O redimensionador funciona em x86. Depois de `--architectures arm64` com o mesmo zip, toda invocação falha ao importar uma biblioteca compilada de imagens. Qual é a correção?",
+    "choices": [
+      {
+        "text": "Aumentar a memória, já que Arm precisa de mais",
+        "why": "A memória não muda para qual processador um arquivo compilado foi construído."
+      },
+      {
+        "text": "Construir o pacote de novo com o wheel arm64 da biblioteca",
+        "why": "Uma dependência compilada é construída para uma arquitetura, então o pacote precisa ser feito para aquela onde roda."
+      },
+      {
+        "text": "Passar a biblioteca para uma layer, que o Lambda traduz para Arm",
+        "why": "O Lambda desempacota uma layer como ela está; não traduz nada, então um arquivo x86 falha em `/opt` exatamente como em `/var/task`."
+      },
+      {
+        "text": "Trocar o runtime para `provided.al2023`",
+        "why": "Esse runtime é para uma função que traz o próprio runtime; ele não muda a arquitetura de uma biblioteca."
+      }
+    ]
+  },
+  "ex-n2skme5k": {
+    "prompt": "Relacione cada nome de runtime com o que ele dá a uma função.",
+    "pairs": [
+      {
+        "left": "python3.12",
+        "right": "Python 3.12 sobre Amazon Linux 2023, corrigido pela AWS"
+      },
+      {
+        "left": "nodejs22.x",
+        "right": "Node.js 22, corrigido pela AWS"
+      },
+      {
+        "left": "provided.al2023",
+        "right": "Amazon Linux 2023 e um runtime que a função traz, como Go faz"
+      }
+    ],
+    "right_distractors": [
+      "Uma imagem de contêiner de até 10 GB",
+      "Python 3.12 que a AWS não corrige mais"
+    ]
+  },
+  "ex-n9mhhrnp": {
+    "prompt": "Uma equipe implanta o mesmo handler como imagem de contêiner construída `FROM public.ecr.aws/lambda/python:3.12`, em vez de um zip em `python3.12`. Quem corrige o runtime agora?",
+    "choices": [
+      {
+        "text": "A AWS, por baixo da função em funcionamento, como num zip",
+        "why": "Esse é o arranjo de um runtime gerenciado. Numa imagem o runtime faz parte do que você construiu."
+      },
+      {
+        "text": "O ECR, que reanalisa e corrige as imagens guardadas",
+        "why": "O ECR guarda e analisa imagens; ele não as reescreve."
+      },
+      {
+        "text": "Ninguém: o runtime de uma imagem nunca precisa de correções",
+        "why": "Uma imagem traz o mesmo sistema operacional e o mesmo Python que o runtime do zip, com a mesma necessidade de correções."
+      },
+      {
+        "text": "A equipe, reconstruindo a partir de uma imagem base mais nova e implantando",
+        "why": "A imagem contém o runtime, então as correções só chegam quando a imagem é reconstruída e a função atualizada."
+      }
+    ]
+  },
+  "ex-zp38h7ea": {
+    "prompt": "Um handler abre uma conexão com o banco de dados no nível do módulo, ao lado de `LOADED`. Cem eventos chegam um depois do outro e um ambiente trata todos. Quantas conexões foram abertas?",
+    "choices": [
+      {
+        "text": "Cem, uma por evento",
+        "why": "É o que abri-la dentro do handler faria. No nível do módulo ela roda só no INIT."
+      },
+      {
+        "text": "Uma, feita no INIT e reaproveitada por todo evento",
+        "why": "Código no nível do módulo roda uma vez por ambiente, e por isso é o lugar de uma conexão ou de um cliente que vale reaproveitar."
+      },
+      {
+        "text": "Nenhuma até o primeiro evento pedir uma",
+        "why": "O código no nível do módulo não espera um evento; ele roda quando o arquivo é importado."
+      },
+      {
+        "text": "Duas, uma no INIT e uma para o primeiro evento",
+        "why": "Nada roda o módulo duas vezes no mesmo ambiente."
+      }
+    ]
+  },
+  "ex-tynwx8cf": {
+    "prompt": "Um handler guarda em cache um arquivo baixado em `/var/task/cache.json`, e toda invocação na AWS falha ao escrevê-lo. Para onde o cache deve ir?",
+    "choices": [
+      {
+        "text": "`/opt`, onde estão as layers",
+        "why": "`/opt` é só leitura como `/var/task`; os dois guardam o que foi desempacotado dos seus zips."
+      },
+      {
+        "text": "Para dentro do zip, para chegar já escrito",
+        "why": "Isso só serve para um arquivo que nunca muda; um cache de downloads é escrito em tempo de execução."
+      },
+      {
+        "text": "`/var/runtime`, ao lado do runtime",
+        "why": "Esse diretório é o runtime da AWS, e uma função não escreve ali."
+      },
+      {
+        "text": "`/tmp`",
+        "why": "É o único diretório com escrita, 512 MB por padrão, e dura enquanto durar o ambiente."
+      }
+    ]
+  },
+  "ex-dk19v0gg": {
+    "prompt": "Um handler devolve `{'tags': {'a', 'b'}}`, um dicionário que contém um set do Python. O que quem chamou recebe?",
+    "choices": [
+      {
+        "text": "As tags como uma lista JSON",
+        "why": "O runtime não converte um set; ele usa o codificador JSON padrão, que não tem regra para isso."
+      },
+      {
+        "text": "Uma resposta vazia com status 200",
+        "why": "A falha é informada, como o `ValueError` foi, como um objeto de erro."
+      },
+      {
+        "text": "Um `Runtime.MarshalError`, já que um set não é JSON",
+        "why": "O que o handler devolve precisa ser serializável em JSON; o runtime informa `Unable to marshal response` quando não é."
+      },
+      {
+        "text": "Uma string com o `repr` do dicionário",
+        "why": "O runtime nunca recorre ao `repr`; a resposta é JSON ou um erro."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1916 @@
+{
+  "ex-rx8w5mm5": {
+    "prompt": "Um binário fechado de x86_64, de um fornecedor, mantém as duas vCPUs da máquina a 90% o dia todo e usa uns 3 GiB de memória. Qual tipo da tabela de preços é o mais barato que serve?",
+    "hint": "Aula 1. Três coisas a conferir: a arquitetura, a proporção e se o processador é vendido inteiro.",
+    "choices": [
+      {
+        "text": "c7g.large, a 0,1111 USD a hora",
+        "why": "O mais barato dos quatro, e Arm: um binário fechado compilado para x86_64 não roda no Graviton."
+      },
+      {
+        "text": "c7i.large",
+        "why": "Isso. Duas vCPUs x86 e 4 GiB, a proporção de computação, a 0,13755 USD a hora."
+      },
+      {
+        "text": "t3.medium, que custa menos da metade",
+        "why": "A linha de base é 20% por vCPU; a 90% o dia todo ela fica presa à base no modo standard ou cobra o excedente no unlimited."
+      },
+      {
+        "text": "m7i.large, o tipo de uso geral para começar",
+        "why": "Serve, e paga por 8 GiB que o binário nunca usa. Começar no m é para quando nada foi medido, e aqui a carga é conhecida."
+      }
+    ]
+  },
+  "ex-d2t8rcnm": {
+    "prompt": "Uma t3.micro tem 2 vCPUs, ganha 12 créditos por hora e guarda no máximo 288. Ela roda as duas vCPUs a 40%. Partindo do saldo cheio, quantas horas até os créditos acabarem?",
+    "hint": "Aula 1. Um crédito é uma vCPU a 100% por um minuto; o que gasta menos o que ganha é a perda por hora.",
+    "unit": "horas"
+  },
+  "ex-m047xasm": {
+    "prompt": "Um serviço que transmite arquivos numa m7i.large mostra 15% de CPU, e as transferências caem bem abaixo de 12,5 Gbit/s depois dos primeiros minutos de cada hora movimentada. O que explica isso?",
+    "hint": "Aula 1. Leia o que \"Up to\" quer dizer na coluna de rede.",
+    "choices": [
+      {
+        "text": "Uma large tem garantidos 0,781 Gbit/s; 12,5 é um pico que ela gasta e perde",
+        "why": "Isso. \"Up to\" é um pico com um sistema de créditos próprio. A base dobra a cada tamanho e encontra o pico na 8xlarge."
+      },
+      {
+        "text": "Os créditos de CPU acabaram, e o processador fica preso à linha de base até eles voltarem",
+        "why": "m7i não é uma família com créditos, e um processador a 15% não é o que está faltando aqui."
+      },
+      {
+        "text": "Só os tipos com o atributo n chegam a 12,5 Gbit/s",
+        "why": "O n sobe o teto para 40 na c7gn; uma m7i.large já chega a 12,5 em pico."
+      },
+      {
+        "text": "O volume EBS dela é gp3",
+        "why": "Um volume limita o que chega ao disco. O que trava aqui é o fluxo saindo pela rede da instância."
+      }
+    ]
+  },
+  "ex-v4q50ncp": {
+    "prompt": "O template de um grupo nomeia um tipo que a sa-east-1 oferece em sa-east-1a e sa-east-1b e não em sa-east-1c, e as sub-redes do grupo cobrem as três zonas. O que o grupo recebe na AWS?",
+    "hint": "Aula 1, com a aula 4. As ofertas são listadas por zona.",
+    "choices": [
+      {
+        "text": "Uma recusa na criação, porque uma sub-rede está numa zona sem o tipo",
+        "why": "O grupo é criado. A falta aparece quando ele tenta pôr uma instância na zona sem o tipo."
+      },
+      {
+        "text": "O tamanho seguinte em sa-east-1c, para a distribuição ficar igual",
+        "why": "Nada troca o tipo por você; o template diz o que cada instância é."
+      },
+      {
+        "text": "Instâncias nas duas zonas que o oferecem, e nenhuma na terceira",
+        "why": "Isso. Um tipo que não é oferecido numa zona não sobe lá, por mais certo que esteja o resto do pedido."
+      },
+      {
+        "text": "Uma distribuição igual, já que as ofertas são por região",
+        "why": "describe-instance-type-offerings responde também por zona, e é justamente assim que um tipo aparece faltando numa delas."
+      }
+    ]
+  },
+  "ex-ncp6g9ya": {
+    "prompt": "Passando de m7i.large para m7i.xlarge, quais destes dobram? Marque todos que se aplicam.",
+    "hint": "Aula 1. Um tamanho é uma quantidade dentro de uma família.",
+    "choices": [
+      {
+        "text": "As vCPUs",
+        "why": "Isso. De 2 para 4."
+      },
+      {
+        "text": "O preço por hora",
+        "why": "Isso. De 0,16065 para 0,3213 USD."
+      },
+      {
+        "text": "A memória por vCPU",
+        "why": "A proporção fica em 4 GiB por vCPU em todos os tamanhos; essa proporção é o que a família é."
+      },
+      {
+        "text": "A banda de rede de base",
+        "why": "Isso. De 0,781 para 1,562 Gbit/s."
+      },
+      {
+        "text": "O pico de rede de 12,5 Gbit/s",
+        "why": "O pico fica em 12,5 até a 8xlarge; só a base se mexe."
+      }
+    ]
+  },
+  "ex-80qcttgq": {
+    "prompt": "Um job noturno roda create-image --no-reboot num servidor de banco de dados que escreve a noite inteira. Com o que começa uma instância lançada dessa imagem?",
+    "hint": "Aula 2. Um snapshot é dos blocos, num instante.",
+    "choices": [
+      {
+        "text": "O que uma queda de energia deixaria no disco",
+        "why": "Isso. O banco se recupera como depois de uma pane, sem o que ainda estava na memória. É essa a consistência que o --no-reboot compra. Reiniciar antes, ou o backup do próprio banco, é o caminho seguro."
+      },
+      {
+        "text": "Tudo o que estava no disco e na memória",
+        "why": "Um snapshot guarda os blocos dos volumes e nada da memória."
+      },
+      {
+        "text": "Uma cópia consistente, porque o snapshot é tirado num instante",
+        "why": "Um instante dos blocos, que não é a mesma coisa que um sistema de arquivos em repouso."
+      },
+      {
+        "text": "Nada: a AWS se recusa a registrar a imagem de um disco em uso",
+        "why": "A AWS não sabe o que roda no disco e registra o que os blocos eram."
+      }
+    ]
+  },
+  "ex-yehks33g": {
+    "prompt": "A conta 111122223333 tem permissão de lançamento na sua imagem e roda cinco instâncias dela. Você cancela o registro da imagem. O que acontece nessa conta?",
+    "hint": "Aula 2. Uma permissão de lançamento não faz um dono.",
+    "choices": [
+      {
+        "text": "As cinco param em poucos minutos",
+        "why": "As instâncias que já rodam continuam: foram feitas da imagem, não estão presas a ela."
+      },
+      {
+        "text": "Nada, porque a permissão de lançamento a torna coproprietária",
+        "why": "Ela nunca vira dona. Para ter uma cópia própria, precisa copiar a imagem."
+      },
+      {
+        "text": "As cinco seguem, e os novos lançamentos também, até o snapshot ser apagado",
+        "why": "A AWS recusa lançar de uma imagem sem registro, sobre o que quer que reste dos snapshots."
+      },
+      {
+        "text": "As cinco seguem; o próximo lançamento dela com esse id falha",
+        "why": "Isso. Cancelar o registro acaba com lançamentos novos em todo lugar e não mexe em nada que já roda."
+      }
+    ]
+  },
+  "ex-90q3x262": {
+    "prompt": "Um volume tem 40 GB escritos. Um snapshot noturno é guardado por 30 dias e 5 GB mudam por dia. A 0,068 USD por GB-mês, quanto isso custa a menos por mês do que 30 cópias inteiras dos 40 GB, em USD?",
+    "hint": "Aula 2. Calcule os dois jeitos e subtraia; o primeiro snapshot guarda o que foi escrito, cada um depois guarda o que mudou.",
+    "unit": "USD"
+  },
+  "ex-402td3mb": {
+    "prompt": "Ponha em ordem o primeiro lançamento a partir de uma AMI, até os dados de usuário.",
+    "hint": "Aula 2, com a aula 7. O registro, os discos, o boot, o programa lá dentro.",
+    "items": [
+      "O EC2 lê o registro da imagem e o mapeamento de dispositivos de bloco",
+      "Um volume é criado de cada snapshot que o mapeamento nomeia, na zona da instância",
+      "A instância dá boot pelo volume raiz",
+      "O cloud-init busca os dados de usuário e os executa"
+    ],
+    "trap": "Executar os dados de usuário antes do boot é o deslize: o cloud-init é um programa dentro da imagem, então só existe depois que o volume raiz existe."
+  },
+  "ex-4hf1n751": {
+    "prompt": "Um volume gp3 numa m7i.large é elevado a 16.000 IOPS. Uma semana de benchmarks dentro da instância sustenta uns 3.600. Por quê?",
+    "hint": "Aula 3. O EBS passa pela rede, e duas coisas definem o teto.",
+    "choices": [
+      {
+        "text": "A base de EBS da própria instância, 3.600 IOPS",
+        "why": "Isso. Essa base vale para todos os volumes juntos, porque cada tipo tem sua própria banda para o EBS. Dimensione o volume e a instância juntos."
+      },
+      {
+        "text": "O gp3 permite 500 IOPS por GiB, e o volume é pequeno demais",
+        "why": "Esse limite recusa a mudança na hora; não aceita e entrega menos."
+      },
+      {
+        "text": "A modificação ainda está em optimizing",
+        "why": "Isso leva de minutos a horas, não uma semana, e enquanto isso o volume roda na taxa antiga, 3.000."
+      },
+      {
+        "text": "O gp3 só entrega IOPS acima de 3.000 em picos",
+        "why": "O que o gp3 provisiona não é pico. O pico desta história é o da instância."
+      }
+    ]
+  },
+  "ex-assc65fd": {
+    "prompt": "Um job em lote guarda o único checkpoint no disco NVMe de uma c7gd.xlarge spot cujo comportamento de interrupção é stop. Ela é interrompida e depois iniciada de novo. O que há nesse disco?",
+    "hint": "Aula 3, com a aula 6. De quem é esse disco?",
+    "choices": [
+      {
+        "text": "O checkpoint, porque stop mantém os discos",
+        "why": "Stop mantém os volumes EBS. O instance store pertence ao host e é apagado."
+      },
+      {
+        "text": "O checkpoint, desde que o volume raiz seja EBS",
+        "why": "O tipo da raiz não muda o que acontece com o instance store."
+      },
+      {
+        "text": "Uma cópia restaurada do snapshot que a AWS tira na interrupção",
+        "why": "Não existe snapshot de instance store."
+      },
+      {
+        "text": "Nada: o disco é apagado sempre que a instância sai do host",
+        "why": "Isso. Um stop e start cai num host novo, com o disco vazio. Checkpoint vai para o S3 ou para o EBS."
+      }
+    ]
+  },
+  "ex-07m8m91b": {
+    "prompt": "Quais destes pedidos a AWS recusa? Marque todos que se aplicam.",
+    "hint": "Aula 3, com a aula 2 para o snapshot.",
+    "choices": [
+      {
+        "text": "Aumentar um volume gp3 anexado de 100 GiB para 200",
+        "why": "Aumentar em uso é permitido; o sistema de arquivos dentro é aumentado depois."
+      },
+      {
+        "text": "Diminuir um volume gp3 anexado de 200 GiB para 100",
+        "why": "Isso. Um volume EBS nunca diminui. Um disco menor é um volume novo e uma cópia."
+      },
+      {
+        "text": "Um volume gp3 de 100 GiB com 60.000 IOPS",
+        "why": "Isso. 500 por GiB o para em 50.000."
+      },
+      {
+        "text": "Um volume de 200 GiB a partir do snapshot de um volume de 100 GiB",
+        "why": "Maior que o volume do snapshot é permitido. Menor é o que a AWS recusa."
+      },
+      {
+        "text": "Um volume st1 de 100 GiB",
+        "why": "Isso. Os tipos de disco rígido começam em 125 GiB."
+      }
+    ]
+  },
+  "ex-bybdvra4": {
+    "prompt": "Um sistema de arquivos EFS com 5 GB, no modo de throughput que recebeu por padrão, fica lento toda vez que o tráfego dispara. O que a AWS recomenda?",
+    "hint": "Aula 3. No modo padrão, o throughput cresce com o que está guardado.",
+    "choices": [
+      {
+        "text": "Um volume gp3 maior, compartilhado pelas instâncias",
+        "why": "Um volume pertence a uma instância numa zona; é justamente o que o EFS veio substituir aqui."
+      },
+      {
+        "text": "Escrever 100 GB de enchimento, para o throughput de bursting crescer",
+        "why": "O bursting cresce mesmo com o que está guardado, e enchimento a 0,57 USD por GB-mês é o jeito caro de contornar o modo que a AWS indica."
+      },
+      {
+        "text": "Trocar o PerformanceMode de generalPurpose",
+        "why": "O modo de desempenho é outra configuração, e generalPurpose é o que se mantém sem uma orientação específica."
+      },
+      {
+        "text": "Throughput elastic, que acompanha a demanda",
+        "why": "Isso. Ele cobra o que é lido e escrito, e a AWS recomenda elastic para cargas com picos ou imprevisíveis."
+      }
+    ]
+  },
+  "ex-wt6yscte": {
+    "prompt": "Um grupo de um só tipo de instância tem quatro instâncias: duas em sa-east-1a, uma da versão 1 do template e uma da versão 2, e uma da versão 1 em cada uma das outras duas zonas. A capacidade desejada cai para 3. Qual instância a política de terminação padrão remove?",
+    "hint": "Aula 4. A política é uma lista em ordem, e as zonas vêm primeiro.",
+    "choices": [
+      {
+        "text": "A instância da versão 1 em sa-east-1a",
+        "why": "Isso. A zona mais cheia primeiro, depois o template mais antigo dentro dela."
+      },
+      {
+        "text": "Uma instância da versão 1 em sa-east-1b ou sa-east-1c",
+        "why": "O equilíbrio vem antes da idade, e essas zonas têm uma instância cada."
+      },
+      {
+        "text": "A instância da versão 2, a mais nova delas",
+        "why": "A mais nova sai primeiro só com NewestInstance; a padrão remove templates antigos."
+      },
+      {
+        "text": "Qualquer uma das três da versão 1, sorteada",
+        "why": "O sorteio é o último passo, depois que a zona e o template já estreitaram a escolha."
+      }
+    ]
+  },
+  "ex-y47jkx5h": {
+    "prompt": "O que uma instance refresh acrescenta a terminar instâncias antigas uma por uma à mão? Marque todos que se aplicam.",
+    "hint": "Aula 4. O passo à mão é um lote sem nenhuma das verificações.",
+    "choices": [
+      {
+        "text": "Esperar cada instância nova ficar saudável antes do próximo lote",
+        "why": "Isso. É o que o MinHealthyPercentage e o warmup ritmam."
+      },
+      {
+        "text": "Mudar as instâncias em execução no lugar, sem substituí-las",
+        "why": "Nada muda a origem de uma instância que já roda; a refresh substitui."
+      },
+      {
+        "text": "Parar quando as instâncias novas não ficam saudáveis",
+        "why": "Isso. O passo à mão seguiria de qualquer jeito."
+      },
+      {
+        "text": "Mover a versão padrão do template para a mais nova",
+        "why": "Isso é modify-launch-template, uma decisão à parte com um nome no log."
+      },
+      {
+        "text": "Voltar para a versão anterior, com AutoRollback",
+        "why": "Isso. Nada restaura a versão antiga quando a troca é feita à mão."
+      }
+    ]
+  },
+  "ex-a3v578sa": {
+    "prompt": "Durante uma investigação alguém rodou suspend-processes para ReplaceUnhealthy e nunca retomou. Duas semanas depois o host de uma instância falha. O que acontece?",
+    "hint": "Aula 4. Para que serve o processo suspenso?",
+    "choices": [
+      {
+        "text": "O grupo a substitui, já que host com falha não é aplicação doente",
+        "why": "Um host com falha reprova nas verificações de status do EC2: isso é uma instância doente, e substituí-la é o que foi suspenso."
+      },
+      {
+        "text": "Ela é marcada como doente e fica; o grupo roda com uma a menos",
+        "why": "Isso. Um grupo suspenso não cumpre mais a promessa, e por isso suspender é para investigar e nunca para operar."
+      },
+      {
+        "text": "A AWS retoma processos suspensos depois de um dia, para nenhum grupo ficar quebrado",
+        "why": "Nada os retoma além de resume-processes."
+      },
+      {
+        "text": "O AZRebalance a leva para uma zona que funciona",
+        "why": "O rebalanceamento iguala as zonas; não substitui a troca de uma instância doente."
+      }
+    ]
+  },
+  "ex-k31ag439": {
+    "prompt": "Uma conta AWS aberta em 2025 aplica um Terraform antigo que cria uma launch configuration para o grupo. O que acontece?",
+    "hint": "Aula 4. A AWS vem aposentando esse recurso, em duas etapas.",
+    "choices": [
+      {
+        "text": "Ela é criada, mas sem nenhum dos tipos de instância lançados desde 2023",
+        "why": "Esse limite vale nas contas mais antigas. Esta nem consegue criar uma."
+      },
+      {
+        "text": "Funciona, e o grupo só fica sem versões",
+        "why": "Isso era a launch configuration nas contas antigas; esta conta não consegue criar uma."
+      },
+      {
+        "text": "Ela vira um launch template com o mesmo nome",
+        "why": "A AWS não converte nada por você."
+      },
+      {
+        "text": "Recusa: contas abertas após 1º de outubro de 2024 não podem criá-las",
+        "why": "Isso. A saída é um launch template com as mesmas respostas, e o grupo trocado para ele."
+      }
+    ]
+  },
+  "ex-nr488xq4": {
+    "prompt": "Uma política de target tracking de CPU a 50% tem DisableScaleIn ligado, e uma ação agendada à noite define só o mínimo, para 2. À noite a CPU cai para 10% em 8 instâncias. O que reduz o grupo?",
+    "hint": "Aula 5. Quem mexe na capacidade desejada aqui?",
+    "choices": [
+      {
+        "text": "A política, depois que o alarme baixo espera o bastante",
+        "why": "O DisableScaleIn transforma a política numa que só adiciona."
+      },
+      {
+        "text": "A ação agendada, que puxa o grupo até o novo mínimo",
+        "why": "Baixar o mínimo permite menos instâncias; não define quantas."
+      },
+      {
+        "text": "O cooldown, que remove o que a política adicionou",
+        "why": "Um cooldown é uma espera entre ações de uma política simples, e não remove nada."
+      },
+      {
+        "text": "Nada: fica em 8 até algo definir a capacidade desejada",
+        "why": "Isso. A ação noturna que só define o mínimo deixa a redução para a política, e esta política não reduz."
+      }
+    ]
+  },
+  "ex-49t3y8fb": {
+    "prompt": "Ponha em ordem a introdução segura do predictive scaling num grupo.",
+    "hint": "Aula 5. Uma previsão é conferida antes de poder agir.",
+    "items": [
+      "O grupo roda com target tracking e acumula pelo menos um dia de histórico de métricas",
+      "Uma política preditiva é adicionada em ForecastOnly",
+      "A previsão é comparada com a carga real por cerca de uma semana",
+      "O modo passa para ForecastAndScale"
+    ],
+    "trap": "Passar para ForecastAndScale antes da comparação é o deslize: o ForecastOnly existe para uma previsão ruim ser achada antes de mexer no mínimo."
+  },
+  "ex-w49ep4qw": {
+    "prompt": "A política de passos da aula adiciona 1 para uma violação de 0 a 20 pontos e 3 para 20 ou mais. O alarme passa de 60% para 70% e os passos ficam como estão. A CPU marca 85%. Quantas instâncias ela adiciona?",
+    "hint": "Aula 5. A partir de onde as faixas são medidas?",
+    "choices": [
+      {
+        "text": "Três, porque 85 está 25 pontos acima de 60",
+        "why": "60 era o limiar antigo; as faixas contam a partir do limiar atual do alarme."
+      },
+      {
+        "text": "Uma",
+        "why": "Isso. 85 está 15 acima do novo limiar, e a tabela se move com o alarme."
+      },
+      {
+        "text": "Nenhuma, já que os passos foram escritos para 60",
+        "why": "Os passos são relativos ao limiar, e por isso não precisam ser reescritos quando ele muda."
+      },
+      {
+        "text": "Duas, entre as duas linhas",
+        "why": "Não há interpolação: uma leitura cai em exatamente uma linha."
+      }
+    ]
+  },
+  "ex-1b585sth": {
+    "prompt": "Associe cada configuração ao que ela decide.",
+    "hint": "Aula 5, e a aula 4 para a refresh.",
+    "pairs": [
+      {
+        "left": "Período de carência da verificação de saúde",
+        "right": "Quanto tempo até uma verificação reprovada contar contra uma instância nova"
+      },
+      {
+        "left": "Warmup padrão de instância",
+        "right": "Quanto tempo até as métricas de uma instância nova contarem na média do grupo"
+      },
+      {
+        "left": "Cooldown",
+        "right": "Quanto tempo uma política de scaling simples espera antes de agir de novo"
+      },
+      {
+        "left": "MinHealthyPercentage",
+        "right": "Quanto da capacidade desejada uma refresh mantém saudável"
+      }
+    ],
+    "right_distractors": [
+      "Quantas versões do template o grupo guarda"
+    ]
+  },
+  "ex-aeegzphg": {
+    "prompt": "Um grupo misto de m7i.large tem OnDemandBaseCapacity 2 e OnDemandPercentageAboveBaseCapacity 25, com capacidade desejada de 18. Suponha, só para a conta, um desconto spot de 60% sobre os 0,16065 USD por hora sob demanda. Quanto o grupo custa num mês de 730 horas, em USD?",
+    "hint": "Aula 6. Divida o grupo primeiro: a base, depois a porcentagem do que está acima dela.",
+    "unit": "USD"
+  },
+  "ex-9qx4enj5": {
+    "prompt": "Uma equipe quer o seu único servidor PostgreSQL em spot, com o comportamento de interrupção stop para os volumes EBS sobreviverem. O que há de errado no plano?",
+    "hint": "Aula 6. Pergunte o que uma interrupção custa, não se os dados sobrevivem.",
+    "choices": [
+      {
+        "text": "O banco cai a cada interrupção",
+        "why": "Isso. Fica fora até a capacidade voltar, sem nada para responder enquanto isso. Uma instância única com estado é o que não serve para spot: os dados sobrevivem e o serviço não."
+      },
+      {
+        "text": "Nada; stop mantém os dados, e o banco fica seguro lá",
+        "why": "Seguro para os bytes, e fora do ar para os usuários toda vez que a AWS quer a capacidade de volta."
+      },
+      {
+        "text": "Stop exige um pedido one-time",
+        "why": "É o contrário: stop e hibernate exigem um pedido persistent."
+      },
+      {
+        "text": "Instâncias spot não têm volumes EBS",
+        "why": "Têm, como qualquer instância; é isso que o stop mantém."
+      }
+    ]
+  },
+  "ex-6areg6g9": {
+    "prompt": "A operação quer uma contagem única de toda interrupção spot numa frota de trezentas instâncias. Onde ela deve escutar?",
+    "hint": "Aula 6. O mesmo sinal chega a dois lugares.",
+    "choices": [
+      {
+        "text": "Em cada instância, consultando spot/instance-action para um arquivo local",
+        "why": "Isso alcança a frota uma instância por vez, e deixa a contagem nos discos que estão sendo tomados."
+      },
+      {
+        "text": "No describe-spot-price-history, que tem uma linha por interrupção",
+        "why": "Ele tem uma linha por mudança de preço, e nenhuma por interrupção."
+      },
+      {
+        "text": "Uma regra do EventBridge no aviso de interrupção",
+        "why": "Isso. Com uma fila ou uma função de alvo: um evento por aviso, com o id da instância, para a frota inteira."
+      },
+      {
+        "text": "A CPU média do grupo, que cai em cada interrupção",
+        "why": "Uma queda de CPU tem muitas causas e não conta nada."
+      }
+    ]
+  },
+  "ex-gpvm7j3v": {
+    "prompt": "A economia do spot num grupo é o desconto multiplicado pela ___ do grupo que roda em spot.",
+    "hint": "Aula 6. Um desconto de 60% sobre 60% de um grupo deu uns 36%.",
+    "blanks": [
+      {
+        "accept": [
+          "parcela",
+          "fração",
+          "proporção",
+          "parte",
+          "porcentagem",
+          "percentagem",
+          "porção"
+        ]
+      }
+    ]
+  },
+  "ex-27jjnddf": {
+    "prompt": "Uma instância roda contêineres de outras equipes numa bridge do Docker, com tokens exigidos. Alguém sobe o HttpPutResponseHopLimit de 1 para 2 para um agente de monitoração num contêiner funcionar. O que mais mudou?",
+    "hint": "Aula 7. O limite corta para os dois lados.",
+    "choices": [
+      {
+        "text": "Qualquer carga ali agora alcança o papel da instância pelo serviço de metadados",
+        "why": "Isso. Esse é o preço do 2, e o motivo de um contêiner que precisa da AWS ganhar um papel próprio."
+      },
+      {
+        "text": "O IMDSv1 volta a responder aos contêineres",
+        "why": "O HttpTokens continua required, então toda leitura ainda exige token."
+      },
+      {
+        "text": "Nada; o limite é por contêiner",
+        "why": "É por instância: um só limite para toda resposta que o serviço de metadados envia."
+      },
+      {
+        "text": "A própria instância perde o acesso, já que as respostas agora precisam de dois saltos",
+        "why": "Um limite de 2 ainda alcança um processo na instância, que está a um salto."
+      }
+    ]
+  },
+  "ex-bs7nfj3z": {
+    "prompt": "modify-instance-metadata-defaults --http-tokens required é executado em sa-east-1. Quais instâncias passam a exigir tokens por causa disso?",
+    "hint": "Aula 7. É um padrão, e padrão vale onde nada mais foi dito.",
+    "choices": [
+      {
+        "text": "Toda instância da conta, em todas as regiões",
+        "why": "O padrão da conta é definido por região."
+      },
+      {
+        "text": "Toda instância rodando em sa-east-1, depois do próximo reboot",
+        "why": "Não muda nada que já roda, com reboot ou sem."
+      },
+      {
+        "text": "Só as instâncias lançadas de um launch template",
+        "why": "O template é mais um lugar para definir isso; o padrão cobre lançamentos que não definem nada."
+      },
+      {
+        "text": "Lançamentos novos em sa-east-1 que não nomeiam opções próprias",
+        "why": "Isso. Um lançamento que nomeia as próprias opções ainda ganha, e por isso a política é o nível que ninguém esquece."
+      }
+    ]
+  },
+  "ex-j48pyvfh": {
+    "prompt": "Uma sessão do IMDSv2 começa com um PUT em /latest/api/___.",
+    "hint": "Aula 7. O caminho diz o que o PUT devolve.",
+    "blanks": [
+      {
+        "accept": [
+          "token"
+        ]
+      }
+    ]
+  },
+  "ex-2fkdaxxc": {
+    "prompt": "Um script de dados de usuário tem 14 KB, e a forma em base64, como a CLI o envia, tem uns 18,7 KB. O que a AWS faz com o lançamento?",
+    "hint": "Aula 7. Qual forma os 16 KB contam?",
+    "choices": [
+      {
+        "text": "Aceita",
+        "why": "Isso. Os 16 KB da AWS são a forma crua, antes da codificação."
+      },
+      {
+        "text": "Recusa, já que a forma codificada passa de 16 KB",
+        "why": "O limite conta antes da codificação, sobre os 14 KB."
+      },
+      {
+        "text": "Aceita, e o cloud-init o executa a cada boot",
+        "why": "Aceita, e executa só no primeiro boot."
+      },
+      {
+        "text": "Aceita de um launch template e recusa num lançamento direto",
+        "why": "O limite é o mesmo seja qual for o jeito de lançar."
+      }
+    ]
+  },
+  "ex-79zb7m25": {
+    "prompt": "Uma tarefa Fargate para antes de a aplicação rodar, com CannotPullContainerError do ECR da mesma conta, e nenhum log chega. A sub-rede tem rota para um NAT gateway. Qual papel está sem permissão?",
+    "hint": "Aula 8, com a aula 10. Dois papéis, dois chamadores, dois momentos.",
+    "choices": [
+      {
+        "text": "O papel da tarefa, o que o código recebe",
+        "why": "O código nem rodou: o pull acontece antes de ele existir."
+      },
+      {
+        "text": "A política do repositório",
+        "why": "Política de repositório é para outra conta; dentro da conta, puxar é uma questão de IAM."
+      },
+      {
+        "text": "O papel de execução",
+        "why": "Isso. O ECS o usa para puxar a imagem e mandar os logs, e ele precisa de permissões ecr: para o pull e logs: para a saída."
+      },
+      {
+        "text": "O papel do nó",
+        "why": "Esse é o papel de um nó do EKS; uma tarefa ECS no Fargate não tem nó seu."
+      }
+    ]
+  },
+  "ex-gxmt401e": {
+    "prompt": "Um serviço de seis tarefas em modo bridge define hostPort como 0 e roda em duas instâncias de contêiner. Como o balanceador alcança as seis?",
+    "hint": "Aula 8. O Docker escolhe a porta; alguém precisa avisar o target group.",
+    "choices": [
+      {
+        "text": "Cada instância encaminha a porta 80 para suas tarefas em rodízio",
+        "why": "Nada na instância faz isso; cada tarefa tem uma porta própria."
+      },
+      {
+        "text": "Não alcança, porque hostPort 0 é para o Fargate",
+        "why": "O Fargate é só awsvpc; o 0 é a resposta do modo bridge para uma cópia por instância."
+      },
+      {
+        "text": "O Docker dá a cada tarefa a porta 80 num endereço próprio",
+        "why": "Isso é o modo awsvpc. No bridge, as tarefas dividem o endereço da instância."
+      },
+      {
+        "text": "O ECS registra a porta de cada tarefa no target group",
+        "why": "Isso. O ECS mantém o target group atualizado com a porta de cada tarefa, e o tráfego acha todas."
+      }
+    ]
+  },
+  "ex-z3079hx3": {
+    "prompt": "Dois contêineres disputam o processador de uma instância de contêiner: um tem cpu 512, o outro 1536. O que o primeiro recebe enquanto disputam, e quando o segundo está ocioso?",
+    "hint": "Aula 8. Um peso, não um teto.",
+    "choices": [
+      {
+        "text": "Um quarto, e depois o processador inteiro",
+        "why": "Isso. 512 contra 1.536 é uma parte em quatro, e sem disputa um peso não limita nada."
+      },
+      {
+        "text": "Exatamente meia vCPU o tempo todo, já que 512 unidades são meia",
+        "why": "Isso seria um teto. O cpu no EC2 vira cpu-shares, que é um peso."
+      },
+      {
+        "text": "Um terço, e depois um terço",
+        "why": "512 contra 1.536 é uma parte em quatro do total, e sozinho ele não fica preso a nada."
+      },
+      {
+        "text": "Um quarto, com ou sem ociosidade",
+        "why": "Quando o outro está ocioso, não há com quem dividir."
+      }
+    ]
+  },
+  "ex-d6nc2q98": {
+    "prompt": "Uma migração de banco que roda por cinco minutos e termina é implantada como serviço ECS com contagem desejada 1. O que dá errado?",
+    "hint": "Aula 8. Uma vez, ou sempre N.",
+    "choices": [
+      {
+        "text": "Ela nem começa, já que um serviço precisa de balanceador",
+        "why": "Um serviço roda sem; o balanceador é para tráfego."
+      },
+      {
+        "text": "O serviço a inicia de novo cada vez que ela termina",
+        "why": "Isso. Um serviço mantém um número; um job que roda uma vez é run-task."
+      },
+      {
+        "text": "Nada: o serviço lê o código de saída 0 como concluído",
+        "why": "Um serviço conta tarefas rodando; uma saída limpa é uma a menos que o número."
+      },
+      {
+        "text": "O ECS recusa contagem desejada 1",
+        "why": "Um é uma contagem comum."
+      }
+    ]
+  },
+  "ex-awgz5gnp": {
+    "prompt": "Uma tarefa Fargate precisa de 1 vCPU de trabalho e 12 GB de memória. Qual é o menor tamanho que a AWS permite para ela no Linux?",
+    "hint": "Aula 9. A faixa de memória sobe com a CPU.",
+    "choices": [
+      {
+        "text": "1 vCPU e 12 GB",
+        "why": "1 vCPU permite de 2 a 8 GB; 12 não está entre eles."
+      },
+      {
+        "text": "1 vCPU e 8 GB, o máximo que 1 vCPU permite",
+        "why": "É o máximo para 1 vCPU, e faltam quatro gigabytes para o que a tarefa precisa."
+      },
+      {
+        "text": "2 vCPU e 12 GB",
+        "why": "Isso. 2 vCPU permite de 4 a 16 GB, de 1 em 1, então a memória decide a CPU."
+      },
+      {
+        "text": "4 vCPU e 12 GB",
+        "why": "4 vCPU permite de 8 a 30 GB, então cabe, e 2 vCPU já cabe por menos."
+      }
+    ]
+  },
+  "ex-tkapv6ny": {
+    "prompt": "Um serviço Fargate é escalado para 300 tarefas, todas numa sub-rede /24 que não tem mais nada. O que acontece?",
+    "hint": "Aula 9. O que cada tarefa tira da sub-rede?",
+    "choices": [
+      {
+        "text": "As 300 sobem; as tarefas dividem o endereço do host",
+        "why": "No awsvpc cada tarefa tem uma interface e um endereço próprios."
+      },
+      {
+        "text": "No máximo 256 sobem, uma por endereço",
+        "why": "A AWS guarda cinco endereços de toda sub-rede para si."
+      },
+      {
+        "text": "As 300 sobem, porque o Fargate põe as tarefas fora da sua sub-rede",
+        "why": "A capacidade é da AWS; a interface que cada tarefa usa fica na sua sub-rede."
+      },
+      {
+        "text": "No máximo 251 sobem; as outras não têm endereço para pegar",
+        "why": "Isso. 256 menos os cinco que a AWS reserva. Dimensione a sub-rede do Fargate para tarefas, não para instâncias."
+      }
+    ]
+  },
+  "ex-nrp35xnw": {
+    "prompt": "O Fargate cobra uma tarefa Linux por segundo, com um mínimo de um ___.",
+    "hint": "Aula 9. Um job de dez segundos paga por sessenta.",
+    "blanks": [
+      {
+        "accept": [
+          "minuto"
+        ]
+      }
+    ]
+  },
+  "ex-4t3zv7bc": {
+    "prompt": "Ponha em ordem a vida de uma tarefa Fargate, do run-task até o fim.",
+    "hint": "Aula 9. PROVISIONING, PENDING, RUNNING, e o que a parada devolve.",
+    "items": [
+      "Uma interface de rede é criada na sub-rede, com o grupo de segurança da tarefa",
+      "A tarefa fica PENDING enquanto a imagem é puxada",
+      "Os contêineres sobem e a tarefa fica RUNNING",
+      "A tarefa para e a interface dela é apagada"
+    ],
+    "trap": "Puxar antes de a interface existir é o deslize: a imagem vem pela rede, e no modo awsvpc a única rede da tarefa é essa interface."
+  },
+  "ex-t36evbg7": {
+    "prompt": "Uma implantação ECS de shop/web:1.0.0 começou na segunda. Na terça, 1.0.0 é sobrescrita no repositório mutável. Na quarta, alguém força uma nova implantação só para reiniciar as tarefas. O que as tarefas rodam agora?",
+    "hint": "Aula 10. Quando o ECS transforma a tag num digest?",
+    "choices": [
+      {
+        "text": "A imagem de segunda, porque a definição de tarefa é a mesma",
+        "why": "A definição nomeia uma tag, e a tag é resolvida de novo a cada implantação."
+      },
+      {
+        "text": "Uma mistura: tarefas em hosts com cópia em cache ficam com a de segunda",
+        "why": "Isso é nó Kubernetes com a política de pull padrão; uma implantação ECS roda um só digest."
+      },
+      {
+        "text": "A imagem de terça, a que 1.0.0 aponta àquela altura",
+        "why": "Isso. O ECS fixa um digest por implantação, e uma implantação nova pega para onde a tag apontar até lá."
+      },
+      {
+        "text": "Nenhuma: o ECS recusa uma tag que mudou",
+        "why": "O ECS não acompanha se uma tag mudou; resolve o que ela diz agora."
+      }
+    ]
+  },
+  "ex-7g31bwb5": {
+    "prompt": "Os testes de um pipeline rodam contra o moto e tratam ImageAlreadyExistsException como \"essa tag já existe\" num repositório imutável. O que acontece quando o pipeline roda na AWS?",
+    "hint": "Aula 10. O moto e a AWS recusam o mesmo push com nomes diferentes.",
+    "choices": [
+      {
+        "text": "Outro nome, ImageTagAlreadyExistsException",
+        "why": "Isso. A comparação não pega: a AWS guarda ImageAlreadyExistsException para o mesmo manifesto na mesma tag; o pipeline precisa casar com os nomes da AWS."
+      },
+      {
+        "text": "A mesma coisa, já que o moto copia os nomes de erro da AWS",
+        "why": "Aqui não copia, e é esse o ponto da pergunta."
+      },
+      {
+        "text": "A AWS deixa o push passar e move a tag",
+        "why": "Imutável é recusado na AWS também; só o nome do erro muda."
+      },
+      {
+        "text": "A AWS responde LayersNotFoundException",
+        "why": "Esse é para um manifesto que nomeia camadas que o repositório não tem."
+      }
+    ]
+  },
+  "ex-yvw4g148": {
+    "prompt": "Um serviço está fixado por digest numa imagem que perdeu a última tag há dez dias. A política de ciclo de vida do repositório expira imagens sem tag depois de 7 dias. Uma tarefa do serviço reprova na verificação de saúde e é substituída. O que acontece?",
+    "hint": "Aula 10. Um digest não se move. Ele some?",
+    "choices": [
+      {
+        "text": "A substituta roda, porque um digest não muda",
+        "why": "Não muda, e pode ser apagado: expirar é apagar."
+      },
+      {
+        "text": "A substituta não sobe: a imagem expirou, e nenhum pull a encontra",
+        "why": "Isso. É por isso que a regra espera uma semana, e por que um serviço fixado numa imagem sem tag é um risco a vigiar."
+      },
+      {
+        "text": "A substituta roda o que a latest apontar",
+        "why": "Um digest nomeia uma imagem e nunca recorre a uma tag."
+      },
+      {
+        "text": "Nada expira enquanto uma tarefa ainda usa a imagem",
+        "why": "O ECR não sabe quem roda uma imagem."
+      }
+    ]
+  },
+  "ex-0jpbc3fp": {
+    "prompt": "Os aumentos de nós travam nos limites de pull do Docker Hub para uma imagem base pública. O que faz eles puxarem da conta da própria equipe?",
+    "hint": "Aula 10. Uma cópia guardada no primeiro pedido.",
+    "choices": [
+      {
+        "text": "Replicação do registro para todas as regiões",
+        "why": "A replicação copia o que você envia; essa imagem nunca foi enviada por você."
+      },
+      {
+        "text": "O ECR Public, em public.ecr.aws",
+        "why": "Esse é outro registro público, fora da conta, com limites próprios."
+      },
+      {
+        "text": "A varredura avançada, que guarda uma cópia de cada imagem que lê",
+        "why": "A varredura lê pacotes e guarda achados, não imagens."
+      },
+      {
+        "text": "Uma regra de pull through cache",
+        "why": "Isso. O registro privado busca a imagem na primeira vez e guarda uma cópia, e a produção segue no dia em que a origem está lenta."
+      }
+    ]
+  },
+  "ex-gjxf7g1b": {
+    "prompt": "Com o vpc-cni padrão, uma t3.medium comporta 17 pods. Uma equipe precisa caber 120 pods, contando todos, em nós t3.medium. Qual é o menor número de nós?",
+    "hint": "Aula 11. Divida, e um pedaço de nó é um nó.",
+    "unit": "nós"
+  },
+  "ex-fhdngjj6": {
+    "prompt": "Uma atualização de 1.35 para 1.36 quebra uma carga que usava uma API que a 1.36 removeu. O control plane pode voltar para a 1.35?",
+    "hint": "Aula 11. O primeiro passo da ordem existe por um motivo.",
+    "choices": [
+      {
+        "text": "Sim, com update-cluster-version --kubernetes-version 1.35",
+        "why": "Essa chamada só anda para a frente."
+      },
+      {
+        "text": "Sim, em até 24 horas depois da atualização",
+        "why": "Não há janela; não há volta nenhuma."
+      },
+      {
+        "text": "Não; nada volta",
+        "why": "Isso. É por isso que os insights vêm primeiro. Nem o control plane nem um node group voltam de versão, então leia o list-insights, ou atualize uma cópia, antes do real."
+      },
+      {
+        "text": "Só enquanto os node groups ainda estão na 1.35",
+        "why": "Os nós atrasados travam a próxima atualização; não abrem um caminho de volta."
+      }
+    ]
+  },
+  "ex-5yfbt093": {
+    "prompt": "Qual destes é um bom motivo para usar um node group autogerenciado em vez de um gerenciado?",
+    "hint": "Aula 11. Olhe primeiro a linha de custo da tabela.",
+    "choices": [
+      {
+        "text": "Economizar a taxa que um node group gerenciado cobra por instância",
+        "why": "Essa taxa não existe: node groups gerenciados custam as instâncias e nada além."
+      },
+      {
+        "text": "Um sistema operacional que o EKS não oferece",
+        "why": "Isso. O motivo é uma necessidade que o gerenciado não atende, não dinheiro."
+      },
+      {
+        "text": "Rodar os nós em capacidade spot",
+        "why": "Um node group gerenciado aceita --capacity-type SPOT."
+      },
+      {
+        "text": "Espalhar os nós por vários tipos de instância",
+        "why": "Um node group gerenciado aceita uma lista de tipos de instância."
+      }
+    ]
+  },
+  "ex-5j8ka2kw": {
+    "prompt": "Associe cada serviço nomeado numa política de confiança ao papel que confia nele.",
+    "hint": "Aulas 8, 11 e 12.",
+    "pairs": [
+      {
+        "left": "eks.amazonaws.com",
+        "right": "O papel do cluster EKS"
+      },
+      {
+        "left": "ec2.amazonaws.com",
+        "right": "O papel dos nós de um node group do EKS"
+      },
+      {
+        "left": "eks-fargate-pods.amazonaws.com",
+        "right": "O papel de execução de pods de um perfil Fargate"
+      },
+      {
+        "left": "ecs-tasks.amazonaws.com",
+        "right": "Os papéis de execução e de tarefa de uma tarefa ECS"
+      }
+    ],
+    "right_distractors": [
+      "O papel de uma função Lambda"
+    ]
+  },
+  "ex-26s6mkfd": {
+    "prompt": "O papel de uma engenheira consegue rodar aws eks get-token, e o cluster não tem access entry para esse papel. O que kubectl get pods responde?",
+    "hint": "Aula 11. Quem você é e o que pode fazer são duas concessões.",
+    "choices": [
+      {
+        "text": "Recusa: conhecida, e sem nada concedido no cluster",
+        "why": "Isso. O API server conhece o principal do IAM, e as access entries ligam um principal do IAM a permissões do Kubernetes, e este não tem nenhuma."
+      },
+      {
+        "text": "Um timeout, já que o token só funciona dentro da VPC",
+        "why": "O endpoint é público por padrão, e o token é um pedido assinado ao STS."
+      },
+      {
+        "text": "Os pods, já que o token prova quem ela é",
+        "why": "Prova quem ela é, e ser conhecida não é ter permissão."
+      },
+      {
+        "text": "Um erro do STS, que recusa principais que não conhece",
+        "why": "O STS responde quem assinou o pedido; não decide nada sobre o cluster."
+      }
+    ]
+  },
+  "ex-8wa2bm3h": {
+    "prompt": "Um pod no EKS Fargate pede 1 vCPU e 3,5 GiB. O Fargate soma 256 MB e arredonda para cima até a próxima combinação para 1 vCPU (de 2 a 8 GB, de 1 em 1 GB). A 0,0696 USD por vCPU-hora e 0,0076 por GB-hora, quanto o pod custa em 730 horas, em USD?",
+    "hint": "Aula 12. Dimensione a máquina primeiro, depois calcule os dois medidores.",
+    "unit": "USD"
+  },
+  "ex-x9c8q3bp": {
+    "prompt": "Um cluster não tem node groups, só um perfil Fargate que seleciona o namespace default. Os pods sobem e não conseguem resolver os nomes dos Services uns dos outros. Por quê?",
+    "hint": "Aula 12. Qual add-on responde nomes, e onde ele pede para rodar?",
+    "choices": [
+      {
+        "text": "Pods no Fargate não usam o DNS do cluster",
+        "why": "Usam como qualquer pod, desde que algo o sirva."
+      },
+      {
+        "text": "O kube-proxy é um DaemonSet, e esses não rodam no Fargate",
+        "why": "Verdade sobre DaemonSets, e não é quem responde nomes: isso é o CoreDNS."
+      },
+      {
+        "text": "As sub-redes do perfil são privadas",
+        "why": "Sub-redes privadas são justamente o que a AWS exige de um perfil."
+      },
+      {
+        "text": "O CoreDNS não tem onde rodar: está anotado para nós EC2",
+        "why": "Isso. Precisa de um perfil que selecione kube-system e da anotação removida; o guia da AWS para um cluster só com Fargate traz o patch."
+      }
+    ]
+  },
+  "ex-stjvqvgp": {
+    "prompt": "O que é o EKS Auto Mode?",
+    "hint": "Aula 12. Chegou em dezembro de 2024.",
+    "choices": [
+      {
+        "text": "O Cluster Autoscaler, ligado por padrão",
+        "why": "O Auto Mode escolhe máquinas; o Cluster Autoscaler muda a contagem de um grupo."
+      },
+      {
+        "text": "Karpenter operado pela AWS, com NodePools definidos e uma taxa por instância",
+        "why": "Isso. A AWS opera o controlador, as imagens dos nós e os add-ons nesses nós."
+      },
+      {
+        "text": "Fargate para todo pod do cluster",
+        "why": "Os nós dele são instâncias EC2, ao preço do EC2 mais a taxa."
+      },
+      {
+        "text": "Atualização automática do control plane a cada nova versão menor",
+        "why": "Atualizar no fim do suporte padrão é a política de upgrade STANDARD, outra configuração."
+      }
+    ]
+  },
+  "ex-0eep9k35": {
+    "prompt": "Um agente de log roda como DaemonSet. Os pods do namespace jobs passam para um perfil Fargate. O que coleta os logs deles agora?",
+    "hint": "Aula 12, com a linha do sidecar da aula 9.",
+    "choices": [
+      {
+        "text": "O DaemonSet, que põe um pod ao lado de cada pod no Fargate",
+        "why": "Um DaemonSet roda em nós seus, e o Fargate não tem nenhum."
+      },
+      {
+        "text": "O agente num nó EC2, lendo os logs pela rede",
+        "why": "Ele lê arquivos do próprio nó, e a máquina de um pod no Fargate não é um deles."
+      },
+      {
+        "text": "Nada, até o agente rodar como sidecar nesses pods",
+        "why": "Isso. Sozinho na máquina, um pod no Fargate leva o próprio agente."
+      },
+      {
+        "text": "O papel de execução de pods, que os manda para o CloudWatch",
+        "why": "Esse papel puxa a imagem e registra o nó; não manda nada."
+      }
+    ]
+  },
+  "ex-wn3gmtrz": {
+    "prompt": "O papel do redimensionador confia no provedor OIDC do cluster `shop-a`. Numa atualização, os pods passam para um cluster novo, `shop-b`, com o mesmo namespace, a mesma service account e a mesma anotação. Na AWS, a primeira chamada deles ao S3 falha. O que falta?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Uma thumbprint do emissor do `shop-b`, somada ao provedor que já existe",
+        "why": "A thumbprint só é consultada quando o certificado do emissor não é assinado por uma autoridade confiável, e o de um emissor EKS é. E o provedor existente é o do `shop-a`."
+      },
+      {
+        "text": "Um provedor para o emissor do `shop-b`, e uma declaração de confiança que o cite",
+        "why": "Isso. Cada cluster tem o seu emissor. Um token assinado pelo `shop-b` não corresponde a provedor nem a principal `Federated` em que o papel confie, e o STS o recusa."
+      },
+      {
+        "text": "`s3:GetObject` no papel dos nós do `shop-b`",
+        "why": "Isso entrega o bucket a todo pod daqueles nós, e com IMDSv2 e limite de saltos 1 os pods nem chegam a ele. O papel que eles pedem continua recusado."
+      },
+      {
+        "text": "Uma anotação nova: anotações não passam de um cluster ao outro",
+        "why": "A anotação está lá, e é o endereço no envelope. A fechadura é a política de confiança, que cita o provedor do `shop-a` e nenhum outro."
+      }
+    ]
+  },
+  "ex-qxvatjc6": {
+    "prompt": "Uma conta roda 120 clusters EKS, um por cliente, todos em nós EC2, e o IAM permite 100 provedores OIDC por padrão. Que forma de dar papéis aos pods escapa desse limite por completo?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "IRSA com `StringLike` no `sub`, para um provedor servir a todos os clusters",
+        "why": "`StringLike` alarga as service accounts que casam. Não faz um provedor responder por 120 emissores: os tokens de cada cluster são assinados pelo dele."
+      },
+      {
+        "text": "Uma chave de acesso por cluster, guardada num Secret do Kubernetes",
+        "why": "Isso troca uma cota por chaves que nunca expiram e vazam por cada cópia do Secret, justamente o problema que o IRSA existe para tirar."
+      },
+      {
+        "text": "IRSA com um papel por cluster em vez de um por carga de trabalho",
+        "why": "Não são os papéis que acabam. Cada cluster continua precisando de um provedor para o seu emissor, 120 contra 100 por padrão."
+      },
+      {
+        "text": "EKS Pod Identity, sem provedor nenhum",
+        "why": "Isso. Os papéis confiam em `pods.eks.amazonaws.com`, e o vínculo com a service account é uma associação no EKS, então nenhum cluster precisa de provedor OIDC."
+      }
+    ]
+  },
+  "ex-fee451wc": {
+    "prompt": "Ponha em ordem os passos para dar um papel ao redimensionador pelo IRSA, feitos à mão.",
+    "hint": "Aula 13.",
+    "items": [
+      "Ler o emissor OIDC do cluster com `describe-cluster`",
+      "Criar um provedor OIDC do IAM para esse emissor, audiência `sts.amazonaws.com`",
+      "Criar o papel, com a política de confiança citando o provedor e `shop:photos`",
+      "Anotar a service account `photos` com o ARN do papel",
+      "Criar os pods do redimensionador com `serviceAccountName: photos`"
+    ],
+    "trap": "Os pods vêm por último: um que já rodava quando a anotação chegou não recebe o token."
+  },
+  "ex-qbtx28dx": {
+    "prompt": "Só o redimensionador, service account `shop:photos`, deveria ler o bucket das fotos. Quais destas mudanças deixariam outro pod lê-lo também? Marque todas as que se aplicam.",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Apagar a condição `sub` da política de confiança do papel",
+        "why": "Isso. O token de todo pod vem do mesmo emissor, então sem `sub` qualquer pod anotado com o papel o recebe."
+      },
+      {
+        "text": "Definir `AWS_ROLE_SESSION_NAME` como `photos-pod` no redimensionador",
+        "why": "O nome da sessão rotula as chamadas do redimensionador no CloudTrail. Não concede nada a ninguém."
+      },
+      {
+        "text": "Escrever a condição como `StringLike` com `system:serviceaccount:shop:*`",
+        "why": "Isso. Qualquer service account do namespace, inclusive uma criada ano que vem, pode ser anotada com o papel e assumi-lo."
+      },
+      {
+        "text": "Somar `s3:GetObject` ao papel do nó com o IMDSv2 deixado opcional",
+        "why": "Isso. Qualquer processo no nó pode então pedir ao serviço de metadados as credenciais do nó, pods inclusive."
+      },
+      {
+        "text": "Passar o redimensionador do IRSA para o EKS Pod Identity, com uma associação",
+        "why": "Uma associação liga uma service account ao papel. Ninguém mais o recebe, e o código não muda."
+      }
+    ]
+  },
+  "ex-e9cws1ax": {
+    "prompt": "Uma função de 1.024 MB roda 50 ms por invocação, 10 milhões de vezes por mês. Passando de x86 para Arm com a mesma velocidade, em quantos USD por mês cai a cobrança de duração, aos 0,0000166667 e 0,0000133334 USD por GB-segundo da tabela?",
+    "hint": "Aula 14. As requisições custam o mesmo nas duas.",
+    "unit": "USD"
+  },
+  "ex-dwc25w6x": {
+    "prompt": "Uma função precisa de um modelo de 300 MB junto do código, 320 MB descompactados ao todo. Que forma de implantá-la o Lambda aceita?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Um zip enviado pelo S3, que tira o limite de tamanho",
+        "why": "O S3 tira o limite do arquivo zip. Descompactados, a função e as layers ainda precisam caber em 250 MB."
+      },
+      {
+        "text": "O modelo numa layer e o código no zip",
+        "why": "As layers contam junto com a função, descompactadas, contra os mesmos 250 MB."
+      },
+      {
+        "text": "Uma imagem de contêiner no ECR, com até 10 GB",
+        "why": "Isso. Uma imagem chega a 10 GB descompactada, e o modelo vai junto do código em `/var/task`."
+      },
+      {
+        "text": "Cinco layers de 64 MB, o máximo que uma função cita",
+        "why": "Cinco é o máximo que uma função cita, e os 320 MB delas continuam contando juntos contra 250."
+      }
+    ]
+  },
+  "ex-946axdxt": {
+    "prompt": "O alias `live` aponta para a versão `1` de `greet`. Uma desenvolvedora corrige um bug, roda `update-function-code` e para aí. O que as chamadas a `live` rodam agora?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "O código corrigido, já que a atualização chega a todas as versões",
+        "why": "Uma versão publicada nunca muda de novo. Só a `$LATEST` recebe atualizações."
+      },
+      {
+        "text": "Nada, até `live` ser movido para uma versão nova",
+        "why": "`live` continua apontando para a versão `1`, que continua existindo e respondendo."
+      },
+      {
+        "text": "O código corrigido nos ambientes novos, o antigo nos aquecidos",
+        "why": "O código de um ambiente segue a versão que ele serve, não a hora em que começou, e a versão `1` é um zip congelado."
+      },
+      {
+        "text": "O código antigo: a atualização caiu só na `$LATEST`",
+        "why": "Isso. O `publish-version` congelou a versão `1`, e toda atualização vai para a `$LATEST` até alguém publicar de novo e mover o alias."
+      }
+    ]
+  },
+  "ex-fk9dgcd7": {
+    "prompt": "Uma layer para Node.js guarda os pacotes em `nodejs/___` dentro do zip, que é onde esse runtime os procura em `/opt`.",
+    "hint": "Aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "node_modules"
+        ]
+      }
+    ]
+  },
+  "ex-h9y2t9tw": {
+    "prompt": "`thumbs` tem `--maximum-retry-attempts 1`, `--maximum-event-age-in-seconds 3600` e o destino em caso de falha `thumbs-failed`. Ela sofre throttle por duas horas num incidente, enquanto os uploads continuam chegando. O que acontece com o evento de um upload do primeiro minuto do throttle?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "O S3 é avisado para mandá-lo de novo, e tenta outra vez depois do incidente",
+        "why": "O S3 entregou o evento e teve resposta na hora; uma origem assíncrona nunca fica sabendo do throttle."
+      },
+      {
+        "text": "O Lambda o guarda uma hora e o entrega ao destino",
+        "why": "Isso. Um evento assíncrono com throttle espera na fila do Lambda e é tentado de novo até a idade máxima, aqui uma hora, e então vai para o destino."
+      },
+      {
+        "text": "Ele se perde na hora, porque o throttle conta como a sua única nova tentativa",
+        "why": "Um throttle não é a função falhando no evento; o evento espera na fila do Lambda até a idade máxima."
+      },
+      {
+        "text": "Espera na fila do bucket",
+        "why": "Um bucket não tem fila própria. A fila em que um evento assíncrono espera é a do Lambda."
+      }
+    ]
+  },
+  "ex-ym1td1j3": {
+    "prompt": "Um mapeamento de stream do DynamoDB tem `--bisect-batch-on-function-error`, `--maximum-retry-attempts 2` e uma fila em caso de falha. Um lote de 100 tem um registro em que o handler lança erro, na posição 37. O que acontece com os outros 99?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Esperam atrás dele pelas 24 horas do stream, porque a ordem vem primeiro",
+        "why": "Isso acontece sem nenhum dos três ajustes. A divisão e o limite de tentativas existem para impedir."
+      },
+      {
+        "text": "Vão junto com ele para a fila de falha, como um lote que falhou",
+        "why": "O destino recebe a descrição dos registros abandonados, e a divisão deixa o ruim sozinho antes disso."
+      },
+      {
+        "text": "Passam conforme o lote que falha é dividido ao meio",
+        "why": "Isso. Cada lote que falha é cortado em dois e tentado de novo, e o registro ruim acaba sozinho enquanto os bons em volta são processados."
+      },
+      {
+        "text": "São pulados, e o shard segue para o próximo lote",
+        "why": "Pular registros bons quebraria a ordem que o stream mantém; eles são processados, não pulados."
+      }
+    ]
+  },
+  "ex-1dr0yzqp": {
+    "prompt": "Com `ReportBatchItemFailures` no mapeamento, o handler cita cada mensagem do SQS que não conseguiu tratar pelo ___ dela em `batchItemFailures`.",
+    "hint": "Aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "messageId"
+        ]
+      }
+    ]
+  },
+  "ex-b0nc0wn3": {
+    "prompt": "A função `orders` é alimentada pelo mapeamento do SQS e pela regra `big-orders`, e não tem destino nem fila de mensagens mortas própria. Um evento malformado chega por cada caminho e o handler lança erro toda vez. Onde cada um termina na AWS?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Os dois na fila interna do Lambda, tentados por seis horas",
+        "why": "Esse é só o caminho assíncrono. A mensagem do SQS é lida por um mapeamento e nunca sai da fila dela."
+      },
+      {
+        "text": "Os dois de volta com quem os mandou, que fica sabendo da falha",
+        "why": "Nenhum dos dois espera: a fila foi lida por um leitor, e o EventBridge invoca de forma assíncrona."
+      },
+      {
+        "text": "A mensagem de volta na fila; o evento perdido após duas tentativas",
+        "why": "Isso. A fila guarda a mensagem até a política de redrive movê-la; o Lambda tenta o evento duas vezes e, sem destino, deixa uma linha de log."
+      },
+      {
+        "text": "Os dois no arquivo do barramento, prontos para reenvio",
+        "why": "Um arquivo guarda eventos só se alguém o criou, e mensagens do SQS nunca passam por um barramento."
+      }
+    ]
+  },
+  "ex-bxtay7qw": {
+    "prompt": "A cota de concorrência de uma conta subiu para 3.000. Uma função parada recebe de repente tráfego que pede tudo isso. No ritmo em que o Lambda deixa uma função crescer, quanto tempo leva, no mínimo, para chegar a 3.000 ambientes?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Tempo nenhum: a cota é o número com que ela começa",
+        "why": "A cota é quantos podem rodar, não quantos começam de uma vez; a função cresce até ela."
+      },
+      {
+        "text": "Uns 30 segundos",
+        "why": "Isso. Uma função soma até 1.000 ambientes a cada 10 segundos, e as requisições acima da contagem que cresce sofrem throttle enquanto isso."
+      },
+      {
+        "text": "Uns 3 segundos",
+        "why": "Isso seriam 1.000 ambientes por segundo; o ritmo documentado é de 1.000 a cada 10 segundos."
+      },
+      {
+        "text": "Uns 5 minutos, um minuto e meio para cada mil",
+        "why": "O ritmo documentado é dez vezes mais rápido: 1.000 ambientes a cada 10 segundos."
+      }
+    ]
+  },
+  "ex-ga2y7nnx": {
+    "prompt": "Um consumidor de SQS grava num banco que aceita 100 conexões, por isso tem concorrência reservada de 80. Chega uma rajada de 50.000 mensagens. O que acontece com as mensagens que um 81º ambiente teria pegado?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "O Lambda as tenta de novo da fila interna por seis horas",
+        "why": "Esse é o caminho assíncrono, de S3, SNS e EventBridge. O SQS é lido por um mapeamento de origem de eventos, e as mensagens nunca saem do SQS."
+      },
+      {
+        "text": "Nenhuma se perde: ficam na fila até o tempo de visibilidade",
+        "why": "Isso. O throttle deixa o leitor mais lento; as mensagens ficam onde estão, e só a recebida vezes demais vai para a fila de mensagens mortas."
+      },
+      {
+        "text": "O produtor recebe um 429 e precisa mandá-las de novo",
+        "why": "Esse é o caminho síncrono. O produtor pôs as mensagens numa fila e já foi embora; nada volta para ele."
+      },
+      {
+        "text": "São descartadas, a menos que a função tenha um destino em caso de falha",
+        "why": "Nada é descartado. A fila continua com elas, e um throttle não é falha da mensagem."
+      }
+    ]
+  },
+  "ex-gmf64fqz": {
+    "prompt": "Uma função atrás do API Gateway recebe 400 requisições por segundo de 0,25 s cada, e tem concorrência reservada de 80. O resto da conta está parado. O que os clientes veem?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Toda requisição atendida, com 20 ambientes emprestados do pool parado",
+        "why": "A reserva é teto além de piso. A parte parada do pool nunca é emprestada a uma função que tem reserva."
+      },
+      {
+        "text": "Toda requisição atendida: 400 por segundo fica bem abaixo do limite de taxa",
+        "why": "O limite de taxa é dez vezes a cota e não é ele que aperta aqui. O teto de 80 ambientes é."
+      },
+      {
+        "text": "Cerca de um quinto delas respondido na hora com erro de throttle",
+        "why": "Isso. A lei de Little dá 400 × 0,25 = 100 em andamento; com teto de 80, o resto sofre throttle, e um cliente síncrono recebe o erro na hora."
+      },
+      {
+        "text": "As requisições a mais esperam na fila interna do Lambda",
+        "why": "Isso acontece com invocações assíncronas. O API Gateway chama de forma síncrona, e quem chamou fica sabendo."
+      }
+    ]
+  },
+  "ex-8p01c9xa": {
+    "prompt": "A AWS recusa uma concorrência reservada que deixaria menos de ___ do pool da conta sem reserva.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "100"
+        ]
+      }
+    ]
+  },
+  "ex-hbkx3719": {
+    "prompt": "Uma função em Python 3.12 passa a usar SnapStart nas versões publicadas. Quais destas a AWS documenta que ela não pode ter junto com o SnapStart? Marque todas as que se aplicam.",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Concorrência provisionada",
+        "why": "Isso. Os dois não se combinam; cada um tira a fase de init do seu jeito."
+      },
+      {
+        "text": "Um alias que aponta para a versão publicada",
+        "why": "Aliases apontam para versões, e as versões são justamente onde o SnapStart vale."
+      },
+      {
+        "text": "Um sistema de arquivos EFS montado na função",
+        "why": "Isso. O EFS está na lista documentada do que não se combina com o SnapStart."
+      },
+      {
+        "text": "2 GB de armazenamento efêmero em `/tmp`",
+        "why": "Isso. Acima de 512 MB de armazenamento efêmero, o SnapStart não está disponível."
+      },
+      {
+        "text": "Um cliente do SDK construído no topo do arquivo",
+        "why": "É exatamente isso que o snapshot captura, e a restauração pula a construção."
+      }
+    ]
+  },
+  "ex-h5kcgzmj": {
+    "prompt": "Uma função em `python3.11` tem um cold start que os usuários notam, e a equipe quer SnapStart. O que precisa acontecer antes?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Nada: o SnapStart existe em todo runtime gerenciado",
+        "why": "A AWS o documenta para Java 11 em diante, Python 3.12 em diante e .NET 8 em diante, e não para os outros."
+      },
+      {
+        "text": "Ligar para a `$LATEST`, onde mora o código que está sendo editado",
+        "why": "Um snapshot da `$LATEST` seria um snapshot de algo que muda; o SnapStart vale para versões publicadas."
+      },
+      {
+        "text": "Primeiro a concorrência provisionada, sobre a qual o SnapStart se apoia",
+        "why": "Os dois não se combinam de jeito nenhum."
+      },
+      {
+        "text": "Passar para `python3.12` ou mais novo e publicar uma versão",
+        "why": "Isso. O Python 3.12 é o primeiro Python que o SnapStart aceita, e ele funciona em versões publicadas."
+      }
+    ]
+  },
+  "ex-ryhy003e": {
+    "prompt": "Uma função passa 700 ms de cada requisição esperando um banco de dados, e mais CPU não encurta isso. A 0,0000166667 USD por GB-segundo, quantos USD a mais custa um mês de 1.000.000 de requisições com 1.024 MB do que com 256 MB?",
+    "hint": "Aula 17.",
+    "unit": "USD"
+  },
+  "ex-qdkrw09d": {
+    "prompt": "Uma função carrega um modelo de 2 GB no topo do arquivo, o que leva 14 segundos, e mantém o timeout padrão de 3 segundos. O que a AWS documenta que acontece num cold start?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "O init roda os 14 s: não tem limite",
+        "why": "Tem: dez segundos."
+      },
+      {
+        "text": "O init para em 10 s e é refeito na invocação de 3 s",
+        "why": "Isso. Passados dez segundos o init é refeito na fase de invocação, sob o timeout da própria função, e 3 s é curto demais para ele."
+      },
+      {
+        "text": "A requisição espera 14 s e dá certo, cobrada só pelo handler",
+        "why": "Desde agosto de 2025 a fase de init é cobrada como duração, e de qualquer modo ela é parada em 10 s."
+      },
+      {
+        "text": "A primeira requisição falha e o ambiente aquecido atende o resto",
+        "why": "Não há ambiente aquecido para guardar: cada um novo roda a mesma importação e bate no mesmo limite."
+      }
+    ]
+  },
+  "ex-gepcfb98": {
+    "prompt": "Uma função foi para sub-redes privadas para alcançar o banco RDS. Desde então toda chamada dela ao Secrets Manager trava até o timeout, sem erro de rede. Que mudança resolve isso sem abrir a internet?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Um endpoint de gateway para o Secrets Manager na tabela de rotas",
+        "why": "Endpoints de gateway existem para S3 e DynamoDB e para mais nada."
+      },
+      {
+        "text": "Uma regra de entrada no grupo de segurança da função para a porta 443",
+        "why": "Nada se conecta a uma função; os pacotes dela saem e não acham rota, o que nenhuma regra de entrada muda."
+      },
+      {
+        "text": "Um endpoint de interface, com o grupo admitindo 443 do grupo da função",
+        "why": "Isso. Ele põe uma interface em cada sub-rede, para a qual o nome de sempre do serviço resolve, e o SDK chega a ela por HTTPS."
+      },
+      {
+        "text": "`secretsmanager:GetSecretValue` somado ao papel de execução",
+        "why": "Uma permissão negada responderia AccessDenied na hora. Estas chamadas travam porque os pacotes não vão a lugar nenhum."
+      }
+    ]
+  },
+  "ex-qqsjptj5": {
+    "prompt": "Uma equipe leu que uma VPC soma segundos a todo cold start do Lambda, e por isso, em vez de pôr a função na VPC, dá ao banco RDS um endereço público. O que a aula 18 diz dessa troca?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Está certa: um cold start numa VPC ainda espera a interface",
+        "why": "Isso valia antes de setembro de 2019. A interface agora é feita quando a função é configurada."
+      },
+      {
+        "text": "Está certa, já que a VPC nunca foi feita para funções",
+        "why": "Uma função entra numa VPC para alcançar o que tem endereço privado, que é exatamente este banco."
+      },
+      {
+        "text": "Só compensa com concorrência provisionada para esconder a espera",
+        "why": "Não há espera a esconder; a concorrência provisionada é comprada pela fase de init, não por uma interface."
+      },
+      {
+        "text": "Responde a um custo que sumiu em 2019, expondo o banco",
+        "why": "Isso. Desde as interfaces Hyperplane, uma função numa VPC inicia tão rápido quanto uma fora dela, e o banco podia continuar privado."
+      }
+    ]
+  },
+  "ex-5sbynsem": {
+    "prompt": "Uma função em duas zonas sai por dois NAT gateways, um por zona, a 0,093 USD a hora cada e 0,093 USD por GB processado. Ela movimenta 1.200 GB por mês, 1.000 GB deles do S3. Um endpoint de gateway para o S3 é criado. Qual a conta dos NAT gateways num mês de 730 horas depois disso?",
+    "hint": "Aula 18.",
+    "unit": "USD"
+  },
+  "ex-yr5fyc8y": {
+    "prompt": "Uma função numa VPC é apagada, e um minuto depois a equipe tenta apagar o grupo de segurança que ela usava. A AWS recusa. O que explica?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "A interface do Lambda ainda está na sub-rede",
+        "why": "Isso. A interface Hyperplane dura um pouco mais que a função, e o grupo em que ela está espera o Lambda apagá-la."
+      },
+      {
+        "text": "Um grupo não pode ser apagado enquanto a VPC dele existir",
+        "why": "Pode: um grupo é apagado sozinho assim que nada o usa."
+      },
+      {
+        "text": "Um grupo de segurança que uma função usou fica guardado por 90 dias",
+        "why": "Não existe esse prazo; o grupo fica livre assim que o Lambda remove a interface dele."
+      },
+      {
+        "text": "A equipe precisa antes desconectar a interface pelo console",
+        "why": "O Lambda é dono daquela interface, e ninguém mais pode desconectá-la ou apagá-la."
+      }
+    ]
+  },
+  "ex-73wwhd05": {
+    "prompt": "O backend de uma API WebSocket manda aos clientes 500.000 mensagens por mês de 70 KB cada. A 1,55 USD por milhão de mensagens, quanto custam por mês?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Cerca de 0,78 USD, uma mensagem cobrada por mensagem enviada",
+        "why": "As mensagens são contadas em passos de 32 KB, então 70 KB contam como três."
+      },
+      {
+        "text": "Cerca de 1,55 USD, cada uma contada como duas",
+        "why": "Dois passos de 32 KB levam 64 KB; os últimos 6 KB começam um terceiro."
+      },
+      {
+        "text": "Cerca de 2,33 USD, cada uma contada como três vezes",
+        "why": "Isso. 70 KB são três passos de 32 KB, então 1,5 milhão de mensagens a 1,55 por milhão."
+      },
+      {
+        "text": "Nada a mais: os minutos de conexão já as cobrem",
+        "why": "Os dois medidores são separados; as mensagens são cobradas além da conexão."
+      }
+    ]
+  },
+  "ex-dqangc47": {
+    "prompt": "Uma API interna não pode ter endereço público, deve ser alcançável só de dentro da VPC da loja, e todo cliente carrega um JWT do provedor de identidade da loja. Que montagem serve?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Uma API REST com endpoint privado e um autorizador Lambda ou Cognito",
+        "why": "Isso. Só a REST oferece endpoint privado, e a REST não tem autorizador JWT embutido, então um dos autorizadores que ela tem verifica o token."
+      },
+      {
+        "text": "Uma API HTTP com o autorizador JWT no estágio `$default`",
+        "why": "O autorizador JWT é da HTTP, e o endereço público também: uma API HTTP não tem endpoint privado."
+      },
+      {
+        "text": "Uma API WebSocket, para a conexão nunca sair da VPC",
+        "why": "Uma API WebSocket decide quem pode falar primeiro, não de onde ela é alcançável."
+      },
+      {
+        "text": "Uma API REST com uma chave por cliente no lugar do token",
+        "why": "Uma chave identifica um cliente e não autentica ninguém; ela viaja à vista em toda requisição."
+      }
+    ]
+  },
+  "ex-qp0yz68y": {
+    "prompt": "Uma equipe apaga a API HTTP e a recria a partir de um template, que lhe dá um id novo. A rota, a integração e a função voltaram, mas toda chamada responde `500` e o log da função fica vazio. Qual a causa mais provável?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "O autorizador JWT recusa os tokens dos clientes",
+        "why": "Um token reprovado recebe um 401, antes de a função ser tocada."
+      },
+      {
+        "text": "O estágio `$default` nunca foi implantado à mão",
+        "why": "Com auto-deploy, o `$default` implanta cada mudança sozinho."
+      },
+      {
+        "text": "A permissão ainda cita o id antigo no ARN de origem",
+        "why": "Isso. O API Gateway é recusado ao chamar a função, o que dá um 500 sem invocação por trás."
+      },
+      {
+        "text": "A integração nova manda o formato de payload 1.0",
+        "why": "Um handler escrito para 2.0 rodaria e falharia com `KeyError`, e esse erro estaria no log."
+      }
+    ]
+  },
+  "ex-cznk8gg1": {
+    "prompt": "A implantação `d2` no estágio REST `prod` quebra as chamadas de um parceiro, e a anterior, `d1`, funcionava. Qual o jeito mais rápido de voltar?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Desfazer a edição na árvore e esperar que chegue ao estágio",
+        "why": "Um estágio REST nunca pega sozinho uma mudança da árvore; ele serve a implantação para a qual aponta."
+      },
+      {
+        "text": "Apontar `prod` para `d1` de novo",
+        "why": "Isso. As implantações antigas ficam na lista, e um estágio é um ponteiro para uma delas."
+      },
+      {
+        "text": "Apagar o estágio e criá-lo de novo com as configurações antigas",
+        "why": "Isso tira a API de todos os clientes enquanto é refeita, e leva junto as configurações de throttle, log e cache."
+      },
+      {
+        "text": "Apagar `d2`, para o estágio voltar à anterior",
+        "why": "Um estágio não volta para nada sozinho; ele aponta para onde mandarem."
+      }
+    ]
+  },
+  "ex-ca8wwwsr": {
+    "prompt": "Ligue cada necessidade ao tipo de API do API Gateway que a aula 19 montaria para ela.",
+    "hint": "Aula 19.",
+    "pairs": [
+      {
+        "left": "Parceiros, cada um com chave própria e cota mensal",
+        "right": "Uma API REST"
+      },
+      {
+        "left": "O status de um pedido empurrado à página assim que muda",
+        "right": "Uma API WebSocket"
+      },
+      {
+        "left": "Um app cujos usuários carregam um JWT, com o menor preço por requisição",
+        "right": "Uma API HTTP"
+      }
+    ],
+    "right_distractors": [
+      "Uma URL de função sem nada na frente"
+    ]
+  },
+  "ex-mph34khs": {
+    "prompt": "Um workflow Standard de pedidos tem um `Map` que roda três estados para cada linha do pedido, e os pedidos têm em média 400 linhas. A maior parte da conta são essas transições. Que mudança a aula 20 indica?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Tornar Express o workflow inteiro do pedido",
+        "why": "O pedido espera o depósito e uma janela de cancelamento; o Express para em cinco minutos e não guarda histórico."
+      },
+      {
+        "text": "Baixar o `MaxConcurrency` do `Map` para 1",
+        "why": "Isso deixa a rajada mais lenta e conta exatamente as mesmas transições."
+      },
+      {
+        "text": "Trocar os estados de cada linha por estados `Wait`, que não rodam nada",
+        "why": "Uma espera é grátis por segundo, e entrar nela é uma transição como outra qualquer."
+      },
+      {
+        "text": "Uma execução Express filha, aberta para os itens do lote",
+        "why": "Isso. A rajada custa ao medidor Standard uma transição mais uma execução Express barata, e o pedido mantém o histórico e a duração do Standard."
+      }
+    ]
+  },
+  "ex-gkwh663d": {
+    "prompt": "Um workflow Express usa 100 MB de memória, roda 0,45 s e executa 2 milhões de vezes por mês. O Express cobra memória em passos de 64 MB e tempo arredondado para cima nos 100 ms seguintes. A 1 USD por milhão de requisições e 0,00001667 USD por GB-segundo, quanto custa o mês?",
+    "hint": "Aula 20.",
+    "unit": "USD"
+  },
+  "ex-mq2q2fye": {
+    "prompt": "A requisição de um app precisa esperar um workflow de quatro passos rápidos, uns 8 segundos ao todo, e receber o resultado na mesma resposta. O que serve?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Um workflow Standard, com o cliente consultando `describe-execution`",
+        "why": "Esse é o padrão para tarefas de minutos. Aqui a resposta cabe numa requisição, e a consulta só acrescenta idas e voltas."
+      },
+      {
+        "text": "Uma execução Express síncrona iniciada pela rota",
+        "why": "Isso. Uma execução Express síncrona devolve a saída na mesma chamada, dentro dos 29 ou 30 segundos da API."
+      },
+      {
+        "text": "Um workflow Standard, com a rota esperando o `start-execution`",
+        "why": "O `start-execution` volta na hora com o nome da execução; nunca espera o resultado."
+      },
+      {
+        "text": "Um workflow Express iniciado de forma assíncrona, que devolve a saída",
+        "why": "Iniciada de forma assíncrona, uma execução Express não devolve nada a quem chamou, e roda pelo menos uma vez."
+      }
+    ]
+  },
+  "ex-v8g25r1p": {
+    "prompt": "Ligue cada situação num estado `Task` ao nome de erro que o Step Functions dá a ela.",
+    "hint": "Aula 20.",
+    "pairs": [
+      {
+        "left": "A tarefa passa do `TimeoutSeconds`",
+        "right": "`States.Timeout`"
+      },
+      {
+        "left": "O papel da máquina de estados não pode fazer a chamada",
+        "right": "`States.Permissions`"
+      },
+      {
+        "left": "Um worker com um token fica calado além do `HeartbeatSeconds`",
+        "right": "`States.HeartbeatTimeout`"
+      }
+    ],
+    "right_distractors": [
+      "`States.ALL`"
+    ]
+  },
+  "ex-m40f4qpm": {
+    "prompt": "A tarefa `Notify` de um workflow Standard, com `Retry`, põe cada pagamento numa fila SQS padrão, e um consumidor cobra o cartão. Alguns clientes são cobrados duas vezes. O que as aulas 20 e 21 juntas indicam?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Tirar o `Retry`, já que o Standard roda cada estado exatamente uma vez",
+        "why": "Sem retry o SQS ainda entrega duas vezes de vez em quando, e uma resposta perdida faria perder o pagamento."
+      },
+      {
+        "text": "Tornar a fila FIFO, que acaba com duplicatas",
+        "why": "A FIFO descarta um id de deduplicação repetido por cinco minutos numa fila. Um consumidor que cobra e cai antes de apagar ainda cobra duas vezes."
+      },
+      {
+        "text": "Levar `$$.Execution.Name` como chave e pular as já cobradas",
+        "why": "Isso. Um retry ou o próprio SQS entregam duas vezes; uma chave igual em toda tentativa, guardada num lugar que dura mais que a mensagem, torna a segunda inofensiva."
+      },
+      {
+        "text": "Subir o tempo de visibilidade da fila para 12 horas",
+        "why": "Um tempo maior esconde por mais tempo uma mensagem lenta; não faz nada contra uma mensagem enviada duas vezes."
+      }
+    ]
+  },
+  "ex-z6xeg46h": {
+    "prompt": "Os pedidos já vão para o barramento `shop`, onde uma regra manda os grandes para revisão. Uma equipe de auditoria agora quer uma cópia de todo `OrderPlaced`. O que muda?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O produtor também manda cada pedido para a fila da auditoria",
+        "why": "Isso amarra o produtor a um consumidor, que é o que o barramento estava lá para evitar."
+      },
+      {
+        "text": "O padrão de `big-orders` é alargado para qualquer total, com dois alvos",
+        "why": "A revisão passaria a receber todo pedido também: um padrão decide por todos os alvos da regra."
+      },
+      {
+        "text": "Uma segunda regra em `shop`; nada muda antes dela",
+        "why": "Isso. Num barramento as regras escolhem os alvos, então um consumidor novo é uma regra nova e ninguém antes dele muda nada."
+      },
+      {
+        "text": "A fila da auditoria assina o barramento, como faria com um tópico",
+        "why": "Um barramento não tem assinaturas; as regras dele escolhem os alvos."
+      }
+    ]
+  },
+  "ex-qaxd8bmq": {
+    "prompt": "O faturamento fica sabendo dos pedidos pagos por um tópico SNS. Por que a aula 21 põe uma fila SQS atrás da assinatura do faturamento em vez de assinar a função do faturamento diretamente?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O SNS não tem como entregar a uma função Lambda",
+        "why": "Tem: uma função Lambda é um dos endpoints que a aula lista."
+      },
+      {
+        "text": "A fila retém o que se perderia enquanto ele estiver fora",
+        "why": "Isso. Um tópico tenta de novo um endpoint que não recebe e depois descarta; a fila guarda por até catorze dias."
+      },
+      {
+        "text": "Uma fila entrega a cópia ao faturamento e à expedição juntos",
+        "why": "Uma fila entrega cada mensagem a um consumidor. Fazer cópias é trabalho do tópico."
+      },
+      {
+        "text": "Políticas de filtro funcionam em assinaturas SQS e em nenhum outro tipo",
+        "why": "Uma política de filtro vale para qualquer assinatura; não é por isso que a fila está ali."
+      }
+    ]
+  },
+  "ex-p39gnf1y": {
+    "prompt": "Um fluxo de 50 milhões de eventos por mês vai sempre para os mesmos dois consumidores, cada um atrás de uma fila SQS. Na tabela de 16 de outubro de 2026, que transporte custa menos, e por volta de quanto?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Um barramento EventBridge, uns 25,00 USD contra 50,00 num tópico",
+        "why": "Isso troca os preços: um evento personalizado custa 1 USD por milhão, uma publicação SNS 0,5."
+      },
+      {
+        "text": "O mesmo nos dois, já que cada um faz uma cópia por consumidor",
+        "why": "Entregas do SNS para o SQS são grátis, e o primeiro milhão de publicações também; o barramento cobra por evento posto nele."
+      },
+      {
+        "text": "Um tópico SNS, uns 49,50 USD, já que cada uma das duas entregas é cobrada",
+        "why": "A AWS não cobra entregas do SNS para filas SQS; só as publicações contam."
+      },
+      {
+        "text": "Um tópico SNS, uns 24,50 USD contra 50,00 num barramento",
+        "why": "Isso. 49 milhões de publicações pagas a 0,5 dão 24,50, as entregas ao SQS não custam nada, e 50 milhões de eventos personalizados a 1 dão 50,00."
+      }
+    ]
+  },
+  "ex-qknry4ez": {
+    "prompt": "As instâncias de um ambiente Beanstalk precisam de um pacote de fontes para relatórios em PDF. Um desenvolvedor o instala por SSH, e uma semana depois os relatórios voltam a falhar. O que houve, e onde fica o pacote?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "As atualizações gerenciadas o removeram; é preciso desligá-las",
+        "why": "As atualizações mudam a plataforma por baixo. O pacote sumiu porque a instância onde estava foi trocada."
+      },
+      {
+        "text": "O stack o desfez; ele vai no template do stack",
+        "why": "O stack não guarda pacote nenhum, e editá-lo à mão é o erro clássico do Beanstalk."
+      },
+      {
+        "text": "Uma instância foi trocada; ele vai em `.ebextensions` ou num hook `.platform`",
+        "why": "Isso. O Beanstalk troca instâncias quando implanta de forma imutável, escala ou se recupera, e o que a instância precisa viaja com a versão."
+      },
+      {
+        "text": "Mudanças por SSH são desfeitas toda noite; ele vai pelo console do EC2",
+        "why": "Nada desfaz a instância à noite; o grupo a trocou, e o console chega à mesma instância e perde do mesmo jeito."
+      }
+    ]
+  },
+  "ex-39bw5md9": {
+    "prompt": "Ponha estas políticas de implantação do Beanstalk na ordem da capacidade que mantêm atendendo durante uma implantação, a menor primeiro.",
+    "hint": "Aula 22.",
+    "items": [
+      "`AllAtOnce`",
+      "`Rolling`",
+      "`RollingWithAdditionalBatch`"
+    ],
+    "trap": "AllAtOnce pega todas as instâncias de uma vez, Rolling um lote por vez, e o lote adicional é lançado antes para a capacidade se manter."
+  },
+  "ex-p567qqcc": {
+    "prompt": "Um serviço App Runner fica ocupado das 08:00 às 18:00 nos dias úteis, e ninguém o visita à noite. O que é preciso para as noites não custarem nada?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "`MinSize` em 0 na configuração de escalonamento",
+        "why": "O próprio modelo da API recusa um `MinSize` abaixo de um."
+      },
+      {
+        "text": "Nada: sem requisição o serviço vai a zero",
+        "why": "Ele nunca vai a zero sozinho: uma instância provisionada paga a memória a noite toda."
+      },
+      {
+        "text": "Um `MaxConcurrency` menor, para provisionar menos instâncias",
+        "why": "O `MaxConcurrency` decide quando uma instância é somada sob carga; nunca remove a última."
+      },
+      {
+        "text": "`PauseService` toda noite, por alguém ou por agendamento",
+        "why": "Isso. A pausa é a única coisa que para os dois medidores, e é um ato manual, que perde o estado da instância."
+      }
+    ]
+  },
+  "ex-t9z6m2mf": {
+    "prompt": "Um ambiente Beanstalk roda `64bit Amazon Linux 2 v3.3.14 running Python 3.8`, com atualizações gerenciadas ligadas e `UpdateLevel: minor`. O Python 3.8 chegou ao fim da vida. O que as atualizações gerenciadas vão fazer a respeito?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Passá-lo para o ramo Amazon Linux 2023 na próxima janela semanal",
+        "why": "Isso é troca de ramo, e as atualizações gerenciadas nunca aplicam uma."
+      },
+      {
+        "text": "Nada: trocar de ramo é mudança da equipe, para fazer e testar",
+        "why": "Isso. As atualizações gerenciadas pegam versões menores e de correção dentro de um ramo, nunca um ramo novo."
+      },
+      {
+        "text": "Subir o Python para 3.12 e manter a versão da plataforma",
+        "why": "A versão do Python faz parte do nome do ramo; mudá-la é mudar de ramo."
+      },
+      {
+        "text": "Parar o ambiente até alguém escolher um ramo",
+        "why": "Nada o para. Ele segue, numa linguagem que ninguém corrige, até a equipe movê-lo."
+      }
+    ]
+  },
+  "ex-fftw56j0": {
+    "prompt": "No compare.py, mude LAMBDA_GB de 0.5 para 0.25 e mantenha MS em 100. Duas tarefas Fargate continuam custando 49,596 USD por mês, e uma requisição custa 0,2 USD por milhão mais os GB-segundos a 0,0000133334. Com quantos milhões de requisições por mês o Lambda custa o mesmo que as duas tarefas?",
+    "hint": "Aula 23.",
+    "unit": "milhões de requisições"
+  },
+  "ex-rkqgqjy1": {
+    "prompt": "Uma API em duas instâncias EC2 mantém um pool de 20 conexões ao banco em cada uma, e o banco aceita 100. Levada ao Lambda como está, teria 150 requisições em andamento no pico. O que as aulas 16 e 23 juntas indicam?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Manter os pools de 20, que o Lambda divide entre os ambientes",
+        "why": "Nada é dividido entre ambientes: com 150 em andamento, pools de 20 pediriam 3.000 conexões."
+      },
+      {
+        "text": "Concorrência provisionada de 100, para não rodarem mais de 100",
+        "why": "Concorrência provisionada não é teto: requisições acima dela são atendidas por ambientes sob demanda, cada um com a sua conexão."
+      },
+      {
+        "text": "Uma conexão por ambiente, aberta no init, e uma reserva abaixo de 100",
+        "why": "Isso. Cada ambiente segura a sua conexão, então limitar os ambientes limita as conexões."
+      },
+      {
+        "text": "Mais memória para a função, para precisar de menos ambientes",
+        "why": "Mais memória encurta trabalho de CPU. Uma requisição esperando o banco espera o mesmo, e a lei de Little mantém a contagem."
+      }
+    ]
+  },
+  "ex-h7wwg4gd": {
+    "prompt": "Uma exportação em PDF leva 12 minutos para ficar pronta. Uma equipe a quer no Lambda, atrás da API HTTP que o resto da loja usa. O que precisa mudar?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Nada: doze minutos cabem nos 900 segundos do Lambda",
+        "why": "A função terminaria, depois de o cliente já ter recebido um 504 aos 30 segundos."
+      },
+      {
+        "text": "O timeout da integração subido para quinze minutos",
+        "why": "Uma integração de API HTTP espera 30 segundos no máximo, peça-se o que for."
+      },
+      {
+        "text": "Pedaços de menos de 30 segundos cada, que a rota chama em sequência",
+        "why": "A rota continua esperando todos eles, e o cliente continua batendo no limite de 30 segundos."
+      },
+      {
+        "text": "A rota responde `202` e uma fila leva o trabalho",
+        "why": "Isso. Doze minutos cabem nos quinze do Lambda, mas nenhuma integração de API HTTP espera mais de 30 segundos, e a exportação vira tarefa."
+      }
+    ]
+  },
+  "ex-and8e21y": {
+    "prompt": "Ponha estas mudanças na ordem do trabalho que dão, pela tabela de mudanças da aula 23, a menor primeiro.",
+    "hint": "Aula 23.",
+    "items": [
+      "App Runner para ECS, com a mesma imagem",
+      "EC2 para Fargate",
+      "EC2 para Lambda"
+    ],
+    "trap": "Mudanças em direção ao Lambda custam mais, porque uma função supõe o mínimo sobre onde roda; App Runner para ECS mantém a imagem."
+  },
+  "ex-7sr6cv59": {
+    "prompt": "O compare.py dá 27,74 USD para o perfil de escritório no App Runner. Aí um monitor externo passa a chamá-lo uma vez por minuto, o dia todo. O que acontece com esse número, no modelo do compare.py?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Fica em 27,74: uma requisição por minuto é pouco demais para contar",
+        "why": "No compare.py qualquer hora com requisição paga o processador, e uma instância de verdade precisa estar ativa para responder."
+      },
+      {
+        "text": "Sobe para 56,94: as noites quietas agora pagam o processador",
+        "why": "Isso. Nenhuma hora fica ociosa, então as 24 cobram vCPU além de memória nas mesmas duas instâncias."
+      },
+      {
+        "text": "Cai, porque o App Runner cobra só memória entre requisições",
+        "why": "A memória é cobrada enquanto a instância está provisionada de qualquer jeito; o que muda é o processador cobrado à noite."
+      },
+      {
+        "text": "Sobe pelas tarifas por requisição do monitor, cerca de um USD",
+        "why": "O App Runner não cobra tarifa por requisição na tabela; o custo são as instâncias mantidas ativas a noite toda."
+      }
+    ]
+  },
+  "ex-c9v7fx2h": {
+    "prompt": "De São Paulo, o primeiro GB do mês para a internet é grátis, depois 0,25 USD por GB até 10.240 GB, e 0,23 USD por GB daí até 51.200 GB. Quanto custa mandar 20.000 GB para fora num mês, pelo preço de tabela?",
+    "hint": "Aula 24.",
+    "unit": "USD"
+  },
+  "ex-hjct59g7": {
+    "prompt": "Um pull request põe `import boto3` em `orders.py`, para cada orçamento também gravar uma linha de auditoria no S3. O que o registro de decisão da loja dá a quem revisa para apontar?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "Uma travessia recusada da costura do S3",
+        "why": "Isso. Regras que importam boto3, e chamadas ao S3 fora daquele módulo, estão as duas na lista do aprisionamento recusado."
+      },
+      {
+        "text": "Nada: o registro é sobre a plataforma, não sobre código",
+        "why": "As linhas de `lock-in refused` são sobre código, escritas para quem revisa apontar um pull request que cruza uma delas."
+      },
+      {
+        "text": "Os gatilhos de saída, já que gravar no S3 sobe a conta do mês",
+        "why": "Os gatilhos são mudanças de tráfego e de preço. Esta mudança cruza uma costura."
+      },
+      {
+        "text": "Um motivo para substituir o registro 4 por um novo",
+        "why": "Nada na decisão muda; é o pull request que precisa mudar para respeitá-la."
+      }
+    ]
+  },
+  "ex-14eaf83j": {
+    "prompt": "O gatilho de saída do registro 4 diz que o Lambda ganha abaixo de uma média de 21,8 requisições por segundo. Um ano depois, as requisições rodam 200 ms em vez de 100, e o ponto de equilíbrio do compare.py cai para uns 32 milhões por mês. O que deve acontecer com o registro?",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "Editar o gatilho no registro 4 com o número novo",
+        "why": "Um registro aceito nunca é editado; ele é substituído, para o histórico do porquê continuar legível."
+      },
+      {
+        "text": "Manter 21,8, já que o gatilho é de tráfego e não de duração",
+        "why": "O 21,8 veio do custo por requisição, e dobrar a duração quase dobra os GB-segundos."
+      },
+      {
+        "text": "Um registro novo o substitui, com uns 12,3 por segundo",
+        "why": "Isso. O gatilho era aritmética sobre a duração antiga: 32,35 milhões num mês de 730 horas dá cerca de 12,3 por segundo, e o registro novo aponta para o antigo."
+      },
+      {
+        "text": "Levar a API para o Lambda, já que o gatilho disparou",
+        "why": "O tráfego não caiu; o ponto de equilíbrio caiu, para uns 12,3 por segundo, ainda mais longe dos 26,5 de hoje."
+      }
+    ]
+  },
+  "ex-adwafyja": {
+    "prompt": "Na estimativa da aula 24 do que custaria à loja sair, quais números são capturas, ou aritmética exata sobre elas, e não inventados? Marque todos os que se aplicam.",
+    "hint": "Aula 24.",
+    "choices": [
+      {
+        "text": "As 31 linhas dos dois adaptadores",
+        "why": "Isso. Contadas com `wc -l`."
+      },
+      {
+        "text": "Três pessoas por três dias para aprender a próxima plataforma",
+        "why": "A aula diz que todo número de esforço do exemplo é inventado, e este é um."
+      },
+      {
+        "text": "0,25 USD por GB para a internet a partir de São Paulo",
+        "why": "Isso. Lido da lista de preços da AWS pelo `egress.py`."
+      },
+      {
+        "text": "Dois dias para mudar as chamadas de armazenamento",
+        "why": "Outro número de esforço, inventado para o exemplo."
+      },
+      {
+        "text": "49,60 USD por mês de Fargate durante a sobreposição",
+        "why": "Isso. O programa da aula 23 calculou a partir da tabela."
+      }
+    ]
+  }
+}

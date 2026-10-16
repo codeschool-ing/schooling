@@ -1,0 +1,645 @@
+[
+  {
+    "id": "ex-ph8k0tqq",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want ECS to run nginx with a port, a memory limit and an environment variable. What do you hand ECS?",
+    "hint": "ECS starts everything from one kind of document.",
+    "choices": [
+      {
+        "text": "A container you built and saved with docker save",
+        "correct": false,
+        "why": "ECS never takes a container. It pulls an image by name, as the definition says."
+      },
+      {
+        "text": "A task definition",
+        "correct": true,
+        "why": "The image, the port, the memory and the environment are fields of one versioned JSON document."
+      },
+      {
+        "text": "A docker run command line, stored in the cluster's settings",
+        "correct": false,
+        "why": "Clusters store no commands; the flags of docker run become fields of a task definition."
+      },
+      {
+        "text": "An AMI with nginx installed",
+        "correct": false,
+        "why": "That is how an EC2 instance gets software, lesson 2's subject; ECS runs images, not AMIs."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjpbd1z2",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The application in a task calls S3 and is refused with AccessDenied. The image was pulled and the logs arrive. Which role needs the S3 permission?",
+    "hint": "Who is calling S3: ECS, or the code?",
+    "choices": [
+      {
+        "text": "The execution role, since it already works",
+        "correct": false,
+        "why": "It works for ECS pulling and logging. The code in the container never receives it."
+      },
+      {
+        "text": "The container instance's role",
+        "correct": false,
+        "why": "Taking the instance's role from a task is what a hop limit of 1 is there to prevent."
+      },
+      {
+        "text": "The task role",
+        "correct": true,
+        "why": "It is the role the SDK inside the container finds credentials for, so the code's permissions go on it."
+      },
+      {
+        "text": "Both, because ECS merges the two before the task starts",
+        "correct": false,
+        "why": "ECS does not merge them: each serves a different caller at a different moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7fz1r63",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of web.json to what it decides.",
+    "hint": "Two are roles, one names revisions, one ties the task's life to a container.",
+    "pairs": [
+      {
+        "left": "executionRoleArn",
+        "right": "What ECS may do to pull the image and send logs"
+      },
+      {
+        "left": "taskRoleArn",
+        "right": "What the code in the container may call"
+      },
+      {
+        "left": "family",
+        "right": "The name every revision shares"
+      },
+      {
+        "left": "essential",
+        "right": "Whether the task stops when this container stops"
+      }
+    ],
+    "right_distractors": [
+      "Which cluster the task joins"
+    ]
+  },
+  {
+    "id": "ex-jg03y9fs",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "web.json was registered twice, then web:1 was deregistered. What does describe-task-definition --task-definition web return?",
+    "hint": "A family with no number means one particular revision.",
+    "choices": [
+      {
+        "text": "Revision 2, the latest ACTIVE one",
+        "correct": true,
+        "why": "Without a number ECS takes the newest ACTIVE revision, which the capture printed as 2."
+      },
+      {
+        "text": "Revision 1, the first one registered",
+        "correct": false,
+        "why": "Revision 1 is INACTIVE, and the family alone never means the first."
+      },
+      {
+        "text": "An error, because the family now holds an INACTIVE revision",
+        "correct": false,
+        "why": "One INACTIVE revision does not stop the others from being described."
+      },
+      {
+        "text": "Both revisions, merged into one",
+        "correct": false,
+        "why": "Revisions are separate, immutable documents; nothing merges them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z9ka16j",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a task definition, cpu is counted in units of one ___th of a vCPU, so 256 is a quarter.",
+    "hint": "A power of two, four times 256.",
+    "blanks": [
+      {
+        "accept": [
+          "1024",
+          "1,024"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4qq54qtb",
+    "version": 1,
+    "section": "task-definitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague puts the database password in the environment list of a task definition. Who can read it?",
+    "hint": "Where is a task definition kept, and who can describe it?",
+    "choices": [
+      {
+        "text": "Only the code in the container, because environment variables are private to a process",
+        "correct": false,
+        "why": "Inside the container, yes; but the value is also stored in the definition, in plain text."
+      },
+      {
+        "text": "Nobody, because AWS encrypts every task definition",
+        "correct": false,
+        "why": "AWS stores it, and returns it in clear to whoever may describe it."
+      },
+      {
+        "text": "Anybody allowed to describe the task definition",
+        "correct": true,
+        "why": "It is a plain field of the document. A secret goes in secrets, a reference the execution role resolves."
+      },
+      {
+        "text": "Only the execution role",
+        "correct": false,
+        "why": "A role is not a reader of documents; people and programs with ecs:DescribeTaskDefinition are."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv4ba5mr",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A report runs for twenty minutes every night and exits. How should it run on ECS?",
+    "hint": "Think about what a service does when its task exits.",
+    "choices": [
+      {
+        "text": "As a service with a desired count of 1",
+        "correct": false,
+        "why": "The service would start the report again the moment it finished, all night."
+      },
+      {
+        "text": "As a service with desired 0, raised by hand each night",
+        "correct": false,
+        "why": "That is run-task with extra steps, and somebody has to remember to lower it again."
+      },
+      {
+        "text": "As an essential container added to the web task",
+        "correct": false,
+        "why": "Then the report finishing would stop the web task too."
+      },
+      {
+        "text": "As a task started with run-task",
+        "correct": true,
+        "why": "run-task starts it and forgets it, which is what a job that ends is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5kzbvys",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service has a desired count of 6 and maximumPercent 200. How many tasks may exist at once during a deployment?",
+    "hint": "A percentage of the desired count.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-x0p7c47y",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same service, desired 6, has minimumHealthyPercent 50. What is the fewest tasks that must keep serving during the deployment?",
+    "hint": "Half of the desired count.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-ezcw6xgt",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, a service asked for 3 tasks reports desiredCount 3, runningCount 0, pendingCount 3, and no task appears. What does it tell you about AWS?",
+    "hint": "moto keeps the records and runs no scheduler.",
+    "choices": [
+      {
+        "text": "Nothing: on AWS the scheduler would start three tasks",
+        "correct": true,
+        "why": "moto stores the service and starts none; the loop that starts and replaces tasks is AWS's."
+      },
+      {
+        "text": "That the cluster has no instances, so AWS would say the same",
+        "correct": false,
+        "why": "The cluster had a registered instance with room; moto still started nothing."
+      },
+      {
+        "text": "That services wait for a deployment before starting tasks",
+        "correct": false,
+        "why": "On AWS creating the service is the deployment, and its tasks start right away."
+      },
+      {
+        "text": "That pendingCount means the tasks are queued for a free slot",
+        "correct": false,
+        "why": "There was a free slot; the pending count is a number moto wrote and never moves."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvh5vm29",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster of instances you run has no room for a single extra task, and the service of 4 must deploy a new revision without new instances. Which deployment configuration works?",
+    "hint": "The maximum caps how many exist at once.",
+    "choices": [
+      {
+        "text": "minimumHealthyPercent 100, maximumPercent 200",
+        "correct": false,
+        "why": "That starts new tasks beside the old ones, which needs room for up to 8."
+      },
+      {
+        "text": "minimumHealthyPercent 50, maximumPercent 100",
+        "correct": true,
+        "why": "Never more than 4 exist, so old tasks stop first and the cluster holds no more than it does today."
+      },
+      {
+        "text": "minimumHealthyPercent 100, maximumPercent 100",
+        "correct": false,
+        "why": "No task may stop before another starts, and none may start: the deployment cannot move."
+      },
+      {
+        "text": "minimumHealthyPercent 0, maximumPercent 200",
+        "correct": false,
+        "why": "It allows stopping everything, and still lets ECS start new tasks first, which needs room."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2gdwsgn",
+    "version": 1,
+    "section": "tasks-and-services",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a service do on AWS that the lab's moto did not? Choose all that apply.",
+    "hint": "Compare what the commands asked for with what moto showed afterwards.",
+    "choices": [
+      {
+        "text": "Start tasks until the running count reaches the desired count",
+        "correct": true,
+        "why": "moto left runningCount at 0."
+      },
+      {
+        "text": "Start a replacement when one of its tasks stops",
+        "correct": true,
+        "why": "That loop is the service's whole value, and moto has no scheduler to run it."
+      },
+      {
+        "text": "Create a new PRIMARY deployment when the revision changes",
+        "correct": true,
+        "why": "moto changed the service's revision and kept the old deployment as the only one."
+      },
+      {
+        "text": "Refuse to delete the service while it wants tasks",
+        "correct": false,
+        "why": "moto refused that too, as AWS does; it is the one rule here it enforced."
+      },
+      {
+        "text": "Edit the task definition revision it runs",
+        "correct": false,
+        "why": "Nothing edits a revision, on AWS or anywhere: a change is a new revision."
+      }
+    ]
+  },
+  {
+    "id": "ex-ka3mank0",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An instance booted from the ECS-optimised AMI. How does its agent know which cluster to join?",
+    "hint": "Lesson 7 is the mechanism.",
+    "choices": [
+      {
+        "text": "From ECS_CLUSTER in /etc/ecs/ecs.config, written by user data",
+        "correct": true,
+        "why": "Without the line it joins the cluster called default."
+      },
+      {
+        "text": "From the instance's tags, which ECS reads at launch",
+        "correct": false,
+        "why": "ECS reads no tags to decide membership; the agent reads its configuration file."
+      },
+      {
+        "text": "It joins every cluster in the Region and the scheduler picks",
+        "correct": false,
+        "why": "A container instance belongs to exactly one cluster."
+      },
+      {
+        "text": "From the subnet it was launched in",
+        "correct": false,
+        "why": "Clusters are not tied to subnets; the same subnet can hold instances of many clusters."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcm3neex",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task with hostPort 8080 runs on the cluster's only instance. You start a second copy. What does AWS answer?",
+    "hint": "moto answered no tasks and no failures; AWS says why.",
+    "choices": [
+      {
+        "text": "The task starts on port 8081, the next free one",
+        "correct": false,
+        "why": "ECS does not renumber a fixed port; hostPort 0 is how you ask for any free one."
+      },
+      {
+        "text": "A failure with the reason RESOURCE:PORTS",
+        "correct": true,
+        "why": "The only instance with room has the port taken, and the scheduler says so."
+      },
+      {
+        "text": "Both tasks share port 8080 and take turns",
+        "correct": false,
+        "why": "Two processes cannot bind one port on one host, as Docker showed on the laptop."
+      },
+      {
+        "text": "The first task is stopped to make room",
+        "correct": false,
+        "why": "Placing a new task never stops a running one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs37xb6s",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An m7g.large is 0.1301 USD an hour on the sheet. What does one cost as a container instance for a month of 730 hours, in USD, to the cent?",
+    "hint": "Hourly price times 730; ECS adds nothing.",
+    "value": 94.97,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-cba6tzv1",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service's strategy is base=2 on FARGATE, weight 1 on FARGATE and weight 3 on FARGATE_SPOT. With 10 tasks, how many run on FARGATE?",
+    "hint": "The base first, then the rest divided 1 to 3.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-xf6qt6c0",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto registered the m7i.large with 4,096 CPU units. How many does the ECS agent register for it on AWS?",
+    "hint": "Two vCPUs, at 1,024 units each.",
+    "choices": [
+      {
+        "text": "4,096, as moto said",
+        "correct": false,
+        "why": "moto's figure is a placeholder; an m7i.large has 2 vCPUs."
+      },
+      {
+        "text": "2,048, two vCPUs of 1,024 each",
+        "correct": true,
+        "why": "That is what the agent registers; moto's 4,096 is a placeholder."
+      },
+      {
+        "text": "1,024, because the agent keeps a vCPU for itself",
+        "correct": false,
+        "why": "The agent keeps some memory back, not a whole vCPU."
+      },
+      {
+        "text": "8,192, one unit per MiB of memory",
+        "correct": false,
+        "why": "CPU units count processor, not memory; 8 GiB is a separate resource."
+      }
+    ]
+  },
+  {
+    "id": "ex-baftkajj",
+    "version": 1,
+    "section": "clusters-and-capacity",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between launching a container instance and its first container starting.",
+    "hint": "User data runs before the agent can know its cluster.",
+    "items": [
+      "The instance boots from the ECS-optimised AMI",
+      "User data writes ECS_CLUSTER into /etc/ecs/ecs.config",
+      "The agent registers the instance with that cluster",
+      "ECS places a task by subtracting what it asks for from what is left",
+      "The agent starts the task's containers through Docker"
+    ],
+    "trap": "Registering before the user data has run puts the instance in the cluster called default."
+  },
+  {
+    "id": "ex-a9dk9d0c",
+    "version": 1,
+    "section": "the-same-container-at-home",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The container runs with --cpu-shares 256 and nothing else is running on the machine. How much processor can it use?",
+    "hint": "Shares only matter when containers compete.",
+    "choices": [
+      {
+        "text": "A quarter of one vCPU, always",
+        "correct": false,
+        "why": "That would be a cap, and --cpu-shares is a weight."
+      },
+      {
+        "text": "All of it, since there is no competition",
+        "correct": true,
+        "why": "A weight divides contended time; alone, the container may use every processor."
+      },
+      {
+        "text": "None until another container gives up time",
+        "correct": false,
+        "why": "Shares never block a container that is alone."
+      },
+      {
+        "text": "256 MHz of one core",
+        "correct": false,
+        "why": "Shares are a relative weight, not a frequency."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ycfypt2",
+    "version": 1,
+    "section": "the-same-container-at-home",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task's only container has memory 512 and its process grows to 600 MiB. What happens on ECS?",
+    "hint": "The section called memory the opposite of the CPU setting.",
+    "choices": [
+      {
+        "text": "The kernel kills it and the task stops with an out-of-memory reason",
+        "correct": true,
+        "why": "memory is a hard limit, as docker inspect's 536870912 bytes was."
+      },
+      {
+        "text": "It is slowed down until it fits",
+        "correct": false,
+        "why": "Slowing is what CPU contention does; memory has no slow mode."
+      },
+      {
+        "text": "ECS moves it to an instance with more memory",
+        "correct": false,
+        "why": "ECS never moves a running task; a service would start a new one after it stops."
+      },
+      {
+        "text": "Nothing, because 512 is only a reservation",
+        "correct": false,
+        "why": "That is memoryReservation, the soft value; memory is the hard one."
+      }
+    ]
+  },
+  {
+    "id": "ex-57vw8xxh",
+    "version": 1,
+    "section": "the-same-container-at-home",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The port mapping with hostPort 8080 and containerPort 80 becomes the docker run flag -p ___.",
+    "hint": "Host first, container second.",
+    "blanks": [
+      {
+        "accept": [
+          "8080:80"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3hhdy74y",
+    "version": 1,
+    "section": "the-same-container-at-home",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The second docker run with -p 8080:80 left web2 in the state Created. Why did it not start?",
+    "hint": "Read the error Docker printed.",
+    "choices": [
+      {
+        "text": "The image had to be pulled again",
+        "correct": false,
+        "why": "The image was already there; the error was about the port."
+      },
+      {
+        "text": "Two containers cannot have the same name",
+        "correct": false,
+        "why": "They were named web and web2."
+      },
+      {
+        "text": "Port 8080 on the host was already bound by web",
+        "correct": true,
+        "why": "Docker could not bind it a second time, which is ECS's RESOURCE:PORTS on one machine."
+      },
+      {
+        "text": "Only one container per image may run",
+        "correct": false,
+        "why": "Any number may run from one image, on different ports."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5c4hbv9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service with hostPort 8080 runs on three container instances, each with plenty of CPU and memory. Its desired count goes from 3 to 4 and the fourth task is never placed. What fixes it without a fourth instance?",
+    "hint": "The scarce resource is not CPU or memory.",
+    "choices": [
+      {
+        "text": "Raise the cpu and memory of the task definition",
+        "correct": false,
+        "why": "The tasks already fit; asking for more makes placement harder, not easier."
+      },
+      {
+        "text": "Set minimumHealthyPercent to 50",
+        "correct": false,
+        "why": "That shapes deployments; it does not make a port free."
+      },
+      {
+        "text": "Add a FARGATE_SPOT capacity provider with weight 0",
+        "correct": false,
+        "why": "A weight of 0 sends it no tasks, and the EC2 instances keep their port problem."
+      },
+      {
+        "text": "hostPort 0 behind a target group",
+        "correct": true,
+        "why": "Each task gets a free port, so one instance can hold several, and the target group follows the ports."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdcyx3qk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service of 4 deploys a new image with minimumHealthyPercent 100 and maximumPercent 200. Put the steps in order.",
+    "hint": "Room to spare: the new tasks come first.",
+    "items": [
+      "Register a new revision of the task definition",
+      "Point the service at it with update-service",
+      "Four new tasks start beside the four old ones",
+      "The new tasks pass the target group's health check",
+      "The four old tasks are stopped"
+    ],
+    "trap": "Stopping the old tasks before the new ones are healthy is what a minimum of 100 forbids."
+  }
+]

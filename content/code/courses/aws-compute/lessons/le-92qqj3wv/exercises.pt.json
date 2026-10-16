@@ -1,0 +1,488 @@
+{
+  "ex-8qg9q1wv": {
+    "prompt": "Em 123456789012.dkr.ecr.sa-east-1.amazonaws.com/shop/web:1.0.0, o que o sa-east-1 decide?",
+    "hint": "Cada conta tem um registry por região.",
+    "choices": [
+      {
+        "text": "A única região onde uma task roda esta imagem",
+        "why": "Uma task em outra região consegue baixá-la; o pull é mais lento e a transferência é cobrada."
+      },
+      {
+        "text": "Qual registry regional guarda as camadas",
+        "why": "Isso. O registry é por conta e por região, e as camadas ficam nessa região."
+      },
+      {
+        "text": "Nada: o Docker acha o registry pelo nome do repositório",
+        "why": "O Docker lê o registry na parte antes da primeira barra, então o hostname é o destino."
+      },
+      {
+        "text": "A região onde a imagem foi construída, guardada como rótulo",
+        "why": "Onde o build rodou não fica no endereço; o endereço diz onde a imagem está guardada."
+      }
+    ]
+  },
+  "ex-h1st09td": {
+    "prompt": "Uma role na conta 444455556666 tem ecr:BatchGetImage e ecr:GetDownloadUrlForLayer permitidos pela policy do IAM dela, e os pulls do seu repositório são recusados. O que falta?",
+    "hint": "Duas contas, duas metades que precisam concordar.",
+    "choices": [
+      {
+        "text": "Imutabilidade de tags no seu repositório",
+        "why": "A mutabilidade decide se as tags se movem; não tem nada a ver com quem pode ler."
+      },
+      {
+        "text": "Scan no push, que o ECR exige antes de um pull de outra conta",
+        "why": "Scanning é sobre achados, e nenhum pull espera por ele."
+      },
+      {
+        "text": "Uma repository policy que deixe a 444455556666 entrar",
+        "why": "Isso. De outra conta o recurso precisa permitir quem chama, além do IAM de quem chama."
+      },
+      {
+        "text": "Uma chave KMS deles configurada no seu repositório",
+        "why": "A criptografia em repouso é escolhida na criação pelo dono, e AES256 não bloqueia outra conta."
+      }
+    ]
+  },
+  "ex-5qffw3ks": {
+    "prompt": "Se as camadas de um repositório são criptografadas com a chave do ECR ou com uma chave KMS sua é decidido quando o repositório é ___, e não muda depois.",
+    "hint": "Um momento na vida de um repositório.",
+    "blanks": [
+      {
+        "accept": [
+          "criado",
+          "feito"
+        ]
+      }
+    ]
+  },
+  "ex-m4dwsw5w": {
+    "prompt": "aws ecr create-repository --repository-name Shop/Web é recusado com InvalidParameterException. Por quê?",
+    "hint": "Leia a expressão regular no erro.",
+    "choices": [
+      {
+        "text": "Barra não é permitida no nome de um repositório",
+        "why": "shop/web foi criado um momento antes; a barra faz parte do nome."
+      },
+      {
+        "text": "Letras maiúsculas",
+        "why": "Isso. O padrão aceita letras minúsculas, dígitos, e . _ - / entre eles."
+      },
+      {
+        "text": "O repositório Shop precisa existir antes, como pai",
+        "why": "Não existem repositórios pai: shop/ é um prefixo do nome, não uma pasta."
+      },
+      {
+        "text": "O moto recusa um nome que a AWS aceitaria",
+        "why": "O moto carrega a mesma expressão que a AWS publica; a AWS também recusa."
+      }
+    ]
+  },
+  "ex-p0bc7y2h": {
+    "prompt": "Uma task na mesma conta baixa shop/web:1.0.0. De que permissões a role dela precisa? Escolha todas as que se aplicam.",
+    "hint": "Uma para fazer login, duas para ler.",
+    "choices": [
+      {
+        "text": "ecr:GetAuthorizationToken",
+        "why": "Ela produz o token que o docker login usa."
+      },
+      {
+        "text": "ecr:BatchGetImage",
+        "why": "Ela lê o manifest, a primeira coisa que um pull busca."
+      },
+      {
+        "text": "ecr:GetDownloadUrlForLayer",
+        "why": "Ela busca cada camada que o manifest cita."
+      },
+      {
+        "text": "ecr:PutImage",
+        "why": "Essa escreve um manifest; um pull lê."
+      },
+      {
+        "text": "Uma repository policy citando a conta",
+        "why": "Dentro de uma conta, só o IAM decide. A repository policy é para outras contas."
+      }
+    ]
+  },
+  "ex-qfsgzs5w": {
+    "prompt": "Ponha as chamadas de API do ECR por trás de um docker login e um docker push na ordem em que acontecem.",
+    "hint": "O manifest cita as camadas, então não vai primeiro.",
+    "items": [
+      "GetAuthorizationToken",
+      "BatchCheckLayerAvailability",
+      "InitiateLayerUpload",
+      "UploadLayerPart",
+      "CompleteLayerUpload",
+      "PutImage"
+    ],
+    "trap": "PutImage vem por último: o manifest que ele envia cita camadas que o registry já precisa ter."
+  },
+  "ex-9kwakgq6": {
+    "prompt": "O que é o digest de uma imagem?",
+    "hint": "O sha256sum o imprimiu.",
+    "choices": [
+      {
+        "text": "Um id aleatório que o ECR atribui quando um push termina",
+        "why": "Nada nele é aleatório: quem tem o mesmo manifest calcula o mesmo digest."
+      },
+      {
+        "text": "O SHA-256 da maior camada",
+        "why": "Cada camada tem o seu digest; o da imagem é calculado sobre o manifest que as lista."
+      },
+      {
+        "text": "A tag, com o endereço do registry na frente",
+        "why": "Isso é o nome da imagem, e uma tag se move; um digest não."
+      },
+      {
+        "text": "O SHA-256 dos bytes do manifest",
+        "why": "Isso. sha256sum manifest.json imprimiu o mesmo valor que o docker image inspect."
+      }
+    ]
+  },
+  "ex-3fr68rg0": {
+    "prompt": "A imagem da lição tem 25.988.426 bytes de camadas comprimidas. A 0,10 USD por GB-mês, com 1 GB = 1.000.000.000 bytes, quanto custa guardá-la por mês, em USD, com quatro casas decimais?",
+    "hint": "Bytes divididos por um bilhão, vezes o preço.",
+    "unit": "USD"
+  },
+  "ex-z6jr5w7e": {
+    "prompt": "Contra o moto, o put-image devolveu um digest diferente do que o sha256sum manifest.json imprimiu. Qual dos dois a AWS informaria para esta imagem?",
+    "hint": "Um é calculado a partir dos bytes; o outro é uma conta do próprio moto.",
+    "choices": [
+      {
+        "text": "O que o sha256sum imprimiu",
+        "why": "Isso. A AWS calcula o hash do manifest, e o docker push informa esse mesmo valor."
+      },
+      {
+        "text": "O que o moto devolveu, já que é o registry que calcula",
+        "why": "O moto deriva o valor dele da lista de digests das camadas; a AWS não."
+      },
+      {
+        "text": "Os dois, porque o ECR guarda um digest por tag",
+        "why": "Um digest pertence ao manifest, e duas tags no mesmo manifest o compartilham."
+      },
+      {
+        "text": "Nenhum: a AWS calcula o digest do blob de config, não do manifest",
+        "why": "O config também tem digest, listado dentro do manifest; a imagem leva o nome do digest do manifest."
+      }
+    ]
+  },
+  "ex-2w9p77vm": {
+    "prompt": "O put-image que a lição rodou contra o moto seria recusado pela AWS. Por quê?",
+    "hint": "O que um push envia antes do manifest?",
+    "choices": [
+      {
+        "text": "O manifest era um arquivo, e o PutImage só aceita manifests vindos do docker",
+        "why": "O PutImage aceita qualquer manifest; a AWS até o documenta para reetiquetar com batch-get-image."
+      },
+      {
+        "text": "Nenhuma das camadas que ele cita foi enviada (LayersNotFoundException)",
+        "why": "Isso. Um manifest só cita camadas que o repositório já guarda."
+      },
+      {
+        "text": "A tag 1.0.0 não tinha sido criada antes",
+        "why": "Tags não são criadas à parte; é o PutImage que cria a tag."
+      },
+      {
+        "text": "O manifest não foi comprimido com gzip antes",
+        "why": "As camadas viajam comprimidas; o manifest é JSON puro e vai como está."
+      }
+    ]
+  },
+  "ex-f2z14606": {
+    "prompt": "Na AWS, a senha que aws ecr get-login-password imprime é um token que expira depois de ___ horas.",
+    "hint": "Meio dia.",
+    "blanks": [
+      {
+        "accept": [
+          "12",
+          "doze"
+        ]
+      }
+    ]
+  },
+  "ex-1szc8trk": {
+    "prompt": "Num repositório mutável na AWS, 1.0.0 é enviado de novo com outra imagem. O que acontece com a imagem que 1.0.0 citava, se ela não tinha outra tag?",
+    "hint": "O moto e a AWS diferem aqui.",
+    "choices": [
+      {
+        "text": "É apagada, como foi no moto",
+        "why": "Esse é o comportamento do moto. A AWS mantém a imagem."
+      },
+      {
+        "text": "Fica, sem tag, ainda guardada e cobrada",
+        "why": "Isso, e qualquer coisa que cite o digest dela ainda a baixa."
+      },
+      {
+        "text": "Fica com a tag, e a imagem nova é recusada",
+        "why": "Isso é um repositório imutável. Um mutável move a tag."
+      },
+      {
+        "text": "O ECR renomeia a tag dela para 1.0.0-previous",
+        "why": "O ECR não inventa tags; a imagem simplesmente fica sem nenhuma."
+      }
+    ]
+  },
+  "ex-dq05kzds": {
+    "prompt": "Ligue cada configuração de mutabilidade de tags ao que ela permite.",
+    "hint": "A lista de exclusão inverte a configuração para as tags que casam.",
+    "pairs": [
+      {
+        "left": "MUTABLE",
+        "right": "Qualquer tag pode ser movida para outra imagem"
+      },
+      {
+        "left": "IMMUTABLE",
+        "right": "Nenhuma tag pode ser movida depois do push"
+      },
+      {
+        "left": "IMMUTABLE_WITH_EXCLUSION",
+        "right": "Só as tags que casam com um filtro podem ser movidas"
+      },
+      {
+        "left": "MUTABLE_WITH_EXCLUSION",
+        "right": "As tags que casam com um filtro não podem ser movidas"
+      }
+    ],
+    "right_distractors": [
+      "Uma tag só se move para uma imagem mais nova"
+    ]
+  },
+  "ex-vv4e1rgn": {
+    "prompt": "Um Deployment do Kubernetes roda shop/web:1.0.0 com a política de pull padrão em três nodes. O 1.0.0 é sobrescrito num repositório mutável, e depois um quarto node entra e recebe um pod. O que está rodando agora?",
+    "hint": "Para uma tag que não seja latest, um node só baixa o que não tem.",
+    "choices": [
+      {
+        "text": "Todos os pods passam para a imagem nova em poucos minutos",
+        "why": "Nada avisa os pods em execução de que a tag mudou; eles ficam com a cópia que o node tem."
+      },
+      {
+        "text": "O quarto node se recusa a baixar uma tag que mudou",
+        "why": "Um registry não tem noção de tag alterada; ele serve o que a tag cita agora."
+      },
+      {
+        "text": "O pod novo roda a imagem nova e os outros três a antiga",
+        "why": "Isso: dois programas com um só número de versão, e nenhum erro em lugar nenhum."
+      },
+      {
+        "text": "Quatro pods na imagem antiga, até alguém editar o Deployment",
+        "why": "O quarto node não tinha cópia, então baixou o que o 1.0.0 cita depois da sobrescrita."
+      }
+    ]
+  },
+  "ex-9a7tdx4v": {
+    "prompt": "Para fazer deploy de uma imagem que nenhum push futuro consiga mudar, cite-a pelo seu ___ em vez de uma tag: shop/web@sha256: seguido de 64 caracteres.",
+    "hint": "Ele é calculado a partir dos bytes.",
+    "blanks": [
+      {
+        "accept": [
+          "digest",
+          "resumo"
+        ]
+      }
+    ]
+  },
+  "ex-c27tk23h": {
+    "prompt": "Com o lifecycle.json da lição, o que acontece com uma imagem cuja única tag é latest?",
+    "hint": "Confira as três seleções contra a tag latest.",
+    "choices": [
+      {
+        "text": "Expira depois de 7 dias, junto com as imagens sem tag",
+        "why": "Ela tem uma tag, então a regra das sem tag não a seleciona."
+      },
+      {
+        "text": "Conta como uma das 30 versões mantidas",
+        "why": "latest não casa com *.*.*, que exige dois pontos."
+      },
+      {
+        "text": "Fica: nenhuma regra a seleciona",
+        "why": "Isso. Para pegá-la seria preciso uma regra com tagStatus any, lida por último."
+      },
+      {
+        "text": "Expira depois de 14 dias, como um build de pull request",
+        "why": "Essa regra casa com tags que começam com pr-, e latest não começa."
+      }
+    ]
+  },
+  "ex-yz9rah31": {
+    "prompt": "Por que a primeira regra do lifecycle.json espera sete dias antes de expirar uma imagem sem tag, e não um?",
+    "hint": "Quem mais ainda estaria usando uma imagem que perdeu a tag?",
+    "choices": [
+      {
+        "text": "Um deploy preso a ela pelo digest não conseguiria baixá-la",
+        "why": "Isso. Expirar é apagar, e um digest cita justamente as imagens que uma tag deixou para trás."
+      },
+      {
+        "text": "O ECR se recusa a expirar uma imagem com menos de sete dias",
+        "why": "Não existe esse piso; countNumber 1 a expiraria depois de um dia."
+      },
+      {
+        "text": "Imagens sem tag são de graça na primeira semana",
+        "why": "O armazenamento é cobrado desde o primeiro dia, com tag ou sem."
+      },
+      {
+        "text": "A prévia precisa de uma semana de pushes para montar a lista",
+        "why": "A prévia avalia as regras contra o que existe agora."
+      }
+    ]
+  },
+  "ex-2yaew48r": {
+    "prompt": "Quais destas coisas o ECR do moto fez nesta lição que a AWS faria diferente? Escolha todas as que se aplicam.",
+    "hint": "Compare cada uma com o que o texto diz que a AWS faz.",
+    "choices": [
+      {
+        "text": "Apagou uma imagem quando a última tag dela saiu",
+        "why": "A AWS a mantém, sem tag."
+      },
+      {
+        "text": "Recusou uma tag movida com ImageAlreadyExistsException",
+        "why": "A AWS responde ImageTagAlreadyExistsException para uma tag num repositório imutável."
+      },
+      {
+        "text": "Falhou com erro interno na prévia da lifecycle policy",
+        "why": "A AWS avalia as regras e lista o que elas expirariam."
+      },
+      {
+        "text": "Recusou o nome de repositório Shop/Web",
+        "why": "A AWS também recusa, com a mesma expressão regular."
+      },
+      {
+        "text": "Manteve o 1.0.0 no lugar no repositório imutável",
+        "why": "É o que a AWS também faz."
+      }
+    ]
+  },
+  "ex-yhnsr52w": {
+    "prompt": "Qual scan lê os pacotes pip instalados dentro de uma imagem?",
+    "hint": "Um dos dois também lê pacotes de linguagem.",
+    "choices": [
+      {
+        "text": "O scan básico, em todo push",
+        "why": "O básico lê os pacotes do sistema operacional."
+      },
+      {
+        "text": "Os dois, o básico com menos frequência",
+        "why": "A diferença é o que eles leem, e não apenas a frequência."
+      },
+      {
+        "text": "O scan avançado, rodado pelo Amazon Inspector",
+        "why": "Isso. Ele lê pacotes do sistema e de linguagens como pip e npm."
+      },
+      {
+        "text": "Nenhum: o ECR escaneia a imagem base e nada que foi acrescentado",
+        "why": "Um scan lê a imagem inteira, inclusive as camadas que o seu Dockerfile acrescentou."
+      }
+    ]
+  },
+  "ex-3htgz6yt": {
+    "prompt": "Uma imagem foi escaneada limpa no push na segunda. Na quarta é publicada uma vulnerabilidade num dos pacotes do sistema dela. Com o scan básico, quando o achado aparece?",
+    "hint": "O scan básico olha para um momento.",
+    "choices": [
+      {
+        "text": "Na quarta, quando a vulnerabilidade é publicada",
+        "why": "Reescanear na publicação é o que o scan avançado acrescenta."
+      },
+      {
+        "text": "Quando alguém escanear essa imagem de novo",
+        "why": "Isso: quando pedido, no máximo uma vez a cada 24 horas para essa imagem."
+      },
+      {
+        "text": "No próximo push de qualquer imagem para o repositório",
+        "why": "O scan no push escaneia a imagem enviada, não as que já estão lá."
+      },
+      {
+        "text": "Nunca: um scan básico roda uma vez por imagem, para sempre",
+        "why": "Um scan básico se repete, uma vez por imagem a cada 24 horas."
+      }
+    ]
+  },
+  "ex-wnwahgbt": {
+    "prompt": "Um repositório guarda 40 imagens de 26 MB cada. A 0,10 USD por GB-mês, com 1 GB = 1.000 MB, quanto custa por mês, em USD?",
+    "hint": "Imagens vezes tamanho, em GB, vezes o preço.",
+    "unit": "USD"
+  },
+  "ex-cth3n1bz": {
+    "prompt": "O moto respondeu ao scan com CVE-9999-9999, severidade HIGH, no pacote moto_fake. O que isso diz sobre a imagem?",
+    "hint": "O que o moto chegou a receber para olhar dentro?",
+    "choices": [
+      {
+        "text": "Ela tem uma vulnerabilidade alta, num pacote que o Docker acrescentou",
+        "why": "Não existe pacote com esse nome, e nenhum CVE assim foi publicado."
+      },
+      {
+        "text": "Nada: é um placeholder que o moto devolve para qualquer imagem",
+        "why": "Isso. O moto recebeu um manifest e nenhuma camada, então não havia o que ler."
+      },
+      {
+        "text": "Os pacotes dela estão atualizados, menos um",
+        "why": "O moto não leu pacote nenhum, então não sabe nada das versões."
+      },
+      {
+        "text": "Que o moto lê pacotes de linguagem e não do sistema",
+        "why": "Ele não lê nenhum dos dois; o achado é o mesmo seja qual for a imagem."
+      }
+    ]
+  },
+  "ex-m9emmb9m": {
+    "prompt": "Um pipeline envia dez versões de 26 MB por dia útil e não apaga nada. Depois de 250 dias úteis, quanto o repositório custa por mês a 0,10 USD por GB-mês, com 1 GB = 1.000 MB?",
+    "hint": "Conte as imagens primeiro.",
+    "unit": "USD"
+  },
+  "ex-qh6zdca0": {
+    "prompt": "Ponha em ordem os passos de publicar shop/web:1.0.1 no ECR e fazer o deploy com segurança.",
+    "hint": "O nome é o destino, e o digest chega com o push.",
+    "items": [
+      "docker build da imagem",
+      "docker tag com o endereço do repositório",
+      "docker login com o token do aws ecr get-login-password",
+      "docker push",
+      "Deploy pelo digest que o push informou"
+    ],
+    "trap": "A tag precisa vir antes do push, porque o docker lê o registry no nome."
+  },
+  "ex-kpgpmkjq": {
+    "prompt": "Um cluster em us-east-1 baixa shop/web de um repositório em sa-east-1 a cada node novo, e os pulls são lentos e aparecem na conta. O que resolve as duas coisas e mantém um só pipeline?",
+    "hint": "O repositório vive numa região.",
+    "choices": [
+      {
+        "text": "Tornar as tags imutáveis",
+        "why": "A imutabilidade impede as tags de se moverem; as camadas continuam atravessando o continente."
+      },
+      {
+        "text": "Uma lifecycle policy que mantém menos imagens",
+        "why": "Menos imagens guardadas não encurtam pull nenhum."
+      },
+      {
+        "text": "Ligar o scan avançado em us-east-1",
+        "why": "O scanning não diz nada sobre de onde as camadas são baixadas."
+      },
+      {
+        "text": "Replicação do registry para us-east-1, baixando de lá",
+        "why": "Isso. Cada push é copiado para a outra região, e os nodes baixam da própria."
+      }
+    ]
+  },
+  "ex-2xx7q69c": {
+    "prompt": "Ligue cada erro que o ECR da AWS responde à situação que o produz.",
+    "hint": "Leia o nome de cada um com atenção.",
+    "pairs": [
+      {
+        "left": "ImageTagAlreadyExistsException",
+        "right": "Mover uma tag num repositório imutável"
+      },
+      {
+        "left": "ImageAlreadyExistsException",
+        "right": "O mesmo manifest enviado de novo com a mesma tag"
+      },
+      {
+        "left": "LayersNotFoundException",
+        "right": "Um manifest que cita camadas que nunca foram enviadas"
+      },
+      {
+        "left": "RepositoryNotEmptyException",
+        "right": "Apagar um repositório que ainda guarda imagens"
+      }
+    ],
+    "right_distractors": [
+      "Uma tag mais longa que o nome do repositório"
+    ]
+  }
+}

@@ -1,0 +1,467 @@
+{
+  "ex-g72bv86z": {
+    "prompt": "O `data` do Secret guarda a chave como `dGVzdA==`. Contra o que essa codificação protege a chave?",
+    "choices": [
+      {
+        "text": "Nada: `base64 -d` a transforma de volta na chave",
+        "why": "Base64 é uma codificação sem segredo nenhum. A captura a decodificou com um comando, e qualquer um que leia o Secret faz o mesmo."
+      },
+      {
+        "text": "De quem não tem a chave de criptografia do cluster",
+        "why": "Isso descreve criptografia em repouso, que protege os discos. O valor no Secret é legível por todos que o Kubernetes deixa ler."
+      },
+      {
+        "text": "De ser lida por pods de outros namespaces do cluster",
+        "why": "Namespaces e RBAC decidem quem lê um Secret, e fazem isso seja qual for a aparência do valor. A codificação não acrescenta nada."
+      },
+      {
+        "text": "De ser usada depois que o Secret é apagado",
+        "why": "Apagar o Secret apaga uma cópia. A chave continua válida no IAM, e toda outra cópia dela segue funcionando."
+      }
+    ]
+  },
+  "ex-1k8z6cks": {
+    "prompt": "Para evitar uma chave, uma equipe acrescenta `s3:GetObject` ao role dos nós do EKS, para que o redimensionador leia o bucket. O que ela concedeu de fato?",
+    "choices": [
+      {
+        "text": "Leitura aos pods do redimensionador, e ao kubelet que os inicia",
+        "why": "O kubelet usa o role do nó, sim, mas também o usa todo outro processo da máquina que pergunta ao serviço de metadados."
+      },
+      {
+        "text": "Nada, porque um role de nó se limita ao ECR e ao CNI",
+        "why": "Um role de nó tem as políticas que estiverem anexadas a ele; esse limite não existe, e é exatamente esse o perigo."
+      },
+      {
+        "text": "Leitura aos pods cuja service account nomeia o role do nó",
+        "why": "Service accounts nomeiam roles no IRSA, por uma anotação. O role do nó chega aos pods pelo serviço de metadados, sem anotação nenhuma."
+      },
+      {
+        "text": "Leitura para qualquer pod nesses nós",
+        "why": "O role do nó é entregue pelos metadados da instância, então é concedido à máquina e ao que roda nela, não a uma carga de trabalho."
+      }
+    ]
+  },
+  "ex-5q7jt90c": {
+    "prompt": "Na captura, o `get-session-token` respondeu com um `Expiration`. Quantas horas depois do pedido essa credencial temporária para de funcionar?",
+    "hint": "Compare o horário em `Expiration` com o que o `create-access-key` imprimiu um segundo antes.",
+    "unit": "horas"
+  },
+  "ex-ped4x735": {
+    "prompt": "Onde uma chave posta no `secret.yaml` vai parar? Escolha todos os lugares que a seção cita.",
+    "choices": [
+      {
+        "text": "No repositório, e em cada clone dele, se o arquivo foi commitado",
+        "why": "O Git guarda toda versão commitada, então apagar o arquivo depois deixa a chave no histórico e em cada clone."
+      },
+      {
+        "text": "Em cada pod que monta o Secret",
+        "why": "Montar é a finalidade do Secret: cada pod assim tem a chave no seu ambiente."
+      },
+      {
+        "text": "Num log de CI que imprimiu o ambiente",
+        "why": "Uma das cópias acidentais que a seção lista, e das mais difíceis de achar depois."
+      },
+      {
+        "text": "No STS, que guarda uma cópia para poder expirar a chave",
+        "why": "O STS emite credenciais temporárias e não guarda cópia da chave de um usuário do IAM; nada faz a chave expirar."
+      },
+      {
+        "text": "No serviço de metadados da instância do nó",
+        "why": "O serviço de metadados entrega as credenciais temporárias do role do nó. Ele não sabe nada de uma chave guardada num Secret."
+      }
+    ]
+  },
+  "ex-hja1y9yp": {
+    "prompt": "O que `aws iam create-open-id-connect-provider --url \"$ISSUER\" --client-id-list sts.amazonaws.com` acrescenta à conta?",
+    "choices": [
+      {
+        "text": "Um role que todo pod do cluster consegue assumir",
+        "why": "Um provedor não concede nada sozinho. Que tokens viram qual role é decidido pela política de confiança de um role."
+      },
+      {
+        "text": "Um usuário do IAM para o cluster, com uma chave que os pods dividem",
+        "why": "O IRSA não cria usuário nem chave. O próprio pod chama o STS com o seu token."
+      },
+      {
+        "text": "A chave privada do emissor, para o IAM assinar cada token que os pods apresentam",
+        "why": "O Kubernetes assina os tokens e guarda a chave privada; o IAM fica sabendo onde buscar as chaves públicas que os conferem."
+      },
+      {
+        "text": "Um registro de que tokens deste emissor e desta audiência merecem crédito",
+        "why": "É só isso: o IAM aprende de quem aceitar assinaturas, e uma política de confiança pode então nomear o provedor."
+      }
+    ]
+  },
+  "ex-czkbjzdw": {
+    "prompt": "A política de confiança de um role nomeia o provedor do cluster e a condição de `aud`, mas alguém apagou a linha do `sub`. Que pods conseguem assumir o role agora?",
+    "choices": [
+      {
+        "text": "Nenhum, porque a política ficou inválida e o IAM a rejeita",
+        "why": "Uma declaração com menos condições continua sendo IAM válido. Ela fica mais larga, não quebrada, e por isso o erro passa despercebido."
+      },
+      {
+        "text": "Só os pods do namespace cuja service account criou o role",
+        "why": "Roles não são criados a partir de um namespace, e nada na política nomeia um mais."
+      },
+      {
+        "text": "Todo pod do cluster com um token para `sts.amazonaws.com`",
+        "why": "O token de todo pod vem do mesmo emissor, então sem o `sub` a política não distingue mais uma service account de outra."
+      },
+      {
+        "text": "Pods de outros clusters da mesma conta",
+        "why": "Outro cluster tem outro emissor e outro provedor, e o principal `Federated` continua nomeando este."
+      }
+    ]
+  },
+  "ex-escaevnj": {
+    "prompt": "Complete a ação que uma política de confiança de IRSA permite, a chamada que troca um token do Kubernetes por credenciais: `\"Action\": \"sts:___\"`",
+    "hint": "O nome diz o que quem chama traz: uma identidade da web.",
+    "blanks": [
+      {
+        "accept": [
+          "AssumeRoleWithWebIdentity"
+        ]
+      }
+    ]
+  },
+  "ex-w31v115z": {
+    "prompt": "Para não ter de editar, uma equipe escreve a condição de confiança como `StringLike` com `system:serviceaccount:shop:*`. Um ano depois um colega cria a service account `shop:export` para outro trabalho. O que acontece?",
+    "choices": [
+      {
+        "text": "`shop:export` é recusada até alguém a acrescentar ao role",
+        "why": "Isso é o que `StringEquals` com um nome faria. O curinga foi escrito justamente para ninguém precisar acrescentar nada."
+      },
+      {
+        "text": "O role para de funcionar, já que agora duas service accounts casam",
+        "why": "Uma condição que casa com vários sujeitos é válida; cada token é testado por si."
+      },
+      {
+        "text": "Nada muda a menos que `shop:export` rode no mesmo nó",
+        "why": "Nós não participam da decisão de confiança do IRSA. O que se testa é o sujeito do token."
+      },
+      {
+        "text": "`shop:export` consegue assumir o role no dia em que for anotada com ele",
+        "why": "O curinga casa com toda service account do namespace, inclusive as que não existiam quando a política foi escrita."
+      }
+    ]
+  },
+  "ex-xrrps93e": {
+    "prompt": "O role, o provedor e a política de confiança estão certos. A anotação foi posta na service account `photos` há uma hora, e o pod do redimensionador, rodando desde ontem, ainda recebe `AccessDenied` do S3. Qual é a causa mais provável?",
+    "choices": [
+      {
+        "text": "O provedor OIDC precisa de um thumbprint para o IAM confiar nele",
+        "why": "A referência da API diz que o thumbprint é opcional, e o certificado de um emissor do EKS é conferido contra as autoridades confiáveis da AWS."
+      },
+      {
+        "text": "O pod é anterior à anotação, então nunca recebeu o token",
+        "why": "O role é ligado ao pod quando o pod é criado. Reiniciar o deployment cria pods que o têm."
+      },
+      {
+        "text": "O IRSA leva um dia para chegar a uma service account nova",
+        "why": "Não existe atraso assim no IRSA. O token é escrito quando o pod inicia."
+      },
+      {
+        "text": "O S3 recusa credenciais temporárias vindas de uma identidade web",
+        "why": "O S3 as aceita como qualquer pedido assinado; são credenciais comuns do STS."
+      }
+    ]
+  },
+  "ex-rqcx0q8c": {
+    "prompt": "Ponha a troca do IRSA na ordem em que acontece na AWS, a partir da primeira chamada do pod à AWS.",
+    "items": [
+      "O SDK lê AWS_ROLE_ARN e o arquivo do token",
+      "O SDK envia o token ao AssumeRoleWithWebIdentity do STS",
+      "O STS busca as chaves públicas do emissor",
+      "O STS confere a assinatura e as condições da política de confiança",
+      "O STS devolve credenciais por uma hora",
+      "O SDK assina a chamada ao S3 com elas"
+    ],
+    "trap": "Conferir as condições antes de buscar as chaves: o STS não pode confiar em declaração nenhuma até verificar a assinatura sobre todas elas."
+  },
+  "ex-0nfvtxk2": {
+    "prompt": "Com `AWS_ROLE_ARN` e `AWS_WEB_IDENTITY_TOKEN_FILE` exportadas mas as chaves de teste ainda definidas, `aws sts get-caller-identity` responde como o usuário do moto. Por quê?",
+    "choices": [
+      {
+        "text": "O moto se recusa a fazer a troca enquanto as chaves de teste ainda estão presentes",
+        "why": "O moto nem vê uma troca nesse caso: a linha de comando não tenta fazer uma."
+      },
+      {
+        "text": "O SDK procura chaves no ambiente antes de procurar um token",
+        "why": "A cadeia de credenciais para na primeira fonte que responde, e as chaves do ambiente vêm primeiro. Um pod de verdade não tem nenhuma."
+      },
+      {
+        "text": "O arquivo do token precisa estar em `/var/run/secrets`",
+        "why": "Qualquer caminho serve; a variável diz onde ele está, e a captura usou `~/aws/token`."
+      },
+      {
+        "text": "Faltava `AWS_ROLE_SESSION_NAME`",
+        "why": "Ela é opcional. Sem ela o SDK inventa um nome de sessão e faz a troca do mesmo jeito."
+      }
+    ]
+  },
+  "ex-33hc5efy": {
+    "prompt": "O moto deu credenciais para o token `not-a-token` e para um role que não existe. O que a troca executada no laptop estabelece de fato?",
+    "choices": [
+      {
+        "text": "Que o lado do SDK funciona: duas variáveis o fazem executar a troca",
+        "why": "Essa é a parte que o moto exercitou de verdade, o mesmo caminho de código que um pod percorre. A verificação foi a parte que ele pulou."
+      },
+      {
+        "text": "Que a política de confiança em `trust.json` está correta para o pod de fotos",
+        "why": "O moto nunca a abriu. Um `sub` errado daria a mesma resposta, e por isso a política precisa ser conferida na AWS."
+      },
+      {
+        "text": "Que o STS aceita um token sem assinatura desde que seja curto",
+        "why": "O STS recusa um token sem assinatura de qualquer tamanho com `InvalidIdentityToken`; o moto não lê nenhum."
+      },
+      {
+        "text": "Que roles são criados sob demanda pelo STS",
+        "why": "Quem cria roles é o IAM. O moto só não confere se o ARN nomeia um."
+      }
+    ]
+  },
+  "ex-c745qyt2": {
+    "prompt": "Na AWS, relacione cada token entregue ao STS com o que o STS responde.",
+    "pairs": [
+      {
+        "left": "Um token cuja assinatura não confere com as chaves do emissor",
+        "right": "InvalidIdentityToken"
+      },
+      {
+        "left": "Um token bem assinado depois do seu exp",
+        "right": "ExpiredToken"
+      },
+      {
+        "left": "Um token bem assinado para system:serviceaccount:shop:default",
+        "right": "AccessDenied"
+      },
+      {
+        "left": "Um token bem assinado para system:serviceaccount:shop:photos",
+        "right": "credenciais de photos-reader"
+      }
+    ],
+    "right_distractors": [
+      "NoSuchEntity",
+      "SignatureDoesNotMatch"
+    ]
+  },
+  "ex-hqcx1k8r": {
+    "prompt": "A recusa rodou com `INITIAL_NO_AUTH_ACTION_COUNT=5`: bucket, foto, role, permissão, troca. Você quer repeti-la criando também o provedor OIDC do IAM, dentro da janela sem conferência, antes da troca. Com que valor você inicia o moto?",
+    "hint": "Conte um por pedido à AWS que a linha de comando envia. Escrever um arquivo não envia nenhum.",
+    "unit": "pedidos"
+  },
+  "ex-8tkecm11": {
+    "prompt": "Com o EKS Pod Identity, o que liga a service account `shop:photos` ao seu role?",
+    "choices": [
+      {
+        "text": "Uma anotação na service account",
+        "why": "Essa é a ligação do IRSA. O Pod Identity não tem nada a anotar no Kubernetes."
+      },
+      {
+        "text": "Uma condição de `sub` na política de confiança do role",
+        "why": "A política de confiança do Pod Identity nomeia o serviço `pods.eks.amazonaws.com` e nenhuma service account."
+      },
+      {
+        "text": "Uma associação no EKS",
+        "why": "Uma associação nomeia o cluster, o namespace, a service account e o role, e substitui tanto a anotação quanto o provedor."
+      },
+      {
+        "text": "Um provedor OIDC do IAM por namespace",
+        "why": "O Pod Identity não precisa de provedor OIDC nenhum, nem por namespace nem por cluster."
+      }
+    ]
+  },
+  "ex-8g8x3eaq": {
+    "prompt": "Um cluster roda algumas cargas em node groups gerenciados e outras num perfil Fargate. Quais podem usar o EKS Pod Identity?",
+    "choices": [
+      {
+        "text": "As duas, desde que o add-on esteja instalado",
+        "why": "O add-on é um DaemonSet, e um DaemonSet não tem nó onde rodar no Fargate."
+      },
+      {
+        "text": "Só os pods no Fargate, já que a AWS roda o agente deles",
+        "why": "A AWS não roda Pod Identity Agent para pods no Fargate; é por isso que eles ficam de fora."
+      },
+      {
+        "text": "Nenhuma, até o cluster ser recriado",
+        "why": "O Pod Identity é acrescentado a um cluster existente instalando o add-on e criando associações."
+      },
+      {
+        "text": "Só os que estão em nós EC2; os outros ficam com o IRSA",
+        "why": "O agente roda em nós que são seus, e o Fargate não lhe dá nenhum, então os pods Fargate da aula 12 usam o IRSA."
+      }
+    ]
+  },
+  "ex-k32v2yes": {
+    "prompt": "Na execução no laptop, o que a linha de comando enviou ao agente substituto em `AWS_CONTAINER_CREDENTIALS_FULL_URI`?",
+    "choices": [
+      {
+        "text": "Um GET com o token como `Authorization`",
+        "why": "Esse é o protocolo de credenciais de contêiner: o token de `AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE`, enviado como cabeçalho, e credenciais em JSON de volta."
+      },
+      {
+        "text": "Um pedido `AssumeRole` assinado com as chaves de teste",
+        "why": "As chaves tinham sido removidas; a linha de comando não tinha com que assinar, e por isso perguntou ao agente."
+      },
+      {
+        "text": "O ARN do role, para o agente saber qual role assumir",
+        "why": "Aqui o pod não escolhe o seu role. A associação decide, e o substituto tinha o role escrito nele."
+      },
+      {
+        "text": "Um PUT pedindo um token IMDSv2, como numa instância EC2",
+        "why": "Esse é o protocolo do serviço de metadados da aula 7. O agente é outro endpoint, com outro protocolo."
+      }
+    ]
+  },
+  "ex-1zk60t02": {
+    "prompt": "Dez equipes dividem um cluster, um namespace cada, e cada uma deve ler só `s3://shop-data/<seu namespace>/`. Que abordagem mantém isso com um role só?",
+    "choices": [
+      {
+        "text": "IRSA, com dez condições de `sub` numa política de confiança",
+        "why": "Isso deixa dez service accounts assumirem o mesmo role, e então cada uma lê todos os prefixos que o role permite."
+      },
+      {
+        "text": "O role do nó, com uma declaração por prefixo na sua política de permissão",
+        "why": "O role do nó é compartilhado por todo pod do nó, então não distingue as equipes de jeito nenhum."
+      },
+      {
+        "text": "Pod Identity, comparando o prefixo com a tag de namespace da sessão",
+        "why": "Toda sessão leva o seu namespace como tag, então uma política de permissão pode dizer \"o seu próprio prefixo\" para as dez."
+      },
+      {
+        "text": "Um usuário do IAM por namespace, com a chave num Secret",
+        "why": "Dez usuários, dez chaves que nunca expiram, e ainda nenhum role único: a primeira resposta errada da seção, dez vezes."
+      }
+    ]
+  },
+  "ex-t7n2kzht": {
+    "prompt": "Relacione cada carga de trabalho com o jeito que este curso usaria para lhe dar credenciais da AWS.",
+    "pairs": [
+      {
+        "left": "Um pod num perfil Fargate do EKS",
+        "right": "IRSA"
+      },
+      {
+        "left": "Um pod em nós EC2, em oito clusters trocados a cada atualização",
+        "right": "EKS Pod Identity"
+      },
+      {
+        "left": "Um cron job numa instância EC2 comum",
+        "right": "um instance profile"
+      }
+    ],
+    "right_distractors": [
+      "a chave de um usuário do IAM num Secret",
+      "o role dos nós do EKS"
+    ]
+  },
+  "ex-yghqbpfm": {
+    "prompt": "IRSA e Pod Identity estão bem configurados, e uma auditoria ainda acha um pod lendo um bucket com as credenciais do role do nó. Que configuração da aula 7 fecha esse caminho?",
+    "choices": [
+      {
+        "text": "Um `DurationSeconds` menor no role do pod",
+        "why": "O role do pod não é o que está sendo usado; é o role do nó, pelo serviço de metadados."
+      },
+      {
+        "text": "Uma condição de `sub` na política de confiança do role do nó",
+        "why": "O role do nó confia no serviço EC2, e o serviço de metadados o entrega a qualquer processo que pergunte; `sub` é coisa de tokens de identidade web."
+      },
+      {
+        "text": "IMDSv2 obrigatório, com limite de saltos 1",
+        "why": "A resposta do token não consegue dar o salto a mais até o contêiner, então o pod nunca alcança as credenciais do nó."
+      },
+      {
+        "text": "Apagar a service account do pod",
+        "why": "O pod perderia o próprio role e ficaria com o do nó, que é o contrário da correção."
+      }
+    ]
+  },
+  "ex-hrttt3ea": {
+    "prompt": "Todo evento do CloudTrail do redimensionador mostra o nome de sessão `botocore-session-1792166400`, e vinte réplicas parecem idênticas. O que teria feito os eventos dizerem qual carga de trabalho foi?",
+    "choices": [
+      {
+        "text": "Dar a cada réplica um usuário do IAM e uma chave próprios",
+        "why": "Isso traz de volta a chave estática e todo o seu custo, para resolver um problema de nome."
+      },
+      {
+        "text": "Definir `AWS_ROLE_SESSION_NAME` no pod",
+        "why": "Sem ela o SDK inventa um nome com horário; com ela a sessão diz qual carga de trabalho, como `photos-pod` disse na captura."
+      },
+      {
+        "text": "Acrescentar um thumbprint ao provedor OIDC",
+        "why": "Um thumbprint diz respeito ao TLS do endpoint de chaves do emissor e não diz nada sobre sessões."
+      },
+      {
+        "text": "Aumentar a validade do token projetado para mais de um dia",
+        "why": "Um token mais longo muda a frequência com que o kubelet o reescreve, não o nome da sessão."
+      }
+    ]
+  },
+  "ex-fxrhg3yb": {
+    "prompt": "Quais destes o pod identity webhook acrescenta a um pod cuja service account tem a anotação do IRSA? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "`AWS_ROLE_ARN`",
+        "why": "O role da anotação, que o SDK põe na troca."
+      },
+      {
+        "text": "`AWS_WEB_IDENTITY_TOKEN_FILE`",
+        "why": "O caminho do token projetado, a outra metade do que faz o SDK passar para a troca."
+      },
+      {
+        "text": "Um volume projetado com um token para `sts.amazonaws.com`",
+        "why": "O próprio token, válido por um dia e reescrito pelo kubelet antes de acabar."
+      },
+      {
+        "text": "`AWS_SECRET_ACCESS_KEY`",
+        "why": "Nenhuma chave entra no pod; evitar exatamente isso é a razão do IRSA."
+      },
+      {
+        "text": "`AWS_CONTAINER_CREDENTIALS_FULL_URI`",
+        "why": "Essa variável é do Pod Identity, e aponta o SDK para o agente; o IRSA não a define."
+      }
+    ]
+  },
+  "ex-6ve0s6d8": {
+    "prompt": "`aws eks create-pod-identity-association` respondeu com a página `404 Not Found` do moto. O que isso diz sobre a AWS?",
+    "choices": [
+      {
+        "text": "Que o cluster `shop` não foi encontrado",
+        "why": "Um cluster que falta é um `ResourceNotFoundException` em JSON do EKS, não uma página HTML."
+      },
+      {
+        "text": "Que o role precisa antes de `sts:TagSession`",
+        "why": "O role já tinha isso no `pod-trust.json`, e um problema de política nunca é respondido com uma página 404."
+      },
+      {
+        "text": "Nada: o moto 5.2.3 não tem rota para a chamada, e na AWS ela devolve a associação",
+        "why": "O 404 é do framework web do moto. O comportamento na AWS precisa ser lido na documentação da AWS, como a seção fez."
+      },
+      {
+        "text": "Que o Pod Identity não é oferecido em sa-east-1",
+        "why": "Nada na resposta nomeia uma região; é o emulador que não tem a chamada."
+      }
+    ]
+  },
+  "ex-47efkzz1": {
+    "prompt": "Uma equipe muda o redimensionador do IRSA para o Pod Identity. Que mudança o código do próprio redimensionador precisa?",
+    "choices": [
+      {
+        "text": "Uma chamada à API EKS Auth antes do primeiro pedido ao S3",
+        "why": "Quem faz essa chamada é o agente. A aplicação só vê o SDK encontrar credenciais."
+      },
+      {
+        "text": "Ler o arquivo do token e passá-lo ao S3",
+        "why": "O S3 nunca vê um token do Kubernetes em nenhum dos mecanismos; ele vê pedidos assinados com credenciais do STS."
+      },
+      {
+        "text": "Nenhuma, com um SDK recente o bastante",
+        "why": "Os dois mecanismos são encontrados pela cadeia de credenciais do SDK, então o código é o mesmo; um SDK antigo é a única coisa a conferir."
+      },
+      {
+        "text": "Trocar `AWS_ROLE_ARN` pelo id da associação",
+        "why": "O id da associação nunca é dado ao pod; o EKS define as duas variáveis de contêiner em vez disso."
+      }
+    ]
+  }
+}

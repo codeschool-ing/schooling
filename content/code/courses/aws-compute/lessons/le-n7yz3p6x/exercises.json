@@ -1,0 +1,659 @@
+[
+  {
+    "id": "ex-n2x0z0rc",
+    "version": 1,
+    "section": "app-runner",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An App Runner service on the default settings gets no visitors for a whole month. What is it billed for?",
+    "hint": "Two meters, and one of them runs whether anybody visits or not.",
+    "choices": [
+      {
+        "text": "Nothing, because App Runner scales a quiet service down to zero instances",
+        "correct": false,
+        "why": "MinSize cannot go below one. Only PauseService takes capacity to zero, and somebody has to call it."
+      },
+      {
+        "text": "The memory of one provisioned instance",
+        "correct": true,
+        "why": "Right. Memory is billed for every provisioned instance; the processor only while one serves. 2 GB × 0.007 × 730 is 10.22 USD."
+      },
+      {
+        "text": "The processor and the memory of one instance, all month",
+        "correct": false,
+        "why": "That is the bill of an instance that is active all month, 56.94 USD. An idle one pays memory alone."
+      },
+      {
+        "text": "The memory of the 25 instances that MaxSize allows",
+        "correct": false,
+        "why": "MaxSize is a ceiling for busy times. A quiet service keeps MinSize instances, which is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-smfnvqe5",
+    "version": 1,
+    "section": "app-runner",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An App Runner service with one instance of 1 vCPU and 2 GB is active for 300 hours of a 730-hour month and idle for the rest. At 0.064 USD per vCPU-hour and 0.007 USD per GB-hour, what is the month, in USD, to the cent?",
+    "hint": "Active hours pay vCPU and memory, 0.078 an hour; idle hours pay memory only, 0.014 an hour.",
+    "value": 29.42,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-wazqveqh",
+    "version": 1,
+    "section": "app-runner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You run aws apprunner list-services against moto and get a 500 with an HTML page in it. What does that tell you?",
+    "hint": "Who wrote the page: AWS, or the program on your laptop?",
+    "choices": [
+      {
+        "text": "App Runner is not offered in us-east-1 either",
+        "correct": false,
+        "why": "us-east-1 is where the price sheet reads App Runner from. And the answer did not come from AWS at all."
+      },
+      {
+        "text": "moto does not implement App Runner",
+        "correct": true,
+        "why": "Right. A 500 from moto is a service it has no code for; AWS would answer the command line in JSON, not with an HTML page."
+      },
+      {
+        "text": "The credentials test and test were refused",
+        "correct": false,
+        "why": "A refused credential is a named error such as InvalidClientTokenId, and moto accepts test anyway."
+      },
+      {
+        "text": "AWS refused because the account is not an existing App Runner customer",
+        "correct": false,
+        "why": "The request never reached AWS: AWS_ENDPOINT_URL sends it to moto on your laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc5he1x8",
+    "version": 1,
+    "section": "app-runner",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company opens its first AWS account in October 2026 and wants exactly what App Runner offers: an image in, an address out. What does AWS's own documentation point it to?",
+    "hint": "The service closed to new customers on a date in 2026, and its availability page names a successor.",
+    "choices": [
+      {
+        "text": "App Runner in us-east-1, since São Paulo does not offer it",
+        "correct": false,
+        "why": "Changing region does not help. Since 30 April 2026 App Runner is closed to new customers in every region."
+      },
+      {
+        "text": "Amazon ECS Express Mode",
+        "correct": true,
+        "why": "Right. The availability-change page recommends it: one call that builds a Fargate service with its load balancer and scaling."
+      },
+      {
+        "text": "A self-managed Kubernetes cluster on EC2, which is what App Runner ran on underneath",
+        "correct": false,
+        "why": "Nothing in the documentation says that, and a cluster is the opposite of what the company asked for."
+      },
+      {
+        "text": "App Runner through a VPC connector, which existing customers lend to new accounts",
+        "correct": false,
+        "why": "A VPC connector lets a service reach a private network. It has nothing to do with who may sign up."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6btnh2k",
+    "version": 1,
+    "section": "app-runner",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default auto scaling configuration, App Runner adds an instance once one instance has more than ___ requests in flight at the same time.",
+    "hint": "The default of MaxConcurrency.",
+    "blanks": [
+      {
+        "accept": [
+          "100"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m5qvjrd4",
+    "version": 1,
+    "section": "elastic-beanstalk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Elastic Beanstalk, what is shop-prod when the application is called shop?",
+    "hint": "Of the four words, which one has an address of its own?",
+    "choices": [
+      {
+        "text": "An application version: one zip of the code in S3",
+        "correct": false,
+        "why": "A version is a build with a label such as v2. It runs nowhere until an environment deploys it."
+      },
+      {
+        "text": "A platform",
+        "correct": false,
+        "why": "A platform is the operating system, runtime and web server underneath, maintained by AWS."
+      },
+      {
+        "text": "An environment: one running copy of one version",
+        "correct": true,
+        "why": "Right. shop-prod and shop-staging are two environments of the same application."
+      },
+      {
+        "text": "A second application, since every environment needs one of its own",
+        "correct": false,
+        "why": "One application holds several environments. That is what the application is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4q6pqwq",
+    "version": 1,
+    "section": "elastic-beanstalk",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto answered create-environment. Which fields of its answer show that moto is imitating Beanstalk rather than running it? Choose all that apply.",
+    "hint": "Compare each field with what AWS would have put there.",
+    "choices": [
+      {
+        "text": "EnvironmentId is an empty string",
+        "correct": true,
+        "why": "AWS returns an id beginning with e-. moto left it empty."
+      },
+      {
+        "text": "PlatformArn is TODO",
+        "correct": true,
+        "why": "A note moto's authors left for themselves, where AWS names the platform."
+      },
+      {
+        "text": "Status is Ready in the same second",
+        "correct": true,
+        "why": "AWS answers Launching and builds for minutes. moto has nothing to build."
+      },
+      {
+        "text": "ApplicationName is shop",
+        "correct": false,
+        "why": "That is what the request named, and AWS would answer the same."
+      },
+      {
+        "text": "Tier is WebServer",
+        "correct": false,
+        "why": "A load-balanced web server is the tier a plain create-environment asks for on AWS too."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yqkk81d",
+    "version": 1,
+    "section": "elastic-beanstalk",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of putting the shop on Elastic Beanstalk, on AWS, in order.",
+    "hint": "The folder first, the running copy after the code exists.",
+    "items": [
+      "create-application names the application shop",
+      "create-application-version registers a zip in S3 as v2",
+      "create-environment starts a CloudFormation stack for shop-prod",
+      "The stack creates the group, the instances and the load balancer"
+    ],
+    "trap": "Creating the environment before a version exists gives it the sample application rather than yours."
+  },
+  {
+    "id": "ex-99wbrbv5",
+    "version": 1,
+    "section": "elastic-beanstalk",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Beanstalk environment keeps three t4g.medium instances running all month. At 0.0536 USD an hour each and 730 hours, what do the instances cost, in USD, to the cent?",
+    "hint": "Beanstalk itself adds nothing; count only the instances.",
+    "value": 117.38,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-yyfw3rz7",
+    "version": 1,
+    "section": "elastic-beanstalk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague edits the listener of a Beanstalk environment's load balancer by hand, in the EC2 console, because no option seemed to reach it. What goes wrong later?",
+    "hint": "Who believes they own that load balancer?",
+    "choices": [
+      {
+        "text": "Nothing goes wrong, because Beanstalk reads the load balancer live each time and adopts the edit",
+        "correct": false,
+        "why": "Beanstalk works through its stack, and the stack still describes the old listener."
+      },
+      {
+        "text": "The environment is deleted as soon as Beanstalk notices a change made outside it",
+        "correct": false,
+        "why": "Nothing is deleted. The trouble arrives later, quietly."
+      },
+      {
+        "text": "A later Beanstalk change reverts the edit, or fails against a stack that no longer matches",
+        "correct": true,
+        "why": "Right. The resources are ordinary, but the stack that made them still thinks it owns them."
+      },
+      {
+        "text": "The console refuses the edit, because resources a Beanstalk stack created are locked against changes",
+        "correct": false,
+        "why": "They are ordinary resources and the console lets you change them, which is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpbpfvdk",
+    "version": 1,
+    "section": "what-remains",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Beanstalk deployment policy to what happens while it deploys.",
+    "hint": "Ask of each one: does capacity drop, and what is left of the old version?",
+    "pairs": [
+      {
+        "left": "AllAtOnce",
+        "right": "Every instance at once, and the site is down meanwhile"
+      },
+      {
+        "left": "Rolling",
+        "right": "One batch at a time, with capacity down by a batch"
+      },
+      {
+        "left": "RollingWithAdditionalBatch",
+        "right": "An extra batch first, so capacity holds"
+      },
+      {
+        "left": "Immutable",
+        "right": "A full new set beside the old, swapped in when healthy"
+      },
+      {
+        "left": "TrafficSplitting",
+        "right": "New instances take a share of requests for a set time"
+      }
+    ],
+    "right_distractors": [
+      "A second environment whose address is swapped"
+    ]
+  },
+  {
+    "id": "ex-qews96tj",
+    "version": 1,
+    "section": "what-remains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which deployment policy leaves the old instances serving until the new ones are healthy, so that going back means terminating the new ones?",
+    "hint": "Going back without deploying the old version again.",
+    "choices": [
+      {
+        "text": "Rolling",
+        "correct": false,
+        "why": "Rolling replaces instances batch by batch. Going back is deploying the old version again."
+      },
+      {
+        "text": "RollingWithAdditionalBatch",
+        "correct": false,
+        "why": "The extra batch keeps capacity up, but the old instances are still updated in place, and going back is another deployment."
+      },
+      {
+        "text": "Immutable",
+        "correct": true,
+        "why": "Right. The new set runs beside the old; if it fails its health checks, it is terminated and the old set never changed."
+      },
+      {
+        "text": "AllAtOnce, since it is the fastest to undo",
+        "correct": false,
+        "why": "It is the fastest to run, with the site down. Undoing it is a second deployment just as fast and just as down."
+      }
+    ]
+  },
+  {
+    "id": "ex-dte21wk2",
+    "version": 1,
+    "section": "what-remains",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An environment with MinSize 3 on t4g.medium (0.0536 USD an hour) deploys with the Immutable policy. While old and new sets run together, what do the instances cost per hour, in USD?",
+    "hint": "An immutable deployment runs a complete second set beside the first.",
+    "value": 0.3216,
+    "tolerance": 0.0001,
+    "unit": "USD per hour"
+  },
+  {
+    "id": "ex-2pr48fmz",
+    "version": 1,
+    "section": "what-remains",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "shop.config sets PreferredStartTime to \"Sun:05:00\" for managed platform updates. When does the window start for a team in São Paulo, three hours behind UTC?",
+    "hint": "The time in that option is UTC.",
+    "choices": [
+      {
+        "text": "Sunday at 05:00",
+        "correct": false,
+        "why": "That is the time in UTC. São Paulo is three hours behind it."
+      },
+      {
+        "text": "Sunday at 02:00",
+        "correct": true,
+        "why": "Right. 05:00 UTC less three hours is 02:00 in São Paulo, a quiet hour for a shop."
+      },
+      {
+        "text": "Sunday at 08:00",
+        "correct": false,
+        "why": "That adds the three hours instead of taking them away."
+      },
+      {
+        "text": "Saturday at 21:00",
+        "correct": false,
+        "why": "That takes away eight hours, which is no time zone the shop is in."
+      }
+    ]
+  },
+  {
+    "id": "ex-11p2rxt9",
+    "version": 1,
+    "section": "what-remains",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Beanstalk options that should travel with each version of the code are written in a file under the directory ___ inside the version's zip.",
+    "hint": "A hidden directory whose name starts with a dot and the initials of the service.",
+    "blanks": [
+      {
+        "accept": [
+          ".ebextensions",
+          "ebextensions"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yk64a80e",
+    "version": 1,
+    "section": "when-they-fit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three developers, one Django shop, a new AWS account in October 2026, and now and then a need to log into a machine to look at a problem. Which of this lesson's options fits?",
+    "hint": "Which one is open to them and still gives them a machine?",
+    "choices": [
+      {
+        "text": "App Runner, built from the Git repository",
+        "correct": false,
+        "why": "It would fit the shape, but it is closed to new customers, and it gives no instance to log into."
+      },
+      {
+        "text": "Elastic Beanstalk on the Python platform",
+        "correct": true,
+        "why": "Right. It is open, it runs the app on EC2 instances in their account, and SSH is there when they need to look."
+      },
+      {
+        "text": "An EKS cluster with managed node groups",
+        "correct": false,
+        "why": "It works and it costs them a cluster to run and upgrade, which is the platform job they do not have anybody for."
+      },
+      {
+        "text": "ECS Express Mode, for the SSH it adds to Fargate",
+        "correct": false,
+        "why": "Express Mode builds a Fargate service, and Fargate gives no host to log into."
+      }
+    ]
+  },
+  {
+    "id": "ex-0225yy64",
+    "version": 1,
+    "section": "when-they-fit",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is a sign that a team has outgrown its platform service? Choose all that apply.",
+    "hint": "The signal is the application stopping being ordinary, not the platform doing its job.",
+    "choices": [
+      {
+        "text": "A second and a third service now call each other privately, each with its own releases",
+        "correct": true,
+        "why": "A platform built around one application starts to show its seams."
+      },
+      {
+        "text": "A release must reach one customer's traffic first, as a canary",
+        "correct": true,
+        "why": "That is more than the platform's deployment options offer."
+      },
+      {
+        "text": "Traffic doubles from 10 to 20 requests a second",
+        "correct": false,
+        "why": "Scaling is what the platform does for you. Growth alone is not a reason to leave."
+      },
+      {
+        "text": "An agent has to run beside the application on every machine",
+        "correct": true,
+        "why": "App Runner offers no way to; Beanstalk offers hooks that grow into a platform of their own."
+      },
+      {
+        "text": "The platform applies a patch version in its weekly window",
+        "correct": false,
+        "why": "That is managed updates working as configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s6zapjb",
+    "version": 1,
+    "section": "when-they-fit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team still on App Runner wants the day it leaves to cost a week rather than a quarter. Which choice, made now, does most for that?",
+    "hint": "What leaves with the application unchanged?",
+    "choices": [
+      {
+        "text": "Deploying from an image in ECR rather than from the source repository",
+        "correct": true,
+        "why": "Right. The same image goes into a task definition of lesson 8; a source build leaves you to write the Dockerfile on the way out."
+      },
+      {
+        "text": "Keeping the default awsapprunner.com address",
+        "correct": false,
+        "why": "The address is the one thing every exit changes. A custom domain would help more than the default."
+      },
+      {
+        "text": "Setting MinSize to 1",
+        "correct": false,
+        "why": "That is the default, and it changes the bill, not the exit."
+      },
+      {
+        "text": "Switching on automatic deployments",
+        "correct": false,
+        "why": "It removes a pipeline from your side, which is one more thing to rebuild after leaving."
+      }
+    ]
+  },
+  {
+    "id": "ex-sc1w3g3f",
+    "version": 1,
+    "section": "when-they-fit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an Elastic Beanstalk worker environment do with the messages in its SQS queue?",
+    "hint": "A worker has no load balancer in front of it.",
+    "choices": [
+      {
+        "text": "Its instances read them and post each one to your application over HTTP",
+        "correct": true,
+        "why": "Right. The application receives a request per message, so a background job runs on the same platform as the site."
+      },
+      {
+        "text": "It forwards them to Lambda, which runs your code for each",
+        "correct": false,
+        "why": "No function is involved; the work runs on the environment's own instances."
+      },
+      {
+        "text": "It stores them in S3 for the web environment to collect",
+        "correct": false,
+        "why": "The queue already holds them. The worker's job is to deliver them to your code."
+      },
+      {
+        "text": "It turns each message into a new application version and deploys it",
+        "correct": false,
+        "why": "Versions are code. Messages are work for the code that is already deployed."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8p3axjj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where are the EC2 instances that serve a Beanstalk environment on AWS?",
+    "hint": "App Runner hides the machines; Beanstalk does something else with them.",
+    "choices": [
+      {
+        "text": "In an account AWS owns, out of sight, as with App Runner",
+        "correct": false,
+        "why": "That is App Runner's model. Beanstalk builds in yours."
+      },
+      {
+        "text": "In your own account, created by the environment's CloudFormation stack",
+        "correct": true,
+        "why": "Right. They are ordinary instances in an ordinary group, which you can list and must not edit by hand."
+      },
+      {
+        "text": "Nowhere: Beanstalk is serverless, and it bills per request rather than by the hour",
+        "correct": false,
+        "why": "Beanstalk bills nothing itself; the instances it builds are billed by the hour."
+      },
+      {
+        "text": "In moto, which keeps them as records",
+        "correct": false,
+        "why": "moto kept the environment as a record and built no instance at all: four empty lists."
+      }
+    ]
+  },
+  {
+    "id": "ex-edfgrgp0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of an Immutable deployment in Beanstalk in order.",
+    "hint": "The old instances are the last thing to change.",
+    "items": [
+      "New instances with v2 are launched in a temporary group",
+      "The new instances pass their health checks",
+      "They are moved into the environment's own group",
+      "The instances running v1 are terminated"
+    ],
+    "trap": "Terminating the old instances before the new ones are healthy turns Immutable into AllAtOnce with extra steps."
+  },
+  {
+    "id": "ex-x10tev3c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a deployment App Runner temporarily doubles a service's provisioned instances. What does that do to the bill?",
+    "hint": "Which meter does a provisioned instance run?",
+    "choices": [
+      {
+        "text": "Nothing at all, because App Runner charges no fee for a deployment",
+        "correct": false,
+        "why": "The deployment itself carries no fee, but the extra copies are provisioned, and provisioned copies are billed."
+      },
+      {
+        "text": "Memory charges for the extra copies, until the switch is over",
+        "correct": true,
+        "why": "Right. Memory is billed for every provisioned instance; the processor only for the ones that serve."
+      },
+      {
+        "text": "A full month of a second instance, since one was provisioned",
+        "correct": false,
+        "why": "The doubling is temporary: it lasts the deployment, not the month."
+      },
+      {
+        "text": "Twice the price per GB-hour, for as long as the deployment lasts",
+        "correct": false,
+        "why": "The price stays 0.007. It is the number of instances that changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxetrchz",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "App Runner bills memory for every provisioned instance, and the processor only for the ___ ones.",
+    "hint": "The ones serving requests at that moment.",
+    "blanks": [
+      {
+        "accept": [
+          "active",
+          "serving"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c1xyqcm4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Elastic Beanstalk itself charge for an environment?",
+    "hint": "Separate the builder from what it builds.",
+    "choices": [
+      {
+        "text": "Nothing; you pay for what it creates",
+        "correct": true,
+        "why": "Right. Two t4g.medium all month are 78.26 USD of instances, and Beanstalk adds nothing to that."
+      },
+      {
+        "text": "A fee per environment per hour, on top of the instances",
+        "correct": false,
+        "why": "There is no such fee. The bill is the resources."
+      },
+      {
+        "text": "0.064 USD per vCPU-hour, like App Runner",
+        "correct": false,
+        "why": "That is App Runner's processor meter, in us-east-1."
+      },
+      {
+        "text": "A fee per deployment, which is why AllAtOnce is cheapest",
+        "correct": false,
+        "why": "Deployments carry no fee; AllAtOnce is the fastest, with the site down."
+      }
+    ]
+  }
+]

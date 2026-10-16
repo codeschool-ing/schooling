@@ -1,0 +1,679 @@
+[
+  {
+    "id": "ex-dxcexyc5",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What performance does a 100 GiB gp3 volume get without paying for any extra?",
+    "hint": "It is the same at any size.",
+    "choices": [
+      {
+        "text": "300 IOPS, three per GiB, and the throughput that allows",
+        "correct": false,
+        "why": "That is gp2, where performance grows only with size."
+      },
+      {
+        "text": "3,000 IOPS and 125 MiB/s, whatever the size of the volume",
+        "correct": true,
+        "why": "Right. Anything above is a separate line on the bill."
+      },
+      {
+        "text": "Whatever the instance type allows, with no limit of its own",
+        "correct": false,
+        "why": "The volume has its own limits, and the instance has others on top."
+      },
+      {
+        "text": "Only the storage; every IOPS is bought separately",
+        "correct": false,
+        "why": "That is closer to io2. gp3 includes a baseline."
+      }
+    ]
+  },
+  {
+    "id": "ex-kntvr8rb",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A gp3 volume of 200 GB is raised to 5,000 IOPS and left at 125 MiB/s. At 0.152 USD per GB-month and 0.0095 per IOPS-month above 3,000, what does it cost a month, in USD?",
+    "hint": "Storage, plus the IOPS above the included 3,000.",
+    "value": 49.4,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-0arnqaxp",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database needs 3,000 IOPS on 100 GiB of data. Why is gp3 the better choice than gp2?",
+    "hint": "Three IOPS per GiB.",
+    "choices": [
+      {
+        "text": "gp2 cannot be attached to current instance types",
+        "correct": false,
+        "why": "It can; it is older, not withdrawn."
+      },
+      {
+        "text": "gp2 would need 1,000 GiB to reach 3,000 IOPS, and gp3 includes them at any size",
+        "correct": true,
+        "why": "Right. On gp2 the only lever is size."
+      },
+      {
+        "text": "gp3 is a hard disk, and hard disks are faster for databases",
+        "correct": false,
+        "why": "gp3 is SSD; the hard-disk types are st1 and sc1, and they are poor at random IOPS."
+      },
+      {
+        "text": "gp2 has no IOPS limit, which makes it unpredictable",
+        "correct": false,
+        "why": "It has one: three per GiB."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yy0fhgs",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto created a 100 GiB gp3 volume with 90,000 IOPS. What does AWS do with the same request?",
+    "hint": "A ratio of IOPS to size.",
+    "choices": [
+      {
+        "text": "Creates it and caps the IOPS at the instance's limit",
+        "correct": false,
+        "why": "The volume limit is checked when it is created, before any instance."
+      },
+      {
+        "text": "Creates it, and bills the IOPS that are used",
+        "correct": false,
+        "why": "Provisioned IOPS are billed whether used or not, and this many are refused anyway."
+      },
+      {
+        "text": "Turns it into io2, which allows that rate",
+        "correct": false,
+        "why": "AWS never changes the type you asked for."
+      },
+      {
+        "text": "Refuses it: gp3 allows at most 500 IOPS per GiB",
+        "correct": true,
+        "why": "Right, so 100 GiB stops at 50,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-kw6s7mfp",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A gp3 volume provisioned at 250 MiB/s is attached to an m7i.large. What does the extra throughput buy?",
+    "hint": "Read the instance's EBS baseline.",
+    "choices": [
+      {
+        "text": "All of it, sustained, since the volume was provisioned for it",
+        "correct": false,
+        "why": "The instance is a limit of its own, whatever the volume can do."
+      },
+      {
+        "text": "Nothing, because gp3 throughput only applies to io2 instances",
+        "correct": false,
+        "why": "io2 is a volume type, not an instance type."
+      },
+      {
+        "text": "Double, because two volumes share the instance's bandwidth",
+        "correct": false,
+        "why": "Sharing divides the bandwidth; it never doubles it."
+      },
+      {
+        "text": "Bursts only: the instance sustains 81.25 MB/s to EBS",
+        "correct": true,
+        "why": "Right. Size the instance and the volume together."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m4jqtsh",
+    "version": 1,
+    "section": "ebs-volumes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an st1 volume? Choose all that apply.",
+    "hint": "It is a hard disk sold for throughput.",
+    "choices": [
+      {
+        "text": "It cannot be a boot volume",
+        "correct": true,
+        "why": "Neither hard-disk type can."
+      },
+      {
+        "text": "AWS sells it from 125 GiB upwards",
+        "correct": true,
+        "why": "moto accepted 10 GiB; AWS refuses it."
+      },
+      {
+        "text": "It suits large sequential reads such as logs",
+        "correct": true,
+        "why": "Throughput grows with its size."
+      },
+      {
+        "text": "It is fast at small random reads",
+        "correct": false,
+        "why": "That is where a hard disk is weakest."
+      },
+      {
+        "text": "It includes 3,000 IOPS at any size",
+        "correct": false,
+        "why": "That is gp3."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky8dnq8j",
+    "version": 1,
+    "section": "attaching",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does AWS answer to attaching a volume in sa-east-1b to an instance in sa-east-1a?",
+    "hint": "moto answered differently.",
+    "choices": [
+      {
+        "text": "It attaches it, more slowly, across the zones",
+        "correct": false,
+        "why": "That is moto's answer, without the slowness. AWS never attaches across zones."
+      },
+      {
+        "text": "It moves the volume into sa-east-1a, then attaches it",
+        "correct": false,
+        "why": "A volume never leaves its zone; moving means a snapshot and a new volume."
+      },
+      {
+        "text": "It refuses: InvalidVolume.ZoneMismatch",
+        "correct": true,
+        "why": "Right. A volume attaches only within its zone."
+      },
+      {
+        "text": "It attaches it read-only",
+        "correct": false,
+        "why": "EBS has no such mode for a cross-zone attachment; it refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qejc6q6",
+    "version": 1,
+    "section": "attaching",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of growing an in-use XFS data volume from 100 to 200 GiB in order.",
+    "hint": "The volume first, then what is inside it.",
+    "items": [
+      "Run modify-volume with the new size",
+      "Wait until the modification reaches optimizing or completed",
+      "Grow the partition with growpart",
+      "Grow the file system with xfs_growfs"
+    ],
+    "trap": "Growing the file system before the partition, or before the volume, finds no space to grow into."
+  },
+  {
+    "id": "ex-97parvgx",
+    "version": 1,
+    "section": "attaching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance is terminated. A data volume attached to it after launch, with the default flag, is now what?",
+    "hint": "DeleteOnTermination defaults to false for those.",
+    "choices": [
+      {
+        "text": "Available: unattached, intact, and still billed every month",
+        "correct": true,
+        "why": "Right. Nobody is warned that it is still there."
+      },
+      {
+        "text": "Deleted with the instance, like the root",
+        "correct": false,
+        "why": "Only volumes whose flag is true go; the root's is, this one's is not."
+      },
+      {
+        "text": "Attached to the next instance launched in the zone",
+        "correct": false,
+        "why": "Nothing attaches a volume on its own."
+      },
+      {
+        "text": "Turned into a snapshot automatically, and then deleted",
+        "correct": false,
+        "why": "No snapshot is taken unless somebody takes one."
+      }
+    ]
+  },
+  {
+    "id": "ex-jq35dzp8",
+    "version": 1,
+    "section": "attaching",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An account finds 12 forgotten gp3 volumes of 100 GB in the available state. At 0.152 USD per GB-month, what do they cost a month, in USD?",
+    "hint": "Volumes times size times price.",
+    "value": 182.4,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-31s36nfa",
+    "version": 1,
+    "section": "attaching",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A volume attached to an instance after it was launched has DeleteOnTermination set to ___ unless somebody changes it.",
+    "hint": "The root is the other value.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yqsvp02p",
+    "version": 1,
+    "section": "attaching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A scratch volume means nothing without its instance and should not outlive it. What is the right fix?",
+    "hint": "The flag can be changed on a running instance.",
+    "choices": [
+      {
+        "text": "A weekly job that deletes every available volume",
+        "correct": false,
+        "why": "It would also delete the data volumes somebody kept on purpose."
+      },
+      {
+        "text": "Make it an instance store volume with modify-volume",
+        "correct": false,
+        "why": "modify-volume changes size, type and performance among EBS types; instance store comes with the type."
+      },
+      {
+        "text": "Detach it before every termination",
+        "correct": false,
+        "why": "A detached volume survives just the same, and is still billed."
+      },
+      {
+        "text": "Set its DeleteOnTermination to true",
+        "correct": true,
+        "why": "Right, or in the launch template's mapping for a whole fleet."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhdfam3p",
+    "version": 1,
+    "section": "instance-store",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An i4i.large is stopped and started again. What is on its 468 GB NVMe disk?",
+    "hint": "Where does the instance start?",
+    "choices": [
+      {
+        "text": "Everything that was there before the stop",
+        "correct": false,
+        "why": "That is a reboot, which stays on the same host."
+      },
+      {
+        "text": "The data, restored from an automatic snapshot",
+        "correct": false,
+        "why": "Instance store cannot be snapshotted at all."
+      },
+      {
+        "text": "The data, read-only until the next reboot",
+        "correct": false,
+        "why": "There is no data left to read."
+      },
+      {
+        "text": "Nothing: it starts empty, on a new host",
+        "correct": true,
+        "why": "Right. The old disk stayed with the old host and was erased."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghgbd4p7",
+    "version": 1,
+    "section": "instance-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs on instance store?",
+    "hint": "Temporary, or copied somewhere else.",
+    "choices": [
+      {
+        "text": "The only copy of a PostgreSQL database",
+        "correct": false,
+        "why": "A stop or a host failure takes it with no way back."
+      },
+      {
+        "text": "Photos users uploaded",
+        "correct": false,
+        "why": "Nobody can upload them again for you."
+      },
+      {
+        "text": "A build cache whose originals are kept in S3",
+        "correct": true,
+        "why": "Right. Losing it costs a refill and nothing else."
+      },
+      {
+        "text": "The application's configuration, edited by hand",
+        "correct": false,
+        "why": "A hand edit on a disk that vanishes is lost with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pr68f9m",
+    "version": 1,
+    "section": "instance-store",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three i4i.large (0.274 USD an hour) replace three r7i.large (0.21105) of the same vCPU and memory. How much more do they cost in a month of 730 hours, in USD?",
+    "hint": "The difference per hour, times 730, times three.",
+    "value": 137.86,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-dz80h4hw",
+    "version": 1,
+    "section": "instance-store",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event to what it does to an instance store disk and to an EBS volume.",
+    "hint": "Which events leave the host?",
+    "pairs": [
+      {
+        "left": "A reboot",
+        "right": "Both kept"
+      },
+      {
+        "left": "A stop and start",
+        "right": "Instance store erased, EBS kept"
+      },
+      {
+        "left": "A termination",
+        "right": "Instance store erased, EBS by its flag"
+      },
+      {
+        "left": "A host failure",
+        "right": "Instance store lost, EBS kept in its zone"
+      }
+    ],
+    "right_distractors": [
+      "Both erased"
+    ]
+  },
+  {
+    "id": "ex-7hqhr7h0",
+    "version": 1,
+    "section": "efs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many mount targets can one EFS file system have in one Availability Zone?",
+    "hint": "moto and AWS agree.",
+    "choices": [
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right; a second gives MountTargetConflict."
+      },
+      {
+        "text": "Two, one for each subnet type",
+        "correct": false,
+        "why": "One per zone, in whichever subnet you choose."
+      },
+      {
+        "text": "As many as the zone has subnets",
+        "correct": false,
+        "why": "The second in the same zone is refused."
+      },
+      {
+        "text": "None, since EFS is reached without one",
+        "correct": false,
+        "why": "Instances reach it only through a target in their zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n4vkbez",
+    "version": 1,
+    "section": "efs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A mount target is reached over NFS on TCP port ___, which its security group has to allow.",
+    "hint": "The NFS port.",
+    "blanks": [
+      {
+        "accept": [
+          "2049"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0nr2w8rv",
+    "version": 1,
+    "section": "efs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file system stores 60 GB in EFS Standard, at 0.57 USD per GB-month. What does it cost a month, in USD?",
+    "hint": "Stored, not provisioned.",
+    "value": 34.2,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-11dfddvt",
+    "version": 1,
+    "section": "efs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to put a PostgreSQL data directory on EFS, so that any instance can take over. Why is that a poor fit?",
+    "hint": "Where does each operation go?",
+    "choices": [
+      {
+        "text": "Every operation crosses the network to a regional service, and a database is built around fast local I/O",
+        "correct": true,
+        "why": "Right. Put the database on EBS, or use a managed database."
+      },
+      {
+        "text": "EFS cannot store files larger than 1 GB",
+        "correct": false,
+        "why": "File size is not the problem; latency is."
+      },
+      {
+        "text": "EFS is only reachable from one zone",
+        "correct": false,
+        "why": "It is reachable from every zone with a mount target."
+      },
+      {
+        "text": "PostgreSQL refuses to start on encrypted storage",
+        "correct": false,
+        "why": "Encryption is invisible to the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxxjr6ja",
+    "version": 1,
+    "section": "efs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file system was created without encryption. How is it made encrypted at rest?",
+    "hint": "It is decided once.",
+    "choices": [
+      {
+        "text": "Turn encryption on with update-file-system",
+        "correct": false,
+        "why": "Encryption at rest cannot be switched on later."
+      },
+      {
+        "text": "Mount it with the tls option, which encrypts what is written",
+        "correct": false,
+        "why": "tls encrypts the traffic on the way, not the stored files."
+      },
+      {
+        "text": "A new one, encrypted from birth, plus a copy",
+        "correct": true,
+        "why": "Right. The choice is made at creation."
+      },
+      {
+        "text": "Add a KMS key to its mount targets",
+        "correct": false,
+        "why": "Mount targets are network interfaces; they hold no key."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9smhvg4",
+    "version": 1,
+    "section": "efs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong on EFS? Choose all that apply.",
+    "hint": "Files several machines read and write.",
+    "choices": [
+      {
+        "text": "Uploads shared by four web servers in three zones",
+        "correct": true,
+        "why": "The case EFS exists for."
+      },
+      {
+        "text": "Users' home directories on a fleet of machines",
+        "correct": true,
+        "why": "Every machine sees the same files."
+      },
+      {
+        "text": "The data directory of a busy MySQL",
+        "correct": false,
+        "why": "Network latency on every operation; EBS fits."
+      },
+      {
+        "text": "A dataset that many workers read",
+        "correct": true,
+        "why": "One copy, read from every zone."
+      },
+      {
+        "text": "An instance's root volume",
+        "correct": false,
+        "why": "An instance boots from EBS, not from a network file system."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdfm7h87",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Four web servers in three zones must all see the same uploaded files, which nobody can recreate. Where do the files go?",
+    "hint": "Shared, across zones, and durable.",
+    "choices": [
+      {
+        "text": "A large gp3 volume attached to all four",
+        "correct": false,
+        "why": "A volume attaches to instances in one zone, and is not a shared file system."
+      },
+      {
+        "text": "EFS, with a mount target in each of the three zones",
+        "correct": true,
+        "why": "Right. Each server mounts the target in its own zone."
+      },
+      {
+        "text": "The instance store of the largest server",
+        "correct": false,
+        "why": "It vanishes with a stop, and the other three cannot reach it."
+      },
+      {
+        "text": "A gp3 volume per server, synchronised by a nightly snapshot",
+        "correct": false,
+        "why": "Four copies a day apart are four different sets of files."
+      }
+    ]
+  },
+  {
+    "id": "ex-rspsdxz3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from the cheapest per GB-month on the price sheet to the dearest.",
+    "hint": "0.086, 0.152, 0.238, 0.57.",
+    "items": [
+      "st1",
+      "gp3",
+      "io2",
+      "EFS Standard"
+    ],
+    "trap": "Per gigabyte is not per month: EFS bills what is stored and a volume what is provisioned."
+  },
+  {
+    "id": "ex-1w3g6bqa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Kafka cluster keeps every partition on three brokers, each an i4i.large writing to its instance store. One broker's host fails. What happens to its data?",
+    "hint": "Lost on that host, kept elsewhere.",
+    "choices": [
+      {
+        "text": "AWS restores it from the instance store's backup",
+        "correct": false,
+        "why": "There is no backup of instance store."
+      },
+      {
+        "text": "It is gone for good, and the cluster loses those partitions",
+        "correct": false,
+        "why": "Two other brokers hold each partition."
+      },
+      {
+        "text": "A new broker refills from the other two",
+        "correct": true,
+        "why": "Right. Replication is what makes instance store safe here."
+      },
+      {
+        "text": "The disk moves with the instance to a new host",
+        "correct": false,
+        "why": "An instance store disk stays with the host it belongs to."
+      }
+    ]
+  }
+]

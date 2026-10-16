@@ -1,0 +1,406 @@
+{
+  "ex-wkca3e7c": {
+    "prompt": "O que é um cold start?",
+    "hint": "O que precisa existir antes de um handler poder ser chamado?",
+    "choices": [
+      {
+        "text": "O próprio serviço do Lambda acordando depois de um período longo parado",
+        "why": "O serviço está sempre de pé. O que falta é um ambiente para esta função."
+      },
+      {
+        "text": "Um ambiente novo sendo montado antes de o handler receber a requisição",
+        "why": "Isso. Posicionar o ambiente, iniciar o runtime e importar o seu módulo são a fase init."
+      },
+      {
+        "text": "O handler rodando devagar da primeira vez porque o Python o compila",
+        "why": "Compilar para bytecode é uma parte pequena. A fase init é sobretudo o runtime e os seus imports."
+      },
+      {
+        "text": "A rede de quem chama abrindo uma conexão com a AWS",
+        "why": "Isso acontece também nas requisições quentes. O cold start é do lado da função."
+      }
+    ]
+  },
+  "ex-xgh39rzg": {
+    "prompt": "Ponha em ordem o que acontece com uma requisição fria.",
+    "hint": "Primeiro init, depois invoke.",
+    "items": [
+      "O Lambda posiciona um ambiente e busca o código",
+      "O runtime inicia",
+      "O runtime importa o seu módulo, rodando o nível de cima dele",
+      "O runtime chama o handler com o evento",
+      "O valor devolvido pelo handler volta para quem chamou"
+    ],
+    "trap": "O código do nível de cima roda antes de o handler ser chamado, e não na primeira linha dele."
+  },
+  "ex-9d5mj9x6": {
+    "prompt": "Quais destas rodam na fase init? Marque todas as que se aplicam.",
+    "hint": "A fase init é o import do módulo.",
+    "choices": [
+      {
+        "text": "Um import boto3 no topo do arquivo",
+        "why": "Isso. Os imports do nível de cima rodam quando o módulo é importado."
+      },
+      {
+        "text": "Um cliente construído no topo do arquivo",
+        "why": "Isso. Tudo no nível do módulo roda no init."
+      },
+      {
+        "text": "Um cliente construído dentro do handler",
+        "why": "Isso roda na fase invoke, a cada chamada."
+      },
+      {
+        "text": "O return do handler",
+        "why": "O handler roda na fase invoke."
+      },
+      {
+        "text": "Um arquivo de configuração lido no nível do módulo",
+        "why": "Isso. Ele é lido uma vez, quando o módulo é importado."
+      }
+    ]
+  },
+  "ex-f0zw1a41": {
+    "prompt": "No emulador, um módulo que constrói um cliente mostra Init Duration: 0.06 ms e Duration: 306.68 ms no primeiro REPORT. Onde está a duração da fase init dele?",
+    "hint": "O emulador erra um campo.",
+    "choices": [
+      {
+        "text": "No Init Duration, como na AWS: o cliente quase não custou nada",
+        "why": "Na AWS esse campo está certo; no emulador ele imprime poucos milissegundos no máximo, faça o módulo o que fizer."
+      },
+      {
+        "text": "No Billed Duration menos o Duration",
+        "why": "Essa diferença é o arredondamento para o milissegundo seguinte."
+      },
+      {
+        "text": "No durationMs da linha INIT REPORT",
+        "why": "Isso. O emulador mede a fase init ali, e a soma ao primeiro Duration."
+      },
+      {
+        "text": "No tempo que o curl imprimiu para a segunda chamada",
+        "why": "A segunda chamada é quente; ela não tem fase init nenhuma."
+      }
+    ]
+  },
+  "ex-ntr8np1n": {
+    "prompt": "Na AWS, a linha REPORT de uma requisição fria dá o tamanho da fase init no campo Init ___.",
+    "hint": "O campo que o emulador erra.",
+    "blanks": [
+      {
+        "accept": [
+          "Duration"
+        ]
+      }
+    ]
+  },
+  "ex-d1vz242f": {
+    "prompt": "No laptop, a fase init do handler vazio levou 48 ms e a do eager, que importa o boto3 e constrói um cliente, 301 ms. Quantos milissegundos do init do eager são o import e o cliente?",
+    "hint": "A parte do runtime é a mesma nos dois.",
+    "unit": "ms"
+  },
+  "ex-119ny89n": {
+    "prompt": "Levar o cliente do topo do arquivo para dentro do handler deu uma fase init curta. O que isso fez com a função?",
+    "hint": "Olhe a primeira chamada e depois as quentes.",
+    "choices": [
+      {
+        "text": "Deixou-a mais rápida, porque a fase init é o custo do cold start",
+        "why": "A primeira chamada pagou o mesmo import no lugar, e as chamadas quentes ficaram mais lentas."
+      },
+      {
+        "text": "A requisição fria continuou lenta, e cada quente reconstrói o cliente",
+        "why": "Isso. Cerca de 8 ms por chamada quente contra menos de 1 ms, em quase toda requisição."
+      },
+      {
+        "text": "Deixou só a primeira chamada mais lenta, e as quentes como estavam",
+        "why": "O Python guarda o módulo, então o import sai de graça, mas o cliente é construído a cada chamada."
+      },
+      {
+        "text": "Pulou o import nas chamadas quentes, então ganha com tráfego",
+        "why": "Pular o import está certo; o cliente continua sendo reconstruído, e é essa a parte que custa."
+      }
+    ]
+  },
+  "ex-e857aspm": {
+    "prompt": "Uma função de 1 GB em sa-east-1 é cobrada por 8 ms por requisição quente com o cliente construído no handler, e por 1 ms com ele construído no topo do arquivo. A 0,0000166667 USD por GB-segundo, quanto 10.000.000 de requisições quentes por mês custam a mais do primeiro jeito, em USD até o centavo?",
+    "hint": "7 ms de diferença, vezes as requisições, vezes 1 GB, vezes o preço.",
+    "unit": "USD"
+  },
+  "ex-5bwrs8nm": {
+    "prompt": "Quando construir algo dentro do handler, no primeiro uso, é a escolha certa?",
+    "hint": "Pense numa dependência de que nem toda requisição precisa.",
+    "choices": [
+      {
+        "text": "Para qualquer cliente, para a fase init ficar curta",
+        "why": "Isso leva o custo para a primeira chamada e o repete nas quentes, a menos que seja guardado."
+      },
+      {
+        "text": "Para uma dependência rara, guardada numa global",
+        "why": "Isso. As requisições que nunca precisam dela nunca pagam, e as outras pagam uma vez por ambiente."
+      },
+      {
+        "text": "Quando a função tem concorrência provisionada",
+        "why": "Ambientes provisionados rodam a fase init com antecedência, então tirar trabalho dela não ganha nada."
+      },
+      {
+        "text": "Quando a função é chamada raramente, então a maioria das requisições é fria",
+        "why": "Uma requisição fria paga o trabalho de qualquer jeito; onde ele roda não faz diferença para ela."
+      }
+    ]
+  },
+  "ex-8ptay4vg": {
+    "prompt": "Ligue cada linha do log do emulador ao que ela marca.",
+    "hint": "Linhas de init, linhas de invoke, e o único campo que engana.",
+    "pairs": [
+      {
+        "left": "exec '/var/runtime/bootstrap'",
+        "right": "O contêiner iniciando o bootstrap do runtime"
+      },
+      {
+        "left": "INIT REPORT(durationMs: ...)",
+        "right": "A fase init, como o emulador a mede"
+      },
+      {
+        "left": "INVOKE START",
+        "right": "O handler sendo chamado para uma requisição"
+      },
+      {
+        "left": "Init Duration no REPORT",
+        "right": "Na AWS, a fase init de uma requisição fria"
+      }
+    ],
+    "right_distractors": [
+      "O ambiente sendo aposentado"
+    ]
+  },
+  "ex-r80jm62f": {
+    "prompt": "O init de uma função constrói três clientes do SDK e analisa um esquema grande. Ela roda com 128 MB no Lambda, e alguém aumenta para 1.024 MB. O que acontece com o cold start?",
+    "hint": "O que mais vem junto com a memória no Lambda?",
+    "choices": [
+      {
+        "text": "Nada: a memória decide quanto a função consegue guardar, não a velocidade",
+        "why": "No Lambda, a CPU é dada em proporção à memória, então um init limitado por CPU acelera."
+      },
+      {
+        "text": "Fica mais longo, porque mais memória precisa ser preparada",
+        "why": "Preparar memória não é do que a fase init é feita; computação é."
+      },
+      {
+        "text": "As requisições quentes aceleram, enquanto o init roda numa CPU fixa",
+        "why": "A fase init roda com a mesma fatia de CPU que o handler."
+      },
+      {
+        "text": "Fica mais curto, porque a fatia de CPU cresce com a memória",
+        "why": "Isso. O emulador mostrou o mesmo com o --cpus do Docker: 343 ms com uma CPU, 1337 com um quarto."
+      }
+    ]
+  },
+  "ex-ptx3pcpw": {
+    "prompt": "O python3 -X importtime imprime o boto3 com 221273 na coluna do meio. O que é esse número?",
+    "hint": "Próprio, acumulado, módulo.",
+    "choices": [
+      {
+        "text": "Microssegundos para o boto3 e tudo o que ele importou por sua vez",
+        "why": "Isso. O tempo acumulado, cerca de 221 ms, a maior parte botocore."
+      },
+      {
+        "text": "Microssegundos do código do próprio boto3, sem contar os imports dele",
+        "why": "Essa é a primeira coluna, o tempo do próprio módulo."
+      },
+      {
+        "text": "Microssegundos desde que o interpretador iniciou",
+        "why": "A coluna é por módulo, não um relógio."
+      },
+      {
+        "text": "Os bytes de memória que o boto3 ocupou ao ser importado",
+        "why": "O importtime mede só tempo; memória pede outra ferramenta."
+      }
+    ]
+  },
+  "ex-jrcb41m7": {
+    "prompt": "Uma função roda 0,6 s por requisição com 512 MB em sa-east-1, a 0,0000166667 USD por GB-segundo. Quanto custa a duração de 1.000.000 de requisições, em USD até o centavo?",
+    "hint": "0,5 GB × 0,6 s por requisição.",
+    "unit": "USD"
+  },
+  "ex-2vs8sbt9": {
+    "prompt": "Quais destas encurtam um cold start sem aumentar a conta? Marque todas as que se aplicam.",
+    "hint": "Algumas movem o trabalho, algumas o tiram, algumas são pagas.",
+    "choices": [
+      {
+        "text": "Tirar um import que a função nunca usa",
+        "why": "Isso. Menos trabalho na fase init, de graça."
+      },
+      {
+        "text": "Construir os clientes no nível do módulo em vez de no handler",
+        "why": "Isso acelera as requisições quentes; a fria paga o mesmo trabalho de qualquer jeito."
+      },
+      {
+        "text": "Manter o pacote pequeno, para haver menos a buscar",
+        "why": "Isso. Na AWS o código é buscado na fase init."
+      },
+      {
+        "text": "Concorrência provisionada nas horas de movimento",
+        "why": "Ela tira o cold start, e é cobrada por cada segundo em que está configurada."
+      },
+      {
+        "text": "Um ping a cada cinco minutos",
+        "why": "Ele mantém um ambiente aquecido, soma invocações e deixa um pico frio."
+      }
+    ]
+  },
+  "ex-5h25v4k3": {
+    "prompt": "Uma equipe empacota o próprio boto3 em vez de depender da cópia do runtime. O que ela ganha, e quanto custa?",
+    "hint": "Quem atualiza a cópia do runtime, e quando?",
+    "choices": [
+      {
+        "text": "Um import mais rápido, porque uma cópia empacotada já vem pré-compilada de fábrica",
+        "why": "A cópia empacotada é o mesmo Python; o import custa o mesmo."
+      },
+      {
+        "text": "Uma versão que ela controla, por uns 27 MB a mais a buscar em cada cold start",
+        "why": "Isso. A AWS atualiza a cópia do runtime no calendário dela; uma cópia fixa não muda."
+      },
+      {
+        "text": "Um pacote menor, porque a cópia do runtime é então removida",
+        "why": "A cópia do runtime continua no runtime; a deles é somada ao pacote."
+      },
+      {
+        "text": "Nada, porque o Lambda ignora um boto3 dentro do pacote",
+        "why": "O pacote vem primeiro no path, então o boto3 dele é o importado."
+      }
+    ]
+  },
+  "ex-bsdxw9ks": {
+    "prompt": "O que levar uma função Python de x86 para Arm faz, segundo a tabela e a documentação da AWS?",
+    "hint": "Compare as duas linhas de duração, e lembre o que a AWS promete.",
+    "choices": [
+      {
+        "text": "Um cold start mais rápido, e é justamente por isso que custa menos",
+        "why": "A AWS não promete cold start mais rápido em Arm; o preço é a diferença documentada."
+      },
+      {
+        "text": "O mesmo preço por GB-segundo, com mais memória por gigabyte",
+        "why": "Um gigabyte é um gigabyte; o que muda é o preço por GB-segundo."
+      },
+      {
+        "text": "Um quinto a menos por GB-segundo, sem aceleração prometida",
+        "why": "Isso. 0,0000133334 contra 0,0000166667, e um cold start que você teria de medir."
+      },
+      {
+        "text": "Requisições mais baratas, ao mesmo preço por GB-segundo",
+        "why": "O preço da requisição é o mesmo; é o preço da duração que o Arm baixa."
+      }
+    ]
+  },
+  "ex-dntg4n80": {
+    "prompt": "O que o SnapStart faz?",
+    "hint": "Ele leva a fase init para outro momento.",
+    "choices": [
+      {
+        "text": "Mantém ambientes inicializados com antecedência e os cobra por segundo",
+        "why": "Isso é concorrência provisionada."
+      },
+      {
+        "text": "Roda o init uma vez na publicação e o restaura em cada cold start",
+        "why": "Isso. O interpretador, os imports e os clientes voltam do snapshot."
+      },
+      {
+        "text": "Invoca a função num agendamento para um ambiente continuar aquecido",
+        "why": "Isso é o ping, que mantém um ambiente e nada mais."
+      },
+      {
+        "text": "Comprime o pacote para que ele seja baixado mais rápido durante o init",
+        "why": "Ele fotografa um ambiente inicializado; não é o pacote que ele muda."
+      }
+    ]
+  },
+  "ex-pz8akz6x": {
+    "prompt": "O create-function com --snap-start ApplyOn=PublishedVersions, contra o moto 5.2.3, respondeu ApplyOn: None. O que isso mostra?",
+    "hint": "O que o moto fez com a configuração?",
+    "choices": [
+      {
+        "text": "Que o SnapStart não existe para Python, e o pedido foi recusado",
+        "why": "A AWS o documenta para Python 3.12 em diante. Nada foi recusado: a chamada deu certo."
+      },
+      {
+        "text": "Que o moto descartou a configuração, que a AWS teria guardado",
+        "why": "Isso. O moto aceitou a opção e não guardou nada, a falha mais silenciosa que existe."
+      },
+      {
+        "text": "Que o SnapStart só vale depois que uma versão é publicada",
+        "why": "Isso vale para o snapshot, e a configuração em si já diria PublishedVersions na hora."
+      },
+      {
+        "text": "Que o SnapStart precisa de concorrência provisionada na mesma versão",
+        "why": "Os dois não se combinam de jeito nenhum."
+      }
+    ]
+  },
+  "ex-vh4bvaet": {
+    "prompt": "Com o SnapStart, quais destes, feitos no topo do arquivo, precisam ser verificados ou refeitos depois de cada restauração? Marque todos os que se aplicam.",
+    "hint": "Quais deles estariam errados se dois ambientes os compartilhassem?",
+    "choices": [
+      {
+        "text": "Uma semente aleatória",
+        "why": "Isso. Toda cópia restaurada produziria os mesmos números."
+      },
+      {
+        "text": "Uma conexão com o banco de dados",
+        "why": "Isso. Ela foi aberta por um ambiente que não existe mais."
+      },
+      {
+        "text": "O import do boto3",
+        "why": "Código importado é o mesmo em toda cópia, e é esse o objetivo do snapshot."
+      },
+      {
+        "text": "Uma credencial temporária",
+        "why": "Isso. Ela seria compartilhada, e ela expira."
+      },
+      {
+        "text": "Um arquivo de configuração que vem no pacote",
+        "why": "O arquivo é o mesmo em todo lugar; lê-lo uma vez está certo."
+      }
+    ]
+  },
+  "ex-869mp4z6": {
+    "prompt": "Um ping invoca uma função a cada cinco minutos, o dia todo. Quantas invocações ele soma num mês de 30 dias?",
+    "hint": "Doze por hora.",
+    "unit": "invocações"
+  },
+  "ex-k1x5m35c": {
+    "prompt": "Ponha os remédios para um cold start na ordem em que vale tentá-los, o mais barato primeiro.",
+    "hint": "O que cada um custa, de nada a cada segundo.",
+    "items": [
+      "Deixar o módulo leve: menos imports, um pacote pequeno",
+      "Dar à função a memória de que o init precisa",
+      "Publicar versões e ligar o SnapStart",
+      "Concorrência provisionada nas horas em que importa"
+    ],
+    "trap": "A concorrência provisionada vem por último porque é cobrada por cada segundo em que está configurada, ocupada ou parada."
+  },
+  "ex-5765zmj0": {
+    "prompt": "Um ping mantém um ambiente aquecido. Seis requisições chegam no mesmo segundo. Quantas delas encontram um cold start?",
+    "hint": "Um ambiente atende uma requisição por vez.",
+    "unit": "requisições"
+  },
+  "ex-d43p1f9j": {
+    "prompt": "Um consumidor de fila processa um lote noturno e tem um cold start de 2 s. O que a equipe deve fazer primeiro a respeito?",
+    "hint": "Quem espera a primeira mensagem?",
+    "choices": [
+      {
+        "text": "Concorrência provisionada nas horas do lote",
+        "why": "Isso paga cada segundo para tirar um atraso que ninguém vê."
+      },
+      {
+        "text": "Um ping a cada cinco minutos, o dia todo",
+        "why": "Ele soma 288 invocações por dia e mantém um ambiente aquecido, por um atraso que ninguém nota."
+      },
+      {
+        "text": "Pouco: ninguém espera, e um módulo leve basta",
+        "why": "Isso. Um cold start importa na proporção da pessoa que espera por ele, e aqui não há ninguém."
+      },
+      {
+        "text": "Ligar o SnapStart, porque todo cold start é um defeito a remover",
+        "why": "Um cold start é um custo, e este não custa a ninguém nada que se perceba."
+      }
+    ]
+  }
+}

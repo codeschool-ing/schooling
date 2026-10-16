@@ -1,0 +1,691 @@
+[
+  {
+    "id": "ex-sd6r7fwc",
+    "version": 1,
+    "section": "target-tracking",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A group of 8 instances averages 70% CPU under a target tracking policy with a target of 40%. How many instances does the policy ask for?",
+    "hint": "Current capacity times the metric over the target.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-ssngpvdf",
+    "version": 1,
+    "section": "target-tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a poor metric to track for a group of workers that read from a queue?",
+    "hint": "A good target metric falls when instances are added.",
+    "choices": [
+      {
+        "text": "The workers' average CPU",
+        "correct": false,
+        "why": "If the work is computation, more workers share it and the average falls, which is what the policy assumes."
+      },
+      {
+        "text": "The backlog per instance: messages waiting divided by workers",
+        "correct": false,
+        "why": "That one falls as workers are added, which is exactly why it is the queue metric that works."
+      },
+      {
+        "text": "The workers' average network in",
+        "correct": false,
+        "why": "Traffic in is shared out over the workers too, and it is one of the four predefined metrics."
+      },
+      {
+        "text": "The number of messages waiting in the queue, as one total for the whole group",
+        "correct": true,
+        "why": "Right. Adding workers does not shrink the total by being there, so the arithmetic of current times metric over target has nothing to divide. The backlog per instance is the form that works."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gpvdvpb",
+    "version": 1,
+    "section": "target-tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group has two target tracking policies. The CPU one would remove two instances; the requests one would add one. What does the group do?",
+    "hint": "Out on any, in on all.",
+    "choices": [
+      {
+        "text": "Removes one: the two answers are added together",
+        "correct": false,
+        "why": "Policies are not summed. Each one computes its own capacity, and the rule picks between them."
+      },
+      {
+        "text": "Removes two, because the CPU policy was created first",
+        "correct": false,
+        "why": "Order of creation plays no part."
+      },
+      {
+        "text": "Adds one",
+        "correct": true,
+        "why": "Right. It scales out when any policy asks for more and in only when all of them agree, so a second policy can only make the group larger."
+      },
+      {
+        "text": "Nothing, until the two policies agree",
+        "correct": false,
+        "why": "Agreement is needed to scale in, not to scale out."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptpgwava",
+    "version": 1,
+    "section": "target-tracking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In moto, put-scaling-policy for target tracking printed nothing, and describe-alarms was empty. What does AWS do with the same call?",
+    "hint": "Who writes the alarms for a target tracking policy?",
+    "choices": [
+      {
+        "text": "Prints the policy's ARN and the two CloudWatch alarms it created and owns",
+        "correct": true,
+        "why": "Right. AWS writes a high alarm and a low alarm for every target tracking policy, and the response lists them."
+      },
+      {
+        "text": "The same as moto: you then create the alarms yourself and point them at the policy",
+        "correct": false,
+        "why": "That is step and simple scaling. Target tracking exists so that you do not write the alarms."
+      },
+      {
+        "text": "Prints the ARN; alarms appear later, once metrics arrive",
+        "correct": false,
+        "why": "The alarms are created with the policy; metrics only decide when they change state."
+      },
+      {
+        "text": "Refuses it until detailed monitoring is enabled on the template",
+        "correct": false,
+        "why": "Target tracking works with the group's metrics as they are; nothing has to be switched on first."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n4aqft5",
+    "version": 1,
+    "section": "target-tracking",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A target of 50% CPU leaves the other half as ___, which carries a rise while the new instances boot.",
+    "hint": "Capacity paid for and not used, on purpose.",
+    "blanks": [
+      {
+        "accept": [
+          "headroom",
+          "spare capacity",
+          "slack",
+          "margin"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-35jk315h",
+    "version": 1,
+    "section": "step-and-simple",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A step policy's alarm is at 70% CPU. Its steps add 1 for a breach of 0 to 15 points, 2 for 15 to 30, and 4 for 30 or more. A group of 5 reads 92%. What is its desired capacity afterwards?",
+    "hint": "Measure from the threshold, find the row, add to five.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-j8gv0rm8",
+    "version": 1,
+    "section": "step-and-simple",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A simple policy that adds two, with a 300-second cooldown, is executed twice a minute apart, the second time with --honor-cooldown. moto went from 2 to 4 to 6. Where does AWS end?",
+    "hint": "What is the option for?",
+    "choices": [
+      {
+        "text": "At 6, as moto did, since a manual execution skips the cooldown",
+        "correct": false,
+        "why": "Without the option it would; with --honor-cooldown the second call waits for the cooldown like an alarm would."
+      },
+      {
+        "text": "At 4: the second call came inside the cooldown and was not applied",
+        "correct": true,
+        "why": "Right. moto ignored the option, which is moto's gap and not the policy's."
+      },
+      {
+        "text": "At 8, because the cooldown queues the second adjustment and adds it twice",
+        "correct": false,
+        "why": "Nothing is queued or doubled; a call inside the cooldown simply does not scale."
+      },
+      {
+        "text": "At 2: --honor-cooldown cancels the first adjustment too",
+        "correct": false,
+        "why": "The first call was outside any cooldown and stands."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2s85afk",
+    "version": 1,
+    "section": "step-and-simple",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the lesson's policy (alarm at 60%, add 1 for a breach of 0 to 20, add 3 for 20 and up), the CPU reads exactly 80%. How many does it add?",
+    "hint": "Which bound of a range is included?",
+    "choices": [
+      {
+        "text": "One, since 80% is the top of the first step",
+        "correct": false,
+        "why": "The upper bound of a range is not included; 20 belongs to the next row."
+      },
+      {
+        "text": "Four: one for each step it has reached",
+        "correct": false,
+        "why": "Steps are not cumulative; exactly one row applies to a reading."
+      },
+      {
+        "text": "None, because a breach must be strictly above the threshold to count and 20 is the boundary",
+        "correct": false,
+        "why": "The breach is 20 points, well above the threshold; the boundary question is between the rows, not the alarm."
+      },
+      {
+        "text": "Three",
+        "correct": true,
+        "why": "Right. A breach of 20 is the lower bound of the second row, and lower bounds are included."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5ghzmq8",
+    "version": 1,
+    "section": "step-and-simple",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each adjustment setting to what the number in a step means.",
+    "hint": "Add, set, share, floor.",
+    "pairs": [
+      {
+        "left": "ChangeInCapacity",
+        "right": "Add or remove that many instances"
+      },
+      {
+        "left": "ExactCapacity",
+        "right": "Set the count to that number"
+      },
+      {
+        "left": "PercentChangeInCapacity",
+        "right": "Add that share of the current capacity"
+      },
+      {
+        "left": "MinAdjustmentMagnitude",
+        "right": "The fewest instances a percentage step may add"
+      }
+    ],
+    "right_distractors": [
+      "Wait that many seconds before acting again"
+    ]
+  },
+  {
+    "id": "ex-jvsq4b3z",
+    "version": 1,
+    "section": "step-and-simple",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana sets an alarm whose action is a step policy to ALARM by hand. moto shows the alarm in ALARM and the group still at six. Why?",
+    "hint": "Which half of the wiring does moto keep?",
+    "choices": [
+      {
+        "text": "set-alarm-state only changes the label; AWS also ignores a state set by hand",
+        "correct": false,
+        "why": "On AWS a state set by hand triggers the alarm's actions like any other, which is what the command is used to test."
+      },
+      {
+        "text": "moto stores alarms and their states and runs no action for them",
+        "correct": true,
+        "why": "Right. On AWS the alarm would invoke the policy and the group would grow; moto connects the two to nothing."
+      },
+      {
+        "text": "The alarm names the policy, and it has to be the policy that names the alarm",
+        "correct": false,
+        "why": "It is the other way round: the alarm's action is the policy's ARN, as the lesson wired it."
+      },
+      {
+        "text": "Step policies wait for a cooldown of 300 seconds after an alarm before acting",
+        "correct": false,
+        "why": "Step scaling has no cooldown at all; it uses instance warmup instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0454hbn",
+    "version": 1,
+    "section": "scheduled",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A scheduled action has the recurrence '30 7 * * 1-5' and no time zone. When does it fire, in São Paulo time?",
+    "hint": "A cron expression with no time zone is read in UTC.",
+    "choices": [
+      {
+        "text": "At 07:30, because a group uses its region's local time",
+        "correct": false,
+        "why": "A region has no time zone of its own for this; the default is UTC whatever the region."
+      },
+      {
+        "text": "At 10:30",
+        "correct": false,
+        "why": "That is 07:30 São Paulo written in UTC, the conversion in the other direction."
+      },
+      {
+        "text": "At 04:30",
+        "correct": true,
+        "why": "Right. 07:30 UTC is three hours earlier in São Paulo, before anybody arrives."
+      },
+      {
+        "text": "At 06:30 in summer and 07:30 in winter",
+        "correct": false,
+        "why": "São Paulo has kept the same offset all year since 2019."
+      }
+    ]
+  },
+  {
+    "id": "ex-fx60ay8f",
+    "version": 1,
+    "section": "scheduled",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Brazil stopped changing its clocks in 2019, São Paulo is ___ hours behind UTC all year.",
+    "hint": "07:30 there is 10:30 UTC.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-45vvphh6",
+    "version": 1,
+    "section": "scheduled",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A schedule keeps 3 more t3.micro instances for 10 hours on each of 22 weekdays. At 0.0168 USD an hour, what does that add to the month, in USD?",
+    "hint": "Instances times hours times days, times the price.",
+    "value": 11.09,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-x1kzythb",
+    "version": 1,
+    "section": "scheduled",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A target tracking policy has a group at 9 on a busy evening. At 19:00 a scheduled action sets the minimum and the desired capacity to 2. What follows, and what would have been better?",
+    "hint": "Which of the two numbers did the evening need to move?",
+    "choices": [
+      {
+        "text": "It drops to 2 and the policy adds instances back minutes later; lowering only the minimum would have let the policy decide",
+        "correct": true,
+        "why": "Right. The cut costs users the minutes it takes the policy to see the CPU it caused, and a minimum-only action avoids it."
+      },
+      {
+        "text": "Nothing changes, because the policy keeps the group at 9 over any schedule",
+        "correct": false,
+        "why": "A scheduled action sets the desired capacity directly; the policy only reacts afterwards, once its alarm sees the result."
+      },
+      {
+        "text": "It drops to 2 and stays there, because a schedule overrides a policy until the next action",
+        "correct": false,
+        "why": "The policy keeps working between the bounds; it raises the desired capacity again as soon as its alarm fires."
+      },
+      {
+        "text": "The action is refused because the desired capacity would fall below what the policy wants",
+        "correct": false,
+        "why": "Nothing compares a scheduled action with a policy's wish; the bounds are the only check."
+      }
+    ]
+  },
+  {
+    "id": "ex-53thv6dn",
+    "version": 1,
+    "section": "scheduled",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a weekday of the lesson's group in order, on AWS.",
+    "hint": "The schedule moves the floor; the policy moves within it.",
+    "items": [
+      "At 07:30 the morning action sets the minimum and the desired capacity to 6",
+      "The new instances boot before the load arrives",
+      "The load rises and the policy takes the desired capacity above 6",
+      "At 19:00 the evening action lowers the minimum to 2",
+      "The load falls and the policy scales in towards 2"
+    ],
+    "trap": "The policy cannot scale in below 6 during the day; only after the evening action lowers the floor can it shrink the group."
+  },
+  {
+    "id": "ex-e37n0da6",
+    "version": 1,
+    "section": "predictive-and-warmup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A predictive policy is put on a group created two hours ago. When can it produce its first forecast?",
+    "hint": "How much history does it need?",
+    "choices": [
+      {
+        "text": "At once, from the history of other groups in the region",
+        "correct": false,
+        "why": "It forecasts from the group's own metrics and nobody else's."
+      },
+      {
+        "text": "Once the group has 24 hours of metric history",
+        "correct": true,
+        "why": "Right. Below that there is no daily pattern to find, and AWS documents 24 hours as the minimum."
+      },
+      {
+        "text": "After 14 days, the amount of history it reads",
+        "correct": false,
+        "why": "Fourteen days is the most it reads, not the least it needs."
+      },
+      {
+        "text": "After its first 48-hour forecast window has passed",
+        "correct": false,
+        "why": "Forty-eight hours is how far ahead it forecasts, not a wait before the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-d60ydkpa",
+    "version": 1,
+    "section": "predictive-and-warmup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why start a predictive policy in ForecastOnly mode?",
+    "hint": "What can you compare during that week?",
+    "choices": [
+      {
+        "text": "Because ForecastAndScale needs a week of ForecastOnly first, or AWS refuses it",
+        "correct": false,
+        "why": "Nothing enforces an order; you may create a policy in ForecastAndScale on the first day."
+      },
+      {
+        "text": "ForecastOnly is cheaper, since a forecast that scales is billed per instance it launches",
+        "correct": false,
+        "why": "Predictive scaling has no charge of its own either way; the instances are what costs."
+      },
+      {
+        "text": "To compare its forecasts with what actually happened before letting it act",
+        "correct": true,
+        "why": "Right. A forecast for a load that does not repeat is a guess, and a week of comparing shows which one you have."
+      },
+      {
+        "text": "Because ForecastAndScale would replace the target tracking policy beside it",
+        "correct": false,
+        "why": "The two work together: the forecast lifts the floor and the dynamic policy handles the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-q00pabh4",
+    "version": 1,
+    "section": "predictive-and-warmup",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the default instance warmup? Choose all that apply.",
+    "hint": "It is about metrics, not health.",
+    "choices": [
+      {
+        "text": "A new instance's metrics are left out of the group's average while it lasts",
+        "correct": true,
+        "why": "That is its definition."
+      },
+      {
+        "text": "A failed health check does not count against the instance while it lasts",
+        "correct": false,
+        "why": "That is the health check grace period, a different setting."
+      },
+      {
+        "text": "An instance refresh with no InstanceWarmup of its own uses it between batches",
+        "correct": true,
+        "why": "The refresh falls back to the group's warmup."
+      },
+      {
+        "text": "It is how long a simple policy waits before acting again",
+        "correct": false,
+        "why": "That is the cooldown."
+      },
+      {
+        "text": "moto 5.2.3 accepts it at creation and stores nothing",
+        "correct": true,
+        "why": "The description showed null for the 180 seconds given."
+      }
+    ]
+  },
+  {
+    "id": "ex-kam4k3xq",
+    "version": 1,
+    "section": "predictive-and-warmup",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's traffic jumps tenfold whenever an influencer posts, at times nobody knows in advance. Which of this lesson's tools helps least?",
+    "hint": "Which one needs the load to repeat?",
+    "choices": [
+      {
+        "text": "A target tracking policy with more headroom",
+        "correct": false,
+        "why": "Headroom absorbs any rise, predictable or not, while the policy catches up."
+      },
+      {
+        "text": "A step policy that adds several instances at a large breach",
+        "correct": false,
+        "why": "A steep response to a sharp rise is exactly what step scaling is for."
+      },
+      {
+        "text": "Predictive scaling, which projects a daily and weekly pattern this traffic does not have",
+        "correct": true,
+        "why": "Right. A forecast is a pattern carried forward, and posts at unknown times leave no pattern to carry."
+      },
+      {
+        "text": "A warm pool of stopped instances",
+        "correct": false,
+        "why": "It shortens the minutes each new instance needs, which matters most when the rise is sudden."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f8rpafq",
+    "version": 1,
+    "section": "predictive-and-warmup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The group was created with --default-instance-warmup 180, and moto's description shows null. What should you conclude?",
+    "hint": "Whose behaviour is the null?",
+    "choices": [
+      {
+        "text": "That 180 is outside the allowed range and AWS would also drop it",
+        "correct": false,
+        "why": "180 seconds is an ordinary value; AWS would show it back."
+      },
+      {
+        "text": "That the warmup only appears once the first instance has warmed up",
+        "correct": false,
+        "why": "The setting is part of the group from creation, whatever its instances are doing."
+      },
+      {
+        "text": "That moto accepted the option and did not store it",
+        "correct": true,
+        "why": "Right. On AWS the same description shows DefaultInstanceWarmup as 180."
+      },
+      {
+        "text": "That a warmup has to be set with update-auto-scaling-group after creation",
+        "correct": false,
+        "why": "Creation takes it on AWS; nothing requires a second call."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5nfddnp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new instance needs 4 minutes before the application answers, and its CPU sits at 100% while it starts. The group tracks CPU at 50% and keeps scaling out during every boot. Which setting fixes that?",
+    "hint": "Which setting keeps a starting instance out of the average?",
+    "choices": [
+      {
+        "text": "A health check grace period of 4 minutes",
+        "correct": false,
+        "why": "That stops failed health checks counting; the CPU still enters the average and still drives the policy."
+      },
+      {
+        "text": "A cooldown of 4 minutes on the target tracking policy",
+        "correct": false,
+        "why": "Cooldowns belong to simple scaling; target tracking uses the warmup instead."
+      },
+      {
+        "text": "A target of 90% so that one booting instance moves the average less",
+        "correct": false,
+        "why": "It moves the average just as much and leaves no headroom for the real load."
+      },
+      {
+        "text": "The group's default warmup, set to the length of the boot",
+        "correct": true,
+        "why": "Right. The starting instance's metrics stay out of the group's aggregate until it is ready, so its boot no longer looks like load."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdx6k644",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto 5.2.3 really do in this lesson? Choose all that apply.",
+    "hint": "What it stored, against what it ran.",
+    "choices": [
+      {
+        "text": "Ran a simple scaling policy by hand and changed the desired capacity",
+        "correct": true,
+        "why": "execute-policy took the group from 2 to 4."
+      },
+      {
+        "text": "Created the alarms of a target tracking policy",
+        "correct": false,
+        "why": "describe-alarms came back empty."
+      },
+      {
+        "text": "Stored two scheduled actions with their time zone",
+        "correct": true,
+        "why": "describe-scheduled-actions showed both, with America/Sao_Paulo."
+      },
+      {
+        "text": "Fired a scheduled action at its time",
+        "correct": false,
+        "why": "moto has no clock that runs them; they are records."
+      },
+      {
+        "text": "Returned a forecast for the predictive policy",
+        "correct": false,
+        "why": "get-predictive-scaling-forecast answered a 500."
+      },
+      {
+        "text": "Kept an alarm's state after set-alarm-state",
+        "correct": true,
+        "why": "The alarm read ALARM with the reason given, and acted on nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxhycp4z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tracking CPU at 50% instead of 80%: which statement describes the trade?",
+    "hint": "What the other half is for.",
+    "choices": [
+      {
+        "text": "50% scales more often, so it costs more in API calls than in instances",
+        "correct": false,
+        "why": "Scaling calls are not billed; the instances are the cost."
+      },
+      {
+        "text": "At 80% the policy scales in less, so 80% is the safer setting",
+        "correct": false,
+        "why": "A higher target runs the group fuller; it is the less safe one when load rises."
+      },
+      {
+        "text": "They cost the same, since the group runs the same number of instances at either target",
+        "correct": false,
+        "why": "At 50% the same load needs more instances; that is the arithmetic of current times metric over target."
+      },
+      {
+        "text": "50% pays for more idle capacity every hour and in exchange absorbs a rise while new instances boot",
+        "correct": true,
+        "why": "Right. 80% is cheaper until the first spike, when every instance is saturated for the minutes reinforcements take."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht6qckcz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A sale starts at 20:00 next Friday, and the shop expects four times its usual load. What is the right tool?",
+    "hint": "The date is known weeks ahead.",
+    "choices": [
+      {
+        "text": "A one-off scheduled action with --start-time that raises the minimum before 20:00",
+        "correct": true,
+        "why": "Right. The rise is too steep for a reacting policy and its date is known, which is the case scheduled actions handle best."
+      },
+      {
+        "text": "Predictive scaling, which will see the sale coming",
+        "correct": false,
+        "why": "A sale that has never happened is in no history; the forecast cannot know it."
+      },
+      {
+        "text": "A lower CPU target on the policy that day",
+        "correct": false,
+        "why": "It helps a little and still reacts minutes late to a fourfold jump."
+      },
+      {
+        "text": "Raising the maximum",
+        "correct": false,
+        "why": "A maximum is a ceiling; it does not put a single instance in place before the load arrives."
+      }
+    ]
+  }
+]

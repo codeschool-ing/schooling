@@ -1,0 +1,423 @@
+{
+  "ex-sprsqn8j": {
+    "prompt": "No EKS com Fargate, quantos pods rodam numa das máquinas que o Fargate inicia?",
+    "hint": "O Kubernetes mostra cada uma como um node.",
+    "choices": [
+      {
+        "text": "Quantos couberem, como em qualquer node",
+        "why": "Isso é um node de node group. Uma máquina do Fargate é iniciada para um pod."
+      },
+      {
+        "text": "Um por namespace que o profile seleciona",
+        "why": "Os namespaces decidem quais pods vão para o Fargate, não como são arrumados."
+      },
+      {
+        "text": "Até os 29 que o vpc-cni permite numa m7g.large",
+        "why": "Esse limite é dos nodes EC2; uma máquina do Fargate guarda um único pod."
+      },
+      {
+        "text": "Um",
+        "why": "Isso. A máquina é dimensionada para aquele pod e vai embora com ele."
+      }
+    ]
+  },
+  "ex-tycmd3mp": {
+    "prompt": "O profile batch seleciona namespace=jobs, e namespace=reports com o rótulo compute: fargate. Onde roda um pod em reports sem esse rótulo?",
+    "hint": "Todo rótulo de um seletor precisa casar.",
+    "choices": [
+      {
+        "text": "No Fargate, porque o namespace dele está na lista",
+        "why": "O seletor de reports também cita um rótulo, e o pod não o tem."
+      },
+      {
+        "text": "Em lugar nenhum: o EKS se recusa a criá-lo",
+        "why": "Nada recusa o pod; ele apenas não é do Fargate."
+      },
+      {
+        "text": "Nos nodes EC2 do cluster, se houver algum",
+        "why": "Isso. Ele não casa com nenhum seletor, então o scheduler comum o põe nos nodes de um node group."
+      },
+      {
+        "text": "No Fargate, no namespace jobs em vez disso",
+        "why": "Um profile nunca muda um pod de namespace."
+      }
+    ]
+  },
+  "ex-nnhmx1k3": {
+    "prompt": "Um pod no Fargate pede 1 vCPU e 2 GiB. O Fargate soma 256 MB e arredonda para cima até a próxima combinação para 1 vCPU (de 2 a 8 GB, de 1 em 1 GB). A 0,0696 USD por vCPU-hora e 0,0076 por GB-hora, quanto custa por 730 horas, em USD, até o centavo?",
+    "hint": "2 GiB mais 256 MB arredonda para 3 GB.",
+    "unit": "USD"
+  },
+  "ex-9tx95yq0": {
+    "prompt": "Quais destes não vão rodar, ou não vão funcionar, num pod no EKS Fargate? Escolha todos os que se aplicam.",
+    "hint": "O pod está sozinho na máquina e não tem host para alcançar.",
+    "choices": [
+      {
+        "text": "Um DaemonSet para um agente de log",
+        "why": "Não há node seu onde pô-lo; o agente vira um sidecar."
+      },
+      {
+        "text": "Um container privilegiado",
+        "why": "O Fargate recusa containers privilegiados."
+      },
+      {
+        "text": "Um volume apoiado em EBS",
+        "why": "Volumes EBS não são montados lá; o EFS é."
+      },
+      {
+        "text": "Um sistema de arquivos EFS montado no pod",
+        "why": "O EFS é o armazenamento compartilhado que os pods do Fargate recebem."
+      },
+      {
+        "text": "Um Deployment de três réplicas",
+        "why": "Três réplicas são três pods em três máquinas."
+      }
+    ]
+  },
+  "ex-9833tndp": {
+    "prompt": "A AWS permite no máximo ___ seletores num Fargate profile, embora o moto tenha aceitado seis.",
+    "hint": "Um número.",
+    "blanks": [
+      {
+        "accept": [
+          "cinco",
+          "5"
+        ]
+      }
+    ]
+  },
+  "ex-atqg36m2": {
+    "prompt": "Os seletores de um Fargate profile precisam mudar. Como se faz isso na AWS?",
+    "hint": "Procure uma operação de update.",
+    "choices": [
+      {
+        "text": "aws eks update-fargate-profile com os seletores novos",
+        "why": "Essa operação não existe; a linha de comando recusou o nome."
+      },
+      {
+        "text": "Criar um profile novo, esperar ACTIVE e então apagar o antigo",
+        "why": "Isso. Profiles são imutáveis, então uma mudança é uma substituição."
+      },
+      {
+        "text": "Apagar o cluster e criá-lo com o profile novo",
+        "why": "Muito mais do que o necessário: profiles entram e saem com o cluster rodando."
+      },
+      {
+        "text": "Rotular os pods de outro jeito, já que os seletores leem rótulos em execução",
+        "why": "Isso muda quais pods casam, e não o profile."
+      }
+    ]
+  },
+  "ex-zwfkz83y": {
+    "prompt": "O moto aceitou um Fargate profile nas subnets da VPC padrão. Por que a mesma chamada falharia na AWS?",
+    "hint": "Um pod no Fargate recebe endereço público?",
+    "choices": [
+      {
+        "text": "A VPC padrão não tem subnet em sa-east-1c",
+        "why": "Ela tem uma em cada uma das três zonas, como o describe-subnets mostrou."
+      },
+      {
+        "text": "Um profile precisa de uma subnet por seletor",
+        "why": "Subnets e seletores são listas independentes."
+      },
+      {
+        "text": "Esses pods não recebem endereço público, e a AWS só aceita as privadas",
+        "why": "Isso. Pods no Fargate não recebem IP público, então só subnets sem rota para um internet gateway são aceitas."
+      },
+      {
+        "text": "O Fargate não é oferecido em sa-east-1",
+        "why": "A tabela de preços tem linhas de Fargate para São Paulo."
+      }
+    ]
+  },
+  "ex-fejgjjec": {
+    "prompt": "O que o Karpenter faz quando pods não conseguem ser agendados?",
+    "hint": "Nenhum Auto Scaling group entra nisso.",
+    "choices": [
+      {
+        "text": "Aumenta o número desejado dos node groups do cluster",
+        "why": "Esse é o ciclo do Cluster Autoscaler."
+      },
+      {
+        "text": "Os move para o Fargate",
+        "why": "O Fargate fica com os pods que um profile seleciona; o Karpenter lança nodes EC2."
+      },
+      {
+        "text": "Diminui os pedidos deles até caberem num node existente",
+        "why": "O Karpenter nunca edita um pod; ele muda as máquinas."
+      },
+      {
+        "text": "Pede direto ao EC2 uma máquina que os comporte",
+        "why": "Isso, com uma chamada CreateFleet oferecendo vários tipos."
+      }
+    ]
+  },
+  "ex-sg78wpaq": {
+    "prompt": "Ligue cada campo do NodePool ao que ele decide.",
+    "hint": "Leia as notas ao lado do nodepool.yaml.",
+    "pairs": [
+      {
+        "left": "requirements",
+        "right": "A faixa de tipos de instância entre os quais o Karpenter escolhe"
+      },
+      {
+        "left": "limits.cpu",
+        "right": "O máximo de vCPUs que o pool guarda no total"
+      },
+      {
+        "left": "disruption.consolidationPolicy",
+        "right": "Se nodes mal arrumados também são substituídos, além dos vazios"
+      },
+      {
+        "left": "expireAfter",
+        "right": "Que idade um node atinge antes de ser substituído"
+      },
+      {
+        "left": "nodeClassRef",
+        "right": "Qual EC2NodeClass monta os nodes"
+      }
+    ],
+    "right_distractors": [
+      "A versão do Kubernetes do control plane"
+    ]
+  },
+  "ex-q1jssym2": {
+    "prompt": "Contra o moto, o create-fleet com três tipos de instância oferecidos devolveu três c7g.large, todas em sa-east-1a. O que isso diz sobre a AWS?",
+    "hint": "De quem foi a escolha?",
+    "choices": [
+      {
+        "text": "Que a c7g.large tinha mais capacidade sobrando naquele dia",
+        "why": "O moto não mede capacidade; ele pegou o primeiro tipo da lista."
+      },
+      {
+        "text": "Que o price-capacity-optimized sempre escolhe o primeiro override",
+        "why": "Na AWS a estratégia pesa o preço e a capacidade sobrando de cada pool."
+      },
+      {
+        "text": "Nada: a escolha foi do moto, e não uma que a AWS faria",
+        "why": "Isso. O moto aceitou o pedido; ele não modelou pool nenhum."
+      },
+      {
+        "text": "Que uma fleet põe todas as instâncias numa zona",
+        "why": "Os overrides citaram uma subnet aqui; a AWS espalha pelas subnets e pools oferecidos."
+      }
+    ]
+  },
+  "ex-6kbgvg4m": {
+    "prompt": "Onde os pods do próprio Karpenter devem rodar?",
+    "hint": "O que a consolidação poderia fazer com um node que o Karpenter administra?",
+    "choices": [
+      {
+        "text": "Num node do próprio NodePool, para se pagar sozinho",
+        "why": "Ele poderia consolidar esse node debaixo de si mesmo."
+      },
+      {
+        "text": "Em capacidade que ele não administra: um node group pequeno ou um Fargate profile",
+        "why": "Isso. O controller dele precisa sobreviver ao que ele faz com outros nodes."
+      },
+      {
+        "text": "Fora do cluster, num notebook com kubectl",
+        "why": "Ele roda no cluster como um Deployment, ao lado do que observa."
+      },
+      {
+        "text": "No control plane, que a AWS roda para ele",
+        "why": "Nada seu roda no control plane; o Auto Mode é o caso em que a AWS o roda."
+      }
+    ]
+  },
+  "ex-45mzk9q1": {
+    "prompt": "O Karpenter lança os nodes que escolhe com uma única chamada ao EC2, o ___, do tipo instant.",
+    "hint": "A chamada que a lição rodou contra o moto.",
+    "blanks": [
+      {
+        "accept": [
+          "CreateFleet",
+          "create-fleet"
+        ]
+      }
+    ]
+  },
+  "ex-z6r8dmjq": {
+    "prompt": "Um cluster com consolidação WhenEmptyOrUnderutilized roda um serviço com uma réplica e sem PodDisruptionBudget. O que vai acontecer com ele, mais cedo ou mais tarde?",
+    "hint": "A consolidação economiza movendo pods.",
+    "choices": [
+      {
+        "text": "É movido para outro node, e fica fora enquanto reinicia",
+        "why": "Isso. Uma réplica e nenhum budget significam que nada impede a mudança nem cobre o intervalo."
+      },
+      {
+        "text": "O Karpenter o deixa em paz porque ele tem uma única réplica",
+        "why": "Nada na policy protege uma réplica única; o budget é como uma carga diz isso."
+      },
+      {
+        "text": "Fica preso ao node até o node expirar",
+        "why": "O expireAfter também substitui o node, e o pod se move nessa hora também."
+      },
+      {
+        "text": "O Karpenter primeiro o escala para duas réplicas",
+        "why": "O Karpenter muda máquinas, nunca as réplicas de uma carga."
+      }
+    ]
+  },
+  "ex-vdfz6k0h": {
+    "prompt": "O Cluster Autoscaler acrescenta duas m7i.2xlarge a 0,6426 USD por hora cada onde o Karpenter teria acrescentado duas c7g.large a 0,1111. Quanto a escolha do Cluster Autoscaler custa a mais em 730 horas, em USD, até o centavo?",
+    "hint": "Diferença por hora, vezes dois nodes, vezes horas.",
+    "unit": "USD"
+  },
+  "ex-16xg9em2": {
+    "prompt": "Um cluster roda o Cluster Autoscaler com um node group de m7g.large (8 GiB). Chega um pod que pede 30 GiB. O que acontece?",
+    "hint": "O grupo lança o seu próprio tipo.",
+    "choices": [
+      {
+        "text": "O Cluster Autoscaler acrescenta quatro m7g.large e espalha o pod por elas",
+        "why": "Um pod roda num node; ele não se divide."
+      },
+      {
+        "text": "O grupo troca para um tipo maior só para esse pod",
+        "why": "O tipo é fixo no grupo; o Cluster Autoscaler só muda a contagem."
+      },
+      {
+        "text": "Fica em Pending: nenhum grupo tem um node que o comporte",
+        "why": "Isso. Os formatos são seus para prever, com um grupo para pods grandes."
+      },
+      {
+        "text": "O Fargate o pega automaticamente",
+        "why": "Só os pods que um profile seleciona vão para o Fargate, e o Fargate chega a 30 GB com os 256 MB somados."
+      }
+    ]
+  },
+  "ex-4rcn4jxq": {
+    "prompt": "Ponha o ciclo do Cluster Autoscaler em ordem, de um pod pendente até um pod rodando.",
+    "hint": "O autoscaler só muda um número.",
+    "items": [
+      "Um pod está Pending porque nenhum node tem espaço",
+      "O Cluster Autoscaler simula o scheduler contra o tipo de cada grupo",
+      "Ele aumenta o número desejado do Auto Scaling group escolhido",
+      "O grupo lança uma instância do seu próprio tipo",
+      "O node entra e o scheduler posiciona o pod"
+    ],
+    "trap": "O autoscaler nunca lança a instância ele mesmo: o Auto Scaling group lança, depois que o número muda."
+  },
+  "ex-0991cw15": {
+    "prompt": "Um time roda Kubernetes na AWS e em outra nuvem, e quer o mesmo autoscaler, configurado do mesmo jeito, nas duas. Qual serve?",
+    "hint": "Qual dos dois é o do próprio projeto Kubernetes, construído sobre node groups?",
+    "choices": [
+      {
+        "text": "O Karpenter, porque a AWS o começou",
+        "why": "Quem começou não diz nada sobre onde ele funciona do mesmo jeito."
+      },
+      {
+        "text": "O EKS Auto Mode, nas duas",
+        "why": "O Auto Mode é uma funcionalidade do EKS e só existe na AWS."
+      },
+      {
+        "text": "O Cluster Autoscaler",
+        "why": "Isso. Ele funciona com node groups em toda nuvem que os tem."
+      },
+      {
+        "text": "Fargate profiles, que outras nuvens também leem",
+        "why": "O Fargate é da AWS, e um profile não significa nada em outro lugar."
+      }
+    ]
+  },
+  "ex-hzqv3szw": {
+    "prompt": "Quais destas coisas o Karpenter faz e o Cluster Autoscaler não? Escolha todas as que se aplicam.",
+    "hint": "Compare as duas linhas da tabela.",
+    "choices": [
+      {
+        "text": "Escolhe o tipo de instância para cada leva de pods pendentes",
+        "why": "O tipo de um grupo é fixo; um NodePool é uma faixa."
+      },
+      {
+        "text": "Substitui nodes mal arrumados, e não só os vazios",
+        "why": "Isso é a consolidação com WhenEmptyOrUnderutilized."
+      },
+      {
+        "text": "Chama o EC2 direto em vez de mudar um Auto Scaling group",
+        "why": "Ele lança com CreateFleet."
+      },
+      {
+        "text": "Reage a pods que ficam em Pending",
+        "why": "Os dois reagem exatamente a isso."
+      },
+      {
+        "text": "Precisa de um node group definido antes para cada formato",
+        "why": "Essa é a exigência do Cluster Autoscaler."
+      }
+    ]
+  },
+  "ex-g6cx81p9": {
+    "prompt": "O NodePool só permite tipos arm64, e um time faz deploy de uma imagem construída só para x86. O que dá errado?",
+    "hint": "A economia da seção supôs algo sobre as imagens.",
+    "choices": [
+      {
+        "text": "O Karpenter reconstrói a imagem para Arm",
+        "why": "O Karpenter lança máquinas; nunca mexe numa imagem."
+      },
+      {
+        "text": "Os containers dela não iniciam nos nodes Arm",
+        "why": "Isso. O NodePool teria de permitir tipos amd64 também."
+      },
+      {
+        "text": "Nada, já que o Graviton roda programas x86 a toda velocidade",
+        "why": "O Graviton é Arm e não roda uma imagem só x86."
+      },
+      {
+        "text": "Os pods vão para o Fargate",
+        "why": "Só um profile manda pods para o Fargate."
+      }
+    ]
+  },
+  "ex-h4e0bcrh": {
+    "prompt": "Um pod no Fargate pede 0,25 vCPU e 0,5 GiB. Com os 256 MB que o Fargate soma, ele arredonda para 0,25 vCPU e 1 GB. A 0,0696 USD por vCPU-hora e 0,0076 por GB-hora, quanto custa por 730 horas, em USD, até o centavo?",
+    "hint": "vCPU × preço + GB × preço, vezes horas.",
+    "unit": "USD"
+  },
+  "ex-00b91ed5": {
+    "prompt": "Jobs batch de tamanhos muito diferentes, alguns construídos para Arm e outros para x86, rodam quase todos em spot, e um node group por formato está saindo do controle. O que serve melhor?",
+    "hint": "Qual ferramenta escolhe a máquina por leva de pods?",
+    "choices": [
+      {
+        "text": "Mais node groups, um por tamanho e arquitetura",
+        "why": "Esse é o crescimento que a pergunta diz estar saindo do controle."
+      },
+      {
+        "text": "O Karpenter, com um NodePool que permita as duas arquiteturas e spot",
+        "why": "Isso: uma faixa, escolhida por leva, com spot primeiro."
+      },
+      {
+        "text": "Fargate profiles para todo namespace",
+        "why": "O Fargate cobra cada pedido inteiro e não tem preço spot na tabela; os jobs perdem o spot."
+      },
+      {
+        "text": "Um node group bem grande de m7i.2xlarge",
+        "why": "Cada job pequeno compraria uma máquina grande, e as imagens Arm não rodariam."
+      }
+    ]
+  },
+  "ex-0z7xea2v": {
+    "prompt": "Ligue cada carga à capacidade em que esta lição a poria.",
+    "hint": "Lembre o que o Fargate recusa e do que o Karpenter precisa.",
+    "pairs": [
+      {
+        "left": "O controller do próprio Karpenter",
+        "right": "Um managed node group pequeno"
+      },
+      {
+        "left": "Jobs noturnos no namespace jobs",
+        "right": "Um Fargate profile que seleciona jobs"
+      },
+      {
+        "left": "Um agente de log em todo node",
+        "right": "Um DaemonSet nos nodes EC2"
+      },
+      {
+        "left": "Pods de muitos tamanhos, Arm e x86",
+        "right": "Um NodePool com uma faixa ampla de tipos"
+      }
+    ],
+    "right_distractors": [
+      "Um Fargate profile que seleciona só o kube-system"
+    ]
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "ex-n2x0z0rc": {
+    "prompt": "Um serviço do App Runner nas configurações padrão não recebe nenhuma visita durante um mês inteiro. Pelo que ele é cobrado?",
+    "hint": "Dois medidores, e um deles corre com ou sem visitas.",
+    "choices": [
+      {
+        "text": "Por nada, porque o App Runner reduz um serviço parado a zero instâncias",
+        "why": "MinSize não pode ficar abaixo de um. Só PauseService leva a capacidade a zero, e alguém precisa chamá-lo."
+      },
+      {
+        "text": "Pela memória de uma instância provisionada",
+        "why": "Isso. A memória é cobrada de toda instância provisionada; o processador, só enquanto uma atende. 2 GB × 0,007 × 730 dá 10,22 USD."
+      },
+      {
+        "text": "Pelo processador e pela memória de uma instância, o mês todo",
+        "why": "Essa é a conta de uma instância ativa o mês inteiro, 56,94 USD. Uma ociosa paga só a memória."
+      },
+      {
+        "text": "Pela memória das 25 instâncias que MaxSize permite",
+        "why": "MaxSize é um teto para os horários de pico. Um serviço parado mantém MinSize instâncias, que é uma."
+      }
+    ]
+  },
+  "ex-smfnvqe5": {
+    "prompt": "Um serviço do App Runner com uma instância de 1 vCPU e 2 GB fica ativo 300 horas de um mês de 730 horas e ocioso no resto. A 0,064 USD por vCPU-hora e 0,007 USD por GB-hora, quanto custa o mês, em USD, até o centavo?",
+    "hint": "Horas ativas pagam vCPU e memória, 0,078 por hora; horas ociosas pagam só memória, 0,014 por hora.",
+    "unit": "USD"
+  },
+  "ex-wazqveqh": {
+    "prompt": "Você roda aws apprunner list-services contra o moto e recebe um 500 com uma página HTML dentro. O que isso diz?",
+    "hint": "Quem escreveu a página: a AWS ou o programa no seu laptop?",
+    "choices": [
+      {
+        "text": "Que o App Runner também não é oferecido em us-east-1",
+        "why": "us-east-1 é de onde a tabela de preços lê o App Runner. E a resposta nem veio da AWS."
+      },
+      {
+        "text": "Que o moto não implementa o App Runner",
+        "why": "Isso. Um 500 do moto é um serviço para o qual ele não tem código; a AWS responderia à linha de comando em JSON, não com uma página HTML."
+      },
+      {
+        "text": "Que as credenciais test e test foram recusadas",
+        "why": "Uma credencial recusada é um erro com nome, como InvalidClientTokenId, e o moto aceita test de qualquer jeito."
+      },
+      {
+        "text": "Que a AWS recusou porque a conta não é cliente do App Runner",
+        "why": "O pedido nem chegou à AWS: AWS_ENDPOINT_URL o manda para o moto no seu laptop."
+      }
+    ]
+  },
+  "ex-yc5he1x8": {
+    "prompt": "Uma empresa abre a primeira conta na AWS em outubro de 2026 e quer exatamente o que o App Runner oferece: entra uma imagem, sai um endereço. Para onde a própria documentação da AWS a aponta?",
+    "hint": "O serviço fechou para novos clientes numa data de 2026, e a página de disponibilidade dele nomeia um sucessor.",
+    "choices": [
+      {
+        "text": "Para o App Runner em us-east-1, já que São Paulo não o oferece",
+        "why": "Trocar de região não ajuda. Desde 30 de abril de 2026 o App Runner está fechado para novos clientes em todas as regiões."
+      },
+      {
+        "text": "Para o Amazon ECS Express Mode",
+        "why": "Isso. A página da mudança de disponibilidade o recomenda: uma chamada que constrói um service de Fargate com load balancer e escala."
+      },
+      {
+        "text": "Para um cluster Kubernetes autogerenciado no EC2, que era o que o App Runner rodava por baixo",
+        "why": "Nada na documentação diz isso, e um cluster é o contrário do que a empresa pediu."
+      },
+      {
+        "text": "Para o App Runner por meio de um VPC connector, que clientes atuais emprestam a contas novas",
+        "why": "Um VPC connector deixa um serviço alcançar uma rede privada. Não tem nada a ver com quem pode se cadastrar."
+      }
+    ]
+  },
+  "ex-w6btnh2k": {
+    "prompt": "Com a auto scaling configuration padrão, o App Runner soma uma instância quando uma instância tem mais de ___ requisições em andamento ao mesmo tempo.",
+    "hint": "O padrão de MaxConcurrency.",
+    "blanks": [
+      {
+        "accept": [
+          "100"
+        ]
+      }
+    ]
+  },
+  "ex-m5qvjrd4": {
+    "prompt": "No Elastic Beanstalk, o que é shop-prod quando a aplicação se chama shop?",
+    "hint": "Das quatro palavras, qual tem endereço próprio?",
+    "choices": [
+      {
+        "text": "Uma application version: um zip do código no S3",
+        "why": "Uma versão é um build com um rótulo como v2. Não roda em lugar nenhum até um ambiente implantá-la."
+      },
+      {
+        "text": "Uma plataforma",
+        "why": "Uma plataforma é o sistema operacional, o runtime e o servidor web por baixo, mantidos pela AWS."
+      },
+      {
+        "text": "Um environment: uma cópia rodando de uma versão",
+        "why": "Isso. shop-prod e shop-staging são dois ambientes da mesma aplicação."
+      },
+      {
+        "text": "Uma segunda aplicação, já que cada ambiente precisa de uma própria",
+        "why": "Uma aplicação guarda vários ambientes. É para isso que a aplicação existe."
+      }
+    ]
+  },
+  "ex-w4q6pqwq": {
+    "prompt": "O moto respondeu a create-environment. Quais campos da resposta mostram que o moto está imitando o Beanstalk em vez de rodá-lo? Marque todas as que se aplicam.",
+    "hint": "Compare cada campo com o que a AWS teria posto ali.",
+    "choices": [
+      {
+        "text": "EnvironmentId é uma string vazia",
+        "why": "A AWS devolve um id que começa com e-. O moto deixou vazio."
+      },
+      {
+        "text": "PlatformArn é TODO",
+        "why": "Um bilhete que os autores do moto deixaram para si mesmos, onde a AWS nomeia a plataforma."
+      },
+      {
+        "text": "Status é Ready no mesmo segundo",
+        "why": "A AWS responde Launching e constrói por minutos. O moto não tem nada para construir."
+      },
+      {
+        "text": "ApplicationName é shop",
+        "why": "É o que o pedido nomeou, e a AWS responderia o mesmo."
+      },
+      {
+        "text": "Tier é WebServer",
+        "why": "Um servidor web com balanceamento é o tier que um create-environment simples pede na AWS também."
+      }
+    ]
+  },
+  "ex-6yqkk81d": {
+    "prompt": "Ponha em ordem os passos de colocar a loja no Elastic Beanstalk, na AWS.",
+    "hint": "Primeiro a pasta, e a cópia rodando depois que o código existe.",
+    "items": [
+      "create-application nomeia a aplicação shop",
+      "create-application-version registra um zip no S3 como v2",
+      "create-environment inicia uma pilha do CloudFormation para shop-prod",
+      "A pilha cria o grupo, as instâncias e o load balancer"
+    ],
+    "trap": "Criar o ambiente antes de existir uma versão dá a ele a aplicação de exemplo, e não a sua."
+  },
+  "ex-99wbrbv5": {
+    "prompt": "Um ambiente do Beanstalk mantém três instâncias t4g.medium rodando o mês inteiro. A 0,0536 USD por hora cada e 730 horas, quanto custam as instâncias, em USD, até o centavo?",
+    "hint": "O Beanstalk em si não soma nada; conte só as instâncias.",
+    "unit": "USD"
+  },
+  "ex-yyfw3rz7": {
+    "prompt": "Um colega edita à mão, no console do EC2, o listener do load balancer de um ambiente do Beanstalk, porque nenhuma opção parecia alcançá-lo. O que dá errado depois?",
+    "hint": "Quem acha que é dono desse load balancer?",
+    "choices": [
+      {
+        "text": "Nada dá errado, porque o Beanstalk lê o load balancer ao vivo toda vez e adota a edição",
+        "why": "O Beanstalk trabalha pela pilha dele, e a pilha ainda descreve o listener antigo."
+      },
+      {
+        "text": "O ambiente é apagado assim que o Beanstalk percebe uma mudança feita fora dele",
+        "why": "Nada é apagado. O problema chega depois, em silêncio."
+      },
+      {
+        "text": "Uma mudança seguinte do Beanstalk desfaz a edição, ou falha contra uma pilha que não confere mais",
+        "why": "Isso. Os recursos são comuns, mas a pilha que os criou ainda acha que é dona deles."
+      },
+      {
+        "text": "O console recusa a edição, porque os recursos criados por uma pilha do Beanstalk ficam travados contra mudanças",
+        "why": "São recursos comuns e o console deixa você mudá-los, e esse é o perigo."
+      }
+    ]
+  },
+  "ex-tpbpfvdk": {
+    "prompt": "Ligue cada política de implantação do Beanstalk ao que acontece enquanto ela implanta.",
+    "hint": "Pergunte de cada uma: a capacidade cai, e o que sobra da versão antiga?",
+    "pairs": [
+      {
+        "left": "AllAtOnce",
+        "right": "Todas as instâncias de uma vez, com o site fora do ar enquanto isso"
+      },
+      {
+        "left": "Rolling",
+        "right": "Um lote por vez, com a capacidade um lote abaixo"
+      },
+      {
+        "left": "RollingWithAdditionalBatch",
+        "right": "Um lote extra antes, para a capacidade não cair"
+      },
+      {
+        "left": "Immutable",
+        "right": "Um conjunto novo completo ao lado do antigo, trocado quando saudável"
+      },
+      {
+        "left": "TrafficSplitting",
+        "right": "As instâncias novas recebem uma parte das requisições por um tempo definido"
+      }
+    ],
+    "right_distractors": [
+      "Um segundo ambiente cujo endereço é trocado"
+    ]
+  },
+  "ex-qews96tj": {
+    "prompt": "Qual política de implantação deixa as instâncias antigas atendendo até as novas estarem saudáveis, de modo que voltar significa encerrar as novas?",
+    "hint": "Voltar sem implantar a versão antiga de novo.",
+    "choices": [
+      {
+        "text": "Rolling",
+        "why": "Rolling substitui as instâncias lote a lote. Voltar é implantar de novo a versão antiga."
+      },
+      {
+        "text": "RollingWithAdditionalBatch",
+        "why": "O lote extra mantém a capacidade, mas as instâncias antigas ainda são atualizadas no lugar, e voltar é outra implantação."
+      },
+      {
+        "text": "Immutable",
+        "why": "Isso. O conjunto novo roda ao lado do antigo; se falhar nos health checks, é encerrado, e o conjunto antigo nunca mudou."
+      },
+      {
+        "text": "AllAtOnce, já que é a mais rápida de desfazer",
+        "why": "É a mais rápida de rodar, com o site fora do ar. Desfazê-la é uma segunda implantação tão rápida e tão fora do ar quanto."
+      }
+    ]
+  },
+  "ex-dte21wk2": {
+    "prompt": "Um ambiente com MinSize 3 em t4g.medium (0,0536 USD por hora) implanta com a política Immutable. Enquanto os conjuntos antigo e novo rodam juntos, quanto as instâncias custam por hora, em USD?",
+    "hint": "Uma implantação imutável roda um segundo conjunto completo ao lado do primeiro.",
+    "unit": "USD por hora"
+  },
+  "ex-2pr48fmz": {
+    "prompt": "shop.config define PreferredStartTime como \"Sun:05:00\" para as atualizações gerenciadas da plataforma. Quando começa a janela para uma equipe em São Paulo, três horas atrás do UTC?",
+    "hint": "O horário dessa opção é UTC.",
+    "choices": [
+      {
+        "text": "Domingo às 05:00",
+        "why": "Esse é o horário em UTC. São Paulo está três horas atrás."
+      },
+      {
+        "text": "Domingo às 02:00",
+        "why": "Isso. 05:00 UTC menos três horas dá 02:00 em São Paulo, uma hora tranquila para uma loja."
+      },
+      {
+        "text": "Domingo às 08:00",
+        "why": "Isso soma as três horas em vez de subtraí-las."
+      },
+      {
+        "text": "Sábado às 21:00",
+        "why": "Isso subtrai oito horas, e a loja não está em nenhum fuso assim."
+      }
+    ]
+  },
+  "ex-11p2rxt9": {
+    "prompt": "As opções do Beanstalk que devem viajar com cada versão do código ficam num arquivo sob o diretório ___ dentro do zip da versão.",
+    "hint": "Um diretório oculto cujo nome começa com um ponto e as iniciais do serviço.",
+    "blanks": [
+      {
+        "accept": [
+          ".ebextensions",
+          "ebextensions"
+        ]
+      }
+    ]
+  },
+  "ex-yk64a80e": {
+    "prompt": "Três desenvolvedores, uma loja em Django, uma conta nova na AWS em outubro de 2026 e, de vez em quando, a necessidade de entrar numa máquina para olhar um problema. Qual das opções desta aula serve?",
+    "hint": "Qual está aberta para eles e ainda lhes dá uma máquina?",
+    "choices": [
+      {
+        "text": "O App Runner, construído a partir do repositório Git",
+        "why": "Serviria no formato, mas está fechado para novos clientes e não dá instância para entrar."
+      },
+      {
+        "text": "O Elastic Beanstalk na plataforma Python",
+        "why": "Isso. Está aberto, roda a aplicação em instâncias EC2 na conta deles e tem SSH quando precisarem olhar."
+      },
+      {
+        "text": "Um cluster EKS com node groups gerenciados",
+        "why": "Funciona e lhes custa um cluster para operar e atualizar, que é o trabalho de plataforma para o qual não têm ninguém."
+      },
+      {
+        "text": "O ECS Express Mode, pelo SSH que ele acrescenta ao Fargate",
+        "why": "O Express Mode constrói um service de Fargate, e o Fargate não dá host para entrar."
+      }
+    ]
+  },
+  "ex-0225yy64": {
+    "prompt": "Qual destes é sinal de que uma equipe cresceu além do seu serviço de plataforma? Marque todas as que se aplicam.",
+    "hint": "O sinal é a aplicação deixar de ser comum, e não a plataforma fazendo o trabalho dela.",
+    "choices": [
+      {
+        "text": "Um segundo e um terceiro serviço agora chamam um ao outro de forma privada, cada um com as próprias publicações",
+        "why": "Uma plataforma construída em torno de uma aplicação começa a mostrar as costuras."
+      },
+      {
+        "text": "Uma publicação precisa chegar primeiro ao tráfego de um cliente, como canário",
+        "why": "Isso é mais do que as opções de implantação da plataforma oferecem."
+      },
+      {
+        "text": "O tráfego dobra de 10 para 20 requisições por segundo",
+        "why": "Escalar é o que a plataforma faz por você. Crescer, por si só, não é motivo para sair."
+      },
+      {
+        "text": "Um agente precisa rodar ao lado da aplicação em toda máquina",
+        "why": "O App Runner não oferece como; o Beanstalk oferece hooks que crescem até virar uma plataforma própria."
+      },
+      {
+        "text": "A plataforma aplica uma versão de correção na janela semanal",
+        "why": "São as atualizações gerenciadas funcionando como foram configuradas."
+      }
+    ]
+  },
+  "ex-2s6zapjb": {
+    "prompt": "Uma equipe ainda no App Runner quer que o dia da saída custe uma semana e não um trimestre. Qual escolha, feita agora, mais ajuda nisso?",
+    "hint": "O que sai junto com a aplicação sem mudar?",
+    "choices": [
+      {
+        "text": "Implantar a partir de uma imagem no ECR, e não do repositório de código",
+        "why": "Isso. A mesma imagem entra numa task definition da aula 8; um build a partir do código deixa você escrevendo o Dockerfile na saída."
+      },
+      {
+        "text": "Manter o endereço padrão em awsapprunner.com",
+        "why": "O endereço é justamente o que toda saída muda. Um domínio próprio ajudaria mais do que o padrão."
+      },
+      {
+        "text": "Definir MinSize como 1",
+        "why": "Esse é o padrão, e ele muda a conta, não a saída."
+      },
+      {
+        "text": "Ligar as implantações automáticas",
+        "why": "Isso tira um pipeline do seu lado, que é mais uma coisa para reconstruir depois de sair."
+      }
+    ]
+  },
+  "ex-sc1w3g3f": {
+    "prompt": "O que um ambiente worker do Elastic Beanstalk faz com as mensagens da fila SQS dele?",
+    "hint": "Um worker não tem load balancer na frente.",
+    "choices": [
+      {
+        "text": "As instâncias dele as leem e entregam cada uma à sua aplicação por HTTP",
+        "why": "Isso. A aplicação recebe uma requisição por mensagem, então um job em segundo plano roda na mesma plataforma que o site."
+      },
+      {
+        "text": "Repassa as mensagens ao Lambda, que roda o seu código para cada uma",
+        "why": "Nenhuma função entra nisso; o trabalho roda nas instâncias do próprio ambiente."
+      },
+      {
+        "text": "Guarda as mensagens no S3 para o ambiente web recolher",
+        "why": "A fila já as guarda. O trabalho do worker é entregá-las ao seu código."
+      },
+      {
+        "text": "Transforma cada mensagem numa versão nova da aplicação e a implanta",
+        "why": "Versões são código. Mensagens são trabalho para o código que já está implantado."
+      }
+    ]
+  },
+  "ex-e8p3axjj": {
+    "prompt": "Onde estão as instâncias EC2 que atendem um ambiente do Beanstalk na AWS?",
+    "hint": "O App Runner esconde as máquinas; o Beanstalk faz outra coisa com elas.",
+    "choices": [
+      {
+        "text": "Numa conta da AWS, fora de vista, como no App Runner",
+        "why": "Esse é o modelo do App Runner. O Beanstalk constrói na sua."
+      },
+      {
+        "text": "Na sua própria conta, criadas pela pilha do CloudFormation do ambiente",
+        "why": "Isso. São instâncias comuns num grupo comum, que você pode listar e não deve editar à mão."
+      },
+      {
+        "text": "Em lugar nenhum: o Beanstalk é serverless, e cobra por requisição e não por hora",
+        "why": "O Beanstalk não cobra nada por si; as instâncias que ele constrói são cobradas por hora."
+      },
+      {
+        "text": "No moto, que as guarda como registros",
+        "why": "O moto guardou o ambiente como registro e não construiu instância nenhuma: quatro listas vazias."
+      }
+    ]
+  },
+  "ex-edfgrgp0": {
+    "prompt": "Ponha em ordem os passos de uma implantação Immutable no Beanstalk.",
+    "hint": "As instâncias antigas são a última coisa a mudar.",
+    "items": [
+      "Instâncias novas com v2 são lançadas num grupo temporário",
+      "As instâncias novas passam nos health checks",
+      "Elas são movidas para o grupo do próprio ambiente",
+      "As instâncias rodando v1 são encerradas"
+    ],
+    "trap": "Encerrar as instâncias antigas antes de as novas estarem saudáveis transforma Immutable em AllAtOnce com passos a mais."
+  },
+  "ex-x10tev3c": {
+    "prompt": "Durante uma implantação, o App Runner dobra temporariamente as instâncias provisionadas de um serviço. O que isso faz com a conta?",
+    "hint": "Que medidor uma instância provisionada liga?",
+    "choices": [
+      {
+        "text": "Nada, porque o App Runner não cobra tarifa nenhuma por uma implantação",
+        "why": "A implantação em si não tem tarifa, mas as cópias extras ficam provisionadas, e cópias provisionadas são cobradas."
+      },
+      {
+        "text": "Cobrança de memória das cópias extras, até a troca terminar",
+        "why": "Isso. A memória é cobrada de toda instância provisionada; o processador, só das que atendem."
+      },
+      {
+        "text": "Um mês inteiro de uma segunda instância, já que uma foi provisionada",
+        "why": "A duplicação é temporária: dura a implantação, não o mês."
+      },
+      {
+        "text": "O dobro do preço por GB-hora, enquanto a implantação durar",
+        "why": "O preço continua 0,007. O que muda é o número de instâncias."
+      }
+    ]
+  },
+  "ex-sxetrchz": {
+    "prompt": "O App Runner cobra a memória de toda instância provisionada, e o processador só das ___.",
+    "hint": "As que estão atendendo requisições naquele momento.",
+    "blanks": [
+      {
+        "accept": [
+          "ativas",
+          "ativa"
+        ]
+      }
+    ]
+  },
+  "ex-c1xyqcm4": {
+    "prompt": "Quanto o próprio Elastic Beanstalk cobra por um ambiente?",
+    "hint": "Separe o construtor do que ele constrói.",
+    "choices": [
+      {
+        "text": "Nada; você paga pelos recursos que ele cria",
+        "why": "Isso. Duas t4g.medium o mês todo dão 78,26 USD de instâncias, e o Beanstalk não soma nada a isso."
+      },
+      {
+        "text": "Uma tarifa por ambiente por hora, além das instâncias",
+        "why": "Essa tarifa não existe. A conta são os recursos."
+      },
+      {
+        "text": "0,064 USD por vCPU-hora, como o App Runner",
+        "why": "Esse é o medidor de processador do App Runner, em us-east-1."
+      },
+      {
+        "text": "Uma tarifa por implantação, e por isso AllAtOnce é a mais barata",
+        "why": "Implantações não têm tarifa; AllAtOnce é a mais rápida, com o site fora do ar."
+      }
+    ]
+  }
+}

@@ -1,0 +1,663 @@
+[
+  {
+    "id": "ex-z0x2gfqa",
+    "version": 1,
+    "section": "user-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An instance is launched with a script in --user-data. What runs that script?",
+    "hint": "EC2 stores the text; something else acts on it.",
+    "choices": [
+      {
+        "text": "EC2 itself, before handing the instance over",
+        "correct": false,
+        "why": "EC2 never reads or runs user data. It stores the text and hands it back when the instance asks."
+      },
+      {
+        "text": "cloud-init, inside the image, on the first boot",
+        "correct": true,
+        "why": "cloud-init fetches the text from the metadata service early in the first boot and runs it as root."
+      },
+      {
+        "text": "The AWS CLI, after run-instances returns",
+        "correct": false,
+        "why": "The CLI only base64-encodes the file and sends it. It is finished before the instance boots."
+      },
+      {
+        "text": "The launch template, every time the instance starts",
+        "correct": false,
+        "why": "A launch template can carry user data, but it runs nothing, and the script does not run at every start."
+      }
+    ]
+  },
+  {
+    "id": "ex-f263eee4",
+    "version": 1,
+    "section": "user-data",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "first-boot.sh is 395 bytes and its base64 form is 528 characters, four for every three. How many base64 characters does a 3,000-byte script become?",
+    "hint": "3,000 divides by 3 exactly, so there is no padding.",
+    "value": 4000,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-56pzp0hh",
+    "version": 1,
+    "section": "user-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A web server launched with first-boot.sh is rebooted a week later. What does cloud-init do with the user data on that reboot?",
+    "hint": "It keeps a record of what it has already done for this instance.",
+    "choices": [
+      {
+        "text": "It runs the script again, so nginx is reinstalled",
+        "correct": false,
+        "why": "That would be true of a service the script installed, not of the script. cloud-init runs it on the first boot only."
+      },
+      {
+        "text": "It downloads the newest user data and runs that instead",
+        "correct": false,
+        "why": "Even replaced user data is not run again on a later boot of the same instance."
+      },
+      {
+        "text": "It refuses to boot until the user data is removed",
+        "correct": false,
+        "why": "Nothing about a reboot depends on the user data; the instance boots normally."
+      },
+      {
+        "text": "Nothing: the instance has had its first boot",
+        "correct": true,
+        "why": "cloud-init records the first boot and skips user-data scripts after it, which is why the script enables nginx."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rkh1rhh",
+    "version": 1,
+    "section": "user-data",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who can read the user data of an instance in full? Choose all that apply.",
+    "hint": "The section decoded it with one permission, and named a path on the instance.",
+    "choices": [
+      {
+        "text": "Anybody allowed ec2:DescribeInstanceAttribute in the account",
+        "correct": true,
+        "why": "That permission returns the base64, and base64 is an encoding, not encryption."
+      },
+      {
+        "text": "Any process on the instance that can reach the metadata service",
+        "correct": true,
+        "why": "/latest/user-data answers any process on the instance, not only root."
+      },
+      {
+        "text": "Anybody on the internet who knows the instance's public address",
+        "correct": false,
+        "why": "169.254.169.254 is link-local and answers from inside the instance only."
+      },
+      {
+        "text": "Only the account's root user, because the text is encrypted",
+        "correct": false,
+        "why": "It is stored base64-encoded, which anybody can decode, as the capture did with base64 -d."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r17qrrk",
+    "version": 1,
+    "section": "user-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Forty instances in an auto scaling group were launched with a user-data script that installs the wrong version of an agent. What puts the right version on the fleet?",
+    "hint": "Changing the text on an instance does not re-run a first boot.",
+    "choices": [
+      {
+        "text": "Stop each instance, replace its user data and start it again",
+        "correct": false,
+        "why": "AWS allows the replacement while stopped, but cloud-init will not run it, because the first boot is over."
+      },
+      {
+        "text": "Launch replacements from a fixed template version",
+        "correct": true,
+        "why": "New instances have a first boot, so they run the new script; an instance refresh, from lesson 4, does the replacing."
+      },
+      {
+        "text": "Reboot them all, since the script runs at every boot",
+        "correct": false,
+        "why": "It runs on the first boot only, so a reboot changes nothing."
+      },
+      {
+        "text": "modify-instance-attribute on the running instances",
+        "correct": false,
+        "why": "AWS refuses that on a running instance, and moto accepting it proved only that moto does not check."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsj96vbz",
+    "version": 1,
+    "section": "the-metadata-service",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a request to the metadata service need no access key and no signature?",
+    "hint": "Think about what kind of address 169.254.169.254 is.",
+    "choices": [
+      {
+        "text": "AWS signs it on the instance's behalf at the internet gateway",
+        "correct": false,
+        "why": "The request never reaches an internet gateway; the host under the instance answers it."
+      },
+      {
+        "text": "The metadata it returns is public anyway",
+        "correct": false,
+        "why": "It returns role credentials and user data, which are anything but public."
+      },
+      {
+        "text": "Only the instance reaches it, so its origin is the identity",
+        "correct": true,
+        "why": "The address is link-local and no router forwards it, so a request that arrives came from that instance."
+      },
+      {
+        "text": "The session token replaces the key",
+        "correct": false,
+        "why": "Even IMDSv1, with no token, needed no key. The token defends against forged requests; it is not an identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdspderq",
+    "version": 1,
+    "section": "the-metadata-service",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From inside an instance, the metadata service is reached at the link-local IPv4 address ___.",
+    "hint": "Four numbers, two of them repeated.",
+    "blanks": [
+      {
+        "accept": [
+          "169.254.169.254",
+          "http://169.254.169.254"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2kc5xyq4",
+    "version": 1,
+    "section": "the-metadata-service",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's metadata path answered us-east-1a for the zone, while every instance the lab launched was in sa-east-1a. What does that answer tell you?",
+    "hint": "Compare it with the id it gave: i-fake.",
+    "choices": [
+      {
+        "text": "That moto moved the instance to another Region",
+        "correct": false,
+        "why": "describe-instances still placed every instance in sa-east-1a; nothing moved."
+      },
+      {
+        "text": "That the region variable is set wrongly in this terminal",
+        "correct": false,
+        "why": "AWS_DEFAULT_REGION is sa-east-1, and the CLI was not even involved: curl asked moto directly."
+      },
+      {
+        "text": "That the metadata service answers for the account's default Region",
+        "correct": false,
+        "why": "On AWS it answers for the instance asking; there is no account-wide answer."
+      },
+      {
+        "text": "Nothing about any instance: it is a fixed placeholder",
+        "correct": true,
+        "why": "moto serves the same answers whatever was launched, for SDKs under test. On AWS each instance gets its own value."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjpz34f4",
+    "version": 1,
+    "section": "the-metadata-service",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no credential variables set, the CLI on an instance finds its keys in the metadata service. Put its requests in order.",
+    "hint": "The --debug lines showed three requests before the real call.",
+    "items": [
+      "PUT /latest/api/token, for a session token",
+      "GET .../iam/security-credentials/, for the role's name",
+      "GET .../iam/security-credentials/<role>, for its keys",
+      "The signed call to the AWS API with those keys"
+    ],
+    "trap": "Asking for the role's keys before knowing its name: the name comes from the listing."
+  },
+  {
+    "id": "ex-5g1r4z50",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A web application fetches any URL a user pastes. Under IMDSv2, why does pasting the credentials URL no longer return keys?",
+    "hint": "What does the application send, and what does the service now demand first?",
+    "choices": [
+      {
+        "text": "The service blocks every request coming from a web server process",
+        "correct": false,
+        "why": "It cannot tell which process asked, and the CLI on the same instance is answered."
+      },
+      {
+        "text": "The URL changed, so the old path no longer exists",
+        "correct": false,
+        "why": "The paths are the same in both versions; first-boot.sh reads the same tree."
+      },
+      {
+        "text": "Its GET has no token, and only a PUT with a custom header gets one",
+        "correct": true,
+        "why": "The forged request is a GET with headers the application chose, so it never has a token to present."
+      },
+      {
+        "text": "The keys are encrypted with the token, so a request without it reads nothing useful",
+        "correct": false,
+        "why": "The keys are returned in clear to a request with a valid token; the token gates the read, it encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gv82dge",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The longest lifetime a token PUT may ask for is 21,600 seconds. How many hours is that?",
+    "hint": "3,600 seconds to an hour.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-t95cpv6f",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The metadata service refuses a token PUT that carries an X-Forwarded-For header. Which path to the credentials does that close?",
+    "hint": "Which kind of software adds that header?",
+    "choices": [
+      {
+        "text": "A misconfigured reverse proxy relaying an outside request",
+        "correct": true,
+        "why": "A proxy forwards any method but adds X-Forwarded-For, so it announces itself as a relay and is refused."
+      },
+      {
+        "text": "A container on a bridge network",
+        "correct": false,
+        "why": "The container is stopped by the hop limit, not by a header; it adds no X-Forwarded-For."
+      },
+      {
+        "text": "An old SDK that still speaks IMDSv1",
+        "correct": false,
+        "why": "An IMDSv1 client sends no PUT at all, so this rule never meets it."
+      },
+      {
+        "text": "A user-data script run as root",
+        "correct": false,
+        "why": "user data runs on the instance itself and sends no such header; first-boot.sh gets its token."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmrvgm8j",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A container on a Docker bridge network, on an instance with tokens required and a hop limit of 1, times out asking for credentials. It needs to write to one S3 bucket. What is the better fix?",
+    "hint": "Raising the limit works; ask what it hands the container.",
+    "choices": [
+      {
+        "text": "Its own role, with only the permission it needs",
+        "correct": true,
+        "why": "A task role, lesson 8, gives that container just the permission it needs and leaves the instance's role out of reach."
+      },
+      {
+        "text": "Set HttpTokens back to optional so the container can use IMDSv1",
+        "correct": false,
+        "why": "That reopens the forged-GET path for every program on the instance to fix one container."
+      },
+      {
+        "text": "Raise the hop limit to 2, which lets it borrow the instance's role",
+        "correct": false,
+        "why": "It works, and every container on the instance then gets the instance's role, with all of its permissions."
+      },
+      {
+        "text": "Put an access key in the container's environment",
+        "correct": false,
+        "why": "A static key never expires on its own and is readable by anybody who can inspect the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh1c5dcr",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each header or setting to what it does in IMDSv2.",
+    "hint": "Two travel with the requests, one is refused, one is set on the instance.",
+    "pairs": [
+      {
+        "left": "X-aws-ec2-metadata-token-ttl-seconds",
+        "right": "How long the requested token lives"
+      },
+      {
+        "left": "X-aws-ec2-metadata-token",
+        "right": "The token, presented on every read"
+      },
+      {
+        "left": "X-Forwarded-For",
+        "right": "Marks a relay, so the token PUT is refused"
+      },
+      {
+        "left": "HttpPutResponseHopLimit",
+        "right": "How many hops the token reply survives"
+      }
+    ],
+    "right_distractors": [
+      "The name of the role the keys belong to"
+    ]
+  },
+  {
+    "id": "ex-33tbj3ks",
+    "version": 1,
+    "section": "imdsv2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tokens are required on an instance. Which of these can still read the role's credentials?",
+    "hint": "IMDSv2 stops requests somebody tricked a program into making.",
+    "choices": [
+      {
+        "text": "A forged URL sent through the app's image-fetching feature",
+        "correct": false,
+        "why": "That is a GET with no token, refused with 401."
+      },
+      {
+        "text": "Code an attacker managed to run on the instance",
+        "correct": true,
+        "why": "Code that can send its own requests sends the PUT like the CLI does. Least privilege on the role limits what that costs."
+      },
+      {
+        "text": "A container behind a bridge with the hop limit at 1",
+        "correct": false,
+        "why": "The token reply dies at the bridge, so it never gets a token."
+      },
+      {
+        "text": "A request relayed by a reverse proxy",
+        "correct": false,
+        "why": "The proxy's X-Forwarded-For gets its token PUT refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-cb26x5h4",
+    "version": 1,
+    "section": "enforcing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance shows HttpTokens: optional. A process sends a GET for the credentials with no token at all. What happens on AWS?",
+    "hint": "optional means both versions are spoken.",
+    "choices": [
+      {
+        "text": "It is answered, because IMDSv1 still works beside IMDSv2",
+        "correct": true,
+        "why": "That is why optional protects nothing against a forged GET."
+      },
+      {
+        "text": "It gets 401, since a token is the only way in",
+        "correct": false,
+        "why": "That is required. With optional, a request with no token is IMDSv1 and is answered."
+      },
+      {
+        "text": "It is answered only if the hop limit is 2",
+        "correct": false,
+        "why": "The hop limit applies to the token PUT's reply, and this request sent no PUT."
+      },
+      {
+        "text": "The instance is stopped until somebody sets HttpTokens to required",
+        "correct": false,
+        "why": "Nothing stops an instance over its metadata options."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnsh2e96",
+    "version": 1,
+    "section": "enforcing-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make new instances require tokens without anybody adding --metadata-options to each launch? Choose all that apply.",
+    "hint": "Look for settings that sit above a single launch.",
+    "choices": [
+      {
+        "text": "MetadataOptions in the launch template the group uses",
+        "correct": true,
+        "why": "Every instance launched from that version starts with them."
+      },
+      {
+        "text": "The account default set with modify-instance-metadata-defaults",
+        "correct": true,
+        "why": "It applies to every launch in that Region that does not name its own options."
+      },
+      {
+        "text": "An AMI registered with --imds-support v2.0",
+        "correct": true,
+        "why": "Instances launched from it get HttpTokens required, which Amazon Linux 2023's images carry."
+      },
+      {
+        "text": "modify-instance-metadata-options on the instance running today",
+        "correct": false,
+        "why": "That changes one existing instance; tomorrow's launches are not touched."
+      },
+      {
+        "text": "A hop limit of 2 on the launch template",
+        "correct": false,
+        "why": "The hop limit says how far a token travels, not whether one is required."
+      }
+    ]
+  },
+  {
+    "id": "ex-9j8jva2a",
+    "version": 1,
+    "section": "enforcing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before setting required on a fleet, an engineer reads each instance's MetadataNoToken metric. What is she looking for?",
+    "hint": "The name says what it counts.",
+    "choices": [
+      {
+        "text": "How many tokens each instance has issued",
+        "correct": false,
+        "why": "It counts reads without a token, not tokens issued."
+      },
+      {
+        "text": "Programs still reading metadata with IMDSv1, which required would break",
+        "correct": true,
+        "why": "A metric that has read zero for a couple of weeks means the switch breaks nothing."
+      },
+      {
+        "text": "Failed SSRF attempts against the instance",
+        "correct": false,
+        "why": "A refused forged request is not what it counts, and with optional nothing is refused."
+      },
+      {
+        "text": "Instances that have no role attached",
+        "correct": false,
+        "why": "An instance without a role still answers metadata reads, and still counts them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v9t9rx7",
+    "version": 1,
+    "section": "enforcing-it",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An IAM policy can deny ec2:RunInstances unless the condition key ec2:___ equals required.",
+    "hint": "It is named after the launch setting, prefixed with Metadata.",
+    "blanks": [
+      {
+        "accept": [
+          "MetadataHttpTokens"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9fdjr4bj",
+    "version": 1,
+    "section": "enforcing-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto reported HttpTokens: sometimes and a hop limit of 65 as applied. What would AWS have done?",
+    "hint": "AWS accepts two values for one and a range for the other.",
+    "choices": [
+      {
+        "text": "Applied them too; AWS rounds the hop limit down to 64",
+        "correct": false,
+        "why": "AWS rounds nothing here; values outside the allowed set are refused."
+      },
+      {
+        "text": "Refused both values",
+        "correct": true,
+        "why": "Tokens are optional or required, and the limit runs from 1 to 64. moto stores what it is given. A script that passes against moto has been checked for shape, not values."
+      },
+      {
+        "text": "Accepted sometimes as a synonym of optional",
+        "correct": false,
+        "why": "There is no such synonym; the request is invalid."
+      },
+      {
+        "text": "Applied them after a reboot of the instance",
+        "correct": false,
+        "why": "Valid options apply without a reboot, and these are not valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdr4xka1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of moving a running fleet to IMDSv2 in a safe order.",
+    "hint": "Find what would break before breaking it; make it impossible to undo last.",
+    "items": [
+      "Read MetadataNoToken to find who still uses IMDSv1",
+      "Update those agents and scripts until the metric stays at zero",
+      "Publish a launch template version with tokens required",
+      "Replace the instances with an instance refresh",
+      "Deny launches without required in a policy"
+    ],
+    "trap": "Requiring tokens before the metric reads zero breaks whatever still speaks IMDSv1. The metric comes first, and the policy last, once nothing needs optional."
+  },
+  {
+    "id": "ex-3gn2xf6s",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user-data script runs for 20 minutes and reads metadata throughout, with tokens of 300 seconds. What is the fewest tokens it must ask for?",
+    "hint": "20 minutes in seconds, over the lifetime of one token.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-8q973bwz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring agent last updated in 2018 stops reporting the moment HttpTokens is set to required. The agent's other features still work. What is the likeliest reason?",
+    "hint": "When did IMDSv2 appear?",
+    "choices": [
+      {
+        "text": "It reads the instance's metadata with IMDSv1, which predates it",
+        "correct": true,
+        "why": "IMDSv2 arrived in November 2019, so an agent from 2018 sends plain GETs, and they now get 401."
+      },
+      {
+        "text": "It runs in a container and the hop limit is 1",
+        "correct": false,
+        "why": "Nothing says it runs in a container, and the change that broke it was the token, not the limit."
+      },
+      {
+        "text": "Its role lost its permissions when the setting changed",
+        "correct": false,
+        "why": "Metadata options do not touch IAM; the role's policies are unchanged."
+      },
+      {
+        "text": "The metadata service was turned off",
+        "correct": false,
+        "why": "That would be HttpEndpoint disabled; required keeps the service on."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp6ajy20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script launched on thirty instances must write each instance's own Availability Zone into a page. Where should the zone come from?",
+    "hint": "The same text runs on all thirty.",
+    "choices": [
+      {
+        "text": "Typed into the user data before each launch",
+        "correct": false,
+        "why": "Then the group, which launches from one template, writes the same zone on every instance."
+      },
+      {
+        "text": "From AWS_DEFAULT_REGION in the instance's environment",
+        "correct": false,
+        "why": "That is a Region, not a zone, and nothing sets it on a fresh instance."
+      },
+      {
+        "text": "From describe-instances, called on the instance with the account's access key",
+        "correct": false,
+        "why": "It works only with a key on the instance, which is the static secret the lesson avoids."
+      },
+      {
+        "text": "From placement/availability-zone in the metadata service, read at boot",
+        "correct": true,
+        "why": "Each instance asks about itself, so one script is right on all thirty, as first-boot.sh does."
+      }
+    ]
+  }
+]

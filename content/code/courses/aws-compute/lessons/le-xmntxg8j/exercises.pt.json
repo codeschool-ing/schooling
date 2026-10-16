@@ -1,0 +1,444 @@
+{
+  "ex-z0x2gfqa": {
+    "prompt": "Uma instância é lançada com um script em --user-data. O que roda esse script?",
+    "hint": "O EC2 guarda o texto; outra coisa age sobre ele.",
+    "choices": [
+      {
+        "text": "O próprio EC2, antes de entregar a instância",
+        "why": "O EC2 nunca lê nem roda o user data. Ele guarda o texto e o devolve quando a instância pede."
+      },
+      {
+        "text": "O cloud-init, dentro da imagem, no primeiro boot",
+        "why": "O cloud-init busca o texto no serviço de metadados no começo do primeiro boot e o roda como root."
+      },
+      {
+        "text": "A AWS CLI, depois que o run-instances retorna",
+        "why": "A CLI só codifica o arquivo em base64 e o envia. Ela termina antes de a instância dar boot."
+      },
+      {
+        "text": "O launch template, toda vez que a instância inicia",
+        "why": "Um launch template pode levar user data, mas não roda nada, e o script não roda a cada início."
+      }
+    ]
+  },
+  "ex-f263eee4": {
+    "prompt": "O first-boot.sh tem 395 bytes e a forma base64 dele tem 528 caracteres, quatro para cada três. Em quantos caracteres base64 vira um script de 3.000 bytes?",
+    "hint": "3.000 é divisível por 3, então não há preenchimento.",
+    "unit": "caracteres"
+  },
+  "ex-56pzp0hh": {
+    "prompt": "Um servidor web lançado com o first-boot.sh é reiniciado uma semana depois. O que o cloud-init faz com o user data nesse reboot?",
+    "hint": "Ele guarda registro do que já fez para esta instância.",
+    "choices": [
+      {
+        "text": "Roda o script de novo, e o nginx é reinstalado",
+        "why": "Isso valeria para um serviço que o script instalou, não para o script. O cloud-init o roda só no primeiro boot."
+      },
+      {
+        "text": "Baixa o user data mais novo e roda esse no lugar",
+        "why": "Nem um user data substituído roda de novo num boot posterior da mesma instância."
+      },
+      {
+        "text": "Recusa o boot até o user data ser removido",
+        "why": "Nada num reboot depende do user data; a instância dá boot normalmente."
+      },
+      {
+        "text": "Nada: a instância já teve o primeiro boot",
+        "why": "O cloud-init registra o primeiro boot e pula os scripts de user data depois dele, e é por isso que o script habilita o nginx."
+      }
+    ]
+  },
+  "ex-6rkh1rhh": {
+    "prompt": "Quem consegue ler o user data de uma instância por inteiro? Marque todas as que se aplicam.",
+    "hint": "A seção o decodificou com uma permissão, e citou um caminho na instância.",
+    "choices": [
+      {
+        "text": "Quem tem permissão de ec2:DescribeInstanceAttribute na conta",
+        "why": "Essa permissão devolve o base64, e base64 é uma codificação, não criptografia."
+      },
+      {
+        "text": "Qualquer processo na instância que alcance o serviço de metadados",
+        "why": "O /latest/user-data responde a qualquer processo na instância, não só ao root."
+      },
+      {
+        "text": "Qualquer pessoa na internet que saiba o endereço público da instância",
+        "why": "O 169.254.169.254 é link-local e só responde de dentro da instância."
+      },
+      {
+        "text": "Só o usuário root da conta, porque o texto é criptografado",
+        "why": "Ele é guardado em base64, que qualquer um decodifica, como a captura fez com base64 -d."
+      }
+    ]
+  },
+  "ex-9r17qrrk": {
+    "prompt": "Quarenta instâncias num grupo de auto scaling foram lançadas com um script de user data que instala a versão errada de um agente. O que coloca a versão certa na frota?",
+    "hint": "Mudar o texto numa instância não refaz um primeiro boot.",
+    "choices": [
+      {
+        "text": "Parar cada instância, trocar o user data e iniciá-la de novo",
+        "why": "A AWS permite a troca com a instância parada, mas o cloud-init não vai rodá-la, porque o primeiro boot já passou."
+      },
+      {
+        "text": "Substitutas lançadas de um template corrigido",
+        "why": "Instâncias novas têm primeiro boot, então rodam o script novo; um instance refresh, da aula 4, faz a substituição."
+      },
+      {
+        "text": "Reiniciar todas, já que o script roda em todo boot",
+        "why": "Ele só roda no primeiro boot, então um reboot não muda nada."
+      },
+      {
+        "text": "modify-instance-attribute nas instâncias em execução",
+        "why": "A AWS recusa isso numa instância em execução, e o moto aceitar só provou que o moto não confere."
+      }
+    ]
+  },
+  "ex-qsj96vbz": {
+    "prompt": "Por que um pedido ao serviço de metadados não precisa de chave de acesso nem de assinatura?",
+    "hint": "Pense em que tipo de endereço é o 169.254.169.254.",
+    "choices": [
+      {
+        "text": "A AWS assina por ela no internet gateway",
+        "why": "O pedido nunca chega a um internet gateway; o host embaixo da instância responde."
+      },
+      {
+        "text": "Os metadados que ele devolve são públicos de qualquer forma",
+        "why": "Ele devolve credenciais da role e o user data, que são tudo menos públicos."
+      },
+      {
+        "text": "Só a instância o alcança, então a origem já é a identidade",
+        "why": "O endereço é link-local e nenhum roteador o encaminha, então um pedido que chega veio daquela instância."
+      },
+      {
+        "text": "O token de sessão substitui a chave",
+        "why": "Até o IMDSv1, sem token, dispensava chave. O token defende contra pedidos forjados; não é uma identidade."
+      }
+    ]
+  },
+  "ex-gdspderq": {
+    "prompt": "De dentro de uma instância, o serviço de metadados é alcançado no endereço IPv4 link-local ___.",
+    "hint": "Quatro números, dois deles repetidos.",
+    "blanks": [
+      {
+        "accept": [
+          "169.254.169.254",
+          "http://169.254.169.254"
+        ]
+      }
+    ]
+  },
+  "ex-2kc5xyq4": {
+    "prompt": "O caminho de metadados do moto respondeu us-east-1a como zona, enquanto toda instância que o laboratório lançou estava em sa-east-1a. O que essa resposta diz?",
+    "hint": "Compare com o id que ele deu: i-fake.",
+    "choices": [
+      {
+        "text": "Que o moto moveu a instância para outra região",
+        "why": "O describe-instances continuou pondo cada instância em sa-east-1a; nada se moveu."
+      },
+      {
+        "text": "Que a variável de região está errada neste terminal",
+        "why": "O AWS_DEFAULT_REGION é sa-east-1, e a CLI nem participou: o curl perguntou ao moto direto."
+      },
+      {
+        "text": "Que o serviço de metadados responde pela região padrão da conta",
+        "why": "Na AWS ele responde pela instância que pergunta; não existe resposta da conta inteira."
+      },
+      {
+        "text": "Nada sobre instância alguma: é um valor fixo de enfeite",
+        "why": "O moto serve as mesmas respostas, seja o que for lançado, para SDKs em teste. Na AWS cada instância recebe o próprio valor."
+      }
+    ]
+  },
+  "ex-jjpz34f4": {
+    "prompt": "Sem variáveis de credencial, a CLI numa instância acha as chaves no serviço de metadados. Ponha os pedidos dela em ordem.",
+    "hint": "As linhas do --debug mostraram três pedidos antes da chamada de verdade.",
+    "items": [
+      "PUT /latest/api/token, para um token de sessão",
+      "GET .../iam/security-credentials/, para o nome da role",
+      "GET .../iam/security-credentials/<role>, para as chaves dela",
+      "A chamada assinada à API da AWS com essas chaves"
+    ],
+    "trap": "Pedir as chaves da role antes de saber o nome: o nome vem da listagem."
+  },
+  "ex-5g1r4z50": {
+    "prompt": "Uma aplicação web busca qualquer URL que o usuário cola. Com o IMDSv2, por que colar a URL das credenciais não devolve mais as chaves?",
+    "hint": "O que a aplicação envia, e o que o serviço passou a exigir antes?",
+    "choices": [
+      {
+        "text": "O serviço bloqueia todo pedido vindo de um processo de servidor web",
+        "why": "Ele não sabe qual processo pediu, e a CLI na mesma instância é atendida."
+      },
+      {
+        "text": "A URL mudou, então o caminho antigo não existe mais",
+        "why": "Os caminhos são os mesmos nas duas versões; o first-boot.sh lê a mesma árvore."
+      },
+      {
+        "text": "O GET dela não tem token, e só um PUT com cabeçalho próprio obtém um",
+        "why": "O pedido forjado é um GET com cabeçalhos que a aplicação escolheu, então nunca tem token para apresentar."
+      },
+      {
+        "text": "As chaves são criptografadas com o token, então um pedido sem ele não lê nada útil",
+        "why": "As chaves voltam em claro para um pedido com token válido; o token controla a leitura, não criptografa nada."
+      }
+    ]
+  },
+  "ex-1gv82dge": {
+    "prompt": "A maior validade que um PUT de token pode pedir é 21.600 segundos. Quantas horas são?",
+    "hint": "3.600 segundos por hora.",
+    "unit": "horas"
+  },
+  "ex-t95cpv6f": {
+    "prompt": "O serviço de metadados recusa um PUT de token que traga o cabeçalho X-Forwarded-For. Que caminho até as credenciais isso fecha?",
+    "hint": "Que tipo de software acrescenta esse cabeçalho?",
+    "choices": [
+      {
+        "text": "Um proxy reverso mal configurado repassando um pedido de fora",
+        "why": "Um proxy repassa qualquer método mas acrescenta o X-Forwarded-For, então se anuncia como intermediário e é recusado."
+      },
+      {
+        "text": "Um contêiner numa rede bridge",
+        "why": "O contêiner é barrado pelo hop limit, não por um cabeçalho; ele não acrescenta X-Forwarded-For."
+      },
+      {
+        "text": "Um SDK antigo que ainda fala IMDSv1",
+        "why": "Um cliente IMDSv1 nem envia PUT, então essa regra nunca o encontra."
+      },
+      {
+        "text": "Um script de user data rodando como root",
+        "why": "O user data roda na própria instância e não envia esse cabeçalho; o first-boot.sh obtém o token."
+      }
+    ]
+  },
+  "ex-tmrvgm8j": {
+    "prompt": "Um contêiner numa rede bridge do Docker, numa instância com token obrigatório e hop limit 1, estoura o tempo pedindo credenciais. Ele precisa gravar num bucket S3. Qual é a correção melhor?",
+    "hint": "Aumentar o limite funciona; pergunte o que isso entrega ao contêiner.",
+    "choices": [
+      {
+        "text": "Uma role própria, só com a permissão necessária",
+        "why": "Uma task role, da aula 8, dá ao contêiner só a permissão de que ele precisa e deixa a role da instância fora de alcance."
+      },
+      {
+        "text": "Voltar o HttpTokens para optional para o contêiner usar o IMDSv1",
+        "why": "Isso reabre o caminho do GET forjado para todo programa da instância para resolver um contêiner."
+      },
+      {
+        "text": "Subir o hop limit para 2, o que o deixa usar a role da instância",
+        "why": "Funciona, e todo contêiner da instância passa a ter a role dela, com todas as permissões."
+      },
+      {
+        "text": "Pôr uma chave de acesso no ambiente do contêiner",
+        "why": "Uma chave estática não expira sozinha e pode ser lida por quem inspeciona o contêiner."
+      }
+    ]
+  },
+  "ex-mh1c5dcr": {
+    "prompt": "Ligue cada cabeçalho ou configuração ao que ele faz no IMDSv2.",
+    "hint": "Dois viajam com os pedidos, um é recusado, um é configurado na instância.",
+    "pairs": [
+      {
+        "left": "X-aws-ec2-metadata-token-ttl-seconds",
+        "right": "Quanto tempo dura o token pedido"
+      },
+      {
+        "left": "X-aws-ec2-metadata-token",
+        "right": "O token, apresentado em cada leitura"
+      },
+      {
+        "left": "X-Forwarded-For",
+        "right": "Marca um intermediário, e o PUT do token é recusado"
+      },
+      {
+        "left": "HttpPutResponseHopLimit",
+        "right": "Quantos saltos a resposta do token aguenta"
+      }
+    ],
+    "right_distractors": [
+      "O nome da role a que as chaves pertencem"
+    ]
+  },
+  "ex-33tbj3ks": {
+    "prompt": "O token é obrigatório numa instância. Qual destes ainda consegue ler as credenciais da role?",
+    "hint": "O IMDSv2 barra pedidos que alguém induziu um programa a fazer.",
+    "choices": [
+      {
+        "text": "Uma URL forjada enviada pelo recurso de buscar imagens da aplicação",
+        "why": "Isso é um GET sem token, recusado com 401."
+      },
+      {
+        "text": "Código que um atacante conseguiu rodar na instância",
+        "why": "Código que envia os próprios pedidos manda o PUT como a CLI faz. Menor privilégio na role limita o custo disso."
+      },
+      {
+        "text": "Um contêiner atrás de uma bridge com hop limit 1",
+        "why": "A resposta do token morre na bridge, então ele nunca obtém token."
+      },
+      {
+        "text": "Um pedido repassado por um proxy reverso",
+        "why": "O X-Forwarded-For do proxy faz o PUT do token ser recusado."
+      }
+    ]
+  },
+  "ex-cb26x5h4": {
+    "prompt": "Uma instância mostra HttpTokens: optional. Um processo envia um GET das credenciais sem token nenhum. O que acontece na AWS?",
+    "hint": "optional quer dizer que as duas versões são aceitas.",
+    "choices": [
+      {
+        "text": "É atendido: o IMDSv1 segue valendo ao lado do IMDSv2",
+        "why": "É por isso que optional não protege nada contra um GET forjado."
+      },
+      {
+        "text": "Recebe 401, já que o token passa a ser o único jeito de entrar",
+        "why": "Isso é required. Com optional, um pedido sem token é IMDSv1 e é atendido."
+      },
+      {
+        "text": "É atendido só se o hop limit for 2",
+        "why": "O hop limit vale para a resposta do PUT do token, e esse pedido não enviou PUT."
+      },
+      {
+        "text": "A instância é parada até alguém mudar o HttpTokens para required",
+        "why": "Nada para uma instância por causa das opções de metadados."
+      }
+    ]
+  },
+  "ex-dnsh2e96": {
+    "prompt": "Quais destes fazem instâncias novas exigirem token sem ninguém pôr --metadata-options em cada lançamento? Marque todas as que se aplicam.",
+    "hint": "Procure configurações que ficam acima de um lançamento só.",
+    "choices": [
+      {
+        "text": "MetadataOptions no launch template que o grupo usa",
+        "why": "Toda instância lançada daquela versão começa com elas."
+      },
+      {
+        "text": "O padrão da conta definido com modify-instance-metadata-defaults",
+        "why": "Vale para todo lançamento naquela região que não diga as próprias opções."
+      },
+      {
+        "text": "Uma AMI registrada com --imds-support v2.0",
+        "why": "Instâncias lançadas dela recebem HttpTokens required, como as imagens do Amazon Linux 2023."
+      },
+      {
+        "text": "modify-instance-metadata-options na instância que roda hoje",
+        "why": "Isso muda uma instância existente; os lançamentos de amanhã não são tocados."
+      },
+      {
+        "text": "Um hop limit 2 no launch template",
+        "why": "O hop limit diz até onde o token viaja, não se ele é obrigatório."
+      }
+    ]
+  },
+  "ex-9j8jva2a": {
+    "prompt": "Antes de definir required numa frota, uma engenheira lê a métrica MetadataNoToken de cada instância. O que ela procura?",
+    "hint": "O nome diz o que ela conta.",
+    "choices": [
+      {
+        "text": "Quantos tokens cada instância emitiu",
+        "why": "Ela conta leituras sem token, não tokens emitidos."
+      },
+      {
+        "text": "Programas que ainda leem metadados com IMDSv1, que o required quebraria",
+        "why": "Uma métrica que ficou em zero por umas duas semanas quer dizer que a troca não quebra nada."
+      },
+      {
+        "text": "Tentativas de SSRF que falharam contra a instância",
+        "why": "Ela não conta pedidos forjados recusados, e com optional nada é recusado."
+      },
+      {
+        "text": "Instâncias sem role associada",
+        "why": "Uma instância sem role ainda responde leituras de metadados, e ainda as conta."
+      }
+    ]
+  },
+  "ex-1v9t9rx7": {
+    "prompt": "Uma política IAM pode negar o ec2:RunInstances a menos que a chave de condição ec2:___ seja igual a required.",
+    "hint": "O nome vem da configuração do lançamento, com o prefixo Metadata.",
+    "blanks": [
+      {
+        "accept": [
+          "MetadataHttpTokens"
+        ]
+      }
+    ]
+  },
+  "ex-9fdjr4bj": {
+    "prompt": "O moto reportou HttpTokens: sometimes e hop limit 65 como applied. O que a AWS teria feito?",
+    "hint": "A AWS aceita dois valores para um e uma faixa para o outro.",
+    "choices": [
+      {
+        "text": "Aplicado também; a AWS arredonda o hop limit para 64",
+        "why": "A AWS não arredonda nada aqui; valores fora do permitido são recusados."
+      },
+      {
+        "text": "Recusado os dois valores",
+        "why": "O token é optional ou required, e o limite vai de 1 a 64. O moto guarda o que recebe. Um script que passa no moto foi conferido na forma, não nos valores."
+      },
+      {
+        "text": "Aceito sometimes como sinônimo de optional",
+        "why": "Não existe esse sinônimo; o pedido é inválido."
+      },
+      {
+        "text": "Aplicado depois de um reboot da instância",
+        "why": "Opções válidas valem sem reboot, e estas não são válidas."
+      }
+    ]
+  },
+  "ex-cdr4xka1": {
+    "prompt": "Ponha em ordem segura os passos para mudar uma frota em execução para o IMDSv2.",
+    "hint": "Ache o que quebraria antes de quebrar; torne impossível desfazer por último.",
+    "items": [
+      "Ler a MetadataNoToken para achar quem ainda usa IMDSv1",
+      "Atualizar esses agentes e scripts até a métrica ficar em zero",
+      "Publicar uma versão do launch template com token obrigatório",
+      "Substituir as instâncias com um instance refresh",
+      "Negar lançamentos sem required numa política"
+    ],
+    "trap": "Exigir token antes de a métrica zerar quebra o que ainda fala IMDSv1. A métrica vem primeiro, e a política por último, quando nada mais precisa de optional."
+  },
+  "ex-3gn2xf6s": {
+    "prompt": "Um script de user data roda por 20 minutos e lê metadados o tempo todo, com tokens de 300 segundos. Qual é o menor número de tokens que ele precisa pedir?",
+    "hint": "20 minutos em segundos, dividido pela validade de um token.",
+    "unit": "tokens"
+  },
+  "ex-8q973bwz": {
+    "prompt": "Um agente de monitoramento atualizado pela última vez em 2018 para de reportar no momento em que o HttpTokens vira required. O resto do agente funciona. Qual é o motivo mais provável?",
+    "hint": "Quando o IMDSv2 apareceu?",
+    "choices": [
+      {
+        "text": "Ele lê os metadados da instância com IMDSv1, que é anterior a ele",
+        "why": "O IMDSv2 chegou em novembro de 2019, então um agente de 2018 manda GETs simples, que agora recebem 401."
+      },
+      {
+        "text": "Ele roda num contêiner e o hop limit é 1",
+        "why": "Nada diz que ele roda num contêiner, e o que o quebrou foi o token, não o limite."
+      },
+      {
+        "text": "A role dele perdeu as permissões quando a configuração mudou",
+        "why": "As opções de metadados não mexem no IAM; as políticas da role continuam iguais."
+      },
+      {
+        "text": "O serviço de metadados foi desligado",
+        "why": "Isso seria HttpEndpoint disabled; required mantém o serviço ligado."
+      }
+    ]
+  },
+  "ex-sp6ajy20": {
+    "prompt": "Um script lançado em trinta instâncias precisa escrever a zona de disponibilidade de cada instância numa página. De onde a zona deve vir?",
+    "hint": "O mesmo texto roda nas trinta.",
+    "choices": [
+      {
+        "text": "Digitada no user data antes de cada lançamento",
+        "why": "Aí o grupo, que lança de um template só, escreve a mesma zona em toda instância."
+      },
+      {
+        "text": "Do AWS_DEFAULT_REGION no ambiente da instância",
+        "why": "Isso é uma região, não uma zona, e nada a define numa instância nova."
+      },
+      {
+        "text": "Do describe-instances, chamado na própria instância com a chave de acesso da conta",
+        "why": "Só funciona com uma chave na instância, que é o segredo estático que a aula evita."
+      },
+      {
+        "text": "Do placement/availability-zone no serviço de metadados, lido no boot",
+        "why": "Cada instância pergunta sobre si mesma, então um script serve nas trinta, como faz o first-boot.sh."
+      }
+    ]
+  }
+}

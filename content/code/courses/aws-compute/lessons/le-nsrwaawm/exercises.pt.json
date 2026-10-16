@@ -1,0 +1,428 @@
+{
+  "ex-4bzg83c8": {
+    "prompt": "O que a concorrência do Lambda conta?",
+    "hint": "Pense no que um ambiente de execução está fazendo num dado instante.",
+    "choices": [
+      {
+        "text": "As requisições que chegam em um segundo, seja qual for a duração de cada uma",
+        "why": "Isso é a taxa de requisições. A concorrência depende também de quanto tempo cada requisição roda."
+      },
+      {
+        "text": "As threads que um ambiente roda lado a lado para atender as suas requisições",
+        "why": "Esse é o modelo de um servidor web. Um ambiente do Lambda atende uma requisição por vez."
+      },
+      {
+        "text": "As requisições em andamento agora, um ambiente cada",
+        "why": "Isso. Cada requisição segura um ambiente enquanto roda, e a concorrência é quantos estão ocupados."
+      },
+      {
+        "text": "As funções implantadas na conta naquela região",
+        "why": "O número de funções não diz nada sobre quantas requisições estão rodando."
+      }
+    ]
+  },
+  "ex-39thmz1k": {
+    "prompt": "Uma função recebe 200 requisições por segundo e cada uma roda por 0,25 s. Quantos ambientes de execução ficam ocupados ao mesmo tempo, pela lei de Little?",
+    "hint": "Requisições por segundo vezes segundos por requisição.",
+    "unit": "ambientes"
+  },
+  "ex-1abj37z9": {
+    "prompt": "Uma função atende 80 requisições por segundo a 0,15 s cada. O banco de dados dela fica lento e toda requisição passa a levar 1,5 s, com o mesmo tráfego. Qual é a concorrência dela agora?",
+    "hint": "Só um dos dois fatores mudou.",
+    "unit": "ambientes"
+  },
+  "ex-dznd4gpj": {
+    "prompt": "Duas chamadas simultâneas ao emulador falham, e o log diz ReserveFailed: AlreadyReserved. O que isso mostra sobre o Lambda na AWS?",
+    "hint": "O emulador é um ambiente. O que a AWS faria com a segunda requisição?",
+    "choices": [
+      {
+        "text": "Que o Lambda recusa uma segunda requisição que chega enquanto a primeira ainda roda",
+        "why": "Isso é a limitação do emulador lida como se fosse do Lambda. Na AWS a segunda requisição ganha um segundo ambiente."
+      },
+      {
+        "text": "Que o handler Python não é thread-safe",
+        "why": "O handler nunca rodou duas vezes. A recusa veio do emulador, antes de qualquer código."
+      },
+      {
+        "text": "Que um ambiente segura uma requisição; o Lambda iniciaria um segundo",
+        "why": "Isso. O emulador não tem um segundo ambiente para iniciar, e é exatamente isso que o Lambda faz."
+      },
+      {
+        "text": "Que a porta publicada pelo Docker aceita uma conexão por vez, o que é um limite do Docker e não do Lambda",
+        "why": "Uma porta publicada aceita muitas conexões. A linha do log é o emulador reservando o seu ambiente."
+      }
+    ]
+  },
+  "ex-wd85kdx6": {
+    "prompt": "Pela lei de Little, as requisições em andamento são a taxa de chegada multiplicada pela ___ de cada requisição.",
+    "hint": "Quanto tempo ela leva.",
+    "blanks": [
+      {
+        "accept": [
+          "duração",
+          "latência"
+        ]
+      }
+    ]
+  },
+  "ex-bz9mt3br": {
+    "prompt": "Qual é o limite padrão de concorrência de uma conta AWS para o Lambda?",
+    "hint": "É um pool, e é compartilhado.",
+    "choices": [
+      {
+        "text": "1.000 execuções simultâneas para cada função, em cada região",
+        "why": "Os mil não são por função: toda função da região tira do mesmo pool."
+      },
+      {
+        "text": "1.000 requisições por segundo para a conta",
+        "why": "Isso mistura a taxa com a concorrência. O pool conta requisições em andamento, e a taxa permitida é dez vezes ele."
+      },
+      {
+        "text": "Nenhum, porque o Lambda cobra cada ambiente que inicia",
+        "why": "O Lambda cobra por uso, e também tem um limite; o limite é o que mantém um erro pequeno."
+      },
+      {
+        "text": "1.000 execuções simultâneas por região, compartilhadas por todas as funções da conta",
+        "why": "Isso. Um pool por conta e região, e uma cota que o Service Quotas pode aumentar."
+      }
+    ]
+  },
+  "ex-9cypsbt1": {
+    "prompt": "Ligue cada forma de invocar uma função ao que um throttle faz com a requisição.",
+    "hint": "Quem chamou, e alguém segura a requisição?",
+    "pairs": [
+      {
+        "left": "API Gateway, síncrono",
+        "right": "Quem chamou recebe um 429 na hora"
+      },
+      {
+        "left": "Uma notificação do S3, assíncrona",
+        "right": "O Lambda tenta de novo a partir da fila interna por até seis horas"
+      },
+      {
+        "left": "Um event source mapping do SQS",
+        "right": "A mensagem fica na fila e volta depois do visibility timeout"
+      },
+      {
+        "left": "Um event source mapping do Kinesis",
+        "right": "O shard espera atrás do lote tentado de novo"
+      }
+    ],
+    "right_distractors": [
+      "A requisição espera numa fila atrás dos ambientes ocupados"
+    ]
+  },
+  "ex-k3dn33ec": {
+    "prompt": "Uma função roda por 4 ms e recebe 15.000 requisições por segundo, numa conta com a cota padrão de 1.000 e nada mais rodando. O que acontece?",
+    "hint": "Calcule a concorrência, depois lembre do segundo limite.",
+    "choices": [
+      {
+        "text": "Parte do tráfego sofre throttle: a taxa permitida é 10.000/s, e só 60 ambientes estão ocupados",
+        "why": "Isso. 15.000 × 0,004 = 60 em andamento está muito abaixo de 1.000, mas a taxa permitida é dez vezes a cota."
+      },
+      {
+        "text": "Toda requisição dá certo, porque 60 ambientes cabem folgados no pool",
+        "why": "A concorrência está certa e a conclusão não: o Lambda também limita requisições por segundo."
+      },
+      {
+        "text": "Toda requisição acima de 1.000 por segundo sofre throttle, porque a cota é 1.000",
+        "why": "Isso lê a cota como uma taxa. Ela conta requisições em andamento, e a taxa permitida é 10.000 por segundo."
+      },
+      {
+        "text": "O Lambda põe numa fila o que passa do limite e atende um segundo depois",
+        "why": "O Lambda não põe uma requisição síncrona numa fila; um throttle é um erro devolvido a quem chamou."
+      }
+    ]
+  },
+  "ex-q5fj4ens": {
+    "prompt": "Quais destas são verdadeiras sobre o limite de concorrência da conta? Marque todas as que se aplicam.",
+    "hint": "Pense em quem o compartilha e em quem o faz valer.",
+    "choices": [
+      {
+        "text": "É compartilhado por toda função da conta e da região",
+        "why": "Isso. Um pool por conta e região."
+      },
+      {
+        "text": "Um teste de carga numa função pode causar throttle nas outras",
+        "why": "Isso. Elas tiram dos mesmos mil."
+      },
+      {
+        "text": "O moto o faz valer, então um script testado ali mostra onde ele aperta",
+        "why": "O moto não conta nada rodando e não faz throttle de nada."
+      },
+      {
+        "text": "É uma cota que um pedido pelo Service Quotas aumenta",
+        "why": "Isso. É uma cota, não uma parede."
+      },
+      {
+        "text": "Conta requisições por segundo, e não requisições em andamento",
+        "why": "Conta requisições em andamento; a taxa é um limite separado, de dez vezes a cota."
+      }
+    ]
+  },
+  "ex-fzjw4ym4": {
+    "prompt": "Uma notificação do S3 invoca uma função de forma assíncrona e sofre throttle. O que acontece com o evento?",
+    "hint": "Quem está segurando o evento depois que o S3 o entregou?",
+    "choices": [
+      {
+        "text": "O S3 recebe o 429 e manda a notificação de novo mais tarde",
+        "why": "O S3 entregou o evento ao Lambda e saiu da história; as novas tentativas são do Lambda."
+      },
+      {
+        "text": "É descartado na hora",
+        "why": "Ele é guardado e tentado de novo antes. Só é descartado depois da idade máxima, e só se nenhum destino estiver configurado."
+      },
+      {
+        "text": "O Lambda o guarda e tenta de novo por até seis horas, depois usa o destino de falha",
+        "why": "Isso. O caminho assíncrono absorve o throttle em silêncio, e por isso pode parecer lentidão."
+      },
+      {
+        "text": "Vai para uma fila SQS que o S3 mantém para o bucket, e espera ali até haver espaço livre",
+        "why": "O S3 não mantém fila para um bucket; a fila interna que segura o evento é do Lambda."
+      }
+    ]
+  },
+  "ex-8gy5ejwf": {
+    "prompt": "O que uma concorrência reservada de 100 faz por uma função?",
+    "hint": "É o mesmo número visto de dois lados.",
+    "choices": [
+      {
+        "text": "Inicia 100 ambientes com antecedência e os cobra por segundo",
+        "why": "Isso é concorrência provisionada. Uma reserva não inicia nada e não custa nada."
+      },
+      {
+        "text": "Garante 100 a ela, e deixa que ela pegue emprestado do pool sem reserva acima disso",
+        "why": "A reserva também é um teto: a 101ª requisição simultânea sofre throttle."
+      },
+      {
+        "text": "Garante 100 a ela e a limita a 100, sem custo",
+        "why": "Isso. Um piso e um teto ao mesmo tempo, e um número na função."
+      },
+      {
+        "text": "Limita a 100 mas não a protege das outras funções",
+        "why": "Ela protege, sim: nenhuma outra função pode usar os 100 reservados para ela."
+      }
+    ]
+  },
+  "ex-ch6gq1vk": {
+    "prompt": "Uma conta tem o pool padrão de 1.000. checkout reserva 300 e orders reserva 250. Qual é o máximo que uma terceira função pode reservar?",
+    "hint": "A AWS mantém um piso de 100 sem reserva.",
+    "unit": "ambientes"
+  },
+  "ex-3fvxfvcb": {
+    "prompt": "Uma função grava num banco que aceita 100 conexões, e cada ambiente segura uma. Um pico iniciaria 300 ambientes. Qual configuração protege o banco?",
+    "hint": "Qual configuração é um teto?",
+    "choices": [
+      {
+        "text": "Uma concorrência provisionada de 100",
+        "why": "A concorrência provisionada não é um teto: as requisições acima dela são atendidas por ambientes sob demanda, que abrem mais conexões."
+      },
+      {
+        "text": "Um pedido para aumentar o limite da conta, para que os throttles parem",
+        "why": "Um pool maior deixa mais ambientes chegarem ao banco, que é justamente o problema."
+      },
+      {
+        "text": "Uma concorrência reservada abaixo de 100 nessa função, como 80",
+        "why": "Isso. A 81ª requisição sofre throttle antes de chegar ao banco, e nada fica pela metade."
+      },
+      {
+        "text": "Uma concorrência reservada de 0 em todas as outras funções da conta",
+        "why": "Isso para todas as outras funções e deixa esta livre para iniciar 300 ambientes."
+      }
+    ]
+  },
+  "ex-sf7fz1rx": {
+    "prompt": "Ponha na ordem em que precisam acontecer os passos para dar uma reserva a uma função nova contra o moto.",
+    "hint": "Cada passo precisa do que o anterior criou.",
+    "items": [
+      "Criar a role com uma política de confiança para lambda.amazonaws.com",
+      "Compactar o handler em orders.zip",
+      "Rodar create-function, citando a role e o zip",
+      "Rodar put-function-concurrency com 100",
+      "Ler Concurrency de volta com get-function"
+    ],
+    "trap": "Compactar antes de criar a role também funciona; a role e o pacote precisam existir antes de o create-function citá-los."
+  },
+  "ex-qx8m6wfv": {
+    "prompt": "O moto aceitou uma concorrência reservada de 2000 numa função. O que isso diz?",
+    "hint": "O que o moto confere, e o que ele deixa para a AWS?",
+    "choices": [
+      {
+        "text": "Que a AWS permite uma reserva acima do pool quando nada mais está rodando",
+        "why": "A AWS recusa qualquer reserva que deixe menos de 100 sem reserva, ocupado ou não."
+      },
+      {
+        "text": "Que a conta do moto tem um pool maior que o padrão",
+        "why": "O moto não tem pool nenhum; ele guarda o número sem compará-lo com nada."
+      },
+      {
+        "text": "Que o piso de 100 vale para contas com várias funções",
+        "why": "O piso vale para toda conta. O moto simplesmente não o modela."
+      },
+      {
+        "text": "Só que a chamada está bem formada; a AWS recusaria o número",
+        "why": "Isso. O moto responde como a AWS e faz valer muito menos, então um sucesso aqui prova a forma da chamada e mais nada."
+      }
+    ]
+  },
+  "ex-c39xqtyb": {
+    "prompt": "Onde a concorrência provisionada é configurada?",
+    "hint": "O que o Lambda mantém pronto precisa ser um código que não muda por baixo dele.",
+    "choices": [
+      {
+        "text": "No $LATEST, para que acompanhe toda atualização do código",
+        "why": "A AWS recusa o $LATEST, porque ele é a cópia editável e pode mudar por baixo dos ambientes prontos."
+      },
+      {
+        "text": "Numa versão, ou num alias que aponta para uma",
+        "why": "Isso. O alias é a escolha comum, porque um deploy o move e os ambientes acompanham."
+      },
+      {
+        "text": "Na função como um todo, do jeito que a concorrência reservada é",
+        "why": "A reserva fica na função; a provisionada fica num qualificador, uma versão ou um alias."
+      },
+      {
+        "text": "Na conta, onde toda função da região a compartilha",
+        "why": "Não existe um pool provisionado da conta inteira; ela é configurada por versão ou alias e sai do pool de concorrência."
+      }
+    ]
+  },
+  "ex-fpcn026j": {
+    "prompt": "Quatro ambientes de 0,5 GB são mantidos prontos por um mês de 730 horas em sa-east-1, a 0,0000066372 USD por GB-segundo. Quanto custa mantê-los prontos, antes de uma única requisição, em USD até o centavo?",
+    "hint": "Ambientes × GB × segundos × preço; 730 horas são 2.628.000 segundos.",
+    "unit": "USD"
+  },
+  "ex-hgyr2z6v": {
+    "prompt": "Uma função tem 10 ambientes provisionados e chegam 25 requisições ao mesmo tempo. O que acontece com as outras 15?",
+    "hint": "A concorrência provisionada não é um teto.",
+    "choices": [
+      {
+        "text": "Sofrem throttle com um 429, porque 10 é o limite",
+        "why": "Isso trata o provisionado como teto. Só uma reserva limita uma função."
+      },
+      {
+        "text": "São atendidas por ambientes sob demanda, cada um com um cold start",
+        "why": "Isso. Além do número provisionado o Lambda inicia ambientes comuns, se o pool permitir."
+      },
+      {
+        "text": "Esperam numa fila até um dos dez ambientes provisionados ficar livre",
+        "why": "O Lambda não põe uma requisição numa fila atrás de um ambiente ocupado; ele inicia outro."
+      },
+      {
+        "text": "O Lambda acrescenta 15 ambientes provisionados e os cobra a partir dali",
+        "why": "O número provisionado só muda quando você, ou uma política de escala, o muda."
+      }
+    ]
+  },
+  "ex-56qy39h7": {
+    "prompt": "Uma equipe em sa-east-1 quer concorrência provisionada numa função ocupada 90% do tempo, para economizar. Com a tabela de 16 de outubro de 2026, eles estão certos?",
+    "hint": "Compare o que o provisionado economiza por GB-segundo rodando com o que cobra por GB-segundo mantido pronto.",
+    "choices": [
+      {
+        "text": "Sim: os textos põem o equilíbrio perto de 60% de uso, e 90% está acima",
+        "why": "Esse número é conta com os preços de outra região. Na tabela de São Paulo não existe equilíbrio."
+      },
+      {
+        "text": "Sim, mas só acima de 95% de uso, onde o desconto no tempo rodando alcança",
+        "why": "O equilíbrio dá 562%, que nenhum mês alcança."
+      },
+      {
+        "text": "Não: economizar 0,0000011800 por GB-segundo rodando nunca paga 0,0000066372 por GB-segundo mantido",
+        "why": "Isso. Em sa-east-1 a concorrência provisionada é comprada por latência, em qualquer nível de uso."
+      },
+      {
+        "text": "Não faz diferença, porque as requisições são cobradas igual nos dois",
+        "why": "As requisições se cancelam, e a duração não: o provisionado soma uma cobrança por cada segundo mantido pronto."
+      }
+    ]
+  },
+  "ex-y9dm9svy": {
+    "prompt": "Ponha estas funções em ordem de concorrência, a menor primeiro.",
+    "hint": "Multiplique cada taxa pela duração.",
+    "items": [
+      "500 requisições por segundo a 20 ms",
+      "50 requisições por segundo a 0,4 s",
+      "10 requisições por segundo a 3 s",
+      "2 requisições por segundo a 25 s"
+    ],
+    "trap": "A função mais movimentada em requisições por segundo é a menos concorrente: 500 × 0,02 = 10."
+  },
+  "ex-pr3grq7z": {
+    "prompt": "Ligue cada configuração ao que ela é.",
+    "hint": "Quais custam dinheiro, e quais só traçam uma linha?",
+    "pairs": [
+      {
+        "left": "Concorrência reservada",
+        "right": "Um piso e um teto gratuitos para uma função"
+      },
+      {
+        "left": "Concorrência provisionada",
+        "right": "Ambientes inicializados com antecedência, cobrados por segundo"
+      },
+      {
+        "left": "O limite da conta",
+        "right": "O pool de que toda função da região tira"
+      },
+      {
+        "left": "O piso sem reserva",
+        "right": "Os 100 que a AWS mantém para funções sem reserva"
+      }
+    ],
+    "right_distractors": [
+      "Uma fila que segura requisições até um ambiente ficar livre"
+    ]
+  },
+  "ex-j9hqhwz5": {
+    "prompt": "Quais destas o moto 5.2.3 fez nesta lição? Marque todas as que se aplicam.",
+    "hint": "Duas ele fez; as outras ele recusou, ignorou ou não tem.",
+    "choices": [
+      {
+        "text": "Guardou uma concorrência reservada numa função",
+        "why": "Isso. put-function-concurrency e get-function responderam."
+      },
+      {
+        "text": "Recusou uma reserva maior que o pool",
+        "why": "Ele aceitou 2000 sem comparar com nada."
+      },
+      {
+        "text": "Publicou uma versão e criou um alias apontando para ela",
+        "why": "Isso. publish-version e create-alias funcionam no moto."
+      },
+      {
+        "text": "Configurou dez ambientes provisionados atrás de um alias",
+        "why": "O PutProvisionedConcurrencyConfig respondeu com uma página 404: o moto não o implementou."
+      },
+      {
+        "text": "Imprimiu os limites da conta com get-account-settings",
+        "why": "Essa operação também falta no moto, e devolveu a mesma página 404."
+      }
+    ]
+  },
+  "ex-9q9grvs2": {
+    "prompt": "O que faz uma concorrência reservada de 0?",
+    "hint": "Ela é um teto além de um piso.",
+    "choices": [
+      {
+        "text": "Remove a reserva e devolve a função ao pool compartilhado das outras",
+        "why": "Isso é o delete-function-concurrency. Uma reserva de 0 é um teto de zero."
+      },
+      {
+        "text": "Faz throttle de toda requisição: a função para, sem ser apagada",
+        "why": "Isso. É o interruptor para um incidente ou para uma função chamando a si mesma em loop."
+      },
+      {
+        "text": "Deixa a função usar o pool sem reserva inteiro",
+        "why": "Isso é uma função sem reserva nenhuma; 0 é uma reserva, e a menor delas."
+      },
+      {
+        "text": "Nada, porque a AWS recusa uma reserva menor que 1",
+        "why": "A AWS aceita 0, e o documenta como a forma de parar as invocações de uma função."
+      }
+    ]
+  },
+  "ex-mwfptgw2": {
+    "prompt": "Sob demanda em sa-east-1, a duração custa 0,0000166667 USD por GB-segundo. Uma função de 512 MB atende 3.000.000 de requisições de 200 ms cada num mês. Qual é a cobrança de duração, em USD até o centavo?",
+    "hint": "512 MB são 0,5 GB; GB × segundos × requisições × preço.",
+    "unit": "USD"
+  }
+}

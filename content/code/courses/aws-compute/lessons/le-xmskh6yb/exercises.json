@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-8y13zs0a",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `Choice` state has rules and no `Default`. An input arrives that no rule matches. What happens on AWS?",
+    "hint": "`Default` is where everything else goes.",
+    "choices": [
+      {
+        "text": "The execution fails with `States.NoChoiceMatched`",
+        "correct": true,
+        "why": "Yes. With no rule and no `Default`, there is nowhere to go."
+      },
+      {
+        "text": "It follows the first rule's `Next`",
+        "correct": false,
+        "why": "A rule is followed only when it matches."
+      },
+      {
+        "text": "The execution succeeds, with its input as the output",
+        "correct": false,
+        "why": "Only `Succeed` ends a run that way; a `Choice` is not an end state."
+      },
+      {
+        "text": "It waits until an input that matches arrives",
+        "correct": false,
+        "why": "A `Choice` reads the input it has once; it never waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4f8c8g1",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `start-execution`, `describe-execution` for `order-42` said `RUNNING`. Why?",
+    "hint": "What does the caller wait for?",
+    "choices": [
+      {
+        "text": "moto is slower than AWS at starting executions",
+        "correct": false,
+        "why": "AWS answers the same way: a Standard start returns before the work."
+      },
+      {
+        "text": "The command line had not yet sent the input",
+        "correct": false,
+        "why": "The input is part of the start call; it was already there."
+      },
+      {
+        "text": "The start returns at once; the run goes on alone",
+        "correct": true,
+        "why": "Yes. The two-second `Wait` and the task happened after the command returned."
+      },
+      {
+        "text": "The queue was still empty, so `Notify` was retrying",
+        "correct": false,
+        "why": "The queue existed; an empty queue is no error, and the history shows no retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7s972pg",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`order-42` went through the `Wait` and its history had 13 events. `order-43` skipped it. A `Wait` adds one event on entering and one on leaving. How many events did `order-43` have?",
+    "hint": "13 minus what the Wait adds.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "events"
+  },
+  {
+    "id": "ex-ttgz997v",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto created a state machine whose only state has `\"Next\": \"B\"`, and no state `B` exists. What does AWS do with the same command?",
+    "hint": "AWS checks a definition when it is created.",
+    "choices": [
+      {
+        "text": "Refuses it with `InvalidDefinition`",
+        "correct": true,
+        "why": "Yes, naming the state that points nowhere."
+      },
+      {
+        "text": "Creates it, and the first execution fails at `A`",
+        "correct": false,
+        "why": "That is moto's behaviour at best; AWS never creates it."
+      },
+      {
+        "text": "Creates it and treats `A` as an end state",
+        "correct": false,
+        "why": "A missing `Next` target is an error, not an implicit end."
+      },
+      {
+        "text": "Creates a `Pass` state called `B` to fill the gap",
+        "correct": false,
+        "why": "Nothing is ever added to a definition for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6kaj14x",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each state type with what it does.",
+    "hint": "One description belongs to a type not on the left.",
+    "pairs": [
+      {
+        "left": "`Choice`",
+        "right": "reads the input and picks the next state"
+      },
+      {
+        "left": "`Wait`",
+        "right": "holds the execution and runs nothing"
+      },
+      {
+        "left": "`Map`",
+        "right": "runs the same steps once per item of a list"
+      },
+      {
+        "left": "`Parallel`",
+        "right": "runs different branches at once and waits for all"
+      }
+    ],
+    "right_distractors": [
+      "calls a service and takes its answer as the result"
+    ]
+  },
+  {
+    "id": "ex-7sbqn6n9",
+    "version": 1,
+    "section": "amazon-states-language",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Notify` state, `___` puts SQS's answer at `$.sent`, beside the input, instead of replacing the input with it.",
+    "hint": "A field name, one word in two parts.",
+    "blanks": [
+      {
+        "accept": [
+          "ResultPath"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6f78syrh",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Standard workflow of 8 steps runs 500,000 times a month, with no retries. At 37.5 USD per million state transitions, what does a month cost? Leave out the free tier.",
+    "hint": "Executions × steps, then per million.",
+    "value": 150,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-949ax8ch",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same 500,000 runs as Express workflows take 1.5 s each at the smallest memory step, 64 MB. At 1 USD per million requests and 0.00001667 USD per GB-second, what does a month cost?",
+    "hint": "64 MB is 0.0625 GB; add the requests.",
+    "value": 1.2814,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-kyvm8k33",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refund workflow waits for a manager's approval, which takes up to two days. Which type does it need?",
+    "hint": "Two limits rule one of them out.",
+    "choices": [
+      {
+        "text": "Express, because it is about a hundred times cheaper",
+        "correct": false,
+        "why": "It cannot run past five minutes, and it has no `.waitForTaskToken`."
+      },
+      {
+        "text": "Express, started synchronously from the API",
+        "correct": false,
+        "why": "A synchronous start makes the caller wait; the five-minute limit still applies."
+      },
+      {
+        "text": "Either; the type only changes the price",
+        "correct": false,
+        "why": "The types differ in duration, history and the waits they support."
+      },
+      {
+        "text": "Standard",
+        "correct": true,
+        "why": "Yes: a year of duration and the token callback."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpmwj5nd",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, an Express state machine with a one-hour `Wait` succeeds after an hour. What would AWS do?",
+    "hint": "What did `describe-state-machine` report for `orders-fast`?",
+    "choices": [
+      {
+        "text": "The same, since moto imitates AWS",
+        "correct": false,
+        "why": "moto stored the machine as Standard, so it ran without Express's limit."
+      },
+      {
+        "text": "Stop the execution at five minutes",
+        "correct": true,
+        "why": "Yes. Express's limit is five minutes, and moto does not apply it."
+      },
+      {
+        "text": "Refuse to create a machine containing a `Wait`",
+        "correct": false,
+        "why": "Express accepts a `Wait`; the run as a whole is what is limited."
+      },
+      {
+        "text": "Run it to the end and bill it as Standard",
+        "correct": false,
+        "why": "The type is fixed at creation and decides both the limits and the bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-zha0ay14",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an Express workflow on AWS? Choose all that apply.",
+    "hint": "The table in the section.",
+    "choices": [
+      {
+        "text": "Started asynchronously, it runs at least once",
+        "correct": true,
+        "why": "Yes, so a run may repeat."
+      },
+      {
+        "text": "Its history is readable from the service for 90 days",
+        "correct": false,
+        "why": "That is Standard; Express sends history to CloudWatch Logs if logging is on."
+      },
+      {
+        "text": "It has no `.waitForTaskToken`",
+        "correct": true,
+        "why": "Yes; neither does it have `.sync`."
+      },
+      {
+        "text": "It is billed per state transition",
+        "correct": false,
+        "why": "Express is billed per request and by duration and memory."
+      },
+      {
+        "text": "A run lasts five minutes at most",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6j0gwp8",
+    "version": 1,
+    "section": "standard-and-express",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Express workflow started asynchronously charges a card in one of its steps. A customer is charged twice for one order, and the workflow has no `Retry`. What explains it, and what prevents it?",
+    "hint": "What does at least once allow?",
+    "choices": [
+      {
+        "text": "A hidden default `Retry`; add `MaxAttempts: 0`",
+        "correct": false,
+        "why": "There is no default retry on a task; the repeat came from the execution."
+      },
+      {
+        "text": "The customer clicked twice; Express cannot be the cause",
+        "correct": false,
+        "why": "It can: at-least-once execution is part of what Express promises."
+      },
+      {
+        "text": "Express runs every step twice; switch to a synchronous start",
+        "correct": false,
+        "why": "It does not run every step twice; it may run the whole workflow again. Synchronous is at most once, which can lose a run instead."
+      },
+      {
+        "text": "It ran twice; pass the provider an idempotency key",
+        "correct": true,
+        "why": "Yes. Async Express is at least once, so the charge must recognise a repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-hvaqk284",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `Retry` has `IntervalSeconds: 3`, `BackoffRate: 2` and `MaxAttempts: 3`, and every attempt fails at once. How many seconds pass waiting between attempts, in total, before the `Catch` takes over?",
+    "hint": "Three retries; each gap is twice the last.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ger339yd",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of `order-45` in the order they happened.",
+    "hint": "`MaxAttempts: 2` means two retries after the first try.",
+    "items": [
+      "the first attempt fails",
+      "one second of waiting",
+      "the second attempt fails",
+      "two seconds of waiting",
+      "the third attempt fails",
+      "the `Catch` moves the execution to `Failed`"
+    ],
+    "trap": "The `Catch` acts only after the last retry, not after the first failure."
+  },
+  {
+    "id": "ex-bggdqymj",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`order-45` failed while sending to SQS, yet `describe-execution` reported the error `NotifyFailed`. Why?",
+    "hint": "Where did the `Catch` send the execution?",
+    "choices": [
+      {
+        "text": "moto renames SQS errors",
+        "correct": false,
+        "why": "moto kept SQS's error on the task events; the name came from the document."
+      },
+      {
+        "text": "The execution ended in a `Fail` state, which names its own error",
+        "correct": true,
+        "why": "Yes. The SQS error is still in the `TaskFailed` events."
+      },
+      {
+        "text": "`States.ALL` turns every error into `NotifyFailed`",
+        "correct": false,
+        "why": "`States.ALL` only matches errors; it renames nothing."
+      },
+      {
+        "text": "Only the last attempt's error is ever kept",
+        "correct": false,
+        "why": "Each failed attempt is in the history with its own error."
+      }
+    ]
+  },
+  {
+    "id": "ex-8n7g55r3",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task's `Retry` list has `States.ALL` first, then `States.Timeout` with a longer interval. What is wrong?",
+    "hint": "Rules are tried in order.",
+    "choices": [
+      {
+        "text": "Nothing; the more specific rule wins wherever it is",
+        "correct": false,
+        "why": "Rules are tried in order and the first match wins."
+      },
+      {
+        "text": "A timeout cannot be retried",
+        "correct": false,
+        "why": "`States.Timeout` can be retried like any error."
+      },
+      {
+        "text": "`States.ALL` has to come last, so AWS refuses the definition",
+        "correct": true,
+        "why": "Yes. It is the catch-all, and anything after it could never be reached."
+      },
+      {
+        "text": "`States.Timeout` is only valid inside a `Catch`",
+        "correct": false,
+        "why": "Error names work in both `Retry` and `Catch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jy9tg6k5",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment step has a `Retry`. Which value should it send to the payment provider as the idempotency key?",
+    "hint": "It has to be the same on every attempt of the same work.",
+    "choices": [
+      {
+        "text": "`$$.Execution.Name`",
+        "correct": true,
+        "why": "Yes. Unique per execution and unchanged between retries."
+      },
+      {
+        "text": "A new UUID generated on each attempt",
+        "correct": false,
+        "why": "Then each retry looks like a new payment, which is the problem."
+      },
+      {
+        "text": "The time the attempt started",
+        "correct": false,
+        "why": "It changes on every attempt."
+      },
+      {
+        "text": "`$$.Task.Token`",
+        "correct": false,
+        "why": "A token exists only for callback tasks, and it is a handle, not a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5v1gkrf",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Set to `FULL`, the retry field `___` randomises each gap, so that a thousand executions failing together do not all try again in the same second.",
+    "hint": "Two words joined, in the style of `BackoffRate`.",
+    "blanks": [
+      {
+        "accept": [
+          "JitterStrategy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-egsqdjk2",
+    "version": 1,
+    "section": "waiting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a Standard workflow, how does a `Wait` of a week compare in price with a `Wait` of one second?",
+    "hint": "What does Standard bill?",
+    "choices": [
+      {
+        "text": "A week costs about 600,000 times more",
+        "correct": false,
+        "why": "Standard bills transitions, not time spent in a state."
+      },
+      {
+        "text": "The same",
+        "correct": true,
+        "why": "Yes. The state is the same transitions, and the time is free."
+      },
+      {
+        "text": "A week is refused; a `Wait` lasts five minutes at most",
+        "correct": false,
+        "why": "Five minutes is Express's limit for a whole run, not a `Wait`'s on Standard."
+      },
+      {
+        "text": "A week costs one transition per hour waited",
+        "correct": false,
+        "why": "A wait does not tick; it is entered once and left once."
+      }
+    ]
+  },
+  {
+    "id": "ex-9egkvnwp",
+    "version": 1,
+    "section": "waiting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `.waitForTaskToken` task has `TimeoutSeconds: 86400` and `HeartbeatSeconds: 300`. The worker sends one heartbeat, then crashes. When does the task fail, and with what?",
+    "hint": "Which of the two limits runs out first?",
+    "choices": [
+      {
+        "text": "After about five minutes, with `States.HeartbeatTimeout`",
+        "correct": true,
+        "why": "Yes. Silence longer than `HeartbeatSeconds` fails the task."
+      },
+      {
+        "text": "After a day, with `States.Timeout`",
+        "correct": false,
+        "why": "The heartbeat limit runs out long before the day does."
+      },
+      {
+        "text": "Never: a worker that crashed leaves it waiting for a whole year",
+        "correct": false,
+        "why": "Both limits are set, and either ends the wait."
+      },
+      {
+        "text": "At once, with `States.TaskFailed`",
+        "correct": false,
+        "why": "Nobody tells Step Functions about a crash; it notices the silence."
+      }
+    ]
+  },
+  {
+    "id": "ex-07m3ny9a",
+    "version": 1,
+    "section": "waiting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of work with the way the state should wait for it.",
+    "hint": "Who decides that the wait is over?",
+    "pairs": [
+      {
+        "left": "send a reminder at the hour the customer chose",
+        "right": "`Wait` with `TimestampPath`"
+      },
+      {
+        "left": "a manager approves a refund",
+        "right": "`.waitForTaskToken`"
+      },
+      {
+        "left": "an ECS task that must finish before the next step",
+        "right": "`.sync`"
+      },
+      {
+        "left": "start a report nobody waits for",
+        "right": "the integration with no suffix"
+      }
+    ],
+    "right_distractors": [
+      "an Express workflow with a long `Wait`"
+    ]
+  },
+  {
+    "id": "ex-b87p7fc3",
+    "version": 1,
+    "section": "waiting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The store's system receives a message carrying a task token from AWS. What should it do with the token?",
+    "hint": "It is up to 1,024 characters and meant to be opaque.",
+    "choices": [
+      {
+        "text": "Read the order id out of it",
+        "correct": false,
+        "why": "Nothing in it is meant to be read; the order travels beside it in the message."
+      },
+      {
+        "text": "Shorten it to a UUID, as moto's tokens are",
+        "correct": false,
+        "why": "moto's tokens are short; AWS's are not, and a cut token matches nothing."
+      },
+      {
+        "text": "Pass it to `start-execution` to resume the workflow",
+        "correct": false,
+        "why": "That starts a new execution; the waiting one resumes only on a send-task call."
+      },
+      {
+        "text": "Store it whole and send it back",
+        "correct": true,
+        "why": "Yes, with `send-task-success` or `send-task-failure`. It is a handle on one waiting task, and nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-40xns0bp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every photo uploaded to S3 becomes three thumbnails: 200,000 photos a day, each done in under three seconds, and a repeat only overwrites the same three files. Which type of workflow fits?",
+    "hint": "Short, many, and safe to repeat.",
+    "choices": [
+      {
+        "text": "Standard, because it runs exactly once",
+        "correct": false,
+        "why": "Exactly once buys nothing when a repeat is harmless, and it costs per transition."
+      },
+      {
+        "text": "Express",
+        "correct": true,
+        "why": "Yes: under five minutes, many runs, and idempotent by nature."
+      },
+      {
+        "text": "Standard with `.waitForTaskToken` on each thumbnail",
+        "correct": false,
+        "why": "Nobody hands a token back here; the work is the service's own."
+      },
+      {
+        "text": "Neither: a state machine cannot be started by S3",
+        "correct": false,
+        "why": "An EventBridge rule on the upload starts one, as lesson 21 shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy6xf1j9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab of this lesson really show? Choose all that apply.",
+    "hint": "moto ran the interpreter; some AWS behaviour it skips.",
+    "choices": [
+      {
+        "text": "Retry gaps of one and then two real seconds",
+        "correct": true,
+        "why": "Yes, in the timestamps of `order-45`."
+      },
+      {
+        "text": "An Express execution stopped at five minutes",
+        "correct": false,
+        "why": "moto stored the machine as Standard and applies no such limit."
+      },
+      {
+        "text": "A task token handed back, and the execution finishing",
+        "correct": true,
+        "why": "Yes, `order-46`."
+      },
+      {
+        "text": "A broken definition refused with `InvalidDefinition`",
+        "correct": false,
+        "why": "moto created `broken`; the refusal is AWS's documented behaviour."
+      },
+      {
+        "text": "A message sent to SQS by a `Task`, with no function",
+        "correct": true,
+        "why": "Yes; `receive-message` printed `42`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx4k18fs",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Standard workflow of 6 steps runs 100,000 times a month, and on average one step is retried twice per execution. At 37.5 USD per million transitions, what does the month cost?",
+    "hint": "Each retry is a transition too.",
+    "value": 30,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]

@@ -1,0 +1,463 @@
+{
+  "ex-zdyjs1zt": {
+    "prompt": "Um consumidor chama `receive-message` e recebe `order 42`. O que aconteceu com a mensagem na fila?",
+    "hint": "Pense na primeira transcrição depois do delete.",
+    "choices": [
+      {
+        "text": "Sumiu; a fila a entregou",
+        "why": "Receber não remove; só o `delete-message` remove."
+      },
+      {
+        "text": "Foi copiada para todos os outros consumidores da fila",
+        "why": "Cópias por assinante são o que um tópico faz."
+      },
+      {
+        "text": "Foi para a dead-letter queue na hora",
+        "why": "Só depois de `maxReceiveCount` recebimentos sem delete."
+      },
+      {
+        "text": "Oculta até o timeout acabar, se não for apagada",
+        "why": "Isso. É assim que uma fila sobrevive a um consumidor que cai."
+      }
+    ]
+  },
+  "ex-3rpc7ehm": {
+    "prompt": "Cada mensagem leva 45 segundos para um consumidor processar, e a fila mantém o visibility timeout padrão de 30 segundos. Dois consumidores leem a fila. O que acontece?",
+    "hint": "Quando a mensagem volta a ficar visível?",
+    "choices": [
+      {
+        "text": "Nada; o timeout só importa para consumidores que caem",
+        "why": "A fila não distingue lento de caído; aos 30 segundos ela entrega a mensagem de novo."
+      },
+      {
+        "text": "A fila estende o timeout enquanto o consumidor trabalha",
+        "why": "Só uma chamada `change-message-visibility` do consumidor faz isso."
+      },
+      {
+        "text": "O primeiro delete falha, então a mensagem se perde",
+        "why": "Nada se perde; o risco é o contrário, o trabalho feito duas vezes."
+      },
+      {
+        "text": "Reaparece aos 30 s e o outro consumidor a começa",
+        "why": "Isso. Ponha o timeout acima do tempo de processamento mais lento."
+      }
+    ]
+  },
+  "ex-2exxxj0g": {
+    "prompt": "A redrive policy de uma fila tem `maxReceiveCount` 5. Uma mensagem nunca é apagada. Quantas vezes ela é recebida antes de a fila movê-la para a dead-letter queue?",
+    "hint": "Com 3, a execução mostrou as contagens 1, 2 e 3.",
+    "unit": "recebimentos"
+  },
+  "ex-j2j3enem": {
+    "prompt": "Ponha a vida da `order 42` na fila `work` em ordem, como a execução mostrou.",
+    "hint": "O `maxReceiveCount` era 3.",
+    "items": [
+      "mandada para `work`",
+      "recebida, contagem 1, depois oculta",
+      "recebida, contagem 2, depois oculta",
+      "recebida, contagem 3, depois oculta",
+      "movida para `work-dlq` no receive seguinte"
+    ],
+    "trap": "A movida acontece quando um quarto receive passaria da contagem, não logo depois do terceiro."
+  },
+  "ex-xbt9as96": {
+    "prompt": "O `delete-message` não recebe o id da mensagem; ele recebe o receipt ___, que nomeia um recebimento da mensagem.",
+    "hint": "A opção da CLI é `--receipt-` seguida desta palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "handle"
+        ]
+      }
+    ]
+  },
+  "ex-hg13njr5": {
+    "prompt": "O que o long polling (`--wait-time-seconds 20`) muda para um consumidor de uma fila ociosa?",
+    "hint": "O SQS cobra por requisição, vazia ou não.",
+    "choices": [
+      {
+        "text": "Paga-se por muito menos receives vazios",
+        "why": "Isso. Cada requisição espera no servidor: três por minuto em vez de um por volta do laço."
+      },
+      {
+        "text": "As mensagens são entregues mais rápido",
+        "why": "Uma mensagem que chega durante a espera volta na hora, mas velocidade nunca foi o problema."
+      },
+      {
+        "text": "O visibility timeout cresce para 20 segundos",
+        "why": "Os dois ajustes são separados: um é quanto esperar por uma mensagem, o outro quanto tempo ocultá-la."
+      },
+      {
+        "text": "As mensagens são guardadas 20 segundos a mais antes de expirar",
+        "why": "A retenção é um atributo próprio, quatro dias por padrão."
+      }
+    ]
+  },
+  "ex-ebmmp14r": {
+    "prompt": "Billing e shipping leem os pedidos pagos de uma única fila do SQS. O que dá errado?",
+    "hint": "Uma fila entrega cada mensagem a quantos consumidores?",
+    "choices": [
+      {
+        "text": "Cada time recebe cada pedido, como num tópico",
+        "why": "Uma fila entrega cada mensagem a um consumidor."
+      },
+      {
+        "text": "A fila recusa um segundo consumidor",
+        "why": "Qualquer número de consumidores pode ler; eles disputam as mensagens."
+      },
+      {
+        "text": "Cada time vê cerca de metade dos pedidos",
+        "why": "Isso. Eles precisam de um tópico, com uma fila para cada um atrás dele."
+      },
+      {
+        "text": "Todo pedido é entregue duas vezes aos dois times",
+        "why": "O contrário: cada pedido chega a um deles."
+      }
+    ]
+  },
+  "ex-ksfemxy0": {
+    "prompt": "Na AWS, a Ana assina uma fila num tópico exatamente como no laboratório, publica, e a fila fica vazia. No moto funcionou. Qual a causa provável?",
+    "hint": "O que o moto não verifica?",
+    "choices": [
+      {
+        "text": "A fila não tem política para o `sns.amazonaws.com`",
+        "why": "Isso. Sem ela o SNS não entrega nada e a assinatura parece certa."
+      },
+      {
+        "text": "A entrega raw precisa estar ligada para todo endpoint SQS",
+        "why": "Raw só muda o formato do que chega."
+      },
+      {
+        "text": "O SNS entrega ao SQS só uma vez por dia",
+        "why": "A entrega é imediata."
+      },
+      {
+        "text": "Um tópico precisa de pelo menos duas assinaturas",
+        "why": "Uma assinatura basta."
+      }
+    ]
+  },
+  "ex-0fyn978v": {
+    "prompt": "Depois das duas publicações, quais destas eram verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Uma assinatura tinha filtro e entrega raw.",
+    "choices": [
+      {
+        "text": "`billing` recebeu os dois pedidos",
+        "why": "Sim; ela não tem filtro."
+      },
+      {
+        "text": "`shipping` recebeu o pedido digital",
+        "why": "O filtro o barrou antes da entrega."
+      },
+      {
+        "text": "`shipping` recebeu o texto publicado e nada mais",
+        "why": "Sim, por causa da entrega raw."
+      },
+      {
+        "text": "`billing` recebeu o envelope JSON do SNS em volta de cada mensagem",
+        "why": "Sim, com `Type`, `Message` e os atributos."
+      },
+      {
+        "text": "O filtro foi aplicado pela fila `shipping` depois da entrega",
+        "why": "O SNS o aplica antes da entrega; uma fila não tem filtros."
+      }
+    ]
+  },
+  "ex-pgtb1jbj": {
+    "prompt": "Um terceiro time assina uma fila em `orders` uma hora depois de `order 42 paid` ser publicada. A fila dele recebe essa mensagem?",
+    "hint": "O que um tópico guarda?",
+    "choices": [
+      {
+        "text": "Sim, uma vez, quando a assinatura é confirmada",
+        "why": "Não há o que reenviar; a mensagem foi entregue e não guardada."
+      },
+      {
+        "text": "Sim, se pedir as mensagens dos últimos 14 dias",
+        "why": "Catorze dias é a retenção máxima de uma fila; um tópico não guarda nenhuma."
+      },
+      {
+        "text": "Não; um tópico não guarda nada",
+        "why": "Isso. Uma assinatura só recebe o que é publicado depois que ela existe."
+      },
+      {
+        "text": "Só com entrega raw",
+        "why": "Raw muda o formato, não o que é entregue."
+      }
+    ]
+  },
+  "ex-tmgdkkq8": {
+    "prompt": "Com valor `MessageBody`, o atributo de assinatura `___` faz uma filter policy ler o JSON da mensagem em vez dos atributos dela.",
+    "hint": "Ele começa com as palavras `FilterPolicy`.",
+    "blanks": [
+      {
+        "accept": [
+          "FilterPolicyScope"
+        ]
+      }
+    ]
+  },
+  "ex-eb18rkkr": {
+    "prompt": "O bus `shop` tem uma regra, `big-orders`, para totais acima de 1000. Um evento com total 300 é posto nele. O que acontece com o evento?",
+    "hint": "O que a `review` recebeu?",
+    "choices": [
+      {
+        "text": "Ele espera no bus até uma regra casar com ele",
+        "why": "Um bus não guarda nada; só um archive guardaria."
+      },
+      {
+        "text": "O `put-events` o recusa com uma entrada falha",
+        "why": "O `FailedEntryCount` foi 0; o evento foi aceito."
+      },
+      {
+        "text": "Ele vai para o bus default em vez disso",
+        "why": "Eventos nunca mudam de bus sozinhos."
+      },
+      {
+        "text": "É descartado: nenhuma regra casou, então nenhum alvo o recebe",
+        "why": "Isso. Sem um archive ele some."
+      }
+    ]
+  },
+  "ex-dzjhy3sn": {
+    "prompt": "O padrão da regra cita `source` e `detail.total > 1000`. Chega um evento de `shop.orders` com o detail `{\"id\": \"9\", \"amount\": 2000}`. Ele casa?",
+    "hint": "Todo campo que o padrão cita precisa casar.",
+    "choices": [
+      {
+        "text": "Sim: 2000 é maior que 1000",
+        "why": "O 2000 está em `amount`, que o padrão não lê."
+      },
+      {
+        "text": "Não: falta ao evento o `total` exigido",
+        "why": "Isso. Um evento sem um campo citado não casa."
+      },
+      {
+        "text": "Sim: um campo ausente é ignorado",
+        "why": "Campos que o padrão não cita são ignorados; os que ele cita são exigidos."
+      },
+      {
+        "text": "Depende da ordem dos campos no detail",
+        "why": "A comparação é por nome, nunca por posição."
+      }
+    ]
+  },
+  "ex-0t9g777r": {
+    "prompt": "Ligue cada necessidade ao serviço que se encaixa nela.",
+    "hint": "Quem decide para onde a mensagem vai?",
+    "pairs": [
+      {
+        "left": "cada job precisa ser feito por um worker",
+        "right": "uma fila do SQS"
+      },
+      {
+        "left": "billing e shipping precisam, cada um, de todo pagamento",
+        "right": "um tópico do SNS"
+      },
+      {
+        "left": "consumidores novos aparecem, e o conteúdo decide quem recebe o quê",
+        "right": "um bus do EventBridge com regras"
+      },
+      {
+        "left": "iniciar um relatório toda noite às 03:00 de São Paulo",
+        "right": "uma agenda do EventBridge Scheduler"
+      }
+    ],
+    "right_distractors": [
+      "um estado `Wait` do Step Functions em laço"
+    ]
+  },
+  "ex-zems4j6p": {
+    "prompt": "O SNS e o EventBridge entregam uma mensagem a vários lugares. Qual é a diferença em que a seção insiste?",
+    "hint": "Onde mora o roteamento?",
+    "choices": [
+      {
+        "text": "O EventBridge guarda eventos por 14 dias e o SNS não",
+        "why": "Nenhum guarda mensagens por padrão; o EventBridge só com um archive."
+      },
+      {
+        "text": "Num bus, o conteúdo decide os alvos",
+        "why": "Isso. O produtor só diz o que aconteceu."
+      },
+      {
+        "text": "O SNS só entrega a filas",
+        "why": "O SNS também entrega a Lambda, HTTPS, e-mail e SMS."
+      },
+      {
+        "text": "O EventBridge é mais barato por mensagem",
+        "why": "Na tabela um evento custom custa 1, uma publicação SNS 0,5 por milhão."
+      }
+    ]
+  },
+  "ex-44mtkazg": {
+    "prompt": "O que chega ao bus `default` de uma conta sem ninguém pôr eventos nele?",
+    "hint": "Uma instância mudando de estado é um exemplo.",
+    "choices": [
+      {
+        "text": "Eventos começam a chegar quando existe um bus custom",
+        "why": "O bus default existe em toda conta e recebe os eventos da AWS."
+      },
+      {
+        "text": "Toda mensagem SNS publicada na conta",
+        "why": "Publicações do SNS vão para tópicos, não para o bus."
+      },
+      {
+        "text": "Eventos dos serviços da AWS",
+        "why": "Isso: EC2, S3, Step Functions e outros publicam lá."
+      },
+      {
+        "text": "Uma cópia dos eventos de todo bus custom",
+        "why": "Os buses são separados; nada é copiado entre eles a menos que uma regra tenha outro bus como alvo."
+      }
+    ]
+  },
+  "ex-48spqpyx": {
+    "prompt": "Um produtor manda para uma fila FIFO com o deduplication id `42-paid`, não recebe resposta, e manda de novo um minuto depois com o mesmo id. O que acontece?",
+    "hint": "Por quanto tempo uma fila FIFO lembra um id?",
+    "choices": [
+      {
+        "text": "O segundo envio é recusado com erro",
+        "why": "Ele é aceito; é isso que torna a nova tentativa segura."
+      },
+      {
+        "text": "Os dois são aceitos e uma mensagem é entregue",
+        "why": "Isso; o id é lembrado por cinco minutos."
+      },
+      {
+        "text": "Os dois são entregues, um depois do outro",
+        "why": "Dentro de cinco minutos, um id repetido é descartado."
+      },
+      {
+        "text": "O segundo substitui o primeiro na fila",
+        "why": "Nada é substituído; a repetição simplesmente não é entregue."
+      }
+    ]
+  },
+  "ex-fvabhyk4": {
+    "prompt": "4 milhões de pedidos por mês passam por uma fila FIFO, cada um mandado, recebido e apagado uma vez. A 0,5 USD por milhão de requisições, quanto custa o mês?",
+    "hint": "Três requisições por mensagem.",
+    "unit": "USD"
+  },
+  "ex-26ya09p0": {
+    "prompt": "Um consumidor sem long polling pergunta a uma fila standard ociosa 5 vezes por segundo durante um mês de 30 dias. A 0,4 USD por milhão de requisições, quanto custam os receives vazios?",
+    "hint": "Um mês de 30 dias são 2.592.000 segundos.",
+    "unit": "USD"
+  },
+  "ex-0k9ye961": {
+    "prompt": "O `consumer.py` insere a chave e chama `charge` dentro de uma transação. Por que não inserir a chave depois que a cobrança deu certo, numa transação própria?",
+    "hint": "Imagine dois consumidores com cópias da mesma mensagem no mesmo momento.",
+    "choices": [
+      {
+        "text": "O SQLite não consegue rodar dois comandos em transações separadas",
+        "why": "Consegue; a ordem é uma escolha de desenho, não um limite."
+      },
+      {
+        "text": "Seria mais rápido, mas mais difícil de ler",
+        "why": "Velocidade não é a questão; a correção com duplicatas é."
+      },
+      {
+        "text": "As duas cópias poderiam cobrar antes de qualquer chave ser escrita",
+        "why": "Isso. Reservar a chave primeiro deixa a restrição de unicidade parar a segunda."
+      },
+      {
+        "text": "A mensagem não seria apagada",
+        "why": "O delete acontece de qualquer jeito, depois do bloco."
+      }
+    ]
+  },
+  "ex-yp8fr1jh": {
+    "prompt": "Um time põe todo pedido da loja num único message group FIFO, `all`. Quanto isso custa a eles?",
+    "hint": "O que um grupo permite enquanto uma das mensagens dele é processada?",
+    "choices": [
+      {
+        "text": "Uma por vez, com qualquer número de consumidores",
+        "why": "Isso. Os grupos são de onde vem o paralelismo do FIFO."
+      },
+      {
+        "text": "Duplicatas deixam de ser descartadas",
+        "why": "A deduplicação não depende do grupo."
+      },
+      {
+        "text": "A fila se recusa a aceitar mais de um nome de grupo",
+        "why": "Qualquer número de grupos é permitido; é esse o propósito."
+      },
+      {
+        "text": "O preço por requisição dobra",
+        "why": "O preço é o mesmo; quem sofre é a vazão."
+      }
+    ]
+  },
+  "ex-y3p544vd": {
+    "prompt": "Quais destas ainda podem entregar o mesmo trabalho duas vezes de uma fila FIFO? Escolha todas as que se aplicam.",
+    "hint": "A deduplicação cobre cinco minutos, no lado de quem manda.",
+    "choices": [
+      {
+        "text": "Um produtor tenta de novo com o mesmo id depois de seis minutos",
+        "why": "Sim; a janela fechou."
+      },
+      {
+        "text": "Um consumidor faz o trabalho e cai antes de apagar",
+        "why": "Sim; a mensagem volta depois do visibility timeout."
+      },
+      {
+        "text": "Um visibility timeout menor que o tempo de processamento",
+        "why": "Sim; a mensagem é entregue de novo enquanto ainda está sendo trabalhada."
+      },
+      {
+        "text": "Dois envios com o mesmo id com um minuto de diferença",
+        "why": "Esse é exatamente o caso que a deduplicação descarta."
+      },
+      {
+        "text": "Corpos idênticos dentro de cinco minutos com `ContentBasedDeduplication`",
+        "why": "O hash do corpo é o id, então o segundo é descartado."
+      }
+    ]
+  },
+  "ex-fces4pta": {
+    "prompt": "Um serviço de estoque recebe aumentos e baixas de 2.000 produtos a uma taxa alta. Para cada produto as mudanças precisam ser aplicadas na ordem em que foram feitas; entre produtos, a ordem não importa. Qual desenho se encaixa?",
+    "hint": "Ordem dentro de uma chave, paralelismo entre chaves.",
+    "choices": [
+      {
+        "text": "Uma fila standard, com o consumidor ordenando o que recebe",
+        "why": "Um consumidor não ordena o que ainda não recebeu, e dois consumidores veem metades diferentes."
+      },
+      {
+        "text": "Um tópico do SNS com uma assinatura por produto",
+        "why": "Um tópico copia mensagens; ele não promete ordem a uma fila standard."
+      },
+      {
+        "text": "Uma fila FIFO com um message group para tudo",
+        "why": "Ordem correta, mas uma mudança por vez nos 2.000 produtos."
+      },
+      {
+        "text": "Uma fila FIFO cujo message group id é o id do produto",
+        "why": "Isso: em ordem por produto, em paralelo entre eles."
+      }
+    ]
+  },
+  "ex-sch5abjq": {
+    "prompt": "6 milhões de mensagens por mês são publicadas num tópico do SNS com duas assinaturas SQS. A 0,5 USD por milhão de publicações depois do primeiro milhão gratuito, e nada pelas entregas ao SQS, quanto o SNS custa no mês?",
+    "hint": "As assinaturas não multiplicam as publicações.",
+    "unit": "USD"
+  },
+  "ex-c8rx2nd7": {
+    "prompt": "Um produtor manda mensagens de 150 KB ao SQS. Como cada envio é cobrado?",
+    "hint": "As requisições são contadas em passos de 64 KB.",
+    "choices": [
+      {
+        "text": "Como uma requisição, seja qual for o tamanho",
+        "why": "Cada passo de 64 KB é uma requisição."
+      },
+      {
+        "text": "Como três requisições",
+        "why": "Isso: 150 KB ocupam três passos de 64 KB."
+      },
+      {
+        "text": "Como duas requisições, arredondando para o passo mais próximo",
+        "why": "Os passos arredondam para cima, não para o mais próximo."
+      },
+      {
+        "text": "É recusado por passar de 64 KB",
+        "why": "64 KB é o passo de cobrança, não o limite de tamanho."
+      }
+    ]
+  }
+}

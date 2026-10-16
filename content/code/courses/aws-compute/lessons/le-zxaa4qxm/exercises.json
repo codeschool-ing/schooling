@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-wkca3e7c",
+    "version": 1,
+    "section": "the-init-phase",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a cold start?",
+    "hint": "What has to exist before a handler can be called?",
+    "choices": [
+      {
+        "text": "Lambda's own service waking up after a quiet period",
+        "correct": false,
+        "why": "The service is always up. What is missing is an environment for this function."
+      },
+      {
+        "text": "A new environment being built before the handler gets the request",
+        "correct": true,
+        "why": "Right. Placing it, starting the runtime and importing your module are the init phase."
+      },
+      {
+        "text": "The handler running slowly the first time because Python compiles it",
+        "correct": false,
+        "why": "Compiling to bytecode is a small part. The init phase is mostly the runtime and your imports."
+      },
+      {
+        "text": "The caller's network opening a connection to AWS",
+        "correct": false,
+        "why": "That happens on warm requests too. A cold start is on the function's side."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgh39rzg",
+    "version": 1,
+    "section": "the-init-phase",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to a cold request in order.",
+    "hint": "Init first, then invoke.",
+    "items": [
+      "Lambda places an environment and fetches the code",
+      "The runtime starts",
+      "The runtime imports your module, running its top level",
+      "The runtime calls the handler with the event",
+      "The handler's return value goes back to the caller"
+    ],
+    "trap": "Your top-level code runs before the handler is called, not on its first line."
+  },
+  {
+    "id": "ex-9d5mj9x6",
+    "version": 1,
+    "section": "the-init-phase",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these run in the init phase? Choose all that apply.",
+    "hint": "The init phase is the import of the module.",
+    "choices": [
+      {
+        "text": "An import boto3 at the top of the file",
+        "correct": true,
+        "why": "Right. Top-level imports run when the module is imported."
+      },
+      {
+        "text": "A client built at the top of the file",
+        "correct": true,
+        "why": "Right. Anything at module level runs at init."
+      },
+      {
+        "text": "A client built inside the handler",
+        "correct": false,
+        "why": "That runs in the invoke phase, on every call."
+      },
+      {
+        "text": "The handler's return statement",
+        "correct": false,
+        "why": "The handler runs in the invoke phase."
+      },
+      {
+        "text": "A configuration file read at module level",
+        "correct": true,
+        "why": "Right. It is read once, when the module is imported."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0zw1a41",
+    "version": 1,
+    "section": "the-init-phase",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the emulator, a module that builds a client shows Init Duration: 0.06 ms and Duration: 306.68 ms on its first REPORT. Where is the length of its init phase?",
+    "hint": "The emulator gets one field wrong.",
+    "choices": [
+      {
+        "text": "In Init Duration, as on AWS: the client cost almost nothing",
+        "correct": false,
+        "why": "On AWS that field is right; in the emulator it prints a few milliseconds at most, whatever the module does."
+      },
+      {
+        "text": "In Billed Duration minus Duration",
+        "correct": false,
+        "why": "That difference is the rounding up to the next millisecond."
+      },
+      {
+        "text": "In the durationMs of the INIT REPORT line",
+        "correct": true,
+        "why": "Right. The emulator measures the init phase there, and folds it into the first Duration."
+      },
+      {
+        "text": "In the time curl printed for the second call",
+        "correct": false,
+        "why": "The second call is warm; it has no init phase at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntr8np1n",
+    "version": 1,
+    "section": "the-init-phase",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AWS, the REPORT line of a cold request gives the length of its init phase in the field Init ___.",
+    "hint": "The field the emulator gets wrong.",
+    "blanks": [
+      {
+        "accept": [
+          "Duration"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d1vz242f",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the laptop, the bare handler's init phase took 48 ms and the eager one's, which imports boto3 and builds a client, 301 ms. How many milliseconds of the eager init are the import and the client?",
+    "hint": "The runtime's part is the same in both.",
+    "value": 253,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-119ny89n",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Moving the client from the top of the file into the handler gave a short init phase. What did it do to the function?",
+    "hint": "Look at the first call and then at the warm ones.",
+    "choices": [
+      {
+        "text": "Made it faster overall, because init is what a cold start costs",
+        "correct": false,
+        "why": "The first call paid the same import instead, and the warm calls got slower."
+      },
+      {
+        "text": "The cold request stayed as slow, and each warm one rebuilds the client",
+        "correct": true,
+        "why": "Right. About 8 ms per warm call against under 1 ms, on nearly every request."
+      },
+      {
+        "text": "It slowed the first call alone, and left the warm calls as they were",
+        "correct": false,
+        "why": "Python keeps the module, so the import is free, but the client is built on every call."
+      },
+      {
+        "text": "It skipped the import on warm calls, so it wins under traffic",
+        "correct": false,
+        "why": "Skipping the import is right; the client is still rebuilt, which is the part that costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-e857aspm",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 1 GB function in sa-east-1 is billed 8 ms per warm request with the client built in the handler, and 1 ms with it built at the top of the file. At 0.0000166667 USD per GB-second, what do 10,000,000 warm requests a month cost extra the first way, in USD to the cent?",
+    "hint": "7 ms of difference, times the requests, times 1 GB, times the price.",
+    "value": 1.17,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-5bwrs8nm",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is building something inside the handler, on first use, the right choice?",
+    "hint": "Think of a dependency not every request needs.",
+    "choices": [
+      {
+        "text": "For any client, so that the init phase stays short",
+        "correct": false,
+        "why": "That moves the cost to the first call and repeats it on warm calls unless it is kept."
+      },
+      {
+        "text": "For a rarely needed dependency, kept in a global",
+        "correct": true,
+        "why": "Right. Requests that never need it never pay for it, and the rest pay once per environment."
+      },
+      {
+        "text": "When the function has provisioned concurrency",
+        "correct": false,
+        "why": "Provisioned environments run the init phase in advance, so moving work out of it gains nothing."
+      },
+      {
+        "text": "When the function is called rarely, so most requests are cold",
+        "correct": false,
+        "why": "A cold request pays the work either way; where it runs makes no difference to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ptay4vg",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of the emulator's log to what it marks.",
+    "hint": "Init lines, invoke lines, and the one field that misleads.",
+    "pairs": [
+      {
+        "left": "exec '/var/runtime/bootstrap'",
+        "right": "The container starting the runtime's bootstrap"
+      },
+      {
+        "left": "INIT REPORT(durationMs: ...)",
+        "right": "The init phase, as the emulator measures it"
+      },
+      {
+        "left": "INVOKE START",
+        "right": "The handler being called for one request"
+      },
+      {
+        "left": "Init Duration in REPORT",
+        "right": "On AWS, the init phase of a cold request"
+      }
+    ],
+    "right_distractors": [
+      "The environment being retired"
+    ]
+  },
+  {
+    "id": "ex-r80jm62f",
+    "version": 1,
+    "section": "measuring-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function's init builds three SDK clients and parses a large schema. It runs at 128 MB on Lambda, and somebody raises it to 1,024 MB. What happens to its cold start?",
+    "hint": "What else comes with memory on Lambda?",
+    "choices": [
+      {
+        "text": "Nothing: memory decides how much the function can hold, not how fast it runs",
+        "correct": false,
+        "why": "On Lambda, CPU is given in proportion to memory, so a CPU-bound init speeds up."
+      },
+      {
+        "text": "It gets longer, because more memory has to be prepared",
+        "correct": false,
+        "why": "Preparing memory is not what the init phase is made of; computation is."
+      },
+      {
+        "text": "The warm requests speed up while the init runs on a fixed CPU",
+        "correct": false,
+        "why": "The init phase runs on the same CPU share as the handler."
+      },
+      {
+        "text": "It gets shorter, because the CPU share grows with memory",
+        "correct": true,
+        "why": "Right. The emulator showed the same with Docker's --cpus: 343 ms on one CPU, 1337 on a quarter."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptx3pcpw",
+    "version": 1,
+    "section": "what-reduces-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "python3 -X importtime prints boto3 with 221273 in its middle column. What is that number?",
+    "hint": "Self, cumulative, module.",
+    "choices": [
+      {
+        "text": "Microseconds for boto3 and everything it imported in turn",
+        "correct": true,
+        "why": "Right. The cumulative time, about 221 ms, mostly botocore."
+      },
+      {
+        "text": "Microseconds for boto3's own code, its imports not counted",
+        "correct": false,
+        "why": "That is the first column, the module's own time."
+      },
+      {
+        "text": "Microseconds since the interpreter started",
+        "correct": false,
+        "why": "The column is per module, not a clock."
+      },
+      {
+        "text": "The bytes of memory boto3 took when it was imported",
+        "correct": false,
+        "why": "importtime measures time only; memory needs another tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrcb41m7",
+    "version": 1,
+    "section": "what-reduces-it",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function runs 0.6 s per request at 512 MB in sa-east-1, at 0.0000166667 USD per GB-second. What does the duration of 1,000,000 requests cost, in USD to the cent?",
+    "hint": "0.5 GB × 0.6 s per request.",
+    "value": 5.0,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-2vs8sbt9",
+    "version": 1,
+    "section": "what-reduces-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these shorten a cold start without adding to the bill? Choose all that apply.",
+    "hint": "Some move the work, some remove it, some are paid.",
+    "choices": [
+      {
+        "text": "Removing an import the function never uses",
+        "correct": true,
+        "why": "Right. Less work in the init phase, for nothing."
+      },
+      {
+        "text": "Building the clients at module level instead of in the handler",
+        "correct": false,
+        "why": "That speeds up the warm requests; the cold one pays the same work either way."
+      },
+      {
+        "text": "Keeping the package small, so there is less to fetch",
+        "correct": true,
+        "why": "Right. On AWS the code is fetched in the init phase."
+      },
+      {
+        "text": "Provisioned concurrency for the busy hours",
+        "correct": false,
+        "why": "It removes the cold start, and it is billed for every second it is configured."
+      },
+      {
+        "text": "A ping every five minutes",
+        "correct": false,
+        "why": "It keeps one environment warm, adds invocations, and leaves a burst cold."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h25v4k3",
+    "version": 1,
+    "section": "what-reduces-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team packages its own boto3 instead of relying on the runtime's copy. What do they gain, and what does it cost?",
+    "hint": "Who updates the runtime's copy, and when?",
+    "choices": [
+      {
+        "text": "A faster import, because a packaged copy is precompiled",
+        "correct": false,
+        "why": "The packaged copy is the same Python; the import costs the same."
+      },
+      {
+        "text": "A version they control, for about 27 MB more to fetch on each cold start",
+        "correct": true,
+        "why": "Right. AWS updates the runtime's copy on its own schedule; a pinned copy does not move."
+      },
+      {
+        "text": "A smaller package, because the runtime's copy is then removed",
+        "correct": false,
+        "why": "The runtime's copy stays in the runtime; theirs is added to the package."
+      },
+      {
+        "text": "Nothing, because Lambda ignores a boto3 inside the package",
+        "correct": false,
+        "why": "The package comes first on the path, so its boto3 is the one imported."
+      }
+    ]
+  },
+  {
+    "id": "ex-bsdxw9ks",
+    "version": 1,
+    "section": "what-reduces-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does moving a Python function from x86 to Arm do, according to the sheet and AWS's documentation?",
+    "hint": "Compare the two duration lines, and recall what AWS promises.",
+    "choices": [
+      {
+        "text": "A faster cold start, which is the reason it costs less",
+        "correct": false,
+        "why": "AWS does not promise a faster cold start on Arm; the price is the documented difference."
+      },
+      {
+        "text": "The same price per GB-second, with more memory per gigabyte",
+        "correct": false,
+        "why": "A gigabyte is a gigabyte; the price per GB-second is what differs."
+      },
+      {
+        "text": "A fifth off each GB-second, and no promised speed-up",
+        "correct": true,
+        "why": "Right. 0.0000133334 against 0.0000166667, and a cold start you would have to measure."
+      },
+      {
+        "text": "Cheaper requests, at the same price per GB-second",
+        "correct": false,
+        "why": "The request price is the same; the duration price is what Arm lowers."
+      }
+    ]
+  },
+  {
+    "id": "ex-dntg4n80",
+    "version": 1,
+    "section": "snapshots-and-warming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does SnapStart do?",
+    "hint": "It moves the init phase to a different moment.",
+    "choices": [
+      {
+        "text": "Keeps environments initialised in advance and bills them by the second",
+        "correct": false,
+        "why": "That is provisioned concurrency."
+      },
+      {
+        "text": "Runs init once at publish and restores it on each cold start",
+        "correct": true,
+        "why": "Right. The interpreter, the imports and the clients come back from the snapshot."
+      },
+      {
+        "text": "Invokes the function on a schedule so one environment stays warm",
+        "correct": false,
+        "why": "That is the ping, which keeps one environment and no more."
+      },
+      {
+        "text": "Compresses the package so that it downloads faster during init",
+        "correct": false,
+        "why": "It snapshots an initialised environment; the package is not what it changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz8akz6x",
+    "version": 1,
+    "section": "snapshots-and-warming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "create-function with --snap-start ApplyOn=PublishedVersions, against moto 5.2.3, answered ApplyOn: None. What does that show?",
+    "hint": "What did moto do with the setting?",
+    "choices": [
+      {
+        "text": "That SnapStart is not available for Python, and the request was turned down",
+        "correct": false,
+        "why": "AWS documents it for Python 3.12 and later. Nothing was refused: the call succeeded."
+      },
+      {
+        "text": "That moto discarded the setting, which AWS would have kept",
+        "correct": true,
+        "why": "Right. moto accepted the flag and stored nothing, the quietest failure there is."
+      },
+      {
+        "text": "That SnapStart only takes effect after a version is published",
+        "correct": false,
+        "why": "That is true of the snapshot, and the setting itself would still read PublishedVersions at once."
+      },
+      {
+        "text": "That SnapStart needs provisioned concurrency on the same version",
+        "correct": false,
+        "why": "The two do not combine at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh4bvaet",
+    "version": 1,
+    "section": "snapshots-and-warming",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under SnapStart, which of these, made at the top of the file, has to be checked or remade after each restore? Choose all that apply.",
+    "hint": "Which of them would be wrong if two environments shared it?",
+    "choices": [
+      {
+        "text": "A random seed",
+        "correct": true,
+        "why": "Right. Every restored copy would produce the same numbers."
+      },
+      {
+        "text": "A database connection",
+        "correct": true,
+        "why": "Right. It was opened by an environment that no longer exists."
+      },
+      {
+        "text": "The import of boto3",
+        "correct": false,
+        "why": "Imported code is the same in every copy, which is the point of the snapshot."
+      },
+      {
+        "text": "A temporary credential",
+        "correct": true,
+        "why": "Right. It would be shared, and it expires."
+      },
+      {
+        "text": "A configuration file shipped in the package",
+        "correct": false,
+        "why": "The file is the same everywhere; reading it once is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-869mp4z6",
+    "version": 1,
+    "section": "snapshots-and-warming",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A ping invokes a function every five minutes, all day. How many invocations does it add in a 30-day month?",
+    "hint": "Twelve an hour.",
+    "value": 8640,
+    "tolerance": 0,
+    "unit": "invocations"
+  },
+  {
+    "id": "ex-k1x5m35c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the remedies for a cold start in the order they are worth trying, the cheapest first.",
+    "hint": "What each one costs, from nothing to every second.",
+    "items": [
+      "Make the module light: fewer imports, a small package",
+      "Give the function the memory its init needs",
+      "Publish versions and turn on SnapStart",
+      "Provisioned concurrency for the hours it matters"
+    ],
+    "trap": "Provisioned concurrency comes last because it is billed for every second it is configured, busy or idle."
+  },
+  {
+    "id": "ex-5765zmj0",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A ping keeps one environment warm. Six requests arrive in the same second. How many of them meet a cold start?",
+    "hint": "One environment serves one request at a time.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-d43p1f9j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A queue consumer processes a nightly batch and has a cold start of 2 s. What should the team do about it first?",
+    "hint": "Who waits on the first message?",
+    "choices": [
+      {
+        "text": "Provisioned concurrency for the hours the batch runs",
+        "correct": false,
+        "why": "That pays every second to remove a delay nobody sees."
+      },
+      {
+        "text": "A ping every five minutes, all day",
+        "correct": false,
+        "why": "It adds 288 invocations a day and keeps one environment warm, for a delay nobody notices."
+      },
+      {
+        "text": "Little: nobody waits, so a light module is all it needs",
+        "correct": true,
+        "why": "Right. A cold start matters in proportion to the person waiting on it, and here nobody is."
+      },
+      {
+        "text": "Turn on SnapStart, because any cold start is a defect to remove",
+        "correct": false,
+        "why": "A cold start is a cost, and this one costs nobody anything they notice."
+      }
+    ]
+  }
+]
