@@ -1,0 +1,1365 @@
+{
+  "ex-e2yysjdn": {
+    "prompt": "Num boxoffice recém-iniciado, um pedido de 4 lugares do sh-101 é aceito. Que total_cents o corpo dele deve trazer?",
+    "hint": "Lição 1. Procure o preço do sh-101.",
+    "unit": "centavos"
+  },
+  "ex-h94er5p7": {
+    "prompt": "Um servidor responde 200 com `content-type: text/plain`, e o corpo é um JSON com todos os campos certos. O que quem testa conclui?",
+    "hint": "Lição 1. O que um cliente lê antes do corpo?",
+    "choices": [
+      {
+        "text": "Sem defeito: os campos estão certos, e é isso que um teste confere",
+        "why": "O rótulo decide como o corpo é lido; um corpo certo sob um rótulo errado não serve."
+      },
+      {
+        "text": "Tudo bem, já que o código de status diz que funcionou",
+        "why": "O código de status vem primeiro, e o rótulo é a próxima coisa conferida."
+      },
+      {
+        "text": "Um defeito do curl, que escolheu o rótulo ao receber a resposta",
+        "why": "O curl imprime o rótulo que o servidor mandou; ele não escolhe nenhum."
+      },
+      {
+        "text": "Um defeito: um cliente que confia no rótulo não vai interpretá-lo",
+        "why": "Certo. Os cabeçalhos que descrevem o corpo vêm antes do corpo no que quem testa lê."
+      }
+    ]
+  },
+  "ex-md41gqne": {
+    "prompt": "O teste de um colega procura um cabeçalho de resposta escrito exatamente `Content-Type` e falha contra o boxoffice, que manda `content-type`. Onde está o defeito?",
+    "hint": "Lição 1, a seção sobre cabeçalhos.",
+    "choices": [
+      {
+        "text": "No boxoffice: nomes de cabeçalho deveriam ter maiúsculas como o curl escreve",
+        "why": "As maiúsculas do curl são um costume, não uma regra; o HTTP/2 até exige minúsculas."
+      },
+      {
+        "text": "Em nenhum: HTTP/1.1 e HTTP/2 discordam, então a verificação deve sair",
+        "why": "Os dois concordam que nomes não diferenciam maiúsculas; a verificação vale, escrita do jeito certo."
+      },
+      {
+        "text": "No teste: nomes de cabeçalho não diferenciam maiúsculas",
+        "why": "Certo. Content-Type e content-type são o mesmo cabeçalho, e um teste que os compara letra a letra tem um defeito próprio."
+      },
+      {
+        "text": "No boxoffice: deveria imitar a requisição",
+        "why": "Nada liga as maiúsculas da resposta às da requisição; nenhuma das duas tem significado."
+      }
+    ]
+  },
+  "ex-t4evnvzv": {
+    "prompt": "Um método que não muda nada no servidor, de modo que um cliente, um cache ou um teste o mande quantas vezes quiser, é chamado de ___.",
+    "hint": "Lição 1. GET e HEAD são; POST não é.",
+    "blanks": [
+      {
+        "accept": [
+          "seguro"
+        ]
+      }
+    ]
+  },
+  "ex-pfmt5tt9": {
+    "prompt": "Outra API responde `DELETE /v1/shows/sh-101`, um espetáculo que existe e não pode ser apagado, com 404. O que o relatório deve pedir?",
+    "hint": "Lição 1. O que o 404 afirma sobre o endereço?",
+    "choices": [
+      {
+        "text": "Nada: qualquer 4xx diz ao cliente para não mandar de novo",
+        "why": "A classe está certa e o código não; o 404 afirma que o espetáculo não existe, o que é falso."
+      },
+      {
+        "text": "Um 400, porque um DELETE num espetáculo é uma requisição malformada",
+        "why": "A requisição está bem formada; ela pede algo que o endereço não oferece."
+      },
+      {
+        "text": "Um 403, já que ninguém pode apagar um espetáculo",
+        "why": "O 403 é sobre quem pergunta; aqui o verbo é recusado para qualquer um, o que é 405."
+      },
+      {
+        "text": "Um 405 com um cabeçalho allow listando o que o endereço aceita",
+        "why": "Certo. O endereço existe e o método não é aceito ali, que é o que o 405 diz."
+      }
+    ]
+  },
+  "ex-wzxdaxb7": {
+    "prompt": "Num boxoffice recém-iniciado, um token válido pede 5 lugares do sh-103. O que volta?",
+    "hint": "Lição 2. Que regra o 5 fere, a do contrato ou a do espetáculo?",
+    "choices": [
+      {
+        "text": "422, porque 5 lugares está fora da regra de um pedido",
+        "why": "A regra é de 1 a 6, e 5 está dentro dela."
+      },
+      {
+        "text": "201 com 4 lugares, o máximo que o espetáculo ainda tem",
+        "why": "O boxoffice nunca muda a quantidade pedida; ele recusa ou aceita o pedido como veio."
+      },
+      {
+        "text": "409, restam só 4 lugares",
+        "why": "Certo. O corpo é válido; o estado do servidor é que impede, e é isso que o 409 diz."
+      },
+      {
+        "text": "400, porque o corpo não pode ser lido como pedido",
+        "why": "O corpo é JSON válido e um pedido válido; 400 é para um corpo que não se consegue ler."
+      }
+    ]
+  },
+  "ex-h4vbsh8h": {
+    "prompt": "Um app quer distinguir para o usuário \"esgotado\" de \"escolha entre 1 e 6 lugares\" quando um pedido ao boxoffice é recusado. Em que o código dele deve se basear?",
+    "hint": "Lição 2, problem details. O type do boxoffice é about:blank em todo lugar.",
+    "choices": [
+      {
+        "text": "O texto do detail, que muda entre as duas recusas",
+        "why": "O detail é escrito para pessoas, e um dia alguém vai reescrevê-lo."
+      },
+      {
+        "text": "O código de status, 409 contra 422",
+        "why": "Certo. Com o type sempre about:blank, o código de status é aquilo em que um programa decide."
+      },
+      {
+        "text": "O campo type, que dá nome a cada tipo de problema",
+        "why": "No boxoffice ele é about:blank em todo erro, então não distingue os dois em caso nenhum."
+      },
+      {
+        "text": "O cabeçalho content-type do erro",
+        "why": "Os dois erros são application/problem+json."
+      }
+    ]
+  },
+  "ex-h5hny1va": {
+    "prompt": "Quais destas respostas a `POST /v1/orders` quebrariam o contrato do openapi.yaml, qualquer que fosse o corpo?",
+    "hint": "Lição 2. O contrato lista os códigos que a operação pode dar.",
+    "choices": [
+      {
+        "text": "500",
+        "why": "Certo. Ele não está na lista, então o cliente ouviu que nunca o veria."
+      },
+      {
+        "text": "402",
+        "why": "Está na lista: um pagamento recusado."
+      },
+      {
+        "text": "503",
+        "why": "Certo. A operação lista 502 e 504, não 503."
+      },
+      {
+        "text": "504",
+        "why": "Está na lista: o provedor de pagamento não respondeu a tempo."
+      },
+      {
+        "text": "404",
+        "why": "Certo. Um espetáculo desconhecido é 422 aqui; o 404 não está entre os códigos da operação."
+      }
+    ]
+  },
+  "ex-29vzsa5w": {
+    "prompt": "Um relatório soma preços em reais como números do JavaScript. Um teste compra três ingressos de R$ 80,10 e confere `total === 240.3`. O que acontece?",
+    "hint": "Lição 2, dinheiro.",
+    "choices": [
+      {
+        "text": "Passa, porque 80.10 tem duas casas decimais e o total também",
+        "why": "Duas casas no texto não são duas casas em ponto flutuante binário."
+      },
+      {
+        "text": "Falha, porque a soma sai como 240.29999999999998",
+        "why": "Certo. O Node imprimiu exatamente isso; a mesma soma em centavos dá exatamente 24030."
+      },
+      {
+        "text": "Falha, porque o JSON não tem como levar um número com casas decimais",
+        "why": "O JSON leva 80.10 sem problema; o erro vem de somá-lo em ponto flutuante binário."
+      },
+      {
+        "text": "Passa: o JavaScript arredonda para o centavo",
+        "why": "O JavaScript não faz esse arredondamento; a tela faz, e é por isso que o erro se esconde ali."
+      }
+    ]
+  },
+  "ex-0xbpmkmh": {
+    "prompt": "No openapi.yaml um caminho não repete a forma de um pedido; ele aponta para `NewOrder` em components com a palavra-chave ___.",
+    "hint": "Lição 2. Começa com um cifrão.",
+    "blanks": [
+      {
+        "accept": [
+          "$ref",
+          "ref"
+        ]
+      }
+    ]
+  },
+  "ex-emk15gzm": {
+    "prompt": "Uma nova API da equipe responde a uma requisição sem chave com \"key missing\" e a uma com a chave errada com \"key not recognised\", as duas com 401. O que você relata?",
+    "hint": "Lição 3, a chave da equipe.",
+    "choices": [
+      {
+        "text": "Nada: as duas mensagens ajudam quem escreveu o cliente a achar o erro",
+        "why": "Elas ajudam um estranho também, dizendo quais requisições chegaram perto de estar certas."
+      },
+      {
+        "text": "Que a chave errada deveria levar 403, porque o servidor sabe que uma chave veio",
+        "why": "Uma chave que o servidor não tem não identifica ninguém, então 401 está certo; o problema são as mensagens."
+      },
+      {
+        "text": "Que as duas recusas deveriam dizer o mesmo, palavra por palavra",
+        "why": "Certo. O boxoffice responde as duas igual, e essa igualdade é o que deixa as tentativas de um estranho às cegas."
+      },
+      {
+        "text": "Que a chave deveria ir na query string para o servidor registrar qual falhou",
+        "why": "Um endereço é registrado por padrão, então isso poria a chave no log; a lição testa que ali ela é recusada."
+      }
+    ]
+  },
+  "ex-q8wc2c3w": {
+    "prompt": "Ligue cada claim do payload de um token do boxoffice ao que ela guarda.",
+    "hint": "Lição 3, dentro de um JWT.",
+    "pairs": [
+      {
+        "left": "sub",
+        "right": "o cliente de quem é o token"
+      },
+      {
+        "left": "scope",
+        "right": "o que o token pode fazer, separado por espaços"
+      },
+      {
+        "left": "iat",
+        "right": "quando foi emitido, em segundos desde 1970"
+      },
+      {
+        "left": "exp",
+        "right": "quando deixa de funcionar, nos mesmos segundos"
+      }
+    ],
+    "right_distractors": [
+      "o segredo com que foi assinado"
+    ]
+  },
+  "ex-76pcyf0e": {
+    "prompt": "O boxoffice roda com `TOKEN_TTL=5`, e o payload de um token diz `\"iat\":1791661400`. Que número a claim exp guarda?",
+    "hint": "Lição 3. O exp é o iat mais a duração em segundos."
+  },
+  "ex-93qfbza3": {
+    "prompt": "Testando outra API, você manda um token cujo cabeçalho diz `\"alg\":\"none\"` e cuja assinatura está vazia, e ele cria um pedido com 201. Qual é o seu veredito?",
+    "hint": "Lição 3. Quem consegue fazer um token desses?",
+    "choices": [
+      {
+        "text": "Aceitável, já que as claims dentro do token eram válidas",
+        "why": "Sem assinatura conferida, as claims são o que quem mandou digitou."
+      },
+      {
+        "text": "Um defeito grave: qualquer cliente poderia se dar qualquer escopo",
+        "why": "Certo. Um servidor que pula a assinatura aceita tokens que ninguém assinou, que é o teste do token editado falhando."
+      },
+      {
+        "text": "Um defeito menor: deveria ter respondido 403 em vez de 201",
+        "why": "O problema não é qual recusa; o token não devia ter sido aceito como ninguém, o que é 401."
+      },
+      {
+        "text": "Esperado, porque um JWT é criptografado e o alg dá nome à cifra",
+        "why": "Um JWT é assinado, não criptografado; o alg diz como foi assinado."
+      }
+    ]
+  },
+  "ex-bvh73r09": {
+    "prompt": "Ponha os passos do fluxo authorization code com PKCE em ordem.",
+    "hint": "Lição 3. O verifier viaja por último.",
+    "items": [
+      "o app cria um verifier e calcula o challenge dele",
+      "o app abre o navegador com o client id, o state e o challenge",
+      "a pessoa entra na página do servidor de autorização",
+      "o navegador volta ao app com um code e o mesmo state",
+      "o app manda o code e o verifier ao endpoint de token",
+      "o servidor calcula o hash do verifier, compara e responde com um token"
+    ]
+  },
+  "ex-2pjj8f97": {
+    "prompt": "Uma equipe mantém uma coleção do boxoffice e dois ambientes, lab e staging. Quais destes pertencem aos ambientes e não à coleção?",
+    "hint": "Lição 4. O que muda de um servidor para outro?",
+    "choices": [
+      {
+        "text": "baseUrl",
+        "why": "Certo. O endereço é a primeira coisa que muda entre servidores."
+      },
+      {
+        "text": "clientSecret",
+        "why": "Certo. Credenciais mudam por servidor, e o arquivo compartilhado deve deixar o valor real vazio."
+      },
+      {
+        "text": "showId, o espetáculo de que as requisições compram",
+        "why": "Ele pertence às requisições desta API, que é para o que servem as variáveis de coleção."
+      },
+      {
+        "text": "a autorização bearer que as pastas herdam",
+        "why": "A autorização é definida na coleção e nas pastas; só o valor do token é uma variável."
+      },
+      {
+        "text": "clientId",
+        "why": "Certo. Outro servidor pode ter um cliente próprio para os testes."
+      }
+    ]
+  },
+  "ex-cr2w4sca": {
+    "prompt": "Você importa um ambiente que um colega exportou. No Postman dele o clientSecret mostra um valor, e no seu está vazio. O que explica isso?",
+    "hint": "Lição 4. O Postman guarda dois valores para cada variável.",
+    "choices": [
+      {
+        "text": "A importação falhou numa vírgula faltando e perdeu esse valor",
+        "why": "Um arquivo quebrado nem é importado; o jq diria a linha."
+      },
+      {
+        "text": "O tipo secret criptografa o valor dentro do arquivo exportado",
+        "why": "O secret só esconde o valor na tela; um arquivo que o leva o leva em texto puro."
+      },
+      {
+        "text": "O valor dele era o local, que fica no computador dele",
+        "why": "Certo. Um arquivo exportado leva só o valor compartilhado, e o dele ficou local."
+      },
+      {
+        "text": "Uma variável global chamada clientSecret no seu workspace a está escondendo",
+        "why": "Global é o escopo mais largo; o ambiente ganharia dela, e não o contrário."
+      }
+    ]
+  },
+  "ex-9rzagrd5": {
+    "prompt": "Você acrescenta à coleção da lição 4 uma pasta chamada reports, sem entrada de auth, e nela um GET para /v1/reports/sales sem nenhum outro cabeçalho. O que o boxoffice responde?",
+    "hint": "Lição 4 para o que a pasta herda, lição 3 para o que o relatório quer.",
+    "choices": [
+      {
+        "text": "200, porque a pasta herda as credenciais da coleção",
+        "why": "Ela herda o token bearer, e o relatório não aceita token."
+      },
+      {
+        "text": "403, porque o ci-tests não tem escopo para relatórios",
+        "why": "O relatório nunca lê o escopo de um token; ele recusa qualquer coisa sem a chave, com 401."
+      },
+      {
+        "text": "O Postman se recusa a mandar até a pasta dizer um tipo de auth",
+        "why": "Sem entrada de auth significa herdar; nada impede a requisição."
+      },
+      {
+        "text": "401: o token bearer vai e a chave da equipe não",
+        "why": "Certo. Uma pasta que não diz nada herda o bearer, e o relatório quer o X-Api-Key."
+      }
+    ]
+  },
+  "ex-qnn9wgtq": {
+    "prompt": "Ponha as requisições da coleção da lição 4 na ordem em que uma execução da coleção inteira as manda.",
+    "hint": "Lição 4. Pasta por pasta, de cima para baixo.",
+    "items": [
+      "List shows",
+      "One show",
+      "Get token",
+      "Create order",
+      "Read order",
+      "Cancel order"
+    ]
+  },
+  "ex-cfhge9d3": {
+    "prompt": "Um colega move o salvamento para dentro do teste: `pm.test('status is 201', () => { pm.response.to.have.status(201); pm.collectionVariables.set('orderUrl', pm.response.headers.get('location')); })`. Numa execução, Create order recebe 409. O que acontece com orderUrl?",
+    "hint": "Lição 5. Onde uma asserção que falha para?",
+    "choices": [
+      {
+        "text": "Ela guarda o que tinha antes, então as requisições seguintes agem sobre um pedido antigo",
+        "why": "Certo. A asserção que falhou parou a função, e o salvamento depois dela foi pulado justamente quando a resposta era incomum."
+      },
+      {
+        "text": "Ela vira null, já que um 409 não traz location",
+        "why": "A linha do set nem roda: a asserção acima dela lançou o erro antes."
+      },
+      {
+        "text": "Ela é gravada como sempre, porque o pm.test roda toda linha antes de julgar",
+        "why": "O pm.test roda a função e a reprova no primeiro erro; nada depois dele roda."
+      },
+      {
+        "text": "O Newman para a execução inteira no teste que falhou",
+        "why": "Só o --bail para uma execução; sem ele o Newman segue para a próxima requisição."
+      }
+    ]
+  },
+  "ex-dcmhymty": {
+    "prompt": "No postman/seats.csv, uma linha cujo campo seats precisa chegar ao corpo JSON como a string \"2\", com aspas, escreve esse campo como ___.",
+    "hint": "Lição 5. Em CSV, uma aspa dentro de um campo entre aspas se escreve duas vezes.",
+    "blanks": [
+      {
+        "accept": [
+          "\"\"\"2\"\"\""
+        ]
+      }
+    ]
+  },
+  "ex-vjmds7qk": {
+    "prompt": "O seats.csv passa a ter nove linhas de dados. O Newman roda só a pasta seat rules com ele, e o token buscado antes da primeira iteração continua válido. Quantas requisições a tabela conta?",
+    "hint": "Lição 5. Seis linhas deram sete requisições."
+  },
+  "ex-n48rh83w": {
+    "prompt": "Um teste afirma que a lista de espetáculos tem exatamente três itens. Hoje ele passa. Quando ele falha sem nada quebrado?",
+    "hint": "Lição 5, o que não afirmar.",
+    "choices": [
+      {
+        "text": "Quando o teatro acrescentar um espetáculo",
+        "why": "Certo. Três é verdade hoje e nunca foi prometido; afirme que há espetáculos e o que cada um tem."
+      },
+      {
+        "text": "Quando a execução se repete no mesmo servidor sem reiniciar",
+        "why": "Pedidos mudam o seats_left, não quantos espetáculos existem."
+      },
+      {
+        "text": "No dia seguinte à gravação das transcrições, por causa do cabeçalho Date",
+        "why": "Esse era o teste de Date da coleção frágil; este não lê a data."
+      },
+      {
+        "text": "Quando um token expira durante a execução",
+        "why": "Os espetáculos não precisam de token, e o script de pré-requisição renova um de qualquer jeito."
+      }
+    ]
+  },
+  "ex-vs3fkfma": {
+    "prompt": "Um passo do pipeline está escrito `run: node boxoffice.mjs > boxoffice.log 2>&1`, sem o `&`. O que acontece com o job?",
+    "hint": "Lição 6. O boxoffice termina sozinho em algum momento?",
+    "choices": [
+      {
+        "text": "O Newman roda antes de o servidor ficar pronto e as requisições são recusadas",
+        "why": "O Newman nem chega a rodar: o passo anterior não termina."
+      },
+      {
+        "text": "Nada muda, porque o GitHub inicia cada passo em segundo plano",
+        "why": "Um passo roda em primeiro plano até o comando terminar; é para isso que serve o &."
+      },
+      {
+        "text": "Ele fica parado nesse passo, esperando, até o GitHub encerrar o job",
+        "why": "Certo. O passo espera um servidor que nunca termina, e a coleção nunca roda."
+      },
+      {
+        "text": "O boxoffice termina na hora porque a saída vai para um arquivo",
+        "why": "Mandar a saída para um arquivo não para um servidor; ele continua escutando."
+      }
+    ]
+  },
+  "ex-zvh8g3tn": {
+    "prompt": "A tabela da lição 6 contou 11 prerequest-scripts. Alguém remove o script de pré-requisição do Order seats e não muda mais nada. Quantos a próxima execução da coleção inteira conta?",
+    "hint": "Lição 6. O script da coleção roda antes de cada uma das 9 requisições do arquivo, mais os das próprias requisições."
+  },
+  "ex-jxwxgf34": {
+    "prompt": "Uma execução do Newman imprime uma tabela cuja linha de requests diz 10 executadas e 10 falhas, e todas as asserções falharam também. Qual é a primeira suspeita?",
+    "hint": "Lição 6. O que a coluna failed de requests conta?",
+    "choices": [
+      {
+        "text": "O boxoffice respondeu 4xx a toda requisição",
+        "why": "Um status de erro é uma resposta; requisições que tiveram resposta não contam como falhas."
+      },
+      {
+        "text": "O token expirou no meio da execução",
+        "why": "Um token expirado é respondido com 401, o que ainda conta como requisição que funcionou."
+      },
+      {
+        "text": "Os testes foram escritos para outra versão do Newman",
+        "why": "Um problema de script aparece em test-scripts ou assertions, não em requests."
+      },
+      {
+        "text": "O boxoffice não está rodando, ou o endereço está errado",
+        "why": "Certo. Essa linha conta requisições que nem puderam ser mandadas."
+      }
+    ]
+  },
+  "ex-2eptp0f4": {
+    "prompt": "O npm repassa ao script os argumentos do `npm run test:api` que vêm depois de um marcador de dois caracteres, que é ___.",
+    "hint": "Lição 6. Dois caracteres.",
+    "blanks": [
+      {
+        "accept": [
+          "--"
+        ]
+      }
+    ]
+  },
+  "ex-qx345ek6": {
+    "prompt": "Um teste de REST Assured confere `.body(\"price_cents\", equalTo(\"6500\"))` contra o sh-103. O que acontece?",
+    "hint": "Lição 7, os matchers.",
+    "choices": [
+      {
+        "text": "Passa: o Hamcrest transforma os dois lados em texto antes de comparar",
+        "why": "O equalTo compara valor e tipo, e não faz essa conversão."
+      },
+      {
+        "text": "Passa, porque o JSON tem um único tipo de número",
+        "why": "Um tipo de número, sim, mas \"6500\" no teste é uma string, não um número."
+      },
+      {
+        "text": "Falha: o corpo tem o número 6500, não um texto",
+        "why": "Certo. O equalTo é exato, daquele tipo, e uma string não é o número."
+      },
+      {
+        "text": "Não compila, já que o Java recusa uma string ali",
+        "why": "O equalTo aceita qualquer tipo, então compila e falha na execução."
+      }
+    ]
+  },
+  "ex-v8864y5t": {
+    "prompt": "O mvn test termina com `Tests run: 11, Failures: 0, Errors: 11`. Onde você olha primeiro?",
+    "hint": "Lição 7. Uma falha e um erro apontam para lugares diferentes.",
+    "choices": [
+      {
+        "text": "Nas respostas do boxoffice, já que onze verificações não se sustentaram",
+        "why": "Uma verificação que não se sustentou é uma falha, e não há nenhuma."
+      },
+      {
+        "text": "Em lugar nenhum: erros são avisos e o build fica verde",
+        "why": "Erros deixam o build vermelho como as falhas."
+      },
+      {
+        "text": "No pom.xml, já que o Surefire não achou testes",
+        "why": "Ele achou e rodou onze; a falta do pino do Surefire aparece como Tests run: 0."
+      },
+      {
+        "text": "No laboratório: se o boxoffice está rodando onde os testes mandam",
+        "why": "Certo. Um erro é um teste que não conseguiu terminar, como uma requisição que estourou porque ninguém respondeu."
+      }
+    ]
+  },
+  "ex-bf857atm": {
+    "prompt": "A suíte da lição 7 reportou Tests run 11. Você acrescenta ReportTest.java com dois métodos @Test e ReportCheck.java com três, os dois em src/test/java/boxoffice. O que o mvn test reporta agora?",
+    "hint": "Lição 7. Que nomes de classe o Surefire roda?"
+  },
+  "ex-f2gsm4xe": {
+    "prompt": "Os testes de REST Assured compilam num terminal e não compilam em outro, no mesmo notebook. Para onde a lição aponta?",
+    "hint": "Lição 7. Leia a linha Java version do mvn -version.",
+    "choices": [
+      {
+        "text": "Um cache no ~/.m2 que um dos terminais não enxerga",
+        "why": "O ~/.m2 é do usuário, e os dois terminais leem o mesmo."
+      },
+      {
+        "text": "O JAVA_HOME apontando para um JDK diferente em cada um",
+        "why": "Certo. O Maven compila com o JDK que o JAVA_HOME indica, que pode não ser o que o java -version mostra."
+      },
+      {
+        "text": "O boxoffice rodando em só um deles",
+        "why": "Um servidor parado dá erros na execução dos testes, não falha de compilação."
+      },
+      {
+        "text": "Uma IDE que compila pelas costas do terminal",
+        "why": "A lição não precisa de IDE; a diferença é qual JDK o Maven usa."
+      }
+    ]
+  },
+  "ex-02yya565": {
+    "prompt": "Para rodar um método de uma classe, o -Dtest recebe o nome da classe, depois o caractere ___, depois o nome do método.",
+    "hint": "Lição 7, os relatórios.",
+    "blanks": [
+      {
+        "accept": [
+          "#"
+        ]
+      }
+    ]
+  },
+  "ex-6562qf7m": {
+    "prompt": "Ligue cada forma de comparar do Karate a quando ela passa.",
+    "hint": "Lição 8, match.",
+    "pairs": [
+      {
+        "left": "match a == b",
+        "right": "as mesmas chaves e valores, e nada a mais"
+      },
+      {
+        "left": "match a contains b",
+        "right": "a tem b entre outras coisas"
+      },
+      {
+        "left": "match each a == b",
+        "right": "cada item da lista a passa em b"
+      }
+    ],
+    "right_distractors": [
+      "a e b diferem só na ordem das chaves",
+      "b não está em a"
+    ]
+  },
+  "ex-bfc27hh2": {
+    "prompt": "O Background de uma feature diz `* header Authorization = 'Bearer ' + ci.token`, e o cenário dela posta um pedido e depois o lê com um GET. O que acontece?",
+    "hint": "Lição 8. header contra configure headers.",
+    "choices": [
+      {
+        "text": "O POST leva o token e o GET vai sem ele, então recebe 401",
+        "why": "Certo. O header vale só para a próxima requisição; o configure headers é o que dura."
+      },
+      {
+        "text": "As duas requisições levam o token, já que o Background roda antes do cenário",
+        "why": "Ele roda antes do cenário, mas o header vale só para a próxima requisição."
+      },
+      {
+        "text": "Nenhuma leva: o header é ignorado dentro de um Background",
+        "why": "Ele não é ignorado; a primeira requisição depois dele recebe o cabeçalho."
+      },
+      {
+        "text": "O Karate recusa a feature, porque o header precisa de um Given",
+        "why": "Given, When, Then e * são intercambiáveis; o Karate não recusa nada aqui."
+      }
+    ]
+  },
+  "ex-4yrpt9hr": {
+    "prompt": "A execução completa do Karate reportou 16 testes. Três linhas a mais entram nos Examples do seats.feature, e o head.feature é apagado. Quantos testes a próxima execução completa reporta?",
+    "hint": "Lição 8. Cada linha de um Outline é um teste, e cada cenário também."
+  },
+  "ex-7nnhvsyj": {
+    "prompt": "Um colega copia um pom.xml de um artigo antigo que indica `com.intuit.karate:karate-junit6:2.1.2`. O que acontece no mvn test?",
+    "hint": "Lição 8, o projeto.",
+    "choices": [
+      {
+        "text": "Funciona, porque o Maven Central redireciona o grupo antigo para o novo",
+        "why": "Nada redireciona; grupo e artefato indicam uma entrada ou nenhuma."
+      },
+      {
+        "text": "Não roda teste nenhum e imprime BUILD SUCCESS, como um Surefire sem versão",
+        "why": "Essa é a armadilha da lição 7; aqui a própria dependência não é encontrada."
+      },
+      {
+        "text": "O Maven não consegue resolvê-la: o Karate 2 é publicado sob io.karatelabs",
+        "why": "Certo. com.intuit.karate é o grupo de antes da mudança, e o Karate 2 só existe no novo."
+      },
+      {
+        "text": "Baixa um Karate antigo cuja sintaxe de feature é outra",
+        "why": "Não existe Karate 2.1.2 no grupo antigo para baixar."
+      }
+    ]
+  },
+  "ex-pqatgnds": {
+    "prompt": "Ligue cada coisa que você pode ver numa troca SOAP ao que ela diz a quem testa.",
+    "hint": "Lição 9, as duas versões.",
+    "pairs": [
+      {
+        "left": "content-type: text/xml",
+        "right": "a mensagem fala SOAP 1.1"
+      },
+      {
+        "left": "content-type: application/soap+xml",
+        "right": "a mensagem fala SOAP 1.2"
+      },
+      {
+        "left": "faultcode soap:Client",
+        "right": "o SOAP 1.1 culpa a requisição"
+      },
+      {
+        "left": "env:Sender",
+        "right": "o SOAP 1.2 culpa a requisição"
+      }
+    ],
+    "right_distractors": [
+      "o endereço do WSDL"
+    ]
+  },
+  "ex-y3pabhng": {
+    "prompt": "Uma nova versão do WSDL de notas acrescenta `<xs:element name=\"discountCents\" type=\"xs:positiveInteger\" minOccurs=\"0\"/>`. Que requisição quebra esse contrato?",
+    "hint": "Lição 9, a parte types. O que o minOccurs=\"0\" muda?",
+    "choices": [
+      {
+        "text": "Uma que deixa o discountCents de fora",
+        "why": "O minOccurs=\"0\" torna o elemento opcional; sem ele, o elemento precisa aparecer exatamente uma vez."
+      },
+      {
+        "text": "Uma que manda um discountCents igual a 0",
+        "why": "Certo. Opcional não é sem tipo: quando aparece, precisa ser um inteiro positivo, e 0 não é."
+      },
+      {
+        "text": "Uma com discountCents igual a 500",
+        "why": "500 é um inteiro positivo, que é o que o tipo pede."
+      },
+      {
+        "text": "Qualquer requisição que ainda ignore a regra dos 11 dígitos do buyerTaxId",
+        "why": "Essa regra vive no código, não no WSDL; o schema chama o buyerTaxId de string."
+      }
+    ]
+  },
+  "ex-ak48088a": {
+    "prompt": "Num test case do SoapUI, o invoiceNumber de uma resposta precisa ir para a próxima requisição. Que passo de teste faz isso?",
+    "hint": "Lição 9, o SoapUI descrito por fora.",
+    "choices": [
+      {
+        "text": "Um passo Delay",
+        "why": "O Delay só espera; ele não move valor nenhum."
+      },
+      {
+        "text": "Uma asserção Schema Compliance",
+        "why": "Isso é uma asserção sobre uma resposta, conferindo-a contra os tipos do WSDL; ela não repassa nada."
+      },
+      {
+        "text": "Um passo Property Transfer",
+        "why": "Certo. Ele copia um valor de uma resposta para a próxima requisição, por XPath."
+      },
+      {
+        "text": "Um MockService respondendo a próxima requisição",
+        "why": "Um MockService finge ser o serviço; ele não carrega valores entre passos."
+      }
+    ]
+  },
+  "ex-9rsbgytw": {
+    "prompt": "Ponha os elementos da requisição de nota em ordem, do mais externo ao mais interno.",
+    "hint": "Lição 9, soap/issue.xml.",
+    "items": [
+      "soap:Envelope",
+      "soap:Body",
+      "inv:IssueInvoice",
+      "inv:amountCents"
+    ]
+  },
+  "ex-mayyr60t": {
+    "prompt": "O validador de outra ferramenta deixa a checagem de format desligada a menos que alguém peça. Ele confere um espetáculo cujo starts_at é \"8/11 18h\" contra o schemas/show.json. O que ele diz?",
+    "hint": "Lição 10. O que é o format sozinho?",
+    "choices": [
+      {
+        "text": "Válido: é uma string, e o format ali não passa de uma anotação",
+        "why": "Certo. O padrão deixa a checagem de format opcional, então a data passa a menos que o validador seja mandado conferi-la."
+      },
+      {
+        "text": "Inválido, porque uma data não é uma string em JSON",
+        "why": "O JSON não tem tipo data; uma data viaja como string, e esta é uma string."
+      },
+      {
+        "text": "Inválido, porque o starts_at precisa bater com date-time",
+        "why": "Isso foi o que o Ajv disse com o ajv-formats; com a checagem de format desligada, ninguém lê a palavra-chave."
+      },
+      {
+        "text": "Recusa o schema, porque format é uma palavra-chave do 2020-12",
+        "why": "O format é antigo e muito conhecido; a questão é só se o validador o confere."
+      }
+    ]
+  },
+  "ex-d0bx95a8": {
+    "prompt": "O check.mjs, com o schemas/order.json corrigido, recebe `{\"id\":\"ord-7\",\"show_id\":\"sh-101\",\"seats\":0,\"total_cents\":-100,\"status\":\"cancelled\",\"venue\":\"x\"}`. Quantas linhas de regras quebradas ele imprime?",
+    "hint": "Lição 10. O allErrors reporta todas as regras, e um pedido cancelado não precisa de payment."
+  },
+  "ex-bbbmztc6": {
+    "prompt": "Quais destas mudanças na resposta de espetáculo do boxoffice fariam falhar a verificação do pact do app Tickets?",
+    "hint": "Lição 10. Leia as matchingRules, e quais campos o pact cita.",
+    "choices": [
+      {
+        "text": "seats_left mandado como a string \"4\"",
+        "why": "Certo. A regra do pact para seats_left é integer."
+      },
+      {
+        "text": "starts_at mandado como 2026-11-08T21:00:00Z",
+        "why": "Certo. A regex termina num offset como -03:00, e o Z não bate com ela."
+      },
+      {
+        "text": "A peça renomeada, de modo que o title tenha outra string",
+        "why": "A regra do title é type: qualquer string serve."
+      },
+      {
+        "text": "price_cents removido do espetáculo",
+        "why": "O pact nunca cita o price_cents, porque a tela do espetáculo não o lê."
+      }
+    ]
+  },
+  "ex-qxzk7jxv": {
+    "prompt": "Um consumidor escreve um pact com `given('order ord-1001 exists')`, e o teste de provedor do boxoffice registra esse estado com um handler que não faz nada. A verificação contra um boxoffice recém-iniciado falha com 404. Onde está a correção?",
+    "hint": "Lição 10. Para que serve um state handler?",
+    "choices": [
+      {
+        "text": "No teste do consumidor, que deveria parar de citar um estado",
+        "why": "O estado é o que dá sentido à interação; o provedor precisa ser colocado nele."
+      },
+      {
+        "text": "No Pact Broker, que deveria guardar o pedido junto com o pact",
+        "why": "Um broker guarda pacts e resultados; ele não guarda dados para o provedor."
+      },
+      {
+        "text": "No boxoffice, que deveria responder 200 para um pedido que ninguém fez",
+        "why": "Um 404 para um pedido que não existe está certo; a verificação rodou no estado errado."
+      },
+      {
+        "text": "No handler, que deveria fazer esse pedido antes da interação",
+        "why": "Certo. Um handler prepara o provedor para o given; o sh-103 não precisava de nada, um pedido precisa."
+      }
+    ]
+  },
+  "ex-82cr6kt9": {
+    "prompt": "Um colega testando contra o mock Prism do boxoffice recebe um espetáculo cujo title é \"string\" e abre um defeito contra o boxoffice. O que você diz a ele?",
+    "hint": "Lição 11. De onde o Prism tira as respostas?",
+    "choices": [
+      {
+        "text": "Que o Prism o montou a partir do schema, que não tem título de exemplo",
+        "why": "Certo. A forma está certa e o conteúdo é inventado; o boxoffice nem foi consultado."
+      },
+      {
+        "text": "Que o campo title não está no openapi.yaml",
+        "why": "Ele está lá, com tipo string; é justamente por isso que o Prism escreveu a palavra string."
+      },
+      {
+        "text": "Que o boxoffice perdeu o título quando foi reiniciado",
+        "why": "O Prism não perguntou nada ao boxoffice; no modo mock ele responde sozinho."
+      },
+      {
+        "text": "Que o Prism repete a última resposta que o boxoffice deu a ele",
+        "why": "No modo mock o Prism não repassa nada e não grava nada do boxoffice."
+      }
+    ]
+  },
+  "ex-yv3538wj": {
+    "prompt": "O mapping que aprova casa com `\"url\": \"/charges\"`. Uma nova versão do boxoffice posta as cobranças em /charges?attempt=1. O que o WireMock responde?",
+    "hint": "Lição 11. url contra urlPath.",
+    "choices": [
+      {
+        "text": "404, com um relatório do mapping mais próximo",
+        "why": "Certo. O url casa caminho e query exatamente; o urlPath ignoraria a query string."
+      },
+      {
+        "text": "201 aprovado, já que o caminho ainda é /charges",
+        "why": "Isso valeria para o urlPath; o url compara a query string também."
+      },
+      {
+        "text": "201 recusado, do mapping de prioridade 1",
+        "why": "O mapping que recusa também usa url, então também não casa."
+      },
+      {
+        "text": "Um 500, como responde um provedor com problemas",
+        "why": "Esse é o modo down do stub escrito à mão, não o que o WireMock faz com uma requisição sem par."
+      }
+    ]
+  },
+  "ex-13bc7w3v": {
+    "prompt": "Com os dois arquivos de mapping da lição 11 carregados, qual é o menor amount_cents inteiro que o WireMock responde como recusado?",
+    "hint": "Lição 11. Leia o filtro do charge-declined.json."
+  },
+  "ex-sr7bqp41": {
+    "prompt": "Um substituto que responde como foi mandado e também registra o que recebeu, para o teste ler depois, é chamado de ___.",
+    "hint": "Lição 11, o vocabulário dos substitutos.",
+    "blanks": [
+      {
+        "accept": [
+          "spy"
+        ]
+      }
+    ]
+  },
+  "ex-fqvravy3": {
+    "prompt": "Um boxoffice recém-iniciado recebe um pedido de 2 lugares do sh-103 e um de 1 lugar do sh-101. Depois que o relatório de vendas alcança os pedidos, qual é o revenue_cents dele?",
+    "hint": "Lição 12. O relatório soma os pedidos confirmados."
+  },
+  "ex-eys10a4x": {
+    "prompt": "Dois arquivos de teste chamam `start('boxoffice.mjs', { PORT: '8181' })` no before, e o node os roda em paralelo. O que o segundo vê?",
+    "hint": "Lição 12, tests/start.mjs.",
+    "choices": [
+      {
+        "text": "Os testes dele passam contra o servidor do primeiro arquivo, que responde na 8181",
+        "why": "O start espera o próprio filho imprimir listening; esse filho nunca imprime."
+      },
+      {
+        "text": "Os testes dele estouram o tempo um a um contra um servidor morto",
+        "why": "Essa é a falha que o start.mjs existe para evitar: ele rejeita quando o programa termina antes."
+      },
+      {
+        "text": "Esse arquivo falha na hora, porque o servidor dele sai com EADDRINUSE",
+        "why": "Certo. A porta está ocupada, o filho termina com EADDRINUSE, e o arquivo falha com esse motivo."
+      },
+      {
+        "text": "O node percebe o conflito e muda o segundo servidor para a 8182",
+        "why": "Nada muda uma porta sozinho; o segundo servidor simplesmente não consegue iniciar."
+      }
+    ]
+  },
+  "ex-2sz6cxzg": {
+    "prompt": "Numa manhã o relatório diz `ok 4 - HEAD answers like GET, without a body # TODO boxoffice answers HEAD with 405, lesson 1`. O que você deve fazer?",
+    "hint": "Lição 12, um defeito conhecido à vista.",
+    "choices": [
+      {
+        "text": "Tirar a opção todo, já que o HEAD foi corrigido",
+        "why": "Certo. ok com # TODO é o sinal que a lição citou; sem a opção, o teste protege a correção."
+      },
+      {
+        "text": "Nada, já que a execução já estava verde",
+        "why": "Ela já estava verde antes; a linha ok diz que o motivo do todo acabou."
+      },
+      {
+        "text": "Apagar o teste, já que o defeito foi corrigido",
+        "why": "Apagá-lo deixaria o defeito voltar sem ninguém ver."
+      },
+      {
+        "text": "Mudar o teste para esperar 405 de novo",
+        "why": "Isso afirmaria o defeito, e falharia agora que o servidor está certo."
+      }
+    ]
+  },
+  "ex-77acb83n": {
+    "prompt": "Ponha em ordem o que acontece durante uma execução do tests/payments.test.mjs.",
+    "hint": "Lição 12. Leia o log do stub junto com os hooks.",
+    "items": [
+      "um token é buscado uma vez",
+      "o registro do stub é esvaziado e ele passa a aprovar",
+      "um pedido é feito e o registro do stub é lido",
+      "o registro é esvaziado e o stub volta a aprovar",
+      "o stub passa a recusar e um pedido é feito",
+      "o stub volta a aprovar"
+    ]
+  },
+  "ex-qceyzb24": {
+    "prompt": "Uma cópia do run-integration.sh termina na linha do grep e deixa de fora o `exit $status`. Um teste falha. O que o pipeline mostra?",
+    "hint": "Lição 12. O código de saída de qual comando encerra o script então?",
+    "choices": [
+      {
+        "text": "Vermelho, porque o node --test saiu com 1",
+        "why": "Um script termina com o código do último comando, e o node --test não é o último."
+      },
+      {
+        "text": "Vermelho, porque o trap reporta a falha quando o script termina",
+        "why": "O trap só mata os servidores; ele não muda o código de saída."
+      },
+      {
+        "text": "Nada: o script fica preso nos servidores que iniciou",
+        "why": "O trap para os dois servidores, aconteça o que acontecer."
+      },
+      {
+        "text": "Verde, porque o grep achou a linha not ok",
+        "why": "Certo. O grep teve sucesso, então o script sai com 0 e a falha fica escondida."
+      }
+    ]
+  },
+  "ex-04aqx76d": {
+    "prompt": "O withRetry roda com os padrões (attempts 4, base 100, cap 2000), um random que sempre responde 1, e um send que responde 503 toda vez. Quantos milissegundos ele espera ao todo antes de retornar?",
+    "hint": "Lição 13. Não há espera depois da última tentativa.",
+    "unit": "ms"
+  },
+  "ex-c7mtaxtp": {
+    "prompt": "Outro cliente que pode criar pedidos manda a chave buy-7f3a, que o ci-tests já usou no pedido de dois lugares, com o mesmo corpo. O que ele recebe?",
+    "hint": "Lição 13. De quem são as chaves?",
+    "choices": [
+      {
+        "text": "Uma repetição do pedido do ci-tests, o ord-1001",
+        "why": "Isso entregaria a um cliente o pedido de outro; o boxoffice guarda as respostas pelo sub do token."
+      },
+      {
+        "text": "Um pedido novo, só dele, com id próprio",
+        "why": "Certo. As chaves pertencem a um cliente, então a mesma chave de outro cliente é uma nova intenção."
+      },
+      {
+        "text": "422, porque a chave já foi usada",
+        "why": "O 422 é para o mesmo cliente reusando uma chave com outro corpo."
+      },
+      {
+        "text": "409, enquanto o pedido do ci-tests está em andamento",
+        "why": "Essa é a correção que a lição propõe para a corrida, e o boxoffice não a tem."
+      }
+    ]
+  },
+  "ex-69r79me6": {
+    "prompt": "O withRetry envolve um pedido e a primeira resposta é `409 only 1 seat left`. Quantas vezes o pedido é mandado?",
+    "hint": "Lição 13. Que status o RETRYABLE guarda?",
+    "choices": [
+      {
+        "text": "Só uma vez",
+        "why": "Certo. O 409 diz que o estado impede, então a mesma requisição falharia do mesmo jeito, e o RETRYABLE guarda só 429, 502, 503 e 504."
+      },
+      {
+        "text": "Quatro vezes, o número padrão de tentativas",
+        "why": "O attempts limita as repetições de uma resposta repetível; um 409 é devolvido na hora."
+      },
+      {
+        "text": "Duas",
+        "why": "Não há segunda tentativa, com espera ou sem, para um status fora do RETRYABLE."
+      },
+      {
+        "text": "Até o lugar ficar livre, até o teto de 2000 ms",
+        "why": "O teto limita uma espera, não o laço inteiro, e um 409 não é esperado."
+      }
+    ]
+  },
+  "ex-9tne5g0r": {
+    "prompt": "Escolher cada espera de modo uniforme entre zero e o teto que dobra, para que clientes que falharam juntos se espalhem, se chama full ___.",
+    "hint": "Lição 13, a espera entre tentativas.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter"
+        ]
+      }
+    ]
+  },
+  "ex-54te17t1": {
+    "prompt": "Um app recebe 504 do boxoffice para um pedido e o repete com a mesma Idempotency-Key. O que acontece do lado do boxoffice?",
+    "hint": "Lição 13. Quando o boxoffice guarda uma chave?",
+    "choices": [
+      {
+        "text": "Ele repete o 504, já que a chave já foi vista",
+        "why": "O boxoffice guarda uma chave só depois de uma cobrança dar certo, e esta nunca deu."
+      },
+      {
+        "text": "Ele faz um pedido novo e repassa a chave ao provedor",
+        "why": "Certo. Só um provedor que respeite chaves de idempotência consegue reconhecer a cobrança repetida."
+      },
+      {
+        "text": "Ele responde 422, porque a chave já foi usada uma vez",
+        "why": "O 422 é para uma chave reusada com outro corpo depois de uma resposta guardada."
+      },
+      {
+        "text": "Ele devolve o primeiro pedido, que o timeout tinha confirmado",
+        "why": "O primeiro pedido foi marcado como failed quando o boxoffice desistiu; ele não confirmou nada."
+      }
+    ]
+  },
+  "ex-sr5ztv3f": {
+    "prompt": "No Tickets, o que o price() escreve para um Show cujo priceCents é 6505?",
+    "hint": "Lição 14, Shows.kt. O formato é \"R$ %d,%02d\".",
+    "choices": [
+      {
+        "text": "R$ 65,5",
+        "why": "O %02d completa os centavos com dois dígitos, então 5 vira 05."
+      },
+      {
+        "text": "R$ 65,05",
+        "why": "Certo. 6505 / 100 dá 65, 6505 % 100 dá 5, escrito com dois dígitos."
+      },
+      {
+        "text": "R$ 65,50",
+        "why": "O resto é 5 centavos, não 50; o preenchimento vai à esquerda."
+      },
+      {
+        "text": "R$ 6505,00",
+        "why": "A divisão inteira por 100 transforma centavos em reais primeiro."
+      }
+    ]
+  },
+  "ex-va34bn7j": {
+    "prompt": "Por que o Appium chama o botão do Tickets de `example.tickets:id/refresh` e não só de `refresh`?",
+    "hint": "Lição 14, como a árvore é.",
+    "choices": [
+      {
+        "text": "Porque o Appium acrescenta o pacote para o XPath achá-lo mais rápido",
+        "why": "O XPath não tem nada a ver, e o prefixo é do Android, não do Appium."
+      },
+      {
+        "text": "Porque dois apps numa mesma tela têm cada um seu refresh",
+        "why": "Certo. O Tickets e o diálogo de permissão desenhado por cima são apps diferentes, e o pacote separa os ids deles."
+      },
+      {
+        "text": "Porque o arquivo de layout declara o id com o pacote escrito nele",
+        "why": "O layout diz @+id/refresh; o pacote é acrescentado pelo Android quando ele reporta o nó."
+      },
+      {
+        "text": "Porque uma content description precisa levar um pacote",
+        "why": "Isso é o resource id, não a content description, que não tem esse prefixo."
+      }
+    ]
+  },
+  "ex-2a3re7qr": {
+    "prompt": "O Tickets foi instalado e aberto uma vez com o boxoffice rodando. Depois o boxoffice é parado, e o usuário toca em Refresh. O que a tela de lista mostra?",
+    "hint": "Lição 14, Shows.load e display.",
+    "choices": [
+      {
+        "text": "A linha de erro e uma lista vazia",
+        "why": "Esse é o Loaded.Failed, para quando nada foi salvo; a primeira carga salvou uma cópia."
+      },
+      {
+        "text": "A lista como estava, sem nada dizendo que é antiga",
+        "why": "O display mostra o banner sempre que a carga é Offline."
+      },
+      {
+        "text": "O banner e a linha de erro juntos",
+        "why": "O display esconde os dois primeiro e mostra só um deles por resultado."
+      },
+      {
+        "text": "A lista salva, sob o banner Offline: showing the list from HH:mm",
+        "why": "Certo. A requisição falha, o corpo salvo é lido, e o banner diz a hora em que foi salvo."
+      }
+    ]
+  },
+  "ex-5ynsrb3b": {
+    "prompt": "Quais destes um teste local, rodando no Java do próprio computador sem Android, consegue conferir no Tickets?",
+    "hint": "Lição 14, três lugares onde um teste pode viver.",
+    "choices": [
+      {
+        "text": "Que o price() escreve 6500 centavos como R$ 65,00",
+        "why": "Certo. Formatar não precisa de tela, que é para o que serve um teste local."
+      },
+      {
+        "text": "Que o time() transforma o início em 08/11 18:00",
+        "why": "Certo. É trabalho com strings, sem Android nenhum."
+      },
+      {
+        "text": "Que tocar numa linha abre a tela do espetáculo",
+        "why": "Isso precisa das views do app num aparelho: um teste instrumentado ou de ponta a ponta."
+      },
+      {
+        "text": "Que o diálogo de notificação aparece quando a chave é ligada",
+        "why": "O diálogo é do Android; só um teste de ponta a ponta o vê."
+      }
+    ]
+  },
+  "ex-mbp1gxnv": {
+    "prompt": "A tela de lista do Tickets não tem a chave remind. A espera implícita do Appium está em 10 segundos, e um teste pergunta se a chave existe ali. Quanto isso custa?",
+    "hint": "Lição 15, esperas. Onde age uma espera implícita?",
+    "choices": [
+      {
+        "text": "Nada: perguntar se existe é instantâneo",
+        "why": "Com uma espera implícita definida, toda busca tenta de novo no servidor antes de responder, esta também."
+      },
+      {
+        "text": "Dez segundos inteiros, só para provar uma ausência",
+        "why": "Certo. A busca tenta de novo até a espera implícita acabar, então escolha um lugar para esperar: a espera explícita do teste."
+      },
+      {
+        "text": "Uma sessão perdida, porque uma busca sem resultado a encerra",
+        "why": "Uma busca sem resultado responde no such element; a sessão continua."
+      },
+      {
+        "text": "Vinte segundos, o tempo que o driver dá ao adb para achar um aparelho",
+        "why": "Essa espera de vinte segundos é para iniciar uma sessão, não para uma busca."
+      }
+    ]
+  },
+  "ex-zwz8qker": {
+    "prompt": "Ligue cada espera do WebdriverIO a quando ela tem sucesso.",
+    "hint": "Lição 15, as esperas do WebdriverIO.",
+    "pairs": [
+      {
+        "left": "waitForExist()",
+        "right": "o elemento está na árvore, desenhado ou não"
+      },
+      {
+        "left": "waitForDisplayed()",
+        "right": "ele está na árvore e visível"
+      },
+      {
+        "left": "waitForEnabled()",
+        "right": "dá para agir sobre ele"
+      },
+      {
+        "left": "waitForDisplayed({ reverse: true })",
+        "right": "ele sumiu, como um indicador de progresso"
+      }
+    ],
+    "right_distractors": [
+      "a sessão foi apagada"
+    ]
+  },
+  "ex-5qrj2bar": {
+    "prompt": "Uma equipe quer um só localizador Appium que ache o botão Comprar no build Android e no build iOS do app. O que precisa ser verdade nos dois builds?",
+    "hint": "Lição 15, estratégias em ordem de preferência.",
+    "choices": [
+      {
+        "text": "Os dois dão ao botão o mesmo resource id, achado pela estratégia id",
+        "why": "Resource id é coisa do Android; o iOS não tem resource ids para o mesmo nome bater."
+      },
+      {
+        "text": "Os dois desenham o botão no mesmo lugar, achado por XPath",
+        "why": "O XPath descreve posições, e as duas plataformas montam árvores diferentes."
+      },
+      {
+        "text": "O mesmo nome de acessibilidade, achado por accessibility id",
+        "why": "Certo. Ela lê a content description no Android e o accessibility identifier no iOS."
+      },
+      {
+        "text": "Nada: a estratégia UiAutomator funciona nas duas plataformas",
+        "why": "O UiAutomator só existe no Android."
+      }
+    ]
+  },
+  "ex-2gszssrp": {
+    "prompt": "O `curl localhost:4723/status` responde `\"ready\": true`. Quais destas coisas isso NÃO diz?",
+    "hint": "Lição 15, o servidor.",
+    "choices": [
+      {
+        "text": "Que há um aparelho conectado",
+        "why": "Certo. O servidor só sabe para qual aparelho é uma sessão quando a sessão pede."
+      },
+      {
+        "text": "Que o servidor está de pé e aceita sessões",
+        "why": "É exatamente isso que o ready true diz."
+      },
+      {
+        "text": "Que o Tickets está instalado no emulador",
+        "why": "Certo. O app é instalado quando uma sessão começa, a partir do appium:app."
+      },
+      {
+        "text": "Qual versão do Appium está respondendo",
+        "why": "A resposta traz o build.version, 3.8.0."
+      }
+    ]
+  },
+  "ex-n4g7rfde": {
+    "prompt": "Ponha em ordem as peças por onde passa um toque, do comando do teste até a tela.",
+    "hint": "Lição 15, quatro programas entre um teste e um toque.",
+    "items": [
+      "a biblioteca cliente no teste",
+      "o servidor Appium na porta 4723",
+      "o driver UiAutomator2",
+      "o app do próprio driver no aparelho"
+    ]
+  },
+  "ex-tz8pws0z": {
+    "prompt": "Na tela de lista, um teste roda `onView(withId(R.id.remind)).check(matches(not(isDisplayed())))`. O que acontece?",
+    "hint": "Lição 16. O remind chega a ser inflado na tela de lista?",
+    "choices": [
+      {
+        "text": "Falha: nenhuma view bate, então NoMatchingViewException",
+        "why": "Certo. O remind pertence à tela do espetáculo e nunca foi inflado aqui, ao contrário do banner, que existe escondido."
+      },
+      {
+        "text": "Passa, porque não existe chave remind nenhuma para ser exibida",
+        "why": "O matches precisa de uma view para julgar; sem nenhuma encontrada, a verificação nem chega lá."
+      },
+      {
+        "text": "Falha com AmbiguousViewMatcherException",
+        "why": "Essa é para um matcher que acha mais de uma view, como o title na lista."
+      },
+      {
+        "text": "Espera até a tela do espetáculo abrir",
+        "why": "O Espresso espera a thread principal, não uma view aparecer."
+      }
+    ]
+  },
+  "ex-d4mghddz": {
+    "prompt": "Um colega escreve `onData(anything()).inAdapterView(withId(R.id.shows)).atPosition(2).perform(click())` para abrir o sh-103. Quando ele passa a abrir o espetáculo errado?",
+    "hint": "Lição 16, por que uma lista precisa de onData.",
+    "choices": [
+      {
+        "text": "Quando a lista foi rolada para baixo antes do toque",
+        "why": "O onData rola até o item sozinho; a posição é um lugar nos dados, não na tela."
+      },
+      {
+        "text": "Quando o emulador é girado",
+        "why": "Girar redesenha a tela; o terceiro item dos dados continua sendo o terceiro."
+      },
+      {
+        "text": "Quando o boxoffice mudar a ordem dos espetáculos",
+        "why": "Certo. A posição acha o que estiver em terceiro; o showWithId(\"sh-103\") acha o espetáculo pelo que a linha guarda."
+      },
+      {
+        "text": "Quando o sh-103 esgotar",
+        "why": "Um espetáculo esgotado continua na lista, no mesmo lugar."
+      }
+    ]
+  },
+  "ex-9r9y8m8m": {
+    "prompt": "Uma classe de teste registra o ShowsIdlingResource no @Before e não tem @After. O que isso pode fazer com as classes de teste que rodam depois dela?",
+    "hint": "Lição 16, um idling resource.",
+    "choices": [
+      {
+        "text": "Nada: o Espresso descarta todo resource quando uma classe termina",
+        "why": "O IdlingRegistry guarda o que recebeu até ser mandado tirar."
+      },
+      {
+        "text": "Ele segue respondendo nelas, por um teste que já acabou",
+        "why": "Certo. Tirar o registro importa tanto quanto registrar, porque o registro vive mais que a classe."
+      },
+      {
+        "text": "Elas deixam de esperar a thread principal",
+        "why": "Um resource registrado soma ao que o Espresso espera; ele não tira nada."
+      },
+      {
+        "text": "O Shows.busy do app fica acima de zero para sempre",
+        "why": "O resource só lê o busy; ele nunca o muda."
+      }
+    ]
+  },
+  "ex-80wg19b9": {
+    "prompt": "Ponha em ordem os passos de uma execução dos testes instrumentados pelo Gradle.",
+    "hint": "Lição 16, o que o Gradle faz no aparelho.",
+    "items": [
+      "o Gradle monta o APK do app e o APK de teste",
+      "os dois APKs são instalados no aparelho",
+      "o adb pede ao Android que inicie a instrumentation do APK de teste",
+      "os testes rodam dentro do processo do próprio app",
+      "os relatórios HTML e JUnit XML são gravados"
+    ]
+  },
+  "ex-gjhrb51w": {
+    "prompt": "Quais destes o Espresso espera antes de cada passo sem que ninguém mande?",
+    "hint": "Lição 16, o que o Espresso espera e o que não espera.",
+    "choices": [
+      {
+        "text": "Uma tela nova sendo desenhada depois de um toque",
+        "why": "Certo. É trabalho na thread principal, que o Espresso sempre espera."
+      },
+      {
+        "text": "A thread que o Tickets inicia para pedir os espetáculos ao boxoffice",
+        "why": "Uma thread que o próprio app iniciou é invisível ao Espresso; é por isso que o idling resource existe."
+      },
+      {
+        "text": "O conjunto de workers em segundo plano que o AsyncTask usava",
+        "why": "Certo. O Espresso observa esse conjunto também, embora código novo não o use mais."
+      },
+      {
+        "text": "Uma lista que a thread principal ainda está preenchendo",
+        "why": "Certo. Preencher a lista é trabalho da thread principal."
+      },
+      {
+        "text": "Uma requisição em andamento de outro app do celular",
+        "why": "O Espresso só enxerga o processo deste app."
+      }
+    ]
+  },
+  "ex-srwxm0zh": {
+    "prompt": "Um teste Appium da lista em React Native procura `id=com.ticketsrn:id/refresh` no Android e não acha nada, embora o botão tenha testID=\"refresh\". Por quê?",
+    "hint": "Lição 17, testID.",
+    "choices": [
+      {
+        "text": "Porque um testID vira content description, então é o ~refresh que o acha",
+        "why": "No Android ele vira o resource id; a content description é outro atributo."
+      },
+      {
+        "text": "Porque um testID vira o resource id refresh, sem pacote na frente",
+        "why": "Certo. A árvore reporta refresh do jeito que está, ao contrário dos ids example.tickets:id/ do Tickets."
+      },
+      {
+        "text": "Porque o Appium não enxerga apps React Native, que rodam numa web view",
+        "why": "Não há navegador nem HTML; o React Native desenha widgets nativos que o Appium enxerga."
+      },
+      {
+        "text": "Porque o testID vale para o build iOS e não para o Android",
+        "why": "Ele chega aos dois: o resource id no Android, o accessibility identifier no iOS."
+      }
+    ]
+  },
+  "ex-75dnftjt": {
+    "prompt": "Um pipeline roda os specs do Detox contra um build release do app React Native, e ninguém inicia o npx react-native start. O que acontece?",
+    "hint": "Lição 17, a configuração.",
+    "choices": [
+      {
+        "text": "O app mostra um erro sobre o servidor de desenvolvimento",
+        "why": "Isso acontece com um build debug, que carrega o JavaScript do Metro."
+      },
+      {
+        "text": "O Detox se recusa a iniciar o emulador sem o Metro",
+        "why": "Iniciar o AVD não tem nada a ver com o Metro; um nome de AVD errado é que o impede."
+      },
+      {
+        "text": "Nada dá errado: um build release leva o JavaScript dentro do APK",
+        "why": "Certo. Esse é um dos motivos de pipelines testarem builds release com frequência."
+      },
+      {
+        "text": "Todo spec trava, porque o app espera a porta 8081",
+        "why": "Só um build debug pergunta ao Metro na 8081."
+      }
+    ]
+  },
+  "ex-haejfbkk": {
+    "prompt": "Ponha em ordem os passos do spec da lição para uma lista que fica consultando sem parar.",
+    "hint": "Lição 17, a terceira saída.",
+    "items": [
+      "device.disableSynchronization()",
+      "waitFor até a linha show-sh-103 ficar visível, em até 10 segundos",
+      "tocar na linha show-sh-103",
+      "waitFor até a linha chosen ficar visível, em até 5 segundos",
+      "device.enableSynchronization(), no finally"
+    ]
+  },
+  "ex-f3vnceq4": {
+    "prompt": "Um app React Native nunca fica ocioso para o Detox, e a única causa é uma conexão longa que ele mantém aberta com um endereço de preços. Os desenvolvedores não podem mudar o app nesta sprint. Que saída preserva mais sincronização?",
+    "hint": "Lição 17, três saídas. Com o que a blacklist não lidava no caso da lição?",
+    "choices": [
+      {
+        "text": "device.disableSynchronization() no beforeAll, para todo spec",
+        "why": "Isso a desliga para a suíte inteira, o custo contra o qual a lição avisa."
+      },
+      {
+        "text": "Um timeout maior no Jest, para a espera acabar um dia",
+        "why": "Um app que nunca fica ocioso espera até qualquer timeout; um maior só falha mais tarde."
+      },
+      {
+        "text": "device.setURLBlacklist com o padrão desse endereço",
+        "why": "Certo. Aqui não há timer envolvido, então ignorar esse endereço deixa o resto da sincronização ligada."
+      },
+      {
+        "text": "Thread.sleep antes de cada expect, como fazem os testes de Espresso",
+        "why": "Dormir não deixa o app ocioso, e as lições o descartam em todo lugar."
+      }
+    ]
+  }
+}
