@@ -19,7 +19,7 @@ trips.to_sql("trips", con, index=False, if_exists="replace")
 33337
 ```
 
-`to_sql` creates the table and inserts every row, and prints the number of rows it wrote.
+`to_sql` creates the table, inserts every row, and returns the number of rows it wrote.
 `if_exists="replace"` makes the cell safe to run again. Now ask the database a question:
 
 ```python

@@ -36,11 +36,24 @@ wrong.shape, wrong.columns.tolist()
 ((365, 1), ['date;rain_mm;temp_max'])
 ```
 
-**Two columns, not three**, with names nobody chose. `read_csv` split every line at its commas,
-which here are the decimal points: `2025-01-01;0,0;29,9` became `2025-01-01;0` and `0;29` and `9`,
-and with one header field fewer than data fields, it quietly used the first piece as the index. No
-error. A `shape` that is not what you expected is the only symptom, which is why lesson 9 said to
-read it first.
+**One column, named after the whole header line.** `read_csv` looked for commas. The header has
+none, so it saw a single column. Every data line has two, the decimal points, so it saw three
+pieces, two more than the header promised, and it quietly made the extra pieces into
+the index:
+
+```python
+wrong.head(2)
+```
+
+```
+                   date;rain_mm;temp_max
+2025-01-01;0 0;29                    9.0
+2025-01-02;6 8;30                    0.0
+```
+
+`2025-01-01;0` and `0;29` became a two-level index, and the `9` of `29,9` became the value, read as
+`9.0`. No error. A `shape` that is not what you expected is the only symptom, which is why lesson 9
+said to read it first.
 
 Tell it both conventions:
 

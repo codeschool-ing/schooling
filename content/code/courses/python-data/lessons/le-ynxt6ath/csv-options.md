@@ -64,8 +64,17 @@ dtype: object
 
 `dtype` fixes the type of a column instead of letting `read_csv` choose: here a smaller integer.
 `parse_dates` turns text columns into **datetimes**, the type lesson 12 is about. The empty
-`ended_at` of the 146 bikes that never came back became `NaT`, "not a time", which is a datetime's
-`NaN`.
+`ended_at` of the bikes that never came back became `NaT`, "not a time", which is a datetime's
+`NaN`:
+
+```python
+gone = typed["ended_at"].isna()
+gone.sum(), typed.loc[gone, "ended_at"].iloc[0]
+```
+
+```
+(np.int64(146), NaT)
+```
 
 ## What counts as missing
 

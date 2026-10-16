@@ -56,3 +56,11 @@ columns are never touched. Lesson 20 uses that on a file large enough for it to 
 **Parquet is the format to keep your own intermediate results in**: a cleaned table saved as Parquet
 comes back exactly as you left it, types and all. CSV is the format to give to people and to tools
 you do not control.
+
+| format | keeps the types | the trips on disk | reads part of a file |
+|---|---|---|---|
+| CSV | no: everything is text, and `read_csv` guesses | 2.3 MB | rows with `nrows`; columns only by scanning |
+| JSON Lines | partly: numbers and text, and `read_json` guesses dates | 5.3 MB | no |
+| Excel | numbers and dates, not pandas' own types | (the weather: 12 KB) | sheets, and rows with `nrows` |
+| Parquet | yes, every column's dtype | 0.8 MB | columns, without reading the rest |
+| SQL | the database's types | in the database | whatever the query asks for |
