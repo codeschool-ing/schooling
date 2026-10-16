@@ -1,0 +1,426 @@
+{
+  "ex-cnfng9p4": {
+    "prompt": "Com o IAM Identity Center no lugar, onde mora o login de uma pessoa?",
+    "hint": "Em nenhuma das contas.",
+    "choices": [
+      {
+        "text": "Num usuário do IAM criado em cada conta em que a pessoa trabalha",
+        "why": "Esse é o arranjo que o Identity Center substitui: um usuário por pessoa por conta, cada um para criar e apagar."
+      },
+      {
+        "text": "Na fonte de identidade única, fora de toda conta",
+        "why": "Isso. As contas guardam roles; a pessoa está no diretório do Identity Center, no Active Directory ou num provedor externo."
+      },
+      {
+        "text": "Na conta de gerenciamento, como um usuário do IAM com uma role em cada conta",
+        "why": "O Identity Center não cria usuário do IAM nenhum, nem na conta de gerenciamento nem em outro lugar."
+      },
+      {
+        "text": "No `~/.aws/credentials`, no laptop em que a pessoa trabalha",
+        "why": "Esse arquivo guarda chaves. Um login pelo Identity Center deixa só um token em cache, e só pela sessão."
+      }
+    ]
+  },
+  "ex-3n2vckt9": {
+    "prompt": "A loja liga o Google Workspace ao Identity Center. Qual o trabalho do SCIM nessa ligação, em oposição ao do SAML?",
+    "hint": "Um protocolo é sobre o momento do login; o outro não.",
+    "choices": [
+      {
+        "text": "Conferir a senha e o segundo fator da pessoa no login",
+        "why": "Quem confere é o Google, e o SAML leva o resultado ao Identity Center como uma asserção assinada."
+      },
+      {
+        "text": "Cifrar a asserção para que nenhuma senha chegue à AWS",
+        "why": "Nenhuma senha chega à AWS em nenhum dos protocolos. A asserção é assinada, e essa é a parte do SAML."
+      },
+      {
+        "text": "Manter usuários e grupos em dia, antes e depois dos logins",
+        "why": "Isso. O SAML diz quem está entrando agora; o SCIM diz quem existe e em quais grupos, antes e depois."
+      },
+      {
+        "text": "Entregar à linha de comando as credenciais da role depois de cada login",
+        "why": "A linha de comando recebe credenciais de role do portal com o token em cache. O SCIM roda entre o Google e o Identity Center."
+      }
+    ]
+  },
+  "ex-zfa0xgns": {
+    "prompt": "Alguém acrescenta à mão uma política à role `AWSReservedSSO_ReadOnly_…` dentro de `shop-prod`. O que acontece com a mudança?",
+    "hint": "Quem gerencia essa role?",
+    "choices": [
+      {
+        "text": "Ela se espalha para toda outra conta que tem o mesmo permission set",
+        "why": "As mudanças vão do permission set para as roles, nunca de uma role de volta para as outras."
+      },
+      {
+        "text": "Ela é sobrescrita na próxima vez que o permission set for provisionado naquela conta",
+        "why": "Isso. Até lá esta conta discorda das outras em silêncio, que é a metade pior."
+      },
+      {
+        "text": "O IAM recusa: a role só pode ser lida dentro da conta",
+        "why": "Editar é possível, e é exatamente por isso que a regra contra precisa ser dita."
+      },
+      {
+        "text": "Ela passa a fazer parte do próprio permission set",
+        "why": "O permission set é definido no Identity Center, não lido de volta das roles que provisionou."
+      }
+    ]
+  },
+  "ex-fpvj2k4p": {
+    "prompt": "A loja tem seis contas e cinco pessoas. Com um usuário do IAM por pessoa em cada conta, quantos usuários do IAM haveria para auditar?",
+    "hint": "Pessoas vezes contas.",
+    "unit": "usuários"
+  },
+  "ex-k116kqpz": {
+    "prompt": "Ligue cada fonte de identidade à organização a que ela serve.",
+    "hint": "Três linhas da tabela da seção.",
+    "pairs": [
+      {
+        "left": "o diretório do Identity Center",
+        "right": "uma equipe pequena sem diretório próprio"
+      },
+      {
+        "left": "Active Directory",
+        "right": "uma empresa que já roda AD"
+      },
+      {
+        "left": "um provedor de identidade externo",
+        "right": "pessoas que já entram no Google ou no Entra ID"
+      }
+    ],
+    "right_distractors": [
+      "um programa que roda fora da AWS"
+    ]
+  },
+  "ex-ndsm57dq": {
+    "prompt": "O Google está ligado só por SAML, sem SCIM. O `caio` sai e é desativado no Google. O que sobra do lado da AWS?",
+    "hint": "Separe entrar de existir.",
+    "choices": [
+      {
+        "text": "Nada: desativá-lo no Google o apaga em todo lugar",
+        "why": "Apagá-lo no Identity Center é trabalho do SCIM, e aqui não há SCIM."
+      },
+      {
+        "text": "Um usuário que ainda consegue entrar, já que o Identity Center guarda uma senha própria dele",
+        "why": "Com um provedor externo, o Identity Center não guarda senha. Todo login vai ao Google, que agora o recusa."
+      },
+      {
+        "text": "Usuário, grupos e atribuições dele, inúteis e ainda por apagar",
+        "why": "Isso. O SAML barra o login; só o SCIM, ou alguém que se lembre, remove o que sobrou."
+      },
+      {
+        "text": "Um usuário do IAM em cada conta a que ele foi atribuído",
+        "why": "Atribuições provisionam roles, não usuários. Nunca houve usuários do IAM para ele."
+      }
+    ]
+  },
+  "ex-6pg551c6": {
+    "prompt": "Quais três coisas compõem uma atribuição de conta?",
+    "hint": "A trinca da seção.",
+    "choices": [
+      {
+        "text": "Um usuário ou grupo, um permission set e uma conta",
+        "why": "Isso. Cada atribuição é uma célula da grade, e uma role naquela conta."
+      },
+      {
+        "text": "Uma role, uma política de confiança e uma política de permissão",
+        "why": "Isso é do que uma role provisionada é feita. A atribuição é o que a causa."
+      },
+      {
+        "text": "Um usuário, uma senha e um segundo fator",
+        "why": "Isso pertence à fonte de identidade. Uma atribuição não diz nada sobre como a pessoa entra."
+      },
+      {
+        "text": "Um permission set, uma unidade organizacional e uma região",
+        "why": "Uma atribuição aponta para uma conta, e um permission set vale em toda região dela."
+      }
+    ]
+  },
+  "ex-g15he5s1": {
+    "prompt": "Por que a seção atribui permission sets ao grupo `developers` e não à `bia` diretamente?",
+    "hint": "Conte os comandos para a próxima desenvolvedora.",
+    "choices": [
+      {
+        "text": "Porque o Identity Center recusa atribuições a usuários",
+        "why": "`--principal-type USER` é aceito. A escolha é sobre manutenção, não uma recusa."
+      },
+      {
+        "text": "Porque grupos recebem sessões mais longas que usuários, diga o set o que disser",
+        "why": "A duração da sessão pertence ao permission set, seja quem for que o recebe."
+      },
+      {
+        "text": "Para uma associação substituir três atribuições",
+        "why": "Isso. Entrar no grupo dá todas as células da linha dele, e sair as remove juntas."
+      },
+      {
+        "text": "Porque o SCIM provisiona grupos e não usuários avulsos",
+        "why": "O SCIM provisiona usuários e grupos igualmente. Este laboratório nem tem SCIM."
+      }
+    ]
+  },
+  "ex-bzd9vcbr": {
+    "prompt": "Um permission set cujas sessões duram quatro horas é criado com `--session-duration ___`.",
+    "hint": "Uma duração ISO 8601.",
+    "blanks": [
+      {
+        "accept": [
+          "PT4H"
+        ]
+      }
+    ]
+  },
+  "ex-9a5twxhy": {
+    "prompt": "O `create-account-assignment` respondeu `SUCCEEDED`, mas `shop-prod` lista só `OrganizationAccountAccessRole`. O que a medição mostra?",
+    "hint": "Qual lado do Identity Center o moto imita?",
+    "choices": [
+      {
+        "text": "Que a role só é criada quando alguém entra pela primeira vez",
+        "why": "Na AWS a role existe quando o provisionamento termina, antes de alguém entrar. O moto nunca a cria."
+      },
+      {
+        "text": "Que a atribuição foi feita na conta errada",
+        "why": "O `list-account-assignments` de `shop-prod` nomeia os dois grupos, então a conta está certa."
+      },
+      {
+        "text": "Que o moto registra as atribuições e nunca provisiona a role que a AWS criaria ali",
+        "why": "Isso. A AWS teria `AWSReservedSSO_ReadOnly_…` ali; o laboratório cobre só o lado administrativo."
+      },
+      {
+        "text": "Que `OrganizationAccountAccessRole` é a role que o Identity Center provisiona",
+        "why": "Essa role foi criada com a conta, pelo Organizations, antes de existir qualquer atribuição."
+      }
+    ]
+  },
+  "ex-g2fz0z9s": {
+    "prompt": "Qual é a sessão mais longa, em horas, que a AWS aceita para um permission set?",
+    "hint": "A seção dá o intervalo.",
+    "unit": "horas"
+  },
+  "ex-74j1nkmz": {
+    "prompt": "O `caio` abre `shop-prod` com `ReadOnly`: `ReadOnlyAccess` mais o deny inline de `s3:GetObject` em `shop-backups/*`. Ele consegue baixar um backup?",
+    "hint": "A primeira regra de avaliação da lição 8.",
+    "choices": [
+      {
+        "text": "Sim: `ReadOnlyAccess` permite `s3:GetObject` em todo lugar",
+        "why": "Ela permite, e um deny explícito vence qualquer allow. O allow não é o fim da avaliação."
+      },
+      {
+        "text": "Não: o deny explícito vence o allow gerenciado",
+        "why": "Isso. Ele ainda consegue listar o bucket, já que só o `GetObject` é recusado."
+      },
+      {
+        "text": "Só pelo console, onde políticas inline não são aplicadas",
+        "why": "O console assina as mesmas requisições com a mesma role. O deny vale para todo cliente."
+      },
+      {
+        "text": "Depende de qual política foi anexada primeiro",
+        "why": "A avaliação não tem ordem de anexação. Um deny explícito vence onde quer que esteja."
+      }
+    ]
+  },
+  "ex-y90263bx": {
+    "prompt": "Quais destes o moto 5.2.3 respondeu como a AWS responderia, nesta lição? Marque todos os que se aplicam.",
+    "hint": "As chamadas administrativas, e não o que decorre delas.",
+    "choices": [
+      {
+        "text": "Listar a instância do Identity Center e o identity store dela",
+        "why": "Isso. Ele até tinha uma antes de qualquer coisa ser criada."
+      },
+      {
+        "text": "Criar um permission set com uma política gerenciada e uma inline",
+        "why": "Isso. O `describe-permission-set` devolveu o nome e a duração da sessão."
+      },
+      {
+        "text": "Criar usuários, grupos e associações no identity store",
+        "why": "Isso. O `list-users` e o `list-groups` os devolveram com os ids."
+      },
+      {
+        "text": "Criar a role `AWSReservedSSO_` na conta atribuída",
+        "why": "Esse é o passo que o moto deixa de fora: a conta guardava só `OrganizationAccountAccessRole`."
+      },
+      {
+        "text": "Entrar com `aws sso login`",
+        "why": "O moto não tem serviço de login: a primeira requisição, `RegisterClient`, respondeu 500."
+      }
+    ]
+  },
+  "ex-kjx15w3a": {
+    "prompt": "No `~/.aws/config`, o que a seção `[sso-session shop]` guarda que a seção `[profile prod-readonly]` não guarda?",
+    "hint": "Uma seção é o login, a outra um destino.",
+    "choices": [
+      {
+        "text": "O id da conta e o nome do permission set a abrir nela",
+        "why": "Isso é o destino, e fica no perfil."
+      },
+      {
+        "text": "O endereço do portal, a região dele e o escopo",
+        "why": "Isso. Uma sessão serve a todo perfil que a nomeia, então um login abre todos eles."
+      },
+      {
+        "text": "Uma cópia do token em cache, renovada a cada login",
+        "why": "O token mora em `~/.aws/sso/cache/`, nunca no arquivo de configuração."
+      },
+      {
+        "text": "A chave de acesso com que a sessão assina",
+        "why": "Não há chave de acesso em lugar nenhum neste arranjo. Esse é o ponto dele."
+      }
+    ]
+  },
+  "ex-ks5aaafm": {
+    "prompt": "O `env.sh` exporta chaves de teste, mas `aws sts get-caller-identity --profile prod-readonly` para com `Error loading SSO Token` em vez de usá-las. Por quê?",
+    "hint": "Como o perfil foi nomeado?",
+    "choices": [
+      {
+        "text": "Porque as chaves de teste venceram quando o moto reiniciou",
+        "why": "`test` e `test` nunca vencem; são marcadores que o moto aceita até a verificação ser ligada."
+      },
+      {
+        "text": "Porque um perfil `sso-session` desliga todo outro provedor de vez, em todo terminal",
+        "why": "Nada é desligado de vez. Sem `--profile`, o mesmo terminal ainda usa as chaves de teste."
+      },
+      {
+        "text": "O `--profile` exclui da cadeia o que vem do ambiente",
+        "why": "Isso. A linha de comando fica só com o caminho do perfil, e esse caminho exige um login antes."
+      },
+      {
+        "text": "Porque o moto recusou as chaves para aquela conta",
+        "why": "Nenhuma requisição chegou ao moto. A linha de comando parou antes de enviar qualquer coisa."
+      }
+    ]
+  },
+  "ex-es032f6q": {
+    "prompt": "Ponha em ordem os passos do `aws sso login` contra a AWS, como a documentação da AWS os descreve.",
+    "hint": "O registro vem antes de alguém digitar qualquer coisa.",
+    "items": [
+      "a linha de comando se registra com `RegisterClient`",
+      "ela imprime um endereço e um código",
+      "a pessoa entra no provedor de identidade, com MFA",
+      "um token é escrito em `~/.aws/sso/cache/`",
+      "cada comando troca o token por credenciais da role"
+    ],
+    "trap": "O token só pode ir para o cache depois que a pessoa entrou e autorizou o acesso."
+  },
+  "ex-4kph9czd": {
+    "prompt": "`ReadOnly` tem `PT4H`, e a sessão do Identity Center dura oito horas. Cinco horas depois do `aws sso login`, o `caio` roda um comando com `prod-readonly`. O que acontece?",
+    "hint": "Dois relógios, e só um deles acabou.",
+    "choices": [
+      {
+        "text": "A linha de comando pede que ele rode `aws sso login` de novo",
+        "why": "Isso acontece quando a sessão do Identity Center acaba, às oito horas. Faltam três."
+      },
+      {
+        "text": "O comando falha, já que quatro horas é o máximo que uma credencial pode durar",
+        "why": "Quatro horas limitam cada conjunto de credenciais da role, não o login. Dá para buscar novas."
+      },
+      {
+        "text": "Ela troca em silêncio o token em cache por um novo conjunto de credenciais da role, sem perguntar",
+        "why": "Isso. O primeiro conjunto venceu às quatro horas; o token ainda vale, então o provedor `sso` busca outro."
+      },
+      {
+        "text": "Ela recorre às chaves de teste que o `env.sh` exporta",
+        "why": "Com `--profile` as chaves do ambiente estão fora da cadeia, e aqui nem são necessárias."
+      }
+    ]
+  },
+  "ex-c4v1vft7": {
+    "prompt": "O `aws sso login` escreve o token em `~/.aws/sso/___/`, e o `aws sso logout` o remove.",
+    "hint": "O diretório em que a linha de comando procurou antes de alguém entrar.",
+    "blanks": [
+      {
+        "accept": [
+          "cache"
+        ]
+      }
+    ]
+  },
+  "ex-awac01y5": {
+    "prompt": "Ligue cada configuração do `~/.aws/config` da lição ao que ela nomeia.",
+    "hint": "Duas são da sessão, duas do perfil.",
+    "pairs": [
+      {
+        "left": "`sso_start_url`",
+        "right": "o endereço do portal de acesso"
+      },
+      {
+        "left": "`sso_region`",
+        "right": "onde o Identity Center vive"
+      },
+      {
+        "left": "`sso_account_id`",
+        "right": "a conta a abrir"
+      },
+      {
+        "left": "`sso_role_name`",
+        "right": "o permission set, pelo nome"
+      }
+    ],
+    "right_distractors": [
+      "o usuário do IAM com que entrar"
+    ]
+  },
+  "ex-63yh8gaz": {
+    "prompt": "A loja contrata o `edu`, terceirizado, por três meses para ler logs em `shop-staging`. Que arranjo segue esta lição?",
+    "hint": "Sair deve ser uma ação só.",
+    "choices": [
+      {
+        "text": "Um usuário do IAM em `shop-staging` com chave de acesso, apagado no fim do contrato",
+        "why": "Isso funciona até alguém esquecer a data, e a chave funciona de qualquer lugar até lá. Pessoas não estão na lista dos usuários do IAM."
+      },
+      {
+        "text": "Um usuário dele num grupo com `ReadOnly` em `shop-staging`, desativado no fim",
+        "why": "Isso. Ele entra com segundo fator, as sessões dele vencem, e desativá-lo encerra todo login futuro."
+      },
+      {
+        "text": "As credenciais da sessão `ReadOnly` da `bia`, compartilhadas com ele pelos três meses",
+        "why": "Elas vencem em horas, e o CloudTrail nomearia a `bia` por tudo o que ele fizesse."
+      },
+      {
+        "text": "Um permission set novo só para ele, atribuído em toda conta",
+        "why": "Ele precisa de uma conta, e `ReadOnly` já diz o que é ler. Toda conta é muito mais amplo que o pedido."
+      }
+    ]
+  },
+  "ex-dbtd80qp": {
+    "prompt": "O CloudTrail de `shop-staging` mostra um bucket apagado por `arn:aws:sts::132607488945:assumed-role/AWSReservedSSO_Developer_…/bia`. O que o ARN diz?",
+    "hint": "Leia do fim para o começo.",
+    "choices": [
+      {
+        "text": "Um usuário do IAM chamado `bia` em `shop-staging` o apagou com a chave dela",
+        "why": "O ARN de um usuário do IAM tem `:user/`. `assumed-role` significa uma sessão de role."
+      },
+      {
+        "text": "A role `Developer` foi editada antes pela `bia` para permitir a exclusão",
+        "why": "Nada no ARN fala de edição. A `PowerUserAccess` já permite apagar buckets."
+      },
+      {
+        "text": "A `bia`, logada pelo Identity Center, usou `Developer`",
+        "why": "Isso. A role é a `Developer` provisionada, alcançada pela atribuição do grupo, e a sessão leva o nome dela."
+      },
+      {
+        "text": "Alguém usou as credenciais da conta de gerenciamento logado como `bia`",
+        "why": "A conta no ARN é a de `shop-staging`, e a role pertence a ela."
+      }
+    ]
+  },
+  "ex-1p6yah89": {
+    "prompt": "Um desenvolvedor copia toda manhã as credenciais de vida curta do portal de acesso para o `~/.aws/credentials`. O que a lição oferece no lugar?",
+    "hint": "O mesmo trabalho, sem o arquivo.",
+    "choices": [
+      {
+        "text": "Um usuário do IAM, para as credenciais durarem mais",
+        "why": "Durar mais é o problema de uma chave, não a cura para copiar."
+      },
+      {
+        "text": "Uma duração de sessão maior no permission set",
+        "why": "Isso deixa o segredo copiado válido por mais tempo e mantém a cópia."
+      },
+      {
+        "text": "Um perfil `sso-session` e `aws sso login`",
+        "why": "Isso. Um login enche o cache, e todo comando busca sozinho credenciais novas da role."
+      },
+      {
+        "text": "`credential_process` apontando para a página do portal",
+        "why": "O `credential_process` roda um programa, e uma página web não é um. O provedor `sso` já faz isso direito."
+      }
+    ]
+  }
+}
