@@ -1,0 +1,1710 @@
+{
+ "ex-xhbbj7x4": {
+  "prompt": "Um requisito diz: \"95º percentil abaixo de 200 ms e erros abaixo de 1%, a 50 requisições por segundo sustentadas por 10 minutos, cronometrado no cliente, na máquina de staging.\" Qual das cinco partes falta?",
+  "hint": "Aula 1.",
+  "choices": [
+   {
+    "text": "A estatística comparada",
+    "why": "Ela está lá: o 95º percentil do tempo de resposta, e a taxa de erros."
+   },
+   {
+    "text": "A carga aplicada durante o patamar",
+    "why": "Ela está lá: 50 requisições por segundo."
+   },
+   {
+    "text": "Qual requisição está sendo cronometrada",
+    "why": "Isso. Sem a operação nomeada, o teste cronometra uma mistura de tudo, e a listagem barata esconde a reserva cara numa média só."
+   },
+   {
+    "text": "Quanto tempo, onde e cronometrado em que ponta",
+    "why": "Essas são as condições, e estão escritas: dez minutos, staging, cronometrado no cliente."
+   }
+  ]
+ },
+ "ex-4w93kg34": {
+  "prompt": "Um product owner escreve \"precisamos saber quando quebrar\". Qual versão dessa frase um teste conseguiria reprovar?",
+  "hint": "Aula 1.",
+  "choices": [
+   {
+    "text": "Plantão avisado em 5 min após erros passarem de 2%",
+    "why": "Isso. Nomeia uma estatística, um limite e um tempo, então um alerta atrasado, ou nenhum, a reprova."
+   },
+   {
+    "text": "Há dashboards montados para cada serviço antes do release",
+    "why": "Dashboards existirem não diz nada sobre alguém ficar sabendo, então nenhum resultado o reprovaria."
+   },
+   {
+    "text": "O time responde rápido a incidentes em produção",
+    "why": "\"Rápido\" é o adjetivo de novo, sem número por trás."
+   },
+   {
+    "text": "Uma linha de log é guardada para cada requisição que o sistema responde",
+    "why": "Guardar logs é sobre armazenamento; não nomeia limite nem prazo para alguém ser avisado."
+   }
+  ]
+ },
+ "ex-dq9s0qx3": {
+  "prompt": "Dois relatórios sobre GET /shows/{id} dizem \"p95 abaixo de 200 ms\". Um sustentou 50 requisições por segundo por dez minutos no staging, cronometrado no cliente; o outro rodou trinta segundos num notebook, cronometrado pelo log do servidor. O que se conclui?",
+  "hint": "Aula 1.",
+  "choices": [
+   {
+    "text": "O segundo confirma o primeiro, mais barato",
+    "why": "Uma execução mais curta, em outra máquina, cronometrada na outra ponta, mediu outra coisa."
+   },
+   {
+    "text": "A execução no notebook é a mais rigorosa, por ser uma máquina menor",
+    "why": "O log do servidor deixa de fora a rede e o cliente, então lê menos, o contrário de rigoroso."
+   },
+   {
+    "text": "O primeiro é redundante, já que os dois passam",
+    "why": "Passar em dois testes diferentes não é passar duas vezes no mesmo."
+   },
+   {
+    "text": "São afirmações diferentes, e uma não confirma a outra",
+    "why": "Isso. As condições fazem parte do requisito: duração, máquina e onde fica o relógio mudam o que foi medido."
+   }
+  ]
+ },
+ "ex-17capqta": {
+  "prompt": "python3 app.py para com \"OSError: [Errno 98] Address already in use\". Qual é a causa mais provável, e o que você roda primeiro?",
+  "hint": "Aula 1.",
+  "choices": [
+   {
+    "text": "O banco está travado; apague data/boxoffice.db",
+    "why": "Um banco travado levanta um erro do SQLite, não de bind, e apagar dados não é diagnóstico."
+   },
+   {
+    "text": "Um app.py anterior ainda ocupa a porta 8000",
+    "why": "Isso. Quase sempre é um servidor esquecido em outro terminal, e o ss diz qual processo parar."
+   },
+   {
+    "text": "Falta um pacote; rode o apt-get install de novo",
+    "why": "O traceback termina em bind(), que é sobre a porta, não sobre pacotes."
+   },
+   {
+    "text": "A VM perdeu a rede; reinicie-a",
+    "why": "O servidor escuta em 127.0.0.1 e não precisa de rede para fazer o bind."
+   }
+  ]
+ },
+ "ex-8n906tfq": {
+  "prompt": "Um teste de soak sustenta a carga esperada por doze horas, e o 95º percentil fica abaixo do limite a noite inteira. Quais destes ainda são achados? Marque todos que forem.",
+  "hint": "Aula 2.",
+  "choices": [
+   {
+    "text": "A memória do servidor sobe sem parar da primeira hora à última",
+    "why": "Isso. Um soak se lê como tendência, e memória que cresce é a deriva que ele existe para achar."
+   },
+   {
+    "text": "As conexões abertas com o banco crescem de 20 para 400",
+    "why": "Isso. Conexões abertas e não devolvidas estão entre as coisas que se acumulam."
+   },
+   {
+    "text": "Uma consulta de reservas é mais lenta na hora doze do que na hora um, embora dentro do limite",
+    "why": "Isso. Uma tabela que cresce a cada requisição deixa a consulta seguinte mais lenta; a última hora devia parecer a primeira."
+   },
+   {
+    "text": "O uso de processador fica perto de 30% do começo ao fim",
+    "why": "Uma linha reta é o que um soak espera ver."
+   }
+  ]
+ },
+ "ex-1x4zcks0": {
+  "prompt": "Um time quer um número: a maior vazão que a sua máquina do tamanho da produção sustenta dentro do requisito. Não pretende mudar a máquina. Que teste é esse?",
+  "hint": "Aula 2.",
+  "choices": [
+   {
+    "text": "Um teste de escalabilidade",
+    "why": "Esse compara capacidades entre configurações, e este time fica com uma configuração."
+   },
+   {
+    "text": "Um teste de soak durante a noite",
+    "why": "Um soak sustenta a carga esperada por horas para observar deriva; não procura um teto."
+   },
+   {
+    "text": "Um teste de capacidade",
+    "why": "Isso. Capacidade é um número sobre uma configuração; escalabilidade é como ele se move quando a configuração muda."
+   },
+   {
+    "text": "Um teste de pico do normal a dez vezes o normal",
+    "why": "Um pico salta e volta, para ver sobrevivência e recuperação, não a maior taxa sustentada."
+   }
+  ]
+ },
+ "ex-mxzjg6rd": {
+  "prompt": "Uma escada de estresse acha o ponto de ruptura em 300 requisições por segundo, seis vezes as 50 esperadas, e o servidor se recupera quando a carga cai. Os logs mostram que, a 280 por segundo, dois clientes compraram o mesmo assento. Como se lê o teste?",
+  "hint": "Aula 2.",
+  "choices": [
+   {
+    "text": "Reprovado: um assento vendido duas vezes sob pressão",
+    "why": "Isso. Um teste de estresse reprova quando o jeito está errado, como dados corrompidos sob carga, seja qual for o ponto de ruptura."
+   },
+   {
+    "text": "Aprovado, com margem de seis vezes a carga esperada",
+    "why": "A margem é um achado; não desculpa um defeito."
+   },
+   {
+    "text": "Aprovado, porque um teste de estresse não tem nota de corte",
+    "why": "Não tem nota de corte sobre onde quebra; o jeito de quebrar ainda o reprova."
+   },
+   {
+    "text": "Inconclusivo até rodar um teste de carga a 50 por segundo",
+    "why": "Um teste de carga responde outra pergunta, e a venda dupla já aconteceu."
+   }
+  ]
+ },
+ "ex-fe372rg4": {
+  "prompt": "Ligue cada formato de carga no tempo ao teste a que pertence.",
+  "hint": "Aula 2.",
+  "pairs": [
+   {
+    "left": "Uma rampa, um longo patamar na carga esperada, uma descida",
+    "right": "Carga"
+   },
+   {
+    "left": "Degraus que continuam subindo além da carga esperada",
+    "right": "Estresse"
+   },
+   {
+    "left": "Normal, um salto súbito a muitas vezes o normal, e de volta",
+    "right": "Pico"
+   },
+   {
+    "left": "A carga esperada, reta durante uma noite inteira",
+    "right": "Soak"
+   }
+  ],
+  "right_distractors": [
+   "Fumaça"
+  ]
+ },
+ "ex-qzbwj5td": {
+  "prompt": "Um ramp-up espalha a partida dos usuários virtuais por alguns segundos, para o teste não começar com um ___ que ninguém pediu.",
+  "hint": "Aula 3.",
+  "blanks": [
+   {
+    "accept": [
+     "pico",
+     "spike",
+     "surto"
+    ]
+   }
+  ]
+ },
+ "ex-n5he16ss": {
+  "prompt": "Uma venda traz 2.400 pessoas nos seus dois primeiros minutos, e cada visita dura 20 segundos. Pela lei de Little, mais ou menos quantas pessoas estão no site ao mesmo tempo nesses dois minutos?",
+  "hint": "Aula 3.",
+  "unit": "pessoas"
+ },
+ "ex-h1nrs1a0": {
+  "prompt": "Uma ferramenta de carga só manda a próxima requisição de cada usuário virtual depois que chega a resposta da anterior. O servidor congela três segundos uma vez na execução, e o relatório mostra uma requisição lenta e um p99 de 9 ms. O que aconteceu?",
+  "hint": "Aula 3.",
+  "choices": [
+   {
+    "text": "Três segundos é pouco para mexer num percentil",
+    "why": "Numa taxa de chegada, três segundos atrasariam cada requisição prevista neles; a ferramenta fechada não as mandou."
+   },
+   {
+    "text": "O servidor enfileirou as requisições e respondeu em ordem",
+    "why": "Nada foi enfileirado: a ferramenta tinha parado de pedir."
+   },
+   {
+    "text": "O p99 está certo, já que havia uma requisição em andamento na hora",
+    "why": "Havia uma requisição em andamento porque a ferramenta esperou; chegadas reais não esperam."
+   },
+   {
+    "text": "As requisições previstas no congelamento não saíram",
+    "why": "Isso. É a omissão coordenada: gerador e servidor combinam, sem querer, deixar o momento ruim de fora."
+   }
+  ]
+ },
+ "ex-b7cg974r": {
+  "prompt": "O gerador aberto da aula 3, a 150 por segundo, manteve sent em 150 enquanto done ficava abaixo e respostas continuavam chegando depois do fim. Um teste fechado com 150 usuários e sem think time, contra o mesmo servidor, mostraria o quê?",
+  "hint": "Aula 3.",
+  "choices": [
+   {
+    "text": "A mesma fila crescendo, já que o número de usuários bate com a taxa",
+    "why": "Usuários não são uma taxa: cada um espera a resposta, então a fila para em 150."
+   },
+   {
+    "text": "Tempos maiores, e vazão parada no que ele termina",
+    "why": "Isso. O modelo fechado recua com o servidor: a lentidão aparece como tempo de resposta, não como fila crescendo."
+   },
+   {
+    "text": "Mais erros, porque usuários em laço apertam mais que chegadas",
+    "why": "Um usuário fechado não manda nada novo enquanto espera; ele alivia."
+   },
+   {
+    "text": "Exatamente 150 requisições por segundo, uma de cada usuário",
+    "why": "Cada usuário manda uma por tempo de resposta, então a taxa é 150 sobre R, e cai quando R cresce."
+   }
+  ]
+ },
+ "ex-jarnr19j": {
+  "prompt": "No plano da aula 4, a Response Assertion que procura \"left\" sai de dentro de GET /shows/{id} e vai para o nível do thread group, ao lado do timer. O que acontece na próxima execução?",
+  "hint": "Aula 4.",
+  "choices": [
+   {
+    "text": "Nada muda: uma asserção confere o sampler que vem antes dela",
+    "why": "O escopo é decidido pelo nível na árvore, não pela posição."
+   },
+   {
+    "text": "A asserção roda uma vez por thread, na partida",
+    "why": "Asserções conferem amostras; não rodam sozinhas."
+   },
+   {
+    "text": "As amostras de GET /shows também falham, já que a lista não tem \"left\"",
+    "why": "Isso. No nível do grupo a asserção vale para os dois samplers, e a lista de espetáculos não tem esse campo."
+   },
+   {
+    "text": "O JMeter se recusa a carregar o plano",
+    "why": "Uma asserção nesse nível é válida; ela vale para mais coisas."
+   }
+  ]
+ },
+ "ex-eeytptng": {
+  "prompt": "No .jtl de uma execução, o Connect fica em uns 17 ms de mais ou menos 25 ms de elapsed em cada linha, da primeira amostra à última. O que isso sugere?",
+  "hint": "Aula 4.",
+  "choices": [
+   {
+    "text": "O keep-alive está desligado",
+    "why": "Isso. Na execução da aula 4 uma thread pagou para conectar na primeira amostra, e as seguintes, na conexão mantida, gastaram 1 ms."
+   },
+   {
+    "text": "O banco demora a responder",
+    "why": "Connect é o tempo de abrir a conexão, antes de o servidor ler a requisição."
+   },
+   {
+    "text": "O timer de think time é contado dentro do elapsed",
+    "why": "Um timer espera antes do sampler, e a espera não faz parte da amostra."
+   },
+   {
+    "text": "A asserção soma 17 ms a cada amostra",
+    "why": "Uma asserção confere a resposta depois que ela chega; o Connect vem antes da requisição."
+   }
+  ]
+ },
+ "ex-031ca5ft": {
+  "prompt": "Uma segunda execução de jmeter -n -t plan.jmx -l results.jtl -e -o report/ para antes de começar. Qual é o motivo mais provável?",
+  "hint": "Aula 4.",
+  "choices": [
+   {
+    "text": "Um relatório HTML precisa da GUI aberta",
+    "why": "-e -o o monta no fim de uma execução sem GUI."
+   },
+   {
+    "text": "O plano não tem listener, então não há o que relatar",
+    "why": "O .jtl escrito pelo -l é o listener, e o relatório sai dele."
+   },
+   {
+    "text": "Vinte threads passam do heap padrão de uma segunda execução",
+    "why": "Vinte threads rodaram bem da primeira vez, e memória não tem nada a ver com o diretório."
+   },
+   {
+    "text": "report/ ainda guarda o dashboard da execução anterior",
+    "why": "Isso. O JMeter se recusa a escrever um relatório num diretório que já tem arquivos, então report/ é apagado antes."
+   }
+  ]
+ },
+ "ex-5y590w3h": {
+  "prompt": "Workers do JMeter rodam em máquinas próprias atrás de um firewall que abre a porta 1099, e as execuções distribuídas falham ao começar. Que configuração da aula 4 permite configurar o firewall para o RMI?",
+  "hint": "Aula 4.",
+  "choices": [
+   {
+    "text": "Mandar os usuários com -J em vez de -G",
+    "why": "-J define uma propriedade só no controlador; não tem nada a ver com portas."
+   },
+   {
+    "text": "Fixar o server.rmi.localport",
+    "why": "Isso. Com as duas portas conhecidas, o firewall deixa as duas passarem."
+   },
+   {
+    "text": "Copiar o shows.csv para o diretório de cada worker",
+    "why": "Um arquivo de dados ausente deixa um worker sem amostras, não recusa a conexão."
+   },
+   {
+    "text": "Ligar de novo a criptografia do RMI",
+    "why": "A criptografia muda como o tráfego viaja, não qual porta ele usa."
+   }
+  ]
+ },
+ "ex-zzrze42w": {
+  "prompt": "Ponha as etapas de uma execução do k6 na ordem em que acontecem.",
+  "hint": "Aula 5.",
+  "items": [
+   "O código de init roda, uma vez para cada usuário virtual",
+   "setup() roda uma vez e devolve os seus dados",
+   "A função default roda uma vez por iteração enquanto o cenário dura",
+   "O k6 compara os thresholds com as amostras que coletou",
+   "O k6 sai com 0, ou com 99 se um threshold foi cruzado"
+  ],
+  "trap": "setup() fica entre o código de init e a carga; o veredito precisa de todas as amostras, então vem no fim."
+ },
+ "ex-vp6wf2b6": {
+  "prompt": "Um teste do k6 precisa da lista de espetáculos uma vez, antes de a carga começar. Requisições são recusadas no código de init, então o lugar delas é uma função chamada ___().",
+  "hint": "Aula 5.",
+  "blanks": [
+   {
+    "accept": [
+     "setup"
+    ]
+   }
+  ]
+ },
+ "ex-1v2raeyf": {
+  "prompt": "Um script do k6 faz uma requisição no código de init, e o k6 para antes de qualquer carga. Que código de saída o k6 usa para esse erro no script?",
+  "hint": "Aula 5."
+ },
+ "ex-rrtfv3fn": {
+  "prompt": "O único threshold de um script do k6 é http_req_duration: ['p(95)<200']. Sob carga, o servidor passa a responder metade das requisições com um 503 em 3 ms. O que a execução relata?",
+  "hint": "Aula 5.",
+  "choices": [
+   {
+    "text": "Reprovada com saída 99, porque um 503 é erro",
+    "why": "Ele entra no http_req_failed, mas nenhum threshold lê essa métrica aqui."
+   },
+   {
+    "text": "Reprovada com saída 107, porque os checks quebraram",
+    "why": "107 é erro no script, e não há check envolvido."
+   },
+   {
+    "text": "Aprovada, saída 0: as falhas rápidas puxam o percentil para baixo",
+    "why": "Isso. A duração conta cada resposta, com falha ou não, e nada nas opções julga o http_req_failed."
+   },
+   {
+    "text": "Sem veredito, já que um percentil sobre requisições falhas é indefinido",
+    "why": "O percentil é calculado sobre as respostas, os 503 incluídos."
+   }
+  ]
+ },
+ "ex-tqfhy9va": {
+  "prompt": "Ligue cada ferramenta ao jeito como o seu teste diz reprovado.",
+  "hint": "Aula 6.",
+  "pairs": [
+   {
+    "left": "k6",
+    "right": "thresholds nas options, e código de saída 99"
+   },
+   {
+    "left": "Gatling",
+    "right": "assertions, e um build do Maven que falha com saída 1"
+   },
+   {
+    "left": "Locust",
+    "right": "um hook no quitting que define o código de saída"
+   },
+   {
+    "left": "JMeter",
+    "right": "asserções em cada resposta, com um veredito de percentil somado por cima"
+   }
+  ],
+  "right_distractors": [
+   "uma nota de 0 a 100 num relatório HTML"
+  ]
+ },
+ "ex-09g79wet": {
+  "prompt": "Um time escreve os seus serviços em Kotlin, e o requisito diz 40 requisições por segundo. Seguindo as perguntas da aula 6 na ordem, que ferramenta e que modelo servem primeiro?",
+  "hint": "Aula 6.",
+  "choices": [
+   {
+    "text": "Gatling, injetando usuários a uma taxa com injectOpen",
+    "why": "Isso. A DSL existe em Kotlin, e uma taxa é um modelo aberto, que o injectOpen diz diretamente."
+   },
+   {
+    "text": "Locust, com 40 usuários em laço",
+    "why": "Python não é a língua deste time, e 40 usuários em laço são uma população, não 40 requisições por segundo."
+   },
+   {
+    "text": "JMeter, já que uma janela dispensa linguagem de programação",
+    "why": "O diff do XML dele é uma página de atributos que ninguém revisa, o que a segunda pergunta da aula pesa contra."
+   },
+   {
+    "text": "k6 com constant-vus, já que JavaScript é muito lido",
+    "why": "Usuários em laço definem uma população, não uma taxa, e o time escreve Kotlin."
+   }
+  ]
+ },
+ "ex-vt6d2f2c": {
+  "prompt": "Um colega escreve um perfil de injeção do Gatling que sobe com rampUsersPerSec e depois mantém constantConcurrentUsers(50). O que há de errado?",
+  "hint": "Aula 6.",
+  "choices": [
+   {
+    "text": "rampUsersPerSec precisa de pelo menos um minuto de during()",
+    "why": "Qualquer duração serve; a rampa da aula durou cinco segundos."
+   },
+   {
+    "text": "constantConcurrentUsers é do Locust, não do Gatling",
+    "why": "É do Gatling, da família injectClosed."
+   },
+   {
+    "text": "Cinquenta usuários simultâneos pedem um segundo gerador de carga",
+    "why": "O número está bom; o problema é a mistura de modelos."
+   },
+   {
+    "text": "Mistura as famílias aberta e fechada",
+    "why": "Isso. Chegadas por segundo e usuários dentro ao mesmo tempo não dividem um perfil de injeção."
+   }
+  ]
+ },
+ "ex-4zjfje65": {
+  "prompt": "Uma execução do Locust imprime uma linha Aggregated com mediana de 20 ms. O requisito é sobre GET /shows/{id}. Por qual linha você o julga?",
+  "hint": "Aula 6.",
+  "choices": [
+   {
+    "text": "Aggregated, porque tem mais requisições",
+    "why": "Mais requisições de dois tipos é uma mistura, não uma amostra melhor."
+   },
+   {
+    "text": "A linha do GET: a agregada mistura duas operações",
+    "why": "Isso. A mediana dela fica entre os espetáculos e as reservas e não descreve nenhum dos dois."
+   },
+   {
+    "text": "A linha do POST, já que as reservas são as lentas",
+    "why": "As reservas são outra operação, não a que o requisito nomeia."
+   },
+   {
+    "text": "Qualquer uma: os percentis do Locust são aproximados de todo jeito",
+    "why": "O arredondamento é pequeno; misturar duas operações não é."
+   }
+  ]
+ },
+ "ex-8k73xy19": {
+  "prompt": "O Vegeta roda com -rate=300 e -max-workers=10 contra um servidor que responde em uns 200 ms. O que acontece com o modelo aberto dele?",
+  "hint": "Aula 7.",
+  "choices": [
+   {
+    "text": "Nada: o Vegeta mantém 300 por segundo, digam o que disserem as flags",
+    "why": "-max-workers limita as requisições em andamento, que é a flag que o faz deixar de manter a taxa."
+   },
+   {
+    "text": "Ele se recusa a começar, porque dez workers são poucos para 300",
+    "why": "Ele roda, mandando o que dez workers permitem."
+   },
+   {
+    "text": "Cai para uns 50 por segundo",
+    "why": "Isso. Com o limite atingido, uma requisição espera um worker, e o gerador se comporta como um fechado."
+   },
+   {
+    "text": "Ele sobe a taxa depois para compensar a diferença",
+    "why": "O Vegeta não recupera; o que não saiu na hora saiu atrasado ou não saiu."
+   }
+  ]
+ },
+ "ex-jw60bfbk": {
+  "prompt": "O Vegeta ataca com -rate=200 por -duration=10s e relata Success 90.00%. Quantas das suas requisições não tiveram resposta 2xx ou 3xx?",
+  "hint": "Aula 7.",
+  "unit": "requisições"
+ },
+ "ex-3ky1ypn4": {
+  "prompt": "Os testes de carga de um time serão revisados por gente de operações que lê arquivos de configuração todo dia e nenhuma linguagem de programação. Qual das seis ferramentas da aula 7 serve melhor para as jornadas?",
+  "hint": "Aula 7.",
+  "choices": [
+   {
+    "text": "Artillery, cujo teste é YAML",
+    "why": "Isso. Um cenário em YAML é lido por quem lê arquivos de configuração."
+   },
+   {
+    "text": "Gatling, já que a DSL dele parece uma descrição",
+    "why": "Ainda é uma classe em Java, Kotlin, Scala ou JavaScript."
+   },
+   {
+    "text": "Vegeta, uma linha por requisição",
+    "why": "Ele não tem jornada para escrever: nem fluxo, nem think time."
+   },
+   {
+    "text": "JMeter, montado numa janela",
+    "why": "O diff do XML dele é uma página de atributos que ninguém revisa."
+   }
+  ]
+ },
+ "ex-5etaanqt": {
+  "prompt": "A execução de ontem do Vegeta foi salva com tee results.bin. Hoje alguém quer o 99º percentil dela e um histograma com um bucket em 100 ms. O que você faz?",
+  "hint": "Aula 7.",
+  "choices": [
+   {
+    "text": "Rodar o ataque de novo, já que um relatório lê um fluxo ao vivo",
+    "why": "O vegeta report lê resultados de um arquivo tanto quanto de um pipe."
+   },
+   {
+    "text": "Abrir results.bin numa planilha",
+    "why": "É o formato binário do Vegeta; o próprio report o lê."
+   },
+   {
+    "text": "Estimar a partir do relatório em texto de ontem",
+    "why": "O relatório em texto não tinha bucket de 100 ms, e os resultados brutos ainda estão lá."
+   },
+   {
+    "text": "Rodar vegeta report sobre o arquivo salvo",
+    "why": "Isso. Resultados salvos podem ser relatados de novo em qualquer forma sem mandar uma requisição."
+   }
+  ]
+ },
+ "ex-04v0fjjv": {
+  "prompt": "O gerador A mandou 900 requisições com média de 20 ms; o gerador B mandou 100 requisições do mesmo teste com média de 120 ms. Qual é o tempo médio de resposta das 1.000, em ms?",
+  "hint": "Aula 8.",
+  "unit": "ms"
+ },
+ "ex-3qtzfe1x": {
+  "prompt": "Um requisito põe o 99º percentil abaixo de 300 ms, e o teste manda 300 requisições. Quais afirmações valem? Marque todas que valerem.",
+  "hint": "Aula 8.",
+  "choices": [
+   {
+    "text": "Pelo posto mais próximo, o p99 é a quarta requisição mais lenta",
+    "why": "Isso. 0,99 × 300 dá 297, e três requisições ficam acima da posição 297."
+   },
+   {
+    "text": "Três requisições acima do p99 são poucas para aprová-lo ou reprová-lo com honestidade",
+    "why": "Isso. Uma requisição azarada o move muito."
+   },
+   {
+    "text": "Para dez requisições além do p99, a execução precisa de umas mil",
+    "why": "Isso. Um percentil significa algo quando há valores acima dele."
+   },
+   {
+    "text": "Com 300 requisições o p99 é tão estável quanto o p95",
+    "why": "O p95 tem quinze requisições acima e o p99 três; o p99 se move muito mais entre execuções."
+   }
+  ]
+ },
+ "ex-5g6e2dbz": {
+  "prompt": "Ponha os passos do percentil pelo posto mais próximo em ordem.",
+  "hint": "Aula 8.",
+  "items": [
+   "Ordene os n tempos medidos do mais rápido ao mais lento",
+   "Multiplique p/100 por n",
+   "Arredonde essa posição para cima, até um número inteiro",
+   "Leia o valor nessa posição, contando a partir de 1"
+  ],
+  "trap": "Uma posição lida numa lista sem ordenar, ou arredondada para baixo, não é o valor daquele posto."
+ },
+ "ex-6znng3eq": {
+  "prompt": "Um teste de reserva manda apenas assentos que sabe estarem livres, e 4% das respostas são 409. O que diz o relatório?",
+  "hint": "Aula 8.",
+  "choices": [
+   {
+    "text": "Nada a relatar: um 409 é a bilheteria recusando venda dupla",
+    "why": "Isso vale num teste que reserva assentos aleatórios; este escolheu assentos livres."
+   },
+   {
+    "text": "Um defeito: a bilheteria recusou lugares vagos",
+    "why": "Isso. Se um 409 é correto depende do que o teste esperava antes da execução."
+   },
+   {
+    "text": "Acrescente 409 aos status esperados para a taxa de erros dar zero",
+    "why": "Isso esconde um defeito atrás de um callback de resposta."
+   },
+   {
+    "text": "Repita essas requisições, já que um 409 quer dizer que duas threads colidiram",
+    "why": "O teste afirma um comportamento; repetir deixaria o defeito invisível."
+   }
+  ]
+ },
+ "ex-ehwv1ww0": {
+  "prompt": "O teste de carga de outro servidor mostra mediana de 12 ms, p99 de 3.050 ms e máximo perto de 7 s, enquanto os tempos da própria aplicação não mostram requisição acima de 40 ms. Onde você olha primeiro?",
+  "hint": "Aula 9.",
+  "choices": [
+   {
+    "text": "As consultas mais lentas do banco",
+    "why": "A aplicação não viu nada lento; o tempo foi gasto antes de ela ver a requisição."
+   },
+   {
+    "text": "O disco, pela coluna wa do vmstat",
+    "why": "Um disco ocupado aparece nos tempos da própria aplicação, que aqui são curtos."
+   },
+   {
+    "text": "A fila de aceite",
+    "why": "Isso. Uma cauda perto de 1 s ou 3 s é a impressão digital de conexões repetidas, que a aplicação nunca viu."
+   },
+   {
+    "text": "O coletor de lixo do servidor",
+    "why": "Uma pausa apareceria nos tempos do servidor, e eles são curtos."
+   }
+  ]
+ },
+ "ex-dw683sqn": {
+  "prompt": "Depois que a fila de aceite passou de 5 para 128, a mediana com 32 workers subiu de 9,0 ms para 49,5 ms. Uma gerente chama isso de regressão. Qual é a resposta?",
+  "hint": "Aula 9.",
+  "choices": [
+   {
+    "text": "Agora os 32 são atendidos",
+    "why": "Isso. Menos requisições lá dentro deixavam a mediana antiga rápida; a lei de Little põe uns 32 lá dentro agora."
+   },
+   {
+    "text": "É regressão; volte para uma fila de 5",
+    "why": "A fila de 5 descartou 190 conexões em cinco segundos."
+   },
+   {
+    "text": "Mediana é ruído, e o que conta é o p99",
+    "why": "A mediana se mexeu por um motivo, e o motivo é o que importa."
+   },
+   {
+    "text": "O banco perdeu o índice quando foi recriado",
+    "why": "O tempo de banco ficou em fração de milissegundo nas duas execuções."
+   }
+  ]
+ },
+ "ex-gkttmash": {
+  "prompt": "Com 32 workers, o app_fixed.py fica perto de 116% de um processador numa VM de quatro, o measure.py perto de 23%, e a vazão para perto de 717 por segundo. Qual é a próxima correção?",
+  "hint": "Aula 9.",
+  "choices": [
+   {
+    "text": "Outro índice em bookings",
+    "why": "O banco já responde em fração de milissegundo."
+   },
+   {
+    "text": "Um segundo gerador de carga",
+    "why": "O gerador está em uns 23%; não é o gargalo."
+   },
+   {
+    "text": "Uma fila de aceite maior",
+    "why": "Nada está sendo descartado com 128."
+   },
+   {
+    "text": "Mais processos de servidor",
+    "why": "Isso. Um processo Python roda o seu código Python num processador por vez, então para perto de um."
+   }
+  ]
+ },
+ "ex-yh28kx3f": {
+  "prompt": "Uma reserva segura uma trava global enquanto chama um provedor de pagamento que leva 50 ms. No máximo quantas reservas bem-sucedidas por segundo esse servidor termina, seja qual for a carga?",
+  "hint": "Aula 9.",
+  "unit": "reservas/s"
+ },
+ "ex-2ekww5zt": {
+  "prompt": "Ligue cada defeito da página lenta da aula 10 ao número que o mostra.",
+  "hint": "Aula 10.",
+  "pairs": [
+   {
+    "left": "Um script simples no <head> que roda por 500 ms",
+    "right": "First Contentful Paint"
+   },
+   {
+    "left": "Uma imagem de 2,4 MB como a maior coisa da tela",
+    "right": "Largest Contentful Paint"
+   },
+   {
+    "left": "400 ms de trabalho depois que a página pinta pela primeira vez",
+    "right": "Total Blocking Time"
+   },
+   {
+    "left": "Um banner inserido um segundo depois de o resto ser desenhado",
+    "right": "Cumulative Layout Shift"
+   }
+  ],
+  "right_distractors": [
+   "Time to First Byte"
+  ]
+ },
+ "ex-5shbzzad": {
+  "prompt": "Depois da primeira pintura, a thread principal roda três tarefas de 120 ms, 80 ms e 40 ms. Qual é o Total Blocking Time delas, em ms?",
+  "hint": "Aula 10.",
+  "unit": "ms"
+ },
+ "ex-w8xa9w0b": {
+  "prompt": "Numa execução de laboratório ninguém toca em nada, por isso o Lighthouse relata o Total ___ Time onde o campo mede o INP.",
+  "hint": "Aula 10.",
+  "blanks": [
+   {
+    "accept": [
+     "Blocking"
+    ]
+   }
+  ]
+ },
+ "ex-exz1cheq": {
+  "prompt": "Um colega diz que uma mudança levou o LCP da página lenta de 13,1 s para 2,3 s. O configSettings dos relatórios mostra throttlingMethod \"simulate\" na execução antiga e \"provided\" na nova. O que você conclui?",
+  "hint": "Aula 10.",
+  "choices": [
+   {
+    "text": "A mudança consertou o LCP; as configurações mexem na nota e mais nada",
+    "why": "As configurações mudam cada tempo, o LCP acima de tudo."
+   },
+   {
+    "text": "Nada sobre a mudança ainda; rode as duas de novo com as mesmas configurações",
+    "why": "Isso. provided não aplica limitação, e a página lenta sem mudança leu 2,3 s desse jeito na aula 10."
+   },
+   {
+    "text": "A página piorou, já que provided é o método mais rigoroso",
+    "why": "provided é o mais frouxo: relata esta máquina pelo loopback."
+   },
+   {
+    "text": "O LCP melhorou, embora o CLS precise ser medido de novo",
+    "why": "O CLS é medido na carga real em qualquer método; a comparação de LCP é que está quebrada."
+   }
+  ]
+ },
+ "ex-76m4v5x7": {
+  "prompt": "Um gate faz cinco execuções do k6 contra um limite fixo e quer o veredito da execução mediana. Pelo menos quantas execuções precisam cruzar o limite para o gate reprovar?",
+  "hint": "Aula 11.",
+  "unit": "execuções"
+ },
+ "ex-2t2yh2ry": {
+  "prompt": "Um pull request acrescenta um script de 450 KB que roda depois de a página corrigida pintar. No laboratório, LCP e CLS não se mexem. Quais linhas da tabela do budget.py dizem OVER? Marque todas que disserem.",
+  "hint": "Aula 11.",
+  "choices": [
+   {
+    "text": "script bytes",
+    "why": "Isso. 450.000 bytes contra um limite de 50.000."
+   },
+   {
+    "text": "total bytes",
+    "why": "Isso. Uns 23.000 bytes antes, mais 450.000, passam do limite de 400.000."
+   },
+   {
+    "text": "total requests",
+    "why": "Quatro requisições contra um limite de quinze."
+   },
+   {
+    "text": "image bytes",
+    "why": "As imagens não mudaram."
+   }
+  ]
+ },
+ "ex-fmhv36q7": {
+  "prompt": "Para poupar trabalho, o gate de um time grava sozinho o p95 de cada execução aceita no baseline.json. Quanto isso custa?",
+  "hint": "Aula 11.",
+  "choices": [
+   {
+    "text": "Nada: a execução mais nova é a melhor linha de base que há",
+    "why": "A execução mais nova carrega o ruído dela e qualquer regressão que tenha."
+   },
+   {
+    "text": "Mais reprovações, porque o limite fica mais rígido",
+    "why": "Cada execução mais lenta sobe o limite, então o gate reprova menos, pelo motivo errado."
+   },
+   {
+    "text": "A linha de base acompanha cada regressão, então uma deriva lenta não é pega",
+    "why": "Isso. Uma linha de base renovada pela última execução sobe a cada pequena lentidão; ela é renovada de propósito."
+   },
+   {
+    "text": "O k6 recusa um arquivo de linha de base que não escreveu",
+    "why": "O script abre o JSON que receber."
+   }
+  ]
+ },
+ "ex-ze0dymy1": {
+  "prompt": "Um endpoint responde em uns 2 ms, e três execuções do mesmo código leram p95 de 2,1, 3,2 e 3,4 ms. Alguém propõe uma tolerância de 10% sobre a linha de base, sem parte absoluta. O que o gate vai fazer?",
+  "hint": "Aula 11.",
+  "choices": [
+   {
+    "text": "Reprovar mudanças boas: a variação entre execuções é bem maior que 10%",
+    "why": "Isso. A tolerância tem de ser maior que o ruído, e num endpoint rápido o ruído se mede em milissegundos."
+   },
+   {
+    "text": "Pegar regressões reais mais cedo, sem custo",
+    "why": "Pega ruído também, e um gate vermelho por nada passa a ser ignorado."
+   },
+   {
+    "text": "Aprovar quase tudo, já que 10% de 2 ms é minúsculo",
+    "why": "Uma folga minúscula reprova mais, não menos."
+   },
+   {
+    "text": "Se comportar como os 50% mais 5 ms da aula 11",
+    "why": "Aquela é mais larga que a variação de 60%; esta é bem mais estreita."
+   }
+  ]
+ },
+ "ex-ncjw3ebt": {
+  "prompt": "Ponha as três camadas da WCAG em ordem, da mais externa até a que um teste aprova ou reprova.",
+  "hint": "Aula 12.",
+  "items": [
+   "Princípio",
+   "Diretriz",
+   "Critério de sucesso"
+  ],
+  "trap": "Uma diretriz é um objetivo sem nível; os critérios dentro dela é que aprovam ou reprovam."
+ },
+ "ex-0da91kgt": {
+  "prompt": "Na WCAG 2.2, quantos critérios de sucesso, dos níveis A e AA juntos, uma página precisa atender para estar conforme no nível AA?",
+  "hint": "Aula 12.",
+  "unit": "critérios"
+ },
+ "ex-zc2vjtp3": {
+  "prompt": "Uma pequena loja online tem sede em São Paulo e vende ao público. Que regra obriga o site dela?",
+  "hint": "Aula 12.",
+  "choices": [
+   {
+    "text": "O eMAG 3.1, o modelo do governo federal",
+    "why": "O eMAG obriga os sites do próprio governo; uma loja privada atende à LBI."
+   },
+   {
+    "text": "A Section 508, por meio de contratos públicos",
+    "why": "Isso é compra pública federal dos Estados Unidos."
+   },
+   {
+    "text": "A EN 301 549, por meio do European Accessibility Act",
+    "why": "Isso alcança produtos e serviços vendidos na UE."
+   },
+   {
+    "text": "A Lei Brasileira de Inclusão, artigo 63",
+    "why": "Isso. Cobre os sites de empresas com sede no país, lida como apontando para a WCAG."
+   }
+  ]
+ },
+ "ex-dhjefkzn": {
+  "prompt": "Uma designer diz que #777777 no branco parece igual a #767676 e usa a cor no texto do corpo, de 16 pixels. O que o testador relata?",
+  "hint": "Aula 12.",
+  "choices": [
+   {
+    "text": "Nenhum achado, já que o olho não distingue as duas",
+    "why": "A razão é calculada a partir das cores, não julgada a olho."
+   },
+   {
+    "text": "Uma falha do 1.4.3: mede 4,48:1",
+    "why": "Isso. A razão fica abaixo de 4,5; #767676, com 4,54:1, é o cinza mais claro que passa no branco."
+   },
+   {
+    "text": "Aprovado em AA para texto grande, que cobre o texto do corpo",
+    "why": "Texto normal de dezesseis pixels é texto comum; grande começa perto de 24 px, ou 18,7 px em negrito."
+   },
+   {
+    "text": "Uma falha do 1.4.11, o contraste do que não é texto",
+    "why": "O 1.4.11 cobre bordas, anéis de foco e ícones; isto é texto, que é o 1.4.3."
+   }
+  ]
+ },
+ "ex-5rzw6e1t": {
+  "prompt": "Quais destes uma regra do axe consegue decidir a partir do documento sozinho? Marque todos que ela consegue.",
+  "hint": "Aula 13.",
+  "choices": [
+   {
+    "text": "Um <img> não tem atributo alt",
+    "why": "Isso. O atributo está lá ou não está."
+   },
+   {
+    "text": "Uma cor de texto mede 2,84:1 sobre o seu fundo",
+    "why": "Isso. Duas cores calculadas têm uma razão, acima ou abaixo da linha."
+   },
+   {
+    "text": "O <html> não tem atributo lang",
+    "why": "Isso. Um fato sobre a marcação."
+   },
+   {
+    "text": "O texto alternativo diz o que a imagem mostra",
+    "why": "Uma regra confere que existe um nome, não que ele esteja certo."
+   },
+   {
+    "text": "O foco está visível depois de outline: none",
+    "why": "A página pode desenhar o foco de outro jeito, então nenhuma regra distingue um indicador ausente de um diferente."
+   }
+  ]
+ },
+ "ex-p1yx3tm4": {
+  "prompt": "Para chegar rápido ao nível A, um time planeja corrigir os achados que o axe marca como critical e deixar o resto. O que há de errado no plano?",
+  "hint": "Aula 13.",
+  "choices": [
+   {
+    "text": "Achados critical são AAA, então o plano mira alto demais",
+    "why": "O impacto não diz nada sobre o nível; image-alt é critical e nível A."
+   },
+   {
+    "text": "O axe não tem níveis de impacto; o Lighthouse é que os acrescenta",
+    "why": "O próprio axe marca cada violação como minor, moderate, serious ou critical."
+   },
+   {
+    "text": "Impacto não é nível da WCAG",
+    "why": "Isso. Triar por impacto deixa intocadas falhas de nível A marcadas como serious."
+   },
+   {
+    "text": "Nada; critical e nível A são a mesma lista",
+    "why": "html-has-lang é serious e nível A, então as listas diferem."
+   }
+  ]
+ },
+ "ex-fwhs35ej": {
+  "prompt": "Um rodapé fixo cobre por inteiro o botão Book quando quem usa teclado chega nele com Tab, e o audit.js imprime 0 violações. Por que nenhuma regra relatou?",
+  "hint": "Aula 13.",
+  "choices": [
+   {
+    "text": "O 2.4.11 não tem regra no axe",
+    "why": "Isso. A tag wcag22aa tem uma regra, target-size; Focus Not Obscured não tem nenhuma."
+   },
+   {
+    "text": "As cores do rodapé passam no 1.4.3",
+    "why": "Contraste é outro critério, e não diz nada sobre cobrir."
+   },
+   {
+    "text": "O axe pula elementos com position: fixed",
+    "why": "Não pula; só não tem regra para esse critério."
+   },
+   {
+    "text": "O 2.4.11 é nível AAA, fora das cinco tags do audit.js",
+    "why": "O 2.4.11 é AA; o AAA é o 2.4.12."
+   }
+  ]
+ },
+ "ex-arsrfac8": {
+  "prompt": "Ligue cada ferramenta ao lugar onde ela põe a resposta.",
+  "hint": "Aula 13.",
+  "pairs": [
+   {
+    "left": "axe num script do Playwright",
+    "right": "uma lista de violações e um código de saída"
+   },
+   {
+    "left": "a categoria de acessibilidade do Lighthouse",
+    "right": "uma nota de 0 a 100 e as auditorias que falharam"
+   },
+   {
+    "left": "WAVE",
+    "right": "ícones desenhados na página ao lado de cada elemento"
+   },
+   {
+    "left": "o painel de acessibilidade do DevTools",
+    "right": "o papel e o nome calculados de um elemento"
+   }
+  ],
+  "right_distractors": [
+   "uma gravação do que um leitor de tela disse"
+  ]
+ },
+ "ex-cq6a665q": {
+  "prompt": "Ponha os passos da passada manual de teclado de cinco minutos em ordem.",
+  "hint": "Aula 14.",
+  "items": [
+   "Clique na barra de endereço e aperte Tab uma vez",
+   "Continue apertando Tab, conferindo a ordem e que o foco segue visível",
+   "Opere cada controle com Enter, Espaço, as setas ou Esc",
+   "Complete a tarefa para a qual a página existe",
+   "Volte pela página com Shift+Tab"
+  ],
+  "trap": "A tarefa vem depois de cada controle ter sido encontrado; a volta confere a ordem de trás para frente no fim."
+ },
+ "ex-y40zr6fq": {
+  "prompt": "Num formulário de pagamento, cada um de três botões de rádio ocupa uma parada de Tab, e as setas não fazem nada. O que está errado?",
+  "hint": "Aula 14.",
+  "choices": [
+   {
+    "text": "Nada: Tab é como o teclado anda entre opções",
+    "why": "Tab anda entre controles; dentro de um widget quem anda são as setas."
+   },
+   {
+    "text": "Os botões precisam de tabindex=\"1\" para virem primeiro",
+    "why": "Um tabindex positivo reordena a página inteira e não conserta nada aqui."
+   },
+   {
+    "text": "Botões de rádio respondem ao Espaço, então as setas são opcionais",
+    "why": "As setas são o jeito esperado de andar dentro de um grupo."
+   },
+   {
+    "text": "Um grupo de rádio é uma parada de Tab, e as setas escolhem dentro dele",
+    "why": "Isso. Pôr cada opção na ordem de Tab transforma um grupo longo numa parede de Tabs."
+   }
+  ]
+ },
+ "ex-qvv41tyy": {
+  "prompt": "Num formulário de comentários, um editor de texto rico insere um caractere de tabulação quando se aperta Tab e não oferece ao teclado outra saída. Que critério falha?",
+  "hint": "Aula 14.",
+  "choices": [
+   {
+    "text": "2.4.3 Focus Order",
+    "why": "A ordem não é o problema; sair é."
+   },
+   {
+    "text": "2.1.2 No Keyboard Trap",
+    "why": "Isso. Se o teclado consegue pôr o foco dentro, tem de conseguir tirá-lo."
+   },
+   {
+    "text": "2.4.7 Focus Visible",
+    "why": "O foco poderia estar perfeitamente visível dentro da armadilha."
+   },
+   {
+    "text": "2.4.1 Bypass Blocks",
+    "why": "Esse é sobre pular blocos repetidos, não sobre escapar de um widget."
+   }
+  ]
+ },
+ "ex-9hr62rw9": {
+  "prompt": "Enquanto quem usa teclado desce com Tab, um cabeçalho fixo esconde a metade de cima do link focado, e a metade de baixo continua visível. Como isso fica diante da WCAG 2.2?",
+  "hint": "Aula 14.",
+  "choices": [
+   {
+    "text": "Falha no 2.4.11 em AA",
+    "why": "O 2.4.11 falha quando o controle fica escondido por inteiro, e aqui metade aparece."
+   },
+   {
+    "text": "Falha no 2.4.7 Focus Visible",
+    "why": "O indicador existe; parte dele está coberta."
+   },
+   {
+    "text": "Atende ao 2.4.11 em AA e falha no 2.4.12 em AAA",
+    "why": "Isso. O mínimo vale enquanto parte do controle aparece; a versão AAA pede que nada dele fique escondido."
+   },
+   {
+    "text": "Atende também ao 2.4.12",
+    "why": "O 2.4.12 pede que nenhuma parte do controle fique escondida."
+   }
+  ]
+ },
+ "ex-kx6hq22v": {
+  "prompt": "Quando um salvamento termina, uma página acrescenta <p role=\"status\">Salvo</p> ao documento, elemento e texto juntos. Quem usa leitor de tela diz que não ouve nada. Por quê?",
+  "hint": "Aula 15.",
+  "choices": [
+   {
+    "text": "A região chegou junto com o texto",
+    "why": "Isso. A região tem de estar lá, vazia, antes de a mensagem chegar."
+   },
+   {
+    "text": "status é educado demais para ser anunciado; precisa de alert",
+    "why": "Regiões educadas são anunciadas quando o leitor termina; o problema é a região chegar tarde."
+   },
+   {
+    "text": "Uma palavra é curta demais para um leitor anunciar",
+    "why": "O tamanho não tem nada a ver com isso."
+   },
+   {
+    "text": "Mensagens de status são um critério AAA que os leitores pulam",
+    "why": "O 4.1.3 Status Messages é AA, e os leitores anunciam regiões de status."
+   }
+  ]
+ },
+ "ex-nvsc32mn": {
+  "prompt": "Um campo de e-mail não tem <label> nem aria-label, e tem placeholder=\"Email\". O que o testador anota?",
+  "hint": "Aula 15.",
+  "choices": [
+   {
+    "text": "Nenhum problema: o placeholder é a fonte nativa do nome",
+    "why": "A fonte nativa é o <label>; o placeholder é o último recurso."
+   },
+   {
+    "text": "O campo não tem nome acessível algum",
+    "why": "O cálculo recorre ao placeholder, então ele tem um nome fraco."
+   },
+   {
+    "text": "Um aria-label ficaria abaixo do placeholder",
+    "why": "O aria-label é consultado antes da fonte nativa e antes do placeholder."
+   },
+   {
+    "text": "O nome vem do placeholder, o último recurso",
+    "why": "Isso. Um <label> de verdade ligado ao campo é a fonte a buscar."
+   }
+  ]
+ },
+ "ex-4p70z4ag": {
+  "prompt": "Uma página de reserva mostra \"Seus assentos estão guardados por mais 2 minutos\", atualizado a cada minuto enquanto a pessoa preenche o formulário. Como essa região é marcada?",
+  "hint": "Aula 15.",
+  "choices": [
+   {
+    "text": "role=\"alert\", para cada atualização interromper na hora",
+    "why": "Interromper quem está digitando a cada minuto é a urgência errada; alert é para um erro a resolver agora."
+   },
+   {
+    "text": "role=\"status\": anunciada quando o leitor termina, sem interromper",
+    "why": "Isso. Informa um estado sem mover o foco, que é o 4.1.3, com urgência educada."
+   },
+   {
+    "text": "Sem região viva; a pessoa lê quando chegar nela",
+    "why": "O 4.1.3 pede que uma mensagem de status seja anunciada sem mover o foco."
+   },
+   {
+    "text": "aria-invalid no formulário enquanto o tempo corre",
+    "why": "aria-invalid é um estado de campo, não uma mensagem."
+   }
+  ]
+ },
+ "ex-9n21t3zb": {
+  "prompt": "Os dados de uso mostram que a maioria dos clientes de um teatro reserva pelo iPhone. Que par o roteiro de leitor de tela nomeia primeiro?",
+  "hint": "Aula 15.",
+  "choices": [
+   {
+    "text": "NVDA com Firefox",
+    "why": "Um par de desktop Windows, certo para quem usa desktop e não para estes."
+   },
+   {
+    "text": "TalkBack com Chrome",
+    "why": "Isso é Android."
+   },
+   {
+    "text": "VoiceOver com Safari",
+    "why": "Isso. Quais leitores testar é uma pergunta sobre usuários, e o par importa tanto quanto o leitor."
+   },
+   {
+    "text": "Narrator com Edge",
+    "why": "Embutido no Windows, não num telefone."
+   }
+  ]
+ },
+ "ex-xrxjm1ay": {
+  "prompt": "Um time quer achados de segurança com a linha de código junto, produzidos enquanto os seus testes funcionais rodam. Que tipo de ferramenta é essa?",
+  "hint": "Aula 16.",
+  "choices": [
+   {
+    "text": "IAST",
+    "why": "Isso. Um agente dentro do processo observa o que os testes o fazem fazer, linha a linha."
+   },
+   {
+    "text": "SAST",
+    "why": "O SAST lê o código-fonte sem rodá-lo."
+   },
+   {
+    "text": "DAST",
+    "why": "O DAST manda requisições de fora e não sabe nada do código."
+   },
+   {
+    "text": "SCA",
+    "why": "O SCA lê a lista de dependências."
+   }
+  ]
+ },
+ "ex-v6cjqw95": {
+  "prompt": "O escopo publicado de um programa de bug bounty lista o site de reservas de uma empresa. Um pesquisador quer sondar o provedor de pagamento que esse site chama. O que vale?",
+  "hint": "Aula 16.",
+  "choices": [
+   {
+    "text": "Está no escopo, porque o site de reservas depende dele",
+    "why": "Depender de um serviço não o põe no escopo de ninguém."
+   },
+   {
+    "text": "É permitido se cada sonda for inofensiva",
+    "why": "Inofensiva ou não, testar sem permissão é crime."
+   },
+   {
+    "text": "É permitido a partir do staging, em geral no escopo",
+    "why": "O staging é da empresa; o provedor não é."
+   },
+   {
+    "text": "Está fora do escopo: o provedor tem outro dono, cuja política decide",
+    "why": "Isso. Um bounty dá permissão dentro do escopo publicado, e a política do terceiro decide o que dele pode ser testado."
+   }
+  ]
+ },
+ "ex-0mmtsh0p": {
+  "prompt": "Um teste de segurança afirma que um cliente recebe 403 em /staff/bookings, e mais nada. Uma refatoração quebra a rota para todo mundo, equipe incluída, com um 403. O que a suíte diz?",
+  "hint": "Aula 16.",
+  "choices": [
+   {
+    "text": "Vermelho, porque a equipe também é recusada",
+    "why": "Nenhum teste pergunta como alguém da equipe."
+   },
+   {
+    "text": "Verde: falta um controle de equipe que espere 200",
+    "why": "Isso. Um teste só de recusa passa quando a rota quebra para todo mundo, e rota quebrada não é defesa."
+   },
+   {
+    "text": "Vermelho, porque 403 é um status de erro",
+    "why": "403 é exatamente o que o teste espera."
+   },
+   {
+    "text": "Nenhum dos dois: o unittest pula rotas que recusam",
+    "why": "O unittest roda o teste; ele simplesmente passa."
+   }
+  ]
+ },
+ "ex-7ccx21v4": {
+  "prompt": "Um teste de intrusão anual acha um jeito de cancelar a reserva de outro cliente, e os desenvolvedores corrigem. O que o testador acrescenta?",
+  "hint": "Aula 16.",
+  "choices": [
+   {
+    "text": "Uma nota para repetir essa sonda no teste do ano que vem",
+    "why": "Um ano é muito tempo; um teste de regressão vigia cada mudança."
+   },
+   {
+    "text": "Uma varredura DAST, que acha o mesmo defeito",
+    "why": "Nenhum scanner sabe de quem é a reserva."
+   },
+   {
+    "text": "Um teste de regressão que falha se a correção sumir",
+    "why": "Isso. Cada achado, uma vez corrigido, vira um teste, e o próximo teste de intrusão é gasto em algo novo."
+   },
+   {
+    "text": "O próprio relatório, que é o registro duradouro",
+    "why": "O relatório descreve o sistema como ele era naquela quinzena."
+   }
+  ]
+ },
+ "ex-jx5mcqca": {
+  "prompt": "Sondar um sistema que não é seu é crime sem a ___ por escrito do dono.",
+  "hint": "Aula 16.",
+  "blanks": [
+   {
+    "accept": [
+     "permissão",
+     "autorização",
+     "consentimento"
+    ]
+   }
+  ]
+ },
+ "ex-r7694nxy": {
+  "prompt": "A página de estorno da equipe não tem link em nenhuma tela de cliente, e quem a desenvolveu chama isso de proteção. Que teste o testador escreve?",
+  "hint": "Aula 17.",
+  "choices": [
+   {
+    "text": "Uma sonda de escalada vertical",
+    "why": "Isso. Link ausente não é tranca; duas contas, uma requisição, e uma recusa com um controle ao lado."
+   },
+   {
+    "text": "Horizontal: um cliente lê o estorno de outro",
+    "why": "Esse é o mesmo papel alcançando outros dados; aqui é um papel sendo alcançado."
+   },
+   {
+    "text": "Nenhum: uma página sem link não é achada",
+    "why": "Digitar o endereço acha; essa é a sonda."
+   },
+   {
+    "text": "Uma varredura DAST da página",
+    "why": "Um scanner não sabe quem tem permissão."
+   }
+  ]
+ },
+ "ex-ez14hmak": {
+  "prompt": "Para depurar bloqueios, um desenvolvedor propõe registrar no log a senha que cada login falho tentou. Qual é a objeção?",
+  "hint": "Aula 17.",
+  "choices": [
+   {
+    "text": "Deixaria cada login mais lento sob carga",
+    "why": "Escrever uma linha custa pouco; o problema é o que ela guarda."
+   },
+   {
+    "text": "Logs não são guardados por tempo bastante para ajudar",
+    "why": "São guardados por mais tempo, o que piora."
+   },
+   {
+    "text": "O scrypt teria de rodar duas vezes",
+    "why": "Registrar uma string não envolve hash."
+   },
+   {
+    "text": "Registra quase acertos de senhas reais",
+    "why": "Isso. Logs são copiados para mais lugares e guardados por mais tempo que a tabela que descrevem."
+   }
+  ]
+ },
+ "ex-zghm4rp5": {
+  "prompt": "Um serviço confere cada token com cuidado e depois devolve a reserva de qualquer id pedido. Como você o descreve?",
+  "hint": "Aula 17.",
+  "choices": [
+   {
+    "text": "A autorização funciona; falta a autenticação",
+    "why": "Conferir o token é autenticação, e ela funciona."
+   },
+   {
+    "text": "A autenticação funciona; falta a autorização",
+    "why": "Isso. Sabe quem pergunta e não pergunta se a reserva é dela."
+   },
+   {
+    "text": "As duas funcionam, já que um token é exigido",
+    "why": "Um token responde quem; nada pergunta se a reserva é da pessoa."
+   },
+   {
+    "text": "Nenhuma funciona",
+    "why": "Quem pergunta é conferido corretamente."
+   }
+  ]
+ },
+ "ex-e4d2h1tf": {
+  "prompt": "Num serviço, os tokens não expiram, e o logout apaga a cópia do navegador e mais nada. Um token aparece num print colado num chamado de suporte há um ano. O que quem lê o chamado consegue fazer?",
+  "hint": "Aula 17.",
+  "choices": [
+   {
+    "text": "Nenhum dano: o cliente já saiu da conta desde então",
+    "why": "O logout aqui deixou a sessão viva no servidor."
+   },
+   {
+    "text": "Ler a senha, que o token codifica",
+    "why": "Um token é aleatório e não codifica nada."
+   },
+   {
+    "text": "Agir como aquele cliente hoje",
+    "why": "Isso. Um token que não termina é uma senha que não muda, e o servidor ainda o aceita."
+   },
+   {
+    "text": "Ler reservas mas não reservar, já que tokens são de leitura",
+    "why": "Um token é o cliente, até onde o serviço consegue dizer."
+   }
+  ]
+ },
+ "ex-bmj272v6": {
+  "prompt": "Uma varredura do histórico continua relatando uma chave que foi rotacionada. Para silenciá-la, um colega põe a regra generic-api-key numa lista de exceções na configuração do gitleaks. O que mudou?",
+  "hint": "Aula 18.",
+  "choices": [
+   {
+    "text": "Chaves genéricas novas também são ignoradas",
+    "why": "Isso. Uma fingerprint nomeia um commit, arquivo, regra e linha; desligar a regra abre o buraco que o pipeline existe para fechar."
+   },
+   {
+    "text": "Nada além do que uma fingerprint faria",
+    "why": "Uma fingerprint aceita um achado; a lista de exceções aceita uma regra inteira."
+   },
+   {
+    "text": "A chave antiga sai do histórico",
+    "why": "A configuração muda o que é relatado, não o que o histórico guarda."
+   },
+   {
+    "text": "A varredura agora lê commits novos e pula os antigos",
+    "why": "A regra fica desligada em cada commit, novo ou antigo."
+   }
+  ]
+ },
+ "ex-wcb8v518": {
+  "prompt": "Um time acha uma chave no histórico já enviado, roda git filter-repo, faz push forçado e pede a todos que clonem de novo. Ninguém fala com o provedor. Qual é a situação?",
+  "hint": "Aula 18.",
+  "choices": [
+   {
+    "text": "Resolvida, já que nenhuma cópia do histórico guarda a chave agora",
+    "why": "Clones, forks e caches feitos antes da reescrita a guardam."
+   },
+   {
+    "text": "Resolvida, assim que a varredura do histórico volta limpa",
+    "why": "Uma varredura limpa do histórico novo não diz nada sobre as cópias nem sobre a chave."
+   },
+   {
+    "text": "Resolvida, já que provedores revogam chaves de históricos reescritos",
+    "why": "Um provedor não sabe nada da sua reescrita."
+   },
+   {
+    "text": "Escondida, e a chave ainda funciona para quem tem uma cópia antiga",
+    "why": "Isso. Rotacionar é o que torna cada cópia inofensiva; reescrever arruma o repositório e não desfaz o vazamento."
+   }
+  ]
+ },
+ "ex-k5nvvwgc": {
+  "prompt": "Para provar que o scanner do pipeline funciona, um teste comita payment_api_key = \"example-key-9fQ2xL7mZ4pR8tW1\" e espera uma falha. O pipeline fica verde. O que isso mostra?",
+  "hint": "Aula 18.",
+  "choices": [
+   {
+    "text": "O scanner está quebrado e tem de ser trocado",
+    "why": "Ele fez o que foi projetado para fazer: pula placeholders."
+   },
+   {
+    "text": "Nada: o gitleaks pula valores com palavras de placeholder",
+    "why": "Isso. Uma chave plantada tem de parecer aleatória para ser achada, com a nota de que é falsa fora do valor."
+   },
+   {
+    "text": "O pipeline lê os arquivos e não o histórico",
+    "why": "Onde ele lê não é a questão; o valor é."
+   },
+   {
+    "text": "A regra precisa de um limite de entropia maior",
+    "why": "Um limite maior relataria menos valores, não mais."
+   }
+  ]
+ },
+ "ex-fpk1zwx4": {
+  "prompt": "Uma pessoa nova no time clona o repositório, cola uma chave num arquivo e comita, e nada recusa, embora o time tenha montado o hook do gitleaks faz tempo. Por quê?",
+  "hint": "Aula 18.",
+  "choices": [
+   {
+    "text": "O hook varre o histórico em vez do que está no stage",
+    "why": "--staged lê exatamente o que está para ser comitado."
+   },
+   {
+    "text": "O gitleaks pula arquivos que nunca foram comitados",
+    "why": "As linhas de um arquivo novo são mudanças no stage como quaisquer outras."
+   },
+   {
+    "text": "Um hook mora em .git/, que um clone não traz",
+    "why": "Isso. Até alguém instalá-lo naquela máquina não há hook, e é por isso que a varredura do pipeline é a checagem que conta."
+   },
+   {
+    "text": "O commit era pequeno demais para valer a varredura",
+    "why": "Uma linha basta para um achado."
+   }
+  ]
+ },
+ "ex-1t7aa565": {
+  "prompt": "Ligue cada interpretador à defesa que mantém o texto do usuário fora das instruções dele.",
+  "hint": "Aula 20.",
+  "pairs": [
+   {
+    "left": "um banco lendo SQL",
+    "right": "uma consulta parametrizada"
+   },
+   {
+    "left": "um navegador lendo HTML",
+    "right": "codificação na saída, para o contexto"
+   },
+   {
+    "left": "um serviço lendo um formulário como decisão",
+    "right": "um token CSRF ligado à sessão"
+   },
+   {
+    "left": "um sistema de arquivos lendo nomes e tipos",
+    "right": "um nome feito pelo servidor, e o tipo lido dos bytes"
+   }
+  ],
+  "right_distractors": [
+   "sinais de menor e maior retirados quando o texto é salvo"
+  ]
+ },
+ "ex-cdmxwvn1": {
+  "prompt": "Uma consulta devolve a reserva cuja referência casa com ref LIKE ?, parametrizada, e devia devolver a única reserva de uma referência que o cliente conhece. Mandar % devolve reservas de outros clientes. Como se registra?",
+  "hint": "Aula 20.",
+  "choices": [
+   {
+    "text": "Um achado: escapar os curingas com ESCAPE, ou comparar com =",
+    "why": "Isso. Sobre registros privados, curingas que alargam a busca são um achado, não uma curiosidade."
+   },
+   {
+    "text": "Sem achado, já que a consulta é parametrizada",
+    "why": "O parâmetro mantém o valor fora do SQL, mas o LIKE ainda lê % como curinga dentro dele."
+   },
+   {
+    "text": "Injeção de SQL: o % rodou como SQL",
+    "why": "Nada rodou como SQL; o curinga é sintaxe do próprio LIKE."
+   },
+   {
+    "text": "Um falso positivo causado pela sonda",
+    "why": "A sonda mostrou comportamento real em dados reais."
+   }
+  ]
+ },
+ "ex-s90e5wva": {
+  "prompt": "Uma página escreve o nome do titular de uma reserva num script embutido, var holder = \"…\";, depois de passá-lo pelo html.escape. Essa é a defesa certa?",
+  "hint": "Aula 20.",
+  "choices": [
+   {
+    "text": "Sim: o html.escape codifica aspas, então a string fecha em segurança",
+    "why": "Codifica como entidades HTML, que um script não lê como HTML; o contexto está errado."
+   },
+   {
+    "text": "Sim, porque a Content-Security-Policy bloqueia scripts embutidos",
+    "why": "A política é uma segunda camada, não motivo para largar a primeira."
+   },
+   {
+    "text": "Não: retire < e > do nome quando ele for salvo",
+    "why": "Retirar na entrada estraga nomes e erra outros contextos."
+   },
+   {
+    "text": "Não: uma string de script pede outra codificação",
+    "why": "Isso. Uma string de script não decodifica entidades HTML e lê a barra invertida como escape; html.escape é para texto e atributos HTML."
+   }
+  ]
+ },
+ "ex-ece9bbyg": {
+  "prompt": "Um upload começa com os oito bytes da assinatura PNG e carrega outra coisa depois, e o account.py o aceita. O que a aula 20 diz sobre isso?",
+  "hint": "Aula 20.",
+  "choices": [
+   {
+    "text": "Ele é recusado, já que a checagem de tamanho lê o arquivo inteiro",
+    "why": "O tamanho vem do Content-Length; a checagem de conteúdo lê o começo."
+   },
+   {
+    "text": "A checagem dos primeiros bytes é um piso; recodificar e passar antivírus vão além",
+    "why": "Isso. Serviços que recebem imagens de estranhos as recodificam com uma biblioteca de imagem e examinam o que guardam."
+   },
+   {
+    "text": "É inofensivo, já que o servidor escolheu o nome",
+    "why": "O nome é uma defesa de quatro, não motivo para confiar no conteúdo."
+   },
+   {
+    "text": "O nosniff dispensa a checagem de conteúdo",
+    "why": "O nosniff governa como o navegador lê um arquivo servido; não inspeciona upload."
+   }
+  ]
+ },
+ "ex-9rbpm0c4": {
+  "prompt": "Os buckets de /shows/{id} depois de uma execução: 963 requisições ao todo, 887 em até 0,05 s e 952 em até 0,1 s. Quantas requisições levaram mais de 50 ms?",
+  "hint": "Aula 22.",
+  "unit": "requisições"
+ },
+ "ex-pkkrxzax": {
+  "prompt": "Um release sai às 14:00, e às 14:20 uma exceção nova aparece no checkout para alguns usuários. Qual dos cinco produtos parte da pergunta \"que erro é novo desde o release, e quantos usuários ele atingiu\"?",
+  "hint": "Aula 22.",
+  "choices": [
+   {
+    "text": "Grafana",
+    "why": "O Grafana desenha o que uma fonte de dados responde e não guarda nada."
+   },
+   {
+    "text": "Kibana",
+    "why": "O Kibana busca linhas de log; agrupar exceções por release é de onde o Sentry partiu."
+   },
+   {
+    "text": "Sentry",
+    "why": "Isso. Agrupa cada exceção com o stack trace, por release e por usuários atingidos."
+   },
+   {
+    "text": "Datadog",
+    "why": "O Datadog partiu de métricas de infraestrutura em cada host."
+   }
+  ]
+ },
+ "ex-qdp1bd8t": {
+  "prompt": "O requisito é 200 ms, e os buckets de um histograma perto dele são 0,1 s e 0,25 s. O time quer o número exato de requisições que atenderam ao requisito. O que deve mudar?",
+  "hint": "Aula 22.",
+  "choices": [
+   {
+    "text": "Um limite de bucket em 0,2 s",
+    "why": "Isso. Aí a contagem abaixo de 200 ms sai direto de um bucket, sem estimativa."
+   },
+   {
+    "text": "Nada: o histogram_quantile interpola com exatidão",
+    "why": "Ele supõe distribuição uniforme dentro do bucket, então a resposta é uma estimativa."
+   },
+   {
+    "text": "Tirar a média das contagens de 0,1 e 0,25",
+    "why": "Isso é um número que ninguém mediu."
+   },
+   {
+    "text": "Dividir _sum por _count e comparar com 200 ms",
+    "why": "Isso dá a média, a estatística contra a qual a aula 8 alerta."
+   }
+  ]
+ },
+ "ex-6qkd4cnn": {
+  "prompt": "O up da boxoffice dá 1 a cada coleta, enquanto clientes relatam que as reservas falham. O que esse par diz?",
+  "hint": "Aula 22.",
+  "choices": [
+   {
+    "text": "Os relatos estão errados, já que o alvo está de pé",
+    "why": "O up responde se uma coleta funcionou, não se uma reserva funcionou."
+   },
+   {
+    "text": "O Prometheus parou de coletar",
+    "why": "up em 1 quer dizer que a última coleta deu certo."
+   },
+   {
+    "text": "O node exporter caiu",
+    "why": "Esse é outro job; o up da boxoffice é sobre a boxoffice."
+   },
+   {
+    "text": "O processo responde ao /metrics, o que não diz nada sobre reservas darem certo",
+    "why": "Isso. O up é o alerta mais barato e o menos informativo; olhe a razão de erros e o log."
+   }
+  ]
+ },
+ "ex-srxwrrph": {
+  "prompt": "Uma sonda roda uma vez por minuto no próprio servidor da bilheteria. Quais destas quedas ela deixa passar? Marque todas que ela deixa passar.",
+  "hint": "Aula 23.",
+  "choices": [
+   {
+    "text": "O registro DNS público aponta para o endereço errado",
+    "why": "Isso. Uma sonda ao lado do servidor não passa pelo nome público."
+   },
+   {
+    "text": "O certificado que os clientes veem expirou à meia-noite",
+    "why": "Isso. A sonda fala HTTP simples com 127.0.0.1 e não encontra certificado."
+   },
+   {
+    "text": "O balanceador manda o tráfego para uma máquina desligada",
+    "why": "Isso. A sonda não passa pelo balanceador."
+   },
+   {
+    "text": "O provedor de pagamento leva 900 ms por chamada",
+    "why": "O limite de tempo do passo de reserva pega isso, de qualquer lugar."
+   },
+   {
+    "text": "O processo do servidor parou",
+    "why": "A sonda recebe connection refused e reprova."
+   }
+  ]
+ },
+ "ex-jpmqjpy5": {
+  "prompt": "Uma sonda manda o cabeçalho X-Synthetic: 1 e reserva com um nome de cliente comum, e a aplicação ignora o cabeçalho. O que dá errado?",
+  "hint": "Aula 23.",
+  "choices": [
+   {
+    "text": "Nada, já que o cabeçalho marca cada requisição",
+    "why": "Uma marca na requisição que não deixa rastro na linha não marca nada que fica."
+   },
+   {
+    "text": "As vendas contam as reservas da sonda",
+    "why": "Isso. A marca tem de chegar às linhas, porque é lá que o relatório de vendas lê."
+   },
+   {
+    "text": "A sonda reprova na checagem do corpo",
+    "why": "A reserva é respondida normalmente, então a checagem do corpo passa."
+   },
+   {
+    "text": "O servidor bloqueia a sonda como robô",
+    "why": "Nada na bilheteria olha o cabeçalho."
+   }
+  ]
+ },
+ "ex-vn52x2hf": {
+  "prompt": "Uma sonda confere o status e o corpo de cada passo, mas não tem limite de tempo. Qual falha da aula 23 ela relataria como aprovada?",
+  "hint": "Aula 23.",
+  "choices": [
+   {
+    "text": "O servidor parado, com connection refused",
+    "why": "Nenhuma resposta reprova o primeiro passo."
+   },
+   {
+    "text": "GET /shows respondendo 200 com lista vazia",
+    "why": "A checagem do corpo pega."
+   },
+   {
+    "text": "Pagamentos a 900 ms, cada reserva ainda respondida com 201",
+    "why": "Isso. Cada status foi sucesso; só a checagem de tempo pega uma bilheteria que funciona e está lenta demais."
+   },
+   {
+    "text": "Um 201 para um assento diferente do pedido",
+    "why": "A checagem do corpo compara o assento."
+   }
+  ]
+ },
+ "ex-m5yyz7xd": {
+  "prompt": "Uma sonda rodada uma vez é um teste; rodada num ___ fixo, ela vira um monitor.",
+  "hint": "Aula 23.",
+  "blanks": [
+   {
+    "accept": [
+     "horário",
+     "agendamento",
+     "intervalo"
+    ]
+   }
+  ]
+ },
+ "ex-qgd0hk46": {
+  "prompt": "Ponha os momentos de um alerta que chama alguém em ordem, a partir da primeira falha.",
+  "hint": "Aula 24.",
+  "items": [
+   "As respostas 5xx começam",
+   "A razão de erros de cinco minutos passa de 2% e a regra fica pending",
+   "O for: se esgota e o alerta dispara",
+   "O Alertmanager espera o group_wait pelo resto do grupo",
+   "O serviço de chamada toca para a pessoa de plantão"
+  ],
+  "trap": "O pending dura o for: inteiro; o agrupamento acontece depois de a regra disparar e antes de qualquer telefone tocar."
+ },
+ "ex-a01784w5": {
+  "prompt": "O orçamento de erro de um SLO vale por 30 dias. A razão de erros atual dá uma taxa de queima de 6. Em quantos dias o orçamento do mês acabaria nesse ritmo?",
+  "hint": "Aula 24.",
+  "unit": "dias"
+ },
+ "ex-v41cm0zv": {
+  "prompt": "Um banco de dados cai, e vinte serviços que o usam disparam, cada um, um alerta de razão de erros com o nome do serviço. Que recurso do Alertmanager evita que a pessoa de plantão receba vinte chamadas por uma causa só?",
+  "hint": "Aula 24.",
+  "choices": [
+   {
+    "text": "Inibição, segurando o que o alerta do banco explica",
+    "why": "Isso. Enquanto o alerta do banco dispara, os alertas que ele explica ficam retidos."
+   },
+   {
+    "text": "Agrupar por alertname",
+    "why": "Os vinte alertas têm vinte nomes, então agrupar por nome os mantém separados."
+   },
+   {
+    "text": "Um repeat_interval de quatro horas",
+    "why": "Isso espaça as repetições de um alerta disparado; os vinte primeiros chegam do mesmo jeito."
+   },
+   {
+    "text": "Um for: mais longo em cada regra",
+    "why": "Esperar mais atrasa os vinte por igual."
+   }
+  ]
+ },
+ "ex-mxk03cx9": {
+  "prompt": "Numa arrumação, severity: page sai dos labels de uma regra e vai para as annotations. A regra continua disparando na hora. O que muda?",
+  "hint": "Aula 24.",
+  "choices": [
+   {
+    "text": "Nada, já que o Alertmanager lê os dois",
+    "why": "O roteamento casa labels; annotations são para quem lê."
+   },
+   {
+    "text": "O promtool check rules passa a falhar",
+    "why": "O arquivo continua YAML e PromQL válidos."
+   },
+   {
+    "text": "O alerta deixa de chegar a firing",
+    "why": "Disparar é decidido pelo expr e pelo for."
+   },
+   {
+    "text": "A rota de chamada deixa de casar, e ele cai na fila do time",
+    "why": "Isso. A pessoa de plantão deixa de ser avisada, e a regra parece saudável."
+   }
+  ]
+ }
+}

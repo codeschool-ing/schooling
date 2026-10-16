@@ -1,0 +1,2353 @@
+[
+ {
+  "id": "ex-xhbbj7x4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A requirement reads: \"95th percentile under 200 ms and errors under 1%, at 50 requests a second sustained for 10 minutes, timed at the client, on the staging machine.\" Which of the five parts is missing?",
+  "hint": "Lesson 1.",
+  "choices": [
+   {
+    "text": "The statistic compared",
+    "correct": false,
+    "why": "It is there: the 95th percentile of the response time, and the error rate."
+   },
+   {
+    "text": "The load applied during the hold",
+    "correct": false,
+    "why": "It is there: 50 requests a second."
+   },
+   {
+    "text": "Which request is being timed",
+    "correct": true,
+    "why": "Right. With no operation named, the test times a mix of everything, and the cheap list hides the expensive booking inside one average."
+   },
+   {
+    "text": "How long, where, and timed at which end",
+    "correct": false,
+    "why": "Those are the conditions, and they are all written: ten minutes, staging, timed at the client."
+   }
+  ]
+ },
+ {
+  "id": "ex-4w93kg34",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A product owner writes \"we must know when it breaks\". Which version of that sentence could a test fail?",
+  "hint": "Lesson 1.",
+  "choices": [
+   {
+    "text": "On-call told within 5 min of errors over 2%",
+    "correct": true,
+    "why": "Right. It names a statistic, a threshold and a time, so a late alert or none fails it."
+   },
+   {
+    "text": "Dashboards are set up for each service before the release",
+    "correct": false,
+    "why": "Dashboards existing says nothing about anybody finding out, so no result could fail it."
+   },
+   {
+    "text": "The team responds quickly to incidents in production",
+    "correct": false,
+    "why": "\"Quickly\" is the adjective again, with no number behind it."
+   },
+   {
+    "text": "A log line is kept for each request the system answers",
+    "correct": false,
+    "why": "Keeping logs is about storage; it names no threshold and no time for anybody to be told."
+   }
+  ]
+ },
+ {
+  "id": "ex-dq9s0qx3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "Two reports on GET /shows/{id} both say \"p95 under 200 ms\". One held 50 requests a second for ten minutes on staging, timed at the client; the other ran thirty seconds on a laptop, timed from the server's log. What follows?",
+  "hint": "Lesson 1.",
+  "choices": [
+   {
+    "text": "The second confirms the first, more cheaply",
+    "correct": false,
+    "why": "A shorter run on another machine, timed at the other end, measured something else."
+   },
+   {
+    "text": "The laptop run is the stricter of the two, being a smaller machine",
+    "correct": false,
+    "why": "The server's log leaves out the network and the client, so it reads lower, which is the opposite of strict."
+   },
+   {
+    "text": "The first is redundant, since both pass",
+    "correct": false,
+    "why": "Passing two different tests is not one test passed twice."
+   },
+   {
+    "text": "They are different claims, and neither confirms the other",
+    "correct": true,
+    "why": "Right. The conditions are part of the requirement: duration, machine and where the clock sits change what was measured."
+   }
+  ]
+ },
+ {
+  "id": "ex-17capqta",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "python3 app.py stops with \"OSError: [Errno 98] Address already in use\". What is the likeliest cause, and what do you run first?",
+  "hint": "Lesson 1.",
+  "choices": [
+   {
+    "text": "The database is locked; delete data/boxoffice.db",
+    "correct": false,
+    "why": "A locked database raises a SQLite error, not a bind error, and deleting data is not a diagnosis."
+   },
+   {
+    "text": "An earlier app.py still holds port 8000",
+    "correct": true,
+    "why": "Right. It is almost always a server forgotten in another terminal, and ss names the process to stop."
+   },
+   {
+    "text": "A package is missing; run the apt-get install again",
+    "correct": false,
+    "why": "The traceback ends in bind(), which is about the port, not about packages."
+   },
+   {
+    "text": "The VM has lost its network; restart it",
+    "correct": false,
+    "why": "The server listens on 127.0.0.1 and needs no network to bind."
+   }
+  ]
+ },
+ {
+  "id": "ex-8n906tfq",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "prompt": "A soak test holds the expected load for twelve hours, and the 95th percentile stays under its threshold all night. Which of these are still findings? Choose every one that is.",
+  "hint": "Lesson 2.",
+  "choices": [
+   {
+    "text": "The server's memory climbs steadily from the first hour to the last",
+    "correct": true,
+    "why": "Right. A soak test is read as a trend, and memory that grows is the drift it exists to find."
+   },
+   {
+    "text": "Open database connections grow from 20 to 400",
+    "correct": true,
+    "why": "Right. Connections opened and not returned are one of the things that accumulate."
+   },
+   {
+    "text": "A bookings query is slower at hour twelve than at hour one, though within the threshold",
+    "correct": true,
+    "why": "Right. A table that grows with each request makes the next query slower; the last hour should look like the first."
+   },
+   {
+    "text": "Processor use holds near 30% from start to finish",
+    "correct": false,
+    "why": "A flat line is what a soak test hopes to see."
+   }
+  ]
+ },
+ {
+  "id": "ex-1x4zcks0",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A team wants one number: the highest throughput its production-size machine sustains within the requirement. It has no plan to change the machine. Which test is that?",
+  "hint": "Lesson 2.",
+  "choices": [
+   {
+    "text": "A scalability test",
+    "correct": false,
+    "why": "That compares capacities across configurations, and this team keeps one configuration."
+   },
+   {
+    "text": "A soak test held overnight",
+    "correct": false,
+    "why": "A soak holds the expected load for hours to watch for drift; it does not look for a ceiling."
+   },
+   {
+    "text": "A capacity test",
+    "correct": true,
+    "why": "Right. Capacity is a number about one setup; scalability is how that number moves when the setup changes."
+   },
+   {
+    "text": "A spike test from normal to ten times normal",
+    "correct": false,
+    "why": "A spike jumps and drops back, to see survival and recovery, not the highest sustained rate."
+   }
+  ]
+ },
+ {
+  "id": "ex-mxzjg6rd",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A stress staircase finds the breaking point at 300 requests a second, six times the expected 50, and the server recovers when the load drops. The logs show that at 280 a second two customers were sold the same seat. How is the test read?",
+  "hint": "Lesson 2.",
+  "choices": [
+   {
+    "text": "A fail: a seat sold twice under pressure",
+    "correct": true,
+    "why": "Right. A stress test fails when the manner is wrong, such as data corrupted under load, whatever the breaking point was."
+   },
+   {
+    "text": "A pass, with a margin of six times the expected load",
+    "correct": false,
+    "why": "The margin is a finding; it does not excuse a defect."
+   },
+   {
+    "text": "A pass, because a stress test has no pass mark",
+    "correct": false,
+    "why": "It has no pass mark on where it breaks; the manner of breaking still fails it."
+   },
+   {
+    "text": "Inconclusive until a load test at 50 a second is run",
+    "correct": false,
+    "why": "A load test answers a different question, and the double sale already happened."
+   }
+  ]
+ },
+ {
+  "id": "ex-fe372rg4",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each shape of load over time to the test it belongs to.",
+  "hint": "Lesson 2.",
+  "pairs": [
+   {
+    "left": "A ramp, a long flat hold at the expected load, a ramp down",
+    "right": "Load"
+   },
+   {
+    "left": "Steps that keep climbing past the expected load",
+    "right": "Stress"
+   },
+   {
+    "left": "Normal, a sudden jump to many times normal, and back",
+    "right": "Spike"
+   },
+   {
+    "left": "The expected load, held flat for a whole night",
+    "right": "Soak"
+   }
+  ],
+  "right_distractors": [
+   "Smoke"
+  ]
+ },
+ {
+  "id": "ex-qzbwj5td",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "A ramp-up spreads the virtual users' start over some seconds, so that the test does not open with a ___ nobody asked for.",
+  "hint": "Lesson 3.",
+  "blanks": [
+   {
+    "accept": [
+     "spike",
+     "burst"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-n5he16ss",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "A sale brings 2,400 people in its first two minutes, and each visit lasts 20 seconds. By Little's law, about how many people are on the site at once during those two minutes?",
+  "hint": "Lesson 3.",
+  "value": 400,
+  "tolerance": 10,
+  "unit": "people"
+ },
+ {
+  "id": "ex-h1nrs1a0",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A load tool sends each virtual user's next request only after the last answer arrives. The server freezes for three seconds once in the run, yet the report shows one slow request and a p99 of 9 ms. What happened?",
+  "hint": "Lesson 3.",
+  "choices": [
+   {
+    "text": "Three seconds is too short to move a percentile",
+    "correct": false,
+    "why": "At an arrival rate, three seconds would delay each request due in them; the closed tool did not send those."
+   },
+   {
+    "text": "The server queued the requests and answered them in order",
+    "correct": false,
+    "why": "Nothing was queued: the tool had stopped asking."
+   },
+   {
+    "text": "The p99 is right, since one request was in flight at the time",
+    "correct": false,
+    "why": "One request was in flight because the tool waited; real arrivals do not wait."
+   },
+   {
+    "text": "The requests due in the freeze were never sent",
+    "correct": true,
+    "why": "Right. That is coordinated omission: generator and server agree, without meaning to, to leave the bad moment out."
+   }
+  ]
+ },
+ {
+  "id": "ex-b7cg974r",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "Lesson 3's open generator at 150 a second kept sent at 150 while done fell short and answers kept arriving after the end. A closed test with 150 users and no think time, against the same server, would show what instead?",
+  "hint": "Lesson 3.",
+  "choices": [
+   {
+    "text": "The same growing queue, since the user count matches the rate",
+    "correct": false,
+    "why": "Users are not a rate: each one waits for its answer, so the queue stops at 150."
+   },
+   {
+    "text": "Longer times, and throughput flat at what it finishes",
+    "correct": true,
+    "why": "Right. The closed model backs off with the server: the slowdown shows as response time, not as a queue that grows."
+   },
+   {
+    "text": "More errors, because looping users press harder than arrivals",
+    "correct": false,
+    "why": "A closed user sends nothing new while it waits; it eases off."
+   },
+   {
+    "text": "Exactly 150 requests a second, one from each user",
+    "correct": false,
+    "why": "Each user sends one per response time, so the rate is 150 over R, and it falls as R grows."
+   }
+  ]
+ },
+ {
+  "id": "ex-jarnr19j",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "In lesson 4's plan, the Response Assertion that looks for \"left\" is moved out of GET /shows/{id} to the thread group's level, beside the timer. What happens in the next run?",
+  "hint": "Lesson 4.",
+  "choices": [
+   {
+    "text": "Nothing changes: an assertion checks the sampler before it",
+    "correct": false,
+    "why": "Scope is decided by the level in the tree, not by position."
+   },
+   {
+    "text": "The assertion runs once per thread, at start-up",
+    "correct": false,
+    "why": "Assertions check samples; they do not run on their own."
+   },
+   {
+    "text": "GET /shows samples fail as well, since the list has no \"left\" in it",
+    "correct": true,
+    "why": "Right. At the group's level the assertion applies to both samplers, and the list of shows carries no such field."
+   },
+   {
+    "text": "JMeter refuses to load the plan",
+    "correct": false,
+    "why": "An assertion at that level is valid; it applies more widely."
+   }
+  ]
+ },
+ {
+  "id": "ex-eeytptng",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "In a run's .jtl, Connect is about 17 ms of roughly 25 ms elapsed on each line, from the first sample to the last. What does that suggest?",
+  "hint": "Lesson 4.",
+  "choices": [
+   {
+    "text": "Keep-alive is off",
+    "correct": true,
+    "why": "Right. In lesson 4's run a thread paid to connect on its first sample, and later samples on the kept connection spent 1 ms."
+   },
+   {
+    "text": "The database is slow to answer",
+    "correct": false,
+    "why": "Connect is the time to open the connection, before the server reads the request."
+   },
+   {
+    "text": "The think timer is counted inside elapsed",
+    "correct": false,
+    "why": "A timer waits before the sampler, and its wait is not part of the sample."
+   },
+   {
+    "text": "The assertion adds 17 ms to each sample",
+    "correct": false,
+    "why": "An assertion checks the answer after it arrives; Connect comes before the request."
+   }
+  ]
+ },
+ {
+  "id": "ex-031ca5ft",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "easy",
+  "prompt": "A second run of jmeter -n -t plan.jmx -l results.jtl -e -o report/ stops before it starts. What is the likeliest reason?",
+  "hint": "Lesson 4.",
+  "choices": [
+   {
+    "text": "An HTML report needs the GUI to be open",
+    "correct": false,
+    "why": "-e -o builds it at the end of a non-GUI run."
+   },
+   {
+    "text": "The plan has no listener, so there is nothing to report",
+    "correct": false,
+    "why": "The .jtl written by -l is the listener, and the report is built from it."
+   },
+   {
+    "text": "Twenty threads exceed the default heap of a second run",
+    "correct": false,
+    "why": "Twenty threads ran fine the first time, and memory has nothing to do with the directory."
+   },
+   {
+    "text": "report/ still holds the last run's dashboard",
+    "correct": true,
+    "why": "Right. JMeter refuses to write a report into a directory that already has files in it, so report/ is deleted first."
+   }
+  ]
+ },
+ {
+  "id": "ex-5y590w3h",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "JMeter workers run on machines of their own behind a firewall that opens port 1099, and distributed runs fail when they start. Which setting from lesson 4 lets the firewall be configured for RMI?",
+  "hint": "Lesson 4.",
+  "choices": [
+   {
+    "text": "Sending the users with -J instead of -G",
+    "correct": false,
+    "why": "-J sets a property on the controller alone; it has nothing to do with ports."
+   },
+   {
+    "text": "Fixing server.rmi.localport",
+    "correct": true,
+    "why": "Right. With both ports known, the firewall can let both through."
+   },
+   {
+    "text": "Copying shows.csv into each worker's directory",
+    "correct": false,
+    "why": "A missing data file gives a worker no samples, not a refused connection."
+   },
+   {
+    "text": "Turning RMI's encryption back on",
+    "correct": false,
+    "why": "Encryption changes how the traffic travels, not which port it uses."
+   }
+  ]
+ },
+ {
+  "id": "ex-zzrze42w",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "prompt": "Put the stages of one k6 run in the order they happen.",
+  "hint": "Lesson 5.",
+  "items": [
+   "The init code runs, once for each virtual user",
+   "setup() runs once and returns its data",
+   "The default function runs once per iteration while the scenario lasts",
+   "k6 compares the thresholds with the samples it collected",
+   "k6 exits with 0, or with 99 if a threshold was crossed"
+  ],
+  "trap": "setup() sits between the init code and the load; the verdict needs every sample, so it comes last."
+ },
+ {
+  "id": "ex-vp6wf2b6",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "prompt": "A k6 test needs the list of shows once, before the load starts. Requests are refused in the init code, so they belong in a function called ___().",
+  "hint": "Lesson 5.",
+  "blanks": [
+   {
+    "accept": [
+     "setup"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-1v2raeyf",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "easy",
+  "prompt": "A k6 script makes a request in its init code, and k6 stops before any load. Which exit code does k6 use for that error in the script?",
+  "hint": "Lesson 5.",
+  "value": 107,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-rrtfv3fn",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A k6 script's only threshold is http_req_duration: ['p(95)<200']. Under load the server starts answering half the requests with a 503 in 3 ms. What does the run report?",
+  "hint": "Lesson 5.",
+  "choices": [
+   {
+    "text": "A fail with exit 99, because a 503 is an error",
+    "correct": false,
+    "why": "It is counted in http_req_failed, but no threshold reads that metric here."
+   },
+   {
+    "text": "A fail with exit 107, because the checks crashed",
+    "correct": false,
+    "why": "107 is an error in the script, and no check is involved."
+   },
+   {
+    "text": "A pass, exit 0: the fast failures pull the percentile down",
+    "correct": true,
+    "why": "Right. The duration counts each answer, failed or not, and nothing in the options judges http_req_failed."
+   },
+   {
+    "text": "No verdict, since a percentile over failed requests is undefined",
+    "correct": false,
+    "why": "The percentile is computed over the answers, the 503s included."
+   }
+  ]
+ },
+ {
+  "id": "ex-tqfhy9va",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each tool to the way its test says fail.",
+  "hint": "Lesson 6.",
+  "pairs": [
+   {
+    "left": "k6",
+    "right": "thresholds in options, and exit code 99"
+   },
+   {
+    "left": "Gatling",
+    "right": "assertions, and a Maven build that fails with exit 1"
+   },
+   {
+    "left": "Locust",
+    "right": "a hook at quitting that sets the exit code"
+   },
+   {
+    "left": "JMeter",
+    "right": "assertions on each response, with a percentile verdict added on top"
+   }
+  ],
+  "right_distractors": [
+   "a score out of 100 in an HTML report"
+  ]
+ },
+ {
+  "id": "ex-09g79wet",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A team writes its services in Kotlin, and its requirement says 40 requests a second. Taking lesson 6's questions in order, which tool and model fit first?",
+  "hint": "Lesson 6.",
+  "choices": [
+   {
+    "text": "Gatling, injecting users at a rate with injectOpen",
+    "correct": true,
+    "why": "Right. The DSL exists in Kotlin, and a rate is an open model, which injectOpen states directly."
+   },
+   {
+    "text": "Locust, with 40 users looping",
+    "correct": false,
+    "why": "Python is not this team's language, and 40 looping users are a population, not 40 requests a second."
+   },
+   {
+    "text": "JMeter, since a window needs no programming language",
+    "correct": false,
+    "why": "Its XML diff is a page of attributes nobody reviews, which the lesson's second question weighs against."
+   },
+   {
+    "text": "k6 with constant-vus, since JavaScript is widely read",
+    "correct": false,
+    "why": "Looping users set a population, not a rate, and the team writes Kotlin."
+   }
+  ]
+ },
+ {
+  "id": "ex-vt6d2f2c",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A colleague writes one Gatling injection profile that ramps with rampUsersPerSec and then holds constantConcurrentUsers(50). What is wrong with it?",
+  "hint": "Lesson 6.",
+  "choices": [
+   {
+    "text": "rampUsersPerSec needs at least a minute of during()",
+    "correct": false,
+    "why": "Any duration works; the lesson's ramp lasted five seconds."
+   },
+   {
+    "text": "constantConcurrentUsers is Locust's, not Gatling's",
+    "correct": false,
+    "why": "It is Gatling's, from the injectClosed family."
+   },
+   {
+    "text": "Fifty concurrent users need a second load generator",
+    "correct": false,
+    "why": "The number is fine; the mix of models is the problem."
+   },
+   {
+    "text": "It mixes the open and closed families",
+    "correct": true,
+    "why": "Right. Arrivals a second and users inside at once cannot share one injection profile."
+   }
+  ]
+ },
+ {
+  "id": "ex-4zjfje65",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A Locust run prints an Aggregated row with a median of 20 ms. The requirement is about GET /shows/{id}. Which row do you judge it by?",
+  "hint": "Lesson 6.",
+  "choices": [
+   {
+    "text": "Aggregated, because it holds the most requests",
+    "correct": false,
+    "why": "More requests of two kinds is a blend, not a better sample."
+   },
+   {
+    "text": "The GET row: the aggregated one mixes two operations",
+    "correct": true,
+    "why": "Right. Its median sits between the shows and the bookings and describes neither."
+   },
+   {
+    "text": "The POST row, since the bookings are the slow ones",
+    "correct": false,
+    "why": "The bookings are a different operation from the one the requirement names."
+   },
+   {
+    "text": "Either: Locust's percentiles are approximated anyway",
+    "correct": false,
+    "why": "The rounding is small; mixing two operations is not."
+   }
+  ]
+ },
+ {
+  "id": "ex-8k73xy19",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "Vegeta is run with -rate=300 and -max-workers=10 against a server that answers in about 200 ms. What happens to its open model?",
+  "hint": "Lesson 7.",
+  "choices": [
+   {
+    "text": "Nothing: Vegeta keeps 300 a second whatever its flags say",
+    "correct": false,
+    "why": "-max-workers caps the requests in flight, which is the one flag that stops it keeping the rate."
+   },
+   {
+    "text": "It refuses to start, as ten workers are too few for 300",
+    "correct": false,
+    "why": "It runs, sending what ten workers allow."
+   },
+   {
+    "text": "It falls to about 50 a second",
+    "correct": true,
+    "why": "Right. With the cap reached, a request waits for a worker, and the generator behaves like a closed one."
+   },
+   {
+    "text": "It raises its rate later to make up the difference",
+    "correct": false,
+    "why": "Vegeta does not catch up; the requests it could not send on time were sent late or not at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-jw60bfbk",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "Vegeta attacks at -rate=200 for -duration=10s and reports Success 90.00%. How many of its requests did not get a 2xx or 3xx answer?",
+  "hint": "Lesson 7.",
+  "value": 200,
+  "tolerance": 0,
+  "unit": "requests"
+ },
+ {
+  "id": "ex-3ky1ypn4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A team's load tests will be reviewed by operations staff who read configuration files every day and no programming language. Which of lesson 7's six tools fits the journeys best?",
+  "hint": "Lesson 7.",
+  "choices": [
+   {
+    "text": "Artillery, whose test is YAML",
+    "correct": true,
+    "why": "Right. A scenario in YAML is read by anybody who reads configuration files."
+   },
+   {
+    "text": "Gatling, since its DSL reads like a description",
+    "correct": false,
+    "why": "It is still a class in Java, Kotlin, Scala or JavaScript."
+   },
+   {
+    "text": "Vegeta, one line per request",
+    "correct": false,
+    "why": "It has no journey to write: no flow, no think time."
+   },
+   {
+    "text": "JMeter, built in a window",
+    "correct": false,
+    "why": "Its XML diff is a page of attributes nobody reviews."
+   }
+  ]
+ },
+ {
+  "id": "ex-5etaanqt",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "Yesterday's Vegeta run was saved with tee results.bin. Today somebody wants its 99th percentile and a histogram with a bucket at 100 ms. What do you do?",
+  "hint": "Lesson 7.",
+  "choices": [
+   {
+    "text": "Run the attack again, as a report reads a live stream",
+    "correct": false,
+    "why": "vegeta report reads results from a file as well as from a pipe."
+   },
+   {
+    "text": "Open results.bin in a spreadsheet",
+    "correct": false,
+    "why": "It is Vegeta's binary format; its own report reads it."
+   },
+   {
+    "text": "Estimate it from yesterday's text report",
+    "correct": false,
+    "why": "The text report held no 100 ms bucket, and the raw results are still there."
+   },
+   {
+    "text": "Run vegeta report on the saved file",
+    "correct": true,
+    "why": "Right. Saved results can be reported again in any form without sending a single request."
+   }
+  ]
+ },
+ {
+  "id": "ex-04v0fjjv",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "Generator A sent 900 requests with a mean of 20 ms; generator B sent 100 requests of the same test with a mean of 120 ms. What is the mean response time of all 1,000, in ms?",
+  "hint": "Lesson 8.",
+  "value": 30,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-3qtzfe1x",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "prompt": "A requirement puts the 99th percentile under 300 ms, and the test sends 300 requests. Which statements hold? Choose every one that does.",
+  "hint": "Lesson 8.",
+  "choices": [
+   {
+    "text": "By the nearest rank, the p99 is the fourth slowest request",
+    "correct": true,
+    "why": "Right. 0.99 × 300 is 297, and three requests sit above position 297."
+   },
+   {
+    "text": "Three requests above the p99 are too few to pass or fail it honestly",
+    "correct": true,
+    "why": "Right. One unlucky request moves it a long way."
+   },
+   {
+    "text": "For ten requests beyond the p99, the run needs about a thousand",
+    "correct": true,
+    "why": "Right. A percentile means something when there are values above it."
+   },
+   {
+    "text": "With 300 requests the p99 is as steady as the p95",
+    "correct": false,
+    "why": "The p95 has fifteen requests above it and the p99 three; the p99 moves far more between runs."
+   }
+  ]
+ },
+ {
+  "id": "ex-5g6e2dbz",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "prompt": "Put the steps of the nearest-rank percentile in order.",
+  "hint": "Lesson 8.",
+  "items": [
+   "Sort the n measured times from fastest to slowest",
+   "Multiply p/100 by n",
+   "Round that position up to a whole number",
+   "Read the value at that position, counting from 1"
+  ],
+  "trap": "A position read from an unsorted list, or rounded down, is not the value at that rank."
+ },
+ {
+  "id": "ex-6znng3eq",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A booking test sends only seats it knows are free, and 4% of its answers are 409. What does the report say?",
+  "hint": "Lesson 8.",
+  "choices": [
+   {
+    "text": "Nothing to report: a 409 is the box office refusing a double sale",
+    "correct": false,
+    "why": "That holds in a test that books random seats; this one chose free seats."
+   },
+   {
+    "text": "A defect: the box office refused seats that were free",
+    "correct": true,
+    "why": "Right. Whether a 409 is correct depends on what the test expected before the run."
+   },
+   {
+    "text": "Add 409 to the expected statuses so the error rate reads zero",
+    "correct": false,
+    "why": "That hides a defect behind a response callback."
+   },
+   {
+    "text": "Retry those requests, since a 409 means two threads collided",
+    "correct": false,
+    "why": "The test asserts behaviour; retrying would make the defect invisible."
+   }
+  ]
+ },
+ {
+  "id": "ex-ehwv1ww0",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "Another server's load test shows a median of 12 ms, a p99 of 3,050 ms and a maximum near 7 s, while the application's own timings show no request slower than 40 ms. Where do you look first?",
+  "hint": "Lesson 9.",
+  "choices": [
+   {
+    "text": "The database's slowest queries",
+    "correct": false,
+    "why": "The application saw nothing slow; the time was spent before it saw the request."
+   },
+   {
+    "text": "The disk, through vmstat's wa column",
+    "correct": false,
+    "why": "A busy disk shows in the application's own times, which here are short."
+   },
+   {
+    "text": "The accept queue",
+    "correct": true,
+    "why": "Right. A tail near 1 s or 3 s is the fingerprint of retried connections, which the application never saw."
+   },
+   {
+    "text": "The garbage collector of the server",
+    "correct": false,
+    "why": "A pause would show inside the server's timings, and they are short."
+   }
+  ]
+ },
+ {
+  "id": "ex-dw683sqn",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "After the accept queue went from 5 to 128, the median under 32 workers rose from 9.0 ms to 49.5 ms. A manager calls it a regression. What is the reply?",
+  "hint": "Lesson 9.",
+  "choices": [
+   {
+    "text": "All 32 are being served now",
+    "correct": true,
+    "why": "Right. Fewer requests inside made the old median quick; Little's law puts about 32 inside now."
+   },
+   {
+    "text": "It is a regression; go back to a queue of 5",
+    "correct": false,
+    "why": "The queue of 5 dropped 190 connections in five seconds."
+   },
+   {
+    "text": "A median is noise, and the p99 is what counts",
+    "correct": false,
+    "why": "The median moved for a reason, and the reason is the point."
+   },
+   {
+    "text": "The database lost its index when it was seeded again",
+    "correct": false,
+    "why": "Database time stayed a fraction of a millisecond in both runs."
+   }
+  ]
+ },
+ {
+  "id": "ex-gkttmash",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "Under 32 workers, app_fixed.py sits near 116% of a processor on a four-processor VM, measure.py near 23%, and throughput stops near 717 a second. What is the next fix?",
+  "hint": "Lesson 9.",
+  "choices": [
+   {
+    "text": "Another index on bookings",
+    "correct": false,
+    "why": "The database already answers in a fraction of a millisecond."
+   },
+   {
+    "text": "A second load generator",
+    "correct": false,
+    "why": "The generator is at about 23%; it is not the bottleneck."
+   },
+   {
+    "text": "A larger accept queue",
+    "correct": false,
+    "why": "Nothing is being dropped at 128."
+   },
+   {
+    "text": "More server processes",
+    "correct": true,
+    "why": "Right. One Python process runs its Python code on one processor at a time, so it tops out near one."
+   }
+  ]
+ },
+ {
+  "id": "ex-yh28kx3f",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "A booking holds one global lock while it calls a payment provider that takes 50 ms. At most how many successful bookings a second can that server finish, whatever the load?",
+  "hint": "Lesson 9.",
+  "value": 20,
+  "tolerance": 0,
+  "unit": "bookings/s"
+ },
+ {
+  "id": "ex-2ekww5zt",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each defect of lesson 10's slow page to the number that shows it.",
+  "hint": "Lesson 10.",
+  "pairs": [
+   {
+    "left": "A plain script in <head> that runs for 500 ms",
+    "right": "First Contentful Paint"
+   },
+   {
+    "left": "A 2.4 MB picture as the largest thing on screen",
+    "right": "Largest Contentful Paint"
+   },
+   {
+    "left": "400 ms of work after the page first paints",
+    "right": "Total Blocking Time"
+   },
+   {
+    "left": "A banner inserted a second after the rest is drawn",
+    "right": "Cumulative Layout Shift"
+   }
+  ],
+  "right_distractors": [
+   "Time to First Byte"
+  ]
+ },
+ {
+  "id": "ex-5shbzzad",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "After the first paint, the main thread runs three tasks of 120 ms, 80 ms and 40 ms. What is their Total Blocking Time, in ms?",
+  "hint": "Lesson 10.",
+  "value": 100,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-w8xa9w0b",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "prompt": "In a lab run nobody taps anything, so Lighthouse reports Total ___ Time where the field measures INP.",
+  "hint": "Lesson 10.",
+  "blanks": [
+   {
+    "accept": [
+     "Blocking"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-exz1cheq",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A colleague says a change took the slow page's LCP from 13.1 s to 2.3 s. The reports' configSettings show throttlingMethod \"simulate\" for the old run and \"provided\" for the new one. What do you conclude?",
+  "hint": "Lesson 10.",
+  "choices": [
+   {
+    "text": "The change fixed LCP; the settings move the score alone",
+    "correct": false,
+    "why": "The settings change each timing, LCP above all."
+   },
+   {
+    "text": "Nothing about the change yet; rerun both with the same settings",
+    "correct": true,
+    "why": "Right. provided applies no throttling, and the unchanged slow page read 2.3 s that way in lesson 10."
+   },
+   {
+    "text": "The page got worse, since provided is the stricter method",
+    "correct": false,
+    "why": "provided is the loosest: it reports this machine over loopback."
+   },
+   {
+    "text": "LCP improved, though CLS has to be measured again",
+    "correct": false,
+    "why": "CLS is measured on the real load either way; the LCP comparison is the broken one."
+   }
+  ]
+ },
+ {
+  "id": "ex-76m4v5x7",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "A gate makes five k6 runs against a fixed limit and wants the verdict of the median run. At least how many runs have to cross the limit for the gate to fail?",
+  "hint": "Lesson 11.",
+  "value": 3,
+  "tolerance": 0,
+  "unit": "runs"
+ },
+ {
+  "id": "ex-2t2yh2ry",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "prompt": "A pull request adds a 450 KB script that runs after the fixed page has painted. In the lab, LCP and CLS do not move. Which lines of budget.py's table say OVER? Choose every one that does.",
+  "hint": "Lesson 11.",
+  "choices": [
+   {
+    "text": "script bytes",
+    "correct": true,
+    "why": "Right. 450,000 bytes against a limit of 50,000."
+   },
+   {
+    "text": "total bytes",
+    "correct": true,
+    "why": "Right. About 23,000 bytes before, plus 450,000, is over the 400,000 limit."
+   },
+   {
+    "text": "total requests",
+    "correct": false,
+    "why": "Four requests against a limit of fifteen."
+   },
+   {
+    "text": "image bytes",
+    "correct": false,
+    "why": "The pictures did not change."
+   }
+  ]
+ },
+ {
+  "id": "ex-fmhv36q7",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "To save effort, a team's gate writes each accepted run's p95 into baseline.json on its own. What does that cost?",
+  "hint": "Lesson 11.",
+  "choices": [
+   {
+    "text": "Nothing: the newest run is the best baseline there is",
+    "correct": false,
+    "why": "The newest run carries that run's noise and any regression in it."
+   },
+   {
+    "text": "More failures, as the limit grows stricter",
+    "correct": false,
+    "why": "Each slower run raises the limit, so the gate fails less, for the wrong reason."
+   },
+   {
+    "text": "The baseline follows each regression, so a slow drift is not caught",
+    "correct": true,
+    "why": "Right. A baseline refreshed by the last run moves up with every small slowdown; it is refreshed on purpose."
+   },
+   {
+    "text": "k6 refuses a baseline file it did not write",
+    "correct": false,
+    "why": "The script opens whatever JSON it is given."
+   }
+  ]
+ },
+ {
+  "id": "ex-ze0dymy1",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "An endpoint answers in about 2 ms, and three runs of the same code read p95s of 2.1, 3.2 and 3.4 ms. Someone proposes a tolerance of 10% over the baseline, with no absolute part. What will the gate do?",
+  "hint": "Lesson 11.",
+  "choices": [
+   {
+    "text": "Fail good changes: the spread between runs is far wider than 10%",
+    "correct": true,
+    "why": "Right. The tolerance has to be wider than the noise, and on a fast endpoint the noise is measured in milliseconds."
+   },
+   {
+    "text": "Catch real regressions sooner, at no cost",
+    "correct": false,
+    "why": "It catches noise as well, and a gate that is red for nothing gets ignored."
+   },
+   {
+    "text": "Pass almost anything, since 10% of 2 ms is tiny",
+    "correct": false,
+    "why": "A tiny allowance fails more often, not less."
+   },
+   {
+    "text": "Behave like lesson 11's 50% plus 5 ms",
+    "correct": false,
+    "why": "That one is wider than the 60% spread; this one is far narrower."
+   }
+  ]
+ },
+ {
+  "id": "ex-ncjw3ebt",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "prompt": "Put WCAG's three layers in order, from the outermost to the one a test passes or fails.",
+  "hint": "Lesson 12.",
+  "items": [
+   "Principle",
+   "Guideline",
+   "Success criterion"
+  ],
+  "trap": "A guideline is a goal with no level; the criteria inside it are what pass or fail."
+ },
+ {
+  "id": "ex-0da91kgt",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "In WCAG 2.2, how many success criteria, of levels A and AA together, must a page meet to conform at level AA?",
+  "hint": "Lesson 12.",
+  "value": 55,
+  "tolerance": 0,
+  "unit": "criteria"
+ },
+ {
+  "id": "ex-zc2vjtp3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A small online shop has its seat in São Paulo and sells to the public. Which rule binds its website?",
+  "hint": "Lesson 12.",
+  "choices": [
+   {
+    "text": "eMAG 3.1, the federal government's model",
+    "correct": false,
+    "why": "eMAG binds the government's own websites; a private shop meets the LBI."
+   },
+   {
+    "text": "Section 508, through public contracts",
+    "correct": false,
+    "why": "That is US federal procurement."
+   },
+   {
+    "text": "EN 301 549, through the European Accessibility Act",
+    "correct": false,
+    "why": "That reaches products and services sold in the EU."
+   },
+   {
+    "text": "The Lei Brasileira de Inclusão, article 63",
+    "correct": true,
+    "why": "Right. It covers the websites of companies with a seat in the country, read as pointing to WCAG."
+   }
+  ]
+ },
+ {
+  "id": "ex-dhjefkzn",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A designer says #777777 on white looks the same as #767676 and uses it for 16-pixel body text. What does the tester report?",
+  "hint": "Lesson 12.",
+  "choices": [
+   {
+    "text": "No finding, since the eye cannot tell them apart",
+    "correct": false,
+    "why": "The ratio is computed from the colours, never judged by eye."
+   },
+   {
+    "text": "A failure of 1.4.3: it measures 4.48:1",
+    "correct": true,
+    "why": "Right. The ratio is under 4.5; #767676, at 4.54:1, is the lightest grey that passes on white."
+   },
+   {
+    "text": "A pass at AA large, which covers body text",
+    "correct": false,
+    "why": "Sixteen-pixel normal text is ordinary text; large starts near 24 px, or 18.7 px bold."
+   },
+   {
+    "text": "A failure of 1.4.11, the contrast of things that are not text",
+    "correct": false,
+    "why": "1.4.11 covers borders, focus rings and icons; this is text, which is 1.4.3."
+   }
+  ]
+ },
+ {
+  "id": "ex-5rzw6e1t",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "prompt": "Which of these can an axe rule decide from the document alone? Choose every one it can.",
+  "hint": "Lesson 13.",
+  "choices": [
+   {
+    "text": "An <img> has no alt attribute",
+    "correct": true,
+    "why": "Right. The attribute is there or it is not."
+   },
+   {
+    "text": "A text colour measures 2.84:1 on its background",
+    "correct": true,
+    "why": "Right. Two computed colours have a ratio, over or under the line."
+   },
+   {
+    "text": "<html> has no lang attribute",
+    "correct": true,
+    "why": "Right. A fact about the markup."
+   },
+   {
+    "text": "The alt text says what the picture shows",
+    "correct": false,
+    "why": "A rule checks that a name exists, not that it is right."
+   },
+   {
+    "text": "Focus is visible after outline: none",
+    "correct": false,
+    "why": "The page might draw focus another way, so no rule can tell a missing indicator from a different one."
+   }
+  ]
+ },
+ {
+  "id": "ex-p1yx3tm4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "To reach level A quickly, a team plans to fix the findings axe marks critical and leave the rest. What is wrong with the plan?",
+  "hint": "Lesson 13.",
+  "choices": [
+   {
+    "text": "Critical findings are AAA, so the plan aims too high",
+    "correct": false,
+    "why": "Impact says nothing about level; image-alt is critical and level A."
+   },
+   {
+    "text": "axe has no impact levels; Lighthouse adds them",
+    "correct": false,
+    "why": "axe itself marks each violation minor, moderate, serious or critical."
+   },
+   {
+    "text": "Impact is not a WCAG level",
+    "correct": true,
+    "why": "Right. Triage by impact leaves level A failures marked serious untouched."
+   },
+   {
+    "text": "Nothing; critical and level A are the same list",
+    "correct": false,
+    "why": "html-has-lang is serious and level A, so the lists differ."
+   }
+  ]
+ },
+ {
+  "id": "ex-fwhs35ej",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A sticky footer completely covers the Book button when a keyboard user tabs to it, and audit.js prints 0 violations. Why did no rule report it?",
+  "hint": "Lesson 13.",
+  "choices": [
+   {
+    "text": "2.4.11 has no axe rule",
+    "correct": true,
+    "why": "Right. The wcag22aa tag holds one rule, target-size; Focus Not Obscured has none."
+   },
+   {
+    "text": "The footer's colours pass 1.4.3",
+    "correct": false,
+    "why": "Contrast is a different criterion, and it says nothing about covering."
+   },
+   {
+    "text": "axe skips elements with position: fixed",
+    "correct": false,
+    "why": "It does not; it simply has no rule for this criterion."
+   },
+   {
+    "text": "2.4.11 is level AAA, outside audit.js's five tags",
+    "correct": false,
+    "why": "2.4.11 is AA; the AAA one is 2.4.12."
+   }
+  ]
+ },
+ {
+  "id": "ex-arsrfac8",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each tool to where it puts its answer.",
+  "hint": "Lesson 13.",
+  "pairs": [
+   {
+    "left": "axe in a Playwright script",
+    "right": "a list of violations and an exit code"
+   },
+   {
+    "left": "Lighthouse's accessibility category",
+    "right": "a score out of 100 and the failing audits"
+   },
+   {
+    "left": "WAVE",
+    "right": "icons drawn on the page beside each element"
+   },
+   {
+    "left": "DevTools' accessibility pane",
+    "right": "the computed role and name of one element"
+   }
+  ],
+  "right_distractors": [
+   "a recording of what a screen reader said"
+  ]
+ },
+ {
+  "id": "ex-cq6a665q",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "easy",
+  "prompt": "Put the steps of the five-minute manual keyboard pass in order.",
+  "hint": "Lesson 14.",
+  "items": [
+   "Click in the address bar and press Tab once",
+   "Keep pressing Tab, checking the order and that the focus stays visible",
+   "Operate each control with Enter, Space, the arrows or Escape",
+   "Complete the task the page exists for",
+   "Press Shift+Tab back through the page"
+  ],
+  "trap": "The task comes after the controls have each been met; the reverse pass checks the order backwards at the end."
+ },
+ {
+  "id": "ex-y40zr6fq",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "On a payment form, each of three radio buttons takes its own Tab stop, and the arrow keys do nothing. What is wrong?",
+  "hint": "Lesson 14.",
+  "choices": [
+   {
+    "text": "Nothing: Tab is how a keyboard moves between options",
+    "correct": false,
+    "why": "Tab moves between controls; inside a widget the arrows do the moving."
+   },
+   {
+    "text": "The buttons need tabindex=\"1\" to come first",
+    "correct": false,
+    "why": "A positive tabindex reorders the whole page and fixes nothing here."
+   },
+   {
+    "text": "Radio buttons answer Space, so the arrows are optional",
+    "correct": false,
+    "why": "The arrows are the expected way to move within a group."
+   },
+   {
+    "text": "A radio group is one tab stop, and the arrows choose inside it",
+    "correct": true,
+    "why": "Right. Putting each option in the tab order makes a long group a wall of Tab presses."
+   }
+  ]
+ },
+ {
+  "id": "ex-qvv41tyy",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "In a comment form, a rich-text editor inserts a tab character when Tab is pressed and offers the keyboard no other way out. Which criterion fails?",
+  "hint": "Lesson 14.",
+  "choices": [
+   {
+    "text": "2.4.3 Focus Order",
+    "correct": false,
+    "why": "The order is not the problem; leaving is."
+   },
+   {
+    "text": "2.1.2 No Keyboard Trap",
+    "correct": true,
+    "why": "Right. If the keyboard can move the focus in, it has to be able to move it out."
+   },
+   {
+    "text": "2.4.7 Focus Visible",
+    "correct": false,
+    "why": "The focus could be perfectly visible inside the trap."
+   },
+   {
+    "text": "2.4.1 Bypass Blocks",
+    "correct": false,
+    "why": "That is about skipping repeated blocks, not escaping a widget."
+   }
+  ]
+ },
+ {
+  "id": "ex-9hr62rw9",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "As a keyboard user tabs down, a sticky header hides the top half of the focused link, and the bottom half stays visible. How does that stand against WCAG 2.2?",
+  "hint": "Lesson 14.",
+  "choices": [
+   {
+    "text": "It fails 2.4.11 at AA",
+    "correct": false,
+    "why": "2.4.11 fails when the control is entirely hidden, and here half of it shows."
+   },
+   {
+    "text": "It fails 2.4.7 Focus Visible",
+    "correct": false,
+    "why": "The indicator exists; part of it is covered."
+   },
+   {
+    "text": "It meets 2.4.11 at AA and fails 2.4.12 at AAA",
+    "correct": true,
+    "why": "Right. The minimum holds while any part of the control shows; the AAA version asks for none of it hidden."
+   },
+   {
+    "text": "It meets 2.4.12 as well",
+    "correct": false,
+    "why": "2.4.12 asks that no part of the control be hidden."
+   }
+  ]
+ },
+ {
+  "id": "ex-kx6hq22v",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "When a save completes, a page adds <p role=\"status\">Saved</p> to the document, element and text together. Screen reader users report hearing nothing. Why?",
+  "hint": "Lesson 15.",
+  "choices": [
+   {
+    "text": "The region arrived with its text",
+    "correct": true,
+    "why": "Right. The region has to be there, empty, before the message arrives."
+   },
+   {
+    "text": "status is too polite to be announced; it needs alert",
+    "correct": false,
+    "why": "Polite regions are announced once the reader finishes; the trouble is the region arriving late."
+   },
+   {
+    "text": "One word is too short for a reader to announce",
+    "correct": false,
+    "why": "Length has nothing to do with it."
+   },
+   {
+    "text": "Status messages are a AAA criterion readers skip",
+    "correct": false,
+    "why": "4.1.3 Status Messages is AA, and readers announce status regions."
+   }
+  ]
+ },
+ {
+  "id": "ex-nvsc32mn",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "An e-mail field has no <label>, no aria-label, and placeholder=\"Email\". What does the tester note?",
+  "hint": "Lesson 15.",
+  "choices": [
+   {
+    "text": "No issue: placeholder is the native source of a name",
+    "correct": false,
+    "why": "The native source is the <label>; placeholder is a last resort."
+   },
+   {
+    "text": "The field has no accessible name at all",
+    "correct": false,
+    "why": "The computation falls back to placeholder, so it has a weak one."
+   },
+   {
+    "text": "An aria-label would rank below the placeholder",
+    "correct": false,
+    "why": "aria-label is checked before the native source and before placeholder."
+   },
+   {
+    "text": "Its name rests on the placeholder alone",
+    "correct": true,
+    "why": "Right. A real <label> tied to the field is the source to reach for."
+   }
+  ]
+ },
+ {
+  "id": "ex-4p70z4ag",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A booking page shows \"Your seats are held for 2 more minutes\", updated each minute while the user fills in the form. How is that region marked?",
+  "hint": "Lesson 15.",
+  "choices": [
+   {
+    "text": "role=\"alert\", so each update interrupts at once",
+    "correct": false,
+    "why": "Interrupting somebody who is typing each minute is the wrong urgency; alert is for an error to deal with now."
+   },
+   {
+    "text": "role=\"status\": announced when the reader finishes, without interrupting",
+    "correct": true,
+    "why": "Right. It reports a state without moving the focus, which is 4.1.3, at a polite urgency."
+   },
+   {
+    "text": "No live region; the user reads it on reaching it",
+    "correct": false,
+    "why": "4.1.3 asks for a status message to be announced without moving the focus."
+   },
+   {
+    "text": "aria-invalid on the form while time runs out",
+    "correct": false,
+    "why": "aria-invalid is a field's state, not a message."
+   }
+  ]
+ },
+ {
+  "id": "ex-9n21t3zb",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "Analytics show that most of a theatre's customers book on iPhones. Which pairing does the screen reader charter name first?",
+  "hint": "Lesson 15.",
+  "choices": [
+   {
+    "text": "NVDA with Firefox",
+    "correct": false,
+    "why": "A Windows desktop pairing, right for desktop users and not for these."
+   },
+   {
+    "text": "TalkBack with Chrome",
+    "correct": false,
+    "why": "That is Android."
+   },
+   {
+    "text": "VoiceOver with Safari",
+    "correct": true,
+    "why": "Right. Which readers to test is a question about users, and the pairing matters as much as the reader."
+   },
+   {
+    "text": "Narrator with Edge",
+    "correct": false,
+    "why": "Built into Windows, not on a phone."
+   }
+  ]
+ },
+ {
+  "id": "ex-xrxjm1ay",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A team wants security findings with the line of code attached, produced while its existing functional tests run. Which kind of tool is that?",
+  "hint": "Lesson 16.",
+  "choices": [
+   {
+    "text": "IAST",
+    "correct": true,
+    "why": "Right. An agent inside the process watches what the tests make it do, line by line."
+   },
+   {
+    "text": "SAST",
+    "correct": false,
+    "why": "SAST reads the source without running it."
+   },
+   {
+    "text": "DAST",
+    "correct": false,
+    "why": "DAST sends requests from outside and knows nothing of the code."
+   },
+   {
+    "text": "SCA",
+    "correct": false,
+    "why": "SCA reads the list of dependencies."
+   }
+  ]
+ },
+ {
+  "id": "ex-v6cjqw95",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A bug bounty programme's published scope lists a company's booking site. A researcher wants to probe the payment provider that site calls. What applies?",
+  "hint": "Lesson 16.",
+  "choices": [
+   {
+    "text": "It is in scope, because the booking site depends on it",
+    "correct": false,
+    "why": "Depending on a service does not put it in somebody's scope."
+   },
+   {
+    "text": "It is allowed if each probe is harmless",
+    "correct": false,
+    "why": "Harmless or not, testing without permission is a crime."
+   },
+   {
+    "text": "It is allowed from staging, usually in scope",
+    "correct": false,
+    "why": "Staging is the company's; the provider is not."
+   },
+   {
+    "text": "It is out of scope: the provider is another owner, whose policy decides",
+    "correct": true,
+    "why": "Right. A bounty gives permission inside its published scope, and a third party's own policy decides what of theirs may be tested."
+   }
+  ]
+ },
+ {
+  "id": "ex-0mmtsh0p",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A security test asserts that a customer gets 403 from /staff/bookings, and nothing else. A refactor breaks the route for everybody, staff included, with a 403. What does the suite say?",
+  "hint": "Lesson 16.",
+  "choices": [
+   {
+    "text": "Red, because staff are refused as well",
+    "correct": false,
+    "why": "No test asks as a member of staff."
+   },
+   {
+    "text": "Green: it needs a staff control that expects 200",
+    "correct": true,
+    "why": "Right. A refusal-only test passes when the route is broken for everybody, and a broken route is not a defence."
+   },
+   {
+    "text": "Red, because 403 is an error status",
+    "correct": false,
+    "why": "403 is exactly what the test expects."
+   },
+   {
+    "text": "Neither: unittest skips routes that refuse",
+    "correct": false,
+    "why": "unittest runs the test; it simply passes."
+   }
+  ]
+ },
+ {
+  "id": "ex-7ccx21v4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A yearly penetration test finds a way to cancel another customer's booking, and the developers fix it. What does the tester add?",
+  "hint": "Lesson 16.",
+  "choices": [
+   {
+    "text": "A note to repeat that probe at next year's test",
+    "correct": false,
+    "why": "A year is a long time; a regression test watches each change."
+   },
+   {
+    "text": "A DAST scan, which finds the same defect",
+    "correct": false,
+    "why": "No scanner knows whose booking it is."
+   },
+   {
+    "text": "A regression test that fails if the fix goes",
+    "correct": true,
+    "why": "Right. Each finding, once fixed, becomes a test, so the next penetration test is spent on something new."
+   },
+   {
+    "text": "The report itself, which is the lasting record",
+    "correct": false,
+    "why": "The report describes the system as it was that fortnight."
+   }
+  ]
+ },
+ {
+  "id": "ex-jx5mcqca",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "Probing a system you do not own is illegal without the owner's written ___.",
+  "hint": "Lesson 16.",
+  "blanks": [
+   {
+    "accept": [
+     "permission",
+     "authorisation",
+     "authorization",
+     "consent"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-r7694nxy",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "The staff refund page has no link from any customer screen, and its developer calls that its protection. Which test does the tester write?",
+  "hint": "Lesson 17.",
+  "choices": [
+   {
+    "text": "A vertical escalation probe",
+    "correct": true,
+    "why": "Right. A missing link is not a lock; two accounts, one request, and a refusal with a control beside it."
+   },
+   {
+    "text": "Horizontal: one customer reads another's refund",
+    "correct": false,
+    "why": "That is the same role reaching other data; this is a role being reached for."
+   },
+   {
+    "text": "None: an unlinked page is not found",
+    "correct": false,
+    "why": "Typing the address finds it; that is the probe."
+   },
+   {
+    "text": "A DAST scan of the page",
+    "correct": false,
+    "why": "A scanner does not know who is allowed."
+   }
+  ]
+ },
+ {
+  "id": "ex-ez14hmak",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "To debug lockouts, a developer proposes logging the password each failed sign-in tried. What is the objection?",
+  "hint": "Lesson 17.",
+  "choices": [
+   {
+    "text": "It would slow each sign-in down under load",
+    "correct": false,
+    "why": "Writing a line costs little; what it holds is the problem."
+   },
+   {
+    "text": "Logs are not kept long enough to be of help",
+    "correct": false,
+    "why": "They are kept longer, which makes it worse."
+   },
+   {
+    "text": "scrypt would have to run twice",
+    "correct": false,
+    "why": "Logging a string involves no hashing."
+   },
+   {
+    "text": "It records near-misses of real passwords",
+    "correct": true,
+    "why": "Right. Logs are copied to more places and kept longer than the table they describe."
+   }
+  ]
+ },
+ {
+  "id": "ex-zghm4rp5",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A service checks each token carefully and then returns whichever booking id is asked for. How do you describe it?",
+  "hint": "Lesson 17.",
+  "choices": [
+   {
+    "text": "Authorisation works; authentication is missing",
+    "correct": false,
+    "why": "The token check is authentication, and it works."
+   },
+   {
+    "text": "Authentication works; authorisation is missing",
+    "correct": true,
+    "why": "Right. It knows who is asking and never asks whether this booking is theirs."
+   },
+   {
+    "text": "Both work, since a token is required",
+    "correct": false,
+    "why": "A token answers who; nothing asks whether the booking is theirs."
+   },
+   {
+    "text": "Neither works",
+    "correct": false,
+    "why": "Who is asking is checked correctly."
+   }
+  ]
+ },
+ {
+  "id": "ex-e4d2h1tf",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "Tokens on a service never expire, and logout deletes the browser's copy alone. A token turns up in a screenshot pasted into a support ticket a year ago. What can whoever reads the ticket do?",
+  "hint": "Lesson 17.",
+  "choices": [
+   {
+    "text": "No harm: the customer has logged out since",
+    "correct": false,
+    "why": "Logout here left the session alive on the server."
+   },
+   {
+    "text": "Read the password, which the token encodes",
+    "correct": false,
+    "why": "A token is random and encodes nothing."
+   },
+   {
+    "text": "Act as that customer today",
+    "correct": true,
+    "why": "Right. A token that does not end is a password that never changes, and the server still accepts it."
+   },
+   {
+    "text": "Read bookings but not book, as tokens are read-only",
+    "correct": false,
+    "why": "A token is the customer, as far as the service can tell."
+   }
+  ]
+ },
+ {
+  "id": "ex-bmj272v6",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A history scan keeps reporting a key that was rotated. To quiet it, a colleague allowlists the rule generic-api-key in the gitleaks configuration. What has changed?",
+  "hint": "Lesson 18.",
+  "choices": [
+   {
+    "text": "New generic keys are ignored too",
+    "correct": true,
+    "why": "Right. A fingerprint names one commit, file, rule and line; switching the rule off opens the hole the pipeline was built to close."
+   },
+   {
+    "text": "Nothing beyond what a fingerprint would do",
+    "correct": false,
+    "why": "A fingerprint accepts one finding; the allowlist accepts a whole rule."
+   },
+   {
+    "text": "The old key is taken out of the history",
+    "correct": false,
+    "why": "Configuration changes what is reported, not what the history holds."
+   },
+   {
+    "text": "The scan now reads new commits and skips old ones",
+    "correct": false,
+    "why": "The rule is off in every commit, new and old alike."
+   }
+  ]
+ },
+ {
+  "id": "ex-wcb8v518",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A team finds a key in its pushed history, runs git filter-repo, force-pushes and asks everybody to clone again. Nobody contacts the provider. What is the state?",
+  "hint": "Lesson 18.",
+  "choices": [
+   {
+    "text": "Closed, since no copy of the history holds the key now",
+    "correct": false,
+    "why": "Clones, forks and caches made before the rewrite keep it."
+   },
+   {
+    "text": "Closed, once the scan of the history comes back clean",
+    "correct": false,
+    "why": "A clean scan of the new history says nothing about the copies or the key."
+   },
+   {
+    "text": "Closed, as providers revoke keys from rewritten histories",
+    "correct": false,
+    "why": "A provider knows nothing of your rewrite."
+   },
+   {
+    "text": "Hidden, and the key still works for whoever holds an older copy",
+    "correct": true,
+    "why": "Right. Rotation is what makes every copy harmless; rewriting tidies the repository and un-leaks nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-k5nvvwgc",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "To prove the pipeline's scanner works, a test commits payment_api_key = \"example-key-9fQ2xL7mZ4pR8tW1\" and expects a failure. The pipeline stays green. What does that show?",
+  "hint": "Lesson 18.",
+  "choices": [
+   {
+    "text": "The scanner is broken and has to be replaced",
+    "correct": false,
+    "why": "It behaved as designed: it skips placeholders."
+   },
+   {
+    "text": "Nothing: gitleaks skips values carrying placeholder words",
+    "correct": true,
+    "why": "Right. A planted key has to look random to be found, with the note that it is fake kept outside the value."
+   },
+   {
+    "text": "The pipeline reads the files and not the history",
+    "correct": false,
+    "why": "Where it reads is not the issue; the value is."
+   },
+   {
+    "text": "The rule needs a higher entropy threshold",
+    "correct": false,
+    "why": "A higher threshold would report fewer values, not more."
+   }
+  ]
+ },
+ {
+  "id": "ex-fpk1zwx4",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A new team member clones the repository, pastes a key into a file and commits, and nothing refuses it, though the team set up the gitleaks hook long ago. Why?",
+  "hint": "Lesson 18.",
+  "choices": [
+   {
+    "text": "The hook scans the history rather than what is staged",
+    "correct": false,
+    "why": "--staged reads exactly what is about to be committed."
+   },
+   {
+    "text": "gitleaks skips files that were not committed before",
+    "correct": false,
+    "why": "A new file's lines are staged changes like any other."
+   },
+   {
+    "text": "A hook lives in .git/, which a clone does not carry",
+    "correct": true,
+    "why": "Right. Until somebody installs it on that machine there is no hook, which is why the pipeline's scan is the check that counts."
+   },
+   {
+    "text": "The commit was too small to be worth scanning",
+    "correct": false,
+    "why": "One line is enough for a finding."
+   }
+  ]
+ },
+ {
+  "id": "ex-1t7aa565",
+  "version": 1,
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each interpreter to the defence that keeps user text out of its instructions.",
+  "hint": "Lesson 20.",
+  "pairs": [
+   {
+    "left": "a database reading SQL",
+    "right": "a parameterised query"
+   },
+   {
+    "left": "a browser reading HTML",
+    "right": "encoding on the way out, for the context"
+   },
+   {
+    "left": "a service reading a form as a decision",
+    "right": "a CSRF token tied to the session"
+   },
+   {
+    "left": "a filesystem reading names and types",
+    "right": "a name made by the server, and the type read from the bytes"
+   }
+  ],
+  "right_distractors": [
+   "angle brackets stripped when the text is saved"
+  ]
+ },
+ {
+  "id": "ex-cdmxwvn1",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A lookup returns the booking whose reference matches ref LIKE ?, parameterised, and is meant to return the one booking for a reference a customer knows. Sending % returns other customers' bookings. How is it recorded?",
+  "hint": "Lesson 20.",
+  "choices": [
+   {
+    "text": "A finding: escape the wildcards with ESCAPE, or compare with =",
+    "correct": true,
+    "why": "Right. Over private records, wildcards that widen a match are a finding, not a curiosity."
+   },
+   {
+    "text": "No finding, since the query is parameterised",
+    "correct": false,
+    "why": "The parameter keeps the value out of SQL, but LIKE still reads % as a wildcard inside it."
+   },
+   {
+    "text": "SQL injection: the % ran as SQL",
+    "correct": false,
+    "why": "Nothing ran as SQL; the wildcard is LIKE's own syntax."
+   },
+   {
+    "text": "A false positive caused by the probe",
+    "correct": false,
+    "why": "The probe showed real behaviour on real data."
+   }
+  ]
+ },
+ {
+  "id": "ex-s90e5wva",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A page writes a booking holder's name into an inline script, var holder = \"…\";, after passing it through html.escape. Is that the right defence?",
+  "hint": "Lesson 20.",
+  "choices": [
+   {
+    "text": "Yes: html.escape encodes quotes, so the string is closed safely",
+    "correct": false,
+    "why": "It encodes them as HTML entities, which a script does not read as HTML; the context is wrong."
+   },
+   {
+    "text": "Yes, because the Content-Security-Policy blocks inline scripts",
+    "correct": false,
+    "why": "A policy is a second layer, not a reason to drop the first."
+   },
+   {
+    "text": "No: strip < and > from the name when it is saved",
+    "correct": false,
+    "why": "Stripping on input mangles names and misses other contexts."
+   },
+   {
+    "text": "No: a script string needs its own encoding",
+    "correct": true,
+    "why": "Right. A script string does not decode HTML entities and reads a backslash as an escape; html.escape is for HTML text and attributes."
+   }
+  ]
+ },
+ {
+  "id": "ex-ece9bbyg",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "An upload starts with the eight bytes of a PNG signature and carries something else after them, and account.py accepts it. What does lesson 20 say about that?",
+  "hint": "Lesson 20.",
+  "choices": [
+   {
+    "text": "It is refused, since the size check reads the whole file",
+    "correct": false,
+    "why": "Size comes from Content-Length; the content check reads the start."
+   },
+   {
+    "text": "The first-bytes check is a floor; re-encoding and a malware scan go further",
+    "correct": true,
+    "why": "Right. Services that take images from strangers re-encode them with an image library and scan what they keep."
+   },
+   {
+    "text": "It is harmless, since the server chose its name",
+    "correct": false,
+    "why": "The name is one defence of four, not a reason to trust the content."
+   },
+   {
+    "text": "nosniff makes the content check unnecessary",
+    "correct": false,
+    "why": "nosniff governs how a browser reads a file it is served; it inspects no upload."
+   }
+  ]
+ },
+ {
+  "id": "ex-9rbpm0c4",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "The buckets of /shows/{id} after a run: 963 requests in all, 887 at most 0.05 s and 952 at most 0.1 s. How many requests took longer than 50 ms?",
+  "hint": "Lesson 22.",
+  "value": 76,
+  "tolerance": 0,
+  "unit": "requests"
+ },
+ {
+  "id": "ex-pkkrxzax",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A release goes out at 14:00, and by 14:20 a new exception appears in checkout for some users. Which of the five products starts from the question \"which error is new since the release, and how many users did it hit\"?",
+  "hint": "Lesson 22.",
+  "choices": [
+   {
+    "text": "Grafana",
+    "correct": false,
+    "why": "Grafana draws what a data source answers and stores nothing itself."
+   },
+   {
+    "text": "Kibana",
+    "correct": false,
+    "why": "Kibana searches log lines; grouping exceptions by release is where Sentry started."
+   },
+   {
+    "text": "Sentry",
+    "correct": true,
+    "why": "Right. It groups each exception with its stack trace, by release and by users hit."
+   },
+   {
+    "text": "Datadog",
+    "correct": false,
+    "why": "Datadog started from infrastructure metrics on each host."
+   }
+  ]
+ },
+ {
+  "id": "ex-qdp1bd8t",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "The requirement is 200 ms, and a histogram's buckets near it are 0.1 s and 0.25 s. The team wants the exact number of requests that met the requirement. What should change?",
+  "hint": "Lesson 22.",
+  "choices": [
+   {
+    "text": "A bucket boundary at 0.2 s",
+    "correct": true,
+    "why": "Right. Then the count under 200 ms is read straight from a bucket, with no estimate."
+   },
+   {
+    "text": "Nothing: histogram_quantile interpolates exactly",
+    "correct": false,
+    "why": "It assumes an even spread inside a bucket, so its answer is an estimate."
+   },
+   {
+    "text": "Take the mean of the 0.1 and 0.25 counts",
+    "correct": false,
+    "why": "That is a number nobody measured."
+   },
+   {
+    "text": "Divide _sum by _count and compare it with 200 ms",
+    "correct": false,
+    "why": "That gives the mean, the statistic lesson 8 warns against."
+   }
+  ]
+ },
+ {
+  "id": "ex-6qkd4cnn",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "up for boxoffice reads 1 at each scrape, while customers report that bookings fail. What does that pair tell you?",
+  "hint": "Lesson 22.",
+  "choices": [
+   {
+    "text": "The reports are mistaken, since the target is up",
+    "correct": false,
+    "why": "up answers whether a scrape worked, not whether a booking did."
+   },
+   {
+    "text": "Prometheus has stopped scraping",
+    "correct": false,
+    "why": "up at 1 means the last scrape succeeded."
+   },
+   {
+    "text": "The node exporter has gone down",
+    "correct": false,
+    "why": "That is a separate job; boxoffice's up is about boxoffice."
+   },
+   {
+    "text": "The process answers /metrics, which says nothing about bookings succeeding",
+    "correct": true,
+    "why": "Right. up is the cheapest alert and the least informative; look at the error ratio and the log."
+   }
+  ]
+ },
+ {
+  "id": "ex-srxwrrph",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "prompt": "A probe runs once a minute on the box office's own server. Which of these outages does it miss? Choose every one it misses.",
+  "hint": "Lesson 23.",
+  "choices": [
+   {
+    "text": "The public DNS record points at the wrong address",
+    "correct": true,
+    "why": "Right. A probe beside the server never goes through the public name."
+   },
+   {
+    "text": "The certificate customers see expired at midnight",
+    "correct": true,
+    "why": "Right. The probe speaks plain HTTP to 127.0.0.1 and meets no certificate."
+   },
+   {
+    "text": "The load balancer sends the traffic to a machine that is switched off",
+    "correct": true,
+    "why": "Right. The probe does not pass through the load balancer."
+   },
+   {
+    "text": "The payment provider takes 900 ms a call",
+    "correct": false,
+    "why": "The booking step's time limit catches that, from anywhere."
+   },
+   {
+    "text": "The server process has stopped",
+    "correct": false,
+    "why": "The probe gets connection refused and fails."
+   }
+  ]
+ },
+ {
+  "id": "ex-jpmqjpy5",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A probe sends the header X-Synthetic: 1 and books under an ordinary customer name, and the application ignores the header. What goes wrong?",
+  "hint": "Lesson 23.",
+  "choices": [
+   {
+    "text": "Nothing, since the header marks each request",
+    "correct": false,
+    "why": "A mark on a request that leaves no trace in the row marks nothing that stays."
+   },
+   {
+    "text": "Sales reports count the probe's bookings",
+    "correct": true,
+    "why": "Right. The mark has to reach the rows, because that is where the sales report reads."
+   },
+   {
+    "text": "The probe fails its body check",
+    "correct": false,
+    "why": "The booking is answered normally, so the body check passes."
+   },
+   {
+    "text": "The server blocks the probe as a bot",
+    "correct": false,
+    "why": "Nothing in the box office looks at the header."
+   }
+  ]
+ },
+ {
+  "id": "ex-vn52x2hf",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A probe checks each step's status and body but has no time limit. Which failure from lesson 23 would it report as a pass?",
+  "hint": "Lesson 23.",
+  "choices": [
+   {
+    "text": "The server stopped, with connection refused",
+    "correct": false,
+    "why": "No answer at all fails the first step."
+   },
+   {
+    "text": "GET /shows answering 200 with an empty list",
+    "correct": false,
+    "why": "The body check catches it."
+   },
+   {
+    "text": "Payments at 900 ms, each booking still answered 201",
+    "correct": true,
+    "why": "Right. Every status was a success; only the time check catches a box office that works and is too slow."
+   },
+   {
+    "text": "A 201 for a different seat from the one asked",
+    "correct": false,
+    "why": "The body check compares the seat."
+   }
+  ]
+ },
+ {
+  "id": "ex-m5yyz7xd",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "A probe run once is a test; run on a ___, it becomes a monitor.",
+  "hint": "Lesson 23.",
+  "blanks": [
+   {
+    "accept": [
+     "schedule",
+     "timer"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-qgd0hk46",
+  "version": 1,
+  "type": "ordering",
+  "difficulty": "medium",
+  "prompt": "Put the moments of a paged alert in order, from the first failure.",
+  "hint": "Lesson 24.",
+  "items": [
+   "The 5xx answers begin",
+   "The five-minute error ratio passes 2% and the rule turns pending",
+   "for: runs out and the alert fires",
+   "Alertmanager waits group_wait for the rest of the group",
+   "The paging service rings the person on call"
+  ],
+  "trap": "Pending lasts the whole of for:; grouping happens after the rule fires and before any phone rings."
+ },
+ {
+  "id": "ex-a01784w5",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "An SLO's error budget is set over 30 days. The current error ratio gives a burn rate of 6. In how many days would the month's budget be gone at this rate?",
+  "hint": "Lesson 24.",
+  "value": 5,
+  "tolerance": 0,
+  "unit": "days"
+ },
+ {
+  "id": "ex-v41cm0zv",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A database fails, and twenty services that use it each fire an error-ratio alert named after the service. Which Alertmanager feature keeps the person on call from getting twenty pages about one cause?",
+  "hint": "Lesson 24.",
+  "choices": [
+   {
+    "text": "Inhibition, holding back what the database alert explains",
+    "correct": true,
+    "why": "Right. While the database alert fires, the alerts it explains are held back."
+   },
+   {
+    "text": "Grouping by alertname",
+    "correct": false,
+    "why": "The twenty alerts have twenty names, so grouping by name keeps them apart."
+   },
+   {
+    "text": "A repeat_interval of four hours",
+    "correct": false,
+    "why": "That spaces out repeats of a firing alert; the first twenty still arrive."
+   },
+   {
+    "text": "A longer for: on each rule",
+    "correct": false,
+    "why": "Waiting longer delays all twenty equally."
+   }
+  ]
+ },
+ {
+  "id": "ex-mxk03cx9",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "During a tidy-up, severity: page is moved from a rule's labels to its annotations. The rule still fires on time. What changes?",
+  "hint": "Lesson 24.",
+  "choices": [
+   {
+    "text": "Nothing, since Alertmanager reads both",
+    "correct": false,
+    "why": "Routing matches labels; annotations are for the person reading."
+   },
+   {
+    "text": "promtool check rules starts to fail",
+    "correct": false,
+    "why": "The file is still valid YAML and PromQL."
+   },
+   {
+    "text": "The alert stops reaching firing",
+    "correct": false,
+    "why": "Firing is decided by expr and for."
+   },
+   {
+    "text": "The page route stops matching, so it lands in the team queue",
+    "correct": true,
+    "why": "Right. The person on call is no longer told, and the rule looks healthy."
+   }
+  ]
+ }
+]
