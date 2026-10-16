@@ -45,28 +45,28 @@ def l17_map(lang):
                    rules=[('60 and over pay half', ['59 pays R$ 36,00', '60 pays R$ 18,00', '61 pays R$ 18,00']),
                           ('half is the most', ['adult, Wed: R$ 18,00', 'student, Wed: R$ 18,00',
                                                  'child, Wed 15:00: R$ 14,00'])],
-                   q='is a session ever typed as 9:30?', who='Lia asks Célia',
+                   q='accept 9:30, or always 09:30?', who='Lia asks Célia',
                    keys=['story: a yellow card', 'rule: blue', 'example: green', 'question: red'],
                    label='An example map. At the top, the story card: older customers and students pay half, without '
                          'stacking with Wednesday. Two rule cards under it. Rule one, 60 and over pay half, with three '
                          'examples: 59 pays R$ 36,00, 60 pays R$ 18,00, 61 pays R$ 18,00. Rule two, half is the most, '
                          'with three examples: an adult on Wednesday pays R$ 18,00, a student on Wednesday R$ 18,00, a '
-                         'child at a Wednesday 15:00 session R$ 14,00. To the right, one question card: is a session '
-                         'ever typed as 9:30? Lia asks Célia.',
+                         'child at a Wednesday 15:00 session R$ 14,00. To the right, one question card: '
+                         'should the program accept 9:30, or the schedule always say 09:30? Lia asks Célia.',
                    cap='Cine Aurora’s map for one story. The six examples are its acceptance tests; the question has an '
                        'owner and no answer yet.'),
         'pt': dict(story='idosos e estudantes pagam meia, sem somar com a quarta',
                    rules=[('60 ou mais pagam meia', ['59 paga R$ 36,00', '60 paga R$ 18,00', '61 paga R$ 18,00']),
                           ('meia é o máximo', ['adulto, qua: R$ 18,00', 'estudante, qua: R$ 18,00',
                                                'criança, qua 15:00: R$ 14,00'])],
-                   q='alguém digita uma sessão como 9:30?', who='a Lia pergunta à Célia',
+                   q='aceitar 9:30, ou sempre 09:30?', who='a Lia pergunta à Célia',
                    keys=['história: cartão amarelo', 'regra: azul', 'exemplo: verde', 'pergunta: vermelho'],
                    label='Um mapa de exemplos. No topo, o cartão da história: idosos e estudantes pagam meia, sem somar '
                          'com a quarta. Dois cartões de regra embaixo. Regra um, 60 ou mais pagam meia, com três '
                          'exemplos: 59 paga R$ 36,00, 60 paga R$ 18,00, 61 paga R$ 18,00. Regra dois, meia é o máximo, '
                          'com três exemplos: um adulto na quarta paga R$ 18,00, um estudante na quarta R$ 18,00, uma '
-                         'criança numa sessão de quarta às 15:00 R$ 14,00. À direita, um cartão de pergunta: alguém '
-                         'digita uma sessão como 9:30? A Lia pergunta à Célia.',
+                         'criança numa sessão de quarta às 15:00 R$ 14,00. À direita, um cartão de pergunta: '
+                         'o programa deve aceitar 9:30, ou a programação dizer sempre 09:30? A Lia pergunta à Célia.',
                    cap='O mapa do Cine Aurora para uma história. Os seis exemplos são os testes de aceitação dela; a '
                        'pergunta tem dono e ainda não tem resposta.'),
     }[lang]

@@ -125,8 +125,9 @@ story so far, and it will run on every change from now on.
 
 The six rows say the rule holds for the six examples the three amigos chose. They do not say the program is right
 about every input, and the map already showed one thing they leave out: the red card. A session typed as `9:30`
-still compares as text, and still costs the evening price. Nobody has decided yet whether the box office ever
-types it, so there is no row for it, and the acceptance tests are honest about that by not pretending.
+still compares as text, and still costs the evening price. Until Célia answers, nobody knows whether the right
+example is *9:30 costs the matinée price* or *9:30 is refused*, so there is no row for it, and the acceptance
+tests are honest about that by not pretending.
 
 That is the honest position for ATDD to leave a tester in. The agreed examples are covered, every day,
 automatically. What is left is exactly what the earlier lessons gave a tester to do: owning the open questions,

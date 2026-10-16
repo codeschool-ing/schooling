@@ -125,9 +125,9 @@ cada história até aqui, e vai rodar a cada mudança daqui em diante.
 
 As seis linhas dizem que a regra vale para os seis exemplos que os três amigos escolheram. Não dizem que o programa
 está certo para toda entrada, e o mapa já mostrava uma coisa que elas deixam de fora: o cartão vermelho. Uma sessão
-digitada como `9:30` ainda é comparada como texto, e ainda custa o preço da noite. Ninguém decidiu ainda se a
-bilheteria algum dia digita isso, então não há linha para isso, e os testes de aceitação são honestos a respeito ao
-não fingir.
+digitada como `9:30` ainda é comparada como texto, e ainda custa o preço da noite. Até a Célia responder, ninguém sabe se o exemplo
+certo é *9:30 custa o preço da matinê* ou *9:30 é recusado*, então não há linha para isso, e os testes de aceitação
+são honestos a respeito ao não fingir.
 
 Essa é a posição honesta em que o ATDD deixa quem testa. Os exemplos combinados estão cobertos, todo dia,
 automaticamente. O que sobra é exatamente o que as aulas anteriores deram a quem testa: ser dono das perguntas em
