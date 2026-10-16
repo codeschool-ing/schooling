@@ -1,0 +1,49 @@
+---
+title: Esquema na escrita, esquema na leitura
+version: 1
+---
+
+**Todo dado é conferido contra um esquema em algum momento, nem que seja pela pessoa que lê um
+gráfico. A escolha de verdade é quando a conferência acontece, e quem está ali quando ela falha.** O
+esquema na escrita a põe na porta, antes de qualquer coisa ser guardada. O esquema na leitura a põe em
+cada leitor, depois de tudo guardado. As seções anteriores fizeram as duas coisas: o `structured.py`
+recusou `9 min` no momento da escrita, e o `loose.py`, o `flatten.py` e o `drift.py` decidiram cada um
+o que o dado queria dizer só na hora de ler.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 270\" role=\"img\" aria-label=\"Duas faixas. Esquema na escrita: quem escreve manda para uma conferência, que devolve um valor ruim a quem escreveu e passa os bons para uma tabela, que dois leitores usam como está. Esquema na leitura: quem escreve manda direto para um armazenamento que guarda tudo, e cada um de dois leitores roda a sua própria conferência.\" data-fig=\"on-write-on-read\"><defs><marker id=\"on-write-on-read-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"14\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">esquema na escrita</text><rect x=\"14\" y=\"40\" width=\"110\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"69.0\" y=\"65.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">quem escreve</text><line x1=\"124\" y1=\"65\" x2=\"172\" y2=\"65\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><rect x=\"174\" y=\"40\" width=\"130\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"239.0\" y=\"49.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.0\" fill=\"var(--paper)\" font-weight=\"600\">a conferência</text><text x=\"239.0\" y=\"65.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">confere todo</text><text x=\"239.0\" y=\"80.5\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">valor</text><line x1=\"304\" y1=\"65\" x2=\"352\" y2=\"65\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><rect x=\"354\" y=\"40\" width=\"130\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"419.0\" y=\"57.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.0\" fill=\"var(--paper)\" font-weight=\"600\">uma tabela</text><text x=\"419.0\" y=\"72.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">só o que coube</text><line x1=\"484\" y1=\"58\" x2=\"556\" y2=\"42\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><line x1=\"484\" y1=\"72\" x2=\"556\" y2=\"88\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><rect x=\"558\" y=\"22\" width=\"148\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"632.0\" y=\"40.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">leitor: confia</text><rect x=\"558\" y=\"70\" width=\"148\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"632.0\" y=\"88.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">leitor: confia</text><line x1=\"239\" y1=\"90\" x2=\"239\" y2=\"112\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><line x1=\"239\" y1=\"112\" x2=\"69\" y2=\"112\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></line><line x1=\"69\" y1=\"112\" x2=\"69\" y2=\"92\" stroke=\"var(--amber)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><text x=\"154\" y=\"124\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">recusado, agora</text><line x1=\"14\" y1=\"142\" x2=\"706\" y2=\"142\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"4 4\"></line><text x=\"14\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">esquema na leitura</text><rect x=\"14\" y=\"186\" width=\"110\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"69.0\" y=\"211.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">quem escreve</text><line x1=\"124\" y1=\"211\" x2=\"260\" y2=\"211\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><rect x=\"262\" y=\"186\" width=\"160\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"342.0\" y=\"203.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.0\" fill=\"var(--paper)\" font-weight=\"600\">armazenamento</text><text x=\"342.0\" y=\"218.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">tudo o que veio</text><line x1=\"422\" y1=\"204\" x2=\"494\" y2=\"186\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><line x1=\"422\" y1=\"218\" x2=\"494\" y2=\"236\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#on-write-on-read-ah)\"></line><rect x=\"496\" y=\"164\" width=\"210\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"601.0\" y=\"184.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">leitor + a própria conferência</text><rect x=\"496\" y=\"218\" width=\"210\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"601.0\" y=\"238.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">leitor + a própria conferência</text></svg>", "caption": "A mesma conferência em dois lugares. Na escrita ela roda uma vez, antes de qualquer coisa ser guardada; na leitura ela roda em cada leitor, depois de tudo guardado."}
+```
+
+Nenhum dos dois é o melhor. Eles põem o mesmo custo em lugares diferentes:
+
+| | esquema na escrita | esquema na leitura |
+|---|---|---|
+| um valor errado é pego | quando chega, por quem escreve | quando é usado, por cada leitor |
+| quem precisa concordar antes | quem escreve e o dono do esquema | ninguém; quem escreve só escreve |
+| um campo novo | uma mudança no esquema, feita de propósito | aparece no registro seguinte |
+| o que fica guardado | só o dado que coube | tudo o que foi enviado |
+| os leitores podem confiar na forma | sim, sem olhar | só depois de conferir por conta própria |
+| a mesma conferência escrita | uma vez | uma vez por leitor, e eles podem discordar |
+| na Roda Livre | as tabelas de viagens e de pagamentos | os eventos do aplicativo recém-chegados |
+
+Duas linhas dessa tabela explicam a maior parte das discussões sobre ela. **O que fica guardado**: o
+esquema na escrita guarda só o que coube, então um lote recusado às três da manhã é um lote que não está
+em lugar nenhum, e alguém precisa ir buscá-lo de novo. O esquema na leitura guarda tudo, e é isso que o
+torna o jeito natural de pousar o dado primeiro e decidir depois. **A mesma conferência escrita uma vez por leitor**: o Caio e o analista transformam `bike.battery`
+em número cada um do seu jeito, um tirando o `%` e o outro pulando as linhas que o têm. Eles chegam a
+duas médias diferentes a partir de um arquivo só, e os dois estão confiantes.
+
+## As plataformas usam os dois, nessa ordem
+
+Os dois não são campos rivais. Uma plataforma de dados normalmente pousa o dado na leitura e o serve na
+escrita. A aula 3 deu nome às zonas: a zona **bruta** guarda o que cada fonte mandou, exatamente como
+veio, sem esquema imposto, então nada se perde para uma conferência rígida demais. As zonas **limpa** e
+**curada** são tabelas com esquemas declarados, escritas por um pipeline que faz a leitura, o
+achatamento e a conferência uma vez, para que ninguém adiante precise fazer. Na Roda Livre os eventos
+do aplicativo pousam como JSON Lines na zona bruta, e um job noturno os escreve numa tabela `rides` e
+numa tabela `charges` cujas colunas e tipos são fixos.
+
+Esse arranjo fica com a metade boa de cada um. A zona bruta sempre pode ser lida de novo com um leitor
+melhor. As tabelas curadas dão a todo analista a mesma resposta. E o lugar onde o esquema na leitura
+vira esquema na escrita, o job do meio, é o único lugar onde a deriva precisa ser percebida, e é por
+isso que a conferência da seção anterior mora ali.

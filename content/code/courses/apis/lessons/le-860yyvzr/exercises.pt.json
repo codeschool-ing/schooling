@@ -1,0 +1,634 @@
+{
+  "ex-6ym1p79s": {
+    "prompt": "O distribuidor oferece `GetStock` e `PlaceOrder`. Como um cliente SOAP diz a ele qual das duas quer?",
+    "hint": "Pense em quantos endereços o serviço tem.",
+    "choices": [
+      {
+        "text": "Pelo método HTTP: `GET` para uma, `POST` para a outra",
+        "why": "É assim que o REST diz o que fazer. Um serviço SOAP recebe `POST` para toda operação, inclusive as que só leem."
+      },
+      {
+        "text": "Pelo endereço: cada operação tem um caminho próprio",
+        "why": "O serviço tem um endereço só, `/distributor`, para as duas operações. Um caminho por ação está mais perto do REST."
+      },
+      {
+        "text": "Pelo elemento dentro do `Body`",
+        "why": "Certo. A operação é nomeada dentro da mensagem, pelo primeiro elemento, e o cabeçalho `SOAPAction` repete isso para o HTTP."
+      },
+      {
+        "text": "Por uma query string como `?op=GetStock`",
+        "why": "A única query string que este serviço lê é `?wsdl`, para enviar o contrato. As operações viajam no envelope."
+      }
+    ]
+  },
+  "ex-zk9rda5q": {
+    "prompt": "Ligue cada parte de uma mensagem SOAP ao que ela carrega.",
+    "hint": "Uma delas é opcional.",
+    "pairs": [
+      {
+        "left": "`Envelope`",
+        "right": "a raiz, cujo namespace diz a versão do SOAP"
+      },
+      {
+        "left": "`Header`",
+        "right": "o que é sobre a mensagem: um token, um id de transação"
+      },
+      {
+        "left": "`Body`",
+        "right": "a operação e seus argumentos, ou o resultado"
+      },
+      {
+        "left": "`Fault`",
+        "right": "o que deu errado, no lugar do resultado"
+      }
+    ],
+    "right_distractors": [
+      "o status HTTP com que a resposta viaja"
+    ]
+  },
+  "ex-4g3e04ky": {
+    "prompt": "Um colega diz que o SOAP morreu, então a loja deveria esperar o distribuidor oferecer REST. O que a aula responde?",
+    "hint": "Ser escolhido e estar em uso são coisas diferentes.",
+    "choices": [
+      {
+        "text": "Concordar: o SOAP foi retirado como padrão, então clientes novos não têm mais suporte",
+        "why": "Nada foi retirado. Toolkits como o zeep ainda leem WSDLs, e o distribuidor ainda responde."
+      },
+      {
+        "text": "Deixou de ser escolhido para APIs novas, mas sistemas que funcionam e falam SOAP são integrados, não reescritos",
+        "why": "Certo. Os serviços da NF-e, bancos, ERPs e este distribuidor estão todos rodando agora, e a integração é trabalho deste ano."
+      },
+      {
+        "text": "Esperar: um parceiro que ainda roda SOAP está fadado a migrar para REST em um ou dois anos, e integrar agora é trabalho perdido",
+        "why": "Um sistema que funciona há vinte anos não é reescrito porque o formato saiu de moda. A loja precisa de estoque agora."
+      },
+      {
+        "text": "Usar REST mesmo assim, mandando JSON para o endereço SOAP",
+        "why": "O serviço lê envelopes no namespace dele. Um corpo JSON não é XML bem formado, e ele responderia com uma falha."
+      }
+    ]
+  },
+  "ex-7jhsev44": {
+    "prompt": "Ponha as partes de um WSDL na ordem em que as perguntas de quem chama as encontram, começando por \"para onde eu mando?\".",
+    "hint": "Leia o arquivo de baixo para cima.",
+    "items": [
+      "`service`",
+      "`binding`",
+      "`portType`",
+      "`message`",
+      "`types`"
+    ],
+    "trap": "Ler de cima para baixo encontra os tipos antes de saber para que servem."
+  },
+  "ex-0dx5nyzv": {
+    "prompt": "O schema do distribuidor diz `elementFormDefault=\"qualified\"`. O que isso muda numa requisição?",
+    "hint": "Veja como o `getstock.xml` escreve o ISBN.",
+    "choices": [
+      {
+        "text": "Todo valor precisa ser qualificado com o tipo do XML Schema, como em `xsd:string`",
+        "why": "Anotações de tipo nos valores são o que corpos `encoded` acrescentam. Este arquivo é `literal`, e os tipos ficam no schema."
+      },
+      {
+        "text": "A requisição precisa nomear a operação no cabeçalho `SOAPAction`",
+        "why": "Isso vem do `binding` e do SOAP 1.1 sobre HTTP, não do schema."
+      },
+      {
+        "text": "Os elementos internos também levam o namespace: `d:ISBN`",
+        "why": "Certo. Sem ele, `ISBN` é um elemento sem namespace, e o serviço não achou o que procurava."
+      },
+      {
+        "text": "O serviço aceita os nomes dos elementos com qualquer caixa de letra",
+        "why": "Nomes XML diferenciam maiúsculas de minúsculas, diga o schema o que disser; `Isbn` é outro elemento, diferente de `ISBN`."
+      }
+    ]
+  },
+  "ex-w3n6ynqy": {
+    "prompt": "Para quem um WSDL é escrito, principalmente?",
+    "hint": "A seção depois dela constrói algo a partir dele.",
+    "choices": [
+      {
+        "text": "Para quem mantém o serviço, como anotações internas",
+        "why": "Anotações internas não precisariam de schema e binding. O WSDL é publicado em `?wsdl` para quem chama."
+      },
+      {
+        "text": "Para um navegador, que o mostra como a página inicial do serviço",
+        "why": "Um navegador mostra XML como árvore, no máximo. Nada exibe um WSDL como página."
+      },
+      {
+        "text": "Para programas",
+        "why": "Certo. Um toolkit o lê e constrói o cliente; uma pessoa o lê para saber o que o toolkit vai fazer."
+      },
+      {
+        "text": "Para o servidor HTTP, que roteia as requisições lendo o arquivo a cada chamada",
+        "why": "O substituto despacha pelo elemento no `Body`; ele lê o arquivo WSDL só para enviá-lo em `?wsdl`."
+      }
+    ]
+  },
+  "ex-a69ekt8y": {
+    "prompt": "A equipe da loja testa contra o substituto por semanas, e todo teste passa. O que isso não contou a ela sobre o distribuidor real?",
+    "hint": "Um substituto é construído a partir do contrato.",
+    "choices": [
+      {
+        "text": "Se os envelopes deles batem com o WSDL que receberam",
+        "why": "Isso um substituto construído a partir do mesmo WSDL confere: um namespace errado é recusado aqui como seria lá."
+      },
+      {
+        "text": "Quais operações existem",
+        "why": "As operações estão no WSDL, que os dois compartilham."
+      },
+      {
+        "text": "Como é uma falha",
+        "why": "A forma da falha é fixada pelo SOAP 1.1, e o substituto manda o mesmo `faultcode`, `faultstring` e `detail`."
+      },
+      {
+        "text": "Como o serviço real se comporta num dia ruim",
+        "why": "Certo. O substituto responde na hora, a não ser que você o deixe lento; os dias ruins do serviço real nenhum contrato descreve."
+      }
+    ]
+  },
+  "ex-mczatg02": {
+    "prompt": "Um toolkit de SOAP espera o contrato de um serviço no próprio endereço dele com `?___` no fim.",
+    "hint": "O nome da linguagem do contrato, em minúsculas.",
+    "blanks": [
+      {
+        "accept": [
+          "wsdl"
+        ]
+      }
+    ]
+  },
+  "ex-e9az95s1": {
+    "prompt": "Uma requisição escrita à mão manda `<ISBN>9786500000030</ISBN>` sem o prefixo `d:`, e a resposta é uma falha dizendo `ISBN  is not in the catalogue`, com dois espaços. O que aconteceu?",
+    "hint": "O serviço procurou um elemento pelo nome completo.",
+    "choices": [
+      {
+        "text": "O ISBN não está no catálogo do distribuidor",
+        "why": "O mesmo ISBN com `d:ISBN` respondeu 25 cópias. O valor nunca chegou à busca."
+      },
+      {
+        "text": "Um `ISBN` sem namespace é outro elemento, então o serviço leu um ISBN vazio",
+        "why": "Certo. A resposta parece um problema de dados e é um problema de namespace; o valor vazio entre os dois espaços é a pista."
+      },
+      {
+        "text": "O XML não estava bem formado, e o parser descartou em silêncio o valor que não conseguiu ler",
+        "why": "XML malformado tem falha própria, `not well-formed XML`. Este envelope foi lido."
+      },
+      {
+        "text": "O cabeçalho `SOAPAction` apontava para outra operação, então o `GetStock` leu o campo errado",
+        "why": "Um `SOAPAction` ausente é recusado com uma frase própria. Esta requisição chegou ao `GetStock`."
+      }
+    ]
+  },
+  "ex-jwz5fv1n": {
+    "prompt": "No SOAP 1.1 sobre HTTP, a operação é nomeada pelo primeiro elemento do `Body` e de novo no cabeçalho `___`.",
+    "hint": "Deixá-lo de fora rendeu uma falha antes de o corpo ser lido.",
+    "blanks": [
+      {
+        "accept": [
+          "SOAPAction"
+        ]
+      }
+    ]
+  },
+  "ex-dy0kxphk": {
+    "prompt": "`GetStock` só lê, e mesmo assim viaja como `POST` para o mesmo endereço do `PlaceOrder`. O que isso tira?",
+    "hint": "A aula 1 disse o que um método promete.",
+    "choices": [
+      {
+        "text": "Qualquer jeito de cache, proxy ou cliente que repete distinguir leitura de pedido",
+        "why": "Certo. No REST um `GET` avisa todo mundo entre os dois programas que é seguro; aqui o protocolo não diz nada, e quem tem de dizer é o contrato."
+      },
+      {
+        "text": "O corpo da resposta, que uma resposta a `POST` deixa vazio",
+        "why": "A resposta ao `GetStock` voltou com um envelope inteiro. Uma resposta a `POST` tem corpo como qualquer outra."
+      },
+      {
+        "text": "A criptografia, que o HTTP aplica a requisições `GET`",
+        "why": "O HTTP não criptografa nada por método. Isso é TLS, e cobre todos os métodos igualmente."
+      },
+      {
+        "text": "O código de status, que um `POST` para um endereço compartilhado devolve sempre como 200, até nas falhas",
+        "why": "O mesmo endereço respondeu 500 para uma falha. Um endereço só não fixa o status."
+      }
+    ]
+  },
+  "ex-7tydd0bv": {
+    "prompt": "`restock.py` imprimiu `'UnitPrice': Decimal('18.90')`. Por que um `Decimal`?",
+    "hint": "Onde o zeep aprendeu o que é um preço?",
+    "choices": [
+      {
+        "text": "O schema o declara `xsd:decimal`",
+        "why": "Certo. O zeep converte cada valor para o tipo que o WSDL declara; `NextDelivery`, declarado string, continuou string."
+      },
+      {
+        "text": "O Python transforma qualquer número com ponto decimal em `Decimal` ao ler texto",
+        "why": "O Python lê `18.90` como float, a não ser que digam outra coisa. O tipo veio do contrato."
+      },
+      {
+        "text": "O zeep adivinha pelo `Unit` no nome do elemento",
+        "why": "O zeep lê nomes como nomes. `QtyAvail` virou `int` pelo mesmo motivo que `UnitPrice` virou `Decimal`: o schema."
+      },
+      {
+        "text": "O distribuidor o mandou com um atributo `type`",
+        "why": "A resposta foi `<UnitPrice>18.90</UnitPrice>` sem atributo, como é um corpo `literal`."
+      }
+    ]
+  },
+  "ex-k7x71qkf": {
+    "prompt": "Quais destes são custos de construir o cliente a partir do WSDL com um toolkit? Escolha todos os que se aplicam.",
+    "hint": "A tabela tinha duas colunas.",
+    "choices": [
+      {
+        "text": "Os nomes do distribuidor, como `QtyAvail`, viram atributos no seu código",
+        "why": "Certo. Conveniente num script curto, e o começo do modelo do distribuidor vazando para a loja."
+      },
+      {
+        "text": "Envelopes cujos namespaces você tem de conferir à mão",
+        "why": "É isso que o toolkit tira: ele escreve os namespaces a partir do contrato toda vez."
+      },
+      {
+        "text": "O cliente não sobe sem o WSDL",
+        "why": "Certo. `restock.py` o baixou a cada execução, e o log do distribuidor mostrou cada `GET`."
+      },
+      {
+        "text": "O XML que trafega fica fora de vista, a não ser que você peça",
+        "why": "Certo. Por isso a chamada à mão veio antes: é o nível onde uma discordância é encontrada."
+      }
+    ]
+  },
+  "ex-0x2sc5mn": {
+    "prompt": "`GetStock(Isbn='9786500000030')` levantou `TypeError: ... got an unexpected keyword argument 'Isbn'`. Onde isso foi decidido?",
+    "hint": "A mensagem nomeia um erro do Python, não uma falha.",
+    "choices": [
+      {
+        "text": "No distribuidor, que recusou o elemento e mandou uma falha de volta",
+        "why": "Uma falha teria chegado como `zeep.exceptions.Fault`. Um `TypeError` é levantado do seu lado."
+      },
+      {
+        "text": "Na camada HTTP, que rejeitou uma requisição com um cabeçalho errado",
+        "why": "O nome do argumento não é um cabeçalho; viraria um elemento no corpo, se algo fosse enviado."
+      },
+      {
+        "text": "No `xmllint`, que valida envelopes antes de saírem",
+        "why": "`xmllint` não participou desse comando; o zeep monta e confere o envelope sozinho."
+      },
+      {
+        "text": "No zeep, pelo WSDL, antes de qualquer requisição",
+        "why": "Certo. O comando usou o `distributor.wsdl` local e conferiu o argumento contra a assinatura `ISBN: xsd:string`."
+      }
+    ]
+  },
+  "ex-wkvayq6g": {
+    "prompt": "Um serviço SOAP 1.1 recebe uma pergunta sobre um ISBN que ele não vende, um erro de quem chamou. Com que status HTTP a falha dele viaja?",
+    "hint": "`curl -w '%{http_code}'` imprimiu.",
+    "unit": "status"
+  },
+  "ex-m6ecp88m": {
+    "prompt": "Um programa que chama o distribuidor precisa decidir o que uma falha significa. O que ele deve ler?",
+    "hint": "Um destes é escrito para uma pessoa.",
+    "choices": [
+      {
+        "text": "O status HTTP",
+        "why": "No SOAP 1.1 ele é 500 para toda falha, de quem chamou e do serviço, então só diz que existe uma."
+      },
+      {
+        "text": "O `faultstring`, comparado com as frases da documentação",
+        "why": "O texto é para uma pessoa, e alguém pode melhorá-lo ano que vem. Uma comparação com ele quebra em silêncio."
+      },
+      {
+        "text": "O `faultcode`, depois o código de erro no `detail`",
+        "why": "Certo. `soap:Client` diz de quem é a culpa, e `E100` diz o quê, numa forma feita para um programa."
+      },
+      {
+        "text": "O `Content-Type` da resposta",
+        "why": "Uma falha e um resultado são os dois `text/xml`. A diferença está dentro do `Body`."
+      }
+    ]
+  },
+  "ex-y34n8bj5": {
+    "prompt": "Ligue o que o distribuidor fez ao status que o shelf responde.",
+    "hint": "Três deles são os códigos de gateway.",
+    "pairs": [
+      {
+        "left": "falha `E100`, um ISBN que ele não vende",
+        "right": "404"
+      },
+      {
+        "left": "falha `E200`, cópias insuficientes",
+        "right": "409"
+      },
+      {
+        "left": "uma falha `Server`",
+        "right": "502"
+      },
+      {
+        "left": "nenhuma resposta dentro do timeout",
+        "right": "504"
+      }
+    ],
+    "right_distractors": [
+      "500"
+    ]
+  },
+  "ex-zqs01axf": {
+    "prompt": "Por que pôr o `bridge.py` entre a loja e o distribuidor em vez de chamar o zeep onde quer que se precise de estoque?",
+    "hint": "Pense no dia em que o distribuidor renomeia um campo.",
+    "choices": [
+      {
+        "text": "O zeep é lento demais para ser chamado de mais de um módulo",
+        "why": "Velocidade não é o argumento; a ponte acrescenta um salto. O que ela compra é que um módulo só conhece o distribuidor."
+      },
+      {
+        "text": "Para os nomes, as unidades e as falhas do distribuidor pararem num módulo só",
+        "why": "Certo. Essa é a camada anticorrupção: um campo renomeado ou um distribuidor novo muda o `bridge.py` e nada mais."
+      },
+      {
+        "text": "O SOAP exige um gateway entre um cliente e um serviço, então uma chamada direta é recusada",
+        "why": "`restock.py` chamou o distribuidor direto e funcionou. A camada é uma escolha de projeto."
+      },
+      {
+        "text": "Para guardar em cache as respostas do distribuidor",
+        "why": "`bridge.py` não guarda nada em cache; toda requisição chega ao distribuidor. O trabalho dele é traduzir."
+      }
+    ]
+  },
+  "ex-0cn6r25c": {
+    "prompt": "O distribuidor cota *Americanah* com `UnitPrice` de `35.50` reais. O que a ponte responde como `price_cents`?",
+    "hint": "`int(stock.UnitPrice * 100)`",
+    "unit": "centavos"
+  },
+  "ex-8jz33phj": {
+    "prompt": "Alguém apaga `operation_timeout=TIMEOUT` do `bridge.py`, e numa tarde o distribuidor leva um minuto por resposta. O que a loja vê?",
+    "hint": "Cada requisição esperando segura uma thread.",
+    "choices": [
+      {
+        "text": "Um 504 depois de dois segundos, como antes",
+        "why": "Os dois segundos eram aquele argumento. Sem ele, o zeep espera o quanto o distribuidor levar."
+      },
+      {
+        "text": "Uma falha SOAP do distribuidor dizendo que está ocupado demais para atender a requisição agora",
+        "why": "Um serviço lento não manda nada até terminar; silêncio não é falha."
+      },
+      {
+        "text": "Um 502 na hora, porque a ponte não consegue abrir conexão com um distribuidor tão lento",
+        "why": "Uma conexão recusada é um distribuidor fora do ar. Um lento aceita a conexão e depois não diz nada."
+      },
+      {
+        "text": "Requisições presas por um minuto cada, se acumulando até a loja parar de responder",
+        "why": "Certo. Uma dependência lenta sem timeout passa a lentidão para todo mundo que chama, cada requisição segurando uma thread enquanto espera."
+      }
+    ]
+  },
+  "ex-fqevzebf": {
+    "prompt": "Ligue cada forma de integração legada à falha que parece sucesso nela.",
+    "hint": "Cada forma falha em silêncio do seu jeito.",
+    "pairs": [
+      {
+        "left": "arquivo depositado",
+        "right": "um arquivo lido enquanto o parceiro ainda o escreve"
+      },
+      {
+        "left": "consulta periódica por timestamp",
+        "right": "uma linha gravada no mesmo segundo, depois da última olhada"
+      },
+      {
+        "left": "fila de mensagens",
+        "right": "a mesma mensagem entregue duas vezes"
+      },
+      {
+        "left": "banco de dados compartilhado",
+        "right": "uma coluna renomeada na próxima versão do parceiro"
+      }
+    ],
+    "right_distractors": [
+      "uma falha com status HTTP 500"
+    ]
+  },
+  "ex-3vh2s3c9": {
+    "prompt": "Ler direto as tabelas de pedidos do distribuidor seria a integração mais rápida de construir. Por que a aula a chama de pior?",
+    "hint": "Quem concordou com o quê?",
+    "choices": [
+      {
+        "text": "SQL é mais lento que SOAP para ler uma linha",
+        "why": "Uma consulta é mais rápida que um envelope sobre HTTP. A velocidade é a atração, não o problema."
+      },
+      {
+        "text": "O servidor de banco do distribuidor recusaria uma conexão vinda da rede de outra empresa",
+        "why": "Se permitisse, a integração funcionaria, no começo. O problema vem depois."
+      },
+      {
+        "text": "Ler as tabelas de outro sistema exige uma fila de mensagens entre os dois bancos para levar as linhas",
+        "why": "Um banco compartilhado não precisa de fila; isso é parte do motivo de parecer barato."
+      },
+      {
+        "text": "O schema interno deles vira um contrato com que nunca concordaram",
+        "why": "Certo. A próxima versão deles renomeia uma coluna e a loja quebra, sem ninguém do lado deles saber que a integração existia."
+      }
+    ]
+  },
+  "ex-yhtemx0x": {
+    "prompt": "O distribuidor vai deixar um CSV com os preços num diretório compartilhado toda noite. Com o que ele deve concordar para a loja nunca ler meio arquivo?",
+    "hint": "Uma operação sobre um arquivo é instantânea.",
+    "choices": [
+      {
+        "text": "Comprimir o arquivo",
+        "why": "Um arquivo comprimido também é escrito ao longo do tempo, e quem chega cedo ainda encontra parte dele."
+      },
+      {
+        "text": "Escrever com um nome temporário e renomear quando estiver completo",
+        "why": "Certo. Renomear é instantâneo, então a loja vê ou nenhum arquivo ou o arquivo inteiro."
+      },
+      {
+        "text": "Enviar sempre no mesmo horário toda noite",
+        "why": "Um horário fixo estreita a janela. Um arquivo grande num link lento ainda está sendo escrito quando chega a hora."
+      },
+      {
+        "text": "Pôr uma linha de cabeçalho no topo do arquivo",
+        "why": "O cabeçalho é escrito primeiro, então meio arquivo também tem um."
+      }
+    ]
+  },
+  "ex-z44qw3x5": {
+    "prompt": "A ponte respondeu 504 a um pedido. O que o shelf sabe sobre esse pedido naquele momento?",
+    "hint": "São três resultados, não dois.",
+    "choices": [
+      {
+        "text": "Que não foi feito, já que o distribuidor não respondeu",
+        "why": "Foi feito três segundos depois. Silêncio não é recusa."
+      },
+      {
+        "text": "Que foi feito, já que o distribuidor aceitou a conexão",
+        "why": "Aceitar uma conexão não diz nada sobre terminar o trabalho; ele poderia ter caído ou recusado."
+      },
+      {
+        "text": "Que falhou com uma falha que a ponte não mapeou",
+        "why": "Uma falha não mapeada vira 502, e é uma resposta. 504 quer dizer que nenhuma resposta chegou."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Um timeout diz que o shelf parou de esperar, não o que aconteceu do outro lado."
+      }
+    ]
+  },
+  "ex-r8406gsw": {
+    "prompt": "Ponha em ordem a vida de um circuit breaker, a partir da operação normal.",
+    "hint": "Ele testa a água antes de confiar de novo.",
+    "items": [
+      "Fechado: toda chamada passa, e as falhas são contadas",
+      "As falhas passam do limite",
+      "Aberto: as chamadas falham na hora, sem serem tentadas",
+      "Meio aberto: uma chamada de teste passa",
+      "O teste dá certo e o breaker fecha"
+    ],
+    "trap": "Ir de aberto direto para fechado mandaria todo o tráfego a um serviço que talvez ainda esteja com problemas."
+  },
+  "ex-eg98xzfb": {
+    "prompt": "Por que a deduplicação de pedidos tem de ficar no distribuidor e não na ponte?",
+    "hint": "Depois de um timeout, qual lado está em dúvida?",
+    "choices": [
+      {
+        "text": "A ponte reinicia com frequência e perde a memória",
+        "why": "Uma ponte que guardasse a memória em disco teria o mesmo buraco: ela não tem como saber o que chegou."
+      },
+      {
+        "text": "Só o lado de lá sabe se a primeira requisição chegou",
+        "why": "Certo. O que a ponte mandou é justamente aquilo de que ela não tem certeza; o distribuidor viu `R-2002` e pôde responder `Repeated`."
+      },
+      {
+        "text": "O SOAP proíbe um cliente de guardar estado entre chamadas",
+        "why": "O SOAP não diz nada sobre o que um cliente lembra."
+      },
+      {
+        "text": "O estoque do distribuidor está em memória, então só ele pode contar",
+        "why": "Onde o estoque fica é detalhe; um distribuidor real o guarda num banco e o argumento é o mesmo."
+      }
+    ]
+  },
+  "ex-xmy3gdn2": {
+    "prompt": "Uma NF-e assinada passa por um gateway e por um arquivo morto e é conferida anos depois. Por que uma assinatura WS-Security permite isso e o TLS não?",
+    "hint": "Onde cada proteção mora?",
+    "choices": [
+      {
+        "text": "A assinatura pertence à mensagem, e o TLS à conexão",
+        "why": "Certo. O TLS termina onde a conexão é encerrada; a assinatura viaja dentro do documento."
+      },
+      {
+        "text": "As chaves do TLS expiram depois de um ano, e as assinaturas XML não",
+        "why": "Certificados expiram nos dois mundos. A diferença é o que é protegido, uma mensagem ou uma conexão."
+      },
+      {
+        "text": "O TLS protege somente requisições `GET`",
+        "why": "O TLS protege cada byte da conexão, seja qual for o método."
+      },
+      {
+        "text": "Uma assinatura XML criptografa o documento",
+        "why": "Uma assinatura prova integridade e origem; criptografia é outra peça, a XML Encryption."
+      }
+    ]
+  },
+  "ex-qbxx0ssh": {
+    "prompt": "O distribuidor pede um `UsernameToken` com `PasswordDigest`. O que isso impõe do lado do distribuidor?",
+    "hint": "Para conferir o digest, ele calcula o mesmo.",
+    "choices": [
+      {
+        "text": "Nada, porque o digest é conferido pelo TLS",
+        "why": "O TLS não sabe nada do conteúdo do envelope; o próprio serviço confere o token."
+      },
+      {
+        "text": "Guardar um hash bcrypt de cada senha, o que basta para conferir o digest",
+        "why": "O digest é calculado a partir do nonce, do horário e da própria senha, e um hash bcrypt não devolve a senha."
+      },
+      {
+        "text": "Guardar a própria senha, então não pode guardar só um hash",
+        "why": "Certo. Ele recalcula o digest a partir da senha, que é a troca contra a qual a aula 10 alerta."
+      },
+      {
+        "text": "Mandar a senha de volta na resposta",
+        "why": "Nada no perfil manda uma senha de volta."
+      }
+    ]
+  },
+  "ex-s88cds4v": {
+    "prompt": "O substituto recusa qualquer mensagem que contenha `<!DOCTYPE`. Por que é seguro fazer isso antes de ler o XML?",
+    "hint": "O que o SOAP 1.1 diz sobre isso?",
+    "choices": [
+      {
+        "text": "Porque o zeep nunca manda uma, e o zeep é o único cliente",
+        "why": "O curl também é cliente, e um serviço tem de se defender de quem chama sem ter sido escrito por ele."
+      },
+      {
+        "text": "O SOAP 1.1 diz que uma mensagem não pode conter uma, então nenhum chamador válido é recusado",
+        "why": "Certo. E recusá-la fecha a porta para a expansão de entidades e as entidades externas antes de o parser entrar."
+      },
+      {
+        "text": "Porque um DTD deixa o envelope grande demais para o HTTP",
+        "why": "`<!DOCTYPE x>` tem uma dúzia de bytes. Tamanho não é o motivo."
+      },
+      {
+        "text": "Porque o `xml.etree` quebraria com ela",
+        "why": "O `xml.etree` lê uma declaração de tipo de documento. A recusa é uma política, não um contorno."
+      }
+    ]
+  },
+  "ex-1eg4r3ff": {
+    "prompt": "Uma requisição à ponte estoura o tempo com 504. Quais destas a loja pode reenviar como estão, sem risco de um segundo efeito? Escolha todas as que se aplicam.",
+    "hint": "Idempotente, ou tornada idempotente pelo lado de lá.",
+    "choices": [
+      {
+        "text": "`GET /stock/9786500000030`",
+        "why": "Certo. Vira `GetStock`, que só lê."
+      },
+      {
+        "text": "Um pedido enviado de novo com a mesma `reference`",
+        "why": "Certo. O distribuidor lembra a referência e responde com o pedido que já tem."
+      },
+      {
+        "text": "Um pedido enviado de novo com uma `reference` nova",
+        "why": "Uma referência nova é um pedido novo para o distribuidor, e o primeiro talvez já tenha sido feito."
+      },
+      {
+        "text": "Um envelope `PlaceOrder` enviado à mão com curl",
+        "why": "Mandar à mão não muda o que ele faz; se é seguro depende da referência que ele leva."
+      }
+    ]
+  },
+  "ex-86q2ngwe": {
+    "prompt": "O distribuidor começa com 40 cópias de *Dom Casmurro*. Um pedido de 10 com a referência `R-2002` estoura o tempo com 504, mas é feito; é reenviado com `R-2002` e responde 200. Depois um pedido de 5 com a referência `R-2003` responde 201. Quantas cópias o `GetStock` informa agora?",
+    "hint": "Uma referência repetida não faz pedido nenhum.",
+    "unit": "cópias"
+  },
+  "ex-an3rhq3p": {
+    "prompt": "Ponha em ordem os passos de `curl localhost:8000/stock/9786500000030`, da requisição à resposta.",
+    "hint": "A tradução acontece duas vezes: uma em cada sentido.",
+    "items": [
+      "A ponte reconhece `/stock/` e um ISBN de 13 dígitos",
+      "O zeep monta um envelope `GetStock` com `SOAPAction`",
+      "O distribuidor responde com `QtyAvail`, `UnitPrice` e `NextDelivery`",
+      "O zeep converte os valores para os tipos do WSDL",
+      "A ponte responde JSON em centavos com data ISO"
+    ],
+    "trap": "A conversão de tipos acontece no zeep antes de a ponte ver os valores, e por isso `UnitPrice * 100` é exato."
+  },
+  "ex-kkk75rbt": {
+    "prompt": "O `PlaceOrder` SOAP de outro parceiro não tem campo de referência, e um pedido a ele estoura o tempo. O que o adaptador da loja deve fazer?",
+    "hint": "O lado de lá não deduplica o que não consegue reconhecer.",
+    "choices": [
+      {
+        "text": "Reenviar na hora, já que uma chamada SOAP com falha é sempre segura de repetir",
+        "why": "Não houve falha, só silêncio, e um `POST` que cria um pedido não é idempotente por si só."
+      },
+      {
+        "text": "Tratar o pedido como falho e dizer ao cliente para pedir de novo",
+        "why": "O primeiro pedido pode ter sido feito, como o do distribuidor foi; isso arrisca dois."
+      },
+      {
+        "text": "Consultar os pedidos do parceiro antes de reenviar, e passar para uma pessoa se não puder consultar",
+        "why": "Certo. Sem referência para deduplicar, descobrir vem antes de agir de novo."
+      },
+      {
+        "text": "Acrescentar um campo de referência ao envelope mesmo assim",
+        "why": "O schema do parceiro não tem o elemento; na melhor hipótese ele o ignora, na pior recusa o envelope."
+      }
+    ]
+  }
+}

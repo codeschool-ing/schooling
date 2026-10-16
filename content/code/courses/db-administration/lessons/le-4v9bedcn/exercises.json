@@ -1,0 +1,756 @@
+[
+  {
+    "id": "ex-f41k3jjz",
+    "version": 1,
+    "section": "pages-and-blocks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`customers` has 568 pages. Its file is 4653056 bytes. How many bytes is one page?",
+    "hint": "Divide, or remember block_size.",
+    "value": 8192,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-yagn531a",
+    "version": 1,
+    "section": "pages-and-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a power cut leave a PostgreSQL page half new and half old on ext4?",
+    "hint": "Compare the two units of writing.",
+    "choices": [
+      {
+        "text": "Its 8 kB spans two 4 kB filesystem blocks, written separately",
+        "correct": true,
+        "why": "Right. One 8 kB page is two 4 kB blocks, and nothing makes both land together."
+      },
+      {
+        "text": "PostgreSQL writes each row separately and stops halfway through the list of rows in a page",
+        "correct": false,
+        "why": "PostgreSQL writes whole pages. The split happens below it, in the filesystem's smaller blocks."
+      },
+      {
+        "text": "ext4 compresses pages and loses half on a crash",
+        "correct": false,
+        "why": "ext4 does not compress data. The cause is the size mismatch, which any 4 kB filesystem has."
+      },
+      {
+        "text": "The write-ahead log only records half of every page",
+        "correct": false,
+        "why": "The opposite: after a checkpoint the log records the whole page, which is how a torn page is repaired."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r1haq2a",
+    "version": 1,
+    "section": "pages-and-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague wants to set `block_size = 4096` in postgresql.conf so pages match the filesystem. What happens?",
+    "hint": "When is the page size decided?",
+    "choices": [
+      {
+        "text": "Torn pages stop happening after the next restart, because the page now matches the block",
+        "correct": false,
+        "why": "The setting cannot be changed in a configuration file at all, so the restart changes nothing."
+      },
+      {
+        "text": "Existing tables are rewritten in 4 kB pages",
+        "correct": false,
+        "why": "No setting rewrites the data files into another page size; a different size needs a new cluster."
+      },
+      {
+        "text": "Nothing: it is fixed at compile time",
+        "correct": true,
+        "why": "Right. `block_size` is read-only; changing it means building PostgreSQL and a new cluster."
+      },
+      {
+        "text": "full_page_writes is switched off automatically",
+        "correct": false,
+        "why": "Nothing switches it off, and on ext4 it must stay on."
+      }
+    ]
+  },
+  {
+    "id": "ex-xm5jewnt",
+    "version": 1,
+    "section": "filesystems",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which mount option should never be used under a PostgreSQL data directory?",
+    "hint": "Which one makes fsync meaningless?",
+    "choices": [
+      {
+        "text": "barrier=0",
+        "correct": true,
+        "why": "Right. Without barriers a flush may not reach stable storage, and a power cut can lose committed transactions."
+      },
+      {
+        "text": "noatime",
+        "correct": false,
+        "why": "noatime only stops access-time updates, which PostgreSQL never reads. It is safe."
+      },
+      {
+        "text": "relatime",
+        "correct": false,
+        "why": "relatime is the default and harmless; it updates access times at most once a day."
+      },
+      {
+        "text": "defaults",
+        "correct": false,
+        "why": "defaults gives the distribution's normal options, barriers included."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb236caa",
+    "version": 1,
+    "section": "filesystems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team on Red Hat Enterprise Linux asks whether to reformat as ext4 because the course uses ext4. What does the lesson advise?",
+    "hint": "Where should the attention go instead?",
+    "choices": [
+      {
+        "text": "Reformat: PostgreSQL is only supported on ext4",
+        "correct": false,
+        "why": "PostgreSQL runs on both, and XFS is where many production servers live."
+      },
+      {
+        "text": "Move to NFS, so the data is safe on another machine",
+        "correct": false,
+        "why": "A network filesystem is the one the lesson says to avoid unless the vendor documents it for databases."
+      },
+      {
+        "text": "Keep XFS, the distribution's default, and look at the disk",
+        "correct": true,
+        "why": "Right. Both are well tested for PostgreSQL; the disk matters far more than the choice between them."
+      },
+      {
+        "text": "Switch to tmpfs for speed",
+        "correct": false,
+        "why": "tmpfs lives in memory and loses everything at a reboot."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv5nhcss",
+    "version": 1,
+    "section": "filesystems",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A data filesystem listed in /etc/fstab fails to mount at boot, and the server starts PostgreSQL anyway. What has happened?",
+    "hint": "What is at the mount point when nothing is mounted on it?",
+    "choices": [
+      {
+        "text": "PostgreSQL reads the data through the device name instead",
+        "correct": false,
+        "why": "PostgreSQL only knows a directory path. It never opens the device."
+      },
+      {
+        "text": "The kernel mounts it later, and PostgreSQL waits for the files to appear",
+        "correct": false,
+        "why": "Nothing waits. What PostgreSQL finds at start is what it uses."
+      },
+      {
+        "text": "It found an empty directory",
+        "correct": true,
+        "why": "Right. The mount point is an ordinary empty directory until something is mounted on it, so the server has no data there."
+      },
+      {
+        "text": "The data is read from the operating system's cache",
+        "correct": false,
+        "why": "After a boot the cache is empty, and it never held a whole filesystem anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-7eytfpf6",
+    "version": 1,
+    "section": "measuring-a-disk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which row of `pg_test_fsync` tells you what your server's commits wait on, with the default settings?",
+    "hint": "Linux's default wal_sync_method.",
+    "choices": [
+      {
+        "text": "Non-sync'ed 8kB writes",
+        "correct": false,
+        "why": "That row never waits for the disk; it measures the kernel's memory."
+      },
+      {
+        "text": "fdatasync",
+        "correct": true,
+        "why": "Right. It is Linux's default wal_sync_method, so each commit waits about that long."
+      },
+      {
+        "text": "fsync_writethrough",
+        "correct": false,
+        "why": "It printed n/a: that method does not exist on Linux."
+      },
+      {
+        "text": "16 * 1kB open_sync writes",
+        "correct": false,
+        "why": "That compares write sizes for open_sync, which the server does not use by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-jttge26n",
+    "version": 1,
+    "section": "measuring-a-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cloud disk reports 900,000 fdatasync operations a second in pg_test_fsync. What should you conclude?",
+    "hint": "Compare with the tmpfs run.",
+    "choices": [
+      {
+        "text": "It is fast",
+        "correct": false,
+        "why": "Too fast to be a real flush. A disk that fast without a protected cache loses commits on a power cut."
+      },
+      {
+        "text": "A flush is probably not reaching durable storage",
+        "correct": true,
+        "why": "Right. That is the tmpfs number: a write cache answering before the data is safe. Find out whether it has power protection."
+      },
+      {
+        "text": "Switch wal_sync_method to open_datasync",
+        "correct": false,
+        "why": "The method is not the question. The number says the promise of a flush may not be kept at all."
+      },
+      {
+        "text": "Commits will be limited by the processor",
+        "correct": false,
+        "why": "The question is durability, not speed. A suspiciously fast flush is a risk, not a bottleneck."
+      }
+    ]
+  },
+  {
+    "id": "ex-na347ewt",
+    "version": 1,
+    "section": "measuring-a-disk",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Ubuntu, pg_test_fsync is not on the PATH. It lives in /usr/lib/postgresql/16/___.",
+    "hint": "Where every server program of version 16 lives.",
+    "blanks": [
+      {
+        "accept": [
+          "bin",
+          "bin/"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2t2yt6vy",
+    "version": 1,
+    "section": "separating-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_wal` holds 337 MB and `max_wal_size` is 1GB. Which size is a reasonable floor for a dedicated pg_wal filesystem?",
+    "hint": "max_wal_size is soft.",
+    "choices": [
+      {
+        "text": "512 MB, comfortably above the 337 MB measured today",
+        "correct": false,
+        "why": "Today's size is not the limit. This is the size the lesson made on purpose so it would fill."
+      },
+      {
+        "text": "1 GB, exactly max_wal_size",
+        "correct": false,
+        "why": "The limit is where a checkpoint is asked for, not a ceiling; the log can pass it."
+      },
+      {
+        "text": "2 GB",
+        "correct": true,
+        "why": "Right. Twice max_wal_size, because WAL keeps arriving while the checkpoint it triggered runs."
+      },
+      {
+        "text": "400 MB, the measured size plus a margin",
+        "correct": false,
+        "why": "The log can grow to around max_wal_size between checkpoints, far past what it holds today."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f5r73bd",
+    "version": 1,
+    "section": "separating-wal",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for moving pg_wal of an existing cluster to a new, mounted filesystem in order.",
+    "hint": "The server must not be running while files move.",
+    "items": [
+      "sudo systemctl stop postgresql@16-main",
+      "sudo mv /var/lib/postgresql/16/main/pg_wal /srv/wal/pg_wal",
+      "sudo -u postgres ln -s /srv/wal/pg_wal /var/lib/postgresql/16/main/pg_wal",
+      "sudo systemctl start postgresql@16-main"
+    ],
+    "trap": "Linking before moving fails, because pg_wal still exists as a directory."
+  },
+  {
+    "id": "ex-mrj5w6nc",
+    "version": 1,
+    "section": "separating-wal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the course's virtual machine both filesystems are files on the same physical drive. What does separating pg_wal still buy there?",
+    "hint": "The lesson gives two reasons; one needs separate devices.",
+    "choices": [
+      {
+        "text": "Faster commits, since the checkpoint no longer competes with them for the same disk",
+        "correct": false,
+        "why": "On one physical drive they still compete. That benefit needs different devices."
+      },
+      {
+        "text": "Each fills on its own, without the other",
+        "correct": true,
+        "why": "Right. The space is separate even when the device is shared, so a full data filesystem does not stop the log, or the reverse."
+      },
+      {
+        "text": "Smaller WAL files",
+        "correct": false,
+        "why": "Segments stay 16 MB wherever they live."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The space boundary is real on any machine; only the speed benefit is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kemr3hbt",
+    "version": 1,
+    "section": "full-tablespace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An INSERT into a table on a full tablespace fails with `could not extend file`. What happens to the server?",
+    "hint": "Read the severity.",
+    "choices": [
+      {
+        "text": "It restarts every connection",
+        "correct": false,
+        "why": "That is what a PANIC does, as when the log's filesystem fills. A data filesystem fails statements."
+      },
+      {
+        "text": "It keeps running; only the statement failed",
+        "correct": true,
+        "why": "Right. It is an ERROR: the statement is rolled back and every other query carries on."
+      },
+      {
+        "text": "It shuts down until space is freed",
+        "correct": false,
+        "why": "The server stays up; the next query read a million orders from the other disk."
+      },
+      {
+        "text": "It becomes read-only",
+        "correct": false,
+        "why": "PostgreSQL has no such mode for this. Writes elsewhere still work."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbt5cpgx",
+    "version": 1,
+    "section": "full-tablespace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the failed INSERT, `filler` has 0 rows. Why is its file still 51 MB?",
+    "hint": "What does a rollback leave in the pages?",
+    "choices": [
+      {
+        "text": "Dead rows",
+        "correct": true,
+        "why": "Right. The rolled-back rows stay in pages that exist until VACUUM removes them."
+      },
+      {
+        "text": "The rows are still visible to other sessions",
+        "correct": false,
+        "why": "count(*) returned 0. Nobody sees them; they only take space."
+      },
+      {
+        "text": "ext4 does not report freed space until the filesystem is unmounted",
+        "correct": false,
+        "why": "Nothing was freed. pg_relation_size reports the file itself, and it really is 51 MB."
+      },
+      {
+        "text": "The write-ahead log keeps a copy inside the table",
+        "correct": false,
+        "why": "The log lives in pg_wal, on another filesystem here."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmmek9f3",
+    "version": 1,
+    "section": "full-tablespace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`VACUUM filler` failed on the full filesystem, then succeeded after `tune2fs -m 0`. Why did that work for PostgreSQL?",
+    "hint": "Who could use the reserved blocks before?",
+    "choices": [
+      {
+        "text": "tune2fs deleted the dead rows directly in the file",
+        "correct": false,
+        "why": "tune2fs only changes filesystem settings; it knows nothing about rows."
+      },
+      {
+        "text": "It grew the filesystem from 56 MB to 64 MB",
+        "correct": false,
+        "why": "The size stayed 56M in df; only the reserved share changed."
+      },
+      {
+        "text": "The root-only reserve became usable by postgres",
+        "correct": true,
+        "why": "Right. ext4 keeps 5% for root; at 0% the postgres user got 3.2 MB, enough for the visibility map."
+      },
+      {
+        "text": "It made VACUUM run as root",
+        "correct": false,
+        "why": "The server always runs as postgres. The change was who may use the reserved blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rfnm8gd",
+    "version": 1,
+    "section": "full-wal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a PANIC mean for the sessions connected to the server?",
+    "hint": "It is the severity above FATAL.",
+    "choices": [
+      {
+        "text": "Only the session that hit the error loses its connection",
+        "correct": false,
+        "why": "That is FATAL. PANIC is one level above and takes every process with it."
+      },
+      {
+        "text": "Only the current statement is rolled back",
+        "correct": false,
+        "why": "That is ERROR, which is what a full tablespace gave."
+      },
+      {
+        "text": "Every one of them is disconnected and the server restarts",
+        "correct": true,
+        "why": "Right. A PANIC ends the whole server, not one statement or one session."
+      },
+      {
+        "text": "Nothing, it is only written to the log",
+        "correct": false,
+        "why": "The capture shows the client lost its connection and the cluster went down."
+      }
+    ]
+  },
+  {
+    "id": "ex-4516ns6q",
+    "version": 1,
+    "section": "full-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the PANIC, the postmaster started crash recovery by itself. Why did the cluster still end up down?",
+    "hint": "Read the line after `redo done`.",
+    "choices": [
+      {
+        "text": "Finishing recovery has to write WAL too",
+        "correct": true,
+        "why": "Right. Recovery replayed to the end, then could not write a new log file on the full filesystem."
+      },
+      {
+        "text": "The data files were corrupted by the crash and recovery refused to read them",
+        "correct": false,
+        "why": "redo done means replay succeeded. Nothing was corrupted; there was no room to write."
+      },
+      {
+        "text": "systemd does not restart PostgreSQL after a crash",
+        "correct": false,
+        "why": "The postmaster did restart itself; recovery ran and failed for lack of space."
+      },
+      {
+        "text": "max_wal_size forbids a restart",
+        "correct": false,
+        "why": "No setting forbids it. The startup process failed on a write."
+      }
+    ]
+  },
+  {
+    "id": "ex-tym3zq84",
+    "version": 1,
+    "section": "full-wal",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`walfill` was created with 1,000,000 rows, then the loop ran INSERTs of 1,000,000 rows each: three printed INSERT 0 1000000 and the fourth hit the PANIC. How many rows did `walfill` have after recovery?",
+    "hint": "Only what committed survives.",
+    "value": 4000000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-jpb68d75",
+    "version": 1,
+    "section": "kernel-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `vm.overcommit_memory = 2`, what happens when a backend asks for memory beyond the limit?",
+    "hint": "Where does the failure land?",
+    "choices": [
+      {
+        "text": "Only that query fails, with an out of memory error",
+        "correct": true,
+        "why": "Right. The request is refused inside the process that made it, and the rest of the server carries on."
+      },
+      {
+        "text": "The OOM killer chooses the largest process",
+        "correct": false,
+        "why": "That is the default, overcommit 0, which the setting exists to avoid."
+      },
+      {
+        "text": "The postmaster restarts every connection to free memory for the backend that asked",
+        "correct": false,
+        "why": "The restart follows a killed backend. With overcommit 2 nobody is killed."
+      },
+      {
+        "text": "The kernel moves shared buffers to swap",
+        "correct": false,
+        "why": "Nothing is moved; the allocation is simply refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgk7xg8f",
+    "version": 1,
+    "section": "kernel-settings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 4 GB server with no swap gets `vm.overcommit_memory = 2` and nothing else. What is the risk?",
+    "hint": "Which other setting decides the limit?",
+    "choices": [
+      {
+        "text": "The OOM killer becomes more aggressive",
+        "correct": false,
+        "why": "With 2 the kernel refuses allocations instead of killing; the problem is how low the limit is."
+      },
+      {
+        "text": "The whole machine commits at most 2 GB",
+        "correct": true,
+        "why": "Right. The limit is swap plus overcommit_ratio per cent of memory, and the default ratio is 50."
+      },
+      {
+        "text": "Huge pages stop working",
+        "correct": false,
+        "why": "The two settings are independent."
+      },
+      {
+        "text": "None, because PostgreSQL is designed for it",
+        "correct": false,
+        "why": "PostgreSQL recommends it, together with a ratio that leaves the server enough memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-2p89tfy0",
+    "version": 1,
+    "section": "kernel-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`huge_pages` is `try` and `HugePages_Total` is 0. What is the server using?",
+    "hint": "What does try do when none are reserved?",
+    "choices": [
+      {
+        "text": "Ordinary pages, silently",
+        "correct": true,
+        "why": "Right. try falls back without a word, which is why on is the honest value once pages are reserved."
+      },
+      {
+        "text": "72 huge pages it reserved for itself at start",
+        "correct": false,
+        "why": "PostgreSQL cannot reserve them; the kernel has to, with vm.nr_hugepages."
+      },
+      {
+        "text": "Nothing: it refuses to start",
+        "correct": false,
+        "why": "That is huge_pages = on. The server in the capture was running."
+      },
+      {
+        "text": "Transparent huge pages",
+        "correct": false,
+        "why": "AnonHugePages and ShmemHugePages were 0 as well; shared buffers are not in huge pages at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy17czk7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each full filesystem to what PostgreSQL does.",
+    "hint": "ERROR, PANIC, and a refusal to finish starting.",
+    "pairs": [
+      {
+        "left": "A tablespace's filesystem",
+        "right": "The statement fails with ERROR"
+      },
+      {
+        "left": "pg_wal's filesystem, server running",
+        "right": "PANIC, every session dropped"
+      },
+      {
+        "left": "pg_wal's filesystem, during crash recovery",
+        "right": "FATAL in the startup process, cluster down"
+      }
+    ],
+    "right_distractors": [
+      "Read-only mode until space returns"
+    ]
+  },
+  {
+    "id": "ex-5xdn798s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 3 a.m. pg_wal's filesystem is full and the cluster will not start. A colleague proposes deleting the ten oldest files in pg_wal. What do you do instead?",
+    "hint": "The log is the only copy of changes not yet in the data files.",
+    "choices": [
+      {
+        "text": "Run pg_resetwal first, since it is the official tool for exactly this situation",
+        "correct": false,
+        "why": "pg_resetwal throws the log away and can leave the database inconsistent. It is a last resort, not the first step."
+      },
+      {
+        "text": "Give the filesystem room, then start",
+        "correct": true,
+        "why": "Right. Grow it or free something else on it; recovery then replays and finishes with a checkpoint."
+      },
+      {
+        "text": "Lower max_wal_size and restart",
+        "correct": false,
+        "why": "Recycling needs a running server, and it cannot start."
+      },
+      {
+        "text": "Delete them, but only the ones older than the last checkpoint",
+        "correct": false,
+        "why": "You cannot tell from outside which are still needed, and recovery needs everything since the checkpoint it starts from."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg6j7evb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new storage array shows 2,000 fdatasync a second and the vendor says it has a battery-backed cache. A second array shows 600,000 and has no battery. Which one belongs under pg_wal?",
+    "hint": "Speed is not the question; the promise is.",
+    "choices": [
+      {
+        "text": "The second, because commits will be three hundred times faster",
+        "correct": false,
+        "why": "Fast until the power goes, and then committed transactions are lost with nothing in the log."
+      },
+      {
+        "text": "Either, as long as full_page_writes stays on",
+        "correct": false,
+        "why": "full_page_writes repairs torn pages; it cannot recover a commit the disk never stored."
+      },
+      {
+        "text": "The first",
+        "correct": true,
+        "why": "Right. Its number is plausible and its cache survives a power cut. The second is flushing to memory with nothing behind it."
+      },
+      {
+        "text": "Neither: the WAL belongs on tmpfs",
+        "correct": false,
+        "why": "tmpfs loses everything at a reboot. That is the worst place for the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgyjqfyw",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these return space to a full tablespace's filesystem? Choose all that apply.",
+    "hint": "Which ones remove the file's pages rather than the rows' visibility?",
+    "choices": [
+      {
+        "text": "TRUNCATE on a disposable table",
+        "correct": true,
+        "why": "Yes. The file goes when the transaction commits."
+      },
+      {
+        "text": "DELETE FROM the largest table",
+        "correct": false,
+        "why": "No. DELETE leaves dead rows in the same pages; the file keeps its size."
+      },
+      {
+        "text": "ALTER TABLE ... SET TABLESPACE to one with room",
+        "correct": true,
+        "why": "Yes, at the price of a lock while it copies."
+      },
+      {
+        "text": "Growing the filesystem",
+        "correct": true,
+        "why": "Yes, and it is the way that does not depend on what is in the tables."
+      },
+      {
+        "text": "Deleting the largest numbered file by hand",
+        "correct": false,
+        "why": "No. That file is a table, which then errors on every read."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8m40wtx",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The kernel reserves pages of 2 MB in advance when you set the sysctl vm.___ in /etc/sysctl.d.",
+    "hint": "nr_ is how the kernel says number of.",
+    "blanks": [
+      {
+        "accept": [
+          "nr_hugepages"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

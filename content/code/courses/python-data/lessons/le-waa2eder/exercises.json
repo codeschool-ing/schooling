@@ -1,0 +1,497 @@
+[
+  {
+    "id": "ex-s2s672ww",
+    "version": 1,
+    "section": "wide-and-long",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A table has the columns `month`, `plan` and `trips`, one row per month and plan. Which shape is it?",
+    "hint": "One observation per row.",
+    "choices": [
+      {
+        "text": "Long",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Wide",
+        "correct": false,
+        "why": "Wide would have a column per plan."
+      },
+      {
+        "text": "Neither: it has a MultiIndex",
+        "correct": false,
+        "why": "Its keys are ordinary columns."
+      },
+      {
+        "text": "Wide, because it has three columns",
+        "correct": false,
+        "why": "The number of columns does not decide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdg6arsn",
+    "version": 1,
+    "section": "wide-and-long",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips.pivot(index=\"month\", columns=\"plan\", values=\"minutes\")` raises `Index contains duplicate entries`. What does that mean?",
+    "hint": "How many trips share a month and a plan?",
+    "choices": [
+      {
+        "text": "The trips table has duplicated rows",
+        "correct": false,
+        "why": "Every trip is different."
+      },
+      {
+        "text": "`minutes` has missing values",
+        "correct": false,
+        "why": "Gaps do not cause this error."
+      },
+      {
+        "text": "Many trips share each cell",
+        "correct": true,
+        "why": "Right: `pivot` never aggregates, so aggregate first or use `pivot_table`."
+      },
+      {
+        "text": "`month` must be the index already",
+        "correct": false,
+        "why": "`index=` takes a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ex4545s",
+    "version": 1,
+    "section": "wide-and-long",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `wide` holding one column per plan, why is the day passes' share one line, `wide[\"day\"] / wide.sum(axis=1)`?",
+    "hint": "Across the columns of a row.",
+    "choices": [
+      {
+        "text": "Because `wide` is sorted",
+        "correct": false,
+        "why": "Order does not matter here."
+      },
+      {
+        "text": "Both plans share a row",
+        "correct": true,
+        "why": "Right: a month's two plans sit side by side."
+      },
+      {
+        "text": "Because pivot already divided the counts",
+        "correct": false,
+        "why": "It only moved them."
+      },
+      {
+        "text": "Because wide tables are faster to compute on",
+        "correct": false,
+        "why": "Speed is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbhr6582",
+    "version": 1,
+    "section": "wide-and-long",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A long table has 24 rows: 12 months by 2 plans. Pivoted with months as the index and plans as columns, how many rows does it have?",
+    "hint": "One per month.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-thpgyfze",
+    "version": 1,
+    "section": "pivot-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `fill_value=0` do in `pivot_table(..., aggfunc=\"count\", fill_value=0)`?",
+    "hint": "Cells no row reached.",
+    "choices": [
+      {
+        "text": "Replaces missing values in the data before counting",
+        "correct": false,
+        "why": "It acts on the result's empty cells."
+      },
+      {
+        "text": "Drops rows whose count is 0",
+        "correct": false,
+        "why": "Nothing is dropped."
+      },
+      {
+        "text": "Starts every count at 0 instead of 1",
+        "correct": false,
+        "why": "Counts always start at 0."
+      },
+      {
+        "text": "Writes 0, not `NaN`, where no row fell",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzbn8gg4",
+    "version": 1,
+    "section": "pivot-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `aggfunc=\"median\"` and `margins=True`, what is the `All` row?",
+    "hint": "The lesson's 14.2 against 15.3.",
+    "choices": [
+      {
+        "text": "The median of the cells above it",
+        "correct": false,
+        "why": "That gave 15.3, not 14.2."
+      },
+      {
+        "text": "The median of all the trips in that column",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The sum of the cells above it",
+        "correct": false,
+        "why": "Margins use the same `aggfunc`."
+      },
+      {
+        "text": "The mean of the cells above it",
+        "correct": false,
+        "why": "Margins use the same `aggfunc`, on the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcgf6esk",
+    "version": 1,
+    "section": "pivot-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the weekday-by-hour grid, the busiest hour from Monday to Friday is 7. On Saturday it is 16. What does that suggest?",
+    "hint": "Who rides at 7?",
+    "choices": [
+      {
+        "text": "Saturday's data was shifted by nine hours by a time-zone mistake",
+        "correct": false,
+        "why": "Nothing points to an error."
+      },
+      {
+        "text": "Fewer stations open on Saturday",
+        "correct": false,
+        "why": "Every station has Saturday trips."
+      },
+      {
+        "text": "Commuting on weekdays",
+        "correct": true,
+        "why": "Right: commuters on weekdays, leisure at weekends."
+      },
+      {
+        "text": "The grid's columns are in the wrong order",
+        "correct": false,
+        "why": "`idxmax` reads labels, not positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-q95jfwt4",
+    "version": 1,
+    "section": "melt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `wide.reset_index().melt(id_vars=\"month\")`, what does `id_vars` name?",
+    "hint": "What is repeated on every row?",
+    "choices": [
+      {
+        "text": "The columns to melt",
+        "correct": false,
+        "why": "Those are all the others."
+      },
+      {
+        "text": "The columns kept as they are",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The name of the new value column",
+        "correct": false,
+        "why": "That is `value_name`."
+      },
+      {
+        "text": "The index to sort by",
+        "correct": false,
+        "why": "`melt` does not sort."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbb5vqf8",
+    "version": 1,
+    "section": "melt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson call `reset_index()` before `melt`?",
+    "hint": "Where was the month?",
+    "choices": [
+      {
+        "text": "To sort the months",
+        "correct": false,
+        "why": "They were already sorted."
+      },
+      {
+        "text": "`melt` refuses a DataFrame whose index has a name of its own",
+        "correct": false,
+        "why": "It accepts it, and leaves the index out."
+      },
+      {
+        "text": "To drop the month",
+        "correct": false,
+        "why": "The month was kept as `id_vars`."
+      },
+      {
+        "text": "The month was the index, and `melt` works on columns",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9qcjtgt",
+    "version": 1,
+    "section": "melt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `weather.melt(id_vars=\"date\", var_name=\"measure\", value_name=\"value\")`, what is wrong with `measured[\"value\"].mean()`?",
+    "hint": "What units are in `value`?",
+    "choices": [
+      {
+        "text": "It averages millimetres with degrees",
+        "correct": true,
+        "why": "Right: a number about nothing."
+      },
+      {
+        "text": "It raises a `TypeError`",
+        "correct": false,
+        "why": "Both are floats; it runs."
+      },
+      {
+        "text": "It skips the dates",
+        "correct": false,
+        "why": "Dates are in another column."
+      },
+      {
+        "text": "It counts each day twice, once per measure",
+        "correct": false,
+        "why": "Each value is counted once, beside values of another unit."
+      }
+    ]
+  },
+  {
+    "id": "ex-t29q3162",
+    "version": 1,
+    "section": "stack-and-unstack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`per` has 107 rows of lost bikes by station and month. `per.unstack(\"month\")` has 240 cells. What are the other 133?",
+    "hint": "Combinations that did not occur.",
+    "choices": [
+      {
+        "text": "Bikes lost twice",
+        "correct": false,
+        "why": "A bike is lost once."
+      },
+      {
+        "text": "`NaN`, for station-months with no lost bike",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Zeros pandas fills in",
+        "correct": false,
+        "why": "Only with `fill_value=0`."
+      },
+      {
+        "text": "Rows `unstack` copied from other months",
+        "correct": false,
+        "why": "Nothing is copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-whpy8vpq",
+    "version": 1,
+    "section": "stack-and-unstack",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For a grid of median trip lengths by station and hour, should an empty cell become 0?",
+    "hint": "What does no trips mean for a length?",
+    "choices": [
+      {
+        "text": "Yes: `fill_value=0` is always right",
+        "correct": false,
+        "why": "Only for counts and sums."
+      },
+      {
+        "text": "Yes, so that the dtype stays integer",
+        "correct": false,
+        "why": "A median is a float anyway."
+      },
+      {
+        "text": "No: no trips is not a length of zero",
+        "correct": true,
+        "why": "Right: leave it missing."
+      },
+      {
+        "text": "No, because pandas forbids it",
+        "correct": false,
+        "why": "It allows it; it would be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx1ttktm",
+    "version": 1,
+    "section": "stack-and-unstack",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In pandas 3, `per.unstack(\"month\").stack()` keeps the empty cells as `NaN`. Calling `.___()` after it returns only the 107 combinations that occurred.",
+    "hint": "The method that drops missing values.",
+    "blanks": [
+      {
+        "accept": [
+          "dropna"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sp1phagj",
+    "version": 1,
+    "section": "crosstab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To ask \"do day-pass riders choose electric bikes more often?\", how should `pd.crosstab(trips[\"plan\"], trips[\"bike\"])` be normalised?",
+    "hint": "Compare the plans, which are the rows.",
+    "choices": [
+      {
+        "text": "`normalize=\"columns\"`",
+        "correct": false,
+        "why": "That answers who rides each bike."
+      },
+      {
+        "text": "`normalize=True`",
+        "correct": false,
+        "why": "Shares of the grand total mix plan size in."
+      },
+      {
+        "text": "`normalize=\"index\"`",
+        "correct": true,
+        "why": "Right: each row adds to 1."
+      },
+      {
+        "text": "No normalisation; read the counts",
+        "correct": false,
+        "why": "The counts mostly show there are more subscribers."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h8zgxkp",
+    "version": 1,
+    "section": "crosstab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Both plans take an electric bike about 35% of the time. What does that say?",
+    "hint": "Does the plan change the bike?",
+    "choices": [
+      {
+        "text": "Electric bikes are broken 65% of the time",
+        "correct": false,
+        "why": "Nothing in the data is about repairs."
+      },
+      {
+        "text": "Plan and bike look independent",
+        "correct": true,
+        "why": "Right: the generator chose them separately."
+      },
+      {
+        "text": "Day riders prefer electric bikes",
+        "correct": false,
+        "why": "The shares are the same."
+      },
+      {
+        "text": "The table was normalised wrongly",
+        "correct": false,
+        "why": "Row shares answer this question."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zn5ya8e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call to what it does.",
+    "hint": "Reshape, aggregate, count.",
+    "pairs": [
+      {
+        "left": "`pivot`",
+        "right": "Long to wide, no aggregation"
+      },
+      {
+        "left": "`pivot_table`",
+        "right": "Long to wide, aggregating each cell"
+      },
+      {
+        "left": "`melt`",
+        "right": "Wide columns into rows"
+      },
+      {
+        "left": "`crosstab`",
+        "right": "Counts of value pairs"
+      }
+    ],
+    "right_distractors": [
+      "Rows into a list"
+    ]
+  },
+  {
+    "id": "ex-zxvz38hg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps that turn the trips into a weekday-by-hour table a person can read.",
+    "hint": "Derive, grid, arrange.",
+    "items": [
+      "Add `weekday` and `hour` columns from `started_at`",
+      "Build the grid with `pivot_table` and `fill_value=0`",
+      "Put the rows in the order of the week with `.loc[order]`",
+      "Read the peaks with `idxmax(axis=1)`"
+    ],
+    "trap": "The grid needs the columns before it can use them as keys."
+  }
+]

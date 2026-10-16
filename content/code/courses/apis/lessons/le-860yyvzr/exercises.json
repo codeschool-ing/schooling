@@ -1,0 +1,930 @@
+[
+  {
+    "id": "ex-6ym1p79s",
+    "version": 1,
+    "section": "what-soap-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The distributor offers `GetStock` and `PlaceOrder`. How does a SOAP client tell it which one it wants?",
+    "hint": "Think about how many addresses the service has.",
+    "choices": [
+      {
+        "text": "By the HTTP method: `GET` for one, `POST` for the other",
+        "correct": false,
+        "why": "That is how REST says what to do. A SOAP service takes `POST` for every operation, the ones that read included."
+      },
+      {
+        "text": "By the address: each operation has a path of its own",
+        "correct": false,
+        "why": "The service has one address, `/distributor`, for both operations. Separate paths per action are closer to REST."
+      },
+      {
+        "text": "By the element inside the `Body`",
+        "correct": true,
+        "why": "Right. The operation is named inside the message, by its first element, and the `SOAPAction` header repeats it for HTTP."
+      },
+      {
+        "text": "By a query string such as `?op=GetStock`",
+        "correct": false,
+        "why": "The only query string this service reads is `?wsdl`, to send its contract. Operations travel in the envelope."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk9rda5q",
+    "version": 1,
+    "section": "what-soap-is",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a SOAP message to what it carries.",
+    "hint": "One of them is optional.",
+    "pairs": [
+      {
+        "left": "`Envelope`",
+        "right": "the root, whose namespace says the SOAP version"
+      },
+      {
+        "left": "`Header`",
+        "right": "what is about the message: a token, a transaction id"
+      },
+      {
+        "left": "`Body`",
+        "right": "the operation and its arguments, or the result"
+      },
+      {
+        "left": "`Fault`",
+        "right": "what went wrong, in place of the result"
+      }
+    ],
+    "right_distractors": [
+      "the HTTP status the answer travels with"
+    ]
+  },
+  {
+    "id": "ex-4g3e04ky",
+    "version": 1,
+    "section": "what-soap-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says SOAP is dead, so the shop should wait until the distributor offers REST. What does the lesson answer?",
+    "hint": "Being chosen and being in use are different things.",
+    "choices": [
+      {
+        "text": "Agree: SOAP was withdrawn as a standard, so new clients are no longer supported",
+        "correct": false,
+        "why": "Nothing was withdrawn. Toolkits such as zeep still read WSDLs, and the distributor still answers."
+      },
+      {
+        "text": "It stopped being chosen for new APIs, but working systems that speak it are integrated with, not rewritten",
+        "correct": true,
+        "why": "Right. The NF-e services, banks, ERPs and this distributor are all running now, and the integration is this year's job."
+      },
+      {
+        "text": "Wait: a partner that still runs SOAP is bound to move to REST within a year or two, and integrating now is wasted work",
+        "correct": false,
+        "why": "A system that has worked for twenty years is not rewritten because its format went out of fashion. The shop needs stock now."
+      },
+      {
+        "text": "Use REST anyway, sending JSON to the SOAP address",
+        "correct": false,
+        "why": "The service reads envelopes in its namespace. A JSON body is not well-formed XML, and it would answer with a fault."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jhsev44",
+    "version": 1,
+    "section": "the-wsdl",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a WSDL in the order a caller's questions meet them, starting with \"where do I send it?\".",
+    "hint": "Read the file from the bottom.",
+    "items": [
+      "`service`",
+      "`binding`",
+      "`portType`",
+      "`message`",
+      "`types`"
+    ],
+    "trap": "Reading from the top meets the types before knowing what they are for."
+  },
+  {
+    "id": "ex-0dx5nyzv",
+    "version": 1,
+    "section": "the-wsdl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The distributor's schema says `elementFormDefault=\"qualified\"`. What does that change in a request?",
+    "hint": "Look at how `getstock.xml` writes the ISBN.",
+    "choices": [
+      {
+        "text": "Every value must be qualified with its XML Schema type, as in `xsd:string`",
+        "correct": false,
+        "why": "Type annotations on values are what `encoded` bodies add. This file is `literal`, and the types stay in the schema."
+      },
+      {
+        "text": "The request must name its operation in the `SOAPAction` header",
+        "correct": false,
+        "why": "That comes from the `binding` and SOAP 1.1 over HTTP, not from the schema."
+      },
+      {
+        "text": "Inner elements carry the namespace too: `d:ISBN`",
+        "correct": true,
+        "why": "Right. Without it, `ISBN` is an element in no namespace, and the service did not find the one it looked for."
+      },
+      {
+        "text": "The service accepts its element names in any letter case",
+        "correct": false,
+        "why": "XML names are case-sensitive whatever the schema says; `Isbn` is a different element from `ISBN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3n6ynqy",
+    "version": 1,
+    "section": "the-wsdl",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who is a WSDL mainly written for?",
+    "hint": "The section after it builds something from it.",
+    "choices": [
+      {
+        "text": "For the people who maintain the service, as internal notes",
+        "correct": false,
+        "why": "Internal notes would not need a schema and a binding. The WSDL is published at `?wsdl` for callers."
+      },
+      {
+        "text": "For a browser, which renders it as the service's home page",
+        "correct": false,
+        "why": "A browser shows XML as a tree at most. Nothing renders a WSDL as a page."
+      },
+      {
+        "text": "For programs",
+        "correct": true,
+        "why": "Right. A toolkit reads it and builds the client; a person reads it to know what the toolkit will do."
+      },
+      {
+        "text": "For the HTTP server, which routes requests by reading it on each call",
+        "correct": false,
+        "why": "The stand-in dispatches on the element in the `Body`; it reads the WSDL file only to send it at `?wsdl`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a69ekt8y",
+    "version": 1,
+    "section": "the-distributor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's team tests against the stand-in for weeks, and every test passes. What has that not told them about the real distributor?",
+    "hint": "A stand-in is built from the contract.",
+    "choices": [
+      {
+        "text": "Whether their envelopes match the WSDL they were given",
+        "correct": false,
+        "why": "That is what a stand-in built from the same WSDL does check: a wrong namespace is refused here as it would be there."
+      },
+      {
+        "text": "Which operations exist",
+        "correct": false,
+        "why": "The operations are in the WSDL, which both share."
+      },
+      {
+        "text": "What a fault looks like",
+        "correct": false,
+        "why": "The fault's shape is fixed by SOAP 1.1, and the stand-in sends the same `faultcode`, `faultstring` and `detail`."
+      },
+      {
+        "text": "How the real service behaves on a bad day",
+        "correct": true,
+        "why": "Right. The stand-in answers at once unless you make it slow; the real service's bad days are something no contract describes."
+      }
+    ]
+  },
+  {
+    "id": "ex-mczatg02",
+    "version": 1,
+    "section": "the-distributor",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A SOAP toolkit expects a service's contract at the service's own address with `?___` on the end.",
+    "hint": "The name of the contract's language, in lower case.",
+    "blanks": [
+      {
+        "accept": [
+          "wsdl"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e9az95s1",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hand-written request sends `<ISBN>9786500000030</ISBN>` without the `d:` prefix, and the answer is a fault saying `ISBN  is not in the catalogue`, with two spaces. What happened?",
+    "hint": "The service looked for an element by its full name.",
+    "choices": [
+      {
+        "text": "The ISBN is not in the distributor's catalogue",
+        "correct": false,
+        "why": "The same ISBN with `d:ISBN` answered 25 copies. The value never reached the lookup."
+      },
+      {
+        "text": "An `ISBN` in no namespace is a different element, so the service read an empty ISBN",
+        "correct": true,
+        "why": "Right. The answer looks like a data problem and is a namespace problem; the empty value between the two spaces is the clue."
+      },
+      {
+        "text": "The XML was not well-formed, and the parser quietly dropped the value it could not read",
+        "correct": false,
+        "why": "Malformed XML gets its own fault, `not well-formed XML`. This envelope parsed."
+      },
+      {
+        "text": "The `SOAPAction` header pointed at a different operation, so `GetStock` read the wrong field",
+        "correct": false,
+        "why": "A missing `SOAPAction` is refused with its own sentence. This request reached `GetStock`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwz5fv1n",
+    "version": 1,
+    "section": "by-hand",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In SOAP 1.1 over HTTP, the operation is named by the first element of the `Body` and again in the `___` header.",
+    "hint": "Leaving it out got a fault before the body was read.",
+    "blanks": [
+      {
+        "accept": [
+          "SOAPAction"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dy0kxphk",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GetStock` only reads, yet it travels as a `POST` to the same address as `PlaceOrder`. What does that take away?",
+    "hint": "Lesson 1 said what a method promises.",
+    "choices": [
+      {
+        "text": "Any way for a cache, proxy or retrying client to tell a read from an order",
+        "correct": true,
+        "why": "Right. In REST a `GET` tells everyone between the two programs that it is safe; here the protocol says nothing, and the contract has to."
+      },
+      {
+        "text": "The answer's body, which a `POST` reply leaves empty",
+        "correct": false,
+        "why": "The answer to `GetStock` came back with a full envelope. A `POST` answer has a body like any other."
+      },
+      {
+        "text": "Encryption, which HTTP applies to `GET` requests",
+        "correct": false,
+        "why": "HTTP encrypts nothing by method. That is TLS, and it covers every method alike."
+      },
+      {
+        "text": "The status code, which a `POST` to one shared address returns as 200 every time, faults included",
+        "correct": false,
+        "why": "The same address answered 500 for a fault. One address does not fix the status."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tydd0bv",
+    "version": 1,
+    "section": "zeep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`restock.py` printed `'UnitPrice': Decimal('18.90')`. Why a `Decimal`?",
+    "hint": "Where did zeep learn what a price is?",
+    "choices": [
+      {
+        "text": "The schema declares it `xsd:decimal`",
+        "correct": true,
+        "why": "Right. zeep converts each value to the type the WSDL declares; `NextDelivery`, declared a string, stayed a string."
+      },
+      {
+        "text": "Python turns any number with a decimal point into a `Decimal` when it parses text",
+        "correct": false,
+        "why": "Python parses `18.90` as a float unless told otherwise. The type came from the contract."
+      },
+      {
+        "text": "zeep guesses from the `Unit` in the element's name",
+        "correct": false,
+        "why": "zeep reads names as names. `QtyAvail` became an `int` for the same reason `UnitPrice` became a `Decimal`: the schema."
+      },
+      {
+        "text": "The distributor sent it with a `type` attribute",
+        "correct": false,
+        "why": "The answer was `<UnitPrice>18.90</UnitPrice>` with no attribute, as a `literal` body is."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7x71qkf",
+    "version": 1,
+    "section": "zeep",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs of building the client from the WSDL with a toolkit? Choose all that apply.",
+    "hint": "The table had two columns.",
+    "choices": [
+      {
+        "text": "The distributor's names, such as `QtyAvail`, become attributes in your code",
+        "correct": true,
+        "why": "Right. Convenient in a short script, and the start of the distributor's model leaking into the shop."
+      },
+      {
+        "text": "Envelopes whose namespaces you have to check by hand",
+        "correct": false,
+        "why": "That is what the toolkit removes: it writes the namespaces from the contract every time."
+      },
+      {
+        "text": "The client cannot start without the WSDL",
+        "correct": true,
+        "why": "Right. `restock.py` downloaded it on every run, and the distributor's log showed each `GET`."
+      },
+      {
+        "text": "The XML on the wire is out of sight unless you ask for it",
+        "correct": true,
+        "why": "Right. That is why the call by hand came first: it is the level where a disagreement is found."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x2sc5mn",
+    "version": 1,
+    "section": "zeep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GetStock(Isbn='9786500000030')` raised `TypeError: ... got an unexpected keyword argument 'Isbn'`. Where was that decided?",
+    "hint": "The message names a Python error, not a fault.",
+    "choices": [
+      {
+        "text": "In the distributor, which refused the element and sent a fault back",
+        "correct": false,
+        "why": "A fault would have arrived as `zeep.exceptions.Fault`. A `TypeError` is raised on your side."
+      },
+      {
+        "text": "In the HTTP layer, which rejected a request with a wrong header",
+        "correct": false,
+        "why": "The argument name is not a header; it would become an element in the body if anything were sent."
+      },
+      {
+        "text": "In `xmllint`, which validates envelopes before they leave",
+        "correct": false,
+        "why": "`xmllint` was not involved in that command; zeep builds and checks the envelope itself."
+      },
+      {
+        "text": "In zeep, from the WSDL, before any request was made",
+        "correct": true,
+        "why": "Right. The command used the local `distributor.wsdl` and checked the argument against the signature `ISBN: xsd:string`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkvayq6g",
+    "version": 1,
+    "section": "faults",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A SOAP 1.1 service is asked about an ISBN it does not sell, a mistake on the caller's side. With which HTTP status does its fault travel?",
+    "hint": "`curl -w '%{http_code}'` printed it.",
+    "value": 500,
+    "tolerance": 0,
+    "unit": "status"
+  },
+  {
+    "id": "ex-m6ecp88m",
+    "version": 1,
+    "section": "faults",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program that calls the distributor has to decide what a fault means. What should it read?",
+    "hint": "One of these is written for a person.",
+    "choices": [
+      {
+        "text": "The HTTP status",
+        "correct": false,
+        "why": "In SOAP 1.1 it is 500 for every fault, the caller's and the service's, so it says only that there is one."
+      },
+      {
+        "text": "The `faultstring`, matched against the sentences in the documentation",
+        "correct": false,
+        "why": "The wording is for a person, and somebody may improve it next year. A match on it breaks silently."
+      },
+      {
+        "text": "The `faultcode`, then the error code in `detail`",
+        "correct": true,
+        "why": "Right. `soap:Client` says whose fault, and `E100` says what, in a form meant for a program."
+      },
+      {
+        "text": "The `Content-Type` of the answer",
+        "correct": false,
+        "why": "A fault and a result are both `text/xml`. The difference is inside the `Body`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y34n8bj5",
+    "version": 1,
+    "section": "faults",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the distributor did to the status the shelf answers.",
+    "hint": "Three of them are the gateway codes.",
+    "pairs": [
+      {
+        "left": "fault `E100`, an ISBN it does not sell",
+        "right": "404"
+      },
+      {
+        "left": "fault `E200`, not enough copies",
+        "right": "409"
+      },
+      {
+        "left": "a `Server` fault",
+        "right": "502"
+      },
+      {
+        "left": "no answer within the timeout",
+        "right": "504"
+      }
+    ],
+    "right_distractors": [
+      "500"
+    ]
+  },
+  {
+    "id": "ex-zqs01axf",
+    "version": 1,
+    "section": "the-bridge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why put `bridge.py` between the shop and the distributor instead of calling zeep wherever stock is needed?",
+    "hint": "Think about the day the distributor renames a field.",
+    "choices": [
+      {
+        "text": "zeep is too slow to call from more than one module",
+        "correct": false,
+        "why": "Speed is not the argument; the bridge adds a hop. What it buys is that one module knows the distributor."
+      },
+      {
+        "text": "So the distributor's names, units and faults stop at one module",
+        "correct": true,
+        "why": "Right. That is the anti-corruption layer: a renamed field or a new distributor changes `bridge.py` and nothing else."
+      },
+      {
+        "text": "SOAP requires a gateway between a client and a service, so a direct call is refused",
+        "correct": false,
+        "why": "`restock.py` called the distributor directly and it worked. The layer is a design choice."
+      },
+      {
+        "text": "To cache the distributor's answers",
+        "correct": false,
+        "why": "`bridge.py` caches nothing; every request reaches the distributor. Its job is translation."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cn6r25c",
+    "version": 1,
+    "section": "the-bridge",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The distributor quotes *Americanah* at a `UnitPrice` of `35.50` reais. What does the bridge answer as `price_cents`?",
+    "hint": "`int(stock.UnitPrice * 100)`",
+    "value": 3550,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-8jz33phj",
+    "version": 1,
+    "section": "the-bridge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody deletes `operation_timeout=TIMEOUT` from `bridge.py`, and one afternoon the distributor takes a minute per answer. What does the shop see?",
+    "hint": "Each request waiting holds a thread.",
+    "choices": [
+      {
+        "text": "A 504 after two seconds, as before",
+        "correct": false,
+        "why": "The two seconds were that argument. Without it zeep waits as long as the distributor takes."
+      },
+      {
+        "text": "A SOAP fault from the distributor saying it is too busy to take the request right now",
+        "correct": false,
+        "why": "A slow service sends nothing until it is done; silence is not a fault."
+      },
+      {
+        "text": "A 502 straight away, because the bridge cannot open a connection to a distributor that slow",
+        "correct": false,
+        "why": "A refused connection is a distributor that is down. A slow one accepts the connection and then says nothing."
+      },
+      {
+        "text": "Requests that hang for a minute each, piling up until the shop stops answering",
+        "correct": true,
+        "why": "Right. A slow dependency with no timeout passes its slowness to every caller, each request holding a thread while it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqevzebf",
+    "version": 1,
+    "section": "other-shapes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each shape of legacy integration to the failure that looks like success in it.",
+    "hint": "Each shape fails quietly in its own way.",
+    "pairs": [
+      {
+        "left": "file drop",
+        "right": "a file read while the partner is still writing it"
+      },
+      {
+        "left": "polling by timestamp",
+        "right": "a row written in the same second, after the last look"
+      },
+      {
+        "left": "message queue",
+        "right": "the same message delivered twice"
+      },
+      {
+        "left": "shared database",
+        "right": "a column renamed in the partner's next release"
+      }
+    ],
+    "right_distractors": [
+      "a fault with HTTP status 500"
+    ]
+  },
+  {
+    "id": "ex-3vh2s3c9",
+    "version": 1,
+    "section": "other-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading the distributor's order tables directly would be the quickest integration to build. Why does the lesson call it the worst?",
+    "hint": "Who agreed to what?",
+    "choices": [
+      {
+        "text": "SQL is slower than SOAP for reading one row",
+        "correct": false,
+        "why": "One query is faster than an envelope over HTTP. Speed is the attraction, not the problem."
+      },
+      {
+        "text": "The distributor's database server would refuse a connection that comes from another company's network",
+        "correct": false,
+        "why": "If it allowed it, the integration would work, at first. The trouble comes later."
+      },
+      {
+        "text": "Reading another system's tables needs a message queue between the two databases to carry the rows",
+        "correct": false,
+        "why": "A shared database needs no queue; that is part of why it feels cheap."
+      },
+      {
+        "text": "Their internal schema becomes a contract they never agreed to",
+        "correct": true,
+        "why": "Right. Their next release renames a column and the shop breaks, with nobody on their side aware the integration existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhtemx0x",
+    "version": 1,
+    "section": "other-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The distributor will drop a CSV of its prices into a shared directory every night. What should it agree to do so the shop never reads half a file?",
+    "hint": "One operation on a file is instant.",
+    "choices": [
+      {
+        "text": "Compress the file",
+        "correct": false,
+        "why": "A compressed file is still written over time, and a reader that arrives early still finds part of it."
+      },
+      {
+        "text": "Write it under a temporary name and rename it when complete",
+        "correct": true,
+        "why": "Right. A rename is instant, so the shop sees either no file or the whole one."
+      },
+      {
+        "text": "Send it at the same hour every night",
+        "correct": false,
+        "why": "A fixed hour narrows the window. A large file on a slow link is still being written when the hour comes."
+      },
+      {
+        "text": "Put a header row at the top of the file",
+        "correct": false,
+        "why": "The header is written first, so half a file has one too."
+      }
+    ]
+  },
+  {
+    "id": "ex-z44qw3x5",
+    "version": 1,
+    "section": "resilience",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bridge answered 504 to an order. What does the shelf know about that order at that moment?",
+    "hint": "There are three outcomes, not two.",
+    "choices": [
+      {
+        "text": "It was not placed, since the distributor did not answer",
+        "correct": false,
+        "why": "It was placed three seconds later. Silence is not a refusal."
+      },
+      {
+        "text": "It was placed, since the distributor accepted the connection",
+        "correct": false,
+        "why": "Accepting a connection says nothing about finishing the work; it might have crashed or refused."
+      },
+      {
+        "text": "It failed with a fault the bridge did not map",
+        "correct": false,
+        "why": "An unmapped fault becomes 502, and it is an answer. 504 means no answer arrived."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. A timeout says that the shelf stopped waiting, not what happened on the far side."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8406gsw",
+    "version": 1,
+    "section": "resilience",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a circuit breaker's life in order, starting from normal operation.",
+    "hint": "It tests the water before it trusts again.",
+    "items": [
+      "Closed: every call goes through, and failures are counted",
+      "Failures pass the threshold",
+      "Open: calls fail at once without being tried",
+      "Half-open: one trial call is let through",
+      "The trial succeeds and the breaker closes"
+    ],
+    "trap": "Going from open straight to closed would send full traffic to a service that may still be struggling."
+  },
+  {
+    "id": "ex-eg98xzfb",
+    "version": 1,
+    "section": "resilience",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the deduplication of orders have to live in the distributor and not in the bridge?",
+    "hint": "After a timeout, which side is unsure?",
+    "choices": [
+      {
+        "text": "The bridge restarts often and loses its memory",
+        "correct": false,
+        "why": "A bridge that kept its memory on disk would still have the same gap: it cannot know what arrived."
+      },
+      {
+        "text": "Only the far side knows whether the first request arrived",
+        "correct": true,
+        "why": "Right. What the bridge sent is exactly what it is unsure about; the distributor saw `R-2002` and could answer `Repeated`."
+      },
+      {
+        "text": "SOAP forbids a client from keeping state between calls",
+        "correct": false,
+        "why": "SOAP says nothing about what a client remembers."
+      },
+      {
+        "text": "The distributor's stock is in memory, so only it can count",
+        "correct": false,
+        "why": "Where the stock lives is incidental; a real distributor keeps it in a database and the argument is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmy3gdn2",
+    "version": 1,
+    "section": "ws-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A signed NF-e passes through a gateway and an archive and is checked years later. Why does a WS-Security signature allow that when TLS does not?",
+    "hint": "Where does each protection live?",
+    "choices": [
+      {
+        "text": "The signature belongs to the message, and TLS to the connection",
+        "correct": true,
+        "why": "Right. TLS ends wherever the connection is terminated; the signature travels inside the document."
+      },
+      {
+        "text": "TLS keys expire after a year, and XML signatures do not",
+        "correct": false,
+        "why": "Certificates expire in both worlds. The difference is what is protected, a message or a connection."
+      },
+      {
+        "text": "TLS protects only `GET` requests",
+        "correct": false,
+        "why": "TLS protects every byte of the connection, whatever the method."
+      },
+      {
+        "text": "An XML signature encrypts the document",
+        "correct": false,
+        "why": "A signature proves integrity and origin; encryption is a separate piece, XML Encryption."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbxx0ssh",
+    "version": 1,
+    "section": "ws-security",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The distributor asks for a `UsernameToken` with `PasswordDigest`. What does that force on the distributor's side?",
+    "hint": "To check the digest, it computes the same one.",
+    "choices": [
+      {
+        "text": "Nothing, because the digest is checked by TLS",
+        "correct": false,
+        "why": "TLS knows nothing about the envelope's contents; the service checks the token itself."
+      },
+      {
+        "text": "Storing a bcrypt hash of each password, which is enough to check the digest",
+        "correct": false,
+        "why": "The digest is computed from the nonce, the time and the password itself, and a bcrypt hash cannot give the password back."
+      },
+      {
+        "text": "Keeping each password itself, so it cannot store only a hash",
+        "correct": true,
+        "why": "Right. It recomputes the digest from the password, which is the trade lesson 10 warns against."
+      },
+      {
+        "text": "Sending the password back in its answer",
+        "correct": false,
+        "why": "Nothing in the profile sends a password back."
+      }
+    ]
+  },
+  {
+    "id": "ex-s88cds4v",
+    "version": 1,
+    "section": "ws-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stand-in refuses any message containing `<!DOCTYPE`. Why is that safe to do before parsing?",
+    "hint": "What does SOAP 1.1 say about it?",
+    "choices": [
+      {
+        "text": "Because zeep never sends one, and zeep is the only client",
+        "correct": false,
+        "why": "curl is a client too, and a service has to defend itself against callers it did not write."
+      },
+      {
+        "text": "SOAP 1.1 says a message must not contain one, so no valid caller is refused",
+        "correct": true,
+        "why": "Right. And refusing it closes the door to entity expansion and external entities before the parser is involved."
+      },
+      {
+        "text": "Because a DTD makes the envelope too large for HTTP",
+        "correct": false,
+        "why": "`<!DOCTYPE x>` is a dozen bytes. Size is not the reason."
+      },
+      {
+        "text": "Because `xml.etree` would crash on it",
+        "correct": false,
+        "why": "`xml.etree` parses a document type declaration. The refusal is a policy, not a workaround."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eg4r3ff",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request to the bridge times out with 504. Which of these may the shop resend as they are, without risk of a second effect? Choose all that apply.",
+    "hint": "Idempotent, or made idempotent by the far side.",
+    "choices": [
+      {
+        "text": "`GET /stock/9786500000030`",
+        "correct": true,
+        "why": "Right. It becomes `GetStock`, which only reads."
+      },
+      {
+        "text": "An order sent again with the same `reference`",
+        "correct": true,
+        "why": "Right. The distributor remembers the reference and answers with the order it already has."
+      },
+      {
+        "text": "An order sent again with a fresh `reference`",
+        "correct": false,
+        "why": "A new reference is a new order to the distributor, and the first one may already be placed."
+      },
+      {
+        "text": "A `PlaceOrder` envelope posted by hand with curl",
+        "correct": false,
+        "why": "Sending it by hand changes nothing about what it does; whether it is safe depends on the reference in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-86q2ngwe",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The distributor starts with 40 copies of *Dom Casmurro*. An order for 10 with reference `R-2002` times out with 504 but is placed; it is resent with `R-2002` and answers 200. Then an order for 5 with reference `R-2003` answers 201. How many copies does `GetStock` report now?",
+    "hint": "A repeated reference places nothing.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-an3rhq3p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `curl localhost:8000/stock/9786500000030` in order, from the request to the answer.",
+    "hint": "The translation happens twice: once each way.",
+    "items": [
+      "The bridge matches `/stock/` and an ISBN of 13 digits",
+      "zeep builds a `GetStock` envelope with `SOAPAction`",
+      "The distributor answers with `QtyAvail`, `UnitPrice` and `NextDelivery`",
+      "zeep converts the values to the types in the WSDL",
+      "The bridge answers JSON in cents with an ISO date"
+    ],
+    "trap": "The type conversion happens in zeep before the bridge sees the values, which is why `UnitPrice * 100` is exact."
+  },
+  {
+    "id": "ex-kkk75rbt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A different partner's SOAP `PlaceOrder` has no reference field, and an order to it times out. What should the shop's adapter do?",
+    "hint": "The far side cannot deduplicate what it cannot recognise.",
+    "choices": [
+      {
+        "text": "Resend it at once, since a SOAP call with a fault is always safe to repeat",
+        "correct": false,
+        "why": "There was no fault, only silence, and a `POST` that creates an order is not idempotent by itself."
+      },
+      {
+        "text": "Treat the order as failed and tell the customer to order again",
+        "correct": false,
+        "why": "The first order may have been placed, as the distributor's was; this risks two."
+      },
+      {
+        "text": "Ask the partner's orders before resending, and hand it to a person if it cannot ask",
+        "correct": true,
+        "why": "Right. With no reference to deduplicate on, finding out comes before acting again."
+      },
+      {
+        "text": "Add a reference field to the envelope anyway",
+        "correct": false,
+        "why": "The partner's schema does not have the element; it would ignore it at best and refuse the envelope at worst."
+      }
+    ]
+  }
+]

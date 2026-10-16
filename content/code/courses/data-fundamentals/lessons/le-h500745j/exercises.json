@@ -1,0 +1,1311 @@
+[
+  {
+    "id": "ex-rbfete4b",
+    "version": 1,
+    "section": "what-cap-says",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During a partition, what does CAP say each running machine has to choose between?",
+    "hint": "Think of `n3`, cut off, with a customer waiting.",
+    "choices": [
+      {
+        "text": "Answering now, or refusing until it is sure its answer is still current",
+        "correct": true,
+        "why": "Right: answer and risk being stale, or refuse and stay correct."
+      },
+      {
+        "text": "Accepting writes, or accepting reads, but not both kinds of request",
+        "correct": false,
+        "why": "A node that chose consistency refused both the write and the read in the capture."
+      },
+      {
+        "text": "Answering quickly, or answering correctly, on every ordinary request",
+        "correct": false,
+        "why": "That is the trade-off PACELC names for the days with no partition."
+      },
+      {
+        "text": "Tolerating the partition, or shutting down until it ends",
+        "correct": false,
+        "why": "P is not a choice: the cut happens either way, and the question is what to do during it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkha2dzr",
+    "version": 1,
+    "section": "what-cap-says",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"pick any two of C, A and P\" the wrong picture for a system on several machines?",
+    "hint": "Who decides whether a partition happens?",
+    "choices": [
+      {
+        "text": "With enough replicas, a system can in fact have all three at once",
+        "correct": false,
+        "why": "More replicas do not stop a cut; they only change how many nodes sit on each side."
+      },
+      {
+        "text": "The network decides whether it happens, so P is not a choice",
+        "correct": true,
+        "why": "Right: the only choice left is C or A while the cut lasts."
+      },
+      {
+        "text": "C and A turn out to be one property under two names",
+        "correct": false,
+        "why": "They are opposite answers to the same cut: refuse, or answer."
+      },
+      {
+        "text": "Partitions no longer happen inside one modern data centre",
+        "correct": false,
+        "why": "They are rarer, but a cable, a switch or a slow peer still produces one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahcf1n25",
+    "version": 1,
+    "section": "what-cap-says",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the C of CAP mean?",
+    "hint": "It is not the C of ACID.",
+    "choices": [
+      {
+        "text": "A transaction leaves the database’s rules intact",
+        "correct": false,
+        "why": "That is the C of ACID, a different word with the same letter."
+      },
+      {
+        "text": "Every copy of a table has the same set of columns",
+        "correct": false,
+        "why": "That is about the schema; CAP is about which value a read returns."
+      },
+      {
+        "text": "Every read sees the latest completed write, as if there were one copy",
+        "correct": true,
+        "why": "Right: linearisability, as though there were one copy."
+      },
+      {
+        "text": "Data passes its quality checks before it is stored",
+        "correct": false,
+        "why": "Checks at the door are lesson 7; they say nothing about copies agreeing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d2t0dgj",
+    "version": 1,
+    "section": "what-cap-says",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of availability as CAP defines it? Choose all that apply.",
+    "hint": "The definition is about each machine, not the month.",
+    "choices": [
+      {
+        "text": "Every running machine that gets a request answers it",
+        "correct": true,
+        "why": "Yes: that is the definition in the proof."
+      },
+      {
+        "text": "An error does not count as an answer",
+        "correct": true,
+        "why": "Yes: refusing with an error is exactly what giving up availability looks like."
+      },
+      {
+        "text": "It is measured as the share of the month the service was up",
+        "correct": false,
+        "why": "That is uptime, a measurement over time and another sense of the word."
+      },
+      {
+        "text": "The majority side answering is enough to count as available",
+        "correct": false,
+        "why": "Then the system chose consistency: the minority side refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzvmxbs0",
+    "version": 1,
+    "section": "what-cap-says",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The consistency of CAP has a precise name: ___.",
+    "hint": "As though there were one copy, read in a line.",
+    "blanks": [
+      {
+        "accept": [
+          "linearisability",
+          "linearizability",
+          "linearisable",
+          "linearizable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j5qf4frk",
+    "version": 1,
+    "section": "a-partition",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `cp` run, on how many nodes was `n1`’s write of 5 recorded?",
+    "hint": "Read the line that starts `n1 write 5`.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-6a8szce2",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `cp` run, why did `n3` refuse the read as well as the write?",
+    "hint": "What could `n3` not know about its own copy?",
+    "choices": [
+      {
+        "text": "The partition had wiped its copy of the count",
+        "correct": false,
+        "why": "Its copy still said 6; the cut removes nothing."
+      },
+      {
+        "text": "It could not know whether the majority had accepted a write it never saw",
+        "correct": true,
+        "why": "Right: the majority might have accepted a write it never saw, and it had."
+      },
+      {
+        "text": "Once a node refuses one write, it refuses everything after it",
+        "correct": false,
+        "why": "Both refusals come from the same check, the majority, made afresh each time."
+      },
+      {
+        "text": "It had seen the newer value on `n2` and would not contradict it",
+        "correct": false,
+        "why": "It could not see `n2` at all: that is what the cut means."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmc40d3b",
+    "version": 1,
+    "section": "a-partition",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `ap` run, what did a read from `n3` return?",
+    "hint": "The line `n3 read:`.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "bicycles"
+  },
+  {
+    "id": "ex-78vsq4pf",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `ap` run, `n2` read 5 and `n3` read 7. Which statement is true?",
+    "hint": "One bicycle left, one came back.",
+    "choices": [
+      {
+        "text": "`n3` is right, because its write came later than `n1`’s",
+        "correct": false,
+        "why": "Later is not truer: `n3` never saw the ride taken at `n1`."
+      },
+      {
+        "text": "`n2` is right, because it sits on the majority side",
+        "correct": false,
+        "why": "In `ap` mode the majority decides nothing, and `n2` never saw the return."
+      },
+      {
+        "text": "Neither one is the true count of bicycles there",
+        "correct": true,
+        "why": "Right: Rua XV holds 6, and each node saw half of what happened."
+      },
+      {
+        "text": "Both are right until somebody compares them",
+        "correct": false,
+        "why": "Each is a faithful report of what one node saw, and neither is the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-vagbq1m1",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A store that chose consistency runs on two nodes, and the link between them is cut. What happens to writes?",
+    "hint": "Is one of two more than half?",
+    "choices": [
+      {
+        "text": "The node that was leader keeps accepting them",
+        "correct": false,
+        "why": "The leader also sees one of two, which is not a majority."
+      },
+      {
+        "text": "Both sides accept them and merge after the cut",
+        "correct": false,
+        "why": "That is the AP behaviour, which this store did not choose."
+      },
+      {
+        "text": "The node holding the newer data keeps accepting them",
+        "correct": false,
+        "why": "Neither node can tell whether the other is newer without talking to it."
+      },
+      {
+        "text": "Both sides refuse, because neither holds a majority",
+        "correct": true,
+        "why": "Right: that is why such systems run three or five nodes."
+      }
+    ]
+  },
+  {
+    "id": "ex-57npp428",
+    "version": 1,
+    "section": "a-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a real node not know it is partitioned, as `replicas.py` lets it?",
+    "hint": "Lesson 9: what can a timeout tell apart?",
+    "choices": [
+      {
+        "text": "Networks report a cut to the routers and not to the nodes themselves",
+        "correct": false,
+        "why": "Nothing reports a cut to anybody; the symptom is silence."
+      },
+      {
+        "text": "Silence from a cut peer looks like a slow one",
+        "correct": true,
+        "why": "Right: a timeout cannot tell a cut, a slow peer and a dead one apart."
+      },
+      {
+        "text": "Nodes keep no clock with which to measure a wait",
+        "correct": false,
+        "why": "They have clocks; the trouble is that waiting does not explain itself."
+      },
+      {
+        "text": "Detecting a partition needs a vote of every node first",
+        "correct": false,
+        "why": "A vote would need the very messages the cut is losing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfmfw2yw",
+    "version": 1,
+    "section": "choosing-consistency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets a CP system be sure only one side of a cut accepts writes?",
+    "hint": "Two groups cannot both have it.",
+    "choices": [
+      {
+        "text": "The side with the newest clock reading wins",
+        "correct": false,
+        "why": "Clocks disagree, and a cut gives no way to compare them."
+      },
+      {
+        "text": "Only one side of any cut ever holds a majority of the nodes",
+        "correct": true,
+        "why": "Right: two of three on one side leaves no second majority anywhere."
+      },
+      {
+        "text": "The client picks the side at random for each request",
+        "correct": false,
+        "why": "A random pick could land on both sides over two requests."
+      },
+      {
+        "text": "Every write is copied to a backup before it is accepted",
+        "correct": false,
+        "why": "A backup is a copy, not a rule about who may write."
+      }
+    ]
+  },
+  {
+    "id": "ex-9narw72z",
+    "version": 1,
+    "section": "choosing-consistency",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each cost of choosing consistency to when it is paid.",
+    "hint": "Only one of them waits for a partition.",
+    "pairs": [
+      {
+        "left": "the minority side refuses",
+        "right": "only while a link is cut"
+      },
+      {
+        "left": "each write waits for a majority",
+        "right": "on every write, cut or not"
+      },
+      {
+        "left": "writes stop until a new leader is chosen",
+        "right": "when the coordinating machine fails"
+      }
+    ]
+  },
+  {
+    "id": "ex-j9kpkg9g",
+    "version": 1,
+    "section": "choosing-consistency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Roda Livre action belongs on the side that refuses during a cut?",
+    "hint": "Could two yeses be undone?",
+    "choices": [
+      {
+        "text": "Showing the dock map to a customer about to walk",
+        "correct": false,
+        "why": "A map slightly behind still helps; an error does not."
+      },
+      {
+        "text": "Unlocking `B017` for a customer",
+        "correct": true,
+        "why": "Right: one bicycle cannot be handed to two riders."
+      },
+      {
+        "text": "Recording a reading sent by a dock sensor",
+        "correct": false,
+        "why": "A reading is a fact that merges; a duplicate is dropped by its id."
+      },
+      {
+        "text": "Counting yesterday’s rides for the morning report",
+        "correct": false,
+        "why": "That reads a copy kept behind on purpose; no cut is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbzcmhft",
+    "version": 1,
+    "section": "choosing-consistency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment refused during a cut, or a payment accepted on both sides. Why is the refusal the better failure?",
+    "hint": "Lesson 1 named two kinds of failure.",
+    "choices": [
+      {
+        "text": "A refusal is loud, and the client is free to try it again safely",
+        "correct": true,
+        "why": "Right, and an idempotent retry makes it safe; a double charge succeeds twice in silence."
+      },
+      {
+        "text": "A double charge is merged into one at the end of the day",
+        "correct": false,
+        "why": "A charge is a decision, not a count: there is nothing to merge it with."
+      },
+      {
+        "text": "Customers prefer an error message to a short delay",
+        "correct": false,
+        "why": "The argument is about which failure can be undone, not about taste."
+      },
+      {
+        "text": "On a CP system a payment cannot be charged twice in any case",
+        "correct": false,
+        "why": "A careless client can still send it twice; the refusal is what stops the cut doing so."
+      }
+    ]
+  },
+  {
+    "id": "ex-gprmr92j",
+    "version": 1,
+    "section": "choosing-consistency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which cost of choosing consistency is paid on a day when nothing is broken?",
+    "hint": "The theorem does not mention it.",
+    "choices": [
+      {
+        "text": "The minority side of the network refuses requests",
+        "correct": false,
+        "why": "That needs a cut; on a calm day there is no minority side."
+      },
+      {
+        "text": "Copies diverge and have to be merged later",
+        "correct": false,
+        "why": "That is the bill of the AP side."
+      },
+      {
+        "text": "Each write waits until a majority has answered",
+        "correct": true,
+        "why": "Right: PACELC calls this the latency side of the trade."
+      },
+      {
+        "text": "Every read compares timestamps across all the copies",
+        "correct": false,
+        "why": "Comparing timestamps is last write wins, an AP technique."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkvzc57r",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `merge.py`, why did last write wins keep 7?",
+    "hint": "Look at the two `at` fields.",
+    "choices": [
+      {
+        "text": "The rule always keeps whichever value is larger",
+        "correct": false,
+        "why": "It compares times, not values; a later 5 would have won."
+      },
+      {
+        "text": "The return was stamped 08:05, which is later than the ride’s 08:02",
+        "correct": true,
+        "why": "Right: 08:05 beats 08:02, and the ride is thrown away."
+      },
+      {
+        "text": "The node that was cut off has the final say once it is back",
+        "correct": false,
+        "why": "Which node was cut does not enter the rule at all."
+      },
+      {
+        "text": "A return cancels any ride taken from the same station",
+        "correct": false,
+        "why": "The rule knows nothing of rides or returns, only timestamps."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnzz59yd",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What count did the merged counter in `merge.py` give for ST02?",
+    "hint": "The line `merged counter:`.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "bicycles"
+  },
+  {
+    "id": "ex-007qqv2h",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the counter safe to merge whenever two copies meet? Choose all that apply.",
+    "hint": "The last two lines of the output test two of them.",
+    "choices": [
+      {
+        "text": "The order of a merge makes no difference",
+        "correct": true,
+        "why": "Yes: \"either order: True\"."
+      },
+      {
+        "text": "Merging the same copy twice changes nothing",
+        "correct": true,
+        "why": "Yes: \"merged twice: True\"."
+      },
+      {
+        "text": "Each node counts only what it saw itself",
+        "correct": true,
+        "why": "Yes: that is what lets the merge take the larger number per node."
+      },
+      {
+        "text": "The merge keeps the copy with the latest timestamp",
+        "correct": false,
+        "why": "That is last write wins, the rule that lost a bicycle."
+      },
+      {
+        "text": "The nodes elect a leader before they merge anything",
+        "correct": false,
+        "why": "No leader is needed; that is the point of the shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtxkqbs8",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A data type built so that any two of its copies can be merged is called a ___.",
+    "hint": "Four capital letters, named in 2011.",
+    "blanks": [
+      {
+        "accept": [
+          "CRDT",
+          "CRDTs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h0xnjxfx",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does last write wins depend on the nodes’ clocks?",
+    "hint": "Lesson 9: clocks disagree.",
+    "choices": [
+      {
+        "text": "Clocks decide which node becomes leader after a cut",
+        "correct": false,
+        "why": "Last write wins has no leader; it only compares stamps."
+      },
+      {
+        "text": "A fast clock lets an earlier write win",
+        "correct": true,
+        "why": "Right: the stamp, not the moment, decides."
+      },
+      {
+        "text": "Two writes with the same stamp are both thrown away",
+        "correct": false,
+        "why": "A tie needs some rule, but the danger is a stamp that is wrong."
+      },
+      {
+        "text": "The merge counts the seconds between the two writes",
+        "correct": false,
+        "why": "It compares two stamps and keeps one; it counts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tw89mtgm",
+    "version": 1,
+    "section": "choosing-availability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Dynamo’s shopping cart suit the side that answers during a cut?",
+    "hint": "What happens to two versions of one cart?",
+    "choices": [
+      {
+        "text": "Carts are too small for a partition to affect them",
+        "correct": false,
+        "why": "Size has nothing to do with it; any copied value can diverge."
+      },
+      {
+        "text": "Carts are stored on one machine, out of reach of the network",
+        "correct": false,
+        "why": "They were replicated, which is why two versions could exist."
+      },
+      {
+        "text": "Two carts merge cleanly, and an error loses the sale",
+        "correct": true,
+        "why": "Right: a wrong cart for a minute is cheaper than a refused click."
+      },
+      {
+        "text": "Customers expect their cart to be out of date",
+        "correct": false,
+        "why": "Nobody expects it; the merge makes it rarely visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6g6jbt9",
+    "version": 1,
+    "section": "pacelc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the E in PACELC stand for?",
+    "hint": "Read the name as a sentence.",
+    "choices": [
+      {
+        "text": "Eventual, as in eventual consistency",
+        "correct": false,
+        "why": "A tempting reading, but the letters spell an if and an else."
+      },
+      {
+        "text": "Error, the reply a refusing node sends",
+        "correct": false,
+        "why": "Refusing belongs to the P half; E opens the other half."
+      },
+      {
+        "text": "Election, of a new leader after a crash",
+        "correct": false,
+        "why": "Elections exist, but they are not in the name."
+      },
+      {
+        "text": "Else: what to choose when nothing is partitioned",
+        "correct": true,
+        "why": "Right: else, choose latency or consistency."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4j6tbq2",
+    "version": 1,
+    "section": "pacelc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is there a choice between latency and consistency when nothing is broken?",
+    "hint": "What does being sure wait for?",
+    "choices": [
+      {
+        "text": "A consistent read has to scan every row of the data set",
+        "correct": false,
+        "why": "Consistency is about which copy answers, not how much is read."
+      },
+      {
+        "text": "Detecting partitions slows every request down a little",
+        "correct": false,
+        "why": "The wait is for agreement, and it is there with or without detection."
+      },
+      {
+        "text": "Agreeing with another copy costs a message there and back",
+        "correct": true,
+        "why": "Right: waiting for another copy is what being sure costs."
+      },
+      {
+        "text": "Consistent systems write every record to disk twice",
+        "correct": false,
+        "why": "Disk writes are not what the letters describe."
+      }
+    ]
+  },
+  {
+    "id": "ex-efw8mmte",
+    "version": 1,
+    "section": "pacelc",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each PACELC pair to what the system does.",
+    "hint": "The first letter pair is the cut; the second is the calm day.",
+    "pairs": [
+      {
+        "left": "PA/EL",
+        "right": "answers during a cut, answers fast otherwise"
+      },
+      {
+        "left": "PC/EC",
+        "right": "refuses during a cut, waits for agreement otherwise"
+      },
+      {
+        "left": "PA/EC",
+        "right": "answers during a cut, waits for agreement otherwise"
+      },
+      {
+        "left": "PC/EL",
+        "right": "refuses during a cut, answers fast otherwise"
+      }
+    ]
+  },
+  {
+    "id": "ex-at547013",
+    "version": 1,
+    "section": "pacelc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Cassandra keeps three copies. Which levels make a read see the last write?",
+    "hint": "Lesson 9: R + W > N.",
+    "choices": [
+      {
+        "text": "`ONE` for writes and `QUORUM` for reads",
+        "correct": false,
+        "why": "1 + 2 = 3, which is not more than 3: the read can miss the copy that took the write."
+      },
+      {
+        "text": "`QUORUM` for both",
+        "correct": true,
+        "why": "Right: 2 + 2 = 4 > 3, so the two always share a copy."
+      },
+      {
+        "text": "`ONE` for both, on a fast enough network",
+        "correct": false,
+        "why": "Speed does not help: 1 + 1 can name two different copies."
+      },
+      {
+        "text": "`QUORUM` for writes and `ONE` for reads",
+        "correct": false,
+        "why": "2 + 1 = 3 again: the one copy read may be the one the write skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-75evdks3",
+    "version": 1,
+    "section": "consistency-models",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each consistency model to the surprise it rules out at Roda Livre.",
+    "hint": "Two of them are promises to one session.",
+    "pairs": [
+      {
+        "left": "strong",
+        "right": "a reader seeing 7 after another was told 5"
+      },
+      {
+        "left": "read-your-writes",
+        "right": "ana’s finished ride still showing as open"
+      },
+      {
+        "left": "monotonic reads",
+        "right": "the map going from 6 back to 5"
+      },
+      {
+        "left": "eventual",
+        "right": "copies that never agree once writes stop"
+      }
+    ]
+  },
+  {
+    "id": "ex-9n7rnywa",
+    "version": 1,
+    "section": "consistency-models",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "ana returns a bicycle and the app still shows her ride as open. Which guarantee is missing?",
+    "hint": "It is about her own action.",
+    "choices": [
+      {
+        "text": "Monotonic reads",
+        "correct": false,
+        "why": "That stops going backwards after seeing something newer; she never saw the return."
+      },
+      {
+        "text": "Read-your-writes",
+        "correct": true,
+        "why": "Right: her own write should be visible to her."
+      },
+      {
+        "text": "Eventual consistency",
+        "correct": false,
+        "why": "This is still eventual: the copies will agree later."
+      },
+      {
+        "text": "Partition tolerance",
+        "correct": false,
+        "why": "Nothing here needs a cut; one lagging copy is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w88ywqg",
+    "version": 1,
+    "section": "consistency-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does eventual consistency promise?",
+    "hint": "It says nothing about the meantime.",
+    "choices": [
+      {
+        "text": "Every read is at most a second behind the latest write",
+        "correct": false,
+        "why": "It puts no bound on time at all."
+      },
+      {
+        "text": "Copies agree a moment after each write",
+        "correct": false,
+        "why": "That is how it is heard; it promises less."
+      },
+      {
+        "text": "Copies converge once the writes stop coming",
+        "correct": true,
+        "why": "Right, and not when, nor what is read on the way."
+      },
+      {
+        "text": "A reader never sees an older value after a newer one",
+        "correct": false,
+        "why": "That is monotonic reads, a stronger promise."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5pjdf5a",
+    "version": 1,
+    "section": "consistency-models",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do read-your-writes and monotonic reads cost less than strong consistency?",
+    "hint": "Who has to wait?",
+    "choices": [
+      {
+        "text": "They are promises to one session",
+        "correct": true,
+        "why": "Right: only that session’s reads are steered or held, nobody else’s."
+      },
+      {
+        "text": "They skip the copies on the far side of the network",
+        "correct": false,
+        "why": "They may read any copy; what they constrain is which, for one reader."
+      },
+      {
+        "text": "They are only offered on a single machine with no replicas",
+        "correct": false,
+        "why": "On one machine there would be nothing to promise."
+      },
+      {
+        "text": "They let the copies stop replicating for a while",
+        "correct": false,
+        "why": "Replication goes on; the promise is about what one reader sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-agnk8ps9",
+    "version": 1,
+    "section": "real-systems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a PostgreSQL database on one machine sit in the figure, and why?",
+    "hint": "What would a cut separate?",
+    "choices": [
+      {
+        "text": "On the CP edge, as a consensus system with a leader",
+        "correct": false,
+        "why": "One machine runs no consensus; there is nobody to agree with."
+      },
+      {
+        "text": "On the AP edge, because a single machine answers everyone",
+        "correct": false,
+        "why": "Answering everyone is easy when no copy can disagree."
+      },
+      {
+        "text": "Outside the triangle: CAP does not apply to SQL",
+        "correct": false,
+        "why": "The query language is irrelevant; the number of copies decides."
+      },
+      {
+        "text": "On the C–A edge, because there is no network to cut between copies",
+        "correct": true,
+        "why": "Right: a second copy would move it to one of the other edges."
+      }
+    ]
+  },
+  {
+    "id": "ex-cc64mbhk",
+    "version": 1,
+    "section": "real-systems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Unclean leader election is off and every in-sync copy of a Kafka partition is gone. What does Kafka do?",
+    "hint": "Waiting is the C.",
+    "choices": [
+      {
+        "text": "Promotes the most recent copy that is out of sync",
+        "correct": false,
+        "why": "That is what switching unclean election on allows, at the price of lost messages."
+      },
+      {
+        "text": "Waits for an in-sync copy to return",
+        "correct": true,
+        "why": "Right: it refuses rather than lose messages."
+      },
+      {
+        "text": "Accepts writes on every broker and merges them later",
+        "correct": false,
+        "why": "Kafka keeps one leader per partition and does not merge."
+      },
+      {
+        "text": "Deletes the partition and creates it again, empty",
+        "correct": false,
+        "why": "Nothing is deleted; the partition is unavailable until a copy returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgy2bzd6",
+    "version": 1,
+    "section": "real-systems",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What changed about Amazon S3 in December 2020?",
+    "hint": "Workarounds became dead weight.",
+    "choices": [
+      {
+        "text": "Uploads became eventually consistent to make them faster",
+        "correct": false,
+        "why": "The change went the other way."
+      },
+      {
+        "text": "It began refusing writes whenever a region was cut off",
+        "correct": false,
+        "why": "The change was about what a read returns after a write."
+      },
+      {
+        "text": "Overwrites began to be settled by last write wins across regions",
+        "correct": false,
+        "why": "The section names no such change."
+      },
+      {
+        "text": "Reads straight after a write became strongly consistent",
+        "correct": true,
+        "why": "Right: an overwritten file is read back in its new version."
+      }
+    ]
+  },
+  {
+    "id": "ex-pshj2eqf",
+    "version": 1,
+    "section": "real-systems",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is \"Cassandra is AP\" a statement about a default rather than a fact?",
+    "hint": "Its consistency level travels with each request.",
+    "choices": [
+      {
+        "text": "`QUORUM` makes the minority side refuse",
+        "correct": true,
+        "why": "Right: per request, it can behave as CP."
+      },
+      {
+        "text": "It was mislabelled for years and has really been CP all along",
+        "correct": false,
+        "why": "By default it answers on both sides; the label is right about the default."
+      },
+      {
+        "text": "It keeps a single copy, so CAP does not apply to it",
+        "correct": false,
+        "why": "It keeps several copies, which is why the levels exist."
+      },
+      {
+        "text": "In a cluster of three nodes, AP and CP behave the same way",
+        "correct": false,
+        "why": "The capture showed three nodes behaving in two different ways."
+      }
+    ]
+  },
+  {
+    "id": "ex-1medzjsh",
+    "version": 1,
+    "section": "cap-in-roda-livre",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question decides whether a piece of Roda Livre’s data goes on the side that refuses or the side that answers?",
+    "hint": "Imagine both sides of a cut saying yes.",
+    "choices": [
+      {
+        "text": "How large the data is, and how quickly it grows each month",
+        "correct": false,
+        "why": "Volume is lesson 7’s question; it does not decide what a cut should do."
+      },
+      {
+        "text": "Which database the company already runs for its other data",
+        "correct": false,
+        "why": "That is choosing by letters for the whole company, the mistake the section names."
+      },
+      {
+        "text": "If both sides said yes, could the two answers be merged afterwards?",
+        "correct": true,
+        "why": "Right: if they merge, answer; if not, refuse."
+      },
+      {
+        "text": "How many people read it on an ordinary day",
+        "correct": false,
+        "why": "Popular data can sit on either side."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4d5j8jb",
+    "version": 1,
+    "section": "cap-in-roda-livre",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can safely answer on both sides of a cut? Choose all that apply.",
+    "hint": "Ask whether two answers merge.",
+    "choices": [
+      {
+        "text": "The dock map in the app",
+        "correct": true,
+        "why": "Yes: counts merge, and a map slightly behind still helps."
+      },
+      {
+        "text": "Readings from the dock sensors",
+        "correct": true,
+        "why": "Yes: a reading is a fact, and duplicates are dropped by id."
+      },
+      {
+        "text": "The payment for a ride",
+        "correct": false,
+        "why": "No: a double charge becomes a refund and a phone call."
+      },
+      {
+        "text": "Which customer holds bicycle `B017`",
+        "correct": false,
+        "why": "No: one bicycle, one rider."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdjhmc7g",
+    "version": 1,
+    "section": "cap-in-roda-livre",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a data platform promise in place of linearisability?",
+    "hint": "Lesson 2 made it a target.",
+    "choices": [
+      {
+        "text": "That every copy agrees with the source at every moment",
+        "correct": false,
+        "why": "That is linearisability itself, which the platform gave up on purpose."
+      },
+      {
+        "text": "Freshness: a known delay, stated in advance and measured",
+        "correct": true,
+        "why": "Right: behind by an amount it states and measures."
+      },
+      {
+        "text": "That it answers on both sides of any network cut",
+        "correct": false,
+        "why": "The platform reads a copy; cuts in the app’s store are not its question."
+      },
+      {
+        "text": "That every report is recomputed from the source on each read",
+        "correct": false,
+        "why": "That would put the platform back on the source’s clock and load."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg7v1nvs",
+    "version": 1,
+    "section": "cap-in-roda-livre",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Roda Livre adds reservations: a customer can hold a bicycle for ten minutes before riding. Which side should a reservation go on?",
+    "hint": "Two customers, one bicycle.",
+    "choices": [
+      {
+        "text": "The answering side, since a reservation is just another entry on the map",
+        "correct": false,
+        "why": "A map entry merges; two holds on one bicycle do not."
+      },
+      {
+        "text": "Neither: it belongs in the nightly batch with the morning report",
+        "correct": false,
+        "why": "A reservation is needed now, not tomorrow morning."
+      },
+      {
+        "text": "The refusing side: two holds cannot merge",
+        "correct": true,
+        "why": "Right: it is the unlock decision, ten minutes early."
+      },
+      {
+        "text": "The answering side, provided timestamps settle any tie afterwards",
+        "correct": false,
+        "why": "Last write wins would silently cancel one customer’s hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdqksa3p",
+    "version": 1,
+    "section": "the-whole-map",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of lesson 3’s lifecycle in order.",
+    "hint": "The middle row of the map, left to right.",
+    "items": [
+      "generation",
+      "ingestion",
+      "storage",
+      "transformation",
+      "delivery"
+    ],
+    "trap": "Data is stored raw before it is transformed, so the raw copy survives a bad transformation."
+  },
+  {
+    "id": "ex-13k5v6g8",
+    "version": 1,
+    "section": "the-whole-map",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 7 only introduced checks at the door. Which course takes data quality further?",
+    "hint": "The transformation stage names two.",
+    "choices": [
+      {
+        "text": "`statistics`, the next course in the track",
+        "correct": false,
+        "why": "It teaches what to do with a number once it can be trusted."
+      },
+      {
+        "text": "`data-cleaning`, which measures and repairs it",
+        "correct": true,
+        "why": "Right: quality measured and repaired in depth."
+      },
+      {
+        "text": "`warehouse-modeling`, which organises the stored data",
+        "correct": false,
+        "why": "It models the warehouse; quality in depth is another course."
+      },
+      {
+        "text": "`streaming`, which handles late and duplicate events",
+        "correct": false,
+        "why": "It walks lesson 8’s region, not quality in general."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jjq11d9",
+    "version": 1,
+    "section": "the-whole-map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Last write wins lost a bicycle and printed nothing. Which of the four recurring ideas is that?",
+    "hint": "Lesson 1’s `twice.py` was another one.",
+    "choices": [
+      {
+        "text": "A loud failure, which names itself",
+        "correct": false,
+        "why": "Nothing stopped and nothing was named: that is the other kind."
+      },
+      {
+        "text": "A copy that somebody declared to be behind",
+        "correct": false,
+        "why": "A declared delay is honest; this loss was invisible."
+      },
+      {
+        "text": "A quiet failure",
+        "correct": true,
+        "why": "Right: a plausible wrong number, the kind the profession exists to prevent."
+      },
+      {
+        "text": "A trade-off with a right side in general",
+        "correct": false,
+        "why": "The section says no trade-off has a right side in general."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5a9rzbs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the `ap` run, and what follows it, in order.",
+    "hint": "The cut comes before anything diverges.",
+    "items": [
+      "the link to `n3` is cut",
+      "`n1` accepts 5 for itself and `n2`",
+      "`n3` accepts 7 on its own",
+      "readers see 5 on `n2` and 7 on `n3`",
+      "the link heals and the copies are merged"
+    ],
+    "trap": "Divergence needs the cut first, and the merge needs the link back."
+  },
+  {
+    "id": "ex-avsz03d6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A store that chose consistency has five nodes, and a cut splits them three and two. Which side accepts writes?",
+    "hint": "More than half of five.",
+    "choices": [
+      {
+        "text": "The side of two, if the leader happens to be on it",
+        "correct": false,
+        "why": "Two of five is not a majority; the leader steps down without one."
+      },
+      {
+        "text": "Both sides, until the cut has been detected",
+        "correct": false,
+        "why": "A CP store checks for a majority before accepting, detected or not."
+      },
+      {
+        "text": "Neither, since no side holds all five nodes",
+        "correct": false,
+        "why": "A majority is enough; unanimity would make every cut fatal."
+      },
+      {
+        "text": "The side of three, because three of five is a majority",
+        "correct": true,
+        "why": "Right: three of five is a majority, and there cannot be two."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfj1evg0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a cut, the app still shows the dock map but greys out the unlock button. What has Roda Livre done?",
+    "hint": "Two pieces of data, two answers.",
+    "choices": [
+      {
+        "text": "Chosen availability for the whole app, and failed to deliver it",
+        "correct": false,
+        "why": "The greyed button is a deliberate refusal, not a failure of AP."
+      },
+      {
+        "text": "Chosen per piece of data: AP map, CP unlock",
+        "correct": true,
+        "why": "Right: each part of the app got the answer its data needs."
+      },
+      {
+        "text": "Chosen consistency for the whole app, apart from the cache",
+        "correct": false,
+        "why": "The map answering during a cut is availability, whatever stores it."
+      },
+      {
+        "text": "Avoided the partition by keeping a copy on the phone",
+        "correct": false,
+        "why": "A copy on the phone is one more copy that can fall behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyxa86t6",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PACELC: if there is a Partition, choose Availability or Consistency; Else, choose ___ or Consistency.",
+    "hint": "What you pay to wait for another copy.",
+    "blanks": [
+      {
+        "accept": [
+          "latency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

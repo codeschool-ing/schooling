@@ -1,0 +1,551 @@
+[
+  {
+    "id": "ex-94cbcsn3",
+    "version": 1,
+    "section": "a-generator-and-a-seed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two generators made with `np.random.default_rng(2025)` each draw ten integers. What do you get?",
+    "hint": "Same seed, same sequence.",
+    "choices": [
+      {
+        "text": "The same ten numbers twice",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two different sets, since each generator is random",
+        "correct": false,
+        "why": "The seed fixes the sequence."
+      },
+      {
+        "text": "The second set continues where the first stopped",
+        "correct": false,
+        "why": "They are separate generators, each at its own start."
+      },
+      {
+        "text": "An error, because a seed can be used only once",
+        "correct": false,
+        "why": "A seed can start any number of generators."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyfgekx6",
+    "version": 1,
+    "section": "a-generator-and-a-seed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rng` drew ten numbers. What does the next `rng.integers(1, 7, size=5)` give?",
+    "hint": "A generator keeps its place.",
+    "choices": [
+      {
+        "text": "The first five of the ten again",
+        "correct": false,
+        "why": "It does not restart."
+      },
+      {
+        "text": "The next five in the sequence",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Five numbers from a new random seed",
+        "correct": false,
+        "why": "The seed was given once and stays."
+      },
+      {
+        "text": "Values 11 to 15",
+        "correct": false,
+        "why": "Positions in a sequence are not the values drawn."
+      }
+    ]
+  },
+  {
+    "id": "ex-10ry3afx",
+    "version": 1,
+    "section": "a-generator-and-a-seed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A notebook uses `np.random.default_rng()` with no seed and passes Restart and Run All. What is wrong?",
+    "hint": "Run it twice.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "Its numbers change on every run."
+      },
+      {
+        "text": "It will fail on another machine",
+        "correct": false,
+        "why": "It runs anywhere; it just never repeats."
+      },
+      {
+        "text": "Each run gives different numbers",
+        "correct": true,
+        "why": "Right: self-consistent, not reproducible."
+      },
+      {
+        "text": "`default_rng` needs a seed or it raises an error",
+        "correct": false,
+        "why": "Without one it asks the system for a fresh seed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysq456w6",
+    "version": 1,
+    "section": "a-generator-and-a-seed",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`rng.integers(1, 7)` can return 1 to ___, inclusive.",
+    "hint": "The stop is excluded.",
+    "blanks": [
+      {
+        "accept": [
+          "6"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ncwcwdhp",
+    "version": 1,
+    "section": "the-global-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `np.random.seed(42)`, a helper calls `np.random.shuffle`. Then your `np.random.randint(...)` runs. What happens to your numbers?",
+    "hint": "One generator for the whole program.",
+    "choices": [
+      {
+        "text": "They are the same as without the helper",
+        "correct": false,
+        "why": "The helper moved the shared generator."
+      },
+      {
+        "text": "They become `nan`",
+        "correct": false,
+        "why": "Nothing becomes `nan`."
+      },
+      {
+        "text": "NumPy raises an error about the seed being used",
+        "correct": false,
+        "why": "Nothing reports it."
+      },
+      {
+        "text": "Different, because the helper drew from the same global generator first",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx4m3t82",
+    "version": 1,
+    "section": "the-global-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the Generator equivalent of `np.random.randint(1, 7, 5)`?",
+    "hint": "Not named randint.",
+    "choices": [
+      {
+        "text": "`rng.randint(1, 7, 5)`",
+        "correct": false,
+        "why": "The method has another name."
+      },
+      {
+        "text": "`rng.integers(1, 7, 5)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rng.random(1, 7, 5)`",
+        "correct": false,
+        "why": "`random` gives floats in [0, 1)."
+      },
+      {
+        "text": "`np.random.seed(1, 7, 5)`",
+        "correct": false,
+        "why": "That sets a seed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sy995yk",
+    "version": 1,
+    "section": "the-global-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Old code is moved from `np.random.seed(42)` to `np.random.default_rng(42)`, keeping the same seed. What happens to its random results?",
+    "hint": "Different algorithms underneath.",
+    "choices": [
+      {
+        "text": "Nothing: a seed is a seed",
+        "correct": false,
+        "why": "The two interfaces use different algorithms."
+      },
+      {
+        "text": "They change, once",
+        "correct": true,
+        "why": "Right: worth saying in the commit."
+      },
+      {
+        "text": "They become unreproducible",
+        "correct": false,
+        "why": "They are reproducible under the new seed."
+      },
+      {
+        "text": "They change on every run from then on",
+        "correct": false,
+        "why": "A seeded Generator repeats."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzhv940g",
+    "version": 1,
+    "section": "distributions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which distribution models trips per hour at a station, counts of independent events at a steady rate?",
+    "hint": "Whole numbers, never negative.",
+    "choices": [
+      {
+        "text": "Normal",
+        "correct": false,
+        "why": "It gives fractions and negatives."
+      },
+      {
+        "text": "Exponential",
+        "correct": false,
+        "why": "That is the wait between events."
+      },
+      {
+        "text": "Poisson",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Log-normal",
+        "correct": false,
+        "why": "That is for positive, skewed amounts like durations."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfekc432",
+    "version": 1,
+    "section": "distributions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of 10,000 exponential waits with mean 15, `np.histogram` put 6387 under 15. What percentage is that? Give one decimal.",
+    "hint": "6387 / 10000 × 100.",
+    "value": 63.9,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-pv43kdzh",
+    "version": 1,
+    "section": "distributions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rng.normal(170, 8, 10_000).mean()` came out 170.03, not 170. Why?",
+    "hint": "What is a sample?",
+    "choices": [
+      {
+        "text": "A sample's mean differs a little from the distribution's",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`loc` is the median, not the mean",
+        "correct": false,
+        "why": "For the normal they coincide; `loc` is the mean."
+      },
+      {
+        "text": "The generator rounds every draw",
+        "correct": false,
+        "why": "It does not round."
+      },
+      {
+        "text": "Ten thousand is too few for NumPy to use the right formula",
+        "correct": false,
+        "why": "The formula does not depend on the size."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg8bnq4v",
+    "version": 1,
+    "section": "sampling-and-shuffling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why choose sample positions with `rng.choice(len(known), 5, replace=False)` rather than values?",
+    "hint": "Other arrays need to follow.",
+    "choices": [
+      {
+        "text": "Positions are faster to draw",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "`choice` cannot draw floats",
+        "correct": false,
+        "why": "It can draw from any array."
+      },
+      {
+        "text": "So other columns follow in step",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Values would repeat, positions cannot",
+        "correct": false,
+        "why": "`replace=False` prevents repeats either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-6y7y9s8s",
+    "version": 1,
+    "section": "sampling-and-shuffling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `rng.permutation(a)` and `rng.shuffle(a)`?",
+    "hint": "One changes `a`.",
+    "choices": [
+      {
+        "text": "None; they are aliases",
+        "correct": false,
+        "why": "One returns a new array, one works in place."
+      },
+      {
+        "text": "`shuffle` is reproducible and `permutation` is not",
+        "correct": false,
+        "why": "Both follow the seed."
+      },
+      {
+        "text": "`shuffle` changes `a` itself",
+        "correct": true,
+        "why": "Right; `permutation` returns a new array."
+      },
+      {
+        "text": "`permutation` sorts and `shuffle` randomises",
+        "correct": false,
+        "why": "Both randomise."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqqrhs06",
+    "version": 1,
+    "section": "sampling-and-shuffling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bootstrap draws 359 days from 359 days, with replacement, many times. What does that imitate?",
+    "hint": "Why with replacement?",
+    "choices": [
+      {
+        "text": "Removing the outliers from the year",
+        "correct": false,
+        "why": "Nothing is removed on purpose."
+      },
+      {
+        "text": "The same year, shuffled",
+        "correct": false,
+        "why": "Without replacement it would be the same days, and the same mean every time."
+      },
+      {
+        "text": "Other years the same process could have produced",
+        "correct": true,
+        "why": "Right: how much the mean would move."
+      },
+      {
+        "text": "A forecast of next year's rain",
+        "correct": false,
+        "why": "It measures uncertainty, not the future."
+      }
+    ]
+  },
+  {
+    "id": "ex-crezd94j",
+    "version": 1,
+    "section": "the-program-that-made-the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two lines of `make_data.py` that draw from `rng` are swapped. What changes?",
+    "hint": "Each draw starts where the previous stopped.",
+    "choices": [
+      {
+        "text": "Only those two lines' values",
+        "correct": false,
+        "why": "Everything drawn after the swap moves too."
+      },
+      {
+        "text": "Every number drawn from that point on, in every file after it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, since the seed is the same",
+        "correct": false,
+        "why": "Order is part of the sequence."
+      },
+      {
+        "text": "Only the order of the rows in the files",
+        "correct": false,
+        "why": "The values themselves change."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5w5c62e",
+    "version": 1,
+    "section": "the-program-that-made-the-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which distribution does `make_data.py` use for the length of a trip in minutes?",
+    "hint": "Positive, mostly short, a long tail.",
+    "choices": [
+      {
+        "text": "Normal",
+        "correct": false,
+        "why": "It would give negative minutes."
+      },
+      {
+        "text": "Poisson",
+        "correct": false,
+        "why": "That gives counts."
+      },
+      {
+        "text": "Dirichlet",
+        "correct": false,
+        "why": "That gives shares adding to 1."
+      },
+      {
+        "text": "Log-normal",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmn8smkw",
+    "version": 1,
+    "section": "what-a-seed-does-not-promise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your seeded notebook gives different numbers after upgrading NumPy. Is that a bug?",
+    "hint": "What did NumPy promise about the Generator?",
+    "choices": [
+      {
+        "text": "Yes: seeds guarantee the same numbers in every version",
+        "correct": false,
+        "why": "Only the frozen legacy interface promises that."
+      },
+      {
+        "text": "No: Generator streams are not promised across versions",
+        "correct": true,
+        "why": "Right; pin the version too."
+      },
+      {
+        "text": "Yes: the seed was overwritten by the upgrade",
+        "correct": false,
+        "why": "The seed is in your code."
+      },
+      {
+        "text": "No: it is because the computer is different",
+        "correct": false,
+        "why": "The upgrade is the change here."
+      }
+    ]
+  },
+  {
+    "id": "ex-zffgj2cp",
+    "version": 1,
+    "section": "what-a-seed-does-not-promise",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three parallel simulations each need random numbers. Which setup is right?",
+    "hint": "Independent and reproducible.",
+    "choices": [
+      {
+        "text": "Each makes `np.random.default_rng(2025)`",
+        "correct": false,
+        "why": "They would draw identical numbers."
+      },
+      {
+        "text": "Each makes `np.random.default_rng()` with no seed",
+        "correct": false,
+        "why": "Independent, but not reproducible."
+      },
+      {
+        "text": "All three share one generator",
+        "correct": false,
+        "why": "Their order of drawing would decide the numbers."
+      },
+      {
+        "text": "One parent seeded once, `parent.spawn(3)`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dp7tqa91",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are sound habits with seeds? Choose all that apply.",
+    "hint": "A seed is chosen once, in advance.",
+    "choices": [
+      {
+        "text": "Write the seed at the top of the notebook",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Try seeds until the result is significant",
+        "correct": false,
+        "why": "No: that chooses the result."
+      },
+      {
+        "text": "Report a random result under several seeds",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Pass one Generator to the functions that need it",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Call `np.random.seed` inside every function",
+        "correct": false,
+        "why": "No: that resets the shared sequence everywhere."
+      }
+    ]
+  }
+]

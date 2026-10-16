@@ -181,7 +181,8 @@ func codeOf(fences []fenced) []codeBlock {
 // string as `LOCALISED` in `ui/app/text.js`, which draws it.
 const localised = "localised"
 
-// The shapes of a capture: a shell prompt, a bare `$ ` and the Python REPL's.
-var capturedLine = regexp.MustCompile(`(?m)^([\w.-]+@[\w.-]+:\S*[$#] |\$ |>>> |PS [^>\n]*> )`)
+// The shapes of a capture: a shell prompt, with the name of an active virtual
+// environment in front of it or not, a bare `$ ` and the Python REPL's.
+var capturedLine = regexp.MustCompile(`(?m)^((\([\w.-]+\) )?[\w.-]+@[\w.-]+:\S*[$#] |\$ |>>> |PS [^>\n]*> )`)
 
 func looksCaptured(body string) bool { return capturedLine.MatchString(body) }
