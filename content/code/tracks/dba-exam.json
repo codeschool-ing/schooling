@@ -1,0 +1,3913 @@
+[
+  {
+    "id": "ex-nknmmf9y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Choosing a disk for a busy PostgreSQL server, a colleague points at an NVMe drive rated at 7 000 MB/s. Why does that figure not tell you how many commits a second the server will sustain?",
+    "hint": "Essential Computing, lesson 1; Database Server: Installation and Maintenance, lesson 9.",
+    "choices": [
+      {
+        "text": "It is the speed of the connection to the board, and the chips behind it are slower still",
+        "correct": false,
+        "why": "That confuses the connection with the drive; NVMe and SATA name how a drive is connected, and neither figure counts flushes."
+      },
+      {
+        "text": "It is a reading figure, and the box gives writing as a second MB/s figure",
+        "correct": false,
+        "why": "A write figure in MB/s is still throughput; a commit's flush is a few kilobytes, and it is counted per second."
+      },
+      {
+        "text": "It holds for commits as well, as long as about a tenth of the drive is kept free",
+        "correct": false,
+        "why": "Free space is the one place capacity touches speed, and it does not turn throughput into commits."
+      },
+      {
+        "text": "It counts large transfers; a commit waits on a small flush, which `pg_test_fsync` measures",
+        "correct": true,
+        "why": "Right: throughput and flushes per second are different questions, and a busy server waits on the second."
+      }
+    ]
+  },
+  {
+    "id": "ex-andxkpfa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`pg_test_fsync` on a new server reports well over a million `fdatasync` flushes a second. Its disk answers from a write cache with no battery behind it, keeping its promise in ___ memory that a power cut erases, committed transactions included.",
+    "hint": "Essential Computing, lesson 1; Database Server: Installation and Maintenance, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "volatile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cere3ygw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A 4 GB server runs PostgreSQL with `work_mem` raised to 64MB for everybody. On Monday morning twenty people open the same dashboard report, and the whole machine crawls: the disk is busy and the processor mostly idle. What is going on?",
+    "hint": "Essential Computing, lesson 1; Database Server: Installation and Maintenance, lesson 6.",
+    "choices": [
+      {
+        "text": "`work_mem` caps each connection at 64MB, so the reports spill to temporary files",
+        "correct": false,
+        "why": "`work_mem` is a ceiling per sort or hash, not per connection, and nothing adds the steps up."
+      },
+      {
+        "text": "`shared_buffers` is too small, so every page has to come from the disk",
+        "correct": false,
+        "why": "Giving the cache more would take memory from a machine already out of it; the symptom is memory, not cache misses."
+      },
+      {
+        "text": "Their sorts and hashes outgrew memory, so the system is moving memory out to disk",
+        "correct": true,
+        "why": "Right: each step may take `work_mem` and twenty reports multiply it, and a full memory swaps."
+      },
+      {
+        "text": "Twenty reports are more than the processor can handle, and the idle figure is lagging",
+        "correct": false,
+        "why": "An idle processor is the evidence, not a misreading: the work is waiting on the disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2cfs5n6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's nightly dump of its database is written to a USB drive that stays plugged into the database server. Why will that copy not survive a ransomware attack on the server?",
+    "hint": "Essential Computing, lesson 8; Backup, Replication and High Availability, lesson 10.",
+    "choices": [
+      {
+        "text": "Plugged in, it is one more folder, open to whoever takes the server",
+        "correct": true,
+        "why": "Right: an attacker goes for the backups first, and a drive that is always connected is part of the machine."
+      },
+      {
+        "text": "It would survive if every dump were restored the next morning to prove it works",
+        "correct": false,
+        "why": "A restore proves the copy is good; it does nothing to stop the intruder reaching it."
+      },
+      {
+        "text": "It would survive if the drive kept a week of dumps rather than only last night's",
+        "correct": false,
+        "why": "Every one of those dumps sits on the same connected drive, so all of them are reached together."
+      },
+      {
+        "text": "It would survive if each dump file were encrypted with a password of its own",
+        "correct": false,
+        "why": "Encryption keeps the contents from being read; the intruder can still delete or encrypt the file over it."
+      }
+    ]
+  },
+  {
+    "id": "ex-db6nw5rz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A developer argues the shop needs no backups, because a standby receives every change the primary makes within a second. What is the flaw in that argument?",
+    "hint": "Essential Computing, lesson 11; Backup, Replication and High Availability, lesson 11.",
+    "choices": [
+      {
+        "text": "A standby counts as a copy only when its disk is a different model",
+        "correct": false,
+        "why": "That borrows the rule about two kinds of media, and a different disk would still receive the same change."
+      },
+      {
+        "text": "A copy built to change when the original does also receives a mistaken `DELETE`",
+        "correct": true,
+        "why": "Right: like sync, replication copies the mistake, and a backup is a copy that does not change."
+      },
+      {
+        "text": "A second is too slow; only a standby that confirms each commit before it returns can stand in",
+        "correct": false,
+        "why": "Speed makes it worse, not better: the faster the copy, the sooner the mistake arrives."
+      },
+      {
+        "text": "A standby sits on another machine, so it cannot be restored from directly",
+        "correct": false,
+        "why": "Being elsewhere is what an offsite backup wants; the trouble is that it follows every change."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxtpn50h",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "A processor needs a piece of data. Put the places it can find it in order, nearest and fastest first.",
+    "hint": "Essential Computing, lesson 1.",
+    "items": [
+      "registers",
+      "cache",
+      "memory (RAM)",
+      "an SSD",
+      "a hard disk"
+    ],
+    "trap": "Putting cache after memory, as if it were extra RAM; it lives inside the processor and is reached in about 5 ns."
+  },
+  {
+    "id": "ex-k2sjvx5y",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Each event below loses a database's data. Match it to the way of losing data it belongs to, among the four the computing course names.",
+    "hint": "Essential Computing, lesson 8; Backup, Replication and High Availability, lesson 11.",
+    "pairs": [
+      {
+        "left": "a `DELETE` with the wrong `WHERE`",
+        "right": "you delete it"
+      },
+      {
+        "left": "the server's SSD controller dies",
+        "right": "the hardware fails"
+      },
+      {
+        "left": "a flood in the server room",
+        "right": "the machine goes"
+      },
+      {
+        "left": "ransomware encrypts the data files",
+        "right": "something changes the files while you still have them"
+      }
+    ],
+    "right_distractors": [
+      "the backup was never restored"
+    ]
+  },
+  {
+    "id": "ex-gamdtgzm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's application suddenly cannot reach its database. The chain runs through the application's settings, the name lookup, the network, the firewall and the database server. By the lesson's method, what is the best first test?",
+    "hint": "Essential Computing, lesson 14.",
+    "choices": [
+      {
+        "text": "Restart the database server first, as it is the likeliest cause",
+        "correct": false,
+        "why": "Fixing the likeliest cause first has no structure: three wrong guesses leave you where you began."
+      },
+      {
+        "text": "Check the settings, then the name, then the network, until one fails",
+        "correct": false,
+        "why": "Link by link, a test that passes tells you almost nothing; halving rules out half either way."
+      },
+      {
+        "text": "Change the firewall rule and the settings together, then try again",
+        "correct": false,
+        "why": "Two changes at once leave you unable to say which one mattered."
+      },
+      {
+        "text": "Try a known-good client from the application's machine, a cheap cut",
+        "correct": true,
+        "why": "Right: it splits the application's own settings from everything after them, and it costs a minute."
+      }
+    ]
+  },
+  {
+    "id": "ex-z85e0465",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A report needs 1 000 pages scattered across a hard disk, none of them in memory, and each has to be reached separately. Using the lesson's figure for reaching one thing on a hard disk, about how many seconds does the reaching alone take?",
+    "hint": "Essential Computing, lesson 1.",
+    "value": 10,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-h3nfaj6n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's application finds its primary database through `db.shop.example`, whose record has a TTL of 86400. On Saturday the team will move the primary to another server by changing that record. What should happen first, and when?",
+    "hint": "Web and Internet Fundamentals, lesson 8; Backup, Replication and High Availability, lesson 19.",
+    "choices": [
+      {
+        "text": "Lower the TTL to about sixty seconds at least a day ahead, as that change waits out the old TTL",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Change the record on Saturday, then lower the TTL so the new address spreads faster",
+        "correct": false,
+        "why": "Lowering it afterwards changes nothing for the copies already cached under the old TTL."
+      },
+      {
+        "text": "Change the record on Saturday and allow forty-eight hours for it to propagate",
+        "correct": false,
+        "why": "Nothing propagates; the longest wait is one TTL, and forty-eight hours belongs to changing nameservers."
+      },
+      {
+        "text": "Move the domain to a DNS provider whose servers push each change out at once",
+        "correct": false,
+        "why": "No server pushes anything to resolvers, and changing nameservers is the slow kind of change."
+      }
+    ]
+  },
+  {
+    "id": "ex-w76x6s5z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A page lists fifty customers and loads each one's orders lazily: one query for the list, then one per customer. The application stays in São Paulo and the database moves to Miami. At the round-trip floor the lesson gives for that route, at least how many milliseconds does the page spend crossing to the database?",
+    "hint": "Web and Internet Fundamentals, lesson 3; Relational Databases and SQL, lesson 11.",
+    "value": 4080,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-mzgan1ez",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A standby opens a connection to the primary and receives the write-ahead log as it is written. In that exchange, which machine plays the client?",
+    "hint": "Web and Internet Fundamentals, lesson 1; Backup, Replication and High Availability, lesson 11.",
+    "choices": [
+      {
+        "text": "The primary, since it is the one sending the data across",
+        "correct": false,
+        "why": "Sending most of the bytes is not the role; the client is whoever starts the exchange and asks."
+      },
+      {
+        "text": "The standby, because it opens the connection and asks for the log",
+        "correct": true,
+        "why": "Right: the role belongs to the exchange, so a database server can be a client too."
+      },
+      {
+        "text": "Neither: two database servers talking to each other is peer-to-peer",
+        "correct": false,
+        "why": "Each connection still has one side that asks and one that answers; two servers do not change that."
+      },
+      {
+        "text": "The standby, because it is the smaller and less important machine",
+        "correct": false,
+        "why": "Size and importance do not decide the role; a small machine that answers is a server."
+      }
+    ]
+  },
+  {
+    "id": "ex-q41ra43p",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The shop moves its PostgreSQL from its own VPS to a provider's managed database. Which jobs are still the shop's afterwards? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 9; Database Server: Installation and Maintenance, lesson 3.",
+    "choices": [
+      {
+        "text": "Taking the nightly backups of the data",
+        "correct": false,
+        "why": "A managed database is the case where somebody else takes the backups."
+      },
+      {
+        "text": "Deciding the roles and what each one may read",
+        "correct": true,
+        "why": "Right: roles and grants live inside the database, wherever the server is."
+      },
+      {
+        "text": "Choosing when to move to the next major version",
+        "correct": true,
+        "why": "Right: the console only carries out that decision; it does not make it."
+      },
+      {
+        "text": "Applying the minor-version updates to the server",
+        "correct": false,
+        "why": "The provider applies minor versions; the decision left to the shop is the major one."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpbdxv89",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A colleague in another office types the database container's address, `172.17.0.2`, into a client, and nothing answers. Addresses in the `172.16`–`172.31` range are ___, so nothing on the internet routes to them.",
+    "hint": "Web and Internet Fundamentals, lesson 4; Docker and Containers, lesson 23.",
+    "blanks": [
+      {
+        "accept": [
+          "private"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q2x8cdbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "During the nightly report, the proxy in front of the shop's application logs `504 Gateway Timeout` for some requests. What does that code say happened?",
+    "hint": "Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The application answered, but with something the proxy could not read",
+        "correct": false,
+        "why": "That is `502`: the thing behind the proxy answered badly."
+      },
+      {
+        "text": "The application is up and refusing on purpose, for maintenance",
+        "correct": false,
+        "why": "That is `503`, a service deliberately not serving."
+      },
+      {
+        "text": "The application behind the proxy never answered in time",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The browser sent a request that the proxy could not make sense of",
+        "correct": false,
+        "why": "That would be a `4xx`, the client's fault; a `5xx` points at the server side."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzwqa9v2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A staff laptop is stolen while signed in to the shop's admin pages. Sessions are rows in a table on the server, and the cookie holds only an identifier. What ends that laptop's session at once?",
+    "hint": "Web and Internet Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "Changing the staff member's password, which the cookie carries",
+        "correct": false,
+        "why": "The cookie carries an identifier and nothing else; the password was never in it."
+      },
+      {
+        "text": "Waiting for the idle timeout, which ends it after a quiet period",
+        "correct": false,
+        "why": "That ends it eventually, and only if the thief stays quiet; it is not at once."
+      },
+      {
+        "text": "Deleting that session's row in the table on the server",
+        "correct": true,
+        "why": "Right: the identifier then points at nothing, and that is ending the session from your side."
+      },
+      {
+        "text": "Sending a response that tells that browser to drop its cookie",
+        "correct": false,
+        "why": "A response only reaches the laptop if it asks for something, and the thief chooses that."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxx1s3jb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "So that the monitoring account can read file sizes, a colleague runs `sudo chmod -R 755 /var/lib/postgresql/16/main`. What happens at the next restart of PostgreSQL?",
+    "hint": "Linux and the Command Line, lesson 4; Database Server: Installation and Maintenance, lesson 4.",
+    "choices": [
+      {
+        "text": "It starts, and every account can now list `base/` and read the sizes",
+        "correct": false,
+        "why": "That is what the mode allows on Linux; the server checks its directory before it lets that stand."
+      },
+      {
+        "text": "The server refuses to start, as its directory is open to other accounts",
+        "correct": true,
+        "why": "Right: the sizes are asked of the server, with its size functions."
+      },
+      {
+        "text": "Nothing changes, because the postgres account's umask still applies",
+        "correct": false,
+        "why": "A umask acts only when a file is created; `chmod` is absolute."
+      },
+      {
+        "text": "It starts, but the files are now executable and the server reads none",
+        "correct": false,
+        "why": "An execute bit on a data file changes nothing for the server; the open directory is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpwb30y5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On an Ubuntu database server, `systemctl status postgresql` reports `active (exited)`, while `psql` answers `No such file or directory` and asks whether the server is running. What do you look at next?",
+    "hint": "Linux and the Command Line, lesson 5; Database Server: Installation and Maintenance, lesson 3.",
+    "choices": [
+      {
+        "text": "The cluster's own unit, `systemctl status postgresql@16-main`",
+        "correct": true,
+        "why": "Right: that unit holds the postmaster, and its status and journal say why it is down."
+      },
+      {
+        "text": "`systemctl enable postgresql`, since `exited` means it will not start at boot",
+        "correct": false,
+        "why": "Whether a unit starts at boot is the `Loaded:` line, not the `Active:` one."
+      },
+      {
+        "text": "Nothing on the server: `active (exited)` means the job ran and is healthy",
+        "correct": false,
+        "why": "That unit only passes commands to the clusters; its success says nothing about the postmaster."
+      },
+      {
+        "text": "`systemctl restart postgresql`, because `exited` is how a crash is shown",
+        "correct": false,
+        "why": "A unit that stopped and should not have reads `failed`; restarting before reading loses the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzrp8wgr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reporting service connects to a database on another machine as it starts. After every reboot it fails once, and `systemctl start` by hand always works. Its unit says `After=network.target`. What does the lesson change?",
+    "hint": "Linux and the Command Line, lesson 5.",
+    "choices": [
+      {
+        "text": "`Requires=network.target`, so the service fails along with the network",
+        "correct": false,
+        "why": "That adds a dependency; `network.target` is still reached before the network can carry anything."
+      },
+      {
+        "text": "`After=postgresql.service`, so the database is started before the report",
+        "correct": false,
+        "why": "The database is on another machine; a local unit's order says nothing about it."
+      },
+      {
+        "text": "`Type=forking`, so systemd waits for the service to finish starting",
+        "correct": false,
+        "why": "`forking` is for a program that daemonises itself; on one that does not, the start hangs."
+      },
+      {
+        "text": "`After=` and `Wants=network-online.target`, with the wait-online service enabled",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgryy1nn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "After a reboot, the database does not answer and you suspect its service. Put the checks in the order the lesson runs them.",
+    "hint": "Linux and the Command Line, lesson 5; Database Server: Installation and Maintenance, lesson 3.",
+    "items": [
+      "`systemctl --failed`, to see which units failed",
+      "`systemctl status postgresql@16-main`, read in order",
+      "`journalctl -u postgresql@16-main -n 50`, for more of its log",
+      "`journalctl -b -p err`, for a cause elsewhere on the machine"
+    ],
+    "trap": "Opening the whole boot's errors first buries the cluster's own message, which its status block usually shows on the first screen."
+  },
+  {
+    "id": "ex-rjksn9va",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A runaway session holds locks, and `ps` shows its backend as pid 4821. A colleague is about to type `sudo kill -9 4821`. What do you tell them?",
+    "hint": "Linux and the Command Line, lesson 6; Database Server: Installation and Maintenance, lesson 10.",
+    "choices": [
+      {
+        "text": "Go ahead: `KILL` cannot be ignored, and only that session ends",
+        "correct": false,
+        "why": "The postmaster treats a killed backend as a crash and restarts every process."
+      },
+      {
+        "text": "Send `-9` to the postmaster instead, so that its children stop with it",
+        "correct": false,
+        "why": "`KILL` lets nothing clean up; the next start is a crash recovery for the whole server."
+      },
+      {
+        "text": "`kill -HUP 4821` instead, so the backend rereads its settings and lets go",
+        "correct": false,
+        "why": "`HUP` asks for the configuration to be read again; the transaction and its locks stay."
+      },
+      {
+        "text": "`sudo kill 4821` instead, which ends just that one session, cleanly",
+        "correct": true,
+        "why": "Right: `TERM` is what `pg_terminate_backend` sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-18d462s2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A nightly job runs `pg_dump shop | gzip > shop.sql.gz`, and when the dump fails the line still exits 0, because a pipeline reports its last program. The script should begin with `set -o ___`.",
+    "hint": "Linux and the Command Line, lesson 6; Backup, Replication and High Availability, lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w1xdxv7y",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`pg_dump shop > shop.sql` is running in the foreground, and you press `Ctrl+\\` to stop it. By the lesson's rule, what does `echo $?` print straight afterwards?",
+    "hint": "Linux and the Command Line, lesson 6.",
+    "value": 131,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-c4xt3t67",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The database server still runs PostgreSQL 16.2, though `apt upgrade` has run every month without a word about it, and `apt list --upgradable` shows 16.15 waiting. Which command comes first?",
+    "hint": "Linux and the Command Line, lesson 7; Database Server: Installation and Maintenance, lesson 20.",
+    "choices": [
+      {
+        "text": "`apt-mark showhold`",
+        "correct": true,
+        "why": "Right: a held package is skipped by every upgrade, silently."
+      },
+      {
+        "text": "`pg_upgradecluster`, because going from 16.2 to 16.15 converts the data directory",
+        "correct": false,
+        "why": "That is a minor release: new programs and a restart, with no file converted."
+      },
+      {
+        "text": "`apt policy postgresql-16`, as priority 100 on the installed version blocks the new one",
+        "correct": false,
+        "why": "Priority 100 only stops an installed package being replaced by an older one."
+      },
+      {
+        "text": "Install 16.3 first and then each later release, since apt cannot skip any",
+        "correct": false,
+        "why": "Minor releases are cumulative; 16.15 carries every fix since 16.2."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjk074tj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a dedicated PostgreSQL server, `free -h` shows about 300 MB under `free`, 10 GB under `buff/cache` and 10 GB under `available`. A colleague wants a nightly job that drops the caches to free memory. What do you answer?",
+    "hint": "Linux and the Command Line, lesson 11; Database Server: Installation and Maintenance, lesson 6.",
+    "choices": [
+      {
+        "text": "Yes: with 300 MB free, the next large sort will be killed for lack of memory",
+        "correct": false,
+        "why": "`available` is the number that says what a program can get, and it reads 10 GB."
+      },
+      {
+        "text": "Yes, after raising `shared_buffers` to 12 GB so the server keeps the pages",
+        "correct": false,
+        "why": "Memory given to one cache is taken from the other; a quarter of the machine is the starting point."
+      },
+      {
+        "text": "No: that cache is the second one the database reads its pages through",
+        "correct": true,
+        "why": "Right: dropping it turns its cheap reads into real disk reads."
+      },
+      {
+        "text": "No: add swap instead, so that the cache can be moved out to disk",
+        "correct": false,
+        "why": "Swap parks cold program pages; it is not a place for the file cache, and it fixes no shortage."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxq8750n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On Monday morning every database session was cut at once. `dmesg -T | grep -i 'killed process'` shows `Out of memory: Killed process 48211 (postgres)`, and 48211 was one of twenty sessions running the same report. What happened?",
+    "hint": "Linux and the Command Line, lesson 11; Database Server: Installation and Maintenance, lesson 6.",
+    "choices": [
+      {
+        "text": "The kernel killed the backends one by one, each scoring worst once the last had gone",
+        "correct": false,
+        "why": "There is one kill in the log; the other sessions were ended by the postmaster."
+      },
+      {
+        "text": "One backend was killed, and the postmaster restarted every other connection to be safe",
+        "correct": true,
+        "why": "Right: it cannot trust shared memory a killed backend may have left half changed."
+      },
+      {
+        "text": "The report's sorts went past `work_mem`, and the server ended the sessions to free it",
+        "correct": false,
+        "why": "A sort past `work_mem` spills to temporary files; nothing is ended for it."
+      },
+      {
+        "text": "A `MemoryMax=` on the cluster's unit was reached, and systemd stopped the whole service",
+        "correct": false,
+        "why": "A limit on a group logs `Memory cgroup out of memory`; this line says the machine ran out."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nyf4hns",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Small write transactions have become slow. On the database's NVMe volume, `iostat -xz 2` shows `%util` at 100, `aqu-sz` near 1, `w_await` 0.4 ms and `f_await` 38 ms. What does that say?",
+    "hint": "Linux and the Command Line, lesson 11; Database Server: Installation and Maintenance, lesson 8.",
+    "choices": [
+      {
+        "text": "Flushes take 38 ms, and every commit has to wait for one before it returns",
+        "correct": true,
+        "why": "Right: a slow `f_await` on a database volume is the most direct sign the disk is too slow for it."
+      },
+      {
+        "text": "Writes wait 0.4 ms, so the disk is fine and the slowness lies in the queries",
+        "correct": false,
+        "why": "Ordinary writes land in the page cache; a commit waits for the flush, which is the slow part."
+      },
+      {
+        "text": "The device is saturated, as `%util` shows; spread the tables over a second volume",
+        "correct": false,
+        "why": "On a device with a queue, `%util` at 100 is a fact, not a verdict on saturation."
+      },
+      {
+        "text": "Set `fsync = off`, so commits stop waiting for the disk to confirm",
+        "correct": false,
+        "why": "That can leave the cluster corrupt after a power cut; `synchronous_commit` is the one to relax knowingly."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm0v0vss",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "PostgreSQL's log fills with `No space left on device` for its data volume, and the application has started failing. Which of these belong before anything is deleted? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 11; Database Server: Installation and Maintenance, lesson 4.",
+    "choices": [
+      {
+        "text": "`df -i` on the volume, to see whether the inodes ran out",
+        "correct": true,
+        "why": "Right: every file needs an inode, and the error names the wrong number when they run out."
+      },
+      {
+        "text": "Delete the oldest segments in `pg_wal`, the largest directory there",
+        "correct": false,
+        "why": "The server needs those segments to recover after a crash; delete the wrong one and it may not start."
+      },
+      {
+        "text": "`lsof +L1` on the volume, for space held by a file deleted while open",
+        "correct": true,
+        "why": "Right: that space comes back only when the process holding it closes the file."
+      },
+      {
+        "text": "Remove old log files until `df -h` shows room, then look for the cause",
+        "correct": false,
+        "why": "If a deleted file still held open is using the space, deleting more achieves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnc4nkm6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "From the application server, `nc -zv 10.0.0.7 5432` answers `Connection refused` at once. On the database server, `ss -ltn 'sport = 5432'` shows one line, `127.0.0.1:5432`. What fixes it?",
+    "hint": "Networks and Protocols, lesson 3; Database Server: Installation and Maintenance, lesson 5.",
+    "choices": [
+      {
+        "text": "A `host` line for the application server in `pg_hba.conf`, then a reload",
+        "correct": false,
+        "why": "That line is the second door; the first is an address the server listens on, which it lacks."
+      },
+      {
+        "text": "A higher `max_connections`, as the server turns new clients away",
+        "correct": false,
+        "why": "A full server answers `sorry, too many clients already`; a refusal never reached it."
+      },
+      {
+        "text": "`listen_addresses` naming 10.0.0.7, then `systemctl reload postgresql`",
+        "correct": false,
+        "why": "It is a `postmaster` parameter: a reload leaves it pending until a restart."
+      },
+      {
+        "text": "`listen_addresses` naming 10.0.0.7, then a full restart of PostgreSQL",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3mhpjn8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "A new application server tries to reach PostgreSQL, and over a week its log shows four different errors. Match each one to what it says about where the attempt stopped.",
+    "hint": "Networks and Protocols, lesson 3; Database Server: Installation and Maintenance, lesson 5.",
+    "pairs": [
+      {
+        "left": "`Connection refused`, at once",
+        "right": "nothing listening on that address and port, or a reject rule"
+      },
+      {
+        "left": "`timed out`, after the full wait",
+        "right": "something on the path silently discarding the attempt"
+      },
+      {
+        "left": "`no pg_hba.conf entry for host`",
+        "right": "the server was reached, and no line matches the client"
+      },
+      {
+        "left": "`password authentication failed`",
+        "right": "a line matched, and the password check did not pass"
+      }
+    ],
+    "right_distractors": [
+      "every connection slot on the server already taken"
+    ]
+  },
+  {
+    "id": "ex-ebnsv7tt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The database server keeps `listen_addresses` at `localhost`. From your laptop you run `ssh -f -N -L 6543:127.0.0.1:5432 db`, then `psql -h 127.0.0.1 -p 6543 shop`. Which `pg_hba.conf` line decides whether you get in?",
+    "hint": "Networks and Protocols, lesson 7; Database Server: Installation and Maintenance, lesson 5.",
+    "choices": [
+      {
+        "text": "A `host` line for the laptop's own address, which the server has to carry",
+        "correct": false,
+        "why": "The server never sees the laptop: sshd opens the connection from the server itself."
+      },
+      {
+        "text": "`local all all peer`, since the tunnel ends inside the machine",
+        "correct": false,
+        "why": "The tunnel ends at `127.0.0.1` port 5432, which is TCP, not the socket."
+      },
+      {
+        "text": "The `host` line for `127.0.0.1/32`",
+        "correct": true,
+        "why": "Right: sshd on the server connects to `127.0.0.1`, so that is the address the file matches."
+      },
+      {
+        "text": "None of them, because what travels inside SSH skips `pg_hba.conf`",
+        "correct": false,
+        "why": "Every connection meets the file; SSH only changes where it seems to come from."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx20m6f7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The database servers accept SSH only from the bastion. In `~/.ssh/config`, the `Host db` block gets the line `___ bastion`, so that `ssh db`, `scp` and `rsync` all hop through it.",
+    "hint": "Networks and Protocols, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "ProxyJump"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-04zdkgwc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Each night the database server runs `rsync -a --delete /var/lib/pgbackrest/ backup-host:pgbackrest/`, logging in with a key held by its `postgres` account. Why is that offsite copy weaker than it looks?",
+    "hint": "Networks and Protocols, lesson 8; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "rsync sends only the changed parts, so the far copy is never a whole backup",
+        "correct": false,
+        "why": "Only the transfer is a difference; what lands on the far side is a complete mirror."
+      },
+      {
+        "text": "Whoever controls this server can delete the copy, by hand or through the next run",
+        "correct": true,
+        "why": "Right: an emptied repository is mirrored as empty, and the key itself can delete."
+      },
+      {
+        "text": "rsync over SSH sends the backup in the clear for anybody on the path to read",
+        "correct": false,
+        "why": "rsync over SSH travels inside SSH, encrypted, on port 22."
+      },
+      {
+        "text": "The trailing slash makes rsync create `pgbackrest/pgbackrest` on the far side",
+        "correct": false,
+        "why": "With the slash the contents are copied in; without it the folder itself would be."
+      }
+    ]
+  },
+  {
+    "id": "ex-159nz2rn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "After a network change, the application server cannot reach `db.example.com` on port 5432. Put the checks in the order the lesson climbs them.",
+    "hint": "Networks and Protocols, lesson 10.",
+    "items": [
+      "`ip -br addr`, to see the interface is up with an address",
+      "`ping` the gateway, the first hop",
+      "`ping 10.0.0.7`, the database server's address",
+      "`dig db.example.com`, to see what the name answers",
+      "`nc -zv 10.0.0.7 5432`, to see whether anything answers on the port"
+    ],
+    "trap": "Starting with the database's port is tempting, and a failure there means nothing until every step below it has passed."
+  },
+  {
+    "id": "ex-ckbtk4ev",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After a failover, `db.example.com` was pointed at the new primary on ns1, and `dig @ns1` shows the new address. The application servers, which all use the company's own resolver, still get the old one with a TTL of 3402 counting down. What brings them over now?",
+    "hint": "Networks and Protocols, lesson 4; Backup, Replication and High Availability, lesson 19.",
+    "choices": [
+      {
+        "text": "Lowering the record's TTL on ns1 to 60, so their copies expire within a minute",
+        "correct": false,
+        "why": "A cached copy keeps the TTL it was given; the new value reaches only the next lookup."
+      },
+      {
+        "text": "Waiting, while the change is propagated outward from ns1 to the resolvers",
+        "correct": false,
+        "why": "Nothing is sent anywhere: each resolver keeps its answer until the TTL runs out."
+      },
+      {
+        "text": "Raising the zone's serial again, so that every resolver notices the change",
+        "correct": false,
+        "why": "The serial tells secondary servers the zone changed; resolvers never read it."
+      },
+      {
+        "text": "Flushing that name on the company's resolver, so its next lookup goes to ns1",
+        "correct": true,
+        "why": "Right: resolvers elsewhere still wait out the TTL."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ee85n83",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "The lesson's check warns thirty days ahead with `openssl x509 -noout -enddate -checkend 2592000`. You want the same check to warn one week ahead instead. What number goes after `-checkend`?",
+    "hint": "Networks and Protocols, lesson 6.",
+    "value": 604800,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9ra8p4gb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The backup dashboard's certificate was renewed last week, and a check on its server, `openssl x509 -in` the certificate file `-checkend 2592000`, says it will not expire. Since this morning every user, on laptops and phones alike, gets `certificate has expired`. What explains it?",
+    "hint": "Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "The users' clocks are wrong, and a client's own clock judges the dates",
+        "correct": false,
+        "why": "One wrong clock explains one machine, not every user on every kind of device."
+      },
+      {
+        "text": "The server never loaded the renewed file and still sends the old certificate",
+        "correct": true,
+        "why": "Right: only a check of what the server sends, through `openssl s_client`, sees that."
+      },
+      {
+        "text": "`-checkend 2592000` looks thirty days ahead and misses a date already passed",
+        "correct": false,
+        "why": "A certificate already expired fails any `-checkend`; the file checked is simply the new one."
+      },
+      {
+        "text": "The server sends no intermediate, so clients cannot follow the chain to a root",
+        "correct": false,
+        "why": "A missing intermediate reads `unable to get local issuer certificate`, not `expired`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjk6hnzk",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "On the application server, `ss -tan state time-wait` lists about three thousand lines whose peer is `10.0.0.7:5432`, the database. Which of these are true? Choose all that apply.",
+    "hint": "Networks and Protocols, lesson 3; Database Server: Installation and Maintenance, lesson 10.",
+    "choices": [
+      {
+        "text": "The database is failing to close its side, a bug in the server's code",
+        "correct": false,
+        "why": "A side that will not close shows `CLOSE-WAIT`, and on the side that failed to close."
+      },
+      {
+        "text": "Each line is a connection this side closed first, held for 60 seconds",
+        "correct": true,
+        "why": "Right: so a late packet from it is not taken for part of a new one."
+      },
+      {
+        "text": "They are attempts the database refused, each left in `TIME-WAIT` afterwards",
+        "correct": false,
+        "why": "A refusal is one SYN and one RST; no connection was ever open to be waited out."
+      },
+      {
+        "text": "The application opens a fresh connection for most of its requests",
+        "correct": true,
+        "why": "Right: each one costs the server a process start, which a pool would save."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtyj6b6e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A session left `idle in transaction` for two days was finally ended, and the next VACUUM of `orders` removed every dead version. The table holds the same live rows as before, yet its file is still twice the size. Why?",
+    "hint": "Relational Databases and SQL, lesson 8; Database Server: Installation and Maintenance, lesson 15.",
+    "choices": [
+      {
+        "text": "VACUUM marks the space free for new versions and returns only empty pages at the end",
+        "correct": true,
+        "why": "Right: the file keeps the size it had at its fullest, and shrinking it takes a rewrite."
+      },
+      {
+        "text": "The freed pages go back to the disk at the next checkpoint, when they are written",
+        "correct": false,
+        "why": "A checkpoint writes dirty pages to their files; it does not cut the files down."
+      },
+      {
+        "text": "Its index entries for dead rows must go first, and only then can the file get smaller",
+        "correct": false,
+        "why": "VACUUM removed those entries in the same run; the table's file still kept its size."
+      },
+      {
+        "text": "Autovacuum has not been round since, and it is the one that hands space back",
+        "correct": false,
+        "why": "Autovacuum runs the same VACUUM; it would leave the file the same size."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksb6x8m8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At two in the afternoon you are asked which statements are slow on a busy server where `shared_preload_libraries` is empty, and nobody may be disconnected before tonight. What can you start now?",
+    "hint": "Relational Databases and SQL, lesson 10; Database Server: Installation and Maintenance, lesson 18.",
+    "choices": [
+      {
+        "text": "`ALTER SYSTEM SET shared_preload_libraries`, then `pg_reload_conf()`",
+        "correct": false,
+        "why": "That list is read only when the server starts, so it waits for tonight's restart."
+      },
+      {
+        "text": "`CREATE EXTENSION pg_stat_statements`, and read the view at once",
+        "correct": false,
+        "why": "The view is created, but reading it fails until the library has been loaded at start."
+      },
+      {
+        "text": "`ALTER SYSTEM SET log_min_duration_statement`, then `pg_reload_conf()`",
+        "correct": true,
+        "why": "Right: a reload applies it to every session, and nobody is cut off."
+      },
+      {
+        "text": "`SELECT pg_stat_statements_reset()`, so the counts begin from this moment",
+        "correct": false,
+        "why": "There are no counts to reset while the library is not loaded; nothing is being collected."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm5d9jpj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop moved from MySQL 8 to PostgreSQL with pgloader; the copy reported no errors and every row matched. A month later support finds `ana@example.com` and `Ana@example.com` as two accounts, though `email` is `UNIQUE` in both engines. What explains it?",
+    "hint": "Relational Databases and SQL, lesson 12; Database Server: Installation and Maintenance, lesson 21.",
+    "choices": [
+      {
+        "text": "pgloader left the `UNIQUE` constraint behind, so PostgreSQL never refused the second address",
+        "correct": false,
+        "why": "Even with it in place, a PostgreSQL `UNIQUE` on the plain column accepts both, because it compares exactly."
+      },
+      {
+        "text": "MySQL's old `utf8` stored the capital letter in a way PostgreSQL reads as a different character",
+        "correct": false,
+        "why": "The three-byte limit of `utf8` costs emoji; it does not turn a capital into another letter."
+      },
+      {
+        "text": "The new server folds unquoted values to lower case, as it folds names, so they differ",
+        "correct": false,
+        "why": "Folding applies to identifiers such as table names; a stored value is kept as written."
+      },
+      {
+        "text": "MySQL's default collation is case-insensitive, so its `UNIQUE` refused one; PostgreSQL compares exactly",
+        "correct": true,
+        "why": "Right: a unique index on `lower(email)` asks PostgreSQL for the old behaviour, once the pair is merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-285th244",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Four orders, in `day` order: day 1 with a total of 12, two on day 2 with totals of 8 and 30, and day 3 with 5. The query computes `sum(total) OVER (ORDER BY day)`, with no frame written. What value does the first day-2 row show?",
+    "hint": "Relational Databases and SQL, lesson 6.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-4kpvesds",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Reading a plan from the bottom up, you stop at the first node whose estimate and actual differ by a factor of a hundred. Match each shape of the gap to its usual cause.",
+    "hint": "Relational Databases and SQL, lesson 10.",
+    "pairs": [
+      {
+        "left": "far under, on a scan filtered through `date(placed_at)`",
+        "right": "no statistics for the expression"
+      },
+      {
+        "left": "far under on `city` and `state` together, right on each alone",
+        "right": "columns that move together"
+      },
+      {
+        "left": "right on every scan, wrong from a join upwards",
+        "right": "the join's selectivity, and the order joins were tried in"
+      },
+      {
+        "left": "right in `psql`, wrong when the application sends it",
+        "right": "a generic plan made for a placeholder"
+      }
+    ],
+    "right_distractors": [
+      "an index missing on the filtered column"
+    ]
+  },
+  {
+    "id": "ex-fpzjzayw",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`invoices` has eighty million rows, is written all day, and `status` has to become `NOT NULL` without locking the table for more than a moment. Put the steps in order.",
+    "hint": "Relational Databases and SQL, lesson 3.",
+    "items": [
+      "Add `CHECK (status IS NOT NULL) NOT VALID`",
+      "Fill in the existing nulls, in batches",
+      "`VALIDATE CONSTRAINT` the check",
+      "`ALTER COLUMN status SET NOT NULL`",
+      "Drop the check, which has done its job"
+    ],
+    "trap": "Running `SET NOT NULL` before the check is validated scans all eighty million rows under an `ACCESS EXCLUSIVE` lock, which is the outage the steps exist to avoid."
+  },
+  {
+    "id": "ex-btfm1h7w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A checkout opens a transaction, inserts the order, calls the payment provider over HTTP, which can take thirty seconds, then marks the order paid and commits. What shape does the lesson recommend instead?",
+    "hint": "Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "Keep the one transaction, and lock the order row with `FOR UPDATE` first",
+        "correct": false,
+        "why": "That keeps the locks for the provider's thirty seconds, which is the problem itself."
+      },
+      {
+        "text": "Commit a `pending` row, call the provider, then settle it in a new transaction",
+        "correct": true,
+        "why": "Right: the slow part sits between two short transactions, and the row says where things stand."
+      },
+      {
+        "text": "Run the transaction at `SERIALIZABLE`, so no other checkout can conflict with it",
+        "correct": false,
+        "why": "The isolation level does not shorten how long the locks are held."
+      },
+      {
+        "text": "Set `idle_in_transaction_session_timeout` below thirty seconds",
+        "correct": false,
+        "why": "That kills the checkouts whose provider is slow; it does not take the wait out of the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3ppv4h5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`customers.last_seen` is set on every request. A developer adds an index on it, in case a report needs one some day. Where does the cost of that index land?",
+    "hint": "Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "On reads by `id`, which the planner now sends through the new index",
+        "correct": false,
+        "why": "A lookup by `id` still uses the primary key; nothing about reads moved."
+      },
+      {
+        "text": "Nowhere until the report exists, since an index costs only when it is read",
+        "correct": false,
+        "why": "An index is maintained on every write for as long as it exists, read or not."
+      },
+      {
+        "text": "On every request's update, which now changes an indexed column",
+        "correct": true,
+        "why": "Right: the update can no longer skip the index work, so every index gets an entry."
+      },
+      {
+        "text": "On disk alone, since an update of one column touches only that column's index",
+        "correct": false,
+        "why": "An update writes a new version of the whole row, and every index may need to point at it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vksgx53j",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A raw query must take a list of ids whose length changes from call to call. With one parameter holding the whole array, the condition is written `WHERE id = ___($1)`.",
+    "hint": "Relational Databases and SQL, lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "ANY"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p1nvnc7e",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`orders` has a primary key on `id` and an index on `(customer_id, created_at)`. Which of these further indexes are pure loss? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "An index on `(customer_id)`",
+        "correct": true,
+        "why": "Right: the composite already serves every query this one would."
+      },
+      {
+        "text": "An index on `(created_at)`, for a report filtering on dates alone",
+        "correct": false,
+        "why": "The composite starts with `customer_id`, so it does nothing for a date on its own."
+      },
+      {
+        "text": "An index on `(id)`, created by hand",
+        "correct": true,
+        "why": "Right: the primary key is already an index on `id`."
+      },
+      {
+        "text": "An index kept for a report that was deleted last year",
+        "correct": true,
+        "why": "Right: it is maintained on every write and serves no query."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pj2fy0p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A transfer at `SERIALIZABLE` reads two balances, decides how much to move, and updates both. Its commit fails with SQLSTATE `40001`. Why does the retry start again from `BEGIN` rather than re-run the last `UPDATE`?",
+    "hint": "Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "What it read is no longer true, so the decision has to be made again from new reads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The `UPDATE` would hit the same lock cycle again unless a new `BEGIN` reorders it",
+        "correct": false,
+        "why": "That describes a deadlock; `40001` says the premise of what was read turned out false."
+      },
+      {
+        "text": "`40001` means the row is a genuine duplicate, which only a fresh transaction can see",
+        "correct": false,
+        "why": "A genuine duplicate is `23505`, and retrying that fails the same way every time."
+      },
+      {
+        "text": "PostgreSQL re-runs the failed statement by itself, so only `COMMIT` is sent",
+        "correct": false,
+        "why": "After a failure every statement is refused until a rollback; nothing resumes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga9jdaf5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "So that a deploy does not run a twenty-minute query while its migration is open, the view is created empty with `CREATE MATERIALIZED VIEW monthly_revenue AS SELECT ... WITH NO ___;` and filled later by a refresh.",
+    "hint": "Relational Databases and SQL, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "DATA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h1mzyaxa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The application reaches PostgreSQL as role `app` through PgBouncer in transaction mode, and its forgotten transactions hold rows for hours. You want any session idle in a transaction for over a minute ended. Where does `idle_in_transaction_session_timeout` go?",
+    "hint": "Database Server: Installation and Maintenance, lesson 10; Backup, Replication and High Availability, lesson 18.",
+    "choices": [
+      {
+        "text": "`ALTER ROLE app SET`, picked up by each new server connection of `app`",
+        "correct": true,
+        "why": "Right: the pool's connections log in as `app`, and nobody else is caught."
+      },
+      {
+        "text": "`ALTER SYSTEM`, and a reload, so every session on the server gets it",
+        "correct": false,
+        "why": "That also ends your own sessions and long maintenance jobs, which the limit was never chosen for."
+      },
+      {
+        "text": "A `SET` the application sends once, when it first connects to PgBouncer",
+        "correct": false,
+        "why": "A session setting stays on whichever server connection ran it, reaching other clients and missing the rest."
+      },
+      {
+        "text": "`ALTER DATABASE shop SET`, so only connections to `shop` are limited",
+        "correct": false,
+        "why": "Your own psql sessions and maintenance jobs in `shop` would be caught by the application's limit too."
+      }
+    ]
+  },
+  {
+    "id": "ex-hysrwm98",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A new application server cannot reach the database, and you try four broken setups in turn. Match what the client gets to the door that is shut.",
+    "hint": "Database Server: Installation and Maintenance, lesson 5; Networks and Protocols, lesson 3.",
+    "pairs": [
+      {
+        "left": "`Connection refused` at once, and `ss -ltn` on the server shows only `127.0.0.1:5432`",
+        "right": "the server is not listening on the address called"
+      },
+      {
+        "left": "`no pg_hba.conf entry for host`, with the client's address in it",
+        "right": "no line matches the address, role and database"
+      },
+      {
+        "left": "`password authentication failed`",
+        "right": "a line matched, and its method was not satisfied"
+      },
+      {
+        "left": "no answer at all, until the client gives up",
+        "right": "something on the path silently drops the attempt"
+      }
+    ],
+    "right_distractors": [
+      "every slot under `max_connections` is taken"
+    ]
+  },
+  {
+    "id": "ex-mxbrnewy",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`VACUUM (VERBOSE)` on a busy table keeps reporting `100000 are dead but not yet removable`, yet `pg_stat_activity` shows no session with an old `xact_start`. Which views are worth reading next? Choose all that apply.",
+    "hint": "Database Server: Installation and Maintenance, lesson 14; Backup, Replication and High Availability, lesson 11.",
+    "choices": [
+      {
+        "text": "`pg_stat_progress_vacuum`, whose phase column names the session that holds the horizon",
+        "correct": false,
+        "why": "It shows how far a running VACUUM has got; it says nothing about who holds old row versions."
+      },
+      {
+        "text": "`pg_prepared_xacts`, for a prepared transaction nobody committed or rolled back",
+        "correct": true,
+        "why": "Right: it holds the line like a session, and `pg_stat_activity` does not list it."
+      },
+      {
+        "text": "`pg_replication_slots`, for a slot with `active` false whose standby has stopped",
+        "correct": true,
+        "why": "Right: a slot whose consumer is gone keeps its old `xmin` and holds the line."
+      },
+      {
+        "text": "`pg_stat_user_tables`, whose `n_dead_tup` says which transaction left the versions",
+        "correct": false,
+        "why": "`n_dead_tup` counts the dead versions; it does not say what stops them being removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-13v4t70w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A table's `reltuples` is 3,000,000, and it has been given `ALTER TABLE ... SET (autovacuum_vacuum_scale_factor = 0.01)`, with every other setting at its default. After how many dead row versions does autovacuum vacuum it?",
+    "hint": "Database Server: Installation and Maintenance, lesson 14.",
+    "value": 30050,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-k5t8khsk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Each night a job loads 300,000 orders with a new status, and the morning report then crawls. `EXPLAIN ANALYZE` shows the scan of `orders` estimated at `rows=1` and returning `rows=300000`, under a nested loop. What should change in the job?",
+    "hint": "Database Server: Installation and Maintenance, lesson 16; Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "Raise `work_mem` for the job, so the nested loop has room to run",
+        "correct": false,
+        "why": "The loop was chosen because the planner expected one row; memory does not change that estimate."
+      },
+      {
+        "text": "End it with `ANALYZE orders`, which lets reads and writes carry on",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Switch autovacuum off on `orders` while it loads, then back on",
+        "correct": false,
+        "why": "That holds open the window in which the summary is stale; it does not close it."
+      },
+      {
+        "text": "Add an index on `status`, so the report stops scanning the table",
+        "correct": false,
+        "why": "The plan already scans through an index; what is wrong is the row count it was planned on."
+      }
+    ]
+  },
+  {
+    "id": "ex-qph2zgfm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A migration rewrites `orders_live` to change a column's type, about a minute of work. So that it cannot queue the application behind it, its file starts with `SET statement_timeout = '2s'`. The table is quiet when it runs. What happens?",
+    "hint": "Database Server: Installation and Maintenance, lesson 22; Relational Databases and SQL, lesson 3.",
+    "choices": [
+      {
+        "text": "It waits up to two seconds for its lock, then has the table to itself",
+        "correct": false,
+        "why": "That is `lock_timeout`, which counts only the wait; this setting counts the work as well."
+      },
+      {
+        "text": "It finishes, and the two seconds bound the queries queued after it",
+        "correct": false,
+        "why": "The setting belongs to the session that set it; the others are not touched."
+      },
+      {
+        "text": "It finishes, because `statement_timeout` does not apply to `ALTER TABLE`",
+        "correct": false,
+        "why": "It applies to any statement; that is why it cuts a rewrite off halfway."
+      },
+      {
+        "text": "It gets its lock, works for two seconds and is cancelled, every run",
+        "correct": true,
+        "why": "Right: `lock_timeout` would have limited the wait and let the work finish."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xwmj7gf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Every slot is taken, and even `sudo -u postgres psql` answers `sorry, too many clients already`. A colleague has the pid of one runaway application backend from `ps` and is about to run `sudo kill -9` on it. What should be sent instead, and why?",
+    "hint": "Database Server: Installation and Maintenance, lesson 10; Linux and the Command Line, lesson 6.",
+    "choices": [
+      {
+        "text": "`kill -STOP`, which freezes the backend and hands its slot back until a `-CONT`",
+        "correct": false,
+        "why": "A frozen process still exists and still holds its slot and its locks."
+      },
+      {
+        "text": "Nothing else: `-9` frees the one slot, and only that backend's transaction is lost",
+        "correct": false,
+        "why": "A backend that dies without cleaning up may leave shared memory half changed, and every session pays."
+      },
+      {
+        "text": "Plain `kill`, the `SIGTERM` that `pg_terminate_backend` sends: only that session rolls back",
+        "correct": true,
+        "why": "Right: a backend killed with `-9` cannot clean up, so the postmaster restarts every process."
+      },
+      {
+        "text": "A restart of the service, since a backend ignores `SIGTERM` the way `stubborn.sh` did",
+        "correct": false,
+        "why": "A backend handles `SIGTERM` and exits cleanly; a restart costs every connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-24g7j52e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop moved from MySQL to PostgreSQL overnight, and every row arrived with the id it had. On the first morning, the first new order is refused because its id collides with an existing row. Which step of the migration was missed?",
+    "hint": "Database Server: Installation and Maintenance, lesson 21.",
+    "choices": [
+      {
+        "text": "Making `INT UNSIGNED` columns `bigint`, so large ids did not wrap round",
+        "correct": false,
+        "why": "A value too large for its column is refused at load; it does not wrap onto an id in use."
+      },
+      {
+        "text": "Turning each `0000-00-00` date into NULL before the load",
+        "correct": false,
+        "why": "That decides what a missing date becomes; it does nothing to how new ids are numbered."
+      },
+      {
+        "text": "Folding `\"Customers\"` to lower case, so queries without quotes find it",
+        "correct": false,
+        "why": "A name in the wrong case makes a query fail to find the table, not collide on an id."
+      },
+      {
+        "text": "Starting each sequence after the highest id already copied",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xww8h5c6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Nobody restarted the Ubuntu server, yet this morning's log shows `received fast shutdown request` and, seconds later, `starting PostgreSQL 16.15`, where the previous start said 16.2. What most likely happened?",
+    "hint": "Database Server: Installation and Maintenance, lesson 20.",
+    "choices": [
+      {
+        "text": "unattended-upgrades installed the minor release from the security pocket",
+        "correct": true,
+        "why": "Right: the package's scripts stopped the cluster, swapped the programs and started it."
+      },
+      {
+        "text": "The server crashed in the night, and recovery started it on the newer binaries",
+        "correct": false,
+        "why": "A crash leaves no fast shutdown line, and recovery does not change the programs."
+      },
+      {
+        "text": "`apt upgrade` moved the cluster to a new major version, as it does each autumn",
+        "correct": false,
+        "why": "16.2 to 16.15 is a minor release, and Ubuntu never changes the major version within a release."
+      },
+      {
+        "text": "`pg_upgradecluster` ran from a timer, converting the data directory as it went",
+        "correct": false,
+        "why": "That is the tool for a major upgrade; a minor release converts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-eazph55p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To speed up nightly loads, a colleague wants `fsync = off` on the production server. He tested it: ten `kill -9`s on the server under load, and it came back clean every time. What does his test miss?",
+    "hint": "Database Server: Installation and Maintenance, lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing: a clean recovery after a kill shows the order of writes still holds",
+        "correct": false,
+        "why": "Nothing enforces that order with `fsync` off; the kill simply never put it to the test."
+      },
+      {
+        "text": "Recovery replays the log, which is still flushed, so only table files are at risk",
+        "correct": false,
+        "why": "With `fsync` off the call is not made for the log either."
+      },
+      {
+        "text": "Writes in the operating system's cache survive a kill; a power cut loses them",
+        "correct": true,
+        "why": "Right: only a power loss or a kernel crash shows what `fsync = off` costs."
+      },
+      {
+        "text": "`kill -9` sends `SIGTERM` first, so the server had time to flush before it died",
+        "correct": false,
+        "why": "`SIGKILL` cannot be caught and asks nothing; there is no warning to flush on."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh3pzgqy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A migration runs `CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS orders_one_per_customer ON orders (customer_id)`. The first deploy failed on a duplicated key. The re-run printed `already exists, skipping` and then `CREATE INDEX`. What is true now?",
+    "hint": "Database Server: Installation and Maintenance, lesson 17; Relational Databases and SQL, lesson 3.",
+    "choices": [
+      {
+        "text": "The index exists and enforces uniqueness, as the re-run's `CREATE INDEX` says",
+        "correct": false,
+        "why": "`IF NOT EXISTS` looked only at the name; the output reports a skip, not a build."
+      },
+      {
+        "text": "An invalid index left by the first run holds the name, and no query uses it",
+        "correct": true,
+        "why": "Right: `pg_index` shows it with `indisvalid` false; drop it, fix the data, and run it without `IF NOT EXISTS`."
+      },
+      {
+        "text": "The first run's index finished building in the background once the duplicate was skipped",
+        "correct": false,
+        "why": "A build that found a duplicate stops; nothing completes it later."
+      },
+      {
+        "text": "Nothing is left of the first run, because a failed statement rolls back whole",
+        "correct": false,
+        "why": "That is the plain `CREATE INDEX`; the concurrent one had already committed its first step."
+      }
+    ]
+  },
+  {
+    "id": "ex-xh497xkn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "A server that matters is on 16.2, and Ubuntu has 16.15 waiting. Put the minor upgrade in order.",
+    "hint": "Database Server: Installation and Maintenance, lesson 20.",
+    "items": [
+      "`sudo apt update`, then `apt list --upgradable` to see what is waiting",
+      "Read the Migration section of every release note in between",
+      "Agree a time with whoever owns the application",
+      "`sudo apt install postgresql-16`",
+      "Ask `version()` and `pg_postmaster_start_time()`, expecting both to have changed"
+    ],
+    "trap": "Installing first and reading the release notes afterwards misses the one release that asked for something, such as rebuilding indexes."
+  },
+  {
+    "id": "ex-1691mkxs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a server where `max_prepared_transactions` is 0, `VACUUM (VERBOSE)` prints a `removable cutoff` millions of XIDs old. `~/oldest.sql` returns no rows, and `pg_wal` has been growing for days. Where do you look next?",
+    "hint": "Database Performance and Scale, lesson 15; Backup, Replication and High Availability, lesson 11.",
+    "choices": [
+      {
+        "text": "`pg_replication_slots`, for a slot whose consumer has gone away",
+        "correct": true,
+        "why": "Right: a forgotten slot holds both the horizon and the log, and has no row in pg_stat_activity."
+      },
+      {
+        "text": "`pg_stat_archiver`, since a failing archive command holds back VACUUM too",
+        "correct": false,
+        "why": "A broken archive keeps segments in pg_wal, but it holds no snapshot, so it cannot hold the cutoff."
+      },
+      {
+        "text": "`pg_prepared_xacts`, for a two-phase commit a coordinator forgot",
+        "correct": false,
+        "why": "With max_prepared_transactions at 0 there can be none, and one would not make pg_wal grow."
+      },
+      {
+        "text": "`pg_stat_activity` again, sorted by `xact_start` instead of age",
+        "correct": false,
+        "why": "oldest.sql already lists every session with an xid or a snapshot; sorting differently finds no new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d60f782",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The forgotten transaction has been ended and `VACUUM` has run, but `products` is still more than three times its old size. The shop cannot stop reads or writes on it during the day. What gives the space back?",
+    "hint": "Database Performance and Scale, lesson 15; Database Server: Installation and Maintenance, lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: the table shrinks by itself as autovacuum catches up",
+        "correct": false,
+        "why": "The free space is reused by later updates, so the table stops growing; it does not shrink back on its own."
+      },
+      {
+        "text": "`VACUUM FULL`, which writes the live rows into a new, compact file",
+        "correct": false,
+        "why": "It does compact the table, but it holds ACCESS EXCLUSIVE for the whole rewrite, which stops even a plain SELECT."
+      },
+      {
+        "text": "Another plain `VACUUM`, now that nothing holds the horizon back",
+        "correct": false,
+        "why": "Plain VACUUM turns dead versions into free space inside the pages; it hands back only empty pages at the end of the file."
+      },
+      {
+        "text": "`pg_repack`, which locks the table only briefly at each end",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzjm838b",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "In lesson 15 the pricing robot made about 4650 updates a second on `products`. Had Session A's `REPEATABLE READ` transaction stayed open for 10 minutes at that rate, about how many dead versions would `VACUUM` have had to keep?",
+    "hint": "Database Performance and Scale, lesson 15.",
+    "value": 2790000,
+    "tolerance": 20000,
+    "unit": ""
+  },
+  {
+    "id": "ex-q95pe1yr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's only standby is also its failover target. So that the hour-long nightly export there stops being cancelled, somebody sets `max_standby_streaming_delay` to two hours on it and leaves `hot_standby_feedback` off. What does that trade away?",
+    "hint": "Database Performance and Scale, lesson 20; Backup, Replication and High Availability, lesson 15.",
+    "choices": [
+      {
+        "text": "Dead rows pile up in the primary's busiest tables while the export runs",
+        "correct": false,
+        "why": "That is the price of hot_standby_feedback, which was left off here."
+      },
+      {
+        "text": "It falls hours behind during the export, the worst state to promote it from",
+        "correct": true,
+        "why": "Right: the course keeps long reports off the replica that a failover would use."
+      },
+      {
+        "text": "Every commit on the primary waits until the standby has replayed it",
+        "correct": false,
+        "why": "The standby is asynchronous; holding its replay back never delays a commit on the primary."
+      },
+      {
+        "text": "Nothing, since replay catches up at full speed once the export ends",
+        "correct": false,
+        "why": "It does catch up afterwards, but a primary that fails during the export finds the standby hours behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz7pwh87",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To spread the load, a developer sends the stock check that runs just before an item is sold to HAProxy's port 5001, which leads to the replicas. What is wrong with that?",
+    "hint": "Database Performance and Scale, lesson 20; Backup, Replication and High Availability, lesson 19.",
+    "choices": [
+      {
+        "text": "Nothing, as long as the replicas' `replay_lag` stays under a second",
+        "correct": false,
+        "why": "However small the lag, acting on a moment that has passed can sell the same last unit twice."
+      },
+      {
+        "text": "Port 5001 refuses a `SELECT`, as standbys take only replication connections",
+        "correct": false,
+        "why": "A standby answers reads; what it refuses is a write, as a read-only transaction."
+      },
+      {
+        "text": "A read that decides a sale belongs on the primary, with the write",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Port 5001 sends each connection to whichever node is the primary now",
+        "correct": false,
+        "why": "That is port 5000; port 5001 spreads connections over the replicas."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyyetv32",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`nightly-job.sql` takes `pg_try_advisory_lock(hashtext('nightly-recount'))` and counts on disconnecting to release it. Since the workers were moved behind PgBouncer in transaction mode, most nights every worker prints `another worker holds the lock: nothing to do`. Why?",
+    "hint": "Database Performance and Scale, lesson 12; Backup, Replication and High Availability, lesson 18.",
+    "choices": [
+      {
+        "text": "PgBouncer refuses advisory locks, so every attempt answers `f`",
+        "correct": false,
+        "why": "PgBouncer passes the call through; the first night's run shows the lock was granted."
+      },
+      {
+        "text": "`hashtext` gives a different number on each server connection",
+        "correct": false,
+        "why": "The number depends only on the name, which is why the job hashes a name instead of using 42."
+      },
+      {
+        "text": "The lock stayed on a pooled server connection that never disconnects",
+        "correct": true,
+        "why": "Right: the session it belongs to is PgBouncer's, and it outlives every worker."
+      },
+      {
+        "text": "`\\gset` loses `got_it` once the next statement runs elsewhere",
+        "correct": false,
+        "why": "\\gset keeps the answer in psql, on the client's side, where no pool can reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr4mbkc3",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each statement to the table lock it takes on `orders`.",
+    "hint": "Database Performance and Scale, lesson 12.",
+    "pairs": [
+      {
+        "left": "`SELECT`",
+        "right": "ACCESS SHARE"
+      },
+      {
+        "left": "`UPDATE`",
+        "right": "ROW EXCLUSIVE"
+      },
+      {
+        "left": "`CREATE INDEX`",
+        "right": "SHARE"
+      },
+      {
+        "left": "`CREATE INDEX CONCURRENTLY`",
+        "right": "SHARE UPDATE EXCLUSIVE"
+      }
+    ],
+    "right_distractors": [
+      "ACCESS EXCLUSIVE"
+    ]
+  },
+  {
+    "id": "ex-xrgw4e6k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The root of a lock chain is pid 5792, idle in transaction. A colleague who knows that `SIGKILL` cannot be caught proposes `sudo kill -9 5792`, to be sure it goes. What does the course say?",
+    "hint": "Database Performance and Scale, lesson 13; Linux and the Command Line, lesson 6.",
+    "choices": [
+      {
+        "text": "`pg_terminate_backend(5792)`, as SIGKILL restarts all connections",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`kill -9` is right here, since an idle backend ignores the polite signal",
+        "correct": false,
+        "why": "A backend handles SIGTERM, which is what pg_terminate_backend sends: it rolls back and exits cleanly."
+      },
+      {
+        "text": "Either will do, as both end the session and roll its transaction back",
+        "correct": false,
+        "why": "Only the function ends one session; a backend killed by SIGKILL is treated as a crash."
+      },
+      {
+        "text": "Try `pg_cancel_backend(5792)` first, as the gentler of the two",
+        "correct": false,
+        "why": "A cancel stops a running statement; an idle root has none, and its transaction keeps its locks."
+      }
+    ]
+  },
+  {
+    "id": "ex-jadmw3vt",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Behind PgBouncer 1.22 in transaction mode, a driver's named queries fail with `prepared statement \"P_0\" does not exist`. One line in `pgbouncer.ini` makes PgBouncer prepare them again on whatever server connection the client gets: `___ = 100`.",
+    "hint": "Database Performance and Scale, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "max_prepared_statements"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ftm0f7vd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`place-order.sql` inserts each order with a total of zero and then updates `total_cents`. Which of these statements about the indexes on `orders` are true? Choose all that apply.",
+    "hint": "Database Performance and Scale, lesson 11.",
+    "choices": [
+      {
+        "text": "An index that contains `total_cents` makes each of those updates touch every index of the table",
+        "correct": true,
+        "why": "Right: HOT is only possible when no index contains a column the update changes."
+      },
+      {
+        "text": "An index that no query ever reads is still kept current on every insert",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An index on `placed_at` costs more log per order than one on `customer_id`",
+        "correct": false,
+        "why": "The other way round: keys that only grow land on the same few pages, and random ones cost page images."
+      },
+      {
+        "text": "An update stays HOT for as long as no query uses the index on the changed column",
+        "correct": false,
+        "why": "HOT depends on what the index contains, not on whether anybody reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h92qkhgq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The checkout page times out and connections pile up behind one row. Put the steps of handling it in the order lesson 13 takes them.",
+    "hint": "Database Performance and Scale, lesson 13.",
+    "items": [
+      "Run `~/lock-tree.sql` to find the root, the session that blocks and waits for nobody",
+      "Read the root's `state` and `last_query` to learn what it was doing",
+      "End the idle-in-transaction root with `pg_terminate_backend`",
+      "Run the tree again, because the next session up may now be the root"
+    ],
+    "trap": "Acting on the session the users complain about, or cancelling an idle root, leaves the whole chain standing."
+  },
+  {
+    "id": "ex-mxjffe2z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Three application servers each run PgBouncer, and somebody proposes that the pools log in as the `postgres` superuser so that they are never refused a connection. Why does the course argue against it?",
+    "hint": "Database Performance and Scale, lesson 16; Database Server: Installation and Maintenance, lesson 10.",
+    "choices": [
+      {
+        "text": "The reserved slots belong to monitoring roles with `pg_use_reserved_connections`",
+        "correct": false,
+        "why": "That is reserved_connections, zero by default; the three superuser slots are a separate reserve."
+      },
+      {
+        "text": "Superusers skip `max_connections`, so the server could run out of memory",
+        "correct": false,
+        "why": "Nobody skips it: with every slot taken, even postgres is refused."
+      },
+      {
+        "text": "A superuser pool ignores `default_pool_size` and opens one per client",
+        "correct": false,
+        "why": "The pool size is per database and role, whichever role it is; the role does not change how a pool lends connections."
+      },
+      {
+        "text": "Superuser pools fill the reserved slots too, leaving no way in to fix it",
+        "correct": true,
+        "why": "Right: sorry, too many clients already then reaches the administrator as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-3110k5de",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A standby must survive a six-hour network outage without being rebuilt, and the primary writes about 3 GB of log an hour. Sizing the cap the way lesson 11 does, what is the smallest `max_slot_wal_keep_size`, in GB?",
+    "hint": "Backup, Replication and High Availability, lesson 11.",
+    "value": 18,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8p519vn4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A primary archives every segment with `archive_command`, and you are writing its alerts. Which of these conditions should raise one? Choose all that apply.",
+    "hint": "Backup, Replication and High Availability, lesson 4.",
+    "choices": [
+      {
+        "text": "`failed_count` in `pg_stat_archiver` has gone up since the last check",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`failed_count` in `pg_stat_archiver` is above zero",
+        "correct": false,
+        "why": "It counts attempts since the statistics were reset, so a failure fixed long ago keeps it above zero."
+      },
+      {
+        "text": "The number of `.ready` files in `archive_status` keeps growing",
+        "correct": true,
+        "why": "Right: it is the one that predicts a full disk and a stopped server."
+      },
+      {
+        "text": "On a quiet server, `last_archived_time` is older than `archive_timeout`",
+        "correct": true,
+        "why": "Right: it catches a command that hangs instead of failing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfpqy37k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The primary has `synchronous_standby_names = 'standby1'`, and standby1 has died. The application's role has `statement_timeout = '3s'`, yet its inserts hang for minutes. Why does the timeout not end them?",
+    "hint": "Backup, Replication and High Availability, lesson 12; Database Performance and Scale, lesson 15.",
+    "choices": [
+      {
+        "text": "A role's setting reaches only new sessions, and these opened earlier",
+        "correct": false,
+        "why": "That is true of ALTER ROLE, but lesson 12 set the timeout on the session itself and it still waited."
+      },
+      {
+        "text": "The statement is finished; what waits is the commit, outside it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Waiting sessions need `idle_in_transaction_session_timeout` instead",
+        "correct": false,
+        "why": "These sessions are active, waiting on SyncRep, and the idle timeout never touches an active session."
+      },
+      {
+        "text": "It fired, but the error is held until the standby comes back",
+        "correct": false,
+        "why": "Nothing fired: the commit wait lies outside every statement, so no statement limit covers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q857248d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A standby whose slot was lost should fetch the missing log from pgBackRest. Its log alternates `requested WAL segment 000000010000000000000012 has already been removed` with `ERROR: [032]: PostgreSQL working directory '/var/lib/postgresql/16/standby' is not the same as option pg1-path '/var/lib/postgresql/16/main'`. What fixes it?",
+    "hint": "Backup, Replication and High Availability, lesson 13.",
+    "choices": [
+      {
+        "text": "Rebuild the standby from a new base backup, since the slot is lost",
+        "correct": false,
+        "why": "That was lesson 11's ending; with the archive beside the slot, the standby catches up without one."
+      },
+      {
+        "text": "Raise `max_slot_wal_keep_size` on the primary and restart the standby",
+        "correct": false,
+        "why": "The segments are already gone from the primary; a bigger cap helps only the next outage."
+      },
+      {
+        "text": "Add `--pg1-path=/var/lib/postgresql/16/standby` to `restore_command`",
+        "correct": true,
+        "why": "Right: pgBackRest checks that the server asking is the data directory it was told about."
+      },
+      {
+        "text": "Run `stanza-create` again so that the standby joins the stanza",
+        "correct": false,
+        "why": "The stanza is fine and the archive holds the segments; only the command fetching them was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqj5bzzx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To be ready for `pg_rewind`, you ran `ALTER SYSTEM SET wal_log_hints = on` on the primary and restarted it. On the standby, `SHOW wal_log_hints` still answers `off`. Why?",
+    "hint": "Backup, Replication and High Availability, lesson 15; Database Server: Installation and Maintenance, lesson 5.",
+    "choices": [
+      {
+        "text": "`ALTER SYSTEM` wrote the primary's own `postgresql.auto.conf`, not the standby's",
+        "correct": true,
+        "why": "Right: set it on the standby too, and restart it there."
+      },
+      {
+        "text": "A line in the standby's `conf.d` overrides the value replication brought",
+        "correct": false,
+        "why": "postgresql.auto.conf is read last and wins over conf.d; here the value never arrived at all."
+      },
+      {
+        "text": "The standby received the value but waits for a restart, as `pending_restart` would show",
+        "correct": false,
+        "why": "Nothing reached the standby to be pending; the file that changed is the primary's."
+      },
+      {
+        "text": "Physical replication applies settings only at the standby's next checkpoint",
+        "correct": false,
+        "why": "It carries the log of data changes, never configuration files, at any checkpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cbaywgz",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The writes have been stopped for maintenance, and the role of primary is to move to the standby without losing anything. Put the rest of the switchover in the order lesson 15 gives.",
+    "hint": "Backup, Replication and High Availability, lesson 15.",
+    "items": [
+      "Stop the primary cleanly",
+      "Confirm the standby has replayed past the primary's last checkpoint",
+      "Promote the standby",
+      "Make the old primary a standby of the new one, and start it",
+      "Point the application at the new primary"
+    ],
+    "trap": "Promoting before the old primary has stopped cleanly turns a switchover into a failover, with two primaries possible and no proof that nothing was lost."
+  },
+  {
+    "id": "ex-bx0ht9t8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reporting standby, `standby2`, streams from `standby1`, not from the primary. With `hot_standby_feedback = on` set on `standby2` alone, its long reports are still cancelled with `conflict with recovery`. What is missing?",
+    "hint": "Backup, Replication and High Availability, lesson 20.",
+    "choices": [
+      {
+        "text": "A larger `max_standby_streaming_delay` set on the primary",
+        "correct": false,
+        "why": "That setting governs the standby running the query; on the primary it decides nothing."
+      },
+      {
+        "text": "The same setting on `standby1`, so that it passes the request up",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Running the reports at `REPEATABLE READ`, so their snapshot is kept",
+        "correct": false,
+        "why": "The report already holds one snapshot; that is exactly what the primary's VACUUM removes rows under."
+      },
+      {
+        "text": "A slot for `standby2` on the primary, beside the one on `standby1`",
+        "correct": false,
+        "why": "standby2 holds its slot on standby1, its source; feedback travels up the chain, step by step."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp411ft6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Behind a pool in transaction mode, an application keeps its timeout inside one transaction, where the next client cannot inherit it: `BEGIN; SET ___ statement_timeout = '5s'; ... COMMIT;`",
+    "hint": "Backup, Replication and High Availability, lesson 18.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b6xsh2g0",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "With a synchronous standby configured, match each value of `synchronous_commit` to the moment a commit returns to the application.",
+    "hint": "Backup, Replication and High Availability, lesson 12.",
+    "pairs": [
+      {
+        "left": "`off`",
+        "right": "the commit is in the primary's memory"
+      },
+      {
+        "left": "`local`",
+        "right": "the commit is on the primary's disk"
+      },
+      {
+        "left": "`remote_write`",
+        "right": "the standby has written it, not yet flushed it"
+      },
+      {
+        "left": "`remote_apply`",
+        "right": "the standby has replayed it"
+      }
+    ],
+    "right_distractors": [
+      "the standby has flushed it to disk"
+    ]
+  },
+  {
+    "id": "ex-m5t96qmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`nightly-backup.sh` ran from the `postgres` crontab on a cloud image with no mail transfer agent. A rebuild of the machine left the crontab out, and three weeks went by without a backup. What would have caught it within a day?",
+    "hint": "Backup, Replication and High Availability, lesson 5; Linux and the Command Line, lesson 13.",
+    "choices": [
+      {
+        "text": "A `MAILTO=ops@example.com` line at the top of the crontab",
+        "correct": false,
+        "why": "A job that never runs prints nothing to mail, and this machine has nowhere to send mail anyway."
+      },
+      {
+        "text": "Checking the exit status of `pgbackrest verify` inside the job",
+        "correct": false,
+        "why": "verify exits 0 even on damage, and on a night the job never runs there is no status to read."
+      },
+      {
+        "text": "A daily `grep CRON /var/log/syslog` on the rebuilt machine",
+        "correct": false,
+        "why": "The log lists jobs cron started; a job missing from the crontab leaves no line to find."
+      },
+      {
+        "text": "A monitor elsewhere that expects the job's success report each night",
+        "correct": true,
+        "why": "Right: only something outside the machine notices a job that never ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k9bj9nr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Patroni runs with `synchronous_mode`. The old leader's Patroni froze, another node took over, and inserts still reaching the old primary hang. To tidy up, somebody runs `pg_cancel_backend` on every session waiting there. What has that done?",
+    "hint": "Backup, Replication and High Availability, lesson 17.",
+    "choices": [
+      {
+        "text": "Told each client its insert worked, on a row the rewind will later throw away",
+        "correct": true,
+        "why": "Right: the fence was the wait, and cancelling it makes confirmed writes that only the old primary has."
+      },
+      {
+        "text": "Nothing harmful: the rows reach the new leader when the old primary rejoins",
+        "correct": false,
+        "why": "On rejoining, the old primary is rewound to where the histories split, and what it wrote after is thrown away."
+      },
+      {
+        "text": "Demoted the old primary, since nothing on it waits for a standby now",
+        "correct": false,
+        "why": "Only its frozen Patroni could demote it; cancelling sessions changes nothing about its role."
+      },
+      {
+        "text": "Rolled each insert back, because the cancel arrived before its commit",
+        "correct": false,
+        "why": "They had committed locally before they began to wait, and a cancel cannot take a commit back."
+      }
+    ]
+  },
+  {
+    "id": "ex-q98ef9h1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A colleague remembers the bad `DELETE` as happening at about 14:03, and nobody has read the log yet. Restoring by time with `--target-action=pause`, which way should you err?",
+    "hint": "Backup, Replication and High Availability, lesson 6.",
+    "choices": [
+      {
+        "text": "Either way, because `--target-exclusive` undoes the target's transaction",
+        "correct": false,
+        "why": "target-exclusive decides whether the named target is replayed; it undoes nothing that comes after it."
+      },
+      {
+        "text": "Later: a target past the mistake can still be paused before its commit",
+        "correct": false,
+        "why": "recovery_target_time stops before the first commit after the time given, so a late target replays the DELETE."
+      },
+      {
+        "text": "Exactly 14:03, since people remember the database server's clock",
+        "correct": false,
+        "why": "The time people remember comes from screens and graphs, not necessarily the server's clock or time zone."
+      },
+      {
+        "text": "Earlier: the repair copies back the good transactions it misses",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqve86g8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A database container's volume has held data since last year. To rotate the password, the team edits `POSTGRES_PASSWORD` and recreates the container, and the new password gets `password authentication failed for user \"postgres\"`. What changes it without leaving it in a log or a history file?",
+    "hint": "Docker and Containers, lesson 9; Database Server: Installation and Maintenance, lesson 11.",
+    "choices": [
+      {
+        "text": "`docker exec db psql -c \"ALTER ROLE postgres PASSWORD '...'\"`, as the variable only acts on an empty volume",
+        "correct": false,
+        "why": "The reason is right, and the statement carries the password into shell history and, on any error, the server log."
+      },
+      {
+        "text": "`\\password postgres` in psql inside the container, as the variable only acts on an empty volume",
+        "correct": true,
+        "why": "Right: the old password is stored in the database, and `\\password` sends a verifier rather than the password."
+      },
+      {
+        "text": "A script in `/docker-entrypoint-initdb.d` that sets it, run at the next start",
+        "correct": false,
+        "why": "Setup scripts run only when the data directory is empty, which this volume has not been since last year."
+      },
+      {
+        "text": "Running `docker rm -f db` and the same `docker run` once more, so the change is picked up",
+        "correct": false,
+        "why": "That is what the team already did; recreating the container leaves the volume, and the password in it, as they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbaeedcx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's database runs from `postgres:16` with its data in the named volume `pgdata`. A colleague changes the image to `postgres:17` and starts a new container on the same volume. What happens?",
+    "hint": "Docker and Containers, lesson 8; Database Server: Installation and Maintenance, lesson 20.",
+    "choices": [
+      {
+        "text": "17 converts the volume's files on its first start, so all that is needed is a backup beforehand",
+        "correct": false,
+        "why": "No version converts another's files on start; something has to carry the data across."
+      },
+      {
+        "text": "It runs as before, because the entrypoint finds a database and skips initialisation",
+        "correct": false,
+        "why": "Skipping initialisation is true, and the server it then starts cannot read files that 16 wrote."
+      },
+      {
+        "text": "17 refuses those files; pg_upgrade, dump and restore, or logical replication has to move the data",
+        "correct": true,
+        "why": "Right: a new image is a new major version, and the volume keeps 16's format."
+      },
+      {
+        "text": "It runs as before, as 16 and 17 share the on-disk format that every minor release keeps unchanged",
+        "correct": false,
+        "why": "Only minor releases keep the format; a major version changes the system catalogue."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7k1dejv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Every night, while the database runs, a job archives its volume with `docker run --rm -v pgdata:/data:ro -v /srv/backup:/backup alpine:3.22 tar -czf /backup/pgdata.tar.gz -C /data .`, and `/srv/backup` is on the same machine. What keeps this from being a backup the track would accept? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 8; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "PostgreSQL may be halfway through writing the files that `tar` copies",
+        "correct": true,
+        "why": "Right: a running database's files are not a consistent copy."
+      },
+      {
+        "text": "The `:ro` mount stops `tar` from reading the files in the volume",
+        "correct": false,
+        "why": "Read-only stops the job from changing the volume; reading it is exactly what it allows."
+      },
+      {
+        "text": "The archive sits on the same machine as the database it protects",
+        "correct": true,
+        "why": "Right: one failure of that machine takes the database and the copy together."
+      },
+      {
+        "text": "The archive ends up owned by `root`, so it cannot be restored",
+        "correct": false,
+        "why": "Ownership is an inconvenience the lesson fixes later; root can read and restore it like any file."
+      }
+    ]
+  },
+  {
+    "id": "ex-72dnahhs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Bruno has recreated his database container a dozen times with `docker rm -f db` and the same `docker run`, never naming a volume for `postgres:17`. To free space he runs `docker volume prune`. What happened to the tables his earlier containers held?",
+    "hint": "Docker and Containers, lesson 7.",
+    "choices": [
+      {
+        "text": "They are safe until the `postgres:17` image itself is removed",
+        "correct": false,
+        "why": "A volume does not belong to the image; removing the image would not touch it either way."
+      },
+      {
+        "text": "They were already gone, removed with each container's writable layer",
+        "correct": false,
+        "why": "The image declares its data directory as a volume, so the tables were never in the writable layer."
+      },
+      {
+        "text": "They are safe, because plain `prune` only removes volumes with no files in them",
+        "correct": false,
+        "why": "Plain `prune` removes anonymous volumes no container uses, full or empty."
+      },
+      {
+        "text": "They are gone: each sat in an anonymous volume that no container was using",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbfemmp0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A setup script starts a fresh `postgres:17` container, loops on `docker exec db pg_isready -U postgres -q` until it succeeds, then connects through the published port. The first run fails with `server closed the connection unexpectedly`. Why?",
+    "hint": "Docker and Containers, lesson 9.",
+    "choices": [
+      {
+        "text": "A temporary server, listening only on a Unix socket, answered the check",
+        "correct": true,
+        "why": "Right: the entrypoint runs it for the setup scripts and stops it, so the check should ask over TCP."
+      },
+      {
+        "text": "The published port opens a few seconds after the server inside starts",
+        "correct": false,
+        "why": "Publishing is set up with the container; what was missing was the real server behind the port."
+      },
+      {
+        "text": "`POSTGRES_PASSWORD` is applied after the first connection, which is refused",
+        "correct": false,
+        "why": "The password is set before the server starts; the failure was not about authentication."
+      },
+      {
+        "text": "The server refuses the host until the port is published on every address",
+        "correct": false,
+        "why": "Publishing on `127.0.0.1` reaches the server from the host; a check over TCP then connects that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfkd9mx2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Bruno runs PostgreSQL in a container started with `--memory 2g` on a 16 GB host, and wants `shared_buffers` at the database course's quarter of the machine. What should he size it from?",
+    "hint": "Docker and Containers, lesson 17; Database Server: Installation and Maintenance, lesson 6.",
+    "choices": [
+      {
+        "text": "The host's 16 GB, as the kernel only slows a container that goes past its limit",
+        "correct": false,
+        "why": "Slowing down is what a CPU limit does; at a memory limit the out-of-memory killer ends the process."
+      },
+      {
+        "text": "The host's 16 GB, as shared memory is left out of a container's memory count",
+        "correct": false,
+        "why": "Nothing in either course leaves the cache outside the limit; it is memory the server allocates like any other."
+      },
+      {
+        "text": "The 2 GB limit, which `docker stats` shows under `MEM USAGE / LIMIT`",
+        "correct": true,
+        "why": "Right: the cgroup is the server's machine now, so a quarter of it is 512 MB."
+      },
+      {
+        "text": "The host's 16 GB, since the server inside sees the host and plans for it",
+        "correct": false,
+        "why": "What the server can see is not what it may use; the kernel enforces the 2 GB."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqc4jdq0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A `postgres` container starts for the first time against an empty volume. Put what the image's entrypoint does in order.",
+    "hint": "Docker and Containers, lesson 9.",
+    "items": [
+      "creates the database files",
+      "sets the password",
+      "runs your setup scripts",
+      "starts the server"
+    ],
+    "trap": "Placing the server's start before the setup scripts, as though they were ordinary clients; the real server starts only once they have run."
+  },
+  {
+    "id": "ex-gypz7cck",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Treating every container as something you will delete, match each kind of state to where it belongs.",
+    "hint": "Docker and Containers, lesson 7.",
+    "pairs": [
+      {
+        "left": "the database's data",
+        "right": "a named volume"
+      },
+      {
+        "left": "source files you edit on the host while developing",
+        "right": "a bind mount"
+      },
+      {
+        "left": "the database password",
+        "right": "a secret file, never the image"
+      },
+      {
+        "left": "caches and temporary files",
+        "right": "the writable layer, or tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "an image made with `docker commit`"
+    ]
+  },
+  {
+    "id": "ex-ky38f2qc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A PostgreSQL server keeps its data directory on one `gp3` volume and its write-ahead log on another. A nightly schedule snapshots each volume on its own, a few hundred milliseconds apart. What makes such a pair something the server can be started from?",
+    "hint": "Cloud and Serverless, lesson 5; Backup, Replication and High Availability, lesson 3.",
+    "choices": [
+      {
+        "text": "Running `fsfreeze` on each volume just before its own snapshot",
+        "correct": false,
+        "why": "A freeze makes one volume clean at the filesystem level; it does not make two volumes the same moment."
+      },
+      {
+        "text": "One atomic group snapshot, or `pg_backup_start` and `pg_backup_stop` around them",
+        "correct": true,
+        "why": "Right: either the storage takes both at one instant, or PostgreSQL hands back a `backup_label` that lets the log repair the gap."
+      },
+      {
+        "text": "Copying both snapshots to another region as soon as they finish",
+        "correct": false,
+        "why": "That answers where the copies live, not whether the two describe the same instant."
+      },
+      {
+        "text": "Snapshotting only the data volume, since the server writes a fresh log when it starts",
+        "correct": false,
+        "why": "The log is what crash recovery replays; a data copy without its matching log has nothing to recover from."
+      }
+    ]
+  },
+  {
+    "id": "ex-th0qe9d3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A manager wants the standby in Virginia made synchronous, so that losing São Paulo loses nothing. A nightly import commits one million rows one at a time. Using only the floor the lesson worked out from São Paulo to Virginia, at least how many hours of waiting does the standby add to that import?",
+    "hint": "Cloud and Serverless, lesson 9; Backup, Replication and High Availability, lesson 12.",
+    "value": 21.3,
+    "tolerance": 0.3,
+    "unit": ""
+  },
+  {
+    "id": "ex-j7vpg0sk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your PostgreSQL primary runs in `sa-east-1a` with a standby in `sa-east-1b`, and the application finds the primary through a DNS record that the failover runbook edits. On the day zone a fails, `us-east-1` has a control-plane problem. Which arrangement would have let the application reach the promoted standby anyway?",
+    "hint": "Cloud and Serverless, lesson 9; Backup, Replication and High Availability, lesson 19.",
+    "choices": [
+      {
+        "text": "Both hosts in the connection string, with `target_session_attrs=read-write`",
+        "correct": true,
+        "why": "Right: the driver finds the new primary itself, and nothing has to be changed anywhere."
+      },
+      {
+        "text": "A TTL of a few seconds on the record, so that the edited answer reaches clients sooner",
+        "correct": false,
+        "why": "A short TTL only speeds up an edit that has been made; the edit is the step that goes through Virginia."
+      },
+      {
+        "text": "A virtual IP that `keepalived` moves from zone a to zone b",
+        "correct": false,
+        "why": "An address that moves between machines needs a network that allows it, which most clouds do not."
+      },
+      {
+        "text": "A runbook step that launches a fresh primary in zone b from a snapshot",
+        "correct": false,
+        "why": "A new instance has a new address, so the application still waits on the same DNS edit to find it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p825stj2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At 14:05 a developer drops a table on a managed PostgreSQL. You start a point-in-time restore to 14:04. What do you have when it finishes?",
+    "hint": "Cloud and Serverless, lesson 5; Backup, Replication and High Availability, lesson 21.",
+    "choices": [
+      {
+        "text": "The same instance at its usual address, rewound to the state of 14:04",
+        "correct": false,
+        "why": "A restore does not rewind anything in place; it builds a copy from the backups."
+      },
+      {
+        "text": "The same instance, with the dropped table back and every later write kept in place",
+        "correct": false,
+        "why": "Point-in-time recovery stops at one moment; nothing after 14:04 is in the copy, and nothing is merged."
+      },
+      {
+        "text": "A new instance with its own address; the old one runs on, table still gone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A snapshot id, to attach as a volume to the database still running",
+        "correct": false,
+        "why": "A managed restore hands back a database, and the old one keeps running beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy7rwgqz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A new reporting server in the same VPC runs `psql` against the PostgreSQL instance's private address, and you try four broken setups in turn. Match each thing `psql` reports to its cause.",
+    "hint": "Cloud and Serverless, lesson 6; Database Server: Installation and Maintenance, lesson 5.",
+    "pairs": [
+      {
+        "left": "It waits, and gives up with a timeout",
+        "right": "the database's security group has no rule for the reporting server's group"
+      },
+      {
+        "left": "`Connection refused`",
+        "right": "PostgreSQL listens only on `127.0.0.1`"
+      },
+      {
+        "left": "`no pg_hba.conf entry for host`",
+        "right": "no `host` line matches the reporting server's address"
+      },
+      {
+        "left": "`fe_sendauth: no password supplied`",
+        "right": "nothing is blocked; the server is asking for a password"
+      }
+    ],
+    "right_distractors": [
+      "the subnet's route table has no `0.0.0.0/0` to the internet gateway"
+    ]
+  },
+  {
+    "id": "ex-14p357jb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly `pg_dump` job on the database server uploads to a bucket through a role whose policy allows `s3:*` on `*`. You want the dumps to survive somebody who takes over that server and its role. Which change does that?",
+    "hint": "Cloud and Serverless, lesson 7; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "Swap the role for an access key in the job's config file, and rotate it every month",
+        "correct": false,
+        "why": "A key in a file travels with every copy of the disk, and it can still delete whatever the policy allows."
+      },
+      {
+        "text": "Keep `s3:*`, but narrow `Resource` down to the backup bucket's own ARN",
+        "correct": false,
+        "why": "Every S3 action on that bucket still includes deleting the dumps in it."
+      },
+      {
+        "text": "Encrypt each dump before upload, with a key kept on the database server",
+        "correct": false,
+        "why": "Encryption decides who can read a backup; it does nothing about who can delete it."
+      },
+      {
+        "text": "Allow only `s3:PutObject` on the prefix, and leave expiry to a lifecycle rule",
+        "correct": true,
+        "why": "Right: the server can write new dumps and cannot remove old ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-phxgdexe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "For speed, a test PostgreSQL keeps its data directory on the instance store of an `m7gd.large`. Which of these leaves that data where it was?",
+    "hint": "Cloud and Serverless, lesson 4.",
+    "choices": [
+      {
+        "text": "Stopping it over the weekend and starting it on Monday",
+        "correct": false,
+        "why": "A stop releases the host, and the instance store stays behind, erased."
+      },
+      {
+        "text": "A reboot to load a new kernel",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Terminating it with the root volume set to be kept",
+        "correct": false,
+        "why": "Keeping the root volume saves a network volume; the instance store goes with the instance."
+      },
+      {
+        "text": "A stop and start to move it to a larger instance type",
+        "correct": false,
+        "why": "Changing the type needs a stop, and a stop erases the instance store."
+      }
+    ]
+  },
+  {
+    "id": "ex-p93hn0d7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "PostgreSQL on a 200 GB `gp3` volume commits slowly at peak, and `pg_test_fsync` shows the volume's flushes are the limit. Which change goes at that limit?",
+    "hint": "Cloud and Serverless, lesson 5; Database Server: Installation and Maintenance, lesson 9.",
+    "choices": [
+      {
+        "text": "Growing the volume to 400 GB, since a bigger `gp3` does more operations a second",
+        "correct": false,
+        "why": "That was true of older volume types; `gp3` keeps the same baseline at any size."
+      },
+      {
+        "text": "Moving the data directory to `st1`, which streams long reads faster for less",
+        "correct": false,
+        "why": "`st1` is built for long sequential reads and is slow at many small operations."
+      },
+      {
+        "text": "Buying more throughput in MiB/s, the figure a large file copy shows",
+        "correct": false,
+        "why": "Throughput is bytes a second of long writes; a commit waits on one small flush at a time."
+      },
+      {
+        "text": "Buying more IOPS for the same `gp3` volume, without changing its size",
+        "correct": true,
+        "why": "Right: commits wait on how many flushes a second the disk does, and `gp3` sells operations apart from size."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwe04xx0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A design that already runs enough capacity in its second zone, so that losing the first needs no control-plane call at all, has what AWS's guidance calls static ___.",
+    "hint": "Cloud and Serverless, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "stability"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g1cm7yat",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A PostgreSQL instance with a 20 GB `gp3` root volume and a fixed public IPv4 address is stopped for a month while a project is on hold. Which of these are still billed during that month? Choose all that apply.",
+    "hint": "Cloud and Serverless, lesson 4.",
+    "choices": [
+      {
+        "text": "The `gp3` root volume, for its 20 GB",
+        "correct": true,
+        "why": "Right: the volume waits for the instance and bills while it waits."
+      },
+      {
+        "text": "The processor, by the second, as long as the instance exists",
+        "correct": false,
+        "why": "The processor charge stops with a stop and starts again with a start."
+      },
+      {
+        "text": "The instance store disks, until the instance is terminated",
+        "correct": false,
+        "why": "Instance store is part of the instance's price, and a stopped instance pays none of it."
+      },
+      {
+        "text": "The fixed public IPv4 address kept for it",
+        "correct": true,
+        "why": "Right: keeping an address fixed is a resource of its own, billed by the hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-byrbq4ce",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague tests a Redis running `appendfsync no`: some writes, a `docker kill`, a restart, and nothing is missing. They conclude it is as safe as `always`. Which PostgreSQL finding is the same trap?",
+    "hint": "NoSQL: Modelling and Operations, lesson 13; Database Server: Installation and Maintenance, lesson 8.",
+    "choices": [
+      {
+        "text": "An `UNLOGGED` table coming back empty after a `docker kill` and restart",
+        "correct": false,
+        "why": "That test did show a loss; the trap is a test that cannot show one."
+      },
+      {
+        "text": "`synchronous_commit = off` roughly doubling the work done in thirty seconds of `pgbench`",
+        "correct": false,
+        "why": "That is a measurement of speed, not a crash test that hides what a power cut would cost."
+      },
+      {
+        "text": "`fsync = off` passing every `kill -9`, since the kernel still writes its cache out",
+        "correct": true,
+        "why": "Right: a killed process leaves the page cache behind, so only a power cut or a kernel crash shows what is lost."
+      },
+      {
+        "text": "`statement_timeout` failing to end a commit that waits on `SyncRep`",
+        "correct": false,
+        "why": "That is a defence that does not bound a wait; nothing about it hides a loss from a test."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzszyemb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A shop reads its \"my orders\" page with read preference `secondaryPreferred` to spare the primary, on a replica set of three. Customers who have just placed an order, written with `w: 1`, sometimes see no order and place it again. The PostgreSQL team met the same complaint with a read replica. Which fix do both courses give first?",
+    "hint": "NoSQL: Modelling and Operations, lesson 9; Backup, Replication and High Availability, lesson 13.",
+    "choices": [
+      {
+        "text": "Send that page's reads to the primary for a while after each new order",
+        "correct": true,
+        "why": "Right: the primary is the only place guaranteed to have the write it just acknowledged."
+      },
+      {
+        "text": "Keep `secondaryPreferred` and add `readConcern(\"majority\")` to that read",
+        "correct": false,
+        "why": "`\"majority\"` buys durability, not freshness: it can return something older than the member's own latest."
+      },
+      {
+        "text": "Switch the page to `nearest`, which picks whichever member answers fastest",
+        "correct": false,
+        "why": "The fastest member may well be a secondary that has not caught up."
+      },
+      {
+        "text": "Write orders with `w: \"majority\"` and keep reading from any secondary",
+        "correct": false,
+        "why": "A majority of three is the primary and one secondary; the read can still land on the other one."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3wd532s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two primaries are each cut off from everything but one client: a Redis with `min-replicas-to-write 1` and `min-replicas-max-lag 10`, and a PostgreSQL leader under Patroni's `synchronous_mode`, whose synchronous standby now follows the new leader. How do the writes each of them confirms differ?",
+    "hint": "NoSQL: Modelling and Operations, lesson 15; Backup, Replication and High Availability, lesson 17.",
+    "choices": [
+      {
+        "text": "Both refuse from the first write, as each one needs a replica to answer",
+        "correct": false,
+        "why": "Redis counts a replica as good for up to ten seconds after it last answered, so it accepts writes until then."
+      },
+      {
+        "text": "Redis says `OK` for its first seconds and loses those writes; PostgreSQL confirms none",
+        "correct": true,
+        "why": "Right: the Redis setting bounds the window without closing it, while every PostgreSQL commit waits for a standby it no longer has."
+      },
+      {
+        "text": "Redis refuses at once with `NOREPLICAS`; PostgreSQL confirms writes until its key expires",
+        "correct": false,
+        "why": "That is the wrong way round on both sides: the lag has to pass first, and the commit waits on the standby, not on the key."
+      },
+      {
+        "text": "Both confirm every write, and the two histories are merged when the network heals",
+        "correct": false,
+        "why": "Neither merges anything: the old Redis primary flushes its data on rejoining, and PostgreSQL never confirmed its writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbvz717a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's MongoDB has grown to 400 GB, with six indexes on its largest collection, and the signed RTO is one hour. The last drill, a `mongorestore` of the 100,000-order lab copy, finished in under two seconds. What should the team conclude?",
+    "hint": "NoSQL: Modelling and Operations, lesson 11; Backup, Replication and High Availability, lesson 8.",
+    "choices": [
+      {
+        "text": "The hour is met with room to spare, as a restore grows only with the bytes copied",
+        "correct": false,
+        "why": "That is how a snapshot's restore grows; a dump's restore inserts every document and builds every index again."
+      },
+      {
+        "text": "Nothing yet: time the restore again, on a full copy of the real data and indexes",
+        "correct": true,
+        "why": "Right: rebuilding the indexes grows with the data times their number, and only a measurement says whether it fits."
+      },
+      {
+        "text": "A file snapshot would take just as long, since both restores insert every document",
+        "correct": false,
+        "why": "A snapshot is restored by starting a server on the files; its indexes are already there."
+      },
+      {
+        "text": "Rerun the drill on a smaller server, since the hardware does not change the time",
+        "correct": false,
+        "why": "A restore is measured on the hardware that will do it; a smaller server is slower, not a fair stand-in."
+      }
+    ]
+  },
+  {
+    "id": "ex-npfz8etb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A Cassandra keyspace keeps five copies of every partition, and the application reads and writes at `QUORUM`. How many of a partition's replicas can be down while both reads and writes still answer?",
+    "hint": "NoSQL: Modelling and Operations, lesson 17.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8najsd5e",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A Cassandra cluster keeps three copies in a São Paulo data centre and three in a Virginia one. So that each region reads its own writes at once without crossing to the other on every request, reads and writes both use the level `___`.",
+    "hint": "NoSQL: Modelling and Operations, lesson 17.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL_QUORUM"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ydm7q360",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The shop sells the last monitor, and the stock shown from Redis must follow the order kept in Postgres. Put the transactional outbox's steps in order.",
+    "hint": "NoSQL: Modelling and Operations, lesson 22.",
+    "items": [
+      "Insert the order, and an `outbox` row saying to set the stock of MN-330 to 0",
+      "`COMMIT` both rows in one Postgres transaction",
+      "The relay takes the next entry with `FOR UPDATE SKIP LOCKED`",
+      "The relay runs `SET` on the stock key in Redis",
+      "The relay marks the entry done"
+    ],
+    "trap": "Marking the entry done before the `SET` means a relay that dies in between leaves an update that nobody will ever apply."
+  },
+  {
+    "id": "ex-1r80g6rx",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these lose writes that Redis had already acknowledged? Choose all that apply.",
+    "hint": "NoSQL: Modelling and Operations, lesson 13.",
+    "choices": [
+      {
+        "text": "`appendfsync everysec`, and the process is killed",
+        "correct": false,
+        "why": "The kernel keeps the bytes `write()` handed it and flushes them after the process dies."
+      },
+      {
+        "text": "`appendfsync everysec`, and the machine loses power",
+        "correct": true,
+        "why": "Right: about the last second, which had not been flushed yet."
+      },
+      {
+        "text": "Snapshots only, and the process is killed",
+        "correct": true,
+        "why": "Right: every write since the last snapshot is gone."
+      },
+      {
+        "text": "`appendfsync always`, and the machine loses power",
+        "correct": false,
+        "why": "Each write is flushed before the reply, so nothing acknowledged is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkk5wpxw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After a month of normal traffic, on a MongoDB that has not restarted and serves every read from the primary, `$indexStats` shows zero operations for `email_1`, a unique index, and for `items.sku_1`. What does a careful cleanup do?",
+    "hint": "NoSQL: Modelling and Operations, lesson 7; Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "Drop `email_1`, keep `items.sku_1`, since the application already checks for duplicates",
+        "correct": false,
+        "why": "Two inserts checked at the same moment both see no duplicate; only the index makes one per e-mail true."
+      },
+      {
+        "text": "Drop both, since a month of zero on the member taking every read is enough evidence",
+        "correct": false,
+        "why": "A unique index has a second job, refusing duplicates, which no read ever counts."
+      },
+      {
+        "text": "Keep both, since `$indexStats` counts only `explain()` runs and not real queries",
+        "correct": false,
+        "why": "It is the other way round: real operations are counted and `explain()` calls are not."
+      },
+      {
+        "text": "Drop `items.sku_1` and keep `email_1`",
+        "correct": true,
+        "why": "Right: the unique index enforces one account per e-mail without any query ever searching it."
+      }
+    ]
+  },
+  {
+    "id": "ex-40dtrd6q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A managed Redis set to `allkeys-lru` reaches its memory limit and silently evicts carts that existed nowhere else. The provider's status page shows nothing wrong. Whose decision caused the loss?",
+    "hint": "NoSQL: Modelling and Operations, lesson 21.",
+    "choices": [
+      {
+        "text": "The provider's, since data lost on a managed service is an outage it must answer for",
+        "correct": false,
+        "why": "The provider ran the policy it was given; an eviction it was told to make is not its outage."
+      },
+      {
+        "text": "A failover's, whose dropped connections a retry in the application would have saved",
+        "correct": false,
+        "why": "No failover happened; the keys were evicted on purpose by the policy."
+      },
+      {
+        "text": "The team's: whether a key may be evicted is a choice about their own data",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The maintenance window's, since its patching restarted the instance empty",
+        "correct": false,
+        "why": "A restart is not what removed them; the policy evicted them while the instance kept running."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ebhmps4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's application connects as `app`, which also owns `customers` and `orders` so that migrations can run under it. A review finds an injection flaw in the application. Which change most limits what the flaw can do?",
+    "hint": "Information Security Fundamentals, lesson 6; Database Server: Installation and Maintenance, lesson 12.",
+    "choices": [
+      {
+        "text": "Give the tables to a `NOLOGIN` owner; grant `app` row privileges only",
+        "correct": true,
+        "why": "Right: an injected statement can then lose rows, which a backup brings back, but cannot drop a table."
+      },
+      {
+        "text": "Require a second factor whenever the `app` role logs in",
+        "correct": false,
+        "why": "The flaw runs inside a session the application has already opened; a factor guards the login, not what follows."
+      },
+      {
+        "text": "Revoke the right to drop tables from `app` and leave it as the owner",
+        "correct": false,
+        "why": "Ownership cannot be limited by a grant: whoever owns a table can alter, drop and grant on it."
+      },
+      {
+        "text": "Rename `app` to something no attacker could guess from outside",
+        "correct": false,
+        "why": "The injected statement runs as whatever role the application uses; its name hides nothing from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-990fpwwf",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Four things happen on the shop's PostgreSQL server. Match each one to the question of access control it answers.",
+    "hint": "Information Security Fundamentals, lesson 8; Database Server: Installation and Maintenance, lesson 11.",
+    "pairs": [
+      {
+        "left": "`psql -U app` naming the role to log in as",
+        "right": "identification"
+      },
+      {
+        "left": "the server checking the password against the role's SCRAM verifier",
+        "right": "authentication"
+      },
+      {
+        "left": "only a superuser being allowed to read `pg_authid`",
+        "right": "authorisation"
+      },
+      {
+        "left": "the server log keeping a failed `ALTER ROLE` and who sent it",
+        "right": "accounting"
+      }
+    ],
+    "right_distractors": [
+      "non-repudiation"
+    ]
+  },
+  {
+    "id": "ex-nj1bnb3r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A plan counts two layers against losing the shop's data: the database, and an offsite pgBackRest repository that `postgres` on the database server pushes to every night. Why would the security lesson count them as one layer?",
+    "hint": "Information Security Fundamentals, lesson 4; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "The repository sits on other storage, so the two already fail for different reasons",
+        "correct": false,
+        "why": "Other storage survives a dead disk; it does not survive the one cause that can reach both."
+      },
+      {
+        "text": "Both are written by PostgreSQL, so a bug in one version reaches both",
+        "correct": false,
+        "why": "The repository is written by pgBackRest; the shared cause here is a credential, not the software."
+      },
+      {
+        "text": "A backup only notices damage, so it cannot count as a layer at all",
+        "correct": false,
+        "why": "Restoring from backup is a corrective control; it counts whenever it fails for its own reasons."
+      },
+      {
+        "text": "Whoever becomes `postgres` on that server can delete the backups and the data",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vz5hfd1w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Each month ana restores the nightly `pg_dump` of `shop` into a second database on the same server, and the rows match the live ones. The yearly walk-through restores on a different machine instead. What would that restore show here?",
+    "hint": "Information Security Fundamentals, lesson 12; Backup, Replication and High Availability, lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing new, since a dump that matches row for row on one server matches on any",
+        "correct": false,
+        "why": "The same-server test found everything the dump assumed already there; a new server has none of it."
+      },
+      {
+        "text": "That the archive's SHA-256 changes once it is copied to another machine",
+        "correct": false,
+        "why": "A digest changes only when bytes change; an intact copy checks `OK` anywhere."
+      },
+      {
+        "text": "That no roles travel in the dump, so its ownership and grants fail there",
+        "correct": true,
+        "why": "Right: roles belong to the whole server, and `pg_restore` reports each line naming one."
+      },
+      {
+        "text": "That the dump holds the old data directory's path, which a new server lacks",
+        "correct": false,
+        "why": "A logical dump is statements and rows; it names no file paths."
+      }
+    ]
+  },
+  {
+    "id": "ex-0eff98hb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A developer proposes keeping a nightly copy of the orders on `www`, in the DMZ, so that the shop's pages load without asking `db`. What does the lesson say?",
+    "hint": "Information Security Fundamentals, lesson 5.",
+    "choices": [
+      {
+        "text": "Fine if the copy is read-only, since the DMZ is behind a firewall too",
+        "correct": false,
+        "why": "`www` is the server most likely to be compromised, and read-only data is still readable by an intruder."
+      },
+      {
+        "text": "The orders stay in `db`, and `www` asks through the one allowed port",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Better to move `db` into the DMZ as well, so both share one zone",
+        "correct": false,
+        "why": "That would let the internet reach the zone holding the data; the DMZ is for what must answer the internet."
+      },
+      {
+        "text": "Keep the copy outside the firewall, where it cannot reach the inside",
+        "correct": false,
+        "why": "Outside the firewall nothing protects it, and anybody on the internet can reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgy66trf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the shop's server, `\\du` shows ana's own role as `Superuser, Create role, Create DB`, and she uses it every day to run the sales reports. What does the security lesson recommend?",
+    "hint": "Information Security Fundamentals, lesson 6; Database Server: Installation and Maintenance, lesson 11.",
+    "choices": [
+      {
+        "text": "An ordinary role for reports; the superuser only to administer",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A second person approving each report before she runs it",
+        "correct": false,
+        "why": "That is separation of duties for a sensitive task; the problem here is a standing privilege behind routine work."
+      },
+      {
+        "text": "Changing her password every month, so a leaked one dies soon",
+        "correct": false,
+        "why": "A stolen password still works fully until it changes; what matters is how far the role reaches."
+      },
+      {
+        "text": "Nothing needs changing: she is trusted, and the role is hers alone",
+        "correct": false,
+        "why": "Least privilege limits the damage of anything that goes wrong while acting as her, not her honesty."
+      }
+    ]
+  },
+  {
+    "id": "ex-88rs2yjn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "ana is the shop's only DBA. She writes every schema change and applies it herself, and nobody else can review a change before it runs. What does the security lesson put in place of that second person?",
+    "hint": "Information Security Fundamentals, lesson 6; Database Server: Installation and Maintenance, lesson 19.",
+    "choices": [
+      {
+        "text": "`log_statement = 'ddl'`, in a log the owners read every week",
+        "correct": true,
+        "why": "Right: the separation becomes detective rather than preventive, and the second person arrives afterwards."
+      },
+      {
+        "text": "A role for her that cannot run `DROP`, so that a mistaken change is refused",
+        "correct": false,
+        "why": "That limits an account; the task still needs somebody able to change the schema, and she is the one."
+      },
+      {
+        "text": "`log_statement = 'all'`, so that every statement she sends is kept for review",
+        "correct": false,
+        "why": "That buries the changes under every `BEGIN` and `END`, and writes literals such as passwords into the file."
+      },
+      {
+        "text": "Job rotation, handing the schema to a developer every other month",
+        "correct": false,
+        "why": "Rotation finds frauds that need somebody present every day; with one DBA there is nobody to rotate to."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1dgmqdr",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ransomware has taken root on the shop's database server. Which of these backup copies can it destroy from there? Choose all that apply.",
+    "hint": "Information Security Fundamentals, lesson 12; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "A bucket under S3 Object Lock in compliance mode",
+        "correct": false,
+        "why": "The lock refuses deletion before the retention date whatever credential asks, the account's administrator included."
+      },
+      {
+        "text": "A backup disk that stays mounted on the database server",
+        "correct": true,
+        "why": "Right: whatever the server can write to falls with the server."
+      },
+      {
+        "text": "The weekly encrypted disk that one of the owners takes home",
+        "correct": false,
+        "why": "A disk on a shelf at somebody's house is offline; no network attack reaches it."
+      },
+      {
+        "text": "A repository directory on that server, marked `chattr +i`",
+        "correct": true,
+        "why": "Right: root removes the flag as easily as it set it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtn0tpe0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "An attacker on a staff laptop who moves on to the database at port 5432 never crosses the perimeter. Traffic between machines inside the network, like this, is called ___ traffic.",
+    "hint": "Information Security Fundamentals, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "east-west",
+          "east west",
+          "eastwest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dt5xd7st",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The owners decide the orders may lose at most one hour of data and may be down for a whole day. The team proposes keeping the nightly backup and buying storage that restores it in twenty minutes. What does the lesson make of the plan?",
+    "hint": "Information Security Fundamentals, lesson 12.",
+    "choices": [
+      {
+        "text": "It meets both targets, since twenty minutes is well inside a day",
+        "correct": false,
+        "why": "Twenty minutes answers the RTO; the RPO asks how often, and a nightly backup can lose a day."
+      },
+      {
+        "text": "It is sound, as the two targets are one figure and the shorter wins",
+        "correct": false,
+        "why": "The lesson keeps them independent; treating them as one is exactly how money goes to the wrong one."
+      },
+      {
+        "text": "It meets the RPO, because a restore that quick loses under an hour",
+        "correct": false,
+        "why": "How fast a restore runs decides the downtime, not how much the last backup holds."
+      },
+      {
+        "text": "It pays for speed nobody asked for, and the one hour stays unmet",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-64gmethd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A clinic's `diagnosis` column was filled with pgcrypto's `encrypt(code, key, 'aes')`. An analyst with no key runs `SELECT encode(diagnosis, 'hex'), count(*) FROM patients GROUP BY 1`. What can the result reveal?",
+    "hint": "Applied Cryptography, lesson 14; Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "The codes themselves, since CBC with a zero IV decrypts without a key",
+        "correct": false,
+        "why": "A fixed IV makes equal inputs look equal; it does not hand back the plaintext."
+      },
+      {
+        "text": "Nothing, as every value is random bytes to somebody without the key",
+        "correct": false,
+        "why": "`encrypt` with `'aes'` uses CBC with an all-zero IV, so equal codes give equal bytes."
+      },
+      {
+        "text": "Which patients share a diagnosis, and how many of them have each one",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The key's length, read off the size of each ciphertext in the group",
+        "correct": false,
+        "why": "The size follows the value padded to AES blocks; the key does not show in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kf4j8b9q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The offsite pgBackRest repository is encrypted, and its `repo2-cipher-pass` exists in one place: `/etc/pgbackrest.conf` on the database server. Where else should it be kept?",
+    "hint": "Applied Cryptography, lesson 14; Backup, Replication and High Availability, lesson 9.",
+    "choices": [
+      {
+        "text": "In a file beside the backups in the offsite repository, so a restore finds it",
+        "correct": false,
+        "why": "A key is never stored beside what it protects: whoever takes the repository takes the key."
+      },
+      {
+        "text": "In a vault the organisation trusts, open to more than one person, and proved by a drill",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the configuration repository with `postgresql.conf`, so provisioning rebuilds it",
+        "correct": false,
+        "why": "A key in a repository is read by everybody who clones it, for as long as any copy exists."
+      },
+      {
+        "text": "Only in the memory of the DBA who generated it, so it sits on no disk at all",
+        "correct": false,
+        "why": "Then a restore depends on one person being reachable, and no drill can prove the copy is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggb1mbh5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The `app_users` table holds bcrypt values that begin `$2a$06$`. New hashes are to be made with `gen_salt('bf', 12)`. Counting bcrypt's cost the way the lessons define it, how many times as many rounds of key setup does one new hash take as one old hash?",
+    "hint": "Applied Cryptography, lesson 5; Database Server: Installation and Maintenance, lesson 18.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-k771srqb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The application's `app_users` rows are bcrypt at cost 06, and the policy is now cost 12, with no forced reset. Put in order what the application does when a user signs in with the right password.",
+    "hint": "Applied Cryptography, lesson 5; Database Server: Installation and Maintenance, lesson 18.",
+    "items": [
+      "Read the algorithm, the cost and the salt from the user's stored value",
+      "Recompute from the typed password with those, and compare in constant time",
+      "Notice that the stored cost is below the policy's",
+      "Hash the same typed password again at the policy's cost, with a fresh salt",
+      "Replace the user's stored value with the new hash"
+    ],
+    "trap": "Making the new hash before the old one has been verified would store whatever was typed, right or wrong, as the user's password."
+  },
+  {
+    "id": "ex-n6q79ym7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "With pgcrypto, `encrypt(…, 'aes')` gave two patients with one CPF identical ciphertexts. The function that uses a random session key and IV for every value, so that one CPF gives different bytes each time, is `___`.",
+    "hint": "Applied Cryptography, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "pgp_sym_encrypt",
+          "pgp_sym_encrypt()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g5cgvfyp",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A monitoring check connects to the clinic's server as `www.vereda.example`, and `s_client` stops with `hostname mismatch`. The certificate covers `portal.vereda.example`. Which of these fix it as the lesson does? Choose all that apply.",
+    "hint": "Applied Cryptography, lesson 10.",
+    "choices": [
+      {
+        "text": "Install the issuing CA's root certificate on the monitoring host",
+        "correct": false,
+        "why": "That answers `unable to get local issuer certificate`; the chain was fine and the name was not."
+      },
+      {
+        "text": "Point the check at `portal.vereda.example`, the name it covers",
+        "correct": true,
+        "why": "Right: use the name the certificate covers."
+      },
+      {
+        "text": "Turn off verification in the check, since the server is the clinic's own",
+        "correct": false,
+        "why": "An impostor's certificate looks to the client exactly like this one; disabling the check accepts both."
+      },
+      {
+        "text": "Issue a certificate whose SAN also carries `www.vereda.example`",
+        "correct": true,
+        "why": "Right: a certificate covering the name the client asks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryc6cvm9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Offsite backups are encrypted under data keys wrapped by a KMS master key. The database server's cloud credential may call unwrap, and may also schedule that master key for deletion. What does this leave open to a ransomware attack?",
+    "hint": "Applied Cryptography, lesson 14; Backup, Replication and High Availability, lesson 10.",
+    "choices": [
+      {
+        "text": "The master key reaches the server in clear on every unwrap, ready to steal",
+        "correct": false,
+        "why": "Unwrap returns a data key, briefly; the master key never leaves the KMS."
+      },
+      {
+        "text": "Anybody who copies the bucket can now decrypt the backups without the KMS",
+        "correct": false,
+        "why": "The data keys are stored wrapped; reading them still takes an unwrap by an allowed identity."
+      },
+      {
+        "text": "The intruder can delete that key first, and every backup goes with it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rotating the master key now means re-encrypting every backup",
+        "correct": false,
+        "why": "Rotation re-wraps the data keys, a few hundred bytes each, whoever holds the credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-afn2pvds",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A developer keeps the system's pepper in a one-row `app_settings` table, in the same database as the Argon2id hashes, so that every application server finds it. A nightly dump of that database leaks. What has the pepper bought?",
+    "hint": "Applied Cryptography, lesson 5.",
+    "choices": [
+      {
+        "text": "Every guess is still blocked, since the HMAC runs before Argon2id",
+        "correct": false,
+        "why": "The HMAC blocks guesses only for somebody who lacks its key, and this dump carries the key."
+      },
+      {
+        "text": "The hashes can no longer be tied to accounts, so the leak is harmless",
+        "correct": false,
+        "why": "The dump keeps each user beside their hash; a pepper changes the value, not whose it is."
+      },
+      {
+        "text": "Each user must now reset, as the leaked pepper voids all their hashes",
+        "correct": false,
+        "why": "The stored hashes still verify; the problem is that guessing against them is open again."
+      },
+      {
+        "text": "Nothing, because the dump carries the pepper beside the hashes",
+        "correct": true,
+        "why": "Right: a pepper is only worth something where the store is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w16ntaf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your DBA portfolio project's README says the database is backed up every night. An interviewer asks how you know the backups work. Which answer is the strong one, in the sense the lesson gives to \"how do you know your tests work?\"",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12; Backup, Replication and High Availability, lesson 1.",
+    "choices": [
+      {
+        "text": "I restored last night's dump into a second database and diffed a report against the live one",
+        "correct": true,
+        "why": "Right: like removing the index and watching the test fail, it shows the guarantee holds."
+      },
+      {
+        "text": "The backup job has exited with status 0 every night for a month",
+        "correct": false,
+        "why": "That is a statement about the job, not about the data: a pipe ending in `gzip` exits 0 with nothing in it."
+      },
+      {
+        "text": "The dump is half a megabyte, so it is not one of the twenty-byte files a broken pipe leaves",
+        "correct": false,
+        "why": "Size is a clue, not proof: a dump of the wrong database or one schema of three is not tiny either."
+      },
+      {
+        "text": "The script starts with `set -o pipefail`, so a failure in any program in it turns the job red",
+        "correct": false,
+        "why": "That catches a failed program; a dump that succeeds and holds the wrong thing still exits cleanly."
+      }
+    ]
+  },
+  {
+    "id": "ex-srd9hj9x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio project's committed `setup.sql` ends with `ALTER ROLE app PASSWORD 'app-lab-only';` so that anybody can rebuild the database. Taking both lessons together, what is wrong with it?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Database Server: Installation and Maintenance, lesson 11.",
+    "choices": [
+      {
+        "text": "Nothing serious: the server keeps only a SCRAM verifier, not the password that was typed",
+        "correct": false,
+        "why": "The server stores a verifier, but the file and the statement carry the password in clear text."
+      },
+      {
+        "text": "The password is in the history, and a failing run writes it into the server log too",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It stops being a problem once `setup.sql` is listed in `.gitignore` in the very next commit",
+        "correct": false,
+        "why": "Ignoring a file stops future additions; the commit that holds the password stays in the history that is pushed."
+      },
+      {
+        "text": "`ALTER ROLE` cannot set a password at all, so the script fails on that line",
+        "correct": false,
+        "why": "It can; the lesson prefers `\\password` because the statement carries the password to every place a statement goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q67hhve",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You find that a commit pushed last week to your public portfolio repository contains the password of `app`, the PostgreSQL role your project connects as. What do you do first?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Database Server: Installation and Maintenance, lesson 11.",
+    "choices": [
+      {
+        "text": "Rewrite the history with `git filter-repo` and force-push, so the scanners find nothing",
+        "correct": false,
+        "why": "Cleaning is optional and last: it cannot recall copies already cloned, forked or cached."
+      },
+      {
+        "text": "Read the server log for logins as `app`, to learn whether the password was used",
+        "correct": false,
+        "why": "Checking for use is the second step; until the password changes, it still works for whoever has it."
+      },
+      {
+        "text": "Give `app` a new password with `\\password app`, then update the project's environment to match",
+        "correct": true,
+        "why": "Right: revoking is the only step that makes the leaked value useless."
+      },
+      {
+        "text": "Make the repository private, since only people who could read it had the password",
+        "correct": false,
+        "why": "A week in public is enough for clones and scanners; hiding the repository revokes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7859mq4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For your DBA portfolio's slow-query investigation you want realistic data. A clinic you used to work for offers an export of its appointments with the patients' names removed, keeping dates of birth, addresses and diagnoses. What do the two lessons say?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 17; Information Security Fundamentals, lesson 17.",
+    "choices": [
+      {
+        "text": "Use it once the clinic agrees in writing, as the clinic decides what is done with it",
+        "correct": false,
+        "why": "The patients gave it for their care; the clinic's signature does not make it demo data for your portfolio."
+      },
+      {
+        "text": "Use it in a private repository, and publish only the query plans and the timings",
+        "correct": false,
+        "why": "Hidden or not, you would hold patients' sensitive data with no basis for it, and it is not yours to use."
+      },
+      {
+        "text": "Use it: without the names it is anonymised, and anonymised data is outside the LGPD",
+        "correct": false,
+        "why": "Dropping the name and keeping address and date of birth still identifies people, with one more step."
+      },
+      {
+        "text": "Generate invented data: this is still personal data, and diagnoses are sensitive data",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1pnm4jt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`seed.py` lends Laptop 03 nine days before the day it runs, and loanbook's loans last seven days. If you run it a year after the lesson was recorded, by how many days is that loan past its due date on the day of the run?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 17.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-tr4yxwnf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In loanbook's Quadlet file, one line in the `[Service]` section makes systemd bring the container back whenever it dies: `Restart=___`.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "always"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n0et82m7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "The project reads its secrets from the environment and keeps `.env` out of git. So that the next person knows what to set, the repository commits a file called `___`, listing every variable with a fake value.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          ".env.example"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5d3z024r",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You are deploying a new version of your project to srv the way the lesson does. Put the steps in order.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "items": [
+      "Push `main` and its tags to the bare repository on srv",
+      "Clone it on srv and check that the commit is the one on laptop",
+      "Build the image with `sudo podman build -t loanbook .`",
+      "Copy the `.container` file to `/etc/containers/systemd/` and run `daemon-reload`",
+      "Start the service and ask for `/healthz` from the server itself"
+    ],
+    "trap": "Building and starting before checking which commit was cloned is how a deploy ships something other than what you think."
+  },
+  {
+    "id": "ex-gtfejywv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "\"Why did you back the project's database up with a nightly `pg_dump` and not by archiving the WAL?\" Which answer follows the lesson's four steps, with a reason the backup course would accept?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 20; Backup, Replication and High Availability, lesson 8.",
+    "choices": [
+      {
+        "text": "Nightly `pg_dump`, not WAL archiving: the demo can lose a day. With real orders and an RPO of minutes, I'd archive",
+        "correct": true,
+        "why": "Right: choice, alternative, a reason in the project's own terms, and what would change it."
+      },
+      {
+        "text": "Nightly `pg_dump`, because it was what I knew; I had not set up WAL archiving before this project",
+        "correct": false,
+        "why": "Honest, and it stops short: the lesson asks you to add when you would choose differently."
+      },
+      {
+        "text": "Nightly `pg_dump`, since WAL archiving is overkill for a database this small; nobody needs it below a few gigabytes",
+        "correct": false,
+        "why": "That argues the alternative is bad, with a general claim the interviewer may run a database to disprove."
+      },
+      {
+        "text": "Nightly `pg_dump` over WAL archiving, because `pg_dump` is simpler and it is what most teams start with",
+        "correct": false,
+        "why": "A general truth instead of the project's facts, and no condition under which the other choice wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsaw2kw9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "You are on the DBA track, choosing your portfolio project. Which does the lesson say a reviewer in your field looks for? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "A short video of the project on a real device",
+        "correct": false,
+        "why": "That is what a mobile reviewer opens, since they will rarely install the app."
+      },
+      {
+        "text": "A slow query's plan before and after the fix, measured",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The pipeline file, from a commit to something running",
+        "correct": false,
+        "why": "That is the DevOps reviewer's first stop."
+      },
+      {
+        "text": "A backup, and a restore that was actually performed",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6v5zvtd4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In your third week, the shop's checkout starts failing an hour after you dropped what looked like an unused index. You think your change may be the cause. What comes first?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Backup, Replication and High Availability, lesson 22.",
+    "choices": [
+      {
+        "text": "Put the index back on your own, and mention it once checkout works again",
+        "correct": false,
+        "why": "Silence while you fix it alone is how a small mistake becomes an incident."
+      },
+      {
+        "text": "Tell the person who needs to know, now, that your change may be why",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Start the write-up's timeline now, while every time is still in the logs",
+        "correct": false,
+        "why": "The write-up comes after the incident is over, not before anybody knows."
+      },
+      {
+        "text": "Post the likely cause on the status page, so support has an answer to give",
+        "correct": false,
+        "why": "A cause is never guessed in public; a wrong one has to be retracted."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjb741sy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A command you ran on the wrong server caused a twenty-minute outage, and you are asked to draft the write-up. Which line belongs under its Actions?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Backup, Replication and High Availability, lesson 22.",
+    "choices": [
+      {
+        "text": "The script asks for the server's name; owner Ana, by 30 October",
+        "correct": true,
+        "why": "Right: a change, with an owner and a date."
+      },
+      {
+        "text": "Cause: human error by the junior who ran the command",
+        "correct": false,
+        "why": "That is a cause, not an action, and human error is never a cause on its own."
+      },
+      {
+        "text": "Be more careful about which server each open terminal is connected to",
+        "correct": false,
+        "why": "\"Be more careful\" is not an action: it changes nothing anybody can check."
+      },
+      {
+        "text": "The junior runs nothing on production until the end of the trial period",
+        "correct": false,
+        "why": "That punishes a person; the write-up asks how the system let a reasonable action cause harm."
+      }
+    ]
+  },
+  {
+    "id": "ex-twbw8zxx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In your second week as a junior DBA you are asked to choose a first task. The runbook for a filling disk says it was last rehearsed two years and a major version ago. Which task fits both lessons best?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Database Server: Installation and Maintenance, lesson 24.",
+    "choices": [
+      {
+        "text": "Add the background on WAL and slots to each step, so the next junior understands it",
+        "correct": false,
+        "why": "A runbook carries the commands, not the explanation; a training text is a different document."
+      },
+      {
+        "text": "Rehearse it on a copy, fix the steps that were wrong, update the date and say it is done",
+        "correct": true,
+        "why": "Right: small, finished properly and visible."
+      },
+      {
+        "text": "Follow it on production at the next real alert, and note every step that fails",
+        "correct": false,
+        "why": "A runbook is rehearsed before it is needed, on a server that matters to nobody."
+      },
+      {
+        "text": "Turn the whole page into one script, and show it to the team once it is finished",
+        "correct": false,
+        "why": "A large first task that drags is the worst start, and some acts need a person to ask first."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmrnjsxx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a design interview for a junior DBA role, you are asked how you would set up the database for a small online shop. What do you do first?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; Backup, Replication and High Availability, lesson 8.",
+    "choices": [
+      {
+        "text": "Begin with the tables and their keys, as the schema is the part a DBA owns",
+        "correct": false,
+        "why": "The answers to the clarifying questions change the design, so they come before any drawing."
+      },
+      {
+        "text": "Draw a primary, two replicas and automatic failover, since a shop has to stay open",
+        "correct": false,
+        "why": "Parts nobody asked for read as recited, and \"stay open\" at any cost is a wish until somebody sees the price."
+      },
+      {
+        "text": "Ask how much data the shop could lose, and for how long it could be down",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "State that it needs zero loss, and name synchronous replication as the way",
+        "correct": false,
+        "why": "That assumes the costliest answer: every commit would wait for a second server, every day."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4b43v85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your CV needs one line about the backup work in your lab. Which line follows the lesson's pattern, with evidence the backup course would count?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; Backup, Replication and High Availability, lesson 1.",
+    "choices": [
+      {
+        "text": "Was responsible for the PostgreSQL backups in a lab, using pg_dump and pgBackRest",
+        "correct": false,
+        "why": "It opens with a phrase that hides what you did, and then lists tools."
+      },
+      {
+        "text": "Improved backup reliability by 40% using pgBackRest, compression and retention",
+        "correct": false,
+        "why": "A number with no baseline and no way to measure it costs more than no number."
+      },
+      {
+        "text": "Helped build a backup system with pgBackRest, cron and PostgreSQL 16",
+        "correct": false,
+        "why": "\"Helped\" hides your part, and the rest of the line is a list of tools."
+      },
+      {
+        "text": "Set up nightly lab backups, each restored on a second server and checked",
+        "correct": true,
+        "why": "Right: what you did, what is now true, and how anybody can check it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn1yh14v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A take-home for a junior DBA role hands you a virtual machine whose PostgreSQL will not start, with about three hours suggested. You fix it in two. Besides the working machine, what does the lesson say to hand in?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "An account of how PostgreSQL starts up, to show that you understood the cause",
+        "correct": false,
+        "why": "The brief asked for a fix someone can follow, not an essay on the server."
+      },
+      {
+        "text": "A recording of the whole terminal session, so the reviewer sees every command",
+        "correct": false,
+        "why": "The reviewer has about ten minutes; two hundred commands do not say which ones mattered."
+      },
+      {
+        "text": "Nothing more: a server that now starts is the evidence, and a note would pad it",
+        "correct": false,
+        "why": "The note says what you did, what you chose and why, and what you would do with more time."
+      },
+      {
+        "text": "The steps, in order, that somebody else could follow, and what you checked",
+        "correct": true,
+        "why": "Right: for an infrastructure take-home the runbook takes the README's place."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2c4c584",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "You start a junior DBA job on a ninety-day trial contract. Put the lesson's steps for the trial period in order.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 21.",
+    "items": [
+      "In the first week, ask your manager what good looks like at the end of the trial",
+      "Write the answer down as a list you can both look at",
+      "Around day 45, compare where you think you are with how it looks from their side",
+      "At the end, the question asked is whether they would hire you again"
+    ],
+    "trap": "Leaving the comparison for the last day means hearing about a gap with no time left to close it."
+  },
+  {
+    "id": "ex-wc5vpaz6",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "In your first months as a junior DBA, match each thing to where it belongs.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 21; Database Server: Installation and Maintenance, lesson 24.",
+    "pairs": [
+      {
+        "left": "the commands for a filling disk, and how to tell each one worked",
+        "right": "a runbook, in the repository beside the configuration"
+      },
+      {
+        "left": "what you saw and did during the night, as it happened",
+        "right": "one line each, with the time in front"
+      },
+      {
+        "left": "a task you already know will be late",
+        "right": "the next one-to-one, said early"
+      },
+      {
+        "left": "what your manager wants to see by the end of the trial",
+        "right": "a written list, checked around day 45"
+      }
+    ],
+    "right_distractors": [
+      "an account written the next morning, from memory"
+    ]
+  }
+]
