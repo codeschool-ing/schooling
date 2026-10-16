@@ -15,7 +15,7 @@ builds the 18-layer version in one call. Save as `~/dl/resnet.py`:
   "parts": [
     {
       "code": "\"\"\"resnet: torchvision's ResNet-18, built empty, and what each stage does to an image.\"\"\"\nimport torch\nfrom torchvision.models import resnet18\n\nmodel = resnet18(weights=None)\nmodel.eval()\nprint(\"parameters:\", sum(p.numel() for p in model.parameters()))",
-      "note": "The architecture with random weights. `weights=None` is the only way it is built in this course, because the lab cannot download the trained ones, and the shapes and the count do not depend on them."
+      "note": "The architecture with random weights. `weights=None` is the only way it is built in this course, because the machine this course was recorded on could not download the trained ones, and the shapes and the count do not depend on them."
     },
     {
       "code": "x = torch.randn(1, 3, 224, 224)\nwith torch.no_grad():\n    x = model.maxpool(model.relu(model.bn1(model.conv1(x))))\n    print(\"stem    \", tuple(x.shape))",
@@ -34,7 +34,25 @@ builds the 18-layer version in one call. Save as `~/dl/resnet.py`:
 ```
 
 ```
-PENDING resnet
+ana@vm:~/dl$ python resnet.py
+parameters: 11689512
+stem     (1, 64, 56, 56)
+layer1   (1, 64, 56, 56)  2 blocks, 147,968 parameters
+layer2   (1, 128, 28, 28)  2 blocks, 525,568 parameters
+layer3   (1, 256, 14, 14)  2 blocks, 2,099,712 parameters
+layer4   (1, 512, 7, 7)  2 blocks, 8,393,728 parameters
+head     (1, 1000)
+BasicBlock(
+  (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+  (downsample): Sequential(
+    (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+    (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+  )
+)
 ```
 
 **Follow the shape down the column.** The stem takes the 224 by 224 image to 56 by 56 at once, with
@@ -63,6 +81,6 @@ a 1x1 convolution narrows the channels, the 3x3 works on the narrow version, and
 them back. The paper called it a bottleneck: the expensive 3x3 sees fewer channels, so the network
 can have three layers in a block where ResNet-18 has two.
 
-All of this was built with random weights. **The trained ones are a download, and the lab cannot
-make it**, so nothing here was tested on a real photograph; lesson 13 shows how those weights are
-asked for and what they bring.
+All of this was built with random weights. **The trained ones are a download that the recording
+machine could not make**, so nothing here was tested on a real photograph; lesson 13 shows how those
+weights are asked for and what they bring.

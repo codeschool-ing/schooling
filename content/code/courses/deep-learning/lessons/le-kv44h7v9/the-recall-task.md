@@ -63,7 +63,18 @@ below trains an RNN and an LSTM, the same size and on the same data, at three le
 ```
 
 ```
-PENDING recall
+ana@vm:~/dl$ time python recall.py
+accuracy on 1,000 new sequences after 1,000, 2,000 and 3,000 steps (chance is 0.125)
+rnn   length  5   1.000  1.000  1.000
+lstm  length  5   1.000  1.000  1.000
+rnn   length 20   0.134  0.416  0.482
+lstm  length 20   1.000  1.000  1.000
+rnn   length 50   0.122  0.136  0.118
+lstm  length 50   0.120  0.122  0.144
+
+real	1m17.545s
+user	1m16.646s
+sys	0m0.516s
 ```
 
 It took about a minute and a half on the course's machine, one thread for the six runs.

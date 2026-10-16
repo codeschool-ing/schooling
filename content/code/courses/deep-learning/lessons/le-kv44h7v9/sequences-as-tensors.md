@@ -37,7 +37,17 @@ Save as `~/dl/shapes.py`:
 ```
 
 ```
-PENDING shapes
+ana@vm:~/dl$ python shapes.py
+symbols (4, 6) torch.int64
+tensor([[4, 7, 5, 0, 3, 3],
+        [3, 7, 1, 3, 5, 2],
+        [4, 7, 6, 0, 0, 4],
+        [2, 1, 6, 7, 7, 6]])
+embedded (4, 6, 3)
+sequence 0, step 0: [-0.23  -0.392  0.543]
+row 4 of the table: [-0.23  -0.392  0.543]
+a dense layer on length 6: (4, 10)
+the same layer on length 9: mat1 and mat2 shapes cannot be multiplied (4x27 and 18x10)
 ```
 
 The symbols arrive as a `(4, 6)` table of whole numbers, `int64`. **`nn.Embedding` turns each one into

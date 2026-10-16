@@ -41,7 +41,12 @@ a loop. Save as `~/dl/rnn_by_hand.py`:
 ```
 
 ```
-PENDING rnn
+ana@vm:~/dl$ python rnn_by_hand.py
+out (2, 4, 5)  h_last (1, 2, 5)
+the loop equals nn.RNN: True
+the last output is the final state: True
+parameters: 50 = 15 + 25 + 2 biases of 5
+the same 50 parameters read a sequence of 40: (2, 40, 5)
 ```
 
 **The loop and `nn.RNN` agree**, so there is nothing else hidden inside the layer: two matrix

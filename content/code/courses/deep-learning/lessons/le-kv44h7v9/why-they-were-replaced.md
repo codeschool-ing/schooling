@@ -24,11 +24,11 @@ number of symbols both ways, and then longer sequences. Save as `~/dl/timing.py`
       "note": "One thread again, so that the comparison is between two ways of arranging the work and not between two ways of sharing it."
     },
     {
-      "code": "def ms(batch, length, repeat=10):\n    \"\"\"The fastest of `repeat` forward passes, in milliseconds.\"\"\"\n    x = torch.randn(batch, length, 16)\n    best = float(\"inf\")\n    with torch.no_grad():\n        for _ in range(repeat):\n            start = time.perf_counter()\n            lstm(x)\n            best = min(best, time.perf_counter() - start)\n    return best * 1000",
-      "note": "The fastest of ten runs, because anything else on the machine can only make a run slower, never faster. Only the forward pass is timed; a training step adds a backward pass that walks the same steps in reverse, one at a time as well."
+      "code": "def ms(batch, length, repeat=30):\n    \"\"\"The fastest of `repeat` forward passes, in milliseconds.\"\"\"\n    x = torch.randn(batch, length, 16)\n    best = float(\"inf\")\n    with torch.no_grad():\n        for _ in range(repeat):\n            start = time.perf_counter()\n            lstm(x)\n            best = min(best, time.perf_counter() - start)\n    return best * 1000",
+      "note": "The fastest of thirty runs, because anything else on the machine can only make a run slower, never faster. Only the forward pass is timed; a training step adds a backward pass that walks the same steps in reverse, one at a time as well."
     },
     {
-      "code": "base = ms(64, 50)\nfor batch, length in ((64, 50), (1, 3200), (64, 100), (64, 200)):\n    t = ms(batch, length)\n    print(f\"{batch:2d} x {length:4d} steps = {batch * length:5d} symbols\"\n          f\"  {t:5.1f} ms  x{t / base:.1f}\")",
+      "code": "shapes = ((64, 50), (1, 3200), (64, 100), (64, 200))\ntimes = [ms(batch, length) for batch, length in shapes]\nfor (batch, length), t in zip(shapes, times):\n    print(f\"{batch:2d} x {length:4d} steps = {batch * length:5d} symbols\"\n          f\"  {t:5.1f} ms  x{t / times[0]:.1f}\")",
       "note": "The first two rows read the same 3,200 symbols, as 64 sequences side by side or as one long one. The last two keep the batch and make the sequences longer. The last column is each time divided by the first row's."
     }
   ]
@@ -36,7 +36,11 @@ number of symbols both ways, and then longer sequences. Save as `~/dl/timing.py`
 ```
 
 ```
-PENDING timing
+ana@vm:~/dl$ python timing.py
+64 x   50 steps =  3200 symbols    1.9 ms  x1.0
+ 1 x 3200 steps =  3200 symbols    4.5 ms  x2.4
+64 x  100 steps =  6400 symbols    3.7 ms  x1.9
+64 x  200 steps = 12800 symbols    6.7 ms  x3.6
 ```
 
 The timings are the course machine's and yours will differ; **the ratios are what to compare.** The

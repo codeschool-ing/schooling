@@ -34,7 +34,15 @@ abaixo pede ao autograd o gradiente em relação à própria entrada. Salve como
 ```
 
 ```
-PENDING bptt-rnn
+ana@vm:~/dl$ python bptt.py rnn
+rnn   0 steps back  gradient 1.6e+00
+rnn   1 steps back  gradient 6.8e-01
+rnn   2 steps back  gradient 4.5e-01
+rnn   5 steps back  gradient 6.5e-02
+rnn  10 steps back  gradient 3.4e-03
+rnn  20 steps back  gradient 6.2e-06
+rnn  30 steps back  gradient 1.2e-08
+rnn  49 steps back  gradient 2.9e-14
 ```
 
 **A entrada do último passo move a saída com um gradiente de 1.6; a entrada 49 passos atrás, com

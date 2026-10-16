@@ -39,12 +39,27 @@ The block has the same two convolutions and the same parameter count as `Plain`,
 is fair: the same program, the same seeds, the skip as the only change.
 
 ```
-PENDING residual
+ana@vm:~/dl$ python depth.py Residual
+epoch  20  train loss 0.2515  val loss 0.2521  val acc 0.925
+4 layers, 4970 parameters
+  train loss by epoch: 2.31 2.28 2.18 1.85 1.49 1.18 0.96 0.83 0.67 0.62 0.51 0.46 0.40 0.34 0.33 0.28 0.30 0.26 0.26 0.25
+epoch  20  train loss 0.0671  val loss 0.1190  val acc 0.956
+8 layers, 14250 parameters
+  train loss by epoch: 2.31 2.21 1.90 1.70 1.45 1.13 0.81 0.56 0.40 0.44 0.34 0.24 0.19 0.17 0.16 0.16 0.11 0.09 0.13 0.07
+epoch  20  train loss 0.0369  val loss 0.0952  val acc 0.964
+12 layers, 23530 parameters
+  train loss by epoch: 2.32 2.30 2.10 1.42 0.96 0.61 0.42 0.36 0.25 0.23 0.21 0.22 0.15 0.07 0.09 0.12 0.10 0.12 0.12 0.04
+epoch  20  train loss 0.0851  val loss 0.1853  val acc 0.942
+20 layers, 42090 parameters
+  train loss by epoch: 2.31 2.27 2.15 1.82 1.63 1.27 1.02 0.65 0.47 0.36 0.25 0.21 0.15 0.19 0.16 0.24 0.15 0.13 0.10 0.09
 ```
 
-**With the skips, depth helps at every step.** The 20-layer residual network, which as a plain
-network sat at 2.30 for twenty epochs, ends at a training loss of 0.06 and a validation accuracy of
-0.958, the best of the eight runs. The parameter counts are the same as the plain ones, line for line.
+**With the skips, every depth trains.** The 12-layer residual network ends at a training loss of
+0.04 and a validation accuracy of 0.964, the best of the eight runs. The 20-layer one, which as a
+plain network sat at 2.30 for twenty epochs, ends at 0.09 and 0.942. It is not better than the
+12-layer one on 1,077 images and twenty epochs, and the skips do not promise that; they promise that
+adding layers no longer stops training. The parameter counts are the same as the plain ones, line
+for line.
 
 The reason is in the gradient. Before any training, give both 20-layer networks one batch, run one
 backward pass, and measure the gradient that reaches each block. Save as `~/dl/grads.py`:
@@ -70,11 +85,14 @@ backward pass, and measure the gradient that reaches each block. Save as `~/dl/g
 ```
 
 ```
-PENDING grads
+ana@vm:~/dl$ python grads.py
+Plain    block 1 to 9: 2e-09 2e-09 3e-08 1e-07 1e-06 7e-06 5e-05 6e-04 4e-03
+Residual block 1 to 9: 2e-02 5e-02 7e-02 5e-02 7e-02 9e-02 7e-02 1e-01 6e-02
 ```
 
-**In the plain network the gradient shrinks by about ten times at every block on the way back**, and
-the first block gets a gradient around a million times smaller than the last one. Its weights barely
+**In the plain network the gradient shrinks at almost every block on the way back**, by three to
+fifteen times at most of them, and the first block gets a gradient more than a million times smaller than
+the last one. Its weights barely
 move, the blocks after it are reading what is close to noise, and the whole stack stalls: lesson 3's
 vanishing gradients, at work in a real network. In the residual network every block gets a gradient
 of the same size. The addition copies the gradient of the output straight to the input, because

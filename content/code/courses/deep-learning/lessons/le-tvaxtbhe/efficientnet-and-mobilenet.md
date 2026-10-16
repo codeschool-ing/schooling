@@ -39,7 +39,13 @@ neighbourhood, 32 × 64 weights. Save as `~/dl/separable.py`:
 ```
 
 ```
-PENDING separable
+ana@vm:~/dl$ python separable.py
+full 3x3:   18432 parameters, output (1, 64, 56, 56)
+depthwise:  288 parameters, output (1, 32, 56, 56)
+pointwise:  2048 parameters, output (1, 64, 56, 56)
+separable:  2336 parameters
+mobilenet_v3_small: 52 convolutions, 11 depthwise, 40 1x1
+efficientnet_b0: 81 convolutions, 16 depthwise, 64 1x1
 ```
 
 The pair reaches the same output shape for 2,336 parameters against 18,432, nearly eight times fewer, and
@@ -82,7 +88,16 @@ B7. Save as `~/dl/scaling.py`:
 ```
 
 ```
-PENDING scaling
+ana@vm:~/dl$ python scaling.py
+model            blocks  width  image   parameters
+efficientnet_b0      16    320    224    5,288,548
+efficientnet_b1      23    320    240    7,794,184
+efficientnet_b2      23    352    288    9,109,994
+efficientnet_b3      26    384    300   12,233,232
+efficientnet_b4      32    448    380   19,341,616
+efficientnet_b5      39    512    456   30,389,784
+efficientnet_b6      45    576    528   43,040,704
+efficientnet_b7      55    640    600   66,347,960
 ```
 
 **Read down the columns: all three grow at every step.** From B0 to B7 the blocks go from 16 to 55,

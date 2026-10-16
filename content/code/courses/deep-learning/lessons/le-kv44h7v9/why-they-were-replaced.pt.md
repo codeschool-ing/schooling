@@ -25,11 +25,11 @@ lê o mesmo número de símbolos dos dois jeitos, e depois sequências mais long
       "note": "Uma thread de novo, para que a comparação seja entre dois jeitos de arrumar o trabalho e não entre dois jeitos de dividi-lo."
     },
     {
-      "code": "def ms(batch, length, repeat=10):\n    \"\"\"The fastest of `repeat` forward passes, in milliseconds.\"\"\"\n    x = torch.randn(batch, length, 16)\n    best = float(\"inf\")\n    with torch.no_grad():\n        for _ in range(repeat):\n            start = time.perf_counter()\n            lstm(x)\n            best = min(best, time.perf_counter() - start)\n    return best * 1000",
-      "note": "A mais rápida de dez execuções, porque qualquer outra coisa na máquina só pode deixar uma execução mais lenta, nunca mais rápida. Só a passada para a frente é medida; um passo de treino soma uma passada para trás que percorre os mesmos passos ao contrário, também um de cada vez."
+      "code": "def ms(batch, length, repeat=30):\n    \"\"\"The fastest of `repeat` forward passes, in milliseconds.\"\"\"\n    x = torch.randn(batch, length, 16)\n    best = float(\"inf\")\n    with torch.no_grad():\n        for _ in range(repeat):\n            start = time.perf_counter()\n            lstm(x)\n            best = min(best, time.perf_counter() - start)\n    return best * 1000",
+      "note": "A mais rápida de trinta execuções, porque qualquer outra coisa na máquina só pode deixar uma execução mais lenta, nunca mais rápida. Só a passada para a frente é medida; um passo de treino soma uma passada para trás que percorre os mesmos passos ao contrário, também um de cada vez."
     },
     {
-      "code": "base = ms(64, 50)\nfor batch, length in ((64, 50), (1, 3200), (64, 100), (64, 200)):\n    t = ms(batch, length)\n    print(f\"{batch:2d} x {length:4d} steps = {batch * length:5d} symbols\"\n          f\"  {t:5.1f} ms  x{t / base:.1f}\")",
+      "code": "shapes = ((64, 50), (1, 3200), (64, 100), (64, 200))\ntimes = [ms(batch, length) for batch, length in shapes]\nfor (batch, length), t in zip(shapes, times):\n    print(f\"{batch:2d} x {length:4d} steps = {batch * length:5d} symbols\"\n          f\"  {t:5.1f} ms  x{t / times[0]:.1f}\")",
       "note": "As duas primeiras linhas leem os mesmos 3.200 símbolos, como 64 sequências lado a lado ou como uma só, longa. As duas últimas mantêm o lote e alongam as sequências. A última coluna é cada tempo dividido pelo da primeira linha."
     }
   ]
@@ -37,7 +37,11 @@ lê o mesmo número de símbolos dos dois jeitos, e depois sequências mais long
 ```
 
 ```
-PENDING timing
+ana@vm:~/dl$ python timing.py
+64 x   50 steps =  3200 symbols    1.9 ms  x1.0
+ 1 x 3200 steps =  3200 symbols    4.5 ms  x2.4
+64 x  100 steps =  6400 symbols    3.7 ms  x1.9
+64 x  200 steps = 12800 symbols    6.7 ms  x3.6
 ```
 
 Os tempos são os da máquina do curso e os seus vão ser outros; **o que se compara são as razões.** As duas

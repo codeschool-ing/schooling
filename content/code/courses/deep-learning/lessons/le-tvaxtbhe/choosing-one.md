@@ -26,13 +26,19 @@ one image costs and the accuracy those weights reached. Reading them downloads n
 ```
 
 ```
-PENDING card
+ana@vm:~/dl$ python card.py
+model                  parameters  GFLOPs  image  top-1 %
+vgg16                 138,357,544   15.47    224     71.6
+resnet18               11,689,512    1.81    224     69.8
+resnet50               25,557,032    4.09    224     76.1
+efficientnet_b0         5,288,548    0.39    224     77.7
+mobilenet_v3_small      2,542,856    0.06    224     67.7
 ```
 
 GFLOPs are billions of floating-point operations for one image, and top-1 is the percentage of
 ImageNet's validation photographs whose first guess was right. **These are torchvision's figures for
-its own trained weights, not measurements from this lab**, which has never run one of these networks
-on a real photograph.
+its own trained weights, not measurements made for this course**, which never ran one of these
+networks on a real photograph.
 
 Three things to read off it:
 
@@ -69,12 +75,20 @@ Save as `~/dl/small.py`:
 ```
 
 ```
-PENDING small
+ana@vm:~/dl$ python small.py
+cnn.make_cnn 38282 parameters
+epoch   5  train loss 0.3023  val loss 0.2438  val acc 0.939
+epoch  10  train loss 0.0985  val loss 0.1518  val acc 0.953
+  1 s
+resnet18 11175370 parameters
+epoch   5  train loss 0.2078  val loss 0.2733  val acc 0.931
+epoch  10  train loss 0.1344  val loss 0.2077  val acc 0.939
+  23 s
 ```
 
 ResNet-18 has 11,175,370 parameters against the small network's 38,282, about 290 times as many, and
-it ends at 0.939 on validation against 0.972. It took 7 times as long to get there. Its stem divides
-the side by four, as the 224 to 56 of the last section showed, so the digits reach the first residual
+it ends at 0.939 on validation against 0.953. It took 23 seconds to get there, against 1. Its stem divides
+the side by four, as the 224 to 56 of the ResNet-18 section showed, so the digits reach the first residual
 block as 2 by 2 maps and most of the machinery works on four pixels. An architecture carries assumptions about its input, and the size of the image is the
 first of them.
 
