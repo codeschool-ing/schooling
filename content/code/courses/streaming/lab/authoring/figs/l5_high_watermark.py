@@ -10,7 +10,7 @@ PT = {"node 1 · leader": "nó 1 · líder", "node 2 · follower": "nó 2 · seg
       "a consumer reads 0 to 6": "um consumidor lê de 0 a 6",
       "written, not yet committed": "gravado, ainda não confirmado",
       "producer": "produtor", "fetch": "fetch"}
-SAME = ["high watermark = 7", "fetch"]
+SAME = ["high watermark = 7"]
 def draw(s, t):
     x0, cw, y0, rh = 150, 38, 50, 52
     rows = [("node 1 · leader", 10), ("node 2 · follower", 9), ("node 3 · follower", 7)]

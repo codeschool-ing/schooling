@@ -9,7 +9,7 @@ PT = {"producer": "produtor", "node 1 · leader": "nó 1 · líder", "node 2": "
       "acks=all: answered": "acks=all: respondida", "produce": "produce", "written to its log": "gravada no log",
       "fetch": "fetch", "the record": "o registro", "next fetch": "fetch seguinte",
       "high watermark moves": "high watermark avança", "copied": "copiada"}
-SAME = ["produce", "fetch"]
+SAME = []
 def draw(s, t):
     lanes = {"p": 230, "l": 400, "a": 540, "b": 660}
     heads = [("p", "producer"), ("l", "node 1 · leader"), ("a", "node 2"), ("b", "node 3")]

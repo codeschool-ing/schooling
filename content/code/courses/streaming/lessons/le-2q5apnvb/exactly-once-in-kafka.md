@@ -28,7 +28,7 @@ The job is small on purpose: read `sales`, and copy every sale of 100.00 or more
       "note": "`--crash-after N` ends the process abruptly after reading N sales, in the middle of a transaction."
     },
     {
-      "code": "consumer = Consumer({\"bootstrap.servers\": \"localhost:9092\",\n                     \"group.id\": \"eos-copy\",\n                     \"auto.offset.reset\": \"earliest\",\n                     \"enable.auto.commit\": False,\n                     \"isolation.level\": \"read_committed\"})",
+      "code": "consumer = Consumer({\"bootstrap.servers\": \"localhost:9092\",\n                     \"group.id\": \"eos-copy\",\n                     \"auto.offset.reset\": \"earliest\",\n                     \"enable.auto.commit\": False,\n                     \"isolation.level\": \"read_committed\",\n                     \"session.timeout.ms\": 6000})",
       "note": "**The consumer never commits on its own**: auto commit is off and the program never calls `commit`. It reads with `read_committed`, so it would not copy anything a previous run aborted, if its input were itself written in transactions."
     },
     {
@@ -36,7 +36,7 @@ The job is small on purpose: read `sales`, and copy every sale of 100.00 or more
       "note": "The `transactional.id` is fixed, so a restarted copy is recognised as the same producer. **`init_transactions` aborts whatever the crashed run left open.**"
     },
     {
-      "code": "read = copied = 0\nwhile batch := consumer.consume(num_messages=10, timeout=10):\n    producer.begin_transaction()\n    for msg in batch:\n        read += 1\n        if json.loads(msg.value())[\"cents\"] >= 10000:\n            producer.produce(\"big-sales\", key=msg.key(), value=msg.value())\n            copied += 1",
+      "code": "read = copied = 0\nwhile batch := consumer.consume(num_messages=10, timeout=15):\n    producer.begin_transaction()\n    for msg in batch:\n        read += 1\n        if json.loads(msg.value())[\"cents\"] >= 10000:\n            producer.produce(\"big-sales\", key=msg.key(), value=msg.value())\n            copied += 1",
       "note": "One transaction per batch. The copies go out as ordinary `produce` calls; they reach the log at once, and become visible to a `read_committed` reader only at the commit."
     },
     {

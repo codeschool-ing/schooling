@@ -30,12 +30,12 @@ abruptly in the middle of a batch. Save it as `~/work/crash_consumer.py`:
       "note": "Two modes, one for each order of the two steps."
     },
     {
-      "code": "consumer = Consumer({\"bootstrap.servers\": \"localhost:9092\",\n                     \"group.id\": f\"crash-{args.mode}\",\n                     \"auto.offset.reset\": \"earliest\",\n                     \"enable.auto.commit\": False})\nconsumer.subscribe([\"sales\"])\n",
-      "note": "**`enable.auto.commit` is off**, so nothing is committed unless the program says so. Each mode has its own group, and so its own committed offsets."
+      "code": "consumer = Consumer({\"bootstrap.servers\": \"localhost:9092\",\n                     \"group.id\": f\"crash-{args.mode}\",\n                     \"auto.offset.reset\": \"earliest\",\n                     \"enable.auto.commit\": False,\n                     \"session.timeout.ms\": 6000})\nconsumer.subscribe([\"sales\"])\n",
+      "note": "**`enable.auto.commit` is off**, so nothing is committed unless the program says so. Each mode has its own group, and so its own committed offsets. A member that crashes stays in its group until its session times out, and **6 seconds is the shortest session the broker allows**, so a restart waits that long and no longer."
     },
     {
-      "code": "done = 0\nwith open(f\"processed-{args.mode}.txt\", \"a\") as out:\n    while batch := consumer.consume(num_messages=10, timeout=10):\n        if args.mode == \"most\":\n            consumer.commit(asynchronous=False)",
-      "note": "`consume` returns up to ten messages, or an empty list after ten seconds with nothing new, which ends the loop. **In `most` mode the commit comes first**: `commit()` with no arguments commits the position after the batch just read."
+      "code": "done = 0\nwith open(f\"processed-{args.mode}.txt\", \"a\") as out:\n    while batch := consumer.consume(num_messages=10, timeout=15):\n        if args.mode == \"most\":\n            consumer.commit(asynchronous=False)",
+      "note": "`consume` returns up to ten messages, or an empty list after fifteen seconds with nothing new, which ends the loop. **In `most` mode the commit comes first**: `commit()` with no arguments commits the position after the batch just read."
     },
     {
       "code": "        for msg in batch:\n            out.write(json.loads(msg.value())[\"sale\"] + \"\\n\")\n            out.flush()\n            done += 1\n            if done == args.crash_after:\n                print(f\"crashed after {done} sales\", flush=True)\n                os._exit(1)",
