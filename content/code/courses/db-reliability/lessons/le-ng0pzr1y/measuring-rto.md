@@ -60,7 +60,7 @@ disk failure on Saturday evening means replaying nearly a week of it:
 | plus a differential every night | up to about 20 GB | about 8 minutes |
 
 The first row on its own may already be more than an RTO of one hour leaves room for, once
-noticing, deciding and reconnecting are added. The second row comes from one line of the nightly job.
+noticing, deciding and reconnecting are added. The second row costs one extra line in the nightly job.
 Neither number is a guess: the volume comes from the database's own log positions, and the rate from
 a timed replay of real log on real hardware.
 
