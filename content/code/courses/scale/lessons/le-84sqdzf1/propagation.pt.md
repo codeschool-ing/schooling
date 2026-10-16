@@ -65,8 +65,8 @@ propagadores do OpenTelemetry tratam os dois casos.
 
 ## E o custo de um cabeçalho
 
-Aceitar um `traceparent` de fora significa que um cliente pode escolher os seus ids de rastro e a sua
-decisão de amostragem. Sistemas que se importam põem um gateway na borda que começa um rastro novo
-para quem chama sem ser confiável, ou registra o rastro de quem chamou como um vínculo (*link*) em
-vez de como pai, para que ninguém de fora possa encher um back end de rastros pedindo que todo pedido
-seja amostrado.
+Aceitar um `traceparent` de fora significa que um cliente pode escolher os seus ids de rastro e a
+sua decisão de amostragem. Sistemas que se importam põem um gateway na borda. Ele começa um rastro
+novo para quem chama sem ser confiável, ou registra o rastro de quem chamou como um vínculo (*link*)
+em vez de como pai, para que ninguém de fora possa encher um back end de rastros pedindo que todo
+pedido seja amostrado.

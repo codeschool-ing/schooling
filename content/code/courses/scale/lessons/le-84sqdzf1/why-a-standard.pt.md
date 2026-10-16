@@ -6,8 +6,8 @@ version: 1
 A aula 7 instrumentou a bilheteria com `prometheus_client`, uma biblioteca que fala um formato com
 um sistema. Era assim que se instrumentava em todo lugar, e isso tem um custo que só aparece depois:
 **o código que registra os sinais fica preso ao produto que os guarda.** Uma equipe que troca de
-fornecedor de monitoramento reescreve a instrumentação de todo serviço; uma biblioteca que quer
-emitir rastros precisa escolher um fornecedor por todos os seus usuários; e um pedido que atravessa
+fornecedor de monitoramento reescreve a instrumentação de todo serviço. Uma biblioteca que quer
+emitir rastros precisa escolher um fornecedor por todos os seus usuários. E um pedido que atravessa
 dois serviços escritos por duas equipes, com bibliotecas de dois fornecedores, não pode ser seguido
 de jeito nenhum, porque as duas não concordam em como passar um rastro de uma para a outra.
 

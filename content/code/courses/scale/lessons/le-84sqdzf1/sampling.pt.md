@@ -66,12 +66,12 @@ Ela decide antes de qualquer coisa acontecer, então guarda um décimo dos pedid
 dos que falharam, os rastros que alguém de fato quer. Com uma proporção de 1%, o único pedido com
 falha em dez mil quase nunca é rastreado.
 
-A **amostragem na cauda** (*tail sampling*) decide no fim, quando o rastro inteiro já chegou: guardar
-todo rastro com erro, todo rastro mais lento que 250 ms, e 1% do resto. Ela roda no Collector, no
-processador `tail_sampling` da distribuição contrib do Collector, e tem um custo real: o Collector
-precisa segurar na memória todo span de todo rastro recente até decidir, e todos os spans de um
-rastro precisam chegar ao **mesmo** Collector, o que exige uma camada de Collectors que balanceia a
-carga roteando pelo id do rastro.
+A **amostragem na cauda** (*tail sampling*) decide no fim, quando o rastro inteiro já chegou:
+guardar todo rastro com erro, todo rastro mais lento que 250 ms, e 1% do resto. Ela roda no
+Collector, no processador `tail_sampling` da distribuição contrib do Collector. Ela tem um custo
+real: o Collector precisa segurar na memória todo span de todo rastro recente até decidir, e todos
+os spans de um rastro precisam chegar ao **mesmo** Collector, o que exige uma camada de Collectors
+que balanceia a carga roteando pelo id do rastro.
 
 O arranjo comum são as duas: uma amostragem generosa na cabeça, ou nenhuma, nos serviços, e
 amostragem na cauda numa camada de Collectors que guarda o que interessa. Qualquer que seja a

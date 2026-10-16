@@ -45,10 +45,10 @@ mais lento.
 **Depois a sobrecarga vai para outro lugar.** Com 128 trabalhadores, 146 vendas falharam com um 500,
 e o log diz por quê: **o PostgreSQL recusou conexões**, `too many clients already`. A bilheteria
 atende cada conexão que o nginx abre numa thread própria, e cada thread abre a própria conexão com o
-banco na primeira vez que precisa de uma. 128 trabalhadores fazem o nginx abrir umas 128 conexões com
-a bilheteria, então umas 128 threads pedem conexões ao banco, e o limite padrão do PostgreSQL é 100.
-Depois da execução, com a maioria dessas threads encerradas, sobraram 52 conexões, contando a do
-próprio `psql`.
+banco na primeira vez que precisa de uma. 128 trabalhadores fazem o nginx abrir umas 128 conexões
+com a bilheteria, então umas 128 threads pedem conexões ao banco, e o limite padrão do PostgreSQL é
+100. Depois da execução, com a maioria dessas threads encerradas, sobraram 52 conexões, contando a
+do próprio `psql`.
 
 Esse último passo é o que vale lembrar. **Uma bilheteria sem CPU virou um banco sem conexões**, e o
 erro que um comprador viu não citava nenhum dos dois. A sobrecarga se espalha pelo que não tem

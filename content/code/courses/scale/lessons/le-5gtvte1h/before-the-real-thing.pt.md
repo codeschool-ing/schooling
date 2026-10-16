@@ -27,10 +27,10 @@ essa semelhança, e cada uma é um jeito como testes de carga já mentiram para 
 ## O que o curso construiu
 
 Doze aulas atrás a bilheteria era um programa e um banco, e uma linha quente a parava abaixo de 140
-vendas por segundo. Desde então ela ganhou cópias e uma réplica, aprendeu para que serve cada tipo de
-banco, mudou o esquema sem parar, contou o que faz em métricas, logs e rastros, se defendeu com
-limites, descarte e um disjuntor, tentou de novo sem cobrar duas vezes, se degradou em vez de falhar,
-e foi planejada e testada na carga de uma abertura de vendas.
+vendas por segundo. Desde então ela ganhou cópias e uma réplica, aprendeu para que serve cada tipo
+de banco e mudou o esquema sem parar. Também contou o que faz em métricas, logs e rastros, se
+defendeu com limites, descarte e um disjuntor, tentou de novo sem cobrar duas vezes, se degradou em
+vez de falhar, e foi planejada e testada na carga de uma abertura de vendas.
 
 Nenhum desses passos fez a bilheteria *escalar* sozinho. Cada um moveu um limite, mediu onde estava o
 próximo, ou fez uma falha dizer o que era. Esse é o trabalho, e ele não acaba: o próximo limite é

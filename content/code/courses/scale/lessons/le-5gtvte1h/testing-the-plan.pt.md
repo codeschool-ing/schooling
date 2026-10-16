@@ -4,10 +4,10 @@ version: 1
 ---
 
 O plano da aula 11, como um teste: 1.000 leituras e 100 vendas por segundo, o primeiro minuto da
-abertura de vendas, por trinta segundos. Dois cenários rodam ao mesmo tempo, cada um marcando os seus
-pedidos com um `kind`, e a nota de corte é escrita no teste como **limiares** (*thresholds*): o
+abertura de vendas, por trinta segundos. Dois cenários rodam ao mesmo tempo, cada um marcando os
+seus pedidos com um `kind`. A nota de corte é escrita no teste como **limiares** (*thresholds*): o
 percentil 95 das leituras abaixo de 100 ms, das vendas abaixo de 250 ms, e menos de 1% dos pedidos
-falhando, em que o k6 conta qualquer status de 400 para cima como falha. Salve-o como `onsale.js`:
+falhando; o k6 conta qualquer status de 400 para cima como falha. Salve-o como `onsale.js`:
 
 ```javascript
 // onsale.js

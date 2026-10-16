@@ -91,10 +91,10 @@ initial connection time = 11.193 ms
 tps = 1439.731837 (without initial connection time)
 ```
 
-O `sync_state` mudou de `async` para `sync`, e as mesmas transações foram de **2,008 ms para
-2,778 ms** em média, de 1992 por segundo para 1440. **Todo commit agora espera uma ida e volta até a
+O `sync_state` mudou de `async` para `sync`, e as mesmas transações foram de **2,008 ms para 2,778
+ms** em média, de 1992 por segundo para 1440. **Todo commit agora espera uma ida e volta até a
 réplica e uma gravação no disco dela.** Aqui a réplica está na mesma máquina, atrás de uma ponte de
-rede virtual, então a ida e volta é de dezenas de microssegundos e a maior parte do extra é a
+rede virtual, então a ida e volta é de dezenas de microssegundos. A maior parte do extra é a
 gravação da própria réplica.
 
 Em redes de verdade a ida e volta é a parte maior. Entre dois data centers na mesma cidade ela fica
