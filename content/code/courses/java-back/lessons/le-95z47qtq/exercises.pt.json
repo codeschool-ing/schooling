@@ -154,7 +154,7 @@
         "why": "No `like`, `_` é curinga para um caractere, e é justamente por isso que o Spring Data o escapa antes de envolver o texto em `%`."
       },
       {
-        "text": "Como um sublinhado literal, escapado antes de os `%` serem acrescentados",
+        "text": "Como um sublinhado literal: ele é escapado antes",
         "why": "Certo. O texto do cliente é comparado como texto; só os `%` que o Spring Data põe de cada lado são curingas."
       },
       {
@@ -172,11 +172,11 @@
     "hint": "O compilador vê um método comum.",
     "choices": [
       {
-        "text": "Quando o `mvn -q package` compila a interface",
+        "text": "Quando o `mvn -q package` compila a interface e confere os nomes dela",
         "why": "Para o compilador o nome é só um nome; o build passa, como passou com o `findByTitel`."
       },
       {
-        "text": "Quando a aplicação sobe: ela se recusa com uma `PropertyReferenceException`",
+        "text": "Na inicialização, com uma `PropertyReferenceException`",
         "why": "Certo. O Spring Data lê todo nome derivado na inicialização e para numa propriedade que o `Book` não tem; aqui ele seguiria o `author` e não acharia `nmae` no `Author`."
       },
       {
@@ -194,7 +194,7 @@
     "hint": "Propriedade, depois palavra-chave, depois a ordem no fim.",
     "choices": [
       {
-        "text": "`findByPrice_centsLessThanOrderByPrice_cents(int cents)`",
+        "text": "`findByPrice_centsLessThanOrderByPrice_centsAsc(int cents)`",
         "why": "`price_cents` é a coluna. Uma consulta derivada nomeia o campo da entidade, `priceCents`, porque vira JPQL primeiro."
       },
       {
@@ -206,7 +206,7 @@
         "why": "Certo: o campo, a comparação, e um `OrderBy` com a direção no fim."
       },
       {
-        "text": "`findByPriceCentsOrderByPriceCentsLessThan(int cents)`",
+        "text": "`findByPriceCentsOrderByPriceCentsAscLessThan(int cents)`",
         "why": "O `OrderBy` fecha o nome; uma condição depois dele é lida como parte da ordenação e o nome é recusado."
       }
     ]
@@ -242,7 +242,7 @@
     "hint": "De quem é a decisão, e quantas consultas ela alcança?",
     "choices": [
       {
-        "text": "O JPA não permite `EAGER` num `@ManyToOne`",
+        "text": "O JPA não permite `EAGER` num `@ManyToOne`, só em coleções",
         "why": "Permite, e `EAGER` é inclusive o padrão do JPA para `@ManyToOne`; o mapeamento da aula 10 escolheu `LAZY` de propósito."
       },
       {
@@ -250,11 +250,11 @@
         "why": "A paginação é sobre as linhas de livros; um `@ManyToOne` acrescenta no máximo um autor por linha e deixa a página intacta."
       },
       {
-        "text": "Carrega o autor em toda consulta que um dia tocar num livro, inclusive nas que nunca o leem",
+        "text": "Carrega o autor em toda consulta, mesmo onde nada o lê",
         "why": "Certo. `EAGER` é uma decisão sobre a entidade, tomada para toda consulta; um entity graph é uma decisão sobre uma consulta, onde o autor é de fato lido."
       },
       {
-        "text": "Ele precisa de `spring.jpa.open-in-view=true` para funcionar",
+        "text": "Ele precisa de `spring.jpa.open-in-view=true`, senão o autor nunca é carregado",
         "why": "O open-in-view importa para carregamento preguiçoso fora de uma transação. Um autor carregado de antemão já está lá."
       }
     ]
@@ -268,7 +268,7 @@
         "why": "Pode: declarar o `findById` de novo na interface com `@EntityGraph` resolveria. A aula escolhe não fazer."
       },
       {
-        "text": "É um comando a mais para um livro; o problema N+1 é sobre listas, em que o N cresce",
+        "text": "Um comando a mais por um livro; o N+1 é sobre listas",
         "why": "Certo. Uma leitura isolada com uma referência preguiçosa custa uma ida a mais ao banco, seja qual for o tamanho do catálogo."
       },
       {
@@ -316,11 +316,11 @@
         "why": "Os nomes das propriedades JSON vêm dos getters, que seriam os mesmos com qualquer apelido."
       },
       {
-        "text": "Para o Spring Data casar cada valor com o getter de mesmo nome no `TitleAndPrice`",
+        "text": "Para o Spring Data casar cada valor com um getter do `TitleAndPrice`",
         "why": "Certo: `getTitle` lê `title` e `getPriceCents` lê `priceCents` de cada linha."
       },
       {
-        "text": "O JPQL recusa um caminho como `b.priceCents` num select sem apelido",
+        "text": "O JPQL recusa um caminho como `b.priceCents` num select a menos que tenha apelido",
         "why": "O JPQL aceita o caminho sozinho; o apelido é para a projeção, não para o analisador."
       }
     ]
@@ -399,7 +399,7 @@
         "why": "Nada guarda isso; uma requisição posterior pela página 1 mandou um `count(*)` novo."
       },
       {
-        "text": "Voltaram menos linhas que o tamanho da página, então ela era a última e as linhas dela eram o total",
+        "text": "Vieram menos linhas que o tamanho, o que deu o total",
         "why": "Certo. O Spring Data faz a conta em vez de perguntar: primeira página, sete linhas, espaço para vinte."
       },
       {
@@ -421,7 +421,7 @@
         "why": "Parâmetros de ordenação nunca são colados como texto; é justamente isso que os impede de ser um ponto de injeção."
       },
       {
-        "text": "O Spring Data não achou a propriedade `price` no `Book`, e nenhum handler converte essa exceção num 400",
+        "text": "Não há propriedade `price` no `Book`, e nenhum handler trata a exceção",
         "why": "Certo. A recusa está certa e o status não: o erro é do cliente, e o handler da aula 7 não tem um caso para `PropertyReferenceException`."
       },
       {

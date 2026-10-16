@@ -99,7 +99,7 @@ already there. Six books or six hundred, the list is one statement and one round
   obvious in the log, where it looks like a column of identical statements.
 - **Decide what to load where the query is written**, not on the entity. The mapping says what a
   book IS; the query says what this screen needs.
-- `join fetch` is one cure among several. Hibernate can also load the authors of many books in a
-  single `IN` query when it finds them lazy (batch fetching), and lesson 11 states the same intent
+- `join fetch` is one cure among several. Hibernate can also load the lazy authors of many books
+  together, in one query, when the first of them is asked for (batch fetching), and lesson 11 states the same intent
   on a Spring Data repository with `@EntityGraph`. `sql-databases` lesson 11 looks at the problem
   from the database's side.

@@ -42,7 +42,7 @@ SEEN=0
 up() {
   start --spring.profiles.active=sql
   for _ in $(seq 50); do grep -q 'Catalogue opened' $LOG && break; sleep 0.2; done
-  SEEN=0
+  SEEN=$(grep -cE "$PAT" $LOG)
 }
 second() {
   printf 'ana@vm:%s$ %s\n' "$HERE" "java -jar target/bookshop-0.1.0.jar --spring.profiles.active=sql | grep -E '$PAT'"
@@ -138,7 +138,6 @@ run "java -jar target/bookshop-0.1.0.jar | grep 'Caused by' | tail -n 1"
 stage le-95z47qtq
 quiet 'cd ~/bookshop && mvn -q package'
 up
-SEEN=$(grep -cE "$PAT" $LOG)
 
 block page-run
 run 'curl -s "localhost:8080/books?size=2&page=1&sort=title,desc" | python3 -m json.tool'

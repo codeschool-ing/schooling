@@ -225,7 +225,7 @@
         "why": "In `like`, `_` is a wildcard for one character, which is exactly why Spring Data escapes it before wrapping the text in `%`."
       },
       {
-        "text": "As a literal underscore, escaped before the `%` signs are added",
+        "text": "As a literal underscore: it is escaped first",
         "correct": true,
         "why": "Right. The client's text is matched as text; only the `%` Spring Data adds on each side is a wildcard."
       },
@@ -252,12 +252,12 @@
     "hint": "The compiler sees an ordinary method.",
     "choices": [
       {
-        "text": "When `mvn -q package` compiles the interface",
+        "text": "When `mvn -q package` compiles the interface and checks the names in it",
         "correct": false,
         "why": "To the compiler the name is just a name; the build succeeds, as it did for `findByTitel`."
       },
       {
-        "text": "When the application starts: it refuses with a `PropertyReferenceException`",
+        "text": "At startup, with a `PropertyReferenceException`",
         "correct": true,
         "why": "Right. Spring Data parses every derived name at startup and stops at a property `Book` does not have; here it would follow `author` and find no `nmae` on `Author`."
       },
@@ -284,7 +284,7 @@
     "hint": "Property, then keyword, then the order at the end.",
     "choices": [
       {
-        "text": "`findByPrice_centsLessThanOrderByPrice_cents(int cents)`",
+        "text": "`findByPrice_centsLessThanOrderByPrice_centsAsc(int cents)`",
         "correct": false,
         "why": "`price_cents` is the column. A derived query names the entity's field, `priceCents`, because it becomes JPQL first."
       },
@@ -299,7 +299,7 @@
         "why": "Right: the field, the comparison, and an `OrderBy` with its direction at the end."
       },
       {
-        "text": "`findByPriceCentsOrderByPriceCentsLessThan(int cents)`",
+        "text": "`findByPriceCentsOrderByPriceCentsAscLessThan(int cents)`",
         "correct": false,
         "why": "`OrderBy` closes the name; a condition after it is read as part of the sort and the name is refused."
       }
@@ -360,7 +360,7 @@
     "hint": "Whose decision is it, and how many queries does it reach?",
     "choices": [
       {
-        "text": "JPA does not allow `EAGER` on a `@ManyToOne`",
+        "text": "JPA does not allow `EAGER` on a `@ManyToOne`, only on collections",
         "correct": false,
         "why": "It allows it, and `EAGER` is in fact the JPA default for `@ManyToOne`; lesson 10's mapping chose `LAZY` on purpose."
       },
@@ -370,12 +370,12 @@
         "why": "Paging is about the books' rows; a `@ManyToOne` adds at most one author per row and leaves the page intact."
       },
       {
-        "text": "It loads the author in every query that ever touches a book, including those that never read it",
+        "text": "It loads the author in every query, even where nothing reads it",
         "correct": true,
         "why": "Right. `EAGER` is a decision about the entity, taken for every query; an entity graph is a decision about one query, where the author is actually read."
       },
       {
-        "text": "It needs `spring.jpa.open-in-view=true` to work",
+        "text": "It needs `spring.jpa.open-in-view=true`, or the author is never loaded",
         "correct": false,
         "why": "Open-in-view matters for lazy loading outside a transaction. An eagerly loaded author is already there."
       }
@@ -397,7 +397,7 @@
         "why": "It can: declaring `findById` again in the interface with `@EntityGraph` would do it. The lesson chooses not to."
       },
       {
-        "text": "It is one extra statement for one book; the N+1 problem is about lists, where N grows",
+        "text": "One extra statement for one book; N+1 is about lists",
         "correct": true,
         "why": "Right. A single read with one lazy reference costs one more round trip, whatever the size of the catalogue."
       },
@@ -466,12 +466,12 @@
         "why": "The JSON property names come from the getters, which would be the same with any alias."
       },
       {
-        "text": "So Spring Data can match each value to the getter of the same name in `TitleAndPrice`",
+        "text": "So that Spring Data matches each value to a getter of `TitleAndPrice`",
         "correct": true,
         "why": "Right: `getTitle` reads `title` and `getPriceCents` reads `priceCents` from each row."
       },
       {
-        "text": "JPQL refuses a path such as `b.priceCents` in a select without one",
+        "text": "JPQL refuses a path such as `b.priceCents` in a select unless it has an alias",
         "correct": false,
         "why": "JPQL accepts the path alone; the alias is for the projection, not for the parser."
       }
@@ -593,7 +593,7 @@
         "why": "Nothing caches it; a later request for page 1 sent a fresh `count(*)`."
       },
       {
-        "text": "Fewer rows than the page size came back, so that page was the last and its rows were the total",
+        "text": "Fewer rows came back than the size, giving the total",
         "correct": true,
         "why": "Right. Spring Data does the arithmetic instead of asking: first page, seven rows, room for twenty."
       },
@@ -625,7 +625,7 @@
         "why": "Sort parameters are never pasted in as text; that is exactly what keeps them from being an injection point."
       },
       {
-        "text": "Spring Data found no property `price` on `Book`, and no handler maps that exception to a 400",
+        "text": "No property `price` on `Book`, and no handler maps the exception",
         "correct": true,
         "why": "Right. The refusal is correct and the status is not: the mistake is the client's, and lesson 7's handler has no case for `PropertyReferenceException`."
       },

@@ -8,9 +8,10 @@ relates to other entities, and Hibernate works out the rest from the fields them
 has two: `Author`, and `Book`, which points at it.
 
 Lesson 5 made `Book` a record, and it cannot stay one. A record is final, has no constructor without
-arguments and never changes, and the mapper needs all three: it creates an empty object, fills its
-fields from a row, and later notices when one of them has been changed. So both entities are ordinary
-classes. Delete the old `Book.java` and create `src/main/java/com/example/bookshop/catalogue/Author.java`:
+arguments and never changes, and the mapper needs the opposite of each: it generates subclasses of
+entities for its proxies, creates an empty object, fills its fields from a row, and later notices when
+one of them has changed. So both entities are ordinary classes. Create
+`src/main/java/com/example/bookshop/catalogue/Author.java`:
 
 ```java
 package com.example.bookshop.catalogue;
@@ -46,7 +47,7 @@ public class Author {
 }
 ```
 
-Then `Book.java` in the same directory. Each piece is explained beside it:
+Then replace `Book.java` in the same directory. Each piece is explained beside it:
 
 ```schooling-example
 {

@@ -224,11 +224,12 @@ BUILD FAILED in 8s
 3 actionable tasks: 1 executed, 2 up-to-date
 ```
 
-Two things to read. The compile tasks are `UP-TO-DATE`: the test sources never mention the
-launcher, so they compiled without it, and only starting the tests needed it. And the message
+Two things to read. The compile tasks are `UP-TO-DATE`: the launcher was never on the classpath
+the tests compile against, so removing it changed nothing there, and only starting the tests
+needed it. And the message
 names exactly what is missing, `the JUnit Platform launcher`. Gradle 8 put the launcher on the test
-classpath by itself; Gradle 9 stopped, and every build upgraded from 8 to 9 meets this message
-once.
+classpath by itself; Gradle 9 stopped, and a build upgraded from 8 to 9 that never named it meets
+this message on its first test run.
 
 Put the line back where it was in `build.gradle.kts`,
 `testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")` after the

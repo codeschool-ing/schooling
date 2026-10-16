@@ -230,7 +230,7 @@ terminal is the first sign the mapper works:
 (capture report)
 ```
 
-And the API answers as it did in lesson 9, with two more books and a different shape underneath:
+And the API answers as it did in lesson 9, with three more books and a different shape underneath:
 
 ```
 (capture books)

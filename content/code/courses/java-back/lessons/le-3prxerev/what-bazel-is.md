@@ -19,9 +19,9 @@ the change could have broken.
 ## Hermetic, so it can be cached
 
 An action is **hermetic** when nothing outside its declared inputs can change its result. Bazel
-enforces it: each action runs in a sandbox where only the declared files exist, so a source file
-somebody forgot to declare is a compile error on every machine, rather than a build that works on
-the laptop where the file happens to be present. The tools count as inputs too. Left to itself,
+enforces it by running each action in a sandbox where only the declared files exist. A source file
+somebody forgot to declare is then a compile error on every machine, rather than a build that works
+on the laptop where the file happens to be present. The tools count as inputs too. Left to itself,
 Bazel downloads the JDK it compiles with and pins it, instead of using whichever `java` the
 machine has on its `PATH`.
 

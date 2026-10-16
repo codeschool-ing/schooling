@@ -19,9 +19,9 @@ mais, e rodar só os testes que a mudança pode ter quebrado.
 ## Hermético, para poder ir para o cache
 
 Uma ação é **hermética** quando nada fora das entradas declaradas consegue mudar o resultado dela.
-O Bazel garante isso: cada ação roda num sandbox onde só existem os arquivos declarados, então um
-arquivo-fonte que alguém esqueceu de declarar é erro de compilação em toda máquina, em vez de um
-build que funciona no notebook onde o arquivo por acaso está. As ferramentas também contam como
+O Bazel garante isso rodando cada ação num sandbox onde só existem os arquivos declarados. Um
+arquivo-fonte que alguém esqueceu de declarar vira então erro de compilação em toda máquina, em vez
+de um build que funciona no notebook onde o arquivo por acaso está. As ferramentas também contam como
 entradas. Por conta própria, o Bazel baixa o JDK com que compila e o fixa, em vez de usar o `java`
 que a máquina tiver no `PATH`.
 

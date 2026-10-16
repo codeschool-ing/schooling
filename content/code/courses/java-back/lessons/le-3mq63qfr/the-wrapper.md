@@ -5,14 +5,13 @@ version: 1
 
 A build that depends on whichever Gradle each developer happened to install is a build that
 behaves differently on each machine. A Gradle older than 9.1 cannot run on Java 25 at all, and
-two releases a year apart differ in what they assume, as the JUnit launcher in the last section
-showed. **The wrapper takes the choice away from the
-machine**: a small script and jar, committed with the project, that download the exact Gradle the
+two releases a year apart differ in what they assume, as the JUnit launcher in the section on
+tasks shows. **The wrapper takes the choice away from the machine**: a small script and jar, committed with the project, that download the exact Gradle the
 project names and run the build with it.
 
 ## Generating it
 
-This is the one more time the Gradle in `~/opt` runs. The `wrapper` task writes the wrapper's
+This is the one other time the Gradle in `~/opt` runs. The `wrapper` task writes the wrapper's
 files, and the two options pin the version and its checksum, the one checked by eye in the first
 section:
 
@@ -106,7 +105,7 @@ a CI server with none, and you all run 9.8.1, because the project said so.
 
 The usual wrong picture is that the wrapper is a convenience for people who have not installed
 Gradle. It is the opposite: **it is how a project chooses its build tool's version**, and it is
-why Gradle documentation and every Gradle project write `./gradlew` and almost never `gradle`.
+why Gradle's documentation and most Gradle projects write `./gradlew` and almost never `gradle`.
 Upgrading is a change to the properties file, made by running the `wrapper` task again with a new
 version, and it arrives on every machine through the same commit as any other change.
 

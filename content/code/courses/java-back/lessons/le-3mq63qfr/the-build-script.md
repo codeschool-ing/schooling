@@ -87,6 +87,5 @@ ana@vm:~/isbn-gradle$ find . -type f | sort
 ./src/test/java/com/example/isbn/IsbnCheckTest.java
 ```
 
-Three small files and the unchanged sources. Nothing has been built yet, and no command so far
-could build it: the Gradle in `~/opt` could, but the next section gives the project a Gradle of
-its own first.
+Three small files and the unchanged sources. Nothing has been built yet. The Gradle in `~/opt`
+could build it now, but the next section first gives the project a Gradle of its own.
