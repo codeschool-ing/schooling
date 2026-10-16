@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-478w50fd",
+    "version": 1,
+    "section": "the-decision",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's three questions before a promotion in order.",
+    "hint": "Alive, then data, then a second promotion.",
+    "items": [
+      "Is the primary really gone?",
+      "How much does the standby have?",
+      "Will anything promote a second time?"
+    ],
+    "trap": "Asking about data before knowing the primary is gone can promote beside a live primary."
+  },
+  {
+    "id": "ex-pm84k7p6",
+    "version": 1,
+    "section": "the-decision",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You cannot connect to the primary from your laptop. What does that tell you?",
+    "hint": "A fact about a path.",
+    "choices": [
+      {
+        "text": "The primary has crashed",
+        "correct": false,
+        "why": "It may be alive and taking writes from whoever can reach it."
+      },
+      {
+        "text": "The standby has every write",
+        "correct": false,
+        "why": "Your laptop's connection says nothing about the standby."
+      },
+      {
+        "text": "The path from you is broken",
+        "correct": true,
+        "why": "Right: it is a fact about the path, not the primary."
+      },
+      {
+        "text": "It is safe to promote at once",
+        "correct": false,
+        "why": "Promoting beside a live primary makes two primaries."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkak14d7",
+    "version": 1,
+    "section": "the-decision",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term with what it means.",
+    "hint": "Planned or not.",
+    "pairs": [
+      {
+        "left": "Failover",
+        "right": "Promoting a standby because the primary failed"
+      },
+      {
+        "left": "Switchover",
+        "right": "Moving the primary's role on purpose, to a standby"
+      },
+      {
+        "left": "Promotion",
+        "right": "The command that turns a standby into a primary"
+      }
+    ],
+    "right_distractors": [
+      "Restoring a backup onto a new server"
+    ]
+  },
+  {
+    "id": "ex-hxyp4g0y",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did the lesson crash the primary?",
+    "hint": "Its main process.",
+    "choices": [
+      {
+        "text": "kill -9 on its postmaster",
+        "correct": true,
+        "why": "Right: the first line of postmaster.pid, killed without a chance to shut down."
+      },
+      {
+        "text": "pg_ctlcluster stop -m fast",
+        "correct": false,
+        "why": "That is a clean shutdown, with a checkpoint."
+      },
+      {
+        "text": "Deleting the data directory",
+        "correct": false,
+        "why": "That is lesson 1's disaster, not a crash."
+      },
+      {
+        "text": "Unplugging the network cable",
+        "correct": false,
+        "why": "A single machine has no cable between its servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjty3ewd",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The standby's received and replayed positions are equal after the crash. What can it not tell you?",
+    "hint": "It knows what it has.",
+    "choices": [
+      {
+        "text": "Whether it is still in recovery",
+        "correct": false,
+        "why": "pg_is_in_recovery() answered that."
+      },
+      {
+        "text": "Its last order id",
+        "correct": false,
+        "why": "It showed 50001."
+      },
+      {
+        "text": "Which timeline it is on",
+        "correct": false,
+        "why": "That is in its control file."
+      },
+      {
+        "text": "Whether the primary wrote more it never got",
+        "correct": true,
+        "why": "Right: an asynchronous standby knows what it has, never what it missed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzmkc1zs",
+    "version": 1,
+    "section": "by-hand",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `promote`, `pg_control_checkpoint()` showed the new primary on ___ 2.",
+    "hint": "What lesson 6's recovery also started.",
+    "blanks": [
+      {
+        "accept": [
+          "timeline"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-azv775yj",
+    "version": 1,
+    "section": "by-hand",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The last order before the crash was 50001 and the first after the promotion was 50034. How many ids were skipped?",
+    "hint": "Between them, not counting either.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "ids"
+  },
+  {
+    "id": "ex-djv60380",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did order ids jump after the promotion?",
+    "hint": "How does a sequence write its values to the log?",
+    "choices": [
+      {
+        "text": "The standby's sequence restarted",
+        "correct": false,
+        "why": "It continued past the old primary's, not from 1."
+      },
+      {
+        "text": "Logged ahead in batches",
+        "correct": true,
+        "why": "Right: sequences log values 32 at a time; the standby replayed the batch, not the last value handed out."
+      },
+      {
+        "text": "Rows were lost in the crash",
+        "correct": false,
+        "why": "The ids skip even when nothing is lost."
+      },
+      {
+        "text": "Promotion rounds ids to a multiple of 32",
+        "correct": false,
+        "why": "There is no rounding; the next unlogged batch starts there."
+      }
+    ]
+  },
+  {
+    "id": "ex-td71veze",
+    "version": 1,
+    "section": "the-old-primary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The old primary rebooted after the failover. What did it do?",
+    "hint": "Its data directory says nothing happened.",
+    "choices": [
+      {
+        "text": "Started as a standby of the new primary",
+        "correct": false,
+        "why": "It has no standby.signal, so nothing makes it a standby."
+      },
+      {
+        "text": "Started as a primary and took a write",
+        "correct": true,
+        "why": "Right: two primaries, and the same id for two customers."
+      },
+      {
+        "text": "Refused to start, seeing a newer timeline",
+        "correct": false,
+        "why": "It never looks at the other server."
+      },
+      {
+        "text": "Started read-only until an operator decides",
+        "correct": false,
+        "why": "Nothing in PostgreSQL does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dyn8x6t",
+    "version": 1,
+    "section": "the-old-primary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What rule does split-brain after a reboot lead to?",
+    "hint": "The third question.",
+    "choices": [
+      {
+        "text": "Never promote a standby",
+        "correct": false,
+        "why": "Promotion is the point; the risk is a second primary."
+      },
+      {
+        "text": "Always rebuild every standby",
+        "correct": false,
+        "why": "That is about rejoining, not about the old primary."
+      },
+      {
+        "text": "Use synchronous replication",
+        "correct": false,
+        "why": "That decides what is lost, not how many primaries exist."
+      },
+      {
+        "text": "It never returns as a primary",
+        "correct": true,
+        "why": "Right: kept down, or brought back as a standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-e46kak6f",
+    "version": 1,
+    "section": "the-old-primary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a script on the standby that promotes when the primary stops answering unsafe?",
+    "hint": "What does it see when the network between them breaks?",
+    "choices": [
+      {
+        "text": "It promotes beside a live, cut-off primary",
+        "correct": true,
+        "why": "Right: the same picture as the reboot, with no reboot needed."
+      },
+      {
+        "text": "Scripts cannot run pg_ctlcluster",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "It promotes too slowly to matter",
+        "correct": false,
+        "why": "Speed is not the problem; the decision is."
+      },
+      {
+        "text": "The standby has no way to reach the primary",
+        "correct": false,
+        "why": "It has one, and that is the only way it decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7adxdd2",
+    "version": 1,
+    "section": "rejoining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `pg_rewind` refuse the first time?",
+    "hint": "Its error names two settings.",
+    "choices": [
+      {
+        "text": "The old primary was still running",
+        "correct": false,
+        "why": "It was stopped first."
+      },
+      {
+        "text": "The new primary was on another timeline",
+        "correct": false,
+        "why": "That is what pg_rewind exists to handle."
+      },
+      {
+        "text": "Neither wal_log_hints nor checksums was on",
+        "correct": true,
+        "why": "Right: without them, hint-bit changes leave no trace in the log."
+      },
+      {
+        "text": "It needs the archive",
+        "correct": false,
+        "why": "It reads the target's own log."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xqe0jpe",
+    "version": 1,
+    "section": "rejoining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When must `wal_log_hints` be turned on to help with a failover?",
+    "hint": "It needs a restart, and it describes the log being written.",
+    "choices": [
+      {
+        "text": "Right after the failure, before the rewind",
+        "correct": false,
+        "why": "The divergent changes were already written without it."
+      },
+      {
+        "text": "On the new primary only",
+        "correct": false,
+        "why": "The old primary's log is the one read, and either may be old next time."
+      },
+      {
+        "text": "Never; it is only for checksums",
+        "correct": false,
+        "why": "It is an alternative to checksums."
+      },
+      {
+        "text": "Before the failure, with a restart",
+        "correct": true,
+        "why": "Right: it only makes the log it writes from then on usable for a rewind."
+      }
+    ]
+  },
+  {
+    "id": "ex-agae3m04",
+    "version": 1,
+    "section": "rejoining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ALTER SYSTEM SET wal_log_hints = on` on the 5434 left the 5432 at `off`. Why?",
+    "hint": "Where does ALTER SYSTEM write?",
+    "choices": [
+      {
+        "text": "The 5432 had not been restarted",
+        "correct": false,
+        "why": "It had been."
+      },
+      {
+        "text": "Standbys ignore wal_log_hints",
+        "correct": false,
+        "why": "It was set on the 5432 next and took effect."
+      },
+      {
+        "text": "auto.conf is not replicated",
+        "correct": true,
+        "why": "Right: ALTER SYSTEM writes a file replication does not copy; postgresql.auto.conf is each server's own."
+      },
+      {
+        "text": "The setting needs a reload, not a restart",
+        "correct": false,
+        "why": "It needs a restart, and was given one."
+      }
+    ]
+  },
+  {
+    "id": "ex-fm2jt7wp",
+    "version": 1,
+    "section": "switchover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a clean shutdown of a primary do that a crash does not?",
+    "hint": "Lesson 3's checkpoint, and the standby.",
+    "choices": [
+      {
+        "text": "Writes a final checkpoint",
+        "correct": true,
+        "why": "Right: a shutdown checkpoint, and it waits until standbys receive the log up to it, so nothing is lost."
+      },
+      {
+        "text": "Deletes its replication slots",
+        "correct": false,
+        "why": "Slots survive a shutdown."
+      },
+      {
+        "text": "Promotes the standby itself",
+        "correct": false,
+        "why": "Promotion is always an explicit act."
+      },
+      {
+        "text": "Copies the archive to the standby",
+        "correct": false,
+        "why": "Streaming carries the log; the archive is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-687d6zy6",
+    "version": 1,
+    "section": "switchover",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stopped primary's last checkpoint starts at `0/6000110`; the standby replayed to `0/6000188`. How many bytes past the start of that record is the standby (hex 188 minus 110)?",
+    "hint": "0x188 - 0x110.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-502hjamb",
+    "version": 1,
+    "section": "switchover",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the switchover's steps in order.",
+    "hint": "Clean stop first; the application moves last.",
+    "items": [
+      "Stop the primary cleanly",
+      "Confirm the standby replayed past its last checkpoint",
+      "Promote the standby",
+      "Make the old primary a standby and start it",
+      "Point the application at the new primary"
+    ],
+    "trap": "Promoting before the check risks the switchover becoming a failover with loss."
+  },
+  {
+    "id": "ex-bp7yhtbn",
+    "version": 1,
+    "section": "switchover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the old primary need only `standby.signal` and a slot to become a standby?",
+    "hint": "What was still in its postgresql.auto.conf?",
+    "choices": [
+      {
+        "text": "pg_ctlcluster rewrote its configuration",
+        "correct": false,
+        "why": "Nothing rewrote it."
+      },
+      {
+        "text": "Its old primary_conninfo was still there",
+        "correct": true,
+        "why": "Right: written by pg_basebackup -R and ignored while it was a primary."
+      },
+      {
+        "text": "A switchover copies settings automatically",
+        "correct": false,
+        "why": "Nothing copies settings between servers."
+      },
+      {
+        "text": "Standbys need no connection settings",
+        "correct": false,
+        "why": "They need primary_conninfo to stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g0mh5f4",
+    "version": 1,
+    "section": "rewinding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pg_rewind` need `--config-file` on Ubuntu?",
+    "hint": "Where does Ubuntu keep postgresql.conf?",
+    "choices": [
+      {
+        "text": "To read the source server's password",
+        "correct": false,
+        "why": "The password comes from the connection, not the config."
+      },
+      {
+        "text": "It writes the new primary_conninfo there",
+        "correct": false,
+        "why": "That goes into postgresql.auto.conf."
+      },
+      {
+        "text": "postgresql.conf lives in /etc/postgresql",
+        "correct": true,
+        "why": "Right: its single-user crash recovery could not find it otherwise."
+      },
+      {
+        "text": "Ubuntu disables pg_rewind without it",
+        "correct": false,
+        "why": "It ran, and failed at its first step."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rhpykqf",
+    "version": 1,
+    "section": "rewinding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the rewind, the old primary did not stream: `replication slot \"standby1\" does not exist`. Where did that name come from?",
+    "hint": "What else does pg_rewind copy?",
+    "choices": [
+      {
+        "text": "The 5434's postgresql.auto.conf",
+        "correct": true,
+        "why": "Right: copied over by pg_rewind, it carried the 5434's old primary_slot_name."
+      },
+      {
+        "text": "pg_rewind invents a slot name",
+        "correct": false,
+        "why": "It wrote no slot name at all."
+      },
+      {
+        "text": "The new primary's pg_hba.conf",
+        "correct": false,
+        "why": "pg_hba.conf has no slot names."
+      },
+      {
+        "text": "It is the default slot name",
+        "correct": false,
+        "why": "There is no default."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rhscv5s",
+    "version": 1,
+    "section": "rewinding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a failover finished?",
+    "hint": "Not when the new primary takes writes.",
+    "choices": [
+      {
+        "text": "When the new primary accepts its first write",
+        "correct": false,
+        "why": "The old primary may still come back as a primary, or never return."
+      },
+      {
+        "text": "When pg_rewind prints Done!",
+        "correct": false,
+        "why": "It printed Done! and the standby still did not stream."
+      },
+      {
+        "text": "When the incident report is written",
+        "correct": false,
+        "why": "That is lesson 22, after the failover."
+      },
+      {
+        "text": "When the old primary streams again as a standby",
+        "correct": true,
+        "why": "Right: that is the check to end every failover on."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfe8xfsb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a synchronous standby (lesson 12), which of the three questions does a failover no longer need to ask?",
+    "hint": "What does a synchronous standby guarantee it has?",
+    "choices": [
+      {
+        "text": "Is the primary really gone?",
+        "correct": false,
+        "why": "Synchronous replication says nothing about the primary's state."
+      },
+      {
+        "text": "How much does the standby have?",
+        "correct": true,
+        "why": "Right: every confirmed commit is on it, so nothing confirmed is lost."
+      },
+      {
+        "text": "Will anything promote a second time?",
+        "correct": false,
+        "why": "Split-brain is as possible as ever."
+      },
+      {
+        "text": "None; all three remain the same",
+        "correct": false,
+        "why": "One of them is answered by the configuration."
+      }
+    ]
+  }
+]
