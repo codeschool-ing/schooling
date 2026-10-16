@@ -23,7 +23,9 @@ on others. The list of files known to leave the shop alone fails the other way. 
 classified lands with the tests that take turns, where it is slower and never wrong, and somebody
 who wants it faster has to look at it first.
 
-@@SAFECOUNT@@ The configuration imports the project's own and adds two projects. Save it as
+Thirteen of the twenty-five files, thirty of the sixty-one tests, do not reset the shop or write
+to it: they read the page, the HTML, the layout or the search, or make customers with names nobody
+else uses, as lesson 15's `tests/setup-cost.spec.js` does. The configuration imports the project's own and adds two projects. Save it as
 `turns.config.js`:
 
 ```javascript
@@ -111,10 +113,24 @@ and with `workers: 1` it should be 1. Five runs with four workers and five with 
 writing its JSON report and checking it:
 
 ```
-%%CAP turns-v1%%
+ana@laptop:~/quitanda$ for w in 4 4 4 4 4 8 8 8 8 8; do PLAYWRIGHT_JSON_OUTPUT_FILE=turns.json npx playwright test --config turns.config.js --workers $w --reporter=json > /dev/null; printf "workers %s  " $w; node at-once.mjs turns.json one-at-a-time; done
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 2 at once; 1 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 2 at once; 1 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 3 at once; 2 failed
+workers 8  one-at-a-time: at most 3 at once; 1 failed
+workers 8  one-at-a-time: at most 3 at once; 2 failed
 ```
 
-@@V1READ@@
+**The ceiling did not hold.** In two of the five runs with four workers the one-at-a-time project
+had two tests running at once, and in three of the five with eight it had three; every one of those
+runs failed a test, and every run where the count stayed at 1 failed none. A summary would have
+shown five green runs and five red ones and no reason. The count says the rule was broken before
+anything collided.
 
 ## Why, and the arrangement that holds
 
@@ -130,7 +146,8 @@ makes a suite that fails on some runs and not on others, and lesson 14 is about 
 name another in `dependencies`, and Playwright then runs them in **phases**: every test of the
 dependency first, then the project that waits for it. Each phase gets a dispatcher of its own,
 starting with no workers, so the count the limit relies on is right from the first file. The same
-file with one line more in the second project. Save it as `turns.config.js`:
+file, with `dependencies` added to the second project and the comments saying why. Save it as
+`turns.config.js`:
 
 ```javascript
 import { defineConfig } from '@playwright/test';
@@ -175,23 +192,58 @@ export default defineConfig(base, {
 The same ten runs:
 
 ```
-%%CAP turns-v2%%
+ana@laptop:~/quitanda$ for w in 4 4 4 4 4 8 8 8 8 8; do PLAYWRIGHT_JSON_OUTPUT_FILE=turns.json npx playwright test --config turns.config.js --workers $w --reporter=json > /dev/null; printf "workers %s  " $w; node at-once.mjs turns.json one-at-a-time; done
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 4  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
+workers 8  one-at-a-time: at most 1 at once; 0 failed
 ```
 
-@@V2READ@@
+At most one at a time in all ten, and nothing failed.
 
 ## What it costs
 
-@@TURNSTABLE@@
+| workers | `playwright.config.js` | `turns.config.js` |
+|---|---|---|
+| 1 | 37.0 s, every test passed | 37.9 s, every test passed |
+| 2 | 28.1 s, 3 failed | 33.0 s, every test passed |
+| 4 | 16.7 s, 3 failed | 33.1 s, every test passed |
+| 8 | not run | 34.1 s, every test passed |
 
-@@TURNSCOST@@ **The one-at-a-time phase is a floor**: every test in it waits for the one before it,
+The left column is the first section's runs; the right one is the same command with
+`--config turns.config.js`, one run each:
+
+```
+ana@laptop:~/quitanda$ npx playwright test --config turns.config.js --workers 1 | grep -E '^Running|^  [0-9]+ (passed|failed|flaky|skipped|did not run)'
+Running 61 tests using 1 worker
+  61 passed (37.9s)
+ana@laptop:~/quitanda$ npx playwright test --config turns.config.js --workers 2 | grep -E '^Running|^  [0-9]+ (passed|failed|flaky|skipped|did not run)'
+Running 61 tests using 2 workers
+  61 passed (33.0s)
+ana@laptop:~/quitanda$ npx playwright test --config turns.config.js --workers 4 | grep -E '^Running|^  [0-9]+ (passed|failed|flaky|skipped|did not run)'
+Running 61 tests using 4 workers
+  61 passed (33.1s)
+ana@laptop:~/quitanda$ npx playwright test --config turns.config.js --workers 8 | grep -E '^Running|^  [0-9]+ (passed|failed|flaky|skipped|did not run)'
+Running 61 tests using 8 workers
+  61 passed (34.1s)
+```
+
+Green costs time. With four workers the run takes 33.1 seconds instead of 16.7, and it hardly
+moves between two workers and eight, because thirty-one of the sixty-one tests run one after
+another whatever the count. **The one-at-a-time phase is a floor**: every test in it waits for the one before it,
 no number of workers shortens it, and every test added to it raises the floor for everyone.
 
 Phases have a second price. A dependency that fails stops the project waiting for it: the runner's
 own code, in `lib/runner/tasks.js`, leaves out every project whose dependencies did not all pass,
-so if a test in `parallel` fails, `one-at-a-time` does not run at all. That is the right behaviour for the setup projects dependencies were designed for, and a
-nuisance here, where the two groups do not need each other. Read a red run's summary for *did not
-run* before deciding what failed.
+so if a test in `parallel` fails, `one-at-a-time` does not run at all. That is the right behaviour
+for the setup projects dependencies were designed for, and a nuisance here, where the two groups do
+not need each other: a red `parallel` phase hides whether the shop's tests would have passed.
 
 All of this is a cost paid on every run because the shop keeps one basket. The comment at the top
 of `turns.config.js` says so; the day the shop gets a basket per visitor, the second project is
