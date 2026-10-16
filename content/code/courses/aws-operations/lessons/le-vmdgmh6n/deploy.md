@@ -50,7 +50,7 @@ parameter. Then with the parameter put where `cdk bootstrap` would have put it:
 ana@laptop:~/aws/cdk$ aws ssm put-parameter --name /cdk-bootstrap/hnb659fds/version --type String --value 30 --query Version
 1
 ana@laptop:~/aws/cdk$ aws cloudformation create-stack --stack-name ShopBase --template-body file://cdk.out/ShopBase.template.json --query StackId --output text
-arn:aws:cloudformation:sa-east-1:123456789012:stack/ShopBase/0d3afb05-95f4-4cbe-8b72-a0ef44257312
+arn:aws:cloudformation:sa-east-1:123456789012:stack/ShopBase/63342bf5-29f0-4a9d-a1a8-902eb97d026e
 ana@laptop:~/aws/cdk$ aws cloudformation wait stack-create-complete --stack-name ShopBase
 ana@laptop:~/aws/cdk$ aws cloudformation describe-stacks --stack-name ShopBase --query 'Stacks[0].StackStatus' --output text
 CREATE_COMPLETE

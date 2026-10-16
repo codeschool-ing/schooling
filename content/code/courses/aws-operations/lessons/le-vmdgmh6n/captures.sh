@@ -50,8 +50,8 @@ run "aws cloudformation describe-stacks --stack-name ShopBase --query 'Stacks[0]
 run "aws cloudformation describe-stack-resources --stack-name ShopBase --query 'StackResources[].[LogicalResourceId,ResourceType]' --output text"
 
 block test-pass
-run 'node --test --test-reporter=spec'
+run "node --test 2>&1 | grep -E '^(ok|not ok|# (pass|fail))'"
 block test-fail
 run "sed -i 's/enforceSSL: true/enforceSSL: false/' app.js"
-run 'node --test --test-reporter=spec 2>&1 | head -18'
+run "node --test 2>&1 | grep -E '^(ok|not ok|# (pass|fail))|^  error:|Template has'"
 quiet "sed -i 's/enforceSSL: false/enforceSSL: true/' app.js"

@@ -49,45 +49,30 @@ test("one alarm, and it notifies somebody", () => {
 quando **algum** recurso daquele tipo tem propriedades contendo as que foram dadas; `Match.objectLike`
 e `Match.arrayWith` deixam o resto do objeto e do array conter qualquer outra coisa. `hasResource`
 confere os atributos do próprio recurso, onde moram as políticas de exclusão. `resourceCountIs` conta.
+O executor imprime o relatório em TAP, um formato de texto simples que outras ferramentas leem, e o
+`grep` guarda as linhas que dizem qual teste passou.
 
 ```
-ana@laptop:~/aws/cdk$ node --test --test-reporter=spec
-✔ the uploads bucket refuses plain HTTP (2.833395ms)
-✔ the uploads bucket survives the stack (0.385392ms)
-✔ one alarm, and it notifies somebody (0.311572ms)
-ℹ tests 3
-ℹ suites 0
-ℹ pass 3
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 1750.102685
+ana@laptop:~/aws/cdk$ node --test 2>&1 | grep -E '^(ok|not ok|# (pass|fail))'
+ok 1 - the uploads bucket refuses plain HTTP
+ok 2 - the uploads bucket survives the stack
+ok 3 - one alarm, and it notifies somebody
+# pass 3
+# fail 0
 ```
 
 Agora desfaça a decisão que o primeiro teste protege, como alguém arrumando o arquivo poderia fazer:
 
 ```
 ana@laptop:~/aws/cdk$ sed -i 's/enforceSSL: true/enforceSSL: false/' app.js
-ana@laptop:~/aws/cdk$ node --test --test-reporter=spec 2>&1 | head -18
-✖ the uploads bucket refuses plain HTTP (2.431477ms)
-✔ the uploads bucket survives the stack (0.560651ms)
-✔ one alarm, and it notifies somebody (0.23853ms)
-ℹ tests 3
-ℹ suites 0
-ℹ pass 2
-ℹ fail 1
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 1207.331431
-
-✖ failing tests:
-
-test at app.test.js:9:1
-✖ the uploads bucket refuses plain HTTP (2.431477ms)
-  Error [AssertionError]: Template has 0 resources with type AWS::S3::BucketPolicy.
-  No matches found
+ana@laptop:~/aws/cdk$ node --test 2>&1 | grep -E '^(ok|not ok|# (pass|fail))|^  error:|Template has'
+not ok 1 - the uploads bucket refuses plain HTTP
+  error: |-
+    Template has 0 resources with type AWS::S3::BucketPolicy.
+ok 2 - the uploads bucket survives the stack
+ok 3 - one alarm, and it notifies somebody
+# pass 2
+# fail 1
 ```
 
 **O teste nomeia a decisão que se perdeu**, "the uploads bucket refuses plain HTTP", e o motivo,
