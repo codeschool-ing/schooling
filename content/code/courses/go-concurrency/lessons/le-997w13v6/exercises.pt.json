@@ -1,0 +1,426 @@
+{
+  "ex-41s0kxbx": {
+    "prompt": "O que é o detector de corridas, fisicamente?",
+    "hint": "Pense no que `go build -race` produz.",
+    "choices": [
+      {
+        "text": "Um programa separado que observa o seu de fora",
+        "why": "Não existe segundo programa. A conferência é compilada dentro do seu."
+      },
+      {
+        "text": "Um segundo build do seu próprio programa",
+        "why": "Isso. `-race` muda como o programa é compilado, então as conferências rodam dentro dele."
+      },
+      {
+        "text": "Um linter que lê o código sem rodá-lo",
+        "why": "Ele precisa que o programa rode: relata corridas que acontecem, não corridas que poderiam acontecer."
+      },
+      {
+        "text": "Uma flag que faz as goroutines se revezarem",
+        "why": "As goroutines ainda rodam em paralelo com `-race`; é assim que ele as vê colidir."
+      }
+    ]
+  },
+  "ex-wn2bcg2w": {
+    "prompt": "O `cost` levou 0,156 s normal e 1,852 s compilado com `-race`. Mais ou menos quantas vezes mais lento foi o build com corrida? Dê um número inteiro.",
+    "hint": "1,852 dividido por 0,156.",
+    "unit": "vezes"
+  },
+  "ex-0237tdqj": {
+    "prompt": "O build com corrida do `cost` foi 12 vezes mais lento e ocupou 9 vezes a memória. Por que a lição diz que um servidor que quase sempre espera a rede pagaria bem menos?",
+    "hint": "O que o detector confere, e quanto disso uma espera faz?",
+    "choices": [
+      {
+        "text": "O detector se desliga durante chamadas de rede",
+        "why": "Ele nunca se desliga. Esperar só não é algo que ele precise conferir."
+      },
+      {
+        "text": "O código de rede é compilado sem `-race`",
+        "why": "`-race` se aplica ao programa inteiro, biblioteca padrão incluída."
+      },
+      {
+        "text": "Esperar não toca memória, então há pouco a conferir",
+        "why": "Isso. O `cost` quase não faz nada além de tocar memória, que é o pior caso."
+      },
+      {
+        "text": "Servidores rodam com `GORACE=halt_on_error=1`, que é mais barato",
+        "why": "Essa opção decide quando parar depois de um relatório; ela não barateia a conferência."
+      }
+    ]
+  },
+  "ex-x9g8hv6g": {
+    "prompt": "Onde a lição põe o detector de corridas? Escolha todas as que se aplicam.",
+    "hint": "Quem paga o custo, e quem lê o relatório?",
+    "choices": [
+      {
+        "text": "`go test -race ./...` na CI a cada mudança",
+        "why": "Sim, a linha mais útil que o curso acrescenta."
+      },
+      {
+        "text": "As suas próprias execuções enquanto desenvolve",
+        "why": "Sim. Você paga o custo e você lê o relatório."
+      },
+      {
+        "text": "O binário entregue a todo usuário",
+        "why": "Todo usuário pagaria a lentidão por uma conferência que só ajuda quem lê a saída."
+      },
+      {
+        "text": "Um build sem testes, rodado uma vez antes do lançamento",
+        "why": "Uma execução só vê as corridas que acontecem nela. Testes que fazem goroutines se encontrarem, rodados a cada mudança, veem muito mais."
+      }
+    ]
+  },
+  "ex-cd4vfn8p": {
+    "prompt": "Um programa compilado com `-race` que encontrou uma corrida continua rodando e, no fim, sai com o status ___.",
+    "hint": "A lição 1 encontrou o mesmo número.",
+    "blanks": [
+      {
+        "accept": [
+          "66"
+        ]
+      }
+    ]
+  },
+  "ex-97mtqst8": {
+    "prompt": "Ponha as partes de um relatório de corrida na ordem em que são impressas.",
+    "hint": "O acesso que completou a corrida vem primeiro.",
+    "items": [
+      "o acesso que completou a corrida, com a pilha",
+      "o acesso anterior ao mesmo endereço, com a pilha",
+      "onde cada goroutine citada foi criada",
+      "quantas corridas foram encontradas, e o status 66"
+    ]
+  },
+  "ex-7qxr78de": {
+    "prompt": "No relatório do `stats.go`, a pilha da escrita anterior é `main.serve()` na linha 22, depois `main.main.gowrap1()` na linha 15. O que é a linha 15?",
+    "hint": "`gowrap` é o invólucro do runtime em volta de um tipo de comando.",
+    "choices": [
+      {
+        "text": "O comando `go serve(s)`",
+        "why": "Isso. A mesma linha aparece de novo como lugar de nascimento da goroutine."
+      },
+      {
+        "text": "O `fmt.Println` que leu o contador",
+        "why": "Essa leitura é a linha 17, embaixo do primeiro bloco do relatório."
+      },
+      {
+        "text": "Uma segunda escrita em `s.served` dentro de `main`",
+        "why": "`main` não escreve nada no contador; a linha 15 só inicia o `serve`."
+      },
+      {
+        "text": "A linha em que o programa saiu com o status 66",
+        "why": "O status de saída não tem linha no código; o detector o define quando o programa termina."
+      }
+    ]
+  },
+  "ex-b4gfyrqv": {
+    "prompt": "A execução normal do `stats.go` imprimiu `served so far: 10` e terminou normalmente. O que isso diz sobre a corrida?",
+    "hint": "O que a execução normal tinha, e o que a execução com corrida tinha a mais?",
+    "choices": [
+      {
+        "text": "Que a corrida só existe em builds feitos com `-race`",
+        "why": "A corrida está no código. O `-race` é o que a torna visível."
+      },
+      {
+        "text": "Nada: sem o detector não há sintoma",
+        "why": "Isso. É por isso que o detector existe; a execução normal parecia certa."
+      },
+      {
+        "text": "Que a leitura aconteceu antes de todas as escritas",
+        "why": "A leitura veio depois de uns dez incrementos, sem ordem em relação a eles."
+      },
+      {
+        "text": "Que o contador está certo e o detector está errado",
+        "why": "Um número plausível não é evidência de ordem. Nada sincronizou as duas goroutines."
+      }
+    ]
+  },
+  "ex-20d6sf8j": {
+    "prompt": "A pilha de leitura de um relatório termina em `runtime.mapaccess1_faststr` e nem chega aos seus arquivos, mas a escrita anterior cita `tally.go:17`. O que você faz?",
+    "hint": "Os dois acessos foram ao mesmo endereço.",
+    "choices": [
+      {
+        "text": "Relatar um bug na implementação de map do Go",
+        "why": "Os quadros do runtime são onde a memória do map é tocada; a corrida está no código que o chamou."
+      },
+      {
+        "text": "Rodar de novo até a pilha de leitura citar uma linha, e então consertar",
+        "why": "Não falta nada: basta um lado citar a sua linha."
+      },
+      {
+        "text": "Consertar o map que a linha 17 atualiza",
+        "why": "Isso. Mesmo endereço, então os dois acessos são aquele `counts[w]++`."
+      },
+      {
+        "text": "Ignorar, porque um quadro do runtime significa alarme falso",
+        "why": "As execuções normais concordarem não deixa o map seguro; o detector viu dois acessos sem ordem."
+      }
+    ]
+  },
+  "ex-3r0exj7v": {
+    "prompt": "O que `GORACE=halt_on_error=1` muda?",
+    "hint": "O `tally.go` tinha quatro relatórios sem ela.",
+    "choices": [
+      {
+        "text": "Faz o detector procurar mais tipos de corrida",
+        "why": "Não muda nada no que é detectado, só o que acontece depois do primeiro relatório."
+      },
+      {
+        "text": "Transforma o build com corrida de volta num build normal",
+        "why": "`GORACE` é lida pelo detector dentro de um build com corrida; um build normal não tem detector para lê-la."
+      },
+      {
+        "text": "O programa para no primeiro relatório",
+        "why": "Isso. Um relatório é mais fácil de ler, e você os conserta um por vez de qualquer jeito."
+      },
+      {
+        "text": "Esconde relatórios que apontam para dentro do runtime",
+        "why": "O único relatório que ela imprimiu começava em `runtime.mapaccess2_faststr`."
+      }
+    ]
+  },
+  "ex-zgw563cb": {
+    "prompt": "Associe cada coisa compartilhada ao conserto que a lição escolheu para ela.",
+    "hint": "Pergunte o que é compartilhado, e quantos passos uma atualização leva.",
+    "pairs": [
+      {
+        "left": "o contador `served` do `stats.go`",
+        "right": "`atomic.Int64`"
+      },
+      {
+        "left": "o map `counts` do `tally.go`",
+        "right": "`sync.Mutex`"
+      },
+      {
+        "left": "o slice `results` do `collect.go`",
+        "right": "um elemento por goroutine"
+      },
+      {
+        "left": "um valor entregue de um worker a um coletor",
+        "right": "um canal"
+      }
+    ],
+    "right_distractors": [
+      "`time.Sleep` entre os acessos"
+    ]
+  },
+  "ex-fnxgcz63": {
+    "prompt": "Por que o `tally.go` recebeu um mutex em vez de um atômico?",
+    "hint": "O que `counts[w]++` faz com um map?",
+    "choices": [
+      {
+        "text": "Atômicos são mais lentos que um mutex",
+        "why": "Velocidade não foi o motivo. Um atômico não faz vários passos num map parecerem um."
+      },
+      {
+        "text": "Cada atualização são vários passos numa estrutura, feitos como um",
+        "why": "Isso: procurar, somar, guardar, talvez crescer. Um mutex faz a sequência ser um passo para todos os outros."
+      },
+      {
+        "text": "O map era grande demais para um atômico",
+        "why": "O tamanho não é a questão; um tipo atômico guarda um valor, e atualizar um map não é uma operação."
+      },
+      {
+        "text": "`sync/atomic` não pode ser importado num pacote `main`",
+        "why": "O `stats.go`, um pacote `main`, o importou uma seção antes."
+      }
+    ]
+  },
+  "ex-j19mkwx2": {
+    "prompt": "O `collect.go` foi consertado sem trava, sem atômico e sem canal. Por que escrever `results[i]` de mil goroutines não é uma corrida?",
+    "hint": "Uma corrida precisa da mesma memória.",
+    "choices": [
+      {
+        "text": "Escritas num slice são atômicas em Go",
+        "why": "Não são; o `append` disputou esse mesmo slice um momento antes."
+      },
+      {
+        "text": "O `wg.Wait` ordena as goroutines entre si",
+        "why": "O `wg.Wait` ordena as goroutines em relação a main, não entre si."
+      },
+      {
+        "text": "O `make` trava o slice pelo resto do programa",
+        "why": "O `make` só aloca. Nada é travado."
+      },
+      {
+        "text": "Cada goroutine escreve um elemento diferente do slice",
+        "why": "Isso. Elementos diferentes são memória diferente, então dois acessos nunca se encontram."
+      }
+    ]
+  },
+  "ex-eydb2e76": {
+    "prompt": "Depois que o mutex entrou no `tally.go`, o programa imprimiu exatamente o map que imprimia antes. O que o conserto mudou?",
+    "hint": "A resposta antiga estava certa por construção?",
+    "choices": [
+      {
+        "text": "Agora ela está certa por construção, e o detector concorda",
+        "why": "Isso, e o detector, rodado de novo, concorda."
+      },
+      {
+        "text": "Nada, então o mutex pode ser tirado",
+        "why": "Sem ele o detector relatou quatro corridas; as execuções normais estavam certas por sorte."
+      },
+      {
+        "text": "A ordem em que as palavras são impressas",
+        "why": "O `fmt` imprime um map ordenado pela chave de qualquer jeito."
+      },
+      {
+        "text": "O programa agora roda num processador só",
+        "why": "Um mutex não muda o `GOMAXPROCS`; ele ordena os acessos ao map."
+      }
+    ]
+  },
+  "ex-nt0wc6z8": {
+    "prompt": "Um tipo guarda um `count` e um `total` que precisam mudar sempre juntos. Um colega faz os dois virarem `atomic.Int64`. O que continua errado?",
+    "hint": "O que um leitor pode ver entre as duas atualizações?",
+    "choices": [
+      {
+        "text": "Nada, porque cada campo agora está seguro",
+        "why": "Cada campo está seguro sozinho; o par não."
+      },
+      {
+        "text": "`atomic.Int64` não consegue guardar um total",
+        "why": "Ele guarda qualquer inteiro de 64 bits. O problema é o intervalo entre duas atualizações."
+      },
+      {
+        "text": "Entre os dois Add, um leitor vê o par pela metade",
+        "why": "Isso. Dois valores que se movem juntos são uma estrutura, e uma estrutura pede um mutex."
+      },
+      {
+        "text": "O detector vai relatar todo `Add` como corrida",
+        "why": "Operações atômicas são sincronizadas e o detector sabe disso; ele não relata nada, e é por isso que este caso é sutil."
+      }
+    ]
+  },
+  "ex-dfg1w06h": {
+    "prompt": "`go test ./cache` e `go test -count=5 ./cache` passaram com o `Cache` sem conserto. Por que as conferências das respostas não pegaram a corrida?",
+    "hint": "Qual era o risco: uma resposta errada, ou outra coisa?",
+    "choices": [
+      {
+        "text": "Os testes não chamavam `Get` de várias goroutines",
+        "why": "O `TestGetFromManyGoroutines` fazia exatamente isso, seis ao mesmo tempo."
+      },
+      {
+        "text": "O risco eram duas escritas no map de uma vez",
+        "why": "Isso. Só o detector vê acessos sem ordem que por acaso deram a resposta certa."
+      },
+      {
+        "text": "O `-count=5` reaproveitou um resultado em cache",
+        "why": "O `-count` força os testes a rodar; a saída mostrou um tempo novo, e não `(cached)`."
+      },
+      {
+        "text": "`strings.ToUpper` é rápido demais para disputar",
+        "why": "A velocidade muda quantas vezes os acessos se sobrepõem, nunca se eles têm ordem."
+      }
+    ]
+  },
+  "ex-err3jj80": {
+    "prompt": "Com `go test -race`, o que transforma um relatório de corrida num teste que falha?",
+    "hint": "Leia o fim do `race.log`.",
+    "choices": [
+      {
+        "text": "Um `t.Errorf` que quem escreve o teste tem de pôr",
+        "why": "Nenhuma asserção foi acrescentada; o teste falhou com o mesmo código que passava."
+      },
+      {
+        "text": "O próprio pacote testing reprova o teste",
+        "why": "Isso, então a CI fica vermelha sem ninguém ler o relatório."
+      },
+      {
+        "text": "O status de saída 66 do binário de teste",
+        "why": "O comando go informou FAIL e o shell viu 1; o que importa é o veredito do teste."
+      },
+      {
+        "text": "Um panic dentro de `Get`",
+        "why": "O `Get` nunca deu panic; as respostas estavam certas toda vez."
+      }
+    ]
+  },
+  "ex-c3zrek0c": {
+    "prompt": "Por que rodar o próprio código do pacote `cache` com `-race`, sem o `TestGetFromManyGoroutines`, não encontraria nada?",
+    "hint": "O detector relata corridas que acontecem na execução que observa.",
+    "choices": [
+      {
+        "text": "Pacotes que não são `main` não podem ser compilados com `-race`",
+        "why": "`go test -race ./cache` compilou esse pacote com o detector."
+      },
+      {
+        "text": "O mutex esconde a corrida",
+        "why": "O `Cache` sem conserto não tinha mutex."
+      },
+      {
+        "text": "Nenhum código dele roda de forma concorrente",
+        "why": "Isso. Um teste tem de fazer as goroutines se encontrarem para o detector vê-las colidir."
+      },
+      {
+        "text": "O `TestGet` roda primeiro e aquece o cache",
+        "why": "Cada teste cria o seu próprio `Cache` com `New`; nada passa de um para o outro."
+      }
+    ]
+  },
+  "ex-gcfswrpx": {
+    "prompt": "O conserto segura o mutex durante o `Get` inteiro, incluindo o `lookup` lento. Quanto isso custa?",
+    "hint": "Duas goroutines querem duas chaves diferentes.",
+    "choices": [
+      {
+        "text": "Uma corrida entre `lookup` e `seen`",
+        "why": "O detector rodou vinte vezes e não relatou nada."
+      },
+      {
+        "text": "Um deadlock quando a mesma chave é pedida duas vezes",
+        "why": "A segunda chamada espera a primeira destravar e então acha a resposta guardada."
+      },
+      {
+        "text": "Chaves diferentes esperam umas às outras",
+        "why": "Isso. Correto primeiro; as lições 8 e 9 mostram como segurar a trava por menos tempo."
+      },
+      {
+        "text": "O dobro da memória da versão sem conserto",
+        "why": "Um mutex são poucos bytes; o custo é espera, não memória."
+      }
+    ]
+  },
+  "ex-qrpwmn8z": {
+    "prompt": "Ponha em ordem os passos de lidar com um relatório de corrida.",
+    "hint": "Diagnostique antes de mexer no código, e prove o conserto depois.",
+    "items": [
+      "ler os dois acessos e as linhas deles",
+      "dizer o que é compartilhado e como é atualizado",
+      "escolher atômico, mutex, posse ou canal",
+      "rodar o detector de novo sobre os mesmos testes"
+    ]
+  },
+  "ex-3582a0ms": {
+    "prompt": "Um handler faz `hits[path]++` num map de nível de pacote a cada requisição. Os testes chamam o handler uma vez cada e passam com `-race`. Em produção o servidor às vezes morre com um erro de map. Que teste teria mostrado a corrida?",
+    "hint": "Seção 05: faça as goroutines se encontrarem.",
+    "choices": [
+      {
+        "text": "Os mesmos testes com `-count=100`",
+        "why": "Repetir uma chamada por vez nunca põe duas goroutines no map juntas."
+      },
+      {
+        "text": "Várias goroutines chamando-o juntas, com `-race`",
+        "why": "Isso. É o formato do `TestGetFromManyGoroutines`."
+      },
+      {
+        "text": "Um teste sem `-race`, para a corrida não ficar mais lenta",
+        "why": "Sem o detector uma corrida só aparece por sorte, como o `tally.go` mostrou."
+      },
+      {
+        "text": "Um teste que confere se a contagem final de `hits` está certa",
+        "why": "Uma contagem certa não prova nada; o `tally.go` imprimiu contagens certas com quatro corridas dentro."
+      }
+    ]
+  },
+  "ex-ttwar7dd": {
+    "prompt": "O comando que roda todo teste de todo pacote de um módulo com o detector observando é `go test ___ ./...`.",
+    "hint": "A flag que dá nome a esta lição.",
+    "blanks": [
+      {
+        "accept": [
+          "-race"
+        ]
+      }
+    ]
+  }
+}

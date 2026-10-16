@@ -1,0 +1,517 @@
+[
+  {
+    "id": "ex-m0nz6vr6",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these functions does `go test` run as a test?",
+    "hint": "A name, a capital letter after it, and one parameter.",
+    "choices": [
+      {
+        "text": "`func testCount(t *testing.T)` in `wordcount_test.go`",
+        "correct": false,
+        "why": "The name has to start with `Test`, capital T. A lower-case `test` is an ordinary unexported function."
+      },
+      {
+        "text": "`func TestCount(t *testing.T)` in `wordcount_test.go`",
+        "correct": true,
+        "why": "Right: the `Test` prefix, a capital after it, one `*testing.T`, in a `_test.go` file."
+      },
+      {
+        "text": "`func TestCount()` in `wordcount_test.go`",
+        "correct": false,
+        "why": "Without the `*testing.T` parameter there is no way to report a failure, and the go command refuses the signature."
+      },
+      {
+        "text": "`func TestCount(t *testing.T)` in `wordcount.go`",
+        "correct": false,
+        "why": "The function is right but the file is not: tests are compiled from files ending in `_test.go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj9xk9m1",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `TestCount` failed on `fun` and `fast` but passed on `go`. What did that pattern tell the reader?",
+    "hint": "What did `fun` and `fast` have in the sentence that `go` did not?",
+    "choices": [
+      {
+        "text": "That `Count` lost words at the end of the text",
+        "correct": false,
+        "why": "`simple.` is the last word and was not checked; `fun.` sits in the middle and failed. Position was not the pattern."
+      },
+      {
+        "text": "That lower-casing was broken",
+        "correct": false,
+        "why": "`Go` and `go` were counted together as `go`, three times, so lower-casing worked."
+      },
+      {
+        "text": "That punctuation stayed attached to the word",
+        "correct": true,
+        "why": "Right. `fun.` and `fast,` carried a full stop and a comma; no `go` in the sentence touched one."
+      },
+      {
+        "text": "That the scanner splits words on every letter that is not ASCII",
+        "correct": false,
+        "why": "The sentence is all ASCII. `ScanWords` splits on spaces, which is why the punctuation stayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-34czsghj",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the first test use `t.Fatalf` when `Count` returns an error, but `t.Errorf` for each count?",
+    "hint": "Which checks are still worth making after each kind of failure?",
+    "choices": [
+      {
+        "text": "After an error the map is not worth checking; the counts are independent of each other",
+        "correct": true,
+        "why": "Right. Stop where carrying on would only bury the real failure, carry on where each check says something new."
+      },
+      {
+        "text": "`t.Fatalf` is for errors and `t.Errorf` is for wrong values",
+        "correct": false,
+        "why": "Both take any message. The difference is whether the test function stops."
+      },
+      {
+        "text": "`t.Errorf` does not mark the test as failed",
+        "correct": false,
+        "why": "It does. Both mark the test failed; only `Fatalf` also stops it."
+      },
+      {
+        "text": "`t.Fatalf` ends the whole `go test` run",
+        "correct": false,
+        "why": "It ends the current test function (or subtest), and the other tests still run."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dj91ytv",
+    "version": 1,
+    "section": "first-test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A test file's name has to end in ___ for `go test` to compile it and `go build` to leave it out.",
+    "hint": "`wordcount` plus six characters plus `.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "_test.go"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1cek8eqj",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's test fails, and they change the expected count in the test until it passes. When is that the right fix?",
+    "hint": "Lesson 25 met both cases: `fun.` and `go's`.",
+    "choices": [
+      {
+        "text": "Whenever the code was written before the test",
+        "correct": false,
+        "why": "Order of writing says nothing about which one is right. `Count` existed first and was wrong about `fun.`."
+      },
+      {
+        "text": "When the test asked for something the package should not do",
+        "correct": true,
+        "why": "Right. `go's` was a decision about what a word is; `fun.` was a defect, and the code changed."
+      },
+      {
+        "text": "When the failure is reported with `t.Errorf` rather than `t.Fatalf`",
+        "correct": false,
+        "why": "Which method reported it says how the test carries on, not who was wrong."
+      },
+      {
+        "text": "Never; a test is a specification",
+        "correct": false,
+        "why": "A test can ask the wrong question, as `possessive` did. Deciding is part of the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-apdanfpa",
+    "version": 1,
+    "section": "subtests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the full name of the subtest started by `t.Run(\"accents\", …)` inside `TestCount`?",
+    "hint": "The `-v` output prints it after `=== RUN`.",
+    "choices": [
+      {
+        "text": "`accents`",
+        "correct": false,
+        "why": "That is the string given to `t.Run`. The report adds the parent's name in front."
+      },
+      {
+        "text": "`TestCount.accents`",
+        "correct": false,
+        "why": "The separator is a slash, which is also what `-run` splits on."
+      },
+      {
+        "text": "`TestCount/accents`",
+        "correct": true,
+        "why": "Right: parent, slash, subtest."
+      },
+      {
+        "text": "`TestCount_accents_3`",
+        "correct": false,
+        "why": "Subtests are named by their string, not numbered by position."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ev0nqwa",
+    "version": 1,
+    "section": "subtests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run with five subtests, `possessive` failed. What happened to `empty`, the subtest after it?",
+    "hint": "Each subtest has its own `t`.",
+    "choices": [
+      {
+        "text": "It was skipped, because the parent had already failed",
+        "correct": false,
+        "why": "The parent fails only when the run is over; its other children still run."
+      },
+      {
+        "text": "It ran and passed",
+        "correct": true,
+        "why": "Right. A failure, even a `t.Fatalf`, ends the subtest that reported it and nothing else."
+      },
+      {
+        "text": "It failed too, because subtests share one `*testing.T`",
+        "correct": false,
+        "why": "Each subtest receives its own `t`, which is exactly what isolates the failures."
+      },
+      {
+        "text": "It ran first, since `go test` reorders failing subtests to the end",
+        "correct": false,
+        "why": "Subtests run in the order `t.Run` is called; the `-v` output lists them in source order."
+      }
+    ]
+  },
+  {
+    "id": "ex-86t19hmh",
+    "version": 1,
+    "section": "subtests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You want to run only the `case` subtest of `TestCount`, and not a `lowercase` subtest that may be added one day. Which `-run` pattern does that?",
+    "hint": "Each part of the pattern is a regular expression matched anywhere in that level of the name.",
+    "choices": [
+      {
+        "text": "`-run 'TestCount/case'`",
+        "correct": false,
+        "why": "`case` matches inside `lowercase` too, since the expression is not anchored."
+      },
+      {
+        "text": "`-run 'case'`",
+        "correct": false,
+        "why": "With no slash this is matched against top-level test names, and no test is called `case`."
+      },
+      {
+        "text": "`-run 'TestCount/^case$'`",
+        "correct": true,
+        "why": "Right. The anchors make the second level match the whole name `case` and nothing longer."
+      },
+      {
+        "text": "`-run 'TestCount' -v case`",
+        "correct": false,
+        "why": "`-v` takes no argument; the extra word is a package path that does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj8tyjpf",
+    "version": 1,
+    "section": "subtests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the course change the `possessive` test instead of making `Count` split `Go's` into `go`?",
+    "hint": "Think of `don't`.",
+    "choices": [
+      {
+        "text": "Because the race detector reported a race in `TrimFunc`",
+        "correct": false,
+        "why": "Nothing in this package is concurrent, and no race was involved."
+      },
+      {
+        "text": "Because `unicode.IsLetter` cannot recognise an apostrophe",
+        "correct": false,
+        "why": "It recognises it fine, as not a letter. The point is that `TrimFunc` only trims the ends."
+      },
+      {
+        "text": "Splitting at apostrophes would break `don't` and `it's`",
+        "correct": true,
+        "why": "Right. It was a decision about what a word is, and the test now records it."
+      },
+      {
+        "text": "Because a failing test cannot be fixed by changing the code",
+        "correct": false,
+        "why": "The first test was fixed by changing the code, in section 02."
+      }
+    ]
+  },
+  {
+    "id": "ex-acnf9kma",
+    "version": 1,
+    "section": "subtests",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lines `go test -v` printed for the five subtests in the order they appear, starting with the first line.",
+    "hint": "Every RUN line comes before the summary that closes the parent.",
+    "items": [
+      "`=== RUN   TestCount`",
+      "`=== RUN   TestCount/punctuation`",
+      "`=== RUN   TestCount/empty`",
+      "`--- FAIL: TestCount (0.00s)`",
+      "`--- PASS: TestCount/punctuation (0.00s)`"
+    ]
+  },
+  {
+    "id": "ex-mx657tb7",
+    "version": 1,
+    "section": "helpers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `t.Helper()`, the failing `wantCount` call reported line 7 of `demo_test.go`. What was on line 7?",
+    "hint": "Which line does every call of the helper share?",
+    "choices": [
+      {
+        "text": "The second call, the one that asked about `fun`",
+        "correct": false,
+        "why": "That was line 15, and it is what the report names once `t.Helper()` is added."
+      },
+      {
+        "text": "The `t.Errorf` inside the helper",
+        "correct": true,
+        "why": "Right, and every call goes through it, so the line says nothing about which call failed."
+      },
+      {
+        "text": "The declaration `func TestDemo(t *testing.T)`",
+        "correct": false,
+        "why": "A failure is reported at the line that recorded it, not at the test's declaration."
+      },
+      {
+        "text": "The `import \"testing\"` line",
+        "correct": false,
+        "why": "Line 3 is the import. Line 7 is inside `wantCount`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3khf6xq5",
+    "version": 1,
+    "section": "helpers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestCountFile` writes `note.txt` into `t.TempDir()`. What happens to that directory if the test fails half way?",
+    "hint": "The removal is registered with `t.Cleanup`.",
+    "choices": [
+      {
+        "text": "It stays in `/tmp` so the failure can be examined",
+        "correct": false,
+        "why": "It does not: the cleanup runs on failure as well. To keep a file for examination, copy it out with `t.Logf` pointing at it."
+      },
+      {
+        "text": "It is removed only by `go clean -testcache`",
+        "correct": false,
+        "why": "The test cache stores results, not temporary directories."
+      },
+      {
+        "text": "It is reused by the next run of the same test",
+        "correct": false,
+        "why": "Each call returns a new, empty directory; the run in the lesson had a fresh random number in its name."
+      },
+      {
+        "text": "It is removed when the test ends, pass or fail",
+        "correct": true,
+        "why": "Right. That is the point of `t.TempDir`: no litter after a failure, no collision between runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5xbp8ey",
+    "version": 1,
+    "section": "helpers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a function registered with `t.Cleanup` suit? Choose all that apply.",
+    "hint": "It runs after the test and its subtests finish.",
+    "choices": [
+      {
+        "text": "Stopping a server the test started",
+        "correct": true,
+        "why": "Yes. The section names it."
+      },
+      {
+        "text": "Putting back a package variable the test changed",
+        "correct": true,
+        "why": "Yes, and `t.Setenv` does exactly this for an environment variable."
+      },
+      {
+        "text": "Retrying the test if it failed",
+        "correct": false,
+        "why": "A cleanup runs after the verdict and cannot change it."
+      },
+      {
+        "text": "Running before the test, to prepare its input",
+        "correct": false,
+        "why": "Preparation is ordinary code at the top of the test. A cleanup runs at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf27jz59",
+    "version": 1,
+    "section": "helpers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `TestCountFile` also check that a missing file gives an error matching `fs.ErrNotExist`?",
+    "hint": "What may a caller of `CountFile` do with the error?",
+    "choices": [
+      {
+        "text": "Because `go test` counts a test with one check as incomplete",
+        "correct": false,
+        "why": "The go command has no opinion on how many checks a test makes."
+      },
+      {
+        "text": "Callers use `errors.Is` on it, and a careless wrap would break them",
+        "correct": true,
+        "why": "Right. The test pins down a promise the function makes to its callers."
+      },
+      {
+        "text": "To make sure `t.TempDir` was really emptied",
+        "correct": false,
+        "why": "The directory is new and empty when the test starts; `missing.txt` was never written."
+      },
+      {
+        "text": "Because `os.Open` panics on a missing file",
+        "correct": false,
+        "why": "It returns an error, which is what the test examines."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2krves2",
+    "version": 1,
+    "section": "helpers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method of `*testing.T` with what it does.",
+    "hint": "Five methods from the section, four of them here.",
+    "pairs": [
+      {
+        "left": "`t.Helper()`",
+        "right": "report the caller's line, not this one"
+      },
+      {
+        "left": "`t.TempDir()`",
+        "right": "a new empty directory, removed at the end"
+      },
+      {
+        "left": "`t.Setenv(k, v)`",
+        "right": "set a variable for this test and restore it"
+      },
+      {
+        "left": "`t.Context()`",
+        "right": "cancelled just before the cleanups run"
+      }
+    ],
+    "right_distractors": [
+      "run the test again with the race detector"
+    ]
+  },
+  {
+    "id": "ex-eq3xb4h4",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the final `go test -v` run of lesson 25, how many subtests did `TestCount` have?",
+    "hint": "Count the indented PASS lines under `TestCount`.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "subtests"
+  },
+  {
+    "id": "ex-0k76fe8c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test checks that `Count` gives `\"the\": 2` for a paragraph, and passes. A month later somebody changes `notLetter` so digits are trimmed too. Which subtest in this lesson's final test file would catch that change?",
+    "hint": "Look for a case whose words contain digits.",
+    "choices": [
+      {
+        "text": "`punctuation`",
+        "correct": false,
+        "why": "Its sentence has no digit in it, so trimming digits changes nothing there."
+      },
+      {
+        "text": "`accents`",
+        "correct": false,
+        "why": "Accented letters are letters; trimming digits leaves them alone."
+      },
+      {
+        "text": "None of them: no case has a word with a digit",
+        "correct": true,
+        "why": "Right. A behaviour no test exercises can change silently, which is lesson 30's subject."
+      },
+      {
+        "text": "`empty`",
+        "correct": false,
+        "why": "An empty text has no words to trim."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcm4w950",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To run one subtest you pass `go test` the flag ___ followed by a pattern such as `'TestCount/possessive'`.",
+    "hint": "A flag of three letters after the dash.",
+    "blanks": [
+      {
+        "accept": [
+          "-run"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

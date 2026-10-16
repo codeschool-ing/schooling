@@ -1,0 +1,433 @@
+[
+  {
+    "id": "ex-58w9f14b",
+    "version": 1,
+    "section": "waitgroup",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each `WaitGroup` method with what it does to the counter.",
+    "hint": "One of them does not change the counter at all.",
+    "pairs": [
+      {
+        "left": "`Add(1)`",
+        "right": "raises it by one"
+      },
+      {
+        "left": "`Done()`",
+        "right": "lowers it by one"
+      },
+      {
+        "left": "`Wait()`",
+        "right": "blocks until it is zero"
+      },
+      {
+        "left": "`Go(f)`",
+        "right": "raises it, runs `f` in a goroutine, lowers it after"
+      }
+    ],
+    "right_distractors": [
+      "sets it back to zero at once"
+    ]
+  },
+  {
+    "id": "ex-6gc955yy",
+    "version": 1,
+    "section": "waitgroup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`late.go` printed `finished when Wait returned: 0`. Why did `Wait` not wait?",
+    "hint": "What was the counter when `main` reached `Wait`?",
+    "choices": [
+      {
+        "text": "`time.Sleep` inside the goroutines stops `Wait` from seeing them",
+        "correct": false,
+        "why": "A sleep hides nothing from `Wait`; the counter is all it reads."
+      },
+      {
+        "text": "No goroutine had run its `Add` yet, so the counter was zero",
+        "correct": true,
+        "why": "Right. `Add` has to happen before `go`, in the goroutine that waits."
+      },
+      {
+        "text": "`defer wg.Done()` ran before the work",
+        "correct": false,
+        "why": "A deferred call runs as the function returns, after the sleep and the count."
+      },
+      {
+        "text": "`atomic.Int64` is not visible to `main`",
+        "correct": false,
+        "why": "`Load` is exactly how `main` reads it, safely; the count was 0 because nothing had finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjn60dm7",
+    "version": 1,
+    "section": "waitgroup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a `WaitGroup` do when `Done` is called once more than `Add` raised it?",
+    "hint": "`negative.go` showed it.",
+    "choices": [
+      {
+        "text": "It stays at zero and quietly ignores the extra call",
+        "correct": false,
+        "why": "It does not ignore it; a counter below zero is a bug it reports."
+      },
+      {
+        "text": "`Wait` waits forever",
+        "correct": false,
+        "why": "That is what a missing `Done` does. An extra one fails loudly instead."
+      },
+      {
+        "text": "It panics: `sync: negative WaitGroup counter`",
+        "correct": true,
+        "why": "Right, with the line of the extra `Done` in the trace."
+      },
+      {
+        "text": "It wraps around to a very large number",
+        "correct": false,
+        "why": "The panic message shows the `Add` of minus one being refused, not wrapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-7a89mj74",
+    "version": 1,
+    "section": "waitgroup",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A helper is declared `func fetch(url string, wg sync.WaitGroup)` and calls `defer wg.Done()`. `main` calls `wg.Add(1)` and `go fetch(u, wg)` for three URLs, then `wg.Wait()`. What happens?",
+    "hint": "What does `fetch` receive: the `WaitGroup` or a copy?",
+    "choices": [
+      {
+        "text": "It works, since `Add` is called before each `go` statement",
+        "correct": false,
+        "why": "The `Add` is right; the `Done` lands on a copy."
+      },
+      {
+        "text": "`main` waits forever: each `Done` hits a copy",
+        "correct": true,
+        "why": "Right. Pass `*sync.WaitGroup`, or use `wg.Go`."
+      },
+      {
+        "text": "It panics with a negative counter",
+        "correct": false,
+        "why": "Each copy starts at the value it was copied with, three or less, and goes down by one; none goes below zero."
+      },
+      {
+        "text": "It does not compile",
+        "correct": false,
+        "why": "Passing a struct by value compiles; `go vet` is what complains."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h0g64v5",
+    "version": 1,
+    "section": "waitgroup",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Go 1.25, `wg.___(f)` starts `f` as a goroutine and handles both `Add` and `Done` for it.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "Go"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qgkpaa3g",
+    "version": 1,
+    "section": "once",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `once.go`, eight goroutines called `Get` at the same moment. How many times did `load` run?",
+    "hint": "Read `loads:` in the output.",
+    "choices": [
+      {
+        "text": "Eight, one per caller",
+        "correct": false,
+        "why": "That is what happens with no `Once`; the output says otherwise."
+      },
+      {
+        "text": "Once",
+        "correct": true,
+        "why": "Right: `loads: 1`."
+      },
+      {
+        "text": "Between one and eight, depending on timing",
+        "correct": false,
+        "why": "`Once` makes it one, whatever the timing."
+      },
+      {
+        "text": "None, because `config` was already set",
+        "correct": false,
+        "why": "`config` starts at its zero value; the first `Do` fills it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cw5n02b",
+    "version": 1,
+    "section": "once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `sync.Once` give that a boolean `loaded` checked before loading does not?",
+    "hint": "What do the other callers do while the first is loading?",
+    "choices": [
+      {
+        "text": "It is faster than reading a boolean",
+        "correct": false,
+        "why": "Speed is not the point; correctness is."
+      },
+      {
+        "text": "The other callers wait for the load to finish",
+        "correct": true,
+        "why": "Right. A flag says somebody started, not that the value is ready, and reading it unsynchronised is a race."
+      },
+      {
+        "text": "It reloads the value whenever the file changes on disk",
+        "correct": false,
+        "why": "It never runs the function again; `oncevalues.go` showed even an error stays."
+      },
+      {
+        "text": "It retries when the function panics",
+        "correct": false,
+        "why": "After a panic, `Do` considers the work done and does not call it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe2jq8mr",
+    "version": 1,
+    "section": "once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service reads an API key with `sync.OnceValues` at the first request. On the day it starts, the secret store is down for a minute. What does the lesson predict?",
+    "hint": "Look at the line after the file was written in `oncevalues.go`.",
+    "choices": [
+      {
+        "text": "The first requests fail and later ones succeed once the store is back",
+        "correct": false,
+        "why": "That would need a retry. `OnceValues` returned the first error after the file existed."
+      },
+      {
+        "text": "Every request gets the cached error",
+        "correct": true,
+        "why": "Right. Once means once, failures included; retrying needs a lock and a flag set on success."
+      },
+      {
+        "text": "The service panics at the first request",
+        "correct": false,
+        "why": "An error is returned, not panicked; `oncevalues.go` printed it and carried on."
+      },
+      {
+        "text": "`OnceValues` blocks until the store answers",
+        "correct": false,
+        "why": "It waits only for the function to return, and the function returns the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmcgckjr",
+    "version": 1,
+    "section": "once",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of `oncevalues.go` in the order they happened.",
+    "hint": "The file is written after three calls.",
+    "items": [
+      "the function runs and fails to read `token.txt`",
+      "two more calls return the cached error",
+      "`main` writes `token.txt`",
+      "a fourth call still returns the error",
+      "`attempts: 1` is printed"
+    ]
+  },
+  {
+    "id": "ex-afwcsn6e",
+    "version": 1,
+    "section": "sync-map",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happened when `crash.go` wrote to an ordinary map from four goroutines?",
+    "hint": "Read the first line of the output.",
+    "choices": [
+      {
+        "text": "Some entries were lost and it printed a smaller count",
+        "correct": false,
+        "why": "It never reached the print; the runtime stopped it first."
+      },
+      {
+        "text": "A panic that a `recover` could have caught",
+        "correct": false,
+        "why": "It is a fatal error, which no `recover` catches."
+      },
+      {
+        "text": "`fatal error: concurrent map writes`",
+        "correct": true,
+        "why": "Right, at line 15, the assignment."
+      },
+      {
+        "text": "It worked, since each goroutine used its own keys",
+        "correct": false,
+        "why": "Disjoint keys do not make a plain map safe; the map's internals are shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0jepfsg",
+    "version": 1,
+    "section": "sync-map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By its own documentation, which situation is `sync.Map` optimised for?",
+    "hint": "Two cases are named; one of them is here.",
+    "choices": [
+      {
+        "text": "Any map shared by goroutines",
+        "correct": false,
+        "why": "The documentation says most code should use an ordinary map with its own locking."
+      },
+      {
+        "text": "A map that is written much more often than read",
+        "correct": false,
+        "why": "Heavy writes to shared keys are not one of its two cases."
+      },
+      {
+        "text": "Keys written once, read many times",
+        "correct": true,
+        "why": "Right, the first of its two cases; disjoint keys per goroutine is the second."
+      },
+      {
+        "text": "A map whose `Range` must be one consistent snapshot",
+        "correct": false,
+        "why": "Its `Range` is explicitly not a snapshot of one moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-6m0zs5c8",
+    "version": 1,
+    "section": "sync-map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `syncmap.go`, why does the program print the first visitor of `/blog` but not of `/home`?",
+    "hint": "How many visits did each page have?",
+    "choices": [
+      {
+        "text": "`/blog` had one visit; `/home` had three, in no fixed order",
+        "correct": true,
+        "why": "Right. Which goroutine reached `LoadOrStore` first varies by run."
+      },
+      {
+        "text": "`LoadOrStore` keeps the last value for repeated keys",
+        "correct": false,
+        "why": "It keeps the first value stored and ignores later ones."
+      },
+      {
+        "text": "`sync.Map` cannot store more than one visitor",
+        "correct": false,
+        "why": "It stores one value per key, by design here; the question is which one."
+      },
+      {
+        "text": "`/home` was deleted by `Range`",
+        "correct": false,
+        "why": "`Range` visits entries; returning `true` keeps going and deletes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-503m876b",
+    "version": 1,
+    "section": "sync-map",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`syncmap.go` recorded six visits to `/home`, `/docs` and `/blog`. What number did it print after `pages:`?",
+    "hint": "One entry per key.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0ec0qnb8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team guards a map of user preferences, read on every request and changed by any request, with `sync.Map` 'because it is the concurrent one'. What does the lesson say to prefer?",
+    "hint": "Is the access pattern one of the two cases?",
+    "choices": [
+      {
+        "text": "`sync.Map`, since it has the locking inside",
+        "correct": false,
+        "why": "Having the locking inside is not enough; the access pattern is neither of its two cases."
+      },
+      {
+        "text": "An ordinary map with a `Mutex`",
+        "correct": true,
+        "why": "Right: typed, simpler, and an `RWMutex` only if measurement shows readers waiting."
+      },
+      {
+        "text": "An ordinary map with no lock, as writes are short",
+        "correct": false,
+        "why": "`crash.go` is what that becomes: a fatal error."
+      },
+      {
+        "text": "One `sync.Once` per key",
+        "correct": false,
+        "why": "Preferences change; `Once` would freeze the first value for ever."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6bft57v",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are mistakes `go vet` or the runtime reported in this lesson? Choose all that apply.",
+    "hint": "One was `go vet`, two were the runtime.",
+    "choices": [
+      {
+        "text": "`WaitGroup.Add` called from inside the new goroutine",
+        "correct": true,
+        "why": "Yes, `go vet` on `late.go`."
+      },
+      {
+        "text": "A negative `WaitGroup` counter",
+        "correct": true,
+        "why": "Yes, a panic in `negative.go`."
+      },
+      {
+        "text": "Concurrent writes to an ordinary map",
+        "correct": true,
+        "why": "Yes, a fatal error in `crash.go`."
+      },
+      {
+        "text": "An error cached by `OnceValues`",
+        "correct": false,
+        "why": "That is the documented behaviour, and nothing reports it."
+      }
+    ]
+  }
+]

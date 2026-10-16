@@ -1,0 +1,443 @@
+[
+  {
+    "id": "ex-rwzph411",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets `sq(sq(gen(1, 2, 3)))` work with no new code?",
+    "hint": "Compare the type `sq` takes with the type it returns.",
+    "choices": [
+      {
+        "text": "`sq` keeps a list of the numbers it has seen",
+        "correct": false,
+        "why": "It keeps nothing; each value passes straight through."
+      },
+      {
+        "text": "Its input and output are both `<-chan int`",
+        "correct": true,
+        "why": "Right. A stage whose output type is its input type can be chained to itself."
+      },
+      {
+        "text": "Go runs nested calls in parallel",
+        "correct": false,
+        "why": "The calls themselves run in order; each starts a goroutine and returns at once."
+      },
+      {
+        "text": "`gen` was written to be called twice",
+        "correct": false,
+        "why": "`gen` was called once; it was `sq` that was used twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk3f7115",
+    "version": 1,
+    "section": "stages",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`overlap.go` passed five items through two stages of 20 ms each: 200 ms of work. At how many milliseconds did it finish?",
+    "hint": "The last line of the output.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-7yzbj1dy",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline has three stages taking 5 ms, 40 ms and 10 ms per item. A colleague makes the first stage twice as fast. What happens to the time for 1,000 items?",
+    "hint": "What sets the pace of a pipeline?",
+    "choices": [
+      {
+        "text": "It halves",
+        "correct": false,
+        "why": "Only the whole pipeline running twice as fast would halve it, and the first stage is not what sets the pace."
+      },
+      {
+        "text": "It drops by about a third",
+        "correct": false,
+        "why": "That would need the first stage to be a large share of the pace, and it is not the slowest."
+      },
+      {
+        "text": "Barely changes: the 40 ms stage sets the pace",
+        "correct": true,
+        "why": "Right. Items leave at the rate of the slowest stage; widen that one instead."
+      },
+      {
+        "text": "It grows, because the fast stage floods the next one",
+        "correct": false,
+        "why": "An unbuffered channel makes the fast stage wait; nothing floods."
+      }
+    ]
+  },
+  {
+    "id": "ex-94zhkb53",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `overlap.go`, from 40 ms on, each line comes paired with another at the same instant. What does a pair show?",
+    "hint": "Which items are the two lines about?",
+    "choices": [
+      {
+        "text": "Both stages busy at once",
+        "correct": true,
+        "why": "Right: item n stored while item n+1 is read."
+      },
+      {
+        "text": "One item being read twice",
+        "correct": false,
+        "why": "Each pair names two different items."
+      },
+      {
+        "text": "The channel holding two items",
+        "correct": false,
+        "why": "The channel is unbuffered and holds nothing."
+      },
+      {
+        "text": "The clock rounding two separate moments together",
+        "correct": false,
+        "why": "Rounding to 10 ms could merge moments, but the steady pairing from 40 ms on is the overlap of the stages, which the 120 ms total confirms."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nx80zh9",
+    "version": 1,
+    "section": "closing-correctly",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a pipeline, which channel does each stage close?",
+    "hint": "Lesson 3's rule: the sender closes.",
+    "choices": [
+      {
+        "text": "Its input, once it has read everything",
+        "correct": false,
+        "why": "That would be a receiver closing a channel another goroutine sends on."
+      },
+      {
+        "text": "The one it sends on",
+        "correct": true,
+        "why": "Right, with `defer close(out)`, after its input has closed."
+      },
+      {
+        "text": "Both, input and output",
+        "correct": false,
+        "why": "Closing the input would panic the stage before it."
+      },
+      {
+        "text": "None; `main` closes every channel at the end",
+        "correct": false,
+        "why": "`main` does not even hold the middle channels."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rk40ns3",
+    "version": 1,
+    "section": "closing-correctly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cascade.go` printed `gen: no more numbers, closing` before `main: 1`. What does that show?",
+    "hint": "Lines come from different goroutines.",
+    "choices": [
+      {
+        "text": "That `gen` closed too early and lost a number",
+        "correct": false,
+        "why": "Both squares, 1 and 4, arrived."
+      },
+      {
+        "text": "That `main` received from `gen` directly",
+        "correct": false,
+        "why": "`main` ranges over `sq`'s output."
+      },
+      {
+        "text": "Print order is not data order",
+        "correct": true,
+        "why": "Right. `gen` had handed over its last number and closed while the squares were still in transit."
+      },
+      {
+        "text": "That `defer` runs before the function's body",
+        "correct": false,
+        "why": "A deferred call runs when the function returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3k8cvna",
+    "version": 1,
+    "section": "closing-correctly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`wide.go` runs its slow stage on three goroutines. Who closes that stage's output?",
+    "hint": "Three goroutines send on it.",
+    "choices": [
+      {
+        "text": "Each of the three, with `defer close(out)`",
+        "correct": false,
+        "why": "The second close would panic, and the first would hit the others' sends."
+      },
+      {
+        "text": "The goroutine that finishes last, by checking `len(out)`",
+        "correct": false,
+        "why": "`len` of an unbuffered channel says nothing about who is still sending."
+      },
+      {
+        "text": "`gen`, when it runs out of numbers",
+        "correct": false,
+        "why": "`gen` closes only its own output."
+      },
+      {
+        "text": "A goroutine that waits on a `WaitGroup`",
+        "correct": true,
+        "why": "Right: lesson 14's closer, because only a count knows the last sender."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjrwwaha",
+    "version": 1,
+    "section": "closing-correctly",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `wide.go`, six items of 30 ms took 180 ms at width 1. How many milliseconds did they take at width 3?",
+    "hint": "The second line of the output.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-fhwbx7k3",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`stuck.go` read two results and printed `goroutines still alive: 3`. Which goroutines were they?",
+    "hint": "Count the stages, and the one reading.",
+    "choices": [
+      {
+        "text": "Three copies of `sq`",
+        "correct": false,
+        "why": "`stuck.go` called `sq` once."
+      },
+      {
+        "text": "`main`, `gen` and `sq`",
+        "correct": true,
+        "why": "Right: the two stages are blocked on sends nobody will receive."
+      },
+      {
+        "text": "`main`, the garbage collector and the timer",
+        "correct": false,
+        "why": "`runtime.NumGoroutine` here counts the program's own goroutines, and two of them are the stages."
+      },
+      {
+        "text": "Three stages waiting for `main` to close them",
+        "correct": false,
+        "why": "There are two stages, and they are waiting to send."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2kds7ha",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the close cascade of section 03 not free the stages in `stuck.go`?",
+    "hint": "Which direction does closing travel?",
+    "choices": [
+      {
+        "text": "`main` does not call `close` on `results`",
+        "correct": false,
+        "why": "A reader closing a channel others send on would panic them; that is not the way out."
+      },
+      {
+        "text": "Closing travels downstream; they are upstream",
+        "correct": true,
+        "why": "Right. Only a signal travelling upstream, a context, can reach them."
+      },
+      {
+        "text": "`defer close(out)` runs when `main` exits",
+        "correct": false,
+        "why": "It runs when the stage's own goroutine returns, which never happens here."
+      },
+      {
+        "text": "The thousand numbers have not all been generated",
+        "correct": false,
+        "why": "True, and the reason is that `gen` is blocked, which is the problem itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-p14b7q3a",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `stoppable.go`, `main` waits with `stages.Wait()` before counting goroutines. What would counting straight after `cancel()` risk?",
+    "hint": "Does `cancel` wait for anything?",
+    "choices": [
+      {
+        "text": "Nothing; `cancel` returns after the stages have stopped",
+        "correct": false,
+        "why": "`cancel` closes the `Done` channel and returns; the stages stop afterwards, in their own time."
+      },
+      {
+        "text": "A number taken too soon, still showing 3",
+        "correct": true,
+        "why": "Right. Cancelling asks; the `WaitGroup` is what knows the stages have finished."
+      },
+      {
+        "text": "A panic from counting a cancelled goroutine",
+        "correct": false,
+        "why": "Counting never panics, and goroutines are not themselves cancelled."
+      },
+      {
+        "text": "A race report on `runtime.NumGoroutine`",
+        "correct": false,
+        "why": "It is safe to call at any time; the risk is a wrong number, not a race."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b9yxs52",
+    "version": 1,
+    "section": "cancellation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a stoppable stage, every send sits inside a `select` with a second case, `case <-ctx.___():`.",
+    "hint": "The method returning the channel a context closes when it ends.",
+    "blanks": [
+      {
+        "accept": [
+          "Done"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gn8n9hzn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the shutdown of `stoppable.go` in order, from the moment `main` has its two results.",
+    "hint": "Cancelling asks; waiting confirms.",
+    "items": [
+      "`main` calls `cancel()`",
+      "the stages' `select` takes the `ctx.Done()` case",
+      "each stage's deferred `close(out)` runs",
+      "`stages.Wait()` returns",
+      "`main` prints `goroutines still alive: 1`"
+    ]
+  },
+  {
+    "id": "ex-wa6ma727",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pipeline habit with the failure it prevents.",
+    "hint": "Three habits, three failures from lessons 6 and 14.",
+    "pairs": [
+      {
+        "left": "`defer close(out)` in every stage",
+        "right": "a reader ranging for ever"
+      },
+      {
+        "left": "closing only the channel you send on",
+        "right": "a send on a closed channel"
+      },
+      {
+        "left": "a `select` on `ctx.Done()` around each send",
+        "right": "stages stuck after the reader left"
+      }
+    ],
+    "right_distractors": [
+      "results arriving out of order"
+    ]
+  },
+  {
+    "id": "ex-70zdqmw9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does a stage of `stoppable.go` do? Choose all that apply.",
+    "hint": "The last paragraph of section 04 lists the full pattern.",
+    "choices": [
+      {
+        "text": "Receives its input with `range`",
+        "correct": true,
+        "why": "Yes, so its input's close ends its loop."
+      },
+      {
+        "text": "Sends inside a `select` on `ctx.Done()`",
+        "correct": true,
+        "why": "Yes, so a cancel can reach it while it waits."
+      },
+      {
+        "text": "Closes its input when cancelled",
+        "correct": false,
+        "why": "It closes only its output; its input belongs to the stage before."
+      },
+      {
+        "text": "Calls `cancel` when it runs out of work",
+        "correct": false,
+        "why": "Running out of work is signalled by closing, not cancelling; only `main` cancels."
+      }
+    ]
+  },
+  {
+    "id": "ex-vreyy3tf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server builds `stuck.go`'s pipeline for every request and reads two results. After 10,000 requests, roughly how many stage goroutines are left blocked?",
+    "hint": "Each request leaves its two stages behind.",
+    "choices": [
+      {
+        "text": "None, because each request's goroutines end with the request",
+        "correct": false,
+        "why": "Nothing ends a goroutine but returning, and these never return."
+      },
+      {
+        "text": "Two, since the stages are shared",
+        "correct": false,
+        "why": "Each request built its own pipeline, with its own stages."
+      },
+      {
+        "text": "10,000, one per request",
+        "correct": false,
+        "why": "There are two stages per pipeline."
+      },
+      {
+        "text": "20,000",
+        "correct": true,
+        "why": "Right: two per request, for ever, the leak of lesson 6."
+      }
+    ]
+  }
+]

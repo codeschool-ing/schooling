@@ -1,0 +1,496 @@
+[
+  {
+    "id": "ex-vbtpe0v6",
+    "version": 1,
+    "section": "first-parameter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the `context` package's documentation say a context goes in a function's signature?",
+    "hint": "`go doc context` printed the convention with an example.",
+    "choices": [
+      {
+        "text": "Last, after the arguments it qualifies",
+        "correct": false,
+        "why": "The documented convention is the opposite end: first."
+      },
+      {
+        "text": "The first parameter, named `ctx` by convention",
+        "correct": true,
+        "why": "Right: `func DoSomething(ctx context.Context, arg Arg) error`."
+      },
+      {
+        "text": "In a field of the struct the method belongs to",
+        "correct": false,
+        "why": "That is the thing the documentation says not to do."
+      },
+      {
+        "text": "In a package-level variable set once in `main`",
+        "correct": false,
+        "why": "A package variable would be shared by every request; a context belongs to one call."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvfnc98g",
+    "version": 1,
+    "section": "first-parameter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `layers.go`, `report` never calls `ctx.Done()` or `ctx.Err()`. Why did it still stop when the 150 milliseconds ran out?",
+    "hint": "What did `report` do with `ctx`, and what did the function below it do?",
+    "choices": [
+      {
+        "text": "The runtime stops every function of a goroutine whose context ended",
+        "correct": false,
+        "why": "The runtime stops nothing. Only code that looks at the context reacts to it."
+      },
+      {
+        "text": "It handed `ctx` to `fetch`",
+        "correct": true,
+        "why": "Right. Passing `ctx` down was all the middle layer had to do."
+      },
+      {
+        "text": "`WithTimeout` panics in every function below it",
+        "correct": false,
+        "why": "No panic happened: the program printed an error and exited normally."
+      },
+      {
+        "text": "`report` had its own timer of 150 ms",
+        "correct": false,
+        "why": "Only `handle` set a deadline; `report` mentions no time at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5mbf0wb",
+    "version": 1,
+    "section": "first-parameter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The error from `layers.go` was `report for ana: fetch mar: context deadline exceeded`. What let `errors.Is(err, context.DeadlineExceeded)` still answer `true`?",
+    "hint": "Look at the verb in the two `fmt.Errorf` calls.",
+    "choices": [
+      {
+        "text": "The string contains the words \"deadline exceeded\"",
+        "correct": false,
+        "why": "`errors.Is` never compares text; it walks the chain of wrapped errors."
+      },
+      {
+        "text": "`context.DeadlineExceeded` matches any error",
+        "correct": false,
+        "why": "It matches only itself, found somewhere in the chain."
+      },
+      {
+        "text": "Each layer wrapped the error it received using `%w`",
+        "correct": true,
+        "why": "Right. `%w` keeps the original reachable for `errors.Is`, as lesson 34 of `go` showed."
+      },
+      {
+        "text": "`fetch` returned `ctx.Err()` with no wrapping at all",
+        "correct": false,
+        "why": "`fetch` did wrap it, as `fetch mar: …`; the wrapping with `%w` is why it still matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dhvzgag",
+    "version": 1,
+    "section": "first-parameter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps the context of the request that built their `Client` in a field, and uses it for every later call. What goes wrong?",
+    "hint": "Who owns that context, and how long does it live?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the field is unexported",
+        "correct": false,
+        "why": "Visibility is not the problem; the lifetime of the context is."
+      },
+      {
+        "text": "It belongs to a finished request",
+        "correct": true,
+        "why": "Right. The struct outlives the call, so its context belongs to somebody else's request."
+      },
+      {
+        "text": "The compiler refuses a field of type `context.Context`",
+        "correct": false,
+        "why": "It compiles; the rule is a convention, which is why it has to be learnt."
+      },
+      {
+        "text": "Each call gets a fresh deadline from that field",
+        "correct": false,
+        "why": "A context's deadline is fixed when it is made; nothing in it renews."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xqns3rm",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `tree.go`, `child` asked for one second but its parent `root` had 100 milliseconds. When did `child` end?",
+    "hint": "The last line of the output.",
+    "choices": [
+      {
+        "text": "At 100 ms, with root's deadline",
+        "correct": true,
+        "why": "Right: `child done after 100ms`. A child's deadline is the earlier of its own and its parent's."
+      },
+      {
+        "text": "At one second, as it asked",
+        "correct": false,
+        "why": "A child cannot outlive its parent; it reported root's deadline as its own."
+      },
+      {
+        "text": "At 1.1 s, adding both timeouts",
+        "correct": false,
+        "why": "Timeouts do not add. The earlier deadline wins."
+      },
+      {
+        "text": "Straight away, when `sibling` was cancelled",
+        "correct": false,
+        "why": "Right after that cancel, `child` still answered `<nil>`."
+      }
+    ]
+  },
+  {
+    "id": "ex-75056cas",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sibling` was derived from `root` and cancelled by hand. Which were still running straight afterwards? Choose all that apply.",
+    "hint": "An end travels down the tree.",
+    "choices": [
+      {
+        "text": "`root`",
+        "correct": true,
+        "why": "Yes: `root: <nil>`. Cancelling a child does not touch its parent."
+      },
+      {
+        "text": "`child`",
+        "correct": true,
+        "why": "Yes: `child: <nil>`. Siblings are independent."
+      },
+      {
+        "text": "`sibling`",
+        "correct": false,
+        "why": "It was the one cancelled: `context canceled`."
+      },
+      {
+        "text": "A context derived from `sibling`",
+        "correct": false,
+        "why": "Anything derived from `sibling` ends with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-grn7fek0",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A derived context comes with a function that ends it, and the line straight after deriving it is `defer ___()`.",
+    "hint": "The name `tree.go` and `layers.go` gave that function.",
+    "blanks": [
+      {
+        "accept": [
+          "cancel"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x5hmjj63",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `go vet` report about `ctx, _ := context.WithTimeout(parent, time.Second)`?",
+    "hint": "What happens to a child nobody cancels?",
+    "choices": [
+      {
+        "text": "That one second is too long for a timeout",
+        "correct": false,
+        "why": "`vet` has no opinion on durations."
+      },
+      {
+        "text": "That `parent` might be `nil`",
+        "correct": false,
+        "why": "That is a separate rule of the documentation, and not what `vet` reports here."
+      },
+      {
+        "text": "Nothing, since the deadline ends the child anyway",
+        "correct": false,
+        "why": "It does report it, because until then the child's bookkeeping is held for nothing."
+      },
+      {
+        "text": "The discarded cancel function leaks the context",
+        "correct": true,
+        "why": "Right: `the cancel function returned by context.WithTimeout should be called, not discarded`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh3wq3rd",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `detach.go`, `stop()` returned `false`. What did that mean?",
+    "hint": "When was `stop` called, compared with `cancel`?",
+    "choices": [
+      {
+        "text": "That `AfterFunc` failed to register the function",
+        "correct": false,
+        "why": "It registered it and ran it: its line was the first one printed."
+      },
+      {
+        "text": "It came too late: the function had already run",
+        "correct": true,
+        "why": "Right. `stop` returns true only if it prevented the call."
+      },
+      {
+        "text": "That the context had not been cancelled yet",
+        "correct": false,
+        "why": "`ctx` reported `context canceled`."
+      },
+      {
+        "text": "That `WithoutCancel` had switched `AfterFunc` off",
+        "correct": false,
+        "why": "`WithoutCancel` made a new context, `audit`; the original `ctx` and its `AfterFunc` were untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5bprhxh",
+    "version": 1,
+    "section": "through-the-call",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler must write an audit record even when the client hangs up mid-request, and the record should carry the request's id. Which context does the write get?",
+    "hint": "It needs the values and not the ending.",
+    "choices": [
+      {
+        "text": "The request's context, unchanged",
+        "correct": false,
+        "why": "That one ends when the client hangs up, and the write would be cancelled with it."
+      },
+      {
+        "text": "`context.Background()`",
+        "correct": false,
+        "why": "It never ends, but it has none of the request's values, so the id is lost."
+      },
+      {
+        "text": "`context.WithoutCancel` applied to the request's context",
+        "correct": true,
+        "why": "Right: the values stay, as `audit` kept `req-7f3a`, and the ending does not reach it."
+      },
+      {
+        "text": "A child made with `context.WithTimeout` of a minute",
+        "correct": false,
+        "why": "A child ends when its parent does, so the hang-up still cancels it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5daf080",
+    "version": 1,
+    "section": "checking",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`polite` in `loop.go` checks `ctx.Err()` before each item. How many of the 300 items did it finish before the 50 ms deadline stopped it?",
+    "hint": "The second line of the output.",
+    "value": 47,
+    "tolerance": 0,
+    "unit": "items"
+  },
+  {
+    "id": "ex-9j2skt7r",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`deaf` was handed a context with a 50 ms deadline and returned after 350 ms. What does that say about cancellation?",
+    "hint": "What did `deaf` do with its `ctx` parameter?",
+    "choices": [
+      {
+        "text": "A context stops nothing by itself; the work has to look",
+        "correct": true,
+        "why": "Right. `deaf` accepted `ctx` and never consulted it."
+      },
+      {
+        "text": "The deadline was too short for the scheduler to deliver",
+        "correct": false,
+        "why": "`polite` got the same deadline and stopped at 50 ms."
+      },
+      {
+        "text": "`time.Sleep` blocks cancellation inside a goroutine",
+        "correct": false,
+        "why": "`polite` sleeps the same millisecond per item and stopped on time."
+      },
+      {
+        "text": "The context was cancelled at 350 ms, not 50",
+        "correct": false,
+        "why": "It ended at 50 ms; nothing read it until the loop was over."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw3ktej0",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loop waits on each turn for a value from a channel, `v := <-results`. Why is checking `ctx.Err()` at the top of the loop not enough?",
+    "hint": "Where does the loop spend its time?",
+    "choices": [
+      {
+        "text": "`ctx.Err()` is not safe to call from inside a loop like this one",
+        "correct": false,
+        "why": "It is safe from any goroutine, as `polite` showed."
+      },
+      {
+        "text": "It sits blocked in the receive, where no check runs",
+        "correct": true,
+        "why": "Right. The check has to happen during the wait, which only a `select` can do."
+      },
+      {
+        "text": "Channels ignore contexts until they are closed",
+        "correct": false,
+        "why": "A channel knows nothing about contexts either way; the question is what the loop waits on."
+      },
+      {
+        "text": "`ctx.Err()` returns `nil` until the loop ends",
+        "correct": false,
+        "why": "It returns the reason as soon as the context has ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fe3fpf5",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop of very fast steps, each a few nanoseconds, gets a context. What does the lesson recommend?",
+    "hint": "The rule is about time, not counts.",
+    "choices": [
+      {
+        "text": "Check before every step, exactly like `polite`",
+        "correct": false,
+        "why": "It works, but a check on every one of a billion tiny steps buys nothing: the overrun would be nanoseconds either way."
+      },
+      {
+        "text": "Skip the check, because fast loops finish anyway",
+        "correct": false,
+        "why": "A billion fast steps still take seconds; the loop must look sometimes."
+      },
+      {
+        "text": "Check every so many steps",
+        "correct": true,
+        "why": "Right: look often enough that the loop overruns by an amount nobody minds, every thousand for instance."
+      },
+      {
+        "text": "Run it in a separate goroutine that the context kills",
+        "correct": false,
+        "why": "Nothing kills a goroutine from outside; it has to return by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqzsmt2b",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the roles of the three layers in `layers.go` in order, from where the request arrives to where it waits.",
+    "hint": "Decide, pass, honour.",
+    "items": [
+      "`handle` derives a context with a 150 ms timeout",
+      "`report` passes `ctx` to each fetch",
+      "`fetch` waits on the slow call or on `ctx.Done()`"
+    ]
+  },
+  {
+    "id": "ex-b8mg8wgy",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each function with what it is for.",
+    "hint": "Two of them sit at the edges of a request.",
+    "pairs": [
+      {
+        "left": "`context.AfterFunc`",
+        "right": "run cleanup once a context ends"
+      },
+      {
+        "left": "`context.WithoutCancel`",
+        "right": "keep the values, drop the ending"
+      },
+      {
+        "left": "`context.TODO`",
+        "right": "mark where a context is still missing"
+      },
+      {
+        "left": "`context.WithTimeout`",
+        "right": "give part of the work a shorter limit"
+      }
+    ],
+    "right_distractors": [
+      "make a child live longer than its parent"
+    ]
+  },
+  {
+    "id": "ex-6t30s0fd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function receives a context that has already been cancelled, and its first act would be to open a file and start three goroutines. What should it do?",
+    "hint": "The last paragraph of section 04.",
+    "choices": [
+      {
+        "text": "Start the goroutines and let each notice the cancellation",
+        "correct": false,
+        "why": "It would open a file and start work whose answer nobody is waiting for."
+      },
+      {
+        "text": "Return the context's error at once, before opening anything",
+        "correct": true,
+        "why": "Right: check before starting expensive work at all."
+      },
+      {
+        "text": "Derive a fresh context with `WithoutCancel` and carry on",
+        "correct": false,
+        "why": "That ignores the caller's decision, which is the misuse section 03 warned about."
+      },
+      {
+        "text": "Panic, since a cancelled context is a programming error",
+        "correct": false,
+        "why": "A cancelled context is ordinary: a client left, a deadline passed. It is answered with an error."
+      }
+    ]
+  }
+]

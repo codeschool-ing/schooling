@@ -1,0 +1,316 @@
+{
+  "ex-7z7wb92p": {
+    "prompt": "O `first/main.go` chamou `slog.Debug(\"not shown\")` e nada apareceu. Por quê?",
+    "hint": "A partir de que nível o logger padrão registra?",
+    "choices": [
+      {
+        "text": "Registros de debug vão para a saída de erro",
+        "why": "A captura mostrou as duas saídas juntas; nada foi escrito em lugar nenhum."
+      },
+      {
+        "text": "O logger padrão registra `INFO` para cima",
+        "why": "Isso. As opções do programa seguinte baixaram o nível para `DEBUG`."
+      },
+      {
+        "text": "O `slog.Debug` precisa de um argumento de contexto",
+        "why": "O `DebugContext` é a variante com contexto; o `Debug` funciona sem."
+      },
+      {
+        "text": "Uma mensagem com espaço é descartada",
+        "why": "`order placed` tem espaço e foi registrada."
+      }
+    ]
+  },
+  "ex-7n3h4kh1": {
+    "prompt": "O que um registro do `JSONHandler` mantém que uma frase escrita com `fmt.Printf` perde?",
+    "hint": "Olhe `\"order\":1042`.",
+    "choices": [
+      {
+        "text": "As cores do terminal",
+        "why": "Nenhum dos dois tem cor; a diferença é estrutura."
+      },
+      {
+        "text": "Valores com nome e tipo",
+        "why": "Isso. Um número continua número, que uma busca de logs soma ou filtra."
+      },
+      {
+        "text": "A hora exata até o nanossegundo",
+        "why": "A hora é atributo dos dois, e esta lição a tirou de propósito."
+      },
+      {
+        "text": "O nome da função que registrou",
+        "why": "Isso precisa do `AddSource`, em qualquer dos handlers."
+      }
+    ]
+  },
+  "ex-15m3b4cq": {
+    "prompt": "Um time troca um programa de `TextHandler` para `JSONHandler`. O que precisa mudar nas chamadas que escrevem os registros?",
+    "hint": "Onde o handler é escolhido?",
+    "choices": [
+      {
+        "text": "Os argumentos de toda chamada, para strings JSON",
+        "why": "O handler codifica; as chamadas passam valores comuns."
+      },
+      {
+        "text": "Toda chamada, de `Info` para `InfoJSON`",
+        "why": "Não existe esse método."
+      },
+      {
+        "text": "Nada; só onde o logger é criado",
+        "why": "Isso. O `handlers/main.go` escreveu as mesmas chamadas pelos dois."
+      },
+      {
+        "text": "Os níveis, já que JSON não tem `WARN`",
+        "why": "Registros JSON levam o nível como string como qualquer outro."
+      }
+    ]
+  },
+  "ex-gmgpzczb": {
+    "prompt": "A opção que tira ou reescreve um atributo antes de ele ser escrito, usada aqui para tirar a hora, é `ReplaceAttr` em `slog.___Options`.",
+    "hint": "A struct passada aos dois handlers.",
+    "blanks": [
+      {
+        "accept": [
+          "Handler"
+        ]
+      }
+    ]
+  },
+  "ex-e3yj4kyd": {
+    "prompt": "O que `log.With(\"request_id\", \"r-81f3\", \"user\", 7)` devolve?",
+    "hint": "O próprio `log` mudou?",
+    "choices": [
+      {
+        "text": "Nada; ele acrescenta os atributos ao `log`",
+        "why": "O `log` não muda. O `With` devolve um logger novo, o `req` do programa."
+      },
+      {
+        "text": "Um logger novo que os põe em todo registro",
+        "why": "Isso. Toda linha do `req` começou com `request_id` e `user`."
+      },
+      {
+        "text": "Um registro, pronto para ser escrito",
+        "why": "Registros são feitos pelas chamadas de log, não pelo `With`."
+      },
+      {
+        "text": "Um grupo chamado `request_id`",
+        "why": "Grupos vêm de `slog.Group` ou `WithGroup`."
+      }
+    ]
+  },
+  "ex-fwv2r3y1": {
+    "prompt": "`req.Info(\"odd number of arguments\", \"order\")` escreveu `\"!BADKEY\":\"order\"`. Por que o `slog` escreveu o registro em vez de falhar?",
+    "hint": "O que uma chamada de log que falhasse esconderia?",
+    "choices": [
+      {
+        "text": "Porque `!BADKEY` é uma chave válida que um programa pode escolher",
+        "why": "É a marca que o `slog` usa para um valor sem chave, não uma escolha."
+      },
+      {
+        "text": "Deu panic e se recuperou",
+        "why": "Nenhum panic aconteceu; o registro foi escrito normalmente."
+      },
+      {
+        "text": "Uma chamada de log que falha esconderia a linha de que alguém precisa",
+        "why": "Isso, e o `go vet` pega o erro antes de o programa rodar."
+      },
+      {
+        "text": "Chamadas de log não podem devolver erros",
+        "why": "Elas foram projetadas para não devolver, pelo motivo da resposta certa; nada impedia o contrário."
+      }
+    ]
+  },
+  "ex-3zqgjd8p": {
+    "prompt": "Uma biblioteca de pagamentos registra uma struct que guarda um número de cartão, por qualquer handler que a aplicação escolheu. Onde deve morar a regra \"nunca registrar o número\"?",
+    "hint": "Que pedaço de código está em toda aplicação que registra a struct?",
+    "choices": [
+      {
+        "text": "No `ReplaceAttr` de cada aplicação",
+        "why": "Isso depende de toda aplicação lembrar, e algumas não vão."
+      },
+      {
+        "text": "Num método `LogValue` na struct",
+        "why": "Isso. O tipo diz uma vez como é registrado, com qualquer handler."
+      },
+      {
+        "text": "Numa lista de verificação de revisão de código",
+        "why": "Uma lista é um hábito; o `LogValue` é uma garantia no tipo."
+      },
+      {
+        "text": "No armazenamento de logs, apagando as linhas que batem",
+        "why": "A essa altura o número já foi copiado para um lugar com menos proteção."
+      }
+    ]
+  },
+  "ex-30h2gy86": {
+    "prompt": "Como `slog.Group(\"address\", \"city\", \"Recife\", \"zip\", \"50000-000\")` apareceu no JSON?",
+    "hint": "A linha `shipping`.",
+    "choices": [
+      {
+        "text": "Como duas chaves, `address.city` e `address.zip`",
+        "why": "Essa forma com ponto é a do handler de texto; o JSON aninha."
+      },
+      {
+        "text": "Como uma string, `Recife 50000-000`",
+        "why": "Os valores mantiveram as próprias chaves."
+      },
+      {
+        "text": "Como um objeto dentro do objeto do registro",
+        "why": "Isso: `\"address\":{\"city\":\"Recife\",\"zip\":\"50000-000\"}`."
+      },
+      {
+        "text": "Foi descartado como dado pessoal",
+        "why": "Nada no `slog` julga dados; foi escrito."
+      }
+    ]
+  },
+  "ex-qwxc98ja": {
+    "prompt": "Com que status de saída terminou `go vet ./attrs`, depois de relatar a chamada sem valor final?",
+    "hint": "A última linha daquela transcrição."
+  },
+  "ex-rf3wd75n": {
+    "prompt": "O que torna um `slog.LevelVar` diferente de um `Level` fixo nas opções do handler?",
+    "hint": "Quando o handler o lê?",
+    "choices": [
+      {
+        "text": "Ele guarda vários níveis ao mesmo tempo",
+        "why": "Ele guarda um nível, que pode mudar."
+      },
+      {
+        "text": "Ele vale só para chamadas `Debug`",
+        "why": "É o nível mínimo para toda chamada."
+      },
+      {
+        "text": "Ele muda com o programa em execução",
+        "why": "Isso. O handler o lê em todo registro, então o `level.Set` valeu na hora."
+      },
+      {
+        "text": "Ele é guardado no contexto",
+        "why": "É uma variável para a qual o handler aponta; o contexto levava o id da requisição."
+      }
+    ]
+  },
+  "ex-c702d0aa": {
+    "prompt": "No `levels/main.go`, por que `log.Info(\"no context, no request id\")` não ganhou `request_id`?",
+    "hint": "Que contexto chega ao handler de uma chamada sem contexto?",
+    "choices": [
+      {
+        "text": "Ela chegou ao handler levando um contexto vazio",
+        "why": "Isso. Só as chamadas `…Context` levaram o id junto."
+      },
+      {
+        "text": "O `withRequest` pula registros em `INFO`",
+        "why": "O `InfoContext` em `INFO` ganhou o id."
+      },
+      {
+        "text": "O nível tinha sido posto em `DEBUG` logo antes",
+        "why": "O nível decide se um registro é escrito, não o que ele leva."
+      },
+      {
+        "text": "Ids de requisição são acrescentados só uma vez por programa",
+        "why": "Dois registros ganharam o mesmo id; nada os conta."
+      }
+    ]
+  },
+  "ex-sfjva9br": {
+    "prompt": "Por que a lição põe só o id da requisição no contexto, e não um logger inteiro?",
+    "hint": "Onde fica a decisão sobre como escrever os registros?",
+    "choices": [
+      {
+        "text": "Um logger é grande demais para caber num contexto",
+        "why": "Um contexto guarda qualquer valor; tamanho não é o argumento."
+      },
+      {
+        "text": "Contextos só podem guardar strings",
+        "why": "O `WithValue` aceita qualquer valor."
+      },
+      {
+        "text": "Um logger num contexto vaza uma goroutine",
+        "why": "Nenhuma goroutine está envolvida."
+      },
+      {
+        "text": "O handler fica num lugar só, sem viajar",
+        "why": "Isso. As funções registram com `InfoContext` e não sabem nada de ids."
+      }
+    ]
+  },
+  "ex-smf55er5": {
+    "prompt": "Um operador liga o `DEBUG` em produção para investigar um incidente. Que custo a lição aponta?",
+    "hint": "O que acontece com todo registro escrito?",
+    "choices": [
+      {
+        "text": "O programa precisa ser reiniciado",
+        "why": "Com um `LevelVar` nada reinicia."
+      },
+      {
+        "text": "O volume, que chega a ser cem vezes maior",
+        "why": "Isso. Então se liga pelo tempo necessário e se volta."
+      },
+      {
+        "text": "Registros de debug perdem os atributos",
+        "why": "Eles levam atributos como qualquer outro."
+      },
+      {
+        "text": "Erros deixam de ser registrados",
+        "why": "Baixar o nível acrescenta registros; não tira nenhum."
+      }
+    ]
+  },
+  "ex-zc6jh7jk": {
+    "prompt": "Ponha em ordem o que acontece com `log.InfoContext(ctx, \"order placed\", \"order\", 1042)` no `levels/main.go`.",
+    "hint": "O nível é conferido antes de qualquer coisa ser montada.",
+    "items": [
+      "o nível `INFO` é comparado com o `LevelVar`",
+      "um registro é montado com a mensagem e `order`",
+      "o `withRequest` acrescenta `request_id` a partir do contexto",
+      "o handler de texto escreve a linha"
+    ]
+  },
+  "ex-ch3msvav": {
+    "prompt": "Associe cada necessidade à peça do `slog` que a atende.",
+    "hint": "Quatro peças, quatro necessidades, uma sobrando.",
+    "pairs": [
+      {
+        "left": "o mesmo id em toda linha sobre uma requisição",
+        "right": "`Logger.With`"
+      },
+      {
+        "left": "uma credencial que nunca pode ser escrita",
+        "right": "`LogValue`"
+      },
+      {
+        "left": "mais detalhe agora, sem reiniciar",
+        "right": "`LevelVar`"
+      },
+      {
+        "left": "logs que um serviço de busca lê",
+        "right": "`JSONHandler`"
+      }
+    ],
+    "right_distractors": [
+      "`fmt.Printf`"
+    ]
+  },
+  "ex-qbc8g7xn": {
+    "prompt": "Quais destas chamadas o `go vet` relata? Escolha todas as que se aplicam.",
+    "hint": "Ele confere se os argumentos depois da mensagem vêm em pares.",
+    "choices": [
+      {
+        "text": "`slog.Info(\"saved\", \"id\")`",
+        "why": "Sim: uma chave sem valor."
+      },
+      {
+        "text": "`slog.Info(\"saved\", \"id\", 7)`",
+        "why": "Uma chave e o seu valor: nada a relatar."
+      },
+      {
+        "text": "`slog.Info(\"saved\", slog.Int(\"id\", 7))`",
+        "why": "Um atributo com tipo vale sozinho e não precisa de par."
+      },
+      {
+        "text": "`slog.Warn(\"slow\", \"took_ms\", 812, \"query\")`",
+        "why": "Sim: a última chave não tem valor."
+      }
+    ]
+  }
+}

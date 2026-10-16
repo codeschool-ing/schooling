@@ -1,0 +1,318 @@
+{
+  "ex-11zzdtzq": {
+    "prompt": "Onde a interface `Source` é declarada?",
+    "hint": "Quem precisa dela?",
+    "choices": [
+      {
+        "text": "Ao lado de cada implementação, para ela dizer que a implementa",
+        "why": "Interfaces de Go são satisfeitas implicitamente; uma implementação nunca nomeia a interface."
+      },
+      {
+        "text": "Em `wordcount`, ao lado de `TopOf`",
+        "why": "Isso: no pacote que a usa."
+      },
+      {
+        "text": "Só no arquivo de teste",
+        "why": "Assim o próprio `TopOf` não poderia citá-la como tipo de parâmetro."
+      },
+      {
+        "text": "No pacote `io` da biblioteca padrão",
+        "why": "O `io` tem o `ReadCloser`, que o `Source` devolve; o próprio `Source` é deste pacote."
+      }
+    ]
+  },
+  "ex-sfqbem3f": {
+    "prompt": "Por que a lição insiste que o `Source` tenha um método em vez de copiar a interface de um cliente real?",
+    "hint": "Conte o que cada teste teria de escrever.",
+    "choices": [
+      {
+        "text": "Go proíbe interfaces que tenham mais de um método",
+        "why": "O próprio `io.ReadCloser` tem dois métodos."
+      },
+      {
+        "text": "Um método faz o `TopOf` rodar mais rápido",
+        "why": "O número de métodos não tem nada a ver com velocidade aqui."
+      },
+      {
+        "text": "Clientes reais não podem ser usados em Go",
+        "why": "Podem; a lição 28 escreve um. A questão é o que um teste precisa implementar."
+      },
+      {
+        "text": "Um dublê custa então poucas linhas",
+        "why": "Isso. Uma interface pequena é o que deixa um dublê barato."
+      }
+    ]
+  },
+  "ex-phrgjrdd": {
+    "prompt": "`TopOf` recebe um `ctx` e só o repassa. Por que ele é um parâmetro, afinal?",
+    "hint": "Qual `Source` vai olhar para ele?",
+    "choices": [
+      {
+        "text": "Uma fonte de rede precisa poder ser cancelada",
+        "why": "Isso. A chamada pode esperar, então carrega um contexto, como a lição 11 pediu."
+      },
+      {
+        "text": "O `go vet` recusa funções exportadas que não tenham um",
+        "why": "Essa conferência não existe; é uma convenção, não uma regra que as ferramentas impõem."
+      },
+      {
+        "text": "O `Count` lê o prazo de leitura de dentro dele",
+        "why": "O `Count` recebe só um reader."
+      },
+      {
+        "text": "Para guardar valores para os testes",
+        "why": "A lição 10 guardou valores num contexto para dados da requisição, não para testes."
+      }
+    ]
+  },
+  "ex-25de7h8p": {
+    "prompt": "Associe cada dublê de teste ao que ele é.",
+    "hint": "Pronto, funcionando ou tomando notas.",
+    "pairs": [
+      {
+        "left": "stub",
+        "right": "devolve uma resposta pronta"
+      },
+      {
+        "left": "fake",
+        "right": "uma implementação que funciona, simplificada"
+      },
+      {
+        "left": "spy",
+        "right": "registra como foi usado"
+      },
+      {
+        "left": "mock",
+        "right": "um spy a quem se disse de antemão o que esperar"
+      }
+    ],
+    "right_distractors": [
+      "um servidor real numa porta local"
+    ]
+  },
+  "ex-68jhhn9k": {
+    "prompt": "Qual dublê do `source_test.go` leva o `TopOf` ao caminho de erro?",
+    "hint": "Ele sempre dá a mesma resposta.",
+    "choices": [
+      {
+        "text": "`mapSource`, pedindo um nome que ele não tem",
+        "why": "Isso também funcionaria, mas o teste da lição usa um dublê que falha com um erro escolhido pelo teste."
+      },
+      {
+        "text": "`failingSource`",
+        "why": "Isso, o stub: todo `Open` devolve o erro com que foi construído."
+      },
+      {
+        "text": "`spySource`",
+        "why": "O spy sempre dá certo; ele existe para observar como o documento é tratado."
+      },
+      {
+        "text": "`fstest.MapFS`",
+        "why": "Esse é o sistema de arquivos real da seção 04, não um dublê deste arquivo."
+      }
+    ]
+  },
+  "ex-2x0fxqb3": {
+    "prompt": "A primeira versão do `TopOf` passou nos testes do fake e do stub. Por que só o spy achou o defeito?",
+    "hint": "O que o defeito mudava nos valores de retorno?",
+    "choices": [
+      {
+        "text": "Porque o spy usava um texto mais longo",
+        "why": "O texto dele é `a b a`, mais curto que o do fake."
+      },
+      {
+        "text": "Porque o fake e o stub rodaram com `-short`",
+        "why": "Nenhum teste usou `-short`; os três rodaram do mesmo jeito."
+      },
+      {
+        "text": "Um `Close` que falta não muda valor de retorno",
+        "why": "Isso. Só um teste que registra a chamada consegue vê-lo."
+      },
+      {
+        "text": "Porque o `io.NopCloser` fecha o documento sozinho",
+        "why": "O `Close` dele não faz nada, e por isso o fake não conseguia perceber."
+      }
+    ]
+  },
+  "ex-9ac9f4c4": {
+    "prompt": "Um colega acrescenta ao spy uma conferência de que o `TopOf` lê o documento em exatamente três chamadas a `Read`. O que a lição diz disso?",
+    "hint": "O número de leituras faz parte do que os chamadores esperam?",
+    "choices": [
+      {
+        "text": "Ótimo: mais conferências fazem um teste mais forte",
+        "why": "Mais conferências do tipo errado fazem um teste que falha quando nada está quebrado."
+      },
+      {
+        "text": "Ele descreve a implementação, e quebraria com um `bufio` inofensivo",
+        "why": "Isso. Confira o contrato, como fechar, e deixe o resto em paz."
+      },
+      {
+        "text": "Ele é necessário, porque o `Count` não deve ler mais de três vezes",
+        "why": "Nada promete um número de leituras; o `Count` lê até o fim."
+      },
+      {
+        "text": "Ele faria o detector de corridas relatar o spy",
+        "why": "Contar leituras numa goroutine não envolve corrida."
+      }
+    ]
+  },
+  "ex-9y7pfcwn": {
+    "prompt": "Para dar a um reader simples um método `Close` que não faz nada, embrulhe-o com `io.___`.",
+    "hint": "Um closer que não faz nada.",
+    "blanks": [
+      {
+        "accept": [
+          "NopCloser"
+        ]
+      }
+    ]
+  },
+  "ex-t2vsd8q4": {
+    "prompt": "Uma função recebe um `io.Reader`. O que o teste dela deve passar?",
+    "hint": "Coisas reais que são baratas.",
+    "choices": [
+      {
+        "text": "Um `strings.Reader`",
+        "why": "Isso: a coisa real, e não custa nada."
+      },
+      {
+        "text": "Um spy escrito à mão que conta as chamadas a `Read`",
+        "why": "O número de leituras não faz parte do contrato, e um reader real é de graça."
+      },
+      {
+        "text": "Um arquivo escrito num caminho fixo em `/tmp`",
+        "why": "Isso colide entre execuções, e um reader nem precisa de arquivo."
+      },
+      {
+        "text": "Um mock gerado por um framework",
+        "why": "Não há nada a gerar: a biblioteca padrão tem o real."
+      }
+    ]
+  },
+  "ex-ctms54ce": {
+    "prompt": "Por que o `FSSource.Open` confere o `err` em vez de escrever `return s.FS.Open(name)`?",
+    "hint": "No que um `fs.File` nil se transforma quando devolvido como `io.ReadCloser`?",
+    "choices": [
+      {
+        "text": "O `fs.FS.Open` entra em pânico com um arquivo inexistente",
+        "why": "Ele devolve `fs.ErrNotExist`, como o teste confere."
+      },
+      {
+        "text": "O compilador rejeita devolver um `fs.File` onde se espera um `io.ReadCloser`",
+        "why": "Ele aceita: um `fs.File` tem `Read` e `Close`."
+      },
+      {
+        "text": "Um arquivo nil viraria uma interface não nil guardando nil",
+        "why": "Isso, e quem testasse `rc != nil` seria enganado."
+      },
+      {
+        "text": "Para embrulhar o erro com o nome do arquivo",
+        "why": "Ele devolve o `err` sem mudança; quem acrescenta o nome é o `TopOf`."
+      }
+    ]
+  },
+  "ex-2dav0qye": {
+    "prompt": "Como a lição chama o `fstest.MapFS`?",
+    "hint": "Ele é um dublê?",
+    "choices": [
+      {
+        "text": "Um spy do sistema de arquivos",
+        "why": "Ele não registra nada sobre como é usado."
+      },
+      {
+        "text": "Um stub que sempre devolve o mesmo arquivo",
+        "why": "Ele guarda muitos arquivos, por caminho, e um que falta dá `fs.ErrNotExist`."
+      },
+      {
+        "text": "Um sistema de arquivos real, guardado na memória",
+        "why": "Isso. O mesmo código de `FSSource` roda contra ele e contra o `os.DirFS`."
+      },
+      {
+        "text": "Um mock gerado a partir de `fs.FS`",
+        "why": "Nada é gerado; é um tipo comum da biblioteca padrão."
+      }
+    ]
+  },
+  "ex-9gb85xw6": {
+    "prompt": "Um serviço chama um provedor de pagamentos pelo cliente Go oficial dele. Seguindo a regra da lição, o que você substitui nos testes do serviço?",
+    "hint": "Substitua aquilo de que você é dono da interface.",
+    "choices": [
+      {
+        "text": "O tipo do cliente do provedor, método a método",
+        "why": "Isso é falsificar um comportamento que outra pessoa escreveu, e o palpite falha nos erros."
+      },
+      {
+        "text": "Nada: chamar o provedor real em todo teste",
+        "why": "Lento, instável, talvez cobrado: exatamente o caso para um dublê."
+      },
+      {
+        "text": "Uma interface pequena sua, posta entre o serviço e o cliente",
+        "why": "Isso. Teste o serviço contra dublês dela, e a implementação real dela contra a coisa real."
+      },
+      {
+        "text": "O `net/http`, para toda requisição falhar do mesmo jeito",
+        "why": "Substituir a biblioteca padrão é substituir algo de que você é ainda menos dono."
+      }
+    ]
+  },
+  "ex-2h6e89g0": {
+    "prompt": "Quais motivos justificam substituir uma dependência por um dublê? Escolha todos os que se aplicam.",
+    "hint": "A primeira frase da seção 04 os lista.",
+    "choices": [
+      {
+        "text": "A real é lenta",
+        "why": "Sim."
+      },
+      {
+        "text": "A real falha por motivos que não têm a ver com o seu código",
+        "why": "Sim, instável."
+      },
+      {
+        "text": "A real está na biblioteca padrão",
+        "why": "Essas costumam ser as coisas reais mais baratas de usar."
+      },
+      {
+        "text": "A real tem mais de um método",
+        "why": "O tamanho da interface dela não é motivo; ponha uma pequena sua na frente."
+      }
+    ]
+  },
+  "ex-r23ts6aa": {
+    "prompt": "Ponha em ordem os passos do `TopOf`, como ficou consertado na seção 03.",
+    "hint": "O `defer` vem logo depois da conferência do erro.",
+    "items": [
+      "`src.Open(ctx, name)`",
+      "devolver o erro, embrulhado com o nome",
+      "`defer rc.Close()`",
+      "`Count(rc)`",
+      "`Top(counts, n)`"
+    ]
+  },
+  "ex-0323ytme": {
+    "prompt": "O `TestTopOfOpenFails` confere `errors.Is(err, boom)`. O que o faria falhar?",
+    "hint": "O que o `%w` faz que o `%v` não faz?",
+    "choices": [
+      {
+        "text": "Acrescentar o nome do documento à mensagem",
+        "why": "O nome já está nela, e o teste pede por ele."
+      },
+      {
+        "text": "Embrulhar com `%v` em vez de `%w`",
+        "why": "Isso. O `%v` mantém o texto e perde o erro, então o `errors.Is` não acha nada."
+      },
+      {
+        "text": "Devolver um slice nil junto com o erro",
+        "why": "O teste ignora o slice neste caminho."
+      },
+      {
+        "text": "Usar `t.Context()` em vez de `context.Background()`",
+        "why": "O stub ignora o contexto por completo."
+      }
+    ]
+  },
+  "ex-wy5bdg2q": {
+    "prompt": "Quantas funções de teste o `go test -v -run TopOf` rodou na seção 03?",
+    "hint": "Uma por dublê.",
+    "unit": "testes"
+  }
+}

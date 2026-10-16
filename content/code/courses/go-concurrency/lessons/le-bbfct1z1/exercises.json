@@ -1,0 +1,431 @@
+[
+  {
+    "id": "ex-ery6sc92",
+    "version": 1,
+    "section": "recorder",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a test with `httptest.NewRecorder` need besides the handler?",
+    "hint": "The handler's one method takes two arguments.",
+    "choices": [
+      {
+        "text": "A free port, and a server already running on it",
+        "correct": false,
+        "why": "That is `NewServer`. A recorder is called with no network at all."
+      },
+      {
+        "text": "A request, from `httptest.NewRequest`",
+        "correct": true,
+        "why": "Right: the test calls `ServeHTTP(rec, req)` directly."
+      },
+      {
+        "text": "A goroutine to run the handler in",
+        "correct": false,
+        "why": "`ServeHTTP` is an ordinary call in the test's own goroutine."
+      },
+      {
+        "text": "An `http.Client` to send the request",
+        "correct": false,
+        "why": "Nothing is sent; the request value is handed to the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zpyxpea",
+    "version": 1,
+    "section": "recorder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `Handler` set `Content-Type` after calling `Encode`. Why did the JSON go out as `text/plain`?",
+    "hint": "When are the headers sent?",
+    "choices": [
+      {
+        "text": "`json.Encoder` always writes plain text",
+        "correct": false,
+        "why": "It writes bytes; the type is a header, and the header was set too late."
+      },
+      {
+        "text": "The recorder cannot carry a `Content-Type`",
+        "correct": false,
+        "why": "After the fix the same recorder reported `application/json`."
+      },
+      {
+        "text": "Headers go out with the first write",
+        "correct": true,
+        "why": "Right. With no type set at that moment, `net/http` sniffed one from the body."
+      },
+      {
+        "text": "`http.Error` ran first and fixed the type",
+        "correct": false,
+        "why": "`http.Error` runs only on the error paths, which passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp6vrk6p",
+    "version": 1,
+    "section": "recorder",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test checks the content type with `rec.Header().Get(\"Content-Type\")` instead of `rec.Result()`. Against the first, faulty `Handler`, what would that test report?",
+    "hint": "`rec.Header()` is the live map the handler writes into.",
+    "choices": [
+      {
+        "text": "A pass: the live map has the late `Set`",
+        "correct": true,
+        "why": "Right, which is why the section checks `Result()`: it shows what was actually sent."
+      },
+      {
+        "text": "The same failure that the lesson's own test reported",
+        "correct": false,
+        "why": "The live map holds `application/json` by the time the handler returns."
+      },
+      {
+        "text": "A compile error",
+        "correct": false,
+        "why": "`rec.Header()` exists and compiles."
+      },
+      {
+        "text": "A panic inside the recorder",
+        "correct": false,
+        "why": "Reading a header map does not panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkjyff6z",
+    "version": 1,
+    "section": "recorder",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `ServeHTTP` returns, the response a client would have received comes from the recorder's method ___.",
+    "hint": "It returns an `*http.Response`.",
+    "blanks": [
+      {
+        "accept": [
+          "Result",
+          "Result()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hfre6why",
+    "version": 1,
+    "section": "server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `httptest.NewServer` listen?",
+    "hint": "The test log printed its address.",
+    "choices": [
+      {
+        "text": "Nowhere: it is an object in memory",
+        "correct": false,
+        "why": "That is the recorder. The server is real and has an address."
+      },
+      {
+        "text": "On port 80 of every interface",
+        "correct": false,
+        "why": "It takes a free port, and only on the loopback."
+      },
+      {
+        "text": "On a port the test has to choose and pass in",
+        "correct": false,
+        "why": "It chooses one itself and reports it in `srv.URL`."
+      },
+      {
+        "text": "On a free port of `127.0.0.1`",
+        "correct": true,
+        "why": "Right: `http://127.0.0.1:40299` in the run quoted."
+      }
+    ]
+  },
+  {
+    "id": "ex-cayzej0z",
+    "version": 1,
+    "section": "server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `HTTPSource.Open` turn a 404 into `fs.ErrNotExist`?",
+    "hint": "What does `FSSource` give for a missing file?",
+    "choices": [
+      {
+        "text": "Because `http.Client` refuses to return 404 responses",
+        "correct": false,
+        "why": "The client returns any status; `Open` decides what each means."
+      },
+      {
+        "text": "So a missing document means one thing everywhere",
+        "correct": true,
+        "why": "Right, and `Handler` turns it back into a 404 of its own."
+      },
+      {
+        "text": "Because `fs.ErrNotExist` closes the response body",
+        "correct": false,
+        "why": "An error value closes nothing; `Open` closes the body itself."
+      },
+      {
+        "text": "To make the 404 count as a test failure",
+        "correct": false,
+        "why": "The test expects `fs.ErrNotExist` for `b.txt`; it is the success of that check."
+      }
+    ]
+  },
+  {
+    "id": "ex-40hsr53r",
+    "version": 1,
+    "section": "server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a 500, `HTTPSource.Open` closes the body before returning its error. Why there and not in `TopOf`?",
+    "hint": "What does `TopOf` hold when `Open` fails?",
+    "choices": [
+      {
+        "text": "Because `TopOf` closes only files",
+        "correct": false,
+        "why": "`TopOf` closes any `io.ReadCloser` it is handed."
+      },
+      {
+        "text": "Because the server closes it anyway",
+        "correct": false,
+        "why": "The body belongs to the client's side and is the client's to close."
+      },
+      {
+        "text": "`TopOf` never sees the body",
+        "correct": true,
+        "why": "Right. Whoever holds the body last closes it."
+      },
+      {
+        "text": "To make the error message include the body's text",
+        "correct": false,
+        "why": "The message carries the status, not the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-63zxk1bq",
+    "version": 1,
+    "section": "server",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a `httptest.NewServer` test exercise that a recorder test does not? Choose all that apply.",
+    "hint": "One of them is a real connection.",
+    "choices": [
+      {
+        "text": "The client's request going over a real connection",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A client's deadline cutting a request short",
+        "correct": true,
+        "why": "Yes, as section 04 showed."
+      },
+      {
+        "text": "The handler's choice of status code",
+        "correct": false,
+        "why": "A recorder captures that too; it was section 02's subject."
+      },
+      {
+        "text": "The body the handler writes",
+        "correct": false,
+        "why": "The recorder's `Body` holds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5499bsnk",
+    "version": 1,
+    "section": "client-timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What timeout does `http.DefaultClient` have?",
+    "hint": "Section 04's first paragraph.",
+    "choices": [
+      {
+        "text": "Thirty seconds",
+        "correct": false,
+        "why": "There is no default number at all."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right, so without a deadline it waits as long as the server does."
+      },
+      {
+        "text": "Whatever `GOMAXPROCS` is, in seconds",
+        "correct": false,
+        "why": "`GOMAXPROCS` has nothing to do with HTTP."
+      },
+      {
+        "text": "The deadline of the test that uses it",
+        "correct": false,
+        "why": "A client knows nothing about tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqfjsm2j",
+    "version": 1,
+    "section": "client-timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the quoted run, after how many milliseconds did `TestHTTPSourceTimeout` give up?",
+    "hint": "The `t.Logf` line.",
+    "value": 51,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-q7zpdkhs",
+    "version": 1,
+    "section": "client-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestStuckServer`'s client gave up after 50 ms, yet the test took six seconds. What held it?",
+    "hint": "What does `srv.Close` wait for?",
+    "choices": [
+      {
+        "text": "The context's deadline, which was six seconds",
+        "correct": false,
+        "why": "The deadline was 50 milliseconds."
+      },
+      {
+        "text": "The race detector, which slows tests down",
+        "correct": false,
+        "why": "The run had no `-race`."
+      },
+      {
+        "text": "`srv.Close`, waiting for the sleeping handler",
+        "correct": true,
+        "why": "Right, and it said so: blocked in Close after 5 seconds."
+      },
+      {
+        "text": "`TopOf`, which retried the request",
+        "correct": false,
+        "why": "`TopOf` makes one call and returns its error."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvq4jb6n",
+    "version": 1,
+    "section": "client-timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants every request from a service to `HTTPSource` limited to two seconds, even when a caller forgets to pass a deadline. Which change does that?",
+    "hint": "One of the two limits belongs to the client, not to the call.",
+    "choices": [
+      {
+        "text": "Passing `context.Background()` everywhere",
+        "correct": false,
+        "why": "`Background` has no deadline at all."
+      },
+      {
+        "text": "A client with `Timeout: 2 * time.Second`",
+        "correct": true,
+        "why": "Right. It limits every request through that client; a caller's shorter deadline still wins."
+      },
+      {
+        "text": "Making the test handler sleep two seconds",
+        "correct": false,
+        "why": "That changes the test server, not the service."
+      },
+      {
+        "text": "Using `http.DefaultClient`",
+        "correct": false,
+        "why": "It has no timeout, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehz0856z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of `TestHTTPSourceTimeout` in the order they happen.",
+    "hint": "The handler is waiting from the moment the request arrives.",
+    "items": [
+      "the test starts the server",
+      "`TopOf` sends the request through `HTTPSource`",
+      "the handler waits on `r.Context().Done()`",
+      "the 50 ms deadline passes and the client gives up",
+      "the handler returns and `srv.Close` finishes"
+    ]
+  },
+  {
+    "id": "ex-e0zrn7pz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing to test with the tool the lesson uses for it.",
+    "hint": "Which side of the conversation is under test?",
+    "pairs": [
+      {
+        "left": "what `Handler` answers to a bad `n`",
+        "right": "`httptest.NewRecorder`"
+      },
+      {
+        "left": "what `HTTPSource` does with a 500",
+        "right": "`httptest.NewServer`"
+      },
+      {
+        "left": "`TopOf` with a source that fails",
+        "right": "a stub `Source`"
+      }
+    ],
+    "right_distractors": [
+      "the race detector"
+    ]
+  },
+  {
+    "id": "ex-x71mvr2f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague replaces `srv.Client()` with `http.DefaultClient` in `TestHTTPSource`. What changes for that test?",
+    "hint": "What is special about `srv.Client()` for a plain `NewServer`?",
+    "choices": [
+      {
+        "text": "It fails, because the default client cannot reach `127.0.0.1`",
+        "correct": false,
+        "why": "Any client reaches the loopback."
+      },
+      {
+        "text": "It hangs, because the default client waits for ever",
+        "correct": false,
+        "why": "The file server answers at once, so there is nothing to wait for."
+      },
+      {
+        "text": "Nothing visible: for plain HTTP it is an ordinary client",
+        "correct": true,
+        "why": "Right. The difference shows with `NewTLSServer`, where `srv.Client()` trusts the test certificate."
+      },
+      {
+        "text": "The 404 stops being `fs.ErrNotExist`",
+        "correct": false,
+        "why": "That mapping is in `HTTPSource.Open`, whatever client it uses."
+      }
+    ]
+  }
+]
