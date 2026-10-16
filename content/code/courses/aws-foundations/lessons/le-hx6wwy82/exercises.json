@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ex-k1wt77zt",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an organisational unit hold?",
+    "hint": "It is a folder in the tree.",
+    "choices": [
+      {
+        "text": "Resources shared by the accounts beneath it",
+        "correct": false,
+        "why": "An OU holds no resources at all. Each resource still belongs to exactly one account."
+      },
+      {
+        "text": "Accounts and other OUs, never a resource",
+        "correct": true,
+        "why": "Right. It is a branch of the tree, so that a rule can be attached once for everything in it."
+      },
+      {
+        "text": "The IAM users of a department",
+        "correct": false,
+        "why": "Users live inside accounts. An OU groups accounts, and is drawn by the kind of work, not the team."
+      },
+      {
+        "text": "A bill of its own, paid by its first account",
+        "correct": false,
+        "why": "There is one bill for the whole organisation, paid by the management account."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1jqknyx",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `create-account`, where in the tree is the new account?",
+    "hint": "The command takes no parent.",
+    "choices": [
+      {
+        "text": "In the OU named after it, which is created with it",
+        "correct": false,
+        "why": "No OU is created for an account. OUs are made with `create-organizational-unit`, on purpose."
+      },
+      {
+        "text": "Nowhere, until `move-account` gives it a parent",
+        "correct": false,
+        "why": "Every account always has exactly one parent; the tree has no loose accounts."
+      },
+      {
+        "text": "Directly under the root, beside the management account",
+        "correct": true,
+        "why": "Right. The transcript's `list-children` of the root listed all six until the moves."
+      },
+      {
+        "text": "In the same OU as the account that created it",
+        "correct": false,
+        "why": "The management account sits under the root, and so does every account it creates, but not because it is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy22my2n",
+    "version": 1,
+    "section": "the-tree",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-prod` already exists under the root of a new organisation with no OUs. Order the steps that put it into `Prod`, under `Workloads`.",
+    "hint": "Each step needs an id that the step before it produced.",
+    "items": [
+      "look up the root's id with `list-roots`",
+      "create the OU `Workloads` under the root",
+      "create the OU `Prod` under `Workloads`",
+      "`move-account` from the root to `Prod`"
+    ],
+    "trap": "Creating `Prod` before `Workloads` is the usual slip: `create-organizational-unit` needs the parent's id, and `Workloads` has none until it exists."
+  },
+  {
+    "id": "ex-02x30yef",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company draws its tree by department: an OU for marketing, one for engineering, one for finance, each holding production and test accounts. What will its rules struggle with?",
+    "hint": "A rule attached to an OU reaches every account below it.",
+    "choices": [
+      {
+        "text": "Nothing; a department is the natural owner of a rule",
+        "correct": false,
+        "why": "Rules follow the kind of work. A department mixes production with tests, so its branch cannot carry either kind's rules."
+      },
+      {
+        "text": "Its bill, which can only be split by OU",
+        "correct": false,
+        "why": "The bill lists every account, whatever OU it sits in. The tree's shape does not decide the invoice."
+      },
+      {
+        "text": "Nesting, since three departments exceed five levels",
+        "correct": false,
+        "why": "Three OUs side by side are one level. Depth is not the problem here."
+      },
+      {
+        "text": "Rules for live systems end up repeated in three places",
+        "correct": true,
+        "why": "Right. Production is spread across three branches, so no single branch can hold the rule. That is why the shop groups by `Prod` and `Staging`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1benvavr",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's root lists no enabled policy type right after `create-organization` with all features. What would AWS's root list?",
+    "hint": "The API reference for `CreateOrganization` says it.",
+    "choices": [
+      {
+        "text": "Service control policies, enabled at once",
+        "correct": true,
+        "why": "Right. AWS enables them in the root when the organisation is created with all features; moto waits for `enable-policy-type`."
+      },
+      {
+        "text": "Nothing either, until the first account joins",
+        "correct": false,
+        "why": "Joining accounts does not enable a policy type. The empty list is moto's difference."
+      },
+      {
+        "text": "Every policy type AWS offers",
+        "correct": false,
+        "why": "Only service control policies are on from the start. The others are enabled one by one."
+      },
+      {
+        "text": "Consolidated billing, which is a policy type",
+        "correct": false,
+        "why": "Consolidated billing is a feature set, not a policy type, and it is always there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v8vsm8e",
+    "version": 1,
+    "section": "the-tree",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The top of an organisation's tree, with an id starting `r-`, is called the ___.",
+    "hint": "One per organisation.",
+    "blanks": [
+      {
+        "accept": [
+          "root"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q9bcq06m",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two accounts each send 8,192 GB from `sa-east-1` to the internet in a month: 0.15 per GB for the first 10,240 GB, then 0.138. In one organisation, how many dollars is the month, leaving the free allowance aside?",
+    "hint": "Price 16,384 GB as one account would.",
+    "value": 2383.87,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-byfh48nh",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Same two accounts, but `shop-staging` sends only 2,048 GB while `shop-prod` sends 8,192 GB. How many dollars does the organisation save against two separate bills?",
+    "hint": "Add them first, then see whether the total crosses 10,240 GB.",
+    "value": 0,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-ghs75zp1",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What changes when an account that paid its own bill joins an organisation?",
+    "hint": "Who pays, and how usage is counted.",
+    "choices": [
+      {
+        "text": "Its resources move into the management account",
+        "correct": false,
+        "why": "Nothing moves. Ownership stays with the member; only the payer changes."
+      },
+      {
+        "text": "Somebody else pays, and its use is priced with the rest",
+        "correct": true,
+        "why": "Right. One payer, and AWS prices the organisation as if it were one account where prices have tiers."
+      },
+      {
+        "text": "Its charges disappear from the invoice, merged into one total",
+        "correct": false,
+        "why": "Each member is still listed with what it used. The invoice is one, the lines are per account."
+      },
+      {
+        "text": "Its prices drop to the management account's region",
+        "correct": false,
+        "why": "Prices follow the region a resource runs in, whoever pays. Joining changes no price list."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qnxwnkx",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are shared across an organisation's accounts by default? Choose all that apply.",
+    "hint": "Three things cross the walls on the bill.",
+    "choices": [
+      {
+        "text": "The volume tiers of a price",
+        "correct": true,
+        "why": "Right. Usage is added up across the accounts before the tiers are applied."
+      },
+      {
+        "text": "A Savings Plan's discount",
+        "correct": true,
+        "why": "Right. By default it applies to matching use in any account; lesson 14 reads it."
+      },
+      {
+        "text": "The VPC quota of each region",
+        "correct": false,
+        "why": "Quotas stay per account, which is one of the reasons to split accounts at all."
+      },
+      {
+        "text": "Credits granted by AWS",
+        "correct": true,
+        "why": "Right. They are spent against the whole organisation unless the billing preferences restrict them."
+      },
+      {
+        "text": "The IAM users of the management account",
+        "correct": false,
+        "why": "Identities never cross the walls. Billing is the part that does."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryxd9e62",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company created its organisation with `CONSOLIDATED_BILLING` years ago and now wants guardrails. What stands in the way?",
+    "hint": "Read what the API reference for `EnableAllFeatures` asks for.",
+    "choices": [
+      {
+        "text": "Nothing: policies can be attached in a billing-only organisation",
+        "correct": false,
+        "why": "A billing-only organisation can attach no policy of any kind. It needs all features first."
+      },
+      {
+        "text": "The organisation has to be deleted and made again",
+        "correct": false,
+        "why": "The move to all features exists for exactly this case. Nothing is deleted."
+      },
+      {
+        "text": "Every invited account has to approve the change first",
+        "correct": true,
+        "why": "Right. Enabling all features sends a handshake to each invited account, and the change waits for all of them."
+      },
+      {
+        "text": "Every member account has to be created again",
+        "correct": false,
+        "why": "The accounts stay as they are; what they owe the change is an approval."
+      }
+    ]
+  },
+  {
+    "id": "ex-syd9g9be",
+    "version": 1,
+    "section": "consolidated-billing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do this section's numbers about money come from, given that moto has no bill?",
+    "hint": "One program from lesson 1, and some arithmetic.",
+    "choices": [
+      {
+        "text": "From `aws ce get-cost-and-usage` against moto",
+        "correct": false,
+        "why": "moto answered it with an empty list. It keeps no usage and computes no charge."
+      },
+      {
+        "text": "From AWS's published price list, and arithmetic on it",
+        "correct": true,
+        "why": "Right. The tiers were printed by `price.py` from the offer of 16 September 2026, and the bill was worked out by hand."
+      },
+      {
+        "text": "From a real organisation's invoice",
+        "correct": false,
+        "why": "There is no AWS account behind the course, so there is no invoice to read."
+      },
+      {
+        "text": "From moto's own price table",
+        "correct": false,
+        "why": "moto has no price table. A price from moto would be a price nobody published."
+      }
+    ]
+  },
+  {
+    "id": "ex-deh6f019",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the shop's first web server not run in the management account?",
+    "hint": "What applies to every member and not to it?",
+    "choices": [
+      {
+        "text": "Machines there are billed at a higher price",
+        "correct": false,
+        "why": "A machine costs the same in any account. The reason is what governs it."
+      },
+      {
+        "text": "It has no default VPC to put the server in",
+        "correct": false,
+        "why": "Every account has a default VPC in every region, the management account's included."
+      },
+      {
+        "text": "Guardrails never apply to it, and it reaches every member",
+        "correct": true,
+        "why": "Right. A workload there runs outside every rule, in the one account whose compromise is everybody's."
+      },
+      {
+        "text": "Its quotas are a fraction of a member's",
+        "correct": false,
+        "why": "It has the same default quotas as any other account."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsws36cn",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, `list-attached-role-policies` for `shop-prod`'s `OrganizationAccountAccessRole` answered an empty list. What would it answer in AWS, for an account the organisation created?",
+    "hint": "AWS gives the role what it needs to administer the account.",
+    "choices": [
+      {
+        "text": "An empty list as well, until somebody attaches a policy",
+        "correct": false,
+        "why": "That is moto's behaviour. AWS attaches a policy when it creates the role."
+      },
+      {
+        "text": "`ReadOnlyAccess`, so that the management account can only look",
+        "correct": false,
+        "why": "The role exists to administer the account, not to look at it."
+      },
+      {
+        "text": "`AdministratorAccess`",
+        "correct": true,
+        "why": "Right. Taking the role on gives full control of the member account, which is why the management account is guarded so closely."
+      },
+      {
+        "text": "The organisation's service control policies",
+        "correct": false,
+        "why": "An SCP is attached in Organizations, never to a role. Lesson 4 says what it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgpdp8bm",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The trust policy of `OrganizationAccountAccessRole` names `arn:aws:iam::123456789012:root`. Who may take the role on?",
+    "hint": "`root` at the end of an account's ARN is not the root user.",
+    "choices": [
+      {
+        "text": "Only the management account's root user",
+        "correct": false,
+        "why": "The word reads that way and means the account as a whole. Lesson 9 reads trust policies properly."
+      },
+      {
+        "text": "Whoever in that account its IAM lets through",
+        "correct": true,
+        "why": "Right. The trust policy lets the account in; the account's IAM decides which of its identities may use that."
+      },
+      {
+        "text": "Any account of the organisation",
+        "correct": false,
+        "why": "Only the account it names. `shop-staging` is not `123456789012`."
+      },
+      {
+        "text": "The root of the organisation's tree, `r-ucqy`",
+        "correct": false,
+        "why": "The tree's root is not an identity and cannot take a role on. The ARN names an account."
+      }
+    ]
+  },
+  {
+    "id": "ex-1va0k8d2",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the joining of an existing account in order.",
+    "hint": "The account itself has the last word.",
+    "items": [
+      "the management account runs `invite-account-to-organization`",
+      "AWS e-mails the other account's owner",
+      "somebody inside that account runs `accept-handshake`",
+      "an administrator there creates `OrganizationAccountAccessRole` by hand"
+    ],
+    "trap": "Expecting the role to exist after joining is the usual slip: only accounts the organisation creates get it."
+  },
+  {
+    "id": "ex-syf34sdy",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`invite-account-to-organization` answered `500` in moto. What does that mean?",
+    "hint": "Whose error is a 500 here?",
+    "choices": [
+      {
+        "text": "AWS refused the invitation because `111122223333` does not exist",
+        "correct": false,
+        "why": "Nothing reached AWS; the request went to moto, and moto failed."
+      },
+      {
+        "text": "moto does not implement invitations",
+        "correct": true,
+        "why": "Right. The handshake was described from AWS's documentation and not run."
+      },
+      {
+        "text": "The invited account must be created first with `create-account`",
+        "correct": false,
+        "why": "An invitation is for an account that already exists outside the organisation."
+      },
+      {
+        "text": "The organisation has reached its limit of accounts",
+        "correct": false,
+        "why": "A limit would be a refusal with a reason. A 500 is the server failing."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc6ppnp4",
+    "version": 1,
+    "section": "the-management-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-staging`, created inside the organisation, tries `leave-organization` the next day. What stops it, with no guardrail in place?",
+    "hint": "It would become a standalone account.",
+    "choices": [
+      {
+        "text": "Nothing; a member may leave whenever it likes",
+        "correct": false,
+        "why": "A member may leave, but not before it has what a standalone account needs."
+      },
+      {
+        "text": "Only the management account may remove an account",
+        "correct": false,
+        "why": "`leave-organization` is run from inside the member, and it exists for exactly that."
+      },
+      {
+        "text": "It lacks a payment method and a support plan",
+        "correct": true,
+        "why": "Right. A created account never collected them, and a standalone account needs all three."
+      },
+      {
+        "text": "Accounts created by an organisation can never leave it",
+        "correct": false,
+        "why": "They can, once the missing details are added. Lesson 4's guardrail is what forbids it outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-by7tytp0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each command to what it answered in this lesson.",
+    "hint": "One transcript each.",
+    "pairs": [
+      {
+        "left": "`list-children` of the root, after the moves",
+        "right": "only the management account"
+      },
+      {
+        "left": "`list-parents` of `shop-prod`",
+        "right": "the OU `Prod`"
+      },
+      {
+        "left": "`move-account`",
+        "right": "nothing at all"
+      },
+      {
+        "left": "`ce get-cost-and-usage`",
+        "right": "an empty list of results"
+      }
+    ],
+    "right_distractors": [
+      "the OU `Workloads`"
+    ]
+  },
+  {
+    "id": "ex-zgc5s25k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An existing account with five years of history joins the shop's organisation by invitation. Which of these is true of it afterwards?",
+    "hint": "Compare a created account with an invited one.",
+    "choices": [
+      {
+        "text": "Its resources become the management account's",
+        "correct": false,
+        "why": "Joining moves no resource. It keeps every wall."
+      },
+      {
+        "text": "It already carries `OrganizationAccountAccessRole`",
+        "correct": false,
+        "why": "Only created accounts get the role. An invited one gets it when somebody creates it there."
+      },
+      {
+        "text": "It stays under the root forever, since only created accounts can be moved",
+        "correct": false,
+        "why": "Any member can be moved between OUs, whichever way it joined."
+      },
+      {
+        "text": "Its usage now counts towards the organisation's volume tiers",
+        "correct": true,
+        "why": "Right. From joining on, the management account pays for it and prices it with everybody else's usage."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nt5evsx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate proposes giving `security` its own organisation, so that nobody in the shop's organisation can touch it. What does the shop lose?",
+    "hint": "What do two organisations not share?",
+    "choices": [
+      {
+        "text": "One bill, and the rules attached to its tree",
+        "correct": true,
+        "why": "Right. Two organisations are two payers and two trees. An account is better protected in its own OU with guardrails than outside the tree."
+      },
+      {
+        "text": "Nothing, since two organisations may share an OU between them",
+        "correct": false,
+        "why": "An OU belongs to one tree, and an account to one organisation at a time."
+      },
+      {
+        "text": "The account's default VPC",
+        "correct": false,
+        "why": "The default VPC belongs to the account, whatever organisation it is in."
+      },
+      {
+        "text": "The ability to create IAM users in it",
+        "correct": false,
+        "why": "IAM lives inside the account and works the same in any organisation, or none."
+      }
+    ]
+  }
+]
