@@ -1,0 +1,649 @@
+[
+  {
+    "id": "ex-82646sjj",
+    "version": 1,
+    "section": "who-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can two PostgreSQL servers not safely decide between themselves which one is the primary?",
+    "hint": "What does each see when the link between them breaks?",
+    "choices": [
+      {
+        "text": "PostgreSQL has no promote command",
+        "correct": false,
+        "why": "It has one; lesson 15 used it."
+      },
+      {
+        "text": "They need the same major version to talk",
+        "correct": false,
+        "why": "Version is not the issue; the tie is."
+      },
+      {
+        "text": "Each sees the other as dead",
+        "correct": true,
+        "why": "Right: neither can tell a dead partner from a broken path, and nothing breaks the tie."
+      },
+      {
+        "text": "Their slots would conflict",
+        "correct": false,
+        "why": "Slots are not what decides a primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-q31kwgrw",
+    "version": 1,
+    "section": "who-decides",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the cluster with its job.",
+    "hint": "One process, one store, one key.",
+    "pairs": [
+      {
+        "left": "Patroni",
+        "right": "Starts, stops, promotes and demotes its PostgreSQL"
+      },
+      {
+        "left": "etcd",
+        "right": "Agrees on values among machines, or refuses to answer"
+      },
+      {
+        "left": "The leader key",
+        "right": "Names the one node allowed to be primary"
+      }
+    ],
+    "right_distractors": [
+      "Copies the log to the archive"
+    ]
+  },
+  {
+    "id": "ex-fkbjf4qf",
+    "version": 1,
+    "section": "who-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a Patroni leader do when it cannot renew its leader key?",
+    "hint": "Somebody else may hold it by now.",
+    "choices": [
+      {
+        "text": "Demotes itself",
+        "correct": true,
+        "why": "Right: it must assume another node already holds the key."
+      },
+      {
+        "text": "Keeps running and retries forever",
+        "correct": false,
+        "why": "That would allow two primaries."
+      },
+      {
+        "text": "Promotes a replica itself",
+        "correct": false,
+        "why": "Only the node that takes the key promotes."
+      },
+      {
+        "text": "Restarts etcd",
+        "correct": false,
+        "why": "Patroni does not manage etcd."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kz187p2",
+    "version": 1,
+    "section": "who-decides",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The leader key expires unless renewed; in this course its time to live, the `___` setting, is 30 seconds.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "ttl"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ymzbrvbc",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `etcdctl endpoint health` check?",
+    "hint": "One member, one answer.",
+    "choices": [
+      {
+        "text": "That Patroni is running",
+        "correct": false,
+        "why": "etcd knows nothing about Patroni's processes."
+      },
+      {
+        "text": "That the three PostgreSQL servers are up",
+        "correct": false,
+        "why": "That is patronictl list."
+      },
+      {
+        "text": "That the leader key exists",
+        "correct": false,
+        "why": "That is etcdctl get."
+      },
+      {
+        "text": "That etcd answers and commits a write",
+        "correct": true,
+        "why": "Right: it reports a committed proposal and how long it took."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtfw1trg",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say one etcd is enough to learn on and not enough to run on?",
+    "hint": "The last section.",
+    "choices": [
+      {
+        "text": "etcd needs three members to start at all",
+        "correct": false,
+        "why": "One member started and answered."
+      },
+      {
+        "text": "No etcd, no writes",
+        "correct": true,
+        "why": "Right: losing it stops every write in the cluster; with one etcd down, the primary demotes itself."
+      },
+      {
+        "text": "One etcd cannot hold more than one key",
+        "correct": false,
+        "why": "It held seven."
+      },
+      {
+        "text": "Patroni refuses a single etcd",
+        "correct": false,
+        "why": "It ran on one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf621j02",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting of `pg1.yml` with what it does.",
+    "hint": "Name, interface, store, checksums.",
+    "pairs": [
+      {
+        "left": "scope: shop",
+        "right": "Makes the nodes one cluster"
+      },
+      {
+        "left": "restapi",
+        "right": "Patroni's HTTP interface for other nodes and tools"
+      },
+      {
+        "left": "etcd3",
+        "right": "Where the shared state is kept"
+      },
+      {
+        "left": "initdb: data-checksums",
+        "right": "Lets pg_rewind work from the start"
+      }
+    ],
+    "right_distractors": [
+      "Sets the archive command"
+    ]
+  },
+  {
+    "id": "ex-0580s8bc",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did the lesson make `pg2.yml` and `pg3.yml`?",
+    "hint": "Three things differ between nodes.",
+    "choices": [
+      {
+        "text": "By running patroni --init",
+        "correct": false,
+        "why": "No such step was used."
+      },
+      {
+        "text": "With sed, from pg1.yml",
+        "correct": true,
+        "why": "Right: changing the name, the two ports and the directory; everything else is the same."
+      },
+      {
+        "text": "Copied by Patroni from etcd",
+        "correct": false,
+        "why": "Each node needs its own file before it starts."
+      },
+      {
+        "text": "Typed by hand",
+        "correct": false,
+        "why": "The lesson avoids that on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-6p163hq6",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `pg1` started alone, before the other two?",
+    "hint": "Who runs initdb?",
+    "choices": [
+      {
+        "text": "Patroni can only run one node a minute",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "To give etcd time to start",
+        "correct": false,
+        "why": "etcd was already healthy."
+      },
+      {
+        "text": "pg2 and pg3 need its pg1.yml",
+        "correct": false,
+        "why": "They have their own files."
+      },
+      {
+        "text": "So that it creates the cluster",
+        "correct": true,
+        "why": "Right: the others find a leader and copy it with a base backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7s3s3vt",
+    "version": 1,
+    "section": "the-leader-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the value of `/service/shop/leader` in etcd?",
+    "hint": "One string.",
+    "choices": [
+      {
+        "text": "The leader's node name",
+        "correct": true,
+        "why": "Right: pg1 at that point."
+      },
+      {
+        "text": "The leader's IP address and port",
+        "correct": false,
+        "why": "Those are in its members/ entry."
+      },
+      {
+        "text": "The current timeline",
+        "correct": false,
+        "why": "That is in the members' state."
+      },
+      {
+        "text": "A timestamp of the last renewal",
+        "correct": false,
+        "why": "The expiry is etcd's lease, not the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ycjtrps",
+    "version": 1,
+    "section": "the-leader-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop was loaded into `pg1`. Why did `pg3` have 50,000 orders?",
+    "hint": "What did pg3 become when it started?",
+    "choices": [
+      {
+        "text": "Patroni copies every database at start",
+        "correct": false,
+        "why": "It only bootstraps replicas once."
+      },
+      {
+        "text": "shop.sql ran on all three",
+        "correct": false,
+        "why": "It ran once, on pg1."
+      },
+      {
+        "text": "pg3 streams from the leader",
+        "correct": true,
+        "why": "Right: it is a replica of whichever node the key names."
+      },
+      {
+        "text": "etcd stores the rows",
+        "correct": false,
+        "why": "etcd stores a few keys, never data."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0vedemd",
+    "version": 1,
+    "section": "losing-the-leader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Straight after `pg1` was killed, `patronictl list` still showed it as `Leader`, `running`. Why?",
+    "hint": "What does list read?",
+    "choices": [
+      {
+        "text": "Patroni had restarted it",
+        "correct": false,
+        "why": "Its Patroni was killed too."
+      },
+      {
+        "text": "The kill had failed",
+        "correct": false,
+        "why": "Both processes were gone."
+      },
+      {
+        "text": "list reads PostgreSQL directly",
+        "correct": false,
+        "why": "It reads etcd."
+      },
+      {
+        "text": "The key had not expired yet",
+        "correct": true,
+        "why": "Right: etcd still held pg1's key and last report."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cbpjgc5",
+    "version": 1,
+    "section": "losing-the-leader",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The kill was at 01:39:37 and `pg3` promoted itself at 01:40:05. How many seconds did the failover take?",
+    "hint": "Subtract.",
+    "value": 28,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-2r5yjekq",
+    "version": 1,
+    "section": "losing-the-leader",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does a shorter `ttl` buy and cost?",
+    "hint": "Sooner, but fooled by what?",
+    "choices": [
+      {
+        "text": "Less disk on etcd; but slower failover",
+        "correct": false,
+        "why": "ttl does not affect disk."
+      },
+      {
+        "text": "Fewer replicas needed; but more lag",
+        "correct": false,
+        "why": "ttl is unrelated to replica count or lag."
+      },
+      {
+        "text": "Sooner; a slow primary looks dead",
+        "correct": true,
+        "why": "Right: a primary that misses renewals because it is slow loses the key."
+      },
+      {
+        "text": "Nothing; ttl only affects logging",
+        "correct": false,
+        "why": "It decides how long a dead leader blocks writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-41rz7yfc",
+    "version": 1,
+    "section": "losing-the-leader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both replicas were current. Why did `pg3` become leader and not `pg2`?",
+    "hint": "etcd gives the key to one.",
+    "choices": [
+      {
+        "text": "Whichever asked etcd first won",
+        "correct": true,
+        "why": "Right, and that is not something to depend on."
+      },
+      {
+        "text": "pg3 has the highest number",
+        "correct": false,
+        "why": "Names play no part."
+      },
+      {
+        "text": "pg3 was further ahead",
+        "correct": false,
+        "why": "Both were at 0 MB lag."
+      },
+      {
+        "text": "pg2 was configured as a replica only",
+        "correct": false,
+        "why": "Both had identical configurations."
+      }
+    ]
+  },
+  {
+    "id": "ex-d30ngwh4",
+    "version": 1,
+    "section": "losing-the-leader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When `pg1`'s Patroni started again, what did it do before starting PostgreSQL?",
+    "hint": "It read one key.",
+    "choices": [
+      {
+        "text": "Promoted pg1 back",
+        "correct": false,
+        "why": "The key named pg3, so pg1 could not be primary."
+      },
+      {
+        "text": "Ran pg_rewind, then became a replica",
+        "correct": true,
+        "why": "Right: it saw another leader and rewound its data to follow it."
+      },
+      {
+        "text": "Deleted its data and took a base backup",
+        "correct": false,
+        "why": "pg_rewind was enough, exit code 0."
+      },
+      {
+        "text": "Waited for an operator",
+        "correct": false,
+        "why": "Patroni did it on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc2ae6v7",
+    "version": 1,
+    "section": "switchover",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `patronictl` subcommand moved the leader from `pg3` to `pg1` on purpose?",
+    "hint": "Planned, not forced by a failure.",
+    "choices": [
+      {
+        "text": "failover",
+        "correct": false,
+        "why": "failover is for a leader that is unhealthy; this one was healthy."
+      },
+      {
+        "text": "restart",
+        "correct": false,
+        "why": "restart restarts PostgreSQL on a node without moving the leader."
+      },
+      {
+        "text": "switchover",
+        "correct": true,
+        "why": "Right: --leader pg3 --candidate pg1, a clean stop of pg3 and then pg1 promoted."
+      },
+      {
+        "text": "reinit",
+        "correct": false,
+        "why": "reinit rebuilds a replica from the leader."
+      }
+    ]
+  },
+  {
+    "id": "ex-xskrmcc4",
+    "version": 1,
+    "section": "switchover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a switchover the first thing to try on a new cluster?",
+    "hint": "What must all work for it to succeed?",
+    "choices": [
+      {
+        "text": "It tests every moving part",
+        "correct": true,
+        "why": "Right: before a failure does; replicas current, nodes reachable, and the application following."
+      },
+      {
+        "text": "It resets the timeline to 1",
+        "correct": false,
+        "why": "It moved the timeline forward to 3."
+      },
+      {
+        "text": "It is required before Patroni accepts writes",
+        "correct": false,
+        "why": "Writes worked before any switchover."
+      },
+      {
+        "text": "It compacts etcd",
+        "correct": false,
+        "why": "It has nothing to do with etcd's storage."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfhv2nax",
+    "version": 1,
+    "section": "without-etcd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "etcd stopped. What did the healthy primary `pg1` do?",
+    "hint": "demoting self because DCS is not accessible.",
+    "choices": [
+      {
+        "text": "Kept accepting writes",
+        "correct": false,
+        "why": "Without failsafe mode, it cannot be sure it is still the leader."
+      },
+      {
+        "text": "Shut down",
+        "correct": false,
+        "why": "It kept running, read-only."
+      },
+      {
+        "text": "Promoted pg2 to share the load",
+        "correct": false,
+        "why": "Nothing can be promoted without etcd."
+      },
+      {
+        "text": "Demoted itself; the cluster became read-only",
+        "correct": true,
+        "why": "Right: every server healthy, and no order could be taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-vba5b1zw",
+    "version": 1,
+    "section": "without-etcd",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A production etcd should survive the loss of one member and still have a majority. What is the smallest number of members that does that?",
+    "hint": "A majority of the remaining.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "members"
+  },
+  {
+    "id": "ex-aqvq2bzb",
+    "version": 1,
+    "section": "without-etcd",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `failsafe_mode` on, what lets the leader keep running when etcd is gone?",
+    "hint": "It asks somebody else directly.",
+    "choices": [
+      {
+        "text": "A longer ttl",
+        "correct": false,
+        "why": "ttl was unchanged."
+      },
+      {
+        "text": "All members answering",
+        "correct": true,
+        "why": "Right: over their REST interfaces; if it can see all of them, none can have been promoted."
+      },
+      {
+        "text": "A majority of members answering",
+        "correct": false,
+        "why": "It needs all of them."
+      },
+      {
+        "text": "A cached copy of the leader key",
+        "correct": false,
+        "why": "A cached key cannot prove nobody else took it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qr560hqa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs Patroni with three PostgreSQL nodes and one etcd on the same machine as `pg1`. Which single failure stops all writes?",
+    "hint": "Which machine holds two things?",
+    "choices": [
+      {
+        "text": "Losing pg2's machine",
+        "correct": false,
+        "why": "pg1 stays leader; pg3 remains a replica."
+      },
+      {
+        "text": "Losing pg1's machine, and etcd with it",
+        "correct": true,
+        "why": "Right: no etcd, no key, and the survivors cannot elect a leader."
+      },
+      {
+        "text": "Losing pg3's machine",
+        "correct": false,
+        "why": "Same: one replica fewer."
+      },
+      {
+        "text": "A slow network between pg2 and pg3",
+        "correct": false,
+        "why": "Replicas do not need to reach each other."
+      }
+    ]
+  }
+]

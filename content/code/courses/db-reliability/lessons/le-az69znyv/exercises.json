@@ -1,0 +1,649 @@
+[
+  {
+    "id": "ex-97r33tha",
+    "version": 1,
+    "section": "three-lags",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are the two units replication lag is measured in?",
+    "hint": "A distance, and a duration.",
+    "choices": [
+      {
+        "text": "Rows and transactions per second",
+        "correct": false,
+        "why": "Neither is reported by pg_stat_replication."
+      },
+      {
+        "text": "Segments archived and segments missing",
+        "correct": false,
+        "why": "Those describe the archive, not a standby's lag."
+      },
+      {
+        "text": "Bytes of log, and seconds",
+        "correct": true,
+        "why": "Right: bytes say how much log stands between the standby and the primary; seconds say how old a change is when it arrives."
+      },
+      {
+        "text": "Checkpoints and restart points",
+        "correct": false,
+        "why": "Those are about crash recovery, not lag."
+      }
+    ]
+  },
+  {
+    "id": "ex-r70tqfty",
+    "version": 1,
+    "section": "three-lags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which expression gives how many bytes a standby is behind?",
+    "hint": "Subtract two positions.",
+    "choices": [
+      {
+        "text": "pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)",
+        "correct": true,
+        "why": "Right: the primary's position minus the standby's replayed position, in bytes."
+      },
+      {
+        "text": "now() - replay_lag",
+        "correct": false,
+        "why": "That mixes a timestamp and an interval and measures no distance."
+      },
+      {
+        "text": "pg_size_pretty(replay_lag)",
+        "correct": false,
+        "why": "replay_lag is a time, not a size."
+      },
+      {
+        "text": "count(*) FROM pg_stat_replication",
+        "correct": false,
+        "why": "That counts standbys."
+      }
+    ]
+  },
+  {
+    "id": "ex-n35awawt",
+    "version": 1,
+    "section": "three-lags",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each measurement to the question it answers.",
+    "hint": "Lost, stale, slow.",
+    "pairs": [
+      {
+        "left": "Bytes behind replay_lsn",
+        "right": "How much log a promotion would have to replay or lose"
+      },
+      {
+        "left": "replay_lag",
+        "right": "How old a read on the standby can be"
+      },
+      {
+        "left": "write_lag and flush_lag",
+        "right": "How slow the network and the standby's disk are"
+      }
+    ],
+    "right_distractors": [
+      "How many standbys are connected"
+    ]
+  },
+  {
+    "id": "ex-m7aqjnsj",
+    "version": 1,
+    "section": "three-lags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`write_lag` and `flush_lag` are under a millisecond; `replay_lag` is forty seconds. Where is the problem?",
+    "hint": "The log arrives; does it get applied?",
+    "choices": [
+      {
+        "text": "The network between the two servers",
+        "correct": false,
+        "why": "write_lag would be large if the log were slow to arrive."
+      },
+      {
+        "text": "The primary's disk",
+        "correct": false,
+        "why": "The primary's disk does not appear in these three columns."
+      },
+      {
+        "text": "The archive",
+        "correct": false,
+        "why": "Streaming does not go through the archive."
+      },
+      {
+        "text": "On the standby, which is not replaying",
+        "correct": true,
+        "why": "Right: the log arrives and sits unreplayed; replay is paused, slow or blocked on the standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2pgk7yq",
+    "version": 1,
+    "section": "the-idle-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody has written to the primary for an hour. What do the `_lag` columns show?",
+    "hint": "When was the last measurement made?",
+    "choices": [
+      {
+        "text": "An hour, since nothing has replayed",
+        "correct": false,
+        "why": "They do not count time since the last change."
+      },
+      {
+        "text": "Their last measurement",
+        "correct": true,
+        "why": "Right: they keep the value from the last change sent and do not grow while nothing happens."
+      },
+      {
+        "text": "NULL, as soon as the primary is idle",
+        "correct": false,
+        "why": "In the lesson they kept their milliseconds while idle."
+      },
+      {
+        "text": "Zero, as the standby is caught up",
+        "correct": false,
+        "why": "They showed the previous milliseconds, not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-37mqzxb1",
+    "version": 1,
+    "section": "the-idle-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an idle primary, `now() - pg_last_xact_replay_timestamp()` on the standby went from 0.6 to 21 seconds. How far behind was the standby?",
+    "hint": "Compare the positions it printed.",
+    "choices": [
+      {
+        "text": "Twenty-one seconds",
+        "correct": false,
+        "why": "That is time since the last transaction, not lag."
+      },
+      {
+        "text": "Not at all",
+        "correct": true,
+        "why": "Right: receive, replay and the primary's position were the same LSN."
+      },
+      {
+        "text": "About a segment",
+        "correct": false,
+        "why": "The positions were identical."
+      },
+      {
+        "text": "Unknown without pg_stat_replication",
+        "correct": false,
+        "why": "The standby's own positions and the primary's answered it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5mr44ch",
+    "version": 1,
+    "section": "the-idle-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What rule does the lesson draw from both idle measurements?",
+    "hint": "One kind of measure is never wrong when nothing happens.",
+    "choices": [
+      {
+        "text": "Alert only during business hours",
+        "correct": false,
+        "why": "That hides the night an outage starts."
+      },
+      {
+        "text": "Measure lag on the standby only",
+        "correct": false,
+        "why": "The primary's view gave the right answer here."
+      },
+      {
+        "text": "Write a heartbeat row every second, so time works",
+        "correct": false,
+        "why": "A heartbeat is a real technique, but it is not what the lesson concluded."
+      },
+      {
+        "text": "Compare positions; use time beside them",
+        "correct": true,
+        "why": "Right: bytes behind is correct on an idle primary, and a time is only meaningful when something moves."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qdpf2c5",
+    "version": 1,
+    "section": "the-stale-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Replay was paused and order 50001 was placed on the primary. What did a query on the standby find?",
+    "hint": "The log was there; was it applied?",
+    "choices": [
+      {
+        "text": "No such order",
+        "correct": true,
+        "why": "Right: count 0, a stale read."
+      },
+      {
+        "text": "The order, from the received log",
+        "correct": false,
+        "why": "Received log is not visible until it is replayed."
+      },
+      {
+        "text": "An error, since replay was paused",
+        "correct": false,
+        "why": "A paused standby still answers queries, from its past."
+      },
+      {
+        "text": "Half the order's columns",
+        "correct": false,
+        "why": "A row is replayed whole or not at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa8evb6n",
+    "version": 1,
+    "section": "the-stale-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a stale read worse than a slow page for a shop?",
+    "hint": "What does the customer do next?",
+    "choices": [
+      {
+        "text": "It shows wrong prices",
+        "correct": false,
+        "why": "It shows old data, which here is a missing order."
+      },
+      {
+        "text": "The primary slows down",
+        "correct": false,
+        "why": "Reads on the standby do not touch the primary."
+      },
+      {
+        "text": "They see no order and place it again",
+        "correct": true,
+        "why": "Right: the shop reads from the past and the customer acts on it."
+      },
+      {
+        "text": "The standby crashes",
+        "correct": false,
+        "why": "Nothing crashes; it answers from the past."
+      }
+    ]
+  },
+  {
+    "id": "ex-nv22veaf",
+    "version": 1,
+    "section": "the-stale-read",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the application's steps for reading its own write from a standby in order.",
+    "hint": "Write, remember where, check, read.",
+    "items": [
+      "Commit the write on the primary",
+      "Ask the primary for pg_current_wal_lsn()",
+      "Ask the standby whether pg_last_wal_replay_lsn() has reached it",
+      "Read from the standby if t, else from the primary"
+    ],
+    "trap": "Asking for the position before the commit would give a position the commit is past."
+  },
+  {
+    "id": "ex-kdk5q2ny",
+    "version": 1,
+    "section": "the-stale-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Besides comparing positions, which two ways of reading your own writes does the lesson name?",
+    "hint": "One costs a read on the primary; one costs every commit.",
+    "choices": [
+      {
+        "text": "A longer statement_timeout; or a bigger slot",
+        "correct": false,
+        "why": "Neither makes the standby current."
+      },
+      {
+        "text": "Pausing replay; or a nightly dump",
+        "correct": false,
+        "why": "Pausing makes reads staler."
+      },
+      {
+        "text": "synchronous_commit = off; or a second standby",
+        "correct": false,
+        "why": "off makes things faster and less safe, and a second standby is as stale."
+      },
+      {
+        "text": "The primary after a write; or remote_apply",
+        "correct": true,
+        "why": "Right. The first is simple; the second makes every commit wait for the standby's replay."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ep4h4tt",
+    "version": 1,
+    "section": "the-stale-read",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a standby, `pg_last_wal_____lsn()` returns the position up to which the log has been applied to its data.",
+    "hint": "The word lesson 11 used for applying the log.",
+    "blanks": [
+      {
+        "accept": [
+          "replay"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fga9yg1h",
+    "version": 1,
+    "section": "lag-alerts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The check lists standbys more than 64 MB behind and alerts when it returns a row. The only standby stops. What does it report?",
+    "hint": "What does pg_stat_replication hold for it?",
+    "choices": [
+      {
+        "text": "standby1, since it is infinitely behind",
+        "correct": false,
+        "why": "A disconnected standby is absent from the view."
+      },
+      {
+        "text": "An error, since the standby is unreachable",
+        "correct": false,
+        "why": "The query runs on the primary and succeeds."
+      },
+      {
+        "text": "Nothing: a missing standby has no row",
+        "correct": true,
+        "why": "Right: no row, no alert, exit 0, on the worst lag there is."
+      },
+      {
+        "text": "A row with NULL lag",
+        "correct": false,
+        "why": "There is no row at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4maykyk5",
+    "version": 1,
+    "section": "lag-alerts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `lagcheck.sh` take the standbys' names as arguments?",
+    "hint": "What can it not know otherwise?",
+    "choices": [
+      {
+        "text": "To notice a missing one",
+        "correct": true,
+        "why": "Right: a standby that is gone is invisible unless somebody wrote down that it should be there."
+      },
+      {
+        "text": "psql needs them to connect",
+        "correct": false,
+        "why": "It connects to the primary only."
+      },
+      {
+        "text": "To query each standby's own port",
+        "correct": false,
+        "why": "It reads the primary's view."
+      },
+      {
+        "text": "For the slot names",
+        "correct": false,
+        "why": "It filters by application_name, not by slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbhnr9zm",
+    "version": 1,
+    "section": "lag-alerts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`SELECT max(pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)) > 67108864 FROM pg_stat_replication` with no standby connected returns what?",
+    "hint": "max over zero rows.",
+    "choices": [
+      {
+        "text": "false",
+        "correct": false,
+        "why": "max over no rows is NULL, and NULL > anything is NULL."
+      },
+      {
+        "text": "NULL, which no alert treats as true",
+        "correct": true,
+        "why": "Right: the comparison is unknown and the alert stays quiet."
+      },
+      {
+        "text": "true",
+        "correct": false,
+        "why": "Nothing is compared to give true."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "Aggregates over empty sets are legal."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhhzdp38",
+    "version": 1,
+    "section": "lag-alerts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`lagcheck.sh` reported `BEHIND by 45096800 bytes`. About how many MB is that (1 MB = 1048576 bytes), to the nearest whole number?",
+    "hint": "Divide.",
+    "value": 43,
+    "tolerance": 0.5,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-hzn7ywk8",
+    "version": 1,
+    "section": "lag-alerts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the lag check not run only from the primary's own scheduler?",
+    "hint": "Which night matters most?",
+    "choices": [
+      {
+        "text": "It needs a superuser",
+        "correct": false,
+        "why": "Where it runs does not change the role it uses."
+      },
+      {
+        "text": "Cron cannot run shell scripts",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It dies with the primary",
+        "correct": true,
+        "why": "Right: the night the primary's machine is gone, nobody hears about the standby."
+      },
+      {
+        "text": "The primary is busy",
+        "correct": false,
+        "why": "The check is two small queries."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qb2jc4m",
+    "version": 1,
+    "section": "archive-beside-the-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did pgBackRest refuse to fetch segments for the standby at first?",
+    "hint": "Read its error.",
+    "choices": [
+      {
+        "text": "Its pg1-path was main's data directory",
+        "correct": true,
+        "why": "Right: the standby is another directory, and --pg1-path tells archive-get which."
+      },
+      {
+        "text": "The archive had been deleted",
+        "correct": false,
+        "why": "info listed the archive up to segment ...14."
+      },
+      {
+        "text": "The standby's user could not read the repository",
+        "correct": false,
+        "why": "Both run as postgres."
+      },
+      {
+        "text": "restore_command needs a restart",
+        "correct": false,
+        "why": "It was changed with a reload, which worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-0064edja",
+    "version": 1,
+    "section": "archive-beside-the-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the fix, what did the standby do with its lost slot's missing segments?",
+    "hint": "Three lines of its log.",
+    "choices": [
+      {
+        "text": "Waited for a new base backup",
+        "correct": false,
+        "why": "Nothing was rebuilt."
+      },
+      {
+        "text": "Skipped them and streamed from the current position",
+        "correct": false,
+        "why": "A standby cannot skip log; it would be a different database."
+      },
+      {
+        "text": "Asked the primary to recreate them",
+        "correct": false,
+        "why": "The primary removed them and cannot make them again."
+      },
+      {
+        "text": "Restored them from the archive, then streamed",
+        "correct": true,
+        "why": "Right: ...12 to ...14 from the archive, then streaming from where the archive ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-ambhf1y6",
+    "version": 1,
+    "section": "archive-beside-the-slot",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mechanism with what it gives a standby.",
+    "hint": "Near, far, capped.",
+    "pairs": [
+      {
+        "left": "The slot",
+        "right": "Recent log kept in the primary's pg_wal"
+      },
+      {
+        "left": "The archive",
+        "right": "Every segment, kept somewhere else"
+      },
+      {
+        "left": "max_slot_wal_keep_size",
+        "right": "A limit so the slot cannot fill the primary's disk"
+      }
+    ],
+    "right_distractors": [
+      "A copy of every query the standby ran"
+    ]
+  },
+  {
+    "id": "ex-52hds5j8",
+    "version": 1,
+    "section": "archive-beside-the-slot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the standby came back through the archive, the slot showed `wal_status: unreserved`, even after a checkpoint. What does the lesson suggest watching instead?",
+    "hint": "Two numbers from lessons 11 and 13.",
+    "choices": [
+      {
+        "text": "Nothing; recreate the slot every night",
+        "correct": false,
+        "why": "That throws away the log the slot is for."
+      },
+      {
+        "text": "How much the slot holds, and the lag",
+        "correct": true,
+        "why": "Right: the word stayed odd; the amounts are what tell you something is wrong."
+      },
+      {
+        "text": "The standby's log file size",
+        "correct": false,
+        "why": "That measures logging, not replication."
+      },
+      {
+        "text": "wal_status, with an alert on unreserved",
+        "correct": false,
+        "why": "It would keep firing on a healthy standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd9afsyg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application reads order pages from an asynchronous standby, and customers report orders that vanish for a few seconds. What fixes it at the lowest cost?",
+    "hint": "Only some reads need to be current.",
+    "choices": [
+      {
+        "text": "Make the standby synchronous with remote_apply",
+        "correct": false,
+        "why": "It works, and every commit in the shop pays for it."
+      },
+      {
+        "text": "Read the customer's own orders from the primary",
+        "correct": true,
+        "why": "Right, or check the LSN first. Only reads of one's own writes need to be current."
+      },
+      {
+        "text": "Lower max_slot_wal_keep_size",
+        "correct": false,
+        "why": "That is about the primary's disk, not freshness."
+      },
+      {
+        "text": "Restart the standby every hour",
+        "correct": false,
+        "why": "That makes it fall further behind."
+      }
+    ]
+  }
+]

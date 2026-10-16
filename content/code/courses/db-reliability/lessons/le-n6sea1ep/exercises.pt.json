@@ -1,0 +1,205 @@
+{
+  "ex-bx5rcyym": {
+    "prompt": "O que diferencia um ensaio de restauração das restaurações das lições 1 a 6?",
+    "hint": "O valor está em fazer de novo.",
+    "choices": [
+      {"text": "Ele restaura por cima do banco em produção para testar de verdade", "why": "Um ensaio nunca toca o banco em produção; ele restaura num lugar inofensivo."},
+      {"text": "Ele usa um dump lógico em vez de um backup físico", "why": "Ele usa o que a recuperação de verdade usaria, aqui o pgBackRest."},
+      {"text": "A repetição: com hora marcada, cronometrado, registrado", "why": "Isso. Uma falha aparece na semana em que acontece, e os tempos mostram uma tendência."},
+      {"text": "Ele pula a comparação para ganhar tempo em bancos grandes", "why": "A comparação é a prova; pulá-la transforma o ensaio de novo numa afirmação."}
+    ]
+  },
+  "ex-gj8dxnnr": {
+    "prompt": "Entre as verificações deste curso, que pergunta só um ensaio responde?",
+    "hint": "A lição 8 precisa de um número.",
+    "choices": [
+      {"text": "Quanto tempo leva restaurar os dados reais", "why": "Isso. Só uma restauração cronometrada dos dados reais mede isso."},
+      {"text": "Se o comando de arquivamento deu certo ontem à noite", "why": "O pg_stat_archiver e o check respondem isso."},
+      {"text": "Se os arquivos do repositório batem com seus checksums", "why": "O verify responde isso."},
+      {"text": "Se a rotina noturna terminou com 0", "why": "O próprio status de saída da rotina diz isso."}
+    ]
+  },
+  "ex-v21mfbhb": {
+    "prompt": "Por que o ensaio da plataforma restaura num servidor novo e temporário em vez de por cima do banco que testa?",
+    "hint": "Qual operação é a destrutiva?",
+    "choices": [
+      {"text": "Porque o provedor de nuvem proíbe restaurar por cima de uma instância em uso", "why": "O motivo é de risco, não uma regra do provedor."},
+      {"text": "Para economizar em armazenamento", "why": "Um segundo servidor custa mais, não menos."},
+      {"text": "Porque o banco em produção ficaria mais rápido depois", "why": "Velocidade não tem nada a ver."},
+      {"text": "Restaurar por cima destrói o que você precisa se a restauração sair ruim", "why": "Isso. A restauração é o ato destrutivo, e destruiria a coisa que está sendo testada."}
+    ]
+  },
+  "ex-d1vkqhp7": {
+    "prompt": "O que faz o `\\gexec` no fim da primeira consulta do `report.sql`?",
+    "hint": "A consulta devolve comandos.",
+    "choices": [
+      {"text": "Exporta o resultado para um arquivo", "why": "Gravar num arquivo é \\o ou \\copy; o \\gexec executa."},
+      {"text": "Roda cada linha devolvida como SQL", "why": "Isso: ele roda como comando cada linha que a consulta devolveu. A consulta escreve um comando por tabela."},
+      {"text": "Repete a consulta a cada poucos segundos", "why": "Isso é o \\watch."},
+      {"text": "Roda a consulta dentro de uma única transação", "why": "O \\gexec não abre transação."}
+    ]
+  },
+  "ex-y9j4dnb7": {
+    "prompt": "Por que o `report.sql` lê `information_schema.tables` em vez de nomear as tabelas do shop?",
+    "hint": "O que acontece no dia em que alguém cria uma tabela?",
+    "choices": [
+      {"text": "Nomear tabelas não é permitido num relatório", "why": "É permitido; o verify.sql da lição 1 fazia isso."},
+      {"text": "Tabelas novas entram no ensaio sem edição", "why": "Isso. Um relatório que nomeia tabelas deixa, em silêncio, de cobrir o banco à medida que ele cresce."},
+      {"text": "O information_schema é mais rápido de ler que as tabelas", "why": "É uma view de catálogo; velocidade não é o motivo."},
+      {"text": "Tabelas nomeadas diretamente podem estar travadas durante um ensaio", "why": "Nomeá-las não muda nada quanto a locks."}
+    ]
+  },
+  "ex-kpahka2y": {
+    "prompt": "Uma linha em três milhões tem um caractere alterado na cópia restaurada, e o total não mudou. Qual relatório percebe?",
+    "hint": "As somas da lição 1 contra as impressões digitais desta lição.",
+    "choices": [
+      {"text": "Os dois: qualquer mudança mexe numa soma", "why": "Um nome alterado não mexe numa soma de totais, e duas mudanças podem se anular."},
+      {"text": "Nenhum: uma linha em três milhões está abaixo do que um relatório detecta", "why": "A impressão digital detecta um caractere em qualquer lugar de qualquer linha."},
+      {"text": "Só o relatório da lição 1, porque ele soma colunas", "why": "Uma soma sobre total_cents não vê uma mudança em outra coluna."},
+      {"text": "A impressão digital desta lição, e não as somas da lição 1", "why": "Isso. O md5 sobre o texto de cada linha muda com um caractere; uma soma sobre uma coluna não vê um nome alterado."}
+    ]
+  },
+  "ex-jn6pqfv7": {
+    "prompt": "Mais ou menos quantos segundos o `report.sql` levou no `bigshop`?",
+    "hint": "A linha real do time.",
+    "unit": "segundos"
+  },
+  "ex-wcxz3zda": {
+    "prompt": "Ponha os passos do script de ensaio em ordem.",
+    "hint": "O momento tem que existir antes de qualquer coisa ser restaurada até ele.",
+    "items": [
+      "Criar um ponto de restauração e ler os relatórios em produção",
+      "Esperar até o arquivo ter o ponto de restauração",
+      "Restaurar no segundo servidor e subi-lo",
+      "Ler os relatórios na cópia e comparar",
+      "Jogar a cópia fora e acrescentar uma linha ao drills.csv"
+    ],
+    "trap": "O alvo é nomeado primeiro; o check garante que ele foi arquivado; restauração e recuperação vêm em seguida; a prova precisa da cópia; e a cópia vai embora, com um registro, seja qual for o resultado."
+  },
+  "ex-n5hang55": {
+    "prompt": "No primeiro ensaio, qual fase levou mais tempo, e por quê?",
+    "hint": "Restauração 2,2 s, recuperação 2,5 s, prova 6,0 s.",
+    "choices": [
+      {"text": "A prova, porque lê cada linha dos dois lados", "why": "Isso. Tirar a impressão digital de três milhões de linhas significa lê-las e ordená-las."},
+      {"text": "A restauração, porque descomprime cada arquivo", "why": "Ela levou 2,2 segundos, a fase mais curta."},
+      {"text": "A recuperação, porque reaplica o arquivo", "why": "2,5 segundos; havia pouco log para reaplicar."},
+      {"text": "Levaram o mesmo tempo", "why": "6,0 é mais que o dobro de qualquer uma das outras."}
+    ]
+  },
+  "ex-zc3bd28p": {
+    "prompt": "Por que o script remove a cópia restaurada seja qual for o resultado?",
+    "hint": "O que fica rodando se não, e com o quê dentro?",
+    "choices": [
+      {"text": "Porque o pgBackRest se recusa a restaurar duas vezes no mesmo diretório", "why": "Ele poderia restaurar com --delta; esse não é o motivo."},
+      {"text": "Porque uma cópia restaurada deixa o servidor em produção mais lento", "why": "Aqui ela divide a máquina, e não é por isso que é removida."},
+      {"text": "Para um ensaio que falha não deixar um servidor com os dados", "why": "Isso. Um ensaio que falha é justamente quando uma cópia esquecida fica para trás."},
+      {"text": "Para o próximo backup ficar menor", "why": "Os backups vêm do servidor em produção; a cópia não tem nada a ver com eles."}
+    ]
+  },
+  "ex-ww7mekpw": {
+    "prompt": "Quantos segundos o primeiro ensaio levou no total?",
+    "hint": "O sexto campo.",
+    "unit": "segundos"
+  },
+  "ex-ec22dryw": {
+    "prompt": "O segundo ensaio relatou `DIFFERENT` embora o backup estivesse perfeito. O que causou isso?",
+    "hint": "Compare quando cada lado foi lido.",
+    "choices": [
+      {"text": "O ponto de restauração foi criado depois dos relatórios", "why": "Ele foi criado primeiro; a diferença veio depois dele."},
+      {"text": "A impressão digital é aleatória e muda a cada execução", "why": "É o md5 das mesmas linhas; ele não muda a menos que as linhas mudem."},
+      {"text": "O backup deixou de fora o último segmento", "why": "A cópia batia exatamente com o ponto de restauração; o lado em produção é que tinha andado."},
+      {"text": "O lado em produção e a cópia foram lidos em momentos diferentes", "why": "Isso. O lado em produção foi lido depois do momento até o qual a cópia foi restaurada, e os pedidos inseridos nesse instante estavam num lado só."}
+    ]
+  },
+  "ex-gcw6h6dy": {
+    "prompt": "Por que um ensaio que às vezes falha por motivos próprios é perigoso?",
+    "hint": "O que as pessoas aprendem com ele?",
+    "choices": [
+      {"text": "Ele esgota o servidor de restauração", "why": "O custo é em confiança, não em máquinas."},
+      {"text": "Ele apaga backups bons", "why": "Um ensaio nunca toca os backups do repositório."},
+      {"text": "As falhas dele deixam de ser lidas", "why": "Isso. As pessoas aprendem a ignorar as falhas dele, e aí deixam passar uma real. Um resultado vermelho tem que sempre querer dizer alguma coisa."},
+      {"text": "Ele deixa o servidor em produção lento", "why": "Essa é uma preocupação à parte."}
+    ]
+  },
+  "ex-kaf2h2rh": {
+    "prompt": "Qual método faz o relatório em produção e a cópia restaurada descreverem o mesmo instante num banco movimentado?",
+    "hint": "Um snapshot, e o horário dele.",
+    "choices": [
+      {"text": "Um snapshot, restaurado até o próprio now()", "why": "Isso: leia o relatório num snapshot REPEATABLE READ e restaure até o now() dele. Cada comando vê um instante, e a restauração para ali."},
+      {"text": "Rodar o relatório duas vezes e ficar com o segundo resultado", "why": "Duas leituras em movimento continuam em movimento."},
+      {"text": "Restaurar até o ponto mais recente que o arquivo tem", "why": "O ponto mais recente também anda."},
+      {"text": "Travar todas as tabelas durante o ensaio", "why": "Isso para a aplicação: uma indisponibilidade para rodar uma verificação."}
+    ]
+  },
+  "ex-rvyn9qwg": {
+    "prompt": "Entre `BEGIN` e `COMMIT`, o `now()` do PostgreSQL devolve o momento em que a ___ começou, e é por isso que ele pode nomear o horário de um snapshot.",
+    "hint": "Não o comando.",
+    "blanks": [{"accept": ["transação", "transacao", "transaction"]}]
+  },
+  "ex-wgm3rhja": {
+    "prompt": "O que o intervalo entre ensaios diz a você?",
+    "hint": "Um backup quebra no dia seguinte a um ensaio.",
+    "choices": [
+      {"text": "Quantos dados uma restauração perde", "why": "Isso é trabalho do backup e do arquivo, o RPO da lição 8."},
+      {"text": "Por quanto tempo, no máximo, um backup quebrado passa despercebido", "why": "Isso. Com ensaios mensais, até um mês."},
+      {"text": "Quanto tempo leva uma restauração", "why": "O ensaio mede isso; o intervalo não decide."},
+      {"text": "Quantos backups são guardados", "why": "Isso é a retenção."}
+    ]
+  },
+  "ex-2vc6yy49": {
+    "prompt": "A retenção guarda umas duas semanas de backups e o ensaio roda por mês. O que acontece quando o ensaio descobre que os backups quebraram há três semanas?",
+    "hint": "Olhe a figura.",
+    "choices": [
+      {"text": "Você restaura do último backup antes da quebra", "why": "Ele expirou há uma semana; a retenção alcança duas semanas para trás."},
+      {"text": "Você restaura do backup mais recente, que está bom", "why": "O backup mais recente é um dos quebrados."},
+      {"text": "Os backups guardados são de depois da quebra, então não há um bom", "why": "Isso. O intervalo entre ensaios tem que ser menor que a janela de retenção."},
+      {"text": "O pgBackRest restaura um backup do conjunto expirado", "why": "Backups expirados são apagados do repositório."}
+    ]
+  },
+  "ex-v17gq1ry": {
+    "prompt": "Os backups full são semanais, dois são guardados, e você quer pelo menos uma semana de folga entre perceber uma falha e o último backup bom expirar. Qual é o maior intervalo entre ensaios, em dias?",
+    "hint": "Uns catorze dias de retenção, menos sete de folga.",
+    "unit": "dias"
+  },
+  "ex-5111vq24": {
+    "prompt": "O que um ensaio trimestral, feito por alguém que não montou os backups, pega e o script semanal não consegue pegar?",
+    "hint": "O script não precisa perguntar nada a ninguém.",
+    "choices": [
+      {"text": "Passos que uma pessoa só conhece", "why": "Isso: um procedimento, uma senha ou um passo que vive na cabeça de uma pessoa. Um script que funciona não diz se outra pessoa conseguiria fazer o mesmo."},
+      {"text": "Um backup danificado por um disco ruim", "why": "O verify e a restauração do script semanal pegam isso."},
+      {"text": "Uma restauração mais lenta que a da semana passada", "why": "O drills.csv mostra essa tendência."},
+      {"text": "Mudanças na impressão digital", "why": "O script compara impressões digitais toda semana."}
+    ]
+  },
+  "ex-rs9hmasn": {
+    "prompt": "Os tempos de restauração no `drills.csv` subiram de 20 minutos em janeiro para 50 em junho. A promessa é de uma hora. Qual é a leitura útil?",
+    "hint": "Prolongue a linha.",
+    "choices": [
+      {"text": "Nada a fazer enquanto estiver abaixo de uma hora", "why": "Nesse ritmo ela passa da hora em poucos meses, e uma restauração nesse dia quebra a promessa."},
+      {"text": "Os backups estão se degradando e precisam ser refeitos", "why": "Mais lento não é danificado; os dados cresceram."},
+      {"text": "Ensaiar menos, para os números ficarem estáveis", "why": "Os números continuariam crescendo; você só deixaria de vê-los."},
+      {"text": "Agir agora: a tendência logo passa da promessa", "why": "Isso. Hardware de restauração mais rápido, restauração em paralelo, ou fulls mais frequentes, antes do dia em que importa."}
+    ]
+  },
+  "ex-2pp0dav3": {
+    "prompt": "Segundo a lição, em que os ensaios de verdade falham com mais frequência?",
+    "hint": "Antes dos dados, na maioria das vezes.",
+    "choices": [
+      {"text": "Um arquivo de backup danificado", "why": "Acontece, e é o mais raro da lista."},
+      {"text": "Algo de que a restauração precisa e não está com o backup", "why": "Isso: uma chave, uma senha, um arquivo de configuração, um tablespace, uma extensão."},
+      {"text": "A função de impressão digital dando resultados diferentes em duas máquinas", "why": "O md5 é determinístico em qualquer lugar."},
+      {"text": "O PostgreSQL se recusando a reaplicar o log arquivado", "why": "A reaplicação funciona quando o log está lá; buracos são uma falha à parte, já listada."}
+    ]
+  },
+  "ex-znjrmg23": {
+    "prompt": "Ligue cada achado de um ensaio ao tipo de falha que ele é.",
+    "hint": "Só um é o próprio backup.",
+    "pairs": [
+      {"left": "O servidor de restauração tem o PostgreSQL 15 instalado", "right": "A máquina de restauração não está pronta"},
+      {"left": "Falta no repositório um segmento de março", "right": "Um buraco no arquivo"},
+      {"left": "Só a Ana sabe a senha de criptografia do repositório", "right": "Algo de que a restauração precisa não está com o backup"},
+      {"left": "Um backup full reprova no checksum", "right": "O backup está danificado"}
+    ],
+    "right_distractors": ["O banco em produção está lento demais"]
+  }
+}

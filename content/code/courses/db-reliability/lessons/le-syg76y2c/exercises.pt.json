@@ -1,0 +1,174 @@
+{
+  "ex-xxx7mted": {
+    "prompt": "O que atende cada conexão ao PostgreSQL no servidor?",
+    "hint": "Um destes por cliente.",
+    "choices": [
+      { "text": "Uma thread num processo de servidor compartilhado", "why": "O PostgreSQL usa processos, não threads." },
+      { "text": "Um espaço no shared buffer pool", "why": "Os buffers guardam páginas, não conexões." },
+      { "text": "Um processo próprio", "why": "Isso: iniciado na conexão, encerrado na desconexão, com memória própria." },
+      { "text": "O WAL sender", "why": "Ele atende só conexões de replicação." }
+    ]
+  },
+  "ex-qbkwz7a2": {
+    "prompt": "Com `max_connections = 100`, o `pgbench -c 120` falhou ao criar qual número de cliente (contando como o pgbench conta, a partir do zero)?",
+    "hint": "could not create connection for client …",
+    "unit": ""
+  },
+  "ex-1qc1fw1z": {
+    "prompt": "Por que aumentar `max_connections` para 1000 não resolve?",
+    "hint": "Quatro núcleos.",
+    "choices": [
+      { "text": "Os processos competiriam", "why": "Isso: mil deles competem em vez de trabalhar; o muro muda de lugar; o custo de cada conexão continua." },
+      { "text": "Exige um restart", "why": "É verdade, e não é o motivo." },
+      { "text": "O PostgreSQL não passa de 100", "why": "Passa." },
+      { "text": "Clientes veriam os dados uns dos outros", "why": "Os processos são isolados." }
+    ]
+  },
+  "ex-70xjmewv": {
+    "prompt": "O que o `userlist.txt` guarda para o `shop_app`?",
+    "hint": "O PgBouncer confere senhas antes de ter uma conexão com o servidor.",
+    "choices": [
+      { "text": "A senha em texto puro", "why": "Com SCRAM ele guarda o segredo, nunca a senha." },
+      { "text": "Um hash que o PgBouncer calcula ao iniciar", "why": "Ele o lê do arquivo que você escreveu." },
+      { "text": "Nada; o PgBouncer pergunta ao servidor a cada vez", "why": "Isso é o auth_query, não o que esta lição configurou." },
+      { "text": "O segredo SCRAM copiado do pg_authid", "why": "Isso: o mesmo segredo que o servidor guarda." }
+    ]
+  },
+  "ex-fkpa1654": {
+    "prompt": "Associe cada configuração do `pgbouncer.ini` ao que ela faz.",
+    "hint": "Onde, quem, como, quantas.",
+    "pairs": [
+      { "left": "listen_port = 6433", "right": "A porta em que os clientes se conectam" },
+      { "left": "admin_users = shop_app", "right": "Pode usar o console de administração pgbouncer" },
+      { "left": "pool_mode = transaction", "right": "Devolve a conexão depois de cada transação" },
+      { "left": "default_pool_size = 20", "right": "Conexões com o servidor por banco e usuário" }
+    ],
+    "right_distractors": ["Onde fica o arquivo de WAL"]
+  },
+  "ex-sybncvkw": {
+    "prompt": "Por que a lição roda o PgBouncer na 6433 em vez da 6432 do pacote?",
+    "hint": "De quem é cada uma?",
+    "choices": [
+      { "text": "A 6432 é reservada para replicação", "why": "É a porta padrão do serviço do pacote." },
+      { "text": "Para rodar uma cópia própria como você", "why": "Isso: alterada e reiniciada sem sudo, ao lado da do pacote." },
+      { "text": "O PgBouncer 1.22 exige isso", "why": "Qualquer porta livre funciona." },
+      { "text": "Porque o PostgreSQL usa a 6432", "why": "O PostgreSQL está na 5432." }
+    ]
+  },
+  "ex-48p6e062": {
+    "prompt": "Durante a execução, o `SHOW POOLS` mostrou `cl_active` 20 e `cl_waiting` 100. O que os 100 estavam fazendo?",
+    "hint": "Na fila.",
+    "choices": [
+      { "text": "Falhando com too many clients", "why": "O pgbench não reportou nenhuma transação com falha." },
+      { "text": "Esperando no PgBouncer por uma conexão", "why": "Isso: cada um pega uma para uma transação e depois a devolve." },
+      { "text": "Conectados direto ao servidor", "why": "O servidor tinha 21 processos do shop_app." },
+      { "text": "Lendo do standby", "why": "Não havia standby." }
+    ]
+  },
+  "ex-2xfc3nvh": {
+    "prompt": "Quantos processos do `shop_app` o servidor tinha enquanto 120 clientes rodavam através do PgBouncer?",
+    "hint": "20 para o bench, e o pool do shop.",
+    "unit": "processos"
+  },
+  "ex-3vtxr2nf": {
+    "prompt": "A latência média subiu para cerca de 73 ms através do pool. Onde foi gasta a maior parte desse tempo?",
+    "hint": "120 clientes, 20 conexões.",
+    "choices": [
+      { "text": "Nas verificações SCRAM do PgBouncer em cada consulta", "why": "A autenticação acontece na conexão, não por consulta." },
+      { "text": "Escrevendo o WAL duas vezes", "why": "O pool não muda o WAL." },
+      { "text": "Copiando linhas pelo PgBouncer", "why": "Os resultados passam por ele a baixo custo." },
+      { "text": "Esperando na fila do PgBouncer", "why": "Isso: onde ele deve ser gasto, em vez de num servidor sobrecarregado." }
+    ]
+  },
+  "ex-vjjphwtk": {
+    "prompt": "Um cliente rodou `SET statement_timeout = '1ms'` e saiu. Por que a contagem do cliente seguinte foi cancelada?",
+    "hint": "Onde mora uma configuração de sessão?",
+    "choices": [
+      { "text": "Ela ficou na conexão", "why": "Isso: a configuração ficou na conexão com o servidor do pool; no modo transaction o estado de uma sessão pertence à conexão com o servidor." },
+      { "text": "O PgBouncer copia configurações entre clientes", "why": "Ele não copia nada; a configuração ficou na conexão com o servidor." },
+      { "text": "statement_timeout vale para o servidor inteiro", "why": "O SET a altera para uma sessão." },
+      { "text": "A tabela orders estava bloqueada", "why": "O erro cita o timeout." }
+    ]
+  },
+  "ex-h95cw8v7": {
+    "prompt": "Associe cada parte do estado da sessão ao que ela é.",
+    "hint": "Todas vazam no modo transaction.",
+    "pairs": [
+      { "left": "SET search_path", "right": "Uma configuração fora de uma transação" },
+      { "left": "PREPARE q AS …", "right": "Um prepared statement criado em SQL" },
+      { "left": "CREATE TEMP TABLE", "right": "Uma tabela que pertence à sessão" },
+      { "left": "LISTEN orders", "right": "Uma inscrição em notificações" }
+    ],
+    "right_distractors": ["SET LOCAL dentro de um BEGIN"]
+  },
+  "ex-zzyprbpj": {
+    "prompt": "`SET ___ statement_timeout = '1ms'` dentro de uma transação dura só até a transação terminar.",
+    "hint": "O oposto de global.",
+    "blanks": [ { "accept": ["LOCAL", "local"] } ]
+  },
+  "ex-0fxk6yg5": {
+    "prompt": "Além do `SET LOCAL`, como uma aplicação atrás de um pool em modo transaction pode ter uma configuração em toda conexão?",
+    "hint": "Aplicada quando uma conexão com o servidor começa.",
+    "choices": [
+      { "text": "Um SET no início de cada sessão", "why": "Isso é estado de sessão, e vaza." },
+      { "text": "Um default_pool_size maior", "why": "O tamanho do pool não tem nada a ver com configurações." },
+      { "text": "ALTER ROLE … SET", "why": "Isso: cada conexão nova desse papel começa com ela." },
+      { "text": "O modo statement", "why": "O modo statement quebra transações com vários comandos." }
+    ]
+  },
+  "ex-dgsxpa0f": {
+    "prompt": "Por que a configuração não vazou no modo session?",
+    "hint": "Entre dois clientes.",
+    "choices": [
+      { "text": "O modo session proíbe SET", "why": "O SET funcionou." },
+      { "text": "O servidor reiniciou depois do HUP", "why": "O SIGHUP relê o arquivo do PgBouncer; nada reiniciou." },
+      { "text": "A configuração era LOCAL", "why": "Era um SET simples." },
+      { "text": "O PgBouncer roda DISCARD ALL antes de reusar", "why": "Isso: e uma sessão pertence a um cliente durante toda a sua vida." }
+    ]
+  },
+  "ex-kn7qhc0r": {
+    "prompt": "O `SELECT 1` extra levou 0,143 s no modo transaction. Quantos segundos levou no modo session, segundo o `time`?",
+    "hint": "real.",
+    "unit": "s"
+  },
+  "ex-wss8yfwe": {
+    "prompt": "Associe cada modo de pool ao momento em que a conexão volta.",
+    "hint": "Desconexão, commit, comando.",
+    "pairs": [
+      { "left": "session", "right": "Quando o cliente se desconecta" },
+      { "left": "transaction", "right": "Quando cada transação termina" },
+      { "left": "statement", "right": "Quando cada comando termina" }
+    ],
+    "right_distractors": ["Quando o servidor reinicia"]
+  },
+  "ex-2pfncekh": {
+    "prompt": "O que o modo `statement` quebra?",
+    "hint": "Cada comando pode cair em outra conexão.",
+    "choices": [
+      { "text": "Todo SELECT", "why": "Comandos isolados funcionam." },
+      { "text": "Prepared statements criados por drivers", "why": "Isso também é um problema do modo transaction, e não o que o define." },
+      { "text": "Transações com vários comandos", "why": "Isso: o BEGIN e o comando seguinte poderiam cair em conexões diferentes, então ele as recusa." },
+      { "text": "Conexões vindas do psql", "why": "O psql se conecta como qualquer cliente." }
+    ]
+  },
+  "ex-s5x7z8yc": {
+    "prompt": "Como o PgBouncer foi instruído a reler o seu arquivo sem derrubar clientes?",
+    "hint": "Um sinal.",
+    "choices": [
+      { "text": "kill -HUP", "why": "Isso: enviado ao processo cujo ID está em pgbouncer.pid." },
+      { "text": "pg_ctl reload", "why": "O pg_ctl gerencia o PostgreSQL, não o PgBouncer." },
+      { "text": "Reiniciando-o com -d", "why": "Isso derrubaria os clientes." },
+      { "text": "SELECT pg_reload_conf()", "why": "Isso recarrega a configuração do PostgreSQL." }
+    ]
+  },
+  "ex-x3ypy2p0": {
+    "prompt": "Uma aplicação define `search_path` uma vez ao se conectar e usa tabelas temporárias em relatórios longos. 300 workers web dividem um servidor. Que arranjo serve sem mudar a aplicação?",
+    "hint": "Estado de sessão, muitos clientes.",
+    "choices": [
+      { "text": "Modo transaction, pool de 20", "why": "O search_path e as tabelas temporárias vazariam entre clientes." },
+      { "text": "Modo session", "why": "Isso: com conexões com o servidor suficientes para as suas sessões; seguro para estado de sessão; o pooling ainda economiza o início de conexões." },
+      { "text": "Modo statement", "why": "Relatórios com vários comandos numa transação seriam recusados." },
+      { "text": "Sem pooler, max_connections = 300", "why": "Trezentos processos num servidor é o problema com que a lição começou." }
+    ]
+  }
+}

@@ -1,0 +1,585 @@
+[
+  {
+    "id": "ex-fmrtr3vb",
+    "version": 1,
+    "section": "how-it-happens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is split-brain?",
+    "hint": "Count the primaries.",
+    "choices": [
+      {
+        "text": "A replica too far behind to fail over to",
+        "correct": false,
+        "why": "That is lag, lesson 13."
+      },
+      {
+        "text": "A standby that lost its replication slot",
+        "correct": false,
+        "why": "That is lesson 11's lost slot."
+      },
+      {
+        "text": "Two servers taking writes, each as primary",
+        "correct": true,
+        "why": "Right: one database, two histories."
+      },
+      {
+        "text": "Two etcd members that disagree about a key",
+        "correct": false,
+        "why": "etcd refuses to answer rather than disagree."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9k4a6s7",
+    "version": 1,
+    "section": "how-it-happens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which assumption does Patroni's protection against two primaries rest on?",
+    "hint": "Noticing takes a running process.",
+    "choices": [
+      {
+        "text": "That the old leader notices",
+        "correct": true,
+        "why": "Right: that a leader unable to renew notices and stops, and noticing takes a process that is running."
+      },
+      {
+        "text": "That etcd stays up",
+        "correct": false,
+        "why": "Lesson 16 showed what Patroni does when it fails."
+      },
+      {
+        "text": "That replicas keep up",
+        "correct": false,
+        "why": "maximum_lag_on_failover handles lag."
+      },
+      {
+        "text": "That the network between nodes holds",
+        "correct": false,
+        "why": "A partition is one of the cases it handles, when the process runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7y1n60b",
+    "version": 1,
+    "section": "how-it-happens",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event with how it stops the manager but not the database.",
+    "hint": "Pause, partition, crash.",
+    "pairs": [
+      {
+        "left": "A virtual machine suspended by its host",
+        "right": "Every process frozen, resumed later unaware"
+      },
+      {
+        "left": "A cut between the primary and etcd",
+        "right": "The primary still reachable by some applications"
+      },
+      {
+        "left": "The Patroni process killed",
+        "right": "PostgreSQL, a separate process, keeps serving"
+      }
+    ],
+    "right_distractors": [
+      "The disk filled by WAL"
+    ]
+  },
+  {
+    "id": "ex-eqbx9q0j",
+    "version": 1,
+    "section": "the-frozen-leader",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pkill -STOP` do to the process it matches?",
+    "hint": "Not KILL.",
+    "choices": [
+      {
+        "text": "Stops it cleanly, like pg_ctl stop",
+        "correct": false,
+        "why": "SIGSTOP is not a shutdown request; the process does nothing at all."
+      },
+      {
+        "text": "Kills it after a grace period",
+        "correct": false,
+        "why": "It never dies; it resumes on SIGCONT."
+      },
+      {
+        "text": "Restarts it",
+        "correct": false,
+        "why": "Nothing restarts."
+      },
+      {
+        "text": "Freezes it where it stands",
+        "correct": true,
+        "why": "Right: until SIGCONT, it runs nothing, and keeps everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-khzefzaj",
+    "version": 1,
+    "section": "the-frozen-leader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the key expired and `pg2` promoted itself, what was `pg1`'s PostgreSQL?",
+    "hint": "pg_is_in_recovery().",
+    "choices": [
+      {
+        "text": "A replica of pg2",
+        "correct": false,
+        "why": "Nothing demoted it: its Patroni was frozen."
+      },
+      {
+        "text": "Still a primary, taking writes",
+        "correct": true,
+        "why": "Right: f, and order 50001 went in."
+      },
+      {
+        "text": "Stopped",
+        "correct": false,
+        "why": "It answered queries."
+      },
+      {
+        "text": "Read-only, waiting for Patroni",
+        "correct": false,
+        "why": "It accepted an INSERT."
+      }
+    ]
+  },
+  {
+    "id": "ex-ceb65qvq",
+    "version": 1,
+    "section": "the-frozen-leader",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During the freeze, how many servers confirmed a new order?",
+    "hint": "50001 and 50029.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "servers"
+  },
+  {
+    "id": "ex-2q2mph13",
+    "version": 1,
+    "section": "what-was-lost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When `pg1`'s Patroni thawed, what happened to order 50001?",
+    "hint": "pg_rewind's job.",
+    "choices": [
+      {
+        "text": "It was copied to pg2",
+        "correct": false,
+        "why": "Nothing copies the old primary's writes."
+      },
+      {
+        "text": "Discarded, unreported",
+        "correct": true,
+        "why": "Right: the rewind threw it away; confirmed to the application, then gone."
+      },
+      {
+        "text": "It was kept in a conflict table",
+        "correct": false,
+        "why": "PostgreSQL has none."
+      },
+      {
+        "text": "It was replayed onto pg2 by the slot",
+        "correct": false,
+        "why": "The slot carries log from leader to replica, not back."
+      }
+    ]
+  },
+  {
+    "id": "ex-re6e0jgh",
+    "version": 1,
+    "section": "what-was-lost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call this worse than an outage?",
+    "hint": "What does monitoring show?",
+    "choices": [
+      {
+        "text": "It takes longer to repair",
+        "correct": false,
+        "why": "The cluster repaired itself in seconds."
+      },
+      {
+        "text": "It stops all writes",
+        "correct": false,
+        "why": "Writes continued on both servers."
+      },
+      {
+        "text": "It breaks the replication slots",
+        "correct": false,
+        "why": "Slots were fine."
+      },
+      {
+        "text": "Silent loss",
+        "correct": true,
+        "why": "Right: a confirmed write vanished; nobody is told, until a customer with a receipt asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpjdxpw6",
+    "version": 1,
+    "section": "what-was-lost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would have kept a way to recover order 50001?",
+    "hint": "Before the rejoin.",
+    "choices": [
+      {
+        "text": "A copy of its data first",
+        "correct": true,
+        "why": "Right: the rewind removes the divergent history; a copy keeps it."
+      },
+      {
+        "text": "A larger ttl",
+        "correct": false,
+        "why": "That delays the failover; it does not keep the write."
+      },
+      {
+        "text": "max_slot_wal_keep_size",
+        "correct": false,
+        "why": "That limits a slot; it does not save divergent writes."
+      },
+      {
+        "text": "Restarting etcd before the rewind ran",
+        "correct": false,
+        "why": "etcd holds no rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fk0mtzs",
+    "version": 1,
+    "section": "fencing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Making sure the old primary can no longer write before a new one is promoted is called ___.",
+    "hint": "Like the fence around a field.",
+    "blanks": [
+      {
+        "accept": [
+          "fencing"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-njzmmgpb",
+    "version": 1,
+    "section": "fencing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of fencing with how it stops the old primary.",
+    "hint": "Timer, power, network, commit.",
+    "pairs": [
+      {
+        "left": "Watchdog",
+        "right": "The kernel reboots the machine when Patroni stops resetting a timer"
+      },
+      {
+        "left": "STONITH",
+        "right": "The machine is powered off through its management interface"
+      },
+      {
+        "left": "Network fencing",
+        "right": "Its port or address is cut from every path"
+      },
+      {
+        "left": "Synchronous replication",
+        "right": "It cannot confirm a commit without its standby"
+      }
+    ],
+    "right_distractors": [
+      "The replication slot is dropped"
+    ]
+  },
+  {
+    "id": "ex-bxbxnf4r",
+    "version": 1,
+    "section": "fencing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does Patroni arrange for the watchdog to fire?",
+    "hint": "Before or after the key expires?",
+    "choices": [
+      {
+        "text": "As soon as etcd stops answering",
+        "correct": false,
+        "why": "It fires when Patroni stops resetting it, whatever the reason."
+      },
+      {
+        "text": "After the new leader is promoted",
+        "correct": false,
+        "why": "That would leave two primaries in between."
+      },
+      {
+        "text": "A few seconds before its key could expire",
+        "correct": true,
+        "why": "Right: so the machine is down before anybody else can take the key."
+      },
+      {
+        "text": "Once a day, as a test",
+        "correct": false,
+        "why": "It fires only when not reset."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6wddac7",
+    "version": 1,
+    "section": "fencing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `watchdog: mode: required` do on a node without a watchdog device?",
+    "hint": "Found at start-up, not during a failover.",
+    "choices": [
+      {
+        "text": "Uses a software timer instead",
+        "correct": false,
+        "why": "required means the device must be there."
+      },
+      {
+        "text": "Reboots the machine at once",
+        "correct": false,
+        "why": "It refuses leadership; it does not reboot."
+      },
+      {
+        "text": "Nothing; required is a warning only",
+        "correct": false,
+        "why": "automatic is the lenient mode."
+      },
+      {
+        "text": "Refuses it the leadership",
+        "correct": true,
+        "why": "Right: a missing device is found before it matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-93gw82g2",
+    "version": 1,
+    "section": "fencing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What can `softdog` not protect against?",
+    "hint": "Where does it run?",
+    "choices": [
+      {
+        "text": "A frozen Patroni process",
+        "correct": false,
+        "why": "That is exactly what it covers."
+      },
+      {
+        "text": "A crash of PostgreSQL",
+        "correct": false,
+        "why": "A crash of PostgreSQL is not a split-brain risk; Patroni handles it."
+      },
+      {
+        "text": "A hung kernel",
+        "correct": true,
+        "why": "Right: it is a timer inside the same kernel; a hardware watchdog covers that."
+      },
+      {
+        "text": "A full disk",
+        "correct": false,
+        "why": "That is not its job, and not what it fails at."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8q03d73",
+    "version": 1,
+    "section": "fencing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does STONITH cost that a watchdog does not?",
+    "hint": "Who holds the power switch?",
+    "choices": [
+      {
+        "text": "Power-off credentials",
+        "correct": true,
+        "why": "Right: something that can power off a database server, and a dependency on that interface answering."
+      },
+      {
+        "text": "A reboot of a slow machine",
+        "correct": false,
+        "why": "The watchdog costs that too."
+      },
+      {
+        "text": "A synchronous standby",
+        "correct": false,
+        "why": "That is the cost of the last fence."
+      },
+      {
+        "text": "A second etcd",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-29gatpwj",
+    "version": 1,
+    "section": "sync-as-fence",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Patroni's `synchronous_mode` manage for you?",
+    "hint": "Lesson 12's setting.",
+    "choices": [
+      {
+        "text": "The ttl of the leader key",
+        "correct": false,
+        "why": "ttl is unrelated."
+      },
+      {
+        "text": "synchronous_standby_names",
+        "correct": true,
+        "why": "Right: it picks a replica and sets the leader to wait for it."
+      },
+      {
+        "text": "The replication slots",
+        "correct": false,
+        "why": "use_slots does that."
+      },
+      {
+        "text": "The watchdog device",
+        "correct": false,
+        "why": "That is the watchdog section."
+      }
+    ]
+  },
+  {
+    "id": "ex-zda8vkqn",
+    "version": 1,
+    "section": "sync-as-fence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could the frozen old primary not confirm the insert?",
+    "hint": "Who was its synchronous standby?",
+    "choices": [
+      {
+        "text": "Its disk was full",
+        "correct": false,
+        "why": "Nothing filled."
+      },
+      {
+        "text": "etcd refused the commit",
+        "correct": false,
+        "why": "etcd is not in the commit path."
+      },
+      {
+        "text": "Its standby had gone",
+        "correct": true,
+        "why": "Right: synchronous_standby_names said pg3, and pg3 was now the leader."
+      },
+      {
+        "text": "Patroni had blocked its port",
+        "correct": false,
+        "why": "Patroni was frozen and did nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-44ez5wj5",
+    "version": 1,
+    "section": "sync-as-fence",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status did `timeout 10 psql …` report on the old primary?",
+    "hint": "timeout's own status.",
+    "value": 124,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-tv4mkdw7",
+    "version": 1,
+    "section": "sync-as-fence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which risk remains with synchronous replication as the only fence?",
+    "hint": "Lesson 12's cancel.",
+    "choices": [
+      {
+        "text": "A cancel confirming a local row",
+        "correct": true,
+        "why": "Right: the commit is already local, and a cancel tells the client INSERT 0 1."
+      },
+      {
+        "text": "The old primary takes and confirms writes",
+        "correct": false,
+        "why": "It cannot confirm them; that is the fence."
+      },
+      {
+        "text": "The new primary refuses writes",
+        "correct": false,
+        "why": "It took writes normally."
+      },
+      {
+        "text": "The ttl stops working",
+        "correct": false,
+        "why": "ttl is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8whrqxw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's Patroni cluster runs on virtual machines a host may suspend for snapshots. Which change targets that exact risk?",
+    "hint": "A suspended machine is a frozen Patroni.",
+    "choices": [
+      {
+        "text": "A bigger max_slot_wal_keep_size",
+        "correct": false,
+        "why": "That is about disk, not two primaries."
+      },
+      {
+        "text": "Three etcd members",
+        "correct": false,
+        "why": "That covers etcd failing, not the leader freezing."
+      },
+      {
+        "text": "A longer loop_wait",
+        "correct": false,
+        "why": "That makes failure slower to notice."
+      },
+      {
+        "text": "A watchdog in required mode on each node",
+        "correct": true,
+        "why": "Right: a frozen Patroni stops resetting the timer and the machine reboots before the key expires."
+      }
+    ]
+  }
+]

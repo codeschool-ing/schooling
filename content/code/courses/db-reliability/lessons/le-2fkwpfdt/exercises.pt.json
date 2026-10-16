@@ -1,0 +1,421 @@
+{
+  "ex-9newr200": {
+    "prompt": "Por que uma recuperação para um ponto no tempo é melhor que o dump da lição 2 para este erro?",
+    "hint": "O que acontece com os pedidos escritos entre o backup e o DELETE?",
+    "choices": [
+      {
+        "text": "Restaura mais rápido que um dump do mesmo tamanho",
+        "why": "Pode até ser, mas velocidade não é o que este erro pedia."
+      },
+      {
+        "text": "Traz de volta também os pedidos escritos depois do DELETE, sem reparo",
+        "why": "O que vem depois do alvo não está na cópia; é para isso que serve o reparo."
+      },
+      {
+        "text": "Mantém cada mudança feita antes do erro",
+        "why": "Isso. O dump teria perdido tudo entre o snapshot dele e o DELETE."
+      },
+      {
+        "text": "Dispensa o backup, porque o log basta",
+        "why": "A reaplicação parte de um base backup; o log sozinho não tem de onde partir."
+      }
+    ]
+  },
+  "ex-zr9fhfw3": {
+    "prompt": "Logo depois de perceber o erro, por que perguntar qual segmento está sendo escrito agora?",
+    "hint": "O erro tem segundos de idade.",
+    "choices": [
+      {
+        "text": "Porque é onde o erro está",
+        "why": "Isso. Um erro dos últimos segundos está no segmento atual, então é ali que o pg_waldump procura."
+      },
+      {
+        "text": "Para apagar esse segmento antes que seja arquivado",
+        "why": "Apagar log quebraria o arquivo e perderia também as transações boas que estão nele."
+      },
+      {
+        "text": "Para saber quantos bytes o DELETE ocupou no log",
+        "why": "A questão não é o tamanho; é achar a transação."
+      },
+      {
+        "text": "Porque uma restauração mira o segmento atual",
+        "why": "Uma restauração pode mirar qualquer ponto depois do backup."
+      }
+    ]
+  },
+  "ex-pj2b53j9": {
+    "prompt": "Quantos pedidos o `DELETE` errado removeu?",
+    "hint": "Ele mesmo informou.",
+    "unit": "pedidos"
+  },
+  "ex-1e8nk7nz": {
+    "prompt": "O que o `awk '/desc: DELETE/ {print $8}' | sort | uniq -c` contou, sobre o dump do segmento?",
+    "hint": "O campo 8 de uma linha de registro é o id da transação.",
+    "choices": [
+      {
+        "text": "Comandos DELETE por tabela do banco",
+        "why": "O pg_waldump conhece registros, não comandos; e a contagem foi por transação."
+      },
+      {
+        "text": "Commits por segundo ao longo do dia",
+        "why": "Commits são registros COMMIT; o filtro pegou registros DELETE."
+      },
+      {
+        "text": "Segmentos de log escritos por cada sessão",
+        "why": "Nada no dump é contado por sessão."
+      },
+      {
+        "text": "Linhas apagadas por transação",
+        "why": "Isso. Uma transação, a 742, apagou 12059 linhas, o número que o DELETE informou."
+      }
+    ]
+  },
+  "ex-2eqs0fzv": {
+    "prompt": "Qual era o id de transação do `DELETE`?",
+    "hint": "A que tem 12059 linhas.",
+    "unit": "id de transação"
+  },
+  "ex-a5afg2jr": {
+    "prompt": "O `pg_waldump` imprimiu `error in WAL record … invalid record length … expected at least 24, got 0` antes dos resultados. O que isso quer dizer aqui?",
+    "hint": "O segmento está terminado?",
+    "choices": [
+      {
+        "text": "O segmento está corrompido e a restauração vai falhar",
+        "why": "Nada está danificado; a restauração usou esse segmento mais tarde."
+      },
+      {
+        "text": "Ele chegou ao fim de um segmento em uso",
+        "why": "Isso: leu até o fim do que foi escrito, num segmento ainda em uso. O resto do arquivo de 16 MB ainda está vazio, então o dump para ali e avisa."
+      },
+      {
+        "text": "O DELETE era grande demais para o log",
+        "why": "As 12059 linhas foram registradas e contadas."
+      },
+      {
+        "text": "Ele precisa rodar como postgres, e não com sudo",
+        "why": "Rodou com sudo e leu o arquivo; a mensagem é sobre o conteúdo."
+      }
+    ]
+  },
+  "ex-c5bzts19": {
+    "prompt": "Num servidor movimentado, um segmento guarda milhares de transações, e várias delas grandes. O que estreita a busca até o erro?",
+    "hint": "O pg_waldump tem opções para isso.",
+    "choices": [
+      {
+        "text": "Restaurar uma vez por transação até os dados parecerem certos",
+        "why": "Em princípio funciona, e custa uma restauração por palpite."
+      },
+      {
+        "text": "As opções --relation, --start e --end dele",
+        "why": "Isso: --relation para a tabela, --start e --end para o trecho do log que você conhece. Mais ou menos quando, e qual tabela, reduzem um segmento movimentado a um punhado de candidatos."
+      },
+      {
+        "text": "Ler o log do servidor, que registra cada comando por padrão",
+        "why": "Por padrão o PostgreSQL não registra os comandos."
+      },
+      {
+        "text": "Escolher a transação com mais registros",
+        "why": "Num servidor movimentado, a maior transação muitas vezes é um lote legítimo."
+      }
+    ]
+  },
+  "ex-3hbw3sqf": {
+    "prompt": "A primeira restauração parou com `recovery ended before configured recovery target was reached`. Por quê?",
+    "hint": "Qual segmento tinha a transação 742, e ele estava no arquivo?",
+    "choices": [
+      {
+        "text": "O xid foi digitado errado",
+        "why": "O alvo era 742, o certo; a segunda tentativa usou o mesmo."
+      },
+      {
+        "text": "O --target-exclusive não é aceito com um xid",
+        "why": "É aceito, e a segunda tentativa o usou."
+      },
+      {
+        "text": "O base backup era antigo demais para chegar àquele ponto",
+        "why": "Idade não interrompe a reaplicação; um segmento faltando interrompe."
+      },
+      {
+        "text": "O segmento com o alvo ainda não fora arquivado",
+        "why": "Isso. A 742 estava no …04, ainda sendo escrito, e o arquivo terminava no …03."
+      }
+    ]
+  },
+  "ex-fzzrysa9": {
+    "prompt": "Por que a lição chama aquela recusa de boa notícia?",
+    "hint": "Qual teria sido a alternativa?",
+    "choices": [
+      {
+        "text": "Uma cópia errada teria parecido certa",
+        "why": "Isso. Uma cópia parada em silêncio no …03 teria parecido recuperada e estaria sem os cinco pedidos bons, e ninguém saberia."
+      },
+      {
+        "text": "Porque prova que o backup é válido",
+        "why": "Não prova nada sobre o backup; é sobre o alvo."
+      },
+      {
+        "text": "Porque mostra que o servidor de produção ainda está rodando",
+        "why": "A recusa não diz nada sobre o servidor de produção."
+      },
+      {
+        "text": "Porque apagou a cópia restaurada automaticamente",
+        "why": "A cópia ficou como estava; a tentativa seguinte a removeu à mão."
+      }
+    ]
+  },
+  "ex-htw95k21": {
+    "prompt": "O que fez o segmento do alvo chegar ao arquivo?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Reiniciar o servidor restaurado",
+        "why": "O servidor restaurado lê o arquivo; não tem como acrescentar a ele, e o arquivamento dele estava desligado."
+      },
+      {
+        "text": "O pgbackrest check no servidor restaurado",
+        "why": "O check roda contra o servidor da própria stanza, e o segmento tinha que vir do de produção."
+      },
+      {
+        "text": "O pg_switch_wal() no servidor de produção",
+        "why": "Isso. Ele terminou o …04, e o archive-push o enviou."
+      },
+      {
+        "text": "Esperar o próximo backup full",
+        "why": "Isso também o arquivaria, mais cedo ou mais tarde; a correção foi imediata."
+      }
+    ]
+  },
+  "ex-8xa7t1zd": {
+    "prompt": "Ligue cada alvo de recuperação a quando usá-lo.",
+    "hint": "Um deles precisa de preparo com antecedência.",
+    "pairs": [
+      {
+        "left": "`recovery_target_xid`",
+        "right": "O log mostrou qual transação foi"
+      },
+      {
+        "left": "`recovery_target_time`",
+        "right": "Você sabe mais ou menos quando, e nada mais preciso"
+      },
+      {
+        "left": "`recovery_target_lsn`",
+        "right": "Você tem uma posição no log em vez de uma transação"
+      },
+      {
+        "left": "`recovery_target_name`",
+        "right": "Alguém criou um ponto de restauração antes da mudança"
+      }
+    ],
+    "right_distractors": [
+      "Você quer o momento mais recente que o arquivo guarda"
+    ]
+  },
+  "ex-8hntr85t": {
+    "prompt": "O que o `--target-action=pause` te dá que o `promote` não dá?",
+    "hint": "Somente leitura, esperando.",
+    "choices": [
+      {
+        "text": "Uma recuperação mais rápida",
+        "why": "É a mesma reaplicação; ela só espera no fim."
+      },
+      {
+        "text": "Escritas permitidas durante a pausa",
+        "why": "Um servidor pausado ainda está em recuperação, somente leitura."
+      },
+      {
+        "text": "Reparo automático do banco de produção",
+        "why": "Nada mexe no banco de produção."
+      },
+      {
+        "text": "Uma olhada na cópia antes de decidir qualquer coisa",
+        "why": "Isso. Se o alvo estava errado, você restaura de novo sem perder nada."
+      }
+    ]
+  },
+  "ex-yhm9sv36": {
+    "prompt": "Quantos pedidos a cópia pausada tinha?",
+    "hint": "Cinquenta mil, mais os pedidos de antes do DELETE.",
+    "unit": "pedidos"
+  },
+  "ex-x2wdsgka": {
+    "prompt": "Uma equipe vai rodar uma migração que reescreve uma tabela grande. Pensando na recuperação, qual é a coisa mais barata a fazer antes?",
+    "hint": "Tornar exato um alvo futuro.",
+    "choices": [
+      {
+        "text": "Tirar um base backup completo e esperar terminar",
+        "why": "Útil e lento; o arquivo já deixa voltar a qualquer momento depois do último backup."
+      },
+      {
+        "text": "Desligar o arquivamento durante a migração",
+        "why": "Isso tira justamente o log com que você faria a recuperação."
+      },
+      {
+        "text": "Rodar SELECT pg_create_restore_point('before-migration')",
+        "why": "Isso. Uma chamada, e o recovery_target_name dá um alvo exato se a migração der errado."
+      },
+      {
+        "text": "Pausar a replicação",
+        "why": "Replicação é a lição 11; ela não torna exato um alvo de recuperação."
+      }
+    ]
+  },
+  "ex-g74ppkyc": {
+    "prompt": "Depois que o servidor restaurado foi promovido, o `pg_control_checkpoint()` informou a timeline 2. Por que uma timeline nova?",
+    "hint": "Duas histórias agora continuam de um mesmo ponto.",
+    "choices": [
+      {
+        "text": "Uma história nova começou onde a reaplicação parou",
+        "why": "Isso. A recuperação parou antes do fim do log, então uma história nova começou ali: a timeline 2 saiu da timeline 1 antes da transação 742."
+      },
+      {
+        "text": "Cada reinício aumenta a timeline",
+        "why": "Um reinício mantém a timeline; quem a bifurca é uma recuperação que termina antes do fim do log."
+      },
+      {
+        "text": "O pgBackRest numera cada restauração",
+        "why": "A timeline é do PostgreSQL, escrita pelo servidor na promoção."
+      },
+      {
+        "text": "O servidor de produção passou para a timeline 2 quando a cópia foi feita",
+        "why": "O servidor de produção continua na timeline 1."
+      }
+    ]
+  },
+  "ex-yy89t7yf": {
+    "prompt": "O arquivo que registra onde a timeline 2 saiu da timeline 1 se chama `00000002.___`.",
+    "hint": "Ele registra a bifurcação.",
+    "blanks": [
+      {
+        "accept": [
+          "history"
+        ]
+      }
+    ]
+  },
+  "ex-c0yt4k9x": {
+    "prompt": "Em `000000020000000000000005`, o que dizem os oito primeiros dígitos?",
+    "hint": "Compare com o …0004 na timeline 1.",
+    "choices": [
+      {
+        "text": "A porta do servidor",
+        "why": "Portas não aparecem em nomes de segmento."
+      },
+      {
+        "text": "A timeline a que o segmento pertence",
+        "why": "Isso. Mesma posição no log, outra história, outro nome."
+      },
+      {
+        "text": "O dia do mês em que ele foi escrito",
+        "why": "Nomes de segmento não carregam datas."
+      },
+      {
+        "text": "O tamanho do segmento em megabytes",
+        "why": "Os segmentos têm 16 MB; o nome não diz isso."
+      }
+    ]
+  },
+  "ex-rz02tfvx": {
+    "prompt": "Quando substituir o banco de produção pela cópia restaurada é a escolha certa, em vez de reparar a partir dela?",
+    "hint": "O que acontece com tudo o que veio depois do alvo?",
+    "choices": [
+      {
+        "text": "Quando a cópia tem mais linhas que o banco de produção",
+        "why": "Contagem de linhas não decide isso; a confiança no que veio depois decide."
+      },
+      {
+        "text": "Quando o erro foi um DELETE em vez de um UPDATE",
+        "why": "Os dois podem ser reparados a partir de uma cópia."
+      },
+      {
+        "text": "Quando o que veio depois não é confiável",
+        "why": "Isso, ou quando o servidor de produção se foi. Fora isso, substituir joga fora cada escrita boa desde o erro."
+      },
+      {
+        "text": "Quando a restauração levou menos de uma hora",
+        "why": "A velocidade não muda o que a substituição perde."
+      }
+    ]
+  },
+  "ex-f8tadq1e": {
+    "prompt": "Quantos pedidos o shop de produção tinha depois do reparo?",
+    "hint": "Cinquenta mil, cinco antes, três depois.",
+    "unit": "pedidos"
+  },
+  "ex-y6hw6rfy": {
+    "prompt": "Alguém do suporte diz que o erro aconteceu \"às 16:36\" pelo relógio do notebook, em outra cidade. A partir de que o alvo por horário deve ser montado?",
+    "hint": "O relógio de quem escreveu os horários de commit?",
+    "choices": [
+      {
+        "text": "Os horários de commit que o pg_waldump mostra, com o offset",
+        "why": "Isso. O registro do próprio banco de quando cada transação foi confirmada é o relógio que vale."
+      },
+      {
+        "text": "O horário da pessoa, convertido para o fuso do servidor",
+        "why": "Melhor que sem converter, e ainda é o relógio de um notebook; o log tem o horário real."
+      },
+      {
+        "text": "O horário da pessoa menos uma hora, por segurança",
+        "why": "Ir mais cedo é mais seguro, mas uma hora perde transações boas à toa."
+      },
+      {
+        "text": "O horário em que o monitoramento mostrou a queda",
+        "why": "Outro relógio de novo, e mais tarde que o commit."
+      }
+    ]
+  },
+  "ex-9sh6gmtq": {
+    "prompt": "Por que um alvo cedo demais é mais seguro que um tarde demais?",
+    "hint": "Qual dos dois o reparo consegue consertar?",
+    "choices": [
+      {
+        "text": "Cedo demais é mais rápido de reaplicar",
+        "why": "Um pouco, e esse não é o motivo."
+      },
+      {
+        "text": "O PostgreSQL recusa alvos depois do último commit",
+        "why": "Ele recusa alvos que não consegue alcançar, o que é outro problema."
+      },
+      {
+        "text": "Tarde demais danifica o arquivo",
+        "why": "A reaplicação não escreve no arquivo."
+      },
+      {
+        "text": "Tarde demais é o que reaplica o erro",
+        "why": "Isso. Cedo demais perde mudanças que o reparo traz de volta do servidor de produção; tarde demais reaplica o erro. Mudanças boas que faltam podem ser copiadas do servidor de produção; um erro reaplicado deixa a cópia inútil."
+      }
+    ]
+  },
+  "ex-bqj1as9c": {
+    "prompt": "Ponha em ordem os passos de uma recuperação para um ponto no tempo.",
+    "hint": "Ache o momento antes de restaurar até ele.",
+    "items": [
+      "Achar no log a transação ou o horário do alvo",
+      "Garantir que o arquivo tem o segmento com o alvo",
+      "Restaurar num servidor separado, com o arquivamento desligado, pausando no alvo",
+      "Conferir a cópia, depois promover e substituir ou reparar"
+    ],
+    "trap": "Não dá para restaurar até um alvo que você não achou; um segmento não arquivado faz a restauração falhar; e nada é decidido antes de a cópia pausada ser conferida."
+  },
+  "ex-vdqjyspz": {
+    "prompt": "Uma restauração com `recovery_target_time = '16:36:09'` produziu uma cópia com 37947 pedidos. O que aconteceu?",
+    "hint": "O DELETE foi confirmado às 16:36:08.563.",
+    "choices": [
+      {
+        "text": "Falta um segmento no arquivo",
+        "why": "Um segmento faltando faria a recuperação parar com erro, e não daria uma cópia além do erro."
+      },
+      {
+        "text": "O alvo era depois do DELETE, então ele foi reaplicado",
+        "why": "Isso. 37947 é o shop depois do DELETE mais um pedido posterior, o 743, confirmado às 16:36:08.600; o alvo tem que ser anterior a 16:36:08.563."
+      },
+      {
+        "text": "A cópia está certa, e a contagem inclui pedidos antigos duas vezes",
+        "why": "O que falta são os pedidos antigos, não há nada em dobro."
+      },
+      {
+        "text": "Alvos por horário ignoram comandos DELETE",
+        "why": "A reaplicação aplica cada registro antes do alvo, inclusive DELETEs."
+      }
+    ]
+  }
+}

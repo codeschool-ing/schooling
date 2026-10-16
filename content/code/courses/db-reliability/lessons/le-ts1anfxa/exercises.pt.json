@@ -1,0 +1,213 @@
+{
+  "ex-478w50fd": {
+    "prompt": "Ponha em ordem as três perguntas da lição antes de uma promoção.",
+    "hint": "Vivo, depois dados, depois uma segunda promoção.",
+    "items": [
+      "O primário se foi mesmo?",
+      "Quanto o standby tem?",
+      "Alguma coisa vai promover uma segunda vez?"
+    ],
+    "trap": "Perguntar pelos dados antes de saber se o primário se foi pode levar a promover ao lado de um primário vivo."
+  },
+  "ex-pm84k7p6": {
+    "prompt": "Você não consegue se conectar ao primário a partir do seu laptop. O que isso lhe diz?",
+    "hint": "Um fato sobre um caminho.",
+    "choices": [
+      { "text": "O primário caiu", "why": "Ele pode estar vivo e aceitando escritas de quem consegue alcançá-lo." },
+      { "text": "O standby tem todas as escritas", "why": "A conexão do seu laptop não diz nada sobre o standby." },
+      { "text": "O caminho a partir de você caiu", "why": "Isso. É um fato sobre o caminho, não sobre o primário." },
+      { "text": "É seguro promover agora mesmo", "why": "Promover ao lado de um primário vivo cria dois primários." }
+    ]
+  },
+  "ex-rkak14d7": {
+    "prompt": "Associe cada termo ao que ele significa.",
+    "hint": "Planejado ou não.",
+    "pairs": [
+      { "left": "Failover", "right": "Promover um standby porque o primário falhou" },
+      { "left": "Switchover", "right": "Passar o papel do primário para um standby, de propósito" },
+      { "left": "Promoção", "right": "O comando que transforma um standby num primário" }
+    ],
+    "right_distractors": [
+      "Restaurar um backup num servidor novo"
+    ]
+  },
+  "ex-hxyp4g0y": {
+    "prompt": "Como a lição derrubou o primário?",
+    "hint": "O processo principal dele.",
+    "choices": [
+      { "text": "kill -9 no postmaster dele", "why": "Isso. A primeira linha do postmaster.pid, morto sem chance de fazer shutdown." },
+      { "text": "pg_ctlcluster stop -m fast", "why": "Isso é um shutdown limpo, com checkpoint." },
+      { "text": "Apagando o diretório de dados", "why": "Esse é o desastre da lição 1, não um crash." },
+      { "text": "Desconectando o cabo de rede", "why": "Uma máquina só não tem cabo entre os seus servidores." }
+    ]
+  },
+  "ex-gjty3ewd": {
+    "prompt": "As posições recebida e reaplicada do standby são iguais depois do crash. O que ele não consegue lhe dizer?",
+    "hint": "Ele sabe o que tem.",
+    "choices": [
+      { "text": "Se ainda está em recuperação", "why": "O pg_is_in_recovery() respondeu isso." },
+      { "text": "O id do seu último pedido", "why": "Ele mostrou 50001." },
+      { "text": "Em que timeline ele está", "why": "Isso está no arquivo de controle dele." },
+      { "text": "Se o primário escreveu mais do que ele recebeu", "why": "Isso. Um standby assíncrono sabe o que tem, nunca o que perdeu." }
+    ]
+  },
+  "ex-qzmkc1zs": {
+    "prompt": "Depois do `promote`, o `pg_control_checkpoint()` mostrou o primário novo na ___ 2.",
+    "hint": "O que a recuperação da lição 6 também começou.",
+    "blanks": [
+      { "accept": ["timeline", "linha do tempo"] }
+    ]
+  },
+  "ex-azv775yj": {
+    "prompt": "O último pedido antes do crash foi o 50001 e o primeiro depois da promoção foi o 50034. Quantos ids foram pulados?",
+    "hint": "Entre os dois, sem contar nenhum deles.",
+    "unit": "ids"
+  },
+  "ex-djv60380": {
+    "prompt": "Por que os ids dos pedidos saltaram depois da promoção?",
+    "hint": "Como uma sequência escreve os seus valores no log?",
+    "choices": [
+      { "text": "A sequência do standby recomeçou", "why": "Ela continuou depois da do primário antigo, não a partir de 1." },
+      { "text": "Registrados no log em lotes", "why": "Isso. Sequências registram valores de 32 em 32; o standby reaplicou o lote, não o último valor entregue." },
+      { "text": "Linhas se perderam no crash", "why": "Os ids pulam mesmo quando nada se perde." },
+      { "text": "A promoção arredonda ids para múltiplos de 32", "why": "Não há arredondamento; o próximo lote ainda não registrado começa ali." }
+    ]
+  },
+  "ex-td71veze": {
+    "prompt": "O primário antigo reiniciou depois do failover. O que ele fez?",
+    "hint": "O diretório de dados dele diz que nada aconteceu.",
+    "choices": [
+      { "text": "Subiu como standby do primário novo", "why": "Ele não tem standby.signal, então nada o torna um standby." },
+      { "text": "Subiu como primário e aceitou uma escrita", "why": "Isso. Dois primários, e o mesmo id para dois clientes." },
+      { "text": "Recusou-se a subir ao ver uma timeline mais nova", "why": "Ele não olha para o outro servidor." },
+      { "text": "Subiu só leitura até um operador decidir", "why": "Nada no PostgreSQL faz isso." }
+    ]
+  },
+  "ex-8dyn8x6t": {
+    "prompt": "A que regra leva um split-brain depois de um reboot?",
+    "hint": "A terceira pergunta.",
+    "choices": [
+      { "text": "Nunca promover um standby", "why": "A promoção é o objetivo; o risco é um segundo primário." },
+      { "text": "Sempre reconstruir todo standby", "why": "Isso é sobre voltar a seguir, não sobre o primário antigo." },
+      { "text": "Usar replicação síncrona", "why": "Isso decide o que se perde, não quantos primários existem." },
+      { "text": "Ele nunca volta como primário", "why": "Isso. Mantido parado, ou trazido de volta como standby." }
+    ]
+  },
+  "ex-e46kak6f": {
+    "prompt": "Por que um script no standby que promove quando o primário para de responder é inseguro?",
+    "hint": "O que ele vê quando a rede entre os dois cai?",
+    "choices": [
+      { "text": "Promove ao lado de um primário vivo e isolado", "why": "Isso. A mesma figura do reboot, sem precisar de reboot." },
+      { "text": "Scripts não conseguem rodar o pg_ctlcluster", "why": "Conseguem." },
+      { "text": "Promove devagar demais para fazer diferença", "why": "A velocidade não é o problema; a decisão é." },
+      { "text": "O standby não tem como alcançar o primário", "why": "Tem um, e é o único jeito com que ele decide." }
+    ]
+  },
+  "ex-v7adxdd2": {
+    "prompt": "Por que o `pg_rewind` se recusou da primeira vez?",
+    "hint": "O erro dele nomeia duas configurações.",
+    "choices": [
+      { "text": "O primário antigo ainda estava rodando", "why": "Ele foi parado antes." },
+      { "text": "O primário novo estava em outra timeline", "why": "É para isso que o pg_rewind existe." },
+      { "text": "Nem wal_log_hints nem checksums ligados", "why": "Isso. Sem eles, mudanças de hint bits não deixam rastro no log." },
+      { "text": "Ele precisa do archive", "why": "Ele lê o próprio log do alvo." }
+    ]
+  },
+  "ex-0xqe0jpe": {
+    "prompt": "Quando o `wal_log_hints` tem que ser ligado para ajudar num failover?",
+    "hint": "Ele exige um restart, e descreve o log que está sendo escrito.",
+    "choices": [
+      { "text": "Logo depois da falha, antes do rewind", "why": "As mudanças divergentes já foram escritas sem ele." },
+      { "text": "Só no primário novo", "why": "O log lido é o do primário antigo, e qualquer um pode ser o antigo da próxima vez." },
+      { "text": "Nunca; ele só serve para checksums", "why": "Ele é uma alternativa aos checksums." },
+      { "text": "Antes da falha, com um restart", "why": "Isso. Ele torna utilizável para um rewind só o log que escreve dali em diante." }
+    ]
+  },
+  "ex-agae3m04": {
+    "prompt": "`ALTER SYSTEM SET wal_log_hints = on` no 5434 deixou o 5432 em `off`. Por quê?",
+    "hint": "Onde o ALTER SYSTEM escreve?",
+    "choices": [
+      { "text": "O 5432 não tinha sido reiniciado", "why": "Tinha sido." },
+      { "text": "Standbys ignoram o wal_log_hints", "why": "Ele foi configurado no 5432 em seguida e passou a valer." },
+      { "text": "O auto.conf não é replicado", "why": "Isso. O ALTER SYSTEM escreve um arquivo que a replicação não copia; o postgresql.auto.conf é de cada servidor." },
+      { "text": "A configuração exige reload, não restart", "why": "Ela exige um restart, e recebeu um." }
+    ]
+  },
+  "ex-fm2jt7wp": {
+    "prompt": "O que um shutdown limpo de um primário faz que um crash não faz?",
+    "hint": "O checkpoint da lição 3, e o standby.",
+    "choices": [
+      { "text": "Escreve um checkpoint final", "why": "Isso. Um checkpoint de shutdown, e ele espera os standbys receberem o log até ali, então nada se perde." },
+      { "text": "Apaga os slots de replicação", "why": "Os slots sobrevivem a um shutdown." },
+      { "text": "Promove sozinho o standby", "why": "A promoção é sempre um ato explícito." },
+      { "text": "Copia o archive para o standby", "why": "O streaming transporta o log; o archive não entra nisso." }
+    ]
+  },
+  "ex-687d6zy6": {
+    "prompt": "O último checkpoint do primário parado começa em `0/6000110`; o standby reaplicou até `0/6000188`. Quantos bytes além do começo desse registro está o standby (188 menos 110, em hexadecimal)?",
+    "hint": "0x188 - 0x110.",
+    "unit": "bytes"
+  },
+  "ex-502hjamb": {
+    "prompt": "Ponha em ordem os passos do switchover.",
+    "hint": "Parada limpa primeiro; a aplicação muda por último.",
+    "items": [
+      "Parar o primário de forma limpa",
+      "Confirmar que o standby reaplicou além do último checkpoint dele",
+      "Promover o standby",
+      "Fazer do primário antigo um standby e subi-lo",
+      "Apontar a aplicação para o primário novo"
+    ],
+    "trap": "Promover antes da verificação arrisca transformar o switchover num failover com perda."
+  },
+  "ex-bp7yhtbn": {
+    "prompt": "Por que o primário antigo precisou só de `standby.signal` e de um slot para virar standby?",
+    "hint": "O que ainda estava no postgresql.auto.conf dele?",
+    "choices": [
+      { "text": "O pg_ctlcluster reescreveu a configuração dele", "why": "Nada a reescreveu." },
+      { "text": "O antigo primary_conninfo ainda estava lá", "why": "Isso. Escrito pelo pg_basebackup -R e ignorado enquanto ele era primário." },
+      { "text": "Um switchover copia configurações sozinho", "why": "Nada copia configurações entre servidores." },
+      { "text": "Standbys não precisam de configuração de conexão", "why": "Eles precisam do primary_conninfo para fazer streaming." }
+    ]
+  },
+  "ex-2g0mh5f4": {
+    "prompt": "Por que o `pg_rewind` precisa de `--config-file` no Ubuntu?",
+    "hint": "Onde o Ubuntu guarda o postgresql.conf?",
+    "choices": [
+      { "text": "Para ler a senha do servidor de origem", "why": "A senha vem da conexão, não da configuração." },
+      { "text": "Ele escreve ali o primary_conninfo novo", "why": "Isso vai para o postgresql.auto.conf." },
+      { "text": "O postgresql.conf fica em /etc/postgresql", "why": "Isso. Sem ela, a recuperação de crash em single-user não o encontraria." },
+      { "text": "O Ubuntu desativa o pg_rewind sem essa opção", "why": "Ele rodou, e falhou no primeiro passo." }
+    ]
+  },
+  "ex-4rhpykqf": {
+    "prompt": "Depois do rewind, o primário antigo não fez streaming: `replication slot \"standby1\" does not exist`. De onde veio esse nome?",
+    "hint": "O que mais o pg_rewind copia?",
+    "choices": [
+      { "text": "Do postgresql.auto.conf copiado do 5434", "why": "Isso. Copiado pelo pg_rewind, ele trazia o antigo primary_slot_name do 5434." },
+      { "text": "O pg_rewind inventa um nome de slot", "why": "Ele não escreveu nome de slot nenhum." },
+      { "text": "Do pg_hba.conf do primário novo", "why": "O pg_hba.conf não tem nomes de slot." },
+      { "text": "É o nome de slot padrão", "why": "Não existe padrão." }
+    ]
+  },
+  "ex-7rhscv5s": {
+    "prompt": "Quando um failover termina?",
+    "hint": "Não quando o primário novo aceita escritas.",
+    "choices": [
+      { "text": "Quando o primário novo aceita a primeira escrita", "why": "O primário antigo ainda pode voltar como primário, ou não voltar nunca." },
+      { "text": "Quando o pg_rewind imprime Done!", "why": "Ele imprimiu Done! e o standby continuou sem fazer streaming." },
+      { "text": "Quando o relatório do incidente é escrito", "why": "Isso é a lição 22, depois do failover." },
+      { "text": "Quando o antigo volta a fazer streaming como standby", "why": "Isso. É a verificação com que todo failover deve terminar." }
+    ]
+  },
+  "ex-xfe8xfsb": {
+    "prompt": "Com um standby síncrono (lição 12), qual das três perguntas um failover não precisa mais fazer?",
+    "hint": "O que um standby síncrono garante que tem?",
+    "choices": [
+      { "text": "O primário se foi mesmo?", "why": "A replicação síncrona não diz nada sobre o estado do primário." },
+      { "text": "Quanto o standby tem?", "why": "Isso. Todo commit confirmado está nele, então nada confirmado se perde." },
+      { "text": "Alguma coisa vai promover uma segunda vez?", "why": "Um split-brain é tão possível quanto antes." },
+      { "text": "Nenhuma; as três continuam iguais", "why": "Uma delas é respondida pela configuração." }
+    ]
+  }
+}

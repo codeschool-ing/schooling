@@ -1,0 +1,180 @@
+{
+  "ex-a1980n01": {
+    "prompt": "Associe cada abordagem ao que muda num failover.",
+    "hint": "Nada, uma escolha, um endereço, um registro.",
+    "pairs": [
+      { "left": "Vários hosts na string de conexão", "right": "Nada; o cliente tenta cada um" },
+      { "left": "Um proxy como o HAProxy", "right": "O backend que o proxy escolhe" },
+      { "left": "Um IP virtual", "right": "O próprio endereço, para outra máquina" },
+      { "left": "DNS", "right": "Um registro que aponta o novo primário" }
+    ],
+    "right_distractors": ["O diretório de dados"]
+  },
+  "ex-jv01e8ds": {
+    "prompt": "O que as quatro abordagens têm em comum no momento de um failover?",
+    "hint": "Conexões abertas.",
+    "choices": [
+      { "text": "Precisam do etcd", "why": "Só algumas leem o líder no etcd." },
+      { "text": "Exigem reiniciar a aplicação", "why": "Nenhuma exige isso; a aplicação reconecta." },
+      { "text": "As conexões abertas caem", "why": "Isso: nenhum truque de endereço conserta uma conexão com um servidor que deixou de ser primário." },
+      { "text": "Acrescentam uma ida e volta de rede a cada consulta", "why": "Só um proxy acrescenta um salto." }
+    ]
+  },
+  "ex-qgc72pwd": {
+    "prompt": "Qual parâmetro de conexão fez o `psql` ficar com o primário entre três hosts?",
+    "hint": "Uma condição que o servidor escolhido tem de cumprir.",
+    "choices": [
+      { "text": "target_session_attrs=read-write", "why": "Isso: ele pula os servidores que recusam escrita." },
+      { "text": "sslmode=require", "why": "Esse é sobre criptografia." },
+      { "text": "application_name=primary", "why": "Esse só dá nome à sessão." },
+      { "text": "load_balance_hosts=random", "why": "Esse embaralha a ordem; não escolhe o primário." }
+    ]
+  },
+  "ex-86y138m7": {
+    "prompt": "Com `target_session_attrs=standby`, em qual porta a string de três hosts conectou?",
+    "hint": "Ela passou pelo primário.",
+    "unit": ""
+  },
+  "ex-1s0n50fx": {
+    "prompt": "Qual custo das listas no lado do cliente a lição cita?",
+    "hint": "Quem precisa mudar quando um servidor é adicionado?",
+    "choices": [
+      { "text": "A libpq manda cada consulta para todos os hosts", "why": "Ela mantém uma conexão." },
+      { "text": "Precisa do HAProxy de qualquer jeito", "why": "Não precisa de nada no meio." },
+      { "text": "Funciona só em sessões de leitura", "why": "read-write achou o primário." },
+      { "text": "Cada config lista todos os servidores", "why": "Isso: a configuração de cada aplicação lista, então adicionar um muda todas, e um primeiro host morto custa um connect timeout." }
+    ]
+  },
+  "ex-500sf9gr": {
+    "prompt": "O que o endpoint REST `/primary` do Patroni responde numa réplica?",
+    "hint": "Dois códigos.",
+    "choices": [
+      { "text": "200", "why": "Só o líder responde 200." },
+      { "text": "503", "why": "Isso: e 200 no líder, que é o que o HAProxy checa." },
+      { "text": "302, apontando para o líder", "why": "Ele não redireciona." },
+      { "text": "Nada; réplicas não têm porta REST", "why": "Todo nó tem uma." }
+    ]
+  },
+  "ex-ab36wf17": {
+    "prompt": "Associe cada linha do `haproxy.cfg` à sua função.",
+    "hint": "Modo, checagem, tempo, corte.",
+    "pairs": [
+      { "left": "mode tcp", "right": "Repassa o protocolo do PostgreSQL sem mexer nele" },
+      { "left": "option httpchk GET /primary", "right": "Pergunta ao Patroni de cada nó se ele é o líder" },
+      { "left": "inter 2s fall 2 rise 2", "right": "Checa a cada dois segundos; duas respostas para mudar de estado" },
+      { "left": "on-marked-down shutdown-sessions", "right": "Fecha as conexões com um servidor marcado como fora" }
+    ],
+    "right_distractors": ["Copia o WAL para o standby"]
+  },
+  "ex-vsz15kzq": {
+    "prompt": "Por que `timeout client` e `timeout server` estão em 30 minutos?",
+    "hint": "O que uma conexão de banco faz na maior parte do tempo?",
+    "choices": [
+      { "text": "Para dar tempo às consultas lentas", "why": "O tempo de consulta é assunto do servidor, não do HAProxy." },
+      { "text": "Conexões ociosas seriam cortadas", "why": "Isso: uma conexão de banco passa a maior parte da vida ociosa." },
+      { "text": "O HAProxy exige no mínimo 30 minutos", "why": "Esse mínimo não existe." },
+      { "text": "Para as checagens terem tempo", "why": "Delas cuida o timeout check." }
+    ]
+  },
+  "ex-khfknzxr": {
+    "prompt": "Duas conexões na porta 5001 chegaram à 5442 e depois à 5443. Por quê?",
+    "hint": "listen replicas.",
+    "choices": [
+      { "text": "O pg1 recusou a conexão", "why": "O pg1 está fora desse lado porque é o líder." },
+      { "text": "A libpq escolheu as duas", "why": "Quem escolheu foi o HAProxy; o psql tinha um endereço." },
+      { "text": "A segunda sofreu failover", "why": "Nada falhou." },
+      { "text": "balance roundrobin entre as réplicas", "why": "Isso: /replica responde 200 nas duas, e as conexões se alternam." }
+    ]
+  },
+  "ex-7wn2k4ek": {
+    "prompt": "O que a lição diz sobre rodar um único HAProxy?",
+    "hint": "É mais uma coisa que precisa estar no ar.",
+    "choices": [
+      { "text": "Rodar dois, ou um por servidor de aplicação", "why": "Isso: senão o proxy vira o novo ponto único de falha." },
+      { "text": "Basta; ele não falha nunca", "why": "É mais um componente que se pode perder." },
+      { "text": "Rodar no primário", "why": "Aí ele morre junto com o primário." },
+      { "text": "Trocar pelo PgBouncer", "why": "O PgBouncer faz pooling; não segue o líder sozinho." }
+    ]
+  },
+  "ex-6nabmhjg": {
+    "prompt": "Quantos pedidos o `orders.sh` informou como FAILED durante o switchover?",
+    "hint": "Conte as linhas.",
+    "unit": "pedidos"
+  },
+  "ex-th0qmsqt": {
+    "prompt": "O último pedido na 5441 foi às 02:17:38 e o primeiro na 5442 às 02:17:44. Por quantos segundos nenhum pedido entrou?",
+    "hint": "Subtraia.",
+    "unit": "segundos"
+  },
+  "ex-jk3jk315": {
+    "prompt": "O que aconteceu com a conexão que estava no meio do `pg_sleep(30)`?",
+    "hint": "held.log.",
+    "choices": [
+      { "text": "O HAProxy a passou para o pg2", "why": "Uma conexão não passa de um servidor para outro." },
+      { "text": "Terminou o sleep e depois falhou", "why": "Ela foi cortada no meio." },
+      { "text": "Foi encerrada", "why": "Isso: terminating connection due to administrator command, quando o pg1 foi parado." },
+      { "text": "Esperou o pg1 voltar", "why": "A sessão vivia no processo do pg1, que foi parado." }
+    ]
+  },
+  "ex-e2xvtp1a": {
+    "prompt": "Quais duas coisas formaram os segundos sem pedidos?",
+    "hint": "Uma troca, depois uma checagem.",
+    "choices": [
+      { "text": "O ttl do etcd e o TTL do DNS", "why": "Um switchover não espera o ttl, e não havia DNS." },
+      { "text": "O pg_rewind e um base backup", "why": "Nenhum dos dois roda antes de o novo primário aceitar escritas." },
+      { "text": "O sleep do orders.sh e a partida do psql", "why": "Esses custam um segundo, não seis." },
+      { "text": "A troca do Patroni e as checagens do HAProxy", "why": "Isso: parar o pg1 e promover o pg2, depois duas checagens boas com dois segundos entre elas." }
+    ]
+  },
+  "ex-3cj1j1zx": {
+    "prompt": "Um pedido falhou com \"connection lost\". Por que repeti-lo às cegas é arriscado?",
+    "hint": "Lição 12.",
+    "choices": [
+      { "text": "A repetição vai para o primário antigo", "why": "As conexões novas foram para o novo." },
+      { "text": "O PostgreSQL recusa repetições", "why": "Uma conexão nova as aceita." },
+      { "text": "Não se sabe se ele foi commitado", "why": "Isso: o commit dele é desconhecido, e uma chave escolhida pela aplicação torna a repetição segura." },
+      { "text": "O HAProxy bloqueia repetições por um minuto", "why": "Ele não faz nada disso." }
+    ]
+  },
+  "ex-kqsgpz5x": {
+    "prompt": "Coloque em ordem o que uma aplicação deve fazer quando a sua conexão cai.",
+    "hint": "Esperar, reconectar, verificar, repetir.",
+    "items": [
+      "Esperar um pouco antes de reconectar",
+      "Abrir uma conexão nova",
+      "Verificar se a transação foi commitada",
+      "Repeti-la se não foi"
+    ],
+    "trap": "Repetir antes de verificar pode duplicar um pedido que foi commitado."
+  },
+  "ex-2j1eva5n": {
+    "prompt": "Por que um IP virtual muitas vezes não funciona numa nuvem?",
+    "hint": "A rede decide onde um endereço pode ficar.",
+    "choices": [
+      { "text": "O endereço não muda de máquina lá", "why": "Isso: as nuvens não deixam um endereço passar de uma máquina para outra; lá um load balancer da nuvem cumpre esse papel." },
+      { "text": "IPs virtuais precisam de IPv6", "why": "Funcionam com IPv4." },
+      { "text": "O Patroni não roda numa nuvem", "why": "Roda em qualquer lugar." },
+      { "text": "O endereço demora demais para mudar", "why": "A troca é rápida onde é permitida." }
+    ]
+  },
+  "ex-d3b61qcc": {
+    "prompt": "O que faz o DNS demorar a fazer efeito depois de um failover?",
+    "hint": "Alguém guardou a resposta antiga.",
+    "choices": [
+      { "text": "Registros DNS só mudam uma vez por hora", "why": "Mudam quando são gravados." },
+      { "text": "Respostas em cache", "why": "Isso: os caches guardam a resposta antiga por pelo menos o TTL: resolvers e runtimes, alguns por mais tempo." },
+      { "text": "O novo primário não tem nome", "why": "O registro é alterado para apontá-lo." },
+      { "text": "A libpq não usa DNS", "why": "Usa, para cada nome de host." }
+    ]
+  },
+  "ex-bjvvty2e": {
+    "prompt": "Como a lição manda testar a abordagem que um sistema usa?",
+    "hint": "Não lendo o gerenciador do cluster.",
+    "choices": [
+      { "text": "Conferir o patronictl list depois de uma troca", "why": "Isso mostra o cluster, não a aplicação." },
+      { "text": "Ler a página de status do HAProxy", "why": "Isso mostra o proxy, não a aplicação." },
+      { "text": "Observar uma aplicação durante a troca", "why": "Isso: como o orders.sh fez." },
+      { "text": "Rodar o pgbench na porta do primário", "why": "Isso pula o caminho que a aplicação usa." }
+    ]
+  }
+}

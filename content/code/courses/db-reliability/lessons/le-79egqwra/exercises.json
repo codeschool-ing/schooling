@@ -1,0 +1,473 @@
+[
+  {
+    "id": "ex-2b97fk36",
+    "version": 1,
+    "section": "far-away",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the standby in another region usually asynchronous?",
+    "hint": "Lesson 12's arithmetic.",
+    "choices": [
+      {
+        "text": "Asynchronous standbys use less disk",
+        "correct": false,
+        "why": "They store the same log."
+      },
+      {
+        "text": "Patroni forbids synchronous standbys far away",
+        "correct": false,
+        "why": "It allows them; the latency forbids them."
+      },
+      {
+        "text": "Every commit would wait a long round trip",
+        "correct": true,
+        "why": "Right: a tenth of a second or more per commit between continents."
+      },
+      {
+        "text": "Cascading only works asynchronously",
+        "correct": false,
+        "why": "The reason is the distance, not the cascade."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnsmx9c7",
+    "version": 1,
+    "section": "far-away",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first region is lost. What does the far asynchronous standby lose?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Whatever it had not received",
+        "correct": true,
+        "why": "Right: its lag at that moment is the region's RPO."
+      },
+      {
+        "text": "Nothing, as it is a full copy",
+        "correct": false,
+        "why": "It is a copy up to what it had received."
+      },
+      {
+        "text": "Its slot",
+        "correct": false,
+        "why": "The slot was on the lost side; the standby's data is intact."
+      },
+      {
+        "text": "Every transaction of the last hour",
+        "correct": false,
+        "why": "Only as much as it was behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-941sbg3j",
+    "version": 1,
+    "section": "far-away",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who decides to move the business to the other region, in the shape the lesson describes?",
+    "hint": "Not across an ocean.",
+    "choices": [
+      {
+        "text": "Patroni, after its ttl",
+        "correct": false,
+        "why": "Patroni manages the nodes in one region."
+      },
+      {
+        "text": "The DNS provider",
+        "correct": false,
+        "why": "DNS moves an answer; it does not decide."
+      },
+      {
+        "text": "The far standby itself",
+        "correct": false,
+        "why": "A standby never promotes itself."
+      },
+      {
+        "text": "People, in the incident",
+        "correct": true,
+        "why": "Right: lesson 22's decision, not a cluster manager's."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbfq3khq",
+    "version": 1,
+    "section": "cascading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is cascading replication?",
+    "hint": "Who feeds whom.",
+    "choices": [
+      {
+        "text": "A primary with two synchronous standbys",
+        "correct": false,
+        "why": "That is a quorum, lesson 12."
+      },
+      {
+        "text": "A standby fed by another standby",
+        "correct": true,
+        "why": "Right: standby2 streams from standby1."
+      },
+      {
+        "text": "Logical replication between versions",
+        "correct": false,
+        "why": "That is lesson 14."
+      },
+      {
+        "text": "A replica applying the log late",
+        "correct": false,
+        "why": "That is a delayed replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfv9r4r1",
+    "version": 1,
+    "section": "cascading",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What `sender_port` did `standby2`'s WAL receiver report?",
+    "hint": "It streams from standby1.",
+    "value": 5434,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-wg3rj96q",
+    "version": 1,
+    "section": "cascading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the chain cost if `standby1` stops?",
+    "hint": "Who feeds standby2?",
+    "choices": [
+      {
+        "text": "The primary stops",
+        "correct": false,
+        "why": "The primary is unaffected."
+      },
+      {
+        "text": "standby2 stops receiving",
+        "correct": true,
+        "why": "Right: until it is pointed at another source."
+      },
+      {
+        "text": "standby2 promotes itself",
+        "correct": false,
+        "why": "Standbys never promote themselves."
+      },
+      {
+        "text": "standby2's data is deleted",
+        "correct": false,
+        "why": "It keeps what it has."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnvvz9jq",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the report on `standby2` cancelled?",
+    "hint": "VACUUM on the primary.",
+    "choices": [
+      {
+        "text": "The standby ran out of memory",
+        "correct": false,
+        "why": "The error names recovery."
+      },
+      {
+        "text": "The report took longer than statement_timeout",
+        "correct": false,
+        "why": "No statement_timeout was set."
+      },
+      {
+        "text": "standby1 restarted",
+        "correct": false,
+        "why": "Nothing restarted."
+      },
+      {
+        "text": "Replay needed its rows gone",
+        "correct": true,
+        "why": "Right: replay had to remove row versions its snapshot needed; after max_standby_streaming_delay, replay wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx9vgrve",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds does `max_standby_streaming_delay` wait by default before cancelling a conflicting query?",
+    "hint": "The lesson's default.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-946ebk8v",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`hot_standby____ = on` makes a standby tell its upstream which row versions its queries still need.",
+    "hint": "The standby reports back.",
+    "blanks": [
+      {
+        "accept": [
+          "feedback"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s756zhy2",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With feedback on, where did the primary record what the standbys' queries still needed?",
+    "hint": "The standby connects with a slot.",
+    "choices": [
+      {
+        "text": "In the xmin of the slot standby1",
+        "correct": true,
+        "why": "Right: 739 there, and VACUUM kept the rows."
+      },
+      {
+        "text": "In pg_stat_replication's backend_xmin",
+        "correct": false,
+        "why": "With a slot, it goes to the slot."
+      },
+      {
+        "text": "In a table on the standby",
+        "correct": false,
+        "why": "The primary keeps it."
+      },
+      {
+        "text": "In etcd",
+        "correct": false,
+        "why": "No cluster manager was involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-aea5xb3q",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the second `UPDATE` and `VACUUM`, how many dead row versions did the primary keep for the report?",
+    "hint": "n_dead_tup.",
+    "value": 1000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-t74sa37m",
+    "version": 1,
+    "section": "reading-from-standbys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `hot_standby_feedback` cost?",
+    "hint": "Where do the dead rows wait?",
+    "choices": [
+      {
+        "text": "Standby queries run more slowly",
+        "correct": false,
+        "why": "They run the same; they just are not cancelled."
+      },
+      {
+        "text": "Replication becomes synchronous",
+        "correct": false,
+        "why": "It is unrelated to synchronous_commit."
+      },
+      {
+        "text": "Bloat on the primary",
+        "correct": true,
+        "why": "Right: a long standby query holds back VACUUM there; hours of reports, hours of dead rows piling up."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The primary pays in bloat."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpktj6gp",
+    "version": 1,
+    "section": "delayed-replica",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `recovery_min_apply_delay = '2min'` do?",
+    "hint": "Receive and apply are separate.",
+    "choices": [
+      {
+        "text": "Connects to the primary only every two minutes",
+        "correct": false,
+        "why": "It streams continuously."
+      },
+      {
+        "text": "Takes a base backup every two minutes",
+        "correct": false,
+        "why": "It is a standby, not a backup job."
+      },
+      {
+        "text": "Delays the primary's commits",
+        "correct": false,
+        "why": "The primary does not wait for it."
+      },
+      {
+        "text": "Receives at once, applies two minutes later",
+        "correct": true,
+        "why": "Right: the log is on its disk; the transactions wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-q48rzjse",
+    "version": 1,
+    "section": "delayed-replica",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders of customer 7 were copied out of the delayed replica and back into the primary?",
+    "hint": "COPY.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-3rhcjvq8",
+    "version": 1,
+    "section": "delayed-replica",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why had `standby2` already lost customer 7's orders?",
+    "hint": "What does a cascade forward?",
+    "choices": [
+      {
+        "text": "standby2 is fed by the primary",
+        "correct": false,
+        "why": "It is fed by standby1."
+      },
+      {
+        "text": "The delay setting was not reloaded",
+        "correct": false,
+        "why": "standby1 kept the rows, so the setting was in force."
+      },
+      {
+        "text": "standby1 forwards the log as it arrives",
+        "correct": true,
+        "why": "Right: standby2 has no delay of its own."
+      },
+      {
+        "text": "standby2 is faster hardware",
+        "correct": false,
+        "why": "Same machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ah0eh3d",
+    "version": 1,
+    "section": "delayed-replica",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the rescue from a delayed replica in order.",
+    "hint": "Stop the clock first.",
+    "items": [
+      "Pause replay on the delayed replica",
+      "Copy the rows out of it",
+      "Copy them into the primary",
+      "Resume replay"
+    ],
+    "trap": "Copying before pausing races the delay; resuming before the copy loses the rows on the replica too."
+  },
+  {
+    "id": "ex-1jtestmd",
+    "version": 1,
+    "section": "delayed-replica",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a delayed replica useless for failover?",
+    "hint": "How far behind is it?",
+    "choices": [
+      {
+        "text": "Too far behind",
+        "correct": true,
+        "why": "Right: promoting it means waiting out the delay, or giving up the delayed part of the log; an hour of delay is an hour of lost writes or of waiting."
+      },
+      {
+        "text": "It cannot be promoted",
+        "correct": false,
+        "why": "It can, like any standby."
+      },
+      {
+        "text": "It has no slot",
+        "correct": false,
+        "why": "It has one."
+      },
+      {
+        "text": "It has no shop database",
+        "correct": false,
+        "why": "It is a full copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-wynmp2ck",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each problem with the tool from this course that answers it.",
+    "hint": "Region, mistake, report, cleanup.",
+    "pairs": [
+      {
+        "left": "A whole region lost",
+        "right": "An asynchronous standby in another region"
+      },
+      {
+        "left": "A DELETE noticed within the hour",
+        "right": "A delayed replica"
+      },
+      {
+        "left": "A DELETE noticed tomorrow",
+        "right": "Point-in-time recovery from the archive"
+      },
+      {
+        "left": "Reports cancelled on a standby",
+        "right": "hot_standby_feedback, or a larger delay"
+      }
+    ],
+    "right_distractors": [
+      "A synchronous standby in the same rack"
+    ]
+  }
+]

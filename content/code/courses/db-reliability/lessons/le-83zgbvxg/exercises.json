@@ -1,0 +1,646 @@
+[
+  {
+    "id": "ex-trbyp5kn",
+    "version": 1,
+    "section": "segments",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many megabytes is one write-ahead log segment on a default PostgreSQL server?",
+    "hint": "ls -l printed 16777216 bytes.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-erp2vayq",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `pg_wal_lsn_diff(pg_current_wal_lsn(), :'before')` measure after an UPDATE?",
+    "hint": "An LSN is a byte position.",
+    "choices": [
+      {
+        "text": "How many rows the UPDATE changed",
+        "correct": false,
+        "why": "UPDATE reports that itself, 50000. The difference is in bytes of log."
+      },
+      {
+        "text": "How many segments were archived in between",
+        "correct": false,
+        "why": "Nothing was being archived yet; and the result is in bytes, not segments."
+      },
+      {
+        "text": "The bytes of log written in between",
+        "correct": true,
+        "why": "Right. Two positions in the log subtract to the amount of log written between them."
+      },
+      {
+        "text": "How long the UPDATE took, in microseconds",
+        "correct": false,
+        "why": "LSNs are positions, not times."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq261ztt",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Updating every row of a table of about 3 MB wrote 15 MB of log. Which explains most of the difference?",
+    "hint": "What does the first change to a page after a checkpoint log?",
+    "choices": [
+      {
+        "text": "Whole pages, logged on first change after a checkpoint",
+        "correct": true,
+        "why": "Right. Full-page images and new index entries for each new row version add up to several times the data."
+      },
+      {
+        "text": "The log stores every row twice, once for safety",
+        "correct": false,
+        "why": "There is no duplicate copy for safety; each change is logged once, in its own form."
+      },
+      {
+        "text": "The log is uncompressed text, much larger than the table's binary format",
+        "correct": false,
+        "why": "The log is binary records, not text."
+      },
+      {
+        "text": "The UPDATE ran twice because of a retry",
+        "correct": false,
+        "why": "UPDATE 50000 ran once."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv4hvsk1",
+    "version": 1,
+    "section": "segments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `SELECT pg_switch_wal()` do?",
+    "hint": "The segment does not have to be full.",
+    "choices": [
+      {
+        "text": "It moves the log to a different directory",
+        "correct": false,
+        "why": "The directory stays pg_wal; only the segment being written changes."
+      },
+      {
+        "text": "It turns archiving on without a restart",
+        "correct": false,
+        "why": "archive_mode still needs a restart; the switch only closes a segment."
+      },
+      {
+        "text": "It deletes the segments the server no longer needs",
+        "correct": false,
+        "why": "Recycling happens at checkpoints, not on a switch."
+      },
+      {
+        "text": "It finishes the current segment now and starts the next one",
+        "correct": true,
+        "why": "Right. That is how this lesson makes a segment available to the archive without waiting for it to fill."
+      }
+    ]
+  },
+  {
+    "id": "ex-remztq6n",
+    "version": 1,
+    "section": "archiving",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting or placeholder with what it does.",
+    "hint": "One of them needs a restart.",
+    "pairs": [
+      {
+        "left": "`archive_mode`",
+        "right": "Makes the server track which segments have been archived; changing it needs a restart"
+      },
+      {
+        "left": "`archive_command`",
+        "right": "The shell command run once for each finished segment"
+      },
+      {
+        "left": "`%p`",
+        "right": "Replaced by the path of the segment to archive"
+      },
+      {
+        "left": "`%f`",
+        "right": "Replaced by the segment's file name alone"
+      }
+    ],
+    "right_distractors": [
+      "Closes a segment after a set time if anything was written to it"
+    ]
+  },
+  {
+    "id": "ex-r42x8d7m",
+    "version": 1,
+    "section": "archiving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the archive command start with `test ! -f /var/lib/postgresql/wal-archive/%f &&`?",
+    "hint": "What should happen if a segment with that name is already archived?",
+    "choices": [
+      {
+        "text": "To make the copy faster when the file already exists",
+        "correct": false,
+        "why": "It does not copy faster; it refuses to copy at all if the file exists."
+      },
+      {
+        "text": "Never overwriting an archived segment",
+        "correct": true,
+        "why": "Right. Another server archiving into the same place would otherwise replace your history silently."
+      },
+      {
+        "text": "Because cp cannot create files in an empty directory",
+        "correct": false,
+        "why": "cp creates files in empty directories without trouble."
+      },
+      {
+        "text": "To skip segments that have not been written yet",
+        "correct": false,
+        "why": "The server only calls the command for finished segments; there is nothing to skip."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvsjwpm3",
+    "version": 1,
+    "section": "archiving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lesson calls `cp` the simplest archive command that works and not a good one for production. What is its weakness?",
+    "hint": "When does cp report success?",
+    "choices": [
+      {
+        "text": "It cannot copy files of 16 MB",
+        "correct": false,
+        "why": "It copied 16 MB without trouble."
+      },
+      {
+        "text": "It says done before the bytes are on disk",
+        "correct": true,
+        "why": "Right: success before the copy is known to be on disk. A power cut a moment later can lose a segment the server believes is archived, and then recycles."
+      },
+      {
+        "text": "It does not keep the file's permissions",
+        "correct": false,
+        "why": "Permissions are not what makes an archive safe."
+      },
+      {
+        "text": "It runs as ana instead of postgres",
+        "correct": false,
+        "why": "The server runs it, as postgres."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgvk3tgh",
+    "version": 1,
+    "section": "when-archiving-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The archive directory becomes unwritable. What do the application's queries notice?",
+    "hint": "Where does the failure show up?",
+    "choices": [
+      {
+        "text": "Every write fails until archiving is fixed",
+        "correct": false,
+        "why": "Writes carry on; the server keeps the segments and retries."
+      },
+      {
+        "text": "Commits slow down while the server retries",
+        "correct": false,
+        "why": "Archiving happens in its own process, after commit; commits are not delayed by it."
+      },
+      {
+        "text": "The database switches to read-only",
+        "correct": false,
+        "why": "It does not, until the disk holding pg_wal is full, when it stops altogether."
+      },
+      {
+        "text": "Nothing; a log line and a counter show it",
+        "correct": true,
+        "why": "Right. That is correct behaviour and exactly what makes the failure dangerous."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4kfwnav",
+    "version": 1,
+    "section": "when-archiving-fails",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the archive broken, how many segments were waiting as `.ready` after six more updates?",
+    "hint": "grep -c counted them.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "segments"
+  },
+  {
+    "id": "ex-nx362vpj",
+    "version": 1,
+    "section": "when-archiving-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A broken archive command goes unnoticed for long enough that the disk holding `pg_wal` fills. What happens to the database?",
+    "hint": "What can a server not do without writing to its log?",
+    "choices": [
+      {
+        "text": "It cannot write the log, so it stops accepting writes and shuts down",
+        "correct": true,
+        "why": "Right. A backup problem nobody saw becomes an outage everybody sees."
+      },
+      {
+        "text": "It deletes the oldest unarchived segments to make room",
+        "correct": false,
+        "why": "It never throws away log it has not archived; that would break the backup silently."
+      },
+      {
+        "text": "It stops archiving and carries on",
+        "correct": false,
+        "why": "Archiving already failed. The problem is that it cannot write new log."
+      },
+      {
+        "text": "It moves pg_wal to another disk automatically",
+        "correct": false,
+        "why": "There is no such mechanism."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdnkz6tc",
+    "version": 1,
+    "section": "when-archiving-fails",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database writes 2 GB of log an hour. Its archive breaks at 18:00 on Friday and nobody notices until 06:00 on Monday. About how many GB of segments has the server kept by then?",
+    "hint": "Count the hours.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-mtfad3qq",
+    "version": 1,
+    "section": "when-archiving-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the fix, `failed_count` still reads 13. A monitoring rule alerts when `failed_count > 0`. What is wrong with the rule?",
+    "hint": "What does the counter count?",
+    "choices": [
+      {
+        "text": "Nothing: 13 failures is worth an alert",
+        "correct": false,
+        "why": "They are old failures, already recovered from. The alert would fire for ever."
+      },
+      {
+        "text": "failed_count only counts segments that were finally archived",
+        "correct": false,
+        "why": "It counts failed attempts, whether or not the segment was archived later."
+      },
+      {
+        "text": "It counts old attempts too, so it never clears",
+        "correct": true,
+        "why": "Right: it counts attempts since the last reset, so one incident keeps it above zero for ever. Compare it with its previous value, and watch last_archived_time and the .ready files too."
+      },
+      {
+        "text": "It should alert on archived_count instead",
+        "correct": false,
+        "why": "archived_count going up says things work; it cannot say something failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9npvfy0",
+    "version": 1,
+    "section": "the-quiet-hour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a quiet server with no `archive_timeout`, an order is written into a segment that is far from full. When is it archived?",
+    "hint": "A segment is archived when it is finished.",
+    "choices": [
+      {
+        "text": "Within a second, because the order committed",
+        "correct": false,
+        "why": "Committing writes the log to the server's own disk. Archiving waits for the segment to finish."
+      },
+      {
+        "text": "At the next checkpoint",
+        "correct": false,
+        "why": "Checkpoints do not finish segments; they make old ones recyclable."
+      },
+      {
+        "text": "Never, because a partial segment cannot be archived",
+        "correct": false,
+        "why": "It is archived once something finishes it, by filling or by a switch."
+      },
+      {
+        "text": "When the segment fills, days later on a quiet server",
+        "correct": true,
+        "why": "Right. Until then the order exists only on the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-60083db6",
+    "version": 1,
+    "section": "the-quiet-hour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `archive_timeout = '60s'` do on a server where nothing has been written for an hour?",
+    "hint": "It only closes a segment if anything was written to it.",
+    "choices": [
+      {
+        "text": "Archives an empty segment every minute",
+        "correct": false,
+        "why": "It closes a segment only if something was written to it, so an idle server produces nothing."
+      },
+      {
+        "text": "Stops the archiver until something is written",
+        "correct": false,
+        "why": "The archiver keeps running; there is just nothing to hand it."
+      },
+      {
+        "text": "Nothing: no change to close a segment for",
+        "correct": true,
+        "why": "Right. It bounds how long a change waits, and costs nothing when there are no changes."
+      },
+      {
+        "text": "Forces a checkpoint every minute",
+        "correct": false,
+        "why": "archive_timeout switches segments; it does not cause checkpoints."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wgtzfa4",
+    "version": 1,
+    "section": "the-quiet-hour",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Segment `0D` held one order and had been open for more than a minute when `archive_timeout = '60s'` was set and reloaded. What did the server do?",
+    "hint": "The timeout was already exceeded.",
+    "choices": [
+      {
+        "text": "Closed 0D at once, so the next order went into 0E",
+        "correct": true,
+        "why": "Right. 0D was archived straight away, and 0E sixty seconds later."
+      },
+      {
+        "text": "Waited sixty seconds from the reload, then closed 0D",
+        "correct": false,
+        "why": "The minute is measured from when the segment was last switched, which was already more than a minute ago."
+      },
+      {
+        "text": "Nothing until 0D filled, because a timeout only applies to new segments",
+        "correct": false,
+        "why": "The setting applied at once to the open segment."
+      },
+      {
+        "text": "Discarded 0D, because it was nearly empty",
+        "correct": false,
+        "why": "Nothing is discarded. An almost empty segment is archived like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ff39myp",
+    "version": 1,
+    "section": "the-quiet-hour",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server writes something every minute and has `archive_timeout = '60s'`. Each closed segment is 16 MB. Roughly how many GB of archive does a day add, before compression?",
+    "hint": "1440 minutes in a day.",
+    "value": 23,
+    "tolerance": 1,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-54ej1t44",
+    "version": 1,
+    "section": "receivewal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the file `pg_receivewal` wrote called `…0F.partial`?",
+    "hint": "Is segment 0F finished?",
+    "choices": [
+      {
+        "text": "Because the copy failed halfway",
+        "correct": false,
+        "why": "Nothing failed. The server has not finished writing that segment."
+      },
+      {
+        "text": "Because the server is still writing that segment",
+        "correct": true,
+        "why": "Right. It is renamed without the suffix once the segment is finished."
+      },
+      {
+        "text": "Because pg_receivewal compresses part of each file",
+        "correct": false,
+        "why": "No compression was asked for, and the suffix is not about it."
+      },
+      {
+        "text": "Because the slot only allows partial copies",
+        "correct": false,
+        "why": "The slot keeps log for the receiver; it does not limit what is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-40kg454j",
+    "version": 1,
+    "section": "receivewal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `pg_receivewal` was stopped and its slot left in place, `active` false. What does the slot do from then on?",
+    "hint": "Look at restart_lsn.",
+    "choices": [
+      {
+        "text": "Nothing: an inactive slot is ignored",
+        "correct": false,
+        "why": "An inactive slot is the dangerous kind: it keeps its promise with nobody to collect."
+      },
+      {
+        "text": "It disappears after archive_timeout",
+        "correct": false,
+        "why": "Slots never expire on their own here; somebody has to drop them."
+      },
+      {
+        "text": "Keep every segment from restart_lsn on",
+        "correct": true,
+        "why": "Right: the server keeps every segment from the slot's restart_lsn onwards. With no receiver, that pile grows until somebody drops the slot or the disk fills."
+      },
+      {
+        "text": "It forces every segment to be archived twice",
+        "correct": false,
+        "why": "It keeps segments on the server; it does not touch the archive."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6csmwqq",
+    "version": 1,
+    "section": "receivewal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a streaming receiver running, how much log can be lost if the primary's disk dies?",
+    "hint": "Does the server wait for the receiver before a commit returns?",
+    "choices": [
+      {
+        "text": "The last fraction of a second",
+        "correct": true,
+        "why": "Right. Small and not zero."
+      },
+      {
+        "text": "A whole segment, as with archive_command",
+        "correct": false,
+        "why": "The receiver has the log as it is written, not only when a segment ends."
+      },
+      {
+        "text": "Up to archive_timeout",
+        "correct": false,
+        "why": "That is the bound for an archive command on a quiet server."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "A commit returns before the receiver has the record, unless the server is made to wait (lesson 12)."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zr8swa3",
+    "version": 1,
+    "section": "base-plus-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Base backups are taken every Sunday and the last four are kept. From when must the archive be kept?",
+    "hint": "Recovery starts from a base backup and needs every segment after its start.",
+    "choices": [
+      {
+        "text": "From the start of the newest base backup",
+        "correct": false,
+        "why": "Then the three older base backups could not be brought forward to any point."
+      },
+      {
+        "text": "For the last seven days only",
+        "correct": false,
+        "why": "Seven days covers one backup, not four."
+      },
+      {
+        "text": "Only from the last checkpoint",
+        "correct": false,
+        "why": "Checkpoints decide what the server needs for crash recovery, not what a backup needs."
+      },
+      {
+        "text": "From the oldest kept backup's start",
+        "correct": true,
+        "why": "Right. Restoring from the oldest needs every segment from its start point onwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-b134nxhb",
+    "version": 1,
+    "section": "base-plus-wal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A segment from Wednesday is missing from the archive; everything else from Sunday's base backup to Friday is there. A restore is needed to Friday 15:00. How far can it go from Sunday's backup?",
+    "hint": "Replay is a chain.",
+    "choices": [
+      {
+        "text": "To Friday 15:00, skipping the missing segment",
+        "correct": false,
+        "why": "Replay cannot skip: every record depends on the ones before it."
+      },
+      {
+        "text": "Up to where the missing segment begins",
+        "correct": true,
+        "why": "Right. Recovery stops at the first gap, however much archive comes after it."
+      },
+      {
+        "text": "Only to the end of the base backup on Sunday",
+        "correct": false,
+        "why": "Monday and Tuesday are unbroken and replay through them."
+      },
+      {
+        "text": "Nowhere, the whole archive is invalid",
+        "correct": false,
+        "why": "Everything before the gap is usable."
+      }
+    ]
+  },
+  {
+    "id": "ex-v44387az",
+    "version": 1,
+    "section": "base-plus-wal",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what a recovery to a moment after the base backup needs, in the order it uses them.",
+    "hint": "Start from the copy of the files.",
+    "items": [
+      "The base backup's files",
+      "Its backup_label, saying where replay starts",
+      "Every archived segment from there, without a gap",
+      "The moment to stop at"
+    ],
+    "trap": "The label points into the log; the segments are replayed in order from there; and replay stops at the chosen moment, which lesson 6 sets."
+  },
+  {
+    "id": "ex-dmqjyxat",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit a server whose `pg_stat_archiver` shows `archived_count` 50211, `failed_count` 0 and `last_archived_time` three days ago. The database is busy. What is happening?",
+    "hint": "A busy server finishes segments every few minutes.",
+    "choices": [
+      {
+        "text": "Everything is fine: no failures",
+        "correct": false,
+        "why": "No failures and no archiving for three days on a busy server is a command that hangs instead of failing."
+      },
+      {
+        "text": "Archiving has stalled without failing, and pg_wal is filling",
+        "correct": true,
+        "why": "Right. That is why last_archived_time and the .ready count are alerted on, not only failures."
+      },
+      {
+        "text": "The server is idle, so there was nothing to archive",
+        "correct": false,
+        "why": "The question says it is busy."
+      },
+      {
+        "text": "archive_mode was switched off three days ago",
+        "correct": false,
+        "why": "Then the statistics would have been reset by the restart, and pg_wal would not be the risk."
+      }
+    ]
+  }
+]

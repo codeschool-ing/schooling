@@ -1,0 +1,652 @@
+[
+  {
+    "id": "ex-dy8dkqcn",
+    "version": 1,
+    "section": "the-commit-wait",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With an asynchronous standby, the primary confirms a commit and dies a millisecond later. What happens to that commit if the standby is promoted?",
+    "hint": "When was the log sent?",
+    "choices": [
+      {
+        "text": "It is replayed from the primary's memory",
+        "correct": false,
+        "why": "The primary is dead; its memory went with it."
+      },
+      {
+        "text": "It is safe, because a commit is written twice",
+        "correct": false,
+        "why": "Written twice on the primary's own disk, not on the standby's."
+      },
+      {
+        "text": "Lost, if the log had not reached the standby",
+        "correct": true,
+        "why": "Right. The application was told yes about a transaction the new primary never received."
+      },
+      {
+        "text": "The standby refuses to be promoted",
+        "correct": false,
+        "why": "Nothing in promotion checks for commits it never saw."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjy34b91",
+    "version": 1,
+    "section": "the-commit-wait",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the values of `synchronous_commit` from the one that returns soonest to the one that waits longest.",
+    "hint": "Follow the commit from the primary's memory to the standby's data.",
+    "items": [
+      "off",
+      "local",
+      "remote_write",
+      "on",
+      "remote_apply"
+    ],
+    "trap": "remote_write and on both wait for the standby; on also waits for its disk."
+  },
+  {
+    "id": "ex-ztf5pc96",
+    "version": 1,
+    "section": "the-commit-wait",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting, with a synchronous standby, to the moment the commit returns.",
+    "hint": "Written, flushed, replayed.",
+    "pairs": [
+      {
+        "left": "local",
+        "right": "It is on the primary's disk"
+      },
+      {
+        "left": "remote_write",
+        "right": "The standby has written it, not flushed it"
+      },
+      {
+        "left": "on",
+        "right": "The standby has flushed it to disk"
+      },
+      {
+        "left": "remote_apply",
+        "right": "The standby has replayed it"
+      }
+    ],
+    "right_distractors": [
+      "The standby has archived it"
+    ]
+  },
+  {
+    "id": "ex-5c9qxygp",
+    "version": 1,
+    "section": "the-commit-wait",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`synchronous_standby_names` is empty. What does `synchronous_commit = on` wait for?",
+    "hint": "Nobody is named.",
+    "choices": [
+      {
+        "text": "Its own disk, as local does",
+        "correct": true,
+        "why": "Right. With no synchronous standby, on and local behave the same."
+      },
+      {
+        "text": "Every connected standby to flush",
+        "correct": false,
+        "why": "Only standbys named in synchronous_standby_names are waited for."
+      },
+      {
+        "text": "The first standby to connect",
+        "correct": false,
+        "why": "An empty list names nobody."
+      },
+      {
+        "text": "Nothing; it behaves like off",
+        "correct": false,
+        "why": "on still waits for the primary's own flush."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5h59f4p",
+    "version": 1,
+    "section": "the-commit-wait",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One database records payments and page views. What does the lesson suggest?",
+    "hint": "The setting is not only server-wide.",
+    "choices": [
+      {
+        "text": "Two servers, one for each kind of data",
+        "correct": false,
+        "why": "Possible, but the setting already lets one server do both."
+      },
+      {
+        "text": "remote_apply for the server, to be safe",
+        "correct": false,
+        "why": "Then every page view pays the cost of a payment."
+      },
+      {
+        "text": "off for the server, and a nightly dump",
+        "correct": false,
+        "why": "Payments would lose their last second of commits on a crash."
+      },
+      {
+        "text": "Choose synchronous_commit per transaction",
+        "correct": true,
+        "why": "Right: remote_apply where losing the commit matters, off or local where it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cnwk101",
+    "version": 1,
+    "section": "naming-the-standby",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the primary compare with the names in `synchronous_standby_names`?",
+    "hint": "Each standby says it when it connects.",
+    "choices": [
+      {
+        "text": "The standby's port number",
+        "correct": false,
+        "why": "Ports are not names; both standbys could use the same port on different hosts."
+      },
+      {
+        "text": "Its application_name",
+        "correct": true,
+        "why": "Right. Here it is set in the connection string pg_basebackup copied into primary_conninfo."
+      },
+      {
+        "text": "The name of the standby's cluster",
+        "correct": false,
+        "why": "Lesson 11's standby reported 16/standby only because nothing else was given."
+      },
+      {
+        "text": "The replication slot's name",
+        "correct": false,
+        "why": "The slot is separate; the list matches application_name."
+      }
+    ]
+  },
+  {
+    "id": "ex-tww04zqt",
+    "version": 1,
+    "section": "naming-the-standby",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A standby introduces itself with the `___` in its `primary_conninfo`, and the primary lists it under that name in `pg_stat_replication`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "application_name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-81e1z9rj",
+    "version": 1,
+    "section": "naming-the-standby",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson pass `-d 'host=... application_name=standby1'` to `pg_basebackup`?",
+    "hint": "What does -R write?",
+    "choices": [
+      {
+        "text": "pg_basebackup refuses to run without a name",
+        "correct": false,
+        "why": "Lesson 11 ran it without one."
+      },
+      {
+        "text": "-R copies the string into primary_conninfo",
+        "correct": true,
+        "why": "Right, so the standby uses the name every time it connects."
+      },
+      {
+        "text": "The slot is named after the application",
+        "correct": false,
+        "why": "The slot is named by -S."
+      },
+      {
+        "text": "It makes the copy synchronous",
+        "correct": false,
+        "why": "Nothing is synchronous until the primary's synchronous_standby_names names it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qsr2rhh",
+    "version": 1,
+    "section": "the-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run, average latency was 1.610 ms with the standby asynchronous and 1.969 ms synchronous. How many milliseconds did each transaction pay for the wait?",
+    "hint": "Subtract.",
+    "value": 0.359,
+    "tolerance": 0.005,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-5rfs3554",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call its measured cost the cheapest synchronous replication will ever be?",
+    "hint": "Where was the standby?",
+    "choices": [
+      {
+        "text": "pgbench runs faster than real applications",
+        "correct": false,
+        "why": "The workload is not the point; the distance is."
+      },
+      {
+        "text": "The standby had no queries of its own to serve",
+        "correct": false,
+        "why": "That helps a little; the round trip is what grows."
+      },
+      {
+        "text": "PostgreSQL 16 removed the network wait",
+        "correct": false,
+        "why": "Every synchronous commit waits for one round trip."
+      },
+      {
+        "text": "The standby is on the same machine",
+        "correct": true,
+        "why": "Right. Every real standby adds a network round trip to each commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7a2gabp",
+    "version": 1,
+    "section": "the-price",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An import commits one million rows one at a time against a synchronous standby with a 100 ms round trip. Ignoring everything else, how many hours does the waiting add?",
+    "hint": "Seconds first, then divide by 3600.",
+    "value": 27.8,
+    "tolerance": 0.3,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-3me8qz3p",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `synchronous_commit = off` risk?",
+    "hint": "It does not wait for the primary's disk either.",
+    "choices": [
+      {
+        "text": "Recent commits, if it crashes",
+        "correct": true,
+        "why": "Right: the last fraction of a second of them, on a crash of the primary, with or without a standby."
+      },
+      {
+        "text": "The standby falling hours behind",
+        "correct": false,
+        "why": "Replication is unaffected; the risk is on the primary."
+      },
+      {
+        "text": "Corruption of the data files",
+        "correct": false,
+        "why": "off loses recent commits; it never corrupts the database."
+      },
+      {
+        "text": "Nothing, if there is a synchronous standby",
+        "correct": false,
+        "why": "The primary may still lose commits it confirmed before writing them."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv6rxhsf",
+    "version": 1,
+    "section": "the-stall",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`synchronous_standby_names = 'standby1'` and standby1 stops. What happens to writes on the primary?",
+    "hint": "Nothing can be confirmed.",
+    "choices": [
+      {
+        "text": "They continue asynchronously",
+        "correct": false,
+        "why": "PostgreSQL never downgrades on its own; that would break the guarantee silently."
+      },
+      {
+        "text": "They fail at once with an error",
+        "correct": false,
+        "why": "They wait, with no error and no end."
+      },
+      {
+        "text": "They wait until the standby is back or the setting changes",
+        "correct": true,
+        "why": "Right. The primary does not fall back to asynchronous by itself."
+      },
+      {
+        "text": "The primary shuts down",
+        "correct": false,
+        "why": "It keeps running and keeps waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf27srsq",
+    "version": 1,
+    "section": "the-stall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While the `INSERT` waited on `SyncRep`, another session counted the order and got 0. Why?",
+    "hint": "The commit is on the primary's disk.",
+    "choices": [
+      {
+        "text": "The insert had not been written yet",
+        "correct": false,
+        "why": "It was written and flushed on the primary before the wait."
+      },
+      {
+        "text": "The other session read from the standby",
+        "correct": false,
+        "why": "Both sessions were on the primary."
+      },
+      {
+        "text": "count(*) skips rows from the last second",
+        "correct": false,
+        "why": "count has no such rule."
+      },
+      {
+        "text": "A waiting commit is invisible to others",
+        "correct": true,
+        "why": "Right: until the wait ends, nobody else sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-04w2djbc",
+    "version": 1,
+    "section": "the-stall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `statement_timeout = 3s` do to the insert waiting for the stopped standby?",
+    "hint": "Where does the wait happen?",
+    "choices": [
+      {
+        "text": "Cancelled it after three seconds",
+        "correct": false,
+        "why": "timeout killed the client at ten seconds; the database never cancelled it."
+      },
+      {
+        "text": "Rolled it back on the primary",
+        "correct": false,
+        "why": "It was already committed locally."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right: the statement had finished, and the commit waits outside the statement."
+      },
+      {
+        "text": "Made the primary go asynchronous",
+        "correct": false,
+        "why": "No setting on a connection changes the server's replication."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1tx5cnx",
+    "version": 1,
+    "section": "the-stall",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session waiting on `SyncRep` is cancelled. What is in the table, and what does its client see?",
+    "hint": "insert.log.",
+    "choices": [
+      {
+        "text": "On the primary only; INSERT 0 1",
+        "correct": true,
+        "why": "Right: the row is on the primary only, and the client got a warning and then INSERT 0 1: success, on a row that exists on one server. An application reading only INSERT 0 1 never knows."
+      },
+      {
+        "text": "No row, and an error",
+        "correct": false,
+        "why": "The commit happened before the wait and cannot be undone."
+      },
+      {
+        "text": "No row, and INSERT 0 1",
+        "correct": false,
+        "why": "The row is there: the count was 1."
+      },
+      {
+        "text": "The row on both servers, and a warning",
+        "correct": false,
+        "why": "The standby was stopped; it has nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryajn02n",
+    "version": 1,
+    "section": "the-stall",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `exit 124` mean in the lesson's transcripts?",
+    "hint": "It is the exit status of one of the commands.",
+    "choices": [
+      {
+        "text": "The insert violated a constraint",
+        "correct": false,
+        "why": "That would print an ERROR from psql."
+      },
+      {
+        "text": "timeout killed psql after ten seconds",
+        "correct": true,
+        "why": "Right: the command was still waiting when the limit arrived."
+      },
+      {
+        "text": "The standby refused the connection",
+        "correct": false,
+        "why": "psql connected to the primary, not the standby."
+      },
+      {
+        "text": "psql lost the connection to the server",
+        "correct": false,
+        "why": "That exits with 2 and prints a message."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0sqawq9",
+    "version": 1,
+    "section": "quorum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `ANY 1 (standby1, standby2)`, standby1 stops. What happens to the next insert?",
+    "hint": "Any one is enough.",
+    "choices": [
+      {
+        "text": "It waits for standby1 to return",
+        "correct": false,
+        "why": "That is what a single named standby does."
+      },
+      {
+        "text": "It commits asynchronously, with a warning",
+        "correct": false,
+        "why": "standby2 confirmed it; nothing became asynchronous."
+      },
+      {
+        "text": "It commits, confirmed by standby2",
+        "correct": true,
+        "why": "Right: exit 0 at once, and the commit is still on two servers."
+      },
+      {
+        "text": "It fails until the list is edited",
+        "correct": false,
+        "why": "The quorum is exactly what avoids that."
+      }
+    ]
+  },
+  {
+    "id": "ex-8axwmxrw",
+    "version": 1,
+    "section": "quorum",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value of `synchronous_standby_names` to what a commit waits for.",
+    "hint": "Empty, one, FIRST, ANY.",
+    "pairs": [
+      {
+        "left": "''",
+        "right": "Nobody: replication is asynchronous"
+      },
+      {
+        "left": "'standby1'",
+        "right": "standby1, and stops when it is gone"
+      },
+      {
+        "left": "'FIRST 1 (standby1, standby2)'",
+        "right": "standby1 while it is connected, else standby2"
+      },
+      {
+        "left": "'ANY 1 (standby1, standby2)'",
+        "right": "Whichever of the two answers first"
+      }
+    ],
+    "right_distractors": [
+      "Both standbys, every time"
+    ]
+  },
+  {
+    "id": "ex-ra6j7hph",
+    "version": 1,
+    "section": "quorum",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many PostgreSQL servers, primary included, does it take for every confirmed commit to be on two machines while one standby can fail without stopping writes?",
+    "hint": "One primary and a quorum of one out of how many?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "servers"
+  },
+  {
+    "id": "ex-pkvja0c7",
+    "version": 1,
+    "section": "quorum",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One standby is in the same data centre and one in another city. Why might a team choose `FIRST 1 (near, far)` over `ANY 1 (near, far)`?",
+    "hint": "Which does each one wait for in steady state?",
+    "choices": [
+      {
+        "text": "It states a preference for near",
+        "correct": true,
+        "why": "Right: the far one is only waited for when the near one is gone, so the near one sets the speed for as long as it is up."
+      },
+      {
+        "text": "FIRST is faster when both are up",
+        "correct": false,
+        "why": "ANY waits for the quickest, which is at least as fast."
+      },
+      {
+        "text": "ANY needs both standbys to be up",
+        "correct": false,
+        "why": "ANY 1 needs one."
+      },
+      {
+        "text": "FIRST keeps the far standby asynchronous forever",
+        "correct": false,
+        "why": "It becomes the synchronous one when near is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkww3cnb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop agreed to an RPO of a few seconds for orders, and has one standby. What does this lesson suggest?",
+    "hint": "Lesson 8's number decides.",
+    "choices": [
+      {
+        "text": "Make the one standby synchronous",
+        "correct": false,
+        "why": "Then the standby's failure stops every order."
+      },
+      {
+        "text": "synchronous_commit = off, for speed",
+        "correct": false,
+        "why": "That loses commits on a crash of the primary itself."
+      },
+      {
+        "text": "Synchronous, plus a timeout on every statement",
+        "correct": false,
+        "why": "A timeout does not bound the commit's wait."
+      },
+      {
+        "text": "Asynchronous, with its lag watched",
+        "correct": true,
+        "why": "Right: seconds of RPO need no synchronous standby, and its failure stops nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5z9sren",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A payment table is protected by `ANY 1` over two nearby synchronous standbys. Somebody runs `DELETE FROM payments` without a `WHERE`. What gets the rows back?",
+    "hint": "Synchronous replication copies faster; it does not judge.",
+    "choices": [
+      {
+        "text": "Promoting one of the standbys",
+        "correct": false,
+        "why": "Both standbys replayed the delete, sooner than an asynchronous one would."
+      },
+      {
+        "text": "A point-in-time restore",
+        "correct": true,
+        "why": "Right: point-in-time recovery from the archive to a moment before the delete, as in lesson 6. Replication protects machines, not data."
+      },
+      {
+        "text": "Cancelling the delete's SyncRep wait",
+        "correct": false,
+        "why": "The delete was committed on the primary before the wait."
+      },
+      {
+        "text": "Nothing: it cannot be recovered",
+        "correct": false,
+        "why": "The base backup and the archive can bring back the moment before."
+      }
+    ]
+  }
+]
