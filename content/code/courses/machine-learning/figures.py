@@ -1131,6 +1131,75 @@ def l11_reliability(lang):
             'Honesto embaixo, baixo em cima, onde vão os créditos.')
     return fig, cap
 
+# ------------------------------------------------------------------ lesson 12
+
+@figure('l12-errors', 12)
+def l12_errors(lang):
+    import math
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    d = deliveries_frame()
+    f = ['distance_km', 'items', 'rush', 'rain', 'driver_months']
+    tr, te = d[d['date'] < '2025-10-01'], d[d['date'] >= '2025-10-01']
+    m = HistGradientBoostingRegressor(loss='absolute_error', random_state=0).fit(tr[f], tr['minutes'])
+    err = (te['minutes'] - m.predict(te[f])).to_numpy()
+    edges = list(range(-25, 131, 5))
+    counts = histogram(err, edges)
+    stuck = int((abs(err) > 30).sum())
+    fig = Fig('l12-errors', 600, 340, T(lang,
+        f'A histogram of the errors of boost_absolute on the {len(err):,} test deliveries, truth minus '
+        f'prediction, in five-minute bins from −25 to 130 minutes, on a square-root scale so the rare bars '
+        f'show. Nearly all errors sit in a hump between −10 and +15 minutes. A thin tail of small amber '
+        f'bars runs out to 130 minutes late: the {stuck} deliveries more than half an hour off.',
+        f'Um histograma dos erros do boost_absolute nas {len(err):,} entregas de teste, verdade menos '
+        f'previsão, em faixas de cinco minutos de −25 a 130 minutos, numa escala de raiz quadrada para as '
+        f'barras raras aparecerem. Quase todos os erros ficam num morro entre −10 e +15 minutos. Uma cauda '
+        f'fina de barras âmbar pequenas vai até 130 minutos de atraso: as {stuck} entregas com mais de meia '
+        f'hora de erro.'.replace(f'{len(err):,}', f'{len(err):,}'.replace(',', '.'))))
+    top = math.sqrt(max(counts)) * 1.05
+    p = Plot(fig, 70, 30, 580, 280, -25, 130, 0, top)
+    p.xaxis([-20, 0, 20, 40, 60, 80, 100, 120], fmt=str,
+            label=T(lang, 'minutes late (truth − prediction)', 'minutos de atraso (verdade − previsão)'))
+    p.yaxis([math.sqrt(v) for v in [0, 10, 50, 100, 200, 400, 600] if math.sqrt(v) < top],
+            fmt=lambda t: str(round(t * t)), label=T(lang, 'deliveries (square-root scale)',
+                                                     'entregas (escala de raiz quadrada)'))
+    p.bars(edges, [math.sqrt(c) for c in counts], highlight=lambda i: edges[i] >= 30)
+    fig.line(p.sx(0), p.y1, p.sx(0), p.y0 + 10, stroke='--paper-dim', width=1.2, dash='3 3')
+    fig.text(p.sx(80), p.sy(math.sqrt(60)), T(lang, f'{stuck} stuck deliveries, more than', f'{stuck} entregas paradas, mais de'),
+             size=10.5, fill='--amber', anchor='middle')
+    fig.text(p.sx(80), p.sy(math.sqrt(60)) + 15, T(lang, 'half an hour off: most of the RMSE', 'meia hora de erro: quase todo o RMSE'),
+             size=10.5, fill='--amber', anchor='middle')
+    cap = T(lang, 'A hump that the MAE describes, and a tail that the RMSE is mostly made of.',
+            'Um morro que o MAE descreve, e uma cauda de que o RMSE é feito quase todo.')
+    return fig, cap
+
+
+@figure('l12-pinball', 12)
+def l12_pinball(lang):
+    fig = Fig('l12-pinball', 560, 320, T(lang,
+        'The pinball loss for the 0.9 quantile: cost on the vertical axis against the error in minutes. '
+        'Left of zero, where the delivery was early, the line rises gently, 0.1 per minute. Right of zero, '
+        'where it was late, it rises nine times as steeply, 0.9 per minute. A dashed line shows the '
+        'absolute error, the same slope of 0.5 on both sides, for the median.',
+        'A perda pinball para o quantil 0,9: custo no eixo vertical contra o erro em minutos. À esquerda '
+        'do zero, onde a entrega chegou cedo, a linha sobe devagar, 0,1 por minuto. À direita do zero, '
+        'onde atrasou, sobe nove vezes mais íngreme, 0,9 por minuto. Uma linha tracejada mostra o erro '
+        'absoluto, a mesma inclinação de 0,5 dos dois lados, para a mediana.'))
+    p = Plot(fig, 70, 30, 520, 260, -20, 20, 0, 18)
+    p.xaxis([-20, -10, 0, 10, 20], fmt=lambda v: f'{v:+d}' if v else '0',
+            label=T(lang, 'minutes late (truth − prediction)', 'minutos de atraso (verdade − previsão)'))
+    p.yaxis([0, 6, 12, 18], fmt=str, label=T(lang, 'cost', 'custo'))
+    p.curve(lambda e: 0.9 * e if e > 0 else -0.1 * e, -20, 20, steps=200, stroke='--phosphor', width=2.6)
+    p.curve(lambda e: 0.5 * abs(e), -20, 20, steps=200, stroke='--paper-dim', width=1.6, dash='5 4')
+    fig.text(p.sx(-19), p.sy(3.6), T(lang, 'early: 0.1 a minute', 'cedo: 0,1 por minuto'), size=10.5,
+             anchor='start', fill='--phosphor')
+    fig.text(p.sx(9.5), p.sy(15.5), T(lang, 'late: 0.9 a minute', 'atrasado: 0,9 por minuto'), size=10.5,
+             anchor='end', fill='--phosphor')
+    fig.text(p.sx(-19), p.sy(11.6), T(lang, 'absolute error: 0.5 both ways', 'erro absoluto: 0,5 nos dois lados'),
+             size=10, anchor='start', fill='--paper-dim')
+    cap = T(lang, 'Lean late and pay nine times as much: the model learns to promise more.',
+            'Errar para o atraso custa nove vezes mais: o modelo aprende a prometer mais.')
+    return fig, cap
+
 
 def main():
     if '--list' in sys.argv:
