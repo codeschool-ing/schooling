@@ -1,0 +1,539 @@
+[
+  {
+    "id": "ex-cn7mpmet",
+    "version": 1,
+    "section": "how-it-goes",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of a typical ransomware attack in the order defenders see them in reports.",
+    "hint": "The visible part comes late.",
+    "items": [
+      "A way in",
+      "Weeks inside, quietly",
+      "The backups destroyed",
+      "The damage",
+      "The demand"
+    ],
+    "trap": "The backups go before the damage, because a victim who can restore does not pay; and the long quiet stretch is why the clean point is hard to find."
+  },
+  {
+    "id": "ex-vgn75rhm",
+    "version": 1,
+    "section": "how-it-goes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do attackers destroy backups before doing visible damage?",
+    "hint": "What does a victim with a good backup do?",
+    "choices": [
+      {
+        "text": "Because backups slow the encryption down",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "Because backups contain the passwords they need",
+        "correct": false,
+        "why": "Some may, but the reason they are destroyed is recovery."
+      },
+      {
+        "text": "So the victim cannot recover without paying",
+        "correct": true,
+        "why": "Right. That is why lesson 9's copy behind another credential matters."
+      },
+      {
+        "text": "Because backups are easier to find than databases",
+        "correct": false,
+        "why": "Ease is not the motive."
+      }
+    ]
+  },
+  {
+    "id": "ex-nghk33g4",
+    "version": 1,
+    "section": "how-it-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the dwell time, and why does it matter for recovery?",
+    "hint": "How long is the intruder inside before anybody notices?",
+    "choices": [
+      {
+        "text": "Weeks inside; restores keep their work",
+        "correct": true,
+        "why": "Right: the weeks inside before the damage. A copy from just before the damage carries their preparations."
+      },
+      {
+        "text": "The time a restore takes; it sets the RTO",
+        "correct": false,
+        "why": "That is the RTO itself, not the dwell time."
+      },
+      {
+        "text": "The delay between backup and archive; it sets the RPO",
+        "correct": false,
+        "why": "That is archive_timeout's subject, lesson 4."
+      },
+      {
+        "text": "The time a ransom note stays on screen",
+        "correct": false,
+        "why": "Not a term defenders use."
+      }
+    ]
+  },
+  {
+    "id": "ex-42c8tfrk",
+    "version": 1,
+    "section": "how-it-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A perfect restore brings every row back. Which part of a ransomware incident does it leave unsolved?",
+    "hint": "What else may have happened during the weeks inside?",
+    "choices": [
+      {
+        "text": "The application's downtime",
+        "correct": false,
+        "why": "A restore ends downtime; that is what it is for."
+      },
+      {
+        "text": "The damaged rows",
+        "correct": false,
+        "why": "Those are what the restore brings back."
+      },
+      {
+        "text": "The missing backups",
+        "correct": false,
+        "why": "If a restore worked, a backup survived."
+      },
+      {
+        "text": "Data copied out before the damage",
+        "correct": true,
+        "why": "Right. What was taken is outside your control whatever you restore."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex73d6rd",
+    "version": 1,
+    "section": "watching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `walwatch.sh` measure to spot damage?",
+    "hint": "Lesson 4's LSN arithmetic.",
+    "choices": [
+      {
+        "text": "The number of rows in each table every few seconds",
+        "correct": false,
+        "why": "It never reads a table; counting rows would itself be expensive."
+      },
+      {
+        "text": "Log written per interval, from the LSN",
+        "correct": true,
+        "why": "Right. Rewriting every row writes log at a rate ordinary traffic never reaches."
+      },
+      {
+        "text": "Failed logins in the server's log",
+        "correct": false,
+        "why": "Useful elsewhere, and not what this script reads."
+      },
+      {
+        "text": "The size of the data directory on disk",
+        "correct": false,
+        "why": "Disk size moves slowly and late; the log rate moves at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj3dqz1a",
+    "version": 1,
+    "section": "watching",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many MB of log did the watcher report in the interval with the two UPDATEs?",
+    "hint": "The ALERT line.",
+    "value": 19,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-p18rqnbm",
+    "version": 1,
+    "section": "watching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How should the alert limit of `walwatch.sh` be set on a real database?",
+    "hint": "What would it catch every night if set too low?",
+    "choices": [
+      {
+        "text": "At 10 MB per 5 s, as in the lab",
+        "correct": false,
+        "why": "The lab's shop is nearly idle; a real database's normal moments may be far above that."
+      },
+      {
+        "text": "Above normal peaks",
+        "correct": true,
+        "why": "Right: above the busiest normal moment, measured first. Otherwise the nightly batch pages somebody every night, and the page stops being read."
+      },
+      {
+        "text": "As low as possible, to catch everything",
+        "correct": false,
+        "why": "An alert that fires every night is ignored, including on the night it matters."
+      },
+      {
+        "text": "At whatever pgBackRest recommends",
+        "correct": false,
+        "why": "pgBackRest knows nothing about your traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3m975z9",
+    "version": 1,
+    "section": "watching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The alert line says `21:54:22 19 MB ALERT` with a 5-second interval. What is the latest safe recovery target?",
+    "hint": "The damage happened inside the interval that ended at 21:54:22.",
+    "choices": [
+      {
+        "text": "21:54:22",
+        "correct": false,
+        "why": "That is the end of the interval with the damage in it."
+      },
+      {
+        "text": "21:54:27, after the burst",
+        "correct": false,
+        "why": "That replays the damage."
+      },
+      {
+        "text": "The time of the last full backup",
+        "correct": false,
+        "why": "Safe, and it loses everything since, for no reason."
+      },
+      {
+        "text": "21:54:17, the start of that interval, or earlier",
+        "correct": true,
+        "why": "Right. The lesson went one more interval back, to 21:54:12, to be sure."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6g6hv2j",
+    "version": 1,
+    "section": "the-clean-point",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the comparison with the good day's inventory find in the restored copy?",
+    "hint": "One line.",
+    "choices": [
+      {
+        "text": "maint_svc, a login superuser",
+        "correct": true,
+        "why": "Right. Created before the target, so restored with everything else."
+      },
+      {
+        "text": "Every row was damaged",
+        "correct": false,
+        "why": "The data was intact; the audit was about access."
+      },
+      {
+        "text": "A missing role, postgres",
+        "correct": false,
+        "why": "postgres was there in both."
+      },
+      {
+        "text": "A function added by the intruder",
+        "correct": false,
+        "why": "This lab's intruder added a role, not a function."
+      }
+    ]
+  },
+  {
+    "id": "ex-61ran0ad",
+    "version": 1,
+    "section": "the-clean-point",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many orders did the restored copy hold?",
+    "hint": "Fifty thousand and the ones after the role was created.",
+    "value": 50003,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-dt7z69z0",
+    "version": 1,
+    "section": "the-clean-point",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the inventory taken on a good day and kept, rather than produced during the incident?",
+    "hint": "What would an inventory taken from the restored copy show?",
+    "choices": [
+      {
+        "text": "Because taking it is slow on a big database",
+        "correct": false,
+        "why": "It is a quick query; timing is not the reason."
+      },
+      {
+        "text": "Because PostgreSQL forbids querying roles during recovery",
+        "correct": false,
+        "why": "It allows it; the audit above ran on the paused copy."
+      },
+      {
+        "text": "Only an older copy shows what changed",
+        "correct": true,
+        "why": "Right. An inventory of the restored copy lists the intruder's role as if it belonged."
+      },
+      {
+        "text": "Because the globals file replaces it",
+        "correct": false,
+        "why": "The globals file is one record of roles; the point is having one from before."
+      }
+    ]
+  },
+  {
+    "id": "ex-83hyrh5j",
+    "version": 1,
+    "section": "the-clean-point",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The intrusion began on a date nobody knows. Which recovery does the lesson recommend?",
+    "hint": "Restore late, then make it safe.",
+    "choices": [
+      {
+        "text": "Restore to before the damage and reconnect at once",
+        "correct": false,
+        "why": "That hands the intruder's account back to them."
+      },
+      {
+        "text": "Restore the oldest backup kept, to be safe",
+        "correct": false,
+        "why": "It may still be after the intrusion, and it loses the most."
+      },
+      {
+        "text": "Refuse to restore until the date is known",
+        "correct": false,
+        "why": "The date may never be known; the business waits for nothing."
+      },
+      {
+        "text": "Restore to before the damage, audit access, change every credential",
+        "correct": true,
+        "why": "Right. Going back before an unknown date is not possible, so the copy is cleaned instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9z4w4cg",
+    "version": 1,
+    "section": "the-clean-point",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restore and the audit, which credentials have to change?",
+    "hint": "What could the intruder have read?",
+    "choices": [
+      {
+        "text": "Only maint_svc's",
+        "correct": false,
+        "why": "It is dropped; the others may have been read too."
+      },
+      {
+        "text": "Only the ones found in the audit",
+        "correct": false,
+        "why": "An audit finds what was added, not what was copied."
+      },
+      {
+        "text": "All of them",
+        "correct": true,
+        "why": "Right: roles, repository keys, the passphrase, system accounts. Anything stored where the intruder had access is to be treated as known to them."
+      },
+      {
+        "text": "None, if the backups were immutable",
+        "correct": false,
+        "why": "Immutability protects the backups, not the passwords."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2h523cy",
+    "version": 1,
+    "section": "recovery-order",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the first steps of a ransomware recovery in order.",
+    "hint": "Evidence before cleaning; a clean place before a restore.",
+    "items": [
+      "Isolate the affected machines",
+      "Preserve what is there as evidence",
+      "Build clean servers with new credentials",
+      "Restore a checked copy and audit it",
+      "Change every credential, then reconnect"
+    ],
+    "trap": "Isolating stops the spread; preserving keeps evidence; restoring onto the old machines restores onto the intruder's foothold; and reconnecting comes last."
+  },
+  {
+    "id": "ex-15czgefb",
+    "version": 1,
+    "section": "recovery-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say not to switch the affected machines off, unless the response lead says so?",
+    "hint": "What is lost at a reboot?",
+    "choices": [
+      {
+        "text": "A reboot destroys evidence",
+        "correct": true,
+        "why": "Right: memory and running state hold evidence a reboot destroys. Isolate them from the network instead."
+      },
+      {
+        "text": "Because PostgreSQL corrupts its files on shutdown",
+        "correct": false,
+        "why": "It does not; a clean shutdown is safe."
+      },
+      {
+        "text": "Because the attacker is notified",
+        "correct": false,
+        "why": "That is not the reason given."
+      },
+      {
+        "text": "Because the backups need the server running",
+        "correct": false,
+        "why": "Backups are restored elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c8j1cwf",
+    "version": 1,
+    "section": "recovery-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which decision in a ransomware incident belongs to the database administrator?",
+    "hint": "Facts, not policy.",
+    "choices": [
+      {
+        "text": "Whether to pay",
+        "correct": false,
+        "why": "That is the organisation's leadership, with lawyers and responders."
+      },
+      {
+        "text": "Facts about the copies",
+        "correct": true,
+        "why": "Right: which copies are clean, and how long a restore takes. Those facts, measured beforehand, are what the others decide with."
+      },
+      {
+        "text": "Whether to tell customers",
+        "correct": false,
+        "why": "Disclosure is decided by leadership and legal advice."
+      },
+      {
+        "text": "Whether to call the police",
+        "correct": false,
+        "why": "Also a leadership and legal decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z3kcng7",
+    "version": 1,
+    "section": "recovery-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a tabletop exercise find that a scripted restore drill does not?",
+    "hint": "Nobody touches a system.",
+    "choices": [
+      {
+        "text": "Damaged backup files",
+        "correct": false,
+        "why": "The scripted drill finds those."
+      },
+      {
+        "text": "Slow restores",
+        "correct": false,
+        "why": "The drill's timings find those."
+      },
+      {
+        "text": "Missing phone numbers, logins and passphrases",
+        "correct": true,
+        "why": "Right. The gaps between people, which no script exercises."
+      },
+      {
+        "text": "Corrupt indexes",
+        "correct": false,
+        "why": "Not something people around a table can see."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddmmdn66",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signal with the stage of an attack it can reveal.",
+    "hint": "Which stage leaves which trace?",
+    "pairs": [
+      {
+        "left": "A new superuser in the daily inventory",
+        "right": "Weeks inside, preparing"
+      },
+      {
+        "left": "Fewer backups in a repository than yesterday",
+        "right": "The backups being destroyed"
+      },
+      {
+        "left": "A sudden burst of log in a few seconds",
+        "right": "The damage itself"
+      }
+    ],
+    "right_distractors": [
+      "The demand being sent"
+    ]
+  },
+  {
+    "id": "ex-wx2ygcwe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The alert fired at 03:10. The newest immutable backup is from Sunday; the local repository was emptied at 02:00. The archive in the immutable bucket runs to 03:09. What is the plan?",
+    "hint": "What does the immutable bucket hold, and up to when?",
+    "choices": [
+      {
+        "text": "Sunday's backup, then replay, audit, rotate",
+        "correct": true,
+        "why": "Right: Sunday's backup replayed from the bucket's archive to before 03:10, then the audit and new credentials."
+      },
+      {
+        "text": "Restore Sunday's backup and accept losing the week",
+        "correct": false,
+        "why": "The archive in the bucket replays forward from Sunday; there is no need to stop there."
+      },
+      {
+        "text": "Restore from the local repository",
+        "correct": false,
+        "why": "It was emptied at 02:00."
+      },
+      {
+        "text": "Wait for the attacker's key",
+        "correct": false,
+        "why": "Not a plan this course can teach, and not one that guarantees anything."
+      }
+    ]
+  }
+]
