@@ -22,6 +22,9 @@ course, upto = sys.argv[1], int(sys.argv[2])
 topics = json.load(open(os.path.join(course, 'course.json')))['topics']
 FIRST = re.compile(r'^(?://|--|#) boxoffice/(\S+)$')
 files = {}
+# Files a lesson tells the student to delete, by the lesson that says so:
+# lesson 9 replaces schema.sql with numbered migrations.
+REMOVED = {9: ['schema.sql']}
 
 
 def blocks(text):
@@ -55,5 +58,10 @@ for topic in topics[:upto]:
                 m = FIRST.match(lines[0])
                 if m:
                     files[m.group(1)] = '\n'.join(lines) + '\n'
+
+for lesson, paths in REMOVED.items():
+    if lesson <= upto:
+        for p in paths:
+            files.pop(p, None)
 
 json.dump(files, sys.stdout)

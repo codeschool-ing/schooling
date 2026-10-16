@@ -1,0 +1,639 @@
+{
+  "ex-fs61cydn": {
+    "prompt": "A aula 6 escreveu SQL e Go à mão, a aula 7 deixou o GORM escrever o SQL. O que o sqlc muda?",
+    "hint": "Quem escreve qual metade?",
+    "choices": [
+      {
+        "text": "Você escreve o SQL; um programa escreve o Go",
+        "why": "Certo. As consultas continuam suas, e o código de leitura é gerado a partir delas."
+      },
+      {
+        "text": "Você escreve structs; o sqlc escreve o SQL a partir delas em tempo de execução",
+        "why": "Isso descreve um ORM como o GORM, a direção oposta."
+      },
+      {
+        "text": "As duas metades continuam escritas à mão, com um linter entre elas",
+        "why": "A metade Go é gerada; ninguém a mantém em sincronia à mão."
+      },
+      {
+        "text": "O sqlc substitui o pgx como driver",
+        "why": "O código gerado chama o pgx; o sqlc não é driver."
+      }
+    ]
+  },
+  "ex-vqcqfwp0": {
+    "prompt": "Quando o próprio sqlc roda?",
+    "hint": "Ele é importado pelo boxoffice?",
+    "choices": [
+      {
+        "text": "A cada requisição, para montar a consulta",
+        "why": "Nada do sqlc roda dentro do servidor; só o código que ele deixou."
+      },
+      {
+        "text": "Quando o servidor sobe, para ler o queries.sql do disco",
+        "why": "O SQL é copiado para o arquivo Go gerado; o servidor não lê nenhum .sql."
+      },
+      {
+        "text": "Dentro do PostgreSQL, como procedure armazenada que o driver chama a cada consulta",
+        "why": "O sqlc é um programa na sua máquina, não algo instalado no banco."
+      },
+      {
+        "text": "Antes do go build, como um compilador",
+        "why": "Certo. Ele escreve Go comum, guardado ao lado do código que o chama."
+      }
+    ]
+  },
+  "ex-wx3v9d7m": {
+    "prompt": "Ligue cada entrada do fluxo ao que ela diz.",
+    "hint": "Três arquivos entram.",
+    "pairs": [
+      {
+        "left": "`schema.sql`",
+        "right": "as tabelas e suas colunas"
+      },
+      {
+        "left": "`queries.sql`",
+        "right": "cada consulta, com um nome e o que devolve"
+      },
+      {
+        "left": "`sqlc.yaml`",
+        "right": "onde estão os outros dois e o que gerar"
+      }
+    ],
+    "right_distractors": [
+      "as rotas HTTP do serviço"
+    ]
+  },
+  "ex-h13tq7ec": {
+    "prompt": "Por que o `go install` do sqlc precisa de um compilador C, quando a maioria das ferramentas Go não precisa?",
+    "hint": "Como o sqlc entende o SQL do PostgreSQL?",
+    "choices": [
+      {
+        "text": "Ele gera arquivos C em vez de Go",
+        "why": "A saída é Go; o C está dentro do próprio sqlc."
+      },
+      {
+        "text": "O Go 1.27 compila todo módulo pelo gcc",
+        "why": "Go puro compila sem gcc; só o cgo precisa dele."
+      },
+      {
+        "text": "Ele embute o parser C do PostgreSQL via cgo",
+        "why": "Certo. O cgo é a ponte do Go para o C, e precisa de um compilador C para compilar."
+      },
+      {
+        "text": "O pacote gcc traz os cabeçalhos do PostgreSQL",
+        "why": "O gcc é o compilador; o código do parser vem com o módulo do sqlc."
+      }
+    ]
+  },
+  "ex-frhxj2zn": {
+    "prompt": "Por que instalar `sqlc@v1.31.1` em vez de `sqlc@latest`?",
+    "hint": "Olhe o topo de um arquivo gerado.",
+    "choices": [
+      {
+        "text": "O `@latest` é recusado pelo go install",
+        "why": "Ele é aceito; só não é reproduzível."
+      },
+      {
+        "text": "Versões posteriores exigem um gcc mais novo",
+        "why": "A aula não diz nada disso; o argumento é saída reproduzível."
+      },
+      {
+        "text": "Os arquivos gerados registram a versão que os produziu",
+        "why": "Certo. Fixar faz toda máquina produzir os mesmos arquivos."
+      },
+      {
+        "text": "A v1.31.1 é a única versão que suporta pgx/v5",
+        "why": "A aula fixa a versão por consistência, não por falta de suporte ao pgx nas outras."
+      }
+    ]
+  },
+  "ex-q853fp8a": {
+    "prompt": "O build para com `cgo: C compiler \"gcc\" not found` em `runtime/cgo`. Qual o conserto no Ubuntu?",
+    "hint": "Leia a mensagem até o fim.",
+    "choices": [
+      {
+        "text": "Definir `CGO_ENABLED=1`",
+        "why": "O cgo já estava tentando; ele não achou compilador para rodar."
+      },
+      {
+        "text": "`sudo apt install -y gcc`",
+        "why": "Certo. Um pacote só, e o detector de corrida da aula 15 também precisa dele."
+      },
+      {
+        "text": "Reinstalar o Go a partir do arquivo compactado",
+        "why": "O Go está bem; o que falta é o compilador C."
+      },
+      {
+        "text": "Rodar o go install como root com sudo",
+        "why": "Permissão não é o problema; o compilador não existe."
+      }
+    ]
+  },
+  "ex-jd91cewh": {
+    "prompt": "No `queries.sql`, o que faz a linha `-- name: SellSeats :one`?",
+    "hint": "Não é um comentário comum.",
+    "choices": [
+      {
+        "text": "Nada; o SQL ignora comentários",
+        "why": "O PostgreSQL ignora, o sqlc lê."
+      },
+      {
+        "text": "Marca a consulta para rodar uma vez na subida",
+        "why": ":one fala de linhas devolvidas, não de quantas vezes roda."
+      },
+      {
+        "text": "Dá nome à função Go e diz que ela devolve uma linha",
+        "why": "Certo. A anotação decide o nome da função e o resultado."
+      },
+      {
+        "text": "Restringe a consulta a uma única conexão do pool",
+        "why": "A anotação não menciona o pool."
+      }
+    ]
+  },
+  "ex-p2hfck3e": {
+    "prompt": "Ligue cada anotação ao que a função gerada devolve.",
+    "hint": "Quatro anotações da tabela.",
+    "pairs": [
+      {
+        "left": "`:one`",
+        "right": "uma struct, ou pgx.ErrNoRows"
+      },
+      {
+        "left": "`:many`",
+        "right": "um slice, vazio quando não há linhas"
+      },
+      {
+        "left": "`:exec`",
+        "right": "um erro e mais nada"
+      },
+      {
+        "left": "`:execrows`",
+        "right": "as linhas afetadas, e um erro"
+      }
+    ],
+    "right_distractors": [
+      "um canal de linhas"
+    ]
+  },
+  "ex-wndm8k82": {
+    "prompt": "Em `SellSeats`, por que a quantidade é escrita `sqlc.arg(quantity)` em vez de `$1`?",
+    "hint": "Com base em que o sqlc dá nome a um `$1`?",
+    "choices": [
+      {
+        "text": "Ela é comparada com uma expressão, não com uma coluna, então o sqlc não tem coluna para dar nome; o mesmo nome duas vezes é um parâmetro só",
+        "why": "Certo. Vira o campo Quantity de SellSeatsParams."
+      },
+      {
+        "text": "O PostgreSQL rejeita `$1` num UPDATE",
+        "why": "O SQL gerado usa `$1`; o PostgreSQL aceita."
+      },
+      {
+        "text": "O `sqlc.arg` torna o parâmetro opcional",
+        "why": "Isso é o `sqlc.narg`, da seção 08."
+      },
+      {
+        "text": "Para manter o valor fora do texto do SQL",
+        "why": "O `$1` também o mantém fora; aqui se trata de nome."
+      }
+    ]
+  },
+  "ex-q4qb52z7": {
+    "prompt": "O código sob um diretório chamado ___ só pode ser importado de dentro do mesmo módulo, e por isso a saída do sqlc vai para lá.",
+    "hint": "O `out` do sqlc.yaml começa com ele.",
+    "blanks": [
+      {
+        "accept": [
+          "internal"
+        ]
+      }
+    ]
+  },
+  "ex-7rfvmpf4": {
+    "prompt": "Quantas linhas de Go o `sqlc generate` escreveu, nos três arquivos?",
+    "hint": "O total do `wc -l`.",
+    "unit": "linhas"
+  },
+  "ex-tb08q5f8": {
+    "prompt": "Por que os campos do `Event` gerado são `int32`, enquanto o `Event` do boxoffice usa `int`?",
+    "hint": "De onde o sqlc tira os tipos?",
+    "choices": [
+      {
+        "text": "O sqlc arredonda todo número para baixo para economizar memória",
+        "why": "Ele segue o tipo da coluna, nada mais."
+      },
+      {
+        "text": "O pgx/v5 não tem inteiro de 64 bits",
+        "why": "O pgx lida bem com bigint; a coluna aqui é de 32 bits."
+      },
+      {
+        "text": "O sqlc.yaml pede int32",
+        "why": "A configuração não diz nada sobre tamanho de inteiro."
+      },
+      {
+        "text": "As colunas são `integer` de 32 bits",
+        "why": "Certo. Os tipos vêm da tabela, e a seção 06 converte entre os dois."
+      }
+    ]
+  },
+  "ex-86hmz3fw": {
+    "prompt": "O que deixa o mesmo `Queries` gerado rodar por um pool, uma conexão única ou uma transação?",
+    "hint": "Olhe o db.go.",
+    "choices": [
+      {
+        "text": "Um type switch dentro de cada função gerada que testa cada um dos três",
+        "why": "As funções geradas só chamam q.db; não existe switch."
+      },
+      {
+        "text": "Uma variável global definida pelo main",
+        "why": "O Queries guarda o DBTX num campo; nada é global."
+      },
+      {
+        "text": "Reflexão sobre o valor passado ao New",
+        "why": "É uma interface comum; não há reflexão."
+      },
+      {
+        "text": "A interface `DBTX`, três métodos que todos eles têm",
+        "why": "Certo. O New envolve qualquer um deles, e o WithTx troca por uma transação."
+      }
+    ]
+  },
+  "ex-hn4pvrpm": {
+    "prompt": "Um arquivo gerado começa com `Code generated by sqlc. DO NOT EDIT.` Você precisa mudar o SQL dele. O que faz?",
+    "hint": "De onde o arquivo vem?",
+    "choices": [
+      {
+        "text": "Editar, e fazer commit antes que alguém regere",
+        "why": "O próximo `sqlc generate` desfaz a edição em silêncio."
+      },
+      {
+        "text": "Copiar para outro arquivo e editar a cópia",
+        "why": "Aí a cópia se descola do SQL, o problema que o sqlc elimina."
+      },
+      {
+        "text": "Mudar o queries.sql, depois regerar",
+        "why": "Certo. Um arquivo gerado se muda pelas entradas."
+      },
+      {
+        "text": "Apagar a linha do cabeçalho, depois editar à vontade",
+        "why": "O cabeçalho é um aviso, não uma trava; tirá-lo não impede a regeração."
+      }
+    ]
+  },
+  "ex-shv30y8k": {
+    "prompt": "Com a primeira versão sqlc do `pgStore`, `GET /events/4294967297` respondeu com o Jazz at the Docks. Por quê?",
+    "hint": "4294967297 é 2³² + 1.",
+    "choices": [
+      {
+        "text": "O PostgreSQL arredonda ids grandes demais",
+        "why": "O PostgreSQL foi consultado sobre o evento 1, corretamente; a mudança aconteceu no Go."
+      },
+      {
+        "text": "`int32(id)` guardou os 32 bits de baixo, que são 1",
+        "why": "Certo. O Go define a conversão como uma volta: nem pânico, nem log."
+      },
+      {
+        "text": "O strconv.Atoi só lê o último dígito",
+        "why": "O Atoi devolveu 4294967297 exato; a conversão depois é que deu a volta."
+      },
+      {
+        "text": "O mux casou o prefixo mais longo, /events/1",
+        "why": "O curinga pegou o segmento inteiro; o mux não tem essa regra."
+      }
+    ]
+  },
+  "ex-9m09mt17": {
+    "prompt": "O store escrito à mão da aula 6 recebeu a mesma requisição e não respondeu com o evento 1. O que aconteceu lá?",
+    "hint": "Que tipo ele passava ao pgx?",
+    "choices": [
+      {
+        "text": "Um 404, porque o pgx devolveu ErrNoRows",
+        "why": "O pgx se recusou a codificar o valor, então nenhuma consulta rodou."
+      },
+      {
+        "text": "O store também convertia para int32, e devolveu o evento 1",
+        "why": "Ele passava o int sem converter; essa é a diferença."
+      },
+      {
+        "text": "O pgx recusou o valor; um 500",
+        "why": "Certo. Não era a resposta certa, mas também não era o evento de outra pessoa."
+      },
+      {
+        "text": "A validação da aula 3 recusava ids acima de 10",
+        "why": "A validação cobre quantidade e e-mail, não o id do caminho."
+      }
+    ]
+  },
+  "ex-ajmsqq2t": {
+    "prompt": "O que o store consertado faz com um id acima de `math.MaxInt32`?",
+    "hint": "Leia o `eventID`.",
+    "choices": [
+      {
+        "text": "Limita a MaxInt32 e consulta esse",
+        "why": "Isso responderia de novo por outro evento."
+      },
+      {
+        "text": "Entra em pânico, e o middleware recoverPanics transforma isso numa resposta 500",
+        "why": "Ele devolve um erro; nada entra em pânico."
+      },
+      {
+        "text": "Devolve ErrNotFound na hora",
+        "why": "Certo. Nenhum evento assim existe numa coluna int4, então 404 é a verdade."
+      },
+      {
+        "text": "Converte para int64 na consulta",
+        "why": "A função gerada recebe int32; o store recusa em vez disso."
+      }
+    ]
+  },
+  "ex-ggq4fgze": {
+    "prompt": "Quando o `pgStore` passou para o sqlc, que arquivos do boxoffice mudaram além do `pgstore.go`?",
+    "hint": "O que os handlers enxergavam?",
+    "choices": [
+      {
+        "text": "Todo handler, para chamar as funções geradas",
+        "why": "Os handlers chamam o Store; o store chama o código gerado."
+      },
+      {
+        "text": "O main.go, para montar um db.Queries para as rotas",
+        "why": "O pgStore o monta sozinho em q(); o main continua com &pgStore{pool: pool}."
+      },
+      {
+        "text": "O routes.go, que agora recebe um *db.Queries no lugar do Store",
+        "why": "O routes continua recebendo um Store."
+      },
+      {
+        "text": "Nenhum dos handlers, rotas ou main",
+        "why": "Certo. Eles só viam a interface Store."
+      }
+    ]
+  },
+  "ex-q3jfyw44": {
+    "prompt": "Com a configuração da seção 04, `sould` digitado no lugar de `sold` dentro do WHERE de `SellSeats`. Quando foi encontrado?",
+    "hint": "Siga a transcrição.",
+    "choices": [
+      {
+        "text": "No sqlc generate",
+        "why": "O generate e o go build passaram; esse é o ponto."
+      },
+      {
+        "text": "Na primeira compra",
+        "why": "Certo. O PostgreSQL recusou com SQLSTATE 42703."
+      },
+      {
+        "text": "No go build",
+        "why": "O nome da coluna está dentro de uma string de SQL; o compilador não lê."
+      },
+      {
+        "text": "No go vet, como aviso",
+        "why": "O vet também não lê SQL."
+      }
+    ]
+  },
+  "ex-0m7svvwc": {
+    "prompt": "O PostgreSQL recusou a coluna com nome errado com SQLSTATE ___, coluna indefinida.",
+    "hint": "Cinco caracteres, na linha do log.",
+    "blanks": [
+      {
+        "accept": [
+          "42703"
+        ]
+      }
+    ]
+  },
+  "ex-ex4es5ds": {
+    "prompt": "O que mudou ao acrescentar `database: uri: ${DATABASE_URL}` ao sqlc.yaml?",
+    "hint": "Quem confere as consultas agora?",
+    "choices": [
+      {
+        "text": "O sqlc prepara cada consulta contra o PostgreSQL durante o generate, então o erro virou erro do generate",
+        "why": "Certo. queries.sql:15:12, antes de qualquer Go compilar."
+      },
+      {
+        "text": "O servidor conecta com essa URL em vez da sua",
+        "why": "O servidor continua lendo DATABASE_URL no main; o bloco é para o sqlc."
+      },
+      {
+        "text": "O sqlc aplica o schema.sql no banco",
+        "why": "Ele pergunta ao banco; as tabelas já precisam existir."
+      },
+      {
+        "text": "O código gerado guarda o endereço",
+        "why": "O endereço é lido do ambiente, nunca escrito."
+      }
+    ]
+  },
+  "ex-ehvsg392": {
+    "prompt": "`env -u DATABASE_URL sqlc generate` falhou ao conectar. O que isso diz sobre a verificação com o banco?",
+    "hint": "Pense numa máquina de integração contínua.",
+    "choices": [
+      {
+        "text": "Ela é opcional no generate e é pulada quando nenhum banco responde",
+        "why": "O generate não pulou; falhou."
+      },
+      {
+        "text": "O sqlc guarda o último schema em cache e o usa na próxima",
+        "why": "Nada ficou em cache; a execução falhou."
+      },
+      {
+        "text": "Só funciona para o usuário postgres",
+        "why": "Conectou como ana e pediu o banco ana; faltava a URL."
+      },
+      {
+        "text": "O banco precisa existir, com as tabelas, onde o generate rodar",
+        "why": "Certo. Na CI isso quer dizer um PostgreSQL ao lado do build."
+      }
+    ]
+  },
+  "ex-a80bq5xg": {
+    "prompt": "`WHERE seats - sold >= $1` foi digitado como `<=` em SellSeats. Qual verificação pega isso?",
+    "hint": "É SQL válido?",
+    "choices": [
+      {
+        "text": "A análise estática do sqlc",
+        "why": "O SQL é válido; não há o que apontar."
+      },
+      {
+        "text": "A análise feita pelo banco",
+        "why": "O PostgreSQL prepara sem reclamar."
+      },
+      {
+        "text": "A verificação de printf do go vet",
+        "why": "O vet lê Go, não o sentido do SQL."
+      },
+      {
+        "text": "Um teste",
+        "why": "Certo. O sqlc confere se o SQL quer dizer algo; só testes conferem se é a coisa certa."
+      }
+    ]
+  },
+  "ex-a7gff550": {
+    "prompt": "Por que uma busca com filtros opcionais é desajeitada para o sqlc?",
+    "hint": "Quando o SQL precisa existir?",
+    "choices": [
+      {
+        "text": "Cada função é um comando fixo",
+        "why": "Certo. Não dá para acrescentar uma condição por filtro em tempo de execução, como um ORM faz."
+      },
+      {
+        "text": "O sqlc rejeita ILIKE",
+        "why": "O SearchEvents usa ILIKE e gera sem problema."
+      },
+      {
+        "text": "O pgx não sabe mandar NULL",
+        "why": "Um pgtype.Int4 com Valid false é enviado como NULL."
+      },
+      {
+        "text": "Parâmetros de query string não chegam a uma consulta :many",
+        "why": "Qualquer valor chega como parâmetro; o problema é o formato do SQL."
+      }
+    ]
+  },
+  "ex-mks4rt3b": {
+    "prompt": "Em `(sqlc.narg(min_available)::int IS NULL OR seats - sold >= sqlc.narg(min_available)::int)`, o que acontece quando o filtro não vem?",
+    "hint": "Avalie a metade esquerda.",
+    "choices": [
+      {
+        "text": "A consulta falha, porque NULL não pode ser comparado",
+        "why": "A metade esquerda é verdadeira, então a comparação não importa."
+      },
+      {
+        "text": "Toda linha passa nela",
+        "why": "Certo. Um filtro ausente não filtra nada."
+      },
+      {
+        "text": "Nenhuma linha passa, porque NULL é falso",
+        "why": "`IS NULL` de um NULL é verdadeiro, não NULL."
+      },
+      {
+        "text": "O sqlc tira a condição do SQL gerado",
+        "why": "O SQL é fixo; o banco o avalia."
+      }
+    ]
+  },
+  "ex-x8jkbrb7": {
+    "prompt": "Em milhões de linhas, por que a consulta única de filtros opcionais pode ficar lenta onde consultas separadas são rápidas?",
+    "hint": "Quantas vezes ela é planejada?",
+    "choices": [
+      {
+        "text": "Parâmetros NULL custam uma ida e volta cada",
+        "why": "Os parâmetros viajam junto com a consulta."
+      },
+      {
+        "text": "O ILIKE desliga todo índice no PostgreSQL",
+        "why": "O argumento da aula é sobre o plano compartilhado, não o ILIKE."
+      },
+      {
+        "text": "Um plano tem de cobrir todas as combinações, então um índice que serve a um filtro fica sem uso",
+        "why": "Certo. Escreva as combinações comuns separadas, ou monte esse comando em tempo de execução."
+      },
+      {
+        "text": "O pgtype.Text decodifica mais devagar que string",
+        "why": "Decodificar não é o custo que a aula aponta."
+      }
+    ]
+  },
+  "ex-15ecm5ty": {
+    "prompt": "Ligue cada abordagem ao lugar onde o SQL dela pode ser lido.",
+    "hint": "A terceira linha da tabela.",
+    "pairs": [
+      {
+        "left": "pgx à mão",
+        "right": "no arquivo Go"
+      },
+      {
+        "left": "GORM",
+        "right": "só no log"
+      },
+      {
+        "left": "sqlc",
+        "right": "no queries.sql e no arquivo gerado"
+      }
+    ],
+    "right_distractors": [
+      "no catálogo do banco"
+    ]
+  },
+  "ex-rnpe95bp": {
+    "prompt": "Quais valem para o sqlc e não para o pgx à mão? Marque todas as que se aplicam.",
+    "hint": "Linhas da tabela de comparação.",
+    "choices": [
+      {
+        "text": "Uma coluna e um campo não têm como sair de sincronia",
+        "why": "Certo. Os dois são gerados juntos."
+      },
+      {
+        "text": "Uma coluna com nome errado é achada no generate, com um banco a quem perguntar",
+        "why": "Certo. À mão, ela é achada quando a consulta roda."
+      },
+      {
+        "text": "Os módulos novos incluem o GORM",
+        "why": "O código gerado pelo sqlc só precisa do pgx."
+      },
+      {
+        "text": "Ele precisa de uma ferramenta extra e do gcc para compilá-la",
+        "why": "Certo. O pgx à mão não precisa de ferramenta extra."
+      },
+      {
+        "text": "Filtros opcionais são naturais",
+        "why": "Essa é a coluna do GORM; para o sqlc são desajeitados."
+      }
+    ]
+  },
+  "ex-45zserqd": {
+    "prompt": "Uma equipe está montando uma tela de administração com cinquenta filtros de busca opcionais numa tabela grande. Para onde aponta a comparação da aula?",
+    "hint": "Onde o sqlc é desajeitado?",
+    "choices": [
+      {
+        "text": "Pesar um query builder ou um ORM",
+        "why": "Certo. A aula diz que um serviço assim pesaria a troca de outro jeito."
+      },
+      {
+        "text": "O sqlc, porque código gerado é o mais rápido",
+        "why": "Velocidade nunca foi o argumento; filtros opcionais são o ponto fraco do sqlc."
+      },
+      {
+        "text": "pgx à mão com os valores colados na string SQL",
+        "why": "Valores nunca vão no texto do SQL; aula 6 seção 07."
+      },
+      {
+        "text": "Nenhum banco",
+        "why": "Nada na aula sugere abandonar o banco."
+      }
+    ]
+  },
+  "ex-ngf6q7nj": {
+    "prompt": "Ponha em ordem os passos de mudar uma consulta no boxoffice, da edição ao servidor rodando.",
+    "hint": "O código gerado vem do queries.sql.",
+    "items": [
+      "Editar a consulta no queries.sql",
+      "Rodar o sqlc generate, que pergunta ao PostgreSQL sobre ela",
+      "Ajustar o pgstore.go à nova assinatura gerada",
+      "go build, depois subir o servidor"
+    ],
+    "trap": "Nunca comece editando o internal/db à mão."
+  },
+  "ex-ysmq35zk": {
+    "prompt": "Uma coluna nova `price` entra na tabela como `bigint`, e nas consultas. Onde procurar primeiro um bug como o da seção 06?",
+    "hint": "Compare o tipo gerado com o do próprio boxoffice.",
+    "choices": [
+      {
+        "text": "No arquivo gerado, que precisa ser editado",
+        "why": "Arquivos gerados não se editam; a conversão é sua."
+      },
+      {
+        "text": "Nas linhas de conversão",
+        "why": "Certo. Um bigint vira int64; guardá-lo num tipo Go mais estreito dá a volta em silêncio."
+      },
+      {
+        "text": "Nos padrões do mux",
+        "why": "O mux não sabe nada de tipos de coluna."
+      },
+      {
+        "text": "No bloco database do sqlc.yaml",
+        "why": "Esse bloco confere nomes e tipos contra o PostgreSQL, não conversões em Go."
+      }
+    ]
+  }
+}
