@@ -1,38 +1,37 @@
 ---
-title: The decision, as a checklist
+title: A decisão, como uma lista de verificação
 version: 1
 ---
 
-The lesson comes down to a few questions, asked in order, before anybody writes a training loop.
-**Each one has a measurement behind it from this lesson or an earlier one**, so the answer can be
-checked rather than argued.
+A aula se resume a algumas perguntas, feitas em ordem, antes que alguém escreva um laço de treino.
+**Cada uma tem uma medição por trás, desta aula ou de uma anterior**, então a resposta pode ser
+conferida em vez de discutida.
 
-| question | if yes | where it was measured |
+| pergunta | se sim | onde foi medido |
 | --- | --- | --- |
-| Is the data rows and columns, each column a quantity somebody chose? | Start with boosting, and make the network beat it | the cancer and customer tables, this lesson |
-| Do columns have holes, categories, wildly different scales? | Boosting takes them as they are; a network needs each one prepared | `baseline.py`, this lesson |
-| Is the input raw and structured: pixels, audio, text? | A network, because the features have to be learnt | `moved.py`, this lesson; lessons 11 and 16 |
-| Are there only tens of examples per class? | A simple model, or a pretrained network with a new head | `small.py`, this lesson; lessons 13 and 17 |
-| Is the network's lead smaller than the spread between seeds? | It has not won; keep the cheaper model | lesson 18 |
-| Does the gain pay for the hours and the hardware? | Train it; otherwise do not | lesson 19 |
+| Os dados são linhas e colunas, cada coluna uma grandeza que alguém escolheu? | Comece pelo boosting, e faça a rede superá-lo | as tabelas de câncer e de clientes, nesta aula |
+| As colunas têm buracos, categorias, escalas muito diferentes? | O boosting as aceita como estão; uma rede precisa de cada uma preparada | `baseline.py`, nesta aula |
+| A entrada é crua e estruturada: pixels, áudio, texto? | Uma rede, porque os atributos precisam ser aprendidos | `moved.py`, nesta aula; aulas 11 e 16 |
+| Há só dezenas de exemplos por classe? | Um modelo simples, ou uma rede pré-treinada com uma cabeça nova | `small.py`, nesta aula; aulas 13 e 17 |
+| A vantagem da rede é menor que a dispersão entre sementes? | Ela não venceu; fique com o modelo mais barato | aula 18 |
+| O ganho paga as horas e o hardware? | Treine; senão, não | aula 19 |
 
-**The first row is the one most often skipped.** A team that starts with a network on a table finds
-out how good the network is, and never finds out whether a model trained in under a second would
-have done as well. Run the baseline first, and the network's result has something to be compared
-with on the day it arrives.
+**A primeira linha é a mais pulada.** Uma equipe que começa com uma rede numa tabela descobre quão
+boa a rede é, e nunca descobre se um modelo treinado em um ou dois segundos teria se saído igual.
+Rode a linha de base primeiro, e o resultado da rede terá com o que ser comparado no dia em que
+chegar.
 
-The questions do not argue against deep learning. The same checklist sends images, sound and text to
-a network every time, and with a pretrained model it sends little data there too. What it refuses is
-the habit of choosing the model before looking at the data.
+As perguntas não são um argumento contra o deep learning. A mesma lista manda imagens, som e texto
+para uma rede toda vez, e com um modelo pré-treinado manda poucos dados para lá também. O que ela
+recusa é o hábito de escolher o modelo antes de olhar os dados.
 
-## The end of the course
+## O fim do curso
 
-That closes the course. It began with a perceptron failing XOR in lesson 1 and built every piece a
-network is made of by hand: the gradient, backpropagation, the losses, the optimisers, the
-regularisers and the normalisations, in NumPy, before PyTorch did the same in a few lines from
-lesson 9. Convolutions, sequences, attention and tokens followed, then transfer and fine-tuning, and
-the last three lessons were about knowing what a result is worth: its spread, its price, and here,
-whether a network was the right tool at all.
+Isso fecha o curso. Ele começou com um perceptron falhando no XOR na aula 1. Depois construiu à mão, em NumPy, cada
+peça de uma rede: o gradiente, a retropropagação, as perdas, os otimizadores, as regularizações e as
+normalizações. A partir da aula 9, o PyTorch fez o mesmo em poucas linhas. Vieram convoluções, sequências, atenção e tokens, depois transferência e ajuste
+fino, e as três últimas aulas foram sobre saber quanto vale um resultado: a dispersão, o preço e,
+aqui, se uma rede era a ferramenta certa.
 
-**Everything you ran is on your own machine**, in `~/dl`, and every program can be run again,
-changed and broken on purpose. That is the best way to keep what the course taught.
+**Tudo o que você rodou está na sua própria máquina**, em `~/dl`, e todo programa pode ser rodado de
+novo, alterado e quebrado de propósito. Essa é a melhor maneira de guardar o que o curso ensinou.

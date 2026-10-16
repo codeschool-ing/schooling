@@ -34,7 +34,14 @@ tensors. Save this as `~/dl/batches.py`:
 ```
 
 ```
-PENDING batches
+ana@vm:~/dl$ python batches.py
+one batch: (32, 64) (32,)  first labels: [2, 4, 8, 4, 0, 5]
+batches: 34  first 32  last 21  images: 1077
+with drop_last: 33 batches
+collate of 3 items: (3, 64) [6, 6, 6]
+seed 0: epoch 1 starts [6, 3, 2, 1, 4, 9], epoch 2 starts [7, 6, 4, 2, 6, 3]
+seed 0: epoch 1 starts [6, 3, 2, 1, 4, 9], epoch 2 starts [7, 6, 4, 2, 6, 3]
+seed 1: epoch 1 starts [4, 3, 6, 2, 2, 5], epoch 2 starts [0, 7, 2, 4, 9, 2]
 ```
 
 ## Batches, and the short one at the end
@@ -87,7 +94,13 @@ lesson 9:
 ```
 
 ```
-PENDING ltrain
+ana@vm:~/dl$ python ltrain.py
+epoch   5  val loss 0.6784  val acc 0.889
+epoch  10  val loss 0.3138  val acc 0.922
+epoch  15  val loss 0.2261  val acc 0.928
+epoch  20  val loss 0.1948  val acc 0.939
+epoch  25  val loss 0.1679  val acc 0.950
+epoch  30  val loss 0.1464  val acc 0.956
 ```
 
 **The five lines inside the loop are lesson 9's, untouched**; only where the batches come from has

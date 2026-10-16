@@ -12,7 +12,8 @@ modelo trabalha num lote, os workers já estão entortando os próximos.
 Quantos workers fazem sentido depende de quantos processadores existem. O laboratório tem quatro:
 
 ```
-PENDING workers
+ana@vm:~/dl$ nproc
+4
 ```
 
 Salve isto como `~/dl/workers.py`. Ele lê o conjunto de treino entortado três vezes com cada
@@ -40,13 +41,16 @@ configuração e não treina nada, então o que ele mede é só o carregador:
 ```
 
 ```
-PENDING workers
+ana@vm:~/dl$ python workers.py
+num_workers=0  epochs 0.94 s  0.84 s  0.84 s   fastest 1.0x the speed of 0 workers
+num_workers=2  epochs 0.50 s  0.48 s  0.39 s   fastest 2.1x the speed of 0 workers
+num_workers=4  epochs 0.34 s  0.33 s  0.32 s   fastest 2.6x the speed of 0 workers
 ```
 
 **Dois workers leem uma época 2,1 vezes mais rápido que nenhum, e quatro workers 2,6 vezes**: de
 0,84 segundo no melhor caso para 0,39 e para 0,32. Quatro workers não são quatro vezes mais rápidos,
-porque a máquina tem quatro processadores e o processo principal também precisa de um deles, para
-receber os lotes. Passado o número de processadores livres, um worker extra só se reveza com os
+porque a máquina tem quatro processadores e o processo principal também precisa de parte do tempo
+deles, para receber os lotes. Passado o número de processadores livres, um worker extra só se reveza com os
 outros. São os tempos desta máquina no momento da execução; nos seus, os segundos vão ser outros, e
 o formato, mais workers mais rápido até os processadores acabarem, é o que esperar.
 
@@ -90,7 +94,15 @@ cada worker no estado em que estava, e todo worker passa a sortear os mesmos nú
 ```
 
 ```
-PENDING twins
+ana@vm:~/dl$ python twins.py
+worker_init_fn=None
+  batch 0, from worker 0, noise begins [0.0126, -0.0132, 0.064]
+  batch 1, from worker 1, noise begins [0.0126, -0.0132, 0.064]
+  the same noise: True
+worker_init_fn=reseed
+  batch 0, from worker 0, noise begins [0.1064, 0.0871, 0.0789]
+  batch 1, from worker 1, noise begins [-0.0058, -0.0862, -0.1132]
+  the same noise: False
 ```
 
 Sem ajuda, o ruído do lote 0 e o do lote 1 começam com os mesmos três números: dois workers, uma

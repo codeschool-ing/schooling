@@ -12,7 +12,8 @@ on one batch, the workers are already warping the next ones.
 How many workers make sense depends on how many processors there are. The lab has four:
 
 ```
-PENDING workers
+ana@vm:~/dl$ nproc
+4
 ```
 
 Save this as `~/dl/workers.py`. It reads the warped training set three times with each setting and
@@ -40,12 +41,15 @@ trains nothing, so what it measures is the loader alone:
 ```
 
 ```
-PENDING workers
+ana@vm:~/dl$ python workers.py
+num_workers=0  epochs 0.94 s  0.84 s  0.84 s   fastest 1.0x the speed of 0 workers
+num_workers=2  epochs 0.50 s  0.48 s  0.39 s   fastest 2.1x the speed of 0 workers
+num_workers=4  epochs 0.34 s  0.33 s  0.32 s   fastest 2.6x the speed of 0 workers
 ```
 
 **Two workers read an epoch 2.1 times as fast as none, and four workers 2.6 times**: from 0.84
 seconds at best to 0.39 and to 0.32. Four workers are not four times as fast, because the machine
-has four processors and the main process needs one of them too, to receive the batches. Past the
+has four processors and the main process needs some of their time too, to receive the batches. Past the
 number of free processors, an extra worker only takes turns with the others. These are this
 machine's times at the moment of the run; on yours the seconds will differ, and the shape, more
 workers faster until the processors run out, is what to expect.
@@ -90,7 +94,15 @@ the state it was in, and every worker then draws the same numbers. Save as `~/dl
 ```
 
 ```
-PENDING twins
+ana@vm:~/dl$ python twins.py
+worker_init_fn=None
+  batch 0, from worker 0, noise begins [0.0126, -0.0132, 0.064]
+  batch 1, from worker 1, noise begins [0.0126, -0.0132, 0.064]
+  the same noise: True
+worker_init_fn=reseed
+  batch 0, from worker 0, noise begins [0.1064, 0.0871, 0.0789]
+  batch 1, from worker 1, noise begins [-0.0058, -0.0862, -0.1132]
+  the same noise: False
 ```
 
 Without help, the noise in batch 0 and in batch 1 begins with the same three numbers: two workers,

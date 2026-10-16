@@ -1,23 +1,23 @@
 ---
-title: Tabular data, and three models on one table
+title: Dados tabulares, e três modelos numa tabela
 version: 1
 ---
 
-Nineteen lessons have trained networks, and it would be easy to leave them believing that a network
-is the strong model, the one to reach for when the problem matters. **On a table of rows and
-columns, that belief does not survive a measurement.** This section makes the measurement, on real
-data, with the models `machine-learning` taught standing beside a network from this course.
+Dezenove aulas treinaram redes, e seria fácil sair delas acreditando que a rede é o modelo forte, o
+que se pega quando o problema importa. **Numa tabela de linhas e colunas, essa crença não sobrevive a
+uma medição.** Esta seção faz a medição, com dados reais, com os modelos que `machine-learning`
+ensinou ao lado de uma rede deste curso.
 
-A table here means what it means in a spreadsheet or a database: one row per case, one column per
-measured quantity, and each column meaning something on its own. Sales records, loan applications,
-sensor readings, patient measurements. Most of the data a company holds looks like this, and most of
-the models a company runs are trained on it.
+Tabela aqui quer dizer o mesmo que numa planilha ou num banco de dados: uma linha por caso, uma
+coluna por grandeza medida, e cada coluna significando algo por si só. Registros de venda, pedidos de
+empréstimo, leituras de sensores, medidas de pacientes. A maior parte dos dados que uma empresa
+guarda tem essa cara, e a maior parte dos modelos que uma empresa roda é treinada neles.
 
-The program below is the bench for this section and the next. It runs three models on the same
-table: logistic regression, scikit-learn's `HistGradientBoostingClassifier`, which is the gradient
-boosting `machine-learning` lesson 8 taught, and a dense network in PyTorch. Each is scored by
-five-fold cross-validation, `machine-learning` lesson 3's method, and timed. It needs the `loop.py`
-from lesson 9 beside it. Save it as `~/dl/bench.py`:
+O programa abaixo é a bancada desta seção e da próxima. Ele roda três modelos na mesma tabela:
+regressão logística, o `HistGradientBoostingClassifier` do scikit-learn, que é o gradient boosting
+que a aula 8 de `machine-learning` ensinou, e uma rede densa em PyTorch. Cada um é avaliado por
+validação cruzada em cinco dobras, o método da aula 3 de `machine-learning`, e cronometrado. Ele
+precisa do `loop.py` da aula 9 ao lado. Salve como `~/dl/bench.py`:
 
 ```schooling-example
 {
@@ -55,13 +55,13 @@ from lesson 9 beside it. Save it as `~/dl/bench.py`:
 }
 ```
 
-**Every model is held to one processor**, and that is a decision about fairness, not speed. With
-four processors each library divides its work its own way, and on a machine that is busy with
-something else the division can cost more than the work. One processor each makes the clock measure
-how much work a model does.
+**Todo modelo fica preso a um processador**, e isso é uma decisão de justiça, não de velocidade. Com
+quatro processadores, cada biblioteca divide o trabalho do seu jeito, e numa máquina ocupada com
+outra coisa a divisão pode custar mais que o trabalho. Um processador para cada um faz o relógio
+medir quanto trabalho um modelo faz.
 
-The first table is scikit-learn's breast cancer set: 569 tumours, 30 measurements each, and whether
-it was malignant or benign. Save as `~/dl/cancer.py` and run it:
+A primeira tabela é o conjunto de câncer de mama do scikit-learn: 569 tumores, 30 medidas cada um, e
+se ele era maligno ou benigno. Salve como `~/dl/cancer.py` e rode:
 
 ```schooling-example
 {
@@ -81,22 +81,26 @@ it was malignant or benign. Save as `~/dl/cancer.py` and run it:
 ```
 
 ```
-PENDING cancer
+ana@vm:~/dl$ python cancer.py
+569 rows, 30 columns, 63% benign
+logistic regression  accuracy 0.979  worst fold 0.956    0.06 s
+gradient boosting    accuracy 0.970  worst fold 0.956    1.22 s
+MLP, PyTorch         accuracy 0.967  worst fold 0.930    4.52 s
 ```
 
-**All three land within 1.2 points of each other, and the network is last.** Logistic regression
-reaches 0.979, boosting 0.970 and the network 0.967. Each fold holds about 114 tumours, so one
-tumour is almost a point, and these three differ by one or two tumours a fold. The network also had
-the worst single fold, 0.930. Lesson 18 is about telling a difference from noise, and this one does
-not qualify. What is not in doubt is that the network bought nothing.
+**Os três ficam a 1,2 ponto um do outro, e a rede fica em último.** A regressão logística chega a
+0,979, o boosting a 0,970 e a rede a 0,967. Cada dobra tem uns 114 tumores, então um tumor vale quase
+um ponto, e esses três diferem por um ou dois tumores por dobra. A rede também teve a pior dobra,
+0,930. A aula 18 trata de separar uma diferença de ruído, e esta não se qualifica. O que não está em
+dúvida é que a rede não comprou nada.
 
-**The clock separates them more than the accuracy does.** Logistic regression took 0.03 seconds for
-all five folds, boosting 0.68 and the network 2.97, about four times boosting and a hundred times
-logistic regression. Those seconds will be different on your machine, and they move from one run to
-the next. The order is what to read.
+**O relógio separa os três mais do que a acurácia.** A regressão logística levou 0,06 segundo para
+as cinco dobras, o boosting 1,22 e a rede 4,52: a rede várias vezes o boosting, e o boosting muitas
+vezes a regressão logística. Esses segundos serão outros na sua máquina, e mudam de uma execução
+para outra. A ordem é o que se deve ler.
 
-Notice which model won. This table's 30 columns are measurements a pathologist chose because they
-separate the two classes, and a weighted sum of them is nearly enough. **When somebody has already
-done the feature engineering, there is little left for a network to learn**, and a linear model with
-30 weights is a hard thing to beat. The next section builds a table where that is not true, and the
-answer changes, though not towards the network.
+Repare em qual modelo venceu. As 30 colunas desta tabela são medidas que um patologista escolheu
+porque separam as duas classes, e uma soma ponderada delas quase basta. **Quando alguém já fez a
+engenharia de atributos, sobra pouco para uma rede aprender**, e um modelo linear com 30 pesos é
+difícil de vencer. A próxima seção monta uma tabela em que isso não vale, e a resposta muda, mas não
+a favor da rede.

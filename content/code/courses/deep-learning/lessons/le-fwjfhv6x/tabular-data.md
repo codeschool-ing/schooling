@@ -81,7 +81,11 @@ it was malignant or benign. Save as `~/dl/cancer.py` and run it:
 ```
 
 ```
-PENDING cancer
+ana@vm:~/dl$ python cancer.py
+569 rows, 30 columns, 63% benign
+logistic regression  accuracy 0.979  worst fold 0.956    0.06 s
+gradient boosting    accuracy 0.970  worst fold 0.956    1.22 s
+MLP, PyTorch         accuracy 0.967  worst fold 0.930    4.52 s
 ```
 
 **All three land within 1.2 points of each other, and the network is last.** Logistic regression
@@ -90,9 +94,9 @@ tumour is almost a point, and these three differ by one or two tumours a fold. T
 the worst single fold, 0.930. Lesson 18 is about telling a difference from noise, and this one does
 not qualify. What is not in doubt is that the network bought nothing.
 
-**The clock separates them more than the accuracy does.** Logistic regression took 0.03 seconds for
-all five folds, boosting 0.68 and the network 2.97, about four times boosting and a hundred times
-logistic regression. Those seconds will be different on your machine, and they move from one run to
+**The clock separates them more than the accuracy does.** Logistic regression took 0.06 seconds for
+all five folds, boosting 1.22 and the network 4.52: the network several times boosting, and
+boosting many times logistic regression. Those seconds will be different on your machine, and they move from one run to
 the next. The order is what to read.
 
 Notice which model won. This table's 30 columns are measurements a pathologist chose because they

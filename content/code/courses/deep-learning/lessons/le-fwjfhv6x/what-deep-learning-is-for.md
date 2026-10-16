@@ -41,7 +41,10 @@ validation digits moved one pixel to each side. It needs the `cnn.py`, `tdigits.
 ```
 
 ```
-PENDING moved
+ana@vm:~/dl$ python moved.py
+moved +0:  logistic 0.967  boosting 0.978  CNN 0.978
+moved +1:  logistic 0.381  boosting 0.425  CNN 0.706
+moved -1:  logistic 0.400  boosting 0.442  CNN 0.683
 ```
 
 **On the digits in place, boosting ties the CNN at 0.978.** On images this small, the network has no
@@ -61,6 +64,6 @@ a single raw number mean anything a tree could split on. **Where the features ha
 from raw, structured input, networks have no serious rival**, and pretrained ones (lessons 13 and 17)
 bring that to problems with little data too.
 
-The two meet often. A table with a column of free text or a photo per row is common, and a sound
-arrangement is to let a network turn the text or the photo into a vector of numbers, an embedding,
-and hand that to boosting as more columns beside the others. Each model then does what it is good at.
+The two meet often. A table with a column of free text or a photo per row is common. A sound arrangement lets a network
+turn the text or the photo into a vector of numbers, an embedding, and hands that to boosting as more
+columns beside the others. Each model then does what it is good at.

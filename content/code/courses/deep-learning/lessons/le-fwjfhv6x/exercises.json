@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-srjh4p6e",
+    "version": 1,
+    "section": "tabular-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `bench.py` hold every model to one processor?",
+    "hint": "Think about what the clock is meant to compare.",
+    "choices": [
+      {
+        "text": "Because scikit-learn's models crash with more than one thread",
+        "correct": false,
+        "why": "They run on four; the program limits them by choice, not to avoid a failure."
+      },
+      {
+        "text": "Because the five folds would otherwise run in parallel and mix their scores",
+        "correct": false,
+        "why": "The folds run one after another in a plain `for` loop whatever the thread count."
+      },
+      {
+        "text": "Because a network trains faster on one processor than on four",
+        "correct": false,
+        "why": "Speed was not the reason given; fairness of the comparison was."
+      },
+      {
+        "text": "So the clock measures the work, not the thread handling",
+        "correct": true,
+        "why": "Right. With four processors each library divides its work its own way, and on a busy machine that division costs more than the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-gz18b3fw",
+    "version": 1,
+    "section": "tabular-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the breast cancer table the three models scored 0.979, 0.970 and 0.967, with about 114 tumours in each fold. What is the fair reading?",
+    "hint": "How many tumours is one point?",
+    "choices": [
+      {
+        "text": "Logistic regression is the better model, by 1.2 points",
+        "correct": false,
+        "why": "1.2 points is one or two tumours a fold, too small to call from one run of each (lesson 18)."
+      },
+      {
+        "text": "The network lost because 569 rows are too few to train any model",
+        "correct": false,
+        "why": "All three trained well past the 63% majority class, so the rows were enough."
+      },
+      {
+        "text": "They differ by a tumour or two a fold, and the network bought nothing",
+        "correct": true,
+        "why": "Right. No model has clearly won on accuracy, and the network was the slowest."
+      },
+      {
+        "text": "Boosting failed, because 0.970 is below what the majority class scores",
+        "correct": false,
+        "why": "The majority class scores 0.63 here, far below all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzete8hd",
+    "version": 1,
+    "section": "tabular-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of 50,000 loan applications has 40 columns chosen by analysts. After a week of tuning, a network scores 0.912; boosting with its defaults scored 0.915 on the same folds. What does this lesson recommend?",
+    "hint": "Which model is cheaper to train, to rerun and to explain?",
+    "choices": [
+      {
+        "text": "Keep boosting",
+        "correct": true,
+        "why": "Right. The network has not beaten the baseline, and it costs more at every step."
+      },
+      {
+        "text": "Keep the network, since it is close and will improve with more tuning",
+        "correct": false,
+        "why": "More tuning is more weeks, and boosting got its score with none."
+      },
+      {
+        "text": "Average the two models' scores and report 0.9135",
+        "correct": false,
+        "why": "An average of two scores is not a model anybody can deploy."
+      },
+      {
+        "text": "Switch to logistic regression, since it won on the cancer table",
+        "correct": false,
+        "why": "Winning on one table says nothing about this one; it would have to be run here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ratwx5r8",
+    "version": 1,
+    "section": "why-trees-win",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `table.py`, a monthly customer under 24 months of tenure leaves. Why does a tree capture that rule more easily than a network?",
+    "hint": "Think about the shape of the rule: a step.",
+    "choices": [
+      {
+        "text": "Trees see more rows of training data than networks do",
+        "correct": false,
+        "why": "Both saw the same 2,400 rows of each fold."
+      },
+      {
+        "text": "Trees standardise the columns first",
+        "correct": false,
+        "why": "It is the network that needs standardising; a split on a column does not care about its scale."
+      },
+      {
+        "text": "The network was given no access to the tenure column",
+        "correct": false,
+        "why": "All ten columns went to all three models."
+      },
+      {
+        "text": "A split lands exactly on 24; a network builds the step out of smooth ReLU pieces",
+        "correct": true,
+        "why": "Right. Sharp thresholds and their `and` are what trees are made of, and what networks approximate slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwcxvf3v",
+    "version": 1,
+    "section": "why-trees-win",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `bench.py`'s network, each of `table.py`'s five noise columns has a weight into each of the 64 first-layer units. How many weights is that in total?",
+    "hint": "Columns times units.",
+    "value": 320,
+    "tolerance": 0,
+    "unit": "weights"
+  },
+  {
+    "id": "ex-y4k6r0eq",
+    "version": 1,
+    "section": "why-trees-win",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add 20 more columns of pure noise to `table.py` and rerun the bench. Between boosting and the network, which does this lesson's argument expect to lose more accuracy?",
+    "hint": "Who has to learn to ignore a column, and with how many numbers?",
+    "choices": [
+      {
+        "text": "Boosting, because it has more columns to try splits on",
+        "correct": false,
+        "why": "Trying a split on a useless column costs time, and the split is simply not chosen."
+      },
+      {
+        "text": "The network, which has 1,280 new weights to silence from the same rows",
+        "correct": true,
+        "why": "Right: 20 columns times 64 units, learnt from 2,400 rows, with room to fit noise."
+      },
+      {
+        "text": "Neither, since noise columns average out to zero",
+        "correct": false,
+        "why": "Their mean is near zero, but each row's values are not, and a model can fit them."
+      },
+      {
+        "text": "Both equally, since both see exactly the same rows",
+        "correct": false,
+        "why": "The same rows meet two very different ways of using a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zrvtfs7",
+    "version": 1,
+    "section": "little-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With 2 images of each digit to train on, which model did best on the 360 validation images?",
+    "hint": "Look at the first row of `small.py`'s output.",
+    "choices": [
+      {
+        "text": "Lesson 11's CNN",
+        "correct": false,
+        "why": "It was last, at 0.717."
+      },
+      {
+        "text": "Lesson 9's MLP",
+        "correct": false,
+        "why": "Close, at 0.761, but still behind."
+      },
+      {
+        "text": "All three tied, at 0.764",
+        "correct": false,
+        "why": "Only logistic regression reached 0.764; the others were below."
+      },
+      {
+        "text": "Logistic regression",
+        "correct": true,
+        "why": "Right, at 0.764, with 650 weights against the CNN's 38,282."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xfmywb4",
+    "version": 1,
+    "section": "little-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `small.py` give every size of training set the same 1,020 optimiser steps?",
+    "hint": "What would 30 epochs mean for 20 images?",
+    "choices": [
+      {
+        "text": "Because 1,020 is close to the number of training images",
+        "correct": false,
+        "why": "The number comes from 34 batches times 30 epochs, lesson 9's recipe."
+      },
+      {
+        "text": "To make the small sets overfit on purpose",
+        "correct": false,
+        "why": "Overfitting is a risk of the setup, not its aim."
+      },
+      {
+        "text": "So no network loses for having been stopped early",
+        "correct": true,
+        "why": "Right. Thirty epochs of 20 images would be 30 steps, and the network would lose for lack of training rather than lack of data."
+      },
+      {
+        "text": "Because SGD at 0.1 needs exactly 1,020 steps to converge",
+        "correct": false,
+        "why": "No rate converges in a fixed number of steps; 1,020 is borrowed from lesson 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cxg0rd2",
+    "version": 1,
+    "section": "little-data",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Deep learning's own answer to little data is to start from a ___ model and train a new head on the few examples.",
+    "hint": "Lessons 13 and 17.",
+    "blanks": [
+      {
+        "accept": [
+          "pretrained",
+          "pre-trained"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8rqyszde",
+    "version": 1,
+    "section": "the-boosting-baseline",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lesson's recipe for a new table in the order it is run.",
+    "hint": "From the floor up.",
+    "items": [
+      "The majority class",
+      "A linear model on standardised columns",
+      "Gradient boosting with its defaults, on the table as it came",
+      "A network, which has to beat boosting by more than the spread"
+    ]
+  },
+  {
+    "id": "ex-7jkv3xm7",
+    "version": 1,
+    "section": "the-boosting-baseline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `baseline.py`, why did the plain logistic regression pipeline refuse the table while boosting ran?",
+    "hint": "Read the refusal.",
+    "choices": [
+      {
+        "text": "`StandardScaler` failed on a column of money",
+        "correct": false,
+        "why": "The message came from `LogisticRegression`, not from the scaler."
+      },
+      {
+        "text": "A fifth of the charges were `NaN`, which it does not accept",
+        "correct": true,
+        "why": "Right. Boosting learns which side of each split the blanks go to; logistic regression needs them filled first."
+      },
+      {
+        "text": "Logistic regression handles two classes and this table has three",
+        "correct": false,
+        "why": "The label is leave or stay, two classes."
+      },
+      {
+        "text": "`cross_val_score` gives a model with no `random_state` a refusal",
+        "correct": false,
+        "why": "The imputed pipeline had none either and ran, at 0.797."
+      }
+    ]
+  },
+  {
+    "id": "ex-qs345zjp",
+    "version": 1,
+    "section": "the-boosting-baseline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new table has a `country` column with 80 values and blanks in a third of its `income` column. Which first model run follows the lesson's recipe after the majority class and a linear model?",
+    "hint": "Step 3 says: as it came.",
+    "choices": [
+      {
+        "text": "Impute, one-hot encode and scale everything, then train an MLP to find the ceiling",
+        "correct": false,
+        "why": "That is a network before the baseline exists, which is the habit the recipe exists to stop."
+      },
+      {
+        "text": "Drop every row with a blank, so all models see complete data",
+        "correct": false,
+        "why": "That throws away a third of the rows, and boosting needed none of them dropped."
+      },
+      {
+        "text": "Boosting on the table as it is, told which column is a category",
+        "correct": true,
+        "why": "Right. It takes the blanks natively, and categories only need naming."
+      },
+      {
+        "text": "XGBoost, because scikit-learn's boosting refuses categories",
+        "correct": false,
+        "why": "`HistGradientBoostingClassifier` accepts categorical columns once told which they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3w7jy7h",
+    "version": 1,
+    "section": "what-deep-learning-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `moved.py`, which model kept the most accuracy when the validation digits moved one pixel to the right?",
+    "hint": "Compare the line `moved +1`.",
+    "choices": [
+      {
+        "text": "Gradient boosting, at 0.425",
+        "correct": false,
+        "why": "Boosting fell from 0.978 to 0.425."
+      },
+      {
+        "text": "None of them, all three stayed above 0.95",
+        "correct": false,
+        "why": "All three dropped; only the CNN stayed above 0.7."
+      },
+      {
+        "text": "Logistic regression, at 0.381",
+        "correct": false,
+        "why": "It was the lowest of the three."
+      },
+      {
+        "text": "The CNN, at 0.706",
+        "correct": true,
+        "why": "Right. Its filters are the same weights at every place, so a moved stroke is still found."
+      }
+    ]
+  },
+  {
+    "id": "ex-763743ca",
+    "version": 1,
+    "section": "what-deep-learning-is-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did boosting fall from 0.978 to 0.425 on digits moved by one pixel?",
+    "hint": "What did its splits look at?",
+    "choices": [
+      {
+        "text": "Its splits test fixed pixel positions, so a moved digit is a different table",
+        "correct": true,
+        "why": "Right. Nothing it learnt about pixel 27 carries over to pixel 28."
+      },
+      {
+        "text": "It overfitted the 1,077 training digits far more than the CNN did on the same images",
+        "correct": false,
+        "why": "On the digits in place it scored 0.978, equal to the CNN, so it generalised as well there."
+      },
+      {
+        "text": "The blank column moved in confused its handling of missing values",
+        "correct": false,
+        "why": "Blank is 0 ink, not `NaN`; nothing was missing."
+      },
+      {
+        "text": "Boosting needs at least 1,000 rows per class",
+        "correct": false,
+        "why": "It trained on the same 1,077 images as the CNN and tied it before the move."
+      }
+    ]
+  },
+  {
+    "id": "ex-khz8sbk7",
+    "version": 1,
+    "section": "what-deep-learning-is-for",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of input to the model this lesson would try first.",
+    "hint": "Where do the features come from in each case?",
+    "pairs": [
+      {
+        "left": "A table of measurements chosen by analysts",
+        "right": "Gradient boosting with its defaults"
+      },
+      {
+        "left": "Photographs, 30 labelled per class",
+        "right": "A pretrained network with a new head"
+      },
+      {
+        "left": "A table with one column of free text",
+        "right": "Text turned into an embedding, fed to boosting"
+      },
+      {
+        "left": "Ten thousand labelled sound clips, no pretrained model",
+        "right": "A network trained from scratch"
+      }
+    ],
+    "right_distractors": [
+      "Logistic regression on the raw samples"
+    ]
+  },
+  {
+    "id": "ex-rbztvpwt",
+    "version": 1,
+    "section": "the-decision",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A network beats boosting by 0.4 points, and five seeds of the same network spread over 1 point. What does the checklist say?",
+    "hint": "Lesson 18's row.",
+    "choices": [
+      {
+        "text": "It has not won; keep the cheaper model",
+        "correct": true,
+        "why": "Right. The difference is smaller than what a change of seed moves."
+      },
+      {
+        "text": "The network has won, by 0.4 points",
+        "correct": false,
+        "why": "A lead inside the spread is not a lead anyone has measured."
+      },
+      {
+        "text": "Train the network for more epochs until the lead passes 1 point",
+        "correct": false,
+        "why": "Training until a number looks good is choosing on noise."
+      },
+      {
+        "text": "Report the best seed, since that is what the network can reach",
+        "correct": false,
+        "why": "The best of five is a lucky draw, not what the next run will give."
+      }
+    ]
+  },
+  {
+    "id": "ex-7z0hbdqm",
+    "version": 1,
+    "section": "the-decision",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A clinic has 30 labelled X-ray images per class and wants a classifier. Which plan follows the checklist?",
+    "hint": "Two rows apply: raw input, and little data.",
+    "choices": [
+      {
+        "text": "Boosting on the raw pixels, because there is little data",
+        "correct": false,
+        "why": "Pixels are not columns a tree splits well; `moved.py` showed how brittle that is."
+      },
+      {
+        "text": "A CNN trained from scratch for many epochs",
+        "correct": false,
+        "why": "With 30 per class, `small.py`'s CNN came last; more epochs only memorise."
+      },
+      {
+        "text": "A network pretrained on many images, with a new head trained on the 30",
+        "correct": true,
+        "why": "Right. The input needs learnt features and the data is too small to learn them, so they come from elsewhere."
+      },
+      {
+        "text": "Logistic regression on the raw pixels, since it won with 20 digits",
+        "correct": false,
+        "why": "It won against networks trained from nothing; a pretrained one was not in that race."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyr1zq67",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`table.py` makes 3,000 rows and `bench.py` uses five folds. How many rows does each model train on in one fold?",
+    "hint": "Four folds of the five.",
+    "value": 2400,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-maxkg81f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the digits in place, boosting and the CNN both scored 0.978. What does that tie say?",
+    "hint": "How many numbers is an 8 by 8 image?",
+    "choices": [
+      {
+        "text": "Convolution brings nothing to images",
+        "correct": false,
+        "why": "One pixel of movement showed what it brings: 0.706 against 0.425."
+      },
+      {
+        "text": "At 64 pixels, an image is small enough to be handled as a table",
+        "correct": true,
+        "why": "Right. The case for a network grows with the input, a photograph being 150,528 numbers."
+      },
+      {
+        "text": "Boosting has learnt to find strokes anywhere in the image",
+        "correct": false,
+        "why": "Moved by one pixel it fell to 0.425, so it had learnt fixed positions."
+      },
+      {
+        "text": "The validation set is too easy to separate any two models",
+        "correct": false,
+        "why": "The same set separated logistic regression, at 0.967, from both."
+      }
+    ]
+  },
+  {
+    "id": "ex-2e4vzz92",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "On the customer table, boosting beat the network by more than 8 points",
+        "correct": true,
+        "why": "Yes: 0.883 against 0.799."
+      },
+      {
+        "text": "On the cancer table, the network was the most accurate model",
+        "correct": false,
+        "why": "No: it was last, at 0.967."
+      },
+      {
+        "text": "With 20 training images, logistic regression beat the CNN",
+        "correct": true,
+        "why": "Yes: 0.764 against 0.717."
+      },
+      {
+        "text": "Boosting refused the table with missing charges",
+        "correct": false,
+        "why": "No: it scored 0.867 on it; logistic regression refused."
+      },
+      {
+        "text": "With all 1,077 images, the CNN beat logistic regression",
+        "correct": true,
+        "why": "Yes: 0.978 against 0.967."
+      }
+    ]
+  }
+]

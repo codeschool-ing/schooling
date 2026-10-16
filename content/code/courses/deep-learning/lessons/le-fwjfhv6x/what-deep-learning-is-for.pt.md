@@ -1,20 +1,20 @@
 ---
-title: What deep learning is for
+title: Para que serve o deep learning
 version: 1
 ---
 
-After three sections where the network lost, the opposite question deserves the same care: **where
-does a network win, and why there?** The answer is in what a column means. In a table, a column is a
-feature somebody chose, and it means the same thing in every row. In an image, pixel 27 is ink in
-one digit and background in the next, and what matters is the arrangement of many pixels, wherever
-it sits. Somebody has to turn that arrangement into features. **A network learns those features
-itself**, and that is the work a tree on raw pixels cannot do.
+Depois de três seções em que a rede perdeu, a pergunta oposta merece o mesmo cuidado: **onde uma rede
+vence, e por que ali?** A resposta está no que uma coluna significa. Numa tabela, uma coluna é um
+atributo que alguém escolheu, e significa a mesma coisa em toda linha. Numa imagem, o pixel 27 é
+tinta num dígito e fundo no seguinte, e o que importa é o arranjo de muitos pixels, onde quer que ele
+esteja. Alguém precisa transformar esse arranjo em atributos. **Uma rede aprende esses atributos
+sozinha**, e esse é o trabalho que uma árvore sobre pixels crus não consegue fazer.
 
-The digits are a small test of that, because at 8 by 8 they are nearly a table: 64 numbers, few
-enough that boosting can treat each pixel as a column. The program below trains logistic regression,
-boosting and lesson 11's CNN once, on the digits as they are, then asks all three about the
-validation digits moved one pixel to each side. It needs the `cnn.py`, `tdigits.py`, `loop.py` and
-`digits.py` that `small.py` used. Save it as `~/dl/moved.py`:
+Os dígitos são um teste pequeno disso, porque com 8 por 8 eles são quase uma tabela: 64 números,
+poucos o bastante para o boosting tratar cada pixel como uma coluna. O programa abaixo treina a
+regressão logística, o boosting e a CNN da aula 11 uma vez, nos dígitos como são, e depois pergunta
+aos três sobre os dígitos de validação deslocados um pixel para cada lado. Ele precisa do `cnn.py`,
+do `tdigits.py`, do `loop.py` e do `digits.py` que o `small.py` usou. Salve como `~/dl/moved.py`:
 
 ```schooling-example
 {
@@ -41,26 +41,31 @@ validation digits moved one pixel to each side. It needs the `cnn.py`, `tdigits.
 ```
 
 ```
-PENDING moved
+ana@vm:~/dl$ python moved.py
+moved +0:  logistic 0.967  boosting 0.978  CNN 0.978
+moved +1:  logistic 0.381  boosting 0.425  CNN 0.706
+moved -1:  logistic 0.400  boosting 0.442  CNN 0.683
 ```
 
-**On the digits in place, boosting ties the CNN at 0.978.** On images this small, the network has no
-advantage to show. Moving the digits by one pixel changes that completely. Logistic regression falls
-to 0.381 and 0.400, boosting to 0.425 and 0.442, and the CNN keeps 0.706 and 0.683.
+**Nos dígitos no lugar, o boosting empata com a CNN em 0,978.** Em imagens tão pequenas, a rede não
+tem vantagem a mostrar. Deslocar os dígitos em um pixel muda isso por completo. A regressão logística
+cai para 0,381 e 0,400, o boosting para 0,425 e 0,442, e a CNN mantém 0,706 e 0,683.
 
-The two tabular models learnt a weight or a split per pixel position, so to them a shifted digit is a
-different table. The CNN's filters are the same nine weights at every place (lesson 11), so a stroke
-it learnt to find in column 3 is found in column 4 as well, and its pooling forgives a little more.
-**That is a feature learnt from the structure of the input, not from a column**, and it is why it
-dropped less. It did drop: one pooling layer is not full invariance, and lesson 7's augmentation, by
-showing it shifted digits in training, is the usual way to close the rest.
+Os dois modelos tabulares aprenderam um peso ou um corte por posição de pixel, então para eles um
+dígito deslocado é outra tabela. Os filtros da CNN são os mesmos nove pesos em todo lugar (aula 11),
+então um traço que ela aprendeu a achar na coluna 3 é achado na coluna 4 também, e o pooling perdoa
+um pouco mais. **Isso é um atributo aprendido da estrutura da entrada, não de uma coluna**, e é por
+isso que ela caiu menos. Ela caiu, sim: uma camada de pooling não é invariância completa, e o
+aumento de dados da aula 7, mostrando dígitos deslocados no treino, é o caminho de sempre para
+fechar o resto.
 
-Scale that up and you have the case for deep learning. A photograph is 150,528 numbers, a second of
-audio is tens of thousands, a sentence is a sequence of tokens (lesson 16), and in none of them does
-a single raw number mean anything a tree could split on. **Where the features have to be learnt
-from raw, structured input, networks have no serious rival**, and pretrained ones (lessons 13 and 17)
-bring that to problems with little data too.
+Aumente a escala e você tem o argumento a favor do deep learning. Uma fotografia são 150.528 números,
+um segundo de áudio são dezenas de milhares, uma frase é uma sequência de tokens (aula 16), e em
+nenhum deles um número cru isolado significa algo em que uma árvore possa cortar. **Onde os atributos
+precisam ser aprendidos a partir de entradas cruas e estruturadas, as redes não têm rival sério**, e
+as pré-treinadas (aulas 13 e 17) levam isso também a problemas com poucos dados.
 
-The two meet often. A table with a column of free text or a photo per row is common, and a sound
-arrangement is to let a network turn the text or the photo into a vector of numbers, an embedding,
-and hand that to boosting as more columns beside the others. Each model then does what it is good at.
+Os dois se encontram com frequência. Uma tabela com uma coluna de texto livre ou uma foto por linha é comum. Um arranjo sensato deixa uma
+rede transformar o texto ou a foto num vetor de números, um embedding, e entrega isso ao boosting
+como mais colunas ao lado das outras. Cada modelo faz então
+aquilo em que é bom.

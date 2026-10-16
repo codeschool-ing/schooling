@@ -64,7 +64,10 @@ Depois leia-o à mão, do jeito que um carregador vai ler. Salve como `~/dl/firs
 ```
 
 ```
-PENDING firstset
+ana@vm:~/dl$ python firstset.py
+length: 1077  item 0: (64,) torch.float32  label 6
+TensorDataset: 1077  same item 0: True
+item 1077: index 1077 is out of bounds for dimension 0 with size 1077
 ```
 
 O item 0 é uma imagem de 64 pixels, `float32`, com o rótulo 6: um item, não um lote. O

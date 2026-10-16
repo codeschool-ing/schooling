@@ -31,7 +31,10 @@ the device is the processor:
 ```
 
 ```
-PENDING todevice
+ana@vm:~/dl$ python todevice.py
+device: cpu  batch on cpu  pinned: False  model on cpu  last loss 2.1942
+tensor after x.to(float64), result not kept: torch.float32
+module after layer.to(float64), result not kept: torch.float64
 ```
 
 ## The model once, the batches every time
@@ -55,7 +58,10 @@ makes the loader put each batch there. On this machine there is no card to copy 
 says so:
 
 ```
-PENDING pinned
+ana@vm:~/dl$ python -c "from torch.utils.data import DataLoader; from dset import Digits; xb, yb = next(iter(DataLoader(Digits('train'), batch_size=32, pin_memory=True))); print('pinned:', xb.is_pinned())"
+/home/ana/dl/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+pinned: False
 ```
 
 The warning and `pinned: False` are the whole effect. That is why `todevice.py` asks for pinning

@@ -52,7 +52,15 @@ it as `~/dl/baseline.py`:
 ```
 
 ```
-PENDING baseline
+ana@vm:~/dl$ python baseline.py
+majority class       accuracy 0.759  worst fold 0.758   0.02 s
+logistic regression  refused:
+    LogisticRegression does not accept missing values encoded as NaN
+    natively. For supervised learning, you might want to consider
+    sklearn.ensemble.HistGradientBoostingClassifier and Regressor which
+    accept missing values encoded as NaNs natively.
+logistic, imputed    accuracy 0.797  worst fold 0.775   0.07 s
+gradient boosting    accuracy 0.867  worst fold 0.858   1.38 s
 ```
 
 **Logistic regression refuses the table outright**, and scikit-learn's own message names the model
@@ -67,6 +75,6 @@ trees over binned columns in the same way, scikit-learn's version was inspired b
 either can replace it in step 3. Neither is installed in this course's environment, so neither is
 run here; `machine-learning` lesson 8 covers them.
 
-The run took under a second for the whole recipe. **A baseline that cheap has no excuse to be
+The whole recipe took under two seconds. **A baseline that cheap has no excuse to be
 skipped**, and a network that cannot beat it has told you something worth knowing before the first
 epoch was spent.

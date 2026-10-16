@@ -31,7 +31,10 @@ dispositivo é o processador:
 ```
 
 ```
-PENDING todevice
+ana@vm:~/dl$ python todevice.py
+device: cpu  batch on cpu  pinned: False  model on cpu  last loss 2.1942
+tensor after x.to(float64), result not kept: torch.float32
+module after layer.to(float64), result not kept: torch.float64
 ```
 
 ## O modelo uma vez, os lotes toda vez
@@ -55,7 +58,10 @@ diretamente. `pin_memory=True` faz o carregador pôr cada lote lá. Nesta máqui
 onde copiar, e o PyTorch avisa:
 
 ```
-PENDING pinned
+ana@vm:~/dl$ python -c "from torch.utils.data import DataLoader; from dset import Digits; xb, yb = next(iter(DataLoader(Digits('train'), batch_size=32, pin_memory=True))); print('pinned:', xb.is_pinned())"
+/home/ana/dl/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+pinned: False
 ```
 
 O aviso e o `pinned: False` são o efeito inteiro. É por isso que o `todevice.py` pede a fixação com

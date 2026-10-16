@@ -1,31 +1,31 @@
 ---
-title: The boosting baseline, run first
+title: A linha de base do boosting, rodada primeiro
 version: 1
 ---
 
-`machine-learning` lesson 2 made the case for a baseline: the trivial rule a model has to beat
-before its score means anything. **On a table, the baseline worth beating is not the trivial rule.
-It is gradient boosting with its defaults**, because it is cheap, it rarely loses by much, and the
-two sections before this one showed it winning outright. A network on a table has to earn its place
-against that number, and the number has to exist first.
+A aula 2 de `machine-learning` defendeu a linha de base: a regra trivial que um modelo precisa
+superar antes que a nota dele queira dizer alguma coisa. **Numa tabela, a linha de base que vale a
+pena superar não é a regra trivial. É o gradient boosting com os padrões**, porque é barato, raramente
+perde por muito, e as duas seções anteriores o mostraram vencendo de vez. Uma rede numa tabela tem de
+conquistar o lugar contra esse número, e o número precisa existir antes.
 
-So the recipe, in the order to run it:
+Então a receita, na ordem em que se roda:
 
-1. **The majority class.** The floor. A model that cannot beat it has learnt nothing.
-2. **A linear model on standardised columns.** Cheap, readable, and on a table like the cancer
-   one, hard to beat.
-3. **`HistGradientBoostingClassifier` with its defaults, on the table as it came.** No scaling, no
-   filling of missing values, no encoding of categories beyond telling it which columns they are.
-4. **The same folds for all of them**, and the metric that matches the cost of each kind of error,
-   which is `machine-learning` lesson 10's subject. Accuracy is used here because the classes are
-   not far from even and both errors cost the same.
+1. **A classe majoritária.** O piso. Um modelo que não a supera não aprendeu nada.
+2. **Um modelo linear sobre colunas padronizadas.** Barato, legível, e numa tabela como a de câncer,
+   difícil de vencer.
+3. **O `HistGradientBoostingClassifier` com os padrões, na tabela do jeito que veio.** Sem escala,
+   sem preencher valores faltantes, sem codificar categorias além de dizer quais colunas elas são.
+4. **As mesmas dobras para todos**, e a métrica que corresponde ao custo de cada tipo de erro, que é
+   o assunto da aula 10 de `machine-learning`. Aqui se usa acurácia porque as classes não estão longe
+   do equilíbrio e os dois erros custam o mesmo.
 
-Only after that does a network get its run, and it has to beat step 3 by more than the spread
-between folds, or between seeds, the measurement lesson 18 taught.
+Só depois disso uma rede ganha a sua vez, e ela precisa superar o passo 3 por mais que a dispersão
+entre dobras, ou entre sementes, a medida que a aula 18 ensinou.
 
-The third step's "as it came" deserves a demonstration, because real tables have holes. The program
-below runs the recipe on `table.py`'s customers after blanking a fifth of the monthly charges. Save
-it as `~/dl/baseline.py`:
+O "do jeito que veio" do terceiro passo merece uma demonstração, porque tabelas reais têm buracos. O
+programa abaixo roda a receita sobre os clientes do `table.py` depois de apagar um quinto das contas
+mensais. Salve como `~/dl/baseline.py`:
 
 ```schooling-example
 {
@@ -52,21 +52,29 @@ it as `~/dl/baseline.py`:
 ```
 
 ```
-PENDING baseline
+ana@vm:~/dl$ python baseline.py
+majority class       accuracy 0.759  worst fold 0.758   0.02 s
+logistic regression  refused:
+    LogisticRegression does not accept missing values encoded as NaN
+    natively. For supervised learning, you might want to consider
+    sklearn.ensemble.HistGradientBoostingClassifier and Regressor which
+    accept missing values encoded as NaNs natively.
+logistic, imputed    accuracy 0.797  worst fold 0.775   0.07 s
+gradient boosting    accuracy 0.867  worst fold 0.858   1.38 s
 ```
 
-**Logistic regression refuses the table outright**, and scikit-learn's own message names the model
-that would not have: the gradient boosting in this very program. Filling each blank with the
-column's mean lets it run, at 0.797. Boosting took the holes as they were and reached 0.867, against
-0.883 on the complete table in the section before. It learns, at each split, which side the missing
-values go to, so a blank becomes information instead of an error.
+**A regressão logística recusa a tabela de cara**, e a própria mensagem do scikit-learn nomeia o
+modelo que não recusaria: o gradient boosting deste mesmo programa. Preencher cada buraco com a média
+da coluna a deixa rodar, com 0,797. O boosting aceitou os buracos como estavam e chegou a 0,867,
+contra 0,883 na tabela completa da seção anterior. Ele aprende, em cada corte, para que lado vão os
+valores faltantes, e assim um buraco vira informação em vez de erro.
 
-`HistGradientBoostingClassifier` has the same idea as two libraries you will meet in other people's
-code: **XGBoost and LightGBM**, the usual names for gradient boosting in production. Both build
-trees over binned columns in the same way, scikit-learn's version was inspired by LightGBM, and
-either can replace it in step 3. Neither is installed in this course's environment, so neither is
-run here; `machine-learning` lesson 8 covers them.
+O `HistGradientBoostingClassifier` tem a mesma ideia de duas bibliotecas que você vai encontrar no
+código dos outros: **XGBoost e LightGBM**, os nomes de sempre para gradient boosting em produção. As
+duas constroem árvores sobre colunas agrupadas em faixas do mesmo jeito, a versão do scikit-learn foi
+inspirada no LightGBM, e qualquer uma pode substituí-la no passo 3. Nenhuma está instalada no
+ambiente deste curso, então nenhuma roda aqui; a aula 8 de `machine-learning` trata delas.
 
-The run took under a second for the whole recipe. **A baseline that cheap has no excuse to be
-skipped**, and a network that cannot beat it has told you something worth knowing before the first
-epoch was spent.
+A receita inteira levou menos de dois segundos. **Uma linha de base tão barata não tem desculpa para
+ser pulada**, e uma rede que não a supera já disse algo que vale saber antes de gastar a primeira
+época.

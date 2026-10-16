@@ -1,12 +1,13 @@
 ---
-title: Why trees win on tables
+title: Por que árvores vencem em tabelas
 version: 1
 ---
 
-The cancer table is friendly to a linear model. Most business tables are not: **what decides the
-outcome is a rule with a threshold**, a contract type, a tariff band, a limit somebody set, and
-several columns that turn out to mean nothing at all. The program below generates a table with that
-shape, so the rules are known and the scores can be read against them. Save it as `~/dl/table.py`:
+A tabela de câncer é amigável a um modelo linear. A maioria das tabelas de negócio não é: **o que
+decide o resultado é uma regra com limiar**, um tipo de contrato, uma faixa de tarifa, um limite que
+alguém definiu, e várias colunas que no fim não significam nada. O programa abaixo gera uma tabela
+com esse formato, então as regras são conhecidas e as notas podem ser lidas contra elas. Salve como
+`~/dl/table.py`:
 
 ```schooling-example
 {
@@ -33,8 +34,8 @@ shape, so the rules are known and the scores can be read against them. Save it a
 }
 ```
 
-The rules make about one customer in four leave, and the random flips cap any model near 0.9. Run
-the same bench on it. Save as `~/dl/churn.py`:
+As regras fazem mais ou menos um cliente em cada quatro sair, e as trocas aleatórias limitam qualquer
+modelo a perto de 0,9. Rode a mesma bancada nela. Salve como `~/dl/churn.py`:
 
 ```schooling-example
 {
@@ -50,39 +51,42 @@ the same bench on it. Save as `~/dl/churn.py`:
 ```
 
 ```
-PENDING churn
+ana@vm:~/dl$ python churn.py
+3000 rows, 10 columns, 24% left
+logistic regression  accuracy 0.801  worst fold 0.782    0.04 s
+gradient boosting    accuracy 0.883  worst fold 0.877    1.44 s
+MLP, PyTorch         accuracy 0.799  worst fold 0.788    6.81 s
 ```
 
-**Boosting reaches 0.883, within a couple of points of the ceiling, and the other two stall near
-0.80.** A model that always answered "stays" would score 0.76, so logistic regression and the
-network have each found only a small part of the rules. The worst folds tell the same story: boosting
-0.877, the other two below 0.79. The network is again the slowest, at 4.40 seconds against
-boosting's 0.82.
+**O boosting chega a 0,883, a poucos pontos do teto, e os outros dois param perto de 0,80.** Um
+modelo que sempre respondesse "fica" marcaria 0,76, então a regressão logística e a rede acharam só
+uma pequena parte das regras. As piores dobras contam a mesma história: boosting 0,877, os outros dois
+abaixo de 0,79. A rede é de novo a mais lenta, com 6,81 segundos contra 1,44 do boosting.
 
-## Three reasons, each a property of the table
+## Três razões, cada uma uma propriedade da tabela
 
-In 2022 Léo Grinsztajn, Edouard Oyallon and Gaël Varoquaux compared trees and networks on 45 tabular
-data sets of about ten thousand rows each, including networks designed for tables, and asked why the
-trees kept winning. **Their three answers are visible in `table.py`.**
+Em 2022, Léo Grinsztajn, Edouard Oyallon e Gaël Varoquaux compararam árvores e redes em 45 conjuntos
+de dados tabulares de uns dez mil registros cada, incluindo redes projetadas para tabelas, e
+perguntaram por que as árvores continuavam vencendo. **As três respostas deles aparecem no
+`table.py`.**
 
-**The target is irregular.** Whether a customer leaves jumps at 24 months, at three calls, at a bill
-of 70. A tree places a split at exactly such a value and is done. A network builds its answer from
-sums of ReLUs, which bend a little at a time, and approximating a sharp step and an `and` of two
-thresholds takes many units and many examples. Networks are biased towards smooth functions, which is
-a strength on images and a handicap here.
+**O alvo é irregular.** Se um cliente sai ou não muda de repente aos 24 meses, nos três chamados, numa
+conta de 70. Uma árvore põe um corte exatamente nesse valor e pronto. Uma rede monta a resposta com
+somas de ReLUs, que dobram um pouco de cada vez, e aproximar um degrau nítido e um `and` de dois
+limiares exige muitas unidades e muitos exemplos. Redes têm viés para funções suaves, o que é uma
+força em imagens e uma desvantagem aqui.
 
-**Half the columns are noise.** A tree tries a split on each column, finds that `noise3` never
-helps, and leaves it alone. The network gives every column a weight into each of its 64 first-layer
-units, and it has to learn to set those 320 weights to nothing from 2,400 training rows, which leaves
-room to fit the noise instead.
+**Metade das colunas é ruído.** Uma árvore testa um corte em cada coluna, descobre que `noise3` nunca
+ajuda e a deixa de lado. A rede dá a cada coluna um peso para cada uma das 64 unidades da primeira camada. Ela precisa
+aprender a zerar esses 320 pesos a partir de 2.400 linhas de treino, o que deixa espaço para ajustar o
+ruído no lugar.
 
-**Each column means something on its own.** Months, money and a contract code are not
-interchangeable. A tree looks at one column at a time. A network's first layer mixes all ten into
-weighted sums before anything else happens, which is the right move for pixels, where any
-combination of neighbours may matter, and the wrong one for a table, where the columns were chosen by
-somebody who knew what each one meant.
+**Cada coluna significa algo por si só.** Meses, dinheiro e um código de contrato não são
+intercambiáveis. Uma árvore olha uma coluna por vez. A primeira camada de uma rede mistura as dez em somas ponderadas antes de qualquer outra coisa. É o
+movimento certo para pixels, em que qualquer combinação de vizinhos pode importar, e o errado para
+uma tabela, cujas colunas foram escolhidas por alguém que sabia o que cada uma queria dizer.
 
-None of this says a network cannot reach 0.88 here. It could be tuned: more units, dropout
-(lesson 7), a different rate (lesson 5), a search over all of them (`machine-learning` lesson 9).
-**Every one of those is an afternoon, and boosting got 0.883 with its defaults.** That is the
-comparison that matters on a working day.
+Nada disso diz que uma rede não consegue chegar a 0,88 aqui. Ela poderia ser ajustada: mais unidades,
+dropout (aula 7), outra taxa (aula 5), uma busca sobre tudo isso (aula 9 de `machine-learning`).
+**Cada uma dessas é uma tarde, e o boosting chegou a 0,883 com os padrões.** Essa é a comparação que
+importa num dia de trabalho.

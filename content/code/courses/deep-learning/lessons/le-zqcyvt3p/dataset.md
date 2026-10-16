@@ -64,7 +64,10 @@ Then read it by hand, the way a loader will. Save as `~/dl/firstset.py`:
 ```
 
 ```
-PENDING firstset
+ana@vm:~/dl$ python firstset.py
+length: 1077  item 0: (64,) torch.float32  label 6
+TensorDataset: 1077  same item 0: True
+item 1077: index 1077 is out of bounds for dimension 0 with size 1077
 ```
 
 Item 0 is one image of 64 pixels, `float32`, with the label 6: one item, not a batch. PyTorch's own

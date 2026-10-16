@@ -28,9 +28,9 @@ Save it as `~/dl/warp.py`:
 }
 ```
 
-The bending is a version of the elastic distortion Patrice Simard and his colleagues used on handwritten digits
-in 2003: a smooth random field moves every pixel a little, and the strokes come out the way another
-person might have written the same digit. It is an augmentation, and lesson 7 said why
+The bending is a version of the elastic distortion that Patrice Simard and his colleagues used on
+handwritten digits in 2003: a smooth random field moves every pixel a little, and the strokes come
+out the way another person might have written the same digit. It is an augmentation, and lesson 7 said why
 augmentation helps; **here it is a workload**. Nothing in it sleeps or waits: every microsecond it
 takes is arithmetic.
 
@@ -62,11 +62,30 @@ Now measure it. Save as `~/dl/slow.py`:
 ```
 
 ```
-PENDING slow
+ana@vm:~/dl$ python slow.py
+plain      3.5 microseconds an image, 0.004 s for all 1077
+warped  1747.1 microseconds an image, 1.882 s for all 1077
+item 0: (1, 32, 32)  label 6  read again, same image: False
+            %%%%====                         :=##%#**=:.                        -*##+-:.            
+            %%%%====                      . :=+%%%%*=-..                      .-+*#%#+-:.           
+        ====%%%%....                      .-=+#%%%+=:                       ..:+*%%%+=:             
+        ====%%%%....                     .:=+%##++:.                       .:=+*###*=:.             
+        %%%%----                         -=*#**=-:.                        .=*#**+=-:.              
+        %%%%----                         -#%%*=.                           :*%█%+-.                 
+        ████....                        .-#█%*-.                           -*%█#=.                  
+        ████....                         -+██#+:....::..                  :=%██#=:....   ....       
+    ....████****########....            .-*██%#*=++*+*++=-::             .=+%██%*+-===*+**+=-:.     
+    ....████****########....           . -+%██%%**+***##**+=-:.          .+*%██%#*++**#####**==-. . 
+    ....████****----++++####            .-+*████#+=---=+*###*+=:.       .:=*%███%#*===-++**##**+-:. 
+    ....████****----++++####             :=*███%#+-::-=+###%%#+=:         :+#███%#*=:.-=+##%%█#*+-. 
+        %%%%****::::%%%%****             :=+#%##*+---=**#%%█%#*-.         .-**%%%%*=-:-*#%%█%█%*+-. 
+        %%%%****::::%%%%****             ..:-=+*####*##%%#%##+=-.         ..::=++##***########**=-. 
+            ####████****....                 .-=#████%%***++=-::.               -+%████%#*+====::.  
+            ####████****....                   ..::--=+++=:::.                  ..:-----=----.      
 ```
 
-**Reading a plain image took 2.1 microseconds; reading a warped one took 894.5**, some four hundred
-times as long. Over the training set that is 0.002 seconds against 0.963 seconds for one pass, and
+**Reading a plain image took 3.5 microseconds; reading a warped one took 1747.1**, some five hundred
+times as long. Over the training set that is 0.004 seconds against 1.882 seconds for one pass, and
 it is paid again in every epoch, because the transform runs inside `__getitem__`. These are times
 on one machine at one moment, and yours will differ: what carries over is the ratio, a transform
 costing hundreds of times what the read itself costs.
