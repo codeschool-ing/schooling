@@ -57,7 +57,7 @@ assunto, não porque dividem uma necessidade.
 
 **Toda consulta paga por uma estrutura feita para escrita.** `holder` é indexado por exemplar porque
 é isso que um empréstimo muda. A tela de disponibilidade quer uma contagem por título, então percorre
-todos os exemplares para cada título: 3 títulos vezes 4 exemplares são os 12 que o programa
+todos os exemplares para cada título, e 3 títulos vezes 4 exemplares são os 12 que o programa
 imprimiu. Uma biblioteca de bairro com 2.000 títulos e 5.000 exemplares visitaria dez milhões de
 registros para desenhar uma página. Um índice ajudaria, e seria um índice acrescentado à estrutura
 das regras por causa da tela.

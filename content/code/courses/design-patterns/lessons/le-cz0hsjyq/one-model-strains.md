@@ -56,7 +56,7 @@ share a subject, not because they share a need.
 
 **Every query pays for a structure built for writing.** `holder` is keyed by copy because that is
 what a loan changes. The availability screen wants a count per title, so it walks every copy for
-every title: 3 titles times 4 copies is the 12 the program printed. A branch library with 2,000
+every title, and 3 titles times 4 copies is the 12 the program printed. A branch library with 2,000
 titles and 5,000 copies would visit ten million records to draw one page. An index would help, and
 it would be an index added to the rules' structure for the screen's sake.
 
