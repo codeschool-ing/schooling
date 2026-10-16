@@ -1,0 +1,1246 @@
+{
+  "ex-bp0v6eqs": {
+    "prompt": "Na conta da loja, `describe-availability-zones` liga `us-east-1a` a `use1-az6`. A conta de um parceiro precisa pôr o cache na mesma zona física. O que o parceiro deve fazer?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "Usar `us-east-1a` também, já que o nome da zona é fixado pela região",
+        "why": "Numa região antiga a AWS liga nomes a zonas por conta, então o `us-east-1a` do parceiro pode ser outro prédio."
+      },
+      {
+        "text": "Rodar o mesmo comando na própria conta e usar o nome cujo id é `use1-az6`",
+        "why": "Isso. O id nomeia a mesma zona em toda conta; cada conta o traduz para o próprio nome."
+      },
+      {
+        "text": "Escolher a zona com menor latência, medida a partir da loja",
+        "why": "As zonas de uma região ficam todas a um ou dois milissegundos; a latência não identifica uma delas."
+      },
+      {
+        "text": "Pedir ao suporte da AWS que alinhe os nomes de zona das duas contas",
+        "why": "Nada precisa ser alinhado: o id da zona já é o nome comum, e o comando o imprime."
+      }
+    ]
+  },
+  "ex-yy2bpz0y": {
+    "prompt": "Todo mês 100 GB vão de `sa-east-1` para `us-east-1`, e 100 GB voltam de `us-east-1` para `sa-east-1`. Pelos preços da lista de 16 de setembro de 2026, quanto custa a transferência do mês entre as regiões, em dólares?",
+    "hint": "Lição 1. Cada sentido tem seu preço, pago pela região de onde os bytes saem.",
+    "unit": "dólares"
+  },
+  "ex-d7tjm1da": {
+    "prompt": "Ligue cada lugar ao que ele é.",
+    "hint": "Lição 1.",
+    "pairs": [
+      {
+        "left": "Availability Zone",
+        "right": "uma falha separada dentro de uma região"
+      },
+      {
+        "left": "Local Zone",
+        "right": "uma região estendida a uma cidade que não tem uma"
+      },
+      {
+        "left": "Wavelength Zone",
+        "right": "equipamento da AWS dentro da rede de uma operadora móvel"
+      },
+      {
+        "left": "Outposts",
+        "right": "racks da AWS no seu próprio datacenter"
+      }
+    ],
+    "right_distractors": [
+      "uma cópia da AWS com contas próprias"
+    ]
+  },
+  "ex-fvh20ekd": {
+    "prompt": "Uma máquina de build conversa com seu cache o dia todo. Se uma das duas se perder, o build só roda de novo mais tarde. Onde o cache deve ficar?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "Em outra zona, para que a falha de uma zona deixe uma das duas de pé",
+        "why": "É a escolha certa para um banco e seu standby. Aqui a falha não importa, e cada byte entre zonas é pago dos dois lados."
+      },
+      {
+        "text": "Em outra região, onde a cópia fica mais segura",
+        "why": "Sair de São Paulo custa 0.138 por GB; um par que conversa muito entre regiões paga isso a cada troca."
+      },
+      {
+        "text": "Na mesma zona da máquina de build",
+        "why": "Isso. Dentro de uma zona, por endereços privados, a transferência é grátis, e perder as duas juntas custa só uma nova execução."
+      },
+      {
+        "text": "Onde a hora for mais barata; transferência dentro da região é grátis",
+        "why": "Só dentro de uma zona é grátis. Entre duas zonas da região é 0.01 por GB em cada sentido."
+      }
+    ]
+  },
+  "ex-rt3h2msd": {
+    "prompt": "Uma política nomeia `arn:aws:sqs:us-east-1:218935875641:orders`. Um colega diz que é uma fila da `shop-prod`, em São Paulo. O que o próprio ARN diz?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "As duas coisas estão certas: o campo de região é só onde a fila foi criada primeiro",
+        "why": "Uma fila não muda de região; o quarto campo é onde ela mora."
+      },
+      {
+        "text": "Seja qual for a conta, a fila está na Virgínia",
+        "why": "Isso. O quarto campo é a região, `us-east-1`; o quinto é a conta."
+      },
+      {
+        "text": "Nada sobre a conta, já que um ARN do SQS deixa esse campo vazio",
+        "why": "Esse é o ARN de um bucket, que não tem conta nem região. Este traz os dois."
+      },
+      {
+        "text": "Que é uma fila em uma partição separada, `us-east-1`",
+        "why": "A partição é o segundo campo, `aws` aqui. `us-east-1` é uma região dela."
+      }
+    ]
+  },
+  "ex-mhdvavex": {
+    "prompt": "A `shop-staging` tenta criar o bucket `shop-backups` e ouve `BucketAlreadyExists`. Nenhuma conta da organização da loja tem um bucket com esse nome. O que se pode concluir?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "Alguma conta em algum lugar da AWS é dona dele, e a AWS não diz qual",
+        "why": "Isso. Nomes de bucket dividem um espaço único em toda a AWS, e a recusa não nomeia o dono de propósito."
+      },
+      {
+        "text": "A conta de gerenciamento é dona dele, já que os buckets dela ficam escondidos dos membros",
+        "why": "Se fosse da loja, alguma conta da loja o mostraria. E na própria conta dona a resposta seria `BucketAlreadyOwnedByYou`."
+      },
+      {
+        "text": "O nome foi apagado há pouco e está esperando ser liberado",
+        "why": "A lição não dá essa causa; o código diz que o nome está ocupado, por outra conta."
+      },
+      {
+        "text": "A `shop-staging` não tem permissão para criar buckets",
+        "why": "Falta de permissão é `AccessDenied`. Este código é sobre o nome."
+      }
+    ]
+  },
+  "ex-nz3y3w2n": {
+    "prompt": "O Service Quotas aumentou a cota de VPCs da `shop-staging` em `sa-east-1` para 10. Qual é a cota da `shop-staging` em `us-east-1`, e da `shop-prod` em `sa-east-1`?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "10 e 10, porque um aumento vale para a organização inteira",
+        "why": "Uma cota é contada por conta, então a organização não tem um número único para aumentar."
+      },
+      {
+        "text": "10 e 5: o aumento acompanha a conta em toda região",
+        "why": "A cota de VPCs não é global; ela é contada em cada região separadamente."
+      },
+      {
+        "text": "5 e 10, já que o aumento cai na conta que roda produção",
+        "why": "Um pedido aumenta a cota da conta que pediu, nunca a de outra."
+      },
+      {
+        "text": "5 e 5",
+        "why": "Isso. Um aumento vale para uma cota numa região de uma conta; em todo o resto fica o padrão de cinco."
+      }
+    ]
+  },
+  "ex-e33x6f22": {
+    "prompt": "A loja cria uma conta `shop-dev` e, para economizar uma caixa de correio, dá a ela `aws+shop-staging@example.com`, o endereço que a `shop-staging` já usa. O que acontece na AWS?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "As duas contas passam a dividir um usuário root",
+        "why": "Cada conta tem exatamente um usuário root próprio; a AWS nem deixa duas contas dividirem um endereço."
+      },
+      {
+        "text": "A criação falha com `EMAIL_ALREADY_EXISTS`",
+        "why": "Isso. O endereço do usuário root é único em toda a AWS. O moto deixou passar, então essa recusa não foi rodada."
+      },
+      {
+        "text": "Funciona; só o alias da conta precisa ser único",
+        "why": "O alias também é único, mas o endereço também. É isso que o moto mostra e a AWS recusa."
+      },
+      {
+        "text": "A `shop-staging` perde o endereço, que passa para a conta mais nova",
+        "why": "Nada muda de lugar: a segunda conta simplesmente não é criada."
+      }
+    ]
+  },
+  "ex-7jfm1sm5": {
+    "prompt": "`shop-prod`, `shop-staging` e `sandbox` mandam cada uma 4.096 GB de `sa-east-1` para a internet num mês: 0.15 dólar por GB nos primeiros 10.240 GB, depois 0.138. As três estão numa organização. Qual é o total do mês, em dólares, deixando de fora a franquia grátis?",
+    "hint": "Lição 3. As faixas contam o uso da organização somado.",
+    "unit": "dólares"
+  },
+  "ex-9xa0854p": {
+    "prompt": "Uma conta com anos de história entrou na organização da loja por convite. Da conta de gerenciamento, `assume-role` na `OrganizationAccountAccessRole` dela falha. Qual é a razão mais provável?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "O handshake não foi aceito, então a conta ainda está fora da organização",
+        "why": "Então ela nem seria membro. A conta entrou; o que falta é algo que a organização nunca criou para ela."
+      },
+      {
+        "text": "O papel existe, mas o `AdministratorAccess` dele é retirado quando a conta é convidada",
+        "why": "Nada é retirado ao entrar. O papel simplesmente não existe, para começar."
+      },
+      {
+        "text": "O papel não existe: só as contas que a organização criou o recebem",
+        "why": "Isso. Um administrador da conta convidada tem de criá-lo à mão, com a mesma política de confiança e o `AdministratorAccess`."
+      },
+      {
+        "text": "Contas convidadas só podem ser acessadas pelo usuário root delas",
+        "why": "Um papel funciona numa conta convidada como em qualquer outra, depois que alguém o cria."
+      }
+    ]
+  },
+  "ex-ppssxxkv": {
+    "prompt": "Para saber quais membros chegaram com história própria, leia o `describe-account`: uma conta que aceitou um convite informa o `JoinedMethod` como ___.",
+    "hint": "Lição 3. O outro valor é `CREATED`.",
+    "blanks": [
+      {
+        "accept": [
+          "INVITED"
+        ]
+      }
+    ]
+  },
+  "ex-7283h4wv": {
+    "prompt": "A equipe de segurança quer o GuardDuty rodando para a organização inteira, e a conta de gerenciamento fora do trabalho diário. O que o Organizations oferece para isso?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "Uma OU de segurança, que roda o serviço para as contas abaixo dela",
+        "why": "Uma OU guarda contas e regras; ela não roda nada e não tem recursos próprios."
+      },
+      {
+        "text": "Nomear a conta `security` como administradora delegada do serviço",
+        "why": "Isso. Um membro faz então o trabalho da organização inteira, e a conta de gerenciamento fica só com a árvore e a fatura."
+      },
+      {
+        "text": "Mover a conta de gerenciamento para a OU `Security`",
+        "why": "Onde ela fica não muda nada nos poderes dela, e a ideia era tirar trabalho dela."
+      },
+      {
+        "text": "Uma segunda organização, de propriedade da conta `security`",
+        "why": "Uma conta pertence a uma organização por vez, então as ferramentas não veriam nenhuma conta da loja."
+      }
+    ]
+  },
+  "ex-v3ratb3n": {
+    "prompt": "Uma chave de administrador roubada da `shop-staging` é usada para `iam:CreateUser` e para `ec2:RunInstances` em `us-east-1`. As quatro proteções da loja estão anexadas como a lição 4 as deixou. Quais das duas chamadas passam pelas SCPs?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Nenhuma, já que a proteção de região cobre toda ação fora de São Paulo",
+        "why": "O `NotAction` isenta os serviços globais, o IAM entre eles, então a negação de região não toca no `CreateUser`."
+      },
+      {
+        "text": "As duas, porque uma chave de administrador passa por cima das negações da organização",
+        "why": "Nenhuma identidade numa conta membro levanta uma SCP; é isso que faz dela uma proteção."
+      },
+      {
+        "text": "Só o `CreateUser`",
+        "why": "Isso. O IAM está isento da negação de região, e nenhuma das quatro nega criar usuários; a máquina na Virgínia é recusada."
+      },
+      {
+        "text": "Só o `RunInstances`, porque a `protect-deployer` nega escritas no IAM",
+        "why": "Essa proteção cobre só o papel `deployer`, e a negação de região recusa a máquina."
+      }
+    ]
+  },
+  "ex-9rk50zeb": {
+    "prompt": "Uma equipe cria um papel chamado `deployer` na conta `sandbox`. Ele está coberto pela `protect-deployer`?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Não: a política está anexada a `Workloads`, e a `sandbox` não fica abaixo dela",
+        "why": "Isso. Uma SCP filtra as contas do ramo dela; o `*` no ARN só deixa uma política valer em toda conta desse ramo."
+      },
+      {
+        "text": "Sim: o `*` no campo de conta do ARN alcança toda conta",
+        "why": "O ARN diz a quais papéis uma instrução se aplica. Em quais contas ela vale é decidido por onde a política está anexada."
+      },
+      {
+        "text": "Sim, porque SCPs na raiz são copiadas para toda conta",
+        "why": "SCPs nunca são copiadas, e esta está em `Workloads`, não na raiz."
+      },
+      {
+        "text": "Só quando a lista de permissões da sandbox nomear o IAM",
+        "why": "A lista de permissões já inclui `iam:*`, e uma lista de permissões não protege nada: ela só limita."
+      }
+    ]
+  },
+  "ex-yx0asb0f": {
+    "prompt": "A raiz da loja carrega a `FullAWSAccess` e três proteções. Quantas SCPs a mais podem ser anexadas diretamente à raiz na AWS?",
+    "hint": "Lição 4. O moto não aplicou o limite por alvo.",
+    "unit": "políticas"
+  },
+  "ex-xn27e2ks": {
+    "prompt": "Os desenvolvedores precisam do SQS na sandbox, que a lista de permissões na OU `Sandbox` deixa de fora. Que mudança os deixa usar?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Anexar uma SCP permitindo `sqs:*` à própria conta `sandbox`",
+        "why": "A conta já permite tudo. A OU acima dela continua sem permissão para o SQS, e todo nível precisa ter uma."
+      },
+      {
+        "text": "Dar aos desenvolvedores uma política do IAM permitindo `sqs:*`",
+        "why": "Eles precisam disso também, mas o IAM não passa do teto que a OU define."
+      },
+      {
+        "text": "Acrescentar `sqs:*` à `sandbox-allow-list`, a política na OU",
+        "why": "Isso. Os níveis se cruzam, então a permissão tem de estar na OU, onde ela falta."
+      },
+      {
+        "text": "Anexar a `FullAWSAccess` à raiz de novo",
+        "why": "A raiz já tem. A OU é o nível que deixa o SQS de fora."
+      }
+    ]
+  },
+  "ex-mph9s1jv": {
+    "prompt": "Num mês, uma conta registra 10.000 itens de configuração e suas regras do Config fazem 150.000 avaliações. Pelos preços de São Paulo de 11 de setembro de 2026 (0.003 por item; avaliações a 0.001 nas primeiras 100.000, depois 0.0008), quanto custa o Config nesse mês, em dólares?",
+    "hint": "Lição 5. Duas linhas na fatura, a segunda em duas faixas.",
+    "unit": "dólares"
+  },
+  "ex-1ygz305j": {
+    "prompt": "Um controle recusou uma pilha do CloudFormation que criaria um bucket público. Uma hora depois um engenheiro criou o mesmo bucket com `aws s3api`, e nada o recusou. Que tipo de controle era?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Preventivo",
+        "why": "Um controle preventivo é uma SCP e julga toda requisição, inclusive da linha de comando."
+      },
+      {
+        "text": "Detetive",
+        "why": "Um controle detetive não recusa nada: ele relata um recurso depois que ele existe."
+      },
+      {
+        "text": "Proativo",
+        "why": "Isso. Um hook do CloudFormation só vê o que passa pelo CloudFormation, que é exatamente a brecha por onde o engenheiro passou."
+      },
+      {
+        "text": "Obrigatório",
+        "why": "Obrigatório é um nível de orientação, não um tipo de controle, e os obrigatórios protegem a própria landing zone."
+      }
+    ]
+  },
+  "ex-ygbfe1hd": {
+    "prompt": "A loja roda uma landing zone sob o Control Tower. Quais destes aparecem na fatura? Marque todos os que se aplicam.",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Os itens de configuração do Config, em toda conta governada",
+        "why": "Isso: 0.003 dólar cada em São Paulo, e a conta mais movimentada registra mais."
+      },
+      {
+        "text": "O próprio Control Tower, por conta governada",
+        "why": "O Control Tower é grátis; o que ele liga é cobrado."
+      },
+      {
+        "text": "As avaliações de regras do Config feitas pelos controles detetives",
+        "why": "Isso: cada regra julgando cada recurso é uma avaliação, 0.001 nas primeiras 100.000 do mês."
+      },
+      {
+        "text": "Os eventos de gerenciamento da trilha da organização",
+        "why": "A primeira cópia dos eventos de gerenciamento não custa nada, e a trilha da organização é essa cópia."
+      },
+      {
+        "text": "Guardar os registros em `log-archive`",
+        "why": "Isso: os registros ficam no S3 de lá, e armazenamento é cobrado como qualquer outro."
+      }
+    ]
+  },
+  "ex-tnr5z7cz": {
+    "prompt": "Uma carga de pagamentos chega com regras de um regulador que nenhuma outra parte da loja precisa. Que controles servem para ela, e como são ligados?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Os fortemente recomendados, na raiz, para que toda conta os receba",
+        "why": "Esses são o conselho da AWS para qualquer empresa; as exigências de um regulador são de uma parte da árvore."
+      },
+      {
+        "text": "Os obrigatórios, que o Control Tower acrescenta quando vê a carga",
+        "why": "Os obrigatórios estão ligados desde o início e protegem a própria landing zone; não são escolhidos por carga."
+      },
+      {
+        "text": "Nenhum; os controles do Control Tower não podem ser escolhidos, só aceitos",
+        "why": "Só os obrigatórios são fixos. Os outros dois níveis são uma escolha."
+      },
+      {
+        "text": "Os eletivos, ligados para a OU que a abriga",
+        "why": "Isso. Controles eletivos são para necessidades específicas e são ligados OU por OU."
+      }
+    ]
+  },
+  "ex-q8ney2mw": {
+    "prompt": "O workflow da loja na `main` de `shop/web` faz deploy pelo `deployer` com OIDC. Agora um workflow no branch `release` do mesmo repositório também precisa fazer deploy, e nada mais pode. O que muda?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Retirar a condição `sub`, já que o `aud` já limita o token à AWS",
+        "why": "Todo workflow do GitHub recebe tokens para a mesma audiência; sem `sub` o papel confia em todos, estranhos inclusive."
+      },
+      {
+        "text": "Deixar a condição `sub` aceitar também `repo:shop/web:ref:refs/heads/release`",
+        "why": "Isso. O `sub` nomeia repositório e branch; um segundo valor para a mesma chave é uma alternativa, e todo o resto continua recusado."
+      },
+      {
+        "text": "Criar um usuário do IAM com chave de acesso para o workflow de release",
+        "why": "Isso põe um segredo de longo prazo no GitHub, exatamente o que o OIDC existe para evitar."
+      },
+      {
+        "text": "Registrar um segundo provedor OIDC para o branch `release`",
+        "why": "O emissor é o mesmo para todo branch, e o IAM é avisado para confiar nele uma vez por conta."
+      }
+    ]
+  },
+  "ex-9w90nk99": {
+    "prompt": "Um id de chave começando com `ASIA` aparece num log de build que ficou público hoje de manhã. O que é, e por quanto tempo vale?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "A chave de longo prazo de um usuário, válida até alguém apagá-la",
+        "why": "Esse prefixo é `AKIA`. A chave de um usuário teria mesmo de ser achada e apagada."
+      },
+      {
+        "text": "A chave permanente do próprio papel, válida até o papel ser apagado",
+        "why": "Um papel não tem chave própria; `create-access-key` para um papel respondeu `NoSuchEntity`."
+      },
+      {
+        "text": "A chave temporária de uma sessão, inútil quando a sessão expira",
+        "why": "Isso. Ela só funciona com o segredo e o token, e os três são recusados juntos na expiração, uma hora por padrão."
+      },
+      {
+        "text": "Uma chave do usuário root, válida enquanto a conta existir",
+        "why": "Uma chave do root seria de longo prazo também, com o prefixo `AKIA`."
+      }
+    ]
+  },
+  "ex-xyt86f3b": {
+    "prompt": "Para organizar o IAM, alguém propõe um grupo `staff` contendo os grupos `developers`, `data` e `finance`, para que uma política em `staff` alcance todo mundo. O que acontece?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Funciona, até os dez grupos de que um usuário pode participar",
+        "why": "Dez é em quantos grupos um usuário pode estar. Não diz nada sobre grupos dentro de grupos."
+      },
+      {
+        "text": "Não dá para montar: um grupo guarda usuários, nunca outro grupo",
+        "why": "Isso. O jeito de alcançar todo mundo é pôr cada usuário em `staff` também, ou anexar a política aos três grupos."
+      },
+      {
+        "text": "Funciona, e `staff` pode então ser nomeado como principal de um papel",
+        "why": "Um grupo não é principal de jeito nenhum; a AWS recusa uma política de confiança que nomeie um."
+      },
+      {
+        "text": "Funciona só se `staff` receber uma senha própria",
+        "why": "Um grupo não tem senha, chave nem jeito de assinar nada."
+      }
+    ]
+  },
+  "ex-gv28b1bd": {
+    "prompt": "Qual destas tarefas tem de ser feita pelo usuário root, pela documentação da AWS?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Criar o primeiro usuário do IAM da conta",
+        "why": "O root pode fazer, mas qualquer principal com `iam:CreateUser` também pode; não está na lista curta."
+      },
+      {
+        "text": "Anexar uma service control policy à conta",
+        "why": "SCPs são anexadas pelo Organizations da conta de gerenciamento, e limitam o root do membro."
+      },
+      {
+        "text": "Mudar ou cancelar o plano de suporte",
+        "why": "Isso. Junto com mudar o nome, o e-mail ou a senha root da conta e fechar a conta, é uma das poucas tarefas que exigem o root."
+      },
+      {
+        "text": "Ligar o MFA do usuário bia",
+        "why": "Qualquer administrador pode fazer isso; nada no fator da bia exige o root."
+      }
+    ]
+  },
+  "ex-c04qxnec": {
+    "prompt": "Uma instrução permite `s3:GetObject` em `arn:aws:s3:::shop-assets/home/${aws:username}/*`, e a política não tem linha `Version`. O que a bia recebe?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "O próprio prefixo, `home/bia/`, já que a variável é trocada pelo nome dela",
+        "why": "Isso acontece com `2012-10-17`. Um documento sem `Version` é lido como a linguagem antiga."
+      },
+      {
+        "text": "Só um prefixo chamado literalmente `${aws:username}`, que ninguém usa",
+        "why": "Isso. Sem `Version` o documento é `2008-10-17`, em que variáveis de política são texto comum."
+      },
+      {
+        "text": "Todo prefixo do bucket, já que uma variável desconhecida casa com qualquer coisa",
+        "why": "Uma variável não lida não é curinga; são os caracteres como escritos."
+      },
+      {
+        "text": "Uma recusa do documento, já que `Version` é obrigatório",
+        "why": "O documento é aceito e lido como a versão antiga, por isso vale escrever a linha toda vez."
+      }
+    ]
+  },
+  "ex-x9pq3w2k": {
+    "prompt": "Um documento de política tem 3.000 caracteres. Onde a AWS deixa que ele vá, pelos limites que as lições 4 e 7 deram? Marque todos os que se aplicam.",
+    "hint": "Lição 7, e a lição 4 para as políticas da organização.",
+    "choices": [
+      {
+        "text": "Uma política gerenciada pelo cliente anexada à bia",
+        "why": "Isso: uma política gerenciada comporta 6.144 caracteres."
+      },
+      {
+        "text": "Uma política inline no usuário bia",
+        "why": "As políticas inline de um usuário comportam só 2.048 caracteres, o que é uma pista do que elas servem para fazer."
+      },
+      {
+        "text": "Uma política inline no grupo `developers`",
+        "why": "Isso: as políticas inline de um grupo comportam 5.120."
+      },
+      {
+        "text": "Uma service control policy anexada à `shop-prod`",
+        "why": "Isso: a lição 4 deu o limite de uma SCP como 5.120 caracteres. Caberia, embora não concedesse nada."
+      }
+    ]
+  },
+  "ex-n14sdr19": {
+    "prompt": "Ponha em ordem o início de uma lição que precisa que o moto julgue permissões, de um moto parado até o primeiro comando rodado como `admin`.",
+    "hint": "Lição 7.",
+    "items": [
+      "iniciar `INITIAL_NO_AUTH_ACTION_COUNT=3 moto_server -p 4567`",
+      "criar o usuário `admin`",
+      "anexar o `AdministratorAccess` ao `admin`",
+      "criar uma chave de acesso para o `admin` e guardá-la numa variável",
+      "fazer `export` do id e do segredo da chave",
+      "rodar `aws sts get-caller-identity`"
+    ],
+    "trap": "A chave tem de ser a terceira requisição: uma quarta assinada com `test` é recusada, e não há volta a não ser reiniciar."
+  },
+  "ex-gfzbenx7": {
+    "prompt": "Uma instrução permite `s3:*Object` em `arn:aws:s3:::shop-assets/*`. Qual destas ações ela NÃO cobre?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "`s3:DeleteObject`",
+        "why": "O `*` casa com qualquer sequência de caracteres, então `Delete` antes de `Object` está coberto."
+      },
+      {
+        "text": "`s3:ListBucket`",
+        "why": "Isso. O nome não termina em `Object`, e ela age sobre o bucket, que `shop-assets/*` também não nomeia."
+      },
+      {
+        "text": "`s3:PutObject`",
+        "why": "`Put` é uma sequência de caracteres antes de `Object`, então casa."
+      },
+      {
+        "text": "`s3:GetObject`",
+        "why": "Casa como as outras, e age sobre objetos, que é o que o recurso nomeia."
+      }
+    ]
+  },
+  "ex-2r0ptcbf": {
+    "prompt": "Numa mesma conta, a política do bucket `shop-assets` permite `s3:GetObject` para `arn:aws:iam::123456789012:user/caio`. As políticas do próprio caio não dizem nada sobre S3. Na AWS, ele consegue ler um objeto?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Sim: dentro de uma conta, uma camada que concede basta",
+        "why": "Isso. A política do bucket é uma camada que concede e nada nega. Os dois lados precisam conceder só entre contas."
+      },
+      {
+        "text": "Não: a política de identidade dele também precisa permitir",
+        "why": "Essa é a regra entre contas. Aqui quem chama e o bucket estão na mesma conta."
+      },
+      {
+        "text": "Não: uma política de bucket só pode negar, nunca conceder",
+        "why": "Uma política baseada em recurso é uma camada que concede, como uma política de identidade."
+      },
+      {
+        "text": "Só com MFA, que uma política de bucket sempre exige",
+        "why": "MFA é uma condição que alguém escreve; esta política não tem nenhuma."
+      }
+    ]
+  },
+  "ex-m03pktqj": {
+    "prompt": "A ana precisa dar ao edu uma sessão do `deployer` que só leia o S3 por uma tarde, sem criar um segundo papel. O que a lição 8 oferece para isso?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Um limite de permissões no `deployer`",
+        "why": "Um limite restringe toda sessão do papel, a do pipeline inclusive, não a de uma tarde."
+      },
+      {
+        "text": "Uma SCP na conta durante a tarde",
+        "why": "Uma SCP limita todo mundo na conta, e é definida pela organização, não por quem assume um papel."
+      },
+      {
+        "text": "Uma política de sessão passada ao `assume-role` com `--policy`",
+        "why": "Isso. Ela restringe aquela sessão; o que ela pode é o que o papel e a política de sessão permitem juntos."
+      },
+      {
+        "text": "Uma política inline no edu permitindo só leituras no S3",
+        "why": "Dentro da sessão as políticas do próprio edu não contam; valem as permissões do papel."
+      }
+    ]
+  },
+  "ex-1ge31v4g": {
+    "prompt": "Uma política permite `s3:*` em todo recurso quando `aws:ResourceTag/team` é igual a `${aws:PrincipalTag/team}`. A bia tem a tag `team=web`, e um bucket tem a tag `team=data`. Na AWS, ela consegue apagar objetos nele?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Sim, porque `s3:*` cobre a exclusão",
+        "why": "A ação casa, mas a condição não, e uma instrução cuja condição falha não permite nada."
+      },
+      {
+        "text": "Sim, mas só depois que uma política de sessão nomear a tag",
+        "why": "Uma política de sessão só pode limitar, nunca conceder."
+      },
+      {
+        "text": "Não, porque a política nega explicitamente as outras equipes",
+        "why": "Não há `Deny` aqui. A recusa é a negação implícita de uma requisição que nada permitiu."
+      },
+      {
+        "text": "Não: `web` não é `data`, então nada permite",
+        "why": "Isso. Cada equipe fica com as próprias coisas; a requisição volta para onde toda requisição começa."
+      }
+    ]
+  },
+  "ex-kxcyadwa": {
+    "prompt": "A loja quer uma lista de todo bucket, fila e chave da organização que uma conta de fora da organização consegue alcançar. Que ferramenta dá isso?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "`aws iam simulate-principal-policy`, rodado para cada pessoa de fora",
+        "why": "O simulador responde por um principal que você nomeia. O ponto aqui são os de fora que ninguém nomeou."
+      },
+      {
+        "text": "Um IAM Access Analyzer criado para a organização",
+        "why": "Isso. Um analyzer lista todo recurso cuja política deixa entrar alguém de fora da sua zona de confiança."
+      },
+      {
+        "text": "`aws accessanalyzer validate-policy` em cada SCP",
+        "why": "O validador confere a gramática de um documento antes de ser salvo; ele não lista o que está compartilhado."
+      },
+      {
+        "text": "O moto, com a verificação ligada, consultado de uma segunda conta",
+        "why": "O moto não julga políticas baseadas em recurso, então deixaria tudo passar."
+      }
+    ]
+  },
+  "ex-4n6xsb1g": {
+    "prompt": "Um papel na `shop-prod` confia em `arn:aws:iam::123456789012:role/platform-admin`, um papel na conta de gerenciamento. O caio, administrador lá, chama `assume-role` nele direto do próprio usuário. O que a AWS responde?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Uma sessão, já que o `AdministratorAccess` dele permite `sts:AssumeRole`",
+        "why": "O lado dele permite, mas a política de confiança é a outra metade, e ela nomeia um papel, não ele."
+      },
+      {
+        "text": "Uma recusa: só sessões do `platform-admin` podem passar",
+        "why": "Isso. É a forma mais estreita de confiança entre contas; o caio primeiro assume o `platform-admin`, se a confiança dele o deixar."
+      },
+      {
+        "text": "Uma sessão, porque a política de confiança nomeia a conta dele",
+        "why": "Ela nomeia um papel daquela conta. Nomear `:root` é que abriria para a conta."
+      },
+      {
+        "text": "Uma recusa, porque nenhum papel pode confiar no papel de outra conta",
+        "why": "Confiar num papel de outra conta é permitido, e é a escolha mais estreita."
+      }
+    ]
+  },
+  "ex-jksfp3eh": {
+    "prompt": "O `deployer` confia na bia, e a política dela permite `sts:AssumeRole` nele. O `deployer` não tem política de permissão nenhuma. O que a sessão da bia pode fazer?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "O que as políticas da própria bia permitem, já que o papel não acrescenta nada",
+        "why": "Uma sessão não mantém as permissões de quem chamou; a política da bia só a deixou entrar."
+      },
+      {
+        "text": "Tudo, porque um papel sem políticas não tem restrição",
+        "why": "Nenhuma política é nenhuma permissão, e toda requisição começa negada."
+      },
+      {
+        "text": "Quase nada: o `sts get-caller-identity` ainda responde a ela",
+        "why": "Isso. A sessão tem as permissões do papel, que são nenhuma; o `get-caller-identity` responde a qualquer um."
+      },
+      {
+        "text": "Nada: o STS recusa sessão para um papel sem políticas",
+        "why": "O STS julga a confiança e o lado de quem chama; os dois concordam, então a sessão é emitida."
+      }
+    ]
+  },
+  "ex-vaj37r2h": {
+    "prompt": "A política de confiança de um papel nomeia `\"AWS\": \"arn:aws:iam::123456789012:root\"`. Na AWS, quais destes podem assumi-lo? Marque todos os que se aplicam.",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "O `admin` em `123456789012`, com `AdministratorAccess`",
+        "why": "Isso. A confiança nomeia a conta dele, e as políticas dele permitem `sts:AssumeRole`. O moto recusou este, comparando ARNs como texto."
+      },
+      {
+        "text": "Um usuário em `123456789012` cuja única política permite `sts:AssumeRole` nesse papel",
+        "why": "Isso. Confiar na conta entrega a decisão às políticas de identidade dessa conta, e esta permite."
+      },
+      {
+        "text": "Um usuário em `123456789012` sem política nenhuma",
+        "why": "O lado dele não concede nada, e os dois lados precisam concordar."
+      },
+      {
+        "text": "Um administrador de `444455556666`, outra conta",
+        "why": "As políticas dele permitem, mas a política de confiança nomeia outra conta."
+      }
+    ]
+  },
+  "ex-906qh878": {
+    "prompt": "Um perfil que nomeia um papel faz a linha de comando assumi-lo e guardar a sessão até ela expirar, no diretório `~/.aws/cli/___`.",
+    "hint": "Lição 9.",
+    "blanks": [
+      {
+        "accept": [
+          "cache"
+        ]
+      }
+    ]
+  },
+  "ex-09fnwfrw": {
+    "prompt": "A dani quer um orçamento que a avise quando os gastos da equipe web passarem de 300 dólares num mês, nas seis contas. Onde ele é criado, e o que precisa ser verdade antes?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Na de gerenciamento, filtrado por uma tag `team` ativada",
+        "why": "Isso. A conta de gerenciamento vê as cobranças de toda conta, e um filtro de tag só funciona com uma chave que o billing conhece."
+      },
+      {
+        "text": "Em cada uma das seis contas, um orçamento de 50 dólares cada",
+        "why": "Seis orçamentos vigiam seis totais, nenhum deles o da equipe web; uma equipe gastando 290 numa conta não dispara nada."
+      },
+      {
+        "text": "Na `shop-prod`, já que é lá que fica a maior parte do custo da equipe web",
+        "why": "Um orçamento numa conta membro vigia só aquela conta, e a parte da staging passaria despercebida."
+      },
+      {
+        "text": "Em qualquer conta, desde que os recursos da equipe web tenham a tag",
+        "why": "A tag no recurso é um portão; a ativação na conta de gerenciamento é o outro, e o orçamento precisa ver toda conta."
+      }
+    ]
+  },
+  "ex-4x6k14as": {
+    "prompt": "Uma conta novinha recebe o `shop-monthly` no primeiro dia, com as duas notificações. Nas primeiras semanas, qual delas pode disparar?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Só a de previsão, que é o aviso antecipado",
+        "why": "Ela é o aviso antecipado, mas precisa de histórico para prever, e a conta não tem nenhum."
+      },
+      {
+        "text": "Só a de gasto real, em 80%",
+        "why": "Isso. A AWS precisa de cerca de cinco semanas de histórico antes de prever qualquer coisa, então só o alerta de gasto real funciona no início."
+      },
+      {
+        "text": "As duas, desde a primeira atualização do dia",
+        "why": "A de gasto real pode; a previsão ainda não tem de onde projetar."
+      },
+      {
+        "text": "Nenhuma, até acabar o primeiro mês completo do orçamento",
+        "why": "Um alerta de gasto real dispara na primeira atualização depois que 40 dólares foram gastos, seja qual for o dia."
+      }
+    ]
+  },
+  "ex-784pawh1": {
+    "prompt": "Um relatório agrupado por `team` mostra uma grande sobra em `team$`, e ninguém sabe quem criou aqueles recursos. Que chave de tag poderia ter dito isso sem ninguém escrevê-la?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "`team`, depois que uma tag policy fixar os valores",
+        "why": "Uma tag policy fixa a grafia; ela não exige a tag, então um recurso sem tag passa por ela."
+      },
+      {
+        "text": "`project`, que todo recurso da loja carrega",
+        "why": "Ela também é escrita por pessoas, e esses recursos não têm nenhuma."
+      },
+      {
+        "text": "`aws:createdBy`, uma chave gerada pela AWS, ativada no Billing",
+        "why": "Isso. A AWS escreve a identidade que criou o recurso; como uma chave definida pelo usuário, ela precisa ser ativada para chegar a um relatório."
+      },
+      {
+        "text": "`env`, com backfill dos últimos doze meses",
+        "why": "Um backfill aplica uma ativação a meses passados; ele não acrescenta uma tag que o recurso nunca teve."
+      }
+    ]
+  },
+  "ex-8jxkvm5d": {
+    "prompt": "Uma conta nova vive de uma promoção da AWS. Para o orçamento de custo mostrar o uso e não uma fatura perto de zero, os `CostTypes` do orçamento precisam pôr `Include___` como `false`.",
+    "hint": "Lição 13.",
+    "blanks": [
+      {
+        "accept": [
+          "Credit"
+        ]
+      }
+    ]
+  },
+  "ex-tm4acr06": {
+    "prompt": "Uma `m7i.large` de staging em São Paulo roda 12 horas por dia durante 30 dias. Sob demanda custa 0.16065 por hora; a reserva padrão de um ano, sem adiantamento, custa 72.68 por mês, rode o que rodar. Quantos dólares por mês ficar sob demanda economiza?",
+    "hint": "Lição 14. Conte as horas primeiro, depois compare com o ponto de equilíbrio.",
+    "unit": "dólares"
+  },
+  "ex-ytz0ckjv": {
+    "prompt": "Se faltar capacidade em `sa-east-1a`, o plano de recuperação da loja ainda precisa conseguir iniciar uma `m7i.large` lá. Que compra dá isso, pela lição 14?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "Uma reserva regional padrão para `m7i.large`",
+        "why": "Uma reserva regional é um desconto em qualquer zona da região, e não separa capacidade em lugar nenhum."
+      },
+      {
+        "text": "Uma reserva zonal em `sa-east-1a`",
+        "why": "Isso. Uma reserva zonal vale só na sua zona, e em troca também reserva a capacidade lá."
+      },
+      {
+        "text": "Um EC2 Instance Savings Plan para a família `m7i`",
+        "why": "Um Savings Plan compromete dólares por hora e não guarda máquina nenhuma para você."
+      },
+      {
+        "text": "Um Compute Savings Plan, que acompanha a carga em qualquer lugar",
+        "why": "Ele acompanha o uso na fatura; não abre espaço numa zona."
+      }
+    ]
+  },
+  "ex-745cccqt": {
+    "prompt": "Cinco meses depois de um compromisso de um ano, a loja deixa de precisar dele. Qual dos seus compromissos ela poderia vender para outra pessoa?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "Um Compute Savings Plan",
+        "why": "A documentação da AWS diz que nenhum Savings Plan pode ser vendido ou trocado depois de comprado."
+      },
+      {
+        "text": "Uma Reserved Instance conversível",
+        "why": "Uma conversível pode ser trocada por outra conversível de valor igual ou maior, não vendida."
+      },
+      {
+        "text": "Uma Reserved Instance padrão",
+        "why": "Isso. Uma reserva padrão pode ser vendida no Reserved Instance Marketplace da AWS."
+      },
+      {
+        "text": "Um EC2 Instance Savings Plan",
+        "why": "Tem preço de reserva padrão, mas é um Savings Plan do mesmo jeito: não pode ser vendido."
+      }
+    ]
+  },
+  "ex-134e4b6f": {
+    "prompt": "A `shop-prod` tem uma reserva padrão para uma `m7i.large` e um Compute Savings Plan de 0.10915 por hora, e numa hora roda uma única `m7i.large`. Que compromisso cobre essa instância?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "O Savings Plan, já que a taxa dele é a maior das duas",
+        "why": "A ordem é fixa e não depende da taxa."
+      },
+      {
+        "text": "Os dois, cada um pagando metade da hora",
+        "why": "Uma hora de uso é coberta uma vez; nada é dividido entre compromissos."
+      },
+      {
+        "text": "A RI; a hora do plano vai para outro uso, ou se perde",
+        "why": "Isso. Reservas são aplicadas primeiro, e Savings Plans ao que sobra, aqui em outra conta da organização se houver."
+      },
+      {
+        "text": "O que tiver sido comprado primeiro",
+        "why": "A data de compra não conta; a AWS documenta a ordem por tipo."
+      }
+    ]
+  },
+  "ex-90kj202d": {
+    "prompt": "A primeira exportação de dados da loja é criada na `shop-staging`, porque é lá que estão as perguntas de custo. O que os arquivos vão cobrir?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "A organização inteira, já que toda conta divide uma fatura",
+        "why": "A fatura é da conta de gerenciamento; a exportação de um membro vê aquele membro."
+      },
+      {
+        "text": "Só a `shop-staging`; uma exportação da organização fica na conta de gerenciamento",
+        "why": "Isso. A fatura consolidada pertence à conta de gerenciamento, pelo mesmo motivo que as tags de alocação de custo são ativadas lá."
+      },
+      {
+        "text": "Nada, porque uma conta membro não pode criar exportação",
+        "why": "A lição põe a exportação na conta de gerenciamento quando ela deve cobrir a organização, não porque um membro é recusado."
+      },
+      {
+        "text": "Toda conta, mas sem tags",
+        "why": "Quais contas aparecem depende de onde a exportação mora, e as tags dependem da ativação, não da conta."
+      }
+    ]
+  },
+  "ex-1m78hd49": {
+    "prompt": "Em outubro a instância sob o Savings Plan rodou só metade do mês, e o `team.sql` foi rodado sem mudança. O que a coluna amortizada erra?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "Nada: o amortizado espalha a taxa pelas horas usadas",
+        "why": "Ele cobra de cada linha coberta o custo efetivo; as horas sem nada a cobrir não têm linha para carregá-las."
+      },
+      {
+        "text": "Cobra da equipe web a taxa do mês inteiro",
+        "why": "Cobra da equipe web só a metade coberta; o problema é para onde foi a outra metade."
+      },
+      {
+        "text": "A metade não usada do compromisso some de toda linha",
+        "why": "Isso. A consulta zera a linha da taxa, então horas ociosas que foram pagas não caem em ninguém, e o total fica abaixo da fatura."
+      },
+      {
+        "text": "Conta as horas cobertas duas vezes, como faz o não combinado",
+        "why": "O não combinado também não conta duas vezes: o uso coberto e a negação se cancelam."
+      }
+    ]
+  },
+  "ex-857maw9a": {
+    "prompt": "No CUR 2.0, uma tag que alguém escreveu, como `team`, aparece dentro de `resource_tags` com o prefixo `___`, que a distingue de uma gerada pela AWS.",
+    "hint": "Lição 15.",
+    "blanks": [
+      {
+        "accept": [
+          "user_",
+          "user"
+        ]
+      }
+    ]
+  },
+  "ex-4dcehty6": {
+    "prompt": "O relatório real da loja chega a milhões de linhas em Parquet, e o `team.sql` sai do `sqlite3` para o Amazon Athena. O que precisa mudar nele?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "O agrupamento, já que o Athena não faz `GROUP BY` por tag",
+        "why": "O `GROUP BY` fica como está."
+      },
+      {
+        "text": "Nada: o SQL é o mesmo em todo lugar",
+        "why": "Quase nada, mas o `json_extract` é o substituto deste arquivo para um mapa, e o Athena lê um mapa de verdade."
+      },
+      {
+        "text": "Os nomes das colunas, que o relatório real escreve diferente",
+        "why": "O `cur.csv` usa os nomes reais, e é isso que faz as consultas servirem."
+      },
+      {
+        "text": "Só o jeito de ler o mapa de tags",
+        "why": "Isso. O Athena lê o mapa `resource_tags` com a própria sintaxe, no lugar do `json_extract`; o `GROUP BY` fica."
+      }
+    ]
+  },
+  "ex-pcq4eka0": {
+    "prompt": "A loja tem uma zona pública e uma privada, as duas chamadas `shop.example.com`, a privada associada à VPC de produção. Um servidor nessa VPC pergunta por `api.shop.example.com`. Que zona responde?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "A pública, porque foi delegada no registrador",
+        "why": "A delegação manda os resolvedores da internet para a zona pública; dentro da VPC o Resolver pergunta primeiro às zonas privadas."
+      },
+      {
+        "text": "A interna, à qual a rede dele está ligada",
+        "why": "Isso. É o DNS de horizonte dividido: um nome, uma resposta interna para as máquinas da loja e uma pública para todo o resto."
+      },
+      {
+        "text": "Nenhuma: duas zonas com o mesmo nome são recusadas",
+        "why": "Uma zona pública e uma privada podem ter o mesmo nome; é um arranjo documentado."
+      },
+      {
+        "text": "A que foi criada primeiro",
+        "why": "A ordem de criação não conta; a associação conta."
+      }
+    ]
+  },
+  "ex-5jpq3fbm": {
+    "prompt": "Ligue cada necessidade da loja à política de roteamento que a atende.",
+    "hint": "Lição 21.",
+    "pairs": [
+      {
+        "left": "mandar uma busca em cada dez para um cluster novo",
+        "right": "ponderada (weighted)"
+      },
+      {
+        "left": "responder da região com o menor atraso de rede medido",
+        "right": "latência (latency)"
+      },
+      {
+        "left": "responder com um standby enquanto a verificação de saúde do primário falha",
+        "right": "failover"
+      },
+      {
+        "left": "mostrar uma página só a quem está no Brasil, seja qual for a rede",
+        "right": "geolocalização (geolocation)"
+      }
+    ],
+    "right_distractors": [
+      "simples (simple)"
+    ]
+  },
+  "ex-npqgpdg8": {
+    "prompt": "Às três da manhã o canário da busca, com peso 10 ao lado de 90, começa a responder erros. Qual é o jeito mais rápido de parar de mandar tráfego a ele e guardar o registro para depois?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "Apagar o registro do canário com um lote `DELETE`",
+        "why": "Isso para, e o registro some; a ideia era guardá-lo."
+      },
+      {
+        "text": "Subir o peso do registro atual para 1000",
+        "why": "O canário ainda receberia 10 respostas em 1.010: uma fração, não zero."
+      },
+      {
+        "text": "Fazer `UPSERT` do canário com peso 0",
+        "why": "Isso. Peso 0 tira um registro do rodízio sem apagá-lo; os caches ainda guardam a resposta antiga pelo TTL, 60 segundos aqui."
+      },
+      {
+        "text": "Baixar o TTL do canário para 1 segundo",
+        "why": "Um TTL decide por quanto tempo uma resposta é guardada, não com que frequência ela é dada."
+      }
+    ]
+  },
+  "ex-6xk68409": {
+    "prompt": "O standby na Virgínia, `198.51.100.20`, ganha uma verificação de saúde própria, testando por HTTPS a cada 30 segundos. Pela lista de 11 de setembro de 2026, quanto essa verificação custa por mês?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "Nada: as primeiras 50 verificações são grátis",
+        "why": "Só verificações de endpoints da AWS são grátis nas primeiras 50, e este endereço está fora da AWS."
+      },
+      {
+        "text": "0.75 dólar",
+        "why": "Essa é a verificação de um endereço fora da AWS sem opções. HTTPS conta como uma."
+      },
+      {
+        "text": "2.75 dólares",
+        "why": "Isso: 0.75 por um endpoint fora da AWS, mais 2.00 porque HTTPS é um dos recursos opcionais."
+      },
+      {
+        "text": "0.50 dólar",
+        "why": "Essa é a verificação de um endpoint da AWS depois das primeiras 50."
+      }
+    ]
+  },
+  "ex-haap5n3d": {
+    "prompt": "Um servidor no datacenter da loja, alcançado pela VPN da lição 24, precisa ficar atrás do ALB junto com as máquinas da VPC. Que target group pode guardá-lo?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Um grupo `instance`, registrando o servidor pelo nome",
+        "why": "`instance` registra máquinas pelo id do EC2, e um servidor no datacenter não tem um."
+      },
+      {
+        "text": "Um do tipo `ip`, registrando o endereço do servidor",
+        "why": "Isso. Alvos `ip` são o jeito de uma máquina numa VPC emparelhada ou no datacenter ficar atrás de um ALB; o tipo é escolhido na criação e nunca muda."
+      },
+      {
+        "text": "O grupo `shop-web-app` existente, depois de mudar o tipo para `ip`",
+        "why": "O tipo de um target group não pode ser mudado depois; é preciso um grupo novo."
+      },
+      {
+        "text": "Um grupo `lambda`, com uma função repassando ao servidor",
+        "why": "Um alvo `lambda` é uma função que responde à requisição, não um repasse."
+      }
+    ]
+  },
+  "ex-jd322hcf": {
+    "prompt": "Para proteger as páginas da equipe, um colega acrescenta uma regra: encaminhar ao target group da equipe só quando o cabeçalho `X-Staff: yes` estiver presente, e responder 403 nos outros casos. O que a regra conseguiu?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Proteção, porque só um ALB consegue ler o cabeçalho",
+        "why": "Só um ALB o lê, mas qualquer um pode escrevê-lo: o cabeçalho é o que quem chama escolheu mandar."
+      },
+      {
+        "text": "Proteção, desde que o listener seja HTTPS",
+        "why": "O TLS esconde o cabeçalho de quem está no caminho, não de quem chama e o escreve."
+      },
+      {
+        "text": "Nada, já que uma resposta fixa não pode vir depois de uma regra de encaminhamento",
+        "why": "Regras dos dois tipos ficam lado a lado num listener, como as da própria loja."
+      },
+      {
+        "text": "Só roteamento: quem mandar esse cabeçalho entra",
+        "why": "Isso. Uma regra decide para onde vai uma requisição, nunca quem pode fazê-la; autenticação, security groups ou WAF decidem isso."
+      }
+    ]
+  },
+  "ex-8gzpkf94": {
+    "prompt": "Um colega cria o listener HTTPS e deixa de fora o `--ssl-policy`, confiando no padrão. Sobre o que a resposta do laboratório alerta?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "O padrão dele ainda aceita TLS 1.0 e 1.1",
+        "why": "Isso. No laboratório o padrão foi a `ELBSecurityPolicy-2016-08`; nomear a `ELBSecurityPolicy-TLS13-1-2-2021-06` aceita só 1.2 e 1.3, que todo navegador dos clientes fala."
+      },
+      {
+        "text": "O listener é recusado sem política",
+        "why": "Ele é criado, com um padrão; esse é o problema."
+      },
+      {
+        "text": "O padrão aceita só TLS 1.3, que navegadores antigos não têm",
+        "why": "É o contrário: o padrão é a política mais antiga e mais aberta."
+      },
+      {
+        "text": "O certificado é ignorado até uma política ser nomeada",
+        "why": "O certificado e a política são configurações separadas do listener."
+      }
+    ]
+  },
+  "ex-5qkdcs4m": {
+    "prompt": "Ponha em ordem o que acontece com a requisição de um cliente para `https://shop.example.com/api/orders`, do nome até a máquina que responde.",
+    "hint": "Lição 22.",
+    "items": [
+      "o nome resolve para o endereço de um dos nós do load balancer",
+      "esse nó aceita a conexão no listener da porta 443",
+      "o listener tenta as regras da menor prioridade para cima",
+      "a regra de `/api/*` escolhe o target group `shop-api`",
+      "um alvo saudável desse grupo responde"
+    ],
+    "trap": "As máquinas estão ligadas ao target group, não ao load balancer: o grupo é escolhido antes de qualquer máquina."
+  },
+  "ex-5bpzcqzq": {
+    "prompt": "Num mês a loja manda 1.024 GB pelo CloudFront para espectadores nos EUA, em 20 milhões de requisições HTTPS. Pela lista de 16 de setembro de 2026, quanto custam transferência e requisições juntas, em dólares?",
+    "hint": "Lição 23. O lugar de quem assiste define o preço, não a região da loja.",
+    "unit": "dólares"
+  },
+  "ex-g91a2za6": {
+    "prompt": "Um script de release roda `create-invalidation --paths \"/*\"` depois de todo deploy, dez vezes por mês. Quanto isso custa à loja?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "Nada: dez caminhos ficam bem dentro dos mil grátis",
+        "why": "A linha na fatura é de fato grátis, mas esse não é o custo inteiro."
+      },
+      {
+        "text": "Dez caches esvaziados, e quase nada cobrado",
+        "why": "Isso. Um curinga é um caminho, mas `/*` manda a próxima requisição de cada espectador à origem de uma vez, depois de cada release."
+      },
+      {
+        "text": "0.005 dólar por arquivo que o curinga alcança",
+        "why": "A AWS conta um caminho com curinga como um caminho, quantos arquivos ele cobrir."
+      },
+      {
+        "text": "Nada, e os navegadores buscam os arquivos novos na hora",
+        "why": "Uma invalidação limpa só os caches do CloudFront; um navegador guarda a cópia pelo tempo que o cabeçalho dele disse."
+      }
+    ]
+  },
+  "ex-7bqgt22f": {
+    "prompt": "O comportamento da API usa `CachingDisabled` com `AllViewer`, e a API agora lê o `Accept-Language` de quem acessa. Um colega propõe pôr esse cabeçalho numa chave de cache. O que a lição diz?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "É necessário, senão o cabeçalho nunca chega à origem",
+        "why": "O que chega à origem é assunto da política de requisição de origem, e o `AllViewer` repassa todo cabeçalho."
+      },
+      {
+        "text": "Não é preciso: o que chega à origem é outra configuração, e ela manda tudo",
+        "why": "Isso. Repassar e compor a chave são perguntas separadas, e com o cache desligado nem há chave para dividir."
+      },
+      {
+        "text": "É necessário, e deve ir em `/static/*` também",
+        "why": "Em `/static/*` faria uma cópia de cada imagem por idioma, dividindo a taxa de acerto à toa."
+      },
+      {
+        "text": "É recusado, já que uma política gerenciada não pode levar um cabeçalho",
+        "why": "Políticas gerenciadas levam cabeçalhos; o `AllViewer` repassa todos."
+      }
+    ]
+  },
+  "ex-eb3j3p8p": {
+    "prompt": "A loja cria uma web ACL do AWS WAF em `sa-east-1`, com escopo regional, e não consegue anexá-la à distribuição. Do que o CloudFront precisa?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "A mesma web ACL, anexada à origem do bucket",
+        "why": "O WAF filtra na borda para o CloudFront; o bucket é fechado pelo OAC, não pelo WAF."
+      },
+      {
+        "text": "Uma web ACL em toda região onde há bordas",
+        "why": "Uma distribuição é global e recebe uma web ACL, feita num lugar só."
+      },
+      {
+        "text": "O Shield Advanced, que substitui o WAF numa distribuição",
+        "why": "O Shield trata de enxurradas de tráfego e não substitui as regras do WAF."
+      },
+      {
+        "text": "Outra, de alcance `CLOUDFRONT`, criada em `us-east-1`",
+        "why": "Isso. Como os certificados, o que o CloudFront anexa vem de `us-east-1`, onde quer que a loja more."
+      }
+    ]
+  },
+  "ex-43mjeskb": {
+    "prompt": "A tabela de rotas da loja manda `192.168.0.0/16` ao virtual private gateway, com `CreateRoute` na coluna `Origin`. O escritório acrescenta `172.16.0.0/16` e o anuncia por BGP, e a VPC não consegue alcançá-lo. Por quê?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "O BGP não consegue anunciar mais de uma rede por um túnel",
+        "why": "Anunciar vários prefixos é o trabalho comum do BGP."
+      },
+      {
+        "text": "A propagação está desligada: a tabela só tem o que foi digitado",
+        "why": "Isso. Com propagação ligada a partir do gateway, a tabela recebe o que o gateway aprendeu; a rota diria `EnableVgwRoutePropagation`."
+      },
+      {
+        "text": "O customer gateway precisa ser criado de novo com a faixa nova",
+        "why": "Um customer gateway registra um endereço e um número AS, não as redes do escritório."
+      },
+      {
+        "text": "`172.16.0.0/16` se sobrepõe à `10.20.0.0/16` da VPC",
+        "why": "As duas faixas não têm endereço em comum."
+      }
+    ]
+  },
+  "ex-3r9v028a": {
+    "prompt": "O `VgwTelemetry` da VPN do escritório mostra um túnel `UP` e o outro `DOWN`, e o escritório ainda alcança a VPC. O que a loja deve fazer?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Nada: um túnel de pé é o estado normal",
+        "why": "Dois túneis de pé é o projeto; com um, a próxima manutenção na ponta desse túnel tira o escritório da VPC."
+      },
+      {
+        "text": "Apagar a conexão VPN e criar uma de um túnel só",
+        "why": "Toda conexão VPN tem dois túneis; não existe um tipo de túnel único para criar."
+      },
+      {
+        "text": "Subir o segundo túnel antes de a AWS fazer manutenção na ponta do primeiro",
+        "why": "Isso. A AWS faz manutenção nas suas duas pontas uma de cada vez; o escritório só sobrevive a isso com os dois túneis configurados e de pé."
+      },
+      {
+        "text": "Trocar o BGP por rotas estáticas, que mantêm um túnel de pé",
+        "why": "Rotas estáticas fazem failover pior, não melhor: o roteador precisa perceber sozinho um túnel morto."
+      }
+    ]
+  },
+  "ex-nt3jhtgq": {
+    "prompt": "A loja tem duas conexões Direct Connect, as duas na Equinix SP4, em dispositivos separados da AWS. Que falha esse arranjo NÃO aguenta?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Um dos dispositivos da AWS falhando",
+        "why": "Dispositivos separados são exatamente o que este arranjo compra."
+      },
+      {
+        "text": "Uma porta falhando numa conexão",
+        "why": "A outra conexão continua; esse é o propósito do modelo de desenvolvimento e teste."
+      },
+      {
+        "text": "O prédio ficando sem energia",
+        "why": "Isso. As duas conexões estão num local só; sobreviver a um prédio exige uma conexão em cada um de dois."
+      },
+      {
+        "text": "Um cross-connect sendo cortado numa das duas",
+        "why": "Cada conexão tem seu próprio cross-connect, então a segunda continua funcionando."
+      }
+    ]
+  },
+  "ex-2takbk9v": {
+    "prompt": "Ponha estes projetos para o caminho do escritório em ordem do custo mensal só das horas, do mais barato ao mais caro, pelas listas de 17 de setembro de 2026 e 730 horas.",
+    "hint": "Lição 24.",
+    "items": [
+      "uma VPN até o virtual private gateway",
+      "uma VPN terminando num Transit Gateway",
+      "uma porta dedicada de 1 Gbps na Equinix SP4",
+      "uma porta dedicada de 1 Gbps, com uma VPN por trás",
+      "uma porta dedicada de 1 Gbps em cada um de dois locais"
+    ],
+    "trap": "O anexo ao Transit Gateway é cobrado além da hora da própria VPN, 0.09 contra 0.05, e ainda fica bem abaixo dos 0.30 de uma porta."
+  }
+}
