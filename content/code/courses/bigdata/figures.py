@@ -541,6 +541,98 @@ def l06_catalyst(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-narrow-wide', 7)
+def l07_narrow_wide(lang):
+    t = {'en': dict(
+            label='On the left, a narrow transformation: each of three input partitions feeds '
+                  'exactly one output partition, and the steps chain inside one stage. On the '
+                  'right, a wide transformation: each of three input partitions sends rows to '
+                  'every output partition, a shuffle, and a new stage begins after it.',
+            narrow='narrow: filter, select', wide='wide: groupBy, join', inp='input',
+            out='output', stage='one stage', two='stage boundary',
+            cap='Narrow steps chain inside a task; a wide step needs rows from every partition, '
+                'and that is a shuffle.'),
+         'pt': dict(
+            label='À esquerda, uma transformação estreita: cada uma das três partições de entrada '
+                  'alimenta exatamente uma partição de saída, e os passos se encadeiam dentro de um '
+                  'estágio. À direita, uma transformação larga: cada uma das três partições de '
+                  'entrada manda linhas a todas as partições de saída, um shuffle, e um estágio novo '
+                  'começa depois dele.',
+            narrow='estreita: filter, select', wide='larga: groupBy, join', inp='entrada',
+            out='saída', stage='um estágio', two='fronteira de estágio',
+            cap='Passos estreitos se encadeiam dentro de uma tarefa; um passo largo precisa de '
+                'linhas de toda partição, e isso é um shuffle.')}[lang]
+    f = Fig('l07-narrow-wide', 720, 260, t['label'])
+    for side, x0 in ((0, 40), (1, 400)):
+        f.text(x0 + 140, 20, t['wide'] if side else t['narrow'], size=11, weight='600')
+        f.text(x0 + 20, 44, t['inp'], size=10, fill='--paper-dim')
+        f.text(x0 + 260, 44, t['out'], size=10, fill='--paper-dim')
+        for i in range(3):
+            y = 60 + i * 55
+            f.rect(x0, y, 40, 36, stroke='--phosphor', fill='--scan', rx=3)
+            f.rect(x0 + 240, y, 40, 36, stroke='--phosphor' if not side else '--amber',
+                   fill='--scan', rx=3)
+            if side:
+                for j in range(3):
+                    f.line(x0 + 40, y + 18, x0 + 238, 78 + j * 55, stroke='--amber', width=1,
+                           arrow=True)
+            else:
+                f.line(x0 + 40, y + 18, x0 + 238, y + 18, stroke='--paper-dim', arrow=True)
+        if side:
+            f.line(x0 + 140, 50, x0 + 140, 225, stroke='--amber', dash='4 3')
+            f.text(x0 + 140, 240, t['two'], size=10, fill='--amber')
+        else:
+            f.text(x0 + 140, 240, t['stage'], size=10, fill='--paper-dim')
+    f.line(360, 30, 360, 250, stroke='--wire', dash='4 4')
+    return f, t['cap']
+
+
+@figure('l07-memory', 7)
+def l07_memory(lang):
+    t = {'en': dict(
+            label='The 768 MiB heap of one executor as a bar. 300 MiB are reserved. Of the 468 '
+                  'left, 60 percent, 280.8 MiB, is the unified region shared by execution and '
+                  'storage; the other 187.2 MiB is for user code. Overhead memory sits outside the '
+                  'heap.',
+            res='reserved', uni='execution + storage', user='user code', heap='768 MiB heap',
+            over='overhead, outside the heap', exe='execution', sto='storage',
+            cap='Spark keeps 300 MiB for itself and shares 60 percent of the rest between running '
+                'tasks and cached data.'),
+         'pt': dict(
+            label='O heap de 768 MiB de um executor como uma barra. 300 MiB são reservados. Dos '
+                  '468 que sobram, 60 por cento, 280,8 MiB, são a região unificada dividida entre '
+                  'execução e armazenamento; os outros 187,2 MiB são para o código do usuário. A '
+                  'memória de overhead fica fora do heap.',
+            res='reservado', uni='execução + armazenamento', user='código do usuário',
+            heap='heap de 768 MiB', over='overhead, fora do heap', exe='execução',
+            sto='armazenamento',
+            cap='O Spark guarda 300 MiB para si e divide 60 por cento do resto entre tarefas em '
+                'execução e dados em cache.')}[lang]
+    f = Fig('l07-memory', 720, 200, t['label'])
+    x0, w = 30, 560
+    sc = w / 768
+    parts = [(300, t['res'], '300', '--wire'), (280.8, t['uni'], '280.8', '--phosphor'),
+             (187.2, t['user'], '187.2', '--wire')]
+    x = x0
+    for size, name, num, stroke in parts:
+        f.rect(x, 60, size * sc, 56, stroke=stroke, fill='--scan' if stroke == '--phosphor' else '--panel', rx=2)
+        f.text(x + size * sc / 2, 80, name, size=10.5, weight='600')
+        f.text(x + size * sc / 2, 98, (num.replace('.', ',') if lang == 'pt' else num) + ' MiB',
+               size=10, fill='--paper-dim', mono=True)
+        x += size * sc
+    ux = x0 + 300 * sc
+    f.line(ux + 280.8 * sc / 2, 116, ux + 280.8 * sc / 2, 150, stroke='--phosphor', dash='3 3')
+    f.text(ux + 6, 150, t['exe'], size=10, anchor='start', fill='--phosphor')
+    f.text(ux + 280.8 * sc - 6, 150, t['sto'], size=10, anchor='end', fill='--phosphor')
+    f.text(x0 + w / 2, 40, t['heap'], size=11, weight='600')
+    f.rect(x0 + w + 10, 60, 110, 56, stroke='--amber', fill='--panel', rx=2, dash='4 3')
+    f.text(x0 + w + 65, 88, t['over'].split(',')[0], size=10.5, weight='600')
+    f.text(x0 + w + 65, 130, t['over'].split(', ')[1], size=9.5, fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

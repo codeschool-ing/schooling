@@ -1,0 +1,478 @@
+{
+  "ex-5wadj20k": {
+    "prompt": "Ordene da maior para a menor unidade de trabalho.",
+    "hint": "Uma ação inicia a maior.",
+    "items": [
+      "Job",
+      "Estágio",
+      "Tarefa"
+    ]
+  },
+  "ex-0jfrjznd": {
+    "prompt": "Onde o Spark corta um job em estágios?",
+    "hint": "Aula 6: todo `Exchange`.",
+    "choices": [
+      {
+        "text": "A cada 128 MB de entrada",
+        "why": "Isso dimensiona partições, não estágios."
+      },
+      {
+        "text": "Em todo shuffle",
+        "why": "Isso. Um estágio é uma cadeia de passos estreitos entre shuffles."
+      },
+      {
+        "text": "Em cada arquivo que o job lê, um estágio por arquivo",
+        "why": "Arquivos viram tarefas de um estágio."
+      },
+      {
+        "text": "Em toda transformação escrita no programa",
+        "why": "Transformações estreitas se encadeiam num estágio."
+      }
+    ]
+  },
+  "ex-nvxv7t90": {
+    "prompt": "A linha de um estágio diz 19,4 segundos de tarefa. Por que o estágio pode ter levado bem menos no relógio?",
+    "hint": "Quantas tarefas rodam ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "A interface REST arredonda tempos para cima na dezena de segundos",
+        "why": "Ela reporta milissegundos."
+      },
+      {
+        "text": "Metade foi tempo do driver",
+        "why": "Tempo de tarefa é tempo de executor."
+      },
+      {
+        "text": "Inclui o próximo estágio",
+        "why": "Cada estágio tem a própria linha."
+      },
+      {
+        "text": "Três tarefas rodaram de cada vez",
+        "why": "Isso. O número é uma soma sobre tarefas, não uma duração."
+      }
+    ]
+  },
+  "ex-xjp60peb": {
+    "prompt": "365 arquivos de 1,1 MB, cada um contado como 4 MB a mais, empacotados em partições de 128 MB. Cerca de quantas partições?",
+    "hint": "Some os tamanhos contados, depois divida."
+  },
+  "ex-z4b8hn1r": {
+    "prompt": "Por que o Spark conta cada arquivo como 4 MB maior do que é ao empacotar partições?",
+    "hint": "Um arquivo vazio sai de graça?",
+    "choices": [
+      {
+        "text": "Abrir um arquivo tem um custo próprio",
+        "why": "Isso. Sem isso, uma partição poderia ter milhares de arquivos minúsculos."
+      },
+      {
+        "text": "Para deixar espaço para a compressão",
+        "why": "A compressão já está no tamanho do arquivo."
+      },
+      {
+        "text": "Blocos do HDFS são arredondados para cima",
+        "why": "Estes arquivos estão num disco local."
+      },
+      {
+        "text": "Arquivos Parquet têm um cabeçalho de 4 MB",
+        "why": "O rodapé deles tem poucos kilobytes."
+      }
+    ]
+  },
+  "ex-x9wk65tn": {
+    "prompt": "Ligue cada momento ao que decide o número de partições.",
+    "hint": "Três lugares, três regras.",
+    "pairs": [
+      {
+        "left": "Lendo arquivos Parquet",
+        "right": "spark.sql.files.maxPartitionBytes"
+      },
+      {
+        "left": "Depois de um shuffle",
+        "right": "spark.sql.shuffle.partitions"
+      },
+      {
+        "left": "Quando o programa pede",
+        "right": "repartition(n) ou coalesce(n)"
+      }
+    ],
+    "right_distractors": [
+      "spark.executor.memory"
+    ]
+  },
+  "ex-9va0ce33": {
+    "prompt": "Quais destas são transformações largas? Escolha todas que se aplicam.",
+    "hint": "Larga precisa de linhas de toda partição.",
+    "choices": [
+      {
+        "text": "`filter`",
+        "why": "Estreita: cada partição é filtrada sozinha."
+      },
+      {
+        "text": "`groupBy`",
+        "why": "Sim. As linhas de cada chave podem estar em qualquer lugar."
+      },
+      {
+        "text": "`orderBy`",
+        "why": "Sim. Uma ordem global move linhas entre partições."
+      },
+      {
+        "text": "`withColumn`",
+        "why": "Estreita: uma coluna nova a partir da mesma linha."
+      }
+    ]
+  },
+  "ex-4rsh82ch": {
+    "prompt": "Um programa filtra, seleciona, filtra de novo e acrescenta uma coluna. Quantos estágios essa parte precisa?",
+    "hint": "As quatro são estreitas.",
+    "choices": [
+      {
+        "text": "Um, numa passada só",
+        "why": "Isso. Passos estreitos se encadeiam dentro de uma tarefa."
+      },
+      {
+        "text": "Nenhum até o programa escrever",
+        "why": "Quando roda, é um estágio."
+      },
+      {
+        "text": "Dois, um por filtro",
+        "why": "Filtros são estreitos."
+      },
+      {
+        "text": "Quatro, um por passo",
+        "why": "Estágios são cortados em shuffles, não em passos."
+      }
+    ]
+  },
+  "ex-xgewc1g3": {
+    "prompt": "Por que um broadcast join não termina um estágio no lado grande?",
+    "hint": "Onde cada tarefa acha as linhas com que junta?",
+    "choices": [
+      {
+        "text": "O join acontece no driver",
+        "why": "Ele acontece em cada tarefa."
+      },
+      {
+        "text": "Cada tarefa tem a própria cópia do lado pequeno",
+        "why": "Isso. Nenhuma linha do lado grande precisa se mover."
+      },
+      {
+        "text": "O lado grande é ordenado antes",
+        "why": "Ordenar é o jeito do sort-merge join."
+      },
+      {
+        "text": "Broadcasts não são contados como estágios pela interface",
+        "why": "É uma diferença real, não uma escolha de contagem."
+      }
+    ]
+  },
+  "ex-m68xrxdv": {
+    "prompt": "Agrupar por tipo embaralhou quase nada; agrupar por visitante, 34,6 MiB. O que fez a diferença?",
+    "hint": "O que a contagem parcial encolhe?",
+    "choices": [
+      {
+        "text": "A coluna de visitante é mais larga",
+        "why": "Uns bytes mais larga; o que importa é a quantidade de chaves."
+      },
+      {
+        "text": "O segundo agrupamento leu mais linhas",
+        "why": "Os dois leram 24 milhões."
+      },
+      {
+        "text": "O número de chaves distintas",
+        "why": "Isso. Quatro chaves viram quatro linhas por tarefa; 1,7 milhão não."
+      },
+      {
+        "text": "O primeiro foi um broadcast",
+        "why": "Nenhum juntou nada."
+      }
+    ]
+  },
+  "ex-w8z0sn8p": {
+    "prompt": "O que um shuffle custa? Escolha todos que se aplicam.",
+    "hint": "Escrever, buscar, mesclar.",
+    "choices": [
+      {
+        "text": "Uma escrita no HDFS com três cópias",
+        "why": "Isso era o MapReduce entre jobs; arquivos de shuffle são locais."
+      },
+      {
+        "text": "Rede, para as buscas",
+        "why": "Sim, num cluster de verdade."
+      },
+      {
+        "text": "Memória, para mesclar o que foi buscado",
+        "why": "Sim, despejando em disco se não couber."
+      },
+      {
+        "text": "Disco local, para os arquivos do lado do map",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-yn9gnxkd": {
+    "prompt": "Uma rede de 10 gigabits move cerca de 1,2 GB por segundo. Quantos segundos um shuffle de 36 GB precisa só para atravessá-la?",
+    "hint": "Divida.",
+    "unit": "segundos"
+  },
+  "ex-5a6d9fx2": {
+    "prompt": "Onde ficam os arquivos de um shuffle?",
+    "hint": "Não no HDFS.",
+    "choices": [
+      {
+        "text": "No HDFS, com três cópias",
+        "why": "Shuffles nunca vão ao HDFS."
+      },
+      {
+        "text": "No `~/spark-events`",
+        "why": "Ali ficam os logs de eventos."
+      },
+      {
+        "text": "No disco local de cada executor, sob `/tmp`",
+        "why": "Isso, sob o `spark.local.dir`."
+      },
+      {
+        "text": "Na memória do driver",
+        "why": "O driver nunca vê dados de shuffle."
+      }
+    ]
+  },
+  "ex-m81kkdvw": {
+    "prompt": "Um shuffle com 15 tarefas de map deixou quantos arquivos em disco, contando dados, índice e checksum?",
+    "hint": "Três por tarefa."
+  },
+  "ex-mpfk6frn": {
+    "prompt": "Um executor morre depois que o lado do map de um shuffle terminou. O que precisa acontecer antes de o lado do reduce ler?",
+    "hint": "Onde estavam os arquivos de shuffle desse executor?",
+    "choices": [
+      {
+        "text": "O job inteiro recomeça",
+        "why": "Só as saídas de map perdidas são recalculadas."
+      },
+      {
+        "text": "Nada; o HDFS tem cópias",
+        "why": "Arquivos de shuffle não estão no HDFS."
+      },
+      {
+        "text": "O driver manda a cópia dele",
+        "why": "O driver não tem nenhuma."
+      },
+      {
+        "text": "As tarefas de map dele rodam de novo",
+        "why": "Isso. A saída delas morreu com o disco, e a linhagem a refaz."
+      }
+    ]
+  },
+  "ex-vvnjnqb5": {
+    "prompt": "Com a execução adaptativa ligada, como deve ser ajustado o `spark.sql.shuffle.partitions`?",
+    "hint": "O AQE consegue juntar, não dividir.",
+    "choices": [
+      {
+        "text": "Para o maior shuffle",
+        "why": "Isso. O AQE junta para baixo; não divide para cima."
+      },
+      {
+        "text": "Exatamente no número de núcleos",
+        "why": "Baixo demais para shuffles grandes, e o AQE não o aumenta."
+      },
+      {
+        "text": "Em 1, para o AQE decidir tudo",
+        "why": "O AQE teria uma partição para trabalhar."
+      },
+      {
+        "text": "Não importa mais nada",
+        "why": "É o teto de onde o AQE junta para baixo."
+      }
+    ]
+  },
+  "ex-vpmn2te9": {
+    "prompt": "Com a execução adaptativa desligada, quantas tarefas de reduce o agrupamento por visitante rodou?",
+    "hint": "As partições de shuffle padrão."
+  },
+  "ex-jwtwpat2": {
+    "prompt": "Um executor tem 2.048 MiB de heap. Com 300 MiB reservados e uma fração de 0,6, quantos MiB o Spark recebe para execução e armazenamento?",
+    "hint": "(heap − 300) × 0,6.",
+    "unit": "MiB"
+  },
+  "ex-vr5rxy30": {
+    "prompt": "O que quer dizer *unificada* na memória unificada do Spark?",
+    "hint": "Dois usos, uma região.",
+    "choices": [
+      {
+        "text": "Driver e executores usam as mesmas configurações",
+        "why": "Eles têm configurações separadas."
+      },
+      {
+        "text": "O heap e o overhead são um só",
+        "why": "O overhead fica fora do heap."
+      },
+      {
+        "text": "Todos os executores dividem um conjunto de memória entre máquinas",
+        "why": "A memória de cada executor é dela."
+      },
+      {
+        "text": "Execução e armazenamento dividem uma região",
+        "why": "Isso. Cada um pode tomar emprestado o que o outro não usa."
+      }
+    ]
+  },
+  "ex-259bccrc": {
+    "prompt": "Um contêiner do YARN de um executor de 8 GB é morto por exceder a memória, embora o heap não estivesse cheio. Onde está o excesso mais provável?",
+    "hint": "O que mora fora do heap?",
+    "choices": [
+      {
+        "text": "A reserva de 300 MiB",
+        "why": "Ela está dentro do heap e é fixa."
+      },
+      {
+        "text": "Overhead, ou os workers Python",
+        "why": "Isso. Nenhum dos dois aparece nos números do heap."
+      },
+      {
+        "text": "A memória do driver",
+        "why": "O driver é outro processo."
+      },
+      {
+        "text": "A metade de armazenamento da memória unificada",
+        "why": "Ela está dentro do heap."
+      }
+    ]
+  },
+  "ex-2yms3q33": {
+    "prompt": "Quando os dados de uma tarefa não cabem na memória de execução, o Spark escreve parte em disco e segue em frente: um ___.",
+    "hint": "Como um copo cheio.",
+    "blanks": [
+      {
+        "accept": [
+          "spill"
+        ]
+      }
+    ]
+  },
+  "ex-3wq0mppg": {
+    "prompt": "A ordenação com 3 partições despejou muito em disco e ainda assim terminou antes da de 200. Por quê?",
+    "hint": "O que cada uma das 200 tarefas pagou?",
+    "choices": [
+      {
+        "text": "O spill deixa a ordenação mais rápida",
+        "why": "Ele acrescenta trabalho; a outra execução acrescentou mais."
+      },
+      {
+        "text": "Três partições querem dizer três vezes mais memória",
+        "why": "A memória por tarefa é a mesma."
+      },
+      {
+        "text": "O spill custou menos que 200 tarefas",
+        "why": "Isso. O spill é um custo a pesar, não uma falha."
+      },
+      {
+        "text": "A segunda execução reaproveitou os arquivos da primeira",
+        "why": "Cada uma foi uma consulta nova."
+      }
+    ]
+  },
+  "ex-86bbak6m": {
+    "prompt": "Ordene as correções para um estágio que despeja demais, na ordem que a aula sugere tentar.",
+    "hint": "A mais barata primeiro.",
+    "items": [
+      "Mais partições",
+      "Menos colunas antes do passo largo",
+      "Mais memória por tarefa"
+    ]
+  },
+  "ex-dxetqaxj": {
+    "prompt": "Por que deixar o driver sem memória é pior que um executor despejar em disco?",
+    "hint": "Em que o driver pode se apoiar?",
+    "choices": [
+      {
+        "text": "Executores têm mais memória que drivers por projeto",
+        "why": "Qualquer um pode receber qualquer tamanho."
+      },
+      {
+        "text": "A memória do driver é dividida com o master",
+        "why": "São processos separados."
+      },
+      {
+        "text": "A morte dele encerra a aplicação",
+        "why": "Isso. A única falha irrecuperável da aula 2."
+      },
+      {
+        "text": "Não é pior; os dois tentam de novo",
+        "why": "Nada tenta de novo um driver morto."
+      }
+    ]
+  },
+  "ex-8m9k9t9b": {
+    "prompt": "Um job termina com `rows = df.collect()` sobre 50 GB e falha. Qual é a correção certa?",
+    "hint": "Quem deveria guardar o resultado?",
+    "choices": [
+      {
+        "text": "Subir a memória do driver para 64 GB",
+        "why": "Muda o limite; os dados continuam não pertencendo ali."
+      },
+      {
+        "text": "Chamar `collect` duas vezes",
+        "why": "O dobro do problema."
+      },
+      {
+        "text": "Escrevê-lo com `write.parquet` no lugar",
+        "why": "Isso. Cada executor escreve as próprias partições."
+      },
+      {
+        "text": "Subir o `spark.driver.maxResultSize` para 64 GB",
+        "why": "O limite passaria e o driver morreria."
+      }
+    ]
+  },
+  "ex-qcwpberx": {
+    "prompt": "Por que um job que falhou ontem à noite precisa do history server para ser examinado?",
+    "hint": "Para onde foi a página do driver dele?",
+    "choices": [
+      {
+        "text": "Jobs que falham não escrevem log de eventos",
+        "why": "Eles o escrevem até o momento em que falham."
+      },
+      {
+        "text": "O master apaga aplicações que falharam",
+        "why": "Ele guarda um resumo; o detalhe estava no driver."
+      },
+      {
+        "text": "O history server roda o job de novo",
+        "why": "Ele só lê os logs."
+      },
+      {
+        "text": "A interface morreu junto",
+        "why": "Isso. O log de eventos é o que resta."
+      }
+    ]
+  },
+  "ex-rst7zx79": {
+    "prompt": "Em que porta o history server responde?",
+    "hint": "Cinco dígitos."
+  },
+  "ex-m8ff30t4": {
+    "prompt": "Ligue cada relatório de estágio ao problema mais provável.",
+    "hint": "Leia as colunas: tarefas, shuffle, spill.",
+    "pairs": [
+      {
+        "left": "200 tarefas lendo 0,2 MiB cada",
+        "right": "Partições de shuffle demais"
+      },
+      {
+        "left": "3 tarefas, quase toda a entrada despejada",
+        "right": "Poucas partições para a memória"
+      },
+      {
+        "left": "Um shuffle grande saindo de um agrupamento",
+        "right": "Uma chave com muitíssimos valores"
+      },
+      {
+        "left": "maxResultSize excedido",
+        "right": "Dados demais trazidos ao driver"
+      }
+    ]
+  },
+  "ex-54ge8019": {
+    "prompt": "Uma consulta lê os cliques, filtra compras, junta os livros por broadcast, agrupa por categoria e ordena. Quantos estágios, ignorando a execução adaptativa e o job próprio do broadcast?",
+    "hint": "Conte os shuffles e some um."
+  }
+}
