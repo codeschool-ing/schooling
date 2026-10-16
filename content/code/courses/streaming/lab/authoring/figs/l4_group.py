@@ -20,12 +20,12 @@ def draw(s, t):
         s.path(f"M 286 {y + 15} L 154 140", arrow=True)
     s.rect(520, 45, 170, 195, fill="none", stroke="var(--wire)", dash="4 3")
     s.text(605, 62, t("group shelf"), size=10, weight=600)
-    members = [("c", 0, 95), ("b", 1, 135), ("a", 2, 175), ("d", None, 213)]
+    members = [("c", 0, 95), ("b", 1, 135), ("a", 2, 175), ("d", None, 205)]
     for name, p, y in members:
         idle = p is None
         s.rect(570, y - 12, 70, 26, stroke="var(--amber)" if idle else "var(--wire)", dash="3 3" if idle else None)
         s.text(605, y + 1, name, size=10, mono=True, fill="var(--amber)" if idle else "var(--paper)")
         if idle:
-            s.text(665, y + 1, t("idle"), size=9, fill="var(--amber)", anchor="start")
+            s.text(605, y + 22, t("idle"), size=9, fill="var(--amber)")
         else:
             s.line(434, ys[p] + 15, 566, y + 1, stroke="var(--paper-dim)", arrow=True)

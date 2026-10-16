@@ -1,0 +1,751 @@
+[
+  {
+    "id": "ex-xqb3qpmp",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `describe` output, what does the first node in a partition's `Replicas` list name?",
+    "choices": [
+      {
+        "text": "The node that holds the oldest copy",
+        "correct": false,
+        "why": "All copies hold the same log; the order says something else."
+      },
+      {
+        "text": "The preferred leader",
+        "correct": true,
+        "why": "Right. Leadership is moved back to it after a failure."
+      },
+      {
+        "text": "The active controller of the cluster",
+        "correct": false,
+        "why": "That is `LeaderId` in `kafka-metadata-quorum.sh`, not a partition's list."
+      },
+      {
+        "text": "The node whose disk the topic was created on",
+        "correct": false,
+        "why": "Every replica's node has a directory for the partition; none is the origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vc2f9qe",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson give `kafka-topics.sh` two addresses, `localhost:9092,localhost:9093`?",
+    "choices": [
+      {
+        "text": "Each address returns half of the partitions",
+        "correct": false,
+        "why": "Any node can answer for the whole cluster."
+      },
+      {
+        "text": "To reach the cluster even when one of those nodes is down",
+        "correct": true,
+        "why": "Right. After node 2 was killed, a WARN for 9093 and then the answer from the other address."
+      },
+      {
+        "text": "Because a replication factor of 3 needs at least two bootstrap servers",
+        "correct": false,
+        "why": "The replication factor does not constrain the client's address list."
+      },
+      {
+        "text": "So that the tool writes to two leaders at once",
+        "correct": false,
+        "why": "`describe` writes nothing; it reads metadata."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf0znt6c",
+    "version": 1,
+    "section": "three-nodes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `./cluster.sh new 3` and a topic with 3 partitions and replication factor 3, how many `sales-*` directories exist across all nodes?",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "directories"
+  },
+  {
+    "id": "ex-1w11q0bh",
+    "version": 1,
+    "section": "leaders-and-followers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a follower get the leader's new records?",
+    "choices": [
+      {
+        "text": "It fetches them from the leader, as a consumer would",
+        "correct": true,
+        "why": "Right. Followers pull, at their own pace."
+      },
+      {
+        "text": "The leader pushes each write to it and waits",
+        "correct": false,
+        "why": "That is the common wrong picture; nothing is pushed."
+      },
+      {
+        "text": "The controllers copy the segments between nodes every second",
+        "correct": false,
+        "why": "Controllers keep metadata; data moves by fetch."
+      },
+      {
+        "text": "The producer sends every record to each replica",
+        "correct": false,
+        "why": "The producer talks only to the leader."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkqyjetq",
+    "version": 1,
+    "section": "leaders-and-followers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The leader has offsets 0 to 9, one in-sync follower has 0 to 8 and the other 0 to 6. Which offsets can a consumer read?",
+    "hint": "Look for the first offset missing from some in-sync replica.",
+    "choices": [
+      {
+        "text": "0 to 9, everything the leader has",
+        "correct": false,
+        "why": "Records above the high watermark are not given to consumers."
+      },
+      {
+        "text": "0 to 8",
+        "correct": false,
+        "why": "The slowest in-sync replica decides, and it only has up to 6."
+      },
+      {
+        "text": "0 to 6",
+        "correct": true,
+        "why": "Right. The high watermark is 7, the first offset not on every in-sync replica."
+      },
+      {
+        "text": "None until all three have offset 9",
+        "correct": false,
+        "why": "Everything below the high watermark is readable now."
+      }
+    ]
+  },
+  {
+    "id": "ex-93hzmty9",
+    "version": 1,
+    "section": "leaders-and-followers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are consumers never shown records above the high watermark?",
+    "choices": [
+      {
+        "text": "Those records are still compressed",
+        "correct": false,
+        "why": "Compression has nothing to do with visibility."
+      },
+      {
+        "text": "A new leader might not have them, so a reader could see a record that later disappears",
+        "correct": true,
+        "why": "Right. That rule makes a failover invisible to readers."
+      },
+      {
+        "text": "Kafka reads them in batches of seven",
+        "correct": false,
+        "why": "Seven was this example's high watermark, not a batch size."
+      },
+      {
+        "text": "The producer has not received its acknowledgement yet, and acknowledgements are what make a record readable",
+        "correct": false,
+        "why": "With acks=1 a producer can be answered before the high watermark moves; visibility follows the replicas, not the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qw46et8",
+    "version": 1,
+    "section": "in-sync-replicas",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the default `replica.lag.time.max.ms` the broker reported?",
+    "choices": [
+      {
+        "text": "30000",
+        "correct": true,
+        "why": "Right: thirty seconds without being fully caught up removes a follower."
+      },
+      {
+        "text": "300",
+        "correct": false,
+        "why": "300 is `leader.imbalance.check.interval.seconds`, in seconds."
+      },
+      {
+        "text": "9000",
+        "correct": false,
+        "why": "That number was not what the grep printed."
+      },
+      {
+        "text": "4000",
+        "correct": false,
+        "why": "The grep printed a larger value."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7at5xzc",
+    "version": 1,
+    "section": "in-sync-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Node 3 is frozen with `kill -STOP`. Forty seconds later, what does `describe` show?",
+    "choices": [
+      {
+        "text": "Node 3 still in every ISR, because its process is alive",
+        "correct": false,
+        "why": "Alive is not enough; it stopped fetching."
+      },
+      {
+        "text": "Node 3 out of every ISR, and partition 2 led by another node",
+        "correct": true,
+        "why": "Right. A frozen leader answers nobody, so leadership moved."
+      },
+      {
+        "text": "Every partition offline",
+        "correct": false,
+        "why": "Two copies stayed in sync on every partition."
+      },
+      {
+        "text": "Node 3 removed from the `Replicas` list",
+        "correct": false,
+        "why": "`Replicas` is the assignment; only `Isr` shrinks."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk6qm92p",
+    "version": 1,
+    "section": "in-sync-replicas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did Kafka stop counting how many messages a follower was behind, and use only time?",
+    "choices": [
+      {
+        "text": "Counting messages was too slow on large topics",
+        "correct": false,
+        "why": "The cost of counting is not the reason given."
+      },
+      {
+        "text": "Time is easier to configure",
+        "correct": false,
+        "why": "Ease is not the argument; false removals are."
+      },
+      {
+        "text": "Message counts differ between partitions of the same topic",
+        "correct": false,
+        "why": "True, and irrelevant to why followers were removed wrongly."
+      },
+      {
+        "text": "A burst of writes put healthy followers out of the ISR",
+        "correct": true,
+        "why": "Right. A time limit only removes a follower that is truly stuck."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzf509jq",
+    "version": 1,
+    "section": "acks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `acks=1`, when is the producer told yes?",
+    "choices": [
+      {
+        "text": "When the request leaves the producer",
+        "correct": false,
+        "why": "That is `acks=0`, where nobody answers."
+      },
+      {
+        "text": "When the leader has written it to its own log",
+        "correct": true,
+        "why": "Right. The followers may not have it yet."
+      },
+      {
+        "text": "When every in-sync replica has it",
+        "correct": false,
+        "why": "That is `acks=all`."
+      },
+      {
+        "text": "When a consumer has read it",
+        "correct": false,
+        "why": "No setting waits for a consumer."
+      }
+    ]
+  },
+  {
+    "id": "ex-6sbxeask",
+    "version": 1,
+    "section": "acks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With node 3 down and `min.insync.replicas=3`, `acks.py --acks all` reported `_MSG_TIMED_OUT`. Where was the reason `NotEnoughReplicas` found?",
+    "choices": [
+      {
+        "text": "In the producer's output, beside each failed sale",
+        "correct": false,
+        "why": "The client reported its own timeout, not the broker's reason."
+      },
+      {
+        "text": "In the `describe` output, in the `Elr` column",
+        "correct": false,
+        "why": "`Elr` was empty; it is not where refusals are recorded."
+      },
+      {
+        "text": "In the broker's `server.log`",
+        "correct": true,
+        "why": "Right. grep found NotEnoughReplicasException there: an ISR of 2 against 3."
+      },
+      {
+        "text": "In `__consumer_offsets`",
+        "correct": false,
+        "why": "That topic holds consumer positions, not errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-edn6gwn1",
+    "version": 1,
+    "section": "acks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic has replication factor 3 and `min.insync.replicas=1`. Two nodes die and producers use `acks=all`. What is true?",
+    "choices": [
+      {
+        "text": "Writes are refused until a node returns",
+        "correct": false,
+        "why": "With a floor of 1, an ISR of one is enough."
+      },
+      {
+        "text": "Writes are accepted on a single disk, which is acks=1 under a better name",
+        "correct": true,
+        "why": "Right. The floor is what stops `all` from meaning just the leader."
+      },
+      {
+        "text": "Writes go on with three copies, because `acks=all` always waits for every replica",
+        "correct": false,
+        "why": "It waits for the ISR, which has shrunk to one."
+      },
+      {
+        "text": "The producers switch to `acks=0`",
+        "correct": false,
+        "why": "The client never changes its own setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdeh6hym",
+    "version": 1,
+    "section": "acks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With replication factor 3 and `min.insync.replicas=2`, how many nodes can be lost while `acks=all` writes still succeed?",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-pq1g2we8",
+    "version": 1,
+    "section": "a-node-dies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While the leader of partition 1 was killed, `acks.py` sent a hundred sales. What did it report?",
+    "choices": [
+      {
+        "text": "70 delivered and 30 failed",
+        "correct": false,
+        "why": "Nothing failed in the run with one node killed."
+      },
+      {
+        "text": "100 delivered, at 100 consecutive offsets",
+        "correct": true,
+        "why": "Right. The client kept the sales in memory and sent them to the new leader."
+      },
+      {
+        "text": "100 delivered and 3 duplicates",
+        "correct": false,
+        "why": "The offsets ran 290 to 389, exactly one per sale."
+      },
+      {
+        "text": "An error, because the bootstrap address was dead",
+        "correct": false,
+        "why": "It had three addresses and the FAIL lines are logs, not failed sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-apz139kh",
+    "version": 1,
+    "section": "a-node-dies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Node 2 comes back after being killed. What happens to the leadership it held?",
+    "choices": [
+      {
+        "text": "It takes it back as soon as it is in the ISR",
+        "correct": false,
+        "why": "A returning node comes back as a follower."
+      },
+      {
+        "text": "It stays with the node that took over, until a preferred election moves it back",
+        "correct": true,
+        "why": "Right. Automatically every 300 seconds, or at once with the tool."
+      },
+      {
+        "text": "It is lost, and the partition has to be recreated",
+        "correct": false,
+        "why": "Nothing is recreated; leadership just moves."
+      },
+      {
+        "text": "It moves to the active controller",
+        "correct": false,
+        "why": "Partition leadership and the controller vote are separate roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-dw3fwgzv",
+    "version": 1,
+    "section": "a-node-dies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did the failure of a leader cost the producer, according to the section?",
+    "choices": [
+      {
+        "text": "Every sale sent while the leader was down",
+        "correct": false,
+        "why": "None was lost: 100 of 100 delivered."
+      },
+      {
+        "text": "A duplicate of each sale in flight",
+        "correct": false,
+        "why": "The offsets show none was written twice."
+      },
+      {
+        "text": "A few seconds",
+        "correct": true,
+        "why": "Right. The partition had no leader briefly, and sales waited in memory."
+      },
+      {
+        "text": "The consumer group's committed offsets",
+        "correct": false,
+        "why": "Committed offsets live in a replicated topic and survive."
+      }
+    ]
+  },
+  {
+    "id": "ex-na9t6skz",
+    "version": 1,
+    "section": "the-controllers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Kafka 4, what replaced ZooKeeper for the cluster's metadata?",
+    "choices": [
+      {
+        "text": "A group of controllers voting with KRaft",
+        "correct": true,
+        "why": "Right. They keep the metadata in `__cluster_metadata`."
+      },
+      {
+        "text": "The schema registry",
+        "correct": false,
+        "why": "The registry is lesson 6 and stores schemas, not cluster metadata."
+      },
+      {
+        "text": "The leader of partition 0 of every topic",
+        "correct": false,
+        "why": "Partition leaders store data; controllers decide."
+      },
+      {
+        "text": "A file each broker keeps beside its log",
+        "correct": false,
+        "why": "A file per broker could not keep them in agreement."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9e1tv0k",
+    "version": 1,
+    "section": "the-controllers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nodes 2 and 3 are killed, leaving node 1. `kafka-topics.sh --create` is run against node 1. What happened?",
+    "choices": [
+      {
+        "text": "The topic was created on node 1 alone",
+        "correct": false,
+        "why": "Creating a topic needs a decision, which needs a majority."
+      },
+      {
+        "text": "It failed at once with connection refused",
+        "correct": false,
+        "why": "Node 1 answered; the command waited."
+      },
+      {
+        "text": "It hung until `timeout` ended it with status 124",
+        "correct": true,
+        "why": "Right. One voter of three cannot decide anything."
+      },
+      {
+        "text": "Node 1 became the only voter and created it",
+        "correct": false,
+        "why": "The survivor does not guess that it is the survivor."
+      }
+    ]
+  },
+  {
+    "id": "ex-mq49dhjb",
+    "version": 1,
+    "section": "the-controllers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why would a team run five controllers rather than four?",
+    "choices": [
+      {
+        "text": "Four controllers cannot elect a leader",
+        "correct": false,
+        "why": "They can; they just survive no more failures than three."
+      },
+      {
+        "text": "Five survive two failures; four survive one, like three",
+        "correct": true,
+        "why": "Right. A majority of four is three, so a fourth machine buys nothing."
+      },
+      {
+        "text": "Kafka requires an odd number and refuses to start with four",
+        "correct": false,
+        "why": "It does not refuse; an even number is just wasteful."
+      },
+      {
+        "text": "Five controllers process writes faster",
+        "correct": false,
+        "why": "More voters make agreement slower, not faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh8esnxj",
+    "version": 1,
+    "section": "unclean-election",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`till-log` shows `Leader: none` and `Elr: 2`. What does the `Elr` entry tell an operator?",
+    "choices": [
+      {
+        "text": "Node 2 is the replica that lost the most data",
+        "correct": false,
+        "why": "The opposite: it holds every committed record."
+      },
+      {
+        "text": "Node 2 must be removed from the topic",
+        "correct": false,
+        "why": "It is the node to bring back, not to remove."
+      },
+      {
+        "text": "Node 2 is being elected right now",
+        "correct": false,
+        "why": "It is down; it can only be elected when it returns."
+      },
+      {
+        "text": "Node 2 can lead cleanly when it comes back",
+        "correct": true,
+        "why": "Right. It was the last in-sync replica, so it has everything committed."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2mkycdj",
+    "version": 1,
+    "section": "unclean-election",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the unclean election made node 3 leader of `till-log`, how many sales did a consumer reading from the beginning get?",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-cjnxnq94",
+    "version": 1,
+    "section": "unclean-election",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic holds the live positions of delivery vans, useless after a minute. Which choice about unclean election fits it, by the section's argument?",
+    "choices": [
+      {
+        "text": "Leave it off, because acknowledged records must never be lost",
+        "correct": false,
+        "why": "That is the argument for sales; here an outage is worse than a gap."
+      },
+      {
+        "text": "Turn it on for this topic: an hour of nothing is worse than a few lost points",
+        "correct": true,
+        "why": "Right. It is a decision per topic, and this data is only worth anything fresh."
+      },
+      {
+        "text": "Raise the replication factor to 5 instead",
+        "correct": false,
+        "why": "That makes the situation rarer, and is a different trade at a high price."
+      },
+      {
+        "text": "Turn it on for the whole cluster",
+        "correct": false,
+        "why": "Sales and stock would then lose data silently too."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekm5er0q",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a replication factor of 3 multiply? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The disk a topic uses",
+        "correct": true,
+        "why": "Yes: 32,443 bytes on each of three nodes."
+      },
+      {
+        "text": "Traffic between brokers",
+        "correct": true,
+        "why": "Yes: each follower fetches every record."
+      },
+      {
+        "text": "The number of partitions",
+        "correct": false,
+        "why": "The topic still has three partitions; each has three copies."
+      },
+      {
+        "text": "The number of messages a consumer reads",
+        "correct": false,
+        "why": "A consumer reads each record once, from the leader."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekzm0vqb",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does this lab not demonstrate what replication is really for?",
+    "choices": [
+      {
+        "text": "The three nodes share one machine, so no rack or zone is ever lost",
+        "correct": true,
+        "why": "Right. Every failure here was a process ending."
+      },
+      {
+        "text": "Kafka disables replication on a single machine",
+        "correct": false,
+        "why": "Replication really happened: three identical segment files."
+      },
+      {
+        "text": "`kill -9` is gentler than a real failure",
+        "correct": false,
+        "why": "It is as abrupt as a power cut for the process."
+      },
+      {
+        "text": "The followers in a lab never leave the ISR",
+        "correct": false,
+        "why": "Node 3 left the ISR when it was frozen."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3n5vxsp",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The broker setting that names a broker's rack or zone, so replicas are spread across them, is `broker.___`.",
+    "blanks": [
+      {
+        "accept": [
+          "rack"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vx3spytw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the unclean election in the order they happened.",
+    "items": [
+      "Ten sales written to both replicas",
+      "Node 3 is killed",
+      "Ten more sales written to node 2 alone",
+      "Node 2 is killed and node 3 comes back",
+      "Node 3 is elected leader, unclean",
+      "Node 2 returns and truncates its log"
+    ]
+  },
+  {
+    "id": "ex-kdawbg0e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to what it cost in this lesson.",
+    "pairs": [
+      {
+        "left": "the leader of partition 1 killed",
+        "right": "a few seconds, nothing lost"
+      },
+      {
+        "left": "two of three controllers killed",
+        "right": "no decisions until a majority returned"
+      },
+      {
+        "left": "an unclean election",
+        "right": "ten acknowledged sales"
+      }
+    ],
+    "right_distractors": [
+      "a doubled sale"
+    ]
+  }
+]

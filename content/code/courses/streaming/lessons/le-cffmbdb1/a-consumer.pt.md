@@ -65,7 +65,7 @@ A primeira linha é a atribuição: sozinho no grupo `stock`, o `c1` recebeu as 
 as dez vendas, numa ordem que vale a pena ler. **Dentro de cada partição elas estão em ordem de
 offset**: as duas vendas do Recife da partição 2, depois as quatro da partição 1, depois as quatro da
 partição 0. Entre partições não há ordem nenhuma; o cliente por acaso buscou a partição 2 primeiro, e
-a venda `oli-000001` de Olinda, a primeira produzida, saiu em oitavo. A promessa da lição 2 era ordem
+a venda `oli-000001` de Olinda, a primeira produzida, saiu em sétimo. A promessa da lição 2 era ordem
 por chave, e foi exatamente isso que chegou.
 
 O Ctrl+C encerrou o laço, e o `close` devolveu as partições, que é a linha `revoked`. Ele também

@@ -65,7 +65,7 @@ The first line is the assignment: alone in group `stock`, `c1` was given all thr
 the ten sales, in an order worth reading. **Within each partition they are in offset order**:
 partition 2's two Recife sales, then partition 1's four, then partition 0's four. Across partitions
 there is no order at all; the client happened to fetch partition 2 first, and Olinda's sale
-`oli-000001`, the first one produced, came out eighth. Lesson 2's promise was order per key, and
+`oli-000001`, the first one produced, came out seventh. Lesson 2's promise was order per key, and
 that is exactly what arrived.
 
 Ctrl+C ended the loop, and `close` handed the partitions back, which is the `revoked` line. It also
