@@ -135,6 +135,42 @@ var QuestionsPerAttempt = setting.Declared{
 }
 
 /*
+QuestionsPerTrackAttempt is how long a track's final is when the pool is longer.
+
+	A SECOND DECLARATION AND NOT A MULTIPLE OF THE FIRST, because A-14 decided
+	the two separately and for different reasons. A course paper samples one
+	course; a track's samples twelve to fifteen of them, and at the course's
+	twenty that is under two questions a course — a paper that measures which
+	courses the draw happened to land on rather than the track. Thirty keeps
+	A-11's five-times ratio at a pool of a hundred and fifty.
+
+	FOR SIX TRACKS IT WAS THE COURSE'S NUMBER, because `questionsPerPaper` read
+	one declaration for every scope. The pools were written at a hundred and
+	fifty, so the content was right and the draw was not.
+
+	`exam.questions` IS LEFT EXACTLY WHERE IT WAS — same name, same fence, same
+	fallback — so a deployment that already moved the course paper has moved
+	nothing else by it, and nothing it set is reinterpreted.
+
+	THE FENCE: under fifteen, a track of fifteen courses cannot ask once of each
+	even in principle, and the final is a course paper with a bigger name; over
+	sixty, the course's argument holds unchanged — the paper is longer than a
+	sitting and what it measures is stamina.
+*/
+var QuestionsPerTrackAttempt = setting.Declared{
+	Name:     "exam.questions.track",
+	Unit:     setting.Count,
+	Least:    15,
+	Most:     60,
+	Fallback: 30,
+	Why: "how long a track's final is when the pool is longer. A track is twelve to " +
+		"fifteen courses, so a paper the length of a course's asks under two questions " +
+		"of each and measures luck rather than the track; a long one measures better " +
+		"and is abandoned more. Where to sit between those is a judgement, and a pool " +
+		"smaller than the number is still asked in full.",
+}
+
+/*
 Numbers is what this module reads from the parameter registry, wired by `cmd`.
 
 	IT IS A STRUCT OF FUNCTIONS RATHER THAN TWO MORE CONSTRUCTOR ARGUMENTS
@@ -150,6 +186,9 @@ Numbers is what this module reads from the parameter registry, wired by `cmd`.
 type Numbers struct {
 	PassMark          func(ctx context.Context) int
 	QuestionsPerPaper func(ctx context.Context) int
+	// QuestionsPerTrackPaper is the track final's length, which A-14 decided
+	// apart from the course's. See QuestionsPerTrackAttempt.
+	QuestionsPerTrackPaper func(ctx context.Context) int
 }
 
 // Scope is which kind of exam. The course exam issues a certificate; the track
@@ -257,7 +296,13 @@ func (s *Store) passMark(ctx context.Context) int {
 	return within(ctx, s.numbers.PassMark, PassMark)
 }
 
-func (s *Store) questionsPerPaper(ctx context.Context) int {
+// questionsPerPaper takes the scope because the two papers are two decisions
+// (A-14). A scope that is neither is the course's number: there is no third
+// exam, and `Start` has refused an unknown scope before it gets here.
+func (s *Store) questionsPerPaper(ctx context.Context, scope Scope) int {
+	if scope == ScopeTrack {
+		return within(ctx, s.numbers.QuestionsPerTrackPaper, QuestionsPerTrackAttempt)
+	}
 	return within(ctx, s.numbers.QuestionsPerPaper, QuestionsPerAttempt)
 }
 
@@ -513,7 +558,7 @@ func (s *Store) draw(ctx context.Context, tenantID, accountID uuid.UUID,
 		order[i] = i
 	}
 	rnd.Shuffle(len(order), func(i, j int) { order[i], order[j] = order[j], order[i] })
-	if most := s.questionsPerPaper(ctx); len(order) > most {
+	if most := s.questionsPerPaper(ctx, scope); len(order) > most {
 		order = order[:most]
 	}
 
