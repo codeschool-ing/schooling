@@ -20,7 +20,7 @@ O arquivo `.prov` ao lado dele na página de release é o formato de assinatura 
 ferramenta mais antiga.
 
 Depois ele é publicado no seu registry, exatamente como a aula 7 publicou o chart do `bulletin`,
-para que o cluster o baixe de um lugar que você controla:
+para que **o cluster o baixe de um lugar que você controla**:
 
 ```
 ana@laptop:~/setup$ helm push external-secrets-1.3.2.tgz oci://localhost:5001/charts --plain-http

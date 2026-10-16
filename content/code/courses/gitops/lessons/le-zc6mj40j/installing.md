@@ -19,7 +19,7 @@ The `.prov` file beside it on the release page is Helm's own signature format, w
 checks against the public key of whoever signed it: the same idea as lesson 8, with an older tool.
 
 Then it is published into your registry, exactly as lesson 7 published `bulletin`'s chart, so that
-the cluster pulls it from a place you control:
+**the cluster pulls it from a place you control**:
 
 ```
 ana@laptop:~/setup$ helm push external-secrets-1.3.2.tgz oci://localhost:5001/charts --plain-http

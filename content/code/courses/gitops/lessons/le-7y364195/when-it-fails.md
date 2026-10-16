@@ -16,9 +16,9 @@ NAME      	REVISION	SUSPENDED	READY	MESSAGE
 probe-path	        	False    	False	kustomization path not found: stat /tmp/kustomization-21424086/staging: no such file or directory	
 ```
 
-`kustomization path not found`, with the full path inside the artifact. Flux does nothing with a
-path it cannot find, and the objects it applied before stay as they are; the Kustomization stays not
-ready until the path is fixed in Git.
+`kustomization path not found`, with the full path inside the artifact. **Flux does nothing with a
+path it cannot find**, and the objects it applied before stay as they are; the Kustomization stays
+not ready until the path is fixed in Git.
 
 ## A dependency that does not exist
 
