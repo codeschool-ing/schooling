@@ -11,7 +11,7 @@ command line still calls it `aws firehose`. The wrong picture to drop first is t
 object per record. It writes one object per **buffer**: records are held until enough bytes or
 enough seconds have accumulated, and then they are written together.
 
-The terminal is the one from lesson 1, with moto empty in its own terminal. A delivery stream needs
+The terminal is the one from lesson 1: moto running in its own terminal and the four lines of lesson 1's "Your lab, in brief" typed in this one, with moto started empty. A delivery stream needs
 a destination, and the destination is described in a file. Save this one in
 `~/aws`:
 

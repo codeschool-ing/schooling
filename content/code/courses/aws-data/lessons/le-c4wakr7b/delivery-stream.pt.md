@@ -11,7 +11,7 @@ de comando ainda o chama de `aws firehose`. A imagem errada a largar primeiro é
 objeto por registro. Ele escreve um objeto por **buffer**: os registros ficam guardados até se juntarem
 bytes ou segundos suficientes, e então são escritos juntos.
 
-O terminal é o da lição 1, com o moto vazio no terminal dele. Um delivery stream precisa de um
+O terminal é o da lição 1: o moto rodando no terminal dele e as quatro linhas de "O seu laboratório, em resumo" da lição 1 digitadas neste, com o moto ligado vazio. Um delivery stream precisa de um
 destino, e o destino é descrito num arquivo. Salve este em `~/aws`:
 
 `orders-to-s3.json`:
