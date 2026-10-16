@@ -8,11 +8,6 @@
     "hint": "Big Data and Distributed Processing, lesson 1.",
     "choices": [
       {
-        "text": "Hash each visitor into one of sixteen files, count each file alone, and add the counts",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Split the input by day, count each day's different visitors, and add the daily counts",
         "correct": false,
         "why": "A visitor who came on two days is counted on both. Only a split by the visitor puts each visitor in exactly one part, which is what lets the counts add up."
@@ -26,6 +21,11 @@
         "text": "Read the daily files one at a time, closing each before opening the next",
         "correct": false,
         "why": "The files are not what fills memory. The sets keep growing across every file, and they are only counted at the end."
+      },
+      {
+        "text": "Hash each visitor into one of sixteen files, count each file alone, and add the counts",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -37,11 +37,6 @@
     "prompt": "Each task of a Spark job inserts its slice of purchases into a PostgreSQL table, giving every insert a new row id. An executor dies in the middle of a task, and the job still finishes. What does the table hold, and what would have made it right?",
     "hint": "Big Data and Distributed Processing, lesson 2; Streaming and Event Processing, lesson 8.",
     "choices": [
-      {
-        "text": "Some purchases twice; inserting each keyed by its sale id with `ON CONFLICT DO NOTHING`",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "Each purchase once, because Spark undoes a lost task's writes before it reruns the task",
         "correct": false,
@@ -56,6 +51,11 @@
         "text": "Some purchases twice; `spark.task.maxFailures` set to 1, so that no task ever runs a second time",
         "correct": false,
         "why": "Then one lost executor fails the whole job, and the rows the dead attempt wrote stay in the table anyway."
+      },
+      {
+        "text": "Some purchases twice; inserting each keyed by its sale id with `ON CONFLICT DO NOTHING`",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -73,11 +73,6 @@
         "why": "The master listed the killed application as `FINISHED`, its word for anything that is no longer running."
       },
       {
-        "text": "An alert on the age of a timestamp the job pushes to a Pushgateway once its output is written",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Prometheus scraping the driver's port 4040 for failed tasks every fifteen seconds",
         "correct": false,
         "why": "The page died with the driver, and a scrape of a process that is gone finds nothing to ask, not a failure."
@@ -86,6 +81,11 @@
         "text": "An alert on `ERROR` lines in the driver's own output",
         "correct": false,
         "why": "The process that would have logged the error is the one that died. The only line was the shell's `Killed`."
+      },
+      {
+        "text": "An alert on the age of a timestamp the job pushes to a Pushgateway once its output is written",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -124,6 +124,11 @@
     "hint": "Big Data and Distributed Processing, lesson 4.",
     "choices": [
       {
+        "text": "The average price paid for each book",
+        "correct": false,
+        "why": "An average of partial averages is wrong when the pieces differ in size. Emit the sum and the count, combine those, and divide at the end."
+      },
+      {
         "text": "The total revenue of each book",
         "correct": true,
         "why": "Right."
@@ -134,19 +139,14 @@
         "why": "Right."
       },
       {
-        "text": "The average price paid for each book",
-        "correct": false,
-        "why": "An average of partial averages is wrong when the pieces differ in size. Emit the sum and the count, combine those, and divide at the end."
+        "text": "The lowest price paid for each book",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "How many different prices each book was sold at",
         "correct": false,
         "why": "Two map tasks can see the same price, so their partial counts do not add up; only the list of prices does, and it is no smaller."
-      },
-      {
-        "text": "The lowest price paid for each book",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -164,11 +164,6 @@
         "why": "Nothing was kept. `views` is a recipe, and the second count read every file again."
       },
       {
-        "text": "The files sat in the operating system's cache, and the Python workers were already up",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "The second count followed the lineage and skipped the `filter`",
         "correct": false,
         "why": "The lineage is the recipe itself; following it again means running the filter on every line again."
@@ -177,6 +172,11 @@
         "text": "Adaptive execution merged the second job's partitions",
         "correct": false,
         "why": "This is an RDD count with no shuffle, so there was nothing to coalesce."
+      },
+      {
+        "text": "The files sat in the operating system's cache, and the Python workers were already up",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -207,14 +207,14 @@
     "hint": "Big Data and Distributed Processing, lesson 6; Machine Learning and MLOps, lesson 6.",
     "choices": [
       {
-        "text": "`F.col(\"ts\") < \"2025-09-01\"` alone, which says the same thing to the second",
-        "correct": false,
-        "why": "It keeps to the cutoff, but the planner does not know that a cut on `ts` implies one on `day`, so it opens every directory."
-      },
-      {
         "text": "`F.col(\"day\") <= \"2025-08-31\"`, with any finer cut on `ts` beside it",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "`F.col(\"ts\") < \"2025-09-01\"` alone, which says the same thing to the second",
+        "correct": false,
+        "why": "It keeps to the cutoff, but the planner does not know that a cut on `ts` implies one on `day`, so it opens every directory."
       },
       {
         "text": "A Python UDF that compares each row's `day` with the cutoff",
@@ -265,14 +265,14 @@
     "hint": "Big Data and Distributed Processing, lesson 7; Observability and Operations, lesson 16.",
     "choices": [
       {
-        "text": "No successful run by seven, an hour before it is due",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "A stage spilled more than 500 MiB to the executors' disks",
         "correct": false,
         "why": "A spill is a cost, not a failure: lesson 7's spilling sort finished first. It is a ticket at most."
+      },
+      {
+        "text": "No successful run by seven, an hour before it is due",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "An executor was lost during the night's run",
@@ -330,14 +330,14 @@
         "why": "That is the loop's checkpoint: a DataFrame written out and its lineage cut."
       },
       {
-        "text": "Nothing different: both cut a lineage that has grown too long",
-        "correct": false,
-        "why": "The streaming one is a record of progress and state; a restart reads it to rerun an unfinished batch and to bring back the open windows."
-      },
-      {
         "text": "Which offsets each batch read, whether its output reached the sink, and the open windows",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Nothing different: both cut a lineage that has grown too long",
+        "correct": false,
+        "why": "The streaming one is a record of progress and state; a restart reads it to rerun an unfinished batch and to bring back the open windows."
       },
       {
         "text": "The same kind of data, kept on the driver's local disk",
@@ -360,14 +360,14 @@
         "why": "The footer holds the schema, the row groups, and each column chunk's encodings and smallest and largest value. Nothing in it says who may read."
       },
       {
-        "text": "Nulls: column pruning leaves out what a role was not granted",
-        "correct": false,
-        "why": "Pruning drops the columns a query does not use, and this query uses `email`."
-      },
-      {
         "text": "The e-mails come back: the grant is checked by PostgreSQL, not by a file",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Nulls: column pruning leaves out what a role was not granted",
+        "correct": false,
+        "why": "Pruning drops the columns a query does not use, and this query uses `email`."
       },
       {
         "text": "Refused: the copy was made with the analyst's grants, so `email` never reached the lake",
@@ -414,6 +414,11 @@
     "hint": "Big Data and Distributed Processing, lesson 11; Data Security, Governance and Privacy, lesson 7.",
     "choices": [
       {
+        "text": "`VERSION AS OF` an earlier version returns the rows, until `VACUUM` deletes the old files past their retention",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Nothing: the delete rewrote every file that held the rows, so no copy of them is left",
         "correct": false,
         "why": "The rewrite added new files and marked the old ones removed; they stay on disk, and time travel reads them. Backups and extracts are further copies a `DELETE` never reaches."
@@ -422,11 +427,6 @@
         "text": "`count(*)` still includes the rows, since it is answered from the row counts in the log",
         "correct": false,
         "why": "The delete's commit removes the old files from the table and adds the new ones with their own counts, so the count drops at once."
-      },
-      {
-        "text": "`VERSION AS OF` an earlier version returns the rows, until `VACUUM` deletes the old files past their retention",
-        "correct": true,
-        "why": "Right."
       },
       {
         "text": "The rows are out of the files but still written in the log's `remove` actions",
@@ -444,6 +444,11 @@
     "hint": "Big Data and Distributed Processing, lesson 11; Machine Learning and MLOps, lesson 8.",
     "choices": [
       {
+        "text": "The first run's scores, untouched",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "The corrected scores, in place of the first run's",
         "correct": false,
         "why": "The pair marks a write as already done, not a night to replace. The second write is skipped, and replacing the night means deleting its rows first."
@@ -452,11 +457,6 @@
         "text": "Both runs' scores, so every member twice",
         "correct": false,
         "why": "That is a plain append run twice; the pair in the log is exactly what stops it here."
-      },
-      {
-        "text": "The first run's scores, untouched",
-        "correct": true,
-        "why": "Right."
       },
       {
         "text": "Nothing at all: a repeated `txnVersion` fails the write and rolls back the first one",
@@ -479,11 +479,6 @@
         "why": "One file every five seconds is still 17,280 files a day."
       },
       {
-        "text": "Running `OPTIMIZE` on the table on a schedule, apart from the stream",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "A larger `spark.sql.files.maxPartitionBytes` for the readers",
         "correct": false,
         "why": "Packing more files into a task still opens every file and reads every footer; the files stay as small as they were."
@@ -492,6 +487,11 @@
         "text": "Writing plain Parquet instead, whose `_spark_metadata` merges each batch's files",
         "correct": false,
         "why": "`_spark_metadata` lists the files of each finished batch. It merges nothing."
+      },
+      {
+        "text": "Running `OPTIMIZE` on the table on a schedule, apart from the stream",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -504,14 +504,14 @@
     "hint": "Big Data and Distributed Processing, lesson 12.",
     "choices": [
       {
-        "text": "About 896 MB: the heap, and at least 384 MB for what lies outside it",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "512 MB, the heap the application asked for",
         "correct": false,
         "why": "A container is the heap plus an overhead for thread stacks, network buffers and native libraries."
+      },
+      {
+        "text": "About 896 MB: the heap, and at least 384 MB for what lies outside it",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "About 563 MB: the heap, plus a tenth of the executor's memory on top",
@@ -534,14 +534,14 @@
     "hint": "Big Data and Distributed Processing, lesson 13.",
     "choices": [
       {
-        "text": "Reading across the network is faster than reading a local disk",
-        "correct": false,
-        "why": "It is slower: lesson 3's locality is lost, and lessons 6 and 10 are how that is paid back."
-      },
-      {
         "text": "A pod's disk lives and dies with the pod",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Reading across the network is faster than reading a local disk",
+        "correct": false,
+        "why": "It is slower: lesson 3's locality is lost, and lessons 6 and 10 are how that is paid back."
       },
       {
         "text": "Executors on Kubernetes write no shuffle files, so there is nothing local to keep",
@@ -575,14 +575,14 @@
     "hint": "Big Data and Distributed Processing, lesson 14.",
     "choices": [
       {
+        "text": "A grouping by visitor that sends 35 GB across the network",
+        "correct": false,
+        "why": "That is the shuffle column: the time goes on moving bytes, and the table shows them."
+      },
+      {
         "text": "A hot key in a sort-merge join whose task outgrows its execution memory",
         "correct": false,
         "why": "That task spills, and the spill column is the one that says so."
-      },
-      {
-        "text": "A Python UDF applied to every purchase",
-        "correct": true,
-        "why": "Right."
       },
       {
         "text": "Parsing a year of gzipped CSV text",
@@ -590,11 +590,612 @@
         "why": "Right."
       },
       {
-        "text": "A grouping by visitor that sends 35 GB across the network",
-        "correct": false,
-        "why": "That is the shuffle column: the time goes on moving bytes, and the table shows them."
+        "text": "A Python UDF applied to every purchase",
+        "correct": true,
+        "why": "Right."
       }
     ]
+  },
+  {
+    "id": "ex-ry4xqayv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ponto Final's data team is asked for five things. By lesson 1's test, which of them are worth building as a stream? Choose all that apply.",
+    "hint": "Streaming and Event Processing, lesson 1.",
+    "choices": [
+      {
+        "text": "Keeping the website's stock right, so that the last copy is not sold twice.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A quarterly figure that an auditor checks.",
+        "correct": false,
+        "why": "An auditor wants a number reproducible from a file, not from a moment; the period closes and a batch serves it."
+      },
+      {
+        "text": "Retraining the recommendation model on last year's sales.",
+        "correct": false,
+        "why": "The input is finite and fixed; a batch over it is complete and can be run again."
+      },
+      {
+        "text": "Getting each sale to the stock system, the loyalty scheme, the warehouse and the accountant, although all four work in hourly batches.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Flagging a card used in Recife and in Lisbon within ten minutes.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pegexfdn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Stock is kept per shop, and the topic is keyed by shop. Recife sends five copies of a book to Olinda. How does lesson 2 put the transfer into the log?",
+    "hint": "Streaming and Event Processing, lesson 2.",
+    "choices": [
+      {
+        "text": "As two events, each keyed by its own shop.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "As one event keyed by `recife`, the shop the books leave.",
+        "correct": false,
+        "why": "Keyed by Recife it stays in order with Recife's events only, and Olinda's row can be changed out of order."
+      },
+      {
+        "text": "As one event keyed by the book, since the book is what moves.",
+        "correct": false,
+        "why": "A key by book keeps order among that book's sales across shops, and with neither shop's other events; the stock is kept per shop."
+      },
+      {
+        "text": "As one event with no key, so that it reaches the partitions of both shops.",
+        "correct": false,
+        "why": "An event with no key goes to one partition the producer picks, and keeps order with nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4estwk7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A customer asks to be erased. Their purchases are in the `sales` topic, which has `cleanup.policy=delete`, a `retention.ms` of seven days and the default `segment.ms` of seven days. Which sentence belongs in the answer the customer receives?",
+    "hint": "Streaming and Event Processing, lesson 3; Data Security, Governance and Privacy, lesson 7.",
+    "choices": [
+      {
+        "text": "They have been deleted: a delete was written for each of the customer's sales.",
+        "correct": false,
+        "why": "Kafka has no way to delete one message, and a message with a key and no value only means something on a compacted topic."
+      },
+      {
+        "text": "They are gone, because every consumer group has already read them.",
+        "correct": false,
+        "why": "Reading never removed anything; retention does not care who has read what."
+      },
+      {
+        "text": "They stay in the topic until their segment expires, up to two weeks after each sale, and then they are gone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They will be gone within minutes, once `retention.ms` on the topic is lowered to one hour and the broker checks again.",
+        "correct": false,
+        "why": "Retention removes whole segments, every customer's sales with them, and keeps the last hour; that empties the topic, not the customer's data."
+      }
+    ]
+  },
+  {
+    "id": "ex-78kkvxys",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A consumer of a three-partition topic keyed by shop is too slow, so a teammate has its one member hand each message to whichever of eight threads is free. The stock it keeps per shop starts to come out wrong. Why, by lesson 4?",
+    "hint": "Streaming and Event Processing, lesson 4.",
+    "choices": [
+      {
+        "text": "Eight threads are more readers than three partitions, so five of them never receive a message.",
+        "correct": false,
+        "why": "That ceiling is on members of a group reading the log; threads inside one member are the member's own business."
+      },
+      {
+        "text": "The group rebalances whenever a thread picks up a message, and the partitions stop while it does.",
+        "correct": false,
+        "why": "A rebalance follows members joining or leaving; threads inside one member are not members."
+      },
+      {
+        "text": "The member now receives each partition's messages out of offset order.",
+        "correct": false,
+        "why": "The member still receives them in offset order; the order is lost afterwards, between the threads."
+      },
+      {
+        "text": "Two sales of one shop can be handled by two threads at once and finish in either order.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhxhyb71",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Four members of one group read a topic of three partitions. The fourth is given an empty list and reads nothing, but takes over a partition at the next rebalance if one of the other three leaves. Lesson 4 calls a member like that a ___.",
+    "hint": "Streaming and Event Processing, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "standby",
+          "stand-by",
+          "stand by"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6j7958mv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The `sales` topic has three replicas and `min.insync.replicas=2`. The ISR of one partition has shrunk to its leader alone, and a producer with `acks=1` writes to it. What happens, by lesson 5?",
+    "hint": "Streaming and Event Processing, lesson 5.",
+    "choices": [
+      {
+        "text": "The leader refuses the write with `NotEnoughReplicas`, because the topic's floor is two.",
+        "correct": false,
+        "why": "The floor is checked only for `acks=all` writes; an `acks=1` producer is answered once the leader has the record."
+      },
+      {
+        "text": "The sale is accepted, with one copy on one disk.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The leader holds back its answer until a second replica is in the ISR again.",
+        "correct": false,
+        "why": "Waiting for the ISR is what `acks=all` asks for, and even that is refused below the floor rather than held."
+      },
+      {
+        "text": "The topic raises the producer to `acks=all`, and the write times out.",
+        "correct": false,
+        "why": "`acks` is set per producer, not per topic; nothing on the topic changes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6vj7ngp",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A partition's leader is killed while a producer with `acks=all` is sending to it. Put what follows in order, by lesson 5.",
+    "hint": "Streaming and Event Processing, lesson 5.",
+    "items": [
+      "The controllers stop hearing the leader's heartbeats",
+      "A new leader is picked from the partition's ISR",
+      "Every node is told who the new leader is",
+      "The producer asks for fresh metadata and sends the sales it kept in memory"
+    ],
+    "trap": "The producer cannot resend first: until fresh metadata names the new leader it has nowhere to send, so the sales wait in its memory, inside `message.timeout.ms`."
+  },
+  {
+    "id": "ex-5b4mw69q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "New till software keeps the field `cents`, still a `long`, but writes the price in reais instead of centavos. The subject `sales-avro-value` is set to `FULL`. What does the registry do, and what would have caught the change?",
+    "hint": "Streaming and Event Processing, lesson 6; Data Security, Governance and Privacy, lesson 11.",
+    "choices": [
+      {
+        "text": "It refuses version 2 with a 409 Conflict, since `FULL` checks that the new schema and the old one can each read the other's data.",
+        "correct": false,
+        "why": "There is no version 2: the schema is the one already registered, and compatibility compares schemas, not what their values mean."
+      },
+      {
+        "text": "It accepts version 2 as a minor change, the way a contract treats a new optional field.",
+        "correct": false,
+        "why": "A meaning changed under the same name is a major change by the contract's rules, and the registry sees no change at all."
+      },
+      {
+        "text": "Nothing: the schema is unchanged and gets its old id back; only a contract saying what `cents` means catches it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It accepts it, and readers still on version 1 fail to decode the new sales.",
+        "correct": false,
+        "why": "The bytes have the same shape, so every reader decodes them; the totals are simply wrong a hundred times over."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc9fveb5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Under `BACKWARD`, version 2 of the sale drops a field that version 1 has no default for. The consumers moved to version 2 first, as the mode asks, and then the tills. An hour later the till release misbehaves and is rolled back. The deployment lesson's review question asks what a rollback leaves behind. What is the answer here?",
+    "hint": "Streaming and Event Processing, lesson 6; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "Nothing: the registry still holds version 1, so rolling back the tills undoes the release.",
+        "correct": false,
+        "why": "A topic is not migrated: the sales written with version 2 stay as they are, a message format left for whoever reads next."
+      },
+      {
+        "text": "Version 2 must be deleted from the registry, or the old tills keep writing with it.",
+        "correct": false,
+        "why": "The tills write the schema they were built with; and the messages already sent carry id 2, which has to keep meaning that schema."
+      },
+      {
+        "text": "An hour of sales written with version 2, which stay on the topic for its retention, so the consumers cannot go back to version 1 until then.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The consumers must be rolled back too, since they now expect a field the old tills leave out.",
+        "correct": false,
+        "why": "A reader on version 2 reads version 1 data; the field it no longer has is skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-nawx0fxn",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A job copies the big sales to `big-sales` exactly once, one transaction per batch, and a crash left one aborted batch in the log. Which of these readers count each big sale once? Choose all that apply.",
+    "hint": "Streaming and Event Processing, lesson 7.",
+    "choices": [
+      {
+        "text": "The console consumer, with its default settings.",
+        "correct": false,
+        "why": "It is built on the Java client, which defaults to `read_uncommitted` and reads the aborted copies too."
+      },
+      {
+        "text": "A Python consumer, with its default settings.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A Java consumer, with its default settings.",
+        "correct": false,
+        "why": "The Java client defaults to `read_uncommitted`, so the aborted batch is counted as well."
+      },
+      {
+        "text": "The console consumer with `--isolation-level read_committed`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5684dx5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A delivery raises a shop's stock, and an event has to reach Kafka through an outbox. Put the steps in order, by lesson 8.",
+    "hint": "Streaming and Event Processing, lesson 8.",
+    "items": [
+      "The stock row and the event row are written in one transaction",
+      "The relay reads the unsent rows, in the order they were written",
+      "Kafka acknowledges the events",
+      "The relay marks the acknowledged rows as sent"
+    ],
+    "trap": "Marking a row as sent before Kafka has acknowledged it turns a crash into a lost event; marking it after turns a crash into a second copy, which the event's id lets a consumer drop."
+  },
+  {
+    "id": "ex-3prjjq3g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A stock consumer doubled the stock it wrote when its topic was replayed, and the fix makes it skip sale ids it has already applied. Which test should go into the suite beside the fix?",
+    "hint": "Streaming and Event Processing, lesson 8; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "A test with one sale per book that checks each book's stock goes down by one.",
+        "correct": false,
+        "why": "That example passes on both versions; the defect only shows when the same input arrives twice."
+      },
+      {
+        "text": "A check that the topic holds no two sales with the same id.",
+        "correct": false,
+        "why": "Every sale in the topic was different; the second copies came from reading them again."
+      },
+      {
+        "text": "Run it twice over the same input, diff the two dumps, and see that fail on the old consumer and pass on the fix.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Run the fixed consumer twice over the same input and diff the dumps; the old consumer is known to be wrong already, so it need not be run.",
+        "correct": false,
+        "why": "A regression test is proved both ways, red on the bug and green on the fix; one never seen failing may test nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mwd512m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "One till's clock runs fifty minutes fast. Its sales go to a `CreateTime` topic, and the pipeline's watermark is the latest event time seen, minus two minutes. What happens, by lesson 9?",
+    "hint": "Streaming and Event Processing, lesson 9.",
+    "choices": [
+      {
+        "text": "Kafka refuses those sales, because they claim to come from the future.",
+        "correct": false,
+        "why": "The guard refuses stamps more than an hour ahead, `message.timestamp.after.max.ms`; fifty minutes is inside it."
+      },
+      {
+        "text": "Only that till's sales suffer: they land in windows fifty minutes later than the ones they belong to, and the rest are untouched.",
+        "correct": false,
+        "why": "The watermark is shared, so one source jumping forward makes every other source's sales look late."
+      },
+      {
+        "text": "The sales are stored, the watermark jumps fifty minutes ahead, and the other shops' honest sales arrive behind it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing goes wrong, because the watermark skips any event time ahead of the broker's clock.",
+        "correct": false,
+        "why": "Nothing compares the sale's `at` with a clock: the latest time seen is whatever a sale claims."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtx63ywa",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each question to the window lesson 10 answers it with.",
+    "hint": "Streaming and Event Processing, lesson 10.",
+    "pairs": [
+      {
+        "left": "Sales per hour, for bars that are added up into the day",
+        "right": "tumbling"
+      },
+      {
+        "left": "Sales in the last ten minutes, refreshed every five",
+        "right": "hopping"
+      },
+      {
+        "left": "A card used twice within ten minutes, wherever the clock's marks fall",
+        "right": "sliding"
+      },
+      {
+        "left": "One customer's visit to the website, however long it lasts",
+        "right": "session"
+      }
+    ]
+  },
+  {
+    "id": "ex-0a1y7wp5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Five-minute tumbling windows, a watermark bound of two minutes, and five minutes of allowed lateness. A sale for the 09:05 to 09:10 window arrives late. It can still update that window until the latest event time seen reaches what time? Give it in minutes after 09:00.",
+    "hint": "Streaming and Event Processing, lesson 11.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-7cppvrac",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Structured Streaming query appends its counts as files to a directory, and another engine reads that directory by listing every file in it. A crash interrupts a batch halfway through. What can that engine end up counting, and what avoids it?",
+    "hint": "Streaming and Event Processing, lesson 12; Big Data and Distributed Processing, lesson 11.",
+    "choices": [
+      {
+        "text": "The files of the interrupted batch, which no `_spark_metadata` entry names; a reader that goes by a log of commits leaves them out.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing extra: the file sink is exactly-once, so every reader sees each window once.",
+        "correct": false,
+        "why": "It is exactly-once for a reader that goes by `_spark_metadata`; a plain listing takes every file it finds."
+      },
+      {
+        "text": "Windows still open, which the next batch rewrites once the watermark has passed them.",
+        "correct": false,
+        "why": "In append mode a window is written once, after the watermark passes it, and a file is never rewritten."
+      },
+      {
+        "text": "Each window twice, unless the query switches to update mode and overwrites its files.",
+        "correct": false,
+        "why": "A file cannot be updated, and the file sink refuses update mode before the query starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-76v00d2y",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A Kafka Streams application counts sales per book, reading a topic keyed by shop. `groupBy` picks the book as the new key, so the library writes every sale to Kafka a second time, keyed by book. Lesson 13 calls that topic the ___ topic.",
+    "hint": "Streaming and Event Processing, lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "repartition",
+          "re-partition",
+          "repartitioning"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2tjcwxh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Debezium connector reads only the `stock` table, which changes once a day. Connect is running and the slot shows `active` as `t`, yet its retained WAL grows all night while another application writes gigabytes to tables nobody publishes. Why, and what does lesson 14 set?",
+    "hint": "Streaming and Event Processing, lesson 14.",
+    "choices": [
+      {
+        "text": "The slot moves only when the connector confirms a change from its own tables; `heartbeat.interval.ms` makes it confirm on a timer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The other application's tables were added to the publication by mistake, and removing them stops it.",
+        "correct": false,
+        "why": "Unpublished tables' WAL is held all the same: the WAL is one stream for the whole server."
+      },
+      {
+        "text": "`REPLICA IDENTITY FULL` on `stock` writes old rows into the WAL; going back to `DEFAULT` frees it.",
+        "correct": false,
+        "why": "FULL adds the old row to that table's updates and deletes, once a day here; it holds nothing back."
+      },
+      {
+        "text": "The connector has fallen behind, and `max_slot_wal_keep_size` lets it catch up.",
+        "correct": false,
+        "why": "There is nothing waiting to be read; and that setting saves the disk by marking the slot lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8za034r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Packing an order takes 40 seconds, and the SQS queue's visibility timeout is 30. Nothing crashes. What happens, by lesson 15?",
+    "hint": "Streaming and Event Processing, lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: a packer still at work keeps the order hidden until it deletes it.",
+        "correct": false,
+        "why": "SQS has no connection to watch; it uses the clock, and after 30 seconds the order is visible again."
+      },
+      {
+        "text": "Every order is lost, because SQS deletes a message whose timeout runs out.",
+        "correct": false,
+        "why": "A message whose timeout runs out becomes visible again; it is only deleted by a consumer."
+      },
+      {
+        "text": "Every order is handed to a second packer while the first is still on it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The second packer is refused the order, since the first has acknowledged it.",
+        "correct": false,
+        "why": "SQS has no acknowledgement; a consumer deletes the message when the work is done."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsxdp0n3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The website promises that its stock is never more than a minute old. A teammate proposes paging on-call whenever the `stock` group's lag passes 1000 messages. What do the two lessons page on instead?",
+    "hint": "Streaming and Event Processing, lesson 16; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "Lag in time above a few minutes: the stale stock a customer sees, whatever caused it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A higher count, say 10 000, so that Saturday morning's peak, which drains on its own, wakes nobody.",
+        "correct": false,
+        "why": "A count says nothing about staleness: a thousand messages is a second on a busy topic and hours on a quiet one."
+      },
+      {
+        "text": "Each cause separately, each with its own threshold: a rebalance, a slow database, a poison message.",
+        "correct": false,
+        "why": "Causes are tickets; one page on the symptom covers every cause, including the ones nobody listed."
+      },
+      {
+        "text": "The consumer's rate, against the rate it managed at launch.",
+        "correct": false,
+        "why": "A rate belongs on a dashboard; it does not say whether the promise to the customer is broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqqnb50r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Sales cross Kafka with a `traceparent` header. Lesson 16's counter copies a bad sale to `sales.dlq` with its key, its value and two headers of its own, the error and where the sale came from. Once the sale is fixed and sent back, what does its trace look like?",
+    "hint": "Streaming and Event Processing, lesson 16; Observability and Operations, lesson 4.",
+    "choices": [
+      {
+        "text": "The original trace, with a gap for the time the sale sat in the dead-letter topic.",
+        "correct": false,
+        "why": "Only a context carried inside the message joins a trace, and the copy's headers were replaced, not added to."
+      },
+      {
+        "text": "A new trace: the copy carried no `traceparent`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The original trace, found through the `from` header's partition and offset.",
+        "correct": false,
+        "why": "An origin is not a trace context; nothing extracts a trace from it."
+      },
+      {
+        "text": "No trace at all, because a consumer cannot open a span for a message without one.",
+        "correct": false,
+        "why": "Extracting from missing headers gives an empty context, and the span starts a trace of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-xap2vbng",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new version of the stock program reprocesses `sales` from the start under the group `stock-v2` while the old one keeps serving. Taking blue-green as the deployment lesson runs it, the team lets both versions write to the one `stock` table they share. What goes wrong?",
+    "hint": "Streaming and Event Processing, lesson 16; Automated Testing and CI/CD, lesson 10.",
+    "choices": [
+      {
+        "text": "The table mixes both versions' numbers while the new one catches up, and no row says which wrote it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, since the new group has offsets of its own and leaves the old group alone.",
+        "correct": false,
+        "why": "Separate offsets keep the reading apart, not the writing; two versions writing to one place leave a mixture of both."
+      },
+      {
+        "text": "Nothing, provided the new version is idempotent, since a repeat then changes nothing.",
+        "correct": false,
+        "why": "Idempotence stops repeats; here two different programs write different numbers to the same rows."
+      },
+      {
+        "text": "The old group is moved back to the start as well, and the stock page shows Monday's numbers until it catches up.",
+        "correct": false,
+        "why": "A new group changes nothing about the old one; moving a group back is replay."
+      }
+    ]
+  },
+  {
+    "id": "ex-x80hcdft",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Ponto Final keeps its 20 000 sales a day for seven days, in three copies. Lesson 17 measured about 135 bytes a sale on disk uncompressed, and 17 with `zstd` after rounding. How many megabytes of disk does `zstd` save, all copies counted? (1 MB = 1 000 000 bytes)",
+    "hint": "Streaming and Event Processing, lesson 17.",
+    "value": 49.56,
+    "tolerance": 0.01,
+    "unit": ""
   },
   {
     "id": "ex-m51gz7fa",
@@ -604,11 +1205,6 @@
     "prompt": "`python -m pytest -q --durations=4` on `shipquote` lists two teardowns of 0.50 s each at the top, while the acceptance test's six quotes take 0.03 s together. What does that say about the top of the pyramid?",
     "hint": "Automated Testing and CI/CD, lesson 1.",
     "choices": [
-      {
-        "text": "Its cost is in setting up and tearing down a world for the tests, and it multiplies with every module up there.",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "The requests are what is slow, and a quicker HTTP server would fix it.",
         "correct": false,
@@ -623,6 +1219,11 @@
         "text": "The integration layer's SQLite is the bottleneck of the whole suite.",
         "correct": false,
         "why": "The three integration tests took 0.17 s; SQLite lives in the test's own process and costs almost nothing."
+      },
+      {
+        "text": "Its cost is in setting up and tearing down a world for the tests, and it multiplies with every module up there.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -634,11 +1235,6 @@
     "prompt": "A Spark job sends each customer a confirmation e-mail from inside a task. Its unit test hands the task a spy for the mailer, asserts exactly one call per order, and passes. In the cluster, some customers get two e-mails on the night an executor is killed. Why could the test not see it?",
     "hint": "Automated Testing and CI/CD, lesson 2; Big Data and Distributed Processing, lesson 2.",
     "choices": [
-      {
-        "text": "Spark reran the lost task from its input, so the e-mail inside it went out again; the test ran each task once.",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "A spy only records calls; a mock built with `create_autospec` would have checked them and failed.",
         "correct": false,
@@ -653,6 +1249,11 @@
         "text": "Spark restarts the whole job when an executor dies, so every order was processed twice.",
         "correct": false,
         "why": "Only the tasks running on that executor are lost and rerun; finished tasks had already sent their results. That is why only some customers got two."
+      },
+      {
+        "text": "Spark reran the lost task from its input, so the e-mail inside it went out again; the test ran each task once.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -664,11 +1265,6 @@
     "prompt": "For a staging database, a team copies production's orders and replaces `customer_id` with `md5(customer_id::text)`, so the orders still join to each other. The customer ids run from 1 to 6,012. What is wrong with this test data?",
     "hint": "Automated Testing and CI/CD, lesson 3; Data Security, Governance and Privacy, lesson 5.",
     "choices": [
-      {
-        "text": "Hashing 1 to 6,012 returns every customer in a second; test data should be generated, not copied.",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "Nothing: once hashed, the copy is anonymous and the LGPD no longer reaches it.",
         "correct": false,
@@ -683,6 +1279,11 @@
         "text": "`md5` is too slow for a table this size; an HMAC would make the copy anonymous and safe to commit as a fixture.",
         "correct": false,
         "why": "A keyed HMAC is a real pseudonym, and pseudonymised data is still personal data: it does not belong in a repository."
+      },
+      {
+        "text": "Hashing 1 to 6,012 returns every customer in a second; test data should be generated, not copied.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -695,14 +1296,14 @@
     "hint": "Automated Testing and CI/CD, lesson 4.",
     "choices": [
       {
-        "text": "None of the new behaviour was tested; the price of a heavy parcel could be anything.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Half the change is tested, since the `if` is covered.",
         "correct": false,
         "why": "The `if` ran because every quote passes through it, and no quote went over 30 kg. A line that ran is not a line that was checked."
+      },
+      {
+        "text": "None of the new behaviour was tested; the price of a heavy parcel could be anything.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "Nothing about this change: a one-point drop in the total is what any change on a large project looks like.",
@@ -725,9 +1326,9 @@
     "hint": "Automated Testing and CI/CD, lesson 4.",
     "choices": [
       {
-        "text": "The handling of a carrier error that no test has reached yet.",
-        "correct": false,
-        "why": "Untested is not the same as not worth testing. That missing line is a test to write."
+        "text": "An `assert False` marking a branch that cannot happen.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "`main()`, which reads `SHIPQUOTE_PORT` and builds the server.",
@@ -735,14 +1336,14 @@
         "why": "Both can be wrong, a typo in the variable or a server on the wrong address. Excluding it hides it from the one report that shows nothing checks it yet."
       },
       {
-        "text": "An `assert False` marking a branch that cannot happen.",
+        "text": "Code under `if TYPE_CHECKING:`, read by type checkers only.",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "Code under `if TYPE_CHECKING:`, read by type checkers only.",
-        "correct": true,
-        "why": "Right."
+        "text": "The handling of a carrier error that no test has reached yet.",
+        "correct": false,
+        "why": "Untested is not the same as not worth testing. That missing line is a test to write."
       },
       {
         "text": "The `if __name__ == \"__main__\":` guard at the foot of `app.py`.",
@@ -765,14 +1366,14 @@
         "why": "Every run starts from a clean checkout. A cache holds dependencies, never the code under test."
       },
       {
-        "text": "Two changes that each passed on their own can conflict once combined.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "A push to `main` is what builds and publishes the release.",
         "correct": false,
         "why": "A release is started by a tag starting with `v`, which then calls the same checks."
+      },
+      {
+        "text": "Two changes that each passed on their own can conflict once combined.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "A pull request run cannot be a required check.",
@@ -790,11 +1391,6 @@
     "hint": "Automated Testing and CI/CD, lesson 6.",
     "choices": [
       {
-        "text": "The dot-files are left out, so `coverage combine` has nothing and every job stays green.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "The upload fails, naming the hidden files it skipped, and the whole run goes red at that step.",
         "correct": false,
         "why": "Nothing fails. The upload action leaves hidden files out quietly unless told otherwise."
@@ -808,6 +1404,11 @@
         "text": "`merge-multiple` keeps one file of the six, so only one cell is counted.",
         "correct": false,
         "why": "`merge-multiple` puts the artifacts' files into one directory; the files here never reached an artifact at all."
+      },
+      {
+        "text": "The dot-files are left out, so `coverage combine` has nothing and every job stays green.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -846,14 +1447,14 @@
         "why": "Removing a field is allowed under `BACKWARD`, and a field that had a default may go under `FORWARD`."
       },
       {
-        "text": "None of them: accepting a version rewrites the stored messages in it.",
-        "correct": false,
-        "why": "The registry checks schemas when a version is offered; the bytes on the topic stay as they were written."
-      },
-      {
         "text": "The backfill: a topic is not migrated, and messages written before `amount` existed keep their schema for as long as retention keeps them.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "None of them: accepting a version rewrites the stored messages in it.",
+        "correct": false,
+        "why": "The registry checks schemas when a version is offered; the bytes on the topic stay as they were written."
       }
     ]
   },
@@ -871,6 +1472,11 @@
         "why": "The check answered at once and said `ok`. Waiting longer for the same question gets the same answer."
       },
       {
+        "text": "One real read through the main path, such as a quote for a known CEP.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Nothing: a smoke test only asks whether the program is up, and the database is the integration tests' business.",
         "correct": false,
         "why": "Integration tests never meet the deployed configuration. The smoke test is the one check that runs against it."
@@ -879,11 +1485,6 @@
         "text": "A comparison of `/version` against the artifact's SHA-256 rather than its version number.",
         "correct": false,
         "why": "The version was right; the release was the one meant. What nobody asked was whether it can do its job."
-      },
-      {
-        "text": "One real read through the main path, such as a quote for a known CEP.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -956,14 +1557,14 @@
     "hint": "Automated Testing and CI/CD, lesson 9; Data Security, Governance and Privacy, lesson 4.",
     "choices": [
       {
+        "text": "`permissions: contents: read` at the top of the workflow, with `id-token: write` added in the deploy job alone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "`contents: write` at the top of the workflow, so the one job that creates the release has it.",
         "correct": false,
         "why": "A permission set for the workflow reaches every job, including a test job running a compromised dependency. It belongs on the job that needs it."
-      },
-      {
-        "text": "A token for the website that may also read `transit/keys/ipe-cpf`, to check the key's version before it encrypts.",
-        "correct": false,
-        "why": "Using a key does not need its configuration; the ciphertext already says which version made it."
       },
       {
         "text": "A policy giving the website `update` on `transit/encrypt/ipe-cpf` and nothing on `transit/decrypt/ipe-cpf`.",
@@ -971,9 +1572,9 @@
         "why": "Right."
       },
       {
-        "text": "`permissions: contents: read` at the top of the workflow, with `id-token: write` added in the deploy job alone.",
-        "correct": true,
-        "why": "Right."
+        "text": "A token for the website that may also read `transit/keys/ipe-cpf`, to check the key's version before it encrypts.",
+        "correct": false,
+        "why": "Using a key does not need its configuration; the ciphertext already says which version made it."
       }
     ]
   },
@@ -997,6 +1598,11 @@
     "hint": "Automated Testing and CI/CD, lesson 10; Machine Learning and MLOps, lesson 8.",
     "choices": [
       {
+        "text": "Nothing; the canary must compare what the two versions say, such as the mean probability.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "A breach: probabilities that high are counted as errors.",
         "correct": false,
         "why": "An error here is a 5xx or no answer. A 200 carrying a strange number passes every error count."
@@ -1010,11 +1616,6 @@
         "text": "Nothing, because it splits per request; splitting by member would make the error rate show the bug.",
         "correct": false,
         "why": "Splitting by member keeps each person on one side. It changes who sees which version, not what an error count can measure."
-      },
-      {
-        "text": "Nothing; the canary must compare what the two versions say, such as the mean probability.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1066,14 +1667,14 @@
         "why": "One in twenty is the canary's rate. Over all checkouts it is 5% of 5%, 0.25%, against an allowed 0.5%."
       },
       {
-        "text": "About 0.5, too low to page; the canary's comparison with the baseline must stop it.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "About 0.5, so it is safe to promote, since the month's budget is not at risk.",
         "correct": false,
         "why": "The budget is safe at 5%. At 100% the same release fails 5% of checkouts, a burn rate of 10."
+      },
+      {
+        "text": "About 0.5, too low to page; the canary's comparison with the baseline must stop it.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "None can be computed yet: the canary has to answer 50 requests before any rate means something.",
@@ -1160,6 +1761,11 @@
     "hint": "Observability and Operations, lesson 2.",
     "choices": [
       {
+        "text": "It keeps a fixed number in its queue, 2048 by default in Python, and drops the rest.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Each request waits for its export to go through, so charges slow down until the Collector is back.",
         "correct": false,
         "why": "Waiting on the network is the simple processor's habit; the batch one queues the span and returns at once."
@@ -1173,11 +1779,6 @@
         "text": "It writes them to disk and sends them after the next restart.",
         "correct": false,
         "why": "Nothing in the SDK keeps the queue on disk; a process that dies loses whatever was still waiting in it."
-      },
-      {
-        "text": "It keeps a fixed number in its queue, 2048 by default in Python, and drops the rest.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1195,6 +1796,11 @@
         "why": "Orders' `POST /orders` span does carry the method; lesson 3 listed its keys, `http.method` among them."
       },
       {
+        "text": "Orders' instrumentation libraries still write the older name, `http.method`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Orders excludes its routes from tracing with `OTEL_PYTHON_FLASK_EXCLUDED_URLS`.",
         "correct": false,
         "why": "That variable leaves out `health` and `metrics` only; the order route is traced."
@@ -1203,11 +1809,6 @@
         "text": "The conventions name the method one way on a server span and another way on a client span.",
         "correct": false,
         "why": "The difference is a generation of names, not a kind of span: orders' server and client spans both use the older one."
-      },
-      {
-        "text": "Orders' instrumentation libraries still write the older name, `http.method`.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1220,14 +1821,14 @@
     "hint": "Observability and Operations, lesson 4; Streaming and Event Processing, lesson 16.",
     "choices": [
       {
-        "text": "In the record's headers: the producer injects it, and the consumer extracts it and starts its span under it.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Nowhere extra: the group's committed offset already ties each record to the request that wrote it.",
         "correct": false,
         "why": "An offset is a position in a partition; it knows nothing about the trace of whoever produced the record."
+      },
+      {
+        "text": "In the record's headers: the producer injects it, and the consumer extracts it and starts its span under it.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "It is read from the record's timestamp, which the producer sets from the trace.",
@@ -1297,19 +1898,19 @@
     "hint": "Observability and Operations, lesson 6; Machine Learning and MLOps, lesson 9.",
     "choices": [
       {
+        "text": "`member_id`, to count one member's requests",
+        "correct": false,
+        "why": "Lesson 6's `user_id` experiment: a label per person is a series per person, and anything that names one member goes on the span or the line."
+      },
+      {
         "text": "`path`, as the log writes it",
         "correct": false,
         "why": "The log writes `/lapse/2`, so the member id rides in the path: one series per member, up to 4,600. A route template would be safe."
       },
       {
-        "text": "`model_version`",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "`member_id`, to count one member's requests",
+        "text": "`p_lapse`",
         "correct": false,
-        "why": "Lesson 6's `user_id` experiment: a label per person is a series per person, and anything that names one member goes on the span or the line."
+        "why": "A score takes hundreds of values and is a measurement; it belongs in the log line or a histogram, never in a label."
       },
       {
         "text": "`status`",
@@ -1317,9 +1918,9 @@
         "why": "Right."
       },
       {
-        "text": "`p_lapse`",
-        "correct": false,
-        "why": "A score takes hundreds of values and is a measurement; it belongs in the log line or a histogram, never in a label."
+        "text": "`model_version`",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -1331,6 +1932,11 @@
     "prompt": "In lesson 7, payments is rolled back at 120 seconds, and the checkout's 99th percentile on the panel stays high until 180. What kept it there?",
     "hint": "Observability and Operations, lesson 7.",
     "choices": [
+      {
+        "text": "Each point is a rate over the minute before it, and that minute still held slow checkouts.",
+        "correct": true,
+        "why": "Right."
+      },
       {
         "text": "Grafana caches each panel for a minute before it asks Prometheus again.",
         "correct": false,
@@ -1345,11 +1951,6 @@
         "text": "The rollback annotation was written a minute after the rollback.",
         "correct": false,
         "why": "The mark and the rollback went out together; the annotation says when somebody acted, and the line lagged behind it."
-      },
-      {
-        "text": "Each point is a rate over the minute before it, and that minute still held slow checkouts.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1402,14 +2003,14 @@
     "hint": "Observability and Operations, lesson 9.",
     "choices": [
       {
-        "text": "Each trace id becomes a stream of its own, and the index that keeps Loki cheap stops being small.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Nothing, because Loki already indexes every field of every line as it arrives.",
         "correct": false,
         "why": "That is Elasticsearch's design; Loki indexes the labels of each stream and never the lines."
+      },
+      {
+        "text": "Each trace id becomes a stream of its own, and the index that keeps Loki cheap stops being small.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "Lookups get faster at no cost, since Loki stores each value of a label only once, however often it appears.",
@@ -1432,6 +2033,11 @@
     "hint": "Observability and Operations, lesson 10; Data Security, Governance and Privacy, lesson 10.",
     "choices": [
       {
+        "text": "Three policies: a week for routine lines, longer for errors, and the audit trail in its own store with its own period, often five years.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Raise the whole store to five years, so the audit trail is covered and nothing is lost.",
         "correct": false,
         "why": "Every routine line, and whatever personal data it holds, would then stay five years; nothing may be kept longer than its purpose needs."
@@ -1445,11 +2051,6 @@
         "text": "Delete the trail with the rest after seven days, because it is personal data.",
         "correct": false,
         "why": "Personal data needs a purpose and a period, not the shortest one; administrative records commonly keep five years."
-      },
-      {
-        "text": "Three policies: a week for routine lines, longer for errors, and the audit trail in its own store with its own period, often five years.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1461,6 +2062,11 @@
     "prompt": "A customer asks to be erased. For a week the storefront's logs carried their e-mail address in a field, and copies sit in Loki, Elasticsearch, the container's own log and last night's backup. Which design would have left nothing to delete in any of them?",
     "hint": "Observability and Operations, lesson 10; Data Security, Governance and Privacy, lesson 10.",
     "choices": [
+      {
+        "text": "Lines carrying only an internal id, which point at nobody once the account row is erased.",
+        "correct": true,
+        "why": "Right."
+      },
       {
         "text": "A Loki delete request for the address, sent the day the request arrives.",
         "correct": false,
@@ -1475,11 +2081,6 @@
         "text": "A backup retention of 35 days, so the copy taken last night expires on its own.",
         "correct": false,
         "why": "That bounds how long the backup holds the address and leaves every log store and the machine's log untouched."
-      },
-      {
-        "text": "Lines carrying only an internal id, which point at nobody once the account row is erased.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1522,14 +2123,14 @@
     "hint": "Observability and Operations, lesson 12.",
     "choices": [
       {
-        "text": "Only whole traces, because the storefront records its own span once orders has kept one.",
-        "correct": false,
-        "why": "The storefront decided when the trace began and dropped its span then; nothing brings it back later."
-      },
-      {
         "text": "Traces that begin at orders' `POST /orders`, pointing at a parent that was never exported.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Only whole traces, because the storefront records its own span once orders has kept one.",
+        "correct": false,
+        "why": "The storefront decided when the trace began and dropped its span then; nothing brings it back later."
       },
       {
         "text": "Nothing different, since a downstream service follows the flag in `traceparent`.",
@@ -1562,11 +2163,6 @@
         "why": "The span metrics are computed from every span before the sampler drops any, so they still count every checkout."
       },
       {
-        "text": "Checkouts per second, counted from the traces in the store",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "An exemplar on orders' latency panel, opened as a trace",
         "correct": true,
         "why": "Right."
@@ -1575,6 +2171,11 @@
         "text": "A search in Jaeger for the checkouts that failed in the last two minutes",
         "correct": false,
         "why": "The `errors` policy keeps every trace with an error status, so that search finds all of them."
+      },
+      {
+        "text": "Checkouts per second, counted from the traces in the store",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -1605,6 +2206,11 @@
     "hint": "Observability and Operations, lesson 14.",
     "choices": [
       {
+        "text": "The storefront leaves rotation too, and takes with it the pages that never touch the database.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Kubernetes restarts the storefront's pods until the database returns.",
         "correct": false,
         "why": "A failing readiness probe stops traffic; only a liveness probe restarts a container."
@@ -1618,11 +2224,6 @@
         "text": "The storefront stays in rotation, because readiness looks only at the process itself.",
         "correct": false,
         "why": "Readiness is whatever the check asks, and this one asks another service; checking only the process is liveness."
-      },
-      {
-        "text": "The storefront leaves rotation too, and takes with it the pages that never touch the database.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -1640,14 +2241,14 @@
         "why": "A percentile from buckets is interpolated inside a bucket; the share below a boundary is the exact question."
       },
       {
-        "text": "The mean, `_sum` over `_count`, kept under 50 ms.",
-        "correct": false,
-        "why": "A mean hides the slow requests; the lapse service's mean of 68.7 ms sat below its median."
-      },
-      {
         "text": "A bucket boundary at 0.05 s, and the SLI as that bucket's rate over the count's rate.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "The mean, `_sum` over `_count`, kept under 50 ms.",
+        "correct": false,
+        "why": "A mean hides the slow requests; the lapse service's mean of 68.7 ms sat below its median."
       },
       {
         "text": "A summary, which computes the 99th percentile inside each worker.",
@@ -1665,11 +2266,6 @@
     "hint": "Observability and Operations, lesson 16; Streaming and Event Processing, lesson 16.",
     "choices": [
       {
-        "text": "Lag in time past a few minutes.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Lag above 1,000 messages on any partition.",
         "correct": false,
         "why": "It fires on every Saturday peak that drains by itself, and a count says nothing about how old the stock is."
@@ -1683,6 +2279,11 @@
         "text": "Each sale taking longer than 100 ms to update the stock.",
         "correct": false,
         "why": "That is a cause, and the consumer may still be keeping up; the page belongs to the symptom, how stale the stock is."
+      },
+      {
+        "text": "Lag in time past a few minutes.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -1798,14 +2399,14 @@
         "why": "Mutual TLS secures the connection; the proxies record spans in permissive mode too."
       },
       {
-        "text": "Nothing: the proxies see every request in and out, and pair them up themselves.",
-        "correct": false,
-        "why": "A proxy cannot know which outgoing call belongs to which incoming request."
-      },
-      {
         "text": "Each service passing the incoming `traceparent` on to the calls it makes.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Nothing: the proxies see every request in and out, and pair them up themselves.",
+        "correct": false,
+        "why": "A proxy cannot know which outgoing call belongs to which incoming request."
       },
       {
         "text": "Ambient mode, because a sidecar proxy has no way to record a span.",
@@ -1823,14 +2424,14 @@
     "hint": "Observability and Operations, lesson 16; Machine Learning and MLOps, lesson 9.",
     "choices": [
       {
-        "text": "No, a ticket: nothing has to be done before the morning.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Yes: every model alarm is a symptom, and symptoms page.",
         "correct": false,
         "why": "A symptom pages when people are hurt now or before morning; nobody acts on these scores until a person has looked."
+      },
+      {
+        "text": "No, a ticket: nothing has to be done before the morning.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "Yes, because the batch reported success and only a person can catch that.",
@@ -1841,6 +2442,558 @@
         "text": "No alert at all: the report card in ninety days will say whether the night was wrong.",
         "correct": false,
         "why": "The watch exists to stand in for that late card, and a check nobody hears is a log line."
+      }
+    ]
+  },
+  {
+    "id": "ex-awttbfy3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ipê ships the PostgreSQL server log to Loki, which keeps it for seven days. With `log_statement = 'ddl'` on, Ana sets the website's password with `ALTER ROLE site_app PASSWORD '…'`. What should happen next?",
+    "hint": "Data Security, Governance and Privacy, lesson 1; Observability and Operations, lesson 10.",
+    "choices": [
+      {
+        "text": "Send Loki a delete request for that line and keep the password, since SCRAM stores only a verifier and nothing usable is left once that one line has gone from the store.",
+        "correct": false,
+        "why": "The statement carried the password itself, and the server's own log file, `~/.psql_history` and any backup still hold it. Deleting a log line is never finished."
+      },
+      {
+        "text": "Leave it to Loki's retention: after seven days the line expires on its own.",
+        "correct": false,
+        "why": "For those seven days anybody who reads the logs can log in as the website, and the copies outside Loki keep their own time."
+      },
+      {
+        "text": "Set a new password with psql's `\\password`, which sends only the stored form, and treat the old one as read by anybody who can read the log or a copy of it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Turn `log_statement` off, which also clears what it has written.",
+        "correct": false,
+        "why": "The setting decides what is logged from now on. The line already written stays where it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-5j2k3zfk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every night `etl_loader` copies `sales.customers` into `support.customers_copy`, a plain table, and support agents are granted `SELECT` on the copy. Lesson 2's policy limits Carla to São Paulo and Rio on `sales.customers`. How many customers does she see in the copy?",
+    "hint": "Data Security, Governance and Privacy, lesson 2.",
+    "choices": [
+      {
+        "text": "3,386, because a row policy goes with the rows it filtered wherever they are copied.",
+        "correct": false,
+        "why": "A policy belongs to one table. The copy was read under the pipeline's policy, `USING (true)`, so it holds every row."
+      },
+      {
+        "text": "None, because the copy inherits row security from its source and has no policy for `support_agent`.",
+        "correct": false,
+        "why": "Row security is switched on table by table, and nothing switched it on for the copy."
+      },
+      {
+        "text": "All 6,012: the region rule stays on the table it was written for.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None, because a table a service account fills can only be read by that same account.",
+        "correct": false,
+        "why": "The grant on the copy decides who reads it, whoever wrote the rows, and support was granted `SELECT`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bh0k3at",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lia's contract has ended. Put the four statements of lesson 2's offboarding in the order the lesson runs them.",
+    "hint": "Data Security, Governance and Privacy, lesson 2.",
+    "items": [
+      "`ALTER ROLE lia NOLOGIN`",
+      "`REVOKE analyst FROM lia`",
+      "`REASSIGN OWNED BY lia TO ipe_owner`",
+      "`DROP OWNED BY lia`"
+    ],
+    "trap": "NOLOGIN comes first so that no session opens, by certificate or by `peer`, while the rest is undone. REASSIGN comes before DROP OWNED, so that whatever she created outlives her account instead of vanishing with it."
+  },
+  {
+    "id": "ex-3swdavfg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 3's first attempt read CPFs with `crypto.pgp_sym_decrypt(cpf_enc, 'chave-da-ipe-2026')`. The server log reaches Loki through an OpenTelemetry Collector, and a colleague proposes a `replace_pattern` that blanks `chave-da-ipe-2026` on the way. Why does that not fix it?",
+    "hint": "Data Security, Governance and Privacy, lesson 3; Observability and Operations, lesson 10.",
+    "choices": [
+      {
+        "text": "It does fix it, provided the pattern runs before the Collector parses the JSON.",
+        "correct": false,
+        "why": "The Collector cleans only what passes through it. Everything else that holds the statement still holds the key."
+      },
+      {
+        "text": "A passphrase with hyphens in it cannot be matched reliably, so some lines would keep the key.",
+        "correct": false,
+        "why": "The pattern would match. The trouble is the places the key lands that are not log lines at all."
+      },
+      {
+        "text": "The key travels inside every statement, so it also sits in `pg_stat_activity`, `pg_stat_statements`, the server's own log file and its memory, and none of those pass through the Collector. The key has to leave the query.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The real fix is a log on an encrypted volume, so that every line is ciphertext on the disk.",
+        "correct": false,
+        "why": "Volume encryption ends at the operating system. Whoever reads the log reads the key in clear."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n0h8dcd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "After rotating `ipe-cpf` on suspicion of a leak, Ana moves each `v1` ciphertext to `v2` without the plaintext leaving OpenBao, by writing it to `transit/___/ipe-cpf`, and only then raises `min_decryption_version`.",
+    "hint": "Data Security, Governance and Privacy, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "rewrap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pyn03txx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ipê keeps support notes in a Delta table, each customer's notes encrypted with a transit key of their own, like `ipe-customer-4711`. Customer 4711 asks for erasure, and `DELETE FROM notes WHERE customer_id = 4711` commits a new version. What does deleting the key add?",
+    "hint": "Data Security, Governance and Privacy, lesson 4; Big Data and Distributed Processing, lesson 11.",
+    "choices": [
+      {
+        "text": "The ciphertext that older versions still name stops decrypting at once, backups too, without waiting for `VACUUM`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the `DELETE` rewrote every file that held those rows, so there is no copy of the notes left anywhere for anybody to read.",
+        "correct": false,
+        "why": "The removed files stay on disk for `VERSION AS OF` until `VACUUM` passes its retention, seven days by default, and backups keep them longer."
+      },
+      {
+        "text": "It makes `VACUUM` unnecessary for that table, since every old version of every customer's notes becomes unreadable.",
+        "correct": false,
+        "why": "Only what 4711's key encrypted is gone. The other customers' old versions are still history for `VACUUM` to manage."
+      },
+      {
+        "text": "It also erases those notes where somebody pasted them into a ticket.",
+        "correct": false,
+        "why": "Shredding reaches only what that key encrypted. A copy in clear is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zcc0qgy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 5's release by decade of birth, sex and state has 246 groups; 61 of them hold fewer than five people, 132 customers in all. If Ipê makes the release 5-anonymous by suppressing those customers rather than by generalising further, how many of its 6,012 customers remain in it?",
+    "hint": "Data Security, Governance and Privacy, lesson 5.",
+    "value": 5880,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t5pkef5e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ipê trains a recommender on an export in which `customer_id` is replaced by an HMAC from `ipe-analytics-ref`. The file is tracked with `dvc add`, and `dvc push` copies every version of it to the team's remote. Customer 112 asks to be erased. Which statement is right?",
+    "hint": "Data Security, Governance and Privacy, lesson 5; Machine Learning and MLOps, lesson 7.",
+    "choices": [
+      {
+        "text": "The export is anonymous, because nobody outside OpenBao can compute that HMAC, and that places every version of the file outside the reach of the customer's request.",
+        "correct": false,
+        "why": "A pseudonym whose key the controller holds is personal data (art. 13, §4). Anonymity is measured, and this one fails by construction."
+      },
+      {
+        "text": "Only the current version matters, because `dvc push` replaces the remote's old file when a new one is added.",
+        "correct": false,
+        "why": "DVC names each version by its hash and keeps it; `git checkout` and `dvc checkout` bring an old one back byte for byte."
+      },
+      {
+        "text": "Rotating `ipe-analytics-ref` re-pseudonymises the old versions.",
+        "correct": false,
+        "why": "A rotation makes a new key version for new HMACs. The strings already in the old files do not change."
+      },
+      {
+        "text": "The file is personal data, since Ipê holds the key and the customer table, so the request reaches the versions in the DVC remote as well as the next export.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1751qwn7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "LGPD article 37 obliges the controller to keep a record of the processing operations it carries out. In the GDPR's vocabulary that record goes by a four-letter abbreviation, ___.",
+    "hint": "Data Security, Governance and Privacy, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "ROPA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-93z6h9ct",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ipê's nightly loader fails on a malformed ticket and writes `failed row:` followed by the whole row of `support.tickets` into its log, which goes to Loki and is kept for seven days. What should change?",
+    "hint": "Data Security, Governance and Privacy, lesson 6; Observability and Operations, lesson 10.",
+    "choices": [
+      {
+        "text": "Nothing: seven days is short enough for the LGPD to treat debug output as being outside its scope.",
+        "correct": false,
+        "why": "The law has no exemption for short-lived logs. For a week the store holds free text that is sensitive here."
+      },
+      {
+        "text": "A Collector `replace_pattern` for CPFs and e-mail addresses, after which the line is safe to keep as it is.",
+        "correct": false,
+        "why": "Patterns catch what has a shape. A medicine described in a sentence has none, and the loader's own output on its machine is never cleaned."
+      },
+      {
+        "text": "It copies a sensitive column; the line should carry the `ticket_id` and nothing typed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, once the store that keeps the logs sits on an encrypted volume of its own, away from the loader.",
+        "correct": false,
+        "why": "That protects a disk that leaves the building, not the people who read the logs, who are the ones the line is exposed to."
+      }
+    ]
+  },
+  {
+    "id": "ex-np33v3zs",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 4's audit device wrote a line for support's refused attempt to read `transit/keys/ipe-cpf`. Which of these can an investigator read straight from that line? Choose all that apply.",
+    "hint": "Data Security, Governance and Privacy, lesson 4.",
+    "choices": [
+      {
+        "text": "The operation and the path: a `read` of `transit/keys/ipe-cpf`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The outcome, in `policy_results`: `allowed: false`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The configuration of `ipe-cpf` that support asked for.",
+        "correct": false,
+        "why": "The request was refused, and the response carries only its error, itself replaced by an HMAC."
+      },
+      {
+        "text": "The policies on the token, `default` and `support`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The support token itself, to see which one was used.",
+        "correct": false,
+        "why": "It is logged as an `hmac-sha256:` value. An investigator holding a suspect token hashes it with `sys/audit-hash` and searches for the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-10v0fsw7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Customer 3 asked Ipê to delete their data. Match each thing Ipê held about them to what lesson 7's transaction did with it.",
+    "hint": "Data Security, Governance and Privacy, lesson 7.",
+    "pairs": [
+      {
+        "left": "the marketing consent",
+        "right": "withdrawn by a new event, the history kept as proof"
+      },
+      {
+        "left": "the two support tickets",
+        "right": "deleted, since no law requires them"
+      },
+      {
+        "left": "the e-mail address",
+        "right": "replaced by an address that cannot receive mail"
+      },
+      {
+        "left": "the orders, payments and prescriptions",
+        "right": "kept under article 16, I, for that obligation alone"
+      }
+    ],
+    "right_distractors": [
+      "turned into monthly totals that name nobody"
+    ]
+  },
+  {
+    "id": "ex-cay96ce4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ipê adds a reverse ETL sync shaped like the analytics course's: a model selects every row of `sales.customers` with a segment, the sync PUTs what changed, and it DELETEs contacts that have left the model. Customer 3's erasure from lesson 7 has just run. What happens to customer 3's contact in the CRM?",
+    "hint": "Data Security, Governance and Privacy, lesson 7; Analytics, BI and Reverse ETL, lesson 7.",
+    "choices": [
+      {
+        "text": "It is deleted, because the erasure changed the e-mail and the sync notices a different payload.",
+        "correct": false,
+        "why": "A different payload is sent as a PUT. Only a contact missing from the model gets a DELETE."
+      },
+      {
+        "text": "It stays, updated at most. The row is kept because orders point at it, so the model still selects it, and only a contact that leaves the model is deleted; the model has to drop erased customers.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is deleted, because the erasure transaction ran a `DELETE` for customer 3.",
+        "correct": false,
+        "why": "That `DELETE` was on `support.tickets`. The customer row was updated and kept."
+      },
+      {
+        "text": "Nothing has to happen there: a CRM vendor is a processor, so the request stops at Ipê.",
+        "correct": false,
+        "why": "Article 18, §6 makes the controller tell the agents it shared the data with, and a copy in the CRM is the person's data as much as the source row is."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6hmggq6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ipê serves `fraud-score` from MLflow as `models:/fraud-score@champion`, and lesson 8 asks for every cancellation to be recorded as it was made. What should each decision row say about the model?",
+    "hint": "Data Security, Governance and Privacy, lesson 8; Machine Learning and MLOps, lesson 7.",
+    "choices": [
+      {
+        "text": "The alias `champion`, since production loads by alias and the registry keeps every version the alias ever pointed at.",
+        "correct": false,
+        "why": "Promoting moves the alias. Next month `champion` names another version, and the row would point at the wrong model."
+      },
+      {
+        "text": "The DVC hash of the training data, which is enough to rebuild the exact model.",
+        "correct": false,
+        "why": "A model is the product of code, data, settings and environment. The data hash names one of the four."
+      },
+      {
+        "text": "Nothing: the reviewer's name is what the law asks.",
+        "correct": false,
+        "why": "Explaining a decision later needs the model version, the inputs, the score and the threshold, as well as who reviewed it."
+      },
+      {
+        "text": "The registered version the alias named when the score was computed.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph7bjeh9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "It is October 2026. By lesson 8, which of these already bind Ipê? Choose all that apply.",
+    "hint": "Data Security, Governance and Privacy, lesson 8.",
+    "choices": [
+      {
+        "text": "Article 26's deployer duties for `cv-screen`, such as human oversight and keeping its logs.",
+        "correct": false,
+        "why": "They apply from 2 December 2027, after the Digital Omnibus moved the date for Annex III."
+      },
+      {
+        "text": "A GDPR impact assessment for `cv-screen`, which evaluates applicants automatically.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The ban on emotion recognition at work, should somebody propose it for the Lisbon warehouse.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Telling customers in the support chat that they are talking to an AI system.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The obligations for high-risk systems that are safety components of regulated products.",
+        "correct": false,
+        "why": "Those apply from 2 August 2028, and none of Ipê's four systems is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gf48d7s",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each finding to the quality dimension it falls under, by lesson 9.",
+    "hint": "Data Security, Governance and Privacy, lesson 9.",
+    "pairs": [
+      {
+        "left": "an order dated 2027-02-10",
+        "right": "validity"
+      },
+      {
+        "left": "a customer who signed up again with the e-mail in capitals",
+        "right": "uniqueness"
+      },
+      {
+        "left": "an order of 2021 with no customer",
+        "right": "completeness"
+      },
+      {
+        "left": "a consent timestamp earlier than the account",
+        "right": "consistency"
+      },
+      {
+        "left": "a well-shaped address ending in `.con`",
+        "right": "accuracy"
+      }
+    ],
+    "right_distractors": [
+      "timeliness"
+    ]
+  },
+  {
+    "id": "ex-n919yv3n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ipê pages through Alertmanager on every failing rule in `gov.quality_runs`. A first draft of the completeness rule counts every order whose `customer_id` is null, and it pages every night on the 14 guest orders of 2019. What is the fix?",
+    "hint": "Data Security, Governance and Privacy, lesson 9; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "Set the rule's tolerance to 14, so that the guest orders pass while any further null still fails the run and pages whoever happens to be on call that night.",
+        "correct": false,
+        "why": "Lesson 10's purge removes the 2019 orders, after which 14 real defects pass unseen. A rule that tolerates a few will tolerate a few more."
+      },
+      {
+        "text": "Delete the 14 guest orders, so that the table has no nulls left to count.",
+        "correct": false,
+        "why": "The owner decided they are not a defect, and nobody deletes data to make a check pass."
+      },
+      {
+        "text": "Silence the alert, with a reason and an end.",
+        "correct": false,
+        "why": "A silence is for planned work and it ends. The rule pages again the night after."
+      },
+      {
+        "text": "Count only the nulls since 2020, which writes the owner's decision into the rule, so that it fails only on something somebody has to act on.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8dr1cy7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To feed Kafka, Ipê captures `sales.customers` with Debezium and sets `REPLICA IDENTITY FULL`, so that each update event carries the old row. Lesson 10 built `gov.audit_log` to record which columns changed and never their values. What does the topic now do that the trail was designed to avoid?",
+    "hint": "Data Security, Governance and Privacy, lesson 10; Streaming and Event Processing, lesson 14.",
+    "choices": [
+      {
+        "text": "Nothing new: like the trail's `row_key`, a change event names the primary key and leaves the other columns out.",
+        "correct": false,
+        "why": "That is the default replica identity, and only for a delete. `FULL` writes the whole old row on every update."
+      },
+      {
+        "text": "It breaks the trail's append-only triggers, since Debezium reads the WAL through a replication slot.",
+        "correct": false,
+        "why": "Reading the WAL changes no row, so the triggers have nothing to refuse."
+      },
+      {
+        "text": "It costs extra WAL on every update and delete, a matter of disk rather than of privacy.",
+        "correct": false,
+        "why": "The cost is real, and the old values it carries are a second copy of personal data for as long as the topic keeps them."
+      },
+      {
+        "text": "Customer 3's erasure itself publishes the e-mail it removed, in `before`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygvz4pej",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The nightly purge for 1 July 2026 has run and been logged, and the job is retried by mistake for the same date. What happens?",
+    "hint": "Data Security, Governance and Privacy, lesson 10.",
+    "choices": [
+      {
+        "text": "It deletes the same rows again and doubles the monthly totals in `gov.sales_monthly`.",
+        "correct": false,
+        "why": "On the same date there is nothing left to find, so a second run deletes nothing and adds nothing."
+      },
+      {
+        "text": "An append-only trigger on `gov.purge_log` refuses the second insert.",
+        "correct": false,
+        "why": "The log has no such trigger. Its primary key is what refuses a second line for the date."
+      },
+      {
+        "text": "The insert into `gov.purge_log` fails on its key, `(run_on, rel)`, so the retry fails loudly instead of writing a second line; it would have deleted nothing anyway.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It raises an error because it finds nothing to delete.",
+        "correct": false,
+        "why": "Zero rows is an ordinary night, and the function returns counts of zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6mevkj3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The job that writes Rota Certa's feed moves to a container whose session time zone is UTC. It still reads `share.delivery_feed`, whose filter is `o.ordered_at::date = DATE '2026-06-30'`. What changes?",
+    "hint": "Data Security, Governance and Privacy, lesson 11; Analytics, BI and Reverse ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing: `ordered_at` is a `timestamptz`, which stores the moment with its zone, so the cast gives the same date in any session.",
+        "correct": false,
+        "why": "Storing the moment is what makes the choice possible. The cast to a date uses the session's zone, and São Paulo is three hours behind UTC."
+      },
+      {
+        "text": "`check_contract.py` exits 1, because `ordered_on` is served as a different type when the session runs in UTC rather than São Paulo.",
+        "correct": false,
+        "why": "The type is `date` in either zone. Columns and types still match, so the checker passes while the rows change."
+      },
+      {
+        "text": "Orders after 21:00 São Paulo time move a day and the checker still passes; the contract has to say whose day it is.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only the time the feed is ready moves, to 03:00.",
+        "correct": false,
+        "why": "The rows change: the day the filter selects starts and ends three hours earlier."
       }
     ]
   },
@@ -1924,14 +3077,14 @@
     "hint": "Analytics, BI and Reverse ETL, lesson 2; Observability and Operations, lesson 7.",
     "choices": [
       {
-        "text": "Recompute every earlier month under the new rule, so the line has no step left to explain.",
-        "correct": false,
-        "why": "That is a silent edit. Last year's board report was computed under the old version, and somebody will compare the two."
-      },
-      {
         "text": "An annotation on 1 September that names the new version of the definition.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "Recompute every earlier month under the new rule, so the line has no step left to explain.",
+        "correct": false,
+        "why": "That is a silent edit. Last year's board report was computed under the old version, and somebody will compare the two."
       },
       {
         "text": "An alert on the drop, so the owner of net revenue hears about it the next time it happens.",
@@ -1998,6 +3151,11 @@
     "hint": "Analytics, BI and Reverse ETL, lesson 5.",
     "choices": [
       {
+        "text": "Tableau took `order_id` for a measure from its type and summed the ids.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "The extract is stale and holds every order since 2025 in each month.",
         "correct": false,
         "why": "A stale extract shows old numbers, each order still counted once. It cannot turn hundreds into millions."
@@ -2011,11 +3169,6 @@
         "text": "The decimal separator of the locale turned `32.90` into `3290`.",
         "correct": false,
         "why": "That is the money columns arriving a hundred times too large in Power Query. An id has no decimal point to misread."
-      },
-      {
-        "text": "Tableau took `order_id` for a measure from its type and summed the ids.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -2033,9 +3186,9 @@
         "why": "Right."
       },
       {
-        "text": "Split the card into seven cards, one per weekday, each over a smaller range.",
-        "correct": false,
-        "why": "Every card runs its own query each time the page opens. Fewer cards is the first remedy, not more."
+        "text": "Answer it from a small table of purchases per day, rebuilt after each load, with the \"data until\" line saying when.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "Write the \"last seven days\" test as a Python function, so the date logic lives in one place.",
@@ -2048,9 +3201,9 @@
         "why": "Right."
       },
       {
-        "text": "Answer it from a small table of purchases per day, rebuilt after each load, with the \"data until\" line saying when.",
-        "correct": true,
-        "why": "Right."
+        "text": "Split the card into seven cards, one per weekday, each over a smaller range.",
+        "correct": false,
+        "why": "Every card runs its own query each time the page opens. Fewer cards is the first remedy, not more."
       }
     ]
   },
@@ -2062,11 +3215,6 @@
     "prompt": "A monitoring page has one tile, \"Lapse model accuracy: 86.0%\", for a model whose test members lapse 16.9% of the time. A number on a page needs a comparison beside it. Which one belongs on this tile?",
     "hint": "Analytics, BI and Reverse ETL, lesson 6; Machine Learning and MLOps, lesson 4.",
     "choices": [
-      {
-        "text": "83.1%, the accuracy of a model that says nobody lapses.",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "Last month's accuracy, so the reader sees whether it is moving.",
         "correct": false,
@@ -2081,6 +3229,11 @@
         "text": "The same month a year earlier, which takes the seasons out.",
         "correct": false,
         "why": "Seasons move sales. On a rare outcome, accuracy measures mostly how common the common outcome is, in any month."
+      },
+      {
+        "text": "83.1%, the accuracy of a model that says nobody lapses.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2098,14 +3251,14 @@
         "why": "That measures a cause, on the platform's side. A job can exit cleanly having loaded nothing, which is why \"data until\" comes from the data."
       },
       {
-        "text": "The average number of minutes between the end of a day and the end of its load, over the month.",
-        "correct": false,
-        "why": "An average hides the bad mornings. An indicator is the share of events that went well against a threshold."
-      },
-      {
         "text": "The share of Mondays on which the layer's `max(order_date)` was the day before by 07:00.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "The average number of minutes between the end of a day and the end of its load, over the month.",
+        "correct": false,
+        "why": "An average hides the bad mornings. An indicator is the share of events that went well against a threshold."
       },
       {
         "text": "The share of mornings on which the page's title showed that day's date.",
@@ -2174,14 +3327,14 @@
         "why": "`send` retries a `429` only. A `400` fails the same way on every run until somebody changes the picklist or the view."
       },
       {
-        "text": "To the CRM vendor's support, since its API refused valid data.",
-        "correct": false,
-        "why": "The CRM did what its picklist says. The model and the destination disagree, and settling that is a decision inside the company."
-      },
-      {
         "text": "To a ticket queue, for somebody to fix the picklist or the view in working hours.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "To the CRM vendor's support, since its API refused valid data.",
+        "correct": false,
+        "why": "The CRM did what its picklist says. The model and the destination disagree, and settling that is a decision inside the company."
       }
     ]
   },
@@ -2193,11 +3346,6 @@
     "prompt": "A colleague tidies `sync.sh`'s first query, writing `WHERE s.payload <> row_to_json(m)::jsonb` in place of `IS DISTINCT FROM`. What changes?",
     "hint": "Analytics, BI and Reverse ETL, lesson 7.",
     "choices": [
-      {
-        "text": "A customer who was never sent before is never sent at all.",
-        "correct": true,
-        "why": "Right."
-      },
       {
         "text": "Nothing: for rows like these the two give the same answer.",
         "correct": false,
@@ -2212,6 +3360,11 @@
         "text": "Contacts that did not change are sent again on every run.",
         "correct": false,
         "why": "For a contact sent before, `<>` is false when the payloads match, just as `IS DISTINCT FROM` is."
+      },
+      {
+        "text": "A customer who was never sent before is never sent at all.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2229,6 +3382,11 @@
         "why": "Consent is recorded per purpose. Withdrawing the marketing one stops marketing; the orders and the CRM record serve other purposes, on other bases."
       },
       {
+        "text": "The audience filters on current consent for that purpose, so the customer leaves the model and the next run takes them off the list.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "The old e-mails to this customer are recorded as sent without a legal basis.",
         "correct": false,
         "why": "Withdrawal stops future processing and does not undo the past. What was sent before it was sent lawfully."
@@ -2237,11 +3395,6 @@
         "text": "Nothing changes until marketing rebuilds the list for the next campaign.",
         "correct": false,
         "why": "An audience is a definition, not a list. A customer who leaves the model leaves the destination on the next run, with nobody rebuilding anything."
-      },
-      {
-        "text": "The audience filters on current consent for that purpose, so the customer leaves the model and the next run takes them off the list.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -2254,19 +3407,14 @@
     "hint": "Analytics, BI and Reverse ETL, lesson 8; Data Security, Governance and Privacy, lesson 7.",
     "choices": [
       {
-        "text": "An analyst's CSV extract that holds the customer belongs in a complete answer.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "The erasure needs its own record of which systems hold the customer, and a check that each one no longer does.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Every backup holding the customer has to be restored and edited at once.",
         "correct": false,
         "why": "The defensible practice is to let backups expire on schedule, keep them out of use, and apply the deletion again if one is ever restored."
+      },
+      {
+        "text": "An analyst's CSV extract that holds the customer belongs in a complete answer.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "The sync never deletes the contact from the CRM, because a full resync does no diffing.",
@@ -2277,6 +3425,11 @@
         "text": "Setting the delete behaviour to *Delete destination record* makes the resync remove the contact.",
         "correct": false,
         "why": "A full resync ignores the clear and delete settings: with no previous run to compare, it sees no row leave."
+      },
+      {
+        "text": "The erasure needs its own record of which systems hold the customer, and a check that each one no longer does.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2317,14 +3470,14 @@
         "why": "That is the mistake the empty cells fix: those customers had no time, not no orders."
       },
       {
-        "text": "The `m3` average covers only the cohorts up to February 2026, while `m1` includes March and April, so the two columns average different generations.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "The November cohort should come out first, since Black Friday makes it an outlier.",
         "correct": false,
         "why": "Dropping the cohort that differs hides the finding. The problem is which cohorts each column holds."
+      },
+      {
+        "text": "The `m3` average covers only the cohorts up to February 2026, while `m1` includes March and April, so the two columns average different generations.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2375,11 +3528,6 @@
         "why": "It removes one confounder and leaves every other way the customers who got coupons differ from those who did not. There is always one more column."
       },
       {
-        "text": "Give the coupon to home customers picked at random before the offer, and compare them with the rest.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Compute the correlation over two full years of orders, since more rows make it believable.",
         "correct": false,
         "why": "More rows of the same mix carry the same confounder, and a correlation says nothing about which way the cause runs."
@@ -2388,6 +3536,11 @@
         "text": "Split by each column of `customers` and keep the result if it survives every split.",
         "correct": false,
         "why": "That is the weak defence the lesson names. It only rules out the columns somebody thought to try."
+      },
+      {
+        "text": "Give the coupon to home customers picked at random before the offer, and compare them with the rest.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2429,6 +3582,11 @@
     "hint": "Machine Learning and MLOps, lesson 2.",
     "choices": [
       {
+        "text": "Whether group 6 is still the crime readers, because a retrained k-means numbers its groups afresh.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "Whether crime sales fell in April, since the group follows what its members buy.",
         "correct": false,
         "why": "The count can halve with no change in sales, because the number may now name a different group."
@@ -2437,11 +3595,6 @@
         "text": "Whether the silhouette fell, since a weaker grouping sheds members from every group.",
         "correct": false,
         "why": "The silhouette scores how well members separate; it does not hold a group's number still between runs."
-      },
-      {
-        "text": "Whether group 6 is still the crime readers, because a retrained k-means numbers its groups afresh.",
-        "correct": true,
-        "why": "Right."
       },
       {
         "text": "Nothing, because `random_state=0` gives the crime readers the same number on every run.",
@@ -2469,11 +3622,6 @@
         "why": "Right."
       },
       {
-        "text": "The next title the website shows a member who has just bought a book.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "The lapse probabilities behind marketing's monthly voucher list.",
         "correct": false,
         "why": "The vouchers go out once a month, so a score from last night serves as well as one from this second."
@@ -2482,6 +3630,11 @@
         "text": "Retraining the lapse model on last year's members.",
         "correct": false,
         "why": "That input is finite and fixed, which is a batch's case, and its labels take 90 days to close anyway."
+      },
+      {
+        "text": "The next title the website shows a member who has just bought a book.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2499,14 +3652,14 @@
         "why": "Lapsed is the absence of a purchase, so an open window inflates it. A return is an event, and an open window hides it."
       },
       {
-        "text": "That returns are rarer than they are, because a return yet to happen is labelled kept.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "Nothing harmful, since the newest month is a small share of all the orders.",
         "correct": false,
         "why": "The open window is every order of the last 30 days, and those are the rows a nightly retrain treats as the most relevant."
+      },
+      {
+        "text": "That returns are rarer than they are, because a return yet to happen is labelled kept.",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "Nothing harmful, as long as the test rows come from the same table.",
@@ -2535,14 +3688,14 @@
     "hint": "Machine Learning and MLOps, lesson 4; Analytics, BI and Reverse ETL, lesson 2.",
     "choices": [
       {
-        "text": "ROC AUC, because a model can only improve its top 300 by ordering everybody better.",
-        "correct": false,
-        "why": "AUC and the top 300 both judge the order. A model can keep the order and get every probability wrong."
-      },
-      {
         "text": "Calibration: what the model said against the share that lapsed.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "ROC AUC, because a model can only improve its top 300 by ordering everybody better.",
+        "correct": false,
+        "why": "AUC and the top 300 both judge the order. A model can keep the order and get every probability wrong."
       },
       {
         "text": "Accuracy, because it counts every member and not only three hundred.",
@@ -2570,14 +3723,14 @@
         "why": "One source, two computations. Which clock each one reads is part of what the feature means."
       },
       {
-        "text": "A safer feature, because a till's clock can drift and the consumer's clock is the platform's own.",
-        "correct": false,
-        "why": "An answer about the world takes the time of the sale. A drifting till clock is synchronised and bounded, not swapped for the reader's."
-      },
-      {
         "text": "Training-serving skew: serving says when the pipeline heard of a sale, training when it happened.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "A safer feature, because a till's clock can drift and the consumer's clock is the platform's own.",
+        "correct": false,
+        "why": "An answer about the world takes the time of the sale. A drifting till clock is synchronised and bounded, not swapped for the reader's."
       },
       {
         "text": "A stale value at worst, which the store's seven-day time to live already drops.",
@@ -2605,14 +3758,14 @@
         "why": "Delta reads the version it is asked for or fails; it does not hand back the current table instead."
       },
       {
-        "text": "It works, provided each night's write carried `txnAppId` and `txnVersion`.",
-        "correct": false,
-        "why": "Those make a retried write add nothing. They do not keep old files from a vacuum."
-      },
-      {
         "text": "It fails: the files that version read were vacuumed long ago.",
         "correct": true,
         "why": "Right."
+      },
+      {
+        "text": "It works, provided each night's write carried `txnAppId` and `txnVersion`.",
+        "correct": false,
+        "why": "Those make a retried write add nothing. They do not keep old files from a vacuum."
       }
     ]
   },
@@ -2671,6 +3824,11 @@
     "hint": "Machine Learning and MLOps, lesson 8; Automated Testing and CI/CD, lesson 11.",
     "choices": [
       {
+        "text": "It is promoted: every answer is a 200, and the criteria count only errors.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "It is stopped at 25%, as the shipping release that could not quote Alagoas was.",
         "correct": false,
         "why": "That release failed requests. Version 2 fails none, so the error rule never fires."
@@ -2679,11 +3837,6 @@
         "text": "It is stopped at 5%, the first step, where the canary has too few answers to judge.",
         "correct": false,
         "why": "Too few answers makes the script carry on to the next step, not stop."
-      },
-      {
-        "text": "It is promoted: every answer is a 200, and the criteria count only errors.",
-        "correct": true,
-        "why": "Right."
       },
       {
         "text": "It cannot run: a model service has no error rate to compare.",
@@ -2706,6 +3859,11 @@
         "why": "The score can be no fresher than its features, which change nightly, and a service adds an outage the table never had."
       },
       {
+        "text": "A nightly sync of `lapse_scores`, keyed by member id, sending only the rows that changed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
         "text": "A sync keyed by the member's e-mail address, which support already searches by.",
         "correct": false,
         "why": "People change and share addresses. The shop's own id is assigned once and never changes."
@@ -2714,11 +3872,6 @@
         "text": "A sync that sends every member's row on every run, so that the help desk is never out of date.",
         "correct": false,
         "why": "Resending everything is slower, spends requests the API limits, and overwrites whatever somebody typed in those fields."
-      },
-      {
-        "text": "A nightly sync of `lapse_scores`, keyed by member id, sending only the rows that changed.",
-        "correct": true,
-        "why": "Right."
       }
     ]
   },
@@ -2759,11 +3912,6 @@
     "hint": "Machine Learning and MLOps, lesson 9.",
     "choices": [
       {
-        "text": "More worker processes, each with its own model, paid for in memory.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "More threads inside the one process, which costs nothing extra in memory.",
         "correct": false,
         "why": "Python runs one thread of Python code at a time, so the predictions still take turns, and switching costs something too."
@@ -2777,6 +3925,11 @@
         "text": "Raising the objective to 400 ms, so that the number passes.",
         "correct": false,
         "why": "That moves the promise and leaves the wait where it was."
+      },
+      {
+        "text": "More worker processes, each with its own model, paid for in memory.",
+        "correct": true,
+        "why": "Right."
       }
     ]
   },
@@ -2819,17 +3972,17 @@
     "hint": "Machine Learning and MLOps, lesson 10.",
     "choices": [
       {
-        "text": "Free postage moves members from the shops to the website.",
-        "correct": false,
-        "why": "That changes `online_share`, an input, and its PSI reached 0.602."
-      },
-      {
         "text": "A load multiplies every `spend_180d` by a hundred.",
         "correct": false,
         "why": "The input's median jumps a hundredfold that night, and the watch raised an alarm."
       },
       {
-        "text": "A price rise makes members with the same visits and spend come back less often than before.",
+        "text": "Free postage moves members from the shops to the website.",
+        "correct": false,
+        "why": "That changes `online_share`, an input, and its PSI reached 0.602."
+      },
+      {
+        "text": "A rival's book subscription draws away young members whose histories look as they always did.",
         "correct": true,
         "why": "Right."
       },
@@ -2839,7 +3992,7 @@
         "why": "A value the training data never had is an input; `channel` measured 0.420 on the first night."
       },
       {
-        "text": "A rival's book subscription draws away young members whose histories look as they always did.",
+        "text": "A price rise makes members with the same visits and spend come back less often than before.",
         "correct": true,
         "why": "Right."
       }
