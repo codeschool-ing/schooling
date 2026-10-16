@@ -25,7 +25,8 @@
 #   run CMD              print the prompt and CMD, run it, print what it printed
 #   say TEXT             print a line into the block without running anything
 #   at DIR               the directory the prompt shows (default ~/aws)
-#   sh_fences FILE N     the Nth ```sh fence of FILE, counted from 1
+#   fences LANG FILE N   the Nth ```LANG fence of FILE, counted from 1
+#   sh_fences FILE N     the same for ```sh
 #   example FILE NAME    the code parts of the schooling-example whose file is NAME
 
 AWS_COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -72,16 +73,17 @@ at() { PROMPT_DIR=$1; }
 say() { printf '%s\n' "$*"; }
 run() { printf 'ana@laptop:%s$ %s\n' "$PROMPT_DIR" "$*"; bash -c "$*" 2>&1 || true; }
 
-sh_fences() {
-  python3 - "$1" "$2" <<'PY'
+fences() { # LANG FILE N: the Nth fence labelled LANG in FILE, counted from 1
+  python3 - "$1" "$2" "$3" <<'PY'
 import re, sys
-fences = re.findall(r'^```sh\n(.*?)^```$', open(sys.argv[1]).read(), re.S | re.M)
-n = int(sys.argv[2])
-if not 1 <= n <= len(fences):
-    sys.exit(f'{sys.argv[1]}: no sh fence number {n} (there are {len(fences)})')
-sys.stdout.write(fences[n - 1])
+lang, path, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
+found = re.findall(r'^```' + re.escape(lang) + r'\n(.*?)^```$', open(path).read(), re.S | re.M)
+if not 1 <= n <= len(found):
+    sys.exit(f'{path}: no {lang} fence number {n} (there are {len(found)})')
+sys.stdout.write(found[n - 1])
 PY
 }
+sh_fences() { fences sh "$1" "$2"; }
 
 example() {
   python3 - "$1" "$2" <<'PY'

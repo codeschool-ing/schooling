@@ -2,6 +2,7 @@
 """Every diagram in the aws-foundations course, drawn in both languages.
 
     python3 figures.py            # rewrite every figure in the lessons
+    python3 figures.py lessons/X  # only that lesson's prose
     python3 figures.py --list     # the names, and the lesson each lives in
 
 A figure lives in a lesson's prose as an ordinary `schooling-figure` fence. Its
@@ -227,8 +228,13 @@ def main():
         for name in sorted(PICTURES):
             print(f' -  images/{name}.svg')
         return
+    # `python3 figures.py lessons/<id> ...` rewrites only those lessons, so two
+    # people drawing in two lessons at once never write each other's files.
+    only = [os.path.abspath(a) for a in sys.argv[1:] if not a.startswith('-')]
     changed = 0
     for path in sorted(glob.glob(os.path.join(HERE, 'lessons', '*', '*.md'))):
+        if only and os.path.dirname(path) not in only:
+            continue
         changed += apply(path)
     os.makedirs(os.path.join(HERE, 'images'), exist_ok=True)
     for name, f in PICTURES.items():
