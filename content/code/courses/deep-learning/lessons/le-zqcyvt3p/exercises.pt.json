@@ -1,0 +1,396 @@
+{
+  "ex-rn1qzc1m": {
+    "prompt": "Um dataset de um milhão de fotos guarda só os nomes dos arquivos no `__init__`, e o seu `__getitem__` abre e decodifica um arquivo. Quando uma foto é decodificada?",
+    "hint": "Qual dos dois métodos o carregador chama por item?",
+    "choices": [
+      {
+        "text": "Todas, quando o objeto do dataset é criado",
+        "why": "O `__init__` só guardou nomes; nada nele abre um arquivo."
+      },
+      {
+        "text": "Todas, quando o `DataLoader` é montado",
+        "why": "Montar um carregador não lê nenhum item; ele só registra como pedi-los."
+      },
+      {
+        "text": "Cada uma quando o seu índice é pedido, a cada leitura",
+        "why": "Certo. O `__getitem__` roda por item, então o trabalho acontece uma imagem por vez, e de novo a cada época."
+      },
+      {
+        "text": "Uma vez por época, o conjunto inteiro no começo dela",
+        "why": "Nada lê o conjunto inteiro adiantado; os itens são pedidos conforme os lotes são montados."
+      }
+    ]
+  },
+  "ex-f2ehnkyz": {
+    "prompt": "Escreva os dois métodos que um dataset do PyTorch no estilo mapa define: ___ para o número de itens, e ___ para o item número i.",
+    "hint": "Os dois têm dois sublinhados de cada lado.",
+    "blanks": [
+      {
+        "accept": [
+          "__len__",
+          "len"
+        ]
+      },
+      {
+        "accept": [
+          "__getitem__",
+          "getitem"
+        ]
+      }
+    ]
+  },
+  "ex-2t120pm2": {
+    "prompt": "Um conjunto de treino tem 1.000 imagens, e o carregador usa `batch_size=64` com `drop_last=False`. Quantos lotes uma época tem?",
+    "hint": "Quinze lotes cheios guardam 960 imagens.",
+    "unit": "lotes"
+  },
+  "ex-65gx2bm4": {
+    "prompt": "Com `shuffle=True` e `drop_last=True`, 21 das 1.077 imagens de treino ficam fora de cada época. Quais?",
+    "hint": "Quando a ordem é decidida, e com que frequência?",
+    "choices": [
+      {
+        "text": "As 21 últimas do dataset, pelo índice",
+        "why": "Isso valeria com `shuffle=False`; embaralhado, o último lote tem o que a permutação pôs por último."
+      },
+      {
+        "text": "Outras 21 a cada época, escolhidas pelo embaralhamento dela",
+        "why": "Certo. Cada época sorteia uma ordem nova, e o lote curto do fim é o que caiu lá, então ao longo de muitas épocas toda imagem é usada."
+      },
+      {
+        "text": "As mesmas 21 em toda época, escolhidas no primeiro embaralhamento",
+        "why": "O `batches.py` mostrou a época 2 começando diferente da época 1: o embaralhamento é refeito a cada vez."
+      },
+      {
+        "text": "Nenhuma, porque elas passam para o começo da época seguinte",
+        "why": "O carregador não guarda nada de uma época para a outra; as sobras são descartadas."
+      }
+    ]
+  },
+  "ex-71r3teg4": {
+    "prompt": "Um dataset de fotos devolve imagens de tamanhos diferentes, e o carregador falha dentro do `default_collate` dizendo que os tensores precisam ter o mesmo tamanho. O que resolve e mantém lotes de 32?",
+    "hint": "Qual passo põe 32 itens num tensor só?",
+    "choices": [
+      {
+        "text": "`drop_last=True`",
+        "why": "Ele remove o lote curto do fim; os lotes cheios continuam misturando tamanhos."
+      },
+      {
+        "text": "`shuffle=False`, para fotos parecidas serem lidas juntas",
+        "why": "A ordem não torna dois tamanhos empilháveis; vizinhas nos arquivos podem diferir do mesmo jeito."
+      },
+      {
+        "text": "`num_workers=0`, para um processo só montar todo lote",
+        "why": "Os workers chamam o mesmo `default_collate`; o erro é o mesmo no processo principal."
+      },
+      {
+        "text": "Uma `collate_fn` que preenche ou corta cada lote para um tamanho",
+        "why": "Certo. A colagem é o passo que empilha os itens, então uma função de colagem que os deixa de um tamanho antes é o lugar da correção; uma transformação que redimensiona toda imagem é o outro lugar."
+      }
+    ]
+  },
+  "ex-4ma3rb0w": {
+    "prompt": "O `ltrain.py` usa as sementes, a rede, a taxa e o tamanho de lote da aula 9, e mesmo assim termina com acurácia de validação de 0,956, onde a aula 9 terminou com 0,950. Por quê?",
+    "hint": "O que decide quais imagens vão para cada lote?",
+    "choices": [
+      {
+        "text": "O carregador converte as imagens para `float64`",
+        "why": "A colagem mantém o dtype; os lotes são `float32` como os tensores do `tdigits.py`."
+      },
+      {
+        "text": "Os embaralhamentos diferem, e os lotes também",
+        "why": "Certo. O carregador tira números do gerador do seu próprio jeito, então a mesma semente dá outros lotes, e a execução cai perto da aula 9, e não em cima dela."
+      },
+      {
+        "text": "O carregador descarta o último lote curto, a não ser que mandem o contrário",
+        "why": "O `drop_last` é `False` por padrão, e o `batches.py` contou 34 lotes, com um último de 21."
+      },
+      {
+        "text": "O `loop.evaluate` mede diferente quando os dados passaram por um carregador",
+        "why": "O conjunto de validação nem passa pelo carregador; são os mesmos tensores da aula 9."
+      }
+    ]
+  },
+  "ex-yjh1b7zw": {
+    "prompt": "`warped[0]` lido duas vezes deu duas imagens diferentes. O que isso significa para um treino de 30 épocas?",
+    "hint": "Quando a transformação roda?",
+    "choices": [
+      {
+        "text": "Uma variante nova de cada dígito em cada época",
+        "why": "Certo. A transformação roda a cada leitura, então cada época sorteia campos novos, que é para isso que serve o aumento de dados."
+      },
+      {
+        "text": "Os rótulos mudam com a imagem, então precisam ser recalculados",
+        "why": "O rótulo vem de `self.y[i]` sem mudança; só a imagem passa pela transformação."
+      },
+      {
+        "text": "O dataset cresce para 30 cópias guardadas de cada imagem",
+        "why": "Nada é guardado; cada variante só existe até o seu lote ser usado."
+      },
+      {
+        "text": "A acurácia de validação só pode ser comparada entre execuções com campos iguais",
+        "why": "O conjunto de validação é lido sem a transformação, então as imagens dele são as mesmas em toda execução."
+      }
+    ]
+  },
+  "ex-3yxyzcqd": {
+    "prompt": "Para economizar tempo, alguém roda o `Warp` uma vez sobre o conjunto de treino no `__init__` e guarda os 1.077 resultados. O que o treino perde?",
+    "hint": "Quantas versões diferentes de um dígito cada abordagem mostra à rede?",
+    "choices": [
+      {
+        "text": "Nada, já que a rede vê dígitos entortados nos dois casos",
+        "why": "Ela vê um entortamento fixo de cada dígito, em toda época, em vez de um novo a cada vez."
+      },
+      {
+        "text": "Os rótulos, que o `__init__` não alcança",
+        "why": "O `__init__` já guarda os rótulos; a transformação não mexe neles."
+      },
+      {
+        "text": "A variedade: toda época repete as mesmas imagens",
+        "why": "Certo. Calcular antes transforma uma transformação aleatória numa fixa, que é mais barata e já não aumenta os dados; só uma parte sem aleatoriedade, como um redimensionamento fixo, pode ser guardada sem perda."
+      },
+      {
+        "text": "O ruído, que o `torch.randn` se recusa a sortear no `__init__`",
+        "why": "O `torch.randn` funciona em qualquer lugar; o ruído seria sorteado uma vez e congelado, como o resto."
+      }
+    ]
+  },
+  "ex-5kxpk7p3": {
+    "prompt": "O `workers.py` não tem modelo nenhum. O que o tempo por época dele diz sobre um treino com o mesmo carregador?",
+    "hint": "Uma época de treino pode levar menos tempo do que ler os seus lotes?",
+    "choices": [
+      {
+        "text": "Nada, porque um modelo muda a velocidade com que o carregador lê os itens",
+        "why": "O modelo divide os processadores e pode atrasar o carregador, mas não pode tornar a leitura mais rápida."
+      },
+      {
+        "text": "O mínimo que a época de treino pode durar, custe o modelo o que custar",
+        "why": "Certo. Todo lote precisa ser montado antes de ser usado, então a época do próprio carregador é um piso que um modelo mais rápido ou uma placa de vídeo não conseguem furar."
+      },
+      {
+        "text": "Quanto o passo para a frente do modelo leva por lote",
+        "why": "Não há passo para a frente nele; cada lote é recebido e jogado fora."
+      },
+      {
+        "text": "O tempo que o treino leva, já que a parte do modelo nele é desprezível",
+        "why": "Isso só vale quando o cálculo é pequeno; o `waiting.py` mostra as duas partes medidas separadas."
+      }
+    ]
+  },
+  "ex-n3dmvdy4": {
+    "prompt": "Quatro transformações somam ruído aleatório e rodam num carregador com quatro workers. Qual dá o mesmo ruído em todo worker?",
+    "hint": "O PyTorch semeia alguns geradores em cada worker quando ele começa. Qual gerador foi criado antes de os workers existirem?",
+    "choices": [
+      {
+        "text": "Uma que chama `torch.randn` a cada leitura",
+        "why": "O gerador do torch de cada worker é semeado diferente, e é por isso que o `Warp` não precisou de conserto."
+      },
+      {
+        "text": "Uma que chama o `random.gauss` do Python",
+        "why": "O PyTorch também semeia o módulo `random` do Python em cada worker."
+      },
+      {
+        "text": "Uma que chama o `np.random.normal` global a cada leitura",
+        "why": "O gerador global do NumPy é semeado por worker pelo PyTorch; só um objeto gerador seu é copiado sem mudança."
+      },
+      {
+        "text": "Uma que sorteia de um `np.random.default_rng(0)` guardado pelo `__init__`",
+        "why": "Certo. Esse objeto gerador é copiado para cada worker do jeito que estava, então todos sorteiam os mesmos números, como o `twins.py` mostrou; uma `worker_init_fn` precisa substituí-lo."
+      }
+    ]
+  },
+  "ex-px5nc7en": {
+    "prompt": "Ligue cada argumento do `DataLoader` ao que ele faz.",
+    "hint": "Uma descrição não pertence a nenhum argumento daqui.",
+    "pairs": [
+      {
+        "left": "`num_workers`",
+        "right": "quantos processos extras montam lotes"
+      },
+      {
+        "left": "`persistent_workers`",
+        "right": "mantém esses processos vivos entre épocas"
+      },
+      {
+        "left": "`pin_memory`",
+        "right": "põe os lotes em memória fixada para cópias a uma placa"
+      },
+      {
+        "left": "`drop_last`",
+        "right": "descarta o lote curto do fim"
+      }
+    ],
+    "right_distractors": [
+      "quantas imagens vão num lote"
+    ]
+  },
+  "ex-1jmk1r47": {
+    "prompt": "Uma transformação custa 2 ms por imagem, os lotes têm 64 imagens, não há workers, e uma placa de vídeo faz cada passo de treino em 5 ms. Em que porcentagem da época a placa fica parada?",
+    "hint": "Montar um lote leva 64 × 2 ms, e nada mais acontece enquanto isso.",
+    "unit": "%"
+  },
+  "ex-e247qtfb": {
+    "prompt": "O `nvidia-smi` mostra a placa com 35% de utilização durante o treino. Qual a primeira coisa a medir?",
+    "hint": "Antes de mudar qualquer coisa, descubra o que são os outros 65%.",
+    "choices": [
+      {
+        "text": "Tempo de espera contra tempo de cálculo, por lote",
+        "why": "Certo. Utilização baixa diz que a placa fica parada muitas vezes, não por quê; dividir o tempo como o `waiting.py` faz diz se a causa é o carregador."
+      },
+      {
+        "text": "Se um modelo maior deixaria a placa mais ocupada",
+        "why": "Um modelo maior aumenta a porcentagem por deixar cada passo mais longo, e o treino fica mais lento, não mais rápido."
+      },
+      {
+        "text": "A temperatura da placa sob essa carga",
+        "why": "Uma placa quente atrasa o próprio cálculo; ela não fica parada dois terços do tempo."
+      },
+      {
+        "text": "O efeito da taxa de aprendizado na perda",
+        "why": "A taxa decide o que um passo faz com os pesos, não quanto tempo a placa espera por um."
+      }
+    ]
+  },
+  "ex-k1217btd": {
+    "prompt": "Dois workers baixaram a espera por lote nesta máquina. O mesmo carregador então alimenta uma placa que calcula 30 vezes mais rápido. O que acontece com a espera por lote?",
+    "hint": "Enquanto o passo rodava, os workers montavam o próximo lote. Quanto dura o passo agora?",
+    "choices": [
+      {
+        "text": "Continua igual, já que os workers não mudaram",
+        "why": "A espera depende de quanto da montagem acontece por trás do passo, e o passo ficou mais curto."
+      },
+      {
+        "text": "Cresce, já que um passo mais curto esconde menos da montagem",
+        "why": "Certo. Os workers precisam de mais ou menos o mesmo tempo para montar um lote; com menos cálculo para sobrepor, mais desse tempo aparece como espera."
+      },
+      {
+        "text": "Cai a zero, porque a placa copia os dados sozinha",
+        "why": "A placa copia lotes que já existem; montá-los continua sendo trabalho do processador."
+      },
+      {
+        "text": "Cai 30 vezes, do mesmo jeito que o cálculo",
+        "why": "Cálculo e carregamento rodam em hardware diferente; acelerar um não faz nada pelo outro."
+      }
+    ]
+  },
+  "ex-c8vnqyxg": {
+    "prompt": "Num laço de treino, `xb.to(device)` fica numa linha sozinho, sem atribuição. O que acontece com `xb` numa máquina com placa?",
+    "hint": "Compare o tensor e o módulo no `todevice.py`.",
+    "choices": [
+      {
+        "text": "Vai para a placa, como um módulo vai",
+        "why": "Um módulo muda a si mesmo; o `.to` de um tensor devolve um tensor novo e deixa o antigo onde estava."
+      },
+      {
+        "text": "Fica onde estava; a cópia se perde",
+        "why": "Certo. A linha seguinte então entrega um tensor do processador a um modelo na placa, e o PyTorch para com um erro de dispositivo."
+      },
+      {
+        "text": "É movido depois, quando o modelo o lê pela primeira vez",
+        "why": "O PyTorch não move nada sozinho; uma diferença de dispositivo é um erro, não uma cópia silenciosa."
+      },
+      {
+        "text": "É movido e fixado, já que o carregador o fixou",
+        "why": "Fixar prepara uma cópia; não faz um `.to` sem atribuição ter efeito."
+      }
+    ]
+  },
+  "ex-ygczpkrh": {
+    "prompt": "O que `pin_memory=True` fez na máquina do laboratório, que não tem placa de vídeo?",
+    "hint": "Olhe a linha que o programa de uma linha imprimiu depois do aviso.",
+    "choices": [
+      {
+        "text": "Deixou cada lote mais rápido de ler da memória",
+        "why": "Memória fixada acelera cópias para uma placa, e aqui não há placa para onde copiar."
+      },
+      {
+        "text": "Parou o programa com um erro",
+        "why": "O programa seguiu e imprimiu a sua linha; a reclamação foi um aviso."
+      },
+      {
+        "text": "Fixou o lote na memória do processador para depois",
+        "why": "O `is_pinned()` respondeu `False`: nada foi fixado."
+      },
+      {
+        "text": "Nada, depois de um aviso",
+        "why": "Certo. Sem acelerador, o PyTorch avisa e pula a fixação, e é por isso que o `todevice.py` só a pede quando o dispositivo é `cuda`."
+      }
+    ]
+  },
+  "ex-mr4769x2": {
+    "prompt": "Um laço copia um lote com `xb.to('cuda', non_blocking=True)` e chama `model(xb)` na linha seguinte. O modelo pode ler um lote copiado pela metade?",
+    "hint": "Quem é que não espera: o processador ou a placa?",
+    "choices": [
+      {
+        "text": "Não: a placa roda a cópia e o modelo em ordem",
+        "why": "Certo. O processador segue sem esperar, mas a placa enfileira a cópia antes das operações do modelo, então elas leem um lote completo."
+      },
+      {
+        "text": "Sim, e a perda sai errada naquele lote",
+        "why": "O trabalho numa fila da placa roda na ordem em que foi enfileirado, então a cópia termina antes."
+      },
+      {
+        "text": "Não, porque o `non_blocking` é ignorado para entradas de modelo",
+        "why": "Ele não é ignorado; ele deixa o processador seguir enquanto a cópia roda."
+      },
+      {
+        "text": "Sim, a não ser que se chame `torch.cuda.synchronize()` antes",
+        "why": "Sincronizar faz o processador esperar a placa; a placa já mantinha a própria ordem."
+      }
+    ]
+  },
+  "ex-kjn39f1z": {
+    "prompt": "Uma época passa 80% do tempo esperando dados. Quais mudanças a encurtam? Escolha todas as que encurtam.",
+    "hint": "Em qual lado do tempo cada mudança age?",
+    "choices": [
+      {
+        "text": "Mais workers, enquanto houver processadores livres",
+        "why": "Certo: os lotes são montados em paralelo e por trás do passo."
+      },
+      {
+        "text": "Guardar a parte da transformação que não tem aleatoriedade",
+        "why": "Certo: trabalho feito uma vez não se repete a cada leitura."
+      },
+      {
+        "text": "Uma placa de vídeo duas vezes mais rápida",
+        "why": "Ela encurta os 20% de cálculo e deixa os 80% como estavam."
+      },
+      {
+        "text": "`non_blocking=True` numa máquina sem placa",
+        "why": "No processador não há cópia para sobrepor, então nada muda."
+      }
+    ]
+  },
+  "ex-dn5cbvt8": {
+    "prompt": "Ponha em ordem o que acontece com um lote de um carregador sem workers, até o passo para a frente.",
+    "hint": "Índices vêm antes dos itens.",
+    "items": [
+      "O amostrador pega 32 índices da ordem embaralhada",
+      "O `__getitem__` roda uma vez para cada índice, com a transformação",
+      "A função de colagem empilha os 32 itens num lote",
+      "O lote é movido para o dispositivo",
+      "O modelo roda o passo para a frente no lote"
+    ]
+  },
+  "ex-4zcpewb0": {
+    "prompt": "Num notebook com quatro processadores, um carregador com `num_workers=8` e um modelo treinado na CPU é mais lento do que com `num_workers=3`. O que explica?",
+    "hint": "O que mais precisa desses quatro processadores?",
+    "choices": [
+      {
+        "text": "Cada worker lê o dataset inteiro, então oito o leem oito vezes",
+        "why": "Os workers dividem os lotes entre si; cada item de uma época é lido uma vez."
+      },
+      {
+        "text": "Processos demais para quatro processadores",
+        "why": "Certo. Passado o número de processadores livres, workers extras só se revezam, e se revezam também com o cálculo do próprio modelo."
+      },
+      {
+        "text": "Um `num_workers` acima do tamanho do lote desperdiça workers",
+        "why": "Os workers montam lotes inteiros, um cada; o tamanho do lote não os limita."
+      },
+      {
+        "text": "Oito workers desligam o embaralhamento",
+        "why": "O embaralhamento é decidido pelo amostrador no processo principal, qualquer que seja o número de workers."
+      }
+    ]
+  }
+}

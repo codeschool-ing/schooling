@@ -1,7 +1,15 @@
 ---
-title: a-slow-transform
+title: A transform that costs real work
 version: 1
 ---
+
+Reading a digit costs nothing because it is already a row of numbers in memory. **A real image
+pipeline pays for every image it reads**: the file is decoded from JPEG or PNG, cropped and
+resized, flipped or rotated at random, turned into a tensor and normalised. All of it runs on the
+processor, once per image per epoch, before the network sees a single pixel.
+
+To feel that cost on the digits, this lesson gives them a transform that does comparable work.
+Save it as `~/dl/warp.py`:
 
 ```schooling-example
 {
@@ -19,6 +27,14 @@ version: 1
   ]
 }
 ```
+
+The bending is a version of the elastic distortion Patrice Simard and his colleagues used on handwritten digits
+in 2003: a smooth random field moves every pixel a little, and the strokes come out the way another
+person might have written the same digit. It is an augmentation, and lesson 7 said why
+augmentation helps; **here it is a workload**. Nothing in it sleeps or waits: every microsecond it
+takes is arithmetic.
+
+Now measure it. Save as `~/dl/slow.py`:
 
 ```schooling-example
 {
@@ -44,3 +60,21 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING slow
+```
+
+**Reading a plain image took 1.9 microseconds; reading a warped one took 758.8**, some four hundred
+times as long. Over the training set that is 0.002 seconds against 0.817 seconds for one pass, and
+it is paid again in every epoch, because the transform runs inside `__getitem__`. These are times
+on one machine at one moment, and yours will differ: what carries over is the ratio, a transform
+costing hundreds of times what the read itself costs.
+
+The picture shows why it has to run every time. The first panel is item 0 as it is stored, a 6 in
+8 by 8 blocks. The other two are the same item read twice, **and they are not the same image**:
+`read again, same image: False`. Every read draws a new field and new noise, so in every epoch the
+network sees a slightly different 6. Computing the warps once and storing them would make the
+reading free and turn the augmentation into 1,077 fixed images.
+
+The next two sections ask what this cost does to training, and what can be done about it.

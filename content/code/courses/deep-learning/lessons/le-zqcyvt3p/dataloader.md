@@ -1,7 +1,12 @@
 ---
-title: dataloader
+title: The DataLoader: batches, shuffling and collate
 version: 1
 ---
+
+A `DataLoader` takes a dataset and turns it into something a `for` loop can walk through, one batch
+at a time. **Everything `fit` did with `randperm` and slicing in lesson 9 is now its job**: picking
+the order, cutting it into batches, asking the dataset for each item, and stacking the items into
+tensors. Save this as `~/dl/batches.py`:
 
 ```schooling-example
 {
@@ -28,6 +33,42 @@ version: 1
 }
 ```
 
+```
+PENDING batches
+```
+
+## Batches, and the short one at the end
+
+**A batch is 32 items stacked along a new first dimension**: `(32, 64)` images and `(32,)` labels,
+the shapes `fit` used to cut by hand. One epoch is 34 batches, 33 of 32 images and a last one of
+21, which adds back up to 1,077. `drop_last=True` throws the short batch away and leaves 33.
+
+The short batch is harmless for the digits, since the loss is a mean over whatever the batch
+holds. `drop_last` matters where a layer needs a full batch, or where a batch of one would break
+something, as batch normalisation from lesson 8 does when it has a single example to average over.
+With `shuffle=True` the images it drops are different in each epoch.
+
+## Collate
+
+The loader asks the dataset for 32 items one by one, gets a list of 32 `(image, label)` pairs, and
+hands the list to a **collate function**. The default, `default_collate`, stacks the images into
+one tensor and the labels into another, which is what the three-item call printed: `(3, 64)` and
+three labels. It only works when every item has the same shape. Photographs of different sizes,
+or sentences of different lengths, need a `collate_fn` of your own that pads or crops them to one
+size before stacking, and lessons 14 and 16 meet exactly that with sequences.
+
+## Order
+
+Each new `iter(loader)` is a new epoch with a new shuffle: epoch 2 starts with other labels than
+epoch 1. **A generator with a fixed seed makes the sequence of shuffles repeat** from one run to
+the next, as the two `seed 0` lines show, and a different seed gives a different sequence. That is
+the same job lesson 9's `fit` gave its own generator.
+
+## Lesson 9's run, with a loader
+
+The training loop barely changes. Save as `~/dl/ltrain.py`; it uses `mlp.py` and `loop.py` from
+lesson 9:
+
 ```schooling-example
 {
   "language": "python",
@@ -44,3 +85,14 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING ltrain
+```
+
+**The five lines inside the loop are lesson 9's, untouched**; only where the batches come from has
+moved. The run lands at a validation accuracy of 0.956 and a loss of 0.1464, against lesson 9's
+0.950 and 0.1461. Close, and not equal, because the loader draws its shuffles from the generator in
+its own way, so the same seed gives a different sequence of batches. Both runs are equally
+correct. Neither number means more than the other, and lesson 18 measures how far apart two seeds
+of one configuration land.

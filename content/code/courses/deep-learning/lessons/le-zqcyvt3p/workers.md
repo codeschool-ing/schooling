@@ -1,7 +1,22 @@
 ---
-title: workers
+title: Workers, and reading in parallel
 version: 1
 ---
+
+With the default `num_workers=0`, the loader builds every batch in the training program's own
+process: the program asks for a batch, waits while 32 images are warped one after another, and only
+then gets on with the step. **`num_workers=n` starts n extra processes that build batches on their
+own**, each a whole batch at a time, and send them back to the main process. While the model works
+on one batch, the workers are already warping the next ones.
+
+How many workers make sense depends on how many processors there are. The lab has four:
+
+```
+PENDING workers
+```
+
+Save this as `~/dl/workers.py`. It reads the warped training set three times with each setting and
+trains nothing, so what it measures is the loader alone:
 
 ```schooling-example
 {
@@ -24,6 +39,30 @@ version: 1
 }
 ```
 
+```
+PENDING workers
+```
+
+TODO-NUMBERS
+
+**The first epoch with workers is the slowest of its row**, because it includes starting the
+processes and handing each a copy of the dataset. `persistent_workers=True` keeps them alive after
+that; without it, every epoch would pay the start-up again, which is a real cost when epochs are
+short.
+
+**The loader alone is a floor.** A training epoch cannot be shorter than the time it takes to build
+its batches, however fast the model is, so this number is the first one to know about any training
+setup. And on a machine with no graphics card, workers compete with the model for the same
+processors, which the next section measures.
+
+## Each worker is a copy
+
+A worker is a separate process with its own copy of the dataset and of the transform inside it.
+PyTorch seeds the random generators it knows about differently in each worker: its own, Python's
+`random` module, and NumPy's global one. That is why `Warp`, which draws with `torch.rand`, needed
+nothing. **A generator object of your own is a different matter**: it is copied into every worker in
+the state it was in, and every worker then draws the same numbers. Save as `~/dl/twins.py`:
+
 ```schooling-example
 {
   "language": "python",
@@ -44,3 +83,12 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING twins
+```
+
+Without help, the noise in batch 0 and in batch 1 begins with the same three numbers: two workers,
+one sequence of noise, and an augmentation that repeats itself across the batches. Nothing fails
+and nothing warns. `reseed`, passed as `worker_init_fn`, gives each worker's copy a generator of its
+own from the seed PyTorch chose for that worker, and the two batches part ways.
