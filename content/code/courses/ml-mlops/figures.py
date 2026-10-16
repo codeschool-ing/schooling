@@ -951,6 +951,47 @@ def l07_four_inputs(lang):
     return f, t['cap']
 
 
+@figure('l08-three-places', 8)
+def l08_three_places(lang):
+    t = {'en': dict(
+            label='Three columns. Batch: a nightly run scores every member and writes a table, '
+                  'which the campaign reads during the day. Real time: a request for one member '
+                  'reaches a service, which reads fresh features and answers at once. Edge: a copy '
+                  'of the model sits on the device, which answers without the network.',
+            cols=[('batch', [('nightly run', 'every member'), ('a table', 'scores as of tonight'),
+                             ('read later', 'by the campaign')]),
+                  ('real time', [('a request', 'one member'), ('the service', 'fresh features'),
+                                 ('the answer', 'in milliseconds')]),
+                  ('at the edge', [('a copy of the model', 'shipped to the device'),
+                                   ('the device', 'its own features'),
+                                   ('the answer', 'with no network')])],
+            cap='The question that picks one is how old an answer may be when somebody reads it.'),
+         'pt': dict(
+            label='Três colunas. Lote: uma execução noturna pontua todos os membros e grava uma '
+                  'tabela, que a campanha lê durante o dia. Tempo real: um pedido sobre um membro '
+                  'chega a um serviço, que lê atributos frescos e responde na hora. Borda: uma '
+                  'cópia do modelo fica no aparelho, que responde sem a rede.',
+            cols=[('lote', [('execução noturna', 'todos os membros'), ('uma tabela', 'notas desta noite'),
+                            ('lida depois', 'pela campanha')]),
+                  ('tempo real', [('um pedido', 'um membro'), ('o serviço', 'atributos frescos'),
+                                  ('a resposta', 'em milissegundos')]),
+                  ('na borda', [('uma cópia do modelo', 'enviada ao aparelho'),
+                                ('o aparelho', 'os seus atributos'),
+                                ('a resposta', 'sem rede')])],
+            cap='A pergunta que escolhe uma delas é quão velha uma resposta pode estar quando alguém a lê.')}[lang]
+    f = Fig('l08-three-places', 720, 330, t['label'])
+    for i, (title, steps) in enumerate(t['cols']):
+        x = 20 + i * 235
+        f.rect(x, 10, 210, 310, stroke='--wire', fill='--scan', dash='4 3')
+        f.text(x + 105, 32, title, size=13, weight='700', fill='--amber')
+        for j, (name, sub) in enumerate(steps):
+            y = 55 + j * 88
+            box(f, x + 20, y, 170, 56, name, sub)
+            if j < len(steps) - 1:
+                f.line(x + 105, y + 56, x + 105, y + 86, stroke='--phosphor', width=1.4, arrow=True)
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
