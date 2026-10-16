@@ -1234,6 +1234,68 @@ def l14_funnel(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 15
+
+@figure('l15-grid', 15)
+def l15_grid(lang):
+    o = csv('orders.csv', parse_dates=['date'])
+    today = pd.Timestamp('2025-12-31')
+    yr = o[o['date'] > today - pd.Timedelta(days=365)]
+    rfm = pd.DataFrame({'recency': (today - o.groupby('customer')['date'].max()).dt.days,
+                        'frequency': yr.groupby('customer').size()}).dropna()
+    rfm['R'] = pd.qcut(rfm['recency'].rank(method='first'), 5, labels=[5, 4, 3, 2, 1]).astype(int)
+    rfm['F'] = pd.qcut(rfm['frequency'].rank(method='first'), 5, labels=[1, 2, 3, 4, 5]).astype(int)
+    counts = rfm.groupby(['R', 'F']).size()
+    t = {'en': dict(
+        label='A five by five grid of recency score against frequency score, with the number of '
+              'customers in each cell. The top right, recent and frequent, is the champions; the '
+              'top left, frequent but not recent, is at risk; the bottom right, recent but '
+              'infrequent, is new or occasional; the bottom left is lost; the middle band is in '
+              'between.',
+        x='recency score R', y='frequency score F',
+        seg={'champions': 'champions', 'at risk': 'at risk', 'new': 'new or occasional', 'lost': 'lost'},
+        cap='Two scores, five segments. Most customers sit near the diagonal, because people who '
+            'order often have also ordered recently.'),
+        'pt': dict(
+        label='Uma grade de cinco por cinco da nota de recência contra a nota de frequência, com o '
+              'número de clientes em cada célula. Em cima à direita, recentes e frequentes, ficam os '
+              'campeões; em cima à esquerda, frequentes mas não recentes, os em risco; embaixo à '
+              'direita, recentes mas pouco frequentes, os novos ou ocasionais; embaixo à esquerda, os '
+              'perdidos; a faixa do meio fica entre um e outro.',
+        x='nota de recência R', y='nota de frequência F',
+        seg={'champions': 'campeões', 'at risk': 'em risco', 'new': 'novos ou ocasionais', 'lost': 'perdidos'},
+        cap='Duas notas, cinco segmentos. A maioria dos clientes fica perto da diagonal, porque quem '
+            'pede com frequência também pediu há pouco.')}[lang]
+    f = Fig('l15-grid', 600, 360, t['label'])
+    x0, y0, cs = 170, 30, 52
+
+    def seg(r, fq):
+        if r >= 4 and fq >= 4: return 'champions', '--phosphor'
+        if r <= 2 and fq >= 4: return 'at risk', '--amber'
+        if r >= 4 and fq <= 2: return 'new', '--phosphor-dim'
+        if r <= 2 and fq <= 2: return 'lost', '--paper-dim'
+        return None, None
+    for r in range(1, 6):
+        for fq in range(1, 6):
+            x, y = x0 + (r - 1) * cs, y0 + (5 - fq) * cs
+            name, col = seg(r, fq)
+            if col:
+                f.path(f'M{x + 1} {y + 1} h{cs - 2} v{cs - 2} h{-(cs - 2)} Z', stroke=None, width=0,
+                       fill=col, opacity=0.25)
+            f.rect(x, y, cs, cs, stroke='--wire', fill='--panel', width=1, rx=0) if not col else None
+            f.text(x + cs / 2, y + cs / 2, str(int(counts.get((r, fq), 0))), size=10, mono=True)
+    for k in range(5):
+        f.text(x0 + k * cs + cs / 2, y0 + 5 * cs + 14, str(k + 1), size=10, fill='--paper-dim', mono=True)
+        f.text(x0 - 10, y0 + (4 - k) * cs + cs / 2, str(k + 1), size=10, anchor='end', fill='--paper-dim', mono=True)
+    f.text(x0 + 2.5 * cs, y0 + 5 * cs + 32, t['x'], size=10, weight='600')
+    f.text(x0 - 30, y0 + 2.5 * cs, t['y'], size=10, anchor='end', weight='600')
+    f.text(x0 + 4 * cs, y0 - 10, t['seg']['champions'], size=10.5, weight='600', fill='--phosphor')
+    f.text(x0 + 1 * cs, y0 - 10, t['seg']['at risk'], size=10.5, weight='600', fill='--amber')
+    f.text(x0 + 5 * cs + 10, y0 + 4.5 * cs, t['seg']['new'], size=10.5, anchor='start', weight='600')
+    f.text(x0 - 10, y0 + 5 * cs + 32, t['seg']['lost'], size=10.5, anchor='end', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
