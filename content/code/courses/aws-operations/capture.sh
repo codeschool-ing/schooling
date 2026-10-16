@@ -28,11 +28,21 @@ export PATH="$HOME/.local/bin:$HOME/aws/venv/bin:$PATH"
 
 MOTO_PID=
 moto_up() {
-  local log=${MOTO_LOG:-/var/tmp/awsops-moto.log}
+  local log=${MOTO_LOG:-/var/tmp/awsops-moto.log} d c
   moto_down
+  # a moto left over from an earlier run would answer instead, with its state
+  for d in /proc/[0-9]*; do
+    c=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null) || continue
+    case "$c" in *bin/moto_server\ -p\ 4567*) kill "${d#/proc/}" 2>/dev/null ;; esac
+  done
+  for _ in $(seq 40); do curl -s -o /dev/null http://127.0.0.1:4567/ || break; sleep 0.25; done
   env "$@" setsid "$HOME/aws/venv/bin/moto_server" -p 4567 > "$log" 2>&1 < /dev/null &
   MOTO_PID=$!
-  for _ in $(seq 80); do curl -s -o /dev/null http://127.0.0.1:4567/ && return 0; sleep 0.25; done
+  for _ in $(seq 80); do
+    kill -0 "$MOTO_PID" 2>/dev/null || { echo "moto exited"; cat "$log"; exit 1; }
+    curl -s -o /dev/null http://127.0.0.1:4567/ && return 0
+    sleep 0.25
+  done
   echo "moto did not start"; cat "$log"; exit 1
 }
 moto_down() { [ -n "$MOTO_PID" ] && kill "$MOTO_PID" 2>/dev/null && wait "$MOTO_PID" 2>/dev/null; MOTO_PID=; }

@@ -1,0 +1,295 @@
+{
+  "ex-hkrdvd1p": {
+    "prompt": "Num deploy blue/green que acabou de falhar, como o tráfego volta para a versão antiga?",
+    "hint": "A versão antiga ainda está rodando?",
+    "choices": [
+      {
+        "text": "A imagem antiga é reconstruída e implantada de novo, tarefa por tarefa",
+        "why": "É assim que um deploy rolling reverte; o blue/green mantém as tarefas antigas vivas."
+      },
+      {
+        "text": "O ECS restaura o serviço do último snapshot",
+        "why": "O ECS não guarda snapshot de serviço; o conjunto antigo simplesmente ainda roda."
+      },
+      {
+        "text": "O listener volta para o target group azul",
+        "why": "Certo. O azul nunca parou, então voltar é uma troca de listener."
+      },
+      {
+        "text": "O DNS é apontado para o balanceador antigo",
+        "why": "Um balanceador só atende os dois; só o listener troca de target group."
+      }
+    ]
+  },
+  "ex-zsv426e5": {
+    "prompt": "O que o blue/green custa que um deploy rolling não custa?",
+    "hint": "Conte as tarefas rodando no momento mais cheio.",
+    "choices": [
+      {
+        "text": "Um segundo balanceador para o verde",
+        "why": "Os dois target groups ficam atrás do mesmo balanceador."
+      },
+      {
+        "text": "Capacidade dobrada enquanto o azul é mantido",
+        "why": "Certo. Um conjunto verde inteiro roda ao lado do azul até o azul ser encerrado."
+      },
+      {
+        "text": "Uma interrupção mais longa enquanto o listener troca",
+        "why": "A troca é uma mudança de listener, sem interrupção; é para isso que serve."
+      },
+      {
+        "text": "Uma cópia do banco para as tarefas verdes",
+        "why": "As duas versões compartilham o banco, e por isso a seção de rollback importa."
+      }
+    ]
+  },
+  "ex-qj2dgtt3": {
+    "prompt": "Ligue cada configuração do CodeDeploy ao que ela faz com o tráfego.",
+    "hint": "Leia o nome: porcentagem, depois tempo.",
+    "pairs": [
+      {
+        "left": "CodeDeployDefault.ECSAllAtOnce",
+        "right": "Tudo para o verde num movimento só"
+      },
+      {
+        "left": "CodeDeployDefault.ECSCanary10Percent5Minutes",
+        "right": "10% primeiro, o resto depois de cinco minutos"
+      },
+      {
+        "left": "CodeDeployDefault.ECSLinear10PercentEvery1Minutes",
+        "right": "10% a mais a cada minuto"
+      }
+    ],
+    "right_distractors": [
+      "Tarefas trocadas algumas por vez, sem conjunto verde"
+    ]
+  },
+  "ex-c05n9gr1": {
+    "prompt": "Para que serve o listener de teste na 8443, no deployment group da loja?",
+    "hint": "Quem chega ao verde antes dos clientes?",
+    "choices": [
+      {
+        "text": "Um teste de fumaça chega ao verde antes de qualquer cliente",
+        "why": "Certo. O hook AfterAllowTestTraffic roda contra ele."
+      },
+      {
+        "text": "Ele leva os 10% de tráfego de clientes do canário",
+        "why": "A fatia do canário passa pelo listener de produção; o de teste não leva clientes."
+      },
+      {
+        "text": "Deixa um administrador chegar ao azul durante a troca",
+        "why": "Ele aponta para o verde, não o azul: a versão nova, antes do release."
+      },
+      {
+        "text": "É a porta que as verificações de saúde do balanceador usam",
+        "why": "As verificações de saúde vão direto aos alvos, não por um listener."
+      }
+    ]
+  },
+  "ex-tv22r64d": {
+    "prompt": "O moto devolveu o deployment group com `alarmConfiguration` vazio. Na AWS, que erro tem o mesmo efeito?",
+    "hint": "Um alarme que é aceito e nunca dispara.",
+    "choices": [
+      {
+        "text": "Listar mais de dois alarmes",
+        "why": "Um grupo pode listar vários alarmes; o número não é o problema."
+      },
+      {
+        "text": "Ligar DEPLOYMENT_STOP_ON_ALARM",
+        "why": "É isso que faz um alarme reverter; não remove nenhum."
+      },
+      {
+        "text": "Usar CodeDeployDefault.ECSAllAtOnce",
+        "why": "A estratégia não muda se os alarmes existem."
+      },
+      {
+        "text": "Nomear um alarme com erro de digitação, ou um que vive em outra região",
+        "why": "Certo. O grupo aceita o nome e vigia um alarme que nunca entra em ALARM."
+      }
+    ]
+  },
+  "ex-p9ngj2te": {
+    "prompt": "`terminationWaitTimeInMinutes` vale 60. Um problema é encontrado 90 minutos depois de um deploy bem-sucedido. Quão rápido é o rollback?",
+    "hint": "O que existe no minuto 90?",
+    "choices": [
+      {
+        "text": "Segundos: o listener volta para o azul",
+        "why": "O azul foi encerrado no minuto 60; não há para onde voltar."
+      },
+      {
+        "text": "É um deploy novo da versão antiga",
+        "why": "Certo. Depois da espera, um rollback é um deploy completo como qualquer outro."
+      },
+      {
+        "text": "Impossível: o CodeDeploy se recusa a implantar uma task definition mais antiga",
+        "why": "Qualquer task definition pode ser implantada; mais antiga não é recusada."
+      },
+      {
+        "text": "Instantâneo, porque o CodeDeploy guarda o azul até o próximo release",
+        "why": "O azul é mantido pelo tempo de espera e não mais."
+      }
+    ]
+  },
+  "ex-c6r2zb5v": {
+    "prompt": "No modelo, um canário de 10% vigiado por um alarme no serviço inteiro falhou 500 requisições, mais do que tudo de uma vez. Por quê?",
+    "hint": "Divida os erros do canário por todo o tráfego.",
+    "choices": [
+      {
+        "text": "O canário manda 10% do tráfego para uma versão 10% mais lenta",
+        "why": "O modelo não tem latência nenhuma; ele conta falhas."
+      },
+      {
+        "text": "Diluídos para 2%, os erros nunca passaram do limite até tudo mudar",
+        "why": "Certo. 10% de 20% é 2%, não acima de 2%, então o alarme esperou a troca completa."
+      },
+      {
+        "text": "Canários sempre falham mais requisições do que um release de uma vez",
+        "why": "Com o alarme na versão nova, o mesmo canário falhou 40."
+      },
+      {
+        "text": "O CodeDeploy pausa os alarmes durante a janela do canário",
+        "why": "Nada é pausado; o alarme viu uma taxa no limite, não acima dele."
+      }
+    ]
+  },
+  "ex-7e8z62mj": {
+    "prompt": "Um release falha 8% das requisições. Durante um canário de 10%, que taxa de erro, em porcentagem, um alarme no serviço inteiro enxerga?",
+    "hint": "Fatia vezes taxa de falha.",
+    "unit": "%"
+  },
+  "ex-pakp2y06": {
+    "prompt": "Que métrica deixa um alarme vigiar só o conjunto verde no ECS atrás de um Application Load Balancer?",
+    "hint": "Azul e verde têm cada um o seu target group.",
+    "choices": [
+      {
+        "text": "HTTPCode_ELB_5XX_Count do balanceador",
+        "why": "Isso conta erros que o próprio balanceador gerou, de todos os target groups juntos."
+      },
+      {
+        "text": "CPUUtilization do cluster ECS",
+        "why": "CPU não diz nada sobre requisições que falharam, e cobre as duas versões."
+      },
+      {
+        "text": "HTTPCode_Target_5XX_Count com o target group verde como dimensão",
+        "why": "Certo. Por target group, ela conta só os erros da versão nova."
+      },
+      {
+        "text": "RequestCount do balanceador inteiro",
+        "why": "Uma contagem de requisições não é de erros, e esta mistura as duas versões."
+      }
+    ]
+  },
+  "ex-ffqvba9d": {
+    "prompt": "O que é o `canary.py` nesta lição?",
+    "hint": "Leia a primeira linha dele.",
+    "choices": [
+      {
+        "text": "Uma cópia do algoritmo que o CodeDeploy usa para mover tráfego",
+        "why": "Não é algoritmo de ninguém; ele encena um release ruim simples com quatro suposições."
+      },
+      {
+        "text": "Um hook Lambda que roda depois de liberar o tráfego de teste",
+        "why": "O hook do AppSpec é outra função; o canary.py roda no seu notebook."
+      },
+      {
+        "text": "Um script que lê as métricas do CodeDeploy no moto",
+        "why": "Ele não chama nada; cada número nele é uma entrada que você pode mudar."
+      },
+      {
+        "text": "Um modelo com suposições declaradas, não o CodeDeploy",
+        "why": "Certo. O moto não roda deploy nenhum, então a lição conta com um modelo e diz isso."
+      }
+    ]
+  },
+  "ex-xj0yz6p4": {
+    "prompt": "O release 1.4.1 renomeou uma coluna e passou a usar o nome novo. O alarme do canário dispara e o tráfego volta para 1.4.0. O que acontece em seguida?",
+    "hint": "Um rollback mexe no banco?",
+    "choices": [
+      {
+        "text": "O 1.4.0 falha, pedindo uma coluna que não existe mais",
+        "why": "Certo. O rollback funcionou e o serviço está fora nas duas versões."
+      },
+      {
+        "text": "O 1.4.0 atende normalmente, porque o rollback restaurou o esquema",
+        "why": "Um rollback move tráfego; a coluna renomeada continua renomeada."
+      },
+      {
+        "text": "O CodeDeploy recusa o rollback porque o esquema mudou",
+        "why": "O CodeDeploy não sabe nada de bancos e não confere."
+      },
+      {
+        "text": "Nada, desde que terminationWaitTimeInMinutes não tenha passado",
+        "why": "A espera mantém as tarefas do azul, não o esquema antigo."
+      }
+    ]
+  },
+  "ex-eqkxeewg": {
+    "prompt": "Ponha em ordem os três releases de uma renomeação segura de coluna.",
+    "hint": "Acrescente antes de remover.",
+    "trap": "Trocar as leituras antes da cópia é o deslize: linhas gravadas antes seriam lidas vazias.",
+    "items": [
+      "Acrescentar a coluna nova e gravar nas duas",
+      "Copiar os valores antigos e passar as leituras para a coluna nova",
+      "Remover a coluna antiga quando nada mais a ler"
+    ]
+  },
+  "ex-m14h5zfj": {
+    "prompt": "O jeito em três releases de mudar um esquema para cada passo poder ser revertido se chama expand and ___.",
+    "hint": "O oposto de expand.",
+    "blanks": [
+      {
+        "accept": [
+          "contract"
+        ]
+      }
+    ]
+  },
+  "ex-b23mvebq": {
+    "prompt": "Quais destas coisas um rollback blue/green restaura? Marque todas as que se aplicam.",
+    "hint": "Ele restaura o que o conjunto antigo estava rodando.",
+    "choices": [
+      {
+        "text": "A imagem que a task definition antiga nomeia",
+        "why": "Sim. As tarefas antigas ainda a rodam."
+      },
+      {
+        "text": "Um parâmetro mudado no Parameter Store junto com o release",
+        "why": "Não. Um valor fora da task definition fica como foi definido."
+      },
+      {
+        "text": "As variáveis de ambiente da task definition antiga",
+        "why": "Sim. Elas fazem parte da task definition que as tarefas antigas rodam."
+      },
+      {
+        "text": "Linhas que a versão nova gravou no banco",
+        "why": "Não. Dado gravado fica gravado; esse é o limite do rollback."
+      }
+    ]
+  },
+  "ex-bbe4wdtw": {
+    "prompt": "Um release pode falhar por ficar lento em vez de devolver erros. O que o deployment group deve ter para pegar isso?",
+    "hint": "Um segundo sintoma precisa de um segundo alarme.",
+    "choices": [
+      {
+        "text": "Uma janela de canário maior, para a lentidão virar erro",
+        "why": "A lentidão pode nunca virar erro, e os clientes sofrem com ela enquanto isso."
+      },
+      {
+        "text": "Uma fatia de canário menor, 1% em vez de 10%",
+        "why": "Uma fatia menor reduz exposição e evidência; não detecta lentidão."
+      },
+      {
+        "text": "Um alarme de latência no target group verde",
+        "why": "Certo. Por isso o grupo da loja nomeia api-green-p99 ao lado de api-green-5xx."
+      },
+      {
+        "text": "A configuração ECSAllAtOnce, para o problema ficar óbvio logo",
+        "why": "Óbvio para todos os clientes de uma vez é o resultado que um canário existe para evitar."
+      }
+    ]
+  },
+  "ex-cmwpejc3": {
+    "prompt": "A 2.000 requisições por minuto, um release falha 30% das requisições. Um canário manda 10% para ele durante 3 minutos antes de o alarme reverter. Quantas requisições falharam?",
+    "hint": "Requisições vezes fatia vezes taxa de falha vezes minutos."
+  }
+}
