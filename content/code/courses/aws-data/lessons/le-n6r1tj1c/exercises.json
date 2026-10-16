@@ -1,0 +1,662 @@
+[
+  {
+    "id": "ex-j5sv9mfy",
+    "version": 1,
+    "section": "why-not-iam",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a bucket policy not hide the `phone` column of `part-0.csv` from the analysts?",
+    "hint": "What is the smallest thing S3 hands out?",
+    "choices": [
+      {
+        "text": "Bucket policies cannot name a prefix, only a whole bucket",
+        "correct": false,
+        "why": "They can; `curated/orders/*` is a perfectly good resource. The trouble is below the prefix."
+      },
+      {
+        "text": "The column is inside the object, and S3 grants whole objects",
+        "correct": true,
+        "why": "Right. `aws s3 cp` returned all four columns, because the object is the unit S3 knows."
+      },
+      {
+        "text": "S3 hides columns for Parquet files and reads CSV files whole",
+        "correct": false,
+        "why": "S3 knows nothing of the format; a Parquet file is an object like any other."
+      },
+      {
+        "text": "The phone column is encrypted under a KMS key of its own",
+        "correct": false,
+        "why": "Nothing in the lesson encrypts one column; the file is plain CSV."
+      }
+    ]
+  },
+  {
+    "id": "ex-jswp6v3a",
+    "version": 1,
+    "section": "why-not-iam",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With IAM alone and no Lake Formation, what must an analyst's role be allowed so that Athena can query a table? Choose all that apply.",
+    "hint": "Two services, which know nothing of each other.",
+    "choices": [
+      {
+        "text": "`glue:GetTable` on the database and the table",
+        "correct": true,
+        "why": "Yes. Without it Athena cannot find out what the table is."
+      },
+      {
+        "text": "`s3:GetObject` on the table's prefix",
+        "correct": true,
+        "why": "Yes. Without it the query fails on the first file."
+      },
+      {
+        "text": "`lakeformation:GetDataAccess`",
+        "correct": false,
+        "why": "That belongs to the path through Lake Formation, where the S3 permission is the one that goes away."
+      },
+      {
+        "text": "`s3:PutObject` on the table's prefix",
+        "correct": false,
+        "why": "Reading needs no write permission; that is for the pipeline that writes the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3x126ma",
+    "version": 1,
+    "section": "why-not-iam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With IAM alone, what is the usual workaround for keeping one column away from a team?",
+    "hint": "Nothing in IAM can hide a column.",
+    "choices": [
+      {
+        "text": "A `Deny` on the column, written in the bucket policy",
+        "correct": false,
+        "why": "A bucket policy names buckets and keys; there is no column to deny."
+      },
+      {
+        "text": "A list of the allowed columns in the role's IAM policy",
+        "correct": false,
+        "why": "IAM has no condition that reaches inside an object."
+      },
+      {
+        "text": "A second copy of the table, minus the column",
+        "correct": true,
+        "why": "Right, and a second copy is a second thing to keep in step, pay for and protect."
+      },
+      {
+        "text": "Renaming the column so the team cannot guess it",
+        "correct": false,
+        "why": "A renamed column is still in the file, and the file is still read whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-zekjvgxd",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does registering `s3://quitanda-curated-prod/curated` with Lake Formation do?",
+    "hint": "Think about the credentials an engine is handed.",
+    "choices": [
+      {
+        "text": "It copies the files into Lake Formation's own storage",
+        "correct": false,
+        "why": "Nothing moves and nothing is copied; the files stay in the bucket."
+      },
+      {
+        "text": "It creates a Glue table for every prefix under the path",
+        "correct": false,
+        "why": "That is a crawler's work, in lesson 16; this lesson wrote its table by hand."
+      },
+      {
+        "text": "It lets Lake Formation vend credentials for the path",
+        "correct": true,
+        "why": "Right. With `--use-service-linked-role` that role is one AWS creates for the purpose."
+      },
+      {
+        "text": "It makes the path readable to anybody holding a grant, directly through S3",
+        "correct": false,
+        "why": "S3 does not consult Lake Formation; grants are checked by the engines that ask."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m3xbrtm",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `put-data-lake-settings` was sent with only `DataLakeAdmins`, what had happened to the two default grants to `IAM_ALLOWED_PRINCIPALS`?",
+    "hint": "Compare the two `get-data-lake-settings` answers.",
+    "choices": [
+      {
+        "text": "They were kept, because the call merges into the settings",
+        "correct": false,
+        "why": "The second answer has no default grants at all; the call does not merge."
+      },
+      {
+        "text": "They passed to the new administrator",
+        "correct": false,
+        "why": "The administrator can grant anything, and holds no copy of the defaults."
+      },
+      {
+        "text": "They became column grants on every table",
+        "correct": false,
+        "why": "Nothing was converted; they were simply not in the new document."
+      },
+      {
+        "text": "They were gone: the call replaces the whole document",
+        "correct": true,
+        "why": "Right. On AWS, leaving them out is how new tables stop being handed to IAM."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cc99fy8",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The analyst holds `SELECT` on `order_id`, `customer_id`, `total_cents` and `dt`, and nothing else. On AWS, what does `SELECT * FROM curated.orders` return in Athena?",
+    "hint": "Athena removes what the grant does not cover.",
+    "choices": [
+      {
+        "text": "Every column, since `*` is not a column name",
+        "correct": false,
+        "why": "The grant is applied to what is returned, whatever the query spells."
+      },
+      {
+        "text": "The four granted columns, without `phone`",
+        "correct": true,
+        "why": "Right. A query that names `phone` is refused, and `*` returns the rest."
+      },
+      {
+        "text": "Only `order_id`, the first column of the grant",
+        "correct": false,
+        "why": "All four granted columns are readable; their order in the grant does not matter."
+      },
+      {
+        "text": "An error, because `*` includes a column the analyst may not read",
+        "correct": false,
+        "why": "Naming `phone` explicitly is refused; `*` is narrowed to the granted columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejc46982",
+    "version": 1,
+    "section": "the-model",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an Athena query on a Lake Formation table in order.",
+    "hint": "The engine asks before it reads.",
+    "items": [
+      "The analyst sends the query to Athena",
+      "Athena asks Lake Formation for access to the table, as the analyst",
+      "Lake Formation checks the grants and returns temporary credentials",
+      "Athena reads the files from S3 with those credentials",
+      "Athena returns only the granted columns to the analyst"
+    ]
+  },
+  {
+    "id": "ex-4xp720sy",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, every grant of this lesson succeeded and `get-temporary-glue-table-credentials` answered 404. What does that tell you about what the analyst could read on AWS?",
+    "hint": "Who, in this lab, ever asks Lake Formation anything?",
+    "choices": [
+      {
+        "text": "That the analyst would be refused, since no credentials can be vended",
+        "correct": false,
+        "why": "The 404 is a call moto does not implement, not a refusal AWS would give."
+      },
+      {
+        "text": "That the analyst could read everything, since nothing was enforced",
+        "correct": false,
+        "why": "Nothing was enforced because nothing asked; that says nothing about AWS."
+      },
+      {
+        "text": "Nothing either way: moto stores the grants, and nothing asks it",
+        "correct": true,
+        "why": "Right. A success from moto means the request was well formed."
+      },
+      {
+        "text": "That the grants are correct, since moto accepted all of them",
+        "correct": false,
+        "why": "moto accepted a grant on a table that does not exist, too."
+      }
+    ]
+  },
+  {
+    "id": "ex-akchp2rr",
+    "version": 1,
+    "section": "iam-allowed-principals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lake Formation is on. `orders` carries the analysts' column grant and also the default `ALL` to `IAM_ALLOWED_PRINCIPALS`. The analysts' IAM policy allows Athena, the catalogue and the bucket. On AWS, what do they read?",
+    "hint": "What does that group mean?",
+    "choices": [
+      {
+        "text": "The four granted columns, as the column grant says",
+        "correct": false,
+        "why": "With `IAM_ALLOWED_PRINCIPALS` holding `ALL`, IAM decides, and IAM allows every column."
+      },
+      {
+        "text": "All five of them, since IAM is left to decide",
+        "correct": true,
+        "why": "Right. The column grant is not in force until that grant is revoked."
+      },
+      {
+        "text": "Nothing, because the two grants contradict each other",
+        "correct": false,
+        "why": "Grants add up; they do not cancel."
+      },
+      {
+        "text": "Only the columns tagged `internal`",
+        "correct": false,
+        "why": "No tag-based grant was given to the analysts."
+      }
+    ]
+  },
+  {
+    "id": "ex-t32egv4a",
+    "version": 1,
+    "section": "iam-allowed-principals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which order of steps takes `orders` over to Lake Formation without breaking a query on the way?",
+    "hint": "Between the two steps, which door is open?",
+    "choices": [
+      {
+        "text": "Revoke `IAM_ALLOWED_PRINCIPALS` on the table, then grant its users in Lake Formation",
+        "correct": false,
+        "why": "Between the two, IAM's door has closed and Lake Formation's has not opened, so every query fails."
+      },
+      {
+        "text": "Grant its users in Lake Formation, then revoke `IAM_ALLOWED_PRINCIPALS` on the table",
+        "correct": true,
+        "why": "Right. The new door is open before the old one closes."
+      },
+      {
+        "text": "Deregister the location, then grant its users",
+        "correct": false,
+        "why": "Without a registered location Lake Formation cannot vend credentials for the table at all."
+      },
+      {
+        "text": "Remove the users' IAM policies, then revoke `IAM_ALLOWED_PRINCIPALS`",
+        "correct": false,
+        "why": "They still need Athena and the catalogue in IAM; it is the S3 permission that goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xt4dept",
+    "version": 1,
+    "section": "iam-allowed-principals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every Lake Formation grant on `orders` is right and `IAM_ALLOWED_PRINCIPALS` has been revoked, but a script's role still has `s3:GetObject` on `quitanda-curated-prod/curated/*`. What can the script read?",
+    "hint": "Which service does `aws s3 cp` talk to?",
+    "choices": [
+      {
+        "text": "Only the columns it holds grants on, since the location is registered",
+        "correct": false,
+        "why": "Registration lets Lake Formation vend credentials; S3 still answers its own permissions."
+      },
+      {
+        "text": "Nothing, since a registered location refuses direct reads",
+        "correct": false,
+        "why": "S3 has never heard of Lake Formation; a direct read is judged by IAM and the bucket policy."
+      },
+      {
+        "text": "Every column, with `aws s3 cp`: S3 never consults Lake Formation",
+        "correct": true,
+        "why": "Right. The second half of taking over a lake is removing that permission."
+      },
+      {
+        "text": "Only the files of the tables it holds `SELECT` on",
+        "correct": false,
+        "why": "S3 knows nothing of tables or of `SELECT`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmzjda53",
+    "version": 1,
+    "section": "iam-allowed-principals",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In ___ access mode, a registered location keeps answering IAM's permissions for everybody, while the principals opted in one by one are judged by Lake Formation's grants.",
+    "hint": "It is the gentle way to move a lake many teams use.",
+    "blanks": [
+      {
+        "accept": [
+          "hybrid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5wnv82ny",
+    "version": 1,
+    "section": "lf-tags-and-filters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders` is tagged `sensitivity=internal`, and its `phone` column `sensitivity=pii`. An analyst is granted `SELECT` on the expression `sensitivity=internal`. On AWS, what can the analyst read?",
+    "hint": "A column can override the tag it inherits.",
+    "choices": [
+      {
+        "text": "Every column, since the table is `internal`",
+        "correct": false,
+        "why": "`phone` was given its own value for the same key, so it is not `internal`."
+      },
+      {
+        "text": "Only `phone`",
+        "correct": false,
+        "why": "That is the one column the expression does not match."
+      },
+      {
+        "text": "Nothing, since a column needs a grant of its own",
+        "correct": false,
+        "why": "A tag-based grant covers every resource whose tags match, columns included."
+      },
+      {
+        "text": "Every column of `orders` except `phone`",
+        "correct": true,
+        "why": "Right. The table's tag flows down to four columns, and `phone` carries `pii`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe45wxzf",
+    "version": 1,
+    "section": "lf-tags-and-filters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Next week the pipeline creates a table and tags it `sensitivity=internal`. What has to be done before the support role can read it?",
+    "hint": "Support was granted an expression, not a table.",
+    "choices": [
+      {
+        "text": "Nothing: the existing tag grant covers it",
+        "correct": true,
+        "why": "Right. That is the point of tags, and also why tagging is a sensitive permission."
+      },
+      {
+        "text": "A grant on the new table for the support role",
+        "correct": false,
+        "why": "That would be the per-table grant that tags exist to replace."
+      },
+      {
+        "text": "Running the tag-based grant again",
+        "correct": false,
+        "why": "The expression is evaluated against the tags as they are; it does not need repeating."
+      },
+      {
+        "text": "Registering the table's location again",
+        "correct": false,
+        "why": "A location is registered once, for every table under it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6g91mz7s",
+    "version": 1,
+    "section": "lf-tags-and-filters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the permission to assign LF-tags as sensitive as the data itself?",
+    "hint": "Grants follow the tags.",
+    "choices": [
+      {
+        "text": "Every tag assignment is billed",
+        "correct": false,
+        "why": "The price sheet has no line for Lake Formation permissions at all."
+      },
+      {
+        "text": "A tag, once assigned, can never be changed",
+        "correct": false,
+        "why": "Tags can be changed, as `phone` overriding its table's value showed; that is the danger, not the safety."
+      },
+      {
+        "text": "Tags are written into the S3 objects and travel with copies",
+        "correct": false,
+        "why": "LF-tags live in the catalogue, not in the files."
+      },
+      {
+        "text": "Whoever tags a table decides which tag grants cover it, and so who reads it",
+        "correct": true,
+        "why": "Right. Tagging a table `pii` by mistake hands it to support on the spot."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q722w1x",
+    "version": 1,
+    "section": "lf-tags-and-filters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, `support-filter.json` applied to the three rows of `part-0.csv` lets support see some rows and some columns. How many cells, rows times columns, does it let through?",
+    "hint": "Count the customers in the row filter and the names in `ColumnNames`.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qv2pv5hm",
+    "version": 1,
+    "section": "auditing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command lists every Lake Formation grant for an audit?",
+    "hint": "It was run with `--output table`.",
+    "choices": [
+      {
+        "text": "`aws iam list-policies`",
+        "correct": false,
+        "why": "Those are IAM policies; Lake Formation grants are not among them."
+      },
+      {
+        "text": "`aws glue get-tables`",
+        "correct": false,
+        "why": "That lists the tables, not who may read them."
+      },
+      {
+        "text": "`aws lakeformation list-permissions`",
+        "correct": true,
+        "why": "Right. With no filter it is every grant, and a `--query` makes it readable."
+      },
+      {
+        "text": "`aws s3api get-bucket-policy`",
+        "correct": false,
+        "why": "The bucket policy is the S3 side; it holds no table or column grant."
+      }
+    ]
+  },
+  {
+    "id": "ex-gabfae6p",
+    "version": 1,
+    "section": "auditing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted a grant on `ordres`, a table that does not exist, and Glue says it is not there. What does that show?",
+    "hint": "Did anything compare the grant with the catalogue?",
+    "choices": [
+      {
+        "text": "Lake Formation creates a table at its first grant",
+        "correct": false,
+        "why": "Glue still answers that `ordres` is not found."
+      },
+      {
+        "text": "moto stores grants and checks none against the catalogue",
+        "correct": true,
+        "why": "Right. moto enforces none of Lake Formation."
+      },
+      {
+        "text": "Lake Formation and Glue use separate catalogues on AWS",
+        "correct": false,
+        "why": "Lake Formation grants on the Glue Data Catalog itself."
+      },
+      {
+        "text": "The grant is reserved for when somebody creates `ordres`, by design",
+        "correct": false,
+        "why": "Nothing in the lesson describes reserved grants; it is a typing mistake that was stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-re42h1mj",
+    "version": 1,
+    "section": "auditing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong on the defender's list? Choose all that apply.",
+    "hint": "Each one closes a door the lesson showed open.",
+    "choices": [
+      {
+        "text": "Grant to roles rather than to individual users",
+        "correct": true,
+        "why": "Yes. People come and go without grants left behind."
+      },
+      {
+        "text": "Take direct S3 access away from principals that read through an engine",
+        "correct": true,
+        "why": "Yes. Otherwise `aws s3 cp` reads every column."
+      },
+      {
+        "text": "Alert on `GrantPermissions` for the `pii` tag",
+        "correct": true,
+        "why": "Yes. A new reader of phone numbers is noticed the day it appears."
+      },
+      {
+        "text": "Keep `IAM_ALLOWED_PRINCIPALS` on sensitive tables as a fallback",
+        "correct": false,
+        "why": "While it holds `ALL`, the column grants on that table are not in force."
+      },
+      {
+        "text": "Give every analyst the permission to assign tags",
+        "correct": false,
+        "why": "Whoever tags decides who reads; that permission is granted as carefully as the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-te7zesan",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "hint": "Each one is a door the lesson named.",
+    "pairs": [
+      {
+        "left": "Analysts see `phone` despite their column grant",
+        "right": "`IAM_ALLOWED_PRINCIPALS` still holds `ALL` on the table"
+      },
+      {
+        "left": "Every query on a table fails after a change",
+        "right": "IAM's grant was revoked before any Lake Formation grant existed"
+      },
+      {
+        "left": "Support cannot read a new table",
+        "right": "It carries no tag that support's expression matches"
+      },
+      {
+        "left": "A script reads every column with `aws s3 cp`",
+        "right": "Its role keeps `s3:GetObject` on the registered location"
+      }
+    ],
+    "right_distractors": [
+      "Athena scanned more bytes than the query needed"
+    ]
+  },
+  {
+    "id": "ex-zev0mwv0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants each district's support team to see phone numbers only for that district's customers. Which Lake Formation feature does that?",
+    "hint": "Some rows and some columns at once.",
+    "choices": [
+      {
+        "text": "An LF-tag `pii` on the `phone` column, granted to each team",
+        "correct": false,
+        "why": "A tag covers the whole column, for every row."
+      },
+      {
+        "text": "A data filter on rows and columns, granted to each team",
+        "correct": true,
+        "why": "Right. Rows and columns together are cells, and the filter is what narrows a grant to them."
+      },
+      {
+        "text": "A column grant on `phone` for every support role",
+        "correct": false,
+        "why": "That shows `phone` for every customer, not one district's."
+      },
+      {
+        "text": "A bucket policy on each district's prefix in the curated bucket",
+        "correct": false,
+        "why": "The files are partitioned by day, not by district, and S3 grants whole files."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3gkb046",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these calls failed with a 404 in moto, so that the lesson could not run it?",
+    "hint": "One kind of permission was described entirely from the documentation.",
+    "choices": [
+      {
+        "text": "`register-resource`",
+        "correct": false,
+        "why": "It succeeded, and `list-resources` showed the location."
+      },
+      {
+        "text": "`create-lf-tag`",
+        "correct": false,
+        "why": "It succeeded; the tag was then added to the table and a column."
+      },
+      {
+        "text": "`grant-permissions` on an `LFTagPolicy`",
+        "correct": false,
+        "why": "It succeeded and appeared in `list-permissions`."
+      },
+      {
+        "text": "`create-data-cells-filter`",
+        "correct": true,
+        "why": "Right. Row and cell filtering were taught from AWS's documentation."
+      }
+    ]
+  }
+]
