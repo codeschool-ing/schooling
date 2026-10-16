@@ -5,8 +5,8 @@ version: 1
 
 Verificar pede três coisas: a imagem, a chave pública e a decisão sobre o log de transparência.
 **`--insecure-ignore-tlog=true` diz que não se espera entrada no log público**, o que vale para toda
-assinatura deste curso e é a razão de a flag ter esse nome: numa assinatura que deveria estar no log,
-pular essa checagem remove a prova de quando ela foi feita.
+assinatura deste curso e é a razão de a flag ter esse nome: numa assinatura que deveria estar no
+log, pular essa checagem remove a prova de quando ela foi feita.
 
 ```
 ana@laptop:~/signing$ cosign verify --key cosign.pub --insecure-ignore-tlog=true localhost:5001/bulletin@$DIGEST | jq .

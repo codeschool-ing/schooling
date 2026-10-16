@@ -711,7 +711,10 @@ PY
   vault policy write bulletin-production /home/ana/vault/bulletin-production.hcl >/dev/null
   vault write auth/kubernetes/role/bulletin-production bound_service_account_names=bulletin \
     bound_service_account_namespaces=production policies=bulletin-production ttl=10m >/dev/null
-  for i in $(seq 300); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && break; sleep 2; done
+  for i in $(seq 300); do
+    n=0; for j in $(seq 12); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && n=$((n + 1)); done
+    [ "$n" = 12 ] && break; sleep 2
+  done
   cd /home/ana
 }
 

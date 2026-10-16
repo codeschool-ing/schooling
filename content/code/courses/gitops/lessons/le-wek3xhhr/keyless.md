@@ -4,9 +4,9 @@ version: 1
 ---
 
 **A private key is a secret that lasts for years**, and everything this course says about secrets in
-lessons 9 to 11 applies to it: it has to be stored, protected, rotated, and revoked when it leaks, and
-a key that signed releases for three years cannot be rotated without every verifier learning the new
-one. Sigstore, the project `cosign` belongs to, offers a way around the long-lived key, called
+lessons 9 to 11 applies to it: it has to be stored, protected, rotated, and revoked when it leaks,
+and a key that signed releases for three years cannot be rotated without every verifier learning the
+new one. Sigstore, the project `cosign` belongs to, offers a way around the long-lived key, called
 **keyless** signing. There is still a key; it lives for a few minutes.
 
 1. The signer, usually a CI job, proves who it is to an OpenID Connect provider: GitHub Actions,
@@ -18,9 +18,9 @@ one. Sigstore, the project `cosign` belongs to, offers a way around the long-liv
 4. **Rekor**, a public transparency log, records the signature and the certificate, with a timestamp
    proving the signing happened while the certificate was valid.
 
-Verifying then asks a different question from this course's `--key cosign.pub`: not "was this
-signed by this key?" but **"was this signed by this identity, according to this issuer?"**. For a
-release built by GitHub Actions, the check names the workflow and GitHub's token issuer:
+Verifying then asks a different question from this course's `--key cosign.pub`: not "was this signed
+by this key?" but **"was this signed by this identity, according to this issuer?"**. For a release
+built by GitHub Actions, the check names the workflow and GitHub's token issuer:
 
 ```sh
 cosign verify ghcr.io/fluxcd/source-controller:v1.9.6 \

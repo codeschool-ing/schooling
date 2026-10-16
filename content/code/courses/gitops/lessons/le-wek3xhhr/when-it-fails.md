@@ -29,11 +29,11 @@ error during command execution: no matching attestations: failed to verify signa
 This time a signature exists, and the error is different: the signature found does not verify with
 the key given. `Found: 0, Expected 1` is `cosign` counting the signatures that matched.
 
-And the flag this lesson keeps passing matters. Without `--insecure-ignore-tlog=true`, `cosign` expects
-every signature to be recorded in Rekor, fetches Sigstore's trust root to check that, and fails a
-key-only signature that was never logged. That run is not recorded here: this machine cannot reach
-Sigstore at all, so it fails one step earlier, at fetching the trust root, which is not the failure
-you would meet.
+And the flag this lesson keeps passing matters. Without `--insecure-ignore-tlog=true`, `cosign`
+expects every signature to be recorded in Rekor, fetches Sigstore's trust root to check that, and
+fails a key-only signature that was never logged. That run is not recorded here: this machine cannot
+reach Sigstore at all, so it fails one step earlier, at fetching the trust root, which is not the
+failure you would meet.
 
 | what you see | what it means | what to do |
 |---|---|---|
@@ -41,14 +41,14 @@ you would meet.
 | `accepted signatures do not match threshold` | a signature exists, none of them made by your key | find out who signed it; never answer by trusting their key |
 | `no matching signatures were found` in `flux get sources` | Flux checked the chart's signature and refused it | the same two questions, asked about the chart |
 
-**The wrong answer to every one of these is the same**: turning the check off. A verification that is
-disabled on the day it fails was never a check, only a delay. Each failure above names an artefact
-and a key, and the question to answer is always which of the two is wrong.
+**The wrong answer to every one of these is the same**: turning the check off. A verification that
+is disabled on the day it fails was never a check, only a delay. Each failure above names an
+artefact and a key, and the question to answer is always which of the two is wrong.
 
 ## Rotating the key
 
-Keys have to change: a person leaves, a laptop is lost, a policy says every year. Rotation with a key
-pair is three steps, and the order matters:
+Keys have to change: a person leaves, a laptop is lost, a policy says every year. Rotation with a
+key pair is three steps, and the order matters:
 
 1. publish the new public key **beside** the old one, so verifiers accept both. Flux's Secret can
    hold several `.pub` files, and a signature by any of them passes;

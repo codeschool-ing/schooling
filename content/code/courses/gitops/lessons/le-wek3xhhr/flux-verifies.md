@@ -3,10 +3,11 @@ title: Flux refuses what nobody signed
 version: 1
 ---
 
-**Flux verifies the artefacts it pulls itself.** An `OCIRepository` takes a `verify` field naming the
-provider, `cosign`, and a Secret holding the public keys; the source controller then checks the
+**Flux verifies the artefacts it pulls itself.** An `OCIRepository` takes a `verify` field naming
+the provider, `cosign`, and a Secret holding the public keys; the source controller then checks the
 signature of every revision before anything downstream sees it. The preview's chart is such an
-artefact since lesson 7, so it is the one to protect. It is signed exactly like the image, by digest:
+artefact since lesson 7, so it is the one to protect. It is signed exactly like the image, by
+digest:
 
 ```
 ana@laptop:~/signing$ CHART=$(curl -sI -H "Accept: application/vnd.oci.image.manifest.v1+json" localhost:5001/v2/charts/bulletin/manifests/0.1.0 | tr -d "\r" | awk "tolower(\$1) == \"docker-content-digest:\" { print \$2 }"); echo $CHART

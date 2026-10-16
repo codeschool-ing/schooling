@@ -4,11 +4,12 @@ version: 1
 ---
 
 **Por padrão, o `cosign` assina para o mundo público.** Ele registra cada assinatura no Rekor, o log
-público de transparência do Sigstore, e acrescenta um carimbo de tempo de uma autoridade pública, para
-que qualquer pessoa confira depois quando a assinatura foi feita. Os dois são serviços na internet. A
-assinatura de uma imagem no registry do seu laptop não tem lugar num log público, e o registry deste
-laptop nem está na internet, então o `cosign` recebe a lista de serviços a usar numa **signing
-config**: um arquivo que os enumera. Uma sem serviço nenhum é uma assinatura com a chave e mais nada:
+público de transparência do Sigstore, e acrescenta um carimbo de tempo de uma autoridade pública,
+para que qualquer pessoa confira depois quando a assinatura foi feita. Os dois são serviços na
+internet. A assinatura de uma imagem no registry do seu laptop não tem lugar num log público, e o
+registry deste laptop nem está na internet, então o `cosign` recebe a lista de serviços a usar numa
+**signing config**: um arquivo que os enumera. Uma sem serviço nenhum é uma assinatura com a chave e
+mais nada:
 
 ```
 ana@laptop:~/signing$ cosign signing-config create --out offline.json
@@ -39,12 +40,11 @@ ana@laptop:~/signing$ curl -s localhost:5001/v2/bulletin/tags/list | jq -c .tags
 ```
 
 O `WARNING` é a máquina de gravação sem conseguir alcançar a raiz de confiança do Sigstore, que o
-`cosign` tenta buscar em toda execução; com acesso à internet ele não aparece, e uma assinatura feita
-com uma chave não precisa dela. O `-y` responde sim à pergunta que o `cosign` faz antes de assinar,
-que é sobre o log público e não
-se aplica aqui. A assinatura agora está no registry, como mais uma tag de `bulletin`, com o nome do
-digest que ela assina: **quem consegue ler a imagem consegue achar a assinatura dela**, e o registry
-não precisou de nada novo para guardá-la.
+`cosign` tenta buscar em toda execução; com acesso à internet ele não aparece, e uma assinatura
+feita com uma chave não precisa dela. O `-y` responde sim à pergunta que o `cosign` faz antes de
+assinar, que é sobre o log público e não se aplica aqui. A assinatura agora está no registry, como
+mais uma tag de `bulletin`, com o nome do digest que ela assina: **quem consegue ler a imagem
+consegue achar a assinatura dela**, e o registry não precisou de nada novo para guardá-la.
 
 Num pipeline, isto é um passo depois do push, executado pelo CI com a chave tirada do cofre dele.
 Ele assina o que acabou de ser construído, pelo digest que o push informou, e nunca por uma tag que

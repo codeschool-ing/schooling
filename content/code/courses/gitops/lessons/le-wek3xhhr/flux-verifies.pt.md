@@ -120,5 +120,5 @@ aceitou, e o `helm list` concorda: **a preview continua rodando o chart assinado
 assinado é recusado.
 
 **Esta é a propriedade que a aula procura**: o pull request passou pela revisão e pelo CI, o merge
-aconteceu, e o cluster recusou mesmo assim, porque a garantia não depende de alguém perceber. A saída
-é assinar a `0.1.1` ou voltar para a `0.1.0`, e as duas são decisões com um nome nelas.
+aconteceu, e o cluster recusou mesmo assim, porque a garantia não depende de alguém perceber. A
+saída é assinar a `0.1.1` ou voltar para a `0.1.0`, e as duas são decisões com um nome nelas.

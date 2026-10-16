@@ -26,10 +26,10 @@ Duas linhas importam: `vcs:source`, o repositório de onde veio o contexto do bu
 Docker leu os dois do diretório `.git` no contexto do build e os escreveu no atestado da imagem,
 então **a própria imagem diz de qual commit foi construída**.
 
-**A proveniência vale o que vale quem a escreveu.** Esta foi escrita pelo builder no laptop da Ana, e
-nada impede um laptop de escrever a declaração que quiser. Ela vira evidência quando um builder que o
-desenvolvedor não controla a escreve e a assina: um serviço de CI que registra o repositório e o
-commit que fez checkout e assina a declaração com uma identidade própria. É isso que os níveis do
+**A proveniência vale o que vale quem a escreveu.** Esta foi escrita pelo builder no laptop da Ana,
+e nada impede um laptop de escrever a declaração que quiser. Ela vira evidência quando um builder
+que o desenvolvedor não controla a escreve e a assina: um serviço de CI que registra o repositório e
+o commit que fez checkout e assina a declaração com uma identidade própria. É isso que os níveis do
 SLSA graduam, de "existe proveniência" até "a proveniência é produzida por um serviço de build
 endurecido que nem os mantenedores do projeto conseguem adulterar".
 

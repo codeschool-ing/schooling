@@ -19,8 +19,8 @@ ana@laptop:~$ git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_sign
 ```
 
 `gpg.format ssh` tells Git to sign with SSH, `user.signingkey` names the public half of the key to
-sign with, and the allowed-signers file is the list of who may sign: each line an address and the key
-that may sign for it. It is the verification side's trust root, exactly like `cosign.pub`.
+sign with, and the allowed-signers file is the list of who may sign: each line an address and the
+key that may sign for it. It is the verification side's trust root, exactly like `cosign.pub`.
 
 ```
 ana@laptop:~/fleet$ git switch --quiet -c preview-0.1.0
@@ -31,8 +31,8 @@ Good "git" signature for ana@example.org with ED25519 key SHA256:FoPKghSz0uyS83m
 f237f00 ana Merge pull request 'preview: chart 0.1.1' (#12) from preview-0.1.1 into main
 ```
 
-`Good "git" signature for ana@example.org`, against the key in the list. The commit before it carries
-no signature at all, and nothing in Git stops anybody from writing one in Ana's name.
+`Good "git" signature for ana@example.org`, against the key in the list. The commit before it
+carries no signature at all, and nothing in Git stops anybody from writing one in Ana's name.
 
 ## Who checks
 

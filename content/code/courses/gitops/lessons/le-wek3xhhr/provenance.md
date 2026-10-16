@@ -33,8 +33,8 @@ repository and the commit it checked out, and signs the statement with an identi
 is what the SLSA levels grade, from "provenance exists" to "provenance is produced by a hardened
 build service that the project's own maintainers cannot tamper with".
 
-`cosign` can sign a statement like this as an **attestation**, with `cosign attest`, and check it with
-`cosign verify-attestation`, which also checks the statement's contents against a policy: *built from
-this repository, on this builder*. The admission controllers at the end of this lesson can require the
-same at the cluster's door. This course signs the image and stops there; the attestation is the same
-key and the same registry with a statement in place of nothing.
+`cosign` can sign a statement like this as an **attestation**, with `cosign attest`, and check it
+with `cosign verify-attestation`, which also checks the statement's contents against a policy:
+*built from this repository, on this builder*. The admission controllers at the end of this lesson
+can require the same at the cluster's door. This course signs the image and stops there; the
+attestation is the same key and the same registry with a statement in place of nothing.

@@ -38,13 +38,12 @@ ana@laptop:~/signing$ curl -s localhost:5001/v2/bulletin/tags/list | jq -c .tags
 ["1.0","1.1","1.2","sha256-55e5248439fc0bf682f42be50a3503363a3de9421bf967a7876a97eb920fab18","stable"]
 ```
 
-The `WARNING` is the recording machine failing to reach Sigstore's trust root, which `cosign` tries to
-fetch on every run; with internet access it does not appear, and a signature made with a key does not
-need it. `-y` answers yes to the question `cosign` asks before signing, which is about the public
-log and does
-not apply here. The signature is in the registry now, as one more tag of `bulletin`, named after the
-digest it signs: **anybody who can read the image can find its signature**, and the registry needed
-nothing new to store it.
+The `WARNING` is the recording machine failing to reach Sigstore's trust root, which `cosign` tries
+to fetch on every run; with internet access it does not appear, and a signature made with a key does
+not need it. `-y` answers yes to the question `cosign` asks before signing, which is about the
+public log and does not apply here. The signature is in the registry now, as one more tag of
+`bulletin`, named after the digest it signs: **anybody who can read the image can find its
+signature**, and the registry needed nothing new to store it.
 
 In a pipeline this is one step after the push, run by CI with the key from its secret store. It
 signs what was just built, by the digest the push reported, and never by a tag somebody could move

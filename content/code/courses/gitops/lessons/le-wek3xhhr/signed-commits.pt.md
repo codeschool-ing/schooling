@@ -3,10 +3,10 @@ title: Commits assinados
 version: 1
 ---
 
-**Assinar o artefato prova quem o construiu. Assinar o commit prova quem escreveu o estado desejado.**
-O campo de autor de um commit é um texto que qualquer um define, como toda captura deste curso faz com
-o `GIT_AUTHOR_NAME`. Uma assinatura não é: ela é feita com uma chave que só o dono tem, e o Git
-consegue conferi-la contra uma lista de chaves em que confia.
+**Assinar o artefato prova quem o construiu. Assinar o commit prova quem escreveu o estado
+desejado.** O campo de autor de um commit é um texto que qualquer um define, como toda captura deste
+curso faz com o `GIT_AUTHOR_NAME`. Uma assinatura não é: ela é feita com uma chave que só o dono
+tem, e o Git consegue conferi-la contra uma lista de chaves em que confia.
 
 O Git assina com GPG ou, de forma mais simples, com uma chave SSH:
 
@@ -18,10 +18,10 @@ ana@laptop:~$ echo "ana@example.org $(cat ~/.ssh/signing.pub)" > ~/.ssh/allowed_
 ana@laptop:~$ git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
 ```
 
-O `gpg.format ssh` manda o Git assinar com SSH, o `user.signingkey` cita a metade pública da chave com
-que assinar, e o arquivo de signatários permitidos é a lista de quem pode assinar: cada linha um
-endereço e a chave que pode assinar por ele. É a raiz de confiança do lado da verificação, exatamente
-como o `cosign.pub`.
+O `gpg.format ssh` manda o Git assinar com SSH, o `user.signingkey` cita a metade pública da chave
+com que assinar, e o arquivo de signatários permitidos é a lista de quem pode assinar: cada linha um
+endereço e a chave que pode assinar por ele. É a raiz de confiança do lado da verificação,
+exatamente como o `cosign.pub`.
 
 ```
 ana@laptop:~/fleet$ git switch --quiet -c preview-0.1.0
@@ -48,7 +48,7 @@ Uma assinatura que ninguém confere é enfeite. Três lugares conseguem conferi-
 - **a revisão**: o autor do pull request é a conta que fez o push, e a aprovação é a conta que aprovou,
   as duas registradas pelo servidor, digam o que disserem os commits.
 
-**Num fluxo com branches protegidos e revisões, o registro do servidor sobre quem enviou e quem aprovou
-já é uma evidência forte**, e muitos times param aí. Commits assinados acrescentam a garantia de que o
-conteúdo não foi alterado entre a máquina do autor e o servidor, o que importa mais onde um servidor
-comprometido ou um espelho fazem parte da ameaça.
+**Num fluxo com branches protegidos e revisões, o registro do servidor sobre quem enviou e quem
+aprovou já é uma evidência forte**, e muitos times param aí. Commits assinados acrescentam a
+garantia de que o conteúdo não foi alterado entre a máquina do autor e o servidor, o que importa
+mais onde um servidor comprometido ou um espelho fazem parte da ameaça.

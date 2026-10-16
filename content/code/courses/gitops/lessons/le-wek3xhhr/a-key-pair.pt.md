@@ -18,10 +18,10 @@ ana@laptop:~/setup$ cosign version | grep GitVersion
 GitVersion:    v3.1.3
 ```
 
-Um par de chaves são dois arquivos. A chave privada assina e é cifrada com uma senha; a chave pública
-verifica e pode ser publicada em qualquer lugar. A senha é um segredo como os tokens do Gitea da aula
-2, então vai num arquivo que só você lê, e o `cosign` a lê da variável `COSIGN_PASSWORD` em vez de
-perguntar:
+Um par de chaves são dois arquivos. A chave privada assina e é cifrada com uma senha; a chave
+pública verifica e pode ser publicada em qualquer lugar. A senha é um segredo como os tokens do
+Gitea da aula 2, então vai num arquivo que só você lê, e o `cosign` a lê da variável
+`COSIGN_PASSWORD` em vez de perguntar:
 
 ```
 ana@laptop:~/signing$ openssl rand -base64 24 > ~/cosign.password && chmod 600 ~/cosign.password
@@ -42,8 +42,8 @@ LXaA1zXL8TKAHvpvgVMUlXou3Uz277HIUfzoZaz3FasGS2+L2KUSZnJuLA==
 O `cosign.key` só pode ser lido pelo dono, e foi o próprio `cosign` que cuidou disso. **É o arquivo
 sobre o qual repousa toda a garantia desta aula**: quem tiver ele e a senha assina qualquer coisa em
 seu nome, e todo verificador aceita. Num time, ele não mora num laptop. Mora no cofre de segredos do
-sistema de CI ou, melhor, num serviço de gestão de chaves que assina sob pedido e nunca deixa a chave
-sair; o `cosign` usa um desses no lugar do arquivo com `--key` apontando para um endereço como
+sistema de CI ou, melhor, num serviço de gestão de chaves que assina sob pedido e nunca deixa a
+chave sair; o `cosign` usa um desses no lugar do arquivo com `--key` apontando para um endereço como
 `awskms://`, `gcpkms://`, `azurekms://` ou `hashivault://`. A aula 9 trata de onde segredos como
 este moram.
 
