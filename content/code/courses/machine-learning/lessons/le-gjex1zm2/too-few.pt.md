@@ -52,8 +52,7 @@ acaso; o com 1.000 já fez a maior parte do caminho.
 
 Agora compare linhas com a mesma contagem e parte diferente. 300 pessoas que saem entre 36.427 que
 ficam, uma parte de 0,8%, e 300 entre 4.966, uma parte de 5,7%: AUC 0,748 e 0,737. 2.201 a 5,7% e a
-30,7%: 0,803 e 0,794. **Mudar a parte, com a contagem fixa, não fez nada de útil.** Se tanto, os que
-ficam a mais ajudaram um pouco, o que faz sentido: eles também são evidência, sobre como é ficar.
+30,7%: 0,803 e 0,794. **Mudar a parte, com a contagem fixa, não fez nada de útil.** Se fizeram alguma diferença, os que ficam a mais ajudaram um pouco, o que faz sentido: eles também são evidência, sobre como é ficar.
 
 Esse é o fato mais importante sobre desbalanceamento, e os remédios das próximas seções não o mudam.
 **Reamostrar muda a parte e não muda a contagem.** Duplicar alguém que sai não acrescenta ninguém novo;

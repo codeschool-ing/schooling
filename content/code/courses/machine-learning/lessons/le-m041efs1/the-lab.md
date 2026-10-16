@@ -90,7 +90,7 @@ ana@lab:~/ml$ pip install --quiet -r requirements.txt
 
 `--quiet` keeps pip from printing every file it downloads, so **silence is success here**.
 
-Last, five lines at the end of `~/.bashrc`, so that every new terminal starts the same way:
+Last, four lines at the end of `~/.bashrc`, so that every new terminal starts the same way:
 
 ```sh
 cat >> ~/.bashrc <<'EOF'

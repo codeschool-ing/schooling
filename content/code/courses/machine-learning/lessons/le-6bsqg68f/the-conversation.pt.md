@@ -10,7 +10,7 @@ entra no ar. Cada um tem uma resposta que soa prestativa e está errada, e uma q
 **1. "Use 0,5. É o padrão."** A líder de marketing leu isso num tutorial.
 
 0,5 é o padrão de uma função, escolhido por ninguém para este negócio. Quer dizer "mais provável sair
-que ficar", e o crédito da Feira em Casa se paga com menos da metade disso. A resposta é a curva de
+que ficar", e o crédito da Feira em Casa se paga com 0,278, pouco mais da metade disso. A resposta é a curva de
 valor: em 0,5 o modelo faz R$ 9.088 nos meses de teste, e no corte calculado dos custos faz
 R$ 21.672. **Um padrão não precisa de defesa até alguém mostrar quanto ele custa.**
 
@@ -28,7 +28,7 @@ corte segue dela: discuta o número, e o corte se move sozinho.
 O melhor corte nos meses de teste foi 0,23 e fez R$ 23.832, e foi escolhido olhando as respostas. Ele
 venceu por causa de um aumento de preço que ninguém poderia prever em junho, e a surpresa do próximo
 semestre vai ser outra. A resposta são as três linhas do `choose_cut.py`: o corte escolhido antes, o
-escolhido num período de validação e o escolhido depois do fato, **com o último marcado como teto e não
+escolhido num período de validação e o escolhido a posteriori, **com o último marcado como teto e não
 como resultado**.
 
 **4. "Só conseguimos fazer 150 ligações por mês."** Operações, e este não é uma opinião.

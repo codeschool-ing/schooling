@@ -62,6 +62,5 @@ As máquinas de vetores de suporte foram o classificador de uso geral mais forte
 tabelas como a da Feira em Casa elas foram superadas pelo gradient boosting, e têm dois problemas
 práticos. **O tempo de ajuste cresce mais rápido que o número de linhas**, mais ou menos com o
 quadrado ou pior, então 38.000 linhas é lento e um milhão é inviável. E **elas não produzem
-probabilidades**: a distância até a rua é uma nota, e é preciso um modelo extra por cima para virá-la
-probabilidade. Elas ainda vão bem com poucas linhas e muitas colunas, como texto, em que a rua é
+probabilidades**: a distância até a rua é uma nota, e o `probability=True` ajusta um modelo extra por cima para virá-la probabilidade. Elas ainda vão bem com poucas linhas e muitas colunas, como texto, em que a rua é
 desenhada num espaço que ninguém conseguiria imaginar.

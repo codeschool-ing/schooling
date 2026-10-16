@@ -58,9 +58,10 @@ ana@lab:~/ml$ python row.py C00035 2026-03-01 | curl -s localhost:8000/score -H 
 imprime a resposta numa linha.
 
 **C00007 recebe crédito**: 18 anos, cinco meses de casa, duas entregas atrasadas e nota 3,58, que é o
-formato de insatisfeito da aula 14. **C00035 não recebe**, e é o pedido mais interessante: no plano
-mensal, sem app e sem nota, então `rating_90d` e `days_since_login` chegaram os dois como `null`, e o
-imputador do pipeline os preencheu como faz em todo lote.
+formato de insatisfeito da aula 14. **C00035 não recebe**, e é o pedido mais interessante. A linha dele,
+que `python row.py C00035 2026-03-01` imprime sozinho, é do plano mensal, sem app e sem nota, então
+`rating_90d` e `days_since_login` chegaram como `null`, e o imputador do pipeline os preencheu como faz
+em todo lote.
 
 Agora três pedidos que não deveriam receber uma chance:
 

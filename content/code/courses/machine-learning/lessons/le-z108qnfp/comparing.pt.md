@@ -75,7 +75,7 @@ R$ 3.176**: ele cruza o zero com folga. O teste não consegue separar os dois, e
 vale: escolha por outra coisa.
 
 O que a tabela mostra é um degrau. **Todo modelo de boosting, a floresta completa e as árvores em
-bagging superam a regressão logística por uns R$ 5.000, e nenhum supera outro por mais que o ruído.**
+bagging superam a regressão logística por R$ 5.000 a R$ 7.000, e nenhum supera outro por mais que o ruído.**
 A floresta limitada à raiz quadrada das colunas fica entre os dois grupos, pelo motivo que a seção da
 floresta deu. Essa é a forma de costume em dados tabulares de negócio: o salto da reta para as
 árvores é real, a escolha entre bons ensembles de árvores quase sempre não é. Então a escolha se faz

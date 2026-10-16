@@ -4,8 +4,7 @@ version: 1
 ---
 
 A model only sees the columns it is given. Lesson 5's logistic regression was given the columns of
-`churn.csv` as they came, and it made R$ 16,424 on the test months where gradient boosting made
-R$ 21,672. Part of that gap is the kind of model. A sum of weighted columns can only say *more of
+`churn.csv` as they came, and it made R$ 16,424 on the test months where lesson 2's gradient boosting, reading the categories directly, made R$ 21,672. Part of that gap is the kind of model. A sum of weighted columns can only say *more of
 this, more risk*, in a straight line, while a tree can say *above this point, suddenly much more*.
 But the trees did not know anything the line could not have been told. **Feature engineering is the
 telling**: making columns that hand a simpler model the shapes it cannot find on its own.

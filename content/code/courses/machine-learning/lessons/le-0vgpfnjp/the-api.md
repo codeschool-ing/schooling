@@ -9,7 +9,7 @@ an address and read the answer, and that is what an **API** is here: a small pro
 port, takes a subscriber described in **JSON**, and answers with a chance.
 
 **FastAPI** builds that program from ordinary Python functions, and **Uvicorn** is the server that runs
-it, both in lesson 1's `requirements.txt` for this lesson. The whole service is one file. Save this as
+it, both already installed by lesson 1's `requirements.txt`. The whole service is one file. Save this as
 `app.py`:
 
 ```schooling-example

@@ -38,10 +38,9 @@ random_state=0      40 trees  R$ 21,672
 Nothing in the call says *random*, and yet two identical calls gave different models. With more than
 ten thousand rows, `HistGradientBoostingClassifier` turns on lesson 8's early stopping by itself, and
 early stopping sets aside a random tenth of the rows to decide when to stop. A different tenth, a
-different number of trees, a different result: 38 trees and 41 here, R$ 21,120 and R$ 21,152. While this
-lesson was being written, another pair of unseeded runs came out R$ 1,464 apart. Your own two lines will
+different number of trees, a different result: 38 trees and 41 here, R$ 21,120 and R$ 21,152. Your own two lines will
 almost certainly differ from these and from each other, which is the point. **With `random_state=0` the model is the same every
-time**, and the same as every earlier lesson's R$ 21,672.
+time**, and the same as lesson 2's R$ 21,672.
 
 That is the other reason to fix the seed: a comparison between two settings is only a comparison if nothing else changed between the two
 fits.

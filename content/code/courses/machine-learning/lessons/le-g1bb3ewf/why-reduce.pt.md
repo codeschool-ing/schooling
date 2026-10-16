@@ -14,7 +14,7 @@ diferentes.
 - **Para alimentar um modelo com menos colunas.** A aula 6 encontrou a maldição da dimensionalidade: em
   muitas colunas toda linha fica longe de todas as outras, e os métodos que medem distância sofrem. Menos
   colunas, mais densas, podem ajudar, e também deixam um modelo mais rápido.
-- **Para tirar redundância.** Colunas que andam juntas dizem a mesma coisa duas vezes. Dobrá-las numa só
+- **Para tirar redundância.** Colunas que andam juntas dizem a mesma coisa duas vezes. Juntá-las numa só
   tira a repetição, e às vezes o ruído junto.
 
 Esta aula tem três métodos. A **PCA** traça eixos retos novos pelos dados e guarda aqueles ao longo dos

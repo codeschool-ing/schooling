@@ -57,12 +57,12 @@ para qualquer novato em qualquer plano.
 
 **O `plan_weekly` e o `plan_fortnightly`, +0,36 e +0,28, são um artefato.** Todo assinante de um plano
 conhecido recebe um desses dois pesos, ambos negativos, como os pesos de pagamento da primeira seção. Um
-assinante mensal recebe zero nos dois, como o `handle_unknown="ignore"` da aula 14 arranjou, então ele deixa
+assinante mensal recebe zero nos dois, como o `handle_unknown="ignore"` da aula 14 determina, então ele deixa
 de receber um peso negativo que todos os outros recebem. O modelo não está dizendo que o plano mensal é
 arriscado. Ele nunca viu o plano mensal, e *"nenhum dos planos que conheço"* por acaso fica no intercepto,
 acima dos dois planos conhecidos.
 
-Então, dos +0,94 que separam os dois grupos, cerca de dois terços vêm de um plano de que o modelo não sabe
-nada sendo lido como um valor que ele nunca aprendeu. Vale dizer isso à equipe de retenção antes que ela mande
+Então, dos +0,94 que separam os dois grupos, cerca de dois terços vêm das colunas de plano: um plano que o modelo
+nunca viu, lido como um valor que ele nunca aprendeu. Vale dizer isso à equipe de retenção antes que ela mande
 aos assinantes mensais créditos de que talvez não precisem, e esse é o argumento mais forte que existe para
 **ajustar de novo quando o plano novo tiver alguns meses de rótulos**, o que a aula 22 faz.

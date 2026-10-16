@@ -45,12 +45,12 @@ all 36 columns          0.818   R$ 22,184
 quase tão bons, 0,812; vinte ficam dentro do ruído. O valor líquido oscila, R$ 23.384 com vinte
 componentes e R$ 22.184 com todas as colunas, dentro da faixa que o bootstrap da aula 2 não separaria.
 
-Então neste problema a PCA compra um modelo menor e custa um pouco de acerto, e custa algo que importa
-mais: **os pesos deixam de querer dizer alguma coisa.** A aula 5 leu um peso em `rating_90d` e a aula 14
+Então neste problema a PCA dá um modelo menor ao preço de um pouco de acerto. E custa também algo que
+importa mais: **os pesos deixam de querer dizer alguma coisa.** A aula 5 leu um peso em `rating_90d` e a aula 14
 em `unhappy`; um peso no *componente 7* é um peso numa mistura de 36 colunas, e nenhuma equipe de retenção
 consegue agir com ele.
 
-A PCA justifica seu lugar num modelo quando há muito mais colunas que isto, centenas ou milhares que andam
-juntas, como os pixels de uma imagem ou as palavras do texto da aula 14, ou quando um método que mede
-distância está sofrendo a maldição da aula 6. Com 36 colunas bem escolhidas e 38.628 linhas, nenhuma das
+A PCA justifica seu lugar num modelo em dois casos. Um é ter muito mais colunas que isto, centenas ou
+milhares que andam juntas, como os pixels de uma imagem ou as palavras do texto da aula 14. O outro é um
+método que mede distância e está sofrendo a maldição da aula 6. Com 36 colunas bem escolhidas e 38.628 linhas, nenhuma das
 duas coisas vale, e o modelo completo fica.

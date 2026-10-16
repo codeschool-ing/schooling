@@ -20,7 +20,7 @@ Três hábitos decorrem disso.
 
 **Relate primeiro a métrica do negócio, e o resto como explicação.** A equipe de retenção perguntou
 quanto dinheiro os créditos dão. Precisão e revocação explicam como esse número foi feito; AUC e
-precisão média explicam quanto melhor ele poderia ser com outro corte. Nenhuma delas o substitui.
+precisão média dizem quão boa é a ordenação por baixo de todo corte. Nenhuma delas o substitui.
 
 **Nunca cite uma métrica que depende de corte sem o corte.** "Revocação de 0,33" não quer dizer nada
 até virar "revocação de 0,33 num corte de 0,2, com precisão de 0,42". Um número sem o seu corte pode
@@ -32,5 +32,5 @@ separados; o intervalo diz se foram.
 
 Mais uma coisa que a tabela mostra: em 0,2 o modelo fez R$ 23.448, mais que no corte de equilíbrio que a
 aula 2 tirou dos custos. Se as chances do modelo fossem probabilidades honestas, o corte de equilíbrio
-seria o melhor por construção. Ele não ser quer dizer que as chances não são bem o que afirmam, e esse é
+seria o melhor por construção. O fato de não ser quer dizer que as chances não são bem o que afirmam, e esse é
 o primeiro assunto da aula 11.

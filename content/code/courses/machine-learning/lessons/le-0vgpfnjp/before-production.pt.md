@@ -11,7 +11,7 @@ aprendizado de máquina vai ser usado.
 - **Ele responde a qualquer um que o alcance.** Ele escuta em `127.0.0.1`, só esta máquina, e é isso que
   o mantém seguro agora. Numa rede ele precisa saber quem está perguntando e recusar todos os outros: as
   chances são dados pessoais sobre assinantes com nome.
-- **Ele roda como um processo numa máquina.** O Uvicorn consegue rodar vários workers, e um serviço
+- **Ele roda como um processo só, numa máquina só.** O Uvicorn consegue rodar vários workers, e um serviço
   costuma rodar várias cópias, em mais de uma máquina, atrás de algo que reparte os pedidos.
 - **Ele para quando o terminal fecha.** Um serviço de verdade é iniciado pelo sistema, reiniciado quando
   falha e empacotado com as suas versões, para que a máquina em que roda bata com a ficha. Contêineres são

@@ -39,7 +39,7 @@ boost_absolute             +2.89 min   50.5%         5.0%
 O modelo com o melhor MAE **atrasa em metade das promessas**, 50,5%. Isso não é defeito: ele prevê a
 mediana, e a mediana é por definição o tempo que metade das entregas ultrapassa. É exatamente o que
 foi pedido, e exatamente errado para uma promessa. O viés dele é de quase três minutos de atraso,
-porque as entregas que passam do tempo passam por mais do que as adiantadas ficam aquém.
+porque as que atrasam atrasam mais do que as adiantadas se adiantam.
 
 A reta quase não tem viés, +0,20 minuto, e atrasa só 26,6% das vezes. Ela mira a média, e a média fica
 acima da mediana aqui, então como promessa ela é cautelosa por acidente. Isso é sorte, não projeto. Num

@@ -7,7 +7,7 @@ A **análise de componentes principais** procura a direção, pela nuvem de linh
 mais se espalham, e a chama de primeiro componente. Depois procura a direção de maior espalhamento em
 ângulo reto com a primeira, o segundo componente, e assim por diante, até haver tantos componentes quanto
 colunas. Cada componente é uma soma com pesos das colunas originais, e juntos eles descrevem os dados
-exatamente; a questão é que os primeiros costumam descrever quase tudo.
+exatamente; a vantagem é que os primeiros costumam descrever quase tudo.
 
 Salve isto como `pca.py`; ele ajusta todos os componentes e imprime quanto da variação total cada um
 carrega:
@@ -57,8 +57,7 @@ retrato que deixa de fora menos de um terço do que existe. Depois do terceiro, 
 alguns por cento, que são detalhe, e parte disso ruído.
 
 **O oitavo componente não carrega nada, 0,0%.** Isso não é acaso. As seis partes somam 100 para todo
-cliente, então sabidas cinco delas, a sexta também está sabida: os dados têm só sete dimensões vestidas de
-oito. A PCA achou isso sem ninguém dizer. Sempre que um componente carrega exatamente nada, duas ou mais
+cliente, então sabidas cinco delas, a sexta também está sabida: os dados têm só sete dimensões disfarçadas de oito. A PCA achou isso sem ninguém dizer. Sempre que um componente carrega exatamente nada, duas ou mais
 colunas estão repetindo umas às outras, e vale saber disso antes de ajustar qualquer modelo.
 
 A tabela de baixo é o assunto da próxima seção: de que são feitos os dois primeiros componentes.

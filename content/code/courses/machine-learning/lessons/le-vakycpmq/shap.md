@@ -57,4 +57,4 @@ section. Where the two disagree a little lower down, the reason is what they mea
 how much the **score** depends on a column; SHAP asks how much the **predictions** move with it. A column
 can move predictions without improving them.
 
-A global ranking is the summary. The point of SHAP is the next section: one subscriber at a time.
+A global ranking is the summary. SHAP's real use is one subscriber at a time, which is the next section.

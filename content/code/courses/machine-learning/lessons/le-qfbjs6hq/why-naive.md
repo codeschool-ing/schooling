@@ -17,8 +17,8 @@ further towards the end it was already heading for, and the order of the reviews
 
 What it does hurt is the **probabilities themselves**. The last line of `bayes.py` says it: **56.8%
 of the test reviews were scored below 1% or above 99%.** Each correlated word adds its evidence
-again, and the model ends up certain where it has no right to be. A review it scores at 99.9% is not
-a thousand times surer than one at 99%; both are mostly *very likely a complaint*.
+again, and the model ends up certain where it has no right to be. A review it scores at 99.9% has ten times
+the odds of one at 99% and is not meaningfully surer; both mean *very likely a complaint*.
 
 That matters as soon as the number is used as a probability rather than a ranking. Lesson 11 sets a
 threshold from costs, and a threshold computed from costs assumes that 0.3 means three in ten.

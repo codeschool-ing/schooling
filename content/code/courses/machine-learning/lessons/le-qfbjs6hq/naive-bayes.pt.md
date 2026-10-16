@@ -50,8 +50,8 @@ test reviews scored below 1% or above 99%: 56.8%
 **92,3% de acerto**, contra 78,2% de um modelo que nunca diz *reclamação*. Como o naive Bayes é feito
 de contagens, ele pode ser lido: as palavras que mais sugerem uma reclamação são as que uma pessoa
 escolheria, *bruised*, *wilted*, *late*, *soggy*, *rotten*, *missing*, e do outro lado *ripe*,
-*lovely*, *crisp*. A diferença de log-probabilidades calculada no programa é quanto mais
-frequentemente cada palavra aparece nas reclamações do que no resto.
+*lovely*, *crisp*. A diferença de log-probabilidades calculada no programa é o
+logaritmo de quantas vezes mais cada palavra aparece nas reclamações do que no resto.
 
 O vocabulário tem 39 palavras porque as avaliações foram geradas a partir de frases curtas.
 Avaliações reais têm milhares de palavras, muitas delas raras, e o naive Bayes lida bem com isso:

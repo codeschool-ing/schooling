@@ -4,9 +4,9 @@ version: 1
 ---
 
 A tabela de semelhanças comparava produtos dois a dois. A **fatoração de matrizes** procura alguns gostos
-escondidos que expliquem a tabela inteira de uma vez: cada cliente recebe alguns números dizendo quanto tem
-de cada gosto, cada produto alguns números dizendo quanto agrada a cada gosto, e o produto dos dois refaz a
-tabela, preenchendo as células vazias com um palpite. Esses palpites são as recomendações.
+escondidos que expliquem a tabela inteira de uma vez. Cada cliente recebe alguns números dizendo quanto
+tem de cada gosto, e cada produto alguns números dizendo quanto agrada a cada gosto. Multiplicados, os
+dois refazem a tabela e preenchem as células vazias com um palpite. Esses palpites são as recomendações.
 
 É a ideia da aula 17 aplicada a outra tabela. O `TruncatedSVD` é um parente próximo da PCA que trabalha numa
 tabela de zeros e uns sem centralizá-la, e o `NMF`, fatoração de matrizes não negativa, faz o mesmo mantendo

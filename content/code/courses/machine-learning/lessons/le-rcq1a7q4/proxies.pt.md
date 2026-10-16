@@ -41,8 +41,8 @@ app_user   0.95   0.87   0.72   0.52  0.27
 boleto     0.04   0.10   0.18   0.24  0.32
 ```
 
-**Colunas sem a idade identificam quem tem 65 anos ou mais com AUC de 0,872.** Duas delas fazem a maior
-parte do trabalho, e a tabela de baixo as mostra. 95% da faixa mais jovem usa o app, contra 27% da mais
+**Colunas sem a idade identificam quem tem 65 anos ou mais com AUC de 0,872.** Duas delas aparecem com
+clareza na tabela de baixo. 95% da faixa mais jovem usa o app, contra 27% da mais
 velha; 4% da mais jovem paga com boleto, contra 32% da mais velha. Nenhuma das duas colunas é sobre idade,
 as duas são coisas razoáveis para um modelo de churn ler, e juntas dizem muito sobre a idade de alguém.
 

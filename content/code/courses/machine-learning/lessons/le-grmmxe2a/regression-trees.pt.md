@@ -58,5 +58,5 @@ para sempre:
 A reta da aula 5 continua subindo, o que é mais ou menos certo. A árvore fica plana, o que é errado
 de um jeito que cresce a cada quilômetro. Para previsões dentro da faixa dos dados de treino, a
 diferença não importa. Para uma empresa que vai começar a entregar mais longe do que nunca, ela é a
-pergunta inteira, e nenhum modelo de árvores, por mais árvores que faça a média, consegue
+pergunta inteira, e nenhum modelo de árvores, por mais árvores que entrem na média, consegue
 respondê-la.

@@ -30,7 +30,7 @@ has given you is the half that turns their knowledge and the model's evidence in
 frame that says what is being decided, the test that says whether the model helps, and the checks that
 say, every month, whether it still does.
 
-Going further from here is two directions. **`deep-learning`** is the course built on this one: models
+Two courses go further from here. **`deep-learning`** is the course built on this one: models
 for images, text and sequences, where the features are learned rather than written, and everything from
 lesson 1 to lesson 4 still applies unchanged. **`ml-mlops`** is the machinery around this lesson: the
 monthly run on a schedule, models in a registry instead of a folder, alarms that page someone, and the

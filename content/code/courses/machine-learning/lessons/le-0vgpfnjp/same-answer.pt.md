@@ -3,9 +3,9 @@ title: A mesma resposta pelos dois caminhos
 version: 1
 ---
 
-Agora há dois jeitos de pontuar um assinante: o jeito em lote de todas as aulas anteriores,
-`predict_proba` numa tabela lida com `pd.read_csv`, e o jeito servido, uma linha transformada em JSON,
-enviada, conferida pelo `Subscriber`, remontada numa tabela de uma linha e só então entregue ao modelo. O
+Agora há dois jeitos de pontuar um assinante. O jeito em lote de todas as aulas anteriores é
+`predict_proba` numa tabela lida com `pd.read_csv`. O jeito servido transforma uma linha em JSON, envia,
+confere pelo `Subscriber`, remonta uma tabela de uma linha e só então a entrega ao modelo. O
 jeito servido é o que o negócio usa, e o jeito em lote é o que este curso mediu. **Se os dois discordam,
 todo número do curso descreve um modelo que ninguém está rodando.**
 
@@ -74,7 +74,7 @@ largest difference between the two: 0.0000
 **A maior diferença é zero**, até as quatro casas que o servidor arredonda. Os 4.540 assinantes receberam
 a mesma chance pelos dois caminhos. Isso não é formalidade: no caminho servido um `null` chega como o
 `None` do Python e não como o `NaN` do pandas, todo número chega por JSON, e cada linha é uma tabela
-própria. Desta vez nada disso mudou uma resposta, e agora isso é sabido em vez de suposto.
+própria. Desta vez nada disso mudou uma resposta, e agora isso foi verificado, não suposto.
 
 As duas últimas linhas são o desalinhamento que este teste existe para pegar, feito de propósito. **Os
 1.133 assinantes sem o app não têm login, então `days_since_login` é `null`.** Um cliente escrito por
@@ -83,6 +83,6 @@ no lugar. Para o modelo, 0 quer dizer *entrou hoje*, o mais engajado que um assi
 média deles cai de 0,071 para 0,065 e seis perdem um crédito. Nada falhou. Todo pedido voltou 200, toda
 resposta era um número plausível, e o único lugar onde a mudança aparece é numa comparação como esta.
 
-É esse o argumento para guardar o `compare.py`, ou um teste parecido, e rodá-lo sempre que o cliente, o
-servidor ou o modelo mudar: **um modelo em produção é conferido contra o lote em que foi medido, linha por
+Guarde o `compare.py`, ou um teste parecido, e rode-o sempre que o cliente, o servidor ou o modelo mudar.
+**Um modelo em produção é conferido contra o lote em que foi medido, linha por
 linha, não olhando algumas respostas e achando-as razoáveis.**

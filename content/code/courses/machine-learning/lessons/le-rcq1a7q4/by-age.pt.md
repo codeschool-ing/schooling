@@ -4,8 +4,7 @@ version: 1
 ---
 
 O modelo de churn decide quem ganha R$ 40 de desconto numa caixa. É um benefício pequeno, distribuído por
-uma máquina, e umas pessoas recebem e outras não. **Justiça** (em inglês, *fairness*) pergunta se a linha
-entre elas cai ao longo de uma característica que não devia decidir esse tipo de coisa: idade, sexo, raça,
+uma máquina, e umas pessoas recebem e outras não. **Justiça** (em inglês, *fairness*) pergunta se o que separa umas das outras é uma característica que não devia decidir esse tipo de coisa: idade, sexo, raça,
 religião, deficiência, as características que a lei e a decência comum tratam como **protegidas**. O
 `churn.csv` tem uma delas, `age`, e todos os modelos desde a aula 2 a leram.
 

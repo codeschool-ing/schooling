@@ -8,8 +8,7 @@ que quem faz ciência de dados encontra toda semana.
 
 A **codificação one-hot** faz uma coluna de 0 ou 1 por valor: `box_small`, `box_medium`, `box_large`.
 Ela não supõe nada sobre os valores, o que é certo para `city` ou `payment`, onde não há ordem. É o que
-o `get_dummies` fez na aula 5, e a versão do scikit-learn, o `OneHotEncoder`, faz uma coisa que o
-`get_dummies` não faz: **ele lembra as colunas que fez**, então um valor que ele nunca viu ao ajustar
+o `get_dummies` fez na aula 5. A versão do scikit-learn, o `OneHotEncoder`, faz uma coisa a mais: **ele lembra as colunas que fez**, então um valor que ele nunca viu ao ajustar
 recebe zeros em tudo em vez de uma coluna nova de que o modelo nunca ouviu falar.
 
 A **codificação ordinal** troca cada valor pela posição dele numa ordem que você dá: pequena 0, média 1,
@@ -56,7 +55,7 @@ ana@lab:~/ml$ python encoders.py
 ```
 
 A segunda linha nova tem `plan_fortnightly` e `plan_weekly` os dois em 0. **O modelo vai ler o plano
-mensal como "nenhum dos planos que conheço"**, que é o honesto a dizer dele, em vez de quebrar ou criar
+mensal como "nenhum dos planos que conheço"**, que é a resposta honesta sobre ele, em vez de quebrar ou criar
 uma coluna em silêncio. É o `handle_unknown="ignore"` que permite isso; o padrão é levantar um erro, que
 é o padrão certo durante o desenvolvimento e o errado às três da manhã quando aparece um plano novo. A
 aula 15 roda o modelo de churn inteiro no `churn_2026.csv` e encontra exatamente isto.

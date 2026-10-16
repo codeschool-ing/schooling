@@ -4,9 +4,9 @@ version: 1
 ---
 
 k-means makes three assumptions without saying so: every row belongs to some cluster, clusters are round,
-and you know how many there are. **DBSCAN** drops all three. It grows clusters out of dense regions: a row
-with at least `min_samples` neighbours within a distance `eps` is a core; cores near each other join one
-cluster; rows near a core join it too; and rows near no core are **noise**, given the label −1.
+and you know how many there are. **DBSCAN** drops all three. It grows clusters out of dense regions. A row with at least `min_samples` neighbours within a distance
+`eps` is a core. Cores near each other join one cluster, and rows near a core join it too. Rows near no
+core are **noise**, given the label −1.
 
 So it finds the number of clusters itself, follows any shape, and leaves the odd customer out instead of
 forcing them into the nearest group. In exchange it needs `eps`, a distance in the scaled units, and that
@@ -38,7 +38,7 @@ ana@lab:~/ml$ python dbscan.py
  2.0        1       0   [1200]
 ```
 
-**At 1.2 it finds the same four groups k-means did**, with nine customers left out as noise, and nobody
+**At 1.2 it finds four groups of nearly the sizes k-means found**, with nine customers left out as noise, and nobody
 had to tell it four. At 0.8 the density bar is too high: 355 customers count as noise, and the rare big
 spenders, the smallest group, shrink to 74. At 1.5 two groups touch and merge into one of 687, and at 2.0
 everything is one cluster.

@@ -30,6 +30,6 @@ reported it just as faithfully. Explanations are worth most when they are read w
 lesson 4: when one is surprising, ask what in the data or the preparation could have produced it, before
 believing it says something about customers.
 
-What the tools are good for is checking, communicating and debugging: **checking** that the model learned
+The tools are good for three things: **checking** that the model learned
 shapes a person would recognise, **communicating** why a subscriber was chosen, and **debugging** a model
 whose behaviour on new data looks odd, which is exactly what found the monthly-plan artefact.

@@ -14,7 +14,7 @@ sinal errado, digamos entregas atrasadas deixando as pessoas *menos* propensas a
 achado: um vazamento, um defeito numa coluna ou uma surpresa sobre os clientes, e cada um vale saber.
 Um modelo de boosting com o mesmo defeito é mais difícil de pegar.
 
-**Ele é estável.** Reajustado no mês seguinte com linhas um pouco diferentes, os pesos mudam pouco;
+**Ele é estável.** Se ele for reajustado no mês seguinte com linhas um pouco diferentes, os pesos mudam pouco;
 as previsões para um dado assinante mudam pouco. Alguns modelos mudam muito de ideia sobre linhas
 individuais entre um ajuste e outro, o que é um problema quando a equipe de retenção já ligou para
 alguém.
@@ -27,10 +27,10 @@ treino, recebe uma previsão que continua a reta: longa, mais ou menos certa. Um
 **É barato de rodar e de explicar a um regulador.** Em crédito, seguro e saúde, a explicação às vezes
 é exigência legal e não gentileza, e a aula 20 volta a isso.
 
-Contra tudo isso: **ele só acha as formas que recebe.** Os dados de churn têm um limiar dentro, quem
-tem avaliação média abaixo de certo ponto sai muito mais, e uma interação entre atraso e ser novo. A
-regressão logística vê uma versão em linha reta de cada um, e o modelo de boosting os vê como são.
-Isso é quase todo o R$ 5.248 entre os dois.
+Contra tudo isso: **ele só acha as formas que recebe.** Os dados de churn têm duas dessas formas:
+um limiar, abaixo do qual uma avaliação média faz as pessoas saírem muito mais, e uma interação entre
+atraso e ser novo. A regressão logística vê uma versão em linha reta de cada uma, e o modelo de boosting
+as vê como são. É aí que o modelo de boosting tem espaço que a reta não tem.
 
 A conclusão prática é um hábito, não uma regra. **Ajuste o modelo linear primeiro**, sempre: ele é a
 linha de base mais forte que existe, leva um minuto, e seus pesos dizem se os dados fazem sentido.

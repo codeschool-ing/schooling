@@ -46,7 +46,7 @@ worst: 255
 ```
 
 **The best combination makes R$ 757 per thousand rows, against R$ 610 for the defaults**, and the worst
-makes R$ 255: the dials matter. All five of the best use small trees, 7 leaves, against the default 31.
+makes R$ 255: the dials matter. Four of the five best use small trees, 7 leaves, against the default 31.
 That is information the grid found and nobody guessed.
 
 Look at the numbers beside the scores, though: **the standard deviation across the three folds is

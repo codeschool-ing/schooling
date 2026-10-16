@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A score on its own says nothing.** "The model is 94% accurate" sounds like a result, and lesson
-1 already showed that a model which never predicts a cancellation scores exactly that on this data.
+1 already showed that a model which never predicts a cancellation scores about that on this data.
 A number becomes a result only beside the number something simpler would have got, on the same
 rows, measured the same way. That simpler thing is the **baseline**, and it is built before the
 model, not after.

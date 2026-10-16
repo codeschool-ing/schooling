@@ -57,5 +57,4 @@ that is 1,484 leavers at R$ 104 each, **R$ 154,336**. The model gets about 14% o
 Both halves of that picture matter. The model is far better than anything simpler, which is the
 reason to build it. And it is far from perfect, because most people who leave give no sign of it in
 these columns three months before. **A baseline tells you whether a model is worth having; the
-ceiling tells you how much better one could possibly be.** Between them, they stop a project from
-either giving up too early or polishing forever.
+ceiling tells you how much better one could possibly be.** 

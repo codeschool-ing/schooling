@@ -48,7 +48,9 @@ tuned    R$ 22,464 on the test months
 tuned minus defaults: 95% of resamples between R$ -1,001 and R$ 3,457
 ```
 
-**The tuned model makes R$ 22,464 against R$ 21,248 for the defaults: R$ 1,216 more over six months.**
+**The tuned model makes R$ 22,464 against R$ 21,248 for the defaults: R$ 1,216 more over six months.** The
+defaults here are `booster()`'s, with early stopping off, which is why they make R$ 21,248 and not lesson
+2's R$ 21,672.
 On the validation months the gap looked larger, R$ 846 against R$ 610 per thousand rows, which would be
 over R$ 5,000 on the test months' 24,257 rows. Some of that was the luck of the search, and it stayed
 behind.

@@ -30,8 +30,8 @@ for name, method in [("PCA", PCA(n_components=2)), ("UMAP", UMAP(random_state=0,
         print(f"{name:6} has no transform: a new customer means drawing the whole map again")
 ```
 
-A escala aqui é ajustada nas 1.200 linhas, um atalho inofensivo para um retrato e que seria o vazamento de
-preparação da aula 4 se o mapa alimentasse um modelo; dentro de um pipeline, como a aula 15 montou, ela
+A escala aqui é ajustada nas 1.200 linhas. Esse atalho é inofensivo para um retrato e seria o vazamento
+de preparação da aula 4 se o mapa alimentasse um modelo. Dentro de um pipeline, como a aula 15 montou, ela
 seria ajustada só nos primeiros 1.000.
 
 ```
@@ -53,4 +53,4 @@ achando os vizinhos do cliente novo entre os que aprendeu. Então a divisão de 
 |---|---|---|---|---|
 | PCA | razoável | exatas | sim | instantânea |
 | t-SNE | bom | não | não | lento em dados grandes |
-| UMAP | bom | aproximadas | não | rápido depois de compilado |
+| UMAP | bom | aproximadas | não | lento para começar, escala melhor que o t-SNE |

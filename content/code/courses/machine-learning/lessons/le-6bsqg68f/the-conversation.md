@@ -10,7 +10,7 @@ the week the model goes live. Each has a reply that sounds helpful and is wrong,
 **1. "Use 0.5. It's the standard."** Marketing's lead read it in a tutorial.
 
 0.5 is the default of a function, chosen by nobody for this business. It means "more likely to
-leave than to stay", and Feira em Casa's credit pays at less than half that. The reply is the
+leave than to stay", and Feira em Casa's credit pays at 0.278, not much over half that. The reply is the
 value curve: at 0.5 the model makes R$ 9,088 on the test months, and at the cut computed from the
 costs it makes R$ 21,672. **A default needs no defence until somebody shows what it costs.**
 

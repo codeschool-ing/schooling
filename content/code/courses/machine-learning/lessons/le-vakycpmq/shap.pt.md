@@ -57,4 +57,4 @@ pesos. Onde as duas discordam um pouco mais abaixo, o motivo é o que medem. A p
 **nota** depende de uma coluna; o SHAP pergunta quanto as **previsões** se mexem com ela. Uma coluna pode
 mexer nas previsões sem melhorá-las.
 
-Uma ordem global é o resumo. O ponto do SHAP é a próxima seção: um assinante de cada vez.
+Uma ordem global é o resumo. O uso de verdade do SHAP é um assinante de cada vez, que é a próxima seção.

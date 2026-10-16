@@ -77,8 +77,7 @@ Now the warnings, which are what using these maps well consists of.
 - **Sizes mean little either.** A tight blob can be a spread-out group squeezed by the method.
 - **The settings change the picture.** At perplexity 5, t-SNE keeps neighbours as well as at 30, yet the
   groups look far less separate, 0.514. Draw a map with two or three settings before believing it.
-- **Time matters at scale, and the first run lies.** UMAP took 14 seconds here, most of it compiling its
-  own code on its first use in the session; a second fit in the same program took under three. On a
+- **Time matters at scale, and the first run lies.** UMAP took 14 seconds here, much of it compiling its own code on first use. On a
   million rows, t-SNE's cost grows faster than UMAP's.
 
 Use t-SNE and UMAP to **see**, and check what you see against the data. Use PCA when the axes need to

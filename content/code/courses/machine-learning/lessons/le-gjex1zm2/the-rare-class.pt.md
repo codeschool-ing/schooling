@@ -33,12 +33,12 @@ um assunto só:
 - **O corte padrão fica longe** (aulas 10 e 11). Uma chance precisa ser muito alta para passar de 0,5
   quando quase todo mundo é negativo, então um modelo rodado com `predict` não acha quase ninguém: 194
   créditos enviados, 117 pessoas que saem alcançadas entre 1.484.
-- **As curvas precisam ser escolhidas** (aula 10). A ROC AUC elogia um modelo numa classe rara, e a
+- **As curvas precisam ser escolhidas** (aula 10). A ROC AUC favorece um modelo numa classe rara, e a
   curva de precisão e revocação mantém a classe à vista.
 
 Existe uma família inteira de remédios para isso, e a maioria dos tutoriais pega um antes de qualquer
 outra coisa: **dar pesos às classes, ou reamostrá-las até ficarem equilibradas**. Esta aula testa cada
-um no modelo de churn e mede o que ele compra. Medir é o ponto. Os remédios são fáceis de aplicar, e
+um no modelo de churn e mede o que ele rende. Medir é o ponto. Os remédios são fáceis de aplicar, e
 fáceis de aplicar a um problema que eles não resolvem.
 
 Antes disso, uma distinção que decide quase tudo o que vem depois. Uma classe pode ser rara de dois

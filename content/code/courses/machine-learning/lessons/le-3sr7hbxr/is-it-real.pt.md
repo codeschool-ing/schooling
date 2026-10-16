@@ -51,5 +51,4 @@ proporções de 30, 30, 25 e 15 por cento, e os quatro grupos têm 345, 342, 329
 conferência, e o teste de estabilidade, a concordância entre métodos e uma frase que descreve cada grupo
 são o que ficam no lugar dela.
 
-**Um grupo é uma hipótese sobre clientes**, e ele fica útil quando é testado como qualquer hipótese: mande
-a newsletter de padaria ao grupo da padaria e uma simples a uma metade sorteada dele, e veja se algo muda.
+**Um grupo é uma hipótese sobre clientes**, e ele fica útil quando é testado como qualquer hipótese: mande a newsletter de padaria a uma metade sorteada do grupo da padaria e uma simples à outra metade, e veja se algo muda.

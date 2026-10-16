@@ -4,8 +4,7 @@ version: 1
 ---
 
 The program below rebuilds lesson 5's table, then adds columns in two rounds, and fits both a
-logistic regression and gradient boosting on each version. The second round, **the gaps**, is the
-subject of the next section; here the third matters. It adds seven columns, each with a reason:
+logistic regression and gradient boosting on each version. The first round, **the gaps**, is the subject of the next section; here the second matters. It adds seven columns, each with a reason:
 
 | column | what it is | why |
 |---|---|---|

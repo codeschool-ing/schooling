@@ -55,8 +55,7 @@ que uma árvore sem ela na raiz cresce pior, e a diferença extra entre as árvo
 dados em que várias colunas são mais ou menos igualmente úteis, a raiz quadrada costuma vencer. **É
 por isso que é um ajuste e não uma constante**, e a aula 9 o escolhe em dados de validação.
 
-A acurácia out-of-bag, 0,9438 contra 0,9450, quase não se mexe, e fica um fio acima dos 0,939 da
-constante. É a aula 2 de novo: a acurácia não enxerga o que importa aqui. A floresta mede as linhas
+A acurácia out-of-bag, 0,9438 contra 0,9450, quase não se mexe, e fica um fio acima do que dizer *fica* para todo mundo tira nessas linhas de treino, onde 5,7% saem. É a aula 2 de novo: a acurácia não enxerga o que importa aqui. A floresta mede as linhas
 out-of-bag por acurácia porque esse é o padrão dela, e outra nota pode ser calculada a partir de
 `oob_decision_function_` quando for preciso.
 

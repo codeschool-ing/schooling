@@ -39,5 +39,5 @@ on validation rows.**
 | **support vector machines** | few to medium rows, many columns, a curved boundary | hundreds of thousands of rows, or probabilities are needed directly |
 
 On Feira em Casa's churn table, which has tens of thousands of rows, a mix of numbers and
-categories, gaps, thresholds and interactions, none of these four wins. That is the usual result
+categories, gaps, thresholds and interactions, neither of the two scored on it here catches the boosted model: R$ 16,424 and R$ 7,744 against its R$ 21,672. That is the usual result
 for tabular business data, and the reason the next two lessons are about trees.

@@ -52,5 +52,5 @@ check, and the stability test, the agreement between methods and a sentence that
 are what stand in for it.
 
 **A cluster is a hypothesis about customers**, and it becomes useful when it is tested the way any
-hypothesis is: send the bakery newsletter to the bakery cluster and a plain one to a random half of it,
+hypothesis is: send the bakery newsletter to a random half of the bakery cluster and a plain one to the other half,
 and see whether anything changes.

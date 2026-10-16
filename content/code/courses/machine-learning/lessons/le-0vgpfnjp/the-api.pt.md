@@ -9,7 +9,7 @@ um endereço e ler a resposta, e é isso que uma **API** é aqui: um programa pe
 recebe um assinante descrito em **JSON** e responde com uma chance.
 
 O **FastAPI** monta esse programa a partir de funções comuns de Python, e o **Uvicorn** é o servidor que o
-roda, os dois no `requirements.txt` da aula 1 para esta aula. O serviço inteiro é um arquivo. Salve isto
+roda, os dois já instalados pelo `requirements.txt` da aula 1. O serviço inteiro é um arquivo. Salve isto
 como `app.py`:
 
 ```schooling-example
@@ -52,7 +52,7 @@ nota como `"4,2"`, um cliente que manda idades em meses, um campo renomeado na v
 cada um vira uma chance confiante e errada, a não ser que algo na porta confira. O `Subscriber` é essa
 conferência, e não custa nada no momento em que um pedido chega.
 
-Três escolhas nele valem ser ditas:
+Vale explicar três escolhas dele:
 
 - **As palavras são `str` simples**, não uma lista dos valores que o modelo conhece. Uma lista recusaria
   o plano mensal, que chegou em fevereiro de 2026 e que o pipeline sabe tratar: o

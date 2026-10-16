@@ -51,8 +51,9 @@ needs them most.
 
 The point is not that parity is wrong. It is that **every fairness policy has a price and a set of winners
 and losers**, and both can be computed before anybody decides. Here the price is small in money and real
-in who is reached. A per-band cut chosen for equal **recall** instead would raise the young band's credits
-rather than lower them, and the same program, with the quantile replaced, prices it.
+in who is reached. A per-band cut chosen for equal **recall** instead
+would move credits towards the bands whose recall is lowest, 25-34 and 65+, and a little away from the
+youngest, whose recall is already the highest; the same program, with the quantile replaced, prices it.
 
 Two cautions about per-group cuts. Using a protected characteristic to set a different threshold is itself
 treating people differently by that characteristic, which may be exactly what the law forbids in some

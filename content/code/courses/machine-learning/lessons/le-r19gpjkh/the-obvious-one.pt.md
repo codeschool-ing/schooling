@@ -50,5 +50,4 @@ vazia ou em zero.
 
 Deixe-a fora do modelo, e guarde-a. A `cancel_reason` é inútil para prever quem vai sair e valiosa
 para entender por que as pessoas saíram, que é outro projeto com outra entrega: um gráfico para
-quem decide o preço, em vez de uma lista para a equipe de retenção. Uma coluna que vaza é uma coluna
-na pergunta errada.
+quem decide o preço, em vez de uma lista para a equipe de retenção. 

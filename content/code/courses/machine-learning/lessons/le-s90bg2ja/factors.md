@@ -4,9 +4,9 @@ version: 1
 ---
 
 The similarity table compared products two at a time. **Matrix factorisation** looks for a few hidden
-tastes that explain the whole table at once: each customer gets a few numbers saying how much of each
-taste they have, each product a few numbers saying how much it appeals to each taste, and the product of
-the two rebuilds the table, filling in the empty cells with a guess. Those guesses are the recommendations.
+tastes that explain the whole table at once. Each customer gets a few numbers saying how much of each
+taste they have, and each product a few numbers saying how much it appeals to each taste. Multiplied
+together, the two rebuild the table and fill the empty cells with a guess. Those guesses are the recommendations.
 
 It is lesson 17's idea applied to a different table. `TruncatedSVD` is a close relative of PCA that works
 on a table of zeros and ones without centring it, and `NMF`, non-negative matrix factorisation, does the

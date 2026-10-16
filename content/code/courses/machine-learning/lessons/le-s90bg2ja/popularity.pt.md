@@ -3,7 +3,7 @@ title: A referência: o que todo mundo compra
 version: 1
 ---
 
-A regra da aula 2 vale aqui também: antes de qualquer coisa esperta, meça a coisa mais simples que poderia
+A regra da aula 2 vale aqui também: antes de qualquer coisa sofisticada, meça a coisa mais simples que poderia
 funcionar. Em recomendação isso é a **popularidade**: mostrar a todo cliente os três adicionais mais
 vendidos que ele ainda não compra. Não precisa de modelo e muitas vezes é difícil de vencer, porque produtos
 populares são populares por algum motivo. Salve isto como `popular.py`:
@@ -41,5 +41,5 @@ desta aula precisa vencer.
 Quatro dos cinco primeiros são os adicionais que todo mundo compra, abacate, pão de fermentação natural,
 queijo e ovos, e a popularidade os mostra a todo mundo. A fraqueza dela é exatamente essa: **ela recomenda
 os mesmos três produtos a quem faz pão e a quem toma café**, e depois que um cliente tem esses três, ela não
-tem nada a dizer sobre do que aquela pessoa em particular gostaria. As próximas seções usam o que cada
+tem nada a dizer sobre o que aquela pessoa em particular gostaria de comprar. As próximas seções usam o que cada
 cliente comprou para escolher por ele.

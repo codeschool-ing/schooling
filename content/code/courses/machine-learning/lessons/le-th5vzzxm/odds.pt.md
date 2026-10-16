@@ -5,7 +5,7 @@ version: 1
 
 Um peso na regressão logística não move a chance por um valor fixo, porque a curva faz o mesmo
 empurrão valer mais no meio do que perto de 0 ou de 1. O que ele move por um valor fixo é a
-**razão de chances** (*odds*): a chance de sair dividida pela chance de ficar. Uma chance de 0,2 são
+**odds** (a *chance relativa*): a chance de sair dividida pela chance de ficar. Uma chance de 0,2 são
 odds de 0,25, um para quatro; uma chance de 0,5 são odds de 1.
 
 **Cada peso, posto como expoente de e, é o fator pelo qual as odds são multiplicadas** quando aquela
@@ -14,9 +14,9 @@ foram padronizadas, uma unidade é um desvio-padrão da coluna:
 
 | coluna | odds × | lido em voz alta |
 |---|---|---|
-| `rating_90d` | 0,45 | um desvio-padrão a mais de avaliação, cerca de meia estrela aqui, e as odds de sair caem mais da metade |
-| `tenure_months` | 0,62 | um desvio-padrão a mais de casa, cerca de oito meses, e as odds caem um terço |
-| `skips_90d` | 1,41 | um desvio-padrão a mais de pulos, cerca de uma caixa, e as odds sobem 41% |
+| `rating_90d` | 0,45 | um desvio-padrão a mais de avaliação, e as odds de sair caem mais da metade |
+| `tenure_months` | 0,62 | um desvio-padrão a mais de casa, e as odds caem mais de um terço |
+| `skips_90d` | 1,41 | um desvio-padrão a mais de pulos, e as odds sobem 41% |
 | `late_90d` | 1,30 | mais ou menos uma entrega atrasada a mais, e as odds sobem 30% |
 
 Para transformar um desses num fator por unidade original, divida o peso pelo desvio-padrão da coluna

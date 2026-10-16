@@ -14,9 +14,9 @@ were scaled, one unit is one standard deviation of the column:
 
 | column | odds × | read out loud |
 |---|---|---|
-| `rating_90d` | 0.45 | one standard deviation higher in rating, about half a star here, and the odds of leaving fall by more than half |
-| `tenure_months` | 0.62 | one standard deviation longer as a subscriber, about eight months, and the odds fall by a third |
-| `skips_90d` | 1.41 | one standard deviation more skips, about one box, and the odds rise by 41% |
+| `rating_90d` | 0.45 | one standard deviation higher in rating, and the odds of leaving fall by more than half |
+| `tenure_months` | 0.62 | one standard deviation longer as a subscriber, and the odds fall by more than a third |
+| `skips_90d` | 1.41 | one standard deviation more skips, and the odds rise by 41% |
 | `late_90d` | 1.30 | one more late delivery or so, and the odds rise by 30% |
 
 To turn one of these into a factor per original unit, divide the weight by the column's standard

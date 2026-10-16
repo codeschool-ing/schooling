@@ -58,9 +58,10 @@ ana@lab:~/ml$ python row.py C00035 2026-03-01 | curl -s localhost:8000/score -H 
 through the pipe. `jq -c` prints the answer on one line.
 
 **C00007 gets a credit**: 18 years old, five months in, two late deliveries and a rating of 3.58, which
-is lesson 14's unhappy shape. **C00035 does not**, and it is the more interesting request: on the monthly
-plan, with no app and no rating, so `rating_90d` and `days_since_login` both arrived as `null`, and the
-pipeline's imputer filled them as it does in every batch.
+is lesson 14's unhappy shape. **C00035 does not**, and it is the more interesting request. Its row,
+which `python row.py C00035 2026-03-01` prints on its own, is on the monthly plan with no app and no
+rating, so `rating_90d` and `days_since_login` arrived as `null`, and the pipeline's imputer filled them
+as it does in every batch.
 
 Now three requests that should not get a chance:
 

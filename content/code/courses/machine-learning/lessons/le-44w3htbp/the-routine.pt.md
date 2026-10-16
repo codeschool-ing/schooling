@@ -30,7 +30,7 @@ que o curso deu a você é a metade que transforma o conhecimento delas e a evid
 decisão só: o enquadramento que diz o que está sendo decidido, o teste que diz se o modelo ajuda e as
 conferências que dizem, todo mês, se ele ainda ajuda.
 
-Seguir daqui tem duas direções. **`deep-learning`** é o curso construído sobre este: modelos para imagens,
+Dois cursos seguem daqui. **`deep-learning`** é o curso construído sobre este: modelos para imagens,
 texto e sequências, em que as features são aprendidas em vez de escritas, e tudo da aula 1 à aula 4
 continua valendo sem mudança. **`ml-mlops`** é a maquinaria em volta desta aula: a rodada mensal num
 horário marcado, modelos num registro em vez de numa pasta, alarmes que chamam alguém e o reajuste como um

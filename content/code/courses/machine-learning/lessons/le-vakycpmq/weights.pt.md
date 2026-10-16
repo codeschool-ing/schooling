@@ -59,7 +59,7 @@ do boleto contra o −0,56 do cartão diz que pagar com boleto soma cerca de 0,4
 pagar com cartão. Leia os pesos de uma categoria uns contra os outros, nunca um de cada vez.
 
 Mais dois cuidados com pesos, ambos da aula 5 e ambos ainda verdadeiros. Um peso só é comparável a outro
-quando as colunas estão na mesma escala, o que a escala do pipeline garante para os números. E **colunas
+quando as colunas estão na mesma escala, o que o padronizador (`StandardScaler`) do pipeline garante para os números. E **colunas
 correlacionadas dividem o peso**: `rating_90d` e `unhappy` descrevem a mesma coisa de dois jeitos, então
 nenhum dos dois pesos sozinho diz quanto as notas importam. Juntos dizem.
 

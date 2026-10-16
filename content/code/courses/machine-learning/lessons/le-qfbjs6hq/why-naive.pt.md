@@ -18,9 +18,9 @@ sobrevive.
 
 O que ela atrapalha são as **próprias probabilidades**. A última linha do `bayes.py` diz isso: **56,8%
 das avaliações de teste ganharam nota abaixo de 1% ou acima de 99%.** Cada palavra correlacionada
-soma sua evidência de novo, e o modelo termina certo onde não tem direito de estar. Uma avaliação com
-99,9% não está mil vezes mais segura que uma com 99%; as duas são, no fundo, *muito provavelmente uma
-reclamação*.
+soma sua evidência de novo, e o modelo acaba seguro de si onde não deveria. Uma avaliação com
+99,9% tem dez vezes as odds de uma com 99% e não está de fato mais segura; as duas querem dizer *muito
+provavelmente uma reclamação*.
 
 Isso importa assim que o número é usado como probabilidade e não como ordem. A aula 11 define um
 limiar a partir de custos, e um limiar calculado a partir de custos supõe que 0,3 quer dizer três em

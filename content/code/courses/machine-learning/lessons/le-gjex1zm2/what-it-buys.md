@@ -12,7 +12,7 @@ Put the lesson's numbers in one place:
 | oversampling | 0.788 | 0.315 | R$ 21,616 |
 | undersampling | 0.788 | 0.285 | R$ 18,440 |
 
-On this problem **none of the remedies made the model know more**, and each made it slightly worse.
+On this problem **none of the remedies made the model know more**, and each made it worse, undersampling most.
 What each did was move the chances, and with them the place where a cut is useful. A model that
 produces chances, read with a cut computed from the costs, has already dealt with the imbalance:
 the cut is where it is dealt with.

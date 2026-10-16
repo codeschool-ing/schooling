@@ -15,7 +15,7 @@ vetores de suporte, árvores, florestas, `HistGradientBoostingClassifier`. O XGB
 O programa abaixo ajusta o modelo de churn de quatro jeitos: como era, com pesos de classe, e com os
 dois tipos de reamostragem que a próxima seção descreve. Para cada um ele imprime as medidas de
 ordenação da aula 10, a chance média, o dinheiro no corte padrão e **o melhor corte nos meses de teste,
-com o dinheiro ali**. Essa última coluna é a visão de depois da aula 11, e é usada aqui para um único
+com o dinheiro ali**. Essa última coluna é o olhar em retrospecto da aula 11, e é usada aqui para um único
 fim: comparar os quatro modelos cada um no seu melhor, que é a comparação mais justa do que cada um
 aprendeu. É um teto, e nenhum deles poderia tê-lo sabido antes. Salve isto como `rebalance.py`:
 
@@ -63,8 +63,9 @@ undersampling   4,402  0.788  0.285     0.342   R$  -73,464   0.84: R$ 18,440
 
 Pegue as duas primeiras linhas. **Os pesos não melhoraram a ordenação**: a AUC foi de 0,804 para 0,797,
 a precisão média de 0,322 para 0,321. O que eles fizeram foi subir toda chance, de uma média de 0,051
-para 0,313, seis vezes a taxa real de saída. Isso muda quais linhas passam de 0,5: o modelo com pesos
-manda 4.199 créditos no corte padrão em vez de 194, e perde R$ 41.528 fazendo isso.
+para 0,313, seis vezes a média do modelo simples e cerca de cinco vezes a taxa real de saída. Isso muda
+quais linhas passam de 0,5: o modelo com pesos manda créditos aos milhares no corte padrão, e perde
+R$ 41.528 fazendo isso.
 
 O melhor corte dele é 0,79, onde faz R$ 21.304, um pouco menos que o modelo simples em 0,23. Os pesos
 mudaram **onde fica o corte útil**, não quanto o modelo sabe. Esse é o efeito inteiro, e é a mesma coisa

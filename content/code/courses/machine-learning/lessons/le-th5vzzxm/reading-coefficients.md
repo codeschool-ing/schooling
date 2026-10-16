@@ -59,8 +59,7 @@ MAE 5.71  rain +3.55  km +2.38  rain_km +1.30
 ```
 
 With the product `rain_km` added, the error falls from 5.87 to 5.71, and the story changes: rain
-now adds **3.55 minutes plus 1.30 for every kilometre**, so 5 minutes on a short trip and 16 on a
-ten-kilometre one, where the first model said 11 for both. The new column is an **interaction**,
+now adds **3.55 minutes plus 1.30 for every kilometre**, so about 5 minutes on a short trip and 17 on a ten-kilometre one, where the first model said 11 for both. The new column is an **interaction**,
 and a linear model only has the ones it is given. Lesson 7's trees find interactions by
 themselves, which is one of the reasons they usually win, and one of the reasons they are harder to
 read.

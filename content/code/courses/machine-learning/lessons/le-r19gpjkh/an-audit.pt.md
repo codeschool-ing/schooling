@@ -29,13 +29,12 @@ modelo.
    entrada.
 3. **Se é um resumo, de que janela, terminando quando?** "Últimos 90 dias" não quer dizer nada até
    você saber que os 90 dias terminam no retrato e não na exportação.
-4. **Ela pode mudar depois de escrita?** Um campo atualizado no lugar, como a situação ou o segmento
+4. **Ela pode mudar depois de escrita?** Um campo sobrescrito a cada atualização, como a situação ou o segmento
    de um cliente, guarda o valor de hoje em toda linha histórica.
 5. **Ela vai estar lá, com o mesmo significado, quando o modelo rodar?** Uma coluna calculada num
    lote noturno não vai existir para um modelo que avalia em tempo real, no caixa.
 
-A quarta pergunta é a que mais acha vazamentos na prática, e é a mais difícil de ver, porque um campo
-atualizado no lugar parece exatamente um campo histórico. A pista é um campo igual em toda linha de
+A quarta pergunta é a que mais acha vazamentos na prática, e é a mais difícil de ver, porque um campo sobrescrito a cada atualização parece exatamente um campo histórico. A pista é um campo igual em toda linha de
 um cliente, mesmo ao longo de anos em que esse cliente certamente mudou.
 
 ## E o procedimento em volta

@@ -6,7 +6,7 @@ version: 1
 **Um modelo se ajusta, não se descreve.** Toda aula deste curso roda alguma coisa: uma divisão, um
 ajuste, uma nota, uma curva. Você vai entender uma matriz de confusão muito melhor depois que um
 programa seu imprimir uma que discorda do que você esperava, então o curso é feito para ser rodado,
-num computador que você mesmo prepara. Esta seção o prepara. A próxima faz os dados.
+num computador que você mesmo prepara. Esta seção o prepara. A próxima gera os dados.
 
 O laboratório é uma pasta, `~/ml`, com três coisas dentro:
 
@@ -89,7 +89,7 @@ ana@lab:~/ml$ pip install --quiet -r requirements.txt
 
 `--quiet` impede o pip de imprimir cada arquivo que baixa, então **silêncio aqui é sucesso**.
 
-Por último, cinco linhas no fim do `~/.bashrc`, para todo terminal novo começar do mesmo jeito:
+Por último, quatro linhas no fim do `~/.bashrc`, para todo terminal novo começar do mesmo jeito:
 
 ```sh
 cat >> ~/.bashrc <<'EOF'

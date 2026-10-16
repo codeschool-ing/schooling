@@ -49,7 +49,7 @@ Três coisas em cinco linhas de resultado.
 duas horas a mais que o normal, um pneu furado ou um endereço errado, e puxam a média para cima; a
 mediana as ignora, e um erro médio absoluto em minutos é exatamente o que a mediana minimiza.
 
-**Separar por cidade não compra nada.** As cidades diferem menos no tempo de entrega do que parece
+**Separar por cidade não rende nada.** As cidades diferem menos no tempo de entrega do que parece
 que deveriam, e a regra que um gerente usaria primeiro acrescenta uma coluna e nenhuma precisão.
 
 **A regra que soa mais sensata é a pior.** "Minutos por quilômetro, vezes quilômetros" é como

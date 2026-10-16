@@ -8,8 +8,7 @@ that a data scientist meets every week.
 
 **One-hot encoding** makes one 0-or-1 column per value: `box_small`, `box_medium`, `box_large`. It
 assumes nothing about the values, which is right for `city` or `payment`, where no order exists. It is
-what `get_dummies` did in lesson 5, and scikit-learn's version, `OneHotEncoder`, does one thing
-`get_dummies` cannot: **it remembers the columns it made**, so a value it never saw while fitting
+what `get_dummies` did in lesson 5. scikit-learn's version, `OneHotEncoder`, does one thing more: **it remembers the columns it made**, so a value it never saw while fitting
 gets zeros everywhere instead of a new column that the model has never heard of.
 
 **Ordinal encoding** replaces each value by its position in an order you give it: small 0, medium 1,

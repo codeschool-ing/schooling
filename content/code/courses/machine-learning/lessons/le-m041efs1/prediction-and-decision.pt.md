@@ -79,4 +79,4 @@ que uma classe rara faz com cada número que mede um modelo.
 - **Um positivo** é uma linha cujo rótulo é 1, aqui um cancelamento. É positivo no sentido de "a
   coisa procurada", e por isso um positivo é má notícia para a empresa.
 - **Ajustar** ou **treinar** é a etapa em que os números do modelo são escolhidos a partir dos dados,
-  e **escorar** ou **prever** é usá-los em linhas que ele não viu.
+  e **pontuar** ou **prever** é usá-los em linhas que ele não viu.

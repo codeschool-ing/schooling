@@ -5,8 +5,7 @@ version: 1
 
 Esta seção ajusta um modelo e não o explica. O algoritmo é gradient boosting, assunto da aula 8. Ele
 é usado aqui porque aceita os dados como o `load_churn` os deixa, com lacunas e colunas de texto, e
-assim o programa fica curto. **Trate-o como uma caixa** por enquanto: linhas entram, uma chance de
-sair sai.
+assim o programa fica curto. **Trate-o como uma caixa** por enquanto: entram linhas, sai uma chance de cancelar.
 
 A única decisão deste programa é onde cortar essa chance. Um crédito se paga quando a chance de sair
 passa de 40 ÷ (0,3 × 480), então é ali que ele manda. A aula 11 trata dessa linha; aqui ela é
@@ -57,5 +56,4 @@ Nestes seis meses são 1.484 pessoas a R$ 104 cada, **R$ 154.336**. O modelo fic
 As duas metades dessa imagem importam. O modelo é muito melhor que qualquer coisa mais simples, e é
 por isso que vale construí-lo. E está longe do perfeito, porque a maioria das pessoas que saem não
 dá sinal disso nestas colunas três meses antes. **A linha de base diz se um modelo vale a pena; o
-teto diz quanto melhor um modelo poderia ser.** Entre os dois, eles impedem um projeto de desistir
-cedo demais ou de polir para sempre.
+teto diz quanto melhor um modelo poderia ser.** 

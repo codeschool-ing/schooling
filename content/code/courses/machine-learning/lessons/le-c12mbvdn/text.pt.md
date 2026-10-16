@@ -63,7 +63,7 @@ foram escritas a partir de um conjunto fixo de frases, e nenhuma frase quer dize
 palavras em outra ordem.
 
 Texto de verdade não é assim. *"Not fresh"* e *"fresh, not bruised"* têm as mesmas palavras e querem
-dizer coisas opostas, e ali os pares pagam suas colunas. A lição é a mesma de todo atributo desta aula:
+dizer coisas opostas, e ali os pares compensam as colunas que custam. A lição é a mesma de todo atributo desta aula:
 **acrescente, meça, e fique com ele só se ele mover o número que importa.** Aqui não moveu, e 485 colunas
 que não fazem nada são 485 colunas para calcular, guardar e explicar.
 

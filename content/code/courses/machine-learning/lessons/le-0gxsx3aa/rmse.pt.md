@@ -15,8 +15,7 @@ das bibliotecas ajusta por padrão.
 
 Nas entregas isso é um problema, porque os erros grandes aqui não são culpa do modelo. A aula 2
 notou que algumas entregas levam uma ou duas horas a mais que o normal: um pneu furado, um endereço
-errado. Nenhuma coluna do arquivo diz quais, então nenhum modelo as vê chegando. Conte-as, e dê preço
-às duas métricas com e sem elas. Salve isto como `outliers.py`:
+errado. Nenhuma coluna do arquivo diz quais, então nenhum modelo as vê chegando. Conte-as, e calcule as duas métricas com e sem elas. Salve isto como `outliers.py`:
 
 ```python
 # outliers.py
@@ -71,5 +70,5 @@ o negócio:
   eles. Relate-o se alguém pedir, mas não escolha modelo por ele.
 
 Mais uma propriedade sai do quadrado: **o RMSE nunca é menor que o MAE**, e a distância entre eles diz
-quão pesada é a cauda. Aqui o RMSE é quase o triplo do MAE. Com erros todos de tamanho parecido, os
+quão pesada é a cauda. Aqui o RMSE fica entre duas vezes e meia e três vezes o MAE. Com erros todos de tamanho parecido, os
 dois seriam quase iguais.

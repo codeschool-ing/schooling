@@ -65,7 +65,7 @@ menos que o corte dos custos**. Três meses com 559 pessoas que saíram não bas
 um morro plano: um punhado de gente de um lado ou do outro de um corte move o melhor ponto em vários
 centésimos. O corte dos custos não tinha esse ruído, porque não foi estimado.
 
-A visão de depois diz 0,23 e R$ 23.832. **Esse número é o teto deste modelo nestes meses, e não é um
+Em retrospecto, o melhor é 0,23, com R$ 23.832. **Esse número é o teto deste modelo nestes meses, e não é um
 resultado.** Os R$ 2.160 entre ele e o corte de equilíbrio são o que o aumento de preço custou a um
 modelo que não tinha como saber dele.
 

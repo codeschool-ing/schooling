@@ -51,4 +51,4 @@ prediction, to be empty or zero.
 Leave it out of the model, and keep it. `cancel_reason` is useless for predicting who will leave
 and valuable for understanding why people left, which is a different project with a different
 deliverable: a chart for the people who decide the price, rather than a list for the retention
-team. A column that leaks is a column in the wrong question.
+team. 

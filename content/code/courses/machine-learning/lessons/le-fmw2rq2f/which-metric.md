@@ -20,7 +20,7 @@ Three habits follow.
 
 **Report the business metric first, and the rest as explanation.** The retention team asked how much
 money the credits make. Precision and recall explain how that number was made; AUC and average precision
-explain how much better it could be with a different cut. None of them replaces it.
+say how good the ranking underneath every cut is. None of them replaces it.
 
 **Never quote a cut-dependent metric without the cut.** "Recall of 0.33" means nothing until it is
 "recall of 0.33 at a cut of 0.2, with precision 0.42". A number without its cut can be made as large as

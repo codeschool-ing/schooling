@@ -3,8 +3,7 @@ title: Quando as respostas chegam
 version: 1
 ---
 
-Um mês depois de cada rodada, as respostas do mês existem: quem saiu em janeiro é sabido no dia 1º de
-fevereiro. O `churn_2026_labels.csv` as guarda para os três meses, do jeito que o sistema da empresa as
+Um mês depois de cada rodada, as respostas do mês existem: no dia 1º de fevereiro já se sabe quem saiu em janeiro. O `churn_2026_labels.csv` as guarda para os três meses, do jeito que o sistema da empresa as
 teria entregado, um mês de cada vez. Agora as pontuações podem ser avaliadas, e a avaliação é a mesma de
 toda aula: a ordenação se mantém, o nível é honesto, e quanto os créditos renderam. Salve isto como
 `labels.py`:
@@ -51,7 +50,7 @@ posterior do aumento de preço tinha passado em janeiro, e um modelo ajustado no
 continuou esperando por ele. A aula 11 avisou exatamente isso: uma decisão que compara uma chance com um
 número fixo herda o erro da chance.
 
-**E os créditos renderam metade do prometido**, ou menos: R$ 1.904 contra R$ 3.600 em janeiro, R$ 1.296
+**E os créditos renderam cerca de metade do prometido**, ou menos: R$ 1.904 contra R$ 3.600 em janeiro, R$ 1.296
 contra R$ 4.783 em março. Ainda positivo, então o programa ainda valia rodar. Mas uma equipe que
 planejasse um orçamento pelo número prometido estaria explicando uma diferença de R$ 7.898 no fim de
 março, e a explicação não é "o modelo piorou". É que o modelo ordena as pessoas tão bem quanto antes, e é

@@ -46,7 +46,7 @@ worst: 255
 ```
 
 **A melhor combinação faz R$ 757 por mil linhas, contra R$ 610 dos padrões**, e a pior faz R$ 255: os
-botões importam. As cinco melhores usam árvores pequenas, 7 folhas, contra 31 do padrão. Essa é uma
+botões importam. Quatro das cinco melhores usam árvores pequenas, 7 folhas, contra 31 do padrão. Essa é uma
 informação que a grade achou e ninguém adivinhou.
 
 Mas olhe os números ao lado das notas: **o desvio-padrão entre as três partes fica entre 132 e 193 em

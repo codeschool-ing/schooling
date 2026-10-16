@@ -50,8 +50,8 @@ test reviews scored below 1% or above 99%: 56.8%
 **92.3% right**, against 78.2% for a model that never says *complaint*. Because naive Bayes is
 counts, it can be read: the words that most suggest a complaint are the ones a person would pick,
 *bruised*, *wilted*, *late*, *soggy*, *rotten*, *missing*, and on the other side *ripe*, *lovely*,
-*crisp*. The difference of log-probabilities computed in the program is how much more often each
-word appears in complaints than in the rest.
+*crisp*. The difference of log-probabilities computed in the program is the
+logarithm of how many times more often each word appears in complaints than in the rest.
 
 The vocabulary is 39 words because the reviews were generated from short phrases. Real reviews have
 thousands of words, many of them rare, and naive Bayes copes with that well: every word gets its

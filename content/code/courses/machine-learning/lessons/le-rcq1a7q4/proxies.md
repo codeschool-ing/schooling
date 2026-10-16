@@ -41,8 +41,8 @@ app_user   0.95   0.87   0.72   0.52  0.27
 boleto     0.04   0.10   0.18   0.24  0.32
 ```
 
-**Columns without age pick out the over-65s with an AUC of 0.872.** Two of them do most of the work, and
-the bottom table shows them. 95% of the youngest band uses the app and 27% of the oldest; 4% of the youngest
+**Columns without age pick out the over-65s with an AUC of 0.872.** Two of them are easy
+to see in the bottom table. 95% of the youngest band uses the app and 27% of the oldest; 4% of the youngest
 pay by boleto and 32% of the oldest. Neither column is about age, both are reasonable things for a churn
 model to read, and together they say a great deal about how old someone is.
 

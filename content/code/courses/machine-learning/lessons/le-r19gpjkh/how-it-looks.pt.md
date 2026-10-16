@@ -6,7 +6,7 @@ version: 1
 Um vazamento tem sintomas, e nenhum deles é prova. São motivos para parar e perguntar de onde vem
 uma coluna, que é a única prova que existe.
 
-**Uma nota melhor do que o problema permite.** O teto da aula 2 e o passeio da aula 3 dão uma ideia
+**Uma nota melhor do que o problema permite.** O teto da aula 2 e a validação mês a mês da aula 3 dão uma ideia
 do que estes dados conseguem: uma AUC em torno de 0,8, um valor líquido em torno de R$ 900 por mil
 linhas. Um modelo com 0,958, ou com 1,0, num problema sobre quem vai cancelar uma caixa de verduras,
 tem muito mais chance de estar vazando do que de ser brilhante. Comportamento humano é ruidoso, e um

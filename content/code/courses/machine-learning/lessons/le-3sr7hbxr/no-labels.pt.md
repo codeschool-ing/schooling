@@ -46,5 +46,5 @@ e é julgado por ser estável, por poder ser descrito e por alguém poder agir c
 primeiro e pratica os outros dois.
 
 Há um luxo aqui que dados reais nunca oferecem. O `make_data.py` da aula 1 sorteou estes clientes de
-quatro tipos de família, e dá para ler como no `your-data.md`. Uma equipe de marketing de verdade não teria
+quatro tipos de família, e a seção *Seus dados, de um programa que você pode ler* da aula 1 mostra como. Uma equipe de marketing de verdade não teria
 página nenhuma para conferir, e a aula só se apoia nisso no fim.

@@ -38,5 +38,6 @@ certa, e as fronteiras curvas estão ajustando ruído. **Os dados decidem, nas l
 | **máquinas de vetores de suporte** | poucas a médias linhas, muitas colunas, uma fronteira curva | centenas de milhares de linhas, ou quando se precisa de probabilidades direto |
 
 Na tabela de churn da Feira em Casa, que tem dezenas de milhares de linhas, uma mistura de números e
-categorias, lacunas, limiares e interações, nenhum desses quatro vence. Esse é o resultado de costume
+categorias, lacunas, limiares e interações, nenhum dos dois pontuados nela aqui alcança o modelo de boosting: R$ 16.424 e R$ 7.744 contra os
+R$ 21.672 dele. Esse é o resultado de costume
 em dados tabulares de negócio, e o motivo de as duas próximas aulas serem sobre árvores.

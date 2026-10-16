@@ -30,6 +30,6 @@ mesma fidelidade. Explicações valem mais quando são lidas com o ceticismo da 
 pergunte o que nos dados ou na preparação poderia tê-la produzido, antes de acreditar que diz algo sobre
 clientes.
 
-Para que as ferramentas servem é conferir, comunicar e depurar: **conferir** que o modelo aprendeu formas que
+As ferramentas servem para três coisas: **conferir** que o modelo aprendeu formas que
 uma pessoa reconheceria, **comunicar** por que um assinante foi escolhido, e **depurar** um modelo cujo
 comportamento em dados novos parece estranho, que é exatamente o que achou o artefato do plano mensal.

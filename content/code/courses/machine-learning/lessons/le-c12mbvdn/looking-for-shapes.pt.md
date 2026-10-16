@@ -4,10 +4,10 @@ version: 1
 ---
 
 Um modelo só vê as colunas que recebe. A regressão logística da aula 5 recebeu as colunas do
-`churn.csv` como vieram, e fez R$ 16.424 nos meses de teste, onde o gradient boosting fez R$ 21.672.
+`churn.csv` como vieram, e fez R$ 16.424 nos meses de teste, onde o gradient boosting da aula 2, lendo as categorias direto, fez R$ 21.672.
 Parte dessa distância é o tipo de modelo. Uma soma de colunas com pesos só sabe dizer *mais disto, mais
 risco*, em linha reta, enquanto uma árvore sabe dizer *acima deste ponto, de repente muito mais*. Mas as
-árvores não sabiam nada que não pudesse ter sido contado à reta. **Engenharia de atributos é contar**:
+árvores não sabiam nada que não pudesse ter sido contado à reta. **Engenharia de atributos é entregar isso ao modelo**:
 fazer colunas que entregam a um modelo mais simples as formas que ele não acha sozinho.
 
 As formas vêm de olhar. Agrupe as linhas de treino por uma coluna, em faixas, e veja como a parte que

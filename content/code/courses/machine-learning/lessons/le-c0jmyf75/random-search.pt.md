@@ -12,8 +12,7 @@ motivo que é mais fácil de ver num desenho:
 ```
 
 Suponha que só um de dois hiperparâmetros importa. Nove pontos de grade testam **três** valores dele,
-cada um três vezes. Nove pontos ao acaso testam **nove** valores diferentes dele, porque dois pontos
-ao acaso não dividem uma coordenada. Seja qual for o botão que importa, a busca aleatória o explorou
+cada um três vezes. Nove pontos ao acaso testam **nove** valores diferentes dele, porque dois pontos ao acaso quase nunca dividem uma coordenada. Seja qual for o botão que importa, a busca aleatória o explorou
 com mais detalhe, e ninguém precisa saber antes qual é.
 
 As faixas são sorteadas de distribuições, e a escolha da distribuição é a única decisão que sobra. O

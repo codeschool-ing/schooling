@@ -24,8 +24,7 @@ whether the machine learning gets used.
   what happened.
 
 Each of those has tools and a discipline of its own, and **`ml-mlops` is the course about them**: model
-registries, containers, scheduled retraining and the pipelines that run them. What this lesson leaves in
-place is the part every one of them assumes: a model that is one object, a file that comes back
+registries, containers, scheduled retraining and the pipelines that run them. Every one of them assumes the part this lesson leaves in place: a model that is one object, a file that comes back
 identical, a card that says what made it, a door that checks what comes in, and a test that the served
 answers are the measured ones.
 

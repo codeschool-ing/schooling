@@ -10,7 +10,7 @@ diferentes dessa população, as chances dele estão sendo aplicadas num lugar o
 
 A medida comum para uma coluna é o **índice de estabilidade da população** (*population stability
 index*). Corte os valores de treino em dez faixas com a mesma contagem, veja que parte dos valores deste
-mês cai em cada uma e some quanto cada parte se mexeu, pesado pelo quanto o movimento surpreende. Ele é 0
+mês cai em cada uma e some quanto cada parte se mexeu, ponderado pelo quanto o movimento surpreende. Ele é 0
 para uma coluna que não se mexeu; por uma regra prática muito usada em score de crédito, abaixo de 0,1 é
 estável, de 0,1 a 0,25 vale uma olhada e acima de 0,25 é um deslocamento grande. Para uma coluna de
 palavras as faixas são os valores dela. Salve isto como `inputs.py`:
@@ -91,7 +91,7 @@ Três coisas se mexeram, e cada uma precisa de uma pessoa para dizer se importa:
 - **`plan` pula de 0,001 para 0,240 e 0,472**, e as duas últimas linhas dizem por quê: um plano que o
   modelo nunca viu, 4,0% de fevereiro e 7,1% de março. É neste que se deve agir. O codificador da aula 15
   dá zeros a ele, a aula 19 mostrou que os zeros tornam as chances dele em parte um artefato, e uma parte
-  que dobra a cada mês é uma parte que vai pesar.
+  que quase dobrou em um mês é uma parte que vai pesar.
 - **`price_month` fica acima de 0,6 em todo mês.** É o aumento de preço de setembro: a maioria das linhas
   de treino é de antes dele, e todo preço de 2026 é 12% mais alto. O índice está certo, e o alarme é
   notícia velha. Um alarme que toca desde setembro vai ser ignorado em dezembro, e esse é o argumento
@@ -100,7 +100,7 @@ Três coisas se mexeram, e cada uma precisa de uma pessoa para dizer se importa:
   então cada mês tem um pouco mais de assinantes novos que os meses de treino tinham.
 
 E uma coisa não se mexeu, o que importa tanto quanto: **`city` está em 0,001.** A mesma parte dos
-assinantes mora em cada cidade, como sempre. Guarde isso por duas seções.
+assinantes mora em cada cidade, como sempre. Guarde isso: ele volta daqui a duas seções.
 
 As conferências de entrada cobrem também o que esta tabela não mostra: uma coluna que de repente vem toda
 vazia, um valor impossível, um arquivo com metade das linhas de costume. Esses são defeitos no caminho de

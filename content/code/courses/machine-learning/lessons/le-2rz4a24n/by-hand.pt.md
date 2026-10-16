@@ -3,7 +3,7 @@ title: O que quebra quando a preparação é feita à mão
 version: 1
 ---
 
-Toda regressão logística deste curso até aqui foram três ou quatro objetos segurados juntos pelo
+Toda regressão logística deste curso até aqui foi feita de três ou quatro objetos mantidos juntos pelo
 programa em volta deles: um dicionário de medianas, uma chamada ao `get_dummies`, um `StandardScaler`, o
 modelo. Cada um foi ajustado nas linhas de treino e aplicado nas de teste, na ordem certa, à mão.
 Funcionou, porque as linhas de teste vinham do mesmo arquivo, lido do mesmo jeito, algumas linhas

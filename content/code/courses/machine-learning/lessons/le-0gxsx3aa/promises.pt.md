@@ -3,7 +3,7 @@ title: Uma promessa é um quantil
 version: 1
 ---
 
-A mediana é o tempo que metade das entregas vence. Uma promessa que deve ser cumprida nove vezes em
+A mediana é o tempo dentro do qual metade das entregas chega. Uma promessa que deve ser cumprida nove vezes em
 dez precisa do tempo que **nove entregas em dez vencem: o percentil 90**, para aquele tipo de viagem.
 Modelos conseguem prever isso diretamente. A **regressão quantílica** ajusta um percentil escolhido em
 vez da média ou da mediana, e o gradient boosting faz isso com `loss="quantile"`.

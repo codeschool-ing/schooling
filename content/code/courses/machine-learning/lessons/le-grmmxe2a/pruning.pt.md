@@ -3,7 +3,7 @@ title: Poda, e os outros freios
 version: 1
 ---
 
-O `max_depth` para todo galho na mesma profundidade, o que é grosseiro: alguns galhos têm linhas de
+O `max_depth` interrompe todo galho na mesma profundidade, o que é grosseiro: alguns galhos têm linhas de
 sobra para descer mais com proveito e outros ficaram sem evidência bem antes. O scikit-learn tem
 freios mais finos, e dois deles fazem quase todo o trabalho:
 
@@ -40,8 +40,7 @@ min_samples_leaf=200     139 leaves, depth 17, test R$   15,960
 ccp_alpha=0.0003          10 leaves, depth  4, test R$   11,800
 ```
 
-**Os dois freios transformam prejuízo em lucro.** Sem limites, 3.328 folhas perdem R$ 23.856. Exigir
-200 linhas por folha cresce uma árvore de 139 folhas, com 17 níveis em alguns pontos, e faz
+**Os dois freios transformam prejuízo em lucro.** Sem limites, 3.328 folhas perdem R$ 23.856. Exigir 200 linhas por folha produz uma árvore de 139 folhas, com 17 níveis em alguns pontos, e faz
 **R$ 15.960**: funda onde os dados são abundantes, rasa onde não são. Podar com `ccp_alpha=0.0003`
 deixa só 10 folhas, quatro níveis, e faz R$ 11.800 com uma árvore pequena o bastante para ler.
 

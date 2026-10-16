@@ -1,5 +1,5 @@
 ---
-title: Quando a equipe só consegue fazer tantas ligações
+title: Quando a equipe só dá conta de um número limitado de ligações
 version: 1
 ---
 

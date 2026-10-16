@@ -22,7 +22,7 @@ justificada, como quais sinistros uma seguradora manda para revisão.
 A legibilidade some com a profundidade. A melhor árvore da seção anterior, de profundidade 7, tem 110
 folhas e caminhos de até sete condições; ainda dá para imprimi-la, mas ela não cabe mais na cabeça de
 ninguém, e na profundidade 10 é tão opaca quanto qualquer outro modelo. **Uma árvore é legível quando
-é pequena, e precisa quando não é**, e na maioria dos dados essas duas coisas puxam para lados
+é pequena, e acerta mais quando não é**, e na maioria dos dados essas duas coisas puxam para lados
 opostos.
 
 ## Três jeitos de a leitura dar errado

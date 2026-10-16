@@ -5,8 +5,7 @@ version: 1
 
 Cada pergunta divide as linhas ao meio de novo, mais ou menos, então uma árvore de profundidade d
 pode ter até 2^d folhas. Funda o bastante, cada folha tem um punhado de linhas, e a árvore parou de
-aprender padrões e começou a guardar respostas: a árvore sem limites da aula 3, com 3.421 folhas e
-prejuízo nos meses de teste. A profundidade é o botão entre essas pontas. Salve isto como `depth.py`:
+aprender padrões e começou a guardar respostas: a árvore sem limites da aula 3, que perdeu dinheiro nos meses de teste. A profundidade é o botão entre essas pontas. Salve isto como `depth.py`:
 
 ```python
 # depth.py

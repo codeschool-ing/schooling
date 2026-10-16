@@ -3,9 +3,9 @@ title: The same answer by both roads
 version: 1
 ---
 
-There are now two ways to score a subscriber: the batch way of every earlier lesson, `predict_proba` on
-a table read with `pd.read_csv`, and the served way, a row turned into JSON, sent, checked by
-`Subscriber`, rebuilt into a table of one line and only then given to the model. The served way is the
+There are now two ways to score a subscriber. The batch way of every earlier lesson is `predict_proba` on
+a table read with `pd.read_csv`. The served way turns a row into JSON, sends it, checks it with
+`Subscriber`, rebuilds a table of one line and only then gives it to the model. The served way is the
 one the business uses, and the batch way is the one this course measured. **If they disagree, every
 number in the course describes a model nobody is running.**
 
@@ -83,6 +83,6 @@ model, 0 means *logged in today*, the most engaged a subscriber can be. Their me
 to 0.065 and six of them lose a credit. Nothing failed. Every request returned 200, every answer was a
 plausible number, and the only place the change is visible is a comparison like this one.
 
-That is the case for keeping `compare.py`, or a test like it, and running it whenever the client, the
-server or the model changes: **a deployed model is checked against the batch it was measured on, row by
+Keep `compare.py`, or a test like it, and run it whenever the client, the server or the model changes.
+**A deployed model is checked against the batch it was measured on, row by
 row, not by looking at a few answers and finding them reasonable.**

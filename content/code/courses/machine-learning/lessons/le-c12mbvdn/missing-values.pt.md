@@ -1,5 +1,5 @@
 ---
-title: Valores faltantes, direito
+title: Valores faltantes, do jeito certo
 version: 1
 ---
 
@@ -23,11 +23,11 @@ mediana. O scikit-learn faz o mesmo com `SimpleImputer(strategy="median", add_in
 pipeline da aula 15 usa.
 
 E na tabela essas duas colunas **não mudaram nada**: de R$ 16.424 para R$ 16.360 na regressão logística,
-uma AUC que não se mexeu. As duas têm motivos, e os dois valem saber:
+uma AUC que não se mexeu. Cada uma tem um motivo, e vale conhecer os dois:
 
 - `no_login` é a mesma coluna que `app_user`, de ponta-cabeça. Todo não usuário não tem login e todo
   usuário tem, então a marca repetiu algo que o modelo já tinha.
-- `no_rating` separa sim dois grupos, 4,2% contra 5,8% cancelando, nos meses de treino. Mas com a
+- `no_rating` separa sim dois grupos, 4,2% contra 5,8% cancelando, nos meses de treino da aula 5. Mas com a
   mediana preenchida, uma nota faltante já fica no meio da escala, onde a taxa de churn é mais ou menos
   a mesma, então a reta tinha pouco a aprender com a marca.
 

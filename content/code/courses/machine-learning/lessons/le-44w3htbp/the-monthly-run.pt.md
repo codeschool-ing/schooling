@@ -4,7 +4,7 @@ version: 1
 ---
 
 A aula 21 terminou numa escolha: o crédito é uma decisão em lote, tomada uma vez por mês para todos,
-então a vida de trabalho do modelo é um programa que roda no dia 1º de cada mês. Esta aula é esse
+então a vida útil do modelo é um programa que roda no dia 1º de cada mês. Esta aula é esse
 programa rodando de janeiro a março de 2026, e o que acontece em volta dele: o que dá para conferir no
 dia, o que só dá para conferir um mês depois, e o que fazer quando os dois discordam.
 

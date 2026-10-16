@@ -35,8 +35,7 @@ print(f"{month[:7]}: {len(scores):,} subscribers, mean chance {chance.mean():.3f
 ```
 
 In a real deployment `churn_2026.csv` would be a fresh export each month and the program would run on a
-schedule. Here the three months are already in the file, so three runs stand in for three first-of-the-
-months. The model file is lesson 21's; if `models/churn-2025-12.joblib` is not there, run
+schedule. Here the three months are already in the file, so three runs stand in for three firsts of the month. The model file is lesson 21's; if `models/churn-2025-12.joblib` is not there, run
 `python save_model.py` first.
 
 ```

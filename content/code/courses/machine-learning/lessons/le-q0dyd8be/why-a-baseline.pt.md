@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Uma nota sozinha não diz nada.** "O modelo tem 94% de acurácia" soa como resultado, e a aula 1 já
-mostrou que um modelo que nunca prevê um cancelamento tira exatamente isso nestes dados. Um número só
+mostrou que um modelo que nunca prevê um cancelamento tira mais ou menos isso nestes dados. Um número só
 vira resultado ao lado do número que algo mais simples teria tirado, nas mesmas linhas, medido do
 mesmo jeito. Essa coisa mais simples é a **linha de base**, e ela é construída antes do modelo, não
 depois.
@@ -21,7 +21,7 @@ de boa-fé: **até onde o óbvio chega?**
 | **uma regra prática** | uma condição que uma pessoa escreveria: *pulou três caixas, manda o crédito* | que o modelo acha algo que a frase de um especialista não acha |
 | **a prática atual** | o que a empresa faz hoje, mesmo que seja uma planilha e um palpite | que mudar alguma coisa vale o trabalho |
 
-A Feira em Casa não tem prática atual, porque o crédito é novo. Então a barra são os outros dois:
+A Feira em Casa não tem prática atual, porque o crédito é novo. Então a régua são os outros dois:
 **a constante**, que aqui quer dizer *não mandar a ninguém* e vale exatamente R$ 0, e **a melhor
 regra que uma pessoa conseguiria escrever** com as mesmas colunas que o modelo lê.
 

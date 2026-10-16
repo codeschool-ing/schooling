@@ -89,8 +89,7 @@ Three things moved, and each needs a person to say whether it matters:
 
 - **`plan` jumps from 0.001 to 0.240 to 0.472**, and the last two lines say why: a plan the model has
   never seen, 4.0% of February and 7.1% of March. This is the one to act on. Lesson 15's encoder gives it
-  zeros, lesson 19 showed that zeros make its chances partly an artefact, and a share that doubles each
-  month is a share that will matter.
+  zeros, lesson 19 showed that zeros make its chances partly an artefact, and a share that nearly doubled in a month is a share that will matter.
 - **`price_month` is above 0.6 in every month.** That is September's price rise: most of the training
   rows are from before it, and every 2026 price is 12% higher. The index is right, and the alarm is old
   news. An alarm that has been ringing since September will be ignored by December, which is the case for

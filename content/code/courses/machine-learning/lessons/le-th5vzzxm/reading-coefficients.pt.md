@@ -59,7 +59,7 @@ MAE 5.71  rain +3.55  km +2.38  rain_km +1.30
 ```
 
 Com o produto `rain_km` acrescentado, o erro cai de 5,87 para 5,71, e a história muda: a chuva agora
-soma **3,55 minutos mais 1,30 por quilômetro**, então 5 minutos numa viagem curta e 16 numa de dez
+soma **3,55 minutos mais 1,30 por quilômetro**, então cerca de 5 minutos numa viagem curta e 17 numa de dez
 quilômetros, onde o primeiro modelo dizia 11 para as duas. A coluna nova é uma **interação**, e um
 modelo linear só tem as que recebe. As árvores da aula 7 acham interações sozinhas, que é um dos
 motivos de costumarem vencer, e um dos motivos de serem mais difíceis de ler.

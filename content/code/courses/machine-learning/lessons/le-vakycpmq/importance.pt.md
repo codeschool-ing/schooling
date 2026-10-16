@@ -70,7 +70,7 @@ O motivo é como a importância por impureza é ganha. Uma coluna com muitos val
 de um jeito útil por pura sorte. Cada um é creditado à coluna. A `noise` tem 38.628 valores diferentes e
 recebe muito desse crédito; a `coin`, com dois valores, recebe pouco, embora seja igualmente sem sentido. A
 idade, com sessenta valores, é quarta por impureza e quase nada por permutação. **A importância por impureza
-puxa para colunas com muitos valores**, e nas linhas de treino ela não distingue aprender de decorar.
+é enviesada a favor de colunas com muitos valores**, e nas linhas de treino ela não distingue aprender de decorar.
 
 A importância por permutação é medida onde deve, em linhas de onde o modelo não aprendeu, em unidades que
 querem dizer algo, aqui AUC. Ela é mais lenta, já que mede o modelo de novo muitas vezes, e divide mal o

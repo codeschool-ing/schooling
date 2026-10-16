@@ -51,7 +51,7 @@ rise's after-effect was over by January, and a model fitted on the months that i
 expecting it. Lesson 11 warned about exactly this: a decision that compares a chance with a fixed number
 inherits the error in the chance.
 
-**And the credits earned half of what was promised**, or less: R$ 1,904 against R$ 3,600 in January,
+**And the credits earned about half of what was promised**, or less: R$ 1,904 against R$ 3,600 in January,
 R$ 1,296 against R$ 4,783 in March. Still positive, so the program was still worth running. But a
 team that planned a budget on the promised figure would be explaining a gap of R$ 7,898 by the end of
 March, and the explanation is not "the model got worse". It is that the model is as good at ordering

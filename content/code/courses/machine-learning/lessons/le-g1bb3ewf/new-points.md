@@ -30,8 +30,8 @@ for name, method in [("PCA", PCA(n_components=2)), ("UMAP", UMAP(random_state=0,
         print(f"{name:6} has no transform: a new customer means drawing the whole map again")
 ```
 
-The scaler here is fitted on all 1,200 rows, a shortcut that is harmless for a picture and would be the
-preparation leak of lesson 4 if the map fed a model; inside a pipeline, as lesson 15 built, it would be
+The scaler here is fitted on all 1,200 rows. That shortcut is harmless for a picture and would be the
+preparation leak of lesson 4 if the map fed a model. Inside a pipeline, as lesson 15 built, it would be
 fitted on the first 1,000 only.
 
 ```
@@ -53,4 +53,4 @@ new customer's neighbours among the ones it learned from. So the division of lab
 |---|---|---|---|---|
 | PCA | adequate | exact | yes | instant |
 | t-SNE | good | no | no | slow on large data |
-| UMAP | good | approximate | no | fast once compiled |
+| UMAP | good | approximate | no | slow to start, scales better than t-SNE |

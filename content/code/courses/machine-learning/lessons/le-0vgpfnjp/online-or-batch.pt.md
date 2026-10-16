@@ -3,9 +3,7 @@ title: Um de cada vez, ou todos de uma vez
 version: 1
 ---
 
-As duas primeiras linhas do `compare.py` mediram outra coisa também. Perguntado sobre um assinante por
-pedido, o servidor levou cerca de 12 milissegundos cada, a maior parte de um minuto para o mês. Perguntado
-sobre o mês inteiro numa chamada, o mesmo modelo levou 32 milissegundos para os 4.540. **Por assinante, o
+As duas primeiras linhas do `compare.py` mediram outra coisa também. Com um assinante por pedido, o servidor levou cerca de 12 milissegundos cada, a maior parte de um minuto para o mês. Com o mês inteiro numa chamada, o mesmo modelo levou 32 milissegundos para os 4.540. **Por assinante, o
 lote foi bem mais de mil vezes mais rápido.** O modelo não fica mais lento no servidor. Quase todos esses
 12 milissegundos são o caminho: abrir uma conexão, codificar JSON, conferi-lo, montar uma tabela de uma
 linha e fazer a viagem inteira de volta.

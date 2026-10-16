@@ -5,7 +5,7 @@ version: 1
 
 Each question halves the rows again, roughly, so a tree with depth d can have up to 2^d leaves. Deep
 enough, every leaf holds a handful of rows, and the tree has stopped learning patterns and started
-storing answers: lesson 3's unlimited tree, with 3,421 leaves and a loss on the test months. Depth
+storing answers: lesson 3's unlimited tree, which lost money on the test months. Depth
 is the dial between those ends. Save this as `depth.py`:
 
 ```python

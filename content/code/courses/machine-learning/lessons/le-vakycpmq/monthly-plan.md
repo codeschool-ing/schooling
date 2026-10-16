@@ -63,7 +63,7 @@ miss a negative weight that everyone else receives. The model is not saying the 
 It has never seen the monthly plan, and *"neither of the plans I know"* happens to sit at the intercept,
 above both known plans.
 
-So of the +0.94 that separates the two groups, about two thirds comes from a plan the model knows nothing
-about being read as a value it never learned. That is worth saying to the retention team before they send
+So of the +0.94 that separates the two groups, about two thirds comes from the plan columns: a plan the model has
+never seen, read as a value it never learned. That is worth saying to the retention team before they send
 monthly subscribers credits they may not need, and it is the strongest argument there is for **refitting
 once the new plan has a few months of labels**, which lesson 22 does.

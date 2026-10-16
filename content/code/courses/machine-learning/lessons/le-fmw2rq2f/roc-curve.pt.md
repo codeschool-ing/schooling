@@ -25,7 +25,7 @@ Três leituras da imagem:
 
 - **A diagonal é um modelo que não sabe nada.** Mandar créditos ao acaso dá a mesma parte de quem sai e
   de quem fica, em todo corte.
-- **Quanto mais a curva se curva para o canto de cima à esquerda, melhor o modelo separa.** O canto de
+- **Quanto mais a curva se aproxima do canto para o canto de cima à esquerda, melhor o modelo separa.** O canto de
   cima à esquerda é achar todo mundo que sai sem incomodar ninguém que fica.
 - **Os dois pontos marcados são os dois cortes desta aula.** Em 0,5 o modelo alcança 7,9% de quem sai e
   0,3% de quem fica; em 0,278, 23,5% de quem sai e 1,6% de quem fica. Os dois ficam baixos na curva, que

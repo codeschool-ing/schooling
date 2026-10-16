@@ -3,7 +3,7 @@ title: O mesmo resultado, duas vezes
 version: 1
 ---
 
-Um resultado que não pode ser produzido de novo não pode ser conferido, comparado nem confiado. Três
+Um resultado que não pode ser produzido de novo não pode ser conferido nem comparado, e não merece confiança. Três
 coisas decidem se um modelo ajustado hoje pode ser ajustado de novo no mês que vem e dar a mesma
 resposta: os dados, o acaso e as versões. Os dados são o `make_data.py` e suas impressões digitais da aula
 1. As outras duas são esta seção.
@@ -38,10 +38,9 @@ random_state=0      40 trees  R$ 21,672
 Nada na chamada diz *aleatório*, e mesmo assim duas chamadas idênticas deram modelos diferentes. Com mais
 de dez mil linhas, o `HistGradientBoostingClassifier` liga sozinho a parada antecipada da aula 8, e a
 parada antecipada separa um décimo sorteado das linhas para decidir quando parar. Outro décimo, outro
-número de árvores, outro resultado: 38 árvores e 41 aqui, R$ 21.120 e R$ 21.152. Enquanto esta aula era
-escrita, outro par de execuções sem semente saiu R$ 1.464 distante. As suas duas linhas quase certamente
+número de árvores, outro resultado: 38 árvores e 41 aqui, R$ 21.120 e R$ 21.152. As suas duas linhas quase certamente
 vão diferir destas e uma da outra, e esse é o ponto. **Com `random_state=0` o modelo é o mesmo toda vez**,
-e o mesmo dos R$ 21.672 de toda aula anterior.
+e o mesmo dos R$ 21.672 da aula 2.
 
 Esse é o outro motivo para fixar a semente: uma comparação entre dois ajustes só é comparação se nada mais
 mudou entre os dois.

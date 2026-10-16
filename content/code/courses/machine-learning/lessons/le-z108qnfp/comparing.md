@@ -74,7 +74,7 @@ to R$ 3,176**: it crosses zero comfortably. The test cannot tell the two apart, 
 applies: choose on something else.
 
 What the table does show is a step. **Every boosted model, the full forest and the bagged trees beat
-logistic regression by about R$ 5,000, and none of them beats another by more than the noise.** The
+logistic regression by R$ 5,000 to R$ 7,000, and none of them beats another by more than the noise.** The
 forest limited to the square root of the columns sits between the two groups, for the reason the
 forest section gave. That is the usual shape on tabular
 business data: the jump from linear to trees is real, the choice among good tree ensembles is mostly

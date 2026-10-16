@@ -4,8 +4,7 @@ version: 1
 ---
 
 O programa abaixo refaz a tabela da aula 5, depois acrescenta colunas em duas rodadas, e ajusta uma
-regressão logística e um gradient boosting em cada versão. A segunda rodada, **as lacunas**, é o assunto
-da próxima seção; aqui importa a terceira. Ela acrescenta sete colunas, cada uma com um motivo:
+regressão logística e um gradient boosting em cada versão. A primeira rodada, **as lacunas**, é o assunto da próxima seção; aqui importa a segunda. Ela acrescenta sete colunas, cada uma com um motivo:
 
 | coluna | o que é | por quê |
 |---|---|---|

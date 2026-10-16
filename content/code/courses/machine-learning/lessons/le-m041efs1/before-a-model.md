@@ -51,7 +51,7 @@ and it is the most reusable thing in the project:
 
 **The frame is a contract more than a document.** When somebody asks, three months later, why the
 model is "only 30% precise", the answer is already written: precision was never the goal, the net
-value in the last section was, and here is what was agreed.
+value in the previous section was, and here is what was agreed.
 
 ## What changes for a regression
 

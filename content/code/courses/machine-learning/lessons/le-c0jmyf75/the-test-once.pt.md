@@ -48,7 +48,9 @@ tuned    R$ 22,464 on the test months
 tuned minus defaults: 95% of resamples between R$ -1,001 and R$ 3,457
 ```
 
-**O modelo otimizado faz R$ 22.464 contra R$ 21.248 dos padrões: R$ 1.216 a mais em seis meses.** Nos
+**O modelo otimizado faz R$ 22.464 contra R$ 21.248 dos padrões: R$ 1.216 a mais em seis meses.** Os
+padrões aqui são os do `booster()`, com a parada antecipada desligada, e é por isso que fazem R$ 21.248 e
+não os R$ 21.672 da aula 2. Nos
 meses de validação a diferença parecia maior, R$ 846 contra R$ 610 por mil linhas, o que seria mais de
 R$ 5.000 nas 24.257 linhas do teste. Parte disso era a sorte da busca, e ela ficou para trás.
 

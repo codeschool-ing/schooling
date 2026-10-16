@@ -10,7 +10,7 @@ uma tem metade de razão, e cada uma tem resposta.
 
 A segunda tabela do `by_age.py` é a resposta. Tirar a idade baixou a chance de crédito dos jovens que saem
 de 26,7% para 19,4%, e o modelo continuou separando as faixas: as colunas que ficaram identificam quem tem
-65 anos ou mais com AUC de 0,872, sobretudo `app_user` e o boleto. **O desconhecimento mudou quem se
+65 anos ou mais com AUC de 0,872, e duas delas, `app_user` e o boleto, mudam muito com a idade. **O desconhecimento mudou quem se
 beneficia sem tirar a idade da decisão.** A versão útil do instinto é deixar a idade fora do modelo e
 dentro da auditoria.
 
@@ -27,7 +27,7 @@ que está em jogo; não tira a pergunta.
 O `parity.py` pôs preço nisso: R$ 1.088 em seis meses, menos gente que sai alcançada, e créditos
 deslocados para longe dos mais jovens, o grupo que mais sai. A resposta é a tabela de definições:
 **partes iguais é o objetivo certo quando o benefício deve ser distribuído por igual, e o errado quando ele
-é para quem precisa.** Recall igual serve melhor a este crédito.
+é para quem precisa.** Recall igual serve melhor a este crédito: quem vai sair tem a mesma chance de oferta em qualquer faixa.
 
 **4. "O modelo é matemática. Ele não pode ser enviesado."** Um engenheiro que não leu esta aula.
 
@@ -40,8 +40,9 @@ pende.
 ## O que a Ana escreve no enquadramento
 
 O enquadramento da aula 1 ganha três linhas. **A idade fica fora do modelo e guardada para auditoria.**
-Todo mês, o recall do crédito é impresso por faixa de idade, com o intervalo de bootstrap da aula 2, e uma
-faixa cujo recall cair claramente abaixo das outras é investigada. E um assinante que pergunte por que
+Todo mês, a Ana imprime
+o recall do crédito por faixa de idade, com o intervalo de bootstrap da aula 2, e investiga qualquer
+faixa cujo recall caia claramente abaixo das outras. E um assinante que pergunte por que
 recebeu ou não recebeu um crédito ganha uma resposta: a LGPD dá às pessoas o direito de pedir a revisão de
 decisões tomadas unicamente com base em tratamento automatizado que afetem os seus interesses (art. 20), e
 os valores SHAP da aula 19 são o que torna uma resposta possível.

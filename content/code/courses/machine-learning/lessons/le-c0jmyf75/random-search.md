@@ -12,8 +12,7 @@ reason that is easiest to see in a picture:
 ```
 
 Suppose only one of two hyperparameters matters. Nine grid points try **three** values of it, each
-three times over. Nine random points try **nine** different values of it, because no two random
-points share a coordinate. Whichever dial turns out to matter, random search has explored it more
+three times over. Nine random points try **nine** different values of it, because two random points almost never share a coordinate. Whichever dial turns out to matter, random search has explored it more
 finely, and nobody has to know in advance which one it is.
 
 Ranges are drawn from distributions, and the choice of distribution is the one decision left.

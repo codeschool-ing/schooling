@@ -55,8 +55,7 @@ denied it at the root grows worse, and the extra difference between the trees do
 it. On data where several columns are about equally useful, the square root usually wins. **That is
 why it is a setting and not a constant**, and lesson 9 chooses it on validation data.
 
-The out-of-bag accuracy, 0.9438 against 0.9450, barely moves, and sits a hair above the 0.939 of the
-constant. That is lesson 2 again: accuracy cannot see what matters here. The forest scores its out-of-bag rows
+The out-of-bag accuracy, 0.9438 against 0.9450, barely moves, and sits a hair above what saying *stays* to everybody scores on those training rows, where 5.7% leave. That is lesson 2 again: accuracy cannot see what matters here. The forest scores its out-of-bag rows
 by accuracy because that is its default, and a different score can be computed from
 `oob_decision_function_` when one is needed.
 

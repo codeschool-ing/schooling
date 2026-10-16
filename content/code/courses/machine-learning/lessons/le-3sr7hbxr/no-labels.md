@@ -46,5 +46,5 @@ and it is judged by whether it is stable, whether it can be described, and wheth
 it. This lesson measures the first and practises the other two.
 
 There is one luxury here that real data never offers. Lesson 1's `make_data.py` drew these customers
-from four kinds of household, and you can read how in `your-data.md`. A real marketing team would have
+from four kinds of household, and lesson 1's section *Your data, from a program you can read* shows how. A real marketing team would have
 no such page to check against, and the lesson does not lean on it until the end.

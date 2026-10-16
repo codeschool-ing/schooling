@@ -6,7 +6,7 @@ version: 1
 Todo recomendador desta aula aprende com histórico, e histórico é exatamente o que falta a um cliente novo ou
 a um produto novo. Essa é a **partida a frio**, e ela vem de duas formas.
 
-**Um cliente novo** comprou pouco ou nada, então não há com o que parecer e nenhuma linha para fatorar. Quanto
+**Um cliente novo** comprou pouco ou nada, então não há com o que comparar e nenhuma linha para fatorar. Quanto
 histórico basta pode ser medido: divida os clientes por quantos adicionais sabidamente compram, e compare os
 dois recomendadores em cada grupo. Salve isto como `cold_start.py`:
 
@@ -52,7 +52,7 @@ recomendado. A filtragem colaborativa não quebra esse ciclo sozinha.
 
 O que quebra é informação que não vem de compras:
 
-- **Pergunte.** Um cliente novo que escolhe *"faço pão"* no cadastro começa com um gosto em vez de em branco.
+- **Pergunte.** Um cliente novo que escolhe *"faço pão"* no cadastro começa com um gosto em vez de começar do zero.
 - **Descreva o produto.** Um tempero novo pode pegar emprestados os vizinhos dos produtos com que mais se
   parece, por categoria, por ingredientes, por preço. Isso é recomendação **baseada em conteúdo**, e combinada
   com a filtragem colaborativa se chama híbrida.

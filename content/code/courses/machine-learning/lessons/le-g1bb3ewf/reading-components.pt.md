@@ -21,7 +21,7 @@ Leia cada coluna de pesos pelos números maiores, e pelos sinais.
 
 **O primeiro componente é "padaria, laticínios e cestas grandes" contra "produtos frescos".** Padaria,
 ovos e laticínios, extras e o tamanho da cesta pesam positivo; fruta, legumes e folhas pesam negativo. Um
-cliente lá longe nele compra pão, queijo e extras em pedidos grandes; lá longe do outro lado, sobretudo
+cliente no extremo positivo dele compra pão, queijo e extras em pedidos grandes; no extremo oposto, sobretudo
 produtos frescos.
 
 **O segundo é "fruta" contra "legumes, folhas e pedidos frequentes".** Ele separa os dois tipos de

@@ -55,8 +55,7 @@ after 300 trees: off by  4.98 minutes
 **Uma árvore erra por 11 minutos, mais ou menos tão mal quanto a mediana da aula 2.** Cada árvore
 soma uma pequena correção, e depois de cem o modelo erra por 5,03 minutos, o que supera a reta da aula
 5, com 5,9. A reta tinha a forma certa para a maior parte dos dados; o boosting acha a mesma
-inclinação como uma soma de muitos passos pequenos, e também as partes que a reta não via, como a
-chuva pesar mais em viagens longas.
+inclinação como uma soma de muitos passos pequenos, e também as partes que a reta não via.
 
 A curva se achata: de 100 para 300 árvores o erro se mexe cinco centésimos de minuto. Nestes dados
 nada pior acontece. Com uma taxa maior ou árvores mais fundas, o erro de teste pode virar e subir,

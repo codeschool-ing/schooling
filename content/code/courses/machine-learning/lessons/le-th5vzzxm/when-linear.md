@@ -27,10 +27,10 @@ same as for the longest delivery it saw, which is wrong in a different and less 
 explanation is sometimes a legal requirement rather than a courtesy, and lesson 20 comes back to
 that.
 
-Against all of that: **it only finds the shapes it is given.** The churn data has a threshold in
-it, people whose average rating falls below a certain point leave much more often, and an
-interaction between lateness and being new. Logistic regression sees a straight-line version of
-each, and the boosted model sees them as they are. That is most of the R$ 5,248 between them.
+Against all of that: **it only finds the shapes it is given.** The churn data has two such shapes: a
+threshold, below which an average rating makes people leave much more often, and an interaction between
+lateness and being new. Logistic regression sees a straight-line version of each, and the boosted model
+sees them as they are. Those shapes are where the boosted model has room the line does not.
 
 The practical conclusion is a habit rather than a rule. **Fit the linear model first**, always: it
 is the strongest baseline there is, it takes a minute, and its weights tell you whether the data

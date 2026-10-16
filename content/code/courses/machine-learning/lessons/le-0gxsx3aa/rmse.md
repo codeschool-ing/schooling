@@ -71,5 +71,5 @@ business:
   it if somebody asks for it, but do not choose a model by it.
 
 One more property follows from the squaring: **RMSE is never smaller than MAE**, and the gap between
-them says how heavy the tail is. Here RMSE is nearly three times the MAE. On errors that were all
+them says how heavy the tail is. Here RMSE is two and a half to three times the MAE. On errors that were all
 about the same size, the two would be nearly equal.

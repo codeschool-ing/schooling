@@ -45,12 +45,12 @@ all 36 columns          0.818   R$ 22,184
 nearly as good, 0.812; twenty are within the noise. The net value wanders, R$ 23,384 at twenty
 components and R$ 22,184 with all of them, inside the range lesson 2's bootstrap would not separate.
 
-So on this problem PCA buys a smaller model and costs a little accuracy, and it costs something that
+So on this problem PCA buys a smaller model and costs a little accuracy. It also costs something that
 matters more: **the weights stop meaning anything.** Lesson 5 read a weight on `rating_90d` and lesson 14
 on `unhappy`; a weight on *component 7* is a weight on a mixture of 36 columns, and no retention team can
 act on it.
 
-PCA earns its place in a model when there are many more columns than this, hundreds or thousands that
-move together, such as the pixels of an image or the words of lesson 14's text, or when a method that
-measures distance is suffering from the curse of lesson 6. With 36 well-chosen columns and 38,628 rows,
+PCA earns its place in a model in two cases. One is many more columns than this, hundreds or thousands
+that move together, such as the pixels of an image or the words of lesson 14's text. The other is a
+method that measures distance and is suffering from the curse of lesson 6. With 36 well-chosen columns and 38,628 rows,
 neither is true, and the full model stays.

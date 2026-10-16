@@ -52,8 +52,9 @@ mais precisa deles.
 
 O ponto não é que a paridade esteja errada. É que **toda política de justiça tem um preço e um conjunto de
 ganhadores e perdedores**, e os dois podem ser calculados antes de alguém decidir. Aqui o preço é pequeno
-em dinheiro e real em quem é alcançado. Um corte por faixa escolhido para igualar o **recall** subiria os
-créditos da faixa jovem em vez de baixá-los, e o mesmo programa, com o quantil trocado, põe preço nele.
+em dinheiro e real em quem é alcançado. Um corte por faixa escolhido para igualar o **recall**
+moveria créditos para as faixas de recall mais baixo, 25-34 e 65+, e um pouco para longe da mais jovem,
+cujo recall já é o maior; o mesmo programa, com o quantil trocado, põe preço nele.
 
 Duas cautelas com cortes por grupo. Usar uma característica protegida para definir um limiar diferente já
 é tratar as pessoas de forma diferente por essa característica, o que pode ser exatamente o que a lei

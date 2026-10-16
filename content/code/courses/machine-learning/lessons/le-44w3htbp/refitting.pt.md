@@ -70,11 +70,10 @@ Leia coluna por coluna, contra a última linha.
 
 **Reajustar consertou o que os dados conseguiam ver e deixou o que não conseguiam.** O plano mensal era
 uma lacuna nos dados, e dados a preencheram. O concorrente é uma mudança no mundo que as colunas não
-descrevem, e mais linhas das mesmas colunas só o descrevem devagar. Os caminhos adiante não são só
-técnicos: uma coluna que o negócio pode fornecer, *um concorrente entrega nesta cidade desde este mês*;
-ou mais peso nos meses recentes, pelos pesos de amostra do modelo, o que custa estabilidade em todo o
-resto; ou, enquanto isso se decide, uma pessoa avisada de que o modelo subestima duas cidades, e um
-orçamento de crédito para elas definido à mão. As três são decisões de quem é dono do crédito. A parte do
+descrevem, e mais linhas das mesmas colunas só o descrevem devagar. Os caminhos adiante não são só técnicos. O negócio pode fornecer uma coluna, *um
+concorrente entrega nesta cidade desde este mês*. Os meses recentes podem pesar mais, pelos pesos de
+amostra do modelo, o que custa estabilidade em todo o resto. E, enquanto isso se decide, uma pessoa pode
+ser avisada de que o modelo subestima duas cidades, com um orçamento de crédito para elas definido à mão. As três são decisões de quem é dono do crédito. A parte do
 modelo é tornar o erro visível, por grupo, todo mês.
 
 O `churn-2026-02` é o melhor modelo para março, em toda medida que não é ruído, e é ele que deve ser

@@ -64,8 +64,9 @@ undersampling   4,402  0.788  0.285     0.342   R$  -73,464   0.84: R$ 18,440
 
 Take the first two rows. **The weights did not improve the ranking**: AUC went from 0.804 to 0.797,
 average precision from 0.322 to 0.321. What they did is move every chance up, from an average of
-0.051 to 0.313, six times the true rate of leaving. That moves which rows cross 0.5: the weighted
-model sends 4,199 credits at the default cut instead of 194, and loses R$ 41,528 doing it.
+0.051 to 0.313, six times the plain model's average and about five times the true rate of leaving. That
+moves which rows cross 0.5: the weighted model sends credits by the thousand at the default cut, and
+loses R$ 41,528 doing it.
 
 Its own best cut is 0.79, where it makes R$ 21,304, a little less than the plain model at 0.23. The
 weights changed **where the useful cut is**, not how much the model knows. That is the whole effect,

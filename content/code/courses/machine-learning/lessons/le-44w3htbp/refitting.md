@@ -70,11 +70,10 @@ Read it column by column, against the last row.
 
 **Refitting fixed what the data could see and left what it could not.** The monthly plan was a gap in the
 data, and data filled it. The competitor is a change in the world that the columns do not describe, and
-more rows of the same columns describe it only slowly. The ways forward are not technical alone: a column
-the business can supply, *a competitor delivers in this city since this month*; or more weight on recent
-months, through the model's sample weights, which costs stability everywhere else; or, while
-those are decided, a person told that the model under-estimates two cities, and a credit budget for them
-set by hand. All three are decisions for the people who own the credit. The model's part is to make the
+more rows of the same columns describe it only slowly. The ways forward are not technical alone. The business can supply a column, *a
+competitor delivers in this city since this month*. Recent months can carry more weight, through the
+model's sample weights, which costs stability everywhere else. And while those are decided, a person can
+be told that the model under-estimates two cities, with a credit budget for them set by hand. All three are decisions for the people who own the credit. The model's part is to make the
 error visible, by group, every month.
 
 `churn-2026-02` is the better model for March, on every measure that is not noise, and it is the one to

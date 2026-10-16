@@ -49,5 +49,5 @@ jeito como os produtos andam juntos numa cozinha.
 O pão de fermentação natural é diferente, e merece uma segunda olhada. Os vizinhos dele são ovos, queijo e
 abacate, os outros adicionais que todo mundo compra, e depois baunilha, num 0,58 bem mais baixo. Produtos que
 quase todo mundo compra parecem uns com os outros sobretudo porque parecem com tudo, e essa é uma fraqueza
-conhecida da similaridade de cosseno simples: **itens populares se espremem em toda lista**. Sistemas em
+conhecida da similaridade de cosseno simples: **itens populares aparecem em toda lista**. Sistemas em
 produção costumam descontá-los, e esta aula os deixa como estão, porque quem decide é a taxa de acerto.

@@ -69,7 +69,7 @@ UMAP                      14.1             0.971          0.891
 grupos parecem mais afastados no UMAP**, 0,891, onde o retrato da PCA os mostra se tocando, com 0,641. O
 retrato que uma pessoa prefere olhar é claramente o do UMAP.
 
-Agora os avisos, que são aquilo em que consiste usar bem esses mapas.
+Agora os avisos, que são o que separa o bom uso desses mapas.
 
 - **Distâncias entre grupos num mapa de t-SNE ou UMAP querem dizer pouco.** Os dois métodos se importam
   com quem está perto de quem, não com quão longe estão os distantes. Duas ilhas desenhadas longe podem
@@ -79,9 +79,6 @@ Agora os avisos, que são aquilo em que consiste usar bem esses mapas.
 - **Os ajustes mudam o retrato.** Com perplexidade 5, o t-SNE guarda os vizinhos tão bem quanto com 30, e
   mesmo assim os grupos parecem bem menos separados, 0,514. Desenhe um mapa com dois ou três ajustes antes
   de acreditar nele.
-- **O tempo importa em escala, e a primeira execução engana.** O UMAP levou 14 segundos aqui, quase tudo
-  compilando o próprio código no primeiro uso da sessão; um segundo ajuste no mesmo programa levou menos de
-  três. Em um milhão de linhas, o custo do t-SNE cresce mais rápido que o do UMAP.
+- **O tempo importa em escala, e a primeira execução engana.** O UMAP levou 14 segundos aqui, boa parte compilando o próprio código no primeiro uso. Em um milhão de linhas, o custo do t-SNE cresce mais rápido que o do UMAP.
 
-Use t-SNE e UMAP para **ver**, e confira o que viu contra os dados. Use a PCA quando os eixos precisam
-querer dizer algo.
+Use t-SNE e UMAP para **ver**, e confira o que viu contra os dados. Use a PCA quando os eixos precisam ter significado.

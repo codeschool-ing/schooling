@@ -14,7 +14,7 @@ coluna de rótulo para prever, mas ainda pode ser testada com honestidade com um
 produto que cada cliente comprou, e veja se o recomendador o sugere.** Se três sugestões muitas vezes
 incluem o produto escondido, o recomendador sabe algo sobre o que as pessoas querem.
 
-Todo programa desta aula usa o mesmo esconderijo, então ele mora num módulo. Salve isto como `holdout.py`:
+Todo programa desta aula usa o mesmo sorteio do produto escondido, então ele mora num módulo. Salve isto como `holdout.py`:
 
 ```python
 # holdout.py
@@ -44,7 +44,7 @@ def hit_rate(scores, known, hidden, k=3):
 
 O `crosstab` monta a tabela cliente por produto, e o `clip(upper=1)` transforma contagens em comprou ou
 não. O `split` esconde um produto de todo cliente com pelo menos dois, e o `hit_rate` dá a um recomendador
-uma tabela de notas, descarta o que cada cliente já sabidamente compra e conta quantas vezes o produto
+uma tabela de notas, descarta o que já se sabe que cada cliente compra e conta quantas vezes o produto
 escondido está entre os três primeiros. Esse número é a **taxa de acerto em 3**.
 
 Agora olhe a tabela. Salve isto como `matrix.py`:
