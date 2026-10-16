@@ -38,8 +38,11 @@
 #     17 used for lesson 20's captures was built from the source tarball of
 #     Ubuntu's own postgresql-17 package (17.10) and installed into the paths
 #     the PGDG package uses (/usr/lib/postgresql/17, /usr/share/postgresql/17),
-#     where postgresql-common's tools find it. Lesson 20 says the repository
-#     step was not run here.
+#     where postgresql-common's tools find it, with its default socket
+#     directory patched to /var/run/postgresql as Debian's packaging does.
+#     `sudo bash lab.sh build17` makes /var/lib/machines/pg17.tar, which
+#     lesson 20's captures unpack into the machine. Lesson 20 says the
+#     repository step was not run here.
 #   - ana may use sudo without a password, which a real server would not
 #     allow. It keeps the transcripts free of password prompts.
 #   - The recording computer had 4 processors and 15 GB of memory, and a
@@ -52,6 +55,8 @@
 #
 #   sudo bash lab.sh build          debootstrap the server and download every
 #                                   package into its cache (once)
+#   sudo bash lab.sh build17        build PostgreSQL 17.10 from Ubuntu's source
+#                                   tarball into /var/lib/machines/pg17.tar
 #   sudo bash lab.sh reset [N]      a fresh copy of the server, booted, in the
 #                                   state lesson N starts from
 #   sudo bash lab.sh as 'cmd'       run a command as ana, in /home/ana, in a
@@ -122,6 +127,30 @@ build() {
     DEBIAN_FRONTEND=noninteractive apt-get install -y -q --no-download postgresql >/dev/null"
 }
 
+build17() { # lesson 20's PostgreSQL 17, on the host, which is Ubuntu 24.04 too
+  apt-get install -y -q build-essential libicu-dev libreadline-dev zlib1g-dev libssl-dev pkg-config \
+    bison flex libxml2-dev libxslt1-dev liblz4-dev libzstd-dev libkrb5-dev libpam0g-dev libldap-dev \
+    libselinux1-dev libsystemd-dev uuid-dev gettext
+  local src=/var/tmp/pg17src
+  rm -rf "$src"; mkdir -p "$src"; cd "$src"
+  curl -sSfO "$MIRROR/pool/main/p/postgresql-17/postgresql-17_17.10.orig.tar.gz"
+  tar xzf postgresql-17_17.10.orig.tar.gz; cd postgresql-17.10
+  # Debian and PGDG put the default socket in /var/run/postgresql; upstream
+  # uses /tmp, where the wrapper's psql 17 would find no cluster.
+  sed -i 's|^#define DEFAULT_PGSOCKET_DIR  "/tmp"|#define DEFAULT_PGSOCKET_DIR  "/var/run/postgresql"|' \
+    src/include/pg_config_manual.h
+  grep -q '"/var/run/postgresql"' src/include/pg_config_manual.h
+  ./configure --prefix=/usr/lib/postgresql/17 --datadir=/usr/share/postgresql/17 \
+    --sysconfdir=/etc/postgresql-common --with-pgport=5432 \
+    --with-system-tzdata=/usr/share/zoneinfo --enable-nls \
+    --with-icu --with-openssl --with-lz4 --with-zstd --with-libxml --with-libxslt \
+    --with-pam --with-gssapi --with-ldap --with-systemd --with-selinux --with-uuid=e2fs CFLAGS='-O2 -g'
+  make -j4 world-bin
+  rm -rf /var/lib/machines/pg17-root
+  make install-world-bin DESTDIR=/var/lib/machines/pg17-root
+  tar -C /var/lib/machines/pg17-root -cf /var/lib/machines/pg17.tar usr
+}
+
 down() {
   local p; p=$(cat "$PIDFILE" 2>/dev/null) || return 0
   rm -f "$PIDFILE"
@@ -176,6 +205,7 @@ reset() {
 
 case "${1:-}" in
   build) build ;;
+  build17) build17 ;;
   reset) reset "${2:-1}" ;;
   up) up ;;
   down) down ;;
