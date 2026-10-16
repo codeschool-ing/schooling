@@ -18,14 +18,15 @@ links/
 │   ├── store.js        guarda os links, na memória e depois num arquivo (aulas 6, 8)
 │   └── config.js       lê e confere o ambiente, uma vez (aula 9)
 └── test/
-    └── links.test.js   faz perguntas à app sem rede (aulas 4, 6)
+    └── links.test.js   faz perguntas à app numa porta livre (aulas 4, 6)
 ```
 
 Três escolhas nela merecem nome, porque cada uma é um erro que as pessoas cometem uma vez.
 
-**O `app.js` monta a aplicação e o `server.js` a inicia.** Um teste precisa da aplicação sem porta:
-ele importa o `app.js`, manda requisições, e termina. Se o mesmo arquivo também chamasse `listen`,
-todo teste abriria uma porta e deixaria o processo rodando, o quebra-cabeça da seção da aula 2 sobre
+**O `app.js` monta a aplicação e o `server.js` a inicia.** Um teste precisa da aplicação sem a porta
+de verdade: ele importa o `app.js`, a inicia numa porta que o sistema escolhe, manda requisições, e a
+fecha. Se o mesmo arquivo também chamasse `listen` na porta 3000, todo teste brigaria por essa porta e
+deixaria o processo rodando, o quebra-cabeça da seção da aula 2 sobre
 quando um processo decide que terminou.
 
 **O `store.js` esconde onde os dados ficam.** As rotas chamam `store.add` e `store.find` e nunca sabem

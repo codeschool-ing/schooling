@@ -45,13 +45,17 @@ def parse(body):
     e["parts"] = out
     return e
 
-for f in sys.argv[1:]:
+def main(files):
+  for f in files:
     t = open(f, encoding="utf-8").read()
-    n = 0
+    n = [0]
     def repl(m):
-        global n
-        n += 1
+        n[0] += 1
         return "```schooling-example\n" + fmt(parse(m.group(1))) + "```"
     t = re.sub(r"^```example\n(.*?)^```$", repl, t, flags=re.S | re.M)
     open(f, "w", encoding="utf-8").write(t)
-    if n: print(f"{f}: {n} example(s)")
+    if n[0]: print(f"{f}: {n[0]} example(s)")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

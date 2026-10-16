@@ -18,14 +18,15 @@ links/
 │   ├── store.js        keeps the links, in memory and then in a file (lessons 6, 8)
 │   └── config.js       reads and checks the environment, once (lesson 9)
 └── test/
-    └── links.test.js   asks the app questions without a network (lessons 4, 6)
+    └── links.test.js   asks the app questions on a spare port (lessons 4, 6)
 ```
 
 Three choices in it are worth naming, because each is a mistake people make once.
 
 **`app.js` builds the application and `server.js` starts it.** A test needs the application without
-a port: it imports `app.js`, sends it requests, and finishes. If the same file also called `listen`,
-every test would open a port and leave the process running, the puzzle from lesson 2's section on
+its real port: it imports `app.js`, starts it on a port the system picks, sends it requests, and
+closes it. If the same file also called `listen` on port 3000, every test would fight over that port
+and leave the process running, the puzzle from lesson 2's section on
 when a process decides it is finished.
 
 **`store.js` hides where the data lives.** The routes call `store.add` and `store.find` and never know
