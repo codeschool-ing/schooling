@@ -1,0 +1,414 @@
+{
+  "ex-bypyr071": {
+    "prompt": "Qual parte do Airflow calcula que uma tarefa está na hora e a entrega a um worker?",
+    "hint": "É a parte que precisa estar acordada às três da manhã.",
+    "choices": [
+      {
+        "text": "O servidor web, onde as execuções são desenhadas",
+        "why": "O servidor web mostra execuções e deixa as pessoas limparem uma tarefa; não liga nada sozinho."
+      },
+      {
+        "text": "O scheduler",
+        "why": "Isso. Ele lê as DAGs e o banco de metadados e enfileira o que está na hora."
+      },
+      {
+        "text": "O banco de metadados, que guarda toda execução",
+        "why": "Ele guarda o estado que o scheduler lê; não decide nada."
+      },
+      {
+        "text": "O próprio job do Glue, quando chega a hora dele",
+        "why": "Um job do Glue não tem relógio próprio aqui; alguém precisa ligá-lo, e é para isso que serve o Airflow."
+      }
+    ]
+  },
+  "ex-6ngxq9rh": {
+    "prompt": "Ligue cada parte do Airflow ao que ela faz.",
+    "hint": "Cinco partes, quatro delas aqui.",
+    "pairs": [
+      {
+        "left": "servidor web",
+        "right": "onde uma tarefa que falhou é limpa para rodar de novo"
+      },
+      {
+        "left": "banco de metadados",
+        "right": "o estado de toda execução de DAG e instância de tarefa"
+      },
+      {
+        "left": "workers",
+        "right": "rodam as tarefas tiradas de uma fila"
+      },
+      {
+        "left": "pasta de DAGs",
+        "right": "os arquivos Python, num bucket no MWAA"
+      }
+    ],
+    "right_distractors": [
+      "o código Spark do job do Glue"
+    ]
+  },
+  "ex-ytb0nq8k": {
+    "prompt": "Começa a execução da DAG das 03:00 de 16 de outubro de 2026. O que `{{ ds }}` contém nas tarefas dela?",
+    "hint": "Uma execução cobre um intervalo, e leva o nome do intervalo.",
+    "choices": [
+      {
+        "text": "`2026-10-16`, o dia em que a execução começa",
+        "why": "É quando ela roda; o intervalo que ela cobre é o dia anterior."
+      },
+      {
+        "text": "`2026-10-01`, a `start_date` da DAG",
+        "why": "A data de início é onde o agendamento começa, não a data de cada execução."
+      },
+      {
+        "text": "O horário em que a tarefa por acaso começou",
+        "why": "Uma tarefa que começa atrasada ou é refeita recebe mesmo assim a data do intervalo; é esse o objetivo."
+      },
+      {
+        "text": "`2026-10-15`",
+        "why": "Isso: a execução das três do dia 16 cobre o dia 15, a partição que o job deve ler."
+      }
+    ]
+  },
+  "ex-5ts73z6k": {
+    "prompt": "Alguém copia a DAG com `catchup=True` e a envia em 16 de outubro; a `start_date` dela é 1º de outubro. O que o Airflow faz?",
+    "hint": "O catchup é um backfill que ninguém pediu.",
+    "choices": [
+      {
+        "text": "Roda o pipeline uma vez para cada noite desde 1º de outubro",
+        "why": "Isso: quinze execuções, cada uma com o seu `ds`, cada uma ligando dois jobs do Glue. Útil de propósito, caro por acidente."
+      },
+      {
+        "text": "Roda o intervalo desta noite e nada antes",
+        "why": "É o que o `catchup=False` faz."
+      },
+      {
+        "text": "Recusa o arquivo porque a data de início está no passado",
+        "why": "Uma data de início no passado é comum; é a partir dela que o catchup conta."
+      },
+      {
+        "text": "Roda a noite de 1º de outubro e espera alguém rodar o resto",
+        "why": "O catchup agenda sozinho cada intervalo perdido."
+      }
+    ]
+  },
+  "ex-e8b5ag3s": {
+    "prompt": "Por que o MWAA recusa um bucket de DAGs sem versionamento?",
+    "hint": "O que o ambiente registra sobre cada arquivo?",
+    "choices": [
+      {
+        "text": "O versionamento deixa um arquivo de DAG ser editado no lugar",
+        "why": "Nenhum objeto do S3 é editado no lugar, versionado ou não; a lição 1 mostrou um envio substituindo o objeto inteiro."
+      },
+      {
+        "text": "O servidor web lê as DAGs por uma URL pública que exige isso",
+        "why": "O MWAA também exige que o bucket bloqueie acesso público."
+      },
+      {
+        "text": "Ele registra qual versão de cada arquivo carregou",
+        "why": "Isso, e um bucket sem versões não sabe responder isso."
+      },
+      {
+        "text": "Buckets versionados saem mais baratos de ler",
+        "why": "O versionamento guarda mais bytes e, se algo muda, custa mais."
+      }
+    ]
+  },
+  "ex-jsa4nn4q": {
+    "prompt": "`AWS_ENDPOINT_URL` é `http://localhost:4567`, e `aws mwaa list-environments` não consegue conectar em `http://api.localhost:4567/environments`. De onde veio o `api.`?",
+    "hint": "A saída do `--debug` deu o nome.",
+    "choices": [
+      {
+        "text": "O moto redirecionou a requisição para um subdomínio dele",
+        "why": "A requisição nem chegou ao moto; a linha de comando não conseguiu conectar."
+      },
+      {
+        "text": "A API do MWAA, que põe o prefixo `api.` antes do host",
+        "why": "Isso: `host_prefix` `api.`, que a linha de comando acrescenta seja qual for o endpoint, até um endereço IP."
+      },
+      {
+        "text": "Um erro de digitação nas variáveis do laboratório",
+        "why": "Todos os outros serviços do laboratório usam a mesma variável e chegam a `localhost`."
+      },
+      {
+        "text": "O MWAA exige HTTPS, então a linha de comando reescreveu o endereço",
+        "why": "O endereço que ela tentou continua `http://`."
+      }
+    ]
+  },
+  "ex-6szvp741": {
+    "prompt": "Na máquina de um aluno cujo resolvedor responde nomes sob `.localhost`, o mesmo comando leva um `500` em vez de um erro de conexão. O que o aluno deve concluir?",
+    "hint": "Que programa respondeu, e o que ele tem?",
+    "choices": [
+      {
+        "text": "Existe um ambiente no moto, e ele está quebrado",
+        "why": "Não há MWAA no moto 5.2.3 para guardar um."
+      },
+      {
+        "text": "O moto dele tem parte do MWAA que o do curso não tem",
+        "why": "Os dois são 5.2.3; perguntado diretamente, o moto responde `404` para o caminho."
+      },
+      {
+        "text": "A requisição chegou ao moto, e o moto não tem MWAA algum",
+        "why": "Isso. Outro caminho para a mesma resposta."
+      },
+      {
+        "text": "`create-environment` agora vai funcionar, já que o nome resolve",
+        "why": "Resolver o nome só deixa a requisição chegar a um servidor sem nada por trás daquele caminho."
+      }
+    ]
+  },
+  "ex-3w95mxtz": {
+    "prompt": "Quais destas coisas realmente aconteceram no laboratório desta lição? Marque todas as que se aplicam.",
+    "hint": "Guardar não é rodar.",
+    "choices": [
+      {
+        "text": "O arquivo da DAG foi guardado num bucket versionado",
+        "why": "Sim; o S3 no moto é fiel."
+      },
+      {
+        "text": "A definição da máquina de estados foi guardada como foi escrita",
+        "why": "Sim."
+      },
+      {
+        "text": "Um agendamento cron foi guardado com o fuso horário",
+        "why": "Sim; o `get-schedule` o devolveu."
+      },
+      {
+        "text": "O scheduler pegou a DAG no bucket",
+        "why": "Não há Airflow nem MWAA no laboratório."
+      },
+      {
+        "text": "A máquina de estados ligou o job `load-orders` do Glue",
+        "why": "O Glue respondeu que esse job não existe."
+      }
+    ]
+  },
+  "ex-e9rm64gm": {
+    "prompt": "Um ambiente pequeno custa 0,84249 USD por hora. Quanto ele custa num mês de 30 dias, 720 horas, em USD com duas casas, sem workers extras?",
+    "hint": "Ele é cobrado toda hora, trabalhando ou não."
+  },
+  "ex-8f1dnpja": {
+    "prompt": "O ambiente pequeno tem preço de 0,84249 por hora, e a seção diz que ele custa 10,25 USD por hora de trabalho. De onde vem a diferença?",
+    "hint": "Divida o mês pelas horas em que o pipeline trabalha.",
+    "choices": [
+      {
+        "text": "615,02 por mês, espalhados por 60 horas de trabalho",
+        "why": "Isso: 670 das 730 horas são pagas para esperar."
+      },
+      {
+        "text": "As DPUs do Glue dos dois jobs estão incluídas",
+        "why": "O Glue é cobrado à parte, por cima."
+      },
+      {
+        "text": "Workers extras são cobrados a 10,25 por hora enquanto ocupados",
+        "why": "Um worker pequeno extra custa 0,09456 por hora."
+      },
+      {
+        "text": "O MWAA cobra no mínimo doze horas por execução de DAG",
+        "why": "O MWAA cobra o ambiente por hora, não as execuções."
+      }
+    ]
+  },
+  "ex-2c7h31fv": {
+    "prompt": "A Quitanda não vai rodar pipeline nenhum por três semanas. O que ela pode fazer para parar de pagar o ambiente do MWAA nesse tempo?",
+    "hint": "Não existe estado parado.",
+    "choices": [
+      {
+        "text": "Parar o ambiente e ligá-lo de novo depois",
+        "why": "Um ambiente não tem estado parado."
+      },
+      {
+        "text": "Pôr os workers extras em zero",
+        "why": "Isso tira as linhas de 0,09456; o preço por hora do próprio ambiente continua."
+      },
+      {
+        "text": "Apagá-lo, perdendo a história das execuções",
+        "why": "Isso. As DAGs sobrevivem no bucket; o registro das execuções passadas não."
+      },
+      {
+        "text": "Passá-lo para uma classe menor nas três semanas",
+        "why": "Uma classe menor continua cobrada toda hora, e a pequena já é a menor da tabela."
+      }
+    ]
+  },
+  "ex-ksd6n70g": {
+    "prompt": "Quarenta DAGs já dividem com folga um ambiente pequeno. Outra equipe acrescenta mais uma DAG. Quanto ela soma à conta do ambiente?",
+    "hint": "Pelo que o ambiente é cobrado?",
+    "choices": [
+      {
+        "text": "Uma quadragésima primeira parte: 615,02 ÷ 41",
+        "why": "Essa é a média depois; o total não cresce por uma parte."
+      },
+      {
+        "text": "Mais 615,02, já que cada equipe precisa do próprio ambiente",
+        "why": "Equipes podem dividir um ambiente; é essa divisão que torna o MWAA barato por pipeline."
+      },
+      {
+        "text": "Quase nada, a menos que peça mais workers",
+        "why": "Isso. O ambiente é pago para esperar; uma DAG a mais espera nas mesmas horas."
+      },
+      {
+        "text": "15,38, o preço por DAG que a seção calculou",
+        "why": "Essa é uma média de quarenta, não o que uma a mais soma."
+      }
+    ]
+  },
+  "ex-x2k34hhq": {
+    "prompt": "O que na máquina de estados faz o papel que `{{ ds }}` fazia na DAG?",
+    "hint": "O que uma máquina de estados sabe sobre intervalos?",
+    "choices": [
+      {
+        "text": "`$.ds`, que o Step Functions preenche a cada execução",
+        "why": "O Step Functions não preenche nada assim; `$.` lê a entrada que recebeu."
+      },
+      {
+        "text": "O sufixo `.sync` no recurso",
+        "why": "Isso faz o estado esperar o job; não carrega data nenhuma."
+      },
+      {
+        "text": "O bloco `Retry` de cada estado",
+        "why": "Isso substitui o `retries=2`, não a data."
+      },
+      {
+        "text": "Nada: ela recebe um horário, e o job calcula \"ontem\"",
+        "why": "Isso, e sem intervalos também não há backfill."
+      }
+    ]
+  },
+  "ex-y7a38scm": {
+    "prompt": "No laboratório, `describe-execution` diz `RUNNING` e `get-execution-history` termina em `ExecutionSucceeded`, passando por estados `Pass`. Qual diz a verdade?",
+    "hint": "Procure um estado `Pass` em `nightly.json`.",
+    "choices": [
+      {
+        "text": "O histórico: a execução deu certo rápido",
+        "why": "Não há estado `Pass` na definição, e o job do Glue nunca foi ligado."
+      },
+      {
+        "text": "Nenhum dos dois, porque o moto não executa nada",
+        "why": "Isso. O status nunca anda, e o histórico é uma amostra fixa."
+      },
+      {
+        "text": "O status: o job do Glue ainda está rodando",
+        "why": "O Glue disse que o job não existe."
+      },
+      {
+        "text": "Os dois, um depois do outro",
+        "why": "O status foi lido depois de o histórico ser escrito e continuava `RUNNING`."
+      }
+    ]
+  },
+  "ex-md0krmjn": {
+    "prompt": "Um estado `Task` cujo recurso é `arn:aws:states:::glue:startJobRun` com o sufixo ___ acrescentado espera o job do Glue terminar antes de seguir.",
+    "hint": "Sem ele, o estado segue assim que o job começa.",
+    "blanks": [
+      {
+        "accept": [
+          ".sync",
+          "sync"
+        ]
+      }
+    ]
+  },
+  "ex-dez0eqh9": {
+    "prompt": "Qual destas o EventBridge Scheduler aceita para as 03:00 de todo dia?",
+    "hint": "O cron da AWS tem seis campos e um ponto de interrogação.",
+    "choices": [
+      {
+        "text": "`cron(0 3 * * *)`",
+        "why": "Cinco campos é o cron do Unix; a AWS recusa, embora o moto o tenha guardado."
+      },
+      {
+        "text": "`cron(3 0 * * ? *)`",
+        "why": "Os minutos vêm primeiro: isso é 00:03."
+      },
+      {
+        "text": "`cron(0 3 * * ? *)`",
+        "why": "Isso: minuto 0, hora 3, qualquer dia do mês, todo mês, qualquer dia da semana, todo ano."
+      },
+      {
+        "text": "`rate(03:00)`",
+        "why": "Um rate é um intervalo como `rate(1 day)`, e não tem horário do dia."
+      }
+    ]
+  },
+  "ex-k7hbq0p0": {
+    "prompt": "O agendamento `cron(0 3 * * ? *)` é criado sem `--schedule-expression-timezone`. Quando ele dispara, no horário de São Paulo?",
+    "hint": "Sem fuso, a expressão é lida em UTC.",
+    "choices": [
+      {
+        "text": "Às 03:00, já que a região é sa-east-1",
+        "why": "A região não define o fuso de uma expressão."
+      },
+      {
+        "text": "Às 06:00, três horas depois",
+        "why": "Esse é o horário UTC de um agendamento marcado para 03:00 de São Paulo, ao contrário."
+      },
+      {
+        "text": "À meia-noite",
+        "why": "Isso: 03:00 UTC é 00:00 em São Paulo."
+      },
+      {
+        "text": "Ele é recusado até um fuso ser dado",
+        "why": "O fuso é opcional, e é por isso que o erro é fácil."
+      }
+    ]
+  },
+  "ex-xb3c2vg2": {
+    "prompt": "Numa noite o Scheduler dispara atrasado e a execução começa às 03:40. O job calcula \"ontem\" a partir de `<aws.scheduler.scheduled-time>`. Que dia ele processa?",
+    "hint": "Qual horário esse atributo carrega?",
+    "choices": [
+      {
+        "text": "O dia anterior à noite em que estava marcado",
+        "why": "Isso. O atributo é o horário em que a execução estava marcada, não quando começou, então um atraso não muda nada."
+      },
+      {
+        "text": "Hoje, porque 03:40 é depois do agendamento",
+        "why": "O job nunca vê 03:40; ele vê o horário marcado."
+      },
+      {
+        "text": "Nenhum: uma execução atrasada recebe entrada vazia",
+        "why": "O Scheduler preenche o atributo em toda invocação, atrasada ou não."
+      },
+      {
+        "text": "Dois dias atrás, já que o atraso passou de um limite",
+        "why": "Quarenta minutos não cruzam limite de dia, e o horário usado é o marcado de todo jeito."
+      }
+    ]
+  },
+  "ex-e6nbcn9j": {
+    "prompt": "A Quitanda tem dois pipelines hoje. Em um ano espera trinta e cinco DAGs de quatro equipes, e reexecuções frequentes de dias passados. Que plano serve?",
+    "hint": "Pague pela espera quando houver o bastante para esperar.",
+    "choices": [
+      {
+        "text": "MWAA agora, já que vai ser necessário em um ano e mudar depois dá trabalho",
+        "why": "Um ano de 615,02 por mês por dois pipelines, uns 7.380, não compra nada que a alternativa não tenha hoje."
+      },
+      {
+        "text": "Step Functions agora, cada passo um job do Glue com data; MWAA depois",
+        "why": "Isso. Os jobs ficam quando o orquestrador muda, o que mantém a mudança barata."
+      },
+      {
+        "text": "MWAA agora, apagado toda manhã e criado de novo toda noite",
+        "why": "Cada exclusão perde a história das execuções, de que dependem backfills e reexecuções."
+      },
+      {
+        "text": "Step Functions para sempre, com toda reexecução de um dia passado iniciada à mão",
+        "why": "Reexecuções frequentes de dias passados por quatro equipes é o caso para o qual os intervalos do Airflow existem."
+      }
+    ]
+  },
+  "ex-27mg91az": {
+    "prompt": "Ordene estes custos mensais do mais barato ao mais caro.",
+    "hint": "O ocioso primeiro; depois o que acompanha a carga; depois os ambientes.",
+    "items": [
+      "Step Functions e Scheduler entre execuções",
+      "Três workers pequenos extras, duas horas por noite",
+      "Um ambiente pequeno",
+      "Um ambiente médio",
+      "Um ambiente grande"
+    ]
+  },
+  "ex-6fqjnj6f": {
+    "prompt": "Vinte e cinco DAGs dividem um ambiente pequeno a 615,02 USD por mês. Quanto custa cada uma, em USD com duas casas?",
+    "hint": "O ambiente é a conta; as DAGs a dividem."
+  }
+}
