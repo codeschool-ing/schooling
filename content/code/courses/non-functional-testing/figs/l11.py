@@ -86,7 +86,7 @@ def gate():
         f.text(30, y, name, size=11, anchor='start', weight='600')
         for k in range(3):
             f.rect(114 + k * 8, y - 22 + k * 6, 112, 30, stroke='--wire', fill='--panel', width=1.1)
-        f.text(186, y + 5, f'{tool} ×3', size=10.5, mono=True)
+        f.text(178, y + 5, f'{tool} ×3', size=10, mono=True)   # inside all three stacked cards
         f.arrow([(244, y + 5), (268, y)], stroke='--paper-dim')
         f.rect(272, y - 18, 170, 36, stroke='--wire', fill='--panel', width=1.1)
         f.text(357, y, middle, size=10.5)
